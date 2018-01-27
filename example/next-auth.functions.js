@@ -122,7 +122,14 @@ module.exports = () => {
       },
       // Seralize turns the value of the ID key from a User object
       serialize: (user) => {
-        return Promise.resolve(user._id)
+        // Supports serialization from Mongo Object *and* deserialize() object
+        if (user.id) {
+          return Promise.resolve(user.id) 
+        } else if (user._id) {
+          return Promise.resolve(user._id) 
+        } else {
+          return Promise.reject(new Error("Unable to serialise user"))
+        }
       },
       // Deseralize turns a User ID into a normalized User object that is
       // exported to clients. It should not return private/sensitive fields.

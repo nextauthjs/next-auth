@@ -169,6 +169,7 @@ module.exports = (nextApp, {
           
         functions.serialize(req.user)
         .then(id => {
+          if (!id) throw new Error("Unable to serialize user")
           return functions.find({ id: id })
         })
         .then(user => {
@@ -178,13 +179,13 @@ module.exports = (nextApp, {
           providers.forEach(provider => {
             linkedAccounts[provider.providerName] = (user[provider.providerName.toLowerCase()]) ? true : false
           })
-      
+          
           return resolve(linkedAccounts)
         })
         .catch(err => {
           return reject(err)
         })  
-      })    
+      })
     }
     next()
   })

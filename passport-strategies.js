@@ -146,6 +146,7 @@ module.exports = ({
               // functions.deserialize().    
               functions.serialize(req.user)
               .then(id => {
+                if (!id) throw new Error("Unable to serialize user")
                 return functions.find({ id: id })
               })
               .then(user => {
@@ -296,6 +297,7 @@ module.exports = ({
       // a simplified set of properties set by functions.deserialize().    
       functions.serialize(req.user)
       .then(id => {
+        if (!id) throw new Error("Unable to serialize user")
         return functions.find({ id: id })
       })
       .then(user => {
