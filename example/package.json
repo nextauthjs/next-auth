@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "NODE_ENV=development node index.js",
     "build": "next build",
-    "start": "NODE_ENV=production node index.js"
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
