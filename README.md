@@ -8,7 +8,7 @@ It's also used in the [nextjs-starter.now.sh](https://nextjs-starter.now.sh) pro
 
 ## Example usage
 
-If you have an existing Next.js site, create an `index.js` file in the root of your project containing the following:
+If you have an existing site you can add authentication to it by creating an `index.js` file in the root of your project containing the following:
 
 ````javascript
 // Include Next.js, Next Auth and a Next Auth config
@@ -45,9 +45,17 @@ nextApp
 })
 ````
 
-Then copy over the example configuration files below (`next-auth.config.js`, `next-auth.functions.js` and `next-auth.providers.js`) into your project.
+The easist way to get started to to copy the following configuration files into the root of your project:
 
-Add the following to your `package.json` file to start the project:
+* [next-auth.config.js](https://github.com/iaincollins/next-auth/tree/master/example/next-auth.config.js)
+* [next-auth.functions.js](https://github.com/iaincollins/next-auth/tree/master/example/next-auth.functions.js)
+* [next-auth.providers.js](https://github.com/iaincollins/next-auth/tree/master/example/next-auth.providers.js)
+
+You can copy over the pages from the example project into your own pages directory and customise them:
+
+* [example pages](https://github.com/iaincollins/next-auth/tree/master/example/pages)
+
+You may want to add the following to your `package.json` file to start the project:
 
 ````json
 "scripts": {
@@ -57,7 +65,7 @@ Add the following to your `package.json` file to start the project:
 },
 ````
 
-You can add a `.env file to the root of the project as a place to specify configuration options:
+You can add a `.env` file to the root of the project as a place to specify configuration options:
 
 ````
 SERVER_URL=http://localhost:3000
@@ -74,12 +82,11 @@ EMAIL_PORT=465
 EMAIL_USERNAME=username@gmail.com
 EMAIL_PASSWORD=
 ````
-
-See [AUTHENTICATION.md](https://github.com/iaincollins/next-auth/tree/master/AUTHENTICATION.md) for a guide on how to set up oAuth providers.
-
 ## Configuration
 
 NextAuth configuration can be split into into three files, which makes it easier to manage.
+
+You can copy these from the included [example project](https://github.com/iaincollins/next-auth/tree/master/example) to get started.
 
 ### next-auth.config.js
 
@@ -107,6 +114,8 @@ Configuration for oAuth providers are defined in **next-auth.functions.js**
 
 The example configuration file supports Facebook, Google and Twitter but can be updated to support any oAuth provider.
 
+See [AUTHENTICATION.md](https://github.com/iaincollins/next-auth/tree/master/AUTHENTICATION.md) for a guide on how to set up oAuth providers.
+
 ---- 
 
-See the [nextjs-starter.now.sh](https://nextjs-starter.now.sh) project for more complete example and live demo.
+See the [nextjs-starter.now.sh](https://nextjs-starter.now.sh) project for working example of how to use NextAuth and live demo.
