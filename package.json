@@ -1,0 +1,26 @@
+{
+  "name": "next-auth",
+  "version": "1.1.1",
+  "description": "Add oAuth and/or email authentication to Next.js sites",
+  "repository": "https://github.com/iaincollins/next-auth.git",
+  "main": "index.js",
+  "scripts": {},
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cookie-parser": "^1.4.3",
+    "express": "^4.16.2",
+    "express-session": "^1.15.6",
+    "lusca": "^1.5.2",
+    "nodemailer": "^4.4.2",
+    "nodemailer-direct-transport": "^3.3.2",
+    "passport": "^0.4.0",
+    "uuid": "^3.2.1"
+  },
+  "devDependencies": {
+    "next": "^4.2.3",
+    "next-auth-client": "^1.0.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
+  }
+}
