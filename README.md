@@ -2,11 +2,11 @@
 
 ## About NextAuth
 
-NextAuth is an authenticaton library for Next.js projects.
+NextAuth is an authentication library for Next.js projects.
 
 The NextAuth library uses Express and Passport, the most commonly used authentication library for Node.js, to provide support for signing in with email and with services like Facebook, Google and Twitter.
 
-NextAuth adds Cross Site Request Forgery (CSRF) tokens and HTTP Only cookies, supports univeral rendering and does not require client side JavaScript.
+NextAuth adds Cross Site Request Forgery (CSRF) tokens and HTTP Only cookies, supports universal rendering and does not require client side JavaScript.
 
 It adds session support without using client side accessible session tokens, providing protection against Cross Site Scripting (XSS) and session hijacking, while leveraging localStorage where available to cache non-critical session state for optimal performance in Single Page Apps.
 
@@ -29,7 +29,7 @@ All POST routes request must include a CSRF token.
 
 CSRF, Session and Linked Account endpoints are provided for Single Page Apps.
 
-Note: Session Tokens are stored in HTTP Only cookies to prevent session hijacking and protect against Cross Site Scripting (XSS) attacks. Only HTTP requests that originate from the origional domain are able to read from them.
+Note: Session Tokens are stored in HTTP Only cookies to prevent session hijacking and protect against Cross Site Scripting (XSS) attacks. Only HTTP requests that originate from the original domain are able to read from them.
 
 In addition, it will add the following routes for each oAuth provider currently configured:
 

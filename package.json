@@ -1,7 +1,7 @@
 {
   "name": "next-auth",
-  "version": "1.1.8",
-  "description": "An authentication library for Next.js projects",
+  "version": "1.1.9",
+  "description": "An authentication library for Next.js",
   "repository": "https://github.com/iaincollins/next-auth.git",
   "main": "index.js",
   "scripts": {},
