@@ -1,6 +1,6 @@
 {
   "name": "next-auth-examples",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "An example of how to use next-auth",
   "repository": "https://github.com/iaincollins/next-auth.git",
   "main": "",
@@ -25,8 +25,7 @@
     "passport-google-oauth": "^1.0.0",
     "passport-twitter": "^1.0.4",
     "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "universal-cookie": "^2.1.2"
+    "react-dom": "^16.2.0"
   },
   "now": {
     "name": "next-auth-demo",

@@ -25,18 +25,18 @@ module.exports = (nextApp, {
   // Session store for express-session. 
   // Defaults to an in memory store, which is not recommended for production.
   sessionStore = expressSession.MemoryStore(),
-  // Maximum Session Age in ms (default is 7 days).
+  // Maximum Session Age in ms (optional, default is 7 days).
   // The expiry time for a session is reset every time a user revisits the site
   // or revalidates their session token - this is the maximum idle time value.
   sessionMaxAge = 60000 * 60 * 24 * 7,
-  // Session Revalidation required after X ms (default is 60 seconds).
+  // Session Revalidation in X ms (optional, default is 60 seconds).
   // Specifies how often a Single Page App should revalidate a session.
   // Does not impact the session life on the server, but causes clients to 
   // refetch session info (even if it is in a local cache) after N seconds has
   // elapsed since it was last checked so they always display state correctly.
   // If set to 0 will revalidate a session before rendering every page.
   sessionRevalidateAge = 60000,
-  // Absolute URL of the server (recommended but optional).
+  // Canonical URL of the server (optiona, but recommended).
   // e.g. 'http://localhost:3000' or 'https://www.example.com' 
   // Used in callbak URLs and email sign in links. It will be auto generated
   // if not specified, which may cause problems if your site uses multiple
@@ -58,6 +58,7 @@ module.exports = (nextApp, {
     } = {}) => { Promise.resolve(user) },
     update: (user) => { Promise.resolve(user) },
     insert: (user) => { Promise.resolve(user) },
+    remove: (id) => { Promise.resolve(id) },
     serialize: (user) => { Promise.resolve(id) },
     deserialize: (id) => { Promise.resolve(user) },
     sendSignInEmail: ({

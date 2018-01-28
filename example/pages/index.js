@@ -2,7 +2,6 @@ import React from 'react'
 import Head from 'next/head'
 import Router from 'next/router'
 import Link from 'next/link'
-import Cookies from 'universal-cookie'
 import { NextAuth } from 'next-auth-client'
 
 export default class extends React.Component {
@@ -19,11 +18,6 @@ export default class extends React.Component {
 
   handleSignOutSubmit(event) {
     event.preventDefault()
-    
-    // Save current URL so user is redirected back here after signing out
-    const cookies = new Cookies()
-    cookies.set('redirect_url', window.location.pathname)
-    
     NextAuth.signout()
     .then(() => {
       Router.push('/auth/callback')
@@ -37,8 +31,9 @@ export default class extends React.Component {
     return (
       <div className="container">
         <Head>
-          <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossOrigin="anonymous"/>
+          <meta name="viewport" content="width=device-width, initial-scale=1"/>
           <script src="https://cdn.polyfill.io/v2/polyfill.min.js"/>
+          <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossOrigin="anonymous"/>
         </Head>
         <div className="text-center">
           <h1 className="display-4 mt-3 mb-3">NextAuth Example</h1>

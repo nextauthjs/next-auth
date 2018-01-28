@@ -15,6 +15,7 @@
  *   } = {}) => {},
  *   update: (user) => {},
  *   insert: (user) => {},
+ *   remove: (id) => {},
  *   serialize: (user) => {},
  *   deserialize: (id) => {}
  * }
@@ -27,6 +28,11 @@
  * Environment variables for this example:
  *
  * MONGO_URI=mongodb://localhost:27017/my-database
+ * EMAIL_FROM=username@gmail.com
+ * EMAIL_SERVER=smtp.gmail.com
+ * EMAIL_PORT=465
+ * EMAIL_USERNAME=username@gmail.com
+ * EMAIL_PASSWORD=p4ssw0rd
  *
  * If you wish, you can put these in a `.env` to seperate your environment 
  * specific configuration from your code.
@@ -106,7 +112,7 @@ module.exports = () => {
       },
       update: (user) => {
         return new Promise((resolve, reject) => {
-          usersCollection.update({_id: user._id}, user, {}, (err) => {
+          usersCollection.update({_id: MongoObjectId(user._id)}, user, {}, (err) => {
             if (err) return reject(err)
             return resolve(user)
           })
@@ -114,7 +120,7 @@ module.exports = () => {
       },
       remove: (id) => {
         return new Promise((resolve, reject) => {
-          usersCollection.remove({_id: id}, (err) => {
+          usersCollection.remove({_id: MongoObjectId(id)}, (err) => {
             if (err) return reject(err)
             return resolve(true)
           })
@@ -137,10 +143,10 @@ module.exports = () => {
         return new Promise((resolve, reject) => {
           usersCollection.findOne({ _id: MongoObjectId(id) }, (err, user) => {
             if (err) return reject(err)
-
+              
             // If user not found (e.g. account deleted) return null object
             if (!user) return resolve(null)
-
+              
             return resolve({
               id: user._id,
               name: user.name,
