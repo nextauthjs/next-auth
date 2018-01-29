@@ -167,7 +167,7 @@ Methods for user management and sending email are defined in **next-auth.functio
 * remove(id)
 * serialize(user)
 * deserialize(id)
-* sendSigninEmail({email, url}) // Send email
+* sendSigninEmail({email, url})
 
 The example configuration provided is for Mongo DB. By defining the behaviour in these functions you can use NextAuth with any database, including a relational database that uses SQL.
 

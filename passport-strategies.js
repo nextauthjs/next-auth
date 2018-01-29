@@ -142,7 +142,7 @@ module.exports = ({
 
               // First get the User ID from the User, then look up the user 
               // details. Note: We don't use the User object in req.user 
-              // directly as it is a a simplified set of properties set by 
+              // directly as it is a simplified set of properties set by 
               // functions.deserialize().    
               functions.serialize(req.user)
               .then(id => {
