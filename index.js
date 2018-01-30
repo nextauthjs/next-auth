@@ -36,7 +36,7 @@ module.exports = (nextApp, {
   // elapsed since it was last checked so they always display state correctly.
   // If set to 0 will revalidate a session before rendering every page.
   sessionRevalidateAge = 60000,
-  // Canonical URL of the server (optiona, but recommended).
+  // Canonical URL of the server (optional, but recommended).
   // e.g. 'http://localhost:3000' or 'https://www.example.com' 
   // Used in callbak URLs and email sign in links. It will be auto generated
   // if not specified, which may cause problems if your site uses multiple
@@ -88,7 +88,7 @@ module.exports = (nextApp, {
    * with your own pre-configured cookie parsing and body parsing library if
    * you wish, though this may cause compatiblity issues if they do not work
    * in the same way.
-   **/
+   */
   if (cookieParser === true) {
     expressApp.use(CookieParser())
   }
@@ -116,7 +116,7 @@ module.exports = (nextApp, {
   /**
    * With sessions configured we need to configure Passport and trigger
    * passport.initialize() before we add any other routes.
-   **/
+   */
   passportStrategies({
     expressApp: expressApp,
     serverUrl: serverUrl,
@@ -126,7 +126,7 @@ module.exports = (nextApp, {
 
   /**
    * Add route to get CSRF token via AJAX
-   **/
+   */
   expressApp.get(`${pathPrefix}/csrf`, (req, res) => {
     return res.json({
       csrfToken: res.locals._csrf
@@ -254,7 +254,7 @@ module.exports = (nextApp, {
   
   /**
    * Generate a one time use sign in link and email it to the user
-   **/
+   */
   expressApp.post(`${pathPrefix}/email/signin`, (req, res) => {
     const email = req.body.email || null
     
@@ -294,7 +294,7 @@ module.exports = (nextApp, {
 
   /**
    * Verify token in callback URL for email sign in 
-   **/
+   */
   expressApp.get(`${pathPrefix}/email/signin/:token`, (req, res) => {
     if (!req.params.token) {
       return res.redirect(`${pathPrefix}/error?action=signin&type=token-missing`)
@@ -325,7 +325,7 @@ module.exports = (nextApp, {
 
   /**
    * Sign a user out
-   **/
+   */
   expressApp.post(`${pathPrefix}/signout`, (req, res) => {
     // Log user out with Passport and remove their Express session
     req.logout()
@@ -337,7 +337,7 @@ module.exports = (nextApp, {
   /**
    * If a port has been specified, then set Next.js as the default final
    * route hanlder and start listening on the specified port.
-   **/
+   */
   if (port) {
     // Set Next.js to handle all other routes by default
     expressApp.all('*', (req, res) => {

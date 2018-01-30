@@ -1,6 +1,6 @@
 {
   "name": "next-auth-examples",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "An example project for next-auth",
   "repository": "https://github.com/iaincollins/next-auth.git",
   "main": "",
@@ -20,6 +20,7 @@
     "next-auth": "^1.1.1",
     "next-auth-client": "^1.1.1",
     "nodemailer": "^4.4.2",
+    "nodemailer-direct-transport": "^3.3.2",
     "nodemailer-smtp-transport": "^2.7.4",
     "passport-facebook": "^2.1.1",
     "passport-google-oauth": "^1.0.0",

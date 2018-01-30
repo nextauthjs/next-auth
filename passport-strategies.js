@@ -1,6 +1,6 @@
 /**
  * Configures Passport Strategies
- **/
+ */
 'use strict'
 
 const passport = require('passport')
@@ -33,7 +33,7 @@ module.exports = ({
 
   /**
    * Return functions ID property from a functions object
-   **/
+   */
   passport.serializeUser((user, next) => {
     functions.serialize(user)
     .then(id => {
@@ -46,7 +46,7 @@ module.exports = ({
 
   /**
    * Return functions from a functions ID
-   **/
+   */
   passport.deserializeUser((id, next) => {
     functions.deserialize(id)
     .then(user => {

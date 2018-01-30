@@ -48,10 +48,25 @@ const MongoClient = require('mongodb').MongoClient
 const NeDB = require('nedb')
 const MongoObjectId = (process.env.MONGO_URI) ? require('mongodb').ObjectId : (id) => { return id }
 
-// Use Node Mailer SMTP Transport for email sign in
+// Use Node Mailer for email sign in
 const nodemailer = require('nodemailer')
 const nodemailerSmtpTransport = require('nodemailer-smtp-transport')
+const nodemailerDirectTransport = require('nodemailer-direct-transport')
 
+// Send email direct from localhost if no mail server configured
+let nodemailerTransport = nodemailerDirectTransport()
+if (process.env.EMAIL_SERVER && process.env.EMAIL_USERNAME && process.env.EMAIL_PASSWORD) {
+  nodemailerTransport = nodemailerSmtpTransport({
+      host: process.env.EMAIL_SERVER,
+      port: process.env.EMAIL_PORT || 25,
+      secure: true,
+      auth: {
+        user: process.env.EMAIL_USERNAME,
+        pass: process.env.EMAIL_PASSWORD
+      }
+    })
+}
+        
 module.exports = () => {
   return new Promise((resolve, reject) => {
     if (process.env.MONGO_URI) { 
@@ -163,15 +178,7 @@ module.exports = () => {
         url = null
         } = {}) => {
         nodemailer
-        .createTransport(nodemailerSmtpTransport({
-          host: process.env.EMAIL_SERVER,
-          port: process.env.EMAIL_PORT || 25,
-          secure: true,
-          auth: {
-            user: process.env.EMAIL_USERNAME,
-            pass: process.env.EMAIL_PASSWORD
-          }
-        }))
+        .createTransport(nodemailerTransport)
         .sendMail({
           to: email,
           from: process.env.EMAIL_FROM,
