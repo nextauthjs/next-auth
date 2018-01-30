@@ -349,12 +349,18 @@ module.exports = (nextApp, {
     return expressApp.listen(port, err => {
       if (err) Promise.reject(err)
       return Promise.resolve({
-        express: expressApp
+        next: nextApp,
+        express: expressApp,
+        functions: functions,
+        providers: providers
       })
     })
   } else {
     return Promise.resolve({
-      express: expressApp
+      next: nextApp,
+      express: expressApp,
+      functions: functions,
+      providers: providers
     })
   }
 }
