@@ -17,8 +17,8 @@ module.exports = ({
       emailToken,
       provider
     } = {}) => {},
-    update: (user) => {},
-    insert: (user) => {},
+    update: (user, profile) => {},
+    insert: (user, profile) => {},
     serialize: (user) => {},
     deserialize: (id) => {}
   }
@@ -69,11 +69,12 @@ module.exports = ({
     strategyOptions.callbackURL = (serverUrl || '') + `${pathPrefix}/oauth/${providerName.toLowerCase()}/callback`
     strategyOptions.passReqToCallback = true
 
-    passport.use(new Strategy(strategyOptions, (req, accessToken, refreshToken, profile, next) => {
+    passport.use(new Strategy(strategyOptions, (req, accessToken, refreshToken, _profile, next) => {
 
       try {
-        // Normalise the provider specific profile into a standard user object.
-        profile = getProfile(profile)
+        // Normalise the provider specific profile into a standard basic
+        // profile object with just { id, name, email } properties.
+        let profile = getProfile(_profile)
 
         // Save the Access Token to the current session.
         req.session[providerName.toLowerCase()] = {
@@ -115,7 +116,7 @@ module.exports = ({
                     refreshToken: refreshToken
                   }
 
-                  functions.update(user)
+                  functions.update(user, _profile)
                   .then(user => {
                     return next(null, user)
                   })
@@ -133,7 +134,7 @@ module.exports = ({
                 // This prevents users from linking an oAuth account to more 
                 // than one local account at the same time.
                 return next(null, false)
-              }                           
+              }
             } else {
               // This secion handles if a user is already logged in and is
               // trying to link a new account.
@@ -177,7 +178,7 @@ module.exports = ({
                 }
 
                 // Update details for the new provider for this user.
-                return functions.update(user)
+                return functions.update(user, _profile)
                 .then(user => {
                   return next(null, user)
                 })
@@ -200,10 +201,10 @@ module.exports = ({
               // as that user.
               
               // Update Access and Refresh Tokens for the user if we got them.
-              if (accessToken || refreshToken) {                
+              if (accessToken || refreshToken) {
                 if (accessToken) user[providerName.toLowerCase()].accessToken = accessToken
                 if (refreshToken) user[providerName.toLowerCase()].refreshToken = refreshToken
-                return functions.update(user)
+                return functions.update(user, _profile)
                 .then(user => {
                   return next(null, user)
                 })
@@ -234,7 +235,7 @@ module.exports = ({
                 // or create an account elsewhere for another users email 
                 // address then trying to sign in from it, so don't do that.
                 if (user) return next(null, false)
-
+                
                 // If an account does not exist, create one for them and return
                 // a user object to passport, which will sign them in.
                 return functions.insert({
@@ -245,7 +246,7 @@ module.exports = ({
                     accessToken: accessToken,
                     refreshToken: refreshToken
                   }
-                })
+                }, _profile)
                 .then(user => {
                   return next(null, user)
                 })

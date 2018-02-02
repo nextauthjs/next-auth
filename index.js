@@ -56,8 +56,8 @@ module.exports = (nextApp, {
       emailToken,
       provider // provider = { name: 'twitter', id: '123456' }
     } = {}) => { Promise.resolve(user) },
-    update: (user) => { Promise.resolve(user) },
-    insert: (user) => { Promise.resolve(user) },
+    update: (user, profile) => { Promise.resolve(user) },
+    insert: (user, profile) => { Promise.resolve(user) },
     remove: (id) => { Promise.resolve(id) },
     serialize: (user) => { Promise.resolve(id) },
     deserialize: (id) => { Promise.resolve(user) },
@@ -303,8 +303,9 @@ module.exports = (nextApp, {
     functions.find({ emailToken: req.params.token })
     .then(user => {
       if (user) {
-        // Reset token and update email address as verified
-        user.emailToken = null
+        // Delete current token so it cannot be used again
+        delete user.emailToken
+        // Mark email as verified now we know they have access to it
         user.emailVerified = true
         return functions.update(user)
       } else {

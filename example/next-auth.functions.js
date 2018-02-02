@@ -102,7 +102,7 @@ module.exports = () => {
         } else if (emailToken) {
           query = { emailToken: emailToken }
         } else if (provider) {
-          query = { [`${provider.name}.id`]: provider.id }                
+          query = { [`${provider.name}.id`]: provider.id }
         }
 
         return new Promise((resolve, reject) => {
@@ -112,7 +112,14 @@ module.exports = () => {
           })
         })
       },
-      insert: (user) => {
+      // The user parameter contains a basic user object to be added to the DB.
+      // The oAuthProfile parameter is passed when signing in via oAuth.
+      //
+      // The optional oAuthProfile parameter contains all properties associated
+      // with the users account on the oAuth service they are signing in with.
+      //
+      // You can use this to capture profile.avatar, profile.location, etc.
+      insert: (user, oAuthProfile) => {
         return new Promise((resolve, reject) => {
           usersCollection.insert(user, (err, response) => {
             if (err) return reject(err)
@@ -125,7 +132,14 @@ module.exports = () => {
           })
         })
       },
-      update: (user) => {
+      // The user parameter contains a basic user object to be added to the DB.
+      // The oAuthProfile parameter is passed when signing in via oAuth.
+      //
+      // The optional oAuthProfile parameter contains all properties associated
+      // with the users account on the oAuth service they are signing in with.
+      //
+      // You can use this to capture profile.avatar, profile.location, etc.
+      update: (user, profile) => {
         return new Promise((resolve, reject) => {
           usersCollection.update({_id: MongoObjectId(user._id)}, user, {}, (err) => {
             if (err) return reject(err)
@@ -133,6 +147,10 @@ module.exports = () => {
           })
         })
       },
+      // The remove parameter is passed the ID of a user account to delete.
+      //
+      // This method is not used in the current version of next-auth but will
+      // be in a future release, to provide an endpoint for account deletion.
       remove: (id) => {
         return new Promise((resolve, reject) => {
           usersCollection.remove({_id: MongoObjectId(id)}, (err) => {
@@ -145,15 +163,18 @@ module.exports = () => {
       serialize: (user) => {
         // Supports serialization from Mongo Object *and* deserialize() object
         if (user.id) {
-          return Promise.resolve(user.id) 
+          // Handle responses from deserialize()
+          return Promise.resolve(user.id)
         } else if (user._id) {
+          // Handle responses from find(), insert(), update() 
           return Promise.resolve(user._id) 
         } else {
           return Promise.reject(new Error("Unable to serialise user"))
         }
       },
       // Deseralize turns a User ID into a normalized User object that is
-      // exported to clients. It should not return private/sensitive fields.
+      // exported to clients. It should not return private/sensitive fields,
+      // only fields you want to expose via the user interface.
       deserialize: (id) => {
         return new Promise((resolve, reject) => {
           usersCollection.findOne({ _id: MongoObjectId(id) }, (err, user) => {

@@ -115,10 +115,10 @@ You can add the following to your `package.json` file to start the project:
 
 You will need to create following pages under `./pages/auth` in your project:
 
-* index.js // Sign In
+* index.js // Sign In (and Link/Unlink)
 * error.js // Error handling
 * check-email.js // Check email prompt
-* callback.js // Callback page for Single Page Apps
+* callback.js // Callback page, used to update state in Single Page Apps
 
 You can [find examples of these](https://github.com/iaincollins/next-auth/tree/master/example) included which you can copy and paste into your project.
 
@@ -162,8 +162,8 @@ It is where the **next-auth.functions.js** and **next-auth.providers.js** files 
 Methods for user management and sending email are defined in **next-auth.functions.js**
 
 * find({id,email,emailToken,provider})
-* insert(user)
-* update(user)
+* insert(user, oAuthProfile)
+* update(user, oAuthProfile)
 * remove(id)
 * serialize(user)
 * deserialize(id)
