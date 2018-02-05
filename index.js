@@ -263,7 +263,8 @@ module.exports = (nextApp, {
     }
 
     const token = uuid()
-    const url = (serverUrl || `http://${req.headers.host}`) + `${pathPrefix}/email/signin/${token}`
+    const http = req.secure ? 'https' : 'http'
+    const url = (serverUrl || `${http}://${req.headers.host}`) + `${pathPrefix}/email/signin/${token}`
 
     // Create verification token save it to database
     functions.find({ email: email })
