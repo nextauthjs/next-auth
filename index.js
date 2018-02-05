@@ -42,6 +42,10 @@ module.exports = (nextApp, {
   // if not specified, which may cause problems if your site uses multiple
   // aliases (e.g. 'example.com and 'www.examples.com').
   serverUrl = null,
+  // If we are behind a proxy server and it says we are running SSL, trust it.
+  // All this does is make sure we use HTTPS for callback URLs and email links.
+  // You should never need to turn this off.
+  trustProxy = true,
   // An array of oAuth Provider config blocks (optional).
   providers = [],
   // Port to start listening on
@@ -104,22 +108,18 @@ module.exports = (nextApp, {
     resave: false,
     rolling: true,
     saveUninitialized: false,
-    httpOnly: true,
     cookie: {
+      httpOnly: true,
+      secure: 'auto',
       maxAge: sessionMaxAge
     }
   }))
   if (csrf === true) {
     expressApp.use(lusca.csrf())
   }
-
-   // Respect protocol
-   expressApp.use(function(req, res, next) {
-    if (req.headers["x-forwarded-proto"] === "https") {
-      req.connection.encrypted = true;
-    }
-    next();
-  });
+  if (trustProxy === true) {
+    expressApp.set('trust proxy', 1)
+  }
 
   /**
    * With sessions configured we need to configure Passport and trigger
