@@ -113,6 +113,14 @@ module.exports = (nextApp, {
     expressApp.use(lusca.csrf())
   }
 
+   // Respect protocol
+   expressApp.use(function(req, res, next) {
+    if (req.headers["x-forwarded-proto"] === "https") {
+      req.connection.encrypted = true;
+    }
+    next();
+  });
+
   /**
    * With sessions configured we need to configure Passport and trigger
    * passport.initialize() before we add any other routes.
@@ -263,7 +271,7 @@ module.exports = (nextApp, {
     }
 
     const token = uuid()
-    const url = (serverUrl || `http://${req.headers.host}`) + `${pathPrefix}/email/signin/${token}`
+    const url = (serverUrl || `${req.protocol}://${req.headers.host}`) + `${pathPrefix}/email/signin/${token}`
 
     // Create verification token save it to database
     functions.find({ email: email })
