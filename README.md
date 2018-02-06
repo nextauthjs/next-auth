@@ -10,9 +10,41 @@ NextAuth adds Cross Site Request Forgery (CSRF) tokens and HTTP Only cookies, su
 
 It adds session support without using client side accessible session tokens, providing protection against Cross Site Scripting (XSS) and session hijacking, while leveraging localStorage where available to cache non-critical session state for optimal performance in Single Page Apps.
 
-The NextAuthClient library for NextAuth is designed to work with React pages powered by Next.js.
+The NextAuth comes with a client library, designed to work with React pages powered by Next.js to easily add universal session support to sites.
 
 It contains an [example site](https://github.com/iaincollins/next-auth/tree/master/example) that shows how to use it in a simple project. It's also used in the [nextjs-starter.now.sh](https://nextjs-starter.now.sh) project, which provides a more complete example with a live demo.
+
+Note: As of version 1.5 it's also compatible with Next.js projects, just pass `null` instead of a nextApp instance when calling `nextAuth()`.
+
+## Example Usage
+
+````javascript
+import React from 'react'
+import { NextAuth } from 'next-auth/client'
+
+export default class extends React.Component {
+  static async getInitialProps({req}) {
+    return {
+      session: await NextAuth.init({req})
+    }
+  }
+  render() {
+    if (this.props.session.user) {
+      return(
+        <div>
+          <p>You are logged in as {this.props.session.user.name || this.props.session.user.email}.</p>
+        </div>
+        )
+    } else {
+      return(
+        <div>
+          <p>You are not logged in.</p>
+        </div>
+      )
+    }
+  }
+}
+````
 
 ## Routes
 
@@ -60,7 +92,7 @@ It will return a JSON object with the current oAuth provider configuration:
 }
 ````
 
-Note: The `/auth` prefix is configurable on the server, but it is currently hard coded in [the client](https://www.npmjs.com/package/next-auth-client), so you probably don't want to change it.
+Note: The `/auth` prefix is configurable via an option in the module, but it is currently hard coded in the client component, so you probably don't want to change it. It will be configurable in future releases.
 
 ## Getting Started
 

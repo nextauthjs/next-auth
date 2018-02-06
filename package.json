@@ -1,10 +1,14 @@
 {
   "name": "next-auth",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "An authentication library for Next.js",
   "repository": "https://github.com/iaincollins/next-auth.git",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "build": "webpack -d",
+    "prepublish": "webpack -d",
+    "start": "webpack -d --watch"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {

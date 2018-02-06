@@ -2,7 +2,7 @@ import React from 'react'
 import Head from 'next/head'
 import Router from 'next/router'
 import Link from 'next/link'
-import { NextAuth } from 'next-auth-client'
+import { NextAuth } from 'next-auth/client'
 
 export default class extends React.Component {
   

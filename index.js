@@ -5,7 +5,7 @@ const CookieParser = require('cookie-parser')
 const lusca = require('lusca')
 const Express = require('express')
 const ExpressSession = require('express-session')
-const passportStrategies = require('./passport-strategies')
+const passportStrategies = require('./src/passport-strategies')
 const uuid = require('uuid/v4')
 
 module.exports = (nextApp, {
@@ -72,9 +72,6 @@ module.exports = (nextApp, {
     } = {}) => { Promise.resolve(true) }
   }
 } = {}) => {
-  if (typeof(nextApp) !== 'object') {
-    throw new Error('nextApp must be a next instance')
-  }
   
   if (typeof(functions) !== 'object') {
     throw new Error('functions must be a an object')
@@ -348,11 +345,14 @@ module.exports = (nextApp, {
    * route hanlder and start listening on the specified port.
    */
   if (port) {
-    // Set Next.js to handle all other routes by default
-    expressApp.all('*', (req, res) => {
-      let nextRequestHandler = nextApp.getRequestHandler()
-      return nextRequestHandler(req, res)
-    })
+    
+    // If instance of nextApp passed have it handle all other routes by default
+    if (nextApp) {
+      expressApp.all('*', (req, res) => {
+        let nextRequestHandler = nextApp.getRequestHandler()
+        return nextRequestHandler(req, res)
+      })
+    }
 
     // Start Express
     return expressApp.listen(port, err => {
