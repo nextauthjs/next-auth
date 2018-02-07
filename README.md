@@ -18,7 +18,7 @@ Note: As of version 1.5 NextAuth is also compatible non-Next.js React projects, 
 
 You will need to handle setting up routes before and after initialising NextAuth if you are not using Next.js. NextAuth lets you pass an instance of express as 'expressApp' option (and returns it in the response).
 
-## Example Usage
+## Example Client Usage
 
 ````javascript
 import React from 'react'
@@ -47,6 +47,8 @@ export default class extends React.Component {
   }
 }
 ````
+
+See [Documentation for the NextAuth Client](https://github.com/iaincollins/next-auth/blob/master/README-CLIENT.md) for more information on how to interact with the client.
 
 ## Routes
 

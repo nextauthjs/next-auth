@@ -6,11 +6,13 @@ NextAuthClient is session library for the [next-auth](https://www.npmjs.com/pack
 
 ## Methods
 
-It provides the following methods, all of which return a promise:
+It provides the following methods, all of which return a promise.
 
 ### NextAuthClient.init({ req, force })
 
-Isometric (runs client and server side). Return the current session.
+Isometric (can be used in server side rendering when passed optional `req` object).
+
+Return the current session.
 
 When using Server Side Rendering and passed `req` object from **getInitialProps({req})** it will read the data from it.
 
@@ -20,9 +22,13 @@ When using Client Side Rendering it will use localStorage (if avalible) to check
 
 Client side only method. Request an email sign in token.
 
+Makes POST request to `/auth/signin`.
+
 ### NextAuthClient.signout()
 
 Client side only method. Triggers the current session to be destroyed.
+
+Makes POST request to `/auth/signout`.
 
 ### NextAuthClient.csrfToken()
 
@@ -30,17 +36,29 @@ Client side only method. Returns the latest CSRF Token.
 
 Note: When rendering server side, this is accessible from NextAuthClient.init().
 
-### NextAuthClient.linked()
+Makes GET request to `/auth/csrf`.
 
-Client side only method. Returns a list of linked/unlinked oAuth providers.
+### NextAuthClient.linked({ req })
+
+Isometric method (can be used in server side rendering when passed optional `req` object).
+
+Returns a list of linked/unlinked oAuth providers.
 
 This is useful on account management pages where you want to display buttons to link / unlink accounts.
 
-### NextAuthClient.providers()
+Makes GET request to `/auth/linked`.
 
-Client side only method. Returns a list of all configured oAuth providers.
+### NextAuthClient.providers({ req })
 
-It includes their names, sign in URLs and callback URLs. This is useful on sign in pages and to check the callback URLs when configuring oAuth providers.
+Isometric method (can be used in server side rendering when passed optional `req` object).
+
+Returns a list of all configured oAuth providers.
+
+It includes their names, sign in URLs and callback URLs.
+
+This is useful on sign in pages (e.g. to render sign in links for all configured providers).
+
+Makes GET request to `/auth/providers`.
 
 ## Example
 
