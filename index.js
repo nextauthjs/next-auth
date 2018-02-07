@@ -352,7 +352,7 @@ module.exports = (nextApp, {
     }
     
     // If no port specified, don't start Express automatically
-    if (!port) resolve(response)
+    if (!port) return resolve(response)
     
     // If an instance of nextApp was passed, have it handle all other routes
     if (nextApp) {
