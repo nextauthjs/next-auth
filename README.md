@@ -14,7 +14,9 @@ The NextAuth comes with a client library, designed to work with React pages powe
 
 It contains an [example site](https://github.com/iaincollins/next-auth/tree/master/example) that shows how to use it in a simple project. It's also used in the [nextjs-starter.now.sh](https://nextjs-starter.now.sh) project, which provides a more complete example with a live demo.
 
-Note: As of version 1.5 it's also compatible with Next.js projects, just pass `null` instead of a nextApp instance when calling `nextAuth()`.
+Note: As of version 1.5 NextAuth is also compatible non-Next.js React projects, just pass `null` instead of a nextApp instance when calling `nextAuth()`.
+
+You will need to handle setting up routes before and after initialising NextAuth if you are not using Next.js. NextAuth lets you pass an instance of express as 'expressApp' option (and returns it in the response).
 
 ## Example Usage
 
