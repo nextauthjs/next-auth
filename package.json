@@ -1,6 +1,6 @@
 {
   "name": "next-auth",
-  "version": "1.7.2",
+  "version": "1.7.3",
   "description": "An authentication library for Next.js",
   "repository": "https://github.com/iaincollins/next-auth.git",
   "main": "index.js",
@@ -15,12 +15,12 @@
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "express-session": "^1.15.6",
+    "isomorphic-fetch": "^2.2.1",
     "lusca": "^1.5.2",
     "passport": "^0.4.0",
     "uuid": "^3.2.1"
   },
   "devDependencies": {
-    "isomorphic-fetch": "^2.2.1",
     "webpack": "^3.10.0"
   }
 }
