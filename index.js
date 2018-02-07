@@ -81,6 +81,15 @@ module.exports = (nextApp, {
     expressApp = Express()
   }
 
+  // If an instance of nextApp was passed, let all requests to /_next/* pass
+  // to it *before* Express Session and other middleware is called.
+  if (nextApp) {
+    expressApp.all('/_next/*', (req, res) => {
+      let nextRequestHandler = nextApp.getRequestHandler()
+      return nextRequestHandler(req, res)
+    })
+  }
+
   /**
    * Set up cookie parsing, body parsing, express sessions and add Cross Site
    * Site Request Forgery tokens to all POST requests.
@@ -340,36 +349,34 @@ module.exports = (nextApp, {
     })
   })
 
-  /**
-   * If a port has been specified, then set Next.js as the default final
-   * route hanlder and start listening on the specified port.
-   */
-  if (port) {
+  return new Promise((resolve, reject) => {
+    let response = {
+      next: nextApp,
+      express: expressApp,
+      functions: functions,
+      providers: providers,
+      port: port
+    }
     
-    // If instance of nextApp passed have it handle all other routes by default
+    // If no port specified, don't start Express automatically
+    if (!port) resolve(response)
+    
+    // If an instance of nextApp was passed, have it handle all other routes
     if (nextApp) {
       expressApp.all('*', (req, res) => {
         let nextRequestHandler = nextApp.getRequestHandler()
         return nextRequestHandler(req, res)
       })
     }
-
+    
     // Start Express
     return expressApp.listen(port, err => {
-      if (err) Promise.reject(err)
-      return Promise.resolve({
-        next: nextApp,
-        express: expressApp,
-        functions: functions,
-        providers: providers
-      })
+      if (err) reject(err)
+      return resolve(response)
     })
-  } else {
-    return Promise.resolve({
-      next: nextApp,
-      express: expressApp,
-      functions: functions,
-      providers: providers
-    })
-  }
+
+  })
+  .then(() => {
+    return Promise.resolve()
+  })
 }
