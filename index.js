@@ -1,15 +1,13 @@
 'use strict'
 
 const BodyParser = require('body-parser')
-const CookieParser = require('cookie-parser')
-const lusca = require('lusca')
 const Express = require('express')
 const ExpressSession = require('express-session')
+const lusca = require('lusca')
 const passportStrategies = require('./src/passport-strategies')
 const uuid = require('uuid/v4')
 
 module.exports = (nextApp, {
-  cookieParser = true,
   bodyParser = true,
   csrf = true,
   // URL base path for authentication routes (optional).
@@ -91,17 +89,11 @@ module.exports = (nextApp, {
   }
 
   /**
-   * Set up cookie parsing, body parsing, express sessions and add Cross Site
-   * Site Request Forgery tokens to all POST requests.
+   * Set up body parsing, express sessions and add CSRF tokens.
    *
-   * You can set cookieParser, bodyParser to false and pass an express instance
-   * with your own pre-configured cookie parsing and body parsing library if
-   * you wish, though this may cause compatiblity issues if they do not work
-   * in the same way.
+   * You can set bodyParser to false and pass an Express instance if you want
+   * to customise how you invoke Body Parser.
    */
-  if (cookieParser === true) {
-    expressApp.use(CookieParser())
-  }
   if (bodyParser === true) {
     expressApp.use(BodyParser.json())
     expressApp.use(BodyParser.urlencoded({
@@ -352,7 +344,8 @@ module.exports = (nextApp, {
   return new Promise((resolve, reject) => {
     let response = {
       next: nextApp,
-      express: expressApp,
+      express: Express,
+      expressApp: expressApp,
       functions: functions,
       providers: providers,
       port: port
@@ -374,9 +367,5 @@ module.exports = (nextApp, {
       if (err) reject(err)
       return resolve(response)
     })
-
-  })
-  .then(() => {
-    return Promise.resolve()
   })
 }

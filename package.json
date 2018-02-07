@@ -1,6 +1,6 @@
 {
   "name": "next-auth",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "An authentication library for Next.js",
   "repository": "https://github.com/iaincollins/next-auth.git",
   "main": "index.js",
@@ -13,7 +13,6 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.2",
-    "cookie-parser": "^1.4.3",
     "express": "^4.16.2",
     "express-session": "^1.15.6",
     "lusca": "^1.5.2",
