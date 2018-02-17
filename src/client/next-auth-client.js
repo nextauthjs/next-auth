@@ -151,43 +151,57 @@ export default class {
     .then(data => data)
     .catch(() => Error('Unable to get oAuth providers'))
   }
-  
-  static async signin(email) {
-    // Sign in to the server
 
-    // Load current session info from cache
-    let session = await this.init()
 
-    // Make sure we have the latest CSRF Token in our session
-    session.csrfToken = await this.csrfToken()
+  /*
+   * Sign in
+   * 
+   * Will post a form to /auth/signin auth route if an object is passed.
+   * If the details are valid a session will be created and you should redirect
+   * to your callback page so the session is loaded in the client.
+   *
+   * If just a string containing an email address is specififed will generate a
+   * a one-time use sign in link and send it via email; you should redirect to a
+   * page telling the user to check their inbox for an email with the link.
+   */
+  static async signin(params) {
+    // Params can be just string (an email address) or an object (form fields)
+    const formData = (typeof params === 'string') ? { email: params } : params
 
-    const formData = {
-      _csrf: session.csrfToken,
-      email,
-    }
+    // Use either the email token generation route or the custom form auth route
+    const route = (typeof params === 'string') ? '/auth/email/signin' : '/auth/signin' 
+
+    // Add latest CSRF Token to request
+    formData._csrf = await this.csrfToken()
     
     // Encoded form parser for sending data in the body
     const encodedForm = Object.keys(formData).map((key) => {
       return encodeURIComponent(key) + '=' + encodeURIComponent(formData[key])
     }).join('&')
 
-    return fetch('/auth/email/signin', {
+    return fetch(route, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-Requested-With': 'XMLHttpRequest' // So Express can detect AJAX post
       },
       body: encodedForm,
       credentials: 'same-origin'
     })
-    .then(response => {
+    .then(async response => {
       if (response.ok) {
-        return response
+        return await response.json()
       } else {
-        return Promise.reject(Error('HTTP error while attempting to sign in'))
+        throw new Error('HTTP error while attempting to sign in')
       }
     })
-    .then(() => true)
-    .catch(() => Error('Unable to sign in'))
+    .then(data => {
+      if (data.success && data.success === true) {
+        return Promise.resolve(true)
+      } else {
+        return Promise.resolve(false)
+      }
+    })
   }
 
   static async signout() {

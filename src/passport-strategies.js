@@ -1,4 +1,4 @@
-/**
+/*
  * Configures Passport Strategies
  */
 'use strict'
@@ -31,7 +31,7 @@ module.exports = ({
     throw new Error('functions must be a an object')
   }
 
-  /**
+  /*
    * Return functions ID property from a functions object
    */
   passport.serializeUser((user, next) => {
@@ -44,7 +44,7 @@ module.exports = ({
     })
   })
 
-  /**
+  /*
    * Return functions from a functions ID
    */
   passport.deserializeUser((id, next) => {

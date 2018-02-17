@@ -197,15 +197,27 @@ It is where the **next-auth.functions.js** and **next-auth.providers.js** files 
 
 Methods for user management and sending email are defined in **next-auth.functions.js**
 
+The example configuration provided is for Mongo DB. By defining the behaviour in these functions you can use NextAuth with any database, including a relational database that uses SQL.
+
+#### Required
+
 * find({id,email,emailToken,provider})
 * insert(user, oAuthProfile)
 * update(user, oAuthProfile)
 * remove(id)
 * serialize(user)
 * deserialize(id)
-* sendSigninEmail({email, url})
 
-The example configuration provided is for Mongo DB. By defining the behaviour in these functions you can use NextAuth with any database, including a relational database that uses SQL.
+#### Optional
+
+* sendSigninEmail({email, url, req})
+* signIn({form, req})
+
+The `sendSigninEmail()` method is used to send an email for email token based sign in (one time use passwords). Omit it or set it to null to disable email based sign in.
+
+The `signIn()` method is used to handle authenticating with custom credentials (e.g. username and password, 2FA token, etc). Omit it or leave it undefined unless you need it.
+
+You can use any combination of authentication methods (email, credentials, oAuth providers).
 
 ### next-auth.providers.js 
 

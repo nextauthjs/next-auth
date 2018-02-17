@@ -57,16 +57,16 @@ const nodemailerDirectTransport = require('nodemailer-direct-transport')
 let nodemailerTransport = nodemailerDirectTransport()
 if (process.env.EMAIL_SERVER && process.env.EMAIL_USERNAME && process.env.EMAIL_PASSWORD) {
   nodemailerTransport = nodemailerSmtpTransport({
-      host: process.env.EMAIL_SERVER,
-      port: process.env.EMAIL_PORT || 25,
-      secure: true,
-      auth: {
-        user: process.env.EMAIL_USERNAME,
-        pass: process.env.EMAIL_PASSWORD
-      }
-    })
+    host: process.env.EMAIL_SERVER,
+    port: process.env.EMAIL_PORT || 25,
+    secure: true,
+    auth: {
+      user: process.env.EMAIL_USERNAME,
+      pass: process.env.EMAIL_PASSWORD
+    }
+  })
 }
-        
+
 module.exports = () => {
   return new Promise((resolve, reject) => {
     if (process.env.MONGO_URI) { 
@@ -166,8 +166,8 @@ module.exports = () => {
           // Handle responses from deserialize()
           return Promise.resolve(user.id)
         } else if (user._id) {
-          // Handle responses from find(), insert(), update() 
-          return Promise.resolve(user._id) 
+          // Handle responses from find(), insert(), update()
+          return Promise.resolve(user._id)
         } else {
           return Promise.reject(new Error("Unable to serialise user"))
         }
@@ -193,11 +193,14 @@ module.exports = () => {
           })
         })
       },
-      // Define method for sending links for signing in over email.
-      sendSignInEmail: ({
-        email = null,
-        url = null
-        } = {}) => {
+      // Email Sign In
+      //
+      // Accounts are created automatically, as when signing in via oAuth.
+      // Users are sent one-time use sign in tokens in links. This avoids
+      // storing user supplied passwords anywhere, preventing password re-use.
+      //
+      // To disable this option, do not set sendSignInEmail (or set it to null).
+      sendSignInEmail: ({email, url, req}) => {
         nodemailer
         .createTransport(nodemailerTransport)
         .sendMail({
@@ -213,8 +216,40 @@ module.exports = () => {
         })
         if (process.env.NODE_ENV === 'development')  {
           console.log('Generated sign in link ' + url + ' for ' + email)
-        }   
+        }
       },
+      // Credentials Sign In
+      //
+      // If you use this you will need to define your own way to validate 
+      // credentials. Unlike with oAuth or Email Sign In, accounts are not 
+      // created automatically so you will need to provide a way to create them.
+      //
+      // This feature is intended for strategies like Two Factor Authentication.
+      //
+      // To disable this option, do not set signin (or set it to null).
+      /*
+      signIn: ({form, req}) => {
+        return new Promise((resolve, reject) => {
+          // Should validate credentials (e.g. hash password, compare 2FA token
+          // etc) and return a valid user object from a database.
+            return usersCollection.findOne({
+            email: form.email
+          }, (err, user) => {
+            if (err) return reject(err)
+            if (!user) return resolve(null)
+            
+            // Check credentials - e.g. compare bcrypt password hashes
+            if (form.password == "test1234") {
+              // If valid, return user object - e.g. { id, name, email }
+              return resolve(user)
+            } else {
+              // If invalid, return null
+              return resolve(null)
+            }
+          })
+        })
+      }
+      */
     })
   })
 }

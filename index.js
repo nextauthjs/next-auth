@@ -63,11 +63,17 @@ module.exports = (nextApp, {
     remove: (id) => { Promise.resolve(id) },
     serialize: (user) => { Promise.resolve(id) },
     deserialize: (id) => { Promise.resolve(user) },
-    sendSignInEmail: ({
+    sendSignInEmail: null, /* ({
       email = null,
       url = null,
       req = null
     } = {}) => { Promise.resolve(true) }
+    */
+    signIn: null /* ({
+      email = null,
+      password = null
+    } = {}) => { Promise.resolve(user) }
+    */
   }
 } = {}) => {
   
@@ -88,7 +94,7 @@ module.exports = (nextApp, {
     })
   }
 
-  /**
+  /*
    * Set up body parsing, express sessions and add CSRF tokens.
    *
    * You can set bodyParser to false and pass an Express instance if you want
@@ -119,7 +125,7 @@ module.exports = (nextApp, {
     expressApp.set('trust proxy', 1)
   }
 
-  /**
+  /*
    * With sessions configured we need to configure Passport and trigger
    * passport.initialize() before we add any other routes.
    */
@@ -130,7 +136,7 @@ module.exports = (nextApp, {
     functions: functions
   })
 
-  /**
+  /*
    * Add route to get CSRF token via AJAX
    */
   expressApp.get(`${pathPrefix}/csrf`, (req, res) => {
@@ -139,7 +145,7 @@ module.exports = (nextApp, {
     })
   })
 
-  /**
+  /*
    * Return session info
    */
   expressApp.get(`${pathPrefix}/session`, (req, res) => {
@@ -162,7 +168,7 @@ module.exports = (nextApp, {
     return res.json(session)
   })
   
-  /**
+  /*
    * Return list of which accounts are already linked.
    * 
    * We define this both as a server side function and a RESTful endpoint so 
@@ -222,7 +228,7 @@ module.exports = (nextApp, {
     })
   })
 
-  /**
+  /*
    * Return list of configured oAuth Providers
    * 
    * We define this both as a server side function and a RESTful endpoint so 
@@ -257,80 +263,133 @@ module.exports = (nextApp, {
       return res.json(configuredProviders)
     })
   })
+
+
+  /*
+   * Enable /auth/signin routes if signIn() function is passed
+   */
+  if (functions.signIn) {
+    expressApp.post(`${pathPrefix}/signin`, (req, res) => {
+      // Passes all supplied credentials to the signIn function
+      functions.signIn({
+        form: req.body,
+        req: req
+      })
+      .then(user => {
+        if (user) {
+          // If signIn() returns a user, sign in as them
+          req.logIn(user, (err) => {
+            if (err) return res.redirect(`${pathPrefix}/error?action=signin&type=credentials`)
+            if (req.xhr) {
+              // If AJAX request (from client with JS), return JSON response
+              return res.json({success: true})
+            } else {
+              // If normal form POST (from client without JS) return redirect
+              return res.redirect(`${pathPrefix}/callback?action=signin&service=credentials`)
+            }
+          })
+        } else {
+          // If no user object is returned, bounce back to the sign in page
+          return res.redirect(`${pathPrefix}`)
+        }
+      })
+      .catch(err => {
+        return res.redirect(`${pathPrefix}/error?action=signin&type=credentials`)
+      })
+    })
+  }
   
-  /**
-   * Generate a one time use sign in link and email it to the user
+  /*
+   * Enable /auth/email/signin  routes if sendSignInEmail() function is passed
    */
-  expressApp.post(`${pathPrefix}/email/signin`, (req, res) => {
-    const email = req.body.email || null
+  if (functions.sendSignInEmail) {
+    /*
+     * Generate a one time use sign in link and email it to the user
+     */
+    expressApp.post(`${pathPrefix}/email/signin`, (req, res) => {
+      const email = req.body.email || null
     
-    if (!email || email.trim() === '') {
-      res.redirect(`${pathPrefix}`)
-    }
+      if (!email || email.trim() === '') {
+        res.redirect(`${pathPrefix}`)
+      }
 
-    const token = uuid()
-    const url = (serverUrl || `${req.protocol}://${req.headers.host}`) + `${pathPrefix}/email/signin/${token}`
+      const token = uuid()
+      const url = (serverUrl || `${req.protocol}://${req.headers.host}`) + `${pathPrefix}/email/signin/${token}`
 
-    // Create verification token save it to database
-    functions.find({ email: email })
-    .then(user => {
-      if (user) {
-        // If a user with that email address exists already, update token.
-        user.emailToken = token
-        return functions.update(user)
-      } else {
-        // If the user does not exist, create a new account with the token.
-        return functions.insert({
-          email: email,
-          emailToken: token
+      // Create verification token save it to database
+      functions.find({ email: email })
+      .then(user => {
+        if (user) {
+          // If a user with that email address exists already, update token.
+          user.emailToken = token
+          return functions.update(user)
+        } else {
+          // If the user does not exist, create a new account with the token.
+          return functions.insert({
+            email: email,
+            emailToken: token
+          })
+        }
+      })
+      .then(user => {
+        functions.sendSignInEmail({
+          email: user.email,
+          url: url,
+          req: req
         })
-      }
-    })
-    .then(user => {
-      functions.sendSignInEmail({
-        email: user.email,
-        url: url
+        if (req.xhr) {
+          // If AJAX request (from client with JS), return JSON response
+          return res.json({success: true})
+        } else {
+          // If normal form POST (from client without JS) return redirect
+          return res.redirect(`${pathPrefix}/check-email?email=${email}`)
+        }
       })
-      return res.redirect(`${pathPrefix}/check-email?email=${email}`)
-    })
-    .catch(err => {
-      return res.redirect(`${pathPrefix}/error?action=signin&type=email&email=${email}`)
-    })
-  })
-
-  /**
-   * Verify token in callback URL for email sign in 
-   */
-  expressApp.get(`${pathPrefix}/email/signin/:token`, (req, res) => {
-    if (!req.params.token) {
-      return res.redirect(`${pathPrefix}/error?action=signin&type=token-missing`)
-    }
-
-    functions.find({ emailToken: req.params.token })
-    .then(user => {
-      if (user) {
-        // Delete current token so it cannot be used again
-        delete user.emailToken
-        // Mark email as verified now we know they have access to it
-        user.emailVerified = true
-        return functions.update(user)
-      } else {
-        return Promise.reject(new Error("Token not valid"))
-      }
-    })
-    .then(user => {
-      // If the user object is valid, sign the user in
-      req.logIn(user, (err) => {
-        if (err) throw err
-        return res.redirect(`${pathPrefix}/callback?action=signin&service=email`)
+      .catch(err => {
+        return res.redirect(`${pathPrefix}/error?action=signin&type=email&email=${email}`)
       })
     })
-    .catch(err => {
-      return res.redirect(`${pathPrefix}/error?action=signin&type=token-invalid`)
-    })
-  })
 
-  /**
+    /*
+     * Verify token in callback URL for email sign in 
+     */
+    expressApp.get(`${pathPrefix}/email/signin/:token`, (req, res) => {
+      if (!req.params.token) {
+        return res.redirect(`${pathPrefix}/error?action=signin&type=token-missing`)
+      }
+
+      functions.find({ emailToken: req.params.token })
+      .then(user => {
+        if (user) {
+          // Delete current token so it cannot be used again
+          delete user.emailToken
+          // Mark email as verified now we know they have access to it
+          user.emailVerified = true
+          return functions.update(user)
+        } else {
+          return Promise.reject(new Error("Token not valid"))
+        }
+      })
+      .then(user => {
+        // If the user object is valid, sign the user in
+        req.logIn(user, (err) => {
+          if (err) return res.redirect(`${pathPrefix}/error?action=signin&type=token-invalid`)
+          if (req.xhr) {
+            // If AJAX request (from client with JS), return JSON response
+            return res.json({success: true})
+          } else {
+            // If normal form POST (from client without JS) return redirect
+            return res.redirect(`${pathPrefix}/callback?action=signin&service=email`)
+          }
+        })
+      })
+      .catch(err => {
+        return res.redirect(`${pathPrefix}/error?action=signin&type=token-invalid`)
+      })
+    })
+  }
+
+  /*
    * Sign a user out
    */
   expressApp.post(`${pathPrefix}/signout`, (req, res) => {

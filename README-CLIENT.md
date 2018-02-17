@@ -18,11 +18,13 @@ When using Server Side Rendering and passed `req` object from **getInitialProps(
 
 When using Client Side Rendering it will use localStorage (if avalible) to check for cached session data and if not found or expired it call the `/auth/session` end point.
 
-### NextAuthClient.signin({ email })
+### NextAuthClient.signin(string or object)
 
-Client side only method. Request an email sign in token.
+Client side only method.
 
-Makes POST request to `/auth/signin`.
+If passed a string treats it as an email address, generates an email sign in token and makes POST request to `/auth/email/signin`.
+
+If passed an object treats it as a form to be handled by a custom signIn() function and makes a POST request to `/auth/signin`.
 
 ### NextAuthClient.signout()
 

@@ -39,7 +39,7 @@ export default class extends React.Component {
     .then(() => {
       Router.push(`/auth/check-email?email=${this.state.email}`)
     })
-    .catch(err => {
+    .catch(() => {
       Router.push(`/auth/error?action=signin&type=email&email=${this.state.email}`)
     })
   }
@@ -55,7 +55,7 @@ export default class extends React.Component {
           </Head>
           <div className="text-center">
             <h1 className="display-4 mt-3">NextAuth Example</h1>
-            <p className="lead mt-3 mb-1">You are signed in as <span className="font-weight-bold">{this.props.session.user.name || this.props.session.user.email}</span>.</p>
+            <p className="lead mt-3 mb-1">You are signed in as <span className="font-weight-bold">{this.props.session.user.email}</span>.</p>
           </div>
           <div className="row">
             <div className="col-sm-5 mr-auto ml-auto">
@@ -101,6 +101,9 @@ export default class extends React.Component {
               </div>
             </div>
           </div>
+          <p className="text-center small">
+            <Link href="/auth/credentials"><a>Sign in with credentials</a></Link>
+          </p>
           <p className="text-center">
             <Link href="/"><a>Home</a></Link>
           </p>

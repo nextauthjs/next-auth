@@ -33,6 +33,8 @@ This example includes the following pages:
 * pages/auth/check-email.js
 * pages/auth/callback.js
 
+The file `pages/auth/credentials.js` provides an additional example of how to use a custom authentication handler defined in `next-auth.functions.js`.
+
 ## Configuration
 
 It also includes the following configuration files:
