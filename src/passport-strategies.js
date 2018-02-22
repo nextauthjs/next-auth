@@ -309,7 +309,7 @@ module.exports = ({
           delete user[providerName.toLowerCase()]
         }
 
-        return functions.update(user)
+        return functions.update(user, null, { delete: providerName.toLowerCase() })
         .then(user => {
           return res.redirect(`${pathPrefix}/callback?action=unlink&service=${providerName.toLowerCase()}`)
         })

@@ -365,7 +365,7 @@ module.exports = (nextApp, {
           delete user.emailToken
           // Mark email as verified now we know they have access to it
           user.emailVerified = true
-          return functions.update(user)
+          return functions.update(user, null, { delete: 'emailToken' })
         } else {
           return Promise.reject(new Error("Token not valid"))
         }
