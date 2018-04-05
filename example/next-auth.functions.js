@@ -59,7 +59,7 @@ if (process.env.EMAIL_SERVER && process.env.EMAIL_USERNAME && process.env.EMAIL_
   nodemailerTransport = nodemailerSmtpTransport({
     host: process.env.EMAIL_SERVER,
     port: process.env.EMAIL_PORT || 25,
-    secure: true,
+    secure: process.env.EMAIL_SECURE || true,
     auth: {
       user: process.env.EMAIL_USERNAME,
       pass: process.env.EMAIL_PASSWORD
