@@ -10,6 +10,7 @@ const uuid = require('uuid/v4')
 module.exports = (nextApp, {
   bodyParser = true,
   csrf = true,
+  csrfOptions = {},
   // URL base path for authentication routes (optional).
   // Note: The prefix value of '/auth' is currently hard coded in 
   // next-auth-client so you should not change this unless you also modify it.
@@ -119,7 +120,7 @@ module.exports = (nextApp, {
     }
   }))
   if (csrf === true) {
-    expressApp.use(lusca.csrf())
+    expressApp.use(lusca.csrf(csrfOptions))
   }
   if (trustProxy === true) {
     expressApp.set('trust proxy', 1)
