@@ -1,12 +1,12 @@
 module.exports = {
   entry: './src/client/index.js',
   output: {
-    filename: '../client.js',
+    filename: './client.js',
     library: 'next-auth-client',
     libraryTarget: 'umd'
   },
   module: {
-    rules: [
+    loaders: [
       {
         test: /\.js$/,
         exclude: /node_modules/
