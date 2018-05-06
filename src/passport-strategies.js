@@ -66,7 +66,7 @@ module.exports = ({
     getProfile
   }) => {
 
-    strategyOptions.callbackURL = (serverUrl || '') + `${pathPrefix}/oauth/${providerName.toLowerCase()}/callback`
+    strategyOptions.callbackURL = (strategyOptions.callbackURL || (serverUrl || '') + `${pathPrefix}/oauth/${providerName.toLowerCase()}/callback`)
     strategyOptions.passReqToCallback = true
 
     passport.use(new Strategy(strategyOptions, (req, accessToken, refreshToken, _profile, next) => {
