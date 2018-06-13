@@ -4,7 +4,7 @@ To use oAuth you need to configure environment variables with ID and secret and 
 
 This project comes pre-configured to handle Facebook, Google and Twitter oAuth if you provide the ID and sercret for the service via environment variables.
 
-You can pass them on the command line or put them in `.env` file which will be loaded at startup (see [.env.default](https://github.com/iaincollins/next-auth/blob/master/example/.env.default) for an example).
+You can pass them on the command line or put them in `.env` file which will be loaded at startup (see [.env.example](https://github.com/9oelM/next-auth/blob/master/example/.env.example) for an example).
 
 If you want to add new oAuth providers (such as GitHub), you will need to:
 
