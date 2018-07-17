@@ -4,7 +4,7 @@ To use oAuth you need to configure environment variables with ID and secret and 
 
 This project comes pre-configured to handle Facebook, Google and Twitter oAuth if you provide the ID and sercret for the service via environment variables.
 
-You can pass them on the command line or put them in `.env` file which will be loaded at startup (see [.env.example](https://github.com/9oelM/next-auth/blob/master/example/.env.example) for an example).
+You can pass them on the command line or put them in `.env` file which will be loaded at startup (see [.env.example](https://github.com/iaincollins/next-auth/blob/master/example/.env.example) for an example).
 
 If you want to add new oAuth providers (such as GitHub), you will need to:
 
@@ -73,14 +73,13 @@ Environment variables:
   
 Configuration steps:
 
-1. Sign in at [https://dev.twitter.com](https://dev.twitter.com/)
-2. From the profile picture dropdown menu select **My Applications**
-3. Click **Create a new application**
-4. Enter your application name, website and description
-5. For **Callback URL**: `http://your-server.example.com/auth/oauth/twitter/callback`
-6. Go to **Settings** tab
-7. Under *Application Type* select **Read and Write** access
-8. Check the box **Allow this application to be used to Sign in with Twitter**
-9. Click **Update this Twitter's applications settings**
-10. Specify *Consumer Key* as the **TWITTER_KEY** Config Variable
-11. Specify *Consumer Secret* as the **TWITTER_SECRET** Config Variable
+1. Sign in at [https://apps.twitter.com](https://apps.twitter.com/)
+2. Click **Create a new application**
+3. Enter your application name, website and description
+4. For **Callback URL**: `http://your-server.example.com/auth/oauth/twitter/callback`
+5. Go to **Settings** tab
+6. Under *Application Type* select **Read and Write** access
+7. Check the box **Allow this application to be used to Sign in with Twitter**
+8. Click **Update this Twitter's applications settings**
+9. Specify *Consumer Key* as the **TWITTER_KEY** Config Variable
+10. Specify *Consumer Secret* as the **TWITTER_SECRET** Config Variable
