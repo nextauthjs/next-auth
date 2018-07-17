@@ -80,6 +80,8 @@ export default class extends React.Component {
                 If you need password based sign in, two factor authentication 
                 or some other credentials based sign in method, you can define
                 a signin() function in <strong>next-auth.functions.js</strong>.
+              </p>
+              <p>
                 You can pass in any properties you need (e.g. username and password,
                 a token, etc) to NextAuth.signin().
               </p>

@@ -144,12 +144,17 @@ export default class {
       if (response.ok) {
         return response
       } else {
-        return Promise.reject(Error('Unexpected response when trying to get oAuth providers'))
+        console.log("NextAuth Error Fetching Providers")
+        return null
       }
     })
     .then(response => response.json())
     .then(data => data)
-    .catch(() => Error('Unable to get oAuth providers'))
+    .catch((e) => {
+      console.log("NextAuth Error Loading Providers")
+      console.log(e)
+      return null
+    })
   }
 
 

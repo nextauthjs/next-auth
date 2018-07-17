@@ -1,113 +1,277 @@
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("isomorphic-fetch"));
-	else if(typeof define === 'function' && define.amd)
-		define(["isomorphic-fetch"], factory);
-	else if(typeof exports === 'object')
-		exports["next-auth-client"] = factory(require("isomorphic-fetch"));
-	else
-		root["next-auth-client"] = factory(root["isomorphic-fetch"]);
-})(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE_2__) {
-return /******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/*!*****************************!*\
-  !*** ./src/client/index.js ***!
-  \*****************************/
-/*! exports provided: NextAuth */
-/*! all exports used */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('isomorphic-fetch')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'isomorphic-fetch'], factory) :
+  (factory((global['next-auth-client'] = {}),null));
+}(this, (function (exports,fetch) { 'use strict';
 
-"use strict";
-eval("Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true });\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__next_auth_client__ = __webpack_require__(/*! ./next-auth-client */ 1);\n/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, \"NextAuth\", function() { return __WEBPACK_IMPORTED_MODULE_0__next_auth_client__[\"a\"]; });\n\n\n\n\n\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMC5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL3NyYy9jbGllbnQvaW5kZXguanM/MTAwYyJdLCJzb3VyY2VzQ29udGVudCI6WyIndXNlIHN0cmljdCdcblxuaW1wb3J0IE5leHRBdXRoIGZyb20gJy4vbmV4dC1hdXRoLWNsaWVudCdcblxuZXhwb3J0IHtcbiAgTmV4dEF1dGhcbn1cblxuXG5cbi8vLy8vLy8vLy8vLy8vLy8vL1xuLy8gV0VCUEFDSyBGT09URVJcbi8vIC4vc3JjL2NsaWVudC9pbmRleC5qc1xuLy8gbW9kdWxlIGlkID0gMFxuLy8gbW9kdWxlIGNodW5rcyA9IDAiXSwibWFwcGluZ3MiOiJBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBR0E7Iiwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///0\n");
+  fetch = fetch && fetch.hasOwnProperty('default') ? fetch['default'] : fetch;
 
-/***/ }),
-/* 1 */
-/*!****************************************!*\
-  !*** ./src/client/next-auth-client.js ***!
-  \****************************************/
-/*! exports provided: default */
-/*! exports used: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+  class nextAuthClient {
+    /**
+     * This is an async, isometric method which returns a session object - 
+     * either by looking up the current express session object when run on the
+     * server, or by using fetch (and optionally caching the result in local
+     * storage) when run on the client.  
+     * 
+     * Note that actual session tokens are not stored in local storage, they are
+     * kept in an HTTP Only cookie as protection against session hi-jacking by
+     * malicious JavaScript.
+     **/
+    static async init({
+      req = null,
+      force = false
+    } = {}) {
+      let session = {};
+      if (req) {
+        if (req.session) {
+          // If running on the server session data should be in the req object
+          session.csrfToken = req.connection._httpMessage.locals._csrf;
+          session.expires = req.session.cookie._expires;
+          // If the user is logged in, add the user to the session object
+          if (req.user) {
+            session.user = req.user;
+          }
+        }
+      } else {
+        // If running in the browser attempt to load session from sessionStore
+        if (force === true) {
+          // If force update is set, reset data store
+          this._removeLocalStore('session');
+        } else {
+          session = this._getLocalStore('session');
+        }
+      }
 
-"use strict";
-eval("/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_isomorphic_fetch__ = __webpack_require__(/*! isomorphic-fetch */ 2);\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_isomorphic_fetch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_isomorphic_fetch__);\n\n\n\n\n/* harmony default export */ __webpack_exports__[\"a\"] = (class {\n  /**\n   * This is an async, isometric method which returns a session object - \n   * either by looking up the current express session object when run on the\n   * server, or by using fetch (and optionally caching the result in local\n   * storage) when run on the client.  \n   * \n   * Note that actual session tokens are not stored in local storage, they are\n   * kept in an HTTP Only cookie as protection against session hi-jacking by\n   * malicious JavaScript.\n   **/\n  static async init({\n    req = null,\n    force = false\n  } = {}) {\n    let session = {}\n    if (req) {\n      if (req.session) {\n        // If running on the server session data should be in the req object\n        session.csrfToken = req.connection._httpMessage.locals._csrf\n        session.expires = req.session.cookie._expires\n        // If the user is logged in, add the user to the session object\n        if (req.user) {\n          session.user = req.user\n        }\n      }\n    } else {\n      // If running in the browser attempt to load session from sessionStore\n      if (force === true) {\n        // If force update is set, reset data store\n        this._removeLocalStore('session')\n      } else {\n        session = this._getLocalStore('session')\n      }\n    }\n\n    // If session data exists, has not expired AND force is not set then\n    // return the stored session we already have.\n    if (session && Object.keys(session).length > 0 && session.expires && session.expires > Date.now()) {\n      return new Promise(resolve => {\n        resolve(session)\n      })\n    } else {\n      // If running on server, but session has expired return empty object\n      // (no valid session)\n      if (typeof window === 'undefined') {\n        return new Promise(resolve => {\n          resolve({})\n        })\n      }\n    }\n\n    // If we don't have session data, or it's expired, or force is set\n    // to true then revalidate it by fetching it again from the server.\n    return __WEBPACK_IMPORTED_MODULE_0_isomorphic_fetch___default()('/auth/session', {\n      credentials: 'same-origin'\n    })\n    .then(response => {\n      if (response.ok) {\n        return response\n      } else {\n        return Promise.reject(Error('HTTP error when trying to get session'))\n      }\n    })\n    .then(response => response.json())\n    .then(data => {\n      // Update session with session info\n      session = data\n\n      // Set a value we will use to check this client should silently\n      // revalidate, using the value for revalidateAge returned by the server.\n      session.expires = Date.now() + session.revalidateAge\n\n      // Save changes to session\n      this._saveLocalStore('session', session)\n\n      return session\n    })\n    .catch(() => Error('Unable to get session'))\n  }\n\n  /**\n   * A simple static method to get the CSRF Token is provided for convenience\n   **/\n  static async csrfToken() {\n    return __WEBPACK_IMPORTED_MODULE_0_isomorphic_fetch___default()('/auth/csrf', {\n      credentials: 'same-origin'\n    })\n    .then(response => {\n      if (response.ok) {\n        return response\n      } else {\n        return Promise.reject(Error('Unexpected response when trying to get CSRF token'))\n      }\n    })\n    .then(response => response.json())\n    .then(data => data.csrfToken)\n    .catch(() => Error('Unable to get CSRF token'))\n  }\n\n  /**\n   * A static method to get list of currently linked oAuth accounts\n   **/\n  static async linked({\n    req = null\n  } = {}) {\n    // If running server side, uses server side method\n    if (req) return req.linked()\n    \n    // If running client side, use RESTful endpoint\n    return __WEBPACK_IMPORTED_MODULE_0_isomorphic_fetch___default()('/auth/linked', {\n      credentials: 'same-origin'\n    })\n    .then(response => {\n      if (response.ok) {\n        return response\n      } else {\n        return Promise.reject(Error('Unexpected response when trying to get linked accounts'))\n      }\n    })\n    .then(response => response.json())\n    .then(data => data)\n    .catch(() => Error('Unable to get linked accounts'))\n  }\n  \n  /**\n   * A static method to get list of currently configured oAuth providers\n   **/\n  static async providers({\n    req = null\n  } = {}) {\n    // If running server side, uses server side method\n    if (req) return req.providers()\n    \n    // If running client side, use RESTful endpoint\n    return __WEBPACK_IMPORTED_MODULE_0_isomorphic_fetch___default()('/auth/providers', {\n      credentials: 'same-origin'\n    })\n    .then(response => {\n      if (response.ok) {\n        return response\n      } else {\n        return Promise.reject(Error('Unexpected response when trying to get oAuth providers'))\n      }\n    })\n    .then(response => response.json())\n    .then(data => data)\n    .catch(() => Error('Unable to get oAuth providers'))\n  }\n\n\n  /*\n   * Sign in\n   * \n   * Will post a form to /auth/signin auth route if an object is passed.\n   * If the details are valid a session will be created and you should redirect\n   * to your callback page so the session is loaded in the client.\n   *\n   * If just a string containing an email address is specififed will generate a\n   * a one-time use sign in link and send it via email; you should redirect to a\n   * page telling the user to check their inbox for an email with the link.\n   */\n  static async signin(params) {\n    // Params can be just string (an email address) or an object (form fields)\n    const formData = (typeof params === 'string') ? { email: params } : params\n\n    // Use either the email token generation route or the custom form auth route\n    const route = (typeof params === 'string') ? '/auth/email/signin' : '/auth/signin' \n\n    // Add latest CSRF Token to request\n    formData._csrf = await this.csrfToken()\n    \n    // Encoded form parser for sending data in the body\n    const encodedForm = Object.keys(formData).map((key) => {\n      return encodeURIComponent(key) + '=' + encodeURIComponent(formData[key])\n    }).join('&')\n\n    return __WEBPACK_IMPORTED_MODULE_0_isomorphic_fetch___default()(route, {\n      method: 'POST',\n      headers: {\n        'Content-Type': 'application/x-www-form-urlencoded',\n        'X-Requested-With': 'XMLHttpRequest' // So Express can detect AJAX post\n      },\n      body: encodedForm,\n      credentials: 'same-origin'\n    })\n    .then(async response => {\n      if (response.ok) {\n        return await response.json()\n      } else {\n        throw new Error('HTTP error while attempting to sign in')\n      }\n    })\n    .then(data => {\n      if (data.success && data.success === true) {\n        return Promise.resolve(true)\n      } else {\n        return Promise.resolve(false)\n      }\n    })\n  }\n\n  static async signout() {\n    // Signout from the server\n    const csrfToken = await this.csrfToken()\n    const formData = { _csrf: csrfToken }\n\n    // Encoded form parser for sending data in the body\n    const encodedForm = Object.keys(formData).map((key) => {\n      return encodeURIComponent(key) + '=' + encodeURIComponent(formData[key])\n    }).join('&')\n    \n    // Remove cached session data\n    this._removeLocalStore('session')\n\n    return __WEBPACK_IMPORTED_MODULE_0_isomorphic_fetch___default()('/auth/signout', {\n      method: 'POST',\n      headers: {\n        'Content-Type': 'application/x-www-form-urlencoded'\n      },\n      body: encodedForm,\n      credentials: 'same-origin'\n    })\n    .then(() => {\n      return true\n    })\n    .catch(() => Error('Unable to sign out'))\n  }\n\n  // The Web Storage API is widely supported, but not always available (e.g.\n  // it can be restricted in private browsing mode, triggering an exception).\n  // We handle that silently by just returning null here.\n  static _getLocalStore(name) {\n    try {\n      return JSON.parse(localStorage.getItem(name))\n    } catch (err) {\n      return null\n    }\n  }\n  \n  static _saveLocalStore(name, data) {\n    try {\n      localStorage.setItem(name, JSON.stringify(data))\n      return true\n    } catch (err) {\n      return false\n    }\n  }\n  \n  static _removeLocalStore(name) {\n    try {\n      localStorage.removeItem(name)\n      return true\n    } catch (err) {\n      return false\n    }\n  }\n});//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMS5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL3NyYy9jbGllbnQvbmV4dC1hdXRoLWNsaWVudC5qcz81NGQwIl0sInNvdXJjZXNDb250ZW50IjpbIid1c2Ugc3RyaWN0J1xuXG5pbXBvcnQgZmV0Y2ggZnJvbSAnaXNvbW9ycGhpYy1mZXRjaCdcblxuZXhwb3J0IGRlZmF1bHQgY2xhc3Mge1xuICAvKipcbiAgICogVGhpcyBpcyBhbiBhc3luYywgaXNvbWV0cmljIG1ldGhvZCB3aGljaCByZXR1cm5zIGEgc2Vzc2lvbiBvYmplY3QgLSBcbiAgICogZWl0aGVyIGJ5IGxvb2tpbmcgdXAgdGhlIGN1cnJlbnQgZXhwcmVzcyBzZXNzaW9uIG9iamVjdCB3aGVuIHJ1biBvbiB0aGVcbiAgICogc2VydmVyLCBvciBieSB1c2luZyBmZXRjaCAoYW5kIG9wdGlvbmFsbHkgY2FjaGluZyB0aGUgcmVzdWx0IGluIGxvY2FsXG4gICAqIHN0b3JhZ2UpIHdoZW4gcnVuIG9uIHRoZSBjbGllbnQuICBcbiAgICogXG4gICAqIE5vdGUgdGhhdCBhY3R1YWwgc2Vzc2lvbiB0b2tlbnMgYXJlIG5vdCBzdG9yZWQgaW4gbG9jYWwgc3RvcmFnZSwgdGhleSBhcmVcbiAgICoga2VwdCBpbiBhbiBIVFRQIE9ubHkgY29va2llIGFzIHByb3RlY3Rpb24gYWdhaW5zdCBzZXNzaW9uIGhpLWphY2tpbmcgYnlcbiAgICogbWFsaWNpb3VzIEphdmFTY3JpcHQuXG4gICAqKi9cbiAgc3RhdGljIGFzeW5jIGluaXQoe1xuICAgIHJlcSA9IG51bGwsXG4gICAgZm9yY2UgPSBmYWxzZVxuICB9ID0ge30pIHtcbiAgICBsZXQgc2Vzc2lvbiA9IHt9XG4gICAgaWYgKHJlcSkge1xuICAgICAgaWYgKHJlcS5zZXNzaW9uKSB7XG4gICAgICAgIC8vIElmIHJ1bm5pbmcgb24gdGhlIHNlcnZlciBzZXNzaW9uIGRhdGEgc2hvdWxkIGJlIGluIHRoZSByZXEgb2JqZWN0XG4gICAgICAgIHNlc3Npb24uY3NyZlRva2VuID0gcmVxLmNvbm5lY3Rpb24uX2h0dHBNZXNzYWdlLmxvY2Fscy5fY3NyZlxuICAgICAgICBzZXNzaW9uLmV4cGlyZXMgPSByZXEuc2Vzc2lvbi5jb29raWUuX2V4cGlyZXNcbiAgICAgICAgLy8gSWYgdGhlIHVzZXIgaXMgbG9nZ2VkIGluLCBhZGQgdGhlIHVzZXIgdG8gdGhlIHNlc3Npb24gb2JqZWN0XG4gICAgICAgIGlmIChyZXEudXNlcikge1xuICAgICAgICAgIHNlc3Npb24udXNlciA9IHJlcS51c2VyXG4gICAgICAgIH1cbiAgICAgIH1cbiAgICB9IGVsc2Uge1xuICAgICAgLy8gSWYgcnVubmluZyBpbiB0aGUgYnJvd3NlciBhdHRlbXB0IHRvIGxvYWQgc2Vzc2lvbiBmcm9tIHNlc3Npb25TdG9yZVxuICAgICAgaWYgKGZvcmNlID09PSB0cnVlKSB7XG4gICAgICAgIC8vIElmIGZvcmNlIHVwZGF0ZSBpcyBzZXQsIHJlc2V0IGRhdGEgc3RvcmVcbiAgICAgICAgdGhpcy5fcmVtb3ZlTG9jYWxTdG9yZSgnc2Vzc2lvbicpXG4gICAgICB9IGVsc2Uge1xuICAgICAgICBzZXNzaW9uID0gdGhpcy5fZ2V0TG9jYWxTdG9yZSgnc2Vzc2lvbicpXG4gICAgICB9XG4gICAgfVxuXG4gICAgLy8gSWYgc2Vzc2lvbiBkYXRhIGV4aXN0cywgaGFzIG5vdCBleHBpcmVkIEFORCBmb3JjZSBpcyBub3Qgc2V0IHRoZW5cbiAgICAvLyByZXR1cm4gdGhlIHN0b3JlZCBzZXNzaW9uIHdlIGFscmVhZHkgaGF2ZS5cbiAgICBpZiAoc2Vzc2lvbiAmJiBPYmplY3Qua2V5cyhzZXNzaW9uKS5sZW5ndGggPiAwICYmIHNlc3Npb24uZXhwaXJlcyAmJiBzZXNzaW9uLmV4cGlyZXMgPiBEYXRlLm5vdygpKSB7XG4gICAgICByZXR1cm4gbmV3IFByb21pc2UocmVzb2x2ZSA9PiB7XG4gICAgICAgIHJlc29sdmUoc2Vzc2lvbilcbiAgICAgIH0pXG4gICAgfSBlbHNlIHtcbiAgICAgIC8vIElmIHJ1bm5pbmcgb24gc2VydmVyLCBidXQgc2Vzc2lvbiBoYXMgZXhwaXJlZCByZXR1cm4gZW1wdHkgb2JqZWN0XG4gICAgICAvLyAobm8gdmFsaWQgc2Vzc2lvbilcbiAgICAgIGlmICh0eXBlb2Ygd2luZG93ID09PSAndW5kZWZpbmVkJykge1xuICAgICAgICByZXR1cm4gbmV3IFByb21pc2UocmVzb2x2ZSA9PiB7XG4gICAgICAgICAgcmVzb2x2ZSh7fSlcbiAgICAgICAgfSlcbiAgICAgIH1cbiAgICB9XG5cbiAgICAvLyBJZiB3ZSBkb24ndCBoYXZlIHNlc3Npb24gZGF0YSwgb3IgaXQncyBleHBpcmVkLCBvciBmb3JjZSBpcyBzZXRcbiAgICAvLyB0byB0cnVlIHRoZW4gcmV2YWxpZGF0ZSBpdCBieSBmZXRjaGluZyBpdCBhZ2FpbiBmcm9tIHRoZSBzZXJ2ZXIuXG4gICAgcmV0dXJuIGZldGNoKCcvYXV0aC9zZXNzaW9uJywge1xuICAgICAgY3JlZGVudGlhbHM6ICdzYW1lLW9yaWdpbidcbiAgICB9KVxuICAgIC50aGVuKHJlc3BvbnNlID0+IHtcbiAgICAgIGlmIChyZXNwb25zZS5vaykge1xuICAgICAgICByZXR1cm4gcmVzcG9uc2VcbiAgICAgIH0gZWxzZSB7XG4gICAgICAgIHJldHVybiBQcm9taXNlLnJlamVjdChFcnJvcignSFRUUCBlcnJvciB3aGVuIHRyeWluZyB0byBnZXQgc2Vzc2lvbicpKVxuICAgICAgfVxuICAgIH0pXG4gICAgLnRoZW4ocmVzcG9uc2UgPT4gcmVzcG9uc2UuanNvbigpKVxuICAgIC50aGVuKGRhdGEgPT4ge1xuICAgICAgLy8gVXBkYXRlIHNlc3Npb24gd2l0aCBzZXNzaW9uIGluZm9cbiAgICAgIHNlc3Npb24gPSBkYXRhXG5cbiAgICAgIC8vIFNldCBhIHZhbHVlIHdlIHdpbGwgdXNlIHRvIGNoZWNrIHRoaXMgY2xpZW50IHNob3VsZCBzaWxlbnRseVxuICAgICAgLy8gcmV2YWxpZGF0ZSwgdXNpbmcgdGhlIHZhbHVlIGZvciByZXZhbGlkYXRlQWdlIHJldHVybmVkIGJ5IHRoZSBzZXJ2ZXIuXG4gICAgICBzZXNzaW9uLmV4cGlyZXMgPSBEYXRlLm5vdygpICsgc2Vzc2lvbi5yZXZhbGlkYXRlQWdlXG5cbiAgICAgIC8vIFNhdmUgY2hhbmdlcyB0byBzZXNzaW9uXG4gICAgICB0aGlzLl9zYXZlTG9jYWxTdG9yZSgnc2Vzc2lvbicsIHNlc3Npb24pXG5cbiAgICAgIHJldHVybiBzZXNzaW9uXG4gICAgfSlcbiAgICAuY2F0Y2goKCkgPT4gRXJyb3IoJ1VuYWJsZSB0byBnZXQgc2Vzc2lvbicpKVxuICB9XG5cbiAgLyoqXG4gICAqIEEgc2ltcGxlIHN0YXRpYyBtZXRob2QgdG8gZ2V0IHRoZSBDU1JGIFRva2VuIGlzIHByb3ZpZGVkIGZvciBjb252ZW5pZW5jZVxuICAgKiovXG4gIHN0YXRpYyBhc3luYyBjc3JmVG9rZW4oKSB7XG4gICAgcmV0dXJuIGZldGNoKCcvYXV0aC9jc3JmJywge1xuICAgICAgY3JlZGVudGlhbHM6ICdzYW1lLW9yaWdpbidcbiAgICB9KVxuICAgIC50aGVuKHJlc3BvbnNlID0+IHtcbiAgICAgIGlmIChyZXNwb25zZS5vaykge1xuICAgICAgICByZXR1cm4gcmVzcG9uc2VcbiAgICAgIH0gZWxzZSB7XG4gICAgICAgIHJldHVybiBQcm9taXNlLnJlamVjdChFcnJvcignVW5leHBlY3RlZCByZXNwb25zZSB3aGVuIHRyeWluZyB0byBnZXQgQ1NSRiB0b2tlbicpKVxuICAgICAgfVxuICAgIH0pXG4gICAgLnRoZW4ocmVzcG9uc2UgPT4gcmVzcG9uc2UuanNvbigpKVxuICAgIC50aGVuKGRhdGEgPT4gZGF0YS5jc3JmVG9rZW4pXG4gICAgLmNhdGNoKCgpID0+IEVycm9yKCdVbmFibGUgdG8gZ2V0IENTUkYgdG9rZW4nKSlcbiAgfVxuXG4gIC8qKlxuICAgKiBBIHN0YXRpYyBtZXRob2QgdG8gZ2V0IGxpc3Qgb2YgY3VycmVudGx5IGxpbmtlZCBvQXV0aCBhY2NvdW50c1xuICAgKiovXG4gIHN0YXRpYyBhc3luYyBsaW5rZWQoe1xuICAgIHJlcSA9IG51bGxcbiAgfSA9IHt9KSB7XG4gICAgLy8gSWYgcnVubmluZyBzZXJ2ZXIgc2lkZSwgdXNlcyBzZXJ2ZXIgc2lkZSBtZXRob2RcbiAgICBpZiAocmVxKSByZXR1cm4gcmVxLmxpbmtlZCgpXG4gICAgXG4gICAgLy8gSWYgcnVubmluZyBjbGllbnQgc2lkZSwgdXNlIFJFU1RmdWwgZW5kcG9pbnRcbiAgICByZXR1cm4gZmV0Y2goJy9hdXRoL2xpbmtlZCcsIHtcbiAgICAgIGNyZWRlbnRpYWxzOiAnc2FtZS1vcmlnaW4nXG4gICAgfSlcbiAgICAudGhlbihyZXNwb25zZSA9PiB7XG4gICAgICBpZiAocmVzcG9uc2Uub2spIHtcbiAgICAgICAgcmV0dXJuIHJlc3BvbnNlXG4gICAgICB9IGVsc2Uge1xuICAgICAgICByZXR1cm4gUHJvbWlzZS5yZWplY3QoRXJyb3IoJ1VuZXhwZWN0ZWQgcmVzcG9uc2Ugd2hlbiB0cnlpbmcgdG8gZ2V0IGxpbmtlZCBhY2NvdW50cycpKVxuICAgICAgfVxuICAgIH0pXG4gICAgLnRoZW4ocmVzcG9uc2UgPT4gcmVzcG9uc2UuanNvbigpKVxuICAgIC50aGVuKGRhdGEgPT4gZGF0YSlcbiAgICAuY2F0Y2goKCkgPT4gRXJyb3IoJ1VuYWJsZSB0byBnZXQgbGlua2VkIGFjY291bnRzJykpXG4gIH1cbiAgXG4gIC8qKlxuICAgKiBBIHN0YXRpYyBtZXRob2QgdG8gZ2V0IGxpc3Qgb2YgY3VycmVudGx5IGNvbmZpZ3VyZWQgb0F1dGggcHJvdmlkZXJzXG4gICAqKi9cbiAgc3RhdGljIGFzeW5jIHByb3ZpZGVycyh7XG4gICAgcmVxID0gbnVsbFxuICB9ID0ge30pIHtcbiAgICAvLyBJZiBydW5uaW5nIHNlcnZlciBzaWRlLCB1c2VzIHNlcnZlciBzaWRlIG1ldGhvZFxuICAgIGlmIChyZXEpIHJldHVybiByZXEucHJvdmlkZXJzKClcbiAgICBcbiAgICAvLyBJZiBydW5uaW5nIGNsaWVudCBzaWRlLCB1c2UgUkVTVGZ1bCBlbmRwb2ludFxuICAgIHJldHVybiBmZXRjaCgnL2F1dGgvcHJvdmlkZXJzJywge1xuICAgICAgY3JlZGVudGlhbHM6ICdzYW1lLW9yaWdpbidcbiAgICB9KVxuICAgIC50aGVuKHJlc3BvbnNlID0+IHtcbiAgICAgIGlmIChyZXNwb25zZS5vaykge1xuICAgICAgICByZXR1cm4gcmVzcG9uc2VcbiAgICAgIH0gZWxzZSB7XG4gICAgICAgIHJldHVybiBQcm9taXNlLnJlamVjdChFcnJvcignVW5leHBlY3RlZCByZXNwb25zZSB3aGVuIHRyeWluZyB0byBnZXQgb0F1dGggcHJvdmlkZXJzJykpXG4gICAgICB9XG4gICAgfSlcbiAgICAudGhlbihyZXNwb25zZSA9PiByZXNwb25zZS5qc29uKCkpXG4gICAgLnRoZW4oZGF0YSA9PiBkYXRhKVxuICAgIC5jYXRjaCgoKSA9PiBFcnJvcignVW5hYmxlIHRvIGdldCBvQXV0aCBwcm92aWRlcnMnKSlcbiAgfVxuXG5cbiAgLypcbiAgICogU2lnbiBpblxuICAgKiBcbiAgICogV2lsbCBwb3N0IGEgZm9ybSB0byAvYXV0aC9zaWduaW4gYXV0aCByb3V0ZSBpZiBhbiBvYmplY3QgaXMgcGFzc2VkLlxuICAgKiBJZiB0aGUgZGV0YWlscyBhcmUgdmFsaWQgYSBzZXNzaW9uIHdpbGwgYmUgY3JlYXRlZCBhbmQgeW91IHNob3VsZCByZWRpcmVjdFxuICAgKiB0byB5b3VyIGNhbGxiYWNrIHBhZ2Ugc28gdGhlIHNlc3Npb24gaXMgbG9hZGVkIGluIHRoZSBjbGllbnQuXG4gICAqXG4gICAqIElmIGp1c3QgYSBzdHJpbmcgY29udGFpbmluZyBhbiBlbWFpbCBhZGRyZXNzIGlzIHNwZWNpZmlmZWQgd2lsbCBnZW5lcmF0ZSBhXG4gICAqIGEgb25lLXRpbWUgdXNlIHNpZ24gaW4gbGluayBhbmQgc2VuZCBpdCB2aWEgZW1haWw7IHlvdSBzaG91bGQgcmVkaXJlY3QgdG8gYVxuICAgKiBwYWdlIHRlbGxpbmcgdGhlIHVzZXIgdG8gY2hlY2sgdGhlaXIgaW5ib3ggZm9yIGFuIGVtYWlsIHdpdGggdGhlIGxpbmsuXG4gICAqL1xuICBzdGF0aWMgYXN5bmMgc2lnbmluKHBhcmFtcykge1xuICAgIC8vIFBhcmFtcyBjYW4gYmUganVzdCBzdHJpbmcgKGFuIGVtYWlsIGFkZHJlc3MpIG9yIGFuIG9iamVjdCAoZm9ybSBmaWVsZHMpXG4gICAgY29uc3QgZm9ybURhdGEgPSAodHlwZW9mIHBhcmFtcyA9PT0gJ3N0cmluZycpID8geyBlbWFpbDogcGFyYW1zIH0gOiBwYXJhbXNcblxuICAgIC8vIFVzZSBlaXRoZXIgdGhlIGVtYWlsIHRva2VuIGdlbmVyYXRpb24gcm91dGUgb3IgdGhlIGN1c3RvbSBmb3JtIGF1dGggcm91dGVcbiAgICBjb25zdCByb3V0ZSA9ICh0eXBlb2YgcGFyYW1zID09PSAnc3RyaW5nJykgPyAnL2F1dGgvZW1haWwvc2lnbmluJyA6ICcvYXV0aC9zaWduaW4nIFxuXG4gICAgLy8gQWRkIGxhdGVzdCBDU1JGIFRva2VuIHRvIHJlcXVlc3RcbiAgICBmb3JtRGF0YS5fY3NyZiA9IGF3YWl0IHRoaXMuY3NyZlRva2VuKClcbiAgICBcbiAgICAvLyBFbmNvZGVkIGZvcm0gcGFyc2VyIGZvciBzZW5kaW5nIGRhdGEgaW4gdGhlIGJvZHlcbiAgICBjb25zdCBlbmNvZGVkRm9ybSA9IE9iamVjdC5rZXlzKGZvcm1EYXRhKS5tYXAoKGtleSkgPT4ge1xuICAgICAgcmV0dXJuIGVuY29kZVVSSUNvbXBvbmVudChrZXkpICsgJz0nICsgZW5jb2RlVVJJQ29tcG9uZW50KGZvcm1EYXRhW2tleV0pXG4gICAgfSkuam9pbignJicpXG5cbiAgICByZXR1cm4gZmV0Y2gocm91dGUsIHtcbiAgICAgIG1ldGhvZDogJ1BPU1QnLFxuICAgICAgaGVhZGVyczoge1xuICAgICAgICAnQ29udGVudC1UeXBlJzogJ2FwcGxpY2F0aW9uL3gtd3d3LWZvcm0tdXJsZW5jb2RlZCcsXG4gICAgICAgICdYLVJlcXVlc3RlZC1XaXRoJzogJ1hNTEh0dHBSZXF1ZXN0JyAvLyBTbyBFeHByZXNzIGNhbiBkZXRlY3QgQUpBWCBwb3N0XG4gICAgICB9LFxuICAgICAgYm9keTogZW5jb2RlZEZvcm0sXG4gICAgICBjcmVkZW50aWFsczogJ3NhbWUtb3JpZ2luJ1xuICAgIH0pXG4gICAgLnRoZW4oYXN5bmMgcmVzcG9uc2UgPT4ge1xuICAgICAgaWYgKHJlc3BvbnNlLm9rKSB7XG4gICAgICAgIHJldHVybiBhd2FpdCByZXNwb25zZS5qc29uKClcbiAgICAgIH0gZWxzZSB7XG4gICAgICAgIHRocm93IG5ldyBFcnJvcignSFRUUCBlcnJvciB3aGlsZSBhdHRlbXB0aW5nIHRvIHNpZ24gaW4nKVxuICAgICAgfVxuICAgIH0pXG4gICAgLnRoZW4oZGF0YSA9PiB7XG4gICAgICBpZiAoZGF0YS5zdWNjZXNzICYmIGRhdGEuc3VjY2VzcyA9PT0gdHJ1ZSkge1xuICAgICAgICByZXR1cm4gUHJvbWlzZS5yZXNvbHZlKHRydWUpXG4gICAgICB9IGVsc2Uge1xuICAgICAgICByZXR1cm4gUHJvbWlzZS5yZXNvbHZlKGZhbHNlKVxuICAgICAgfVxuICAgIH0pXG4gIH1cblxuICBzdGF0aWMgYXN5bmMgc2lnbm91dCgpIHtcbiAgICAvLyBTaWdub3V0IGZyb20gdGhlIHNlcnZlclxuICAgIGNvbnN0IGNzcmZUb2tlbiA9IGF3YWl0IHRoaXMuY3NyZlRva2VuKClcbiAgICBjb25zdCBmb3JtRGF0YSA9IHsgX2NzcmY6IGNzcmZUb2tlbiB9XG5cbiAgICAvLyBFbmNvZGVkIGZvcm0gcGFyc2VyIGZvciBzZW5kaW5nIGRhdGEgaW4gdGhlIGJvZHlcbiAgICBjb25zdCBlbmNvZGVkRm9ybSA9IE9iamVjdC5rZXlzKGZvcm1EYXRhKS5tYXAoKGtleSkgPT4ge1xuICAgICAgcmV0dXJuIGVuY29kZVVSSUNvbXBvbmVudChrZXkpICsgJz0nICsgZW5jb2RlVVJJQ29tcG9uZW50KGZvcm1EYXRhW2tleV0pXG4gICAgfSkuam9pbignJicpXG4gICAgXG4gICAgLy8gUmVtb3ZlIGNhY2hlZCBzZXNzaW9uIGRhdGFcbiAgICB0aGlzLl9yZW1vdmVMb2NhbFN0b3JlKCdzZXNzaW9uJylcblxuICAgIHJldHVybiBmZXRjaCgnL2F1dGgvc2lnbm91dCcsIHtcbiAgICAgIG1ldGhvZDogJ1BPU1QnLFxuICAgICAgaGVhZGVyczoge1xuICAgICAgICAnQ29udGVudC1UeXBlJzogJ2FwcGxpY2F0aW9uL3gtd3d3LWZvcm0tdXJsZW5jb2RlZCdcbiAgICAgIH0sXG4gICAgICBib2R5OiBlbmNvZGVkRm9ybSxcbiAgICAgIGNyZWRlbnRpYWxzOiAnc2FtZS1vcmlnaW4nXG4gICAgfSlcbiAgICAudGhlbigoKSA9PiB7XG4gICAgICByZXR1cm4gdHJ1ZVxuICAgIH0pXG4gICAgLmNhdGNoKCgpID0+IEVycm9yKCdVbmFibGUgdG8gc2lnbiBvdXQnKSlcbiAgfVxuXG4gIC8vIFRoZSBXZWIgU3RvcmFnZSBBUEkgaXMgd2lkZWx5IHN1cHBvcnRlZCwgYnV0IG5vdCBhbHdheXMgYXZhaWxhYmxlIChlLmcuXG4gIC8vIGl0IGNhbiBiZSByZXN0cmljdGVkIGluIHByaXZhdGUgYnJvd3NpbmcgbW9kZSwgdHJpZ2dlcmluZyBhbiBleGNlcHRpb24pLlxuICAvLyBXZSBoYW5kbGUgdGhhdCBzaWxlbnRseSBieSBqdXN0IHJldHVybmluZyBudWxsIGhlcmUuXG4gIHN0YXRpYyBfZ2V0TG9jYWxTdG9yZShuYW1lKSB7XG4gICAgdHJ5IHtcbiAgICAgIHJldHVybiBKU09OLnBhcnNlKGxvY2FsU3RvcmFnZS5nZXRJdGVtKG5hbWUpKVxuICAgIH0gY2F0Y2ggKGVycikge1xuICAgICAgcmV0dXJuIG51bGxcbiAgICB9XG4gIH1cbiAgXG4gIHN0YXRpYyBfc2F2ZUxvY2FsU3RvcmUobmFtZSwgZGF0YSkge1xuICAgIHRyeSB7XG4gICAgICBsb2NhbFN0b3JhZ2Uuc2V0SXRlbShuYW1lLCBKU09OLnN0cmluZ2lmeShkYXRhKSlcbiAgICAgIHJldHVybiB0cnVlXG4gICAgfSBjYXRjaCAoZXJyKSB7XG4gICAgICByZXR1cm4gZmFsc2VcbiAgICB9XG4gIH1cbiAgXG4gIHN0YXRpYyBfcmVtb3ZlTG9jYWxTdG9yZShuYW1lKSB7XG4gICAgdHJ5IHtcbiAgICAgIGxvY2FsU3RvcmFnZS5yZW1vdmVJdGVtKG5hbWUpXG4gICAgICByZXR1cm4gdHJ1ZVxuICAgIH0gY2F0Y2ggKGVycikge1xuICAgICAgcmV0dXJuIGZhbHNlXG4gICAgfVxuICB9XG59XG5cblxuLy8vLy8vLy8vLy8vLy8vLy8vXG4vLyBXRUJQQUNLIEZPT1RFUlxuLy8gLi9zcmMvY2xpZW50L25leHQtYXV0aC1jbGllbnQuanNcbi8vIG1vZHVsZSBpZCA9IDFcbi8vIG1vZHVsZSBjaHVua3MgPSAwIl0sIm1hcHBpbmdzIjoiQUFBQTtBQUFBO0FBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EiLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///1\n");
+      // If session data exists, has not expired AND force is not set then
+      // return the stored session we already have.
+      if (session && Object.keys(session).length > 0 && session.expires && session.expires > Date.now()) {
+        return new Promise(resolve => {
+          resolve(session);
+        })
+      } else {
+        // If running on server, but session has expired return empty object
+        // (no valid session)
+        if (typeof window === 'undefined') {
+          return new Promise(resolve => {
+            resolve({});
+          })
+        }
+      }
 
-/***/ }),
-/* 2 */
-/*!**********************************************************************************************************************************!*\
-  !*** external {"root":"isomorphic-fetch","commonjs2":"isomorphic-fetch","commonjs":"isomorphic-fetch","amd":"isomorphic-fetch"} ***!
-  \**********************************************************************************************************************************/
-/*! dynamic exports provided */
-/*! exports used: default */
-/***/ (function(module, exports) {
+      // If we don't have session data, or it's expired, or force is set
+      // to true then revalidate it by fetching it again from the server.
+      return fetch('/auth/session', {
+        credentials: 'same-origin'
+      })
+      .then(response => {
+        if (response.ok) {
+          return response
+        } else {
+          return Promise.reject(Error('HTTP error when trying to get session'))
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Update session with session info
+        session = data;
 
-eval("module.exports = __WEBPACK_EXTERNAL_MODULE_2__;//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMi5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy9leHRlcm5hbCB7XCJyb290XCI6XCJpc29tb3JwaGljLWZldGNoXCIsXCJjb21tb25qczJcIjpcImlzb21vcnBoaWMtZmV0Y2hcIixcImNvbW1vbmpzXCI6XCJpc29tb3JwaGljLWZldGNoXCIsXCJhbWRcIjpcImlzb21vcnBoaWMtZmV0Y2hcIn0/YzA0ZCJdLCJzb3VyY2VzQ29udGVudCI6WyJtb2R1bGUuZXhwb3J0cyA9IF9fV0VCUEFDS19FWFRFUk5BTF9NT0RVTEVfMl9fO1xuXG5cbi8vLy8vLy8vLy8vLy8vLy8vL1xuLy8gV0VCUEFDSyBGT09URVJcbi8vIGV4dGVybmFsIHtcInJvb3RcIjpcImlzb21vcnBoaWMtZmV0Y2hcIixcImNvbW1vbmpzMlwiOlwiaXNvbW9ycGhpYy1mZXRjaFwiLFwiY29tbW9uanNcIjpcImlzb21vcnBoaWMtZmV0Y2hcIixcImFtZFwiOlwiaXNvbW9ycGhpYy1mZXRjaFwifVxuLy8gbW9kdWxlIGlkID0gMlxuLy8gbW9kdWxlIGNodW5rcyA9IDAiXSwibWFwcGluZ3MiOiJBQUFBIiwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///2\n");
+        // Set a value we will use to check this client should silently
+        // revalidate, using the value for revalidateAge returned by the server.
+        session.expires = Date.now() + session.revalidateAge;
 
-/***/ })
-/******/ ]);
-});
+        // Save changes to session
+        this._saveLocalStore('session', session);
+
+        return session
+      })
+      .catch(() => Error('Unable to get session'))
+    }
+
+    /**
+     * A simple static method to get the CSRF Token is provided for convenience
+     **/
+    static async csrfToken() {
+      return fetch('/auth/csrf', {
+        credentials: 'same-origin'
+      })
+      .then(response => {
+        if (response.ok) {
+          return response
+        } else {
+          return Promise.reject(Error('Unexpected response when trying to get CSRF token'))
+        }
+      })
+      .then(response => response.json())
+      .then(data => data.csrfToken)
+      .catch(() => Error('Unable to get CSRF token'))
+    }
+
+    /**
+     * A static method to get list of currently linked oAuth accounts
+     **/
+    static async linked({
+      req = null
+    } = {}) {
+      // If running server side, uses server side method
+      if (req) return req.linked()
+      
+      // If running client side, use RESTful endpoint
+      return fetch('/auth/linked', {
+        credentials: 'same-origin'
+      })
+      .then(response => {
+        if (response.ok) {
+          return response
+        } else {
+          return Promise.reject(Error('Unexpected response when trying to get linked accounts'))
+        }
+      })
+      .then(response => response.json())
+      .then(data => data)
+      .catch(() => Error('Unable to get linked accounts'))
+    }
+    
+    /**
+     * A static method to get list of currently configured oAuth providers
+     **/
+    static async providers({
+      req = null
+    } = {}) {
+      // If running server side, uses server side method
+      if (req) return req.providers()
+      
+      // If running client side, use RESTful endpoint
+      return fetch('/auth/providers', {
+        credentials: 'same-origin'
+      })
+      .then(response => {
+        if (response.ok) {
+          return response
+        } else {
+          console.log("NextAuth Error Fetching Providers");
+          return null
+        }
+      })
+      .then(response => response.json())
+      .then(data => data)
+      .catch((e) => {
+        console.log("NextAuth Error Loading Providers");
+        console.log(e);
+        return null
+      })
+    }
+
+
+    /*
+     * Sign in
+     * 
+     * Will post a form to /auth/signin auth route if an object is passed.
+     * If the details are valid a session will be created and you should redirect
+     * to your callback page so the session is loaded in the client.
+     *
+     * If just a string containing an email address is specififed will generate a
+     * a one-time use sign in link and send it via email; you should redirect to a
+     * page telling the user to check their inbox for an email with the link.
+     */
+    static async signin(params) {
+      // Params can be just string (an email address) or an object (form fields)
+      const formData = (typeof params === 'string') ? { email: params } : params;
+
+      // Use either the email token generation route or the custom form auth route
+      const route = (typeof params === 'string') ? '/auth/email/signin' : '/auth/signin'; 
+
+      // Add latest CSRF Token to request
+      formData._csrf = await this.csrfToken();
+      
+      // Encoded form parser for sending data in the body
+      const encodedForm = Object.keys(formData).map((key) => {
+        return encodeURIComponent(key) + '=' + encodeURIComponent(formData[key])
+      }).join('&');
+
+      return fetch(route, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-Requested-With': 'XMLHttpRequest' // So Express can detect AJAX post
+        },
+        body: encodedForm,
+        credentials: 'same-origin'
+      })
+      .then(async response => {
+        if (response.ok) {
+          return await response.json()
+        } else {
+          throw new Error('HTTP error while attempting to sign in')
+        }
+      })
+      .then(data => {
+        if (data.success && data.success === true) {
+          return Promise.resolve(true)
+        } else {
+          return Promise.resolve(false)
+        }
+      })
+    }
+
+    static async signout() {
+      // Signout from the server
+      const csrfToken = await this.csrfToken();
+      const formData = { _csrf: csrfToken };
+
+      // Encoded form parser for sending data in the body
+      const encodedForm = Object.keys(formData).map((key) => {
+        return encodeURIComponent(key) + '=' + encodeURIComponent(formData[key])
+      }).join('&');
+      
+      // Remove cached session data
+      this._removeLocalStore('session');
+
+      return fetch('/auth/signout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: encodedForm,
+        credentials: 'same-origin'
+      })
+      .then(() => {
+        return true
+      })
+      .catch(() => Error('Unable to sign out'))
+    }
+
+    // The Web Storage API is widely supported, but not always available (e.g.
+    // it can be restricted in private browsing mode, triggering an exception).
+    // We handle that silently by just returning null here.
+    static _getLocalStore(name) {
+      try {
+        return JSON.parse(localStorage.getItem(name))
+      } catch (err) {
+        return null
+      }
+    }
+    
+    static _saveLocalStore(name, data) {
+      try {
+        localStorage.setItem(name, JSON.stringify(data));
+        return true
+      } catch (err) {
+        return false
+      }
+    }
+    
+    static _removeLocalStore(name) {
+      try {
+        localStorage.removeItem(name);
+        return true
+      } catch (err) {
+        return false
+      }
+    }
+  }
+
+  exports.NextAuth = nextAuthClient;
+
+  Object.defineProperty(exports, '__esModule', { value: true });
+
+})));
