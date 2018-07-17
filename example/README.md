@@ -10,7 +10,7 @@ This project as is run the same way as any Next.js project.
 
 To run it locally, just use:
 
-    nmp run dev
+    npm run dev
 
 To run it it production mode, use:
 
