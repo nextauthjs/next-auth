@@ -1,6 +1,6 @@
 {
   "name": "next-auth-examples",
-  "version": "1.9.0",
+  "version": "1.9.1",
   "description": "An example project for next-auth",
   "repository": "https://github.com/iaincollins/next-auth.git",
   "main": "",

@@ -1,5 +1,4 @@
 import React from 'react'
-import Head from 'next/head'
 import Router from 'next/router'
 import Link from 'next/link'
 import { NextAuth } from 'next-auth/client'
@@ -30,11 +29,6 @@ export default class extends React.Component {
   render() {
     return (
       <div className="container">
-        <Head>
-          <meta name="viewport" content="width=device-width, initial-scale=1"/>
-          <script src="https://cdn.polyfill.io/v2/polyfill.min.js"/>
-          <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossOrigin="anonymous"/>
-        </Head>
         <div className="text-center">
           <h1 className="display-4 mt-3 mb-3">NextAuth Example</h1>
           <p className="lead mt-3 mb-3">An example of how to use the <a href="https://www.npmjs.com/package/next-auth">NextAuth</a> module.</p>

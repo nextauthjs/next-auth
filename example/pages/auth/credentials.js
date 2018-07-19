@@ -1,5 +1,4 @@
 import React from 'react'
-import Head from 'next/head'
 import Router from 'next/router'
 import Link from 'next/link'
 import { NextAuth } from 'next-auth/client'
@@ -66,30 +65,27 @@ export default class extends React.Component {
     } else {
       return (
         <div className="container">
-          <Head>
-            <meta name="viewport" content="width=device-width, initial-scale=1"/>
-            <script src="https://cdn.polyfill.io/v2/polyfill.min.js"/>
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossOrigin="anonymous"/>
-          </Head>
           <div className="text-center">
-            <h1 className="display-4 mt-3 mb-3">NextAuth Example</h1>
+            <h1 className="display-4 mt-3 mb-3">NextAuth With Credentials</h1>
           </div>
           <div className="row">
             <div className="col-sm-6 mr-auto ml-auto">
               <p>
                 If you need password based sign in, two factor authentication 
-                or some other credentials based sign in method, you can define
-                a signin() function in <strong>next-auth.functions.js</strong>.
+                or another sign in method, you can use a signin() function
+                in <strong>next-auth.functions.js</strong>.
               </p>
               <p>
-                You can pass in any properties you need (e.g. username and password,
-                a token, etc) to NextAuth.signin().
+                You can pass in any properties you need – e.g. username and password,
+                a PIN or 2FA Token – as properties of the object passed to
+                NextAuth.signin() in the front end and they will be passed
+                through to your signin() function.
               </p>
               <div className="card mt-3 mb-3">
                 <h4 className="card-header">Sign In</h4>
                 <div className="card-body pb-0">
-                  <p className="text-italic text-muted text-center">
-                    Tip: Create an account first then try the password "test1234".
+                  <p className="text-italic text-muted text-center small">
+                    <strong>Important!</strong> Enable the signin() function in <strong>next-auth.functions.js</strong> first.
                   </p>
                   <form id="signin" method="post" action="/auth/signin" onSubmit={this.handleSignInSubmit}>
                     <input name="_csrf" type="hidden" value={this.state.session.csrfToken}/>
@@ -99,7 +95,7 @@ export default class extends React.Component {
                     </p>
                     <p>
                       <label htmlFor="password">Password</label><br/>
-                      <input name="password" type="password" placeholder="" id="email" className="form-control" value={this.state.password} onChange={this.handlePasswordChange}/>
+                      <input name="password" type="password" placeholder="" id="password" className="form-control" value={this.state.password} onChange={this.handlePasswordChange}/>
                     </p>
                     <p className="text-right">
                       <button id="submitButton" type="submit" className="btn btn-outline-primary">Sign in</button>

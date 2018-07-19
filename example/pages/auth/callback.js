@@ -1,6 +1,5 @@
 import React from 'react'
 import Link from 'next/link'
-import Head from 'next/head'
 import Router from 'next/router'
 import { NextAuth } from 'next-auth/client'
 
@@ -23,11 +22,7 @@ export default class extends React.Component {
     // Provide a link for clients without JavaScript as a fallback.
     return (
       <React.Fragment>
-        <Head>
-          <meta name="viewport" content="width=device-width, initial-scale=1"/>
-          <script src="https://cdn.polyfill.io/v2/polyfill.min.js"/>
-        </Head>
-        <style jsx global>{`
+      <style jsx global>{`
           body{ 
             background-color: #fff;
           }

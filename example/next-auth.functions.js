@@ -239,7 +239,7 @@ module.exports = () => {
             if (!user) return resolve(null)
             
             // Check credentials - e.g. compare bcrypt password hashes
-            if (form.password == "test1234") {
+            if (form.password === "test1234") {
               // If valid, return user object - e.g. { id, name, email }
               return resolve(user)
             } else {
