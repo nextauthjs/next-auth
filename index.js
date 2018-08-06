@@ -63,6 +63,7 @@ module.exports = (nextApp, {
     remove: (id) => { Promise.resolve(id) },
     serialize: (user) => { Promise.resolve(id) },
     deserialize: (id) => { Promise.resolve(user) },
+    session: null,
     sendSignInEmail: null, /* ({
       email = null,
       url = null,
@@ -118,9 +119,15 @@ module.exports = (nextApp, {
       maxAge: sessionMaxAge
     }
   }))
+  
   if (csrf === true) {
+    // If csrf is true (default) apply to all routes
     expressApp.use(lusca.csrf())
-  }
+  } else if (csrf !== false) {
+    // If csrf is anything else (except false) then pass it as a config option
+    expressApp.use(lusca.csrf(csrf))
+  } // if csrf is explicitly set to false then doesn't apply CSRF at all
+  
   if (trustProxy === true) {
     expressApp.set('trust proxy', 1)
   }
@@ -135,7 +142,7 @@ module.exports = (nextApp, {
     providers: providers,
     functions: functions
   })
-
+  
   /*
    * Add route to get CSRF token via AJAX
    */
@@ -146,7 +153,12 @@ module.exports = (nextApp, {
   })
 
   /*
-   * Return session info
+   * Return session info to client
+   *
+   * Will be stored in local storage, so should not return sensitive data that
+   * could be captured in a Cross Site Scripting attack (i.e. so not the session
+   * token) – or anything you don't want users to see (like private IDs) but is
+   * is okay to return things like access tokens for acessing remote services.
    */
   expressApp.get(`${pathPrefix}/session`, (req, res) => {
     let session = {
@@ -154,32 +166,24 @@ module.exports = (nextApp, {
       revalidateAge: sessionRevalidateAge,
       csrfToken: res.locals._csrf
     }
-
-    // Add user object to session if logged in
-    if (req.user) {
-      // If logged in, export the API access token details to the client
-      // Note: This token is valid for the duration of this session only.
+    
+    if (req.user)
       session.user = req.user
-      if (req.session && req.session.api) {
-        session.api = req.session.api
-      }
-    }
+      
+    if (functions.session)
+      session = functions.session(session, req)
 
     return res.json(session)
   })
-  
-  /*
-   * Return list of which accounts are already linked.
-   * 
-   * We define this both as a server side function and a RESTful endpoint so 
-   * that it can be used rendering a page both server side and client side.
-   */
-  // Server side function
+
+  // Server side function for returning list of accounts user has linked.
+  // Called when pages are rendered in on the server (instead of /auth/linked).
+  // Returns all accounts the user has linked (e.g. Twitter, Facebook, Google…)
   expressApp.use((req, res, next) => {
     req.linked = () => {
       return new Promise((resolve, reject) => {
         if (!req.user) return resolve({})
-          
+      
         functions.serialize(req.user)
         .then(id => {
           if (!id) throw new Error("Unable to serialize user")
@@ -187,12 +191,12 @@ module.exports = (nextApp, {
         })
         .then(user => {
           if (!user) return resolve({})
-        
+    
           let linkedAccounts = {}
           providers.forEach(provider => {
             linkedAccounts[provider.providerName] = (user[provider.providerName.toLowerCase()]) ? true : false
           })
-          
+      
           return resolve(linkedAccounts)
         })
         .catch(err => {
@@ -202,7 +206,10 @@ module.exports = (nextApp, {
     }
     next()
   })
-  // RESTful endpoint
+  
+  // Client side REST endpoint for returning list of accounts user has linked.
+  // Called when pages are rendered in the browser (instead of req.linked()).
+  // Returns all accounts the user has linked (e.g. Twitter, Facebook, Google…)
   expressApp.get(`${pathPrefix}/linked`, (req, res) => {
     if (!req.user) return res.json({})
 

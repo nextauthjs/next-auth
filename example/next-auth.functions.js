@@ -248,6 +248,24 @@ module.exports = () => {
             }
           })
         })
+      },
+      */
+      // Session Object (optional)
+      //
+      // The session object that gets returned to the client. You don't need to
+      // specify this function here unless you want to override or extend the 
+      // default (e.g. with any other properties you have added to req.session)
+      // 
+      // Note: The object returned will be stored in localStorage and visible 
+      // client side so do not return data you would not want the user to see.
+      /*
+      session: (session, req) => {
+        if (req.session && req.session.someCustomProperty)
+          session.someCustomProperty = req.session.someCustomProperty
+
+        session.someOtherCustomProperty = "Example custom property"
+          
+        return session
       }
       */
     })
