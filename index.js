@@ -42,22 +42,22 @@ module.exports = (nextApp, {
   // even if it made no changes (this behavior also depends on what store you're
   // using). https://www.npmjs.com/package/express-session#resave
   sessionResave = false,
-  // Force a session identifier cookie to be set on every response.
-  // The expiration is reset to the original maxAge, resetting the expiration countdown.
-  // The default value is false.
+  // Force a session identifier cookie to be set on every response. The expire
+  // time is reset to the original maxAge, resetting the expiration time.
   // Note When this option is set to true but the saveUninitialized option
   // is set to false, the cookie will not be set on a response with an
-  // uninitialized session. https://www.npmjs.com/package/express-session#rolling
+  // uninitialized session https://www.npmjs.com/package/express-session#rolling
   sessionRolling = true,
-  // Forces a session that is "uninitialized" to be saved to the store. A session
-  // is uninitialized when it is new but not modified. Choosing false is useful
-  // for implementing login sessions, reducing server storage usage, or complying
-  // with laws that require permission before setting a cookie. Choosing false
-  // will also help with race conditions where a client makes multiple parallel
-  // requests without a session.
-  // The default value is true, but using the default has been deprecated, as
-  // the default will change in the future. Please research into this setting and
-  // choose what is appropriate to your use-case.
+  // Forces a session that is "uninitialized" to be saved to the store.
+  // A session is uninitialized when it is new but not modified. Choosing false 
+  // is useful for implementing login sessions, reducing server storage usage,
+  // or complying with laws that require permission before setting a cookie. 
+  //
+  // Choosing false will also help with race conditions where a client makes 
+  // multiple parallel requests without a session.
+  //
+  // Note that if the build in CSRF protection is enabled (the default) then
+  // sessions will ALWAYS be 'initialized' as it saves to the session.
   // https://www.npmjs.com/package/express-session#saveuninitialized
   sessionSaveUninitialized = false,
   // Canonical URL of the server (optional, but recommended).
