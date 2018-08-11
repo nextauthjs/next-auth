@@ -21,20 +21,24 @@ export default class extends React.Component {
             <p className="lead"><Link href="/auth"><a>Sign in with email or another service</a></Link></p>
           </div>
           <div className="row">
-            <div className="col-sm-8 mr-auto ml-auto mb-5">
+            <div className="col-sm-8 mr-auto ml-auto mb-5 mt-5">
               <div className="text-muted">
                 <h4 className="mb-2">Why am I seeing this?</h4>
-                <p className="mb-2">
-                  It looks like you might have already signed up using another service. 
+                <p className="mb-3">
+                  It looks like you might have already signed up using another service to sign in. 
                 </p>
                 <p className="mb-3">
-                  To protect your account, if you have perviously signed up
-                  using another service you must link accounts before you
+                  If you have previously signed up using another service you must link accounts before you
                   can use a different service to sign in.
+                </p>
+                <p className="mb-5">
+                  This is to prevent people from signing up to another service using your email address
+                  to try and access your account.
                 </p>
                 <h4 className="mb-2">How do I fix this?</h4>
                 <p className="mb-0">
-                  To sign in using another service, first sign in using your email address then link accounts.
+                  First sign in using your email address then link your account to the service you want
+                  to use to sign in with in future. You only need to do this once.
                 </p>
               </div>
             </div>
