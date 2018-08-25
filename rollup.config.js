@@ -1,3 +1,5 @@
+import babel from 'rollup-plugin-babel'
+
 export default {
   input: 'src/client/index.js',
   output: {
@@ -7,5 +9,13 @@ export default {
     globals: {
       'fetch': 'isomorphic-fetch'
     }
-  }
+  },
+  plugins: [
+    babel({
+      babelrc: false,
+      exclude: [ 'node_modules/**' ],
+      presets: [['env', { modules: false }]]
+    })
+  ],
+  
 }

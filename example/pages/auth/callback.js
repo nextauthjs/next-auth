@@ -35,14 +35,12 @@ export default class extends React.Component {
             text-align: center;
             transform: translate(-50%, -50%);
           }
-
           .circle-loader .circle {
             fill: transparent;
             stroke: rgba(0,0,0,0.2);
             stroke-width: 4px;
             animation: dash 2s ease infinite, rotate 2s linear infinite;
           }
-
           @keyframes dash {
             0% {
               stroke-dasharray: 1,95;
@@ -57,17 +55,29 @@ export default class extends React.Component {
               stroke-dashoffset: -93;
             }
           }
-
           @keyframes rotate {
             0% {transform: rotate(0deg); }
             100% {transform: rotate(360deg); }
           }
         `}</style>
+        <noscript>
+          <style>{`
+            svg {
+              display: none;
+            }
+            a {
+              font-weight: bold;
+            }
+          `}</style>
+        </noscript>
         <a href="/" className="circle-loader">
           <svg className="circle" width="60" height="60" version="1.1" xmlns="http://www.w3.org/2000/svg">
             <circle cx="30" cy="30" r="15"/>
           </svg>
-        </a>
+        <noscript>
+          Click here to continue
+        </noscript>
+        </a>          
       </React.Fragment>
     )
   }
