@@ -10,6 +10,7 @@
   },
   "author": "",
   "license": "ISC",
+  "sideEffects": false,
   "dependencies": {
     "babel-core": "^6.26.3",
     "babel-polyfill": "^6.26.0",
