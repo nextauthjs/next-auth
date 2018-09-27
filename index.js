@@ -9,6 +9,9 @@ const uuid = require('uuid/v4')
 
 module.exports = (nextApp, {
   bodyParser = true,
+  // Optional, allows you to set e.g. 'limit' (maximum request body size, default 100kb)
+  bodyParserJsonOptions = {},
+  bodyParserUrlEncodedOptions = { extended: true },
   csrf = true,
   // URL base path for authentication routes (optional).
   // Note: The prefix value of '/auth' is currently hard coded in 
@@ -128,10 +131,8 @@ module.exports = (nextApp, {
    * to customise how you invoke Body Parser.
    */
   if (bodyParser === true) {
-    expressApp.use(BodyParser.json())
-    expressApp.use(BodyParser.urlencoded({
-      extended: true
-    }))
+    expressApp.use(BodyParser.json(bodyParserJsonOptions))
+    expressApp.use(BodyParser.urlencoded(bodyParserUrlEncodedOptions))
   }
   expressApp.use(expressSession({
     secret: sessionSecret,
