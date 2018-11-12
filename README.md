@@ -202,8 +202,8 @@ The example configuration provided is for Mongo DB. By defining the behaviour in
 #### Required
 
 * find({id,email,emailToken,provider})
-* insert(user, oAuthProfile)
-* update(user, oAuthProfile)
+* insert(user, oAuthProfile, providerParams)
+* update(user, oAuthProfile, providerParams)
 * remove(id)
 * serialize(user)
 * deserialize(id)
