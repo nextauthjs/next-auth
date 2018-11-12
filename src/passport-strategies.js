@@ -69,7 +69,7 @@ module.exports = ({
     strategyOptions.callbackURL = (strategyOptions.callbackURL || (serverUrl || '') + `${pathPrefix}/oauth/${providerName.toLowerCase()}/callback`)
     strategyOptions.passReqToCallback = true
 
-    passport.use(new Strategy(strategyOptions, (req, accessToken, refreshToken, _params, _profile, next) => {
+    passport.use(providerName, new Strategy(strategyOptions, (req, accessToken, refreshToken, _params, _profile, next) => {
 
       try {
         // Normalise the provider specific profile into a standard basic
