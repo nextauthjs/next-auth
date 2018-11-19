@@ -61,7 +61,7 @@ module.exports = () => {
         // state correctly.
         // If set to 0 will revalidate a session before rendering every page.
         sessionRevalidateAge: 60000,
-        // Canonical URL of the server (optiona, but recommended).
+        // Canonical URL of the server (optional, but recommended).
         // e.g. 'http://localhost:3000' or 'https://www.example.com' 
         // Used in callbak URLs and email sign in links. It will be auto 
         // generated if not specified, which may cause problems if your site 
