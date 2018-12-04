@@ -191,7 +191,7 @@ EMAIL_PASSWORD=
 
 Basic configuration of NextAuth is handled in **next-auth.config.js**.
 
-It is where the **next-auth.functions.js** and **next-auth.providers.js** files are loaded.
+It is also where the **next-auth.functions.js** and **next-auth.providers.js** files are loaded.
 
 ### next-auth.functions.js
 
