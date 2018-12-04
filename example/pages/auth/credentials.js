@@ -66,27 +66,18 @@ export default class extends React.Component {
       return (
         <div className="container">
           <div className="text-center">
-            <h1 className="display-4 mt-3 mb-3">NextAuth With Credentials</h1>
+            <h1 className="display-5 mt-4 mb-2">NextAuth - Custom Sign In</h1>
           </div>
           <div className="row">
-            <div className="col-sm-6 mr-auto ml-auto">
-              <p>
-                If you need password based sign in, two factor authentication 
-                or another sign in method, you can use a signin() function
+            <div className="col-sm-12 col-md-10 col-lg-8 col-xl-7 mr-auto ml-auto">
+              <p className="mt-3 mb-4 text-center">
+                If you want to support password based sign in, two factor authentication 
+                or another sign in method, define a signin() function
                 in <strong>next-auth.functions.js</strong>.
-              </p>
-              <p>
-                You can pass in any properties you need – e.g. username and password,
-                a PIN or 2FA Token – as properties of the object passed to
-                NextAuth.signin() in the front end and they will be passed
-                through to your signin() function.
               </p>
               <div className="card mt-3 mb-3">
                 <h4 className="card-header">Sign In</h4>
                 <div className="card-body pb-0">
-                  <p className="text-italic text-muted text-center small">
-                    <strong>Important!</strong> Enable the signin() function in <strong>next-auth.functions.js</strong> first.
-                  </p>
                   <form id="signin" method="post" action="/auth/signin" onSubmit={this.handleSignInSubmit}>
                     <input name="_csrf" type="hidden" value={this.state.session.csrfToken}/>
                     <p>
@@ -103,6 +94,9 @@ export default class extends React.Component {
                   </form>
                 </div>
               </div>
+              <p className="text-italic text-muted text-center small">
+                For this to work, you will need enable the signin() function in <strong>next-auth.functions.js</strong>
+              </p>
             </div>
           </div>
           <p className="text-center">

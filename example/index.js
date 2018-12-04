@@ -24,17 +24,14 @@ const nextApp = next({
 })
 
 // Add next-auth to next app
-nextApp
-.prepare()
-.then(() => {
+nextApp.prepare()
+.then(async () => {
   // Load configuration and return config object
-  return nextAuthConfig()
-})
-.then(nextAuthOptions => {
+  const nextAuthOptions = await nextAuthConfig()
+
   // Pass Next.js App instance and NextAuth options to NextAuth
-  return nextAuth(nextApp, nextAuthOptions)  
-})
-.then((response) => {
+  const nextAuthApp = await nextAuth(nextApp, nextAuthOptions)  
+
   console.log(`Ready on http://localhost:${process.env.PORT || 3000}`)
 })
 .catch(err => {

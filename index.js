@@ -37,14 +37,15 @@ module.exports = (nextApp, {
   // elapsed since it was last checked so they always display state correctly.
   // If set to 0 will revalidate a session before rendering every page.
   sessionRevalidateAge = 60000,
-  // Forces the session to be saved back to the session store, even if
-  // the session  was never modified during the request. Depending on your
-  // store this may be necessary, but it can also create race conditions where
-  // a client makes two parallel requests to your server and changes made to
-  // the session in one request may get overwritten when the other request ends,
-  // even if it made no changes (this behavior also depends on what store you're
-  // using). https://www.npmjs.com/package/express-session#resave
-  sessionResave = false,
+  // Force the session to be saved back to the session store, even if the
+  // session was not modified during the request.
+  // Note: If this is false, session expiry will not rotate and will expire
+  // after sessionMaxAge unless you write you own code to rotate the session.
+  // This is an option exposed for advanced use cases on people with specific
+  // databases that have session store drivers that do not work well with
+  // the express-session resave option.
+  // https://www.npmjs.com/package/express-session#resave
+  sessionResave = true,
   // Force a session identifier cookie to be set on every response. The expire
   // time is reset to the original maxAge, resetting the expiration time.
   // Note When this option is set to true but the saveUninitialized option
