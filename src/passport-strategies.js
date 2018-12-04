@@ -69,7 +69,7 @@ module.exports = ({
     strategyOptions.callbackURL = (strategyOptions.callbackURL || (serverUrl || '') + `${pathPrefix}/oauth/${providerName.toLowerCase()}/callback`)
     strategyOptions.passReqToCallback = true
 
-    passport.use(new Strategy(strategyOptions, (req, accessToken, refreshToken, _profile, next) => {
+    passport.use(providerName, new Strategy(strategyOptions, (req, accessToken, refreshToken, _params, _profile, next) => {
 
       try {
         // Normalise the provider specific profile into a standard basic
@@ -116,7 +116,7 @@ module.exports = ({
                     refreshToken: refreshToken
                   }
 
-                  functions.update(user, _profile)
+                  functions.update(user, _profile, _params)
                   .then(user => {
                     return next(null, user)
                   })
@@ -178,7 +178,7 @@ module.exports = ({
                 }
 
                 // Update details for the new provider for this user.
-                return functions.update(user, _profile)
+                return functions.update(user, _profile, _params)
                 .then(user => {
                   return next(null, user)
                 })
@@ -204,7 +204,7 @@ module.exports = ({
               if (accessToken || refreshToken) {
                 if (accessToken) user[providerName.toLowerCase()].accessToken = accessToken
                 if (refreshToken) user[providerName.toLowerCase()].refreshToken = refreshToken
-                return functions.update(user, _profile)
+                return functions.update(user, _profile, _params)
                 .then(user => {
                   return next(null, user)
                 })
@@ -246,7 +246,7 @@ module.exports = ({
                     accessToken: accessToken,
                     refreshToken: refreshToken
                   }
-                }, _profile)
+                }, _profile, _params)
                 .then(user => {
                   return next(null, user)
                 })
