@@ -151,10 +151,10 @@ You can add the following to your `package.json` file to start the project:
 
 You will need to create following pages under `./pages/auth` in your project:
 
-* index.js // Sign In (and Link/Unlink)
-* error.js // Error handling
-* check-email.js // Check email prompt
-* callback.js // Callback page, used to update state in Single Page Apps
+* index.js – Sign In and Link/Unlink accounts
+* error.js – Error handling
+* check-email.js – Check email prompt
+* callback.js – Callback page used to update app state in Single Page Apps
 
 You can [find examples of these](https://github.com/iaincollins/next-auth/tree/master/example) included which you can copy and paste into your project.
 
@@ -191,7 +191,7 @@ EMAIL_PASSWORD=
 
 Basic configuration of NextAuth is handled in **next-auth.config.js**.
 
-It is where the **next-auth.functions.js** and **next-auth.providers.js** files are loaded.
+It is also where the **next-auth.functions.js** and **next-auth.providers.js** files are loaded.
 
 ### next-auth.functions.js
 
