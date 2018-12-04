@@ -277,11 +277,11 @@ module.exports = ({
     providerOptions
   }) => {
     // Route to start sign in
-    expressApp.get(`${pathPrefix}/oauth/${providerName.toLowerCase()}`, passport.authenticate(providerName, providerOptions))
+    expressApp.get(`${pathPrefix}/oauth/${providerName.toLowerCase()}`, passport.authenticate(providerName.toLowerCase(), providerOptions))
     
     // Route to call back to after signing in
     expressApp.get(`${pathPrefix}/oauth/${providerName.toLowerCase()}/callback`,
-      passport.authenticate(providerName, {
+      passport.authenticate(providerName.toLowerCase(), {
         successRedirect: `${pathPrefix}/callback?action=signin&service=${providerName}`,
         failureRedirect: `${pathPrefix}/error?action=signin&type=oauth&service=${providerName}`
       })
