@@ -151,10 +151,10 @@ You can add the following to your `package.json` file to start the project:
 
 You will need to create following pages under `./pages/auth` in your project:
 
-* index.js // Sign In (and Link/Unlink)
-* error.js // Error handling
-* check-email.js // Check email prompt
-* callback.js // Callback page, used to update state in Single Page Apps
+* index.js – Sign In and Link/Unlink accounts
+* error.js – If an authentication error occurs
+* check-email.js – 'Check your email' messsage
+* callback.js – Callback page; updates local session on sign in / sign out
 
 You can [find examples of these](https://github.com/iaincollins/next-auth/tree/master/example) included which you can copy and paste into your project.
 
