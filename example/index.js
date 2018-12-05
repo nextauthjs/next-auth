@@ -1,5 +1,5 @@
 /**
- * Simple example of how to use the NextAuth module.
+ * An example of how to use the NextAuth module.
  *
  * To invoke next-auth you will need to define a configuration block for your
  * site. You can create a next-auth.config.js file and put all your options
