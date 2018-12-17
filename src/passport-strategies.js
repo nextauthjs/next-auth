@@ -76,6 +76,37 @@ module.exports = ({
         // profile object with just { id, name, email } properties.
         let profile = getProfile(_profile)
 
+        const linkToExistingAccount = user => {
+          const nextUser = Object.assign({}, user)
+
+          // If we don't already have a name for the user, use value the
+          // name value specfied in their profile on the remote service.
+          nextUser.name = user.name || profile.name
+
+          // If we don't have a real email address for the user, use the
+          // email value specified in their profile on the remote service.
+          if (
+            user.email &&
+            user.email.match(/.*@localhost\.localdomain$/) &&
+            profile.email &&
+            !profile.email.match(/.*@localhost\.localdomain$/)
+          ) {
+            nextUser.emailVerified = false
+            nextUser.email = profile.email
+          }
+
+          // Save Profile ID, Access Token and Refresh Token values
+          // to the users local account, which links the accounts.
+          nextUser[providerName.toLowerCase()] = {
+            id: profile.id,
+            accessToken: accessToken,
+            refreshToken: refreshToken
+          };
+
+          // Update details for the new provider for this user.
+          return functions.update(nextUser, _profile, _params)
+        }
+
         // Save the Access Token to the current session.
         req.session[providerName.toLowerCase()] = {
           accessToken: accessToken
@@ -137,61 +168,30 @@ module.exports = ({
               }
             } else {
               // This secion handles if a user is already logged in and is
-              // trying to link a new account.
-               
-              // Look up the current user.
+              // trying to link a new account to the existing local account.
 
-              // First get the User ID from the User, then look up the user 
-              // details. Note: We don't use the User object in req.user 
-              // directly as it is a simplified set of properties set by 
-              // functions.deserialize().    
-              functions.serialize(req.user)
+              // First get the User ID from the User, then look up the user
+              // details. Note: We don't use the User object in req.user
+              // directly as it is a simplified set of properties set by
+              // functions.deserialize().
+              return functions.serialize(req.user)
               .then(id => {
                 if (!id) throw new Error("Unable to serialize user")
                 return functions.find({ id: id })
               })
               .then(user => {
-                
-                // This error should not happen, unless the currently signed in 
+                // This error should not happen, unless the currently signed in
                 // user has been deleted deleted from the database since
                 // signing in (or there is a problem talking to the database).
-                if (!user) return next(new Error('Unable to look up account for current user'), false)
-              
-                // If we don't already have a name for the user, use value the
-                // name value specfied in their profile on the remote service.
-                user.name = user.name || profile.name
-
-                // If we don't have a real email address for the user, use the
-                // email value specified in their profile on the remote service.
-                if (user.email && user.email.match(/.*@localhost\.localdomain$/) &&
-                  profile.email && !profile.email.match(/.*@localhost\.localdomain$/)) {
-                  user.emailVerified = false
-                  user.email = profile.email
-                }
-
-                // Save Profile ID, Access Token and Refresh Token values
-                // to the users local account, which links the accounts.
-                user[providerName.toLowerCase()] = {
-                  id: profile.id,
-                  accessToken: accessToken,
-                  refreshToken: refreshToken
-                }
-
-                // Update details for the new provider for this user.
-                return functions.update(user, _profile, _params)
-                .then(user => {
-                  return next(null, user)
-                })
-                .catch(err => {
-                  return next(err)
-                })
-
+                if (!user) return next(new Error("Unable to look up account for current user"), false);
+                return linkToExistingAccount(user)
               })
-              .catch(err => {
-                return next(err, false)
+              .then(user => {
+                next(null, user)
               })
+              .catch(err => next(err, false));
             }
-        
+
           } else {
             // This section handles scenarios when a user is not logged in.
 
@@ -226,15 +226,35 @@ module.exports = ({
               return functions.find({email: profile.email})
               .then(user => {
                 
-                // If we already have a local account associated with their 
-                // email address, the user should sign in with that account - 
-                // and then they can link accounts if they wish.
-                //
-                // Note: Automatically linking them here could expose a 
-                // potential security exploit allowing someone to pre-register 
-                // or create an account elsewhere for another users email 
-                // address then trying to sign in from it, so don't do that.
-                if (user) return next(null, false)
+                if (user) {
+                  // We already have a local account associated with their
+                  // email address.
+
+                  // If the provider is trustworthy and doesn't allow to create accounts
+                  // for another user emails, then we allow to link this new account to
+                  // the corresponding local account.
+                  //
+                  // Note: By default, we treat all providers as not trustworthy. Enable
+                  // the `trustedIdentity` flag at your own risk and only to those providers,
+                  // who you are sure will guarantee that identities can not be spoofed.
+                  const provider = providers.find(provider => provider.providerName === providerName)
+                  if (provider && provider.trustedIdentity) {
+                    return linkToExistingAccount(user)
+                    .then(user => {
+                      next(null, user)
+                    })
+                    .catch(err => next(err, false))
+                  }
+
+                  // Otherwise, the user should sign in with his/her local account first -
+                  // and then they can link accounts if they wish.
+                  //
+                  // Note: Automatically linking insufficiently trusted accounts here could
+                  // expose a potential security exploit allowing someone to pre-register
+                  // or create an account elsewhere for another users email
+                  // address then trying to sign in from it, so don't do that.
+                  return next(null, false)
+                }
                 
                 // If an account does not exist, create one for them and return
                 // a user object to passport, which will sign them in.
