@@ -26,6 +26,9 @@ module.exports = (nextApp, {
   // Session store for express-session. 
   // Defaults to an in memory store, which is not recommended for production.
   sessionStore = expressSession.MemoryStore(),
+  // The name of the session ID cookie to set in the response (and read from in
+  // the request). The default value is 'connect.sid'.
+  sessionCookie = 'connect.sid',
   // Maximum Session Age in ms (optional, default is 7 days).
   // The expiry time for a session is reset every time a user revisits the site
   // or revalidates their session token - this is the maximum idle time value.
@@ -142,6 +145,7 @@ module.exports = (nextApp, {
     rolling: sessionRolling,
     saveUninitialized: sessionSaveUninitialized,
     cookie: {
+      name: sessionCookie
       httpOnly: true,
       secure: 'auto',
       maxAge: sessionMaxAge
