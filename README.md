@@ -182,6 +182,15 @@ Basic configuration of NextAuth is handled in **next-auth.config.js**.
 
 It is also where the **next-auth.functions.js** and **next-auth.providers.js** files are loaded.
 
+#### CSRF Configuration
+
+By default, **next-auth** uses [lusca library](https://github.com/krakenjs/lusca) for **Cross-Site Request Forgery** validation.
+
+The `csrf` field that you provide in `next-auth.functions.js` file can be a boolean that enable or disable CSRF protection, or you can customise it's behavior passing an object
+that will be handled directly to the [lusca](https://github.com/krakenjs/lusca) library.
+
+For more information about CSRF protection, please read the project documentation.
+
 ### next-auth.functions.js
 
 Methods for user management and sending email are defined in **next-auth.functions.js**

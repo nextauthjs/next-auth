@@ -1,13 +1,15 @@
-import expressSession, { Store } from "express-session";
-import { RequestHandler, Express } from "express";
+import { Store } from "express-session";
+import { Express } from "express";
 import * as next from "next";
+import { LuscaOptions } from "lusca";
+import { INextAuthSessionData } from "./client";
 
 export  interface IOptions {
     bodyParser?: boolean;
-    csrf?: boolean;
+    csrf?: boolean | LuscaOptions;
     pathPrefix?: string;
     expressApp?: Express.Application;
-    expressSession: expressSession;
+    expressSession: any;
     sessionSecret: string;
     sessionStore: Store;
     sessionMaxAge: number;
@@ -36,18 +38,24 @@ export  interface ISignInOpts {
     password?: string;
   }
 
+  export interface IFindParamsType<
+      UserType = {},
+      IDType = string,
+      SessionType extends INextAuthSessionData = INextAuthSessionData
+      > {
+
+      id: IDType,
+      email: string,
+      emailToken: string,
+      provider: IUserProvider
+  }
+
   export  interface IFunctions<
     UserType = {},
     IDType = string,
     SessionType extends INextAuthSessionData = INextAuthSessionData
   > {
-    find({
-             id: IDType,
-             email: string,
-             emailToken: string,
-             provider: IUserProvider
-         }
-    ): Promise<UserType>;
+    find(opts: IFindParamsType<UserType, IDType, SessionType>): Promise<UserType>;
     update: (user: UserType, profile: any) => Promise<UserType>;
     insert: (user: UserType, profile: any) => Promise<UserType>;
     remove: (id: IDType) => Promise<boolean>;
