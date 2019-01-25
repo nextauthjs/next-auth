@@ -118,6 +118,7 @@ export default class {
     .then(response => {
       if (response.ok) {
         return response
+      } else {
         return Promise.reject(Error('Unexpected response when trying to get linked accounts'))
       }
     })
