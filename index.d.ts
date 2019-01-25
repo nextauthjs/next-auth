@@ -1,58 +1,52 @@
-import { Store } from "express-session";
-import { RequestHandler } from "express";
-import { IpcNetConnectOpts } from "net";
+import expressSession, { Store } from "express-session";
+import { RequestHandler, Express } from "express";
+import * as next from "next";
 
-declare namespace nextAuth {
-  interface IOptions {
-    bodyParser: boolean;
-    csrf: boolean;
-    pathPrefix: string;
+export  interface IOptions {
+    bodyParser?: boolean;
+    csrf?: boolean;
+    pathPrefix?: string;
     expressApp?: Express.Application;
-    expressSession: RequestHandler;
+    expressSession: expressSession;
     sessionSecret: string;
     sessionStore: Store;
     sessionMaxAge: number;
     sessionRevalidateAge: number;
-    sessionResave: boolean;
-    sessionRolling: boolean;
-    sessionSaveUninitialized: boolean;
+    sessionResave?: boolean;
+    sessionRolling?: boolean;
+    sessionSaveUninitialized?: boolean;
     serverUrl?: string;
-    trustProxy: boolean;
+    trustProxy?: boolean;
     providers: any[];
     port?: number;
     functions: IFunctions;
   }
 
-  interface IUserProvider {
+export  interface IUserProvider {
     name: string;
     id: string;
   }
-  interface ISendSignInEmailOpts {
+export  interface ISendSignInEmailOpts {
     email?: string;
     url?: string;
     req?: Express.Request;
   }
-  interface ISignInOpts {
+export  interface ISignInOpts {
     email?: string;
     password?: string;
   }
-  interface INextAuthSessionData<UserType = {}> extends Session {
-    maxAge: number;
-    revalidateAge: number;
-    csrfToken: string;
-    user?: UserType;
-    expires?: number;
-  }
-  interface IFunctions<
+
+  export  interface IFunctions<
     UserType = {},
     IDType = string,
     SessionType extends INextAuthSessionData = INextAuthSessionData
   > {
-    find(
-      id: IDType,
-      email: string,
-      emailToken: string,
-      provider: IUserProvider
+    find({
+             id: IDType,
+             email: string,
+             emailToken: string,
+             provider: IUserProvider
+         }
     ): Promise<UserType>;
     update: (user: UserType, profile: any) => Promise<UserType>;
     insert: (user: UserType, profile: any) => Promise<UserType>;
@@ -67,18 +61,16 @@ declare namespace nextAuth {
     signIn?: (opts: ISignInOpts) => Promise<UserType>;
   }
 
-  interface INextAuthResult {
-    next?: nextApp;
+export  interface INextAuthResult {
+    next?: next.Server;
     express: Express;
     expressApp: Express.Application;
     function: IFunctions;
     providers: any;
     port?: number;
-  }
 }
 
-declare function NextAuth(
-  nextApp?: NextApp,
-  options?: nextAuth.IOptions
-): Promise<nextAuth.INextAuthResult>;
-export = NextAuth;
+export default function NextAuth(
+  nextApp?: next.Server,
+  options?: IOptions
+): Promise<INextAuthResult>;

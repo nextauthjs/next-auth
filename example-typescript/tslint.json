@@ -1,0 +1,9 @@
+{
+  "extends": ["tslint:latest", "tslint-config-prettier", "tslint-react"],
+  "linterOptions": {
+    "exclude": ["/.next", "/static/*", "/__tests__", "/out", "/node_modules"]
+  },
+  "rules": {
+    "no-submodule-imports": false
+  }
+}
