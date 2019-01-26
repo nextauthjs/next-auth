@@ -12,7 +12,6 @@
   "license": "ISC",
   "sideEffects": false,
   "dependencies": {
-    "babel-core": "^6.26.3",
     "babel-polyfill": "^6.26.0",
     "body-parser": "^1.18.2",
     "express": "^4.16.3",
@@ -20,10 +19,11 @@
     "isomorphic-fetch": "^2.2.1",
     "lusca": "^1.6.0",
     "passport": "^0.4.0",
-    "rollup-plugin-babel": "^3.0.7",
     "uuid": "^3.2.1"
   },
   "devDependencies": {
+    "babel-core": "^6.26.3",
+    "rollup-plugin-babel": "^3.0.7",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-env": "^1.7.0",
     "bl": "^2.1.2",
