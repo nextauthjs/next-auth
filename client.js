@@ -1,24 +1,78 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('babel-polyfill'), require('isomorphic-fetch')) :
   typeof define === 'function' && define.amd ? define(['exports', 'babel-polyfill', 'isomorphic-fetch'], factory) :
-  (factory((global['next-auth-client'] = {}),null,global.fetch));
-}(this, (function (exports,babelPolyfill,fetch) { 'use strict';
+  (global = global || self, factory(global['next-auth-client'] = {}, null, global.fetch));
+}(this, function (exports, babelPolyfill, fetch) { 'use strict';
 
   fetch = fetch && fetch.hasOwnProperty('default') ? fetch['default'] : fetch;
 
-  var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-  function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
-
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-  var _class = function () {
-    function _class() {
-      _classCallCheck(this, _class);
+  function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
+    try {
+      var info = gen[key](arg);
+      var value = info.value;
+    } catch (error) {
+      reject(error);
+      return;
     }
 
-    _createClass(_class, null, [{
-      key: 'init',
+    if (info.done) {
+      resolve(value);
+    } else {
+      Promise.resolve(value).then(_next, _throw);
+    }
+  }
+
+  function _asyncToGenerator(fn) {
+    return function () {
+      var self = this,
+          args = arguments;
+      return new Promise(function (resolve, reject) {
+        var gen = fn.apply(self, args);
+
+        function _next(value) {
+          asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
+        }
+
+        function _throw(err) {
+          asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
+        }
+
+        _next(undefined);
+      });
+    };
+  }
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  function _defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  function _createClass(Constructor, protoProps, staticProps) {
+    if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) _defineProperties(Constructor, staticProps);
+    return Constructor;
+  }
+
+  var _default =
+  /*#__PURE__*/
+  function () {
+    function _default() {
+      _classCallCheck(this, _default);
+    }
+
+    _createClass(_default, null, [{
+      key: "init",
 
       /**
        * This is an async, isometric method which returns a session object - 
@@ -31,28 +85,32 @@
        * malicious JavaScript.
        **/
       value: function () {
-        var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+        var _init = _asyncToGenerator(
+        /*#__PURE__*/
+        regeneratorRuntime.mark(function _callee() {
           var _this = this;
 
-          var _ref2 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-              _ref2$req = _ref2.req,
-              req = _ref2$req === undefined ? null : _ref2$req,
-              _ref2$force = _ref2.force,
-              force = _ref2$force === undefined ? false : _ref2$force;
+          var _ref,
+              _ref$req,
+              req,
+              _ref$force,
+              force,
+              session,
+              _args = arguments;
 
-          var session;
           return regeneratorRuntime.wrap(function _callee$(_context) {
             while (1) {
               switch (_context.prev = _context.next) {
                 case 0:
+                  _ref = _args.length > 0 && _args[0] !== undefined ? _args[0] : {}, _ref$req = _ref.req, req = _ref$req === void 0 ? null : _ref$req, _ref$force = _ref.force, force = _ref$force === void 0 ? false : _ref$force;
                   session = {};
 
                   if (req) {
                     if (req.session) {
                       // If running on the server session data should be in the req object
                       session.csrfToken = req.connection._httpMessage.locals._csrf;
-                      session.expires = req.session.cookie._expires;
-                      // If the user is logged in, add the user to the session object
+                      session.expires = req.session.cookie._expires; // If the user is logged in, add the user to the session object
+
                       if (req.user) {
                         session.user = req.user;
                       }
@@ -65,32 +123,31 @@
                     } else {
                       session = this._getLocalStore('session');
                     }
-                  }
-
-                  // If session data exists, has not expired AND force is not set then
+                  } // If session data exists, has not expired AND force is not set then
                   // return the stored session we already have.
 
+
                   if (!(session && Object.keys(session).length > 0 && session.expires && session.expires > Date.now())) {
-                    _context.next = 6;
+                    _context.next = 7;
                     break;
                   }
 
-                  return _context.abrupt('return', new Promise(function (resolve) {
+                  return _context.abrupt("return", new Promise(function (resolve) {
                     resolve(session);
                   }));
 
-                case 6:
+                case 7:
                   if (!(typeof window === 'undefined')) {
-                    _context.next = 8;
+                    _context.next = 9;
                     break;
                   }
 
-                  return _context.abrupt('return', new Promise(function (resolve) {
+                  return _context.abrupt("return", new Promise(function (resolve) {
                     resolve({});
                   }));
 
-                case 8:
-                  return _context.abrupt('return', fetch('/auth/session', {
+                case 9:
+                  return _context.abrupt("return", fetch('/auth/session', {
                     credentials: 'same-origin'
                   }).then(function (response) {
                     if (response.ok) {
@@ -102,22 +159,20 @@
                     return response.json();
                   }).then(function (data) {
                     // Update session with session info
-                    session = data;
-
-                    // Set a value we will use to check this client should silently
+                    session = data; // Set a value we will use to check this client should silently
                     // revalidate, using the value for revalidateAge returned by the server.
-                    session.expires = Date.now() + session.revalidateAge;
 
-                    // Save changes to session
+                    session.expires = Date.now() + session.revalidateAge; // Save changes to session
+
                     _this._saveLocalStore('session', session);
 
                     return session;
-                  }).catch(function () {
+                  })["catch"](function () {
                     return Error('Unable to get session');
                   }));
 
-                case 9:
-                case 'end':
+                case 10:
+                case "end":
                   return _context.stop();
               }
             }
@@ -125,25 +180,26 @@
         }));
 
         function init() {
-          return _ref.apply(this, arguments);
+          return _init.apply(this, arguments);
         }
 
         return init;
       }()
-
       /**
        * A simple static method to get the CSRF Token is provided for convenience
        **/
 
     }, {
-      key: 'csrfToken',
+      key: "csrfToken",
       value: function () {
-        var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+        var _csrfToken = _asyncToGenerator(
+        /*#__PURE__*/
+        regeneratorRuntime.mark(function _callee2() {
           return regeneratorRuntime.wrap(function _callee2$(_context2) {
             while (1) {
               switch (_context2.prev = _context2.next) {
                 case 0:
-                  return _context2.abrupt('return', fetch('/auth/csrf', {
+                  return _context2.abrupt("return", fetch('/auth/csrf', {
                     credentials: 'same-origin'
                   }).then(function (response) {
                     if (response.ok) {
@@ -155,50 +211,54 @@
                     return response.json();
                   }).then(function (data) {
                     return data.csrfToken;
-                  }).catch(function () {
+                  })["catch"](function () {
                     return Error('Unable to get CSRF token');
                   }));
 
                 case 1:
-                case 'end':
+                case "end":
                   return _context2.stop();
               }
             }
-          }, _callee2, this);
+          }, _callee2);
         }));
 
         function csrfToken() {
-          return _ref3.apply(this, arguments);
+          return _csrfToken.apply(this, arguments);
         }
 
         return csrfToken;
       }()
-
       /**
        * A static method to get list of currently linked oAuth accounts
        **/
 
     }, {
-      key: 'linked',
+      key: "linked",
       value: function () {
-        var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-          var _ref5 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-              _ref5$req = _ref5.req,
-              req = _ref5$req === undefined ? null : _ref5$req;
+        var _linked = _asyncToGenerator(
+        /*#__PURE__*/
+        regeneratorRuntime.mark(function _callee3() {
+          var _ref2,
+              _ref2$req,
+              req,
+              _args3 = arguments;
 
           return regeneratorRuntime.wrap(function _callee3$(_context3) {
             while (1) {
               switch (_context3.prev = _context3.next) {
                 case 0:
+                  _ref2 = _args3.length > 0 && _args3[0] !== undefined ? _args3[0] : {}, _ref2$req = _ref2.req, req = _ref2$req === void 0 ? null : _ref2$req;
+
                   if (!req) {
-                    _context3.next = 2;
+                    _context3.next = 3;
                     break;
                   }
 
-                  return _context3.abrupt('return', req.linked());
+                  return _context3.abrupt("return", req.linked());
 
-                case 2:
-                  return _context3.abrupt('return', fetch('/auth/linked', {
+                case 3:
+                  return _context3.abrupt("return", fetch('/auth/linked', {
                     credentials: 'same-origin'
                   }).then(function (response) {
                     if (response.ok) {
@@ -210,50 +270,54 @@
                     return response.json();
                   }).then(function (data) {
                     return data;
-                  }).catch(function () {
+                  })["catch"](function () {
                     return Error('Unable to get linked accounts');
                   }));
 
-                case 3:
-                case 'end':
+                case 4:
+                case "end":
                   return _context3.stop();
               }
             }
-          }, _callee3, this);
+          }, _callee3);
         }));
 
         function linked() {
-          return _ref4.apply(this, arguments);
+          return _linked.apply(this, arguments);
         }
 
         return linked;
       }()
-
       /**
        * A static method to get list of currently configured oAuth providers
        **/
 
     }, {
-      key: 'providers',
+      key: "providers",
       value: function () {
-        var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
-          var _ref7 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-              _ref7$req = _ref7.req,
-              req = _ref7$req === undefined ? null : _ref7$req;
+        var _providers = _asyncToGenerator(
+        /*#__PURE__*/
+        regeneratorRuntime.mark(function _callee4() {
+          var _ref3,
+              _ref3$req,
+              req,
+              _args4 = arguments;
 
           return regeneratorRuntime.wrap(function _callee4$(_context4) {
             while (1) {
               switch (_context4.prev = _context4.next) {
                 case 0:
+                  _ref3 = _args4.length > 0 && _args4[0] !== undefined ? _args4[0] : {}, _ref3$req = _ref3.req, req = _ref3$req === void 0 ? null : _ref3$req;
+
                   if (!req) {
-                    _context4.next = 2;
+                    _context4.next = 3;
                     break;
                   }
 
-                  return _context4.abrupt('return', req.providers());
+                  return _context4.abrupt("return", req.providers());
 
-                case 2:
-                  return _context4.abrupt('return', fetch('/auth/providers', {
+                case 3:
+                  return _context4.abrupt("return", fetch('/auth/providers', {
                     credentials: 'same-origin'
                   }).then(function (response) {
                     if (response.ok) {
@@ -266,27 +330,26 @@
                     return response.json();
                   }).then(function (data) {
                     return data;
-                  }).catch(function (e) {
+                  })["catch"](function (e) {
                     console.log("NextAuth Error Loading Providers");
                     console.log(e);
                     return null;
                   }));
 
-                case 3:
-                case 'end':
+                case 4:
+                case "end":
                   return _context4.stop();
               }
             }
-          }, _callee4, this);
+          }, _callee4);
         }));
 
         function providers() {
-          return _ref6.apply(this, arguments);
+          return _providers.apply(this, arguments);
         }
 
         return providers;
       }()
-
       /*
        * Sign in
        * 
@@ -300,46 +363,47 @@
        */
 
     }, {
-      key: 'signin',
+      key: "signin",
       value: function () {
-        var _ref8 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(params) {
-          var _this2 = this;
-
+        var _signin = _asyncToGenerator(
+        /*#__PURE__*/
+        regeneratorRuntime.mark(function _callee6(params) {
           var formData, route, encodedForm;
           return regeneratorRuntime.wrap(function _callee6$(_context6) {
             while (1) {
               switch (_context6.prev = _context6.next) {
                 case 0:
                   // Params can be just string (an email address) or an object (form fields)
-                  formData = typeof params === 'string' ? { email: params } : params;
+                  formData = typeof params === 'string' ? {
+                    email: params
+                  } : params; // Use either the email token generation route or the custom form auth route
 
-                  // Use either the email token generation route or the custom form auth route
-
-                  route = typeof params === 'string' ? '/auth/email/signin' : '/auth/signin';
-
-                  // Add latest CSRF Token to request
+                  route = typeof params === 'string' ? '/auth/email/signin' : '/auth/signin'; // Add latest CSRF Token to request
 
                   _context6.next = 4;
                   return this.csrfToken();
 
                 case 4:
                   formData._csrf = _context6.sent;
-
-
                   // Encoded form parser for sending data in the body
                   encodedForm = Object.keys(formData).map(function (key) {
                     return encodeURIComponent(key) + '=' + encodeURIComponent(formData[key]);
                   }).join('&');
-                  return _context6.abrupt('return', fetch(route, {
+                  return _context6.abrupt("return", fetch(route, {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/x-www-form-urlencoded',
                       'X-Requested-With': 'XMLHttpRequest' // So Express can detect AJAX post
+
                     },
                     body: encodedForm,
                     credentials: 'same-origin'
-                  }).then(function () {
-                    var _ref9 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(response) {
+                  }).then(
+                  /*#__PURE__*/
+                  function () {
+                    var _ref4 = _asyncToGenerator(
+                    /*#__PURE__*/
+                    regeneratorRuntime.mark(function _callee5(response) {
                       return regeneratorRuntime.wrap(function _callee5$(_context5) {
                         while (1) {
                           switch (_context5.prev = _context5.next) {
@@ -353,21 +417,21 @@
                               return response.json();
 
                             case 3:
-                              return _context5.abrupt('return', _context5.sent);
+                              return _context5.abrupt("return", _context5.sent);
 
                             case 6:
                               throw new Error('HTTP error while attempting to sign in');
 
                             case 7:
-                            case 'end':
+                            case "end":
                               return _context5.stop();
                           }
                         }
-                      }, _callee5, _this2);
+                      }, _callee5);
                     }));
 
-                    return function (_x5) {
-                      return _ref9.apply(this, arguments);
+                    return function (_x2) {
+                      return _ref4.apply(this, arguments);
                     };
                   }()).then(function (data) {
                     if (data.success && data.success === true) {
@@ -378,23 +442,25 @@
                   }));
 
                 case 7:
-                case 'end':
+                case "end":
                   return _context6.stop();
               }
             }
           }, _callee6, this);
         }));
 
-        function signin(_x4) {
-          return _ref8.apply(this, arguments);
+        function signin(_x) {
+          return _signin.apply(this, arguments);
         }
 
         return signin;
       }()
     }, {
-      key: 'signout',
+      key: "signout",
       value: function () {
-        var _ref10 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7() {
+        var _signout = _asyncToGenerator(
+        /*#__PURE__*/
+        regeneratorRuntime.mark(function _callee7() {
           var csrfToken, formData, encodedForm;
           return regeneratorRuntime.wrap(function _callee7$(_context7) {
             while (1) {
@@ -405,19 +471,17 @@
 
                 case 2:
                   csrfToken = _context7.sent;
-                  formData = { _csrf: csrfToken
+                  formData = {
+                    _csrf: csrfToken
+                  }; // Encoded form parser for sending data in the body
 
-                    // Encoded form parser for sending data in the body
-                  };
                   encodedForm = Object.keys(formData).map(function (key) {
                     return encodeURIComponent(key) + '=' + encodeURIComponent(formData[key]);
-                  }).join('&');
-
-                  // Remove cached session data
+                  }).join('&'); // Remove cached session data
 
                   this._removeLocalStore('session');
 
-                  return _context7.abrupt('return', fetch('/auth/signout', {
+                  return _context7.abrupt("return", fetch('/auth/signout', {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/x-www-form-urlencoded'
@@ -426,12 +490,12 @@
                     credentials: 'same-origin'
                   }).then(function () {
                     return true;
-                  }).catch(function () {
+                  })["catch"](function () {
                     return Error('Unable to sign out');
                   }));
 
                 case 7:
-                case 'end':
+                case "end":
                   return _context7.stop();
               }
             }
@@ -439,18 +503,16 @@
         }));
 
         function signout() {
-          return _ref10.apply(this, arguments);
+          return _signout.apply(this, arguments);
         }
 
         return signout;
-      }()
-
-      // The Web Storage API is widely supported, but not always available (e.g.
+      }() // The Web Storage API is widely supported, but not always available (e.g.
       // it can be restricted in private browsing mode, triggering an exception).
       // We handle that silently by just returning null here.
 
     }, {
-      key: '_getLocalStore',
+      key: "_getLocalStore",
       value: function _getLocalStore(name) {
         try {
           return JSON.parse(localStorage.getItem(name));
@@ -459,7 +521,7 @@
         }
       }
     }, {
-      key: '_saveLocalStore',
+      key: "_saveLocalStore",
       value: function _saveLocalStore(name, data) {
         try {
           localStorage.setItem(name, JSON.stringify(data));
@@ -469,7 +531,7 @@
         }
       }
     }, {
-      key: '_removeLocalStore',
+      key: "_removeLocalStore",
       value: function _removeLocalStore(name) {
         try {
           localStorage.removeItem(name);
@@ -480,11 +542,11 @@
       }
     }]);
 
-    return _class;
+    return _default;
   }();
 
-  exports.NextAuth = _class;
+  exports.NextAuth = _default;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-})));
+}));
