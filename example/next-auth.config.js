@@ -12,7 +12,7 @@
  **/
 
 // Load environment variables from a .env file if one exists
-require('dotenv').load()
+require('dotenv').config({ path: './.env' })
 
 const nextAuthProviders = require('./next-auth.providers')
 const nextAuthFunctions = require('./next-auth.functions')
