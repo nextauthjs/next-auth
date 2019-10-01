@@ -15,7 +15,7 @@ const nextAuth = require('next-auth')
 const nextAuthConfig = require('./next-auth.config')
 
 // Load environment variables from .env
-require('dotenv').load()
+require('dotenv').config({ path: './.env' })
 
 // Initialize Next.js
 const nextApp = next({
