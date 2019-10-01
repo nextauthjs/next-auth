@@ -21,7 +21,7 @@
  **/
 
 // Load environment variables from a .env file if one exists
-require('dotenv').load()
+require('dotenv').config({ path: './.env' })
 
 module.exports = () => {
   let providers = []

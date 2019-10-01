@@ -39,7 +39,7 @@
  **/
 
 // Load environment variables from a .env file if one exists
-require('dotenv').load()
+require('dotenv').config({ path: './.env' })
 
 // This config file uses MongoDB for User accounts, as well as session storage.
 // This config includes options for NeDB, which it defaults to if no DB URI 
