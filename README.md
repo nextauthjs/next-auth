@@ -210,7 +210,7 @@ You can use any combination of authentication methods (email, credentials, oAuth
 
 ### next-auth.providers.js 
 
-Configuration for oAuth providers are defined in **next-auth.functions.js**
+Configuration for oAuth providers are defined in **next-auth.providers.js**
 
 It includes configuration examples for Facebook, Google and Twitter oAuth, which can easily be copied and replicated to add support for signing in other oAuth providers.
 
