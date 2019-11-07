@@ -1,6 +1,6 @@
-.next
 .env
+/.env.production
 node_modules
-.idea
+.idea/
 yarn.lock
 yarn-error.log

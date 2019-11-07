@@ -1,52 +1,59 @@
-/// <reference path="./index.d.ts" />
-import { Store } from "express-session";
-import { RequestHandler } from "express";
-import { IpcNetConnectOpts } from "net";
+import * as http from "http"
 
-declare namespace nextAuth {
-  interface ILinkedAccounts {
-    [name: string]: boolean;
-  }
-  interface IProviders {
-    [name: string]: {
-      signin: string;
-      callback: string;
-    };
-  }
-  interface NextAuthRequest<SessionType = nextAuth.NextAuthSession>
-    extends Express.Request {
-    session: NextAuthSession;
-    linked: () => Promise<ILinkedAccounts | Error>;
-    providers: () => Promise<IProviders | Error>;
-  }
-  interface IInitOptions {
-    req?: NextAuthRequest;
-    force: boolean;
-  }
-  interface IClientOptions {
-    req?: NextAuthRequest;
-  }
-}
-
-declare class Client {
+export class NextAuth {
   static init(
-    opts: nextAuth.IInitOptions
-  ): Promise<Partial<nextAuth.INextAuthSessionData>>;
+      opts: IInitOptions
+  ): Promise<Partial<INextAuthSessionData>>;
   static csrfToken(): Promise<string | Error>;
   static linked(
-    opts: nextAuth.IClientOptions
-  ): Promise<nextAuth.ILinkedAccounts | Error>;
+      opts: IClientOptions
+  ): Promise<ILinkedAccounts | Error>;
   static providers(
-    opts: nextAuth.IClientOptions
-  ): Promise<nextAuth.IProviders | Error>;
+      opts: IClientOptions
+  ): Promise<IProviders | Error>;
   static signin(
-    params: string | { [k: string]: string }
+      params: string | { [k: string]: string }
   ): Promise<boolean | Error>;
   static signout(): Promise<true | Error>;
 
-  static _getLocalStore(): Promise<nextAuth.INextAuthSessionData | null>;
+  static _getLocalStore(): Promise<INextAuthSessionData | null>;
   static _saveLocalStore(): Promise<boolean>;
   static _removeLocalStore(): Promise<boolean>;
 }
 
-export = Client;
+export interface ILinkedAccounts {
+  [name: string]: boolean;
+}
+
+export interface IProvider {
+  signin: string;
+  callback: string;
+}
+
+export interface IProviders {
+  [name: string]: IProvider;
+}
+
+export  interface INextAuthSessionData<UserType = {}> extends Express.Session {
+  maxAge: number;
+  revalidateAge: number;
+  csrfToken: string;
+  user?: UserType;
+  expires?: number;
+}
+
+export interface NextAuthRequest<SessionType extends INextAuthSessionData = INextAuthSessionData>
+    extends Express.Request {
+  session: SessionType;
+  linked: () => Promise<ILinkedAccounts | Error>;
+  providers: () => Promise<IProviders | Error>;
+}
+
+export interface IInitOptions {
+  req?: http.IncomingMessage;
+  force?: boolean;
+}
+
+export interface IClientOptions {
+  req?: http.IncomingMessage;
+}
