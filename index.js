@@ -33,6 +33,10 @@ module.exports = (nextApp, {
   // The expiry time for a session is reset every time a user revisits the site
   // or revalidates their session token - this is the maximum idle time value.
   sessionMaxAge = 60000 * 60 * 24 * 7,
+  // The session cookie name. Useful for adding cookie prefixes. E.g. setting
+  // '__HOST-' and '__SECURE-' prefixes on cookie names prevents them from being
+  // overwritten by insecure origins.
+  sessionName = null,
   // Session Revalidation in X ms (optional, default is 60 seconds).
   // Specifies how often a Single Page App should revalidate a session.
   // Does not impact the session life on the server, but causes clients to 
@@ -55,6 +59,9 @@ module.exports = (nextApp, {
   // is set to false, the cookie will not be set on a response with an
   // uninitialized session https://www.npmjs.com/package/express-session#rolling
   sessionRolling = true,
+  // Prevent cookies from being sent cross-site, protecting against CSRF
+  // attacks.
+  sessionSameSite = null,
   // Forces a session that is "uninitialized" to be saved to the store.
   // A session is uninitialized when it is new but not modified. Choosing false 
   // is useful for implementing login sessions, reducing server storage usage,
@@ -139,6 +146,7 @@ module.exports = (nextApp, {
     expressApp.use(BodyParser.urlencoded(bodyParserUrlEncodedOptions))
   }
   expressApp.use(expressSession({
+    name: sessionName,
     secret: sessionSecret,
     store: sessionStore,
     resave: sessionResave,
@@ -148,7 +156,8 @@ module.exports = (nextApp, {
       name: sessionCookie,
       httpOnly: true,
       secure: 'auto',
-      maxAge: sessionMaxAge
+      maxAge: sessionMaxAge,
+      sameSite: sessionSameSite,
     }
   }))
   
