@@ -10,18 +10,18 @@ export default (req, res, _options) => {
     slug,
     action = slug[0],
     provider = slug[1],
-    serverUrl = 'http://localhost:3000',
-    callbackUrl = serverUrl,
+    site = 'http://localhost:3000',
+    callbackUrl = site,
     pathPrefix = '/api/auth',
   } = query
 
-  const urlPrefix = `${(serverUrl || '')}${pathPrefix}`
+  const urlPrefix = `${(site || '')}${pathPrefix}`
 
   const options = {
     ..._options,
     urlPrefix: urlPrefix,
     providers: parseProviders(_options.providers, urlPrefix),
-    serverUrl,
+    site,
     action,
     provider,
     callbackUrl,
@@ -40,10 +40,10 @@ export default (req, res, _options) => {
           signin(req, res, options)
         } else {
           res.setHeader('Content-Type', 'text/html')
-          res.end(`<ul>${
+          res.end(`<html><body style="margin: 2em; text-align: center; font-family: sans-serif;"><h1>Sign up / Sign in</h1>${
             Object.values(options.providers).map(provider =>
-             `<li><a href="${provider.signinUrl}?callbackUrl=${options.callbackUrl}">Signin with ${provider.name}</a></li>`
-            ).join('')}</ul>`)
+             `<p><a href="${provider.signinUrl}?callbackUrl=${options.callbackUrl}">Sign in with ${provider.name}</a></p>`
+          ).join('')}</ul><p><small><em>This page is a placeholder!</em></small></p><body></html>`)
         }
         break
       case 'callback':
