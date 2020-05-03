@@ -3,7 +3,7 @@ import { oAuthCallback } from '../lib/oauth/callback'
 
 export default async (req, res, options) => {
   return new Promise(resolve => {
-    const { provider, providers, adapter, serverUrl } = options
+    const { provider, providers, adapter, site } = options
     const providerConfig = providers[provider]
     const { type } = providerConfig
 
@@ -17,7 +17,7 @@ export default async (req, res, options) => {
       adapter.create(user)
 
       // Get callback URL from cookie (saved at the start of the signin flow)
-      const callbackUrl = req.cookies['callback-url'] || serverUrl
+      const callbackUrl = req.cookies['callback-url'] || site
 
       // Check callbackUrl is at allowed domain
       if (!options.checkCallbackUrl || options.checkCallbackUrl(callbackUrl)) {
@@ -27,9 +27,9 @@ export default async (req, res, options) => {
       } else {
         // If checkCallbackUrl function is defined but doesn't return true,
         // then redirect to the homepage
-        console.warn(`Warning: URL '${callbackUrl}' is not an allowed callback URL (redirecting client to ${serverUrl})`)
+        console.warn(`Warning: URL '${callbackUrl}' is not an allowed callback URL (redirecting client to ${site})`)
         res.statusCode = 302
-        res.setHeader('Location', serverUrl)
+        res.setHeader('Location', site)
         res.end()
       }
       return resolve()
