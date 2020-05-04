@@ -75,18 +75,16 @@ const _oAuth2Callback = (req, provider, callback) => {
   /*
   const client = oAuth2Client(provider)
   client.code.getToken(req.url)
-  .then((user) => {
+  .then(accessToken => {
     // Create 'Authorization' header with Bearer token
-    var signedRequest = user.sign({
+    var signedRequest = accessToken.sign({
       method: 'GET',
       url: provider.profileUrl,
     })
 
     fetch(provider.profileUrl, signedRequest)
     .then(response => response.json() )
-    .then(user => {
-      callback(null, user)
-    })
+    .then(profileData => callback(null, _getProfile(error, profileData, accessToken, null, provider), profileData) )
   })
   */
 }
@@ -99,7 +97,11 @@ function _getProfile(error, profileData, accessToken, refreshToken, provider) {
 
   let profile = {}
   try {
-    profile = provider.profile(JSON.parse(profileData))
+    // Convert profileData into an object if it's a string
+    if (typeof profileData === 'string' || profileData instanceof String)
+      profileData = JSON.parse(profileData)
+
+    profile = provider.profile(profileData)
   } catch (exception) {
     // @TODO Handle parsing error
     if (exception) {
@@ -107,16 +109,20 @@ function _getProfile(error, profileData, accessToken, refreshToken, provider) {
     }
   }
 
-  return {
-    name: profile.name,
-    email: profile.email,
-    image: profile.image,
-    [provider.id]: {
-      id: profile.id,
-      accessToken,
-      refreshToken,
-    }
-  }
+  // Return "clean" profile and raw profile object
+  return ({
+    profile: {
+      name: profile.name,
+      email: profile.email,
+      image: profile.image,
+      [provider.id]: {
+        id: profile.id,
+        accessToken,
+        refreshToken,
+      }
+    },
+    _profile: profileData
+  })
 }
 
 export {
