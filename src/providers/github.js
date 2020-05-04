@@ -1,6 +1,5 @@
 export default (options) => {
   return {
-    ...options,
     id: 'github',
     name: 'GitHub',
     type: 'oauth',
@@ -16,6 +15,7 @@ export default (options) => {
         email: profile.email,
         image: profile.avatar_url
       }
-    }
+    },
+    ...options
   }
 }
