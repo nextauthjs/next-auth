@@ -7,7 +7,6 @@
 // is swapped out in future.
 export default (options) => {
   return {
-    ...options,
     id: 'google',
     name: 'Google',
     type: 'oauth2',
@@ -22,6 +21,7 @@ export default (options) => {
         email: profile.email,
         image: profile.picture
       }
-    }
+    },
+    ...options
   }
 }

@@ -1,6 +1,5 @@
 export default (options) => {
   return {
-    ...options,
     id: 'twitter',
     name: 'Twitter',
     type: 'oauth',
@@ -17,6 +16,7 @@ export default (options) => {
         email: profile.email,
         image: profile.profile_image_url_https.replace(/_normal\.jpg$/, '.jpg')
       }
-    }
+    },
+    ...options
   }
 }
