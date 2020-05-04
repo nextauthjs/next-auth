@@ -28,7 +28,7 @@ export default async (req, res, options, resolve) => {
       console.log('SIGNIN_CALLBACK_ERROR', error)
     }
 
-    const { profile, _profile } = response
+    const { profile, account } = response
 
     // @TODO Check if user email exists in db
     try {
@@ -40,7 +40,7 @@ export default async (req, res, options, resolve) => {
         adapter,
         sessionId,
         profile,
-        providerConfig
+        account
       )
 
       // @TODO Save session cookie

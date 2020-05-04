@@ -1,11 +1,14 @@
-export default (adapter, sessionId, profile, provider) => {
+export default (adapter, sessionId, profile, providerAccount) => {
   return new Promise(async (resolve, reject) => {
     // Input validation
     if (!profile || !profile.id || !profile.email)
       reject(new Error("Missing or invalid profile"))
 
-    if (!provider || !provider.id || !provider.type)
-      reject(new Error("Missing or invalid provider"))
+    if (!providerAccount || !providerAccount.id || !providerAccount.type)
+      reject(new Error("Missing or invalid provider account"))
+
+    // Get adapter - async as dependant on DB connection being ready
+    const _adapter = await adapter.getAdapter()
 
     const {
       createUser,
@@ -20,7 +23,7 @@ export default (adapter, sessionId, profile, provider) => {
       createSession,
       getSessionById,
       deleteSessionById,
-    } = adapter
+    } = _adapter
 
     let session = sessionId ? await getSessionById(sessionId) : null
     let user = (session && session.user && session.user.id) ? await getUserById(session.user.id) : null
@@ -31,7 +34,7 @@ export default (adapter, sessionId, profile, provider) => {
 
     // @TODO Support 'credentials' auth flow
 
-    if (provider.type === 'email') {
+    if (providerAccount.type === 'email') {
       // @TODO Ensure verification of email address before this portion of the flow can be triggered
 
       // If signing in with an email address, check if an account with the same
@@ -75,9 +78,9 @@ export default (adapter, sessionId, profile, provider) => {
         isNewAccount
       })
       
-    } else if (provider.type === 'oauth') {
+    } else if (providerAccount.type === 'oauth') {
       // If signing in with oauth account, check to see if the account exists already
-      const userByProviderAccountId = await getUserByProviderAccountId(provider.id, profile[provider.id].id)
+      const userByProviderAccountId = await getUserByProviderAccountId(providerAccount.provider, providerAccount.id)
       if (userByProviderAccountId) {
         if (isSignedIn) {
           // If the user is already signed in with this account, we don't need to do anything.
@@ -108,7 +111,15 @@ export default (adapter, sessionId, profile, provider) => {
         if (isSignedIn) {
           // If the user is already signed in and the oAuth account isn't already associated
           // with another user account then we can go ahead and link the accounts safely.
-          user = await linkAccount(user.id, provider.id, profile[provider.id].id)
+          await linkAccount(
+            user.id,
+            providerAccount.provider,
+            providerAccount.type,
+            providerAccount.id,
+            providerAccount.refreshToken,
+            providerAccount.accessToken,
+            providerAccount.accessTokenExpires
+          )
 
           // As they are already signed in, we don't need to do anything after linking them.
           return resolve({
@@ -153,7 +164,16 @@ export default (adapter, sessionId, profile, provider) => {
           // create a new account for the user, link it to the oAuth acccount and 
           // create a new session for them so they are signed in with it.
           user = await createUser(profile)
-          user = await linkAccount(user.id, provider.id, profile[provider.id].id)
+          await linkAccount(
+            user.id,
+            providerAccount.provider,
+            providerAccount.type,
+            providerAccount.id,
+            providerAccount.refreshToken,
+            providerAccount.accessToken,
+            providerAccount.accessTokenExpires
+          )
+
           session = await createSession(user)
           isNewAccount = true
           return resolve({

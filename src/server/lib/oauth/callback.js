@@ -109,17 +109,20 @@ function _getProfile(error, profileData, accessToken, refreshToken, provider) {
     }
   }
 
-  // Return "clean" profile and raw profile object
+  // Return profile, raw profile and auth provider details
   return ({
     profile: {
       name: profile.name,
       email: profile.email,
       image: profile.image,
-      [provider.id]: {
-        id: profile.id,
-        accessToken,
-        refreshToken,
-      }
+    },
+    account: {
+      provider: provider.id,
+      type: provider.type,
+      id: profile.id,
+      refreshToken,
+      accessToken,
+      accessTokenExpires: null
     },
     _profile: profileData
   })
