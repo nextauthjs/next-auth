@@ -10,6 +10,7 @@
   },
   "license": "ISC",
   "dependencies": {
-    "oauth": "^0.9.15"
+    "oauth": "^0.9.15",
+    "typeorm": "^0.2.24"
   }
 }

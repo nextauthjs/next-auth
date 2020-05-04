@@ -1,1 +1,0 @@
-// @TODO Elasticsearch Adapter
