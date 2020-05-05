@@ -11,6 +11,13 @@
     "build:server": "babel src/server/index.js -o index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "files": [
+    "dist",
+    "index.js",
+    "providers.js",
+    "adapters.js",
+    "client.js"
+  ],
   "license": "ISC",
   "dependencies": {
     "oauth": "^0.9.15",
