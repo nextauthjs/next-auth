@@ -1,16 +1,23 @@
 import 'reflect-metadata'
 import { createConnection, getConnection, getManager, EntitySchema } from 'typeorm'
 
-import { Account, AccountSchema } from '../models/account'
-import { User, UserSchema } from '../models/user'
+import Models from '../models'
 
-const Default = (config) => {
+const Default = (config, options) => {
+  // Parse options before parsing config as we need to load any custom models or schemas first
+  const defaultOptions = {}
 
-  function debug(...args) {
-    if (process.env.NODE_ENV === 'development')
-      console.log(...args)
+  options = {
+    ...defaultOptions,
+    ...options
   }
 
+  const Account = options.Account ? options.Account.model : Models.Account.model
+  const AccountSchema = options.Account ? options.Account.schema : Models.Account.schema
+  const User = options.User ? options.User.model :  Models.User.model
+  const UserSchema = options.User ? options.User.schema :  Models.User.schema
+
+  // Parse config (uses options)
   const defaultConfig = {
     name: 'default',
     autoLoadEntities: true,
@@ -27,6 +34,10 @@ const Default = (config) => {
     ...config
   }
 
+  function debug(...args) {
+    if (process.env.NODE_ENV === 'development')
+      console.log(...args)
+  }
   let connection = null
 
   async function getAdapter() {
