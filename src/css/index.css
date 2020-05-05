@@ -1,0 +1,59 @@
+:root {
+  --primary-color: #6D757D;
+}
+
+body {
+  margin: 1em;
+  font-family: sans-serif;
+}
+
+h1 {
+  font-weight: 300;
+  margin: 1em;
+}
+
+.page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.signin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: auto;
+  transform: translateX(-50%) translateY(-50%);
+  text-align: center;
+
+  p {
+    margin: 0;
+    padding: 0;
+  }
+
+  a {
+    display: block;
+    margin: 0 auto 0.5em auto;
+    padding: 0.5em 2em;
+    border: 1px solid var(--primary-color);
+    border-radius: 0.2em;
+    text-decoration: none;
+    font-size: 1.1em;
+    transition: all 0.1s ease-in-out;
+
+    &:link,
+    &:visited {
+      background-color: #fff;
+      color: var(--primary-color);
+    }
+
+    &:hover,
+    &:active {
+      border-color: var(--primary-color);
+      background-color: var(--primary-color);
+      color: #fff;
+    }
+  }
+}
