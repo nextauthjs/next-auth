@@ -1,11 +1,11 @@
 export default (adapter, sessionId, profile, providerAccount) => {
   return new Promise(async (resolve, reject) => {
     // Input validation
-    if (!profile || !profile.id || !profile.email)
-      reject(new Error("Missing or invalid profile"))
+    if (!profile || !profile.email)
+      return reject(new Error("Missing or invalid profile"))
 
     if (!providerAccount || !providerAccount.id || !providerAccount.type)
-      reject(new Error("Missing or invalid provider account"))
+      return reject(new Error("Missing or invalid provider account"))
 
     // Get adapter - async as dependant on DB connection being ready
     const _adapter = await adapter.getAdapter()
