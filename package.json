@@ -6,9 +6,12 @@
   "author": "Iain Collins <me@iaincollins.com>",
   "main": "index.js",
   "scripts": {
-    "build": "babel src --out-dir dist",
-    "watch": "babel --watch src --out-dir dist",
-    "build:server": "babel src/server/index.js -o index.js",
+    "build": "npm run build:js && npm run build:css",
+    "build:js": "babel src --out-dir dist",
+    "build:css": "postcss src/**/*.css --base src --dir dist",
+    "watch": "npm run watch:js | npm run watch:css",
+    "watch:js": "babel --watch src --out-dir dist",
+    "watch:css": "postcss --watch src/**/*.css --base src --dir dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "files": [
@@ -21,11 +24,19 @@
   "license": "ISC",
   "dependencies": {
     "oauth": "^0.9.15",
+    "preact": "^10.4.1",
+    "preact-render-to-string": "^5.1.7",
     "typeorm": "^0.2.24"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.6",
-    "@babel/preset-env": "^7.9.6"
+    "@babel/preset-env": "^7.9.6",
+    "autoprefixer": "^9.7.6",
+    "babel-preset-minify": "^0.5.1",
+    "babel-preset-preact": "^2.0.0",
+    "cssnano": "^4.1.10",
+    "postcss-cli": "^7.1.1",
+    "postcss-nested": "^4.2.1"
   }
 }
