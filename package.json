@@ -6,11 +6,19 @@
   "author": "Iain Collins <me@iaincollins.com>",
   "main": "index.js",
   "scripts": {
+    "build": "babel src --out-dir dist",
+    "watch": "babel --watch src --out-dir dist",
+    "build:server": "babel src/server/index.js -o index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "license": "ISC",
   "dependencies": {
     "oauth": "^0.9.15",
     "typeorm": "^0.2.24"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.6",
+    "@babel/preset-env": "^7.9.6"
   }
 }

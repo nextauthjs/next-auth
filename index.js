@@ -1,3 +1,1 @@
-import NextAuthServer from './src/server/index'
-
-export default NextAuthServer
+module.exports = require('./dist/server')
