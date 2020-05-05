@@ -1,12 +1,14 @@
 {
   "presets": [
+    "preact",
     [
-      "@babel/preset-env",
-      {
+      "@babel/preset-env", {
         "targets": {
           "esmodules": true
         }
       }
-    ]
-  ]
+    ],
+    "minify"
+  ],
+  "comments": false
 }

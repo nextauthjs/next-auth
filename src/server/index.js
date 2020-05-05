@@ -3,6 +3,7 @@ import providers from './routes/providers'
 import signin from './routes/signin'
 import callback from './routes/callback'
 import session from './routes/session'
+import pages from './pages'
 
 export default (req, res, _options) => {
   return new Promise(async resolve => {
@@ -43,11 +44,10 @@ export default (req, res, _options) => {
           if (provider && options.providers[provider]) {
             signin(req, res, options, resolve)
           } else {
-            res.setHeader('Content-Type', 'text/html')
-            res.end(`<html><body style="margin: 2em; text-align: center; font-family: sans-serif;"><h1>Sign up / Sign in</h1>${
-              Object.values(options.providers).map(provider =>
-              `<p><a href="${provider.signinUrl}?callbackUrl=${options.callbackUrl}">Sign in with ${provider.name}</a></p>`
-            ).join('')}</ul><p><small><em>This page is a placeholder!</em></small></p><body></html>`)
+            pages.render(res, 'signin', {
+              providers: Object.values(options.providers),
+              callbackUrl: options.callbackUrl
+            })
           }
           break
         case 'callback':
