@@ -34,17 +34,16 @@ export default async (req, res, options, resolve) => {
     try {
       const {
         session,
-        user,
         isNewAccount
-        } = await signinFlow(
+      } = await signinFlow(
         adapter,
         sessionId,
         profile,
         account
       )
 
-      // @TODO Save session cookie
-      //cookie(res, sessionIdCookieName, session.id, cookieOptions)
+      // Save Session ID in cookie
+      cookie(res, sessionIdCookieName, session.id, { httpOnly: true, cookieOptions })
 
       // Handle first logins on new accounts
       // e.g. option to send users to a new account landing page on initial login
@@ -53,6 +52,7 @@ export default async (req, res, options, resolve) => {
         callbackUrl = options.newAccountLandingPageUrl
     } catch(error) {
       // @TODO Handle signin flow errors
+      console.error(error)
     }
 
     // Check callbackUrl is at allowed domain

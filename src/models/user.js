@@ -27,11 +27,5 @@ export const UserSchema = {
       type: 'varchar',
       nullable: true
     }
-  },
-  relations: {
-    accounts: {
-      target: 'Account',
-      type: 'one-to-many'
-    }
   }
 }
