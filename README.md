@@ -18,6 +18,10 @@ Note: NextAuth is not associated with Next.js or Vercel.
 
 ## Configuration
 
+Configuration is much simpler and more powerful than in NextAuth 1.0, with both SQL and Document databases supported out of the box. There are predefined models for Users and Sessions, which you can use, extend or replace with your own!
+
+### Server
+
 To add `next-auth` to a project, create a file to handle authentication requests at `pages/api/auth/[...slug.js]` with a list of authentication providers (e.g. Twitter, Facebook, Google, GitHub, etc) and your database (e.g. MongoDB, MySQL, Elasticsearch, etc).
 
 All requests to `pages/api/auth/*` (signin, callback, signout) will be automatically handed by NextAuth.
@@ -28,7 +32,6 @@ Example `pages/api/auth/[...slug.js]`:
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 import Adapters from 'next-auth/adapters'
-import MongoClient from 'mongodb'
 
 const options = {
   site: 'https://www.example.com',
@@ -46,16 +49,53 @@ const options = {
       clientSecret: process.env.GITHUB_CLIENT_SECRET
     }),
   ],
-  adapter: Adapters.MongoDB(MongoClient, process.env.MONGODB)
+  adapter: Adapters.Default()
 }
 
 export default (req, res) => NextAuth(req, res, options)
 ```
 
+An "*Adapter*" in NextAuth is a object connects to whatever system you want to use to store data for user accounts, sessions, etc.
+
+NextAuth comes with a default adapter that uses [TypeORM](https://typeorm.io/) so that it can be be used with many different databases without any configuration.
+
+To specify the database you want to use (and to pass any credentials) you can use environment variables ([see TypeORM configuration documentation](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md)). 
+
+Alternatively, you can create a file called `ormconfig.json` at the top level of your project with your configuration, or you can pass a configuration object to the `Adapters.Default()` function.
+
+An example `ormconfig.json` configuration for SQL Lite (useful for local development and testing):
+
+```json
+{
+  "type": "sqlite",
+  "database": "test"
+}
+```
+
+The following databases are supported by default adapter:
+
+* cordova
+* expo
+* mariadb
+* mongodb
+* mssql
+* mysql
+* oracle
+* postgres
+* sqlite
+* sqljs
+* react-native
+
+Appropriate tables / collections for Users, Sessions (etc) will be created automatically. You can customize, extend or replace the models by passing additional options to the `Adapters.Default()` function.
+
+### Client
+
 NextAuth Client usage remains almost identical, but is much simpler than in version 1.x.
+
+It can be used with React Hooks as well as React lifescycle and Next.js methods.
 
 You can still create your own custom authentication pages, but if you want to you will now be able to just link to `/api/auth/signin` to use the built-in authentication pages, which are generated automatically based on the supplied configuration options.
 
-*Additional documentation coming soon!*
+*This documentation will be updated closer to release.*
 
 
