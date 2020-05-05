@@ -14,8 +14,12 @@ const Default = (config, options) => {
 
   const Account = options.Account ? options.Account.model : Models.Account.model
   const AccountSchema = options.Account ? options.Account.schema : Models.Account.schema
+
   const User = options.User ? options.User.model :  Models.User.model
   const UserSchema = options.User ? options.User.schema :  Models.User.schema
+
+  const Session = options.Session ? options.Session.model :  Models.Session.model
+  const SessionSchema = options.Session ? options.Session.schema :  Models.Session.schema
 
   // Parse config (uses options)
   const defaultConfig = {
@@ -23,7 +27,8 @@ const Default = (config, options) => {
     autoLoadEntities: true,
     entities: [
       new EntitySchema(AccountSchema),
-      new EntitySchema(UserSchema)
+      new EntitySchema(UserSchema),
+      new EntitySchema(SessionSchema)
     ],
     synchronize: true,
     logging: false,
@@ -102,9 +107,14 @@ const Default = (config, options) => {
 
     async function getUserById(id) {
       debug('Get user account by ID', id)
-      return new Promise((resolve, reject) => {
-        // @TODO Get user from DB
-        resolve(false)
+      return new Promise(async (resolve, reject) => {
+        try {
+          const user = await connection.getRepository(User).findOne({ id: id })
+          resolve(user)
+        } catch (error) {
+          console.error('GET_USER_BY_ID_ERROR', error)
+          reject(new Error('GET_USER_BY_ID_ERROR', error))
+        }
       })
     }
 
@@ -169,22 +179,29 @@ const Default = (config, options) => {
 
     async function createSession(user) {
       debug('Create session for user', user)
-      return new Promise((resolve, reject) => {
-        // @TODO Create session
-        resolve(true)
+      return new Promise(async (resolve, reject) => {
+        const session = new Session(user.id)
+        await getManager().save(session)
+        resolve(session)
       })
     }
 
-    async function getSessionById(sessionId) {
-      debug('Get session by ID', sessionId)
-      return new Promise((resolve, reject) => {
-        // @TODO Get session
-        resolve(true)
+    async function getSessionById(id) {
+      debug('Get session by ID', id)
+      return new Promise(async (resolve, reject) => {
+        try {
+          const session = await connection.getRepository(Session).findOne({ id })
+          // @TODO Check session has not expired
+          resolve(session)
+        } catch (error) {
+          console.error('GET_SESSION_BY_ID_ERROR', error)
+          reject(new Error('GET_SESSION_BY_ID_ERROR', error))
+        }
       })
     }
 
-    async function deleteSessionById(sessionId) {
-      debug('Delete session by ID', sessionId)
+    async function deleteSessionById(id) {
+      debug('Delete session by ID', id)
       return new Promise((resolve, reject) => {
         // @TODO Delete session
         resolve(true)
