@@ -23,6 +23,7 @@
   ],
   "license": "ISC",
   "dependencies": {
+    "isomorphic-unfetch": "^3.0.0",
     "oauth": "^0.9.15",
     "preact": "^10.4.1",
     "preact-render-to-string": "^5.1.7",
