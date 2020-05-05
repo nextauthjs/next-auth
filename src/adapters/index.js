@@ -109,7 +109,7 @@ const Default = (config, options) => {
       debug('Get user account by ID', id)
       return new Promise(async (resolve, reject) => {
         try {
-          const user = await connection.getRepository(User).findOne({ id: id })
+          const user = await connection.getRepository(User).findOne({ id })
           resolve(user)
         } catch (error) {
           console.error('GET_USER_BY_ID_ERROR', error)
@@ -117,12 +117,22 @@ const Default = (config, options) => {
         }
       })
     }
+ 
+    async function getUserByProviderAccountId(providerId, providerAccountId) {
+      debug('Get user account by provider account ID', providerId, providerAccountId)
+      return new Promise(async (resolve, reject) => {
+        try {
+          const account = await connection.getRepository(Account).findOne({ providerId, providerAccountId })
+          if (!account)
+            return resolve(null)
 
-    async function getUserByProviderAccountId(provider, providerAccountId) {
-      debug('Get user account by provider account ID', provider, providerAccountId)
-      return new Promise((resolve, reject) => {
-        // @TODO Get user from DB
-        resolve(false)
+          const user = await connection.getRepository(User).findOne({ id: account.userId })
+          resolve(user)
+
+        } catch (error) {
+          console.error('GET_USER_BY_POVIDER_ACCOUNT_ID_ERROR', error)
+          reject(new Error('GET_USER_BY_POVIDER_ACCOUNT_ID_ERROR', error))
+        }
       })
     }
 
@@ -151,12 +161,12 @@ const Default = (config, options) => {
       })
     }
 
-    async function linkAccount(userId, providerId, providerAccountId, refreshToken, accessToken, accessTokenExpires) {
-      debug('Link provider account', userId, providerId, providerAccountId, refreshToken, accessToken, accessTokenExpires)
+    async function linkAccount(userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires) {
+      debug('Link provider account', userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires)
       return new Promise(async (resolve, reject) => {
         try {
           // Create user account
-          const account = new Account(userId, providerId, providerAccountId, refreshToken, accessToken, accessTokenExpires)
+          const account = new Account(userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires)
           await getManager().save(account)
           resolve(account)
         } catch (error) {

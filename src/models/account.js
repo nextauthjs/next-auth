@@ -4,6 +4,7 @@ export class Account {
   constructor(
     userId,
     providerId,
+    providerType,
     providerAccountId,
     refreshToken,
     accessToken,
@@ -12,6 +13,7 @@ export class Account {
     this.id = createHash('sha256').update(`${providerId}:${providerAccountId}`).digest('hex')
     this.userId = userId
     this.providerId = providerId
+    this.providerType = providerType
     this.providerAccountId = providerAccountId
     this.refreshToken = refreshToken
     this.accessToken = accessToken
@@ -32,6 +34,9 @@ export const AccountSchema = {
       type: 'varchar'
     },
     providerId: {
+      type: 'varchar'
+    },
+    providerType: {
       type: 'varchar'
     },
     providerAccountId: {

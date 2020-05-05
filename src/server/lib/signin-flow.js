@@ -26,9 +26,9 @@ export default (adapter, sessionId, profile, providerAccount) => {
     } = _adapter
 
     let session = sessionId ? await getSessionById(sessionId) : null
-    let user = (session && session.user && session.user.id) ? await getUserById(session.user.id) : null
+    let isSignedIn = session ? true : false
+    let user = isSignedIn ? await getUserById(session.userId) : null
     let isNewAccount = false
-    const isSignedIn = (session && session.id) ? true : false
     
     // @TODO replace all Error objects returned with custom error types
 

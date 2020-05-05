@@ -7,7 +7,7 @@ export class Session {
     const accessTokenExpiryInDays = 30
 
     this.id = randomBytes(32).toString('hex')
-    this.user = userId 
+    this.userId = userId 
     this.accessToken = randomBytes(32).toString('hex')
     this.accessTokenExpires = date.setDate(date.getDate() + accessTokenExpiryInDays) 
     this.expires = date.setDate(date.getDate() + sessionExpiryInDays) 
@@ -23,7 +23,7 @@ export const SessionSchema = {
       primary: true,
       unique: true
     },
-    user: {
+    userId: {
       type: 'int'
     },
     accessToken: {
