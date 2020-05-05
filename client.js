@@ -1,3 +1,1 @@
-import NextAuthClient from './src/client/index'
-
-export default NextAuthClient
+module.exports = require('./dist/client')

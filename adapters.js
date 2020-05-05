@@ -1,3 +1,1 @@
-import NextAuthAdapters from './src/adapters/index'
-
-export default NextAuthAdapters
+module.exports = require('./dist/adapters')

@@ -1,3 +1,1 @@
-import NextAuthProviders from './src/providers/index'
-
-export default NextAuthProviders
+module.exports = require('./dist/providers')
