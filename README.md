@@ -20,8 +20,6 @@ Note: NextAuth is not associated with Next.js or Vercel.
 
 Configuration is much simpler and more powerful than in NextAuth 1.0, with both SQL and Document databases supported out of the box. There are predefined models for Users and Sessions, which you can use (or extend or replace with your own models/schemas).
 
-### Code
-
 ### Server
 
 To add `next-auth` to a project, create a file to handle authentication requests at `pages/api/auth/[...slug.js]`:
@@ -73,7 +71,7 @@ export default () => {
 
 *This is all the code you need to add support for signing in to a project!*
 
-### Authentication with Server Side Rendering
+#### Server Side Rendering
 
 Authentication with Server Side Rendering is also supported.
 
@@ -103,7 +101,7 @@ Authentication between the client and server is handled securely, using an HTTP 
 
 **Important! The API for 2.0 is subject to change before release.**
 
-#### Configuration
+## Configuration
 
 Configuration options are passed to NextAuth when initalizing it (in your `/api/` route).
 
@@ -141,12 +139,6 @@ The following databases are supported by the default adapter:
 Appropriate tables / collections for Users, Sessions (etc) will be created automatically. You can customize, extend or replace the models by passing additional options to the `Adapters.Default()` function.
 
 If you are using a database that is not supported out of the box - or if you want to use NextAuth with an existing database - you can pass your own methods to be called for user creation / deletion (etc). This works in a similar way to NextAuth 1.x, but is easier to do.
-
-### Client
-
-NextAuth Client usage remains almost identical, but is much simpler than in version 1.x. Thanks to a new build process, the client library in NextAuth 2.0 is extremely lightweight.
-
-It can be used with React Hooks as well as React lifescycle and Next.js methods for both client and server side rendering, supporting both Single Page Applications and websites that support authentication but are entirely server side rendered (without any dependancy on client side JavaScript).
 
 ## Customization
 
