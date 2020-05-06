@@ -29,7 +29,7 @@ const session = ({req, site, pathPrefix}) => {
       setData(Object.keys(data).length > 0 ? data : null) // Return null if session data empty
       setLoading(false)
     } catch (error) {
-      console.error("SESSION_ERROR", error)
+      console.error("CLIENT_SESSION_ERROR", error)
       resolve(null)
     }
   })
@@ -46,7 +46,7 @@ const useSession = (session, pathPrefix) => {
       setData(Object.keys(data).length > 0 ? data : null) // Return null if session data empty
       setLoading(false)
     } catch (error) {
-      console.error("SESSION_ERROR", error)
+      console.error("CLIENT_SESSION_ERROR", error)
     }
   }
   useEffect(() => getSession(), [])
@@ -55,15 +55,22 @@ const useSession = (session, pathPrefix) => {
 
 // Adapted from https://github.com/felixfong227/simple-cookie-parser/blob/master/index.js
 const _parseCookie = (string) => {
-  const object = {}
-  const a = string.split(';')
-  for (let i = 0; i < a.length; i++) {
-    const b = a[i].split('=')
-      if (b[0].length > 1 && b[1]) {
-          object[b[0].trim()] = decodeURIComponent(b[1])
-      }
+  if (!string)
+    return {}
+  try {
+    const object = {}
+    const a = string.split(';')
+    for (let i = 0; i < a.length; i++) {
+      const b = a[i].split('=')
+        if (b[0].length > 1 && b[1]) {
+            object[b[0].trim()] = decodeURIComponent(b[1])
+        }
+    }
+    return object
+  } catch (e) {
+    console.error("CLIENT_COOKIE_PARSE_ERROR")
+    return {}
   }
-  return object
 }
 
 export default {
