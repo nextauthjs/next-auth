@@ -1,25 +1,13 @@
 {
   "presets": [
-    ["@babel/preset-env", { "targets": { "esmodules": true } } ]
+    ["@babel/preset-env", { "targets": { "esmodules": true } } ],
+    "minify"
   ],
   "comments": false,
   "overrides": [
     {
       "test": [ "./src/server/pages/**" ],
       "presets": [ "preact" ]
-    },
-    {
-      "test": [ "./src/**" ],
-      "exclude": [ "./src/client/**" ],
-      "presets": [
-        
-      ]
-    },
-    {
-      "test": [ "./src/client/**" ],
-      "presets": [
-        
-      ]
     }
   ]
 }
