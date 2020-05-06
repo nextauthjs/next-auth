@@ -1,6 +1,6 @@
 {
   "presets": [
-   
+    ["@babel/preset-env", { "targets": { "esmodules": true } } ]
   ],
   "comments": false,
   "overrides": [
@@ -11,14 +11,14 @@
     {
       "test": [ "./src/**" ],
       "exclude": [ "./src/client/**" ],
-      "presets": [ 
-        [ "@babel/preset-env", { "targets": { "esmodules": true } } ]
+      "presets": [
+        
       ]
     },
     {
       "test": [ "./src/client/**" ],
       "presets": [
-        ["@babel/preset-env", { "modules": "umd" } ]
+        
       ]
     }
   ]

@@ -4,9 +4,9 @@
 // * https://github.com/jshttp/cookie/blob/master/index.js
 // * https://github.com/zeit/next.js/blob/master/examples/api-routes-middleware/utils/cookies.js
 //
-// As only partial functionlity is required, the required elements have been incrorporated here
-// to reduce dependancy size of the generated function.
-export default (res, name, value, options = {}) => {
+// As only partial functionlity is required, only the code we need has been incorporated here
+// (with fixes for specific issues) to keep dependancy size down.
+const set = (res, name, value, options = {}) => {
   const stringValue = typeof value === 'object' ? 'j:' + JSON.stringify(value) : String(value)
 
   if ('maxAge' in options) {
@@ -14,7 +14,10 @@ export default (res, name, value, options = {}) => {
     options.maxAge /= 1000
   }
 
-  res.setHeader('Set-Cookie', _serialize(name, String(stringValue), options))
+  // Preserve any existing cookies that have already been set in the same session
+  const setCookieHeader = res.getHeader('Set-Cookie') || []
+  setCookieHeader.push(_serialize(name, String(stringValue), options))
+  res.setHeader('Set-Cookie', setCookieHeader)
 }
 
 function _serialize(name, val, options) {
@@ -96,4 +99,8 @@ function _serialize(name, val, options) {
   }
 
   return str
+}
+
+export default {
+  set
 }
