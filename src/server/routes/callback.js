@@ -4,23 +4,15 @@ import signinFlow from '../lib/signin-flow'
 import cookie from '../lib/cookie'
 
 export default async (req, res, options, resolve) => {
-  const {
-    provider,
-    providers,
-    adapter,
-    site,
-    sessionIdCookieName,
-    callbackUrlCookieName,
-    cookieOptions
-  } = options
+  const { provider, providers, adapter, site, urlPrefix, cookies } = options
   const providerConfig = providers[provider]
   const { type } = providerConfig
 
   // Get session ID (if set)
-  const sessionId = req.cookies[sessionIdCookieName]
+  const sessionId = req.cookies[cookies.sessionId.name]
 
   // Get callback URL from cookie (saved at the start of the signin flow)
-  let callbackUrl = req.cookies[callbackUrlCookieName] || site
+  let callbackUrl = req.cookies[cookies.callbackUrl.name] || site
 
   const _callback = async (error, response) => {
     // @TODO Check error
@@ -30,7 +22,6 @@ export default async (req, res, options, resolve) => {
 
     const { profile, account } = response
 
-    // @TODO Check if user email exists in db
     try {
       const {
         session,
@@ -42,8 +33,11 @@ export default async (req, res, options, resolve) => {
         account
       )
 
-      // Save Session ID in cookie
-      cookie(res, sessionIdCookieName, session.id, { httpOnly: true, cookieOptions })
+      // Save Session ID in cookie (HTTP Only cookie)
+      cookie.set(res, cookies.sessionId.name, session.id, cookies.sessionId.options)
+
+      // Save URL Prefix so we can securely return sessions when rendering server side (HTTP Only cookie)
+      cookie.set(res, cookies.urlPrefix.name, urlPrefix, cookies.urlPrefix.options)
 
       // Handle first logins on new accounts
       // e.g. option to send users to a new account landing page on initial login

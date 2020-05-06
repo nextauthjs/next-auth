@@ -22,6 +22,8 @@ Configuration is much simpler and more powerful than in NextAuth 1.0, with both 
 
 ### Code
 
+### Server
+
 To add `next-auth` to a project, create a file to handle authentication requests at `pages/api/auth/[...slug.js]`:
 
 ```javascript
@@ -53,13 +55,29 @@ export default (req, res) => NextAuth(req, res, options)
 
 All requests to `pages/api/auth/*` (signin, callback, signout) will now be automatically handed by NextAuth.
 
-To check if a user is signed in, create a page in your Next.js application that looks like this:
+### Client
 
-**Important! Both these usage examples for 2.0 are likely to change**
+You can now use the can use the `useSession()` hook to see if a user is signed in.
 
-#### Server Side Rendering Example
 ```javascript
-// Example Next.js page with Server Side Rendering
+export default () => {
+  const [session, loading] = NextAuth.useSession()
+
+  return <>
+    {loading && <p>Loading session…</p>}
+    {!loading && session && <p>Logged in as {session.user.name || session.user.email}.</p>}
+    {!loading && !session && <p>Not logged in.</p>}
+  </>
+}
+```
+
+*This is all the code you need to add support for signing in to a project!*
+
+### Authentication with Server Side Rendering
+
+Authentication with Server Side Rendering is also supported.
+
+```javascript
 import NextAuth from 'next-auth/client'
 
 export default ({ session }) => <>
@@ -67,8 +85,8 @@ export default ({ session }) => <>
   {!session && <p>You are not logged in.</p>}
 </>
 
-export async function getServerSideProps(context) {
-  const session = await NextAuth.session(context)
+export async function getServerSideProps({req}) {
+  const session = await NextAuth.session({req})
   return {
     props: {
       session
@@ -77,49 +95,13 @@ export async function getServerSideProps(context) {
 }
 ```
 
-*This is all the code you need to add support for signing in to a project!*
+You can use this method and the `useSession()` hook together - the hook can be pre-populated with the session object from the server side call, so that it is avalible immediately when the page is loaded, and updated client side when the page is viewed in the browser.
 
-#### Client Side Rendering Example
+You can also call `NextAuth.session()` function in client side JavaScript, without needing to pass a `req` object (it is only needed when calling the function from `getServerSideProps` or `getInitialProps`).
 
-If you only need to support Client Side Rendering, you can create a hook.
+Authentication between the client and server is handled securely, using an HTTP only cookie for the session ID.
 
-```javascript
-// Example Next.js page with Client Side Rendering
-import NextAuth from 'next-auth/client'
-import useSession from '../hooks/use-session'
-
-export default () => {
-  const [session, loading] = useSession()
-
-  return <>
-    {loading && <p>Loading session…</p>}
-    {!loading && session && <p>Logged in as {session.user.name || session.user.email}.</p>}
-    {!loading && !session && <p>Not logged in.</p>}
-  </>
-}
-
-// Example hook in ../hooks/use-session.js
-// @TODO This is a placeholer, there are simpler solutions than this!
-import { useState, useEffect } from 'react'
-import fetch from 'isomorphic-unfetch'
-
-// Can optionally be passed initial session from getServerSideProps()
-const useSession = (session) => {
-  const [data, setData] = useState(session)
-  const [loading, setLoading] = useState(true)
-  const getSession = async () => {
-    const res = await fetch('/api/auth/session')
-    const _session = await res.json()
-    // Return null if the session object is empty
-    setData(Object.keys(_session).length > 0 ? _session : null)
-    setLoading(false)
-  }
-  useEffect(() => getSession(), [])
-  return [data, loading]
-}
-
-export default useSession
-```
+**Important! The API for 2.0 is subject to change before release.**
 
 #### Configuration
 
