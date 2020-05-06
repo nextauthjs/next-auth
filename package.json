@@ -6,7 +6,6 @@
   "author": "Iain Collins <me@iaincollins.com>",
   "main": "index.js",
   "scripts": {
-    "install": "npm run build",
     "build": "npm run build:js && npm run build:css",
     "build:js": "babel src --out-dir dist",
     "build:css": "postcss src/**/*.css --base src --dir dist",
