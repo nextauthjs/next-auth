@@ -11,8 +11,7 @@ export default (req, res, options, resolve) => {
     provider,
     providers,
     callbackUrl,
-    callbackUrlCookieName,
-    cookieOptions
+    cookies,
   } = options
   const providerConfig = providers[provider]
   const { type } = providerConfig
@@ -24,7 +23,7 @@ export default (req, res, options, resolve) => {
   }
 
   // Save callback URL in a cookie (the callback page will read this and redirect to it)
-  cookie(res, callbackUrlCookieName, callbackUrl, cookieOptions)
+  cookie.set(res, cookies.callbackUrl.name, callbackUrl, cookies.callbackUrl.options)
   
   if (type === 'oauth' || type === 'oauth2') {
     getAuthorizationUrl(providerConfig, (error, url) => {

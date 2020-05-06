@@ -19,10 +19,29 @@ export default (req, res, _options) => {
 
     const urlPrefix = `${(site || '')}${pathPrefix}`
 
+    const cookies = {
+      sessionId: {
+        name: 'next-auth.session-id',
+        options: {
+          httpOnly: true
+        }
+      },
+      callbackUrl: {
+        name: 'next-auth.callback-url',
+        options: {}
+      },
+      urlPrefix: {
+        name: 'next-auth.url-prefix',
+        options: {
+          httpOnly: true
+        }
+      },
+      ..._options.cookies
+    }
+
     const options = {
       sessionIdCookieName: 'session-id',
       callbackUrlCookieName: 'callback-url',
-      cookieOptions: {},
       ..._options,
       urlPrefix: urlPrefix,
       providers: parseProviders(_options.providers, urlPrefix),
@@ -30,6 +49,7 @@ export default (req, res, _options) => {
       action,
       provider,
       callbackUrl,
+      cookies
     }
     
     if (req.method === 'GET') {

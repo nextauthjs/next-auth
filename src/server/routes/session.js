@@ -1,10 +1,10 @@
 import { User } from "../../models/user"
 
 export default async (req, res, options, resolve) => {
-  const { sessionIdCookieName, adapter } = options
+  const { cookies, adapter } = options
   const _adapter = await adapter.getAdapter()
   const { getUserById, getSessionById } = _adapter
-  const sessionId = req.cookies[sessionIdCookieName]
+  const sessionId = req.cookies[cookies.sessionId.name]
 
   let response = {}
 
