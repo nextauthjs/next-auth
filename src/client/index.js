@@ -26,8 +26,7 @@ const session = ({req, site, pathPrefix}) => {
     try {
       const res = await fetch(`${urlPrefix}/session`, fetchOptions) // Absolute URL
       const data = await res.json()
-      setData(Object.keys(data).length > 0 ? data : null) // Return null if session data empty
-      setLoading(false)
+      resolve(Object.keys(data).length > 0 ? data : null) // Return null if session data empty
     } catch (error) {
       console.error("CLIENT_SESSION_ERROR", error)
       resolve(null)
