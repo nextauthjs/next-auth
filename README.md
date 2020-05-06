@@ -55,35 +55,71 @@ All requests to `pages/api/auth/*` (signin, callback, signout) will now be autom
 
 To check if a user is signed in, create a page in your Next.js application that looks like this:
 
-```javascript
-import React from 'react'
-import { NextAuth } from 'next-auth/client'
+**Important! Both these usage examples for 2.0 are likely to change**
 
-export default class extends React.Component {
-  static async getInitialProps({req}) {
-    return {
-      session: await NextAuth.init({req})
-    }
-  }
-  render() {
-    if (this.props.session.user) {
-      return(
-        <div>
-          <p>You are logged in as {this.props.session.user.name || this.props.session.user.email}.</p>
-        </div>
-        )
-    } else {
-      return(
-        <div>
-          <p>You are not logged in.</p>
-        </div>
-      )
+#### Server Side Rendering Example
+```javascript
+// Example Next.js page with Server Side Rendering
+import NextAuth from 'next-auth/client'
+
+export default ({ session }) => <>
+  {session && <p>You are logged in as {session.user.name || session.user.email}.</p>}
+  {!session && <p>You are not logged in.</p>}
+</>
+
+export async function getServerSideProps(context) {
+  const session = await NextAuth.session(context)
+  return {
+    props: {
+      session
     }
   }
 }
 ```
 
 *This is all the code you need to add support for signing in to a project!*
+
+#### Client Side Rendering Example
+
+If you only need to support Client Side Rendering, you can create a hook.
+
+```javascript
+// Example Next.js page with Client Side Rendering
+import NextAuth from 'next-auth/client'
+import useSession from '../hooks/use-session'
+
+export default () => {
+  const [session, loading] = useSession()
+
+  return <>
+    {loading && <p>Loading session…</p>}
+    {!loading && session && <p>Logged in as {session.user.name || session.user.email}.</p>}
+    {!loading && !session && <p>Not logged in.</p>}
+  </>
+}
+
+// Example hook in ../hooks/use-session.js
+// @TODO This is a placeholer, there are simpler solutions than this!
+import { useState, useEffect } from 'react'
+import fetch from 'isomorphic-unfetch'
+
+// Can optionally be passed initial session from getServerSideProps()
+const useSession = (session) => {
+  const [data, setData] = useState(session)
+  const [loading, setLoading] = useState(true)
+  const getSession = async () => {
+    const res = await fetch('/api/auth/session')
+    const _session = await res.json()
+    // Return null if the session object is empty
+    setData(Object.keys(_session).length > 0 ? _session : null)
+    setLoading(false)
+  }
+  useEffect(() => getSession(), [])
+  return [data, loading]
+}
+
+export default useSession
+```
 
 #### Configuration
 
