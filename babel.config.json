@@ -1,14 +1,25 @@
 {
   "presets": [
-    "preact",
-    [
-      "@babel/preset-env", {
-        "targets": {
-          "esmodules": true
-        }
-      }
-    ],
-    "minify"
+   
   ],
-  "comments": false
+  "comments": false,
+  "overrides": [
+    {
+      "test": [ "./src/server/pages/**" ],
+      "presets": [ "preact" ]
+    },
+    {
+      "test": [ "./src/**" ],
+      "exclude": [ "./src/client/**" ],
+      "presets": [ 
+        [ "@babel/preset-env", { "targets": { "esmodules": true } } ]
+      ]
+    },
+    {
+      "test": [ "./src/client/**" ],
+      "presets": [
+        ["@babel/preset-env", { "modules": "umd" } ]
+      ]
+    }
+  ]
 }

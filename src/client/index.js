@@ -1,18 +1,19 @@
-'use strict'
-
 import fetch from 'isomorphic-unfetch'
 
-export default class {
+const session = (context) => {
+  return new Promise(resolve => {
+    if (context)
+      return resolve(null)
 
-  static async session() {
-    return new Promise(resolve => {
-      fetch('http://localhost:3000/api/auth/session')
-      .then(r => r.json())
-      .then(data =>{
-        console.log('session', data)
-        resolve(data)
-      })
+    // @TODO Get hostname dynamically
+    fetch('http://localhost:3000/api/auth/session')
+    .then(r => r.json())
+    .then(session =>{
+      resolve(session)
     })
-  }
+  })
+}
 
+export default {
+  session
 }
