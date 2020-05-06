@@ -1,6 +1,6 @@
 {
   "name": "next-auth",
-  "version": "2.0.0",
+  "version": "2.0.0-beta.1",
   "description": "An authentication library for Next.js",
   "repository": "https://github.com/iaincollins/next-auth.git",
   "author": "Iain Collins <me@iaincollins.com>",
@@ -12,7 +12,10 @@
     "watch": "npm run watch:js | npm run watch:css",
     "watch:js": "babel --watch src --out-dir dist",
     "watch:css": "postcss --watch src/**/*.css --base src --dir dist",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublishOnly": "npm run build",
+    "publish:beta": "npm publish --tag beta",
+    "publish:canary": "npm publish --tag canary"
   },
   "files": [
     "dist",
