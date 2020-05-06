@@ -7,7 +7,7 @@ const DEFAULT_PATH_PREFIX = '/api/auth'
 
 // Isomorphic get session method
 const session = ({req, site, pathPrefix}) => {
-  return new Promise(resolve => {  
+  return new Promise(async resolve => {  
     // If we have a 'req' object are running sever side and should get cookies from headers
     const cookies = req ? _parseCookie(req.headers.cookie) : null
     // We will need the raw header as it will have the HTTP only Session ID cookie in it
@@ -23,11 +23,15 @@ const session = ({req, site, pathPrefix}) => {
       ? `${site || DEFAULT_SITE}${pathPrefix || DEFAULT_PATH_PREFIX}`
       : cookies[URL_PREFIX_COOKIE]
     
-    fetch(`${urlPrefix}/session`, fetchOptions)
-    .then(r => r.json())
-    .then(data => {
-      resolve(Object.keys(data).length > 0 ? data : null) // Return null if session data empty
-    })
+    try {
+      const res = await fetch(`${urlPrefix}/session`, fetchOptions) // Absolute URL
+      const data = await res.json()
+      setData(Object.keys(data).length > 0 ? data : null) // Return null if session data empty
+      setLoading(false)
+    } catch (error) {
+      console.error("SESSION_ERROR", error)
+      resolve(null)
+    }
   })
 }
 
@@ -36,10 +40,14 @@ const useSession = (session, pathPrefix) => {
   const [data, setData] = useState(session)
   const [loading, setLoading] = useState(true)
   const getSession = async () => {
-    const res = await fetch(`${pathPrefix || DEFAULT_PATH_PREFIX}/session`)
-    const data = await res.json()
-    setData(Object.keys(data).length > 0 ? data : null) // Return null if session data empty
-    setLoading(false)
+    try {
+      const res = await fetch(`${pathPrefix || DEFAULT_PATH_PREFIX}/session`) // Releative URL
+      const data = await res.json()
+      setData(Object.keys(data).length > 0 ? data : null) // Return null if session data empty
+      setLoading(false)
+    } catch (error) {
+      console.error("SESSION_ERROR", error)
+    }
   }
   useEffect(() => getSession(), [])
   return [data, loading]
