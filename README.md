@@ -55,7 +55,7 @@ All requests to `pages/api/auth/*` (signin, callback, signout) will now be autom
 
 ### Client
 
-You can now use the can use the `useSession()` hook to see if a user is signed in.
+You can use the `useSession()` hook to see if a user is signed in.
 
 ```javascript
 export default () => {
@@ -73,7 +73,7 @@ export default () => {
 
 #### Server Side Rendering
 
-Authentication with Server Side Rendering is also supported.
+Authentication in Server Side Rendering flows is also supported.
 
 ```javascript
 import NextAuth from 'next-auth/client'
@@ -95,7 +95,7 @@ export async function getServerSideProps({req}) {
 
 You can use this method and the `useSession()` hook together - the hook can be pre-populated with the session object from the server side call, so that it is avalible immediately when the page is loaded, and updated client side when the page is viewed in the browser.
 
-You can also call `NextAuth.session()` function in client side JavaScript, without needing to pass a `req` object (it is only needed when calling the function from `getServerSideProps` or `getInitialProps`).
+You can also call `NextAuth.session()` function in client side JavaScript, without needing to pass a `req` object - it is only needed when calling the function from `getServerSideProps` or `getInitialProps`.
 
 Authentication between the client and server is handled securely, using an HTTP only cookie for the session ID.
 
@@ -107,11 +107,13 @@ Configuration options are passed to NextAuth when initalizing it (in your `/api/
 
 The only things you will probably need to configure are your site name (e.g. 'http://www.example.com'), which should be set explicitly for security reasons, a list of authentication services (Twitter, Facebook, Google, etc) and a database adapter.
 
-An "*Adapter*" in NextAuth is the thing that connects your application to whatever system you want to use to store data for user accounts, sessions, etc. NextAuth comes with a default adapter that uses [TypeORM](https://typeorm.io/) so that it can be be used with many different databases without any configuration, you simply add the database driver you want to use to your project and tell NextAuth to use it.
+An "*Adapter*" in NextAuth is the thing that connects your application to whatever system you want to use to store data for user accounts, sessions, etc.
+
+NextAuth comes with a default adapter that uses [TypeORM](https://typeorm.io/) so that it can be be used with many different databases without any configuration, you simply add the database driver you want to use to your project and tell NextAuth to use it.
 
 ### Simple Example
 
-To use SQLite in memory database (useful for development and testing, and to check everything is working):
+This is an example of how to use an SQLite in memory database, which can be useful for development and testing, and to check everything is working:
 
 1. Install the database driver as a dependancy in the usual way - e.g. `npm i sqlite3`
 2. Pass a *TypeORM* configuration object when calling `NextAuth()` in your API route.
@@ -125,7 +127,7 @@ adapter: Adapters.Default({
 }),
 ```
 
-You can pass database credentials here securely, using environment variables in your application.
+You can pass database credentials securely, using environment variables for options.
 
 See the [TypeORM configuration documentation](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md) for more details about supported options.
 
@@ -153,8 +155,8 @@ If you are using a database that is not supported out of the box - or if you wan
 
 ## Customization
 
-NextAuth now auto-generates simple, unbranded authentication pages for handling Sign in, Email Verification, callbacks, etc.
+NextAuth automatically crates simple, unbranded authentication pages for handling Sign in, Email Verification, callbacks, etc.
 
-These are generated automatically with the appropriate sign in options based on the supplied configuration, but you can still create custom authentication pages if you would like to customize the experience.
+These are generated based on the configuration supplied, You can create custom authentication pages if you would like to customize the experience.
 
 *This documentation will be updated closer to release.*
