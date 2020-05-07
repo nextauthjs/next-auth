@@ -107,20 +107,29 @@ Configuration options are passed to NextAuth when initalizing it (in your `/api/
 
 The only things you will probably need to configure are your site name (e.g. 'http://www.example.com'), which should be set explicitly for security reasons, a list of authentication services (Twitter, Facebook, Google, etc) and a database adapter.
 
-An "*Adapter*" in NextAuth is a object connects to whatever system you want to use to store data for user accounts, sessions, etc.
+An "*Adapter*" in NextAuth is the thing that connects your application to whatever system you want to use to store data for user accounts, sessions, etc. NextAuth comes with a default adapter that uses [TypeORM](https://typeorm.io/) so that it can be be used with many different databases without any configuration, you simply add the database driver you want to use to your project and tell NextAuth to use it.
 
-NextAuth comes with a default adapter that uses [TypeORM](https://typeorm.io/) so that it can be be used with many different databases without any configuration, you simply add the database driver you want to use to your project and tell NextAuth to use it.
+### Simple Example
 
-You can define database configuration (including any credentials) using environment variables. Alternatively, you can create a file called `ormconfig.json` at the top level of your project with your configuration, or you can pass a configuration object to the `Adapters.Default()` function. Refer to the [TypeORM configuration documentation](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md) for details.
+To use SQLite in memory database (useful for development and testing, and to check everything is working):
 
-An example `ormconfig.json` configuration for SQL Lite (useful for development and testing):
+1. Install the database driver as a dependancy in the usual way - e.g. `npm i sqlite3`
+2. Pass a *TypeORM* configuration object when calling `NextAuth()` in your API route.
 
-```json
-{
-  "type": "sqlite",
-  "database": "test"
-}
+e.g.
+
+```javascript
+adapter: Adapters.Default({
+  type: 'sqlite',
+  database: ':memory:'
+}),
 ```
+
+You can pass database credentials here securely, using environment variables in your application.
+
+See the [TypeORM configuration documentation](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md) for more details about supported options.
+
+### Supported Databases
 
 The following databases are supported by the default adapter:
 
@@ -138,7 +147,9 @@ The following databases are supported by the default adapter:
 
 Appropriate tables / collections for Users, Sessions (etc) will be created automatically. You can customize, extend or replace the models by passing additional options to the `Adapters.Default()` function.
 
-If you are using a database that is not supported out of the box - or if you want to use NextAuth with an existing database - you can pass your own methods to be called for user creation / deletion (etc). This works in a similar way to NextAuth 1.x, but is easier to do.
+If you are using a database that is not supported out of the box - or if you want to use NextAuth with an existing database (or have a more complex setup, with accounts and sessions spread across different systems - you can pass your own methods to be called for user and session creation / deletion (etc).
+
+**Important! The list of supported databases is subject to change before release.**
 
 ## Customization
 
