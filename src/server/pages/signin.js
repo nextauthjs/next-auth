@@ -5,8 +5,9 @@ export default ({ providers, callbackUrl }) => {
   return render(
     <div className="signin">
       {providers.map(provider => 
-        <p data-provider={provider.id}><a href={`${provider.signinUrl}?callbackUrl=${callbackUrl}`}>Sign in with {provider.name}</a></p>
+        <p><a data-provider={provider.id} href={`${provider.signinUrl}?callbackUrl=${callbackUrl}`}>Sign in with {provider.name}</a></p>
       )}
+      <p><small><a href={process.env.SITE_NAME}>{process.env.SITE_NAME}</a></small></p>
     </div>
   )
 }
