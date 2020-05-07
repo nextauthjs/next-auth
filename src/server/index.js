@@ -5,6 +5,9 @@ import callback from './routes/callback'
 import session from './routes/session'
 import pages from './pages'
 
+const DEFAULT_SITE = ''
+const DEFAULT_PATH_PREFIX = '/api/auth'
+
 export default (req, res, _options) => {
   return new Promise(async resolve => {
     const { url, query } = req
@@ -12,14 +15,18 @@ export default (req, res, _options) => {
       slug,
       action = slug[0],
       provider = slug[1],
-      site = 'http://localhost:3000',
-      callbackUrl = site,
-      pathPrefix = '/api/auth',
     } = query
 
-    const urlPrefix = `${(site || '')}${pathPrefix}`
+    // Allow site name, path prefix to be overriden
+    const site = _options.site || DEFAULT_SITE
+    const pathPrefix = _options.pathPrefix || DEFAULT_PATH_PREFIX
+    const urlPrefix = `${site}${pathPrefix}`
+
+    // If no callback URL is provided, use site name
+    const callbackUrl = query.callbackUrl || site
 
     const cookies = {
+      // default cookie options
       sessionId: {
         name: 'next-auth.session-id',
         options: {
@@ -36,20 +43,22 @@ export default (req, res, _options) => {
           httpOnly: true
         }
       },
+      // Allow user cookie options to override them
       ..._options.cookies
     }
-
+    
+    // User provided options are overriden by other options,
+    // except for the options with special handlign above
     const options = {
-      sessionIdCookieName: 'session-id',
-      callbackUrlCookieName: 'callback-url',
       ..._options,
-      urlPrefix: urlPrefix,
-      providers: parseProviders(_options.providers, urlPrefix),
       site,
+      pathPrefix,
+      urlPrefix,
+      callbackUrl,
       action,
       provider,
-      callbackUrl,
-      cookies
+      cookies,
+      providers: parseProviders(_options.providers, urlPrefix),
     }
     
     if (req.method === 'GET') {

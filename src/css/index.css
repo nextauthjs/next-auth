@@ -9,7 +9,6 @@ body {
 
 h1 {
   font-weight: 300;
-  margin: 1em;
 }
 
 .page {
@@ -33,7 +32,7 @@ h1 {
     padding: 0;
   }
 
-  a {
+  a[data-provider] {
     display: block;
     margin: 0 auto 0.5em auto;
     padding: 0.5em 2em;
