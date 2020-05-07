@@ -62,9 +62,9 @@ export default () => {
   const [session, loading] = NextAuth.useSession()
 
   return <>
-    {loading && <p>Loading session…</p>}
-    {!loading && session && <p>Logged in as {session.user.name || session.user.email}.</p>}
-    {!loading && !session && <p>Not logged in.</p>}
+    {loading && <p>Checking session…</p>}
+    {!loading && session && <p>Signed in as {session.user.name || session.user.email}.</p>}
+    {!loading && !session && <p><a href="/api/auth/signin">Sign in here</p>}
   </>
 }
 ```
@@ -79,8 +79,8 @@ Authentication in Server Side Rendering flows is also supported.
 import NextAuth from 'next-auth/client'
 
 export default ({ session }) => <>
-  {session && <p>You are logged in as {session.user.name || session.user.email}.</p>}
-  {!session && <p>You are not logged in.</p>}
+  {session && <p>Signed in as {session.user.name || session.user.email}.</p>}
+  {!session && <p><a href="/api/auth/signin">Sign in here</a></p>}
 </>
 
 export async function getServerSideProps({req}) {
