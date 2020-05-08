@@ -85,6 +85,10 @@ export default (req, res, _options) => {
       ..._options.cookies
     }
     
+    // Set canonical site name + API route in a cookie to facilitate client configuration
+    if (!req.cookies[cookies.urlPrefix.name])
+      cookie.set(res, cookies.urlPrefix.name, urlPrefix, cookies.urlPrefix.options)
+
     // Secret used salt cookies and tokens (e.g. for CSRF protection).
     // If no secret option is specified then it creates one on the fly
     // based on options passed here. A options contains unique data, such as

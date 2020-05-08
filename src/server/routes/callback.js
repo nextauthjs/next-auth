@@ -36,9 +36,6 @@ export default async (req, res, options, done) => {
       // Save Session ID in cookie (HTTP Only cookie)
       cookie.set(res, cookies.sessionId.name, session.id, cookies.sessionId.options)
 
-      // Save URL Prefix so we can securely return sessions when rendering server side (HTTP Only cookie)
-      cookie.set(res, cookies.urlPrefix.name, urlPrefix, cookies.urlPrefix.options)
-
       // Handle first logins on new accounts
       // e.g. option to send users to a new account landing page on initial login
       // Note that the callback URL is preserved, so the journey can still be resumed
