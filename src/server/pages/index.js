@@ -11,12 +11,10 @@ function render(res, page, props) {
       html = signin(props)
       break
     default:
-      res.statusCode = 400
-      res.end(`Error: HTTP GET is not supported for ${url}`)
+      res.status(400).end(`Error: HTTP GET is not supported for ${url}`)
       return
   }
 
-  res.statusCode = 200
   res.setHeader('Content-Type', 'text/html')
   res.send(`<!DOCTYPE html><html><head><style type="text/css">${defaultStyles}</style><meta name="viewport" content="width=device-width, initial-scale=1"></head><body><div class="page">${html}</div></body></html>`)
 }

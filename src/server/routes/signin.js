@@ -17,8 +17,7 @@ export default (req, res, options, resolve) => {
   const { type } = providerConfig
 
   if (!type) {
-    res.statusCode = 500
-    res.end(`Error: Type not specified for ${provider}`)
+    res.status(500).end(`Error: Type not specified for ${provider}`)
     return resolve()
   }
 
@@ -32,14 +31,12 @@ export default (req, res, options, resolve) => {
         console.error('SIGNIN_ERROR', error)
       }
 
-      res.statusCode = 302
       res.setHeader('Location', url)
-      res.end()
+      res.status(302).end()
       return resolve()
     })
   } else {
-    res.statusCode = 500
-    res.end(`Error: Provider type ${type} not supported`)
+    res.status(500).end(`Error: Provider type ${type} not supported`)
     return resolve()
   }
 }

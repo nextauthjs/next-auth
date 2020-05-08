@@ -14,8 +14,7 @@ export default (req, res, options, resolve) => {
     }
   })
 
-  res.statusCode = 200
   res.setHeader('Content-Type', 'application/json')
-  res.end(JSON.stringify(result))
+  res.json(result)
   return resolve()
 }

@@ -51,15 +51,13 @@ export default async (req, res, options, resolve) => {
 
     // Check callbackUrl is at allowed domain
     if (!options.checkCallbackUrl || options.checkCallbackUrl(callbackUrl)) {
-      res.statusCode = 302
-      res.setHeader('Location', callbackUrl)
+      res.status(302).setHeader('Location', callbackUrl)
       res.end()
     } else {
       // If checkCallbackUrl function is defined but doesn't return true,
       // then redirect to the homepage
       console.warn(`Warning: URL '${callbackUrl}' is not an allowed callback URL (redirecting client to ${site})`)
-      res.statusCode = 302
-      res.setHeader('Location', site)
+      res.status(302).setHeader('Location', site)
       res.end()
     }
     return resolve()
@@ -68,8 +66,7 @@ export default async (req, res, options, resolve) => {
   if (type === 'oauth' || type === 'oauth2') {
     oAuthCallback(req, providerConfig, _callback)
   } else {
-    res.statusCode = 500
-    res.end(`Error: Callback for provider type ${type} not supported`)
+    res.status(500).end(`Error: Callback for provider type ${type} not supported`)
     return resolve()
   }
 }
