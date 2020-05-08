@@ -2,7 +2,7 @@
 // and their signin and callback URLs. This makes it possible to automatically
 // generate buttons for all providers when rendering client side.
 
-export default (req, res, options, resolve) => {
+export default (req, res, options, done) => {
   const { providers } = options
 
   const result = {}
@@ -16,5 +16,5 @@ export default (req, res, options, resolve) => {
 
   res.setHeader('Content-Type', 'application/json')
   res.json(result)
-  return resolve()
+  return done()
 }
