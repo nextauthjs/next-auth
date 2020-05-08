@@ -47,6 +47,9 @@ export default async (req, res, options, done) => {
     }
 
     // Check callbackUrl is at allowed domain
+    // @FIXME This should be hoisted up so that callback URL is checked 
+    // and saved in index.js to avoid having to have checks for it in 
+    // multiple places.
     if (!options.checkCallbackUrl || options.checkCallbackUrl(callbackUrl)) {
       res.status(302).setHeader('Location', callbackUrl)
       res.end()
