@@ -1,6 +1,8 @@
 // Handle requests to /api/auth/signout
+import cookie from '../lib/cookie'
+
 export default async (req, res, options, done) => {
-  const { adapter, cookies, callbackUrl, csrfTokenVerified } = options
+  const { adapter, cookies, callbackUrl, csrfTokenVerified, urlPrefix } = options
   const _adapter = await adapter.getAdapter()
   const { deleteSessionById } = _adapter
   
@@ -9,15 +11,18 @@ export default async (req, res, options, done) => {
 
   if (csrfTokenVerified) {
     try {
-      // @TODO Delete session cookie
+      // Delete session cookie
+      cookie.set(res, cookies.sessionId.name, '', { ...cookies.sessionId.options, maxAge: 0 })
+
+      // Remove session from database
       await deleteSessionById(sessionId)
     } catch (error) {
       // Log error and continue
       console.error('SIGNOUT_ERROR', error)
     }
 
-    res.setHeader('Location', callbackUrl)
-    res.status(302).end()
+    res.status(302).setHeader('Location', callbackUrl)
+    res.end()
     return done()
   } else {
     // If a csrfToken was not verified with this request, send the user to 
@@ -26,6 +31,7 @@ export default async (req, res, options, done) => {
     //
     // Note: Adds ?csrf=true query string param to URL for debugging/tracking.
     res.status(302).setHeader('Location', `${urlPrefix}/signout?csrf=true`)
+    res.end()
     return done()
   }
 }
