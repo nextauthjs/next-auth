@@ -1,5 +1,5 @@
 :root {
-  --primary-color: #6D757D;
+  --primary-color: #444;
 }
 
 body {
@@ -28,13 +28,19 @@ h1 {
   text-align: center;
 
   p {
-    margin: 0;
+    margin: 0 0 0.5em 0;
     padding: 0;
+  }
+
+  a.site {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 0.9em;
   }
 
   a[data-provider] {
     display: block;
-    margin: 0 auto 0.5em auto;
+    margin: 0 auto 0 auto;
     padding: 0.5em 2em;
     border: 1px solid var(--primary-color);
     border-radius: 0.2em;
