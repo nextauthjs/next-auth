@@ -3,6 +3,7 @@ import cookie from './lib/cookie'
 import parseProviders from './lib/providers'
 import providers from './routes/providers'
 import signin from './routes/signin'
+import signout from './routes/signout'
 import callback from './routes/callback'
 import session from './routes/session'
 import pages from './pages'
@@ -193,8 +194,9 @@ export default (req, res, _options) => {
           return done()
       }
     } else if (req.method === 'POST') {
-      switch (route) {
+      switch (action) {
         case 'signout':
+          signout(req, res, options, done)
           break
         default:
           res.status(400).end(`Error: HTTP POST is not supported for ${url}`)

@@ -1,5 +1,4 @@
-import { User } from "../../models/user"
-
+// Return a session object (without any private fields) for Single Page App clients
 export default async (req, res, options, done) => {
   const { cookies, adapter } = options
   const _adapter = await adapter.getAdapter()
@@ -8,13 +7,13 @@ export default async (req, res, options, done) => {
 
   let response = {}
 
-  // @TODO provide adapter method to make it easy  to safely seralize user information and avoid
-  // making assumptions about the user / session model (they should be loosely coupled.)
   const session = await getSessionById(sessionId)
   if (session) {
     const user = await getUserById(session.userId)
-    // Only expose *name* and *email* to client side.
+    // Only exopose a limited subset of information to the client (as needed.
     // This is for presentation purposes (e.g. "you are logged in as…")
+    // @TODO Should support async seralizeUser({ user, function }) style
+    // middleware function to allow response to be customized.
     response = {
       user: {
         name: user.name,

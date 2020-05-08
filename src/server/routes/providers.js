@@ -1,7 +1,6 @@
-// Returns a JSON object with a list of all outh providers currently configured
+// Return a JSON object with a list of all outh providers currently configured
 // and their signin and callback URLs. This makes it possible to automatically
 // generate buttons for all providers when rendering client side.
-
 export default (req, res, options, done) => {
   const { providers } = options
 
