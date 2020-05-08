@@ -212,8 +212,14 @@ const Default = (config, options) => {
 
     async function deleteSessionById(id) {
       debug('Delete session by ID', id)
-      return new Promise((resolve, reject) => {
-        // @TODO Delete session
+      return new Promise(async (resolve, reject) => {
+        try {
+          await connection.getRepository(Session).delete({ id })
+          resolve(true)
+        } catch (error) {
+          console.error('DELETE_SESSION_BY_ID_ERROR', error)
+          reject(new Error('DELETE_SESSION_BY_ID_ERROR', error))
+        }
         resolve(true)
       })
     }
