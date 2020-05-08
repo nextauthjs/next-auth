@@ -6,7 +6,7 @@ const DEFAULT_SITE = ''
 const DEFAULT_PATH_PREFIX = '/api/auth'
 
 // Isomorphic get session method
-const session = ({req, site, pathPrefix}) => {
+const session = ({req, site, pathPrefix, urlPrefixCookieName}) => {
   return new Promise(async resolve => {  
     // If we have a 'req' object are running sever side and should get cookies from headers
     const cookies = req ? _parseCookie(req.headers.cookie) : null
@@ -17,12 +17,19 @@ const session = ({req, site, pathPrefix}) => {
     // If site and/or pathPrefix are specified, use them (or the defaults)
     // otherwise get the server URL from the HTTP only cookie.
     //
-    // Note: If running client side (i.e. no 'req' object) will use relative
-    // path by default (/api/auth) which is fine (only SSR needs absolute path).
-    const urlPrefix = (site || pathPrefix || req === null)
+    // If no options specified (which usually will be the case) then grab
+    // the configuration dynamically from a cookie. Prefer the _Secure-
+    // prefixed version if it is avalible, but fall back to checking the
+    // version without the prefix so it sill works on URLs like http://localhost
+    const urlPrefix = (site || pathPrefix)
       ? `${site || DEFAULT_SITE}${pathPrefix || DEFAULT_PATH_PREFIX}`
-      : cookies[URL_PREFIX_COOKIE]
+      : cookies[urlPrefixCookieName] || cookies[`__Secure-${URL_PREFIX_COOKIE}`] || cookies[URL_PREFIX_COOKIE]
     
+    // If we are rendering server side but don't have a URL prefix, then give up
+    // because we can't call fetch server side an absolute URL to query.
+    if (req && !urlPrefix)
+      return resolve(null)
+
     try {
       const res = await fetch(`${urlPrefix}/session`, fetchOptions) // Absolute URL
       const data = await res.json()
