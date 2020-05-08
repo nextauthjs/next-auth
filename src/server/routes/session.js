@@ -1,6 +1,6 @@
 import { User } from "../../models/user"
 
-export default async (req, res, options, resolve) => {
+export default async (req, res, options, done) => {
   const { cookies, adapter } = options
   const _adapter = await adapter.getAdapter()
   const { getUserById, getSessionById } = _adapter
@@ -27,5 +27,5 @@ export default async (req, res, options, resolve) => {
 
   res.setHeader('Content-Type', 'application/json')
   res.json(response)
-  return resolve()
+  return done()
 }
