@@ -147,6 +147,10 @@ export default (req, res, _options) => {
         case 'session':
           session(req, res, options, done)
           break
+        case 'csrf':
+          res.json({ csrfToken })
+          return done()
+          break;
         case 'signin':
           if (provider && options.providers[provider]) {
             signin(req, res, options, done)
@@ -154,7 +158,7 @@ export default (req, res, _options) => {
             pages.render(res, 'signin', {
               providers: Object.values(options.providers),
               callbackUrl: options.callbackUrl
-            })
+            }, done)
           }
           break
         case 'callback':
