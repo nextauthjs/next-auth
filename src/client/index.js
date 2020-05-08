@@ -9,7 +9,7 @@ const DEFAULT_PATH_PREFIX = '/api/auth'
 const session = ({req, site, pathPrefix, urlPrefixCookieName}) => {
   return new Promise(async resolve => {  
     // If we have a 'req' object are running sever side and should get cookies from headers
-    const cookies = req ? _parseCookie(req.headers.cookie) : null
+    const cookies = req ? _parseCookies(req.headers.cookie) : null
     // We will need the raw header as it will have the HTTP only Session ID cookie in it
     // and we will need to pass that to get the session data back.
     const fetchOptions = req ? { headers: { cookie: req.headers.cookie } } : {}
@@ -23,7 +23,7 @@ const session = ({req, site, pathPrefix, urlPrefixCookieName}) => {
     // version without the prefix so it sill works on URLs like http://localhost
     const urlPrefix = (site || pathPrefix)
       ? `${site || DEFAULT_SITE}${pathPrefix || DEFAULT_PATH_PREFIX}`
-      : cookies[urlPrefixCookieName] || cookies[`__Secure-${URL_PREFIX_COOKIE}`] || cookies[URL_PREFIX_COOKIE]
+      : _getUrlPrefix(cookies, urlPrefixCookieName)
     
     // If we are rendering server side but don't have a URL prefix, then give up
     // because we can't call fetch server side an absolute URL to query.
@@ -52,7 +52,7 @@ const useSession = (session, pathPrefix) => {
       setData(Object.keys(data).length > 0 ? data : null) // Return null if session data empty
       setLoading(false)
     } catch (error) {
-      console.error("CLIENT_SESSION_ERROR", error)
+      console.error("CLIENT_USE_SESSION_ERROR", error)
     }
   }
   useEffect(() => { getSession() }, [])
@@ -60,7 +60,7 @@ const useSession = (session, pathPrefix) => {
 }
 
 // Adapted from https://github.com/felixfong227/simple-cookie-parser/blob/master/index.js
-const _parseCookie = (string) => {
+const _parseCookies = (string) => {
   if (!string)
     return {}
   try {
@@ -77,6 +77,12 @@ const _parseCookie = (string) => {
     console.error("CLIENT_COOKIE_PARSE_ERROR")
     return {}
   }
+}
+
+const _getUrlPrefix = (cookies, urlPrefixCookieName) => {
+  const cookieValue = cookies[urlPrefixCookieName] || cookies[`__Secure-${URL_PREFIX_COOKIE}`] || cookies[URL_PREFIX_COOKIE]
+  const [ urlPrefixValue, urlPrefixHash ] = cookieValue ? cookieValue.split('|') : [null, null]
+  return urlPrefixValue
 }
 
 export default {
