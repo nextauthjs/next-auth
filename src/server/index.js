@@ -157,7 +157,8 @@ export default (req, res, _options) => {
           } else {
             pages.render(res, 'signin', {
               providers: Object.values(options.providers),
-              callbackUrl: options.callbackUrl
+              callbackUrl: options.callbackUrl,
+              site: options.site
             }, done)
           }
           break
