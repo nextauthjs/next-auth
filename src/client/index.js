@@ -48,7 +48,7 @@ const useSession = (session, pathPrefix) => {
       console.error("CLIENT_SESSION_ERROR", error)
     }
   }
-  useEffect(() => getSession(), [])
+  useEffect(() => { getSession() }, [])
   return [data, loading]
 }
 
