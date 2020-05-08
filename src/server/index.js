@@ -12,6 +12,11 @@ const DEFAULT_PATH_PREFIX = '/api/auth'
 
 export default (req, res, _options) => {
   return new Promise(async resolve => {
+    // This is passed to all methods that handle responses, and must be called
+    // when they are complete so that the serverless function knows when it is
+    // safe to return and that no more data will be sent.
+    const done = resolve
+
     const { url, query } = req
     const {
       slug,
@@ -137,14 +142,14 @@ export default (req, res, _options) => {
     if (req.method === 'GET') {
       switch (action) {
         case 'providers':
-          providers(req, res, options, resolve)
+          providers(req, res, options, done)
           break
         case 'session':
-          session(req, res, options, resolve)
+          session(req, res, options, done)
           break
         case 'signin':
           if (provider && options.providers[provider]) {
-            signin(req, res, options, resolve)
+            signin(req, res, options, done)
           } else {
             pages.render(res, 'signin', {
               providers: Object.values(options.providers),
@@ -154,10 +159,10 @@ export default (req, res, _options) => {
           break
         case 'callback':
           if (provider && options.providers[provider]) {
-            callback(req, res, options, resolve)
+            callback(req, res, options, done)
           } else {
             res.status(400).end(`Error: HTTP GET is not supported for ${url}`)
-            return resolve()
+            return done()
           }
           break
         case 'unlink':
@@ -166,20 +171,20 @@ export default (req, res, _options) => {
           break
         case 'done':
           res.end(`If you can see this, it worked!`)
-          return resolve()
+          return done()
         default:
           res.status(400).end(`Error: HTTP GET is not supported for ${url}`)
-          return resolve()
+          return done()
       }
     } else if (req.method === 'POST') {
       switch (route) {
         default:
           res.status(400).end(`Error: HTTP POST is not supported for ${url}`)
-          return resolve()
+          return done()
       }
     } else {
       res.status(400).end(`Error: HTTP ${req.method} is not supported for ${url}`)
-      return resolve()
+      return done()
     }
   })
 }

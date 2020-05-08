@@ -3,7 +3,7 @@ import { oAuthCallback } from '../lib/oauth/callback'
 import signinFlow from '../lib/signin-flow'
 import cookie from '../lib/cookie'
 
-export default async (req, res, options, resolve) => {
+export default async (req, res, options, done) => {
   const { provider, providers, adapter, site, urlPrefix, cookies } = options
   const providerConfig = providers[provider]
   const { type } = providerConfig
@@ -60,13 +60,13 @@ export default async (req, res, options, resolve) => {
       res.status(302).setHeader('Location', site)
       res.end()
     }
-    return resolve()
+    return done()
   }
 
   if (type === 'oauth' || type === 'oauth2') {
     oAuthCallback(req, providerConfig, _callback)
   } else {
     res.status(500).end(`Error: Callback for provider type ${type} not supported`)
-    return resolve()
+    return done()
   }
 }

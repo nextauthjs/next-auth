@@ -6,7 +6,7 @@ http://localhost:3000/api/next-auth?action=signin&provider=google
 import { getAuthorizationUrl } from '../lib/oauth/signin'
 import cookie from '../lib/cookie'
 
-export default (req, res, options, resolve) => {
+export default (req, res, options, done) => {
   const {
     provider,
     providers,
@@ -18,7 +18,7 @@ export default (req, res, options, resolve) => {
 
   if (!type) {
     res.status(500).end(`Error: Type not specified for ${provider}`)
-    return resolve()
+    return done()
   }
 
   // Save callback URL in a cookie (the callback page will read this and redirect to it)
@@ -33,10 +33,10 @@ export default (req, res, options, resolve) => {
 
       res.setHeader('Location', url)
       res.status(302).end()
-      return resolve()
+      return done()
     })
   } else {
     res.status(500).end(`Error: Provider type ${type} not supported`)
-    return resolve()
+    return done()
   }
 }
