@@ -1,6 +1,6 @@
 // Handle callbacks from login services
 import { oAuthCallback } from '../lib/oauth/callback'
-import signinFlow from '../lib/signin-flow'
+import signinHandler from '../lib/signin-handler'
 import cookie from '../lib/cookie'
 
 export default async (req, res, options, done) => {
@@ -23,7 +23,7 @@ export default async (req, res, options, done) => {
       const {
         session,
         isNewAccount
-      } = await signinFlow(
+      } = await signinHandler(
         adapter,
         sessionId,
         profile,
