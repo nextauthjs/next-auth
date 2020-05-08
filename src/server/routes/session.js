@@ -7,6 +7,7 @@ export default async (req, res, options, done) => {
 
   let response = {}
 
+  // @TODO Handle errors with try/catch
   const session = await getSessionById(sessionId)
   if (session) {
     const user = await getUserById(session.userId)
