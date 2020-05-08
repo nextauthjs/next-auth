@@ -156,8 +156,7 @@ export default (req, res, _options) => {
           if (provider && options.providers[provider]) {
             callback(req, res, options, resolve)
           } else {
-            res.statusCode = 400
-            res.end(`Error: HTTP GET is not supported for ${url}`)
+            res.status(400).end(`Error: HTTP GET is not supported for ${url}`)
             return resolve()
           }
           break
@@ -169,20 +168,17 @@ export default (req, res, _options) => {
           res.end(`If you can see this, it worked!`)
           return resolve()
         default:
-          res.statusCode = 400
-          res.end(`Error: HTTP GET is not supported for ${url}`)
+          res.status(400).end(`Error: HTTP GET is not supported for ${url}`)
           return resolve()
       }
     } else if (req.method === 'POST') {
       switch (route) {
         default:
-          res.statusCode = 400
-          res.end(`Error: HTTP POST is not supported for ${url}`)
+          res.status(400).end(`Error: HTTP POST is not supported for ${url}`)
           return resolve()
       }
     } else {
-      res.statusCode = 400
-      res.end(`Error: HTTP ${req.method} is not supported for ${url}`)
+      res.status(400).end(`Error: HTTP ${req.method} is not supported for ${url}`)
       return resolve()
     }
   })
