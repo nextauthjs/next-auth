@@ -1,14 +1,8 @@
 // Handle requests to /api/auth/signin
 import { getAuthorizationUrl } from '../lib/oauth/signin'
-import cookie from '../lib/cookie'
 
 export default (req, res, options, done) => {
-  const {
-    provider,
-    providers,
-    callbackUrl,
-    cookies,
-  } = options
+  const { provider, providers } = options
   const providerConfig = providers[provider]
   const { type } = providerConfig
 
@@ -16,9 +10,6 @@ export default (req, res, options, done) => {
     res.status(500).end(`Error: Type not specified for ${provider}`)
     return done()
   }
-
-  // Save callback URL in a cookie (the callback page will read this and redirect to it)
-  cookie.set(res, cookies.callbackUrl.name, callbackUrl, cookies.callbackUrl.options)
   
   if (type === 'oauth' || type === 'oauth2') {
     getAuthorizationUrl(providerConfig, (error, url) => {

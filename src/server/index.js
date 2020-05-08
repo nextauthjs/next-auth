@@ -22,7 +22,7 @@ export default (req, res, _options) => {
     const {
       slug,
       action = slug[0],
-      provider = slug[1],
+      provider = slug[1]
     } = query
 
     // Allow site name, path prefix to be overriden
@@ -30,9 +30,6 @@ export default (req, res, _options) => {
     const pathPrefix = _options.pathPrefix || DEFAULT_PATH_PREFIX
     const urlPrefix = `${site}${pathPrefix}`
 
-    // If no callback URL is provided, use site name
-    const callbackUrl = query.callbackUrl || site
-    
     // Use secure cookies if the site uses HTTPS
     // This being conditional allows cookies to work non-HTTPS development URLs
     // Honour secure cookie option, which sets 'secure' and also adds '__Secure-'
@@ -140,6 +137,62 @@ export default (req, res, _options) => {
       const newUrlPrefixCookie = `${urlPrefix}|${createHash('sha256').update(`${urlPrefix}${secret}`).digest('hex')}`
       cookie.set(res, cookies.urlPrefix.name, newUrlPrefixCookie, cookies.urlPrefix.options)
     }
+
+    // Handle preserving and validating callback URLs
+    // If an async function for the option `allowCallbackUrl` is passed then call it
+    // and allow or deny the URL to be used as a callback URL based on resolve/reject
+    let callbackUrl
+    const callbackUrlParamValue = query.callbackUrl || null
+    const callbackUrlCookieValue = req.cookies[cookies.callbackUrl.name] || null
+    if (callbackUrlParamValue) {
+      // If callbackUrl query parameter is passed, validate against allowCallbackUrl() function
+      if (_options.callbackUrls) {
+        try {
+          // If callback is provided and passes without rejecting then is safe to use URL
+          await _options.allowCallbackUrl(callbackUrlParamValue)
+          callbackUrl = callbackUrlParamValue
+        } catch (error) {
+          // If callback URL was supplied but callback rejected default to site name
+          console.error('ALLOW_CALLBACK_URL_ERROR', error)
+          callbackUrl = site
+        }
+      } else if (callbackUrlParamValue.startsWith(site)) {
+        // If no allowCallbackUrl() handler is specified then check it matches the
+        // protocol and domain and base URL as the current site...
+        callbackUrl = callbackUrlParamValue
+      } else {
+        // ... if callbackUrl doesn't match, use canonical site URL instead.
+        console.warn('CALLBACK_URL_PARAM_DOES_NOT_MATCH_SITE', callbackUrlParamValue)
+        callbackUrl = site
+      }
+    } else {
+      if (callbackUrlCookieValue) {
+        // If callbackUrl query parameter is set as a cookie, validate it against allowCallbackUrl() function
+        if (_options.callbackUrls) {
+          try {
+            // If callback is provided and passes without rejecting then is safe to use URL
+            await _options.allowCallbackUrl(callbackUrlCookieValue)
+            callbackUrl = callbackUrlCookieValue
+          } catch (error) {
+            // If callback URL was supplied but callback rejected default to site name
+            console.error('ALLOW_CALLBACK_URL_ERROR', error)
+            callbackUrl = site
+          }
+        } else if (callbackUrlCookieValue.startsWith(site)) {
+          // If no allowCallbackUrl() handler is specified then check it matches the
+          // protocol and domain and base URL as the current site...
+          callbackUrl = callbackUrlCookieValue
+        } else {
+          // ... if callbackUrl doesn't match, use canonical site URL instead.
+          console.warn('CALLBACK_URL_COOKIE_DOES_NOT_MATCH_SITE', callbackUrlCookieValue)
+          callbackUrl = site
+        }
+      }
+    }
+
+    // Save callback URL in a cookie so that can be used for subsequent requests in signin/signout/callback flow
+    if (callbackUrl && (callbackUrl != callbackUrlCookieValue))
+      cookie.set(res, cookies.callbackUrl.name, callbackUrl, cookies.callbackUrl.options)
 
     // User provided options are overriden by other options,
     // except for the options with special handlign above

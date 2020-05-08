@@ -4,15 +4,12 @@ import signinFlow from '../lib/signin-flow'
 import cookie from '../lib/cookie'
 
 export default async (req, res, options, done) => {
-  const { provider, providers, adapter, site, urlPrefix, cookies } = options
+  const { provider, providers, adapter, site, urlPrefix, cookies, callbackUrl, newAccountLandingPageUrl } = options
   const providerConfig = providers[provider]
   const { type } = providerConfig
 
   // Get session ID (if set)
   const sessionId = req.cookies[cookies.sessionId.name]
-
-  // Get callback URL from cookie (saved at the start of the signin flow)
-  let callbackUrl = req.cookies[cookies.callbackUrl.name] || site
 
   const _callback = async (error, response) => {
     // @TODO Check error
@@ -39,26 +36,23 @@ export default async (req, res, options, done) => {
       // Handle first logins on new accounts
       // e.g. option to send users to a new account landing page on initial login
       // Note that the callback URL is preserved, so the journey can still be resumed
-      if (isNewAccount && options.newAccountLandingPageUrl)
-        callbackUrl = options.newAccountLandingPageUrl
+      if (isNewAccount && newAccountLandingPageUrl) {
+        res.status(302).setHeader('Location', newAccountLandingPageUrl)
+        res.end()
+        return done()
+      }
     } catch(error) {
       // @TODO Handle signin flow errors
       console.error(error)
     }
 
-    // Check callbackUrl is at allowed domain
-    // @FIXME This should be hoisted up so that callback URL is checked 
-    // and saved in index.js to avoid having to have checks for it in 
-    // multiple places.
-    if (!options.checkCallbackUrl || options.checkCallbackUrl(callbackUrl)) {
+    // Callback URL is already verified at this point, so safe to use if specified
+    if (callbackUrl) {
       res.status(302).setHeader('Location', callbackUrl)
-      res.end()
+      res.end()  
     } else {
-      // If checkCallbackUrl function is defined but doesn't return true,
-      // then redirect to the homepage
-      console.warn(`Warning: URL '${callbackUrl}' is not an allowed callback URL (redirecting client to ${site})`)
       res.status(302).setHeader('Location', site)
-      res.end()
+      res.end()  
     }
     return done()
   }
