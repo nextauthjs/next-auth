@@ -85,10 +85,6 @@ export default (req, res, _options) => {
       ..._options.cookies
     }
     
-    // Set canonical site name + API route in a cookie to facilitate client configuration
-    if (!req.cookies[cookies.urlPrefix.name])
-      cookie.set(res, cookies.urlPrefix.name, urlPrefix, cookies.urlPrefix.options)
-
     // Secret used salt cookies and tokens (e.g. for CSRF protection).
     // If no secret option is specified then it creates one on the fly
     // based on options passed here. A options contains unique data, such as
@@ -123,6 +119,25 @@ export default (req, res, _options) => {
       csrfToken = randomBytes(32).toString('hex')
       const newCsrfTokenCookie = `${csrfToken}|${createHash('sha256').update(`${csrfToken}${secret}`).digest('hex')}`
       cookie.set(res, cookies.csrfToken.name, newCsrfTokenCookie, cookies.csrfToken.options)
+    }
+
+    // Set canonical site name + API route in a cookie to facilitate passing configuration
+    // to the NextAuth client. There are potential security considerations around this
+    // relating to trying to prevent attackers from exploiting this by setting this cookie
+    // on the client first if they can get control of a sub domain or exploit a XSS 
+    // vulnerability, but this approach attempts to mitgate that by always verifying
+    // the cookie and updating it if fails the verification check.
+    let setUrlPrefixCookie = true
+    if (req.cookies[cookies.urlPrefix.name]) {
+      const [ urlPrefixValue, urlPrefixHash ] = req.cookies[cookies.urlPrefix.name].split('|')
+      // If the hash on the cookie is verified, then we must have set the cookie and don't need to update it
+      if (urlPrefixValue === urlPrefix && urlPrefixHash == createHash('sha256').update(`${urlPrefixValue}${secret}`).digest('hex'))
+        setUrlPrefixCookie = false
+    }
+    // If the cookie is not set already (or if it is set, but failed verification) set header to update the cookie
+    if (setUrlPrefixCookie) {
+      const newUrlPrefixCookie = `${urlPrefix}|${createHash('sha256').update(`${urlPrefix}${secret}`).digest('hex')}`
+      cookie.set(res, cookies.urlPrefix.name, newUrlPrefixCookie, cookies.urlPrefix.options)
     }
 
     // User provided options are overriden by other options,
@@ -180,17 +195,6 @@ export default (req, res, _options) => {
     } else if (req.method === 'POST') {
       switch (route) {
         case 'signout':
-          if (csrfTokenVerified) {
-            // @TODO invoke signout (invokes adapter to destroy session, remove session cookie)
-            // signout (req, res, options, done)
-          } else {
-            // If a csrfToken was not verified with this request, send the user to 
-            // the signout page, as they should have a valid one now and clicking
-            // the signout button should work.
-            //
-            // Note: Adds ?csrf=true query string param to URL for debugging/tracking.
-            res.status(302).setHeader('Location', `${urlPrefix}/signout?csrf=true`)
-          }
           break
         default:
           res.status(400).end(`Error: HTTP POST is not supported for ${url}`)
