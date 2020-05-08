@@ -3,12 +3,33 @@
 }
 
 body {
-  margin: 1em;
+  margin: 1rem;
   font-family: sans-serif;
 }
 
 h1 {
   font-weight: 300;
+}
+
+form {
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  margin: 0;
+  padding: .5rem 2rem;
+  border: .1rem solid var(--primary-color);
+  color: var(--primary-color);
+  background: #fff;
+  font-size: 1.1rem;
+  border-radius: .2rem;
+  
+  &:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+    cursor: pointer;
+  }
 }
 
 .page {
@@ -19,7 +40,8 @@ h1 {
   bottom: 0;
 }
 
-.signin {
+.signin,
+.signout {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -28,25 +50,32 @@ h1 {
   text-align: center;
 
   p {
-    margin: 0 0 0.5em 0;
+    margin: 0 0 0.5rem 0;
     padding: 0;
   }
 
   a.site {
     color: var(--primary-color);
     text-decoration: none;
-    font-size: 0.9em;
+    font-size: 1rem;
+    line-height: 2rem;
+    padding-bottom: .5rem;
+    &:hover {
+      text-decoration: underline;
+    }
   }
+}
 
+.signin {
   a[data-provider] {
     display: block;
     margin: 0 auto 0 auto;
-    padding: 0.5em 2em;
-    border: 1px solid var(--primary-color);
-    border-radius: 0.2em;
+    padding: .5rem 2rem;
+    border: .1rem solid var(--primary-color);
+    border-radius: .2rem;
     text-decoration: none;
-    font-size: 1.1em;
-    transition: all 0.1s ease-in-out;
+    font-size: 1.1rem;
+    transition: all .1s ease-in-out;
 
     &:link,
     &:visited {
@@ -56,7 +85,6 @@ h1 {
 
     &:hover,
     &:active {
-      border-color: var(--primary-color);
       background-color: var(--primary-color);
       color: #fff;
     }
