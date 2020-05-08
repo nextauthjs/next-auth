@@ -108,15 +108,13 @@ export default (req, res, _options) => {
     // https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie
     // https://owasp.org/www-chapter-london/assets/slides/David_Johansson-Double_Defeat_of_Double-Submit_Cookie.pdf
     let csrfToken
+    let csrfTokenVerified = false
     if (req.cookies[cookies.csrfToken.name]) {
       const [ csrfTokenValue, csrfTokenHash ] = req.cookies[cookies.csrfToken.name].split('|')
       if (csrfTokenHash == createHash('sha256').update(`${csrfTokenValue}${secret}`).digest('hex')) {
         // If hash matches then we trust the CSRF token value
         csrfToken = csrfTokenValue
-      } else {
-        // @TODO Add handler to reject POST requests for auth routes if the token doesn't match.
-        // Only triggered when there is a cookie but the hash doesn't match. Should be handled gracefully.
-        console.warn('CSRF_TOKEN_CHECK_WARNING')
+        csrfTokenVerified = true
       }
     }
     if (!csrfToken) {
@@ -140,6 +138,7 @@ export default (req, res, _options) => {
       cookies,
       secret,
       csrfToken,
+      csrfTokenVerified,
       providers: parseProviders(_options.providers, urlPrefix),
     }
     
@@ -154,17 +153,15 @@ export default (req, res, _options) => {
         case 'csrf':
           res.json({ csrfToken })
           return done()
-          break;
         case 'signin':
           if (provider && options.providers[provider]) {
             signin(req, res, options, done)
           } else {
-            pages.render(res, 'signin', {
-              providers: Object.values(options.providers),
-              callbackUrl: options.callbackUrl,
-              site: options.site
-            }, done)
+            pages.render(res, 'signin', { site, providers: Object.values(options.providers), callbackUrl}, done)
           }
+          break
+        case 'signout':
+          pages.render(res, 'signout', { site, urlPrefix, csrfToken, callbackUrl }, done)
           break
         case 'callback':
           if (provider && options.providers[provider]) {
@@ -176,17 +173,25 @@ export default (req, res, _options) => {
           break
         case 'unlink':
           break
-        case 'signout':
-          break
-        case 'done':
-          res.end(`If you can see this, it worked!`)
-          return done()
         default:
           res.status(400).end(`Error: HTTP GET is not supported for ${url}`)
           return done()
       }
     } else if (req.method === 'POST') {
       switch (route) {
+        case 'signout':
+          if (csrfTokenVerified) {
+            // @TODO invoke signout (invokes adapter to destroy session, remove session cookie)
+            // signout (req, res, options, done)
+          } else {
+            // If a csrfToken was not verified with this request, send the user to 
+            // the signout page, as they should have a valid one now and clicking
+            // the signout button should work.
+            //
+            // Note: Adds ?csrf=true query string param to URL for debugging/tracking.
+            res.status(302).setHeader('Location', `${urlPrefix}/signout?csrf=true`)
+          }
+          break
         default:
           res.status(400).end(`Error: HTTP POST is not supported for ${url}`)
           return done()

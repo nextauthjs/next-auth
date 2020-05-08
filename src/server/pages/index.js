@@ -1,5 +1,6 @@
-import signin from './signin'
 import fs from 'fs'
+import signin from './signin'
+import signout from './signout'
 
 // Future releases will support customization (via inline or external CSS)
 const defaultStyles = fs.readFileSync(__dirname + '/../../css/index.css', 'utf8')
@@ -9,6 +10,9 @@ function render(res, page, props, done) {
   switch (page) {
     case 'signin':
       html = signin(props)
+      break
+    case 'signout':
+      html = signout(props)
       break
     default:
       res.status(400).end(`Error: HTTP GET is not supported for ${url}`)
