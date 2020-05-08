@@ -1,5 +1,6 @@
 import { createHash, randomBytes } from 'crypto'
 import cookie from './lib/cookie'
+import callbackUrlHandler from './lib/callback-url-handler'
 import parseProviders from './lib/providers'
 import providers from './routes/providers'
 import signin from './routes/signin'
@@ -138,62 +139,6 @@ export default (req, res, _options) => {
       cookie.set(res, cookies.urlPrefix.name, newUrlPrefixCookie, cookies.urlPrefix.options)
     }
 
-    // Handle preserving and validating callback URLs
-    // If an async function for the option `allowCallbackUrl` is passed then call it
-    // and allow or deny the URL to be used as a callback URL based on resolve/reject
-    let callbackUrl
-    const callbackUrlParamValue = query.callbackUrl || null
-    const callbackUrlCookieValue = req.cookies[cookies.callbackUrl.name] || null
-    if (callbackUrlParamValue) {
-      // If callbackUrl query parameter is passed, validate against allowCallbackUrl() function
-      if (_options.callbackUrls) {
-        try {
-          // If callback is provided and passes without rejecting then is safe to use URL
-          await _options.allowCallbackUrl(callbackUrlParamValue)
-          callbackUrl = callbackUrlParamValue
-        } catch (error) {
-          // If callback URL was supplied but callback rejected default to site name
-          console.error('ALLOW_CALLBACK_URL_ERROR', error)
-          callbackUrl = site
-        }
-      } else if (callbackUrlParamValue.startsWith(site)) {
-        // If no allowCallbackUrl() handler is specified then check it matches the
-        // protocol and domain and base URL as the current site...
-        callbackUrl = callbackUrlParamValue
-      } else {
-        // ... if callbackUrl doesn't match, use canonical site URL instead.
-        console.warn('CALLBACK_URL_PARAM_DOES_NOT_MATCH_SITE', callbackUrlParamValue)
-        callbackUrl = site
-      }
-    } else {
-      if (callbackUrlCookieValue) {
-        // If callbackUrl query parameter is set as a cookie, validate it against allowCallbackUrl() function
-        if (_options.callbackUrls) {
-          try {
-            // If callback is provided and passes without rejecting then is safe to use URL
-            await _options.allowCallbackUrl(callbackUrlCookieValue)
-            callbackUrl = callbackUrlCookieValue
-          } catch (error) {
-            // If callback URL was supplied but callback rejected default to site name
-            console.error('ALLOW_CALLBACK_URL_ERROR', error)
-            callbackUrl = site
-          }
-        } else if (callbackUrlCookieValue.startsWith(site)) {
-          // If no allowCallbackUrl() handler is specified then check it matches the
-          // protocol and domain and base URL as the current site...
-          callbackUrl = callbackUrlCookieValue
-        } else {
-          // ... if callbackUrl doesn't match, use canonical site URL instead.
-          console.warn('CALLBACK_URL_COOKIE_DOES_NOT_MATCH_SITE', callbackUrlCookieValue)
-          callbackUrl = site
-        }
-      }
-    }
-
-    // Save callback URL in a cookie so that can be used for subsequent requests in signin/signout/callback flow
-    if (callbackUrl && (callbackUrl != callbackUrlCookieValue))
-      cookie.set(res, cookies.callbackUrl.name, callbackUrl, cookies.callbackUrl.options)
-
     // User provided options are overriden by other options,
     // except for the options with special handlign above
     const options = {
@@ -201,7 +146,6 @@ export default (req, res, _options) => {
       site,
       pathPrefix,
       urlPrefix,
-      callbackUrl,
       action,
       provider,
       cookies,
@@ -209,8 +153,12 @@ export default (req, res, _options) => {
       csrfToken,
       csrfTokenVerified,
       providers: parseProviders(_options.providers, urlPrefix),
+      callbackUrl: site
     }
-    
+
+    // Get / Set callback URL based on query param / cookie + validation
+    options.callbackUrl = await callbackUrlHandler(req, res, options)
+
     if (req.method === 'GET') {
       switch (action) {
         case 'providers':
@@ -226,11 +174,11 @@ export default (req, res, _options) => {
           if (provider && options.providers[provider]) {
             signin(req, res, options, done)
           } else {
-            pages.render(res, 'signin', { site, providers: Object.values(options.providers), callbackUrl}, done)
+            pages.render(res, 'signin', { site, providers: Object.values(options.providers), callbackUrl: options.callbackUrl}, done)
           }
           break
         case 'signout':
-          pages.render(res, 'signout', { site, urlPrefix, csrfToken, callbackUrl }, done)
+          pages.render(res, 'signout', { site, urlPrefix, csrfToken, callbackUrl: options.callbackUrl }, done)
           break
         case 'callback':
           if (provider && options.providers[provider]) {
