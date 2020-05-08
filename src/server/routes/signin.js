@@ -1,8 +1,4 @@
-// Handle sign in
-/*
-http://localhost:3000/api/next-auth?action=signin&provider=twitter
-http://localhost:3000/api/next-auth?action=signin&provider=google
-*/
+// Handle requests to /api/auth/signin
 import { getAuthorizationUrl } from '../lib/oauth/signin'
 import cookie from '../lib/cookie'
 
@@ -26,7 +22,7 @@ export default (req, res, options, done) => {
   
   if (type === 'oauth' || type === 'oauth2') {
     getAuthorizationUrl(providerConfig, (error, url) => {
-      // @TODO Check error
+      // @TODO Handle error
       if (error) {
         console.error('SIGNIN_ERROR', error)
       }
