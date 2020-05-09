@@ -2,11 +2,12 @@ import cookie from '../lib/cookie'
 
 export default async (req, res, options) => {
   const { query } = req
-  const { cookies  } = options
+  const { cookies, site, defaultCallbackUrl } = options
   const callbackUrlHandler = options.callbackUrlHandler || callbackUrlHandlerDefaultFunction
 
   // Handle preserving and validating callback URLs
-  let callbackUrl
+  // If no defaultCallbackUrl option specified, default to the homepage for the site
+  let callbackUrl = defaultCallbackUrl || site
   const callbackUrlParamValue = query.callbackUrl || null
   const callbackUrlCookieValue = req.cookies[cookies.callbackUrl.name] || null
   if (callbackUrlParamValue) {
