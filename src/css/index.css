@@ -16,19 +16,59 @@ form {
   padding: 0;
 }
 
-button {
+
+button,
+a.button {
   margin: 0;
-  padding: .5rem 2rem;
+  padding: .5rem 1rem;
   border: .1rem solid var(--primary-color);
   color: var(--primary-color);
   background: #fff;
-  font-size: 1.1rem;
+  font-size: 1rem;
   border-radius: .2rem;
-  
+  transition: all .1s ease-in-out;  
+}
+
+button {
   &:hover {
     background-color: var(--primary-color);
     color: #fff;
     cursor: pointer;
+  }
+}
+
+a.button {
+  text-decoration: none;
+
+  &:link,
+  &:visited {
+    background-color: #fff;
+    color: var(--primary-color);
+  }
+
+  &:hover,
+  &:active {
+    background-color: var(--primary-color);
+    color: #fff;
+  }
+}
+
+.page .error {
+  a.button {
+    display: inline-block;
+  }
+  .message {
+    margin-bottom: 1rem;
+  }
+}
+
+.page .signin {
+  a.button {
+    margin: 0 auto 0 auto;
+    display: block;
+  }
+  p {
+    margin-bottom: 0.5rem;
   }
 }
 
@@ -38,55 +78,29 @@ button {
   left: 0;
   right: 0;
   bottom: 0;
-}
 
-.signin,
-.signout {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin: auto;
-  transform: translateX(-50%) translateY(-50%);
-  text-align: center;
+  > div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: auto;
+    transform: translateX(-50%) translateY(-50%);
+    text-align: center;
 
-  p {
-    margin: 0 0 0.5rem 0;
-    padding: 0;
-  }
-
-  a.site {
-    color: var(--primary-color);
-    text-decoration: none;
-    font-size: 1rem;
-    line-height: 2rem;
-    padding-bottom: .5rem;
-    &:hover {
-      text-decoration: underline;
+    p {
+      margin: 0 0 1rem 0;
+      padding: 0;
+      font-size: 1rem;
     }
-  }
-}
 
-.signin {
-  a[data-provider] {
-    display: block;
-    margin: 0 auto 0 auto;
-    padding: .5rem 2rem;
-    border: .1rem solid var(--primary-color);
-    border-radius: .2rem;
-    text-decoration: none;
-    font-size: 1.1rem;
-    transition: all .1s ease-in-out;
-
-    &:link,
-    &:visited {
-      background-color: #fff;
+    a.site {
       color: var(--primary-color);
-    }
-
-    &:hover,
-    &:active {
-      background-color: var(--primary-color);
-      color: #fff;
+      text-decoration: none;
+      font-size: 1rem;
+      line-height: 2rem;
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
 }
