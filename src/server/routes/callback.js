@@ -42,17 +42,25 @@ export default async (req, res, options, done) => {
         return done()
       }
     } catch(error) {
-      // @TODO Handle signin flow errors
-      console.error(error)
+      const errorPageUrl = `${urlPrefix}/error` // @TODO Allow error URL to be supplied as an option
+      if (error.name == 'AlreadyExistsError') {
+        res.status(302).setHeader('Location', `${errorPageUrl}?error=SIGNUP_ACCOUNT_EXISTS`)
+      } else {
+        console.error(error)
+        res.status(302).setHeader('Location', `${errorPageUrl}?error=SIGNUP_UNKNOWN`)
+        
+      }
+      res.end()
+      return done()
     }
 
     // Callback URL is already verified at this point, so safe to use if specified
     if (callbackUrl) {
       res.status(302).setHeader('Location', callbackUrl)
-      res.end()  
+      res.end()
     } else {
       res.status(302).setHeader('Location', site)
-      res.end()  
+      res.end()
     }
     return done()
   }
