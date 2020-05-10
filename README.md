@@ -71,23 +71,17 @@ export default () => {
 
 *This is all the code you need to add support for signing in to a project!*
 
-If you want to avoid multiple requests being made from the `useSession()` hook being used in several components, there is also `useGlobalSession()` in combination with `<NextAuth.SessionProvider>` which uses [React Context](https://reactjs.org/docs/context.html)
+Using `useSession()` like this will work perfectly fine, but keep in mind this will do a network request to fetch the session in each component you use it. If you want to only do one network request you can wrap your component tree in our `Provider`, which will make `useSession()` use [React Context](https://reactjs.org/docs/context.html) instead.
 
+You can use this `Provider` on a specific page if you want, or for all pages by overriding your `_app.js` file in Next.js [as documented here](https://nextjs.org/docs/advanced-features/custom-app)
+Example `pages/_app.js`:
 ```javascript
-const Welcome = () => {
-  const [session, loading] = NextAuth.useGlobalSession()
-
-  return <>
-    {loading && <p>Checking session…</p>}
-    {!loading && session && <p>Welcome {session.user.name || session.user.email}.</p>}
-    {!loading && !session && <p><a href="/api/auth/signin">Sign in here</p>}
-  </>
-}
-
-export default () => {
-  <NextAuth.SessionProvider>
-    <Welcome />
-  </NextAuth.SessionProvider>
+export default ({ Component, pageProps }) => {
+  return (
+    <NextAuth.Provider>
+      <Component {...pageProps} />
+    </NextAuth.Provider>
+  )
 }
 ```
 
