@@ -23,7 +23,8 @@ export default (req, res, _options) => {
     const {
       slug,
       action = slug[0],
-      provider = slug[1]
+      provider = slug[1],
+      error
     } = query
 
     // Allow site name, path prefix to be overriden
@@ -188,10 +189,11 @@ export default (req, res, _options) => {
             return done()
           }
           break
-        case 'unlink':
+        case 'error':
+          pages.render(res, 'error', { site, error, urlPrefix }, done)
           break
         default:
-          res.status(400).end(`Error: HTTP GET is not supported for ${url}`)
+          res.status(404).end()
           return done()
       }
     } else if (req.method === 'POST') {

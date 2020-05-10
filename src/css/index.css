@@ -3,7 +3,8 @@
 }
 
 body {
-  margin: 1rem;
+  margin: 0;
+  padding: 0;
   font-family: sans-serif;
 }
 
@@ -16,15 +17,25 @@ form {
   padding: 0;
 }
 
-button {
+p {
+  margin: 0 0 1rem 0;
+  padding: 0;
+  font-size: 1rem;
+}
+
+button,
+a.button {
   margin: 0;
-  padding: .5rem 2rem;
+  padding: .5rem 1rem;
   border: .1rem solid var(--primary-color);
   color: var(--primary-color);
   background: #fff;
-  font-size: 1.1rem;
+  font-size: 1rem;
   border-radius: .2rem;
-  
+  transition: all .1s ease-in-out;  
+}
+
+button {
   &:hover {
     background-color: var(--primary-color);
     color: #fff;
@@ -32,61 +43,65 @@ button {
   }
 }
 
-.page {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
+a.button {
+  text-decoration: none;
 
-.signin,
-.signout {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin: auto;
-  transform: translateX(-50%) translateY(-50%);
-  text-align: center;
-
-  p {
-    margin: 0 0 0.5rem 0;
-    padding: 0;
+  &:link,
+  &:visited {
+    background-color: #fff;
+    color: var(--primary-color);
   }
 
-  a.site {
-    color: var(--primary-color);
-    text-decoration: none;
-    font-size: 1rem;
-    line-height: 2rem;
-    padding-bottom: .5rem;
-    &:hover {
-      text-decoration: underline;
-    }
+  &:hover,
+  &:active {
+    background-color: var(--primary-color);
+    color: #fff;
+  }
+}
+
+a.site {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-size: 1rem;
+  line-height: 2rem;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.page {
+  position: absolute; 
+	width: 100%;
+  height: 100%;
+  display: table;
+  margin: 0;
+  padding: 0;
+
+  > div {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    padding: 0.5rem;
+  }
+}
+
+.error {
+  a.button {
+    display: inline-block;
+  }
+  .message {
+    margin-bottom: 1rem;
   }
 }
 
 .signin {
-  a[data-provider] {
-    display: block;
+  a.button {
     margin: 0 auto 0 auto;
-    padding: .5rem 2rem;
-    border: .1rem solid var(--primary-color);
-    border-radius: .2rem;
-    text-decoration: none;
-    font-size: 1.1rem;
-    transition: all .1s ease-in-out;
-
-    &:link,
-    &:visited {
-      background-color: #fff;
-      color: var(--primary-color);
-    }
-
-    &:hover,
-    &:active {
-      background-color: var(--primary-color);
-      color: #fff;
-    }
+    display: block;
+  }
+  p {
+    margin: 0 auto 0.5rem auto;
+    max-width: 300px !important;
   }
 }
+

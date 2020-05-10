@@ -1,6 +1,7 @@
 import 'reflect-metadata'
 import { createConnection, getConnection, getManager, EntitySchema } from 'typeorm'
 
+import { AlreadyExistsError } from '../lib/errors'
 import Models from '../models'
 
 const Default = (config, options) => {
@@ -90,9 +91,12 @@ const Default = (config, options) => {
           await getManager().save(user)
           resolve(user)
         } catch (error) {
-          // Reject if fails
-          console.error('CREATE_USER_ERROR', error)
-          reject(new Error('CREATE_USER_ERROR', error))
+          if (error.message.startsWith('SQLITE_CONSTRAINT: UNIQUE constraint failed')) {
+            reject(new AlreadyExistsError(error))
+          } else {
+            console.error('CREATE_USER_ERROR', error)
+            reject(new Error('CREATE_USER_ERROR', error))
+          }
         }
       })
     }
@@ -170,7 +174,6 @@ const Default = (config, options) => {
           await getManager().save(account)
           resolve(account)
         } catch (error) {
-          // Reject if fails
           console.error('LINK_ACCOUNT_ERROR', error)
           reject(new Error('LINK_ACCOUNT_ERROR', error))
         }
