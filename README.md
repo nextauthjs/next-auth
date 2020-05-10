@@ -71,6 +71,26 @@ export default () => {
 
 *This is all the code you need to add support for signing in to a project!*
 
+If you want to avoid multiple requests being made from the `useSession()` hook being used in several components, there is also `useGlobalSession()` in combination with `<NextAuth.SessionProvider>` which uses [React Context](https://reactjs.org/docs/context.html)
+
+```javascript
+const Welcome = () => {
+  const [session, loading] = NextAuth.useGlobalSession()
+
+  return <>
+    {loading && <p>Checking session…</p>}
+    {!loading && session && <p>Welcome {session.user.name || session.user.email}.</p>}
+    {!loading && !session && <p><a href="/api/auth/signin">Sign in here</p>}
+  </>
+}
+
+export default () => {
+  <NextAuth.SessionProvider>
+    <Welcome />
+  </NextAuth.SessionProvider>
+}
+```
+
 #### Server Side Rendering
 
 Authentication in Server Side Rendering flows is also supported.
