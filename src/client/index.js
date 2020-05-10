@@ -44,9 +44,8 @@ const session = ({req, site, pathPrefix, urlPrefixCookieName}) => {
 // Context to store session data globally
 const SessionContext = createContext()
 
-// Hook for getting session from the api. Can be used if you don't want to use a context.
-// It's also used in the `useGlobalSession`, but with context instead.
-const useSession = (session, pathPrefix) => {
+// Internal hook for getting session from the api.
+const useSessionData = (session, pathPrefix) => {
   const [data, setData] = useState(session)
   const [loading, setLoading] = useState(true)
   const getSession = async () => {
@@ -64,14 +63,23 @@ const useSession = (session, pathPrefix) => {
 }
 
 // Provider to wrap the app in to make session data available globally
-const SessionProvider = ({ children, session, pathPrefix }) => {
+const Provider = ({ children, session, pathPrefix }) => {
   const value = useSession(session, pathPrefix)
 
   return createElement(SessionContext.Provider, { value }, children)
 }
 
 // Hook to access the session data stored in the context
-const useGlobalSession = () => useContext(SessionContext)
+const useSession = (session, pathPrefix) => {
+  const value = useContext(SessionContext)
+  // If we have no Provider in the tree
+  // we call the actual hook for fetching the session
+  if (value === undefined) {
+    return useSessionData(session, pathPrefix)
+  }
+
+  return value
+}
 
 // Adapted from https://github.com/felixfong227/simple-cookie-parser/blob/master/index.js
 const _parseCookies = (string) => {
@@ -102,6 +110,5 @@ const _getUrlPrefix = (cookies, urlPrefixCookieName) => {
 export default {
   session,
   useSession,
-  useGlobalSession,
-  SessionProvider,
+  Provider,
 }
