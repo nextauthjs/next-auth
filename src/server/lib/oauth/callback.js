@@ -1,6 +1,4 @@
-//import fetch from 'isomorphic-fetch'
-
-import { oAuthClient, oAuth2Client } from './index'
+import { oAuthClient, oAuth2Client } from './index' // eslint-disable-line no-unused-vars
 
 const oAuthCallback = async (req, provider, callback) => {
   if (provider.type === 'oauth') {
@@ -11,21 +9,24 @@ const oAuthCallback = async (req, provider, callback) => {
 }
 
 const _oAuthCallback = async (req, provider, callback) => {
-  const { oauth_token, oauth_verifier, code } = req.query
+  const { oauth_token, oauth_verifier, code } = req.query // eslint-disable-line camelcase
   const client = oAuthClient(provider)
 
   if (provider.version && provider.version.startsWith('2.')) {
     // Handle oAuth v2.x
     const options = {
-      'redirect_uri': provider.callbackUrl
+      redirect_uri: provider.callbackUrl
     }
 
     // Some oAuth providers, like Google, require options to be specified (e.g. grant_type)
-    if (provider.options)
-      Object.entries(provider.options).forEach(([key, value]) => options[key] = value)
+    if (provider.options) {
+      Object.entries(provider.options).forEach(([key, value]) => {
+        options[key] = value
+      })
+    }
 
     // Pass authToken in header by default (unless 'useAuthTokenHeader: false' is set)
-    if (provider.hasOwnProperty('useAuthTokenHeader')) {
+    if (Object.prototype.hasOwnProperty.call(provider, 'useAuthTokenHeader')) {
       client.useAuthorizationHeaderforGET(provider.useAuthTokenHeader)
     } else {
       client.useAuthorizationHeaderforGET(true)
@@ -71,7 +72,7 @@ const _oAuthCallback = async (req, provider, callback) => {
 }
 
 const _oAuth2Callback = (req, provider, callback) => {
-  console.error(`The provider type oauth2 is not supported. Use "type: 'oauth'" and specify "version: '2.0'" to use oAuth 2.x`)
+  console.error('The provider type oauth2 is not supported. Use "type: \'oauth\'" and specify "version: \'2.0\'" to use oAuth 2.x')
   /*
   const client = oAuth2Client(provider)
   client.code.getToken(req.url)
@@ -89,7 +90,7 @@ const _oAuth2Callback = (req, provider, callback) => {
   */
 }
 
-function _getProfile(error, profileData, accessToken, refreshToken, provider) {
+function _getProfile (error, profileData, accessToken, refreshToken, provider) {
   // @TODO Handle error
   if (error) {
     console.error('GET_OAUTH_PROFILE_ERROR', error)
@@ -98,8 +99,7 @@ function _getProfile(error, profileData, accessToken, refreshToken, provider) {
   let profile = {}
   try {
     // Convert profileData into an object if it's a string
-    if (typeof profileData === 'string' || profileData instanceof String)
-      profileData = JSON.parse(profileData)
+    if (typeof profileData === 'string' || profileData instanceof String) { profileData = JSON.parse(profileData) }
 
     profile = provider.profile(profileData)
   } catch (exception) {
@@ -114,7 +114,7 @@ function _getProfile(error, profileData, accessToken, refreshToken, provider) {
     profile: {
       name: profile.name,
       email: profile.email,
-      image: profile.image,
+      image: profile.image
     },
     account: {
       provider: provider.id,

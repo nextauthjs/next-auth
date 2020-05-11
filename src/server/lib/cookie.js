@@ -20,44 +20,38 @@ const set = (res, name, value, options = {}) => {
   res.setHeader('Set-Cookie', setCookieHeader)
 }
 
-function _serialize(name, val, options) {
-  const fieldContentRegExp = /^[\u0009\u0020-\u007e\u0080-\u00ff]+$/
+function _serialize (name, val, options) {
+  const fieldContentRegExp = /^[\u0009\u0020-\u007e\u0080-\u00ff]+$/ // eslint-disable-line no-control-regex
 
   const opt = options || {}
   const enc = opt.encode || encodeURIComponent
 
-  if (typeof enc !== 'function')
-    throw new TypeError('option encode is invalid')
-  
-  if (!fieldContentRegExp.test(name))
-    throw new TypeError('argument name is invalid')
+  if (typeof enc !== 'function') { throw new TypeError('option encode is invalid') }
+
+  if (!fieldContentRegExp.test(name)) { throw new TypeError('argument name is invalid') }
 
   const value = enc(val)
 
-  if (value && !fieldContentRegExp.test(value))
-    throw new TypeError('argument val is invalid')
+  if (value && !fieldContentRegExp.test(value)) { throw new TypeError('argument val is invalid') }
 
   let str = name + '=' + value
 
-  if (null != opt.maxAge) {
+  if (opt.maxAge != null) {
     const maxAge = opt.maxAge - 0
 
-    if (isNaN(maxAge) || !isFinite(maxAge))
-      throw new TypeError('option maxAge is invalid')
+    if (isNaN(maxAge) || !isFinite(maxAge)) { throw new TypeError('option maxAge is invalid') }
 
     str += '; Max-Age=' + Math.floor(maxAge)
   }
 
   if (opt.domain) {
-    if (!fieldContentRegExp.test(opt.domain))
-      throw new TypeError('option domain is invalid')
+    if (!fieldContentRegExp.test(opt.domain)) { throw new TypeError('option domain is invalid') }
 
     str += '; Domain=' + opt.domain
   }
 
   if (opt.path) {
-    if (!fieldContentRegExp.test(opt.path))
-      throw new TypeError('option path is invalid')
+    if (!fieldContentRegExp.test(opt.path)) { throw new TypeError('option path is invalid') }
 
     str += '; Path=' + opt.path
   } else {
@@ -65,17 +59,14 @@ function _serialize(name, val, options) {
   }
 
   if (opt.expires) {
-    if (typeof opt.expires.toUTCString !== 'function')
-      throw new TypeError('option expires is invalid')
+    if (typeof opt.expires.toUTCString !== 'function') { throw new TypeError('option expires is invalid') }
 
     str += '; Expires=' + opt.expires.toUTCString()
   }
 
-  if (opt.httpOnly)
-    str += '; HttpOnly'
+  if (opt.httpOnly) { str += '; HttpOnly' }
 
-  if (opt.secure)
-    str += '; Secure'
+  if (opt.secure) { str += '; Secure' }
 
   if (opt.sameSite) {
     const sameSite = typeof opt.sameSite === 'string' ? opt.sameSite.toLowerCase() : opt.sameSite
