@@ -22,7 +22,7 @@ const getAuthorizationUrl = (provider, callback) => {
       if (provider.authorizationUrl.includes('?')) {
         const parseUrl = new URL(provider.authorizationUrl)
         const baseUrl = `${parseUrl.origin}${parseUrl.pathname}?`
-        url = url.replace(baseUrl, provider.authorizationUrl+'&')
+        url = url.replace(baseUrl, provider.authorizationUrl + '&')
       }
 
       callback(null, url)

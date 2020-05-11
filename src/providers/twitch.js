@@ -11,14 +11,14 @@ export default (options) => {
       'https://id.twitch.tv/oauth2/authorize?response_type=code',
     profileUrl: 'https://api.twitch.tv/helix/users',
     profile: (profile) => {
-      const data = profile.data[0];
+      const data = profile.data[0]
       return {
         id: data.id,
         name: data.display_name,
         image: data.profile_image_url,
-        email: data.email,
-      };
+        email: data.email
+      }
     },
-    ...options,
-  };
-};
+    ...options
+  }
+}

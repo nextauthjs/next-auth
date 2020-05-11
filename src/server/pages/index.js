@@ -1,12 +1,13 @@
 import fs from 'fs'
+import path from 'path'
 import signin from './signin'
 import signout from './signout'
 import error from './error'
 
 // Future releases will support customization (via inline or external CSS)
-const defaultStyles = fs.readFileSync(__dirname + '/../../css/index.css', 'utf8')
+const defaultStyles = fs.readFileSync(path.join(__dirname, '/../../css/index.css'), 'utf8')
 
-function render(res, page, props, done) {
+function render (res, page, props, done) {
   let html = ''
   switch (page) {
     case 'signin':
@@ -17,9 +18,9 @@ function render(res, page, props, done) {
       break
     case 'error':
       html = error(props)
-      break;
+      break
     default:
-      res.status(400).end(`Error: HTTP GET is not supported for ${url}`)
+      html = error(props)
       return
   }
 

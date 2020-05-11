@@ -21,7 +21,7 @@ const oAuthClient = (provider) => {
     return new OAuth2(
       provider.clientId,
       provider.clientSecret,
-      basePath, 
+      basePath,
       authorizePath,
       accessTokenPath,
       provider.headers)
@@ -40,7 +40,7 @@ const oAuthClient = (provider) => {
 }
 
 const oAuth2Client = (provider) => {
-  console.error(`The provider type oauth2 is not supported. Use "type: 'oauth'" and specify "version: '2.0'" to use oAuth 2.x`)
+  console.error('The provider type oauth2 is not supported. Use "type: \'oauth\'" and specify "version: \'2.0\'" to use oAuth 2.x')
   /*
   return new ClientOAuth2({
     clientId: provider.clientId,
