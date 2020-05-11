@@ -1,7 +1,7 @@
 import { createHash } from 'crypto'
 
 export class Account {
-  constructor(
+  constructor (
     userId,
     providerId,
     providerType,
@@ -9,7 +9,7 @@ export class Account {
     refreshToken,
     accessToken,
     accessTokenExpires
-    ) {
+  ) {
     this.id = createHash('sha256').update(`${providerId}:${providerAccountId}`).digest('hex')
     this.userId = userId
     this.providerId = providerId

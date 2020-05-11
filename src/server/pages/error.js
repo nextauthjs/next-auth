@@ -1,4 +1,4 @@
-import { h } from 'preact'
+import { h } from 'preact' // eslint-disable-line no-unused-vars
 import render from 'preact-render-to-string'
 
 export default ({ site, error, urlPrefix }) => {
@@ -6,18 +6,19 @@ export default ({ site, error, urlPrefix }) => {
 
   let heading = <h1>An error occured</h1>
   let message = <p><a className='site' href={site}>{site.replace(/^https?:\/\//, '')}</a></p>
-  
+
   switch (error) {
-    case 'SIGNUP_ACCOUNT_EXISTS':
+    case 'Signin':
       heading = <h1>Sign in with another account</h1>
-      message = <div>
-        <div className='message'>
-          <p>It looks like you previously signed in using another account.</p>
-          <p>Use the same service you used originally to verify your identity.</p>
-          <p>Once you are signed in, you can link your accounts.</p>
+      message =
+        <div>
+          <div className='message'>
+            <p>It seems like you previously signed in with a different account.</p>
+            <p>Sign in with the same account you used originally to verify your identity.</p>
+            <p>Once you are signed in, you can link your accounts.</p>
+          </div>
+          <p><a className='button' href={signinPageUrl}>Sign in</a></p>
         </div>
-        <p><a className='button' href={signinPageUrl}>Sign in</a></p>
-      </div>
       break
     default:
   }
