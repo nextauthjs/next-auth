@@ -144,7 +144,7 @@ export default async (req, res, _options) => {
     }
 
     // User provided options are overriden by other options,
-    // except for the options with special handlign above
+    // except for the options with special handling above
     const options = {
       ..._options,
       site,
