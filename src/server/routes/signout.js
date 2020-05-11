@@ -5,7 +5,7 @@ export default async (req, res, options, done) => {
   const { adapter, cookies, callbackUrl, csrfTokenVerified, urlPrefix } = options
   const _adapter = await adapter.getAdapter()
   const { deleteSessionById } = _adapter
-  
+
   // Get session ID (if set)
   const sessionId = req.cookies[cookies.sessionId.name]
 
@@ -25,7 +25,7 @@ export default async (req, res, options, done) => {
     res.end()
     return done()
   } else {
-    // If a csrfToken was not verified with this request, send the user to 
+    // If a csrfToken was not verified with this request, send the user to
     // the signout page, as they should have a valid one now and clicking
     // the signout button should work.
     //

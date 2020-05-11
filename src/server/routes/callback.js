@@ -11,19 +11,16 @@ export default async (req, res, options, done) => {
   // Get session ID (if set)
   const sessionId = req.cookies[cookies.sessionId.name]
 
-  const _callback = async (error, response) => {
+  const _oAuthCallback = async (error, response) => {
     // @TODO Check error
     if (error) {
-      console.log('SIGNIN_CALLBACK_ERROR', error)
+      console.log('OAUTH_CALLBACK_ERROR', error)
     }
 
     const { profile, account } = response
 
     try {
-      const {
-        session,
-        isNewAccount
-      } = await signinHandler(
+      const { session, isNewAccount } = await signinHandler(
         adapter,
         sessionId,
         profile,
@@ -41,14 +38,17 @@ export default async (req, res, options, done) => {
         res.end()
         return done()
       }
-    } catch(error) {
+    } catch (error) {
       const errorPageUrl = `${urlPrefix}/error` // @TODO Allow error URL to be supplied as an option
-      if (error.name == 'AlreadyExistsError') {
-        res.status(302).setHeader('Location', `${errorPageUrl}?error=SIGNUP_ACCOUNT_EXISTS`)
+      if (error.name === 'CreateUserError') {
+        // @TODO Try to look up user by by email address and confirm it occured because they
+        // the user already has an account with the same email, but signed in with another provider.
+        // This is almost certainly the case, but this COULD happen for other reasons, such as
+        // a problem with the database or custom adapter code.
+        res.status(302).setHeader('Location', `${errorPageUrl}?error=Signin`)
       } else {
-        console.error(error)
-        res.status(302).setHeader('Location', `${errorPageUrl}?error=SIGNUP_UNKNOWN`)
-        
+        res.status(302).setHeader('Location', `${errorPageUrl}?error=Unknown`)
+        console.error('SIGNIN_CALLBACK_ERROR', error)
       }
       res.end()
       return done()
@@ -66,7 +66,7 @@ export default async (req, res, options, done) => {
   }
 
   if (type === 'oauth' || type === 'oauth2') {
-    oAuthCallback(req, providerConfig, _callback)
+    oAuthCallback(req, providerConfig, _oAuthCallback)
   } else {
     res.status(500).end(`Error: Callback for provider type ${type} not supported`)
     return done()
