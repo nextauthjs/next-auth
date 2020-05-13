@@ -5,7 +5,7 @@ export default (options) => {
     type: 'oauth',
     version: '2.0',
     scope: 'user:read:email',
-    options: { grant_type: 'authorization_code' },
+    params: { grant_type: 'authorization_code' },
     accessTokenUrl: 'https://id.twitch.tv/oauth2/token',
     authorizationUrl:
       'https://id.twitch.tv/oauth2/authorize?response_type=code',
