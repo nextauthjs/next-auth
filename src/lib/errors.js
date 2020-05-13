@@ -1,30 +1,30 @@
 class UnknownError extends Error {
-  constructor(message) {
+  constructor (message) {
     super(message)
     this.name = 'UnknownError'
     this.message = message
   }
-  
-  toJSON() {
+
+  toJSON () {
     return {
       error: {
         name: this.name,
-        message: this.message,
+        message: this.message
         // stack: this.stack
       }
     }
   }
 }
 
-class AlreadyExistsError extends UnknownError {
-  constructor(message) {
+class CreateUserError extends UnknownError {
+  constructor (message) {
     super(message)
-    this.name = 'AlreadyExistsError'
+    this.name = 'CreateUserError'
     this.message = message
   }
 }
 
 module.exports = {
   UnknownError,
-  AlreadyExistsError
+  CreateUserError
 }

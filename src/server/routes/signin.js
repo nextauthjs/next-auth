@@ -10,7 +10,7 @@ export default (req, res, options, done) => {
     res.status(500).end(`Error: Type not specified for ${provider}`)
     return done()
   }
-  
+
   if (type === 'oauth' || type === 'oauth2') {
     getAuthorizationUrl(providerConfig, (error, url) => {
       // @TODO Handle error

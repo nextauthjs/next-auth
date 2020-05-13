@@ -14,5 +14,5 @@ export default {
   Mixer,
   Slack,
   Twitter,
-  Twitch,
+  Twitch
 };
