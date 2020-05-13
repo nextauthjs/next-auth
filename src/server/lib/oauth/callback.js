@@ -35,7 +35,7 @@ const _oAuthCallback = async (req, provider, callback) => {
       (error, accessToken, refreshToken, results) => {
         // @TODO Handle error
         if (error || results.error) {
-          console.error('GET_OAUTH2_ACCESS_TOKEN_ERROR', error, results)
+          console.error('GET_OAUTH2_ACCESS_TOKEN_ERROR', error, results, provider.id, code)
         }
 
         // Use custom get() method for oAuth2 flows
