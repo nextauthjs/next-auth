@@ -45,7 +45,7 @@ const session = async ({ req, site, pathPrefix, urlPrefixCookieName } = {}) => {
 const SessionContext = createContext()
 
 // Internal hook for getting session from the api.
-const useSessionData = (session, { pathPrefix }) => {
+const useSessionData = (session, { pathPrefix } = {}) => {
   const [data, setData] = useState(session)
   const [loading, setLoading] = useState(true)
   const getSession = async () => {
@@ -70,7 +70,7 @@ const Provider = ({ children, session, pathPrefix }) => {
 }
 
 // Hook to access the session data stored in the context
-const useSession = (session, { pathPrefix }) => {
+const useSession = (session, { pathPrefix } = {}) => {
   const value = useContext(SessionContext)
   // If we have no Provider in the tree we call the actual hook for fetching the session
   if (value === undefined) {

@@ -1,4 +1,10 @@
 import { oAuthClient, oAuth2Client } from './index' // eslint-disable-line no-unused-vars
+import querystring from 'querystring'
+
+// @TODO Refactor _getOAuthAccessToken() and _get()
+// These methods have been forked from `node-oauth` to fix bugs.
+// It may make sense for NextAuth to have all it's own methods
+// for both oAuth 1.x and 2.x requests.
 
 const oAuthCallback = async (req, provider, callback) => {
   if (provider.type === 'oauth') {
@@ -13,18 +19,6 @@ const _oAuthCallback = async (req, provider, callback) => {
   const client = oAuthClient(provider)
 
   if (provider.version && provider.version.startsWith('2.')) {
-    // Handle oAuth v2.x
-    const options = {
-      redirect_uri: provider.callbackUrl
-    }
-
-    // Some oAuth providers, like Google, require options to be specified (e.g. grant_type)
-    if (provider.options) {
-      Object.entries(provider.options).forEach(([key, value]) => {
-        options[key] = value
-      })
-    }
-
     // Pass authToken in header by default (unless 'useAuthTokenHeader: false' is set)
     if (Object.prototype.hasOwnProperty.call(provider, 'useAuthTokenHeader')) {
       client.useAuthorizationHeaderforGET(provider.useAuthTokenHeader)
@@ -32,17 +26,23 @@ const _oAuthCallback = async (req, provider, callback) => {
       client.useAuthorizationHeaderforGET(true)
     }
 
+    // Use custom getOAuthAccessToken() method for oAuth2 flows
+    client.getOAuthAccessToken = _getOAuthAccessToken
+
     client.getOAuthAccessToken(
       code,
-      options,
+      provider,
       (error, accessToken, refreshToken, results) => {
         // @TODO Handle error
         if (error || results.error) {
           console.error('GET_OAUTH2_ACCESS_TOKEN_ERROR', error, results)
         }
 
+        // Use custom get() method for oAuth2 flows
+        client.get = _get
+
         client.get(
-          provider.profileUrl,
+          provider,
           accessToken,
           (error, profileData) => callback(error, _getProfile(error, profileData, accessToken, refreshToken, provider))
         )
@@ -130,4 +130,71 @@ function _getProfile (error, profileData, accessToken, refreshToken, provider) {
 
 export {
   oAuthCallback
+}
+
+// Ported from https://github.com/ciaranj/node-oauth/blob/a7f8a1e21c362eb4ed2039431fb9ac2ae749f26a/lib/oauth2.js
+function _getOAuthAccessToken (token, provider, callback) {
+  const url = provider.accessTokenUrl
+  const params = provider.params || {}
+  const headers = provider.headers || {}
+  const codeParam = (params.grant_type === 'refresh_token') ? 'refresh_token' : 'code'
+
+  if (!params[codeParam]) { params[codeParam] = token }
+
+  if (!params.client_id) { params.client_id = provider.clientId }
+
+  if (!params.client_secret) { params.client_secret = provider.clientSecret }
+
+  if (!params.redirect_uri) { params.redirect_uri = provider.callbackUrl }
+
+  if (!headers['Content-Type']) { headers['Content-Type'] = 'application/x-www-form-urlencoded' }
+
+  // Added as a fix to accomodate change in Twitch oAuth API
+  if (!headers['Client-ID']) { headers['Client-ID'] = provider.clientId }
+
+  if (!headers.Authorization) { headers.Authorization = `Bearer ${token}` }
+
+  const postData = querystring.stringify(params)
+
+  this._request(
+    'POST',
+    url,
+    headers,
+    postData,
+    null,
+    (error, data, response) => {
+      if (error) { return callback(error) }
+
+      let results
+      try {
+        // As of http://tools.ietf.org/html/draft-ietf-oauth-v2-07
+        // responses should be in JSON
+        results = JSON.parse(data)
+      } catch (e) {
+        // However both Facebook + Github currently use rev05 of the spec  and neither
+        // seem to specify a content-type correctly in their response headers. :(
+        // Clients of these services suffer a minor performance cost.
+        results = querystring.parse(data)
+      }
+      const accessToken = results.access_token
+      const refreshToken = results.refresh_token
+      callback(null, accessToken, refreshToken, results)
+    }
+  )
+}
+
+// Ported from https://github.com/ciaranj/node-oauth/blob/a7f8a1e21c362eb4ed2039431fb9ac2ae749f26a/lib/oauth2.js
+function _get (provider, accessToken, callback) {
+  const url = provider.profileUrl
+  const headers = provider.headers || {}
+
+  if (this._useAuthorizationHeaderForGET) {
+    headers.Authorization = this.buildAuthHeader(accessToken)
+
+    // This line is required for Twitch
+    headers['Client-ID'] = provider.clientId
+    accessToken = null
+  }
+
+  this._request('GET', url, headers, null, accessToken, callback)
 }
