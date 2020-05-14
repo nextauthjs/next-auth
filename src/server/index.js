@@ -23,13 +23,17 @@ export default async (req, res, _options) => {
     // safe to return and that no more data will be sent.
     const done = resolve
 
-    const { url, query } = req
+    const { url, query, body } = req
     const {
       slug,
       action = slug[0],
       provider = slug[1],
       error
     } = query
+
+    const {
+      csrfToken: csrfTokenFromPost
+    } = body
 
     // Allow site name, path prefix to be overriden
     const site = _options.site || DEFAULT_SITE
@@ -114,7 +118,10 @@ export default async (req, res, _options) => {
       if (csrfTokenHash === createHash('sha256').update(`${csrfTokenValue}${secret}`).digest('hex')) {
         // If hash matches then we trust the CSRF token value
         csrfToken = csrfTokenValue
-        csrfTokenVerified = true
+
+        // If this is a POST request and the CSRF Token in the Post request matches
+        // the cookie we have already verified is one we have set, then token is verified!
+        if (req.method === 'POST' && csrfToken === csrfTokenFromPost) { csrfTokenVerified = true }
       }
     }
     if (!csrfToken) {
@@ -201,6 +208,13 @@ export default async (req, res, _options) => {
       }
     } else if (req.method === 'POST') {
       switch (action) {
+        case 'signin':
+          // Signin supports both GET and POST (e.g. for Email signup)
+          if (provider && options.providers[provider]) {
+            signin(req, res, options, done)
+            break
+          }
+          break
         case 'signout':
           signout(req, res, options, done)
           break

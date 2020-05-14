@@ -1,8 +1,8 @@
 import { oAuthClient, oAuth2Client } from './index';
 import crypto from 'crypto';
 
-const getAuthorizationUrl = (provider, callback) => {
-  const { type, callbackUrl } = provider;
+export default (provider, callback) => {
+  const { type, callbackUrl } = provider
   if (type === 'oauth') {
     const client = oAuthClient(provider);
     if (provider.version && provider.version.startsWith('2.')) {
@@ -42,6 +42,4 @@ const getAuthorizationUrl = (provider, callback) => {
     const url = client.code.getUri();
     callback(null, url);
   }
-};
-
-export { getAuthorizationUrl };
+}
