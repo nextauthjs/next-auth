@@ -30,6 +30,7 @@ export default async (req, res, options, done) => {
     // the signout button should work.
     //
     // Note: Adds ?csrf=true query string param to URL for debugging/tracking.
+    // @TODO Add support for custom signin URLs
     res.status(302).setHeader('Location', `${urlPrefix}/signout?csrf=true`)
     res.end()
     return done()
