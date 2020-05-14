@@ -12,7 +12,7 @@ export default async (adapter, sessionToken, profile, providerAccount) => {
     const {
       createUser,
       updateUser,
-      getUserById,
+      getUser,
       getUserByProviderAccountId,
       getUserByEmail,
       getUserByCredentials,
@@ -27,7 +27,7 @@ export default async (adapter, sessionToken, profile, providerAccount) => {
 
     let session = sessionToken ? await getSession(sessionToken) : null
     const isSignedIn = !!session
-    let user = isSignedIn ? await getUserById(session.userId) : null
+    let user = isSignedIn ? await getUser(session.userId) : null
     let isNewAccount = false
 
     // @TODO replace all Error objects returned with custom error types

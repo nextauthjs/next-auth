@@ -99,8 +99,8 @@ const Adapter = (config, options) => {
       return false
     }
 
-    async function getUserById (id) {
-      debug('Get user account by ID', id)
+    async function getUser (id) {
+      debug('Get user by ID', id)
       try {
         return connection.getRepository(User).findOne({ id })
       } catch (error) {
@@ -133,7 +133,7 @@ const Adapter = (config, options) => {
       return false
     }
 
-    async function deleteUserById (userId) {
+    async function deleteUser (userId) {
       debug('Delete user account', userId)
       // @TODO Delete user from DB
       return false
@@ -208,11 +208,11 @@ const Adapter = (config, options) => {
     return Promise.resolve({
       createUser,
       updateUser,
-      getUserById,
+      getUser,
       getUserByProviderAccountId,
       getUserByEmail,
       getUserByCredentials,
-      deleteUserById,
+      deleteUser,
       linkAccount,
       unlinkAccount,
       createSession,
