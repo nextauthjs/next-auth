@@ -1,6 +1,6 @@
 import { createHash } from 'crypto'
 
-export class Invite {
+export class Verify {
   constructor (email, token, salt) {
     // @TODO expose time to expire invite as option
     const dateExpires = new Date()
@@ -12,9 +12,9 @@ export class Invite {
   }
 }
 
-export const InviteSchema = {
-  name: 'Invite',
-  target: Invite,
+export const VerifySchema = {
+  name: 'Verify',
+  target: Verify,
   columns: {
     id: {
       primary: true,
