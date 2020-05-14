@@ -5,11 +5,11 @@ import cookie from '../lib/cookie'
 
 // @TODO Refactor oAuthCallback to return promise instead of using a callback and reduce duplicate code
 export default async (req, res, options, done) => {
-  const { provider, providers, adapter, site, secret, urlPrefix, cookies, callbackUrl, newAccountLandingPageUrl } = options
+  const { provider: providerName, providers, adapter, site, secret, urlPrefix, cookies, callbackUrl, newAccountLandingPageUrl } = options
+  const provider = providers[providerName]
+  const { type } = provider
   const _adapter = await adapter.getAdapter()
-  const { getInvite, deleteInvite } = _adapter
-  const providerConfig = providers[provider]
-  const { type } = providerConfig
+  const { getVerificationRequest, deleteVerificationRequest } = _adapter
 
   // @TODO Allow error URL to be supplied as an option
   const errorPageUrl = `${urlPrefix}/error`
@@ -18,7 +18,7 @@ export default async (req, res, options, done) => {
   const sessionId = req.cookies[cookies.sessionId.name]
 
   if (type === 'oauth' || type === 'oauth2') {
-    oAuthCallback(req, providerConfig, async (error, response) => {
+    oAuthCallback(req, provider, async (error, response) => {
       // @TODO Check error
       if (error) {
         console.log('OAUTH_CALLBACK_ERROR', error)
@@ -73,7 +73,7 @@ export default async (req, res, options, done) => {
 
     try {
       // @TODO Verify email and token match email invitation in DB
-      // const invite = await getInvite(email, token, secret)
+      // const invite = await getVerificationRequest(email, token, secret, provider)
       // if (!invite) {
       //  res.status(302).setHeader('Location', `${errorPageUrl}?error=Invite`)
       //  res.end()
@@ -81,7 +81,7 @@ export default async (req, res, options, done) => {
       // }
 
       // @TODO If token valid, delete email invitation in DB
-      // await deleteInvite(email)
+      // await deleteVerificationRequest(email, token, secret, provider)
 
       // If token valid, sign them in
       const { session, isNewAccount } = await signinHandler(adapter, sessionId, { email }, { type: 'email' })
