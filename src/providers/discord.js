@@ -15,9 +15,9 @@ export default (options) => {
         id: profile.id,
         name: profile.username,
         image: `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`,
-        email: profile.email,
-      };
+        email: profile.email
+      }
     },
-    ...options,
-  };
-};
+    ...options
+  }
+}
