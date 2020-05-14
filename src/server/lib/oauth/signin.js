@@ -1,6 +1,6 @@
 import { oAuthClient, oAuth2Client } from './index'
 
-const getAuthorizationUrl = (provider, callback) => {
+export default (provider, callback) => {
   const { type, callbackUrl } = provider
   if (type === 'oauth') {
     const client = oAuthClient(provider)
@@ -41,8 +41,4 @@ const getAuthorizationUrl = (provider, callback) => {
     const url = client.code.getUri()
     callback(null, url)
   }
-}
-
-export {
-  getAuthorizationUrl
 }
