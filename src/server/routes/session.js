@@ -2,7 +2,7 @@
 export default async (req, res, options, done) => {
   const { cookies, adapter } = options
   const _adapter = await adapter.getAdapter()
-  const { getUserById, getSession } = _adapter
+  const { getUser, getSession } = _adapter
   const sessionToken = req.cookies[cookies.sessionToken.name]
 
   let response = {}
@@ -10,7 +10,7 @@ export default async (req, res, options, done) => {
   try {
     const session = await getSession(sessionToken)
     if (session) {
-      const user = await getUserById(session.userId)
+      const user = await getUser(session.userId)
       // Only expose a limited subset of information to the client as needed
       // for presentation purposes (e.g. "you are logged in as…").
       //
