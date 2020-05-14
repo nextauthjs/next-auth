@@ -187,6 +187,19 @@ const Adapter = (config, options) => {
       }
     }
 
+    async function createVerificationRequest (email, url, token, secret, provider) {
+      // const { from, server, port, secure, username, password } = provider
+
+    }
+
+    async function getVerificationRequest (email, token, secret, provider) {
+
+    }
+
+    async function deleteVerificationRequest (email, token, secret, provider) {
+
+    }
+
     return Promise.resolve({
       createUser,
       updateUser,
@@ -199,7 +212,10 @@ const Adapter = (config, options) => {
       unlinkAccount,
       createSession,
       getSessionById,
-      deleteSessionById
+      deleteSessionById,
+      createVerificationRequest,
+      getVerificationRequest,
+      deleteVerificationRequest
     })
   }
 
