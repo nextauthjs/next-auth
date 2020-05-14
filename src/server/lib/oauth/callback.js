@@ -133,13 +133,13 @@ export {
 }
 
 // Ported from https://github.com/ciaranj/node-oauth/blob/a7f8a1e21c362eb4ed2039431fb9ac2ae749f26a/lib/oauth2.js
-function _getOAuthAccessToken (token, provider, callback) {
+function _getOAuthAccessToken (code, provider, callback) {
   const url = provider.accessTokenUrl
-  const params = provider.params || {}
-  const headers = provider.headers || {}
+  const params = { ...provider.params } || {}
+  const headers = { ...provider.headers } || {}
   const codeParam = (params.grant_type === 'refresh_token') ? 'refresh_token' : 'code'
 
-  if (!params[codeParam]) { params[codeParam] = token }
+  if (!params[codeParam]) { params[codeParam] = code }
 
   if (!params.client_id) { params.client_id = provider.clientId }
 
@@ -152,7 +152,7 @@ function _getOAuthAccessToken (token, provider, callback) {
   // Added as a fix to accomodate change in Twitch oAuth API
   if (!headers['Client-ID']) { headers['Client-ID'] = provider.clientId }
 
-  if (!headers.Authorization) { headers.Authorization = `Bearer ${token}` }
+  if (!headers.Authorization) { headers.Authorization = `Bearer ${code}` }
 
   const postData = querystring.stringify(params)
 
@@ -163,7 +163,10 @@ function _getOAuthAccessToken (token, provider, callback) {
     postData,
     null,
     (error, data, response) => {
-      if (error) { return callback(error) }
+      if (error) {
+        console.error('_GET_OAUTH_ACCESS_TOKEN_ERROR', error, data, response)
+        return callback(error)
+      }
 
       let results
       try {
