@@ -19,6 +19,6 @@ export default (options) => {
       //   email: null,
       // };
     },
-    ...options,
-  };
-};
+    ...options
+  }
+}

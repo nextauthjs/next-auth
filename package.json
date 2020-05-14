@@ -16,7 +16,8 @@
     "prepublishOnly": "npm run build",
     "publish:beta": "npm publish --tag beta",
     "publish:canary": "npm publish --tag canary",
-    "lint": "standard --fix"
+    "lint": "standard",
+    "lint:fix": "standard --fix"
   },
   "files": [
     "dist",
