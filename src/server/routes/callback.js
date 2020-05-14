@@ -15,7 +15,7 @@ export default async (req, res, options, done) => {
   const errorPageUrl = `${urlPrefix}/error`
 
   // Get session ID (if set)
-  const sessionId = req.cookies[cookies.sessionId.name]
+  const sessionToken = req.cookies[cookies.sessionToken.name]
 
   if (type === 'oauth' || type === 'oauth2') {
     oAuthCallback(req, provider, async (error, response) => {
@@ -27,10 +27,10 @@ export default async (req, res, options, done) => {
       const { profile, account } = response
 
       try {
-        const { session, isNewAccount } = await signinHandler(adapter, sessionId, profile, account)
+        const { session, isNewAccount } = await signinHandler(adapter, sessionToken, profile, account)
 
         // Save Session ID in cookie (HTTP Only cookie)
-        cookie.set(res, cookies.sessionId.name, session.id, cookies.sessionId.options)
+        cookie.set(res, cookies.sessionToken.name, session.sessionToken, cookies.sessionToken.options)
 
         // Handle first logins on new accounts
         // e.g. option to send users to a new account landing page on initial login
@@ -84,10 +84,10 @@ export default async (req, res, options, done) => {
       // await deleteVerificationRequest(email, token, secret, provider)
 
       // If token valid, sign them in
-      const { session, isNewAccount } = await signinHandler(adapter, sessionId, { email }, { type: 'email' })
+      const { session, isNewAccount } = await signinHandler(adapter, sessionToken, { email }, { type: 'email' })
 
       // Save Session ID in cookie (HTTP Only cookie)
-      cookie.set(res, cookies.sessionId.name, session.id, cookies.sessionId.options)
+      cookie.set(res, cookies.sessionToken.name, session.sessionToken, cookies.sessionToken.options)
 
       // Handle first logins on new accounts
       // e.g. option to send users to a new account landing page on initial login

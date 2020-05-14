@@ -6,10 +6,10 @@ export class Session {
     const dateExpires = new Date()
     dateExpires.setDate(dateExpires.getDate() + 30) // 30 days
 
-    this.id = randomBytes(32).toString('hex')
     this.userId = userId
+    this.sessionToken = randomBytes(32).toString('hex')
+    this.sessionExpires = dateExpires.toISOString()
     this.accessToken = randomBytes(32).toString('hex')
-    this.expires = dateExpires.toISOString()
   }
 }
 
@@ -18,19 +18,23 @@ export const SessionSchema = {
   target: Session,
   columns: {
     id: {
-      type: 'varchar',
       primary: true,
-      unique: true
+      type: 'int',
+      generated: true
     },
     userId: {
       type: 'int'
     },
-    accessToken: {
+    sessionToken: {
       type: 'varchar',
       unique: true
     },
-    expires: {
+    sessionExpires: {
       type: 'date'
+    },
+    accessToken: {
+      type: 'varchar',
+      unique: true
     }
   }
 }
