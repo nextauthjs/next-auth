@@ -3,9 +3,9 @@ import oAuthSignin from '../lib/oauth/signin'
 import emailSignin from '../lib/email/signin'
 
 export default (req, res, options, done) => {
-  const { provider, providers, urlPrefix, csrfTokenVerified } = options
-  const providerConfig = providers[provider]
-  const { type } = providerConfig
+  const { provider: providerName, providers, urlPrefix, csrfTokenVerified } = options
+  const provider = providers[providerName]
+  const { type } = provider
 
   if (!type) {
     res.status(500).end(`Error: Type not specified for ${provider}`)
@@ -13,7 +13,7 @@ export default (req, res, options, done) => {
   }
 
   if (type === 'oauth' || type === 'oauth2') {
-    oAuthSignin(providerConfig, (error, oAuthSigninUrl) => {
+    oAuthSignin(provider, (error, oAuthSigninUrl) => {
       // @TODO Handle error
       if (error) {
         console.error('OAUTH_SIGNIN_ERROR', error)
@@ -45,7 +45,7 @@ export default (req, res, options, done) => {
     }
 
     // @TODO Generate email invitation
-    // await emailSignin(email, options, providerConfig)
+    // await emailSignin(email, options, provider)
 
     res.status(302).setHeader('Location', `${urlPrefix}/check-email`)
   } else {

@@ -52,8 +52,8 @@ export default async (req, res, _options) => {
     // @TODO Review cookie settings (names, options)
     const cookies = {
       // default cookie options
-      sessionId: {
-        name: `${cookiePrefix}next-auth.session-id`,
+      sessionToken: {
+        name: `${cookiePrefix}next-auth.session-token`,
         options: {
           httpOnly: true,
           sameSite: 'lax',

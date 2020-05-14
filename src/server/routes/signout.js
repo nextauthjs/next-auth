@@ -4,18 +4,18 @@ import cookie from '../lib/cookie'
 export default async (req, res, options, done) => {
   const { adapter, cookies, callbackUrl, csrfTokenVerified, urlPrefix } = options
   const _adapter = await adapter.getAdapter()
-  const { deleteSessionById } = _adapter
+  const { deleteSession } = _adapter
 
   // Get session ID (if set)
-  const sessionId = req.cookies[cookies.sessionId.name]
+  const sessionToken = req.cookies[cookies.sessionToken.name]
 
   if (csrfTokenVerified) {
     try {
-      // Delete session cookie
-      cookie.set(res, cookies.sessionId.name, '', { ...cookies.sessionId.options, maxAge: 0 })
+      // Delete session sessionToken
+      cookie.set(res, cookies.sessionToken.name, '', { ...cookies.sessionToken.options, maxAge: 0 })
 
       // Remove session from database
-      await deleteSessionById(sessionId)
+      await deleteSession(sessionToken)
     } catch (error) {
       // Log error and continue
       console.error('SIGNOUT_ERROR', error)
