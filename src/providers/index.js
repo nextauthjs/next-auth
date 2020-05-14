@@ -1,13 +1,19 @@
-// @TODO import Facebook from './facebook'
-import Twitter from './twitter'
-import Google from './google'
-import GitHub from './github'
-import Twitch from './twitch'
+import Discord from './discord'
 import Email from './email'
+// import Facebook from './facebook' // @TODO
+import GitHub from './github'
+import Google from './google'
+import Mixer from './mixer'
+import Slack from './slack'
+import Twitch from './twitch'
+import Twitter from './twitter'
 
 export default {
+  Discord,
   GitHub,
   Google,
+  Mixer,
+  Slack,
   Twitter,
   Twitch,
   Email
