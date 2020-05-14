@@ -10,14 +10,14 @@ export default (options) => {
     authorizationUrl: 'https://slack.com/oauth/authorize?response_type=code',
     profileUrl: 'https://slack.com/api/users.identity',
     profile: (profile) => {
-      const { user } = profile;
+      const { user } = profile
       return {
         id: user.id,
         name: user.name,
         image: user.image_512,
-        email: user.email,
-      };
+        email: user.email
+      }
     },
-    ...options,
-  };
-};
+    ...options
+  }
+}
