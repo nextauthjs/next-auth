@@ -161,29 +161,34 @@ const Adapter = (config, options) => {
 
     async function createSession (user) {
       debug('Create session for user', user)
-      const session = new Session(user.id)
-      return getManager().save(session)
-    }
-
-    async function getSessionById (id) {
-      debug('Get session by ID', id)
       try {
-        const session = await connection.getRepository(Session).findOne({ id })
-        // @TODO Check session has not expired (return null if it has)
-        return session
+        const session = new Session(user.id)
+        return getManager().save(session)
       } catch (error) {
-        console.error('GET_SESSION_BY_ID_ERROR', error)
-        return Promise.reject(new Error('GET_SESSION_BY_ID_ERROR', error))
+        console.error('CREATE_SESSION_ERROR', error)
+        return Promise.reject(new Error('CREATE_SESSION_ERROR', error))
       }
     }
 
-    async function deleteSessionById (id) {
-      debug('Delete session by ID', id)
+    async function getSession (sessionToken) {
+      debug('Get session by Session ID', sessionToken)
       try {
-        return connection.getRepository(Session).delete({ id })
+        const session = await connection.getRepository(Session).findOne({ sessionToken })
+        // @TODO Check session has not expired (return null if it has)
+        return session
       } catch (error) {
-        console.error('DELETE_SESSION_BY_ID_ERROR', error)
-        return Promise.reject(new Error('DELETE_SESSION_BY_ID_ERROR', error))
+        console.error('GET_SESSION_ERROR', error)
+        return Promise.reject(new Error('GET_SESSION_ERROR', error))
+      }
+    }
+
+    async function deleteSession (sessionToken) {
+      debug('Delete session by Session ID', sessionToken)
+      try {
+        return connection.getRepository(Session).delete({ sessionToken })
+      } catch (error) {
+        console.error('DELETE_SESSION_ERROR', error)
+        return Promise.reject(new Error('DELETE_SESSION_ERROR', error))
       }
     }
 
@@ -211,8 +216,8 @@ const Adapter = (config, options) => {
       linkAccount,
       unlinkAccount,
       createSession,
-      getSessionById,
-      deleteSessionById,
+      getSession,
+      deleteSession,
       createVerificationRequest,
       getVerificationRequest,
       deleteVerificationRequest

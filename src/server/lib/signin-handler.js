@@ -1,4 +1,4 @@
-export default async (adapter, sessionId, profile, providerAccount) => {
+export default async (adapter, sessionToken, profile, providerAccount) => {
   try {
     // Input validation
     if (!profile || !profile.email) { throw new Error('Missing or invalid profile') }
@@ -20,12 +20,12 @@ export default async (adapter, sessionId, profile, providerAccount) => {
       linkAccount,
       unlinkAccount,
       createSession,
-      getSessionById,
-      deleteSessionById
+      getSession,
+      deleteSession
     } = _adapter
     /* eslint-enable no-unused-vars */
 
-    let session = sessionId ? await getSessionById(sessionId) : null
+    let session = sessionToken ? await getSession(sessionToken) : null
     const isSignedIn = !!session
     let user = isSignedIn ? await getUserById(session.userId) : null
     let isNewAccount = false
@@ -54,7 +54,7 @@ export default async (adapter, sessionId, profile, providerAccount) => {
             // Delete existing session if they are currently signed in as another user.
             // This will switch user accounts for the session in cases where the user was
             // already logged in with a different account.
-            await deleteSessionById(sessionId)
+            await deleteSession(sessionToken)
 
             // If signed in with a different acccount, effectively switching accounts.
             user = userByEmail
