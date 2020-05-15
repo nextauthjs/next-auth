@@ -2,7 +2,6 @@ import 'reflect-metadata'
 import { createConnection, getConnection, getManager, EntitySchema } from 'typeorm'
 import { createHash } from 'crypto'
 import nodemailer from 'nodemailer'
-import nodemailerSmtpTransport from 'nodemailer-smtp-transport'
 
 import { CreateUserError } from '../../lib/errors'
 import Models from './models'
@@ -38,7 +37,6 @@ const Adapter = (config, options) => {
       new EntitySchema(SessionSchema),
       new EntitySchema(EmailVerificationSchema)
     ],
-    synchronize: true,
     logging: false
   }
 
@@ -89,7 +87,7 @@ const Adapter = (config, options) => {
 
     // Called when a user signs in
     async function createUser (profile) {
-      debug('Create user account', profile)
+      debug('Create user', profile)
       try {
         // Create user account
         const user = new User(profile.name, profile.email, profile.image)
@@ -101,13 +99,13 @@ const Adapter = (config, options) => {
     }
 
     async function updateUser (user) {
-      debug('Update user account', user)
+      debug('Update user', user)
       // @TODO Save changes to user object in DB
       return false
     }
 
     async function getUser (id) {
-      debug('Get user by ID', id)
+      debug('Get user', id)
       try {
         return connection.getRepository(User).findOne({ id })
       } catch (error) {
@@ -117,7 +115,7 @@ const Adapter = (config, options) => {
     }
 
     async function getUserByProviderAccountId (providerId, providerAccountId) {
-      debug('Get user account by provider account ID', providerId, providerAccountId)
+      debug('Get user by provider account ID', providerId, providerAccountId)
       try {
         const account = await connection.getRepository(Account).findOne({ providerId, providerAccountId })
         if (!account) { return null }
@@ -129,19 +127,19 @@ const Adapter = (config, options) => {
     }
 
     async function getUserByEmail (email) {
-      debug('Get user account by email address', email)
+      debug('Get user by email address', email)
       // @TODO Get user from DB
       return false
     }
 
     async function getUserByCredentials (credentials) {
-      debug('Get user account by credentials', credentials)
+      debug('Get user by credentials', credentials)
       // @TODO Get user from DB
       return false
     }
 
     async function deleteUser (userId) {
-      debug('Delete user account', userId)
+      debug('Delete user', userId)
       // @TODO Delete user from DB
       return false
     }
@@ -167,7 +165,7 @@ const Adapter = (config, options) => {
     }
 
     async function createSession (user) {
-      debug('Create session for user', user)
+      debug('Create session', user)
       try {
         const session = new Session(user.id)
         return getManager().save(session)
@@ -178,7 +176,7 @@ const Adapter = (config, options) => {
     }
 
     async function getSession (sessionToken) {
-      debug('Get session by Session ID', sessionToken)
+      debug('Get session', sessionToken)
       try {
         const session = await connection.getRepository(Session).findOne({ sessionToken })
         // @TODO Check session has not expired (return null if it has)
@@ -190,7 +188,7 @@ const Adapter = (config, options) => {
     }
 
     async function deleteSession (sessionToken) {
-      debug('Delete session by Session ID', sessionToken)
+      debug('Delete session', sessionToken)
       try {
         return await connection.getRepository(Session).delete({ sessionToken })
       } catch (error) {
@@ -204,7 +202,7 @@ const Adapter = (config, options) => {
       try {
         const { site } = options
         const { callbackUrl } = provider
-        const { from, server, port, secure, username, password, subject, text, html } = provider
+        const { server, from, subject, text, html, unsubscribe } = provider
 
         // Store hashed token (using secret as salt) so that tokens cannot be exploited
         // even if the contents of the database is compromised.
@@ -218,26 +216,16 @@ const Adapter = (config, options) => {
         // Send email
         await new Promise((resolve, reject) => {
           nodemailer
-            .createTransport(
-              nodemailerSmtpTransport({
-                host: server,
-                port,
-                secure,
-                auth: {
-                  user: username,
-                  pass: password
-                }
-              })
-            )
+            .createTransport(server)
             .sendMail({
               to: email,
               from,
               subject: subject({ site }) || 'Sign in',
-              text: text({ email, url, token, site, callbackUrl }) || url,
-              html: html({ email, url, token, site, callbackUrl }) || `<p><a href="${url}">Sign in</a></p>`
+              text: text ? text({ email, url, token, site, callbackUrl, unsubscribe }) : url,
+              html: html ? html({ email, url, token, site, callbackUrl, unsubscribe }) : `<p><a href="${url}">Sign in</a></p>`
             }, (error) => {
               if (error) {
-                debug('SEND_EMAIL_VERIFICATION_ERROR', email, error)
+                console.error('SEND_EMAIL_VERIFICATION_ERROR', email, error)
                 return reject(new Error('SEND_EMAIL_VERIFICATION_ERROR', error))
               }
               debug('Sent verification email', email, url)

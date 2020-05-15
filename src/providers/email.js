@@ -3,15 +3,19 @@ export default (options) => {
     id: 'email',
     type: 'email',
     name: 'Email',
-    server: 'localhost',
-    port: 25,
-    secure: true,
-    username: '',
-    password: '',
+    server: {
+      host: 'localhost',
+      port: 25,
+      auth: {
+        user: '',
+        pass: ''
+      }
+    },
     from: 'NextAuth <no-reply@example.com>',
     subject,
     html,
     text,
+    unsubscribe: ({ email }) => '{{unsubscribe}}',
     ...options
   }
 }
@@ -20,7 +24,7 @@ export default (options) => {
 const subject = ({ site }) => `Sign in to ${site.replace(/^https?:\/\//, '')}`
 
 // Email HTML body
-const html = ({ email, url, token, site, callbackUrl }) => {
+const html = ({ email, url, token, site, unsubscribe, callbackUrl }) => {
   const buttonBackgroundColor = '#444444'
   const buttonTextColor = '#ffffff'
   return `
@@ -39,9 +43,19 @@ const html = ({ email, url, token, site, callbackUrl }) => {
       </table>
     </td>
   </tr>
+  <tr>
+    <td align="center" style="padding: 10px 0; font-size: 12px; font-family: Helvetica, Arial, sans-serif; color: #888888;">
+      ${unsubscribe ? `<a href="${unsubscribe}">Unsubscribe</a>` : ''}
+    </td>
+  </tr>
 </table>
 `
 }
 
 // Email Text body (fallback for email clients that don't render HTML, e.g. feature phones)
-const text = ({ email, url, token, site, callbackUrl }) => `${url}\n\n`
+const text = ({ email, url, token, site, callbackUrl, unsubscribe }) => `
+Sign in:\n
+${url}
+\n\n
+${unsubscribe ? `Unsubscribe:\n${unsubscribe}` : ''}
+`
