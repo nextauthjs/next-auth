@@ -1,8 +1,8 @@
 import { randomBytes } from 'crypto'
 
-export default async (email, options, provider) => {
+export default async (email, provider, options) => {
   try {
-    const { urlPrefix, adapter } = options
+    const { site, urlPrefix, adapter } = options
     const _adapter = await adapter.getAdapter()
     const { createEmailVerification } = _adapter
 
@@ -16,7 +16,7 @@ export default async (email, options, provider) => {
     const url = `${urlPrefix}/callback/${encodeURIComponent(provider.id)}?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`
 
     // @TODO Create invite (send secret so can be hashed)
-    await createEmailVerification(email, url, token, secret, provider)
+    await createEmailVerification(email, url, token, secret, provider, options)
 
     // Return promise
     return Promise.resolve()

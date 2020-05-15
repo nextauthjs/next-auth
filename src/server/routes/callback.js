@@ -71,7 +71,7 @@ export default async (req, res, options, done) => {
       // Verify email and token match email verification record in database
       const invite = await getEmailVerification(email, token, secret, provider)
       if (!invite) {
-        res.status(302).setHeader('Location', `${errorPageUrl}?error=Invite`)
+        res.status(302).setHeader('Location', `${errorPageUrl}?error=Verification`)
         res.end()
         return done()
       }
