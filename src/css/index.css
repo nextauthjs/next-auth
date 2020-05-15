@@ -17,6 +17,17 @@ form {
   padding: 0;
 }
 
+input[type="text"] {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  padding: .5rem 1rem;
+  border: .1rem solid var(--primary-color);
+  background: #fff;
+  font-size: 1rem;
+  border-radius: .2rem;
+}
+
 p {
   margin: 0 0 1rem 0;
   padding: 0;
@@ -95,13 +106,29 @@ a.site {
 }
 
 .signin {
-  a.button {
+  a.button,
+  button,
+  input[type="text"] {
     margin: 0 auto 0 auto;
     display: block;
   }
-  p {
+  hr {
+    display: block;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em auto;
+  }
+  p,
+  form {
+    display: block;
     margin: 0 auto 0.5rem auto;
-    max-width: 300px !important;
+    input[type="text"] {
+      margin-bottom: 0.5rem;
+    }
+    button {
+      width: 100%;
+    }
+    max-width: 300px;
   }
 }
 

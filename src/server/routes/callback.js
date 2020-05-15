@@ -9,7 +9,7 @@ export default async (req, res, options, done) => {
   const provider = providers[providerName]
   const { type } = provider
   const _adapter = await adapter.getAdapter()
-  const { getVerificationRequest, deleteVerificationRequest } = _adapter
+  const { getEmailVerification, deleteEmailVerification } = _adapter
 
   // @TODO Allow error URL to be supplied as an option
   const errorPageUrl = `${urlPrefix}/error`
@@ -21,7 +21,7 @@ export default async (req, res, options, done) => {
     oAuthCallback(req, provider, async (error, response) => {
       // @TODO Check error
       if (error) {
-        console.log('OAUTH_CALLBACK_ERROR', error)
+        console.error('OAUTH_CALLBACK_ERROR', error)
       }
 
       const { profile, account } = response
@@ -49,7 +49,7 @@ export default async (req, res, options, done) => {
           res.status(302).setHeader('Location', `${errorPageUrl}?error=Signin`)
         } else {
           res.status(302).setHeader('Location', `${errorPageUrl}?error=Unknown`)
-          console.error('SIGNIN_CALLBACK_ERROR', error)
+          console.error('OAUTH_CALLBACK_ERROR', error)
         }
         res.end()
         return done()
@@ -66,25 +66,21 @@ export default async (req, res, options, done) => {
       return done()
     })
   } else if (type === 'email') {
-    res.status(500).end('Error: Email sign in flow not yet supported.')
-    return done()
-
-    const { email, token } = req.params
-
     try {
-      // @TODO Verify email and token match email invitation in DB
-      // const invite = await getVerificationRequest(email, token, secret, provider)
-      // if (!invite) {
-      //  res.status(302).setHeader('Location', `${errorPageUrl}?error=Invite`)
-      //  res.end()
-      //  return done()
-      // }
+      const { email, token } = req.query
+      // Verify email and token match email verification record in database
+      const invite = await getEmailVerification(email, token, secret, provider)
+      if (!invite) {
+        res.status(302).setHeader('Location', `${errorPageUrl}?error=Invite`)
+        res.end()
+        return done()
+      }
 
-      // @TODO If token valid, delete email invitation in DB
-      // await deleteVerificationRequest(email, token, secret, provider)
+      // If token valid, delete email verification record in database
+      await deleteEmailVerification(email, token, secret, provider)
 
       // If token valid, sign them in
-      const { session, isNewAccount } = await signinHandler(adapter, sessionToken, { email }, { type: 'email' })
+      const { session, isNewAccount } = await signinHandler(adapter, sessionToken, { email }, provider)
 
       // Save Session ID in cookie (HTTP Only cookie)
       cookie.set(res, cookies.sessionToken.name, session.sessionToken, cookies.sessionToken.options)
@@ -97,6 +93,16 @@ export default async (req, res, options, done) => {
         res.end()
         return done()
       }
+
+      // Callback URL is already verified at this point, so safe to use if specified
+      if (callbackUrl) {
+        res.status(302).setHeader('Location', callbackUrl)
+        res.end()
+      } else {
+        res.status(302).setHeader('Location', site)
+        res.end()
+      }
+      return done()
     } catch (error) {
       if (error.name === 'CreateUserError') {
         // @TODO Try to look up user by by email address and confirm it occured because they
@@ -106,7 +112,7 @@ export default async (req, res, options, done) => {
         res.status(302).setHeader('Location', `${errorPageUrl}?error=Signin`)
       } else {
         res.status(302).setHeader('Location', `${errorPageUrl}?error=Unknown`)
-        console.error('SIGNIN_CALLBACK_ERROR', error)
+        console.error('EMAIL_CALLBACK_ERROR', error)
       }
       res.end()
       return done()

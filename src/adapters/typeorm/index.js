@@ -1,5 +1,8 @@
 import 'reflect-metadata'
 import { createConnection, getConnection, getManager, EntitySchema } from 'typeorm'
+import { createHash } from 'crypto'
+import nodemailer from 'nodemailer'
+import nodemailerSmtpTransport from 'nodemailer-smtp-transport'
 
 import { CreateUserError } from '../../lib/errors'
 import Models from './models'
@@ -22,6 +25,9 @@ const Adapter = (config, options) => {
   const Session = options.Session ? options.Session.model : Models.Session.model
   const SessionSchema = options.Session ? options.Session.schema : Models.Session.schema
 
+  const EmailVerification = options.EmailVerification ? options.EmailVerification.model : Models.EmailVerification.model
+  const EmailVerificationSchema = options.EmailVerification ? options.EmailVerification.schema : Models.EmailVerification.schema
+
   // Parse config (uses options)
   const defaultConfig = {
     name: 'default',
@@ -29,7 +35,8 @@ const Adapter = (config, options) => {
     entities: [
       new EntitySchema(AccountSchema),
       new EntitySchema(UserSchema),
-      new EntitySchema(SessionSchema)
+      new EntitySchema(SessionSchema),
+      new EntitySchema(EmailVerificationSchema)
     ],
     synchronize: true,
     logging: false
@@ -185,24 +192,90 @@ const Adapter = (config, options) => {
     async function deleteSession (sessionToken) {
       debug('Delete session by Session ID', sessionToken)
       try {
-        return connection.getRepository(Session).delete({ sessionToken })
+        return await connection.getRepository(Session).delete({ sessionToken })
       } catch (error) {
         console.error('DELETE_SESSION_ERROR', error)
         return Promise.reject(new Error('DELETE_SESSION_ERROR', error))
       }
     }
 
-    async function createVerificationRequest (email, url, token, secret, provider) {
-      // const { from, server, port, secure, username, password } = provider
+    async function createEmailVerification (email, url, token, secret, provider) {
+      debug('Create verification request', email, url)
+      try {
+        const { from, server, port, secure, username, password, subject, text, html } = provider
 
+        // Store hashed token (using secret as salt) so that tokens cannot be exploited
+        // even if the contents of the database is compromised.
+        // @TODO Use bcrypt function here instead of simple salted hash
+        const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
+
+        // Save to database
+        let emailVerification = new EmailVerification(email, hashedToken)
+        emailVerification = await getManager().save(emailVerification)
+
+        // Send email
+        await new Promise((resolve, reject) => {
+          nodemailer
+            .createTransport(
+              nodemailerSmtpTransport({
+                host: server,
+                port,
+                secure,
+                auth: {
+                  user: username,
+                  pass: password
+                }
+              })
+            )
+            .sendMail({
+              to: email,
+              from,
+              subject: subject || 'Sign in',
+              text: text ? text({ email, url }) : `\n${url}\n\n`,
+              html: html ? html({ email, url }) : `<p><a href="${url}">Click here to sign in</a></p>`
+            }, (error) => {
+              if (error) {
+                debug('SEND_EMAIL_VERIFICATION_ERROR', email, error)
+                return reject(new Error('SEND_EMAIL_VERIFICATION_ERROR', error))
+              }
+
+              debug('SENT_EMAIL_VERIFICATION', email, url)
+              resolve()
+            })
+        })
+
+        return emailVerification
+      } catch (error) {
+        console.error('CREATE_EMAIL_VERIFICATION_ERROR', error)
+        return Promise.reject(new Error('CREATE_EMAIL_VERIFICATION_ERROR', error))
+      }
     }
 
-    async function getVerificationRequest (email, token, secret, provider) {
-
+    async function getEmailVerification (email, token, secret, provider) {
+      debug('Get verification request', email, token)
+      try {
+        // Hash token provided with secret before trying to match it with datbase
+        // @TODO Use bcrypt function here instead of simple salted hash
+        const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
+        const emailVerification = await connection.getRepository(EmailVerification).findOne({ email, token: hashedToken })
+        debug('GET_EMAIL_VERIFICATION', emailVerification)
+        return emailVerification
+      } catch (error) {
+        console.error('GET_EMAIL_VERIFICATION_ERROR', error)
+        return Promise.reject(new Error('GET_EMAIL_VERIFICATION_ERROR', error))
+      }
     }
 
-    async function deleteVerificationRequest (email, token, secret, provider) {
-
+    async function deleteEmailVerification (email, token, secret, provider) {
+      debug('Delete verification request', email, token)
+      try {
+        // When a verification request is accepted, delete all of them associated with that same email address
+        // We could just delete the current one, but it's useful.
+        return await connection.getRepository(EmailVerification).delete({ email })
+      } catch (error) {
+        console.error('DELETE_EMAIL_VERIFICATION_ERROR', error)
+        return Promise.reject(new Error('DELETE_EMAIL_VERIFICATION_ERROR', error))
+      }
     }
 
     return Promise.resolve({
@@ -218,9 +291,9 @@ const Adapter = (config, options) => {
       createSession,
       getSession,
       deleteSession,
-      createVerificationRequest,
-      getVerificationRequest,
-      deleteVerificationRequest
+      createEmailVerification,
+      getEmailVerification,
+      deleteEmailVerification
     })
   }
 

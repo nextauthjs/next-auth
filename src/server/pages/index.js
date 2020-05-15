@@ -2,19 +2,23 @@ import fs from 'fs'
 import path from 'path'
 import signin from './signin'
 import signout from './signout'
+import checkEmail from './check-email'
 import error from './error'
 
 // Future releases will support customization (via inline or external CSS)
 const defaultStyles = fs.readFileSync(path.join(__dirname, '/../../css/index.css'), 'utf8')
 
-function render (res, page, props, done) {
+function render (req, res, page, props, done) {
   let html = ''
   switch (page) {
     case 'signin':
-      html = signin(props)
+      html = signin({ ...props, req })
       break
     case 'signout':
       html = signout(props)
+      break
+    case 'check-email':
+      html = checkEmail(props)
       break
     case 'error':
       html = error(props)
