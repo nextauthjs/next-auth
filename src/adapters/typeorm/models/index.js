@@ -1,7 +1,7 @@
 import { Account, AccountSchema } from './account'
 import { User, UserSchema } from './user'
 import { Session, SessionSchema } from './session'
-import { Verify, VerifySchema } from './verify'
+import { EmailVerification, EmailVerificationSchema } from './email-verification'
 
 export default {
   Account: {
@@ -16,8 +16,8 @@ export default {
     model: Session,
     schema: SessionSchema
   },
-  Verify: {
-    model: Verify,
-    schema: VerifySchema
+  EmailVerification: {
+    model: EmailVerification,
+    schema: EmailVerificationSchema
   }
 }

@@ -185,11 +185,11 @@ export default async (req, res, _options) => {
           if (provider && options.providers[provider]) {
             signin(req, res, options, done)
           } else {
-            pages.render(res, 'signin', { site, providers: Object.values(options.providers), callbackUrl: options.callbackUrl }, done)
+            pages.render(req, res, 'signin', { site, providers: Object.values(options.providers), callbackUrl: options.callbackUrl, csrfToken }, done)
           }
           break
         case 'signout':
-          pages.render(res, 'signout', { site, urlPrefix, csrfToken, callbackUrl: options.callbackUrl }, done)
+          pages.render(req, res, 'signout', { site, urlPrefix, csrfToken, callbackUrl: options.callbackUrl }, done)
           break
         case 'callback':
           if (provider && options.providers[provider]) {
@@ -199,8 +199,11 @@ export default async (req, res, _options) => {
             return done()
           }
           break
+        case 'check-email':
+          pages.render(req, res, 'check-email', { site }, done)
+          break
         case 'error':
-          pages.render(res, 'error', { site, error, urlPrefix }, done)
+          pages.render(req, res, 'error', { site, error, urlPrefix }, done)
           break
         default:
           res.status(404).end()
