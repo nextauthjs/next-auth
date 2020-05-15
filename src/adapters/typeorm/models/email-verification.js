@@ -1,20 +1,18 @@
-import { createHash } from 'crypto'
-
-export class Verify {
-  constructor (email, token, salt) {
+export class EmailVerification {
+  constructor (email, token) {
     // @TODO expose time to expire invite as option
     const dateExpires = new Date()
     dateExpires.setDate(dateExpires.getDate() + 1) // 1 day
 
     this.email = email
-    this.token = createHash('sha256').update(`${token}${salt}`).digest('hex')
+    this.token = token
     this.expires = dateExpires.toISOString()
   }
 }
 
-export const VerifySchema = {
-  name: 'Verify',
-  target: Verify,
+export const EmailVerificationSchema = {
+  name: 'EmailVerification',
+  target: EmailVerification,
   columns: {
     id: {
       primary: true,
@@ -25,7 +23,8 @@ export const VerifySchema = {
       type: 'varchar'
     },
     token: {
-      type: 'varchar'
+      type: 'varchar',
+      unique: true
     },
     expires: {
       type: 'date'

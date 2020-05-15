@@ -2,7 +2,7 @@
 import oAuthSignin from '../lib/oauth/signin'
 import emailSignin from '../lib/email/signin'
 
-export default (req, res, options, done) => {
+export default async (req, res, options, done) => {
   const { provider: providerName, providers, urlPrefix, csrfTokenVerified } = options
   const provider = providers[providerName]
   const { type } = provider
@@ -19,8 +19,8 @@ export default (req, res, options, done) => {
         console.error('OAUTH_SIGNIN_ERROR', error)
       }
 
-      res.setHeader('Location', oAuthSigninUrl)
-      res.status(302).end()
+      res.status(302).setHeader('Location', oAuthSigninUrl)
+      res.end()
       return done()
     })
   } else if (type === 'email' && req.method === 'POST') {
@@ -41,16 +41,24 @@ export default (req, res, options, done) => {
     // @TODO Add support for custom signin URLs
     if (!csrfTokenVerified) {
       res.status(302).setHeader('Location', `${urlPrefix}/signin?email=${email}&csrf=true`)
+      res.end()
       return done()
     }
 
-    // @TODO Generate email invitation
-    // await emailSignin(email, options, provider)
-
     res.status(302).setHeader('Location', `${urlPrefix}/check-email`)
+    res.end()
+
+    // Return response immediately to user, but generate email invitation after returning
+    // The user won't know if something goes wrong, but they don't have to wait on this
+    // to execute.
+    await emailSignin(email, options, provider)
+
+    // When email sent, we are actually done.
+    return done()
   } else {
-    res.status(500).end(`Error: Provider type ${type} not supported`)
-    console.error('PROVIDER_SIGNIN_ERROR', provider, type)
+    // If provider not supported, redirect to sign in page
+    res.status(302).setHeader('Location', `${urlPrefix}/signin`)
+    res.end()
     return done()
   }
 }
