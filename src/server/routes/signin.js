@@ -51,7 +51,7 @@ export default async (req, res, options, done) => {
     // Return response immediately to user, but generate email invitation after returning
     // The user won't know if something goes wrong, but they don't have to wait on this
     // to execute.
-    await emailSignin(email, options, provider)
+    await emailSignin(email, provider, options)
 
     // When email sent, we are actually done.
     return done()
