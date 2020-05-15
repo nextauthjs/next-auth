@@ -2,7 +2,7 @@ import { randomBytes } from 'crypto'
 
 export default async (email, provider, options) => {
   try {
-    const { site, urlPrefix, adapter } = options
+    const { urlPrefix, adapter } = options
     const _adapter = await adapter.getAdapter()
     const { createEmailVerification } = _adapter
 
