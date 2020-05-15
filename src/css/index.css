@@ -1,5 +1,6 @@
 :root {
   --primary-color: #444;
+  --border-width: 1px;
 }
 
 body {
@@ -22,10 +23,14 @@ input[type="text"] {
   display: block;
   width: 100%;
   padding: .5rem 1rem;
-  border: .1rem solid var(--primary-color);
+  border: var(--border-width) solid #888;
   background: #fff;
   font-size: 1rem;
   border-radius: .2rem;
+
+  :focus {
+    border-color: var(--primary-color);
+  }
 }
 
 p {
@@ -38,7 +43,7 @@ button,
 a.button {
   margin: 0;
   padding: .5rem 1rem;
-  border: .1rem solid var(--primary-color);
+  border: var(--border-width) solid var(--primary-color);
   color: var(--primary-color);
   background: #fff;
   font-size: 1rem;

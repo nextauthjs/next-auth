@@ -199,9 +199,11 @@ const Adapter = (config, options) => {
       }
     }
 
-    async function createEmailVerification (email, url, token, secret, provider) {
-      debug('Create verification request', email, url)
+    async function createEmailVerification (email, url, token, secret, provider, options) {
+      debug('Create verification request', email)
       try {
+        const { site } = options
+        const { callbackUrl } = provider
         const { from, server, port, secure, username, password, subject, text, html } = provider
 
         // Store hashed token (using secret as salt) so that tokens cannot be exploited
@@ -210,8 +212,8 @@ const Adapter = (config, options) => {
         const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
 
         // Save to database
-        let emailVerification = new EmailVerification(email, hashedToken)
-        emailVerification = await getManager().save(emailVerification)
+        const newEmailVerification = new EmailVerification(email, hashedToken)
+        const emailVerification = await getManager().save(newEmailVerification)
 
         // Send email
         await new Promise((resolve, reject) => {
@@ -230,16 +232,15 @@ const Adapter = (config, options) => {
             .sendMail({
               to: email,
               from,
-              subject: subject || 'Sign in',
-              text: text ? text({ email, url }) : `\n${url}\n\n`,
-              html: html ? html({ email, url }) : `<p><a href="${url}">Click here to sign in</a></p>`
+              subject: subject({ site }) || 'Sign in',
+              text: text({ email, url, token, site, callbackUrl }) || url,
+              html: html({ email, url, token, site, callbackUrl }) || `<p><a href="${url}">Sign in</a></p>`
             }, (error) => {
               if (error) {
                 debug('SEND_EMAIL_VERIFICATION_ERROR', email, error)
                 return reject(new Error('SEND_EMAIL_VERIFICATION_ERROR', error))
               }
-
-              debug('SENT_EMAIL_VERIFICATION', email, url)
+              debug('Sent verification email', email, url)
               resolve()
             })
         })
