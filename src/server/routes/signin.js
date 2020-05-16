@@ -34,7 +34,7 @@ export default async (req, res, options, done) => {
     // The link in the email will take them back to the callback page, where
     // it will be verified and, if valid, the user will be logged in; a new
     // account is created for them if they don't have one already.
-    const { email } = req.body
+    const email = req.query.email ? req.query.email.toLowerCase() : null
 
     // If CSRF token not verified, send the user to sign in page, which will
     // display a new form with a valid token so that submitting it should work.
