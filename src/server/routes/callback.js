@@ -43,9 +43,9 @@ export default async (req, res, options, done) => {
           // the user already has an account with the same email, but signed in with another provider.
           // This is almost certainly the case, but this COULD happen for other reasons, such as
           // a problem with the database or custom adapter code.
-          res.status(302).setHeader('Location', `${urlPrefix}/error?error=Signin`)
+          res.status(302).setHeader('Location', `${urlPrefix}/error?error=oAuthSignin`)
         } else {
-          res.status(302).setHeader('Location', `${urlPrefix}/error?error=Unknown`)
+          res.status(302).setHeader('Location', `${urlPrefix}/error?error=Signin`)
           console.error('OAUTH_CALLBACK_ERROR', error)
         }
         res.end()
@@ -106,9 +106,9 @@ export default async (req, res, options, done) => {
         // the user already has an account with the same email, but signed in with another provider.
         // This is almost certainly the case, but this COULD happen for other reasons, such as
         // a problem with the database or custom adapter code.
-        res.status(302).setHeader('Location', `${urlPrefix}/error?error=Signin`)
+        res.status(302).setHeader('Location', `${urlPrefix}/error?error=EmailSignin`)
       } else {
-        res.status(302).setHeader('Location', `${urlPrefix}/error?error=Unknown`)
+        res.status(302).setHeader('Location', `${urlPrefix}/error?error=Signin`)
         console.error('EMAIL_CALLBACK_ERROR', error)
       }
       res.end()
