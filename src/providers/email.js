@@ -15,7 +15,8 @@ export default (options) => {
     subject,
     html,
     text,
-    unsubscribe: ({ email }) => '{{unsubscribe}}',
+     // unsubscribe: ({ email }) => 'http://example.com/unsubscribe',
+     async: false,
     ...options
   }
 }
@@ -30,22 +31,22 @@ const html = ({ email, url, token, site, unsubscribe, callbackUrl }) => {
   return `
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td align="center" style="padding: 10px 0; font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: #888888;">
+    <td align="center" style="padding: 8px 0; font-size: 22px; font-family: Helvetica, Arial, sans-serif; color: #888888;">
        ${site.replace(/^https?:\/\//, '')}
     </td>
   </tr>
   <tr>
-    <td align="center" style="padding: 10px 0;">
+    <td align="center" style="padding: 16px 0;">
       <table border="0" cellspacing="0" cellpadding="0">
         <tr>
-          <td align="center" style="border-radius: 3px;" bgcolor="${buttonBackgroundColor}"><a href="${url}" target="_blank" style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; color: ${buttonTextColor}; text-decoration: none; text-decoration: none;border-radius: 3px; padding: 12px 18px; border: 1px solid ${buttonBackgroundColor}; display: inline-block; font-weight: bold;">Sign in</a></td>
+          <td align="center" style="border-radius: 3px;" bgcolor="${buttonBackgroundColor}"><a href="${url}" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: ${buttonTextColor}; text-decoration: none; text-decoration: none;border-radius: 3px; padding: 12px 18px; border: 1px solid ${buttonBackgroundColor}; display: inline-block; font-weight: bold;">Sign in</a></td>
         </tr>
       </table>
     </td>
   </tr>
   <tr>
-    <td align="center" style="padding: 10px 0; font-size: 12px; font-family: Helvetica, Arial, sans-serif; color: #888888;">
-      ${unsubscribe ? `<a href="${unsubscribe}">Unsubscribe</a>` : ''}
+    <td align="center" style="padding: 8px 0; font-size: 12px; font-family: Helvetica, Arial, sans-serif; color: #888888 !important;">
+      ${unsubscribe ? `<a href="${unsubscribe(email)}">Unsubscribe</a>` : ''}
     </td>
   </tr>
 </table>
@@ -57,5 +58,5 @@ const text = ({ email, url, token, site, callbackUrl, unsubscribe }) => `
 Sign in:\n
 ${url}
 \n\n
-${unsubscribe ? `Unsubscribe:\n${unsubscribe}` : ''}
+${unsubscribe ? `Unsubscribe:\n${unsubscribe({ email })}\n\n` : ''}
 `

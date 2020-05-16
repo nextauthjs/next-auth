@@ -1,6 +1,6 @@
 // Handle requests to /api/auth/signin
-import oAuthSignin from '../lib/oauth/signin'
-import emailSignin from '../lib/email/signin'
+import oAuthSignin from '../lib/signin/oauth'
+import emailSignin from '../lib/signin/email'
 
 export default async (req, res, options, done) => {
   const { provider: providerName, providers, urlPrefix, csrfTokenVerified } = options
@@ -45,17 +45,31 @@ export default async (req, res, options, done) => {
       return done()
     }
 
+    // If 'async' is not set (or is not set to 'true') then making a blocking call to send
+    // email before returning a response to the user.
+    if (Object.prototype.hasOwnProperty.call(provider, 'async') && provider.async !== true) {
+      try {
+        await emailSignin(email, provider, options)
+      } catch (error) {
+        // Log error so can take action
+        console.error('EMAIL_SIGNIN_ERROR', error)
+        // Return error to user
+        res.status(302).setHeader('Location', `${urlPrefix}/error?error=EmailSignin`)
+        res.end()
+        return done()
+      }
+    }
+
     res.status(302).setHeader('Location', `${urlPrefix}/check-email`)
     res.end()
 
-    // Return response immediately to user, but generate email invitation after returning
-    // The user won't know if something goes wrong, but they don't have to wait on this
-    // to execute.
-    try {
-      await emailSignin(email, provider, options)
-    } catch (error) {
-      // Log error so can take action
-      console.error('EMAIL_SIGNIN_ERROR', error)
+    if (!Object.prototype.hasOwnProperty.call(provider, 'async') || provider.async === true) {
+      try {
+        await emailSignin(email, provider, options)
+      } catch (error) {
+        // Log error, but do nothing else (to late to return to user!)
+        console.error('EMAIL_SIGNIN_ERROR', error)
+      }
     }
 
     // When email sent, we are actually done.
