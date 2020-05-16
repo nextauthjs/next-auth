@@ -1,6 +1,6 @@
 // Handle callbacks from login services
 import { oAuthCallback } from '../lib/oauth/callback'
-import signinHandler from '../lib/signin-handler'
+import callbackHandler from '../lib/callback-handler'
 import cookie from '../lib/cookie'
 
 // @TODO Refactor oAuthCallback to return promise instead of using a callback and reduce duplicate code
@@ -27,7 +27,7 @@ export default async (req, res, options, done) => {
       const { profile, account } = response
 
       try {
-        const { session, isNewAccount } = await signinHandler(adapter, sessionToken, profile, account)
+        const { session, isNewAccount } = await callbackHandler(adapter, sessionToken, profile, account)
 
         // Save Session ID in cookie (HTTP Only cookie)
         cookie.set(res, cookies.sessionToken.name, session.sessionToken, cookies.sessionToken.options)
@@ -41,15 +41,14 @@ export default async (req, res, options, done) => {
           return done()
         }
       } catch (error) {
-        if (error.name === 'CreateUserError') {
-          // @TODO Try to look up user by by email address and confirm it occured because they
-          // the user already has an account with the same email, but signed in with another provider.
-          // This is almost certainly the case, but this COULD happen for other reasons, such as
-          // a problem with the database or custom adapter code.
+        if (error.name === 'AccountNotLinkedError') {
+          // If the emai lon the account is already linked, but nto with this oAuth account
+          res.status(302).setHeader('Location', `${urlPrefix}/error?error=oAuthAccountNotLinked`)
+        } else if (error.name === 'CreateUserError') {
           res.status(302).setHeader('Location', `${urlPrefix}/error?error=oAuthCreateAccount`)
         } else {
-          res.status(302).setHeader('Location', `${urlPrefix}/error?error=Signin`)
           console.error('OAUTH_CALLBACK_ERROR', error)
+          res.status(302).setHeader('Location', `${urlPrefix}/error?error=Callback`)
         }
         res.end()
         return done()
@@ -80,7 +79,7 @@ export default async (req, res, options, done) => {
       await deleteEmailVerification(email, token, secret, provider)
 
       // If token valid, sign them in
-      const { session, isNewAccount } = await signinHandler(adapter, sessionToken, { email }, provider)
+      const { session, isNewAccount } = await callbackHandler(adapter, sessionToken, { email }, provider)
 
       // Save Session ID in cookie (HTTP Only cookie)
       cookie.set(res, cookies.sessionToken.name, session.sessionToken, cookies.sessionToken.options)
@@ -107,7 +106,7 @@ export default async (req, res, options, done) => {
       if (error.name === 'CreateUserError') {
         res.status(302).setHeader('Location', `${urlPrefix}/error?error=EmailCreateAccount`)
       } else {
-        res.status(302).setHeader('Location', `${urlPrefix}/error?error=Signin`)
+        res.status(302).setHeader('Location', `${urlPrefix}/error?error=Callback`)
         console.error('EMAIL_CALLBACK_ERROR', error)
       }
       res.end()

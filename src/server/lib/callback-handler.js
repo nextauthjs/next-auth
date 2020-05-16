@@ -1,3 +1,16 @@
+// This function handles the complex flow of signing users in, and either creating,
+// linking (or not linking) accounts depending on if the user is currently logged
+// in, if they have account already and the authentication mechanism they are using.
+//
+// It prevents insecure behaviour, such as linking oAuth accounts unless a user is
+// signed in and authenticated with an existing valid account.
+//
+// All verification (e.g. oAuth flows or email address verificaiton flows) are
+// done prior to this handler being called to avoid additonal complexity in this
+// handler.
+//
+import { AccountNotLinkedError } from '../../lib/errors'
+
 export default async (adapter, sessionToken, profile, providerAccount) => {
   try {
     // Input validation
@@ -8,22 +21,17 @@ export default async (adapter, sessionToken, profile, providerAccount) => {
     // Get adapter - async as dependant on DB connection being ready
     const _adapter = await adapter.getAdapter()
 
-    /* eslint-disable no-unused-vars */
     const {
       createUser,
-      updateUser,
       getUser,
       getUserByProviderAccountId,
       getUserByEmail,
-      getUserByCredentials,
-      removeUser,
+      // getUserByCredentials, // @TODO Support 'credentials' auth flow
       linkAccount,
-      unlinkAccount,
       createSession,
       getSession,
       deleteSession
     } = _adapter
-    /* eslint-enable no-unused-vars */
 
     let session = sessionToken ? await getSession(sessionToken) : null
     const isSignedIn = !!session
@@ -32,13 +40,8 @@ export default async (adapter, sessionToken, profile, providerAccount) => {
 
     // @TODO replace all Error objects returned with custom error types
 
-    // @TODO Support 'credentials' auth flow
-
     if (providerAccount.type === 'email') {
-      // @TODO Ensure verification of email address before this portion of the flow can be triggered
-
-      // If signing in with an email address, check if an account with the same
-      // email address exists already.
+      // If signing in with an email, check if an account with the same email address exists already
       const userByEmail = await getUserByEmail(profile.email)
       if (userByEmail) {
         if (isSignedIn) {
@@ -56,11 +59,11 @@ export default async (adapter, sessionToken, profile, providerAccount) => {
             // already logged in with a different account.
             await deleteSession(sessionToken)
 
-            // If signed in with a different acccount, effectively switching accounts.
+            // If signed in with a different acccount, effectively switching accounts
             user = userByEmail
           }
         } else {
-          // If user not signed in, then we want to sign them in with this one.
+          // If user not signed in, then we want to sign them in with this one
           user = userByEmail
         }
       } else {
@@ -82,7 +85,7 @@ export default async (adapter, sessionToken, profile, providerAccount) => {
       const userByProviderAccountId = await getUserByProviderAccountId(providerAccount.provider, providerAccount.id)
       if (userByProviderAccountId) {
         if (isSignedIn) {
-          // If the user is already signed in with this account, we don't need to do anything.
+          // If the user is already signed in with this account, we don't need to do anything
           if (userByProviderAccountId.id === user.id) {
             return {
               session,
@@ -93,7 +96,7 @@ export default async (adapter, sessionToken, profile, providerAccount) => {
             // If the user is currently signed in, but the new account they are signing in
             // with is already associated with another account, then we cannot link them
             // and need to return an error.
-            throw new Error('This account is already associated with another user')
+            throw new AccountNotLinkedError()
           }
         } else {
           // If there is no active session, but the account being signed in with is already
@@ -119,7 +122,7 @@ export default async (adapter, sessionToken, profile, providerAccount) => {
             providerAccount.accessTokenExpires
           )
 
-          // As they are already signed in, we don't need to do anything after linking them.
+          // As they are already signed in, we don't need to do anything after linking them
           return {
             session,
             user,
@@ -153,7 +156,7 @@ export default async (adapter, sessionToken, profile, providerAccount) => {
           // We don't want to have two accounts with the same email address, and we don't
           // want to link them in case it's not safe to do so, so instead we prompt the user
           // to sign in via email to verify their identity and then link the accounts.
-          throw new Error('Another user account associated with the same email address already exists')
+          throw new AccountNotLinkedError()
         } else {
           // If the current user is not logged in and the profile isn't linked to any user
           // accounts (by email or provider account id)...
