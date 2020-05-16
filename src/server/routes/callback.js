@@ -66,7 +66,9 @@ export default async (req, res, options, done) => {
     })
   } else if (type === 'email') {
     try {
-      const { email, token } = req.query
+      const token = req.query.token
+      const email = req.query.email ? req.query.email.toLowerCase() : null
+
       // Verify email and token match email verification record in database
       const invite = await getEmailVerification(email, token, secret, provider)
       if (!invite) {
