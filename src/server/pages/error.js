@@ -11,7 +11,9 @@ export default ({ site, error, urlPrefix }) => {
     case 'Signin':
     case 'oAuthSignin':
     case 'oAuthCallback':
+    case 'oAuthCreateAccount':
     case 'EmailCreateAccount':
+    case 'Callback':
       heading = <h1>Sign in failed</h1>
       message =
         <div>
@@ -22,7 +24,7 @@ export default ({ site, error, urlPrefix }) => {
           <p><a className='button' href={signinPageUrl}>Sign in</a></p>
         </div>
       break
-    case 'oAuthCreateAccount':
+    case 'oAuthAccountNotLinked':
       heading = <h1>Sign in with another account</h1>
       message =
         <div>

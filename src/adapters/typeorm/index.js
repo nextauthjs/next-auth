@@ -113,6 +113,16 @@ const Adapter = (config, options) => {
       }
     }
 
+    async function getUserByEmail (email) {
+      debug('Get user by email address', email)
+      try {
+        return connection.getRepository(User).findOne({ email })
+      } catch (error) {
+        console.error('GET_USER_BY_EMAIL_ERROR', error)
+        return Promise.reject(new Error('GET_USER_BY_EMAIL_ERROR', error))
+      }
+    }
+
     async function getUserByProviderAccountId (providerId, providerAccountId) {
       debug('Get user by provider account ID', providerId, providerAccountId)
       try {
@@ -120,15 +130,9 @@ const Adapter = (config, options) => {
         if (!account) { return null }
         return connection.getRepository(User).findOne({ id: account.userId })
       } catch (error) {
-        console.error('GET_USER_BY_POVIDER_ACCOUNT_ID_ERROR', error)
-        return Promise.reject(new Error('GET_USER_BY_POVIDER_ACCOUNT_ID_ERROR', error))
+        console.error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error)
+        return Promise.reject(new Error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error))
       }
-    }
-
-    async function getUserByEmail (email) {
-      debug('Get user by email address', email)
-      // @TODO Get user from DB
-      return false
     }
 
     async function getUserByCredentials (credentials) {
@@ -251,8 +255,8 @@ const Adapter = (config, options) => {
       createUser,
       updateUser,
       getUser,
-      getUserByProviderAccountId,
       getUserByEmail,
+      getUserByProviderAccountId,
       getUserByCredentials,
       deleteUser,
       linkAccount,
