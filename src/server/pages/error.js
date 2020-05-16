@@ -9,23 +9,26 @@ export default ({ site, error, urlPrefix }) => {
 
   switch (error) {
     case 'Signin':
+    case 'oAuthSignin':
+    case 'oAuthCallback':
+    case 'EmailCreateAccount':
       heading = <h1>Sign in failed</h1>
       message =
         <div>
           <div className='message'>
             <p>Something went wrong trying to sign in.</p>
-            <p>You can try signing in again with a different account.</p>
+            <p>Try signing in with a different account.</p>
           </div>
           <p><a className='button' href={signinPageUrl}>Sign in</a></p>
         </div>
       break
-    case 'oAuthSignin':
+    case 'oAuthCreateAccount':
       heading = <h1>Sign in with another account</h1>
       message =
         <div>
           <div className='message'>
             <p>You might have signed in before with a different account.</p>
-            <p>You need to sign in the same account you used originally to confirm your identity.</p>
+            <p>Sign in the same account you used originally to confirm your identity.</p>
           </div>
           <p><a className='button' href={signinPageUrl}>Sign in</a></p>
         </div>

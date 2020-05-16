@@ -1,7 +1,6 @@
 import 'reflect-metadata'
 import { createConnection, getConnection, getManager, EntitySchema } from 'typeorm'
 import { createHash } from 'crypto'
-import nodemailer from 'nodemailer'
 
 import { CreateUserError } from '../../lib/errors'
 import Models from './models'
@@ -201,8 +200,7 @@ const Adapter = (config, options) => {
       debug('Create verification request', email)
       try {
         const { site } = options
-        const { callbackUrl } = provider
-        const { server, from, subject, text, html, unsubscribe } = provider
+        const { verificationCallback } = provider
 
         // Store hashed token (using secret as salt) so that tokens cannot be exploited
         // even if the contents of the database is compromised.
@@ -213,25 +211,9 @@ const Adapter = (config, options) => {
         const newEmailVerification = new EmailVerification(email, hashedToken)
         const emailVerification = await getManager().save(newEmailVerification)
 
-        // Send email
-        await new Promise((resolve, reject) => {
-          nodemailer
-            .createTransport(server)
-            .sendMail({
-              to: email,
-              from,
-              subject: subject({ site }) || 'Sign in',
-              text: text ? text({ email, url, token, site, callbackUrl, unsubscribe }) : url,
-              html: html ? html({ email, url, token, site, callbackUrl, unsubscribe }) : `<p><a href="${url}">Sign in</a></p>`
-            }, (error) => {
-              if (error) {
-                console.error('SEND_EMAIL_VERIFICATION_ERROR', email, error)
-                return reject(new Error('SEND_EMAIL_VERIFICATION_ERROR', error))
-              }
-              debug('Sent verification email', email, url)
-              resolve()
-            })
-        })
+        // With the verificationCallback on a provider, you can send an email, or queue
+        // an email to be sent, or perform some other action (e.g. send a text message)
+        await verificationCallback({ recipient: email, url, token, site, provider })
 
         return emailVerification
       } catch (error) {
@@ -246,9 +228,7 @@ const Adapter = (config, options) => {
         // Hash token provided with secret before trying to match it with datbase
         // @TODO Use bcrypt function here instead of simple salted hash
         const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
-        const emailVerification = await connection.getRepository(EmailVerification).findOne({ email, token: hashedToken })
-        debug('GET_EMAIL_VERIFICATION', emailVerification)
-        return emailVerification
+        return connection.getRepository(EmailVerification).findOne({ email, token: hashedToken })
       } catch (error) {
         console.error('GET_EMAIL_VERIFICATION_ERROR', error)
         return Promise.reject(new Error('GET_EMAIL_VERIFICATION_ERROR', error))

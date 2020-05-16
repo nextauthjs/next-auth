@@ -1,3 +1,5 @@
+import nodemailer from 'nodemailer'
+
 export default (options) => {
   return {
     id: 'email',
@@ -12,27 +14,43 @@ export default (options) => {
       }
     },
     from: 'NextAuth <no-reply@example.com>',
-    subject,
-    html,
-    text,
-    // unsubscribe: ({ email }) => 'http://example.com/unsubscribe',
-    async: false,
+    verificationCallback,
     ...options
   }
 }
 
-// Email Subject line
-const subject = ({ site }) => `Sign in to ${site.replace(/^https?:\/\//, '')}`
+const verificationCallback = ({ recipient, url, token, site, provider }) => {
+  return new Promise((resolve, reject) => {
+    const siteName = site.replace(/^https?:\/\//, '')
+    const { server, from } = provider
+
+    nodemailer
+      .createTransport(server)
+      .sendMail({
+        to: recipient,
+        from,
+        subject: `Sign in to ${siteName}`,
+        text: text({ url, siteName }),
+        html: html({ url, siteName })
+      }, (error) => {
+        if (error) {
+          console.error('SEND_EMAIL_VERIFICATION_ERROR', recipient, error)
+          return reject(new Error('SEND_EMAIL_VERIFICATION_ERROR', error))
+        }
+        return resolve()
+      })
+  })
+}
 
 // Email HTML body
-const html = ({ email, url, token, site, unsubscribe, callbackUrl }) => {
+const html = ({ url, siteName }) => {
   const buttonBackgroundColor = '#444444'
   const buttonTextColor = '#ffffff'
   return `
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td align="center" style="padding: 8px 0; font-size: 22px; font-family: Helvetica, Arial, sans-serif; color: #888888;">
-       ${site.replace(/^https?:\/\//, '')}
+       ${siteName}
     </td>
   </tr>
   <tr>
@@ -44,19 +62,9 @@ const html = ({ email, url, token, site, unsubscribe, callbackUrl }) => {
       </table>
     </td>
   </tr>
-  <tr>
-    <td align="center" style="padding: 8px 0; font-size: 12px; font-family: Helvetica, Arial, sans-serif; color: #888888 !important;">
-      ${unsubscribe ? `<a href="${unsubscribe(email)}">Unsubscribe</a>` : ''}
-    </td>
-  </tr>
 </table>
 `
 }
 
 // Email Text body (fallback for email clients that don't render HTML, e.g. feature phones)
-const text = ({ email, url, token, site, callbackUrl, unsubscribe }) => `
-Sign in:\n
-${url}
-\n\n
-${unsubscribe ? `Unsubscribe:\n${unsubscribe({ email })}\n\n` : ''}
-`
+const text = ({ url, siteName }) => `Sign in to ${siteName}\n${url}\n\n`
