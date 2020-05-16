@@ -19,6 +19,9 @@ export default async (req, res, options, done) => {
       // @TODO Check error
       if (error) {
         console.error('OAUTH_CALLBACK_ERROR', error)
+        res.status(302).setHeader('Location', `${urlPrefix}/error?error=oAuthCallback`)
+        res.end()
+        return done()
       }
 
       const { profile, account } = response
@@ -43,7 +46,7 @@ export default async (req, res, options, done) => {
           // the user already has an account with the same email, but signed in with another provider.
           // This is almost certainly the case, but this COULD happen for other reasons, such as
           // a problem with the database or custom adapter code.
-          res.status(302).setHeader('Location', `${urlPrefix}/error?error=oAuthSignin`)
+          res.status(302).setHeader('Location', `${urlPrefix}/error?error=oAuthCreateAccount`)
         } else {
           res.status(302).setHeader('Location', `${urlPrefix}/error?error=Signin`)
           console.error('OAUTH_CALLBACK_ERROR', error)
@@ -102,11 +105,7 @@ export default async (req, res, options, done) => {
       return done()
     } catch (error) {
       if (error.name === 'CreateUserError') {
-        // @TODO Try to look up user by by email address and confirm it occured because they
-        // the user already has an account with the same email, but signed in with another provider.
-        // This is almost certainly the case, but this COULD happen for other reasons, such as
-        // a problem with the database or custom adapter code.
-        res.status(302).setHeader('Location', `${urlPrefix}/error?error=EmailSignin`)
+        res.status(302).setHeader('Location', `${urlPrefix}/error?error=EmailCreateAccount`)
       } else {
         res.status(302).setHeader('Location', `${urlPrefix}/error?error=Signin`)
         console.error('EMAIL_CALLBACK_ERROR', error)
