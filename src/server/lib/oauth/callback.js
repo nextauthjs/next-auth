@@ -113,7 +113,7 @@ function _getProfile (error, profileData, accessToken, refreshToken, provider) {
   return ({
     profile: {
       name: profile.name,
-      email: profile.email,
+      email: profile.email.toLowerCase(),
       image: profile.image
     },
     account: {
