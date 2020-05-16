@@ -11,9 +11,6 @@ export default async (req, res, options, done) => {
   const _adapter = await adapter.getAdapter()
   const { getEmailVerification, deleteEmailVerification } = _adapter
 
-  // @TODO Allow error URL to be supplied as an option
-  const errorPageUrl = `${urlPrefix}/error`
-
   // Get session ID (if set)
   const sessionToken = req.cookies[cookies.sessionToken.name]
 
@@ -46,9 +43,9 @@ export default async (req, res, options, done) => {
           // the user already has an account with the same email, but signed in with another provider.
           // This is almost certainly the case, but this COULD happen for other reasons, such as
           // a problem with the database or custom adapter code.
-          res.status(302).setHeader('Location', `${errorPageUrl}?error=Signin`)
+          res.status(302).setHeader('Location', `${urlPrefix}/error?error=Signin`)
         } else {
-          res.status(302).setHeader('Location', `${errorPageUrl}?error=Unknown`)
+          res.status(302).setHeader('Location', `${urlPrefix}/error?error=Unknown`)
           console.error('OAUTH_CALLBACK_ERROR', error)
         }
         res.end()
@@ -71,7 +68,7 @@ export default async (req, res, options, done) => {
       // Verify email and token match email verification record in database
       const invite = await getEmailVerification(email, token, secret, provider)
       if (!invite) {
-        res.status(302).setHeader('Location', `${errorPageUrl}?error=Verification`)
+        res.status(302).setHeader('Location', `${urlPrefix}/error?error=Verification`)
         res.end()
         return done()
       }
@@ -109,9 +106,9 @@ export default async (req, res, options, done) => {
         // the user already has an account with the same email, but signed in with another provider.
         // This is almost certainly the case, but this COULD happen for other reasons, such as
         // a problem with the database or custom adapter code.
-        res.status(302).setHeader('Location', `${errorPageUrl}?error=Signin`)
+        res.status(302).setHeader('Location', `${urlPrefix}/error?error=Signin`)
       } else {
-        res.status(302).setHeader('Location', `${errorPageUrl}?error=Unknown`)
+        res.status(302).setHeader('Location', `${urlPrefix}/error?error=Unknown`)
         console.error('EMAIL_CALLBACK_ERROR', error)
       }
       res.end()
