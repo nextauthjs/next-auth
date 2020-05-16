@@ -61,7 +61,6 @@ export default async (req, res, options, done) => {
     }
 
     res.status(302).setHeader('Location', `${urlPrefix}/check-email`)
-    res.end()
 
     if (!Object.prototype.hasOwnProperty.call(provider, 'async') || provider.async === true) {
       try {
@@ -73,6 +72,7 @@ export default async (req, res, options, done) => {
     }
 
     // When email sent, we are actually done.
+    res.end()
     return done()
   } else {
     // If provider not supported, redirect to sign in page
