@@ -1,4 +1,4 @@
-import { oAuthClient, oAuth2Client } from './index'
+import { oAuthClient, oAuth2Client } from '../oauth/index'
 import crypto from 'crypto'
 
 export default (provider, callback) => {
