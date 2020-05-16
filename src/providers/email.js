@@ -5,6 +5,9 @@ export default (options) => {
     id: 'email',
     type: 'email',
     name: 'Email',
+    // In this example, server can be an SMTP connection string (eg 'smtp://user:pass@smtp.example.com:25')
+    // or an a configuration object - nodemailer supports both. It doesn't matter what it as far as NextAuth
+    // is concerend, it's avalible in the verificationCallback() as 'provider.server'.
     server: {
       host: 'localhost',
       port: 25,
