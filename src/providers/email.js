@@ -15,8 +15,8 @@ export default (options) => {
     subject,
     html,
     text,
-     // unsubscribe: ({ email }) => 'http://example.com/unsubscribe',
-     async: false,
+    // unsubscribe: ({ email }) => 'http://example.com/unsubscribe',
+    async: false,
     ...options
   }
 }
