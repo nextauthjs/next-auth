@@ -3,16 +3,16 @@
 ## Supported providers
 
 | Name                 | API docs                                                          | App configuration                           | Notes               
-| :------------------- | :----------------------------------------------------- | :----------------------------------------   |:---------------------------- 
-| `Discord`            |  https://discord.com/developers/docs/topics/oauth2							| https://discord.com/developers/applications |
-| `Email`              |  https://nodemailer.com/smtp/well-known                | 																				    |
-| `Github`       	     |  https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/                         | https://github.com/settings/apps/           | Allows only one callback URL       
-| `Google`             |  https://developers.google.com/identity                |                                             |
-| `Google OAuth2`      |  https://developers.google.com/identity                |                                             |
-| `Mixer`              |  https://dev.mixer.com/reference/oauth                                 |   https://mixer.com/lab/oauth                                          |
-| `Slack`              |  https://api.slack.com                                 |  https://api.slack.com/apps                                           |
-| `Twitch`             |  https://dev.twitch.tv/docs/authentication                                 | https://dev.twitch.tv/console/apps          |                	
-| `Twitter`            |  https://developer.twitter.com                         | https://developer.twitter.com/en/apps       |
+| :------------------- | :-------------------------------------------------------| :------------------------------------------|:---------------------------- 
+| `Discord`            |  https://discord.com/developers/docs/topics/oauth2			 | https://discord.com/developers/applications|
+| `Email`              |  https://nodemailer.com/smtp/well-known                 | 																				    |
+| `Github`       	     |  https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/                       | https://github.com/settings/apps/    | Allows only one callback URL       
+| `Google`             |  https://developers.google.com/identity                 | https://console.developers.google.com/apis/credentials                                            |
+| `Google OAuth2`      |  https://developers.google.com/identity/protocols/oauth2| https://console.developers.google.com/apis/credentials                           |
+| `Mixer`              |  https://dev.mixer.com/reference/oauth                  | https://mixer.com/lab/oauth               |
+| `Slack`              |  https://api.slack.com                                  | https://api.slack.com/apps                 |
+| `Twitch`             |  https://dev.twitch.tv/docs/authentication              | https://dev.twitch.tv/console/apps          |                	
+| `Twitter`            |  https://developer.twitter.com                          | https://developer.twitter.com/en/apps       |
 
 ## OAuth Configuration
 
@@ -137,7 +137,6 @@ You can also open a PR for your custom configuration so we can support the provi
 	 EMAIL_SERVER_PASSWORD=password
 	 EMAIL_SERVER_HOST=smtp.example.com
 	 EMAIL_SERVER_PORT=587
-
 	 ```
 	 Now you can add the provider settings to the NextAuth options object.
 	 ```
@@ -157,7 +156,4 @@ You can also open a PR for your custom configuration so we can support the provi
 	 ```
 3. You can sign in at `[origin]/api/auth/signin`. This is an unbranded auto-generated page with all the configured providers. If you want to create a custom sign in page you can use `[origin]/api/auth/signin/email` which connects directly to the provider.
 	
-### Custom email provider
-
-You can add a custom email provider by creating a custom JSON object.
 
