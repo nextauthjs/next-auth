@@ -14,12 +14,13 @@ export default async (req, res, options, done) => {
       // Only expose a limited subset of information to the client as needed
       // for presentation purposes (e.g. "you are logged in as…").
       //
-      // @TODO Should support async seralizeUser({ user, function }) style
+      // @TODO Should support `async seralizeUser({ user, function })` style
       // middleware function to allow response to be customized.
       response = {
         user: {
           name: user.name,
-          email: user.email
+          email: user.email,
+          image: user.image
         },
         accessToken: session.accessToken
       }
