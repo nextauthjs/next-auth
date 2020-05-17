@@ -54,8 +54,7 @@ module.exports = {
         docs: {
           routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl:
-            'https://github.com/iaincollins/next-auth/',
+          editUrl: 'https://github.com/iaincollins/next-auth/tree/master/www',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
