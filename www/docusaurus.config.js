@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'next-auth',
+  title: 'NextAuth',
   tagline: 'Serverless Authentication, written from scratch for Next.js',
   url: 'https://next-auth.js.org',
   baseUrl: '/',
@@ -23,6 +23,11 @@ module.exports = {
         {
           href: 'https://github.com/iaincollins/next-auth',
           label: 'GitHub',
+          position: 'right',
+        },
+        {
+          href: 'https://npmjs.com/package/next-auth',
+          label: 'NPM',
           position: 'right',
         },
       ],
