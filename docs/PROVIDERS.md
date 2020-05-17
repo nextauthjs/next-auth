@@ -1,3 +1,8 @@
+---
+id: providers
+title: Providers
+---
+
 # Providers
 
 ## Supported providers

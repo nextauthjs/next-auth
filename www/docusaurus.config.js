@@ -10,7 +10,7 @@ module.exports = {
     navbar: {
       title: 'next-auth',
       logo: {
-        alt: 'My Site Logo',
+        alt: 'NextAuth Logo',
         src: 'img/nextjs-logo.svg',
       },
       links: [
@@ -39,7 +39,7 @@ module.exports = {
             },
             {
               label: 'Migrating from v1',
-              to: '/upgrade',
+              to: '/upgrading',
             },
           ],
         },
@@ -61,10 +61,11 @@ module.exports = {
       '@docusaurus/preset-classic',
       {
         docs: {
+          path: '../docs',
           routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl:
-            'https://github.com/iaincollins/next-auth/docs/edit/master/website/',
+            'https://github.com/iaincollins/next-auth/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),

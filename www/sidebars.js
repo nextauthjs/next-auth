@@ -2,9 +2,10 @@ module.exports = {
   sidebar: {
     'v2': [
       'getting-started', 
+      'providers',
       'client', 
       'auth',
-      'upgrade'
+      'upgrade',
     ],
     'v1': [
       'v1/getting-started-v1', 
