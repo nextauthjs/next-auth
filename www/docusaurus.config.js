@@ -1,6 +1,6 @@
 module.exports = {
-  title: 'next-auth',
-  tagline: 'Serverless Authentication, written from scratch for modern Next.js!',
+  title: 'NextAuth',
+  tagline: 'Serverless Authentication, written from scratch for Next.js',
   url: 'https://next-auth.js.org',
   baseUrl: '/',
   favicon: 'img/favicon.ico',
@@ -8,7 +8,7 @@ module.exports = {
   projectName: 'next-auth',
   themeConfig: {
     navbar: {
-      title: 'next-auth',
+      title: 'NextAuth',
       logo: {
         alt: 'NextAuth Logo',
         src: 'img/nextjs-logo.svg',
@@ -23,6 +23,11 @@ module.exports = {
         {
           href: 'https://github.com/iaincollins/next-auth',
           label: 'GitHub',
+          position: 'right',
+        },
+        {
+          href: 'https://npmjs.com/package/next-auth',
+          label: 'NPM',
           position: 'right',
         },
       ],
@@ -43,15 +48,6 @@ module.exports = {
             },
           ],
         },
-        /* { */
-        /*   title: 'More', */
-        /*   items: [ */
-        /*     { */
-        /*       label: 'GitHub', */
-        /*       href: 'https://github.com/facebook/docusaurus', */
-        /*     }, */
-        /*   ], */
-        /* }, */
       ],
       copyright: `Built with Docusaurus 🦖`,
     },
@@ -63,8 +59,7 @@ module.exports = {
         docs: {
           routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl:
-            'https://github.com/iaincollins/next-auth/',
+          editUrl: 'https://github.com/iaincollins/next-auth/tree/master/www',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),

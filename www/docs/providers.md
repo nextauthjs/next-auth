@@ -44,7 +44,7 @@ Most OAuth providers only need a client ID and a client secret to work but some 
 	```
 
 4. Now you can add the provider settings to the NextAuth options object. You can add as many OAuth providers as you like. 
-	```
+	```js title="/pages/api/auth/[...slug].js"
 	...
 	providers: [
 		Providers.Twitter({
@@ -89,7 +89,7 @@ It's also possible to add an OAuth provider that isn't supported by NextAuth by 
 ```
 You can replace all the options in this JSON object with the ones from your custom provider and add it to the providers list.
 
-```
+```js title="/pages/api/auth/[...slug].js"
 ...
 providers: [
 	Providers.Twitter({
@@ -120,13 +120,13 @@ You can also open a PR for your custom configuration so we can support the provi
     2.1. Connection string:
 		
    Create an .env file to the root of your project and the connection string and email address.
-	 ```
+	 ```js title=".env"
 	 EMAIL_FROM=noreply@example.com
 	 EMAIL_SERVER=smtp://username:password@smtp.example.com:587
 	 ```
 	 Now you can add the provider settings to the NextAuth options object.
 
-	 ```
+  ```js title="/pages/api/auth/[...slug].js"
 	 providers: [
 			Providers.Email({
 				server: process.env.EMAIL_SERVER, 
@@ -138,7 +138,7 @@ You can also open a PR for your custom configuration so we can support the provi
     2.2. Configuration object:
 		
    Create an .env file to the root of your project and the configuration object options and email address
-	 ```
+	 ```js title=".env"
 	 EMAIL_FROM=noreply@example.com
 	 EMAIL_SERVER_USER=username
 	 EMAIL_SERVER_PASSWORD=password
@@ -146,7 +146,7 @@ You can also open a PR for your custom configuration so we can support the provi
 	 EMAIL_SERVER_PORT=587
 	 ```
 	 Now you can add the provider settings to the NextAuth options object.
-	 ```
+  ```js title="/pages/api/auth/[...slug].js"
 	 providers: [
 			Providers.Email({
 				server: {
