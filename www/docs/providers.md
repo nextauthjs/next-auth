@@ -7,11 +7,12 @@ title: Providers
 
 ## Supported providers
 
-| Name                 | API docs                                                          | App configuration                           | Notes               
-| :------------------- | :-------------------------------------------------------| :------------------------------------------|:---------------------------- 
+| Name                 | API docs                                                          | App configuration                | Additional options                                       |  Notes
+| :------------------- | :-------------------------------------------------------| :------------------------------------------|:----------------------------------------------|:-------------------------- 
+| `Auth0`              |  https://discord.com/developers/docs/topics/oauth2			 | https://discord.com/developers/applications| accessTokenUrl, authorizationUrl, profileUrl  | doesn't need clientSecret
 | `Discord`            |  https://discord.com/developers/docs/topics/oauth2			 | https://discord.com/developers/applications|
 | `Email`              |  https://nodemailer.com/smtp/well-known                 | 																				    |
-| `Github`       	     |  https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/                       | https://github.com/settings/apps/    | Allows only one callback URL       
+| `Github`       	     |  https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/                       | https://github.com/settings/apps/    |  |allows only one callback URL       
 | `Google`             |  https://developers.google.com/identity                 | https://console.developers.google.com/apis/credentials                                            |
 | `Google OAuth2`      |  https://developers.google.com/identity/protocols/oauth2| https://console.developers.google.com/apis/credentials                           |
 | `Mixer`              |  https://dev.mixer.com/reference/oauth                  | https://mixer.com/lab/oauth               |
@@ -21,7 +22,8 @@ title: Providers
 
 ## OAuth Configuration
 
-NextAuth supports OAuth 1.0, 1.0A and 2.0 providers.
+NextAuth supports OAuth 1.0, 1.0A and 2.0 providers.  
+Most OAuth providers only need a client ID and a client secret to work but some might need some additional or even less options. You can check these in the list of supported providers. 
 
 ### Basics
 
