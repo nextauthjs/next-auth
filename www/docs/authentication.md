@@ -22,8 +22,9 @@ These guides are approximate as exactly how to configure oAuth varies for each p
 
 Due to the volume of requests I'm not usually able to help with specific problems but pull requests with improved or extended instructions are very welcome.
 
-Tip: Twitter's oAuth implementation is the most permissive and easiest to configure, you may want to start with it. If you run into problems, you might 
-want to check email sign-in is working as baseline.
+:::tip oAuth
+Twitter's oAuth implementation is the most permissive and easiest to configure, you may want to start with it. If you run into problems, you might want to check email sign-in is working as baseline.
+:::
 
 Please note that Facebook oAuth cannot be used to sign in to 'localhost' and that if you want to sign in to `localhost` with Google+ you must specifically add something like `http://localhost:3000/auth/oauth/google/callback` as a authorized redirect URI for your application.
 

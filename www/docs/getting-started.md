@@ -40,7 +40,7 @@ There are predefined models for Users and Sessions, which you can use (or extend
 
 To add `next-auth` to a project, create a file to handle authentication requests at `pages/api/auth/[...slug.js]`:
 
-```javascript
+```javascript title="/page/api/auth/[...slug.js]"
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 import Adapters from 'next-auth/adapters'
@@ -77,13 +77,15 @@ export default (req, res) => NextAuth(req, res, options)
 
 All requests to `pages/api/auth/*` (signin, callback, signout, etc) will now be automatically handed by NextAuth.
 
-*Note: Your project will need an NPM module suitable for your database installed (e.g. `npm i sqlite3`).*
+:::note
+Your project will need an NPM module suitable for your database installed (e.g. `npm i sqlite3`).
+:::
 
 ### Client 
 
 You can now use the `useSession()` hook to see if a user is signed in!
 
-```javascript
+```jsx {4}
 import NextAuth from 'next-auth'
 
 export default () => {
@@ -97,15 +99,17 @@ export default () => {
 }
 ```
 
-*This is all the code you need to add support for signing in to a project!*
+> This is all the code you need to add support for signing in to a project!
 
-#### Adding to _app.js
+### Adding to _app.js
 
 While calling `useSession()` like this will work perfectly well, it will do network request to get the session in each component you use it in. To reduce network load and improve performance, you can wrap your component tree in our `Provider`, which will make `useSession()` use [React Context](https://reactjs.org/docs/context.html) instead.
 
-You can use this `Provider` on specific pages or add it to all by adding to your `pages/_app.js` ([Next.js docs for _app.js](https://nextjs.org/docs/advanced-features/custom-app)):
+:::tip
+You can use this `Provider` on specific pages or add it to all by adding to your `pages/_app.js`. See [Next.js docs](https://nextjs.org/docs/advanced-features/custom-app) for custom `_app.js`
+:::
 
-```javascript
+```jsx title="/pages/_app.js"
 import NextAuth from 'next-auth'
 
 export default ({ Component, pageProps }) => {
@@ -117,11 +121,11 @@ export default ({ Component, pageProps }) => {
 }
 ```
 
-#### Server Side Rendering
+### Server Side Rendering
 
 Authentication when Server Side Rendering is also supported with `session()`, which can be called client or server side:
 
-```javascript
+```jsx title="/pages/index.js"
 import NextAuth from 'next-auth/client'
 
 export default ({ session }) => <>
@@ -145,7 +149,11 @@ You can call `NextAuth.session()` function in client side JavaScript, without ne
 
 Configuration options are passed to NextAuth when initalizing it (in your `/api/` route).
 
-The only things you will probably *need* to configure are your site name (e.g. 'http://www.example.com'), which should be set explicitly for security reasons, a list of authentication services (Twitter, Facebook, Google, etc) and a database adapter.
+The only things you will *need* to configure are the following:
+
+- Your site name (e.g. 'http://www.example.com'), which should be set explicitly for security reasons
+- A list of authentication services (Twitter, Facebook, Google, etc)
+- A database adapter
 
 An "*Adapter*" in NextAuth is the thing that connects your application to whatever database / backend system you want to use to store data for user accounts, sessions, etc.
 
@@ -162,14 +170,16 @@ This is an example of how to use an SQLite in memory database, which can be usef
 
 e.g.
 
-```javascript
+```js title="/pages/api/auth/[...slug.js]"
 adapter: Adapters.Default({
   type: 'sqlite',
   database: ':memory:'
 }),
 ```
 
+:::tip
 You can pass database credentials securely, using environment variables for options. See the [TypeORM configuration documentation](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md) for more details about supported options.
+:::
 
 ### Supported Databases
 
@@ -193,14 +203,16 @@ You can customize, extend or replace the models by passing additional options to
 
 If you are using a database that is not supported out of the box - or if you want to use NextAuth with an existing database (or have a more complex setup, with accounts and sessions spread across different systems - you can pass your own methods to be called for user and session creation / deletion (etc).
 
-**Important! Supported databases and models/scehams subject to change before release.**
+:::caution
+**Supported databases and models/schemas subject to change before release**
+:::
 
-## Customization
+## Page Customization
 
 NextAuth automatically creates simple, unbranded authentication pages for handling Sign in, Email Verification, callbacks, etc.
 
 The options displayed are generated based on the configuration supplied.
 
-You can create custom authentication pages if you would like to customize the experience.
+You can create custom authentication pages if you would like to customize the experience. More details on how to accomplish this are coming soon!
 
 *This documentation will be updated closer to release.*

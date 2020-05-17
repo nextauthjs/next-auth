@@ -89,7 +89,7 @@ Makes GET request to `/auth/providers`.
 }>
 <TabItem value="class">
 
-```javascript
+```jsx {5-9}
 import React from 'react'
 import { NextAuth } from 'next-auth/client'
 
@@ -120,7 +120,7 @@ export default class extends React.Component {
 </TabItem>
 <TabItem value="function">
 
-```javascript
+```jsx {2,14-15}
 import React from 'react'
 import { NextAuth } from 'next-auth/client'
 
