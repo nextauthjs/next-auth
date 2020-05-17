@@ -1,6 +1,6 @@
 module.exports = {
   title: 'next-auth',
-  tagline: 'Serverless Authentication, written from scratch for modern Next.js!',
+  tagline: 'Serverless Authentication, written from scratch for Next.js',
   url: 'https://next-auth.js.org',
   baseUrl: '/',
   favicon: 'img/favicon.ico',
@@ -8,7 +8,7 @@ module.exports = {
   projectName: 'next-auth',
   themeConfig: {
     navbar: {
-      title: 'next-auth',
+      title: 'NextAuth',
       logo: {
         alt: 'NextAuth Logo',
         src: 'img/nextjs-logo.svg',
@@ -43,15 +43,6 @@ module.exports = {
             },
           ],
         },
-        /* { */
-        /*   title: 'More', */
-        /*   items: [ */
-        /*     { */
-        /*       label: 'GitHub', */
-        /*       href: 'https://github.com/facebook/docusaurus', */
-        /*     }, */
-        /*   ], */
-        /* }, */
       ],
       copyright: `Built with Docusaurus 🦖`,
     },
