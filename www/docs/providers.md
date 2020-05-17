@@ -9,7 +9,7 @@ title: Providers
 
 | Name                 | API docs                                                          | App configuration                | Additional options                                       |  Notes
 | :------------------- | :-------------------------------------------------------| :------------------------------------------|:----------------------------------------------|:-------------------------- 
-| `Auth0`              |  https://discord.com/developers/docs/topics/oauth2			 | https://discord.com/developers/applications| accessTokenUrl, authorizationUrl, profileUrl  | doesn't need clientSecret
+| `Auth0`              |  https://auth0.com/docs/api/authentication#authorize-application			 | https://manage.auth0.com/dashboard| accessTokenUrl, authorizationUrl, profileUrl  | doesn't need clientSecret
 | `Discord`            |  https://discord.com/developers/docs/topics/oauth2			 | https://discord.com/developers/applications|
 | `Email`              |  https://nodemailer.com/smtp/well-known                 | 																				    |
 | `Github`       	     |  https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/                       | https://github.com/settings/apps/    |  |allows only one callback URL       
