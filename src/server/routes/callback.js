@@ -1,5 +1,5 @@
 // Handle callbacks from login services
-import { oAuthCallback } from '../lib/oauth/callback'
+import oAuthCallback from '../lib/oauth/callback'
 import callbackHandler from '../lib/callback-handler'
 import cookie from '../lib/cookie'
 
@@ -14,7 +14,7 @@ export default async (req, res, options, done) => {
   // Get session ID (if set)
   const sessionToken = req.cookies[cookies.sessionToken.name]
 
-  if (type === 'oauth' || type === 'oauth2') {
+  if (type === 'oauth') {
     oAuthCallback(req, provider, async (error, response) => {
       // @TODO Check error
       if (error) {

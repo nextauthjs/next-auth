@@ -1,20 +1,13 @@
-import { oAuthClient, oAuth2Client } from './index' // eslint-disable-line no-unused-vars
+import oAuthClient from './client'
 import querystring from 'querystring'
 
-// @TODO Refactor _getOAuthAccessToken() and _get()
-// These methods have been forked from `node-oauth` to fix bugs.
-// It may make sense for NextAuth to have all it's own methods
-// for both oAuth 1.x and 2.x requests.
+// @TODO Refactor monkey patching in _getOAuthAccessToken() and _get()
+// These methods have been forked from `node-oauth` to fix bugs; it may make
+// sense to migrate all the methods we need from node-oauth to nexth-auth (with
+// appropriate credit) to make it easier to maintain and address issues as they
+// come up, as the node-oauth package does not seem to be actively maintained.
 
-const oAuthCallback = async (req, provider, callback) => {
-  if (provider.type === 'oauth') {
-    _oAuthCallback(req, provider, callback)
-  } else if (provider.type === 'oauth2') {
-    _oAuth2Callback(req, provider, callback)
-  }
-}
-
-const _oAuthCallback = async (req, provider, callback) => {
+export default async (req, provider, callback) => {
   const { oauth_token, oauth_verifier, code } = req.query // eslint-disable-line camelcase
   const client = oAuthClient(provider)
 
@@ -71,25 +64,6 @@ const _oAuthCallback = async (req, provider, callback) => {
   }
 }
 
-const _oAuth2Callback = (req, provider, callback) => {
-  console.error('The provider type oauth2 is not supported. Use "type: \'oauth\'" and specify "version: \'2.0\'" to use oAuth 2.x')
-  /*
-  const client = oAuth2Client(provider)
-  client.code.getToken(req.url)
-  .then(accessToken => {
-    // Create 'Authorization' header with Bearer token
-    var signedRequest = accessToken.sign({
-      method: 'GET',
-      url: provider.profileUrl,
-    })
-
-    fetch(provider.profileUrl, signedRequest)
-    .then(response => response.json() )
-    .then(profileData => callback(null, _getProfile(error, profileData, accessToken, null, provider), profileData) )
-  })
-  */
-}
-
 function _getProfile (error, profileData, accessToken, refreshToken, provider) {
   // @TODO Handle error
   if (error) {
@@ -126,10 +100,6 @@ function _getProfile (error, profileData, accessToken, refreshToken, provider) {
     },
     _profile: profileData
   })
-}
-
-export {
-  oAuthCallback
 }
 
 // Ported from https://github.com/ciaranj/node-oauth/blob/a7f8a1e21c362eb4ed2039431fb9ac2ae749f26a/lib/oauth2.js
