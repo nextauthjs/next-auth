@@ -33,6 +33,8 @@ NextAuth supports both SQL and Document databases out of the box.
 
 There are predefined models for Users and Sessions, which you can use (or extend or replace with your own models/schemas).
 
+[**Documentation**](https://next-auth-docs.now.sh/)
+
 ### Server
 
 To add `next-auth` to a project, create a file to handle authentication requests at `pages/api/auth/[...slug.js]`:
@@ -114,90 +116,4 @@ export default ({ Component, pageProps }) => {
 }
 ```
 
-#### Server Side Rendering
-
-Authentication when Server Side Rendering is also supported with `session()`, which can be called client or server side:
-
-```javascript
-import NextAuth from 'next-auth/client'
-
-export default ({ session }) => <>
-  {session && <p>Signed in as {session.user.name || session.user.email}.</p>}
-  {!session && <p><a href="/api/auth/signin">Sign in here</a></p>}
-</>
-
-export async function getInitialProps({req}) {
-  const session = await NextAuth.session({req})
-  return {
-    session
-  }
-}
-```
-
-You can use this method and the `useSession()` hook together - the hook can be pre-populated with the session object from the server side call, so that it is avalible immediately when the page is loaded, and updated client side when the page is viewed in the browser.
-
-You can call `NextAuth.session()` function in client side JavaScript, without needing to pass a `req` object - the `req` object is only needed when calling the function from `getServerSideProps` or `getInitialProps`.
-
-## Configuration
-
-Configuration options are passed to NextAuth when initalizing it (in your `/api/` route).
-
-The only things you will probably *need* to configure are your site name (e.g. 'http://www.example.com'), which should be set explicitly for security reasons, a list of authentication services (Twitter, Facebook, Google, etc) and a database adapter.
-
-An "*Adapter*" in NextAuth is the thing that connects your application to whatever database / backend system you want to use to store data for user accounts, sessions, etc.
-
-NextAuth comes with a default adapter that uses [TypeORM](https://typeorm.io/) so that it can be be used with many different databases without any configuration, you simply add the database driver you want to use to your project and tell NextAuth to use it.
-
-If you have an existing database / user management system or want to use a database that isn't supported out of the box you can create and pass your own adapter to handle actions like `createAccount`, `deleteAccount`, (etc).
-
-### Simple Example
-
-This is an example of how to use an SQLite in memory database, which can be useful for development and testing, and to check everything is working:
-
-1. Install the database driver as a dependancy in the usual way - e.g. `npm i sqlite3`
-2. Pass a *TypeORM* configuration object when calling `NextAuth()` in your API route.
-
-e.g.
-
-```javascript
-adapter: Adapters.Default({
-  type: 'sqlite',
-  database: ':memory:'
-}),
-```
-
-You can pass database credentials securely, using environment variables for options. See the [TypeORM configuration documentation](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md) for more details about supported options.
-
-### Supported Databases
-
-The following databases are supported by the default adapter:
-
-* cordova
-* expo
-* mariadb
-* mongodb
-* mssql
-* mysql
-* oracle
-* postgres
-* sqlite
-* sqljs
-* react-native
-
-Appropriate tables / collections for Users, Sessions (etc) will be created automatically.
-
-You can customize, extend or replace the models by passing additional options to the `Adapters.Default()` function.
-
-If you are using a database that is not supported out of the box - or if you want to use NextAuth with an existing database (or have a more complex setup, with accounts and sessions spread across different systems - you can pass your own methods to be called for user and session creation / deletion (etc).
-
-**Important! Supported databases and models/scehams subject to change before release.**
-
-## Customization
-
-NextAuth automatically creates simple, unbranded authentication pages for handling Sign in, Email Verification, callbacks, etc.
-
-The options displayed are generated based on the configuration supplied.
-
-You can create custom authentication pages if you would like to customize the experience.
-
-*This documentation will be updated closer to release.*
+Further customisation and setup options are available in our docs [here](https://next-auth-docs.now.sh/)
