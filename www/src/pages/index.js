@@ -9,31 +9,33 @@ import styles from './styles.module.css';
 const features = [
   {
     title: <>Easy to Use</>,
-    imageUrl: 'img/undraw_docusaurus_mountain.svg',
+    imageUrl: 'img/undraw_authentication.svg',
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Serverless authentication library built primarily for Next.js, but will
+        work in any environment. Simple to setup and does not require Express or PassportJS.
       </>
     ),
   },
   {
-    title: <>Focus on What Matters</>,
-    imageUrl: 'img/undraw_docusaurus_tree.svg',
+    title: <>Many Login Providers</>,
+    imageUrl: 'img/undraw_social.svg',
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Built-in support for many OAuth providers. If you can't find yours, we make it
+        easy to add others as well. We also support an Email / Password based signup and
+        login method.
       </>
     ),
   },
   {
-    title: <>Powered by React</>,
-    imageUrl: 'img/undraw_docusaurus_react.svg',
+    title: <>Secure</>,
+    imageUrl: 'img/undraw_secure.svg',
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        OAuth, CSRF Protection, and secure host only and http only signed cookies out
+        of the box! Session IDs are never exposed to client-side javascript so your
+        users sessions cant get hijacked.
       </>
     ),
   },

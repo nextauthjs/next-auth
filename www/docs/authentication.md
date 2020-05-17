@@ -29,10 +29,10 @@ Please note that Facebook oAuth cannot be used to sign in to 'localhost' and tha
 
 ### Facebook Login
 
-Environment variables:
-
+:::info Environment Variables
 * FACEBOOK_ID
 * FACEBOOK_SECRET
+:::
 
 Configuration steps:
 
@@ -49,10 +49,10 @@ Configuration steps:
 
 ### Google+
 
-Environment variables:
-
+:::info Environment Variables
 * GOOGLE_ID
 * GOOGLE_SECRET
+:::
 
 Configuration steps:
 
@@ -69,10 +69,10 @@ Configuration steps:
 
 ### Twitter 
 
-Environment variables:
-
+:::info Environment Variables
 * TWITTER_KEY
 * TWITTER_SECRET
+:::
   
 Configuration steps:
 
