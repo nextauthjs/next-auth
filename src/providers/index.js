@@ -1,6 +1,6 @@
 import Discord from './discord'
 import Email from './email'
-// import Facebook from './facebook' // @TODO
+import Facebook from './facebook' // @TODO
 import GitHub from './github'
 import Google from './google'
 import Mixer from './mixer'
@@ -9,7 +9,8 @@ import Twitch from './twitch'
 import Twitter from './twitter'
 
 export default {
-  Discord,
+	Discord,
+	Facebook,
   GitHub,
   Google,
   Mixer,
