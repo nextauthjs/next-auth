@@ -1,10 +1,10 @@
 module.exports = {
   title: 'next-auth',
   tagline: 'Serverless Authentication, written from scratch for modern Next.js!',
-  url: 'https://next-auth.js.org',
-  baseUrl: '/',
+  url: 'https://iaincollins.github.io',
+  baseUrl: '/next-auth/',
   favicon: 'img/favicon.ico',
-  organizationName: 'next-auth',
+  organizationName: 'iaincollins',
   projectName: 'next-auth',
   themeConfig: {
     navbar: {
