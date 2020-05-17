@@ -25,4 +25,4 @@ yarn-debug.log*
 yarn-error.log*
 
 # Docusaurus
-www/build/*
+www/build
