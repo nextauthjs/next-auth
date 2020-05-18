@@ -10,12 +10,12 @@ export default (options) => {
     profileUrl: 'https://graph.facebook.com/me?fields=email,name,picture',
     profile: (profile) => {
       return {
-         id: profile.id,
-         name: profile.name,
-         email: profile.email,
-         image: profile.picture.data.url
-       }
+        id: profile.id,
+        name: profile.name,
+        email: profile.email,
+        image: profile.picture.data.url
+      }
     },
-		...options
+    ...options
   }
 }
