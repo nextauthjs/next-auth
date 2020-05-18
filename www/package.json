@@ -11,6 +11,7 @@
     "@docusaurus/core": "^2.0.0-alpha.54",
     "@docusaurus/preset-classic": "^2.0.0-alpha.54",
     "classnames": "^2.2.6",
+    "docusaurus-lunr-search": "^1.0.3",
     "react": "^16.8.4",
     "react-dom": "^16.8.4"
   },
@@ -25,5 +26,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "standard": "^14.3.4"
   }
 }
