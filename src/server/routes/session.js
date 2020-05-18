@@ -32,9 +32,8 @@ export default async (req, res, options, done) => {
       }
 
       // Update expiry on Session Token cookie
-      cookie.set(res, cookies.sessionToken.name, sessionToken, { ...cookies.sessionToken.options, expires: session.sessionExpires })
+      cookie.set(res, cookies.sessionToken.name, sessionToken, { expires: session.sessionExpires, ...cookies.sessionToken.options })
     }
-
   } catch (error) {
     console.error('SESSION_ERROR', error)
   }

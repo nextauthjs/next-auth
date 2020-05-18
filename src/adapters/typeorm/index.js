@@ -200,8 +200,9 @@ const Adapter = (config, options) => {
           return null
         }
 
-        // Check session has not expired - return null if it has
-        if (new Date() > new Date(session.sessionExpires)) {
+        // Check session has not expired - return null if it has.
+        // Only applies if session sessionExpires is not null (if is null, ignore)
+        if (session.sessionExpires && new Date() > new Date(session.sessionExpires)) {
           // @TODO Delete session from DB if expired (and all old sessions)
           return null
         }
