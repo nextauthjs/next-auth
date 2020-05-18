@@ -30,7 +30,7 @@ export default async (req, res, options, done) => {
         const { session, isNewAccount } = await callbackHandler(adapter, sessionToken, profile, account)
 
         // Save Session ID in cookie (HTTP Only cookie)
-        cookie.set(res, cookies.sessionToken.name, session.sessionToken, cookies.sessionToken.options)
+        cookie.set(res, cookies.sessionToken.name, session.sessionToken, { ...cookies.sessionToken.options, expires: session.sessionExpires })
 
         // Handle first logins on new accounts
         // e.g. option to send users to a new account landing page on initial login
@@ -84,7 +84,7 @@ export default async (req, res, options, done) => {
       const { session, isNewAccount } = await callbackHandler(adapter, sessionToken, { email }, provider)
 
       // Save Session ID in cookie (HTTP Only cookie)
-      cookie.set(res, cookies.sessionToken.name, session.sessionToken, cookies.sessionToken.options)
+      cookie.set(res, cookies.sessionToken.name, session.sessionToken, { ...cookies.sessionToken.options, expires: session.sessionExpires })
 
       // Handle first logins on new accounts
       // e.g. option to send users to a new account landing page on initial login

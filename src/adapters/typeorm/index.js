@@ -7,7 +7,15 @@ import Models from './models'
 
 const Adapter = (config, options) => {
   // Parse options before parsing config as we need to load any custom models or schemas first
-  const defaultOptions = {}
+  const defaultOptions = {
+    updateSession: async (session, isNewSession) => {
+      // Default to 30 days for session expiry
+      const dateExpires = new Date()
+      dateExpires.setDate(dateExpires.getDate() + 30)
+      session.sessionExpires = dateExpires.toISOString()
+      return session
+    }
+  }
 
   options = {
     ...defaultOptions,
@@ -97,12 +105,6 @@ const Adapter = (config, options) => {
       }
     }
 
-    async function updateUser (user) {
-      debug('Update user', user)
-      // @TODO Save changes to user object in DB
-      return false
-    }
-
     async function getUser (id) {
       debug('Get user', id)
       try {
@@ -141,6 +143,12 @@ const Adapter = (config, options) => {
       return false
     }
 
+    async function updateUser (user) {
+      debug('Update user', user)
+      // @TODO Save changes to user object in DB
+      return false
+    }
+
     async function deleteUser (userId) {
       debug('Delete user', userId)
       // @TODO Delete user from DB
@@ -170,7 +178,12 @@ const Adapter = (config, options) => {
     async function createSession (user) {
       debug('Create session', user)
       try {
-        const session = new Session(user.id)
+        // Call updateSession() callback (if defined) immediately after
+        // creating a session
+        const session = (options.updateSession)
+          ? await options.updateSession(new Session(user.id, null), true)
+          : new Session(user.id, null)
+
         return getManager().save(session)
       } catch (error) {
         console.error('CREATE_SESSION_ERROR', error)
@@ -182,11 +195,40 @@ const Adapter = (config, options) => {
       debug('Get session', sessionToken)
       try {
         const session = await connection.getRepository(Session).findOne({ sessionToken })
-        // @TODO Check session has not expired (return null if it has)
+
+        if (!session) {
+          return null
+        }
+
+        // Check session has not expired - return null if it has
+        if (new Date() > new Date(session.sessionExpires)) {
+          // @TODO Delete session from DB if expired (and all old sessions)
+          return null
+        }
+
         return session
       } catch (error) {
         console.error('GET_SESSION_ERROR', error)
         return Promise.reject(new Error('GET_SESSION_ERROR', error))
+      }
+    }
+
+    async function updateSession (session) {
+      debug('Update session', session)
+      try {
+        if (options.updateSession) { session = await options.updateSession(session) }
+
+        // If updateSession() retuns false or null, do not update session
+        // This is useful to be easily limit the number of writes to a
+        // database by only updating session expiry when it is outside a
+        // an expiry window (e.g. if < 30 days left, update it to 90 days,
+        // if > 30 days left, do nothing).
+        if (!session) { return null }
+
+        return getManager().save(session)
+      } catch (error) {
+        console.error('UPDATE_SESSION_ERROR', error)
+        return Promise.reject(new Error('UPDATE_SESSION_ERROR', error))
       }
     }
 
@@ -253,16 +295,17 @@ const Adapter = (config, options) => {
 
     return Promise.resolve({
       createUser,
-      updateUser,
       getUser,
       getUserByEmail,
       getUserByProviderAccountId,
       getUserByCredentials,
+      updateUser,
       deleteUser,
       linkAccount,
       unlinkAccount,
       createSession,
       getSession,
+      updateSession,
       deleteSession,
       createEmailVerification,
       getEmailVerification,

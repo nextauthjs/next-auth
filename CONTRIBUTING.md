@@ -8,13 +8,13 @@ Please see the [Code of Conduct](CODE_OF_CONDUCT.md) and follow any templates co
 
 ## Pull Requests
 
-* Pull Requests should be raised for larger changes.
-* Ideally, lots of small changes should be bundled up in to a larger PR.
-* The latest changes are always in `master`
-* Merging (and pushing merge commits to `master`) is disabled in this repo
-* Rebasing is prefered to keep a clean commit history.
-* Pushing directly to master should be reserved for minor updates / one off fixes.
-* Pull Requests are great for batching up changes and making them easy to review and for tagging people so they can track changes, but they do not require approval from other commiters (commiters may raise and merge their own requests).
+* The latest changes are always in `master` 
+* Pull Requests should be raised for larger changes
+* Pull Requests do not need approval before merging for those with contributor access (it's just helpful to have them to track changes)
+* Rebasing in Pull Requests is prefered to keep a clean commit history (see below)
+* Running `npm run lint:fix` before committing can make resolving conflicts easier, but is not required
+* Merge commits (and pushing merge commits to `master`) are disabled in this repo
+* Pushing directly to master should ideally be reserved for minor updates / one off fixes
 
 ## Rebasing
 
@@ -36,4 +36,6 @@ When the rebase is complete (i.e. there are no more conflicts) you should push y
 You should see that any conflicts in your PR are now resolved. You can review changes to make sure it contains changes you intended to make.
 
 *If you accidentally sync before pushing, it will trigger a merge. Uou can use `git merge --abort` to undo the merge.*
+
+You can use `npm run lint:fix` to automatically apply Standard JS rules to resolve formatting differences (tabs vs spaces, line endings, etc).
 

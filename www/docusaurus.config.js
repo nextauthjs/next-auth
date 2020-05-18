@@ -1,34 +1,34 @@
 module.exports = {
-  title: "NextAuth",
-  tagline: "Serverless Authentication, written from scratch for Next.js",
-  url: "https://next-auth.js.org",
-  baseUrl: "/",
-  favicon: "img/favicon.ico",
-  organizationName: "iaincollins",
-  projectName: "next-auth",
+  title: 'NextAuth',
+  tagline: 'Serverless Authentication, written from scratch for Next.js',
+  url: 'https://next-auth.js.org',
+  baseUrl: '/',
+  favicon: 'img/favicon.ico',
+  organizationName: 'iaincollins',
+  projectName: 'next-auth',
   themeConfig: {
     navbar: {
-      title: "NextAuth",
+      title: 'NextAuth',
       logo: {
-        alt: "NextAuth Logo",
-        src: "img/nextjs-logo.svg"
+        alt: 'NextAuth Logo',
+        src: 'img/nextjs-logo.svg'
       },
       links: [
         {
-          to: "/getting-started",
-          activeBasePath: "docs",
-          label: "Docs",
-          position: "left"
+          to: '/getting-started',
+          activeBasePath: 'docs',
+          label: 'Docs',
+          position: 'left'
         },
         {
-          href: "https://github.com/iaincollins/next-auth",
-          label: "GitHub",
-          position: "right"
+          href: 'https://github.com/iaincollins/next-auth',
+          label: 'GitHub',
+          position: 'right'
         },
         {
-          href: "https://npmjs.com/package/next-auth",
-          label: "NPM",
-          position: "right"
+          href: 'https://npmjs.com/package/next-auth',
+          label: 'NPM',
+          position: 'right'
         }
       ]
     },
@@ -40,39 +40,39 @@ module.exports = {
     /*   textColor: '#091E42' */
     /* }, */
     footer: {
-      style: "dark",
+      style: 'dark',
       links: [
         {
-          title: "Docs",
+          title: 'Docs',
           items: [
             {
-              label: "Getting Started",
-              to: "/getting-started"
+              label: 'Getting Started',
+              to: '/getting-started'
             },
             {
-              label: "Migrating from v1",
-              to: "/upgrading"
+              label: 'Migrating from v1',
+              to: '/upgrading'
             }
           ]
         }
       ],
-      copyright: `Built with Docusaurus 🦖`
+      copyright: 'Built with Docusaurus 🦖'
     }
   },
   presets: [
     [
-      "@docusaurus/preset-classic",
+      '@docusaurus/preset-classic',
       {
         docs: {
-          routeBasePath: "/",
-          sidebarPath: require.resolve("./sidebars.js"),
-          editUrl: "https://github.com/iaincollins/next-auth/tree/master/www"
+          routeBasePath: '/',
+          sidebarPath: require.resolve('./sidebars.js'),
+          editUrl: 'https://github.com/iaincollins/next-auth/tree/master/www'
         },
         theme: {
-          customCss: require.resolve("./src/css/custom.css")
+          customCss: require.resolve('./src/css/custom.css')
         }
       }
     ]
   ],
-  plugins: ["docusaurus-lunr-search"]
-};
+  plugins: ['docusaurus-lunr-search']
+}

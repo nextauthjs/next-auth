@@ -1,15 +1,18 @@
 import { randomBytes } from 'crypto'
 
 export class Session {
-  constructor (userId) {
-    // @TODO expose max session duration as option and sync with client and cookie expiry
-    const dateExpires = new Date()
-    dateExpires.setDate(dateExpires.getDate() + 30) // 30 days
+  constructor (userId, sessionToken, sessionExpires, accessToken) {
+    // Defaults to 30 days for expiry if sessionExpires not specified
+    if (!sessionExpires) {
+      const dateExpires = new Date()
+      dateExpires.setDate(dateExpires.getDate() + 30)
+      sessionExpires = dateExpires.toISOString()
+    }
 
     this.userId = userId
-    this.sessionToken = randomBytes(32).toString('hex')
-    this.sessionExpires = dateExpires.toISOString()
-    this.accessToken = randomBytes(32).toString('hex')
+    this.sessionToken = sessionToken || randomBytes(32).toString('hex')
+    this.sessionExpires = sessionExpires
+    this.accessToken = accessToken || randomBytes(32).toString('hex')
   }
 }
 

@@ -59,9 +59,14 @@ function _serialize (name, val, options) {
   }
 
   if (opt.expires) {
-    if (typeof opt.expires.toUTCString !== 'function') { throw new TypeError('option expires is invalid') }
-
-    str += '; Expires=' + opt.expires.toUTCString()
+    let expires = opt.expires
+    if (typeof opt.expires.toUTCString === 'function') {
+      expires = opt.expires.toUTCString()
+    } else {
+      const dateExpires = new Date(opt.expires)
+      expires = dateExpires.toUTCString()
+    }
+    str += '; Expires=' + expires
   }
 
   if (opt.httpOnly) { str += '; HttpOnly' }
