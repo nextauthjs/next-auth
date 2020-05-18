@@ -116,4 +116,4 @@ export default ({ Component, pageProps }) => {
 }
 ```
 
-Further customisation and setup options are available in our docs [here](https://next-auth-docs.now.sh/)
+### Further customisation and setup options are available in our docs [here](https://next-auth-docs.now.sh/)
