@@ -3,27 +3,26 @@ id: providers
 title: Providers
 ---
 
-# Providers
-
 ## Supported providers
 
-| Name                 | API docs                                                          | App configuration                | Additional options                                       |  Notes
-| :------------------- | :-------------------------------------------------------| :------------------------------------------|:----------------------------------------------|:-------------------------- 
-| `Auth0`              |  https://auth0.com/docs/api/authentication#authorize-application			 | https://manage.auth0.com/dashboard| accessTokenUrl, authorizationUrl, profileUrl  | doesn't need clientSecret
-| `Discord`            |  https://discord.com/developers/docs/topics/oauth2			 | https://discord.com/developers/applications|
-| `Email`              |  https://nodemailer.com/smtp/well-known                 | 																				    |
-| `Github`       	     |  https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/                       | https://github.com/settings/apps/    |  |allows only one callback URL       
-| `Google`             |  https://developers.google.com/identity                 | https://console.developers.google.com/apis/credentials                                            |
-| `Google OAuth2`      |  https://developers.google.com/identity/protocols/oauth2| https://console.developers.google.com/apis/credentials                           |
-| `Mixer`              |  https://dev.mixer.com/reference/oauth                  | https://mixer.com/lab/oauth               |
-| `Slack`              |  https://api.slack.com                                  | https://api.slack.com/apps                 |
-| `Twitch`             |  https://dev.twitch.tv/docs/authentication              | https://dev.twitch.tv/console/apps          |                	
-| `Twitter`            |  https://developer.twitter.com                          | https://developer.twitter.com/en/apps       |
+| Name            | API docs                                                                         | App configuration                                      | 
+| :-------------- | :------------------------------------------------------------------------------- | :----------------------------------------------------- | 
+| `Auth0`         | https://auth0.com/docs/api/authentication#authorize-application                  | https://manage.auth0.com/dashboard                     | 
+| `Discord`       | https://discord.com/developers/docs/topics/oauth2                                | https://discord.com/developers/applications            |
+| `Email`         | https://nodemailer.com/smtp/well-known                                           |                                                        |
+| `Facebook`      | https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/ | https://developers.facebook.com/apps/                     |   
+| `Github`        | https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/    | https://github.com/settings/apps/                      |                                        
+| `Google OAuth2` | https://developers.google.com/identity/protocols/oauth2                          | https://console.developers.google.com/apis/credentials |
+| `Mixer`         | https://dev.mixer.com/reference/oauth                                            | https://mixer.com/lab/oauth                            |
+| `Slack`         | https://api.slack.com                                                            | https://api.slack.com/apps                             |
+| `Twitch`        | https://dev.twitch.tv/docs/authentication                                        | https://dev.twitch.tv/console/apps                     |
+| `Twitter`       | https://developer.twitter.com                                                    | https://developer.twitter.com/en/apps                  |
 
 ## OAuth Configuration
 
-NextAuth supports OAuth 1.0, 1.0A and 2.0 providers.  
-Most OAuth providers only need a client ID and a client secret to work but some might need some additional or even less options. You can check these in the list of supported providers. 
+:::note
+NextAuth supports OAuth 1.0, 1.0A and 2.0 providers. 
+:::
 
 ### Basics
 
@@ -59,6 +58,21 @@ Most OAuth providers only need a client ID and a client secret to work but some 
 	...
 	```
 5. You can sign in at `[origin]/api/auth/signin`. This is an unbranded auto-generated page with all the configured providers. If you want to create a custom sign in page you can use `[origin]/api/auth/signin/[provider]` which connects directly to the provider.
+
+:::info Configuration options
+Most OAuth providers only need a client ID and a client secret to work but some might need some additional or even less options.  
+There can also be other gotchas when configuring providers.
+:::
+
+| Name      | Additional options                           | Notes                       |
+| :-------- | :------------------------------------------- | :-------------------------- |
+| `Auth0`   | accessTokenUrl, authorizationUrl, profileUrl | doesn't need clientSecret   |
+| `Discord` |                                              |                             |
+| `Github`  |                                              | allows only one callback URL|
+| `Mixer`   | https://dev.mixer.com/reference/oauth        | https://mixer.com/lab/oauth |
+| `Twitter` |																							 | you can't set a scope to get the user's email  
+																														 
+
 
 ### Custom OAuth provider
 
@@ -108,7 +122,9 @@ providers: [
 ...
 ```
 
+:::note
 You can also open a PR for your custom configuration so we can support the provider out of the box 😉
+:::
 
 ## Email configuration
 
