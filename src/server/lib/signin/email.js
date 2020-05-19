@@ -3,8 +3,7 @@ import { randomBytes } from 'crypto'
 export default async (email, provider, options) => {
   try {
     const { urlPrefix, adapter } = options
-    const _adapter = await adapter.getAdapter()
-    const { createEmailVerification } = _adapter
+    const { createEmailVerification } = await adapter.getAdapter(options)
 
     // Prefer provider specific secret, but use default secret if none specified
     const secret = provider.secret || options.secret

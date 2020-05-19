@@ -3,8 +3,7 @@ import cookie from '../lib/cookie'
 
 export default async (req, res, options, done) => {
   const { adapter, cookies, callbackUrl, csrfTokenVerified, urlPrefix } = options
-  const _adapter = await adapter.getAdapter()
-  const { deleteSession } = _adapter
+  const { deleteSession } = await adapter.getAdapter(options)
 
   // Get session ID (if set)
   const sessionToken = req.cookies[cookies.sessionToken.name]

@@ -5,23 +5,8 @@ import { createHash } from 'crypto'
 import { CreateUserError } from '../../lib/errors'
 import Models from './models'
 
-const Adapter = (config, options) => {
-  // Parse options before parsing config as we need to load any custom models or schemas first
-  const defaultOptions = {
-    updateSession: async (session, isNewSession) => {
-      // Default to 30 days for session expiry
-      const dateExpires = new Date()
-      dateExpires.setDate(dateExpires.getDate() + 30)
-      session.sessionExpires = dateExpires.toISOString()
-      return session
-    }
-  }
-
-  options = {
-    ...defaultOptions,
-    ...options
-  }
-
+const Adapter = (config, options = {}) => {
+  // Load models / schemas (check for custom models / schemas first)
   const Account = options.Account ? options.Account.model : Models.Account.model
   const AccountSchema = options.Account ? options.Account.schema : Models.Account.schema
 
@@ -52,18 +37,9 @@ const Adapter = (config, options) => {
     ...config
   }
 
-  // A quick and dirty way for folks to be able to debug
-  function debug (...args) {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('[DEBUG]', ...args)
-    }
-  }
-
-  debug('Development mode; debug output enabled')
-
   let connection = null
 
-  async function getAdapter () {
+  async function getAdapter (appOptions) {
     // Helper function to reuse / restablish connections
     // (useful if they drop when after being idle)
     async function _connect () {
@@ -92,9 +68,15 @@ const Adapter = (config, options) => {
       await _connect()
     }
 
-    // Called when a user signs in
+    // Display debug output if debug option enabled
+    function _debug (...args) {
+      if (appOptions.debug) {
+        console.log('[DEBUG]', ...args)
+      }
+    }
+
     async function createUser (profile) {
-      debug('Create user', profile)
+      _debug('Create user', profile)
       try {
         // Create user account
         const user = new User(profile.name, profile.email, profile.image)
@@ -106,7 +88,7 @@ const Adapter = (config, options) => {
     }
 
     async function getUser (id) {
-      debug('Get user', id)
+      _debug('Get user', id)
       try {
         return connection.getRepository(User).findOne({ id })
       } catch (error) {
@@ -116,7 +98,7 @@ const Adapter = (config, options) => {
     }
 
     async function getUserByEmail (email) {
-      debug('Get user by email address', email)
+      _debug('Get user by email address', email)
       try {
         return connection.getRepository(User).findOne({ email })
       } catch (error) {
@@ -126,7 +108,7 @@ const Adapter = (config, options) => {
     }
 
     async function getUserByProviderAccountId (providerId, providerAccountId) {
-      debug('Get user by provider account ID', providerId, providerAccountId)
+      _debug('Get user by provider account ID', providerId, providerAccountId)
       try {
         const account = await connection.getRepository(Account).findOne({ providerId, providerAccountId })
         if (!account) { return null }
@@ -138,25 +120,25 @@ const Adapter = (config, options) => {
     }
 
     async function getUserByCredentials (credentials) {
-      debug('Get user by credentials', credentials)
+      _debug('Get user by credentials', credentials)
       // @TODO Get user from DB
       return false
     }
 
     async function updateUser (user) {
-      debug('Update user', user)
+      _debug('Update user', user)
       // @TODO Save changes to user object in DB
       return false
     }
 
     async function deleteUser (userId) {
-      debug('Delete user', userId)
+      _debug('Delete user', userId)
       // @TODO Delete user from DB
       return false
     }
 
     async function linkAccount (userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires) {
-      debug('Link provider account', userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires)
+      _debug('Link provider account', userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires)
       try {
         // Create provider account linked to user
         const account = new Account(userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires)
@@ -168,7 +150,7 @@ const Adapter = (config, options) => {
     }
 
     async function unlinkAccount (userId, providerId, providerAccountId) {
-      debug('Unlink provider account', userId, providerId, providerAccountId)
+      _debug('Unlink provider account', userId, providerId, providerAccountId)
       // @TODO Get current user from DB
       // @TODO Delete [provider] object from user object
       // @TODO Save changes to user object in DB
@@ -176,13 +158,17 @@ const Adapter = (config, options) => {
     }
 
     async function createSession (user) {
-      debug('Create session', user)
+      _debug('Create session', user)
       try {
-        // Call updateSession() callback (if defined) immediately after
-        // creating a session
-        const session = (options.updateSession)
-          ? await options.updateSession(new Session(user.id, null), true)
-          : new Session(user.id, null)
+        const { sessionMaxAge } = appOptions
+        let expires = null
+        if (sessionMaxAge) {
+          const dateExpires = new Date()
+          dateExpires.setTime(dateExpires.getTime() + sessionMaxAge)
+          expires = dateExpires.toISOString()
+        }
+
+        const session = new Session(user.id, null, expires)
 
         return getManager().save(session)
       } catch (error) {
@@ -192,18 +178,13 @@ const Adapter = (config, options) => {
     }
 
     async function getSession (sessionToken) {
-      debug('Get session', sessionToken)
+      _debug('Get session', sessionToken)
       try {
         const session = await connection.getRepository(Session).findOne({ sessionToken })
 
-        if (!session) {
-          return null
-        }
-
-        // Check session has not expired - return null if it has.
-        // Only applies if session sessionExpires is not null (if is null, ignore)
-        if (session.sessionExpires && new Date() > new Date(session.sessionExpires)) {
-          // @TODO Delete session from DB if expired (and all old sessions)
+        // Check session has not expired (do not return it if it has)
+        if (session && session.sessionExpires && new Date() > new Date(session.sessionExpires)) {
+          // @TODO Delete old sessions from database
           return null
         }
 
@@ -214,17 +195,29 @@ const Adapter = (config, options) => {
       }
     }
 
-    async function updateSession (session) {
-      debug('Update session', session)
+    async function updateSession (session, force) {
+      _debug('Update session', session)
       try {
-        if (options.updateSession) { session = await options.updateSession(session) }
+        const { sessionMaxAge, sessionUpdateAge } = appOptions
 
-        // If updateSession() retuns false or null, do not update session
-        // This is useful to be easily limit the number of writes to a
-        // database by only updating session expiry when it is outside a
-        // an expiry window (e.g. if < 30 days left, update it to 90 days,
-        // if > 30 days left, do nothing).
-        if (!session) { return null }
+        if (sessionMaxAge && (sessionUpdateAge || sessionUpdateAge === 0) && session.sessionExpires) {
+          // Calculate last updated date
+          const updateSessionIfOlderThanDate = new Date(session.sessionExpires)
+          updateSessionIfOlderThanDate.setTime(updateSessionIfOlderThanDate.getTime() - sessionMaxAge)
+          updateSessionIfOlderThanDate.setTime(updateSessionIfOlderThanDate.getTime() + sessionUpdateAge)
+
+          if (new Date() > updateSessionIfOlderThanDate) {
+            const newExpiryDate = new Date()
+            newExpiryDate.setTime(newExpiryDate.getTime() + sessionMaxAge)
+            session.sessionExpires = newExpiryDate.toISOString()
+          } else if (!force) {
+            return null
+          }
+        } else {
+          // If sessionMaxAge, sessionUpdateAge or session.sessionExpires are
+          // missing then don't even try to save changes, unless force is set.
+          if (!force) { return null }
+        }
 
         return getManager().save(session)
       } catch (error) {
@@ -234,7 +227,7 @@ const Adapter = (config, options) => {
     }
 
     async function deleteSession (sessionToken) {
-      debug('Delete session', sessionToken)
+      _debug('Delete session', sessionToken)
       try {
         return await connection.getRepository(Session).delete({ sessionToken })
       } catch (error) {
@@ -243,10 +236,10 @@ const Adapter = (config, options) => {
       }
     }
 
-    async function createEmailVerification (email, url, token, secret, provider, options) {
-      debug('Create verification request', email)
+    async function createEmailVerification (email, url, token, secret, provider) {
+      _debug('Create verification request', email)
       try {
-        const { site } = options
+        const { site, verificationMaxAge } = appOptions
         const { verificationCallback } = provider
 
         // Store hashed token (using secret as salt) so that tokens cannot be exploited
@@ -254,8 +247,15 @@ const Adapter = (config, options) => {
         // @TODO Use bcrypt function here instead of simple salted hash
         const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
 
+        let expires = null
+        if (verificationMaxAge) {
+          const dateExpires = new Date()
+          dateExpires.setTime(dateExpires.getTime() + verificationMaxAge)
+          expires = dateExpires.toISOString()
+        }
+
         // Save to database
-        const newEmailVerification = new EmailVerification(email, hashedToken)
+        const newEmailVerification = new EmailVerification(email, hashedToken, expires)
         const emailVerification = await getManager().save(newEmailVerification)
 
         // With the verificationCallback on a provider, you can send an email, or queue
@@ -270,12 +270,20 @@ const Adapter = (config, options) => {
     }
 
     async function getEmailVerification (email, token, secret, provider) {
-      debug('Get verification request', email, token)
+      _debug('Get verification request', email, token)
       try {
         // Hash token provided with secret before trying to match it with datbase
         // @TODO Use bcrypt function here instead of simple salted hash
         const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
-        return connection.getRepository(EmailVerification).findOne({ email, token: hashedToken })
+        const emailVerification = await connection.getRepository(EmailVerification).findOne({ email, token: hashedToken })
+
+        if (emailVerification && emailVerification.expires && new Date() > new Date(emailVerification.expires)) {
+          // Delete email verification so it cannot be used again
+          await connection.getRepository(EmailVerification).delete({ token: hashedToken })
+          return null
+        }
+
+        return emailVerification
       } catch (error) {
         console.error('GET_EMAIL_VERIFICATION_ERROR', error)
         return Promise.reject(new Error('GET_EMAIL_VERIFICATION_ERROR', error))
@@ -283,11 +291,11 @@ const Adapter = (config, options) => {
     }
 
     async function deleteEmailVerification (email, token, secret, provider) {
-      debug('Delete verification request', email, token)
+      _debug('Delete verification request', email, token)
       try {
-        // When a verification request is accepted, delete all of them associated with that same email address
-        // We could just delete the current one, but it's useful.
-        return await connection.getRepository(EmailVerification).delete({ email })
+        // Delete email verification so it cannot be used again
+        const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
+        await connection.getRepository(EmailVerification).delete({ token: hashedToken })
       } catch (error) {
         console.error('DELETE_EMAIL_VERIFICATION_ERROR', error)
         return Promise.reject(new Error('DELETE_EMAIL_VERIFICATION_ERROR', error))

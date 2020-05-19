@@ -8,8 +8,7 @@ export default async (req, res, options, done) => {
   const { provider: providerName, providers, adapter, site, secret, urlPrefix, cookies, callbackUrl, newAccountLandingPageUrl } = options
   const provider = providers[providerName]
   const { type } = provider
-  const _adapter = await adapter.getAdapter()
-  const { getEmailVerification, deleteEmailVerification } = _adapter
+  const { getEmailVerification, deleteEmailVerification } = await adapter.getAdapter(options)
 
   // Get session ID (if set)
   const sessionToken = req.cookies[cookies.sessionToken.name]
@@ -27,7 +26,7 @@ export default async (req, res, options, done) => {
       const { profile, account } = response
 
       try {
-        const { session, isNewAccount } = await callbackHandler(adapter, sessionToken, profile, account)
+        const { session, isNewAccount } = await callbackHandler(sessionToken, profile, account, options)
 
         // Save Session ID in cookie (HTTP Only cookie)
         cookie.set(res, cookies.sessionToken.name, session.sessionToken, { expires: session.sessionExpires || null, ...cookies.sessionToken.options })
@@ -77,11 +76,14 @@ export default async (req, res, options, done) => {
         return done()
       }
 
-      // If token valid, delete email verification record in database
+      // If token is valid, delete email verification record in database…
       await deleteEmailVerification(email, token, secret, provider)
 
-      // If token valid, sign them in
-      const { session, isNewAccount } = await callbackHandler(adapter, sessionToken, { email }, provider)
+      // …lastly, invoke callbackHandler to go through sign up flow.
+      // (Will create new account if they don't have one, or sign them into
+      // an existing account if they do have one.)
+      const dummyProviderAccount = { id: provider.id, type: 'email' }
+      const { session, isNewAccount } = await callbackHandler(sessionToken, { email }, dummyProviderAccount, options)
 
       // Save Session ID in cookie (HTTP Only cookie)
       cookie.set(res, cookies.sessionToken.name, session.sessionToken, { expires: session.sessionExpires || null, ...cookies.sessionToken.options })

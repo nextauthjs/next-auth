@@ -153,7 +153,15 @@ export default async (req, res, _options) => {
     // User provided options are overriden by other options,
     // except for the options with special handling above
     const options = {
+      // Defaults options can be overidden
+      sessionMaxAge: 30 * 60 * 60 * 1000, // Sessions expire after 30 days of being idle
+      sessionUpdateAge: 24 * 60 * 60 * 1000, // Sessions updated only if session is greater than this value (0 = always, 24*60*60*1000 = every 24 hours)
+      verificationMaxAge: 24 * 60 * 60 * 1000, // Email/passwordless links expire after 24 hours
+      debug: false, // Enable debug messages to be displayed
+      // Custom options override defaults
       ..._options,
+      // These computed settings can values in _options but override them
+      // and are request-specific.
       site,
       pathPrefix,
       urlPrefix,
