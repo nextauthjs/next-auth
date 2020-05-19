@@ -83,6 +83,8 @@ function _getProfile (error, profileData, accessToken, refreshToken, provider) {
     }
   }
 
+  if (!profile.email) throw new Error('User profile does not have an email address!')
+
   // Return profile, raw profile and auth provider details
   return ({
     profile: {

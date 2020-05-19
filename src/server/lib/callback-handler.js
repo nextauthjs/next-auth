@@ -11,15 +11,14 @@
 //
 import { AccountNotLinkedError } from '../../lib/errors'
 
-export default async (adapter, sessionToken, profile, providerAccount) => {
+export default async (sessionToken, profile, providerAccount, options) => {
   try {
     // Input validation
     if (!profile || !profile.email) { throw new Error('Missing or invalid profile') }
 
     if (!providerAccount || !providerAccount.id || !providerAccount.type) { throw new Error('Missing or invalid provider account') }
 
-    // Get adapter - async as dependant on DB connection being ready
-    const _adapter = await adapter.getAdapter()
+    const { adapter } = options
 
     const {
       createUser,
@@ -31,14 +30,12 @@ export default async (adapter, sessionToken, profile, providerAccount) => {
       createSession,
       getSession,
       deleteSession
-    } = _adapter
+    } = await adapter.getAdapter(options)
 
     let session = sessionToken ? await getSession(sessionToken) : null
     const isSignedIn = !!session
     let user = isSignedIn ? await getUser(session.userId) : null
     let isNewAccount = false
-
-    // @TODO replace all Error objects returned with custom error types
 
     if (providerAccount.type === 'email') {
       // If signing in with an email, check if an account with the same email address exists already

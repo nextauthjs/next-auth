@@ -3,8 +3,7 @@ import cookie from '../lib/cookie'
 
 export default async (req, res, options, done) => {
   const { cookies, adapter } = options
-  const _adapter = await adapter.getAdapter()
-  const { getUser, getSession, updateSession } = _adapter
+  const { getUser, getSession, updateSession } = await adapter.getAdapter(options)
   const sessionToken = req.cookies[cookies.sessionToken.name]
 
   let response = {}
@@ -33,6 +32,10 @@ export default async (req, res, options, done) => {
 
       // Update expiry on Session Token cookie
       cookie.set(res, cookies.sessionToken.name, sessionToken, { expires: session.sessionExpires, ...cookies.sessionToken.options })
+    } else if (sessionToken) {
+      // If sessionToken was found set but it's not valid for a session then
+      // remove the sessionToken cookie from browser.
+      cookie.set(res, cookies.sessionToken.name, '', { ...cookies.sessionToken.options, maxAge: 0 })
     }
   } catch (error) {
     console.error('SESSION_ERROR', error)

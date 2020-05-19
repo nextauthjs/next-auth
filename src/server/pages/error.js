@@ -52,12 +52,12 @@ export default ({ site, error, urlPrefix }) => {
     case 'Verification':
       // @TODO Check if user is signed in already with the same email address.
       // If they are, no need to display this message, can just direct to callbackUrl
-      heading = <h1>Sign in link invalid</h1>
+      heading = <h1>Sign in failed</h1>
       message =
         <div>
           <div className='message'>
-            <p>The link you used may have been used already or it may have expired.</p>
-            <p>Sign in links can only be used once, you can a new sign in link at any time.</p>
+            <p>The link you followed may have been used already or it may have expired.</p>
+            <p>Sign in links can only be used once and expire, you can a new sign in link at any time.</p>
           </div>
           <p><a className='button' href={signinPageUrl}>Sign in</a></p>
         </div>

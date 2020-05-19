@@ -1,12 +1,8 @@
 export class EmailVerification {
-  constructor (email, token) {
-    // @TODO expose time to expire invite as option
-    const dateExpires = new Date()
-    dateExpires.setDate(dateExpires.getDate() + 1) // 1 day
-
+  constructor (email, token, expires) {
     this.email = email
     this.token = token
-    this.expires = dateExpires.toISOString()
+    this.expires = expires
   }
 }
 
