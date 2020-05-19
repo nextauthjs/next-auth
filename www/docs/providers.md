@@ -5,13 +5,13 @@ title: Providers
 
 ## Supported providers
 
-| Name            | API docs                                                                         | App configuration                                      | 
-| :-------------- | :------------------------------------------------------------------------------- | :----------------------------------------------------- | 
-| `Auth0`         | https://auth0.com/docs/api/authentication#authorize-application                  | https://manage.auth0.com/dashboard                     | 
+| Name            | API docs                                                                         | App configuration                                      |
+| :-------------- | :------------------------------------------------------------------------------- | :----------------------------------------------------- |
+| `Auth0`         | https://auth0.com/docs/api/authentication#authorize-application                  | https://manage.auth0.com/dashboard                     |
 | `Discord`       | https://discord.com/developers/docs/topics/oauth2                                | https://discord.com/developers/applications            |
 | `Email`         | https://nodemailer.com/smtp/well-known                                           |                                                        |
-| `Facebook`      | https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/ | https://developers.facebook.com/apps/                     |   
-| `Github`        | https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/    | https://github.com/settings/apps/                      |                                        
+| `Facebook`      | https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/ | https://developers.facebook.com/apps/                  |
+| `Github`        | https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/    | https://github.com/settings/apps/                      |
 | `Google OAuth2` | https://developers.google.com/identity/protocols/oauth2                          | https://console.developers.google.com/apis/credentials |
 | `Mixer`         | https://dev.mixer.com/reference/oauth                                            | https://mixer.com/lab/oauth                            |
 | `Slack`         | https://api.slack.com                                                            | https://api.slack.com/apps                             |
@@ -65,13 +65,13 @@ Most OAuth providers only need a client ID and a client secret to work but some 
 There can also be other gotchas when configuring providers.
 :::
 
-| Name      | Additional options                                                          | Notes                                           |
-| :-------- | :-------------------------------------------------------------------------- | :---------------------------------------------- |
-| `Auth0`   | accessTokenUrl, authorizationUrl, profileUrl <br> doesn't need clientSecret |                                                 |
-| `Discord` | doesn't need clientSecret                                                   |                                                 |
-| `Github`  |                                                                             | allows only one callback URL                    |
-| `Facebook`   |                                                                          | callback URL doesn't work localhost             |
-| `Twitter` |																							                                | you need to enable the "Request email address from users option in your app's permissions| 
+| Name       | Additional options                                                          | Notes                                                                                        |
+| :--------- | :-------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------- |
+| `Auth0`    | accessTokenUrl, authorizationUrl, profileUrl <br> doesn't need clientSecret |                                                                                              |
+| `Discord`  | doesn't need clientSecret                                                   |                                                                                              |
+| `Github`   |                                                                             | allows only one callback URL                                                                 |
+| `Facebook` |                                                                             | callback URL doesn't work localhost                                                          |
+| `Twitter`  |                                                                             | you need to enable the *"Request email address from users"* option in your app's permissions |
 																														 
 
 
@@ -112,7 +112,7 @@ providers: [
 		clientSecret: process.env.TWITTER_SECRET,
 	}),
 	{
-		id: 'customProvider',
+	id: 'customProvider',
   	name: 'CustomProvider',
   	type: 'oauth',
   	version: '2.0',
@@ -131,7 +131,7 @@ You can also open a PR for your custom configuration so we can support the provi
 
 ### Basics
 
-1. Register your app at an email provider. An overview of email providers is available at the email link in the table above.
+1. Register your app at an email provider. An overview of email providers is available at the email link in the providers list.
 2. There are two ways to configure the SMTP-server you can either use a connection string or a configuration object.
    
     2.1. Connection string:
@@ -143,14 +143,14 @@ You can also open a PR for your custom configuration so we can support the provi
 	 ```
 	 Now you can add the provider settings to the NextAuth options object.
 
-  ```js title="/pages/api/auth/[...slug].js"
-	 providers: [
+		```js title="/pages/api/auth/[...slug].js"
+		providers: [
 			Providers.Email({
 				server: process.env.EMAIL_SERVER, 
 				from: process.env.EMAIL_FROM,
 			}),
-  	],
-	 ```
+		],
+		```
 
     2.2. Configuration object:
 		
@@ -163,21 +163,23 @@ You can also open a PR for your custom configuration so we can support the provi
 	 EMAIL_SERVER_PORT=587
 	 ```
 	 Now you can add the provider settings to the NextAuth options object.
-  ```js title="/pages/api/auth/[...slug].js"
-	 providers: [
-			Providers.Email({
-				server: {
-					host: process.env.EMAIL_SERVER_HOST,
-					port: process.env.EMAIL_SERVER_PORT,
-					auth: {
-						user: process.env.EMAIL_SERVER_USER,
-						pass: process.env.EMAIL_SERVER_PASSWORD
+
+		```js title="/pages/api/auth/[...slug].js"
+		providers: [
+				Providers.Email({
+					server: {
+						host: process.env.EMAIL_SERVER_HOST,
+						port: process.env.EMAIL_SERVER_PORT,
+						auth: {
+							user: process.env.EMAIL_SERVER_USER,
+							pass: process.env.EMAIL_SERVER_PASSWORD
+						}
 					}
-				}
-				from: process.env.EMAIL_FROM,
-			}),
-  	],
+					from: process.env.EMAIL_FROM,
+				}),
+			],
 	 ```
-3. You can sign in at `[origin]/api/auth/signin`. This is an unbranded auto-generated page with all the configured providers. If you want to create a custom sign in page you can use `[origin]/api/auth/signin/email` which connects directly to the provider.
+3. You can sign in at `[origin]/api/auth/signin`.   
+   This is an unbranded auto-generated page with all the configured providers. If you want to create a custom sign in page you can use `[origin]/api/auth/signin/email` which connects directly to the provider.
 	
 
