@@ -35,7 +35,7 @@ NextAuth supports OAuth 1.0, 1.0A and 2.0 providers.
 	```
 	http://localhost:3000/api/auth/callback/twitter
 	```
-3. Create an .env file to the root of your project and add the client id and client secret. For Twitter this would be:
+3. Create an .env file to the root of your project and add the client ID and client secret. For Twitter this would be:
 
 	```
 	TWITTER_ID=YOUR_TWITTER_CLIENT_ID
@@ -57,20 +57,21 @@ NextAuth supports OAuth 1.0, 1.0A and 2.0 providers.
 	],
 	...
 	```
-5. You can sign in at `[origin]/api/auth/signin`. This is an unbranded auto-generated page with all the configured providers. If you want to create a custom sign in page you can use `[origin]/api/auth/signin/[provider]` which connects directly to the provider.
+5. You can sign in at `[origin]/api/auth/signin`. This is an unbranded auto-generated page with all the configured providers.   
+   If you want to create a custom sign in page you can use `[origin]/api/auth/signin/[provider]` which connects directly to the provider.
 
 :::info Configuration options
 Most OAuth providers only need a client ID and a client secret to work but some might need some additional or even less options.  
 There can also be other gotchas when configuring providers.
 :::
 
-| Name      | Additional options                           | Notes                       |
-| :-------- | :------------------------------------------- | :-------------------------- |
-| `Auth0`   | accessTokenUrl, authorizationUrl, profileUrl | doesn't need clientSecret   |
-| `Discord` |                                              |                             |
-| `Github`  |                                              | allows only one callback URL|
-| `Mixer`   | https://dev.mixer.com/reference/oauth        | https://mixer.com/lab/oauth |
-| `Twitter` |																							 | you can't set a scope to get the user's email  
+| Name      | Additional options                                                          | Notes                                           |
+| :-------- | :-------------------------------------------------------------------------- | :---------------------------------------------- |
+| `Auth0`   | accessTokenUrl, authorizationUrl, profileUrl <br> doesn't need clientSecret |                                                 |
+| `Discord` | doesn't need clientSecret                                                   |                                                 |
+| `Github`  |                                                                             | allows only one callback URL                    |
+| `Facebook`   |                                                                          | callback URL doesn't work localhost             |
+| `Twitter` |																							                                | you need to enable the "Request email address from users option in your app's permissions| 
 																														 
 
 
