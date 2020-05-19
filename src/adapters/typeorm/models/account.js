@@ -10,7 +10,7 @@ export class Account {
     accessToken,
     accessTokenExpires
   ) {
-    this.id = createHash('sha256').update(`${providerId}:${providerAccountId}`).digest('hex')
+    this.providerCompoundId = createHash('sha256').update(`${providerId}:${providerAccountId}`).digest('hex')
     this.userId = userId
     this.providerId = providerId
     this.providerType = providerType
@@ -27,6 +27,10 @@ export const AccountSchema = {
   columns: {
     id: {
       primary: true,
+      type: 'int',
+      generated: true
+    },
+    providerCompoundId: {
       type: 'varchar',
       unique: true
     },
