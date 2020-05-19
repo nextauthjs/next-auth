@@ -39,3 +39,50 @@ You should see that any conflicts in your PR are now resolved. You can review ch
 
 You can use `npm run lint:fix` to automatically apply Standard JS rules to resolve formatting differences (tabs vs spaces, line endings, etc).
 
+## Setting up local environment
+
+A quick and dirty guide on how to setup *next-auth* locally to work on it and test things out:
+
+1. Clone the repo:
+
+       git clone git@github.com:iaincollins/next-auth.git
+       cd next-auth/
+
+2. Install packages and run the build command:
+
+       npm i
+       npm run build
+
+3. Link React between the repo and the version installed in your project:
+
+       npm link ../your-application/node_modules/react
+
+*This is an annoying step and not obvious, but is needed because of how React has been written (otherwise React crashes when you try to use the `useSession()` hook in your project).*
+
+4. Finally link your project back to your local copy of next auth:
+
+       cd ../your-application
+       npm link ../next-auth
+
+That's it!
+
+NB: You may need to repeat both `npm link` steps if you install / update additional dependancies with `npm i`.
+
+### Hot reloading
+
+You might find it helpful to use the `npm run watch` command in the next-auth project, which will automatically (and silently) rebuild JS and CSS files as you edit them.
+
+    cd next-auth/
+    npm run watch
+
+If you are working on `next-auth/src/client/index.js` hot reloading will work as normal in your Next.js app.
+
+However  if you are working on anything else (e.g. `next-auth/src/server/*` etc) then you will need to *stop and start* your app for changes to apply as **Next.js will not hot reload those changes**.
+
+## Testing builds
+
+You may also want to clone the repo in GitHub as a way to test a change on a live site (e.g. on now.sh).
+
+You can do this using npm's ability to install a package from a GitHub repo or branch:
+
+    npm install your-github-username/next-auth#master
