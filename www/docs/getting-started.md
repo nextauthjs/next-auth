@@ -38,7 +38,7 @@ There are predefined models for Users and Sessions, which you can use (or extend
 
 ### Server
 
-To add `next-auth` to a project, create a file to handle authentication requests at `pages/api/auth/[...slug.js]`:
+To add `next-auth` to a project, create a file to handle authentication requests in the `/api` routes folder.
 
 ```javascript title="/page/api/auth/[...slug.js]"
 import NextAuth from 'next-auth'
@@ -77,15 +77,16 @@ export default (req, res) => NextAuth(req, res, options)
 
 All requests to `pages/api/auth/*` (signin, callback, signout, etc) will now be automatically handed by NextAuth.
 
-:::note
-Your project will need an NPM module suitable for your database installed (e.g. `npm i sqlite3`).
+:::important
+Your project will need an npm module suitable for your database installed (e.g. `npm install sqlite3`).
 :::
 
 ### Client 
 
-You can now use the `useSession()` hook to see if a user is signed in!
+You can use the `useSession()` hook to see if a user is signed in!
 
-```jsx {4}
+```jsx {5} title="/page/index.js"
+import React from 'react'
 import NextAuth from 'next-auth'
 
 export default () => {
@@ -99,17 +100,17 @@ export default () => {
 }
 ```
 
-> This is all the code you need to add support for signing in to a project!
+#### This is all the code you need to add support for signing in to a project!
 
 ### Adding to _app.js
 
 While calling `useSession()` like this will work perfectly well, it will do network request to get the session in each component you use it in. To reduce network load and improve performance, you can wrap your component tree in our `Provider`, which will make `useSession()` use [React Context](https://reactjs.org/docs/context.html) instead.
 
 :::tip
-You can use this `Provider` on specific pages or add it to all by adding to your `pages/_app.js`. See [Next.js docs](https://nextjs.org/docs/advanced-features/custom-app) for custom `_app.js`
+You can use this `Provider` on specific pages or add it to all by adding to your `pages/_app.js`. <br />See [Next.js docs](https://nextjs.org/docs/advanced-features/custom-app) for custom `_app.js`
 :::
 
-```jsx title="/pages/_app.js"
+```jsx {5,7} title="/pages/_app.js"
 import NextAuth from 'next-auth'
 
 export default ({ Component, pageProps }) => {
@@ -125,7 +126,7 @@ export default ({ Component, pageProps }) => {
 
 Authentication when Server Side Rendering is also supported with `session()`, which can be called client or server side:
 
-```jsx title="/pages/index.js"
+```jsx {3,9-12} title="/pages/index.js"
 import NextAuth from 'next-auth/client'
 
 export default ({ session }) => <>
@@ -147,7 +148,7 @@ You can call `NextAuth.session()` function in client side JavaScript, without ne
 
 ## Configuration
 
-Configuration options are passed to NextAuth when initalizing it (in your `/api/` route).
+Configuration options are passed to NextAuth when initalizing it (in your `/pages/api/auth` route).
 
 The only things you will *need* to configure are the following:
 
@@ -157,7 +158,7 @@ The only things you will *need* to configure are the following:
 
 An "*Adapter*" in NextAuth is the thing that connects your application to whatever database / backend system you want to use to store data for user accounts, sessions, etc.
 
-NextAuth comes with a default adapter that uses [TypeORM](https://typeorm.io/) so that it can be be used with many different databases without any configuration, you simply add the database driver you want to use to your project and tell NextAuth to use it.
+NextAuth comes with a default adapter that uses [TypeORM](https://typeorm.io/) so that it can be used with many different databases without any further configuration, you simply add the database driver you want to use to your project and tell NextAuth to use it.
 
 If you have an existing database / user management system or want to use a database that isn't supported out of the box you can create and pass your own adapter to handle actions like `createAccount`, `deleteAccount`, (etc).
 
@@ -165,7 +166,7 @@ If you have an existing database / user management system or want to use a datab
 
 This is an example of how to use an SQLite in memory database, which can be useful for development and testing, and to check everything is working:
 
-1. Install the database driver as a dependancy in the usual way - e.g. `npm i sqlite3`
+1. Install the database driver as a dependancy in the usual way - e.g. `npm install sqlite3`
 2. Pass a *TypeORM* configuration object when calling `NextAuth()` in your API route.
 
 e.g.
@@ -201,7 +202,7 @@ Appropriate tables / collections for Users, Sessions (etc) will be created autom
 
 You can customize, extend or replace the models by passing additional options to the `Adapters.Default()` function.
 
-If you are using a database that is not supported out of the box - or if you want to use NextAuth with an existing database (or have a more complex setup, with accounts and sessions spread across different systems - you can pass your own methods to be called for user and session creation / deletion (etc).
+If you are using a database that is not supported out of the box, or if you want to use NextAuth with an existing database, or have a more complex setup with accounts and sessions spread across different systems - you can pass your own methods to be called for user and session creation / deletion (etc).
 
 :::caution
 **Supported databases and models/schemas subject to change before release**

@@ -21,13 +21,13 @@ module.exports = {
           position: 'left'
         },
         {
-          href: 'https://github.com/iaincollins/next-auth',
-          label: 'GitHub',
+          href: 'https://npmjs.com/package/next-auth',
+          label: 'npm',
           position: 'right'
         },
         {
-          href: 'https://npmjs.com/package/next-auth',
-          label: 'NPM',
+          href: 'https://github.com/iaincollins/next-auth',
+          label: 'GitHub',
           position: 'right'
         }
       ]
