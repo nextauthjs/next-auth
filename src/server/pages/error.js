@@ -1,8 +1,8 @@
 import { h } from 'preact' // eslint-disable-line no-unused-vars
 import render from 'preact-render-to-string'
 
-export default ({ site, error, urlPrefix }) => {
-  const signinPageUrl = `${urlPrefix}/signin` // @TODO Make sign in URL configurable
+export default ({ site, error, baseUrl }) => {
+  const signinPageUrl = `${baseUrl}/signin` // @TODO Make sign in URL configurable
 
   let heading = <h1>Error</h1>
   let message = <p><a className='site' href={site}>{site.replace(/^https?:\/\//, '')}</a></p>

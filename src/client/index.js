@@ -2,37 +2,20 @@
 /* global fetch:false */
 import { useState, useEffect, useContext, createContext, createElement } from 'react'
 
-const URL_PREFIX_COOKIE = 'next-auth.url-prefix'
+const DEFAULT_BASE_URL_COOKIE_NAME = 'next-auth.base-url'
 const DEFAULT_SITE = ''
-const DEFAULT_PATH_PREFIX = '/api/auth'
+const DEFAULT_BASE_PATH = '/api/auth'
 
 // Isomorphic get session method
-const session = async ({ req, site, pathPrefix, urlPrefixCookieName } = {}) => {
-  // If we have a 'req' object are running sever side and should get cookies from headers
-  const cookies = req ? _parseCookies(req.headers.cookie) : null
-  // We will need the raw header as it will have the HTTP only Session ID cookie in it
-  // and we will need to pass that to get the session data back.
+const session = async ({ req, site, basePath, baseUrlCookieName } = {}) => {
+  const baseUrl = _baseUrl({ req, site, basePath, baseUrlCookieName })
+  if (!baseUrl) { return null }
+
+  // If server side, send with cookies in header (sent automatically client side)
   const fetchOptions = req ? { headers: { cookie: req.headers.cookie } } : {}
 
-  // If site and/or pathPrefix are specified, use them (or the defaults)
-  // otherwise get the server URL from the signed HTTP only cookie.
-  //
-  // If no options specified (which usually will be the case) then grab
-  // the configuration dynamically from a cookie. Prefer the _Secure-
-  // prefixed version if it is avalible, but fall back to checking the
-  // version without the prefix so it still works on URLs like http://localhost
-  //
-  // If there is no cookie set, then we use the default prefix (/api/auth).
-  const urlPrefix = (site || pathPrefix || !cookies)
-    ? `${site || DEFAULT_SITE}${pathPrefix || DEFAULT_PATH_PREFIX}`
-    : _getUrlPrefixFromCookies(cookies, urlPrefixCookieName)
-
-  // If we are rendering server side but don't have a URL prefix, then give up
-  // because we can't call fetch server side an absolute URL to query.
-  if (req && !urlPrefix) { return null }
-
   try {
-    const res = await fetch(`${urlPrefix}/session`, fetchOptions) // Absolute URL
+    const res = await fetch(`${baseUrl}/session`, fetchOptions)
     const data = await res.json()
     return Object.keys(data).length > 0 ? data : null // Return null if session data empty
   } catch (error) {
@@ -41,16 +24,17 @@ const session = async ({ req, site, pathPrefix, urlPrefixCookieName } = {}) => {
   }
 }
 
+
 // Context to store session data globally
 const SessionContext = createContext()
 
 // Internal hook for getting session from the api.
-const useSessionData = (session, { pathPrefix } = {}) => {
+const useSessionData = (session, { basePath } = {}) => {
   const [data, setData] = useState(session)
   const [loading, setLoading] = useState(true)
   const getSession = async () => {
     try {
-      const res = await fetch(`${pathPrefix || DEFAULT_PATH_PREFIX}/session`) // Releative URL
+      const res = await fetch(`${basePath || DEFAULT_BASE_PATH}/session`) // Releative URL
       const data = await res.json()
       setData(Object.keys(data).length > 0 ? data : null) // Return null if session data empty
       setLoading(false)
@@ -63,21 +47,40 @@ const useSessionData = (session, { pathPrefix } = {}) => {
 }
 
 // Provider to wrap the app in to make session data available globally
-const Provider = ({ children, session, pathPrefix }) => {
-  const value = useSession(session, { pathPrefix })
-
+const Provider = ({ children, session, basePath }) => {
+  const value = useSession(session, { basePath })
   return createElement(SessionContext.Provider, { value }, children)
 }
 
 // Hook to access the session data stored in the context
-const useSession = (session, { pathPrefix } = {}) => {
+const useSession = (session, { basePath } = {}) => {
   const value = useContext(SessionContext)
   // If we have no Provider in the tree we call the actual hook for fetching the session
   if (value === undefined) {
-    return useSessionData(session, { pathPrefix })
+    return useSessionData(session, { basePath })
   }
 
   return value
+}
+
+const _baseUrl = ({ req, site, baseUrlCookieName, basePath }) => {
+  // If we have a 'req' object are running sever side and should get cookies from headers
+  const cookies = req ? _parseCookies(req.headers.cookie) : null
+
+  // If site and/or basePath are specified, use them (or the defaults)
+  // otherwise get the server URL from the signed HTTP only cookie.
+  //
+  // If no options specified (which usually will be the case) then grab
+  // the configuration dynamically from a cookie. Prefer the _Secure-
+  // prefixed version if it is avalible, but fall back to checking the
+  // version without the prefix so it still works on URLs like http://localhost
+  //
+  // If there is no cookie set, then we use the default prefix (/api/auth).
+  const baseUrl = (site || basePath || !cookies)
+    ? `${site || DEFAULT_SITE}${basePath || DEFAULT_BASE_PATH}`
+    : _getUrlPrefixFromCookies(cookies, baseUrlCookieName)
+
+  return baseUrl
 }
 
 // Adapted from https://github.com/felixfong227/simple-cookie-parser/blob/master/index.js
@@ -99,14 +102,15 @@ const _parseCookies = (string) => {
   }
 }
 
-const _getUrlPrefixFromCookies = (cookies, urlPrefixCookieName) => {
-  const cookieValue = cookies[urlPrefixCookieName] || cookies[`__Secure-${URL_PREFIX_COOKIE}`] || cookies[URL_PREFIX_COOKIE]
-  const [urlPrefixValue] = cookieValue ? cookieValue.split('|') : [null]
-  return urlPrefixValue
+const _getUrlPrefixFromCookies = (cookies, baseUrlCookieName) => {
+  const cookieValue = cookies[baseUrlCookieName] || cookies[`__Secure-${DEFAULT_BASE_URL_COOKIE_NAME}`] || cookies[DEFAULT_BASE_URL_COOKIE_NAME]
+  const [baseUrl] = cookieValue ? cookieValue.split('|') : [null]
+  return baseUrl
 }
 
 export default {
   session,
   useSession,
+  baseUrl: _baseUrl,
   Provider
 }

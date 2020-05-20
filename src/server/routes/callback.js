@@ -5,7 +5,7 @@ import cookie from '../lib/cookie'
 
 // @TODO Refactor oAuthCallback to return promise instead of using a callback and reduce duplicate code
 export default async (req, res, options, done) => {
-  const { provider: providerName, providers, adapter, site, secret, urlPrefix, cookies, callbackUrl, newAccountLandingPageUrl } = options
+  const { provider: providerName, providers, adapter, site, secret, baseUrl, cookies, callbackUrl, newAccountLandingPageUrl } = options
   const provider = providers[providerName]
   const { type } = provider
   const { getEmailVerification, deleteEmailVerification } = await adapter.getAdapter(options)
@@ -18,7 +18,7 @@ export default async (req, res, options, done) => {
       // @TODO Check error
       if (error) {
         console.error('OAUTH_CALLBACK_ERROR', error)
-        res.status(302).setHeader('Location', `${urlPrefix}/error?error=oAuthCallback`)
+        res.status(302).setHeader('Location', `${baseUrl}/error?error=oAuthCallback`)
         res.end()
         return done()
       }
@@ -42,12 +42,12 @@ export default async (req, res, options, done) => {
       } catch (error) {
         if (error.name === 'AccountNotLinkedError') {
           // If the emai lon the account is already linked, but nto with this oAuth account
-          res.status(302).setHeader('Location', `${urlPrefix}/error?error=oAuthAccountNotLinked`)
+          res.status(302).setHeader('Location', `${baseUrl}/error?error=oAuthAccountNotLinked`)
         } else if (error.name === 'CreateUserError') {
-          res.status(302).setHeader('Location', `${urlPrefix}/error?error=oAuthCreateAccount`)
+          res.status(302).setHeader('Location', `${baseUrl}/error?error=oAuthCreateAccount`)
         } else {
           console.error('OAUTH_CALLBACK_ERROR', error)
-          res.status(302).setHeader('Location', `${urlPrefix}/error?error=Callback`)
+          res.status(302).setHeader('Location', `${baseUrl}/error?error=Callback`)
         }
         res.end()
         return done()
@@ -71,7 +71,7 @@ export default async (req, res, options, done) => {
       // Verify email and token match email verification record in database
       const invite = await getEmailVerification(email, token, secret, provider)
       if (!invite) {
-        res.status(302).setHeader('Location', `${urlPrefix}/error?error=Verification`)
+        res.status(302).setHeader('Location', `${baseUrl}/error?error=Verification`)
         res.end()
         return done()
       }
@@ -108,9 +108,9 @@ export default async (req, res, options, done) => {
       return done()
     } catch (error) {
       if (error.name === 'CreateUserError') {
-        res.status(302).setHeader('Location', `${urlPrefix}/error?error=EmailCreateAccount`)
+        res.status(302).setHeader('Location', `${baseUrl}/error?error=EmailCreateAccount`)
       } else {
-        res.status(302).setHeader('Location', `${urlPrefix}/error?error=Callback`)
+        res.status(302).setHeader('Location', `${baseUrl}/error?error=Callback`)
         console.error('EMAIL_CALLBACK_ERROR', error)
       }
       res.end()

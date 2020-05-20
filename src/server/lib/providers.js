@@ -1,12 +1,12 @@
-export default (_providers, urlPrefix) => {
+export default (_providers, baseUrl) => {
   const providers = {}
 
   _providers.forEach(provider => {
     const providerId = provider.id
     providers[providerId] = {
       ...provider,
-      signinUrl: `${urlPrefix}/signin/${providerId}`,
-      callbackUrl: `${urlPrefix}/callback/${providerId}`
+      signinUrl: `${baseUrl}/signin/${providerId}`,
+      callbackUrl: `${baseUrl}/callback/${providerId}`
     }
   })
 

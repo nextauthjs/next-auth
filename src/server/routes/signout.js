@@ -2,7 +2,7 @@
 import cookie from '../lib/cookie'
 
 export default async (req, res, options, done) => {
-  const { adapter, cookies, callbackUrl, csrfTokenVerified, urlPrefix } = options
+  const { adapter, cookies, callbackUrl, csrfTokenVerified, baseUrl } = options
   const { deleteSession } = await adapter.getAdapter(options)
 
   // Get session ID (if set)
@@ -30,7 +30,7 @@ export default async (req, res, options, done) => {
     //
     // Note: Adds ?csrf=true query string param to URL for debugging/tracking.
     // @TODO Add support for custom signin URLs
-    res.status(302).setHeader('Location', `${urlPrefix}/signout?csrf=true`)
+    res.status(302).setHeader('Location', `${baseUrl}/signout?csrf=true`)
     res.end()
     return done()
   }
