@@ -201,12 +201,19 @@ const Adapter = (config, options = {}) => {
         const { sessionMaxAge, sessionUpdateAge } = appOptions
 
         if (sessionMaxAge && (sessionUpdateAge || sessionUpdateAge === 0) && session.sessionExpires) {
-          // Calculate last updated date
-          const updateSessionIfOlderThanDate = new Date(session.sessionExpires)
-          updateSessionIfOlderThanDate.setTime(updateSessionIfOlderThanDate.getTime() - sessionMaxAge)
-          updateSessionIfOlderThanDate.setTime(updateSessionIfOlderThanDate.getTime() + sessionUpdateAge)
+          // Calculate last updated date, to throttle write updates to database
+          // Formula: ({expiry date} - sessionMaxAge) + sessionUpdateAge
+          //     e.g. ({expiry date} - 30 days) + 1 hour
+          //
+          // Default for sessionMaxAge is 30 days.
+          // Default for sessionUpdateAge is 1 hour.
+          const dateSessionIsDueToBeUpdated = new Date(session.sessionExpires)
+          dateSessionIsDueToBeUpdated.setTime(dateSessionIsDueToBeUpdated.getTime() - sessionMaxAge)
+          dateSessionIsDueToBeUpdated.setTime(dateSessionIsDueToBeUpdated.getTime() + sessionUpdateAge)
 
-          if (new Date() > updateSessionIfOlderThanDate) {
+          // Trigger update of session expiry date and write to database, only
+          // if the session was last updated more than {sessionUpdateAge} ago
+          if (new Date() > dateSessionIsDueToBeUpdated) {
             const newExpiryDate = new Date()
             newExpiryDate.setTime(newExpiryDate.getTime() + sessionMaxAge)
             session.sessionExpires = newExpiryDate.toISOString()
