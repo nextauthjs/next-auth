@@ -154,7 +154,7 @@ export default async (req, res, _options) => {
     // except for the options with special handling above
     const options = {
       // Defaults options can be overidden
-      sessionMaxAge: 30 * 60 * 60 * 1000, // Sessions expire after 30 days of being idle
+      sessionMaxAge: 30 * 24 * 60 * 60 * 1000, // Sessions expire after 30 days of being idle
       sessionUpdateAge: 24 * 60 * 60 * 1000, // Sessions updated only if session is greater than this value (0 = always, 24*60*60*1000 = every 24 hours)
       verificationMaxAge: 24 * 60 * 60 * 1000, // Email/passwordless links expire after 24 hours
       debug: false, // Enable debug messages to be displayed
