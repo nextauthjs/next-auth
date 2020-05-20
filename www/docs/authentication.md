@@ -3,37 +3,38 @@ id: auth
 title: Authentication
 ---
 
-To use oAuth you need to configure environment variables with ID and secret and configure the service accordingly.
+To use OAuth you need to configure environment variables for each provider with ID and secret for each service.
 
-This project comes pre-configured to handle Facebook, Google and Twitter oAuth if you provide the ID and sercret for the service via environment variables.
+This project comes pre-configured to handle Facebook, Google, Twitter and many more. To view all available configurations, please check out our [Providers](/providers) page.
 
-You can pass them on the command line or put them in `.env` file which will be loaded at startup (see [.env.example](https://github.com/iaincollins/next-auth/blob/master/example/.env.example) for an example).
+:::tip
+For an example `.env` configuration please see [.env.example](https://github.com/iaincollins/next-auth/blob/master/example/.env.example).
+:::
 
-If you want to add new oAuth providers (such as GitHub), you will need to:
+If you want to add new OAuth providers, you will need to:
 
-* Add the oauth provider configuration in next-auth.providers.js
+* Add the oauth provider configuration in the `Providers` object in your configuration
 * Add a field to your User model (in 'index.js') with the name of the provider
 * Configure the service to point to your website (as in the examples below)
 * Specify the environment variables at run time
 
 ## Configuring your account
 
-These guides are approximate as exactly how to configure oAuth varies for each provider and tends to change when they update their developer portals, which can be quite often. If you can't see the options mentioned, try exploring the UI in the developer portal or configuration pages.
+These guides are approximate as exactly how to configure OAuth varies for each provider and tends to change when they update their developer portals, which can be quite often. If you can't see the options mentioned, try exploring the UI in the developer portal or configuration pages.
 
 Due to the volume of requests I'm not usually able to help with specific problems but pull requests with improved or extended instructions are very welcome.
 
-:::tip oAuth
-Twitter's oAuth implementation is the most permissive and easiest to configure, you may want to start with it. If you run into problems, you might want to check email sign-in is working as baseline.
+:::tip Twitter
+Twitter's OAuth implementation is the most permissive and easiest to configure, you may want to start with it. If you run into problems, you might want to check email sign-in is working as baseline.
 :::
 
-Please note that Facebook oAuth cannot be used to sign in to 'localhost' and that if you want to sign in to `localhost` with Google+ you must specifically add something like `http://localhost:3000/auth/oauth/google/callback` as a authorized redirect URI for your application.
+> Please note that Facebook OAuth cannot be used to sign in to 'localhost' and that if you want to sign in to `localhost` with Google+ you must specifically add something like `http://localhost:3000/auth/oauth/google/callback` as a authorized redirect URI for your application.
 
 ### Facebook Login
 
-:::info Environment Variables
-* FACEBOOK_ID
-* FACEBOOK_SECRET
-:::
+> Environment Variables:
+> * FACEBOOK_ID
+> * FACEBOOK_SECRET
 
 Configuration steps:
 
@@ -50,10 +51,9 @@ Configuration steps:
 
 ### Google+
 
-:::info Environment Variables
-* GOOGLE_ID
-* GOOGLE_SECRET
-:::
+> Environment Variables:
+> * GOOGLE_ID
+> * GOOGLE_SECRET
 
 Configuration steps:
 
@@ -70,10 +70,9 @@ Configuration steps:
 
 ### Twitter 
 
-:::info Environment Variables
-* TWITTER_KEY
-* TWITTER_SECRET
-:::
+> Environment Variables:
+> * TWITTER_KEY
+> * TWITTER_SECRET
   
 Configuration steps:
 
