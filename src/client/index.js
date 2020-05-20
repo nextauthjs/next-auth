@@ -24,7 +24,6 @@ const session = async ({ req, site, basePath, baseUrlCookieName } = {}) => {
   }
 }
 
-
 // Context to store session data globally
 const SessionContext = createContext()
 
