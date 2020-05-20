@@ -10,7 +10,7 @@ import session from './routes/session'
 import pages from './pages'
 
 const DEFAULT_SITE = ''
-const DEFAULT_PATH_PREFIX = '/api/auth'
+const DEFAULT_BASE_PATH = '/api/auth'
 
 export default async (req, res, _options) => {
   // To the best of my knowledge, we need to return a promise here
@@ -37,8 +37,8 @@ export default async (req, res, _options) => {
 
     // Allow site name, path prefix to be overriden
     const site = _options.site || DEFAULT_SITE
-    const pathPrefix = _options.pathPrefix || DEFAULT_PATH_PREFIX
-    const urlPrefix = `${site}${pathPrefix}`
+    const basePath = _options.basePath || DEFAULT_BASE_PATH
+    const baseUrl = `${site}${basePath}`
 
     // Use secure cookies if the site uses HTTPS
     // This being conditional allows cookies to work non-HTTPS development URLs
@@ -46,7 +46,7 @@ export default async (req, res, _options) => {
     // prefix, but enable them by default if the site URL is HTTPS; but not for
     // non-HTTPS URLs like http://localhost which are used in development).
     // For more on prefixes see https://googlechrome.github.io/samples/cookie-prefixes/
-    const secureCookies = _options.secureCookies || urlPrefix.startsWith('https://')
+    const secureCookies = _options.secureCookies || baseUrl.startsWith('https://')
     const cookiePrefix = secureCookies ? '__Secure-' : ''
 
     // @TODO Review cookie settings (names, options)
@@ -69,8 +69,8 @@ export default async (req, res, _options) => {
           secure: secureCookies
         }
       },
-      urlPrefix: {
-        name: `${cookiePrefix}next-auth.url-prefix`,
+      baseUrl: {
+        name: `${cookiePrefix}next-auth.base-url`,
         options: {
           httpOnly: true,
           sameSite: 'lax',
@@ -139,15 +139,15 @@ export default async (req, res, _options) => {
     // vulnerability, but this approach attempts to mitgate that by always verifying
     // the cookie and updating it if fails the verification check.
     let setUrlPrefixCookie = true
-    if (req.cookies[cookies.urlPrefix.name]) {
-      const [urlPrefixValue, urlPrefixHash] = req.cookies[cookies.urlPrefix.name].split('|')
+    if (req.cookies[cookies.baseUrl.name]) {
+      const [baseUrlValue, baseUrlHash] = req.cookies[cookies.baseUrl.name].split('|')
       // If the hash on the cookie is verified, then we must have set the cookie and don't need to update it
-      if (urlPrefixValue === urlPrefix && urlPrefixHash === createHash('sha256').update(`${urlPrefixValue}${secret}`).digest('hex')) { setUrlPrefixCookie = false }
+      if (baseUrlValue === baseUrl && baseUrlHash === createHash('sha256').update(`${baseUrlValue}${secret}`).digest('hex')) { setUrlPrefixCookie = false }
     }
     // If the cookie is not set already (or if it is set, but failed verification) set header to update the cookie
     if (setUrlPrefixCookie) {
-      const newUrlPrefixCookie = `${urlPrefix}|${createHash('sha256').update(`${urlPrefix}${secret}`).digest('hex')}`
-      cookie.set(res, cookies.urlPrefix.name, newUrlPrefixCookie, cookies.urlPrefix.options)
+      const newUrlPrefixCookie = `${baseUrl}|${createHash('sha256').update(`${baseUrl}${secret}`).digest('hex')}`
+      cookie.set(res, cookies.baseUrl.name, newUrlPrefixCookie, cookies.baseUrl.options)
     }
 
     // User provided options are overriden by other options,
@@ -163,15 +163,15 @@ export default async (req, res, _options) => {
       // These computed settings can values in _options but override them
       // and are request-specific.
       site,
-      pathPrefix,
-      urlPrefix,
+      basePath,
+      baseUrl,
       action,
       provider,
       cookies,
       secret,
       csrfToken,
       csrfTokenVerified,
-      providers: parseProviders(_options.providers, urlPrefix),
+      providers: parseProviders(_options.providers, baseUrl),
       callbackUrl: site
     }
 
@@ -197,7 +197,7 @@ export default async (req, res, _options) => {
           }
           break
         case 'signout':
-          pages.render(req, res, 'signout', { site, urlPrefix, csrfToken, callbackUrl: options.callbackUrl }, done)
+          pages.render(req, res, 'signout', { site, baseUrl, csrfToken, callbackUrl: options.callbackUrl }, done)
           break
         case 'callback':
           if (provider && options.providers[provider]) {
@@ -211,7 +211,7 @@ export default async (req, res, _options) => {
           pages.render(req, res, 'check-email', { site }, done)
           break
         case 'error':
-          pages.render(req, res, 'error', { site, error, urlPrefix }, done)
+          pages.render(req, res, 'error', { site, error, baseUrl }, done)
           break
         default:
           res.status(404).end()

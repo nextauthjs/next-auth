@@ -3,7 +3,7 @@ import oAuthSignin from '../lib/signin/oauth'
 import emailSignin from '../lib/signin/email'
 
 export default async (req, res, options, done) => {
-  const { provider: providerName, providers, urlPrefix, csrfTokenVerified } = options
+  const { provider: providerName, providers, baseUrl, csrfTokenVerified } = options
   const provider = providers[providerName]
   const { type } = provider
 
@@ -16,7 +16,7 @@ export default async (req, res, options, done) => {
     oAuthSignin(provider, (error, oAuthSigninUrl) => {
       if (error) {
         console.error('OAUTH_SIGNIN_ERROR', error)
-        res.status(302).setHeader('Location', `${urlPrefix}/error?error=oAuthSignin`)
+        res.status(302).setHeader('Location', `${baseUrl}/error?error=oAuthSignin`)
         res.end()
         return done()
       }
@@ -41,7 +41,7 @@ export default async (req, res, options, done) => {
     //
     // Note: Adds ?csrf=true query string param to URL for debugging/tracking
     if (!csrfTokenVerified) {
-      res.status(302).setHeader('Location', `${urlPrefix}/signin?email=${email}&csrf=true`)
+      res.status(302).setHeader('Location', `${baseUrl}/signin?email=${email}&csrf=true`)
       res.end()
       return done()
     }
@@ -50,17 +50,17 @@ export default async (req, res, options, done) => {
       await emailSignin(email, provider, options)
     } catch (error) {
       console.error('EMAIL_SIGNIN_ERROR', error)
-      res.status(302).setHeader('Location', `${urlPrefix}/error?error=EmailSignin`)
+      res.status(302).setHeader('Location', `${baseUrl}/error?error=EmailSignin`)
       res.end()
       return done()
     }
 
-    res.status(302).setHeader('Location', `${urlPrefix}/check-email`)
+    res.status(302).setHeader('Location', `${baseUrl}/check-email`)
     res.end()
     return done()
   } else {
     // If provider not supported, redirect to sign in page
-    res.status(302).setHeader('Location', `${urlPrefix}/signin`)
+    res.status(302).setHeader('Location', `${baseUrl}/signin`)
     res.end()
     return done()
   }
