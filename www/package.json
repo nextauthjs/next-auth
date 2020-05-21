@@ -5,7 +5,9 @@
     "start": "docusaurus start",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
-    "deploy": "docusaurus deploy"
+    "deploy": "docusaurus deploy",
+    "lint": "standard",
+    "lint:fix": "standard --fix"
   },
   "dependencies": {
     "@docusaurus/core": "^2.0.0-alpha.54",
