@@ -37,7 +37,7 @@ There are predefined models for Users and Sessions, which you can use (or extend
 
 ### Server
 
-To add `next-auth` to a project, create a file to handle authentication requests at `pages/api/auth/[...slug.js]`:
+To add `next-auth` to a project, create a file to handle authentication requests at `pages/api/auth/[...slug].js`:
 
 ```javascript
 import NextAuth from 'next-auth'

@@ -40,7 +40,7 @@ There are predefined models for Users and Sessions, which you can use (or extend
 
 To add `next-auth` to a project, create a file to handle authentication requests in the `/api` routes folder.
 
-```javascript title="/page/api/auth/[...slug.js]"
+```javascript title="/page/api/auth/[...slug].js"
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 import Adapters from 'next-auth/adapters'
@@ -171,7 +171,7 @@ This is an example of how to use an SQLite in memory database, which can be usef
 
 e.g.
 
-```js title="/pages/api/auth/[...slug.js]"
+```js title="/pages/api/auth/[...slug].js"
 adapter: Adapters.Default({
   type: 'sqlite',
   database: ':memory:'
