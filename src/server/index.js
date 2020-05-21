@@ -8,11 +8,12 @@ import signout from './routes/signout'
 import callback from './routes/callback'
 import session from './routes/session'
 import pages from './pages'
+import adapters from '../adapters'
 
 const DEFAULT_SITE = ''
 const DEFAULT_BASE_PATH = '/api/auth'
 
-export default async (req, res, _options) => {
+export default async (req, res, userSuppliedOptions) => {
   // To the best of my knowledge, we need to return a promise here
   // to avoid early termination of calls to the serverless function
   // (and then return that promise when we are done) - eslint
@@ -36,9 +37,26 @@ export default async (req, res, _options) => {
     } = body
 
     // Allow site name, path prefix to be overriden
-    const site = _options.site || DEFAULT_SITE
-    const basePath = _options.basePath || DEFAULT_BASE_PATH
+    const site = userSuppliedOptions.site || DEFAULT_SITE
+    const basePath = userSuppliedOptions.basePath || DEFAULT_BASE_PATH
     const baseUrl = `${site}${basePath}`
+
+    // Parse database / adapter
+    let adapter
+    if (userSuppliedOptions.adapter) {
+      // If adapter is provided, use it (advanced usage, overrides database)
+      adapter = userSuppliedOptions.adapter
+    } else if (userSuppliedOptions.database) {
+      // If database URI or config object is provided, use it (simple usage)
+      adapter = adapters.Default(userSuppliedOptions.database)
+    } else {
+      // @TODO Add link to documentation
+      console.error(`Error:\n`,
+                    `NextAuth requires a 'database' or 'adapter' option to be specified.\n`,
+                    `See documentation for details https://next-auth.js.org`)
+      pages.render(req, res, 'error', { site, error: 'Configuration', baseUrl }, done)
+      return done()
+    }
 
     // Use secure cookies if the site uses HTTPS
     // This being conditional allows cookies to work non-HTTPS development URLs
@@ -46,7 +64,7 @@ export default async (req, res, _options) => {
     // prefix, but enable them by default if the site URL is HTTPS; but not for
     // non-HTTPS URLs like http://localhost which are used in development).
     // For more on prefixes see https://googlechrome.github.io/samples/cookie-prefixes/
-    const secureCookies = _options.secureCookies || baseUrl.startsWith('https://')
+    const secureCookies = userSuppliedOptions.secureCookies || baseUrl.startsWith('https://')
     const cookiePrefix = secureCookies ? '__Secure-' : ''
 
     // @TODO Review cookie settings (names, options)
@@ -90,14 +108,14 @@ export default async (req, res, _options) => {
         }
       },
       // Allow user cookie options to override any cookie settings above
-      ..._options.cookies
+      ...userSuppliedOptions.cookies
     }
 
     // Secret used salt cookies and tokens (e.g. for CSRF protection).
     // If no secret option is specified then it creates one on the fly
     // based on options passed here. A options contains unique data, such as
     // oAuth provider secrets and database credentials it should be sufficent.
-    const secret = _options.secret || createHash('sha256').update(JSON.stringify(_options)).digest('hex')
+    const secret = userSuppliedOptions.secret || createHash('sha256').update(JSON.stringify(userSuppliedOptions)).digest('hex')
 
     // Ensure CSRF Token cookie is set for any subsequent requests.
     // Used as part of the strateigy for mitigation for CSRF tokens.
@@ -159,9 +177,10 @@ export default async (req, res, _options) => {
       verificationMaxAge: 24 * 60 * 60 * 1000, // Email/passwordless links expire after 24 hours
       debug: false, // Enable debug messages to be displayed
       // Custom options override defaults
-      ..._options,
-      // These computed settings can values in _options but override them
+      ...userSuppliedOptions,
+      // These computed settings can values in userSuppliedOptions but override them
       // and are request-specific.
+      adapter,
       site,
       basePath,
       baseUrl,
@@ -171,7 +190,7 @@ export default async (req, res, _options) => {
       secret,
       csrfToken,
       csrfTokenVerified,
-      providers: parseProviders(_options.providers, baseUrl),
+      providers: parseProviders(userSuppliedOptions.providers, baseUrl),
       callbackUrl: site
     }
 

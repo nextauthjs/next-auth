@@ -62,6 +62,16 @@ export default ({ site, error, baseUrl }) => {
           <p><a className='button' href={signinPageUrl}>Sign in</a></p>
         </div>
       break
+    case 'Configuration':
+      heading = <h1>Server configuration error</h1>
+      message =
+        <div>
+          <div className='message'>
+            <p>There is a problem with the NextAuth server configuration.</p>
+            <p>Check the server logs for details.</p>
+          </div>
+        </div>
+      break
     default:
   }
 
