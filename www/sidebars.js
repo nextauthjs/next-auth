@@ -1,8 +1,11 @@
 module.exports = {
   sidebar: {
     v2: [
+      'about',
       'getting-started',
+      'configuration',
       'providers',
+      'adapters',
       'client',
       'auth',
       'upgrade'
