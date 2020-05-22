@@ -14,15 +14,15 @@ The only things you will *need* to configure are the following:
 
 ## Supported options
 
-* database - a database connection string or [TypeORM](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md) configuration object
-* adapter - advanced option for custom databases (see [Adapter](/adapters))
-* sessionMaxAge - Expire sessions after 30 days of being idle (default: 30*24*60*60*1000)
-* sessionUpdateAge
-* verificationMaxAge
-* debug
-  // sessionUpdateAge: 24*60*60*1000, // Update session expiry only if session was updated more recently than the last 24 hours
-  // verificationMaxAge: 24*60*60*1000, // Expire erification links (for email sign in) after 24 hours
-  // debug: false // Set to true to enable debug messages to be displayed
+* `database` - a database connection string or [TypeORM](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md) configuration object
+* `adapter` - advanced option for custom databases (see [Adapter](/adapters))
+* `sessionMaxAge` - Expire sessions after 30 days of being idle (default: `30*24*60*60*1000`)
+* `sessionUpdateAge`
+* `verificationMaxAge`
+* debug  
+  * `sessionUpdateAge`: `24*60*60*1000` (Update session expiry only if session was updated more recently than the last 24 hours)
+  * `verificationMaxAge`: `24*60*60*1000`, (Expire verification links (for email sign in) after 24 hours)
+  * `debug.: `false` (Set to `true` to enable debug messages to be displayed)
 
 ## Example Database Configuration
 

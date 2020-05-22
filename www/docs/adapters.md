@@ -21,4 +21,9 @@ const database = {
   database: ':memory:',
    synchronize: true
 }
-``
+```
+
+:::note
+Database options - the default adapter is TypeORM
+See https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md
+:::
