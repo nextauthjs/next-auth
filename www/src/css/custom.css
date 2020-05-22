@@ -53,7 +53,7 @@
 
 .home-subtitle {
   justify-content: center;
-  margin-top: 2rem;
+  padding: 2rem 0;
   opacity: 0.7;
   font-style: italic;
 }
@@ -63,6 +63,7 @@
   line-height: 3.5rem;
   margin: 0.5rem 0;  
 }
+
 
 .home-main .code {
   padding: 0;
@@ -90,8 +91,69 @@
   margin-bottom: 2rem;
 }
 
+.navbar__item.navbar__link[href*="github"] {
+  display: flex;
+  font-size: 0;
+  padding-right: 2rem;
+}
+
+.navbar__item.navbar__link[href*="github"]:before {
+  content: "";
+  width: 1.8rem;
+  height: 1.8rem;
+  background-image: url("/img/brand-github.svg");
+  background-repeat: no-repeat;
+}
+
+html[data-theme='dark'] .navbar__item.navbar__link[href*="github"]:before {
+  background-image: url("/img/brand-github-inverted.svg");
+}
+
+.navbar__item.navbar__link[href*="npmjs"] {
+  display: flex;
+  font-size: 0;
+}
+
+.navbar__item.navbar__link[href*="npmjs"]:before {
+  content: "";
+  width: 3rem;
+  height: 1.2rem;
+  margin-top: .2rem;
+  background-image: url("/img/brand-npm.svg");
+  background-repeat: no-repeat;
+}
+
+html[data-theme='dark'] .navbar__item.navbar__link[href*="npm"]:before {
+  background-image: url("/img/brand-npm-inverted.svg");
+}
+
+@media screen and (max-width: 966px) {
+  .navbar__item.navbar__link[href*="github"],
+  .navbar__item.navbar__link[href*="npmjs"] {
+    display: none;
+  }
+}
+
 html[data-theme='dark'] { 
   --ifm-background-color: #1F201C;
+}
+
+.home-main .feature-image-wrapper {
+  display: inline-block;
+  overflow: auto;
+  background: white;
+  padding: 0.3rem;
+  border-radius: 10rem;
+  background: #f1f1f1;  
+  overflow: visible;
+}
+
+.home-main .feature-image-wrapper img {
+  zoom: 1;
+}
+
+html[data-theme='dark'] .home-main .feature-image-wrapper {
+  background: #ccc;
 }
 
 html[data-theme="dark"] .hero .hero__title,

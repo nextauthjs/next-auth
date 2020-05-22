@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'NextAuth',
+  title: 'NextAuth.js',
   tagline: 'Serverless authentication for Next.js',
   url: 'https://next-auth.js.org',
   baseUrl: '/',
@@ -8,7 +8,7 @@ module.exports = {
   projectName: 'next-auth',
   themeConfig: {
     navbar: {
-      title: 'NextAuth',
+      title: 'NextAuth.js',
       /*
       logo: {
         alt: 'NextAuth Logo',
@@ -19,12 +19,17 @@ module.exports = {
         {
           to: '/getting-started',
           activeBasePath: 'docs',
-          label: 'Docs',
+          label: 'Documentation',
+          position: 'left'
+        },
+        {
+          to: 'https://next-auth-example.now.sh',
+          label: 'Example',
           position: 'left'
         },
         {
           href: 'https://www.npmjs.com/package/next-auth/v/beta',
-          label: 'next-auth@beta',
+          label: 'npm',
           position: 'right'
         },
         {
@@ -44,16 +49,16 @@ module.exports = {
       style: 'dark',
       links: [
         {
-          title: 'Docs',
+          title: 'About NextAuth.js',
           items: [
             {
-              label: 'Getting Started',
-              to: '/getting-started'
+              label: 'About NextAuth.js',
+              to: '/about'
             },
             {
-              label: 'Migrating from v1',
-              to: '/upgrading'
-            }
+              label: 'About the team',
+              to: '/contributors'
+            },
           ]
         }
       ],

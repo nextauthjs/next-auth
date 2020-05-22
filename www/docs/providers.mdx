@@ -86,39 +86,38 @@ Most OAuth providers only need a client ID and a client secret to work but some 
 There can also be other gotchas when configuring providers.
 :::
 
-| Name       | Additional options                                                          | Notes                                                                                        |
-| :--------- | :-------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------- |
-| `Auth0`    | accessTokenUrl, authorizationUrl, profileUrl <br /> doesn't need clientSecret |                                                                                              |
-| `Discord`  | doesn't need clientSecret                                                   |                                                                                              |
-| `Github`   |                                                                             | allows only one callback URL                                                                 |
-| `Facebook` |                                                                             | callback URL doesn't work localhost                                                          |
-| `Twitter`  |                                                                             | you need to enable the *"Request email address from users"* option in your app's permissions |
-																														 
-
+| Name | Additional options | Notes |
+| :--- | :--- | :--- |
+| `Auth0` | accessTokenUrl, authorizationUrl, profileUrl <br /> doesn't need clientSecret | |
+| `Discord`| doesn't need clientSecret | |
+| `Github` | | allows only one callback URL |
+| `Facebook` | | callback URL doesn't work localhost |
+| `Twitter` | | you need to enable the *"Request email address from users"* option in your app's permissions |
 
 It's also possible to add an OAuth provider that isn't yet supported by NextAuth by creating a custom JSON object. Below you can see the configuration for the Google provider.
+
 ```json
 {
-	id: 'google',
+  id: 'google',
   name: 'Google',
-	type: 'oauth',
-	version: '2.0',
-	scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
-	params: { grant_type: 'authorization_code' },
-	accessTokenUrl: 'https://accounts.google.com/o/oauth2/token',
-	requestTokenUrl: 'https://accounts.google.com/o/oauth2/auth',
-	authorizationUrl: 'https://accounts.google.com/o/oauth2/auth?response_type=code',
-	profileUrl: 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json',
-	profile: (profile) => {
-		return {
-			id: profile.id,
-			name: profile.name,
-			email: profile.email,
-			image: profile.picture
-		}
-	},
-	clientId: '',
-	clientSecret: ''
+  type: 'oauth',
+  version: '2.0',
+  scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+  params: { grant_type: 'authorization_code' },
+  accessTokenUrl: 'https://accounts.google.com/o/oauth2/token',
+  requestTokenUrl: 'https://accounts.google.com/o/oauth2/auth',
+  authorizationUrl: 'https://accounts.google.com/o/oauth2/auth?response_type=code',
+  profileUrl: 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json',
+  profile: (profile) => {
+    return {
+      id: profile.id,
+      name: profile.name,
+      email: profile.email,
+      image: profile.picture
+    }
+  },
+  clientId: '',
+  clientSecret: ''
 }
 ```
 You can replace all the options in this JSON object with the ones from your custom provider and add it to the providers list.
@@ -126,18 +125,18 @@ You can replace all the options in this JSON object with the ones from your cust
 ```js title="/pages/api/auth/[...slug].js"
 ...
 providers: [
-	Providers.Twitter({
-		clientId: process.env.TWITTER_ID,
-		clientSecret: process.env.TWITTER_SECRET,
-	}),
-	{
-	id: 'customProvider',
-  	name: 'CustomProvider',
-  	type: 'oauth',
-  	version: '2.0',
-		scope: // When configuring OAuth providers you will need to make sure you get permission to request
-		...
-	}
+  Providers.Twitter({
+    clientId: process.env.TWITTER_ID,
+    clientSecret: process.env.TWITTER_SECRET,
+  }),
+  {
+    id: 'customProvider',
+    name: 'CustomProvider',
+    type: 'oauth',
+    version: '2.0',
+    scope: // When configuring OAuth providers you will need to make sure you get permission to request
+    ...
+  }
 ]
 ...
 ```
@@ -185,20 +184,20 @@ Feel free to open a PR for your custom configuration if you've created one for a
 	Now you can add the provider settings to the NextAuth options object in the Email Provider.
 
 	```js title="/pages/api/auth/[...slug].js"
-	providers: [
-	  Providers.Email({
-	    server: {
-	      host: process.env.EMAIL_SERVER_HOST,
-	      port: process.env.EMAIL_SERVER_PORT,
-	      auth: {
-	        user: process.env.EMAIL_SERVER_USER,
-	        pass: process.env.EMAIL_SERVER_PASSWORD
-	      }
-	    },
-	    from: process.env.EMAIL_FROM,
-	  }),
-	],
-	 ```
+  providers: [
+    Providers.Email({
+      server: {
+        host: process.env.EMAIL_SERVER_HOST,
+        port: process.env.EMAIL_SERVER_PORT,
+      auth: {
+        user: process.env.EMAIL_SERVER_USER,
+        pass: process.env.EMAIL_SERVER_PASSWORD
+      }
+    },
+    from: process.env.EMAIL_FROM,
+    }),
+  ],
+	```
 3. You can sign in at `[origin]/api/auth/signin`.   
    This is an unbranded auto-generated page with all the configured providers. If you want to create a custom sign in page you can use `[origin]/api/auth/signin/email` which connects directly to this email provider.
 

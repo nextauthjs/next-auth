@@ -14,7 +14,7 @@ For an example `.env` configuration please see [.env.example](https://github.com
 If you want to add new OAuth providers, you will need to:
 
 * Add the oauth provider configuration in the `Providers` object in your configuration
-* Add a field to your User model (in 'index.js') with the name of the provider
+* Add a field to your User model (in `index.js`) with the name of the provider
 * Configure the service to point to your website (as in the examples below)
 * Specify the environment variables at run time
 
@@ -28,7 +28,7 @@ Due to the volume of requests I'm not usually able to help with specific problem
 Twitter's OAuth implementation is the most permissive and easiest to configure, you may want to start with it. If you run into problems, you might want to check email sign-in is working as baseline.
 :::
 
-> Please note that Facebook OAuth cannot be used to sign in to 'localhost' and that if you want to sign in to `localhost` with Google+ you must specifically add something like `http://localhost:3000/auth/oauth/google/callback` as a authorized redirect URI for your application.
+> Please note that Facebook OAuth cannot be used to sign in to `localhost` and that if you want to sign in to `localhost` with Google+ you must specifically add something like `http://localhost:3000/auth/oauth/google/callback` as a authorized redirect URI for your application.
 
 ### Facebook Login
 
