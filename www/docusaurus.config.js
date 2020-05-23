@@ -58,7 +58,7 @@ module.exports = {
             {
               label: 'About the team',
               to: '/contributors'
-            },
+            }
           ]
         }
       ],

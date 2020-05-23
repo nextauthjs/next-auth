@@ -14,7 +14,7 @@ export default (options) => {
       return {
         id: profile.id,
         name: profile.name,
-        email: profile.email,
+        email: profile.verified_email ? profile.email : null,
         image: profile.picture
       }
     },

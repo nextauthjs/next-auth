@@ -1,5 +1,5 @@
 // Handle requests to /api/auth/signin
-import oAuthSignin from '../lib/signin/oauth'
+import OAuthSignin from '../lib/signin/oauth'
 import emailSignin from '../lib/signin/email'
 
 export default async (req, res, options, done) => {
@@ -13,10 +13,10 @@ export default async (req, res, options, done) => {
   }
 
   if (type === 'oauth') {
-    oAuthSignin(provider, (error, oAuthSigninUrl) => {
+    OAuthSignin(provider, (error, oAuthSigninUrl) => {
       if (error) {
         console.error('OAUTH_SIGNIN_ERROR', error)
-        res.status(302).setHeader('Location', `${baseUrl}/error?error=oAuthSignin`)
+        res.status(302).setHeader('Location', `${baseUrl}/error?error=OAuthSignin`)
         res.end()
         return done()
       }
