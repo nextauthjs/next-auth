@@ -5,7 +5,7 @@ export default (options) => {
     type: 'oauth',
     version: '2.0',
     scope: 'user:details:self',
-    options: { grant_type: 'authorization_code' },
+    params: { grant_type: 'authorization_code' },
     accessTokenUrl: 'https://mixer.com/api/v1/oauth/token',
     authorizationUrl: 'https://mixer.com/oauth/authorize?response_type=code',
     profileUrl: 'https://mixer.com/api/v1/users/current',
