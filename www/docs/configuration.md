@@ -6,25 +6,47 @@ title: Configuration
 
 Configuration options are passed to NextAuth.js when initalizing it (in your `/pages/api/auth` route).
 
-The only things you will *need* to configure are the following:
+The only required options are **site**, **providers** and **database**.
 
-- Your site name (e.g. 'http://www.example.com'), which should be set explicitly for security reasons
-- A list of authentication services (Twitter, Facebook, Google, etc)
-- A database
+## Options
 
-## Supported options
+* **site** (REQUIRED)
 
-* `database` - a database connection string or [TypeORM](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md) configuration object
-* `adapter` - advanced option for custom databases (see [Adapter](/adapters))
-* `sessionMaxAge` - Expire sessions after 30 days of being idle (default: `30*24*60*60*1000`)
-* `sessionUpdateAge`
-* `verificationMaxAge`
-* debug  
-  * `sessionUpdateAge`: `24*60*60*1000` (Update session expiry only if session was updated more recently than the last 24 hours)
-  * `verificationMaxAge`: `24*60*60*1000`, (Expire verification links (for email sign in) after 24 hours)
-  * `debug.: `false` (Set to `true` to enable debug messages to be displayed)
+  The fully qualified URL of your site e.g. `http://localhost:3000` or `https://www.example.com`
 
-## Example Database Configuration
+* **providers** (REQUIRED)
+
+  An array of [Providers](/providers) for signing in (e.g. Google, Facebook, Twitter, GitHub, Email, etc) in any order.
+* **database** (REQUIRED)
+
+  A database connection string or [TypeORM](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md) configuration object.
+* **adapter** 
+
+  An advanced option for specyfing a custom database adapter (see [Adapter](/adapters) for more information).
+
+  If `adapter` is specified, overrides the `database` option.
+
+* **sessionMaxAge** (default: `30*24*60*60*1000` - 30 days)
+
+  How long sessions can be idle before expiring.
+* **sessionUpdateAge** (default: `30*24*60*60*1000` - 24 hours)
+
+  How frequently expiry date should be updated in the database (throttles database writes).
+* **verificationMaxAge** (default: `30*24*60*60*1000` - 24 hours)
+
+  How long links in verification emails are valid for (used for passwordless sign in).
+* ~~**pages**~~ *coming soon*
+
+  ~~Specify custom URLs to be used for sign in, sign out and error pages.~~
+* **debug** (default: `false`)
+
+  Set debug to `true` to enable debug messages for all authenticaiton and database operations.
+
+---
+
+## Configuration Examples 
+
+### Database Configuration
 
 This is an example of how to use an SQLite in memory database, which can be useful for development and testing, and to check everything is working:
 
@@ -46,9 +68,9 @@ database:  {
 * See the [TypeORM configuration documentation](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md) for supported options.
 :::
 
-## Supported Databases
+#### Supported Databases
 
-The following databases are supported by the default adapter:
+The following databases are supported by the default TypeORM adapter:
 
 * cordova
 * expo
@@ -62,20 +84,17 @@ The following databases are supported by the default adapter:
 * sqljs
 * react-native
 
-Appropriate tables / collections for Users, Sessions (etc) will be created automatically.
+Appropriate tables / collections for Users, Sessions (etc) will be created automatically if they do not exist.
 
-You can customize, extend or replace the models by passing additional options to the `Adapters.Default()` function.
-
-If you are using a database that is not supported out of the box, or if you want to use  NextAuth.js with an existing database, or have a more complex setup with accounts and sessions spread across different systems - you can pass your own methods to be called for user and session creation / deletion (etc).
+If you want to customize, extend or replace the models, you can do this by using the 'adapters' option and passing passing additional options to `Adapters.Default()`.
 
 :::caution
-**Supported databases and models/schemas subject to change before release**
+ * Supported databases and models/schemas subject to change before release.
+ * Initial target platforms include MySQL, MariaDB, Postgress and MongoDB.
 :::
 
-## Page Customization
+### Pages
 
- NextAuth.js automatically creates simple, unbranded authentication pages for handling Sign in, Email Verification, callbacks, etc.
+NextAuth.js automatically creates simple, unbranded authentication pages for handling Sign in, Email Verification, callbacks, etc. The options displayed are generated based on the configuration supplied.
 
-The options displayed are generated based on the configuration supplied.
-
-You can create custom authentication pages if you would like to customize the experience. More details on how to accomplish this are coming soon!
+@TODO Add example of how to specify custom URLs for pages

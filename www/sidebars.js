@@ -1,14 +1,12 @@
 module.exports = {
   sidebar: {
     v2: [
-      'about',
       'getting-started',
       'configuration',
       'providers',
       'adapters',
       'client',
-      'auth',
-      'upgrade'
+      'rest-api',
     ],
     v1: [
       'v1/getting-started-v1',

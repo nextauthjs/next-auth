@@ -15,7 +15,7 @@ export const Image = ({ children, src, alt = '' }) => (
   </div>
  )
 
-## Supported providers
+## Supported Providers
 
 | Name | API docs | App configuration| 
 | --- | --- | --- |
@@ -81,18 +81,15 @@ NextAuth supports [OAuth](https://oauth.net/) 1.0, 1.0A and 2.0 providers.
 
 ### Custom OAuth provider
 
-:::note OAuth
-Most OAuth providers only need a client ID and a client secret to work but some might need some additional or even less options.  
-There can also be other gotchas when configuring providers.
-:::
+Most OAuth providers only need a **Client ID** and a **Client Secret** to work but some need some additional options. There are gotchas with some providers.
 
-| Name | Additional options | Notes |
+| Provider | Options required | Notes |
 | :--- | :--- | :--- |
-| `Auth0` | accessTokenUrl, authorizationUrl, profileUrl <br /> doesn't need clientSecret | |
-| `Discord`| doesn't need clientSecret | |
-| `Github` | | allows only one callback URL |
-| `Facebook` | | callback URL doesn't work localhost |
-| `Twitter` | | you need to enable the *"Request email address from users"* option in your app's permissions |
+| `Auth0` | accessTokenUrl, authorizationUrl, profileUrl | Doesn't need clientSecret. |
+| `Discord`|  | Doesn't need clientSecret. |
+| `GitHub` | | Only allows one callback URL. May not return email address if privacy enabled. |
+| `Facebook` | | Doesn't allow testing with localhost callback URLs. May not return email address if the account was created with a mobile number. |
+| `Twitter` | | Need to enable the *"Request email address from users"* option in your app's permissions. |
 
 It's also possible to add an OAuth provider that isn't yet supported by NextAuth by creating a custom JSON object. Below you can see the configuration for the Google provider.
 
