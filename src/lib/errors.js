@@ -34,8 +34,17 @@ class AccountNotLinkedError extends UnknownError {
   }
 }
 
+class InvalidProfile extends UnknownError {
+  constructor (message) {
+    super(message)
+    this.name = 'InvalidProfile'
+    this.message = message
+  }
+}
+
 module.exports = {
   UnknownError,
   CreateUserError,
-  AccountNotLinkedError
+  AccountNotLinkedError,
+  InvalidProfile
 }

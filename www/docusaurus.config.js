@@ -59,7 +59,7 @@ module.exports = {
             {
               label: 'Contributors',
               to: '/contributors'
-            },
+            }
           ]
         }
       ],

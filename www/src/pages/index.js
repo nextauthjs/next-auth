@@ -73,11 +73,12 @@ function Home () {
           <h1 className='hero__title'>{siteConfig.title}</h1>
           <p className='hero__subtitle'>{siteConfig.tagline}</p>
           <div className={styles.buttons}>
-            <a className={classnames(
+            <a
+              className={classnames(
                 'button button--outline button--primary button--lg',
                 styles.button
               )}
-              href="https://next-auth-example.now.sh"
+              href='https://next-auth-example.now.sh'
             >
               Try it out
             </a>

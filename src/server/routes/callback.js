@@ -1,9 +1,9 @@
 // Handle callbacks from login services
-import oAuthCallback from '../lib/oauth/callback'
+import OAuthCallback from '../lib/oauth/callback'
 import callbackHandler from '../lib/callback-handler'
 import cookie from '../lib/cookie'
 
-// @TODO Refactor oAuthCallback to return promise instead of using a callback and reduce duplicate code
+// @TODO Refactor OAuthCallback to return promise instead of using a callback and reduce duplicate code
 export default async (req, res, options, done) => {
   const { provider: providerName, providers, adapter, site, secret, baseUrl, cookies, callbackUrl, newAccountLandingPageUrl } = options
   const provider = providers[providerName]
@@ -14,16 +14,15 @@ export default async (req, res, options, done) => {
   const sessionToken = req.cookies[cookies.sessionToken.name]
 
   if (type === 'oauth') {
-    oAuthCallback(req, provider, async (error, response) => {
-      // @TODO Check error
+    OAuthCallback(req, provider, async (error, oauthAccount) => {
       if (error) {
         console.error('OAUTH_CALLBACK_ERROR', error)
-        res.status(302).setHeader('Location', `${baseUrl}/error?error=oAuthCallback`)
+        res.status(302).setHeader('Location', `${baseUrl}/error?error=OAuthCallback`)
         res.end()
         return done()
       }
 
-      const { profile, account } = response
+      const { profile, account } = await oauthAccount
 
       try {
         const { session, isNewAccount } = await callbackHandler(sessionToken, profile, account, options)
@@ -41,10 +40,13 @@ export default async (req, res, options, done) => {
         }
       } catch (error) {
         if (error.name === 'AccountNotLinkedError') {
-          // If the emai lon the account is already linked, but nto with this oAuth account
+          // If the email on the account is already linked, but nto with this oAuth account
           res.status(302).setHeader('Location', `${baseUrl}/error?error=oAuthAccountNotLinked`)
         } else if (error.name === 'CreateUserError') {
-          res.status(302).setHeader('Location', `${baseUrl}/error?error=oAuthCreateAccount`)
+          res.status(302).setHeader('Location', `${baseUrl}/error?error=OAuthCreateAccount`)
+        } else if (error.name === 'InvalidProfile') {
+          // If is missing email address (NB: the only field on a profile currently required)
+          res.status(302).setHeader('Location', `${baseUrl}/error?error=EmailRequired`)
         } else {
           console.error('OAUTH_CALLBACK_ERROR', error)
           res.status(302).setHeader('Location', `${baseUrl}/error?error=Callback`)

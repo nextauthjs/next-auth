@@ -51,9 +51,9 @@ export default async (req, res, userSuppliedOptions) => {
       adapter = adapters.Default(userSuppliedOptions.database)
     } else {
       // @TODO Add link to documentation
-      console.error(`Error:\n`,
-                    `NextAuth requires a 'database' or 'adapter' option to be specified.\n`,
-                    `See documentation for details https://next-auth.js.org`)
+      console.error('Error:\n',
+        'NextAuth requires a \'database\' or \'adapter\' option to be specified.\n',
+        'See documentation for details https://next-auth.js.org')
       pages.render(req, res, 'error', { site, error: 'Configuration', baseUrl }, done)
       return done()
     }

@@ -9,13 +9,12 @@
 // done prior to this handler being called to avoid additonal complexity in this
 // handler.
 //
-import { AccountNotLinkedError } from '../../lib/errors'
+import { AccountNotLinkedError, InvalidProfile } from '../../lib/errors'
 
 export default async (sessionToken, profile, providerAccount, options) => {
   try {
     // Input validation
-    if (!profile || !profile.email) { throw new Error('Missing or invalid profile') }
-
+    if (!profile) { throw new Error('Missing profile') }
     if (!providerAccount || !providerAccount.id || !providerAccount.type) { throw new Error('Missing or invalid provider account') }
 
     const { adapter } = options
@@ -38,6 +37,9 @@ export default async (sessionToken, profile, providerAccount, options) => {
     let isNewAccount = false
 
     if (providerAccount.type === 'email') {
+      // All new email accounts need an email address associated with the profile
+      if (!profile.email) { throw new InvalidProfile() }
+
       // If signing in with an email, check if an account with the same email address exists already
       const userByEmail = await getUserByEmail(profile.email)
       if (userByEmail) {
@@ -155,6 +157,13 @@ export default async (sessionToken, profile, providerAccount, options) => {
           // to sign in via email to verify their identity and then link the accounts.
           throw new AccountNotLinkedError()
         } else {
+          // New accounts currently require an email address, so unless the user is
+          // already logged in they must be signing in with an oAuth profile that
+          // includes an email address (if they are already logged in, we don't care).
+          //
+          // This restriction may be lifted (or made optional) in future.
+          if (!isSignedIn && !profile.email) { throw new InvalidProfile() }
+
           // If the current user is not logged in and the profile isn't linked to any user
           // accounts (by email or provider account id)...
           //

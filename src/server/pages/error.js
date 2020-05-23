@@ -9,9 +9,9 @@ export default ({ site, error, baseUrl }) => {
 
   switch (error) {
     case 'Signin':
-    case 'oAuthSignin':
-    case 'oAuthCallback':
-    case 'oAuthCreateAccount':
+    case 'OAuthSignin':
+    case 'OAuthCallback':
+    case 'OAuthCreateAccount':
     case 'EmailCreateAccount':
     case 'Callback':
       heading = <h1>Sign in failed</h1>
@@ -38,6 +38,18 @@ export default ({ site, error, baseUrl }) => {
       // <p>Once you are signed in, you can link your accounts.</p>
       // @TODO Display email sign in option if an email provider is configured
       break
+    case 'EmailRequired':
+      heading = <h1>Sign in with another account</h1>
+      message =
+        <div>
+          <div className='message'>
+            <p>Your account doesn't have an email address (required).</p>
+            <p>Try signing in with a different account.</p>
+          </div>
+          <p><a className='button' href={signinPageUrl}>Sign in</a></p>
+        </div>
+      // @TODO Display email sign in option if an email provider is configured
+      break
     case 'EmailSignin':
       heading = <h1>Sign in failed</h1>
       message =
@@ -47,6 +59,16 @@ export default ({ site, error, baseUrl }) => {
             <p>You can try signing in again with a different account.</p>
           </div>
           <p><a className='button' href={signinPageUrl}>Sign in</a></p>
+        </div>
+      break
+    case 'Configuration':
+      heading = <h1>Server configuration error</h1>
+      message =
+        <div>
+          <div className='message'>
+            <p>There is a problem with the NextAuth server configuration.</p>
+            <p>Check the server logs for details.</p>
+          </div>
         </div>
       break
     case 'Verification':
@@ -60,16 +82,6 @@ export default ({ site, error, baseUrl }) => {
             <p>Sign in links can only be used once and expire, you can a new sign in link at any time.</p>
           </div>
           <p><a className='button' href={signinPageUrl}>Sign in</a></p>
-        </div>
-      break
-    case 'Configuration':
-      heading = <h1>Server configuration error</h1>
-      message =
-        <div>
-          <div className='message'>
-            <p>There is a problem with the NextAuth server configuration.</p>
-            <p>Check the server logs for details.</p>
-          </div>
         </div>
       break
     default:

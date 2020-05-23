@@ -64,7 +64,7 @@ export default async (req, provider, callback) => {
   }
 }
 
-function _getProfile (error, profileData, accessToken, refreshToken, provider) {
+async function _getProfile (error, profileData, accessToken, refreshToken, provider) {
   // @TODO Handle error
   if (error) {
     console.error('GET_OAUTH_PROFILE_ERROR', error)
@@ -75,21 +75,18 @@ function _getProfile (error, profileData, accessToken, refreshToken, provider) {
     // Convert profileData into an object if it's a string
     if (typeof profileData === 'string' || profileData instanceof String) { profileData = JSON.parse(profileData) }
 
-    profile = provider.profile(profileData)
+    profile = await provider.profile(profileData)
   } catch (exception) {
     // @TODO Handle parsing error
-    if (exception) {
-      console.error('PARSE_OAUTH_PROFILE_ERROR', exception)
-    }
+    console.error('PARSE_OAUTH_PROFILE_ERROR', exception)
+    throw new Error('Failed to get OAuth profile')
   }
-
-  if (!profile.email) throw new Error('User profile does not have an email address!')
 
   // Return profile, raw profile and auth provider details
   return ({
     profile: {
       name: profile.name,
-      email: profile.email.toLowerCase(),
+      email: profile.email ? profile.email.toLowerCase() : null,
       image: profile.image
     },
     account: {
