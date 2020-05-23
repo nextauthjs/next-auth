@@ -23,7 +23,7 @@ e.g. `const session = await NextAuthClient.session({req})`
 Client side only React hook. Works best when used with NextAuth.Provider
 
 ```jsx
-import NextAuth from 'next-auth'
+import NextAuth from 'next-auth/client'
 
 export default () => {
   const [ session, loading ] = NextAuth.useSession()
