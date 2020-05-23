@@ -23,8 +23,9 @@ module.exports = {
           position: 'left'
         },
         {
-          to: 'https://next-auth-example.now.sh',
-          label: 'Example',
+          to: '/about',
+          activeBasePath: 'docs',
+          label: 'About',
           position: 'left'
         },
         {
@@ -49,14 +50,14 @@ module.exports = {
       style: 'dark',
       links: [
         {
-          title: 'About NextAuth.js',
+          // title: 'About',
           items: [
             {
-              label: 'About NextAuth.js',
+              label: 'About',
               to: '/about'
             },
             {
-              label: 'About the team',
+              label: 'Contributors',
               to: '/contributors'
             },
           ]

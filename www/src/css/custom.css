@@ -37,13 +37,27 @@
 }
 
 .hero .hero__title {
-  font-size: 4rem;
+  font-size: 3rem;
   margin-bottom: 0.5rem;
 }
 
+@media screen and (min-width: 668px) {
+  .hero .hero__title {
+    font-size: 4rem;
+  }
+}
+
 .hero .hero__subtitle {
+  font-size: 1rem;
   margin-bottom: 1rem;
   opacity: 0.8;
+}
+
+
+@media screen and (min-width: 668px) {
+  .hero .hero__subtitle {
+    font-size: 1.5rem;
+  }
 }
 
 .hero .button {
@@ -53,7 +67,7 @@
 
 .home-subtitle {
   justify-content: center;
-  padding: 2rem 0;
+  padding-top: 1rem;
   opacity: 0.7;
   font-style: italic;
 }
@@ -63,7 +77,6 @@
   line-height: 3.5rem;
   margin: 0.5rem 0;  
 }
-
 
 .home-main .code {
   padding: 0;

@@ -25,8 +25,8 @@ const features = [
     imageUrl: 'img/undraw_social.svg',
     description: (
       <ul>
-        <li>Built-in support for popular oAuth services (Google, Facebook, Twitter, Auth0…)</li>
-        <li>Use with any oAuth service (1.x or 2.x)</li>
+        <li>Built-in support for popular OAuth services (Google, Facebook, Twitter, Auth0…)</li>
+        <li>Use with any OAuth service (1.x or 2.x)</li>
         <li>Passwordless email sign in</li>
         <li>Secure account linking</li>
       </ul>
@@ -94,42 +94,40 @@ function Home () {
         </div>
       </header>
       <main className='home-main'>
-        {features && features.length && (
-          <section className={styles.features}>
-            <div className='container'>
+        <div className='container'> 
+           <section className={styles.features}>
               <div className='row'>
                 {features.map((props, idx) => (
                   <Feature key={idx} {...props} />
                 ))}
               </div>
-            </div>
+            </section>
+            <section>
+              <div className='row'>
+                <div className='col'>
+                  <h2 className='text--center'>Examples</h2>
+                </div>
+              </div>
+              <div className='row'>
+                <div className='col col--6'>
+                  <div className='code'>
+                    <h4 className='code-heading'>Serverless function</h4>
+                    <CodeBlock className='javascript'>{serverlessFunctionCode}</CodeBlock>
+                  </div>
+                </div>
+                <div className='col col--6'>
+                  <div className='code'>
+                    <h4 className='code-heading'>React component</h4>
+                    <CodeBlock className='javascript'>{reactComponentCode}</CodeBlock>
+                  </div>
+                </div>
+              </div>
+              <div className='container'>
+                <div className='row home-subtitle'>
+                  {siteConfig.title} is not affiliated with Vercel or Next.js
+                </div>
+              </div>
           </section>
-        )}
-        <div className='container'>
-          <div className='row'>
-            <div className='col'>
-              <h2 className='text--center'>Example usage</h2>
-            </div>
-          </div>
-          <div className='row'>
-            <div className='col col--6'>
-              <div className='code'>
-                <h4 className='code-heading'>Serverless function</h4>
-                <CodeBlock className='javascript'>{serverlessFunctionCode}</CodeBlock>
-              </div>
-            </div>
-            <div className='col col--6'>
-              <div className='code'>
-                <h4 className='code-heading'>React component</h4>
-                <CodeBlock className='javascript'>{reactComponentCode}</CodeBlock>
-              </div>
-            </div>
-          </div>
-          <div className='container'>
-            <div className='row home-subtitle'>
-              {siteConfig.title} is not affiliated with Vercel or Next.js
-            </div>
-          </div>
         </div>
       </main>
     </Layout>

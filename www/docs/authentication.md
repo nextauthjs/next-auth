@@ -1,88 +1,40 @@
 ---
-id: auth
-title: Authentication
+id: rest-api
+title: REST API
 ---
 
-To use OAuth you need to configure environment variables for each provider with ID and secret for each service.
+NextAuth.js exposes the following REST API
 
-This project comes pre-configured to handle Facebook, Google, Twitter and many more. To view all available configurations, please check out our [Providers](/providers) page.
+### GET /api/auth/signin
 
-:::tip
-For an example `.env` configuration please see [.env.example](https://github.com/iaincollins/next-auth/blob/master/example/.env.example).
-:::
+Displays the sign in page.
 
-If you want to add new OAuth providers, you will need to:
+### POST /api/auth/signin
 
-* Add the oauth provider configuration in the `Providers` object in your configuration
-* Add a field to your User model (in `index.js`) with the name of the provider
-* Configure the service to point to your website (as in the examples below)
-* Specify the environment variables at run time
+Handles email sign in form submission. Requires CSRF token.
 
-## Configuring your account
+### GET /api/auth/callback
 
-These guides are approximate as exactly how to configure OAuth varies for each provider and tends to change when they update their developer portals, which can be quite often. If you can't see the options mentioned, try exploring the UI in the developer portal or configuration pages.
+Handles redirects from OAuth services during sign in.
 
-Due to the volume of requests I'm not usually able to help with specific problems but pull requests with improved or extended instructions are very welcome.
+### GET /api/auth/signout
 
-:::tip Twitter
-Twitter's OAuth implementation is the most permissive and easiest to configure, you may want to start with it. If you run into problems, you might want to check email sign-in is working as baseline.
-:::
+Displays the sign out page.
 
-> Please note that Facebook OAuth cannot be used to sign in to `localhost` and that if you want to sign in to `localhost` with Google+ you must specifically add something like `http://localhost:3000/auth/oauth/google/callback` as a authorized redirect URI for your application.
+### POST /api/auth/signout
 
-### Facebook Login
+Handles signing out form submission. Requires CSRF token.
 
-> Environment Variables:
-> * FACEBOOK_ID
-> * FACEBOOK_SECRET
+### GET /api/auth/session
 
-Configuration steps:
+Returns client-safe session object (or empty object of no session).
 
-1. Go to [Facebook Developers](https://developers.facebook.com/)
-2. Click **Apps > Create a New App** in the navigation bar
-3. Enter *Display Name*, then choose a category, then click **Create app**
-5. Specify *App ID* as the **FACEBOOK_ID** Config Variable
-6. Specify *App Secret* as the **FACEBOOK_SECRET** Config Variable
-7. Click on *Settings* on the sidebar, then click **+ Add Platform**
-8. Select **Website**
-9. Enable 'Client OAuth Login' and 'Web OAuth Login'
-10. list`http://your-server.example.com/auth/oauth/facebook/callback` under 'Valid OAuth redirect URIs'
-11. List your sites domain under 'domains'
+### GET /api/auth/csrf
 
-### Google+
+Returns current CSRF to client. Is checked against a signed HTTP only, host only cookie.
 
-> Environment Variables:
-> * GOOGLE_ID
-> * GOOGLE_SECRET
+CSRF protection on authentication requests uses the "double submit cookie method".
 
-Configuration steps:
+### GET /api/auth/providers
 
-1. Visit [Google Cloud Console](https://cloud.google.com/console/project)
-2. Click the **CREATE PROJECT** button, enter a *Project Name* and click **CREATE**
-3. Then select *APIs* then *Credentials* 
-4. Select **Create new oAuth Client ID** and enter the following:
- - **Application Type**: Web Application
- - **Authorized Javascript origins**: `http://your-server.example.com/`
- - **Authorized redirect URI**: `http://your-server.example.com/auth/oauth/google/callback`
-5. Specify *Client ID* as the **GOOGLE_ID** Config Variable
-6. Specify *Client Secret* as the **GOOGLE_SECRET** Config Variable
-7. Enable Google+ on the project - if you don't, sign in with Google+ will fail!
-
-### Twitter 
-
-> Environment Variables:
-> * TWITTER_KEY
-> * TWITTER_SECRET
-  
-Configuration steps:
-
-1. Sign in at [https://apps.twitter.com](https://apps.twitter.com/)
-2. Click **Create a new application**
-3. Enter your application name, website and description
-4. For **Callback URL**: `http://your-server.example.com/auth/oauth/twitter/callback`
-5. Go to **Settings** tab
-6. Under *Application Type* select **Read and Write** access
-7. Check the box **Allow this application to be used to Sign in with Twitter**
-8. Click **Update this Twitter's applications settings**
-9. Specify *Consumer Key* as the **TWITTER_KEY** Config Variable
-10. Specify *Consumer Secret* as the **TWITTER_SECRET** Config Variable
+Returns a list of configured OAuth services and the configuration (e.g. sign in and callback URLs) for each service. As well as providing a way to check how a client should be configured, it can be used to dynamically generate custom sign up pages.
