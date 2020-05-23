@@ -7,7 +7,7 @@ title: About
 
 **NextAuth.js version 2.0 is a complete re-write, designed from the ground up for serverless.**
 
-**Version 2.0 beta software and is not ready for production use!**
+**Version 2.0 is beta software and is not ready for production use!**
 
 *NextAuth.js is not associated with Vercel or Next.js.*
 
