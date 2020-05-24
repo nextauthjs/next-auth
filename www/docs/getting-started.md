@@ -20,7 +20,7 @@ This guide assumes you have new (or existing) Next.js project and have used Next
 
 To add `next-auth` to a project, create a file to handle authentication requests in the `/api` routes folder.
 
-```javascript title="/page/api/auth/[...slug].js"
+```javascript title="/pages/api/auth/[...slug].js"
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 
@@ -62,7 +62,7 @@ Your project will need an npm module suitable for your database installed (e.g. 
 
 The `useSession()` hook is the easiest way to check if someone is signed in.
 
-```jsx {5} title="/page/index.js"
+```jsx {5} title="/pages/index.js"
 import NextAuth from 'next-auth'
 
 export default () => {
