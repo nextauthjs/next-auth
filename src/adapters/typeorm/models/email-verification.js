@@ -23,7 +23,7 @@ export const EmailVerificationSchema = {
       unique: true
     },
     expires: {
-      type: 'date'
+      type: 'timestamp'
     }
   }
 }

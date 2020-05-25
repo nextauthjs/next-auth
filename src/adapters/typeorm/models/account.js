@@ -35,7 +35,7 @@ export const AccountSchema = {
       unique: true
     },
     userId: {
-      type: 'varchar'
+      type: 'int'
     },
     providerId: {
       type: 'varchar'
@@ -47,14 +47,15 @@ export const AccountSchema = {
       type: 'varchar'
     },
     refreshToken: {
-      type: 'varchar',
+      type: 'text',
       nullable: true
     },
     accessToken: {
-      type: 'varchar'
+      type: 'text'
     },
+    // @TODO AccessToken expiry is not yet tracked (varies across providers)
     accessTokenExpires: {
-      type: 'varchar',
+      type: 'timestamp',
       nullable: true
     }
   }

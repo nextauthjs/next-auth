@@ -95,39 +95,39 @@ function Home () {
         </div>
       </header>
       <main className='home-main'>
-        <div className='container'> 
-           <section className={styles.features}>
-              <div className='row'>
-                {features.map((props, idx) => (
-                  <Feature key={idx} {...props} />
-                ))}
+        <div className='container'>
+          <section className={styles.features}>
+            <div className='row'>
+              {features.map((props, idx) => (
+                <Feature key={idx} {...props} />
+              ))}
+            </div>
+          </section>
+          <section>
+            <div className='row'>
+              <div className='col'>
+                <h2 className='text--center'>Examples</h2>
               </div>
-            </section>
-            <section>
-              <div className='row'>
-                <div className='col'>
-                  <h2 className='text--center'>Examples</h2>
+            </div>
+            <div className='row'>
+              <div className='col col--6'>
+                <div className='code'>
+                  <h4 className='code-heading'>Serverless function</h4>
+                  <CodeBlock className='javascript'>{serverlessFunctionCode}</CodeBlock>
                 </div>
               </div>
-              <div className='row'>
-                <div className='col col--6'>
-                  <div className='code'>
-                    <h4 className='code-heading'>Serverless function</h4>
-                    <CodeBlock className='javascript'>{serverlessFunctionCode}</CodeBlock>
-                  </div>
-                </div>
-                <div className='col col--6'>
-                  <div className='code'>
-                    <h4 className='code-heading'>React component</h4>
-                    <CodeBlock className='javascript'>{reactComponentCode}</CodeBlock>
-                  </div>
+              <div className='col col--6'>
+                <div className='code'>
+                  <h4 className='code-heading'>React component</h4>
+                  <CodeBlock className='javascript'>{reactComponentCode}</CodeBlock>
                 </div>
               </div>
-              <div className='container'>
-                <div className='row home-subtitle'>
-                  {siteConfig.title} is not affiliated with Vercel or Next.js
-                </div>
+            </div>
+            <div className='container'>
+              <div className='row home-subtitle'>
+                {siteConfig.title} is not affiliated with Vercel or Next.js
               </div>
+            </div>
           </section>
         </div>
       </main>

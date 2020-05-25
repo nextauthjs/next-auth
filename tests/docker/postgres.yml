@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: nextauth
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: nextauth
+    ports:
+      - "5432:5432"
