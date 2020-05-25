@@ -1,1 +1,1 @@
-module.exports = require('./dist/adapters')
+module.exports = require('./dist/adapters').default

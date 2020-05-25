@@ -110,6 +110,5 @@ const _getUrlPrefixFromCookies = (cookies, baseUrlCookieName) => {
 export default {
   session,
   useSession,
-  baseUrl: _baseUrl,
   Provider
 }

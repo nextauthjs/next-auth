@@ -1,1 +1,1 @@
-module.exports = require('./dist/providers')
+module.exports = require('./dist/providers').default
