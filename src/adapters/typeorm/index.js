@@ -21,28 +21,38 @@ const Adapter = (config, options = {}) => {
 
   // Models default to being suitable for ANSI SQL database
   // Some flexiblity is required to support non-SQL databases
-  const idKey = 'id'
-  const getById = (id) => id
+  let idKey = 'id'
 
-  /* @TODO This is a work in progress
   // Some custom logic is required to make schemas compatible with MongoDB
+  // Here we monkey patch some properties if MongoDB is being used.
   if (config.type === 'mongodb') {
-    if (!options.mongodb) throw new Error('Experimental feature')
+    // MongoDB uses _id (rather than id) for primary keys and TypeORM does not
+    // fully abstract this (e.g. the way Mongoose does), so we need to do it.
+    // Note: We don't need to change the values in the schemas, just in queries
+    // that we make, so it's a variable here.
+    idKey = '_id'
 
-    idKey = 'id'
+    // Important!
+    //
+    // 1. You must set 'objectId: true' on one property on a model.
+    //
+    //   'objectId' MUST be set on the primary ID field. This overrides other
+    //   values on that object in TypeORM (e.g. type: 'int' or 'primary').
+    //
+    // 2. Other properties that are Object IDs in the same model MUST be set to
+    //    type: 'objectId'
+    //
+    //    If you set 'objectId: true' on multiple properties on a model you will
+    //    see the result of queries like find() is wrong. You will see the same
+    //    Object ID in every property of type Object ID in the result (but the
+    //    database will look fine). Use type = 'objectId' for them instead!
     AccountSchema.columns.id.objectId = true
-    AccountSchema.columns.userId.objectId = true
+    AccountSchema.columns.userId.type = 'objectId'
     UserSchema.columns.id.objectId = true
     SessionSchema.columns.id.objectId = true
-    SessionSchema.columns.userId.objectId = true
+    SessionSchema.columns.userId.type = 'objectId'
     EmailVerificationSchema.columns.id.objectId = true
-
-    getById = (id) => {
-      console.log('fancy getById', id)
-      return config.mongodb.ObjectId(id)
-    }
   }
-  */
 
   // Parse config (uses options)
   const defaultConfig = {
@@ -115,7 +125,7 @@ const Adapter = (config, options = {}) => {
     async function getUser (id) {
       _debug('getUser', id)
       try {
-        return connection.getRepository(User).findOne({ [idKey]: getById(id) })
+        return connection.getRepository(User).findOne({ [idKey]: id })
       } catch (error) {
         console.error('GET_USER_BY_ID_ERROR', error)
         return Promise.reject(new Error('GET_USER_BY_ID_ERROR', error))
@@ -137,7 +147,7 @@ const Adapter = (config, options = {}) => {
       try {
         const account = await connection.getRepository(Account).findOne({ providerId, providerAccountId })
         if (!account) { return null }
-        return connection.getRepository(User).findOne({ [idKey]: getById(account.userId) })
+        return connection.getRepository(User).findOne({ [idKey]: account.userId })
       } catch (error) {
         console.error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error)
         return Promise.reject(new Error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error))
