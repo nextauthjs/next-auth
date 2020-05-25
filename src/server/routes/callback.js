@@ -48,7 +48,7 @@ export default async (req, res, options, done) => {
           // If is missing email address (NB: the only field on a profile currently required)
           res.status(302).setHeader('Location', `${baseUrl}/error?error=EmailRequired`)
         } else {
-          console.error('OAUTH_CALLBACK_ERROR', error)
+          console.error('OAUTH_CALLBACK_HANDLER_ERROR', error)
           res.status(302).setHeader('Location', `${baseUrl}/error?error=Callback`)
         }
         res.end()

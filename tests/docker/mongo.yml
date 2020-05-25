@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+
+  mongo:
+    image: bitnami/mongodb
+    restart: always
+    environment:
+      MONGODB_USERNAME: nextauth
+      MONGODB_PASSWORD: password
+      MONGODB_DATABASE: nextauth
+    ports:
+      - "27017:27017"

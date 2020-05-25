@@ -6,7 +6,7 @@ module.exports = {
       'providers',
       'adapters',
       'client',
-      'rest-api',
+      'rest-api'
     ],
     v1: [
       'v1/getting-started-v1',

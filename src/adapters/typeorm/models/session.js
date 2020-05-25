@@ -26,7 +26,7 @@ export const SessionSchema = {
       unique: true
     },
     sessionExpires: {
-      type: 'date'
+      type: 'timestamp'
     },
     accessToken: {
       type: 'varchar',

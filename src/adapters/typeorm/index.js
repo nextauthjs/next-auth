@@ -19,6 +19,31 @@ const Adapter = (config, options = {}) => {
   const EmailVerification = options.EmailVerification ? options.EmailVerification.model : Models.EmailVerification.model
   const EmailVerificationSchema = options.EmailVerification ? options.EmailVerification.schema : Models.EmailVerification.schema
 
+  // Models default to being suitable for ANSI SQL database
+  // Some flexiblity is required to support non-SQL databases
+  const idKey = 'id'
+  const getById = (id) => id
+
+  /* @TODO This is a work in progress
+  // Some custom logic is required to make schemas compatible with MongoDB
+  if (config.type === 'mongodb') {
+    if (!options.mongodb) throw new Error('Experimental feature')
+
+    idKey = 'id'
+    AccountSchema.columns.id.objectId = true
+    AccountSchema.columns.userId.objectId = true
+    UserSchema.columns.id.objectId = true
+    SessionSchema.columns.id.objectId = true
+    SessionSchema.columns.userId.objectId = true
+    EmailVerificationSchema.columns.id.objectId = true
+
+    getById = (id) => {
+      console.log('fancy getById', id)
+      return config.mongodb.ObjectId(id)
+    }
+  }
+  */
+
   // Parse config (uses options)
   const defaultConfig = {
     name: 'default',
@@ -71,12 +96,12 @@ const Adapter = (config, options = {}) => {
     // Display debug output if debug option enabled
     function _debug (...args) {
       if (appOptions.debug) {
-        console.log('[DEBUG]', ...args)
+        console.log('[NextAuth.js][DEBUG]', ...args)
       }
     }
 
     async function createUser (profile) {
-      _debug('Create user', profile)
+      _debug('createUser', profile)
       try {
         // Create user account
         const user = new User(profile.name, profile.email, profile.image)
@@ -88,9 +113,9 @@ const Adapter = (config, options = {}) => {
     }
 
     async function getUser (id) {
-      _debug('Get user', id)
+      _debug('getUser', id)
       try {
-        return connection.getRepository(User).findOne({ id })
+        return connection.getRepository(User).findOne({ [idKey]: getById(id) })
       } catch (error) {
         console.error('GET_USER_BY_ID_ERROR', error)
         return Promise.reject(new Error('GET_USER_BY_ID_ERROR', error))
@@ -98,7 +123,7 @@ const Adapter = (config, options = {}) => {
     }
 
     async function getUserByEmail (email) {
-      _debug('Get user by email address', email)
+      _debug('getUserByEmail', email)
       try {
         return connection.getRepository(User).findOne({ email })
       } catch (error) {
@@ -108,11 +133,11 @@ const Adapter = (config, options = {}) => {
     }
 
     async function getUserByProviderAccountId (providerId, providerAccountId) {
-      _debug('Get user by provider account ID', providerId, providerAccountId)
+      _debug('getUserByProviderAccountId', providerId, providerAccountId)
       try {
         const account = await connection.getRepository(Account).findOne({ providerId, providerAccountId })
         if (!account) { return null }
-        return connection.getRepository(User).findOne({ id: account.userId })
+        return connection.getRepository(User).findOne({ [idKey]: getById(account.userId) })
       } catch (error) {
         console.error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error)
         return Promise.reject(new Error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error))
@@ -120,25 +145,25 @@ const Adapter = (config, options = {}) => {
     }
 
     async function getUserByCredentials (credentials) {
-      _debug('Get user by credentials', credentials)
+      _debug('getUserByCredentials', credentials)
       // @TODO Get user from DB
       return false
     }
 
     async function updateUser (user) {
-      _debug('Update user', user)
+      _debug('updateUser', user)
       // @TODO Save changes to user object in DB
       return false
     }
 
     async function deleteUser (userId) {
-      _debug('Delete user', userId)
+      _debug('deleteUser', userId)
       // @TODO Delete user from DB
       return false
     }
 
     async function linkAccount (userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires) {
-      _debug('Link provider account', userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires)
+      _debug('linkAccount', userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires)
       try {
         // Create provider account linked to user
         const account = new Account(userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires)
@@ -150,7 +175,7 @@ const Adapter = (config, options = {}) => {
     }
 
     async function unlinkAccount (userId, providerId, providerAccountId) {
-      _debug('Unlink provider account', userId, providerId, providerAccountId)
+      _debug('unlinkAccount', userId, providerId, providerAccountId)
       // @TODO Get current user from DB
       // @TODO Delete [provider] object from user object
       // @TODO Save changes to user object in DB
@@ -158,7 +183,7 @@ const Adapter = (config, options = {}) => {
     }
 
     async function createSession (user) {
-      _debug('Create session', user)
+      _debug('createSession', user)
       try {
         const { sessionMaxAge } = appOptions
         let expires = null
@@ -178,7 +203,7 @@ const Adapter = (config, options = {}) => {
     }
 
     async function getSession (sessionToken) {
-      _debug('Get session', sessionToken)
+      _debug('getSession', sessionToken)
       try {
         const session = await connection.getRepository(Session).findOne({ sessionToken })
 
@@ -196,7 +221,7 @@ const Adapter = (config, options = {}) => {
     }
 
     async function updateSession (session, force) {
-      _debug('Update session', session)
+      _debug('updateSession', session)
       try {
         const { sessionMaxAge, sessionUpdateAge } = appOptions
 
@@ -216,7 +241,7 @@ const Adapter = (config, options = {}) => {
           if (new Date() > dateSessionIsDueToBeUpdated) {
             const newExpiryDate = new Date()
             newExpiryDate.setTime(newExpiryDate.getTime() + sessionMaxAge)
-            session.sessionExpires = newExpiryDate.toISOString()
+            session.sessionExpires = newExpiryDate
           } else if (!force) {
             return null
           }
@@ -234,7 +259,7 @@ const Adapter = (config, options = {}) => {
     }
 
     async function deleteSession (sessionToken) {
-      _debug('Delete session', sessionToken)
+      _debug('deleteSession', sessionToken)
       try {
         return await connection.getRepository(Session).delete({ sessionToken })
       } catch (error) {
@@ -244,7 +269,7 @@ const Adapter = (config, options = {}) => {
     }
 
     async function createEmailVerification (email, url, token, secret, provider) {
-      _debug('Create verification request', email)
+      _debug('createEmailVerification', email)
       try {
         const { site, verificationMaxAge } = appOptions
         const { verificationCallback } = provider
@@ -277,7 +302,7 @@ const Adapter = (config, options = {}) => {
     }
 
     async function getEmailVerification (email, token, secret, provider) {
-      _debug('Get verification request', email, token)
+      _debug('getEmailVerification', email, token)
       try {
         // Hash token provided with secret before trying to match it with datbase
         // @TODO Use bcrypt function here instead of simple salted hash
@@ -298,7 +323,7 @@ const Adapter = (config, options = {}) => {
     }
 
     async function deleteEmailVerification (email, token, secret, provider) {
-      _debug('Delete verification request', email, token)
+      _debug('deleteEmailVerification', email, token)
       try {
         // Delete email verification so it cannot be used again
         const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
