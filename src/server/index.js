@@ -176,6 +176,7 @@ export default async (req, res, userSuppliedOptions) => {
       sessionUpdateAge: 24 * 60 * 60 * 1000, // Sessions updated only if session is greater than this value (0 = always, 24*60*60*1000 = every 24 hours)
       verificationMaxAge: 24 * 60 * 60 * 1000, // Email/passwordless links expire after 24 hours
       debug: false, // Enable debug messages to be displayed
+      pages: {}, // Custom pages (e.g. sign in, sign out, errors)
       // Custom options override defaults
       ...userSuppliedOptions,
       // These computed settings can values in userSuppliedOptions but override them
@@ -197,6 +198,12 @@ export default async (req, res, userSuppliedOptions) => {
     // Get / Set callback URL based on query param / cookie + validation
     options.callbackUrl = await callbackUrlHandler(req, res, options)
 
+    const redirect = (redirectUrl) => {
+      res.status(302).setHeader('Location', redirectUrl)
+      res.end()
+      return done()
+    }
+
     if (req.method === 'GET') {
       switch (action) {
         case 'providers':
@@ -212,10 +219,14 @@ export default async (req, res, userSuppliedOptions) => {
           if (provider && options.providers[provider]) {
             signin(req, res, options, done)
           } else {
+            if (options.pages.signin) { return redirect(options.pages.signin) }
+
             pages.render(req, res, 'signin', { site, providers: Object.values(options.providers), callbackUrl: options.callbackUrl, csrfToken }, done)
           }
           break
         case 'signout':
+          if (options.pages.signout) { return redirect(options.pages.signout) }
+
           pages.render(req, res, 'signout', { site, baseUrl, csrfToken, callbackUrl: options.callbackUrl }, done)
           break
         case 'callback':
@@ -227,9 +238,13 @@ export default async (req, res, userSuppliedOptions) => {
           }
           break
         case 'check-email':
+          if (options.pages.checkEmail) { return redirect(options.pages.checkEmail) }
+
           pages.render(req, res, 'check-email', { site }, done)
           break
         case 'error':
+          if (options.pages.error) { return redirect(`${options.pages.error}${options.pages.error.includes('?') ? '&' : '?'}error=${error}`) }
+
           pages.render(req, res, 'error', { site, error, baseUrl }, done)
           break
         default:
