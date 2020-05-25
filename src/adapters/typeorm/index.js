@@ -54,6 +54,14 @@ const Adapter = (config, options = {}) => {
     EmailVerificationSchema.columns.id.objectId = true
   }
 
+  // Some custom logic is required to make schemas compatible with MongoDB
+  // Here we monkey patch some properties if MongoDB is being used.
+  if (config.type === 'sqlite') {
+    AccountSchema.columns.accessTokenExpires.type = 'datetime'
+    SessionSchema.columns.sessionExpires.type = 'datetime'
+    EmailVerificationSchema.columns.expires.type = 'datetime'
+  }
+
   // Parse config (uses options)
   const defaultConfig = {
     name: 'default',
