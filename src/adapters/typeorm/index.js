@@ -6,8 +6,13 @@ import { CreateUserError } from '../../lib/errors'
 import Models from './models'
 
 const Adapter = (config, options = {}) => {
-  // If input is URL string, automatically convert to DB object
-  // This makes database configuration in the client only require a single line!
+  // If the input is URL string, automatically convert the string to an object
+  // to make configuration easier (in most use cases).
+  //
+  // TypeORM accepts connection string as a 'url' option, but unfortunately
+  // not for all databases (e.g. SQLite) so we handle it ourselves.
+  //
+  // @TODO Move this into a function (e.g. lib/parse-database-url)
   if (typeof config === 'string') {
     try {
       const parsedUrl = new URL(config)
@@ -19,8 +24,8 @@ const Adapter = (config, options = {}) => {
       config.password = parsedUrl.password
       config.database = parsedUrl.pathname.replace(/^\//, '')
 
-      if (parsedUrl.query) {
-        parsedUrl.query.split('&').forEach(keyValuePair => {
+      if (parsedUrl.search) {
+        parsedUrl.search.replace(/^\?/, '').split('&').forEach(keyValuePair => {
           let [key, value] = keyValuePair.split('=')
           // Converts true/false strings to actual boolean values
           if (value === 'true') { value = true }
@@ -29,7 +34,10 @@ const Adapter = (config, options = {}) => {
         })
       }
     } catch (error) {
-      throw new Error('Unable to parse database connection string')
+      // If URL parsing fails for any reason, try letting TypeORM handle it
+      config = {
+        url: config
+      }
     }
   }
 
@@ -73,6 +81,9 @@ const Adapter = (config, options = {}) => {
     //    see the result of queries like find() is wrong. You will see the same
     //    Object ID in every property of type Object ID in the result (but the
     //    database will look fine). Use type = 'objectId' for them instead!
+    //
+    // @TODO Look at refactoring to see if there is a better way to do this that
+    // doesn't rely on hard coding this transformation on a per property basis
     AccountSchema.columns.id.objectId = true
     AccountSchema.columns.userId.type = 'objectId'
     UserSchema.columns.id.objectId = true
@@ -81,8 +92,11 @@ const Adapter = (config, options = {}) => {
     EmailVerificationSchema.columns.id.objectId = true
   }
 
-  // Some custom logic is required to make schemas compatible with MongoDB
-  // Here we monkey patch some properties if MongoDB is being used.
+  // SQLite does not support `timestamp` fields so we remap them to `datetime`
+  // NB: `timestamp` is an ANSI SQL specification and widely supported elsewhere
+  //
+  // @TODO Refactor to apply automatically to all `timestamp` properties if the
+  // database is MySQL.
   if (config.type === 'sqlite') {
     AccountSchema.columns.accessTokenExpires.type = 'datetime'
     SessionSchema.columns.sessionExpires.type = 'datetime'
