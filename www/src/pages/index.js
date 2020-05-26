@@ -67,7 +67,7 @@ function Home () {
   const context = useDocusaurusContext()
   const { siteConfig = {} } = context
   return (
-    <Layout title='Home' description={siteConfig.tagline}>
+    <Layout description={siteConfig.tagline}>
       <header className={classnames('hero', styles.heroBanner)}>
         <div className='container'>
           <h1 className='hero__title'>{siteConfig.title}</h1>
