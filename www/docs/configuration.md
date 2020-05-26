@@ -35,9 +35,9 @@ The only required options are **site**, **providers** and **database**.
 * **verificationMaxAge** (default: `30*24*60*60*1000` - 24 hours)
 
   How long links in verification emails are valid for (used for passwordless sign in).
-* ~~**pages**~~ *coming soon*
+* **pages**
 
-  ~~Specify custom URLs to be used for sign in, sign out and error pages.~~
+  Specify custom URLs to be used for sign in, sign out and error pages.
 * **debug** (default: `false`)
 
   Set debug to `true` to enable debug messages for all authenticaiton and database operations.
@@ -97,4 +97,61 @@ If you want to customize, extend or replace the models, you can do this by using
 
 NextAuth.js automatically creates simple, unbranded authentication pages for handling Sign in, Email Verification, callbacks, etc. The options displayed are generated based on the configuration supplied.
 
-@TODO Add example of how to specify custom URLs for pages
+To add a custom login page, for example. You must add a `pages` array to the config, for example:
+
+```javascript title="/pages/api/auth/[...slug].js"
+  ...
+  pages: {
+    signin: '/auth/signin',
+    signout: '/auth/signout',
+    checkEmail: '/auth/check-email',
+    error: '/auth/error'
+  }
+  ...
+```
+
+Then you must create pages at the above routes. 
+
+In the signin page, for example, in order to get the available providers you must make a request to `/api/auth/providers`.
+
+```jsx title="/pages/auth/signin"
+import React from 'react'
+
+const SignIn = ({ providers }) => {
+  return (
+    <div>
+      {providers && Object.values(providers).map(provider => (
+        <p key={provider.name}>
+          <a href={provider.signinUrl}>
+            <Button id='signin-btn' type='submit' appearance='primary' block>Sign in with {provider.name}</Button>
+          </a>
+        </p>
+      ))}
+    </div>
+  )
+}
+
+export default SignIn
+
+export async function getServerSideProps ({ req }) {
+  const host = req ? req.headers['x-forwarded-host'] : window.location.hostname
+  let protocol = 'https:'
+  if (host.indexOf('localhost') > -1) {
+    protocol = 'http:'
+  }
+  const pageRequest = `${protocol}//${host}/api/auth/providers`
+  const res = await fetch(pageRequest, {
+    mode: 'cors',
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
+  })
+  const providers = await res.json()
+
+  return {
+    props: {
+      providers
+    }
+  }
+}
+```
