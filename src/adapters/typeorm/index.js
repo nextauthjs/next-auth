@@ -6,6 +6,33 @@ import { CreateUserError } from '../../lib/errors'
 import Models from './models'
 
 const Adapter = (config, options = {}) => {
+  // If input is URL string, automatically convert to DB object
+  // This makes database configuration in the client only require a single line!
+  if (typeof config === 'string') {
+    try {
+      const parsedUrl = new URL(config)
+      config = {}
+      config.type = parsedUrl.protocol.replace(/:$/, '')
+      config.hostname = parsedUrl.hostname
+      config.port = Number(parsedUrl.port)
+      config.username = parsedUrl.username
+      config.password = parsedUrl.password
+      config.database = parsedUrl.pathname.replace(/^\//, '')
+
+      if (parsedUrl.query) {
+        parsedUrl.query.split('&').forEach(keyValuePair => {
+          let [key, value] = keyValuePair.split('=')
+          // Converts true/false strings to actual boolean values
+          if (value === 'true') { value = true }
+          if (value === 'false') { value = false }
+          config[key] = value
+        })
+      }
+    } catch (error) {
+      throw new Error('Unable to parse database connection string')
+    }
+  }
+
   // Load models / schemas (check for custom models / schemas first)
   const Account = options.Account ? options.Account.model : Models.Account.model
   const AccountSchema = options.Account ? options.Account.schema : Models.Account.schema
