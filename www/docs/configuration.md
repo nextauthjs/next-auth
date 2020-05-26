@@ -139,13 +139,7 @@ export async function getServerSideProps ({ req }) {
   if (host.indexOf('localhost') > -1) {
     protocol = 'http:'
   }
-  const pageRequest = `${protocol}//${host}/api/auth/providers`
-  const res = await fetch(pageRequest, {
-    mode: 'cors',
-    headers: {
-      'Access-Control-Allow-Origin': '*'
-    }
-  })
+  const res = await fetch(`${protocol}//${host}/api/auth/providers`)
   const providers = await res.json()
 
   return {
