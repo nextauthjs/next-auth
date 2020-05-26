@@ -144,13 +144,11 @@ export default () => {
 
   return <p>
     {session && <>
-      Signed in as {session.user.email}
-      {' '}
+      Signed in as {session.user.email} <br/>
       <a href="/api/auth/signout">Sign out</a>
     </>}
     {!session && 
-      Not signed in
-      {' '}
+      Not signed in <br/>
       <a href="/api/auth/signin">Sign in</a>
     }
   </p>

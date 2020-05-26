@@ -12,13 +12,16 @@ title: Getting Started
 This guide assumes you have new (or existing) Next.js project and have used Next.js before.
 
 * The easiest way to get started is to [clone the example project](https://github.com/iaincollins/next-auth-example)
-* Choose one OAuth provider and/or Passwordless email sign in to start with
-* You can use NextAuth with both SQL and Document databases out of the box
-* Try using it with the sqlite database first
+* Choose an [OAuth provider](/providers) to try out and/or use passwordless email sign in
+* A MySQL, Postgress, MongoDB or SQLite database
+
+:::tip
+You can create your own providers and use NextAuth.js with any database but to get started it's recommended to stick to one of the included providers and supported databases.
+:::
 
 ## Server
 
-To add `next-auth` to a project, create a file to handle authentication requests in the `/api` routes folder.
+To add NextAuth.js to a project create a file to handle authentication requests in the `/api` routes folder.
 
 ```javascript title="/pages/api/auth/[...slug].js"
 import NextAuth from 'next-auth'
@@ -40,22 +43,19 @@ const options = {
       clientSecret: process.env.GITHUB_SECRET
     }),
   ],
-  database: {
-    type: 'sqlite',
-    database: ':memory:',
-    synchronize: true
-  }
+  database: process.env.DATABASE_URL
 }
 
 export default (req, res) => NextAuth(req, res, options)
 ```
 
-All requests to `pages/api/auth/*` (signin, callback, signout, etc) will be handed by NextAuth.
+All requests to `pages/api/auth/*` (signin, callback, signout, etc) will be handed by NextAuth.js.
 
 Your can view the callback URLs you need to specify with your OAuth providers at `/api/auth/providers`.
 
 :::important
-Your project will need an npm module suitable for your database installed (e.g. `npm install sqlite3`).
+* You will also need to install the appropraite npm module for your database installed 
+* See the [configuration](/configuration) page for more information and examples
 :::
 
 ## Client 
@@ -63,14 +63,14 @@ Your project will need an npm module suitable for your database installed (e.g. 
 The `useSession()` hook is the easiest way to check if someone is signed in.
 
 ```jsx {5} title="/pages/index.js"
-import NextAuth from 'next-auth'
+import { useSession } from 'next-auth'
 
 export default () => {
-  const [ session, loading ] = NextAuth.useSession()
+  const [ session, loading ] = useSession()
 
   return <>
-    {session && <p>Signed in as {session.user.email}</p>}
-    {!session && <p><a href="/api/auth/signin">Sign in</p>}
+    {session && <p>Signed in as {session.user.email} <a href="/api/auth/signout">Sign out</a></p>}
+    {!session && <p><a href="/api/auth/signin">Sign in</a></p>}
   </>
 }
 ```
@@ -83,20 +83,22 @@ export default () => {
 
 ### Add Provider to _app.js
 
-While calling `useSession()` like this will work perfectly well, it will do network request to get the session in each component you use it in. To reduce network load and improve performance, you can wrap your component tree in our `Provider`, which will make `useSession()` use [React Context](https://reactjs.org/docs/context.html) instead.
+While simply calling `useSession()` will work, it will trigger network request to get the session in each component you use it in.
+
+To reduce network load and improve page speed, you can wrap your component tree in the `Provider`, which uses [React Context](https://reactjs.org/docs/context.html) to share the session object between all instances of `useSession()`.
 
 :::tip
-* Add the `Provider` to `pages/_app.js` if you want to call `useSession()` from any component
-* See [Next.js documentation](https://nextjs.org/docs/advanced-features/custom-app) for more information on `_app.js`
+* Add the **Provider** to `pages/_app.js` if you want to call **useSession()** from any component
+* See [**the Next.js documentation**](https://nextjs.org/docs/advanced-features/custom-app) for more information on `_app.js`
 :::
 
 ```jsx {5,7} title="/pages/_app.js"
-import NextAuth from 'next-auth'
+import { Provider } from 'next-auth'
 
 export default ({ Component, pageProps }) => (
-  <NextAuth.Provider>
+  <Provider>
     <Component {...pageProps} />
-  </NextAuth.Provider>
+  </Provider>
 )
 ```
 
@@ -105,7 +107,7 @@ export default ({ Component, pageProps }) => (
 Authentication when Server Side Rendering is also supported with `session()`, which can be called client or server side, so you can create server rendered pages that do not require client side JavaScript.
 
 ```jsx {3,10} title="/pages/index.js"
-import NextAuth from 'next-auth/client'
+import { session } from 'next-auth/client'
 
 const Page = ({ session }) => (<>
   {session && <p>Signed in as {session.user.email}</p>}
@@ -114,7 +116,7 @@ const Page = ({ session }) => (<>
 
 Page.getInitialProps = async ({req}) => {
   return {
-    session: await NextAuth.session({req})
+    session: await session({req})
   }
 }
 
@@ -123,7 +125,10 @@ export default Page
 
 You can use the `session()` method and the `useSession()` hook together. 
 
-If you are using the `<Provider>` in `_app.js` and export the session as a prop named `session` it will be automatically avalible in `useSession()` when the page loads.
+If you are using the `<Provider>` in `_app.js` and export the session as a prop named `session`, it can be automatically avalible to `useSession()` when the page loads.
 
-The `req` paramater is needed when calling `NextAuth.session()` during server side rendering (i.e. in either `getServerSideProps` or `getInitialProps`), but is not needed when calling it client side.
+Checkout [next-auth-example.now.sh](https://next-auth-example.now.sh) for a working example.
 
+:::important
+The `req` parameter should be passed calling **NextAuth.session()** during server side rendering - i.e. in either **getServerSideProps()** or **getInitialProps()** - but is not needed when calling it client side.
+:::
