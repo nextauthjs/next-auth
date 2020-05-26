@@ -13,7 +13,7 @@ This guide assumes you have new (or existing) Next.js project and have used Next
 
 * The easiest way to get started is to [clone the example project](https://github.com/iaincollins/next-auth-example)
 * Choose an [OAuth provider](/providers) to try out and/or use passwordless email sign in
-* A MySQL, Postgress, MongoDB or SQLite database
+* A MySQL, Postgres, MongoDB or SQLite database
 
 :::tip
 You can create your own providers and use NextAuth.js with any database but to get started it's recommended to stick to one of the included providers and supported databases.
@@ -104,7 +104,7 @@ export default ({ Component, pageProps }) => (
 
 ### Universal Rendering
 
-Authentication when Server Side Rendering is also supported with `session()`, which can be called client or server side, so you can create server rendered pages that do not require client side JavaScript.
+Authentication when server-side rendering is also supported with `session()`, which can be called client-side or server-side, so you can create server rendered pages that do not require client-side JavaScript.
 
 ```jsx {3,10} title="/pages/index.js"
 import { session } from 'next-auth/client'
@@ -125,10 +125,10 @@ export default Page
 
 You can use the `session()` method and the `useSession()` hook together. 
 
-If you are using the `<Provider>` in `_app.js` and export the session as a prop named `session`, it can be automatically avalible to `useSession()` when the page loads.
+If you are using the `<Provider>` in `_app.js` and export the session as a prop named `session`, it can be automatically available to `useSession()` when the page loads.
 
-Checkout [next-auth-example.now.sh](https://next-auth-example.now.sh) for a working example.
+Check out [next-auth-example.now.sh](https://next-auth-example.now.sh) for a working example.
 
 :::important
-The `req` parameter should be passed calling **NextAuth.session()** during server side rendering - i.e. in either **getServerSideProps()** or **getInitialProps()** - but is not needed when calling it client side.
+The `req` parameter should be passed calling **NextAuth.session()** during server-side rendering - i.e. in either **getServerSideProps()** or **getInitialProps()** - but is not needed when calling it client-side.
 :::

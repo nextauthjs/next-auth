@@ -13,14 +13,14 @@ You choose your authentication providers (Google, Facebook, Email, etc) and add 
 ### Features
 
 * Built for Next.js and for Serverless (but works in any environment)
-* Lightweight, doesn't depend on Express or PassportJS
-* Supports oAuth 1.x, oAuth 2.x and email / passwordless authentication 
+* Lightweight, doesn't depend on Express or Passport.js
+* Supports Auth 1.x, OAuth 2.x and email / passwordless authentication 
 * Out of the box support for signing in with Google, Facebook, Twitter, GitHub, Slack, Discord, Twitch and other providers
 * Extremely simple to use client, with `useSession()` hook and a universal `session()` method
-* Doesn't require client side JavaScript
+* Doesn't require client-side JavaScript
 * Supports both SQL and document storage databases with the default database adapter ([TypeORM](https://typeorm.io/))
-* Secure / host only and http only signed cookies; session ID never exposed to client side JavaScript
-* Cross Site Request Forgery protection (double submit cookie method with a signed, HTTP only, host only prefix)
+* Secure / host-only and HttpOnly signed cookies; session ID never exposed to client-side JavaScript
+* Cross-site Request Forgery protection (double submit cookie method with a signed, HttpOnly, host-only prefix)
 * Fully customizable web pages and emails
 
 *Note: NextAuth.js is not associated with Vercel or Next.js.*

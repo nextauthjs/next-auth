@@ -16,7 +16,7 @@ The only required options to get started are **site**, **providers** and **datab
 
 * **providers** (REQUIRED)
 
-  An array of [Providers](/providers) for signing in (e.g. Google, Facebook, Twitter, GitHub, Email, etc) in any order.
+  An array of [Providers](/providers) for signing in (e.g. Google, Facebook, Twitter, GitHub, email, etc) in any order.
 * **database** (REQUIRED)
 
   A database connection string or [TypeORM](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md) configuration object.
