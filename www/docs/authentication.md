@@ -31,7 +31,7 @@ Returns client-safe session object (or empty object of no session).
 
 ### GET /api/auth/csrf
 
-Returns current CSRF to client. Is checked against a signed HTTP only, host only cookie.
+Returns current CSRF to client. Is checked against a signed HttpOnly, host-only cookie.
 
 CSRF protection on authentication requests uses the "double submit cookie method".
 
