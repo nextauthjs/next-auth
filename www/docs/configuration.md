@@ -6,7 +6,7 @@ title: Configuration
 
 Configuration options are passed to NextAuth.js when initalizing it (in your `/pages/api/auth` route).
 
-The only required options are **site**, **providers** and **database**.
+The only required options to get started are **site**, **providers** and **database**.
 
 ## Options
 
@@ -20,6 +20,11 @@ The only required options are **site**, **providers** and **database**.
 * **database** (REQUIRED)
 
   A database connection string or [TypeORM](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md) configuration object.
+* **secret** (RECOMMENDED)
+
+  A random string used to hash tokens and sign cookies (e.g. SHA hash).
+  
+  If not provided will be auto-generated based on hash of all your provided options. The default behaviour is secure, but volatile, and so it is recommended you explicitly specify a value for your secret.
 * **adapter** 
 
   An advanced option for specyfing a custom database adapter (see [Adapter](/adapters) for more information).
@@ -44,31 +49,74 @@ The only required options are **site**, **providers** and **database**.
 
 ---
 
-## Configuration Examples 
+## Examples 
 
-### Database Configuration
+### Database
 
-This is an example of how to use an SQLite in memory database, which can be useful for development and testing, and to check everything is working:
+You can specify database credentials as as a connection string or a [TypeORM configuration](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md) object.
 
-1. Install the database driver as a dependancy in the usual way - e.g. `npm install sqlite3`
-2. Pass a *TypeORM* configuration object when calling `NextAuth()` in your API route.
+*i.e. the following approaches are equivalent:*
 
-e.g.
+```javascript
+database: `mysql://username:password@127.0.0.1:3306/database_name?synchronize=true`
+```
 
-```js title="/pages/api/auth/[...slug].js"
-database:  {
-  type: 'sqlite',
-  database: ':memory:',
+```javascript
+database: {
+  type: 'mysql',
+  host: "127.0.0.1",
+  port: 3306,
+  username: "nextauth",
+  password: "password",
+  database: "nextauth",
   synchronize: true
 }
 ```
 
+#### Supported Databases
+
+* **SQLite**
+
+  *SQLite is intended for development / testing use.*
+
+  Install module:
+  `npm i sqlite3`
+
+  Database URI:<br/>
+  `sqlite://localhost/:memory:?synchronize=true`
+
+* **MySQL**
+
+  Install module:
+  `npm i mysql`
+
+  Database URI:<br/>
+  `mysql://username:password@127.0.0.1:3306/database_name?synchronize=true`
+
+* **Postgres**
+
+  Install module:
+  `npm i pg`
+
+  Database URI:<br/>
+  `postgres://username:password@127.0.0.1:5432/database_name?synchronize=true`
+
+* **MongoDB**
+
+  Install module:
+  `npm i mongo`
+
+  Database URI:<br/>
+  `mongodb://username:password@127.0.0.1:27017/database_name?synchronize=true`
+
 :::tip
-* You can pass database credentials securely, using environment variables for options.
-* See the [TypeORM configuration documentation](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md) for supported options.
+* When configuring your database you should also install an appropriate **npm module**
+* **?synchronize=true** automatically syncs schema changes to the database. It is useful to create the tables you need in the database, but should not be enabled in production as may result in data loss if there are changes to the schema or to NextAuth.js
+* See the [TypeORM configuration documentation](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md) for supported options
 :::
 
-#### Supported Databases
+
+#### Advanced usage
 
 The following databases are supported by the default TypeORM adapter:
 
@@ -84,14 +132,11 @@ The following databases are supported by the default TypeORM adapter:
 * sqljs
 * react-native
 
-Appropriate tables / collections for Users, Sessions (etc) will be created automatically if they do not exist.
+NextAuth.js has not been tested with all of them and not all are supported for use with NextAuth.js but feedback, bug reports and patches are welcome.
 
 If you want to customize, extend or replace the models, you can do this by using the 'adapters' option and passing passing additional options to `Adapters.Default()`.
 
-:::caution
- * Supported databases and models/schemas subject to change before release.
- * Initial target platforms include MySQL, MariaDB, Postgress and MongoDB.
-:::
+See the [documentation for Adapaters](/adapters) for more information on advanced configuration.
 
 ### Pages
 

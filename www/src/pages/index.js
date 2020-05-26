@@ -173,7 +173,7 @@ const options = {
       from: '<no-reply@example.com>'
     }),
   ],
-  database: process.env.DATABASE_URI
+  database: process.env.DATABASE_URL
 }
 
 export default (req, res) => NextAuth(req, res, options)
