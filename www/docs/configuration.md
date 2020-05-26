@@ -123,7 +123,7 @@ const SignIn = ({ providers }) => {
       {providers && Object.values(providers).map(provider => (
         <p key={provider.name}>
           <a href={provider.signinUrl}>
-            <Button id='signin-btn' type='submit' appearance='primary' block>Sign in with {provider.name}</Button>
+            <Button type='submit' appearance='primary' block>Sign in with {provider.name}</Button>
           </a>
         </p>
       ))}
