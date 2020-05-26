@@ -19,12 +19,12 @@ export const Image = ({ children, src, alt = '' }) => (
 
 | Name | API docs | App configuration| 
 | --- | --- | --- |
-| `Auth0` | https://auth0.com/docs/api/authentication#authorize-application | https://manage.auth0.com/dashboard |
-| `Discord` | https://discord.com/developers/docs/topics/oauth2 | https://discord.com/developers/applications |
+| `Auth0` | [`https://auth0.com/docs/...`](https://auth0.com/docs/api/authentication) | https://manage.auth0.com/dashboard |
+| `Discord` | [`https://discord.com/developers/docs/...`](https://discord.com/developers/docs/topics/oauth2) | https://discord.com/developers/applications |
 | `Email` | https://nodemailer.com/smtp/well-known | |
-| `Facebook` | https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/ | https://developers.facebook.com/apps/ |
-| `Github` | https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/ | https://github.com/settings/apps/ |
-| `Google OAuth2` | https://developers.google.com/identity/protocols/oauth2 | https://console.developers.google.com/apis/credentials |
+| `Facebook` | [`https://developers.facebook.com/docs/...`](https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/) | https://developers.facebook.com/apps/ |
+| `Github` | [`https://developer.github.com/apps/...`](https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/) | https://github.com/settings/apps/ |
+| `Google OAuth2` | [`https://developers.google.com/identity/...`](https://developers.google.com/identity/protocols/oauth2) | https://console.developers.google.com/apis/credentials |
 | `Mixer` | https://dev.mixer.com/reference/oauth | https://mixer.com/lab/oauth |
 | `Slack` | https://api.slack.com | https://api.slack.com/apps |
 | `Twitch` | https://dev.twitch.tv/docs/authentication | https://dev.twitch.tv/console/apps |
