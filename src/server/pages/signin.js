@@ -9,8 +9,6 @@ export default ({ req, csrfToken, providers, callbackUrl }) => {
       {providers.map((provider, i) =>
         <p key={provider.id}>
           {provider.type === 'oauth'  && <a className='button' data-provider={provider.id} href={`${provider.signinUrl}${withCallbackUrl}`}>Sign in with {provider.name}</a>}
-          {/* Style the apple button? */}
-          {provider.type === 'oauth-apple' && <a className='button' data-provider={provider.id} href={`${provider.signinUrl}${withCallbackUrl}`}>Sign in with {provider.name}</a>}
           {provider.type === 'email' &&
             <form action={provider.signinUrl} method='POST'>
               {i > 0 && <hr />}

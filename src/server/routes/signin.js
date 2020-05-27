@@ -12,7 +12,7 @@ export default async (req, res, options, done) => {
     return done()
   }
 
-  if (type === 'oauth' || type === 'oauth-apple') {
+  if (type === 'oauth') {
     OAuthSignin(provider, (error, oAuthSigninUrl) => {
       if (error) {
         console.error('OAUTH_SIGNIN_ERROR', error)

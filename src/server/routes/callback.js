@@ -13,7 +13,7 @@ export default async (req, res, options, done) => {
   // Get session ID (if set)
   const sessionToken = req.cookies[cookies.sessionToken.name]
 
-  if (type === 'oauth' || type === 'oauth-apple') {
+  if (type === 'oauth') {
     OAuthCallback(req, provider, async (error, oauthAccount) => {
       if (error) {
         console.error('OAUTH_CALLBACK_ERROR', error)
