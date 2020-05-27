@@ -40,17 +40,17 @@ export default async (req, provider, callback) => {
           console.error('GET_OAUTH2_ACCESS_TOKEN_ERROR', error, results, provider.id, code)
         }
 
-        if(provider.type == "oauth-apple")
+        if(provider.id == "apple")
         {
-          // Use custom get() method for oAuth2 flows
-          client.get =  _decodeIDToken
-
-          client.get(
-            provider,
-            accessToken,
-            refreshToken, 
-            results.id_token,
-            (error, profileData) => callback(error, _getProfile(error, profileData, accessToken, refreshToken, provider))
+            //@TODO create property on provider allowing other providers that might have the same strategy as apple?
+            //provider.ProfileFromIDToken
+            _decodeIDToken(
+              provider,
+              accessToken,
+              refreshToken, 
+              results.id_token,
+              (error, profileData) => callback(error, _getProfile(error, profileData, accessToken, refreshToken, provider))
+          
           )
         }
         else

@@ -2,7 +2,7 @@ export default (options) => {
     return {
       id: 'apple',
       name: 'Apple',
-      type: 'oauth-apple',
+      type: 'oauth',
       version: '2.0',
       scope: 'name email',
       params: { grant_type: 'authorization_code' },
