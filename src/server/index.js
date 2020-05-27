@@ -263,6 +263,14 @@ export default async (req, res, userSuppliedOptions) => {
         case 'signout':
           signout(req, res, options, done)
           break
+        case 'callback':
+            if (provider && options.providers[provider]) {
+              callback(req, res, options, done)
+            } else {
+              res.status(400).end(`Error: HTTP POST is not supported for ${url}`)
+              return done()
+            }
+            break
         default:
           res.status(400).end(`Error: HTTP POST is not supported for ${url}`)
           return done()

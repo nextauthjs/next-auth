@@ -30,6 +30,7 @@
   ],
   "license": "ISC",
   "dependencies": {
+    "jwt-decode": "^2.2.0",
     "nodemailer": "^6.4.6",
     "oauth": "^0.9.15",
     "preact": "^10.4.1",

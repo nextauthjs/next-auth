@@ -1,5 +1,6 @@
 import oAuthClient from './client'
 import querystring from 'querystring'
+import jwt_decode from 'jwt-decode';
 
 // @TODO Refactor monkey patching in _getOAuthAccessToken() and _get()
 // These methods have been forked from `node-oauth` to fix bugs; it may make
@@ -8,10 +9,18 @@ import querystring from 'querystring'
 // come up, as the node-oauth package does not seem to be actively maintained.
 
 export default async (req, provider, callback) => {
-  const { oauth_token, oauth_verifier, code } = req.query // eslint-disable-line camelcase
+  let { oauth_token, oauth_verifier, code } = req.query // eslint-disable-line camelcase
   const client = oAuthClient(provider)
 
   if (provider.version && provider.version.startsWith('2.')) {
+
+    if(req.method == 'POST')
+    {
+      //Get the CODE from Body
+      const body = JSON.parse(JSON.stringify(req.body));
+      code = body.code
+    }
+
     // Pass authToken in header by default (unless 'useAuthTokenHeader: false' is set)
     if (Object.prototype.hasOwnProperty.call(provider, 'useAuthTokenHeader')) {
       client.useAuthorizationHeaderforGET(provider.useAuthTokenHeader)
@@ -31,14 +40,30 @@ export default async (req, provider, callback) => {
           console.error('GET_OAUTH2_ACCESS_TOKEN_ERROR', error, results, provider.id, code)
         }
 
-        // Use custom get() method for oAuth2 flows
-        client.get = _get
+        if(provider.type == "oauth-apple")
+        {
+          // Use custom get() method for oAuth2 flows
+          client.get =  _decodeIDToken
 
-        client.get(
-          provider,
-          accessToken,
-          (error, profileData) => callback(error, _getProfile(error, profileData, accessToken, refreshToken, provider))
-        )
+          client.get(
+            provider,
+            accessToken,
+            refreshToken, 
+            results.id_token,
+            (error, profileData) => callback(error, _getProfile(error, profileData, accessToken, refreshToken, provider))
+          )
+        }
+        else
+        {
+          // Use custom get() method for oAuth2 flows
+          client.get = _get
+
+          client.get(
+            provider,
+            accessToken,
+            (error, profileData) => callback(error, _getProfile(error, profileData, accessToken, refreshToken, provider))
+          )
+        }
       }
     )
   } else {
@@ -169,4 +194,22 @@ function _get (provider, accessToken, callback) {
   }
 
   this._request('GET', url, headers, null, accessToken, callback)
+}
+
+/**
+ * 05/26/2020 GN decodes jwt id_token converts back to json string that mimics a response from profile url
+ * @param {*} provider  List of Providers
+ * @param {*} accessToken 
+ * @param {*} refreshToken 
+ * @param {*} id_token jwt from Provider
+ * @param {*} callback 
+ */
+function _decodeIDToken (provider, accessToken, refreshToken, id_token, callback) 
+{
+   if (!id_token) { throw new Error('Missing id_token') }
+
+   const decoded = jwt_decode(id_token);
+   const profileData = JSON.stringify(decoded)
+   callback(null, profileData, accessToken, refreshToken, provider)
+    
 }

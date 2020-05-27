@@ -79,7 +79,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
         user,
         isNewAccount
       }
-    } else if (providerAccount.type === 'oauth') {
+    } else if (providerAccount.type === 'oauth'  || providerAccount.type === 'oauth-apple') {
       // If signing in with oauth account, check to see if the account exists already
       const userByProviderAccountId = await getUserByProviderAccountId(providerAccount.provider, providerAccount.id)
       if (userByProviderAccountId) {
