@@ -1,6 +1,6 @@
 import oAuthClient from './client'
 import querystring from 'querystring'
-import jwt_decode from 'jwt-decode';
+import jwtDecode from 'jwt-decode'
 
 // @TODO Refactor monkey patching in _getOAuthAccessToken() and _get()
 // These methods have been forked from `node-oauth` to fix bugs; it may make
@@ -13,11 +13,9 @@ export default async (req, provider, callback) => {
   const client = oAuthClient(provider)
 
   if (provider.version && provider.version.startsWith('2.')) {
-
-    if(req.method == 'POST')
-    {
-      //Get the CODE from Body
-      const body = JSON.parse(JSON.stringify(req.body));
+    if (req.method === 'POST') {
+      // Get the CODE from Body
+      const body = JSON.parse(JSON.stringify(req.body))
       code = body.code
     }
 
@@ -40,21 +38,18 @@ export default async (req, provider, callback) => {
           console.error('GET_OAUTH2_ACCESS_TOKEN_ERROR', error, results, provider.id, code)
         }
 
-        if(provider.id == "apple")
-        {
-            //@TODO create property on provider allowing other providers that might have the same strategy as apple?
-            //provider.ProfileFromIDToken
-            _decodeIDToken(
-              provider,
-              accessToken,
-              refreshToken, 
-              results.id_token,
-              (error, profileData) => callback(error, _getProfile(error, profileData, accessToken, refreshToken, provider))
-          
+        if (provider.id === 'apple') {
+          // @TODO create property on provider allowing other providers that might have the same strategy as apple?
+          // provider.ProfileFromIDToken
+          _decodeIDToken(
+            provider,
+            accessToken,
+            refreshToken,
+            results.id_token,
+            (error, profileData) => callback(error, _getProfile(error, profileData, accessToken, refreshToken, provider))
+
           )
-        }
-        else
-        {
+        } else {
           // Use custom get() method for oAuth2 flows
           client.get = _get
 
@@ -199,17 +194,15 @@ function _get (provider, accessToken, callback) {
 /**
  * 05/26/2020 GN decodes jwt id_token converts back to json string that mimics a response from profile url
  * @param {*} provider  List of Providers
- * @param {*} accessToken 
- * @param {*} refreshToken 
- * @param {*} id_token jwt from Provider
- * @param {*} callback 
+ * @param {*} accessToken
+ * @param {*} refreshToken
+ * @param {*} idToken jwt from Provider
+ * @param {*} callback
  */
-function _decodeIDToken (provider, accessToken, refreshToken, id_token, callback) 
-{
-   if (!id_token) { throw new Error('Missing id_token') }
+function _decodeIDToken (provider, accessToken, refreshToken, idToken, callback) {
+  if (!idToken) { throw new Error('Missing idToken') }
 
-   const decoded = jwt_decode(id_token);
-   const profileData = JSON.stringify(decoded)
-   callback(null, profileData, accessToken, refreshToken, provider)
-    
+  const decoded = jwtDecode(idToken)
+  const profileData = JSON.stringify(decoded)
+  callback(null, profileData, accessToken, refreshToken, provider)
 }
