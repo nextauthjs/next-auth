@@ -32,7 +32,18 @@
   display: flex;
   align-items: center;
   padding-top: 2rem;
+  margin: 4rem auto;
   width: 100%;
+}
+
+.features ul {
+  list-style: none;
+  padding: 0;
+  text-align: center;
+}
+
+.features ul li {
+  margin-bottom: .5rem;
 }
 
 .featureImage {

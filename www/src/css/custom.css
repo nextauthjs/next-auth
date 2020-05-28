@@ -5,23 +5,36 @@
  * work well for content-centric websites.
  */
 
+/* @TODO Move as many styles for the homepage as possible into styles.module.css */
+
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #00B0FF;
-  --ifm-color-primary-dark: #009ADF;
-  --ifm-color-primary-darker: #0084BF;
-  --ifm-color-primary-darkest: #006E9F;
-  --ifm-color-primary-light: #20BAFF;
-  --ifm-color-primary-lighter: #40C4FF;
-  --ifm-color-primary-lightest: #60CEFF;
+  --ifm-color-primary: #1eb1fc;
+  --ifm-color-primary-dark: #03a7fa;
+  --ifm-color-primary-darker: #039eed;
+  --ifm-color-primary-darkest: #0382c3;
+  --ifm-color-primary-light: #3abbfc;
+  --ifm-color-primary-lighter: #48bffd;
+  --ifm-color-primary-lightest: #03a7fa;
   --ifm-code-font-size: 95%;
-  --ifm-color-info: #03a9fc;
-  --ifm-color-success: #00cc66;
+  --ifm-color-info: #1eb1fc; /* #03a9fc; */
+  --ifm-color-success: #1eb1fc; /* #00cc66; */
   --ifm-color-warning: #c94b4b;
+  --ifm-font-family-base: -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 }
 
-.footer.footer--dark {
-  --ifm-footer-background-color: #1F201C;
+html {
+  --color-feature-image-background: #fff;
+  --color-section-background: #f9f9f9;
+}
+
+html[data-theme='dark'] {
+  --color-section-background: #242526;
+}
+
+a,
+.navbar .navbar__link {
+  font-weight: 600;
 }
 
 .docusaurus-highlight-code-line {
@@ -31,38 +44,42 @@
   padding: 0 var(--ifm-pre-padding);
 }
 
+.admonition-icon {
+  margin-right: .5rem;
+}
+
+.rounded-pill {
+  border-radius: 2rem;
+}
+
 .hero {
+  margin-top: 2rem;
   background-color: var(--ifm-background-color);
   color: black;
 }
 
-.hero .hero__title {
+.hero .hero__title {  
   font-size: 3rem;
   margin-bottom: 0.5rem;
+  font-weight: 600;
 }
 
 @media screen and (min-width: 668px) {
   .hero .hero__title {
-    font-size: 4rem;
+    font-size: 4.8rem;
   }
 }
 
 .hero .hero__subtitle {
   font-size: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   opacity: 0.8;
 }
-
 
 @media screen and (min-width: 668px) {
   .hero .hero__subtitle {
     font-size: 1.5rem;
   }
-}
-
-.hero .button {
-  border-radius: 2rem;
-  margin-top: 1rem;
 }
 
 .home-subtitle {
@@ -72,8 +89,7 @@
   font-style: italic;
 }
 
-.home-main h3 {
-  text-align: center;
+.home-main h2 {
   line-height: 3.5rem;
   margin: 0.5rem 0;  
 }
@@ -104,27 +120,23 @@
   margin-bottom: 2rem;
 }
 
-.navbar__item.navbar__link[href*="github"] {
+.navbar__item.navbar__link[href*="github"],
+.navbar__item.navbar__link[href*="npmjs"] {
+  padding: 0 1rem 0 0;
   display: flex;
   font-size: 0;
-  padding-right: 2rem;
 }
 
 .navbar__item.navbar__link[href*="github"]:before {
   content: "";
-  width: 1.8rem;
-  height: 1.8rem;
+  width: 1.5rem;
+  height: 1.5rem;
   background-image: url("/img/brand-github.svg");
   background-repeat: no-repeat;
 }
 
 html[data-theme='dark'] .navbar__item.navbar__link[href*="github"]:before {
   background-image: url("/img/brand-github-inverted.svg");
-}
-
-.navbar__item.navbar__link[href*="npmjs"] {
-  display: flex;
-  font-size: 0;
 }
 
 .navbar__item.navbar__link[href*="npmjs"]:before {
@@ -151,22 +163,22 @@ html[data-theme='dark'] {
   --ifm-background-color: #1F201C;
 }
 
+.home-main .section-features {
+   background-color: var(--color-section-background);
+}
+
+
 .home-main .feature-image-wrapper {
   display: inline-block;
   overflow: auto;
-  background: white;
   padding: 0.3rem;
   border-radius: 10rem;
-  background: #f1f1f1;  
   overflow: visible;
+  background-color: var(--color-feature-image-background);
 }
 
 .home-main .feature-image-wrapper img {
   zoom: 1;
-}
-
-html[data-theme='dark'] .home-main .feature-image-wrapper {
-  background: #ccc;
 }
 
 html[data-theme="dark"] .hero .hero__title,
