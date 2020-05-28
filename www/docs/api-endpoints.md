@@ -1,9 +1,11 @@
 ---
-id: rest-api
-title: REST API
+id: api-endpoints
+title: API Endpoints
 ---
 
 NextAuth.js exposes the following REST API
+
+The default base path is `/api/auth`, this is configurable with the `basePath` option.
 
 ### GET /api/auth/signin
 

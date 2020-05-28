@@ -26,9 +26,10 @@ export default async (req, res, userSuppliedOptions) => {
 
     const { url, query, body } = req
     const {
-      slug,
-      action = slug[0],
-      provider = slug[1],
+      slug, // Deprecated (used in early beta versions; should be 'nextauth')
+      nextauth = slug,
+      action = nextauth[0],
+      provider = nextauth[1],
       error
     } = query
 
@@ -64,8 +65,8 @@ export default async (req, res, userSuppliedOptions) => {
     // prefix, but enable them by default if the site URL is HTTPS; but not for
     // non-HTTPS URLs like http://localhost which are used in development).
     // For more on prefixes see https://googlechrome.github.io/samples/cookie-prefixes/
-    const secureCookies = userSuppliedOptions.secureCookies || baseUrl.startsWith('https://')
-    const cookiePrefix = secureCookies ? '__Secure-' : ''
+    const useSecureCookies = userSuppliedOptions.useSecureCookies || baseUrl.startsWith('https://')
+    const cookiePrefix = useSecureCookies ? '__Secure-' : ''
 
     // @TODO Review cookie settings (names, options)
     const cookies = {
@@ -76,7 +77,7 @@ export default async (req, res, userSuppliedOptions) => {
           httpOnly: true,
           sameSite: 'lax',
           path: '/',
-          secure: secureCookies
+          secure: useSecureCookies
         }
       },
       callbackUrl: {
@@ -84,7 +85,7 @@ export default async (req, res, userSuppliedOptions) => {
         options: {
           sameSite: 'lax',
           path: '/',
-          secure: secureCookies
+          secure: useSecureCookies
         }
       },
       baseUrl: {
@@ -93,18 +94,18 @@ export default async (req, res, userSuppliedOptions) => {
           httpOnly: true,
           sameSite: 'lax',
           path: '/',
-          secure: secureCookies
+          secure: useSecureCookies
         }
       },
       csrfToken: {
-        // Default to __Host- for CSRF token for additional protection if using secureCookies
-        // NB: The `__Host-` prefix is stricted than the `__Secure-` prefix.
-        name: `${secureCookies ? '__Host-' : ''}next-auth.csrf-token`,
+        // Default to __Host- for CSRF token for additional protection if using useSecureCookies
+        // NB: The `__Host-` prefix is stricter than the `__Secure-` prefix.
+        name: `${useSecureCookies ? '__Host-' : ''}next-auth.csrf-token`,
         options: {
           httpOnly: true,
           sameSite: 'lax',
           path: '/',
-          secure: secureCookies
+          secure: useSecureCookies
         }
       },
       // Allow user cookie options to override any cookie settings above

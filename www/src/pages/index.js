@@ -14,9 +14,11 @@ const features = [
     description: (
       <ul>
         <li>Full stack open source authentication</li>
-        <li>Designed for Next.js and serverless</li>
-        <li>Use with any database</li>
-        <li>Works in both client and server side React</li>
+        <li>Designed for Next.js and Serverless</li>
+        <li>
+            Supports Bring Your Own Database<br />
+          <em>(MySQL, MariaDB, Postgres, MongoDB…)</em>
+        </li>
       </ul>
     )
   },
@@ -25,10 +27,12 @@ const features = [
     imageUrl: 'img/undraw_social.svg',
     description: (
       <ul>
-        <li>Built-in support for popular OAuth services (Google, Facebook, Twitter, Auth0…)</li>
-        <li>Use with any OAuth service (1.x or 2.x)</li>
-        <li>Passwordless email sign in</li>
-        <li>Secure account linking</li>
+        <li>Sign in with any OAuth service</li>
+        <li>Sign in with any email / passwordless</li>
+        <li>Built in support for popular OAuth services <br />
+          <em>(Google, Facebook, Twitter, Auth0, Apple…)</em>
+        </li>
+
       </ul>
     )
   },
@@ -37,7 +41,7 @@ const features = [
     imageUrl: 'img/undraw_secure.svg',
     description: (
       <ul>
-        <li>CSRF protection (double submit cookie)</li>
+        <li>CSRF protection with double submit cookie</li>
         <li>Cookies are signed, server-only, prefixed</li>
         <li>Session tokens secret from JavaScript</li>
         <li>Doesn't require client side JavaScript</li>
@@ -57,7 +61,7 @@ function Feature ({ imageUrl, title, description }) {
           </div>
         </div>
       )}
-      <h3>{title}</h3>
+      <h2 className='text--center'>{title}</h2>
       <p>{description}</p>
     </div>
   )
@@ -75,60 +79,77 @@ function Home () {
           <div className={styles.buttons}>
             <a
               className={classnames(
-                'button button--outline button--primary button--lg',
+                'button button--outline button--primary button--lg rounded-pill',
                 styles.button
               )}
               href='https://next-auth-example.now.sh'
-            >
-              Try it out
+            >Live Demo
             </a>
             <Link
               className={classnames(
-                'button button--primary button--lg',
+                'button button--primary button--lg rounded-pill',
                 styles.button
               )}
-              to={useBaseUrl('/getting-started')}
-            >
-                Get Started
+              to={useBaseUrl('/getting-started/introduction')}
+            >Get Started
             </Link>
           </div>
         </div>
       </header>
       <main className='home-main'>
-        <div className='container'>
-          <section className={styles.features}>
+        <section className={`section-features ${styles.features}`}>
+          <div className='container'>
             <div className='row'>
               {features.map((props, idx) => (
                 <Feature key={idx} {...props} />
               ))}
             </div>
-          </section>
-          <section>
+          </div>
+        </section>
+        <section>
+          <div className='container'>
             <div className='row'>
               <div className='col'>
-                <h2 className='text--center'>Examples</h2>
+                <p className='text--center'>
+                  <a
+                    href='https://www.npmjs.com/package/next-auth/v/beta'
+                    className='button button--secondary button--outline rounded-pill button--lg'
+                  >npm install next-auth
+                  </a>
+                </p>
               </div>
             </div>
             <div className='row'>
               <div className='col col--6'>
                 <div className='code'>
-                  <h4 className='code-heading'>Serverless function</h4>
+                  <h4 className='code-heading'>Step 1 – Add API Route</h4>
                   <CodeBlock className='javascript'>{serverlessFunctionCode}</CodeBlock>
                 </div>
               </div>
               <div className='col col--6'>
                 <div className='code'>
-                  <h4 className='code-heading'>React component</h4>
+                  <h4 className='code-heading'>Step 2 – Add React Component</h4>
                   <CodeBlock className='javascript'>{reactComponentCode}</CodeBlock>
                 </div>
               </div>
             </div>
-            <div className='container'>
-              <div className='row home-subtitle'>
-                {siteConfig.title} is not affiliated with Vercel or Next.js
+            <div className='row'>
+              <div className='col'>
+                <p className='text--center'>
+                  <Link
+                    to='/getting-started/example'
+                    className='button button--secondary button--ouline button--lg rounded-pill'
+                  >View Example
+                  </Link>
+                </p>
               </div>
             </div>
-          </section>
+          </div>
+        </section>
+        <div className='container'>
+          <div className='row home-subtitle'>
+            {siteConfig.title} is not affiliated with Vercel or Next.js
+          </div>
         </div>
       </main>
     </Layout>
@@ -137,20 +158,20 @@ function Home () {
 
 const reactComponentCode = `
 import React from 'react'
-import NextAuth from 'next-auth'
+import { useSession } from 'next-auth/client'
 
 export default () => {
-  const [ session, loading ] = NextAuth.useSession()
+  const [ session, loading ] = useSession()
 
   return <p>
+    {!session && <>
+      Not signed in <br/>
+      <a href="/api/auth/signin">Sign in</a>
+    </>}
     {session && <>
       Signed in as {session.user.email} <br/>
       <a href="/api/auth/signout">Sign out</a>
     </>}
-    {!session && 
-      Not signed in <br/>
-      <a href="/api/auth/signin">Sign in</a>
-    }
   </p>
 }
 `.trim()
@@ -167,7 +188,7 @@ const options = {
       clientSecret: process.env.GOOGLE_SECRET
     }),
     Providers.Email({
-      server: 'smtp://username:password@smtp.example.com',
+      server: process.env.MAIL_SERVER,
       from: '<no-reply@example.com>'
     }),
   ],
