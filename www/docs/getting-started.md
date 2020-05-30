@@ -93,7 +93,7 @@ To reduce network load and improve page speed, you can wrap your component tree 
 :::
 
 ```jsx {5,7} title="/pages/_app.js"
-import { Provider } from 'next-auth'
+import { Provider } from 'next-auth/client'
 
 export default ({ Component, pageProps }) => (
   <Provider>
