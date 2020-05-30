@@ -63,7 +63,7 @@ Your can view the callback URLs you need to specify with your OAuth providers at
 The `useSession()` hook is the easiest way to check if someone is signed in.
 
 ```jsx {5} title="/pages/index.js"
-import { useSession } from 'next-auth'
+import { useSession } from 'next-auth/client'
 
 export default () => {
   const [ session, loading ] = useSession()
