@@ -1,6 +1,6 @@
 // fetch() is built in to Next.js 9.4 (you can use a polyfill if using an older version)
 /* global fetch:false */
-import { useState, useEffect, useContext, createContext, createElement } from 'react'
+import { useState, useEffect, useContext, createContext, createElement,  } from 'react'
 
 // Note: In calls to fetch() from universal methods, all cookies are passed
 // through from the browser, when the server makes the HTTP request, so that
@@ -34,6 +34,11 @@ const getCsrfToken = async ({ req } = {}) => {
   return data.csrfToken
 }
 
+
+// Context to store session data globally
+const SessionContext = createContext()
+
+// Client side method
 // Hook to access the session data stored in the context
 const useSession = (session) => {
   const value = useContext(SessionContext)
@@ -44,9 +49,6 @@ const useSession = (session) => {
 
   return value
 }
-
-// Context to store session data globally
-const SessionContext = createContext()
 
 // Internal hook for getting session from the api.
 const useSessionData = (session) => {
@@ -64,36 +66,56 @@ const useSessionData = (session) => {
   return [data, loading]
 }
 
-// @TODO Implement signin method
+// Client side method
 const signin = async (provider, args) => {
   if (!provider) {
-    // @TODO Redirect to sign in page
-    return
+    // Redirect to sign in page if no provider specified
+    const baseUrl = _baseUrl()
+    return window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(window.location)}`
   }
 
   const providers = await getProviders()
   if (!providers[provider]) {
-    // @TODO If Provider not recognized, redirect to sign in page
+    // If Provider not recognized, redirect to sign in page
+    const baseUrl = _baseUrl({ req })
+    return window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(window.location)}`
   } else if (providers[provider].type === 'oauth') {
-    // @TODO If OAuth provider, redirect to providers[provider].signinUrl
+    // If is an OAuth provider, redirect to providers[provider].signinUrl
+    return window.location = `${providers[provider].signinUrl}?callbackUrl=${encodeURIComponent(window.location)}`
   } else {
-    // @TODO POST to providers[provider].signinUrl (with CSRF Token)
-    const postArgs = {
-      csrfToken: await getCsrfToken(),
-      ...args
+    // If is any other provider type, POST to providers[provider].signinUrl (with CSRF Token)
+    const options = {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: _encodedForm({ 
+        csrfToken: await getCsrfToken(),
+        callbackUrl: window.location,
+        ...args
+      })
     }
-    // @TODO Reload page if successful
+    const res = await fetch(providers[provider].signinUrl, options)
+    // @TODO Add error handling
+    window.location = res.url ? res.url : window.location
   }
 }
 
-// @TODO Implement signout method
+// Client side method
 const signout = async () => {
-  // @TODO POST to signout endpoint (with CSRF Token)
-  const postArgs = {
-    csrfToken: await getCsrfToken()
+  const baseUrl = _baseUrl()
+  const options = {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: _encodedForm({ 
+      csrfToken: await getCsrfToken(),
+      callbackUrl: window.location
+    })
   }
-
-  // @TODO Reload page if successful
+  const res = await fetch(`${baseUrl}/signout`, options)
+  window.location = res.url ? res.url : window.location
 }
 
 // Provider to wrap the app in to make session data available globally
@@ -113,7 +135,7 @@ const _fetchData = async (url, options) => {
   }
 }
 
-const _baseUrl = ({ req }) => {
+const _baseUrl = ({ req } = {}) => {
   if (req) {
     // Server Side
     // If we have a 'req' object are running sever side, so we should grab the
@@ -152,10 +174,18 @@ const _parseCookies = (string) => {
   }
 }
 
+const _encodedForm = (formData) => {
+  return Object.keys(formData).map((key) => {
+    return encodeURIComponent(key) + '=' + encodeURIComponent(formData[key])
+  }).join('&')
+}
+
 export default {
   session: getSession,
   providers: getProviders,
   csrfToken: getCsrfToken,
   useSession,
-  Provider
+  Provider,
+  signin,
+  signout
 }
