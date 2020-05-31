@@ -1,11 +1,11 @@
 ---
 id: adapter
-title: Adapter
+title: Database Adapters
 ---
 
 An "*Adapter*" in NextAuth.js is the thing that connects your application to whatever database or backend system you want to use to store data for user accounts, sessions, etc.
 
-*Adapters are considered advanced usage are are not fully documented yet.*
+*The **adapter** option is currently considered advanced usage intended for use by NextAuth.js contributors.*
 
 ## TypeORM (Default)
 
@@ -45,10 +45,8 @@ database: {
 
 ## Creating your own adapter
 
-It is possible to create your own adapter, in fact someone has already done this for a [Prisma](https://www.prisma.io/) backend.
+It is possible to create your own adapter, one has already been created for a [Prisma](https://www.prisma.io/) backend.
 
-Using a custom adapter you can connect to any database backend (or even several different databases!).
+Using a custom adapter you can connect to any database backend or even several different databases.
 
-How to do write your own adapter is not yet documented.
-
-If you are interested in creating an adapter, do get in touch with the development team on GitHub.
+How to do write your own adapter is not yet convered in documentation and it is not a supported option.

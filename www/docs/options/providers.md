@@ -1,6 +1,6 @@
 ---
 id: providers
-title: Providers
+title: Sign in Providers
 ---
 
 export const Image = ({ children, src, alt = '' }) => ( 
@@ -21,18 +21,18 @@ NextAuth.js is designed to work with any 0Auth service, it supports 0Auth 1.0, 1
 
 ### Built-in providers
 
-| Name | Documentation | Configuration | Notes
+| Provider | Documentation | Configuration | Notes
 | --- | --- | --- | --- |
-| `Auth0`    | [Documentation](https://auth0.com/docs/api/authentication#authorize-application) | [Configuration](https://manage.auth0.com/dashboard) | Requires accessTokenUrl, authorizationUrl, profileUrl.
-| `Apple`    | -- | -- |
-| `Discord`  | [Documentation](https://discord.com/developers/docs/topics/oauth2) | [Configuration](https://discord.com/developers/applications) | Doesn't need clientSecret.
-| `Facebook` | [Documentation](https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/) | [Configuration](https://developers.facebook.com/apps/) | Doesn't allow testing production applications with localhost URLs. May not return email address if the account was created with a mobile number.
-| `Github`   | [Documentation](https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/) | [Configuration](https://github.com/settings/apps/) | Only allows one callback URL. May not return email address if privacy enabled.
-| `Google`   | [Documentation](https://developers.google.com/identity/protocols/oauth2) | [Configuration](https://console.developers.google.com/apis/credentials) |
-| `Mixer`    | [Documentation](https://dev.mixer.com/reference/oauth) | [Configuration](https://mixer.com/lab/oauth) |
-| `Slack`    | [Documentation](https://api.slack.com) |[Configuration]( https://api.slack.com/apps) |
-| `Twitch`   | [Documentation](https://dev.twitch.tv/docs/authentication) | [Configuration](https://dev.twitch.tv/console/apps) |
-| `Twitter`  | [Documentation](https://developer.twitter.com) | [Configuration](https://developer.twitter.com/en/apps) | Must enable the *"Request email address from users"* option in your app permissions.
+| Auth0    | [Documentation](https://auth0.com/docs/api/authentication#authorize-application) | [Configuration](https://manage.auth0.com/dashboard) | Requires accessTokenUrl, authorizationUrl, profileUrl.
+| Apple    | [Documentation](https://developer.apple.com/sign-in-with-apple/) | [Configuration](https://developer.apple.com/account/resources) | Documentation coming soon. [Okta guide to Sign in with Apple](https://developer.okta.com/blog/2019/06/04/what-the-heck-is-sign-in-with-apple) |
+| Discord  | [Documentation](https://discord.com/developers/docs/topics/oauth2) | [Configuration](https://discord.com/developers/applications) | Doesn't need clientSecret.
+| Facebook | [Documentation](https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/) | [Configuration](https://developers.facebook.com/apps/) | Doesn't allow testing production applications with localhost URLs. May not return email address if the account was created with a mobile number.
+| Github   | [Documentation](https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/) | [Configuration](https://github.com/settings/apps/) | Only allows one callback URL. May not return email address if privacy enabled.
+| Google   | [Documentation](https://developers.google.com/identity/protocols/oauth2) | [Configuration](https://console.developers.google.com/apis/credentials) |
+| Mixer    | [Documentation](https://dev.mixer.com/reference/oauth) | [Configuration](https://mixer.com/lab/oauth) |
+| Slack    | [Documentation](https://api.slack.com) |[Configuration]( https://api.slack.com/apps) |
+| Twitch   | [Documentation](https://dev.twitch.tv/docs/authentication) | [Configuration](https://dev.twitch.tv/console/apps) |
+| Twitter  | [Documentation](https://developer.twitter.com) | [Configuration](https://developer.twitter.com/en/apps) | Must enable the *"Request email address from users"* option in your app permissions.
 
 :::tip
 Most OAuth providers only need a **Client ID** and a **Client Secret** to work but some need some additional options and there are gotchas with some providers (see table above).

@@ -1,18 +1,17 @@
 ---
-
 id: database
-title: Database
+title: Database Configuration
 ---
 
 You can specify database credentials as as a connection string or a [TypeORM configuration](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md) object.
 
-*i.e. the following approaches are equivalent:*
+The following approaches are exactly equivalent:
 
-```javascript
-database: `mysql://username:password@127.0.0.1:3306/database_name?synchronize=true`
+```js
+database: 'mysql://username:password@127.0.0.1:3306/database_name?synchronize=true'
 ```
 
-```javascript
+```js
 database: {
   type: 'mysql',
   host: "127.0.0.1",
@@ -25,10 +24,16 @@ database: {
 ```
 
 :::note
-See the [TypeORM configuration documentation](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md) for supported options.
+See the [TypeORM configuration documentation](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md) for all the supported database options.
 :::
 
 ## Supported Databases
+
+NextAuth.js uses TypeORM as the default database adapter, but only some databases are supported.
+
+:::tip
+When configuring your database you also need to install an appropriate **node module** for your database.
+:::
 
 ### SQLite
 
@@ -37,36 +42,55 @@ See the [TypeORM configuration documentation](https://github.com/typeorm/typeorm
 Install module:
 `npm i sqlite3`
 
-Database URI:
-`sqlite://localhost/:memory:?synchronize=true`
+#### Example
+
+```js
+database: 'sqlite://localhost/:memory:?synchronize=true'
+```
 
 ### MySQL
 
 Install module:
 `npm i mysql`
 
-Database URI:
-`mysql://username:password@127.0.0.1:3306/database_name?synchronize=true`
+#### Example
+
+```js
+database: 'mysql://username:password@127.0.0.1:3306/database_name?synchronize=true'
+```
+
+### MariaDB
+
+Install module:
+`npm i mariadb`
+
+#### Example
+
+```js
+database: 'mariadb://username:password@127.0.0.1:3306/database_name?synchronize=true'
+```
 
 ### Postgres
 
 Install module:
 `npm i pg`
 
-Database URI:
-`postgres://username:password@127.0.0.1:5432/database_name?synchronize=true`
+#### Example
+
+```js
+database: 'postgres://username:password@127.0.0.1:3306/database_name?synchronize=true'
+```
 
 ### MongoDB
 
 Install module:
 `npm i mongo`
 
-Database URI:
-`mongodb://username:password@127.0.0.1:27017/database_name?synchronize=true`
+#### Example
 
-:::tip
-When configuring your database you should also install an appropriate **npm module**
-:::
+```js
+database: 'mongodb://username:password@127.0.0.1:3306/database_name?synchronize=true'
+```
 
 :::warning
 The option **?synchronize=true** automatically syncs schema changes to the database.
@@ -93,6 +117,6 @@ You can customize, extend or replace the models, you can do this by using the 'a
 :::
 
 :::note
-See the [documentation for adapters](/options/adapters) for more information on advanced configuration, including how to use NextAuth.js with any database.
+See the [documentation for adapters](/options/adapter) for more information on advanced configuration, including how to use NextAuth.js with any database.
 :::
 

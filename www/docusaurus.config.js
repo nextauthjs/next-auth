@@ -36,8 +36,8 @@ module.exports = {
     },
     announcementBar: {
       id: 'beta-announcement',
-      content: 'NextAuth v2 is in beta! <a target="_blank" rel="noopener noreferrer" href="https://github.com/iaincollins/next-auth/issues/99">View announcement</a>',
-      backgroundColor: '#eee',
+      content: 'NextAuth.js v2.0 is in beta! <a target="_blank" rel="noopener noreferrer" href="https://github.com/iaincollins/next-auth/issues/99">View announcement</a>',
+      backgroundColor: '#FFF69C',
       textColor: '#091E42'
     },
     footer: {
@@ -47,17 +47,43 @@ module.exports = {
           title: 'About NextAuth.js',
           items: [
             {
+              label: 'Introduction',
+              to: '/getting-started/introduction'
+            },
+            {
               label: 'Contributors',
               to: '/contributors'
+            },
+          ]
+        },
+        {
+          title: 'Download',
+          items: [
+            {
+              label: 'GitHub',
+              to: 'https://github.com/iaincollins/next-auth'
+            },
+            {
+              label: 'NPM',
+              to: 'https://www.npmjs.com/package/next-auth/v/beta'
+            }
+          ]
+        },
+        {
+          title: 'Acknowledgements',
+          items: [
+            {
+              label: 'Docusaurus v2 🦖',
+              to: 'https://v2.docusaurus.io/',
             },
             {
               label: 'Images by unDraw',
               to: 'https://undraw.co/'
             }
           ]
-        }
+        },
       ],
-      copyright: 'Built with Docusaurus 🦖'
+      copyright: 'NextAuth.js &copy; Iain Collins 2020'
     }
   },
   presets: [
