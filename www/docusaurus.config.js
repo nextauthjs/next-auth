@@ -53,7 +53,7 @@ module.exports = {
             {
               label: 'Contributors',
               to: '/contributors'
-            },
+            }
           ]
         },
         {
@@ -74,14 +74,14 @@ module.exports = {
           items: [
             {
               label: 'Docusaurus v2 🦖',
-              to: 'https://v2.docusaurus.io/',
+              to: 'https://v2.docusaurus.io/'
             },
             {
               label: 'Images by unDraw',
               to: 'https://undraw.co/'
             }
           ]
-        },
+        }
       ],
       copyright: 'NextAuth.js &copy; Iain Collins 2020'
     }

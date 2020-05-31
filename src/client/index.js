@@ -2,84 +2,135 @@
 /* global fetch:false */
 import { useState, useEffect, useContext, createContext, createElement } from 'react'
 
+// Note: In calls to fetch() from universal methods, all cookies are passed
+// through from the browser, when the server makes the HTTP request, so that
+// it can authenticate as the browser.
+
+// These can be overridden with NEXTAUTH_ env vars in next.config.js
+// e.g. process.env.NEXTAUTH_SITE
 const DEFAULT_BASE_URL_COOKIE_NAME = 'next-auth.base-url'
 const DEFAULT_SITE = ''
 const DEFAULT_BASE_PATH = '/api/auth'
 
-// Isomorphic get session method
-const session = async ({ req, site, basePath, baseUrlCookieName } = {}) => {
-  const baseUrl = _baseUrl({ req, site, basePath, baseUrlCookieName })
-  if (!baseUrl) { return null }
+// Universal method (client + server)
+const getSession = async ({ req } = {}) => {
+  const baseUrl = _baseUrl({ req })
+  const options = req ? { headers: { cookie: req.headers.cookie } } : {}
+  return _fetchData(`${baseUrl}/session`, options)
+}
 
-  // If server side, send with cookies in header (sent automatically client side)
-  const fetchOptions = req ? { headers: { cookie: req.headers.cookie } } : {}
+// Universal method (client + server)
+const getProviders = async ({ req } = {}) => {
+  const baseUrl = _baseUrl({ req })
+  const options = req ? { headers: { cookie: req.headers.cookie } } : {}
+  return _fetchData(`${baseUrl}/providers`, options)
+}
 
-  try {
-    const res = await fetch(`${baseUrl}/session`, fetchOptions)
-    const data = await res.json()
-    return Object.keys(data).length > 0 ? data : null // Return null if session data empty
-  } catch (error) {
-    console.error('CLIENT_SESSION_ERROR', error)
-    return null
+// Universal method (client + server)
+const getCsrfToken = async ({ req } = {}) => {
+  const baseUrl = _baseUrl({ req })
+  const options = req ? { headers: { cookie: req.headers.cookie } } : {}
+  const data = await _fetchData(`${baseUrl}/csrf`, options)
+  return data.csrfToken
+}
+
+// Hook to access the session data stored in the context
+const useSession = (session) => {
+  const value = useContext(SessionContext)
+  // If we have no Provider in the tree we call the actual hook for fetching the session
+  if (value === undefined) {
+    return useSessionData(session)
   }
+
+  return value
 }
 
 // Context to store session data globally
 const SessionContext = createContext()
 
 // Internal hook for getting session from the api.
-const useSessionData = (session, { basePath } = {}) => {
+const useSessionData = (session) => {
   const [data, setData] = useState(session)
   const [loading, setLoading] = useState(true)
-  const getSession = async () => {
+  const _getSession = async () => {
     try {
-      const res = await fetch(`${basePath || DEFAULT_BASE_PATH}/session`) // Releative URL
-      const data = await res.json()
-      setData(Object.keys(data).length > 0 ? data : null) // Return null if session data empty
+      setData(await getSession())
       setLoading(false)
     } catch (error) {
       console.error('CLIENT_USE_SESSION_ERROR', error)
     }
   }
-  useEffect(() => { getSession() }, [])
+  useEffect(() => { _getSession() }, [])
   return [data, loading]
 }
 
+// @TODO Implement signin method
+const signin = async (provider, args) => {
+  if (!provider) {
+    // @TODO Redirect to sign in page
+    return
+  }
+
+  const providers = await getProviders()
+  if (!providers[provider]) {
+    // @TODO If Provider not recognized, redirect to sign in page
+  } else if (providers[provider].type === 'oauth') {
+    // @TODO If OAuth provider, redirect to providers[provider].signinUrl
+  } else {
+    // @TODO POST to providers[provider].signinUrl (with CSRF Token)
+    const postArgs = {
+      csrfToken: await getCsrfToken(),
+      ...args
+    }
+    // @TODO Reload page if successful
+  }
+}
+
+// @TODO Implement signout method
+const signout = async () => {
+  // @TODO POST to signout endpoint (with CSRF Token)
+  const postArgs = {
+    csrfToken: await getCsrfToken()
+  }
+
+  // @TODO Reload page if successful
+}
+
 // Provider to wrap the app in to make session data available globally
-const Provider = ({ children, session, basePath }) => {
-  const value = useSession(session, { basePath })
+const Provider = ({ children, session }) => {
+  const value = useSession(session)
   return createElement(SessionContext.Provider, { value }, children)
 }
 
-// Hook to access the session data stored in the context
-const useSession = (session, { basePath } = {}) => {
-  const value = useContext(SessionContext)
-  // If we have no Provider in the tree we call the actual hook for fetching the session
-  if (value === undefined) {
-    return useSessionData(session, { basePath })
+const _fetchData = async (url, options) => {
+  try {
+    const res = await fetch(url, options)
+    const data = await res.json()
+    return Object.keys(data).length > 0 ? data : null // Return null if data empty
+  } catch (error) {
+    console.error('CLIENT_FETCH_ERROR', url, error)
+    return null
   }
-
-  return value
 }
 
-const _baseUrl = ({ req, site, baseUrlCookieName, basePath }) => {
-  // If we have a 'req' object are running sever side and should get cookies from headers
-  const cookies = req ? _parseCookies(req.headers.cookie) : null
-
-  // If site and/or basePath are specified, use them (or the defaults)
-  // otherwise get the server URL from the signed HTTP only cookie.
-  //
-  // If no options specified (which usually will be the case) then grab
-  // the configuration dynamically from a cookie. Prefer the _Secure-
-  // prefixed version if it is avalible, but fall back to checking the
-  // version without the prefix so it still works on URLs like http://localhost
-  //
-  // If there is no cookie set, then we use the default prefix (/api/auth).
-  const baseUrl = (site || basePath || !cookies)
-    ? `${site || DEFAULT_SITE}${basePath || DEFAULT_BASE_PATH}`
-    : _getUrlPrefixFromCookies(cookies, baseUrlCookieName)
-
-  return baseUrl
+const _baseUrl = ({ req }) => {
+  if (req) {
+    // Server Side
+    // If we have a 'req' object are running sever side, so we should grab the
+    // base URL from cookie that is set by the API route - which is how config
+    // is shared automatically between the API route and the client.
+    const cookies = req ? _parseCookies(req.headers.cookie) : null
+    const baseUrlCookieName = process.env.NEXTAUTH_BASE_URL_COOKIE_NAME || DEFAULT_BASE_URL_COOKIE_NAME
+    const cookieValue = cookies[`__Secure-${baseUrlCookieName}`] || cookies[baseUrlCookieName]
+    const [baseUrl] = cookieValue ? cookieValue.split('|') : [null]
+    return baseUrl
+  } else {
+    // Client Side
+    // Note: 'site' is empty by default; URL is normally relative.
+    const site = process.env.NEXTAUTH_SITE || DEFAULT_SITE
+    const basePath = process.env.NEXTAUTH_BASE_PATH || DEFAULT_BASE_PATH
+    return `${site}${basePath}`
+  }
 }
 
 // Adapted from https://github.com/felixfong227/simple-cookie-parser/blob/master/index.js
@@ -95,20 +146,16 @@ const _parseCookies = (string) => {
       }
     }
     return object
-  } catch (e) {
-    console.error('CLIENT_COOKIE_PARSE_ERROR')
+  } catch (error) {
+    console.error('CLIENT_COOKIE_PARSE_ERROR', error)
     return {}
   }
 }
 
-const _getUrlPrefixFromCookies = (cookies, baseUrlCookieName) => {
-  const cookieValue = cookies[baseUrlCookieName] || cookies[`__Secure-${DEFAULT_BASE_URL_COOKIE_NAME}`] || cookies[DEFAULT_BASE_URL_COOKIE_NAME]
-  const [baseUrl] = cookieValue ? cookieValue.split('|') : [null]
-  return baseUrl
-}
-
 export default {
-  session,
+  session: getSession,
+  providers: getProviders,
+  csrfToken: getCsrfToken,
   useSession,
   Provider
 }
