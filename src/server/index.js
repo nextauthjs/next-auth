@@ -220,13 +220,13 @@ export default async (req, res, userSuppliedOptions) => {
           if (provider && options.providers[provider]) {
             signin(req, res, options, done)
           } else {
-            if (options.pages.signin) { return redirect(options.pages.signin) }
-
+            if (options.pages.signin) { return redirect(`${options.pages.signin}${options.pages.signin.includes('?') ? '&' : '?'}callbackUrl=${callbackUrl}`) }
+            
             pages.render(req, res, 'signin', { site, providers: Object.values(options.providers), callbackUrl: options.callbackUrl, csrfToken }, done)
           }
           break
         case 'signout':
-          if (options.pages.signout) { return redirect(options.pages.signout) }
+          if (options.pages.signin) { return redirect(`${options.pages.signout}${options.pages.signout.includes('?') ? '&' : '?'}callbackUrl=${callbackUrl}`) }
 
           pages.render(req, res, 'signout', { site, baseUrl, csrfToken, callbackUrl: options.callbackUrl }, done)
           break
@@ -255,7 +255,7 @@ export default async (req, res, userSuppliedOptions) => {
     } else if (req.method === 'POST') {
       switch (action) {
         case 'signin':
-          // Signin supports both GET and POST (e.g. for Email signup)
+          // Signin POST requests are used for email sign in
           if (provider && options.providers[provider]) {
             signin(req, res, options, done)
             break
