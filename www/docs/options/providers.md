@@ -23,7 +23,7 @@ NextAuth.js is designed to work with any 0Auth service, it supports 0Auth 1.0, 1
 
 | Name | Documentation | Configuration | Notes
 | --- | --- | --- | --- |
-| `Auth0`    | [Documentation](https://auth0.com/docs/api/authentication#authorize-application) | [Configuration](https://manage.auth0.com/dashboard) | Requires accessTokenUrl, authorizationUrl, profileUrl. Doesn't need clientSecret.
+| `Auth0`    | [Documentation](https://auth0.com/docs/api/authentication#authorize-application) | [Configuration](https://manage.auth0.com/dashboard) | Requires accessTokenUrl, authorizationUrl, profileUrl.
 | `Apple`    | -- | -- |
 | `Discord`  | [Documentation](https://discord.com/developers/docs/topics/oauth2) | [Configuration](https://discord.com/developers/applications) | Doesn't need clientSecret.
 | `Facebook` | [Documentation](https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/) | [Configuration](https://developers.facebook.com/apps/) | Doesn't allow testing production applications with localhost URLs. May not return email address if the account was created with a mobile number.
