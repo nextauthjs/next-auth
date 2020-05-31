@@ -3,7 +3,8 @@ module.exports = {
     'Getting Started': [
       'getting-started/introduction',
       'getting-started/example',
-      'getting-started/client'
+      'getting-started/client',
+      'getting-started/rest-api'
     ],
     Options: [
       'options/basic-options',

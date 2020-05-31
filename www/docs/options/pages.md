@@ -1,12 +1,13 @@
 ---
 id: pages
-title: Pages
+title: Custom Pages
 ---
 
+NextAuth.js automatically creates simple, unbranded authentication pages for handling Sign in, Sign out, Email Verification and displaying error messages.
+
+The options displayed on the sign up page are automatically generated based on the providers specified in the options passed to NextAuth.js.
 
 ### Using custom pages
-
-NextAuth.js automatically creates simple, unbranded authentication pages for handling Sign in, Email Verification, callbacks, etc. The options displayed are generated based on the configuration supplied.
 
 To add a custom login page, for example. You can us the `pages` option:
 
@@ -21,7 +22,7 @@ To add a custom login page, for example. You can us the `pages` option:
   ...
 ```
 
-In order to get the available providers, you can make a request to `/api/auth/providers`:
+In order to get the available providers and the URLs to use for them, you can make a request to the API endpoint `/api/auth/providers`:
 
 ```jsx title="/pages/auth/signin"
 import React from 'react'
@@ -64,7 +65,7 @@ The documentation for creating custom pages is in progress and will be expanded 
 :::
 
 :::note
-Additional NextAuth.js client methods to handle signin, signout, csrftokens, returning a list of providers are in development and will make creating custom pages much easier.
+Additional NextAuth.js client methods to handle sign in, sign out, CSRF tokens and returning a list of providers are in development and will make creating custom pages much easier in future.
 :::
 
 :::tip

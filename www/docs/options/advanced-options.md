@@ -3,7 +3,9 @@ id: advanced-options
 title: Advanced Options
 ---
 
-Advanced options are passed the same way as basic options, but are not recommended if you are new to NextAuth.js. Some advanced options are not recommended or supported and are intended for future use.
+Advanced options are passed the same way as basic options, but have more complex behaviour or potentially complex implications if they are used.
+
+Most advanced options are not recommended, not supported and may change in future releases.
 
 ## Options
 
@@ -32,7 +34,7 @@ pages: {
 See the documentation for the [pages option](/options/pages) for more information.
 
 :::info
-This API for this feature is fully working but is not yet well supported or fully documented so it may require some trial and error to get everthing working if you use this option.
+This API for this feature is fully working but is not yet well supported or comprehensively documented and it may require some trial and error to get everthing working if you use this option.
 :::
 
 ---

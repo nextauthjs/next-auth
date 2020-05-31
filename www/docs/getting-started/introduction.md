@@ -3,6 +3,10 @@ id: introduction
 title: Introduction
 ---
 
+:::note
+This documentation refers to the [next-auth@beta](https://www.npmjs.com/package/next-auth/v/beta), the beta release of NextAuth.js v2.0.
+:::
+
 ## About NextAuth.js
 
 NextAuth.js is complete open source authentication solution for [Next.js](http://nextjs.org/) applications.

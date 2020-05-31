@@ -3,7 +3,7 @@ id: example
 title: Example
 ---
 
-## Live Demo
+## Example with live demo
 
 The easiest way to get started is to clone the example Next.js application from the [next-auth-example](https://github.com/iaincollins/next-auth-example) repository and to the instructions in the [README](https://github.com/iaincollins/next-auth-example/blob/master/README.md).
 
