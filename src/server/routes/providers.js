@@ -8,6 +8,7 @@ export default (req, res, options, done) => {
   Object.entries(providers).map(([provider, providerConfig]) => {
     result[provider] = {
       name: providerConfig.name,
+      type: providerConfig.type,
       signinUrl: providerConfig.signinUrl,
       callbackUrl: providerConfig.callbackUrl
     }
