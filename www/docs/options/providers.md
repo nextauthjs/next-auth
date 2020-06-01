@@ -1,6 +1,6 @@
 ---
 id: providers
-title: Sign in Providers
+title: Authentication Providers
 ---
 
 export const Image = ({ children, src, alt = '' }) => ( 
@@ -24,7 +24,7 @@ NextAuth.js is designed to work with any 0Auth service, it supports 0Auth 1.0, 1
 | Provider | Documentation | Configuration | Notes
 | --- | --- | --- | --- |
 | Auth0    | [Documentation](https://auth0.com/docs/api/authentication#authorize-application) | [Configuration](https://manage.auth0.com/dashboard) | Requires accessTokenUrl, authorizationUrl, profileUrl.
-| Apple    | [Documentation](https://developer.apple.com/sign-in-with-apple/) | [Configuration](https://developer.apple.com/account/resources) | Documentation coming soon. [Okta guide to Sign in with Apple](https://developer.okta.com/blog/2019/06/04/what-the-heck-is-sign-in-with-apple) |
+| Apple    | [Documentation](https://developer.apple.com/sign-in-with-apple/) | [Configuration](https://developer.apple.com/account/resources) | [NextAuth.js documentation for Apple](/providers/apple) |
 | Discord  | [Documentation](https://discord.com/developers/docs/topics/oauth2) | [Configuration](https://discord.com/developers/applications) | Doesn't need clientSecret.
 | Facebook | [Documentation](https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/) | [Configuration](https://developers.facebook.com/apps/) | Doesn't allow testing production applications with localhost URLs. May not return email address if the account was created with a mobile number.
 | Github   | [Documentation](https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/) | [Configuration](https://github.com/settings/apps/) | Only allows one callback URL. May not return email address if privacy enabled.
@@ -141,6 +141,8 @@ Feel free to open a PR for your custom configuration if you've created one for a
 
 *The email provider can be used in conjuction with – or instead of – one or more OAuth providers.*
 
+### Configuring
+
 1. You will need an SMTP account; ideally for one of the [services known to work with nodemailer](http://nodemailer.com/smtp/well-known/).
 2. There are two ways to configure the SMTP server connection.
 
@@ -197,10 +199,65 @@ Feel free to open a PR for your custom configuration if you've created one for a
 
   An account will not be created for the user until the first time they verify their email address. If an email address already assoicated with an account, the user will be signed in to that account when they use the link in the email.
 
-:::note
-You can fully customise the email that is sent. How to do this is not yet documented.
-:::
+### Custom emails
+
+You can fully customise the sign in email that is sent by passing a custom function as the `sendVerificationRequest` option to `Providers.Email()`.
+
+The following example shows the complete source for the built-in `sendVerificationRequest()` method.
+
+```js
+import nodemailer from 'nodemailer'
+const sendVerificationRequest = ({ identifer: emailAddress, url, token, site, provider }) => {
+  return new Promise((resolve, reject) => {
+    const { server, from } = provider
+    const siteName = site.replace(/^https?:\/\//, '')
+
+    nodemailer
+      .createTransport(server)
+      .sendMail({
+        to: emailAddress,
+        from,
+        subject: `Sign in to ${siteName}`,
+        text: text({ url, siteName }),
+        html: html({ url, siteName })
+      }, (error) => {
+        if (error) {
+          console.error('SEND_VERIFICATION_EMAIL_ERROR', emailAddress, error)
+          return reject(new Error('SEND_VERIFICATION_EMAIL_ERROR', error))
+        }
+        return resolve()
+      })
+  })
+}
+
+// Email HTML body
+const html = ({ url, siteName }) => {
+  const buttonBackgroundColor = '#444444'
+  const buttonTextColor = '#ffffff'
+  return `
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center" style="padding: 8px 0; font-size: 22px; font-family: Helvetica, Arial, sans-serif; color: #888888;">
+       ${siteName}
+    </td>
+  </tr>
+  <tr>
+    <td align="center" style="padding: 16px 0;">
+      <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td align="center" style="border-radius: 3px;" bgcolor="${buttonBackgroundColor}"><a href="${url}" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: ${buttonTextColor}; text-decoration: none; text-decoration: none;border-radius: 3px; padding: 12px 18px; border: 1px solid ${buttonBackgroundColor}; display: inline-block; font-weight: bold;">Sign in</a></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+`
+}
+
+// Email Text body (fallback for email clients that don't render HTML, e.g. feature phones)
+const text = ({ url, siteName }) => `Sign in to ${siteName}\n${url}\n\n`
+```
 
 :::tip
-If you create a custom sign in form for email sign in, you will need to submit both fields for the **email** address and **csrfToken** from **/api/auth/csrf** in a POST request to **/api/auth/signin/email**.
+If you want to generate email-client compatible HTML from React, check out https://mjml.io
 :::

@@ -3,84 +3,142 @@ id: apple
 title: Apple
 ---
 
-This is a placeholder and needs to be refactored before it can be pubished.
+## API Documentation
 
-## Instructions
+https://auth0.com/docs/api/authentication#authorize-application
 
-To test you must secure your local development server. (next-auth-example). Apple doesn't allow for localhost in domains or subdomains.
+## App Configuration
 
-I refactored the code and removed the option "oauth-apple"
-
-How to:
-https://medium.com/@anMagpie/secure-your-local-development-server-with-https-next-js-81ac6b8b3d68
-
-Edit your hostfile and create a fake domain:
-
-127.0.0.1 dev.iaincollins.io
-
-This documentation could be simplified but for the most part I followed: (Creating Apple Services IDs)
-https://developer.okta.com/blog/2019/06/04/what-the-heck-is-sign-in-with-apple
-
-The tricky part after that is creating the secret. The two things that tripped me up were:
-
-TeamID and the KeyID.
-
-The TeamID is located on the top right after logging in.
-The KeyID is located after you create the Key look for before you download the k8 file.
-
-APPLE_ID=dev.iaincollins.io
-APPLE_SECRET=**GENERATED_JWT_TOKEN_FROM_CODE_ABOVE**
+https://manage.auth0.com/dashboard
 
 ## Example
 
-Providers.Apple({
-  clientId: process.env.APPLE_ID,
-  clientSecret: { 
-    appleId: process.env.APPLE_ID,
-    teamId: process.env.APPLE_TEAM_ID,
-    privateKey: process.env.APPLE_PRIVATE_KEY,
-    keyId: process.env.APPLE_KEY_ID,
-  }
-}),
+There are two ways you can use the Sign in with Apple provider.
 
- clientSecretCallback: ({appleId, keyId, teamId, privateKey}) => {
-      const claims = {
-        iss: teamId,
-        iat: Math.floor(Date.now() / 1000),
-        exp: Math.floor(Date.now() / 1000) + ( 86400 * 180 ), // 6 months
-        aud: 'https://appleid.apple.com',
-        sub: appleId
-      }
-    
-      return jwt.sign(claims, privateKey, {
-        algorithm: 'ES256',
-        keyid
-      })
+### Dynamically generated secret
+
+If you use a dynamically generated secret you never have to to manually update the server.
+
+```js
+import Providers from `next-auth/providers`
+...
+providers: [
+  Providers.Apple({
+    clientId: process.env.APPLE_ID,
+    clientSecret: { 
+      appleId: process.env.APPLE_ID,
+      teamId: process.env.APPLE_TEAM_ID,
+      privateKey: process.env.APPLE_PRIVATE_KEY,
+      keyId: process.env.APPLE_KEY_ID,
+    }
   })
+}
+...
+```
 
-  ## HTTPS Server Example
+### Pre-generated secret
 
-  
-const { createServer } = require('https');
-const { parse } = require('url');
-const next = require('next');
-const fs = require('fs');
+If you use a pre-generated secret you can avoid adding your private key as an environment variable.
 
-const dev = process.env.NODE_ENV !== 'production';
-const app = next({ dev });
-const handle = app.getRequestHandler();
+```js
+import Providers from `next-auth/providers`
+...
+providers: [
+  Providers.Apple({
+    clientId: process.env.APPLE_ID,
+    clientSecret: process.env.APPLE_KEY_SECRET,
+    clientSecretCallback: false
+  })
+}
+...
+```
+
+:::tip
+The TeamID is located on the top right after logging in.
+:::
+
+:::tip
+The KeyID is located after you create the Key look for before you download the k8 file.
+:::
+
+## Instructions
+
+### Testing
+
+:::tip
+Apple require all sites to run HTTPS (including local development instances).
+:::
+
+:::tip
+Apple doesn't allow you to use localhost in domains or subdomains.
+:::
+
+The following guides may be helpful:
+
+* [How to setup localhost with HTTPS with a Next.js app](https://medium.com/@anMagpie/secure-your-local-development-server-with-https-next-js-81ac6b8b3d68)
+
+* [Guide to configuring Sign in with Apple](https://developer.okta.com/blog/2019/06/04/what-the-heck-is-sign-in-with-apple)
+
+### Example server
+
+You will need to edit your host file and point your site at `127.0.0.1`
+
+```
+127.0.0.1 www.example.com
+```
+
+You can create a `server.js` in the root of your project and run it with `node server.js` to test Sign in with Apple integration locally:
+
+```js
+const { createServer } = require('https')
+const { parse } = require('url')
+const next = require('next')
+const fs = require('fs')
+
+const dev = process.env.NODE_ENV !== 'production'
+const app = next({ dev })
+const handle = app.getRequestHandler()
 
 const httpsOptions = {
   key: fs.readFileSync('./certificates/localhost.key'),
   cert: fs.readFileSync('./certificates/localhost.crt')
-};
+}
 
 app.prepare().then(() => {
   createServer(httpsOptions, (req, res) => {
-    const parsedUrl = parse(req.url, true);
-    handle(req, res, parsedUrl);
-    
+    const parsedUrl = parse(req.url, true)
+    handle(req, res, parsedUrl)
   }).listen(3000, err => {
-    if (err) throw err;
-    console.log('> Ready on https://localhost:3000');
-  });
+    if (err) throw err
+    console.log('> Ready on https://localhost:3000')
+  })
+}
+```
+
+### Example JWT code
+
+If you want to pre-generate your secret, this is an example of the code you will need:
+
+```js
+const jst = require('jsonwebtoken')
+const fs = require('fs')
+
+const appleId = 'myapp.example.com'
+const keyId = ''
+const teamId = ''
+const privateKey = fs.readFileSync('path/to/key')
+
+const secret = jwt.sign(
+  {
+    iss: teamId,
+    iat: Math.floor(Date.now() / 1000),
+    exp: Math.floor(Date.now() / 1000) + ( 86400 * 180 ), // 6 months
+    aud: 'https://appleid.apple.com',
+    sub: appleId
+  }, privateKey, {
+    algorithm: 'ES256',
+    keyid
+  })
+
+console.log(secret)
+```
