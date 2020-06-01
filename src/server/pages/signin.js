@@ -7,7 +7,7 @@ export default ({ req, csrfToken, providers, callbackUrl }) => {
   return render(
     <div className='signin'>
       {providers.map((provider, i) =>
-        <p key={provider.id}>
+        <div key={provider.id} className='provider'>
           {provider.type === 'oauth' && <a className='button' data-provider={provider.id} href={`${provider.signinUrl}${withCallbackUrl}`}>Sign in with {provider.name}</a>}
           {provider.type === 'email' &&
             <form action={provider.signinUrl} method='POST'>
@@ -17,7 +17,7 @@ export default ({ req, csrfToken, providers, callbackUrl }) => {
               <button type='submit'>Sign in with {provider.name}</button>
               {(i + 1) < providers.length && <hr />}
             </form>}
-        </p>
+        </div>
       )}
     </div>
   )

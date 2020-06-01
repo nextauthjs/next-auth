@@ -56,7 +56,7 @@ export default ({ site, error, baseUrl }) => {
         <div>
           <div className='message'>
             <p>Unable to send email to your address.</p>
-            <p>You can try signing in again with a different account.</p>
+            <p>Try signing in again with a different account.</p>
           </div>
           <p><a className='button' href={signinPageUrl}>Sign in</a></p>
         </div>
@@ -78,8 +78,7 @@ export default ({ site, error, baseUrl }) => {
       message =
         <div>
           <div className='message'>
-            <p>The link you followed may have been used already or it may have expired.</p>
-            <p>Sign in links can only be used once and expire, you can a new sign in link at any time.</p>
+            <p>The link you followed may have been used already or may have expired.</p>
           </div>
           <p><a className='button' href={signinPageUrl}>Sign in</a></p>
         </div>
