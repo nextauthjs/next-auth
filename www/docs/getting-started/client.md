@@ -8,10 +8,10 @@ The NextAuth.js client library makes it easy to interact with sessions from Reac
 Some of the methods can be called both client side and server side.
 
 :::note
-The **context** object must be passed as an argument when calling any of the client methods when calling them server side.
+When using any of the client API methods server side, [context](https://nextjs.org/docs/api-reference/data-fetching/getInitialProps#context-object) must be passed as an argument. 
 :::
 
-## Client Methods
+---
 
 ### useSession()
 
