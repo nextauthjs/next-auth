@@ -37,7 +37,7 @@ export default (options) => {
         privateKey,
         {
           algorithm: 'ES256',
-          keyId
+          keyid: keyId
         }
       )
       return Promise.resolve(response)
