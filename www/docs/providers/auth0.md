@@ -19,6 +19,7 @@ import Providers from `next-auth/providers`
 providers: [
   Providers.Auth0({
     clientId: process.env.AUTH0_ID,
+    clientId: process.env.AUTH0_SECRET,
     accessTokenUrl: process.env.AUTH0_ACCESS_TOKEN_URL,
     authorizationUrl: process.env.AUTH0_AUTHORIZATION_URL,
     profileUrl: process.env.AUTH0_PROFILE_URL
@@ -26,7 +27,3 @@ providers: [
 }
 ...
 ```
-
-:::tip
-Requires **accessTokenUrl**, **authorizationUrl** and **profileUrl**, doesn't require **clientSecret**.
-:::
