@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import signin from './signin'
 import signout from './signout'
-import checkEmail from './check-email'
+import verifyRequest from './verify-request'
 import error from './error'
 
 // Future releases will support customization (via inline or external CSS)
@@ -17,8 +17,8 @@ function render (req, res, page, props, done) {
     case 'signout':
       html = signout(props)
       break
-    case 'check-email':
-      html = checkEmail(props)
+    case 'verify-request':
+      html = verifyRequest(props)
       break
     case 'error':
       html = error(props)

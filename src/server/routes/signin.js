@@ -41,7 +41,7 @@ export default async (req, res, options, done) => {
     //
     // Note: Adds ?csrf=true query string param to URL for debugging/tracking
     if (!csrfTokenVerified) {
-      res.status(302).setHeader('Location', `${baseUrl}/signin?email=${email}&csrf=true`)
+      res.status(302).setHeader('Location', `${baseUrl}/signin?email=${encodeURIComponent(email)}&csrf=true`)
       res.end()
       return done()
     }
@@ -55,7 +55,7 @@ export default async (req, res, options, done) => {
       return done()
     }
 
-    res.status(302).setHeader('Location', `${baseUrl}/check-email`)
+    res.status(302).setHeader('Location', `${baseUrl}/verify-request?provider=${encodeURIComponent(provider.id)}&type=${encodeURIComponent(provider.type)}`)
     res.end()
     return done()
   } else {
