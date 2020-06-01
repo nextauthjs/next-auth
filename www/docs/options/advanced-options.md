@@ -9,36 +9,6 @@ Most advanced options are not recommended, not supported and may change in futur
 
 ## Options
 
-### pages
-
-* **Default value**: `{}`
-* **Required**: *No*
-
-#### Description
-
-Specify URLs to be used for custom sign in, sign out and error pages.
-
-Any options specified will override the corresponding page.
-
-*For example:*
-
-```js
-pages: {
-  signin: '/auth/signin',
-  signout: '/auth/signout',
-  checkEmail: '/auth/check-email',
-  error: '/auth/error'
-}
-```
-
-See the documentation for the [pages option](/options/pages) for more information.
-
-:::info
-This API for this feature is fully working but is not yet well supported or comprehensively documented and it may require some trial and error to get everthing working if you use this option.
-:::
-
----
-
 ### basePath
 
 * **Default value**: `/api/auth`
@@ -46,13 +16,51 @@ This API for this feature is fully working but is not yet well supported or comp
 
 #### Description
 
-This option allows you to specify a different base path (other than `/api/auth` for authentication routes.
+This option allows you to specify a different base path if you don't want to use `/api/auth` for some reason.
 
-This option is not currently recommended as it is supported in the server but not fully supported in the client.
+If you set this option you **must** also specify the same value in the `NEXTAUTH_BASE_PATH` environment variable in `next.config.js` so that the client knows how to contact the server:
 
-:::warning
-This option is not supported by the NextAuth.js client, which currently assumes the default base path for all calls. If you use this option, you will not be able to use the NextAuth.js client in React components.
-:::
+```js
+module.exports = {
+  env: {
+    NEXTAUTH_BASE_PATH: '/api/my-custom-auth-route',
+  },
+}
+```
+
+This is required because the NextAuth.js API route is a seperate codepath to the NextAuth.js Client. As long as you specify this option in an environment variable, the client will be able to pick up any subsequent configuration from the server.
+
+---
+
+### callbackUrlHandler
+
+* **Default value**: `function`
+* **Required**: *No*
+
+#### Description
+
+To ensure site security, byt default `callbackUrlHandler` only allows callbackUrls for signup and signout to be at the same site as the one being signed into.
+
+e.g. if the sign in URL was `https://example.com/api/auth/signin`:
+
+* ✅ `https://example.com/path/to/page`
+* ❌ `http://example.com/path/to/page` 
+* ❌ `https://subdomain.example.com/path/to/page` 
+* ❌ `https://example.com:8080/path/to/page`
+
+If the URL is not allowed, the callback URL will be set to whatever the `site` option is (e.g.`https://example.com/`)
+
+```js
+const callbackUrlHandler = async (url, options) => {
+  if (url.startsWith(options.site)) {
+    return Promise.resolve(url)
+  } else {
+    return Promise.resolve(options.site)
+  }
+}
+```
+
+If you want to support signing in to sites across other domains, you can pass your own function to `callbackUrlHandler` to customise this behaviour.
 
 ---
 

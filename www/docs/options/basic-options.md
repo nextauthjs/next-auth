@@ -15,7 +15,9 @@ The only *required* options are **site**, **providers** and **database**.
 
 #### Description 
 
-The fully qualified URL of your site e.g. `http://localhost:3000` or `https://www.example.com`
+The fully qualified URL for the root of your site.
+
+e.g. `http://localhost:3000` or `https://www.example.com`
 
 ---
 
@@ -110,6 +112,32 @@ If you have a short session max age (e.g. < 24 hours) or if you want to be able 
 How long links in verification emails are valid for.
 
 These are used for passwordless sign in via email.
+
+---
+
+### pages
+
+* **Default value**: `{}`
+* **Required**: *No*
+
+#### Description
+
+Specify URLs to be used if you want to create custom sign in, sign out and error pages.
+
+Pages specified will override the corresponding built-in page.
+
+*For example:*
+
+```js
+pages: {
+  signin: '/auth/signin',
+  signout: '/auth/signout',
+  error: '/auth/error',
+  verifyRequest: '/auth/verify-request'  // (used for check email message)
+}
+```
+
+See the documentation for the [pages option](/options/pages) for more information.
 
 ---
 
