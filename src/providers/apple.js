@@ -1,3 +1,5 @@
+import jwt from 'jsonwebtoken'
+
 export default (options) => {
   return {
     id: 'apple',
@@ -15,6 +17,30 @@ export default (options) => {
         name: profile.name == null ? profile.sub : profile.name,
         email: profile.email
       }
+    },
+    clientId: null,
+    clientSecret: {
+      appleId: null,
+      teamId: null,
+      privateKey: null,
+      keyId: null
+    },
+    clientSecretCallback: async ({ appleId, keyId, teamId, privateKey }) => {
+      const response = jwt.sign(
+        {
+          iss: teamId,
+          iat: Math.floor(Date.now() / 1000),
+          exp: Math.floor(Date.now() / 1000) + (86400 * 180), // 6 months
+          aud: 'https://appleid.apple.com',
+          sub: appleId
+        },
+        privateKey,
+        {
+          algorithm: 'ES256',
+          keyId
+        }
+      )
+      return Promise.resolve(response)
     },
     ...options
   }
