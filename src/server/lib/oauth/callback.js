@@ -29,7 +29,7 @@ export default async (req, provider, callback) => {
     // Use custom getOAuthAccessToken() method for oAuth2 flows
     client.getOAuthAccessToken = _getOAuthAccessToken
 
-    client.getOAuthAccessToken(
+    await client.getOAuthAccessToken(
       code,
       provider,
       (error, accessToken, refreshToken, results) => {
@@ -63,7 +63,7 @@ export default async (req, provider, callback) => {
     )
   } else {
     // Handle oAuth v1.x
-    client.getOAuthAccessToken(
+    await client.getOAuthAccessToken(
       oauth_token,
       null,
       oauth_verifier,
@@ -122,7 +122,7 @@ async function _getProfile (error, profileData, accessToken, refreshToken, provi
 }
 
 // Ported from https://github.com/ciaranj/node-oauth/blob/a7f8a1e21c362eb4ed2039431fb9ac2ae749f26a/lib/oauth2.js
-function _getOAuthAccessToken (code, provider, callback) {
+async function _getOAuthAccessToken (code, provider, callback) {
   const url = provider.accessTokenUrl
   const params = { ...provider.params } || {}
   const headers = { ...provider.headers } || {}
@@ -132,7 +132,15 @@ function _getOAuthAccessToken (code, provider, callback) {
 
   if (!params.client_id) { params.client_id = provider.clientId }
 
-  if (!params.client_secret) { params.client_secret = provider.clientSecret }
+  if (!params.client_secret) {
+    // For some providers it useful to be able to generate the secret on the fly
+    // e.g. For Sign in With Apple a JWT token using the properties in clientSecret
+    if (provider.clientSecretCallback) {
+      params.client_secret = await provider.clientSecretCallback(provider.clientSecret)
+    } else {
+      params.client_secret = provider.clientSecret
+    }
+  }
 
   if (!params.redirect_uri) { params.redirect_uri = provider.callbackUrl }
 
