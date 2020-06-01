@@ -5,9 +5,7 @@ export default (options) => {
     id: 'email',
     type: 'email',
     name: 'Email',
-    // In this example, server can be an SMTP connection string (eg 'smtp://user:pass@smtp.example.com:25')
-    // or an a configuration object - nodemailer supports both. It doesn't matter what it as far as NextAuth
-    // is concerend, it's avalible in the verificationCallback() as 'provider.server'.
+    // Server can be an SMTP connection string or a nodemailer config object
     server: {
       host: 'localhost',
       port: 25,
@@ -17,28 +15,28 @@ export default (options) => {
       }
     },
     from: 'NextAuth <no-reply@example.com>',
-    verificationCallback,
+    sendVerificationRequest,
     ...options
   }
 }
 
-const verificationCallback = ({ recipient, url, token, site, provider }) => {
+const sendVerificationRequest = ({ identifer: emailAddress, url, token, site, provider }) => {
   return new Promise((resolve, reject) => {
-    const siteName = site.replace(/^https?:\/\//, '')
     const { server, from } = provider
+    const siteName = site.replace(/^https?:\/\//, '')
 
     nodemailer
       .createTransport(server)
       .sendMail({
-        to: recipient,
+        to: emailAddress,
         from,
         subject: `Sign in to ${siteName}`,
         text: text({ url, siteName }),
         html: html({ url, siteName })
       }, (error) => {
         if (error) {
-          console.error('SEND_EMAIL_VERIFICATION_ERROR', recipient, error)
-          return reject(new Error('SEND_EMAIL_VERIFICATION_ERROR', error))
+          console.error('SEND_VERIFICATION_EMAIL_ERROR', emailAddress, error)
+          return reject(new Error('SEND_VERIFICATION_EMAIL_ERROR', error))
         }
         return resolve()
       })

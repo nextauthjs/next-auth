@@ -51,8 +51,8 @@ const Adapter = (config, options = {}) => {
   const Session = options.Session ? options.Session.model : Models.Session.model
   const SessionSchema = options.Session ? options.Session.schema : Models.Session.schema
 
-  const EmailVerification = options.EmailVerification ? options.EmailVerification.model : Models.EmailVerification.model
-  const EmailVerificationSchema = options.EmailVerification ? options.EmailVerification.schema : Models.EmailVerification.schema
+  const VerificationRequest = options.VerificationRequest ? options.VerificationRequest.model : Models.VerificationRequest.model
+  const VerificationRequestSchema = options.VerificationRequest ? options.VerificationRequest.schema : Models.VerificationRequest.schema
 
   // Models default to being suitable for ANSI SQL database
   // Some flexiblity is required to support non-SQL databases
@@ -89,7 +89,7 @@ const Adapter = (config, options = {}) => {
     UserSchema.columns.id.objectId = true
     SessionSchema.columns.id.objectId = true
     SessionSchema.columns.userId.type = 'objectId'
-    EmailVerificationSchema.columns.id.objectId = true
+    VerificationRequestSchema.columns.id.objectId = true
   }
 
   // SQLite does not support `timestamp` fields so we remap them to `datetime`
@@ -100,7 +100,7 @@ const Adapter = (config, options = {}) => {
   if (config.type === 'sqlite') {
     AccountSchema.columns.accessTokenExpires.type = 'datetime'
     SessionSchema.columns.sessionExpires.type = 'datetime'
-    EmailVerificationSchema.columns.expires.type = 'datetime'
+    VerificationRequestSchema.columns.expires.type = 'datetime'
   }
 
   // Parse config (uses options)
@@ -111,7 +111,7 @@ const Adapter = (config, options = {}) => {
       new EntitySchema(AccountSchema),
       new EntitySchema(UserSchema),
       new EntitySchema(SessionSchema),
-      new EntitySchema(EmailVerificationSchema)
+      new EntitySchema(VerificationRequestSchema)
     ],
     logging: false
   }
@@ -327,11 +327,11 @@ const Adapter = (config, options = {}) => {
       }
     }
 
-    async function createEmailVerification (email, url, token, secret, provider) {
-      _debug('createEmailVerification', email)
+    async function createVerificationRequest (identifer, url, token, secret, provider) {
+      _debug('createVerificationRequest', identifer)
       try {
         const { site, verificationMaxAge } = appOptions
-        const { verificationCallback } = provider
+        const { sendVerificationRequest } = provider
 
         // Store hashed token (using secret as salt) so that tokens cannot be exploited
         // even if the contents of the database is compromised.
@@ -346,50 +346,50 @@ const Adapter = (config, options = {}) => {
         }
 
         // Save to database
-        const newEmailVerification = new EmailVerification(email, hashedToken, expires)
-        const emailVerification = await getManager().save(newEmailVerification)
+        const newVerificationRequest = new VerificationRequest(identifer, hashedToken, expires)
+        const verificationRequest = await getManager().save(newVerificationRequest)
 
         // With the verificationCallback on a provider, you can send an email, or queue
         // an email to be sent, or perform some other action (e.g. send a text message)
-        await verificationCallback({ recipient: email, url, token, site, provider })
+        await sendVerificationRequest({ identifer, url, token, site, provider })
 
-        return emailVerification
+        return verificationRequest
       } catch (error) {
-        console.error('CREATE_EMAIL_VERIFICATION_ERROR', error)
-        return Promise.reject(new Error('CREATE_EMAIL_VERIFICATION_ERROR', error))
+        console.error('CREATE_VERIFICATION_REQUEST_ERROR', error)
+        return Promise.reject(new Error('CREATE_VERIFICATION_REQUEST_ERROR', error))
       }
     }
 
-    async function getEmailVerification (email, token, secret, provider) {
-      _debug('getEmailVerification', email, token)
+    async function getVerificationRequest (identifer, token, secret, provider) {
+      _debug('getVerificationRequest', identifer, token)
       try {
         // Hash token provided with secret before trying to match it with datbase
         // @TODO Use bcrypt function here instead of simple salted hash
         const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
-        const emailVerification = await connection.getRepository(EmailVerification).findOne({ email, token: hashedToken })
+        const verificationRequest = await connection.getRepository(VerificationRequest).findOne({ identifer, token: hashedToken })
 
-        if (emailVerification && emailVerification.expires && new Date() > new Date(emailVerification.expires)) {
-          // Delete email verification so it cannot be used again
-          await connection.getRepository(EmailVerification).delete({ token: hashedToken })
+        if (verificationRequest && verificationRequest.expires && new Date() > new Date(verificationRequest.expires)) {
+          // Delete verification entry so it cannot be used again
+          await connection.getRepository(VerificationRequest).delete({ token: hashedToken })
           return null
         }
 
-        return emailVerification
+        return verificationRequest
       } catch (error) {
-        console.error('GET_EMAIL_VERIFICATION_ERROR', error)
-        return Promise.reject(new Error('GET_EMAIL_VERIFICATION_ERROR', error))
+        console.error('GET_VERIFICATION_REQUEST_ERROR', error)
+        return Promise.reject(new Error('GET_VERIFICATION_REQUEST_ERROR', error))
       }
     }
 
-    async function deleteEmailVerification (email, token, secret, provider) {
-      _debug('deleteEmailVerification', email, token)
+    async function deleteVerificationRequest (identifer, token, secret, provider) {
+      _debug('deleteVerification', identifer, token)
       try {
-        // Delete email verification so it cannot be used again
+        // Delete verification entry so it cannot be used again
         const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
-        await connection.getRepository(EmailVerification).delete({ token: hashedToken })
+        await connection.getRepository(VerificationRequest).delete({ token: hashedToken })
       } catch (error) {
-        console.error('DELETE_EMAIL_VERIFICATION_ERROR', error)
-        return Promise.reject(new Error('DELETE_EMAIL_VERIFICATION_ERROR', error))
+        console.error('DELETE_VERIFICATION_REQUEST_ERROR', error)
+        return Promise.reject(new Error('DELETE_VERIFICATION_REQUEST_ERROR', error))
       }
     }
 
@@ -407,9 +407,9 @@ const Adapter = (config, options = {}) => {
       getSession,
       updateSession,
       deleteSession,
-      createEmailVerification,
-      getEmailVerification,
-      deleteEmailVerification
+      createVerificationRequest,
+      getVerificationRequest,
+      deleteVerificationRequest
     })
   }
 
