@@ -1,6 +1,6 @@
 // fetch() is built in to Next.js 9.4 (you can use a polyfill if using an older version)
 /* global fetch:false */
-import { useState, useEffect, useContext, createContext, createElement,  } from 'react'
+import { useState, useEffect, useContext, createContext, createElement } from 'react'
 
 // Note: In calls to fetch() from universal methods, all cookies are passed
 // through from the browser, when the server makes the HTTP request, so that
@@ -33,7 +33,6 @@ const getCsrfToken = async ({ req } = {}) => {
   const data = await _fetchData(`${baseUrl}/csrf`, options)
   return data.csrfToken
 }
-
 
 // Context to store session data globally
 const SessionContext = createContext()
@@ -71,25 +70,26 @@ const signin = async (provider, args) => {
   if (!provider) {
     // Redirect to sign in page if no provider specified
     const baseUrl = _baseUrl()
-    return window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(window.location)}`
+    window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(window.location)}`
+    return
   }
 
   const providers = await getProviders()
   if (!providers[provider]) {
     // If Provider not recognized, redirect to sign in page
-    const baseUrl = _baseUrl({ req })
-    return window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(window.location)}`
+    const baseUrl = _baseUrl()
+    window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(window.location)}`
   } else if (providers[provider].type === 'oauth') {
     // If is an OAuth provider, redirect to providers[provider].signinUrl
-    return window.location = `${providers[provider].signinUrl}?callbackUrl=${encodeURIComponent(window.location)}`
+    window.location = `${providers[provider].signinUrl}?callbackUrl=${encodeURIComponent(window.location)}`
   } else {
     // If is any other provider type, POST to providers[provider].signinUrl (with CSRF Token)
     const options = {
       method: 'post',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/x-www-form-urlencoded'
       },
-      body: _encodedForm({ 
+      body: _encodedForm({
         csrfToken: await getCsrfToken(),
         callbackUrl: window.location,
         ...args
@@ -107,9 +107,9 @@ const signout = async () => {
   const options = {
     method: 'post',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/x-www-form-urlencoded'
     },
-    body: _encodedForm({ 
+    body: _encodedForm({
       csrfToken: await getCsrfToken(),
       callbackUrl: window.location
     })
