@@ -238,10 +238,10 @@ export default async (req, res, userSuppliedOptions) => {
             return done()
           }
           break
-        case 'check-email':
-          if (options.pages.checkEmail) { return redirect(options.pages.checkEmail) }
+        case 'verify-request':
+          if (options.pages.verifyRequest) { return redirect(options.pages.verifyRequest) }
 
-          pages.render(req, res, 'check-email', { site }, done)
+          pages.render(req, res, 'verify-request', { site }, done)
           break
         case 'error':
           if (options.pages.error) { return redirect(`${options.pages.error}${options.pages.error.includes('?') ? '&' : '?'}error=${error}`) }
