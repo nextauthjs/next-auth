@@ -8,7 +8,7 @@ export default async (req, res, options, done) => {
   const { provider: providerName, providers, adapter, site, secret, baseUrl, cookies, callbackUrl, newAccountLandingPageUrl } = options
   const provider = providers[providerName]
   const { type } = provider
-  const { getEmailVerification, deleteEmailVerification } = await adapter.getAdapter(options)
+  const { getVerificationRequest, deleteVerificationRequest } = await adapter.getAdapter(options)
 
   // Get session ID (if set)
   const sessionToken = req.cookies[cookies.sessionToken.name]
@@ -71,7 +71,7 @@ export default async (req, res, options, done) => {
       const email = req.query.email ? req.query.email.toLowerCase() : null
 
       // Verify email and token match email verification record in database
-      const invite = await getEmailVerification(email, token, secret, provider)
+      const invite = await getVerificationRequest(email, token, secret, provider)
       if (!invite) {
         res.status(302).setHeader('Location', `${baseUrl}/error?error=Verification`)
         res.end()
@@ -79,7 +79,7 @@ export default async (req, res, options, done) => {
       }
 
       // If token is valid, delete email verification record in database…
-      await deleteEmailVerification(email, token, secret, provider)
+      await deleteVerificationRequest(email, token, secret, provider)
 
       // …lastly, invoke callbackHandler to go through sign up flow.
       // (Will create new account if they don't have one, or sign them into

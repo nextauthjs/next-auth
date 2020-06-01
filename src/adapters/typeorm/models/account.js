@@ -10,7 +10,8 @@ export class Account {
     accessToken,
     accessTokenExpires
   ) {
-    this.providerCompoundId = createHash('sha256').update(`${providerId}:${providerAccountId}`).digest('hex')
+    // The compound ID ensures there is only one entry for a given provider and account
+    this.compoundId = createHash('sha256').update(`${providerId}:${providerAccountId}`).digest('hex')
     this.userId = userId
     this.providerId = providerId
     this.providerType = providerType
@@ -30,7 +31,7 @@ export const AccountSchema = {
       type: 'int',
       generated: true
     },
-    providerCompoundId: {
+    compoundId: {
       type: 'varchar',
       unique: true
     },
@@ -50,10 +51,11 @@ export const AccountSchema = {
       type: 'text',
       nullable: true
     },
+    // Note: AccessTokens are not updated by NextAuth.js
     accessToken: {
       type: 'text'
     },
-    // @TODO AccessToken expiry is not yet tracked (varies across providers)
+    // Note: AccessToken expiry is not recorded by  by NextAuth.js
     accessTokenExpires: {
       type: 'timestamp',
       nullable: true

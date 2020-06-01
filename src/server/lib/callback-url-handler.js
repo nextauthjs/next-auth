@@ -12,7 +12,7 @@ export default async (req, res, options) => {
   // Handle preserving and validating callback URLs
   // If no defaultCallbackUrl option specified, default to the homepage for the site
   let callbackUrl = defaultCallbackUrl || site
-  
+
   // Try reading callbackUrlParamValue from request body (form submission) then from query param (get request)
   const callbackUrlParamValue = body.callbackUrl || query.callbackUrl || null
   const callbackUrlCookieValue = req.cookies[cookies.callbackUrl.name] || null
