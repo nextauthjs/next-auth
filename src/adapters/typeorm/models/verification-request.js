@@ -19,7 +19,7 @@ export const VerificationRequestSchema = {
       type: 'text'
     },
     token: {
-      type: 'text',
+      type: 'varchar',
       unique: true
     },
     expires: {
