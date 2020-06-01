@@ -1,13 +1,22 @@
 ---
 id: client
-title: Client
+title: Client API
 ---
 
-*The NextAuth.js client library makes it easy to interact with sessions from React applications.*
+The NextAuth.js client library makes it easy to interact with sessions from React applications.
 
-## Client API
+Some of the methods can be called both client side and server side.
+
+:::note
+The **context** object must be passed as an argument when calling any of the client methods when calling them server side.
+:::
+
+## Client Methods
 
 ### useSession()
+
+* Client Side: **Yes**
+* Server Side: No
 
 The `useSession()` React Hook in the NextAuth.js client is the easiest way to check if someone is signed in.
 
@@ -29,6 +38,9 @@ export default () => {
 ---
 
 ### session()
+
+* Client Side: **Yes**
+* Server Side: **Yes**
 
 NextAuth.js also provides a `session()` method which can be called client or server side to return a session.
  
@@ -59,13 +71,12 @@ export default Page
 
 You can call `session()` inside a function to check if a user is signed in, or use it for server side rendered pages that supporting signing in without requiring client side JavaScript.
 
-:::note
- The context object must be passed to **session()** when calling it server side.
-:::
-
 ---
 
 ### signin(provider, { options })
+
+* Client Side: **Yes**
+* Server Side: No
 
 Using the `signin()` method ensures the user ends back on the page they started on after completing a sign in flow. It will also handle CSRF tokens for you automatically when signing in with email.
 
@@ -111,6 +122,9 @@ To also support signing in from clients that do not have client side JavaScript,
 
 ### signout()
 
+* Client Side: **Yes**
+* Server Side: No
+
 Using the `signout()` method ensures the user ends back on the page they started on after completing the sign out flow. It also handles CSRF tokens for you automatically.
 
 It reloads the page in the browser when complete.
@@ -125,9 +139,25 @@ export default () => (
 
 ---
 
+### providers()
+
+* Client Side: **Yes**
+* Server Side: **Yes**
+
+The `providers()` method returns the list of providers currently configured for sign in.
+
+It calls `/api/auth/providers` and returns a with a list of the currently configured authentication providers.
+
+It can be use useful if you are creating a dynamic custom sign in page.
+
+---
+
 ### csrfToken()
 
-The `csrfToken()` method returns the current Cross Site Request Forgery (CSRF Token) required to make POST requests (e.g. for signing in and signing out).
+* Client Side: **Yes**
+* Server Side: **Yes**
+
+The `csrfToken()` method returns the current Cross Site Request Forgery (CSRF Token) required to make POST requests (e.g. for signing in and signing out). It calls `/api/auth/csrf`.
 
 You likely only need to use this if you are not using the built-in `signin()` and `signout()` methods.
 
