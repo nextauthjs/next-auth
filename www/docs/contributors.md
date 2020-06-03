@@ -15,7 +15,8 @@ Special thanks to Lori Karikari for creating most of the OAuth providers and to 
 * <a href="https://github.com/LoriKarikari">Lori Karikari</a>
 * <a href="https://github.com/ndom91">Nico Domino</a>
 * <a href="https://github.com/Fumler">Fredrik Pettersen</a>
-
+* <a href="https://github.com/geraldnolan">Gerald Nolan</a>
+ 
 ### Contributors
 
 *Displayed in alphabetical order (by username).*
