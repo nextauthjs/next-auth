@@ -300,7 +300,7 @@ const Adapter = (config, options = {}) => {
           if (new Date() > dateSessionIsDueToBeUpdated) {
             const newExpiryDate = new Date()
             newExpiryDate.setTime(newExpiryDate.getTime() + sessionMaxAge)
-            session.sessionExpires = newExpiryDate
+            session.sessionExpires = newExpiryDate.toISOString()
           } else if (!force) {
             return null
           }
