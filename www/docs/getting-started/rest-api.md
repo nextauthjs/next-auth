@@ -3,10 +3,10 @@ id: rest-api
 title: REST API
 ---
 
-NextAuth.js exposes a REST API, which is used by the NextAuth.js client.
+NextAuth.js exposes a REST API which is used by the NextAuth.js client.
 
 :::note
-The default base path is `/api/auth`, this is configurable with the `basePath` option.
+The default base path is `/api/auth` but it is configurable with the `basePath` option.
 :::
 
 ### GET /api/auth/signin

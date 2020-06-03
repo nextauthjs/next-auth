@@ -7,7 +7,7 @@ title: Example
 
 The easiest way to get started is to clone the example Next.js application from the [next-auth-example](https://github.com/iaincollins/next-auth-example) repository and to the instructions in the [README](https://github.com/iaincollins/next-auth-example/blob/master/README.md).
 
-You can find a live demo of the example at [next-auth-example.now.sh](https://next-auth-example.now.sh)
+You can find a live demo of the example project at [next-auth-example.now.sh](https://next-auth-example.now.sh)
 
 ## How to use NextAuth.js
 

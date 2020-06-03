@@ -19,6 +19,7 @@ const features = [
             Supports Bring Your Own Database<br />
           <em>(MySQL, MariaDB, Postgres, MongoDB…)</em>
         </li>
+        <li>Use database sessions or JSON Web Tokens</li>
       </ul>
     )
   },
@@ -158,7 +159,7 @@ function Home () {
 
 const reactComponentCode = `
 import React from 'react'
-import { useSession } from 'next-auth/client'
+import { useSession, signin, signout } from 'next-auth/client'
 
 export default () => {
   const [ session, loading ] = useSession()
@@ -166,11 +167,11 @@ export default () => {
   return <p>
     {!session && <>
       Not signed in <br/>
-      <a href="/api/auth/signin">Sign in</a>
+      <button onClick={signin}>Sign in</button>
     </>}
     {session && <>
       Signed in as {session.user.email} <br/>
-      <a href="/api/auth/signout">Sign out</a>
+      <button onClick={signout}>Sign out</button>
     </>}
   </p>
 }
@@ -183,16 +184,23 @@ import Providers from 'next-auth/providers'
 const options = {
   site: 'https://example.com'
   providers: [
+    // Add as many authentcation providers as you want…
+    Providers.Apple({
+      clientId: process.env.APPLE_ID,
+      clientSecret: process.env.APPLE_SECRET
+    }),
     Providers.Google({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET
     }),
+    // Allow sign in with passwordless email link…
     Providers.Email({
       server: process.env.MAIL_SERVER,
       from: '<no-reply@example.com>'
     }),
   ],
-  database: process.env.DATABASE_URL
+  database: process.env.DATABASE_URL,
+  jwt: true // Enables JSON Web Tokens
 }
 
 export default (req, res) => NextAuth(req, res, options)

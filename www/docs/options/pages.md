@@ -17,7 +17,8 @@ To add a custom login page, for example. You can us the `pages` option:
     signin: '/auth/signin',
     signout: '/auth/signout',
     error: '/auth/error',
-    verifyRequest: '/auth/verify-request'  // (used for check email message)
+    verifyRequest: '/auth/verify-request', // (used for check email message)
+    newUser: null // If set, new users will be directed here on first sign in
   }
   ...
 ```

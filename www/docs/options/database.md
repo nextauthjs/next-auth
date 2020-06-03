@@ -27,6 +27,51 @@ database: {
 See the [TypeORM configuration documentation](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md) for all the supported database options.
 :::
 
+## Data Structure
+
+NextAuth.js will configure your database with tables / collections automatically if `synchronize: true` is set.
+
+### Tables / Collections
+
+* **User** - User profile (name, email, etc)
+* **Account** – OAuth Account (Provider, Provider Account ID, etc)
+* **VerificationRequest** – Used for Email Verification Tokens
+* **Session** - Unused if JSON Web Tokens are being for sessions
+
+All User accounts have an email address associated with them, they are required and they must be unique.
+
+A User can have multiple OAuth Accounts and multiple Sessions.
+
+:::warning
+The option **?synchronize=true** automatically synchronizes the database schema with what NextAuth.js expects. It is useful to create the tables you need in the database on first run against a test database but it should not be enabled in production as it may result in data loss.
+:::
+
+:::tip
+If you want to set a prefix for all table names you can use the TypeORM **entityPrefix** option.
+
+*For example:*
+
+```js
+'mysql://username:password@127.0.0.1:3306/database_name?entityPrefix=nextauth_'
+```
+
+*…or as a database configuration object:*
+
+```js
+database: {
+  type: 'mysql',
+  host: "127.0.0.1",
+  port: 3306,
+  username: "nextauth",
+  password: "password",
+  database: "nextauth",
+  synchronize: true,
+  entityPrefix: 'nextauth_'
+}
+```
+
+:::
+
 ## Supported Databases
 
 NextAuth.js uses TypeORM as the default database adapter, but only some databases are supported.
@@ -91,12 +136,6 @@ Install module:
 ```js
 database: 'mongodb://username:password@127.0.0.1:3306/database_name?synchronize=true'
 ```
-
-:::warning
-The option **?synchronize=true** automatically syncs schema changes to the database.
-
-It is useful to create the tables you need in the database, but should not be enabled in production as may result in data loss if there are changes to the schema or to NextAuth.js
-:::
 
 
 ## Unsupported Databases

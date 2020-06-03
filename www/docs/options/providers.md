@@ -75,7 +75,7 @@ NextAuth.js requires an email address to sign in. If an account does not have an
   ```
 5. Once a provider has been setup, you can sign in at the following URL: `[origin]/api/auth/signin`. This is an unbranded auto-generated page with all the configured providers.   
 
-<Image src="https://user-images.githubusercontent.com/595695/82076867-5915f380-96d6-11ea-8975-2059ce1c81a7.png" alt="Login Screenshot" />
+<Image src="/static/img/signin.png" alt="Signin Screenshot" />
 
 :::tip
 If you want to create a custom sign in link you can link to **/api/auth/signin/[provider]** which will sign in the user in directly with that provider.
