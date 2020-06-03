@@ -45,8 +45,8 @@ database: {
 
 ## Creating your own adapter
 
-It is possible to create your own adapter, one has already been created for a [Prisma](https://www.prisma.io/) backend.
-
 Using a custom adapter you can connect to any database backend or even several different databases.
 
-How to do write your own adapter is not yet convered in documentation and it is not a supported option.
+As an example, one has already been created by a community member to use a [Prisma](https://www.prisma.io/) backend.
+
+How to write your own adapter is not yet covered by this documentation and we are not able to provide support for it at this time, but if you want to figure it out on your own the API should be relatively stable.
