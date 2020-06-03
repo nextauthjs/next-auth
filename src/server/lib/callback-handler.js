@@ -123,7 +123,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
         } else {
           // If there is no active session, but the account being signed in with is already
           // associated with a valid user then create session to sign the user in.
-          session = useJwt ? await createJwtSession(userByProviderAccountId, sessionMaxAge) : await createSession(user)
+          session = useJwt ? await createJwtSession(userByProviderAccountId, sessionMaxAge) : await createSession(userByProviderAccountId)
           return {
             session,
             user: userByProviderAccountId,
