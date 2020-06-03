@@ -20,7 +20,7 @@ It is designed from the ground up to support Next.js and Serverless.
 ### Authentication
 
 * Designed to work with any 0Auth service, it supports 0Auth 1.0, 1.0A and 2.0
-* Built-in support for [many popular 0Auth sign-in services](/configuration/providers)
+* Built-in support for [many popular 0Auth sign-in services](/options/providers)
 * Supports email / passwordless authentication
 * Supports both JSON Web Tokens and database sessions
 
@@ -28,7 +28,7 @@ It is designed from the ground up to support Next.js and Serverless.
 
 * An open source solution that allows you to keep control of your data
 * Supports Bring Your Own Database (BYOD) and can be used with any database
-* Built-in support for for [MySQL, MariaDB, Postgres, MongoDB and SQLite](/configuration/database)
+* Built-in support for for [MySQL, MariaDB, Postgres, MongoDB and SQLite](/options/database)
 * Works great with databases from popular hosting providers
 
 ### Secure by default
