@@ -2,28 +2,16 @@
 import cookie from '../lib/cookie'
 
 export default async (req, res, options, done) => {
-  const { adapter, cookies, callbackUrl, csrfTokenVerified, baseUrl } = options
-  const { deleteSession } = await adapter.getAdapter(options)
+  const {
+    adapter,
+    cookies,
+    callbackUrl,
+    csrfTokenVerified,
+    baseUrl,
+    jwt: useJwt
+  } = options
 
-  // Get session ID (if set)
-  const sessionToken = req.cookies[cookies.sessionToken.name]
-
-  if (csrfTokenVerified) {
-    try {
-      // Delete session sessionToken
-      cookie.set(res, cookies.sessionToken.name, '', { ...cookies.sessionToken.options, maxAge: 0 })
-
-      // Remove session from database
-      await deleteSession(sessionToken)
-    } catch (error) {
-      // Log error and continue
-      console.error('SIGNOUT_ERROR', error)
-    }
-
-    res.status(302).setHeader('Location', callbackUrl)
-    res.end()
-    return done()
-  } else {
+  if (!csrfTokenVerified) {
     // If a csrfToken was not verified with this request, send the user to
     // the signout page, as they should have a valid one now and clicking
     // the signout button should work.
@@ -34,4 +22,26 @@ export default async (req, res, options, done) => {
     res.end()
     return done()
   }
+
+  // Don't need to update the database if is using JWT instead of session DB
+  if (!useJwt) {
+    // Use Session Token and get session from database
+    const { deleteSession } = await adapter.getAdapter(options)
+    const sessionToken = req.cookies[cookies.sessionToken.name]
+
+    try {
+      // Remove session from database
+      await deleteSession(sessionToken)
+    } catch (error) {
+      // Log error and continue
+      console.error('SIGNOUT_ERROR', error)
+    }
+  }
+
+  // Remove Session Token
+  cookie.set(res, cookies.sessionToken.name, '', { ...cookies.sessionToken.options, maxAge: 0 })
+
+  res.status(302).setHeader('Location', callbackUrl)
+  res.end()
+  return done()
 }
