@@ -18,7 +18,7 @@ const Adapter = (config, options = {}) => {
       const parsedUrl = new URL(config)
       config = {}
       config.type = parsedUrl.protocol.replace(/:$/, '')
-      config.hostname = parsedUrl.hostname
+      config.host = parsedUrl.hostname
       config.port = Number(parsedUrl.port)
       config.username = parsedUrl.username
       config.password = parsedUrl.password
