@@ -8,7 +8,8 @@
 // All verification (e.g. oAuth flows or email address verificaiton flows) are
 // done prior to this handler being called to avoid additonal complexity in this
 // handler.
-//
+import { randomBytes } from 'crypto'
+import jwt from 'jsonwebtoken'
 import { AccountNotLinkedError, InvalidProfile } from '../../lib/errors'
 
 export default async (sessionToken, profile, providerAccount, options) => {
@@ -17,7 +18,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
     if (!profile) { throw new Error('Missing profile') }
     if (!providerAccount || !providerAccount.id || !providerAccount.type) { throw new Error('Missing or invalid provider account') }
 
-    const { adapter } = options
+    const { adapter, jwt: useJwt, jwtSecret, sessionMaxAge } = options
 
     const {
       createUser,
@@ -31,10 +32,30 @@ export default async (sessionToken, profile, providerAccount, options) => {
       deleteSession
     } = await adapter.getAdapter(options)
 
-    let session = sessionToken ? await getSession(sessionToken) : null
-    const isSignedIn = !!session
-    let user = isSignedIn ? await getUser(session.userId) : null
-    let isNewAccount = false
+    let session = null
+    let user = null
+    let isSignedIn = null
+    let isNewUser = false
+
+    if (sessionToken) {
+      if (useJwt) {
+        try {
+          session = jwt.verify(sessionToken, jwtSecret, { maxAge: sessionMaxAge })
+          isSignedIn = !!session
+          if (isSignedIn) {
+            user = await getUser(session.nextauth.user.id)
+          }
+        } catch (e) {
+          // If session can't be verified, treat as no session
+        }
+      } else {
+        session = await getSession(sessionToken)
+        isSignedIn = !!session
+        if (isSignedIn) {
+          user = await getUser(session.userId)
+        }
+      }
+    }
 
     if (providerAccount.type === 'email') {
       // All new email accounts need an email address associated with the profile
@@ -50,13 +71,15 @@ export default async (sessionToken, profile, providerAccount, options) => {
             return {
               session,
               user,
-              isNewAccount
+              isNewUser
             }
           } else {
             // Delete existing session if they are currently signed in as another user.
             // This will switch user accounts for the session in cases where the user was
             // already logged in with a different account.
-            await deleteSession(sessionToken)
+            if (!useJwt) {
+              await deleteSession(sessionToken)
+            }
 
             // If signed in with a different acccount, effectively switching accounts
             user = userByEmail
@@ -68,16 +91,16 @@ export default async (sessionToken, profile, providerAccount, options) => {
       } else {
         // Create user account if there isn't one for the email address already
         user = await createUser(profile)
-        isNewAccount = true
+        isNewUser = true
       }
 
       // Create new session
-      session = await createSession(user)
+      session = useJwt ? await createJwtSession(user, sessionMaxAge) : await createSession(user)
 
       return {
         session,
         user,
-        isNewAccount
+        isNewUser
       }
     } else if (providerAccount.type === 'oauth') {
       // If signing in with oauth account, check to see if the account exists already
@@ -89,7 +112,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
             return {
               session,
               user,
-              isNewAccount
+              isNewUser
             }
           } else {
             // If the user is currently signed in, but the new account they are signing in
@@ -100,11 +123,11 @@ export default async (sessionToken, profile, providerAccount, options) => {
         } else {
           // If there is no active session, but the account being signed in with is already
           // associated with a valid user then create session to sign the user in.
-          session = await createSession(userByProviderAccountId)
+          session = useJwt ? await createJwtSession(userByProviderAccountId, sessionMaxAge) : await createSession(user)
           return {
             session,
             user: userByProviderAccountId,
-            isNewAccount
+            isNewUser
           }
         }
       } else {
@@ -125,7 +148,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
           return {
             session,
             user,
-            isNewAccount
+            isNewUser
           }
         }
 
@@ -181,12 +204,12 @@ export default async (sessionToken, profile, providerAccount, options) => {
             providerAccount.accessTokenExpires
           )
 
-          session = await createSession(user)
-          isNewAccount = true
+          session = useJwt ? await createJwtSession(user, sessionMaxAge) : await createSession(user)
+          isNewUser = true
           return {
             session,
             user,
-            isNewAccount
+            isNewUser
           }
         }
       }
@@ -196,4 +219,15 @@ export default async (sessionToken, profile, providerAccount, options) => {
   } catch (error) {
     return Promise.reject(error)
   }
+}
+
+const createJwtSession = async (user, sessionMaxAge) => {
+  const expiryDate = new Date()
+  expiryDate.setTime(expiryDate.getTime() + sessionMaxAge)
+  const sessionExpires = expiryDate.toISOString()
+  return Promise.resolve({
+    user,
+    sessionExpires,
+    accessToken: randomBytes(32).toString('hex')
+  })
 }

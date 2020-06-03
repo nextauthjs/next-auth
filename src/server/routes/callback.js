@@ -1,11 +1,25 @@
 // Handle callbacks from login services
+import jwt from 'jsonwebtoken'
 import OAuthCallback from '../lib/oauth/callback'
 import callbackHandler from '../lib/callback-handler'
 import cookie from '../lib/cookie'
 
 // @TODO Refactor OAuthCallback to return promise instead of using a callback and reduce duplicate code
 export default async (req, res, options, done) => {
-  const { provider: providerName, providers, adapter, site, secret, baseUrl, cookies, callbackUrl, newAccountLandingPageUrl } = options
+  const {
+    provider: providerName,
+    providers,
+    adapter,
+    site,
+    secret,
+    baseUrl,
+    cookies,
+    callbackUrl,
+    pages,
+    sessionMaxAge,
+    jwt: useJwt,
+    jwtSecret
+  } = options
   const provider = providers[providerName]
   const { type } = provider
   const { getVerificationRequest, deleteVerificationRequest } = await adapter.getAdapter(options)
@@ -25,16 +39,34 @@ export default async (req, res, options, done) => {
       const { profile, account } = await oauthAccount
 
       try {
-        const { session, isNewAccount } = await callbackHandler(sessionToken, profile, account, options)
+        const { session, isNewUser } = await callbackHandler(sessionToken, profile, account, options)
 
-        // Save Session ID in cookie (HTTP Only cookie)
-        cookie.set(res, cookies.sessionToken.name, session.sessionToken, { expires: session.sessionExpires || null, ...cookies.sessionToken.options })
+        if (useJwt) {
+          // Store session in JWT cookie
+          const token = jwt.sign(
+            {
+              nextauth: {
+                ...session,
+                account,
+                isNewUser
+              }
+            },
+            jwtSecret,
+            {
+              expiresIn: sessionMaxAge
+            }
+          )
+          cookie.set(res, cookies.sessionToken.name, token, { expires: session.sessionExpires || null, ...cookies.sessionToken.options })
+        } else {
+          // Save Session Token in cookie
+          cookie.set(res, cookies.sessionToken.name, session.sessionToken, { expires: session.sessionExpires || null, ...cookies.sessionToken.options })
+        }
 
         // Handle first logins on new accounts
         // e.g. option to send users to a new account landing page on initial login
         // Note that the callback URL is preserved, so the journey can still be resumed
-        if (isNewAccount && newAccountLandingPageUrl) {
-          res.status(302).setHeader('Location', newAccountLandingPageUrl)
+        if (isNewUser && pages.newUser) {
+          res.status(302).setHeader('Location', pages.newUser)
           res.end()
           return done()
         }
@@ -85,16 +117,34 @@ export default async (req, res, options, done) => {
       // (Will create new account if they don't have one, or sign them into
       // an existing account if they do have one.)
       const dummyProviderAccount = { id: provider.id, type: 'email' }
-      const { session, isNewAccount } = await callbackHandler(sessionToken, { email }, dummyProviderAccount, options)
+      const { session, isNewUser } = await callbackHandler(sessionToken, { email }, dummyProviderAccount, options)
 
-      // Save Session ID in cookie (HTTP Only cookie)
-      cookie.set(res, cookies.sessionToken.name, session.sessionToken, { expires: session.sessionExpires || null, ...cookies.sessionToken.options })
+      if (useJwt) {
+      // Store session in JWT cookie
+        const token = jwt.sign(
+          {
+            nextauth: {
+              ...session,
+              account: dummyProviderAccount,
+              isNewUser
+            }
+          },
+          jwtSecret,
+          {
+            expiresIn: sessionMaxAge
+          }
+        )
+        cookie.set(res, cookies.sessionToken.name, token, { expires: session.sessionExpires || null, ...cookies.sessionToken.options })
+      } else {
+        // Save Session Token in cookie
+        cookie.set(res, cookies.sessionToken.name, session.sessionToken, { expires: session.sessionExpires || null, ...cookies.sessionToken.options })
+      }
 
       // Handle first logins on new accounts
       // e.g. option to send users to a new account landing page on initial login
       // Note that the callback URL is preserved, so the journey can still be resumed
-      if (isNewAccount && newAccountLandingPageUrl) {
-        res.status(302).setHeader('Location', newAccountLandingPageUrl)
+      if (isNewUser && pages.newUser) {
+        res.status(302).setHeader('Location', pages.newUser)
         res.end()
         return done()
       }
