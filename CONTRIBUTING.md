@@ -78,11 +78,3 @@ You might find it helpful to use the `npm run watch` command in the next-auth pr
 If you are working on `next-auth/src/client/index.js` hot reloading will work as normal in your Next.js app.
 
 However  if you are working on anything else (e.g. `next-auth/src/server/*` etc) then you will need to *stop and start* your app for changes to apply as **Next.js will not hot reload those changes**.
-
-## Testing builds
-
-You may also want to clone the repo in GitHub as a way to test a change on a live site (e.g. on now.sh).
-
-You can do this using npm's ability to install a package from a GitHub repo or branch:
-
-    npm install your-github-username/next-auth#master
