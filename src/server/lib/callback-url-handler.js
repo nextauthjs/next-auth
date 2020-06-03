@@ -25,7 +25,14 @@ export default async (req, res, options) => {
   }
 
   // Save callback URL in a cookie so that can be used for subsequent requests in signin/signout/callback flow
-  if (callbackUrl && (callbackUrl !== callbackUrlCookieValue)) { cookie.set(res, cookies.callbackUrl.name, callbackUrl, cookies.callbackUrl.options) }
+  if (callbackUrl && callbackUrl !== callbackUrlCookieValue) {
+    cookie.set(
+      res,
+      cookies.callbackUrl.name,
+      callbackUrl,
+      cookies.callbackUrl.options
+    )
+  }
 
   return Promise.resolve(callbackUrl)
 }

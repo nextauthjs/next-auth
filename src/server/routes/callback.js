@@ -31,7 +31,9 @@ export default async (req, res, options, done) => {
     OAuthCallback(req, provider, async (error, oauthAccount) => {
       if (error) {
         console.error('OAUTH_CALLBACK_ERROR', error)
-        res.status(302).setHeader('Location', `${baseUrl}/error?error=OAuthCallback`)
+        res
+          .status(302)
+          .setHeader('Location', `${baseUrl}/error?error=OAuthCallback`)
         res.end()
         return done()
       }
@@ -73,15 +75,26 @@ export default async (req, res, options, done) => {
       } catch (error) {
         if (error.name === 'AccountNotLinkedError') {
           // If the email on the account is already linked, but nto with this oAuth account
-          res.status(302).setHeader('Location', `${baseUrl}/error?error=oAuthAccountNotLinked`)
+          res
+            .status(302)
+            .setHeader(
+              'Location',
+              `${baseUrl}/error?error=oAuthAccountNotLinked`
+            )
         } else if (error.name === 'CreateUserError') {
-          res.status(302).setHeader('Location', `${baseUrl}/error?error=OAuthCreateAccount`)
+          res
+            .status(302)
+            .setHeader('Location', `${baseUrl}/error?error=OAuthCreateAccount`)
         } else if (error.name === 'InvalidProfile') {
           // If is missing email address (NB: the only field on a profile currently required)
-          res.status(302).setHeader('Location', `${baseUrl}/error?error=EmailRequired`)
+          res
+            .status(302)
+            .setHeader('Location', `${baseUrl}/error?error=EmailRequired`)
         } else {
           console.error('OAUTH_CALLBACK_HANDLER_ERROR', error)
-          res.status(302).setHeader('Location', `${baseUrl}/error?error=Callback`)
+          res
+            .status(302)
+            .setHeader('Location', `${baseUrl}/error?error=Callback`)
         }
         res.end()
         return done()
@@ -105,7 +118,9 @@ export default async (req, res, options, done) => {
       // Verify email and token match email verification record in database
       const invite = await getVerificationRequest(email, token, secret, provider)
       if (!invite) {
-        res.status(302).setHeader('Location', `${baseUrl}/error?error=Verification`)
+        res
+          .status(302)
+          .setHeader('Location', `${baseUrl}/error?error=Verification`)
         res.end()
         return done()
       }
@@ -160,7 +175,9 @@ export default async (req, res, options, done) => {
       return done()
     } catch (error) {
       if (error.name === 'CreateUserError') {
-        res.status(302).setHeader('Location', `${baseUrl}/error?error=EmailCreateAccount`)
+        res
+          .status(302)
+          .setHeader('Location', `${baseUrl}/error?error=EmailCreateAccount`)
       } else {
         res.status(302).setHeader('Location', `${baseUrl}/error?error=Callback`)
         console.error('EMAIL_CALLBACK_ERROR', error)
@@ -168,8 +185,33 @@ export default async (req, res, options, done) => {
       res.end()
       return done()
     }
+  } else if (type === 'credentials') {
+    const email = req.query.email ? req.query.email.toLowerCase() : null
+
+    //const sessionToken = req.cookies[cookies.sessionToken.name]
+
+    // Handle first logins on new accounts
+    // e.g. option to send users to a new account landing page on initial login
+    // Note that the callback URL is preserved, so the journey can still be resumed
+    // if (isNewAccount && newAccountLandingPageUrl) {
+    //   res.status(302).setHeader('Location', newAccountLandingPageUrl)
+    //   res.end()
+    //   return done()
+    // }
+
+    // Callback URL is already verified at this point, so safe to use if specified
+    if (callbackUrl) {
+      res.status(302).setHeader('Location', callbackUrl)
+      res.end()
+    } else {
+      res.status(302).setHeader('Location', site)
+      res.end()
+    }
+    return done()
   } else {
-    res.status(500).end(`Error: Callback for provider type ${type} not supported`)
+    res
+      .status(500)
+      .end(`Error: Callback for provider type ${type} not supported`)
     return done()
   }
 }

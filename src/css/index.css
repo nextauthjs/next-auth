@@ -22,7 +22,8 @@ form {
   padding: 0;
 }
 
-input[type="text"] {
+input[type='text'],
+input[type='password'] {
   box-sizing: border-box;
   display: block;
   width: 100%;
@@ -90,8 +91,8 @@ a.site {
 }
 
 .page {
-  position: absolute; 
-	width: 100%;
+  position: absolute;
+  width: 100%;
   height: 100%;
   display: table;
   margin: 0;
@@ -117,7 +118,7 @@ a.site {
 .signin {
   a.button,
   button,
-  input[type="text"] {
+  input[type='text'] {
     margin: 0 auto 0 auto;
     display: block;
   }
@@ -141,7 +142,7 @@ a.site {
   form {
     display: block;
     margin: 0 auto 0.5rem auto;
-    input[type="text"] {
+    input[type='text'] {
       margin-bottom: 0.5rem;
     }
     button {
@@ -150,4 +151,3 @@ a.site {
     max-width: 300px;
   }
 }
-
