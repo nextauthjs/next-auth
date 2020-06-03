@@ -61,12 +61,6 @@ const Adapter = (config, options = {}) => {
   // Some custom logic is required to make schemas compatible with MongoDB
   // Here we monkey patch some properties if MongoDB is being used.
   if (config.type === 'mongodb') {
-    // MongoDB uses _id (rather than id) for primary keys and TypeORM does not
-    // fully abstract this (e.g. the way Mongoose does), so we need to do it.
-    // Note: We don't need to change the values in the schemas, just in queries
-    // that we make, so it's a variable here.
-    idKey = '_id'
-
     // Important!
     //
     // 1. You must set 'objectId: true' on one property on a model.
@@ -159,6 +153,17 @@ const Adapter = (config, options = {}) => {
       }
     }
 
+    let ObjectId // Only defined if the database is MongoDB
+    if (config.type === 'mongodb') {
+      // MongoDB uses _id (rather than id) for primary keys and TypeORM does not
+      // fully abstract this (e.g. the way Mongoose does), so we need to do it.
+      // Note: We don't need to change the values in the schemas, just in queries
+      // that we make, so it's a variable here.
+      idKey = '_id'
+      const mongodb = await import('mongodb')
+      ObjectId = mongodb.ObjectId
+    }
+
     async function createUser (profile) {
       _debug('createUser', profile)
       try {
@@ -173,6 +178,17 @@ const Adapter = (config, options = {}) => {
 
     async function getUser (id) {
       _debug('getUser', id)
+
+      // In the very specific case of both using JWT for storing session data
+      // and using MongoDB to store user data, the ID is a string rather than
+      // an ObjectId and we need to turn it into an ObjectId.
+      //
+      // In all other scenarios it is already an ObjectId, because it will have
+      // come from another MongoDB query. 
+      if (ObjectId && !(id instanceof ObjectId)) {
+        id = ObjectId(id)
+      }
+
       try {
         return connection.getRepository(User).findOne({ [idKey]: id })
       } catch (error) {

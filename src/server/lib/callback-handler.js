@@ -40,19 +40,20 @@ export default async (sessionToken, profile, providerAccount, options) => {
     if (sessionToken) {
       if (useJwt) {
         try {
-          session = jwt.verify(sessionToken, jwtSecret, { maxAge: sessionMaxAge })
-          isSignedIn = !!session
-          if (isSignedIn) {
-            user = await getUser(session.nextauth.user.id)
+          const token = jwt.verify(sessionToken, jwtSecret, { maxAge: sessionMaxAge })
+          session = token.nextauth || null
+          if (session && session.user && session.user.id) {
+            user = await getUser(session.user.id)
+            isSignedIn = !!user
           }
         } catch (e) {
           // If session can't be verified, treat as no session
         }
       } else {
         session = await getSession(sessionToken)
-        isSignedIn = !!session
-        if (isSignedIn) {
+        if (session && session.userId) {
           user = await getUser(session.userId)
+          isSignedIn = !!user
         }
       }
     }
@@ -108,7 +109,10 @@ export default async (sessionToken, profile, providerAccount, options) => {
       if (userByProviderAccountId) {
         if (isSignedIn) {
           // If the user is already signed in with this account, we don't need to do anything
-          if (userByProviderAccountId.id === user.id) {
+          // Note: These are cast as strings here to ensure they match as in
+          // some flows (e.g. JWT with a database) one of the values might be a
+          // string and the other might be an ObjectID and would otherwise fail.
+          if (`${userByProviderAccountId.id}` === `${user.id}`) {
             return {
               session,
               user,

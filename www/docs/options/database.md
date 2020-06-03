@@ -129,7 +129,7 @@ database: 'postgres://username:password@127.0.0.1:3306/database_name?synchronize
 ### MongoDB
 
 Install module:
-`npm i mongo`
+`npm i mongodb`
 
 #### Example
 
