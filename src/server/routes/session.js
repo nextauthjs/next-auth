@@ -84,10 +84,7 @@ export default async (req, res, options, done) => {
       } else if (sessionToken) {
         // If sessionToken was found set but it's not valid for a session then
         // remove the sessionToken cookie from browser.
-        cookie.set(res, cookies.sessionToken.name, '', {
-          ...cookies.sessionToken.options,
-          maxAge: 0
-        })
+        cookie.set(res, cookies.sessionToken.name, '', { ...cookies.sessionToken.options, maxAge: 0 })
       }
     } catch (error) {
       console.error('SESSION_ERROR', error)

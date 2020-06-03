@@ -15,12 +15,8 @@ import { AccountNotLinkedError, InvalidProfile } from '../../lib/errors'
 export default async (sessionToken, profile, providerAccount, options) => {
   try {
     // Input validation
-    if (!profile) {
-      throw new Error('Missing profile')
-    }
-    if (!providerAccount || !providerAccount.id || !providerAccount.type) {
-      throw new Error('Missing or invalid provider account')
-    }
+    if (!profile) { throw new Error('Missing profile') }
+    if (!providerAccount || !providerAccount.id || !providerAccount.type) { throw new Error('Missing or invalid provider account') }
 
     const { adapter, jwt: useJwt, jwtSecret, sessionMaxAge } = options
 
@@ -64,9 +60,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
 
     if (providerAccount.type === 'email') {
       // All new email accounts need an email address associated with the profile
-      if (!profile.email) {
-        throw new InvalidProfile()
-      }
+      if (!profile.email) { throw new InvalidProfile() }
 
       // If signing in with an email, check if an account with the same email address exists already
       const userByEmail = await getUserByEmail(profile.email)
@@ -111,10 +105,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
       }
     } else if (providerAccount.type === 'oauth') {
       // If signing in with oauth account, check to see if the account exists already
-      const userByProviderAccountId = await getUserByProviderAccountId(
-        providerAccount.provider,
-        providerAccount.id
-      )
+      const userByProviderAccountId = await getUserByProviderAccountId(providerAccount.provider, providerAccount.id)
       if (userByProviderAccountId) {
         if (isSignedIn) {
           // If the user is already signed in with this account, we don't need to do anything
@@ -198,9 +189,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
           // includes an email address (if they are already logged in, we don't care).
           //
           // This restriction may be lifted (or made optional) in future.
-          if (!isSignedIn && !profile.email) {
-            throw new InvalidProfile()
-          }
+          if (!isSignedIn && !profile.email) { throw new InvalidProfile() }
 
           // If the current user is not logged in and the profile isn't linked to any user
           // accounts (by email or provider account id)...

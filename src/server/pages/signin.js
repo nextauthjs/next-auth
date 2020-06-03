@@ -6,10 +6,18 @@ export default ({ req, csrfToken, providers, callbackUrl }) => {
   const { email, password } = req.query
   return render(
     <div className='signin'>
-      {providers.map((provider, i) =>
+      {providers.map((provider, i) => (
         <div key={provider.id} className='provider'>
-          {provider.type === 'oauth' && <a className='button' data-provider={provider.id} href={`${provider.signinUrl}${withCallbackUrl}`}>Sign in with {provider.name}</a>}
-          {provider.type === 'email' &&
+          {provider.type === 'oauth' && (
+            <a
+              className='button'
+              data-provider={provider.id}
+              href={`${provider.signinUrl}${withCallbackUrl}`}
+            >
+              Sign in with {provider.name}
+            </a>
+          )}
+          {provider.type === 'email' && (
             <form action={provider.signinUrl} method='POST'>
               {i > 0 && <hr />}
               <input type='hidden' name='csrfToken' value={csrfToken} />
@@ -20,7 +28,7 @@ export default ({ req, csrfToken, providers, callbackUrl }) => {
                 value={email}
                 placeholder='email@example.com'
               />
-              <button type='submit'>Sign in with y {provider.name}</button>
+              <button type='submit'>Sign in with {provider.name}</button>
               {i + 1 < providers.length && <hr />}
             </form>
           )}
@@ -43,10 +51,11 @@ export default ({ req, csrfToken, providers, callbackUrl }) => {
                 placeholder='Your pasword'
               />
               <button type='submit'>Sign in with {provider.name}</button>
-              {(i + 1) < providers.length && <hr />}
-            </form>}
+              {i + 1 < providers.length && <hr />}
+            </form>
+          )}
         </div>
-      )}
+      ))}
     </div>
   )
 }
