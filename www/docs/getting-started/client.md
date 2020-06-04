@@ -99,7 +99,7 @@ You can also get the session object in Next.js API routes:
 import { session } from 'next-auth/client'
 
 export default (req, res) => {
-  const session = await getSession({ req })
+  const session = await session({ req })
 
   if (session) {
     // Signed in
