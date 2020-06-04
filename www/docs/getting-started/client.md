@@ -8,7 +8,7 @@ The NextAuth.js client library makes it easy to interact with sessions from Reac
 Some of the methods can be called both client side and server side.
 
 :::note
-When using any of the client API methods server side, [context](https://nextjs.org/docs/api-reference/data-fetching/getInitialProps#context-object) must be passed as an argument. 
+When using any of the client API methods server side, [context](https://nextjs.org/docs/api-reference/data-fetching/getInitialProps#context-object) must be passed as an argument. The documentation for **session()** has an example.
 :::
 
 ---
@@ -46,6 +46,28 @@ NextAuth.js also provides a `session()` method which can be called client or ser
  
 It calls `/api/auth/session` and returns a promise with a session object, or null if no session exists.
 
+A session object looks like this:
+
+```js
+{
+  user: {
+    name: string,
+    email: string,
+    image: uri
+  },
+  accessToken: string,
+  expires: "YYYY-MM-DDTHH:mm:ss.SSSZ"
+}
+```
+
+You can call `session()` inside a function to check if a user is signed in, or use it for server side rendered pages that supporting signing in without requiring client side JavaScript.
+
+:::info
+Note that because it exposed to the client it does not contain sensitive information such as the Session Token or OAuth service related tokens. It includes enough information (e.g name, email) to display information on a page about the user who is signed in, and an Access Token that can be used to identify the session without exposing the Session Token itself.
+:::
+
+Because it is a Universal method, you can use `session()` in both client and server side functions, such as `getInitialProps()` in Next.js:
+
 ```jsx title="/pages/index.js"
 import { session } from 'next-auth/client'
 
@@ -69,47 +91,37 @@ Page.getInitialProps = async (context) => {
 export default Page
 ```
 
-You can call `session()` inside a function to check if a user is signed in, or use it for server side rendered pages that supporting signing in without requiring client side JavaScript.
+#### Using session() in API routes
 
-### session({ req })
-
-`session()` Can also be used to get the session object in api routes (like `/pages/api/user/me.js`). 
+You can also get the session object in Next.js API routes:
+ 
 ```js
-export default async (req, res) => {
-  const session = await getSession({ req });
+import { session } from 'next-auth/client'
 
-  if (!file) {
-    res.status(404).end('No such file');
-    return;
+export default (req, res) => {
+  const session = await getSession({ req })
+
+  if (session) {
+    // Signed in
+    const { accessToken } = session.user
+
+    // Do something with accessToken (e.g. look up user in DB)
+
+    res.statusCode = 200
+    res.setHeader('Content-Type', 'application/json')
+    res.end(JSON.stringify({ /* data */ }))
+  } else {
+    // Not signed in
+    res.status(302).setHeader('Location', pages.newUser)
+    res.end()
   }
-
-  switch (method) {
-    case 'GET':
-      res.statusCode = 200;
-      res.setHeader("Content-Type", "application/json");
-      res.end(JSON.stringify(session.user));
-      break
-      break
-    default:
-      res.setHeader('Allow', ['GET'])
-      res.status(405).end(`Method ${method} Not Allowed`)
-  }
-};
-
-```
-
-The session object has the following structure:
-```js
-{
-  user: {
-    name: string,
-    email: string,
-    image: uri
-  },
-  accessToken: string,
-  expires: "YYYY-MM-DDTHH:mm:ss.SSSZ"
 }
+
 ```
+
+:::note
+When calling `session()` server side, you must pass the request object - e.g. `session({req})` - or you can the pass entire `context` object as it contains the `req` object.
+:::
 
 ---
 
