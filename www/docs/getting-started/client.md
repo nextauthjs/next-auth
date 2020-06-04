@@ -71,6 +71,46 @@ export default Page
 
 You can call `session()` inside a function to check if a user is signed in, or use it for server side rendered pages that supporting signing in without requiring client side JavaScript.
 
+### session({ req })
+
+`session()` Can also be used to get the session object in api routes (like `/pages/api/user/me.js`). 
+```js
+export default async (req, res) => {
+  const session = await getSession({ req });
+
+  if (!file) {
+    res.status(404).end('No such file');
+    return;
+  }
+
+  switch (method) {
+    case 'GET':
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify(session.user));
+      break
+      break
+    default:
+      res.setHeader('Allow', ['GET'])
+      res.status(405).end(`Method ${method} Not Allowed`)
+  }
+};
+
+```
+
+The session object has the following structure:
+```js
+{
+  user: {
+    name: string,
+    email: string,
+    image: uri
+  },
+  accessToken: string,
+  expires: "YYYY-MM-DDTHH:mm:ss.SSSZ"
+}
+```
+
 ---
 
 ### signin(provider, { options })
