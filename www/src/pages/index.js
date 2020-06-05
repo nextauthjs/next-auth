@@ -51,7 +51,7 @@ const features = [
   }
 ]
 
-function Feature({ imageUrl, title, description }) {
+function Feature ({ imageUrl, title, description }) {
   const imgUrl = useBaseUrl(imageUrl)
   return (
     <div className={classnames('col col--4', styles.feature)}>
@@ -68,7 +68,7 @@ function Feature({ imageUrl, title, description }) {
   )
 }
 
-function Home() {
+function Home () {
   const context = useDocusaurusContext()
   const { siteConfig = {} } = context
   return (
@@ -222,7 +222,5 @@ const options = {
 
 export default (req, res) => NextAuth(req, res, options)
 `.trim()
-
-Home.description = 'test description'
 
 export default Home
