@@ -30,8 +30,7 @@ module.exports = {
           label: 'GitHub',
           position: 'right'
         }
-      ],
-      image: 'img/logo/logo-flat-sm.png'
+      ]
     },
     announcementBar: {
       id: 'release-candiate-announcement',
