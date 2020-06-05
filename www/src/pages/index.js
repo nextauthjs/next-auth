@@ -13,7 +13,6 @@ const features = [
     imageUrl: 'img/undraw_authentication.svg',
     description: (
       <ul>
-        <li>Full stack open source authentication</li>
         <li>Designed for Next.js and Serverless</li>
         <li>
             Supports Bring Your Own Database<br />
@@ -75,8 +74,20 @@ function Home () {
     <Layout description={siteConfig.tagline}>
       <header className={classnames('hero', styles.heroBanner)}>
         <div className='container'>
-          <h1 className='hero__title'>{siteConfig.title}</h1>
-          <p className='hero__subtitle'>{siteConfig.tagline}</p>
+          <img
+              src="/static/img/logo/logo-with-icon-sm.png"
+              alt="Shield with key icon"
+              className={ styles.heroLogo}
+            />
+          <div 
+            style={{
+              display: 'inline-block',
+              margin: '1rem 1.5rem 0 1.5rem'
+            }}
+            >
+            <h1 className='hero__title'>{siteConfig.title}</h1>
+            <p className='hero__subtitle'>{siteConfig.tagline}</p>
+          </div>
           <div className={styles.buttons}>
             <a
               className={classnames(

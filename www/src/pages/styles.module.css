@@ -17,11 +17,22 @@
   }
 }
 
+.heroLogo {
+  margin-bottom: -.5rem;
+  width: 6rem;
+}
+
+@media screen and (min-width: 668px) {
+  .heroLogo {
+    width: 8rem;
+  }
+}
+
 .buttons {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 1rem;
+  padding: 4rem 1rem 0 1rem;
 }
 
 .button {
@@ -32,7 +43,7 @@
   display: flex;
   align-items: center;
   padding-top: 2rem;
-  margin: 4rem auto;
+  margin: 2rem auto;
   width: 100%;
 }
 
@@ -44,6 +55,9 @@
 
 .features ul li {
   margin-bottom: .5rem;
+  font-size: 1rem;
+  opacity: 0.8;
+  white-space: nowrap;
 }
 
 .featureImage {

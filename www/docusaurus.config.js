@@ -1,6 +1,6 @@
 module.exports = {
   title: 'NextAuth.js',
-  tagline: 'Serverless authentication for Next.js',
+  tagline: 'Authentication for Next.js & Serverless',
   url: 'https://next-auth.js.org',
   baseUrl: '/',
   favicon: 'img/favicon.ico',
@@ -9,12 +9,10 @@ module.exports = {
   themeConfig: {
     navbar: {
       title: 'NextAuth.js',
-      /*
       logo: {
         alt: 'NextAuth Logo',
-        src: 'img/nextjs-logo.svg'
+        src: 'img/logo/logo-flat-sm.png'
       },
-      */
       links: [
         {
           to: '/getting-started/introduction',
@@ -35,10 +33,10 @@ module.exports = {
       ]
     },
     announcementBar: {
-      id: 'beta-announcement',
-      content: 'NextAuth.js v2.0 is in beta! <a target="_blank" rel="noopener noreferrer" href="https://github.com/iaincollins/next-auth/issues/99">View announcement</a>',
-      backgroundColor: '#FFF69C',
-      textColor: '#091E42'
+      id: 'release-candiate-announcement',
+      content: 'NextAuth.js v2.0 is coming soon! <a target="_blank" rel="noopener noreferrer" href="https://github.com/iaincollins/next-auth/issues/196">View announcement</a>',
+      backgroundColor: '#2DB2F9',
+      textColor: '#fff'
     },
     footer: {
       style: 'dark',
