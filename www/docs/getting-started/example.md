@@ -13,7 +13,7 @@ You can find a live demo of the example project at [next-auth-example.now.sh](ht
 
 *The examples below show how to add authentication with NextAuth.js to an existing Next.js project.*
 
-### Add an API route
+### Add API route
 
 To add NextAuth.js to a project, first create a file called `[...nextauth].js` in `pages/api/auth`.
 

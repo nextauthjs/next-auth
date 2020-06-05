@@ -194,7 +194,7 @@ const secret = jwt.sign(
     sub: appleId
   }, privateKey, {
     algorithm: 'ES256',
-    keyid
+    keyid: keyId
   })
 
 console.log(secret)
