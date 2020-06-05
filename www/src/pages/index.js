@@ -5,6 +5,7 @@ import Link from '@docusaurus/Link'
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
 import useBaseUrl from '@docusaurus/useBaseUrl'
 import CodeBlock from '@theme/CodeBlock'
+import Seo from './seo'
 import styles from './styles.module.css'
 
 const features = [
@@ -15,7 +16,7 @@ const features = [
       <ul>
         <li>Designed for Next.js and Serverless</li>
         <li>
-            Supports Bring Your Own Database<br />
+          Supports Bring Your Own Database<br />
           <em>(MySQL, MariaDB, Postgres, MongoDB…)</em>
         </li>
         <li>Use database sessions or JSON Web Tokens</li>
@@ -72,19 +73,20 @@ function Home () {
   const { siteConfig = {} } = context
   return (
     <Layout description={siteConfig.tagline}>
+      <Seo />
       <header className={classnames('hero', styles.heroBanner)}>
         <div className='container'>
           <img
-              src="/img/logo/logo-with-icon-sm.png"
-              alt="Shield with key icon"
-              className={ styles.heroLogo}
-            />
-          <div 
+            src='/img/logo/logo-with-icon-sm.png'
+            alt='Shield with key icon'
+            className={styles.heroLogo}
+          />
+          <div
             style={{
               display: 'inline-block',
               margin: '1rem 1.5rem 0 1.5rem'
             }}
-            >
+          >
             <h1 className='hero__title'>{siteConfig.title}</h1>
             <p className='hero__subtitle'>{siteConfig.tagline}</p>
           </div>
@@ -216,5 +218,7 @@ const options = {
 
 export default (req, res) => NextAuth(req, res, options)
 `.trim()
+
+Home.description = 'test description'
 
 export default Home
