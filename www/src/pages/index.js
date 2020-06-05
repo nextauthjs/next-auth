@@ -75,7 +75,7 @@ function Home () {
       <header className={classnames('hero', styles.heroBanner)}>
         <div className='container'>
           <img
-              src="/static/img/logo/logo-with-icon-sm.png"
+              src="/img/logo/logo-with-icon-sm.png"
               alt="Shield with key icon"
               className={ styles.heroLogo}
             />
