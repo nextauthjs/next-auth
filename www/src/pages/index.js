@@ -51,7 +51,7 @@ const features = [
   }
 ]
 
-function Feature ({ imageUrl, title, description }) {
+function Feature({ imageUrl, title, description }) {
   const imgUrl = useBaseUrl(imageUrl)
   return (
     <div className={classnames('col col--4', styles.feature)}>
@@ -68,7 +68,7 @@ function Feature ({ imageUrl, title, description }) {
   )
 }
 
-function Home () {
+function Home() {
   const context = useDocusaurusContext()
   const { siteConfig = {} } = context
   return (
@@ -172,7 +172,11 @@ function Home () {
 
 const reactComponentCode = `
 import React from 'react'
-import { useSession, signin, signout } from 'next-auth/client'
+import { 
+  useSession, 
+  signin, 
+  signout 
+} from 'next-auth/client'
 
 export default () => {
   const [ session, loading ] = useSession()
