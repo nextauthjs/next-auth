@@ -17,19 +17,14 @@
   --ifm-color-primary-lighter: #48bffd;
   --ifm-color-primary-lightest: #03a7fa;
   --ifm-code-font-size: 95%;
-  --ifm-color-info: #1eb1fc; /* #03a9fc; */
-  --ifm-color-success: #1eb1fc; /* #00cc66; */
+  --ifm-color-info: #1eb1fc;
+  --ifm-color-success: #1eb1fc;
   --ifm-color-warning: #c94b4b;
   --ifm-font-family-base: -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 }
 
-html {
-  --color-feature-image-background: #fff;
-  --color-section-background: #f9f9f9;
-}
-
 html[data-theme='dark'] {
-  --color-section-background: #242526;
+  background: #191A1B;
 }
 
 a,
@@ -52,16 +47,24 @@ a,
   border-radius: 2rem;
 }
 
+.navbar__title {
+  font-size: 1.2rem;
+  margin-left: .2rem;
+}
+
+.navbar {
+  box-shadow: 0 0 .5rem rgba(0,0,0,.2)
+}
+
 .hero {
   margin-top: 2rem;
-  background-color: var(--ifm-background-color);
+  background: none;
   color: black;
 }
 
 .hero .hero__title {  
   font-size: 3rem;
   margin-bottom: 0.5rem;
-  font-weight: 600;
 }
 
 @media screen and (min-width: 668px) {
@@ -73,7 +76,7 @@ a,
 .hero .hero__subtitle {
   font-size: 1rem;
   margin-bottom: 1.5rem;
-  opacity: 0.8;
+  opacity: 0.6;
 }
 
 @media screen and (min-width: 668px) {
@@ -164,9 +167,8 @@ html[data-theme='dark'] {
 }
 
 .home-main .section-features {
-   background-color: var(--color-section-background);
+   background-color: rgba(0,0,0,.05);
 }
-
 
 .home-main .feature-image-wrapper {
   display: inline-block;
@@ -174,7 +176,7 @@ html[data-theme='dark'] {
   padding: 0.3rem;
   border-radius: 10rem;
   overflow: visible;
-  background-color: var(--color-feature-image-background);
+  background-color: #fff;
 }
 
 .home-main .feature-image-wrapper img {
@@ -184,7 +186,8 @@ html[data-theme='dark'] {
 html[data-theme="dark"] .hero .hero__title,
 html[data-theme="dark"] .hero .hero__subtitle,
 html[data-theme="dark"] .home-subtitle,
-html[data-theme="dark"] .hero .button {
+html[data-theme="dark"] .hero .button:not(.button--outline),
+html[data-theme="dark"] .hero .button:hover {
   color: white;
 }
 
