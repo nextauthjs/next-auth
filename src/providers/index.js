@@ -6,6 +6,7 @@ import Facebook from './facebook' // @TODO
 import GitHub from './github'
 import Google from './google'
 import Mixer from './mixer'
+import Okta from './okta'
 import Slack from './slack'
 import Twitch from './twitch'
 import Twitter from './twitter'
@@ -18,6 +19,7 @@ export default {
   GitHub,
   Google,
   Mixer,
+  Okta,
   Slack,
   Twitter,
   Twitch,
