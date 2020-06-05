@@ -124,6 +124,7 @@ async function _getProfile (error, profileData, accessToken, refreshToken, provi
 // Ported from https://github.com/ciaranj/node-oauth/blob/a7f8a1e21c362eb4ed2039431fb9ac2ae749f26a/lib/oauth2.js
 async function _getOAuthAccessToken (code, provider, callback) {
   const url = provider.accessTokenUrl
+  const setGetAccessTokenAuthHeader = (provider.setGetAccessTokenAuthHeader !== null) ? provider.setGetAccessTokenAuthHeader : true
   const params = { ...provider.params } || {}
   const headers = { ...provider.headers } || {}
   const codeParam = (params.grant_type === 'refresh_token') ? 'refresh_token' : 'code'
@@ -149,7 +150,10 @@ async function _getOAuthAccessToken (code, provider, callback) {
   // Added as a fix to accomodate change in Twitch oAuth API
   if (!headers['Client-ID']) { headers['Client-ID'] = provider.clientId }
 
-  if (!headers.Authorization) { headers.Authorization = `Bearer ${code}` }
+  // Okta errors when this is set. Maybe there are other Providers that also wont like this.
+  if (setGetAccessTokenAuthHeader) {
+    if (!headers.Authorization) { headers.Authorization = `Bearer ${code}` }
+  }
 
   const postData = querystring.stringify(params)
 
