@@ -12,7 +12,7 @@ https://developer.apple.com/sign-in-with-apple/get-started/
 
 https://developer.apple.com/account/resources/identifiers/list/serviceId
 
-## Example
+## Usage
 
 There are two ways you can use the Sign in with Apple provider.
 

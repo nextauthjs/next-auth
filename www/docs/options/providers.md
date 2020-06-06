@@ -21,22 +21,17 @@ NextAuth.js is designed to work with any 0Auth service, it supports 0Auth 1.0, 1
 
 ### Built-in providers
 
-| Provider | Documentation | Configuration | Notes
-| --- | --- | --- | --- |
-| Auth0    | [Documentation](https://auth0.com/docs/api/authentication#authorize-application) | [Configuration](https://manage.auth0.com/dashboard) | Requires accessTokenUrl, authorizationUrl, profileUrl.
-| Apple    | [Documentation](https://developer.apple.com/sign-in-with-apple/) | [Configuration](https://developer.apple.com/account/resources) | [NextAuth.js documentation for Apple](/providers/apple) |
-| Discord  | [Documentation](https://discord.com/developers/docs/topics/oauth2) | [Configuration](https://discord.com/developers/applications) | Doesn't need clientSecret.
-| Facebook | [Documentation](https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/) | [Configuration](https://developers.facebook.com/apps/) | Doesn't allow testing production applications with localhost URLs. May not return email address if the account was created with a mobile number.
-| Github   | [Documentation](https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/) | [Configuration](https://github.com/settings/apps/) | Only allows one callback URL. May not return email address if privacy enabled.
-| Google   | [Documentation](https://developers.google.com/identity/protocols/oauth2) | [Configuration](https://console.developers.google.com/apis/credentials) |
-| Mixer    | [Documentation](https://dev.mixer.com/reference/oauth) | [Configuration](https://mixer.com/lab/oauth) |
-| Slack    | [Documentation](https://api.slack.com) |[Configuration]( https://api.slack.com/apps) |
-| Twitch   | [Documentation](https://dev.twitch.tv/docs/authentication) | [Configuration](https://dev.twitch.tv/console/apps) |
-| Twitter  | [Documentation](https://developer.twitter.com) | [Configuration](https://developer.twitter.com/en/apps) | Must enable the *"Request email address from users"* option in your app permissions.
-
-:::tip
-Most OAuth providers only need a **Client ID** and a **Client Secret** to work but some need some additional options and there are gotchas with some providers (see table above).
-:::
+* [Apple](/providers/apple)
+* [Auth0](/providers/auth0)
+* [Discord](/providers/discord)
+* [Facebook](/providers/facebook)
+* [Github](/providers/github)
+* [Google](/providers/google)
+* [Mixer](/providers/Mixer)
+* [Okta](/providers/Okta)
+* [Slack](/providers/slack)
+* [Twitch](/providers/Twitch)
+* [Twitter](/providers/twitter)
 
 :::warning
 NextAuth.js requires an email address to sign in. If an account does not have an email address, a user will be asked to sign in with an account that does. 
@@ -126,12 +121,30 @@ providers: [
     name: 'CustomProvider',
     type: 'oauth',
     version: '2.0',
-    scope: []  // Make sure to request the users email address
+    scope: ''  // Make sure to request the users email address
     ...
   }
 ]
 ...
 ```
+
+#### Options
+
+|       Name       |                     Description                     | Required |
+| :--------------: | :-------------------------------------------------: | :------: |
+|        id        |        An unique ID for your custom provider        |   Yes    |
+|       name       |       An unique name for your custom provider       |   Yes    |
+|       type       | Type of provider, in this case it should be `oauth` |   Yes    |
+|     version      |                   OAuth version.                    |   Yes    |
+|      scope       |                 OAuth access scopes                 |    No    |
+|      params      |       Additional authorization URL parameters       |    No    |
+|  accessTokenUrl  |        Endpoint to retrieve an access token         |   Yes    |
+| requestTokenUrl  |        Endpoint to retrieve a request token         |    No    |
+| authorizationUrl |   Endpoint to request authorization from the user   |   Yes    |
+|    profileUrl    |       Endpoint to retrieve the user's profile       |    No    |
+|     profile      |           An object with the user's info            |    No    |
+|     clientId     |           Client ID of the OAuth provider           |   Yes    |
+|   clientSecret   |         Client Secret of the OAuth provider         |    No    |
 
 :::note
 Feel free to open a PR for your custom configuration if you've created one for a provider that others may be interested in so we can add it to the list of built-in OAuth providers!
@@ -150,7 +163,7 @@ Feel free to open a PR for your custom configuration if you've created one for a
 
   2.1 **Using a connection string**
 
-  Create an .env file to the root of your project and the connection string and email address.
+  Create an .env file to the root of your project and add the connection string and email address.
   ```js title=".env" {1}
 	EMAIL_SERVER=smtp://username:password@smtp.example.com:587
 	EMAIL_FROM=noreply@example.com

@@ -11,19 +11,16 @@ https://discord.com/developers/docs/topics/oauth2
 
 https://discord.com/developers/applications
 
-## Example
+## Usage
 
 ```js
 import Providers from `next-auth/providers`
 ...
 providers: [
   Providers.Discord({
-    clientId: process.env.DISCORD_ID
+		clientId: process.env.DISCORD_CLIENT_ID,
+		clientSecret: process.env.DISCORD_CLIENT_SECRET
   })
 }
 ...
 ```
-
-:::tip
-Doesn't require **clientSecret**.
-:::
