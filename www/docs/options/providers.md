@@ -163,7 +163,7 @@ Feel free to open a PR for your custom configuration if you've created one for a
 
   2.1 **Using a connection string**
 
-  Create an .env file to the root of your project and the connection string and email address.
+  Create an .env file to the root of your project and add the connection string and email address.
   ```js title=".env" {1}
 	EMAIL_SERVER=smtp://username:password@smtp.example.com:587
 	EMAIL_FROM=noreply@example.com
