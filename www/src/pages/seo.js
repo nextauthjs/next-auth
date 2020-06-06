@@ -15,12 +15,14 @@ const Seo = () => {
     <Head>
       <meta charSet='utf-8' />
       <link rel='canonical' href={url} />
-
       <meta property='og:title' content={title} />
       <meta property='og:description' content={tagline} />
-      <meta property='og:image' content={`${url}/img/logo/logo-with-icon-sm.png`} />
+      <meta property='og:image' content={`${url}/img/social-media-card.png`} />
       <meta property='og:url' content={url} />
       <meta name='twitter:card' content='summary_large_image' />
+      <meta name="twitter:title" content={title} />
+      <meta name="twitter:description" content={tagline} />
+      <meta name="twitter:image" content={`${url}/img/social-media-card.png`} />
     </Head>
   )
 }
