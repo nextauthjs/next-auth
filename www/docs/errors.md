@@ -3,11 +3,8 @@ id: errors
 title: Errors
 ---
 
-### DB_OR_ADAPTER_REQUIRED
 
-You must include an `adapter` or `database` in your `/pages/api/auth/[...nextauth].js` config.
-
-See [adapter](https://next-auth.js.org/options/advanced-options#adapter) or [database](https://next-auth.js.org/options/basic-options#database) for more information.
+## TypeORM
 
 ### ADAPTER_CONNECTION_ERROR
 
@@ -35,13 +32,27 @@ See [adapter](https://next-auth.js.org/options/advanced-options#adapter) or [dat
 
 ### DELETE_VERIFICATION_REQUEST_ERROR
 
+## Client
+
 ### CLIENT_USE_SESSION_ERROR
 
 ### CLIENT_FETCH_ERROR
 
 ### CLIENT_COOKIE_PARSE_ERROR
 
+## Providers
+
 ### SEND_VERIFICATION_EMAIL_ERROR
+
+## Server
+
+### DB_OR_ADAPTER_REQUIRED
+
+You must include an `adapter` or `database` in your `/pages/api/auth/[...nextauth].js` config.
+
+See [adapter](https://next-auth.js.org/options/advanced-options#adapter) or [database](https://next-auth.js.org/options/basic-options#database) for more information.
+
+## 0Auth
 
 ### GET_OAUTH2_ACCESS_TOKEN_ERROR
 
@@ -53,7 +64,11 @@ See [adapter](https://next-auth.js.org/options/advanced-options#adapter) or [dat
 
 ### _GET_OATUH_ACCESS_TOKEN_ERROR
 
+## Signin
+
 ### GET_AUTHORISATION_URL_ERROR
+
+## Routes
 
 ### OAUTH_CALLBACK_ERROR
 
