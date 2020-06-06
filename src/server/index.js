@@ -9,15 +9,7 @@ import callback from './routes/callback'
 import session from './routes/session'
 import pages from './pages'
 import adapters from '../adapters'
-
-if (console) {
-  const cx = console.error
-  console.error = (errCode, text) => {
-    !text
-      ? cx(errCode)
-      : cx(`${text}\nDocs: https://next-auth-docs-git-test-error-urls.iaincollins.now.sh/errors#${errCode}`)
-  }
-}
+import '../lib/consoleErr'
 
 const DEFAULT_SITE = ''
 const DEFAULT_BASE_PATH = '/api/auth'
