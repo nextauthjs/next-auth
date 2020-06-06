@@ -11,7 +11,7 @@ https://auth0.com/docs/api/authentication#authorize-application
 
 https://manage.auth0.com/dashboard
 
-## Example
+## Usage
 
 There are two ways you can use the Sign in with Apple provider.
 

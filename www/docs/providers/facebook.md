@@ -11,15 +11,15 @@ https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/
 
 https://developers.facebook.com/apps/
 
-## Example
+## Usage
 
 ```js
 import Providers from `next-auth/providers`
 ...
 providers: [
   Providers.Facebook({
-    clientId: process.env.FACEBOOK_ID,
-    clientSecret: process.env.FACEBOOK_SECRET
+    clientId: process.env.FACEBOOK_CLIENT_ID,
+    clientSecret: process.env.FACEBOOK_CLIENT_SECRET
   })
 }
 ...

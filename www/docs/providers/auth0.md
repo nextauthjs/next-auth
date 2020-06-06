@@ -11,15 +11,15 @@ https://auth0.com/docs/api/authentication#authorize-application
 
 https://manage.auth0.com/dashboard
 
-## Example
+## Usage
 
 ```js
 import Providers from `next-auth/providers`
 ...
 providers: [
   Providers.Auth0({
-    clientId: process.env.AUTH0_ID,
-    clientId: process.env.AUTH0_SECRET,
+    clientId: process.env.AUTH0_CLIENT_ID,
+    clientId: process.env.AUTH0_CLIENT_SECRET,
     accessTokenUrl: process.env.AUTH0_ACCESS_TOKEN_URL,
     authorizationUrl: process.env.AUTH0_AUTHORIZATION_URL,
     profileUrl: process.env.AUTH0_PROFILE_URL
