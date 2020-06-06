@@ -2,9 +2,10 @@ import Auth0 from './auth0'
 import Apple from './apple'
 import Box from './box'
 import Credentials from './credentials'
+import Cognito from './cognito'
 import Discord from './discord'
 import Email from './email'
-import Facebook from './facebook' // @TODO
+import Facebook from './facebook' 
 import GitHub from './github'
 import GitLab from './gitlab'
 import Google from './google'
@@ -21,6 +22,8 @@ export default {
   Apple,
   Box,
   Credentials,
+	Apple,
+	Cognito,
   Discord,
   Email,
   Facebook,
