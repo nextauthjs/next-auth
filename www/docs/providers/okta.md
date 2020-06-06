@@ -20,7 +20,7 @@ providers: [
   Providers.Okta({
     clientId: process.env.OKTA_CLIENT_ID,
     clientId: process.env.OKTA_CLIENT_SECRET,
-    oktaDomain: process.env.OKTA_DOMAIN
+    domain: process.env.OKTA_DOMAIN
   })
 }
 ...
