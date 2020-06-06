@@ -1,3 +1,4 @@
+export default (options) => {
   return {
     id: 'auth0',
     name: 'Auth0',
@@ -18,4 +19,4 @@
     },
     ...options
   }
-}
+} 
