@@ -5,11 +5,12 @@ title: Apple
 
 ## API Documentation
 
-https://auth0.com/docs/api/authentication#authorize-application
+https://developer.apple.com/sign-in-with-apple/get-started/
+
 
 ## App Configuration
 
-https://manage.auth0.com/dashboard
+https://developer.apple.com/account/resources/identifiers/list/serviceId
 
 ## Example
 
