@@ -5,7 +5,7 @@ title: Introduction
 
 ## About NextAuth.js
 
-NextAuth.js is complete open source authentication solution for [Next.js](http://nextjs.org/) applications.
+NextAuth.js is a complete open source authentication solution for [Next.js](http://nextjs.org/) applications.
 
 It is designed from the ground up to support Next.js and Serverless.
 
