@@ -4,6 +4,7 @@ import { createHash } from 'crypto'
 
 import { CreateUserError } from '../../lib/errors'
 import Models from './models'
+import '../../lib/consoleErr'
 
 const Adapter = (config, options = {}) => {
   // If the input is URL string, automatically convert the string to an object
@@ -184,7 +185,7 @@ const Adapter = (config, options = {}) => {
       // an ObjectId and we need to turn it into an ObjectId.
       //
       // In all other scenarios it is already an ObjectId, because it will have
-      // come from another MongoDB query. 
+      // come from another MongoDB query.
       if (ObjectId && !(id instanceof ObjectId)) {
         id = ObjectId(id)
       }
