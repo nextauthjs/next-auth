@@ -51,7 +51,7 @@ const features = [
   }
 ]
 
-function Feature ({ imageUrl, title, description }) {
+function Feature({ imageUrl, title, description }) {
   const imgUrl = useBaseUrl(imageUrl)
   return (
     <div className={classnames('col col--4', styles.feature)}>
@@ -68,7 +68,7 @@ function Feature ({ imageUrl, title, description }) {
   )
 }
 
-function Home () {
+function Home() {
   const context = useDocusaurusContext()
   const { siteConfig = {} } = context
   return (
@@ -201,7 +201,7 @@ import Providers from 'next-auth/providers'
 const options = {
   site: 'https://example.com'
   providers: [
-    // Add as many authentcation providers as you want…
+    // Add as many authentication providers as you want…
     Providers.Apple({
       clientId: process.env.APPLE_ID,
       clientSecret: process.env.APPLE_SECRET

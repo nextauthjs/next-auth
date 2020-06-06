@@ -3,9 +3,11 @@ id: errors
 title: Errors
 ---
 
-# Errors
-
 ## DB_OR_ADAPTER_REQUIRED
+
+You must include an `adapter` or `database` in your `/pages/api/auth/[...nextauth].js` config.
+
+See [adapter](https://next-auth.js.org/options/advanced-options#adapter) or [database](https://next-auth.js.org/options/basic-options#database) for more information.
 
 ## ADAPTER_CONNECTION_ERROR
 
