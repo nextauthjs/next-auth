@@ -21,6 +21,7 @@
     "test:db:start": "docker-compose -f test/docker/docker-compose.yml up",
     "test:db:stop": "docker-compose -f test/docker/docker-compose.yml down"
   },
+  "types": "types/index.d.ts",
   "files": [
     "dist",
     "index.js",
