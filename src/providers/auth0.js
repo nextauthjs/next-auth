@@ -1,5 +1,3 @@
-export default (options) => {
-	console.log(options)
   return {
     id: 'auth0',
     name: 'Auth0',
