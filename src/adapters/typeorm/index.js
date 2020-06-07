@@ -1,4 +1,3 @@
-import 'reflect-metadata'
 import { createConnection, getConnection, getManager, EntitySchema } from 'typeorm'
 import { createHash } from 'crypto'
 
@@ -153,7 +152,7 @@ const Adapter = (config, options = {}) => {
     // Display debug output if debug option enabled
     function _debug (...args) {
       if (appOptions.debug) {
-        console.log('[NextAuth.js][DEBUG]', ...args)
+        console.log('[next-auth][debug]', ...args)
       }
     }
 
