@@ -346,8 +346,8 @@ const Adapter = (config, options = {}) => {
     async function createVerificationRequest (identifer, url, token, secret, provider) {
       _debug('createVerificationRequest', identifer)
       try {
-        const { site, verificationMaxAge } = appOptions
-        const { sendVerificationRequest } = provider
+        const { site } = appOptions
+        const { sendVerificationRequest, maxAge } = provider
 
         // Store hashed token (using secret as salt) so that tokens cannot be exploited
         // even if the contents of the database is compromised.
@@ -355,9 +355,9 @@ const Adapter = (config, options = {}) => {
         const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
 
         let expires = null
-        if (verificationMaxAge) {
+        if (maxAge) {
           const dateExpires = new Date()
-          dateExpires.setTime(dateExpires.getTime() + verificationMaxAge)
+          dateExpires.setTime(dateExpires.getTime() + (maxAge * 1000))
           expires = dateExpires.toISOString()
         }
 
