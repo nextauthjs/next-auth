@@ -194,11 +194,11 @@ export default async (req, res, userSuppliedOptions) => {
       debug: false, // Enable debug messages to be displayed
       pages: {}, // Custom pages (e.g. sign in, sign out, errors)
       allowSignin: async (user, account) => true, // Return true if user / account is allowed to sign in (false if not)
-      allowCallbackUrl: async (url, options) => {
-        if (url.startsWith(options.site)) {
+      allowCallbackUrl: async (url, site) => {
+        if (url.startsWith(site)) {
           return Promise.resolve(url)
         } else {
-          return Promise.resolve(options.site)
+          return Promise.resolve(site)
         }
       },
       // Custom options override defaults
