@@ -20,6 +20,8 @@ export default async (req, res, options, done) => {
   const provider = providers[providerName]
   const { type } = provider
   const { getVerificationRequest, deleteVerificationRequest } = await adapter.getAdapter(options)
+  const useJwtSession = options.session.jwt
+  const sessionMaxAge = options.session.maxAge
 
   // Get session ID (if set)
   const sessionToken = req.cookies[cookies.sessionToken.name]
@@ -38,19 +40,19 @@ export default async (req, res, options, done) => {
       try {
         const { user, session, isNewUser } = await callbackHandler(sessionToken, profile, account, options)
 
-        if (jwt.enabled) {
-          const jwtPayload = {
+        if (useJwtSession) {
+          const jwtPayload = await jwt.set({
             user,
             account,
             isNewUser
-          }
+          })
 
           // Sign and encrypt token
-          const token = await jwt.encode({ secret: jwt.secret, token: jwtPayload, maxAge: jwt.maxAge })
+          const token = await jwt.encode({ secret: jwt.secret, token: jwtPayload, maxAge: sessionMaxAge })
 
           // Set cookie expiry date
           const cookieExpires = new Date()
-          cookieExpires.setTime(cookieExpires.getTime() + (jwt.maxAge * 1000))
+          cookieExpires.setTime(cookieExpires.getTime() + (sessionMaxAge * 1000))
 
           cookie.set(res, cookies.sessionToken.name, token, { expires: cookieExpires.toISOString(), ...cookies.sessionToken.options })
         } else {
@@ -119,19 +121,19 @@ export default async (req, res, options, done) => {
       // into an existing account if they do have one.
       const { user, session, isNewUser } = await callbackHandler(sessionToken, { email }, emailProviderAccount, options)
 
-      if (jwt.enabled) {
-        const jwtPayload = {
+      if (useJwtSession) {
+        const jwtPayload = await jwt.set({
           user,
           account: emailProviderAccount,
           isNewUser
-        }
+        })
 
         // Sign and encrypt token
-        const token = await jwt.encode({ secret: jwt.secret, token: jwtPayload, maxAge: jwt.maxAge })
+        const token = await jwt.encode({ secret: jwt.secret, token: jwtPayload, maxAge: sessionMaxAge })
 
         // Set cookie expiry date
         const cookieExpires = new Date()
-        cookieExpires.setTime(cookieExpires.getTime() + (jwt.maxAge * 1000))
+        cookieExpires.setTime(cookieExpires.getTime() + (sessionMaxAge * 1000))
 
         cookie.set(res, cookies.sessionToken.name, token, { expires: cookieExpires.toISOString(), ...cookies.sessionToken.options })
       } else {

@@ -7,9 +7,10 @@ export default async (req, res, options, done) => {
     cookies,
     callbackUrl,
     csrfTokenVerified,
-    baseUrl,
-    jwt
+    baseUrl
   } = options
+
+  const useJwtSession = options.session.jwt
 
   if (!csrfTokenVerified) {
     // If a csrfToken was not verified with this request, send the user to
@@ -24,7 +25,7 @@ export default async (req, res, options, done) => {
   }
 
   // Don't need to update the database if using JWT instead of session database
-  if (!jwt.enabled) {
+  if (!useJwtSession) {
     // Use Session Token and get session from database
     const { deleteSession } = await adapter.getAdapter(options)
     const sessionToken = req.cookies[cookies.sessionToken.name]

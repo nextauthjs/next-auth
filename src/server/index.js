@@ -121,6 +121,7 @@ export default async (req, res, userSuppliedOptions) => {
 
     // Options for database sessions - if JWT is enabled these are not used
     const sessionOptions = {
+      jwt: false,
       maxAge: 30 * 24 * 60 * 60, // Sessions expire after 30 days of being idle
       updateAge: 24 * 60 * 60, // Sessions updated only if session is greater than this value (0 = always, 24*60*60 = every 24 hours)
       ...userSuppliedOptions.session
@@ -128,9 +129,8 @@ export default async (req, res, userSuppliedOptions) => {
 
     // JWT optons - if JWT enabled these are used instead of session options
     const jwtOptions = {
-      enabled: false,
       secret,
-      maxAge: 30 * 24 * 60 * 60,
+      set: async (token) => { return token },
       ...jwt,
       ...userSuppliedOptions.jwt
     }

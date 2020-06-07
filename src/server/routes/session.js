@@ -4,6 +4,8 @@ import cookie from '../lib/cookie'
 export default async (req, res, options, done) => {
   const { cookies, adapter, jwt } = options
   const { getUser, getSession, updateSession } = await adapter.getAdapter(options)
+  const useJwtSession = options.session.jwt
+  const sessionMaxAge = options.session.maxAge
   const sessionToken = req.cookies[cookies.sessionToken.name]
 
   if (!sessionToken) {
@@ -13,17 +15,17 @@ export default async (req, res, options, done) => {
   }
 
   let response = {}
-  if (jwt.enabled) {
+  if (useJwtSession) {
     try {
       // Decrypt and verify token
-      const token = await jwt.decode({ secret: jwt.secret, token: sessionToken, maxAge: jwt.maxAge })
+      const token = await jwt.decode({ secret: jwt.secret, token: sessionToken, maxAge: sessionMaxAge })
 
       // Refresh JWT expiry by re-signing it, with updated expiry date
-      const newToken = await jwt.encode({ secret: jwt.secret, token, maxAge: jwt.maxAge })
+      const newToken = await jwt.encode({ secret: jwt.secret, token: await jwt.set(token), maxAge: sessionMaxAge })
 
       // Set cookie expiry date
       const sessionExpiresDate = new Date()
-      sessionExpiresDate.setTime(sessionExpiresDate.getTime() + (jwt.maxAge * 1000))
+      sessionExpiresDate.setTime(sessionExpiresDate.getTime() + (sessionMaxAge * 1000))
       const sessionExpires = sessionExpiresDate.toISOString()
 
       // Set cookie, to also update expiry date on cookie

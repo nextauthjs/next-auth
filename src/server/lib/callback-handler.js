@@ -30,15 +30,18 @@ export default async (sessionToken, profile, providerAccount, options) => {
       deleteSession
     } = await adapter.getAdapter(options)
 
+    const useJwtSession = options.session.jwt
+    const sessionMaxAge = options.session.maxAge
+
     let session = null
     let user = null
     let isSignedIn = null
     let isNewUser = false
 
     if (sessionToken) {
-      if (jwt.enabled) {
+      if (useJwtSession) {
         try {
-          const token = await jwt.decode({ secret: jwt.secret, token: sessionToken, maxAge: jwt.maxAge })
+          const token = await jwt.decode({ secret: jwt.secret, token: sessionToken, maxAge: sessionMaxAge })
           session = token
           if (session && session.user && session.user.id) {
             user = await getUser(session.user.id)
@@ -76,7 +79,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
             // Delete existing session if they are currently signed in as another user.
             // This will switch user accounts for the session in cases where the user was
             // already logged in with a different account.
-            if (!jwt.enabled) {
+            if (!useJwtSession) {
               await deleteSession(sessionToken)
             }
 
@@ -94,7 +97,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
       }
 
       // Create new session
-      session = jwt.enabled ? {} : await createSession(user)
+      session = useJwtSession ? {} : await createSession(user)
 
       return {
         session,
@@ -125,7 +128,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
         } else {
           // If there is no active session, but the account being signed in with is already
           // associated with a valid user then create session to sign the user in.
-          session = jwt.enabled ? {} : await createSession(userByProviderAccountId)
+          session = useJwtSession ? {} : await createSession(userByProviderAccountId)
           return {
             session,
             user: userByProviderAccountId,
@@ -206,7 +209,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
             providerAccount.accessTokenExpires
           )
 
-          session = jwt.enabled ? {} : await createSession(user)
+          session = useJwtSession ? {} : await createSession(user)
           isNewUser = true
           return {
             session,
