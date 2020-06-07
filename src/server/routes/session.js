@@ -3,7 +3,6 @@ import cookie from '../lib/cookie'
 
 export default async (req, res, options, done) => {
   const { cookies, adapter, jwt } = options
-  const { getUser, getSession, updateSession } = await adapter.getAdapter(options)
   const useJwtSession = options.session.jwt
   const sessionMaxAge = options.session.maxAge
   const getSessionResponse = options.session.get
@@ -52,6 +51,7 @@ export default async (req, res, options, done) => {
     }
   } else {
     try {
+      const { getUser, getSession, updateSession } = await adapter.getAdapter(options)
       const session = await getSession(sessionToken)
       if (session) {
         // Trigger update to session object to update session expiry

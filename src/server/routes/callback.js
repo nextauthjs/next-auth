@@ -19,7 +19,6 @@ export default async (req, res, options, done) => {
   } = options
   const provider = providers[providerName]
   const { type } = provider
-  const { getVerificationRequest, deleteVerificationRequest } = await adapter.getAdapter(options)
   const useJwtSession = options.session.jwt
   const sessionMaxAge = options.session.maxAge
 
@@ -97,6 +96,14 @@ export default async (req, res, options, done) => {
     })
   } else if (type === 'email') {
     try {
+      if (!adapter) {
+        console.error('EMAIL_REQUIRES_ADAPTER_ERROR')
+        res.status(302).setHeader('Location', `${baseUrl}/error?error=Configuration`)
+        res.end()
+        return done()  
+      }
+
+      const { getVerificationRequest, deleteVerificationRequest } = await adapter.getAdapter(options)
       const token = req.query.token
       const email = req.query.email ? req.query.email.toLowerCase() : null
 

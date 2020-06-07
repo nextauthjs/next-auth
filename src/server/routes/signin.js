@@ -3,7 +3,13 @@ import OAuthSignin from '../lib/signin/oauth'
 import emailSignin from '../lib/signin/email'
 
 export default async (req, res, options, done) => {
-  const { provider: providerName, providers, baseUrl, csrfTokenVerified } = options
+  const {
+    provider: providerName,
+    providers,
+    baseUrl,
+    csrfTokenVerified,
+    adapter
+  } = options
   const provider = providers[providerName]
   const { type } = provider
 
@@ -26,6 +32,14 @@ export default async (req, res, options, done) => {
       return done()
     })
   } else if (type === 'email' && req.method === 'POST') {
+
+    if (!adapter) {
+      console.error('EMAIL_REQUIRES_ADAPTER_ERROR')
+      res.status(302).setHeader('Location', `${baseUrl}/error?error=Configuration`)
+      res.end()
+      return done()
+    }
+
     // This works like oAuth signin but instead of returning a secure link
     // to the browser, it sends it via email to verify the user and then
     // redirects the browser to a page telling the user to follow the link

@@ -18,6 +18,19 @@ export default async (sessionToken, profile, providerAccount, options) => {
 
     const { adapter, jwt } = options
 
+    const useJwtSession = options.session.jwt
+    const sessionMaxAge = options.session.maxAge
+
+    // If no adapter is configured then we don't have a database and cannot
+    // persist data; in this mode we just return a dummy session object.
+    if (!adapter) {
+      return {
+        user: profile,
+        account: providerAccount,
+        session: {},
+      }
+    }
+
     const {
       createUser,
       getUser,
@@ -30,9 +43,6 @@ export default async (sessionToken, profile, providerAccount, options) => {
       deleteSession
     } = await adapter.getAdapter(options)
 
-    const useJwtSession = options.session.jwt
-    const sessionMaxAge = options.session.maxAge
-
     let session = null
     let user = null
     let isSignedIn = null
@@ -41,9 +51,8 @@ export default async (sessionToken, profile, providerAccount, options) => {
     if (sessionToken) {
       if (useJwtSession) {
         try {
-          const token = await jwt.decode({ secret: jwt.secret, token: sessionToken, maxAge: sessionMaxAge })
-          session = token
-          if (session && session.user && session.user.id) {
+          session = await jwt.decode({ secret: jwt.secret, token: sessionToken, maxAge: sessionMaxAge })
+          if (session && token.user) {
             user = await getUser(session.user.id)
             isSignedIn = !!user
           }

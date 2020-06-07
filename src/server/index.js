@@ -51,13 +51,6 @@ export default async (req, res, userSuppliedOptions) => {
     } else if (userSuppliedOptions.database) {
       // If database URI or config object is provided, use it (simple usage)
       adapter = adapters.Default(userSuppliedOptions.database)
-    } else {
-      // @TODO Add link to documentation
-      console.error('Error:\n',
-        'NextAuth requires a \'database\' or \'adapter\' option to be specified.\n',
-        'See documentation for details https://next-auth.js.org')
-      pages.render(req, res, 'error', { site, error: 'Configuration', baseUrl }, done)
-      return done()
     }
 
     // Secret used salt cookies and tokens (e.g. for CSRF protection).
@@ -119,7 +112,7 @@ export default async (req, res, userSuppliedOptions) => {
       ...userSuppliedOptions.cookies
     }
 
-    // Options for database sessions
+    // Session options
     const sessionOptions = {
       jwt: false,
       maxAge: 30 * 24 * 60 * 60, // Sessions expire after 30 days of being idle
@@ -128,7 +121,7 @@ export default async (req, res, userSuppliedOptions) => {
       ...userSuppliedOptions.session
     }
 
-    // JWT optons
+    // JWT options
     const jwtOptions = {
       secret,
       key: secret,
@@ -136,6 +129,11 @@ export default async (req, res, userSuppliedOptions) => {
       encode: jwt.encode,
       decode: jwt.decode,
       ...userSuppliedOptions.jwt
+    }
+
+    // If no adapter specified, force use of JSON Web Tokens (stateless)
+    if (!adapter) {
+      sessionOptions.jwt = true
     }
 
     // Ensure CSRF Token cookie is set for any subsequent requests.
