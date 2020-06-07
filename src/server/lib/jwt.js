@@ -17,14 +17,13 @@ const sign = async ({ secret, token, maxAge }) => {
   // If maxAge is specified, strip existing exp value from token if set, as only
   // one of them should be specified on a JWT
   if (maxAge && token.exp) { delete token.exp }
-
   const signedToken = jwt.sign(token, secret, { expiresIn: maxAge })
   return signedToken
 }
 
 const verify = async ({ secret, token, maxAge }) => {
   const verifiedToken = jwt.verify(token, secret, { maxAge })
-  return Promise.resolve(verifiedToken)
+  return verifiedToken
 }
 
 const encrypt = async ({ key, token }) => {
