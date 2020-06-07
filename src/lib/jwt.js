@@ -2,9 +2,11 @@ import jwt from 'jsonwebtoken'
 import CryptoJS from 'crypto-js'
 
 const encode = async ({ secret, key = secret, token = {}, maxAge }) => {
-  // Strip `exp` property before signing if the token has one, expiresIn will
-  // add it (and you cannot specify it in both places or will error).
-  if (maxAge && token.exp) { delete token.exp }
+  // If maxAge is set remove any existing created/expiry dates and replace them
+  if (maxAge) {
+    if (token.iat) { delete token.iat }
+    if (token.exp) { delete token.exp }
+  }
   const signedToken = jwt.sign(token, secret, { expiresIn: maxAge })
   const encryptedToken = CryptoJS.AES.encrypt(signedToken, key).toString()
   return encryptedToken
