@@ -1,7 +1,7 @@
 // fetch() is built in to Next.js 9.4 (you can use a polyfill if using an older version)
 /* global fetch:false */
 import { useState, useEffect, useContext, createContext, createElement } from 'react'
-import '../lib/consoleErr'
+import nextAuthError from '../lib/consoleErr'
 
 // Note: In calls to fetch() from universal methods, all cookies are passed
 // through from the browser, when the server makes the HTTP request, so that
@@ -59,7 +59,7 @@ const useSessionData = (session) => {
       setData(await getSession())
       setLoading(false)
     } catch (error) {
-      console.error('CLIENT_USE_SESSION_ERROR', error)
+      nextAuthError('CLIENT_USE_SESSION_ERROR', error)
     }
   }
   useEffect(() => { _getSession() }, [])
@@ -131,7 +131,7 @@ const _fetchData = async (url, options) => {
     const data = await res.json()
     return Object.keys(data).length > 0 ? data : null // Return null if data empty
   } catch (error) {
-    console.error('CLIENT_FETCH_ERROR', url, error)
+    nextAuthError('CLIENT_FETCH_ERROR', url, error)
     return null
   }
 }
@@ -170,7 +170,7 @@ const _parseCookies = (string) => {
     }
     return object
   } catch (error) {
-    console.error('CLIENT_COOKIE_PARSE_ERROR', error)
+    nextAuthError('CLIENT_COOKIE_PARSE_ERROR', error)
     return {}
   }
 }

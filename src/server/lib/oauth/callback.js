@@ -1,6 +1,7 @@
 import oAuthClient from './client'
 import querystring from 'querystring'
 import jwtDecode from 'jwt-decode'
+import nextAuthError from '../../../lib/consoleErr'
 
 // @TODO Refactor monkey patching in _getOAuthAccessToken() and _get()
 // These methods have been forked from `node-oauth` to fix bugs; it may make
@@ -35,7 +36,7 @@ export default async (req, provider, callback) => {
       (error, accessToken, refreshToken, results) => {
         // @TODO Handle error
         if (error || results.error) {
-          console.error('GET_OAUTH2_ACCESS_TOKEN_ERROR', error, results, provider.id, code)
+          nextAuthError('GET_OAUTH2_ACCESS_TOKEN_ERROR', error, results, provider.id, code)
         }
 
         if (provider.id === 'apple') {
@@ -70,7 +71,7 @@ export default async (req, provider, callback) => {
       (error, accessToken, refreshToken, results) => {
         // @TODO Handle error
         if (error || results.error) {
-          console.error('GET_OAUTH_ACCESS_TOKEN_ERROR', error, results)
+          nextAuthError('GET_OAUTH_ACCESS_TOKEN_ERROR', error, results)
         }
 
         client.get(
@@ -87,7 +88,7 @@ export default async (req, provider, callback) => {
 async function _getProfile (error, profileData, accessToken, refreshToken, provider) {
   // @TODO Handle error
   if (error) {
-    console.error('GET_OAUTH_PROFILE_ERROR', error)
+    nextAuthError('GET_OAUTH_PROFILE_ERROR', error)
   }
 
   let profile = {}
@@ -98,7 +99,7 @@ async function _getProfile (error, profileData, accessToken, refreshToken, provi
     profile = await provider.profile(profileData)
   } catch (exception) {
     // @TODO Handle parsing error
-    console.error('PARSE_OAUTH_PROFILE_ERROR', exception)
+    nextAuthError('PARSE_OAUTH_PROFILE_ERROR', exception)
     throw new Error('Failed to get OAuth profile')
   }
 
@@ -165,7 +166,7 @@ async function _getOAuthAccessToken (code, provider, callback) {
     null,
     (error, data, response) => {
       if (error) {
-        console.error('_GET_OAUTH_ACCESS_TOKEN_ERROR', error, data, response)
+        nextAuthError('_GET_OAUTH_ACCESS_TOKEN_ERROR', error, data, response)
         return callback(error)
       }
 

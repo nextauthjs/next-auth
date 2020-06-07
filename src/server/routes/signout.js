@@ -1,5 +1,6 @@
 // Handle requests to /api/auth/signout
 import cookie from '../lib/cookie'
+import nextAuthError from '../../lib/consoleErr'
 
 export default async (req, res, options, done) => {
   const {
@@ -34,7 +35,7 @@ export default async (req, res, options, done) => {
       await deleteSession(sessionToken)
     } catch (error) {
       // Log error and continue
-      console.error('SIGNOUT_ERROR', error)
+      nextAuthError('SIGNOUT_ERROR', error)
     }
   }
 

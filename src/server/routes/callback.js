@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken'
 import OAuthCallback from '../lib/oauth/callback'
 import callbackHandler from '../lib/callback-handler'
 import cookie from '../lib/cookie'
+import nextAuthError from '../../lib/consoleErr'
 
 // @TODO Refactor OAuthCallback to return promise instead of using a callback and reduce duplicate code
 export default async (req, res, options, done) => {
@@ -30,7 +31,7 @@ export default async (req, res, options, done) => {
   if (type === 'oauth') {
     OAuthCallback(req, provider, async (error, oauthAccount) => {
       if (error) {
-        console.error('OAUTH_CALLBACK_ERROR', error)
+        nextAuthError('OAUTH_CALLBACK_ERROR', error)
         res.status(302).setHeader('Location', `${baseUrl}/error?error=OAuthCallback`)
         res.end()
         return done()
@@ -80,7 +81,7 @@ export default async (req, res, options, done) => {
           // If is missing email address (NB: the only field on a profile currently required)
           res.status(302).setHeader('Location', `${baseUrl}/error?error=EmailRequired`)
         } else {
-          console.error('OAUTH_CALLBACK_HANDLER_ERROR', error)
+          nextAuthError('OAUTH_CALLBACK_HANDLER_ERROR', error)
           res.status(302).setHeader('Location', `${baseUrl}/error?error=Callback`)
         }
         res.end()
@@ -120,7 +121,7 @@ export default async (req, res, options, done) => {
       const { session, isNewUser } = await callbackHandler(sessionToken, { email }, dummyProviderAccount, options)
 
       if (useJwt) {
-      // Store session in JWT cookie
+        // Store session in JWT cookie
         const token = jwt.sign(
           {
             nextauth: {
@@ -163,7 +164,7 @@ export default async (req, res, options, done) => {
         res.status(302).setHeader('Location', `${baseUrl}/error?error=EmailCreateAccount`)
       } else {
         res.status(302).setHeader('Location', `${baseUrl}/error?error=Callback`)
-        console.error('EMAIL_CALLBACK_ERROR', error)
+        nextAuthError('EMAIL_CALLBACK_ERROR', error)
       }
       res.end()
       return done()

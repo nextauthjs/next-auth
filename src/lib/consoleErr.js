@@ -1,10 +1,9 @@
-export default (function () {
+const nextAuthError = (errCode, ...text) => {
   if (console) {
-    const cx = console.error
-    console.error = (errCode, text) => {
-      !text
-        ? cx(errCode)
-        : cx(`${text}\nDocs: https://next-auth-docs-git-test-error-urls.iaincollins.now.sh/errors#${errCode.toLowerCase()}`)
-    }
+    !text
+      ? console.error(errCode)
+      : console.error(`${text} \nDocs: https://next-auth-docs-git-test-error-urls.iaincollins.now.sh/errors#${errCode.toLowerCase()}`)
   }
-})()
+}
+
+export default nextAuthError

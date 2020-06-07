@@ -9,7 +9,7 @@ import callback from './routes/callback'
 import session from './routes/session'
 import pages from './pages'
 import adapters from '../adapters'
-import '../lib/consoleErr'
+import nextAuthError from '../lib/consoleErr'
 
 const DEFAULT_SITE = ''
 const DEFAULT_BASE_PATH = '/api/auth'
@@ -53,9 +53,8 @@ export default async (req, res, userSuppliedOptions) => {
       adapter = adapters.Default(userSuppliedOptions.database)
     } else {
       // @TODO Add link to documentation
-      console.error('DB_OR_ADAPTER_REQUIRED',
-        'NextAuth requires a \'database\' or \'adapter\' option to be specified.\n',
-        'See documentation for details https://next-auth.js.org')
+      nextAuthError('DB_OR_ADAPTER_REQUIRED',
+        'NextAuth requires a \'database\' or \'adapter\' option to be specified.\n')
       pages.render(req, res, 'error', { site, error: 'Configuration', baseUrl }, done)
       return done()
     }
