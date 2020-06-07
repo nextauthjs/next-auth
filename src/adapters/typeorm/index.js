@@ -42,11 +42,11 @@ const Adapter = (config, options = {}) => {
   }
 
   // Load models / schemas (check for custom models / schemas first)
-  const Account = options.Account ? options.Account.model : Models.Account.model
-  const AccountSchema = options.Account ? options.Account.schema : Models.Account.schema
-
   const User = options.User ? options.User.model : Models.User.model
   const UserSchema = options.User ? options.User.schema : Models.User.schema
+
+  const Account = options.Account ? options.Account.model : Models.Account.model
+  const AccountSchema = options.Account ? options.Account.schema : Models.Account.schema
 
   const Session = options.Session ? options.Session.model : Models.Session.model
   const SessionSchema = options.Session ? options.Session.schema : Models.Session.schema
@@ -78,9 +78,9 @@ const Adapter = (config, options = {}) => {
     //
     // @TODO Look at refactoring to see if there is a better way to do this that
     // doesn't rely on hard coding this transformation on a per property basis
+    UserSchema.columns.id.objectId = true
     AccountSchema.columns.id.objectId = true
     AccountSchema.columns.userId.type = 'objectId'
-    UserSchema.columns.id.objectId = true
     SessionSchema.columns.id.objectId = true
     SessionSchema.columns.userId.type = 'objectId'
     VerificationRequestSchema.columns.id.objectId = true
@@ -92,9 +92,13 @@ const Adapter = (config, options = {}) => {
   // @TODO Refactor to apply automatically to all `timestamp` properties if the
   // database is MySQL.
   if (config.type === 'sqlite') {
+    UserSchema.columns.created.type = 'datetime'
     AccountSchema.columns.accessTokenExpires.type = 'datetime'
+    AccountSchema.columns.created.type = 'datetime'
     SessionSchema.columns.expires.type = 'datetime'
+    SessionSchema.columns.created.type = 'datetime'
     VerificationRequestSchema.columns.expires.type = 'datetime'
+    VerificationRequestSchema.columns.created.type = 'datetime'
   }
 
   // Parse config (uses options)
@@ -102,8 +106,8 @@ const Adapter = (config, options = {}) => {
     name: 'default',
     autoLoadEntities: true,
     entities: [
-      new EntitySchema(AccountSchema),
       new EntitySchema(UserSchema),
+      new EntitySchema(AccountSchema),
       new EntitySchema(SessionSchema),
       new EntitySchema(VerificationRequestSchema)
     ],

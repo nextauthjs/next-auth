@@ -6,6 +6,9 @@ export class Session {
     this.expires = expires
     this.sessionToken = sessionToken || randomBytes(32).toString('hex')
     this.accessToken = accessToken || randomBytes(32).toString('hex')
+
+    const dateCreated = new Date()
+    this.created = dateCreated.toISOString()
   }
 }
 
@@ -31,6 +34,9 @@ export const SessionSchema = {
     accessToken: {
       type: 'varchar',
       unique: true
+    },
+    created: {
+      type: 'timestamp'
     }
   }
 }
