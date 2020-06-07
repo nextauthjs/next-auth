@@ -131,8 +131,10 @@ export default async (req, res, userSuppliedOptions) => {
     // JWT optons
     const jwtOptions = {
       secret,
+      key: secret,
       set: async (token) => token,
-      ...jwt,
+      encode: jwt.encode,
+      decode: jwt.decode,
       ...userSuppliedOptions.jwt
     }
 
