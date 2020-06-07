@@ -1,9 +1,9 @@
 // Handle callbacks from login services
-import OAuthCallback from '../lib/oauth/callback'
+import oAuthCallback from '../lib/oauth/callback'
 import callbackHandler from '../lib/callback-handler'
 import cookie from '../lib/cookie'
 
-// @TODO Refactor OAuthCallback to return promise instead of using a callback and reduce duplicate code
+// @TODO Refactor oAuthCallback to return promise instead of using a callback and reduce duplicate code
 export default async (req, res, options, done) => {
   const {
     provider: providerName,
@@ -15,7 +15,8 @@ export default async (req, res, options, done) => {
     cookies,
     callbackUrl,
     pages,
-    jwt
+    jwt,
+    allowSignin
   } = options
   const provider = providers[providerName]
   const { type } = provider
@@ -26,15 +27,22 @@ export default async (req, res, options, done) => {
   const sessionToken = req.cookies[cookies.sessionToken.name]
 
   if (type === 'oauth') {
-    OAuthCallback(req, provider, async (error, oauthAccount) => {
+    oAuthCallback(req, provider, async (error, oauthAccount) => {
       if (error) {
         console.error('OAUTH_CALLBACK_ERROR', error)
-        res.status(302).setHeader('Location', `${baseUrl}/error?error=OAuthCallback`)
+        res.status(302).setHeader('Location', `${baseUrl}/error?error=oAuthCallback`)
         res.end()
         return done()
       }
 
       const { profile, account } = await oauthAccount
+
+      // Check allowSignin() allows this account to sign in
+      if (!await allowSignin(profile, account)) {
+        res.status(302).setHeader('Location', `${baseUrl}/error?error=AccessDenied`)
+        res.end()
+        return done()
+      }
 
       try {
         const { user, session, isNewUser } = await callbackHandler(sessionToken, profile, account, options)
@@ -100,12 +108,23 @@ export default async (req, res, options, done) => {
         console.error('EMAIL_REQUIRES_ADAPTER_ERROR')
         res.status(302).setHeader('Location', `${baseUrl}/error?error=Configuration`)
         res.end()
-        return done()  
+        return done()
       }
 
       const { getVerificationRequest, deleteVerificationRequest } = await adapter.getAdapter(options)
       const token = req.query.token
       const email = req.query.email ? req.query.email.toLowerCase() : null
+
+      // Create the an `account` object with `id` and `type` properties as they
+      // are expected by the `callbackHandler` function and in the JWT.
+      const emailProviderAccount = { id: provider.id, type: 'email' }
+
+      // Check allowSignin() allows this account to sign in
+      if (!await allowSignin({ email }, emailProviderAccount)) {
+        res.status(302).setHeader('Location', `${baseUrl}/error?error=AccessDenied`)
+        res.end()
+        return done()
+      }
 
       // Verify email and token match email verification record in database
       const invite = await getVerificationRequest(email, token, secret, provider)
@@ -117,10 +136,6 @@ export default async (req, res, options, done) => {
 
       // If token is valid, delete email verification record in database
       await deleteVerificationRequest(email, token, secret, provider)
-
-      // Create the an `account` object with `id` and `type` properties as they
-      // are expected by the `callbackHandler` function and in the JWT.
-      const emailProviderAccount = { id: provider.id, type: 'email' }
 
       // Invoke callbackHandler to go through sign up flow
       //

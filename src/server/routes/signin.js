@@ -1,5 +1,5 @@
 // Handle requests to /api/auth/signin
-import OAuthSignin from '../lib/signin/oauth'
+import oAuthSignin from '../lib/signin/oauth'
 import emailSignin from '../lib/signin/email'
 
 export default async (req, res, options, done) => {
@@ -8,7 +8,8 @@ export default async (req, res, options, done) => {
     providers,
     baseUrl,
     csrfTokenVerified,
-    adapter
+    adapter,
+    allowSignin
   } = options
   const provider = providers[providerName]
   const { type } = provider
@@ -19,10 +20,10 @@ export default async (req, res, options, done) => {
   }
 
   if (type === 'oauth') {
-    OAuthSignin(provider, (error, oAuthSigninUrl) => {
+    oAuthSignin(provider, (error, oAuthSigninUrl) => {
       if (error) {
         console.error('OAUTH_SIGNIN_ERROR', error)
-        res.status(302).setHeader('Location', `${baseUrl}/error?error=OAuthSignin`)
+        res.status(302).setHeader('Location', `${baseUrl}/error?error=oAuthSignin`)
         res.end()
         return done()
       }
@@ -32,7 +33,6 @@ export default async (req, res, options, done) => {
       return done()
     })
   } else if (type === 'email' && req.method === 'POST') {
-
     if (!adapter) {
       console.error('EMAIL_REQUIRES_ADAPTER_ERROR')
       res.status(302).setHeader('Location', `${baseUrl}/error?error=Configuration`)
@@ -49,6 +49,13 @@ export default async (req, res, options, done) => {
     // it will be verified and, if valid, the user will be logged in; a new
     // account is created for them if they don't have one already.
     const email = req.body.email ? req.body.email.toLowerCase() : null
+
+    // Check allowSignin() allows this account to sign in
+    if (!await allowSignin({ email }, { id: provider.id, type: 'email' })) {
+      res.status(302).setHeader('Location', `${baseUrl}/error?error=AccessDenied`)
+      res.end()
+      return done()
+    }
 
     // If CSRF token not verified, send the user to sign in page, which will
     // display a new form with a valid token so that submitting it should work.

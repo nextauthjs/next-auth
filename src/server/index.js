@@ -193,6 +193,7 @@ export default async (req, res, userSuppliedOptions) => {
       // Defaults options can be overidden
       debug: false, // Enable debug messages to be displayed
       pages: {}, // Custom pages (e.g. sign in, sign out, errors)
+      allowSignin: async (user, account) => true, // Return true if user / account is allowed to sign in (false if not)
       // Custom options override defaults
       ...userSuppliedOptions,
       // These computed settings can values in userSuppliedOptions but override them

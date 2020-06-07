@@ -27,7 +27,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
       return {
         user: profile,
         account: providerAccount,
-        session: {},
+        session: {}
       }
     }
 
@@ -52,7 +52,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
       if (useJwtSession) {
         try {
           session = await jwt.decode({ secret: jwt.secret, token: sessionToken, maxAge: sessionMaxAge })
-          if (session && token.user) {
+          if (session && session.user) {
             user = await getUser(session.user.id)
             isSignedIn = !!user
           }
