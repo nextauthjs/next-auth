@@ -32,14 +32,14 @@ This is required because the NextAuth.js API route is a seperate codepath to the
 
 ---
 
-### callbackUrlHandler
+### allowCallbackUrl
 
 * **Default value**: `function`
 * **Required**: *No*
 
 #### Description
 
-To ensure site security, byt default `callbackUrlHandler` only allows callbackUrls for signup and signout to be at the same site as the one being signed into.
+By default `allowCallbackUrl` only allows callbackUrls for signup and signout to be at the same site as the one being signed into.
 
 e.g. if the sign in URL was `https://example.com/api/auth/signin`:
 
@@ -51,7 +51,7 @@ e.g. if the sign in URL was `https://example.com/api/auth/signin`:
 If the URL is not allowed, the callback URL will be set to whatever the `site` option is (e.g.`https://example.com/`)
 
 ```js
-const callbackUrlHandler = async (url, options) => {
+const allowCallbackUrl = async (url, options) => {
   if (url.startsWith(options.site)) {
     return Promise.resolve(url)
   } else {
@@ -60,7 +60,7 @@ const callbackUrlHandler = async (url, options) => {
 }
 ```
 
-If you want to support signing in to sites across other domains, you can pass your own function to `callbackUrlHandler` to customise this behaviour.
+If you want to support signing in to sites across other domains, you can pass your own function to `allowCallbackUrl` to customise this behaviour.
 
 ---
 
