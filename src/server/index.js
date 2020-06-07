@@ -119,10 +119,18 @@ export default async (req, res, userSuppliedOptions) => {
       ...userSuppliedOptions.cookies
     }
 
+    // Options for database sessions - if JWT is enabled these are not used
+    const sessionOptions = {
+      maxAge: 30 * 24 * 60 * 60, // Sessions expire after 30 days of being idle
+      updateAge: 24 * 60 * 60, // Sessions updated only if session is greater than this value (0 = always, 24*60*60*1000 = every 24 hours)
+      ...userSuppliedOptions.session
+    }
+
+    // JWT optons - if JWT enabled these are used instead of session options
     const jwtOptions = {
       enabled: false,
       secret,
-      maxAge: 30 * 24 * 60 * 60 * 1000, // Time in ms
+      maxAge: 30 * 24 * 60 * 60,
       ...jwt,
       ...userSuppliedOptions.jwt
     }
@@ -182,9 +190,8 @@ export default async (req, res, userSuppliedOptions) => {
     // except for the options with special handling above
     const options = {
       // Defaults options can be overidden
-      jwt: jwtOptions, // Use JSON Web Token (JWT) for session, instead of database
-      sessionMaxAge: 30 * 24 * 60 * 60 * 1000, // Sessions expire after 30 days of being idle
-      sessionUpdateAge: 24 * 60 * 60 * 1000, // Sessions updated only if session is greater than this value (0 = always, 24*60*60*1000 = every 24 hours)
+      jwt: jwtOptions,
+      session: sessionOptions,
       verificationMaxAge: 24 * 60 * 60 * 1000, // Email/passwordless links expire after 24 hours
       debug: false, // Enable debug messages to be displayed
       pages: {}, // Custom pages (e.g. sign in, sign out, errors)

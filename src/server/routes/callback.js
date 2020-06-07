@@ -15,7 +15,6 @@ export default async (req, res, options, done) => {
     cookies,
     callbackUrl,
     pages,
-    sessionMaxAge,
     jwt
   } = options
   const provider = providers[providerName]
@@ -51,7 +50,7 @@ export default async (req, res, options, done) => {
 
           // Set cookie expiry date
           const cookieExpires = new Date()
-          cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge)
+          cookieExpires.setTime(cookieExpires.getTime() + (jwt.maxAge * 1000))
 
           cookie.set(res, cookies.sessionToken.name, token, { expires: cookieExpires.toISOString(), ...cookies.sessionToken.options })
         } else {
@@ -132,7 +131,7 @@ export default async (req, res, options, done) => {
 
         // Set cookie expiry date
         const cookieExpires = new Date()
-        cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge)
+        cookieExpires.setTime(cookieExpires.getTime() + (jwt.maxAge * 1000))
 
         cookie.set(res, cookies.sessionToken.name, token, { expires: cookieExpires.toISOString(), ...cookies.sessionToken.options })
       } else {

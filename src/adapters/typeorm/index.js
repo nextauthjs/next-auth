@@ -164,6 +164,9 @@ const Adapter = (config, options = {}) => {
       ObjectId = mongodb.ObjectId
     }
 
+    const sessionMaxAge = appOptions.session.maxAge * 1000
+    const sessionUpdateAge = appOptions.session.updateAge * 1000
+
     async function createUser (profile) {
       _debug('createUser', profile)
       try {
@@ -260,9 +263,8 @@ const Adapter = (config, options = {}) => {
     async function createSession (user) {
       _debug('createSession', user)
       try {
-        const { sessionMaxAge } = appOptions
         let expires = null
-        if (sessionMaxAge) {
+        if (sessionMaxAge > 0) {
           const dateExpires = new Date()
           dateExpires.setTime(dateExpires.getTime() + sessionMaxAge)
           expires = dateExpires.toISOString()
@@ -298,8 +300,6 @@ const Adapter = (config, options = {}) => {
     async function updateSession (session, force) {
       _debug('updateSession', session)
       try {
-        const { sessionMaxAge, sessionUpdateAge } = appOptions
-
         if (sessionMaxAge && (sessionUpdateAge || sessionUpdateAge === 0) && session.sessionExpires) {
           // Calculate last updated date, to throttle write updates to database
           // Formula: ({expiry date} - sessionMaxAge) + sessionUpdateAge
