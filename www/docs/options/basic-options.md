@@ -75,41 +75,44 @@ The default behaviour is secure, but volatile, and it is strongly recommended yo
 
 If set to `true` will use client side JSON Web Token instead of the `session` table in the database.
 
-The JWT is signed with `HMAC SHA256` and includes the user profile, the provider account they signed in with and the session expiry (which is also set on the cookie and on the JWT expiry property).
+The JWT is signed with `HMAC SHA256` and encrypted with symmetric `AES`.
 
-From a NextAuth.js perspective it works just like a database based session, but is faster and cheaper to run!
+The JWT includes the user profile and the provider account they signed in with.
 
 This option works great combined with serverless and a cloud database for persisting users accounts.
 
-```
+```js
 {
-  nextauth: {
-    user: {
-      name: 'Iain Collins',
-      email: 'me@iaincollins.com',
-      image: 'https://example.com/image.jpg',
-      id: 1
-    },
-    sessionExpires: '2020-07-03T02:18:55.574Z',
-    accessToken: '540c2f7669e4e72a1b0a167cc81d34a488f9cf2018fd9f7e5fc0639fa0ee3241',
-    account: {
-      provider: 'google',
-      type: 'oauth',
-      id: 3218529,
-      refreshToken: 'cc0d32d79145091cd6cd8979f0a6d6b67d490899',
-      accessToken: '931400799b4a980715bb55af1bb8e01d92316956',
-      accessTokenExpires: null
-    },
-    isNewUser: true
+  // Note: If users are not persisted in a database, the User ID value does not
+  // have any signifiance (and will not be unique) and should be ignored.
+  user: {
+    name: 'Iain Collins',
+    email: 'me@iaincollins.com',
+    image: 'https://example.com/image.jpg',
+    id: 1
   },
-  iat: 1591150735,
-  exp: 4183150735
+  // The account object stores details for the authentication provider account 
+  // that was used to sign in. It only contains exactly one account, even the 
+  // user is linked to multiple provider accounts in a database.
+  account: {
+    provider: 'google',
+    type: 'oauth',
+    id: 3218529,
+    refreshToken: 'cc0d32d79145091cd6cd8979f0a6d6b67d490899',
+    accessToken: '931400799b4a980715bb55af1bb8e01d92316956',
+    accessTokenExpires: null
+  },
+  // isNewUser is set only on first sign in
+  isNewUser: true,
+  // JSON Web Token values 
+  iat: 1591150735, // Issued at
+  exp: 4183150735  // Expires in
 }
 ```
 
-:::tip
-Enable the debug option with **debug: true** to view contents of the decoded JWT on the console.
-:::
+From a NextAuth.js perspective, usign JWT instead of a session database works the same, but using JWT is usually easier to scale and to maintain, and faster and cheaper to run, because it doesn't rely on tracking every active session in a database.
+
+A trade off is that only limited information can be stored in a JWT when stored securely as a cookie, due to browser limitations and network overhead.
 
 :::note
 The JWT is stored in the Session Token cookie – the same cookie used for database sessions.

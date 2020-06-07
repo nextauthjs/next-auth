@@ -8,8 +8,7 @@
 // All verification (e.g. oAuth flows or email address verificaiton flows) are
 // done prior to this handler being called to avoid additonal complexity in this
 // handler.
-import { randomBytes } from 'crypto'
-import jwt from 'jsonwebtoken'
+import jwt from './jwt'
 import { AccountNotLinkedError, InvalidProfile } from '../../lib/errors'
 
 export default async (sessionToken, profile, providerAccount, options) => {
@@ -40,8 +39,8 @@ export default async (sessionToken, profile, providerAccount, options) => {
     if (sessionToken) {
       if (useJwt) {
         try {
-          const token = jwt.verify(sessionToken, jwtSecret, { maxAge: sessionMaxAge })
-          session = token.nextauth || null
+          const token = await jwt.decode({ secret: jwtSecret, token: sessionToken, jwtSecret, maxAge: sessionMaxAge / 1000 })
+          session = token
           if (session && session.user && session.user.id) {
             user = await getUser(session.user.id)
             isSignedIn = !!user
@@ -96,7 +95,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
       }
 
       // Create new session
-      session = useJwt ? await createJwtSession(user, sessionMaxAge) : await createSession(user)
+      session = useJwt ? {} : await createSession(user)
 
       return {
         session,
@@ -127,7 +126,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
         } else {
           // If there is no active session, but the account being signed in with is already
           // associated with a valid user then create session to sign the user in.
-          session = useJwt ? await createJwtSession(userByProviderAccountId, sessionMaxAge) : await createSession(userByProviderAccountId)
+          session = useJwt ? {} : await createSession(userByProviderAccountId)
           return {
             session,
             user: userByProviderAccountId,
@@ -208,7 +207,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
             providerAccount.accessTokenExpires
           )
 
-          session = useJwt ? await createJwtSession(user, sessionMaxAge) : await createSession(user)
+          session = useJwt ? {} : await createSession(user)
           isNewUser = true
           return {
             session,
@@ -223,15 +222,4 @@ export default async (sessionToken, profile, providerAccount, options) => {
   } catch (error) {
     return Promise.reject(error)
   }
-}
-
-const createJwtSession = async (user, sessionMaxAge) => {
-  const expiryDate = new Date()
-  expiryDate.setTime(expiryDate.getTime() + sessionMaxAge)
-  const sessionExpires = expiryDate.toISOString()
-  return Promise.resolve({
-    user,
-    sessionExpires,
-    accessToken: randomBytes(32).toString('hex')
-  })
 }

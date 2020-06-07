@@ -1,5 +1,5 @@
 // Return a session object (without any private fields) for Single Page App clients
-import jwt from 'jsonwebtoken'
+import jwt from '../lib/jwt'
 import cookie from '../lib/cookie'
 
 export default async (req, res, options, done) => {
@@ -16,22 +16,19 @@ export default async (req, res, options, done) => {
   let response = {}
   if (useJwt) {
     try {
-      const token = jwt.verify(sessionToken, jwtSecret, { maxAge: sessionMaxAge })
+      // Decrypt and verify token
+      const token = await jwt.decode({ secret: jwtSecret, token: sessionToken, maxAge: sessionMaxAge / 1000 })
+      
+      // Refresh JWT expiry by re-signing it, with updated expiry date
+      const newToken = await jwt.encode({ secret: jwtSecret, token, maxAge: sessionMaxAge / 1000 })
 
-      if (debug) {
-        console.log('[NextAuth.js][DEBUG][JWT]', token)
-      }
+      // Set cookie expiry date
+      const sessionExpiresDate = new Date()
+      sessionExpiresDate.setTime(sessionExpiresDate.getTime() + sessionMaxAge)
+      const sessionExpires = sessionExpiresDate.toISOString()
 
-      // Update Session Expiry inside token (human readable, exposed to UI)
-      const newExpiryDate = new Date()
-      newExpiryDate.setTime(newExpiryDate.getTime() + sessionMaxAge)
-      token.nextauth.sessionExpires = newExpiryDate.toISOString()
-
-      // Update Session Expiry in JWT…
-      token.exp = sessionMaxAge
-
-      // Create new signed JWT (to replace existing one)
-      const newToken = jwt.sign(token, jwtSecret)
+      // Set cookie, to also update expiry date on cookie
+      cookie.set(res, cookies.sessionToken.name, newToken, { expires: sessionExpires, ...cookies.sessionToken.options })
 
       // Only expose a limited subset of information to the client as needed
       // for presentation purposes (e.g. "you are logged in as…").
@@ -40,16 +37,12 @@ export default async (req, res, options, done) => {
       // middleware function to allow response to be customized.
       response = {
         user: {
-          name: token.nextauth.user.name,
-          email: token.nextauth.user.email,
-          image: token.nextauth.user.image
+          name: token.user && token.user.name ? token.user.name : null,
+          email: token.user && token.user.email ? token.user.email : null,
+          image: token.user && token.user.image ? token.user.image : null
         },
-        accessToken: token.nextauth.accessToken,
-        expires: token.nextauth.sessionExpires
+        expires: sessionExpires,
       }
-
-      // Set cookie again to also update expiry on cookie
-      cookie.set(res, cookies.sessionToken.name, newToken, { expires: token.nextauth.sessionExpires, ...cookies.sessionToken.options })
     } catch (error) {
       // If JWT not verifiable, make sure the cookie for it is removed and return empty object
       console.error('JWT_SESSION_ERROR', error)

@@ -1,5 +1,5 @@
 // Handle callbacks from login services
-import jwt from 'jsonwebtoken'
+import jwt from '../lib/jwt'
 import OAuthCallback from '../lib/oauth/callback'
 import callbackHandler from '../lib/callback-handler'
 import cookie from '../lib/cookie'
@@ -39,24 +39,23 @@ export default async (req, res, options, done) => {
       const { profile, account } = await oauthAccount
 
       try {
-        const { session, isNewUser } = await callbackHandler(sessionToken, profile, account, options)
+        const { user, session, isNewUser } = await callbackHandler(sessionToken, profile, account, options)
 
         if (useJwt) {
-          // Store session in JWT cookie
-          const token = jwt.sign(
-            {
-              nextauth: {
-                ...session,
-                account,
-                isNewUser
-              }
-            },
-            jwtSecret,
-            {
-              expiresIn: sessionMaxAge
-            }
-          )
-          cookie.set(res, cookies.sessionToken.name, token, { expires: session.sessionExpires || null, ...cookies.sessionToken.options })
+          const jwtPayload = {
+            user,
+            account,
+            isNewUser
+          }
+
+          // Sign and encrypt token
+          const token = await jwt.encode({ secret: jwtSecret, token: jwtPayload, maxAge: sessionMaxAge / 1000 })
+
+          // Set cookie expiry date
+          const cookieExpires = new Date()
+          cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge)
+
+          cookie.set(res, cookies.sessionToken.name, token, { expires: cookieExpires.toISOString(), ...cookies.sessionToken.options })
         } else {
           // Save Session Token in cookie
           cookie.set(res, cookies.sessionToken.name, session.sessionToken, { expires: session.sessionExpires || null, ...cookies.sessionToken.options })
@@ -117,24 +116,23 @@ export default async (req, res, options, done) => {
       // (Will create new account if they don't have one, or sign them into
       // an existing account if they do have one.)
       const dummyProviderAccount = { id: provider.id, type: 'email' }
-      const { session, isNewUser } = await callbackHandler(sessionToken, { email }, dummyProviderAccount, options)
+      const { user, session, isNewUser } = await callbackHandler(sessionToken, { email }, dummyProviderAccount, options)
 
       if (useJwt) {
-      // Store session in JWT cookie
-        const token = jwt.sign(
-          {
-            nextauth: {
-              ...session,
-              account: dummyProviderAccount,
-              isNewUser
-            }
-          },
-          jwtSecret,
-          {
-            expiresIn: sessionMaxAge
-          }
-        )
-        cookie.set(res, cookies.sessionToken.name, token, { expires: session.sessionExpires || null, ...cookies.sessionToken.options })
+        const jwtPayload = {
+          user,
+          account,
+          isNewUser
+        }
+
+        // Sign and encrypt token
+        const token = await jwt.encode({ secret: jwtSecret, token: jwtPayload, maxAge: sessionMaxAge / 1000 })
+
+        // Set cookie expiry date
+        const cookieExpires = new Date()
+        cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge)
+
+        cookie.set(res, cookies.sessionToken.name, token, { expires: cookieExpires.toISOString(), ...cookies.sessionToken.options })
       } else {
         // Save Session Token in cookie
         cookie.set(res, cookies.sessionToken.name, session.sessionToken, { expires: session.sessionExpires || null, ...cookies.sessionToken.options })
