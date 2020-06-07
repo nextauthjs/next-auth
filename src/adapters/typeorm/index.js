@@ -93,7 +93,7 @@ const Adapter = (config, options = {}) => {
   // database is MySQL.
   if (config.type === 'sqlite') {
     AccountSchema.columns.accessTokenExpires.type = 'datetime'
-    SessionSchema.columns.sessionExpires.type = 'datetime'
+    SessionSchema.columns.expires.type = 'datetime'
     VerificationRequestSchema.columns.expires.type = 'datetime'
   }
 
@@ -264,13 +264,16 @@ const Adapter = (config, options = {}) => {
       _debug('createSession', user)
       try {
         let expires = null
-        if (sessionMaxAge > 0) {
+        if (sessionMaxAge) {
+          console.log('sessionMaxAge', sessionMaxAge)
           const dateExpires = new Date()
           dateExpires.setTime(dateExpires.getTime() + sessionMaxAge)
           expires = dateExpires.toISOString()
         }
+        console.log('sessionMaxAge:f', sessionMaxAge, appOptions.session)
+        console.log('expires', expires)
 
-        const session = new Session(user.id, null, expires)
+        const session = new Session(user.id, expires)
 
         return getManager().save(session)
       } catch (error) {
@@ -285,7 +288,7 @@ const Adapter = (config, options = {}) => {
         const session = await connection.getRepository(Session).findOne({ sessionToken })
 
         // Check session has not expired (do not return it if it has)
-        if (session && session.sessionExpires && new Date() > new Date(session.sessionExpires)) {
+        if (session && session.expires && new Date() > new Date(session.expires)) {
           // @TODO Delete old sessions from database
           return null
         }
@@ -300,14 +303,14 @@ const Adapter = (config, options = {}) => {
     async function updateSession (session, force) {
       _debug('updateSession', session)
       try {
-        if (sessionMaxAge && (sessionUpdateAge || sessionUpdateAge === 0) && session.sessionExpires) {
+        if (sessionMaxAge && (sessionUpdateAge || sessionUpdateAge === 0) && session.expires) {
           // Calculate last updated date, to throttle write updates to database
           // Formula: ({expiry date} - sessionMaxAge) + sessionUpdateAge
           //     e.g. ({expiry date} - 30 days) + 1 hour
           //
           // Default for sessionMaxAge is 30 days.
           // Default for sessionUpdateAge is 1 hour.
-          const dateSessionIsDueToBeUpdated = new Date(session.sessionExpires)
+          const dateSessionIsDueToBeUpdated = new Date(session.expires)
           dateSessionIsDueToBeUpdated.setTime(dateSessionIsDueToBeUpdated.getTime() - sessionMaxAge)
           dateSessionIsDueToBeUpdated.setTime(dateSessionIsDueToBeUpdated.getTime() + sessionUpdateAge)
 
@@ -316,12 +319,12 @@ const Adapter = (config, options = {}) => {
           if (new Date() > dateSessionIsDueToBeUpdated) {
             const newExpiryDate = new Date()
             newExpiryDate.setTime(newExpiryDate.getTime() + sessionMaxAge)
-            session.sessionExpires = newExpiryDate.toISOString()
+            session.expires = newExpiryDate.toISOString()
           } else if (!force) {
             return null
           }
         } else {
-          // If sessionMaxAge, sessionUpdateAge or session.sessionExpires are
+          // If session MaxAge, session UpdateAge or session.expires are
           // missing then don't even try to save changes, unless force is set.
           if (!force) { return null }
         }

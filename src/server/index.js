@@ -1,5 +1,5 @@
 import { createHash, randomBytes } from 'crypto'
-import jwt from './lib/jwt'
+import jwt from '../lib/jwt'
 import cookie from './lib/cookie'
 import callbackUrlHandler from './lib/callback-url-handler'
 import parseProviders from './lib/providers'
@@ -119,18 +119,19 @@ export default async (req, res, userSuppliedOptions) => {
       ...userSuppliedOptions.cookies
     }
 
-    // Options for database sessions - if JWT is enabled these are not used
+    // Options for database sessions
     const sessionOptions = {
       jwt: false,
       maxAge: 30 * 24 * 60 * 60, // Sessions expire after 30 days of being idle
       updateAge: 24 * 60 * 60, // Sessions updated only if session is greater than this value (0 = always, 24*60*60 = every 24 hours)
+      get: async (session) => session,
       ...userSuppliedOptions.session
     }
 
-    // JWT optons - if JWT enabled these are used instead of session options
+    // JWT optons
     const jwtOptions = {
       secret,
-      set: async (token) => { return token },
+      set: async (token) => token,
       ...jwt,
       ...userSuppliedOptions.jwt
     }
@@ -190,8 +191,6 @@ export default async (req, res, userSuppliedOptions) => {
     // except for the options with special handling above
     const options = {
       // Defaults options can be overidden
-      jwt: jwtOptions,
-      session: sessionOptions,
       debug: false, // Enable debug messages to be displayed
       pages: {}, // Custom pages (e.g. sign in, sign out, errors)
       // Custom options override defaults
@@ -209,6 +208,8 @@ export default async (req, res, userSuppliedOptions) => {
       csrfToken,
       csrfTokenVerified,
       providers: parseProviders(userSuppliedOptions.providers, baseUrl),
+      session: sessionOptions,
+      jwt: jwtOptions,
       callbackUrl: site
     }
 

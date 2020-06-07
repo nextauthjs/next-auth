@@ -57,7 +57,7 @@ export default async (req, res, options, done) => {
           cookie.set(res, cookies.sessionToken.name, token, { expires: cookieExpires.toISOString(), ...cookies.sessionToken.options })
         } else {
           // Save Session Token in cookie
-          cookie.set(res, cookies.sessionToken.name, session.sessionToken, { expires: session.sessionExpires || null, ...cookies.sessionToken.options })
+          cookie.set(res, cookies.sessionToken.name, session.sessionToken, { expires: session.expires || null, ...cookies.sessionToken.options })
         }
 
         // Handle first logins on new accounts
@@ -138,7 +138,7 @@ export default async (req, res, options, done) => {
         cookie.set(res, cookies.sessionToken.name, token, { expires: cookieExpires.toISOString(), ...cookies.sessionToken.options })
       } else {
         // Save Session Token in cookie
-        cookie.set(res, cookies.sessionToken.name, session.sessionToken, { expires: session.sessionExpires || null, ...cookies.sessionToken.options })
+        cookie.set(res, cookies.sessionToken.name, session.sessionToken, { expires: session.expires || null, ...cookies.sessionToken.options })
       }
 
       // Handle first logins on new accounts
