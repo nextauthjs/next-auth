@@ -1,4 +1,5 @@
 import { createHash, randomBytes } from 'crypto'
+import jwt from './lib/jwt'
 import cookie from './lib/cookie'
 import callbackUrlHandler from './lib/callback-url-handler'
 import parseProviders from './lib/providers'
@@ -59,6 +60,12 @@ export default async (req, res, userSuppliedOptions) => {
       return done()
     }
 
+    // Secret used salt cookies and tokens (e.g. for CSRF protection).
+    // If no secret option is specified then it creates one on the fly
+    // based on options passed here. A options contains unique data, such as
+    // oAuth provider secrets and database credentials it should be sufficent.
+    const secret = userSuppliedOptions.secret || createHash('sha256').update(JSON.stringify(userSuppliedOptions)).digest('hex')
+
     // Use secure cookies if the site uses HTTPS
     // This being conditional allows cookies to work non-HTTPS development URLs
     // Honour secure cookie option, which sets 'secure' and also adds '__Secure-'
@@ -112,11 +119,13 @@ export default async (req, res, userSuppliedOptions) => {
       ...userSuppliedOptions.cookies
     }
 
-    // Secret used salt cookies and tokens (e.g. for CSRF protection).
-    // If no secret option is specified then it creates one on the fly
-    // based on options passed here. A options contains unique data, such as
-    // oAuth provider secrets and database credentials it should be sufficent.
-    const secret = userSuppliedOptions.secret || createHash('sha256').update(JSON.stringify(userSuppliedOptions)).digest('hex')
+    const jwtOptions = {
+      enabled: false,
+      secret,
+      maxAge: 30 * 24 * 60 * 60 * 1000, // Time in ms
+      ...jwt,
+      ...userSuppliedOptions.jwt
+    }
 
     // Ensure CSRF Token cookie is set for any subsequent requests.
     // Used as part of the strateigy for mitigation for CSRF tokens.
@@ -173,8 +182,7 @@ export default async (req, res, userSuppliedOptions) => {
     // except for the options with special handling above
     const options = {
       // Defaults options can be overidden
-      jwt: false, // Use JSON Web Token (JWT) for session, instead of database
-      jwtSecret: secret, // Use default secret unless explicitly specified
+      jwt: jwtOptions, // Use JSON Web Token (JWT) for session, instead of database
       sessionMaxAge: 30 * 24 * 60 * 60 * 1000, // Sessions expire after 30 days of being idle
       sessionUpdateAge: 24 * 60 * 60 * 1000, // Sessions updated only if session is greater than this value (0 = always, 24*60*60*1000 = every 24 hours)
       verificationMaxAge: 24 * 60 * 60 * 1000, // Email/passwordless links expire after 24 hours

@@ -1,9 +1,8 @@
 // Return a session object (without any private fields) for Single Page App clients
-import jwt from '../lib/jwt'
 import cookie from '../lib/cookie'
 
 export default async (req, res, options, done) => {
-  const { cookies, adapter, sessionMaxAge, jwt: useJwt, jwtSecret, debug } = options
+  const { cookies, adapter, jwt } = options
   const { getUser, getSession, updateSession } = await adapter.getAdapter(options)
   const sessionToken = req.cookies[cookies.sessionToken.name]
 
@@ -14,17 +13,17 @@ export default async (req, res, options, done) => {
   }
 
   let response = {}
-  if (useJwt) {
+  if (jwt.enabled) {
     try {
       // Decrypt and verify token
-      const token = await jwt.decode({ secret: jwtSecret, token: sessionToken, maxAge: sessionMaxAge / 1000 })
-      
+      const token = await jwt.decode({ secret: jwt.secret, token: sessionToken, maxAge: jwt.maxAge })
+
       // Refresh JWT expiry by re-signing it, with updated expiry date
-      const newToken = await jwt.encode({ secret: jwtSecret, token, maxAge: sessionMaxAge / 1000 })
+      const newToken = await jwt.encode({ secret: jwt.secret, token, maxAge: jwt.maxAge })
 
       // Set cookie expiry date
       const sessionExpiresDate = new Date()
-      sessionExpiresDate.setTime(sessionExpiresDate.getTime() + sessionMaxAge)
+      sessionExpiresDate.setTime(sessionExpiresDate.getTime() + (jwt.maxAge * 1000))
       const sessionExpires = sessionExpiresDate.toISOString()
 
       // Set cookie, to also update expiry date on cookie
@@ -41,7 +40,7 @@ export default async (req, res, options, done) => {
           email: token.user && token.user.email ? token.user.email : null,
           image: token.user && token.user.image ? token.user.image : null
         },
-        expires: sessionExpires,
+        expires: sessionExpires
       }
     } catch (error) {
       // If JWT not verifiable, make sure the cookie for it is removed and return empty object

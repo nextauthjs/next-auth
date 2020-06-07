@@ -184,7 +184,7 @@ const Adapter = (config, options = {}) => {
       // an ObjectId and we need to turn it into an ObjectId.
       //
       // In all other scenarios it is already an ObjectId, because it will have
-      // come from another MongoDB query. 
+      // come from another MongoDB query.
       if (ObjectId && !(id instanceof ObjectId)) {
         id = ObjectId(id)
       }

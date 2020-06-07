@@ -38,7 +38,7 @@ const decrypt = async ({ key, token }) => {
   return decryptedToken
 }
 
-export default { 
+export default {
   encode,
   decode,
   sign,

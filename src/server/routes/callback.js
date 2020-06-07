@@ -1,5 +1,4 @@
 // Handle callbacks from login services
-import jwt from '../lib/jwt'
 import OAuthCallback from '../lib/oauth/callback'
 import callbackHandler from '../lib/callback-handler'
 import cookie from '../lib/cookie'
@@ -17,8 +16,7 @@ export default async (req, res, options, done) => {
     callbackUrl,
     pages,
     sessionMaxAge,
-    jwt: useJwt,
-    jwtSecret
+    jwt
   } = options
   const provider = providers[providerName]
   const { type } = provider
@@ -41,7 +39,7 @@ export default async (req, res, options, done) => {
       try {
         const { user, session, isNewUser } = await callbackHandler(sessionToken, profile, account, options)
 
-        if (useJwt) {
+        if (jwt.enabled) {
           const jwtPayload = {
             user,
             account,
@@ -49,7 +47,7 @@ export default async (req, res, options, done) => {
           }
 
           // Sign and encrypt token
-          const token = await jwt.encode({ secret: jwtSecret, token: jwtPayload, maxAge: sessionMaxAge / 1000 })
+          const token = await jwt.encode({ secret: jwt.secret, token: jwtPayload, maxAge: jwt.maxAge })
 
           // Set cookie expiry date
           const cookieExpires = new Date()
@@ -109,24 +107,28 @@ export default async (req, res, options, done) => {
         return done()
       }
 
-      // If token is valid, delete email verification record in database…
+      // If token is valid, delete email verification record in database
       await deleteVerificationRequest(email, token, secret, provider)
 
-      // …lastly, invoke callbackHandler to go through sign up flow.
-      // (Will create new account if they don't have one, or sign them into
-      // an existing account if they do have one.)
-      const dummyProviderAccount = { id: provider.id, type: 'email' }
-      const { user, session, isNewUser } = await callbackHandler(sessionToken, { email }, dummyProviderAccount, options)
+      // Create the an `account` object with `id` and `type` properties as they
+      // are expected by the `callbackHandler` function and in the JWT.
+      const emailProviderAccount = { id: provider.id, type: 'email' }
 
-      if (useJwt) {
+      // Invoke callbackHandler to go through sign up flow
+      //
+      // This will create new new account if they don't have one, or sign them
+      // into an existing account if they do have one.
+      const { user, session, isNewUser } = await callbackHandler(sessionToken, { email }, emailProviderAccount, options)
+
+      if (jwt.enabled) {
         const jwtPayload = {
           user,
-          account,
+          account: emailProviderAccount,
           isNewUser
         }
 
         // Sign and encrypt token
-        const token = await jwt.encode({ secret: jwtSecret, token: jwtPayload, maxAge: sessionMaxAge / 1000 })
+        const token = await jwt.encode({ secret: jwt.secret, token: jwtPayload, maxAge: jwt.maxAge })
 
         // Set cookie expiry date
         const cookieExpires = new Date()
