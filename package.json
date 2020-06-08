@@ -1,6 +1,6 @@
 {
   "name": "next-auth",
-  "version": "2.0.0-beta.63",
+  "version": "2.0.0-beta.64",
   "description": "An authentication library for Next.js",
   "repository": "https://github.com/iaincollins/next-auth.git",
   "author": "Iain Collins <me@iaincollins.com>",
