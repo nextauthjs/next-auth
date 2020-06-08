@@ -99,9 +99,12 @@ session: {
   updateAge: 24 * 60 * 60, // 24 hours
   
   // Easily add custom properties to response from `/api/auth/session`.
-  // Note: This should not return any sensitive information.
+  // Note: The response should not return any sensitive information. The JWT
+  // option is supplied if JWT enabled and contains a (decrypted) copy of the
+  // JWT payload for instances where you need to use data from it to populate
+  // the response returned to the client.
   /*
-  get: async (session) => {
+  get: async (session, jwt) => {
     session.customSessionProperty = "ABC123"
     return session
   }

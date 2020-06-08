@@ -20,8 +20,11 @@ export default async (req, res, options, done) => {
       // Decrypt and verify token
       const token = await jwt.decode({ secret: jwt.secret, token: sessionToken, maxAge: sessionMaxAge })
 
-      // Refresh JWT expiry by re-signing it, with updated expiry date
-      const newToken = await jwt.encode({ secret: jwt.secret, token: await jwt.set(token), maxAge: sessionMaxAge })
+      // Allow token contents to be updated by JWT callback (if any specified)
+      const newToken = await jwt.set(token)
+
+      // Refresh JWT expiry by re-signing it, with an updated expiry date
+      const newEncryptedToken = await jwt.encode({ secret: jwt.secret, token: newToken, maxAge: sessionMaxAge })
 
       // Set cookie expiry date
       const sessionExpiresDate = new Date()
@@ -29,7 +32,7 @@ export default async (req, res, options, done) => {
       const sessionExpires = sessionExpiresDate.toISOString()
 
       // Set cookie, to also update expiry date on cookie
-      cookie.set(res, cookies.sessionToken.name, newToken, { expires: sessionExpires, ...cookies.sessionToken.options })
+      cookie.set(res, cookies.sessionToken.name, newEncryptedToken, { expires: sessionExpires, ...cookies.sessionToken.options })
 
       // Only expose a limited subset of information to the client as needed
       // for presentation purposes (e.g. "you are logged in as…").
@@ -43,7 +46,7 @@ export default async (req, res, options, done) => {
           image: token.user && token.user.image ? token.user.image : null
         },
         expires: sessionExpires
-      })
+      }, newToken)
     } catch (error) {
       // If JWT not verifiable, make sure the cookie for it is removed and return empty object
       console.error('JWT_SESSION_ERROR', error)

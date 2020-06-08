@@ -80,7 +80,7 @@ export default ({ site, error, baseUrl }) => {
             <p><a className='button' href={signinPageUrl}>Sign in</a></p>
           </div>
         </div>
-      break 
+      break
     case 'Verification':
       // @TODO Check if user is signed in already with the same email address.
       // If they are, no need to display this message, can just direct to callbackUrl

@@ -117,7 +117,7 @@ export default async (req, res, userSuppliedOptions) => {
       jwt: false,
       maxAge: 30 * 24 * 60 * 60, // Sessions expire after 30 days of being idle
       updateAge: 24 * 60 * 60, // Sessions updated only if session is greater than this value (0 = always, 24*60*60 = every 24 hours)
-      get: async (session) => session,
+      get: async (session, jwt) => session,
       ...userSuppliedOptions.session
     }
 

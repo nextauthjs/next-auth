@@ -5,10 +5,10 @@ export default (options) => {
     type: 'oauth',
     version: '2.0',
     params: { grant_type: 'authorization_code', respponse_type: 'code' },
-		scope: 'openid email profile',
-		accessTokenUrl: `https://${options.subdomain}.auth0/oauth/token`,
-		authorizationUrl: `https://${options.subdomain}.auth0.com/authorize?`,
-		profileUrl: `http://${options.subdomain}.auth0.com/userinfo`,
+    scope: 'openid email profile',
+    accessTokenUrl: `https://${options.subdomain}.auth0/oauth/token`,
+    authorizationUrl: `https://${options.subdomain}.auth0.com/authorize?`,
+    profileUrl: `http://${options.subdomain}.auth0.com/userinfo`,
     profile: (profile) => {
       return {
         id: profile.sub,
@@ -19,4 +19,4 @@ export default (options) => {
     },
     ...options
   }
-} 
+}
