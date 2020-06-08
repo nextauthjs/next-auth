@@ -181,9 +181,14 @@ const _encodedForm = (formData) => {
 }
 
 export default {
+  // For legacy reasons, some methods are exported with more than one name
+  // @TODO Deprecate these methods?
   session: getSession,
   providers: getProviders,
   csrfToken: getCsrfToken,
+  getSession,
+  getProviders,
+  getCsrfToken,
   useSession,
   Provider,
   signin,

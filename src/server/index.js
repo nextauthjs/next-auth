@@ -1,4 +1,5 @@
 import { createHash, randomBytes } from 'crypto'
+import jwt from '../lib/jwt'
 import cookie from './lib/cookie'
 import callbackUrlHandler from './lib/callback-url-handler'
 import parseProviders from './lib/providers'
@@ -50,14 +51,13 @@ export default async (req, res, userSuppliedOptions) => {
     } else if (userSuppliedOptions.database) {
       // If database URI or config object is provided, use it (simple usage)
       adapter = adapters.Default(userSuppliedOptions.database)
-    } else {
-      // @TODO Add link to documentation
-      console.error('Error:\n',
-        'NextAuth requires a \'database\' or \'adapter\' option to be specified.\n',
-        'See documentation for details https://next-auth.js.org')
-      pages.render(req, res, 'error', { site, error: 'Configuration', baseUrl }, done)
-      return done()
     }
+
+    // Secret used salt cookies and tokens (e.g. for CSRF protection).
+    // If no secret option is specified then it creates one on the fly
+    // based on options passed here. A options contains unique data, such as
+    // oAuth provider secrets and database credentials it should be sufficent.
+    const secret = userSuppliedOptions.secret || createHash('sha256').update(JSON.stringify(userSuppliedOptions)).digest('hex')
 
     // Use secure cookies if the site uses HTTPS
     // This being conditional allows cookies to work non-HTTPS development URLs
@@ -112,11 +112,29 @@ export default async (req, res, userSuppliedOptions) => {
       ...userSuppliedOptions.cookies
     }
 
-    // Secret used salt cookies and tokens (e.g. for CSRF protection).
-    // If no secret option is specified then it creates one on the fly
-    // based on options passed here. A options contains unique data, such as
-    // oAuth provider secrets and database credentials it should be sufficent.
-    const secret = userSuppliedOptions.secret || createHash('sha256').update(JSON.stringify(userSuppliedOptions)).digest('hex')
+    // Session options
+    const sessionOptions = {
+      jwt: false,
+      maxAge: 30 * 24 * 60 * 60, // Sessions expire after 30 days of being idle
+      updateAge: 24 * 60 * 60, // Sessions updated only if session is greater than this value (0 = always, 24*60*60 = every 24 hours)
+      get: async (session) => session,
+      ...userSuppliedOptions.session
+    }
+
+    // JWT options
+    const jwtOptions = {
+      secret,
+      key: secret,
+      set: async (token) => token,
+      encode: jwt.encode,
+      decode: jwt.decode,
+      ...userSuppliedOptions.jwt
+    }
+
+    // If no adapter specified, force use of JSON Web Tokens (stateless)
+    if (!adapter) {
+      sessionOptions.jwt = true
+    }
 
     // Ensure CSRF Token cookie is set for any subsequent requests.
     // Used as part of the strateigy for mitigation for CSRF tokens.
@@ -173,13 +191,16 @@ export default async (req, res, userSuppliedOptions) => {
     // except for the options with special handling above
     const options = {
       // Defaults options can be overidden
-      jwt: false, // Use JSON Web Token (JWT) for session, instead of database
-      jwtSecret: secret, // Use default secret unless explicitly specified
-      sessionMaxAge: 30 * 24 * 60 * 60 * 1000, // Sessions expire after 30 days of being idle
-      sessionUpdateAge: 24 * 60 * 60 * 1000, // Sessions updated only if session is greater than this value (0 = always, 24*60*60*1000 = every 24 hours)
-      verificationMaxAge: 24 * 60 * 60 * 1000, // Email/passwordless links expire after 24 hours
       debug: false, // Enable debug messages to be displayed
       pages: {}, // Custom pages (e.g. sign in, sign out, errors)
+      allowSignin: async (user, account) => true, // Return true if user / account is allowed to sign in (false if not)
+      allowCallbackUrl: async (url, site) => {
+        if (url.startsWith(site)) {
+          return Promise.resolve(url)
+        } else {
+          return Promise.resolve(site)
+        }
+      },
       // Custom options override defaults
       ...userSuppliedOptions,
       // These computed settings can values in userSuppliedOptions but override them
@@ -195,6 +216,8 @@ export default async (req, res, userSuppliedOptions) => {
       csrfToken,
       csrfTokenVerified,
       providers: parseProviders(userSuppliedOptions.providers, baseUrl),
+      session: sessionOptions,
+      jwt: jwtOptions,
       callbackUrl: site
     }
 

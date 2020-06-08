@@ -1,11 +1,14 @@
 import { randomBytes } from 'crypto'
 
 export class Session {
-  constructor (userId, sessionToken, sessionExpires, accessToken) {
+  constructor (userId, expires, sessionToken, accessToken) {
     this.userId = userId
+    this.expires = expires
     this.sessionToken = sessionToken || randomBytes(32).toString('hex')
-    this.sessionExpires = sessionExpires
     this.accessToken = accessToken || randomBytes(32).toString('hex')
+
+    const dateCreated = new Date()
+    this.created = dateCreated.toISOString()
   }
 }
 
@@ -21,16 +24,19 @@ export const SessionSchema = {
     userId: {
       type: 'int'
     },
+    expires: {
+      type: 'timestamp'
+    },
     sessionToken: {
       type: 'varchar',
       unique: true
     },
-    sessionExpires: {
-      type: 'timestamp'
-    },
     accessToken: {
       type: 'varchar',
       unique: true
+    },
+    created: {
+      type: 'timestamp'
     }
   }
 }

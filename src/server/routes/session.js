@@ -1,10 +1,11 @@
 // Return a session object (without any private fields) for Single Page App clients
-import jwt from 'jsonwebtoken'
 import cookie from '../lib/cookie'
 
 export default async (req, res, options, done) => {
-  const { cookies, adapter, sessionMaxAge, jwt: useJwt, jwtSecret, debug } = options
-  const { getUser, getSession, updateSession } = await adapter.getAdapter(options)
+  const { cookies, adapter, jwt } = options
+  const useJwtSession = options.session.jwt
+  const sessionMaxAge = options.session.maxAge
+  const getSessionResponse = options.session.get
   const sessionToken = req.cookies[cookies.sessionToken.name]
 
   if (!sessionToken) {
@@ -14,42 +15,35 @@ export default async (req, res, options, done) => {
   }
 
   let response = {}
-  if (useJwt) {
+  if (useJwtSession) {
     try {
-      const token = jwt.verify(sessionToken, jwtSecret, { maxAge: sessionMaxAge })
+      // Decrypt and verify token
+      const token = await jwt.decode({ secret: jwt.secret, token: sessionToken, maxAge: sessionMaxAge })
 
-      if (debug) {
-        console.log('[NextAuth.js][DEBUG][JWT]', token)
-      }
+      // Refresh JWT expiry by re-signing it, with updated expiry date
+      const newToken = await jwt.encode({ secret: jwt.secret, token: await jwt.set(token), maxAge: sessionMaxAge })
 
-      // Update Session Expiry inside token (human readable, exposed to UI)
-      const newExpiryDate = new Date()
-      newExpiryDate.setTime(newExpiryDate.getTime() + sessionMaxAge)
-      token.nextauth.sessionExpires = newExpiryDate.toISOString()
+      // Set cookie expiry date
+      const sessionExpiresDate = new Date()
+      sessionExpiresDate.setTime(sessionExpiresDate.getTime() + (sessionMaxAge * 1000))
+      const sessionExpires = sessionExpiresDate.toISOString()
 
-      // Update Session Expiry in JWT…
-      token.exp = sessionMaxAge
-
-      // Create new signed JWT (to replace existing one)
-      const newToken = jwt.sign(token, jwtSecret)
+      // Set cookie, to also update expiry date on cookie
+      cookie.set(res, cookies.sessionToken.name, newToken, { expires: sessionExpires, ...cookies.sessionToken.options })
 
       // Only expose a limited subset of information to the client as needed
       // for presentation purposes (e.g. "you are logged in as…").
       //
       // @TODO Should support `async seralizeUser({ user, function })` style
       // middleware function to allow response to be customized.
-      response = {
+      response = await getSessionResponse({
         user: {
-          name: token.nextauth.user.name,
-          email: token.nextauth.user.email,
-          image: token.nextauth.user.image
+          name: token.user && token.user.name ? token.user.name : null,
+          email: token.user && token.user.email ? token.user.email : null,
+          image: token.user && token.user.image ? token.user.image : null
         },
-        accessToken: token.nextauth.accessToken,
-        expires: token.nextauth.sessionExpires
-      }
-
-      // Set cookie again to also update expiry on cookie
-      cookie.set(res, cookies.sessionToken.name, newToken, { expires: token.nextauth.sessionExpires, ...cookies.sessionToken.options })
+        expires: sessionExpires
+      })
     } catch (error) {
       // If JWT not verifiable, make sure the cookie for it is removed and return empty object
       console.error('JWT_SESSION_ERROR', error)
@@ -57,9 +51,10 @@ export default async (req, res, options, done) => {
     }
   } else {
     try {
+      const { getUser, getSession, updateSession } = await adapter.getAdapter(options)
       const session = await getSession(sessionToken)
       if (session) {
-        // Trigger update to session object to update sessionExpires
+        // Trigger update to session object to update session expiry
         await updateSession(session)
 
         const user = await getUser(session.userId)
@@ -69,18 +64,18 @@ export default async (req, res, options, done) => {
         //
         // @TODO Should support `async seralizeUser({ user, function })` style
         // middleware function to allow response to be customized.
-        response = {
+        response = await getSessionResponse({
           user: {
             name: user.name,
             email: user.email,
             image: user.image
           },
           accessToken: session.accessToken,
-          expires: session.sessionExpires
-        }
+          expires: session.expires
+        })
 
         // Set cookie again to update expiry
-        cookie.set(res, cookies.sessionToken.name, sessionToken, { expires: session.sessionExpires, ...cookies.sessionToken.options })
+        cookie.set(res, cookies.sessionToken.name, sessionToken, { expires: session.expires, ...cookies.sessionToken.options })
       } else if (sessionToken) {
         // If sessionToken was found set but it's not valid for a session then
         // remove the sessionToken cookie from browser.

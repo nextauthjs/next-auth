@@ -27,6 +27,12 @@ html[data-theme='dark'] {
   background: #191A1B;
 }
 
+@media screen and (max-width: 360px) {
+  html {
+    font-size: 0.8rem;
+  }
+}
+
 a,
 .navbar .navbar__link {
   font-weight: 600;
@@ -47,13 +53,24 @@ a,
   border-radius: 2rem;
 }
 
+.navbar {
+  box-shadow: 0 0 .5rem rgba(0,0,0,.2)
+}
+
+
 .navbar__title {
   font-size: 1.2rem;
   margin-left: .2rem;
 }
 
-.navbar {
-  box-shadow: 0 0 .5rem rgba(0,0,0,.2)
+.navbar__logo {
+  display: none;
+}
+
+@media screen and (min-width: 376px) {
+  .navbar__logo {
+    display: inline;
+  }
 }
 
 .hero {
@@ -90,11 +107,6 @@ a,
   padding-top: 1rem;
   opacity: 0.7;
   font-style: italic;
-}
-
-.home-main h2 {
-  line-height: 3.5rem;
-  margin: 0.5rem 0;  
 }
 
 .home-main .code {

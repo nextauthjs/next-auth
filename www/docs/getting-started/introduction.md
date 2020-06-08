@@ -26,6 +26,7 @@ It is designed from the ground up to support Next.js and Serverless.
 * Supports Bring Your Own Database (BYOD) and can be used with any database
 * Built-in support for for [MySQL, MariaDB, Postgres, MongoDB and SQLite](/options/database)
 * Works great with databases from popular hosting providers
+* Can also be used *without a database* (e.g. OAuth + JWT)
 
 ### Secure by default
 

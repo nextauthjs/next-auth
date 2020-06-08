@@ -2,13 +2,15 @@
 id: basic-options
 title: Basic Options
 ---
-Configuration options are passed to NextAuth.js when initalizing in your API route.
 
-The only *required* options are **site**, **providers** and **database**.
+:::note
+* Configuration options are passed to NextAuth.js when initalizing it in an API route.
+* The only *required* options are **site** and **providers**.
+:::
 
-## Options
+---
 
-### site
+## site
 
 * **Default value**: `empty string`
 * **Required**: *Yes*
@@ -21,7 +23,7 @@ e.g. `http://localhost:3000` or `https://www.example.com`
 
 ---
 
-### providers
+## providers
 
 * **Default value**: `[]`
 * **Required**: *Yes*
@@ -34,10 +36,10 @@ See the [providers documentation](/options/providers) for a list of supported pr
 
 ---
 
-### database
+## database
 
 * **Default value**: `null`
-* **Required**: *Yes*
+* **Required**: *No* (Except by Email provider)
 
 #### Description 
 
@@ -49,11 +51,15 @@ The default database provider is also compatible with other ANSI SQL compatible 
 
 NextAuth.js can can be used with any database by specifying a custom `adapter` option.
 
+:::tip
+The Email provider currently requires a database to be configured.
+:::
+
 ---
 
-### secret
+## secret
 
-* **Default value**: *SHA Hash of Options*
+* **Default value**: `string` (*SHA hash of the "options" object*)
 * **Required**: *No* (but strongly recommended)
 
 #### Description
@@ -62,54 +68,135 @@ A random string used to hash tokens and sign cookies (e.g. SHA hash).
 
 If not provided will be auto-generated based on hash of all your provided options.
 
-The default behaviour is secure, but volatile, and it is strongly recommended you explicitly specify a value for your secret to avoid invalidating any tokens when the automatically generated hash changes.
+The default behaviour is secure, but volatile, and it is strongly recommended you explicitly specify a value for secret to avoid invalidating any tokens when the automatically generated hash changes.
 
 ---
 
-### jwt
+## session
 
-* **Default value**: `false`
+* **Default value**: `object`
 * **Required**: *No*
 
-#### Description 
+#### Description
 
-If set to `true` will use client side JSON Web Token instead of the `session` table in the database.
+The `session` object and all properties on it are optional.
 
-The JWT is signed with `HMAC SHA256` and includes the user profile, the provider account they signed in with and the session expiry (which is also set on the cookie and on the JWT expiry property).
+Default values for this option are shown below:
 
-From a NextAuth.js perspective it works just like a database based session, but is faster and cheaper to run!
-
-This option works great combined with serverless and a cloud database for persisting users accounts.
-
-```
-{
-  nextauth: {
-    user: {
-      name: 'Iain Collins',
-      email: 'me@iaincollins.com',
-      image: 'https://example.com/image.jpg',
-      id: 1
-    },
-    sessionExpires: '2020-07-03T02:18:55.574Z',
-    accessToken: '540c2f7669e4e72a1b0a167cc81d34a488f9cf2018fd9f7e5fc0639fa0ee3241',
-    account: {
-      provider: 'google',
-      type: 'oauth',
-      id: 3218529,
-      refreshToken: 'cc0d32d79145091cd6cd8979f0a6d6b67d490899',
-      accessToken: '931400799b4a980715bb55af1bb8e01d92316956',
-      accessTokenExpires: null
-    },
-    isNewUser: true
-  },
-  iat: 1591150735,
-  exp: 4183150735
+```js
+session: {
+  // Use JSON Web Tokens for session instead of database sessions.
+  // This option can be used with or without a database for users/accounts.
+  // Note: `jwt` is automatically set to `true` if no database is specified.
+  jwt: false, 
+  
+  // Seconds - How long until an idle session expires and is no longer valid.
+  maxAge: 30 * 24 * 60 * 60, // 30 days
+  
+  // Seconds - Throttle how frequently to write to database to extend a session.
+  // Use it to limit write operations. Set to 0 to always update the database.
+  // Note: This option is ignored if using JSON Web Tokens 
+  updateAge: 24 * 60 * 60, // 24 hours
+  
+  // Easily add custom properties to response from `/api/auth/session`.
+  // Note: This should not return any sensitive information.
+  /*
+  get: async (session) => {
+    session.customSessionProperty = "ABC123"
+    return session
+  }
+  */
 }
 ```
 
-:::tip
-Enable the debug option with **debug: true** to view contents of the decoded JWT on the console.
-:::
+---
+
+## jwt
+
+* **Default value**: `object`
+* **Required**: *No*
+
+#### Description
+
+The `jwt` object and all properties on it are optional.
+
+When enabled, JSON Web Tokens is signed with `HMAC SHA256` and encrypted with symmetric `AES`.
+
+Using JWT to store sessions is often faster, cheaper and more scaleable relying on a database.
+
+Default values for this option are shown below:
+
+```js
+jwt: {
+  // secret: 'my-secret-123', // Secret auto-generated if not specified.
+    
+  // Custom encode/decode functions for signing + encryption can be specified.
+  // if you want to override what is in the JWT or how it is signed.
+  // encode: async ({ secret, key, token, maxAge }) => {},
+  // decode: async ({ secret, key, token, maxAge }) => {},
+
+  // Easily add custom to the JWT. It is updated every time it is accessed.
+  // This encrypted and signed by default and may contain sensitive information
+  // as long as a reasonable secret is defined.
+  /*
+  set: async (token) => { 
+    token.customJwtProperty = "ABC123"
+    return token
+  }
+  */
+}
+```
+
+An example JSON WebToken contains an encrypted payload like this:
+
+```js
+{
+  user: {
+    name: 'Iain Collins',
+    email: 'me@iaincollins.com',
+    image: 'https://example.com/image.jpg',
+    id: 1 // User ID will note be specified if used without a database
+  },
+  // The account object stores details for the authentication provider account 
+  // that was used to sign in. It only contains exactly one account, even the 
+  // user is linked to multiple provider accounts in a database.
+  account: {
+    provider: 'google',
+    type: 'oauth',
+    id: 3218529,
+    refreshToken: 'cc0d32d79145091cd6cd8979f0a6d6b67d490899',
+    accessToken: '931400799b4a980715bb55af1bb8e01d92316956',
+    accessTokenExpires: null
+  },
+  isNewUser: true, // Is set to true if is first sign in
+  iat: 1591150735, // Issued at
+  exp: 4183150735  // Expires in
+}
+```
+
+You can use the built-in JWT decode/encode function from a custom API route, like this:
+
+```js
+import jwt from 'next-auth/jwt'
+
+export default async (req, res) =>  {
+  // Load encrypted (and signed) token from cookie
+  const useSecureCookiePrefix = process.env.NODE_ENV === 'production'
+  const cookieName = `${ useSecureCookiePrefix ? '__Secure-' : '' }next-auth.session-token`
+  const sessionToken = req.cookies[cookieName]
+
+  if (!sessionToken) { return res.end(`No JWT token`) }
+
+  try {
+      // Decrypt and verify token
+    const token = await jwt.decode({ secret: 'my-secret-123', token: sessionToken })
+    res.end(`Contents of JWT:\n${JSON.stringify(token, null, 2)}`)
+  } catch (error) {
+    console.error(error)
+    res.end('Unable to decode JWT')
+  }
+}
+```
 
 :::note
 The JWT is stored in the Session Token cookie – the same cookie used for database sessions.
@@ -117,77 +204,74 @@ The JWT is stored in the Session Token cookie – the same cookie used for datab
 
 ---
 
-### jwtSecret
+## allowSignin
 
-* **Default value**: *set to contents of `secret` by default*
-* **Required**: *No* (but strongly recommended if using JWT)
-
-#### Description 
-
-A secret key used to sign JWT tokens. This should be specified if using JSON Web Tokens.
-
-If not set defaults to the value of `secret` - which is auto-generated if not defined.
-
----
-
-### sessionMaxAge
-
-* **Default value**: `30*24*60*60*1000` (30 days)
+* **Default value**: `function`
 * **Required**: *No*
 
 #### Description
 
-How long sessions can be idle before they expire and the user has to sign in again.
+The `allowSignin` option allows you to define a function that determines if a user / account can sign in.
 
-:::tip
-If using JSON Web Tokens you may wish to set **sessionMaxAge** to a shorter value, as unlike a database session, the sessions cannot be 'expired' server side to force someone to be sign out.
+The function is passed a user and account object associated with the the provider the client has used.
+
+If the function returns `true` the user can sign in, if it returns `false` an access denied message is displayed.
+
+This works with all providers (OAuth and Email) and both with and without databases.
+
+It is useful to control access to dashboards/admin pages without requiring a user database.
+
+Example:
+
+```js
+allowSignin: async (user, account) => {
+  // Return true if user / account is allowed to sign in.
+  // Return false to display an access denied message.
+  return true
+}
+```
+
+:::warning
+You should not rely on the email address alone unless that provider is trusted and has supplied a verified email address. e.g. The built-in Google provider is configured to only return verified email addresses.
 :::
 
 ---
 
-### sessionUpdateAge
+## allowCallbackUrl
 
-* **Default value**: `24*60*60*1000` (24 hours)
+* **Default value**: `function`
 * **Required**: *No*
 
 #### Description
 
-How frequently the session expiry should be updated in the database.
+By default `allowCallbackUrl` only allows callbackUrls for signup and signout to be at the same site as the one being signed into.
 
-It effectively throttles database writes for sessions, which can improve performance and reduce costs.
+e.g. if the sign in URL was `https://example.com/api/auth/signin` the following logic would apply:
 
-It should always be less than `sessionMaxAge`. 
+* ✅ `https://example.com/path/to/page`
+* ❌ `http://example.com/path/to/page` 
+* ❌ `https://subdomain.example.com/path/to/page` 
+* ❌ `https://example.com:8080/path/to/page`
 
-*For example:*
+If the URL is not allowed, the callback URL will be set to whatever the `site` option is set to.
 
-If `sessionMaxAge` specifies a session is valid for up to 30 days and `sessionUpdateAge` is set to 24 hours, and a session was last updated less than 24 hours ago, then the session expiry time on the active session would not be updated.
+The default function looks like this:
 
-However, if a session that was active was last updated more than 24 hours ago, then the session expiry time *would* be updated in the session database.
+```js
+allowCallbackUrl: async (url, site) => {
+  if (url.startsWith(site)) {
+    return Promise.resolve(url)
+  } else {
+    return Promise.resolve(site)
+  }
+}
+```
 
-:::tip
-If you have a short session max age (e.g. < 24 hours) or if you want to be able to track what sessions have been active recently by querying the session database, you can set **sessionUpdateAge** to **0** to create a rolling session that always extends the session expiry any time a session is active.
-:::
-
-:::note
-If using JSON Web Tokens **sessionUpdateAge** is ignored – they are always updated when accessed.
-:::
-
----
-
-### verificationMaxAge
-
-* **Default value**: `24*60*60*1000` (24 hours)
-* **Required**: *No*
-
-#### Description
-
-How long links in verification emails are valid for.
-
-These are used for passwordless sign in via email.
+If you want to support signing in to sites across other domains or hostnames you can pass your own function to `allowCallbackUrl` to customise the behaviour.
 
 ---
 
-### pages
+## pages
 
 * **Default value**: `{}`
 * **Required**: *No*
@@ -214,7 +298,7 @@ See the documentation for the [pages option](/options/pages) for more informatio
 
 ---
 
-### debug
+## debug
 
 * **Default value**: `false`
 * **Required**: *No*

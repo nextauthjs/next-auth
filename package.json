@@ -1,6 +1,6 @@
 {
   "name": "next-auth",
-  "version": "2.0.0-beta.62",
+  "version": "2.0.0-beta.67",
   "description": "An authentication library for Next.js",
   "repository": "https://github.com/iaincollins/next-auth.git",
   "author": "Iain Collins <me@iaincollins.com>",
@@ -30,6 +30,7 @@
   ],
   "license": "ISC",
   "dependencies": {
+    "crypto-js": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^2.2.0",
     "nodemailer": "^6.4.6",

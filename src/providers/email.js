@@ -15,6 +15,7 @@ export default (options) => {
       }
     },
     from: 'NextAuth <no-reply@example.com>',
+    maxAge: 24 * 60 * 60, // How long email links should be valid for
     sendVerificationRequest,
     ...options
   }
