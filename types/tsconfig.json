@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "lib": ["es6", "dom"],
+    "strict": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "paths": { "next-auth": ["."] }
+  }
+}
