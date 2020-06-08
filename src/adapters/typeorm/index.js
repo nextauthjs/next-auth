@@ -4,7 +4,7 @@ import { createHash } from 'crypto'
 
 import { CreateUserError } from '../../lib/errors'
 import Models from './models'
-import nextAuthError from '../../lib/consoleErr'
+import logger.error from '../../lib/consoleErr'
 
 const Adapter = (config, options = {}) => {
   // If the input is URL string, automatically convert the string to an object
@@ -139,7 +139,7 @@ const Adapter = (config, options = {}) => {
           // been re-established, check it's really up
           await _connect()
         } else {
-          nextAuthError('ADAPTER_CONNECTION_ERROR', error)
+          logger.error('ADAPTER_CONNECTION_ERROR', error)
         }
       }
     } else {
@@ -172,7 +172,7 @@ const Adapter = (config, options = {}) => {
         const user = new User(profile.name, profile.email, profile.image)
         return await getManager().save(user)
       } catch (error) {
-        nextAuthError('CREATE_USER_ERROR', error)
+        logger.error('CREATE_USER_ERROR', error)
         return Promise.reject(new CreateUserError(error))
       }
     }
@@ -193,7 +193,7 @@ const Adapter = (config, options = {}) => {
       try {
         return connection.getRepository(User).findOne({ [idKey]: id })
       } catch (error) {
-        nextAuthError('GET_USER_BY_ID_ERROR', error)
+        logger.error('GET_USER_BY_ID_ERROR', error)
         return Promise.reject(new Error('GET_USER_BY_ID_ERROR', error))
       }
     }
@@ -203,7 +203,7 @@ const Adapter = (config, options = {}) => {
       try {
         return connection.getRepository(User).findOne({ email })
       } catch (error) {
-        nextAuthError('GET_USER_BY_EMAIL_ERROR', error)
+        logger.error('GET_USER_BY_EMAIL_ERROR', error)
         return Promise.reject(new Error('GET_USER_BY_EMAIL_ERROR', error))
       }
     }
@@ -215,7 +215,7 @@ const Adapter = (config, options = {}) => {
         if (!account) { return null }
         return connection.getRepository(User).findOne({ [idKey]: account.userId })
       } catch (error) {
-        nextAuthError('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error)
+        logger.error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error)
         return Promise.reject(new Error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error))
       }
     }
@@ -245,7 +245,7 @@ const Adapter = (config, options = {}) => {
         const account = new Account(userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires)
         return getManager().save(account)
       } catch (error) {
-        nextAuthError('LINK_ACCOUNT_ERROR', error)
+        logger.error('LINK_ACCOUNT_ERROR', error)
         return Promise.reject(new Error('LINK_ACCOUNT_ERROR', error))
       }
     }
@@ -273,7 +273,7 @@ const Adapter = (config, options = {}) => {
 
         return getManager().save(session)
       } catch (error) {
-        nextAuthError('CREATE_SESSION_ERROR', error)
+        logger.error('CREATE_SESSION_ERROR', error)
         return Promise.reject(new Error('CREATE_SESSION_ERROR', error))
       }
     }
@@ -291,7 +291,7 @@ const Adapter = (config, options = {}) => {
 
         return session
       } catch (error) {
-        nextAuthError('GET_SESSION_ERROR', error)
+        logger.error('GET_SESSION_ERROR', error)
         return Promise.reject(new Error('GET_SESSION_ERROR', error))
       }
     }
@@ -329,7 +329,7 @@ const Adapter = (config, options = {}) => {
 
         return getManager().save(session)
       } catch (error) {
-        nextAuthError('UPDATE_SESSION_ERROR', error)
+        logger.error('UPDATE_SESSION_ERROR', error)
         return Promise.reject(new Error('UPDATE_SESSION_ERROR', error))
       }
     }
@@ -339,7 +339,7 @@ const Adapter = (config, options = {}) => {
       try {
         return await connection.getRepository(Session).delete({ sessionToken })
       } catch (error) {
-        nextAuthError('DELETE_SESSION_ERROR', error)
+        logger.error('DELETE_SESSION_ERROR', error)
         return Promise.reject(new Error('DELETE_SESSION_ERROR', error))
       }
     }
@@ -372,7 +372,7 @@ const Adapter = (config, options = {}) => {
 
         return verificationRequest
       } catch (error) {
-        nextAuthError('CREATE_VERIFICATION_REQUEST_ERROR', error)
+        logger.error('CREATE_VERIFICATION_REQUEST_ERROR', error)
         return Promise.reject(new Error('CREATE_VERIFICATION_REQUEST_ERROR', error))
       }
     }
@@ -393,7 +393,7 @@ const Adapter = (config, options = {}) => {
 
         return verificationRequest
       } catch (error) {
-        nextAuthError('GET_VERIFICATION_REQUEST_ERROR', error)
+        logger.error('GET_VERIFICATION_REQUEST_ERROR', error)
         return Promise.reject(new Error('GET_VERIFICATION_REQUEST_ERROR', error))
       }
     }
@@ -405,7 +405,7 @@ const Adapter = (config, options = {}) => {
         const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
         await connection.getRepository(VerificationRequest).delete({ token: hashedToken })
       } catch (error) {
-        nextAuthError('DELETE_VERIFICATION_REQUEST_ERROR', error)
+        logger.error('DELETE_VERIFICATION_REQUEST_ERROR', error)
         return Promise.reject(new Error('DELETE_VERIFICATION_REQUEST_ERROR', error))
       }
     }

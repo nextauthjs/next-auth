@@ -1,7 +1,7 @@
 // Return a session object (without any private fields) for Single Page App clients
 import jwt from 'jsonwebtoken'
 import cookie from '../lib/cookie'
-import nextAuthError from '../../lib/consoleErr'
+import logger.error from '../../lib/consoleErr'
 
 export default async (req, res, options, done) => {
   const { cookies, adapter, sessionMaxAge, jwt: useJwt, jwtSecret, debug } = options
@@ -53,7 +53,7 @@ export default async (req, res, options, done) => {
       cookie.set(res, cookies.sessionToken.name, newToken, { expires: token.nextauth.sessionExpires, ...cookies.sessionToken.options })
     } catch (error) {
       // If JWT not verifiable, make sure the cookie for it is removed and return empty object
-      nextAuthError('JWT_SESSION_ERROR', error)
+      logger.error('JWT_SESSION_ERROR', error)
       cookie.set(res, cookies.sessionToken.name, '', { ...cookies.sessionToken.options, maxAge: 0 })
     }
   } else {
@@ -88,7 +88,7 @@ export default async (req, res, options, done) => {
         cookie.set(res, cookies.sessionToken.name, '', { ...cookies.sessionToken.options, maxAge: 0 })
       }
     } catch (error) {
-      nextAuthError('SESSION_ERROR', error)
+      logger.error('SESSION_ERROR', error)
     }
   }
 

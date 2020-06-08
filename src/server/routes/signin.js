@@ -1,7 +1,7 @@
 // Handle requests to /api/auth/signin
 import OAuthSignin from '../lib/signin/oauth'
 import emailSignin from '../lib/signin/email'
-import nextAuthError from '../../lib/consoleErr'
+import logger.error from '../../lib/consoleErr'
 
 export default async (req, res, options, done) => {
   const { provider: providerName, providers, baseUrl, csrfTokenVerified } = options
@@ -16,7 +16,7 @@ export default async (req, res, options, done) => {
   if (type === 'oauth') {
     OAuthSignin(provider, (error, oAuthSigninUrl) => {
       if (error) {
-        nextAuthError('OAUTH_SIGNIN_ERROR', error)
+        logger.error('OAUTH_SIGNIN_ERROR', error)
         res.status(302).setHeader('Location', `${baseUrl}/error?error=OAuthSignin`)
         res.end()
         return done()
@@ -50,7 +50,7 @@ export default async (req, res, options, done) => {
     try {
       await emailSignin(email, provider, options)
     } catch (error) {
-      nextAuthError('EMAIL_SIGNIN_ERROR', error)
+      logger.error('EMAIL_SIGNIN_ERROR', error)
       res.status(302).setHeader('Location', `${baseUrl}/error?error=EmailSignin`)
       res.end()
       return done()
