@@ -26,7 +26,8 @@
     "index.js",
     "providers.js",
     "adapters.js",
-    "client.js"
+    "client.js",
+    "jwt.js"
   ],
   "license": "ISC",
   "dependencies": {
