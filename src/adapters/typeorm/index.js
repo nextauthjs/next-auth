@@ -268,13 +268,10 @@ const Adapter = (config, options = {}) => {
       try {
         let expires = null
         if (sessionMaxAge) {
-          console.log('sessionMaxAge', sessionMaxAge)
           const dateExpires = new Date()
           dateExpires.setTime(dateExpires.getTime() + sessionMaxAge)
           expires = dateExpires.toISOString()
         }
-        console.log('sessionMaxAge:f', sessionMaxAge, appOptions.session)
-        console.log('expires', expires)
 
         const session = new Session(user.id, expires)
 
