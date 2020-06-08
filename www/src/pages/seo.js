@@ -20,9 +20,9 @@ const Seo = () => {
       <meta property='og:image' content={`${url}/img/social-media-card.png`} />
       <meta property='og:url' content={url} />
       <meta name='twitter:card' content='summary_large_image' />
-      <meta name="twitter:title" content={title} />
-      <meta name="twitter:description" content={tagline} />
-      <meta name="twitter:image" content={`${url}/img/social-media-card.png`} />
+      <meta name='twitter:title' content={title} />
+      <meta name='twitter:description' content={tagline} />
+      <meta name='twitter:image' content={`${url}/img/social-media-card.png`} />
     </Head>
   )
 }

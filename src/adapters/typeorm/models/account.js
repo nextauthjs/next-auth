@@ -19,6 +19,9 @@ export class Account {
     this.refreshToken = refreshToken
     this.accessToken = accessToken
     this.accessTokenExpires = accessTokenExpires
+
+    const dateCreated = new Date()
+    this.created = dateCreated.toISOString()
   }
 }
 
@@ -59,6 +62,9 @@ export const AccountSchema = {
     accessTokenExpires: {
       type: 'timestamp',
       nullable: true
+    },
+    created: {
+      type: 'timestamp'
     }
   }
 }

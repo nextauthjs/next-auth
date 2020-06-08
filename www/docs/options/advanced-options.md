@@ -3,11 +3,11 @@ id: advanced-options
 title: Advanced Options
 ---
 
-Advanced options are passed the same way as basic options, but have more complex behaviour or potentially complex implications if they are used.
+:::warning
+Advanced options are passed the same way as basic options, but may have complex implications or side effects. You should try to avoid using advanced options unless you are very comfortable using them.
+:::
 
-Most advanced options are not recommended, not supported and may change in future releases.
-
-## Options
+---
 
 ### basePath
 
@@ -28,39 +28,9 @@ module.exports = {
 }
 ```
 
-This is required because the NextAuth.js API route is a seperate codepath to the NextAuth.js Client. As long as you specify this option in an environment variable, the client will be able to pick up any subsequent configuration from the server.
+This is required because the NextAuth.js API route is a seperate codepath to the NextAuth.js Client.
 
----
-
-### callbackUrlHandler
-
-* **Default value**: `function`
-* **Required**: *No*
-
-#### Description
-
-To ensure site security, byt default `callbackUrlHandler` only allows callbackUrls for signup and signout to be at the same site as the one being signed into.
-
-e.g. if the sign in URL was `https://example.com/api/auth/signin`:
-
-* ✅ `https://example.com/path/to/page`
-* ❌ `http://example.com/path/to/page` 
-* ❌ `https://subdomain.example.com/path/to/page` 
-* ❌ `https://example.com:8080/path/to/page`
-
-If the URL is not allowed, the callback URL will be set to whatever the `site` option is (e.g.`https://example.com/`)
-
-```js
-const callbackUrlHandler = async (url, options) => {
-  if (url.startsWith(options.site)) {
-    return Promise.resolve(url)
-  } else {
-    return Promise.resolve(options.site)
-  }
-}
-```
-
-If you want to support signing in to sites across other domains, you can pass your own function to `callbackUrlHandler` to customise this behaviour.
+As long as you also specify this option in an environment variable, the client will be able to pick up any subsequent configuration from the server, but if you do not set in both it the NextAuth.js Client will not work.
 
 ---
 
@@ -71,16 +41,12 @@ If you want to support signing in to sites across other domains, you can pass yo
 
 #### Description
 
-A custom provider is an advanced option to use only if you need to use NextAuth.js with a database configuration that is not supported by the default `database` option.
+A custom provider is an advanced option intended for use only you need to use NextAuth.js with a database configuration that is not supported by the default `database` adapter.
 
 See the [adapter documentation](/options/adapter) for more information.
 
 :::note
 If the `adapter` option is specified it overrides the `database` option.
-:::
-
-:::info
-This option is not yet well documented. We are not currently able to provide support for this option. In future the goal is to provide first party and third party adapters to integrate with a wide range of platforms.
 :::
 
 ---
@@ -117,7 +83,7 @@ Setting this option to *false* in production is a security risk and may allow se
 
 You can override the default cookie names and options for any of the cookies used by NextAuth.js.
 
-This is an advanced option and using it is not recommended.
+This is an advanced option and using it is not recommended as you may break authentication or introduce security flaws into your application.
 
 You can specify one or more cookies with custom properties, but if you specify custom options for a cookie you must provided all the options for it. You will also likely want to create condtional behaviour to support local development (e.g. setting `secure: false` and not using cookie prefixes on localhost URLs).
 
@@ -164,5 +130,5 @@ cookies: {
 ```
 
 :::warning
-Changing the cookie options may introduce security flaws into your application and may break NextAuth.js integration now or in a future update. Using this option is not currently recommended.
+Changing the cookie options may introduce security flaws into your application and may break NextAuth.js integration now or in a future update. Using this option is not recommended.
 :::

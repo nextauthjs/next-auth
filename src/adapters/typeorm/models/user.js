@@ -3,6 +3,9 @@ export class User {
     this.name = name
     this.email = email
     this.image = image
+
+    const dateCreated = new Date()
+    this.created = dateCreated.toISOString()
   }
 }
 
@@ -26,6 +29,9 @@ export const UserSchema = {
     image: {
       type: 'varchar',
       nullable: true
+    },
+    created: {
+      type: 'timestamp'
     }
   }
 }

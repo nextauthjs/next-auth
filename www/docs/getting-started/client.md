@@ -8,12 +8,12 @@ The NextAuth.js client library makes it easy to interact with sessions from Reac
 Some of the methods can be called both client side and server side.
 
 :::note
-When using any of the client API methods server side, [context](https://nextjs.org/docs/api-reference/data-fetching/getInitialProps#context-object) must be passed as an argument. The documentation for **session()** has an example.
+When using any of the client API methods server side, [context](https://nextjs.org/docs/api-reference/data-fetching/getInitialProps#context-object) must be passed as an argument. The documentation for **getSession()** has an example.
 :::
 
 ---
 
-### useSession()
+## useSession()
 
 * Client Side: **Yes**
 * Server Side: No
@@ -37,12 +37,12 @@ export default () => {
 
 ---
 
-### session()
+## getSession()
 
 * Client Side: **Yes**
 * Server Side: **Yes**
 
-NextAuth.js also provides a `session()` method which can be called client or server side to return a session.
+NextAuth.js also provides a `getSession()` method which can be called client or server side to return a session.
  
 It calls `/api/auth/session` and returns a promise with a session object, or null if no session exists.
 
@@ -60,13 +60,13 @@ A session object looks like this:
 }
 ```
 
-You can call `session()` inside a function to check if a user is signed in, or use it for server side rendered pages that supporting signing in without requiring client side JavaScript.
+You can call `getSession()` inside a function to check if a user is signed in, or use it for server side rendered pages that supporting signing in without requiring client side JavaScript.
 
 :::info
 Note that because it exposed to the client it does not contain sensitive information such as the Session Token or OAuth service related tokens. It includes enough information (e.g name, email) to display information on a page about the user who is signed in, and an Access Token that can be used to identify the session without exposing the Session Token itself.
 :::
 
-Because it is a Universal method, you can use `session()` in both client and server side functions, such as `getInitialProps()` in Next.js:
+Because it is a Universal method, you can use `getSession()` in both client and server side functions, such as `getInitialProps()` in Next.js:
 
 ```jsx title="/pages/index.js"
 import { session } from 'next-auth/client'
@@ -84,14 +84,14 @@ const Page = ({ session }) => (<p>
 
 Page.getInitialProps = async (context) => {
   return {
-    session: await session(context)
+    session: await getSession(context)
   }
 }
 
 export default Page
 ```
 
-#### Using session() in API routes
+#### Using getSession() in API routes
 
 You can also get the session object in Next.js API routes:
  
@@ -99,7 +99,7 @@ You can also get the session object in Next.js API routes:
 import { session } from 'next-auth/client'
 
 export default (req, res) => {
-  const session = await session({ req })
+  const session = await getSession({ req })
 
   if (session) {
     // Signed in
@@ -120,12 +120,36 @@ export default (req, res) => {
 ```
 
 :::note
-When calling `session()` server side, you must pass the request object - e.g. `session({req})` - or you can the pass entire `context` object as it contains the `req` object.
+When calling `getSession()` server side, you must pass the request object - e.g. `getSession({req})` - or you can the pass entire `context` object as it contains the `req` object.
 :::
 
 ---
 
-### signin(provider, { options })
+## getProviders()
+
+* Client Side: **Yes**
+* Server Side: **Yes**
+
+The `getProviders()` method returns the list of providers currently configured for sign in.
+
+It calls `/api/auth/providers` and returns a with a list of the currently configured authentication providers.
+
+It can be use useful if you are creating a dynamic custom sign in page.
+
+---
+
+## getCsrfToken()
+
+* Client Side: **Yes**
+* Server Side: **Yes**
+
+The `getCsrfToken()` method returns the current Cross Site Request Forgery (CSRF Token) required to make POST requests (e.g. for signing in and signing out). It calls `/api/auth/csrf`.
+
+You likely only need to use this if you are not using the built-in `signin()` and `signout()` methods.
+
+---
+
+## signin(provider, { options })
 
 * Client Side: **Yes**
 * Server Side: No
@@ -172,7 +196,7 @@ To also support signing in from clients that do not have client side JavaScript,
 
 ---
 
-### signout()
+## signout()
 
 * Client Side: **Yes**
 * Server Side: No
@@ -191,31 +215,7 @@ export default () => (
 
 ---
 
-### providers()
-
-* Client Side: **Yes**
-* Server Side: **Yes**
-
-The `providers()` method returns the list of providers currently configured for sign in.
-
-It calls `/api/auth/providers` and returns a with a list of the currently configured authentication providers.
-
-It can be use useful if you are creating a dynamic custom sign in page.
-
----
-
-### csrfToken()
-
-* Client Side: **Yes**
-* Server Side: **Yes**
-
-The `csrfToken()` method returns the current Cross Site Request Forgery (CSRF Token) required to make POST requests (e.g. for signing in and signing out). It calls `/api/auth/csrf`.
-
-You likely only need to use this if you are not using the built-in `signin()` and `signout()` methods.
-
----
-
-### Provider
+## Provider
 
 Using the supplied React `<Provider>` allows instances of `useSession()` to share the session object across components, buy using [React Context](https://reactjs.org/docs/context.html) under the hood.
 

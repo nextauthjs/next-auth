@@ -8,8 +8,6 @@
 // All verification (e.g. oAuth flows or email address verificaiton flows) are
 // done prior to this handler being called to avoid additonal complexity in this
 // handler.
-import { randomBytes } from 'crypto'
-import jwt from 'jsonwebtoken'
 import { AccountNotLinkedError, InvalidProfile } from '../../lib/errors'
 
 export default async (sessionToken, profile, providerAccount, options) => {
@@ -18,7 +16,20 @@ export default async (sessionToken, profile, providerAccount, options) => {
     if (!profile) { throw new Error('Missing profile') }
     if (!providerAccount || !providerAccount.id || !providerAccount.type) { throw new Error('Missing or invalid provider account') }
 
-    const { adapter, jwt: useJwt, jwtSecret, sessionMaxAge } = options
+    const { adapter, jwt } = options
+
+    const useJwtSession = options.session.jwt
+    const sessionMaxAge = options.session.maxAge
+
+    // If no adapter is configured then we don't have a database and cannot
+    // persist data; in this mode we just return a dummy session object.
+    if (!adapter) {
+      return {
+        user: profile,
+        account: providerAccount,
+        session: {}
+      }
+    }
 
     const {
       createUser,
@@ -38,11 +49,10 @@ export default async (sessionToken, profile, providerAccount, options) => {
     let isNewUser = false
 
     if (sessionToken) {
-      if (useJwt) {
+      if (useJwtSession) {
         try {
-          const token = jwt.verify(sessionToken, jwtSecret, { maxAge: sessionMaxAge })
-          session = token.nextauth || null
-          if (session && session.user && session.user.id) {
+          session = await jwt.decode({ secret: jwt.secret, token: sessionToken, maxAge: sessionMaxAge })
+          if (session && session.user) {
             user = await getUser(session.user.id)
             isSignedIn = !!user
           }
@@ -78,7 +88,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
             // Delete existing session if they are currently signed in as another user.
             // This will switch user accounts for the session in cases where the user was
             // already logged in with a different account.
-            if (!useJwt) {
+            if (!useJwtSession) {
               await deleteSession(sessionToken)
             }
 
@@ -96,7 +106,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
       }
 
       // Create new session
-      session = useJwt ? await createJwtSession(user, sessionMaxAge) : await createSession(user)
+      session = useJwtSession ? {} : await createSession(user)
 
       return {
         session,
@@ -127,7 +137,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
         } else {
           // If there is no active session, but the account being signed in with is already
           // associated with a valid user then create session to sign the user in.
-          session = useJwt ? await createJwtSession(userByProviderAccountId, sessionMaxAge) : await createSession(userByProviderAccountId)
+          session = useJwtSession ? {} : await createSession(userByProviderAccountId)
           return {
             session,
             user: userByProviderAccountId,
@@ -208,7 +218,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
             providerAccount.accessTokenExpires
           )
 
-          session = useJwt ? await createJwtSession(user, sessionMaxAge) : await createSession(user)
+          session = useJwtSession ? {} : await createSession(user)
           isNewUser = true
           return {
             session,
@@ -223,15 +233,4 @@ export default async (sessionToken, profile, providerAccount, options) => {
   } catch (error) {
     return Promise.reject(error)
   }
-}
-
-const createJwtSession = async (user, sessionMaxAge) => {
-  const expiryDate = new Date()
-  expiryDate.setTime(expiryDate.getTime() + sessionMaxAge)
-  const sessionExpires = expiryDate.toISOString()
-  return Promise.resolve({
-    user,
-    sessionExpires,
-    accessToken: randomBytes(32).toString('hex')
-  })
 }

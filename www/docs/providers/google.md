@@ -5,7 +5,7 @@ title: Google
 
 ## API Documentation
 
-https://developers.google.com/identity/protocols/oauth2s
+https://developers.google.com/identity/protocols/oauth2
 
 ## App Configuration
 
