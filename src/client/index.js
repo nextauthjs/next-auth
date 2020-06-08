@@ -1,7 +1,7 @@
 // fetch() is built in to Next.js 9.4 (you can use a polyfill if using an older version)
 /* global fetch:false */
 import { useState, useEffect, useContext, createContext, createElement } from 'react'
-import logger.error from '../lib/consoleErr'
+import logger from '../lib/consoleErr'
 
 // Note: In calls to fetch() from universal methods, all cookies are passed
 // through from the browser, when the server makes the HTTP request, so that
@@ -182,9 +182,14 @@ const _encodedForm = (formData) => {
 }
 
 export default {
+  // For legacy reasons, some methods are exported with more than one name
+  // @TODO Deprecate these methods?
   session: getSession,
   providers: getProviders,
   csrfToken: getCsrfToken,
+  getSession,
+  getProviders,
+  getCsrfToken,
   useSession,
   Provider,
   signin,

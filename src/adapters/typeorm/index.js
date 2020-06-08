@@ -1,10 +1,9 @@
-import 'reflect-metadata'
 import { createConnection, getConnection, getManager, EntitySchema } from 'typeorm'
 import { createHash } from 'crypto'
 
 import { CreateUserError } from '../../lib/errors'
 import Models from './models'
-import logger.error from '../../lib/consoleErr'
+import logger from '../../lib/consoleErr'
 
 const Adapter = (config, options = {}) => {
   // If the input is URL string, automatically convert the string to an object
@@ -43,11 +42,11 @@ const Adapter = (config, options = {}) => {
   }
 
   // Load models / schemas (check for custom models / schemas first)
-  const Account = options.Account ? options.Account.model : Models.Account.model
-  const AccountSchema = options.Account ? options.Account.schema : Models.Account.schema
-
   const User = options.User ? options.User.model : Models.User.model
   const UserSchema = options.User ? options.User.schema : Models.User.schema
+
+  const Account = options.Account ? options.Account.model : Models.Account.model
+  const AccountSchema = options.Account ? options.Account.schema : Models.Account.schema
 
   const Session = options.Session ? options.Session.model : Models.Session.model
   const SessionSchema = options.Session ? options.Session.schema : Models.Session.schema
@@ -79,9 +78,9 @@ const Adapter = (config, options = {}) => {
     //
     // @TODO Look at refactoring to see if there is a better way to do this that
     // doesn't rely on hard coding this transformation on a per property basis
+    UserSchema.columns.id.objectId = true
     AccountSchema.columns.id.objectId = true
     AccountSchema.columns.userId.type = 'objectId'
-    UserSchema.columns.id.objectId = true
     SessionSchema.columns.id.objectId = true
     SessionSchema.columns.userId.type = 'objectId'
     VerificationRequestSchema.columns.id.objectId = true
@@ -93,9 +92,13 @@ const Adapter = (config, options = {}) => {
   // @TODO Refactor to apply automatically to all `timestamp` properties if the
   // database is MySQL.
   if (config.type === 'sqlite') {
+    UserSchema.columns.created.type = 'datetime'
     AccountSchema.columns.accessTokenExpires.type = 'datetime'
-    SessionSchema.columns.sessionExpires.type = 'datetime'
+    AccountSchema.columns.created.type = 'datetime'
+    SessionSchema.columns.expires.type = 'datetime'
+    SessionSchema.columns.created.type = 'datetime'
     VerificationRequestSchema.columns.expires.type = 'datetime'
+    VerificationRequestSchema.columns.created.type = 'datetime'
   }
 
   // Parse config (uses options)
@@ -103,8 +106,8 @@ const Adapter = (config, options = {}) => {
     name: 'default',
     autoLoadEntities: true,
     entities: [
-      new EntitySchema(AccountSchema),
       new EntitySchema(UserSchema),
+      new EntitySchema(AccountSchema),
       new EntitySchema(SessionSchema),
       new EntitySchema(VerificationRequestSchema)
     ],
@@ -118,10 +121,10 @@ const Adapter = (config, options = {}) => {
 
   let connection = null
 
-  async function getAdapter (appOptions) {
+  async function getAdapter(appOptions) {
     // Helper function to reuse / restablish connections
     // (useful if they drop when after being idle)
-    async function _connect () {
+    async function _connect() {
       // Get current connection by name
       connection = getConnection(config.name)
 
@@ -148,9 +151,9 @@ const Adapter = (config, options = {}) => {
     }
 
     // Display debug output if debug option enabled
-    function _debug (...args) {
+    function _debug(...args) {
       if (appOptions.debug) {
-        console.log('[NextAuth.js][DEBUG]', ...args)
+        console.log('[next-auth][debug]', ...args)
       }
     }
 
@@ -165,7 +168,10 @@ const Adapter = (config, options = {}) => {
       ObjectId = mongodb.ObjectId
     }
 
-    async function createUser (profile) {
+    const sessionMaxAge = appOptions.session.maxAge * 1000
+    const sessionUpdateAge = appOptions.session.updateAge * 1000
+
+    async function createUser(profile) {
       _debug('createUser', profile)
       try {
         // Create user account
@@ -177,7 +183,7 @@ const Adapter = (config, options = {}) => {
       }
     }
 
-    async function getUser (id) {
+    async function getUser(id) {
       _debug('getUser', id)
 
       // In the very specific case of both using JWT for storing session data
@@ -198,7 +204,7 @@ const Adapter = (config, options = {}) => {
       }
     }
 
-    async function getUserByEmail (email) {
+    async function getUserByEmail(email) {
       _debug('getUserByEmail', email)
       try {
         return connection.getRepository(User).findOne({ email })
@@ -208,7 +214,7 @@ const Adapter = (config, options = {}) => {
       }
     }
 
-    async function getUserByProviderAccountId (providerId, providerAccountId) {
+    async function getUserByProviderAccountId(providerId, providerAccountId) {
       _debug('getUserByProviderAccountId', providerId, providerAccountId)
       try {
         const account = await connection.getRepository(Account).findOne({ providerId, providerAccountId })
@@ -220,25 +226,25 @@ const Adapter = (config, options = {}) => {
       }
     }
 
-    async function getUserByCredentials (credentials) {
+    async function getUserByCredentials(credentials) {
       _debug('getUserByCredentials', credentials)
       // @TODO Get user from DB
       return false
     }
 
-    async function updateUser (user) {
+    async function updateUser(user) {
       _debug('updateUser', user)
       // @TODO Save changes to user object in DB
       return false
     }
 
-    async function deleteUser (userId) {
+    async function deleteUser(userId) {
       _debug('deleteUser', userId)
       // @TODO Delete user from DB
       return false
     }
 
-    async function linkAccount (userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires) {
+    async function linkAccount(userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires) {
       _debug('linkAccount', userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires)
       try {
         // Create provider account linked to user
@@ -250,7 +256,7 @@ const Adapter = (config, options = {}) => {
       }
     }
 
-    async function unlinkAccount (userId, providerId, providerAccountId) {
+    async function unlinkAccount(userId, providerId, providerAccountId) {
       _debug('unlinkAccount', userId, providerId, providerAccountId)
       // @TODO Get current user from DB
       // @TODO Delete [provider] object from user object
@@ -258,10 +264,9 @@ const Adapter = (config, options = {}) => {
       return false
     }
 
-    async function createSession (user) {
+    async function createSession(user) {
       _debug('createSession', user)
       try {
-        const { sessionMaxAge } = appOptions
         let expires = null
         if (sessionMaxAge) {
           const dateExpires = new Date()
@@ -269,7 +274,7 @@ const Adapter = (config, options = {}) => {
           expires = dateExpires.toISOString()
         }
 
-        const session = new Session(user.id, null, expires)
+        const session = new Session(user.id, expires)
 
         return getManager().save(session)
       } catch (error) {
@@ -278,13 +283,13 @@ const Adapter = (config, options = {}) => {
       }
     }
 
-    async function getSession (sessionToken) {
+    async function getSession(sessionToken) {
       _debug('getSession', sessionToken)
       try {
         const session = await connection.getRepository(Session).findOne({ sessionToken })
 
         // Check session has not expired (do not return it if it has)
-        if (session && session.sessionExpires && new Date() > new Date(session.sessionExpires)) {
+        if (session && session.expires && new Date() > new Date(session.expires)) {
           // @TODO Delete old sessions from database
           return null
         }
@@ -296,19 +301,17 @@ const Adapter = (config, options = {}) => {
       }
     }
 
-    async function updateSession (session, force) {
+    async function updateSession(session, force) {
       _debug('updateSession', session)
       try {
-        const { sessionMaxAge, sessionUpdateAge } = appOptions
-
-        if (sessionMaxAge && (sessionUpdateAge || sessionUpdateAge === 0) && session.sessionExpires) {
+        if (sessionMaxAge && (sessionUpdateAge || sessionUpdateAge === 0) && session.expires) {
           // Calculate last updated date, to throttle write updates to database
           // Formula: ({expiry date} - sessionMaxAge) + sessionUpdateAge
           //     e.g. ({expiry date} - 30 days) + 1 hour
           //
           // Default for sessionMaxAge is 30 days.
           // Default for sessionUpdateAge is 1 hour.
-          const dateSessionIsDueToBeUpdated = new Date(session.sessionExpires)
+          const dateSessionIsDueToBeUpdated = new Date(session.expires)
           dateSessionIsDueToBeUpdated.setTime(dateSessionIsDueToBeUpdated.getTime() - sessionMaxAge)
           dateSessionIsDueToBeUpdated.setTime(dateSessionIsDueToBeUpdated.getTime() + sessionUpdateAge)
 
@@ -317,12 +320,12 @@ const Adapter = (config, options = {}) => {
           if (new Date() > dateSessionIsDueToBeUpdated) {
             const newExpiryDate = new Date()
             newExpiryDate.setTime(newExpiryDate.getTime() + sessionMaxAge)
-            session.sessionExpires = newExpiryDate.toISOString()
+            session.expires = newExpiryDate.toISOString()
           } else if (!force) {
             return null
           }
         } else {
-          // If sessionMaxAge, sessionUpdateAge or session.sessionExpires are
+          // If session MaxAge, session UpdateAge or session.expires are
           // missing then don't even try to save changes, unless force is set.
           if (!force) { return null }
         }
@@ -334,7 +337,7 @@ const Adapter = (config, options = {}) => {
       }
     }
 
-    async function deleteSession (sessionToken) {
+    async function deleteSession(sessionToken) {
       _debug('deleteSession', sessionToken)
       try {
         return await connection.getRepository(Session).delete({ sessionToken })
@@ -344,11 +347,11 @@ const Adapter = (config, options = {}) => {
       }
     }
 
-    async function createVerificationRequest (identifer, url, token, secret, provider) {
+    async function createVerificationRequest(identifer, url, token, secret, provider) {
       _debug('createVerificationRequest', identifer)
       try {
-        const { site, verificationMaxAge } = appOptions
-        const { sendVerificationRequest } = provider
+        const { site } = appOptions
+        const { sendVerificationRequest, maxAge } = provider
 
         // Store hashed token (using secret as salt) so that tokens cannot be exploited
         // even if the contents of the database is compromised.
@@ -356,9 +359,9 @@ const Adapter = (config, options = {}) => {
         const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
 
         let expires = null
-        if (verificationMaxAge) {
+        if (maxAge) {
           const dateExpires = new Date()
-          dateExpires.setTime(dateExpires.getTime() + verificationMaxAge)
+          dateExpires.setTime(dateExpires.getTime() + (maxAge * 1000))
           expires = dateExpires.toISOString()
         }
 
@@ -377,7 +380,7 @@ const Adapter = (config, options = {}) => {
       }
     }
 
-    async function getVerificationRequest (identifer, token, secret, provider) {
+    async function getVerificationRequest(identifer, token, secret, provider) {
       _debug('getVerificationRequest', identifer, token)
       try {
         // Hash token provided with secret before trying to match it with datbase
@@ -398,7 +401,7 @@ const Adapter = (config, options = {}) => {
       }
     }
 
-    async function deleteVerificationRequest (identifer, token, secret, provider) {
+    async function deleteVerificationRequest(identifer, token, secret, provider) {
       _debug('deleteVerification', identifer, token)
       try {
         // Delete verification entry so it cannot be used again

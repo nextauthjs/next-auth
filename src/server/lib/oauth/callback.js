@@ -1,7 +1,7 @@
 import oAuthClient from './client'
 import querystring from 'querystring'
 import jwtDecode from 'jwt-decode'
-import logger.error from '../../../lib/consoleErr'
+import logger from '../../../lib/consoleErr'
 
 // @TODO Refactor monkey patching in _getOAuthAccessToken() and _get()
 // These methods have been forked from `node-oauth` to fix bugs; it may make
@@ -85,7 +85,7 @@ export default async (req, provider, callback) => {
   }
 }
 
-async function _getProfile (error, profileData, accessToken, refreshToken, provider) {
+async function _getProfile(error, profileData, accessToken, refreshToken, provider) {
   // @TODO Handle error
   if (error) {
     logger.error('GET_OAUTH_PROFILE_ERROR', error)
@@ -123,7 +123,7 @@ async function _getProfile (error, profileData, accessToken, refreshToken, provi
 }
 
 // Ported from https://github.com/ciaranj/node-oauth/blob/a7f8a1e21c362eb4ed2039431fb9ac2ae749f26a/lib/oauth2.js
-async function _getOAuthAccessToken (code, provider, callback) {
+async function _getOAuthAccessToken(code, provider, callback) {
   const url = provider.accessTokenUrl
   const setGetAccessTokenAuthHeader = (provider.setGetAccessTokenAuthHeader !== null) ? provider.setGetAccessTokenAuthHeader : true
   const params = { ...provider.params } || {}
@@ -189,7 +189,7 @@ async function _getOAuthAccessToken (code, provider, callback) {
 }
 
 // Ported from https://github.com/ciaranj/node-oauth/blob/a7f8a1e21c362eb4ed2039431fb9ac2ae749f26a/lib/oauth2.js
-function _get (provider, accessToken, callback) {
+function _get(provider, accessToken, callback) {
   const url = provider.profileUrl
   const headers = provider.headers || {}
 
@@ -212,7 +212,7 @@ function _get (provider, accessToken, callback) {
  * @param {*} idToken jwt from Provider
  * @param {*} callback
  */
-function _decodeIDToken (provider, accessToken, refreshToken, idToken, callback) {
+function _decodeIDToken(provider, accessToken, refreshToken, idToken, callback) {
   if (!idToken) { throw new Error('Missing idToken') }
 
   const decoded = jwtDecode(idToken)

@@ -3,6 +3,9 @@ export class VerificationRequest {
     this.identifer = identifer
     this.token = token
     this.expires = expires
+
+    const dateCreated = new Date()
+    this.created = dateCreated.toISOString()
   }
 }
 
@@ -23,6 +26,9 @@ export const VerificationRequestSchema = {
       unique: true
     },
     expires: {
+      type: 'timestamp'
+    },
+    created: {
       type: 'timestamp'
     }
   }

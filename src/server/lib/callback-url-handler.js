@@ -3,11 +3,7 @@ import cookie from '../lib/cookie'
 export default async (req, res, options) => {
   const { query } = req
   const { body } = req
-  const { cookies, site, defaultCallbackUrl } = options
-
-  // The callbackUrlHandler function is used to validate callback URLs, so you
-  // can easily allow (or deny) specific callback URLs.
-  const callbackUrlHandler = options.callbackUrlHandler || callbackUrlHandlerDefaultFunction
+  const { cookies, site, defaultCallbackUrl, allowCallbackUrl } = options
 
   // Handle preserving and validating callback URLs
   // If no defaultCallbackUrl option specified, default to the homepage for the site
@@ -18,24 +14,14 @@ export default async (req, res, options) => {
   const callbackUrlCookieValue = req.cookies[cookies.callbackUrl.name] || null
   if (callbackUrlParamValue) {
     // If callbackUrl form field or query parameter is passed try to use it if allowed
-    callbackUrl = await callbackUrlHandler(callbackUrlParamValue, options)
+    callbackUrl = await allowCallbackUrl(callbackUrlParamValue, site)
   } else if (callbackUrlCookieValue) {
     // If no callbackUrl specified, try using the value from the cookie if allowed
-    callbackUrl = await callbackUrlHandler(callbackUrlCookieValue, options)
+    callbackUrl = await allowCallbackUrl(callbackUrlCookieValue, site)
   }
 
   // Save callback URL in a cookie so that can be used for subsequent requests in signin/signout/callback flow
   if (callbackUrl && (callbackUrl !== callbackUrlCookieValue)) { cookie.set(res, cookies.callbackUrl.name, callbackUrl, cookies.callbackUrl.options) }
 
   return Promise.resolve(callbackUrl)
-}
-
-// Default handler for callbackUrlHandler(url) checks the protocol and host
-// matches the site name, if not then returns the canonical site url.
-const callbackUrlHandlerDefaultFunction = (url, options) => {
-  if (url.startsWith(options.site)) {
-    return Promise.resolve(url)
-  } else {
-    return Promise.resolve(options.site)
-  }
 }
