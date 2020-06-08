@@ -24,7 +24,7 @@ import Providers from 'next-auth/providers'
 const options = {
   site: process.env.SITE || 'http://localhost:3000',
 
-  // specify one or more authentication providers
+  // configure one or more authentication providers
   providers: [
     Providers.GitHub({
       clientId: process.env.GITHUB_ID,

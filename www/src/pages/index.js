@@ -199,7 +199,7 @@ import Providers from 'next-auth/providers'
 const options = {
   site: 'https://example.com'
   providers: [
-    // Add as many authentcation providers as you want…
+    // OAuth authentication providers
     Providers.Apple({
       clientId: process.env.APPLE_ID,
       clientSecret: process.env.APPLE_SECRET
@@ -208,13 +208,14 @@ const options = {
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET
     }),
-    // Allow sign in with passwordless email link…
+    // Sign in with passwordless email link
     Providers.Email({
       server: process.env.MAIL_SERVER,
       from: '<no-reply@example.com>'
     }),
   ],
-  database: process.env.DATABASE_URL // Optional
+  // MySQL/MariaDB/Postgres/MongoDB connection string (or leave empty)
+  database: process.env.DATABASE_URL
 }
 
 export default (req, res) => NextAuth(req, res, options)
