@@ -62,7 +62,7 @@ function Feature ({ imageUrl, title, description }) {
           </div>
         </div>
       )}
-      <h2 className='text--center'>{title}</h2>
+      <h3 className='text--center'>{title}</h3>
       <p>{description}</p>
     </div>
   )
@@ -81,12 +81,7 @@ function Home () {
             alt='Shield with key icon'
             className={styles.heroLogo}
           />
-          <div
-            style={{
-              display: 'inline-block',
-              margin: '1rem 1.5rem 0 1.5rem'
-            }}
-          >
+          <div className={styles.heroText}>
             <h1 className='hero__title'>{siteConfig.title}</h1>
             <p className='hero__subtitle'>{siteConfig.tagline}</p>
           </div>
@@ -113,6 +108,9 @@ function Home () {
       <main className='home-main'>
         <section className={`section-features ${styles.features}`}>
           <div className='container'>
+            <h2 className='text--center'>
+              Full stack open source authentication
+            </h2>
             <div className='row'>
               {features.map((props, idx) => (
                 <Feature key={idx} {...props} />
