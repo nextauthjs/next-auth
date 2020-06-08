@@ -66,8 +66,8 @@ export default ({ site, error, baseUrl }) => {
       message =
         <div>
           <div className='message'>
-            <p>There is a problem with the NextAuth server configuration.</p>
-            <p>Check the server logs for details.</p>
+            <p>There is a problem with the server configuration.</p>
+            <p>Check the server logs for more information.</p>
           </div>
         </div>
       break
