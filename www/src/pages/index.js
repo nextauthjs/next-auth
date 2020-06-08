@@ -214,7 +214,7 @@ const options = {
       from: '<no-reply@example.com>'
     }),
   ],
-  // MySQL/MariaDB/Postgres/MongoDB connection string (or leave empty)
+  // SQL or MongoDB database (or leave empty)
   database: process.env.DATABASE_URL
 }
 
