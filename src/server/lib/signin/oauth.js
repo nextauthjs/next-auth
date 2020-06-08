@@ -1,5 +1,6 @@
 import oAuthClient from '../oauth/client'
 import crypto from 'crypto'
+import logger from '../../../lib/consoleErr'
 
 export default (provider, callback) => {
   const { callbackUrl } = provider
@@ -30,7 +31,7 @@ export default (provider, callback) => {
     // Handle oAuth v1.x
     client.getOAuthRequestToken((error, oAuthToken) => {
       if (error) {
-        console.error('GET_AUTHORISATION_URL_ERROR', error)
+        logger.error('GET_AUTHORISATION_URL_ERROR', error)
       }
       const url = `${provider.authorizationUrl}?oauth_token=${oAuthToken}`
       callback(error, url)

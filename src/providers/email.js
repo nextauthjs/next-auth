@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer'
+import logger from '../lib/consoleErr'
 
 export default (options) => {
   return {
@@ -36,7 +37,7 @@ const sendVerificationRequest = ({ identifer: emailAddress, url, token, site, pr
         html: html({ url, siteName })
       }, (error) => {
         if (error) {
-          console.error('SEND_VERIFICATION_EMAIL_ERROR', emailAddress, error)
+          logger.error('SEND_VERIFICATION_EMAIL_ERROR', emailAddress, error)
           return reject(new Error('SEND_VERIFICATION_EMAIL_ERROR', error))
         }
         return resolve()

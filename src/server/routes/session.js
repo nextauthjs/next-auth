@@ -1,5 +1,6 @@
 // Return a session object (without any private fields) for Single Page App clients
 import cookie from '../lib/cookie'
+import logger from '../../lib/consoleErr'
 
 export default async (req, res, options, done) => {
   const { cookies, adapter, jwt } = options
@@ -49,7 +50,7 @@ export default async (req, res, options, done) => {
       }, newToken)
     } catch (error) {
       // If JWT not verifiable, make sure the cookie for it is removed and return empty object
-      console.error('JWT_SESSION_ERROR', error)
+      logger.error('JWT_SESSION_ERROR', error)
       cookie.set(res, cookies.sessionToken.name, '', { ...cookies.sessionToken.options, maxAge: 0 })
     }
   } else {
@@ -85,7 +86,7 @@ export default async (req, res, options, done) => {
         cookie.set(res, cookies.sessionToken.name, '', { ...cookies.sessionToken.options, maxAge: 0 })
       }
     } catch (error) {
-      console.error('SESSION_ERROR', error)
+      logger.error('SESSION_ERROR', error)
     }
   }
 

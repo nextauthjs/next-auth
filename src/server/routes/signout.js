@@ -1,14 +1,9 @@
 // Handle requests to /api/auth/signout
 import cookie from '../lib/cookie'
+import logger from '../../lib/consoleErr'
 
 export default async (req, res, options, done) => {
-  const {
-    adapter,
-    cookies,
-    callbackUrl,
-    csrfTokenVerified,
-    baseUrl
-  } = options
+  const { adapter, cookies, callbackUrl, csrfTokenVerified, baseUrl } = options
 
   const useJwtSession = options.session.jwt
 
@@ -35,12 +30,15 @@ export default async (req, res, options, done) => {
       await deleteSession(sessionToken)
     } catch (error) {
       // If error, log it but continue
-      console.error('SIGNOUT_ERROR', error)
+      logger.error('SIGNOUT_ERROR', error)
     }
   }
 
   // Remove Session Token
-  cookie.set(res, cookies.sessionToken.name, '', { ...cookies.sessionToken.options, maxAge: 0 })
+  cookie.set(res, cookies.sessionToken.name, '', {
+    ...cookies.sessionToken.options,
+    maxAge: 0
+  })
 
   res.status(302).setHeader('Location', callbackUrl)
   res.end()

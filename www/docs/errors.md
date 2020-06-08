@@ -1,0 +1,87 @@
+---
+id: errors
+title: Errors
+---
+
+
+## TypeORM
+
+### ADAPTER_CONNECTION_ERROR
+
+### CREATE_USER_ERROR
+
+### GET_USER_BY_ID_ERROR
+
+### GET_USER_BY_EMAIL_ERROR
+
+### GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR
+
+### LINK_ACCOUNT_ERROR
+
+### CREATE_SESSION_ERROR
+
+### GET_SESSION_ERROR
+
+### UPDATE_SESSION_ERROR
+
+### DELETE_SESSION_ERROR
+
+### CREATE_VERIFICATION_REQUEST_ERROR
+
+### GET_VERIFICATION_REQUEST_ERROR
+
+### DELETE_VERIFICATION_REQUEST_ERROR
+
+## Client
+
+### CLIENT_USE_SESSION_ERROR
+
+### CLIENT_FETCH_ERROR
+
+### CLIENT_COOKIE_PARSE_ERROR
+
+## Providers
+
+### SEND_VERIFICATION_EMAIL_ERROR
+
+## Server
+
+### DB_OR_ADAPTER_REQUIRED
+
+You must include an `adapter` or `database` in your `/pages/api/auth/[...nextauth].js` config.
+
+See [adapter](https://next-auth.js.org/options/advanced-options#adapter) or [database](https://next-auth.js.org/options/basic-options#database) for more information.
+
+## 0Auth
+
+### GET_OAUTH2_ACCESS_TOKEN_ERROR
+
+### GET_OAUTH_ACCESS_TOKEN_ERROR
+
+### GET_OAUTH_PROFILE_ERROR
+
+### PARSE_OAUTH_PROFILE_ERROR
+
+### _GET_OATUH_ACCESS_TOKEN_ERROR
+
+## Signin
+
+### GET_AUTHORISATION_URL_ERROR
+
+## Routes
+
+### OAUTH_CALLBACK_ERROR
+
+### OAUTH_CALLBACK_HANDLER_ERROR
+
+### EMAIL_CALLBACK_ERROR
+
+### JWT_SESSION_ERROR
+
+### SESSION_ERROR
+
+### OAUTH_SIGNIN_ERROR
+
+### EMAIL_SIGNIN_ERROR
+
+### SIGNOUT_ERROR

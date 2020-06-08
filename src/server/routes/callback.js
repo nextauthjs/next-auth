@@ -2,6 +2,7 @@
 import oAuthCallback from '../lib/oauth/callback'
 import callbackHandler from '../lib/callback-handler'
 import cookie from '../lib/cookie'
+import logger from '../../lib/consoleErr'
 
 // @TODO Refactor oAuthCallback to return promise instead of using a callback and reduce duplicate code
 export default async (req, res, options, done) => {
@@ -29,7 +30,7 @@ export default async (req, res, options, done) => {
   if (type === 'oauth') {
     oAuthCallback(req, provider, async (error, oauthAccount) => {
       if (error) {
-        console.error('OAUTH_CALLBACK_ERROR', error)
+        logger.error('OAUTH_CALLBACK_ERROR', error)
         res.status(302).setHeader('Location', `${baseUrl}/error?error=oAuthCallback`)
         res.end()
         return done()
@@ -85,7 +86,7 @@ export default async (req, res, options, done) => {
           // If is missing email address (NB: the only field on a profile currently required)
           res.status(302).setHeader('Location', `${baseUrl}/error?error=EmailRequired`)
         } else {
-          console.error('OAUTH_CALLBACK_HANDLER_ERROR', error)
+          logger.error('OAUTH_CALLBACK_HANDLER_ERROR', error)
           res.status(302).setHeader('Location', `${baseUrl}/error?error=Callback`)
         }
         res.end()
@@ -136,7 +137,6 @@ export default async (req, res, options, done) => {
 
       // If token is valid, delete email verification record in database
       await deleteVerificationRequest(email, token, secret, provider)
-
       // Invoke callbackHandler to go through sign up flow
       //
       // This will create new new account if they don't have one, or sign them
@@ -186,7 +186,7 @@ export default async (req, res, options, done) => {
         res.status(302).setHeader('Location', `${baseUrl}/error?error=EmailCreateAccount`)
       } else {
         res.status(302).setHeader('Location', `${baseUrl}/error?error=Callback`)
-        console.error('EMAIL_CALLBACK_ERROR', error)
+        logger.error('EMAIL_CALLBACK_ERROR', error)
       }
       res.end()
       return done()
