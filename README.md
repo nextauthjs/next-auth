@@ -10,7 +10,7 @@ It is designed from the ground up to support Next.js and Serverless.
 
 Install: `npm i next-auth`
 
-Documentation: [next-auth.js.org](https://next-auth.js.org)
+See [next-auth.js.org](https://next-auth.js.org) for more information and documentation.
 
 ## Features
 
@@ -27,6 +27,7 @@ Documentation: [next-auth.js.org](https://next-auth.js.org)
 * Supports Bring Your Own Database (BYOD) and can be used with any database
 * Built-in support for for [MySQL, MariaDB, Postgres, MongoDB and SQLite](https://next-auth.js.org/options/database)
 * Works great with databases from popular hosting providers
+* Can also be used without a database (e.g. OAuth + JWT)
 
 ### Secure by default
 
@@ -46,7 +47,7 @@ import Providers from 'next-auth/providers'
 const options = {
   site: 'https://example.com'
   providers: [
-    // Add as many authentcation providers as you want…
+    // OAuth authentication providers
     Providers.Apple({
       clientId: process.env.APPLE_ID,
       clientSecret: process.env.APPLE_SECRET
@@ -55,14 +56,14 @@ const options = {
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET
     }),
-    // Allow sign in with passwordless email link…
+    // Sign in with passwordless email link
     Providers.Email({
       server: process.env.MAIL_SERVER,
       from: '<no-reply@example.com>'
     }),
   ],
-  database: process.env.DATABASE_URL,
-  jwt: true // Enables JSON Web Tokens
+  // SQL or MongoDB database (or leave empty)
+  database: process.env.DATABASE_URL
 }
 
 export default (req, res) => NextAuth(req, res, options)
