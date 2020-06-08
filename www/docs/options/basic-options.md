@@ -219,14 +219,14 @@ If the function returns `true` the user can sign in, if it returns `false` an ac
 
 This works with all providers (OAuth and Email) and both with and without databases.
 
-It is useful to controlling access to dashboards and/or admin pages without requiring a user database.
+It is useful to control access to dashboards/admin pages without requiring a user database.
 
 Example:
 
 ```js
 allowSignin: async (user, account) => {
-  // Return true if user / account is not allowed to sign in
-  // or false if an access denied message should be displayed
+  // Return true if user / account is allowed to sign in.
+  // Return false to display an access denied message.
   return true
 }
 ```
