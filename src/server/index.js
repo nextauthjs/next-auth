@@ -10,7 +10,6 @@ import callback from './routes/callback'
 import session from './routes/session'
 import pages from './pages'
 import adapters from '../adapters'
-import logger from '../lib/consoleErr'
 
 const DEFAULT_SITE = ''
 const DEFAULT_BASE_PATH = '/api/auth'
@@ -52,12 +51,6 @@ export default async (req, res, userSuppliedOptions) => {
     } else if (userSuppliedOptions.database) {
       // If database URI or config object is provided, use it (simple usage)
       adapter = adapters.Default(userSuppliedOptions.database)
-    } else {
-      // @TODO Add link to documentation
-      logger.error('DB_OR_ADAPTER_REQUIRED',
-        'NextAuth requires a \'database\' or \'adapter\' option to be specified.\n')
-      pages.render(req, res, 'error', { site, error: 'Configuration', baseUrl }, done)
-      return done()
     }
 
     // Secret used salt cookies and tokens (e.g. for CSRF protection).

@@ -1,6 +1,6 @@
 // Return a session object (without any private fields) for Single Page App clients
 import cookie from '../lib/cookie'
-import logger from '../../lib/consoleErr'
+import logger from '../../lib/logger'
 
 export default async (req, res, options, done) => {
   const { cookies, adapter, jwt } = options

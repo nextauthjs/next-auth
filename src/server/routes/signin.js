@@ -1,7 +1,7 @@
 // Handle requests to /api/auth/signin
 import oAuthSignin from '../lib/signin/oauth'
 import emailSignin from '../lib/signin/email'
-import logger from '../../lib/consoleErr'
+import logger from '../../lib/logger'
 
 export default async (req, res, options, done) => {
   const {
@@ -23,7 +23,7 @@ export default async (req, res, options, done) => {
   if (type === 'oauth') {
     oAuthSignin(provider, (error, oAuthSigninUrl) => {
       if (error) {
-        logger.error('OAUTH_SIGNIN_ERROR', error)
+        logger.error('SIGNIN_OAUTH_ERROR', error)
         res
           .status(302)
           .setHeader('Location', `${baseUrl}/error?error=oAuthSignin`)
@@ -82,7 +82,7 @@ export default async (req, res, options, done) => {
     try {
       await emailSignin(email, provider, options)
     } catch (error) {
-      logger.error('EMAIL_SIGNIN_ERROR', error)
+      logger.error('SIGNIN_EMAIL_ERROR', error)
       res
         .status(302)
         .setHeader('Location', `${baseUrl}/error?error=EmailSignin`)

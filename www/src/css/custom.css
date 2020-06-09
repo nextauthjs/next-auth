@@ -53,10 +53,13 @@ a,
   border-radius: 2rem;
 }
 
+.contents li {
+  margin-left: 0;
+}
+
 .navbar {
   box-shadow: 0 0 .5rem rgba(0,0,0,.2)
 }
-
 
 .navbar__title {
   font-size: 1.2rem;
