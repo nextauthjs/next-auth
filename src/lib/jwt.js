@@ -20,7 +20,25 @@ const decode = async ({ secret, key = secret, token, maxAge }) => {
   return verifiedToken
 }
 
+// This is a simple helper method to make it easier to use JWT from an API route
+const getJwt = async ({ req, secret, cookieName }) => {
+  if (!req || !secret) throw new Error('Must pass { req, secret } to getJWT()')
+
+  const secureCookieName = '__Secure-next-auth.session-token'
+  const insecureCookieName = 'next-auth.session-token'
+  const cookieValue = cookieName ? req.cookies[cookieName] : req.cookies[secureCookieName] || req.cookies[insecureCookieName]
+
+  if (!cookieValue) { return null }
+
+  try {
+    return await decode({ secret, token: cookieValue })
+  } catch (error) {
+    return null
+  }
+}
+
 export default {
   encode,
-  decode
+  decode,
+  getJwt
 }
