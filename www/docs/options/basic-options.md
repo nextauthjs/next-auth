@@ -177,27 +177,16 @@ An example JSON WebToken contains an encrypted payload like this:
 }
 ```
 
-You can use the built-in JWT decode/encode function from a custom API route, like this:
+You can use the built-in `getJwt()` helper method to read the token, like this:
 
 ```js
 import jwt from 'next-auth/jwt'
 
+const secret = process.env.JWT_SECRET
+
 export default async (req, res) =>  {
-  // Load encrypted (and signed) token from cookie
-  const useSecureCookiePrefix = process.env.NODE_ENV === 'production'
-  const cookieName = `${ useSecureCookiePrefix ? '__Secure-' : '' }next-auth.session-token`
-  const sessionToken = req.cookies[cookieName]
-
-  if (!sessionToken) { return res.end(`No JWT token`) }
-
-  try {
-      // Decrypt and verify token
-    const token = await jwt.decode({ secret: 'my-secret-123', token: sessionToken })
-    res.end(`Contents of JWT:\n${JSON.stringify(token, null, 2)}`)
-  } catch (error) {
-    console.error(error)
-    res.end('Unable to decode JWT')
-  }
+  const token = await jwt.getJwt({ req, secret })
+  res.end(JSON.stringify(token, null, 2))
 }
 ```
 
