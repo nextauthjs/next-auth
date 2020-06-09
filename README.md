@@ -16,8 +16,8 @@ See [next-auth.js.org](https://next-auth.js.org) for more information and docume
 
 ### Authentication
 
-* Designed to work with any 0Auth service, it supports 0Auth 1.0, 1.0A and 2.0
-* Built-in support for [many popular 0Auth sign-in services](https://next-auth.js.org/options/providers)
+* Designed to work with any OAuth service, it supports OAuth 1.0, 1.0A and 2.0
+* Built-in support for [many popular OAuth sign-in services](https://next-auth.js.org/options/providers)
 * Supports email / passwordless authentication
 * Supports both JSON Web Tokens and database sessions
 
