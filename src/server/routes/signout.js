@@ -1,6 +1,6 @@
 // Handle requests to /api/auth/signout
 import cookie from '../lib/cookie'
-import logger from '../../lib/consoleErr'
+import logger from '../../lib/logger'
 
 export default async (req, res, options, done) => {
   const { adapter, cookies, callbackUrl, csrfTokenVerified, baseUrl } = options

@@ -2,7 +2,7 @@
 import oAuthCallback from '../lib/oauth/callback'
 import callbackHandler from '../lib/callback-handler'
 import cookie from '../lib/cookie'
-import logger from '../../lib/consoleErr'
+import logger from '../../lib/logger'
 
 // @TODO Refactor oAuthCallback to return promise instead of using a callback and reduce duplicate code
 export default async (req, res, options, done) => {
@@ -30,7 +30,7 @@ export default async (req, res, options, done) => {
   if (type === 'oauth') {
     oAuthCallback(req, provider, async (error, oauthAccount) => {
       if (error) {
-        logger.error('OAUTH_CALLBACK_ERROR', error)
+        logger.error('CALLBACK_OAUTH_ERROR', error)
         res.status(302).setHeader('Location', `${baseUrl}/error?error=oAuthCallback`)
         res.end()
         return done()
@@ -186,7 +186,7 @@ export default async (req, res, options, done) => {
         res.status(302).setHeader('Location', `${baseUrl}/error?error=EmailCreateAccount`)
       } else {
         res.status(302).setHeader('Location', `${baseUrl}/error?error=Callback`)
-        logger.error('EMAIL_CALLBACK_ERROR', error)
+        logger.error('CALLBACK_EMAIL_ERROR', error)
       }
       res.end()
       return done()

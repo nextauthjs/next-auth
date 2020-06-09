@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer'
-import logger from '../lib/consoleErr'
+import logger from '../lib/logger'
 
 export default (options) => {
   return {

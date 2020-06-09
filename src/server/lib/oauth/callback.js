@@ -1,7 +1,7 @@
 import oAuthClient from './client'
 import querystring from 'querystring'
 import jwtDecode from 'jwt-decode'
-import logger from '../../../lib/consoleErr'
+import logger from '../../../lib/logger'
 
 // @TODO Refactor monkey patching in _getOAuthAccessToken() and _get()
 // These methods have been forked from `node-oauth` to fix bugs; it may make
@@ -36,7 +36,7 @@ export default async (req, provider, callback) => {
       (error, accessToken, refreshToken, results) => {
         // @TODO Handle error
         if (error || results.error) {
-          logger.error('GET_OAUTH2_ACCESS_TOKEN_ERROR', error, results, provider.id, code)
+          logger.error('OAUTH_GET_ACCESS_TOKEN_ERROR', error, results, provider.id, code)
         }
 
         if (provider.id === 'apple') {
@@ -71,7 +71,7 @@ export default async (req, provider, callback) => {
       (error, accessToken, refreshToken, results) => {
         // @TODO Handle error
         if (error || results.error) {
-          logger.error('GET_OAUTH_ACCESS_TOKEN_ERROR', error, results)
+          logger.error('OAUTH_V1_GET_ACCESS_TOKEN_ERROR', error, results)
         }
 
         client.get(
@@ -85,10 +85,10 @@ export default async (req, provider, callback) => {
   }
 }
 
-async function _getProfile(error, profileData, accessToken, refreshToken, provider) {
+async function _getProfile (error, profileData, accessToken, refreshToken, provider) {
   // @TODO Handle error
   if (error) {
-    logger.error('GET_OAUTH_PROFILE_ERROR', error)
+    logger.error('OAUTH_GET_PROFILE_ERROR', error)
   }
 
   let profile = {}
@@ -99,7 +99,7 @@ async function _getProfile(error, profileData, accessToken, refreshToken, provid
     profile = await provider.profile(profileData)
   } catch (exception) {
     // @TODO Handle parsing error
-    logger.error('PARSE_OAUTH_PROFILE_ERROR', exception)
+    logger.error('OAUTH_PARSE_PROFILE_ERROR', exception)
     throw new Error('Failed to get OAuth profile')
   }
 
@@ -123,7 +123,7 @@ async function _getProfile(error, profileData, accessToken, refreshToken, provid
 }
 
 // Ported from https://github.com/ciaranj/node-oauth/blob/a7f8a1e21c362eb4ed2039431fb9ac2ae749f26a/lib/oauth2.js
-async function _getOAuthAccessToken(code, provider, callback) {
+async function _getOAuthAccessToken (code, provider, callback) {
   const url = provider.accessTokenUrl
   const setGetAccessTokenAuthHeader = (provider.setGetAccessTokenAuthHeader !== null) ? provider.setGetAccessTokenAuthHeader : true
   const params = { ...provider.params } || {}
@@ -166,7 +166,7 @@ async function _getOAuthAccessToken(code, provider, callback) {
     null,
     (error, data, response) => {
       if (error) {
-        logger.error('_GET_OAUTH_ACCESS_TOKEN_ERROR', error, data, response)
+        logger.error('OAUTH_GET_ACCESS_TOKEN_ERROR', error, data, response)
         return callback(error)
       }
 
@@ -189,7 +189,7 @@ async function _getOAuthAccessToken(code, provider, callback) {
 }
 
 // Ported from https://github.com/ciaranj/node-oauth/blob/a7f8a1e21c362eb4ed2039431fb9ac2ae749f26a/lib/oauth2.js
-function _get(provider, accessToken, callback) {
+function _get (provider, accessToken, callback) {
   const url = provider.profileUrl
   const headers = provider.headers || {}
 
@@ -212,7 +212,7 @@ function _get(provider, accessToken, callback) {
  * @param {*} idToken jwt from Provider
  * @param {*} callback
  */
-function _decodeIDToken(provider, accessToken, refreshToken, idToken, callback) {
+function _decodeIDToken (provider, accessToken, refreshToken, idToken, callback) {
   if (!idToken) { throw new Error('Missing idToken') }
 
   const decoded = jwtDecode(idToken)

@@ -1,6 +1,6 @@
 import oAuthClient from '../oauth/client'
 import crypto from 'crypto'
-import logger from '../../../lib/consoleErr'
+import logger from '../../../lib/logger'
 
 export default (provider, callback) => {
   const { callbackUrl } = provider

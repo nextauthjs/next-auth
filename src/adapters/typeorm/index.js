@@ -3,7 +3,7 @@ import { createHash } from 'crypto'
 
 import { CreateUserError } from '../../lib/errors'
 import Models from './models'
-import logger from '../../lib/consoleErr'
+import logger from '../../lib/logger'
 
 const Adapter = (config, options = {}) => {
   // If the input is URL string, automatically convert the string to an object
@@ -121,10 +121,10 @@ const Adapter = (config, options = {}) => {
 
   let connection = null
 
-  async function getAdapter(appOptions) {
+  async function getAdapter (appOptions) {
     // Helper function to reuse / restablish connections
     // (useful if they drop when after being idle)
-    async function _connect() {
+    async function _connect () {
       // Get current connection by name
       connection = getConnection(config.name)
 
@@ -151,9 +151,10 @@ const Adapter = (config, options = {}) => {
     }
 
     // Display debug output if debug option enabled
-    function _debug(...args) {
+    // @TODO Refactor logger so is passed in appOptions
+    function _debug (debugCode, ...args) {
       if (appOptions.debug) {
-        console.log('[next-auth][debug]', ...args)
+        logger.debug(debugCode, ...args)
       }
     }
 
@@ -171,7 +172,7 @@ const Adapter = (config, options = {}) => {
     const sessionMaxAge = appOptions.session.maxAge * 1000
     const sessionUpdateAge = appOptions.session.updateAge * 1000
 
-    async function createUser(profile) {
+    async function createUser (profile) {
       _debug('createUser', profile)
       try {
         // Create user account
@@ -183,7 +184,7 @@ const Adapter = (config, options = {}) => {
       }
     }
 
-    async function getUser(id) {
+    async function getUser (id) {
       _debug('getUser', id)
 
       // In the very specific case of both using JWT for storing session data
@@ -204,7 +205,7 @@ const Adapter = (config, options = {}) => {
       }
     }
 
-    async function getUserByEmail(email) {
+    async function getUserByEmail (email) {
       _debug('getUserByEmail', email)
       try {
         return connection.getRepository(User).findOne({ email })
@@ -214,7 +215,7 @@ const Adapter = (config, options = {}) => {
       }
     }
 
-    async function getUserByProviderAccountId(providerId, providerAccountId) {
+    async function getUserByProviderAccountId (providerId, providerAccountId) {
       _debug('getUserByProviderAccountId', providerId, providerAccountId)
       try {
         const account = await connection.getRepository(Account).findOne({ providerId, providerAccountId })
@@ -226,25 +227,25 @@ const Adapter = (config, options = {}) => {
       }
     }
 
-    async function getUserByCredentials(credentials) {
+    async function getUserByCredentials (credentials) {
       _debug('getUserByCredentials', credentials)
       // @TODO Get user from DB
       return false
     }
 
-    async function updateUser(user) {
+    async function updateUser (user) {
       _debug('updateUser', user)
       // @TODO Save changes to user object in DB
       return false
     }
 
-    async function deleteUser(userId) {
+    async function deleteUser (userId) {
       _debug('deleteUser', userId)
       // @TODO Delete user from DB
       return false
     }
 
-    async function linkAccount(userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires) {
+    async function linkAccount (userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires) {
       _debug('linkAccount', userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires)
       try {
         // Create provider account linked to user
@@ -256,7 +257,7 @@ const Adapter = (config, options = {}) => {
       }
     }
 
-    async function unlinkAccount(userId, providerId, providerAccountId) {
+    async function unlinkAccount (userId, providerId, providerAccountId) {
       _debug('unlinkAccount', userId, providerId, providerAccountId)
       // @TODO Get current user from DB
       // @TODO Delete [provider] object from user object
@@ -264,7 +265,7 @@ const Adapter = (config, options = {}) => {
       return false
     }
 
-    async function createSession(user) {
+    async function createSession (user) {
       _debug('createSession', user)
       try {
         let expires = null
@@ -283,7 +284,7 @@ const Adapter = (config, options = {}) => {
       }
     }
 
-    async function getSession(sessionToken) {
+    async function getSession (sessionToken) {
       _debug('getSession', sessionToken)
       try {
         const session = await connection.getRepository(Session).findOne({ sessionToken })
@@ -301,7 +302,7 @@ const Adapter = (config, options = {}) => {
       }
     }
 
-    async function updateSession(session, force) {
+    async function updateSession (session, force) {
       _debug('updateSession', session)
       try {
         if (sessionMaxAge && (sessionUpdateAge || sessionUpdateAge === 0) && session.expires) {
@@ -337,7 +338,7 @@ const Adapter = (config, options = {}) => {
       }
     }
 
-    async function deleteSession(sessionToken) {
+    async function deleteSession (sessionToken) {
       _debug('deleteSession', sessionToken)
       try {
         return await connection.getRepository(Session).delete({ sessionToken })
@@ -347,7 +348,7 @@ const Adapter = (config, options = {}) => {
       }
     }
 
-    async function createVerificationRequest(identifer, url, token, secret, provider) {
+    async function createVerificationRequest (identifer, url, token, secret, provider) {
       _debug('createVerificationRequest', identifer)
       try {
         const { site } = appOptions
@@ -380,7 +381,7 @@ const Adapter = (config, options = {}) => {
       }
     }
 
-    async function getVerificationRequest(identifer, token, secret, provider) {
+    async function getVerificationRequest (identifer, token, secret, provider) {
       _debug('getVerificationRequest', identifer, token)
       try {
         // Hash token provided with secret before trying to match it with datbase
@@ -401,7 +402,7 @@ const Adapter = (config, options = {}) => {
       }
     }
 
-    async function deleteVerificationRequest(identifer, token, secret, provider) {
+    async function deleteVerificationRequest (identifer, token, secret, provider) {
       _debug('deleteVerification', identifer, token)
       try {
         // Delete verification entry so it cannot be used again
