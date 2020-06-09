@@ -15,7 +15,7 @@ export const Image = ({ children, src, alt = '' }) => (
   </div>
  )
 
-NextAuth.js is designed to work with any 0Auth service, it supports 0Auth 1.0, 1.0A and 2.0 and has built-in support for many popular 0Auth sign-in services. It also supports email / passwordless authentication.
+NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1.0A and 2.0 and has built-in support for many popular OAuth sign-in services. It also supports email / passwordless authentication.
 
 ## Sign in with OAuth
 
