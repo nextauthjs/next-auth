@@ -19,7 +19,7 @@ import Providers from `next-auth/providers`
 providers: [
   Providers.Google({
     clientId: process.env.GOOGLE_CLIENT_ID,
-    clientId: process.env.GOOGLE_CLIENT_SECRET,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
   })
 }
 ...
