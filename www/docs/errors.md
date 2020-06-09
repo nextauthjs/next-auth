@@ -27,7 +27,7 @@ These errors are returned from the client. As the client is [Universal JavaScrip
 
 These erros are displayed on the terminal.
 
-### 0Auth
+### OAuth
 
 #### OAUTH_GET_ACCESS_TOKEN_ERROR
 
