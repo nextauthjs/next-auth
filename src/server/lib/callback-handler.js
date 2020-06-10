@@ -8,7 +8,7 @@
 // All verification (e.g. oAuth flows or email address verificaiton flows) are
 // done prior to this handler being called to avoid additonal complexity in this
 // handler.
-import { AccountNotLinkedError, InvalidProfile } from '../../lib/errors'
+import { AccountNotLinkedError } from '../../lib/errors'
 
 export default async (sessionToken, profile, providerAccount, options) => {
   try {
@@ -69,11 +69,8 @@ export default async (sessionToken, profile, providerAccount, options) => {
     }
 
     if (providerAccount.type === 'email') {
-      // All new email accounts need an email address associated with the profile
-      if (!profile.email) { throw new InvalidProfile() }
-
       // If signing in with an email, check if an account with the same email address exists already
-      const userByEmail = await getUserByEmail(profile.email)
+      const userByEmail = profile.email ? await getUserByEmail(profile.email) : null
       if (userByEmail) {
         if (isSignedIn) {
           if (user.id === userByEmail.id) {
@@ -183,7 +180,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
         //
         // oAuth providers should require email address verification to prevent this, but in
         // practice that is not always the case; this helps protect against that.
-        const userByEmail = await getUserByEmail(profile.email)
+        const userByEmail = profile.email ? await getUserByEmail(profile.email) : null
         if (userByEmail) {
           // We end up here when we don't have an account with the same [provider].id *BUT*
           // we do already have an account with the same email address as the one in the
@@ -194,13 +191,6 @@ export default async (sessionToken, profile, providerAccount, options) => {
           // to sign in via email to verify their identity and then link the accounts.
           throw new AccountNotLinkedError()
         } else {
-          // New accounts currently require an email address, so unless the user is
-          // already logged in they must be signing in with an oAuth profile that
-          // includes an email address (if they are already logged in, we don't care).
-          //
-          // This restriction may be lifted (or made optional) in future.
-          if (!isSignedIn && !profile.email) { throw new InvalidProfile() }
-
           // If the current user is not logged in and the profile isn't linked to any user
           // accounts (by email or provider account id)...
           //

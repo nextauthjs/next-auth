@@ -118,7 +118,7 @@ async function _getProfile (error, profileData, accessToken, refreshToken, provi
       accessToken,
       accessTokenExpires: null
     },
-    _profile: profileData
+    oAuthProfile: profileData
   })
 }
 

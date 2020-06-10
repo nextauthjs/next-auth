@@ -36,10 +36,10 @@ export default async (req, res, options, done) => {
         return done()
       }
 
-      const { profile, account } = await oauthAccount
+      const { profile, account, oAuthProfile } = await oauthAccount
 
       // Check allowSignin() allows this account to sign in
-      if (!await allowSignin(profile, account)) {
+      if (!await allowSignin(profile, account, oAuthProfile)) {
         res.status(302).setHeader('Location', `${baseUrl}/error?error=AccessDenied`)
         res.end()
         return done()
@@ -53,7 +53,7 @@ export default async (req, res, options, done) => {
             user,
             account,
             isNewUser
-          })
+          }, oAuthProfile)
 
           // Sign and encrypt token
           const token = await jwt.encode({ secret: jwt.secret, token: jwtPayload, maxAge: sessionMaxAge })
@@ -79,12 +79,9 @@ export default async (req, res, options, done) => {
       } catch (error) {
         if (error.name === 'AccountNotLinkedError') {
           // If the email on the account is already linked, but nto with this oAuth account
-          res.status(302).setHeader('Location', `${baseUrl}/error?error=oAuthAccountNotLinked`)
+          res.status(302).setHeader('Location', `${baseUrl}/error?error=OAuthAccountNotLinked`)
         } else if (error.name === 'CreateUserError') {
           res.status(302).setHeader('Location', `${baseUrl}/error?error=OAuthCreateAccount`)
-        } else if (error.name === 'InvalidProfile') {
-          // If is missing email address (NB: the only field on a profile currently required)
-          res.status(302).setHeader('Location', `${baseUrl}/error?error=EmailRequired`)
         } else {
           logger.error('OAUTH_CALLBACK_HANDLER_ERROR', error)
           res.status(302).setHeader('Location', `${baseUrl}/error?error=Callback`)

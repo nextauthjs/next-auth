@@ -60,7 +60,7 @@ const Adapter = (config, options = {}) => {
 
   // Some custom logic is required to make schemas compatible with MongoDB
   // Here we monkey patch some properties if MongoDB is being used.
-  if (config.type === 'mongodb') {
+  if (config.type.startsWith('mongodb')) {
     // Important!
     //
     // 1. You must set 'objectId: true' on one property on a model.
@@ -74,24 +74,46 @@ const Adapter = (config, options = {}) => {
     //    If you set 'objectId: true' on multiple properties on a model you will
     //    see the result of queries like find() is wrong. You will see the same
     //    Object ID in every property of type Object ID in the result (but the
-    //    database will look fine). Use type = 'objectId' for them instead!
+    //    database will look fine); so type = 'objectId' for them instead.
     //
-    // @TODO Look at refactoring to see if there is a better way to do this that
-    // doesn't rely on hard coding this transformation on a per property basis
+
+    // Update User schema for MongoDB
+    delete UserSchema.columns.id.type
     UserSchema.columns.id.objectId = true
+
+    // Remove unique constraint from email field and replace with sparce index
+    // to allow more than one field to be null, so that email addresses can
+    // be optional, as `unique: true` and `nullable: true` don't work the same
+    // with MongoDB as they do with SQL databases like MySQL and Postgres.
+    delete UserSchema.columns.email.unique
+    UserSchema.indices = [
+      {
+        name: 'email_index',
+        sparse: true,
+        columns: [
+          'email'
+        ]
+      }
+    ]
+
+    // Update Account schema for MongoDB
+    delete AccountSchema.columns.id.type
     AccountSchema.columns.id.objectId = true
     AccountSchema.columns.userId.type = 'objectId'
+
+    // Update Session schema for MongoDB
+    delete SessionSchema.columns.id.type
     SessionSchema.columns.id.objectId = true
     SessionSchema.columns.userId.type = 'objectId'
+
+    // Update Verification Request  schema for MongoDB
+    delete VerificationRequestSchema.columns.id.type
     VerificationRequestSchema.columns.id.objectId = true
   }
 
   // SQLite does not support `timestamp` fields so we remap them to `datetime`
   // NB: `timestamp` is an ANSI SQL specification and widely supported elsewhere
-  //
-  // @TODO Refactor to apply automatically to all `timestamp` properties if the
-  // database is MySQL.
-  if (config.type === 'sqlite') {
+  if (config.type.startsWith('sqlite')) {
     UserSchema.columns.created.type = 'datetime'
     AccountSchema.columns.accessTokenExpires.type = 'datetime'
     AccountSchema.columns.created.type = 'datetime'
@@ -208,6 +230,7 @@ const Adapter = (config, options = {}) => {
     async function getUserByEmail (email) {
       _debug('getUserByEmail', email)
       try {
+        if (!email) { return Promise.resolve(null) }
         return connection.getRepository(User).findOne({ email })
       } catch (error) {
         logger.error('GET_USER_BY_EMAIL_ERROR', error)
