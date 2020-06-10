@@ -174,7 +174,7 @@ const Adapter = (config, options = {}) => {
 
     // Display debug output if debug option enabled
     // @TODO Refactor logger so is passed in appOptions
-    function _debug (debugCode, ...args) {
+    function debugMessage (debugCode, ...args) {
       if (appOptions.debug) {
         logger.debug(debugCode, ...args)
       }
@@ -195,7 +195,7 @@ const Adapter = (config, options = {}) => {
     const sessionUpdateAge = appOptions.session.updateAge * 1000
 
     async function createUser (profile) {
-      _debug('createUser', profile)
+      debugMessage('CREATE_USER', profile)
       try {
         // Create user account
         const user = new User(profile.name, profile.email, profile.image)
@@ -207,7 +207,7 @@ const Adapter = (config, options = {}) => {
     }
 
     async function getUser (id) {
-      _debug('getUser', id)
+      debugMessage('GET_USER', id)
 
       // In the very specific case of both using JWT for storing session data
       // and using MongoDB to store user data, the ID is a string rather than
@@ -228,7 +228,7 @@ const Adapter = (config, options = {}) => {
     }
 
     async function getUserByEmail (email) {
-      _debug('getUserByEmail', email)
+      debugMessage('GET_USER_BY_EMAIL', email)
       try {
         if (!email) { return Promise.resolve(null) }
         return connection.getRepository(User).findOne({ email })
@@ -239,7 +239,7 @@ const Adapter = (config, options = {}) => {
     }
 
     async function getUserByProviderAccountId (providerId, providerAccountId) {
-      _debug('getUserByProviderAccountId', providerId, providerAccountId)
+      debugMessage('GET_USER_BY_PROVIDER_ACCOUNT_ID', providerId, providerAccountId)
       try {
         const account = await connection.getRepository(Account).findOne({ providerId, providerAccountId })
         if (!account) { return null }
@@ -251,25 +251,25 @@ const Adapter = (config, options = {}) => {
     }
 
     async function getUserByCredentials (credentials) {
-      _debug('getUserByCredentials', credentials)
+      debugMessage('GET_USER_BY_CREDENTIALS', credentials)
       // @TODO Get user from DB
       return false
     }
 
     async function updateUser (user) {
-      _debug('updateUser', user)
+      debugMessage('UPDATE_USER', user)
       // @TODO Save changes to user object in DB
       return false
     }
 
     async function deleteUser (userId) {
-      _debug('deleteUser', userId)
+      debugMessage('DELETE_USER', userId)
       // @TODO Delete user from DB
       return false
     }
 
     async function linkAccount (userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires) {
-      _debug('linkAccount', userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires)
+      debugMessage('LINK_ACCOUNT', userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires)
       try {
         // Create provider account linked to user
         const account = new Account(userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires)
@@ -281,7 +281,7 @@ const Adapter = (config, options = {}) => {
     }
 
     async function unlinkAccount (userId, providerId, providerAccountId) {
-      _debug('unlinkAccount', userId, providerId, providerAccountId)
+      debugMessage('UNLINK_ACCOUNT', userId, providerId, providerAccountId)
       // @TODO Get current user from DB
       // @TODO Delete [provider] object from user object
       // @TODO Save changes to user object in DB
@@ -289,7 +289,7 @@ const Adapter = (config, options = {}) => {
     }
 
     async function createSession (user) {
-      _debug('createSession', user)
+      debugMessage('CREATE_SESSION', user)
       try {
         let expires = null
         if (sessionMaxAge) {
@@ -308,7 +308,7 @@ const Adapter = (config, options = {}) => {
     }
 
     async function getSession (sessionToken) {
-      _debug('getSession', sessionToken)
+      debugMessage('GET_SESSION', sessionToken)
       try {
         const session = await connection.getRepository(Session).findOne({ sessionToken })
 
@@ -326,7 +326,7 @@ const Adapter = (config, options = {}) => {
     }
 
     async function updateSession (session, force) {
-      _debug('updateSession', session)
+      debugMessage('UPDATE_SESSION', session)
       try {
         if (sessionMaxAge && (sessionUpdateAge || sessionUpdateAge === 0) && session.expires) {
           // Calculate last updated date, to throttle write updates to database
@@ -362,7 +362,7 @@ const Adapter = (config, options = {}) => {
     }
 
     async function deleteSession (sessionToken) {
-      _debug('deleteSession', sessionToken)
+      debugMessage('DELETE_SESSION', sessionToken)
       try {
         return await connection.getRepository(Session).delete({ sessionToken })
       } catch (error) {
@@ -372,7 +372,7 @@ const Adapter = (config, options = {}) => {
     }
 
     async function createVerificationRequest (identifer, url, token, secret, provider) {
-      _debug('createVerificationRequest', identifer)
+      debugMessage('CREATE_VERIFICATION_REQUEST', identifer)
       try {
         const { site } = appOptions
         const { sendVerificationRequest, maxAge } = provider
@@ -405,7 +405,7 @@ const Adapter = (config, options = {}) => {
     }
 
     async function getVerificationRequest (identifer, token, secret, provider) {
-      _debug('getVerificationRequest', identifer, token)
+      debugMessage('GET_VERIFICATION_REQUEST', identifer, token)
       try {
         // Hash token provided with secret before trying to match it with datbase
         // @TODO Use bcrypt function here instead of simple salted hash
@@ -426,7 +426,7 @@ const Adapter = (config, options = {}) => {
     }
 
     async function deleteVerificationRequest (identifer, token, secret, provider) {
-      _debug('deleteVerification', identifer, token)
+      debugMessage('DELETE_VERIFICATION', identifer, token)
       try {
         // Delete verification entry so it cannot be used again
         const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
