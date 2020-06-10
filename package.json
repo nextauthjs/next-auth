@@ -18,8 +18,8 @@
     "publish:canary": "npm publish --tag canary",
     "lint": "standard",
     "lint:fix": "standard --fix",
-    "test:db:start": "docker-compose -f test/docker/docker-compose.yml up",
-    "test:db:stop": "docker-compose -f test/docker/docker-compose.yml down"
+    "test:db:run": "docker-compose -f test/docker/docker-compose.yml up",
+    "test:db:clean": "docker-compose -f test/docker/docker-compose.yml down"
   },
   "files": [
     "dist",

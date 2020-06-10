@@ -149,7 +149,7 @@ You likely only need to use this if you are not using the built-in `signin()` an
 
 ---
 
-## signin(provider, { options })
+## signin()
 
 * Client Side: **Yes**
 * Server Side: No
@@ -185,7 +185,7 @@ When using it with the email flow, pass the target `email` as an option.
 ```js
 import { signin } from 'next-auth/client'
 
-export default (email) => (
+export default ({ email }) => (
   <button onClick={() => signin('email', { email })}>Sign in with Email</button>
 )
 ```

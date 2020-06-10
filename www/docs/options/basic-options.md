@@ -99,6 +99,7 @@ session: {
   updateAge: 24 * 60 * 60, // 24 hours
   
   // Easily add custom properties to response from `/api/auth/session`.
+  //
   // Note: The response should not return any sensitive information. The JWT
   // option is supplied if JWT enabled and contains a (decrypted) copy of the
   // JWT payload for instances where you need to use data from it to populate
@@ -121,6 +122,8 @@ session: {
 
 #### Description
 
+JSON Web Tokens are only used if JWT sessions are enabled with `session: { jwt: true }` (see `session` documentation).
+
 The `jwt` object and all properties on it are optional.
 
 When enabled, JSON Web Tokens is signed with `HMAC SHA256` and encrypted with symmetric `AES`.
@@ -141,8 +144,13 @@ jwt: {
   // Easily add custom to the JWT. It is updated every time it is accessed.
   // This encrypted and signed by default and may contain sensitive information
   // as long as a reasonable secret is defined.
+  //
+  // Note: 'oAuthProfile' is the raw oAuth profile from the provider the user
+  // used to sign in with and is only returned when the JWT is created for the 
+  // current user / session, if you want to persist data from it you need to add
+  // the data you want to keep to the token. Keep in mind JWT token size limits.
   /*
-  set: async (token) => { 
+  set: async (token, oAuthProfile) => { 
     token.customJwtProperty = "ABC123"
     return token
   }
@@ -185,6 +193,7 @@ import jwt from 'next-auth/jwt'
 const secret = process.env.JWT_SECRET
 
 export default async (req, res) =>  {
+  // Automatically decrypts and verifies JWT
   const token = await jwt.getJwt({ req, secret })
   res.end(JSON.stringify(token, null, 2))
 }
@@ -198,7 +207,7 @@ The JWT is stored in the Session Token cookie – the same cookie used for datab
 
 ## allowSignin
 
-* **Default value**: `function`
+* **Default value**: `function` (returns `boolean`)
 * **Required**: *No*
 
 #### Description
@@ -216,7 +225,12 @@ It is useful to control access to dashboards/admin pages without requiring a use
 Example:
 
 ```js
-allowSignin: async (user, account) => {
+// `user` and `account` correspond the data persisted in the database, they are
+// still present even if not using a database but may contain more limited data.
+//
+// `oAuthProfile` is the raw oAuth profile from the provider the user used to
+// sign in with; is only present when signing with OAuth.
+allowSignin: async (user, account, oAuthProfile) => {
   // Return true if user / account is allowed to sign in.
   // Return false to display an access denied message.
   return true
@@ -231,7 +245,7 @@ You should not rely on the email address alone unless that provider is trusted a
 
 ## allowCallbackUrl
 
-* **Default value**: `function`
+* **Default value**: `function` (returns URL as `string`)
 * **Required**: *No*
 
 #### Description

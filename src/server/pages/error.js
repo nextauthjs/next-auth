@@ -24,7 +24,7 @@ export default ({ site, error, baseUrl }) => {
           <p><a className='button' href={signinPageUrl}>Sign in</a></p>
         </div>
       break
-    case 'oAuthAccountNotLinked':
+    case 'OAuthAccountNotLinked':
       heading = <h1>Sign in with another account</h1>
       message =
         <div>
@@ -36,18 +36,6 @@ export default ({ site, error, baseUrl }) => {
         </div>
       // @TODO Add this text when account linking is complete
       // <p>Once you are signed in, you can link your accounts.</p>
-      // @TODO Display email sign in option if an email provider is configured
-      break
-    case 'EmailRequired':
-      heading = <h1>Sign in with another account</h1>
-      message =
-        <div>
-          <div className='message'>
-            <p>Your account doesn't have an email address (required).</p>
-            <p>Try signing in with a different account.</p>
-          </div>
-          <p><a className='button' href={signinPageUrl}>Sign in</a></p>
-        </div>
       // @TODO Display email sign in option if an email provider is configured
       break
     case 'EmailSignin':

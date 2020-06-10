@@ -24,7 +24,8 @@ export const UserSchema = {
     },
     email: {
       type: 'varchar',
-      unique: true
+      unique: true,
+      nullable: true
     },
     image: {
       type: 'varchar',
