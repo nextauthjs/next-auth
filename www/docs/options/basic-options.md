@@ -3,9 +3,10 @@ id: basic-options
 title: Basic Options
 ---
 
+Options are passed to NextAuth.js when initalizing it in an API route.
+
 :::note
-* Configuration options are passed to NextAuth.js when initalizing it in an API route.
-* The only *required* options are **site** and **providers**.
+The only *required* options are **site** and **providers**.
 :::
 
 ---

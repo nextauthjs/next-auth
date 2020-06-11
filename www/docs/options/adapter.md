@@ -1,9 +1,11 @@
 ---
 id: adapter
-title: Custom Adapters
+title: Database Adapters
 ---
 
 An "*Adapter*" in NextAuth.js is the thing that connects your application to whatever database or backend system you want to use to store data for user accounts, sessions, etc.
+
+You do not need to specify an adapter explicltly unless you want to use advanced options such as custom models or schemas, or if you are creating a custom adapter to connect to a database that is not one of the supported datatabases.
 
 :::tip
 *The **adapter** option is currently considered advanced usage intended for use by NextAuth.js contributors.*
@@ -22,27 +24,27 @@ If you are using a database that is not supported out of the box, or if you want
 The default adapter is the TypeORM adapter, the following configuration options are exactly equivalent.
 
 ```javascript
-provider: Adapters.Default({
-  type: 'sqlite',
-  database: ':memory:',
-  synchronize: true
-})
-```
-
-```javascript
-provider: Adapters.TypeORM({
-  type: 'sqlite',
-  database: ':memory:',
-  synchronize: true
-})
-```
-
-```javascript
 database: {
   type: 'sqlite',
   database: ':memory:',
   synchronize: true
 }
+```
+
+```javascript
+adapter: Adapters.Default({
+  type: 'sqlite',
+  database: ':memory:',
+  synchronize: true
+})
+```
+
+```javascript
+adapter: Adapters.TypeORM({
+  type: 'sqlite',
+  database: ':memory:',
+  synchronize: true
+})
 ```
 
 ## Custom adapters
