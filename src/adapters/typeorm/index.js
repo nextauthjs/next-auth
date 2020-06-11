@@ -81,20 +81,11 @@ const Adapter = (config, options = {}) => {
     delete UserSchema.columns.id.type
     UserSchema.columns.id.objectId = true
 
-    // Remove unique constraint from email field and replace with sparce index
-    // to allow more than one field to be null, so that email addresses can
-    // be optional, as `unique: true` and `nullable: true` don't work the same
-    // with MongoDB as they do with SQL databases like MySQL and Postgres.
-    delete UserSchema.columns.email.unique
-    UserSchema.indices = [
-      {
-        name: 'email_index',
-        sparse: true,
-        columns: [
-          'email'
-        ]
-      }
-    ]
+    // The options `unique: true` and `nullable: true` don't work the same
+    // with MongoDB as they do with SQL databases like MySQL and Postgres,
+    // we also to add sparce to the index. This still doesn't allow multiple
+    // *null* values, but does allow some records to omit the property.
+    UserSchema.columns.email.sparse = true
 
     // Update Account schema for MongoDB
     delete AccountSchema.columns.id.type

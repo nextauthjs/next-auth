@@ -1,8 +1,8 @@
 export class User {
   constructor (name, email, image) {
-    this.name = name
-    this.email = email
-    this.image = image
+    if (name) { this.name = name }
+    if (email) { this.email = email }
+    if (image) { this.image = image }
 
     const dateCreated = new Date()
     this.created = dateCreated.toISOString()
