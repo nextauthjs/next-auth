@@ -49,7 +49,7 @@ const getJwtPayload = async ({ req, secret, cookieName }) => {
 }
 
 // This helper returns signed JWT that could be used for passing to other API services
-const getJwt = async ({ req, secret, cookieName }) => {
+const getJwt = ({ req, secret, cookieName }) => {
   if (!req || !secret) throw new Error('Must pass { req, secret } to getJWT()')
   const cookies = parseCookies(req.headers.cookie)
   const cookieValue = getSessionToken(cookies, cookieName)
@@ -65,5 +65,5 @@ export default {
   encode,
   decode,
   getJwt,
-  getJwtPayload
+  getJwtPayload,
 }
