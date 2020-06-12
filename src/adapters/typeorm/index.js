@@ -1,136 +1,41 @@
-import { createConnection, getConnection, getManager, EntitySchema } from 'typeorm'
+import { createConnection, getConnection, getManager } from 'typeorm'
 import { createHash } from 'crypto'
 
 import { CreateUserError } from '../../lib/errors'
+import adapterConfig from './lib/config'
+import adapterTransform from './lib/transform'
 import Models from './models'
 import logger from '../../lib/logger'
 
-const Adapter = (config, options = {}) => {
-  // If the input is URL string, automatically convert the string to an object
-  // to make configuration easier (in most use cases).
-  //
-  // TypeORM accepts connection string as a 'url' option, but unfortunately
-  // not for all databases (e.g. SQLite) so we handle it ourselves.
-  //
-  // @TODO Move this into a function (e.g. lib/parse-database-url)
-  if (typeof config === 'string') {
-    try {
-      const parsedUrl = new URL(config)
-      config = {}
-      config.type = parsedUrl.protocol.replace(/:$/, '')
-      config.host = parsedUrl.hostname
-      config.port = Number(parsedUrl.port)
-      config.username = parsedUrl.username
-      config.password = parsedUrl.password
-      config.database = parsedUrl.pathname.replace(/^\//, '')
+const Adapter = (typeOrmConfig, options = {}) => {
 
-      if (parsedUrl.search) {
-        parsedUrl.search.replace(/^\?/, '').split('&').forEach(keyValuePair => {
-          let [key, value] = keyValuePair.split('=')
-          // Converts true/false strings to actual boolean values
-          if (value === 'true') { value = true }
-          if (value === 'false') { value = false }
-          config[key] = value
-        })
-      }
-    } catch (error) {
-      // If URL parsing fails for any reason, try letting TypeORM handle it
-      config = {
-        url: config
-      }
-    }
+  // Ensure typeOrmConfigObject is normalized to an object
+  const typeOrmConfigObject = (typeof typeOrmConfig === 'string')
+    ? adapterConfig.parseConnectionString(typeOrmConfig)
+    : typeOrmConfig
+
+  // Load any custom models passed as an option, default to built in models
+  const { models: customModels = {} } = options
+  const models = {
+    User: customModels.User ? customModels.User : Models.User,
+    Account: customModels.Account ? customModels.Account : Models.Account,
+    Session: customModels.Session ? customModels.Session : Models.Session,
+    VerificationRequest: customModels.VerificationRequest ? customModels.VerificationRequest : Models.VerificationRequest
   }
 
-  // Load models / schemas (check for custom models / schemas first)
-  const User = options.User ? options.User.model : Models.User.model
-  const UserSchema = options.User ? options.User.schema : Models.User.schema
+  // The models are designed for ANSI SQL databases first (as a baseline).
+  // For databases that use a different pragma, we transform the models at run
+  // time *unless* the models are user supplied (in which case we don't do
+  // anything to do them). This function updates arguments by reference.
+  adapterTransform(typeOrmConfigObject, models, options)
 
-  const Account = options.Account ? options.Account.model : Models.Account.model
-  const AccountSchema = options.Account ? options.Account.schema : Models.Account.schema
+  const config = adapterConfig.loadConfig(typeOrmConfigObject, { models, ...options })
 
-  const Session = options.Session ? options.Session.model : Models.Session.model
-  const SessionSchema = options.Session ? options.Session.schema : Models.Session.schema
-
-  const VerificationRequest = options.VerificationRequest ? options.VerificationRequest.model : Models.VerificationRequest.model
-  const VerificationRequestSchema = options.VerificationRequest ? options.VerificationRequest.schema : Models.VerificationRequest.schema
-
-  // Models default to being suitable for ANSI SQL database
-  // Some flexiblity is required to support non-SQL databases
-  let idKey = 'id'
-
-  // Some custom logic is required to make schemas compatible with MongoDB
-  // Here we monkey patch some properties if MongoDB is being used.
-  if (config.type.startsWith('mongodb')) {
-    // Important!
-    //
-    // 1. You must set 'objectId: true' on one property on a model.
-    //
-    //   'objectId' MUST be set on the primary ID field. This overrides other
-    //   values on that object in TypeORM (e.g. type: 'int' or 'primary').
-    //
-    // 2. Other properties that are Object IDs in the same model MUST be set to
-    //    type: 'objectId'
-    //
-    //    If you set 'objectId: true' on multiple properties on a model you will
-    //    see the result of queries like find() is wrong. You will see the same
-    //    Object ID in every property of type Object ID in the result (but the
-    //    database will look fine); so type = 'objectId' for them instead.
-    //
-
-    // Update User schema for MongoDB
-    delete UserSchema.columns.id.type
-    UserSchema.columns.id.objectId = true
-
-    // The options `unique: true` and `nullable: true` don't work the same
-    // with MongoDB as they do with SQL databases like MySQL and Postgres,
-    // we also to add sparce to the index. This still doesn't allow multiple
-    // *null* values, but does allow some records to omit the property.
-    UserSchema.columns.email.sparse = true
-
-    // Update Account schema for MongoDB
-    delete AccountSchema.columns.id.type
-    AccountSchema.columns.id.objectId = true
-    AccountSchema.columns.userId.type = 'objectId'
-
-    // Update Session schema for MongoDB
-    delete SessionSchema.columns.id.type
-    SessionSchema.columns.id.objectId = true
-    SessionSchema.columns.userId.type = 'objectId'
-
-    // Update Verification Request  schema for MongoDB
-    delete VerificationRequestSchema.columns.id.type
-    VerificationRequestSchema.columns.id.objectId = true
-  }
-
-  // SQLite does not support `timestamp` fields so we remap them to `datetime`
-  // NB: `timestamp` is an ANSI SQL specification and widely supported elsewhere
-  if (config.type.startsWith('sqlite')) {
-    UserSchema.columns.created.type = 'datetime'
-    AccountSchema.columns.accessTokenExpires.type = 'datetime'
-    AccountSchema.columns.created.type = 'datetime'
-    SessionSchema.columns.expires.type = 'datetime'
-    SessionSchema.columns.created.type = 'datetime'
-    VerificationRequestSchema.columns.expires.type = 'datetime'
-    VerificationRequestSchema.columns.created.type = 'datetime'
-  }
-
-  // Parse config (uses options)
-  const defaultConfig = {
-    name: 'default',
-    autoLoadEntities: true,
-    entities: [
-      new EntitySchema(UserSchema),
-      new EntitySchema(AccountSchema),
-      new EntitySchema(SessionSchema),
-      new EntitySchema(VerificationRequestSchema)
-    ],
-    logging: false
-  }
-
-  config = {
-    ...defaultConfig,
-    ...config
-  }
+  // Create objects from models that can be consumed by functions in the adapter
+  const User = models.User.model
+  const Account = models.Account.model
+  const Session = models.Session.model
+  const VerificationRequest = models.VerificationRequest.model
 
   let connection = null
 
@@ -171,17 +76,23 @@ const Adapter = (config, options = {}) => {
       }
     }
 
-    let ObjectId // Only defined if the database is MongoDB
+    // The models are primarily designed for ANSI SQL database, but some
+    // flexiblity is required in the adapter to support non-SQL databases such
+    // as MongoDB which have different pragmas.
+    //
+    // TypeORM does some abstraction, but doesn't handle everything (e.g. it
+    // handles translating `id` and `_id` in models, but not queries) so we
+    // need to handle somethings in the adapter to make it compatible.
+    let idKey = 'id'
+    let ObjectId
     if (config.type === 'mongodb') {
-      // MongoDB uses _id (rather than id) for primary keys and TypeORM does not
-      // fully abstract this (e.g. the way Mongoose does), so we need to do it.
-      // Note: We don't need to change the values in the schemas, just in queries
-      // that we make, so it's a variable here.
       idKey = '_id'
       const mongodb = await import('mongodb')
       ObjectId = mongodb.ObjectId
     }
 
+    // These values are stored as seconds, but to use them with dates in
+    // JavaScript we convert them to milliseconds
     const sessionMaxAge = appOptions.session.maxAge * 1000
     const sessionUpdateAge = appOptions.session.updateAge * 1000
 

@@ -1,11 +1,10 @@
+// This model is used for sign in emails, but is designed to support other
+// mechanisms in future (e.g. 2FA via text message or short codes)
 export class VerificationRequest {
   constructor (identifer, token, expires) {
-    this.identifer = identifer
-    this.token = token
-    this.expires = expires
-
-    const dateCreated = new Date()
-    this.created = dateCreated.toISOString()
+    if (identifer) { this.identifer = identifer }
+    if (token) { this.token = token }
+    if (expires) { this.expires = expires }
   }
 }
 
@@ -14,22 +13,32 @@ export const VerificationRequestSchema = {
   target: VerificationRequest,
   columns: {
     id: {
+      // This property has `objectId: true` instead of `type: int` in MongoDB
       primary: true,
       type: 'int',
       generated: true
     },
     identifer: {
-      type: 'text'
+      // An email address, phone number, username or other unique identifier
+      // associated with the request (used to track who it was on behalf of)
+      type: 'varchar'
     },
     token: {
+      // The token used verify the request (maybe hashed or encrypted)
       type: 'varchar',
       unique: true
     },
     expires: {
+      // After this time, the request will no longer ve valid
       type: 'timestamp'
     },
     created: {
-      type: 'timestamp'
+      type: 'timestamp',
+      createDate: true
+    },
+    updated: {
+      type: 'timestamp',
+      updateDate: true
     }
   }
 }
