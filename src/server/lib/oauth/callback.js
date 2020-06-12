@@ -39,16 +39,14 @@ export default async (req, provider, callback) => {
           logger.error('OAUTH_GET_ACCESS_TOKEN_ERROR', error, results, provider.id, code)
         }
 
-        if (provider.id === 'apple') {
-          // @TODO create property on provider allowing other providers that might have the same strategy as apple?
-          // provider.ProfileFromIDToken
-          _decodeIDToken(
+        if (provider.getProfileFromToken) {
+          // Apple and Microsoft use JWT tokens to encode profile data
+          _decodeToken(
             provider,
             accessToken,
             refreshToken,
             results.id_token,
             (error, profileData) => callback(error, _getProfile(error, profileData, accessToken, refreshToken, provider))
-
           )
         } else {
           // Use custom get() method for oAuth2 flows
@@ -212,10 +210,10 @@ function _get (provider, accessToken, callback) {
  * @param {*} idToken jwt from Provider
  * @param {*} callback
  */
-function _decodeIDToken (provider, accessToken, refreshToken, idToken, callback) {
-  if (!idToken) { throw new Error('Missing idToken') }
+function _decodeToken (provider, accessToken, refreshToken, token, callback) {
+  if (!token) { throw new Error('Missing JWT token', token) }
 
-  const decoded = jwtDecode(idToken)
-  const profileData = JSON.stringify(decoded)
+  const decodedToken = jwtDecode(token)
+  const profileData = JSON.stringify(decodedToken)
   callback(null, profileData, accessToken, refreshToken, provider)
 }
