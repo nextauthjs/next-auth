@@ -1,7 +1,14 @@
 // fetch() is built in to Next.js 9.4 (you can use a polyfill if using an older version)
 /* global fetch:false */
-import { useState, useEffect, useContext, createContext, createElement } from 'react'
+import {
+  useState,
+  useEffect,
+  useContext,
+  createContext,
+  createElement
+} from 'react'
 import logger from '../lib/logger'
+import { parseCookies } from '../utils'
 
 // Note: In calls to fetch() from universal methods, all cookies are passed
 // through from the browser, when the server makes the HTTP request, so that
@@ -62,7 +69,9 @@ const useSessionData = (session) => {
       logger.error('CLIENT_USE_SESSION_ERROR', error)
     }
   }
-  useEffect(() => { _getSession() }, [])
+  useEffect(() => {
+    _getSession()
+  }, [])
   return [data, loading]
 }
 
@@ -71,7 +80,9 @@ const signin = async (provider, args) => {
   if (!provider) {
     // Redirect to sign in page if no provider specified
     const baseUrl = _baseUrl()
-    window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(window.location)}`
+    window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(
+      window.location
+    )}`
     return
   }
 
@@ -79,10 +90,14 @@ const signin = async (provider, args) => {
   if (!providers[provider]) {
     // If Provider not recognized, redirect to sign in page
     const baseUrl = _baseUrl()
-    window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(window.location)}`
+    window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(
+      window.location
+    )}`
   } else if (providers[provider].type === 'oauth') {
     // If is an OAuth provider, redirect to providers[provider].signinUrl
-    window.location = `${providers[provider].signinUrl}?callbackUrl=${encodeURIComponent(window.location)}`
+    window.location = `${
+      providers[provider].signinUrl
+    }?callbackUrl=${encodeURIComponent(window.location)}`
   } else {
     // If is any other provider type, POST to providers[provider].signinUrl (with CSRF Token)
     const options = {
@@ -142,9 +157,11 @@ const _baseUrl = ({ req } = {}) => {
     // If we have a 'req' object are running sever side, so we should grab the
     // base URL from cookie that is set by the API route - which is how config
     // is shared automatically between the API route and the client.
-    const cookies = req ? _parseCookies(req.headers.cookie) : null
-    const baseUrlCookieName = process.env.NEXTAUTH_BASE_URL_COOKIE_NAME || DEFAULT_BASE_URL_COOKIE_NAME
-    const cookieValue = cookies[`__Secure-${baseUrlCookieName}`] || cookies[baseUrlCookieName]
+    const cookies = req ? parseCookies(req.headers.cookie) : null
+    const baseUrlCookieName =
+      process.env.NEXTAUTH_BASE_URL_COOKIE_NAME || DEFAULT_BASE_URL_COOKIE_NAME
+    const cookieValue =
+      cookies[`__Secure-${baseUrlCookieName}`] || cookies[baseUrlCookieName]
     const [baseUrl] = cookieValue ? cookieValue.split('|') : [null]
     return baseUrl
   } else {
@@ -156,29 +173,12 @@ const _baseUrl = ({ req } = {}) => {
   }
 }
 
-// Adapted from https://github.com/felixfong227/simple-cookie-parser/blob/master/index.js
-const _parseCookies = (string) => {
-  if (!string) { return {} }
-  try {
-    const object = {}
-    const a = string.split(';')
-    for (let i = 0; i < a.length; i++) {
-      const b = a[i].split('=')
-      if (b[0].length > 1 && b[1]) {
-        object[b[0].trim()] = decodeURIComponent(b[1])
-      }
-    }
-    return object
-  } catch (error) {
-    logger.error('CLIENT_COOKIE_PARSE_ERROR', error)
-    return {}
-  }
-}
-
 const _encodedForm = (formData) => {
-  return Object.keys(formData).map((key) => {
-    return encodeURIComponent(key) + '=' + encodeURIComponent(formData[key])
-  }).join('&')
+  return Object.keys(formData)
+    .map((key) => {
+      return encodeURIComponent(key) + '=' + encodeURIComponent(formData[key])
+    })
+    .join('&')
 }
 
 export default {

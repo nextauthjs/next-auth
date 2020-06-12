@@ -4,18 +4,19 @@ title: Basic Options
 ---
 
 :::note
-* Configuration options are passed to NextAuth.js when initalizing it in an API route.
-* The only *required* options are **site** and **providers**.
-:::
+
+- Configuration options are passed to NextAuth.js when initalizing it in an API route.
+- The only _required_ options are **site** and **providers**.
+  :::
 
 ---
 
 ## site
 
-* **Default value**: `empty string`
-* **Required**: *Yes*
+- **Default value**: `empty string`
+- **Required**: _Yes_
 
-#### Description 
+#### Description
 
 The fully qualified URL for the root of your site.
 
@@ -25,10 +26,10 @@ e.g. `http://localhost:3000` or `https://www.example.com`
 
 ## providers
 
-* **Default value**: `[]`
-* **Required**: *Yes*
+- **Default value**: `[]`
+- **Required**: _Yes_
 
-#### Description 
+#### Description
 
 An array of authentication providers for signing in (e.g. Google, Facebook, Twitter, GitHub, Email, etc) in any order. This can be one of the built-in providers or an object with a custom provider.
 
@@ -38,10 +39,10 @@ See the [providers documentation](/options/providers) for a list of supported pr
 
 ## database
 
-* **Default value**: `null`
-* **Required**: *No* (Except by Email provider)
+- **Default value**: `null`
+- **Required**: _No_ (Except by Email provider)
 
-#### Description 
+#### Description
 
 A database connection string or [TypeORM](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md) configuration object.
 
@@ -59,8 +60,8 @@ The Email provider currently requires a database to be configured.
 
 ## secret
 
-* **Default value**: `string` (*SHA hash of the "options" object*)
-* **Required**: *No* (but strongly recommended)
+- **Default value**: `string` (_SHA hash of the "options" object_)
+- **Required**: _No_ (but strongly recommended)
 
 #### Description
 
@@ -74,8 +75,8 @@ The default behaviour is secure, but volatile, and it is strongly recommended yo
 
 ## session
 
-* **Default value**: `object`
-* **Required**: *No*
+- **Default value**: `object`
+- **Required**: _No_
 
 #### Description
 
@@ -88,16 +89,16 @@ session: {
   // Use JSON Web Tokens for session instead of database sessions.
   // This option can be used with or without a database for users/accounts.
   // Note: `jwt` is automatically set to `true` if no database is specified.
-  jwt: false, 
-  
+  jwt: false,
+
   // Seconds - How long until an idle session expires and is no longer valid.
   maxAge: 30 * 24 * 60 * 60, // 30 days
-  
+
   // Seconds - Throttle how frequently to write to database to extend a session.
   // Use it to limit write operations. Set to 0 to always update the database.
-  // Note: This option is ignored if using JSON Web Tokens 
+  // Note: This option is ignored if using JSON Web Tokens
   updateAge: 24 * 60 * 60, // 24 hours
-  
+
   // Easily add custom properties to response from `/api/auth/session`.
   //
   // Note: The response should not return any sensitive information. The JWT
@@ -117,8 +118,8 @@ session: {
 
 ## jwt
 
-* **Default value**: `object`
-* **Required**: *No*
+- **Default value**: `object`
+- **Required**: _No_
 
 #### Description
 
@@ -135,18 +136,16 @@ Default values for this option are shown below:
 ```js
 jwt: {
   // secret: 'my-secret-123', // Secret auto-generated if not specified.
-    
   // Custom encode/decode functions for signing + encryption can be specified.
   // if you want to override what is in the JWT or how it is signed.
   // encode: async ({ secret, key, token, maxAge }) => {},
   // decode: async ({ secret, key, token, maxAge }) => {},
-
   // Easily add custom to the JWT. It is updated every time it is accessed.
   // This encrypted and signed by default and may contain sensitive information
   // as long as a reasonable secret is defined.
   //
   // Note: 'oAuthProfile' is the raw oAuth profile from the provider the user
-  // used to sign in with and is only returned when the JWT is created for the 
+  // used to sign in with and is only returned when the JWT is created for the
   // current user / session, if you want to persist data from it you need to add
   // the data you want to keep to the token. Keep in mind JWT token size limits.
   /*
@@ -168,8 +167,8 @@ An example JSON WebToken contains an encrypted payload like this:
     image: 'https://example.com/image.jpg',
     id: 1 // User ID will note be specified if used without a database
   },
-  // The account object stores details for the authentication provider account 
-  // that was used to sign in. It only contains exactly one account, even the 
+  // The account object stores details for the authentication provider account
+  // that was used to sign in. It only contains exactly one account, even the
   // user is linked to multiple provider accounts in a database.
   account: {
     provider: 'google',
@@ -185,16 +184,16 @@ An example JSON WebToken contains an encrypted payload like this:
 }
 ```
 
-You can use the built-in `getJwt()` helper method to read the token, like this:
+You can use the built-in `getJwtPayload()` helper method to read the token payload, like this:
 
 ```js
 import jwt from 'next-auth/jwt'
 
 const secret = process.env.JWT_SECRET
 
-export default async (req, res) =>  {
+export default async (req, res) => {
   // Automatically decrypts and verifies JWT
-  const token = await jwt.getJwt({ req, secret })
+  const token = await jwt.getJwtPayload({ req, secret })
   res.end(JSON.stringify(token, null, 2))
 }
 ```
@@ -207,8 +206,8 @@ The JWT is stored in the Session Token cookie – the same cookie used for datab
 
 ## allowSignin
 
-* **Default value**: `function` (returns `boolean`)
-* **Required**: *No*
+- **Default value**: `function` (returns `boolean`)
+- **Required**: _No_
 
 #### Description
 
@@ -245,8 +244,8 @@ You should not rely on the email address alone unless that provider is trusted a
 
 ## allowCallbackUrl
 
-* **Default value**: `function` (returns URL as `string`)
-* **Required**: *No*
+- **Default value**: `function` (returns URL as `string`)
+- **Required**: _No_
 
 #### Description
 
@@ -254,10 +253,10 @@ By default `allowCallbackUrl` only allows callbackUrls for signup and signout to
 
 e.g. if the sign in URL was `https://example.com/api/auth/signin` the following logic would apply:
 
-* ✅ `https://example.com/path/to/page`
-* ❌ `http://example.com/path/to/page` 
-* ❌ `https://subdomain.example.com/path/to/page` 
-* ❌ `https://example.com:8080/path/to/page`
+- ✅ `https://example.com/path/to/page`
+- ❌ `http://example.com/path/to/page`
+- ❌ `https://subdomain.example.com/path/to/page`
+- ❌ `https://example.com:8080/path/to/page`
 
 If the URL is not allowed, the callback URL will be set to whatever the `site` option is set to.
 
@@ -279,8 +278,8 @@ If you want to support signing in to sites across other domains or hostnames you
 
 ## pages
 
-* **Default value**: `{}`
-* **Required**: *No*
+- **Default value**: `{}`
+- **Required**: _No_
 
 #### Description
 
@@ -288,7 +287,7 @@ Specify URLs to be used if you want to create custom sign in, sign out and error
 
 Pages specified will override the corresponding built-in page.
 
-*For example:*
+_For example:_
 
 ```js
 pages: {
@@ -306,8 +305,8 @@ See the documentation for the [pages option](/options/pages) for more informatio
 
 ## debug
 
-* **Default value**: `false`
-* **Required**: *No*
+- **Default value**: `false`
+- **Required**: _No_
 
 #### Description
 
