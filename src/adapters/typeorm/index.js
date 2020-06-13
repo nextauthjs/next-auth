@@ -71,8 +71,8 @@ const Adapter = (typeOrmConfig, options = {}) => {
     // Display debug output if debug option enabled
     // @TODO Refactor logger so is passed in appOptions
     function debugMessage (debugCode, ...args) {
-      if (appOptions.debug) {
-        logger.debug(debugCode, ...args)
+      if (appOptions && appOptions.debug) {
+        logger.debug(`TYPEORM_${debugCode}`, ...args)
       }
     }
 
@@ -92,9 +92,21 @@ const Adapter = (typeOrmConfig, options = {}) => {
     }
 
     // These values are stored as seconds, but to use them with dates in
-    // JavaScript we convert them to milliseconds
-    const sessionMaxAge = appOptions.session.maxAge * 1000
-    const sessionUpdateAge = appOptions.session.updateAge * 1000
+    // JavaScript we convert them to milliseconds.
+    //
+    // Use a conditional to default to 30 day session age if not set - it should
+    // always be set but a meaningful fallback is helpful to facilitate testing.
+    if (appOptions && (!appOptions.session || !appOptions.session.maxAge)) {
+      debugMessage('GET_ADAPTER', 'Session expiry not configured (defaulting to 30 days')
+    }
+    const defaultSessionMaxAge = 30 * 24 * 60 * 60 * 1000
+    const sessionMaxAge = (appOptions && appOptions.session && appOptions.session.maxAge)
+      ? appOptions.session.maxAge * 1000
+      : defaultSessionMaxAge
+    const sessionUpdateAge = (appOptions && appOptions.session && appOptions.session.updateAge)
+      ? appOptions.session.updateAge * 1000
+      : 0
+
 
     async function createUser (profile) {
       debugMessage('CREATE_USER', profile)
