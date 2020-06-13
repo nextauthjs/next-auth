@@ -12,14 +12,17 @@
     "watch": "npm run watch:js | npm run watch:css",
     "watch:js": "babel --watch src --out-dir dist",
     "watch:css": "postcss --watch src/**/*.css --base src --dir dist",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run test:db",
+    "test:db": "npm run test:db:mysql && npm run test:db:postgres",
+    "test:db:mysql": "node test/mysql.js",
+    "test:db:postgres": "node test/postgres.js",
+    "test:db:run": "docker-compose -f test/docker/docker-compose.yml up",
+    "test:db:clean": "docker-compose -f test/docker/docker-compose.yml down",
     "prepublishOnly": "npm run build",
     "publish:beta": "npm publish --tag beta",
     "publish:canary": "npm publish --tag canary",
     "lint": "standard",
-    "lint:fix": "standard --fix",
-    "test:db:run": "docker-compose -f test/docker/docker-compose.yml up",
-    "test:db:clean": "docker-compose -f test/docker/docker-compose.yml down"
+    "lint:fix": "standard --fix"
   },
   "files": [
     "dist",
