@@ -7,7 +7,7 @@ export default (options) => {
     params: { grant_type: 'authorization_code', response_type: 'code' },
     scope: 'openid email profile',
     accessTokenUrl: `https://${options.subdomain}.auth0/oauth/token`,
-    authorizationUrl: `https://${options.subdomain}.auth0.com/authorize?`,
+    authorizationUrl: `https://${options.subdomain}.auth0.com/authorize?response_type=code`,
     profileUrl: `http://${options.subdomain}.auth0.com/userinfo`,
     profile: (profile) => {
       return {
