@@ -8,20 +8,20 @@ Please see the [Code of Conduct](CODE_OF_CONDUCT.md) and follow any templates co
 
 ## Pull Requests
 
-* The latest changes are always in `master` 
+* The latest changes are always in `main` 
 * Pull Requests should be raised for larger changes
 * Pull Requests do not need approval before merging for those with contributor access (it's just helpful to have them to track changes)
 * Rebasing in Pull Requests is prefered to keep a clean commit history (see below)
 * Running `npm run lint:fix` before committing can make resolving conflicts easier, but is not required
-* Merge commits (and pushing merge commits to `master`) are disabled in this repo
-* Pushing directly to master should ideally be reserved for minor updates / one off fixes
+* Merge commits (and pushing merge commits to `main`) are disabled in this repo
+* Pushing directly to main should ideally be reserved for minor updates / one off fixes
 
 ## Rebasing
 
-If you create a branch and there are conflicting updates in the `master` branch, you can resolve them by rebasing from a check out of your branch:
+If you create a branch and there are conflicting updates in the `main` branch, you can resolve them by rebasing from a check out of your branch:
 
     git fetch
-    git rebase origin/master
+    git rebase origin/main
 
 If there are any conflicts, you can resolve them and stage the files, then run:
 
