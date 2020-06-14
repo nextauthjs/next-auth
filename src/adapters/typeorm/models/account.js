@@ -25,7 +25,6 @@ export class Account {
 export const AccountSchema = {
   name: 'Account',
   target: Account,
-  tableName: 'accounts',
   columns: {
     id: {
       // This property has `objectId: true` instead of `type: int` in MongoDB

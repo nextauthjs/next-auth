@@ -1,7 +1,12 @@
 // Perform transforms on SQL models so they can be used with other databases
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
+import { SnakeCaseNamingStrategy, CamelCaseNamingStrategy } from './naming-strategies'
 
 const mongodb = (models, options) => {
+  // A CamelCase naming strategy is used for all document databases
+  if (!options.namingStrategy) {
+    options.namingStrategy = new CamelCaseNamingStrategy()
+  }
+
   // Important!
   //
   // 1. You must set 'objectId: true' on one property on a model in MongoDB.
@@ -57,14 +62,13 @@ const mongodb = (models, options) => {
   if (!customModels.VerificationRequest) {
     delete models.VerificationRequest.schema.columns.id.type
     models.VerificationRequest.schema.columns.id.objectId = true
-    models.VerificationRequest.schema.tableName = 'verificationRequests'
   }
 }
 
 const sqlite = (models, options) => {
   // Apply snake case naming strategy by default for SQLite databases
   if (!options.namingStrategy) {
-    options.namingStrategy = new SnakeNamingStrategy()
+    options.namingStrategy = new SnakeCaseNamingStrategy()
   }
 
   const { models: customModels = {} } = options
@@ -109,7 +113,7 @@ export default (config, models, options) => {
   } else {
     // Apply snake case naming strategy by default for SQL databases
     if (!options.namingStrategy) {
-      options.namingStrategy = new SnakeNamingStrategy()
+      options.namingStrategy = new SnakeCaseNamingStrategy()
     }
   }
 }
