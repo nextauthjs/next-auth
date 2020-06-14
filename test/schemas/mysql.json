@@ -1,5 +1,5 @@
 {
-  "user": {
+  "users": {
     "id": {
       "name": "id",
       "type": "int",
@@ -43,7 +43,7 @@
       "default": "CURRENT_TIMESTAMP(6)"
     }
   },
-  "account": {
+  "accounts": {
     "id": {
       "name": "id",
       "type": "int",
@@ -111,7 +111,7 @@
       "default": "CURRENT_TIMESTAMP(6)"
     }
   },
-  "session": {
+  "sessions": {
     "id": {
       "name": "id",
       "type": "int",
@@ -155,7 +155,7 @@
       "default": "CURRENT_TIMESTAMP(6)"
     }
   },
-  "verification_request": {
+  "verification_requests": {
     "id": {
       "name": "id",
       "type": "int",

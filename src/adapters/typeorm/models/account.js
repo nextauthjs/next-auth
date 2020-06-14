@@ -25,6 +25,7 @@ export class Account {
 export const AccountSchema = {
   name: 'Account',
   target: Account,
+  tableName: 'accounts',
   columns: {
     id: {
       // This property has `objectId: true` instead of `type: int` in MongoDB
@@ -79,16 +80,16 @@ export const AccountSchema = {
   },
   indices: [
     {
-      name: "userId",
-      columns: [ "userId" ]
+      name: 'userId',
+      columns: ['userId']
     },
     {
-      name: "providerId",
-      columns: [ "providerId" ]
+      name: 'providerId',
+      columns: ['providerId']
     },
     {
-      name: "providerAccountId",
-      columns: [ "providerAccountId" ]
+      name: 'providerAccountId',
+      columns: ['providerAccountId']
     }
   ]
 }
