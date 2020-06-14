@@ -11,7 +11,7 @@ export default (options) => {
     accessTokenUrl: 'https://appleid.apple.com/auth/token',
     authorizationUrl: 'https://appleid.apple.com/auth/authorize?response_type=code&id_token&response_mode=form_post',
     profileUrl: null,
-    getProfileFromToken: true,
+    idToken: true,
     profile: (profile) => {
       return {
         id: profile.sub,

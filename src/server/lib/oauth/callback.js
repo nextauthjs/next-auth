@@ -39,8 +39,8 @@ export default async (req, provider, callback) => {
           logger.error('OAUTH_GET_ACCESS_TOKEN_ERROR', error, results, provider.id, code)
         }
 
-        if (provider.getProfileFromToken) {
-          // Apple and Microsoft use JWT tokens to encode profile data
+        if (provider.idToken) {
+          // Support services that use OpenID ID Tokens to encode profile data
           _decodeToken(
             provider,
             accessToken,
@@ -202,18 +202,9 @@ function _get (provider, accessToken, callback) {
   this._request('GET', url, headers, null, accessToken, callback)
 }
 
-/**
- * 05/26/2020 GN decodes jwt id_token converts back to json string that mimics a response from profile url
- * @param {*} provider  List of Providers
- * @param {*} accessToken
- * @param {*} refreshToken
- * @param {*} idToken jwt from Provider
- * @param {*} callback
- */
-function _decodeToken (provider, accessToken, refreshToken, token, callback) {
-  if (!token) { throw new Error('Missing JWT token', token) }
-
-  const decodedToken = jwtDecode(token)
+function _decodeToken (provider, accessToken, refreshToken, idToken, callback) {
+  if (!idToken) { throw new Error('Missing JWT ID Token', provider, idToken) }
+  const decodedToken = jwtDecode(idToken)
   const profileData = JSON.stringify(decodedToken)
   callback(null, profileData, accessToken, refreshToken, provider)
 }
