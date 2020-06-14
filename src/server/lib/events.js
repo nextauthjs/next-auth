@@ -15,8 +15,7 @@ const linkAccount = async (message) => {
 }
 
 const session = async (message) => {
-  // Event triggered when an account is session is active
-  // This event is triggered any time a session is active!
+  // Event triggered when a session is active
 }
 
 const error = async (message) => {
