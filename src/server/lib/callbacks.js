@@ -1,5 +1,5 @@
 /**
- * Use this callback to control if a user is allowed to sign in or not.
+ * Use the signin callback to control if a user is allowed to sign in or not.
  *
  * This is triggered before sign in flow completes, so the user profile may be
  * a user object (with an ID) or it may be just their name and email address,
@@ -40,24 +40,30 @@ const redirect = async (url, baseUrl) => {
 }
 
 /**
- * This callback is called whenever a session is checked.
+ * The session callback is called whenever a session is checked.
  * e.g. `getSession()`, `useSession()`, `/api/auth/session` (etc)
  *
- * @param  {object} session  Session that is returned to client
- * @return {object}          Return session
+ * @param  {object} session  Session object
+ * @param  {object} token    JSON Web Token (if enabled)
+ * @return {object}          Session that will be returned to the client 
  */
-const session = async (session) => {
+const session = async (session, token) => {
   return Promise.resolve(session)
 }
 
 /**
  * This callback is called whenever a JSON Web Token is created / updated.
  * e.g. On sign in, `getSession()`, `useSession()`, `/api/auth/session` (etc)
+ * 
+ * On initial sign in, the raw oAuthProfile is passed if the user is signing in 
+ * with an OAuth provider. It is not avalible on subsequent calls. You can
+ * take advantage of this to persist additional data you need to in the JWT.
  *
- * @param  {object} token  Decrypted JSON Web Token
- * @return {object}        Return  JSON Web Token
+ * @param  {object} token         Decrypted JSON Web Token
+ * @param  {object} oAuthProfile  OAuth profile - only available on sign in
+ * @return {object}               JSON Web Token that will be saved
  */
-const jwt = async (token) => {
+const jwt = async (token, oAuthProfile) => {
   return Promise.resolve(token)
 }
 

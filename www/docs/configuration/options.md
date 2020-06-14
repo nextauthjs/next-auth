@@ -208,6 +208,58 @@ See the documentation for the [pages option](/options/pages) for more informatio
 
 ---
 
+### callbacks
+
+* **Default value**: `object`
+* **Required**: *No*
+
+#### Description
+
+Callbacks are asynchronous functions you can use to control what happens when an action is performed.
+
+Callbacks are extremely powerful, especially in scenarios involving JSON Web Tokens as they allow you to implement access controls without a database and to integrate with external databases or APIs.
+
+You can specify a handler for any of the callbacks below.
+
+```js
+callbacks: {
+  signin: async (profile, account, metadata) => { },
+  redirect: async (url, baseUrl) => { },
+  session: async (session, token) => { },
+  jwt: async (token) => => { }
+}
+```
+
+See the [callbacks documentation](/configuration/callbacks) for more information on how to use the callback functions.
+
+---
+
+### events
+
+* **Default value**: `object`
+* **Required**: *No*
+
+#### Description
+
+Events are asynchronous functions that do not return a response, they are useful for audit logging.
+
+You can specify a handler for any of these events below - e.g. for debugging or to create an audit log.
+
+The content of the message object varies depending on the flow (e.g. OAuth or Email authentication flow, JWT or database sessions, etc), but typically contains a user object and/or contents of the JSON Web Token and other information relevent to the event.
+
+```js
+events: {
+  signin: async (message) => { /* on successful sign in */ },
+  signout: async (message) => { /* on signout */ },
+  createUser: async (message) => { /* user created */ },
+  linkAccount: async (message) => { /* account linked to a user */ },
+  session: async (message) => { /* session is active */ },
+  error: async (message) => { /* error in authentication flow */ }
+}
+```
+
+---
+
 ### debug
 
 * **Default value**: `false`
