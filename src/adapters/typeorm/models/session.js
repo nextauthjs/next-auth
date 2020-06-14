@@ -12,7 +12,6 @@ export class Session {
 export const SessionSchema = {
   name: 'Session',
   target: Session,
-  tableName: 'sessions',
   columns: {
     id: {
       // This property has `objectId: true` instead of `type: int` in MongoDB

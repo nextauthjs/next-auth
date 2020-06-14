@@ -11,7 +11,6 @@ export class VerificationRequest {
 export const VerificationRequestSchema = {
   name: 'VerificationRequest',
   target: VerificationRequest,
-  tableName: 'verification_requests',
   columns: {
     id: {
       // This property has `objectId: true` instead of `type: int` in MongoDB

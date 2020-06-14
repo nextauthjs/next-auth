@@ -42,8 +42,7 @@
     "preact": "^10.4.1",
     "preact-render-to-string": "^5.1.7",
     "querystring": "^0.2.0",
-    "typeorm": "^0.2.24",
-    "typeorm-naming-strategies": "^1.1.0"
+    "typeorm": "^0.2.24"
   },
   "peerDependencies": {
     "react": "^16.13.1",
