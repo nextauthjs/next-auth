@@ -148,7 +148,9 @@ Feel free to open a PR for your custom configuration if you've created one for a
 
 ## Sign in with Email
 
-The Email Provider uses email to send "magic links" that can be used sign in, you will likely have seen these if you have used services like Slack before. The Email Provider can be used in conjuction with – or instead of – one or more OAuth providers.
+The Email provider uses email to send "magic links" that can be used sign in, you will likely have seen them before if you have used software like Slack.
+
+Adding support for signing in via email in addition to one or more OAuth services provides a way for users to sign in if they lose access to their OAuth account (e.g. if it is locked or deleted).
 
 Configuration is similar to other providers, but the options are different:
 
@@ -162,4 +164,9 @@ providers: [
 ],
 ```
 
-See the [Email Provider documentation](/providers/email) for more information on how to configure email sign in.
+See the [Email provider documentation](/providers/email) for more information on how to configure email sign in.
+
+:::note
+The email provider requires a database, it cannot be used without one.
+:::
+

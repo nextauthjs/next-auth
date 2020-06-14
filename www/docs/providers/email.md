@@ -5,13 +5,18 @@ title: Email
 
 ## Overview
 
-The Email Provider uses email to send "magic links" that can be used sign in, you will likely have seen these if you have used services like Slack before.
+The Email provider uses email to send "magic links" that can be used sign in, you will likely have seen these if you have used services like Slack before.
 
-On initial sign in, a Verification Token is sent to the email address provided; by default this token has a 24 hour expiry time. If the Verification Token is used (i.e. by clicking on the link in the email) an account is created for the user and they are signed in.
+Adding support for signing in via email in addition to one or more OAuth services provides a way for users to sign in if they lose access to their OAuth account (e.g. if it is locked or deleted).
 
-If someone provides the email address of an existing account to the Email Provider, they are signed into the account associated with that email address when they use the Verification Token.
+The Email provider can be used in conjuction with (or instead of) one or more OAuth providers.
 
-The Email Provider can be used in conjuction with – or instead of – one or more OAuth providers.
+### How it works
+
+On initial sign in, a **Verification Token** is sent to the email address provided. By default this token is valid for 24 hours. If the Verification Token is used with that time (i.e. by clicking on the link in the email) an account is created for the user and they are signed in.
+
+If someone provides the email address of an *existing account* when signin in, an email is sent and they are signed into the account associated with that email address when they follow the link in the email.
+
 
 :::tip
 The Email Provider can be used with both JSON Web Tokens and database sessions, but you **must** configure a database to use it. It is not possible to enable email sign in without using a database.

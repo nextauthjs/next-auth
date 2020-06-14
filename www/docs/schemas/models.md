@@ -26,7 +26,9 @@ The User model is for information such as the users name and email address.
 Email address are optional, but if one is specified for a User then it must be unique.
 
 :::note
-If a user signs up with OAuth their email is automatically taken from their OAuth profile, if the OAuth provider returns one. This provides a way to contact users and for users to maintain access to their account and sign in using email in the event they are unable to sign in with the OAuth provider in future (as long as an email sign in is also configured).
+If a user first signs in with OAuth then their email address is automatically populated using the one from their OAuth profile, if the OAuth provider returns one.
+
+This provides a way to contact users and for users to maintain access to their account and sign in using email in the event they are unable to sign in with the OAuth provider in future (if email sign in is configured).
 :::
 
 ### Account 

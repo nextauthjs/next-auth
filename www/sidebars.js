@@ -6,12 +6,11 @@ module.exports = {
       'getting-started/client',
       'getting-started/rest-api'
     ],
-    Options: [
-      'options/basic-options',
-      'options/providers',
-      'options/database',
-      'options/pages',
-      'options/advanced-options'
+    Configuration: [
+      'configuration/options',
+      'configuration/providers',
+      'configuration/database',
+      'configuration/pages'
     ],
     Providers: [
       'providers/apple',

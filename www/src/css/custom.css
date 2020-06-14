@@ -45,16 +45,24 @@ a,
   padding: 0 var(--ifm-pre-padding);
 }
 
-.sidebar_node_modules-\@docusaurus-theme-classic-src-theme-DocSidebar- {
-  background: rgba(0,0,0,0.025); 
-}
-
 .admonition-icon {
   margin-right: .5rem;
 }
 
 .rounded-pill {
   border-radius: 2rem;
+}
+
+.contents {
+  margin-top: 0;
+  padding-top: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.contents > li:first-child {
+  margin-top: 0;
+  padding-top: 0;
 }
 
 .contents li {
