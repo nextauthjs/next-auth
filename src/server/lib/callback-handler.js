@@ -9,6 +9,7 @@
 // done prior to this handler being called to avoid additonal complexity in this
 // handler.
 import { AccountNotLinkedError } from '../../lib/errors'
+import dispatchEvent from '../lib/dispatch-event'
 
 export default async (sessionToken, profile, providerAccount, options) => {
   try {
@@ -16,7 +17,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
     if (!profile) { throw new Error('Missing profile') }
     if (!providerAccount || !providerAccount.id || !providerAccount.type) { throw new Error('Missing or invalid provider account') }
 
-    const { adapter, jwt } = options
+    const { adapter, jwt, events } = options
 
     const useJwtSession = options.session.jwt
     const sessionMaxAge = options.session.maxAge
@@ -99,6 +100,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
       } else {
         // Create user account if there isn't one for the email address already
         user = await createUser(profile)
+        await dispatchEvent(events.createUser, user)
         isNewUser = true
       }
 
@@ -154,6 +156,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
             providerAccount.accessToken,
             providerAccount.accessTokenExpires
           )
+          await dispatchEvent(events.linkAccount, { user, providerAccount })
 
           // As they are already signed in, we don't need to do anything after linking them
           return {
@@ -198,6 +201,8 @@ export default async (sessionToken, profile, providerAccount, options) => {
           // create a new account for the user, link it to the oAuth acccount and
           // create a new session for them so they are signed in with it.
           user = await createUser(profile)
+          await dispatchEvent(events.createUser, user)
+
           await linkAccount(
             user.id,
             providerAccount.provider,
@@ -207,6 +212,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
             providerAccount.accessToken,
             providerAccount.accessTokenExpires
           )
+          await dispatchEvent(events.linkAccount, { user, providerAccount })
 
           session = useJwtSession ? {} : await createSession(user)
           isNewUser = true
