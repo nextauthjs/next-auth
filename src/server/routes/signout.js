@@ -50,7 +50,7 @@ export default async (req, res, options, done) => {
     }
   }
 
-  // Remove Session Token 
+  // Remove Session Token
   cookie.set(res, cookies.sessionToken.name, '', {
     ...cookies.sessionToken.options,
     maxAge: 0

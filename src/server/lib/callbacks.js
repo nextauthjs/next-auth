@@ -45,7 +45,7 @@ const redirect = async (url, baseUrl) => {
  *
  * @param  {object} session  Session object
  * @param  {object} token    JSON Web Token (if enabled)
- * @return {object}          Session that will be returned to the client 
+ * @return {object}          Session that will be returned to the client
  */
 const session = async (session, token) => {
   return Promise.resolve(session)
@@ -54,8 +54,8 @@ const session = async (session, token) => {
 /**
  * This callback is called whenever a JSON Web Token is created / updated.
  * e.g. On sign in, `getSession()`, `useSession()`, `/api/auth/session` (etc)
- * 
- * On initial sign in, the raw oAuthProfile is passed if the user is signing in 
+ *
+ * On initial sign in, the raw oAuthProfile is passed if the user is signing in
  * with an OAuth provider. It is not avalible on subsequent calls. You can
  * take advantage of this to persist additional data you need to in the JWT.
  *
