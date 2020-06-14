@@ -1,5 +1,5 @@
 ---
-id: Twitch
+id: twitch
 title: Twitch
 ---
 
@@ -19,7 +19,7 @@ import Providers from `next-auth/providers`
 providers: [
   Providers.Twitch({
     clientId: process.env.TWITCH_CLIENT_ID,
-    clientId: process.env.TWITCH_CLIENT_SECRET
+    clientSecret: process.env.TWITCH_CLIENT_SECRET
   })
 }
 ...

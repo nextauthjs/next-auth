@@ -19,7 +19,7 @@ import Providers from `next-auth/providers`
 providers: [
   Providers.Twitter({
     clientId: process.env.TWITTER_CLIENT_ID,
-    clientId: process.env.TWITTER_CLIENT_SECRET
+    clientSecret: process.env.TWITTER_CLIENT_SECRET
   })
 }
 ...

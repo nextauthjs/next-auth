@@ -43,7 +43,7 @@ As long as you also specify this option in an environment variable, the client w
 
 A custom provider is an advanced option intended for use only you need to use NextAuth.js with a database configuration that is not supported by the default `database` adapter.
 
-See the [adapter documentation](/options/adapter) for more information.
+See the [adapter documentation](/schemas/adapters) for more information.
 
 :::note
 If the `adapter` option is specified it overrides the `database` option.

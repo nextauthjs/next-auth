@@ -19,7 +19,7 @@ import Providers from `next-auth/providers`
 providers: [
   Providers.Auth0({
     clientId: process.env.AUTH0_CLIENT_ID,
-    clientId: process.env.AUTH0_CLIENT_SECRET,
+    clientSecret: process.env.AUTH0_CLIENT_SECRET,
     subdomain: process.env.AUTH0_SUBDOMAIN
   })
 }

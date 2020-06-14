@@ -19,7 +19,7 @@ import Providers from `next-auth/providers`
 providers: [
   Providers.Okta({
     clientId: process.env.OKTA_CLIENT_ID,
-    clientId: process.env.OKTA_CLIENT_SECRET,
+    clientSecret: process.env.OKTA_CLIENT_SECRET,
     domain: process.env.OKTA_DOMAIN
   })
 }
