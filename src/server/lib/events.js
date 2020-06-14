@@ -3,31 +3,19 @@ const signin = async (message) => {
  }
 
 const signout = async (message) => { 
-  // @TODO Event triggered on signout
+  // Event triggered on signout
 }
 
 const createUser = async (message) => {
-  // @TODO Event triggered on user creation
+  // Event triggered on user creation
 }
-
-const updateUser = async (message) => { 
-  // @TODO Event triggered on update to user
-}
-
-const deleteUser = async (message) => {
-  // @TODO Event triggered on user deletion
- }
 
 const linkAccount = async (message) => {
-  // @TODO Event triggered when an account is linked to a user
-}
-
-const unlinkAccount = async (message) => {
-  // @TODO Event triggered when an account is unlinked from a user
+  // Event triggered when an account is linked to a user
 }
 
 const session = async (message) => {
-  // @TODO Event triggered when an account is session is active
+  // Event triggered when an account is session is active
   // This event is triggered any time a session is active!
 }
 
@@ -40,10 +28,7 @@ export default {
   signin,
   signout,
   createUser,
-  updateUser,
-  deleteUser,
   linkAccount,
-  unlinkAccount,
   session,
   error
 }
