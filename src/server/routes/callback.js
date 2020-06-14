@@ -53,7 +53,7 @@ export default async (req, res, options, done) => {
 
         if (useJwtSession) {
           const defaultJwtPayload = { user, account, isNewUser }
-          const jwtPayload = await callbacks.jwt(defaultJwtPayload)
+          const jwtPayload = await callbacks.jwt(defaultJwtPayload, oAuthProfile)
 
           // Sign and encrypt token
           const newEncodedJwt = await jwt.encode({ secret: jwt.secret, token: jwtPayload, maxAge: sessionMaxAge })
