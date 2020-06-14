@@ -3,6 +3,14 @@ id: database
 title: Database Configuration
 ---
 
+Specifying a database is optional if don't need to persist user data or support email sign in.
+
+However if you want to do either of these things you will need to specify a database.
+
+:::tip
+If you don't specify a database then JSON Web Tokens will be enabled and used to store session data. If you do specify a database then database sessions will be enabled, unless you explictly enable JSON Web Tokens for sessions by passing the option `sessions { jwt: true }`.
+:::
+
 You can specify database credentials as as a connection string or a [TypeORM configuration](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md) object.
 
 The following approaches are exactly equivalent:
@@ -30,17 +38,6 @@ See the [TypeORM configuration documentation](https://github.com/typeorm/typeorm
 ## Data Structure
 
 NextAuth.js will configure your database with tables / collections automatically if `synchronize: true` is set.
-
-### Tables / Collections
-
-* **User** - User profile (name, email, etc)
-* **Account** – OAuth Account (Provider, Provider Account ID, etc)
-* **VerificationRequest** – Used for Email Verification Tokens
-* **Session** - Unused if JSON Web Tokens are being for sessions
-
-All User accounts have an email address associated with them, they are required and they must be unique.
-
-A User can have multiple OAuth Accounts and multiple Sessions.
 
 :::warning
 The option **?synchronize=true** automatically synchronizes the database schema with what NextAuth.js expects. It is useful to create the tables you need in the database on first run against a test database but it should not be enabled in production as it may result in data loss.

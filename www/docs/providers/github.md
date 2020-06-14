@@ -17,7 +17,7 @@ https://github.com/settings/apps
 import Providers from `next-auth/providers`
 ...
 providers: [
-  Providers.Github({
+  Providers.GitHub({
     clientId: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET
   })
