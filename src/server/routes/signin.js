@@ -10,8 +10,9 @@ export default async (req, res, options, done) => {
     baseUrl,
     csrfTokenVerified,
     adapter,
-    allowSignin
+    callbacks
   } = options
+  const { getUserByEmail } = await adapter.getAdapter(options)
   const provider = providers[providerName]
   const { type } = provider
 
@@ -45,21 +46,22 @@ export default async (req, res, options, done) => {
       return done()
     }
 
-    // This works like oAuth signin but instead of returning a secure link
-    // to the browser, it sends it via email to verify the user and then
-    // redirects the browser to a page telling the user to follow the link
-    // in their email.
-    //
-    // The link in the email will take them back to the callback page, where
-    // it will be verified and, if valid, the user will be logged in; a new
-    // account is created for them if they don't have one already.
+    // Note: Technically the part of the email address local mailbox element
+    // (everything before the @ symbol) should be treated as 'case sensitive'
+    // according to RFC 2821, but in practice this causes more problems than
+    // it solves. We treat email addresses as all lower case. If anyone
+    // complains about this we can make strict RFC 2821 compliance an option.
     const email = req.body.email ? req.body.email.toLowerCase() : null
 
-    // Check allowSignin() allows this account to sign in
-    if (!(await allowSignin({ email }, { id: provider.id, type: 'email' }))) {
-      res
-        .status(302)
-        .setHeader('Location', `${baseUrl}/error?error=AccessDenied`)
+    // If is an existing user return a user object (otherwise use placeholder)
+    const profile = await getUserByEmail(email) || { email }
+    const account = { id: provider.id, type: 'email', providerAccountId: email }
+
+    // Check if user is allowed to sign in
+    const signinCallbackResponse = await callbacks.signin(profile, account)
+
+    if (signinCallbackResponse === false) {
+      res.status(302).setHeader('Location', `${baseUrl}/error?error=AccessDenied`)
       res.end()
       return done()
     }

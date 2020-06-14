@@ -12,8 +12,6 @@ const linkAccount = async (message) => { }
 
 const unlinkAccount = async (message) => { }
 
-const redirect = async (message) => { }
-
 const session = async (message) => { }
 
 const error = async (message) => { }
@@ -26,7 +24,6 @@ export default {
   deleteUser,
   linkAccount,
   unlinkAccount,
-  redirect,
   session,
   error
 }

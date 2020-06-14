@@ -320,7 +320,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
       debugMessage('GET_VERIFICATION_REQUEST', identifer, token)
       try {
         // Hash token provided with secret before trying to match it with datbase
-        // @TODO Use bcrypt function here instead of simple salted hash
+        // @TODO Use bcrypt instead of salted SHA-256 hash for token
         const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
         const verificationRequest = await connection.getRepository(VerificationRequest).findOne({ identifer, token: hashedToken })
 
