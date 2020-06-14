@@ -3,6 +3,8 @@ import jwt from '../lib/jwt'
 import cookie from './lib/cookie'
 import callbackUrlHandler from './lib/callback-url-handler'
 import parseProviders from './lib/providers'
+import events from './lib/events'
+import callbacks from './lib/callbacks'
 import providers from './routes/providers'
 import signin from './routes/signin'
 import signout from './routes/signout'
@@ -113,11 +115,10 @@ export default async (req, res, userSuppliedOptions) => {
     }
 
     // Session options
-    const sessionOptions = {
+    const sessionOption = {
       jwt: false,
       maxAge: 30 * 24 * 60 * 60, // Sessions expire after 30 days of being idle
       updateAge: 24 * 60 * 60, // Sessions updated only if session is greater than this value (0 = always, 24*60*60 = every 24 hours)
-      get: async (session, jwt) => session,
       ...userSuppliedOptions.session
     }
 
@@ -125,7 +126,6 @@ export default async (req, res, userSuppliedOptions) => {
     const jwtOptions = {
       secret,
       key: secret,
-      set: async (token) => token,
       encode: jwt.encode,
       decode: jwt.decode,
       ...userSuppliedOptions.jwt
@@ -133,7 +133,19 @@ export default async (req, res, userSuppliedOptions) => {
 
     // If no adapter specified, force use of JSON Web Tokens (stateless)
     if (!adapter) {
-      sessionOptions.jwt = true
+      sessionOption.jwt = true
+    }
+
+    // Event messages
+    const eventsOption = {
+      ...events,
+      ...userSuppliedOptions.events
+    }
+
+    // Callback functions
+    const callbacksOption = {
+      ...callbacks,
+      ...userSuppliedOptions.callbacks
     }
 
     // Ensure CSRF Token cookie is set for any subsequent requests.
@@ -193,14 +205,6 @@ export default async (req, res, userSuppliedOptions) => {
       // Defaults options can be overidden
       debug: false, // Enable debug messages to be displayed
       pages: {}, // Custom pages (e.g. sign in, sign out, errors)
-      allowSignin: async (user, account) => true, // Return true if user / account is allowed to sign in (false if not)
-      allowCallbackUrl: async (url, site) => {
-        if (url.startsWith(site)) {
-          return Promise.resolve(url)
-        } else {
-          return Promise.resolve(site)
-        }
-      },
       // Custom options override defaults
       ...userSuppliedOptions,
       // These computed settings can values in userSuppliedOptions but override them
@@ -216,10 +220,15 @@ export default async (req, res, userSuppliedOptions) => {
       csrfToken,
       csrfTokenVerified,
       providers: parseProviders(userSuppliedOptions.providers, baseUrl),
-      session: sessionOptions,
+      session: sessionOption,
       jwt: jwtOptions,
+      events: eventsOption,
+      callbacks: callbacksOption,
       callbackUrl: site
     }
+
+    // If debug enabled, set ENV VAR so that logger logs debug messages
+    if (options.debug === true) { process.env._NEXT_AUTH_DEBUG = true }
 
     // Get / Set callback URL based on query param / cookie + validation
     options.callbackUrl = await callbackUrlHandler(req, res, options)

@@ -11,10 +11,12 @@ const logger = {
     }
   },
   debug: (debugCode, ...text) => {
-    console.log(
-      `[next-auth][debug][${debugCode}]`,
-      text
-    )
+    if (process && process.env && process.env._NEXT_AUTH_DEBUG) {
+      console.log(
+        `[next-auth][debug][${debugCode}]`,
+        text
+      )
+    }
   }
 }
 

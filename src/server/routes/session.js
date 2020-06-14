@@ -1,12 +1,12 @@
 // Return a session object (without any private fields) for Single Page App clients
 import cookie from '../lib/cookie'
 import logger from '../../lib/logger'
+import dispatchEvent from '../lib/dispatch-event'
 
 export default async (req, res, options, done) => {
-  const { cookies, adapter, jwt } = options
+  const { cookies, adapter, jwt, events, callbacks } = options
   const useJwtSession = options.session.jwt
   const sessionMaxAge = options.session.maxAge
-  const getSessionResponse = options.session.get
   const sessionToken = req.cookies[cookies.sessionToken.name]
 
   if (!sessionToken) {
@@ -19,35 +19,38 @@ export default async (req, res, options, done) => {
   if (useJwtSession) {
     try {
       // Decrypt and verify token
-      const token = await jwt.decode({ secret: jwt.secret, token: sessionToken, maxAge: sessionMaxAge })
+      const decodedJwt = await jwt.decode({ secret: jwt.secret, token: sessionToken, maxAge: sessionMaxAge })
 
-      // Allow token contents to be updated by JWT callback (if any specified)
-      const newToken = await jwt.set(token)
-
-      // Refresh JWT expiry by re-signing it, with an updated expiry date
-      const newEncryptedToken = await jwt.encode({ secret: jwt.secret, token: newToken, maxAge: sessionMaxAge })
-
-      // Set cookie expiry date
+      // Generate new session expiry date
       const sessionExpiresDate = new Date()
       sessionExpiresDate.setTime(sessionExpiresDate.getTime() + (sessionMaxAge * 1000))
       const sessionExpires = sessionExpiresDate.toISOString()
 
-      // Set cookie, to also update expiry date on cookie
-      cookie.set(res, cookies.sessionToken.name, newEncryptedToken, { expires: sessionExpires, ...cookies.sessionToken.options })
-
-      // Only expose a limited subset of information to the client as needed
-      // for presentation purposes (e.g. "you are logged in as…").
-      //
-      // @TODO Should support `async seralizeUser({ user, function })` style
-      // middleware function to allow response to be customized.
-      response = await getSessionResponse({
+      // By default, only exposes a limited subset of information to the client
+      // as needed for presentation purposes (e.g. "you are logged in as…").
+      const defaultSessionPayload = {
         user: {
-          name: token.user && token.user.name ? token.user.name : null,
-          email: token.user && token.user.email ? token.user.email : null,
-          image: token.user && token.user.image ? token.user.image : null
+          name: decodedJwt.user && decodedJwt.user.name ? decodedJwt.user.name : null,
+          email: decodedJwt.user && decodedJwt.user.email ? decodedJwt.user.email : null,
+          image: decodedJwt.user && decodedJwt.user.image ? decodedJwt.user.image : null
         },
         expires: sessionExpires
-      }, newToken)
+      }
+
+      // Pass Session and JSON Web Token through to the session callback
+      const jwtPayload = await callbacks.jwt(decodedJwt)
+      const sessionPayload = await callbacks.session(defaultSessionPayload, jwtPayload)
+
+      // Return session payload as response
+      response = sessionPayload
+
+      // Refresh JWT expiry by re-signing it, with an updated expiry date
+      const newEncodedJwt = await jwt.encode({ secret: jwt.secret, token: jwtPayload, maxAge: sessionMaxAge })
+
+      // Set cookie, to also update expiry date on cookie
+      cookie.set(res, cookies.sessionToken.name, newEncodedJwt, { expires: sessionExpires, ...cookies.sessionToken.options })
+
+      await dispatchEvent(events.session, { session: sessionPayload, jwt: jwtPayload })
     } catch (error) {
       // If JWT not verifiable, make sure the cookie for it is removed and return empty object
       logger.error('JWT_SESSION_ERROR', error)
@@ -63,12 +66,9 @@ export default async (req, res, options, done) => {
 
         const user = await getUser(session.userId)
 
-        // Only expose a limited subset of information to the client as needed
-        // for presentation purposes (e.g. "you are logged in as…").
-        //
-        // @TODO Should support `async seralizeUser({ user, function })` style
-        // middleware function to allow response to be customized.
-        response = await getSessionResponse({
+        // By default, only exposes a limited subset of information to the client
+        // as needed for presentation purposes (e.g. "you are logged in as…").
+        const defaultSessionPayload = {
           user: {
             name: user.name,
             email: user.email,
@@ -76,10 +76,18 @@ export default async (req, res, options, done) => {
           },
           accessToken: session.accessToken,
           expires: session.expires
-        })
+        }
+
+        // Pass Session through to the session callback
+        const sessionPayload = await callbacks.session(defaultSessionPayload)
+
+        // Return session payload as response
+        response = sessionPayload
 
         // Set cookie again to update expiry
         cookie.set(res, cookies.sessionToken.name, sessionToken, { expires: session.expires, ...cookies.sessionToken.options })
+
+        await dispatchEvent(events.session, { session: sessionPayload })
       } else if (sessionToken) {
         // If sessionToken was found set but it's not valid for a session then
         // remove the sessionToken cookie from browser.

@@ -12,7 +12,7 @@ module.exports = {
       'configuration/database',
       'configuration/pages'
     ],
-    Providers: [
+    'Authentication Providers': [
       'providers/apple',
       'providers/auth0',
       'providers/discord',
