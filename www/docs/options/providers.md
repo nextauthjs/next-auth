@@ -33,10 +33,6 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 * [Twitch](/providers/Twitch)
 * [Twitter](/providers/twitter)
 
-:::warning
-NextAuth.js requires an email address to sign in. If an account does not have an email address, a user will be asked to sign in with an account that does. 
-:::
-
 ### Using a built-in provider
 
 1. Register your application at the developer portal of your provider. There are links above to the developer docs for most supported providers with details on how to register your application.
@@ -75,7 +71,6 @@ NextAuth.js requires an email address to sign in. If an account does not have an
 :::tip
 If you want to create a custom sign in link you can link to **/api/auth/signin/[provider]** which will sign in the user in directly with that provider.
 :::
-
 
 ### Using a custom provider
 
@@ -153,18 +148,16 @@ Feel free to open a PR for your custom configuration if you've created one for a
 
 ## Sign in with Email
 
+The Email Provider uses email to send "magic links" that can be used sign in, you will likely have seen these if you have used services like Slack before. The Email Provider can be used in conjuction with – or instead of – one or more OAuth providers.
+
+Configuration is similar to other providers, but the options are different:
+
 ```js title="/pages/api/auth/[...nextauth].js"
 providers: [
   Providers.Email({
-    server: {
-      host: process.env.EMAIL_SERVER_HOST,
-      port: process.env.EMAIL_SERVER_PORT,
-      auth: {
-        user: process.env.EMAIL_SERVER_USER,
-        pass: process.env.EMAIL_SERVER_PASSWORD
-      }
-    },
-    from: process.env.EMAIL_FROM
+    server: process.env.EMAIL_SERVER, 
+    from: process.env.EMAIL_FROM,
+    // maxAge: 24 * 60 * 60, // How long email links are valid for (default 24h)
   }),
 ],
 ```

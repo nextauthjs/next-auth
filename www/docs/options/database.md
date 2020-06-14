@@ -7,9 +7,9 @@ Specifying a database is optional if you don't need to persist user data or supp
 
 If you want to do either of these things you will need to specify a database.
 
-:::tip
 If you don't specify a database then JSON Web Tokens will be enabled and used to store session data. If you do specify a database then database sessions will be enabled, unless you explictly enable JSON Web Tokens for sessions by passing the option `sessions { jwt: true }`.
-:::
+
+## Configuration
 
 You can specify database credentials as as a connection string or a [TypeORM configuration](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md) object.
 
@@ -35,7 +35,7 @@ database: {
 See the [TypeORM configuration documentation](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md) for all the supported database options.
 :::
 
-## Data Structure
+## Database setup
 
 NextAuth.js will configure your database with tables / collections automatically if `synchronize: true` is set.
 
@@ -69,7 +69,7 @@ database: {
 
 :::
 
-## Supported Databases
+## Supported databases
 
 NextAuth.js uses TypeORM as the default database adapter, but only some databases are supported.
 
@@ -135,7 +135,7 @@ database: 'mongodb://username:password@127.0.0.1:3306/database_name?synchronize=
 ```
 
 
-## Unsupported Databases
+## Unsupported databases
 
 The following additional databases are supported by TypeORM (which the default adapter uses) and *may* work with NextAuth.js but have not been tested:
 
