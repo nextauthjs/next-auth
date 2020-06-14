@@ -13,7 +13,7 @@ The schema generated for a Postgres database when using the built-in models.
     "name": "id",
     "type": "integer",
     "nullable": false,
-    "default": "nextval('user_id_seq'::regclass)"
+    "default": "nextval('users_id_seq'::regclass)"
   },
   "name": {
     "name": "name",
@@ -62,7 +62,7 @@ The schema generated for a Postgres database when using the built-in models.
     "name": "id",
     "type": "integer",
     "nullable": false,
-    "default": "nextval('account_id_seq'::regclass)"
+    "default": "nextval('accounts_id_seq'::regclass)"
   },
   "compound_id": {
     "name": "compound_id",
@@ -135,7 +135,7 @@ The schema generated for a Postgres database when using the built-in models.
     "name": "id",
     "type": "integer",
     "nullable": false,
-    "default": "nextval('session_id_seq'::regclass)"
+    "default": "nextval('sessions_id_seq'::regclass)"
   },
   "user_id": {
     "name": "user_id",
@@ -184,7 +184,7 @@ The schema generated for a Postgres database when using the built-in models.
     "name": "id",
     "type": "integer",
     "nullable": false,
-    "default": "nextval('verification_request_id_seq'::regclass)"
+    "default": "nextval('verification_requests_id_seq'::regclass)"
   },
   "identifer": {
     "name": "identifer",
