@@ -8,7 +8,6 @@ import Models from './models'
 import logger from '../../lib/logger'
 
 const Adapter = (typeOrmConfig, options = {}) => {
-
   // Ensure typeOrmConfigObject is normalized to an object
   const typeOrmConfigObject = (typeof typeOrmConfig === 'string')
     ? adapterConfig.parseConnectionString(typeOrmConfig)
@@ -106,7 +105,6 @@ const Adapter = (typeOrmConfig, options = {}) => {
     const sessionUpdateAge = (appOptions && appOptions.session && appOptions.session.updateAge)
       ? appOptions.session.updateAge * 1000
       : 0
-
 
     async function createUser (profile) {
       debugMessage('CREATE_USER', profile)

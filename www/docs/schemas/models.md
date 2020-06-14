@@ -9,13 +9,15 @@ This a summary of the models and data structure used by NextAuth.js default data
 
 You are free to define your own models and schemas if you want to use a custom database adapter.
 
+In NextAuth.js all table/collection names are plural, and all table names and column names use snake_case when used with an SQL database and camelCase when used with Document database.
+
 :::tip
 Models in NextAuth.js are built for for ANSI SQL but are polymorphic and are transformed to adapt to the database being used; there is some variance in specific data types (e.g. for datetime, text fields, etc).
 :::
 
 ### User
 
-Table: `user`
+Table: `users`
 
 **Description:**
 
@@ -29,7 +31,7 @@ If a user signs up with OAuth their email is automatically taken from their OAut
 
 ### Account 
 
-Table: `account`
+Table: `accounts`
 
 **Description:**
 
@@ -37,7 +39,7 @@ The Account model is for information about OAuth accounts associated with a User
 
 ### Session
 
-Table: `session`
+Table: `sessions`
 
 **Description:**
 
@@ -45,7 +47,7 @@ The Session model is used for database sessions. It is not used if JSON Web Toke
 
 ### Verification Request
 
-Table: `verification_request`
+Table: `verification_requests`
 
 **Description:**
 
@@ -74,5 +76,5 @@ See `src/adapters/typeorm/models` for the source for the current models and sche
 MongoDB does not use schemas in the same way as most RDBMS databases, but the objects stored in MongoDB use similar datatypes to SQL, with some differences:
 
 * ID fields are of type `ObjectID` rather than `int`
-* By convention, all properties are `camelCase` rather than `snake_case`
+* By convention, all collection names and object properties are `camelCase` rather than `snake_case`
 * A sparse index is used on `User.email` to allow it to not be specified, while enforcing uniqueness if it is

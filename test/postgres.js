@@ -1,3 +1,4 @@
+/* eslint-disable */
 // Placeholder for schema test (will use test framework, this is temporary)
 const fs = require('fs')
 const path = require('path')
@@ -5,10 +6,10 @@ const { Client } = require('pg')
 
 const Adapters = require('../adapters')
 
-const TABLES = ['user', 'account', 'session', 'verification_request']
+const TABLES = ['users', 'accounts', 'sessions', 'verification_requests']
 const SCHEMA_FILE = path.join(__dirname, '/schemas/postgres.json')
 
-function printSchema() {
+function printSchema () {
   return new Promise(async (resolve) => {
     // Invoke adapter to sync schema
     const adapter = Adapters.Default('postgres://nextauth:password@127.0.0.1:5432/nextauth?synchronize=true')
@@ -28,29 +29,28 @@ function printSchema() {
       (error, result) => {
         if (error) { throw error }
 
-        const getColumnSchema  = (column) => {
+        const getColumnSchema = (column) => {
           return {
             name: column.column_name,
             type: column.data_type,
-            nullable: !!column.is_nullable === "YES",
+            nullable: !!column.is_nullable === 'YES',
             default: column.column_default
           }
         }
-        
 
-        let user = {}
-        let account = {}
-        let session = {}
-        let verification_request = {}
+        const users = {}
+        const accounts = {}
+        const sessions = {}
+        const verification_requests = {}
 
-        result[0].rows.forEach(column => { user[column.column_name] = getColumnSchema(column) })
-        result[1].rows.forEach(column => { account[column.column_name] = getColumnSchema(column) })
-        result[2].rows.forEach(column => { session[column.column_name] = getColumnSchema(column) })
-        result[3].rows.forEach(column => { verification_request[column.column_name] = getColumnSchema(column) })
+        result[0].rows.forEach(column => { users[column.column_name] = getColumnSchema(column) })
+        result[1].rows.forEach(column => { accounts[column.column_name] = getColumnSchema(column) })
+        result[2].rows.forEach(column => { sessions[column.column_name] = getColumnSchema(column) })
+        result[3].rows.forEach(column => { verification_requests[column.column_name] = getColumnSchema(column) })
 
         connection.end()
 
-        resolve({ user, account, session, verification_request })
+        resolve({ users, accounts, sessions, verification_requests })
       }
     )
   })
@@ -61,13 +61,13 @@ function printSchema() {
   const expectedSchema = fs.readFileSync(SCHEMA_FILE)
 
   // Uncomment to update fixture
-  //fs.writeFileSync(SCHEMA_FILE, testSchema)
+  // fs.writeFileSync(SCHEMA_FILE, testSchema)
 
   if (testSchema == expectedSchema) {
-    console.log("Postgres schema ok")
+    console.log('Postgres schema ok')
     process.exit()
   } else {
-    console.error("Postgres schema error")
+    console.error('Postgres schema error', testSchema)
     process.exit(1)
   }
 })()

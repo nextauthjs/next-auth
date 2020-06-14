@@ -1,3 +1,4 @@
+/* eslint-disable */
 // Placeholder for schema test (will use test framework, this is temporary)
 const fs = require('fs')
 const path = require('path')
@@ -5,10 +6,10 @@ const mysql = require('mysql')
 
 const Adapters = require('../adapters')
 
-const TABLES = ['user', 'account', 'session', 'verification_request']
+const TABLES = ['users', 'accounts', 'sessions', 'verification_requests']
 const SCHEMA_FILE = path.join(__dirname, '/schemas/mysql.json')
 
-function printSchema() {
+function printSchema () {
   return new Promise(async (resolve) => {
     // Invoke adapter to sync schema
     const adapter = Adapters.Default('mysql://nextauth:password@127.0.0.1:3306/nextauth?synchronize=true')
@@ -29,28 +30,28 @@ function printSchema() {
       (error, result) => {
         if (error) { throw error }
 
-        const getColumnSchema  = (column) => {
+        const getColumnSchema = (column) => {
           return {
             name: column.Field,
             type: column.Type,
-            nullable: !!column.Null === "YES",
+            nullable: !!column.Null === 'YES',
             default: column.Default
           }
         }
 
-        let user = {}
-        let account = {}
-        let session = {}
-        let verification_request = {}
+        const users = {}
+        const accounts = {}
+        const sessions = {}
+        const verification_requests = {}
 
-        result[0].forEach(column => { user[column.Field] = getColumnSchema(column) })
-        result[1].forEach(column => { account[column.Field] = getColumnSchema(column) })
-        result[2].forEach(column => { session[column.Field] = getColumnSchema(column) })
-        result[3].forEach(column => { verification_request[column.Field] = getColumnSchema(column) })
+        result[0].forEach(column => { users[column.Field] = getColumnSchema(column) })
+        result[1].forEach(column => { accounts[column.Field] = getColumnSchema(column) })
+        result[2].forEach(column => { sessions[column.Field] = getColumnSchema(column) })
+        result[3].forEach(column => { verification_requests[column.Field] = getColumnSchema(column) })
 
         connection.end()
 
-        resolve({ user, account, session, verification_request })
+        resolve({ users, accounts, sessions, verification_requests })
       }
     )
   })
@@ -61,13 +62,13 @@ function printSchema() {
   const expectedSchema = fs.readFileSync(SCHEMA_FILE)
 
   // Uncomment to update fixture
-  //fs.writeFileSync(SCHEMA_FILE, testSchema)
+  // fs.writeFileSync(SCHEMA_FILE, testSchema)
 
   if (testSchema == expectedSchema) {
-    console.log("MySQL schema ok")
+    console.log('MySQL schema ok')
     process.exit()
   } else {
-    console.error("MySQL schema error")
+    console.error('MySQL schema error', testSchema)
     process.exit(1)
   }
 })()

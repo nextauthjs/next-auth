@@ -37,7 +37,7 @@ const mongodb = (models, options) => {
         name: 'email',
         unique: true,
         sparse: true,
-        columns: [ 'email' ]
+        columns: ['email']
       }
     ]
   }
@@ -57,12 +57,13 @@ const mongodb = (models, options) => {
   if (!customModels.VerificationRequest) {
     delete models.VerificationRequest.schema.columns.id.type
     models.VerificationRequest.schema.columns.id.objectId = true
+    models.VerificationRequest.schema.tableName = 'verificationRequests'
   }
 }
 
 const sqlite = (models, options) => {
   // Apply snake case naming strategy by default for SQLite databases
-  if (!options.namingStrategy) { 
+  if (!options.namingStrategy) {
     options.namingStrategy = new SnakeNamingStrategy()
   }
 
@@ -73,29 +74,27 @@ const sqlite = (models, options) => {
   // databases, so this schema change is specific to SQLite. SQLite adds
   // 'create' and 'update' fields to allow rows, but that behaviour is specific
   // to SQLite and so they are not used by this databases.
-  if (config.type.startsWith('sqlite')) {
-    if (!customModels.User) {
-      models.User.schema.columns.created.type = 'datetime'
-      models.User.schema.columns.updated.type = 'datetime'
-    }
+  if (!customModels.User) {
+    models.User.schema.columns.created.type = 'datetime'
+    models.User.schema.columns.updated.type = 'datetime'
+  }
 
-    if (!customModels.Account) {
-      models.Account.schema.columns.accessTokenExpires.type = 'datetime'
-      models.Account.schema.columns.created.type = 'datetime'
-      models.Account.schema.columns.updated.type = 'datetime'
-    }
+  if (!customModels.Account) {
+    models.Account.schema.columns.accessTokenExpires.type = 'datetime'
+    models.Account.schema.columns.created.type = 'datetime'
+    models.Account.schema.columns.updated.type = 'datetime'
+  }
 
-    if (!customModels.Session) {
-      models.Session.schema.columns.expires.type = 'datetime'
-      models.Session.schema.columns.created.type = 'datetime'
-      models.Session.schema.columns.updated.type = 'datetime'
-    }
+  if (!customModels.Session) {
+    models.Session.schema.columns.expires.type = 'datetime'
+    models.Session.schema.columns.created.type = 'datetime'
+    models.Session.schema.columns.updated.type = 'datetime'
+  }
 
-    if (!customModels.VerificationRequest) {
-      models.VerificationRequest.schema.columns.expires.type = 'datetime'
-      models.VerificationRequest.schema.columns.created.type = 'datetime'
-      models.VerificationRequest.schema.columns.updated.type = 'datetime'
-    }
+  if (!customModels.VerificationRequest) {
+    models.VerificationRequest.schema.columns.expires.type = 'datetime'
+    models.VerificationRequest.schema.columns.created.type = 'datetime'
+    models.VerificationRequest.schema.columns.updated.type = 'datetime'
   }
 }
 
@@ -108,9 +107,8 @@ export default (config, models, options) => {
     sqlite(models, options)
   } else {
     // Apply snake case naming strategy by default for SQL databases
-    if (!options.namingStrategy) { 
+    if (!options.namingStrategy) {
       options.namingStrategy = new SnakeNamingStrategy()
     }
   }
-
 }

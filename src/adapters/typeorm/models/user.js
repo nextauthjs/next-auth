@@ -9,6 +9,7 @@ export class User {
 export const UserSchema = {
   name: 'User',
   target: User,
+  tableName: 'users',
   columns: {
     id: {
       // This property has `objectId: true` instead of `type: int` in MongoDB

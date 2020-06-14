@@ -13,7 +13,7 @@ module.exports = {
       'options/pages',
       'options/advanced-options'
     ],
-    'Providers': [
+    Providers: [
       'providers/apple',
       'providers/auth0',
       'providers/discord',
@@ -27,12 +27,12 @@ module.exports = {
       'providers/twitch',
       'providers/twitter'
     ],
-   'Models & Schemas': [
+    'Models & Schemas': [
       'schemas/models',
       'schemas/mysql',
       'schemas/postgres',
       'schemas/adapters'
-    ],
+    ]
   /*
     'Version 1 (Legacy)': [
       'v1/getting-started-v1',
