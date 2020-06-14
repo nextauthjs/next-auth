@@ -75,6 +75,7 @@ const sqlite = (models, options) => {
   // 'create' and 'update' fields to allow rows, but that behaviour is specific
   // to SQLite and so they are not used by this databases.
   if (!customModels.User) {
+    models.User.schema.columns.emailVerified.type = 'datetime'
     models.User.schema.columns.created.type = 'datetime'
     models.User.schema.columns.updated.type = 'datetime'
   }
