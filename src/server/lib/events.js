@@ -1,8 +1,8 @@
 const signin = async (message) => {
   // Event triggered on successful sign in
- }
+}
 
-const signout = async (message) => { 
+const signout = async (message) => {
   // Event triggered on signout
 }
 
