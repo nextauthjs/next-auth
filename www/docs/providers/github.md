@@ -19,7 +19,7 @@ import Providers from `next-auth/providers`
 providers: [
   Providers.Github({
     clientId: process.env.GITHUB_CLIENT_ID,
-    clientId: process.env.GITHUB_CLIENT_SECRET,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET
   })
 }
 ...

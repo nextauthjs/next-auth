@@ -19,7 +19,7 @@ import Providers from `next-auth/providers`
 providers: [
   Providers.Slack({
     clientId: process.env.SLACK_CLIENT_ID,
-    clientId: process.env.SLACK_CLIENT_SECRET
+    clientSecret: process.env.SLACK_CLIENT_SECRET
   })
 }
 ...

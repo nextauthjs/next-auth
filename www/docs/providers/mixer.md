@@ -18,8 +18,8 @@ import Providers from `next-auth/providers`
 ...
 providers: [
   Providers.Mixer({
-		clientId: process.env.MIXER_CLIENT_ID,
-		clientSecret: process.env.MIXER_CLIENT_SECRET
+    clientId: process.env.MIXER_CLIENT_ID,
+    clientSecret: process.env.MIXER_CLIENT_SECRET
   })
 }
 ...

@@ -45,6 +45,10 @@ a,
   padding: 0 var(--ifm-pre-padding);
 }
 
+.sidebar_node_modules-\@docusaurus-theme-classic-src-theme-DocSidebar- {
+  background: rgba(0,0,0,0.025); 
+}
+
 .admonition-icon {
   margin-right: .5rem;
 }
@@ -54,7 +58,11 @@ a,
 }
 
 .contents li {
-  margin-left: 0;
+  margin-left: .5rem;
+}
+
+.contents li > ul li {
+  margin-left: 0rem;
 }
 
 .navbar {
