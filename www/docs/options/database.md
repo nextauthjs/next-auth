@@ -3,9 +3,9 @@ id: database
 title: Database Configuration
 ---
 
-Specifying a database is optional if don't need to persist user data or support email sign in.
+Specifying a database is optional if you don't need to persist user data or support email sign in.
 
-However if you want to do either of these things you will need to specify a database.
+If you want to do either of these things you will need to specify a database.
 
 :::tip
 If you don't specify a database then JSON Web Tokens will be enabled and used to store session data. If you do specify a database then database sessions will be enabled, unless you explictly enable JSON Web Tokens for sessions by passing the option `sessions { jwt: true }`.
