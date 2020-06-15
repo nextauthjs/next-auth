@@ -19,7 +19,7 @@ Return the current session.
 
 When using Server Side Rendering and passed `req` object from **getInitialProps({req})** it will read the data from it.
 
-When using Client Side Rendering it will use localStorage (if avalible) to check for cached session data and if not found or expired it call the `/auth/session` end point.
+When using Client Side Rendering it will use localStorage (if available) to check for cached session data and if not found or expired it call the `/auth/session` end point.
 
 ### NextAuthClient.signin(string or object)
 

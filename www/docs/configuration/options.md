@@ -3,7 +3,7 @@ id: options
 title: NextAuth.js Options
 ---
 
-Options are passed to NextAuth.js when initalizing it in an API route.
+Options are passed to NextAuth.js when initializing it in an API route.
 
 :::note
 The only *required* options are **site** and **providers**.
@@ -267,7 +267,7 @@ events: {
 
 #### Description
 
-Set debug to `true` to enable debug messages for authenticaiton and database operations.
+Set debug to `true` to enable debug messages for authentication and database operations.
 
 ---
 
@@ -299,7 +299,7 @@ module.exports = {
 }
 ```
 
-This is required because the NextAuth.js API route is a seperate codepath to the NextAuth.js Client.
+This is required because the NextAuth.js API route is a separate codepath to the NextAuth.js Client.
 
 As long as you also specify this option in an environment variable, the client will be able to pick up any subsequent configuration from the server, but if you do not set in both it the NextAuth.js Client will not work.
 
@@ -333,7 +333,7 @@ When set to `true` (the default for all site URLs that start with `https://`) th
 
 This option defaults to `false` on URLs that start with `http://` (e.g. `http://localhost:3000`) for developer convenience.
 
-You can manually set this option to `false` to disable this security feature and allow cookies to be acessible from non-secured URLs (this is not recommended).
+You can manually set this option to `false` to disable this security feature and allow cookies to be accessible from non-secured URLs (this is not recommended).
 
 :::note
 Properties on any custom `cookies` that are specified override this option.
@@ -356,7 +356,7 @@ You can override the default cookie names and options for any of the cookies use
 
 This is an advanced option and using it is not recommended as you may break authentication or introduce security flaws into your application.
 
-You can specify one or more cookies with custom properties, but if you specify custom options for a cookie you must provided all the options for it. You will also likely want to create condtional behaviour to support local development (e.g. setting `secure: false` and not using cookie prefixes on localhost URLs).
+You can specify one or more cookies with custom properties, but if you specify custom options for a cookie you must provided all the options for it. You will also likely want to create conditional behaviour to support local development (e.g. setting `secure: false` and not using cookie prefixes on localhost URLs).
 
 **For example:**
 

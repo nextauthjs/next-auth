@@ -41,7 +41,7 @@ providers: [
 
   Mac
  
-  Convert your apple key to a single line to use as a enviroment variable.
+  Convert your apple key to a single line to use as a environment variable.
   ```bash
   awk 'NF {sub(/\r/, ""); printf "%s\\n",$0;}'  AuthKey_ID.k8
   ```

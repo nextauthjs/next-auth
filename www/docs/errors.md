@@ -25,7 +25,7 @@ These errors are returned from the client. As the client is [Universal JavaScrip
 
 ## Server
 
-These erros are displayed on the terminal.
+These errors are displayed on the terminal.
 
 ### OAuth
 
@@ -80,7 +80,7 @@ The Credentials authentication provider can only be used if JSON Web Tokens are 
 
 ### Database
 
-These errors are logged by the TypeORM Adapter, which is the default database adapater.
+These errors are logged by the TypeORM Adapter, which is the default database adapter.
 
 They all indicate a problem interacting with the database.
 

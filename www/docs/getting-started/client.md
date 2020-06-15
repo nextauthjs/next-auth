@@ -215,7 +215,7 @@ export default () => (
 
 ## Provider
 
-Using the supplied React `<Provider>` allows instances of `useSession()` to share the session object across components, buy using [React Context](https://reactjs.org/docs/context.html) under the hood.
+Using the supplied React `<Provider>` allows instances of `useSession()` to share the session object across components, by using [React Context](https://reactjs.org/docs/context.html) under the hood.
 
 This improves performance, reduces network calls and avoids page flicker when rendering.
 
