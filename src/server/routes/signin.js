@@ -12,7 +12,6 @@ export default async (req, res, options, done) => {
     adapter,
     callbacks
   } = options
-  const { getUserByEmail } = await adapter.getAdapter(options)
   const provider = providers[providerName]
   const { type } = provider
 
@@ -45,6 +44,7 @@ export default async (req, res, options, done) => {
       res.end()
       return done()
     }
+    const { getUserByEmail } = await adapter.getAdapter(options)
 
     // Note: Technically the part of the email address local mailbox element
     // (everything before the @ symbol) should be treated as 'case sensitive'
