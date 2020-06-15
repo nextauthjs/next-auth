@@ -117,12 +117,4 @@ raw profile to the encoded JWT.
 const jwt = async (token, oAuthProfile) => {
   return Promise.resolve(token)
 }
-
-export default {
-  signin,
-  redirect,
-  session,
-  jwt
-}
-
 ```
