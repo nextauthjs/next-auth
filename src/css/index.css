@@ -1,8 +1,9 @@
 :root {
   --color-primary: #444;
-  --color-control-border: #aaa;
+  --color-control-border: #bbb;
   --color-button-hover-background: #f9f9f9;
-  --color-button-active-background: #f1f1f1;
+  --color-button-active-background: #f5f5f5;
+  --color-button-active-border: #aaa;
   --border-width: 1px;
   --border-radius: .3rem;
 }
@@ -14,7 +15,9 @@ body {
 }
 
 h1 {
-  font-weight: 300;
+  font-weight: 400;
+  margin-bottom: 1.5rem;
+  padding: 0 1rem;
 }
 
 form {
@@ -39,14 +42,15 @@ input[type="text"] {
 }
 
 p {
-  margin: 0 0 1rem 0;
-  padding: 0;
-  font-size: 1rem;
+  margin: 0 0 1.5rem 0;
+  padding: 0 1rem;
+  font-size: 1.1rem;
+  line-height: 2rem;
 }
 
 a.button {
   text-decoration: none;
-
+  line-height: 1rem;
   &:link,
   &:visited {
     background-color: #fff;
@@ -56,15 +60,15 @@ a.button {
 
 button,
 a.button {
-  margin: 0;
-  padding: .5rem 1rem;
+  margin: 0 0 .75rem 0;
+  padding: .75rem 1rem;
   border: var(--border-width) solid var(--color-control-border);
   color: var(--color-primary);
   background-color: #fff;
   font-size: 1rem;
   border-radius: var(--border-radius);
   transition: all .1s ease-in-out;  
-  box-shadow: 0 .1rem .2rem rgba(0,0,0,.2);
+  box-shadow: 0 0.15rem 0.3rem rgba(0,0,0,.15), inset 0 .1rem .2rem #fff, inset 0 -.1rem .1rem rgba(0,0,0,.05);
   font-weight: 500;
   position: relative;
 
@@ -74,7 +78,9 @@ a.button {
   }
   
   &:active {
+    box-shadow: 0 0.15rem 0.3rem rgba(0,0,0,.15), inset 0 .1rem .2rem #fff, inset 0 -.1rem .1rem rgba(0,0,0,.1);
     background-color: var(--color-button-active-background);
+    border-color: var(--color-button-active-border);
     cursor: pointer;
   }
 }
@@ -115,12 +121,14 @@ a.site {
 }
 
 .signin {
-  a.button,
   button,
+  a.button,
   input[type="text"] {
-    margin: 0 auto 0 auto;
+    margin-left: auto;
+    margin-right: auto;
     display: block;
   }
+
   hr {
     display: block;
     border: 0;
@@ -150,4 +158,3 @@ a.site {
     max-width: 300px;
   }
 }
-

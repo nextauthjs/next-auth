@@ -18,8 +18,8 @@ import Providers from `next-auth/providers`
 ...
 providers: [
   Providers.Discord({
-		clientId: process.env.DISCORD_CLIENT_ID,
-		clientSecret: process.env.DISCORD_CLIENT_SECRET
+    clientId: process.env.DISCORD_CLIENT_ID,
+    clientSecret: process.env.DISCORD_CLIENT_SECRET
   })
 }
 ...

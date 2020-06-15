@@ -16,10 +16,10 @@ const features = [
       <ul>
         <li>Designed for Next.js and Serverless</li>
         <li>
-          Supports Bring Your Own Database<br />
+          Bring Your Own Database – or no database!<br />
           <em>(MySQL, MariaDB, Postgres, MongoDB…)</em>
         </li>
-        <li>Use database sessions or JSON Web Tokens</li>
+        <li>JSON Web Tokens or Session Database</li>
       </ul>
     )
   },
@@ -62,7 +62,7 @@ function Feature ({ imageUrl, title, description }) {
           </div>
         </div>
       )}
-      <h2 className='text--center'>{title}</h2>
+      <h3 className='text--center'>{title}</h3>
       <p>{description}</p>
     </div>
   )
@@ -81,12 +81,7 @@ function Home () {
             alt='Shield with key icon'
             className={styles.heroLogo}
           />
-          <div
-            style={{
-              display: 'inline-block',
-              margin: '1rem 1.5rem 0 1.5rem'
-            }}
-          >
+          <div className={styles.heroText}>
             <h1 className='hero__title'>{siteConfig.title}</h1>
             <p className='hero__subtitle'>{siteConfig.tagline}</p>
           </div>
@@ -113,6 +108,9 @@ function Home () {
       <main className='home-main'>
         <section className={`section-features ${styles.features}`}>
           <div className='container'>
+            <h2 className='text--center'>
+              Full stack open source authentication
+            </h2>
             <div className='row'>
               {features.map((props, idx) => (
                 <Feature key={idx} {...props} />
@@ -201,7 +199,7 @@ import Providers from 'next-auth/providers'
 const options = {
   site: 'https://example.com'
   providers: [
-    // Add as many authentcation providers as you want…
+    // OAuth authentication providers
     Providers.Apple({
       clientId: process.env.APPLE_ID,
       clientSecret: process.env.APPLE_SECRET
@@ -210,14 +208,14 @@ const options = {
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET
     }),
-    // Allow sign in with passwordless email link…
+    // Sign in with passwordless email link
     Providers.Email({
       server: process.env.MAIL_SERVER,
       from: '<no-reply@example.com>'
     }),
   ],
-  database: process.env.DATABASE_URL,
-  jwt: true // Enables JSON Web Tokens
+  // SQL or MongoDB database (or leave empty)
+  database: process.env.DATABASE_URL
 }
 
 export default (req, res) => NextAuth(req, res, options)

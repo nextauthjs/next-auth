@@ -6,27 +6,41 @@ module.exports = {
       'getting-started/client',
       'getting-started/rest-api'
     ],
-    Options: [
-      'options/basic-options',
-      'options/advanced-options',
-      'options/providers',
-      'options/database',
-      'options/adapter',
-      'options/pages'
+    Configuration: [
+      'configuration/options',
+      'configuration/providers',
+      'configuration/database',
+      'configuration/pages',
+      'configuration/callbacks'
     ],
-    /*
-    'Providers': [
+    'Authentication Providers': [
       'providers/apple',
       'providers/auth0',
       'providers/discord',
+      'providers/email',
+      'providers/credentials',
       'providers/facebook',
-      'providers/github'
+      'providers/github',
+      'providers/google',
+      'providers/identity-server4',
+      'providers/mixer',
+      'providers/okta',
+      'providers/slack',
+      'providers/twitch',
+      'providers/twitter'
     ],
-    */
+    'Models & Schemas': [
+      'schemas/models',
+      'schemas/mysql',
+      'schemas/postgres',
+      'schemas/adapters'
+    ]
+  /*
     'Version 1 (Legacy)': [
       'v1/getting-started-v1',
       'v1/client-v1',
       'v1/auth-v1'
     ]
+  */
   }
 }

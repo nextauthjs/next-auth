@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer'
+import logger from '../lib/logger'
 
 export default (options) => {
   return {
@@ -15,12 +16,13 @@ export default (options) => {
       }
     },
     from: 'NextAuth <no-reply@example.com>',
+    maxAge: 24 * 60 * 60, // How long email links are valid for (default 24h)
     sendVerificationRequest,
     ...options
   }
 }
 
-const sendVerificationRequest = ({ identifer: emailAddress, url, token, site, provider }) => {
+const sendVerificationRequest = ({ identifier: emailAddress, url, token, site, provider }) => {
   return new Promise((resolve, reject) => {
     const { server, from } = provider
     const siteName = site.replace(/^https?:\/\//, '')
@@ -35,7 +37,7 @@ const sendVerificationRequest = ({ identifer: emailAddress, url, token, site, pr
         html: html({ url, siteName })
       }, (error) => {
         if (error) {
-          console.error('SEND_VERIFICATION_EMAIL_ERROR', emailAddress, error)
+          logger.error('SEND_VERIFICATION_EMAIL_ERROR', emailAddress, error)
           return reject(new Error('SEND_VERIFICATION_EMAIL_ERROR', error))
         }
         return resolve()

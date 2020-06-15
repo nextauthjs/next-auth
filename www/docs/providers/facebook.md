@@ -28,7 +28,3 @@ providers: [
 :::tip
 Production applications cannot use localhost URLs to sign in with Facebook. You need to use a dedicated development application in Facebook to use **localhost** callback URLs.
 :::
-
-:::warning
-Facebook may not return email address if the account was setup using a mobile number and the user has not provided an email address to Facebook. If this happens the user will not be able to sign in as NextAuth.js requires an email address.
-:::

@@ -1,15 +1,13 @@
 // Handle requests to /api/auth/signout
 import cookie from '../lib/cookie'
+import logger from '../../lib/logger'
+import dispatchEvent from '../lib/dispatch-event'
 
 export default async (req, res, options, done) => {
-  const {
-    adapter,
-    cookies,
-    callbackUrl,
-    csrfTokenVerified,
-    baseUrl,
-    jwt: useJwt
-  } = options
+  const { adapter, cookies, events, jwt, callbackUrl, csrfTokenVerified, baseUrl } = options
+  const sessionMaxAge = options.session.maxAge
+  const useJwtSession = options.session.jwt
+  const sessionToken = req.cookies[cookies.sessionToken.name]
 
   if (!csrfTokenVerified) {
     // If a csrfToken was not verified with this request, send the user to
@@ -23,23 +21,40 @@ export default async (req, res, options, done) => {
     return done()
   }
 
-  // Don't need to update the database if is using JWT instead of session DB
-  if (!useJwt) {
-    // Use Session Token and get session from database
-    const { deleteSession } = await adapter.getAdapter(options)
-    const sessionToken = req.cookies[cookies.sessionToken.name]
+  if (useJwtSession) {
+    // Dispatch signout event
+    try {
+      const decodedJwt = await jwt.decode({ secret: jwt.secret, token: sessionToken, maxAge: sessionMaxAge })
+      await dispatchEvent(events.signout, decodedJwt)
+    } catch (error) {
+      // Do nothing if decoding the JWT fails
+    }
+  } else {
+    // Get session from database
+    const { getSession, deleteSession } = await adapter.getAdapter(options)
+
+    try {
+      // Dispatch signout event
+      const session = await getSession(sessionToken)
+      await dispatchEvent(events.signout, session)
+    } catch (error) {
+      // Do nothing if looking up the session fails
+    }
 
     try {
       // Remove session from database
       await deleteSession(sessionToken)
     } catch (error) {
-      // Log error and continue
-      console.error('SIGNOUT_ERROR', error)
+      // If error, log it but continue
+      logger.error('SIGNOUT_ERROR', error)
     }
   }
 
   // Remove Session Token
-  cookie.set(res, cookies.sessionToken.name, '', { ...cookies.sessionToken.options, maxAge: 0 })
+  cookie.set(res, cookies.sessionToken.name, '', {
+    ...cookies.sessionToken.options,
+    maxAge: 0
+  })
 
   res.status(302).setHeader('Location', callbackUrl)
   res.end()

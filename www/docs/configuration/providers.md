@@ -15,7 +15,7 @@ export const Image = ({ children, src, alt = '' }) => (
   </div>
  )
 
-NextAuth.js is designed to work with any 0Auth service, it supports 0Auth 1.0, 1.0A and 2.0 and has built-in support for many popular 0Auth sign-in services. It also supports email / passwordless authentication.
+NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1.0A and 2.0 and has built-in support for many popular OAuth sign-in services. It also supports email / passwordless authentication.
 
 ## Sign in with OAuth
 
@@ -27,15 +27,12 @@ NextAuth.js is designed to work with any 0Auth service, it supports 0Auth 1.0, 1
 * [Facebook](/providers/facebook)
 * [Github](/providers/github)
 * [Google](/providers/google)
+* [IdentityServer4](/providers/identity-server4)
 * [Mixer](/providers/Mixer)
 * [Okta](/providers/Okta)
 * [Slack](/providers/slack)
 * [Twitch](/providers/Twitch)
 * [Twitter](/providers/twitter)
-
-:::warning
-NextAuth.js requires an email address to sign in. If an account does not have an email address, a user will be asked to sign in with an account that does. 
-:::
 
 ### Using a built-in provider
 
@@ -70,12 +67,11 @@ NextAuth.js requires an email address to sign in. If an account does not have an
   ```
 5. Once a provider has been setup, you can sign in at the following URL: `[origin]/api/auth/signin`. This is an unbranded auto-generated page with all the configured providers.   
 
-<Image src="/static/img/signin.png" alt="Signin Screenshot" />
+<Image src="/img/signin.png" alt="Signin Screenshot" />
 
 :::tip
 If you want to create a custom sign in link you can link to **/api/auth/signin/[provider]** which will sign in the user in directly with that provider.
 :::
-
 
 ### Using a custom provider
 
@@ -145,6 +141,7 @@ providers: [
 |     profile      |           An object with the user's info            |    No    |
 |     clientId     |           Client ID of the OAuth provider           |   Yes    |
 |   clientSecret   |         Client Secret of the OAuth provider         |    No    |
+|      idToken     |  Set to `true` for services that use ID Tokens (e.g. OpenID)     |    No    |
 
 :::note
 Feel free to open a PR for your custom configuration if you've created one for a provider that others may be interested in so we can add it to the list of built-in OAuth providers!
@@ -152,125 +149,55 @@ Feel free to open a PR for your custom configuration if you've created one for a
 
 ## Sign in with Email
 
-*The email provider can be used in conjuction with – or instead of – one or more OAuth providers.*
+The Email provider uses email to send "magic links" that can be used sign in, you will likely have seen them before if you have used software like Slack.
 
-### Configuring
+Adding support for signing in via email in addition to one or more OAuth services provides a way for users to sign in if they lose access to their OAuth account (e.g. if it is locked or deleted).
 
-1. You will need an SMTP account; ideally for one of the [services known to work with nodemailer](http://nodemailer.com/smtp/well-known/).
-2. There are two ways to configure the SMTP server connection.
+Configuration is similar to other providers, but the options are different:
 
-  You can either use a connection string or a nodemailer configuration object.
-
-  2.1 **Using a connection string**
-
-  Create an .env file to the root of your project and add the connection string and email address.
-  ```js title=".env" {1}
-	EMAIL_SERVER=smtp://username:password@smtp.example.com:587
-	EMAIL_FROM=noreply@example.com
-  ```
-
-  Now you can add the email provider like this:
-
-  ```js {3} title="/pages/api/auth/[...nextauth].js"
-  providers: [
-    Providers.Email({
-      server: process.env.EMAIL_SERVER, 
-      from: process.env.EMAIL_FROM
-    }),
-  ],
-  ```
-
-  2.2 **Using a configuration object**
-
-  In your `.env` file in the root of your project simply add the configuration object options individually:
-
-  ```js title=".env"
-  EMAIL_SERVER_USER=username
-  EMAIL_SERVER_PASSWORD=password
-  EMAIL_SERVER_HOST=smtp.example.com
-	EMAIL_SERVER_PORT=587
-	EMAIL_FROM=noreply@example.com
-  ```
-  Now you can add the provider settings to the NextAuth options object in the Email Provider.
-
-  ```js title="/pages/api/auth/[...nextauth].js"
-  providers: [
-    Providers.Email({
-      server: {
-        host: process.env.EMAIL_SERVER_HOST,
-        port: process.env.EMAIL_SERVER_PORT,
-        auth: {
-          user: process.env.EMAIL_SERVER_USER,
-          pass: process.env.EMAIL_SERVER_PASSWORD
-        }
-      },
-      from: process.env.EMAIL_FROM
-    }),
-  ],
-  ```
-3. You can now sign in with an email address at `/api/auth/signin`.
-
-  An account will not be created for the user until the first time they verify their email address. If an email address already assoicated with an account, the user will be signed in to that account when they use the link in the email.
-
-### Custom emails
-
-You can fully customise the sign in email that is sent by passing a custom function as the `sendVerificationRequest` option to `Providers.Email()`.
-
-The following example shows the complete source for the built-in `sendVerificationRequest()` method.
-
-```js
-import nodemailer from 'nodemailer'
-const sendVerificationRequest = ({ identifer: emailAddress, url, token, site, provider }) => {
-  return new Promise((resolve, reject) => {
-    const { server, from } = provider
-    const siteName = site.replace(/^https?:\/\//, '')
-
-    nodemailer
-      .createTransport(server)
-      .sendMail({
-        to: emailAddress,
-        from,
-        subject: `Sign in to ${siteName}`,
-        text: text({ url, siteName }),
-        html: html({ url, siteName })
-      }, (error) => {
-        if (error) {
-          console.error('SEND_VERIFICATION_EMAIL_ERROR', emailAddress, error)
-          return reject(new Error('SEND_VERIFICATION_EMAIL_ERROR', error))
-        }
-        return resolve()
-      })
-  })
-}
-
-// Email HTML body
-const html = ({ url, siteName }) => {
-  const buttonBackgroundColor = '#444444'
-  const buttonTextColor = '#ffffff'
-  return `
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td align="center" style="padding: 8px 0; font-size: 22px; font-family: Helvetica, Arial, sans-serif; color: #888888;">
-       ${siteName}
-    </td>
-  </tr>
-  <tr>
-    <td align="center" style="padding: 16px 0;">
-      <table border="0" cellspacing="0" cellpadding="0">
-        <tr>
-          <td align="center" style="border-radius: 3px;" bgcolor="${buttonBackgroundColor}"><a href="${url}" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: ${buttonTextColor}; text-decoration: none; text-decoration: none;border-radius: 3px; padding: 12px 18px; border: 1px solid ${buttonBackgroundColor}; display: inline-block; font-weight: bold;">Sign in</a></td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
-`
-}
-
-// Email Text body (fallback for email clients that don't render HTML, e.g. feature phones)
-const text = ({ url, siteName }) => `Sign in to ${siteName}\n${url}\n\n`
+```js title="/pages/api/auth/[...nextauth].js"
+providers: [
+  Providers.Email({
+    server: process.env.EMAIL_SERVER, 
+    from: process.env.EMAIL_FROM,
+    // maxAge: 24 * 60 * 60, // How long email links are valid for (default 24h)
+  }),
+],
 ```
 
-:::tip
-If you want to generate email-client compatible HTML from React, check out https://mjml.io
+See the [Email provider documentation](/providers/email) for more information on how to configure email sign in.
+
+:::note
+The email provider requires a database, it cannot be used without one.
+:::
+
+
+## Sign in with Credentials
+
+The Credentials provider allows you to handle signing in with arbitrary credentials, such as a username and password, two factor authentication or hardware device (e.g. YubiKey U2F / FIDO).
+
+It is intended to support use cases where you have an existing system you need to authenticate users against.
+
+```js title="/pages/api/auth/[...nextauth].js"
+import Providers from `next-auth/providers`
+...
+providers: [
+  Providers.Credentials({
+    authorize: async (credentials) => {
+      const user = getUserFromCredentials(credentials) // You need to add this!
+      if (user) {
+        return Promise.resolve(user)
+      } else {
+        return Promise.resolve(false)
+      }
+    }
+  })
+}
+...
+```
+
+See the [Credentials provider documentation](/providers/credentials) for more information.
+
+:::note
+The Credentials provider can only be used if JSON Web Tokens are enabled for sessions. Users authenticated with the Credentials provider are not persisted in the database.
 :::

@@ -3,6 +3,14 @@ id: database
 title: Database Configuration
 ---
 
+Specifying a database is optional if you don't need to persist user data or support email sign in.
+
+If you want to do either of these things you will need to specify a database.
+
+If you don't specify a database then JSON Web Tokens will be enabled and used to store session data. If you do specify a database then database sessions will be enabled, unless you explicitly enable JSON Web Tokens for sessions by passing the option `sessions { jwt: true }`.
+
+## How to specify a database
+
 You can specify database credentials as as a connection string or a [TypeORM configuration](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md) object.
 
 The following approaches are exactly equivalent:
@@ -27,20 +35,11 @@ database: {
 See the [TypeORM configuration documentation](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md) for all the supported database options.
 :::
 
-## Data Structure
+## Setting up a database
 
 NextAuth.js will configure your database with tables / collections automatically if `synchronize: true` is set.
 
-### Tables / Collections
-
-* **User** - User profile (name, email, etc)
-* **Account** – OAuth Account (Provider, Provider Account ID, etc)
-* **VerificationRequest** – Used for Email Verification Tokens
-* **Session** - Unused if JSON Web Tokens are being for sessions
-
-All User accounts have an email address associated with them, they are required and they must be unique.
-
-A User can have multiple OAuth Accounts and multiple Sessions.
+If you are having problems connecting to your database, try enabling debug message with the `debug: true` option when initializing NextAuth.js.
 
 :::warning
 The option **?synchronize=true** automatically synchronizes the database schema with what NextAuth.js expects. It is useful to create the tables you need in the database on first run against a test database but it should not be enabled in production as it may result in data loss.
@@ -72,7 +71,7 @@ database: {
 
 :::
 
-## Supported Databases
+## Supported databases
 
 NextAuth.js uses TypeORM as the default database adapter, but only some databases are supported.
 
@@ -138,7 +137,7 @@ database: 'mongodb://username:password@127.0.0.1:3306/database_name?synchronize=
 ```
 
 
-## Unsupported Databases
+## Unsupported databases
 
 The following additional databases are supported by TypeORM (which the default adapter uses) and *may* work with NextAuth.js but have not been tested:
 
@@ -156,6 +155,6 @@ You can customize, extend or replace the models, you can do this by using the 'a
 :::
 
 :::note
-See the [documentation for adapters](/options/adapter) for more information on advanced configuration, including how to use NextAuth.js with any database.
+See the [documentation for adapters](/schemas/adapters) for more information on advanced configuration, including how to use NextAuth.js with any database.
 :::
 
