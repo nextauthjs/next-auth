@@ -9,7 +9,7 @@ The Email provider uses email to send "magic links" that can be used sign in, yo
 
 Adding support for signing in via email in addition to one or more OAuth services provides a way for users to sign in if they lose access to their OAuth account (e.g. if it is locked or deleted).
 
-The Email provider can be used in conjuction with (or instead of) one or more OAuth providers.
+The Email provider can be used in conjunction with (or instead of) one or more OAuth providers.
 
 ### How it works
 
@@ -78,7 +78,7 @@ The Email Provider can be used with both JSON Web Tokens and database sessions, 
   ```
 3. You can now sign in with an email address at `/api/auth/signin`.
 
-  An account will not be created for the user until the first time they verify their email address. If an email address already assoicated with an account, the user will be signed in to that account when they use the link in the email.
+  An account will not be created for the user until the first time they verify their email address. If an email address already associated with an account, the user will be signed in to that account when they use the link in the email.
 
 ## Customising emails
 
