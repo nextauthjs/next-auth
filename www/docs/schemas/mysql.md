@@ -186,8 +186,8 @@ The schema generated for a MySQL database when using the built-in models.
     "nullable": false,
     "default": null
   },
-  "identifer": {
-    "name": "identifer",
+  "identifier": {
+    "name": "identifier",
     "type": "varchar(255)",
     "nullable": false,
     "default": null

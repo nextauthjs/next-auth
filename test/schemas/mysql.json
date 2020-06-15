@@ -162,8 +162,8 @@
       "nullable": false,
       "default": null
     },
-    "identifer": {
-      "name": "identifer",
+    "identifier": {
+      "name": "identifier",
       "type": "varchar(255)",
       "nullable": false,
       "default": null

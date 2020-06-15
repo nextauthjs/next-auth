@@ -88,7 +88,7 @@ The following example shows the complete source for the built-in `sendVerificati
 
 ```js
 import nodemailer from 'nodemailer'
-const sendVerificationRequest = ({ identifer: emailAddress, url, token, site, provider }) => {
+const sendVerificationRequest = ({ identifier: emailAddress, url, token, site, provider }) => {
   return new Promise((resolve, reject) => {
     const { server, from } = provider
     const siteName = site.replace(/^https?:\/\//, '')

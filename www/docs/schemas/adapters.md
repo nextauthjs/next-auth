@@ -166,7 +166,7 @@ const Adapter = (config, options = {}) => {
     }
 
     async function createVerificationRequest (
-      identifer,
+      identifier,
       url,
       token,
       secret,
@@ -176,7 +176,7 @@ const Adapter = (config, options = {}) => {
     }
 
     async function getVerificationRequest (
-      identifer,
+      identifier,
       token,
       secret,
       provider
@@ -185,7 +185,7 @@ const Adapter = (config, options = {}) => {
     }
 
     async function deleteVerificationRequest (
-      identifer,
+      identifier,
       token,
       secret,
       provider
