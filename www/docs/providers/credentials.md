@@ -12,7 +12,7 @@ It is intended to support use cases where you have an existing system you need t
 It comes with the constraint that users authenticated in this manner are not persisted in the database, and that the Credentials provider can only be used if JSON Web Tokens are enabled for sessions.
 
 :::note
-The functionality provided for credentials based authentication is intentionally limited to discourage use of username and password based authenticaiton due to the inherent security risks associated with using usernames and passwords, and the complexities associated with supporting them.
+The functionality provided for credentials based authentication is intentionally limited to discourage use of passwords due to the inherent security risks associated with them and the additional complexity associated with supporting usernames and passwords.
 :::
 
 ## Usage
