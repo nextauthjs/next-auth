@@ -6,6 +6,7 @@ import Email from './email'
 import Facebook from './facebook' // @TODO
 import GitHub from './github'
 import Google from './google'
+import IdentityServer4 from './identity-server4'
 import Mixer from './mixer'
 import Okta from './okta'
 import Slack from './slack'
@@ -21,6 +22,7 @@ export default {
   Facebook,
   GitHub,
   Google,
+  IdentityServer4,
   Mixer,
   Okta,
   Slack,

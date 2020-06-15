@@ -22,6 +22,7 @@ module.exports = {
       'providers/facebook',
       'providers/github',
       'providers/google',
+      'providers/identity-server4',
       'providers/mixer',
       'providers/okta',
       'providers/slack',
