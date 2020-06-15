@@ -81,17 +81,17 @@ e.g. `getSession()`, `useSession()`, `/api/auth/session` (etc)
 If JSON Web Tokens are enabled, you can also access the decrypted token and use
 this method to pass information from the encoded token back to the client.
 
-The JWT callback is invoked first so anything you add to the JWT will be 
-immediately available here.
+The JWT callback is invoked before session is called, so anything you add to the
+JWT will be immediately available in the session callback.
 
 ```js
 /**
 
  * @param  {object} session  Session object
- * @param  {object} token    JSON Web Token
+ * @param  {object} token    JSON Web Token (if enabled)
  * @return {object}          Session that will be returned to the client 
  */
-const session = async (session) => {
+const session = async (session, token) => {
   return Promise.resolve(session)
 }
 ```
@@ -100,12 +100,13 @@ const session = async (session) => {
 
 This JSON Web Token callback is called whenever a JSON Web Token is created or updated.
 
-e.g. On sign in, `getSession()`, `useSession()`, `/api/auth/session` (etc)
+e.g. `/api/auth/signin`, `getSession()`, `useSession()`, `/api/auth/session` (etc)
 
-On initial sign in with an OAuth provider, the raw oAuthProfile is also
-available as a parameter. It is not avalible on subsequent calls.
+On initial sign in with an OAuth provider, the raw oAuthProfile returned by the
+provider is also passed as a parameter - it is not available on subsequent calls.
 
-You can take advantage of this to persist additional data you need from their raw profile to the encoded JWT for as long as the user is signed in.
+You can take advantage of this to persist additional data you need from their
+raw profile to the encoded JWT.
 
 ```js
 /**

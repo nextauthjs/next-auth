@@ -170,3 +170,33 @@ See the [Email provider documentation](/providers/email) for more information on
 The email provider requires a database, it cannot be used without one.
 :::
 
+
+## Sign in with Credentials
+
+The Credentials provider allows you to handle signing in with arbitrary credentials, such as a username and password, two factor authentication or hardware device (e.g. YubiKey U2F / FIDO).
+
+It is intended to support use cases where you have an existing system you need to authenticate users against.
+
+```js title="/pages/api/auth/[...nextauth].js"
+import Providers from `next-auth/providers`
+...
+providers: [
+  Providers.Credentials({
+    authorize: async (credentials) => {
+      const user = getUserFromCredentials(credentials) // You need to add this!
+      if (user) {
+        return Promise.resolve(user)
+      } else {
+        return Promise.resolve(false)
+      }
+    }
+  })
+}
+...
+```
+
+See the [Credentials provider documentation](/providers/credentials) for more information.
+
+:::note
+The Credentials provider can only be used if JSON Web Tokens are enabled for sessions. Users authenticated with the Credentials provider are not persisted in the database.
+:::

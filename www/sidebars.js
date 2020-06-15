@@ -18,6 +18,7 @@ module.exports = {
       'providers/auth0',
       'providers/discord',
       'providers/email',
+      'providers/credentials',
       'providers/facebook',
       'providers/github',
       'providers/google',
