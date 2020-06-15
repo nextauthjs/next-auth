@@ -186,8 +186,8 @@ The schema generated for a Postgres database when using the built-in models.
     "nullable": false,
     "default": "nextval('verification_requests_id_seq'::regclass)"
   },
-  "identifer": {
-    "name": "identifer",
+  "identifier": {
+    "name": "identifier",
     "type": "character varying",
     "nullable": false,
     "default": null

@@ -283,8 +283,8 @@ const Adapter = (typeOrmConfig, options = {}) => {
       }
     }
 
-    async function createVerificationRequest (identifer, url, token, secret, provider) {
-      debugMessage('CREATE_VERIFICATION_REQUEST', identifer)
+    async function createVerificationRequest (identifier, url, token, secret, provider) {
+      debugMessage('CREATE_VERIFICATION_REQUEST', identifier)
       try {
         const { site } = appOptions
         const { sendVerificationRequest, maxAge } = provider
@@ -302,12 +302,12 @@ const Adapter = (typeOrmConfig, options = {}) => {
         }
 
         // Save to database
-        const newVerificationRequest = new VerificationRequest(identifer, hashedToken, expires)
+        const newVerificationRequest = new VerificationRequest(identifier, hashedToken, expires)
         const verificationRequest = await getManager().save(newVerificationRequest)
 
         // With the verificationCallback on a provider, you can send an email, or queue
         // an email to be sent, or perform some other action (e.g. send a text message)
-        await sendVerificationRequest({ identifer, url, token, site, provider })
+        await sendVerificationRequest({ identifier, url, token, site, provider })
 
         return verificationRequest
       } catch (error) {
@@ -316,13 +316,13 @@ const Adapter = (typeOrmConfig, options = {}) => {
       }
     }
 
-    async function getVerificationRequest (identifer, token, secret, provider) {
-      debugMessage('GET_VERIFICATION_REQUEST', identifer, token)
+    async function getVerificationRequest (identifier, token, secret, provider) {
+      debugMessage('GET_VERIFICATION_REQUEST', identifier, token)
       try {
         // Hash token provided with secret before trying to match it with datbase
         // @TODO Use bcrypt instead of salted SHA-256 hash for token
         const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
-        const verificationRequest = await connection.getRepository(VerificationRequest).findOne({ identifer, token: hashedToken })
+        const verificationRequest = await connection.getRepository(VerificationRequest).findOne({ identifier, token: hashedToken })
 
         if (verificationRequest && verificationRequest.expires && new Date() > new Date(verificationRequest.expires)) {
           // Delete verification entry so it cannot be used again
@@ -337,8 +337,8 @@ const Adapter = (typeOrmConfig, options = {}) => {
       }
     }
 
-    async function deleteVerificationRequest (identifer, token, secret, provider) {
-      debugMessage('DELETE_VERIFICATION', identifer, token)
+    async function deleteVerificationRequest (identifier, token, secret, provider) {
+      debugMessage('DELETE_VERIFICATION', identifier, token)
       try {
         // Delete verification entry so it cannot be used again
         const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')

@@ -22,7 +22,7 @@ export default (options) => {
   }
 }
 
-const sendVerificationRequest = ({ identifer: emailAddress, url, token, site, provider }) => {
+const sendVerificationRequest = ({ identifier: emailAddress, url, token, site, provider }) => {
   return new Promise((resolve, reject) => {
     const { server, from } = provider
     const siteName = site.replace(/^https?:\/\//, '')

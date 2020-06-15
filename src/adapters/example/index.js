@@ -72,18 +72,18 @@ const Adapter = (config, options = {}) => {
       return null
     }
 
-    async function createVerificationRequest (identifer, url, token, secret, provider) {
-      _debug('createVerificationRequest', identifer)
+    async function createVerificationRequest (identifier, url, token, secret, provider) {
+      _debug('createVerificationRequest', identifier)
       return null
     }
 
-    async function getVerificationRequest (identifer, token, secret, provider) {
-      _debug('getVerificationRequest', identifer, token)
+    async function getVerificationRequest (identifier, token, secret, provider) {
+      _debug('getVerificationRequest', identifier, token)
       return null
     }
 
-    async function deleteVerificationRequest (identifer, token, secret, provider) {
-      _debug('deleteVerification', identifer, token)
+    async function deleteVerificationRequest (identifier, token, secret, provider) {
+      _debug('deleteVerification', identifier, token)
       return null
     }
 

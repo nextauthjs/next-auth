@@ -1,8 +1,8 @@
 // This model is used for sign in emails, but is designed to support other
 // mechanisms in future (e.g. 2FA via text message or short codes)
 export class VerificationRequest {
-  constructor (identifer, token, expires) {
-    if (identifer) { this.identifer = identifer }
+  constructor (identifier, token, expires) {
+    if (identifier) { this.identifier = identifier }
     if (token) { this.token = token }
     if (expires) { this.expires = expires }
   }
@@ -18,7 +18,7 @@ export const VerificationRequestSchema = {
       type: 'int',
       generated: true
     },
-    identifer: {
+    identifier: {
       // An email address, phone number, username or other unique identifier
       // associated with the request (used to track who it was on behalf of)
       type: 'varchar'
