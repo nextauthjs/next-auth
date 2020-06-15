@@ -12,7 +12,7 @@ You are free to define your own models and schemas if you want to use a custom d
 In NextAuth.js all table/collection names are plural, and all table names and column names use snake_case when used with an SQL database and camelCase when used with Document database. Indexes are declared on properties where appropriate.
 
 :::tip
-Models in NextAuth.js are built for for ANSI SQL but are polymorphic and are transformed to adapt to the database being used; there is some variance in specific data types (e.g. for datetime, text fields, etc).
+Models in NextAuth.js are built for ANSI SQL but are polymorphic and are transformed to adapt to the database being used; there is some variance in specific data types (e.g. for datetime, text fields, etc).
 :::
 
 ### User
