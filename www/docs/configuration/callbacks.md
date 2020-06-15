@@ -86,7 +86,6 @@ JWT will be immediately available in the session callback.
 
 ```js
 /**
-
  * @param  {object} session  Session object
  * @param  {object} token    JSON Web Token (if enabled)
  * @return {object}          Session that will be returned to the client 
