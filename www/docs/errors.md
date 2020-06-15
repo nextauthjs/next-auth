@@ -55,7 +55,13 @@ These erros are displayed on the terminal.
 
 #### EMAIL_REQUIRES_ADAPTER_ERROR
 
+The Email authentication provider can only be used if a database is configured.
 
+#### CALLBACK_CREDENTIALS_JWT_ERROR
+
+The Credentials authentication provider can only be used if JSON Web Tokens are used for sessions.
+
+#### CALLBACK_CREDENTIALS_HANDLER_ERROR
 ---
 
 ### Session Handling

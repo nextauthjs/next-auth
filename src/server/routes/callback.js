@@ -190,6 +190,62 @@ export default async (req, res, options, done) => {
       res.end()
       return done()
     }
+  } else if (type === 'credentials' && req.method === 'POST') {
+    if (!useJwtSession) {
+      logger.error('CALLBACK_CREDENTIALS_JWT_ERROR', 'Signin in with credentials is only supported if JSON Web Tokens are enabled')
+      res.status(302).setHeader('Location', `${baseUrl}/error?error=Configuration`)
+      res.end()
+      return done()
+    }
+
+    if (!provider.authorize) {
+      logger.error('CALLBACK_CREDENTIALS_HANDLER_ERROR', 'Must define an authorize() handler to use credentials authentication provider')
+      res.status(302).setHeader('Location', `${baseUrl}/error?error=Configuration`)
+      res.end()
+      return done()
+    }
+
+    const credentials = req.body
+    const user = await provider.authorize(credentials)
+    const account = { id: provider.id, type: 'credentials' }
+
+    if (user === false) {
+      res.status(302).setHeader('Location', `${baseUrl}/error?error=AccessDenied`)
+      res.end()
+      return done()
+    }
+
+    const signinCallbackResponse = await callbacks.signin(user, account, credentials)
+
+    if (signinCallbackResponse === false) {
+      res.status(302).setHeader('Location', `${baseUrl}/error?error=AccessDenied`)
+      res.end()
+      return done()
+    }
+
+    const defaultJwtPayload = { user, account }
+    const jwtPayload = await callbacks.jwt(defaultJwtPayload)
+
+    // Sign and encrypt token
+    const newEncodedJwt = await jwt.encode({ secret: jwt.secret, token: jwtPayload, maxAge: sessionMaxAge })
+
+    // Set cookie expiry date
+    const cookieExpires = new Date()
+    cookieExpires.setTime(cookieExpires.getTime() + (sessionMaxAge * 1000))
+
+    cookie.set(res, cookies.sessionToken.name, newEncodedJwt, { expires: cookieExpires.toISOString(), ...cookies.sessionToken.options })
+
+    await dispatchEvent(events.signin, { user, account })
+
+    if (callbackUrl) {
+      res.status(302).setHeader('Location', callbackUrl)
+      res.end()
+    } else {
+      res.status(302).setHeader('Location', site)
+      res.end()
+    }
+
+    return done()
   } else {
     res.status(500).end(`Error: Callback for provider type ${type} not supported`)
     return done()

@@ -11,8 +11,6 @@ Some of the methods can be called both client side and server side.
 When using any of the client API methods server side, [context](https://nextjs.org/docs/api-reference/data-fetching/getInitialProps#context-object) must be passed as an argument. The documentation for **getSession()** has an example.
 :::
 
----
-
 ## useSession()
 
 * Client Side: **Yes**
