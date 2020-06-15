@@ -18,19 +18,18 @@ export default ({ site, error, baseUrl }) => {
       message =
         <div>
           <div className='message'>
-            <p>Something went wrong trying to sign in.</p>
-            <p>Try signing in with a different account.</p>
+            <p>Try signing with a different account.</p>
           </div>
           <p><a className='button' href={signinPageUrl}>Sign in</a></p>
         </div>
       break
     case 'OAuthAccountNotLinked':
-      heading = <h1>Sign in with another account</h1>
+      heading = <h1>Sign in failed</h1>
       message =
         <div>
           <div className='message'>
             <p>An account associated with your email address already exists.</p>
-            <p>Sign in the same account you used originally to confirm your identity.</p>
+            <p>Sign in with the same account you used originally to confirm your identity.</p>
           </div>
           <p><a className='button' href={signinPageUrl}>Sign in</a></p>
         </div>
@@ -43,14 +42,14 @@ export default ({ site, error, baseUrl }) => {
       message =
         <div>
           <div className='message'>
-            <p>Unable to send email to your address.</p>
-            <p>Try signing in again with a different account.</p>
+            <p>Unable to send email.</p>
+            <p>Try signing in with a different account.</p>
           </div>
           <p><a className='button' href={signinPageUrl}>Sign in</a></p>
         </div>
       break
     case 'Configuration':
-      heading = <h1>Server configuration error</h1>
+      heading = <h1>Server error</h1>
       message =
         <div>
           <div className='message'>
@@ -64,7 +63,7 @@ export default ({ site, error, baseUrl }) => {
       message =
         <div>
           <div className='message'>
-            <p>Your account does not have permission to sign in.</p>
+            <p>You do not have permission to sign in.</p>
             <p><a className='button' href={signinPageUrl}>Sign in</a></p>
           </div>
         </div>
