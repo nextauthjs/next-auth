@@ -21,10 +21,10 @@ The `useSession()` React Hook in the NextAuth.js client is the easiest way to ch
 It works best when used with NextAuth.js `<Provider>` is added to `pages/_app.js` (see [provider](#provider)).
 
 ```jsx
-import NextAuth from 'next-auth/client'
+import { useSession } from 'next-auth/client'
 
 export default () => {
-  const [ session, loading ] = NextAuth.useSession()
+  const [ session, loading ] = useSession()
 
   return <>
     {session && <p>Signed in as {session.user.email}</p>}
@@ -41,7 +41,7 @@ export default () => {
 * Server Side: **Yes**
 
 NextAuth.js also provides a `getSession()` method which can be called client or server side to return a session.
- 
+
 It calls `/api/auth/session` and returns a promise with a session object, or null if no session exists.
 
 A session object looks like this:
@@ -67,7 +67,7 @@ Note that because it exposed to the client it does not contain sensitive informa
 Because it is a Universal method, you can use `getSession()` in both client and server side functions, such as `getInitialProps()` in Next.js:
 
 ```jsx title="/pages/index.js"
-import { session } from 'next-auth/client'
+import { getSession } from 'next-auth/client'
 
 const Page = ({ session }) => (<p>
     {!session && <>
@@ -92,9 +92,9 @@ export default Page
 #### Using getSession() in API routes
 
 You can also get the session object in Next.js API routes:
- 
+
 ```js
-import { session } from 'next-auth/client'
+import { getSession } from 'next-auth/client'
 
 export default (req, res) => {
   const session = await getSession({ req })
@@ -220,7 +220,7 @@ Using the supplied React `<Provider>` allows instances of `useSession()` to shar
 This improves performance, reduces network calls and avoids page flicker when rendering.
 
 It is highly recommended and can be easily added to all pages in Next.js apps by using `/pages/_app.js`.
- 
+
 ```jsx title="/pages/_app.js"
 import { Provider } from 'next-auth/client'
 
