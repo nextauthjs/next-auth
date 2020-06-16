@@ -1,5 +1,3 @@
-// import NextAuth from 'next-auth';
-import { getSession } from 'next-auth/client';
+import NextAuth from 'next-auth';
 
 // NextAuth({}, {}, {});
-getSession('foo');
