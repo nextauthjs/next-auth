@@ -1,10 +1,8 @@
 ---
 name: Feature request
 about: Suggest an idea for this project
-title: Short clear summary of the request
 labels: enhancement
 assignees: ''
-
 ---
 
 *Please stick to one distinct feature request per issue where possible and raise additional feature quests as separate issues. Try to avoid adding feature requests to existing issues in the comments of issues raised by other users.*
