@@ -1,3 +1,5 @@
+// Minimum TypeScript Version: 3.8
+
 import type { ConnectionOptions } from 'typeorm';
 
 /**
