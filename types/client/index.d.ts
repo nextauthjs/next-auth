@@ -27,16 +27,17 @@ interface GenericObject {
   [key: string]: any;
 }
 
-type UseSessionResult = [Session, boolean];
+declare function useSession(): [Session, boolean];
+declare function getSession(context: NextContext): Promise<Session | null>;
+declare function session(context: NextContext): Promise<Session | null>;
+declare function getProviders(context: NextContext): Promise<GetProvidersResponse | null>;
+declare function providers(context: NextContext): Promise<GetProvidersResponse | null>;
+declare function getCsrfToken(context: NextContext): Promise<string | null>;
+declare function csrfToken(context: NextContext): Promise<string | null>;
+declare function signin(provider: Provider, data: GenericObject): Promise<void>;
+declare function signout(context: NextContext): Promise<void>;
 
-declare function useSession(): UseSessionResult;
-declare function getSession(context: NextContext): Session | null;
-declare function getProviders(context: NextContext): GetProvidersResponse | null;
-declare function getCsrfToken(context: NextContext): string | null;
-declare function signin(provider: Provider, data: GenericObject): void;
-declare function signout(context: NextContext): void;
-
-export { useSession, getSession, getProviders, getCsrfToken, signin, signout };
+export { useSession, getSession, session, getProviders, providers, getCsrfToken, csrfToken, signin, signout };
 export type { Session };
 
 /**
