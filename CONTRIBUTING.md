@@ -85,7 +85,7 @@ If you are working on `next-auth/src/client/index.js` hot reloading will work as
 
 However  if you are working on anything else (e.g. `next-auth/src/server/*` etc) then you will need to *stop and start* your app for changes to apply as **Next.js will not hot reload those changes**.
 
-### Local dabases
+### Databases
 
 Included is a Docker Compose file that starts up MySQL, Postgres and MongoDB databases on localhost.
 
