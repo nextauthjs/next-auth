@@ -1,4 +1,4 @@
-# Contributing
+# Contributing guide
 
 Contributions and feedback on your experience of using this software are welcome.
 
@@ -6,17 +6,21 @@ This includes bug reports, feature requests, ideas, pull requests and examples o
 
 Please see the [Code of Conduct](CODE_OF_CONDUCT.md) and follow any templates configured in GitHub when reporting bugs, requesting enhancements or contributing code.
 
-## Pull Requests
+Please raise any significant new functionality or breaking change an issue for discussion before raising a Pull Request for it.
+
+## Pull Requests
 
 * The latest changes are always in `main` 
 * Pull Requests should be raised for larger changes
 * Pull Requests do not need approval before merging for those with contributor access (it's just helpful to have them to track changes)
 * Rebasing in Pull Requests is prefered to keep a clean commit history (see below)
 * Running `npm run lint:fix` before committing can make resolving conflicts easier, but is not required
-* Merge commits (and pushing merge commits to `main`) are disabled in this repo
-* Pushing directly to main should ideally be reserved for minor updates / one off fixes
+* Merge commits (and pushing merge commits to `main`) are disabled in this repo; but commits in PR can be squashed so this is not a blocker
+* Pushing directly to main should ideally be reserved for minor updates (e.g. correcting typos) or small single-commit fixes
 
 ## Rebasing
+
+*If you don't rebase and end up with merge commits in a PR then it's not a blocker, we can alway squash the commits when merging!*
 
 If you create a branch and there are conflicting updates in the `main` branch, you can resolve them by rebasing from a check out of your branch:
 
@@ -41,7 +45,7 @@ You can use `npm run lint:fix` to automatically apply Standard JS rules to resol
 
 ## Setting up local environment
 
-A quick and dirty guide on how to setup *next-auth* locally to work on it and test things out:
+A quick and dirty guide on how to setup *next-auth* locally to work on it and test out any changes:
 
 1. Clone the repo:
 
@@ -66,7 +70,9 @@ A quick and dirty guide on how to setup *next-auth* locally to work on it and te
 
 That's it!
 
-NB: You may need to repeat both `npm link` steps if you install / update additional dependancies with `npm i`.
+Notes: You may need to repeat both `npm link` steps if you install / update additional dependancies with `npm i`.
+
+If you need an example project to link to, you can use [next-auth-example](https://github.com/iaincollins/next-auth-example).
 
 ### Hot reloading
 
@@ -78,3 +84,25 @@ You might find it helpful to use the `npm run watch` command in the next-auth pr
 If you are working on `next-auth/src/client/index.js` hot reloading will work as normal in your Next.js app.
 
 However  if you are working on anything else (e.g. `next-auth/src/server/*` etc) then you will need to *stop and start* your app for changes to apply as **Next.js will not hot reload those changes**.
+
+### Local dabases
+
+Included is a Docker Compose file that starts up MySQL, Postgres and MongoDB databases on localhost.
+
+It will use port 3306, 5432 and 27017 on localhost respectively; it will not work if are running existing databases on localhost.
+
+You can start them with `npm run db:start` and stop them with `npm run db:stop`.
+
+You will need Docker installed to be able to start / stop the databases.
+
+When stop the databases, it will reset their contents.
+
+### Testing
+
+Tests can be run with `npm run test`.
+
+Automated tests are currently crude and limited in functionality, but improvements are in development.
+
+Currently to run tests you need to first have started local test databases (e.g. using `npm run db:start`).
+
+The databases can take a few seconds to start up, so you might need to give it a minute before running the tests.

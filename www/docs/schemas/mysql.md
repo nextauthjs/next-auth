@@ -8,48 +8,38 @@ The schema generated for a MySQL database when using the built-in models.
 ## User
 
 ```json
-{
+"users": {
   "id": {
-    "name": "id",
     "type": "int",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "name": {
-    "name": "name",
     "type": "varchar(255)",
-    "nullable": false,
+    "nullable": true,
     "default": null
   },
   "email": {
-    "name": "email",
     "type": "varchar(255)",
-    "nullable": false,
+    "nullable": true,
     "default": null
   },
   "email_verified": {
-    "name": "email_verified",
     "type": "timestamp",
-    "nullable": false,
+    "nullable": true,
     "default": null
   },
   "image": {
-    "name": "image",
     "type": "varchar(255)",
-    "nullable": false,
+    "nullable": true,
     "default": null
   },
   "created": {
-    "name": "created",
     "type": "timestamp(6)",
-    "nullable": false,
-    "default": "CURRENT_TIMESTAMP(6)"
+    "nullable": false
   },
   "updated": {
-    "name": "updated",
     "type": "timestamp(6)",
-    "nullable": false,
-    "default": "CURRENT_TIMESTAMP(6)"
+    "nullable": false
   }
 }
 ```
@@ -57,72 +47,53 @@ The schema generated for a MySQL database when using the built-in models.
 ## Account
 
 ```json
-{
+"accounts": {
   "id": {
-    "name": "id",
     "type": "int",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "compound_id": {
-    "name": "compound_id",
     "type": "varchar(255)",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "user_id": {
-    "name": "user_id",
     "type": "int",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "provider_type": {
-    "name": "provider_type",
     "type": "varchar(255)",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "provider_id": {
-    "name": "provider_id",
     "type": "varchar(255)",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "provider_account_id": {
-    "name": "provider_account_id",
     "type": "varchar(255)",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "refresh_token": {
-    "name": "refresh_token",
     "type": "text",
-    "nullable": false,
+    "nullable": true,
     "default": null
   },
   "access_token": {
-    "name": "access_token",
     "type": "text",
-    "nullable": false,
+    "nullable": true,
     "default": null
   },
   "access_token_expires": {
-    "name": "access_token_expires",
     "type": "timestamp",
-    "nullable": false,
+    "nullable": true,
     "default": null
   },
   "created": {
-    "name": "created",
     "type": "timestamp(6)",
-    "nullable": false,
-    "default": "CURRENT_TIMESTAMP(6)"
+    "nullable": false
   },
   "updated": {
-    "name": "updated",
     "type": "timestamp(6)",
-    "nullable": false,
-    "default": "CURRENT_TIMESTAMP(6)"
+    "nullable": false
   }
 }
 ```
@@ -130,48 +101,34 @@ The schema generated for a MySQL database when using the built-in models.
 ## Session
 
 ```json
-{
+"sessions": {
   "id": {
-    "name": "id",
     "type": "int",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "user_id": {
-    "name": "user_id",
     "type": "int",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "expires": {
-    "name": "expires",
     "type": "timestamp",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "session_token": {
-    "name": "session_token",
     "type": "varchar(255)",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "access_token": {
-    "name": "access_token",
     "type": "varchar(255)",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "created": {
-    "name": "created",
     "type": "timestamp(6)",
-    "nullable": false,
-    "default": "CURRENT_TIMESTAMP(6)"
+    "nullable": false
   },
   "updated": {
-    "name": "updated",
     "type": "timestamp(6)",
-    "nullable": false,
-    "default": "CURRENT_TIMESTAMP(6)"
+    "nullable": false
   }
 }
 ```
@@ -179,42 +136,30 @@ The schema generated for a MySQL database when using the built-in models.
 ## Verification Request
 
 ```json
-{
+ "verification_requests": {
   "id": {
-    "name": "id",
     "type": "int",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "identifier": {
-    "name": "identifier",
     "type": "varchar(255)",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "token": {
-    "name": "token",
     "type": "varchar(255)",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "expires": {
-    "name": "expires",
     "type": "timestamp",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "created": {
-    "name": "created",
     "type": "timestamp(6)",
-    "nullable": false,
-    "default": "CURRENT_TIMESTAMP(6)"
+    "nullable": false
   },
   "updated": {
-    "name": "updated",
     "type": "timestamp(6)",
-    "nullable": false,
-    "default": "CURRENT_TIMESTAMP(6)"
+    "nullable": false
   }
 }
 ```

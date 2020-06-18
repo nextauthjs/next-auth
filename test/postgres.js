@@ -4,10 +4,11 @@ const fs = require('fs')
 const path = require('path')
 const { Client } = require('pg')
 
+const { compareSchemas } = require('./lib/db')
 const Adapters = require('../adapters')
 
 const TABLES = ['users', 'accounts', 'sessions', 'verification_requests']
-const SCHEMA_FILE = path.join(__dirname, '/schemas/postgres.json')
+const SCHEMA_FILE = path.join(__dirname, '/fixtures/schemas/postgres.json')
 
 function printSchema () {
   return new Promise(async (resolve) => {
@@ -30,11 +31,11 @@ function printSchema () {
         if (error) { throw error }
 
         const getColumnSchema = (column) => {
+          const nullable = column.is_nullable === 'YES' ? true : false
           return {
-            name: column.column_name,
             type: column.data_type,
-            nullable: !!column.is_nullable === 'YES',
-            default: column.column_default
+            nullable,
+            default: nullable ? column.column_default : undefined
           }
         }
 
@@ -57,17 +58,16 @@ function printSchema () {
 }
 
 (async () => {
-  const testSchema = JSON.stringify(await printSchema(), null, 2)
-  const expectedSchema = fs.readFileSync(SCHEMA_FILE)
-
-  // Uncomment to update fixture
-  // fs.writeFileSync(SCHEMA_FILE, testSchema)
-
-  if (testSchema == expectedSchema) {
+  const expectedSchema = JSON.parse(fs.readFileSync(SCHEMA_FILE))
+  const testResultSchema = await printSchema()
+  const compareResult = compareSchemas(expectedSchema, testResultSchema)
+  if (compareResult === true) {
     console.log('Postgres schema ok')
     process.exit()
   } else {
-    console.error('Postgres schema error', testSchema)
+    console.error('Postgres schema errors')
+    compareResult.forEach(error => console.log(`  * ${error}`))
+    console.log('Postgres schema found:', JSON.stringify(testResultSchema, null, 2))
     process.exit(1)
   }
 })()
