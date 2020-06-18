@@ -30,14 +30,14 @@
       "nullable": false,
       "default": null
     },
-    "created": {
-      "name": "created",
+    "created_at": {
+      "name": "created_at",
       "type": "timestamp(6)",
       "nullable": false,
       "default": "CURRENT_TIMESTAMP(6)"
     },
-    "updated": {
-      "name": "updated",
+    "updated_at": {
+      "name": "updated_at",
       "type": "timestamp(6)",
       "nullable": false,
       "default": "CURRENT_TIMESTAMP(6)"
@@ -98,14 +98,14 @@
       "nullable": false,
       "default": null
     },
-    "created": {
-      "name": "created",
+    "created_at": {
+      "name": "created_at",
       "type": "timestamp(6)",
       "nullable": false,
       "default": "CURRENT_TIMESTAMP(6)"
     },
-    "updated": {
-      "name": "updated",
+    "updated_at": {
+      "name": "updated_at",
       "type": "timestamp(6)",
       "nullable": false,
       "default": "CURRENT_TIMESTAMP(6)"
@@ -142,14 +142,14 @@
       "nullable": false,
       "default": null
     },
-    "created": {
-      "name": "created",
+    "created_at": {
+      "name": "created_at",
       "type": "timestamp(6)",
       "nullable": false,
       "default": "CURRENT_TIMESTAMP(6)"
     },
-    "updated": {
-      "name": "updated",
+    "updated_at": {
+      "name": "updated_at",
       "type": "timestamp(6)",
       "nullable": false,
       "default": "CURRENT_TIMESTAMP(6)"
@@ -159,12 +159,6 @@
     "id": {
       "name": "id",
       "type": "int",
-      "nullable": false,
-      "default": null
-    },
-    "identifier": {
-      "name": "identifier",
-      "type": "varchar(255)",
       "nullable": false,
       "default": null
     },
@@ -180,14 +174,20 @@
       "nullable": false,
       "default": null
     },
-    "created": {
-      "name": "created",
+    "identifier": {
+      "name": "identifier",
+      "type": "varchar(255)",
+      "nullable": false,
+      "default": null
+    },
+    "created_at": {
+      "name": "created_at",
       "type": "timestamp(6)",
       "nullable": false,
       "default": "CURRENT_TIMESTAMP(6)"
     },
-    "updated": {
-      "name": "updated",
+    "updated_at": {
+      "name": "updated_at",
       "type": "timestamp(6)",
       "nullable": false,
       "default": "CURRENT_TIMESTAMP(6)"

@@ -32,11 +32,11 @@ export const VerificationRequestSchema = {
       // After this time, the request will no longer ve valid
       type: 'timestamp'
     },
-    created: {
+    createdAt: {
       type: 'timestamp',
       createDate: true
     },
-    updated: {
+    updatedAt: {
       type: 'timestamp',
       updateDate: true
     }

@@ -68,11 +68,11 @@ export const AccountSchema = {
       type: 'timestamp',
       nullable: true
     },
-    created: {
+    createdAt: {
       type: 'timestamp',
       createDate: true
     },
-    updated: {
+    updatedAt: {
       type: 'timestamp',
       updateDate: true
     }

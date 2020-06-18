@@ -30,14 +30,14 @@
       "nullable": false,
       "default": null
     },
-    "created": {
-      "name": "created",
+    "created_at": {
+      "name": "created_at",
       "type": "timestamp without time zone",
       "nullable": false,
       "default": "now()"
     },
-    "updated": {
-      "name": "updated",
+    "updated_at": {
+      "name": "updated_at",
       "type": "timestamp without time zone",
       "nullable": false,
       "default": "now()"
@@ -98,14 +98,14 @@
       "nullable": false,
       "default": null
     },
-    "created": {
-      "name": "created",
+    "created_at": {
+      "name": "created_at",
       "type": "timestamp without time zone",
       "nullable": false,
       "default": "now()"
     },
-    "updated": {
-      "name": "updated",
+    "updated_at": {
+      "name": "updated_at",
       "type": "timestamp without time zone",
       "nullable": false,
       "default": "now()"
@@ -142,14 +142,14 @@
       "nullable": false,
       "default": null
     },
-    "created": {
-      "name": "created",
+    "created_at": {
+      "name": "created_at",
       "type": "timestamp without time zone",
       "nullable": false,
       "default": "now()"
     },
-    "updated": {
-      "name": "updated",
+    "updated_at": {
+      "name": "updated_at",
       "type": "timestamp without time zone",
       "nullable": false,
       "default": "now()"
@@ -180,14 +180,14 @@
       "nullable": false,
       "default": null
     },
-    "created": {
-      "name": "created",
+    "created_at": {
+      "name": "created_at",
       "type": "timestamp without time zone",
       "nullable": false,
       "default": "now()"
     },
-    "updated": {
-      "name": "updated",
+    "updated_at": {
+      "name": "updated_at",
       "type": "timestamp without time zone",
       "nullable": false,
       "default": "now()"
