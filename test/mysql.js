@@ -31,6 +31,7 @@ function printSchema () {
         if (error) { throw error }
 
         const getColumnSchema = (column) => {
+          console.log(column)
           return {
             name: column.Field,
             type: column.Type,

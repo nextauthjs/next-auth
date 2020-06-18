@@ -38,11 +38,11 @@ export const SessionSchema = {
       type: 'varchar',
       unique: true
     },
-    created: {
+    createdAt: {
       type: 'timestamp',
       createDate: true
     },
-    updated: {
+    updatedAt: {
       type: 'timestamp',
       updateDate: true
     }
