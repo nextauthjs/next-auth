@@ -8,48 +8,38 @@ The schema generated for a Postgres database when using the built-in models.
 ## User
 
 ```json
-{
+"users": {
   "id": {
-    "name": "id",
     "type": "integer",
-    "nullable": false,
-    "default": "nextval('users_id_seq'::regclass)"
+    "nullable": false
   },
   "name": {
-    "name": "name",
     "type": "character varying",
-    "nullable": false,
+    "nullable": true,
     "default": null
   },
   "email": {
-    "name": "email",
     "type": "character varying",
-    "nullable": false,
+    "nullable": true,
     "default": null
   },
   "email_verified": {
-    "name": "email_verified",
     "type": "timestamp without time zone",
-    "nullable": false,
+    "nullable": true,
     "default": null
   },
   "image": {
-    "name": "image",
     "type": "character varying",
-    "nullable": false,
+    "nullable": true,
     "default": null
   },
   "created": {
-    "name": "created",
     "type": "timestamp without time zone",
-    "nullable": false,
-    "default": "now()"
+    "nullable": false
   },
   "updated": {
-    "name": "updated",
     "type": "timestamp without time zone",
-    "nullable": false,
-    "default": "now()"
+    "nullable": false
   }
 }
 ```
@@ -57,72 +47,53 @@ The schema generated for a Postgres database when using the built-in models.
 ## Account
 
 ```json
-{
+"accounts": {
   "id": {
-    "name": "id",
     "type": "integer",
-    "nullable": false,
-    "default": "nextval('accounts_id_seq'::regclass)"
+    "nullable": false
   },
   "compound_id": {
-    "name": "compound_id",
     "type": "character varying",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "user_id": {
-    "name": "user_id",
     "type": "integer",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "provider_type": {
-    "name": "provider_type",
     "type": "character varying",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "provider_id": {
-    "name": "provider_id",
     "type": "character varying",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "provider_account_id": {
-    "name": "provider_account_id",
     "type": "character varying",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "refresh_token": {
-    "name": "refresh_token",
     "type": "text",
-    "nullable": false,
+    "nullable": true,
     "default": null
   },
   "access_token": {
-    "name": "access_token",
     "type": "text",
-    "nullable": false,
+    "nullable": true,
     "default": null
   },
   "access_token_expires": {
-    "name": "access_token_expires",
     "type": "timestamp without time zone",
-    "nullable": false,
+    "nullable": true,
     "default": null
   },
   "created": {
-    "name": "created",
     "type": "timestamp without time zone",
-    "nullable": false,
-    "default": "now()"
+    "nullable": false
   },
   "updated": {
-    "name": "updated",
     "type": "timestamp without time zone",
-    "nullable": false,
-    "default": "now()"
+    "nullable": false
   }
 }
 ```
@@ -130,48 +101,34 @@ The schema generated for a Postgres database when using the built-in models.
 ## Session
 
 ```json
-{
+"sessions": {
   "id": {
-    "name": "id",
     "type": "integer",
-    "nullable": false,
-    "default": "nextval('sessions_id_seq'::regclass)"
+    "nullable": false
   },
   "user_id": {
-    "name": "user_id",
     "type": "integer",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "expires": {
-    "name": "expires",
     "type": "timestamp without time zone",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "session_token": {
-    "name": "session_token",
     "type": "character varying",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "access_token": {
-    "name": "access_token",
     "type": "character varying",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "created": {
-    "name": "created",
     "type": "timestamp without time zone",
-    "nullable": false,
-    "default": "now()"
+    "nullable": false
   },
   "updated": {
-    "name": "updated",
     "type": "timestamp without time zone",
-    "nullable": false,
-    "default": "now()"
+    "nullable": false
   }
 }
 ```
@@ -179,42 +136,30 @@ The schema generated for a Postgres database when using the built-in models.
 ## Verification Request
 
 ```json
-{
+"verification_requests": {
   "id": {
-    "name": "id",
     "type": "integer",
-    "nullable": false,
-    "default": "nextval('verification_requests_id_seq'::regclass)"
+    "nullable": false
   },
   "identifier": {
-    "name": "identifier",
     "type": "character varying",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "token": {
-    "name": "token",
     "type": "character varying",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "expires": {
-    "name": "expires",
     "type": "timestamp without time zone",
-    "nullable": false,
-    "default": null
+    "nullable": false
   },
   "created": {
-    "name": "created",
     "type": "timestamp without time zone",
-    "nullable": false,
-    "default": "now()"
+    "nullable": false
   },
   "updated": {
-    "name": "updated",
     "type": "timestamp without time zone",
-    "nullable": false,
-    "default": "now()"
+    "nullable": false
   }
 }
 ```

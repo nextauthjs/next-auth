@@ -4,10 +4,11 @@ const fs = require('fs')
 const path = require('path')
 const mysql = require('mysql')
 
+const { compareSchemas } = require('./lib/db')
 const Adapters = require('../adapters')
 
 const TABLES = ['users', 'accounts', 'sessions', 'verification_requests']
-const SCHEMA_FILE = path.join(__dirname, '/schemas/mysql.json')
+const SCHEMA_FILE = path.join(__dirname, '/fixtures/schemas/mysql.json')
 
 function printSchema () {
   return new Promise(async (resolve) => {
@@ -31,12 +32,11 @@ function printSchema () {
         if (error) { throw error }
 
         const getColumnSchema = (column) => {
-          console.log(column)
+          const nullable = column.Null === 'YES' ? true : false
           return {
-            name: column.Field,
             type: column.Type,
-            nullable: !!column.Null === 'YES',
-            default: column.Default
+            nullable,
+            default: nullable ? column.Default : undefined
           }
         }
 
@@ -59,17 +59,16 @@ function printSchema () {
 }
 
 (async () => {
-  const testSchema = JSON.stringify(await printSchema(), null, 2)
-  const expectedSchema = fs.readFileSync(SCHEMA_FILE)
-
-  // Uncomment to update fixture
-  // fs.writeFileSync(SCHEMA_FILE, testSchema)
-
-  if (testSchema == expectedSchema) {
+  const expectedSchema = JSON.parse(fs.readFileSync(SCHEMA_FILE))
+  const testResultSchema = await printSchema()
+  const compareResult = compareSchemas(expectedSchema, testResultSchema)
+  if (compareResult === true) {
     console.log('MySQL schema ok')
     process.exit()
   } else {
-    console.error('MySQL schema error', testSchema)
+    console.error('MySQL schema errors')
+    compareResult.forEach(error => console.log(`  * ${error}`))
+    console.log('MySQL schema found:', JSON.stringify(testResultSchema, null, 2))
     process.exit(1)
   }
 })()
