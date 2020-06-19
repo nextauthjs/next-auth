@@ -5,6 +5,7 @@ import Discord from './discord'
 import Email from './email'
 import Facebook from './facebook' // @TODO
 import GitHub from './github'
+import Gitlab from './gitlab'
 import Google from './google'
 import IdentityServer4 from './identity-server4'
 import Mixer from './mixer'
