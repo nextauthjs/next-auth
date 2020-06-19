@@ -39,7 +39,7 @@ export default ({ providers }) => {
       {Object.values(providers).map(provider => (
         <p key={provider.name}>
           <a href={provider.signinUrl} onClick={(e) => e.preventDefault()}>
-            <button onClick={() => signin(provider)}>Sign in with {provider.name}</button>
+            <button onClick={() => signin(provider.id)}>Sign in with {provider.name}</button>
           </a>
         </p>
       ))}
