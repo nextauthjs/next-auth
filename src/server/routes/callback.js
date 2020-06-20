@@ -206,11 +206,23 @@ export default async (req, res, options, done) => {
     }
 
     const credentials = req.body
-    const user = await provider.authorize(credentials)
+
+    // If promise is rejected / throws error then display Configuration error
+    let userObjectReturnedFromAuthorizeHandler
+    try {
+      userObjectReturnedFromAuthorizeHandler = await provider.authorize(credentials)
+    } catch (error) {
+      res.status(302).setHeader('Location', `${baseUrl}/error?error=Configuration`)
+      res.end()
+      return done()
+    }
+
+    const user = userObjectReturnedFromAuthorizeHandler
     const account = { id: provider.id, type: 'credentials' }
 
-    if (user === false) {
-      res.status(302).setHeader('Location', `${baseUrl}/error?error=AccessDenied`)
+    // If no user is returned, credentials are not valid
+    if (!user) {
+      res.status(302).setHeader('Location', `${baseUrl}/error?error=CredentialsSignin&provider=${encodeURIComponent(provider.id)}`)
       res.end()
       return done()
     }
