@@ -12,7 +12,9 @@ const parseConnectionString = (configString) => {
   try {
     const parsedUrl = new URL(configString)
     const config = {}
-    config.type = parsedUrl.protocol.replace(/:$/, '')
+
+    // Remove : and convert strings like 'mongodb+srv' into 'mongodb'
+    config.type = parsedUrl.protocol.replace(/:$/, '').replace(/\+(.*)?$/, '')
     config.host = parsedUrl.hostname
     config.port = Number(parsedUrl.port)
     config.username = parsedUrl.username
