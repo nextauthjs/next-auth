@@ -33,11 +33,11 @@ The schema generated for a MySQL database when using the built-in models.
     "nullable": true,
     "default": null
   },
-  "created": {
+  "created_at": {
     "type": "timestamp(6)",
     "nullable": false
   },
-  "updated": {
+  "updated_at": {
     "type": "timestamp(6)",
     "nullable": false
   }
@@ -87,11 +87,11 @@ The schema generated for a MySQL database when using the built-in models.
     "nullable": true,
     "default": null
   },
-  "created": {
+  "created_at": {
     "type": "timestamp(6)",
     "nullable": false
   },
-  "updated": {
+  "updated_at": {
     "type": "timestamp(6)",
     "nullable": false
   }
@@ -122,11 +122,11 @@ The schema generated for a MySQL database when using the built-in models.
     "type": "varchar(255)",
     "nullable": false
   },
-  "created": {
+  "created_at": {
     "type": "timestamp(6)",
     "nullable": false
   },
-  "updated": {
+  "updated_at": {
     "type": "timestamp(6)",
     "nullable": false
   }
@@ -153,11 +153,11 @@ The schema generated for a MySQL database when using the built-in models.
     "type": "timestamp",
     "nullable": false
   },
-  "created": {
+  "created_at": {
     "type": "timestamp(6)",
     "nullable": false
   },
-  "updated": {
+  "updated_at": {
     "type": "timestamp(6)",
     "nullable": false
   }

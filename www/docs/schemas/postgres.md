@@ -33,11 +33,11 @@ The schema generated for a Postgres database when using the built-in models.
     "nullable": true,
     "default": null
   },
-  "created": {
+  "created_at": {
     "type": "timestamp without time zone",
     "nullable": false
   },
-  "updated": {
+  "updated_at": {
     "type": "timestamp without time zone",
     "nullable": false
   }
@@ -87,11 +87,11 @@ The schema generated for a Postgres database when using the built-in models.
     "nullable": true,
     "default": null
   },
-  "created": {
+  "created_at": {
     "type": "timestamp without time zone",
     "nullable": false
   },
-  "updated": {
+  "updated_at": {
     "type": "timestamp without time zone",
     "nullable": false
   }
@@ -122,11 +122,11 @@ The schema generated for a Postgres database when using the built-in models.
     "type": "character varying",
     "nullable": false
   },
-  "created": {
+  "created_at": {
     "type": "timestamp without time zone",
     "nullable": false
   },
-  "updated": {
+  "updated_at": {
     "type": "timestamp without time zone",
     "nullable": false
   }
@@ -153,11 +153,11 @@ The schema generated for a Postgres database when using the built-in models.
     "type": "timestamp without time zone",
     "nullable": false
   },
-  "created": {
+  "created_at": {
     "type": "timestamp without time zone",
     "nullable": false
   },
-  "updated": {
+  "updated_at": {
     "type": "timestamp without time zone",
     "nullable": false
   }
