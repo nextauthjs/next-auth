@@ -74,32 +74,44 @@ const sqlite = (models, options) => {
   const { models: customModels = {} } = options
 
   // SQLite does not support `timestamp` fields so we remap them to `datetime`
+  // in all models.
+  //
   // `timestamp` is an ANSI SQL specification and widely supported by other
-  // databases, so this schema change is specific to SQLite. SQLite adds
-  // 'create' and 'update' fields to allow rows, but that behaviour is specific
-  // to SQLite and so they are not used by this databases.
+  // databases so this transform is a specific workaround required for SQLite.
+  //
+  // NB: SQLite adds 'create' and 'update' fields to allow rows, but that is
+  // specific to SQLite and so we ignore that behaviour.
+  
   if (!customModels.User) {
-    models.User.schema.columns.emailVerified.type = 'datetime'
-    models.User.schema.columns.created.type = 'datetime'
-    models.User.schema.columns.updated.type = 'datetime'
+    for (const column in models.User.schema.columns) {
+      if (models.User.schema.columns[column].type == 'timestamp') { 
+        models.User.schema.columns[column].type = 'datetime'
+      }
+    }
   }
 
   if (!customModels.Account) {
-    models.Account.schema.columns.accessTokenExpires.type = 'datetime'
-    models.Account.schema.columns.created.type = 'datetime'
-    models.Account.schema.columns.updated.type = 'datetime'
+    for (const column in models.Account.schema.columns) {
+      if (models.Account.schema.columns[column].type == 'timestamp') { 
+        models.Account.schema.columns[column].type = 'datetime'
+      }
+    }
   }
 
   if (!customModels.Session) {
-    models.Session.schema.columns.expires.type = 'datetime'
-    models.Session.schema.columns.created.type = 'datetime'
-    models.Session.schema.columns.updated.type = 'datetime'
+    for (const column in models.Session.schema.columns) {
+      if (models.Session.schema.columns[column].type == 'timestamp') { 
+        models.Session.schema.columns[column].type = 'datetime'
+      }
+    }
   }
 
   if (!customModels.VerificationRequest) {
-    models.VerificationRequest.schema.columns.expires.type = 'datetime'
-    models.VerificationRequest.schema.columns.created.type = 'datetime'
-    models.VerificationRequest.schema.columns.updated.type = 'datetime'
+    for (const column in models.VerificationRequest.schema.columns) {
+      if (models.VerificationRequest.schema.columns[column].type == 'timestamp') { 
+        models.VerificationRequest.schema.columns[column].type = 'datetime'
+      }
+    }
   }
 }
 
