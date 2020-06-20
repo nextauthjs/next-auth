@@ -15,9 +15,9 @@ export default (options) => {
         id: profile.id,
         name: profile.real_name,
         email: profile.default_email,
-        image: null,
+        image: null
       }
     },
-    ...options,
+    ...options
   }
 }

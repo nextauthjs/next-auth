@@ -15,8 +15,8 @@ export default (options) => {
         name: profile.name,
         email: profile.login,
         image: profile.avatar_url
-      };
+      }
     },
-  ...options
+    ...options
   }
 }

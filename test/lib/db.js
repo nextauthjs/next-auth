@@ -6,9 +6,9 @@ exports.compareSchemas = (expected, actual) => {
     if (actual[objectName]) {
       for (const propertyName in expected[objectName]) {
         if (actual[objectName][propertyName]) {
-            if (JSON.stringify(expected[objectName][propertyName]) !== JSON.stringify(actual[objectName][propertyName])) {
-              errors.push(`${objectName}.${propertyName} does not match expected result`)
-            }
+          if (JSON.stringify(expected[objectName][propertyName]) !== JSON.stringify(actual[objectName][propertyName])) {
+            errors.push(`${objectName}.${propertyName} does not match expected result`)
+          }
         } else {
           errors.push(`${objectName}.${propertyName} not found (should exist)`)
         }
