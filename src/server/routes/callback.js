@@ -26,7 +26,7 @@ export default async (req, res, options, done) => {
   const sessionMaxAge = options.session.maxAge
 
   // Get session ID (if set)
-  const sessionToken = req.cookies[cookies.sessionToken.name]
+  const sessionToken = req.cookies ? req.cookies[cookies.sessionToken.name] : null
 
   if (type === 'oauth') {
     oAuthCallback(req, provider, async (error, oauthAccount) => {
@@ -156,6 +156,8 @@ export default async (req, res, options, done) => {
 
         cookie.set(res, cookies.sessionToken.name, newEncodedJwt, { expires: cookieExpires.toISOString(), ...cookies.sessionToken.options })
       } else {
+        console.log('debug.cookies', cookies)
+        console.log('debug.session', session)
         // Save Session Token in cookie
         cookie.set(res, cookies.sessionToken.name, session.sessionToken, { expires: session.expires || null, ...cookies.sessionToken.options })
       }

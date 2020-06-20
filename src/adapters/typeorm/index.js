@@ -110,7 +110,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
       debugMessage('CREATE_USER', profile)
       try {
         // Create user account
-        const user = new User(profile.name, profile.email, profile.image)
+        const user = new User(profile.name, profile.email, profile.image, profile.emailVerified)
         return await getManager().save(user)
       } catch (error) {
         logger.error('CREATE_USER_ERROR', error)
@@ -162,16 +162,9 @@ const Adapter = (typeOrmConfig, options = {}) => {
       }
     }
 
-    async function getUserByCredentials (credentials) {
-      debugMessage('GET_USER_BY_CREDENTIALS', credentials)
-      // @TODO Get user from DB
-      return false
-    }
-
     async function updateUser (user) {
       debugMessage('UPDATE_USER', user)
-      // @TODO Save changes to user object in DB
-      return false
+      return getManager().save(user)
     }
 
     async function deleteUser (userId) {
@@ -207,7 +200,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
         if (sessionMaxAge) {
           const dateExpires = new Date()
           dateExpires.setTime(dateExpires.getTime() + sessionMaxAge)
-          expires = dateExpires.toISOString()
+          expires = dateExpires
         }
 
         const session = new Session(user.id, expires)
@@ -256,7 +249,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
           if (new Date() > dateSessionIsDueToBeUpdated) {
             const newExpiryDate = new Date()
             newExpiryDate.setTime(newExpiryDate.getTime() + sessionMaxAge)
-            session.expires = newExpiryDate.toISOString()
+            session.expires = newExpiryDate
           } else if (!force) {
             return null
           }
@@ -298,7 +291,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
         if (maxAge) {
           const dateExpires = new Date()
           dateExpires.setTime(dateExpires.getTime() + (maxAge * 1000))
-          expires = dateExpires.toISOString()
+          expires = dateExpires
         }
 
         // Save to database
@@ -319,7 +312,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
     async function getVerificationRequest (identifier, token, secret, provider) {
       debugMessage('GET_VERIFICATION_REQUEST', identifier, token)
       try {
-        // Hash token provided with secret before trying to match it with datbase
+        // Hash token provided with secret before trying to match it with database
         // @TODO Use bcrypt instead of salted SHA-256 hash for token
         const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
         const verificationRequest = await connection.getRepository(VerificationRequest).findOne({ identifier, token: hashedToken })
@@ -354,7 +347,6 @@ const Adapter = (typeOrmConfig, options = {}) => {
       getUser,
       getUserByEmail,
       getUserByProviderAccountId,
-      getUserByCredentials,
       updateUser,
       deleteUser,
       linkAccount,

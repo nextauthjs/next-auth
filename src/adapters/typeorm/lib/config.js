@@ -50,8 +50,9 @@ const loadConfig = (config, { models, namingStrategy }) => {
       new EntitySchema(models.Session.schema),
       new EntitySchema(models.VerificationRequest.schema)
     ],
+    timezone: 'Z',
     logging: false,
-    namingStrategy
+    namingStrategy,
   }
 
   return {
