@@ -1,5 +1,6 @@
 import Auth0 from './auth0'
 import Apple from './apple'
+import Box from './box'
 import Credentials from './credentials'
 import Discord from './discord'
 import Email from './email'
@@ -17,6 +18,7 @@ import Twitter from './twitter'
 export default {
   Auth0,
   Apple,
+  Box,
   Credentials,
   Discord,
   Email,
