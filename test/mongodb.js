@@ -4,7 +4,11 @@ const Adapters = require('../adapters')
 
 ;(async () => {
   try {
-    const adapter1 = Adapters.Default('mongodb+srv://nextauth:password@127.0.0.1:27017/nextauth?ssl=true&replicaSet=some-shard-0&authSource=admin&retryWrites=true')
+    // @FIXME Does not actally bail on connection error, adapter *should* throw exception
+    // Before that is addressed, we should make sure all routes in the app that
+    // call getAdapter() or rely on methods that use getAdapter() will handle
+    // a connection error gracefully.
+    const adapter1 = Adapters.Default('mongodb+srv://nextauth:password@127.0.0.1:27017/nextauth?ssl=false&retryWrites=true')
     await adapter1.getAdapter()
 
     const adapter2 = Adapters.Default('mongodb://nextauth:password@127.0.0.1:27017/nextauth?synchronize=true')
