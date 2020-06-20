@@ -24,11 +24,11 @@
       "nullable": true,
       "default": null
     },
-    "created": {
+    "created_at": {
       "type": "timestamp without time zone",
       "nullable": false
     },
-    "updated": {
+    "updated_at": {
       "type": "timestamp without time zone",
       "nullable": false
     }
@@ -73,11 +73,11 @@
       "nullable": true,
       "default": null
     },
-    "created": {
+    "created_at": {
       "type": "timestamp without time zone",
       "nullable": false
     },
-    "updated": {
+    "updated_at": {
       "type": "timestamp without time zone",
       "nullable": false
     }
@@ -103,11 +103,11 @@
       "type": "character varying",
       "nullable": false
     },
-    "created": {
+    "created_at": {
       "type": "timestamp without time zone",
       "nullable": false
     },
-    "updated": {
+    "updated_at": {
       "type": "timestamp without time zone",
       "nullable": false
     }
@@ -129,11 +129,11 @@
       "type": "timestamp without time zone",
       "nullable": false
     },
-    "created": {
+    "created_at": {
       "type": "timestamp without time zone",
       "nullable": false
     },
-    "updated": {
+    "updated_at": {
       "type": "timestamp without time zone",
       "nullable": false
     }
