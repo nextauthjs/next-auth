@@ -35,6 +35,7 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 * [Slack](/providers/slack)
 * [Twitch](/providers/Twitch)
 * [Twitter](/providers/twitter)
+* [Yandex](/providers/yandex)
 
 ### Using a built-in provider
 

@@ -14,6 +14,7 @@ import Okta from './okta'
 import Slack from './slack'
 import Twitch from './twitch'
 import Twitter from './twitter'
+import Yandex from './yandex'
 
 export default {
   Auth0,
@@ -31,5 +32,6 @@ export default {
   Okta,
   Slack,
   Twitter,
-  Twitch
+  Twitch,
+  Yandex
 }
