@@ -34,10 +34,10 @@ export default async (sessionToken, profile, providerAccount, options) => {
 
     const {
       createUser,
+      updateUser,
       getUser,
       getUserByProviderAccountId,
       getUserByEmail,
-      // getUserByCredentials, // @TODO Support 'credentials' auth flow
       linkAccount,
       createSession,
       getSession,
@@ -73,33 +73,25 @@ export default async (sessionToken, profile, providerAccount, options) => {
       // If signing in with an email, check if an account with the same email address exists already
       const userByEmail = profile.email ? await getUserByEmail(profile.email) : null
       if (userByEmail) {
+        // If they are not already signed in as the same user, this flow will
+        // sign them out of the current session and sign them in as the new user
         if (isSignedIn) {
-          if (user.id === userByEmail.id) {
-            // If they are already signed in with this account,
-            // then we we can exit here as nothing for us to do.
-            return {
-              session,
-              user,
-              isNewUser
-            }
-          } else {
+          if (user.id !== userByEmail.id && !useJwtSession) {
             // Delete existing session if they are currently signed in as another user.
             // This will switch user accounts for the session in cases where the user was
             // already logged in with a different account.
-            if (!useJwtSession) {
-              await deleteSession(sessionToken)
-            }
-
-            // If signed in with a different acccount, effectively switching accounts
-            user = userByEmail
+            await deleteSession(sessionToken)
           }
-        } else {
-          // If user not signed in, then we want to sign them in with this one
-          user = userByEmail
         }
+
+        // Update emailVerified property on the user object
+        const currentDate = new Date()
+        userByEmail.emailVerified = currentDate
+        user = await updateUser(userByEmail)
+        await dispatchEvent(events.updateUser, user)
       } else {
         // Create user account if there isn't one for the email address already
-        user = await createUser(profile)
+        user = await createUser({ ...profile, emailVerified: true })
         await dispatchEvent(events.createUser, user)
         isNewUser = true
       }
@@ -111,7 +103,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
         session,
         user,
         isNewUser
-      }
+      } 
     } else if (providerAccount.type === 'oauth') {
       // If signing in with oauth account, check to see if the account exists already
       const userByProviderAccountId = await getUserByProviderAccountId(providerAccount.provider, providerAccount.id)

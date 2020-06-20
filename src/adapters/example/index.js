@@ -27,11 +27,6 @@ const Adapter = (config, options = {}) => {
       return null
     }
 
-    async function getUserByCredentials (credentials) {
-      _debug('getUserByCredentials', credentials)
-      return null
-    }
-
     async function updateUser (user) {
       _debug('updateUser', user)
       return null
@@ -92,7 +87,6 @@ const Adapter = (config, options = {}) => {
       getUser,
       getUserByEmail,
       getUserByProviderAccountId,
-      getUserByCredentials,
       updateUser,
       deleteUser,
       linkAccount,

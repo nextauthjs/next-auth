@@ -1,7 +1,6 @@
 {
   "presets": [
     ["@babel/preset-env", { "targets": { "esmodules": true } } ],
-    ["minify", { "builtIns": false } ]
   ],
   "comments": false,
   "overrides": [
