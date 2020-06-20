@@ -23,10 +23,11 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 
 * [Apple](/providers/apple)
 * [Auth0](/providers/auth0)
+* [Box](/providers/box)
 * [Discord](/providers/discord)
 * [Facebook](/providers/facebook)
 * [Github](/providers/github)
-* [Gitlab](/providers/gitlab)
+* [GitLab](/providers/gitlab)
 * [Google](/providers/google)
 * [IdentityServer4](/providers/identity-server4)
 * [Mixer](/providers/Mixer)
@@ -34,6 +35,7 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 * [Slack](/providers/slack)
 * [Twitch](/providers/Twitch)
 * [Twitter](/providers/twitter)
+* [Yandex](/providers/yandex)
 
 ### Using a built-in provider
 

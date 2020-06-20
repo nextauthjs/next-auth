@@ -1,6 +1,6 @@
 ---
 id: gitlab
-title: Gitlab
+title: GitLab
 ---
 
 ## API Documentation
@@ -17,7 +17,7 @@ https://gitlab.com/profile/applications
 import Providers from `next-auth/providers`
 ...
 providers: [
-  Providers.Gitlab({
+  Providers.GitLab({
     clientId: process.env.GITLAB_CLIENT_ID,
     clientSecret: process.env.GITLAB_CLIENT_SECRET
   })
