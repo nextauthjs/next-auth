@@ -4,6 +4,7 @@ export default (options) => {
     name: 'Credentials',
     type: 'credentials',
     authorize: null,
+    credentials: null,
     ...options
   }
 }

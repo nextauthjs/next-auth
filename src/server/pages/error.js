@@ -43,7 +43,16 @@ export default ({ site, error, baseUrl }) => {
         <div>
           <div className='message'>
             <p>Unable to send email.</p>
-            <p>Try signing in with a different account.</p>
+          </div>
+          <p><a className='button' href={signinPageUrl}>Sign in</a></p>
+        </div>
+      break
+    case 'CredentialsSignin':
+      heading = <h1>Sign in failed</h1>
+      message =
+        <div>
+          <div className='message'>
+            <p>Check the details you provided are correct.</p>
           </div>
           <p><a className='button' href={signinPageUrl}>Sign in</a></p>
         </div>

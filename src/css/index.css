@@ -25,7 +25,15 @@ form {
   padding: 0;
 }
 
-input[type="text"] {
+label {
+  font-weight: 500;
+  text-align: left;
+  margin-bottom: 0.25rem;
+  display: block;
+  color: #666;
+}
+
+input[type] {
   box-sizing: border-box;
   display: block;
   width: 100%;
@@ -114,6 +122,9 @@ a.site {
 .error {
   a.button {
     display: inline-block;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    margin-top: .5rem;
   }
   .message {
     margin-bottom: 1.5rem;
@@ -149,7 +160,7 @@ a.site {
   form {
     display: block;
     margin: 0 auto 0.5rem auto;
-    input[type="text"] {
+    input[type] {
       margin-bottom: 0.5rem;
     }
     button {
