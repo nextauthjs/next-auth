@@ -1,7 +1,7 @@
 export default (options) => {
     return {
       id: 'gitlab',
-      name: 'Gitlab',
+      name: 'GitLab',
       type: 'oauth',
       version: '2.0',
       scope: 'read_user',
