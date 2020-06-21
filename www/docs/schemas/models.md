@@ -86,3 +86,4 @@ MongoDB does not use schemas in the same way as most RDBMS databases, but the ob
 * ID fields are of type `ObjectID` rather than `int`
 * By convention all collection names and object properties are `camelCase` rather than `snake_case`
 * A sparse index is used on the User `email` property to allow it to not be specified, while enforcing uniqueness if it is - this ensures it is functionally equivalent to the ANSI SQL behaviour for a `unique` but `nullable` property
+* All timestamps are stored as `ISODate()` in MongoDB, all timestamps on all models are stored in UTC (aka Zulu time)

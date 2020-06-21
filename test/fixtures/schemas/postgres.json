@@ -15,7 +15,7 @@
       "default": null
     },
     "email_verified": {
-      "type": "timestamp without time zone",
+      "type": "timestamp with time zone",
       "nullable": true,
       "default": null
     },
@@ -25,11 +25,11 @@
       "default": null
     },
     "created_at": {
-      "type": "timestamp without time zone",
+      "type": "timestamp with time zone",
       "nullable": false
     },
     "updated_at": {
-      "type": "timestamp without time zone",
+      "type": "timestamp with time zone",
       "nullable": false
     }
   },
@@ -69,16 +69,16 @@
       "default": null
     },
     "access_token_expires": {
-      "type": "timestamp without time zone",
+      "type": "timestamp with time zone",
       "nullable": true,
       "default": null
     },
     "created_at": {
-      "type": "timestamp without time zone",
+      "type": "timestamp with time zone",
       "nullable": false
     },
     "updated_at": {
-      "type": "timestamp without time zone",
+      "type": "timestamp with time zone",
       "nullable": false
     }
   },
@@ -92,7 +92,7 @@
       "nullable": false
     },
     "expires": {
-      "type": "timestamp without time zone",
+      "type": "timestamp with time zone",
       "nullable": false
     },
     "session_token": {
@@ -104,11 +104,11 @@
       "nullable": false
     },
     "created_at": {
-      "type": "timestamp without time zone",
+      "type": "timestamp with time zone",
       "nullable": false
     },
     "updated_at": {
-      "type": "timestamp without time zone",
+      "type": "timestamp with time zone",
       "nullable": false
     }
   },
@@ -126,15 +126,15 @@
       "nullable": false
     },
     "expires": {
-      "type": "timestamp without time zone",
+      "type": "timestamp with time zone",
       "nullable": false
     },
     "created_at": {
-      "type": "timestamp without time zone",
+      "type": "timestamp with time zone",
       "nullable": false
     },
     "updated_at": {
-      "type": "timestamp without time zone",
+      "type": "timestamp with time zone",
       "nullable": false
     }
   }
