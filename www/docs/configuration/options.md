@@ -291,7 +291,7 @@ This option allows you to specify a different base path if you don't want to use
 
 If you set this option you **must** also specify the same value in the `NEXTAUTH_BASE_PATH` environment variable in `next.config.js` so that the client knows how to contact the server:
 
-```js
+```js title="next.config.js"
 module.exports = {
   env: {
     NEXTAUTH_BASE_PATH: '/api/my-custom-auth-route',
@@ -402,4 +402,39 @@ cookies: {
 
 :::warning
 Changing the cookie options may introduce security flaws into your application and may break NextAuth.js integration now or in a future update. Using this option is not recommended.
+:::
+
+---
+
+### Client Max Age
+
+* **Default value**: `0`
+* **Required**: *No*
+
+#### Description
+
+By default the NextAuth.js client will use whatever cached session object it has and will not not re-check the current session if using the `useSession()` hook.
+
+You can change this behaviour and force it to periodically sync the session state by setting a `NEXTAUTH_CLIENT_MAXAGE` environment variable.
+
+```js title="next.config.js"
+module.exports = {
+  env: {
+    NEXTAUTH_CLIENT_MAXAGE: 60, // Will re-check session every 60 seconds
+  },
+}
+```
+
+If set to `0` (the default) sessions are not re-checked automatically, only when a new window or tab is opened or when `getSession()` is called.
+
+If set to any other value, specifies how many seconds the window or tab should poll the server to update the session data.
+
+When a session is checked this way (or using `getSession()`) it is active and extends the life of the current session.
+
+It can be useful to use this option to prevent sessions from timing out if your application has a short session expiry time.
+
+This option usually has cost implications as checking session status triggers a call to a server side route and/or a database.
+
+:::note
+In NextAuth.js session state is automatically synchronized across all open windows and tabs in the same browser. If you have session expiry times of 30 days or more (the default) you probably don't need to use this option, or can set it to a high value (e.g. every 24 hours).
 :::

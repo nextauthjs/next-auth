@@ -16,18 +16,21 @@ module.exports = {
     'Authentication Providers': [
       'providers/apple',
       'providers/auth0',
+      'providers/box',
       'providers/discord',
       'providers/email',
       'providers/credentials',
       'providers/facebook',
       'providers/github',
+      'providers/gitlab',
       'providers/google',
       'providers/identity-server4',
       'providers/mixer',
       'providers/okta',
       'providers/slack',
       'providers/twitch',
-      'providers/twitter'
+      'providers/twitter',
+      'providers/yandex'
     ],
     'Models & Schemas': [
       'schemas/models',

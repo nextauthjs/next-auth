@@ -9,15 +9,20 @@ import logger from '../lib/logger'
 
 // These can be overridden with NEXTAUTH_ env vars in next.config.js
 // e.g. process.env.NEXTAUTH_SITE
-const DEFAULT_BASE_URL_COOKIE_NAME = 'next-auth.base-url'
-const DEFAULT_SITE = ''
-const DEFAULT_BASE_PATH = '/api/auth'
+const NEXTAUTH_DEFAULT_BASE_URL_COOKIE_NAME = 'next-auth.base-url'
+const NEXTAUTH_DEFAULT_SITE = ''
+const NEXTAUTH_DEFAULT_BASE_PATH = '/api/auth'
+const NEXTAUTH_DEFAULT_CLIENT_MAXAGE = 0 // e.g. 0 == disabled, 60 == 60 seconds
+
+let NEXTAUTH_EVENT_LISTENER_ADDED = false
 
 // Universal method (client + server)
 const getSession = async ({ req } = {}) => {
   const baseUrl = _baseUrl({ req })
   const options = req ? { headers: { cookie: req.headers.cookie } } : {}
-  return _fetchData(`${baseUrl}/session`, options)
+  const session = await _fetchData(`${baseUrl}/session`, options)
+  _sendMessage({ event: 'session', data: { triggeredBy: 'getSession' } })
+  return session
 }
 
 // Universal method (client + server)
@@ -52,12 +57,46 @@ const useSession = (session) => {
 
 // Internal hook for getting session from the api.
 const useSessionData = (session) => {
+  const clientMaxAge = (process.env.NEXTAUTH_CLIENT_MAXAGE || NEXTAUTH_DEFAULT_CLIENT_MAXAGE) * 1000
+
   const [data, setData] = useState(session)
   const [loading, setLoading] = useState(true)
-  const _getSession = async () => {
+  const _getSession = async (sendEvent = true) => {
     try {
       setData(await getSession())
       setLoading(false)
+
+      // Send event to trigger other tabs to update (unless sendEvent is false)
+      if (sendEvent) {
+        _sendMessage({ event: 'session', data: { triggeredBy: 'useSessionData' } })
+      }
+
+      if (typeof window !== 'undefined' && NEXTAUTH_EVENT_LISTENER_ADDED === false) {
+        NEXTAUTH_EVENT_LISTENER_ADDED = true
+        window.addEventListener('storage', async (event) => {
+          if (event.key === 'nextauth.message') {
+            const message = JSON.parse(event.newValue)
+            if (message.event && message.event === 'session' && message.data) {
+              // Fetch new session data but tell it not to fire an event to
+              // avoid an infinate loop.
+              //
+              // Note: We could pass session data through and do something like
+              // `setData(message.data)` but that causes problems depending on
+              // how the session object is being used and may expose session
+              // data to 3rd party scripts, it's safer to update the session
+              // this way.
+              await _getSession(false)
+            }
+          }
+        })
+      }
+
+      // If CLIENT_MAXAGE is greater than zero, trigger auto re-fetching session
+      if (clientMaxAge > 0) {
+        setTimeout(async (session) => {
+          await _getSession()
+        }, clientMaxAge)
+      }
     } catch (error) {
       logger.error('CLIENT_USE_SESSION_ERROR', error)
     }
@@ -119,6 +158,9 @@ const signout = async (args) => {
     })
   }
   const res = await fetch(`${baseUrl}/signout`, options)
+
+  _sendMessage({ event: 'session', data: { triggeredBy: 'signout' } })
+
   window.location = res.url ? res.url : callbackUrl
 }
 
@@ -146,15 +188,15 @@ const _baseUrl = ({ req } = {}) => {
     // base URL from cookie that is set by the API route - which is how config
     // is shared automatically between the API route and the client.
     const cookies = req ? _parseCookies(req.headers.cookie) : null
-    const baseUrlCookieName = process.env.NEXTAUTH_BASE_URL_COOKIE_NAME || DEFAULT_BASE_URL_COOKIE_NAME
+    const baseUrlCookieName = process.env.NEXTAUTH_BASE_URL_COOKIE_NAME || NEXTAUTH_DEFAULT_BASE_URL_COOKIE_NAME
     const cookieValue = cookies[`__Secure-${baseUrlCookieName}`] || cookies[baseUrlCookieName]
     const [baseUrl] = cookieValue ? cookieValue.split('|') : [null]
     return baseUrl
   } else {
     // Client Side
     // Note: 'site' is empty by default; URL is normally relative.
-    const site = process.env.NEXTAUTH_SITE || DEFAULT_SITE
-    const basePath = process.env.NEXTAUTH_BASE_PATH || DEFAULT_BASE_PATH
+    const site = process.env.NEXTAUTH_SITE || NEXTAUTH_DEFAULT_SITE
+    const basePath = process.env.NEXTAUTH_BASE_PATH || NEXTAUTH_DEFAULT_BASE_PATH
     return `${site}${basePath}`
   }
 }
@@ -182,6 +224,12 @@ const _encodedForm = (formData) => {
   return Object.keys(formData).map((key) => {
     return encodeURIComponent(key) + '=' + encodeURIComponent(formData[key])
   }).join('&')
+}
+
+const _sendMessage = (message) => {
+  if (typeof localStorage !== 'undefined') {
+    localStorage.setItem('nextauth.message', JSON.stringify(message)) // eslint-disable-line
+  }
 }
 
 export default {
