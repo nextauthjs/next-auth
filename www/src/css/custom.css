@@ -107,6 +107,10 @@ html[data-theme='dark'] .hero {
   background: linear-gradient(0deg, rgba(222,222,222,0.075) 0%, rgba(255,255,255,0) 100%);
 }
 
+.hero .container {
+  margin-bottom: 2rem;
+}
+
 .hero .hero__title {  
   font-size: 3rem;
   margin-bottom: 0.5rem;
@@ -127,10 +131,6 @@ html[data-theme='dark'] .hero {
 @media screen and (min-width: 668px) {
   .hero .hero__subtitle {
     font-size: 1.5rem;
-  }
-
-  .hero .container {
-    margin-bottom: 2rem;
   }
 }
 
