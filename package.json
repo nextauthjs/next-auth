@@ -54,7 +54,6 @@
     "@babel/core": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
     "autoprefixer": "^9.7.6",
-    "babel-preset-minify": "^0.5.1",
     "babel-preset-preact": "^2.0.0",
     "cssnano": "^4.1.10",
     "mongodb": "^3.5.9",
