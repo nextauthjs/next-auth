@@ -3,6 +3,10 @@ id: auth-v1
 title: Authentication
 ---
 
+:::warning
+This documentation is for version 1 which is no longer supported now [NextAuth.js v2](/getting-started/introduction) is available.
+:::
+
 # Auth
 
 To use oAuth you need to configure environment variables with ID and secret and configure the service accordingly.

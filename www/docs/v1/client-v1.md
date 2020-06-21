@@ -3,6 +3,10 @@ id: client-v1
 title: Client
 ---
 
+:::warning
+This documentation is for version 1 which is no longer supported now [NextAuth.js v2](/getting-started/introduction) is available.
+:::
+
 ## About NextAuthClient
 
 NextAuthClient is session library for the [next-auth](https://www.npmjs.com/package/next-auth) module.

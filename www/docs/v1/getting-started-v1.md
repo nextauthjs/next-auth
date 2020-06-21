@@ -3,6 +3,10 @@ id: getting-started-v1
 title: Getting Started
 ---
 
+:::warning
+This documentation is for version 1 which is no longer supported now [NextAuth.js v2](/getting-started/introduction) is available.
+:::
+
 ## About NextAuth
 
 NextAuth is an authentication library for Next.js projects.

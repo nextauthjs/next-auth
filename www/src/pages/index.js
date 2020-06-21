@@ -43,8 +43,8 @@ const features = [
     description: (
       <ul>
         <li>CSRF protection with double submit cookie</li>
-        <li>Cookies are signed, server-only, prefixed</li>
-        <li>Session tokens secret from JavaScript</li>
+        <li>Signed, refixed, server-only cookies</li>
+        <li>Signed + Encrypted (HMAC+AES) JWT</li>
         <li>Doesn't require client side JavaScript</li>
       </ul>
     )
@@ -151,7 +151,7 @@ function Home () {
                   <Link
                     to='/getting-started/example'
                     className='button button--secondary button--ouline button--lg rounded-pill'
-                  >View Example
+                  >Example Code
                   </Link>
                 </p>
               </div>
