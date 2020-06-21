@@ -103,7 +103,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
         session,
         user,
         isNewUser
-      } 
+      }
     } else if (providerAccount.type === 'oauth') {
       // If signing in with oauth account, check to see if the account exists already
       const userByProviderAccountId = await getUserByProviderAccountId(providerAccount.provider, providerAccount.id)

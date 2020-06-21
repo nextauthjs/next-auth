@@ -24,12 +24,10 @@ export default ({ req, csrfToken, providers, callbackUrl }) => {
       {providersToRender.map((provider, i) =>
         <div key={provider.id} className='provider'>
           {provider.type === 'oauth' &&
-            <a className='button' data-provider={provider.id} href={`${provider.signinUrl}${withCallbackUrl}`}>Sign in with {provider.name}</a>
-          }
-          {(provider.type === 'email' || provider.type === 'credentials') && (i > 0)
-            && providersToRender[i - 1].type !== 'email' && providersToRender[i - 1].type !== 'credentials' && 
-            <hr />
-          }
+            <a className='button' data-provider={provider.id} href={`${provider.signinUrl}${withCallbackUrl}`}>Sign in with {provider.name}</a>}
+          {(provider.type === 'email' || provider.type === 'credentials') && (i > 0) &&
+            providersToRender[i - 1].type !== 'email' && providersToRender[i - 1].type !== 'credentials' &&
+              <hr />}
           {provider.type === 'email' &&
             <form action={provider.signinUrl} method='POST'>
               <input type='hidden' name='csrfToken' value={csrfToken} />
@@ -42,26 +40,25 @@ export default ({ req, csrfToken, providers, callbackUrl }) => {
               <input type='hidden' name='csrfToken' value={csrfToken} />
               {Object.keys(provider.credentials).map(credential => {
                 return (
-                  <div>
+                  <div key={`input-group-${provider.id}`}>
                     <label
                       for={`input-${credential}-for-${provider.id}-provider`}
-                      >{provider.credentials[credential].label || credential}
+                    >{provider.credentials[credential].label || credential}
                     </label>
                     <input
                       name={credential}
                       id={`input-${credential}-for-${provider.id}-provider`}
                       type={provider.credentials[credential].type || 'text'}
                       value={provider.credentials[credential].value || ''}
-                      placeholder={provider.credentials[credential].placeholder || ''} />
+                      placeholder={provider.credentials[credential].placeholder || ''}
+                    />
                   </div>
-                  )
+                )
               })}
               <button type='submit'>Sign in with {provider.name}</button>
-            </form>
-          }
-          {(provider.type === 'email' || provider.type === 'credentials') && ((i + 1) < providersToRender.length) && 
-            <hr/>
-          }
+            </form>}
+          {(provider.type === 'email' || provider.type === 'credentials') && ((i + 1) < providersToRender.length) &&
+            <hr />}
         </div>
       )}
     </div>

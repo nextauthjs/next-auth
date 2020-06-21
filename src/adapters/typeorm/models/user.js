@@ -3,7 +3,7 @@ export class User {
     if (name) { this.name = name }
     if (email) { this.email = email }
     if (image) { this.image = image }
-    if (emailVerified) { 
+    if (emailVerified) {
       const currentDate = new Date()
       this.emailVerified = currentDate
     }

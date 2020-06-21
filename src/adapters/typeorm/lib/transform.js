@@ -14,7 +14,7 @@ const postgres = (models, options) => {
   // aka `timestamptz` to store timestamps correctly in UTC.
   if (!customModels.User) {
     for (const column in models.User.schema.columns) {
-      if (models.User.schema.columns[column].type == 'timestamp') { 
+      if (models.User.schema.columns[column].type === 'timestamp') {
         models.User.schema.columns[column].type = 'timestamptz'
       }
     }
@@ -22,7 +22,7 @@ const postgres = (models, options) => {
 
   if (!customModels.Account) {
     for (const column in models.Account.schema.columns) {
-      if (models.Account.schema.columns[column].type == 'timestamp') { 
+      if (models.Account.schema.columns[column].type === 'timestamp') {
         models.Account.schema.columns[column].type = 'timestamptz'
       }
     }
@@ -30,7 +30,7 @@ const postgres = (models, options) => {
 
   if (!customModels.Session) {
     for (const column in models.Session.schema.columns) {
-      if (models.Session.schema.columns[column].type == 'timestamp') { 
+      if (models.Session.schema.columns[column].type === 'timestamp') {
         models.Session.schema.columns[column].type = 'timestamptz'
       }
     }
@@ -38,7 +38,7 @@ const postgres = (models, options) => {
 
   if (!customModels.VerificationRequest) {
     for (const column in models.VerificationRequest.schema.columns) {
-      if (models.VerificationRequest.schema.columns[column].type == 'timestamp') { 
+      if (models.VerificationRequest.schema.columns[column].type === 'timestamp') {
         models.VerificationRequest.schema.columns[column].type = 'timestamptz'
       }
     }
@@ -125,7 +125,7 @@ const sqlite = (models, options) => {
   // specific to SQLite and so we ignore that behaviour.
   if (!customModels.User) {
     for (const column in models.User.schema.columns) {
-      if (models.User.schema.columns[column].type == 'timestamp') { 
+      if (models.User.schema.columns[column].type === 'timestamp') {
         models.User.schema.columns[column].type = 'datetime'
       }
     }
@@ -133,7 +133,7 @@ const sqlite = (models, options) => {
 
   if (!customModels.Account) {
     for (const column in models.Account.schema.columns) {
-      if (models.Account.schema.columns[column].type == 'timestamp') { 
+      if (models.Account.schema.columns[column].type === 'timestamp') {
         models.Account.schema.columns[column].type = 'datetime'
       }
     }
@@ -141,7 +141,7 @@ const sqlite = (models, options) => {
 
   if (!customModels.Session) {
     for (const column in models.Session.schema.columns) {
-      if (models.Session.schema.columns[column].type == 'timestamp') { 
+      if (models.Session.schema.columns[column].type === 'timestamp') {
         models.Session.schema.columns[column].type = 'datetime'
       }
     }
@@ -149,7 +149,7 @@ const sqlite = (models, options) => {
 
   if (!customModels.VerificationRequest) {
     for (const column in models.VerificationRequest.schema.columns) {
-      if (models.VerificationRequest.schema.columns[column].type == 'timestamp') { 
+      if (models.VerificationRequest.schema.columns[column].type === 'timestamp') {
         models.VerificationRequest.schema.columns[column].type = 'datetime'
       }
     }

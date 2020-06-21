@@ -52,7 +52,7 @@ const loadConfig = (config, { models, namingStrategy }) => {
     ],
     timezone: 'Z', // Required for timestamps to be treated as UTC in MySQL
     logging: false,
-    namingStrategy,
+    namingStrategy
   }
 
   return {
