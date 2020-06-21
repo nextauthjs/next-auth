@@ -124,7 +124,7 @@ function Home () {
               <div className='col'>
                 <p className='text--center'>
                   <a
-                    href='https://www.npmjs.com/package/next-auth/v/beta'
+                    href='https://www.npmjs.com/package/next-auth'
                     className='button button--secondary button--outline rounded-pill button--lg'
                   >npm install next-auth
                   </a>
