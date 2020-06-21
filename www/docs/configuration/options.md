@@ -33,7 +33,7 @@ e.g. `http://localhost:3000` or `https://www.example.com`
 
 An array of authentication providers for signing in (e.g. Google, Facebook, Twitter, GitHub, Email, etc) in any order. This can be one of the built-in providers or an object with a custom provider.
 
-See the [providers documentation](/options/providers) for a list of supported providers and how to use them.
+See the [providers documentation](/configuration/providers) for a list of supported providers and how to use them.
 
 ---
 
@@ -204,7 +204,7 @@ pages: {
 }
 ```
 
-See the documentation for the [pages option](/options/pages) for more information.
+See the documentation for the [pages option](/configuration/pages) for more information.
 
 ---
 

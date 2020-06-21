@@ -42,7 +42,7 @@ export default (req, res) => NextAuth(req, res, options)
 All requests to `/api/auth/*` (signin, callback, signout, etc) will automatically be handed by NextAuth.js.
 
 :::tip
-See the [options documentation](/options/basic-options) for how to configure providers, databases and other options.
+See the [options documentation](/configuration/options) for how to configure providers, databases and other options.
 :::
 
 ### Add React Hook
