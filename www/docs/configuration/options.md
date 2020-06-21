@@ -431,6 +431,10 @@ If set to any other value, specifies how many seconds the window or tab should p
 
 When a session is checked this way (or using `getSession()`) it is active and extends the life of the current session.
 
-It can be useful to use this option to prevent sessions from timing out if your applicaiton has a short session expiry time.
+It can be useful to use this option to prevent sessions from timing out if your application has a short session expiry time.
 
 This option usually has cost implications as checking session status triggers a call to a server side route and/or a database.
+
+:::note
+In NextAuth.js session state is automatically synchronized across all open windows and tabs in the same browser. If you have session expiry times of 30 days or more (the default) you probably don't need to use this option, or can set it to a high value (e.g. every 24 hours).
+:::
