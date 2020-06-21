@@ -188,6 +188,20 @@ export default ({ email }) => (
 )
 ```
 
+#### Specifying a callbackUrl
+
+By default, the URL of page the client is on when they sign in is used as the `callbackUrl` and that is the URL the client will be redirected to after signing in.
+
+You can specify a different URL as the `callbackUrl` parameter by passing it in the second argument to `signin()`. This works for all calls to `signin()`.
+
+e.g.
+
+* `signin(null, { callbackUrl: 'http://localhost:3000/foo' })`
+* `signin('google', { callbackUrl: 'http://localhost:3000/foo' })`
+* `signin('email', { email, callbackUrl: 'http://localhost:3000/foo' })`
+
+The URL must be considered valid by the [redirect callback handler](http://localhost:3000/configuration/callbacks#redirect). By default this means it must be an absolute URL at the same hostname (or else it will default to the homepage); you can define your own custom redirect callback to allow other URLs, including supporting relative URLs.
+
 :::tip
 To also support signing in from clients that do not have client side JavaScript, use a regular link, add an onClick handler to it and call **e.preventDefault()** before calling the **signin()** method.
 :::
@@ -210,6 +224,14 @@ export default () => (
   <button onClick={signout}>Sign out</button>
 )
 ```
+
+#### Specifying a callbackUrl
+
+As with the `signin()` function, you can specify a `callbackUrl` parameter by passing it as an option.
+
+e.g. `signout{ callbackUrl: 'http://localhost:3000/foo' })`
+
+The URL must be considered valid by the [redirect callback handler](http://localhost:3000/configuration/callbacks#redirect). By default this means it must be an absolute URL at the same hostname (or else it will default to the homepage); you can define your own custom redirect callback to allow other URLs, including supporting relative URLs.
 
 ---
 
