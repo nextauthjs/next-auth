@@ -13,7 +13,7 @@ import session from './routes/session'
 import pages from './pages'
 import adapters from '../adapters'
 
-const DEFAULT_SITE = ''
+const DEFAULT_SITE = 'http://localhost:3000'
 const DEFAULT_BASE_PATH = '/api/auth'
 
 export default async (req, res, userSuppliedOptions) => {
@@ -29,8 +29,7 @@ export default async (req, res, userSuppliedOptions) => {
 
     const { url, query, body } = req
     const {
-      slug, // Deprecated (used in early beta versions; should be 'nextauth')
-      nextauth = slug,
+      nextauth,
       action = nextauth[0],
       provider = nextauth[1],
       error
