@@ -8,7 +8,7 @@ It is designed from the ground up to support Next.js and Serverless.
 
 [Follow the examples](https://next-auth.js.org/getting-started/example) to see how easy it is to use NextAuth.js for authentication.
 
-Install: `npm i next-auth@beta`
+Install: `npm i next-auth`
 
 See [next-auth.js.org](https://next-auth.js.org) for more information and documentation.
 

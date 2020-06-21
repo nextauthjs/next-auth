@@ -21,7 +21,7 @@ module.exports = {
           position: 'left'
         },
         {
-          href: 'https://www.npmjs.com/package/next-auth/v/beta',
+          href: 'https://www.npmjs.com/package/next-auth',
           label: 'npm',
           position: 'right'
         },
@@ -32,12 +32,14 @@ module.exports = {
         }
       ]
     },
+    /*
     announcementBar: {
       id: 'release-candiate-announcement',
-      content: 'NextAuth.js v2.0 is coming soon! <a target="_blank" rel="noopener noreferrer" href="https://github.com/iaincollins/next-auth/issues/196">View announcement</a>',
+      content: 'NextAuth.js v2.0 has been released <a target="_blank" rel="noopener noreferrer" href="https://www.npmjs.com/package/next-auth">npm i next-auth</a>',
       backgroundColor: '#2DB2F9',
       textColor: '#fff'
     },
+    */
     footer: {
       style: 'dark',
       links: [
@@ -63,7 +65,7 @@ module.exports = {
             },
             {
               label: 'NPM',
-              to: 'https://www.npmjs.com/package/next-auth/v/beta'
+              to: 'https://www.npmjs.com/package/next-auth'
             }
           ]
         },
