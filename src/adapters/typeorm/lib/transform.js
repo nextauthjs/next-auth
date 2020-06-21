@@ -1,6 +1,50 @@
 // Perform transforms on SQL models so they can be used with other databases
 import { SnakeCaseNamingStrategy, CamelCaseNamingStrategy } from './naming-strategies'
 
+const postgres = (models, options) => {
+  // Apply snake case naming strategy for Postgres databases
+  if (!options.namingStrategy) {
+    options.namingStrategy = new SnakeCaseNamingStrategy()
+  }
+
+  // Only transforms models that are not custom models
+  const { models: customModels = {} } = options
+
+  // For Postgres we need to use the `timestamp with time zone` type
+  // aka `timestamptz` to store timestamps correctly in UTC.
+  if (!customModels.User) {
+    for (const column in models.User.schema.columns) {
+      if (models.User.schema.columns[column].type == 'timestamp') { 
+        models.User.schema.columns[column].type = 'timestamptz'
+      }
+    }
+  }
+
+  if (!customModels.Account) {
+    for (const column in models.Account.schema.columns) {
+      if (models.Account.schema.columns[column].type == 'timestamp') { 
+        models.Account.schema.columns[column].type = 'timestamptz'
+      }
+    }
+  }
+
+  if (!customModels.Session) {
+    for (const column in models.Session.schema.columns) {
+      if (models.Session.schema.columns[column].type == 'timestamp') { 
+        models.Session.schema.columns[column].type = 'timestamptz'
+      }
+    }
+  }
+
+  if (!customModels.VerificationRequest) {
+    for (const column in models.VerificationRequest.schema.columns) {
+      if (models.VerificationRequest.schema.columns[column].type == 'timestamp') { 
+        models.VerificationRequest.schema.columns[column].type = 'timestamptz'
+      }
+    }
+  }
+}
+
 const mongodb = (models, options) => {
   // A CamelCase naming strategy is used for all document databases
   if (!options.namingStrategy) {
@@ -22,10 +66,7 @@ const mongodb = (models, options) => {
   //    Object ID in every property of type Object ID in the result (but the
   //    database will look fine); so use `type: 'objectId'` for them instead.
 
-  // If models are custom models (which we can check to see if they were
-  // passed as an option; if not it's a default model) then we *don't* transform
-  // them and simply use them as is - this ensures transforms are only performed
-  // on the default models.
+  // Only transforms models that are not custom models
   const { models: customModels = {} } = options
 
   if (!customModels.User) {
@@ -66,11 +107,12 @@ const mongodb = (models, options) => {
 }
 
 const sqlite = (models, options) => {
-  // Apply snake case naming strategy by default for SQLite databases
+  // Apply snake case naming strategy for SQLite databases
   if (!options.namingStrategy) {
     options.namingStrategy = new SnakeCaseNamingStrategy()
   }
 
+  // Only transforms models that are not custom models
   const { models: customModels = {} } = options
 
   // SQLite does not support `timestamp` fields so we remap them to `datetime`
@@ -81,7 +123,6 @@ const sqlite = (models, options) => {
   //
   // NB: SQLite adds 'create' and 'update' fields to allow rows, but that is
   // specific to SQLite and so we ignore that behaviour.
-  
   if (!customModels.User) {
     for (const column in models.User.schema.columns) {
       if (models.User.schema.columns[column].type == 'timestamp') { 
@@ -119,6 +160,9 @@ export default (config, models, options) => {
   if ((config.type && config.type.startsWith('mongodb')) ||
       (config.url && config.url.startsWith('mongodb'))) {
     mongodb(models, options)
+  } else if ((config.type && config.type.startsWith('postgres')) ||
+             (config.url && config.url.startsWith('postgres'))) {
+    postgres(models, options)
   } else if ((config.type && config.type.startsWith('sqlite')) ||
              (config.url && config.url.startsWith('sqlite'))) {
     sqlite(models, options)

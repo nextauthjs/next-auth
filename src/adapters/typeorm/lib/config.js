@@ -50,7 +50,7 @@ const loadConfig = (config, { models, namingStrategy }) => {
       new EntitySchema(models.Session.schema),
       new EntitySchema(models.VerificationRequest.schema)
     ],
-    timezone: 'Z',
+    timezone: 'Z', // Required for timestamps to be treated as UTC in MySQL
     logging: false,
     namingStrategy,
   }

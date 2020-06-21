@@ -5,6 +5,10 @@ title: Postgres Schema
 
 The schema generated for a Postgres database when using the built-in models.
 
+:::note
+When using Postgres all timestamps on all models use the type `timestamp with time zone` (aka `timestamptz`) to store timestamps in UTC.
+:::
+
 ## User
 
 ```json
@@ -24,7 +28,7 @@ The schema generated for a Postgres database when using the built-in models.
     "default": null
   },
   "email_verified": {
-    "type": "timestamp without time zone",
+    "type": "timestamp with time zone",
     "nullable": true,
     "default": null
   },
@@ -34,11 +38,11 @@ The schema generated for a Postgres database when using the built-in models.
     "default": null
   },
   "created_at": {
-    "type": "timestamp without time zone",
+    "type": "timestamp with time zone",
     "nullable": false
   },
   "updated_at": {
-    "type": "timestamp without time zone",
+    "type": "timestamp with time zone",
     "nullable": false
   }
 }
@@ -83,16 +87,16 @@ The schema generated for a Postgres database when using the built-in models.
     "default": null
   },
   "access_token_expires": {
-    "type": "timestamp without time zone",
+    "type": "timestamp with time zone",
     "nullable": true,
     "default": null
   },
   "created_at": {
-    "type": "timestamp without time zone",
+    "type": "timestamp with time zone",
     "nullable": false
   },
   "updated_at": {
-    "type": "timestamp without time zone",
+    "type": "timestamp with time zone",
     "nullable": false
   }
 }
@@ -111,7 +115,7 @@ The schema generated for a Postgres database when using the built-in models.
     "nullable": false
   },
   "expires": {
-    "type": "timestamp without time zone",
+    "type": "timestamp with time zone",
     "nullable": false
   },
   "session_token": {
@@ -123,11 +127,11 @@ The schema generated for a Postgres database when using the built-in models.
     "nullable": false
   },
   "created_at": {
-    "type": "timestamp without time zone",
+    "type": "timestamp with time zone",
     "nullable": false
   },
   "updated_at": {
-    "type": "timestamp without time zone",
+    "type": "timestamp with time zone",
     "nullable": false
   }
 }
@@ -150,15 +154,15 @@ The schema generated for a Postgres database when using the built-in models.
     "nullable": false
   },
   "expires": {
-    "type": "timestamp without time zone",
+    "type": "timestamp with time zone",
     "nullable": false
   },
   "created_at": {
-    "type": "timestamp without time zone",
+    "type": "timestamp with time zone",
     "nullable": false
   },
   "updated_at": {
-    "type": "timestamp without time zone",
+    "type": "timestamp with time zone",
     "nullable": false
   }
 }
