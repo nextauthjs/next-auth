@@ -21,10 +21,7 @@ const getSession = async ({ req } = {}) => {
   const baseUrl = _baseUrl({ req })
   const options = req ? { headers: { cookie: req.headers.cookie } } : {}
   const session = await _fetchData(`${baseUrl}/session`, options)
-  _sendMessage({
-    event: 'session',
-    data: session
-  })
+  _sendMessage({ event: 'session', data: { triggeredBy: 'getSession' } })
   return session
 }
 
@@ -71,21 +68,23 @@ const useSessionData = (session) => {
 
       // Send event to trigger other tabs to update (unless sendEvent is false)
       if (sendEvent) {
-        _sendMessage({ event: 'session', data: session })
+        _sendMessage({ event: 'session', data: { triggeredBy: 'useSessionData' } })
       }
 
       if (typeof window !== 'undefined' && NEXTAUTH_EVENT_LISTENER_ADDED === false) {
         NEXTAUTH_EVENT_LISTENER_ADDED = true
         window.addEventListener('storage', async (event) => {
-          if (event.key == 'nextauth.message') {
+          if (event.key === 'nextauth.message') {
             const message = JSON.parse(event.newValue)
             if (message.event && message.event === 'session' && message.data) {
               // Fetch new session data but tell it not to fire an event to
               // avoid an infinate loop.
               //
-              // Note: We could do `setData(message.data)` but that causes
-              // problems depending on how the session object is being used
-              // on a page, it's safer to update the session this way.
+              // Note: We could pass session data through and do something like
+              // `setData(message.data)` but that causes problems depending on
+              // how the session object is being used and may expose session
+              // data to 3rd party scripts, it's safer to update the session
+              // this way.
               await _getSession(false)
             }
           }
@@ -160,10 +159,7 @@ const signout = async (args) => {
   }
   const res = await fetch(`${baseUrl}/signout`, options)
 
-  _sendMessage({
-    event: 'session',
-    data: {}
-  })
+  _sendMessage({ event: 'session', data: { triggeredBy: 'signout' } })
 
   window.location = res.url ? res.url : callbackUrl
 }
@@ -230,12 +226,9 @@ const _encodedForm = (formData) => {
   }).join('&')
 }
 
-// use local storage for messaging. Set message in local storage and clear it right away
-// This is a safe way how to communicate with other tabs while not leaving any traces
-//
 const _sendMessage = (message) => {
   if (typeof localStorage !== 'undefined') {
-    localStorage.setItem('nextauth.message', JSON.stringify(message))
+    localStorage.setItem('nextauth.message', JSON.stringify(message)) // eslint-disable-line
   }
 }
 
