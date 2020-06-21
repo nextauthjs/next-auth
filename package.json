@@ -1,6 +1,6 @@
 {
   "name": "next-auth",
-  "version": "2.0.0-beta.85",
+  "version": "2.0.0-beta.86",
   "description": "An authentication library for Next.js",
   "repository": "https://github.com/iaincollins/next-auth.git",
   "author": "Iain Collins <me@iaincollins.com>",
@@ -8,7 +8,7 @@
   "scripts": {
     "build": "npm run build:js && npm run build:css",
     "build:js": "babel src --out-dir dist",
-    "build:css": "postcss src/**/*.css --base src --dir dist",
+    "build:css": "postcss src/**/*.css --base src --dir dist && node scripts/wrap-css.js",
     "watch": "npm run watch:js | npm run watch:css",
     "watch:js": "babel --watch src --out-dir dist",
     "watch:css": "postcss --watch src/**/*.css --base src --dir dist",

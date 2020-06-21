@@ -4,9 +4,7 @@ import signin from './signin'
 import signout from './signout'
 import verifyRequest from './verify-request'
 import error from './error'
-
-// Future releases will support customization (via inline or external CSS)
-const defaultStyles = fs.readFileSync(path.join(__dirname, '/../../css/index.css'), 'utf8')
+import css from '../../css'
 
 function render (req, res, page, props, done) {
   let html = ''
@@ -29,7 +27,7 @@ function render (req, res, page, props, done) {
   }
 
   res.setHeader('Content-Type', 'text/html')
-  res.send(`<!DOCTYPE html><head><style type="text/css">${defaultStyles}</style><meta name="viewport" content="width=device-width, initial-scale=1"></head><body><div class="page">${html}</div></body></html>`)
+  res.send(`<!DOCTYPE html><head><style type="text/css">${css()}</style><meta name="viewport" content="width=device-width, initial-scale=1"></head><body><div class="page">${html}</div></body></html>`)
   done()
 }
 
