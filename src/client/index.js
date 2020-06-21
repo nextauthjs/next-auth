@@ -68,10 +68,12 @@ const useSessionData = (session) => {
 
 // Client side method
 const signin = async (provider, args) => {
+  const callbackUrl = (args && args.callbackUrl) ? args.callbackUrl : window.location
+
   if (!provider) {
     // Redirect to sign in page if no provider specified
     const baseUrl = _baseUrl()
-    window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(window.location)}`
+    window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`
     return
   }
 
@@ -79,10 +81,10 @@ const signin = async (provider, args) => {
   if (!providers[provider]) {
     // If Provider not recognized, redirect to sign in page
     const baseUrl = _baseUrl()
-    window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(window.location)}`
+    window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`
   } else if (providers[provider].type === 'oauth') {
     // If is an OAuth provider, redirect to providers[provider].signinUrl
-    window.location = `${providers[provider].signinUrl}?callbackUrl=${encodeURIComponent(window.location)}`
+    window.location = `${providers[provider].signinUrl}?callbackUrl=${encodeURIComponent(callbackUrl)}`
   } else {
     // If is any other provider type, POST to providers[provider].signinUrl (with CSRF Token)
     const options = {
@@ -92,18 +94,19 @@ const signin = async (provider, args) => {
       },
       body: _encodedForm({
         csrfToken: await getCsrfToken(),
-        callbackUrl: window.location,
+        callbackUrl: callbackUrl,
         ...args
       })
     }
     const res = await fetch(providers[provider].signinUrl, options)
-    // @TODO Add error handling
-    window.location = res.url ? res.url : window.location
+    window.location = res.url ? res.url : callbackUrl
   }
 }
 
 // Client side method
-const signout = async () => {
+const signout = async (args) => {
+  const callbackUrl = (args && args.callbackUrl) ? args.callbackUrl : window.location
+
   const baseUrl = _baseUrl()
   const options = {
     method: 'post',
@@ -112,11 +115,11 @@ const signout = async () => {
     },
     body: _encodedForm({
       csrfToken: await getCsrfToken(),
-      callbackUrl: window.location
+      callbackUrl: callbackUrl
     })
   }
   const res = await fetch(`${baseUrl}/signout`, options)
-  window.location = res.url ? res.url : window.location
+  window.location = res.url ? res.url : callbackUrl
 }
 
 // Provider to wrap the app in to make session data available globally
@@ -129,10 +132,10 @@ const _fetchData = async (url, options) => {
   try {
     const res = await fetch(url, options)
     const data = await res.json()
-    return Object.keys(data).length > 0 ? data : null // Return null if data empty
+    return Promise.resolve(Object.keys(data).length > 0 ? data : null) // Return null if data empty
   } catch (error) {
     logger.error('CLIENT_FETCH_ERROR', url, error)
-    return null
+    return Promise.resolve(null)
   }
 }
 
@@ -182,8 +185,10 @@ const _encodedForm = (formData) => {
 }
 
 export default {
-  // For legacy reasons, some methods are exported with more than one name
-  // @TODO Deprecate these methods?
+  // Some methods are exported with more than one name. This provides
+  // flexibility over how they can be invoked and compatibility with earlier
+  // releases (going back to v1 and earlier v2 beta releases).
+  // e.g. NextAuth.session() or const { getSession } from 'next-auth/client'
   session: getSession,
   providers: getProviders,
   csrfToken: getCsrfToken,
