@@ -4,12 +4,13 @@ export default (options) => {
     name: 'Auth0',
     type: 'oauth',
     version: '2.0',
-    params: { grant_type: 'authorization_code', response_type: 'code' },
+    params: { grant_type: 'authorization_code' },
     scope: 'openid email profile',
-    accessTokenUrl: `https://${options.subdomain}.auth0/oauth/token`,
-    authorizationUrl: `https://${options.subdomain}.auth0.com/authorize?`,
-    profileUrl: `http://${options.subdomain}.auth0.com/userinfo`,
+    accessTokenUrl: `https://${options.domain}/oauth/token`,
+    authorizationUrl: `https://${options.domain}/authorize?response_type=code`,
+    profileUrl: `https://${options.domain}/userinfo`,
     profile: (profile) => {
+      console.log(profile)
       return {
         id: profile.sub,
         name: profile.nickname,
