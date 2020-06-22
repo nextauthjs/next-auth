@@ -47,6 +47,99 @@ adapter: Adapters.TypeORM.Adapter({
 })
 ```
 
+## Prisma (opinionated adapter)
+
+You can also use NextAuth.js with [Prisma](https://www.prisma.io/docs/). This method requires you to follow a strict and opinionated setup like illustrated below.
+
+To use this adapter, configure your `[...nextauth].js` like this:
+
+```javascript
+import NextAuth from 'next-auth'
+import Providers from 'next-auth/providers'
+import Adapters from 'next-auth/adapters'
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
+
+const options = {
+  site: 'http://localhost:3000',
+  providers: [
+    Providers.Google({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET
+    })
+  ],
+  adapter: Adapters.Prisma.Adapter({ prisma }),
+}
+
+export default (req, res) => NextAuth(req, res, options)
+```
+
+Below you will find a suggested `schema.prisma` file. This is pretty much set in stone if you want to use Prisma.
+
+Suggested `schema.prisma` file:
+
+```
+datasource sqlite {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String    @default(uuid()) @id
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  name          String?
+  sessions      Session[]
+  accounts      Account[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Session {
+  id                 String    @default(uuid()) @id
+  userId             String
+  user               User      @relation(fields: [userId], references: [id])
+  accessToken        String    @default(cuid()) @unique
+  sessionToken       String    @default(cuid()) @unique
+  accessTokenExpires DateTime?
+  expires            DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+}
+
+model Account {
+  id                 String    @default(uuid()) @id
+  compoundId         String    @unique
+  userId             String
+  user               User      @relation(fields: [userId], references: [id])
+  providerId         String
+  providerType       String
+  providerAccountId  String    @unique
+  refreshToken       String?
+  accessToken        String?
+  accessTokenExpires DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+}
+
+model VerificationRequest {
+  id         String   @default(uuid()) @id
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+```
+
+The models themselves need to be defined like above, but the datasource can be changed to what you want.
+
 ## Custom adapters
 
 Using a custom adapter you can connect to any database backend or even several different databases.
