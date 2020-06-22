@@ -17,6 +17,8 @@
     "test:db:mysql": "node test/mysql.js",
     "test:db:postgres": "node test/postgres.js",
     "test:db:mongodb": "node test/mongodb.js",
+    "test:e2e:run": "cypress run",
+    "test:e2e:dev": "cypress open",
     "db:start": "docker-compose -f test/docker/docker-compose.yml up -d",
     "db:stop": "docker-compose -f test/docker/docker-compose.yml down",
     "prepublishOnly": "npm run build",
