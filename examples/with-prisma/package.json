@@ -1,0 +1,23 @@
+{
+  "name": "with-prisma",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "generate": "prisma generate",
+    "db:save": "prisma migrate save --experimental",
+    "db:up": "prisma migrate up --experimental"
+  },
+  "dependencies": {
+    "@prisma/client": "2.0.1",
+    "next": "9.4.4",
+    "next-auth": "latest",
+    "react": "16.13.1",
+    "react-dom": "16.13.1"
+  },
+  "devDependencies": {
+    "@prisma/cli": "2.0.1"
+  }
+}
