@@ -1,5 +1,5 @@
 export default (options) => {
-  const { region, domain } = options;
+  const { domain } = options;
   return {
     id: 'cognito',
     name: 'Cognito',
@@ -7,9 +7,9 @@ export default (options) => {
     version: '2.0',
     scope: 'openid profile email',
     params: { grant_type: 'authorization_code' },
-    accessTokenUrl: `https://${domain}.auth.${region}.amazoncognito.com/oauth2/token`,
-    authorizationUrl: `https://${domain}.auth.${region}.amazoncognito.com/oauth2/authorize?response_type=code`,
-    profileUrl: `https://${domain}.auth.${region}.amazoncognito.com/oauth2/userInfo`,
+    accessTokenUrl: `https://${domain}/oauth2/token`,
+    authorizationUrl: `https://${domain}/oauth2/authorize?response_type=code`,
+    profileUrl: `https://${domain}/oauth2/userInfo`,
     profile: (profile) => {
       return {
         id: profile.sub,
