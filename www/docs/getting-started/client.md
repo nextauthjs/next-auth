@@ -8,7 +8,7 @@ The NextAuth.js client library makes it easy to interact with sessions from Reac
 Some of the methods can be called both client side and server side.
 
 :::note
-To use client methods server side in `getServerSideProp()` OR `getInitialProps()` you should add the NextAuth.js  `<Provider>` in `pages/apps.js`
+To use client methods server side in `getServerSideProp()` or `getInitialProps()` you should add the NextAuth.js  `<Provider>` in `pages/apps.js`
 
 ```jsx title="pages/_app.js"
 import { Provider } from 'next-auth/client'
@@ -228,7 +228,7 @@ Using the supplied React `<Provider>` allows instances of `useSession()` to shar
 
 This improves performance, reduces network calls and avoids page flicker when rendering. It is highly recommended and can be easily added to all pages in Next.js apps by using `pages/_app.js`.
 
-It is also *required* if you want to use client methods like `getSession()` in server side functions like `getServerSideProp()` OR `getInitialProps()`.
+It is also *required* if you want to use client methods like `getSession()` in server side functions like `getServerSideProp()` or `getInitialProps()`.
 
 ```jsx title="pages/_app.js"
 import { Provider } from 'next-auth/client'
