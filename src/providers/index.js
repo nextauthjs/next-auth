@@ -23,7 +23,6 @@ export default {
   Apple,
   Box,
   Credentials,
-	Apple,
 	BattleNet,
 	Cognito,
   Discord,
