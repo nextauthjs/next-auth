@@ -3,28 +3,25 @@
 import { useState, useEffect, useContext, createContext, createElement } from 'react'
 import logger from '../lib/logger'
 
-// Note: In calls to fetch() from universal methods, all cookies are passed
-// through from the browser, when the server makes the HTTP request, so that
-// it can authenticate as the browser.
+const __NEXTAUTH = {
+  site: '',
+  basePath: '/api/auth',
+  clientMaxAge: 0 // e.g. 0 == disabled, 60 == 60 seconds
+}
 
-const NEXTAUTH_DEFAULT_SITE = ''
-const NEXTAUTH_DEFAULT_BASE_PATH = '/api/auth'
-const NEXTAUTH_DEFAULT_CLIENT_MAXAGE = 0 // e.g. 0 == disabled, 60 == 60 seconds
+let __NEXTAUTH_EVENT_LISTENER_ADDED = false
 
-let NEXTAUTH_SITE = NEXTAUTH_DEFAULT_SITE
-let NEXTAUTH_BASE_PATH = NEXTAUTH_DEFAULT_BASE_PATH
-let NEXTAUTH_CLIENT_MAXAGE = NEXTAUTH_DEFAULT_CLIENT_MAXAGE
-let NEXTAUTH_EVENT_LISTENER_ADDED = false
-
-// You can 
-const setConfig = ({
+// Method to set options. The documented way is to use the provider, but this
+// method is being left in as an alternative, that will be helpful if/when we
+// expose a vanilla JavaScript version that doesn't depend on React.
+const setOptions = ({
   site,
   basePath,
   clientMaxAge
 } = {}) => {
-  if (site) { NEXTAUTH_SITE = site }
-  if (basePath) { NEXTAUTH_BASE_PATH = basePath }
-  if (clientMaxAge) { NEXTAUTH_CLIENT_MAXAGE = clientMaxAge }
+  if (site) { __NEXTAUTH.site = site }
+  if (basePath) { __NEXTAUTH.basePath = basePath }
+  if (clientMaxAge) { __NEXTAUTH.clientMaxAge = clientMaxAge }
 }
 
 // Universal method (client + server)
@@ -66,7 +63,7 @@ const useSession = (session) => {
 
 // Internal hook for getting session from the api.
 const useSessionData = (session) => {
-  const clientMaxAge = NEXTAUTH_CLIENT_MAXAGE * 1000
+  const clientMaxAge = __NEXTAUTH.clientMaxAge * 1000
   const [data, setData] = useState(session)
   const [loading, setLoading] = useState(true)
   const _getSession = async (sendEvent = true) => {
@@ -79,8 +76,8 @@ const useSessionData = (session) => {
         _sendMessage({ event: 'session', data: { trigger: 'useSessionData' } })
       }
 
-      if (typeof window !== 'undefined' && NEXTAUTH_EVENT_LISTENER_ADDED === false) {
-        NEXTAUTH_EVENT_LISTENER_ADDED = true
+      if (typeof window !== 'undefined' && __NEXTAUTH_EVENT_LISTENER_ADDED === false) {
+        __NEXTAUTH_EVENT_LISTENER_ADDED = true
         window.addEventListener('storage', async (event) => {
           if (event.key === 'nextauth.message') {
             const message = JSON.parse(event.newValue)
@@ -173,9 +170,9 @@ const signout = async (args) => {
 }
 
 // Provider to wrap the app in to make session data available globally
-const Provider = ({ children, session }) => {
-  const value = useSession(session)
-  return createElement(SessionContext.Provider, { value }, children)
+const Provider = ({ children, session, options }) => {
+  setOptions(options)
+  return createElement(SessionContext.Provider, { value: useSession(session) }, children)
 }
 
 const _fetchData = async (url, options = {}) => {
@@ -189,9 +186,7 @@ const _fetchData = async (url, options = {}) => {
   }
 }
 
-const _baseUrl = () => {
-  return `${NEXTAUTH_SITE}${NEXTAUTH_BASE_PATH}`
-}
+const _baseUrl = () => `${__NEXTAUTH.site}${__NEXTAUTH.basePath}`
 
 const _encodedForm = (formData) => {
   return Object.keys(formData).map((key) => {
@@ -208,8 +203,8 @@ const _sendMessage = (message) => {
 export default {
   // Call config() from _app.js to set options globally in the app.
   // You need to set at least the site name to use server side calls.
-  config: setConfig,
-  setConfig,
+  options: setOptions,
+  setOptions,
   // Some methods are exported with more than one name. This provides
   // flexibility over how they can be invoked and compatibility with earlier
   // releases (going back to v1 and earlier v2 beta releases).
