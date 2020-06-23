@@ -10,7 +10,6 @@ export default (options) => {
     authorizationUrl: `https://${options.domain}/authorize?response_type=code`,
     profileUrl: `https://${options.domain}/userinfo`,
     profile: (profile) => {
-      console.log(profile)
       return {
         id: profile.sub,
         name: profile.nickname,
