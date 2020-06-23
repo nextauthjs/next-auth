@@ -411,14 +411,14 @@ Changing the cookie options may introduce security flaws into your application a
 
 By default the NextAuth.js client will use whatever cached session object it has and will not not re-check the current session if using the `useSession()` hook.
 
-You can change this behaviour and force it to periodically sync the session state by setting a `NEXTAUTH_CLIENT_MAXAGE` environment variable.
+You can change this behaviour and force the client to periodically sync the session state by setting the `maxAge` option in the client in `pages/_app.js`:
 
-```js title="next.config.js"
-module.exports = {
-  env: {
-    NEXTAUTH_CLIENT_MAXAGE: 60, // Will re-check session every 60 seconds
-  },
-}
+```js title="pages/_app.js"
+import { config } from 'next-auth/client'
+config({ 
+  site: process.env.SITE, // e.g. 'http://localhost:3000'
+  maxAge: 60, // Will re-check session every 60 seconds
+})
 ```
 
 If set to `0` (the default) sessions are not re-checked automatically, only when a new window or tab is opened or when `getSession()` is called.
