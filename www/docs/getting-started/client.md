@@ -8,7 +8,24 @@ The NextAuth.js client library makes it easy to interact with sessions from Reac
 Some of the methods can be called both client side and server side.
 
 :::note
-When using any of the client API methods server side, [context](https://nextjs.org/docs/api-reference/data-fetching/getInitialProps#context-object) must be passed as an argument. The documentation for **getSession()** has an example.
+To call client API methods server side you must also define the site name in `pages/_app.js` to match whatever value is configured for the `site` option in your API route.
+
+### Example
+
+```js title="pages/_app.js"
+import { config } from 'next-auth/client'
+config({ site: process.env.SITE }) // e.g. site: 'http://localhost:3000'
+
+export default ({ Component, pageProps }) => {
+  const { session } = pageProps
+  return (
+    <Provider session={session}>
+      <Component {...pageProps} />
+    </Provider>
+  )
+}
+```
+
 :::
 
 ## useSession()

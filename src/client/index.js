@@ -7,37 +7,46 @@ import logger from '../lib/logger'
 // through from the browser, when the server makes the HTTP request, so that
 // it can authenticate as the browser.
 
-// These can be overridden with NEXTAUTH_ env vars in next.config.js
-// e.g. process.env.NEXTAUTH_SITE
-const NEXTAUTH_DEFAULT_BASE_URL_COOKIE_NAME = 'next-auth.base-url'
 const NEXTAUTH_DEFAULT_SITE = ''
 const NEXTAUTH_DEFAULT_BASE_PATH = '/api/auth'
 const NEXTAUTH_DEFAULT_CLIENT_MAXAGE = 0 // e.g. 0 == disabled, 60 == 60 seconds
 
+let NEXTAUTH_SITE = NEXTAUTH_DEFAULT_SITE
+let NEXTAUTH_BASE_PATH = NEXTAUTH_DEFAULT_BASE_PATH
+let NEXTAUTH_CLIENT_MAXAGE = NEXTAUTH_DEFAULT_CLIENT_MAXAGE
 let NEXTAUTH_EVENT_LISTENER_ADDED = false
 
+// You can 
+const setConfig = ({
+  site,
+  basePath,
+  clientMaxAge
+} = {}) => {
+  if (site) { NEXTAUTH_SITE = site }
+  if (basePath) { NEXTAUTH_BASE_PATH = basePath }
+  if (clientMaxAge) { NEXTAUTH_CLIENT_MAXAGE = clientMaxAge }
+}
+
 // Universal method (client + server)
-const getSession = async ({ req } = {}) => {
-  const baseUrl = _baseUrl({ req })
+const getSession = async ({req} = {}) => {
+  const baseUrl = _baseUrl()
   const options = req ? { headers: { cookie: req.headers.cookie } } : {}
   const session = await _fetchData(`${baseUrl}/session`, options)
-  _sendMessage({ event: 'session', data: { triggeredBy: 'getSession' } })
+  _sendMessage({ event: 'session', data: { trigger: 'getSession' } })
   return session
 }
 
 // Universal method (client + server)
-const getProviders = async ({ req } = {}) => {
-  const baseUrl = _baseUrl({ req })
-  const options = req ? { headers: { cookie: req.headers.cookie } } : {}
-  return _fetchData(`${baseUrl}/providers`, options)
+const getProviders = async () => {
+  const baseUrl = _baseUrl()
+  return _fetchData(`${baseUrl}/providers`)
 }
 
 // Universal method (client + server)
-const getCsrfToken = async ({ req } = {}) => {
-  const baseUrl = _baseUrl({ req })
-  const options = req ? { headers: { cookie: req.headers.cookie } } : {}
-  const data = await _fetchData(`${baseUrl}/csrf`, options)
-  return data.csrfToken
+const getCsrfToken = async () => {
+  const baseUrl = _baseUrl()
+  const data = await _fetchData(`${baseUrl}/csrf`)
+  return data && data.csrfToken ? data.csrfToken : null
 }
 
 // Context to store session data globally
@@ -57,8 +66,7 @@ const useSession = (session) => {
 
 // Internal hook for getting session from the api.
 const useSessionData = (session) => {
-  const clientMaxAge = (process.env.NEXTAUTH_CLIENT_MAXAGE || NEXTAUTH_DEFAULT_CLIENT_MAXAGE) * 1000
-
+  const clientMaxAge = NEXTAUTH_CLIENT_MAXAGE * 1000
   const [data, setData] = useState(session)
   const [loading, setLoading] = useState(true)
   const _getSession = async (sendEvent = true) => {
@@ -68,7 +76,7 @@ const useSessionData = (session) => {
 
       // Send event to trigger other tabs to update (unless sendEvent is false)
       if (sendEvent) {
-        _sendMessage({ event: 'session', data: { triggeredBy: 'useSessionData' } })
+        _sendMessage({ event: 'session', data: { trigger: 'useSessionData' } })
       }
 
       if (typeof window !== 'undefined' && NEXTAUTH_EVENT_LISTENER_ADDED === false) {
@@ -78,7 +86,7 @@ const useSessionData = (session) => {
             const message = JSON.parse(event.newValue)
             if (message.event && message.event === 'session' && message.data) {
               // Fetch new session data but tell it not to fire an event to
-              // avoid an infinate loop.
+              // avoid an infinite loop.
               //
               // Note: We could pass session data through and do something like
               // `setData(message.data)` but that causes problems depending on
@@ -159,7 +167,7 @@ const signout = async (args) => {
   }
   const res = await fetch(`${baseUrl}/signout`, options)
 
-  _sendMessage({ event: 'session', data: { triggeredBy: 'signout' } })
+  _sendMessage({ event: 'session', data: { trigger: 'signout' } })
 
   window.location = res.url ? res.url : callbackUrl
 }
@@ -170,7 +178,7 @@ const Provider = ({ children, session }) => {
   return createElement(SessionContext.Provider, { value }, children)
 }
 
-const _fetchData = async (url, options) => {
+const _fetchData = async (url, options = {}) => {
   try {
     const res = await fetch(url, options)
     const data = await res.json()
@@ -181,43 +189,8 @@ const _fetchData = async (url, options) => {
   }
 }
 
-const _baseUrl = ({ req } = {}) => {
-  if (req) {
-    // Server Side
-    // If we have a 'req' object are running sever side, so we should grab the
-    // base URL from cookie that is set by the API route - which is how config
-    // is shared automatically between the API route and the client.
-    const cookies = req ? _parseCookies(req.headers.cookie) : null
-    const baseUrlCookieName = process.env.NEXTAUTH_BASE_URL_COOKIE_NAME || NEXTAUTH_DEFAULT_BASE_URL_COOKIE_NAME
-    const cookieValue = cookies[`__Secure-${baseUrlCookieName}`] || cookies[baseUrlCookieName]
-    const [baseUrl] = cookieValue ? cookieValue.split('|') : [null]
-    return baseUrl
-  } else {
-    // Client Side
-    // Note: 'site' is empty by default; URL is normally relative.
-    const site = process.env.NEXTAUTH_SITE || NEXTAUTH_DEFAULT_SITE
-    const basePath = process.env.NEXTAUTH_BASE_PATH || NEXTAUTH_DEFAULT_BASE_PATH
-    return `${site}${basePath}`
-  }
-}
-
-// Adapted from https://github.com/felixfong227/simple-cookie-parser/blob/master/index.js
-const _parseCookies = (string) => {
-  if (!string) { return {} }
-  try {
-    const object = {}
-    const a = string.split(';')
-    for (let i = 0; i < a.length; i++) {
-      const b = a[i].split('=')
-      if (b[0].length > 1 && b[1]) {
-        object[b[0].trim()] = decodeURIComponent(b[1])
-      }
-    }
-    return object
-  } catch (error) {
-    logger.error('CLIENT_COOKIE_PARSE_ERROR', error)
-    return {}
-  }
+const _baseUrl = () => {
+  return `${NEXTAUTH_SITE}${NEXTAUTH_BASE_PATH}`
 }
 
 const _encodedForm = (formData) => {
@@ -233,6 +206,10 @@ const _sendMessage = (message) => {
 }
 
 export default {
+  // Call config() from _app.js to set options globally in the app.
+  // You need to set at least the site name to use server side calls.
+  config: setConfig,
+  setConfig,
   // Some methods are exported with more than one name. This provides
   // flexibility over how they can be invoked and compatibility with earlier
   // releases (going back to v1 and earlier v2 beta releases).

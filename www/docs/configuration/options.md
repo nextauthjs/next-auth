@@ -289,19 +289,15 @@ Advanced options are passed the same way as basic options, but may have complex 
 
 This option allows you to specify a different base path if you don't want to use `/api/auth` for some reason.
 
-If you set this option you **must** also specify the same value in the `NEXTAUTH_BASE_PATH` environment variable in `next.config.js` so that the client knows how to contact the server:
+If you set this option you **must** also configure it along with the `site` property in `pages/_app.js`
 
-```js title="next.config.js"
-module.exports = {
-  env: {
-    NEXTAUTH_BASE_PATH: '/api/my-custom-auth-route',
-  },
-}
+```js title="pages/_app.js"
+import { config } from 'next-auth/client'
+config({ 
+  site: process.env.SITE, // e.g. 'http://localhost:3000'
+  basePath: process.env.BASE_PATH // e.g. '/api/some-other-route-name'
+})
 ```
-
-This is required because the NextAuth.js API route is a separate codepath to the NextAuth.js Client.
-
-As long as you also specify this option in an environment variable, the client will be able to pick up any subsequent configuration from the server, but if you do not set in both it the NextAuth.js Client will not work.
 
 ---
 
