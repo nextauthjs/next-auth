@@ -227,7 +227,7 @@ export default async (req, res, userSuppliedOptions) => {
     }
 
     // If debug enabled, set ENV VAR so that logger logs debug messages
-    if (options.debug === true) { process.env._NEXT_AUTH_DEBUG = true }
+    if (options.debug === true) { process.env._NEXTAUTH_DEBUG = true }
 
     // Get / Set callback URL based on query param / cookie + validation
     options.callbackUrl = await callbackUrlHandler(req, res, options)
