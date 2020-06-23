@@ -23,8 +23,8 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 
 * [Apple](/providers/apple)
 * [Auth0](/providers/auth0)
-* [Box](/providers/box)
 * [Battle.net](/providers/battlenet)
+* [Box](/providers/box)
 * [Cognito](/providers/cognito)
 * [Discord](/providers/discord)
 * [Facebook](/providers/facebook)
