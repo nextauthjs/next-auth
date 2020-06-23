@@ -89,15 +89,6 @@ export default async (req, res, userSuppliedOptions) => {
           secure: useSecureCookies
         }
       },
-      baseUrl: {
-        name: `${cookiePrefix}next-auth.base-url`,
-        options: {
-          httpOnly: true,
-          sameSite: 'lax',
-          path: '/',
-          secure: useSecureCookies
-        }
-      },
       csrfToken: {
         // Default to __Host- for CSRF token for additional protection if using useSecureCookies
         // NB: The `__Host-` prefix is stricter than the `__Secure-` prefix.
@@ -178,24 +169,6 @@ export default async (req, res, userSuppliedOptions) => {
       csrfToken = randomBytes(32).toString('hex')
       const newCsrfTokenCookie = `${csrfToken}|${createHash('sha256').update(`${csrfToken}${secret}`).digest('hex')}`
       cookie.set(res, cookies.csrfToken.name, newCsrfTokenCookie, cookies.csrfToken.options)
-    }
-
-    // Set canonical site name + API route in a cookie to facilitate passing configuration
-    // to the NextAuth client. There are potential security considerations around this
-    // relating to trying to prevent attackers from exploiting this by setting this cookie
-    // on the client first if they can get control of a sub domain or exploit a XSS
-    // vulnerability, but this approach attempts to mitgate that by always verifying
-    // the cookie and updating it if fails the verification check.
-    let setUrlPrefixCookie = true
-    if (req.cookies[cookies.baseUrl.name]) {
-      const [baseUrlValue, baseUrlHash] = req.cookies[cookies.baseUrl.name].split('|')
-      // If the hash on the cookie is verified, then we must have set the cookie and don't need to update it
-      if (baseUrlValue === baseUrl && baseUrlHash === createHash('sha256').update(`${baseUrlValue}${secret}`).digest('hex')) { setUrlPrefixCookie = false }
-    }
-    // If the cookie is not set already (or if it is set, but failed verification) set header to update the cookie
-    if (setUrlPrefixCookie) {
-      const newUrlPrefixCookie = `${baseUrl}|${createHash('sha256').update(`${baseUrl}${secret}`).digest('hex')}`
-      cookie.set(res, cookies.baseUrl.name, newUrlPrefixCookie, cookies.baseUrl.options)
     }
 
     // User provided options are overriden by other options,
