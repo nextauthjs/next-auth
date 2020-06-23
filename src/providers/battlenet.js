@@ -1,4 +1,3 @@
-// Battle.net doesn't return an email address (currently not supported)
 export default (options) => {
   const { region } = options;
   return {
