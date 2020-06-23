@@ -19,7 +19,7 @@ You need to select your AWS region to go the the Cognito dashboard.
 import Providers from `next-auth/providers`
 ...
 providers: [
-  Providers.Auth0({
+  Providers.Cognito({
     clientId: process.env.COGNITO_CLIENT_ID,
     clientSecret: process.env.COGNITO_CLIENT_SECRET,
 		domain: process.env.COGNITO_DOMAIN,
