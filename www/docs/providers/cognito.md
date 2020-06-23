@@ -22,7 +22,7 @@ providers: [
   Providers.Auth0({
     clientId: process.env.COGNITO_CLIENT_ID,
     clientSecret: process.env.COGNITO_CLIENT_SECRET,
-		subdomain: process.env.COGNITO_SUBDOMAIN,
+		domain: process.env.COGNITO_DOMAIN,
 		region: process.env.COGNITO_REGION
   })
 }
