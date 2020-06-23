@@ -2,6 +2,7 @@ import Auth0 from './auth0'
 import Apple from './apple'
 import Box from './box'
 import Credentials from './credentials'
+import BattleNet from "./battlenet"
 import Cognito from './cognito'
 import Discord from './discord'
 import Email from './email'
@@ -23,6 +24,7 @@ export default {
   Box,
   Credentials,
 	Apple,
+	BattleNet,
 	Cognito,
   Discord,
   Email,
