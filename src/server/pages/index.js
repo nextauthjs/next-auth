@@ -1,5 +1,3 @@
-import fs from 'fs'
-import path from 'path'
 import signin from './signin'
 import signout from './signout'
 import verifyRequest from './verify-request'
