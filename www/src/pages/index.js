@@ -109,7 +109,7 @@ function Home () {
         <section className={`section-features ${styles.features}`}>
           <div className='container'>
             <h2 className='text--center'>
-              Full stack open source authentication
+              Open Source Authentication
             </h2>
             <div className='row'>
               {features.map((props, idx) => (
@@ -150,8 +150,8 @@ function Home () {
                 <p className='text--center'>
                   <Link
                     to='/getting-started/example'
-                    className='button button--secondary button--ouline button--lg rounded-pill'
-                  >Example Code
+                    className='button button--primary button--ouline button--lg rounded-pill'
+                  >View Example Code
                   </Link>
                 </p>
               </div>

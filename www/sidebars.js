@@ -11,7 +11,8 @@ module.exports = {
       'configuration/providers',
       'configuration/database',
       'configuration/pages',
-      'configuration/callbacks'
+      'configuration/callbacks',
+      'configuration/events'
     ],
     'Authentication Providers': [
       'providers/apple',

@@ -17,7 +17,7 @@ You can find a live demo of the example project at [next-auth-example.now.sh](ht
 
 To add NextAuth.js to a project, first create a file called `[...nextauth].js` in `pages/api/auth`.
 
-```javascript title="/pages/api/auth/[...nextauth].js"
+```javascript title="pages/api/auth/[...nextauth].js"
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 
@@ -49,7 +49,7 @@ See the [options documentation](/configuration/options) for how to configure pro
 
 The `useSession()` React Hook in the NextAuth.js client is the easiest way to check if someone is signed in.
 
-```jsx title="/pages/index.js"
+```jsx title="pages/index.js"
 import React from 'react'
 import { useSession } from 'next-auth/client'
 

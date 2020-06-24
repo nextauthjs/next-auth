@@ -7,11 +7,11 @@ Callbacks are asynchronous functions you can use to control what happens when an
 
 Callbacks are extremely powerful, especially in scenarios involving JSON Web Tokens as they allow you to implement access controls without a database and to integrate with external databases or APIs.
 
+### Example
+
 You can specify a handler for any of the callbacks below.
 
-#### How to use the callback option
-
-```js
+```js title="pages/api/auth/[...nextauth.js]"
 callbacks: {
   signin: async (profile, account, metadata) => { },
   redirect: async (url, baseUrl) => { },

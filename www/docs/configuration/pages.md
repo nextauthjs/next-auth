@@ -7,11 +7,11 @@ NextAuth.js automatically creates simple, unbranded authentication pages for han
 
 The options displayed on the sign up page are automatically generated based on the providers specified in the options passed to NextAuth.js.
 
-## Using custom pages
+### Example
 
 To add a custom login page, for example. You can us the `pages` option:
 
-```javascript title="/pages/api/auth/[...nextauth].js"
+```javascript title="pages/api/auth/[...nextauth].js"
   ...
   pages: {
     signin: '/auth/signin',
@@ -29,7 +29,7 @@ To add a custom login page, for example. You can us the `pages` option:
 
 In order to get the available authentication providers and the URLs to use for them, you can make a request to the API endpoint `/api/auth/providers`:
 
-```jsx title="/pages/auth/signin"
+```jsx title="pages/auth/signin"
 import React from 'react'
 import { providers, signin } from 'next-auth/client'
 
@@ -70,7 +70,7 @@ This is easier of if you use the build in `signin()` function, as it sets the CS
 To create a sign in page that works on clients with and without client side JavaScript, you can use both the **signin()** method and the **csrfToken()** method
 :::
 
-```jsx title="/pages/auth/email-signin"
+```jsx title="pages/auth/email-signin"
 import React from 'react'
 import { csrfToken, signin } from 'next-auth/client'
 

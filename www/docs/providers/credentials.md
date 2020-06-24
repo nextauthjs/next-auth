@@ -35,7 +35,7 @@ If you return an object it will be persisted to the JSON Web Token and the user 
 
 If you return `false` or `null` then an error will be displayed advising the user to check their details.
 
-```js title="/pages/api/auth/[...nextauth].js"
+```js title="pages/api/auth/[...nextauth].js"
 import Providers from `next-auth/providers`
 ...
 providers: [
@@ -73,7 +73,7 @@ To use your new credentials provider, you will need to create a form that posts 
 
 All form parameters submitted will be passed as `credentials` to your `authorize` callback.
 
-```js title="/pages/signin"
+```js title="pages/signin"
 import React from 'react'
 
 export default () => {
