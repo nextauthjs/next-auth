@@ -1,5 +1,5 @@
 export default (options) => {
-  const { region } = options;
+  const { region } = options
   return {
     id: 'battlenet',
     name: 'Battle.net',
@@ -21,9 +21,9 @@ export default (options) => {
         id: profile.id,
         name: profile.battletag,
         email: null,
-        image: null,
-      };
+        image: null
+      }
     },
-    ...options,
-  };
-};
+    ...options
+  }
+}

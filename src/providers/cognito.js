@@ -1,5 +1,5 @@
 export default (options) => {
-  const { domain } = options;
+  const { domain } = options
   return {
     id: 'cognito',
     name: 'Cognito',
@@ -15,9 +15,9 @@ export default (options) => {
         id: profile.sub,
         name: profile.username,
         email: profile.email,
-        image: null,
-      };
+        image: null
+      }
     },
-    ...options,
-  };
-};
+    ...options
+  }
+}

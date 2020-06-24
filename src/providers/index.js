@@ -2,11 +2,11 @@ import Auth0 from './auth0'
 import Apple from './apple'
 import Box from './box'
 import Credentials from './credentials'
-import BattleNet from "./battlenet"
+import BattleNet from './battlenet'
 import Cognito from './cognito'
 import Discord from './discord'
 import Email from './email'
-import Facebook from './facebook' 
+import Facebook from './facebook'
 import GitHub from './github'
 import GitLab from './gitlab'
 import Google from './google'
@@ -23,8 +23,8 @@ export default {
   Apple,
   Box,
   Credentials,
-	BattleNet,
-	Cognito,
+  BattleNet,
+  Cognito,
   Discord,
   Email,
   Facebook,
