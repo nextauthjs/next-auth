@@ -3,15 +3,15 @@ id: discord
 title: Discord
 ---
 
-## API Documentation
+## Documentation
 
 https://discord.com/developers/docs/topics/oauth2
 
-## App Configuration
+## Configuration
 
 https://discord.com/developers/applications
 
-## Usage
+## Example
 
 ```js
 import Providers from `next-auth/providers`

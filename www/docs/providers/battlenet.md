@@ -3,16 +3,15 @@ id: battle.net
 title: Battle.net
 ---
 
-## API Documentation
+## Documentation
 
 https://develop.battle.net/documentation/guides/using-oauth
 
-## App Configuration
+## Configuration
 
 https://develop.battle.net/access/clients
 
-
-## Usage
+## Example
 
 ```js
 import Providers from `next-auth/providers`

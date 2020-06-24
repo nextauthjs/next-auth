@@ -3,16 +3,15 @@ id: apple
 title: Apple
 ---
 
-## API Documentation
+## Documentation
 
 https://developer.apple.com/sign-in-with-apple/get-started/
 
-
-## App Configuration
+## Configuration
 
 https://developer.apple.com/account/resources/identifiers/list/serviceId
 
-## Usage
+## Example
 
 There are two ways you can use the Sign in with Apple provider.
 

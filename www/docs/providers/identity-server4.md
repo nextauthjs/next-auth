@@ -3,15 +3,12 @@ id: identity-server4
 title: IdentityServer4
 ---
 
-## API Documentation
+## Documentation
 
 https://identityserver4.readthedocs.io/en/latest/
 
 
-## App Configuration
-
-
-## Usage
+## Example
 
 ```js
 import Providers from `next-auth/providers`

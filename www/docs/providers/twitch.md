@@ -3,15 +3,15 @@ id: twitch
 title: Twitch
 ---
 
-## API Documentation
+## Documentation
 
 https://dev.twitch.tv/docs/authentication
 
-## App Configuration
+## Configuration
 
 https://dev.twitch.tv/console/apps
 
-## Usage
+## Example
 
 ```js
 import Providers from `next-auth/providers`

@@ -3,15 +3,15 @@ id: yandex
 title: Yandex
 ---
 
-## API Documentation
+## Documentation
 
 https://tech.yandex.com/oauth/doc/dg/concepts/about-docpage/
 
-## App Configuration
+## Configuration
 
 https://oauth.yandex.com/client/new
 
-## Usage
+## Example
 
 ```js
 import Providers from `next-auth/providers`

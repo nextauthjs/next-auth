@@ -3,15 +3,15 @@ id: slack
 title: Slack
 ---
 
-## API Documentation
+## Documentation
 
 https://api.slack.com
 
-## App Configuration
+## Configuration
 
 https://api.slack.com/apps
 
-## Usage
+## Example
 
 ```js
 import Providers from `next-auth/providers`

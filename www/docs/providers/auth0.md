@@ -3,11 +3,11 @@ id: auth0
 title: Auth0
 ---
 
-## API Documentation
+## Documentation
 
 https://auth0.com/docs/api/authentication#authorize-application
 
-## App Configuration
+## Configuration
 
 https://manage.auth0.com/dashboard
 
@@ -15,7 +15,7 @@ https://manage.auth0.com/dashboard
 Configure your application in Auth0 as a 'Regular Web Application' (not a 'Single Page App').
 :::
 
-## Usage
+## Example
 
 ```js
 import Providers from `next-auth/providers`

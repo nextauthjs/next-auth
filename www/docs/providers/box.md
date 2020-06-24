@@ -3,15 +3,15 @@ id: box
 title: Box
 ---
 
-## API Documentation
+## Documentation
 
 https://developer.box.com/reference/
 
-## App Configuration
+## Configuration
 
 https://developer.box.com/guides/sso-identities-and-app-users/connect-okta-to-app-users/configure-box/
 
-## Usage
+## Example
 
 ```js
 import Providers from `next-auth/providers`

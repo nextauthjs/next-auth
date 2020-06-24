@@ -3,15 +3,15 @@ id: google
 title: Google
 ---
 
-## API Documentation
+## Documentation
 
 https://developers.google.com/identity/protocols/oauth2
 
-## App Configuration
+## Configuration
 
 https://console.developers.google.com/apis/credentials
 
-## Usage
+## Example
 
 ```js
 import Providers from `next-auth/providers`
