@@ -12,7 +12,7 @@
     "watch": "npm run watch:js | npm run watch:css",
     "watch:js": "babel --watch src --out-dir dist",
     "watch:css": "postcss --watch src/**/*.css --base src --dir dist",
-    "test": "npm run test:db",
+    "test": "npm run lint",
     "test:db": "npm run test:db:mysql && npm run test:db:postgres && npm run test:db:mongodb",
     "test:db:mysql": "node test/mysql.js",
     "test:db:postgres": "node test/postgres.js",
