@@ -39,7 +39,7 @@ The Email Provider can be used with both JSON Web Tokens and database sessions, 
 
   Now you can add the email provider like this:
 
-  ```js {3} title="/pages/api/auth/[...nextauth].js"
+  ```js {3} title="pages/api/auth/[...nextauth].js"
   providers: [
     Providers.Email({
       server: process.env.EMAIL_SERVER, 
@@ -61,7 +61,7 @@ The Email Provider can be used with both JSON Web Tokens and database sessions, 
   ```
   Now you can add the provider settings to the NextAuth options object in the Email Provider.
 
-  ```js title="/pages/api/auth/[...nextauth].js"
+  ```js title="pages/api/auth/[...nextauth].js"
   providers: [
     Providers.Email({
       server: {
