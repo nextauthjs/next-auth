@@ -187,7 +187,7 @@ e.g.
 * `signin('google', { callbackUrl: 'http://localhost:3000/foo' })`
 * `signin('email', { email, callbackUrl: 'http://localhost:3000/foo' })`
 
-The URL must be considered valid by the [redirect callback handler](http://localhost:3000/configuration/callbacks#redirect). By default this means it must be an absolute URL at the same hostname (or else it will default to the homepage); you can define your own custom redirect callback to allow other URLs, including supporting relative URLs.
+The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect). By default this means it must be an absolute URL at the same hostname (or else it will default to the homepage); you can define your own custom redirect callback to allow other URLs, including supporting relative URLs.
 
 :::tip
 To also support signing in from clients that do not have client side JavaScript, use a regular link, add an onClick handler to it and call **e.preventDefault()** before calling the **signin()** method.
@@ -218,7 +218,7 @@ As with the `signin()` function, you can specify a `callbackUrl` parameter by pa
 
 e.g. `signout{ callbackUrl: 'http://localhost:3000/foo' })`
 
-The URL must be considered valid by the [redirect callback handler](http://localhost:3000/configuration/callbacks#redirect). By default this means it must be an absolute URL at the same hostname (or else it will default to the homepage); you can define your own custom redirect callback to allow other URLs, including supporting relative URLs.
+The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect). By default this means it must be an absolute URL at the same hostname (or else it will default to the homepage); you can define your own custom redirect callback to allow other URLs, including supporting relative URLs.
 
 ---
 
