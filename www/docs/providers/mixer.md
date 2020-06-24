@@ -3,15 +3,15 @@ id: mixer
 title: Mixer
 ---
 
-## API Documentation
+## Documentation
 
 https://dev.mixer.com/reference/oauth
 
-## App Configuration
+## Configuration
 
 https://mixer.com/lab/oauth
 
-## Usage
+## Example
 
 ```js
 import Providers from `next-auth/providers`

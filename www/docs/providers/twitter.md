@@ -3,15 +3,15 @@ id: twitter
 title: Twitter
 ---
 
-## API Documentation
+## Documentation
 
 https://developer.twitter.com
 
-## App Configuration
+## Configuration
 
 https://developer.twitter.com/en/apps
 
-## Usage
+## Example
 
 ```js
 import Providers from `next-auth/providers`

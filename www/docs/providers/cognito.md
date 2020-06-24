@@ -1,19 +1,19 @@
 ---
 id: cognito
-title: Cognito
+title: Amazon Cognito
 ---
 
-## API Documentation
+## Documentation
 
 https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-userpools-server-contract-reference.html
 
-## App Configuration
+## Configuration
 
 https://console.aws.amazon.com/cognito/users/
 
 You need to select your AWS region to go the the Cognito dashboard.
 
-## Usage
+## Example
 
 ```js
 import Providers from `next-auth/providers`

@@ -3,15 +3,15 @@ id: gitlab
 title: GitLab
 ---
 
-## API Documentation
+## Documentation
 
 https://docs.gitlab.com/ee/api/oauth2.html
 
-## App Configuration
+## Configuration
 
 https://gitlab.com/profile/applications
 
-## Usage
+## Example
 
 ```js
 import Providers from `next-auth/providers`
@@ -24,6 +24,7 @@ providers: [
 }
 ...
 ```
+
 :::tip
 Enable the *"read_user"* option in scope if you want to save the users email address on sign up.
 :::

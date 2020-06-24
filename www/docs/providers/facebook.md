@@ -3,15 +3,15 @@ id: facebook
 title: Facebook
 ---
 
-## API Documentation
+## Documentation
 
 https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/
 
-## App Configuration
+## Configuration
 
 https://developers.facebook.com/apps/
 
-## Usage
+## Example
 
 ```js
 import Providers from `next-auth/providers`
