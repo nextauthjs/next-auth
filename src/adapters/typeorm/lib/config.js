@@ -7,19 +7,30 @@ const parseConnectionString = (configString) => {
   // to make configuration easier (in most use cases).
   //
   // TypeORM accepts connection string as a 'url' option, but unfortunately
-  // not for all databases (e.g. SQLite) or options, so we handle parsing it
-  // in this function..
+  // not for all databases (e.g. SQLite) or for all options, so we handle
+  // parsing it in this function.
   try {
     const parsedUrl = new URL(configString)
     const config = {}
 
-    // Remove : and convert strings like 'mongodb+srv' into 'mongodb'
-    config.type = parsedUrl.protocol.replace(/:$/, '').replace(/\+(.*)?$/, '')
-    config.host = parsedUrl.hostname
-    config.port = Number(parsedUrl.port)
-    config.username = parsedUrl.username
-    config.password = parsedUrl.password
-    config.database = parsedUrl.pathname.replace(/^\//, '')
+    if (parsedUrl.protocol.startsWith('mongodb+srv')) {
+      // Special case handling is required for mongodb+srv with TypeORM
+      config.type = 'mongodb'
+      config.url = configString.replace(/\?(.*)$/, '')
+      config.useNewUrlParser = true
+    } else {
+      config.type = parsedUrl.protocol.replace(/:$/, '')
+      config.host = parsedUrl.hostname
+      config.port = Number(parsedUrl.port)
+      config.username = parsedUrl.username
+      config.password = parsedUrl.password
+      config.database = parsedUrl.pathname.replace(/^\//, '').replace(/\?(.*)$/, '')
+    }
+
+    // This option is recommended by mongodb
+    if (config.type === 'mongodb') {
+      config.useUnifiedTopology = true
+    }
 
     if (parsedUrl.search) {
       parsedUrl.search.replace(/^\?/, '').split('&').forEach(keyValuePair => {
