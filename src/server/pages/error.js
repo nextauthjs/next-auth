@@ -1,9 +1,10 @@
 import { h } from 'preact' // eslint-disable-line no-unused-vars
 import render from 'preact-render-to-string'
 
-export default ({ site, error, baseUrl }) => {
+export default ({ site, error, baseUrl, res }) => {
   const signinPageUrl = `${baseUrl}/signin` // @TODO Make sign in URL configurable
 
+  let statusCode = 200
   let heading = <h1>Error</h1>
   let message = <p><a className='site' href={site}>{site.replace(/^https?:\/\//, '')}</a></p>
 
@@ -24,6 +25,7 @@ export default ({ site, error, baseUrl }) => {
         </div>
       break
     case 'OAuthAccountNotLinked':
+      statusCode = 403
       heading = <h1>Sign in failed</h1>
       message =
         <div>
@@ -48,6 +50,7 @@ export default ({ site, error, baseUrl }) => {
         </div>
       break
     case 'CredentialsSignin':
+      statusCode = 403
       heading = <h1>Sign in failed</h1>
       message =
         <div>
@@ -58,6 +61,7 @@ export default ({ site, error, baseUrl }) => {
         </div>
       break
     case 'Configuration':
+      statusCode = 500
       heading = <h1>Server error</h1>
       message =
         <div>
@@ -68,6 +72,7 @@ export default ({ site, error, baseUrl }) => {
         </div>
       break
     case 'AccessDenied':
+      statusCode = 403
       heading = <h1>Access Denied</h1>
       message =
         <div>
@@ -80,6 +85,7 @@ export default ({ site, error, baseUrl }) => {
     case 'Verification':
       // @TODO Check if user is signed in already with the same email address.
       // If they are, no need to display this message, can just direct to callbackUrl
+      statusCode = 403
       heading = <h1>Unable to sign in</h1>
       message =
         <div>
@@ -92,6 +98,8 @@ export default ({ site, error, baseUrl }) => {
       break
     default:
   }
+
+  res.status(statusCode)
 
   return render(
     <div className='error'>

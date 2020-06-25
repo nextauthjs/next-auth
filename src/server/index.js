@@ -32,7 +32,7 @@ export default async (req, res, userSuppliedOptions) => {
       nextauth,
       action = nextauth[0],
       provider = nextauth[1],
-      error
+      error = nextauth[1]
     } = query
 
     const {

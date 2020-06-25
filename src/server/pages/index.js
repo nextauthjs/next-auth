@@ -17,7 +17,7 @@ function render (req, res, page, props, done) {
       html = verifyRequest(props)
       break
     case 'error':
-      html = error(props)
+      html = error({ ...props, res })
       break
     default:
       html = error(props)
