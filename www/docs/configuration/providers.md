@@ -60,7 +60,7 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 
 4. Now you can add the provider settings to the NextAuth options object. You can add as many OAuth providers as you like, as you can see `providers` is an array. 
 
-  ```js title="/pages/api/auth/[...nextauth].js"
+  ```js title="pages/api/auth/[...nextauth].js"
   ...
   providers: [
     Providers.Twitter({
@@ -110,7 +110,7 @@ As an example of what this looks like, this is the the provider object returned 
 ```
 You can replace all the options in this JSON object with the ones from your custom provider – be sure to give it a unique ID and specify the correct OAuth version - and add it to the providers option:
 
-```js title="/pages/api/auth/[...nextauth].js"
+```js title="pages/api/auth/[...nextauth].js"
 ...
 providers: [
   Providers.Twitter({
@@ -160,7 +160,7 @@ Adding support for signing in via email in addition to one or more OAuth service
 
 Configuration is similar to other providers, but the options are different:
 
-```js title="/pages/api/auth/[...nextauth].js"
+```js title="pages/api/auth/[...nextauth].js"
 providers: [
   Providers.Email({
     server: process.env.EMAIL_SERVER, 
@@ -183,7 +183,7 @@ The Credentials provider allows you to handle signing in with arbitrary credenti
 
 It is intended to support use cases where you have an existing system you need to authenticate users against.
 
-```js title="/pages/api/auth/[...nextauth].js"
+```js title="pages/api/auth/[...nextauth].js"
 import Providers from `next-auth/providers`
 ...
 providers: [
