@@ -31,7 +31,7 @@ export default async (req, res, options, done) => {
   if (type === 'oauth') {
     try {
       oAuthCallback(req, provider, async (error, profile, account, OAuthProfile) => {
-       try {
+        try {
           if (error) {
             logger.error('CALLBACK_OAUTH_ERROR', error)
             res.status(302).setHeader('Location', `${baseUrl}/error?error=oAuthCallback`)
@@ -100,7 +100,6 @@ export default async (req, res, options, done) => {
           res.status(302).setHeader('Location', callbackUrl || site)
           res.end()
           return done()
-
         } catch (error) {
           if (error.name === 'AccountNotLinkedError') {
             // If the email on the account is already linked, but nto with this oAuth account
