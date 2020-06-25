@@ -50,41 +50,20 @@ providers: [
       password: {  label: "Password", type: "password" }
     },
     authorize: async (credentials) => {
-      const user = (credentials) => {
-        // You need to provide your own logic here that takes the credentials
-        // submitted and returns either a object representing a user or value
-        // that is false/null if the credentials are invalid.
-        // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
-        return null
-      }
+      // Add logic here to look up the user from the credentials supplied
+      const user = { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
+
       if (user) {
-        // Any user object returned here will be saved in the JSON Web Token
+        // Any object returned will be saved in `user` property of the JWT
         return Promise.resolve(user)
       } else {
+        // If you return null or false then the credentials will be rejected
         return Promise.resolve(null)
       }
     }
   })
 ]
 ...
-```
-
-To use your new credentials provider, you will need to create a form that posts back to `/api/auth/callback/credentials`.
-
-All form parameters submitted will be passed as `credentials` to your `authorize` callback.
-
-```js title="pages/signin"
-import React from 'react'
-
-export default () => {
-  return (
-    <form method='post' action='/api/auth/callback/credentials'>
-      <input name='email' type='text' defaultValue='' />
-      <input name='password' type='password' defaultValue='' />
-      <button type='submit'>Sign in</button>
-    </form>
-  )
-}
 ```
 
 As the JSON Web Token is encrypted, you can safely store user credentials in it and revalidate them whenever an action is performed. See the [callbacks documentation](/configuration/callbacks) for more information on how to interact with the token.
@@ -105,7 +84,7 @@ As with all providers, the order you specify them in, is the order they are disp
       id: 'domain-login',
       name: "Domain Account",
       authorize: async (credentials) => {
-        const user = (credentials) => { /* add function to get user */ } 
+        const user = { /* add function to get user */ }
         return Promise.resolve(user)
       },
       credentials: {
@@ -118,7 +97,7 @@ As with all providers, the order you specify them in, is the order they are disp
       id: 'intranet-credentials',
       name: "Two Factor Auth",
       authorize: async (credentials) => {
-        const user = (credentials) => { /* add function to get user */ } 
+        const user = { /* add function to get user */ } 
         return Promise.resolve(user)
       },
       credentials: {
