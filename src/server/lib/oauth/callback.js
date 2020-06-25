@@ -9,6 +9,10 @@ import logger from '../../../lib/logger'
 // appropriate credit) to make it easier to maintain and address issues as they
 // come up, as the node-oauth package does not seem to be actively maintained.
 
+// @TODO Refactor to use promises and not callbacks
+
+// @TODO Refactor to use jsonwebtoken instead of jwt-decode & remove dependancy
+
 export default async (req, provider, callback) => {
   let { oauth_token, oauth_verifier, code } = req.query // eslint-disable-line camelcase
   const client = oAuthClient(provider)
@@ -46,7 +50,10 @@ export default async (req, provider, callback) => {
             accessToken,
             refreshToken,
             results.id_token,
-            (error, profileData) => callback(error, _getProfile(error, profileData, accessToken, refreshToken, provider))
+            async (error, profileData) => {
+              const { profile, account, OAuthProfile } = await _getProfile(error, profileData, accessToken, refreshToken, provider)
+              callback(error, profile, account, OAuthProfile)
+            }
           )
         } else {
           // Use custom get() method for oAuth2 flows
@@ -55,7 +62,10 @@ export default async (req, provider, callback) => {
           client.get(
             provider,
             accessToken,
-            (error, profileData) => callback(error, _getProfile(error, profileData, accessToken, refreshToken, provider))
+            async (error, profileData) => {
+              const { profile, account, OAuthProfile } = await _getProfile(error, profileData, accessToken, refreshToken, provider)
+              callback(error, profile, account, OAuthProfile)
+            }
           )
         }
       }
@@ -76,7 +86,10 @@ export default async (req, provider, callback) => {
           provider.profileUrl,
           accessToken,
           refreshToken,
-          (error, profileData) => callback(error, _getProfile(error, profileData, accessToken, refreshToken, provider))
+          async (error, profileData) => {
+            const { profile, account, OAuthProfile } = await _getProfile(error, profileData, accessToken, refreshToken, provider)
+            callback(error, profile, account, OAuthProfile)
+          }
         )
       }
     )
@@ -96,13 +109,23 @@ async function _getProfile (error, profileData, accessToken, refreshToken, provi
 
     profile = await provider.profile(profileData)
   } catch (exception) {
-    // @TODO Handle parsing error
-    logger.error('OAUTH_PARSE_PROFILE_ERROR', exception)
-    throw new Error('Failed to get OAuth profile')
+    // If we didn't get a response either there was a problem with the provider
+    // response *or* the user cancelled the action with the provider.
+    //
+    // Unfortuately, we can't tell which - at least not in a way that works for
+    // all providers, so we return an empty object; the user should then be
+    // redirected back to the sign up page. We log the error to help developers
+    // who might be trying to debug this when configuring a new provider.
+    logger.error('OAUTH_PARSE_PROFILE_ERROR', exception, profileData)
+    return {
+      profile: null,
+      account: null,
+      OAuthProfile: profileData
+    }
   }
 
   // Return profile, raw profile and auth provider details
-  return ({
+  return {
     profile: {
       name: profile.name,
       email: profile.email ? profile.email.toLowerCase() : null,
@@ -116,8 +139,8 @@ async function _getProfile (error, profileData, accessToken, refreshToken, provi
       accessToken,
       accessTokenExpires: null
     },
-    oAuthProfile: profileData
-  })
+    OAuthProfile: profileData
+  }
 }
 
 // Ported from https://github.com/ciaranj/node-oauth/blob/a7f8a1e21c362eb4ed2039431fb9ac2ae749f26a/lib/oauth2.js
