@@ -21,7 +21,7 @@ This error occurs when the `useSession()` React Hook has a problem fetching sess
 
 #### CLIENT_FETCH_ERROR
 
-If you see `CLIENT_FETCH_ERROR` and "_TypeError: Only absolute URLs are supported_" in the console when accessing a page, it means you have tried to use the client server side without configuring the site name in `pages/app.js` correctly.
+If you see `CLIENT_FETCH_ERROR` and "_TypeError: Only absolute URLs are supported_" in the console when accessing a page it means you have tried to use the client method server side without first configuring the site name in `pages/app.js` correctly.
 
 * This usually happens when calling `getSession()` from `getServerSideProps()` but the site property in the Provider in `pages/_app.js` is not set.
 
@@ -35,9 +35,9 @@ You should not use log bugs against `CLIENT_FETCH_ERROR` unless you are certain 
 
 In the special case of calling `getSession()` in an API route, `pages/_app.js` is not used and won't help.
 
-You can use a currently undocumented feature called `setOptions()` in API routes to configure the site name so you can use `getSession()` in an API route. This is not yet a supported feature and it's possible it may be changed or removed in future but it exists specifically to address this problem as an interim solution.
+You can use an undocumented feature called `setOptions()` in API routes to configure the site name so you can use `getSession()` in an API route. This is not yet a supported feature and it's possible it may be changed or removed in future but it exists specifically to address this problem as an interim solution.
 
-You should not use this approach in client side pages.
+_You should not use this approach in pages, only in API routes._
 
 ```js
 import { setOptions, getSession } from 'next-auth/client'
