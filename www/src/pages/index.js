@@ -108,9 +108,6 @@ function Home () {
       <main className='home-main'>
         <section className={`section-features ${styles.features}`}>
           <div className='container'>
-            <h2 className='text--center'>
-              Open Source Authentication
-            </h2>
             <div className='row'>
               {features.map((props, idx) => (
                 <Feature key={idx} {...props} />
