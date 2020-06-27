@@ -42,12 +42,16 @@ a,
   font-weight: 600;
 }
 
+.navbar__toggle {
+  margin-right: 1rem !important;
+}
+
 .menu__list .menu__list-item a:not(.menu__link--sublist) {
-  font-weight: normal;
+  font-weight: 400;
 }
 
 .menu__list .menu__list-item a[href="#!"] {
-  font-weight: bold;
+  font-weight: 600;
   color: #444;
 }
 
@@ -60,6 +64,21 @@ html[data-theme='dark'] .menu__list .menu__list-item a[href="#!"] {
  background: linear-gradient(0deg, var(--ifm-color-primary-darker) 0%, var(--ifm-color-primary) 100%);
  color: #fff;
  font-weight: normal;
+}
+
+.main-wrapper h1 {
+  font-weight: 700;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: .15rem solid rgba(0,0,0,0.1);
+}
+
+.main-wrapper h2 {
+  font-weight: 700;
+}
+
+.main-wrapper h3 {
+  font-weight: 600;
 }
 
 .docusaurus-highlight-code-line {
@@ -134,7 +153,9 @@ html[data-theme='dark'] .hero {
 .hero .hero__title {  
   font-size: 3rem;
   margin-bottom: 0.5rem;
-  text-shadow: 0 .15rem 0 rgba(255,255,255,1), 0 0 8rem rgba(0,0,0,.5);
+  padding: 0;
+  border: none;
+  text-shadow: 0 .1rem 0 rgba(255,255,255,1), 0 0 8rem rgba(0,0,0,.5);
 }
 
 @media screen and (min-width: 689px) {
@@ -145,7 +166,7 @@ html[data-theme='dark'] .hero {
 }
 
 html[data-theme="dark"] .hero .hero__title {
-  text-shadow: 0 .15rem 0 rgba(255,255,255,.1), 0 0 5rem rgba(255,255,255,.5);
+  text-shadow: 0 .1rem 0 rgba(255,255,255,.1), 0 0 5rem rgba(255,255,255,.5);
 }
 
 .hero .hero__subtitle {
@@ -271,13 +292,16 @@ html[data-theme='dark'] .footer.footer--dark {
 
 .button--primary,
 .button--primary:hover {
-  background: linear-gradient(0deg, var(--ifm-color-primary-darker) 0%, var(--ifm-color-primary) 100%);
+  background: linear-gradient(0deg, var(--ifm-color-primary-dark) 0%, var(--ifm-color-primary) 100%);
   color: #fff;
+  border-color: transparent;
 }
 
-.button--primary.button--outline {
+.button.button--primary.button--outline,
+.button.button--primary.button--outline:active {
   background: transparent;
   color: var(--ifm-color-primary);
+  border-color: var(--ifm-color-primary);
 }
 
 .button.button--secondary.button--sm.menu__button {
@@ -286,8 +310,15 @@ html[data-theme='dark'] .footer.footer--dark {
   bottom: 0;
   left: 0;
   width: 100%;
-  border-top: 1px solid #ccc;
+  border-color: transparent;
+  border-top: 1px solid rgba(0,0,0,.1);
   text-align: left;
+}
+
+html[data-theme='dark'] .button.button--secondary.button--sm.menu__button {
+  border-top: 1px solid rgba(255,255,255,.1);
+  background: #191A1B;
+  color: #fff;
 }
 
 .button.button--secondary.button--sm.menu__button:before {
@@ -298,10 +329,9 @@ html[data-theme='dark'] .footer.footer--dark {
 
 .menu--show .button.button--secondary.button--sm.menu__button:before {
   font-size: 1rem;
-  content: "View Page";
+  content: "Close Menu";
   display: block;
 }
-
 
 .button.button--secondary.button--sm.menu__button svg,
 .button.button--secondary.button--sm.menu__button span {
