@@ -279,3 +279,31 @@ html[data-theme='dark'] .footer.footer--dark {
   background: transparent;
   color: var(--ifm-color-primary);
 }
+
+.button.button--secondary.button--sm.menu__button {
+  border-radius: 0;
+  margin: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  border-top: 1px solid #ccc;
+  text-align: left;
+}
+
+.button.button--secondary.button--sm.menu__button:before {
+  font-size: 1rem;
+  content: "Browse Documentation";
+  display: block;
+}
+
+.menu--show .button.button--secondary.button--sm.menu__button:before {
+  font-size: 1rem;
+  content: "View Page";
+  display: block;
+}
+
+
+.button.button--secondary.button--sm.menu__button svg,
+.button.button--secondary.button--sm.menu__button span {
+  display: none;
+}
