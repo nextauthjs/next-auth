@@ -19,20 +19,19 @@
 
 .heroLogo {
   margin-bottom: .5rem;  
-  width: 6rem;
+  width: 8rem;
 }
 
-@media screen and (min-width: 668px) {
+@media screen and (min-width: 689px) {
   .heroLogo {
-    margin-bottom: -.5rem;    
-    width: 8rem;
+    margin-bottom: -.5rem;
   }
 }
 
-@media screen and (min-width: 668px) {
+@media screen and (min-width: 689px) {
   .heroText {
     display: inline-block;
-    margin: 1rem 1.5rem 0 1.5rem;
+    margin: 1rem 1.5rem 0 2rem;
   }
 }
 
