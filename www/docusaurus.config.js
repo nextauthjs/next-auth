@@ -7,11 +7,12 @@ module.exports = {
   organizationName: 'iaincollins',
   projectName: 'next-auth',
   themeConfig: {
+    sidebarCollapsible: true,
     navbar: {
       title: 'NextAuth.js',
       logo: {
         alt: 'NextAuth Logo',
-        src: 'img/logo/logo-flat-sm.png'
+        src: 'img/logo/logo-xs.png'
       },
       links: [
         {
