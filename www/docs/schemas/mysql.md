@@ -1,6 +1,6 @@
 ---
 id: mysql
-title: MySQL Schema
+title: MySQL
 ---
 
 The schema generated for a MySQL database when using the built-in models.

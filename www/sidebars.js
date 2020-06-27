@@ -9,12 +9,12 @@ module.exports = {
     Configuration: [
       'configuration/options',
       'configuration/providers',
-      'configuration/database',
+      'configuration/databases',
       'configuration/pages',
       'configuration/callbacks',
       'configuration/events'
     ],
-    'Authentication Providers': [
+    'Providers': [
       'providers/apple',
       'providers/auth0',
       'providers/battle.net',
@@ -39,6 +39,7 @@ module.exports = {
       'schemas/models',
       'schemas/mysql',
       'schemas/postgres',
+      'schemas/mongodb',
       'schemas/adapters'
     ]
   /*

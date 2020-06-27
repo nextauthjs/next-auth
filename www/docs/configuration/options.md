@@ -1,6 +1,6 @@
 ---
 id: options
-title: NextAuth.js Options
+title: Options
 ---
 
 Options are passed to NextAuth.js when initializing it in an API route.

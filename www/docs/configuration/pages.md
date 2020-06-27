@@ -1,6 +1,6 @@
 ---
 id: pages
-title: Custom Pages
+title: Pages
 ---
 
 NextAuth.js automatically creates simple, unbranded authentication pages for handling Sign in, Sign out, Email Verification and displaying error messages.

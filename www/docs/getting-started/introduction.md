@@ -11,8 +11,6 @@ It is designed from the ground up to support Next.js and Serverless.
 
 [Follow the examples](/getting-started/example) to see how easy it is to use NextAuth.js for authentication.
 
-## Features
-
 ### Easy authentication
 
 * Designed to work with any OAuth service, it supports OAuth 1.0, 1.0A and 2.0
@@ -27,7 +25,7 @@ NextAuth.js can be used with or without a database.
 
 * An open source solution that allows you to keep control of your data
 * Supports Bring Your Own Database (BYOD) and can be used with any database
-* Built-in support for [MySQL, MariaDB, Postgres, MongoDB and SQLite](/configuration/database)
+* Built-in support for [MySQL, MariaDB, Postgres, MongoDB and SQLite](/configuration/databases)
 * Works great with databases from popular hosting providers
 * Can also be used *without a database* (e.g. OAuth + JWT)
 

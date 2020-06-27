@@ -71,19 +71,16 @@ See `src/adapters/typeorm/models` for the source for the current models and sche
 
 ## Schemas
 
-### MySQL
+NextAuth.js uses a different schemas to implement the model for each database.
 
-* See [MySQL schema documentation](/schemas/mysql) for details.
+They are all functionally equivalent but the syntax is specific to each database. 
 
-### Postgres
+For more information, refer to the schema documentation for each database.
 
-* See [Postgres schema documentation](/schemas/postgres) for details.
+### [MySQL](/schemas/mysql)
+### [Postgres](/schemas/postgres)
+### [MongoDB](/schemas/mongodb)
 
-### MongoDB
-
-MongoDB does not use schemas in the same way as most RDBMS databases, but the objects stored in MongoDB use similar datatypes to SQL, with some differences:
-
-* ID fields are of type `ObjectID` rather than `int`
-* By convention all collection names and object properties are `camelCase` rather than `snake_case`
-* A sparse index is used on the User `email` property to allow it to not be specified, while enforcing uniqueness if it is - this ensures it is functionally equivalent to the ANSI SQL behaviour for a `unique` but `nullable` property
-* All timestamps are stored as `ISODate()` in MongoDB, all timestamps on all models are stored in UTC (aka Zulu time)
+:::note
+There is no schema documentation for SQLite. It functions similarly to the other SQL databases. SQLite support is intended for local development and testing.
+:::

@@ -1,6 +1,6 @@
 ---
 id: postgres
-title: Postgres Schema
+title: Postgres
 ---
 
 The schema generated for a Postgres database when using the built-in models.

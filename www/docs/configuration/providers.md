@@ -1,6 +1,6 @@
 ---
 id: providers
-title: Authentication Providers
+title: Providers
 ---
 
 export const Image = ({ children, src, alt = '' }) => ( 
@@ -14,6 +14,8 @@ export const Image = ({ children, src, alt = '' }) => (
     <img alt={alt} src={src} />
   </div>
  )
+
+Authentication Providers in NextAuth.js are how you define services can be used to sign in.
 
 NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1.0A and 2.0 and has built-in support for many popular OAuth sign-in services. It also supports email / passwordless authentication.
 
