@@ -68,9 +68,13 @@ html[data-theme='dark'] .menu__list .menu__list-item a[href="#!"] {
 
 .main-wrapper h1 {
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   padding-bottom: 1rem;
-  border-bottom: .15rem solid rgba(0,0,0,0.1);
+  border-bottom: .15rem solid rgba(0,0,0,.1);
+}
+
+html[data-theme='dark'] .main-wrapper h1 {
+  border-color: rgba(255,255,255,.2);
 }
 
 .main-wrapper h2 {
@@ -97,10 +101,9 @@ html[data-theme='dark'] .menu__list .menu__list-item a[href="#!"] {
 }
 
 .contents {
-  margin-top: 0;
-  padding-top: 0;
-  margin-bottom: 0;
-  padding-bottom: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
 }
 
 .contents > li:first-child {
@@ -124,14 +127,11 @@ html[data-theme='dark'] .menu__list .menu__list-item a[href="#!"] {
 .navbar__title {
   font-size: 1.2rem;
   margin-left: .2rem;
-}
-
-.navbar__logo {
   display: none;
 }
 
-@media screen and (min-width: 376px) {
-  .navbar__logo {
+@media screen and (min-width: 420px) {
+  .navbar__title {
     display: inline;
   }
 }
@@ -313,6 +313,7 @@ html[data-theme='dark'] .footer.footer--dark {
   border-color: transparent;
   border-top: 1px solid rgba(0,0,0,.1);
   text-align: left;
+  padding: .5rem 1rem;
 }
 
 html[data-theme='dark'] .button.button--secondary.button--sm.menu__button {
