@@ -38,12 +38,23 @@ export default async (req, provider, callback) => {
       code,
       provider,
       (error, accessToken, refreshToken, results) => {
-        // @TODO Handle error
         if (error || results.error) {
           logger.error('OAUTH_GET_ACCESS_TOKEN_ERROR', error, results, provider.id, code)
+          return callback(error || results.error)
         }
 
         if (provider.idToken) {
+
+          // If we don't have an ID Token most likely the user hit a cancel
+          // button when signing in (or the provider is misconfigured).
+          //
+          // Unfortunately, we can't tell which, so we can't treat it as an
+          // error, so instead we just returning nothing, which will cause the
+          // user to be redirected back to the sign in page.
+          if (!results || !results.id_token) {
+            return callback()
+          }
+
           // Support services that use OpenID ID Tokens to encode profile data
           _decodeToken(
             provider,
