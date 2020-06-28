@@ -10,7 +10,7 @@ import styles from './styles.module.css'
 
 const features = [
   {
-    title: 'Easy to Setup',
+    title: 'Easy to use',
     imageUrl: 'img/undraw_authentication.svg',
     description: (
       <ul>
@@ -19,18 +19,18 @@ const features = [
           Bring Your Own Database – or no database!<br />
           <em>(MySQL, MariaDB, Postgres, MongoDB…)</em>
         </li>
-        <li>JSON Web Tokens or Session Database</li>
+        <li>Use JSON Web Tokens or Database Sessions</li>
       </ul>
     )
   },
   {
-    title: 'Easy to Sign in',
+    title: 'Easy to sign in',
     imageUrl: 'img/undraw_social.svg',
     description: (
       <ul>
         <li>Sign in with any OAuth service</li>
         <li>Sign in with any email / passwordless</li>
-        <li>Built in support for popular OAuth services <br />
+        <li>Built in support for popular OAuth services<br />
           <em>(Google, Facebook, Twitter, Auth0, Apple…)</em>
         </li>
 
@@ -38,7 +38,7 @@ const features = [
     )
   },
   {
-    title: 'Secure by Default',
+    title: 'Secure by default',
     imageUrl: 'img/undraw_secure.svg',
     description: (
       <ul>
