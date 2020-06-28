@@ -4,15 +4,15 @@ import * as S from './ProviderMarqueeStyle'
 import times from 'lodash.times'
 
 const icons = {
-	0: '../../static/img/providers/apple-black.svg',
-	1:'../../static/img/providers/auth0.svg' ,
-	2:'../../static/img/providers/aws-cognito.svg' ,
-	3:'../../static/img/providers/box.svg' ,
-	4:'../../static/img/providers/facebook-2.svg',
-	5:'../../static/img/providers/github-1.svg',
-	6:'../../static/img/providers/gitlab.svg',
-	7:'../../static/img/providers/google-icon.svg',
-	8:'../../static/img/providers/okta-3.svg',
+  0: '../../static/img/providers/apple-black.svg',
+  1: '../../static/img/providers/auth0.svg',
+  2: '../../static/img/providers/aws-cognito.svg',
+  3: '../../static/img/providers/box.svg',
+  4: '../../static/img/providers/facebook-2.svg',
+  5: '../../static/img/providers/github-1.svg',
+  6: '../../static/img/providers/gitlab.svg',
+  7: '../../static/img/providers/google-icon.svg',
+  8: '../../static/img/providers/okta-3.svg'
 }
 
 const ProviderMarquee = React.memo(({ size }) => {

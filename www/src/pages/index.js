@@ -119,7 +119,7 @@ function Home () {
         <section>
           <div className='container'>
             <div className='row'>
-							<ProviderMarquee />
+              <ProviderMarquee />
             </div>
           </div>
         </section>

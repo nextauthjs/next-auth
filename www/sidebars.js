@@ -14,7 +14,7 @@ module.exports = {
       'configuration/callbacks',
       'configuration/events'
     ],
-    'Providers': [
+    Providers: [
       'providers/apple',
       'providers/auth0',
       'providers/battle.net',
