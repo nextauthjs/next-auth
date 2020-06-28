@@ -14,8 +14,11 @@
     "@docusaurus/preset-classic": "^2.0.0-alpha.54",
     "classnames": "^2.2.6",
     "docusaurus-lunr-search": "^1.0.3",
+    "lodash.times": "^4.3.2",
     "react": "^16.8.4",
-    "react-dom": "^16.8.4"
+    "react-dom": "^16.8.4",
+    "react-marquee-slider": "^1.0.16",
+    "styled-components": "^5.1.1"
   },
   "browserslist": {
     "production": [
