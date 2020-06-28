@@ -16,20 +16,21 @@ const icons = [
 ]
 
 const ProviderMarquee = React.memo(({ size }) => {
-  const width = window.outerWidth
-
   let scale = 0.5
 
-  if (width > 800) {
-    scale = 0.65
-  }
+  if (typeof window !== 'undefined') {
+    const width = window.outerWidth
+    if (width > 800) {
+      scale = 0.65
+    }
 
-  if (width > 1100) {
-    scale = 0.7
-  }
+    if (width > 1100) {
+      scale = 0.7
+    }
 
-  if (width > 1400) {
-    scale = 0.9
+    if (width > 1400) {
+      scale = 0.9
+    }
   }
 
   return (
