@@ -25,7 +25,11 @@ const setOptions = ({
 }
 
 // Universal method (client + server)
-const getSession = async ({ req } = {}) => {
+const getSession = async ({ req, ctx } = {}) => {
+  if (!req && ctx.req) {
+    req = ctx.req
+  }
+
   const baseUrl = _baseUrl()
   const options = req ? { headers: { cookie: req.headers.cookie } } : {}
   const session = await _fetchData(`${baseUrl}/session`, options)
