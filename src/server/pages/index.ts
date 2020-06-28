@@ -3,8 +3,16 @@ import signout from './signout'
 import verifyRequest from './verify-request'
 import error from './error'
 import css from '../../css'
+import {NextApiRequest, NextApiResponse} from "next";
 
-function render (req, res, page, props, done) {
+function render (
+  req: NextApiRequest,
+  res: NextApiResponse,
+  page: string,
+  // TODO: normalized options type
+  props: Record<string, any>,
+  done: (typeof Promise)["resolve"],
+) {
   let html = ''
   switch (page) {
     case 'signin':

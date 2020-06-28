@@ -4,8 +4,14 @@ import callbackHandler from '../lib/callback-handler'
 import cookie from '../lib/cookie'
 import logger from '../../lib/logger'
 import dispatchEvent from '../lib/dispatch-event'
+import {NextApiRequest, NextApiResponse} from "next";
 
-export default async (req, res, options, done) => {
+export default async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+  options,
+  done: (typeof Promise)["resolve"],
+) => {
   const {
     provider: providerName,
     providers,

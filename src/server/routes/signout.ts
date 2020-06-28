@@ -2,8 +2,15 @@
 import cookie from '../lib/cookie'
 import logger from '../../lib/logger'
 import dispatchEvent from '../lib/dispatch-event'
+import {NextApiRequest, NextApiResponse} from "next";
 
-export default async (req, res, options, done) => {
+export default async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+  // TODO: normalized options type
+  options: any,
+  done: (typeof Promise)["resolve"],
+) => {
   const { adapter, cookies, events, jwt, callbackUrl, csrfTokenVerified, baseUrl } = options
   const sessionMaxAge = options.session.maxAge
   const useJwtSession = options.session.jwt

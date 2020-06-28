@@ -2,8 +2,16 @@
 import oAuthSignin from '../lib/signin/oauth'
 import emailSignin from '../lib/signin/email'
 import logger from '../../lib/logger'
+import {NextApiRequest, NextApiResponse} from "next";
+  
 
-export default async (req, res, options, done) => {
+export default async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+  // TODO: normalized options type
+  options: any,
+  done: (typeof Promise)["resolve"],
+) => {
   const {
     provider: providerName,
     providers,

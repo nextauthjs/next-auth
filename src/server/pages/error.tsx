@@ -1,7 +1,15 @@
 import { h } from 'preact' // eslint-disable-line no-unused-vars
 import render from 'preact-render-to-string'
+import {NextApiResponse} from "next";
 
-export default ({ site, error, baseUrl, res }) => {
+interface Props {
+  res: NextApiResponse;
+  error: string;
+  baseUrl: string;
+  site: string;
+}
+
+export default ({ site, error, baseUrl, res }: Props) => {
   const signinPageUrl = `${baseUrl}/signin` // @TODO Make sign in URL configurable
 
   let statusCode = 200

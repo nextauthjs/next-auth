@@ -1,6 +1,7 @@
 import { h } from 'preact' // eslint-disable-line no-unused-vars
 import render from 'preact-render-to-string'
 
+// TODO: normalized options type
 export default ({ req, csrfToken, providers, callbackUrl }) => {
   const withCallbackUrl = callbackUrl ? `?callbackUrl=${callbackUrl}` : ''
   const { email } = req.query
