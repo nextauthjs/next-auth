@@ -11,7 +11,7 @@ It is designed from the ground up to support Next.js and Serverless.
 
 [Follow the examples](/getting-started/example) to see how easy it is to use NextAuth.js for authentication.
 
-### Easy authentication
+### Easy to use
 
 * Designed to work with any OAuth service, it supports OAuth 1.0, 1.0A and 2.0
 * Supports both JSON Web Tokens and database sessions
