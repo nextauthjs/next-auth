@@ -101,6 +101,7 @@ html[data-theme='dark'] .main-wrapper h1 {
 }
 
 .contents {
+  font-size: 1rem;
   margin: 0 !important;
   padding: 0 !important;
   border: none !important;
@@ -130,13 +131,19 @@ html[data-theme='dark'] .main-wrapper h1 {
   display: none;
 }
 
+.navbar-sidebar__brand .navbar__title { 
+   display: inline;
+}
+
 @media screen and (min-width: 420px) {
   .navbar__title {
     display: inline;
   }
 }
 
+
 .hero {
+  margin-top: -2rem;
   background: none;
   color: black;
   background: linear-gradient(0deg, rgba(222,222,222,.6) 0%, rgba(255,255,255,1) 100%);
@@ -147,7 +154,7 @@ html[data-theme='dark'] .hero {
 }
 
 .hero .container {
-  margin: 2rem auto;
+  margin: 4rem auto 2rem auto;
 }
 
 .hero .hero__title {  
@@ -307,34 +314,58 @@ html[data-theme='dark'] .footer.footer--dark {
 .button.button--secondary.button--sm.menu__button {
   border-radius: 0;
   margin: 0;
-  bottom: 0;
-  left: 0;
+  top: 3.6rem;
+  right: 0;
+  bottom: auto;
   width: 100%;
   border-color: transparent;
-  border-top: 1px solid rgba(0,0,0,.1);
+  border-bottom: 1px solid rgba(0,0,0,.1);
   text-align: left;
   padding: .5rem 1rem;
+  z-index: 50;
+  background: #fff;
 }
 
 html[data-theme='dark'] .button.button--secondary.button--sm.menu__button {
-  border-top: 1px solid rgba(255,255,255,.1);
-  background: #191A1B;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+  background: #242526;
   color: #fff;
+}
+
+.menu--show .button.button--secondary.button--sm.menu__button {
+  top: .25rem;
+  right: .25rem;
+  width: auto;
+  padding: 0 .4rem;
+  border: none;
+  border-radius: 2rem;
 }
 
 .button.button--secondary.button--sm.menu__button:before {
   font-size: 1rem;
+  line-height: 1.5rem;
   content: "Browse Documentation";
+  text-decoration: underline;
   display: block;
 }
 
 .menu--show .button.button--secondary.button--sm.menu__button:before {
   font-size: 1rem;
-  content: "Close Menu";
+  line-height: 1.4rem;
+  content: "✕";
+  text-decoration: none;
   display: block;
+  color: #888;
+  border: none;
 }
 
 .button.button--secondary.button--sm.menu__button svg,
 .button.button--secondary.button--sm.menu__button span {
   display: none;
+}
+
+@media screen and (max-width: 996px) {
+  .main-wrapper {
+    padding-top: 1.5rem;
+  }
 }
