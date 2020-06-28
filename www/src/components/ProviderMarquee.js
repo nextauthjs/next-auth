@@ -3,17 +3,17 @@ import Marquee, { Motion, randomIntFromInterval } from 'react-marquee-slider'
 import * as S from './ProviderMarqueeStyle'
 import times from 'lodash.times'
 
-const icons = {
-  0: '../../static/img/providers/apple-black.svg',
-  1: '../../static/img/providers/auth0.svg',
-  2: '../../static/img/providers/aws-cognito.svg',
-  3: '../../static/img/providers/box.svg',
-  4: '../../static/img/providers/facebook-2.svg',
-  5: '../../static/img/providers/github-1.svg',
-  6: '../../static/img/providers/gitlab.svg',
-  7: '../../static/img/providers/google-icon.svg',
-  8: '../../static/img/providers/okta-3.svg'
-}
+const icons = [
+  '../../static/img/providers/apple-black.svg',
+  '../../static/img/providers/auth0.svg',
+  '../../static/img/providers/aws-cognito.svg',
+  '../../static/img/providers/box.svg',
+  '../../static/img/providers/facebook-2.svg',
+  '../../static/img/providers/github-1.svg',
+  '../../static/img/providers/gitlab.svg',
+  '../../static/img/providers/google-icon.svg',
+  '../../static/img/providers/okta-3.svg'
+]
 
 const ProviderMarquee = React.memo(({ size }) => {
   const width = window.outerWidth
@@ -25,11 +25,11 @@ const ProviderMarquee = React.memo(({ size }) => {
   }
 
   if (width > 1100) {
-    scale = 0.8
+    scale = 0.7
   }
 
   if (width > 1400) {
-    scale = 1
+    scale = 0.9
   }
 
   return (
