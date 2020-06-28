@@ -1,0 +1,8 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "module": "CommonJS"
+  },
+  "extends": "./tsconfig.base.json",
+  "include": ["scripts", "src", "test"]
+}

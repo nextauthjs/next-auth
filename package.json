@@ -4,11 +4,14 @@
   "description": "An authentication library for Next.js",
   "repository": "https://github.com/iaincollins/next-auth.git",
   "author": "Iain Collins <me@iaincollins.com>",
-  "main": "index.js",
+  "main": "cjs/server/index.js",
+  "module": "esm/server/index.js",
+  "types": "esm/server",
   "scripts": {
-    "build": "npm run build:js && npm run build:css",
-    "build:js": "babel src --out-dir dist",
-    "build:css": "postcss src/**/*.css --base src --dir dist && node scripts/wrap-css.js",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build": "yarn build:esm & yarn build:cjs & yarn build:css",
+    "build:css": "postcss src/**/*.css --base src --dir dist && ts-node scripts/wrap-css.ts",
     "watch": "npm run watch:js | npm run watch:css",
     "watch:js": "babel --watch src --out-dir dist",
     "watch:css": "postcss --watch src/**/*.css --base src --dir dist",
@@ -38,21 +41,28 @@
     "crypto-js": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^2.2.0",
-    "nodemailer": "^6.4.6",
+    "next": "^9.4.4",
     "oauth": "^0.9.15",
     "preact": "^10.4.1",
     "preact-render-to-string": "^5.1.7",
-    "querystring": "^0.2.0",
-    "typeorm": "^0.2.24"
+    "querystring": "^0.2.0"
   },
   "peerDependencies": {
+    "next": "^9.4.4",
+    "nodemailer": "^6.4.10",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "typeorm": "^0.2.25"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
+    "@types/jsonwebtoken": "^8.5.0",
+    "@types/mongodb": "^3.5.25",
+    "@types/node": "^14.0.14",
+    "@types/nodemailer": "^6.4.0",
+    "@types/react": "^16.9.41",
     "autoprefixer": "^9.7.6",
     "babel-preset-preact": "^2.0.0",
     "cssnano": "^4.1.10",
@@ -61,6 +71,8 @@
     "pg": "^8.2.1",
     "postcss-cli": "^7.1.1",
     "postcss-nested": "^4.2.1",
-    "standard": "^14.3.3"
+    "standard": "^14.3.3",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.5"
   }
 }
