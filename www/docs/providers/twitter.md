@@ -18,8 +18,8 @@ import Providers from `next-auth/providers`
 ...
 providers: [
   Providers.Twitter({
-    clientId: process.env.TWITTER_CLIENT_ID,
-    clientSecret: process.env.TWITTER_CLIENT_SECRET
+    clientId: process.env.TWITTER_CLIENT_API_KEY,
+    clientSecret: process.env.TWITTER_CLIENT_API_SECRET_KEY
   })
 }
 ...
