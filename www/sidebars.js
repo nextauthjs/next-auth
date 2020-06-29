@@ -12,7 +12,8 @@ module.exports = {
       'configuration/databases',
       'configuration/pages',
       'configuration/callbacks',
-      'configuration/events'
+      'configuration/events',
+      'configuration/testing'
     ],
     'Providers': [
       'providers/apple',
