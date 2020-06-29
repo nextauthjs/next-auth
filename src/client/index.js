@@ -54,11 +54,7 @@ const SessionContext = createContext()
 const useSession = (session) => {
   const value = useContext(SessionContext)
   // If we have no Provider in the tree we call the actual hook for fetching the session
-  if (value === undefined) {
-    return useSessionData(session)
-  }
-
-  return value
+ return value === undefined ? useSessionData(session) : value
 }
 
 // Internal hook for getting session from the api.
