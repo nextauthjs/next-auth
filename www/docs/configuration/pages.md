@@ -64,7 +64,7 @@ The **signin()** method automatically sets the callback URL to the current page.
 
 If you create a custom sign in form for email sign in, you will need to submit both fields for the **email** address and **csrfToken** from **/api/auth/csrf** in a POST request to **/api/auth/signin/email**.
 
-This is easier of if you use the build in `signin()` function, as it sets the CSRF automatically.
+This is easier if you use the build in `signin()` function, as it sets the CSRF token automatically.
 
 :::tip
 To create a sign in page that works on clients with and without client side JavaScript, you can use both the **signin()** method and the **csrfToken()** method
