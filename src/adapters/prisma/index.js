@@ -72,7 +72,7 @@ const Adapter = (prismaConfig, options = {}) => {
     async function getUserByProviderAccountId (providerId, providerAccountId) {
       debugMessage('GET_USER_BY_PROVIDER_ACCOUNT_ID', providerId, providerAccountId)
       try {
-        return prisma[Account].findOne({ where: { providerAccountId } })[User]()
+        return prisma[Account].findOne({ where: { providerAccountId: `${providerAccountId}` } })[User]()
       } catch (error) {
         logger.error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error)
         return Promise.reject(new Error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error))
@@ -109,7 +109,7 @@ const Adapter = (prismaConfig, options = {}) => {
             accessToken,
             refreshToken,
             compoundId: createHash('sha256').update(`${providerId}:${providerAccountId}`).digest('hex'),
-            providerAccountId,
+            providerAccountId: `${providerAccountId}`,
             providerId,
             providerType,
             accessTokenExpires,
@@ -129,7 +129,7 @@ const Adapter = (prismaConfig, options = {}) => {
     async function unlinkAccount (userId, providerId, providerAccountId) {
       debugMessage('UNLINK_ACCOUNT', userId, providerId, providerAccountId)
       try {
-        return prisma[Account].delete({ where: { providerAccountId } })
+        return prisma[Account].delete({ where: { providerAccountId: `${providerAccountId}` } })
       } catch (error) {
         logger.error('UNLINK_ACCOUNT_ERROR', error)
         return Promise.reject(new Error('UNLINK_ACCOUNT_ERROR', error))
