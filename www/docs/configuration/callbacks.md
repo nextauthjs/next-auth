@@ -101,7 +101,7 @@ This JSON Web Token callback is called whenever a JSON Web Token is created or u
 
 e.g. `/api/auth/signin`, `getSession()`, `useSession()`, `/api/auth/session` (etc)
 
-On initial sign in with an OAuth provider, the raw oAuthProfile returned by the
+On initial sign in with an OAuth provider, the raw profile object returned by the
 provider is also passed as a parameter - it is not available on subsequent calls.
 
 You can take advantage of this to persist additional data you need from their
@@ -109,11 +109,11 @@ raw profile to the encoded JWT.
 
 ```js
 /**
- * @param  {object} token         Decrypted JSON Web Token
- * @param  {object} oAuthProfile  OAuth profile - only available on sign in
- * @return {object}               JSON Web Token that will be saved
+ * @param  {object} token    Decrypted JSON Web Token
+ * @param  {object} profile  Profile - only available on sign in
+ * @return {object}          JSON Web Token that will be saved
  */
-const jwt = async (token, oAuthProfile) => {
+const jwt = async (token, profile) => {
   return Promise.resolve(token)
 }
 ```
