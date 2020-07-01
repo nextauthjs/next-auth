@@ -28,8 +28,8 @@ export default async (req, provider, callback) => {
     if (!Object.prototype.hasOwnProperty.call(provider, 'useState') || provider.useState === true) {
       const expectedState = createHash('sha256').update(csrfToken).digest('hex')
       if (state !== expectedState) {
-        return callback(new Error("Invalid state returned from oAuth provider"))
-      } 
+        return callback(new Error('Invalid state returned from oAuth provider'))
+      }
     }
 
     if (req.method === 'POST') {

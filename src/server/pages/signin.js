@@ -25,10 +25,9 @@ export default ({ req, csrfToken, providers, callbackUrl }) => {
           {provider.type === 'oauth' &&
             <form action={provider.signinUrl} method='POST'>
               <input type='hidden' name='csrfToken' value={csrfToken} />
-              {callbackUrl && <input type='hidden' name='callbackUrl' value={callbackUrl} /> }
-              <button type="submit" className='button'>Sign in with {provider.name}</button>
-            </form>
-          }
+              {callbackUrl && <input type='hidden' name='callbackUrl' value={callbackUrl} />}
+              <button type='submit' className='button'>Sign in with {provider.name}</button>
+            </form>}
           {(provider.type === 'email' || provider.type === 'credentials') && (i > 0) &&
             providersToRender[i - 1].type !== 'email' && providersToRender[i - 1].type !== 'credentials' &&
               <hr />}
