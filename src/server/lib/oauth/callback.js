@@ -14,14 +14,24 @@ import logger from '../../../lib/logger'
 // @TODO Refactor to use jsonwebtoken instead of jwt-decode & remove dependancy
 
 export default async (req, provider, callback) => {
-  let { oauth_token, oauth_verifier, code } = req.query // eslint-disable-line camelcase
+  //user = specific to apple provider on first sign in returns an object '{"name":{"firstName":"Johnny","lastName":"Appleseed"},"email":"johnny.appleseed@nextauth.com"}'
+  let { oauth_token, oauth_verifier, code, user } = req.query // eslint-disable-line camelcase
   const client = oAuthClient(provider)
 
   if (provider.version && provider.version.startsWith('2.')) {
     if (req.method === 'POST') {
+
       // Get the CODE from Body
       const body = JSON.parse(JSON.stringify(req.body))
+
+      // @TODO Handle error
+      if (body.error) {
+        logger.error('OAUTH_CALLBACK_HANDLER_ERROR', body.error, req.body, provider.id, code)
+        return callback()
+      }
+
       code = body.code
+      user = body.user != null ? JSON.parse(body.user) : null;
     }
 
     // Pass authToken in header by default (unless 'useAuthTokenHeader: false' is set)
@@ -38,6 +48,7 @@ export default async (req, provider, callback) => {
       code,
       provider,
       (error, accessToken, refreshToken, results) => {
+        // @TODO Handle error
         if (error || results.error) {
           logger.error('OAUTH_GET_ACCESS_TOKEN_ERROR', error, results, provider.id, code)
           return callback(error || results.error)
@@ -45,7 +56,7 @@ export default async (req, provider, callback) => {
 
         if (provider.idToken) {
 
-          // If we don't have an ID Token most likely the user hit a cancel
+           // If we don't have an ID Token most likely the user hit a cancel
           // button when signing in (or the provider is misconfigured).
           //
           // Unfortunately, we can't tell which, so we can't treat it as an
@@ -62,7 +73,7 @@ export default async (req, provider, callback) => {
             refreshToken,
             results.id_token,
             async (error, profileData) => {
-              const { profile, account, OAuthProfile } = await _getProfile(error, profileData, accessToken, refreshToken, provider)
+              const { profile, account, OAuthProfile } = await _getProfile(error, profileData, accessToken, refreshToken, provider, user)
               callback(error, profile, account, OAuthProfile)
             }
           )
@@ -107,7 +118,11 @@ export default async (req, provider, callback) => {
   }
 }
 
-async function _getProfile (error, profileData, accessToken, refreshToken, provider) {
+/**
+ * //6/30/2020 @geraldnolan added userData parameter to attach additional data to the profileData object
+ * Returns profile, raw profile and auth provider details
+ */
+async function _getProfile (error, profileData, accessToken, refreshToken, provider, userData) {
   // @TODO Handle error
   if (error) {
     logger.error('OAUTH_GET_PROFILE_ERROR', error)
@@ -117,6 +132,12 @@ async function _getProfile (error, profileData, accessToken, refreshToken, provi
   try {
     // Convert profileData into an object if it's a string
     if (typeof profileData === 'string' || profileData instanceof String) { profileData = JSON.parse(profileData) }
+
+    if(userData != null)
+    {
+       profileData.user = userData;
+       logger.debug("ProfileData and UserData", profileData)
+    }
 
     profile = await provider.profile(profileData)
   } catch (exception) {
