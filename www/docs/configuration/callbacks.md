@@ -81,7 +81,7 @@ e.g. `getSession()`, `useSession()`, `/api/auth/session` (etc)
 If JSON Web Tokens are enabled, you can also access the decrypted token and use
 this method to pass information from the encoded token back to the client.
 
-The JWT callback is invoked before session is called, so anything you add to the
+The JWT callback is invoked before the session() callback is called, so anything you add to the
 JWT will be immediately available in the session callback.
 
 ```js
@@ -97,15 +97,15 @@ const session = async (session, token) => {
 
 ## JWT
 
-This JSON Web Token callback is called whenever a JSON Web Token is created or updated.
+This JSON Web Token callback is called whenever a JSON Web Token is created (i.e. at sign 
+in) or updated (i.e whenever a session is accesed in the client).
 
 e.g. `/api/auth/signin`, `getSession()`, `useSession()`, `/api/auth/session` (etc)
 
-On initial sign in with an OAuth provider, the raw profile object returned by the
-provider is also passed as a parameter - it is not available on subsequent calls.
+* The JWT expiry time is updated / extended whenever a session is accessed.
 
-You can take advantage of this to persist additional data you need from their
-raw profile to the encoded JWT.
+* On sign in, the raw profile object returned by the provider is also passed as a parameter.
+It is not available on subsequent calls. You can take advantage of this to persist additional data from the profile in the JWT.
 
 ```js
 /**
