@@ -5,27 +5,21 @@ title: REST API
 
 NextAuth.js exposes a REST API which is used by the NextAuth.js client.
 
-:::note
-The default base path is `/api/auth` but it is configurable with the `basePath` option.
-:::
-
 #### GET /api/auth/signin
 
 Displays the sign in page.
 
-#### GET /api/auth/signin/:provider
-
-Starts an OAuth signin flow for the specified provider.
-
 #### POST /api/auth/signin/:provider
 
-A POST submission is required for email sign in.
+Starts an OAuth signin flow for the specified provider.
 
 The POST submission requires CSRF token from `/api/auth/csrf`.
 
 #### GET /api/auth/callback/:provider
 
 Handles retuning requests from OAuth services during sign in.
+
+For OAuth 2.0 providers, the value of the `state` parameter is checked against the one that was generated when the sign in flow was started.
 
 #### GET /api/auth/signout
 
@@ -49,6 +43,12 @@ The CSRF token returned by this endpoint must be passed as form variable named `
 
 #### GET /api/auth/providers
 
-Returns a list of configured OAuth services and the configuration (e.g. sign in and callback URLs) for each service.
+Returns a list of configured OAuth services and details (e.g. sign in and callback URLs) for each service.
 
 It can be used to dynamically generate custom sign up pages and to check what callback URLs are configured for each OAuth provider that is configured.
+
+---
+
+:::note
+The default base path used here is `/api/auth` but it is configurable with the `basePath` option.
+:::
