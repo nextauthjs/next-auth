@@ -7,7 +7,7 @@ export default async (req, res, options, done) => {
   const { provider: providerName, providers, baseUrl, adapter, callbacks, csrfToken } = options
   const provider = providers[providerName]
   const { type } = provider
-  const reponseAsJson = (req.body && req.body.json === 'true') ? true : false
+  const reponseAsJson = !!((req.body && req.body.json === 'true'))
 
   if (!type) {
     res.status(500).end(`Error: Type not specified for ${provider}`)
@@ -82,16 +82,18 @@ export default async (req, res, options, done) => {
     }
 
     if (reponseAsJson) {
-      res.json({ url: `${baseUrl}/verify-request?provider=${encodeURIComponent(
+      res.json({
+        url: `${baseUrl}/verify-request?provider=${encodeURIComponent(
         provider.id
-      )}&type=${encodeURIComponent(provider.type)}` })
+      )}&type=${encodeURIComponent(provider.type)}`
+      })
     } else {
       res.status(302).setHeader(
-          'Location',
+        'Location',
           `${baseUrl}/verify-request?provider=${encodeURIComponent(
             provider.id
           )}&type=${encodeURIComponent(provider.type)}`
-        )
+      )
       res.end()
     }
     return done()
