@@ -18,7 +18,8 @@ export default async (req, res, options, done) => {
     pages,
     jwt,
     events,
-    callbacks
+    callbacks,
+    csrfToken
   } = options
   const provider = providers[providerName]
   const { type } = provider
@@ -30,7 +31,7 @@ export default async (req, res, options, done) => {
 
   if (type === 'oauth') {
     try {
-      oAuthCallback(req, provider, async (error, profile, account, OAuthProfile) => {
+      oAuthCallback(req, provider, csrfToken, async (error, profile, account, OAuthProfile) => {
         try {
           if (error) {
             logger.error('CALLBACK_OAUTH_ERROR', error)

@@ -3,26 +3,32 @@ id: options
 title: Options
 ---
 
-Options are passed to NextAuth.js when initializing it in an API route.
+## Environment Variables
+
+There are two options that must be set using environment variables.
+
+#### NEXTAUTH_URL (required)
+
+Set the `NEXTAUTH_URL` environment variable to the URL of your site.
+
+e.g. `NEXTAUTH_URL=https://example.com`
+
+#### NEXTAUTH_BASE_PATH (optional)
+
+Only use `NEXTAUTH_BASE_PATH` if you cannot use `/api/auth` for your API route.
+
+e.g. `NEXTAUTH_BASE_PATH=/api/auth` (default)
 
 :::note
-The only *required* options are **site** and **providers**.
+Environment variable configuration was introduced in v3.0 to simplify configuration across all pages and API routes.
+The `NEXTAUTH_URL` environment variable replaces the `site` option from NextAuth.js v2.
 :::
+
+---
 
 ## Options
 
-### site
-
-* **Default value**: `empty string`
-* **Required**: *Yes*
-
-#### Description 
-
-The fully qualified URL for the root of your site.
-
-e.g. `http://localhost:3000` or `https://www.example.com`
-
----
+Options are passed to NextAuth.js when initializing it in an API route.
 
 ### providers
 
@@ -110,15 +116,15 @@ session: {
 
 #### Description
 
-JSON Web Tokens are only used if JWT sessions are enabled with `session: { jwt: true }` (see `session` documentation).
+Using JSON Web Tokens to store session data is often faster, cheaper and more scaleable than using a database to store sessions.
 
-The `jwt` object and all properties on it are optional.
+You can use JSON Web Tokens for session data in conjuction with a database for user data, or you can use JSON Web Tokens without a database.
 
-When enabled, JSON Web Tokens is signed with `HMAC SHA256` and encrypted with symmetric `AES`.
+JSON Web Tokens are only used if JWT sessions are enabled with `session: { jwt: true }`, or if you have not specified a database (in which case they are enabled by default).
 
-Using JWT to store sessions is often faster, cheaper and more scaleable relying on a database.
+When enabled, JSON Web Tokens are signed with **HMAC SHA256** and then encrypted with symmetric **AES**.
 
-Default values for this option are shown below:
+Default values for the JWT option are shown below:
 
 ```js
 jwt: {
@@ -161,7 +167,7 @@ An example JSON WebToken contains an encrypted payload like this:
 }
 ```
 
-You can use the built-in `getJwt()` helper method to read the token, like this:
+You can use the built-in `getJwt()` helper method to verify and decrupt the token, like this:
 
 ```js
 import jwt from 'next-auth/jwt'
@@ -169,9 +175,9 @@ import jwt from 'next-auth/jwt'
 const secret = process.env.JWT_SECRET
 
 export default async (req, res) =>  {
-  // Automatically decrypts and verifies JWT
   const token = await jwt.getJwt({ req, secret })
-  res.end(JSON.stringify(token, null, 2))
+  console.log(JSON.stringify(token, null, 2))
+  res.end()
 }
 ```
 
@@ -226,7 +232,7 @@ callbacks: {
   signin: async (profile, account, metadata) => { },
   redirect: async (url, baseUrl) => { },
   session: async (session, token) => { },
-  jwt: async (token) => { }
+  jwt: async (token, profile) => => { }
 }
 ```
 
@@ -273,31 +279,7 @@ Set debug to `true` to enable debug messages for authentication and database ope
 
 ## Advanced Options
 
-
-:::warning
 Advanced options are passed the same way as basic options, but may have complex implications or side effects. You should try to avoid using advanced options unless you are very comfortable using them.
-:::
-
----
-
-### basePath
-
-* **Default value**: `/api/auth`
-* **Required**: *No*
-
-#### Description
-
-This option allows you to specify a different base path if you don't want to use `/api/auth` for some reason.
-
-If you set this option you **must** also configure it along with the `site` property in `pages/_app.js`
-
-```js title="pages/_app.js"
-import { config } from 'next-auth/client'
-config({ 
-  site: process.env.SITE, // e.g. 'http://localhost:3000'
-  basePath: process.env.BASE_PATH // e.g. '/api/some-other-route-name'
-})
-```
 
 ---
 
@@ -336,7 +318,7 @@ Properties on any custom `cookies` that are specified override this option.
 :::
 
 :::warning
-Setting this option to *false* in production is a security risk and may allow sessions to hijacked.
+Setting this option to *false* in production is a security risk and may allow sessions to hijacked. Using this option is not recommended.
 :::
 
 ---

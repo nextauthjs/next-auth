@@ -5,27 +5,6 @@ title: Client API
 
 The NextAuth.js client library makes it easy to interact with sessions from React applications.
 
-Some of the methods can be called both client side and server side.
-
-:::note
-To use client methods server side in `getServerSideProp()` or `getInitialProps()` you should add the NextAuth.js  `<Provider>` in `pages/_app.js`
-
-```jsx title="pages/_app.js"
-import { Provider } from 'next-auth/client'
-
-export default ({ Component, pageProps }) => {
-  const { session } = pageProps
-  return (
-    <Provider options={{ site: process.env.SITE }} session={session} >
-      <Component {...pageProps} />
-    </Provider>
-  )
-}
-```
-
-Specify the same site name as used in the route. [Documentation for `<Provider>`](/getting-started/client#provider)
-:::
-
 ## useSession()
 
 * Client Side: **Yes**
@@ -55,7 +34,7 @@ export default () => {
 * Client Side: **Yes**
 * Server Side: **Yes**
 
-NextAuth.js also provides a `getSession()` method which can be called client or server side to return a session.
+NextAuth.js provides a `getSession()` method which can be called client or server side to return a session.
 
 It calls `/api/auth/session` and returns a promise with a session object, or null if no session exists.
 
@@ -75,8 +54,10 @@ A session object looks like this:
 
 You can call `getSession()` inside a function to check if a user is signed in, or use it for server side rendered pages that supporting signing in without requiring client side JavaScript.
 
-:::info
-Note that because it exposed to the client it does not contain sensitive information such as the Session Token or OAuth service related tokens. It includes enough information (e.g name, email) to display information on a page about the user who is signed in, and an Access Token that can be used to identify the session without exposing the Session Token itself.
+:::note
+The session data returned to the client it does not contain sensitive information such as the Session Token or OAuth tokens. It only includes enough data needed to display information on a page about the user who is signed in (e.g name, email) .
+
+You can use the [session callback](/configuration/callbacks#session) to customize the session object returned to the client if you need to add additional data to it.
 :::
 
 Because it is a Universal method, you can use `getSession()` in both client and server side functions.
@@ -126,40 +107,40 @@ It can be use useful if you are creating a dynamic custom sign in page.
 ## getCsrfToken()
 
 * Client Side: **Yes**
-* Server Side: **Yes**
+* Server Side: No
 
 The `getCsrfToken()` method returns the current Cross Site Request Forgery (CSRF Token) required to make POST requests (e.g. for signing in and signing out). It calls `/api/auth/csrf`.
 
-You likely only need to use this if you are not using the built-in `signin()` and `signout()` methods.
+You likely only need to use this if you are not using the built-in `signIn()` and `signOut()` methods.
 
 ---
 
-## signin()
+## signIn()
 
 * Client Side: **Yes**
 * Server Side: No
 
-Using the `signin()` method ensures the user ends back on the page they started on after completing a sign in flow. It will also handle CSRF tokens for you automatically when signing in with email.
+Using the `signIn()` method ensures the user ends back on the page they started on after completing a sign in flow. It will also handle CSRF tokens for you automatically when signing in with email.
 
-The `signin()` method can be called from the client in different ways, as shown below.
+The `signIn()` method can be called from the client in different ways, as shown below.
 
 #### Redirects to sign in page when clicked
 
 ```js
-import { signin } from 'next-auth/client'
+import { signIn } from 'next-auth/client'
 
 export default () => (
-  <button onClick={signin}>Sign in</button>
+  <button onClick={signIn}>Sign in</button>
 )
 ```
 
 #### Starts Google OAuth sign-in flow when clicked
 
 ```js
-import { signin } from 'next-auth/client'
+import { signIn } from 'next-auth/client'
 
 export default () => (
-  <button onClick={() => signin('google')}>Sign in with Google</button>
+  <button onClick={() => signIn('google')}>Sign in with Google</button>
 )
 ```
 
@@ -168,10 +149,10 @@ export default () => (
 When using it with the email flow, pass the target `email` as an option.
 
 ```js
-import { signin } from 'next-auth/client'
+import { signIn } from 'next-auth/client'
 
 export default ({ email }) => (
-  <button onClick={() => signin('email', { email })}>Sign in with Email</button>
+  <button onClick={() => signIn('email', { email })}>Sign in with Email</button>
 )
 ```
 
@@ -179,44 +160,40 @@ export default ({ email }) => (
 
 By default, the URL of page the client is on when they sign in is used as the `callbackUrl` and that is the URL the client will be redirected to after signing in.
 
-You can specify a different URL as the `callbackUrl` parameter by passing it in the second argument to `signin()`. This works for all calls to `signin()`.
+You can specify a different URL as the `callbackUrl` parameter by passing it in the second argument to `signIn()`. This works for all calls to `signIn()`.
 
 e.g.
 
-* `signin(null, { callbackUrl: 'http://localhost:3000/foo' })`
-* `signin('google', { callbackUrl: 'http://localhost:3000/foo' })`
-* `signin('email', { email, callbackUrl: 'http://localhost:3000/foo' })`
+* `signIn(null, { callbackUrl: 'http://localhost:3000/foo' })`
+* `signIn('google', { callbackUrl: 'http://localhost:3000/foo' })`
+* `signIn('email', { email, callbackUrl: 'http://localhost:3000/foo' })`
 
 The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect). By default this means it must be an absolute URL at the same hostname (or else it will default to the homepage); you can define your own custom redirect callback to allow other URLs, including supporting relative URLs.
 
-:::tip
-To also support signing in from clients that do not have client side JavaScript, use a regular link, add an onClick handler to it and call **e.preventDefault()** before calling the **signin()** method.
-:::
-
 ---
 
-## signout()
+## signOut()
 
 * Client Side: **Yes**
 * Server Side: No
 
-Using the `signout()` method ensures the user ends back on the page they started on after completing the sign out flow. It also handles CSRF tokens for you automatically.
+Using the `signOut()` method ensures the user ends back on the page they started on after completing the sign out flow. It also handles CSRF tokens for you automatically.
 
 It reloads the page in the browser when complete.
 
 ```js
-import { signout } from 'next-auth/client'
+import { signOut } from 'next-auth/client'
 
 export default () => (
-  <button onClick={signout}>Sign out</button>
+  <button onClick={signOut}>Sign out</button>
 )
 ```
 
 #### Specifying a callbackUrl
 
-As with the `signin()` function, you can specify a `callbackUrl` parameter by passing it as an option.
+As with the `signIn()` function, you can specify a `callbackUrl` parameter by passing it as an option.
 
-e.g. `signout({ callbackUrl: 'http://localhost:3000/foo' })`
+e.g. `signOut({ callbackUrl: 'http://localhost:3000/foo' })`
 
 The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect). By default this means it must be an absolute URL at the same hostname (or else it will default to the homepage); you can define your own custom redirect callback to allow other URLs, including supporting relative URLs.
 
@@ -228,15 +205,13 @@ Using the supplied React `<Provider>` allows instances of `useSession()` to shar
 
 This improves performance, reduces network calls and avoids page flicker when rendering. It is highly recommended and can be easily added to all pages in Next.js apps by using `pages/_app.js`.
 
-It is also *required* if you want to use client methods like `getSession()` in server side functions like `getServerSideProp()` or `getInitialProps()`.
-
 ```jsx title="pages/_app.js"
 import { Provider } from 'next-auth/client'
 
 export default ({ Component, pageProps }) => {
   const { session } = pageProps
   return (
-    <Provider options={{ site: process.env.SITE }} session={session} >
+    <Provider session={session} >
       <Component {...pageProps} />
     </Provider>
   )
@@ -247,14 +222,32 @@ If you pass the `session` page prop to the `<Provider>` – as in the example ab
 
 ### Options
 
-* `site` (required) - The URL of the site (e.g. `http://localhost:3000`)
-* `baseUrl` (optional) - The base URL for NextAuth.js (e.g. `/api/auth`)
-* `clientMaxAge` (optional) - How often to refresh the session the background (in seconds)
+You can pass options to the provider.
 
+e.g.
+
+```jsx title="pages/_app.js"
+import { Provider } from 'next-auth/client'
+
+export default ({ Component, pageProps }) => {
+  const { session } = pageProps
+  return (
+    <Provider options={{ 
+      clientMaxAge: 60 * 60 // Auto-update client state every hour
+     }} session={session} >
+      <Component {...pageProps} />
+    </Provider>
+  )
+}
+```
+
+#### clientMaxAge
+
+**clientMaxAge** defines how often (in seconds) the client should automatically refresh the session.
 
 When `clientMaxAge` is set to `0` (the default) sessions are not re-checked automatically, only when a new window or tab is opened or when `getSession()` is called. If set to any other value, specifies how many seconds the client should poll the server to check the session is valid and to keep it alive.
 
-It can be useful to use this option to prevent sessions from timing out if your application has a short session expiry time. This option usually has cost implications as checking session status triggers a call to a server side route and/or a database.
+It can be useful to use this option to prevent sessions from timing out if your application has a short session expiry time but when you want them to stay active as long as a window or tab is active. This option usually has cost implications as checking session status triggers a call to a server side route and/or a database.
 
 :::tip
 In NextAuth.js session state is automatically synchronized across all open windows and tabs in the same browser. If you have session expiry times of 30 days or more (the default) you probably don't need to use the `clientMaxAge` option, or can set it to a high value (e.g. every 24 hours).
