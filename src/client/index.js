@@ -3,13 +3,22 @@
 import { useState, useEffect, useContext, createContext, createElement } from 'react'
 import logger from '../lib/logger'
 
+// This behaviour mirrors the default behaviour for getting the site name that
+// happens server side in server/index.js
+// 1. An empty value is legitimate when the code is being invoked client side as
+//    relative URLs are valid in that context and so defaults to empty.
+// 2. When invoked server side the value is picked up from an environment
+//    variable and defaults to 'http://localhost:3000'.
 const __NEXTAUTH = {
-  site: '',
-  basePath: '/api/auth',
-  clientMaxAge: 0 // e.g. 0 == disabled, 60 == 60 seconds
+  site: (typeof window === 'undefined')
+    ? process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000'
+    : '',
+  basePath: (typeof window === 'undefined')
+    ? process.env.NEXTAUTH_BASE_PATH|| '/api/auth'
+    : '/api/auth',
+  clientMaxAge: 0, // e.g. 0 == disabled, 60 == 60 seconds
+  eventListenerAdded: false
 }
-
-let __NEXTAUTH_EVENT_LISTENER_ADDED = false
 
 // Method to set options. The documented way is to use the provider, but this
 // method is being left in as an alternative, that will be helpful if/when we
@@ -31,23 +40,24 @@ const getSession = async ({ req, ctx } = {}) => {
   }
 
   const baseUrl = _baseUrl()
-  const options = req ? { headers: { cookie: req.headers.cookie } } : {}
-  const session = await _fetchData(`${baseUrl}/session`, options)
+  const fetchOptions = req ? { headers: { cookie: req.headers.cookie } } : {}
+  const session = await _fetchData(`${baseUrl}/session`, fetchOptions)
   _sendMessage({ event: 'session', data: { trigger: 'getSession' } })
   return session
 }
 
 // Universal method (client + server)
+const getCsrfToken = async ({ req }) => {
+  const baseUrl = _baseUrl()
+  const fetchOptions = req ? { headers: { cookie: req.headers.cookie } } : {}
+  const data = await _fetchData(`${baseUrl}/csrf`. fetchOptions)
+  return data && data.csrfToken ? data.csrfToken : null
+}
+
+// Universal method (client + server); does not require request headers
 const getProviders = async () => {
   const baseUrl = _baseUrl()
   return _fetchData(`${baseUrl}/providers`)
-}
-
-// Universal method (client + server)
-const getCsrfToken = async () => {
-  const baseUrl = _baseUrl()
-  const data = await _fetchData(`${baseUrl}/csrf`)
-  return data && data.csrfToken ? data.csrfToken : null
 }
 
 // Context to store session data globally
@@ -80,8 +90,8 @@ const useSessionData = (session) => {
         _sendMessage({ event: 'session', data: { trigger: 'useSessionData' } })
       }
 
-      if (typeof window !== 'undefined' && __NEXTAUTH_EVENT_LISTENER_ADDED === false) {
-        __NEXTAUTH_EVENT_LISTENER_ADDED = true
+      if (typeof window !== 'undefined' && __NEXTAUTH.eventListenerAdded === false) {
+        __NEXTAUTH.eventListenerAdded = true
         window.addEventListener('storage', async (event) => {
           if (event.key === 'nextauth.message') {
             const message = JSON.parse(event.newValue)
@@ -102,9 +112,7 @@ const useSessionData = (session) => {
 
       // If CLIENT_MAXAGE is greater than zero, trigger auto re-fetching session
       if (clientMaxAge > 0) {
-        setTimeout(async (session) => {
-          await _getSession()
-        }, clientMaxAge)
+        setTimeout(async () => { await _getSession() }, clientMaxAge)
       }
     } catch (error) {
       logger.error('CLIENT_USE_SESSION_ERROR', error)
@@ -115,44 +123,44 @@ const useSessionData = (session) => {
 }
 
 // Client side method
-const signin = async (provider, args) => {
+const signIn = async (provider, args) => {
+  const baseUrl = _baseUrl()  
   const callbackUrl = (args && args.callbackUrl) ? args.callbackUrl : window.location
-
-  if (!provider) {
-    // Redirect to sign in page if no provider specified
-    const baseUrl = _baseUrl()
-    window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`
-    return
-  }
-
   const providers = await getProviders()
-  if (!providers[provider]) {
+
+  // Redirect to sign in page if no valid provider specified
+  if (!provider || !providers[provider]) {
     // If Provider not recognized, redirect to sign in page
-    const baseUrl = _baseUrl()
     window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`
-  } else if (providers[provider].type === 'oauth') {
-    // If is an OAuth provider, redirect to providers[provider].signinUrl
-    window.location = `${providers[provider].signinUrl}?callbackUrl=${encodeURIComponent(callbackUrl)}`
   } else {
-    // If is any other provider type, POST to providers[provider].signinUrl (with CSRF Token)
+    // If is any other provider type, POST to provider URL with CSRF Token,
+    // callback URL and any other parameters supplied.
+    //
+    // We pass 'json: true' to request a response in JSON instead of HTTP
+    // as redirect URLs on other domains are not returned when accessed using
+    // the fetch API in the browser, and we need to ask the end point to return
+    // the response as a JSON object (the end point still defaults to returning
+    // an HTTP response with a redirect for non-JavaScript clients).
     const options = {
       method: 'post',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       body: _encodedForm({
+        ...args,
         csrfToken: await getCsrfToken(),
         callbackUrl: callbackUrl,
-        ...args
+        json: true
       })
     }
-    const res = await fetch(providers[provider].signinUrl, options)
-    window.location = res.url ? res.url : callbackUrl
+    const res = await fetch(`${baseUrl}/signin/${provider}`, options)
+    const data = await res.json()
+    window.location = data.url ? data.url : callbackUrl
   }
 }
 
 // Client side method
-const signout = async (args) => {
+const signOut = async (args) => {
   const callbackUrl = (args && args.callbackUrl) ? args.callbackUrl : window.location
 
   const baseUrl = _baseUrl()
@@ -190,7 +198,24 @@ const _fetchData = async (url, options = {}) => {
   }
 }
 
-const _baseUrl = () => `${__NEXTAUTH.site}${__NEXTAUTH.basePath}`
+const _baseUrl = () => {
+  // NEXTAUTH_URL should always be set explicitly to support server side calls
+  if (typeof window === 'undefined' && !process.env.NEXTAUTH_URL) {
+    logger.warn('NEXTAUTH_URL', 'NEXTAUTH_URL environment variable not set')
+  }
+
+  let site = __NEXTAUTH.site
+
+  // If site value exists but does not start with http or https protocol, add it here
+  if (site.length > 0 && !site.startsWith('https://') && !site.startsWith('http://')) {
+    site = `https://${site}`
+  }
+
+  // Remove trailing slash from site if there is one
+  site = site.replace(/\/$/, '')
+
+  return `${site}${__NEXTAUTH.basePath}`
+}
 
 const _encodedForm = (formData) => {
   return Object.keys(formData).map((key) => {
@@ -205,22 +230,23 @@ const _sendMessage = (message) => {
 }
 
 export default {
-  // Call config() from _app.js to set options globally in the app.
-  // You need to set at least the site name to use server side calls.
-  options: setOptions,
+  getSession,
+  getCsrfToken,
+  getProviders,
+  useSession,
+  Provider,
+  signIn,
+  signOut,
+  /* Deprecated / unsupported features below this line */
+  // Use setOptions() set options globally in the app.
   setOptions,
-  // Some methods are exported with more than one name. This provides
-  // flexibility over how they can be invoked and compatibility with earlier
-  // releases (going back to v1 and earlier v2 beta releases).
-  // e.g. NextAuth.session() or const { getSession } from 'next-auth/client'
+  // Some methods are exported with more than one name. This provides some
+  // flexibility over how they can be invoked and backwards compatibility
+  // with earlier releases.
+  options: setOptions,
   session: getSession,
   providers: getProviders,
   csrfToken: getCsrfToken,
-  getSession,
-  getProviders,
-  getCsrfToken,
-  useSession,
-  Provider,
-  signin,
-  signout
+  signin: signIn,
+  signout: signOut,
 }

@@ -12,9 +12,21 @@ import callback from './routes/callback'
 import session from './routes/session'
 import pages from './pages'
 import adapters from '../adapters'
+import logger from '../lib/logger'
 
-const DEFAULT_SITE = 'http://localhost:3000'
-const DEFAULT_BASE_PATH = '/api/auth'
+// @TODO Refactor internal site / url variable names internally once we have
+//       tests in place, as the 'site' name feels a bit ambigous.
+//       I don't want to change it until we have tests as refactoring might
+//       involve changes in dozen files or so and too easy to break accidentally.
+const DEFAULT_SITE = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000'
+const DEFAULT_BASE_PATH =  process.env.NEXTAUTH_BASE_PATH || '/api/auth'
+
+// While we can run locally without this value being set, to work properly in
+// production with OAuth providers the NEXTAUTH_URL environment variable should
+// be set.
+if (!process.env.NEXTAUTH_URL) {
+  logger.warn('NEXTAUTH_URL', 'NEXTAUTH_URL environment variable not set')
+}
 
 export default async (req, res, userSuppliedOptions) => {
   // To the best of my knowledge, we need to return a promise here
@@ -40,7 +52,16 @@ export default async (req, res, userSuppliedOptions) => {
     } = body
 
     // Allow site name, path prefix to be overriden
-    const site = userSuppliedOptions.site || DEFAULT_SITE
+    let site = userSuppliedOptions.site || DEFAULT_SITE
+
+    // If site value does not start with http or https protocol, add it here
+    if (!site.startsWith('https://') && !site.startsWith('http://')) {
+      site = `https://${site}`
+    }
+
+    // Remove trailing slash from site if there is one
+    site = site.replace(/\/$/, '')
+
     const basePath = userSuppliedOptions.basePath || DEFAULT_BASE_PATH
     const baseUrl = `${site}${basePath}`
 
@@ -190,7 +211,6 @@ export default async (req, res, userSuppliedOptions) => {
       cookies,
       secret,
       csrfToken,
-      csrfTokenVerified,
       providers: parseProviders(userSuppliedOptions.providers, baseUrl),
       session: sessionOption,
       jwt: jwtOptions,
@@ -205,9 +225,16 @@ export default async (req, res, userSuppliedOptions) => {
     // Get / Set callback URL based on query param / cookie + validation
     options.callbackUrl = await callbackUrlHandler(req, res, options)
 
+    // Helper method for handling redirects
     const redirect = (redirectUrl) => {
-      res.status(302).setHeader('Location', redirectUrl)
-      res.end()
+      const reponseAsJson = (req.body && req.body.json === 'true') ? true : false
+
+      if (reponseAsJson) {
+        res.json({ url: redirectUrl })
+      } else {
+        res.status(302).setHeader('Location', redirectUrl)
+        res.end()
+      }
       return done()
     }
 
@@ -223,13 +250,9 @@ export default async (req, res, userSuppliedOptions) => {
           res.json({ csrfToken })
           return done()
         case 'signin':
-          if (provider && options.providers[provider]) {
-            signin(req, res, options, done)
-          } else {
-            if (options.pages.signin) { return redirect(`${options.pages.signin}${options.pages.signin.includes('?') ? '&' : '?'}callbackUrl=${options.callbackUrl}`) }
+          if (options.pages.signin) { return redirect(`${options.pages.signin}${options.pages.signin.includes('?') ? '&' : '?'}callbackUrl=${options.callbackUrl}`) }
 
-            pages.render(req, res, 'signin', { site, providers: Object.values(options.providers), callbackUrl: options.callbackUrl, csrfToken }, done)
-          }
+          pages.render(req, res, 'signin', { site, providers: Object.values(options.providers), callbackUrl: options.callbackUrl, csrfToken }, done)
           break
         case 'signout':
           if (options.pages.signout) { return redirect(`${options.pages.signout}${options.pages.signout.includes('?') ? '&' : '?'}callbackUrl=${options.callbackUrl}`) }
@@ -261,17 +284,31 @@ export default async (req, res, userSuppliedOptions) => {
     } else if (req.method === 'POST') {
       switch (action) {
         case 'signin':
-          // Signin POST requests are used for email sign in
+          // Verified CSRF Token required for all sign in routes
+          if (!csrfTokenVerified) {
+            return redirect(`${baseUrl}/signin?csrf=true`)
+          }
+
           if (provider && options.providers[provider]) {
             signin(req, res, options, done)
-            break
           }
           break
         case 'signout':
+          // Verified CSRF Token required for signout
+          if (!csrfTokenVerified) {
+            return redirect(`${baseUrl}/signout?csrf=true`)
+          }
+
           signout(req, res, options, done)
           break
         case 'callback':
           if (provider && options.providers[provider]) {
+
+            // Verified CSRF Token required for credentials providers only
+            if (options.providers[provider].type === 'credentials' && !csrfTokenVerified) {
+              return redirect(`${baseUrl}/signin?csrf=true`)
+            }
+
             callback(req, res, options, done)
           } else {
             res.status(400).end(`Error: HTTP POST is not supported for ${url}`)
