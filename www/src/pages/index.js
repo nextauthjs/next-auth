@@ -202,7 +202,6 @@ import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 
 const options = {
-  site: 'https://example.com',
   providers: [
     // OAuth authentication providers
     Providers.Apple({

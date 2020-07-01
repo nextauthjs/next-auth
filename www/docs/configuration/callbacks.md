@@ -16,7 +16,7 @@ callbacks: {
   signin: async (profile, account, metadata) => { },
   redirect: async (url, baseUrl) => { },
   session: async (session, token) => { },
-  jwt: async (token, oAuthProfile) => { }
+  jwt: async (token, profile) => { }
 }
 ```
 
