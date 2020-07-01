@@ -19,7 +19,7 @@ import logger from '../lib/logger'
 //       I don't want to change it until we have tests as refactoring might
 //       involve changes in dozen files or so and too easy to break accidentally.
 const DEFAULT_SITE = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000'
-const DEFAULT_BASE_PATH =  process.env.NEXTAUTH_BASE_PATH || '/api/auth'
+const DEFAULT_BASE_PATH = process.env.NEXTAUTH_BASE_PATH || '/api/auth'
 
 // While we can run locally without this value being set, to work properly in
 // production with OAuth providers the NEXTAUTH_URL environment variable should
@@ -227,7 +227,7 @@ export default async (req, res, userSuppliedOptions) => {
 
     // Helper method for handling redirects
     const redirect = (redirectUrl) => {
-      const reponseAsJson = (req.body && req.body.json === 'true') ? true : false
+      const reponseAsJson = !!((req.body && req.body.json === 'true'))
 
       if (reponseAsJson) {
         res.json({ url: redirectUrl })
@@ -303,7 +303,6 @@ export default async (req, res, userSuppliedOptions) => {
           break
         case 'callback':
           if (provider && options.providers[provider]) {
-
             // Verified CSRF Token required for credentials providers only
             if (options.providers[provider].type === 'credentials' && !csrfTokenVerified) {
               return redirect(`${baseUrl}/signin?csrf=true`)
