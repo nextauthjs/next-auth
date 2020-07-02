@@ -1,8 +1,8 @@
 /// Note: fetch() is built in to Next.js 9.4
 //
-// Note about signIn() and signOu() methods:
+// Note about signIn() and signOut() methods:
 //
-// On signIn() and signOu() we pass 'json: true' to request a response in JSON
+// On signIn() and signOut() we pass 'json: true' to request a response in JSON
 // instead of HTTP as redirect URLs on other domains are not returned to
 // requests made using the fetch API in the browser, and we need to ask the API
 // to return the response as a JSON object (the end point still defaults to
@@ -27,8 +27,11 @@ const __NEXTAUTH = {
   basePath: (typeof window === 'undefined')
     ? process.env.NEXTAUTH_BASE_PATH || '/api/auth'
     : '/api/auth',
-  clientMaxAge: 0, // e.g. 0 == disabled, 60 == 60 seconds
-  eventListenerAdded: false
+  clientPollInterval: 0, // e.g. 0 == disabled (always use cache) 60 == 60 seconds
+  clientMaxAge: 0, // e.g. 0 == disabled (always use cache) 60 == 60 seconds
+  clientLastSynced: 0, // used for timestamp since last sycned (in seconds)
+  timer: null, // timer for poll interval
+  eventListenersAdded: false // track if event listners have been added
 }
 
 // Method to set options. The documented way is to use the provider, but this
@@ -37,11 +40,13 @@ const __NEXTAUTH = {
 const setOptions = ({
   site,
   basePath,
-  clientMaxAge
+  clientMaxAge,
+  clientPollInterval
 } = {}) => {
   if (site) { __NEXTAUTH.site = site }
   if (basePath) { __NEXTAUTH.basePath = basePath }
   if (clientMaxAge) { __NEXTAUTH.clientMaxAge = clientMaxAge }
+  if (clientPollInterval) { __NEXTAUTH.clientPollInterval = clientPollInterval }
 }
 
 // Universal method (client + server)
@@ -75,20 +80,35 @@ const getProviders = async () => {
 const SessionContext = createContext()
 
 // Client side method
-// Hook to access the session data stored in the context
 const useSession = (session) => {
+  const clientMaxAge = __NEXTAUTH.clientMaxAge
+  const clientLastSynced = __NEXTAUTH.clientLastSynced
+  const currentTime = Math.floor(new Date().getTime() / 1000)
+
+  // Check client freshness (unless clientMaxAge is zero, which is disabled)
+  if (clientMaxAge > 0 && currentTime > (clientLastSynced + clientMaxAge)) {
+    // If we get here then cache is stale!
+    // Uupdate clientLastSynced right away (to avoid repeated invokations of the
+    // hook then invoke the actual hook instead of using the provider / cache.
+    __NEXTAUTH.clientLastSynced = Math.floor(new Date().getTime() / 1000)
+    return _useSessionHook(session)
+  }
+
+  // Try to use context if we can
   const value = useContext(SessionContext)
-  // If we have no Provider in the tree we call the actual hook for fetching the session
+
+  // If we have no Provider in the tree, call the actual hook 
   if (value === undefined) {
-    return useSessionData(session)
+    return _useSessionHook(session)
   }
 
   return value
 }
 
 // Internal hook for getting session from the api.
-const useSessionData = (session) => {
-  const clientMaxAge = __NEXTAUTH.clientMaxAge * 1000
+const _useSessionHook = (session) => {
+
+  const clientPollInterval = __NEXTAUTH.clientPollInterval * 1000
   const [data, setData] = useState(session)
   const [loading, setLoading] = useState(true)
   const _getSession = async (sendEvent = true) => {
@@ -96,13 +116,20 @@ const useSessionData = (session) => {
       setData(await getSession())
       setLoading(false)
 
+      // Update clientLastSynced when we get a successful response
+      __NEXTAUTH.clientLastSynced = Math.floor(new Date().getTime() / 1000)
+
       // Send event to trigger other tabs to update (unless sendEvent is false)
       if (sendEvent) {
         _sendMessage({ event: 'session', data: { trigger: 'useSessionData' } })
       }
 
-      if (typeof window !== 'undefined' && __NEXTAUTH.eventListenerAdded === false) {
-        __NEXTAUTH.eventListenerAdded = true
+      // Add event listners on first run
+      if (__NEXTAUTH.eventListenersAdded === false) {
+        __NEXTAUTH.eventListenersAdded = true
+
+        // Listen for storage events and update session if event fired from
+        // another window (but suppress firing another event to avoid a loop)
         window.addEventListener('storage', async (event) => {
           if (event.key === 'nextauth.message') {
             const message = JSON.parse(event.newValue)
@@ -111,19 +138,29 @@ const useSessionData = (session) => {
               // avoid an infinite loop.
               //
               // Note: We could pass session data through and do something like
-              // `setData(message.data)` but that causes problems depending on
-              // how the session object is being used and may expose session
-              // data to 3rd party scripts, it's safer to update the session
-              // this way.
+              // `setData(message.data)` but that can cause problems depending
+              // on how the session object is being used in the client; it is
+              // more robust to have each window/tab fetch it's own copy of the
+              // session object rather than share it across instances.
               await _getSession(false)
             }
           }
         })
+
+        // Listen for window focus/blur events
+        window.addEventListener("focus", async (event) => await _getSession() )
+        window.addEventListener("blue", async (event) => await _getSession() )
       }
 
-      // If CLIENT_MAXAGE is greater than zero, trigger auto re-fetching session
-      if (clientMaxAge > 0) {
-        setTimeout(async () => { await _getSession() }, clientMaxAge)
+      // If clientPollInterval is greater than zero trigger auto re-fetching
+      if (clientPollInterval > 0) {
+        // Clear existing timer (if there is one)
+        if (__NEXTAUTH.timer !== null) { clearTimeout(__NEXTAUTH.timer) }
+        
+        // Set next timer to trigger in number of seconds in clientPollInterval
+        __NEXTAUTH.timer = setTimeout(async () => { 
+          await _getSession()
+        }, clientPollInterval)
       }
     } catch (error) {
       logger.error('CLIENT_USE_SESSION_ERROR', error)
