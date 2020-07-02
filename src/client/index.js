@@ -1,4 +1,15 @@
-// fetch() is built in to Next.js 9.4 (you can use a polyfill if using an older version)
+/// Note: fetch() is built in to Next.js 9.4
+//
+// Note about signIn() and signOu() methods:
+//
+// On signIn() and signOu() we pass 'json: true' to request a response in JSON
+// instead of HTTP as redirect URLs on other domains are not returned to
+// requests made using the fetch API in the browser, and we need to ask the API
+// to return the response as a JSON object (the end point still defaults to
+// returning an HTTP response with a redirect for non-JavaScript clients).
+//
+// We use HTTP POST requests with CSRF Tokens to protect against CSRF attacks.
+
 /* global fetch:false */
 import { useState, useEffect, useContext, createContext, createElement } from 'react'
 import logger from '../lib/logger'
@@ -47,7 +58,7 @@ const getSession = async ({ req, ctx } = {}) => {
 }
 
 // Universal method (client + server)
-const getCsrfToken = async ({ req }) => {
+const getCsrfToken = async ({ req } = {}) => {
   const baseUrl = _baseUrl()
   const fetchOptions = req ? { headers: { cookie: req.headers.cookie } } : {}
   const data = await _fetchData(`${baseUrl}/csrf`, fetchOptions)
@@ -123,7 +134,7 @@ const useSessionData = (session) => {
 }
 
 // Client side method
-const signIn = async (provider, args) => {
+const signIn = async (provider, args = {}) => {
   const baseUrl = _baseUrl()
   const callbackUrl = (args && args.callbackUrl) ? args.callbackUrl : window.location
   const providers = await getProviders()
@@ -135,13 +146,7 @@ const signIn = async (provider, args) => {
   } else {
     // If is any other provider type, POST to provider URL with CSRF Token,
     // callback URL and any other parameters supplied.
-    //
-    // We pass 'json: true' to request a response in JSON instead of HTTP
-    // as redirect URLs on other domains are not returned when accessed using
-    // the fetch API in the browser, and we need to ask the end point to return
-    // the response as a JSON object (the end point still defaults to returning
-    // an HTTP response with a redirect for non-JavaScript clients).
-    const options = {
+    const fetchOptions = {
       method: 'post',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -153,32 +158,35 @@ const signIn = async (provider, args) => {
         json: true
       })
     }
-    const res = await fetch(`${baseUrl}/signin/${provider}`, options)
+    const signInUrl = (providers[provider].type === 'credentials')
+      ? `${baseUrl}/callback/${provider}`
+      : `${baseUrl}/signin/${provider}`
+    const res = await fetch(signInUrl, fetchOptions)
     const data = await res.json()
     window.location = data.url ? data.url : callbackUrl
   }
 }
 
 // Client side method
-const signOut = async (args) => {
+const signOut = async (args = {}) => {
   const callbackUrl = (args && args.callbackUrl) ? args.callbackUrl : window.location
 
   const baseUrl = _baseUrl()
-  const options = {
+  const fetchOptions = {
     method: 'post',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     },
     body: _encodedForm({
       csrfToken: await getCsrfToken(),
-      callbackUrl: callbackUrl
+      callbackUrl: callbackUrl,
+      json: true
     })
   }
-  const res = await fetch(`${baseUrl}/signout`, options)
-
+  const res = await fetch(`${baseUrl}/signout`, fetchOptions)
+  const data = await res.json()
   _sendMessage({ event: 'session', data: { trigger: 'signout' } })
-
-  window.location = res.url ? res.url : callbackUrl
+  window.location = data.url ? data.url : callbackUrl
 }
 
 // Provider to wrap the app in to make session data available globally
