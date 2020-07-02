@@ -4,10 +4,9 @@ import emailSignin from '../lib/signin/email'
 import logger from '../../lib/logger'
 
 export default async (req, res, options, done) => {
-  const { provider: providerName, providers, baseUrl, adapter, callbacks, csrfToken } = options
+  const { provider: providerName, providers, baseUrl, adapter, callbacks, csrfToken, redirect } = options
   const provider = providers[providerName]
   const { type } = provider
-  const reponseAsJson = !!((req.body && req.body.json === 'true'))
 
   if (!type) {
     res.status(500).end(`Error: Type not specified for ${provider}`)
@@ -18,33 +17,15 @@ export default async (req, res, options, done) => {
     oAuthSignin(provider, csrfToken, (error, oAuthSigninUrl) => {
       if (error) {
         logger.error('SIGNIN_OAUTH_ERROR', error)
-        if (reponseAsJson) {
-          res.json({ url: `${baseUrl}/error?error=oAuthSignin` })
-        } else {
-          res.status(302).setHeader('Location', `${baseUrl}/error?error=oAuthSignin`)
-          res.end()
-        }
-        return done()
+        return redirect(`${baseUrl}/error?error=oAuthSignin`)
       }
 
-      if (reponseAsJson) {
-        res.json({ url: oAuthSigninUrl, foobar: '1' })
-      } else {
-        res.status(302).setHeader('Location', oAuthSigninUrl)
-        res.end()
-      }
-      return done()
+      return redirect(oAuthSigninUrl)
     })
   } else if (type === 'email' && req.method === 'POST') {
     if (!adapter) {
       logger.error('EMAIL_REQUIRES_ADAPTER_ERROR')
-      if (reponseAsJson) {
-        res.json({ url: `${baseUrl}/error?error=Configuration` })
-      } else {
-        res.status(302).setHeader('Location', `${baseUrl}/error?error=Configuration`)
-        res.end()
-      }
-      return done()
+      return redirect(`${baseUrl}/error?error=Configuration`)
     }
     const { getUserByEmail } = await adapter.getAdapter(options)
 
@@ -63,48 +44,20 @@ export default async (req, res, options, done) => {
     const signinCallbackResponse = await callbacks.signin(profile, account)
 
     if (signinCallbackResponse === false) {
-      res.status(302).setHeader('Location', `${baseUrl}/error?error=AccessDenied`)
-      res.end()
-      return done()
+      return redirect(`${baseUrl}/error?error=AccessDenied`)
     }
 
     try {
       await emailSignin(email, provider, options)
     } catch (error) {
       logger.error('SIGNIN_EMAIL_ERROR', error)
-      if (reponseAsJson) {
-        res.json({ url: `${baseUrl}/error?error=EmailSignin` })
-      } else {
-        res.status(302).setHeader('Location', `${baseUrl}/error?error=EmailSignin`)
-        res.end()
-      }
-      return done()
+      return redirect(`${baseUrl}/error?error=EmailSignin`)
     }
 
-    if (reponseAsJson) {
-      res.json({
-        url: `${baseUrl}/verify-request?provider=${encodeURIComponent(
-        provider.id
-      )}&type=${encodeURIComponent(provider.type)}`
-      })
-    } else {
-      res.status(302).setHeader(
-        'Location',
-          `${baseUrl}/verify-request?provider=${encodeURIComponent(
-            provider.id
-          )}&type=${encodeURIComponent(provider.type)}`
-      )
-      res.end()
-    }
-    return done()
+    return redirect(`${baseUrl}/verify-request?provider=${encodeURIComponent(
+      provider.id
+    )}&type=${encodeURIComponent(provider.type)}`)
   } else {
-    if (reponseAsJson) {
-      res.json({ url: `${baseUrl}/signin` })
-    } else {
-      // If provider not supported, redirect to sign in page
-      res.status(302).setHeader('Location', `${baseUrl}/signin`)
-      res.end()
-    }
-    return done()
+    return redirect(`${baseUrl}/signin`)
   }
 }
