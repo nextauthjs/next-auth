@@ -192,6 +192,18 @@ export default async (req, res, userSuppliedOptions) => {
       cookie.set(res, cookies.csrfToken.name, newCsrfTokenCookie, cookies.csrfToken.options)
     }
 
+    // Helper method for handling redirects
+    const redirect = (redirectUrl) => {
+      const reponseAsJson = !!((req.body && req.body.json === 'true'))
+      if (reponseAsJson) {
+        res.json({ url: redirectUrl })
+      } else {
+        res.status(302).setHeader('Location', redirectUrl)
+        res.end()
+      }
+      return done()
+    }
+
     // User provided options are overriden by other options,
     // except for the options with special handling above
     const options = {
@@ -216,7 +228,8 @@ export default async (req, res, userSuppliedOptions) => {
       jwt: jwtOptions,
       events: eventsOption,
       callbacks: callbacksOption,
-      callbackUrl: site
+      callbackUrl: site,
+      redirect
     }
 
     // If debug enabled, set ENV VAR so that logger logs debug messages
@@ -224,19 +237,6 @@ export default async (req, res, userSuppliedOptions) => {
 
     // Get / Set callback URL based on query param / cookie + validation
     options.callbackUrl = await callbackUrlHandler(req, res, options)
-
-    // Helper method for handling redirects
-    const redirect = (redirectUrl) => {
-      const reponseAsJson = !!((req.body && req.body.json === 'true'))
-
-      if (reponseAsJson) {
-        res.json({ url: redirectUrl })
-      } else {
-        res.status(302).setHeader('Location', redirectUrl)
-        res.end()
-      }
-      return done()
-    }
 
     if (req.method === 'GET') {
       switch (action) {
