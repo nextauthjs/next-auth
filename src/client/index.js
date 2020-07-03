@@ -29,7 +29,7 @@ const __NEXTAUTH = {
     ? process.env.NEXTAUTH_BASE_PATH || '/api/auth'
     : '/api/auth',
   // keepAlive 0 == disabled (don't send); 60 == send every 60 seconds
-  keepAlive: 0, 
+  keepAlive: 0,
   // clientMaxAge 0 == disabled (only use cache); 60 == sync if last checked more than 60 seconds ago
   clientMaxAge: 0,
 
@@ -38,7 +38,7 @@ const __NEXTAUTH = {
   _clientSyncTimer: null, // stores timer for poll interval
   _eventListenersAdded: false, // tracks if event listeners have been added,
   _clientSession: undefined, // stores last session response from hook,
-  // Generate a unique ID to make it possible to identify when a message 
+  // Generate a unique ID to make it possible to identify when a message
   // was sent from this tab/window so it can be ignored to avoid event loops.
   _clientId: Math.random().toString(36).substring(2) + Date.now().toString(36),
   // Used to store to function export by getSession() hook
@@ -57,7 +57,7 @@ if (typeof window !== 'undefined') {
         const message = JSON.parse(event.newValue)
         if (message.event && message.event === 'session' && message.data) {
           // Ignore storage events fired from the same window that created them
-          if (__NEXTAUTH._clientId === message.clientId) { 
+          if (__NEXTAUTH._clientId === message.clientId) {
             return
           }
 
@@ -69,14 +69,14 @@ if (typeof window !== 'undefined') {
           // on how the session object is being used in the client; it is
           // more robust to have each window/tab fetch it's own copy of the
           // session object rather than share it across instances.
-          await __NEXTAUTH._getSession({event: 'storage'})
+          await __NEXTAUTH._getSession({ event: 'storage' })
         }
       }
     })
 
     // Listen for window focus/blur events
-    window.addEventListener("focus", async (event) => await __NEXTAUTH. _getSession({event: 'focus'}) )
-    window.addEventListener("blur", async (event) => await __NEXTAUTH._getSession({event: 'blur'}) )
+    window.addEventListener('focus', async (event) => await __NEXTAUTH._getSession({ event: 'focus' }))
+    window.addEventListener('blur', async (event) => await __NEXTAUTH._getSession({ event: 'blur' }))
   }
 }
 
@@ -92,18 +92,18 @@ const setOptions = ({
   if (site) { __NEXTAUTH.site = site }
   if (basePath) { __NEXTAUTH.basePath = basePath }
   if (clientMaxAge) { __NEXTAUTH.clientMaxAge = clientMaxAge }
-  if (keepAlive) { 
+  if (keepAlive) {
     __NEXTAUTH.keepAlive = keepAlive
 
     if (typeof window !== 'undefined' && keepAlive > 0) {
       // Clear existing timer (if there is one)
       if (__NEXTAUTH._clientSyncTimer !== null) { clearTimeout(__NEXTAUTH._clientSyncTimer) }
-      
+
       // Set next timer to trigger in number of seconds
-      __NEXTAUTH._clientSyncTimer = setTimeout(async () => { 
+      __NEXTAUTH._clientSyncTimer = setTimeout(async () => {
         // Only invoke keepalive when a session exists
         if (__NEXTAUTH._clientSession) {
-          await __NEXTAUTH._getSession({event: 'timer'})
+          await __NEXTAUTH._getSession({ event: 'timer' })
         }
       }, keepAlive * 1000)
     }
@@ -148,7 +148,7 @@ const useSession = (session) => {
   // Try to use context if we can
   const value = useContext(SessionContext)
 
-  // If we have no Provider in the tree, call the actual hook 
+  // If we have no Provider in the tree, call the actual hook
   if (value === undefined) {
     return _useSessionHook(session)
   }
@@ -162,8 +162,8 @@ const _useSessionHook = (session) => {
   const [loading, setLoading] = useState(true)
   const _getSession = async ({ event = null } = {}) => {
     try {
-      const triggredByEvent = (event !== null) ? true : false
-      const triggeredByStorageEvent = (event && event === 'storage') ? true : false
+      const triggredByEvent = (event !== null)
+      const triggeredByStorageEvent = !!((event && event === 'storage'))
 
       const clientMaxAge = __NEXTAUTH.clientMaxAge
       const clientLastSync = parseInt(__NEXTAUTH._clientLastSync)
@@ -171,12 +171,12 @@ const _useSessionHook = (session) => {
       const clientSession = __NEXTAUTH._clientSession
       const keepAlive = __NEXTAUTH.keepAlive
 
-      // Updates triggered by a storage event *always* trigger an update and we 
+      // Updates triggered by a storage event *always* trigger an update and we
       // always update if we don't have any value for the current session state.
       if (triggeredByStorageEvent === false && clientSession !== undefined) {
         if (clientMaxAge === 0 && triggredByEvent !== true) {
           // If there is no time defined for when a session should be considered
-          // stale, then it's okay to use the value we have until an event is 
+          // stale, then it's okay to use the value we have until an event is
           // triggered which updates it.
           return
         } else if (clientMaxAge > 0 && clientSession === null) {
@@ -186,7 +186,7 @@ const _useSessionHook = (session) => {
           // event and will skip this logic)
           return
         } else if (clientMaxAge > 0 && currentTime < (clientLastSync + clientMaxAge)) {
-          // If the session freshness is within clientMaxAge then don't request 
+          // If the session freshness is within clientMaxAge then don't request
           // it again on this call (avoids too many invokations).
           return
         }
@@ -194,7 +194,7 @@ const _useSessionHook = (session) => {
 
       if (clientSession === undefined) { __NEXTAUTH._clientSession = null }
 
-      // Update clientLastSync before making response to avoid repeated 
+      // Update clientLastSync before making response to avoid repeated
       // invokations that would otherwise be triggered while we are still
       // waiting for a response.
       __NEXTAUTH._clientLastSync = Math.floor(new Date().getTime() / 1000)
@@ -202,11 +202,11 @@ const _useSessionHook = (session) => {
       // If this call was invoked via a storage event (i.e. another window) then
       // tell getSession not to trigger an event when it calls to avoid an
       // infinate loop.
-      const triggerEvent = (triggeredByStorageEvent === false) ? true : false
-      const newClientSessionData =  await getSession({ triggerEvent })
+      const triggerEvent = (triggeredByStorageEvent === false)
+      const newClientSessionData = await getSession({ triggerEvent })
 
       // Save session state internally, just so we can track that we've checked
-      // if a session exists at least once. 
+      // if a session exists at least once.
       __NEXTAUTH._clientSession = newClientSessionData
 
       setData(newClientSessionData)
@@ -218,7 +218,7 @@ const _useSessionHook = (session) => {
 
   __NEXTAUTH._getSession = _getSession
 
-  useEffect(() => { 
+  useEffect(() => {
     _getSession()
   })
   return [data, loading]

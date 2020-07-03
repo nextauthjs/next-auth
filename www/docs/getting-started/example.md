@@ -50,34 +50,42 @@ The `useSession()` React Hook in the NextAuth.js client is the easiest way to ch
 
 ```jsx title="pages/index.js"
 import React from 'react'
-import { useSession } from 'next-auth/client'
+import {
+  signIn, 
+  signOut,
+  useSession
+} from 'next-auth/client'
 
 export default () => {
   const [ session, loading ] = useSession()
 
-  return <p>
+  return <>
     {!session && <>
       Not signed in <br/>
-      <a href="/api/auth/signin">Sign in</a>
+      <button onClick={signIn}>Sign in</button>
     </>}
     {session && <>
       Signed in as {session.user.email} <br/>
-      <a href="/api/auth/signout">Sign out</a>
+      <button onClick={signOut}>Sign out</button>
     </>}
-  </p>
+  </>
 }
 ```
 
 *That's all the code you need to add authentication to a project!*
 
-### Environment variables
+### Environment Variables
 
-When deploying to production, you should also set the `NEXTAUTH_URL` environment variable to the canonical URL of your site. This is required for sign in and to access sessions from API routes and server side functions.
+When deploying to production you need to set the `NEXTAUTH_URL` environment variable to the canonical URL of your site. This is required for sign in and to access sessions from API routes and server side functions.
 
-e.g. `NEXTAUTH_URL=https://example.com`
+#### Example
+
+```
+NEXTAUTH_URL=https://example.com
+```
 
 :::note
-Providers like [Vercel](https://vercel.com) provide a value `VERCEL_URL` which is similar (and is used as a fallback) but is not identical as it represents the instance of the site not the canonical URL.
+Providers like [Vercel](https://vercel.com) provide a value `VERCEL_URL` which is similar (and is used as a fallback) but is not identical as it represents the instance of the site not the canonical URL; you need to explicitly configure `NEXTAUTH_URL` with the URL of your site in your deployment.
 :::
 
 

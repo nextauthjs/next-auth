@@ -5,24 +5,27 @@ title: Options
 
 ## Environment Variables
 
-There are two options that must be set using environment variables.
+_Environment variable support was introduced in v3.0 to reduce the amount of configuration across client and server side rendered pages and API routes. Only the `NEXTAUTH_URL` environment variable is required._
 
-#### NEXTAUTH_URL (required)
+### NEXTAUTH_URL
 
-Set the `NEXTAUTH_URL` environment variable to the URL of your site.
+When deploying to production you need to set the `NEXTAUTH_URL` environment variable to the canonical URL of your site. This is required for sign in and to access sessions from API routes and server side functions.
 
-e.g. `NEXTAUTH_URL=https://example.com`
+#### Example
 
-#### NEXTAUTH_BASE_PATH (optional)
+```
+NEXTAUTH_URL=https://example.com
+```
 
-Only use `NEXTAUTH_BASE_PATH` if you cannot use `/api/auth` for your API route.
+### NEXTAUTH_BASE_PATH
 
-e.g. `NEXTAUTH_BASE_PATH=/api/auth` (default)
+If you cannot use `/api/auth` for your API route you can optionally define a different path using `NEXTAUTH_BASE_PATH`.
 
-:::note
-Environment variable configuration was introduced in v3.0 to simplify configuration across all pages and API routes.
-The `NEXTAUTH_URL` environment variable replaces the `site` option from NextAuth.js v2.
-:::
+#### Example
+
+```
+NEXTAUTH_BASE_PATH=/api/auth
+```
 
 ---
 
@@ -229,7 +232,7 @@ You can specify a handler for any of the callbacks below.
 
 ```js
 callbacks: {
-  signin: async (profile, account, metadata) => { },
+  signIn: async (profile, account, metadata) => { },
   redirect: async (url, baseUrl) => { },
   session: async (session, token) => { },
   jwt: async (token, profile) => => { }
@@ -255,8 +258,8 @@ The content of the message object varies depending on the flow (e.g. OAuth or Em
 
 ```js
 events: {
-  signin: async (message) => { /* on successful sign in */ },
-  signout: async (message) => { /* on signout */ },
+  signIn: async (message) => { /* on successful sign in */ },
+  signOut: async (message) => { /* on signout */ },
   createUser: async (message) => { /* user created */ },
   linkAccount: async (message) => { /* account linked to a user */ },
   session: async (message) => { /* session is active */ },
