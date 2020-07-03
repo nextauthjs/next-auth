@@ -21,14 +21,19 @@ import logger from '../lib/logger'
 // 2. When invoked server side the value is picked up from an environment
 //    variable and defaults to 'http://localhost:3000'.
 const __NEXTAUTH = {
+  // Configuration options
   site: (typeof window === 'undefined')
     ? process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000'
     : '',
   basePath: (typeof window === 'undefined')
     ? process.env.NEXTAUTH_BASE_PATH || '/api/auth'
     : '/api/auth',
-  keepAlive: 0, // e.g. 0 == disabled (don't keep alive) 60 == 60 seconds
-  clientMaxAge: 0, // e.g. 0 == disabled (always use cache) 60 == 60 seconds
+  // keepAlive 0 == disabled (don't send); 60 == send every 60 seconds
+  keepAlive: 0, 
+  // clientMaxAge 0 == disabled (only use cache); 60 == sync if last checked more than 60 seconds ago
+  clientMaxAge: 0,
+
+  // These properties are used for tracking internal state only
   _clientLastSync: 0, // used for timestamp since last sycned (in seconds)
   _clientSyncTimer: null, // stores timer for poll interval
   _eventListenersAdded: false, // tracks if event listeners have been added,
@@ -40,7 +45,7 @@ const __NEXTAUTH = {
   _getSession: () => {}
 }
 
-// Add event listners on first invokation
+// Add event listners on load
 if (typeof window !== 'undefined') {
   if (__NEXTAUTH._eventListenersAdded === false) {
     __NEXTAUTH._eventListenersAdded = true
@@ -90,7 +95,7 @@ const setOptions = ({
   if (keepAlive) { 
     __NEXTAUTH.keepAlive = keepAlive
 
-    if (keepAlive > 0) {
+    if (typeof window !== 'undefined' && keepAlive > 0) {
       // Clear existing timer (if there is one)
       if (__NEXTAUTH._clientSyncTimer !== null) { clearTimeout(__NEXTAUTH._clientSyncTimer) }
       
