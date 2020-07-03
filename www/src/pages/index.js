@@ -175,25 +175,25 @@ function Home () {
 
 const reactComponentCode = `
 import React from 'react'
-import { 
-  useSession, 
-  signin, 
-  signout 
+import {
+  signIn, 
+  signOut,
+  useSession
 } from 'next-auth/client'
 
 export default () => {
   const [ session, loading ] = useSession()
 
-  return <p>
+  return <>
     {!session && <>
       Not signed in <br/>
-      <button onClick={signin}>Sign in</button>
+      <button onClick={signIn}>Sign in</button>
     </>}
     {session && <>
       Signed in as {session.user.email} <br/>
-      <button onClick={signout}>Sign out</button>
+      <button onClick={signOut}>Sign out</button>
     </>}
-  </p>
+  </>
 }
 `.trim()
 

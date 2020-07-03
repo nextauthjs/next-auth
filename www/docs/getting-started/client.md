@@ -222,9 +222,11 @@ If you pass the `session` page prop to the `<Provider>` – as in the example ab
 
 ### Options
 
-You can pass options to the provider.
+The session state is automatically synchronized across all open tabs/windows and they are all updated whenever they gain or lose focus or the state changes in any of them (e.g. a user signs in or out).
 
-e.g.
+If you have session expiry times of 30 days (the default) or more then you probably don't need to change any of the default options in the Provider. If you need to, you can can trigger an update of the session object across all tabs/windows by calling `getSession()` from a client side function.
+
+However, if you need to customise the session behaviour and/or are using short session expiry times, you can pass options to the provider to customise the behaviour of the `useSession()` hook.
 
 ```jsx title="pages/_app.js"
 import { Provider } from 'next-auth/client'
@@ -233,7 +235,8 @@ export default ({ Component, pageProps }) => {
   const { session } = pageProps
   return (
     <Provider options={{ 
-      clientMaxAge: 60 * 60 // Auto-update client state every hour
+      clientMaxAge: 60 // Re-fetch session if cache is older than 60 seconds
+      keepAlive: 5 * 60 // Send keepAlive message every 5 minutes
      }} session={session} >
       <Component {...pageProps} />
     </Provider>
@@ -241,17 +244,35 @@ export default ({ Component, pageProps }) => {
 }
 ```
 
-#### clientMaxAge
+:::note
+**These options have no effect on clients that are not signed in.**
 
-**clientMaxAge** defines how often (in seconds) the client should automatically refresh the session.
+Every tab/window maintains it's own copy of the local session state; the session it is not stored in shared storage like localStorage or sessionStorage. Any update in one tab/window triggers a message to other tabs/windows to update their own session state.
 
-When `clientMaxAge` is set to `0` (the default) sessions are not re-checked automatically, only when a new window or tab is opened or when `getSession()` is called. If set to any other value, specifies how many seconds the client should poll the server to check the session is valid and to keep it alive.
-
-It can be useful to use this option to prevent sessions from timing out if your application has a short session expiry time but when you want them to stay active as long as a window or tab is active. This option usually has cost implications as checking session status triggers a call to a server side route and/or a database.
-
-:::tip
-In NextAuth.js session state is automatically synchronized across all open windows and tabs in the same browser. If you have session expiry times of 30 days or more (the default) you probably don't need to use the `clientMaxAge` option, or can set it to a high value (e.g. every 24 hours).
+Using low values for `clientMaxAge` or `keepAlive` will increase network traffic and load on  authenticated clients and may impact hosting costs and performance.
 :::
+
+#### Client Max Age
+
+The `clientMaxAge` option is the maximum age a session data can be on the client before it is considerd stale.
+
+When `clientMaxAge` is set to `0` (the default) the cache will always be used when useSession is called and only explicit calls made to get the session status (i.e. `getSession()`) or event triggers, such as signing in or out in another tab/window, or a tab/window gaining or losing focus, will trigger an update of the session state.
+
+If set to any value other than zero, it specifies in seconds the maxium age of session data on the client before the `useSession()` hook will call the server again to sync the session state.
+
+Unless you have a short session expiry time (e.g. < 24 hours) you probably don't need to change this option. Setting this option to too short a value will increase load (and potentially hosting costs).
+
+The value for `clientMaxAge` should always be lower than the value of the session `maxAge` option.
+
+#### Keep Alive
+
+The `keepAlive` option is how often the client should contact the server to avoid a session expirying.
+
+When `keepAlive` is set to `0` (the default) it will not send a keep alive message.
+
+If set to any value other than zero, it specifies in seconds how often the client should contact the server to update the session state. If the session state has expired when it is triggered, all open tabs/windows will be updated to reflect this.
+
+The value for `keepAlive` should always be lower than the value of the session `maxAge` option.
 
 :::note
 See [**the Next.js documentation**](https://nextjs.org/docs/advanced-features/custom-app) for more information on **_app.js** in Next.js applications.

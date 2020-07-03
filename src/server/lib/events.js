@@ -1,9 +1,9 @@
-const signin = async (message) => {
+const signIn = async (message) => {
   // Event triggered on successful sign in
 }
 
-const signout = async (message) => {
-  // Event triggered on signout
+const signOut = async (message) => {
+  // Event triggered on sign out
 }
 
 const createUser = async (message) => {
@@ -28,8 +28,8 @@ const error = async (message) => {
 }
 
 export default {
-  signin,
-  signout,
+  signIn,
+  signOut,
   createUser,
   updateUser,
   linkAccount,

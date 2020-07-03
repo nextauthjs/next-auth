@@ -13,7 +13,7 @@ export default async (req, res, options, done) => {
     // Dispatch signout event
     try {
       const decodedJwt = await jwt.decode({ secret: jwt.secret, token: sessionToken, maxAge: sessionMaxAge })
-      await dispatchEvent(events.signout, decodedJwt)
+      await dispatchEvent(events.signOut, decodedJwt)
     } catch (error) {
       // Do nothing if decoding the JWT fails
     }
@@ -24,7 +24,7 @@ export default async (req, res, options, done) => {
     try {
       // Dispatch signout event
       const session = await getSession(sessionToken)
-      await dispatchEvent(events.signout, session)
+      await dispatchEvent(events.signOut, session)
     } catch (error) {
       // Do nothing if looking up the session fails
     }

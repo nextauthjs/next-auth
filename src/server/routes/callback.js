@@ -55,9 +55,9 @@ export default async (req, res, options, done) => {
           }
 
           // Check if user is allowed to sign in
-          const signinCallbackResponse = await callbacks.signin(profile, account, OAuthProfile)
+          const signInCallbackResponse = await callbacks.signIn(profile, account, OAuthProfile)
 
-          if (signinCallbackResponse === false) {
+          if (signInCallbackResponse === false) {
             return redirect(`${baseUrl}/error?error=AccessDenied`)
           }
 
@@ -81,7 +81,7 @@ export default async (req, res, options, done) => {
             cookie.set(res, cookies.sessionToken.name, session.sessionToken, { expires: session.expires || null, ...cookies.sessionToken.options })
           }
 
-          await dispatchEvent(events.signin, { user, account, isNewUser })
+          await dispatchEvent(events.signIn, { user, account, isNewUser })
 
           // Handle first logins on new accounts
           // e.g. option to send users to a new account landing page on initial login
@@ -134,9 +134,9 @@ export default async (req, res, options, done) => {
       const account = { id: provider.id, type: 'email', providerAccountId: email }
 
       // Check if user is allowed to sign in
-      const signinCallbackResponse = await callbacks.signin(profile, account, null)
+      const signInCallbackResponse = await callbacks.signIn(profile, account, null)
 
-      if (signinCallbackResponse === false) {
+      if (signInCallbackResponse === false) {
         return redirect(`${baseUrl}/error?error=AccessDenied`)
       }
 
@@ -160,7 +160,7 @@ export default async (req, res, options, done) => {
         cookie.set(res, cookies.sessionToken.name, session.sessionToken, { expires: session.expires || null, ...cookies.sessionToken.options })
       }
 
-      await dispatchEvent(events.signin, { user, account, isNewUser })
+      await dispatchEvent(events.signIn, { user, account, isNewUser })
 
       // Handle first logins on new accounts
       // e.g. option to send users to a new account landing page on initial login
@@ -212,9 +212,9 @@ export default async (req, res, options, done) => {
       return redirect(`${baseUrl}/error?error=CredentialsSignin&provider=${encodeURIComponent(provider.id)}`)
     }
 
-    const signinCallbackResponse = await callbacks.signin(user, account, credentials)
+    const signInCallbackResponse = await callbacks.signIn(user, account, credentials)
 
-    if (signinCallbackResponse === false) {
+    if (signInCallbackResponse === false) {
       return redirect(`${baseUrl}/error?error=AccessDenied`)
     }
 
@@ -230,7 +230,7 @@ export default async (req, res, options, done) => {
 
     cookie.set(res, cookies.sessionToken.name, newEncodedJwt, { expires: cookieExpires.toISOString(), ...cookies.sessionToken.options })
 
-    await dispatchEvent(events.signin, { user, account })
+    await dispatchEvent(events.signIn, { user, account })
 
     return redirect(callbackUrl || site)
   } else {
