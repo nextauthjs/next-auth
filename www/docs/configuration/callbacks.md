@@ -13,7 +13,7 @@ You can specify a handler for any of the callbacks below.
 
 ```js title="pages/api/auth/[...nextauth.js]"
 callbacks: {
-  signin: async (profile, account, metadata) => { },
+  signIn: async (profile, account, metadata) => { },
   redirect: async (url, baseUrl) => { },
   session: async (session, token) => { },
   jwt: async (token, profile) => { }
@@ -22,53 +22,52 @@ callbacks: {
 
 The documentation below shows how to implement each callback and their default behaviour.
 
-## Signin
+## Sign In
 
 Use the signin callback to control if a user is allowed to sign in or not.
 
-This is triggered before sign in flow completes, so the user profile may be a
-user object (with an ID) or it may be just their name and email address,
-depending on the sign in flow and if they have an account already.
+This is triggered before sign in flow completes, so the user profile may be a user object (with an ID) or it may be just their name and email address, depending on the sign in flow and if they have an account already.
 
-When using email sign in, this method is triggered both when the user requests
-to sign in and again when they activate the link in the sign in email.
+When using email sign in, this method is triggered both when the user requests to sign in and again when they activate the link in the sign in email.
 
-```js
-/**
- * @param  {object} profile  User profile (e.g. user id, name, email)
- * @param  {object} account  Account used to sign in (e.g. OAuth account)
- * @param  {object} metadata Provider specific metadata (e.g. OAuth Profile)
- * @return {boolean|object}  Return `true` (or a modified JWT) to allow sign in
- *                           Return `false` to deny access
- */
-const signin = async (profile, account, metadata) => {
-  const isAllowedToSignIn = true
-  if (isAllowedToSignIn) {
-    return Promise.resolve(true)
-  } else {
-    return Promise.resolve(false)
+```js title="pages/api/auth/[...nextauth.js]"
+callbacks: {
+  /**
+   * @param  {object} profile  User profile (e.g. user id, name, email)
+   * @param  {object} account  Account used to sign in (e.g. OAuth account)
+   * @param  {object} metadata Provider specific metadata (e.g. OAuth Profile)
+   * @return {boolean|object}  Return `true` (or a modified JWT) to allow sign in
+   *                           Return `false` to deny access
+   */
+  signIn: async (profile, account, metadata) => {
+    const isAllowedToSignIn = true
+    if (isAllowedToSignIn) {
+      return Promise.resolve(true)
+    } else {
+      return Promise.resolve(false)
+    }
   }
 }
 ```
 
 ## Redirect
 
-The redirect callback is called anytime the user is redirected to a callback URL
-(e.g. on signin or signout).
+The redirect callback is called anytime the user is redirected to a callback URL (e.g. on signin or signout).
 
-By default, for security, only Callback URLs on the same URL as the site are
-allowed, you can use the redirect callback to customise that behaviour.
+By default, for security, only Callback URLs on the same URL as the site are allowed, you can use the redirect callback to customise that behaviour.
 
-```js
-/**
- * @param  {string} url      URL provided as callback URL by the client
- * @param  {string} baseUrl  Default base URL of site (can be used as fallback)
- * @return {string}          URL the client will be redirect to
- */
-const redirect = async (url, baseUrl) => {
-  return url.startsWith(baseUrl)
-    ? Promise.resolve(url)
-    : Promise.resolve(baseUrl)
+```js title="pages/api/auth/[...nextauth.js]"
+callbacks: {
+  /**
+   * @param  {string} url      URL provided as callback URL by the client
+   * @param  {string} baseUrl  Default base URL of site (can be used as fallback)
+   * @return {string}          URL the client will be redirect to
+   */
+  redirect: async (url, baseUrl) => {
+    return url.startsWith(baseUrl)
+      ? Promise.resolve(url)
+      : Promise.resolve(baseUrl)
+  }
 }
 ```
 
@@ -78,20 +77,21 @@ The session callback is called whenever a session is checked.
 
 e.g. `getSession()`, `useSession()`, `/api/auth/session` (etc)
 
-If JSON Web Tokens are enabled, you can also access the decrypted token and use
-this method to pass information from the encoded token back to the client.
+If JSON Web Tokens are enabled, you can also access the decrypted token and use this method to pass information from the encoded token back to the client.
 
 The JWT callback is invoked before the session() callback is called, so anything you add to the
 JWT will be immediately available in the session callback.
 
-```js
-/**
- * @param  {object} session  Session object
- * @param  {object} token    JSON Web Token (if enabled)
- * @return {object}          Session that will be returned to the client 
- */
-const session = async (session, token) => {
-  return Promise.resolve(session)
+```js title="pages/api/auth/[...nextauth.js]"
+callbacks: {
+  /**
+   * @param  {object} session  Session object
+   * @param  {object} token    JSON Web Token (if enabled)
+   * @return {object}          Session that will be returned to the client 
+   */
+  session: async (session, token) => {
+    return Promise.resolve(session)
+  }
 }
 ```
 
@@ -104,16 +104,19 @@ e.g. `/api/auth/signin`, `getSession()`, `useSession()`, `/api/auth/session` (et
 
 * The JWT expiry time is updated / extended whenever a session is accessed.
 
-* On sign in, the raw profile object returned by the provider is also passed as a parameter.
-It is not available on subsequent calls. You can take advantage of this to persist additional data from the profile in the JWT.
+* On sign in, the raw profile for a user returned by the provider is also passed as a parameter.
 
-```js
-/**
- * @param  {object} token    Decrypted JSON Web Token
- * @param  {object} profile  Profile - only available on sign in
- * @return {object}          JSON Web Token that will be saved
- */
-const jwt = async (token, profile) => {
-  return Promise.resolve(token)
+The raw profile is not available after the initial callback that is triggered when the user signs in. You can take advantage of it beomg present on the first callback, to persist any additional data you need from the users profile in the JWT.
+
+```js title="pages/api/auth/[...nextauth.js]"
+callbacks: {
+  /**
+   * @param  {object} token    Decrypted JSON Web Token
+   * @param  {object} profile  Profile - only available on sign in
+   * @return {object}          JSON Web Token that will be saved
+   */
+  jwt: async (token, profile) => {
+    return Promise.resolve(token)
+  }
 }
 ```

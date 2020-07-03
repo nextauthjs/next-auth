@@ -1,5 +1,5 @@
 /**
- * Use the signin callback to control if a user is allowed to sign in or not.
+ * Use the signIn callback to control if a user is allowed to sign in or not.
  *
  * This is triggered before sign in flow completes, so the user profile may be
  * a user object (with an ID) or it may be just their name and email address,
@@ -15,7 +15,7 @@
  * @return {boolean|object}  Return `true` (or a modified JWT) to allow sign in
  *                           Return `false` to deny access
  */
-const signin = async (profile, account, metadata) => {
+const signIn = async (profile, account, metadata) => {
   const isAllowedToSignIn = true
   if (isAllowedToSignIn) {
     return Promise.resolve(true)
@@ -68,7 +68,7 @@ const jwt = async (token, oAuthProfile) => {
 }
 
 export default {
-  signin,
+  signIn,
   redirect,
   session,
   jwt
