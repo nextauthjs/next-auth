@@ -14,8 +14,8 @@ To add a custom login page, for example. You can use the `pages` option:
 ```javascript title="pages/api/auth/[...nextauth].js"
   ...
   pages: {
-    signin: '/auth/signin',
-    signout: '/auth/signout',
+    signIn: '/auth/signin',
+    signOut: '/auth/signout',
     error: '/auth/error', // Error code passed in query string as ?error=
     verifyRequest: '/auth/verify-request', // (used for check email message)
     newUser: null // If set, new users will be directed here on first sign in
