@@ -13,11 +13,10 @@ export default (options) => {
     profileUrl: null,
     idToken: true,
     profile: (profile) => {
-
-      //The name of the user will only return on first login
+      // The name of the user will only return on first login
       return {
         id: profile.sub,
-        name: profile.user != null ? profile.user.name.firstName + " " + profile.user.name.lastName : null,
+        name: profile.user != null ? profile.user.name.firstName + ' ' + profile.user.name.lastName : null,
         email: profile.email
       }
     },
