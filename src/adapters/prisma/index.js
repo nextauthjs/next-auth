@@ -39,7 +39,10 @@ const Adapter = (prismaConfig, options = {}) => {
             name: profile.name,
             email: profile.email,
             image: profile.image,
-            emailVerified: profile.emailVerified && Object.prototype.toString.call(profile.emailVerified) === '[object Date]' ? profile.emailVerified.toISOString() : null
+            emailVerified: profile.emailVerified && 
+            Object.prototype.toString.call(profile.emailVerified) === '[object Date]'
+              ? profile.emailVerified.toISOString() 
+              : null
           }
         })
       } catch (error) {
