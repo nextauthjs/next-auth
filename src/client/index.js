@@ -28,12 +28,9 @@ const __NEXTAUTH = {
   basePath: (typeof window === 'undefined')
     ? process.env.NEXTAUTH_BASE_PATH || '/api/auth'
     : '/api/auth',
-  // keepAlive 0 == disabled (don't send); 60 == send every 60 seconds
-  keepAlive: 0,
-  // clientMaxAge 0 == disabled (only use cache); 60 == sync if last checked more than 60 seconds ago
-  clientMaxAge: 0,
-
-  // These properties are used for tracking internal state only
+  keepAlive: 0, // 0 == disabled (don't send); 60 == send every 60 seconds
+  clientMaxAge: 0, // 0 == disabled (only use cache); 60 == sync if last checked > 60 seconds ago
+  // Properties starting with _ are used for tracking internal app state
   _clientLastSync: 0, // used for timestamp since last sycned (in seconds)
   _clientSyncTimer: null, // stores timer for poll interval
   _eventListenersAdded: false, // tracks if event listeners have been added,
@@ -75,8 +72,8 @@ if (typeof window !== 'undefined') {
     })
 
     // Listen for window focus/blur events
-    window.addEventListener('focus', async (event) => await __NEXTAUTH._getSession({ event: 'focus' }))
-    window.addEventListener('blur', async (event) => await __NEXTAUTH._getSession({ event: 'blur' }))
+    window.addEventListener('focus', async (event) => __NEXTAUTH._getSession({ event: 'focus' }))
+    window.addEventListener('blur', async (event) => __NEXTAUTH._getSession({ event: 'blur' }))
   }
 }
 
@@ -169,7 +166,6 @@ const _useSessionHook = (session) => {
       const clientLastSync = parseInt(__NEXTAUTH._clientLastSync)
       const currentTime = Math.floor(new Date().getTime() / 1000)
       const clientSession = __NEXTAUTH._clientSession
-      const keepAlive = __NEXTAUTH.keepAlive
 
       // Updates triggered by a storage event *always* trigger an update and we
       // always update if we don't have any value for the current session state.
