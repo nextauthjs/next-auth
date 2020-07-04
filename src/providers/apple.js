@@ -36,7 +36,9 @@ export default (options) => {
           aud: 'https://appleid.apple.com',
           sub: appleId
         },
-        privateKey,
+        // Automatically convert \\n into \n if found in private key. If the key
+        // is passed in an environment variable \n can get escaped as \\n
+        privateKey.replace(/\\n/g, '\n'), 
         {
           algorithm: 'ES256',
           keyid: keyId
