@@ -91,14 +91,14 @@ generator client {
 
 model User {
   id            String    @default(uuid()) @id
-  email         String    @unique
+  email         String?   @unique
   emailVerified DateTime?
   image         String?
   name          String?
   sessions      Session[]
   accounts      Account[]
   createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  updatedAt     DateTime  @updatedAt @default(now())
 }
 
 model Session {
@@ -110,7 +110,7 @@ model Session {
   accessTokenExpires DateTime?
   expires            DateTime?
   createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
+  updatedAt          DateTime  @updatedAt @default(now())
 }
 
 model Account {
@@ -125,7 +125,7 @@ model Account {
   accessToken        String?
   accessTokenExpires DateTime?
   createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
+  updatedAt          DateTime  @updatedAt @default(now())
 }
 
 model VerificationRequest {
@@ -134,11 +134,28 @@ model VerificationRequest {
   token      String   @unique
   expires    DateTime
   createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  updatedAt  DateTime @updatedAt @default(now())
 }
 ```
 
-The models themselves need to be defined like above, but the datasource can be changed to what you want.
+The properties in the models need to be defined as above, but the model names themselves can be changed with a configuration option, and the datasource can be changed to what you want.
+
+Example usage with custom model names:
+```javascript
+...
+adapter: Adapters.Prisma.Adapter({ 
+  prisma,
+  modelMapping: {
+    User: 'user',
+    Account: 'providerAccount',
+    Session: 'session',
+    VerificationRequest: 'verification'
+  }  
+})
+...
+```
+
+This example shows using e.g. `model ProviderAccount` instead of `model Account` and `model Verification` instead of `model VerificationRequest`.
 
 ## Custom adapters
 
