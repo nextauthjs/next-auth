@@ -10,28 +10,25 @@ import logger from '../../../lib/logger'
 // come up, as the node-oauth package does not seem to be actively maintained.
 
 // @TODO Refactor to use promises and not callbacks
-
 // @TODO Refactor to use jsonwebtoken instead of jwt-decode & remove dependancy
-
 export default async (req, provider, callback) => {
-  //user = specific to apple provider on first sign in returns an object '{"name":{"firstName":"Johnny","lastName":"Appleseed"},"email":"johnny.appleseed@nextauth.com"}'
+  // The "user" object is specific to apple provider and is provided on first sign in
+  // e.g. {"name":{"firstName":"Johnny","lastName":"Appleseed"},"email":"johnny.appleseed@nextauth.com"}
   let { oauth_token, oauth_verifier, code, user } = req.query // eslint-disable-line camelcase
   const client = oAuthClient(provider)
 
   if (provider.version && provider.version.startsWith('2.')) {
     if (req.method === 'POST') {
+      try {
+        const body = JSON.parse(JSON.stringify(req.body))
+        if (body.error) { throw new Error(body.error) }
 
-      // Get the CODE from Body
-      const body = JSON.parse(JSON.stringify(req.body))
-
-      // @TODO Handle error
-      if (body.error) {
-        logger.error('OAUTH_CALLBACK_HANDLER_ERROR', body.error, req.body, provider.id, code)
+        code = body.code
+        user = body.user != null ? JSON.parse(body.user) : null
+      } catch (e) {
+        logger.error('OAUTH_CALLBACK_HANDLER_ERROR', e, req.body, provider.id, code)
         return callback()
       }
-
-      code = body.code
-      user = body.user != null ? JSON.parse(body.user) : null;
     }
 
     // Pass authToken in header by default (unless 'useAuthTokenHeader: false' is set)
@@ -48,15 +45,13 @@ export default async (req, provider, callback) => {
       code,
       provider,
       (error, accessToken, refreshToken, results) => {
-        // @TODO Handle error
         if (error || results.error) {
           logger.error('OAUTH_GET_ACCESS_TOKEN_ERROR', error, results, provider.id, code)
           return callback(error || results.error)
         }
 
         if (provider.idToken) {
-
-           // If we don't have an ID Token most likely the user hit a cancel
+          // If we don't have an ID Token most likely the user hit a cancel
           // button when signing in (or the provider is misconfigured).
           //
           // Unfortunately, we can't tell which, so we can't treat it as an
@@ -133,11 +128,12 @@ async function _getProfile (error, profileData, accessToken, refreshToken, provi
     // Convert profileData into an object if it's a string
     if (typeof profileData === 'string' || profileData instanceof String) { profileData = JSON.parse(profileData) }
 
-    if(userData != null)
-    {
-       profileData.user = userData;
-       logger.debug("ProfileData and UserData", profileData)
+    // If a user object is supplied (e.g. Apple provider) add it to the profile object
+    if (userData != null) {
+      profileData.user = userData
     }
+
+    logger.debug('PROFILE_DATA', profileData)
 
     profile = await provider.profile(profileData)
   } catch (exception) {
