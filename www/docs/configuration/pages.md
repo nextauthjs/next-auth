@@ -9,7 +9,7 @@ The options displayed on the sign up page are automatically generated based on t
 
 ### Example
 
-To add a custom login page, for example. You can us the `pages` option:
+To add a custom login page, for example. You can use the `pages` option:
 
 ```javascript title="pages/api/auth/[...nextauth].js"
   ...
