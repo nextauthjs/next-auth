@@ -175,6 +175,8 @@ export default async (req, res) =>  {
 }
 ```
 
+The built-in `getJwt()` helper method will check for an exisiting cookie first, and if that's not found it will check for an `authorization` header with a `Bearer` token. This way you can easily secure e.g. API routes and use a standalone REST/GraphQL client to explore your data.
+
 :::note
 The JWT is stored in the Session Token cookie – the same cookie used for database sessions.
 :::
