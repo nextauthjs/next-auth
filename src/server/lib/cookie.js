@@ -15,7 +15,9 @@ const set = (res, name, value, options = {}) => {
   }
 
   // Preserve any existing cookies that have already been set in the same session
-  const setCookieHeader = res.getHeader('Set-Cookie') || []
+  let setCookieHeader = res.getHeader('Set-Cookie') || []
+  // If not an array (i.e. a string with a single cookie) convert it into an array
+  if (!Array.isArray(setCookieHeader)) { setCookieHeader = [setCookieHeader] }
   setCookieHeader.push(_serialize(name, String(stringValue), options))
   res.setHeader('Set-Cookie', setCookieHeader)
 }
