@@ -42,7 +42,10 @@ module.exports = {
       "schemas/mongodb",
       "schemas/adapters",
     ],
-    Tutorials: ["tutorials/testing"],
+    Tutorials: [
+      "tutorials/testing",
+      "tutorials/custom-typeorm-models",
+    ],
     /*
     'Version 1 (Legacy)': [
       'v1/getting-started-v1',
