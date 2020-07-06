@@ -14,6 +14,7 @@ import IdentityServer4 from './identity-server4'
 import Mixer from './mixer'
 import Okta from './okta'
 import Slack from './slack'
+import Spotify from './spotify'
 import Twitch from './twitch'
 import Twitter from './twitter'
 import Yandex from './yandex'
@@ -35,6 +36,7 @@ export default {
   Mixer,
   Okta,
   Slack,
+  Spotify,
   Twitter,
   Twitch,
   Yandex
