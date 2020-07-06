@@ -43,7 +43,7 @@ export default () => {
 
   return <>
     {session && <p>Signed in as {session.user.email}</p>}
-    {!session && <p><a href="/api/auth/signin">Sign in</p>}
+    {!session && <p><a href="/api/auth/signin">Sign in</a></p>}
   </>
 }
 ```
@@ -216,7 +216,7 @@ export default () => (
 
 As with the `signin()` function, you can specify a `callbackUrl` parameter by passing it as an option.
 
-e.g. `signout{ callbackUrl: 'http://localhost:3000/foo' })`
+e.g. `signout({ callbackUrl: 'http://localhost:3000/foo' })`
 
 The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect). By default this means it must be an absolute URL at the same hostname (or else it will default to the homepage); you can define your own custom redirect callback to allow other URLs, including supporting relative URLs.
 

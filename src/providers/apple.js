@@ -13,9 +13,10 @@ export default (options) => {
     profileUrl: null,
     idToken: true,
     profile: (profile) => {
+      // The name of the user will only return on first login
       return {
         id: profile.sub,
-        name: profile.name == null ? profile.sub : profile.name,
+        name: profile.user != null ? profile.user.name.firstName + ' ' + profile.user.name.lastName : null,
         email: profile.email
       }
     },
@@ -35,7 +36,9 @@ export default (options) => {
           aud: 'https://appleid.apple.com',
           sub: appleId
         },
-        privateKey,
+        // Automatically convert \\n into \n if found in private key. If the key
+        // is passed in an environment variable \n can get escaped as \\n
+        privateKey.replace(/\\n/g, '\n'), 
         {
           algorithm: 'ES256',
           keyid: keyId
