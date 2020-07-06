@@ -28,7 +28,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
   // anything to do them). This function updates arguments by reference.
   adapterTransform(typeOrmConfigObject, models, options)
 
-  const config = adapterConfig.loadConfig(typeOrmConfigObject, { models, ...options })
+  const config = adapterConfig.loadConfig(typeOrmConfigObject, { ...options, models })
 
   // Create objects from models that can be consumed by functions in the adapter
   const User = models.User.model
