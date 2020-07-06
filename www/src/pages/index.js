@@ -5,6 +5,7 @@ import Link from '@docusaurus/Link'
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
 import useBaseUrl from '@docusaurus/useBaseUrl'
 import CodeBlock from '@theme/CodeBlock'
+import ProviderMarquee from '../components/ProviderMarquee'
 import Seo from './seo'
 import styles from './styles.module.css'
 
@@ -112,6 +113,13 @@ function Home () {
               {features.map((props, idx) => (
                 <Feature key={idx} {...props} />
               ))}
+            </div>
+          </div>
+        </section>
+        <section>
+          <div className='container'>
+            <div className='row'>
+              <ProviderMarquee />
             </div>
           </div>
         </section>
