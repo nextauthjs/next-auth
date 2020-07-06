@@ -26,12 +26,20 @@ const getJwt = async ({ req, secret, cookieName, maxAge }) => {
 
   const secureCookieName = '__Secure-next-auth.session-token'
   const insecureCookieName = 'next-auth.session-token'
-  const cookieValue = cookieName ? req.cookies[cookieName] : req.cookies[secureCookieName] || req.cookies[insecureCookieName]
+  let token = cookieName ? req.cookies[cookieName] : req.cookies[secureCookieName] || req.cookies[insecureCookieName]
 
-  if (!cookieValue) { return null }
+  if (!token) {
+    // Check authorization header if no cookie is present
+    if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
+      const urlEncodedToken = req.headers.authorization.split(' ')[1]
+      token = decodeURIComponent(urlEncodedToken)
+    }
+  }
+
+  if (!token) { return null }
 
   try {
-    return await decode({ secret, token: cookieValue, maxAge })
+    return await decode({ secret, token, maxAge })
   } catch (error) {
     return null
   }
