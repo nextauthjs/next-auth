@@ -37,6 +37,7 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 * [Mixer](/providers/Mixer)
 * [Okta](/providers/Okta)
 * [Slack](/providers/slack)
+* [Spotify](/providers/spotify)
 * [Twitch](/providers/Twitch)
 * [Twitter](/providers/twitter)
 * [Yandex](/providers/yandex)
