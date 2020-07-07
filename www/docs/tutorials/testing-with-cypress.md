@@ -1,6 +1,6 @@
 ---
-id: testing
-title: Testing
+id: testing-with-cypress
+title: Testing with Cypress
 ---
 
 To test an implementation of NextAuth.js, we encourage you to use [Cypress](https://cypress.io). 
