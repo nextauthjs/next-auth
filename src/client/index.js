@@ -13,6 +13,7 @@
 /* global fetch:false */
 import { useState, useEffect, useContext, createContext, createElement } from 'react'
 import logger from '../lib/logger'
+import parseUrl from '../lib/parse-url'
 
 // This behaviour mirrors the default behaviour for getting the site name that
 // happens server side in server/index.js
@@ -21,13 +22,8 @@ import logger from '../lib/logger'
 // 2. When invoked server side the value is picked up from an environment
 //    variable and defaults to 'http://localhost:3000'.
 const __NEXTAUTH = {
-  // Configuration options
-  site: (typeof window === 'undefined')
-    ? process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000'
-    : '',
-  basePath: (typeof window === 'undefined')
-    ? process.env.NEXTAUTH_BASE_PATH || '/api/auth'
-    : '/api/auth',
+  baseUrl: parseUrl(process.env.NEXTAUTH_URL || process.env.VERCEL_URL).baseUrl,
+  basePath: parseUrl(process.env.NEXTAUTH_URL).basePath,
   keepAlive: 0, // 0 == disabled (don't send); 60 == send every 60 seconds
   clientMaxAge: 0, // 0 == disabled (only use cache); 60 == sync if last checked > 60 seconds ago
   // Properties starting with _ are used for tracking internal app state
@@ -81,12 +77,12 @@ if (typeof window !== 'undefined') {
 // method is being left in as an alternative, that will be helpful if/when we
 // expose a vanilla JavaScript version that doesn't depend on React.
 const setOptions = ({
-  site,
+  baseUrl,
   basePath,
   clientMaxAge,
   keepAlive
 } = {}) => {
-  if (site) { __NEXTAUTH.site = site }
+  if (baseUrl) { __NEXTAUTH.baseUrl = baseUrl }
   if (basePath) { __NEXTAUTH.basePath = basePath }
   if (clientMaxAge) { __NEXTAUTH.clientMaxAge = clientMaxAge }
   if (keepAlive) {
@@ -114,7 +110,7 @@ const getSession = async ({ req, ctx, triggerEvent = true } = {}) => {
   // work seemlessly in getInitialProps() on server side pages *and* in _app.js.
   if (!req && ctx && ctx.req) { req = ctx.req }
 
-  const baseUrl = _baseUrl()
+  const baseUrl = _apiBaseUrl()
   const fetchOptions = req ? { headers: { cookie: req.headers.cookie } } : {}
   const session = await _fetchData(`${baseUrl}/session`, fetchOptions)
   if (triggerEvent) {
@@ -125,7 +121,7 @@ const getSession = async ({ req, ctx, triggerEvent = true } = {}) => {
 
 // Universal method (client + server)
 const getCsrfToken = async ({ req } = {}) => {
-  const baseUrl = _baseUrl()
+  const baseUrl = _apiBaseUrl()
   const fetchOptions = req ? { headers: { cookie: req.headers.cookie } } : {}
   const data = await _fetchData(`${baseUrl}/csrf`, fetchOptions)
   return data && data.csrfToken ? data.csrfToken : null
@@ -133,7 +129,7 @@ const getCsrfToken = async ({ req } = {}) => {
 
 // Universal method (client + server); does not require request headers
 const getProviders = async () => {
-  const baseUrl = _baseUrl()
+  const baseUrl = _apiBaseUrl()
   return _fetchData(`${baseUrl}/providers`)
 }
 
@@ -222,7 +218,7 @@ const _useSessionHook = (session) => {
 
 // Client side method
 const signIn = async (provider, args = {}) => {
-  const baseUrl = _baseUrl()
+  const baseUrl = _apiBaseUrl()
   const callbackUrl = (args && args.callbackUrl) ? args.callbackUrl : window.location
   const providers = await getProviders()
 
@@ -258,7 +254,7 @@ const signIn = async (provider, args = {}) => {
 const signOut = async (args = {}) => {
   const callbackUrl = (args && args.callbackUrl) ? args.callbackUrl : window.location
 
-  const baseUrl = _baseUrl()
+  const baseUrl = _apiBaseUrl()
   const fetchOptions = {
     method: 'post',
     headers: {
@@ -293,23 +289,17 @@ const _fetchData = async (url, options = {}) => {
   }
 }
 
-const _baseUrl = () => {
-  // NEXTAUTH_URL should always be set explicitly to support server side calls
-  if (typeof window === 'undefined' && !process.env.NEXTAUTH_URL) {
-    logger.warn('NEXTAUTH_URL', 'NEXTAUTH_URL environment variable not set')
+const _apiBaseUrl = () => {
+  if (typeof window === 'undefined') {
+    // NEXTAUTH_URL should always be set explicitly to support server side calls - log warning if not set
+    if (!process.env.NEXTAUTH_URL) { logger.warn('NEXTAUTH_URL', 'NEXTAUTH_URL environment variable not set') }
+
+    // Return absolute path when called server side
+    return `${__NEXTAUTH.baseUrl}${__NEXTAUTH.basePath}`
+  } else {
+    // Return relative path when called client side
+    return __NEXTAUTH.basePath
   }
-
-  let site = __NEXTAUTH.site
-
-  // If site value exists but does not start with http or https protocol, add it here
-  if (site.length > 0 && !site.startsWith('https://') && !site.startsWith('http://')) {
-    site = `https://${site}`
-  }
-
-  // Remove trailing slash from site if there is one
-  site = site.replace(/\/$/, '')
-
-  return `${site}${__NEXTAUTH.basePath}`
 }
 
 const _encodedForm = (formData) => {
