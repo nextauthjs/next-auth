@@ -169,7 +169,7 @@ app.prepare().then(() => {
     if (err) throw err
     console.log('> Ready on https://localhost:3000')
   })
-}
+})
 ```
 
 ### Example JWT code
