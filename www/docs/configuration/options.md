@@ -3,13 +3,9 @@ id: options
 title: Options
 ---
 
-## Environment Variables
+## Environment Variable
 
-_Environment variable support was introduced in v3.0 to reduce the amount of configuration across client and server side rendered pages and API routes. Only the `NEXTAUTH_URL` environment variable is required._
-
-### NEXTAUTH_URL
-
-When deploying to production you need to set the `NEXTAUTH_URL` environment variable to the canonical URL of your site. This is required for sign in and to access sessions from API routes and server side functions.
+When deploying to production, set the `NEXTAUTH_URL` environment variable to the canonical URL of your site.
 
 #### Example
 
@@ -17,15 +13,9 @@ When deploying to production you need to set the `NEXTAUTH_URL` environment vari
 NEXTAUTH_URL=https://example.com
 ```
 
-### NEXTAUTH_BASE_PATH
+_You do not need to include a path unless your API route does not use the default path `/api/auth/`. If you are using a custom path for an application, specify a URL that includes the path to the API route._
 
-If you cannot use `/api/auth` for your API route you can optionally define a different path using `NEXTAUTH_BASE_PATH`.
-
-#### Example
-
-```
-NEXTAUTH_BASE_PATH=/api/auth
-```
+e.g. `NEXTAUTH_URL=https://example.com/custom-route/api/auth`
 
 ---
 
@@ -321,7 +311,7 @@ Properties on any custom `cookies` that are specified override this option.
 :::
 
 :::warning
-Setting this option to *false* in production is a security risk and may allow sessions to hijacked. Using this option is not recommended.
+Setting this option to *false* in production is a security risk and may allow sessions to hijacked if used in production. It is intended to support development and testing. Using this option is not recommended.
 :::
 
 ---
@@ -373,5 +363,5 @@ cookies: {
 ```
 
 :::warning
-Changing the cookie options may introduce security flaws into your application and may break NextAuth.js integration now or in a future update. Using this option is not recommended.
+Using a custom cookie policy may introduce security flaws into your application and is intended as an option for advanced users who understand the implications. Using this option is not recommended.
 :::

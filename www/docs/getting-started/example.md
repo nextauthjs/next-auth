@@ -74,9 +74,9 @@ export default () => {
 
 *That's all the code you need to add authentication to a project!*
 
-### Environment Variables
+### Configuration
 
-When deploying to production you need to set the `NEXTAUTH_URL` environment variable to the canonical URL of your site. This is required for sign in and to access sessions from API routes and server side functions.
+When deploying to production, set the `NEXTAUTH_URL` environment variable to the canonical URL of your site.
 
 #### Example
 
@@ -84,10 +84,7 @@ When deploying to production you need to set the `NEXTAUTH_URL` environment vari
 NEXTAUTH_URL=https://example.com
 ```
 
-:::note
-Providers like [Vercel](https://vercel.com) provide a value `VERCEL_URL` which is similar (and is used as a fallback) but is not identical as it represents the instance of the site not the canonical URL; you need to explicitly configure `NEXTAUTH_URL` with the URL of your site in your deployment.
-:::
-
+This configuration option is handled using an environment variable to make it easy to access sessions from any API route or server rendered page in your application.
 
 :::tip
 Check out the [client documentation](/getting-started/client) to see how you can improve the user experience and page performance by using the NextAuth.js client.

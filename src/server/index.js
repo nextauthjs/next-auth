@@ -1,5 +1,6 @@
 import { createHash, randomBytes } from 'crypto'
 import jwt from '../lib/jwt'
+import parseUrl from '../lib/parse-url'
 import cookie from './lib/cookie'
 import callbackUrlHandler from './lib/callback-url-handler'
 import parseProviders from './lib/providers'
@@ -14,16 +15,8 @@ import pages from './pages'
 import adapters from '../adapters'
 import logger from '../lib/logger'
 
-// @TODO Refactor internal site / url variable names internally once we have
-//       tests in place, as the 'site' name feels a bit ambigous.
-//       I don't want to change it until we have tests as refactoring might
-//       involve changes in dozen files or so and too easy to break accidentally.
-const DEFAULT_SITE = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000'
-const DEFAULT_BASE_PATH = process.env.NEXTAUTH_BASE_PATH || '/api/auth'
-
-// While we can run locally without this value being set, to work properly in
-// production with OAuth providers the NEXTAUTH_URL environment variable should
-// be set.
+// To work properly in production with OAuth providers the NEXTAUTH_URL
+// environment variable must be set.
 if (!process.env.NEXTAUTH_URL) {
   logger.warn('NEXTAUTH_URL', 'NEXTAUTH_URL environment variable not set')
 }
@@ -51,19 +44,10 @@ export default async (req, res, userSuppliedOptions) => {
       csrfToken: csrfTokenFromPost
     } = body
 
-    // Allow site name, path prefix to be overriden
-    let site = userSuppliedOptions.site || DEFAULT_SITE
-
-    // If site value does not start with http or https protocol, add it here
-    if (!site.startsWith('https://') && !site.startsWith('http://')) {
-      site = `https://${site}`
-    }
-
-    // Remove trailing slash from site if there is one
-    site = site.replace(/\/$/, '')
-
-    const basePath = userSuppliedOptions.basePath || DEFAULT_BASE_PATH
-    const baseUrl = `${site}${basePath}`
+    // @todo refactor all existing references to site, baseUrl and basePath
+    const parsedUrl = parseUrl(process.env.NEXTAUTH_URL || process.env.VERCEL_URL)
+    const baseUrl = parsedUrl.baseUrl
+    const basePath = parsedUrl.basePath
 
     // Parse database / adapter
     let adapter
@@ -192,7 +176,9 @@ export default async (req, res, userSuppliedOptions) => {
       cookie.set(res, cookies.csrfToken.name, newCsrfTokenCookie, cookies.csrfToken.options)
     }
 
-    // Helper method for handling redirects
+    // Helper method for handling redirects, this is passed to all routes
+    // @TODO Refactor into a lib instead of passing as an option
+    //       e.g. and call as redirect(req, res, url)
     const redirect = (redirectUrl) => {
       const reponseAsJson = !!((req.body && req.body.json === 'true'))
       if (reponseAsJson) {
@@ -215,20 +201,19 @@ export default async (req, res, userSuppliedOptions) => {
       // These computed settings can values in userSuppliedOptions but override them
       // and are request-specific.
       adapter,
-      site,
-      basePath,
       baseUrl,
+      basePath,
       action,
       provider,
       cookies,
       secret,
       csrfToken,
-      providers: parseProviders(userSuppliedOptions.providers, baseUrl),
+      providers: parseProviders(userSuppliedOptions.providers, `${baseUrl}${basePath}`),
       session: sessionOption,
       jwt: jwtOptions,
       events: eventsOption,
       callbacks: callbacksOption,
-      callbackUrl: site,
+      callbackUrl: baseUrl,
       redirect
     }
 
@@ -252,12 +237,12 @@ export default async (req, res, userSuppliedOptions) => {
         case 'signin':
           if (options.pages.signIn) { return redirect(`${options.pages.signIn}${options.pages.signIn.includes('?') ? '&' : '?'}callbackUrl=${options.callbackUrl}`) }
 
-          pages.render(req, res, 'signin', { site, providers: Object.values(options.providers), callbackUrl: options.callbackUrl, csrfToken }, done)
+          pages.render(req, res, 'signin', { baseUrl, basePath, providers: Object.values(options.providers), callbackUrl: options.callbackUrl, csrfToken }, done)
           break
         case 'signout':
           if (options.pages.signOut) { return redirect(`${options.pages.signOut}${options.pages.signOut.includes('?') ? '&' : '?'}callbackUrl=${options.callbackUrl}`) }
 
-          pages.render(req, res, 'signout', { site, baseUrl, csrfToken, callbackUrl: options.callbackUrl }, done)
+          pages.render(req, res, 'signout', { baseUrl, basePath, csrfToken, callbackUrl: options.callbackUrl }, done)
           break
         case 'callback':
           if (provider && options.providers[provider]) {
@@ -270,12 +255,12 @@ export default async (req, res, userSuppliedOptions) => {
         case 'verify-request':
           if (options.pages.verifyRequest) { return redirect(options.pages.verifyRequest) }
 
-          pages.render(req, res, 'verify-request', { site }, done)
+          pages.render(req, res, 'verify-request', { baseUrl }, done)
           break
         case 'error':
           if (options.pages.error) { return redirect(`${options.pages.error}${options.pages.error.includes('?') ? '&' : '?'}error=${error}`) }
 
-          pages.render(req, res, 'error', { site, error, baseUrl }, done)
+          pages.render(req, res, 'error', { baseUrl, basePath, error }, done)
           break
         default:
           res.status(404).end()
@@ -286,7 +271,7 @@ export default async (req, res, userSuppliedOptions) => {
         case 'signin':
           // Verified CSRF Token required for all sign in routes
           if (!csrfTokenVerified) {
-            return redirect(`${baseUrl}/signin?csrf=true`)
+            return redirect(`${baseUrl}${basePath}/signin?csrf=true`)
           }
 
           if (provider && options.providers[provider]) {
@@ -296,7 +281,7 @@ export default async (req, res, userSuppliedOptions) => {
         case 'signout':
           // Verified CSRF Token required for signout
           if (!csrfTokenVerified) {
-            return redirect(`${baseUrl}/signout?csrf=true`)
+            return redirect(`${baseUrl}${basePath}/signout?csrf=true`)
           }
 
           signout(req, res, options, done)
@@ -305,7 +290,7 @@ export default async (req, res, userSuppliedOptions) => {
           if (provider && options.providers[provider]) {
             // Verified CSRF Token required for credentials providers only
             if (options.providers[provider].type === 'credentials' && !csrfTokenVerified) {
-              return redirect(`${baseUrl}/signin?csrf=true`)
+              return redirect(`${baseUrl}${basePath}/signin?csrf=true`)
             }
 
             callback(req, res, options, done)
