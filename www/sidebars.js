@@ -1,18 +1,18 @@
 module.exports = {
   sidebar: {
-    "Getting Started": [
-      "getting-started/introduction",
-      "getting-started/example",
-      "getting-started/client",
-      "getting-started/rest-api",
+    'Getting Started': [
+      'getting-started/introduction',
+      'getting-started/example',
+      'getting-started/client',
+      'getting-started/rest-api'
     ],
     Configuration: [
-      "configuration/options",
-      "configuration/providers",
-      "configuration/databases",
-      "configuration/pages",
-      "configuration/callbacks",
-      "configuration/events",
+      'configuration/options',
+      'configuration/providers',
+      'configuration/databases',
+      'configuration/pages',
+      'configuration/callbacks',
+      'configuration/events'
     ],
     Providers: [
       "providers/apple",
@@ -37,17 +37,17 @@ module.exports = {
       "providers/twitter",
       "providers/yandex",
     ],
-    "Models & Schemas": [
-      "schemas/models",
-      "schemas/mysql",
-      "schemas/postgres",
-      "schemas/mongodb",
-      "schemas/adapters",
+    'Models & Schemas': [
+      'schemas/models',
+      'schemas/mysql',
+      'schemas/postgres',
+      'schemas/mongodb',
+      'schemas/adapters'
     ],
     Tutorials: [
-      "tutorials/testing",
-      "tutorials/custom-typeorm-models",
-    ],
+      'tutorials/testing',
+      'tutorials/custom-typeorm-models'
+    ]
     /*
     'Version 1 (Legacy)': [
       'v1/getting-started-v1',
@@ -55,5 +55,5 @@ module.exports = {
       'v1/auth-v1'
     ]
   */
-  },
-};
+  }
+}
