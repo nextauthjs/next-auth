@@ -4,17 +4,19 @@ import { CreateUserError } from '../../lib/errors'
 import logger from '../../lib/logger'
 
 const Adapter = (prismaConfig, options = {}) => {
-  const { prisma, modelMapping = {
-    User: 'user',
-    Account: 'account',
-    Session: 'session',
-    VerificationRequest: 'verificationRequest'
-  }} = prismaConfig
+  const {
+    prisma, modelMapping = {
+      User: 'user',
+      Account: 'account',
+      Session: 'session',
+      VerificationRequest: 'verificationRequest'
+    }
+  } = prismaConfig
 
   const { User, Account, Session, VerificationRequest } = modelMapping
 
   async function getAdapter (appOptions) {
-    function debugMessage(debugCode, ...args) {
+    function debugMessage (debugCode, ...args) {
       if (appOptions && appOptions.debug) {
         logger.debug(`PRISMA_${debugCode}`, ...args)
       }
@@ -39,9 +41,9 @@ const Adapter = (prismaConfig, options = {}) => {
             name: profile.name,
             email: profile.email,
             image: profile.image,
-            emailVerified: profile.emailVerified && 
+            emailVerified: profile.emailVerified &&
             Object.prototype.toString.call(profile.emailVerified) === '[object Date]'
-              ? profile.emailVerified.toISOString() 
+              ? profile.emailVerified.toISOString()
               : null
           }
         })
@@ -91,13 +93,12 @@ const Adapter = (prismaConfig, options = {}) => {
         logger.error('UPDATE_USER_ERROR', error)
         return Promise.reject(new Error('UPDATE_USER_ERROR', error))
       }
-      
     }
 
-    async function deleteUser (id) {
+    async function deleteUser (userId) {
       debugMessage('DELETE_USER', userId)
       try {
-        return prisma[User].delete({ where: { id } })
+        return prisma[User].delete({ where: { id: userId } })
       } catch (error) {
         logger.error('DELETE_USER_ERROR', error)
         return Promise.reject(new Error('DELETE_USER_ERROR', error))
@@ -168,7 +169,7 @@ const Adapter = (prismaConfig, options = {}) => {
     async function getSession (sessionToken) {
       debugMessage('GET_SESSION', sessionToken)
       try {
-        const session = await prisma[Session].findOne({ where: { sessionToken }})
+        const session = await prisma[Session].findOne({ where: { sessionToken } })
 
         // Check session has not expired (do not return it if it has)
         if (session && session.expires && new Date() > session.expires) {
@@ -233,7 +234,7 @@ const Adapter = (prismaConfig, options = {}) => {
     async function createVerificationRequest (identifier, url, token, secret, provider) {
       debugMessage('CREATE_VERIFICATION_REQUEST', identifier)
       try {
-        const { site } = appOptions
+        const { baseUrl } = appOptions
         const { sendVerificationRequest, maxAge } = provider
 
         // Store hashed token (using secret as salt) so that tokens cannot be exploited
@@ -249,15 +250,17 @@ const Adapter = (prismaConfig, options = {}) => {
         }
 
         // Save to database
-        const verificationRequest = await prisma[VerificationRequest].create({ data: {
-          identifier,
-          token: hashedToken,
-          expires
-        }})
+        const verificationRequest = await prisma[VerificationRequest].create({
+          data: {
+            identifier,
+            token: hashedToken,
+            expires
+          }
+        })
 
         // With the verificationCallback on a provider, you can send an email, or queue
         // an email to be sent, or perform some other action (e.g. send a text message)
-        await sendVerificationRequest({ identifier, url, token, site, provider })
+        await sendVerificationRequest({ identifier, url, token, baseUrl, provider })
 
         return verificationRequest
       } catch (error) {
@@ -272,7 +275,7 @@ const Adapter = (prismaConfig, options = {}) => {
         // Hash token provided with secret before trying to match it with database
         // @TODO Use bcrypt instead of salted SHA-256 hash for token
         const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
-        const verificationRequest = await prisma[VerificationRequest].findOne({ where: { token: hashedToken }})
+        const verificationRequest = await prisma[VerificationRequest].findOne({ where: { token: hashedToken } })
 
         if (verificationRequest && verificationRequest.expires && new Date() > verificationRequest.expires) {
           // Delete verification entry so it cannot be used again
@@ -324,5 +327,5 @@ const Adapter = (prismaConfig, options = {}) => {
 }
 
 export default {
-  Adapter,
+  Adapter
 }

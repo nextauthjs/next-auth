@@ -4,7 +4,16 @@ import emailSignin from '../lib/signin/email'
 import logger from '../../lib/logger'
 
 export default async (req, res, options, done) => {
-  const { provider: providerName, providers, baseUrl, adapter, callbacks, csrfToken, redirect } = options
+  const {
+    provider: providerName,
+    providers,
+    baseUrl,
+    basePath,
+    adapter,
+    callbacks,
+    csrfToken,
+    redirect
+  } = options
   const provider = providers[providerName]
   const { type } = provider
 
@@ -17,7 +26,7 @@ export default async (req, res, options, done) => {
     oAuthSignin(provider, csrfToken, (error, oAuthSigninUrl) => {
       if (error) {
         logger.error('SIGNIN_OAUTH_ERROR', error)
-        return redirect(`${baseUrl}/error?error=oAuthSignin`)
+        return redirect(`${baseUrl}${basePath}/error?error=oAuthSignin`)
       }
 
       return redirect(oAuthSigninUrl)
@@ -25,7 +34,7 @@ export default async (req, res, options, done) => {
   } else if (type === 'email' && req.method === 'POST') {
     if (!adapter) {
       logger.error('EMAIL_REQUIRES_ADAPTER_ERROR')
-      return redirect(`${baseUrl}/error?error=Configuration`)
+      return redirect(`${baseUrl}${basePath}/error?error=Configuration`)
     }
     const { getUserByEmail } = await adapter.getAdapter(options)
 
@@ -44,20 +53,20 @@ export default async (req, res, options, done) => {
     const signinCallbackResponse = await callbacks.signIn(profile, account)
 
     if (signinCallbackResponse === false) {
-      return redirect(`${baseUrl}/error?error=AccessDenied`)
+      return redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
     }
 
     try {
       await emailSignin(email, provider, options)
     } catch (error) {
       logger.error('SIGNIN_EMAIL_ERROR', error)
-      return redirect(`${baseUrl}/error?error=EmailSignin`)
+      return redirect(`${baseUrl}${basePath}/error?error=EmailSignin`)
     }
 
-    return redirect(`${baseUrl}/verify-request?provider=${encodeURIComponent(
+    return redirect(`${baseUrl}${basePath}/verify-request?provider=${encodeURIComponent(
       provider.id
     )}&type=${encodeURIComponent(provider.type)}`)
   } else {
-    return redirect(`${baseUrl}/signin`)
+    return redirect(`${baseUrl}${basePath}/signin`)
   }
 }
