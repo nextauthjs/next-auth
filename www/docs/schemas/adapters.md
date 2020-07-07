@@ -3,15 +3,11 @@ id: adapters
 title: Database Adapters
 ---
 
-An "*Adapter*" in NextAuth.js is the thing that connects your application to whatever database or backend system you want to use to store data for user accounts, sessions, etc.
+An **Adapter** in NextAuth.js connects your application to whatever database or backend system you want to use to store data for user accounts, sessions, etc.
 
-You do not need to specify an adapter explicltly unless you want to use advanced options such as custom models or schemas, or if you are creating a custom adapter to connect to a database that is not one of the supported datatabases.
+You do not need to specify an adapter explicltly unless you want to use advanced options such as custom models or schemas, or if you are creating a custom adapter to connect to a database that is not one of the supported databases.
 
-:::tip
-*The **adapter** option is currently considered advanced usage intended for use by NextAuth.js contributors.*
-:::
-
-## TypeORM (default adapter)
+## TypeORM Adapter
 
 NextAuth.js comes with a default adapter that uses [TypeORM](https://typeorm.io/) so that it can be used with many different databases without any further configuration, you simply add the database driver you want to use to your project and tell  NextAuth.js to use it.
 
@@ -47,9 +43,9 @@ adapter: Adapters.TypeORM.Adapter({
 })
 ```
 
-## Prisma (opinionated adapter)
+## Prisma Adapter
 
-You can also use NextAuth.js with [Prisma](https://www.prisma.io/docs/). This method requires you to follow a strict and opinionated setup like illustrated below.
+You can also use NextAuth.js with [Prisma](https://www.prisma.io/docs/).
 
 To use this adapter, configure your `[...nextauth].js` like this:
 
@@ -75,9 +71,7 @@ const options = {
 export default (req, res) => NextAuth(req, res, options)
 ```
 
-Below you will find a suggested `schema.prisma` file. This is pretty much set in stone if you want to use Prisma.
-
-Suggested `schema.prisma` file:
+You should use a `schema.prisma` file similar to this one:
 
 ```
 datasource sqlite {
@@ -138,9 +132,16 @@ model VerificationRequest {
 }
 ```
 
+:::tip
+You can add properties to the schema, but do not change the base properties or types.
+:::
+
+#### Using custom model names
+
 The properties in the models need to be defined as above, but the model names themselves can be changed with a configuration option, and the datasource can be changed to what you want.
 
-Example usage with custom model names:
+This example shows using `model ProviderAccount` instead of `model Account` and `model Verification` instead of `model VerificationRequest`:
+
 ```javascript
 ...
 adapter: Adapters.Prisma.Adapter({ 
@@ -155,180 +156,6 @@ adapter: Adapters.Prisma.Adapter({
 ...
 ```
 
-This example shows using e.g. `model ProviderAccount` instead of `model Account` and `model Verification` instead of `model VerificationRequest`.
+## Custom Adapter
 
-## Custom adapters
-
-Using a custom adapter you can connect to any database backend or even several different databases.
-
-Creating a custom adapter is considerable undertaking and will require some trial and error and some reverse engineering as it is not currently well documented. The hope and expectation is to grow both the number of included (and third party) adapters over time.
-
-An adapter in NextAuth.js is a function which returns an async  `getAdapter()` method, which in turn returns a Promise with a list of functions used to handle operations such as creating user, linking a user and an OAuth account or handling reading and writing sessions.
-
-It uses this approach to allow database connection logic to live in the `getAdapter()` method. By calling the function just before an action needs to happen, it is possible to check database connection status and handle connecting / reconnecting to a database as required.
-
-### Required methods
-
-These methods are required for all sign in flows:
-
-* createUser
-* getUser
-* getUserByEmail
-* getUserByProviderAccountId
-* linkAccount
-* createSession
-* getSession
-* updateSession
-* deleteSession
-
-These methods are required to support email / passwordless sign in:
-
-* createVerificationRequest
-* getVerificationRequest
-* deleteVerificationRequest
-
-### Unimplemented methods
-
-These methods will be required in a future release, but are not yet invoked:
-
-* getUserByCredentials
-* updateUser
-* deleteUser
-* unlinkAccount
-
-### Example code
-
-An example of adapter structure is shown below:
-
-```js
-const Adapter = (config, options = {}) => {
-
-  async function getAdapter (appOptions) {
-
-    async function createUser (profile) {
-      return null
-    }
-
-    async function getUser (id) {
-      return null
-    }
-
-    async function getUserByEmail (email) {
-      return null
-    }
-
-    async function getUserByProviderAccountId (
-      providerId,
-      providerAccountId
-    ) {
-      return null
-    }
-
-    async function getUserByCredentials (credentials) {
-      return null
-    }
-
-    async function updateUser (user) {
-      return null
-    }
-
-    async function deleteUser (userId) {
-      return null
-    }
-
-    async function linkAccount (
-      userId,
-      providerId,
-      providerType,
-      providerAccountId,
-      refreshToken,
-      accessToken,
-      accessTokenExpires
-    ) {
-      return null
-    }
-
-    async function unlinkAccount (
-      userId,
-      providerId,
-      providerAccountId
-    ) {
-      return null
-    }
-
-    async function createSession (user) {
-      return null
-    }
-
-    async function getSession (sessionToken) {
-      return null
-    }
-
-    async function updateSession (
-      session,
-      force
-    ) {
-      return null
-    }
-
-    async function deleteSession (sessionToken) {
-      return null
-    }
-
-    async function createVerificationRequest (
-      identifier,
-      url,
-      token,
-      secret,
-      provider
-    ) {
-      return null
-    }
-
-    async function getVerificationRequest (
-      identifier,
-      token,
-      secret,
-      provider
-    ) {
-      return null
-    }
-
-    async function deleteVerificationRequest (
-      identifier,
-      token,
-      secret,
-      provider
-    ) {
-      return null
-    }
-
-    return Promise.resolve({
-      createUser,
-      getUser,
-      getUserByEmail,
-      getUserByProviderAccountId,
-      getUserByCredentials,
-      updateUser,
-      deleteUser,
-      linkAccount,
-      unlinkAccount,
-      createSession,
-      getSession,
-      updateSession,
-      deleteSession,
-      createVerificationRequest,
-      getVerificationRequest,
-      deleteVerificationRequest
-    })
-  }
-
-  return {
-    getAdapter
-  }
-}
-
-export default {
-  Adapter
-}
-```
+See the tutorial for [creating a database adapter](/tutorials/creating-a-database-adapter) for more information on how to create a custom adapter.
