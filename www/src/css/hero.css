@@ -1,0 +1,135 @@
+
+.hero {
+  margin-top: -2rem;
+  margin-bottom: 4rem;
+  background: none;
+  color: black;
+  background: linear-gradient(0deg, #f1f1f1 0%, #ffffff 100%);
+}
+
+html[data-theme='dark'] .hero {
+  background: linear-gradient(0deg, #111111 0%, #242526 100%);
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 2;
+  padding-bottom: 4rem;
+}
+
+.hero-wave {
+  position: absolute;
+  left: 0;
+  bottom: -4rem;
+  height: 4rem;
+  width: 100%;
+  overflow: hidden;
+}
+
+.hero-wave-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f1f1f1; 
+  height: 40%;
+}
+
+.hero-wave:before {
+  content: "";
+  display: block;
+  position: absolute;
+  border-radius: 100% 30%;
+  width: 56%;
+  height: 3rem;
+  background-color: #f9f9f9;
+  right: -2%;
+  top: 0;
+  z-index: 2;
+}
+
+.hero-wave:after {
+  content: "";
+  display: block;
+  position: absolute;
+  border-radius: 100% 30%;
+  width: 52%;
+  height: 3rem;
+  background-color: #f1f1f1;
+  left: -2%;
+  top: 0;
+}
+
+html[data-theme='dark'] .hero-wave-inner,
+html[data-theme='dark'] .hero-wave:after {
+  background-color: #111111;
+}
+
+html[data-theme='dark'] .hero-wave:before {
+  background-color: #191A1B;
+}
+
+.hero .container {
+  margin: 4rem auto 2rem auto;
+  border-radius: 10rem;
+}
+
+.hero .hero__title {  
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  padding: 0;
+  border: none;
+  text-shadow: 0 .1rem 0 rgba(255,255,255,1), 0 0 8rem rgba(0,0,0,.5);
+}
+
+@media screen and (min-width: 689px) {
+  .hero .hero__title {
+    text-align: left;
+    font-size: 4.8rem;
+  }
+}
+
+html[data-theme="dark"] .hero .hero__title {
+  text-shadow: 0 .1rem 0 rgba(255,255,255,.1), 0 0 5rem rgba(255,255,255,.5);
+}
+
+.hero .hero__subtitle {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.6;
+  font-weight: 500;
+}
+
+@media screen and (min-width: 689px) {
+  .hero .hero__subtitle {
+    font-size: 1.5rem;
+  }
+}
+
+
+html[data-theme="dark"] .hero .hero__title,
+html[data-theme="dark"] .hero .hero__subtitle,
+html[data-theme="dark"] .hero .button:not(.button--outline),
+html[data-theme="dark"] .hero .button:hover {
+  color: white;
+}
+
+.hero-marquee {
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  animation: hero-marquee-fadein 5s;
+  overflow: hidden;
+}
+
+@keyframes hero-marquee-fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.hero-marquee div {
+  overflow: visible;
+}
+
