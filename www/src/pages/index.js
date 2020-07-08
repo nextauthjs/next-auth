@@ -90,7 +90,7 @@ function Home () {
             <div className={styles.buttons}>
               <a
                 className={classnames(
-                  'button button--outline button--primary button--lg rounded-pill',
+                  'button button--outline button--secondary button--lg rounded-pill',
                   styles.button
                 )}
                 href='https://next-auth-example.now.sh'
@@ -106,7 +106,7 @@ function Home () {
               </Link>
             </div>
           </div>
-          <div className='marquee-wrapper'>
+          <div className='hero-marquee'>
             <ProviderMarquee />
           </div>
         </div>
@@ -153,11 +153,11 @@ function Home () {
             </div>
             <div className='row'>
               <div className='col'>
-                <p className='text--center'>
+                <p className='text--center' style={{marginTop: '2rem'}}>
                   <Link
                     to='/getting-started/example'
-                    className='button button--primary button--ouline button--lg rounded-pill'
-                  >View Example Code
+                    className='button button--primary button--lg rounded-pill'
+                  >Get Started
                   </Link>
                 </p>
               </div>
