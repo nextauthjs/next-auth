@@ -7,40 +7,29 @@ const postgres = (models, options) => {
     options.namingStrategy = new SnakeCaseNamingStrategy()
   }
 
-  // Only transforms models that are not custom models
-  const { models: customModels = {} } = options
-
   // For Postgres we need to use the `timestamp with time zone` type
   // aka `timestamptz` to store timestamps correctly in UTC.
-  if (!customModels.User) {
-    for (const column in models.User.schema.columns) {
-      if (models.User.schema.columns[column].type === 'timestamp') {
-        models.User.schema.columns[column].type = 'timestamptz'
-      }
+  for (const column in models.User.schema.columns) {
+    if (models.User.schema.columns[column].type === 'timestamp') {
+      models.User.schema.columns[column].type = 'timestamptz'
     }
   }
 
-  if (!customModels.Account) {
-    for (const column in models.Account.schema.columns) {
-      if (models.Account.schema.columns[column].type === 'timestamp') {
-        models.Account.schema.columns[column].type = 'timestamptz'
-      }
+  for (const column in models.Account.schema.columns) {
+    if (models.Account.schema.columns[column].type === 'timestamp') {
+      models.Account.schema.columns[column].type = 'timestamptz'
     }
   }
 
-  if (!customModels.Session) {
-    for (const column in models.Session.schema.columns) {
-      if (models.Session.schema.columns[column].type === 'timestamp') {
-        models.Session.schema.columns[column].type = 'timestamptz'
-      }
+  for (const column in models.Session.schema.columns) {
+    if (models.Session.schema.columns[column].type === 'timestamp') {
+      models.Session.schema.columns[column].type = 'timestamptz'
     }
   }
 
-  if (!customModels.VerificationRequest) {
-    for (const column in models.VerificationRequest.schema.columns) {
-      if (models.VerificationRequest.schema.columns[column].type === 'timestamp') {
-        models.VerificationRequest.schema.columns[column].type = 'timestamptz'
-      }
+  for (const column in models.VerificationRequest.schema.columns) {
+    if (models.VerificationRequest.schema.columns[column].type === 'timestamp') {
+      models.VerificationRequest.schema.columns[column].type = 'timestamptz'
     }
   }
 }
@@ -66,44 +55,33 @@ const mongodb = (models, options) => {
   //    Object ID in every property of type Object ID in the result (but the
   //    database will look fine); so use `type: 'objectId'` for them instead.
 
-  // Only transforms models that are not custom models
-  const { models: customModels = {} } = options
+  delete models.User.schema.columns.id.type
+  models.User.schema.columns.id.objectId = true
 
-  if (!customModels.User) {
-    delete models.User.schema.columns.id.type
-    models.User.schema.columns.id.objectId = true
+  // The options `unique: true` and `nullable: true` don't work the same
+  // with MongoDB as they do with SQL databases like MySQL and Postgres,
+  // we also to add sparce to the index. This still doesn't allow multiple
+  // *null* values, but does allow some records to omit the property.
+  delete models.User.schema.columns.email.unique
+  models.User.schema.indices = [
+    {
+      name: 'email',
+      unique: true,
+      sparse: true,
+      columns: ['email']
+    }
+  ]
 
-    // The options `unique: true` and `nullable: true` don't work the same
-    // with MongoDB as they do with SQL databases like MySQL and Postgres,
-    // we also to add sparce to the index. This still doesn't allow multiple
-    // *null* values, but does allow some records to omit the property.
-    delete models.User.schema.columns.email.unique
-    models.User.schema.indices = [
-      {
-        name: 'email',
-        unique: true,
-        sparse: true,
-        columns: ['email']
-      }
-    ]
-  }
+  delete models.Account.schema.columns.id.type
+  models.Account.schema.columns.id.objectId = true
+  models.Account.schema.columns.userId.type = 'objectId'
 
-  if (!customModels.Account) {
-    delete models.Account.schema.columns.id.type
-    models.Account.schema.columns.id.objectId = true
-    models.Account.schema.columns.userId.type = 'objectId'
-  }
+  delete models.Session.schema.columns.id.type
+  models.Session.schema.columns.id.objectId = true
+  models.Session.schema.columns.userId.type = 'objectId'
 
-  if (!customModels.Session) {
-    delete models.Session.schema.columns.id.type
-    models.Session.schema.columns.id.objectId = true
-    models.Session.schema.columns.userId.type = 'objectId'
-  }
-
-  if (!customModels.VerificationRequest) {
-    delete models.VerificationRequest.schema.columns.id.type
-    models.VerificationRequest.schema.columns.id.objectId = true
-  }
+  delete models.VerificationRequest.schema.columns.id.type
+  models.VerificationRequest.schema.columns.id.objectId = true
 }
 
 const sqlite = (models, options) => {
@@ -111,9 +89,6 @@ const sqlite = (models, options) => {
   if (!options.namingStrategy) {
     options.namingStrategy = new SnakeCaseNamingStrategy()
   }
-
-  // Only transforms models that are not custom models
-  const { models: customModels = {} } = options
 
   // SQLite does not support `timestamp` fields so we remap them to `datetime`
   // in all models.
@@ -123,35 +98,27 @@ const sqlite = (models, options) => {
   //
   // NB: SQLite adds 'create' and 'update' fields to allow rows, but that is
   // specific to SQLite and so we ignore that behaviour.
-  if (!customModels.User) {
-    for (const column in models.User.schema.columns) {
-      if (models.User.schema.columns[column].type === 'timestamp') {
-        models.User.schema.columns[column].type = 'datetime'
-      }
+  for (const column in models.User.schema.columns) {
+    if (models.User.schema.columns[column].type === 'timestamp') {
+      models.User.schema.columns[column].type = 'datetime'
     }
   }
 
-  if (!customModels.Account) {
-    for (const column in models.Account.schema.columns) {
-      if (models.Account.schema.columns[column].type === 'timestamp') {
-        models.Account.schema.columns[column].type = 'datetime'
-      }
+  for (const column in models.Account.schema.columns) {
+    if (models.Account.schema.columns[column].type === 'timestamp') {
+      models.Account.schema.columns[column].type = 'datetime'
     }
   }
 
-  if (!customModels.Session) {
-    for (const column in models.Session.schema.columns) {
-      if (models.Session.schema.columns[column].type === 'timestamp') {
-        models.Session.schema.columns[column].type = 'datetime'
-      }
+  for (const column in models.Session.schema.columns) {
+    if (models.Session.schema.columns[column].type === 'timestamp') {
+      models.Session.schema.columns[column].type = 'datetime'
     }
   }
 
-  if (!customModels.VerificationRequest) {
-    for (const column in models.VerificationRequest.schema.columns) {
-      if (models.VerificationRequest.schema.columns[column].type === 'timestamp') {
-        models.VerificationRequest.schema.columns[column].type = 'datetime'
-      }
+  for (const column in models.VerificationRequest.schema.columns) {
+    if (models.VerificationRequest.schema.columns[column].type === 'timestamp') {
+      models.VerificationRequest.schema.columns[column].type = 'datetime'
     }
   }
 }
