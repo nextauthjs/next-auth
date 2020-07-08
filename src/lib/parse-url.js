@@ -18,7 +18,7 @@ export default (url) => {
   // Simple split based on first /
   const [_host, ..._path] = url.split('/')
   const baseUrl = _host ? `${protocol}://${_host}` : defaultHost
-  const basePath = _path ? `/${_path.join('/')}` : defaultPath
+  const basePath = _path.length > 0 ? `/${_path.join('/')}` : defaultPath
 
   return {
     baseUrl,
