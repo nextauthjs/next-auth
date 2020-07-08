@@ -208,7 +208,7 @@ export default async (req, res, userSuppliedOptions) => {
       cookies,
       secret,
       csrfToken,
-      providers: parseProviders(userSuppliedOptions.providers, `${baseUrl}${basePath}`),
+      providers: parseProviders(userSuppliedOptions.providers, baseUrl, basePath),
       session: sessionOption,
       jwt: jwtOptions,
       events: eventsOption,
