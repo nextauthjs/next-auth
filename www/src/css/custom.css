@@ -142,23 +142,77 @@ html[data-theme='dark'] .main-wrapper h1 {
 
 .hero {
   margin-top: -2rem;
+  margin-bottom: 4rem;
   background: none;
   color: black;
-  background: linear-gradient(0deg, rgba(222,222,222,.3) 0%, rgba(255,255,255,1) 100%);
+  background: linear-gradient(0deg, #f1f1f1 0%, #ffffff 100%);
 }
 
 html[data-theme='dark'] .hero {
-  background: linear-gradient(0deg, rgba(0,0,0,.3) 0%, rgba(38,38,38,1) 100%);
+  background: linear-gradient(0deg, #111111 0%, #242526 100%);
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 2;
+  padding-bottom: 4rem;
+}
+
+.hero-wave {
+  position: absolute;
+  left: 0;
+  bottom: -4rem;
+  height: 4rem;
+  width: 100%;
+  overflow: hidden;
+}
+
+.hero-wave-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f1f1f1; 
+  height: 40%;
+}
+
+.hero-wave:before {
+  content: "";
+  display: block;
+  position: absolute;
+  border-radius: 100% 30%;
+  width: 56%;
+  height: 3rem;
+  background-color: #f9f9f9;
+  right: -2%;
+  top: 0;
+  z-index: 2;
+}
+
+.hero-wave:after {
+  content: "";
+  display: block;
+  position: absolute;
+  border-radius: 100% 30%;
+  width: 52%;
+  height: 3rem;
+  background-color: #f1f1f1;
+  left: -2%;
+  top: 0;
+}
+
+html[data-theme='dark'] .hero-wave-inner,
+html[data-theme='dark'] .hero-wave:after {
+  background-color: #111111;
+}
+
+html[data-theme='dark'] .hero-wave:before {
+  background-color: #191A1B;
 }
 
 .hero .container {
   margin: 4rem auto 2rem auto;
   border-radius: 10rem;
-  Xbackground: radial-gradient(ellipse at center, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%);   
-}
-
-html[data-theme='dark'] .hero .container {
-  Xbackground: radial-gradient(ellipse at center, rgba(28,28,28,1) 0%,rgba(25,25,25,0) 100%);   
 }
 
 .hero .hero__title {  
@@ -391,15 +445,22 @@ html[data-theme='dark'] .button.button--secondary.button--sm.menu__button {
 }
 
 .marquee-wrapper {
-  z-index: -1;
+  z-index: 1;
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  animation: fadein 5s;
+  animation: marquee-fadein 5s;
+  overflow: visible;
+
+  overflow: hidden;
 }
 
-@keyframes fadein {
+@keyframes marquee-fadein {
   from { opacity: 0; }
   to   { opacity: 1; }
+}
+
+.marquee-wrapper div {
+  overflow: visible;
 }

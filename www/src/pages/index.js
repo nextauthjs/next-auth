@@ -77,36 +77,41 @@ function Home () {
       <Seo />
       <header className={classnames('hero', styles.heroBanner)}>
         <div className='container'>
+          <div className='hero-inner'>
+            <img
+              src='/img/logo/logo-sm.png'
+              alt='Shield with key icon'
+              className={styles.heroLogo}
+            />
+            <div className={styles.heroText}>
+              <h1 className='hero__title'>{siteConfig.title}</h1>
+              <p className='hero__subtitle'>{siteConfig.tagline}</p>
+            </div>
+            <div className={styles.buttons}>
+              <a
+                className={classnames(
+                  'button button--outline button--primary button--lg rounded-pill',
+                  styles.button
+                )}
+                href='https://next-auth-example.now.sh'
+              >Live Demo
+              </a>
+              <Link
+                className={classnames(
+                  'button button--primary button--lg rounded-pill',
+                  styles.button
+                )}
+                to={useBaseUrl('/getting-started/introduction')}
+              >Get Started
+              </Link>
+            </div>
+          </div>
           <div className='marquee-wrapper'>
             <ProviderMarquee />
           </div>
-          <img
-            src='/img/logo/logo-sm.png'
-            alt='Shield with key icon'
-            className={styles.heroLogo}
-          />
-          <div className={styles.heroText}>
-            <h1 className='hero__title'>{siteConfig.title}</h1>
-            <p className='hero__subtitle'>{siteConfig.tagline}</p>
-          </div>
-          <div className={styles.buttons}>
-            <a
-              className={classnames(
-                'button button--outline button--primary button--lg rounded-pill',
-                styles.button
-              )}
-              href='https://next-auth-example.now.sh'
-            >Live Demo
-            </a>
-            <Link
-              className={classnames(
-                'button button--primary button--lg rounded-pill',
-                styles.button
-              )}
-              to={useBaseUrl('/getting-started/introduction')}
-            >Get Started
-            </Link>
-          </div>
+        </div>
+        <div className='hero-wave'>
+          <div className="hero-wave-inner"/>
         </div>
       </header>
       <main className='home-main'>
