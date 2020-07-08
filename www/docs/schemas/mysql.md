@@ -6,7 +6,7 @@ title: MySQL
 The schema generated for a MySQL database when using the built-in models.
 
 :::note
-When using MySQL the timezone is set to `Z` (aka Zulu time / UTC / GMT) in the adapter and all timestamps on all models are stored in UTC.
+When using a MySQL database with the default adapter the timezone is set to `Z` (aka Zulu Time / UTC) and all timestamps are stored in UTC.
 :::
 
 ## User

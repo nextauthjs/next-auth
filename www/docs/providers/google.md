@@ -23,3 +23,7 @@ providers: [
   })
 ]
 ...
+```
+## Notes
+
+Unlike most other providers, Google only Provide the Refresh Token on first sign in.

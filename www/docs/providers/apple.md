@@ -38,16 +38,17 @@ providers: [
 
 :::tip
 
-  Mac
- 
-  Convert your apple key to a single line to use as a environment variable.
-  ```bash
-  awk 'NF {sub(/\r/, ""); printf "%s\\n",$0;}'  AuthKey_ID.k8
-  ```
+You can convert your Apple key to a single line to use it in a environment variable.
+
+**Mac**
+   
+```bash
+awk 'NF {sub(/\r/, ""); printf "%s\\n",$0;}'  AuthKey_ID.k8
+```
   
-  Windows
+**Windows**
   
-  ```powershell
+```powershell
  $k8file = "AuthKey_ID.k8"
 (Get-Content "C:\Users\$env:UserName\Downloads\${k8file}") -join "\n" 
 ```
@@ -126,7 +127,8 @@ openssl req -x509 -out localhost.crt -keyout localhost.key \
 ```
 
 :::tip
-On Windows?  
+**Windows**
+
 The OpenSSL executable is distributed with [Git](https://git-scm.com/download/win]9) for Windows. 
 Once installed you will find the openssl.exe file in `C:/Program Files/Git/mingw64/bin` which you can add to the system PATH environment variable if it’s not already done.
 
