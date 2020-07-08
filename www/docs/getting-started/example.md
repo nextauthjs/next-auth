@@ -78,13 +78,11 @@ export default () => {
 
 When deploying to production, set the `NEXTAUTH_URL` environment variable to the canonical URL of your site.
 
-#### Example
-
 ```
 NEXTAUTH_URL=https://example.com
 ```
 
-This configuration option is handled using an environment variable to make it easy to access sessions from any API route or server rendered page in your application.
+To set environment variables on Vercel, you can use the [dashboard](https://vercel.com/dashboard) or the `now env` command.
 
 :::tip
 Check out the [client documentation](/getting-started/client) to see how you can improve the user experience and page performance by using the NextAuth.js client.

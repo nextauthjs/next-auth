@@ -101,10 +101,11 @@ The following code shows the complete source for the built-in `sendVerificationR
 ```js
 import nodemailer from 'nodemailer'
 
-const sendVerificationRequest = ({ identifier: email, url, token, site, provider }) => {
+const sendVerificationRequest = ({ identifier: email, url, token, baseUrl, provider }) => {
   return new Promise((resolve, reject) => {
     const { server, from } = provider
-    site = site.replace(/^https?:\/\//, '') // Strip protocol from site
+    // Strip protocol from URL and use domain as site name
+    const site = baseUrl.replace(/^https?:\/\//, '')
 
     nodemailer
       .createTransport(server)

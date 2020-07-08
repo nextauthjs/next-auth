@@ -3,19 +3,23 @@ id: options
 title: Options
 ---
 
-## Environment Variable
+## Environment Variables
+
+### NEXTAUTH_URL 
 
 When deploying to production, set the `NEXTAUTH_URL` environment variable to the canonical URL of your site.
-
-#### Example
 
 ```
 NEXTAUTH_URL=https://example.com
 ```
 
-_You do not need to include a path unless your API route does not use the default path `/api/auth/`. If you are using a custom path for an application, specify a URL that includes the path to the API route._
+If your Next.js application uses a custom base path, specify the route to the API endpoint in full.
 
-e.g. `NEXTAUTH_URL=https://example.com/custom-route/api/auth`
+_e.g. `NEXTAUTH_URL=https://example.com/custom-route/api/auth`_
+
+:::tip
+To set environment variables on Vercel, you can use the [dashboard](https://vercel.com/dashboard) or the `now env` command.
+:::
 
 ---
 
