@@ -17,6 +17,7 @@ import Slack from './slack'
 import Twitch from './twitch'
 import Twitter from './twitter'
 import Yandex from './yandex'
+import Webhook from './webhook'
 
 export default {
   Auth0,
@@ -37,5 +38,6 @@ export default {
   Slack,
   Twitter,
   Twitch,
+  Webhook,
   Yandex
 }
