@@ -6,7 +6,9 @@ title: Postgres
 The schema generated for a Postgres database when using the built-in models.
 
 :::note
-When using Postgres all timestamps on all models use the type `timestamp with time zone` (aka `timestamptz`) to store timestamps in UTC.
+When using a Postgres database with the default adapter all properties of type `timestamp` are transformed to `timestamp with time zone`/`timestamptz` and all timestamps are stored in UTC.
+
+This transform is also applied to any properties of type `timestamp` when using custom models.
 :::
 
 ## User

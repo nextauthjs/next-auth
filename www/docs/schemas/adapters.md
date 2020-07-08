@@ -71,6 +71,23 @@ const options = {
 export default (req, res) => NextAuth(req, res, options)
 ```
 
+:::tip
+If you experience issues with Prisma opening too many database connections opening in local development mode (e.g. due to Hot Module Reloading) you can use an approach like this:
+
+```js
+let prisma
+
+if (process.env.NODE_ENV === "production") {
+  prisma = new PrismaClient()
+} else {
+  if (!global.prisma) {
+    global.prisma = new PrismaClient()
+  }
+  prisma = global.prisma
+}
+```
+:::
+
 You should use a `schema.prisma` file similar to this one:
 
 ```
