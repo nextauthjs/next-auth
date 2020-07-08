@@ -38,7 +38,7 @@ const ProviderMarquee = React.memo(({ size }) => {
 
   return (
     <S.FullWidth>
-      <S.Height height={500}>
+      <S.Height height={560}>
         <Marquee
           key='1'
           velocity={5}
