@@ -5,9 +5,9 @@ title: Models
 
 ## Overview
 
-This a description of the models and data structure used by NextAuth.js default database adapter.
+This a description of the models and data structure used by NextAuth.js default database adapter (TypeORM).
 
-You are free to define your own models and schemas if you want to use a custom database adapter.
+You can define your own models and schemas or [create your own database adapter](/tutorials/creating-a-database-adapter).
 
 In NextAuth.js all table/collection names are plural, and all table names and column names use snake_case when used with an SQL database and camelCase when used with Document database. Indexes are declared on properties where appropriate.
 

@@ -26,12 +26,13 @@ providers: [
 ...
 ```
 
+## Demo IdentityServer
 
-## Example using Demo IdentityServer
-https://demo.identityserver.io/
+The configuration below is for the demo server at https://demo.identityserver.io/
 
-**The demo below is using a live server!  You can copy and paste the values below and it will work out of the box.
-  This intended as an example only. (use either <b>bob/bob</b>, <b>alice/alice</b>) 
+If you want to try it out, you can copy and paste the configuration below.
+
+You can sign in to the demo service with either <b>bob/bob</b> or <b>alice/alice</b>.
  
 ```js
 import Providers from `next-auth/providers`
