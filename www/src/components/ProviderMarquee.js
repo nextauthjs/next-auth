@@ -32,13 +32,13 @@ const ProviderMarquee = React.memo(({ size }) => {
     }
 
     if (width > 1400) {
-      scale = 0.9
+      scale = 0.8
     }
   }
 
   return (
     <S.FullWidth>
-      <S.Height height={600}>
+      <S.Height height={500}>
         <Marquee
           key='1'
           velocity={5}
