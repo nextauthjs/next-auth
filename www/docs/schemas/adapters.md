@@ -138,7 +138,7 @@ You can add properties to the schema, but do not change the base properties or t
 
 #### Using custom model names
 
-The properties in the models need to be defined as above, but the model names themselves can be changed with a configuration option, and the datasource can be changed to what you want.
+The properties in the models need to be defined as above, but the model names themselves can be changed with a configuration option, and the datasource can be changed to anything supported by Prisma.
 
 This example shows using `model ProviderAccount` instead of `model Account` and `model Verification` instead of `model VerificationRequest`:
 
