@@ -24,8 +24,8 @@ export default async (req, provider, csrfToken, callback) => {
     // (a hash of the NextAuth.js CSRF token).
     //
     // This check can be disabled for providers that do not support it by
-    // setting 'useState: false' as a provider option (defaults to true).
-    if (!Object.prototype.hasOwnProperty.call(provider, 'useState') || provider.useState === true) {
+    // setting `state: false` as a option on the provider (defaults to true).
+    if (!Object.prototype.hasOwnProperty.call(provider, 'state') || provider.state === true) {
       const expectedState = createHash('sha256').update(csrfToken).digest('hex')
       if (state !== expectedState) {
         return callback(new Error('Invalid state returned from oAuth provider'))
