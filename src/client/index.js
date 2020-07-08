@@ -120,7 +120,12 @@ const getSession = async ({ req, ctx, triggerEvent = true } = {}) => {
 }
 
 // Universal method (client + server)
-const getCsrfToken = async ({ req } = {}) => {
+const getCsrfToken = async ({ req, ctx } = {}) => {
+  // If passed 'appContext' via getInitialProps() in _app.js then get the req
+  // object from ctx and use that for the req value to allow getCsrfToken() to
+  // work seemlessly in getInitialProps() on server side pages *and* in _app.js.
+  if (!req && ctx && ctx.req) { req = ctx.req }
+
   const baseUrl = _apiBaseUrl()
   const fetchOptions = req ? { headers: { cookie: req.headers.cookie } } : {}
   const data = await _fetchData(`${baseUrl}/csrf`, fetchOptions)
