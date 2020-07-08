@@ -12,7 +12,10 @@ const icons = [
   '/img/providers/github-1.svg',
   '/img/providers/gitlab.svg',
   '/img/providers/google-icon.svg',
-  '/img/providers/okta-3.svg'
+  '/img/providers/okta-3.svg',
+  '/img/providers/slack.svg',
+  '/img/providers/spotify.svg',
+  '/img/providers/twitter.svg',
 ]
 
 const ProviderMarquee = React.memo(({ size }) => {
@@ -35,15 +38,15 @@ const ProviderMarquee = React.memo(({ size }) => {
 
   return (
     <S.FullWidth>
-      <S.Height height={300}>
+      <S.Height height={600}>
         <Marquee
           key='1'
-          velocity={17}
+          velocity={5}
           scatterRandomly
           minScale={0.5}
           resetAfterTries={200}
         >
-          {times(9, Number).map(id => (
+          {times(icons.length, Number).map(id => (
             <Motion
               key={`marquee-example-company-${id}`}
               initDeg={randomIntFromInterval(0, 360)}

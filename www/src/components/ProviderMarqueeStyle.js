@@ -2,7 +2,6 @@ import styled from 'styled-components'
 
 export const Circle = styled.div`
   position: absolute;
-  transform: scale(0.8);
   object-position: center center;
   will-change: transform, opacity;
   width: ${props => props.scale * 150}px;
@@ -10,10 +9,10 @@ export const Circle = styled.div`
   top: -50%;
   left: -50%;
   border-radius: 50%;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1), 0 3px 10px rgba(0, 0, 0, 0.07);
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 2rem;
 `
 
 export const Logo = styled.img`
@@ -21,7 +20,7 @@ export const Logo = styled.img`
   width: 65%;
   height: 65%;
   filter: grayscale(100%);
-  opacity: 0.6;
+  opacity: 0.4;
 `
 
 export const FullWidth = styled.div`
@@ -31,6 +30,8 @@ export const FullWidth = styled.div`
   right: 50%;
   margin-left: -50vw;
   margin-right: -50vw;
+  margin-bottom: 2rem;
+  margin-top: 4rem;
 `
 
 export const Height = styled.div`
