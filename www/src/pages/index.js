@@ -77,6 +77,9 @@ function Home () {
       <Seo />
       <header className={classnames('hero', styles.heroBanner)}>
         <div className='container'>
+          <div className='marquee-wrapper'>
+            <ProviderMarquee />
+          </div>
           <img
             src='/img/logo/logo-sm.png'
             alt='Shield with key icon'
@@ -119,13 +122,6 @@ function Home () {
         <section>
           <div className='container'>
             <div className='row'>
-              <ProviderMarquee />
-            </div>
-          </div>
-        </section>
-        <section>
-          <div className='container'>
-            <div className='row'>
               <div className='col'>
                 <p className='text--center'>
                   <a
@@ -139,13 +135,13 @@ function Home () {
             <div className='row'>
               <div className='col col--6'>
                 <div className='code'>
-                  <h4 className='code-heading'>Step 1 – Add API Route</h4>
+                  <h4 className='code-heading'>Server</h4>
                   <CodeBlock className='javascript'>{serverlessFunctionCode}</CodeBlock>
                 </div>
               </div>
               <div className='col col--6'>
                 <div className='code'>
-                  <h4 className='code-heading'>Step 2 – Add React Component</h4>
+                  <h4 className='code-heading'>Client</h4>
                   <CodeBlock className='javascript'>{reactComponentCode}</CodeBlock>
                 </div>
               </div>
@@ -207,6 +203,10 @@ const options = {
     Providers.Apple({
       clientId: process.env.APPLE_ID,
       clientSecret: process.env.APPLE_SECRET
+    }),
+    Providers.Facebook({
+      clientId: process.env.FACEBOOK_ID,
+      clientSecret: process.env.FACEBOOK_SECRET
     }),
     Providers.Google({
       clientId: process.env.GOOGLE_ID,
