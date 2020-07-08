@@ -12,7 +12,7 @@ export const Circle = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-top: 1rem;
 `
 
 export const Logo = styled.img`
@@ -20,7 +20,7 @@ export const Logo = styled.img`
   width: 65%;
   height: 65%;
   filter: grayscale(100%);
-  opacity: 0.4;
+  opacity: 0.2;
 `
 
 export const FullWidth = styled.div`
@@ -30,8 +30,6 @@ export const FullWidth = styled.div`
   right: 50%;
   margin-left: -50vw;
   margin-right: -50vw;
-  margin-bottom: 2rem;
-  margin-top: 4rem;
 `
 
 export const Height = styled.div`
