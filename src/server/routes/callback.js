@@ -69,7 +69,7 @@ export default async (req, res, options, done) => {
             const jwtPayload = await callbacks.jwt(defaultJwtPayload, OAuthProfile)
 
             // Sign and encrypt token
-            const newEncodedJwt = await jwt.encode({ secret: jwt.secret, token: jwtPayload, maxAge: sessionMaxAge })
+            const newEncodedJwt = await jwt.encode({ secret: jwt.secret, key: jwt.key, token: jwtPayload, maxAge: sessionMaxAge, encryption: jwt.encryption })
 
             // Set cookie expiry date
             const cookieExpires = new Date()
@@ -148,7 +148,7 @@ export default async (req, res, options, done) => {
         const jwtPayload = await callbacks.jwt(defaultJwtPayload)
 
         // Sign and encrypt token
-        const newEncodedJwt = await jwt.encode({ secret: jwt.secret, token: jwtPayload, maxAge: sessionMaxAge })
+        const newEncodedJwt = await jwt.encode({ secret: jwt.secret, key: jwt.key, token: jwtPayload, maxAge: sessionMaxAge, encryption: jwt.encryption })
 
         // Set cookie expiry date
         const cookieExpires = new Date()
@@ -222,7 +222,7 @@ export default async (req, res, options, done) => {
     const jwtPayload = await callbacks.jwt(defaultJwtPayload)
 
     // Sign and encrypt token
-    const newEncodedJwt = await jwt.encode({ secret: jwt.secret, token: jwtPayload, maxAge: sessionMaxAge })
+    const newEncodedJwt = await jwt.encode({ secret: jwt.secret, key: jwt.key, token: jwtPayload, maxAge: sessionMaxAge, encryption: jwt.encryption })
 
     // Set cookie expiry date
     const cookieExpires = new Date()

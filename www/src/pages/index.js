@@ -111,7 +111,7 @@ function Home () {
           </div>
         </div>
         <div className='hero-wave'>
-          <div className="hero-wave-inner"/>
+          <div className='hero-wave-inner' />
         </div>
       </header>
       <main className='home-main'>
@@ -153,7 +153,7 @@ function Home () {
             </div>
             <div className='row'>
               <div className='col'>
-                <p className='text--center' style={{marginTop: '2rem'}}>
+                <p className='text--center' style={{ marginTop: '2rem' }}>
                   <Link
                     to='/getting-started/example'
                     className='button button--primary button--lg rounded-pill'
