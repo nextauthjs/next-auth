@@ -70,7 +70,7 @@ html[data-theme='dark'] .hero-wave:before {
 }
 
 .hero .container {
-  margin: 4rem auto 2rem auto;
+  margin: 4rem auto 0 auto;
   border-radius: 10rem;
 }
 

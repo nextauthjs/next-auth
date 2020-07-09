@@ -20,7 +20,7 @@ export const Logo = styled.img`
   width: 65%;
   height: 65%;
   filter: grayscale(100%);
-  opacity: 0.15;
+  opacity: 0.1;
 `
 
 export const FullWidth = styled.div`
