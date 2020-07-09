@@ -134,6 +134,8 @@ As with database session tokens, JSON Web Tokens are limited in the amount of da
 
 JSON Web Tokens are signed (to prevent tampering) and the contents encoded using Base64, but JSON Web Tokens are not encrypted on their own - anyone with access to a token can decode it and read the contents.
 
-NextAuth.js implements [JSON Web Tokens (RFC 7519)](https://tools.ietf.org/html/rfc7519) using the sign-then-encrypt model. By default, it currently uses [Advanced Encryption Standard (RFC 3826)](https://tools.ietf.org/html/rfc3826) rather than [JSON Web Encryption (RFC 7516)](https://tools.ietf.org/html/rfc7516) for encryption, but you can define custom encoding and decoding routines for JSON Web Tokens to use any encryption methods (or none).
+NextAuth.js implements [JSON Web Tokens (RFC 7519)](https://tools.ietf.org/html/rfc7519) by default uses a sign-then-encrypt model using the [Advanced Encryption Standard (RFC 3826)](https://tools.ietf.org/html/rfc3826) to encrypt tokens to ensure data is encoded securely by default. 
 
-For example, if you want to use tokens that are signed (but not encrypted) so they can be more easily used by other services running on the same domain (and it is secure to do so) you can specify custom encode and decode functions that implement signing only.
+You can define custom encoding and decoding routines for JSON Web Tokens to use any encryption method (e.g. [JSON Web Encryption (RFC 7516)](https://tools.ietf.org/html/rfc7516)).
+
+You can disable encryption on tokens by setting the encryption option on the JWT to false. It can be useful to use tokens that are signed (but not encrypted) if you want them to be shared services running on the same domain, as long as the tokens do not contain sensitive information (e.g. secret tokens or API keys).
