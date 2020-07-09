@@ -22,6 +22,12 @@ module.exports = {
           position: 'left'
         },
         {
+          to: '/faq',
+          activeBasePath: 'docs',
+          label: 'FAQ',
+          position: 'left'
+        },
+        {
           href: 'https://www.npmjs.com/package/next-auth',
           label: 'npm',
           position: 'right'
