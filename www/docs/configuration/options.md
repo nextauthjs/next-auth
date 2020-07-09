@@ -113,27 +113,28 @@ session: {
 
 #### Description
 
-Using JSON Web Tokens to store session data is often faster, cheaper and more scaleable than using a database to store sessions.
+JSON Web Tokens are can be used for session tokens (instead of database sessions) if enabled with `session: { jwt: true }` option is set. They are enabled by default if you have not specified a database.
 
 You can use JSON Web Tokens for session data in conjuction with a database for user data, or you can use JSON Web Tokens without a database.
 
-JSON Web Tokens are only used if JWT sessions are enabled with `session: { jwt: true }`, or if you have not specified a database (in which case they are enabled by default).
-
-When enabled, JSON Web Tokens are signed with **HMAC SHA256** and then encrypted with symmetric **AES**.
-
-Default values for the JWT option are shown below:
+Options and values for JSON Web Tokens:
 
 ```js
 jwt: {
-  // secret: 'my-secret-123', // Secret auto-generated if not specified.
+  // JWT secret and keys use the NextAuth.js secret if not specified
+  // secret: 'my-secret-123', // Secret used for signing tokens
+  // key: 'my-key-abc', // Key used for encrypting tokens (defaults to secret)
   
-  // By default the JSON Web Token is signed with SHA256 and encrypted with AES.
+  // Encryption scheme to use when encrypting a token.
+  // Specify a value of false to sign but not encrypt tokens.
+  // encryption: 'AES', // One of [ 'AES', false ] (default 'AES')
+
+  // By default tokens are signed with HMAC-SHA256 and encrypted with AES.
   //
   // You can define your own encode/decode functions for signing + encryption if
-  // you want to override the default behaviour (or to add/remove information
-  // from the JWT when it is encoded).
-  // encode: async ({ secret, key, token, maxAge }) => {},
-  // decode: async ({ secret, key, token, maxAge }) => {},
+  // you want to override the default behaviour.
+  // encode: async ({ secret, key, token, maxAge, encryption }) => {},
+  // decode: async ({ secret, key, token, maxAge, encryption }) => {},
 }
 ```
 
@@ -158,28 +159,43 @@ An example JSON WebToken contains an encrypted payload like this:
     accessToken: '931400799b4a980715bb55af1bb8e01d92316956',
     accessTokenExpires: null
   },
-  isNewUser: true, // Is set to true if is first sign in
+  isNewUser: true, // When using a database, is set to true if first sign in
   iat: 1591150735, // Issued at
   exp: 4183150735  // Expires in
 }
 ```
 
-You can use the built-in `getJwt()` helper method to verify and decrupt the token, like this:
+#### JWT Helper
+
+You can use the built-in `getToken()` helper method to verify and decrypt the token, like this:
 
 ```js
 import jwt from 'next-auth/jwt'
 
 const secret = process.env.JWT_SECRET
 
-export default async (req, res) =>  {
-  const token = await jwt.getJwt({ req, secret })
+export default async (req, res) => {
+  const token = await jwt.getToken({ req, secret })
   console.log(JSON.stringify(token, null, 2))
   res.end()
 }
 ```
 
+The getToken() helper supports the following options:
+
+* req - The request object (required)
+* secret - The secret used for signing tokens (required)
+* key - The key used for decrypting tokens (optional)
+* encryption - One of [ 'AES', false ] (optional, default 'AES')
+* secureCookie - Boolean. Uses secure prefixed cookie if true (optional)
+* cookieName - Use custom session token cookie name (optional)
+
 :::note
-The JWT is stored in the Session Token cookie – the same cookie used for database sessions.
+The helper will attempt to determine if it should use the secure prefixed cookie automatically (e.g. `true` in production, `false` in development instances) but you can set this value manually or specify the cookie name explicitly if you need to.
+:::
+
+:::note
+The JSON Web Token is stored in the Session Token cookie – the same cookie used for database session tokens.
 :::
 
 ---

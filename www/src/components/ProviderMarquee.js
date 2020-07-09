@@ -17,7 +17,7 @@ const icons = [
   '/img/providers/openid.svg',
   '/img/providers/slack.svg',
   '/img/providers/spotify.svg',
-  '/img/providers/twitter.svg',
+  '/img/providers/twitter.svg'
 ]
 
 const ProviderMarquee = React.memo(({ size }) => {
