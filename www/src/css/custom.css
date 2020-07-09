@@ -255,42 +255,33 @@ html[data-theme='dark'] .footer.footer--dark {
 }
 
 
+
+
 .button.button--secondary.button--sm.menu__button {
-  border-radius: 0;
-  margin: 0;
-  top: 3.5rem;
-  right: 0;
-  bottom: auto;
-  width: 100%;
-  border-color: transparent;
-  border-bottom: 1px solid rgba(0,0,0,.1);
-  text-align: left;
-  padding: 0 1rem .5rem 1rem;
-  z-index: 50;
+  position: fixed;
+  top: auto;
+  left: auto;  
+  right: 1.5rem;
+  bottom: 1.5rem;
+  width: auto;
+  padding: 0.5rem;
+  border-radius: 2rem;
+  border: none;
   background: #fff;
+  box-shadow: 0 0 1rem rgba(0,0,0,0.2);
 }
 
 html[data-theme='dark'] .button.button--secondary.button--sm.menu__button {
-  border-bottom: 1px solid rgba(255,255,255,.1);
   background: #242526;
   color: #fff;
-}
-
-.menu--show .button.button--secondary.button--sm.menu__button {
-  position: relative;
-  top: .25rem;
-  right: .25rem;
-  width: auto;
-  padding: 0 .5rem;
-  border: none;
-  border-radius: 2rem;
+  box-shadow: 0 0 1rem rgba(0,0,0,0.4);
 }
 
 .button.button--secondary.button--sm.menu__button:before {
-  font-size: 1rem;
+  font-size: 2rem;
   line-height: 2rem;
-  content: "Documentation";
-  text-decoration: underline;
+  content: "📖";
+  opacity: 0.8;
   display: block;
 }
 
@@ -305,12 +296,12 @@ html[data-theme='dark'] .button.button--secondary.button--sm.menu__button {
 }
 
 @media screen and (max-width: 996px) {
-  .main-wrapper {
-    padding-top: 2rem;
-  }
   .menu.menu--responsive {
-    top: 3rem;
+    top: 3.5rem;
     padding: 0;
+  }
+  .navbar {
+    z-index: 1000 !important;
   }
   /* Force all menus expanded on mobile */
   /*
