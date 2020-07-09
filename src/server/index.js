@@ -121,6 +121,7 @@ export default async (req, res, userSuppliedOptions) => {
     const jwtOptions = {
       secret,
       key: secret,
+      encryption: 'AES', // One of [ 'AES', false ] (default 'AES')
       encode: jwt.encode,
       decode: jwt.decode,
       ...userSuppliedOptions.jwt
