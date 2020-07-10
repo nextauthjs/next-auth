@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken'
 import CryptoJS from 'crypto-js'
 
+const SIGNING_ALGORITHM = 'HS256' // Specified explicitly to prevent tampering
 const DEFAULT_ENCRYPTION_TYPE = 'AES' // Can be one of [ 'AES', false ]
 
 const encode = async ({
@@ -16,7 +17,7 @@ const encode = async ({
     if (token.exp) { delete token.exp }
   }
 
-  const signedToken = jwt.sign(token, secret, { expiresIn: maxAge })
+  const signedToken = jwt.sign(token, secret, { algorithm: SIGNING_ALGORITHM, expiresIn: maxAge })
 
   switch (encryption) {
     case false:
@@ -52,7 +53,7 @@ const decode = async ({
       throw new Error('Unsupported value for `encryption` passed to JWT decode()', encryption)
   }
 
-  return jwt.verify(tokenToVerify, secret, { maxAge })
+  return jwt.verify(tokenToVerify, secret, { algorithms: [SIGNING_ALGORITHM], maxAge })
 }
 
 const getToken = async ({
