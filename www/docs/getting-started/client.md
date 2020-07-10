@@ -52,7 +52,9 @@ A session object looks like this:
 }
 ```
 
-You can call `getSession()` inside a function to check if a user is signed in, or use it for server side rendered pages that supporting signing in without requiring client side JavaScript.
+You can call `getSession()` inside a function to check if a user is signed in. 
+
+You can also use it in API routes or in server side rendered pages that supporting signing in without requiring client side JavaScript.
 
 :::note
 The session data returned to the client it does not contain sensitive information such as the Session Token or OAuth tokens. It only includes enough data needed to display information on a page about the user who is signed in (e.g name, email) .
@@ -61,6 +63,8 @@ You can use the [session callback](/configuration/callbacks#session) to customiz
 :::
 
 Because it is a Universal method, you can use `getSession()` in both client and server side functions.
+
+#### Server Side Rendered Page
 
 ```jsx title="pages/index.js"
 import { getSession } from 'next-auth/client'
@@ -85,8 +89,20 @@ Page.getInitialProps = async (context) => {
 export default Page
 ```
 
+#### API Route
+
+```jsx title="pages/api/example.js"
+import { getSession } from 'next-auth/client'
+
+export default async (req, res) => {
+  const session = await getSession({ req })
+  console.log('Session', session)
+  res.end()
+}
+```
+
 :::note
-When calling `getSession()` server side, you must pass the request object or you can the pass entire `context` object as it contains the `req` object. e.g. `getSession(context)` or `getSession({req})`
+When calling `getSession()` server side, you must pass the request object or you can the pass entire `context` object as it contains the `req` object as shown in the examples. e.g. `getSession(context)` or `getSession({req})`
 :::
 
 ---
