@@ -1,6 +1,6 @@
 ---
 name: Question
-about: Ask for information or support
+about: Ask a question about NextAuth.js or for help using it
 labels: question
 assignees: ''
 ---
