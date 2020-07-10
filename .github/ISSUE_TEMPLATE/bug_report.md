@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Report a defect with the software
+about: Report a defect with NextAuth.js
 labels: bug
 assignees: ''
 ---
