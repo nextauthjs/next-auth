@@ -176,7 +176,7 @@ const secret = process.env.JWT_SECRET
 
 export default async (req, res) => {
   const token = await jwt.getToken({ req, secret })
-  console.log(JSON.stringify(token, null, 2))
+  console.log('JSON Web Token', token)
   res.end()
 }
 ```
@@ -190,12 +190,14 @@ The getToken() helper supports the following options:
 * secureCookie - Boolean. Uses secure prefixed cookie if true (optional)
 * cookieName - Use custom session token cookie name (optional)
 
+_For convenience, this helper function is also able to read and decode tokens passed in an HTTP Bearer header._
+
 :::note
-The helper will attempt to determine if it should use the secure prefixed cookie automatically (e.g. `true` in production, `false` in development instances) but you can set this value manually or specify the cookie name explicitly if you need to.
+The helper function will attempt to determine if it should use the secure prefixed cookie automatically (e.g. `true` in production, `false` in development instances). You can set either `secureCookie` explicitly or specify the cookie name explicitly if you need to.
 :::
 
 :::note
-The JSON Web Token is stored in the Session Token cookie – the same cookie used for database session tokens.
+The JWT is stored in the Session Token cookie, the same cookie used for tokens when using a database session.
 :::
 
 ---
