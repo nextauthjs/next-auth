@@ -1,4 +1,4 @@
-import jose from 'node-jose'
+import jose from 'jose'
 import { createHash, randomBytes } from 'crypto'
 import logger from './logger'
 
@@ -6,6 +6,7 @@ const DEFAULT_SIGNATURE_ALGORITHM = 'HS256' //HS512
 const DEFAULT_SIGNATURE_ALGORITHMS = ['HS256']
 const DEFAULT_ENCRYPTION_ALGORITHM = 'PBES2-HS512+A256KW' // 'ECDH-ES+A256KW'
 const DEFAULT_DECRYPTION_ALGORITHMS = ['A128CBC-HS256', DEFAULT_ENCRYPTION_ALGORITHM]
+const DEFAULT_ISSUER = 'https://next-auth.js.org'
 
 const encode = async ({
   secret,
@@ -13,13 +14,15 @@ const encode = async ({
   token = {},
   maxAge,
   signatureAlgorithm = DEFAULT_SIGNATURE_ALGORITHM,
-  encryptionAlgorithm = DEFAULT_ENCRYPTION_ALGORITHM
+  encryptionAlgorithm = DEFAULT_ENCRYPTION_ALGORITHM,
+  issuer = DEFAULT_ISSUER
 } = {}) => {
+  /*
   token.jit = randomBytes(32).toString('hex')
   token.iat = Math.floor(Date.now() / 1000)
   token.exp = Math.floor(Date.now() / 1000) + maxAge
-
-  const encryption = true
+ */
+  const encryption = false
 
   let keyValue = privateKey
   if (!keyValue) {
@@ -39,7 +42,18 @@ const encode = async ({
   if (encryption) {
     return await jose.JWE.createEncrypt({ format: 'compact', zip: true, alg: encryptionAlgorithm }, key).update(input).final()
   } else {
-    return await jose.JWS.createSign({ format: 'compact', alg: signatureAlgorithm }, key).update(input).final()
+    //return await jose.JWS.createSign({ format: 'compact', alg: signatureAlgorithm }, key).update(input).final()
+    const options = {
+      algorithm: signatureAlgorithm,
+      jti: randomBytes(32).toString('hex'),
+      expiresIn: Math.floor(Date.now() / 1000) + maxAge,
+      kid: false,
+      issuer,
+      header: {
+        typ: 'JWT'
+      },
+    }
+    return jose.JWT.sign(token, key, options)
   }
 }
 
@@ -56,7 +70,7 @@ const decode = async ({
 } = {}) => {
   if (!token) return null
 
-  const encryption = true
+  const encryption = false
 
   // Either a Public Key or a Shared Secret (in Private Key) can be used
   let keyValue = publicKey || privateKey
@@ -76,12 +90,20 @@ const decode = async ({
   let payloadResult
   if (encryption) {
     payloadResult = await jose.JWE.createDecrypt(key, { algorithms: decryptionAlgorithms }).decrypt(token)
+    const stringFromBuffer = payloadResult.payload.toString('utf8')
+    return JSON.parse(stringFromBuffer)
   } else {
-    payloadResult = await jose.JWS.createVerify(key, { algorithms: signatureAlgorithms }).verify(token)    
+  //   payloadResult = await jose.JWS.createVerify(key, { algorithms: signatureAlgorithms }).verify(token)    
+  //   const stringFromBuffer = payloadResult.payload.toString('utf8')
+  //   return JSON.parse(stringFromBuffer)
+    const options = {
+      issuer,
+      algorithms: DEFAULT_SIGNATURE_ALGORITHMS,
+      maxTokenAge: maxAge
+    }
+    return jose.JWT.verify(token, key, options)
   }
 
-  const stringFromBuffer = payloadResult.payload.toString('utf8')
-  return JSON.parse(stringFromBuffer)
 }
 
 const getToken = async ({
