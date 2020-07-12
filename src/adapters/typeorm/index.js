@@ -193,6 +193,18 @@ const Adapter = (typeOrmConfig, options = {}) => {
       return false
     }
 
+    async function getAccounts (id) {
+      debugMessage('GET_ACCOUNTS', id)
+      try {
+        const accounts = await connection.getRepository(Account).find({ userId: id })
+        if (!accounts) { return null }
+        return accounts
+      } catch (error) {
+        logger.error('GET_ACCOUNTS_ERROR', error)
+        return Promise.reject(new Error('GET_ACCOUNTS_ERROR', error))
+      }
+    }
+
     async function createSession (user) {
       debugMessage('CREATE_SESSION', user)
       try {
@@ -351,6 +363,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
       deleteUser,
       linkAccount,
       unlinkAccount,
+      getAccounts,
       createSession,
       getSession,
       updateSession,

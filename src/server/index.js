@@ -11,6 +11,7 @@ import signin from './routes/signin'
 import signout from './routes/signout'
 import callback from './routes/callback'
 import session from './routes/session'
+import accounts from './routes/accounts'
 import pages from './pages'
 import adapters from '../adapters'
 import logger from '../lib/logger'
@@ -231,6 +232,9 @@ export default async (req, res, userSuppliedOptions) => {
           break
         case 'session':
           session(req, res, options, done)
+          break
+        case 'accounts':
+          accounts(req, res, options, done)
           break
         case 'csrf':
           res.json({ csrfToken })
