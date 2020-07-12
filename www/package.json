@@ -14,6 +14,7 @@
     "@docusaurus/preset-classic": "^2.0.0-alpha.54",
     "classnames": "^2.2.6",
     "docusaurus-lunr-search": "^1.0.3",
+    "jose": "^1.27.2",
     "lodash.times": "^4.3.2",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
