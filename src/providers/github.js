@@ -11,7 +11,7 @@ export default (options) => {
     profile: (profile) => {
       return {
         id: profile.id,
-        name: profile.name,
+        name: profile.name || profile.login,
         email: profile.email,
         image: profile.avatar_url
       }
