@@ -12,7 +12,7 @@ export default async (req, res, options, done) => {
   if (useJwtSession) {
     // Dispatch signout event
     try {
-      const decodedJwt = await jwt.decode({ secret: jwt.secret, key: jwt.key, token: sessionToken, maxAge: sessionMaxAge, encryption: jwt.encryption })
+      const decodedJwt = await jwt.decode({ ...jwt, token: sessionToken })
       await dispatchEvent(events.signOut, decodedJwt)
     } catch (error) {
       // Do nothing if decoding the JWT fails

@@ -110,7 +110,7 @@ export default async (req, res, userSuppliedOptions) => {
     }
 
     // Session options
-    const sessionOption = {
+    const sessionOptions = {
       jwt: false,
       maxAge: 30 * 24 * 60 * 60, // Sessions expire after 30 days of being idle
       updateAge: 24 * 60 * 60, // Sessions updated only if session is greater than this value (0 = always, 24*60*60 = every 24 hours)
@@ -119,9 +119,9 @@ export default async (req, res, userSuppliedOptions) => {
 
     // JWT options
     const jwtOptions = {
-      secret,
-      key: secret,
-      encryption: 'AES', // One of [ 'AES', false ] (default 'AES')
+      secret, // Use application secret if no keys specified
+      maxAge: sessionOptions.maxAge, // maxAge is dereived from session maxAge,
+      encryption: true,
       encode: jwt.encode,
       decode: jwt.decode,
       ...userSuppliedOptions.jwt
@@ -129,17 +129,17 @@ export default async (req, res, userSuppliedOptions) => {
 
     // If no adapter specified, force use of JSON Web Tokens (stateless)
     if (!adapter) {
-      sessionOption.jwt = true
+      sessionOptions.jwt = true
     }
 
     // Event messages
-    const eventsOption = {
+    const eventsOptions = {
       ...events,
       ...userSuppliedOptions.events
     }
 
     // Callback functions
-    const callbacksOption = {
+    const callbacksOptions = {
       ...callbacks,
       ...userSuppliedOptions.callbacks
     }
@@ -210,10 +210,10 @@ export default async (req, res, userSuppliedOptions) => {
       secret,
       csrfToken,
       providers: parseProviders(userSuppliedOptions.providers, baseUrl, basePath),
-      session: sessionOption,
+      session: sessionOptions,
       jwt: jwtOptions,
-      events: eventsOption,
-      callbacks: callbacksOption,
+      events: eventsOptions,
+      callbacks: callbacksOptions,
       callbackUrl: baseUrl,
       redirect
     }
