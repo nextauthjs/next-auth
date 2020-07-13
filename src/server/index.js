@@ -63,7 +63,7 @@ export default async (req, res, userSuppliedOptions) => {
     // If no secret option is specified then it creates one on the fly
     // based on options passed here. A options contains unique data, such as
     // oAuth provider secrets and database credentials it should be sufficent.
-    const secret = userSuppliedOptions.secret || createHash('sha256').update(JSON.stringify(userSuppliedOptions)).digest('hex')
+    const secret = userSuppliedOptions.secret || createHash('sha256').update(JSON.stringify({ baseUrl, basePath, ...userSuppliedOptions })).digest('hex')
 
     // Use secure cookies if the site uses HTTPS
     // This being conditional allows cookies to work non-HTTPS development URLs
