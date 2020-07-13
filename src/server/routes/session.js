@@ -30,13 +30,13 @@ export default async (req, res, options, done) => {
       // as needed for presentation purposes (e.g. "you are logged in as…").
       const defaultSessionPayload = {
         user: {
-          name: decodedJwt.user && decodedJwt.user.name ? decodedJwt.user.name : null,
-          email: decodedJwt.user && decodedJwt.user.email ? decodedJwt.user.email : null,
-          image: decodedJwt.user && decodedJwt.user.image ? decodedJwt.user.image : null
+          name: decodedJwt.name || null,
+          email: decodedJwt.email || null,
+          image: decodedJwt.picture || null
         },
         expires: sessionExpires
       }
-
+      
       // Pass Session and JSON Web Token through to the session callback
       const jwtPayload = await callbacks.jwt(decodedJwt)
       const sessionPayload = await callbacks.session(defaultSessionPayload, jwtPayload)
