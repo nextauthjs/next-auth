@@ -36,6 +36,7 @@
   "license": "ISC",
   "dependencies": {
     "crypto-js": "^4.0.0",
+    "jose": "^1.27.2",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^2.2.0",
     "node-jose": "^1.1.4",
