@@ -1,15 +1,24 @@
 
 .button {
-  border-width: .15rem;
+  border: none;
   transition-duration: 0s;
   box-shadow: 0 0 2rem rgba(0,0,0,.1);
+}
+
+.button:hover,
+.button:active {
+  filter: brightness(110%) contrast(.95);
+}
+
+html[data-theme="dark"] .button:hover,
+html[data-theme="dark"] .button:active {
+  filter: brightness(110%) contrast(.95);
 }
 
 .button--primary,
 .button--primary:hover {
   background: linear-gradient(0deg, var(--ifm-color-primary-dark) 0%, var(--ifm-color-primary) 100%);
   color: #fff;
-  border-color: transparent;
 }
 
 .button.button--secondary.button--outline,
@@ -17,13 +26,11 @@
 .button.button--secondary.button--outline:visited,
 .button.button--secondary.button--outline:hover,
 .button.button--secondary.button--outline:active {
-  border-color: #ccc;
   background: #fff;
   color: #444 !important
 }
 
 html[data-theme="dark"] .button.button--secondary.button--outline {
-  border-color: #444;
   background: #000;
-  color: #ccc !important
+  color: #aaa !important
 }
