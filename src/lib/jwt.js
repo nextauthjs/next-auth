@@ -1,15 +1,3 @@
-// WIP
-// @TODO Review DEFAULT_SIGNATURE_ALGORITHM selection
-// @TODO Review DEFAULT_ENCRYPTION_ALGORITHM selection
-// @TODO Support both symmetric and asymmetric keys for signing and encryption
-//       We need create tutorials for JWE that also explain the use cases.
-// @TODO Review adding zip encoding by default if using encryption
-//
-// Note: The implementation of the default algorithms is not compliant with all
-// RFC recommendations and it is likely it is not possible to achive that, we
-// want to combine the least possible friction with the best possible security 
-// and keeping the solution flexible and be transparent about the limitations.
-
 import jose from 'jose'
 import hkdf from 'futoin-hkdf'
 import logger from './logger'
@@ -21,15 +9,13 @@ const DEFAULT_SIGNATURE_ALGORITHM = 'HS512'
 const DEFAULT_ENCRYPTION_ALGORITHM = 'A256GCM'
 
 // Use encryption or not by default
-const DEFAULT_ENCRYPTION_ENABLED = false
+const DEFAULT_ENCRYPTION_ENABLED = true
 
-// Generate warning (but only once at startup) when auto-generated keys are used
-let SIGNING_KEY_WARNING = false
-let ENCRYPTION_KEY_WARNING = false
+const DEFAULT_MAX_AGE = 30 * 24 * 60 * 60 // 30 days
 
 const encode = async ({
   token = {},
-  maxAge,
+  maxAge = DEFAULT_MAX_AGE,
   secret,
   signingKey,
   signingOptions = {
@@ -38,7 +24,8 @@ const encode = async ({
   encryptionKey,
   encryptionOptions = {
     alg: 'dir',
-    enc: DEFAULT_ENCRYPTION_ALGORITHM
+    enc: DEFAULT_ENCRYPTION_ALGORITHM,
+    zip: 'DEF'
   },
   encryption = DEFAULT_ENCRYPTION_ENABLED,
 } = {}) => {
@@ -67,13 +54,15 @@ const encode = async ({
 const decode = async ({
   secret,
   token,
-  maxAge,
+  maxAge = DEFAULT_MAX_AGE,
   signingKey,
+  verificationKey = signingKey, // Optional (defaults to encryptionKey)
   verificationOptions = {
     maxTokenAge: `${maxAge}s`,
     algorithms: [DEFAULT_SIGNATURE_ALGORITHM]
   },
   encryptionKey,
+  decryptionKey = encryptionKey, // Optional (defaults to encryptionKey)
   decryptionOptions = {
     algorithms: [DEFAULT_ENCRYPTION_ALGORITHM]
   },
@@ -85,8 +74,8 @@ const decode = async ({
 
   if (encryption) {
     // Encryption Key
-    const _encryptionKey = (encryptionKey)
-    ? jose.JWK.asKey(JSON.parse(encryptionKey))
+    const _encryptionKey = (decryptionKey)
+    ? jose.JWK.asKey(JSON.parse(decryptionKey))
     : getDerivedEncryptionKey(secret)
 
     // Decrypt token
@@ -95,47 +84,28 @@ const decode = async ({
   }
 
   // Signing Key
-  const _signingKey = (signingKey)
-    ? jose.JWK.asKey(JSON.parse(signingKey))
+  const _signingKey = (verificationKey)
+    ? jose.JWK.asKey(JSON.parse(verificationKey))
     : getDerivedSigningKey(secret)
 
   // Verify token
   return jose.JWT.verify(tokenToVerify, _signingKey, verificationOptions)
 }
 
-const getToken = async ({
-  // Specific to getToken()
-  req,
-  secureCookie,
-  cookieName,
-  // Passed through to decode()
-  secret,
-  maxAge = 30 * 24 * 60 * 60,
-  signingKey,
-  verificationOptions,
-  encryptionKey,
-  decryptionOptions,
-  encryption,
-} = {}) => {
-  if (!req) throw new Error('Must pass `req` to JWT getToken()')
-
-  // If cookie is not specified, choose what cookie name to use in a secure way
-  if (!cookieName) {
-    if (typeof secureCookie === 'undefined') {
-      // If secureCookie is not specified, assume unprefixed cookie in local dev
-      // environments or if an explictly non HTTPS url is specified. Otherwise
-      // asssume a secure prefixed cookie should be used.
-      secureCookie = !((!process.env.NEXTAUTH_URL || process.env.NEXTAUTH_URL.startsWith('http://')))
-    }
-    // Use secure prefixed cookie by default. Only use unprefixed cookie name if
-    // secureCookie is false or if the site URL is HTTP (and not HTTPS).
+const getToken = async (args) => {
+  const {
+    req,
+    // Use secure prefix for cookie name, unless URL is NEXTAUTH_URL is http://
+    // or not set (e.g. development or test instance) case use unprefixed name
+    secureCookie = !( !process.env.NEXTAUTH_URL || process.env.NEXTAUTH_URL.startsWith('http://') ),
     cookieName = (secureCookie) ? '__Secure-next-auth.session-token' : 'next-auth.session-token'
-  }
+  } = args
+  if (!req) throw new Error('Must pass `req` to JWT getToken()')
 
   // Try to get token from cookie
   let token = req.cookies[cookieName]
 
-  // If cookie not provided, look for bearer token in HTTP authorization header
+  // If cookie not found in cookie look for bearer token in authorization header.
   // This allows clients that pass through tokens in headers rather than as
   // cookies to use this helper function.
   if (!token && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
@@ -144,26 +114,20 @@ const getToken = async ({
   }
 
   try {
-    return await decode({
-      token,
-      maxAge,
-      encryption,
-      secret,
-      signingKey,
-      verificationOptions,
-      encryptionKey,
-      decryptionOptions,
-      encryption
-    })
+    return await decode({ token, ...args })
   } catch (error) {
     return null
   }
 }
 
+// Generate warning (but only once at startup) when auto-generated keys are used
+let DERIVED_SIGNING_KEY_WARNING = false
+let DERIVED_ENCRYPTION_KEY_WARNING = false
+
 const getDerivedSigningKey = (secret) => {
-  if (!SIGNING_KEY_WARNING) {
-    logger.warn('JWT_ENCODE_AUTO_GENERATED_SIGNING_KEY')
-    SIGNING_KEY_WARNING = true
+  if (!DERIVED_SIGNING_KEY_WARNING) {
+    logger.warn('JWT_AUTO_GENERATED_SIGNING_KEY')
+    DERIVED_SIGNING_KEY_WARNING = true
   }
   
   const buffer = hkdf(secret, 32, { info: 'NextAuth.js Generated Signing Key', hash: 'SHA-256' })
@@ -172,9 +136,9 @@ const getDerivedSigningKey = (secret) => {
 }
 
 const getDerivedEncryptionKey = (secret) => {
-  if (!ENCRYPTION_KEY_WARNING) {
-    logger.warn('JWT_ENCODE_AUTO_GENERATED_ENCRYPTION_KEY')
-    ENCRYPTION_KEY_WARNING = true
+  if (!DERIVED_ENCRYPTION_KEY_WARNING) {
+    logger.warn('JWT_AUTO_GENERATED_ENCRYPTION_KEY')
+    DERIVED_ENCRYPTION_KEY_WARNING = true
   }
   
   const buffer = hkdf(secret, 32, { info: 'NextAuth.js Generated Encryption Key', hash: 'SHA-256' })
