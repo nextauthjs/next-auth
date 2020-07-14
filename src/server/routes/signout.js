@@ -5,7 +5,6 @@ import dispatchEvent from '../lib/dispatch-event'
 
 export default async (req, res, options, done) => {
   const { adapter, cookies, events, jwt, callbackUrl, redirect } = options
-  const sessionMaxAge = options.session.maxAge
   const useJwtSession = options.session.jwt
   const sessionToken = req.cookies[cookies.sessionToken.name]
 

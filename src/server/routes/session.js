@@ -36,7 +36,7 @@ export default async (req, res, options, done) => {
         },
         expires: sessionExpires
       }
-      
+
       // Pass Session and JSON Web Token through to the session callback
       const jwtPayload = await callbacks.jwt(decodedJwt)
       const sessionPayload = await callbacks.session(defaultSessionPayload, jwtPayload)
