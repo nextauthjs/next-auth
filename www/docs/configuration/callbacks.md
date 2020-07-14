@@ -16,7 +16,7 @@ callbacks: {
   signIn: async (profile, account, metadata) => { },
   redirect: async (url, baseUrl) => { },
   session: async (session, token) => { },
-  jwt: async (token, profile) => { }
+  jwt: async (token, profile, isNewUser) => { }
 }
 ```
 
@@ -106,16 +106,17 @@ e.g. `/api/auth/signin`, `getSession()`, `useSession()`, `/api/auth/session` (et
 
 * On sign in, the raw profile for a user returned by the provider is also passed as a parameter.
 
-The raw profile is not available after the initial callback that is triggered when the user signs in. You can take advantage of it beomg present on the first callback, to persist any additional data you need from the users profile in the JWT.
+The raw profile is not available after the initial callback that is triggered when the user signs in. You can take advantage of it beomg present on the first callback, to persist any additional data you need from the users profile in the JWT (and from there, expose it in the session, using the session callback).
 
 ```js title="pages/api/auth/[...nextauth.js]"
 callbacks: {
   /**
-   * @param  {object} token    Decrypted JSON Web Token
-   * @param  {object} profile  Profile - only available on sign in
-   * @return {object}          JSON Web Token that will be saved
+   * @param  {object}  token     Decrypted JSON Web Token
+   * @param  {object}  profile   Profile is (only available on sign in)
+   * @param  {boolean} isNewUser Is new user (only available on sign in and when using JWT with a database)
+   * @return {object}            JSON Web Token that will be saved
    */
-  jwt: async (token, profile) => {
+  jwt: async (token, profile, isNewUser) => {
     return Promise.resolve(token)
   }
 }

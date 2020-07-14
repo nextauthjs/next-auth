@@ -19,13 +19,13 @@ It is not commercial software and is not associated with a commercial organizati
 
 You can use NextAuth.js with MySQL, MariaDB, Postgres, MongoDB and SQLite or without a database.
 
-You can use also NextAuth.js with any database using a custom database adapter, or by using a custom credentials authentication provider (e.g. to support signing in with a username and password stored in an existing database).
+You can use also NextAuth.js with any database using a custom database adapter, or by using a custom credentials authentication provider - e.g. to support signing in with a username and password stored in an existing database.
 
 ### What authentication services does NextAuth.js support?
 
 NextAuth.js includes built-in support for signing in with Apple, Auth0, Google, Battle.net, Box, AWS Cognito, Discord, Facebook, GitHub, GitLab, Google, Open ID Identity Server, Mixer, Okta, Slack, Spotify, Twitch, Twitter and Yandex.
 
-NextAuth.js also supports email for passwordless sign in, which is useful for account recovery - or for people who are not able to use an account with the configured OAuth services.
+NextAuth.js also supports email for passwordless sign in, which is useful for account recovery or for people who are not able to use an account with the configured OAuth services (e.g. due to service outage, account suspension or otherwise becoming locked out of an account).
 
 You can also use a custom based provider to support signing in with a username and password stored in an external database and/or using two factor authentication.
 
@@ -71,6 +71,8 @@ If you contact us regarding a potentially serious issue, we will endeavor to get
 
 ### How do I get Refresh Tokens and Access Tokens for an OAuth account?
 
+_This is not currently supported, but is something we would like to have support for in future._
+
 NextAuth.js provides a solution for authentication, session management and user account creation.
 
 NextAuth.js records Refresh Tokens and Access Tokens on sign in (if supplied by the provider) and it will save them (along with the User ID, Provider and Provider Account ID) to either:
@@ -79,8 +81,6 @@ NextAuth.js records Refresh Tokens and Access Tokens on sign in (if supplied by 
 2. A JSON Web Token - if JWT sessions are enabled (e.g. if no database specified)
 
 However, NextAuth.js does not also handle Access Token rotation for you. If this is something you need, currently you will need to write the logic to handle that yourself. 
-
-_This is something we would like to have support for in future but is not in active development._
 
 ---
 
@@ -114,32 +114,61 @@ NextAuth.js supports both database session tokens and JWT session tokens.
 
 * If a database is specified, database session tokens will be used by default.
 * If no database is specified, JWT session tokens will be used by default.
-* JWT sessions can be used in conjuction with a database to persist user account data.
+
+You can also choose to use JSON Web Tokens as session tokens with using a database, by explictly setting the `session: { jwt: true }` option.
 
 ### What are the advantages of JSON Web Tokens?
 
 JSON Web Tokens can be used for session tokens, but are also used for lots of other things, such as sending signed objects between services in authentication flows.
 
-Advantages of using a JWT as a session token include that they do not require a database to store sessions and can be faster and cheaper to run and services using JWT can be easier to scale. You can also include confidential information directly in a JWT (such as an API key you may not wish to expose publically).
+Advantages of using a JWT as a session token include that they do not require a database to store sessions and can be faster and cheaper to run and services using JWT can be easier to scale.
+
+You can also enable encryption to store include information directly in a JWT session token that you wish to keep secret and use the token to pass information between services / APIs on the same domain.
 
 ### What are the disadvantages of JSON Web Tokens?
 
-You cannot as easily expire a JSON Web Token remotely - doing so requires maintaining a server side blacklist of invalid accounts. Shorter session expiry times are used when using JSON Web Tokens as session tokens to allow sessions to be invalidated sooner, though any session token can be invalidated sooner by rejecting at run time (e.g. when a client tries to perform an action).
+* You cannot as easily expire a JSON Web Token remotely - doing so requires maintaining a server side blacklist of invalid accounts.
 
-NextAuth.js client includes advanced features such as automatic session token rotation, supports sending keep alive messages and tab/window syncing to support secure services that use sessions with short expiry times (e.g. 5-15 minutes), though typically session expiry times are longer as a short expiry times typically an impact on the cost of running a service.
+  Shorter session expiry times are used when using JSON Web Tokens as session tokens to allow sessions to be invalidated sooner, though any session token can be invalidated sooner by rejecting at run time (e.g. when a client tries to perform an action).
 
-As with database session tokens, JSON Web Tokens are limited in the amount of data you can store in them. There is typically a limit of around 4096 bytes in total for all cookies on a domain, though the exact limit varies between browsers, proxies and hosting services. The more data you try to store in a cookie and the more cookies you send, the closer you will come to this limit.
+  NextAuth.js client includes advanced features to mitigate this impact, such as automatic session token rotation and is able to sending keep alive messages and tab/window syncing to support secure services that use sessions with short expiry times (e.g. 5-15 minutes).
 
-### Why does NextAuth.js encrypt JSON Web Tokens?
+* As with database session tokens, JSON Web Tokens are limited in the amount of data you can store in them. There is typically a limit of around 4096 bytes in total for all cookies on a domain, though the exact limit varies between browsers, proxies and hosting services.
 
-JSON Web Tokens are signed (to prevent tampering) and the contents encoded using Base64, but JSON Web Tokens are not encrypted on their own - anyone with access to a token, including a signed token, can decode it and read the contents.
+  The more data you try to store in a cookie and the more cookies you send, the closer you will come to this limit. If you wish to store more than ~2 KB of data you probably at the point where you need to store a unique ID in the token and persist the data elsewhere (e.g. in a server side key/value store).
 
-NextAuth.js implements [JSON Web Tokens (RFC 7519)](https://tools.ietf.org/html/rfc7519) and uses a sign-then-encrypt model, using [Advanced Encryption Standard (RFC 3826)](https://tools.ietf.org/html/rfc3826) to encrypt tokens after signing and encapsulate the result in an opaque token, so that the contents of the token is not visible to the client and that token metadata cannot be manipulated.
+* Data stored in an encrypted JSON Web Token (JWE) may be compromised at some point.
 
-Advanced options are also supported:
+  Even if appropriately configured, information stored in an encrypted JWT should not be assumed to be impossible to decrypt at some point - e.g. due to the discovery of a defect or advances in technology.
 
-* You can disable encryption on tokens by setting the `encryption` option on the JWT to `false`, this allows you to have tokens are signed (but not encrypted) so they can be more easily used by other services running on the same domain.
+* If you do not explictly specify a secret for your application, existing sessions will be invalidated any time your NextAuth.js configuration changes. You should always specify a secret and/or keys.
 
-* You can also define custom `encoding` and `decoding` routines to use for JSON Web Tokens. This allows you to use any encryption or signing method, including JSON Web Encryption (JWE) and/or Javascript Object Signing and Encryption (JOSE).
+### Are JSON Web Tokens secure?
 
-Note: Changing these options may have implications for the security of your site.
+By default tokens are signed (JWS) but not encrypted (JWE).
+
+* JSON Web Tokens in NextAuth.js use JWS and are signed using HS512 with an auto-generated key.
+
+* If encryption is enabled by setting `jwt: { encrypt: true }` option then the JWT will _also_ use JWE to encrypt the token, using A256GCM with an auto-generated key.
+
+You can specify other valid algorithms - [as specified in RFC 7518](https://tools.ietf.org/html/rfc7517) - with either a  secret (for symmetric encryption) or a public/private key pair (for a symmetric encryption).
+
+NextAuth.js will generate keys for you, but this will generate a warning at start up.
+
+Using explict public/private keys for signing is strongly recommended.
+
+### What signing and encryption standards does NextAuth.js support?
+
+NextAuth.js includes a largely complete implementation of JSON Object Signing and Encryption (JOSE):
+
+* [RFC 7515 - JSON Web Signature (JWS)](https://tools.ietf.org/html/rfc7515)
+* [RFC 7516 - JSON Web Encryption (JWE)](https://tools.ietf.org/html/rfc7516)
+* [RFC 7517 - JSON Web Key (JWK)](https://tools.ietf.org/html/rfc7517)
+* [RFC 7518 - JSON Web Algorithms (JWA)](https://tools.ietf.org/html/rfc7518)
+* [RFC 7519 - JSON Web Token (JWT)](https://tools.ietf.org/html/rfc7519)
+
+This incorporates support for:
+
+* [RFC 7638 - JSON Web Key Thumbprint](https://tools.ietf.org/html/rfc7638)
+* [RFC 7787 - JSON JWS Unencoded Payload Option](https://tools.ietf.org/html/rfc7797)
+* [RFC 8037 - CFRG Elliptic Curve ECDH and Signatures](https://tools.ietf.org/html/rfc8037)
