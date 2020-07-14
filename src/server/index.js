@@ -12,6 +12,7 @@ import signout from './routes/signout'
 import callback from './routes/callback'
 import session from './routes/session'
 import accounts from './routes/accounts'
+import token from './routes/token'
 import pages from './pages'
 import adapters from '../adapters'
 import logger from '../lib/logger'
@@ -235,6 +236,14 @@ export default async (req, res, userSuppliedOptions) => {
           break
         case 'accounts':
           accounts(req, res, options, done)
+          break
+        case 'token':
+          if (provider && options.providers[provider]) {
+            token(req, res, options, done)
+          } else {
+            res.status(400).end(`Error: HTTP GET is not supported for ${url}`)
+            return done()
+          }
           break
         case 'csrf':
           res.json({ csrfToken })
