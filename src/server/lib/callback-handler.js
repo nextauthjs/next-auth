@@ -20,7 +20,6 @@ export default async (sessionToken, profile, providerAccount, options) => {
     const { adapter, jwt, events } = options
 
     const useJwtSession = options.session.jwt
-    const sessionMaxAge = options.session.maxAge
 
     // If no adapter is configured then we don't have a database and cannot
     // persist data; in this mode we just return a dummy session object.

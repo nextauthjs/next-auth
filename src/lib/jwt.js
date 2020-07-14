@@ -19,7 +19,7 @@ const encode = async ({
   secret,
   signingKey,
   signingOptions = {
-    expiresIn: `${maxAge}s`,
+    expiresIn: `${maxAge}s`
   },
   encryptionKey,
   encryptionOptions = {
@@ -27,21 +27,21 @@ const encode = async ({
     enc: DEFAULT_ENCRYPTION_ALGORITHM,
     zip: 'DEF'
   },
-  encryption = DEFAULT_ENCRYPTION_ENABLED,
+  encryption = DEFAULT_ENCRYPTION_ENABLED
 } = {}) => {
   // Signing Key
   const _signingKey = (signingKey)
     ? jose.JWK.asKey(JSON.parse(signingKey))
     : getDerivedSigningKey(secret)
-  
+
   // Sign token
   const signedToken = jose.JWT.sign(token, _signingKey, signingOptions)
-  
+
   if (encryption) {
     // Encryption Key
     const _encryptionKey = (encryptionKey)
-    ? jose.JWK.asKey(JSON.parse(encryptionKey))
-    : getDerivedEncryptionKey(secret)
+      ? jose.JWK.asKey(JSON.parse(encryptionKey))
+      : getDerivedEncryptionKey(secret)
 
     // Encrypt token
     return jose.JWE.encrypt(signedToken, _encryptionKey, encryptionOptions)
@@ -65,7 +65,7 @@ const decode = async ({
   decryptionOptions = {
     algorithms: [DEFAULT_ENCRYPTION_ALGORITHM]
   },
-  encryption = DEFAULT_ENCRYPTION_ENABLED,
+  encryption = DEFAULT_ENCRYPTION_ENABLED
 } = {}) => {
   if (!token) return null
 
@@ -74,8 +74,8 @@ const decode = async ({
   if (encryption) {
     // Encryption Key
     const _encryptionKey = (decryptionKey)
-    ? jose.JWK.asKey(JSON.parse(decryptionKey))
-    : getDerivedEncryptionKey(secret)
+      ? jose.JWK.asKey(JSON.parse(decryptionKey))
+      : getDerivedEncryptionKey(secret)
 
     // Decrypt token
     const decryptedToken = jose.JWE.decrypt(token, _encryptionKey, decryptionOptions)
@@ -96,7 +96,7 @@ const getToken = async (args) => {
     req,
     // Use secure prefix for cookie name, unless URL is NEXTAUTH_URL is http://
     // or not set (e.g. development or test instance) case use unprefixed name
-    secureCookie = !( !process.env.NEXTAUTH_URL || process.env.NEXTAUTH_URL.startsWith('http://') ),
+    secureCookie = !(!process.env.NEXTAUTH_URL || process.env.NEXTAUTH_URL.startsWith('http://')),
     cookieName = (secureCookie) ? '__Secure-next-auth.session-token' : 'next-auth.session-token'
   } = args
   if (!req) throw new Error('Must pass `req` to JWT getToken()')
@@ -128,7 +128,7 @@ const getDerivedSigningKey = (secret) => {
     logger.warn('JWT_AUTO_GENERATED_SIGNING_KEY')
     DERIVED_SIGNING_KEY_WARNING = true
   }
-  
+
   const buffer = hkdf(secret, 64, { info: 'NextAuth.js Generated Signing Key', hash: 'SHA-256' })
   const key = jose.JWK.asKey(buffer, { alg: DEFAULT_SIGNATURE_ALGORITHM, use: 'sig', kid: 'nextauth-auto-generated-signing-key' })
   return key
@@ -139,7 +139,7 @@ const getDerivedEncryptionKey = (secret) => {
     logger.warn('JWT_AUTO_GENERATED_ENCRYPTION_KEY')
     DERIVED_ENCRYPTION_KEY_WARNING = true
   }
-  
+
   const buffer = hkdf(secret, 32, { info: 'NextAuth.js Generated Encryption Key', hash: 'SHA-256' })
   const key = jose.JWK.asKey(buffer, { alg: DEFAULT_ENCRYPTION_ALGORITHM, use: 'enc', kid: 'nextauth-auto-generated-encryption-key' })
   return key
