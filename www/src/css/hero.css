@@ -70,8 +70,14 @@ html[data-theme='dark'] .hero-wave:before {
 }
 
 .hero .container {
-  margin: 4rem auto 0 auto;
+  margin: 5rem auto 1rem auto;
   border-radius: 10rem;
+}
+
+@media screen and (min-width: 689px) {
+  .hero .container {
+    margin: 4rem auto 0 auto;
+  }
 }
 
 .hero .hero__title {  
