@@ -65,10 +65,10 @@ export default async (req, res, options, done) => {
           const { user, session, isNewUser } = await callbackHandler(sessionToken, profile, account, options)
 
           if (useJwtSession) {
-            const defaultJwtPayload = { 
+            const defaultJwtPayload = {
               name: user.name,
               email: user.email,
-              picture: user.image,
+              picture: user.image
             }
             const jwtPayload = await callbacks.jwt(defaultJwtPayload, OAuthProfile, isNewUser)
 
@@ -148,7 +148,7 @@ export default async (req, res, options, done) => {
       const { user, session, isNewUser } = await callbackHandler(sessionToken, profile, account, options)
 
       if (useJwtSession) {
-        const defaultJwtPayload = { 
+        const defaultJwtPayload = {
           name: user.name,
           email: user.email,
           picture: user.image
@@ -226,7 +226,7 @@ export default async (req, res, options, done) => {
       return redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
     }
 
-    const defaultJwtPayload = { 
+    const defaultJwtPayload = {
       name: user.name,
       email: user.email,
       picture: user.image

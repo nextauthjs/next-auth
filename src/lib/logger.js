@@ -1,6 +1,6 @@
 const logger = {
   error: (errorCode, ...text) => {
-    if (!console) { return }    
+    if (!console) { return }
     if (text && text.length <= 1) { text = text[0] || '' }
     console.error(
       `[next-auth][error][${errorCode.toLowerCase()}]`,
