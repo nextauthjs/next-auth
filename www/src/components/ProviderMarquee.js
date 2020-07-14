@@ -21,7 +21,7 @@ const icons = [
 ]
 
 const ProviderMarquee = React.memo(({ size }) => {
-  let scale = 0.5
+  let scale = 0.4
 
   if (typeof window !== 'undefined') {
     const width = window.outerWidth
