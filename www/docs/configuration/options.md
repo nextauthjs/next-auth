@@ -121,20 +121,16 @@ Options and values for JSON Web Tokens:
 
 ```js
 jwt: {
-  // JWT secret and keys use the NextAuth.js secret if not specified
-  // secret: 'my-secret-123', // Secret used for signing tokens
-  // key: 'my-key-abc', // Key used for encrypting tokens (defaults to secret)
+  // A secret to use for key generation (you should set this explicitly)
+  // secret: 'INp8IvdIyeMcoGAgFGoA61DdBglwwSqnXJZkgz8PSnw', 
   
-  // Encryption scheme to use when encrypting a token.
-  // Specify a value of false to sign but not encrypt tokens.
-  // encryption: 'AES', // One of [ 'AES', false ] (default 'AES')
+  // Set to true to use encryption (default: false)
+  // encryption: true
 
-  // By default tokens are signed with HMAC-SHA256 and encrypted with AES.
-  //
   // You can define your own encode/decode functions for signing + encryption if
   // you want to override the default behaviour.
-  // encode: async ({ secret, key, token, maxAge, encryption }) => {},
-  // decode: async ({ secret, key, token, maxAge, encryption }) => {},
+  // encode: async ({ secret, key, token, maxAge }) => {},
+  // decode: async ({ secret, key, token, maxAge }) => {},
 }
 ```
 
@@ -181,23 +177,33 @@ export default async (req, res) => {
 }
 ```
 
-The getToken() helper supports the following options:
-
-* req - The request object (required)
-* secret - The secret used for signing tokens (required)
-* key - The key used for decrypting tokens (optional)
-* encryption - One of [ 'AES', false ] (optional, default 'AES')
-* secureCookie - Boolean. Uses secure prefixed cookie if true (optional)
-* cookieName - Use custom session token cookie name (optional)
-
 _For convenience, this helper function is also able to read and decode tokens passed in an HTTP Bearer header._
 
-:::note
-The helper function will attempt to determine if it should use the secure prefixed cookie automatically (e.g. `true` in production, `false` in development instances). You can set either `secureCookie` explicitly or specify the cookie name explicitly if you need to.
-:::
+**Required**
+
+The getToken() helper requires the following options:
+
+* req - (object) Request object (required)
+* secret - (string) JWT Secret (required)
+
+You must also pass *any options configured on the `jwt` option* to the helper.
+
+e.g. Including custom session `maxAge` and custom signing and/or encryption keys or options
+
+**Optional**
+
+It also supports the following options:
+
+* secureCookie - (boolean) Uses secure prefixed cookie if true (optional)
+
+  By default, the helper function will attempt to determine if it should use the secure prefixed cookie (e.g. `true` in production, `false` in development, unless NEXTAUTH_URL is configured with an HTTPS URL).
+
+* cookieName - (string) Session token cookie name (optional)
+
+  The `secureCookie` option is ignored if `cookieName` is explcitly specified.
 
 :::note
-The JWT is stored in the Session Token cookie, the same cookie used for tokens when using a database session.
+The JWT is stored in the Session Token cookie, the same cookie used for tokens with database sessions.
 :::
 
 ---
