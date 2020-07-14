@@ -122,15 +122,15 @@ Options and values for JSON Web Tokens:
 ```js
 jwt: {
   // A secret to use for key generation (you should set this explicitly)
-  // secret: 'INp8IvdIyeMcoGAgFGoA61DdBglwwSqnXJZkgz8PSnw', 
+  // secret: 'INp8IvdIyeMcoGAgFGoA61DdBglwwSqnXJZkgz8PSnw',
   
   // Set to true to use encryption (default: false)
-  // encryption: true
+  // encryption: true,
 
-  // You can define your own encode/decode functions for signing + encryption if
-  // you want to override the default behaviour.
-  // encode: async ({ secret, key, token, maxAge }) => {},
-  // decode: async ({ secret, key, token, maxAge }) => {},
+  // You can define your own encode/decode functions for signing and encryption
+  // if you want to override the default behaviour.
+  // encode: async ({ secret, token, maxAge }) => {},
+  // decode: async ({ secret, token, maxAge }) => {},
 }
 ```
 
