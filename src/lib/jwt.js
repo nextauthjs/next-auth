@@ -9,7 +9,7 @@ const DEFAULT_SIGNATURE_ALGORITHM = 'HS512'
 const DEFAULT_ENCRYPTION_ALGORITHM = 'A256GCM'
 
 // Use encryption or not by default
-const DEFAULT_ENCRYPTION_ENABLED = true
+const DEFAULT_ENCRYPTION_ENABLED = false
 
 const DEFAULT_MAX_AGE = 30 * 24 * 60 * 60 // 30 days
 
@@ -44,8 +44,7 @@ const encode = async ({
     : getDerivedEncryptionKey(secret)
 
     // Encrypt token
-    const tokenToEncrypt = signedToken
-    return jose.JWE.encrypt(tokenToEncrypt, _encryptionKey, encryptionOptions)
+    return jose.JWE.encrypt(signedToken, _encryptionKey, encryptionOptions)
   } else {
     return signedToken
   }
@@ -130,7 +129,7 @@ const getDerivedSigningKey = (secret) => {
     DERIVED_SIGNING_KEY_WARNING = true
   }
   
-  const buffer = hkdf(secret, 32, { info: 'NextAuth.js Generated Signing Key', hash: 'SHA-256' })
+  const buffer = hkdf(secret, 64, { info: 'NextAuth.js Generated Signing Key', hash: 'SHA-256' })
   const key = jose.JWK.asKey(buffer, { alg: DEFAULT_SIGNATURE_ALGORITHM, use: 'sig', kid: 'nextauth-auto-generated-signing-key' })
   return key
 }
