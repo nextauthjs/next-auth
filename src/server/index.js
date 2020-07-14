@@ -121,7 +121,6 @@ export default async (req, res, userSuppliedOptions) => {
     const jwtOptions = {
       secret, // Use application secret if no keys specified
       maxAge: sessionOptions.maxAge, // maxAge is dereived from session maxAge,
-      encryption: true,
       encode: jwt.encode,
       decode: jwt.decode,
       ...userSuppliedOptions.jwt
