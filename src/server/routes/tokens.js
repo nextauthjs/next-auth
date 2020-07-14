@@ -23,17 +23,20 @@ export default async (req, res, options, done) => {
   if (!useJwtSession) {
     if (req.method === 'GET') {
       try {
-        const { getSession, updateSession, getAccount } = await adapter.getAdapter(options)
+        const { getSession, updateSession, getAccounts, getAccount } = await adapter.getAdapter(options)
         const session = await getSession(sessionToken)
         if (session) {
           // Trigger update to session object to update session expiry
           await updateSession(session)
   
-          const account = await getAccount(session.userId, providerName)
-          if (account) {
-            switch (tokenType) {
-              case 'access':
+          if (!providerName) {
+            response = await getAccounts(session.userId)
+          } else {
+            const account = await getAccount(session.userId, providerName)
+            if (account) {
+              switch (tokenType) {
                 case undefined:
+                case 'access':
                   response = {
                     type: 'access',
                     token: account.accessToken
@@ -48,10 +51,11 @@ export default async (req, res, options, done) => {
                 default:
                   res.status(404).end()
                   return done()
+              }
+            } else {
+              res.status(404).end()
+              return done()  
             }
-          } else {
-            res.status(404).end()
-            return done()  
           }
         } else if (sessionToken) {
           // If sessionToken was found set but it's not valid for a session then
