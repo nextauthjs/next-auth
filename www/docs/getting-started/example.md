@@ -9,7 +9,7 @@ The easiest way to get started is to clone the [example application](https://git
 
 You can find a live demo of the example project at [next-auth-example.now.sh](https://next-auth-example.now.sh)
 
-## Adding NextAuth.js to an existing project
+## Add to an existing project
 
 *The example code below shows how to add authentication to an existing Next.js project.*
 

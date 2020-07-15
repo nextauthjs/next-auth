@@ -45,10 +45,10 @@ const features = [
     description: (
       <ul>
         <li>Signed, prefixed, server-only cookies</li>
-        <li>CSRF Token protection on HTTP POST</li>
+        <li>CSRF Tokens on HTTP POST</li>
         <li>JWT with JWS / JWE / JWK / JWK</li>
         <li>Tab/Window syncing and keepalives</li>
-        <li>Does not rely on client side JavaScript</li>
+        <li>Doesn't rely on client side JavaScript</li>
       </ul>
     )
   }

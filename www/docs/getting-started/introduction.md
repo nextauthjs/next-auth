@@ -14,7 +14,7 @@ It is designed from the ground up to support Next.js and Serverless.
 ### Flexible and easy to use
 
 * Designed to work with any OAuth service, it supports OAuth 1.0, 1.0A and 2.0
-* Built-in support for [many popular OAuth sign-in services](/configuration/providers)
+* Built-in support for [many popular sign-in services](/configuration/providers)
 * Supports email / passwordless authentication
 * Supports stateless authentication with any backend (Active Directory, LDAP, etc)
 * Supports both JSON Web Tokens and database sessions
@@ -43,8 +43,6 @@ NextAuth.js can be used with or without a database.
 * Auto-generates symmetric signing and encryption keys for developer convenience
 * Supports tab/window syncing and keepalive messages to support short lived sessions
 * Attempts to implement the latest guidance published by [Open Web Application Security Project](https://owasp.org/)
-
-To keep your site secure while still making it easy to share data between the backend and front end securely [callback methods](/configuration/callbacks) are provided. Callbacks let you send information to the client without having to handle session validation or JSON Web Token decoding in your application - just read and write JSON objects, and the rest is handled for you.
 
 Advanced options allow you to define your own routines to handle controlling what accounts are allowed to sign in, for encoding and decoding JSON Web Tokens and to set custom cookie security policies and session properties, so you can control who is able to sign in and how often sessions have to be re-validated. 
 
