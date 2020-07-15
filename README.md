@@ -17,7 +17,7 @@ See [next-auth.js.org](https://next-auth.js.org) for more information and docume
 ### Flexible and easy to use
 
 * Designed to work with any OAuth service, it supports OAuth 1.0, 1.0A and 2.0
-* Built-in support for [many popular sign-in services](/configuration/providers)
+* Built-in support for [many popular sign-in services](https://next-auth.js.org/configuration/providers)
 * Supports email / passwordless authentication
 * Supports stateless authentication with any backend (Active Directory, LDAP, etc)
 * Supports both JSON Web Tokens and database sessions
@@ -29,11 +29,11 @@ NextAuth.js can be used with or without a database.
 
 * An open source solution that allows you to keep control of your data
 * Supports Bring Your Own Database (BYOD) and can be used with any database
-* Built-in support for [MySQL, MariaDB, Postgres, MongoDB and SQLite](/configuration/databases)
+* Built-in support for [MySQL, MariaDB, Postgres, MongoDB and SQLite](https://next-auth.js.org/configuration/databases)
 * Works great with databases from popular hosting providers
 * Can also be used *without a database* (e.g. OAuth + JWT)
 
-### Secure
+### Secure by default
 
 * Promotes the use of passwordless sign in mechanisms
 * Designed to be secure by default and encourage best practice for safeguarding user data

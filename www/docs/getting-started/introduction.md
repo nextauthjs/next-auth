@@ -32,7 +32,7 @@ NextAuth.js can be used with or without a database.
 
 *Note: Email sign in requires a database to be configured to store single-use verification tokens.*
 
-### Secure
+### Secure by default
 
 * Promotes the use of passwordless sign in mechanisms
 * Designed to be secure by default and encourage best practice for safeguarding user data
