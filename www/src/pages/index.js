@@ -11,13 +11,14 @@ import styles from './styles.module.css'
 
 const features = [
   {
-    title: 'Easy to use',
+    title: 'Flexible',
     imageUrl: 'img/undraw_authentication.svg',
     description: (
       <ul>
-        <li>Designed for Next.js and Serverless</li>
+        <li>Designed for Serverless but runs anywhere</li>
+        <li>Can be used to secure web pages and APIs</li>
         <li>
-          Bring Your Own Database – or no database!<br />
+          Bring Your Own Database – or no database<br />
           <em>(MySQL, MariaDB, Postgres, MongoDB…)</em>
         </li>
         <li>Use JSON Web Tokens or Database Sessions</li>
@@ -25,28 +26,29 @@ const features = [
     )
   },
   {
-    title: 'Easy to sign in',
+    title: 'Easy',
     imageUrl: 'img/undraw_social.svg',
     description: (
       <ul>
-        <li>Sign in with any OAuth service</li>
-        <li>Sign in with any email / passwordless</li>
         <li>Built in support for popular OAuth services<br />
           <em>(Google, Facebook, Twitter, Auth0, Apple…)</em>
         </li>
-
+        <li>API for custom OAuth service integration</li>
+        <li>Supports email / passwordless / magic link</li>
+        <li>Supports username / password / 2FA / etc</li>
       </ul>
     )
   },
   {
-    title: 'Secure by default',
+    title: 'Secure',
     imageUrl: 'img/undraw_secure.svg',
     description: (
       <ul>
+        <li>Uses signed, prefixed, server-only cookies</li>
         <li>CSRF protection with double submit cookie</li>
-        <li>Signed, refixed, server-only cookies</li>
-        <li>Signed + Encrypted (HMAC+AES) JWT</li>
-        <li>Doesn't require client side JavaScript</li>
+        <li>JWT signing (JWS) and encryption (JWE)</li>
+        <li>Supports tab/window syncing and keepalives</li>
+        <li>Supports clients without client side JavaScript</li>
       </ul>
     )
   }
