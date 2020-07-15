@@ -5,7 +5,7 @@ title: Testing with Cypress
 
 To test an implementation of NextAuth.js, we encourage you to use [Cypress](https://cypress.io). 
 
-## Setup
+## Setting up Crypress
 
 To get started, install the dependencies:
 
@@ -63,7 +63,7 @@ Finally, you can also add the following npm scripts to your `package.json`:
 ```
 
 
-## Testing
+## Writing a test
 
 Once we've got all that configuration out of the way, we can begin writing tests to login using NextAuth.js.
 
