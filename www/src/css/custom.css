@@ -105,11 +105,16 @@ html[data-theme='dark'] .main-wrapper h1 {
   border-radius: 2rem;
 }
 
+/* Targets Table of Contents (right hand side sidebar) */
 .contents {
   font-size: 1rem;
   margin: 0 !important;
   padding: 0 !important;
   border: none !important;
+}
+
+.contents > li > a {
+  font-weight: 700;
 }
 
 .contents > li:first-child {
@@ -118,11 +123,17 @@ html[data-theme='dark'] .main-wrapper h1 {
 }
 
 .contents li {
+  margin-left: 0rem;
+  padding-left: 0rem;
+}
+
+.contents li > ul {
   margin-left: .5rem;
 }
 
-.contents li > ul li {
-  margin-left: 0rem;
+.contents li > ul li > a{
+  font-weight: 500;
+  font-size: 0.95rem;
 }
 
 .navbar {
@@ -314,7 +325,7 @@ html[data-theme='dark'] .button.button--secondary.button--sm.menu__button {
   */
 }
 
-/* Targets docs sidebar (shown on left hand side) */
+/* Targets docs sidebar (left hand side) */
 .main-wrapper > div > div {
     border-right: none !important;
     background-color: rgb(255,255,255);
