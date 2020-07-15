@@ -8,7 +8,7 @@ The NextAuth.js client library makes it easy to interact with sessions from Reac
 Some of the methods can be called both client side and server side.
 
 :::note
-To use client methods server side in `getServerSideProp()` or `getInitialProps()` you should add the NextAuth.js  `<Provider>` in `pages/app.js`
+To use client methods server side in `getServerSideProp()` or `getInitialProps()` you should add the NextAuth.js  `<Provider>` in `pages/_app.js`
 
 ```jsx title="pages/_app.js"
 import { Provider } from 'next-auth/client'
