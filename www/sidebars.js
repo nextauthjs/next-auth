@@ -45,9 +45,10 @@ module.exports = {
       'schemas/adapters'
     ],
     Tutorials: [
-      'tutorials/creating-a-database-adapter',
+      'tutorials/securing-pages-and-api-routes',
       'tutorials/testing-with-cypress',
-      'tutorials/typeorm-custom-models'
+      'tutorials/typeorm-custom-models',
+      'tutorials/creating-a-database-adapter'
     ]
     /*
     'Version 1 (Legacy)': [
