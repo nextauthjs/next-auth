@@ -74,12 +74,6 @@ html[data-theme='dark'] .menu__list .menu__list-item a[href="#!"] {
 .main-wrapper h1 {
   font-weight: 700;
   margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: .15rem solid rgba(0,0,0,.1);
-}
-
-html[data-theme='dark'] .main-wrapper h1 {
-  border-color: rgba(255,255,255,.2);
 }
 
 .main-wrapper h2 {
@@ -187,6 +181,10 @@ html[data-theme='dark'] .main-wrapper h1 {
 
 .home-main .row {
   margin-bottom: 2rem;
+}
+
+hr {
+  margin-top: 2.5rem;
 }
 
 .navbar__item.navbar__link[href*="github"],
