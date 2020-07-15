@@ -11,6 +11,8 @@ _You can find working examples of the approaches shown below in the [example pro
 
 ### Client Side Pages
 
+#### Conditional Render
+
 If data on a page is fetched using calls to API routes  - which in turn use getSession() or getToken() to access the session - you can use client side route protection using the `useSession` React Hook.
 
 ```js title="pages/client-side-example.js"
@@ -31,6 +33,36 @@ export default () => {
   )
 }
 ```
+
+#### Redirect (Advanced)
+
+If you have for instance a statically generated page that requires users to be authenticated, but you would like to redirect the user to a sign in page if they are not logged in you can use a custom script. This is only an example but you can use the script however you wish. (Similar to [the Vercel Dashboard](https://vercel.com/dashboard))
+
+Requires you to have enabled the [`hasSession` cookie option](/configuration/options#cookies).
+
+```js title="pages/client-side-example-redirect.js"
+import Head from 'next/head'
+
+export default () => {
+  const { data } = useSomeDataFromAnAPI() // Secured API route
+
+
+  return (
+    <>
+      <Head>
+        <script dangerouslySetInnerHTML={{ __html: `
+          if (document.cookie && document.cookie.indexOf('next-auth.has-session=') === -1) {
+              location.replace('/api/auth/signin')
+            }
+        `}} />
+      </Head>
+      <h1>Protected Page</h1>
+      {data && <p>You can view this page because you are signed in.</p>}
+    </>
+  )
+}
+```
+
 
 ### Server Side Pages
 
