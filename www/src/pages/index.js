@@ -15,13 +15,13 @@ const features = [
     imageUrl: 'img/undraw_authentication.svg',
     description: (
       <ul>
-        <li>Designed for Serverless but runs anywhere</li>
-        <li>Can be used to secure web pages and APIs</li>
+        <li>Built for Serverless, runs anywhere</li>
         <li>
-          Bring Your Own Database – or no database<br />
-          <em>(MySQL, MariaDB, Postgres, MongoDB…)</em>
+          Bring Your Own Database – or none<br />
+          <em>(MySQL, Postgres, MongoDB…)</em>
         </li>
-        <li>Use JSON Web Tokens or Database Sessions</li>
+        <li>Choose Database Sessions or JWT</li>
+        <li>Secure web pages and API routes</li>
       </ul>
     )
   },
@@ -30,12 +30,12 @@ const features = [
     imageUrl: 'img/undraw_social.svg',
     description: (
       <ul>
-        <li>Built in support for popular OAuth services<br />
-          <em>(Google, Facebook, Twitter, Auth0, Apple…)</em>
+        <li>Built in support for popular services<br />
+          <em>(Google, Facebook, Auth0, Apple…)</em>
         </li>
-        <li>API for custom OAuth service integration</li>
-        <li>Supports email / passwordless / magic link</li>
-        <li>Supports username / password / 2FA / etc</li>
+        <li>API for OAuth service integration</li>
+        <li>Email / Passwordless / Magic Link</li>
+        <li>Use any username/password store</li>
       </ul>
     )
   },
@@ -44,11 +44,11 @@ const features = [
     imageUrl: 'img/undraw_secure.svg',
     description: (
       <ul>
-        <li>Uses signed, prefixed, server-only cookies</li>
-        <li>CSRF protection with double submit cookie</li>
-        <li>JWT signing (JWS) and encryption (JWE)</li>
-        <li>Supports tab/window syncing and keepalives</li>
-        <li>Supports clients without client side JavaScript</li>
+        <li>Signed, prefixed, server-only cookies</li>
+        <li>CSRF Token protection on HTTP POST</li>
+        <li>JWT with JWS / JWE / JWK / JWK</li>
+        <li>Tab/Window syncing and keepalives</li>
+        <li>Does not rely on client side JavaScript</li>
       </ul>
     )
   }
