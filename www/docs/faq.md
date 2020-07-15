@@ -41,9 +41,9 @@ _If you use a custom credentials provider user accounts will not be persisted in
 
 NextAuth.js is designed for use with Next.js and Serverless.
 
-You can built a website that handles sign in with Next.js and use access those sessions on a website that does not use Next.js as long as the websites are on the same domain (e.g. 'example.com', 'account.example.com') and a suitable cookie domain policy set for the Session Token cookie.
+You can create a website that handles sign in with Next.js and then access those sessions on a website that does not use Next.js as long as the websites are on the same domain.
 
-NextAuth.js does not supporting signing into sites on different domains using the same service.
+If they are on a different subdomain you may need to set a custom cookie policy. NextAuth.js does not supporting signing into sites on different domains using the same service.
 
 ### Can I use NextAuth.js with React Native?
 
@@ -121,9 +121,13 @@ You can also choose to use JSON Web Tokens as session tokens with using a databa
 
 JSON Web Tokens can be used for session tokens, but are also used for lots of other things, such as sending signed objects between services in authentication flows.
 
-Advantages of using a JWT as a session token include that they do not require a database to store sessions and can be faster and cheaper to run and services using JWT can be easier to scale.
+* Advantages of using a JWT as a session token include that they do not require a database to store sessions, this can be faster and cheaper to run and easier to scale.
 
-You can also enable encryption to store include information directly in a JWT session token that you wish to keep secret and use the token to pass information between services / APIs on the same domain.
+* JSON Web Tokens in NextAuth.js are secured using cryptographic signing (JWS) by default and it is easy for services and API endpoints to verify tokens without having to contact a database to verify them.
+
+* You can enable encryption (JWE) to store include information directly in a JWT session token that you wish to keep secret and use the token to pass information between services / APIs on the same domain.
+
+* You can use JWT to securely store information you do not mind the client knowing even without encryption, as the JWT is stored in an server-readable-only-token so data in the JWT is not accessible to third party JavaScript running on your site.
 
 ### What are the disadvantages of JSON Web Tokens?
 
@@ -135,17 +139,21 @@ You can also enable encryption to store include information directly in a JWT se
 
 * As with database session tokens, JSON Web Tokens are limited in the amount of data you can store in them. There is typically a limit of around 4096 bytes in total for all cookies on a domain, though the exact limit varies between browsers, proxies and hosting services.
 
-  The more data you try to store in a cookie and the more cookies you send, the closer you will come to this limit. If you wish to store more than ~2 KB of data you probably at the point where you need to store a unique ID in the token and persist the data elsewhere (e.g. in a server side key/value store).
+  The more data you try to store in a token and the more other cookies you set, the closer you will come to this limit. If you wish to store more than ~2 KB of data you probably at the point where you need to store a unique ID in the token and persist the data elsewhere (e.g. in a server side key/value store).
 
 * Data stored in an encrypted JSON Web Token (JWE) may be compromised at some point.
 
   Even if appropriately configured, information stored in an encrypted JWT should not be assumed to be impossible to decrypt at some point - e.g. due to the discovery of a defect or advances in technology.
 
-* If you do not explictly specify a secret for your application, existing sessions will be invalidated any time your NextAuth.js configuration changes. You should always specify a secret and/or keys.
+  Avoid storing any data in a token that might be problematic if it were to be decrypted in the future.
+
+* If you do not explictly specify a secret for for NextAuth.js, existing sessions will be invalidated any time your NextAuth.js configuration changes, as NextAuth.js will default to an auto-generated secret.
+
+  If using JSON Web Token you should at least specify a secret and ideally configure public/private keys.
 
 ### Are JSON Web Tokens secure?
 
-By default tokens are signed (JWS) but not encrypted (JWE).
+By default tokens are signed (JWS) but not encrypted (JWE), as encryption adds additional overhead and reduces the amount of space avalible to store data (total cookie size for a domain is limited to 4KB).
 
 * JSON Web Tokens in NextAuth.js use JWS and are signed using HS512 with an auto-generated key.
 
