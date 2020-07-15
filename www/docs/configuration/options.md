@@ -43,7 +43,7 @@ See the [providers documentation](/configuration/providers) for a list of suppor
 ### database
 
 * **Default value**: `null`
-* **Required**: *No* (Except by Email provider)
+* **Required**: *No (unless using email provider)*
 
 #### Description 
 
@@ -56,7 +56,7 @@ The default database provider is also compatible with other ANSI SQL compatible 
 NextAuth.js can can be used with any database by specifying a custom `adapter` option.
 
 :::tip
-The Email provider currently requires a database to be configured.
+The Email provider requires a database to be configured to store single use sign in tokens.
 :::
 
 ---
@@ -64,15 +64,15 @@ The Email provider currently requires a database to be configured.
 ### secret
 
 * **Default value**: `string` (*SHA hash of the "options" object*)
-* **Required**: *No* (but strongly recommended)
+* **Required**: *No - but strongly recommended!*
 
 #### Description
 
-A random string used to hash tokens and sign cookies (e.g. SHA hash).
+A random string used to hash tokens, sign cookies and generate crytographic keys.
 
-If not provided will be auto-generated based on hash of all your provided options.
+If not specified is uses a hash of all configuration options, including Client ID / Secrets for entropy.
 
-The default behaviour is secure, but volatile, and it is strongly recommended you explicitly specify a value for secret to avoid invalidating any tokens when the automatically generated hash changes.
+The default behaviour is volatile, and it is strongly recommended you explicitly specify a value to avoid invalidating end user sessions when configuration changes are deployed.
 
 ---
 
@@ -113,18 +113,19 @@ session: {
 
 #### Description
 
-JSON Web Tokens are can be used for session tokens (instead of database sessions) if enabled with `session: { jwt: true }` option is set. They are enabled by default if you have not specified a database.
+JSON Web Tokens are can be used for session tokens if enabled with `session: { jwt: true }` option. JSON Web Tokens enabled by default if you have not specified a database.
 
-You can use JSON Web Tokens for session data in conjuction with a database for user data, or you can use JSON Web Tokens without a database.
+By default JSON Web Tokens tokens are signed (JWS) but not encrypted (JWE), as JWT encryption adds additional overhead and comes with some caveats. You can enable encryption by setting `encryption: true`.
 
-Options and values for JSON Web Tokens:
+#### JSON Web Token Options
 
 ```js
 jwt: {
-  // A secret to use for key generation (you should set this explicitly)
+  // A secret to use for key generation - you should set this explicitly
+  // Defaults to NextAuth.js secret if not explicitly specified.
   // secret: 'INp8IvdIyeMcoGAgFGoA61DdBglwwSqnXJZkgz8PSnw',
   
-  // Set to true to use encryption (default: false)
+  // Set to true to use encryption. Defaults to false (signing only).
   // encryption: true,
 
   // You can define your own encode/decode functions for signing and encryption
@@ -134,30 +135,15 @@ jwt: {
 }
 ```
 
-An example JSON WebToken contains an encrypted payload like this:
+An example JSON Web Token contains a payload like this:
 
 ```js
 {
-  user: {
-    name: 'Iain Collins',
-    email: 'me@iaincollins.com',
-    image: 'https://example.com/image.jpg',
-    id: 1 // User ID will note be specified if used without a database
-  },
-  // The account object stores details for the authentication provider account 
-  // that was used to sign in. It only contains exactly one account, even the 
-  // user is linked to multiple provider accounts in a database.
-  account: {
-    provider: 'google',
-    type: 'oauth',
-    id: 3218529,
-    refreshToken: 'cc0d32d79145091cd6cd8979f0a6d6b67d490899',
-    accessToken: '931400799b4a980715bb55af1bb8e01d92316956',
-    accessTokenExpires: null
-  },
-  isNewUser: true, // When using a database, is set to true if first sign in
-  iat: 1591150735, // Issued at
-  exp: 4183150735  // Expires in
+  name: 'Iain Collins',
+  email: 'me@iaincollins.com',
+  picture: 'https://example.com/image.jpg',
+  "iat": 1594601838,
+  "exp": 1597193838
 }
 ```
 
@@ -183,8 +169,8 @@ _For convenience, this helper function is also able to read and decode tokens pa
 
 The getToken() helper requires the following options:
 
-* req - (object) Request object (required)
-* secret - (string) JWT Secret (required)
+* `req` - (object) Request object
+* `secret` - (string) JWT Secret
 
 You must also pass *any options configured on the `jwt` option* to the helper.
 
@@ -194,11 +180,11 @@ e.g. Including custom session `maxAge` and custom signing and/or encryption keys
 
 It also supports the following options:
 
-* secureCookie - (boolean) Uses secure prefixed cookie if true (optional)
+* `secureCookie` - (boolean) Use secure prefixed cookie name
 
-  By default, the helper function will attempt to determine if it should use the secure prefixed cookie (e.g. `true` in production, `false` in development, unless NEXTAUTH_URL is configured with an HTTPS URL).
+  By default, the helper function will attempt to determine if it should use the secure prefixed cookie (e.g. `true` in production and `false` in development, unless NEXTAUTH_URL contains an HTTPS URL).
 
-* cookieName - (string) Session token cookie name (optional)
+* `cookieName` - (string) Session token cookie name
 
   The `secureCookie` option is ignored if `cookieName` is explcitly specified.
 
@@ -357,9 +343,15 @@ You can override the default cookie names and options for any of the cookies use
 
 This is an advanced option and using it is not recommended as you may break authentication or introduce security flaws into your application.
 
-You can specify one or more cookies with custom properties, but if you specify custom options for a cookie you must provided all the options for it. You will also likely want to create conditional behaviour to support local development (e.g. setting `secure: false` and not using cookie prefixes on localhost URLs).
+You can specify one or more cookies with custom properties, but if you specify custom options for a cookie you must provided all the options for that cookie.
 
-**For example:**
+If you use this feature, you will likely want to create conditional behaviour to support setting different cookies policies in development and production builds, as you will be opting out of the built-in dynamic policy.
+
+:::tip
+An example of a use case for this option is to support sharing session tokens across subdomains.
+:::
+
+#### Example
 
 ```js
 cookies: {

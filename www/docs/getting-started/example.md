@@ -3,19 +3,19 @@ id: example
 title: Example
 ---
 
-## Example project
+## Check out the example project
 
-The easiest way to get started is to clone the example Next.js application from the [next-auth-example](https://github.com/iaincollins/next-auth-example) repository and to the instructions in the [README](https://github.com/iaincollins/next-auth-example/blob/main/README.md).
+The easiest way to get started is to clone the [example application](https://github.com/iaincollins/next-auth-example) and follow the instructions in the [README](https://github.com/iaincollins/next-auth-example/blob/main/README.md).
 
 You can find a live demo of the example project at [next-auth-example.now.sh](https://next-auth-example.now.sh)
 
 ## Adding NextAuth.js to an existing project
 
-*The examples code below shows how to add authentication with NextAuth.js to an existing Next.js project.*
+*The example code below shows how to add authentication to an existing Next.js project.*
 
 ### Add API route
 
-To add NextAuth.js to a project, first create a file called `[...nextauth].js` in `pages/api/auth`.
+To add NextAuth.js to a project create a file called `[...nextauth].js` in `pages/api/auth`.
 
 ```javascript title="pages/api/auth/[...nextauth].js"
 import NextAuth from 'next-auth'
@@ -72,7 +72,9 @@ export default () => {
 }
 ```
 
-*That's all the code you need to add authentication to a project!*
+***That's all the code you need to add authentication with NextAuth.js to a project!***
+
+You can use the `useSession` hook from a anywhere in your application (e.g. in a header component).
 
 ### Configuration
 
