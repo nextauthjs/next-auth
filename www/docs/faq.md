@@ -131,11 +131,11 @@ JSON Web Tokens can be used for session tokens, but are also used for lots of ot
 
 ### What are the disadvantages of JSON Web Tokens?
 
-* You cannot as easily expire a JSON Web Token remotely - doing so requires maintaining a server side blacklist of invalid accounts.
+* You cannot as easily expire a JSON Web Token - doing so requires maintaining a server side blocklist of invalid tokens (at least until they expire) and checking every token against the list every time a token is presented.
 
-  Shorter session expiry times are used when using JSON Web Tokens as session tokens to allow sessions to be invalidated sooner, though any session token can be invalidated sooner by rejecting at run time (e.g. when a client tries to perform an action).
+  Shorter session expiry times are used when using JSON Web Tokens as session tokens to allow sessions to be invalidated sooner and simplify this problem.
 
-  NextAuth.js client includes advanced features to mitigate this impact, such as automatic session token rotation and is able to sending keep alive messages and tab/window syncing to support secure services that use sessions with short expiry times (e.g. 5-15 minutes).
+  NextAuth.js client includes advanced features to mitigate the downsides of using shorter session expiry times on the user experience, including automatic session token rotation, optionally sending keep alive messages to prevent short lived sessions from expirying if tehre is an window or tab open, background re-validation, and automatic tab/window syncing that keeps sessions in sync across windows any time session state changes or a window or tab gains or loses focus.
 
 * As with database session tokens, JSON Web Tokens are limited in the amount of data you can store in them. There is typically a limit of around 4096 bytes in total for all cookies on a domain, though the exact limit varies between browsers, proxies and hosting services.
 
