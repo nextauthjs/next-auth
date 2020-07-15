@@ -1,6 +1,6 @@
 module.exports = {
   title: 'NextAuth.js',
-  tagline: 'Authentication for Next.js & Serverless',
+  tagline: 'Authentication for Next.js',
   url: 'https://next-auth.js.org',
   baseUrl: '/',
   favicon: 'img/favicon.ico',
