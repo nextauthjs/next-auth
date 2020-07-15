@@ -3,11 +3,29 @@ id: databases
 title: Databases
 ---
 
-Specifying a database is optional if you don't need to persist user data or support email sign in.
+## About databases in NextAuth.js
 
-If you want to do either of these things you will need to specify a database.
+### What is a database used for?
 
-If you don't specify a database then JSON Web Tokens will be enabled and used to store session data. If you do specify a database then database sessions will be enabled, unless you explicitly enable JSON Web Tokens for sessions by passing the option `sessions { jwt: true }`.
+Databases in NextAuth.js are used for persisting users, oauth accounts, email sign in tokens and sessions.
+
+Specifying a database is optional if you don't need to persist user data or support email sign in - if you don't specify a database then JSON Web Tokens will be enabled for session storage and used to store session data.
+
+:::note
+If you do specify a database then database sessions are be enabled by default, unless you explicitly enable JSON Web Tokens for sessions by passing the option `sessions { jwt: true }`.
+
+If you enable JWT sessions when using a database then accounts will still be persisted in database but stateless sessions will be used on the client. Using JSON Web Tokens in Serverless applications is often less expensive and performs better than database sessions.
+:::
+
+### Should I use a database?
+
+* Using NextAuth.js without a database works well for internal tools - where you need to control who is able to sign in, but when you do not need to create user accounts for them in your application.
+
+* Using NextAuth.js with a database is usually a better approach for a consumer facing application where you need to persist accounts (e.g. for billing, to contact customers, etc).
+
+### What database should I use?
+
+Managed database solutions for MySQL, Postgres and MongoDB are well supported from cloud providers such as Amazon, Google, Microsoft and Atlas. If you are deploying directly to a particular cloud platform you may also want to consider serverless database offerings they have (e.g. [Amazon Aurora Serverless on AWS](https://aws.amazon.com/rds/aurora/serverless/)).
 
 ## How to specify a database
 
@@ -73,7 +91,7 @@ database: {
 
 ## Supported databases
 
-NextAuth.js uses TypeORM as the default database adapter, but only some databases are supported.
+NextAuth.js uses TypeORM as the default database adapter, but only some databases supported by TypeORM are supported by NextAuth.js (as custom logic for creating indexes and date/time handling is required).
 
 :::tip
 When configuring your database you also need to install an appropriate **node module** for your database.
@@ -136,25 +154,7 @@ Install module:
 database: 'mongodb://username:password@127.0.0.1:3306/database_name?synchronize=true'
 ```
 
+## Using other databases
 
-## Unsupported databases
-
-The following additional databases are supported by TypeORM (which the default adapter uses) and *may* work with NextAuth.js but have not been tested:
-
-* cordova
-* expo
-* mssql
-* oracle
-* sqljs
-* react-native
-
-Any database that supports ANSI SQL *should* work out of the box.
-
-:::tip
-You can customize, extend or replace the models, you can do this by using the 'adapters' option and passing passing additional options to **Adapters.Default()**. How to do this is not yet documented.
-:::
-
-:::note
-See the [documentation for adapters](/schemas/adapters) for more information on advanced configuration, including how to use NextAuth.js with any database.
-:::
+See the [documentation for adapters](/schemas/adapters) for more information on advanced configuration, including how to use NextAuth.js with other databases using a [custom adapter](/tutorials/creating-a-database-adapter).
 
