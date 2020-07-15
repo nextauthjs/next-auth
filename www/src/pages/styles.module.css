@@ -83,7 +83,8 @@
 }
 
 .features ul li em {
-  font-weight: 300;
+  font-weight: 400;
+  opacity: 0.6;
   font-style: normal;
 }
 

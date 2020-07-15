@@ -313,3 +313,13 @@ html[data-theme='dark'] .button.button--secondary.button--sm.menu__button {
   }
   */
 }
+
+/* Targets docs sidebar (shown on left hand side) */
+.main-wrapper > div > div {
+    border-right: none !important;
+    background-color: rgb(255,255,255);
+}
+
+html[data-theme='dark'] .main-wrapper > div > div {
+    background-color: rgba(0,0,0,0.1);
+}
