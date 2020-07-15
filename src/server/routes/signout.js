@@ -43,5 +43,13 @@ export default async (req, res, options, done) => {
     maxAge: 0
   })
 
+  // Remove Has Session
+  if (cookies.hasSession) {
+    cookie.set(res, cookies.hasSession.name, '', {
+      ...cookies.hasSession.options,
+      maxAge: 0
+    })
+  }
+
   return redirect(callbackUrl)
 }

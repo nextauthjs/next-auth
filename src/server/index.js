@@ -109,6 +109,20 @@ export default async (req, res, userSuppliedOptions) => {
       ...userSuppliedOptions.cookies
     }
 
+    const hasSession = userSuppliedOptions?.cookies?.hasSession
+    if (hasSession) {
+      cookies.hasSession = {
+        name: hasSession.name || `${cookiePrefix}next-auth.has-session`,
+        options: {
+          sameSite: 'lax',
+          path: '/',
+          secure: useSecureCookies,
+          ...hasSession.options || {},
+          httpOnly: false,
+        }
+      }
+    }
+
     // Session options
     const sessionOptions = {
       jwt: false,

@@ -351,6 +351,12 @@ If you use this feature, you will likely want to create conditional behaviour to
 An example of a use case for this option is to support sharing session tokens across subdomains.
 :::
 
+The `hasSession` cookie will be set alongside the session cookie and can be used as a client side indicator that the user has a session, seeing as the session cookie itself is http only. If the property is defined it will be added when signing in, and cleared when signing out.
+
+:::warning
+The `hasSession` cookie can not be used to validate or ensure a user exists, it should only be used for basic things like a client side redirect to the sign in page.
+:::
+
 #### Example
 
 ```js
@@ -379,6 +385,14 @@ cookies: {
       sameSite: 'lax',
       path: '/',
       secure: true
+    }
+  },
+  // This cookie will only be set if specified
+  hasSession: { // Define custom options like this, or you can just set value to `true`
+    name: `__next-auth.has-session`,
+    options: {
+      sameSite: 'lax',
+      path: '/'
     }
   }
 }

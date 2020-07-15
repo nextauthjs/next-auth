@@ -50,11 +50,19 @@ export default async (req, res, options, done) => {
       // Set cookie, to also update expiry date on cookie
       cookie.set(res, cookies.sessionToken.name, newEncodedJwt, { expires: sessionExpires, ...cookies.sessionToken.options })
 
+      if (cookies.hasSession) {
+        cookie.set(res, cookies.hasSession.name, '1', { expires: sessionExpires, ...cookies.hasSession.options })
+      }
+
       await dispatchEvent(events.session, { session: sessionPayload, jwt: jwtPayload })
     } catch (error) {
       // If JWT not verifiable, make sure the cookie for it is removed and return empty object
       logger.error('JWT_SESSION_ERROR', error)
       cookie.set(res, cookies.sessionToken.name, '', { ...cookies.sessionToken.options, maxAge: 0 })
+
+      if (cookies.hasSession) {
+        cookie.set(res, cookies.hasSession.name, '', { ...cookies.hasSession.options, maxAge: 0 })
+      }
     }
   } else {
     try {
@@ -87,11 +95,19 @@ export default async (req, res, options, done) => {
         // Set cookie again to update expiry
         cookie.set(res, cookies.sessionToken.name, sessionToken, { expires: session.expires, ...cookies.sessionToken.options })
 
+        if (cookies.hasSession) {
+          cookie.set(res, cookies.hasSession.name, '1', { expires: session.expires, ...cookies.hasSession.options })
+        }
+
         await dispatchEvent(events.session, { session: sessionPayload })
       } else if (sessionToken) {
         // If sessionToken was found set but it's not valid for a session then
         // remove the sessionToken cookie from browser.
         cookie.set(res, cookies.sessionToken.name, '', { ...cookies.sessionToken.options, maxAge: 0 })
+
+        if (cookies.hasSession) {
+          cookie.set(res, cookies.hasSession.name, '', { ...cookies.hasSession.options, maxAge: 0 })
+        }
       }
     } catch (error) {
       logger.error('SESSION_ERROR', error)

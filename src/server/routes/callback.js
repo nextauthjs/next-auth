@@ -80,9 +80,17 @@ export default async (req, res, options, done) => {
             cookieExpires.setTime(cookieExpires.getTime() + (sessionMaxAge * 1000))
 
             cookie.set(res, cookies.sessionToken.name, newEncodedJwt, { expires: cookieExpires.toISOString(), ...cookies.sessionToken.options })
+
+            if (cookies.hasSession) {
+              cookie.set(res, cookies.hasSession.name, '1', { expires: cookieExpires.toISOString(), ...cookies.hasSession.options })
+            }
           } else {
             // Save Session Token in cookie
             cookie.set(res, cookies.sessionToken.name, session.sessionToken, { expires: session.expires || null, ...cookies.sessionToken.options })
+
+            if (cookies.hasSession) {
+              cookie.set(res, cookies.hasSession.name, '1', { expires: session.expires || null, ...cookies.hasSession.options })
+            }
           }
 
           await dispatchEvent(events.signIn, { user, account, isNewUser })
@@ -163,9 +171,16 @@ export default async (req, res, options, done) => {
         cookieExpires.setTime(cookieExpires.getTime() + (sessionMaxAge * 1000))
 
         cookie.set(res, cookies.sessionToken.name, newEncodedJwt, { expires: cookieExpires.toISOString(), ...cookies.sessionToken.options })
+
+        if (cookies.hasSession) {
+          cookie.set(res, cookies.hasSession.name, '1', { expires: cookieExpires.toISOString(), ...cookies.hasSession.options })
+        }
       } else {
         // Save Session Token in cookie
         cookie.set(res, cookies.sessionToken.name, session.sessionToken, { expires: session.expires || null, ...cookies.sessionToken.options })
+        if (cookies.hasSession) {
+          cookie.set(res, cookies.hasSession.name, '1', { expires: session.expires || null, ...cookies.hasSession.options })
+        }
       }
 
       await dispatchEvent(events.signIn, { user, account, isNewUser })
@@ -241,6 +256,10 @@ export default async (req, res, options, done) => {
     cookieExpires.setTime(cookieExpires.getTime() + (sessionMaxAge * 1000))
 
     cookie.set(res, cookies.sessionToken.name, newEncodedJwt, { expires: cookieExpires.toISOString(), ...cookies.sessionToken.options })
+
+    if (cookies.hasSession) {
+      cookie.set(res, cookies.hasSession.name, '1', { expires: cookieExpires.toISOString(), ...cookies.hasSession.options })
+    }
 
     await dispatchEvent(events.signIn, { user, account })
 
