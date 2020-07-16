@@ -282,9 +282,8 @@ html[data-theme='dark'] .footer.footer--dark {
 /* The UX is pretty poor but doing the best we can with it! */
 .button.button--secondary.button--sm.menu__button {
   position: fixed;
-  top: 4.5rem;
   right: 1rem;
-  bottom: auto;
+  bottom: 1rem;
   z-index: 1000;
   width: auto;
   padding: 0.5rem 1rem;
