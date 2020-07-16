@@ -63,7 +63,6 @@ export async function getServerSideProps(context) {
 ```
 
 :::tip
-
 This example assumes you have configured `_app.js` to pass the `session` prop through so that it's immediately avalible on page load to `useSession`.
 
 ```js title="pages/_app.js"
@@ -133,7 +132,7 @@ You can use this helper function in any application as long as you set the `NEXT
 :::
 
 :::note
-Pass `getToken` the same value for `secret` as specified in `pages/api/[]...nextauth].js`.
+Pass `getToken` the same value for `secret` as specified in `pages/api/auth/[...nextauth].js`.
 
 See [the documentation for the JWT option](http://localhost:3000/configuration/options#jwt) for more information.
 :::
