@@ -1,3 +1,7 @@
+.admonition-icon {
+  margin-right: .5rem;
+}
+
 .admonition.admonition-tip,
 .admonition.admonition-note,
 .admonition.admonition-warning {
@@ -23,6 +27,13 @@
   color: #444;
   fill: #444;
 }
+
+html[data-theme="dark"] .admonition.admonition-note .admonition-icon svg,
+html[data-theme="dark"] .admonition.admonition-note .admonition-heading {
+  color: #888;
+  fill: #888;
+}
+
 
 html[data-theme="dark"] .admonition.admonition-tip,
 html[data-theme="dark"] .admonition.admonition-note,
