@@ -50,6 +50,6 @@ Advanced options allow you to define your own routines to handle controlling wha
 
 [NextAuth.js 2.0 is possible thanks to its contributors.](/contributors)
 
-## Getting started
+## Getting Started
 
 [Follow the examples to get started.](/getting-started/example)
