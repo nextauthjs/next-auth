@@ -47,7 +47,7 @@ const features = [
         <li>Signed, prefixed, server-only cookies</li>
         <li>CSRF Tokens on HTTP POST</li>
         <li>JWT with JWS / JWE / JWK / JWK</li>
-        <li>Tab/Window syncing and keepalives</li>
+        <li>Tab Syncing, Silient Keepalive</li>
         <li>Doesn't rely on client side JavaScript</li>
       </ul>
     )
@@ -77,101 +77,103 @@ function Home () {
   return (
     <Layout description={siteConfig.tagline}>
       <Seo />
-      <header className={classnames('hero', styles.heroBanner)}>
-        <div className='container'>
-          <div className='hero-inner'>
-            <img
-              src='/img/logo/logo-sm.png'
-              alt='Shield with key icon'
-              className={styles.heroLogo}
-            />
-            <div className={styles.heroText}>
-              <h1 className='hero__title'>{siteConfig.title}</h1>
-              <p className='hero__subtitle'>{siteConfig.tagline}</p>
-            </div>
-            <div className={styles.buttons}>
-              <a
-                className={classnames(
-                  'button button--outline button--secondary button--lg rounded-pill',
-                  styles.button
-                )}
-                href='https://next-auth-example.now.sh'
-              >Live Demo
-              </a>
-              <Link
-                className={classnames(
-                  'button button--primary button--lg rounded-pill',
-                  styles.button
-                )}
-                to={useBaseUrl('/getting-started/introduction')}
-              >Get Started
-              </Link>
-            </div>
-          </div>
-          <div className='hero-marquee'>
-            <ProviderMarquee />
-          </div>
-        </div>
-        <div className='hero-wave'>
-          <div className='hero-wave-inner' />
-        </div>
-      </header>
-      <main className='home-main'>
-        <section className={`section-features ${styles.features}`}>
+      <div className='home-wrapper'>
+        <header className={classnames('hero', styles.heroBanner)}>
           <div className='container'>
-            <div className='row'>
-              {features.map((props, idx) => (
-                <Feature key={idx} {...props} />
-              ))}
-            </div>
-          </div>
-        </section>
-        <section>
-          <div className='container'>
-            <div className='row'>
-              <div className='col'>
-                <p className='text--center'>
-                  <a
-                    href='https://www.npmjs.com/package/next-auth'
-                    className='button button--secondary button--outline rounded-pill button--lg'
-                  >npm install next-auth
-                  </a>
-                </p>
+            <div className='hero-inner'>
+              <img
+                src='/img/logo/logo-sm.png'
+                alt='Shield with key icon'
+                className={styles.heroLogo}
+              />
+              <div className={styles.heroText}>
+                <h1 className='hero__title'>{siteConfig.title}</h1>
+                <p className='hero__subtitle'>{siteConfig.tagline}</p>
+              </div>
+              <div className={styles.buttons}>
+                <a
+                  className={classnames(
+                    'button button--outline button--secondary button--lg rounded-pill',
+                    styles.button
+                  )}
+                  href='https://next-auth-example.now.sh'
+                >Live Demo
+                </a>
+                <Link
+                  className={classnames(
+                    'button button--primary button--lg rounded-pill',
+                    styles.button
+                  )}
+                  to={useBaseUrl('/getting-started/introduction')}
+                >Get Started
+                </Link>
               </div>
             </div>
-            <div className='row'>
-              <div className='col col--6'>
-                <div className='code'>
-                  <h4 className='code-heading'>Server</h4>
-                  <CodeBlock className='javascript'>{serverlessFunctionCode}</CodeBlock>
+            <div className='hero-marquee'>
+              <ProviderMarquee />
+            </div>
+          </div>
+          <div className='hero-wave'>
+            <div className='hero-wave-inner' />
+          </div>
+        </header>
+        <main className='home-main'>
+          <section className={`section-features ${styles.features}`}>
+            <div className='container'>
+              <div className='row'>
+                {features.map((props, idx) => (
+                  <Feature key={idx} {...props} />
+                ))}
+              </div>
+            </div>
+          </section>
+          <section>
+            <div className='container'>
+              <div className='row'>
+                <div className='col'>
+                  <p className='text--center'>
+                    <a
+                      href='https://www.npmjs.com/package/next-auth'
+                      className='button button--secondary button--outline rounded-pill button--lg'
+                    >npm install next-auth
+                    </a>
+                  </p>
                 </div>
               </div>
-              <div className='col col--6'>
-                <div className='code'>
-                  <h4 className='code-heading'>Client</h4>
-                  <CodeBlock className='javascript'>{reactComponentCode}</CodeBlock>
+              <div className='row'>
+                <div className='col col--6'>
+                  <div className='code'>
+                    <h4 className='code-heading'>Server</h4>
+                    <CodeBlock className='javascript'>{serverlessFunctionCode}</CodeBlock>
+                  </div>
+                </div>
+                <div className='col col--6'>
+                  <div className='code'>
+                    <h4 className='code-heading'>Client</h4>
+                    <CodeBlock className='javascript'>{reactComponentCode}</CodeBlock>
+                  </div>
+                </div>
+              </div>
+              <div className='row'>
+                <div className='col'>
+                  <p className='text--center' style={{ marginTop: '2rem' }}>
+                    <Link
+                      to='/getting-started/example'
+                      className='button button--primary button--lg rounded-pill'
+                    >Get Started
+                    </Link>
+                  </p>
                 </div>
               </div>
             </div>
-            <div className='row'>
-              <div className='col'>
-                <p className='text--center' style={{ marginTop: '2rem' }}>
-                  <Link
-                    to='/getting-started/example'
-                    className='button button--primary button--lg rounded-pill'
-                  >Get Started
-                  </Link>
-                </p>
-              </div>
+          </section>
+          <div className='container'>
+            <div className='row home-subtitle'>
+              {siteConfig.title} is not affiliated with Vercel or Next.js
             </div>
           </div>
-        </section>
-        <div className='container'>
-          <div className='row home-subtitle'>
-            {siteConfig.title} is not affiliated with Vercel or Next.js
-          </div>
-        </div>
-      </main>
+        </main>
+      </div>
     </Layout>
   )
 }

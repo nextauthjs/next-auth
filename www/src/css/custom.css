@@ -47,6 +47,10 @@ a,
   font-weight: 600;
 }
 
+a {
+  text-decoration: underline;
+}
+
 .navbar__toggle {
   margin-right: 1rem !important;
 }
@@ -65,10 +69,10 @@ html[data-theme='dark'] .menu__list .menu__list-item a[href="#!"] {
 }
 
 .menu__list .menu__list-item a.menu__link.menu__link--active:not(.menu__link--sublist) {
- background: var(--ifm-color-primary-darkest);
- background: linear-gradient(0deg, var(--ifm-color-primary-darkest) 0%, var(--ifm-color-primary-darker) 100%);
- color: #fff;
- font-weight: normal;
+  background: var(--ifm-color-primary-darkest);
+  background: linear-gradient(0deg, var(--ifm-color-primary-darkest) 0%, var(--ifm-color-primary-darker) 100%);
+  color: #fff;
+  font-weight: normal;
 }
 
 .main-wrapper h1 {
@@ -91,12 +95,12 @@ html[data-theme='dark'] .menu__list .menu__list-item a[href="#!"] {
   padding: 0 var(--ifm-pre-padding);
 }
 
-.admonition-icon {
-  margin-right: .5rem;
-}
-
 .rounded-pill {
   border-radius: 2rem;
+}
+
+.pagination-nav {
+  display: none;
 }
 
 /* Targets Table of Contents (right hand side sidebar) */
@@ -105,6 +109,10 @@ html[data-theme='dark'] .menu__list .menu__list-item a[href="#!"] {
   margin: 0 !important;
   padding: 0 !important;
   border: none !important;
+}
+
+.contents a {
+  text-decoration: none;
 }
 
 .contents > li > a {
@@ -155,23 +163,25 @@ html[data-theme='dark'] .menu__list .menu__list-item a[href="#!"] {
   padding: 0rem 0 2rem 0;
   opacity: 0.6;
   font-style: italic;
+  margin: 0;
 }
 
 .home-main .code {
   padding: 0;
   height: 100%;
   font-size: 0.9rem;
-  background: #292D3D;
+  background: #1E1E1E;
   overflow: hidden;
   border-radius: .5rem;
 }
 
 .home-main .code .code-heading {
-  color: rgba(255,255,255,.8);
-  background: rgba(0,0,0,.2);
+  color: rgba(255,255,255,1);
+  background: #191A1B;
   margin: 0;
   padding: 0.5rem 1rem;
   font-size: 1rem;
+  font-weight: 700;
   width: 100%;
 }
 
@@ -185,6 +195,11 @@ html[data-theme='dark'] .menu__list .menu__list-item a[href="#!"] {
 
 hr {
   margin-top: 2.5rem;
+  border-color: #ddd;
+}
+
+html[data-theme='dark'] hr {
+  border-color: #242526;
 }
 
 .navbar__item.navbar__link[href*="github"],
@@ -263,17 +278,16 @@ html[data-theme='dark'] .footer.footer--dark {
   --ifm-footer-background-color: #242526;
 }
 
-
-
-
+/* Targets the 'Documentation' button on mobile */
+/* The UX is pretty poor but doing the best we can with it! */
 .button.button--secondary.button--sm.menu__button {
   position: fixed;
-  top: auto;
-  left: auto;  
-  right: 1.5rem;
-  bottom: 1.5rem;
+  top: 4.5rem;
+  right: 1rem;
+  bottom: auto;
+  z-index: 1000;
   width: auto;
-  padding: 0.5rem;
+  padding: 0.5rem 1rem;
   border-radius: 2rem;
   border: none;
   background: #fff;
@@ -289,7 +303,7 @@ html[data-theme='dark'] .button.button--secondary.button--sm.menu__button {
 .button.button--secondary.button--sm.menu__button:before {
   font-size: 2rem;
   line-height: 2rem;
-  content: "📖";
+  content: "?";
   opacity: 0.8;
   display: block;
 }
@@ -325,10 +339,10 @@ html[data-theme='dark'] .button.button--secondary.button--sm.menu__button {
 
 /* Targets docs sidebar (left hand side) */
 .main-wrapper > div > div {
-    border-right: none !important;
-    background-color: rgb(255,255,255);
+  border-right: none !important;
+  background-color: #fff;
 }
 
 html[data-theme='dark'] .main-wrapper > div > div {
-    background-color: rgba(0,0,0,0.1);
+  background-color: #242526;
 }
