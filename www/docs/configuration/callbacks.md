@@ -13,14 +13,22 @@ You can specify a handler for any of the callbacks below.
 
 ```js title="pages/api/auth/[...nextauth.js]"
 callbacks: {
-  signIn: async (profile, account, metadata) => { },
-  redirect: async (url, baseUrl) => { },
-  session: async (session, token) => { },
-  jwt: async (token, profile, isNewUser) => { }
+  signIn: async (profile, account, metadata) => {
+    return Promise.resolve(true)
+  },
+  redirect: async (url, baseUrl) => {
+    return Promise.resolve(baseUrl)
+  },
+  session: async (session, token) => {
+    return Promise.resolve(session)
+  },
+  jwt: async (token, profile, isNewUser) => {
+    return Promise.resolve(token)
+  }
 }
 ```
 
-The documentation below shows how to implement each callback and their default behaviour.
+The documentation below shows how to implement each callback, their default behaviour and an example of what the response for each callback should be.
 
 ## Sign In
 
@@ -90,6 +98,7 @@ callbacks: {
    * @return {object}          Session that will be returned to the client 
    */
   session: async (session, token) => {
+    session.foo = 'bar' // Add property to session
     return Promise.resolve(session)
   }
 }
@@ -117,6 +126,9 @@ callbacks: {
    * @return {object}            JSON Web Token that will be saved
    */
   jwt: async (token, profile, isNewUser) => {
+    const isSignIn = (profile) ? true : false
+    // Add auth_time to token on signin in
+    if (isSignIn) { token.auth_time = new Date().toISOString() }
     return Promise.resolve(token)
   }
 }
