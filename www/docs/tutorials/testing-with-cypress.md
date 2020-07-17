@@ -5,7 +5,7 @@ title: Testing with Cypress
 
 To test an implementation of NextAuth.js, we encourage you to use [Cypress](https://cypress.io). 
 
-## Setting up Crypress
+## Setting up Cypress
 
 To get started, install the dependencies:
 
