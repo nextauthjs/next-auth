@@ -5,6 +5,28 @@ title: Client API
 
 The NextAuth.js client library makes it easy to interact with sessions from React applications.
 
+#### Example Session Object
+
+```js
+{
+  user: {
+    name: string,
+    email: string,
+    image: uri
+  },
+  accessToken: string,
+  expires: "YYYY-MM-DDTHH:mm:ss.SSSZ"
+}
+```
+
+:::tip
+The session data returned to the client it does not contain sensitive information such as the Session Token or OAuth tokens. It contains a minimal payloar that includes enough data needed to display information on a page about the user who is signed in for presentation purposes (e.g name, email, image).
+
+You can use the [session callback](/configuration/callbacks#session) to customize the session object returned to the client if you need to return additional data in the session object.
+:::
+
+---
+
 ## useSession()
 
 * Client Side: **Yes**
@@ -13,6 +35,8 @@ The NextAuth.js client library makes it easy to interact with sessions from Reac
 The `useSession()` React Hook in the NextAuth.js client is the easiest way to check if someone is signed in.
 
 It works best when used with NextAuth.js `<Provider>` is added to `pages/_app.js` (see [provider](#provider)).
+
+#### Example
 
 ```jsx
 import { useSession } from 'next-auth/client'
@@ -38,72 +62,64 @@ NextAuth.js provides a `getSession()` method which can be called client or serve
 
 It calls `/api/auth/session` and returns a promise with a session object, or null if no session exists.
 
-A session object looks like this:
+#### Client Side Example
 
 ```js
-{
-  user: {
-    name: string,
-    email: string,
-    image: uri
-  },
-  accessToken: string,
-  expires: "YYYY-MM-DDTHH:mm:ss.SSSZ"
+async function myFunction() {
+  const session = await getSession()
+  /* ... */
 }
 ```
 
-You can call `getSession()` inside a function to check if a user is signed in. 
+#### Server Side Example
 
-You can also use it in API routes or in server side rendered pages that supporting signing in without requiring client side JavaScript.
-
-:::note
-The session data returned to the client it does not contain sensitive information such as the Session Token or OAuth tokens. It only includes enough data needed to display information on a page about the user who is signed in (e.g name, email) .
-
-You can use the [session callback](/configuration/callbacks#session) to customize the session object returned to the client if you need to add additional data to it.
-:::
-
-Because it is a Universal method, you can use `getSession()` in both client and server side functions.
-
-#### Server Side Rendered Page
-
-```jsx title="pages/index.js"
-import { getSession } from 'next-auth/client'
-
-const Page = ({ session }) => (<p>
-    {!session && <>
-      Not signed in <br/>
-      <a href="/api/auth/signin">Sign in</a>
-    </>}
-    {session && <>
-      Signed in as {session.user.email} <br/>
-      <a href="/api/auth/signout">Sign out</a>
-    </>}
-  </p>)
-
-Page.getInitialProps = async (context) => {
-  return {
-    session: await getSession(context)
-  }
-}
-
-export default Page
-```
-
-#### API Route
-
-```jsx title="pages/api/example.js"
+```js
 import { getSession } from 'next-auth/client'
 
 export default async (req, res) => {
   const session = await getSession({ req })
-  console.log('Session', session)
+  /* ... */
   res.end()
 }
 ```
 
 :::note
-When calling `getSession()` server side, you must pass the request object or you can the pass entire `context` object as it contains the `req` object as shown in the examples. e.g. `getSession(context)` or `getSession({req})`
+When calling `getSession()` server side, you need to pass `{req}` or `context` object.
 :::
+
+The tutorial [securing pages and API routes](http://localhost:3000/tutorials/securing-pages-and-api-routes) shows how to use `getSession()` in server side calls.
+
+---
+
+## getCsrfToken()
+
+* Client Side: **Yes**
+* Server Side: **Yes**
+
+The `getCsrfToken()` method returns the current Cross Site Request Forgery (CSRF Token) required to make POST requests (e.g. for signing in and signing out).
+
+You likely only need to use this if you are not using the built-in `signIn()` and `signOut()` methods.
+
+#### Client Side Example
+
+```js
+async function myFunction() {
+  const csrfToken = await getCsrfToken()
+  /* ... */
+}
+```
+
+#### Server Side Example
+
+```js
+import { getCsrfToken } from 'next-auth/client'
+
+export default async (req, res) => {
+  const csrfToken = await getCsrfToken({ req })
+  /* ... */
+  res.end()
+}
+```
 
 ---
 
@@ -120,14 +136,17 @@ It can be use useful if you are creating a dynamic custom sign in page.
 
 ---
 
-## getCsrfToken()
+#### API Route
 
-* Client Side: **Yes**
-* Server Side: No
+```jsx title="pages/api/example.js"
+import { getSession } from 'next-auth/client'
 
-The `getCsrfToken()` method returns the current Cross Site Request Forgery (CSRF Token) required to make POST requests (e.g. for signing in and signing out). It calls `/api/auth/csrf`.
-
-You likely only need to use this if you are not using the built-in `signIn()` and `signOut()` methods.
+export default async (req, res) => {
+  const session = await getSession({ req })
+  console.log('Session', session)
+  res.end()
+}
+```
 
 ---
 
