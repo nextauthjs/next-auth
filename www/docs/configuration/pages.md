@@ -7,12 +7,10 @@ NextAuth.js automatically creates simple, unbranded authentication pages for han
 
 The options displayed on the sign up page are automatically generated based on the providers specified in the options passed to NextAuth.js.
 
-### Configuration
-
 To add a custom login page, for example. You can use the `pages` option:
 
 ```javascript title="pages/api/auth/[...nextauth].js"
-  ...
+...
   pages: {
     signIn: '/auth/signin',
     signOut: '/auth/signout',
@@ -20,7 +18,7 @@ To add a custom login page, for example. You can use the `pages` option:
     verifyRequest: '/auth/verify-request', // (used for check email message)
     newUser: null // If set, new users will be directed here on first sign in
   }
-  ...
+...
 ```
 
 ## Examples
