@@ -6,7 +6,7 @@ interface Providers {
   Apple: Apple;
   Twitter: Twitter;
   Facebook: Facebook;
-  Github: Github;
+  GitHub: GitHub;
   Slack: Slack;
   Google: Google;
   Auth0: Auth0;
@@ -23,7 +23,7 @@ type PossibleProviders =
   | Apple
   | Twitter
   | Facebook
-  | Github
+  | GitHub
   | Slack
   | Google
   | Auth0
@@ -109,11 +109,11 @@ interface ProviderFacebookOptions {
 }
 
 /**
- * Github
+ * GitHub
  */
-type Github = (options: ProviderGithubOptions) => void;
+type GitHub = (options: ProviderGitHubOptions) => void;
 
-interface ProviderGithubOptions {
+interface ProviderGitHubOptions {
   clientId: string;
   clientSecret: string;
 }
