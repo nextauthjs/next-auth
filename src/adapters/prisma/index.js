@@ -221,8 +221,8 @@ const Adapter = (prismaConfig, options = {}) => {
           if (!force) { return null }
         }
 
-        const { id, ...rest } = session
-        return prisma[Session].update({ where: { id }, data: rest })
+        const { id, expires } = session
+        return prisma[Session].update({ where: { id }, data: { expires } })
       } catch (error) {
         logger.error('UPDATE_SESSION_ERROR', error)
         return Promise.reject(new Error('UPDATE_SESSION_ERROR', error))
