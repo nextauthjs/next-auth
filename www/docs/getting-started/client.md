@@ -20,7 +20,7 @@ The NextAuth.js client library makes it easy to interact with sessions from Reac
 ```
 
 :::tip
-The session data returned to the client it does not contain sensitive information such as the Session Token or OAuth tokens. It contains a minimal payloar that includes enough data needed to display information on a page about the user who is signed in for presentation purposes (e.g name, email, image).
+The session data returned to the client does not contain sensitive information such as the Session Token or OAuth tokens. It contains a minimal payload that includes enough data needed to display information on a page about the user who is signed in for presentation purposes (e.g name, email, image).
 
 You can use the [session callback](/configuration/callbacks#session) to customize the session object returned to the client if you need to return additional data in the session object.
 :::
@@ -34,7 +34,7 @@ You can use the [session callback](/configuration/callbacks#session) to customiz
 
 The `useSession()` React Hook in the NextAuth.js client is the easiest way to check if someone is signed in.
 
-It works best when used with NextAuth.js `<Provider>` is added to `pages/_app.js` (see [provider](#provider)).
+It works best when the [`<Provider>`](#provider) is added to `pages/_app.js`.
 
 #### Example
 
@@ -87,7 +87,7 @@ export default async (req, res) => {
 When calling `getSession()` server side, you need to pass `{req}` or `context` object.
 :::
 
-The tutorial [securing pages and API routes](http://localhost:3000/tutorials/securing-pages-and-api-routes) shows how to use `getSession()` in server side calls.
+The tutorial [securing pages and API routes](/tutorials/securing-pages-and-api-routes) shows how to use `getSession()` in server side calls.
 
 ---
 
@@ -96,7 +96,7 @@ The tutorial [securing pages and API routes](http://localhost:3000/tutorials/sec
 * Client Side: **Yes**
 * Server Side: **Yes**
 
-The `getCsrfToken()` method returns the current Cross Site Request Forgery (CSRF Token) required to make POST requests (e.g. for signing in and signing out).
+The `getCsrfToken()` method returns the current Cross Site Request Forgery Token (CSRF Token) required to make POST requests (e.g. for signing in and signing out).
 
 You likely only need to use this if you are not using the built-in `signIn()` and `signOut()` methods.
 
@@ -130,7 +130,7 @@ export default async (req, res) => {
 
 The `getProviders()` method returns the list of providers currently configured for sign in.
 
-It calls `/api/auth/providers` and returns a with a list of the currently configured authentication providers.
+It calls `/api/auth/providers` and returns a list of the currently configured authentication providers.
 
 It can be use useful if you are creating a dynamic custom sign in page.
 
@@ -155,7 +155,7 @@ export default async (req, res) => {
 * Client Side: **Yes**
 * Server Side: No
 
-Using the `signIn()` method ensures the user ends back on the page they started on after completing a sign in flow. It will also handle CSRF tokens for you automatically when signing in with email.
+Using the `signIn()` method ensures the user ends back on the page they started on after completing a sign in flow. It will also handle CSRF Tokens for you automatically when signing in with email.
 
 The `signIn()` method can be called from the client in different ways, as shown below.
 
@@ -193,9 +193,9 @@ export default ({ email }) => (
 
 #### Specifying a callbackUrl
 
-By default, the URL of page the client is on when they sign in is used as the `callbackUrl` and that is the URL the client will be redirected to after signing in.
+The `callbackUrl` specifies to which URL the user will be redirected after signing in. It defaults to the current URL of a user.
 
-You can specify a different URL as the `callbackUrl` parameter by passing it in the second argument to `signIn()`. This works for all calls to `signIn()`.
+You can specify a different `callbackUrl` by specifying it as the second argument of `signIn()`. This works for all providers.
 
 e.g.
 
@@ -203,7 +203,7 @@ e.g.
 * `signIn('google', { callbackUrl: 'http://localhost:3000/foo' })`
 * `signIn('email', { email, callbackUrl: 'http://localhost:3000/foo' })`
 
-The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect). By default this means it must be an absolute URL at the same hostname (or else it will default to the homepage); you can define your own custom redirect callback to allow other URLs, including supporting relative URLs.
+The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect). By default it requires the URL to be an absolute URL at the same hostname, or else it will redirect to the homepage. You can define your own redirect callback to allow other URLs, including supporting relative URLs.
 
 ---
 
