@@ -87,8 +87,16 @@ const Adapter = (prismaConfig, options = {}) => {
     async function updateUser (user) {
       debugMessage('UPDATE_USER', user)
       try {
-        const { id, ...rest } = user
-        return prisma[User].update({ where: { id }, data: rest })
+        const { id, name, email, image, emailVerified } = user
+        return prisma[User].update({ where: { id }, data: {
+          image,
+          email,
+          emailVerified: emailVerified &&
+            Object.prototype.toString.call(emailVerified) === '[object Date]'
+              ? emailVerified.toISOString()
+              : null,
+          name,
+        } })
       } catch (error) {
         logger.error('UPDATE_USER_ERROR', error)
         return Promise.reject(new Error('UPDATE_USER_ERROR', error))
