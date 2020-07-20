@@ -303,7 +303,7 @@ config({
 
 ### adapter
 
-* **Default value**: *Adapater.Default()*
+* **Default value**: *Adapter.Default()*
 * **Required**: *No*
 
 #### Description
