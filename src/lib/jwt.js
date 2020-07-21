@@ -12,16 +12,22 @@ const encode = async ({ secret, key = secret, token = {}, maxAge }) => {
   return encryptedToken
 }
 
-const decode = async ({ secret, key = secret, token, maxAge }) => {
+
+const decode = async ({ secret, key = secret, token, maxAge, verify }) => {
   if (!token) return null
   const decryptedBytes = CryptoJS.AES.decrypt(token, key)
   const decryptedToken = decryptedBytes.toString(CryptoJS.enc.Utf8)
+
+  if (!verify) {
+    return decryptedToken
+  }
+
   const verifiedToken = jwt.verify(decryptedToken, secret, { maxAge })
   return verifiedToken
 }
 
 // This is a simple helper method to make it easier to use JWT from an API route
-const getJwt = async ({ req, secret, cookieName, maxAge }) => {
+const getJwt = async ({ req, secret, cookieName, maxAge, verify = true }) => {
   if (!req || !secret) throw new Error('Must pass { req, secret } to getJWT()')
 
   const secureCookieName = '__Secure-next-auth.session-token'
@@ -31,7 +37,7 @@ const getJwt = async ({ req, secret, cookieName, maxAge }) => {
   if (!cookieValue) { return null }
 
   try {
-    return await decode({ secret, token: cookieValue, maxAge })
+    return await decode({ secret, token: cookieValue, maxAge, verify })
   } catch (error) {
     return null
   }
