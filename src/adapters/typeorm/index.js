@@ -1,4 +1,4 @@
-import { createConnection, getConnection, getManager } from 'typeorm'
+import { createConnection, getConnection } from 'typeorm'
 import { createHash } from 'crypto'
 
 import { CreateUserError } from '../../lib/errors'
@@ -111,7 +111,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
       try {
         // Create user account
         const user = new User(profile.name, profile.email, profile.image, profile.emailVerified)
-        return await getManager().save(user)
+        return await connection.getRepository(User).save(user)
       } catch (error) {
         logger.error('CREATE_USER_ERROR', error)
         return Promise.reject(new CreateUserError(error))
@@ -164,7 +164,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
 
     async function updateUser (user) {
       debugMessage('UPDATE_USER', user)
-      return getManager().save(user)
+      return connection.getRepository(User).save(user)
     }
 
     async function deleteUser (userId) {
@@ -178,7 +178,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
       try {
         // Create provider account linked to user
         const account = new Account(userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires)
-        return getManager().save(account)
+        return connection.getRepository(Account).save(account)
       } catch (error) {
         logger.error('LINK_ACCOUNT_ERROR', error)
         return Promise.reject(new Error('LINK_ACCOUNT_ERROR', error))
@@ -205,7 +205,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
 
         const session = new Session(user.id, expires)
 
-        return getManager().save(session)
+        return connection.getRepository(Session).save(session)
       } catch (error) {
         logger.error('CREATE_SESSION_ERROR', error)
         return Promise.reject(new Error('CREATE_SESSION_ERROR', error))
@@ -259,7 +259,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
           if (!force) { return null }
         }
 
-        return getManager().save(session)
+        return connection.getRepository(Session).save(session)
       } catch (error) {
         logger.error('UPDATE_SESSION_ERROR', error)
         return Promise.reject(new Error('UPDATE_SESSION_ERROR', error))
@@ -296,7 +296,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
 
         // Save to database
         const newVerificationRequest = new VerificationRequest(identifier, hashedToken, expires)
-        const verificationRequest = await getManager().save(newVerificationRequest)
+        const verificationRequest = await connection.getRepository(VerificationRequest).save(newVerificationRequest)
 
         // With the verificationCallback on a provider, you can send an email, or queue
         // an email to be sent, or perform some other action (e.g. send a text message)
