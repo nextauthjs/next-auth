@@ -91,7 +91,7 @@ import { getSession } from 'next-auth/client'
 
 export default async (req, res) => {
   const session = await getSession({ req })
-  if (!session) {
+  if (session) {
     // Signed in
     console.log('Session', JSON.stringify(session, null, 2))
   } else {
@@ -114,7 +114,7 @@ const secret = process.env.SECRET
 
 export default async (req, res) => {
   const token = await jwt.getToken({ req, secret })
-  if (!token) {
+  if (token) {
     // Signed in
     console.log('JSON Web Token', JSON.stringify(token, null, 2))
   } else {
