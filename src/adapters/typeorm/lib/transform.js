@@ -1,7 +1,7 @@
 // Perform transforms on SQL models so they can be used with other databases
 import { SnakeCaseNamingStrategy, CamelCaseNamingStrategy } from './naming-strategies'
 
-const postgres = (models, options) => {
+const postgresTransform = (models, options) => {
   // Apply snake case naming strategy for Postgres databases
   if (!options.namingStrategy) {
     options.namingStrategy = new SnakeCaseNamingStrategy()
@@ -9,32 +9,16 @@ const postgres = (models, options) => {
 
   // For Postgres we need to use the `timestamp with time zone` type
   // aka `timestamptz` to store timestamps correctly in UTC.
-  for (const column in models.User.schema.columns) {
-    if (models.User.schema.columns[column].type === 'timestamp') {
-      models.User.schema.columns[column].type = 'timestamptz'
-    }
-  }
-
-  for (const column in models.Account.schema.columns) {
-    if (models.Account.schema.columns[column].type === 'timestamp') {
-      models.Account.schema.columns[column].type = 'timestamptz'
-    }
-  }
-
-  for (const column in models.Session.schema.columns) {
-    if (models.Session.schema.columns[column].type === 'timestamp') {
-      models.Session.schema.columns[column].type = 'timestamptz'
-    }
-  }
-
-  for (const column in models.VerificationRequest.schema.columns) {
-    if (models.VerificationRequest.schema.columns[column].type === 'timestamp') {
-      models.VerificationRequest.schema.columns[column].type = 'timestamptz'
+  for (const model in models) {
+    for (const column in models[model].schema.columns) {
+      if (models[model].schema.columns[column].type === 'timestamp') {
+        models[model].schema.columns[column].type = 'timestamptz'
+      }
     }
   }
 }
 
-const mongodb = (models, options) => {
+const mongodbTransform = (models, options) => {
   // A CamelCase naming strategy is used for all document databases
   if (!options.namingStrategy) {
     options.namingStrategy = new CamelCaseNamingStrategy()
@@ -54,14 +38,20 @@ const mongodb = (models, options) => {
   //    see the result of queries like find() is wrong. You will see the same
   //    Object ID in every property of type Object ID in the result (but the
   //    database will look fine); so use `type: 'objectId'` for them instead.
+  for (const model in models) {
+    delete models[model].schema.columns.id.type
+    models[model].schema.columns.id.objectId = true
+  }
 
-  delete models.User.schema.columns.id.type
-  models.User.schema.columns.id.objectId = true
+  // Ensure reference to User ID in other models are Object IDs
+  // This needs to done for any properties that reference another entity by ID
+  models.Account.schema.columns.userId.type = 'objectId'
+  models.Session.schema.columns.userId.type = 'objectId'
 
   // The options `unique: true` and `nullable: true` don't work the same
   // with MongoDB as they do with SQL databases like MySQL and Postgres,
-  // we also to add sparce to the index. This still doesn't allow multiple
-  // *null* values, but does allow some records to omit the property.
+  // we need to create a sparse index to only allow unique values, while
+  // still allowing multiple entires to omit the email address.
   delete models.User.schema.columns.email.unique
   models.User.schema.indices = [
     {
@@ -71,20 +61,9 @@ const mongodb = (models, options) => {
       columns: ['email']
     }
   ]
-
-  delete models.Account.schema.columns.id.type
-  models.Account.schema.columns.id.objectId = true
-  models.Account.schema.columns.userId.type = 'objectId'
-
-  delete models.Session.schema.columns.id.type
-  models.Session.schema.columns.id.objectId = true
-  models.Session.schema.columns.userId.type = 'objectId'
-
-  delete models.VerificationRequest.schema.columns.id.type
-  models.VerificationRequest.schema.columns.id.objectId = true
 }
 
-const sqlite = (models, options) => {
+const sqliteTransform = (models, options) => {
   // Apply snake case naming strategy for SQLite databases
   if (!options.namingStrategy) {
     options.namingStrategy = new SnakeCaseNamingStrategy()
@@ -98,27 +77,11 @@ const sqlite = (models, options) => {
   //
   // NB: SQLite adds 'create' and 'update' fields to allow rows, but that is
   // specific to SQLite and so we ignore that behaviour.
-  for (const column in models.User.schema.columns) {
-    if (models.User.schema.columns[column].type === 'timestamp') {
-      models.User.schema.columns[column].type = 'datetime'
-    }
-  }
-
-  for (const column in models.Account.schema.columns) {
-    if (models.Account.schema.columns[column].type === 'timestamp') {
-      models.Account.schema.columns[column].type = 'datetime'
-    }
-  }
-
-  for (const column in models.Session.schema.columns) {
-    if (models.Session.schema.columns[column].type === 'timestamp') {
-      models.Session.schema.columns[column].type = 'datetime'
-    }
-  }
-
-  for (const column in models.VerificationRequest.schema.columns) {
-    if (models.VerificationRequest.schema.columns[column].type === 'timestamp') {
-      models.VerificationRequest.schema.columns[column].type = 'datetime'
+  for (const model in models) {
+    for (const column in models[model].schema.columns) {
+      if (models[model].schema.columns[column].type === 'timestamp') {
+        models[model].schema.columns[column].type = 'datetime'
+      }
     }
   }
 }
@@ -126,15 +89,16 @@ const sqlite = (models, options) => {
 export default (config, models, options) => {
   if ((config.type && config.type.startsWith('mongodb')) ||
       (config.url && config.url.startsWith('mongodb'))) {
-    mongodb(models, options)
+    mongodbTransform(models, options)
   } else if ((config.type && config.type.startsWith('postgres')) ||
              (config.url && config.url.startsWith('postgres'))) {
-    postgres(models, options)
+    postgresTransform(models, options)
   } else if ((config.type && config.type.startsWith('sqlite')) ||
              (config.url && config.url.startsWith('sqlite'))) {
-    sqlite(models, options)
+    sqliteTransform(models, options)
   } else {
-    // Apply snake case naming strategy by default for SQL databases
+    // For all other SQL databases (e.g. MySQL) apply snake case naming
+    // strategy, but otherwise use the models and schemas as they are.
     if (!options.namingStrategy) {
       options.namingStrategy = new SnakeCaseNamingStrategy()
     }
