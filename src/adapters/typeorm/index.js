@@ -1,5 +1,6 @@
-import { createConnection, getConnection, getManager } from 'typeorm'
+import { createConnection, getConnection } from 'typeorm'
 import { createHash } from 'crypto'
+import require_optional from 'require_optional'
 
 import { CreateUserError } from '../../lib/errors'
 import adapterConfig from './lib/config'
@@ -67,12 +68,14 @@ const Adapter = (typeOrmConfig, options = {}) => {
       await _connect()
     }
 
+    // Get manager from connection object
+    // https://github.com/typeorm/typeorm/blob/master/docs/entity-manager-api.md
+    const { manager } = connection
+
     // Display debug output if debug option enabled
     // @TODO Refactor logger so is passed in appOptions
-    function debugMessage (debugCode, ...args) {
-      if (appOptions && appOptions.debug) {
-        logger.debug(`TYPEORM_${debugCode}`, ...args)
-      }
+    function debug (debugCode, ...args) {
+      logger.debug(`TYPEORM_${debugCode}`, ...args)
     }
 
     // The models are primarily designed for ANSI SQL database, but some
@@ -86,7 +89,11 @@ const Adapter = (typeOrmConfig, options = {}) => {
     let ObjectId
     if (config.type === 'mongodb') {
       idKey = '_id'
-      const mongodb = await import('mongodb')
+      // Using a dynamic import causes problems for some compilers/bundlers
+      // that don't handle dynamic imports. To try and work around this we are
+      // using the same method mongodb uses to load Object ID type, which is to
+      // use the require_optional loader.
+      const mongodb = require_optional('mongodb')
       ObjectId = mongodb.ObjectId
     }
 
@@ -96,7 +103,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
     // Use a conditional to default to 30 day session age if not set - it should
     // always be set but a meaningful fallback is helpful to facilitate testing.
     if (appOptions && (!appOptions.session || !appOptions.session.maxAge)) {
-      debugMessage('GET_ADAPTER', 'Session expiry not configured (defaulting to 30 days')
+      debug('GET_ADAPTER', 'Session expiry not configured (defaulting to 30 days')
     }
     const defaultSessionMaxAge = 30 * 24 * 60 * 60 * 1000
     const sessionMaxAge = (appOptions && appOptions.session && appOptions.session.maxAge)
@@ -107,11 +114,11 @@ const Adapter = (typeOrmConfig, options = {}) => {
       : 0
 
     async function createUser (profile) {
-      debugMessage('CREATE_USER', profile)
+      debug('CREATE_USER', profile)
       try {
         // Create user account
         const user = new User(profile.name, profile.email, profile.image, profile.emailVerified)
-        return await getManager().save(user)
+        return await manager.save(user)
       } catch (error) {
         logger.error('CREATE_USER_ERROR', error)
         return Promise.reject(new CreateUserError(error))
@@ -119,7 +126,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
     }
 
     async function getUser (id) {
-      debugMessage('GET_USER', id)
+      debug('GET_USER', id)
 
       // In the very specific case of both using JWT for storing session data
       // and using MongoDB to store user data, the ID is a string rather than
@@ -132,7 +139,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
       }
 
       try {
-        return connection.getRepository(User).findOne({ [idKey]: id })
+        return manager.findOne(User, { [idKey]: id })
       } catch (error) {
         logger.error('GET_USER_BY_ID_ERROR', error)
         return Promise.reject(new Error('GET_USER_BY_ID_ERROR', error))
@@ -140,10 +147,10 @@ const Adapter = (typeOrmConfig, options = {}) => {
     }
 
     async function getUserByEmail (email) {
-      debugMessage('GET_USER_BY_EMAIL', email)
+      debug('GET_USER_BY_EMAIL', email)
       try {
         if (!email) { return Promise.resolve(null) }
-        return connection.getRepository(User).findOne({ email })
+        return manager.findOne(User, { email })
       } catch (error) {
         logger.error('GET_USER_BY_EMAIL_ERROR', error)
         return Promise.reject(new Error('GET_USER_BY_EMAIL_ERROR', error))
@@ -151,11 +158,11 @@ const Adapter = (typeOrmConfig, options = {}) => {
     }
 
     async function getUserByProviderAccountId (providerId, providerAccountId) {
-      debugMessage('GET_USER_BY_PROVIDER_ACCOUNT_ID', providerId, providerAccountId)
+      debug('GET_USER_BY_PROVIDER_ACCOUNT_ID', providerId, providerAccountId)
       try {
-        const account = await connection.getRepository(Account).findOne({ providerId, providerAccountId })
+        const account = await manager.findOne(Account, { providerId, providerAccountId })
         if (!account) { return null }
-        return connection.getRepository(User).findOne({ [idKey]: account.userId })
+        return manager.findOne(User, { [idKey]: account.userId })
       } catch (error) {
         logger.error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error)
         return Promise.reject(new Error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error))
@@ -163,22 +170,22 @@ const Adapter = (typeOrmConfig, options = {}) => {
     }
 
     async function updateUser (user) {
-      debugMessage('UPDATE_USER', user)
-      return getManager().save(user)
+      debug('UPDATE_USER', user)
+      return manager.save(user)
     }
 
     async function deleteUser (userId) {
-      debugMessage('DELETE_USER', userId)
+      debug('DELETE_USER', userId)
       // @TODO Delete user from DB
       return false
     }
 
     async function linkAccount (userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires) {
-      debugMessage('LINK_ACCOUNT', userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires)
+      debug('LINK_ACCOUNT', userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires)
       try {
         // Create provider account linked to user
         const account = new Account(userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires)
-        return getManager().save(account)
+        return manager.save(account)
       } catch (error) {
         logger.error('LINK_ACCOUNT_ERROR', error)
         return Promise.reject(new Error('LINK_ACCOUNT_ERROR', error))
@@ -186,7 +193,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
     }
 
     async function unlinkAccount (userId, providerId, providerAccountId) {
-      debugMessage('UNLINK_ACCOUNT', userId, providerId, providerAccountId)
+      debug('UNLINK_ACCOUNT', userId, providerId, providerAccountId)
       // @TODO Get current user from DB
       // @TODO Delete [provider] object from user object
       // @TODO Save changes to user object in DB
@@ -194,7 +201,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
     }
 
     async function createSession (user) {
-      debugMessage('CREATE_SESSION', user)
+      debug('CREATE_SESSION', user)
       try {
         let expires = null
         if (sessionMaxAge) {
@@ -205,7 +212,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
 
         const session = new Session(user.id, expires)
 
-        return getManager().save(session)
+        return manager.save(session)
       } catch (error) {
         logger.error('CREATE_SESSION_ERROR', error)
         return Promise.reject(new Error('CREATE_SESSION_ERROR', error))
@@ -213,9 +220,9 @@ const Adapter = (typeOrmConfig, options = {}) => {
     }
 
     async function getSession (sessionToken) {
-      debugMessage('GET_SESSION', sessionToken)
+      debug('GET_SESSION', sessionToken)
       try {
-        const session = await connection.getRepository(Session).findOne({ sessionToken })
+        const session = await manager.findOne(Session, { sessionToken })
 
         // Check session has not expired (do not return it if it has)
         if (session && session.expires && new Date() > new Date(session.expires)) {
@@ -231,7 +238,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
     }
 
     async function updateSession (session, force) {
-      debugMessage('UPDATE_SESSION', session)
+      debug('UPDATE_SESSION', session)
       try {
         if (sessionMaxAge && (sessionUpdateAge || sessionUpdateAge === 0) && session.expires) {
           // Calculate last updated date, to throttle write updates to database
@@ -259,7 +266,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
           if (!force) { return null }
         }
 
-        return getManager().save(session)
+        return manager.save(session)
       } catch (error) {
         logger.error('UPDATE_SESSION_ERROR', error)
         return Promise.reject(new Error('UPDATE_SESSION_ERROR', error))
@@ -267,9 +274,9 @@ const Adapter = (typeOrmConfig, options = {}) => {
     }
 
     async function deleteSession (sessionToken) {
-      debugMessage('DELETE_SESSION', sessionToken)
+      debug('DELETE_SESSION', sessionToken)
       try {
-        return await connection.getRepository(Session).delete({ sessionToken })
+        return await manager.delete(Session, { sessionToken })
       } catch (error) {
         logger.error('DELETE_SESSION_ERROR', error)
         return Promise.reject(new Error('DELETE_SESSION_ERROR', error))
@@ -277,7 +284,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
     }
 
     async function createVerificationRequest (identifier, url, token, secret, provider) {
-      debugMessage('CREATE_VERIFICATION_REQUEST', identifier)
+      debug('CREATE_VERIFICATION_REQUEST', identifier)
       try {
         const { baseUrl } = appOptions
         const { sendVerificationRequest, maxAge } = provider
@@ -296,7 +303,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
 
         // Save to database
         const newVerificationRequest = new VerificationRequest(identifier, hashedToken, expires)
-        const verificationRequest = await getManager().save(newVerificationRequest)
+        const verificationRequest = await manager.save(newVerificationRequest)
 
         // With the verificationCallback on a provider, you can send an email, or queue
         // an email to be sent, or perform some other action (e.g. send a text message)
@@ -310,16 +317,16 @@ const Adapter = (typeOrmConfig, options = {}) => {
     }
 
     async function getVerificationRequest (identifier, token, secret, provider) {
-      debugMessage('GET_VERIFICATION_REQUEST', identifier, token)
+      debug('GET_VERIFICATION_REQUEST', identifier, token)
       try {
         // Hash token provided with secret before trying to match it with database
         // @TODO Use bcrypt instead of salted SHA-256 hash for token
         const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
-        const verificationRequest = await connection.getRepository(VerificationRequest).findOne({ identifier, token: hashedToken })
+        const verificationRequest = await manager.findOne(VerificationRequest, { identifier, token: hashedToken })
 
         if (verificationRequest && verificationRequest.expires && new Date() > new Date(verificationRequest.expires)) {
           // Delete verification entry so it cannot be used again
-          await connection.getRepository(VerificationRequest).delete({ token: hashedToken })
+          await manager.delete(VerificationRequest, { token: hashedToken })
           return null
         }
 
@@ -331,11 +338,11 @@ const Adapter = (typeOrmConfig, options = {}) => {
     }
 
     async function deleteVerificationRequest (identifier, token, secret, provider) {
-      debugMessage('DELETE_VERIFICATION', identifier, token)
+      debug('DELETE_VERIFICATION', identifier, token)
       try {
         // Delete verification entry so it cannot be used again
         const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
-        await connection.getRepository(VerificationRequest).delete({ token: hashedToken })
+        await manager.delete(VerificationRequest, { token: hashedToken })
       } catch (error) {
         logger.error('DELETE_VERIFICATION_REQUEST_ERROR', error)
         return Promise.reject(new Error('DELETE_VERIFICATION_REQUEST_ERROR', error))
