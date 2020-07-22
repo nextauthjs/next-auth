@@ -28,7 +28,7 @@ providers: [
 ...
 ```
 
-warning:::
+:::warning
 Make sure you select all the appropriate client settings or the OAuth flow will not work.
 :::
 
