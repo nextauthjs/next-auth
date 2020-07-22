@@ -47,9 +47,16 @@ adapter: Adapters.TypeORM.Adapter({
 
 You can also use NextAuth.js with [Prisma](https://www.prisma.io/docs/).
 
-To use this adapter, configure your `[...nextauth].js` like this:
+To use this adapter, you need to install Prisma Client and Prisma CLI:
 
-```javascript
+```
+npm i @prisma/client
+npm add -D @prisma/cli
+```
+
+Configure your NextAuth.js to use the Prisma adapter:
+
+```javascript title="pages/api/auth/[...nextauth].js"
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 import Adapters from 'next-auth/adapters'
@@ -58,7 +65,6 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 const options = {
-  site: 'http://localhost:3000',
   providers: [
     Providers.Google({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -71,10 +77,108 @@ const options = {
 export default (req, res) => NextAuth(req, res, options)
 ```
 
-:::tip
-If you experience issues with Prisma opening too many database connections opening in local development mode (e.g. due to Hot Module Reloading) you can use an approach like this:
+### Prisma Schema
 
-```js
+Create a `schema.prisma` file similar to this one:
+
+``` title="prisma/schema.prisma"
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                 Int       @default(autoincrement()) @id
+  compoundId         String    @unique @map(name: "compound_id")
+  userId             Int       @map(name: "user_id")
+  providerType       String    @map(name: "provider_type")
+  providerId         String    @map(name: "provider_id")
+  providerAccountId  String    @map(name: "provider_account_id")
+  refreshToken       String?   @map(name: "refresh_token")
+  accessToken        String?   @map(name: "access_token")
+  accessTokenExpires DateTime? @map(name: "access_token_expires")
+  createdAt          DateTime  @default(now()) @map(name: "created_at")
+  updatedAt          DateTime  @default(now()) @map(name: "updated_at")
+
+  @@index([providerAccountId], name: "providerAccountId")
+  @@index([providerId], name: "providerId")
+  @@index([userId], name: "userId")
+
+  @@map(name: "accounts")
+}
+
+model Session {
+  id           Int      @default(autoincrement()) @id
+  userId       Int      @map(name: "user_id")
+  expires      DateTime
+  sessionToken String   @unique @map(name: "session_token")
+  accessToken  String   @unique @map(name: "access_token")
+  createdAt    DateTime @default(now()) @map(name: "created_at")
+  updatedAt    DateTime @default(now()) @map(name: "updated_at")
+
+  @@map(name: "sessions")
+}
+
+model User {
+  id            Int       @default(autoincrement()) @id
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime? @map(name: "email_verified")
+  image         String?
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
+
+  @@map(name: "users")
+}
+
+model VerificationRequest {
+  id         Int      @default(autoincrement()) @id
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  createdAt  DateTime  @default(now()) @map(name: "created_at")
+  updatedAt  DateTime  @default(now()) @map(name: "updated_at")
+
+  @@map(name: "verification_requests")
+}
+```
+
+:::tip
+You can add properties to the schema, but do not change the base properties or types.
+:::
+
+Once you have saved your schema, you can run the Prisma CLI to generate the Prisma Client:
+
+```
+npx @prisma/cli generate
+```
+
+#### Using custom model names
+
+The properties in the models need to be defined as above, but the model names themselves can be changed with a configuration option, and the datasource can be changed to anything supported by Prisma. You can use custom model names by using the `modelMapping` option (shown here with default values).
+
+```javascript title="pages/api/auth/[...nextauth].js"
+...
+adapter: Adapters.Prisma.Adapter({ 
+  prisma,
+  modelMapping: {
+    User: 'user',
+    Account: 'account',
+    Session: 'session',
+    VerificationRequest: 'verificationRequest'
+  }  
+})
+...
+```
+
+:::tip
+If you experience issues with Prisma opening too many database connections opening in local development mode (e.g. due to Hot Module Reloading) you can use an approach like this when initalising the Prisma Client:
+
+```javascript title="pages/api/auth/[...nextauth].js"
 let prisma
 
 if (process.env.NODE_ENV === "production") {
@@ -88,90 +192,6 @@ if (process.env.NODE_ENV === "production") {
 ```
 :::
 
-You should use a `schema.prisma` file similar to this one:
-
-```
-datasource sqlite {
-  provider = "sqlite"
-  url      = "file:./dev.db"
-}
-
-generator client {
-  provider = "prisma-client-js"
-}
-
-model User {
-  id            String    @default(uuid()) @id
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  name          String?
-  sessions      Session[]
-  accounts      Account[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt @default(now())
-}
-
-model Session {
-  id                 String    @default(uuid()) @id
-  userId             String
-  user               User      @relation(fields: [userId], references: [id])
-  accessToken        String    @default(cuid()) @unique
-  sessionToken       String    @default(cuid()) @unique
-  accessTokenExpires DateTime?
-  expires            DateTime?
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt @default(now())
-}
-
-model Account {
-  id                 String    @default(uuid()) @id
-  compoundId         String    @unique
-  userId             String
-  user               User      @relation(fields: [userId], references: [id])
-  providerId         String
-  providerType       String
-  providerAccountId  String    @unique
-  refreshToken       String?
-  accessToken        String?
-  accessTokenExpires DateTime?
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt @default(now())
-}
-
-model VerificationRequest {
-  id         String   @default(uuid()) @id
-  identifier String
-  token      String   @unique
-  expires    DateTime
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt @default(now())
-}
-```
-
-:::tip
-You can add properties to the schema, but do not change the base properties or types.
-:::
-
-#### Using custom model names
-
-The properties in the models need to be defined as above, but the model names themselves can be changed with a configuration option, and the datasource can be changed to anything supported by Prisma.
-
-This example shows using `model ProviderAccount` instead of `model Account` and `model Verification` instead of `model VerificationRequest`:
-
-```javascript
-...
-adapter: Adapters.Prisma.Adapter({ 
-  prisma,
-  modelMapping: {
-    User: 'user',
-    Account: 'providerAccount',
-    Session: 'session',
-    VerificationRequest: 'verification'
-  }  
-})
-...
-```
 
 ## Custom Adapter
 
