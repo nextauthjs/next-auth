@@ -26,5 +26,9 @@ providers: [
 ```
 
 :::warning
-Only allows one callback URL per Client ID + Secret. May not return email address if privacy enabled. 
+Only allows one callback URL per Client ID / Client Secret.
+:::
+
+:::tip
+Email address is not returned if privacy settings are enabled. 
 :::

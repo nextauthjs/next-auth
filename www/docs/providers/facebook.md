@@ -28,3 +28,7 @@ providers: [
 :::tip
 Production applications cannot use localhost URLs to sign in with Facebook. You need to use a dedicated development application in Facebook to use **localhost** callback URLs.
 :::
+
+:::tip
+Email address may not be returned for accounts created on mobile.
+:::
