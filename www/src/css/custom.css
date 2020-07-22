@@ -56,12 +56,13 @@ a {
 }
 
 .menu__list .menu__list-item a:not(.menu__link--sublist) {
-  font-weight: 400;
+  font-weight: 500;
+  color: #666;
 }
 
 .menu__list .menu__list-item a[href="#!"] {
   font-weight: 600;
-  color: #444;
+  color: #222;
 }
 
 html[data-theme='dark'] .menu__list .menu__list-item a[href="#!"] {
@@ -69,10 +70,8 @@ html[data-theme='dark'] .menu__list .menu__list-item a[href="#!"] {
 }
 
 .menu__list .menu__list-item a.menu__link.menu__link--active:not(.menu__link--sublist) {
-  background: var(--ifm-color-primary-darkest);
-  background: linear-gradient(0deg, var(--ifm-color-primary-darkest) 0%, var(--ifm-color-primary-darker) 100%);
+  background: var(--ifm-color-primary);
   color: #fff;
-  font-weight: normal;
 }
 
 .main-wrapper h1 {
