@@ -26,7 +26,7 @@ providers: [
 ```
 
 :::tip
-Enable the *"Request email address from users"* option in your app permissions if you want to save the users email address on sign up.
+You must enable the *"Request email address from users"* option in your app permissions if you want to obtain the users email address.
 :::
 
 ![twitter](https://user-images.githubusercontent.com/7902980/83944068-1640ca80-a801-11ea-959c-0e744e2144f7.PNG)
