@@ -53,7 +53,7 @@ const parseConnectionString = (configString) => {
 
 const loadConfig = (config, { models, namingStrategy }) => {
   const defaultConfig = {
-    name: 'default',
+    name: 'nextauth',
     autoLoadEntities: true,
     entities: [
       new EntitySchema(models.User.schema),
