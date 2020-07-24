@@ -69,7 +69,7 @@ database: {
 Running SQL to create your tables and columns is the recommended way to set up an SQL database.
 
 * [MySQL Schema](/schemas/mysql)
-* [Postgress Schema](/schemas/mysql)
+* [Postgres Schema](/schemas/postgres)
 
 _If you are running SQLite, MongoDB or a Document database you can skip this step._
 
