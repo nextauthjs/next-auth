@@ -18,6 +18,27 @@ const postgresTransform = (models, options) => {
   }
 }
 
+const mysqlTransform = (models, options) => {
+  // Apply snake case naming strategy for MySQL databases
+  if (!options.namingStrategy) {
+    options.namingStrategy = new SnakeCaseNamingStrategy()
+  }
+
+  // For MySQL we default milisecond precision of all timestamps to 6 digits.
+  // This ensures all timestamp fields use the same precision (unless explictly
+  // configured otherwise) and that values in MySQL match those Postgress.
+  for (const model in models) {
+    for (const column in models[model].schema.columns) {
+      if (models[model].schema.columns[column].type === 'timestamp') {
+        // If precision explictly set (including to null) don't change it
+        if (typeof models[model].schema.columns[column].precision === 'undefined') {
+          models[model].schema.columns[column].precision = 6
+        }
+      }
+    }
+  }
+}
+
 const mongodbTransform = (models, options) => {
   // A CamelCase naming strategy is used for all document databases
   if (!options.namingStrategy) {
@@ -87,12 +108,16 @@ const sqliteTransform = (models, options) => {
 }
 
 export default (config, models, options) => {
+  // @TODO Refactor into switch statement
   if ((config.type && config.type.startsWith('mongodb')) ||
       (config.url && config.url.startsWith('mongodb'))) {
     mongodbTransform(models, options)
   } else if ((config.type && config.type.startsWith('postgres')) ||
              (config.url && config.url.startsWith('postgres'))) {
     postgresTransform(models, options)
+  } else if ((config.type && config.type.startsWith('mysql')) ||
+            (config.url && config.url.startsWith('mysql'))) {
+    mysqlTransform(models, options)
   } else if ((config.type && config.type.startsWith('sqlite')) ||
              (config.url && config.url.startsWith('sqlite'))) {
     sqliteTransform(models, options)
