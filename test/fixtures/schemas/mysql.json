@@ -15,7 +15,7 @@
       "default": null
     },
     "email_verified": {
-      "type": "timestamp",
+      "type": "timestamp(6)",
       "nullable": true,
       "default": null
     },
@@ -69,7 +69,7 @@
       "default": null
     },
     "access_token_expires": {
-      "type": "timestamp",
+      "type": "timestamp(6)",
       "nullable": true,
       "default": null
     },
@@ -92,7 +92,7 @@
       "nullable": false
     },
     "expires": {
-      "type": "timestamp",
+      "type": "timestamp(6)",
       "nullable": false
     },
     "session_token": {
@@ -126,7 +126,7 @@
       "nullable": false
     },
     "expires": {
-      "type": "timestamp",
+      "type": "timestamp(6)",
       "nullable": false
     },
     "created_at": {
