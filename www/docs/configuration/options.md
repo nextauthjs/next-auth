@@ -47,17 +47,7 @@ See the [providers documentation](/configuration/providers) for a list of suppor
 
 #### Description 
 
-A database connection string or [TypeORM](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md) configuration object.
-
-NextAuth.js has built in support for MySQL, MariaDB, Postgress, MongoDB and SQLite databases.
-
-The default database provider is also compatible with other ANSI SQL compatible databases.
-
-NextAuth.js can can be used with any database by specifying a custom `adapter` option.
-
-:::tip
-The Email provider requires a database to be configured to store single use sign in tokens.
-:::
+[A database connection string or configuration object.](/configuration/databases)
 
 ---
 

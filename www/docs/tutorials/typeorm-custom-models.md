@@ -3,7 +3,7 @@ id: typeorm-custom-models
 title: Custom models with TypeORM
 ---
 
-NextAuth.js provides a set of [models and schemas](https://next-auth.js.org/schemas/models) for the built-in TypeORM adapter that you can easily extend.
+NextAuth.js provides a set of [models and schemas](/schemas/models) for the built-in TypeORM adapter that you can easily extend.
 
 You can use these models with MySQL, MariaDB, Postgres, MongoDB and SQLite.
 

@@ -3,18 +3,6 @@ id: providers
 title: Providers
 ---
 
-export const Image = ({ children, src, alt = '' }) => (
-  <div
-    style={{
-      padding: '0.2rem',
-      width: '100%',
-      display: 'flex',
-      justifyContent: 'center'
-    }}>
-    <img alt={alt} src={src} />
-  </div>
- )
-
 Authentication Providers in NextAuth.js are how you define services can be used to sign in.
 
 NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1.0A and 2.0 and has built-in support for many popular OAuth sign-in services. It also supports email / passwordless authentication.
@@ -227,3 +215,16 @@ See the [Credentials provider documentation](/providers/credentials) for more in
 :::note
 The Credentials provider can only be used if JSON Web Tokens are enabled for sessions. Users authenticated with the Credentials provider are not persisted in the database.
 :::
+
+<!-- React Image Component -->
+export const Image = ({ children, src, alt = '' }) => ( 
+  <div
+    style={{
+      padding: '0.2rem',
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'center'
+    }}>
+    <img alt={alt} src={src} />
+  </div>
+ )
