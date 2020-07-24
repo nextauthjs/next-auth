@@ -3,169 +3,88 @@ id: postgres
 title: Postgres
 ---
 
-The schema generated for a Postgres database when using the built-in models.
+Schema for a Postgres database.
 
 :::note
-When using a Postgres database with the default adapter all properties of type `timestamp` are transformed to `timestamp with time zone`/`timestamptz` and all timestamps are stored in UTC.
+When using a Postgres database with the default adapter (TypeORM) all properties of type `timestamp` are transformed to `timestamp with time zone`/`timestamptz` and all timestamps are stored in UTC.
 
 This transform is also applied to any properties of type `timestamp` when using custom models.
 :::
 
-## User
+```sql
+CREATE TABLE accounts
+  (
+    id                   SERIAL,
+    compound_id          VARCHAR(255) NOT NULL,
+    user_id              INTEGER NOT NULL,
+    provider_type        VARCHAR(255) NOT NULL,
+    provider_id          VARCHAR(255) NOT NULL,
+    provider_account_id  VARCHAR(255) NOT NULL,
+    refresh_token        TEXT,
+    access_token         TEXT,
+    access_token_expires TIMESTAMPTZ,
+    created_at           TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at           TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+  );
 
-```json
-"users": {
-  "id": {
-    "type": "integer",
-    "nullable": false
-  },
-  "name": {
-    "type": "character varying",
-    "nullable": true,
-    "default": null
-  },
-  "email": {
-    "type": "character varying",
-    "nullable": true,
-    "default": null
-  },
-  "email_verified": {
-    "type": "timestamp with time zone",
-    "nullable": true,
-    "default": null
-  },
-  "image": {
-    "type": "character varying",
-    "nullable": true,
-    "default": null
-  },
-  "created_at": {
-    "type": "timestamp with time zone",
-    "nullable": false
-  },
-  "updated_at": {
-    "type": "timestamp with time zone",
-    "nullable": false
-  }
-}
-```
+CREATE TABLE sessions
+  (
+    id            SERIAL,
+    user_id       INTEGER NOT NULL,
+    expires       TIMESTAMPTZ NOT NULL,
+    session_token VARCHAR(255) NOT NULL,
+    access_token  VARCHAR(255) NOT NULL,
+    created_at    TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at    TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+  );
 
-## Account
+CREATE TABLE users
+  (
+    id             SERIAL,
+    name           VARCHAR(255),
+    email          VARCHAR(255),
+    email_verified TIMESTAMPTZ,
+    image          VARCHAR(255),
+    created_at     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+  );
 
-```json
-"accounts": {
-  "id": {
-    "type": "integer",
-    "nullable": false
-  },
-  "compound_id": {
-    "type": "character varying",
-    "nullable": false
-  },
-  "user_id": {
-    "type": "integer",
-    "nullable": false
-  },
-  "provider_type": {
-    "type": "character varying",
-    "nullable": false
-  },
-  "provider_id": {
-    "type": "character varying",
-    "nullable": false
-  },
-  "provider_account_id": {
-    "type": "character varying",
-    "nullable": false
-  },
-  "refresh_token": {
-    "type": "text",
-    "nullable": true,
-    "default": null
-  },
-  "access_token": {
-    "type": "text",
-    "nullable": true,
-    "default": null
-  },
-  "access_token_expires": {
-    "type": "timestamp with time zone",
-    "nullable": true,
-    "default": null
-  },
-  "created_at": {
-    "type": "timestamp with time zone",
-    "nullable": false
-  },
-  "updated_at": {
-    "type": "timestamp with time zone",
-    "nullable": false
-  }
-}
-```
+CREATE TABLE verification_requests
+  (
+    id         SERIAL,
+    identifier VARCHAR(255) NOT NULL,
+    token      VARCHAR(255) NOT NULL,
+    expires    TIMESTAMPTZ NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+  );
 
-## Session
+CREATE UNIQUE INDEX compound_id
+  ON accounts(compound_id);
 
-```json
-"sessions": {
-  "id": {
-    "type": "integer",
-    "nullable": false
-  },
-  "user_id": {
-    "type": "integer",
-    "nullable": false
-  },
-  "expires": {
-    "type": "timestamp with time zone",
-    "nullable": false
-  },
-  "session_token": {
-    "type": "character varying",
-    "nullable": false
-  },
-  "access_token": {
-    "type": "character varying",
-    "nullable": false
-  },
-  "created_at": {
-    "type": "timestamp with time zone",
-    "nullable": false
-  },
-  "updated_at": {
-    "type": "timestamp with time zone",
-    "nullable": false
-  }
-}
-```
+CREATE INDEX provider_account_id
+  ON accounts(provider_account_id);
 
-## Verification Request
+CREATE INDEX provider_id
+  ON accounts(provider_id);
 
-```json
-"verification_requests": {
-  "id": {
-    "type": "integer",
-    "nullable": false
-  },
-  "identifier": {
-    "type": "character varying",
-    "nullable": false
-  },
-  "token": {
-    "type": "character varying",
-    "nullable": false
-  },
-  "expires": {
-    "type": "timestamp with time zone",
-    "nullable": false
-  },
-  "created_at": {
-    "type": "timestamp with time zone",
-    "nullable": false
-  },
-  "updated_at": {
-    "type": "timestamp with time zone",
-    "nullable": false
-  }
-}
+CREATE INDEX user_id
+  ON accounts(user_id);
+
+CREATE UNIQUE INDEX session_token
+  ON sessions(session_token);
+
+CREATE UNIQUE INDEX access_token
+  ON sessions(access_token);
+
+CREATE UNIQUE INDEX email
+  ON users(email);
+
+CREATE UNIQUE INDEX token
+  ON verification_requests(token);
+
 ```
