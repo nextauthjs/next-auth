@@ -55,6 +55,37 @@ It is not intended to be used in native applications on desktop or mobile applic
 
 ---
 
+## Databases
+
+### What databases are supported by NextAuth.js?
+
+NextAuth.js can be used with MySQL, Postgres, MongoDB, SQLite and compatible databases (e.g. MariaDB, Amazon Aurora, Amazon DocumentDB…) or with no database.
+
+It also provides an Adapter API which allows you to connect it to any database.
+
+### What does NextAuth.js use databases for?
+
+Databases in NextAuth.js are used for persisting users, oauth accounts, email sign in tokens and sessions.
+
+Specifying a database is optional if you don't need to persist user data or support email sign in. If you don't specify a database then JSON Web Tokens will be enabled for session storage and used to store session data.
+
+If you are using a database with NextAuth.js, you can still explicitly enable JSON Web Tokens for sessions (instead of using database sessions).
+
+### Should I use a database?
+
+* Using NextAuth.js without a database works well for internal tools - where you need to control who is able to sign in, but when you do not need to create user accounts for them in your application.
+
+* Using NextAuth.js with a database is usually a better approach for a consumer facing application where you need to persist accounts (e.g. for billing, to contact customers, etc).
+
+### What database should I use?
+
+Managed database solutions for MySQL, Postgres and MongoDB (and compatible databases) are well supported from cloud providers such as Amazon, Google, Microsoft and Atlas.
+
+If you are deploying directly to a particular cloud platform you may also want to consider serverless database offerings they have (e.g. [Amazon Aurora Serverless on AWS](https://aws.amazon.com/rds/aurora/serverless/)).
+
+
+---
+
 ## Security 
 
 ### I think I've found a security problem, what should I do?
