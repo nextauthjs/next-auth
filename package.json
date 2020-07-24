@@ -19,7 +19,13 @@
     "test:db:postgres": "node test/postgres.js",
     "test:db:mongodb": "node test/mongodb.js",
     "db:start": "docker-compose -f test/docker/docker-compose.yml up -d",
+    "db:start:mongo": "docker-compose -f test/docker/mongo.yml up -d",
+    "db:start:mysql": "docker-compose -f test/docker/mysql.yml up -d",
+    "db:start:postgres": "docker-compose -f test/docker/postgres.yml up -d",
     "db:stop": "docker-compose -f test/docker/docker-compose.yml down",
+    "db:stop:mongo": "docker-compose -f test/docker/mongo.yml down",
+    "db:stop:mysql": "docker-compose -f test/docker/mysql.yml down",
+    "db:stop:postgres": "docker-compose -f test/docker/postgres.yml down",
     "prepublishOnly": "npm run build",
     "publish:beta": "npm publish --tag beta",
     "publish:canary": "npm publish --tag canary",
@@ -57,7 +63,8 @@
   "peerOptionalDependencies": {
     "mongodb": "^3.5.9",
     "mysql": "^2.18.1",
-    "pg": "^8.2.1"
+    "pg": "^8.2.1",
+    "@prisma/client": "^2.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
