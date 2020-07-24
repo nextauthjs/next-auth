@@ -4,15 +4,17 @@ const Adapters = require('../adapters')
 
 ;(async () => {
   try {
-    // @FIXME Does not actally bail on connection error, adapter *should* throw exception
-    // Before that is addressed, we should make sure all routes in the app that
-    // call getAdapter() or rely on methods that use getAdapter() will handle
-    // a connection error gracefully.
-    const adapter1 = Adapters.Default('mongodb+srv://nextauth:password@127.0.0.1:27017/nextauth?ssl=false&retryWrites=true')
-    await adapter1.getAdapter()
+    // We can't connection a local MongoDB SRV instance but we can at least see if the URLs cause an error
+    Adapters.Default('mongodb+srv://nextauth:password@127.0.0.1/nextauth?ssl=false&retryWrites=true')
 
-    const adapter2 = Adapters.Default('mongodb://nextauth:password@127.0.0.1:27017/nextauth?synchronize=true')
-    await adapter2.getAdapter()
+    // Connect to local MongoDB instance
+    // Note: MongoDB doesn't thrown a connection error right away if is a 
+    // problem with the credentials or host configuration, but after a few
+    // seconds it throws a Timeout error (which is caught by the adapter).
+    const adapter = Adapters.Default('mongodb://nextauth:password@127.0.0.1:27017/nextauth?synchronize=true')
+    await adapter.getAdapter()
+
+    // @TODO create objects in database, check format of objects returned
 
     console.log('MongoDB loaded ok')
     process.exit()
