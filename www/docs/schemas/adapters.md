@@ -1,6 +1,6 @@
 ---
 id: adapters
-title: Database Adapters
+title: Adapters
 ---
 
 An **Adapter** in NextAuth.js connects your application to whatever database or backend system you want to use to store data for user accounts, sessions, etc.
@@ -10,12 +10,6 @@ You do not need to specify an adapter explicltly unless you want to use advanced
 ## TypeORM Adapter
 
 NextAuth.js comes with a default adapter that uses [TypeORM](https://typeorm.io/) so that it can be used with many different databases without any further configuration, you simply add the node module for the database driver you want to use to your project and pass a database connection string to NextAuth.js.
-
-The default adapter comes with predefined models for **Users**, **Sessions**, **Account Linking** and **Verification Emails**. You can extend or replace the default models and schemas, or even provide your adapter to handle reading/writing from the database (or from multiple databases).
-
-If you have an existing database / user management system or want to use a database that isn't supported out of the box you can create and pass your own adapter to handle actions like `createAccount`, `deleteAccount`, (etc) and do not have to use the built in models.
-
-If you are using a database that is not supported out of the box, or if you want to use  NextAuth.js with an existing database, or have a more complex setup with accounts and sessions spread across different systems then you can pass your own methods to be called for user and session creation / deletion (etc).
 
 The default adapter is the TypeORM adapter, the following configuration options are exactly equivalent.
 
@@ -42,6 +36,8 @@ adapter: Adapters.TypeORM.Adapter({
   synchronize: true
 })
 ```
+
+The tutorial [Custom models with TypeORM](/tutorials/typeorm-custom-models) explains how to extend the built in models and schemas used by the TypeORM adapter.
 
 ## Prisma Adapter
 
@@ -81,14 +77,14 @@ export default (req, res) => NextAuth(req, res, options)
 
 Create a `schema.prisma` file similar to this one:
 
-``` title="prisma/schema.prisma"
+```json title="schema.prisma"
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model Account {
@@ -147,9 +143,25 @@ model VerificationRequest {
 }
 ```
 
-:::tip
-You can add properties to the schema, but do not change the base properties or types.
+:::note
+Set the `datasource` option appropriately for your database:
+
+```json title="schema.prisma"
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+```
+
+```json title="schema.prisma"
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+```
 :::
+
+### Generate Client
 
 Once you have saved your schema, you can run the Prisma CLI to generate the Prisma Client:
 
@@ -157,9 +169,13 @@ Once you have saved your schema, you can run the Prisma CLI to generate the Pris
 npx @prisma/cli generate
 ```
 
-#### Using custom model names
+### Custom Models
 
-The properties in the models need to be defined as above, but the model names themselves can be changed with a configuration option, and the datasource can be changed to anything supported by Prisma. You can use custom model names by using the `modelMapping` option (shown here with default values).
+You can add properties to the schema and map them to any database colum names you wish, but you should not change the base properties or types defined in the example schema.
+
+The model names themselves can be changed with a configuration option, and the datasource can be changed to anything supported by Prisma. 
+
+You can use custom model names by using the `modelMapping` option (shown here with default values).
 
 ```javascript title="pages/api/auth/[...nextauth].js"
 ...
