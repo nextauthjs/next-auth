@@ -55,24 +55,30 @@ a {
   margin-right: 1rem !important;
 }
 
-.menu__list .menu__list-item a:not(.menu__link--sublist) {
+.menu__list .menu__list-item a:not(.menu__link--sublist),
+.menu__list .menu__list-item a[href="#!"] {
   font-weight: 500;
-  color: #666;
+  color: #222;
+  border-radius: 0;
 }
 
 .menu__list .menu__list-item a[href="#!"] {
   font-weight: 600;
-  color: #222;
-}
-
-html[data-theme='dark'] .menu__list .menu__list-item a[href="#!"] {
-  color: #999;
+  opacity: 0.8;
 }
 
 .menu__list .menu__list-item a.menu__link.menu__link--active:not(.menu__link--sublist) {
-  background: var(--ifm-color-primary);
+  background-color: transparent;  
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+html[data-theme='dark'] .menu__list .menu__list-item a.menu__link.menu__link--active:not(.menu__link--sublist),
+html[data-theme='dark'] .menu__list .menu__list-item a:not(.menu__link--sublist),
+html[data-theme='dark'] .menu__list .menu__list-item a[href="#!"] {
   color: #fff;
 }
+
 
 .main-wrapper h1 {
   font-weight: 700;
@@ -115,7 +121,7 @@ html[data-theme='dark'] .menu__list .menu__list-item a[href="#!"] {
 }
 
 .contents > li > a {
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .contents > li:first-child {
