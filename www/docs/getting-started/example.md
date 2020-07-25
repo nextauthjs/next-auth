@@ -50,13 +50,9 @@ The `useSession()` React Hook in the NextAuth.js client is the easiest way to ch
 
 ```jsx title="pages/index.js"
 import React from 'react'
-import {
-  signIn, 
-  signOut,
-  useSession
-} from 'next-auth/client'
+import { signIn, signOut, useSession } from 'next-auth/client'
 
-export default () => {
+export default function Page() {
   const [ session, loading ] = useSession()
 
   return <>
