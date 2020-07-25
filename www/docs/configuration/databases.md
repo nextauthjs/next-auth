@@ -5,9 +5,12 @@ title: Databases
 
 NextAuth.js comes with multiple ways of connecting to a database:
 
-* **TypeORM** (default) - MySQL, Postgres, SQLite, MongoDB
-* **Prisma** - MySQL, Postgres, SQLite
-* **Custom Adapter** - Connect to any database
+* **TypeORM** (default)<br/>
+  _The TypeORM adapter supports MySQL, Postgres, SQLite and MongoDB databases._
+* **Prisma**<br/>
+  _The Prisma 2 adapter supports MySQL, Postgres and SQLite databases._
+* **Custom Adapter**<br/>
+  _A custom Adapter can be used to connect to any database._
 
 **This document covers the default adapter (TypeORM).**
 
@@ -66,14 +69,16 @@ database: {
 
 ## Setting up a database
 
-Running SQL to create your tables and columns is the recommended way to set up an SQL database.
+Using SQL to create tables and columns is the recommended way to set up an SQL database for NextAuth.js.
+
+Check out the links below for SQL you can run to set up a database for NextAuth.js.
 
 * [MySQL Schema](/schemas/mysql)
 * [Postgres Schema](/schemas/postgres)
 
 _If you are running SQLite, MongoDB or a Document database you can skip this step._
 
-You can also have your tables and schemas created automatically using the `synchronize: true` option:
+Alternatively, you can also have your database configured automatically using the `synchronize: true` option:
 
 ```js
 database: 'mysql://username:password@127.0.0.1:3306/database_name?synchronize=true'
@@ -94,7 +99,7 @@ database: {
 :::warning
 **The `synchronize` option should not be used against production databases.**
 
-It is useful to create the tables you need in the database when setting one up for the first time, but it should not be enabled against production databases as it may result in data loss if there is a difference between the schema on in the database and the schema that NextAuth.js is expecting.
+It is useful to create the tables you need when setting up a database for the first time, but it should not be enabled against production databases as it may result in data loss if there is a difference between the schema that found in the database and the schema that the version of NextAuth.js being used is expecting.
 :::
 
 ---

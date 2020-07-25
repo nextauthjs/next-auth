@@ -104,7 +104,7 @@ function Home () {
                     'button button--primary button--lg rounded-pill',
                     styles.button
                   )}
-                  to={useBaseUrl('/getting-started/introduction')}
+                  to={useBaseUrl('/getting-started/example')}
                 >Get Started
                 </Link>
               </div>
@@ -186,7 +186,7 @@ import {
   useSession
 } from 'next-auth/client'
 
-export default () => {
+export default function myComponent() {
   const [ session, loading ] = useSession()
 
   return <>

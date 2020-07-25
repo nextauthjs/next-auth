@@ -243,10 +243,9 @@ This improves performance, reduces network calls and avoids page flicker when re
 ```jsx title="pages/_app.js"
 import { Provider } from 'next-auth/client'
 
-export default ({ Component, pageProps }) => {
-  const { session } = pageProps
+export default function App ({ Component, pageProps }) => {
   return (
-    <Provider session={session} >
+    <Provider session={pageProps.session}>
       <Component {...pageProps} />
     </Provider>
   )
@@ -266,13 +265,14 @@ However, if you need to customise the session behaviour and/or are using short s
 ```jsx title="pages/_app.js"
 import { Provider } from 'next-auth/client'
 
-export default ({ Component, pageProps }) => {
-  const { session } = pageProps
+export default function App ({ Component, pageProps }) => {
   return (
-    <Provider options={{ 
-      clientMaxAge: 60 // Re-fetch session if cache is older than 60 seconds
-      keepAlive: 5 * 60 // Send keepAlive message every 5 minutes
-     }} session={session} >
+    <Provider session={pageProps.session}
+      options={{ 
+        clientMaxAge: 60     // Re-fetch session if cache is older than 60 seconds
+        keepAlive:    5 * 60 // Send keepAlive message every 5 minutes
+      }}
+      >
       <Component {...pageProps} />
     </Provider>
   )
