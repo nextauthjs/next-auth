@@ -3,7 +3,7 @@ id: providers
 title: Providers
 ---
 
-export const Image = ({ children, src, alt = '' }) => ( 
+export const Image = ({ children, src, alt = '' }) => (
   <div
     style={{
       padding: '0.2rem',
@@ -34,6 +34,7 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 * [GitLab](/providers/gitlab)
 * [Google](/providers/google)
 * [IdentityServer4](/providers/identity-server4)
+* [LinkedIn](/providers/LinkedIn)
 * [Mixer](/providers/Mixer)
 * [Okta](/providers/Okta)
 * [Slack](/providers/slack)
@@ -61,7 +62,7 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
   TWITTER_SECRET=YOUR_TWITTER_CLIENT_SECRET
   ```
 
-4. Now you can add the provider settings to the NextAuth options object. You can add as many OAuth providers as you like, as you can see `providers` is an array. 
+4. Now you can add the provider settings to the NextAuth options object. You can add as many OAuth providers as you like, as you can see `providers` is an array.
 
   ```js title="pages/api/auth/[...nextauth].js"
   ...
@@ -166,7 +167,7 @@ Configuration is similar to other providers, but the options are different:
 ```js title="pages/api/auth/[...nextauth].js"
 providers: [
   Providers.Email({
-    server: process.env.EMAIL_SERVER, 
+    server: process.env.EMAIL_SERVER,
     from: process.env.EMAIL_FROM,
     // maxAge: 24 * 60 * 60, // How long email links are valid for (default 24h)
   }),

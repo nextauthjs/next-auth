@@ -11,6 +11,7 @@ import GitHub from './github'
 import GitLab from './gitlab'
 import Google from './google'
 import IdentityServer4 from './identity-server4'
+import LinkedIn from './linkedin'
 import Mixer from './mixer'
 import Okta from './okta'
 import Slack from './slack'
@@ -33,6 +34,7 @@ export default {
   GitLab,
   Google,
   IdentityServer4,
+  LinkedIn,
   Mixer,
   Okta,
   Slack,

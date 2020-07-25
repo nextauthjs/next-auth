@@ -28,6 +28,7 @@ module.exports = {
       "providers/gitlab",
       "providers/google",
       "providers/identity-server4",
+      "providers/linkedin",
       "providers/mixer",
       "providers/okta",
       "providers/slack",
