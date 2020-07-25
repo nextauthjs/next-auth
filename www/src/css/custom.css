@@ -9,6 +9,8 @@
 
 /* You can override the default Infima variables here. */
 :root {
+  --ifm-color-link: #3871ed;
+  --ifm-color-link-button: #3871ed;
   --ifm-color-primary: #1eb1fc;
   --ifm-color-primary-dark: #03a7fa;
   --ifm-color-primary-darker: #039eed;
@@ -21,6 +23,10 @@
   --ifm-color-success: #1eb1fc;
   --ifm-color-warning: #c94b4b;
   --ifm-font-family-base: -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+}
+
+html[data-theme='dark']:root {
+  --ifm-color-link: #3abbfc;
 }
 
 @import "hero.css";
@@ -47,8 +53,15 @@ a,
   font-weight: 600;
 }
 
-a {
+a,
+a:hover,
+.navbar .navbar__link:hover {
   text-decoration: underline;
+  color: var(--ifm-color-link);
+}
+
+.hash-link {
+  text-decoration: none;
 }
 
 .navbar__toggle {
@@ -68,12 +81,12 @@ a {
 }
 
 .menu__list .menu__list-item a.menu__link.menu__link--active:not(.menu__link--sublist) {
-  background-color: transparent;  
+  background: transparent;
+  color: var(--ifm-color-link);
   font-weight: 700;
   text-decoration: underline;
 }
 
-html[data-theme='dark'] .menu__list .menu__list-item a.menu__link.menu__link--active:not(.menu__link--sublist),
 html[data-theme='dark'] .menu__list .menu__list-item a:not(.menu__link--sublist),
 html[data-theme='dark'] .menu__list .menu__list-item a[href="#!"] {
   color: #fff;
@@ -118,6 +131,12 @@ html[data-theme='dark'] .menu__list .menu__list-item a[href="#!"] {
 
 .contents a {
   text-decoration: none;
+}
+
+.contents .contents__link--active,
+.contents a:hover {
+  color: var(--ifm-color-link) !important;
+  text-decoration: underline !important;
 }
 
 .contents > li > a {
