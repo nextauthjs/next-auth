@@ -85,12 +85,12 @@ export default async (sessionToken, profile, providerAccount, options) => {
 
         // Update emailVerified property on the user object
         const currentDate = new Date()
-        userByEmail.emailVerified = currentDate
-        user = await updateUser(userByEmail)
+        user = await updateUser({ ...userByEmail, emailVerified: currentDate })
         await dispatchEvent(events.updateUser, user)
       } else {
         // Create user account if there isn't one for the email address already
-        user = await createUser({ ...profile, emailVerified: true })
+        const currentDate = new Date()
+        user = await createUser({ ...profile, emailVerified: currentDate })
         await dispatchEvent(events.createUser, user)
         isNewUser = true
       }
