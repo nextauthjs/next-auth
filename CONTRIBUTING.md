@@ -57,16 +57,17 @@ A quick and dirty guide on how to setup *next-auth* locally to work on it and te
        npm i
        npm run build
 
-3. Link React between the repo and the version installed in your project:
-
-       npm link ../your-application/node_modules/react
-
-*This is an annoying step and not obvious, but is needed because of how React has been written (otherwise React crashes when you try to use the `useSession()` hook in your project).*
-
-4. Finally link your project back to your local copy of next auth:
+3. Link your project back to your local copy of next auth:
 
        cd ../your-application
        npm link ../next-auth
+
+4. Finally link React between the repo and the version installed in your project:
+
+       cd ../next-auth
+       npm link ../your-application/node_modules/react
+
+*This is an annoying step and not obvious, but is needed because of how React has been written (otherwise React crashes when you try to use the `useSession()` hook in your project).*
 
 That's it!
 
