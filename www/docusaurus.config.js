@@ -9,7 +9,7 @@ module.exports = {
   themeConfig: {
     sidebarCollapsible: true,
     prism: {
-      theme: require('prism-react-renderer/themes/vsDark'),
+      theme: require('prism-react-renderer/themes/vsDark')
     },
     navbar: {
       title: 'NextAuth.js',

@@ -45,10 +45,7 @@ const Adapter = (config) => {
             name: profile.name,
             email: profile.email,
             image: profile.image,
-            emailVerified: profile.emailVerified &&
-            Object.prototype.toString.call(profile.emailVerified) === '[object Date]'
-              ? profile.emailVerified.toISOString()
-              : null
+            emailVerified: profile.emailVerified ? profile.emailVerified.toISOString() : null
           }
         })
       } catch (error) {
@@ -95,13 +92,10 @@ const Adapter = (config) => {
         return prisma[User].update({
           where: { id },
           data: {
-            image,
+            name,
             email,
-            emailVerified: emailVerified &&
-            Object.prototype.toString.call(emailVerified) === '[object Date]'
-              ? emailVerified.toISOString()
-              : null,
-            name
+            image,
+            emailVerified: emailVerified ? emailVerified.toISOString() : null
           }
         })
       } catch (error) {
