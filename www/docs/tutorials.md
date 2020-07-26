@@ -3,7 +3,7 @@ id: tutorials
 title: Tutorials and Explainers
 ---
 
-### How to restrict access to authenticated clients
+### How to restrict access
 
 * [Securing pages and API routes](tutorials/securing-pages-and-api-routes)
 
@@ -11,11 +11,11 @@ title: Tutorials and Explainers
 
 * [Custom models with TypeORM](tutorials/typeorm-custom-models)
 
-### How to use custom database adapters
+### How to use custom adapters
 
 * [Creating a database adapter](tutorials/creating-a-database-adapter)
 
-### How to test sites that use authentication
+### How to write tests
 
 * [Testing with Cypress](tutorials/testing-with-cypress)
 
