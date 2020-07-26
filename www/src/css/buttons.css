@@ -16,8 +16,8 @@ html[data-theme="dark"] .button:active {
 }
 
 .button--primary,
-.button--primary:hover {
-  background-color: var(--ifm-color-link-button);
+.button--primary:hover{
+  background-color: var(--ifm-color-link-button) !important;
   color: #fff;
 }
 

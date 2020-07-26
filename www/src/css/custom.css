@@ -9,8 +9,8 @@
 
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-link: #3871ed;
-  --ifm-color-link-button: #3871ed;
+  --ifm-color-link: #039eed;
+  --ifm-color-link-button: #1eb1fc;
   --ifm-color-primary: #1eb1fc;
   --ifm-color-primary-dark: #03a7fa;
   --ifm-color-primary-darker: #039eed;
@@ -32,6 +32,8 @@ html[data-theme='dark']:root {
 @import "hero.css";
 @import "admonitions.css";
 @import "buttons.css";
+@import "table-of-contents.css";
+@import "sidebar.css";
 
 html {
   background: #f9f9f9;
@@ -68,31 +70,6 @@ a:hover,
   margin-right: 1rem !important;
 }
 
-.menu__list .menu__list-item a:not(.menu__link--sublist),
-.menu__list .menu__list-item a[href="#!"] {
-  font-weight: 500;
-  color: #222;
-  border-radius: 0;
-}
-
-.menu__list .menu__list-item a[href="#!"] {
-  font-weight: 600;
-  opacity: 0.8;
-}
-
-.menu__list .menu__list-item a.menu__link.menu__link--active:not(.menu__link--sublist) {
-  background: transparent;
-  color: var(--ifm-color-link);
-  font-weight: 700;
-  text-decoration: underline;
-}
-
-html[data-theme='dark'] .menu__list .menu__list-item a:not(.menu__link--sublist),
-html[data-theme='dark'] .menu__list .menu__list-item a[href="#!"] {
-  color: #fff;
-}
-
-
 .main-wrapper h1 {
   font-weight: 700;
   margin-bottom: 2rem;
@@ -119,47 +96,6 @@ html[data-theme='dark'] .menu__list .menu__list-item a[href="#!"] {
 
 .pagination-nav {
   display: none;
-}
-
-/* Targets Table of Contents (right hand side sidebar) */
-.contents {
-  font-size: 1rem;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: none !important;
-}
-
-.contents a {
-  text-decoration: none;
-}
-
-.contents .contents__link--active,
-.contents a:hover {
-  color: var(--ifm-color-link) !important;
-  text-decoration: underline !important;
-}
-
-.contents > li > a {
-  font-weight: 600;
-}
-
-.contents > li:first-child {
-  margin-top: 0;
-  padding-top: 0;
-}
-
-.contents li {
-  margin-left: 0rem;
-  padding-left: 0rem;
-}
-
-.contents li > ul {
-  margin-left: .5rem;
-}
-
-.contents li > ul li > a{
-  font-weight: 500;
-  font-size: 0.95rem;
 }
 
 .navbar {
@@ -329,43 +265,4 @@ html[data-theme='dark'] .button.button--secondary.button--sm.menu__button {
   content: "?";
   opacity: 0.8;
   display: block;
-}
-
-.menu--show .button.button--secondary.button--sm.menu__button,
-.menu--show .button.button--secondary.button--sm.menu__button:before {
-  display: none;
-}
-
-.button.button--secondary.button--sm.menu__button svg,
-.button.button--secondary.button--sm.menu__button span {
-  display: none;
-}
-
-@media screen and (max-width: 996px) {
-  .menu.menu--responsive {
-    top: 3.5rem;
-    padding: 0;
-  }
-  .navbar {
-    z-index: 1000 !important;
-  }
-  /* Force all menus expanded on mobile */
-  /*
-  .menu .menu__list-item.menu__list-item--collapsed .menu__list {
-    height: auto;
-  }
- .menu__link.menu__link--sublist:after {
-    display: none !important;
-  }
-  */
-}
-
-/* Targets docs sidebar (left hand side) */
-.main-wrapper > div > div {
-  border-right: none !important;
-  background-color: #fff;
-}
-
-html[data-theme='dark'] .main-wrapper > div > div {
-  background-color: #242526;
 }
