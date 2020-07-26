@@ -10,7 +10,6 @@
 /* You can override the default Infima variables here. */
 :root {
   --ifm-color-link: #039eed;
-  --ifm-color-link-button: #1eb1fc;
   --ifm-color-primary: #1eb1fc;
   --ifm-color-primary-dark: #03a7fa;
   --ifm-color-primary-darker: #039eed;
@@ -226,7 +225,7 @@ html[data-theme='dark'] {
 
 .home-main .feature-image-wrapper img {
   filter: saturate(0.5) contrast(2);
-  zoom: .85;
+  zoom: .80;
 }
 
 /* Targets the 'Documentation' button on mobile */

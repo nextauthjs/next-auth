@@ -60,7 +60,7 @@
 }
 
 .features h3 {
-  font-size: 2.5rem;
+  font-size: 2rem;
   line-height: 4rem;
   margin: 1rem 0 1rem 0;
   font-weight: 700;
@@ -75,7 +75,7 @@
 .features ul li {
   margin-top: .5rem;
   margin-bottom: .5rem;
-  font-size: 1.1rem;
+  font-size: 1rem;
   opacity: 0.7;
   white-space: nowrap;
   font-weight: 500;
