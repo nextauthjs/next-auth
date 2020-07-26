@@ -2,7 +2,7 @@
 .button {
   border: none;
   transition-duration: 0s;
-  box-shadow: 0 0 2rem rgba(0,0,0,.07);
+  box-shadow: 0 0 2rem rgba(0,0,0,.1);
 }
 
 .button:hover,
@@ -17,7 +17,7 @@ html[data-theme="dark"] .button:active {
 
 .button--primary,
 .button--primary:hover{
-  background-color: var(--ifm-color-link-button) !important;
+  background: linear-gradient(0deg, var(--ifm-color-primary-darkest) 0%, var(--ifm-color-primary-lighter) 100%) !important;
   color: #fff;
 }
 
@@ -26,11 +26,11 @@ html[data-theme="dark"] .button:active {
 .button.button--secondary.button--outline:visited,
 .button.button--secondary.button--outline:hover,
 .button.button--secondary.button--outline:active {
-  background: #fff;
+  background: linear-gradient(0deg, #eeeeee 0%, #ffffff 100%) !important;
   color: #444 !important
 }
 
 html[data-theme="dark"] .button.button--secondary.button--outline {
-  background: #000;
+  background: linear-gradient(0deg, #000000 0%, #222222 100%) !important;
   color: #eeee !important
 }

@@ -17,7 +17,7 @@ const features = [
       <ul>
         <li>Built for Serverless, runs anywhere</li>
         <li>
-          Bring Your Own Database – or none<br />
+          Bring Your Own Database - or none!<br />
           <em>(MySQL, Postgres, MongoDB…)</em>
         </li>
         <li>Choose Database Sessions or JWT</li>
@@ -117,9 +117,16 @@ function Home () {
             <div className='hero-wave-inner' />
           </div>
         </header>
-        <main className='home-main'>
+        <main className='home-main'> 
           <section className={`section-features ${styles.features}`}>
             <div className='container'>
+              <div className='row'>
+                <div className='col'>
+                  <h2 className='text--center'>
+                    Open Source. Full Stack. Own Your Data.
+                  </h2>
+                </div>
+              </div>
               <div className='row'>
                 {features.map((props, idx) => (
                   <Feature key={idx} {...props} />
@@ -138,6 +145,13 @@ function Home () {
                     >npm install next-auth
                     </a>
                   </p>
+                </div>
+              </div>
+              <div className='row'>
+                <div className='col'>
+                  <h2 className='text--center'>
+                    Add authentication in minutes with ready made example code.
+                  </h2>
                 </div>
               </div>
               <div className='row'>
@@ -221,13 +235,13 @@ const options = {
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET
     }),
-    // Sign in with passwordless email link
+    // Sign in with email
     Providers.Email({
       server: process.env.MAIL_SERVER,
-      from: '<no-reply@example.com>'
+      from: 'NextAuth.js <no-reply@example.com>'
     }),
   ],
-  // SQL or MongoDB database (or leave empty)
+  // MySQL, Postgres or MongoDB database (or leave empty)
   database: process.env.DATABASE_URL
 }
 
