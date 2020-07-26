@@ -4,11 +4,11 @@
   margin-bottom: 4rem;
   background: none;
   color: black;
-  background: linear-gradient(0deg, #f1f1f1 0%, #ffffff 100%);
+  background: linear-gradient(0deg, var(--ifm-hero-background-color) 0%, #ffffff 100%);
 }
 
 html[data-theme='dark'] .hero {
-  background: linear-gradient(0deg, #111111 0%, #242526 100%);
+  background: linear-gradient(0deg, var(--ifm-hero-background-color) 0%, #242526 100%);
 }
 
 .hero-inner {
@@ -31,7 +31,7 @@ html[data-theme='dark'] .hero {
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #f1f1f1; 
+  background: var(--ifm-hero-background-color);
   height: 40%;
 }
 
@@ -40,9 +40,9 @@ html[data-theme='dark'] .hero {
   display: block;
   position: absolute;
   border-radius: 100% 30%;
-  width: 56%;
-  height: 3rem;
-  background-color: #f9f9f9;
+  width: 59%;
+  height: 3.5rem;
+  background-color: var(--ifm-background-color);
   right: -2%;
   top: 0;
   z-index: 2;
@@ -55,18 +55,9 @@ html[data-theme='dark'] .hero {
   border-radius: 100% 30%;
   width: 52%;
   height: 3rem;
-  background-color: #f1f1f1;
+  background: var(--ifm-hero-background-color);
   left: -2%;
   top: 0;
-}
-
-html[data-theme='dark'] .hero-wave-inner,
-html[data-theme='dark'] .hero-wave:after {
-  background-color: #111111;
-}
-
-html[data-theme='dark'] .hero-wave:before {
-  background-color: #191A1B;
 }
 
 .hero .container {

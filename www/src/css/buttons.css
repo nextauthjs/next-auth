@@ -2,7 +2,7 @@
 .button {
   border: none;
   transition-duration: 0s;
-  box-shadow: 0 0 2rem rgba(0,0,0,.1);
+  box-shadow: 0 0 2rem rgba(0,0,0,.07);
 }
 
 .button:hover,

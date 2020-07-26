@@ -20,12 +20,12 @@ If data on a page is fetched using calls to secure API routes - i.e. routes whic
 ```js title="pages/client-side-example.js"
 import { useSession, getSession } from 'next-auth/client'
 
-export default () => {
+export default function Page() {
   const [ session, loading ] = useSession()
 
-  if (loading) { return <p>Loading…</p> }
+  if (loading) return null
 
-  if (!loading && !session) { return <p>Access Denied</p> }
+  if (!loading && !session) return <p>Access Denied</p>
 
   return (
     <>
@@ -43,10 +43,12 @@ You can protect server side rendered pages using the `getSession()` method.
 ```js title="pages/server-side-example.js"
 import { useSession, getSession } from 'next-auth/client'
 
-export default () => {
+export default function Page() {
   const [ session, loading ] = useSession()
 
-  if (!session) { return <p>Access Denied</p> }
+  if (typeof window !== 'undefined' && loading) return null
+
+  if (!session) return <p>Access Denied</p>
 
   return (
     <>

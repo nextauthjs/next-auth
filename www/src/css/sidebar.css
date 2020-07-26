@@ -1,11 +1,7 @@
 /* Targets sidebar (left hand side) */
 .main-wrapper > div > div {
   border-right: none !important;
-  background: #fff;
-}
-
-html[data-theme='dark'] .main-wrapper > div > div {
-  background: #242526;
+  background: var(--ifm-footer-background-color);
 }
 
 .menu__list .menu__list-item a[href="#!"],

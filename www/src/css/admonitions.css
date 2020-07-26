@@ -5,7 +5,7 @@
 .admonition.admonition-tip,
 .admonition.admonition-note,
 .admonition.admonition-warning {
-  background-color: #eee;
+  background-color: #f9f9f9;
   color: #444;
   border: none;
   border-left: .4rem solid #666;
