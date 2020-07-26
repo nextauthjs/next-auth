@@ -19,7 +19,7 @@ The POST submission requires CSRF token from `/api/auth/csrf`.
 
 Handles retuning requests from OAuth services during sign in.
 
-For OAuth 2.0 providers, the value of the `state` parameter is checked against the one that was generated when the sign in flow was started.
+For OAuth 2.0 providers that support the `state` option, the value of the `state` parameter is checked against the one that was generated when the sign in flow was started - this uses a hash of the CSRF token which MUST match for both the POST and GET calls during sign in.
 
 #### GET /api/auth/signout
 
@@ -34,6 +34,8 @@ The POST submission requires CSRF token from `/api/auth/csrf`.
 #### GET /api/auth/session
 
 Returns client-safe session object - or an empty object if there is no session.
+
+The contents of the session object that is returned is configurable with the session callback.
 
 #### GET /api/auth/csrf
 
@@ -50,5 +52,11 @@ It can be used to dynamically generate custom sign up pages and to check what ca
 ---
 
 :::note
-The default base path used here is `/api/auth` but it is configurable with the `basePath` option.
+The default base path is `/api/auth` but it is configurable by specyfing a custom path in `NEXTAUTH_URL`
+
+e.g. 
+
+ `NEXTAUTH_URL=https://example.com/myapp/api/authentication`
+
+`/api/auth/signin` -> `/myapp/api/authentication/signin`
 :::

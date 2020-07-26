@@ -14,7 +14,14 @@ module.exports = {
       'configuration/callbacks',
       'configuration/events'
     ],
-    Providers: [
+    'Models & Schemas': [
+      'schemas/models',
+      'schemas/mysql',
+      'schemas/postgres',
+      'schemas/mongodb',
+      'schemas/adapters'
+    ],
+    'Authentication Providers': [
       'providers/apple',
       'providers/auth0',
       'providers/battle.net',
@@ -36,25 +43,5 @@ module.exports = {
       'providers/twitter',
       'providers/yandex'
     ],
-    'Models & Schemas': [
-      'schemas/models',
-      'schemas/mysql',
-      'schemas/postgres',
-      'schemas/mongodb',
-      'schemas/adapters'
-    ],
-    Tutorials: [
-      'tutorials/securing-pages-and-api-routes',
-      'tutorials/testing-with-cypress',
-      'tutorials/typeorm-custom-models',
-      'tutorials/creating-a-database-adapter'
-    ]
-    /*
-    'Version 1 (Legacy)': [
-      'v1/getting-started-v1',
-      'v1/client-v1',
-      'v1/auth-v1'
-    ]
-  */
   }
 }

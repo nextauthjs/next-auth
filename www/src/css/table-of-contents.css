@@ -1,0 +1,44 @@
+/* Targets Table of Contents (right hand side sidebar) */
+.contents {
+  font-size: 1rem;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+.contents a {
+  text-decoration: none;
+}
+
+.contents .contents__link--active,
+.contents a:hover {
+  color: var(--ifm-color-link) !important;
+}
+
+.contents a:hover {
+  text-decoration: underline !important;
+}
+
+.contents > li > a {
+  font-weight: 700;
+}
+
+.contents > li:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.contents li {
+  margin-left: 0rem;
+  padding-left: 0rem;
+  margin: 0.25rem 0;
+}
+
+.contents li > ul {
+  margin-left: .25rem;
+}
+
+.contents li > ul li > a{
+  font-weight: 500;
+  font-size: 0.95rem;
+}
