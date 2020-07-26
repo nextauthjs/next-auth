@@ -9,7 +9,7 @@ NextAuth.js is a complete open source authentication solution for [Next.js](http
 
 It is designed from the ground up to support Next.js and Serverless.
 
-[Follow the examples](/getting-started/example) to see how easy it is to use NextAuth.js for authentication.
+[Check out the example code](/getting-started/example) to see how easy it is to use NextAuth.js for authentication.
 
 ### Flexible and easy to use
 
@@ -46,10 +46,10 @@ NextAuth.js can be used with or without a database.
 
 Advanced options allow you to define your own routines to handle controlling what accounts are allowed to sign in, for encoding and decoding JSON Web Tokens and to set custom cookie security policies and session properties, so you can control who is able to sign in and how often sessions have to be re-validated. 
 
-## Acknowledgement
+## Credits
 
-[NextAuth.js 2.0 is possible thanks to its contributors.](/contributors)
+NextAuth.js is an open source project that is only possible [thanks to contributors](/contributors).
 
 ## Getting Started
 
-[Follow the examples to get started.](/getting-started/example)
+[Check out the example code](/getting-started/example) to see how easy it is to use NextAuth.js for authentication.
