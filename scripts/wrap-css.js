@@ -1,4 +1,4 @@
-// Serverless target in Next.js does work if you try to read in files at runtime
+// Serverless target in Next.js does not work if you try to read in files at runtime
 // that are not JavaScript or JSON (e.g. CSS files).
 // https://github.com/iaincollins/next-auth/issues/281
 //
