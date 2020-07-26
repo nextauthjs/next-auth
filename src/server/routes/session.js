@@ -79,7 +79,7 @@ export default async (req, res, options, done) => {
         }
 
         // Pass Session through to the session callback
-        const sessionPayload = await callbacks.session(defaultSessionPayload)
+        const sessionPayload = await callbacks.session(defaultSessionPayload, user)
 
         // Return session payload as response
         response = sessionPayload

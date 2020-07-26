@@ -55,7 +55,18 @@ export default async (req, res, options, done) => {
           }
 
           // Check if user is allowed to sign in
-          const signInCallbackResponse = await callbacks.signIn(profile, account, OAuthProfile)
+          // Attempt to get Profile from OAuth provider details before invoking
+          // signIn callback - but if no user object is returned, that is fine
+          // (that just means it's a new user signing in for the first time).
+          let userOrProfile = profile
+          if (adapter) {
+            const { getUserByProviderAccountId } = await adapter.getAdapter(options)
+            const userFromProviderAccountId = await getUserByProviderAccountId(account.provider, account.id)
+            if (userFromProviderAccountId) {
+              userOrProfile = userFromProviderAccountId
+            }
+          }
+          const signInCallbackResponse = await callbacks.signIn(userOrProfile, account, OAuthProfile)
 
           if (signInCallbackResponse === false) {
             return redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
@@ -70,7 +81,7 @@ export default async (req, res, options, done) => {
               email: user.email,
               picture: user.image
             }
-            const jwtPayload = await callbacks.jwt(defaultJwtPayload, OAuthProfile, isNewUser)
+            const jwtPayload = await callbacks.jwt(defaultJwtPayload, user, account, OAuthProfile, isNewUser)
 
             // Sign and encrypt token
             const newEncodedJwt = await jwt.encode({ ...jwt, token: jwtPayload })
@@ -153,7 +164,7 @@ export default async (req, res, options, done) => {
           email: user.email,
           picture: user.image
         }
-        const jwtPayload = await callbacks.jwt(defaultJwtPayload, account, isNewUser)
+        const jwtPayload = await callbacks.jwt(defaultJwtPayload, user, account, profile, isNewUser)
 
         // Sign and encrypt token
         const newEncodedJwt = await jwt.encode({ ...jwt, token: jwtPayload })
@@ -231,7 +242,7 @@ export default async (req, res, options, done) => {
       email: user.email,
       picture: user.image
     }
-    const jwtPayload = await callbacks.jwt(defaultJwtPayload, userObjectReturnedFromAuthorizeHandler, false)
+    const jwtPayload = await callbacks.jwt(defaultJwtPayload, user, account, userObjectReturnedFromAuthorizeHandler, false)
 
     // Sign and encrypt token
     const newEncodedJwt = await jwt.encode({ ...jwt, token: jwtPayload })
