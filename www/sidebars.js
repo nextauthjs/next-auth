@@ -14,29 +14,6 @@ module.exports = {
       'configuration/callbacks',
       'configuration/events'
     ],
-    Providers: [
-      "providers/apple",
-      "providers/auth0",
-      "providers/battle.net",
-      "providers/box",
-      "providers/cognito",
-      "providers/discord",
-      "providers/email",
-      "providers/credentials",
-      "providers/facebook",
-      "providers/github",
-      "providers/gitlab",
-      "providers/google",
-      "providers/identity-server4",
-      "providers/linkedin",
-      "providers/mixer",
-      "providers/okta",
-      "providers/slack",
-      "providers/spotify",
-      "providers/twitch",
-      "providers/twitter",
-      "providers/yandex",
-    ],
     'Models & Schemas': [
       'schemas/models',
       'schemas/mysql',
@@ -44,18 +21,28 @@ module.exports = {
       'schemas/mongodb',
       'schemas/adapters'
     ],
-    Tutorials: [
-      'tutorials/securing-pages-and-api-routes',
-      'tutorials/testing-with-cypress',
-      'tutorials/typeorm-custom-models',
-      'tutorials/creating-a-database-adapter'
-    ]
-    /*
-    'Version 1 (Legacy)': [
-      'v1/getting-started-v1',
-      'v1/client-v1',
-      'v1/auth-v1'
-    ]
-  */
+    'Authentication Providers': [
+      'providers/apple',
+      'providers/auth0',
+      'providers/battle.net',
+      'providers/box',
+      'providers/cognito',
+      'providers/discord',
+      'providers/email',
+      'providers/credentials',
+      'providers/facebook',
+      'providers/github',
+      'providers/gitlab',
+      'providers/google',
+      'providers/identity-server4',
+      "providers/linkedin",
+      'providers/mixer',
+      'providers/okta',
+      'providers/slack',
+      'providers/spotify',
+      'providers/twitch',
+      'providers/twitter',
+      'providers/yandex'
+    ],
   }
 }

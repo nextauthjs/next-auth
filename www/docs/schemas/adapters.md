@@ -1,13 +1,13 @@
 ---
 id: adapters
-title: Adapters
+title: Database Adapters
 ---
 
 An **Adapter** in NextAuth.js connects your application to whatever database or backend system you want to use to store data for user accounts, sessions, etc.
 
 You do not need to specify an adapter explicitly unless you want to use advanced options such as custom models or schemas, if you want to use the Prisma adapter instead of the default TypeORM adapter, or if you are creating a custom adapter to connect to a database that is not one of the supported databases.
 
-### Database Schema
+### Database Schemas
 
 Configure your database by creating the tables and columns to match the schema expected by NextAuth.js.
 

@@ -1,0 +1,68 @@
+/* Targets sidebar (left hand side) */
+.main-wrapper > div > div {
+  border-right: none !important;
+  background: #fff;
+}
+
+html[data-theme='dark'] .main-wrapper > div > div {
+  background: #242526;
+}
+
+.menu__list .menu__list-item a[href="#!"],
+.menu__list .menu__list-item a:not(.menu__link--sublist) {
+  background: transparent;
+  color: #222;
+}
+
+.menu__list .menu__list-item a:not(.menu__link--sublist) {
+  font-weight: 500;
+}
+
+.menu__list .menu__list-item a:not(.menu__link--sublist):hover {
+  color: var(--ifm-color-link);
+  text-decoration: underline;
+}
+
+.menu__list .menu__list-item a[href="#!"] {
+  font-weight: 700;
+}
+
+.menu__list .menu__list-item a.menu__link.menu__link--active:not(.menu__link--sublist) {
+  background: transparent;  
+  color: var(--ifm-color-link);
+}
+
+html[data-theme='dark'] .menu__list .menu__list-item a:not(.menu__link--sublist),
+html[data-theme='dark'] .menu__list .menu__list-item a[href="#!"] {
+  color: #fff;
+}
+
+/* Mobile sidebar and show/hide control */
+.menu--show .button.button--secondary.button--sm.menu__button,
+.menu--show .button.button--secondary.button--sm.menu__button:before {
+  display: none;
+}
+
+.button.button--secondary.button--sm.menu__button svg,
+.button.button--secondary.button--sm.menu__button span {
+  display: none;
+}
+
+@media screen and (max-width: 996px) {
+  .menu.menu--responsive {
+    top: 3.5rem;
+    padding: 0;
+  }
+  .navbar {
+    z-index: 1000 !important;
+  }
+  /* Force all menus expanded on mobile */
+  /*
+  .menu .menu__list-item.menu__list-item--collapsed .menu__list {
+    height: auto;
+  }
+ .menu__link.menu__link--sublist:after {
+    display: none !important;
+  }
+  */
+}
