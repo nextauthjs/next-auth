@@ -97,7 +97,8 @@ const getToken = async (args) => {
     // Use secure prefix for cookie name, unless URL is NEXTAUTH_URL is http://
     // or not set (e.g. development or test instance) case use unprefixed name
     secureCookie = !(!process.env.NEXTAUTH_URL || process.env.NEXTAUTH_URL.startsWith('http://')),
-    cookieName = (secureCookie) ? '__Secure-next-auth.session-token' : 'next-auth.session-token'
+    cookieName = (secureCookie) ? '__Secure-next-auth.session-token' : 'next-auth.session-token',
+    raw = false
   } = args
   if (!req) throw new Error('Must pass `req` to JWT getToken()')
 
@@ -110,6 +111,10 @@ const getToken = async (args) => {
   if (!token && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
     const urlEncodedToken = req.headers.authorization.split(' ')[1]
     token = decodeURIComponent(urlEncodedToken)
+  }
+
+  if (raw) {
+    return token
   }
 
   try {
