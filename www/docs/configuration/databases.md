@@ -6,7 +6,7 @@ title: Databases
 NextAuth.js comes with multiple ways of connecting to a database:
 
 * **TypeORM** (default)<br/>
-  _The TypeORM adapter supports MySQL, Postgres, SQLite and MongoDB databases._
+  _The TypeORM adapter supports MySQL, Postgres, MsSql, SQLite and MongoDB databases._
 * **Prisma**<br/>
   _The Prisma 2 adapter supports MySQL, Postgres and SQLite databases._
 * **Custom Adapter**<br/>
@@ -169,6 +169,17 @@ Install module:
 
 ```js
 database: 'sqlite://localhost/:memory:'
+```
+
+### Sql Server (mssql)
+
+Install module:
+`npm i mssql`
+
+#### Example
+
+```js
+database: 'mssql://sa:password@localhost:1433/database_name'
 ```
 
 ---
