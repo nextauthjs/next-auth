@@ -50,10 +50,17 @@ export default async (req, res, options, done) => {
     const account = { id: provider.id, type: 'email', providerAccountId: email }
 
     // Check if user is allowed to sign in
-    const signinCallbackResponse = await callbacks.signIn(profile, account)
-
-    if (signinCallbackResponse === false) {
-      return redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
+    try {
+      const signinCallbackResponse = await callbacks.signIn(profile, account, { email, verificationRequest: true })
+      if (signinCallbackResponse === false) {
+        return redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        return redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
+      } else {
+        return redirect(error)
+      }
     }
 
     try {
