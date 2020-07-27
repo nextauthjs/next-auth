@@ -7,6 +7,7 @@ import adapterConfig from './lib/config'
 import adapterTransform from './lib/transform'
 import Models from './models'
 import logger from '../../lib/logger'
+import { updateConnectionEntities } from './lib/utils'
 
 const Adapter = (typeOrmConfig, options = {}) => {
   // Ensure typeOrmConfigObject is normalized to an object
@@ -66,6 +67,10 @@ const Adapter = (typeOrmConfig, options = {}) => {
     } else {
       // If the connection object already exists, ensure it's valid
       await _connect()
+    }
+
+    if (process.env.NODE_ENV !== 'production') {
+      await updateConnectionEntities(connection, config.entities)
     }
 
     // Get manager from connection object
