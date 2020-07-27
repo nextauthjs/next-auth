@@ -32,14 +32,14 @@ You can specify a handler for any of the callbacks below.
 }
 ```
 
-The documentation below shows how to implement each callback, their default behaviour and an example of what the response for each callback should be.
+The documentation below shows how to implement each callback, their default behaviour and an example of what the response for each callback should be. Note that configuration options and authentication providers you are using can impact the values passed to the callbacks.
 
 ## Sign in callback
 
-Use the `signIn()` callback to control if a user is allowed to sign in. When using email sign in, this method is triggered both when the user requests to sign in and again when they activate the link in the sign in email.
+Use the `signIn()` callback to control if a user is allowed to sign in.
 
 ```js title="pages/api/auth/[...nextauth.js]"
-callbacks: {å
+callbacks: {
   /**
    * @param  {object} user     User object
    * @param  {object} account  Provider account
@@ -52,16 +52,34 @@ callbacks: {å
     if (isAllowedToSignIn) {
       return Promise.resolve(true)
     } else {
+      // Return false to display a default error message
       return Promise.resolve(false)
+      // You can also Reject this callback with an Error or with a URL:
+      // return Promise.reject(new Error('error message')) // Redirect to error page
+      // return Promise.reject('/path/to/redirect')        // Redirect to a URL
     }
   }
 }
 ```
 
-:::note
-When using NextAuth.js with a database, the User object will either be a full user object (including the User ID) for users that have signed in before, or a prototype user object (just name, email, image) for users who have not signed in before.
+* When using the **Email Provider** the `signIn()` callback is triggered both when the user makes a **Verification Request** (before they are sent email with a link that will allow them to sign in) and again *after* they activate the link in the sign in email.
 
-When using NextAuth.js without a database, the user object it will always be a prototype user object.
+  Email accounts do not have profiles in the same way OAuth accounts do. On the first call during email sign in the `profile` object will include an property `verificationRequest: true` to indicate it is being triggered in the verification request flow. When the callback is invoked *after* a user has clicked on a sign in link, this property will not be present.
+  
+  You can check for the `verificationRequest` property to avoid sending emails to addresses or domains on a blocklist (or to only explicitly generate them for email address in an allow list).
+
+* When using the **Credentials Provider** the `user` object is the response returned from the `authorization` callback and the `profile` object is the raw body of the `HTTP POST` submission.
+
+:::note
+When using NextAuth.js with a database, the User object will be either a user object from the database (including the User ID) if the user has signed in before or a simpler prototype user object (i.e. name, email, image) for users who have not signed in before.
+
+When using NextAuth.js without a database, the user object it will always be a prototype user object, with information extracted from the profile.
+:::
+
+:::tip
+If you only want to allow users who already have accounts in the database to sign in, you can check for the existance of a `user.id` property and reject any sign in attempts from accounts that do not have one.
+
+If you are using NextAuth.js without database and want to control who can sign in, you can check their email address or profile against a hard coded list in the `signIn()` callback.
 :::
 
 ## Redirect callback

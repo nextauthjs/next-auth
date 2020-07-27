@@ -66,10 +66,18 @@ export default async (req, res, options, done) => {
               userOrProfile = userFromProviderAccountId
             }
           }
-          const signInCallbackResponse = await callbacks.signIn(userOrProfile, account, OAuthProfile)
 
-          if (signInCallbackResponse === false) {
-            return redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
+          try {
+            const signInCallbackResponse = await callbacks.signIn(userOrProfile, account, OAuthProfile)
+            if (signInCallbackResponse === false) {
+              return redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
+            }
+          } catch (error) {
+            if (error instanceof Error) {
+              return redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
+            } else {
+              return redirect(error)
+            }
           }
 
           // Sign user in
@@ -149,10 +157,17 @@ export default async (req, res, options, done) => {
       const account = { id: provider.id, type: 'email', providerAccountId: email }
 
       // Check if user is allowed to sign in
-      const signInCallbackResponse = await callbacks.signIn(profile, account, null)
-
-      if (signInCallbackResponse === false) {
-        return redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
+      try {
+        const signInCallbackResponse = await callbacks.signIn(profile, account, { email })
+        if (signInCallbackResponse === false) {
+          return redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
+        }
+      } catch (error) {
+        if (error instanceof Error) {
+          return redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
+        } else {
+          return redirect(error)
+        }
       }
 
       // Sign user in
@@ -215,26 +230,34 @@ export default async (req, res, options, done) => {
 
     const credentials = req.body
 
-    // If promise is rejected / throws error then display Configuration error
     let userObjectReturnedFromAuthorizeHandler
     try {
       userObjectReturnedFromAuthorizeHandler = await provider.authorize(credentials)
+      if (!userObjectReturnedFromAuthorizeHandler) {
+        return redirect(`${baseUrl}${basePath}/error?error=CredentialsSignin&provider=${encodeURIComponent(provider.id)}`)
+      }
     } catch (error) {
-      return redirect(`${baseUrl}${basePath}/error?error=Configuration`)
+      if (error instanceof Error) {
+        return redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
+      } else {
+        return redirect(error)
+      }
     }
 
     const user = userObjectReturnedFromAuthorizeHandler
     const account = { id: provider.id, type: 'credentials' }
 
-    // If no user is returned, credentials are not valid
-    if (!user) {
-      return redirect(`${baseUrl}${basePath}/error?error=CredentialsSignin&provider=${encodeURIComponent(provider.id)}`)
-    }
-
-    const signInCallbackResponse = await callbacks.signIn(user, account, credentials)
-
-    if (signInCallbackResponse === false) {
-      return redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
+    try {
+      const signInCallbackResponse = await callbacks.signIn(user, account, credentials)
+      if (signInCallbackResponse === false) {
+        return redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        return redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
+      } else {
+        return redirect(error)
+      }
     }
 
     const defaultJwtPayload = {
