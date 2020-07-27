@@ -112,7 +112,7 @@ const mssqlTransform = (models, options) => {
   if (!options.namingStrategy) {
     // SQL server users, tend to use TitleCase, 
     // but this a 'js' library, it shouldn't :) ?
-    options.namingStrategy = new CamelCaseNamingStrategy()
+    options.namingStrategy = new SnakeCaseNamingStrategy()
   }
   // SQL Server deprecated TIMESTAMP in favor of ROWVERSION.
   // But ROWVERSION is not what it was intended in the other adapters.
