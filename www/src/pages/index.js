@@ -117,7 +117,7 @@ function Home () {
             <div className='hero-wave-inner' />
           </div>
         </header>
-        <main className='home-main'> 
+        <main className='home-main'>
           <section className={`section-features ${styles.features}`}>
             <div className='container'>
               <div className='row'>

@@ -235,7 +235,7 @@ export default async (req, res, userSuppliedOptions) => {
           res.json({ csrfToken })
           return done()
         case 'signin':
-          if (options.pages.signIn) { 
+          if (options.pages.signIn) {
             let redirectUrl = `${options.pages.signIn}${options.pages.signIn.includes('?') ? '&' : '?'}callbackUrl=${options.callbackUrl}`
             if (req.query.error) { redirectUrl = `${redirectUrl}&error=${req.query.error}` }
             return redirect(redirectUrl)

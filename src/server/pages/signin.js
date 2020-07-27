@@ -46,9 +46,10 @@ export default ({ req, csrfToken, providers, callbackUrl }) => {
 
   return render(
     <div className='signin'>
-      {errorMessage && <div className='error'>
-        {errorMessage}
-      </div>}
+      {errorMessage &&
+        <div className='error'>
+          {errorMessage}
+        </div>}
       {providersToRender.map((provider, i) =>
         <div key={provider.id} className='provider'>
           {provider.type === 'oauth' &&

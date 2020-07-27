@@ -35,7 +35,7 @@ module.exports = {
       'providers/gitlab',
       'providers/google',
       'providers/identity-server4',
-      "providers/linkedin",
+      'providers/linkedin',
       'providers/mixer',
       'providers/okta',
       'providers/slack',
@@ -43,6 +43,6 @@ module.exports = {
       'providers/twitch',
       'providers/twitter',
       'providers/yandex'
-    ],
+    ]
   }
 }

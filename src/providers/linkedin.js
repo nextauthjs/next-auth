@@ -19,7 +19,7 @@ export default (options) => {
         name: profile.localizedFirstName + ' ' + profile.localizedLastName,
         email: null,
         image: null
-      };
+      }
     },
     ...options
   }
