@@ -120,6 +120,9 @@ export default (config, models, options) => {
     mysqlTransform(models, options)
   } else if ((config.type && config.type.startsWith('sqlite')) ||
              (config.url && config.url.startsWith('sqlite'))) {
+    sqliteTransform(models, options)  
+  } else if ((config.type && config.type.startsWith('mssql')) ||
+             (config.url && config.url.startsWith('mssql'))) {
     sqliteTransform(models, options)
   } else {
     // For all other SQL databases (e.g. MySQL) apply snake case naming

@@ -1,0 +1,141 @@
+{
+    "users": {
+      "id": {
+        "type": "int",
+        "nullable": false
+      },
+      "name": {
+        "type": "varchar",
+        "nullable": true,
+        "default": null
+      },
+      "email": {
+        "type": "varchar",
+        "nullable": true,
+        "default": null
+      },
+      "email_verified": {
+        "type": "datetime",
+        "nullable": true,
+        "default": null
+      },
+      "image": {
+        "type": "varchar",
+        "nullable": true,
+        "default": null
+      },
+      "created_at": {
+        "type": "datetime",
+        "nullable": false
+      },
+      "updated_at": {
+        "type": "datetime",
+        "nullable": false
+      }
+    },
+    "accounts": {
+      "id": {
+        "type": "int",
+        "nullable": false
+      },
+      "compound_id": {
+        "type": "varchar",
+        "nullable": false
+      },
+      "user_id": {
+        "type": "int",
+        "nullable": false
+      },
+      "provider_type": {
+        "type": "varchar",
+        "nullable": false
+      },
+      "provider_id": {
+        "type": "varchar",
+        "nullable": false
+      },
+      "provider_account_id": {
+        "type": "varchar",
+        "nullable": false
+      },
+      "refresh_token": {
+        "type": "text",
+        "nullable": true,
+        "default": null
+      },
+      "access_token": {
+        "type": "text",
+        "nullable": true,
+        "default": null
+      },
+      "access_token_expires": {
+        "type": "datetime",
+        "nullable": true,
+        "default": null
+      },
+      "created_at": {
+        "type": "datetime",
+        "nullable": false
+      },
+      "updated_at": {
+        "type": "datetime",
+        "nullable": false
+      }
+    },
+    "sessions": {
+      "id": {
+        "type": "int",
+        "nullable": false
+      },
+      "user_id": {
+        "type": "int",
+        "nullable": false
+      },
+      "expires": {
+        "type": "datetime",
+        "nullable": false
+      },
+      "session_token": {
+        "type": "varchar",
+        "nullable": false
+      },
+      "access_token": {
+        "type": "varchar",
+        "nullable": false
+      },
+      "created_at": {
+        "type": "datetime",
+        "nullable": false
+      },
+      "updated_at": {
+        "type": "datetime",
+        "nullable": false
+      }
+    },
+    "verification_requests": {
+      "id": {
+        "type": "int",
+        "nullable": false
+      },
+      "identifier": {
+        "type": "varchar",
+        "nullable": false
+      },
+      "token": {
+        "type": "varchar",
+        "nullable": false
+      },
+      "expires": {
+        "type": "datetime",
+        "nullable": false
+      },
+      "created_at": {
+        "type": "datetime",
+        "nullable": false
+      },
+      "updated_at": {
+        "type": "datetime",
+        "nullable": false
+      }
+    }
+  }
