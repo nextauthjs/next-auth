@@ -18,6 +18,7 @@ function render (req, res, page, props, done) {
       break
     case 'error':
       html = error({ ...props, res })
+      if (html === false) return done()
       break
     default:
       html = error(props)
