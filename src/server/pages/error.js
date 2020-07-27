@@ -2,7 +2,7 @@ import { h } from 'preact' // eslint-disable-line no-unused-vars
 import render from 'preact-render-to-string'
 
 export default ({ baseUrl, basePath, error, res }) => {
-  const signinPageUrl = `${baseUrl}${basePath}/signin` // @TODO Make sign in URL configurable
+  const signinPageUrl = `${baseUrl}${basePath}/signin`
 
   let statusCode = 200
   let heading = <h1>Error</h1>
@@ -15,51 +15,13 @@ export default ({ baseUrl, basePath, error, res }) => {
     case 'OAuthCreateAccount':
     case 'EmailCreateAccount':
     case 'Callback':
-      heading = <h1>Sign in failed</h1>
-      message =
-        <div>
-          <div className='message'>
-            <p>Try signing with a different account.</p>
-          </div>
-          <p><a className='button' href={signinPageUrl}>Sign in</a></p>
-        </div>
-      break
     case 'OAuthAccountNotLinked':
-      statusCode = 403
-      heading = <h1>Sign in failed</h1>
-      message =
-        <div>
-          <div className='message'>
-            <p>An account associated with your email address already exists.</p>
-            <p>Sign in with the same account you used originally to confirm your identity.</p>
-          </div>
-          <p><a className='button' href={signinPageUrl}>Sign in</a></p>
-        </div>
-      // @TODO Add this text when account linking is complete
-      // <p>Once you are signed in, you can link your accounts.</p>
-      // @TODO Display email sign in option if an email provider is configured
-      break
     case 'EmailSignin':
-      heading = <h1>Sign in failed</h1>
-      message =
-        <div>
-          <div className='message'>
-            <p>Unable to send email.</p>
-          </div>
-          <p><a className='button' href={signinPageUrl}>Sign in</a></p>
-        </div>
-      break
     case 'CredentialsSignin':
-      statusCode = 403
-      heading = <h1>Sign in failed</h1>
-      message =
-        <div>
-          <div className='message'>
-            <p>Check the details you provided are correct.</p>
-          </div>
-          <p><a className='button' href={signinPageUrl}>Sign in</a></p>
-        </div>
-      break
+      // These messages are displayed in line on the sign in page
+      res.status(302).setHeader('Location', `${signinPageUrl}?error=${error}`)
+      res.end()
+      return false
     case 'Configuration':
       statusCode = 500
       heading = <h1>Server error</h1>

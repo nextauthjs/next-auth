@@ -1,14 +1,18 @@
 :root {
+  --color-background: #fff;
   --color-primary: #444;
   --color-control-border: #bbb;
-  --color-button-hover-background: #f9f9f9;
-  --color-button-active-background: #f5f5f5;
+  --color-button-active-background: #f9f9f9;
   --color-button-active-border: #aaa;
   --border-width: 1px;
   --border-radius: .3rem;
+  --color-error: #c94b4b;
+  --color-info: #157efb;
+  --color-seperator: #ccc;
 }
 
 body {
+  background-color: var(--color-background);
   margin: 0;
   padding: 0;
   font-family: -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
@@ -39,7 +43,7 @@ input[type] {
   width: 100%;
   padding: .5rem 1rem;
   border: var(--border-width) solid var(--color-control-border);
-  background: #fff;
+  background: var(--color-background);
   font-size: 1rem;
   border-radius: var(--border-radius);
   box-shadow: inset 0 .1rem .2rem rgba(0,0,0,.2);
@@ -61,7 +65,7 @@ a.button {
   line-height: 1rem;
   &:link,
   &:visited {
-    background-color: #fff;
+    background-color: var(--color-background);
     color: var(--color-primary);
   }
 }
@@ -72,21 +76,20 @@ a.button {
   padding: .75rem 1rem;
   border: var(--border-width) solid var(--color-control-border);
   color: var(--color-primary);
-  background-color: #fff;
+  background-color: var(--color-background);
   font-size: 1rem;
   border-radius: var(--border-radius);
   transition: all .1s ease-in-out;  
-  box-shadow: 0 0.15rem 0.3rem rgba(0,0,0,.15), inset 0 .1rem .2rem #fff, inset 0 -.1rem .1rem rgba(0,0,0,.05);
+  box-shadow: 0 0.15rem 0.3rem rgba(0,0,0,.15), inset 0 .1rem .2rem var(--color-background), inset 0 -.1rem .1rem rgba(0,0,0,.05);
   font-weight: 500;
   position: relative;
 
   &:hover {
-    background-color: var(--color-button-hover-background);
     cursor: pointer;
   }
   
   &:active {
-    box-shadow: 0 0.15rem 0.3rem rgba(0,0,0,.15), inset 0 .1rem .2rem #fff, inset 0 -.1rem .1rem rgba(0,0,0,.1);
+    box-shadow: 0 0.15rem 0.3rem rgba(0,0,0,.15), inset 0 .1rem .2rem var(--color-background), inset 0 -.1rem .1rem rgba(0,0,0,.1);
     background-color: var(--color-button-active-background);
     border-color: var(--color-button-active-border);
     cursor: pointer;
@@ -143,19 +146,34 @@ a.site {
   hr {
     display: block;
     border: 0;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid var(--color-seperator);
     margin: 1.5em auto 0 auto;
     overflow: visible;
 
     &::before {
       content: "or";
-      background: #fff;
+      background: var(--color-background);
       color: #888;
       padding: 0 .4rem;
       position: relative;
       top: -.6rem;
     }
   }
+
+  .error {
+    background: #f5f5f5;
+    font-weight: 500;
+    border-radius: 0.3rem;
+    background: var(--color-info);
+    color: #fff;
+    p {
+      text-align: left;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      line-height: 1.2rem;
+    }
+  }
+
   > div,
   form {
     display: block;

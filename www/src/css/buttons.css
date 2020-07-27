@@ -17,7 +17,7 @@ html[data-theme="dark"] .button:active {
 
 .button--primary,
 .button--primary:hover{
-  background: linear-gradient(0deg, var(--ifm-color-primary-darkest) 0%, var(--ifm-color-primary-lighter) 100%) !important;
+  background: linear-gradient(0deg, #157efb 0%, var(--ifm-color-primary) 100%) !important;
   color: #fff;
 }
 
@@ -32,5 +32,5 @@ html[data-theme="dark"] .button:active {
 
 html[data-theme="dark"] .button.button--secondary.button--outline {
   background: linear-gradient(0deg, #000000 0%, #222222 100%) !important;
-  color: #eeee !important
+  color: #eee !important
 }

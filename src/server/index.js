@@ -235,12 +235,16 @@ export default async (req, res, userSuppliedOptions) => {
           res.json({ csrfToken })
           return done()
         case 'signin':
-          if (options.pages.signIn) { return redirect(`${options.pages.signIn}${options.pages.signIn.includes('?') ? '&' : '?'}callbackUrl=${options.callbackUrl}`) }
+          if (options.pages.signIn) { 
+            let redirectUrl = `${options.pages.signIn}${options.pages.signIn.includes('?') ? '&' : '?'}callbackUrl=${options.callbackUrl}`
+            if (req.query.error) { redirectUrl = `${redirectUrl}&error=${req.query.error}` }
+            return redirect(redirectUrl)
+          }
 
           pages.render(req, res, 'signin', { baseUrl, basePath, providers: Object.values(options.providers), callbackUrl: options.callbackUrl, csrfToken }, done)
           break
         case 'signout':
-          if (options.pages.signOut) { return redirect(`${options.pages.signOut}${options.pages.signOut.includes('?') ? '&' : '?'}callbackUrl=${options.callbackUrl}`) }
+          if (options.pages.signOut) { return redirect(`${options.pages.signOut}${options.pages.signOut.includes('?') ? '&' : '?'}error=${error}`) }
 
           pages.render(req, res, 'signout', { baseUrl, basePath, csrfToken, callbackUrl: options.callbackUrl }, done)
           break
