@@ -107,6 +107,24 @@ const sqliteTransform = (models, options) => {
   }
 }
 
+const mssqlTransform = (models, options) => {
+  // Apply snake case naming strategy,
+  if (!options.namingStrategy) {
+    // SQL server users, tend to use TitleCase, 
+    // but this a 'js' library, it shouldn't :) ?
+    options.namingStrategy = new CamelCaseNamingStrategy()
+  }
+  // SQL Server deprecated TIMESTAMP in favor of ROWVERSION.
+  // But ROWVERSION is not what it was intended in the other adapters.
+  for (const model in models) {
+    for (const column in models[model].schema.columns) {
+      if (models[model].schema.columns[column].type === 'timestamp') {
+        models[model].schema.columns[column].type = 'datetime'
+      }
+    }
+  }
+}
+
 export default (config, models, options) => {
   // @TODO Refactor into switch statement
   if ((config.type && config.type.startsWith('mongodb')) ||
@@ -122,8 +140,8 @@ export default (config, models, options) => {
              (config.url && config.url.startsWith('sqlite'))) {
     sqliteTransform(models, options)  
   } else if ((config.type && config.type.startsWith('mssql')) ||
-             (config.url && config.url.startsWith('mssql'))) {
-    sqliteTransform(models, options)
+             (config.url && config.url.startsWith('mssql'))) {   
+    mssqlTransform(models, options)
   } else {
     // For all other SQL databases (e.g. MySQL) apply snake case naming
     // strategy, but otherwise use the models and schemas as they are.
