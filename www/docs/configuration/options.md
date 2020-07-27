@@ -178,6 +178,10 @@ It also supports the following options:
 
   The `secureCookie` option is ignored if `cookieName` is explcitly specified.
 
+* `raw` - (boolean) Get raw token (not decoded)
+
+  If set to `true` returns the raw token without decrypting or verifying it.
+
 :::note
 The JWT is stored in the Session Token cookie, the same cookie used for tokens with database sessions.
 :::
