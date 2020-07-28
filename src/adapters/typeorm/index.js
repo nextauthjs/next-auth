@@ -171,7 +171,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
 
     async function updateUser (user) {
       debug('UPDATE_USER', user)
-      return manager.save(user)
+      return manager.save(User, user)
     }
 
     async function deleteUser (userId) {
