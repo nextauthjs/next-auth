@@ -266,7 +266,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
           if (!force) { return null }
         }
 
-        return manager.save(session)
+        return manager.save(Session, session)
       } catch (error) {
         logger.error('UPDATE_SESSION_ERROR', error)
         return Promise.reject(new Error('UPDATE_SESSION_ERROR', error))
