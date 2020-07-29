@@ -102,16 +102,16 @@ If you contact us regarding a potentially serious issue, we will endeavor to get
 
 ### How do I get Refresh Tokens and Access Tokens for an OAuth account?
 
-_This is not currently supported, but is something we would like to have support for in future._
-
 NextAuth.js provides a solution for authentication, session management and user account creation.
 
-NextAuth.js records Refresh Tokens and Access Tokens on sign in (if supplied by the provider) and it will save them (along with the User ID, Provider and Provider Account ID) to either:
+NextAuth.js records Refresh Tokens and Access Tokens on sign in (if supplied by the provider) and it will pass them, along with the User ID, Provider and Provider Account ID, to either:
 
 1. A database - if a database connection string is provided
-2. A JSON Web Token - if JWT sessions are enabled (e.g. if no database specified)
+2. The JSON Web Token callback - if JWT sessions are enabled (e.g. if no database specified)
 
-However, NextAuth.js does not also handle Access Token rotation for you. If this is something you need, currently you will need to write the logic to handle that yourself. 
+You can then look them up from the database or persist them to the JSON Web Token.
+
+Note: NextAuth.js does not current handle Access Token rotation for OAuth providers for you, if this is something you need, currently you will need to write the logic to handle that yourself. 
 
 ---
 
