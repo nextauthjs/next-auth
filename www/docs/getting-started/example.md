@@ -81,7 +81,7 @@ To allow session state to be shared between pages - which improves performance, 
 ```jsx title="pages/_app.js"
 import { Provider } from 'next-auth/client'
 
-export default function App ({ Component, pageProps }) => {
+export default function App ({ Component, pageProps }) {
   return (
     <Provider session={pageProps.session}>
       <Component {...pageProps} />
