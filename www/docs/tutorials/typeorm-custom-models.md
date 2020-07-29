@@ -72,7 +72,7 @@ const options = {
     "mysql://username:password@127.0.0.1:3306/database_name",
     // The second argument can be used to pass custom models and schemas
     {
-      models: {
+      customModels: {
         User: Models.User,
       },
     }
