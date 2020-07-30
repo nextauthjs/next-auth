@@ -1,6 +1,18 @@
 import jwt from 'jsonwebtoken'
 
-export default (options) => {
+export interface ProviderAppleOptions {
+  clientId: string;
+  clientSecret: ProviderAppleSecret;
+}
+
+export interface ProviderAppleSecret {
+  appleId: string;
+  teamId: string;
+  privateKey: string;
+  keyId: string;
+}
+
+export default (options: ProviderAppleOptions) => {
   return {
     id: 'apple',
     name: 'Apple',

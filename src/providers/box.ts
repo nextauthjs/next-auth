@@ -1,4 +1,8 @@
-export default (options) => {
+import { ProviderReturnConfig, ProviderBasicOptions } from "../interfaces"
+
+export interface ProviderBoxOptions extends ProviderBasicOptions {}
+
+export default (options: ProviderBoxOptions): ProviderReturnConfig => {
   return {
     id: 'box',
     name: 'Box',

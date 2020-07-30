@@ -1,6 +1,7 @@
 import jose from 'jose'
 import hkdf from 'futoin-hkdf'
 import logger from './logger'
+import { Session, JWTPayload } from '../interfaces'
 
 // Set default algorithm to use for auto-generated signing key
 const DEFAULT_SIGNATURE_ALGORITHM = 'HS512'
@@ -12,7 +13,6 @@ const DEFAULT_ENCRYPTION_ALGORITHM = 'A256GCM'
 const DEFAULT_ENCRYPTION_ENABLED = false
 
 const DEFAULT_MAX_AGE = 30 * 24 * 60 * 60 // 30 days
-
 
 interface JWTEncodeOptions {
   secret?: string;
@@ -96,7 +96,7 @@ const decode = async ({
     algorithms: [DEFAULT_ENCRYPTION_ALGORITHM]
   },
   encryption = DEFAULT_ENCRYPTION_ENABLED
-}: JWTDecodeOptions = {} ) => {
+}: JWTDecodeOptions = {} ): Promise<null | JWTPayload> => {
   if (!token) return null
 
   let tokenToVerify = token
@@ -118,7 +118,7 @@ const decode = async ({
     : getDerivedSigningKey(secret)
 
   // Verify token
-  return jose.JWT.verify(tokenToVerify as any, _signingKey, verificationOptions)
+  return jose.JWT.verify(tokenToVerify as any, _signingKey, verificationOptions) as any
 }
 
 const getToken = async (args) => {

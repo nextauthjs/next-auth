@@ -1,4 +1,10 @@
-export default (options) => {
+import { ProviderReturnConfig, ProviderBasicOptions } from "../interfaces"
+
+export interface ProviderOktaOptions extends ProviderBasicOptions {
+  domain: string;
+}
+
+export default (options: ProviderOktaOptions): ProviderReturnConfig => {
   return {
     id: 'okta',
     name: 'Okta',

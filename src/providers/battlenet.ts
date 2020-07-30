@@ -1,4 +1,10 @@
-export default (options) => {
+import { ProviderReturnConfig, ProviderBasicOptions } from "../interfaces"
+
+export interface ProviderBattleNetOptions extends ProviderBasicOptions {
+  region: string;
+}
+
+export default (options: ProviderBattleNetOptions): ProviderReturnConfig => {
   const { region } = options
   return {
     id: 'battlenet',

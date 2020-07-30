@@ -15,13 +15,16 @@ import pages from './pages'
 import adapters from '../adapters'
 import logger from '../lib/logger'
 
+import { NextApiRequest, NextApiResponse } from 'next';
+import { InitOptions, InternalOptions, Cookies, JWTOptions, SessionOptions, EventsOptions } from '../interfaces'
+
 // To work properly in production with OAuth providers the NEXTAUTH_URL
 // environment variable must be set.
 if (!process.env.NEXTAUTH_URL) {
   logger.warn('NEXTAUTH_URL', 'NEXTAUTH_URL environment variable not set')
 }
 
-export default async (req, res, userSuppliedOptions) => {
+export default async (req: NextApiRequest, res: NextApiResponse, userSuppliedOptions: InitOptions) => {
   // To the best of my knowledge, we need to return a promise here
   // to avoid early termination of calls to the serverless function
   // (and then return that promise when we are done) - eslint
@@ -33,12 +36,18 @@ export default async (req, res, userSuppliedOptions) => {
     const done = resolve
 
     const { url, query, body } = req
+    interface NextQueryString {
+      nextauth: [string, string,string];
+      action?: string;
+      provider?: string;
+      error?: string;
+    }
     const {
       nextauth,
       action = nextauth[0],
       provider = nextauth[1],
       error = nextauth[1]
-    } = query
+    } = query as any as NextQueryString;
 
     const {
       csrfToken: csrfTokenFromPost
@@ -75,7 +84,7 @@ export default async (req, res, userSuppliedOptions) => {
     const cookiePrefix = useSecureCookies ? '__Secure-' : ''
 
     // @TODO Review cookie settings (names, options)
-    const cookies = {
+    const cookies: Cookies = {
       // default cookie options
       sessionToken: {
         name: `${cookiePrefix}next-auth.session-token`,
@@ -110,7 +119,7 @@ export default async (req, res, userSuppliedOptions) => {
     }
 
     // Session options
-    const sessionOptions = {
+    const sessionOptions: SessionOptions = {
       jwt: false,
       maxAge: 30 * 24 * 60 * 60, // Sessions expire after 30 days of being idle
       updateAge: 24 * 60 * 60, // Sessions updated only if session is greater than this value (0 = always, 24*60*60 = every 24 hours)
@@ -118,7 +127,7 @@ export default async (req, res, userSuppliedOptions) => {
     }
 
     // JWT options
-    const jwtOptions = {
+    const jwtOptions: JWTOptions = {
       secret, // Use application secret if no keys specified
       maxAge: sessionOptions.maxAge, // maxAge is dereived from session maxAge,
       encode: jwt.encode,
@@ -132,7 +141,7 @@ export default async (req, res, userSuppliedOptions) => {
     }
 
     // Event messages
-    const eventsOptions = {
+    const eventsOptions: EventsOptions = {
       ...events,
       ...userSuppliedOptions.events
     }
@@ -192,7 +201,7 @@ export default async (req, res, userSuppliedOptions) => {
 
     // User provided options are overriden by other options,
     // except for the options with special handling above
-    const options = {
+    const options: InternalOptions = {
       // Defaults options can be overidden
       debug: false, // Enable debug messages to be displayed
       pages: {}, // Custom pages (e.g. sign in, sign out, errors)
@@ -218,7 +227,7 @@ export default async (req, res, userSuppliedOptions) => {
     }
 
     // If debug enabled, set ENV VAR so that logger logs debug messages
-    if (options.debug === true) { process.env._NEXTAUTH_DEBUG = true }
+    if (options.debug === true) { process.env._NEXTAUTH_DEBUG = true as any } // todo: remove any
 
     // Get / Set callback URL based on query param / cookie + validation
     options.callbackUrl = await callbackUrlHandler(req, res, options)

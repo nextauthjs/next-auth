@@ -1,3 +1,5 @@
+import { EntitySchemaOptions } from "typeorm/entity-schema/EntitySchemaOptions"
+
 export class User {
   name?: any
   email?: any
@@ -15,7 +17,7 @@ export class User {
   }
 }
 
-export const UserSchema = {
+export const UserSchema: EntitySchemaOptions<any> = {
   name: 'User',
   target: User,
   columns: {

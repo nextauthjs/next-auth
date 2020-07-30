@@ -1,4 +1,8 @@
-export default (options) => {
+import { ProviderReturnConfig, ProviderBasicOptions } from "../interfaces"
+
+export interface ProviderSlackOptions extends ProviderBasicOptions { }
+
+export default (options: ProviderSlackOptions): ProviderReturnConfig => {
   return {
     id: 'slack',
     name: 'Slack',

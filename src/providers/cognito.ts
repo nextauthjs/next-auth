@@ -1,4 +1,10 @@
-export default (options) => {
+import { ProviderReturnConfig, ProviderBasicOptions } from "../interfaces"
+
+export interface ProviderCognitoOptions extends ProviderBasicOptions {
+  domain: string;
+}
+
+export default (options: ProviderCognitoOptions): ProviderReturnConfig => {
   const { domain } = options
   return {
     id: 'cognito',

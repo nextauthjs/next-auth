@@ -13,7 +13,6 @@
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "baseUrl": "./src/",
     "outDir": "./dist",
     "jsx": "preserve"
   },

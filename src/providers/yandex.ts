@@ -1,4 +1,8 @@
-export default (options) => {
+import { ProviderReturnConfig, ProviderBasicOptions } from "../interfaces"
+
+export interface ProviderYandexOptions extends ProviderBasicOptions {}
+
+export default (options: ProviderYandexOptions):ProviderReturnConfig => {
   return {
     id: 'yandex',
     name: 'Yandex',

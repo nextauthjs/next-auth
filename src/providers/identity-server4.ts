@@ -1,4 +1,13 @@
-export default (options) => {
+import { ProviderReturnConfig, ProviderBasicOptions } from "../interfaces"
+
+export interface ProviderIS4Options extends ProviderBasicOptions {
+  id: 'identity-server4';
+  name: 'IdentityServer4';
+  scope: string;
+  domain: string;
+}
+
+export default (options: ProviderIS4Options): ProviderReturnConfig => {
   return {
     id: 'identity-server4',
     name: 'IdentityServer4',

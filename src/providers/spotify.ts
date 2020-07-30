@@ -1,4 +1,8 @@
-export default (options) => {
+import { ProviderBasicOptions, ProviderReturnConfig } from "../interfaces"
+
+export interface ProviderSpotifyOptions extends ProviderBasicOptions {}
+
+export default (options: ProviderSpotifyOptions): ProviderReturnConfig => {
   return {
     id: 'spotify',
     name: 'Spotify',

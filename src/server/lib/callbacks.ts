@@ -63,7 +63,7 @@ const session = async (session, token) => {
  * @param  {object} oAuthProfile  OAuth profile - only available on sign in
  * @return {object}               JSON Web Token that will be saved
  */
-const jwt = async (token, oAuthProfile) => {
+const jwt = async (token, oAuthProfile?: any, account?: any, profile?: any, isNewUser?: any) => {
   return Promise.resolve(token)
 }
 

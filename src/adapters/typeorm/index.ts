@@ -1,14 +1,19 @@
-import { createConnection, getConnection } from 'typeorm'
+import { createConnection, getConnection, ConnectionOptions,EntityOptions } from 'typeorm'
 import { createHash } from 'crypto'
 import require_optional from 'require_optional' // eslint-disable-line camelcase
 
 import { CreateUserError } from '../../lib/errors'
 import adapterConfig from './lib/config'
 import adapterTransform from './lib/transform'
-import Models from './models'
+import Models, { NextAuthModels } from './models'
 import logger from '../../lib/logger'
+import { NextAuthAdapter, NextAuthAdapterFactory } from "../../interfaces";
 
-const Adapter = (typeOrmConfig, options = {}) => {
+export interface NextAuthTypeORMOptions {
+  models?: Partial<NextAuthModels>
+}
+
+const Adapter: NextAuthAdapterFactory<ConnectionOptions | string,NextAuthTypeORMOptions> = (typeOrmConfig, options = {}) => {
   // Ensure typeOrmConfigObject is normalized to an object
   const typeOrmConfigObject = (typeof typeOrmConfig === 'string')
     ? adapterConfig.parseConnectionString(typeOrmConfig)
@@ -39,7 +44,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
 
   let connection = null
 
-  async function getAdapter (appOptions) {
+  async function getAdapter (appOptions): Promise<NextAuthAdapter> {
     // Helper function to reuse / restablish connections
     // (useful if they drop when after being idle)
     async function _connect () {

@@ -2,8 +2,9 @@
 import oAuthSignin from '../lib/signin/oauth'
 import emailSignin from '../lib/signin/email'
 import logger from '../../lib/logger'
+import { InternalOptions } from '../../interfaces'
 
-export default async (req, res, options, done) => {
+export default async (req, res, options: InternalOptions, done) => {
   const {
     provider: providerName,
     providers,

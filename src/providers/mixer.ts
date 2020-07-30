@@ -1,4 +1,8 @@
-export default (options) => {
+import { ProviderReturnConfig, ProviderBasicOptions } from "../interfaces"
+
+export interface ProviderMixerOptions extends ProviderBasicOptions {}
+
+export default (options:ProviderMixerOptions): ProviderReturnConfig => {
   return {
     id: 'mixer',
     name: 'Mixer',

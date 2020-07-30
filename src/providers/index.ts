@@ -1,4 +1,5 @@
-import Auth0 from './auth0'
+
+import Auth0 from './auth0';
 import Apple from './apple'
 import Box from './box'
 import Credentials from './credentials'

@@ -1,7 +1,26 @@
 import nodemailer from 'nodemailer'
 import logger from '../lib/logger'
+import { ProviderReturnConfig } from '../interfaces'
 
-export default (options) => {
+export interface ProviderEmailOptions {
+  server: string | ProviderEmailServer;
+  from: string;
+  maxAge: number;
+  sendVerificationRequest: typeof sendVerificationRequest;
+}
+
+export interface ProviderEmailServer {
+  host: string;
+  port: number;
+  auth: ProviderEmailAuth;
+}
+
+export interface ProviderEmailAuth {
+  user: string;
+  pass: string;
+}
+
+export default (options: ProviderEmailOptions): ProviderReturnConfig => {
   return {
     id: 'email',
     type: 'email',

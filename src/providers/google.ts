@@ -1,4 +1,8 @@
-export default (options) => {
+import { ProviderReturnConfig, ProviderBasicOptions } from "../interfaces"
+
+export interface ProviderGoogleOptions extends ProviderBasicOptions {}
+
+export default (options: ProviderGoogleOptions): ProviderReturnConfig => {
   return {
     id: 'google',
     name: 'Google',

@@ -64,7 +64,7 @@ export default ({ req, csrfToken, providers, callbackUrl }) => {
           {provider.type === 'email' &&
             <form action={provider.signinUrl} method='POST'>
               <input type='hidden' name='csrfToken' value={csrfToken} />
-              <label for={`input-email-for-${provider.id}-provider`}>Email</label>
+              <label htmlFor={`input-email-for-${provider.id}-provider`}>Email</label>
               <input id={`input-email-for-${provider.id}-provider`} autoFocus type='text' name='email' value={email} placeholder='email@example.com' />
               <button type='submit'>Sign in with {provider.name}</button>
             </form>}
@@ -75,7 +75,7 @@ export default ({ req, csrfToken, providers, callbackUrl }) => {
                 return (
                   <div key={`input-group-${provider.id}`}>
                     <label
-                      for={`input-${credential}-for-${provider.id}-provider`}
+                      htmlFor={`input-${credential}-for-${provider.id}-provider`}
                     >{provider.credentials[credential].label || credential}
                     </label>
                     <input

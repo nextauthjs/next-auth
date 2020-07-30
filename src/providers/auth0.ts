@@ -1,4 +1,10 @@
-export default (options) => {
+import { ProviderReturnConfig, ProviderBasicOptions } from "../interfaces"
+
+export interface ProviderAuth0Options extends ProviderBasicOptions {
+  domain: string;
+}
+
+export default (options: ProviderAuth0Options): ProviderReturnConfig => {
   return {
     id: 'auth0',
     name: 'Auth0',

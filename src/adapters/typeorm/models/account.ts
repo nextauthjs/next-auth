@@ -1,4 +1,5 @@
 import { createHash } from 'crypto'
+import { EntitySchemaOptions } from 'typeorm/entity-schema/EntitySchemaOptions'
 
 export class Account {
   compoundId: string
@@ -30,7 +31,7 @@ export class Account {
   }
 }
 
-export const AccountSchema = {
+export const AccountSchema: EntitySchemaOptions<any> = {
   name: 'Account',
   target: Account,
   columns: {

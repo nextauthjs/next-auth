@@ -1,7 +1,10 @@
 // Return a JSON object with a list of all outh providers currently configured
 // and their signin and callback URLs. This makes it possible to automatically
+
+import { InitOptions, InternalOptions } from "../../interfaces"
+
 // generate buttons for all providers when rendering client side.
-export default (req, res, options, done) => {
+export default (req, res, options: InternalOptions, done) => {
   const { providers } = options
 
   const result = {}

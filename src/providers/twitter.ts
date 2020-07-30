@@ -1,4 +1,8 @@
-export default (options) => {
+import { ProviderReturnConfig, ProviderBasicOptions } from "../interfaces"
+
+export interface ProviderTwitterOptions extends ProviderBasicOptions {}
+
+export default (options: ProviderTwitterOptions): ProviderReturnConfig => {
   return {
     id: 'twitter',
     name: 'Twitter',

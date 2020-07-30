@@ -2,8 +2,9 @@
 import cookie from '../lib/cookie'
 import logger from '../../lib/logger'
 import dispatchEvent from '../lib/dispatch-event'
+import { InternalOptions } from '../../interfaces'
 
-export default async (req, res, options, done) => {
+export default async (req, res, options: InternalOptions, done) => {
   const { cookies, adapter, jwt, events, callbacks } = options
   const useJwtSession = options.session.jwt
   const sessionMaxAge = options.session.maxAge

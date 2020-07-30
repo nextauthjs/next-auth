@@ -1,4 +1,6 @@
-export default (_providers, baseUrl, basePath) => {
+import { ProviderInternalConfig } from "../../interfaces"
+
+export default (_providers, baseUrl, basePath): Record<string,ProviderInternalConfig> | {} => {
   const providers = {}
 
   _providers.forEach(provider => {
@@ -10,5 +12,5 @@ export default (_providers, baseUrl, basePath) => {
     }
   })
 
-  return providers
+  return providers;
 }

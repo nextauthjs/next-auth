@@ -1,4 +1,7 @@
 // This model is used for sign in emails, but is designed to support other
+
+import { EntitySchemaOptions } from "typeorm/entity-schema/EntitySchemaOptions";
+
 // mechanisms in future (e.g. 2FA via text message or short codes)
 export class VerificationRequest {
   identifier?: string;
@@ -11,7 +14,7 @@ export class VerificationRequest {
   }
 }
 
-export const VerificationRequestSchema = {
+export const VerificationRequestSchema: EntitySchemaOptions<any> = {
   name: 'VerificationRequest',
   target: VerificationRequest,
   columns: {

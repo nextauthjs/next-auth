@@ -14,8 +14,9 @@
 import { useState, useEffect, useContext, createContext, createElement } from 'react'
 import logger from '../lib/logger'
 import parseUrl from '../lib/parse-url'
+import { Session, InitOptions, ProviderInternalConfig } from '../interfaces'
 
-interface NuxtAuthClient {
+interface NextAuthClient {
   baseUrl: string,
   basePath: string,
   keepAlive: number, // 0 == disabled (don't send); 60 == send every 60 seconds
@@ -38,7 +39,7 @@ interface NuxtAuthClient {
 //    relative URLs are valid in that context and so defaults to empty.
 // 2. When invoked server side the value is picked up from an environment
 //    variable and defaults to 'http://localhost:3000'.
-const __NEXTAUTH: NuxtAuthClient = {
+const __NEXTAUTH: NextAuthClient = {
   baseUrl: parseUrl(process.env.NEXTAUTH_URL || process.env.VERCEL_URL).baseUrl,
   basePath: parseUrl(process.env.NEXTAUTH_URL).basePath,
   keepAlive: 0, // 0 == disabled (don't send); 60 == send every 60 seconds
@@ -98,7 +99,7 @@ const setOptions = ({
   basePath,
   clientMaxAge,
   keepAlive
-}: Partial<Pick<NuxtAuthClient, "baseUrl" | "basePath" | "clientMaxAge" | "keepAlive">> = {}) => {
+}: Partial<Pick<NextAuthClient, "baseUrl" | "basePath" | "clientMaxAge" | "keepAlive">> = {}) => {
   if (baseUrl) { __NEXTAUTH.baseUrl = baseUrl }
   if (basePath) { __NEXTAUTH.basePath = basePath }
   if (clientMaxAge) { __NEXTAUTH.clientMaxAge = clientMaxAge }
@@ -127,7 +128,7 @@ interface GetSessionArgs {
 }
 
 // Universal method (client + server)
-const getSession = async ({ req, ctx, triggerEvent = true }: GetSessionArgs = {}) => {
+const getSession = async ({ req, ctx, triggerEvent = true }: GetSessionArgs = {}): Promise<Session | null> => {
   // If passed 'appContext' via getInitialProps() in _app.js then get the req
   // object from ctx and use that for the req value to allow getSession() to
   // work seamlessly in getInitialProps() on server side pages *and* in _app.js.
@@ -135,7 +136,7 @@ const getSession = async ({ req, ctx, triggerEvent = true }: GetSessionArgs = {}
 
   const baseUrl = _apiBaseUrl()
   const fetchOptions = req ? { headers: { cookie: req.headers.cookie } } : {}
-  const session = await _fetchData(`${baseUrl}/session`, fetchOptions)
+  const session = await _fetchData<Session>(`${baseUrl}/session`, fetchOptions)
   if (triggerEvent) {
     _sendMessage({ event: 'session', data: { trigger: 'getSession' } })
   }
@@ -155,21 +156,21 @@ const getCsrfToken = async ({ req, ctx }: GetCsrfTokenArgs = {}) => {
 
   const baseUrl = _apiBaseUrl()
   const fetchOptions = req ? { headers: { cookie: req.headers.cookie } } : {}
-  const data = await _fetchData(`${baseUrl}/csrf`, fetchOptions)
+  const data = await _fetchData<{csrfToken: string}>(`${baseUrl}/csrf`, fetchOptions)
   return data && data.csrfToken ? data.csrfToken : null
 }
 
 // Universal method (client + server); does not require request headers
 const getProviders = async () => {
   const baseUrl = _apiBaseUrl()
-  return _fetchData(`${baseUrl}/providers`)
+  return _fetchData<Record<string,ProviderInternalConfig>>(`${baseUrl}/providers`)
 }
 
 // Context to store session data globally
-const SessionContext = createContext()
+const SessionContext = createContext(undefined)
 
 // Client side method
-const useSession = (session) => {
+const useSession = (session?: Session) => {
   // Try to use context if we can
   const value = useContext(SessionContext)
 
@@ -182,12 +183,12 @@ const useSession = (session) => {
 }
 
 // Internal hook for getting session from the api.
-const _useSessionHook = (session) => {
+const _useSessionHook = (session?: Session) => {
   const [data, setData] = useState(session)
   const [loading, setLoading] = useState(true)
   const _getSession = async ({ event = null } = {}) => {
     try {
-      const triggredByEvent = (event !== null)
+      const triggeredByEvent = (event !== null)
       const triggeredByStorageEvent = !!((event && event === 'storage'))
 
       const clientMaxAge = __NEXTAUTH.clientMaxAge
@@ -198,7 +199,7 @@ const _useSessionHook = (session) => {
       // Updates triggered by a storage event *always* trigger an update and we
       // always update if we don't have any value for the current session state.
       if (triggeredByStorageEvent === false && clientSession !== undefined) {
-        if (clientMaxAge === 0 && triggredByEvent !== true) {
+        if (clientMaxAge === 0 && triggeredByEvent !== true) {
           // If there is no time defined for when a session should be considered
           // stale, then it's okay to use the value we have until an event is
           // triggered which updates it.
@@ -318,7 +319,8 @@ const Provider = ({ children, session, options }) => {
   return createElement(SessionContext.Provider, { value: useSession(session) }, children)
 }
 
-const _fetchData = async (url, options = {}) => {
+// note: don't include {} in TData, since empty objects are filtered out
+const _fetchData = async <TData  = any>(url, options = {}): Promise<TData | null> => {
   try {
     const res = await fetch(url, options)
     const data = await res.json()

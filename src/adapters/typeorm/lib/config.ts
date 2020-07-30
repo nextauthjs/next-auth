@@ -1,4 +1,5 @@
-import { EntitySchema } from 'typeorm'
+import { EntitySchema, createConnection, ConnectionOptions } from 'typeorm'
+import { NextAuthModels } from '../models';
 
 const parseConnectionString = (configString) => {
   if (typeof configString !== 'string') { return configString }
@@ -51,7 +52,12 @@ const parseConnectionString = (configString) => {
   }
 }
 
-const loadConfig = (config, { models, namingStrategy }) => {
+interface LoadConfigParams {
+  models: NextAuthModels,
+  namingStrategy?: ConnectionOptions["namingStrategy"]
+}
+createConnection
+const loadConfig = (config, { models, namingStrategy }: LoadConfigParams): ConnectionOptions => {
   const defaultConfig = {
     name: 'nextauth',
     autoLoadEntities: true,

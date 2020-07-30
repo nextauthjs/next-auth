@@ -1,11 +1,12 @@
 import { randomBytes } from 'crypto'
+import { EntitySchemaOptions } from 'typeorm/entity-schema/EntitySchemaOptions'
 
 export class Session {
   userId: any
   expires: any
-  sessionToken: any
-  accessToken: any
-  constructor (userId, expires, sessionToken, accessToken) {
+  sessionToken: string
+  accessToken: string
+  constructor (userId, expires, sessionToken?: string, accessToken?: string) {
     this.userId = userId
     this.expires = expires
     this.sessionToken = sessionToken || randomBytes(32).toString('hex')
@@ -13,7 +14,7 @@ export class Session {
   }
 }
 
-export const SessionSchema = {
+export const SessionSchema: EntitySchemaOptions<any> = {
   name: 'Session',
   target: Session,
   columns: {

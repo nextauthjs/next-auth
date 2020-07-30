@@ -1,5 +1,11 @@
-// Logging in works but trying to retrieve the profile results in 401 unauthorized
-export default (options) => {
+import { ProviderBasicOptions, ProviderReturnConfig } from "../interfaces"
+
+export interface ProviderOptionsReddit extends ProviderBasicOptions {}
+
+/**
+ * Logging in works but trying to retrieve the profile results in 401 unauthorized
+ */
+export default (options: ProviderOptionsReddit): ProviderReturnConfig => {
   return {
     id: 'reddit',
     name: 'Reddit',
@@ -18,6 +24,7 @@ export default (options) => {
       //   image: null,
       //   email: null,
       // };
+      return null;
     },
     ...options
   }

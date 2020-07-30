@@ -1,4 +1,10 @@
-export default (options) => {
+import { ProviderReturnConfig, ProviderBasicOptions } from "../interfaces"
+
+export interface ProviderGitHubOptions extends ProviderBasicOptions {
+  scope?: string;
+}
+
+export default (options: ProviderGitHubOptions): ProviderReturnConfig => {
   return {
     id: 'github',
     name: 'GitHub',

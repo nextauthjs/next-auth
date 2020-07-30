@@ -1,4 +1,8 @@
-export default (options) => {
+import { ProviderReturnConfig, ProviderBasicOptions } from "../interfaces"
+
+export interface ProviderGitLabOptions extends ProviderBasicOptions {}
+
+export default (options: ProviderGitLabOptions): ProviderReturnConfig => {
   return {
     id: 'gitlab',
     name: 'GitLab',

@@ -4,8 +4,9 @@ import callbackHandler from '../lib/callback-handler'
 import cookie from '../lib/cookie'
 import logger from '../../lib/logger'
 import dispatchEvent from '../lib/dispatch-event'
+import { InternalOptions, isCredentialsProvider, isOAuthProvider, isEmailProvider } from '../../interfaces'
 
-export default async (req, res, options, done) => {
+export default async (req, res, options: InternalOptions, done) => {
   const {
     provider: providerName,
     providers,
@@ -23,14 +24,14 @@ export default async (req, res, options, done) => {
     redirect
   } = options
   const provider = providers[providerName]
-  const { type } = provider
+
   const useJwtSession = options.session.jwt
   const sessionMaxAge = options.session.maxAge
 
   // Get session ID (if set)
   const sessionToken = req.cookies ? req.cookies[cookies.sessionToken.name] : null
 
-  if (type === 'oauth') {
+  if (isOAuthProvider(provider)) {
     try {
       oAuthCallback(req, provider, csrfToken, async (error, profile, account, OAuthProfile) => {
         try {
@@ -131,7 +132,7 @@ export default async (req, res, options, done) => {
       logger.error('OAUTH_CALLBACK_ERROR', error)
       return redirect(`${baseUrl}${basePath}/error?error=Callback`)
     }
-  } else if (type === 'email') {
+  } else if (isEmailProvider(provider)) {
     try {
       if (!adapter) {
         logger.error('EMAIL_REQUIRES_ADAPTER_ERROR')
@@ -217,7 +218,7 @@ export default async (req, res, options, done) => {
         return redirect(`${baseUrl}${basePath}/error?error=Callback`)
       }
     }
-  } else if (type === 'credentials' && req.method === 'POST') {
+  } else if (isCredentialsProvider(provider) && req.method === 'POST') {
     if (!useJwtSession) {
       logger.error('CALLBACK_CREDENTIALS_JWT_ERROR', 'Signin in with credentials is only supported if JSON Web Tokens are enabled')
       return redirect(`${baseUrl}${basePath}/error?error=Configuration`)
@@ -280,7 +281,7 @@ export default async (req, res, options, done) => {
 
     return redirect(callbackUrl || baseUrl)
   } else {
-    res.status(500).end(`Error: Callback for provider type ${type} not supported`)
+    res.status(500).end(`Error: Callback for provider type ${provider.type} not supported`)
     return done()
   }
 }
