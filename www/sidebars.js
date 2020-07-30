@@ -24,6 +24,7 @@ module.exports = {
     'Authentication Providers': [
       'providers/apple',
       'providers/auth0',
+      'providers/basecamp',
       'providers/battle.net',
       'providers/box',
       'providers/cognito',
