@@ -13,7 +13,7 @@ export interface NextAuthTypeORMOptions {
   models?: Partial<NextAuthModels>
 }
 
-const Adapter: NextAuthAdapterFactory<ConnectionOptions | string,NextAuthTypeORMOptions> = (typeOrmConfig, options = {}) => {
+const Adapter: NextAuthAdapterFactory<ConnectionOptions | string, NextAuthTypeORMOptions> = (typeOrmConfig, options = {}) => {
   // Ensure typeOrmConfigObject is normalized to an object
   const typeOrmConfigObject = (typeof typeOrmConfig === 'string')
     ? adapterConfig.parseConnectionString(typeOrmConfig)

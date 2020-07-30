@@ -2,8 +2,10 @@ import { createHash, randomBytes } from 'crypto'
 
 import { CreateUserError } from '../../lib/errors'
 import logger from '../../lib/logger'
+import { NextAuthAdapterFactory, NextAuthAdapter } from '../../interfaces'
 
-const Adapter = (config) => {
+
+const Adapter: NextAuthAdapterFactory<any> = (config) => {
   const {
     prisma,
     modelMapping = {
@@ -20,7 +22,7 @@ const Adapter = (config) => {
     return createHash('sha256').update(`${providerId}:${providerAccountId}`).digest('hex')
   }
 
-  async function getAdapter (appOptions) {
+  async function getAdapter (appOptions): Promise<NextAuthAdapter> {
     function debug (debugCode, ...args) {
       logger.debug(`PRISMA_${debugCode}`, ...args)
     }

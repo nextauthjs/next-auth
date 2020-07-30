@@ -1,14 +1,5 @@
-import { NextAuthAdapterFactory, NextAuthAdapter } from "../../interfaces"
-
-interface Config {
-  someConfigProperty: string
-}
-interface Options {
-  someOption?: boolean
-}
-
-const Adapter: NextAuthAdapterFactory<Config, Options> = (config, options = {}) => {
-  async function getAdapter (appOptions): Promise<NextAuthAdapter> {
+const Adapter = (config, options = {}) => {
+  async function getAdapter (appOptions) {
     // Display debug output if debug option enabled
     function _debug (...args) {
       if (appOptions.debug) {
@@ -107,7 +98,7 @@ const Adapter: NextAuthAdapterFactory<Config, Options> = (config, options = {}) 
       createVerificationRequest,
       getVerificationRequest,
       deleteVerificationRequest
-    } as any) // Remove "as any" to get proper type checking on the adapter functions
+    })
   }
 
   return {
