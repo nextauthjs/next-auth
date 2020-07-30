@@ -147,6 +147,17 @@ Install module:
 database: 'postgres://username:password@127.0.0.1:3306/database_name'
 ```
 
+### Microsoft SQL Server
+
+Install module:
+`npm i mssql`
+
+#### Example
+
+```js
+database: 'mssql://sa:password@localhost:1433/database_name'
+```
+
 ### MongoDB
 
 Install module:
@@ -171,16 +182,6 @@ Install module:
 database: 'sqlite://localhost/:memory:'
 ```
 
-### Sql Server (mssql)
-
-Install module:
-`npm i mssql`
-
-#### Example
-
-```js
-database: 'mssql://sa:password@localhost:1433/database_name'
-```
 
 ---
 
