@@ -122,7 +122,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
             // If the user is currently signed in, but the new account they are signing in
             // with is already associated with another account, then we cannot link them
             // and need to return an error.
-            throw new AccountNotLinkedError()
+            throw new AccountNotLinkedError("")
           }
         } else {
           // If there is no active session, but the account being signed in with is already
@@ -183,7 +183,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
           // We don't want to have two accounts with the same email address, and we don't
           // want to link them in case it's not safe to do so, so instead we prompt the user
           // to sign in via email to verify their identity and then link the accounts.
-          throw new AccountNotLinkedError()
+          throw new AccountNotLinkedError("")
         } else {
           // If the current user is not logged in and the profile isn't linked to any user
           // accounts (by email or provider account id)...

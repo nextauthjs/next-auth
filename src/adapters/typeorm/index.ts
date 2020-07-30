@@ -142,7 +142,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
         return manager.findOne(User, { [idKey]: id })
       } catch (error) {
         logger.error('GET_USER_BY_ID_ERROR', error)
-        return Promise.reject(new Error('GET_USER_BY_ID_ERROR', error))
+        return Promise.reject(new Error('GET_USER_BY_ID_ERROR'))
       }
     }
 
@@ -153,7 +153,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
         return manager.findOne(User, { email })
       } catch (error) {
         logger.error('GET_USER_BY_EMAIL_ERROR', error)
-        return Promise.reject(new Error('GET_USER_BY_EMAIL_ERROR', error))
+        return Promise.reject(new Error('GET_USER_BY_EMAIL_ERROR'))
       }
     }
 
@@ -165,7 +165,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
         return manager.findOne(User, { [idKey]: account.userId })
       } catch (error) {
         logger.error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error)
-        return Promise.reject(new Error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error))
+        return Promise.reject(new Error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR'))
       }
     }
 
@@ -188,7 +188,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
         return manager.save(account)
       } catch (error) {
         logger.error('LINK_ACCOUNT_ERROR', error)
-        return Promise.reject(new Error('LINK_ACCOUNT_ERROR', error))
+        return Promise.reject(new Error('LINK_ACCOUNT_ERROR'))
       }
     }
 
@@ -215,7 +215,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
         return manager.save(session)
       } catch (error) {
         logger.error('CREATE_SESSION_ERROR', error)
-        return Promise.reject(new Error('CREATE_SESSION_ERROR', error))
+        return Promise.reject(new Error('CREATE_SESSION_ERROR'))
       }
     }
 
@@ -233,7 +233,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
         return session
       } catch (error) {
         logger.error('GET_SESSION_ERROR', error)
-        return Promise.reject(new Error('GET_SESSION_ERROR', error))
+        return Promise.reject(new Error('GET_SESSION_ERROR'))
       }
     }
 
@@ -269,7 +269,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
         return manager.save(Session, session)
       } catch (error) {
         logger.error('UPDATE_SESSION_ERROR', error)
-        return Promise.reject(new Error('UPDATE_SESSION_ERROR', error))
+        return Promise.reject(new Error('UPDATE_SESSION_ERROR'))
       }
     }
 
@@ -279,7 +279,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
         return await manager.delete(Session, { sessionToken })
       } catch (error) {
         logger.error('DELETE_SESSION_ERROR', error)
-        return Promise.reject(new Error('DELETE_SESSION_ERROR', error))
+        return Promise.reject(new Error('DELETE_SESSION_ERROR'))
       }
     }
 
@@ -312,7 +312,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
         return verificationRequest
       } catch (error) {
         logger.error('CREATE_VERIFICATION_REQUEST_ERROR', error)
-        return Promise.reject(new Error('CREATE_VERIFICATION_REQUEST_ERROR', error))
+        return Promise.reject(new Error('CREATE_VERIFICATION_REQUEST_ERROR'))
       }
     }
 
@@ -333,7 +333,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
         return verificationRequest
       } catch (error) {
         logger.error('GET_VERIFICATION_REQUEST_ERROR', error)
-        return Promise.reject(new Error('GET_VERIFICATION_REQUEST_ERROR', error))
+        return Promise.reject(new Error('GET_VERIFICATION_REQUEST_ERROR'))
       }
     }
 
@@ -345,7 +345,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
         await manager.delete(VerificationRequest, { token: hashedToken })
       } catch (error) {
         logger.error('DELETE_VERIFICATION_REQUEST_ERROR', error)
-        return Promise.reject(new Error('DELETE_VERIFICATION_REQUEST_ERROR', error))
+        return Promise.reject(new Error('DELETE_VERIFICATION_REQUEST_ERROR'))
       }
     }
 

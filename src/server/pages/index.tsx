@@ -17,11 +17,12 @@ function render (req, res, page, props, done) {
       html = verifyRequest(props)
       break
     case 'error':
-      html = error({ ...props, res })
-      if (html === false) return done()
+      const result = error({ ...props, res })
+      if (result === false) return done()
+      html = result;
       break
     default:
-      html = error(props)
+      html = error(props) as any;
       return
   }
 

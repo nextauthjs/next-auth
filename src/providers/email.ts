@@ -34,12 +34,12 @@ const sendVerificationRequest = ({ identifier: email, url, baseUrl, provider }) 
         to: email,
         from,
         subject: `Sign in to ${site}`,
-        text: text({ url, site, email }),
+        text: text({ url, site }),
         html: html({ url, site, email })
       }, (error) => {
         if (error) {
           logger.error('SEND_VERIFICATION_EMAIL_ERROR', email, error)
-          return reject(new Error('SEND_VERIFICATION_EMAIL_ERROR', error))
+          return reject(new Error('SEND_VERIFICATION_EMAIL_ERROR'))
         }
         return resolve()
       })

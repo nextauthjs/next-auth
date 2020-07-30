@@ -1,6 +1,9 @@
 // This model is used for sign in emails, but is designed to support other
 // mechanisms in future (e.g. 2FA via text message or short codes)
 export class VerificationRequest {
+  identifier?: string;
+  token?: string;
+  expires?: any;
   constructor (identifier, token, expires) {
     if (identifier) { this.identifier = identifier }
     if (token) { this.token = token }

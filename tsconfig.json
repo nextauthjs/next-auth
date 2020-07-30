@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "strict": false,
+    // "noImplicitAny": false,
+    "target": "es6",
+    "module": "commonjs",
+    "lib": ["dom", "ESNext"],
+    "moduleResolution": "node",
+    "declaration": true,
+    "sourceMap": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "baseUrl": "./src/",
+    "outDir": "./dist",
+    "jsx": "preserve"
+  },
+  "include": ["./src"]
+}

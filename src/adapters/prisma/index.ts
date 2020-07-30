@@ -60,7 +60,7 @@ const Adapter = (config) => {
         return prisma[User].findOne({ where: { id } })
       } catch (error) {
         logger.error('GET_USER_BY_ID_ERROR', error)
-        return Promise.reject(new Error('GET_USER_BY_ID_ERROR', error))
+        return Promise.reject(new Error('GET_USER_BY_ID_ERROR'))
       }
     }
 
@@ -71,7 +71,7 @@ const Adapter = (config) => {
         return prisma[User].findOne({ where: { email } })
       } catch (error) {
         logger.error('GET_USER_BY_EMAIL_ERROR', error)
-        return Promise.reject(new Error('GET_USER_BY_EMAIL_ERROR', error))
+        return Promise.reject(new Error('GET_USER_BY_EMAIL_ERROR'))
       }
     }
 
@@ -81,7 +81,7 @@ const Adapter = (config) => {
         return prisma[Account].findOne({ where: { compoundId: getCompoundId(providerId, providerAccountId) } })
       } catch (error) {
         logger.error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error)
-        return Promise.reject(new Error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error))
+        return Promise.reject(new Error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR'))
       }
     }
 
@@ -100,7 +100,7 @@ const Adapter = (config) => {
         })
       } catch (error) {
         logger.error('UPDATE_USER_ERROR', error)
-        return Promise.reject(new Error('UPDATE_USER_ERROR', error))
+        return Promise.reject(new Error('UPDATE_USER_ERROR'))
       }
     }
 
@@ -110,7 +110,7 @@ const Adapter = (config) => {
         return prisma[User].delete({ where: { id: userId } })
       } catch (error) {
         logger.error('DELETE_USER_ERROR', error)
-        return Promise.reject(new Error('DELETE_USER_ERROR', error))
+        return Promise.reject(new Error('DELETE_USER_ERROR'))
       }
     }
 
@@ -131,7 +131,7 @@ const Adapter = (config) => {
         })
       } catch (error) {
         logger.error('LINK_ACCOUNT_ERROR', error)
-        return Promise.reject(new Error('LINK_ACCOUNT_ERROR', error))
+        return Promise.reject(new Error('LINK_ACCOUNT_ERROR'))
       }
     }
 
@@ -141,7 +141,7 @@ const Adapter = (config) => {
         return prisma[Account].delete({ where: { compoundId: getCompoundId(providerId, providerAccountId) } })
       } catch (error) {
         logger.error('UNLINK_ACCOUNT_ERROR', error)
-        return Promise.reject(new Error('UNLINK_ACCOUNT_ERROR', error))
+        return Promise.reject(new Error('UNLINK_ACCOUNT_ERROR'))
       }
     }
 
@@ -165,7 +165,7 @@ const Adapter = (config) => {
         })
       } catch (error) {
         logger.error('CREATE_SESSION_ERROR', error)
-        return Promise.reject(new Error('CREATE_SESSION_ERROR', error))
+        return Promise.reject(new Error('CREATE_SESSION_ERROR'))
       }
     }
 
@@ -183,7 +183,7 @@ const Adapter = (config) => {
         return session
       } catch (error) {
         logger.error('GET_SESSION_ERROR', error)
-        return Promise.reject(new Error('GET_SESSION_ERROR', error))
+        return Promise.reject(new Error('GET_SESSION_ERROR'))
       }
     }
 
@@ -220,7 +220,7 @@ const Adapter = (config) => {
         return prisma[Session].update({ where: { id }, data: { expires } })
       } catch (error) {
         logger.error('UPDATE_SESSION_ERROR', error)
-        return Promise.reject(new Error('UPDATE_SESSION_ERROR', error))
+        return Promise.reject(new Error('UPDATE_SESSION_ERROR'))
       }
     }
 
@@ -230,7 +230,7 @@ const Adapter = (config) => {
         return prisma[Session].delete({ where: { sessionToken } })
       } catch (error) {
         logger.error('DELETE_SESSION_ERROR', error)
-        return Promise.reject(new Error('DELETE_SESSION_ERROR', error))
+        return Promise.reject(new Error('DELETE_SESSION_ERROR'))
       }
     }
 
@@ -268,7 +268,7 @@ const Adapter = (config) => {
         return verificationRequest
       } catch (error) {
         logger.error('CREATE_VERIFICATION_REQUEST_ERROR', error)
-        return Promise.reject(new Error('CREATE_VERIFICATION_REQUEST_ERROR', error))
+        return Promise.reject(new Error('CREATE_VERIFICATION_REQUEST_ERROR'))
       }
     }
 
@@ -289,7 +289,7 @@ const Adapter = (config) => {
         return verificationRequest
       } catch (error) {
         logger.error('GET_VERIFICATION_REQUEST_ERROR', error)
-        return Promise.reject(new Error('GET_VERIFICATION_REQUEST_ERROR', error))
+        return Promise.reject(new Error('GET_VERIFICATION_REQUEST_ERROR'))
       }
     }
 
@@ -301,7 +301,7 @@ const Adapter = (config) => {
         await prisma[VerificationRequest].delete({ where: { token: hashedToken } })
       } catch (error) {
         logger.error('DELETE_VERIFICATION_REQUEST_ERROR', error)
-        return Promise.reject(new Error('DELETE_VERIFICATION_REQUEST_ERROR', error))
+        return Promise.reject(new Error('DELETE_VERIFICATION_REQUEST_ERROR'))
       }
     }
 

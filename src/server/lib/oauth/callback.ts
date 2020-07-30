@@ -127,20 +127,26 @@ export default async (req, provider, csrfToken, callback) => {
   }
 }
 
+interface Profile {
+  name: string,
+  email: string | null,
+  image: string,
+  id?: any
+}
 /**
  * //6/30/2020 @geraldnolan added userData parameter to attach additional data to the profileData object
  * Returns profile, raw profile and auth provider details
  */
-async function _getProfile (error, profileData, accessToken, refreshToken, provider, userData) {
+async function _getProfile (error, profileData, accessToken, refreshToken, provider, userData?: any) {
   // @TODO Handle error
   if (error) {
     logger.error('OAUTH_GET_PROFILE_ERROR', error)
   }
 
-  let profile = {}
+  let profile: Profile;
   try {
     // Convert profileData into an object if it's a string
-    if (typeof profileData === 'string' || profileData instanceof String) { profileData = JSON.parse(profileData) }
+    if (typeof profileData === 'string' || profileData instanceof String) { profileData = JSON.parse(profileData as string) }
 
     // If a user object is supplied (e.g. Apple provider) add it to the profile object
     if (userData != null) {
@@ -268,7 +274,7 @@ function _get (provider, accessToken, callback) {
 }
 
 function _decodeToken (provider, accessToken, refreshToken, idToken, callback) {
-  if (!idToken) { throw new Error('Missing JWT ID Token', provider, idToken) }
+  if (!idToken) { throw new Error('Missing JWT ID Token') }
   const decodedToken = jwtDecode(idToken)
   const profileData = JSON.stringify(decodedToken)
   callback(null, profileData, accessToken, refreshToken, provider)

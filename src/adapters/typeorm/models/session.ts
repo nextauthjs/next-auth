@@ -1,6 +1,10 @@
 import { randomBytes } from 'crypto'
 
 export class Session {
+  userId: any
+  expires: any
+  sessionToken: any
+  accessToken: any
   constructor (userId, expires, sessionToken, accessToken) {
     this.userId = userId
     this.expires = expires

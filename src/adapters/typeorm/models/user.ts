@@ -1,4 +1,9 @@
 export class User {
+  name?: any
+  email?: any
+  image?: any
+  emailVerified?: Date
+
   constructor (name, email, image, emailVerified) {
     if (name) { this.name = name }
     if (email) { this.email = email }

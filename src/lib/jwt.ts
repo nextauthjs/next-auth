@@ -13,6 +13,18 @@ const DEFAULT_ENCRYPTION_ENABLED = false
 
 const DEFAULT_MAX_AGE = 30 * 24 * 60 * 60 // 30 days
 
+
+interface JWTEncodeOptions {
+  secret?: string;
+  token?: object;
+  maxAge?: number;
+  signingKey?: string;
+  signingOptions?: jose.JWT.SignOptions;
+  encryptionKey?: string;
+  encryptionOptions?: any
+  encryption?: boolean;
+}
+
 const encode = async ({
   token = {},
   maxAge = DEFAULT_MAX_AGE,
@@ -28,7 +40,7 @@ const encode = async ({
     zip: 'DEF'
   },
   encryption = DEFAULT_ENCRYPTION_ENABLED
-} = {}) => {
+}: JWTEncodeOptions = {}) => {
   // Signing Key
   const _signingKey = (signingKey)
     ? jose.JWK.asKey(JSON.parse(signingKey))
@@ -50,12 +62,30 @@ const encode = async ({
   }
 }
 
+interface JWTDecodeOptions {
+  secret?: string;
+  token?: string | jose.JWE.FlattenedJWE | jose.JWE.GeneralJWE;
+  maxAge?: number;
+  signingKey?: string;
+  verificationKey?: string;
+  verificationOptions?:  {
+    maxTokenAge?: any
+    algorithms?: string[]
+  };
+  encryptionKey?: string;
+  decryptionKey?: string;
+  decryptionOptions?: {
+    algorithms?: string[]
+  },
+  encryption?: boolean
+}
+
 const decode = async ({
   secret,
   token,
   maxAge = DEFAULT_MAX_AGE,
   signingKey,
-  verificationKey = signingKey, // Optional (defaults to encryptionKey)
+  verificationKey = signingKey, // Optional (defaults to signingKey)
   verificationOptions = {
     maxTokenAge: `${maxAge}s`,
     algorithms: [DEFAULT_SIGNATURE_ALGORITHM]
@@ -66,7 +96,7 @@ const decode = async ({
     algorithms: [DEFAULT_ENCRYPTION_ALGORITHM]
   },
   encryption = DEFAULT_ENCRYPTION_ENABLED
-} = {}) => {
+}: JWTDecodeOptions = {} ) => {
   if (!token) return null
 
   let tokenToVerify = token
@@ -88,7 +118,7 @@ const decode = async ({
     : getDerivedSigningKey(secret)
 
   // Verify token
-  return jose.JWT.verify(tokenToVerify, _signingKey, verificationOptions)
+  return jose.JWT.verify(tokenToVerify as any, _signingKey, verificationOptions)
 }
 
 const getToken = async (args) => {

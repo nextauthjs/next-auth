@@ -1,6 +1,14 @@
 import { createHash } from 'crypto'
 
 export class Account {
+  compoundId: string
+  userId: any
+  providerType: any
+  providerId: any
+  providerAccountId: any
+  refreshToken: any
+  accessToken: any
+  accessTokenExpires: any
   constructor (
     userId,
     providerId,

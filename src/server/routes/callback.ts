@@ -74,7 +74,7 @@ export default async (req, res, options, done) => {
             }
           } catch (error) {
             if (error instanceof Error) {
-              return redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
+              return redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error as any)}`)
             } else {
               return redirect(error)
             }
@@ -164,7 +164,7 @@ export default async (req, res, options, done) => {
         }
       } catch (error) {
         if (error instanceof Error) {
-          return redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
+          return redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error as any)}`)
         } else {
           return redirect(error)
         }
@@ -238,7 +238,7 @@ export default async (req, res, options, done) => {
       }
     } catch (error) {
       if (error instanceof Error) {
-        return redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
+        return redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error as any)}`)
       } else {
         return redirect(error)
       }
@@ -254,7 +254,7 @@ export default async (req, res, options, done) => {
       }
     } catch (error) {
       if (error instanceof Error) {
-        return redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
+        return redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error as any)}`)
       } else {
         return redirect(error)
       }

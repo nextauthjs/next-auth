@@ -15,13 +15,30 @@ import { useState, useEffect, useContext, createContext, createElement } from 'r
 import logger from '../lib/logger'
 import parseUrl from '../lib/parse-url'
 
+interface NuxtAuthClient {
+  baseUrl: string,
+  basePath: string,
+  keepAlive: number, // 0 == disabled (don't send); 60 == send every 60 seconds
+  clientMaxAge: number, // 0 == disabled (only use cache); 60 == sync if last checked > 60 seconds ago
+  // Properties starting with _ are used for tracking internal app state
+  _clientLastSync: number | string, // used for timestamp since last synced (in seconds)
+  _clientSyncTimer: null | any, // stores timer for poll interval
+  _eventListenersAdded: boolean, // tracks if event listeners have been added,
+  _clientSession?: any, // stores last session response from hook,
+  // Generate a unique ID to make it possible to identify when a message
+  // was sent from this tab/window so it can be ignored to avoid event loops.
+  _clientId: string,
+  // Used to store to function export by getSession() hook
+  _getSession: (data: any) => Promise<any> | any
+}
+
 // This behaviour mirrors the default behaviour for getting the site name that
 // happens server side in server/index.js
 // 1. An empty value is legitimate when the code is being invoked client side as
 //    relative URLs are valid in that context and so defaults to empty.
 // 2. When invoked server side the value is picked up from an environment
 //    variable and defaults to 'http://localhost:3000'.
-const __NEXTAUTH = {
+const __NEXTAUTH: NuxtAuthClient = {
   baseUrl: parseUrl(process.env.NEXTAUTH_URL || process.env.VERCEL_URL).baseUrl,
   basePath: parseUrl(process.env.NEXTAUTH_URL).basePath,
   keepAlive: 0, // 0 == disabled (don't send); 60 == send every 60 seconds
@@ -38,7 +55,7 @@ const __NEXTAUTH = {
   _getSession: () => {}
 }
 
-// Add event listners on load
+// Add event listeners on load
 if (typeof window !== 'undefined') {
   if (__NEXTAUTH._eventListenersAdded === false) {
     __NEXTAUTH._eventListenersAdded = true
@@ -81,7 +98,7 @@ const setOptions = ({
   basePath,
   clientMaxAge,
   keepAlive
-} = {}) => {
+}: Partial<Pick<NuxtAuthClient, "baseUrl" | "basePath" | "clientMaxAge" | "keepAlive">> = {}) => {
   if (baseUrl) { __NEXTAUTH.baseUrl = baseUrl }
   if (basePath) { __NEXTAUTH.basePath = basePath }
   if (clientMaxAge) { __NEXTAUTH.clientMaxAge = clientMaxAge }
@@ -103,11 +120,17 @@ const setOptions = ({
   }
 }
 
+interface GetSessionArgs {
+  req?: {headers: {cookie: string}};
+  ctx?: any;
+  triggerEvent?: boolean;
+}
+
 // Universal method (client + server)
-const getSession = async ({ req, ctx, triggerEvent = true } = {}) => {
+const getSession = async ({ req, ctx, triggerEvent = true }: GetSessionArgs = {}) => {
   // If passed 'appContext' via getInitialProps() in _app.js then get the req
   // object from ctx and use that for the req value to allow getSession() to
-  // work seemlessly in getInitialProps() on server side pages *and* in _app.js.
+  // work seamlessly in getInitialProps() on server side pages *and* in _app.js.
   if (!req && ctx && ctx.req) { req = ctx.req }
 
   const baseUrl = _apiBaseUrl()
@@ -119,8 +142,12 @@ const getSession = async ({ req, ctx, triggerEvent = true } = {}) => {
   return session
 }
 
+interface GetCsrfTokenArgs {
+  req?: {headers: {cookie: string}};
+  ctx?: any;
+}
 // Universal method (client + server)
-const getCsrfToken = async ({ req, ctx } = {}) => {
+const getCsrfToken = async ({ req, ctx }: GetCsrfTokenArgs = {}) => {
   // If passed 'appContext' via getInitialProps() in _app.js then get the req
   // object from ctx and use that for the req value to allow getCsrfToken() to
   // work seemlessly in getInitialProps() on server side pages *and* in _app.js.
@@ -164,7 +191,7 @@ const _useSessionHook = (session) => {
       const triggeredByStorageEvent = !!((event && event === 'storage'))
 
       const clientMaxAge = __NEXTAUTH.clientMaxAge
-      const clientLastSync = parseInt(__NEXTAUTH._clientLastSync)
+      const clientLastSync = parseInt(__NEXTAUTH._clientLastSync as any)
       const currentTime = Math.floor(new Date().getTime() / 1000)
       const clientSession = __NEXTAUTH._clientSession
 
@@ -221,16 +248,20 @@ const _useSessionHook = (session) => {
   return [data, loading]
 }
 
+interface SignInArgs {
+  callbackUrl?: string,
+  [key: string]: any
+}
 // Client side method
-const signIn = async (provider, args = {}) => {
+const signIn = async (provider, args: SignInArgs = {}) => {
   const baseUrl = _apiBaseUrl()
-  const callbackUrl = (args && args.callbackUrl) ? args.callbackUrl : window.location
+  const callbackUrl = (args && args.callbackUrl) ? args.callbackUrl : window.location.href
   const providers = await getProviders()
 
   // Redirect to sign in page if no valid provider specified
   if (!provider || !providers[provider]) {
     // If Provider not recognized, redirect to sign in page
-    window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`
+    window.location.href = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`
   } else {
     const signInUrl = (providers[provider].type === 'credentials')
       ? `${baseUrl}/callback/${provider}`
@@ -255,8 +286,12 @@ const signIn = async (provider, args = {}) => {
   }
 }
 
+interface SignOutArgs {
+  callbackUrl?: string;
+}
+
 // Client side method
-const signOut = async (args = {}) => {
+const signOut = async (args: SignOutArgs = {}) => {
   const callbackUrl = (args && args.callbackUrl) ? args.callbackUrl : window.location
 
   const baseUrl = _apiBaseUrl()

@@ -4,9 +4,14 @@
 // * https://github.com/jshttp/cookie/blob/master/index.js
 // * https://github.com/zeit/next.js/blob/master/examples/api-routes-middleware/utils/cookies.js
 //
-// As only partial functionlity is required, only the code we need has been incorporated here
-// (with fixes for specific issues) to keep dependancy size down.
-const set = (res, name, value, options = {}) => {
+// As only partial functionality is required, only the code we need has been incorporated here
+// (with fixes for specific issues) to keep dependency size down.
+interface CookieOptions {
+  expires?: Date,
+  maxAge?: number
+}
+
+const set = (res, name, value, options: CookieOptions = {}) => {
   const stringValue = typeof value === 'object' ? 'j:' + JSON.stringify(value) : String(value)
 
   if ('maxAge' in options) {

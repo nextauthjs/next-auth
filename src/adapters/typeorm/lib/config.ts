@@ -11,7 +11,7 @@ const parseConnectionString = (configString) => {
   // parsing it in this function.
   try {
     const parsedUrl = new URL(configString)
-    const config = {}
+    const config = {} as any;
 
     if (parsedUrl.protocol.startsWith('mongodb+srv')) {
       // Special case handling is required for mongodb+srv with TypeORM
@@ -36,8 +36,8 @@ const parseConnectionString = (configString) => {
       parsedUrl.search.replace(/^\?/, '').split('&').forEach(keyValuePair => {
         let [key, value] = keyValuePair.split('=')
         // Converts true/false strings to actual boolean values
-        if (value === 'true') { value = true }
-        if (value === 'false') { value = false }
+        if (value === 'true') { config[key] = true; return; }
+        if (value === 'false') { config[key] = false; return; }
         config[key] = value
       })
     }
