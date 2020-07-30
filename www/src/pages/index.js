@@ -18,7 +18,7 @@ const features = [
         <li>Built for Serverless, runs anywhere</li>
         <li>
           Bring Your Own Database - or none!<br />
-          <em>(MySQL, Postgres, MongoDB…)</em>
+          <em>(MySQL, Postgres, MSSQL, MongoDB…)</em>
         </li>
         <li>Choose Database Sessions or JWT</li>
         <li>Secure web pages and API routes</li>
