@@ -1,3 +1,11 @@
+# @FIXME The behaviour fo the MSSQL image differs slightly from the other images
+#        To make it easier to setupm run tests and maintain we probably want to
+#        standardize the behaviour of the Docker images, but not a priority yet.
+#        There might be a third party image that does this out of the box
+#          e.g. like the one from bitnami we use for mongodb
+#
+# * The default username is 'sa'
+# * No database is created by default
 version: '2'
 
 services:

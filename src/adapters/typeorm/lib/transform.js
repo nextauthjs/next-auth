@@ -74,14 +74,16 @@ const mongodbTransform = (models, options) => {
   // we need to create a sparse index to only allow unique values, while
   // still allowing multiple entires to omit the email address.
   delete models.User.schema.columns.email.unique
-  models.User.schema.indices = [
-    {
-      name: 'email',
-      unique: true,
-      sparse: true,
-      columns: ['email']
-    }
-  ]
+
+  if (!models.User.schema.indices)
+    models.User.schema.indices = []
+
+  models.User.schema.indices.push({
+    name: 'email',
+    unique: true,
+    sparse: true,
+    columns: ['email']
+  })
 }
 
 const sqliteTransform = (models, options) => {
@@ -108,12 +110,12 @@ const sqliteTransform = (models, options) => {
 }
 
 const mssqlTransform = (models, options) => {
-  // Apply snake case naming strategy,
+  // Apply snake case naming strategy for SQL Server databases
   if (!options.namingStrategy) {
-    // SQL server users, tend to use TitleCase, 
-    // but this a 'js' library, it shouldn't :) ?
+    // @TODO Add TitleCase instead as more common MSSQL convention?
     options.namingStrategy = new SnakeCaseNamingStrategy()
   }
+
   // SQL Server deprecated TIMESTAMP in favor of ROWVERSION.
   // But ROWVERSION is not what it was intended in the other adapters.
   for (const model in models) {
@@ -123,6 +125,20 @@ const mssqlTransform = (models, options) => {
       }
     }
   }
+
+  // Support UNIQUE on on User.email that allows duplicate NULL values
+  // Note: This is ANSI SQL behaviour for UNIQUE not default in SQL Server
+  delete models.User.schema.columns.email.unique
+
+  if (!models.User.schema.indices) 
+    models.User.schema.indices = []
+
+  models.User.schema.indices.push({
+    name: 'email',
+    columns: ['email'],
+    unique: true,
+    where: "email IS NOT NULL"
+  })
 }
 
 export default (config, models, options) => {
