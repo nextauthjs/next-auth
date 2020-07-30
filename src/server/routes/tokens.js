@@ -5,7 +5,8 @@ export default async (req, res, options, done) => {
   const { query } = req
   const {
     nextauth,
-    tokenType = nextauth[2]
+    tokenType = nextauth[2],
+    action = nextauth[3]
   } = query
   const providerName = options ? options.provider : undefined
 
@@ -32,6 +33,13 @@ export default async (req, res, options, done) => {
           if (!providerName) {
             response = await getAccounts(session.userId)
           } else {
+            let expired;
+            //TODO: Determine if tokens have expired
+
+            if (action === 'renew' || expired) {
+              //TODO: Exchange refresh token for access token
+            }
+
             const account = await getAccount(session.userId, providerName)
             if (account) {
               switch (tokenType) {
