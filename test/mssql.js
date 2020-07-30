@@ -9,14 +9,8 @@ const SCHEMA_FILE = path.join(__dirname, '/fixtures/schemas/mssql.json');
 const expectedSchema = JSON.parse(fs.readFileSync(SCHEMA_FILE));
 const TABLES = Object.keys(expectedSchema);
 
-const user = 'sa';
-const password = 'Pa55w0rd';
-const port = 1433;
-const host = '127.0.0.1';
+const serverUrl = `mssql://sa:Pa55w0rd@127.0.0.1:1433`;
 const dbName = 'nextauth';
-
-const serverUrl = `mssql://${user}:${password}@${host}:${port}`;
-const databaseUrl = `mssql://${user}:${password}@${host}:${port}/${dbName}?synchronize=true`;
 
 function printSchema() {
   return new Promise(async (resolve) => {
@@ -33,8 +27,8 @@ function printSchema() {
           `drop database [${dbName}];` +
           `create database [${dbName}];`
       );
-      // Invoke adapter to sync schema      
-      await (Adapters.Default(databaseUrl)).getAdapter();
+      // Invoke adapter to sync schema
+      await (Adapters.Default(`${serverUrl}/${dbName}?synchronize=true`)).getAdapter();
       // query schema
       const { recordset } = await connection.query(
         `use [${dbName}]; ` +
