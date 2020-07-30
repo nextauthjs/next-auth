@@ -93,15 +93,12 @@ module.exports = {
   webpack: (config, {
     buildId, dev, isServer, defaultLoaders, webpack,
   }) => {
-    // Note: we provide webpack above so you should not `require` it
-    // Perform customizations to webpack config
     config.plugins.push(clearRequireCachePlugin([
       /\.next\/server\/static\/development\/pages/,
       /\.next\/server\/ssr-module-cache.js/,
-      /next-auth/, // replace this with your own module name
+      /next-auth/,
     ]))
 
-    // Important: return the modified config
     return config
   },
 }
