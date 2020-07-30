@@ -45,7 +45,7 @@ const Adapter: NextAuthAdapterFactory<ConnectionOptions | string,NextAuthTypeORM
   let connection = null
 
   async function getAdapter (appOptions): Promise<NextAuthAdapter> {
-    // Helper function to reuse / restablish connections
+    // Helper function to reuse / reestablish connections
     // (useful if they drop when after being idle)
     async function _connect () {
       // Get current connection by name
@@ -84,7 +84,7 @@ const Adapter: NextAuthAdapterFactory<ConnectionOptions | string,NextAuthTypeORM
     }
 
     // The models are primarily designed for ANSI SQL database, but some
-    // flexiblity is required in the adapter to support non-SQL databases such
+    // flexibility is required in the adapter to support non-SQL databases such
     // as MongoDB which have different pragmas.
     //
     // TypeORM does some abstraction, but doesn't handle everything (e.g. it

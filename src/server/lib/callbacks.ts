@@ -27,7 +27,7 @@ const signIn = async (profile, account, metadata) => {
 /**
  * Redirect is called anytime the user is redirected on signin or signout.
  * By default, for security, only Callback URLs on the same URL as the site
- * are allowed, you can use this callback to customise that behaviour.
+ * are allowed, you can use this callback to customize that behavior.
  *
  * @param  {string} url      URL provided as callback URL by the client
  * @param  {string} baseUrl  Default base URL of site (can be used as fallback)
@@ -56,7 +56,7 @@ const session = async (session, token) => {
  * e.g. On sign in, `getSession()`, `useSession()`, `/api/auth/session` (etc)
  *
  * On initial sign in, the raw oAuthProfile is passed if the user is signing in
- * with an OAuth provider. It is not avalible on subsequent calls. You can
+ * with an OAuth provider. It is not available on subsequent calls. You can
  * take advantage of this to persist additional data you need to in the JWT.
  *
  * @param  {object} token         Decrypted JSON Web Token

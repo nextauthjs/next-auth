@@ -1,7 +1,7 @@
 // Simple universal (client/server) function to split host and path
 // We use this rather than a library because we need to use the same logic both
 // client and server side and we only need to parse out the host and path, while
-// supporting a default value, so a simple split is sufficent.
+// supporting a default value, so a simple split is sufficient.
 export default (url) => {
   // Default values
   const defaultHost = 'http://localhost:3000'
@@ -9,7 +9,7 @@ export default (url) => {
 
   if (!url) { url = `${defaultHost}${defaultPath}` }
 
-  // Default to HTTPS if no protocol explictly specified
+  // Default to HTTPS if no protocol explicitly specified
   const protocol = url.match(/^http?:\/\//) ? 'http' : 'https'
 
   // Normalize URLs by stripping protocol and no trailing slash

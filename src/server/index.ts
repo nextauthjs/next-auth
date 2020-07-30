@@ -71,7 +71,7 @@ export default async (req: NextApiRequest, res: NextApiResponse, userSuppliedOpt
     // Secret used salt cookies and tokens (e.g. for CSRF protection).
     // If no secret option is specified then it creates one on the fly
     // based on options passed here. A options contains unique data, such as
-    // oAuth provider secrets and database credentials it should be sufficent.
+    // oAuth provider secrets and database credentials it should be sufficient.
     const secret = userSuppliedOptions.secret || createHash('sha256').update(JSON.stringify({ baseUrl, basePath, ...userSuppliedOptions })).digest('hex')
 
     // Use secure cookies if the site uses HTTPS
@@ -129,7 +129,7 @@ export default async (req: NextApiRequest, res: NextApiResponse, userSuppliedOpt
     // JWT options
     const jwtOptions: JWTOptions = {
       secret, // Use application secret if no keys specified
-      maxAge: sessionOptions.maxAge, // maxAge is dereived from session maxAge,
+      maxAge: sessionOptions.maxAge, // maxAge is derived from session maxAge,
       encode: jwt.encode,
       decode: jwt.decode,
       ...userSuppliedOptions.jwt
@@ -153,13 +153,13 @@ export default async (req: NextApiRequest, res: NextApiResponse, userSuppliedOpt
     }
 
     // Ensure CSRF Token cookie is set for any subsequent requests.
-    // Used as part of the strateigy for mitigation for CSRF tokens.
+    // Used as part of the strategy for mitigation for CSRF tokens.
     //
     // Creates a cookie like 'next-auth.csrf-token' with the value 'token|hash',
     // where 'token' is the CSRF token and 'hash' is a hash made of the token and
     // the secret, and the two values are joined by a pipe '|'. By storing the
     // value and the hash of the value (with the secret used as a salt) we can
-    // verify the cookie was set by the server and not by a malicous attacker.
+    // verify the cookie was set by the server and not by a malicious attacker.
     //
     // For more details, see the following OWASP links:
     // https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie
@@ -179,7 +179,7 @@ export default async (req: NextApiRequest, res: NextApiResponse, userSuppliedOpt
     }
     if (!csrfToken) {
       // If no csrfToken - because it's not been set yet, or because the hash doesn't match
-      // (e.g. because it's been modifed or because the secret has changed) create a new token.
+      // (e.g. because it's been modified or because the secret has changed) create a new token.
       csrfToken = randomBytes(32).toString('hex')
       const newCsrfTokenCookie = `${csrfToken}|${createHash('sha256').update(`${csrfToken}${secret}`).digest('hex')}`
       cookie.set(res, cookies.csrfToken.name, newCsrfTokenCookie, cookies.csrfToken.options)
@@ -189,8 +189,8 @@ export default async (req: NextApiRequest, res: NextApiResponse, userSuppliedOpt
     // @TODO Refactor into a lib instead of passing as an option
     //       e.g. and call as redirect(req, res, url)
     const redirect = (redirectUrl) => {
-      const reponseAsJson = !!((req.body && req.body.json === 'true'))
-      if (reponseAsJson) {
+      const responseAsJson = !!((req.body && req.body.json === 'true'))
+      if (responseAsJson) {
         res.json({ url: redirectUrl })
       } else {
         res.status(302).setHeader('Location', redirectUrl)
@@ -199,10 +199,10 @@ export default async (req: NextApiRequest, res: NextApiResponse, userSuppliedOpt
       return done()
     }
 
-    // User provided options are overriden by other options,
+    // User provided options are overridden by other options,
     // except for the options with special handling above
     const options: InternalOptions = {
-      // Defaults options can be overidden
+      // Defaults options can be overbidden
       debug: false, // Enable debug messages to be displayed
       pages: {}, // Custom pages (e.g. sign in, sign out, errors)
       // Custom options override defaults

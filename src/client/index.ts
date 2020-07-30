@@ -14,7 +14,8 @@
 import { useState, useEffect, useContext, createContext, createElement } from 'react'
 import logger from '../lib/logger'
 import parseUrl from '../lib/parse-url'
-import { Session, InitOptions, ProviderInternalConfig } from '../interfaces'
+import { Session, ProviderInternalConfig } from '../interfaces'
+import { NextPageContext } from 'next'
 
 interface NextAuthClient {
   baseUrl: string,
@@ -33,7 +34,7 @@ interface NextAuthClient {
   _getSession: (data: any) => Promise<any> | any
 }
 
-// This behaviour mirrors the default behaviour for getting the site name that
+// This behavior mirrors the default behavior for getting the site name that
 // happens server side in server/index.js
 // 1. An empty value is legitimate when the code is being invoked client side as
 //    relative URLs are valid in that context and so defaults to empty.
@@ -45,7 +46,7 @@ const __NEXTAUTH: NextAuthClient = {
   keepAlive: 0, // 0 == disabled (don't send); 60 == send every 60 seconds
   clientMaxAge: 0, // 0 == disabled (only use cache); 60 == sync if last checked > 60 seconds ago
   // Properties starting with _ are used for tracking internal app state
-  _clientLastSync: 0, // used for timestamp since last sycned (in seconds)
+  _clientLastSync: 0, // used for timestamp since last synced (in seconds)
   _clientSyncTimer: null, // stores timer for poll interval
   _eventListenersAdded: false, // tracks if event listeners have been added,
   _clientSession: undefined, // stores last session response from hook,
@@ -91,6 +92,7 @@ if (typeof window !== 'undefined') {
   }
 }
 
+type  MutableClientOptions =  Partial<Pick<NextAuthClient, "baseUrl" | "basePath" | "clientMaxAge" | "keepAlive">>;
 // Method to set options. The documented way is to use the provider, but this
 // method is being left in as an alternative, that will be helpful if/when we
 // expose a vanilla JavaScript version that doesn't depend on React.
@@ -99,7 +101,7 @@ const setOptions = ({
   basePath,
   clientMaxAge,
   keepAlive
-}: Partial<Pick<NextAuthClient, "baseUrl" | "basePath" | "clientMaxAge" | "keepAlive">> = {}) => {
+}: MutableClientOptions = {}) => {
   if (baseUrl) { __NEXTAUTH.baseUrl = baseUrl }
   if (basePath) { __NEXTAUTH.basePath = basePath }
   if (clientMaxAge) { __NEXTAUTH.clientMaxAge = clientMaxAge }
@@ -121,14 +123,16 @@ const setOptions = ({
   }
 }
 
-interface GetSessionArgs {
-  req?: {headers: {cookie: string}};
-  ctx?: any;
-  triggerEvent?: boolean;
+interface BaseHookArgs {
+  req?: NextPageContext["req"],
+  ctx?: NextPageContext,
 }
 
+interface GetSessionArgs extends BaseHookArgs {
+  triggerEvent?: boolean
+}
 // Universal method (client + server)
-const getSession = async ({ req, ctx, triggerEvent = true }: GetSessionArgs = {}): Promise<Session | null> => {
+const getSession = async ({ req, ctx, triggerEvent = true }: GetSessionArgs = {} as any): Promise<Session | null> => {
   // If passed 'appContext' via getInitialProps() in _app.js then get the req
   // object from ctx and use that for the req value to allow getSession() to
   // work seamlessly in getInitialProps() on server side pages *and* in _app.js.
@@ -143,15 +147,13 @@ const getSession = async ({ req, ctx, triggerEvent = true }: GetSessionArgs = {}
   return session
 }
 
-interface GetCsrfTokenArgs {
-  req?: {headers: {cookie: string}};
-  ctx?: any;
-}
+interface GetCsrfTokenArgs extends BaseHookArgs  {}
+
 // Universal method (client + server)
 const getCsrfToken = async ({ req, ctx }: GetCsrfTokenArgs = {}) => {
   // If passed 'appContext' via getInitialProps() in _app.js then get the req
   // object from ctx and use that for the req value to allow getCsrfToken() to
-  // work seemlessly in getInitialProps() on server side pages *and* in _app.js.
+  // work seamlessly in getInitialProps() on server side pages *and* in _app.js.
   if (!req && ctx && ctx.req) { req = ctx.req }
 
   const baseUrl = _apiBaseUrl()
@@ -212,7 +214,7 @@ const _useSessionHook = (session?: Session) => {
           return
         } else if (clientMaxAge > 0 && currentTime < (clientLastSync + clientMaxAge)) {
           // If the session freshness is within clientMaxAge then don't request
-          // it again on this call (avoids too many invokations).
+          // it again on this call (avoids too many invocations).
           return
         }
       }
@@ -220,13 +222,13 @@ const _useSessionHook = (session?: Session) => {
       if (clientSession === undefined) { __NEXTAUTH._clientSession = null }
 
       // Update clientLastSync before making response to avoid repeated
-      // invokations that would otherwise be triggered while we are still
+      // invocations that would otherwise be triggered while we are still
       // waiting for a response.
       __NEXTAUTH._clientLastSync = Math.floor(new Date().getTime() / 1000)
 
       // If this call was invoked via a storage event (i.e. another window) then
       // tell getSession not to trigger an event when it calls to avoid an
-      // infinate loop.
+      // infinite loop.
       const triggerEvent = (triggeredByStorageEvent === false)
       const newClientSessionData = await getSession({ triggerEvent })
 
@@ -313,21 +315,29 @@ const signOut = async (args: SignOutArgs = {}) => {
   window.location = data.url ? data.url : callbackUrl
 }
 
+interface ProviderProps {
+  session: Session,
+  options?: MutableClientOptions
+}
 // Provider to wrap the app in to make session data available globally
-const Provider = ({ children, session, options }) => {
+const Provider: React.FunctionComponent<ProviderProps> = ({ children, session, options }) => {
   setOptions(options)
-  return createElement(SessionContext.Provider, { value: useSession(session) }, children)
+  return createElement(SessionContext.Provider, { value: useSession(session) }, children) as any;
 }
 
 // note: don't include {} in TData, since empty objects are filtered out
-const _fetchData = async <TData  = any>(url, options = {}): Promise<TData | null> => {
+const _fetchData = async <TData extends {} = {}>(url, options = {}): Promise<TData | null> => {
   try {
     const res = await fetch(url, options)
-    const data = await res.json()
-    return Promise.resolve(Object.keys(data).length > 0 ? data : null) // Return null if data empty
+    const data: unknown = await res.json()
+    if (Object.keys(data).length > 0) {
+      return data as TData;
+    }
+    // Return null if data empty
+    return null;
   } catch (error) {
     logger.error('CLIENT_FETCH_ERROR', url, error)
-    return Promise.resolve(null)
+    return null;
   }
 }
 

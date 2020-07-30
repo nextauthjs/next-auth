@@ -7,12 +7,12 @@ import logger from '../../../lib/logger'
 
 // @TODO Refactor monkey patching in _getOAuthAccessToken() and _get()
 // These methods have been forked from `node-oauth` to fix bugs; it may make
-// sense to migrate all the methods we need from node-oauth to nexth-auth (with
+// sense to migrate all the methods we need from node-oauth to next-auth (with
 // appropriate credit) to make it easier to maintain and address issues as they
 // come up, as the node-oauth package does not seem to be actively maintained.
 
 // @TODO Refactor to use promises and not callbacks
-// @TODO Refactor to use jsonwebtoken instead of jwt-decode & remove dependancy
+// @TODO Refactor to use jsonwebtoken instead of jwt-decode & remove dependency
 export default async (req, provider, csrfToken, callback) => {
   // The "user" object is specific to apple provider and is provided on first sign in
   // e.g. {"name":{"firstName":"Johnny","lastName":"Appleseed"},"email":"johnny.appleseed@nextauth.com"}
@@ -160,7 +160,7 @@ async function _getProfile (error, profileData, accessToken, refreshToken, provi
     // If we didn't get a response either there was a problem with the provider
     // response *or* the user cancelled the action with the provider.
     //
-    // Unfortuately, we can't tell which - at least not in a way that works for
+    // Unfortunately, we can't tell which - at least not in a way that works for
     // all providers, so we return an empty object; the user should then be
     // redirected back to the sign up page. We log the error to help developers
     // who might be trying to debug this when configuring a new provider.
@@ -217,7 +217,7 @@ async function _getOAuthAccessToken (code, provider, callback) {
 
   if (!headers['Content-Type']) { headers['Content-Type'] = 'application/x-www-form-urlencoded' }
 
-  // Added as a fix to accomodate change in Twitch oAuth API
+  // Added as a fix to accommodate change in Twitch oAuth API
   if (!headers['Client-ID']) { headers['Client-ID'] = provider.clientId }
 
   // Okta errors when this is set. Maybe there are other Providers that also wont like this.

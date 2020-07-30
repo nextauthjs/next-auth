@@ -5,8 +5,8 @@ import { ProviderReturnConfig } from '../interfaces'
 export interface ProviderEmailOptions {
   server: string | ProviderEmailServer;
   from: string;
-  maxAge: number;
-  sendVerificationRequest: typeof sendVerificationRequest;
+  maxAge?: number;
+  sendVerificationRequest?: typeof sendVerificationRequest;
 }
 
 export interface ProviderEmailServer {

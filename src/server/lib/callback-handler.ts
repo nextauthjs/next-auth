@@ -2,11 +2,11 @@
 // linking (or not linking) accounts depending on if the user is currently logged
 // in, if they have account already and the authentication mechanism they are using.
 //
-// It prevents insecure behaviour, such as linking oAuth accounts unless a user is
+// It prevents insecure behavior, such as linking oAuth accounts unless a user is
 // signed in and authenticated with an existing valid account.
 //
-// All verification (e.g. oAuth flows or email address verificaiton flows) are
-// done prior to this handler being called to avoid additonal complexity in this
+// All verification (e.g. oAuth flows or email address verification flows) are
+// done prior to this handler being called to avoid additional complexity in this
 // handler.
 import { AccountNotLinkedError } from '../../lib/errors'
 import dispatchEvent from '../lib/dispatch-event'
@@ -189,7 +189,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
           // accounts (by email or provider account id)...
           //
           // If no account matching the same [provider].id or .email exists, we can
-          // create a new account for the user, link it to the oAuth acccount and
+          // create a new account for the user, link it to the oAuth account and
           // create a new session for them so they are signed in with it.
           user = await createUser(profile)
           await dispatchEvent(events.createUser, user)

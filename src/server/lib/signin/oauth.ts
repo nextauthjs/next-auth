@@ -18,7 +18,7 @@ export default (provider, csrfToken, callback) => {
     // make sure they are included in the URL we return.
     //
     // This is a fix for an open issue with the oAuthClient library we are using
-    // which inadvertantly strips them.
+    // which inadvertently strips them.
     //
     // https://github.com/ciaranj/node-oauth/pull/193
     if (provider.authorizationUrl.includes('?')) {
