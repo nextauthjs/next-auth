@@ -75,8 +75,7 @@ const mongodbTransform = (models, options) => {
   // still allowing multiple entires to omit the email address.
   delete models.User.schema.columns.email.unique
 
-  if (!models.User.schema.indices)
-    models.User.schema.indices = []
+  if (!models.User.schema.indices) { models.User.schema.indices = [] }
 
   models.User.schema.indices.push({
     name: 'email',
@@ -130,14 +129,13 @@ const mssqlTransform = (models, options) => {
   // Note: This is ANSI SQL behaviour for UNIQUE not default in SQL Server
   delete models.User.schema.columns.email.unique
 
-  if (!models.User.schema.indices) 
-    models.User.schema.indices = []
+  if (!models.User.schema.indices) { models.User.schema.indices = [] }
 
   models.User.schema.indices.push({
     name: 'email',
     columns: ['email'],
     unique: true,
-    where: "email IS NOT NULL"
+    where: 'email IS NOT NULL'
   })
 }
 
@@ -154,9 +152,9 @@ export default (config, models, options) => {
     mysqlTransform(models, options)
   } else if ((config.type && config.type.startsWith('sqlite')) ||
              (config.url && config.url.startsWith('sqlite'))) {
-    sqliteTransform(models, options)  
+    sqliteTransform(models, options)
   } else if ((config.type && config.type.startsWith('mssql')) ||
-             (config.url && config.url.startsWith('mssql'))) {   
+             (config.url && config.url.startsWith('mssql'))) {
     mssqlTransform(models, options)
   } else {
     // For all other SQL databases (e.g. MySQL) apply snake case naming
