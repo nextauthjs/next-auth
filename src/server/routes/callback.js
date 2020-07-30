@@ -32,14 +32,12 @@ export default async (req, res, options, done) => {
 
   if (type === 'oauth') {
     try {
-      oAuthCallback(req, provider, csrfToken, async (error, profile, account, OAuthProfile, redirectUrl) => {
-        if (redirectUrl) {
-          return redirect(redirectUrl)
-        }
+      oAuthCallback(req, provider, csrfToken, async (error, profile, account, OAuthProfile) => {
         try {
           if (error) {
             logger.error('CALLBACK_OAUTH_ERROR', error)
-            return redirect(`${baseUrl}${basePath}/error?error=oAuthCallback`)
+
+            return callbacks.error(error, redirect, `${baseUrl}${basePath}/error?error=oAuthCallback`)
           }
 
           // Make it easier to debug when adding a new provider
@@ -73,7 +71,7 @@ export default async (req, res, options, done) => {
           try {
             const signInCallbackResponse = await callbacks.signIn(userOrProfile, account, OAuthProfile)
             if (signInCallbackResponse === false) {
-              return redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
+              return callbacks.error(error, redirect, `${baseUrl}${basePath}/error?error=AccessDenied`)
             }
           } catch (error) {
             if (error instanceof Error) {

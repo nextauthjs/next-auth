@@ -67,9 +67,14 @@ const jwt = async (token, oAuthProfile) => {
   return Promise.resolve(token)
 }
 
+const error = async (error, redirect, redirectUrl) => {
+  return Promise.resolve(redirect(redirectUrl))
+}
+
 export default {
   signIn,
   redirect,
   session,
-  jwt
+  jwt,
+  error
 }
