@@ -14,6 +14,15 @@ import logger from '../../../lib/logger'
 // @TODO Refactor to use promises and not callbacks
 // @TODO Refactor to use jsonwebtoken instead of jwt-decode & remove dependancy
 export default async (req, provider, csrfToken, callback) => {
+  console.log('Running oAuth CALLBACK')
+  console.log('BODY:', req.body)
+  console.log('QUERY:', req.query)
+
+  if (provider.callback) {
+    const result = provider.callback(req, callback)
+
+    if (result) return result
+  }
   // The "user" object is specific to apple provider and is provided on first sign in
   // e.g. {"name":{"firstName":"Johnny","lastName":"Appleseed"},"email":"johnny.appleseed@nextauth.com"}
   let { oauth_token, oauth_verifier, code, user, state } = req.query // eslint-disable-line camelcase

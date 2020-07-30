@@ -32,7 +32,10 @@ export default async (req, res, options, done) => {
 
   if (type === 'oauth') {
     try {
-      oAuthCallback(req, provider, csrfToken, async (error, profile, account, OAuthProfile) => {
+      oAuthCallback(req, provider, csrfToken, async (error, profile, account, OAuthProfile, redirectUrl) => {
+        if (redirectUrl) {
+          return redirect(redirectUrl)
+        }
         try {
           if (error) {
             logger.error('CALLBACK_OAUTH_ERROR', error)
