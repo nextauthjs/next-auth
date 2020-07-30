@@ -84,7 +84,28 @@ You might find it helpful to use the `npm run watch` command in the next-auth pr
 
 If you are working on `next-auth/src/client/index.js` hot reloading will work as normal in your Next.js app.
 
-However  if you are working on anything else (e.g. `next-auth/src/server/*` etc) then you will need to *stop and start* your app for changes to apply as **Next.js will not hot reload those changes**.
+However if you are working on anything else (e.g. `next-auth/src/server/*` etc) then you will need to *stop and start* your app for changes to apply as **Next.js will not hot reload those changes by default**. To facitate this, you can try [this webpack plugin](https://www.npmjs.com/package/webpack-clear-require-cache-plugin). Note that the config syntax in the plugin README may be out of date. It should look like this:
+
+```
+const clearRequireCachePlugin = require('webpack-clear-require-cache-plugin')
+
+module.exports = {
+  webpack: (config, {
+    buildId, dev, isServer, defaultLoaders, webpack,
+  }) => {
+    // Note: we provide webpack above so you should not `require` it
+    // Perform customizations to webpack config
+    config.plugins.push(clearRequireCachePlugin([
+      /\.next\/server\/static\/development\/pages/,
+      /\.next\/server\/ssr-module-cache.js/,
+      /next-auth/, // replace this with your own module name
+    ]))
+
+    // Important: return the modified config
+    return config
+  },
+}
+```
 
 ### Databases
 
