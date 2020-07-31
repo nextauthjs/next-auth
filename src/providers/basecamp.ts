@@ -1,4 +1,8 @@
-export default (options) => {
+import { ProviderBasicOptions, ProviderReturnConfig } from "../interfaces"
+
+export interface ProviderBasecampOptions extends ProviderBasicOptions {}
+
+export default (options: ProviderBasecampOptions): ProviderReturnConfig => {
   return {
     id: 'basecamp',
     name: 'Basecamp',
