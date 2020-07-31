@@ -8,9 +8,7 @@ const Adapters = require('../adapters');
 const SCHEMA_FILE = path.join(__dirname, '/fixtures/schemas/mssql.json');
 const expectedSchema = JSON.parse(fs.readFileSync(SCHEMA_FILE));
 const TABLES = Object.keys(expectedSchema);
-
-const serverUrl = `mssql://sa:Pa55w0rd@127.0.0.1:1433`;
-const dbName = 'nextauth';
+const databaseUrl = `mssql://nextauth:password@127.0.0.1:1433/nextauth?synchronize=true`;
 
 function printSchema() {
   return new Promise(async (resolve) => {
@@ -19,19 +17,12 @@ function printSchema() {
      */
     let connection;
     try {
-      // connect to server, no db ...(it doesn't exists)
-      connection = await mssql.connect(serverUrl);
-      // create table before Adapter
-      await connection.query(
-        `if(exists(select [name] from sys.databases where name = '${dbName}'))` +
-          `drop database [${dbName}];` +
-          `create database [${dbName}];`
-      );
+      connection = await mssql.connect(databaseUrl);           
       // Invoke adapter to sync schema
-      await (Adapters.Default(`${serverUrl}/${dbName}?synchronize=true`)).getAdapter();
+      await (Adapters.Default(databaseUrl)).getAdapter();
       // query schema
       const { recordset } = await connection.query(
-        `use [${dbName}]; ` +
+        `use [nextauth]; ` +
           TABLES.map(
             (table) =>
               `select * from INFORMATION_SCHEMA.COLUMNS` +
