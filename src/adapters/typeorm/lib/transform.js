@@ -74,14 +74,15 @@ const mongodbTransform = (models, options) => {
   // we need to create a sparse index to only allow unique values, while
   // still allowing multiple entires to omit the email address.
   delete models.User.schema.columns.email.unique
-  models.User.schema.indices = [
-    {
-      name: 'email',
-      unique: true,
-      sparse: true,
-      columns: ['email']
-    }
-  ]
+
+  if (!models.User.schema.indices) { models.User.schema.indices = [] }
+
+  models.User.schema.indices.push({
+    name: 'email',
+    unique: true,
+    sparse: true,
+    columns: ['email']
+  })
 }
 
 const sqliteTransform = (models, options) => {
@@ -107,6 +108,37 @@ const sqliteTransform = (models, options) => {
   }
 }
 
+const mssqlTransform = (models, options) => {
+  // Apply snake case naming strategy for SQL Server databases
+  if (!options.namingStrategy) {
+    // @TODO Add TitleCase instead as more common MSSQL convention?
+    options.namingStrategy = new SnakeCaseNamingStrategy()
+  }
+
+  // SQL Server deprecated TIMESTAMP in favor of ROWVERSION.
+  // But ROWVERSION is not what it was intended in the other adapters.
+  for (const model in models) {
+    for (const column in models[model].schema.columns) {
+      if (models[model].schema.columns[column].type === 'timestamp') {
+        models[model].schema.columns[column].type = 'datetime'
+      }
+    }
+  }
+
+  // Support UNIQUE on on User.email that allows duplicate NULL values
+  // Note: This is ANSI SQL behaviour for UNIQUE not default in SQL Server
+  delete models.User.schema.columns.email.unique
+
+  if (!models.User.schema.indices) { models.User.schema.indices = [] }
+
+  models.User.schema.indices.push({
+    name: 'email',
+    columns: ['email'],
+    unique: true,
+    where: 'email IS NOT NULL'
+  })
+}
+
 export default (config, models, options) => {
   // @TODO Refactor into switch statement
   if ((config.type && config.type.startsWith('mongodb')) ||
@@ -121,6 +153,9 @@ export default (config, models, options) => {
   } else if ((config.type && config.type.startsWith('sqlite')) ||
              (config.url && config.url.startsWith('sqlite'))) {
     sqliteTransform(models, options)
+  } else if ((config.type && config.type.startsWith('mssql')) ||
+             (config.url && config.url.startsWith('mssql'))) {
+    mssqlTransform(models, options)
   } else {
     // For all other SQL databases (e.g. MySQL) apply snake case naming
     // strategy, but otherwise use the models and schemas as they are.

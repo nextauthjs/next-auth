@@ -18,6 +18,7 @@ module.exports = {
       'schemas/models',
       'schemas/mysql',
       'schemas/postgres',
+      'schemas/mssql',
       'schemas/mongodb',
       'schemas/adapters'
     ],

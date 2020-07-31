@@ -25,11 +25,17 @@ const parseConnectionString = (configString) => {
       config.username = parsedUrl.username
       config.password = parsedUrl.password
       config.database = parsedUrl.pathname.replace(/^\//, '').replace(/\?(.*)$/, '')
+      config.options = {}
     }
 
     // This option is recommended by mongodb
     if (config.type === 'mongodb') {
       config.useUnifiedTopology = true
+    }
+
+    // Prevents warning about deprecated option (sets default value)
+    if (config.type === 'mssql') {
+      config.options.enableArithAbort = true
     }
 
     if (parsedUrl.search) {
