@@ -14,7 +14,7 @@
 import { useState, useEffect, useContext, createContext, createElement } from 'react'
 import logger from '../lib/logger'
 import parseUrl from '../lib/parse-url'
-import { Session, ProviderInternalConfig } from '../interfaces'
+import { Session, ProviderInternalConfig, AvailableProviders } from '../interfaces'
 import { NextPageContext } from 'next'
 
 interface NextAuthClient {
@@ -54,7 +54,7 @@ const __NEXTAUTH: NextAuthClient = {
   // was sent from this tab/window so it can be ignored to avoid event loops.
   _clientId: Math.random().toString(36).substring(2) + Date.now().toString(36),
   // Used to store to function export by getSession() hook
-  _getSession: () => {}
+  _getSession: () => { }
 }
 
 // Add event listeners on load
@@ -92,7 +92,7 @@ if (typeof window !== 'undefined') {
   }
 }
 
-type  MutableClientOptions =  Partial<Pick<NextAuthClient, "baseUrl" | "basePath" | "clientMaxAge" | "keepAlive">>;
+type MutableClientOptions = Partial<Pick<NextAuthClient, "baseUrl" | "basePath" | "clientMaxAge" | "keepAlive">>;
 // Method to set options. The documented way is to use the provider, but this
 // method is being left in as an alternative, that will be helpful if/when we
 // expose a vanilla JavaScript version that doesn't depend on React.
@@ -147,7 +147,7 @@ const getSession = async ({ req, ctx, triggerEvent = true }: GetSessionArgs = {}
   return session
 }
 
-interface GetCsrfTokenArgs extends BaseHookArgs  {}
+interface GetCsrfTokenArgs extends BaseHookArgs { }
 
 // Universal method (client + server)
 const getCsrfToken = async ({ req, ctx }: GetCsrfTokenArgs = {}) => {
@@ -158,14 +158,14 @@ const getCsrfToken = async ({ req, ctx }: GetCsrfTokenArgs = {}) => {
 
   const baseUrl = _apiBaseUrl()
   const fetchOptions = req ? { headers: { cookie: req.headers.cookie } } : {}
-  const data = await _fetchData<{csrfToken: string}>(`${baseUrl}/csrf`, fetchOptions)
+  const data = await _fetchData<{ csrfToken: string }>(`${baseUrl}/csrf`, fetchOptions)
   return data && data.csrfToken ? data.csrfToken : null
 }
 
 // Universal method (client + server); does not require request headers
-const getProviders = async () => {
+const getProviders = async (_context?: any) => {
   const baseUrl = _apiBaseUrl()
-  return _fetchData<Record<string,ProviderInternalConfig>>(`${baseUrl}/providers`)
+  return _fetchData<Record<string, ProviderInternalConfig>>(`${baseUrl}/providers`)
 }
 
 // Context to store session data globally
@@ -255,8 +255,12 @@ interface SignInArgs {
   callbackUrl?: string,
   [key: string]: any
 }
+type SigninFn = {
+  (provider: AvailableProviders, args?: SignInArgs): Promise<void>;
+  (provider?: any, args?: SignInArgs): Promise<void>;
+}
 // Client side method
-const signIn = async (provider, args: SignInArgs = {}) => {
+const signIn: SigninFn = async (provider?: any, args: SignInArgs = {}) => {
   const baseUrl = _apiBaseUrl()
   const callbackUrl = (args && args.callbackUrl) ? args.callbackUrl : window.location.href
   const providers = await getProviders()
@@ -292,9 +296,15 @@ const signIn = async (provider, args: SignInArgs = {}) => {
 interface SignOutArgs {
   callbackUrl?: string;
 }
+// In order to support passing the function directly to an event handler (onClick etc.)
+// we make the args any.
+declare type SignOutFn = {
+  (args?: SignOutArgs): Promise<void>;
+  (args?: any): Promise<void>;
+};
 
 // Client side method
-const signOut = async (args: SignOutArgs = {}) => {
+const signOut: SignOutFn = async (args: any = {}) => {
   const callbackUrl = (args && args.callbackUrl) ? args.callbackUrl : window.location
 
   const baseUrl = _apiBaseUrl()
