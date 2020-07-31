@@ -60,7 +60,7 @@ export interface ProviderCredentialsConfig extends ProviderCredentialsOptions, P
 export interface ProviderOAuthConfig extends ProviderBaseConfig {
     version: string;
     params?: Record<string, string>;
-    scope: string;
+    scope?: string;
     accessTokenUrl: string;
     requestTokenUrl?: string;
     authorizationUrl: string;
