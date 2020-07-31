@@ -71,6 +71,7 @@
     "@babel/core": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
     "@types/react": "^16.9.43",
+    "@types/react-dom": "^16.9.8",
     "autoprefixer": "^9.7.6",
     "babel-preset-preact": "^2.0.0",
     "cssnano": "^4.1.10",
