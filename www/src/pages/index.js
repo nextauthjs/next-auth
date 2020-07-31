@@ -241,7 +241,7 @@ const options = {
       from: 'NextAuth.js <no-reply@example.com>'
     }),
   ],
-  // MySQL, Postgres or MongoDB database (or leave empty)
+  // SQL or MongoDB database (or leave empty)
   database: process.env.DATABASE_URL
 }
 
