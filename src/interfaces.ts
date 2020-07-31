@@ -74,6 +74,8 @@ export interface ProviderBasicOptions {
     clientSecret: string;
 }
 
+export type AvailableProviders = keyof typeof import("./providers").default;
+
 /**
  * Type guard to check if the provider is of credentials type
  * @param obj 
@@ -125,8 +127,8 @@ export interface InternalOptions extends Omit<InitOptions, "providers"> {
 }
 
 export interface InitOptions {
-    site: string;
     providers: ProviderReturnConfig[];
+    site?: string;
     database?: ConnectionOptions | string;
     secret?: string;
     jwt?: JWTOptions,
@@ -141,9 +143,9 @@ export interface InitOptions {
     adapter?: NextAuthAdapterWrapper;
     useSecureCookies?: boolean;
     cookies?: Cookies;
-    session: SessionOptions;
-    events: EventsOptions;
-    callbacks: Callbacks;
+    session?: SessionOptions;
+    events?: EventsOptions;
+    callbacks?: CallbackOptions;
 }
 
 export interface JWTOptions {
@@ -186,7 +188,7 @@ export interface CallbackURLOptions {
     site: string;
     defaultCallbackUrl?: string;
     cookies?: Cookies;
-    callbacks?: Callbacks;
+    callbacks?: CallbackOptions;
 }
 
 export interface GenericObject {
@@ -200,7 +202,5 @@ export interface SessionOptions {
     updateAge?: number;
 }
 
-type Events = typeof events;
-export interface EventsOptions extends Events { }
-
-type Callbacks = typeof callbacks
+export type EventsOptions = Partial<typeof events>;
+export type CallbackOptions = Partial<typeof callbacks>;
