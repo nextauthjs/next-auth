@@ -7,6 +7,7 @@ import adapterConfig from './lib/config'
 import adapterTransform from './lib/transform'
 import Models, { NextAuthModels } from './models'
 import logger from '../../lib/logger'
+import { updateConnectionEntities } from './lib/utils'
 import { NextAuthAdapter, NextAuthAdapterFactory } from "../../interfaces";
 
 export interface NextAuthTypeORMOptions {
@@ -71,6 +72,10 @@ const Adapter: NextAuthAdapterFactory<ConnectionOptions | string, NextAuthTypeOR
     } else {
       // If the connection object already exists, ensure it's valid
       await _connect()
+    }
+
+    if (process.env.NODE_ENV !== 'production') {
+      await updateConnectionEntities(connection, config.entities)
     }
 
     // Get manager from connection object

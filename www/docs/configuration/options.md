@@ -230,10 +230,18 @@ You can specify a handler for any of the callbacks below.
 
 ```js
 callbacks: {
-  signIn: async (profile, account, metadata) => { },
-  redirect: async (url, baseUrl) => { },
-  session: async (session, token) => { },
-  jwt: async (token, profile) => => { }
+  signIn: async (user, account, profile) => {
+    return Promise.resolve(true)
+  },
+  redirect: async (url, baseUrl) => {
+    return Promise.resolve(baseUrl)
+  },
+  session: async (session, user) => {
+    return Promise.resolve(session)
+  },
+  jwt: async (token, user, account, profile, isNewUser) => {
+    return Promise.resolve(token)
+  }
 }
 ```
 

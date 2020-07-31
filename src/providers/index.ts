@@ -1,9 +1,10 @@
 
 import Auth0 from './auth0';
 import Apple from './apple'
+import Basecamp from './basecamp'
+import BattleNet from './battlenet'
 import Box from './box'
 import Credentials from './credentials'
-import BattleNet from './battlenet'
 import Cognito from './cognito'
 import Discord from './discord'
 import Email from './email'
@@ -24,9 +25,10 @@ import Yandex from './yandex'
 export default {
   Auth0,
   Apple,
+  Basecamp,
+  BattleNet,
   Box,
   Credentials,
-  BattleNet,
   Cognito,
   Discord,
   Email,
