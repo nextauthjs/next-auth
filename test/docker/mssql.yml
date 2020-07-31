@@ -1,20 +1,15 @@
-# @FIXME The behaviour fo the MSSQL image differs slightly from the other images
-#        To make it easier to setupm run tests and maintain we probably want to
-#        standardize the behaviour of the Docker images, but not a priority yet.
-#        There might be a third party image that does this out of the box
-#          e.g. like the one from bitnami we use for mongodb
-#
-# * The default username is 'sa'
-# * No database is created by default
-version: '2'
+version: "2"
 
 services:
-
   mssql:
     image: mcr.microsoft.com/mssql/server:2017-latest
     restart: always
     environment:
-      SA_PASSWORD: Pa55w0rd
+      SA_PASSWORD: Pa55w0rd # minimum password complexity
       ACCEPT_EULA: Y
     ports:
-      - "1433:1433"
+      - "1433:1433" # map to non-default port, to avoid conflicts ? 
+    # WARN: command overrides, default image start sequence, start.sh starts 'sql-server'
+    command: '/var/setup/start.sh' 
+    volumes:
+      - ./mssql:/var/setup # mount setup files
