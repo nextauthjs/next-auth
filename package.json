@@ -6,9 +6,6 @@
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "author": "Iain Collins <me@iaincollins.com>",
   "main": "index.js",
-  "directories": {
-    "lib": "dist"
-  },
   "scripts": {
     "build": "npm run build:js && npm run build:css",
     "build:js": "tsc -p tsconfig.json",
@@ -36,7 +33,12 @@
     "lint:fix": "standard --fix"
   },
   "files": [
-    "dist"
+    "dist",
+    "index.js",
+    "providers.js",
+    "adapters.js",
+    "client.js",
+    "jwt.js"
   ],
   "license": "ISC",
   "dependencies": {
