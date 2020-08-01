@@ -255,9 +255,17 @@ async function _getOAuthAccessToken (code, provider, callback) {
 function _get (provider, accessToken, callback) {
   const url = provider.profileUrl
   const headers = provider.headers || {}
+  const setGetAccessTokenProfileUrl = provider.setGetAccessTokenProfileUrl !== null ? provider.setGetAccessTokenProfileUrl : true
 
   if (this._useAuthorizationHeaderForGET) {
     headers.Authorization = this.buildAuthHeader(accessToken)
+
+    // Mail.ru requires 'access_token' as URL request parameter
+    if (setGetAccessTokenProfileUrl) {
+      if (provider.profileUrl) {
+        url = provider.profileUrl + '?access_token=' + accessToken
+      }
+    }
 
     // This line is required for Twitch
     headers['Client-ID'] = provider.clientId
