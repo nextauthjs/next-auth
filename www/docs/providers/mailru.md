@@ -1,5 +1,5 @@
 ---
-id: mailru
+id: mail.ru
 title: Mail.ru
 ---
 
