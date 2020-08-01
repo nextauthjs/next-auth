@@ -24,6 +24,7 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 * [Google](/providers/google)
 * [IdentityServer4](/providers/identity-server4)
 * [LinkedIn](/providers/LinkedIn)
+* [Mail.ru](/providers/MailRu)
 * [Mixer](/providers/Mixer)
 * [Okta](/providers/Okta)
 * [Slack](/providers/slack)
@@ -218,7 +219,7 @@ The Credentials provider can only be used if JSON Web Tokens are enabled for ses
 :::
 
 <!-- React Image Component -->
-export const Image = ({ children, src, alt = '' }) => ( 
+export const Image = ({ children, src, alt = '' }) => (
   <div
     style={{
       padding: '0.2rem',
