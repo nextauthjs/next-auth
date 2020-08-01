@@ -53,11 +53,16 @@ export interface ProviderBaseConfig {
     type: string;
 }
 
-export interface ProviderEmailConfig extends ProviderEmailOptions, ProviderBaseConfig { }
+export interface ProviderEmailConfig extends ProviderEmailOptions, ProviderBaseConfig { 
+    type: "email"
+}
 
-export interface ProviderCredentialsConfig extends ProviderCredentialsOptions, ProviderBaseConfig { }
+export interface ProviderCredentialsConfig extends ProviderCredentialsOptions, ProviderBaseConfig { 
+    type: "credentials"
+}
 
 export interface ProviderOAuthConfig extends ProviderBaseConfig {
+    type: "oauth",
     version: string;
     params?: Record<string, string>;
     scope?: string;
@@ -89,7 +94,7 @@ export function isCredentialsProvider(obj: ProviderReturnConfig): obj is Provide
  * @param obj 
  */
 export function isOAuthProvider(obj: ProviderReturnConfig): obj is ProviderOAuthConfig {
-    return obj && obj.type === 'oauth2';
+    return obj && obj.type === 'oauth';
 }
 
 /**
