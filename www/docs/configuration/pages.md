@@ -27,7 +27,7 @@ To add a custom login page, for example. You can use the `pages` option:
 
 In order to get the available authentication providers and the URLs to use for them, you can make a request to the API endpoint `/api/auth/providers`:
 
-```jsx title="pages/auth/signin"
+```jsx title="pages/api/auth/signin"
 import React from 'react'
 import { providers, signIn } from 'next-auth/client'
 
@@ -54,7 +54,7 @@ export async function getInitalProps(context) {
 
 If you create a custom sign in form for email sign in, you will need to submit both fields for the **email** address and **csrfToken** from **/api/auth/csrf** in a POST request to **/api/auth/signin/email**.
 
-```jsx title="pages/auth/email-signin"
+```jsx title="pages/api/auth/email-signin"
 import React from 'react'
 import { csrfToken } from 'next-auth/client'
 
@@ -88,7 +88,7 @@ signIn('email', { email: 'jsmith@example.com' })
 
 If you create a sign in form for credentials based authenticaiton, you will needt to pass a **csrfToken** from **/api/auth/csrf** in a POST request to **/api/auth/callback/credentials**.
 
-```jsx title="pages/auth/credentials-signin"
+```jsx title="pages/api/auth/credentials-signin"
 import React from 'react'
 import { csrfToken } from 'next-auth/client'
 
