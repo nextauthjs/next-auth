@@ -17,9 +17,18 @@
  */
 const signIn = async (profile, account, metadata) => {
   const isAllowedToSignIn = true
+  let someCondition = false
+
   if (isAllowedToSignIn) {
     return Promise.resolve(true)
   } else {
+    if (someCondition) {
+      return {
+        success: false,
+        message: 'You were not authenticated because of some reason!'
+      }
+    }
+
     return Promise.resolve(false)
   }
 }
