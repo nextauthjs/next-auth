@@ -14,21 +14,19 @@ If you want to pass data such as an Access Token or User ID to the browser when 
 You can specify a handler for any of the callbacks below.
 
 ```js title="pages/api/auth/[...nextauth].js"
-...
-  callbacks: {
-    signIn: async (user, account, profile) => {
-      return Promise.resolve(true)
-    },
-    redirect: async (url, baseUrl) => {
-      return Promise.resolve(baseUrl)
-    },
-    session: async (session, user) => {
-      return Promise.resolve(session)
-    },
-    jwt: async (token, user, account, profile, isNewUser) => {
-      return Promise.resolve(token)
-    }
-...
+callbacks: {
+  signIn: async (user, account, profile) => {
+    return Promise.resolve(true)
+  },
+  redirect: async (url, baseUrl) => {
+    return Promise.resolve(baseUrl)
+  },
+  session: async (session, user) => {
+    return Promise.resolve(session)
+  },
+  jwt: async (token, user, account, profile, isNewUser) => {
+    return Promise.resolve(token)
+  }
 }
 ```
 
