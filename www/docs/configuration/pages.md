@@ -43,7 +43,7 @@ export default ({ providers }) => {
   )
 }
 
-export async function getInitalProps(context) {
+export async function getInitialProps(context) {
   return {
     providers: await providers(context)
   }
@@ -71,7 +71,7 @@ export default ({ csrfToken }) => {
   )
 }
 
-export async function getInitalProps(context) {
+export async function getInitialProps(context) {
   return {
     csrfToken: await csrfToken(context)
   }
@@ -109,7 +109,7 @@ export default ({ csrfToken }) => {
   )
 }
 
-export async function getInitalProps(context) {
+export async function getInitialProps(context) {
   return {
     csrfToken: await csrfToken(context)
   }
