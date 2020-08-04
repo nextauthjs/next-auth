@@ -31,7 +31,7 @@ In order to get the available authentication providers and the URLs to use for t
 import React from 'react'
 import { providers, signIn } from 'next-auth/client'
 
-export default ({ providers }) => {
+export default function SignIn({ providers }) {
   return (
     <>
       {Object.values(providers).map(provider => (
@@ -43,7 +43,7 @@ export default ({ providers }) => {
   )
 }
 
-export async function getInitalProps(context) {
+SignIn.getInitialProps = async (context) => {
   return {
     providers: await providers(context)
   }
