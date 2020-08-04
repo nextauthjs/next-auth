@@ -1,3 +1,4 @@
+import { randomBytes } from 'crypto'
 import nodemailer from 'nodemailer'
 import logger from '../lib/logger'
 
@@ -17,10 +18,13 @@ export default (options) => {
     },
     from: 'NextAuth <no-reply@example.com>',
     maxAge: 24 * 60 * 60, // How long email links are valid for (default 24h)
+    generateVerificationToken,
     sendVerificationRequest,
     ...options
   }
 }
+
+const generateVerificationToken = () => randomBytes(32).toString('hex')
 
 const sendVerificationRequest = ({ identifier: email, url, baseUrl, provider }) => {
   return new Promise((resolve, reject) => {
