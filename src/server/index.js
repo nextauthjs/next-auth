@@ -52,8 +52,16 @@ export default async (req, res, userSuppliedOptions) => {
     // Parse database / adapter
     let adapter
     if (userSuppliedOptions.adapter) {
-      // If adapter is provided, use it (advanced usage, overrides database)
-      adapter = userSuppliedOptions.adapter
+      // If adapter is provided, use it
+      adapter =
+        typeof userSuppliedOptions.adapter.getAdapter === "function" // 
+          ? userSuppliedOptions.adapter // ready to use 
+          : typeof userSuppliedOptions.adapter === "function"
+            ? userSuppliedOptions.adapter(userSuppliedOptions.database)
+            : undefined; // needs to be built
+      if(!adapter){
+        logger.warn('NEXTAUTH_ADAPTER', `Invalid Adapter: Expected "function" instead of "${typeof userSuppliedOptions.adapter}"`)
+      }
     } else if (userSuppliedOptions.database) {
       // If database URI or config object is provided, use it (simple usage)
       adapter = adapters.Default(userSuppliedOptions.database)
