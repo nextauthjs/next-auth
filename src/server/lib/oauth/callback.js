@@ -253,7 +253,7 @@ async function _getOAuthAccessToken (code, provider, callback) {
 
 // Ported from https://github.com/ciaranj/node-oauth/blob/a7f8a1e21c362eb4ed2039431fb9ac2ae749f26a/lib/oauth2.js
 function _get (provider, accessToken, callback) {
-  const url = provider.profileUrl
+  let url = provider.profileUrl
   const headers = provider.headers || {}
   const setGetAccessTokenProfileUrl = provider.setGetAccessTokenProfileUrl !== null ? provider.setGetAccessTokenProfileUrl : true
 
@@ -262,8 +262,8 @@ function _get (provider, accessToken, callback) {
 
     // Mail.ru requires 'access_token' as URL request parameter
     if (setGetAccessTokenProfileUrl) {
-      if (provider.profileUrl) {
-        url = provider.profileUrl + '?access_token=' + accessToken
+      if (url) {
+        url = url + '?access_token=' + accessToken
       }
     }
 
