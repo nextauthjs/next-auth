@@ -51,7 +51,7 @@ const options = {
 :::
 
 :::tip
-Google also return an `email_verified` boolean property in the OAuth profile.
+Google also return an `verified_email` boolean property in the OAuth profile.
 
 You can use this property to restrict access to people with verified accounts at a particular domain.
 
@@ -61,7 +61,7 @@ const options = {
   callbacks: {
     signIn: async (user, account, profile) => {
       if (account.provider === 'google' &&
-          profile.email_verified === true &&
+          profile.verified_email === true &&
           profile.email.endsWith('@example.com')) {
         return Promise.resolve(true)
       } else {
