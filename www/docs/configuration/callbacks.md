@@ -170,7 +170,7 @@ callbacks: {
   jwt: async (token, user, account, profile, isNewUser) => {
     const isSignIn = (user) ? true : false
     // Add auth_time to token on signin in
-    if (isSignIn) { token.auth_time = new Date().toISOString() }
+    if (isSignIn) { token.auth_time = Date.now() }
     return Promise.resolve(token)
   }
 }

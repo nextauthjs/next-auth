@@ -19,3 +19,8 @@ services:
     extends:
       file: postgres.yml
       service: postgres
+
+  mssql:
+    extends:
+      file: mssql.yml
+      service: mssql
