@@ -59,9 +59,9 @@ const options = {
       return { ...session, user: { username: user.username } };
     },
   },
-  secret: process.env.NEXT_AUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
   jwt: {
-    secret: process.env.NEXT_AUTH_SECRET,
+    secret: process.env.NEXTAUTH_SECRET,
     encryption: true, // Very important to encrypt the JWT, otherwise you're leaking username+password into the browser
   },
 };
@@ -76,7 +76,7 @@ This is then passed back to any API routes and retrieved as such:
 ```js title="/pages/api/doLDAPWork.js"
 token = await jwt.getToken({
 	req,
-	secret: process.env.NEXT_AUTH_SECRET,
+	secret: process.env.NEXTAUTH_SECRET,
 });
 const {username, password} = token;
 ```
