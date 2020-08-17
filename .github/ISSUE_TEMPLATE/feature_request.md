@@ -5,8 +5,6 @@ labels: enhancement
 assignees: ''
 ---
 
-*Please stick to one distinct feature request per issue where possible and raise additional feature quests as separate issues. Try to avoid adding feature requests to existing issues in the comments of issues raised by other users.*
-
 **Summary of proposed feature**
 A clear and concise description of the feature being proposed.
 
