@@ -19,6 +19,7 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 * [Amazon Cognito](/providers/cognito)
 * [Discord](/providers/discord)
 * [Facebook](/providers/facebook)
+* [Foursquare](/providers/foursquare)
 * [GitHub](/providers/github)
 * [GitLab](/providers/gitlab)
 * [Google](/providers/google)
@@ -101,7 +102,7 @@ As an example of what this looks like, this is the the provider object returned 
   clientSecret: ''
 }
 ```
-You can replace all the options in this JSON object with the ones from your custom provider – be sure to give it a unique ID and specify the correct OAuth version - and add it to the providers option:
+You can replace all the options in this JSON object with the ones from your custom provider – be sure to give it a unique ID and specify the correct OAuth version - and add it to the providers option:
 
 ```js title="pages/api/auth/[...nextauth].js"
 ...
