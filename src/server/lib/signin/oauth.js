@@ -10,6 +10,7 @@ export default (provider, csrfToken, callback) => {
     let url = client.getAuthorizeUrl({
       redirect_uri: provider.callbackUrl,
       scope: provider.scope,
+      audience: provider.audience,
       // A hash of the NextAuth.js CSRF token is used as the state
       state: createHash('sha256').update(csrfToken).digest('hex')
     })
