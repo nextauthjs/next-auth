@@ -28,6 +28,7 @@ module.exports = {
       'providers/basecamp',
       'providers/battle.net',
       'providers/box',
+      'providers/bungie',
       'providers/cognito',
       'providers/discord',
       'providers/email',

@@ -3,6 +3,7 @@ import Apple from './apple'
 import Basecamp from './basecamp'
 import BattleNet from './battlenet'
 import Box from './box'
+import Bungie from './bungie'
 import Credentials from './credentials'
 import Cognito from './cognito'
 import Discord from './discord'
@@ -27,6 +28,7 @@ export default {
   Basecamp,
   BattleNet,
   Box,
+  Bungie,
   Credentials,
   Cognito,
   Discord,
