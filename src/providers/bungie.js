@@ -32,7 +32,7 @@ export default (options) => {
       return {
         id: user.membershipId,
         name: user.displayName,
-        image: user.profilePicturePath,
+        image: `https://www.bungie.net/${user.profilePicturePath}`,
         email: null
       }
     },
