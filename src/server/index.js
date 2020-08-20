@@ -180,7 +180,7 @@ export default async (req, res, userSuppliedOptions) => {
     // @TODO Refactor into a lib instead of passing as an option
     //       e.g. and call as redirect(req, res, url)
     const redirect = (redirectUrl) => {
-      const reponseAsJson = !!((req.body && req.body.json === 'true'))
+      const reponseAsJson = !!((req.body && String(req.body.json) === 'true'))
       if (reponseAsJson) {
         res.json({ url: redirectUrl })
       } else {
