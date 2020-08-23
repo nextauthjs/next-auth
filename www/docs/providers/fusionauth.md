@@ -7,7 +7,7 @@ title: FusionAuth
 
 https://fusionauth.io/docs/v1/tech/oauth/
 
-## Example (Single-Tenant setup)
+## Example
 
 ```js
 import Providers from `next-auth/providers`
@@ -25,25 +25,21 @@ providers: [
 ...
 ```
 
-::: warning
-
+:::warning
 If you're using multi-tenancy, you need to pass in the `tenantId` option to apply the proper theme.
-
 :::
 
 ## Instructions
 
 ### Configuration
 
-::: tip
-
-An application can be created at https://<your-fusionauth-server-url>/admin/application.
+:::tip
+An application can be created at https://your-fusionauth-server-url/admin/application.
 
 For more information, follow the [FusionAuth 5-minute setup guide](https://fusionauth.io/docs/v1/tech/5-minute-setup-guide).
-
 :::
 
-In the OAuth settings for your application, configure the following information.
+In the OAuth settings for your application, configure the following.
 * Redirect URL
   - https://localhost:3000/api/auth/callback/fusionauth
 * Enabled grants
