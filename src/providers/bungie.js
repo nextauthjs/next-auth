@@ -32,15 +32,13 @@ export default (options) => {
       return {
         id: user.membershipId,
         name: user.displayName,
-        image: `https://www.bungie.net/${user.profilePicturePath}`,
+        image: `https://www.bungie.net${user.profilePicturePath.startsWith('/') ? '' : '/'}${user.profilePicturePath}`,
         email: null
       }
     },
-
     apiKey: null,
     clientId: null,
     clientSecret: null,
-
     ...options
   }
 }
