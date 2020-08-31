@@ -9,6 +9,7 @@ import Cognito from './cognito'
 import Discord from './discord'
 import Email from './email'
 import Facebook from './facebook'
+import FusionAuth from './fusionauth'
 import GitHub from './github'
 import GitLab from './gitlab'
 import Google from './google'
@@ -34,6 +35,7 @@ export default {
   Discord,
   Email,
   Facebook,
+  FusionAuth,
   GitHub,
   GitLab,
   Google,
