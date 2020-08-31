@@ -6,7 +6,7 @@ export default (options) => {
     version: '2.0',
     scope: 'identify email',
     params: { grant_type: 'authorization_code' },
-    accessTokenUrl: 'https://discordapp.com/api/oauth2/token',
+    accessTokenUrl: 'https://discord.com/api/oauth2/token',
     authorizationUrl:
       'https://discordapp.com/api/oauth2/authorize?response_type=code&prompt=none',
     profileUrl: 'https://discordapp.com/api/users/@me',

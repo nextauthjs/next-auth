@@ -86,7 +86,7 @@ signIn('email', { email: 'jsmith@example.com' })
 
 ### Credentials Sign in
 
-If you create a sign in form for credentials based authenticaiton, you will needt to pass a **csrfToken** from **/api/auth/csrf** in a POST request to **/api/auth/callback/credentials**.
+If you create a sign in form for credentials based authentication, you will need to pass a **csrfToken** from **/api/auth/csrf** in a POST request to **/api/auth/callback/credentials**.
 
 ```jsx title="pages/auth/credentials-signin.js"
 import React from 'react'

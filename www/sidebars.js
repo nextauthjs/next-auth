@@ -33,6 +33,7 @@ module.exports = {
       'providers/email',
       'providers/credentials',
       'providers/facebook',
+      'providers/fusionauth',
       'providers/github',
       'providers/gitlab',
       'providers/google',
