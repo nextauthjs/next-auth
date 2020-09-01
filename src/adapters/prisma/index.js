@@ -78,7 +78,9 @@ const Adapter = (config) => {
     async function getUserByProviderAccountId (providerId, providerAccountId) {
       debug('GET_USER_BY_PROVIDER_ACCOUNT_ID', providerId, providerAccountId)
       try {
-        return prisma[Account].findOne({ where: { compoundId: getCompoundId(providerId, providerAccountId) } })
+        const account = await prisma[Account].findOne({ where: { compoundId: getCompoundId(providerId, providerAccountId) } })
+        if (!account) { return null }
+        return prisma[User].findOne({ where: { id: account.userId } })
       } catch (error) {
         logger.error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error)
         return Promise.reject(new Error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error))
