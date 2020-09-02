@@ -219,7 +219,7 @@ const Adapter = (config) => {
         }
 
         const { id, expires } = session
-        return prisma[Session].update({ where: { id }, data: { expires } })
+        return prisma[Session].update({ where: { id }, data: { expires: expires.toISOString() } })
       } catch (error) {
         logger.error('UPDATE_SESSION_ERROR', error)
         return Promise.reject(new Error('UPDATE_SESSION_ERROR', error))
