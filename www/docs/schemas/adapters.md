@@ -190,26 +190,26 @@ npx @prisma/cli generate
 
 You can add properties to the schema and map them to any database colum names you wish, but you should not change the base properties or types defined in the example schema.
 
-The model names themselves can be changed with a configuration option, and the datasource can be changed to anything supported by Prisma. 
+The model names themselves can be changed with a configuration option, and the datasource can be changed to anything supported by Prisma.
 
 You can use custom model names by using the `modelMapping` option (shown here with default values).
 
 ```javascript title="pages/api/auth/[...nextauth].js"
 ...
-adapter: Adapters.Prisma.Adapter({ 
+adapter: Adapters.Prisma.Adapter({
   prisma,
   modelMapping: {
     User: 'user',
     Account: 'account',
     Session: 'session',
     VerificationRequest: 'verificationRequest'
-  }  
+  }
 })
 ...
 ```
 
 :::tip
-If you experience issues with Prisma opening too many database connections opening in local development mode (e.g. due to Hot Module Reloading) you can use an approach like this when initalising the Prisma Client:
+If you experience issues with Prisma opening too many database connections in local development mode (e.g. due to Hot Module Reloading) you can use an approach like this when initalising the Prisma Client:
 
 ```javascript title="pages/api/auth/[...nextauth].js"
 let prisma
