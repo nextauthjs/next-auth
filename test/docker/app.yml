@@ -1,0 +1,34 @@
+# Start test app with local databases inside the container.
+#
+# Note: Uses Docker Compose v2 as v3 doesn't currently support extends.
+# https://docs.docker.com/compose/compose-file/compose-file-v2/
+version: '2.3'
+
+services:
+
+  app:
+    build:
+      context: ../../
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+
+  # mongo:
+  #   extends:
+  #     file: databases/mongo.yml
+  #     service: mongo
+
+  # mssql:
+  #   extends:
+  #     file: databases/mssql.yml
+  #     service: mssql
+
+  # mysql:
+  #   extends:
+  #     file: databases/mysql.yml
+  #     service: mysql
+
+  # postgres:
+  #   extends:
+  #     file: databases/postgres.yml
+  #     service: postgres
