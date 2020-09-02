@@ -10,6 +10,25 @@ services:
     build:
       context: ../../
       dockerfile: Dockerfile
+    environment:
+      # Set env vars in your current terminal or in .env in the root directory
+      - NEXTAUTH_URL=${NEXTAUTH_URL}
+      - DATABASE_URL=${DATABASE_URL}
+      - SECRET=${SECRET}
+      - JWT_SESSIONS=${JWT_SESSIONS}
+      - AUTH0_ID=${AUTH0_ID}
+      - AUTH0_SECRET=${AUTH0_SECRET}
+      - AUTH0_DOMAIN=${AUTH0_DOMAIN}
+      - FACEBOOK_ID=${FACEBOOK_ID}
+      - FACEBOOK_SECRET=${FACEBOOK_SECRET}
+      - GITHUB_ID=${GITHUB_ID}
+      - GITHUB_SECRET=${GITHUB_SECRET}      
+      - GOOGLE_ID=${GOOGLE_ID}
+      - GOOGLE_SECRET=${GOOGLE_SECRET}      
+      - TWITTER_ID=${TWITTER_ID}
+      - TWITTER_SECRET=${TWITTER_SECRET}
+      - EMAIL_SERVER=${EMAIL_SERVER}
+      - EMAIL_FROM=${EMAIL_FROM}
     ports:
       - "3000:3000"
 
