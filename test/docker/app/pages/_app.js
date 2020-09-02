@@ -18,7 +18,8 @@ export default function App ({ Component, pageProps }) {
         // windows / tabs will be updated to reflect the user is signed out.
         keepAlive: 0
       }}
-      session={pageProps.session} >
+      session={pageProps.session}
+    >
       <Component {...pageProps} />
     </Provider>
   )
