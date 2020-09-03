@@ -19,6 +19,8 @@
     "test:db:postgres": "node test/postgres.js",
     "test:db:mongodb": "node test/mongodb.js",
     "test:db:mssql": "node test/mssql.js",
+    "test:e2e:run": "cypress run",
+    "test:e2e:dev": "cypress open",
     "db:start": "docker-compose -f test/docker/docker-compose.yml up -d",
     "db:start:mongo": "docker-compose -f test/docker/mongo.yml up -d",
     "db:start:mysql": "docker-compose -f test/docker/mysql.yml up -d",
@@ -73,15 +75,18 @@
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
+    "@testing-library/cypress": "^6.0.0",
     "autoprefixer": "^9.7.6",
     "babel-preset-preact": "^2.0.0",
     "cssnano": "^4.1.10",
+    "cypress": "^4.8.0",
     "mongodb": "^3.5.9",
     "mysql": "^2.18.1",
     "mssql": "^6.2.1",
     "pg": "^8.2.1",
     "postcss-cli": "^7.1.1",
     "postcss-nested": "^4.2.1",
-    "standard": "^14.3.3"
+    "standard": "^14.3.3",
+    "start-server-and-test": "^1.11.0"
   }
 }
