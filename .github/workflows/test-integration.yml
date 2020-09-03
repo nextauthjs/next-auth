@@ -1,4 +1,4 @@
-name: Integration Test
+name: Integration test
 
 on:
   push:
@@ -7,29 +7,31 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
-
+  test:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [10.x]
+        node-version: [12.x]
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - run: npm run build
-    - run: npm test
-    - run: npm run test:app:start
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    # https://www.cypress.io/blog/2019/11/20/drastically-simplify-your-testing-with-cypress-github-action/
-    - name: Cypress run
-      uses: cypress-io/github-action@v1
-      with:
-        start: npm run test:e2e:run
+      # Install packages, build library, start test app in Docker container
+      - run: npm ci
+      - run: npm run build
+      - run: npm run test:app:start
 
-    - run: npm run test:app:stop
+      # Run end-to-end integration tests using Cypress
+      # https://www.cypress.io/blog/2019/11/20/drastically-simplify-your-testing-with-cypress-github-action/
+      - name: Cypress tests
+        uses: cypress-io/github-action@v1
+        with:
+          start: npm run test:e2e:run
+
+      # Stop test app in Docker container
+      - run: npm run test:app:stop
