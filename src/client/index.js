@@ -1,176 +1,289 @@
-// fetch() is built in to Next.js 9.4 (you can use a polyfill if using an older version)
+/// Note: fetch() is built in to Next.js 9.4
+//
+// Note about signIn() and signOut() methods:
+//
+// On signIn() and signOut() we pass 'json: true' to request a response in JSON
+// instead of HTTP as redirect URLs on other domains are not returned to
+// requests made using the fetch API in the browser, and we need to ask the API
+// to return the response as a JSON object (the end point still defaults to
+// returning an HTTP response with a redirect for non-JavaScript clients).
+//
+// We use HTTP POST requests with CSRF Tokens to protect against CSRF attacks.
+
 /* global fetch:false */
 import { useState, useEffect, useContext, createContext, createElement } from 'react'
 import logger from '../lib/logger'
+import parseUrl from '../lib/parse-url'
 
-// Note: In calls to fetch() from universal methods, all cookies are passed
-// through from the browser, when the server makes the HTTP request, so that
-// it can authenticate as the browser.
+// This behaviour mirrors the default behaviour for getting the site name that
+// happens server side in server/index.js
+// 1. An empty value is legitimate when the code is being invoked client side as
+//    relative URLs are valid in that context and so defaults to empty.
+// 2. When invoked server side the value is picked up from an environment
+//    variable and defaults to 'http://localhost:3000'.
+const __NEXTAUTH = {
+  baseUrl: parseUrl(process.env.NEXTAUTH_URL || process.env.VERCEL_URL).baseUrl,
+  basePath: parseUrl(process.env.NEXTAUTH_URL).basePath,
+  keepAlive: 0, // 0 == disabled (don't send); 60 == send every 60 seconds
+  clientMaxAge: 0, // 0 == disabled (only use cache); 60 == sync if last checked > 60 seconds ago
+  // Properties starting with _ are used for tracking internal app state
+  _clientLastSync: 0, // used for timestamp since last sycned (in seconds)
+  _clientSyncTimer: null, // stores timer for poll interval
+  _eventListenersAdded: false, // tracks if event listeners have been added,
+  _clientSession: undefined, // stores last session response from hook,
+  // Generate a unique ID to make it possible to identify when a message
+  // was sent from this tab/window so it can be ignored to avoid event loops.
+  _clientId: Math.random().toString(36).substring(2) + Date.now().toString(36),
+  // Used to store to function export by getSession() hook
+  _getSession: () => {}
+}
 
-// These can be overridden with NEXTAUTH_ env vars in next.config.js
-// e.g. process.env.NEXTAUTH_SITE
-const NEXTAUTH_DEFAULT_BASE_URL_COOKIE_NAME = 'next-auth.base-url'
-const NEXTAUTH_DEFAULT_SITE = ''
-const NEXTAUTH_DEFAULT_BASE_PATH = '/api/auth'
-const NEXTAUTH_DEFAULT_CLIENT_MAXAGE = 0 // e.g. 0 == disabled, 60 == 60 seconds
+// Add event listners on load
+if (typeof window !== 'undefined') {
+  if (__NEXTAUTH._eventListenersAdded === false) {
+    __NEXTAUTH._eventListenersAdded = true
 
-let NEXTAUTH_EVENT_LISTENER_ADDED = false
+    // Listen for storage events and update session if event fired from
+    // another window (but suppress firing another event to avoid a loop)
+    window.addEventListener('storage', async (event) => {
+      if (event.key === 'nextauth.message') {
+        const message = JSON.parse(event.newValue)
+        if (message.event && message.event === 'session' && message.data) {
+          // Ignore storage events fired from the same window that created them
+          if (__NEXTAUTH._clientId === message.clientId) {
+            return
+          }
+
+          // Fetch new session data but pass 'true' to it not to fire an event to
+          // avoid an infinite loop.
+          //
+          // Note: We could pass session data through and do something like
+          // `setData(message.data)` but that can cause problems depending
+          // on how the session object is being used in the client; it is
+          // more robust to have each window/tab fetch it's own copy of the
+          // session object rather than share it across instances.
+          await __NEXTAUTH._getSession({ event: 'storage' })
+        }
+      }
+    })
+
+    // Listen for window focus/blur events
+    window.addEventListener('focus', async (event) => __NEXTAUTH._getSession({ event: 'focus' }))
+    window.addEventListener('blur', async (event) => __NEXTAUTH._getSession({ event: 'blur' }))
+  }
+}
+
+// Method to set options. The documented way is to use the provider, but this
+// method is being left in as an alternative, that will be helpful if/when we
+// expose a vanilla JavaScript version that doesn't depend on React.
+const setOptions = ({
+  baseUrl,
+  basePath,
+  clientMaxAge,
+  keepAlive
+} = {}) => {
+  if (baseUrl) { __NEXTAUTH.baseUrl = baseUrl }
+  if (basePath) { __NEXTAUTH.basePath = basePath }
+  if (clientMaxAge) { __NEXTAUTH.clientMaxAge = clientMaxAge }
+  if (keepAlive) {
+    __NEXTAUTH.keepAlive = keepAlive
+
+    if (typeof window !== 'undefined' && keepAlive > 0) {
+      // Clear existing timer (if there is one)
+      if (__NEXTAUTH._clientSyncTimer !== null) { clearTimeout(__NEXTAUTH._clientSyncTimer) }
+
+      // Set next timer to trigger in number of seconds
+      __NEXTAUTH._clientSyncTimer = setTimeout(async () => {
+        // Only invoke keepalive when a session exists
+        if (__NEXTAUTH._clientSession) {
+          await __NEXTAUTH._getSession({ event: 'timer' })
+        }
+      }, keepAlive * 1000)
+    }
+  }
+}
 
 // Universal method (client + server)
-const getSession = async ({ req } = {}) => {
-  const baseUrl = _baseUrl({ req })
-  const options = req ? { headers: { cookie: req.headers.cookie } } : {}
-  const session = await _fetchData(`${baseUrl}/session`, options)
-  _sendMessage({ event: 'session', data: { triggeredBy: 'getSession' } })
+const getSession = async ({ req, ctx, triggerEvent = true } = {}) => {
+  // If passed 'appContext' via getInitialProps() in _app.js then get the req
+  // object from ctx and use that for the req value to allow getSession() to
+  // work seemlessly in getInitialProps() on server side pages *and* in _app.js.
+  if (!req && ctx && ctx.req) { req = ctx.req }
+
+  const baseUrl = _apiBaseUrl()
+  const fetchOptions = req ? { headers: { cookie: req.headers.cookie } } : {}
+  const session = await _fetchData(`${baseUrl}/session`, fetchOptions)
+  if (triggerEvent) {
+    _sendMessage({ event: 'session', data: { trigger: 'getSession' } })
+  }
   return session
 }
 
 // Universal method (client + server)
-const getProviders = async ({ req } = {}) => {
-  const baseUrl = _baseUrl({ req })
-  const options = req ? { headers: { cookie: req.headers.cookie } } : {}
-  return _fetchData(`${baseUrl}/providers`, options)
+const getCsrfToken = async ({ req, ctx } = {}) => {
+  // If passed 'appContext' via getInitialProps() in _app.js then get the req
+  // object from ctx and use that for the req value to allow getCsrfToken() to
+  // work seemlessly in getInitialProps() on server side pages *and* in _app.js.
+  if (!req && ctx && ctx.req) { req = ctx.req }
+
+  const baseUrl = _apiBaseUrl()
+  const fetchOptions = req ? { headers: { cookie: req.headers.cookie } } : {}
+  const data = await _fetchData(`${baseUrl}/csrf`, fetchOptions)
+  return data && data.csrfToken ? data.csrfToken : null
 }
 
-// Universal method (client + server)
-const getCsrfToken = async ({ req } = {}) => {
-  const baseUrl = _baseUrl({ req })
-  const options = req ? { headers: { cookie: req.headers.cookie } } : {}
-  const data = await _fetchData(`${baseUrl}/csrf`, options)
-  return data.csrfToken
+// Universal method (client + server); does not require request headers
+const getProviders = async () => {
+  const baseUrl = _apiBaseUrl()
+  return _fetchData(`${baseUrl}/providers`)
 }
 
 // Context to store session data globally
 const SessionContext = createContext()
 
 // Client side method
-// Hook to access the session data stored in the context
 const useSession = (session) => {
+  // Try to use context if we can
   const value = useContext(SessionContext)
-  // If we have no Provider in the tree we call the actual hook for fetching the session
+
+  // If we have no Provider in the tree, call the actual hook
   if (value === undefined) {
-    return useSessionData(session)
+    return _useSessionHook(session)
   }
 
   return value
 }
 
 // Internal hook for getting session from the api.
-const useSessionData = (session) => {
-  const clientMaxAge = (process.env.NEXTAUTH_CLIENT_MAXAGE || NEXTAUTH_DEFAULT_CLIENT_MAXAGE) * 1000
-
+const _useSessionHook = (session) => {
   const [data, setData] = useState(session)
   const [loading, setLoading] = useState(true)
-  const _getSession = async (sendEvent = true) => {
+  const _getSession = async ({ event = null } = {}) => {
     try {
-      setData(await getSession())
+      const triggredByEvent = (event !== null)
+      const triggeredByStorageEvent = !!((event && event === 'storage'))
+
+      const clientMaxAge = __NEXTAUTH.clientMaxAge
+      const clientLastSync = parseInt(__NEXTAUTH._clientLastSync)
+      const currentTime = Math.floor(new Date().getTime() / 1000)
+      const clientSession = __NEXTAUTH._clientSession
+
+      // Updates triggered by a storage event *always* trigger an update and we
+      // always update if we don't have any value for the current session state.
+      if (triggeredByStorageEvent === false && clientSession !== undefined) {
+        if (clientMaxAge === 0 && triggredByEvent !== true) {
+          // If there is no time defined for when a session should be considered
+          // stale, then it's okay to use the value we have until an event is
+          // triggered which updates it.
+          return
+        } else if (clientMaxAge > 0 && clientSession === null) {
+          // If the client doesn't have a session then we don't need to call
+          // the server to check if it does (if they have signed in via another
+          // tab or window that will come through as a triggeredByStorageEvent
+          // event and will skip this logic)
+          return
+        } else if (clientMaxAge > 0 && currentTime < (clientLastSync + clientMaxAge)) {
+          // If the session freshness is within clientMaxAge then don't request
+          // it again on this call (avoids too many invokations).
+          return
+        }
+      }
+
+      if (clientSession === undefined) { __NEXTAUTH._clientSession = null }
+
+      // Update clientLastSync before making response to avoid repeated
+      // invokations that would otherwise be triggered while we are still
+      // waiting for a response.
+      __NEXTAUTH._clientLastSync = Math.floor(new Date().getTime() / 1000)
+
+      // If this call was invoked via a storage event (i.e. another window) then
+      // tell getSession not to trigger an event when it calls to avoid an
+      // infinate loop.
+      const triggerEvent = (triggeredByStorageEvent === false)
+      const newClientSessionData = await getSession({ triggerEvent })
+
+      // Save session state internally, just so we can track that we've checked
+      // if a session exists at least once.
+      __NEXTAUTH._clientSession = newClientSessionData
+
+      setData(newClientSessionData)
       setLoading(false)
-
-      // Send event to trigger other tabs to update (unless sendEvent is false)
-      if (sendEvent) {
-        _sendMessage({ event: 'session', data: { triggeredBy: 'useSessionData' } })
-      }
-
-      if (typeof window !== 'undefined' && NEXTAUTH_EVENT_LISTENER_ADDED === false) {
-        NEXTAUTH_EVENT_LISTENER_ADDED = true
-        window.addEventListener('storage', async (event) => {
-          if (event.key === 'nextauth.message') {
-            const message = JSON.parse(event.newValue)
-            if (message.event && message.event === 'session' && message.data) {
-              // Fetch new session data but tell it not to fire an event to
-              // avoid an infinate loop.
-              //
-              // Note: We could pass session data through and do something like
-              // `setData(message.data)` but that causes problems depending on
-              // how the session object is being used and may expose session
-              // data to 3rd party scripts, it's safer to update the session
-              // this way.
-              await _getSession(false)
-            }
-          }
-        })
-      }
-
-      // If CLIENT_MAXAGE is greater than zero, trigger auto re-fetching session
-      if (clientMaxAge > 0) {
-        setTimeout(async (session) => {
-          await _getSession()
-        }, clientMaxAge)
-      }
     } catch (error) {
       logger.error('CLIENT_USE_SESSION_ERROR', error)
     }
   }
-  useEffect(() => { _getSession() }, [])
+
+  __NEXTAUTH._getSession = _getSession
+
+  useEffect(() => {
+    _getSession()
+  })
   return [data, loading]
 }
 
 // Client side method
-const signin = async (provider, args) => {
+const signIn = async (provider, args = {}) => {
+  const baseUrl = _apiBaseUrl()
   const callbackUrl = (args && args.callbackUrl) ? args.callbackUrl : window.location
-
-  if (!provider) {
-    // Redirect to sign in page if no provider specified
-    const baseUrl = _baseUrl()
-    window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`
-    return
-  }
-
   const providers = await getProviders()
-  if (!providers[provider]) {
+
+  // Redirect to sign in page if no valid provider specified
+  if (!provider || !providers[provider]) {
     // If Provider not recognized, redirect to sign in page
-    const baseUrl = _baseUrl()
     window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`
-  } else if (providers[provider].type === 'oauth') {
-    // If is an OAuth provider, redirect to providers[provider].signinUrl
-    window.location = `${providers[provider].signinUrl}?callbackUrl=${encodeURIComponent(callbackUrl)}`
   } else {
-    // If is any other provider type, POST to providers[provider].signinUrl (with CSRF Token)
-    const options = {
+    const signInUrl = (providers[provider].type === 'credentials')
+      ? `${baseUrl}/callback/${provider}`
+      : `${baseUrl}/signin/${provider}`
+    // If is any other provider type, POST to provider URL with CSRF Token,
+    // callback URL and any other parameters supplied.
+    const fetchOptions = {
       method: 'post',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       body: _encodedForm({
+        ...args,
         csrfToken: await getCsrfToken(),
         callbackUrl: callbackUrl,
-        ...args
+        json: true
       })
     }
-    const res = await fetch(providers[provider].signinUrl, options)
-    window.location = res.url ? res.url : callbackUrl
+    const res = await fetch(signInUrl, fetchOptions)
+    const data = await res.json()
+    window.location = data.url ? data.url : callbackUrl
   }
 }
 
 // Client side method
-const signout = async (args) => {
+const signOut = async (args = {}) => {
   const callbackUrl = (args && args.callbackUrl) ? args.callbackUrl : window.location
 
-  const baseUrl = _baseUrl()
-  const options = {
+  const baseUrl = _apiBaseUrl()
+  const fetchOptions = {
     method: 'post',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     },
     body: _encodedForm({
       csrfToken: await getCsrfToken(),
-      callbackUrl: callbackUrl
+      callbackUrl: callbackUrl,
+      json: true
     })
   }
-  const res = await fetch(`${baseUrl}/signout`, options)
-
-  _sendMessage({ event: 'session', data: { triggeredBy: 'signout' } })
-
-  window.location = res.url ? res.url : callbackUrl
+  const res = await fetch(`${baseUrl}/signout`, fetchOptions)
+  const data = await res.json()
+  _sendMessage({ event: 'session', data: { trigger: 'signout' } })
+  window.location = data.url ? data.url : callbackUrl
 }
 
 // Provider to wrap the app in to make session data available globally
-const Provider = ({ children, session }) => {
-  const value = useSession(session)
-  return createElement(SessionContext.Provider, { value }, children)
+const Provider = ({ children, session, options }) => {
+  setOptions(options)
+  return createElement(SessionContext.Provider, { value: useSession(session) }, children)
 }
 
-const _fetchData = async (url, options) => {
+const _fetchData = async (url, options = {}) => {
   try {
     const res = await fetch(url, options)
     const data = await res.json()
@@ -181,42 +294,16 @@ const _fetchData = async (url, options) => {
   }
 }
 
-const _baseUrl = ({ req } = {}) => {
-  if (req) {
-    // Server Side
-    // If we have a 'req' object are running sever side, so we should grab the
-    // base URL from cookie that is set by the API route - which is how config
-    // is shared automatically between the API route and the client.
-    const cookies = req ? _parseCookies(req.headers.cookie) : null
-    const baseUrlCookieName = process.env.NEXTAUTH_BASE_URL_COOKIE_NAME || NEXTAUTH_DEFAULT_BASE_URL_COOKIE_NAME
-    const cookieValue = cookies[`__Secure-${baseUrlCookieName}`] || cookies[baseUrlCookieName]
-    const [baseUrl] = cookieValue ? cookieValue.split('|') : [null]
-    return baseUrl
-  } else {
-    // Client Side
-    // Note: 'site' is empty by default; URL is normally relative.
-    const site = process.env.NEXTAUTH_SITE || NEXTAUTH_DEFAULT_SITE
-    const basePath = process.env.NEXTAUTH_BASE_PATH || NEXTAUTH_DEFAULT_BASE_PATH
-    return `${site}${basePath}`
-  }
-}
+const _apiBaseUrl = () => {
+  if (typeof window === 'undefined') {
+    // NEXTAUTH_URL should always be set explicitly to support server side calls - log warning if not set
+    if (!process.env.NEXTAUTH_URL) { logger.warn('NEXTAUTH_URL', 'NEXTAUTH_URL environment variable not set') }
 
-// Adapted from https://github.com/felixfong227/simple-cookie-parser/blob/master/index.js
-const _parseCookies = (string) => {
-  if (!string) { return {} }
-  try {
-    const object = {}
-    const a = string.split(';')
-    for (let i = 0; i < a.length; i++) {
-      const b = a[i].split('=')
-      if (b[0].length > 1 && b[1]) {
-        object[b[0].trim()] = decodeURIComponent(b[1])
-      }
-    }
-    return object
-  } catch (error) {
-    logger.error('CLIENT_COOKIE_PARSE_ERROR', error)
-    return {}
+    // Return absolute path when called server side
+    return `${__NEXTAUTH.baseUrl}${__NEXTAUTH.basePath}`
+  } else {
+    // Return relative path when called client side
+    return __NEXTAUTH.basePath
   }
 }
 
@@ -228,23 +315,29 @@ const _encodedForm = (formData) => {
 
 const _sendMessage = (message) => {
   if (typeof localStorage !== 'undefined') {
-    localStorage.setItem('nextauth.message', JSON.stringify(message)) // eslint-disable-line
+    const timestamp = Math.floor(new Date().getTime() / 1000)
+    localStorage.setItem('nextauth.message', JSON.stringify({ ...message, clientId: __NEXTAUTH._clientId, timestamp })) // eslint-disable-line
   }
 }
 
 export default {
-  // Some methods are exported with more than one name. This provides
-  // flexibility over how they can be invoked and compatibility with earlier
-  // releases (going back to v1 and earlier v2 beta releases).
-  // e.g. NextAuth.session() or const { getSession } from 'next-auth/client'
+  getSession,
+  getCsrfToken,
+  getProviders,
+  useSession,
+  signIn,
+  signOut,
+  Provider,
+  /* Deprecated / unsupported features below this line */
+  // Use setOptions() set options globally in the app.
+  setOptions,
+  // Some methods are exported with more than one name. This provides some
+  // flexibility over how they can be invoked and backwards compatibility
+  // with earlier releases.
+  options: setOptions,
   session: getSession,
   providers: getProviders,
   csrfToken: getCsrfToken,
-  getSession,
-  getProviders,
-  getCsrfToken,
-  useSession,
-  Provider,
-  signin,
-  signout
+  signin: signIn,
+  signout: signOut
 }

@@ -1,51 +1,45 @@
 // Perform transforms on SQL models so they can be used with other databases
 import { SnakeCaseNamingStrategy, CamelCaseNamingStrategy } from './naming-strategies'
 
-const postgres = (models, options) => {
+const postgresTransform = (models, options) => {
   // Apply snake case naming strategy for Postgres databases
   if (!options.namingStrategy) {
     options.namingStrategy = new SnakeCaseNamingStrategy()
   }
 
-  // Only transforms models that are not custom models
-  const { models: customModels = {} } = options
-
   // For Postgres we need to use the `timestamp with time zone` type
   // aka `timestamptz` to store timestamps correctly in UTC.
-  if (!customModels.User) {
-    for (const column in models.User.schema.columns) {
-      if (models.User.schema.columns[column].type === 'timestamp') {
-        models.User.schema.columns[column].type = 'timestamptz'
-      }
-    }
-  }
-
-  if (!customModels.Account) {
-    for (const column in models.Account.schema.columns) {
-      if (models.Account.schema.columns[column].type === 'timestamp') {
-        models.Account.schema.columns[column].type = 'timestamptz'
-      }
-    }
-  }
-
-  if (!customModels.Session) {
-    for (const column in models.Session.schema.columns) {
-      if (models.Session.schema.columns[column].type === 'timestamp') {
-        models.Session.schema.columns[column].type = 'timestamptz'
-      }
-    }
-  }
-
-  if (!customModels.VerificationRequest) {
-    for (const column in models.VerificationRequest.schema.columns) {
-      if (models.VerificationRequest.schema.columns[column].type === 'timestamp') {
-        models.VerificationRequest.schema.columns[column].type = 'timestamptz'
+  for (const model in models) {
+    for (const column in models[model].schema.columns) {
+      if (models[model].schema.columns[column].type === 'timestamp') {
+        models[model].schema.columns[column].type = 'timestamptz'
       }
     }
   }
 }
 
-const mongodb = (models, options) => {
+const mysqlTransform = (models, options) => {
+  // Apply snake case naming strategy for MySQL databases
+  if (!options.namingStrategy) {
+    options.namingStrategy = new SnakeCaseNamingStrategy()
+  }
+
+  // For MySQL we default milisecond precision of all timestamps to 6 digits.
+  // This ensures all timestamp fields use the same precision (unless explictly
+  // configured otherwise) and that values in MySQL match those Postgress.
+  for (const model in models) {
+    for (const column in models[model].schema.columns) {
+      if (models[model].schema.columns[column].type === 'timestamp') {
+        // If precision explictly set (including to null) don't change it
+        if (typeof models[model].schema.columns[column].precision === 'undefined') {
+          models[model].schema.columns[column].precision = 6
+        }
+      }
+    }
+  }
+}
+
+const mongodbTransform = (models, options) => {
   // A CamelCase naming strategy is used for all document databases
   if (!options.namingStrategy) {
     options.namingStrategy = new CamelCaseNamingStrategy()
@@ -65,55 +59,37 @@ const mongodb = (models, options) => {
   //    see the result of queries like find() is wrong. You will see the same
   //    Object ID in every property of type Object ID in the result (but the
   //    database will look fine); so use `type: 'objectId'` for them instead.
-
-  // Only transforms models that are not custom models
-  const { models: customModels = {} } = options
-
-  if (!customModels.User) {
-    delete models.User.schema.columns.id.type
-    models.User.schema.columns.id.objectId = true
-
-    // The options `unique: true` and `nullable: true` don't work the same
-    // with MongoDB as they do with SQL databases like MySQL and Postgres,
-    // we also to add sparce to the index. This still doesn't allow multiple
-    // *null* values, but does allow some records to omit the property.
-    delete models.User.schema.columns.email.unique
-    models.User.schema.indices = [
-      {
-        name: 'email',
-        unique: true,
-        sparse: true,
-        columns: ['email']
-      }
-    ]
+  for (const model in models) {
+    delete models[model].schema.columns.id.type
+    models[model].schema.columns.id.objectId = true
   }
 
-  if (!customModels.Account) {
-    delete models.Account.schema.columns.id.type
-    models.Account.schema.columns.id.objectId = true
-    models.Account.schema.columns.userId.type = 'objectId'
-  }
+  // Ensure reference to User ID in other models are Object IDs
+  // This needs to done for any properties that reference another entity by ID
+  models.Account.schema.columns.userId.type = 'objectId'
+  models.Session.schema.columns.userId.type = 'objectId'
 
-  if (!customModels.Session) {
-    delete models.Session.schema.columns.id.type
-    models.Session.schema.columns.id.objectId = true
-    models.Session.schema.columns.userId.type = 'objectId'
-  }
+  // The options `unique: true` and `nullable: true` don't work the same
+  // with MongoDB as they do with SQL databases like MySQL and Postgres,
+  // we need to create a sparse index to only allow unique values, while
+  // still allowing multiple entires to omit the email address.
+  delete models.User.schema.columns.email.unique
 
-  if (!customModels.VerificationRequest) {
-    delete models.VerificationRequest.schema.columns.id.type
-    models.VerificationRequest.schema.columns.id.objectId = true
-  }
+  if (!models.User.schema.indices) { models.User.schema.indices = [] }
+
+  models.User.schema.indices.push({
+    name: 'email',
+    unique: true,
+    sparse: true,
+    columns: ['email']
+  })
 }
 
-const sqlite = (models, options) => {
+const sqliteTransform = (models, options) => {
   // Apply snake case naming strategy for SQLite databases
   if (!options.namingStrategy) {
     options.namingStrategy = new SnakeCaseNamingStrategy()
   }
-
-  // Only transforms models that are not custom models
-  const { models: customModels = {} } = options
 
   // SQLite does not support `timestamp` fields so we remap them to `datetime`
   // in all models.
@@ -123,51 +99,66 @@ const sqlite = (models, options) => {
   //
   // NB: SQLite adds 'create' and 'update' fields to allow rows, but that is
   // specific to SQLite and so we ignore that behaviour.
-  if (!customModels.User) {
-    for (const column in models.User.schema.columns) {
-      if (models.User.schema.columns[column].type === 'timestamp') {
-        models.User.schema.columns[column].type = 'datetime'
-      }
-    }
-  }
-
-  if (!customModels.Account) {
-    for (const column in models.Account.schema.columns) {
-      if (models.Account.schema.columns[column].type === 'timestamp') {
-        models.Account.schema.columns[column].type = 'datetime'
-      }
-    }
-  }
-
-  if (!customModels.Session) {
-    for (const column in models.Session.schema.columns) {
-      if (models.Session.schema.columns[column].type === 'timestamp') {
-        models.Session.schema.columns[column].type = 'datetime'
-      }
-    }
-  }
-
-  if (!customModels.VerificationRequest) {
-    for (const column in models.VerificationRequest.schema.columns) {
-      if (models.VerificationRequest.schema.columns[column].type === 'timestamp') {
-        models.VerificationRequest.schema.columns[column].type = 'datetime'
+  for (const model in models) {
+    for (const column in models[model].schema.columns) {
+      if (models[model].schema.columns[column].type === 'timestamp') {
+        models[model].schema.columns[column].type = 'datetime'
       }
     }
   }
 }
 
+const mssqlTransform = (models, options) => {
+  // Apply snake case naming strategy for SQL Server databases
+  if (!options.namingStrategy) {
+    // @TODO Add TitleCase instead as more common MSSQL convention?
+    options.namingStrategy = new SnakeCaseNamingStrategy()
+  }
+
+  // SQL Server deprecated TIMESTAMP in favor of ROWVERSION.
+  // But ROWVERSION is not what it was intended in the other adapters.
+  for (const model in models) {
+    for (const column in models[model].schema.columns) {
+      if (models[model].schema.columns[column].type === 'timestamp') {
+        models[model].schema.columns[column].type = 'datetime'
+      }
+    }
+  }
+
+  // Support UNIQUE on on User.email that allows duplicate NULL values
+  // Note: This is ANSI SQL behaviour for UNIQUE not default in SQL Server
+  delete models.User.schema.columns.email.unique
+
+  if (!models.User.schema.indices) { models.User.schema.indices = [] }
+
+  models.User.schema.indices.push({
+    name: 'email',
+    columns: ['email'],
+    unique: true,
+    where: 'email IS NOT NULL'
+  })
+}
+
 export default (config, models, options) => {
+  // @TODO Refactor into switch statement
   if ((config.type && config.type.startsWith('mongodb')) ||
       (config.url && config.url.startsWith('mongodb'))) {
-    mongodb(models, options)
+    mongodbTransform(models, options)
   } else if ((config.type && config.type.startsWith('postgres')) ||
              (config.url && config.url.startsWith('postgres'))) {
-    postgres(models, options)
+    postgresTransform(models, options)
+  } else if ((config.type && config.type.startsWith('mysql')) ||
+            (config.url && config.url.startsWith('mysql'))) {
+    mysqlTransform(models, options)
   } else if ((config.type && config.type.startsWith('sqlite')) ||
              (config.url && config.url.startsWith('sqlite'))) {
-    sqlite(models, options)
+    sqliteTransform(models, options)
+  } else if ((config.type && config.type.startsWith('mssql')) ||
+             (config.url && config.url.startsWith('mssql'))) {
+    mssqlTransform(models, options)
   } else {
-    // Apply snake case naming strategy by default for SQL databases
+    // For all other SQL databases (e.g. MySQL) apply snake case naming
+    // strategy, but otherwise use the models and schemas as they are.
     if (!options.namingStrategy) {
       options.namingStrategy = new SnakeCaseNamingStrategy()
     }

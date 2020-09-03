@@ -1,23 +1,39 @@
 module.exports = {
   title: 'NextAuth.js',
-  tagline: 'Authentication for Next.js & Serverless',
+  tagline: 'Authentication for Next.js',
   url: 'https://next-auth.js.org',
   baseUrl: '/',
   favicon: 'img/favicon.ico',
-  organizationName: 'iaincollins',
+  organizationName: 'nextauthjs',
   projectName: 'next-auth',
   themeConfig: {
+    sidebarCollapsible: true,
+    prism: {
+      theme: require('prism-react-renderer/themes/vsDark')
+    },
     navbar: {
       title: 'NextAuth.js',
       logo: {
         alt: 'NextAuth Logo',
-        src: 'img/logo/logo-flat-sm.png'
+        src: 'img/logo/logo-xs.png'
       },
       links: [
         {
           to: '/getting-started/introduction',
           activeBasePath: 'docs',
           label: 'Documentation',
+          position: 'left'
+        },
+        {
+          to: '/tutorials',
+          activeBasePath: 'docs',
+          label: 'Tutorials',
+          position: 'left'
+        },
+        {
+          to: '/faq',
+          activeBasePath: 'docs',
+          label: 'FAQ',
           position: 'left'
         },
         {
@@ -41,7 +57,6 @@ module.exports = {
     },
     */
     footer: {
-      style: 'dark',
       links: [
         {
           title: 'About NextAuth.js',
@@ -73,7 +88,7 @@ module.exports = {
           title: 'Acknowledgements',
           items: [
             {
-              label: 'Docusaurus v2 🦖',
+              label: 'Docusaurus',
               to: 'https://v2.docusaurus.io/'
             },
             {

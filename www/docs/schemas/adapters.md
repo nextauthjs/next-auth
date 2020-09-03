@@ -3,23 +3,20 @@ id: adapters
 title: Database Adapters
 ---
 
-An "*Adapter*" in NextAuth.js is the thing that connects your application to whatever database or backend system you want to use to store data for user accounts, sessions, etc.
+An **Adapter** in NextAuth.js connects your application to whatever database or backend system you want to use to store data for user accounts, sessions, etc.
 
-You do not need to specify an adapter explicltly unless you want to use advanced options such as custom models or schemas, or if you are creating a custom adapter to connect to a database that is not one of the supported datatabases.
+You do not need to specify an adapter explicitly unless you want to use advanced options such as custom models or schemas, if you want to use the Prisma adapter instead of the default TypeORM adapter, or if you are creating a custom adapter to connect to a database that is not one of the supported databases.
 
-:::tip
-*The **adapter** option is currently considered advanced usage intended for use by NextAuth.js contributors.*
-:::
+### Database Schemas
 
-## TypeORM (default adapter)
+Configure your database by creating the tables and columns to match the schema expected by NextAuth.js.
 
-NextAuth.js comes with a default adapter that uses [TypeORM](https://typeorm.io/) so that it can be used with many different databases without any further configuration, you simply add the database driver you want to use to your project and tell  NextAuth.js to use it.
+* [MySQL Schema](/schemas/mysql)
+* [Postgres Schema](/schemas/postgres)
 
-The default adapter comes with predefined models for **Users**, **Sessions**, **Account Linking** and **Verification Emails**. You can extend or replace the default models and schemas, or even provide your adapter to handle reading/writing from the database (or from multiple databases).
+## TypeORM Adapter
 
-If you have an existing database / user management system or want to use a database that isn't supported out of the box you can create and pass your own adapter to handle actions like `createAccount`, `deleteAccount`, (etc) and do not have to use the built in models.
-
-If you are using a database that is not supported out of the box, or if you want to use  NextAuth.js with an existing database, or have a more complex setup with accounts and sessions spread across different systems then you can pass your own methods to be called for user and session creation / deletion (etc).
+NextAuth.js comes with a default adapter that uses [TypeORM](https://typeorm.io/) so that it can be used with many different databases without any further configuration, you simply add the node module for the database driver you want to use to your project and pass a database connection string to NextAuth.js.
 
 The default adapter is the TypeORM adapter, the following configuration options are exactly equivalent.
 
@@ -47,178 +44,188 @@ adapter: Adapters.TypeORM.Adapter({
 })
 ```
 
-## Custom adapters
+The tutorial [Custom models with TypeORM](/tutorials/typeorm-custom-models) explains how to extend the built in models and schemas used by the TypeORM adapter. You can use these models in your own code.
 
-Using a custom adapter you can connect to any database backend or even several different databases.
+:::tip
+The `synchronize` option in TypeORM will generate SQL that exactly matches the documented schemas for MySQL and Postgres.
 
-Creating a custom adapter is considerable undertaking and will require some trial and error and some reverse engineering as it is not currently well documented. The hope and expectation is to grow both the number of included (and third party) adapters over time.
+However, it should not be enabled against production databases as may cause dataloss if the configured schema does not match the expected schema!
+:::
 
-An adapter in NextAuth.js is a function which returns an async  `getAdapter()` method, which in turn returns a Promise with a list of functions used to handle operations such as creating user, linking a user and an OAuth account or handling reading and writing sessions.
+## Prisma Adapter
 
-It uses this approach to allow database connection logic to live in the `getAdapter()` method. By calling the function just before an action needs to happen, it is possible to check database connection status and handle connecting / reconnecting to a database as required.
+You can also use NextAuth.js with [Prisma](https://www.prisma.io/docs/).
 
-### Required methods
+To use this adapter, you need to install Prisma Client and Prisma CLI:
 
-These methods are required for all sign in flows:
+```
+npm i @prisma/client
+npm add -D @prisma/cli
+```
 
-* createUser
-* getUser
-* getUserByEmail
-* getUserByProviderAccountId
-* linkAccount
-* createSession
-* getSession
-* updateSession
-* deleteSession
+Configure your NextAuth.js to use the Prisma adapter:
 
-These methods are required to support email / passwordless sign in:
+```javascript title="pages/api/auth/[...nextauth].js"
+import NextAuth from 'next-auth'
+import Providers from 'next-auth/providers'
+import Adapters from 'next-auth/adapters'
+import { PrismaClient } from '@prisma/client'
 
-* createVerificationRequest
-* getVerificationRequest
-* deleteVerificationRequest
+const prisma = new PrismaClient()
 
-### Unimplemented methods
-
-These methods will be required in a future release, but are not yet invoked:
-
-* getUserByCredentials
-* updateUser
-* deleteUser
-* unlinkAccount
-
-### Example code
-
-An example of adapter structure is shown below:
-
-```js
-const Adapter = (config, options = {}) => {
-
-  async function getAdapter (appOptions) {
-
-    async function createUser (profile) {
-      return null
-    }
-
-    async function getUser (id) {
-      return null
-    }
-
-    async function getUserByEmail (email) {
-      return null
-    }
-
-    async function getUserByProviderAccountId (
-      providerId,
-      providerAccountId
-    ) {
-      return null
-    }
-
-    async function getUserByCredentials (credentials) {
-      return null
-    }
-
-    async function updateUser (user) {
-      return null
-    }
-
-    async function deleteUser (userId) {
-      return null
-    }
-
-    async function linkAccount (
-      userId,
-      providerId,
-      providerType,
-      providerAccountId,
-      refreshToken,
-      accessToken,
-      accessTokenExpires
-    ) {
-      return null
-    }
-
-    async function unlinkAccount (
-      userId,
-      providerId,
-      providerAccountId
-    ) {
-      return null
-    }
-
-    async function createSession (user) {
-      return null
-    }
-
-    async function getSession (sessionToken) {
-      return null
-    }
-
-    async function updateSession (
-      session,
-      force
-    ) {
-      return null
-    }
-
-    async function deleteSession (sessionToken) {
-      return null
-    }
-
-    async function createVerificationRequest (
-      identifier,
-      url,
-      token,
-      secret,
-      provider
-    ) {
-      return null
-    }
-
-    async function getVerificationRequest (
-      identifier,
-      token,
-      secret,
-      provider
-    ) {
-      return null
-    }
-
-    async function deleteVerificationRequest (
-      identifier,
-      token,
-      secret,
-      provider
-    ) {
-      return null
-    }
-
-    return Promise.resolve({
-      createUser,
-      getUser,
-      getUserByEmail,
-      getUserByProviderAccountId,
-      getUserByCredentials,
-      updateUser,
-      deleteUser,
-      linkAccount,
-      unlinkAccount,
-      createSession,
-      getSession,
-      updateSession,
-      deleteSession,
-      createVerificationRequest,
-      getVerificationRequest,
-      deleteVerificationRequest
+const options = {
+  providers: [
+    Providers.Google({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET
     })
-  }
-
-  return {
-    getAdapter
-  }
+  ],
+  adapter: Adapters.Prisma.Adapter({ prisma }),
 }
 
-export default {
-  Adapter
+export default (req, res) => NextAuth(req, res, options)
+```
+
+:::tip
+While Prisma includes an experimental feature in the migration command that is able to generate SQL from a schema, creating tables and columns using the provided SQL is currently recommended instead as SQL schemas automatically generated by Prisma may differ from the recommended schemas.
+:::
+
+### Prisma Schema
+
+Create a `schema.prisma` file similar to this one:
+
+```json title="schema.prisma"
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Account {
+  id                 Int       @default(autoincrement()) @id
+  compoundId         String    @unique @map(name: "compound_id")
+  userId             Int       @map(name: "user_id")
+  providerType       String    @map(name: "provider_type")
+  providerId         String    @map(name: "provider_id")
+  providerAccountId  String    @map(name: "provider_account_id")
+  refreshToken       String?   @map(name: "refresh_token")
+  accessToken        String?   @map(name: "access_token")
+  accessTokenExpires DateTime? @map(name: "access_token_expires")
+  createdAt          DateTime  @default(now()) @map(name: "created_at")
+  updatedAt          DateTime  @default(now()) @map(name: "updated_at")
+
+  @@index([providerAccountId], name: "providerAccountId")
+  @@index([providerId], name: "providerId")
+  @@index([userId], name: "userId")
+
+  @@map(name: "accounts")
+}
+
+model Session {
+  id           Int      @default(autoincrement()) @id
+  userId       Int      @map(name: "user_id")
+  expires      DateTime
+  sessionToken String   @unique @map(name: "session_token")
+  accessToken  String   @unique @map(name: "access_token")
+  createdAt    DateTime @default(now()) @map(name: "created_at")
+  updatedAt    DateTime @default(now()) @map(name: "updated_at")
+
+  @@map(name: "sessions")
+}
+
+model User {
+  id            Int       @default(autoincrement()) @id
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime? @map(name: "email_verified")
+  image         String?
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
+
+  @@map(name: "users")
+}
+
+model VerificationRequest {
+  id         Int      @default(autoincrement()) @id
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  createdAt  DateTime  @default(now()) @map(name: "created_at")
+  updatedAt  DateTime  @default(now()) @map(name: "updated_at")
+
+  @@map(name: "verification_requests")
 }
 ```
+
+:::note
+Set the `datasource` option appropriately for your database:
+
+```json title="schema.prisma"
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+```
+
+```json title="schema.prisma"
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+```
+:::
+
+### Generate Client
+
+Once you have saved your schema, you can run the Prisma CLI to generate the Prisma Client:
+
+```
+npx @prisma/cli generate
+```
+
+### Custom Models
+
+You can add properties to the schema and map them to any database colum names you wish, but you should not change the base properties or types defined in the example schema.
+
+The model names themselves can be changed with a configuration option, and the datasource can be changed to anything supported by Prisma. 
+
+You can use custom model names by using the `modelMapping` option (shown here with default values).
+
+```javascript title="pages/api/auth/[...nextauth].js"
+...
+adapter: Adapters.Prisma.Adapter({ 
+  prisma,
+  modelMapping: {
+    User: 'user',
+    Account: 'account',
+    Session: 'session',
+    VerificationRequest: 'verificationRequest'
+  }  
+})
+...
+```
+
+:::tip
+If you experience issues with Prisma opening too many database connections opening in local development mode (e.g. due to Hot Module Reloading) you can use an approach like this when initalising the Prisma Client:
+
+```javascript title="pages/api/auth/[...nextauth].js"
+let prisma
+
+if (process.env.NODE_ENV === "production") {
+  prisma = new PrismaClient()
+} else {
+  if (!global.prisma) {
+    global.prisma = new PrismaClient()
+  }
+  prisma = global.prisma
+}
+```
+:::
+
+
+## Custom Adapter
+
+See the tutorial for [creating a database adapter](/tutorials/creating-a-database-adapter) for more information on how to create a custom adapter.

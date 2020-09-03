@@ -1,5 +1,6 @@
 import { createHash, randomBytes } from 'crypto'
 import jwt from '../lib/jwt'
+import parseUrl from '../lib/parse-url'
 import cookie from './lib/cookie'
 import callbackUrlHandler from './lib/callback-url-handler'
 import parseProviders from './lib/providers'
@@ -12,9 +13,13 @@ import callback from './routes/callback'
 import session from './routes/session'
 import pages from './pages'
 import adapters from '../adapters'
+import logger from '../lib/logger'
 
-const DEFAULT_SITE = 'http://localhost:3000'
-const DEFAULT_BASE_PATH = '/api/auth'
+// To work properly in production with OAuth providers the NEXTAUTH_URL
+// environment variable must be set.
+if (!process.env.NEXTAUTH_URL) {
+  logger.warn('NEXTAUTH_URL', 'NEXTAUTH_URL environment variable not set')
+}
 
 export default async (req, res, userSuppliedOptions) => {
   // To the best of my knowledge, we need to return a promise here
@@ -32,17 +37,17 @@ export default async (req, res, userSuppliedOptions) => {
       nextauth,
       action = nextauth[0],
       provider = nextauth[1],
-      error
+      error = nextauth[1]
     } = query
 
     const {
       csrfToken: csrfTokenFromPost
     } = body
 
-    // Allow site name, path prefix to be overriden
-    const site = userSuppliedOptions.site || DEFAULT_SITE
-    const basePath = userSuppliedOptions.basePath || DEFAULT_BASE_PATH
-    const baseUrl = `${site}${basePath}`
+    // @todo refactor all existing references to site, baseUrl and basePath
+    const parsedUrl = parseUrl(process.env.NEXTAUTH_URL || process.env.VERCEL_URL)
+    const baseUrl = parsedUrl.baseUrl
+    const basePath = parsedUrl.basePath
 
     // Parse database / adapter
     let adapter
@@ -58,7 +63,7 @@ export default async (req, res, userSuppliedOptions) => {
     // If no secret option is specified then it creates one on the fly
     // based on options passed here. A options contains unique data, such as
     // oAuth provider secrets and database credentials it should be sufficent.
-    const secret = userSuppliedOptions.secret || createHash('sha256').update(JSON.stringify(userSuppliedOptions)).digest('hex')
+    const secret = userSuppliedOptions.secret || createHash('sha256').update(JSON.stringify({ baseUrl, basePath, ...userSuppliedOptions })).digest('hex')
 
     // Use secure cookies if the site uses HTTPS
     // This being conditional allows cookies to work non-HTTPS development URLs
@@ -89,15 +94,6 @@ export default async (req, res, userSuppliedOptions) => {
           secure: useSecureCookies
         }
       },
-      baseUrl: {
-        name: `${cookiePrefix}next-auth.base-url`,
-        options: {
-          httpOnly: true,
-          sameSite: 'lax',
-          path: '/',
-          secure: useSecureCookies
-        }
-      },
       csrfToken: {
         // Default to __Host- for CSRF token for additional protection if using useSecureCookies
         // NB: The `__Host-` prefix is stricter than the `__Secure-` prefix.
@@ -114,7 +110,7 @@ export default async (req, res, userSuppliedOptions) => {
     }
 
     // Session options
-    const sessionOption = {
+    const sessionOptions = {
       jwt: false,
       maxAge: 30 * 24 * 60 * 60, // Sessions expire after 30 days of being idle
       updateAge: 24 * 60 * 60, // Sessions updated only if session is greater than this value (0 = always, 24*60*60 = every 24 hours)
@@ -123,8 +119,8 @@ export default async (req, res, userSuppliedOptions) => {
 
     // JWT options
     const jwtOptions = {
-      secret,
-      key: secret,
+      secret, // Use application secret if no keys specified
+      maxAge: sessionOptions.maxAge, // maxAge is dereived from session maxAge,
       encode: jwt.encode,
       decode: jwt.decode,
       ...userSuppliedOptions.jwt
@@ -132,17 +128,17 @@ export default async (req, res, userSuppliedOptions) => {
 
     // If no adapter specified, force use of JSON Web Tokens (stateless)
     if (!adapter) {
-      sessionOption.jwt = true
+      sessionOptions.jwt = true
     }
 
     // Event messages
-    const eventsOption = {
+    const eventsOptions = {
       ...events,
       ...userSuppliedOptions.events
     }
 
     // Callback functions
-    const callbacksOption = {
+    const callbacksOptions = {
       ...callbacks,
       ...userSuppliedOptions.callbacks
     }
@@ -180,22 +176,18 @@ export default async (req, res, userSuppliedOptions) => {
       cookie.set(res, cookies.csrfToken.name, newCsrfTokenCookie, cookies.csrfToken.options)
     }
 
-    // Set canonical site name + API route in a cookie to facilitate passing configuration
-    // to the NextAuth client. There are potential security considerations around this
-    // relating to trying to prevent attackers from exploiting this by setting this cookie
-    // on the client first if they can get control of a sub domain or exploit a XSS
-    // vulnerability, but this approach attempts to mitgate that by always verifying
-    // the cookie and updating it if fails the verification check.
-    let setUrlPrefixCookie = true
-    if (req.cookies[cookies.baseUrl.name]) {
-      const [baseUrlValue, baseUrlHash] = req.cookies[cookies.baseUrl.name].split('|')
-      // If the hash on the cookie is verified, then we must have set the cookie and don't need to update it
-      if (baseUrlValue === baseUrl && baseUrlHash === createHash('sha256').update(`${baseUrlValue}${secret}`).digest('hex')) { setUrlPrefixCookie = false }
-    }
-    // If the cookie is not set already (or if it is set, but failed verification) set header to update the cookie
-    if (setUrlPrefixCookie) {
-      const newUrlPrefixCookie = `${baseUrl}|${createHash('sha256').update(`${baseUrl}${secret}`).digest('hex')}`
-      cookie.set(res, cookies.baseUrl.name, newUrlPrefixCookie, cookies.baseUrl.options)
+    // Helper method for handling redirects, this is passed to all routes
+    // @TODO Refactor into a lib instead of passing as an option
+    //       e.g. and call as redirect(req, res, url)
+    const redirect = (redirectUrl) => {
+      const reponseAsJson = !!((req.body && req.body.json === 'true'))
+      if (reponseAsJson) {
+        res.json({ url: redirectUrl })
+      } else {
+        res.status(302).setHeader('Location', redirectUrl)
+        res.end()
+      }
+      return done()
     }
 
     // User provided options are overriden by other options,
@@ -209,34 +201,27 @@ export default async (req, res, userSuppliedOptions) => {
       // These computed settings can values in userSuppliedOptions but override them
       // and are request-specific.
       adapter,
-      site,
-      basePath,
       baseUrl,
+      basePath,
       action,
       provider,
       cookies,
       secret,
       csrfToken,
-      csrfTokenVerified,
-      providers: parseProviders(userSuppliedOptions.providers, baseUrl),
-      session: sessionOption,
+      providers: parseProviders(userSuppliedOptions.providers, baseUrl, basePath),
+      session: sessionOptions,
       jwt: jwtOptions,
-      events: eventsOption,
-      callbacks: callbacksOption,
-      callbackUrl: site
+      events: eventsOptions,
+      callbacks: callbacksOptions,
+      callbackUrl: baseUrl,
+      redirect
     }
 
     // If debug enabled, set ENV VAR so that logger logs debug messages
-    if (options.debug === true) { process.env._NEXT_AUTH_DEBUG = true }
+    if (options.debug === true) { process.env._NEXTAUTH_DEBUG = true }
 
     // Get / Set callback URL based on query param / cookie + validation
     options.callbackUrl = await callbackUrlHandler(req, res, options)
-
-    const redirect = (redirectUrl) => {
-      res.status(302).setHeader('Location', redirectUrl)
-      res.end()
-      return done()
-    }
 
     if (req.method === 'GET') {
       switch (action) {
@@ -250,18 +235,18 @@ export default async (req, res, userSuppliedOptions) => {
           res.json({ csrfToken })
           return done()
         case 'signin':
-          if (provider && options.providers[provider]) {
-            signin(req, res, options, done)
-          } else {
-            if (options.pages.signin) { return redirect(`${options.pages.signin}${options.pages.signin.includes('?') ? '&' : '?'}callbackUrl=${options.callbackUrl}`) }
-
-            pages.render(req, res, 'signin', { site, providers: Object.values(options.providers), callbackUrl: options.callbackUrl, csrfToken }, done)
+          if (options.pages.signIn) {
+            let redirectUrl = `${options.pages.signIn}${options.pages.signIn.includes('?') ? '&' : '?'}callbackUrl=${options.callbackUrl}`
+            if (req.query.error) { redirectUrl = `${redirectUrl}&error=${req.query.error}` }
+            return redirect(redirectUrl)
           }
+
+          pages.render(req, res, 'signin', { baseUrl, basePath, providers: Object.values(options.providers), callbackUrl: options.callbackUrl, csrfToken }, done)
           break
         case 'signout':
-          if (options.pages.signout) { return redirect(`${options.pages.signout}${options.pages.signout.includes('?') ? '&' : '?'}callbackUrl=${options.callbackUrl}`) }
+          if (options.pages.signOut) { return redirect(`${options.pages.signOut}${options.pages.signOut.includes('?') ? '&' : '?'}error=${error}`) }
 
-          pages.render(req, res, 'signout', { site, baseUrl, csrfToken, callbackUrl: options.callbackUrl }, done)
+          pages.render(req, res, 'signout', { baseUrl, basePath, csrfToken, callbackUrl: options.callbackUrl }, done)
           break
         case 'callback':
           if (provider && options.providers[provider]) {
@@ -274,12 +259,12 @@ export default async (req, res, userSuppliedOptions) => {
         case 'verify-request':
           if (options.pages.verifyRequest) { return redirect(options.pages.verifyRequest) }
 
-          pages.render(req, res, 'verify-request', { site }, done)
+          pages.render(req, res, 'verify-request', { baseUrl }, done)
           break
         case 'error':
           if (options.pages.error) { return redirect(`${options.pages.error}${options.pages.error.includes('?') ? '&' : '?'}error=${error}`) }
 
-          pages.render(req, res, 'error', { site, error, baseUrl }, done)
+          pages.render(req, res, 'error', { baseUrl, basePath, error }, done)
           break
         default:
           res.status(404).end()
@@ -288,17 +273,30 @@ export default async (req, res, userSuppliedOptions) => {
     } else if (req.method === 'POST') {
       switch (action) {
         case 'signin':
-          // Signin POST requests are used for email sign in
+          // Verified CSRF Token required for all sign in routes
+          if (!csrfTokenVerified) {
+            return redirect(`${baseUrl}${basePath}/signin?csrf=true`)
+          }
+
           if (provider && options.providers[provider]) {
             signin(req, res, options, done)
-            break
           }
           break
         case 'signout':
+          // Verified CSRF Token required for signout
+          if (!csrfTokenVerified) {
+            return redirect(`${baseUrl}${basePath}/signout?csrf=true`)
+          }
+
           signout(req, res, options, done)
           break
         case 'callback':
           if (provider && options.providers[provider]) {
+            // Verified CSRF Token required for credentials providers only
+            if (options.providers[provider].type === 'credentials' && !csrfTokenVerified) {
+              return redirect(`${baseUrl}${basePath}/signin?csrf=true`)
+            }
+
             callback(req, res, options, done)
           } else {
             res.status(400).end(`Error: HTTP POST is not supported for ${url}`)

@@ -1,89 +1,66 @@
 ---
 id: pages
-title: Custom Pages
+title: Pages
 ---
 
 NextAuth.js automatically creates simple, unbranded authentication pages for handling Sign in, Sign out, Email Verification and displaying error messages.
 
 The options displayed on the sign up page are automatically generated based on the providers specified in the options passed to NextAuth.js.
 
-## Using custom pages
+To add a custom login page, for example. You can use the `pages` option:
 
-To add a custom login page, for example. You can us the `pages` option:
-
-```javascript title="/pages/api/auth/[...nextauth].js"
-  ...
+```javascript title="pages/api/auth/[...nextauth].js"
+...
   pages: {
-    signin: '/auth/signin',
-    signout: '/auth/signout',
+    signIn: '/auth/signin',
+    signOut: '/auth/signout',
     error: '/auth/error', // Error code passed in query string as ?error=
     verifyRequest: '/auth/verify-request', // (used for check email message)
     newUser: null // If set, new users will be directed here on first sign in
   }
-  ...
+...
 ```
 
-## Sign in
+## Examples
 
-### OAuth sign in page
+### OAuth Sign in
 
 In order to get the available authentication providers and the URLs to use for them, you can make a request to the API endpoint `/api/auth/providers`:
 
-```jsx title="/pages/auth/signin"
+```jsx title="pages/auth/signin.js"
 import React from 'react'
-import { providers, signin } from 'next-auth/client'
+import { providers, signIn } from 'next-auth/client'
 
-export default ({ providers }) => {
+export default function SignIn({ providers }) {
   return (
     <>
       {Object.values(providers).map(provider => (
-        <p key={provider.name}>
-          <a href={provider.signinUrl} onClick={(e) => e.preventDefault()}>
-            <button onClick={() => signin(provider.id)}>Sign in with {provider.name}</button>
-          </a>
-        </p>
+        <div key={provider.name}>
+          <button onClick={() => signIn(provider.id)}>Sign in with {provider.name}</button>
+        </div>
       ))}
     </>
   )
 }
 
-export async function getServerSideProps (context) {
+SignIn.getInitialProps = async (context) => {
   return {
-    props: {
-      providers: await providers(context)
-    }
+    providers: await providers(context)
   }
 }
 ```
 
-:::tip
-The **signin()** method automatically sets the callback URL to the current page. Using a link as a fallback means it sign in can work even without client side JavaScript.
-:::
-
-### Email sign in page
+### Email Sign in
 
 If you create a custom sign in form for email sign in, you will need to submit both fields for the **email** address and **csrfToken** from **/api/auth/csrf** in a POST request to **/api/auth/signin/email**.
 
-This is easier of if you use the build in `signin()` function, as it sets the CSRF automatically.
-
-:::tip
-To create a sign in page that works on clients with and without client side JavaScript, you can use both the **signin()** method and the **csrfToken()** method
-:::
-
-```jsx title="/pages/auth/email-signin"
+```jsx title="pages/auth/email-signin.js"
 import React from 'react'
-import { csrfToken, signin } from 'next-auth/client'
+import { csrfToken } from 'next-auth/client'
 
-export default ({ csrfToken }) => {
+export default function SignIn({ csrfToken }) => {
   return (
-    <form
-      method='post'
-      action='/api/auth/signin/email'
-      onSubmit={(e) => {
-        e.preventDefault()
-        signin('email', { email: document.getElementById('email').value })
-      }}
-    >
+    <form method='post' action='/api/auth/signin/email'>
       <input name='csrfToken' type='hidden' defaultValue={csrfToken}/>
       <label>
         Email address
@@ -94,11 +71,53 @@ export default ({ csrfToken }) => {
   )
 }
 
-export async function getServerSideProps (context) {
+SignIn.getInitialProps = async (context) => {
   return {
-    props: {
-      csrfToken: await csrfToken(context)
-    }
+    csrfToken: await csrfToken(context)
   }
 }
+```
+
+You can also use the `signIn()` function which will handle obtaining the CSRF token for you:
+
+```js
+signIn('email', { email: 'jsmith@example.com' })
+```
+
+### Credentials Sign in
+
+If you create a sign in form for credentials based authentication, you will need to pass a **csrfToken** from **/api/auth/csrf** in a POST request to **/api/auth/callback/credentials**.
+
+```jsx title="pages/auth/credentials-signin.js"
+import React from 'react'
+import { csrfToken } from 'next-auth/client'
+
+export default function SignIn({ csrfToken }) => {
+  return (
+    <form method='post' action='/api/auth/callback/credentials'>
+      <input name='csrfToken' type='hidden' defaultValue={csrfToken}/>
+      <label>
+        Username
+        <input name='username' type='text'/>
+      </label>
+      <label>
+        Password
+        <input name='password' type='text'/>
+      </label>
+      <button type='submit'>Sign in</button>
+    </form>
+  )
+}
+
+SignIn.getInitialProps = async (context) => {
+  return {
+    csrfToken: await csrfToken(context)
+  }
+}
+```
+
+You can also use the `signIn()` function which will handle obtaining the CSRF token for you:
+
+```js
+signIn('credentials', { username: 'jsmith', password: '1234' })
 ```

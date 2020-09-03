@@ -9,6 +9,7 @@
 
 /* You can override the default Infima variables here. */
 :root {
+  --ifm-color-link: #039eed;
   --ifm-color-primary: #1eb1fc;
   --ifm-color-primary-dark: #03a7fa;
   --ifm-color-primary-darker: #039eed;
@@ -21,15 +22,24 @@
   --ifm-color-success: #1eb1fc;
   --ifm-color-warning: #c94b4b;
   --ifm-font-family-base: -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  --ifm-background-color: #fff;
+  --ifm-footer-background-color: #f9f9f9;
+  --ifm-hero-background-color: #f5f5f5;
 }
 
-html {
-  background: #f9f9f9;
+html[data-theme='dark']:root {
+  --ifm-color-link: #3abbfc;
+  --ifm-footer-background-color: #242526;
+  --ifm-html-background-color: #242526;
+  --ifm-background-color: #000000;
+  --ifm-hero-background-color: #191919;
 }
 
-html[data-theme='dark'] {
-  background: #191A1B;
-}
+@import "hero.css";
+@import "admonitions.css";
+@import "buttons.css";
+@import "table-of-contents.css";
+@import "sidebar.css";
 
 @media screen and (max-width: 360px) {
   html {
@@ -42,6 +52,34 @@ a,
   font-weight: 600;
 }
 
+a,
+a:hover,
+.navbar .navbar__link:hover {
+  text-decoration: underline;
+  color: var(--ifm-color-link);
+}
+
+.hash-link {
+  text-decoration: none;
+}
+
+.navbar__toggle {
+  margin-right: 1rem !important;
+}
+
+.main-wrapper h1 {
+  font-weight: 700;
+  margin-bottom: 2rem;
+}
+
+.main-wrapper h2 {
+  font-weight: 700;
+}
+
+.main-wrapper h3 {
+  font-weight: 600;
+}
+
 .docusaurus-highlight-code-line {
   background-color: rgb(72, 77, 91);
   display: block;
@@ -49,113 +87,59 @@ a,
   padding: 0 var(--ifm-pre-padding);
 }
 
-.admonition-icon {
-  margin-right: .5rem;
-}
-
 .rounded-pill {
   border-radius: 2rem;
 }
 
-.contents {
-  margin-top: 0;
-  padding-top: 0;
-  margin-bottom: 0;
-  padding-bottom: 0;
-}
-
-.contents > li:first-child {
-  margin-top: 0;
-  padding-top: 0;
-}
-
-.contents li {
-  margin-left: .5rem;
-}
-
-.contents li > ul li {
-  margin-left: 0rem;
+.pagination-nav {
+  display: none;
 }
 
 .navbar {
-  box-shadow: 0 0 .5rem rgba(0,0,0,.2)
+  box-shadow: none;
 }
 
 .navbar__title {
   font-size: 1.2rem;
   margin-left: .2rem;
-}
-
-.navbar__logo {
   display: none;
 }
 
-@media screen and (min-width: 376px) {
-  .navbar__logo {
+.navbar-sidebar__brand .navbar__title { 
+   display: inline;
+}
+
+@media screen and (min-width: 420px) {
+  .navbar__title {
     display: inline;
-  }
-}
-
-.hero {
-  margin-top: 2rem;
-  background: none;
-  color: black;
-  background: linear-gradient(0deg, rgba(222,222,222,0.4) 0%, rgba(255,255,255,0) 100%);
-}
-
-html[data-theme='dark'] .hero {
-  background: linear-gradient(0deg, rgba(222,222,222,0.075) 0%, rgba(255,255,255,0) 100%);
-}
-
-.hero .container {
-  margin-bottom: 2rem;
-}
-
-.hero .hero__title {  
-  font-size: 3rem;
-  margin-bottom: 0.5rem;
-}
-
-@media screen and (min-width: 668px) {
-  .hero .hero__title {
-    font-size: 4.8rem;
-  }
-}
-
-.hero .hero__subtitle {
-  font-size: 1rem;
-  margin-bottom: 1.5rem;
-  opacity: 0.6;
-}
-
-@media screen and (min-width: 668px) {
-  .hero .hero__subtitle {
-    font-size: 1.5rem;
   }
 }
 
 .home-subtitle {
   justify-content: center;
-  padding-top: 1rem;
-  opacity: 0.7;
+  padding: 0rem 0 2rem 0;
+  opacity: 0.8;
   font-style: italic;
+  margin: 0;
+  font-size: 1.2rem;
 }
 
 .home-main .code {
   padding: 0;
   height: 100%;
   font-size: 0.9rem;
-  background: #292D3D;
+  background: #1E1E1E;
   overflow: hidden;
   border-radius: .5rem;
 }
 
 .home-main .code .code-heading {
-  color: rgba(255,255,255,.8);
-  background: rgba(0,0,0,.2);
+  color: rgba(255,255,255,1);
+  background: #191A1B;
   margin: 0;
   padding: 0.5rem 1rem;
   font-size: 1rem;
+  font-weight: 700;
   width: 100%;
 }
 
@@ -165,6 +149,15 @@ html[data-theme='dark'] .hero {
 
 .home-main .row {
   margin-bottom: 2rem;
+}
+
+hr {
+  margin-top: 2.5rem;
+  border-color: #ddd;
+}
+
+html[data-theme='dark'] hr {
+  border-color: #242526;
 }
 
 .navbar__item.navbar__link[href*="github"],
@@ -210,31 +203,56 @@ html[data-theme='dark'] {
   --ifm-background-color: #1F201C;
 }
 
-.home-main .section-features {
-  xbackground-color: rgba(0,0,0,.05);
-}
-
 .home-main .feature-image-wrapper {
   display: inline-block;
   overflow: auto;
-  padding: 0.3rem;
+  padding: 0.6rem;
   border-radius: 10rem;
   overflow: visible;
-  background-color: #fff;
+  background-color: var(--ifm-color-primary);
+  margin-bottom: 1rem;
+  box-shadow: 0 0 2rem rgba(0,0,0,.1);
+  background-image: linear-gradient(0deg, #4FA852 0%, #9ADA5E 100%);
+}
+
+.home-main .section-features .row .col:nth-child(2) .feature-image-wrapper {
+  background-image: linear-gradient(0deg, var(--ifm-color-primary-darkest) 0%, var(--ifm-color-primary) 100%);
+}
+
+.home-main .section-features .row .col:nth-child(3) .feature-image-wrapper {
+  background-image: linear-gradient(0deg, #E95595 0%, #F988BA 100%);
 }
 
 .home-main .feature-image-wrapper img {
-  zoom: 1;
+  filter: saturate(0.5) contrast(2);
+  zoom: .80;
 }
 
-html[data-theme="dark"] .hero .hero__title,
-html[data-theme="dark"] .hero .hero__subtitle,
-html[data-theme="dark"] .home-subtitle,
-html[data-theme="dark"] .hero .button:not(.button--outline),
-html[data-theme="dark"] .hero .button:hover {
-  color: white;
+/* Targets the 'Documentation' button on mobile */
+/* The UX is pretty poor but doing the best we can with it! */
+.button.button--secondary.button--sm.menu__button {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 1000;
+  width: auto;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  border: none;
+  background: #fff;
+  box-shadow: 0 0 1rem rgba(0,0,0,0.2);
 }
 
-html[data-theme='dark'] .footer.footer--dark {
-  --ifm-footer-background-color: #242526;
+html[data-theme='dark'] .button.button--secondary.button--sm.menu__button {
+  background: #242526;
+  color: #fff;
+  box-shadow: 0 0 1rem rgba(0,0,0,0.4);
+}
+
+.button.button--secondary.button--sm.menu__button:before {
+  font-size: 2rem;
+  line-height: 2rem;
+  content: "?";
+  opacity: 0.8;
+  display: block;
 }

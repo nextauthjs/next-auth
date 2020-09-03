@@ -1,19 +1,9 @@
 ---
 id: providers
-title: Authentication Providers
+title: Providers
 ---
 
-export const Image = ({ children, src, alt = '' }) => ( 
-  <div
-    style={{
-      padding: '0.2rem',
-      width: '100%',
-      display: 'flex',
-      justifyContent: 'center'
-    }}>
-    <img alt={alt} src={src} />
-  </div>
- )
+Authentication Providers in NextAuth.js are how you define services can be used to sign in.
 
 NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1.0A and 2.0 and has built-in support for many popular OAuth sign-in services. It also supports email / passwordless authentication.
 
@@ -23,16 +13,21 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 
 * [Apple](/providers/apple)
 * [Auth0](/providers/auth0)
+* [Basecamp](/providers/basecamp)
+* [Battle.net](/providers/battlenet)
 * [Box](/providers/box)
+* [Amazon Cognito](/providers/cognito)
 * [Discord](/providers/discord)
 * [Facebook](/providers/facebook)
 * [GitHub](/providers/github)
 * [GitLab](/providers/gitlab)
 * [Google](/providers/google)
 * [IdentityServer4](/providers/identity-server4)
+* [LinkedIn](/providers/LinkedIn)
 * [Mixer](/providers/Mixer)
 * [Okta](/providers/Okta)
 * [Slack](/providers/slack)
+* [Spotify](/providers/spotify)
 * [Twitch](/providers/Twitch)
 * [Twitter](/providers/twitter)
 * [Yandex](/providers/yandex)
@@ -56,9 +51,9 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
   TWITTER_SECRET=YOUR_TWITTER_CLIENT_SECRET
   ```
 
-4. Now you can add the provider settings to the NextAuth options object. You can add as many OAuth providers as you like, as you can see `providers` is an array. 
+4. Now you can add the provider settings to the NextAuth options object. You can add as many OAuth providers as you like, as you can see `providers` is an array.
 
-  ```js title="/pages/api/auth/[...nextauth].js"
+  ```js title="pages/api/auth/[...nextauth].js"
   ...
   providers: [
     Providers.Twitter({
@@ -108,7 +103,7 @@ As an example of what this looks like, this is the the provider object returned 
 ```
 You can replace all the options in this JSON object with the ones from your custom provider – be sure to give it a unique ID and specify the correct OAuth version - and add it to the providers option:
 
-```js title="/pages/api/auth/[...nextauth].js"
+```js title="pages/api/auth/[...nextauth].js"
 ...
 providers: [
   Providers.Twitter({
@@ -127,15 +122,15 @@ providers: [
 ...
 ```
 
-#### Options
+### OAuth provider options
 
 |       Name       |                     Description                     | Required |
 | :--------------: | :-------------------------------------------------: | :------: |
-|        id        |        An unique ID for your custom provider        |   Yes    |
-|       name       |       An unique name for your custom provider       |   Yes    |
+|        id        |        Unique ID for the provider        |   Yes    |
+|       name       |       Descriptive name for the provider       |   Yes    |
 |       type       | Type of provider, in this case it should be `oauth` |   Yes    |
-|     version      |                   OAuth version.                    |   Yes    |
-|      scope       |                 OAuth access scopes                 |    No    |
+|     version      |     OAuth version (e.g. '1.0', '1.0a', '2.0')       |   Yes    |
+|      scope       |       OAuth access scopes (expects array or string) |    No    |
 |      params      |       Additional authorization URL parameters       |    No    |
 |  accessTokenUrl  |        Endpoint to retrieve an access token         |   Yes    |
 | requestTokenUrl  |        Endpoint to retrieve a request token         |    No    |
@@ -145,6 +140,7 @@ providers: [
 |     clientId     |           Client ID of the OAuth provider           |   Yes    |
 |   clientSecret   |         Client Secret of the OAuth provider         |    No    |
 |      idToken     |  Set to `true` for services that use ID Tokens (e.g. OpenID)     |    No    |
+|      state     | Set to `false` for services that do not support `state` verfication |    No    |
 
 :::note
 Feel free to open a PR for your custom configuration if you've created one for a provider that others may be interested in so we can add it to the list of built-in OAuth providers!
@@ -158,10 +154,10 @@ Adding support for signing in via email in addition to one or more OAuth service
 
 Configuration is similar to other providers, but the options are different:
 
-```js title="/pages/api/auth/[...nextauth].js"
+```js title="pages/api/auth/[...nextauth].js"
 providers: [
   Providers.Email({
-    server: process.env.EMAIL_SERVER, 
+    server: process.env.EMAIL_SERVER,
     from: process.env.EMAIL_FROM,
     // maxAge: 24 * 60 * 60, // How long email links are valid for (default 24h)
   }),
@@ -181,7 +177,7 @@ The Credentials provider allows you to handle signing in with arbitrary credenti
 
 It is intended to support use cases where you have an existing system you need to authenticate users against.
 
-```js title="/pages/api/auth/[...nextauth].js"
+```js title="pages/api/auth/[...nextauth].js"
 import Providers from `next-auth/providers`
 ...
 providers: [
@@ -220,3 +216,16 @@ See the [Credentials provider documentation](/providers/credentials) for more in
 :::note
 The Credentials provider can only be used if JSON Web Tokens are enabled for sessions. Users authenticated with the Credentials provider are not persisted in the database.
 :::
+
+<!-- React Image Component -->
+export const Image = ({ children, src, alt = '' }) => ( 
+  <div
+    style={{
+      padding: '0.2rem',
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'center'
+    }}>
+    <img alt={alt} src={src} />
+  </div>
+ )

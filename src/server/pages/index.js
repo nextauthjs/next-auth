@@ -1,5 +1,3 @@
-import fs from 'fs'
-import path from 'path'
 import signin from './signin'
 import signout from './signout'
 import verifyRequest from './verify-request'
@@ -19,7 +17,8 @@ function render (req, res, page, props, done) {
       html = verifyRequest(props)
       break
     case 'error':
-      html = error(props)
+      html = error({ ...props, res })
+      if (html === false) return done()
       break
     default:
       html = error(props)

@@ -20,7 +20,6 @@ export default async (sessionToken, profile, providerAccount, options) => {
     const { adapter, jwt, events } = options
 
     const useJwtSession = options.session.jwt
-    const sessionMaxAge = options.session.maxAge
 
     // If no adapter is configured then we don't have a database and cannot
     // persist data; in this mode we just return a dummy session object.
@@ -52,7 +51,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
     if (sessionToken) {
       if (useJwtSession) {
         try {
-          session = await jwt.decode({ secret: jwt.secret, token: sessionToken, maxAge: sessionMaxAge })
+          session = await jwt.decode({ ...jwt, token: sessionToken })
           if (session && session.user) {
             user = await getUser(session.user.id)
             isSignedIn = !!user
@@ -86,12 +85,12 @@ export default async (sessionToken, profile, providerAccount, options) => {
 
         // Update emailVerified property on the user object
         const currentDate = new Date()
-        userByEmail.emailVerified = currentDate
-        user = await updateUser(userByEmail)
+        user = await updateUser({ ...userByEmail, emailVerified: currentDate })
         await dispatchEvent(events.updateUser, user)
       } else {
         // Create user account if there isn't one for the email address already
-        user = await createUser({ ...profile, emailVerified: true })
+        const currentDate = new Date()
+        user = await createUser({ ...profile, emailVerified: currentDate })
         await dispatchEvent(events.createUser, user)
         isNewUser = true
       }

@@ -57,16 +57,17 @@ A quick and dirty guide on how to setup *next-auth* locally to work on it and te
        npm i
        npm run build
 
-3. Link React between the repo and the version installed in your project:
-
-       npm link ../your-application/node_modules/react
-
-*This is an annoying step and not obvious, but is needed because of how React has been written (otherwise React crashes when you try to use the `useSession()` hook in your project).*
-
-4. Finally link your project back to your local copy of next auth:
+3. Link your project back to your local copy of next auth:
 
        cd ../your-application
        npm link ../next-auth
+
+4. Finally link React between the repo and the version installed in your project:
+
+       cd ../next-auth
+       npm link ../your-application/node_modules/react
+
+*This is an annoying step and not obvious, but is needed because of how React has been written (otherwise React crashes when you try to use the `useSession()` hook in your project).*
 
 That's it!
 
@@ -83,7 +84,25 @@ You might find it helpful to use the `npm run watch` command in the next-auth pr
 
 If you are working on `next-auth/src/client/index.js` hot reloading will work as normal in your Next.js app.
 
-However  if you are working on anything else (e.g. `next-auth/src/server/*` etc) then you will need to *stop and start* your app for changes to apply as **Next.js will not hot reload those changes**.
+However if you are working on anything else (e.g. `next-auth/src/server/*` etc) then you will need to *stop and start* your app for changes to apply as **Next.js will not hot reload those changes by default**. To facitate this, you can try [this webpack plugin](https://www.npmjs.com/package/webpack-clear-require-cache-plugin). Note that the `next.config.js` syntax in the plugin README may be out of date. It should look like this:
+
+```
+const clearRequireCachePlugin = require('webpack-clear-require-cache-plugin')
+
+module.exports = {
+  webpack: (config, {
+    buildId, dev, isServer, defaultLoaders, webpack,
+  }) => {
+    config.plugins.push(clearRequireCachePlugin([
+      /\.next\/server\/static\/development\/pages/,
+      /\.next\/server\/ssr-module-cache.js/,
+      /next-auth/,
+    ]))
+
+    return config
+  },
+}
+```
 
 ### Databases
 

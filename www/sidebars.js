@@ -9,41 +9,43 @@ module.exports = {
     Configuration: [
       'configuration/options',
       'configuration/providers',
-      'configuration/database',
+      'configuration/databases',
       'configuration/pages',
-      'configuration/callbacks'
-    ],
-    'Authentication Providers': [
-      'providers/apple',
-      'providers/auth0',
-      'providers/box',
-      'providers/discord',
-      'providers/email',
-      'providers/credentials',
-      'providers/facebook',
-      'providers/github',
-      'providers/gitlab',
-      'providers/google',
-      'providers/identity-server4',
-      'providers/mixer',
-      'providers/okta',
-      'providers/slack',
-      'providers/twitch',
-      'providers/twitter',
-      'providers/yandex'
+      'configuration/callbacks',
+      'configuration/events'
     ],
     'Models & Schemas': [
       'schemas/models',
       'schemas/mysql',
       'schemas/postgres',
+      'schemas/mssql',
+      'schemas/mongodb',
       'schemas/adapters'
+    ],
+    'Authentication Providers': [
+      'providers/apple',
+      'providers/auth0',
+      'providers/basecamp',
+      'providers/battle.net',
+      'providers/box',
+      'providers/cognito',
+      'providers/discord',
+      'providers/email',
+      'providers/credentials',
+      'providers/facebook',
+      'providers/fusionauth',
+      'providers/github',
+      'providers/gitlab',
+      'providers/google',
+      'providers/identity-server4',
+      'providers/linkedin',
+      'providers/mixer',
+      'providers/okta',
+      'providers/slack',
+      'providers/spotify',
+      'providers/twitch',
+      'providers/twitter',
+      'providers/yandex'
     ]
-  /*
-    'Version 1 (Legacy)': [
-      'v1/getting-started-v1',
-      'v1/client-v1',
-      'v1/auth-v1'
-    ]
-  */
   }
 }

@@ -4,28 +4,15 @@ import logger from '../../lib/logger'
 import dispatchEvent from '../lib/dispatch-event'
 
 export default async (req, res, options, done) => {
-  const { adapter, cookies, events, jwt, callbackUrl, csrfTokenVerified, baseUrl } = options
-  const sessionMaxAge = options.session.maxAge
+  const { adapter, cookies, events, jwt, callbackUrl, redirect } = options
   const useJwtSession = options.session.jwt
   const sessionToken = req.cookies[cookies.sessionToken.name]
-
-  if (!csrfTokenVerified) {
-    // If a csrfToken was not verified with this request, send the user to
-    // the signout page, as they should have a valid one now and clicking
-    // the signout button should work.
-    //
-    // Note: Adds ?csrf=true query string param to URL for debugging/tracking.
-    // @TODO Add support for custom signin URLs
-    res.status(302).setHeader('Location', `${baseUrl}/signout?csrf=true`)
-    res.end()
-    return done()
-  }
 
   if (useJwtSession) {
     // Dispatch signout event
     try {
-      const decodedJwt = await jwt.decode({ secret: jwt.secret, token: sessionToken, maxAge: sessionMaxAge })
-      await dispatchEvent(events.signout, decodedJwt)
+      const decodedJwt = await jwt.decode({ ...jwt, token: sessionToken })
+      await dispatchEvent(events.signOut, decodedJwt)
     } catch (error) {
       // Do nothing if decoding the JWT fails
     }
@@ -36,7 +23,7 @@ export default async (req, res, options, done) => {
     try {
       // Dispatch signout event
       const session = await getSession(sessionToken)
-      await dispatchEvent(events.signout, session)
+      await dispatchEvent(events.signOut, session)
     } catch (error) {
       // Do nothing if looking up the session fails
     }
@@ -56,7 +43,5 @@ export default async (req, res, options, done) => {
     maxAge: 0
   })
 
-  res.status(302).setHeader('Location', callbackUrl)
-  res.end()
-  return done()
+  return redirect(callbackUrl)
 }

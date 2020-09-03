@@ -2,8 +2,7 @@ import { h } from 'preact' // eslint-disable-line no-unused-vars
 import render from 'preact-render-to-string'
 
 export default ({ req, csrfToken, providers, callbackUrl }) => {
-  const withCallbackUrl = callbackUrl ? `?callbackUrl=${callbackUrl}` : ''
-  const { email } = req.query
+  const { email, error } = req.query
 
   // We only want to render providers
   const providersToRender = providers.filter(provider => {
@@ -19,12 +18,46 @@ export default ({ req, csrfToken, providers, callbackUrl }) => {
     }
   })
 
+  let errorMessage
+  if (error) {
+    switch (error) {
+      case 'Signin':
+      case 'OAuthSignin':
+      case 'OAuthCallback':
+      case 'OAuthCreateAccount':
+      case 'EmailCreateAccount':
+      case 'Callback':
+        errorMessage = <p>Try signing with a different account.</p>
+        break
+      case 'OAuthAccountNotLinked':
+        errorMessage = <p>To confirm your identity, sign in with the same account you used originally.</p>
+        break
+      case 'EmailSignin':
+        errorMessage = <p>Check your email address.</p>
+        break
+      case 'CredentialsSignin':
+        errorMessage = <p>Sign in failed. Check the details you provided are correct.</p>
+        break
+      default:
+        errorMessage = <p>Unable to sign in.</p>
+        break
+    }
+  }
+
   return render(
     <div className='signin'>
+      {errorMessage &&
+        <div className='error'>
+          {errorMessage}
+        </div>}
       {providersToRender.map((provider, i) =>
         <div key={provider.id} className='provider'>
           {provider.type === 'oauth' &&
-            <a className='button' data-provider={provider.id} href={`${provider.signinUrl}${withCallbackUrl}`}>Sign in with {provider.name}</a>}
+            <form action={provider.signinUrl} method='POST'>
+              <input type='hidden' name='csrfToken' value={csrfToken} />
+              {callbackUrl && <input type='hidden' name='callbackUrl' value={callbackUrl} />}
+              <button type='submit' className='button'>Sign in with {provider.name}</button>
+            </form>}
           {(provider.type === 'email' || provider.type === 'credentials') && (i > 0) &&
             providersToRender[i - 1].type !== 'email' && providersToRender[i - 1].type !== 'credentials' &&
               <hr />}

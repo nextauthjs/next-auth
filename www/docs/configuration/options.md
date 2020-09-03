@@ -1,28 +1,31 @@
 ---
 id: options
-title: NextAuth.js Options
+title: Options
 ---
 
-Options are passed to NextAuth.js when initializing it in an API route.
+## Environment Variables
 
-:::note
-The only *required* options are **site** and **providers**.
+### NEXTAUTH_URL 
+
+When deploying to production, set the `NEXTAUTH_URL` environment variable to the canonical URL of your site.
+
+```
+NEXTAUTH_URL=https://example.com
+```
+
+If your Next.js application uses a custom base path, specify the route to the API endpoint in full.
+
+_e.g. `NEXTAUTH_URL=https://example.com/custom-route/api/auth`_
+
+:::tip
+To set environment variables on Vercel, you can use the [dashboard](https://vercel.com/dashboard) or the `now env` command.
 :::
+
+---
 
 ## Options
 
-### site
-
-* **Default value**: `empty string`
-* **Required**: *Yes*
-
-#### Description 
-
-The fully qualified URL for the root of your site.
-
-e.g. `http://localhost:3000` or `https://www.example.com`
-
----
+Options are passed to NextAuth.js when initializing it in an API route.
 
 ### providers
 
@@ -40,36 +43,26 @@ See the [providers documentation](/configuration/providers) for a list of suppor
 ### database
 
 * **Default value**: `null`
-* **Required**: *No* (Except by Email provider)
+* **Required**: *No (unless using email provider)*
 
 #### Description 
 
-A database connection string or [TypeORM](https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md) configuration object.
-
-NextAuth.js has built in support for MySQL, MariaDB, Postgress, MongoDB and SQLite databases.
-
-The default database provider is also compatible with other ANSI SQL compatible databases.
-
-NextAuth.js can can be used with any database by specifying a custom `adapter` option.
-
-:::tip
-The Email provider currently requires a database to be configured.
-:::
+[A database connection string or configuration object.](/configuration/databases)
 
 ---
 
 ### secret
 
 * **Default value**: `string` (*SHA hash of the "options" object*)
-* **Required**: *No* (but strongly recommended)
+* **Required**: *No - but strongly recommended!*
 
 #### Description
 
-A random string used to hash tokens and sign cookies (e.g. SHA hash).
+A random string used to hash tokens, sign cookies and generate crytographic keys.
 
-If not provided will be auto-generated based on hash of all your provided options.
+If not specified is uses a hash of all configuration options, including Client ID / Secrets for entropy.
 
-The default behaviour is secure, but volatile, and it is strongly recommended you explicitly specify a value for secret to avoid invalidating any tokens when the automatically generated hash changes.
+The default behaviour is volatile, and it is strongly recommended you explicitly specify a value to avoid invalidating end user sessions when configuration changes are deployed.
 
 ---
 
@@ -110,73 +103,87 @@ session: {
 
 #### Description
 
-JSON Web Tokens are only used if JWT sessions are enabled with `session: { jwt: true }` (see `session` documentation).
+JSON Web Tokens can be used for session tokens if enabled with `session: { jwt: true }` option. JSON Web Tokens are enabled by default if you have not specified a database.
 
-The `jwt` object and all properties on it are optional.
+By default JSON Web Tokens are signed (JWS) but not encrypted (JWE), as JWT encryption adds additional overhead and comes with some caveats. You can enable encryption by setting `encryption: true`.
 
-When enabled, JSON Web Tokens is signed with `HMAC SHA256` and encrypted with symmetric `AES`.
-
-Using JWT to store sessions is often faster, cheaper and more scaleable relying on a database.
-
-Default values for this option are shown below:
+#### JSON Web Token Options
 
 ```js
 jwt: {
-  // secret: 'my-secret-123', // Secret auto-generated if not specified.
+  // A secret to use for key generation - you should set this explicitly
+  // Defaults to NextAuth.js secret if not explicitly specified.
+  // secret: 'INp8IvdIyeMcoGAgFGoA61DdBglwwSqnXJZkgz8PSnw',
   
-  // By default the JSON Web Token is signed with SHA256 and encrypted with AES.
-  //
-  // You can define your own encode/decode functions for signing + encryption if
-  // you want to override the default behaviour (or to add/remove information
-  // from the JWT when it is encoded).
-  // encode: async ({ secret, key, token, maxAge }) => {},
-  // decode: async ({ secret, key, token, maxAge }) => {},
+  // Set to true to use encryption. Defaults to false (signing only).
+  // encryption: true,
+
+  // You can define your own encode/decode functions for signing and encryption
+  // if you want to override the default behaviour.
+  // encode: async ({ secret, token, maxAge }) => {},
+  // decode: async ({ secret, token, maxAge }) => {},
 }
 ```
 
-An example JSON WebToken contains an encrypted payload like this:
+An example JSON Web Token contains a payload like this:
 
 ```js
 {
-  user: {
-    name: 'Iain Collins',
-    email: 'me@iaincollins.com',
-    image: 'https://example.com/image.jpg',
-    id: 1 // User ID will note be specified if used without a database
-  },
-  // The account object stores details for the authentication provider account 
-  // that was used to sign in. It only contains exactly one account, even the 
-  // user is linked to multiple provider accounts in a database.
-  account: {
-    provider: 'google',
-    type: 'oauth',
-    id: 3218529,
-    refreshToken: 'cc0d32d79145091cd6cd8979f0a6d6b67d490899',
-    accessToken: '931400799b4a980715bb55af1bb8e01d92316956',
-    accessTokenExpires: null
-  },
-  isNewUser: true, // Is set to true if is first sign in
-  iat: 1591150735, // Issued at
-  exp: 4183150735  // Expires in
+  name: 'Iain Collins',
+  email: 'me@iaincollins.com',
+  picture: 'https://example.com/image.jpg',
+  "iat": 1594601838,
+  "exp": 1597193838
 }
 ```
 
-You can use the built-in `getJwt()` helper method to read the token, like this:
+#### JWT Helper
+
+You can use the built-in `getToken()` helper method to verify and decrypt the token, like this:
 
 ```js
 import jwt from 'next-auth/jwt'
 
 const secret = process.env.JWT_SECRET
 
-export default async (req, res) =>  {
-  // Automatically decrypts and verifies JWT
-  const token = await jwt.getJwt({ req, secret })
-  res.end(JSON.stringify(token, null, 2))
+export default async (req, res) => {
+  const token = await jwt.getToken({ req, secret })
+  console.log('JSON Web Token', token)
+  res.end()
 }
 ```
 
+_For convenience, this helper function is also able to read and decode tokens passed in an HTTP Bearer header._
+
+**Required**
+
+The getToken() helper requires the following options:
+
+* `req` - (object) Request object
+* `secret` - (string) JWT Secret
+
+You must also pass *any options configured on the `jwt` option* to the helper.
+
+e.g. Including custom session `maxAge` and custom signing and/or encryption keys or options
+
+**Optional**
+
+It also supports the following options:
+
+* `secureCookie` - (boolean) Use secure prefixed cookie name
+
+  By default, the helper function will attempt to determine if it should use the secure prefixed cookie (e.g. `true` in production and `false` in development, unless NEXTAUTH_URL contains an HTTPS URL).
+
+* `cookieName` - (string) Session token cookie name
+
+  The `secureCookie` option is ignored if `cookieName` is explcitly specified.
+
+* `raw` - (boolean) Get raw token (not decoded)
+
+  If set to `true` returns the raw token without decrypting or verifying it.
+
 :::note
-The JWT is stored in the Session Token cookie – the same cookie used for database sessions.
+The JWT is stored in the Session Token cookie, the same cookie used for tokens with database sessions.
 :::
 
 ---
@@ -196,8 +203,8 @@ Pages specified will override the corresponding built-in page.
 
 ```js
 pages: {
-  signin: '/auth/signin',
-  signout: '/auth/signout',
+  signIn: '/auth/signin',
+  signOut: '/auth/signout',
   error: '/auth/error', // Error code passed in query string as ?error=
   verifyRequest: '/auth/verify-request', // (used for check email message)
   newUser: null // If set, new users will be directed here on first sign in
@@ -223,10 +230,18 @@ You can specify a handler for any of the callbacks below.
 
 ```js
 callbacks: {
-  signin: async (profile, account, metadata) => { },
-  redirect: async (url, baseUrl) => { },
-  session: async (session, token) => { },
-  jwt: async (token) => => { }
+  signIn: async (user, account, profile) => {
+    return Promise.resolve(true)
+  },
+  redirect: async (url, baseUrl) => {
+    return Promise.resolve(baseUrl)
+  },
+  session: async (session, user) => {
+    return Promise.resolve(session)
+  },
+  jwt: async (token, user, account, profile, isNewUser) => {
+    return Promise.resolve(token)
+  }
 }
 ```
 
@@ -249,14 +264,33 @@ The content of the message object varies depending on the flow (e.g. OAuth or Em
 
 ```js
 events: {
-  signin: async (message) => { /* on successful sign in */ },
-  signout: async (message) => { /* on signout */ },
+  signIn: async (message) => { /* on successful sign in */ },
+  signOut: async (message) => { /* on signout */ },
   createUser: async (message) => { /* user created */ },
   linkAccount: async (message) => { /* account linked to a user */ },
   session: async (message) => { /* session is active */ },
   error: async (message) => { /* error in authentication flow */ }
 }
 ```
+
+---
+
+### adapter
+
+* **Default value**: *Adapater.Default()*
+* **Required**: *No*
+
+#### Description
+
+By default NextAuth.js uses a database adapter that uses TypeORM and supports MySQL, MariaDB, Postgres and MongoDB and SQLite databases. An alternative adapter that uses Prisma, which currently supports MySQL, MariaDB and Postgres, is also included.
+
+You can use the `adapter` option to use the Prisma adapter - or pass in your own adapter if you want to use a database that is not supported by one of the built-in adapters.
+
+See the [adapter documentation](/schemas/adapters) for more information.
+
+:::note
+If the `adapter` option is specified it overrides the `database` option, only specify one or the other.
+:::
 
 ---
 
@@ -273,52 +307,7 @@ Set debug to `true` to enable debug messages for authentication and database ope
 
 ## Advanced Options
 
-
-:::warning
 Advanced options are passed the same way as basic options, but may have complex implications or side effects. You should try to avoid using advanced options unless you are very comfortable using them.
-:::
-
----
-
-### basePath
-
-* **Default value**: `/api/auth`
-* **Required**: *No*
-
-#### Description
-
-This option allows you to specify a different base path if you don't want to use `/api/auth` for some reason.
-
-If you set this option you **must** also specify the same value in the `NEXTAUTH_BASE_PATH` environment variable in `next.config.js` so that the client knows how to contact the server:
-
-```js title="next.config.js"
-module.exports = {
-  env: {
-    NEXTAUTH_BASE_PATH: '/api/my-custom-auth-route',
-  },
-}
-```
-
-This is required because the NextAuth.js API route is a separate codepath to the NextAuth.js Client.
-
-As long as you also specify this option in an environment variable, the client will be able to pick up any subsequent configuration from the server, but if you do not set in both it the NextAuth.js Client will not work.
-
----
-
-### adapter
-
-* **Default value**: *Adapater.Default()*
-* **Required**: *No*
-
-#### Description
-
-A custom provider is an advanced option intended for use only you need to use NextAuth.js with a database configuration that is not supported by the default `database` adapter.
-
-See the [adapter documentation](/schemas/adapters) for more information.
-
-:::note
-If the `adapter` option is specified it overrides the `database` option.
-:::
 
 ---
 
@@ -340,7 +329,7 @@ Properties on any custom `cookies` that are specified override this option.
 :::
 
 :::warning
-Setting this option to *false* in production is a security risk and may allow sessions to hijacked.
+Setting this option to *false* in production is a security risk and may allow sessions to hijacked if used in production. It is intended to support development and testing. Using this option is not recommended.
 :::
 
 ---
@@ -356,9 +345,15 @@ You can override the default cookie names and options for any of the cookies use
 
 This is an advanced option and using it is not recommended as you may break authentication or introduce security flaws into your application.
 
-You can specify one or more cookies with custom properties, but if you specify custom options for a cookie you must provided all the options for it. You will also likely want to create conditional behaviour to support local development (e.g. setting `secure: false` and not using cookie prefixes on localhost URLs).
+You can specify one or more cookies with custom properties, but if you specify custom options for a cookie you must provided all the options for that cookie.
 
-**For example:**
+If you use this feature, you will likely want to create conditional behaviour to support setting different cookies policies in development and production builds, as you will be opting out of the built-in dynamic policy.
+
+:::tip
+An example of a use case for this option is to support sharing session tokens across subdomains.
+:::
+
+#### Example
 
 ```js
 cookies: {
@@ -379,15 +374,6 @@ cookies: {
       secure: true
     }
   },
-  baseUrl: {
-    name: `__Secure-next-auth.base-url`,
-    options: {
-      httpOnly: true,
-      sameSite: 'lax',
-      path: '/',
-      secure: true
-    }
-  },
   csrfToken: {
     name: `__Host-next-auth.csrf-token`,
     options: {
@@ -401,40 +387,5 @@ cookies: {
 ```
 
 :::warning
-Changing the cookie options may introduce security flaws into your application and may break NextAuth.js integration now or in a future update. Using this option is not recommended.
-:::
-
----
-
-### Client Max Age
-
-* **Default value**: `0`
-* **Required**: *No*
-
-#### Description
-
-By default the NextAuth.js client will use whatever cached session object it has and will not not re-check the current session if using the `useSession()` hook.
-
-You can change this behaviour and force it to periodically sync the session state by setting a `NEXTAUTH_CLIENT_MAXAGE` environment variable.
-
-```js title="next.config.js"
-module.exports = {
-  env: {
-    NEXTAUTH_CLIENT_MAXAGE: 60, // Will re-check session every 60 seconds
-  },
-}
-```
-
-If set to `0` (the default) sessions are not re-checked automatically, only when a new window or tab is opened or when `getSession()` is called.
-
-If set to any other value, specifies how many seconds the window or tab should poll the server to update the session data.
-
-When a session is checked this way (or using `getSession()`) it is active and extends the life of the current session.
-
-It can be useful to use this option to prevent sessions from timing out if your application has a short session expiry time.
-
-This option usually has cost implications as checking session status triggers a call to a server side route and/or a database.
-
-:::note
-In NextAuth.js session state is automatically synchronized across all open windows and tabs in the same browser. If you have session expiry times of 30 days or more (the default) you probably don't need to use this option, or can set it to a high value (e.g. every 24 hours).
+Using a custom cookie policy may introduce security flaws into your application and is intended as an option for advanced users who understand the implications. Using this option is not recommended.
 :::

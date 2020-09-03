@@ -17,9 +17,11 @@ These errors are returned from the client. As the client is [Universal JavaScrip
 
 #### CLIENT_USE_SESSION_ERROR
 
+This error occurs when the `useSession()` React Hook has a problem fetching session data.
+
 #### CLIENT_FETCH_ERROR
 
-#### CLIENT_COOKIE_PARSE_ERROR
+If you see `CLIENT_FETCH_ERROR` make sure you have configured the `NEXTAUTH_URL` envionment variable.
 
 ---
 

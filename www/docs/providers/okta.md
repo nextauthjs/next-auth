@@ -3,15 +3,11 @@ id: okta
 title: Okta
 ---
 
-## API Documentation
+## Documentation
 
 https://developer.okta.com/docs/reference/api/oidc
 
-## App Configuration
-
-
-
-## Usage
+## Example
 
 ```js
 import Providers from `next-auth/providers`

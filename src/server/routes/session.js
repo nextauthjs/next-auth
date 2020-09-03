@@ -19,7 +19,7 @@ export default async (req, res, options, done) => {
   if (useJwtSession) {
     try {
       // Decrypt and verify token
-      const decodedJwt = await jwt.decode({ secret: jwt.secret, token: sessionToken, maxAge: sessionMaxAge })
+      const decodedJwt = await jwt.decode({ ...jwt, token: sessionToken })
 
       // Generate new session expiry date
       const sessionExpiresDate = new Date()
@@ -30,9 +30,9 @@ export default async (req, res, options, done) => {
       // as needed for presentation purposes (e.g. "you are logged in as…").
       const defaultSessionPayload = {
         user: {
-          name: decodedJwt.user && decodedJwt.user.name ? decodedJwt.user.name : null,
-          email: decodedJwt.user && decodedJwt.user.email ? decodedJwt.user.email : null,
-          image: decodedJwt.user && decodedJwt.user.image ? decodedJwt.user.image : null
+          name: decodedJwt.name || null,
+          email: decodedJwt.email || null,
+          image: decodedJwt.picture || null
         },
         expires: sessionExpires
       }
@@ -45,7 +45,7 @@ export default async (req, res, options, done) => {
       response = sessionPayload
 
       // Refresh JWT expiry by re-signing it, with an updated expiry date
-      const newEncodedJwt = await jwt.encode({ secret: jwt.secret, token: jwtPayload, maxAge: sessionMaxAge })
+      const newEncodedJwt = await jwt.encode({ ...jwt, token: jwtPayload })
 
       // Set cookie, to also update expiry date on cookie
       cookie.set(res, cookies.sessionToken.name, newEncodedJwt, { expires: sessionExpires, ...cookies.sessionToken.options })
@@ -79,7 +79,7 @@ export default async (req, res, options, done) => {
         }
 
         // Pass Session through to the session callback
-        const sessionPayload = await callbacks.session(defaultSessionPayload)
+        const sessionPayload = await callbacks.session(defaultSessionPayload, user)
 
         // Return session payload as response
         response = sessionPayload

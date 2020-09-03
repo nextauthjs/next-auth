@@ -5,34 +5,32 @@
  */
 
 .heroBanner {
-  padding: 4rem 0;
+  padding: 4rem 0 0 0;
   text-align: center;
   position: relative;
-  overflow: hidden;
 }
 
 @media screen and (max-width: 966px) {
   .heroBanner {
-    padding: 2rem;
+    padding: 2rem 2rem 0 2rem;
   }
 }
 
 .heroLogo {
   margin-bottom: .5rem;  
-  width: 6rem;
+  width: 8rem;
 }
 
-@media screen and (min-width: 668px) {
+@media screen and (min-width: 689px) {
   .heroLogo {
-    margin-bottom: -.5rem;    
-    width: 8rem;
+    margin-bottom: -.5rem;
   }
 }
 
-@media screen and (min-width: 668px) {
+@media screen and (min-width: 689px) {
   .heroText {
     display: inline-block;
-    margin: 1rem 1.5rem 0 1.5rem;
+    margin: 1rem 1.5rem 0 2rem;
   }
 }
 
@@ -50,7 +48,7 @@
 .features {
   display: flex;
   align-items: center;
-  padding-top: 2rem;
+  padding-top: 4rem;
   margin: 0 auto 0 auto;
   width: 100%;
 }
@@ -62,22 +60,31 @@
 }
 
 .features h3 {
-  font-size: 1.5rem;
-  line-height: 3.5rem;
-  margin: 1rem 0 0 0;
+  font-size: 2rem;
+  line-height: 4rem;
+  margin: 1rem 0 1rem 0;
+  font-weight: 700;
 }
 
 .features ul {
   list-style: none;
-  padding: 0;
   text-align: center;
+  padding: 0;
 }
 
 .features ul li {
+  margin-top: .5rem;
   margin-bottom: .5rem;
   font-size: 1rem;
-  opacity: 0.8;
+  opacity: 0.7;
   white-space: nowrap;
+  font-weight: 500;
+  text-align: center;
+}
+
+.features ul li em {
+  font-weight: 400;
+  opacity: 0.8;
 }
 
 .featureImage {
