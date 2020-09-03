@@ -1,3 +1,4 @@
 {
-  "baseUrl": "https://next-auth-example.now.sh/"
+  "baseUrl": "http://localhost:3000",
+  "video": false
 }

@@ -10,9 +10,8 @@ describe("the sign in page", () => {
     const providers = ["Email", "Google", "Facebook", "Twitter", "GitHub"];
     providers.forEach((provider) => {
       const isEmailProvider = provider == "Email";
-      const role = isEmailProvider ? "button" : "link";
-
-      cy.findByRole(role, { name: `Sign in with ${provider}` }).should(
+      
+      cy.findByRole('button', { name: `Sign in with ${provider}` }).should(
         "be.visible"
       );
 
