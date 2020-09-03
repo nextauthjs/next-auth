@@ -25,4 +25,11 @@ jobs:
     - run: npm run build
     - run: npm test
     - run: npm run test:app:start
+
+    # https://www.cypress.io/blog/2019/11/20/drastically-simplify-your-testing-with-cypress-github-action/
+    - name: Cypress run
+      uses: cypress-io/github-action@v1
+      with:
+        start: npm run test:e2e:run
+
     - run: npm run test:app:stop
