@@ -1,9 +1,6 @@
 # Publishes module to registry when a new release is created.
-#
 # The following secrets need to be configured for this workflow:
-#
 # * NPM_TOKEN - Auth token from npmjs.com
-
 name: Publish to NPM
 
 on:
@@ -19,7 +16,8 @@ jobs:
         with:
           node-version: 12
       - run: npm ci
-      - run: npm test
+      - run: npm run build
+      - run: npm run lint
 
   publish-npm:
     needs: build
