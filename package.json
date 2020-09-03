@@ -83,5 +83,10 @@
     "postcss-nested": "^4.2.1",
     "standard": "^14.3.3",
     "start-server-and-test": "^1.11.0"
+  },
+  "standard": {
+    "ignore": [
+      "cypress/"
+    ]
   }
 }
