@@ -31,3 +31,7 @@ www/build
 /.vs/slnx.sqlite-journal
 /.vs/slnx.sqlite
 /.vs
+
+cypress.env.json
+cypress/videos
+cypress/screenshots
