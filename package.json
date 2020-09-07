@@ -22,7 +22,7 @@
     "test:db:postgres": "node test/postgres.js",
     "test:db:mongodb": "node test/mongodb.js",
     "test:db:mssql": "node test/mssql.js",
-    "test:mocha": "mocha test/test.js",
+    "test:mocha": "mocha test/integration",
     "test:cypress": "cypress run",
     "test:cypress:open": "cypress open",
     "db:start": "docker-compose -f test/docker/databases.yml up -d",

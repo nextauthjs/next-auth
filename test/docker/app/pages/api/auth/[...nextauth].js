@@ -7,38 +7,38 @@ const options = {
   // https://next-auth.js.org/configuration/providers
   providers: [
     Providers.Email({
-      server: process.env.EMAIL_SERVER,
-      from: process.env.EMAIL_FROM
+      server: process.env.NEXTAUTH_EMAIL_SERVER,
+      from: process.env.NEXTAUTH_EMAIL_FROM
     }),
     Providers.Apple({
-      clientId: process.env.APPLE_ID,
+      clientId: process.env.NEXTAUTH_APPLE_ID,
       clientSecret: {
-        appleId: process.env.APPLE_ID,
-        teamId: process.env.APPLE_TEAM_ID,
-        privateKey: process.env.APPLE_PRIVATE_KEY,
-        keyId: process.env.APPLE_KEY_ID
+        appleId: process.env.NEXTAUTH_APPLE_ID,
+        teamId: process.env.NEXTAUTH_APPLE_TEAM_ID,
+        privateKey: process.env.NEXTAUTH_APPLE_PRIVATE_KEY,
+        keyId: process.env.NEXTAUTH_APPLE_KEY_ID
       }
     }),
     Providers.Auth0({
-      clientId: process.env.AUTH0_ID,
-      clientSecret: process.env.AUTH0_SECRET,
-      domain: process.env.AUTH0_DOMAIN
+      clientId: process.env.NEXTAUTH_AUTH0_ID,
+      clientSecret: process.env.NEXTAUTH_AUTH0_SECRET,
+      domain: process.env.NEXTAUTH_AUTH0_DOMAIN
     }),
     Providers.Facebook({
-      clientId: process.env.FACEBOOK_ID,
-      clientSecret: process.env.FACEBOOK_SECRET
+      clientId: process.env.NEXTAUTH_FACEBOOK_ID,
+      clientSecret: process.env.NEXTAUTH_FACEBOOK_SECRET
     }),
     Providers.GitHub({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET
+      clientId: process.env.NEXTAUTH_GITHUB_ID,
+      clientSecret: process.env.NEXTAUTH_GITHUB_SECRET
     }),
     Providers.Google({
-      clientId: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_SECRET
+      clientId: process.env.NEXTAUTH_GOOGLE_ID,
+      clientSecret: process.env.NEXTAUTH_GOOGLE_SECRET
     }),
     Providers.Twitter({
-      clientId: process.env.TWITTER_ID,
-      clientSecret: process.env.TWITTER_SECRET
+      clientId: process.env.NEXTAUTH_TWITTER_ID,
+      clientSecret: process.env.NEXTAUTH_TWITTER_SECRET
     })
   ],
   // Database optional. MySQL, Maria DB, Postgres and MongoDB are supported.
@@ -47,12 +47,12 @@ const options = {
   // Notes:
   // * You must to install an appropriate node_module for your database
   // * The Email provider requires a database (OAuth providers do not)
-  database: process.env.DATABASE_URL,
+  database: process.env.NEXTAUTH_DATABASE_URL,
 
   // The secret should be set to a reasonably long random string.
   // It is used to sign cookies and to sign and encrypt JSON Web Tokens, unless
   // a seperate secret is defined explicitly for encrypting the JWT.
-  secret: process.env.SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
 
   session: {
     // Use JSON Web Tokens for session instead of database sessions.
