@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 # Install basic dependancies (Next.js, React)
 COPY test/docker/app/package*.json ./
-RUN npm ci
+RUN npm ci --only=production
 
 FROM node:10-alpine as app
 COPY --from=base /usr/src/app ./
@@ -20,7 +20,7 @@ COPY index.js providers.js adapters.js client.js jwt.js node_modules/next-auth/
 COPY dist node_modules/next-auth/dist
 # Copy the package.json for the library and install it's dependences
 COPY package*.json node_modules/next-auth/
-RUN cd node_modules/next-auth/ && npm ci
+RUN cd node_modules/next-auth/ && npm ci --only=production
 
 # Copy test pages across
 COPY test/docker/app/pages ./pages
