@@ -17,6 +17,7 @@ describe('GitHub (OAuth 2.0 flow)', function () {
   it('should be able to sign in', async function () {
     const browser = await puppeteer.launch({ headless: true })
     const page = await browser.newPage()
+    page.setDefaultTimeout(1000 * 60)
     await page.goto(`${BASE_URL}/api/auth/signin?callbackUrl=${encodeURIComponent(CALLBACK_URL)}`)
 
     await page.click(`form[action="${BASE_URL}/api/auth/signin/github"] button`)
