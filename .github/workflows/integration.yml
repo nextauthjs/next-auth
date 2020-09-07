@@ -8,7 +8,8 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    # runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     # Target time is under 5 minutes to run all tests. If it takes longer than
     # 10 minutes should look at running tests in parallel. No individual flow

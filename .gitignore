@@ -27,7 +27,7 @@ yarn-error.log*
 # Docusaurus
 www/build
 
-#VS
+#V S
 /.vs/slnx.sqlite-journal
 /.vs/slnx.sqlite
 /.vs
@@ -35,3 +35,7 @@ www/build
 cypress.env.json
 cypress/videos
 cypress/screenshots
+
+# GitHub Actions runner
+actions-runner
+_work
