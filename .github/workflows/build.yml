@@ -1,6 +1,6 @@
 # Simple check that the build is valid and no linting errors.
 # Currently is run as a seperate workflow as it's fast to fail.
-name: Test build and linting
+name: Build Test
 
 on:
   push:

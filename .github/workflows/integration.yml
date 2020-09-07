@@ -1,4 +1,4 @@
-name: Integration
+name: Integration Test
 
 on:
   push:
@@ -21,18 +21,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      # Install packages
+      # Install dependencies
       - run: npm ci
 
-      # Run tests (checks linting, builds and starts/stops test app in Docker)
-      - run: npm run test
-
-      # Cypress tests are currently disabled (trying out mocha+puppeteer)
-      # - run: npm run test:app:start # Start test app in Docker container
-      # Run end-to-end integration tests using Cypress
-      # https://www.cypress.io/blog/2019/11/20/drastically-simplify-your-testing-with-cypress-github-action/
-      #- name: Cypress tests
-      #  uses: cypress-io/github-action@v1
-      #  with:
-      #    start: npm run test:e2e:run
-      # - run: npm run test:app:stop # Stop test app in Docker container
+      # Run tests (build library, build + start test app in Docker, run tests)
+      - run: npm test
