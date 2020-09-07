@@ -49,17 +49,24 @@ describe('GitHub (OAuth 2.0 flow)', function () {
     return Promise.resolve()
   })
 
-  it('should be returned to app and signed in', async function () {
-    // Wait for page to submit and callback
+  it('should be returned to callback URL', async function () {
+    // Wait for page to return to callback URL
+    await page.waitForSelector('#nextauth-test-page')
+
+    // Check we are at the correct callback URL
+    assert.equal(page.url(), CALLBACK_URL)
+
+    return Promise.resolve()
+  })
+
+  it('should be signed in', async function () {
+    // Check we are signed in
     await page.waitForSelector('#nextauth-signed-in')
+    return Promise.resolve()
+  })
 
-    // Get URL, end browser session
-    const callbackUrl = page.url()
+  after(async () => {
     await browser.close()
-
-    // Check callback URL
-    assert.equal(callbackUrl, CALLBACK_URL)
-
     return Promise.resolve()
   })
 })
