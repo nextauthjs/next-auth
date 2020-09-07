@@ -12,9 +12,8 @@ const {
   NEXTAUTH_TWITTER_PASSWORD: PASSWORD
 } = process.env
 
-describe.only('Twitter (OAuth 1.1 flow)', async function () {
+describe('Twitter (OAuth 1.1 flow)', async function () {
   this.timeout(1000 * 60)
-
   let browser,page
 
   before(async () => {

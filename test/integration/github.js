@@ -14,14 +14,23 @@ const {
 
 describe('GitHub (OAuth 2.0 flow)', function () {
   this.timeout(1000 * 60)
-  it('should be able to sign in', async function () {
-    const browser = await puppeteer.launch({ headless: true })
-    const page = await browser.newPage()
+  let browser,page
+
+  before(async () => {
+    browser = await puppeteer.launch({ headless: true })
+    page = await browser.newPage()
+    return Promise.resolve()
+  })
+
+  it('should show button on sign in page', async function () {
     page.setDefaultTimeout(1000 * 60)
     await page.goto(`${BASE_URL}/api/auth/signin?callbackUrl=${encodeURIComponent(CALLBACK_URL)}`)
-
+    await page.waitForSelector(`form[action="${BASE_URL}/api/auth/signin/github"] button`)
     await page.click(`form[action="${BASE_URL}/api/auth/signin/github"] button`)
+    return Promise.resolve()
+  })
 
+  it('should be redirected to provider', async function () {
     // Enter username
     await page.waitForSelector('input[name="login"]')
     await page.click('input[name="login"]')
@@ -31,10 +40,16 @@ describe('GitHub (OAuth 2.0 flow)', function () {
     await page.waitForSelector('input[name="password"]')
     await page.click('input[name="password"]')
     await page.keyboard.type(PASSWORD)
+    return Promise.resolve()
+  })
 
+  it('should be able to sign in with provider', async function () {
     // Click submit
     await page.click('form[action="/session"] [type="submit"]')
+    return Promise.resolve()
+  })
 
+  it('should be returned to app and signed in', async function () {
     // Wait for page to submit and callback
     await page.waitForSelector('#nextauth-signed-in')
 
