@@ -19,7 +19,7 @@ describe.skip('Google (OAuth 2.0 flow)', function () {
   let browser,page
 
   before(async () => {
-    browser = await puppeteer.launch({ headless: false })
+    browser = await puppeteer.launch({ headless: true })
     page = await browser.newPage()
     return Promise.resolve()
   })
