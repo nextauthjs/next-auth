@@ -7,8 +7,6 @@ services:
     environment:
       SA_PASSWORD: Pa55w0rd # minimum password complexity
       ACCEPT_EULA: Y
-    ports:
-      - "1433:1433" # map to non-default port, to avoid conflicts ? 
     # WARN: command overrides, default image start sequence, start.sh starts 'sql-server'
     command: '/var/setup/start.sh' 
     volumes:
