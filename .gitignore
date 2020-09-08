@@ -1,20 +1,7 @@
-.next
-.env
-.vscode
-node_modules
-dist
-.DS_Store# Dependencies
-/node_modules
-
-# Production
-/build
-
-# Generated files
-.docusaurus
-.cache-loader
-
 # Misc
 .DS_Store
+
+.env
 .env.local
 .env.development.local
 .env.test.local
@@ -24,10 +11,26 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Docusaurus
-www/build
+# Dependencies
+node_modules
 
-#VS
+# Build dirs
+.next
+/build
+/dist
+/www/build
+
+# Generated files
+.docusaurus
+.cache-loader
+.next
+
+# VS
 /.vs/slnx.sqlite-journal
 /.vs/slnx.sqlite
 /.vs
+.vscode
+
+# GitHub Actions runner
+/actions-runner
+/_work

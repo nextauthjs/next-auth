@@ -1,0 +1,45 @@
+name: Integration Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    # runs-on: ubuntu-latest
+    runs-on: self-hosted
+
+    # Target time is under 5 minutes to run all tests. If it takes longer than
+    # 10 minutes should look at running tests in parallel. No individual flow
+    # should take longer than 5 minutes to build and run.
+    timeout-minutes: 10
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # Install dependencies
+      - run: npm ci
+
+      # Run tests (build library, build + start test app in Docker, run tests)
+      - run: npm test
+        # TODO Tests should exit out if env vars not set (currently hangs)
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}} 
+          NEXTAUTH_TWITTER_ID: ${{secrets.NEXTAUTH_TWITTER_ID}}
+          NEXTAUTH_TWITTER_SECRET: ${{secrets.NEXTAUTH_TWITTER_SECRET}}
+          NEXTAUTH_TWITTER_USERNAME: ${{secrets.NEXTAUTH_TWITTER_USERNAME}}
+          NEXTAUTH_TWITTER_PASSWORD: ${{secrets.NEXTAUTH_TWITTER_PASSWORD}}
+          NEXTAUTH_GITHUB_ID: ${{secrets.NEXTAUTH_GITHUB_ID}}
+          NEXTAUTH_GITHUB_SECRET: ${{secrets.NEXTAUTH_GITHUB_SECRET}}
+          NEXTAUTH_GITHUB_USERNAME: ${{secrets.NEXTAUTH_GITHUB_USERNAME}}
+          NEXTAUTH_GITHUB_PASSWORD: ${{secrets.NEXTAUTH_GITHUB_PASSWORD}}
