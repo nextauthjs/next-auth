@@ -15,6 +15,7 @@ const {
 // This seems to stall because of a popup that is displayed only when using
 // puppeteer. See FIXME below. Would appreciate any help resolving it.
 describe.skip('Google (OAuth 2.0 flow)', function () {
+  this.slow(5000)  
   this.timeout(1000 * 60)
   let browser,page
 

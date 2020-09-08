@@ -13,6 +13,7 @@ const {
 } = process.env
 
 describe('Twitter (OAuth 1.1 flow)', async function () {
+  this.slow(5000)
   this.timeout(1000 * 60)
   let browser,page
 

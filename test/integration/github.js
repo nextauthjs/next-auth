@@ -13,6 +13,7 @@ const {
 } = process.env
 
 describe('GitHub (OAuth 2.0 flow)', function () {
+  this.slow(5000)
   this.timeout(1000 * 60)
   let browser,page
 
