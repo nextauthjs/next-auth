@@ -50,12 +50,6 @@ describe('GitHub (OAuth 2.0 flow)', function () {
   })
 
   it('should be returned to callback URL', async function () {
-    console.log("GitHub Callback URL", page.url())
-
-    setTimeout(() => {
-      console.log("GitHub Callback URL 2", page.url())
-    }, 5000)
-
     // Wait for page to return to callback URL
     await page.waitForSelector('#nextauth-test-page')
 

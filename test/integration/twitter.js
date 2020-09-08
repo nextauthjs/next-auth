@@ -50,12 +50,6 @@ describe('Twitter (OAuth 1.1 flow)', async function () {
   })
 
   it('should be returned to callback URL', async function () {
-    console.log("Twitter Callback URL 1", page.url())
-
-    setTimeout(() => {
-      console.log("Twitter Callback URL 2", page.url())
-    }, 5000)
-
     // Wait for page to return to callback URL
     await page.waitForSelector('#nextauth-test-page')
 
