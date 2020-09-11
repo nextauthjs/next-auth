@@ -1,15 +1,13 @@
 require('dotenv').config()
 const assert = require('assert')
-const puppeteer = require('puppeteer-extra')
-const StealthPlugin = require('puppeteer-extra-plugin-stealth')
-puppeteer.use(StealthPlugin())
+const { puppeteer, puppeteerOptions } = require('../lib/puppeteer')
 
 const BASE_URL = 'http://localhost:3000'
 const CALLBACK_URL = `${BASE_URL}/test`
 
 const {
   NEXTAUTH_TWITTER_USERNAME: USERNAME,
-  NEXTAUTH_TWITTER_PASSWORD: PASSWORD
+  NEXTAUTH_TWITTER_PASSWORD: PASSWORD,
 } = process.env
 
 describe('Twitter (OAuth 1.1 flow)', async function () {
@@ -18,7 +16,7 @@ describe('Twitter (OAuth 1.1 flow)', async function () {
   let browser,page
 
   before(async () => {
-    browser = await puppeteer.launch({ headless: true })
+    browser = await puppeteer.launch(puppeteerOptions)
     page = await browser.newPage()
     return Promise.resolve()
   })
