@@ -17,9 +17,8 @@ puppeteerExtra.use(pluginUserAgentOverride)
 // CI is set to true by GitHub Actions to indicate is running in CD/CI
 const { CI } = process.env
 
-// Set to 'true' to debug problems more easily
 const puppeteerOptions = { 
-  headless: false
+  headless: true  // Set to 'false' to debug more easily
 }
 
 // When running on remote test runner (which is ARM) the executable path
