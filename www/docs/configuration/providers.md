@@ -12,6 +12,7 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 ### Built-in providers
 
 * [Apple](/providers/apple)
+* [Atlassian](/providers/atlassian)
 * [Auth0](/providers/auth0)
 * [Basecamp](/providers/basecamp)
 * [Battle.net](/providers/battlenet)
