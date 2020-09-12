@@ -1,5 +1,6 @@
-import Auth0 from './auth0'
 import Apple from './apple'
+import Atlassian from './atlassian'
+import Auth0 from './auth0'
 import Basecamp from './basecamp'
 import BattleNet from './battlenet'
 import Box from './box'
@@ -23,6 +24,7 @@ import Twitter from './twitter'
 import Yandex from './yandex'
 
 export default {
+  Atlassian,
   Auth0,
   Apple,
   Basecamp,
