@@ -179,7 +179,7 @@ app.prepare().then(() => {
 If you want to pre-generate your secret, this is an example of the code you will need:
 
 ```js
-const jst = require('jsonwebtoken')
+const jwt = require('jsonwebtoken')
 const fs = require('fs')
 
 const appleId = 'myapp.example.com'
