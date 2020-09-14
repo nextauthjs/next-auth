@@ -59,7 +59,7 @@ database: {
   port: 3306,
   username: 'nextauth',
   password: 'password',
-  database: 'database_name'
+  database: 'database_name',
   entityPrefix: 'nextauth_'
 }
 ```
