@@ -225,6 +225,22 @@ if (process.env.NODE_ENV === "production") {
 ```
 :::
 
+### Fauna
+
+Create faunadb server key
+
+Create collections:
+- users
+- accounts
+- sessions
+- verificationRequests
+
+Create required indexes:
+- index_users_id, index_users_email
+- index_accounts_providerId_providerAccountId
+- index_verificationRequests_token
+- index_sessions_id
+- index_sessions_sessionToken
 
 ## Custom Adapter
 

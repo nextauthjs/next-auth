@@ -59,10 +59,12 @@
     "react-dom": "^16.13.1"
   },
   "peerOptionalDependencies": {
+    "faunadb": "^3.0.1",
     "mongodb": "^3.5.9",
     "mysql": "^2.18.1",
     "mssql": "^6.2.1",
     "pg": "^8.2.1",
+    "uuid": "^8.3.0",
     "@prisma/client": "^2.3.0"
   },
   "devDependencies": {
