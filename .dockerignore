@@ -1,0 +1,4 @@
+# Exclude directories we don't need from Docker context to improve build time
+node_modules
+www
+src

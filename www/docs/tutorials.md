@@ -19,5 +19,9 @@ title: Tutorials and Explainers
 
 * [Testing with Cypress](tutorials/testing-with-cypress)
 
+### How to use the Credentials Provider
+
+* [LDAP Authentication](tutorials/ldap-auth-example)
+
 
   

@@ -23,7 +23,7 @@ You can use also NextAuth.js with any database using a custom database adapter, 
 
 ### What authentication services does NextAuth.js support?
 
-NextAuth.js includes built-in support for signing in with Apple, Auth0, Google, Battle.net, Box, AWS Cognito, Discord, Facebook, GitHub, GitLab, Google, Open ID Identity Server, Mixer, Okta, Slack, Spotify, Twitch, Twitter and Yandex.
+NextAuth.js includes built-in support for signing in with Apple, Atlassian, Auth0, Google, Battle.net, Box, AWS Cognito, Discord, Facebook, FusionAuth, GitHub, GitLab, Google, Open ID Identity Server, Mixer, Okta, Slack, Spotify, Twitch, Twitter and Yandex.
 
 NextAuth.js also supports email for passwordless sign in, which is useful for account recovery or for people who are not able to use an account with the configured OAuth services (e.g. due to service outage, account suspension or otherwise becoming locked out of an account).
 
@@ -166,7 +166,7 @@ JSON Web Tokens can be used for session tokens, but are also used for lots of ot
 
   Shorter session expiry times are used when using JSON Web Tokens as session tokens to allow sessions to be invalidated sooner and simplify this problem.
 
-  NextAuth.js client includes advanced features to mitigate the downsides of using shorter session expiry times on the user experience, including automatic session token rotation, optionally sending keep alive messages to prevent short lived sessions from expirying if tehre is an window or tab open, background re-validation, and automatic tab/window syncing that keeps sessions in sync across windows any time session state changes or a window or tab gains or loses focus.
+  NextAuth.js client includes advanced features to mitigate the downsides of using shorter session expiry times on the user experience, including automatic session token rotation, optionally sending keep alive messages to prevent short lived sessions from expiring if there is an window or tab open, background re-validation, and automatic tab/window syncing that keeps sessions in sync across windows any time session state changes or a window or tab gains or loses focus.
 
 * As with database session tokens, JSON Web Tokens are limited in the amount of data you can store in them. There is typically a limit of around 4096 bytes in total for all cookies on a domain, though the exact limit varies between browsers, proxies and hosting services.
 

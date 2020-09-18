@@ -1,0 +1,53 @@
+# Start test app with local databases inside the container.
+#
+# Note: Uses Docker Compose v2 as v3 doesn't currently support extends.
+# https://docs.docker.com/compose/compose-file/compose-file-v2/
+version: '2.3'
+
+services:
+
+  app:
+    build:
+      context: ../../
+      dockerfile: Dockerfile
+    environment:
+      # Set env vars in your current terminal or in .env in the root directory
+      - NEXTAUTH_URL=${NEXTAUTH_URL}
+      - NEXTAUTH_DATABASE_URL=${NEXTAUTH_DATABASE_URL}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXTAUTH_JWT_SESSIONS=${NEXTAUTH_JWT_SESSIONS}
+      - NEXTAUTH_AUTH0_ID=${NEXTAUTH_AUTH0_ID}
+      - NEXTAUTH_AUTH0_SECRET=${NEXTAUTH_AUTH0_SECRET}
+      - NEXTAUTH_AUTH0_DOMAIN=${NEXTAUTH_AUTH0_DOMAIN}
+      - NEXTAUTH_FACEBOOK_ID=${NEXTAUTH_FACEBOOK_ID}
+      - NEXTAUTH_FACEBOOK_SECRET=${NEXTAUTH_FACEBOOK_SECRET}
+      - NEXTAUTH_GITHUB_ID=${NEXTAUTH_GITHUB_ID}
+      - NEXTAUTH_GITHUB_SECRET=${NEXTAUTH_GITHUB_SECRET}
+      - NEXTAUTH_GOOGLE_ID=${NEXTAUTH_GOOGLE_ID}
+      - NEXTAUTH_GOOGLE_SECRET=${NEXTAUTH_GOOGLE_SECRET}
+      - NEXTAUTH_TWITTER_ID=${NEXTAUTH_TWITTER_ID}
+      - NEXTAUTH_TWITTER_SECRET=${NEXTAUTH_TWITTER_SECRET}
+      - NEXTAUTH_EMAIL_SERVER=${NEXTAUTH_EMAIL_SERVER}
+      - NEXTAUTH_EMAIL_FROM=${NEXTAUTH_EMAIL_FROM}
+    ports:
+      - "3000:3000"
+
+  # mongo:
+  #   extends:
+  #     file: databases/mongo.yml
+  #     service: mongo
+
+  # mssql:
+  #   extends:
+  #     file: databases/mssql.yml
+  #     service: mssql
+
+  # mysql:
+  #   extends:
+  #     file: databases/mysql.yml
+  #     service: mysql
+
+  # postgres:
+  #   extends:
+  #     file: databases/postgres.yml
+  #     service: postgres
