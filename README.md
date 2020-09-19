@@ -93,7 +93,7 @@ import {
 } from 'next-auth/client'
 
 export default function myComponent() {
-  const [ session, loading ] = useSession()
+  const [session] = useSession()
 
   return <p>
     {!session && <>

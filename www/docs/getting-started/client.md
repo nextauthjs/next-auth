@@ -42,7 +42,7 @@ It works best when the [`<Provider>`](#provider) is added to `pages/_app.js`.
 import { useSession } from 'next-auth/client'
 
 export default () => {
-  const [ session, loading ] = useSession()
+  const [session] = useSession()
 
   return <>
     {session && <p>Signed in as {session.user.email}</p>}
