@@ -225,7 +225,7 @@ if (process.env.NODE_ENV === "production") {
 ```
 :::
 
-### Fauna
+## Fauna Adapter
 
 Create faunadb server key
 

@@ -49,7 +49,9 @@ const Adapter = (config, options = {}) => {
           q.Create(q.Collection('users'), {
             data: {
               ...profile,
-              emailVerified: false,
+              emailVerified: profile.emailVerified
+                ? profile.emailVerified.toISOString()
+                : null,
               id: uuidv4(),
               createdAt: Date.now(),
               updatedAt: Date.now()
@@ -120,7 +122,13 @@ const Adapter = (config, options = {}) => {
         q.Select(
           'data',
           q.Update(q.Select('ref', q.Get(q.Match(q.Index(INDEX_USERS_ID), user.id))), {
-            data: { ...user, updatedAt: Date.now() }
+            data: {
+              ...user,
+              updatedAt: Date.now(),
+              emailVerified: user.emailVerified
+                ? user.emailVerified.toISOString()
+                : null
+            }
           })
         ),
         'UPDATE_USER_ERROR'
