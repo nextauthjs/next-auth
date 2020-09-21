@@ -33,10 +33,13 @@ export default async (req, res, userSuppliedOptions) => {
     const done = resolve
 
     if (!req.query.nextauth) {
+      const error = 'Cannot find [...nextauth].js in pages/api/auth. Make sure the filename is written correctly.'
+
+      logger.error('MISSING_NEXTAUTH_API_ROUTE_ERROR', error)
       res
         .status(500)
         .end(
-          'Error: Cannot find [...nextauth].js in pages/api/auth. Make sure the filename is written correctly.'
+        `Error: ${error}`
         )
       return done()
     }

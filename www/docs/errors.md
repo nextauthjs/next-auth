@@ -64,6 +64,7 @@ The Email authentication provider can only be used if a database is configured.
 The Credentials authentication provider can only be used if JSON Web Tokens are used for sessions.
 
 #### CALLBACK_CREDENTIALS_HANDLER_ERROR
+
 ---
 
 ### Session Handling
@@ -121,3 +122,9 @@ They all indicate a problem interacting with the database.
 This error occurs when the Email Authentication Provider is unable to send an email.
 
 Check your mail server configuration.
+
+#### MISSING_NEXTAUTH_API_ROUTE_ERROR
+
+This error happens when `[...nextauth].js` file is not found inside `pages/api/auth`.
+
+Make sure the file is there and the filename is written correctly.
