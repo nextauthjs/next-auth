@@ -117,19 +117,19 @@ Note: NextAuth.js does not current handle Access Token rotation for OAuth provid
 
 Automatic account linking on sign in is not secure between arbitrary providers - with the exception of allowing users to sign in via an email addresses as a fallback (as they must verify their email address as part of the flow).
 
-When an email address is associated with an OAuth account it does not necessarily mean that it has been verified as belonging to account holder — how email address verification is handled is not part of the OAuth specification and varies between providers (e.g. some do not verify first, some do verify first, others return metadata indiciating the verification status).
+When an email address is associated with an OAuth account it does not necessarily mean that it has been verified as belonging to account holder — how email address verification is handled is not part of the OAuth specification and varies between providers (e.g. some do not verify first, some do verify first, others return metadata indicating the verification status).
 
 With automatic account linking on sign in, this can be exploited by bad actors to hijack accounts by creating an OAuth account associated with the email address of another user.
 
 For this reason it is not secure to automatically link accounts between abitrary providers on sign in, which is why this feature is generally not provided by authentication service and is not provided by NextAuth.js.
 
-Automatic acccount linking is seen on some sites, sometimes insecurely. It can be technically possible to do automatic account linking securely if you trust all the providers involved to ensure they have securely verified the email address associated with the account, but requires placing trust (and transfering the risk) to those providers to handle the process securely.
+Automatic acccount linking is seen on some sites, sometimes insecurely. It can be technically possible to do automatic account linking securely if you trust all the providers involved to ensure they have securely verified the email address associated with the account, but requires placing trust (and transferring the risk) to those providers to handle the process securely.
 
 Examples of scenarios where this is secure include with an OAuth provider you control (e.g. that only authorizes users internal to your organization) or with a provider you explicitly trust to have verified the users email address.
 
 Automatic account linking is not a planned feature of NextAuth.js, however there is scope to improve the user experience of account linking and of handling this flow, in a secure way. Typically this involves providing a fallback option to sign in via email, which is already possible (and recommended), but the current implementation of this flow could be improved on.
 
-Providing support for secure account linking and unlinking of additional providers - which can only be done if a user is already signed in already - was origionally a feature in v1.x but has not been present since v2.0, is planned to return in a future release.
+Providing support for secure account linking and unlinking of additional providers - which can only be done if a user is already signed in already - was originally a feature in v1.x but has not been present since v2.0, is planned to return in a future release.
 
 ---
 
