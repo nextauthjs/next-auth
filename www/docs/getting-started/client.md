@@ -139,11 +139,11 @@ It can be use useful if you are creating a dynamic custom sign in page.
 #### API Route
 
 ```jsx title="pages/api/example.js"
-import { getSession } from 'next-auth/client'
+import { getProviders } from 'next-auth/client'
 
 export default async (req, res) => {
-  const session = await getSession({ req })
-  console.log('Session', session)
+  const providers = await getProviders({ req })
+  console.log('Providers', providers)
   res.end()
 }
 ```
