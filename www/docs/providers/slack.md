@@ -5,7 +5,8 @@ title: Slack
 
 ## Documentation
 
-https://api.slack.com
+https://api.slack.com/authentication
+https://api.slack.com/docs/sign-in-with-slack
 
 ## Configuration
 
