@@ -41,17 +41,17 @@ _If you use a custom credentials provider user accounts will not be persisted in
 
 NextAuth.js is designed for use with Next.js and Serverless.
 
-You can create a website that handles sign in with Next.js and then access those sessions on a website that does not use Next.js as long as the websites are on the same domain.
+If you are using a different framework for you website, you can create a website that handles sign in with Next.js and then access those sessions on a website that does not use Next.js as long as the websites are on the same domain.
 
-If they are on a different subdomain you may need to set a custom cookie policy. NextAuth.js does not supporting signing into sites on different domains using the same service.
+If use NextAuth.js on a website with a different subdomain the rest of your website (e.g. `auth.example.com` vs `www.example.com`) you will need to set a custom cookie domain policy for the Session Token cookie.
+
+NextAuth.js does not currently support automatically signing into sites on different top level domains (e.g. `www.example.com` vs `www.example.org`) using a single session.
 
 ### Can I use NextAuth.js with React Native?
 
-NextAuth.js is designed to handle sign in a Next.js web application.
+NextAuth.js is designed as a secure, confidental client and implements a server side authentication flow.
 
-It is designed as secure, confidental OAuth2 client with server side authentication flow, which allows it to do things public clients (which store embedded secrets) and browser-only clients cannot do.
-
-It is not intended to be used in native applications on desktop or mobile applications, which typically use public clients (e.g. with client / secrets embedded in the application).
+It is not intended to be used in native applications on desktop or mobile applications, which typically implement public clients (e.g. with client / secrets embedded in the application).
 
 ---
 
@@ -112,6 +112,24 @@ NextAuth.js records Refresh Tokens and Access Tokens on sign in (if supplied by 
 You can then look them up from the database or persist them to the JSON Web Token.
 
 Note: NextAuth.js does not current handle Access Token rotation for OAuth providers for you, if this is something you need, currently you will need to write the logic to handle that yourself. 
+
+### When I sign in with another account with the same email address, why are accounts not linked automatically?
+
+Automatic account linking on sign in is not secure between arbitrary providers - with the exception of allowing users to sign in via an email addresses as a fallback (as they must verify their email address as part of the flow).
+
+When an email address is associated with an OAuth account it does not necessarily mean that it has been verified as belonging to account holder — how email address verification is handled is not part of the OAuth specification and varies between providers (e.g. some do not verify first, some do verify first, others return metadata indicating the verification status).
+
+With automatic account linking on sign in, this can be exploited by bad actors to hijack accounts by creating an OAuth account associated with the email address of another user.
+
+For this reason it is not secure to automatically link accounts between abitrary providers on sign in, which is why this feature is generally not provided by authentication service and is not provided by NextAuth.js.
+
+Automatic acccount linking is seen on some sites, sometimes insecurely. It can be technically possible to do automatic account linking securely if you trust all the providers involved to ensure they have securely verified the email address associated with the account, but requires placing trust (and transferring the risk) to those providers to handle the process securely.
+
+Examples of scenarios where this is secure include with an OAuth provider you control (e.g. that only authorizes users internal to your organization) or with a provider you explicitly trust to have verified the users email address.
+
+Automatic account linking is not a planned feature of NextAuth.js, however there is scope to improve the user experience of account linking and of handling this flow, in a secure way. Typically this involves providing a fallback option to sign in via email, which is already possible (and recommended), but the current implementation of this flow could be improved on.
+
+Providing support for secure account linking and unlinking of additional providers - which can only be done if a user is already signed in already - was originally a feature in v1.x but has not been present since v2.0, is planned to return in a future release.
 
 ---
 

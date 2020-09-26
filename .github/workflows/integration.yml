@@ -8,7 +8,17 @@ on:
 
 jobs:
   test:
-    # runs-on: ubuntu-latest
+    # Only run tests integration against Pull Requests from branches in
+    # this repository. We do this as integration tests require access to
+    # secrets in GitHub and they are not exposed to tests run against
+    # forks (for security reasons), so integration test against
+    # Pull Requests from external repos just fail and generate noise.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+
+    # We use self-hosted runners as cloud based runnners (e.g. AWS, GPC)
+    # fail due to IP Address checks done by providers, which enforce 
+    # CAPTCHA checks on login request from cloud compute IP addresses to
+    # prevent abuse.
     runs-on: self-hosted
 
     # Target time is under 5 minutes to run all tests. If it takes longer than

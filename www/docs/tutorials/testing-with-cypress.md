@@ -9,7 +9,7 @@ To test an implementation of NextAuth.js, we encourage you to use [Cypress](http
 
 To get started, install the dependencies:
 
-`npm install --save-dev cypress cypress-social-login @testing-library/cypress`
+`npm install --save-dev cypress cypress-social-logins @testing-library/cypress`
 
 :::note
 If you are using username/password based login, you will not need the `cypress-social-login` dependency.
