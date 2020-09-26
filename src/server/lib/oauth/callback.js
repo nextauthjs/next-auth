@@ -107,7 +107,7 @@ export default async (req, provider, csrfToken, callback) => {
       oauth_token,
       null,
       oauth_verifier,
-      (error, accessToken, refreshToken, results) => {
+      (error, accessToken, accessTokenSecret, results) => {
         // @TODO Handle error
         if (error || results.error) {
           logger.error('OAUTH_V1_GET_ACCESS_TOKEN_ERROR', error, results)
@@ -116,9 +116,9 @@ export default async (req, provider, csrfToken, callback) => {
         client.get(
           provider.profileUrl,
           accessToken,
-          refreshToken,
+          accessTokenSecret,
           async (error, profileData) => {
-            const { profile, account, OAuthProfile } = await _getProfile(error, profileData, accessToken, refreshToken, provider)
+            const { profile, account, OAuthProfile } = await _getProfile(error, profileData, accessToken, accessTokenSecret, provider)
             callback(error, profile, account, OAuthProfile)
           }
         )
@@ -131,7 +131,7 @@ export default async (req, provider, csrfToken, callback) => {
  * //6/30/2020 @geraldnolan added userData parameter to attach additional data to the profileData object
  * Returns profile, raw profile and auth provider details
  */
-async function _getProfile (error, profileData, accessToken, refreshToken, provider, userData) {
+async function _getProfile (error, profileData, accessToken, refreshTokenOrAccessTokenSecret, provider, userData) {
   // @TODO Handle error
   if (error) {
     logger.error('OAUTH_GET_PROFILE_ERROR', error)
@@ -166,6 +166,23 @@ async function _getProfile (error, profileData, accessToken, refreshToken, provi
     }
   }
 
+  const account = (provider.version && provider.version.startsWith('2.'))
+    ? {
+      provider: provider.id,
+      type: provider.type,
+      id: profile.id,
+      refreshToken: refreshTokenOrAccessTokenSecret,
+      accessToken,
+      accessTokenExpires: null
+    }
+    : {
+      provider: provider.id,
+      type: provider.type,
+      id: profile.id,
+      accessTokenSecret: refreshTokenOrAccessTokenSecret,
+      accessToken,
+      accessTokenExpires: null
+    }
   // Return profile, raw profile and auth provider details
   return {
     profile: {
@@ -173,14 +190,7 @@ async function _getProfile (error, profileData, accessToken, refreshToken, provi
       email: profile.email ? profile.email.toLowerCase() : null,
       image: profile.image
     },
-    account: {
-      provider: provider.id,
-      type: provider.type,
-      id: profile.id,
-      refreshToken,
-      accessToken,
-      accessTokenExpires: null
-    },
+    account,
     OAuthProfile: profileData
   }
 }
