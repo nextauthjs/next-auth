@@ -23,8 +23,6 @@ export default (options) => {
             }
             return {
                 id: profile.id,
-                user_id: profile.id,
-                bot: profile.bot,
                 name: profile.username,
                 image: profile.image_url,
                 email: profile.email
