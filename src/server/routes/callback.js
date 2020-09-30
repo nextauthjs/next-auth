@@ -67,8 +67,9 @@ export default async (req, res, options, done) => {
             }
           }
 
+          let signInCallbackResponse
           try {
-            const signInCallbackResponse = await callbacks.signIn(userOrProfile, account, OAuthProfile)
+            signInCallbackResponse = await callbacks.signIn(userOrProfile, account, OAuthProfile)
             if (signInCallbackResponse === false) {
               return redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
             }
@@ -87,7 +88,8 @@ export default async (req, res, options, done) => {
             const defaultJwtPayload = {
               name: user.name,
               email: user.email,
-              picture: user.image
+              picture: user.image,
+              ...(typeof signInCallbackResponse === "object" ? signInCallbackResponse : {})
             }
             const jwtPayload = await callbacks.jwt(defaultJwtPayload, user, account, OAuthProfile, isNewUser)
 
