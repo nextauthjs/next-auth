@@ -44,8 +44,8 @@ callbacks: {
    * @param  {object} user      User object
    * @param  {object} account   Provider account
    * @param  {object} profile   Provider profile 
-   * @return {boolean | object} Return `true` (or a modified JWT) to allow sign in
-   *                            Return `false` to deny access
+   * @return {boolean | object} Return `true` (or a modified JWT, that will be passed to the jwt() callback)
+   *                            to allow sign in. Return `false` to deny access
    */
   signIn: async (user, account, profile) => {
     const isAllowedToSignIn = true
