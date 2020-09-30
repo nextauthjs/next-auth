@@ -41,11 +41,11 @@ Use the `signIn()` callback to control if a user is allowed to sign in.
 ```js title="pages/api/auth/[...nextauth.js]"
 callbacks: {
   /**
-   * @param  {object} user     User object
-   * @param  {object} account  Provider account
-   * @param  {object} profile  Provider profile 
-   * @return {boolean}         Return `true` (or a modified JWT) to allow sign in
-   *                           Return `false` to deny access
+   * @param  {object} user      User object
+   * @param  {object} account   Provider account
+   * @param  {object} profile   Provider profile 
+   * @return {boolean | object} Return `true` (or a modified JWT) to allow sign in
+   *                            Return `false` to deny access
    */
   signIn: async (user, account, profile) => {
     const isAllowedToSignIn = true
