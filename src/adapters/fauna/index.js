@@ -1,12 +1,13 @@
 import { query as q } from 'faunadb'
 import { createHash, randomBytes } from 'crypto'
+import logger from '../../lib/logger'
 
 const Adapter = (config, options = {}) => {
   const { faunaClient } = config
 
   async function getAdapter (appOptions) {
-    function _debug (...args) {
-      console.log('[next-auth-fauna][debug]', ...args)
+    function _debug (debugCode, ...args) {
+      logger.debug(`fauna_${debugCode}`, ...args)
     }
 
     const defaultSessionMaxAge = 30 * 24 * 60 * 60 * 1000
@@ -158,7 +159,7 @@ const Adapter = (config, options = {}) => {
         const user = await faunaClient.query(FQL)
         user.data.id = user.ref.id
 
-        return user
+        return user.data
       } catch (error) {
         console.error('UPDATE_USER_ERROR', error)
         return Promise.reject(new Error('UPDATE_USER_ERROR'))
@@ -212,9 +213,13 @@ const Adapter = (config, options = {}) => {
       _debug('unlinkAccount', userId, providerId, providerAccountId)
 
       const FQL = q.Delete(
-        q.Match(
-          q.Index('account_by_provider_account_id'),
-          [providerId, providerAccountId]
+        q.Select('ref',
+          q.Get(
+            q.Match(
+              q.Index('account_by_provider_account_id'),
+              [providerId, providerAccountId]
+            )
+          )
         )
       )
 
@@ -390,7 +395,7 @@ const Adapter = (config, options = {}) => {
           data: {
             identifier: identifier,
             token: hashedToken,
-            expires: q.Time(expires),
+            expires: expires === null ? null : q.Time(expires),
             createdAt: q.Time(timestamp),
             updatedAt: q.Time(timestamp)
           }
@@ -404,7 +409,7 @@ const Adapter = (config, options = {}) => {
         // an email to be sent, or perform some other action (e.g. send a text message)
         await sendVerificationRequest({ identifier, url, token, baseUrl, provider })
 
-        return verificationRequest
+        return verificationRequest.data
       } catch (error) {
         console.error('CREATE_VERIFICATION_REQUEST_ERROR', error)
         return Promise.reject(new Error('CREATE_VERIFICATION_REQUEST_ERROR'))
