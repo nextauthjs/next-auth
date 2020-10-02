@@ -243,7 +243,7 @@ This improves performance, reduces network calls and avoids page flicker when re
 ```jsx title="pages/_app.js"
 import { Provider } from 'next-auth/client'
 
-export default function App ({ Component, pageProps }) => {
+export default function App ({ Component, pageProps }) {
   return (
     <Provider session={pageProps.session}>
       <Component {...pageProps} />
@@ -265,7 +265,7 @@ However, if you need to customise the session behaviour and/or are using short s
 ```jsx title="pages/_app.js"
 import { Provider } from 'next-auth/client'
 
-export default function App ({ Component, pageProps }) => {
+export default function App ({ Component, pageProps }) {
   return (
     <Provider session={pageProps.session}
       options={{ 
