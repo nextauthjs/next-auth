@@ -50,6 +50,16 @@ NextAuth.js can be used with or without a database.
 
 Advanced options allow you to define your own routines to handle controlling what accounts are allowed to sign in, for encoding and decoding JSON Web Tokens and to set custom cookie security policies and session properties, so you can control who is able to sign in and how often sessions have to be re-validated. 
 
+### Typescript
+
+This library gained Typescript support recently. You can install the types in the following way:
+```
+$ npm i -D @types/next-auth
+```
+In you encounter any issue with them, please raise an issue and add the "typescript" label to it, we'll try to help you with it as soon as possible.
+
+Alternatively you can raise a PR directly with your fixes on [**DefinitivelyTyped**](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/next-auth).
+
 ## Example
 
 ### Add API Route

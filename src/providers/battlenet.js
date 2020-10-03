@@ -13,8 +13,8 @@ export default (options) => {
         : `https://${region}.battle.net/oauth/token`,
     authorizationUrl:
       region === 'CN'
-        ? 'https://www.battlenet.com.cn/oauth/authorize'
-        : `https://${region}.battle.net/oauth/authorize`,
+        ? 'https://www.battlenet.com.cn/oauth/authorize?response_type=code'
+        : `https://${region}.battle.net/oauth/authorize?response_type=code`,
     profileUrl: 'https://us.battle.net/oauth/userinfo',
     profile: (profile) => {
       return {
