@@ -11,6 +11,20 @@ import styles from './styles.module.css'
 
 const features = [
   {
+    title: 'Easy',
+    imageUrl: 'img/undraw_social.svg',
+    description: (
+      <ul>
+        <li>Built in support for popular services<br />
+          <em>(Google, Facebook, Auth0, Apple…)</em>
+        </li>
+        <li>Built in Email / Passwordless / Magic Link</li>
+        <li>Use with any OAuth 1.0 &amp; 2.0 service</li>
+        <li>Use with any username / password store</li>
+      </ul>
+    )
+  },
+  {
     title: 'Flexible',
     imageUrl: 'img/undraw_authentication.svg',
     description: (
@@ -26,26 +40,12 @@ const features = [
     )
   },
   {
-    title: 'Easy',
-    imageUrl: 'img/undraw_social.svg',
-    description: (
-      <ul>
-        <li>Built in support for popular services<br />
-          <em>(Google, Facebook, Auth0, Apple…)</em>
-        </li>
-        <li>API for OAuth service integration</li>
-        <li>Email / Passwordless / Magic Link</li>
-        <li>Use any username/password store</li>
-      </ul>
-    )
-  },
-  {
     title: 'Secure',
     imageUrl: 'img/undraw_secure.svg',
     description: (
       <ul>
         <li>Signed, prefixed, server-only cookies</li>
-        <li>CSRF Tokens on HTTP POST</li>
+        <li>HTTP POST + CSRF Tokens</li>
         <li>JWT with JWS / JWE / JWK / JWK</li>
         <li>Tab Sync, Auto Revalidation, Keepalive</li>
         <li>Doesn't rely on client side JavaScript</li>
@@ -122,8 +122,8 @@ function Home () {
             <div className='container'>
               <div className='row'>
                 <div className='col'>
-                  <h2 className='text--center'>
-                    Open Source. Full Stack. Own Your Data.
+                  <h2 className={styles.featuresTitle}>
+                    <span>Open Source.</span> <span>Full Stack.</span> <span>Own Your Data.</span>
                   </h2>
                 </div>
               </div>
@@ -141,7 +141,7 @@ function Home () {
                   <p className='text--center'>
                     <a
                       href='https://www.npmjs.com/package/next-auth'
-                      className='button button--secondary button--outline rounded-pill button--lg'
+                      className='button button--primary button--outline rounded-pill button--lg'
                     >npm install next-auth
                     </a>
                   </p>
@@ -150,7 +150,7 @@ function Home () {
               <div className='row'>
                 <div className='col'>
                   <h2 className='text--center'>
-                    Add authentication in minutes with ready made example code.
+                    Add authentication in minutes!
                   </h2>
                 </div>
               </div>
