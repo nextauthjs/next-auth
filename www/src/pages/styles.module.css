@@ -76,8 +76,8 @@
 .features h3 {
   font-size: 2rem;
   line-height: 4rem;
-  margin: 1rem 0 1rem 0;
-  font-weight: 700;
+  margin: 1rem 0 2rem 0;
+  font-weight: 800;
 }
 
 .features ul {
@@ -91,7 +91,6 @@
   margin-bottom: .5rem;
   font-size: 1rem;
   white-space: nowrap;
-  font-weight: 600;
   text-align: center;
 }
 
