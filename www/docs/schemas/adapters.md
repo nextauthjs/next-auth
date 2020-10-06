@@ -188,7 +188,7 @@ npx @prisma/cli generate
 
 ### Custom Models
 
-You can add properties to the schema and map them to any database colum names you wish, but you should not change the base properties or types defined in the example schema.
+You can add properties to the schema and map them to any database column names you wish, but you should not change the base properties or types defined in the example schema.
 
 The model names themselves can be changed with a configuration option, and the datasource can be changed to anything supported by Prisma.
 
