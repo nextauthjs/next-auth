@@ -49,7 +49,7 @@ The tutorial [Custom models with TypeORM](/tutorials/typeorm-custom-models) expl
 :::tip
 The `synchronize` option in TypeORM will generate SQL that exactly matches the documented schemas for MySQL and Postgres.
 
-However, it should not be enabled against production databases as may cause dataloss if the configured schema does not match the expected schema!
+However, it should not be enabled against production databases as it may cause data loss if the configured schema does not match the expected schema!
 :::
 
 ## Prisma Adapter
