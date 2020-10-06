@@ -177,7 +177,7 @@ callbacks: {
 ```
 
 :::warning
-NextAuth.js does not limit how much data you can store in a JSON Web Token, however a ~**4096 byte limit** for all cookies on a domain commonly imposed by browsers.
+NextAuth.js does not limit how much data you can store in a JSON Web Token, however a ~**4096 byte limit** for all cookies on a domain is commonly imposed by browsers.
 
 If you need to persist a large amount of data, you will need to persist it elsewhere (e.g. in a database). You can store a key that can be used to look up that data in the `session()` callback.
 :::
