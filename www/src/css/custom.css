@@ -74,12 +74,12 @@ a:hover,
 }
 
 .main-wrapper h1 {
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: 2rem;
 }
 
 .main-wrapper h2 {
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .main-wrapper h3 {
@@ -216,7 +216,6 @@ html[data-theme='dark'] {
   border-radius: 10rem;
   overflow: visible;
   background-color: var(--ifm-color-primary);
-  margin-bottom: 1rem;
   box-shadow: 0 0 2rem rgba(0,0,0,.1);
   background-image: linear-gradient(0deg, #1786FB 0%, #45EABA 100%);
 }
@@ -227,7 +226,7 @@ html[data-theme='dark'] {
 
 
 .home-main .section-features .row .col:nth-child(3) .feature-image-wrapper {
-  background-image: linear-gradient(0deg, #FB6A22 0%, #FBB12E 100%);
+  background-image: linear-gradient(0deg, #FD5D21 0%, #FBB12E 100%);
 }
 
 .home-main .feature-image-wrapper img {
