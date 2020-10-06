@@ -289,7 +289,7 @@ Using low values for `clientMaxAge` or `keepAlive` will increase network traffic
 
 #### Client Max Age
 
-The `clientMaxAge` option is the maximum age a session data can be on the client before it is considerd stale.
+The `clientMaxAge` option is the maximum age a session data can be on the client before it is considered stale.
 
 When `clientMaxAge` is set to `0` (the default) the cache will always be used when useSession is called and only explicit calls made to get the session status (i.e. `getSession()`) or event triggers, such as signing in or out in another tab/window, or a tab/window gaining or losing focus, will trigger an update of the session state.
 
