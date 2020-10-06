@@ -345,7 +345,7 @@ You can override the default cookie names and options for any of the cookies use
 
 This is an advanced option and using it is not recommended as you may break authentication or introduce security flaws into your application.
 
-You can specify one or more cookies with custom properties, but if you specify custom options for a cookie you must provided all the options for that cookie.
+You can specify one or more cookies with custom properties, but if you specify custom options for a cookie you must provide all the options for that cookie.
 
 If you use this feature, you will likely want to create conditional behaviour to support setting different cookies policies in development and production builds, as you will be opting out of the built-in dynamic policy.
 
