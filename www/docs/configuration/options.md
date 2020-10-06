@@ -260,7 +260,7 @@ Events are asynchronous functions that do not return a response, they are useful
 
 You can specify a handler for any of these events below - e.g. for debugging or to create an audit log.
 
-The content of the message object varies depending on the flow (e.g. OAuth or Email authentication flow, JWT or database sessions, etc), but typically contains a user object and/or contents of the JSON Web Token and other information relevent to the event.
+The content of the message object varies depending on the flow (e.g. OAuth or Email authentication flow, JWT or database sessions, etc), but typically contains a user object and/or contents of the JSON Web Token and other information relevant to the event.
 
 ```js
 events: {
