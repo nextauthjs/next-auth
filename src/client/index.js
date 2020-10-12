@@ -27,7 +27,7 @@ const __NEXTAUTH = {
   keepAlive: 0, // 0 == disabled (don't send); 60 == send every 60 seconds
   clientMaxAge: 0, // 0 == disabled (only use cache); 60 == sync if last checked > 60 seconds ago
   // Properties starting with _ are used for tracking internal app state
-  _clientLastSync: 0, // used for timestamp since last sycned (in seconds)
+  _clientLastSync: 0, // used for timestamp since last synced (in seconds)
   _clientSyncTimer: null, // stores timer for poll interval
   _eventListenersAdded: false, // tracks if event listeners have been added,
   _clientSession: undefined, // stores last session response from hook,
@@ -38,7 +38,7 @@ const __NEXTAUTH = {
   _getSession: () => {}
 }
 
-// Add event listners on load
+// Add event listeners on load
 if (typeof window !== 'undefined') {
   if (__NEXTAUTH._eventListenersAdded === false) {
     __NEXTAUTH._eventListenersAdded = true
@@ -160,7 +160,7 @@ const _useSessionHook = (session) => {
   const [loading, setLoading] = useState(true)
   const _getSession = async ({ event = null } = {}) => {
     try {
-      const triggredByEvent = (event !== null)
+      const triggeredByEvent = (event !== null)
       const triggeredByStorageEvent = !!((event && event === 'storage'))
 
       const clientMaxAge = __NEXTAUTH.clientMaxAge
@@ -171,7 +171,7 @@ const _useSessionHook = (session) => {
       // Updates triggered by a storage event *always* trigger an update and we
       // always update if we don't have any value for the current session state.
       if (triggeredByStorageEvent === false && clientSession !== undefined) {
-        if (clientMaxAge === 0 && triggredByEvent !== true) {
+        if (clientMaxAge === 0 && triggeredByEvent !== true) {
           // If there is no time defined for when a session should be considered
           // stale, then it's okay to use the value we have until an event is
           // triggered which updates it.
@@ -218,7 +218,10 @@ const _useSessionHook = (session) => {
   useEffect(() => {
     _getSession()
   })
-  return [data, loading]
+
+  const reloadSession = () => _getSession({ event: "focus" })
+
+  return [data, loading, reloadSession]
 }
 
 // Client side method
