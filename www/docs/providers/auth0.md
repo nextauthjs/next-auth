@@ -15,6 +15,10 @@ https://manage.auth0.com/dashboard
 Configure your application in Auth0 as a 'Regular Web Application' (not a 'Single Page App').
 :::
 
+:::tip
+`callbackUrl` in Auth0 application needs to be set to `http://localhost:3000/api/auth/callback/auth0`
+:::
+
 ## Example
 
 ```js
