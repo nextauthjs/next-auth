@@ -1,5 +1,6 @@
 import { createConnection, getConnection } from 'typeorm'
 import { createHash } from 'crypto'
+import bcrypt from 'bcrypt'
 import require_optional from 'require_optional' // eslint-disable-line camelcase
 
 import { CreateUserError } from '../../lib/errors'
@@ -122,8 +123,15 @@ const Adapter = (typeOrmConfig, options = {}) => {
       debug('CREATE_USER', profile)
       try {
         // Create user account
-        const user = new User(profile.name, profile.email, profile.image, profile.emailVerified)
-        return await manager.save(user)
+        if( ! profile.password) {
+          const user = new User(profile.name, profile.email, null, profile.image, profile.emailVerified)
+          return await manager.save(user)
+        } else {
+          return await bcrypt.hash(profile.password, 10).then( async (hPwd) => {
+            const user = new User(profile.name, profile.email, hPwd, profile.image, profile.emailVerified)
+            return await manager.save(user)
+          })
+        }
       } catch (error) {
         logger.error('CREATE_USER_ERROR', error)
         return Promise.reject(new CreateUserError(error))
@@ -176,7 +184,17 @@ const Adapter = (typeOrmConfig, options = {}) => {
 
     async function updateUser (user) {
       debug('UPDATE_USER', user)
-      return manager.save(User, user)
+      if( ! user.password) {
+        // No password
+        return manager.save(User, user)
+      } else {
+        return await bcrypt.hash(user.password, 10).then( async (hPwd) => {
+          const userWithPwd = {...user,
+            password: hPwd
+          }
+          return manager.save(User, userWithPwd) 
+        })
+      }
     }
 
     async function deleteUser (userId) {
