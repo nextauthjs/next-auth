@@ -123,13 +123,13 @@ const Adapter = (typeOrmConfig, options = {}) => {
       debug('CREATE_USER', profile)
       try {
         // Create user account
-        if( ! profile.password) {
+        if (!profile.password) {
           const user = new User(profile.name, profile.email, null, profile.image, profile.emailVerified)
           return await manager.save(user)
         } else {
-          return await bcrypt.hash(profile.password, 10).then( async (hPwd) => {
+          return await bcrypt.hash(profile.password, 10).then(async (hPwd) => {
             const user = new User(profile.name, profile.email, hPwd, profile.image, profile.emailVerified)
-            return await manager.save(user)
+            return manager.save(user)
           })
         }
       } catch (error) {
@@ -184,15 +184,16 @@ const Adapter = (typeOrmConfig, options = {}) => {
 
     async function updateUser (user) {
       debug('UPDATE_USER', user)
-      if( ! user.password) {
+      if (!user.password) {
         // No password
         return manager.save(User, user)
       } else {
-        return await bcrypt.hash(user.password, 10).then( async (hPwd) => {
-          const userWithPwd = {...user,
+        return bcrypt.hash(user.password, 10).then(async (hPwd) => {
+          const userWithPwd = {
+            ...user,
             password: hPwd
           }
-          return manager.save(User, userWithPwd) 
+          return manager.save(User, userWithPwd)
         })
       }
     }
