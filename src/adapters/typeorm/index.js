@@ -182,10 +182,9 @@ const Adapter = (typeOrmConfig, options = {}) => {
       }
     }
 
-    async function updateUser (user) {
+    async function updateUser (user, resetPassword = false) {
       debug('UPDATE_USER', user)
-      if (!user.password) {
-        // No password
+      if (!user.password || !resetPassword) {
         return manager.save(User, user)
       } else {
         return bcrypt.hash(user.password, 10).then(async (hPwd) => {
