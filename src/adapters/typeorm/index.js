@@ -182,17 +182,43 @@ const Adapter = (typeOrmConfig, options = {}) => {
       }
     }
 
-    async function updateUser (user, resetPassword = false) {
+    async function updateUser (user, passwords) {
       debug('UPDATE_USER', user)
-      if (!user.password || !resetPassword) {
+      if (!passwords || !passwords.new) {
+        // No new password provided
+        // Dont update password
         return manager.save(User, user)
-      } else {
-        return bcrypt.hash(user.password, 10).then(async (hPwd) => {
+      } else if (!user.password || passwords.reset) {
+        // No password previously set for this user
+        // Or reset the password directly
+        return bcrypt.hash(passwords.new, 10).then(async (hPwd) => {
           const userWithPwd = {
             ...user,
             password: hPwd
           }
           return manager.save(User, userWithPwd)
+        })
+      } else if (!passwords.current) {
+        // No current password provided
+        // Cannot match with previously set password
+        // Dont update password
+        return manager.save(User, user)
+      } else {
+        // Compare the provided current password with the stored hashed password
+        return bcrypt.compare(passwords.current, user.password).then(async (pass) => {
+          if (pass) {
+            // Provided password matches with previously set password
+            return bcrypt.hash(passwords.new, 10).then((hPwd) => {
+              const userWithPwd = {
+                ...user,
+                password: hPwd
+              }
+              return manager.save(User, userWithPwd)
+            })
+          } else {
+            // Not matched. Dont update password
+            return manager.save(User, user)
+          }
         })
       }
     }
