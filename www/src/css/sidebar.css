@@ -1,7 +1,6 @@
 /* Targets sidebar (left hand side) */
 .main-wrapper > div > div {
   border-right: none !important;
-  background: var(--ifm-footer-background-color);
 }
 
 .menu__list .menu__list-item a[href="#!"],

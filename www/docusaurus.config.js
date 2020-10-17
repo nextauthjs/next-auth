@@ -18,6 +18,13 @@ module.exports = {
         src: 'img/logo/logo-xs.png'
       },
       links: [
+        /*
+        {
+          to: '/features',
+          label: 'Features',
+          position: 'left'
+        },
+        */
         {
           to: '/getting-started/introduction',
           activeBasePath: 'docs',
@@ -111,7 +118,7 @@ module.exports = {
           editUrl: 'https://github.com/iaincollins/next-auth/edit/main/www'
         },
         theme: {
-          customCss: require.resolve('./src/css/custom.css')
+          customCss: require.resolve('./src/css/index.css')
         }
       }
     ]
