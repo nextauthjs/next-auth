@@ -87,7 +87,8 @@ export default async (req, res, options, done) => {
             const defaultJwtPayload = {
               name: user.name,
               email: user.email,
-              picture: user.image
+              picture: user.image,
+              sub: user.id.toString()
             }
             const jwtPayload = await callbacks.jwt(defaultJwtPayload, user, account, OAuthProfile, isNewUser)
 
@@ -177,7 +178,8 @@ export default async (req, res, options, done) => {
         const defaultJwtPayload = {
           name: user.name,
           email: user.email,
-          picture: user.image
+          picture: user.image,
+          sub: user.id.toString()
         }
         const jwtPayload = await callbacks.jwt(defaultJwtPayload, user, account, profile, isNewUser)
 
