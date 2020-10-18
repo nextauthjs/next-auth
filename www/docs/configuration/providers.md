@@ -3,7 +3,7 @@ id: providers
 title: Providers
 ---
 
-Authentication Providers in NextAuth.js are how you define services can be used to sign in.
+Authentication Providers in NextAuth.js are how you define which services can be used to sign in.
 
 NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1.0A and 2.0 and has built-in support for many popular OAuth sign-in services. It also supports email / passwordless authentication.
 
