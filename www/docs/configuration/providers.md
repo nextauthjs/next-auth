@@ -3,13 +3,15 @@ id: providers
 title: Providers
 ---
 
-Authentication Providers in NextAuth.js are how you define services can be used to sign in.
+Authentication Providers in NextAuth.js are how you define services that can be used to sign in.
 
-NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1.0A and 2.0 and has built-in support for many popular OAuth sign-in services. It also supports email / passwordless authentication.
+This includes, OAuth, email / passwordless and other other services.
 
 ## Sign in with OAuth
 
-### Built-in providers
+NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1.0A and 2.0 and has built-in support for many popular OAuth sign-in services.
+
+### Built-in OAuth providers
 
 * [Apple](/providers/apple)
 * [Atlassian](/providers/atlassian)
@@ -20,6 +22,7 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 * [Amazon Cognito](/providers/cognito)
 * [Discord](/providers/discord)
 * [Facebook](/providers/facebook)
+* [FusionAuth](/providers/fusionauth)
 * [GitHub](/providers/github)
 * [GitLab](/providers/gitlab)
 * [Google](/providers/google)
@@ -33,7 +36,7 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 * [Twitter](/providers/twitter)
 * [Yandex](/providers/yandex)
 
-### Using a built-in provider
+### Using a built-in OAuth provider
 
 1. Register your application at the developer portal of your provider. There are links above to the developer docs for most supported providers with details on how to register your application.
 
