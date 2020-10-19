@@ -10,7 +10,7 @@
 }
 
 .menu__list .menu__list-item a:not(.menu__link--sublist) {
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .menu__list .menu__list-item a:not(.menu__link--sublist):hover {
@@ -46,7 +46,9 @@ html[data-theme='dark'] .menu__list .menu__list-item a[href="#!"] {
 @media screen and (max-width: 996px) {
   .menu.menu--responsive {
     top: 3.5rem;
+    overflow: auto;
     padding: 0;
+    background: var(--ifm-background-color);
   }
   .navbar {
     z-index: 1000 !important;

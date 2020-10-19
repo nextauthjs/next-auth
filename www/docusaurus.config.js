@@ -18,13 +18,6 @@ module.exports = {
         src: 'img/logo/logo-xs.png'
       },
       links: [
-        /*
-        {
-          to: '/features',
-          label: 'Features',
-          position: 'left'
-        },
-        */
         {
           to: '/getting-started/introduction',
           activeBasePath: 'docs',
