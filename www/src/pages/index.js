@@ -149,7 +149,7 @@ function Home () {
               </div>
               <div className='row'>
                 <div className='col'>
-                  <h2 className='text--center' style={{fontSize: '2.5rem'}}>
+                  <h2 className='text--center' style={{ fontSize: '2.5rem' }}>
                     Add authentication in minutes!
                   </h2>
                 </div>
