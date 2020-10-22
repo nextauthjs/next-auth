@@ -9,7 +9,7 @@
 
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-link: #039eed;
+  --ifm-color-link: #289EF9;
   --ifm-color-primary: #1eb1fc;
   --ifm-color-primary-dark: #03a7fa;
   --ifm-color-primary-darker: #039eed;
@@ -25,14 +25,18 @@
   --ifm-background-color: #fff;
   --ifm-footer-background-color: #f9f9f9;
   --ifm-hero-background-color: #f5f5f5;
+  --ifm-navbar-background-color: rgba(255,255,255,0.95);
+  --ifm-h1-font-size: 3rem;
+  --ifm-h1-font-size: 2rem;
 }
 
 html[data-theme='dark']:root {
-  --ifm-color-link: #3abbfc;
-  --ifm-footer-background-color: #242526;
+  --ifm-color-link: #289EF9;
+  --ifm-footer-background-color: #111;
   --ifm-html-background-color: #242526;
   --ifm-background-color: #000000;
-  --ifm-hero-background-color: #191919;
+  --ifm-hero-background-color: #111111;
+  --ifm-navbar-background-color: rgba(0,0,0,0.95);
 }
 
 @import "hero.css";
@@ -47,9 +51,13 @@ html[data-theme='dark']:root {
   }
 }
 
-a,
+a {
+  font-weight: 600;
+}
+
 .navbar .navbar__link {
   font-weight: 600;
+  font-size: 1.1rem;
 }
 
 a,
@@ -68,12 +76,12 @@ a:hover,
 }
 
 .main-wrapper h1 {
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: 2rem;
 }
 
 .main-wrapper h2 {
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .main-wrapper h3 {
@@ -118,10 +126,11 @@ a:hover,
 .home-subtitle {
   justify-content: center;
   padding: 0rem 0 2rem 0;
-  opacity: 0.8;
+  opacity: 0.6;
   font-style: italic;
-  margin: 0;
+  margin: 0 auto;
   font-size: 1.2rem;
+  text-align: center;
 }
 
 .home-main .code {
@@ -141,6 +150,12 @@ a:hover,
   font-size: 1rem;
   font-weight: 700;
   width: 100%;
+}
+
+.home-main .code .code-heading span {
+  opacity: 0.6;
+  float: right;
+  font-weight: normal;
 }
 
 .home-main .col {
@@ -210,49 +225,50 @@ html[data-theme='dark'] {
   border-radius: 10rem;
   overflow: visible;
   background-color: var(--ifm-color-primary);
-  margin-bottom: 1rem;
   box-shadow: 0 0 2rem rgba(0,0,0,.1);
-  background-image: linear-gradient(0deg, #4FA852 0%, #9ADA5E 100%);
+  background-image: linear-gradient(0deg, #1786FB 0%, #45EABA 100%);
 }
 
 .home-main .section-features .row .col:nth-child(2) .feature-image-wrapper {
-  background-image: linear-gradient(0deg, var(--ifm-color-primary-darkest) 0%, var(--ifm-color-primary) 100%);
+  background-image: linear-gradient(0deg, #605BD4 0%, #E95595 100%);  
 }
 
+
 .home-main .section-features .row .col:nth-child(3) .feature-image-wrapper {
-  background-image: linear-gradient(0deg, #E95595 0%, #F988BA 100%);
+  background-image: linear-gradient(0deg, #FD5D21 0%, #FBB12E 100%);
 }
 
 .home-main .feature-image-wrapper img {
-  filter: saturate(0.5) contrast(2);
+  filter: saturate(1.2) contrast(2);
   zoom: .80;
 }
 
-/* Targets the 'Documentation' button on mobile */
-/* The UX is pretty poor but doing the best we can with it! */
-.button.button--secondary.button--sm.menu__button {
-  position: fixed;
-  right: 1rem;
-  bottom: 1rem;
-  z-index: 1000;
-  width: auto;
-  padding: 0.5rem 1rem;
-  border-radius: 2rem;
-  border: none;
-  background: #fff;
-  box-shadow: 0 0 1rem rgba(0,0,0,0.2);
-}
+@media screen and (max-width: 996px) {
+  /* Targets the 'Documentation' button on mobile */
+  /* The UX is pretty poor but doing the best we can with it! */
+  .button.button--secondary.button--sm.menu__button {
+    position: relative;
+    top: 0;
+    width: 100%;
+    background: none;
+    box-shadow: none;
+    font-size: 1rem !important;
+    color: #000;
+    text-align: left;
+    padding: .1rem 2rem;
+    text-decoration: underline;
+    font-weight: bold;
+    display: inline;
+    opacity: 1;
+  }
 
-html[data-theme='dark'] .button.button--secondary.button--sm.menu__button {
-  background: #242526;
-  color: #fff;
-  box-shadow: 0 0 1rem rgba(0,0,0,0.4);
-}
+  html[data-theme='dark'] .button.button--secondary.button--sm.menu__button {
+    color: #fff;
+  }
 
-.button.button--secondary.button--sm.menu__button:before {
-  font-size: 2rem;
-  line-height: 2rem;
-  content: "?";
-  opacity: 0.8;
-  display: block;
+  .button.button--secondary.button--sm.menu__button:before {
+    content: "Documentation";
+    opacity: 0.8;
+    display: block;
+  }
 }
