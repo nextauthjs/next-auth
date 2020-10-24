@@ -26,7 +26,7 @@ export default async (req, res, options, done) => {
     oAuthSignin(provider, csrfToken, (error, oAuthSigninUrl) => {
       if (error) {
         logger.error('SIGNIN_OAUTH_ERROR', error)
-        return redirect(`${baseUrl}${basePath}/error?error=oAuthSignin`)
+        return redirect(`${baseUrl}${basePath}/error?error=OAuthSignin`)
       }
 
       return redirect(oAuthSigninUrl)
