@@ -68,6 +68,14 @@ const jwt = async (token, oAuthProfile) => {
   return Promise.resolve(token)
 }
 
+/**
+ * This callback is called from errors in server routes `callback` and `signin`
+ *
+ * @param {*} error
+ * @param {*} redirect
+ * @param {*} redirectUrl
+ */
+// eslint-disable-next-line
 const error = async (error, redirect, redirectUrl) => {
   return Promise.resolve(redirect(redirectUrl))
 }

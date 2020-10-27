@@ -41,7 +41,8 @@ export default async (req, provider, csrfToken, callback) => {
         user = body.user != null ? JSON.parse(body.user) : null
       } catch (e) {
         logger.error('OAUTH_CALLBACK_HANDLER_ERROR', e, req.body, provider.id, code)
-        return callback({ error: e, body: req.body })
+        const error = { error: e, body: req.body }
+        return callback(error)
       }
     }
 
