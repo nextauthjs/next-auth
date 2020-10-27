@@ -1,5 +1,8 @@
 # NextAuth.js
 
+![Build Test](https://github.com/nextauthjs/next-auth/workflows/Build%20Test/badge.svg)
+![Integration Test](https://github.com/nextauthjs/next-auth/workflows/Integration%20Test/badge.svg)
+
 ## Overview
 
 NextAuth.js is a complete open source authentication solution for [Next.js](http://nextjs.org/) applications.
@@ -29,7 +32,7 @@ NextAuth.js can be used with or without a database.
 
 * An open source solution that allows you to keep control of your data
 * Supports Bring Your Own Database (BYOD) and can be used with any database
-* Built-in support for [MySQL, MariaDB, Postgres, MongoDB and SQLite](https://next-auth.js.org/configuration/databases)
+* Built-in support for [MySQL, MariaDB, Postgres, Microsoft SQL Server, MongoDB and SQLite](https://next-auth.js.org/configuration/databases)
 * Works great with databases from popular hosting providers
 * Can also be used *without a database* (e.g. OAuth + JWT)
 
@@ -46,6 +49,16 @@ NextAuth.js can be used with or without a database.
 * Attempts to implement the latest guidance published by [Open Web Application Security Project](https://owasp.org/)
 
 Advanced options allow you to define your own routines to handle controlling what accounts are allowed to sign in, for encoding and decoding JSON Web Tokens and to set custom cookie security policies and session properties, so you can control who is able to sign in and how often sessions have to be re-validated. 
+
+### Typescript
+
+This library gained Typescript support recently. You can install the types in the following way:
+```
+$ npm i -D @types/next-auth
+```
+In you encounter any issue with them, please raise an issue and add the "typescript" label to it, we'll try to help you with it as soon as possible.
+
+Alternatively you can raise a PR directly with your fixes on [**DefinitivelyTyped**](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/next-auth).
 
 ## Example
 
@@ -89,7 +102,7 @@ import {
   signout 
 } from 'next-auth/client'
 
-export default () => {
+export default function myComponent() {
   const [ session, loading ] = useSession()
 
   return <p>

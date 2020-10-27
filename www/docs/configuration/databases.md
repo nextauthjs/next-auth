@@ -6,7 +6,7 @@ title: Databases
 NextAuth.js comes with multiple ways of connecting to a database:
 
 * **TypeORM** (default)<br/>
-  _The TypeORM adapter supports MySQL, Postgres, SQLite and MongoDB databases._
+  _The TypeORM adapter supports MySQL, Postgres, MsSql, SQLite and MongoDB databases._
 * **Prisma**<br/>
   _The Prisma 2 adapter supports MySQL, Postgres and SQLite databases._
 * **Custom Adapter**<br/>
@@ -27,7 +27,7 @@ You can specify database credentials as as a connection string or a [TypeORM con
 The following approaches are exactly equivalent:
 
 ```js
-database: 'mysql://username:password@127.0.0.1:3306/database_name'
+database: 'mysql://nextauth:password@127.0.0.1:3306/database_name'
 ```
 
 ```js
@@ -37,7 +37,7 @@ database: {
   port: 3306,
   username: 'nextauth',
   password: 'password',
-  database: 'nextauth'
+  database: 'database_name'
 }
 ```
 
@@ -47,7 +47,7 @@ You can pass in any valid [TypeORM configuration option](https://github.com/type
 *e.g. To set a prefix for all table names you can use the **entityPrefix** option as connection string parameter:*
 
 ```js
-'mysql://username:password@127.0.0.1:3306/database_name?entityPrefix=nextauth_'
+'mysql://nextauth:password@127.0.0.1:3306/database_name?entityPrefix=nextauth_'
 ```
 
 *…or as a database configuration object:*
@@ -59,7 +59,7 @@ database: {
   port: 3306,
   username: 'nextauth',
   password: 'password',
-  database: 'nextauth'
+  database: 'database_name',
   entityPrefix: 'nextauth_'
 }
 ```
@@ -81,7 +81,7 @@ _If you are running SQLite, MongoDB or a Document database you can skip this ste
 Alternatively, you can also have your database configured automatically using the `synchronize: true` option:
 
 ```js
-database: 'mysql://username:password@127.0.0.1:3306/database_name?synchronize=true'
+database: 'mysql://nextauth:password@127.0.0.1:3306/database_name?synchronize=true'
 ```
 
 ```js
@@ -91,7 +91,7 @@ database: {
   port: 3306,
   username: 'nextauth',
   password: 'password',
-  database: 'nextauth',
+  database: 'database_name',
   synchronize: true
 }
 ```
@@ -147,6 +147,17 @@ Install module:
 database: 'postgres://username:password@127.0.0.1:3306/database_name'
 ```
 
+### Microsoft SQL Server
+
+Install module:
+`npm i mssql`
+
+#### Example
+
+```js
+database: 'mssql://sa:password@localhost:1433/database_name'
+```
+
 ### MongoDB
 
 Install module:
@@ -170,6 +181,7 @@ Install module:
 ```js
 database: 'sqlite://localhost/:memory:'
 ```
+
 
 ---
 

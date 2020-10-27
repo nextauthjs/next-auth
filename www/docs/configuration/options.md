@@ -103,9 +103,9 @@ session: {
 
 #### Description
 
-JSON Web Tokens are can be used for session tokens if enabled with `session: { jwt: true }` option. JSON Web Tokens enabled by default if you have not specified a database.
+JSON Web Tokens can be used for session tokens if enabled with `session: { jwt: true }` option. JSON Web Tokens are enabled by default if you have not specified a database.
 
-By default JSON Web Tokens tokens are signed (JWS) but not encrypted (JWE), as JWT encryption adds additional overhead and comes with some caveats. You can enable encryption by setting `encryption: true`.
+By default JSON Web Tokens are signed (JWS) but not encrypted (JWE), as JWT encryption adds additional overhead and comes with some caveats. You can enable encryption by setting `encryption: true`.
 
 #### JSON Web Token Options
 
@@ -260,7 +260,7 @@ Events are asynchronous functions that do not return a response, they are useful
 
 You can specify a handler for any of these events below - e.g. for debugging or to create an audit log.
 
-The content of the message object varies depending on the flow (e.g. OAuth or Email authentication flow, JWT or database sessions, etc), but typically contains a user object and/or contents of the JSON Web Token and other information relevent to the event.
+The content of the message object varies depending on the flow (e.g. OAuth or Email authentication flow, JWT or database sessions, etc), but typically contains a user object and/or contents of the JSON Web Token and other information relevant to the event.
 
 ```js
 events: {
@@ -345,7 +345,7 @@ You can override the default cookie names and options for any of the cookies use
 
 This is an advanced option and using it is not recommended as you may break authentication or introduce security flaws into your application.
 
-You can specify one or more cookies with custom properties, but if you specify custom options for a cookie you must provided all the options for that cookie.
+You can specify one or more cookies with custom properties, but if you specify custom options for a cookie you must provide all the options for that cookie.
 
 If you use this feature, you will likely want to create conditional behaviour to support setting different cookies policies in development and production builds, as you will be opting out of the built-in dynamic policy.
 

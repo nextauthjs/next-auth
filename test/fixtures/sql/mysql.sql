@@ -1,4 +1,4 @@
-CREATE TABLE accountsshould be
+CREATE TABLE accounts
   (
     id                   INT NOT NULL AUTO_INCREMENT,
     compound_id          VARCHAR(255) NOT NULL,

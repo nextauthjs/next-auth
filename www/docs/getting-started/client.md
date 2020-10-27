@@ -139,11 +139,11 @@ It can be use useful if you are creating a dynamic custom sign in page.
 #### API Route
 
 ```jsx title="pages/api/example.js"
-import { getSession } from 'next-auth/client'
+import { getProviders } from 'next-auth/client'
 
 export default async (req, res) => {
-  const session = await getSession({ req })
-  console.log('Session', session)
+  const providers = await getProviders({ req })
+  console.log('Providers', providers)
   res.end()
 }
 ```
@@ -243,7 +243,7 @@ This improves performance, reduces network calls and avoids page flicker when re
 ```jsx title="pages/_app.js"
 import { Provider } from 'next-auth/client'
 
-export default function App ({ Component, pageProps }) => {
+export default function App ({ Component, pageProps }) {
   return (
     <Provider session={pageProps.session}>
       <Component {...pageProps} />
@@ -265,7 +265,7 @@ However, if you need to customise the session behaviour and/or are using short s
 ```jsx title="pages/_app.js"
 import { Provider } from 'next-auth/client'
 
-export default function App ({ Component, pageProps }) => {
+export default function App ({ Component, pageProps }) {
   return (
     <Provider session={pageProps.session}
       options={{ 
@@ -289,7 +289,7 @@ Using low values for `clientMaxAge` or `keepAlive` will increase network traffic
 
 #### Client Max Age
 
-The `clientMaxAge` option is the maximum age a session data can be on the client before it is considerd stale.
+The `clientMaxAge` option is the maximum age a session data can be on the client before it is considered stale.
 
 When `clientMaxAge` is set to `0` (the default) the cache will always be used when useSession is called and only explicit calls made to get the session status (i.e. `getSession()`) or event triggers, such as signing in or out in another tab/window, or a tab/window gaining or losing focus, will trigger an update of the session state.
 
