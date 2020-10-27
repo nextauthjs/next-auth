@@ -124,7 +124,8 @@ export default async (req, res, options, done) => {
             return redirect(`${baseUrl}${basePath}/error?error=OAuthCreateAccount`)
           } else {
             logger.error('OAUTH_CALLBACK_HANDLER_ERROR', error)
-            return redirect(`${baseUrl}${basePath}/error?error=Callback`)
+
+            return callbacks.error(error, redirect, `${baseUrl}${basePath}/error?error=Callback`)
           }
         }
       })
