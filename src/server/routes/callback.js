@@ -75,9 +75,9 @@ export default async (req, res, options, done) => {
             }
           } catch (error) {
             if (error instanceof Error) {
-              return redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
+              return callbacks.error(error, redirect, `${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
             } else {
-              return redirect(error)
+              return callbacks.error(error, redirect, error)
             }
           }
 
@@ -119,9 +119,9 @@ export default async (req, res, options, done) => {
         } catch (error) {
           if (error.name === 'AccountNotLinkedError') {
             // If the email on the account is already linked, but nto with this oAuth account
-            return redirect(`${baseUrl}${basePath}/error?error=OAuthAccountNotLinked`)
+            return callbacks.error(error, redirect, `${baseUrl}${basePath}/error?error=OAuthAccountNotLinked`)
           } else if (error.name === 'CreateUserError') {
-            return redirect(`${baseUrl}${basePath}/error?error=OAuthCreateAccount`)
+            return callbacks.error(error, redirect, `${baseUrl}${basePath}/error?error=OAuthCreateAccount`)
           } else {
             logger.error('OAUTH_CALLBACK_HANDLER_ERROR', error)
 
@@ -131,13 +131,13 @@ export default async (req, res, options, done) => {
       })
     } catch (error) {
       logger.error('OAUTH_CALLBACK_ERROR', error)
-      return redirect(`${baseUrl}${basePath}/error?error=Callback`)
+      return callbacks.error(error, redirect, `${baseUrl}${basePath}/error?error=Callback`)
     }
   } else if (type === 'email') {
     try {
       if (!adapter) {
         logger.error('EMAIL_REQUIRES_ADAPTER_ERROR')
-        return redirect(`${baseUrl}${basePath}/error?error=Configuration`)
+        return callbacks.error({ name: 'EMAIL_REQUIRES_ADAPTER_ERROR', type: 'Configuration' }, redirect, `${baseUrl}${basePath}/error?error=Configuration`)
       }
 
       const { getVerificationRequest, deleteVerificationRequest, getUserByEmail } = await adapter.getAdapter(options)
@@ -147,7 +147,7 @@ export default async (req, res, options, done) => {
       // Verify email and verification token exist in database
       const invite = await getVerificationRequest(email, verificationToken, secret, provider)
       if (!invite) {
-        return redirect(`${baseUrl}${basePath}/error?error=Verification`)
+        return callbacks.error({ type: 'Verification' }, redirect, `${baseUrl}${basePath}/error?error=Verification`)
       }
 
       // If verification token is valid, delete verification request token from
