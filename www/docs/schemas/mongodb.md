@@ -7,6 +7,11 @@ MongoDB is a document database and does not use schemas in the same way as most 
 
 **In MongoDB as collections and indexes are created automatically.**
 
+## Add MongoDB Driver to your dependencies:
+```
+npm install --save mongodb
+```
+
 ## Objects in MongoDB
 
 Objects stored in MongoDB use similar datatypes to SQL, with some differences:
