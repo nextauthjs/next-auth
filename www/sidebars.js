@@ -40,6 +40,7 @@ module.exports = {
       'providers/google',
       'providers/identity-server4',
       'providers/linkedin',
+      'providers/microsoft',
       'providers/mixer',
       'providers/okta',
       'providers/slack',
