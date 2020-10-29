@@ -1,5 +1,5 @@
 export default (options) => {
-  const tenant = options.tenantId ? options.tenantId : 'common';
+  const tenant = options.tenantId ? options.tenantId : 'common'
 
   return {
     id: 'microsoft',
@@ -7,7 +7,7 @@ export default (options) => {
     type: 'oauth',
     version: '2.0',
     params: {
-      grant_type: 'authorization_code',
+      grant_type: 'authorization_code'
     },
     accessTokenUrl: `https://login.microsoftonline.com/${tenant}/oauth2/v2.0/token`,
     authorizationUrl: `https://login.microsoftonline.com/${tenant}/oauth2/v2.0/authorize?response_type=code&response_mode=query`,
@@ -16,9 +16,9 @@ export default (options) => {
       return {
         id: profile.id,
         name: profile.displayName,
-        email: profile.userPrincipalName,
-      };
+        email: profile.userPrincipalName
+      }
     },
-    ...options,
-  };
-};
+    ...options
+  }
+}
