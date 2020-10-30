@@ -12,7 +12,7 @@ export default (options) => {
     profile: (profile) => {
       if (profile.avatar === null) {
         const defaultAvatarNumber = parseInt(profile.discriminator) % 5
-        profile.image_url = `https://cdn.discordapp.com/embed/avatars/${defaultAvatarNum}.png`
+        profile.image_url = `https://cdn.discordapp.com/embed/avatars/${defaultAvatarNumber}.png`
       } else {
         const format = profile.premium_type === 1 || profile.premium_type === 2 ? 'gif' : 'png'
         profile.image_url = `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.${format}`
