@@ -85,7 +85,7 @@ The KeyID is located after you create the Key look for before you download the k
 ### Testing
 
 :::tip
-Apple require all sites to run HTTPS (including local development instances).
+Apple requires all sites to run HTTPS (including local development instances).
 :::
 
 :::tip

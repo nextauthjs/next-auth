@@ -8,7 +8,7 @@
 }
 
 html[data-theme='dark'] .hero {
-  background: linear-gradient(0deg, var(--ifm-hero-background-color) 0%, #242526 100%);
+  background: linear-gradient(0deg, var(--ifm-hero-background-color) 0%, #000 100%);
 }
 
 .hero-inner {
@@ -71,8 +71,9 @@ html[data-theme='dark'] .hero {
   }
 }
 
-.hero .hero__title {  
+.hero .hero__title {
   font-size: 3rem;
+  font-weight: 800;
   margin-bottom: 0.5rem;
   padding: 0;
   border: none;
@@ -91,15 +92,15 @@ html[data-theme="dark"] .hero .hero__title {
 }
 
 .hero .hero__subtitle {
-  font-size: 1rem;
-  margin-bottom: 1.5rem;
-  opacity: 0.6;
-  font-weight: 500;
+  font-size: 1.5rem;
+  margin: 0;
+  xopacity: 0.7;
+  xfont-weight: 400;
 }
 
 @media screen and (min-width: 689px) {
   .hero .hero__subtitle {
-    font-size: 1.5rem;
+    font-size: 2rem;
   }
 }
 
