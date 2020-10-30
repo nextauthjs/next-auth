@@ -11,7 +11,7 @@ export default (options) => {
     profileUrl: 'https://discord.com/api/users/@me',
     profile: (profile) => {
       if (profile.avatar === null) {
-        const defaultAvatarNum = parseInt(profile.discriminator) % 5
+        const defaultAvatarNumber = parseInt(profile.discriminator) % 5
         profile.image_url = `https://cdn.discordapp.com/embed/avatars/${defaultAvatarNum}.png`
       } else {
         const format = profile.premium_type === 1 || profile.premium_type === 2 ? 'gif' : 'png'
