@@ -25,6 +25,7 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 * [GitLab](/providers/gitlab)
 * [Google](/providers/google)
 * [IdentityServer4](/providers/identity-server4)
+* [Instagram](/providers/instagram)
 * [LinkedIn](/providers/LinkedIn)
 * [Mixer](/providers/Mixer)
 * [Okta](/providers/Okta)
