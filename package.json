@@ -55,8 +55,8 @@
     "typeorm": "^0.2.24"
   },
   "peerDependencies": {
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react": "^16.13.1 || ^17",
+    "react-dom": "^16.13.1 || ^17"
   },
   "peerOptionalDependencies": {
     "mongodb": "^3.5.9",
