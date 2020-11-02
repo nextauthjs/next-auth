@@ -235,7 +235,7 @@ const signIn = async (provider, args = {}, authParams = {}) => {
     let signInUrl = (providers[provider].type === 'credentials')
       ? `${baseUrl}/callback/${provider}`
       : `${baseUrl}/signin/${provider}`
-    
+
     if (authParams) {
       signInUrl += `?${new URLSearchParams(authParams).toString()}`
     }

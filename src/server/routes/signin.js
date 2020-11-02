@@ -23,7 +23,7 @@ export default async (req, res, options, done) => {
   }
 
   if (type === 'oauth' && req.method === 'POST') {
-    const authParams = {...req.query}
+    const authParams = { ...req.query }
     delete authParams.nextauth // This is probably not intended to be sent to the provider, remove
 
     oAuthSignin(provider, csrfToken, (error, oAuthSigninUrl) => {
