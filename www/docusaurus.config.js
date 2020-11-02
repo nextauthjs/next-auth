@@ -111,7 +111,7 @@ module.exports = {
           editUrl: 'https://github.com/iaincollins/next-auth/edit/main/www'
         },
         theme: {
-          customCss: require.resolve('./src/css/custom.css')
+          customCss: require.resolve('./src/css/index.css')
         }
       }
     ]

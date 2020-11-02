@@ -36,7 +36,7 @@ export default async (req, res, options, done) => {
         try {
           if (error) {
             logger.error('CALLBACK_OAUTH_ERROR', error)
-            return redirect(`${baseUrl}${basePath}/error?error=oAuthCallback`)
+            return redirect(`${baseUrl}${basePath}/error?error=OAuthCallback`)
           }
 
           // Make it easier to debug when adding a new provider

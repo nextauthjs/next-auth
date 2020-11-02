@@ -1,5 +1,6 @@
-import Auth0 from './auth0'
 import Apple from './apple'
+import Atlassian from './atlassian'
+import Auth0 from './auth0'
 import Basecamp from './basecamp'
 import BattleNet from './battlenet'
 import Box from './box'
@@ -8,6 +9,7 @@ import Cognito from './cognito'
 import Discord from './discord'
 import Email from './email'
 import Facebook from './facebook'
+import FusionAuth from './fusionauth'
 import GitHub from './github'
 import GitLab from './gitlab'
 import Google from './google'
@@ -22,6 +24,7 @@ import Twitter from './twitter'
 import Yandex from './yandex'
 
 export default {
+  Atlassian,
   Auth0,
   Apple,
   Basecamp,
@@ -32,6 +35,7 @@ export default {
   Discord,
   Email,
   Facebook,
+  FusionAuth,
   GitHub,
   GitLab,
   Google,

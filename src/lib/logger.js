@@ -14,7 +14,7 @@ const logger = {
     console.warn(
       `[next-auth][warn][${warnCode.toLowerCase()}]`,
       text,
-      `\nhttps://next-auth.js.org/warning#${warnCode.toLowerCase()}`
+      `\nhttps://next-auth.js.org/warnings#${warnCode.toLowerCase()}`
     )
   },
   debug: (debugCode, ...text) => {

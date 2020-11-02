@@ -5,7 +5,7 @@ title: Email
 
 ## Overview
 
-The Email provider uses email to send "magic links" that can be used sign in, you will likely have seen these if you have used services like Slack before.
+The Email provider uses email to send "magic links" that can be used to sign in, you will likely have seen these if you have used services like Slack before.
 
 Adding support for signing in via email in addition to one or more OAuth services provides a way for users to sign in if they lose access to their OAuth account (e.g. if it is locked or deleted).
 
