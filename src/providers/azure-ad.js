@@ -15,7 +15,7 @@ export default (options) => {
         id: profile.sub,
         name: profile.name,
         email: profile.email,
-        image: 'https://graph.microsoft.com/v1.0/me/photo/$value',
+        image: 'https://graph.microsoft.com/v1.0/me/photo/$value'
       }
     },
     clientId: options.clientId,
