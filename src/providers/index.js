@@ -1,6 +1,7 @@
 import Apple from './apple'
 import Atlassian from './atlassian'
 import Auth0 from './auth0'
+import AzureAD from './azure-ad'
 import Basecamp from './basecamp'
 import BattleNet from './battlenet'
 import Box from './box'
@@ -27,6 +28,7 @@ export default {
   Atlassian,
   Auth0,
   Apple,
+  AzureAD,
   Basecamp,
   BattleNet,
   Box,
