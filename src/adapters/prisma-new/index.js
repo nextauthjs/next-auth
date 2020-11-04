@@ -237,12 +237,11 @@ const Adapter = (config) => {
         }
         const session = {
           expires,
-          // userId: user.id,
           sessionToken: randomBytes(32).toString('hex'),
           accessToken: randomBytes(32).toString('hex'),
           user: {
             connect: {
-              id: user.userId
+              id: user.id
             }
           }
         }
