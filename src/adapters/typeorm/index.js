@@ -288,7 +288,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
       }
     }
 
-    async function createVerificationRequest (identifier, url, token, secret, provider) {
+    async function createVerificationRequest (identifier, url, token, secret, provider, options) {
       debug('CREATE_VERIFICATION_REQUEST', identifier)
       try {
         const { baseUrl } = appOptions
@@ -312,7 +312,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
 
         // With the verificationCallback on a provider, you can send an email, or queue
         // an email to be sent, or perform some other action (e.g. send a text message)
-        await sendVerificationRequest({ identifier, url, token, baseUrl, provider })
+        await sendVerificationRequest({ identifier, url, token, baseUrl, provider, options })
 
         return verificationRequest
       } catch (error) {
