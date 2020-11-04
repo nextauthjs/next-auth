@@ -1,10 +1,9 @@
 // @ts-check
-import { createHash, randomBytes } from 'crypto';
-import { klona } from 'klona';
-import LRU from 'lru-cache';
-import { CreateUserError } from '../../lib/errors';
-import logger from '../../lib/logger';
-
+import { createHash, randomBytes } from 'crypto'
+import { klona } from 'klona'
+import LRU from 'lru-cache'
+import { CreateUserError } from '../../lib/errors'
+import logger from '../../lib/logger'
 
 const sessionCache = new LRU({
   maxAge: 24 * 60 * 60 * 1000,
@@ -16,7 +15,8 @@ const userCache = new LRU({
   max: 1000
 })
 
-const maxAge = (expires) => expires ? new Date(expires).getTime() - Date.now() : undefined
+const maxAge = (expires) =>
+  expires ? new Date(expires).getTime() - Date.now() : undefined
 
 const Adapter = (config) => {
   const {
@@ -27,34 +27,34 @@ const Adapter = (config) => {
       Session: 'session',
       VerificationRequest: 'verificationRequest'
     }
-  } = config;
+  } = config
 
-  const { User, Account, Session, VerificationRequest } = modelMapping;
+  const { User, Account, Session, VerificationRequest } = modelMapping
 
-  async function getAdapter(appOptions) {
-    function debug(debugCode, ...args) {
-      logger.debug(`PRISMA_${debugCode}`, ...args);
+  async function getAdapter (appOptions) {
+    function debug (debugCode, ...args) {
+      logger.debug(`PRISMA_${debugCode}`, ...args)
     }
 
     if (appOptions && (!appOptions.session || !appOptions.session.maxAge)) {
       debug(
         'GET_ADAPTER',
         'Session expiry not configured (defaulting to 30 days'
-      );
+      )
     }
 
-    const defaultSessionMaxAge = 30 * 24 * 60 * 60 * 1000;
+    const defaultSessionMaxAge = 30 * 24 * 60 * 60 * 1000
     const sessionMaxAge =
       appOptions && appOptions.session && appOptions.session.maxAge
         ? appOptions.session.maxAge * 1000
-        : defaultSessionMaxAge;
+        : defaultSessionMaxAge
     const sessionUpdateAge =
       appOptions && appOptions.session && appOptions.session.updateAge
         ? appOptions.session.updateAge * 1000
-        : 0;
+        : 0
 
-    async function createUser(profile) {
-      debug('CREATE_USER', profile);
+    async function createUser (profile) {
+      debug('CREATE_USER', profile)
       try {
         const user = await prisma[User].create({
           data: {
@@ -65,17 +65,17 @@ const Adapter = (config) => {
               ? profile.emailVerified.toISOString()
               : null
           }
-        });
+        })
         userCache.set(user.id, user)
         return user
       } catch (error) {
-        logger.error('CREATE_USER_ERROR', error);
-        return Promise.reject(new CreateUserError(error));
+        logger.error('CREATE_USER_ERROR', error)
+        return Promise.reject(new CreateUserError(error))
       }
     }
 
-    async function getUser(id) {
-      debug('GET_USER', id);
+    async function getUser (id) {
+      debug('GET_USER', id)
       try {
         const cachedUser = userCache.get(id)
         if (cachedUser) {
@@ -89,28 +89,28 @@ const Adapter = (config) => {
         }
         return prisma[User].findOne({ where: { id } })
       } catch (error) {
-        logger.error('GET_USER_BY_ID_ERROR', error);
-        //@ts-ignore
-        return Promise.reject(new Error('GET_USER_BY_ID_ERROR', error));
+        logger.error('GET_USER_BY_ID_ERROR', error)
+        // @ts-ignore
+        return Promise.reject(new Error('GET_USER_BY_ID_ERROR', error))
       }
     }
 
-    async function getUserByEmail(email) {
-      debug('GET_USER_BY_EMAIL', email);
+    async function getUserByEmail (email) {
+      debug('GET_USER_BY_EMAIL', email)
       try {
         if (!email) {
-          return Promise.resolve(null);
+          return Promise.resolve(null)
         }
-        return prisma[User].findOne({ where: { email } });
+        return prisma[User].findOne({ where: { email } })
       } catch (error) {
-        logger.error('GET_USER_BY_EMAIL_ERROR', error);
-        //@ts-ignore
-        return Promise.reject(new Error('GET_USER_BY_EMAIL_ERROR', error));
+        logger.error('GET_USER_BY_EMAIL_ERROR', error)
+        // @ts-ignore
+        return Promise.reject(new Error('GET_USER_BY_EMAIL_ERROR', error))
       }
     }
 
-    async function getUserByProviderAccountId(providerId, providerAccountId) {
-      debug('GET_USER_BY_PROVIDER_ACCOUNT_ID', providerId, providerAccountId);
+    async function getUserByProviderAccountId (providerId, providerAccountId) {
+      debug('GET_USER_BY_PROVIDER_ACCOUNT_ID', providerId, providerAccountId)
       try {
         if (!providerId || !providerAccountId) return null
         const account = await prisma[Account].findOne({
@@ -118,28 +118,26 @@ const Adapter = (config) => {
             providerId_providerAccountId: {
               providerId: providerId,
               providerAccountId: providerAccountId
-            },
-
+            }
           },
           include: {
             user: true
           }
         })
         return account?.user
-
       } catch (error) {
-        logger.error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error);
+        logger.error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error)
         return Promise.reject(
           // @ts-ignore
           new Error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error)
-        );
+        )
       }
     }
 
-    async function updateUser(user) {
-      debug('UPDATE_USER', user);
+    async function updateUser (user) {
+      debug('UPDATE_USER', user)
       try {
-        const { id, name, email, image, emailVerified } = user;
+        const { id, name, email, image, emailVerified } = user
         userCache.set(id, user)
         return prisma[User].update({
           where: { id },
@@ -149,27 +147,27 @@ const Adapter = (config) => {
             image,
             emailVerified: emailVerified ? emailVerified.toISOString() : null
           }
-        });
+        })
       } catch (error) {
-        logger.error('UPDATE_USER_ERROR', error);
-        //@ts-ignore
-        return Promise.reject(new Error('UPDATE_USER_ERROR', error));
+        logger.error('UPDATE_USER_ERROR', error)
+        // @ts-ignore
+        return Promise.reject(new Error('UPDATE_USER_ERROR', error))
       }
     }
 
-    async function deleteUser(userId) {
+    async function deleteUser (userId) {
       userCache.del(userId)
-      debug('DELETE_USER', userId);
+      debug('DELETE_USER', userId)
       try {
-        return prisma[User].delete({ where: { id: userId } });
+        return prisma[User].delete({ where: { id: userId } })
       } catch (error) {
-        logger.error('DELETE_USER_ERROR', error);
-        //@ts-ignore
-        return Promise.reject(new Error('DELETE_USER_ERROR', error));
+        logger.error('DELETE_USER_ERROR', error)
+        // @ts-ignore
+        return Promise.reject(new Error('DELETE_USER_ERROR', error))
       }
     }
 
-    async function linkAccount(
+    async function linkAccount (
       userId,
       providerId,
       providerType,
@@ -187,9 +185,9 @@ const Adapter = (config) => {
         refreshToken,
         accessToken,
         accessTokenExpires
-      );
+      )
       try {
-        await prisma[Account].create({
+        return await prisma[Account].create({
           data: {
             accessToken,
             refreshToken,
@@ -199,17 +197,16 @@ const Adapter = (config) => {
             accessTokenExpires,
             user: { connect: { id: userId } }
           }
-        });
-        return
+        })
       } catch (error) {
-        logger.error('LINK_ACCOUNT_ERROR', error);
-        //@ts-ignore
-        return Promise.reject(new Error('LINK_ACCOUNT_ERROR', error));
+        logger.error('LINK_ACCOUNT_ERROR', error)
+        // @ts-ignore
+        return Promise.reject(new Error('LINK_ACCOUNT_ERROR', error))
       }
     }
 
-    async function unlinkAccount(userId, providerId, providerAccountId) {
-      debug('UNLINK_ACCOUNT', userId, providerId, providerAccountId);
+    async function unlinkAccount (userId, providerId, providerAccountId) {
+      debug('UNLINK_ACCOUNT', userId, providerId, providerAccountId)
       try {
         return prisma[Account].delete({
           where: {
@@ -218,22 +215,22 @@ const Adapter = (config) => {
               providerId: providerId
             }
           }
-        });
+        })
       } catch (error) {
-        logger.error('UNLINK_ACCOUNT_ERROR', error);
-        //@ts-ignore
-        return Promise.reject(new Error('UNLINK_ACCOUNT_ERROR', error));
+        logger.error('UNLINK_ACCOUNT_ERROR', error)
+        // @ts-ignore
+        return Promise.reject(new Error('UNLINK_ACCOUNT_ERROR', error))
       }
     }
 
-    async function createSession(user) {
-      debug('CREATE_SESSION', user);
+    async function createSession (user) {
+      debug('CREATE_SESSION', user)
       try {
-        let expires = null;
+        let expires = null
         if (sessionMaxAge) {
-          const dateExpires = new Date();
-          dateExpires.setTime(dateExpires.getTime() + sessionMaxAge);
-          expires = dateExpires.toISOString();
+          const dateExpires = new Date()
+          dateExpires.setTime(dateExpires.getTime() + sessionMaxAge)
+          expires = dateExpires.toISOString()
         }
         const session = {
           expires,
@@ -245,7 +242,6 @@ const Adapter = (config) => {
             }
           }
         }
-
 
         const cachedSession = klona(session)
         cachedSession.user = user
@@ -259,45 +255,49 @@ const Adapter = (config) => {
             sessionToken: randomBytes(32).toString('hex'),
             accessToken: randomBytes(32).toString('hex')
           }
-        });
+        })
       } catch (error) {
-        logger.error('CREATE_SESSION_ERROR', error);
-        //@ts-ignore
-        return Promise.reject(new Error('CREATE_SESSION_ERROR', error));
+        logger.error('CREATE_SESSION_ERROR', error)
+        // @ts-ignore
+        return Promise.reject(new Error('CREATE_SESSION_ERROR', error))
       }
     }
 
-    async function getSession(sessionToken) {
-      debug('GET_SESSION', sessionToken);
+    async function getSession (sessionToken) {
+      debug('GET_SESSION', sessionToken)
       try {
         const cachedSession = sessionCache.get(sessionToken)
         if (cachedSession) {
-          debug('GET_SESSION - Fetched from LRU Cache', cachedSession);
+          debug('GET_SESSION - Fetched from LRU Cache', cachedSession)
           return cachedSession
         }
         const session = await prisma[Session].findOne({
           where: { sessionToken: sessionToken }
-        });
+        })
 
         // Check session has not expired (do not return it if it has)
         if (session && session.expires && new Date() > session.expires) {
-          await prisma[Session].delete({ where: { sessionToken } });
-          return null;
+          await prisma[Session].delete({ where: { sessionToken } })
+          return null
         }
 
+        session &&
+          sessionCache.set(
+            session.sessionToken,
+            session,
+            maxAge(session.expires)
+          )
 
-        session && sessionCache.set(session.sessionToken, session, maxAge(session.expires))
-
-        return session;
+        return session
       } catch (error) {
-        logger.error('GET_SESSION_ERROR', error);
-        //@ts-ignore
-        return Promise.reject(new Error('GET_SESSION_ERROR', error));
+        logger.error('GET_SESSION_ERROR', error)
+        // @ts-ignore
+        return Promise.reject(new Error('GET_SESSION_ERROR', error))
       }
     }
 
-    async function updateSession(session, force) {
-      debug('UPDATE_SESSION', session);
+    async function updateSession (session, force) {
+      debug('UPDATE_SESSION', session)
       try {
         if (
           sessionMaxAge &&
@@ -310,79 +310,78 @@ const Adapter = (config) => {
           //
           // Default for sessionMaxAge is 30 days.
           // Default for sessionUpdateAge is 1 hour.
-          const dateSessionIsDueToBeUpdated = new Date(session.expires);
+          const dateSessionIsDueToBeUpdated = new Date(session.expires)
           dateSessionIsDueToBeUpdated.setTime(
             dateSessionIsDueToBeUpdated.getTime() - sessionMaxAge
-          );
+          )
           dateSessionIsDueToBeUpdated.setTime(
             dateSessionIsDueToBeUpdated.getTime() + sessionUpdateAge
-          );
+          )
 
           // Trigger update of session expiry date and write to database, only
           // if the session was last updated more than {sessionUpdateAge} ago
           if (new Date() > dateSessionIsDueToBeUpdated) {
-            const newExpiryDate = new Date();
-            newExpiryDate.setTime(newExpiryDate.getTime() + sessionMaxAge);
-            session.expires = newExpiryDate;
+            const newExpiryDate = new Date()
+            newExpiryDate.setTime(newExpiryDate.getTime() + sessionMaxAge)
+            session.expires = newExpiryDate
           } else if (!force) {
-            return null;
+            return null
           }
         } else {
           // If session MaxAge, session UpdateAge or session.expires are
           // missing then don't even try to save changes, unless force is set.
           if (!force) {
-            return null;
+            return null
           }
         }
 
-        const { id, expires } = session;
+        const { id, expires } = session
         sessionCache.set(session.sessionToken, session, maxAge(expires))
-        await prisma[Session].update({ where: { id }, data: { expires } });
+        await prisma[Session].update({ where: { id }, data: { expires } })
         return
       } catch (error) {
-        logger.error('UPDATE_SESSION_ERROR', error);
-        //@ts-ignore
-        return Promise.reject(new Error('UPDATE_SESSION_ERROR', error));
+        logger.error('UPDATE_SESSION_ERROR', error)
+        // @ts-ignore
+        return Promise.reject(new Error('UPDATE_SESSION_ERROR', error))
       }
     }
 
-    async function deleteSession(sessionToken) {
-      debug('DELETE_SESSION', sessionToken);
+    async function deleteSession (sessionToken) {
+      debug('DELETE_SESSION', sessionToken)
       try {
         sessionCache.del(sessionToken)
-        await prisma[Session].delete({ where: { sessionToken } });
-        return
+        return await prisma[Session].delete({ where: { sessionToken } })
       } catch (error) {
-        logger.error('DELETE_SESSION_ERROR', error);
-        //@ts-ignore
-        return Promise.reject(new Error('DELETE_SESSION_ERROR', error));
+        logger.error('DELETE_SESSION_ERROR', error)
+        // @ts-ignore
+        return Promise.reject(new Error('DELETE_SESSION_ERROR', error))
       }
     }
 
-    async function createVerificationRequest(
+    async function createVerificationRequest (
       identifier,
       url,
       token,
       secret,
       provider
     ) {
-      debug('CREATE_VERIFICATION_REQUEST', identifier);
+      debug('CREATE_VERIFICATION_REQUEST', identifier)
       try {
-        const { baseUrl } = appOptions;
-        const { sendVerificationRequest, maxAge } = provider;
+        const { baseUrl } = appOptions
+        const { sendVerificationRequest, maxAge } = provider
 
         // Store hashed token (using secret as salt) so that tokens cannot be exploited
         // even if the contents of the database is compromised.
         // @TODO Use bcrypt function here instead of simple salted hash
         const hashedToken = createHash('sha256')
           .update(`${token}${secret}`)
-          .digest('hex');
+          .digest('hex')
 
-        let expires = null;
+        let expires = null
         if (maxAge) {
-          const dateExpires = new Date();
-          dateExpires.setTime(dateExpires.getTime() + maxAge * 1000);
-          expires = dateExpires.toISOString();
+          const dateExpires = new Date()
+          dateExpires.setTime(dateExpires.getTime() + maxAge * 1000)
+          expires = dateExpires.toISOString()
         }
 
         // Save to database
@@ -392,7 +391,7 @@ const Adapter = (config) => {
             token: hashedToken,
             expires
           }
-        });
+        })
 
         // With the verificationCallback on a provider, you can send an email, or queue
         // an email to be sent, or perform some other action (e.g. send a text message)
@@ -402,29 +401,29 @@ const Adapter = (config) => {
           token,
           baseUrl,
           provider
-        });
+        })
 
-        return
+        return verificationRequest
       } catch (error) {
-        logger.error('CREATE_VERIFICATION_REQUEST_ERROR', error);
+        logger.error('CREATE_VERIFICATION_REQUEST_ERROR', error)
         return Promise.reject(
-          //@ts-ignore
+          // @ts-ignore
           new Error('CREATE_VERIFICATION_REQUEST_ERROR', error)
-        );
+        )
       }
     }
 
-    async function getVerificationRequest(identifier, token, secret, provider) {
-      debug('GET_VERIFICATION_REQUEST', identifier, token);
+    async function getVerificationRequest (identifier, token, secret, provider) {
+      debug('GET_VERIFICATION_REQUEST', identifier, token)
       try {
         // Hash token provided with secret before trying to match it with database
         // @TODO Use bcrypt instead of salted SHA-256 hash for token
         const hashedToken = createHash('sha256')
           .update(`${token}${secret}`)
-          .digest('hex');
+          .digest('hex')
         const verificationRequest = await prisma[VerificationRequest].findOne({
           where: { token: hashedToken }
-        });
+        })
 
         if (
           verificationRequest &&
@@ -434,41 +433,41 @@ const Adapter = (config) => {
           // Delete verification entry so it cannot be used again
           await prisma[VerificationRequest].delete({
             where: { token: hashedToken }
-          });
-          return null;
+          })
+          return null
         }
 
-        return verificationRequest;
+        return verificationRequest
       } catch (error) {
-        logger.error('GET_VERIFICATION_REQUEST_ERROR', error);
+        logger.error('GET_VERIFICATION_REQUEST_ERROR', error)
         return Promise.reject(
-          //@ts-ignore
+          // @ts-ignore
           new Error('GET_VERIFICATION_REQUEST_ERROR', error)
-        );
+        )
       }
     }
 
-    async function deleteVerificationRequest(
+    async function deleteVerificationRequest (
       identifier,
       token,
       secret,
       provider
     ) {
-      debug('DELETE_VERIFICATION', identifier, token);
+      debug('DELETE_VERIFICATION', identifier, token)
       try {
         // Delete verification entry so it cannot be used again
         const hashedToken = createHash('sha256')
           .update(`${token}${secret}`)
-          .digest('hex');
+          .digest('hex')
         await prisma[VerificationRequest].delete({
           where: { token: hashedToken }
-        });
+        })
       } catch (error) {
-        logger.error('DELETE_VERIFICATION_REQUEST_ERROR', error);
+        logger.error('DELETE_VERIFICATION_REQUEST_ERROR', error)
         return Promise.reject(
-          //@ts-ignore
+          // @ts-ignore
           new Error('DELETE_VERIFICATION_REQUEST_ERROR', error)
-        );
+        )
       }
     }
 
@@ -488,12 +487,12 @@ const Adapter = (config) => {
       createVerificationRequest,
       getVerificationRequest,
       deleteVerificationRequest
-    });
+    })
   }
 
   return {
     getAdapter
-  };
-};
+  }
+}
 
-export default Adapter;
+export default Adapter
