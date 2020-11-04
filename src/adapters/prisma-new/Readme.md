@@ -1,6 +1,4 @@
-
-
-```prisma
+```prisma filename="schema.prisma"
 model Account {
   id                 Int       @id @default(autoincrement())
   userId             Int
@@ -14,7 +12,7 @@ model Account {
   updatedAt          DateTime  @updatedAt
   user               User      @relation(fields: [userId], references: [id])
 
-  @@unique([providerId, providerAccountId], name: "Account.providerId_providerAccountId_unique")
+  @@unique([providerId, providerAccountId], name: "providerId_providerAccountId_unique")
 }
 
 model Session {

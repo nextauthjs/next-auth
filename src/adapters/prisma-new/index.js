@@ -115,7 +115,7 @@ const Adapter = (config) => {
         if (!providerId || !providerAccountId) return null
         const account = await prisma[Account].findOne({
           where: {
-            providerId_providerAccountId: {
+            providerId_providerAccountId_unique: {
               providerId: providerId,
               providerAccountId: providerAccountId
             }
@@ -210,7 +210,7 @@ const Adapter = (config) => {
       try {
         return prisma[Account].delete({
           where: {
-            providerId_providerAccountId: {
+            providerId_providerAccountId_unique: {
               providerAccountId: providerAccountId,
               providerId: providerId
             }
@@ -495,4 +495,6 @@ const Adapter = (config) => {
   }
 }
 
-export default Adapter
+export default {
+  Adapter
+}
