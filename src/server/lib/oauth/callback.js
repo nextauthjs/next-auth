@@ -95,7 +95,7 @@ export default async (req, provider, csrfToken, callback) => {
             accessToken,
             async (error, profileData) => {
               const { profile, account, OAuthProfile } = await _getProfile(error, profileData, accessToken, refreshToken, provider)
-              callback(error, profile, account, OAuthProfile)
+              callback(error, profile, account, OAuthProfile, results.id_token)
             }
           )
         }
