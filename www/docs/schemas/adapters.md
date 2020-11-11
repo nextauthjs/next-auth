@@ -13,6 +13,7 @@ Configure your database by creating the tables and columns to match the schema e
 
 * [MySQL Schema](/schemas/mysql)
 * [Postgres Schema](/schemas/postgres)
+* [Microsoft SQL Server Schema](/schemas/mssql)
 
 ## TypeORM Adapter
 
