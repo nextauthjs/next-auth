@@ -216,7 +216,7 @@ const _useSessionHook = (session) => {
     }
 
     __NEXTAUTH._getSession = _getSession
-    
+
     _getSession()
   })
   return [data, loading]
