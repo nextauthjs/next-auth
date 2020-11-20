@@ -58,7 +58,7 @@ $ npm i -D @types/next-auth
 ```
 In you encounter any issue with them, please raise an issue and add the "typescript" label to it, we'll try to help you with it as soon as possible.
 
-Alternatively you can raise a PR directly with your fixes on [**DefinitivelyTyped**](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/next-auth).
+Alternatively you can raise a PR directly with your fixes on [**DefinitelyTyped**](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/next-auth).
 
 ## Example
 
