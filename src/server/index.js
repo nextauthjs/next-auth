@@ -22,6 +22,9 @@ if (!process.env.NEXTAUTH_URL) {
 }
 
 export default async (req, res, userSuppliedOptions) => {
+  if (userSuppliedOptions.logger) {
+    logger.setLogger(userSuppliedOptions.logger)
+  }
   // To the best of my knowledge, we need to return a promise here
   // to avoid early termination of calls to the serverless function
   // (and then return that promise when we are done) - eslint
