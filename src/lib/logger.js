@@ -10,7 +10,7 @@ const logger = {
     code = code.toLowerCase()
     const link = `https://next-auth.js.org/errors#${code}`
     if (userLogger.error) {
-      userLogger.error(code, text, link)
+      userLogger.error({ code, text, link })
     } else {
       console.error(
         `[next-auth][error][${code}]`,
@@ -24,7 +24,7 @@ const logger = {
     code = code.toLowerCase()
     const link = `https://next-auth.js.org/warnings#${code}`
     if (userLogger.warn) {
-      userLogger.warn(code, text, link)
+      userLogger.warn({ code, text, link })
     } else {
       console.warn(
         `[next-auth][warn][${code}]`,
@@ -37,7 +37,7 @@ const logger = {
     if (text && text.length <= 1) { text = text[0] || '' }
     code = code.toLowerCase()
     if (userLogger.debug) {
-      userLogger.debug(code, text)
+      userLogger.debug({ code, text })
     }
     if (process && process.env && process.env._NEXTAUTH_DEBUG) {
       console.log(
