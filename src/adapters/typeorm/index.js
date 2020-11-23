@@ -176,13 +176,23 @@ const Adapter = (typeOrmConfig, options = {}) => {
 
     async function updateUser (user) {
       debug('UPDATE_USER', user)
-      return manager.save(User, user)
+      try {
+        return manager.save(User, user)
+      }
+      catch (error) {
+        logger.error('UPDATE_USER_ERROR', error)
+        return Promise.reject(new Error('UPDATE_USER_ERROR', error))
+      }
     }
 
     async function deleteUser (userId) {
       debug('DELETE_USER', userId)
-      // @TODO Delete user from DB
-      return false
+      try {
+        return manager.delete(User, { userId })
+      } catch (error) {
+        logger.error('DELETE_USER_ERROR', error)
+        return Promise.reject(new Error('DELETE_USER_ERROR', error))
+      }
     }
 
     async function linkAccount (userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires) {
@@ -199,10 +209,12 @@ const Adapter = (typeOrmConfig, options = {}) => {
 
     async function unlinkAccount (userId, providerId, providerAccountId) {
       debug('UNLINK_ACCOUNT', userId, providerId, providerAccountId)
-      // @TODO Get current user from DB
-      // @TODO Delete [provider] object from user object
-      // @TODO Save changes to user object in DB
-      return false
+      try {
+        return manager.delete(Account, { userId, providerId, providerAccountId })
+      } catch (error) {
+        logger.error('UNLINK_ACCOUNT_ERROR', error)
+        return Promise.reject(new Error('UNLINK_ACCOUNT_ERROR', error))
+      }
     }
 
     async function createSession (user) {
@@ -231,7 +243,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
 
         // Check session has not expired (do not return it if it has)
         if (session && session.expires && new Date() > new Date(session.expires)) {
-          // @TODO Delete old sessions from database
+          await manager.delete(Session, { sessionToken })
           return null
         }
 
