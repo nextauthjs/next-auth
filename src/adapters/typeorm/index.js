@@ -178,8 +178,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
       debug('UPDATE_USER', user)
       try {
         return manager.save(User, user)
-      }
-      catch (error) {
+      } catch (error) {
         logger.error('UPDATE_USER_ERROR', error)
         return Promise.reject(new Error('UPDATE_USER_ERROR', error))
       }
