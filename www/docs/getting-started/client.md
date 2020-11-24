@@ -134,10 +134,6 @@ It calls `/api/auth/providers` and returns a list of the currently configured au
 
 It can be use useful if you are creating a dynamic custom sign in page.
 
-:::note
-Unlike `getSession()` and `getCsrfToken()`, when calling `getSession()` server side, you don't need to pass anything, just as calling it client side.
-:::
-
 ---
 
 #### API Route
@@ -151,6 +147,10 @@ export default async (req, res) => {
   res.end()
 }
 ```
+
+:::note
+Unlike `getSession()` and `getCsrfToken()`, when calling `getSession()` server side, you don't need to pass anything, just as calling it client side.
+:::
 
 ---
 
