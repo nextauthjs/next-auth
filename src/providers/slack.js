@@ -6,8 +6,8 @@ export default (options) => {
     version: '2.0',
     scope: 'identity.basic identity.email identity.avatar',
     params: { grant_type: 'authorization_code' },
-    accessTokenUrl: 'https://slack.com/api/oauth.access',
-    authorizationUrl: 'https://slack.com/oauth/authorize?response_type=code',
+    accessTokenUrl: 'https://slack.com/api/oauth.v2.access',
+    authorizationUrl: 'https://slack.com/oauth/v2/authorize',
     profileUrl: 'https://slack.com/api/users.identity',
     profile: (profile) => {
       const { user } = profile

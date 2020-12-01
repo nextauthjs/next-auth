@@ -11,7 +11,8 @@ export default (provider, csrfToken, callback) => {
       redirect_uri: provider.callbackUrl,
       scope: provider.scope,
       // A hash of the NextAuth.js CSRF token is used as the state
-      state: createHash('sha256').update(csrfToken).digest('hex')
+      state: createHash('sha256').update(csrfToken).digest('hex'),
+      ...provider.additionalAuthorizeParams,
     })
 
     // If the authorizationUrl specified in the config has query parameters on it
