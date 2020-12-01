@@ -70,4 +70,4 @@ This `dev.to` tutorial walks one through adding NextAuth.js to an existing proje
 
 ### [Adding Sign in With Apple Next JS](https://thesiddd.com/blog/apple-auth)
 
-This tutorial walks step by step on how to get Sign In with Apple working (both locally and on a deployed website) using NextAuth
+This tutorial walks step by step on how to get Sign In with Apple working (both locally and on a deployed website) using NextAuth.
