@@ -29,6 +29,10 @@ export default async (req, res, options, done) => {
         return redirect(`${baseUrl}${basePath}/error?error=OAuthSignin`)
       }
 
+      const authorizationParams = retrieveAuthorizationParams(provider, req.body);
+      const delimiter = oAuthSigninUrl.includes('?') ? '&' : '?';
+      oAuthSigninUrl += delimiter + authorizationParams;      
+
       return redirect(oAuthSigninUrl)
     })
   } else if (type === 'email' && req.method === 'POST') {
@@ -71,9 +75,34 @@ export default async (req, res, options, done) => {
     }
 
     return redirect(`${baseUrl}${basePath}/verify-request?provider=${encodeURIComponent(
-      provider.id
-    )}&type=${encodeURIComponent(provider.type)}`)
+        provider.id
+      )}&type=${encodeURIComponent(provider.type)}`)
   } else {
     return redirect(`${baseUrl}${basePath}/signin`)
   }
+}
+
+/**
+ * Parses and turns the request-based authorization parameters
+ * into a query string (without an initial delimiter).
+ */
+function retrieveAuthorizationParams(provider, requestBody) {
+  let stringifiedParams = "";
+  let additionalParams = provider.authorizationParams;
+
+  if (typeof additionalParams === "function") {
+    additionalParams = additionalParams(requestBody);
+  }
+
+  if (additionalParams && typeof additionalParams === "object") {
+    for (const key of Object.keys(additionalParams)) {
+      if (typeof additionalParams[key] !== 'string') continue
+
+      stringifiedParams +=
+        '&' + encodeURIComponent(key) + '=' + encodeURIComponent(additionalParams[key])
+    }
+  }
+
+  // Axe the first & so it can be appended properly.
+  return stringifiedParams.substring(1);
 }

@@ -18,6 +18,11 @@ export default (options) => {
         image: profile.picture
       }
     },
+    authorizationParams: (body) => {
+      return {
+        login_hint: body.email || undefined
+      }
+    },
     ...options
   }
 }
