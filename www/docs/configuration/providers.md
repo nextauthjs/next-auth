@@ -99,6 +99,11 @@ As an example of what this looks like, this is the the provider object returned 
       image: profile.picture
     }
   },
+  authorizationParams: (body) => {
+    return {
+      login_hint: body.email || undefined
+    }
+  },
   clientId: '',
   clientSecret: ''
 }
@@ -133,7 +138,8 @@ providers: [
 |       type       | Type of provider, in this case it should be `oauth` |   Yes    |
 |     version      |     OAuth version (e.g. '1.0', '1.0a', '2.0')       |   Yes    |
 |      scope       |       OAuth access scopes (expects array or string) |    No    |
-|      params      |       Additional authorization URL parameters       |    No    |
+|      params      |       Additional access token URL parameters        |    No    |
+| authorizationParams | Additional authorization URL parameters (expects object or function) |    No    |
 |  accessTokenUrl  |        Endpoint to retrieve an access token         |   Yes    |
 | requestTokenUrl  |        Endpoint to retrieve a request token         |    No    |
 | authorizationUrl |   Endpoint to request authorization from the user   |   Yes    |
@@ -143,6 +149,10 @@ providers: [
 |   clientSecret   |         Client Secret of the OAuth provider         |    No    |
 |      idToken     |  Set to `true` for services that use ID Tokens (e.g. OpenID)     |    No    |
 |      state     | Set to `false` for services that do not support `state` verfication |    No    |
+
+Note that `authorizationParams` can be a function taking a request body object, which includes
+additional parameters passed to [`signIn`](/getting-started/client#signin). This is used in the
+Google provider to optionally provide a login_hint that can pre-fill a user's email.
 
 :::note
 Feel free to open a PR for your custom configuration if you've created one for a provider that others may be interested in so we can add it to the list of built-in OAuth providers!
