@@ -17,7 +17,7 @@ There are two ways you can use the Sign in with Apple provider.
 
 ### Dynamically generated secret
 
-If you use a dynamically generated secret you never have to to manually update the server.
+If you use a dynamically generated secret you never have to manually update the server.
 
 ```js
 import Providers from `next-auth/providers`
