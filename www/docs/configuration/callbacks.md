@@ -16,7 +16,7 @@ You can specify a handler for any of the callbacks below.
 ```js title="pages/api/auth/[...nextauth].js"
 ...
   callbacks: {
-    signIn: async (user, account, profile) => {
+    signIn: async (user, account, profile, idToken) => {
       return Promise.resolve(true)
     },
     redirect: async (url, baseUrl) => {
@@ -25,7 +25,7 @@ You can specify a handler for any of the callbacks below.
     session: async (session, user) => {
       return Promise.resolve(session)
     },
-    jwt: async (token, user, account, profile, isNewUser) => {
+    jwt: async (token, user, account, profile, isNewUser, idToken) => {
       return Promise.resolve(token)
     }
 ...
@@ -44,6 +44,7 @@ callbacks: {
    * @param  {object} user     User object
    * @param  {object} account  Provider account
    * @param  {object} profile  Provider profile 
+   * @param  {string} idToken  OpenID Connect `id_token` returned by compliant Providers
    * @return {boolean}         Return `true` (or a modified JWT) to allow sign in
    *                           Return `false` to deny access
    */
@@ -165,6 +166,7 @@ callbacks: {
    * @param  {object}  account   Provider account (only available on sign in)
    * @param  {object}  profile   Provider profile (only available on sign in)
    * @param  {boolean} isNewUser True if new user (only available on sign in)
+   * @param  {string}  idToken   OpenID Connect `id_token` returned by compliant Providers (only available on sign in)
    * @return {object}            JSON Web Token that will be saved
    */
   jwt: async (token, user, account, profile, isNewUser) => {

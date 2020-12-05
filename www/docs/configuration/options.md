@@ -230,7 +230,7 @@ You can specify a handler for any of the callbacks below.
 
 ```js
 callbacks: {
-  signIn: async (user, account, profile) => {
+  signIn: async (user, account, profile, idToken) => {
     return Promise.resolve(true)
   },
   redirect: async (url, baseUrl) => {
@@ -239,7 +239,7 @@ callbacks: {
   session: async (session, user) => {
     return Promise.resolve(session)
   },
-  jwt: async (token, user, account, profile, isNewUser) => {
+  jwt: async (token, user, account, profile, isNewUser, idToken) => {
     return Promise.resolve(token)
   }
 }
