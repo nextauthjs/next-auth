@@ -8,7 +8,7 @@ exemptLabels:
   - security
   - priority
 # Label to use when marking an issue as stale
-staleLabel: wontfix
+staleLabel: stale
 # Comment to post when marking an issue as stale. Set to `false` to disable
 markComment: >
   Hi there! It looks like this issue hasn't had any activity for a while.
