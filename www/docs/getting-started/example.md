@@ -101,5 +101,5 @@ NEXTAUTH_URL=https://example.com
 :::tip
 In production, this needs to be set as an environment variable on the service you use to deploy your app.
 
-To set environment variables on Vercel, you can use the [dashboard](https://vercel.com/dashboard) or the `now env` command.
+To set environment variables on Vercel, you can use the [dashboard](https://vercel.com/dashboard) or the `vercel env pull` [command](https://vercel.com/docs/build-step#development-environment-variables).
 :::
