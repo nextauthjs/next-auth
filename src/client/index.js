@@ -158,64 +158,65 @@ const useSession = (session) => {
 const _useSessionHook = (session) => {
   const [data, setData] = useState(session)
   const [loading, setLoading] = useState(true)
-  const _getSession = async ({ event = null } = {}) => {
-    try {
-      const triggredByEvent = (event !== null)
-      const triggeredByStorageEvent = !!((event && event === 'storage'))
-
-      const clientMaxAge = __NEXTAUTH.clientMaxAge
-      const clientLastSync = parseInt(__NEXTAUTH._clientLastSync)
-      const currentTime = Math.floor(new Date().getTime() / 1000)
-      const clientSession = __NEXTAUTH._clientSession
-
-      // Updates triggered by a storage event *always* trigger an update and we
-      // always update if we don't have any value for the current session state.
-      if (triggeredByStorageEvent === false && clientSession !== undefined) {
-        if (clientMaxAge === 0 && triggredByEvent !== true) {
-          // If there is no time defined for when a session should be considered
-          // stale, then it's okay to use the value we have until an event is
-          // triggered which updates it.
-          return
-        } else if (clientMaxAge > 0 && clientSession === null) {
-          // If the client doesn't have a session then we don't need to call
-          // the server to check if it does (if they have signed in via another
-          // tab or window that will come through as a triggeredByStorageEvent
-          // event and will skip this logic)
-          return
-        } else if (clientMaxAge > 0 && currentTime < (clientLastSync + clientMaxAge)) {
-          // If the session freshness is within clientMaxAge then don't request
-          // it again on this call (avoids too many invokations).
-          return
-        }
-      }
-
-      if (clientSession === undefined) { __NEXTAUTH._clientSession = null }
-
-      // Update clientLastSync before making response to avoid repeated
-      // invokations that would otherwise be triggered while we are still
-      // waiting for a response.
-      __NEXTAUTH._clientLastSync = Math.floor(new Date().getTime() / 1000)
-
-      // If this call was invoked via a storage event (i.e. another window) then
-      // tell getSession not to trigger an event when it calls to avoid an
-      // infinate loop.
-      const triggerEvent = (triggeredByStorageEvent === false)
-      const newClientSessionData = await getSession({ triggerEvent })
-
-      // Save session state internally, just so we can track that we've checked
-      // if a session exists at least once.
-      __NEXTAUTH._clientSession = newClientSessionData
-
-      setData(newClientSessionData)
-      setLoading(false)
-    } catch (error) {
-      logger.error('CLIENT_USE_SESSION_ERROR', error)
-    }
-  }
-
-  __NEXTAUTH._getSession = _getSession
 
   useEffect(() => {
+    const _getSession = async ({ event = null } = {}) => {
+      try {
+        const triggredByEvent = (event !== null)
+        const triggeredByStorageEvent = !!((event && event === 'storage'))
+
+        const clientMaxAge = __NEXTAUTH.clientMaxAge
+        const clientLastSync = parseInt(__NEXTAUTH._clientLastSync)
+        const currentTime = Math.floor(new Date().getTime() / 1000)
+        const clientSession = __NEXTAUTH._clientSession
+
+        // Updates triggered by a storage event *always* trigger an update and we
+        // always update if we don't have any value for the current session state.
+        if (triggeredByStorageEvent === false && clientSession !== undefined) {
+          if (clientMaxAge === 0 && triggredByEvent !== true) {
+            // If there is no time defined for when a session should be considered
+            // stale, then it's okay to use the value we have until an event is
+            // triggered which updates it.
+            return
+          } else if (clientMaxAge > 0 && clientSession === null) {
+            // If the client doesn't have a session then we don't need to call
+            // the server to check if it does (if they have signed in via another
+            // tab or window that will come through as a triggeredByStorageEvent
+            // event and will skip this logic)
+            return
+          } else if (clientMaxAge > 0 && currentTime < (clientLastSync + clientMaxAge)) {
+            // If the session freshness is within clientMaxAge then don't request
+            // it again on this call (avoids too many invokations).
+            return
+          }
+        }
+
+        if (clientSession === undefined) { __NEXTAUTH._clientSession = null }
+
+        // Update clientLastSync before making response to avoid repeated
+        // invokations that would otherwise be triggered while we are still
+        // waiting for a response.
+        __NEXTAUTH._clientLastSync = Math.floor(new Date().getTime() / 1000)
+
+        // If this call was invoked via a storage event (i.e. another window) then
+        // tell getSession not to trigger an event when it calls to avoid an
+        // infinate loop.
+        const triggerEvent = (triggeredByStorageEvent === false)
+        const newClientSessionData = await getSession({ triggerEvent })
+
+        // Save session state internally, just so we can track that we've checked
+        // if a session exists at least once.
+        __NEXTAUTH._clientSession = newClientSessionData
+
+        setData(newClientSessionData)
+        setLoading(false)
+      } catch (error) {
+        logger.error('CLIENT_USE_SESSION_ERROR', error)
+      }
+    }
+
+    __NEXTAUTH._getSession = _getSession
+
     _getSession()
   })
   return [data, loading]
