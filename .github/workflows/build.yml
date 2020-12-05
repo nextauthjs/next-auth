@@ -4,9 +4,9 @@ name: Build Test
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, canary ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, canary ]
 
 jobs:
   build:
