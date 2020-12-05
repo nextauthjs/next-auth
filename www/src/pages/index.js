@@ -244,7 +244,7 @@ const options = {
   database: process.env.DATABASE_URL
 }
 
-export default (req, res) => NextAuth(req, res, options)
+export default NextAuth(options)
 `.trim()
 
 export default Home

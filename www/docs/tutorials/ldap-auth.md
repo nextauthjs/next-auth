@@ -66,7 +66,7 @@ const options = {
   },
 };
 
-export default (req, res) => NextAuth(req, res, options);
+export default NextAuth(options);
 ```
 
 The idea is that once one is authenticated with the LDAP server, one can pass through both the username/DN and password to the JWT stored in the browser. 

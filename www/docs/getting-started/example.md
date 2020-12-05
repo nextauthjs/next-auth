@@ -35,7 +35,7 @@ const options = {
   database: process.env.DATABASE_URL,
 }
 
-export default (req, res) => NextAuth(req, res, options)
+export default NextAuth(options)
 ```
 
 All requests to `/api/auth/*` (signin, callback, signout, etc) will automatically be handed by NextAuth.js.

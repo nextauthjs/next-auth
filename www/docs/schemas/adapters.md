@@ -84,7 +84,7 @@ const options = {
   adapter: Adapters.Prisma.Adapter({ prisma }),
 }
 
-export default (req, res) => NextAuth(req, res, options)
+export default NextAuth(options)
 ```
 
 :::tip
