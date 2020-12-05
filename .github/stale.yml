@@ -13,7 +13,7 @@ staleLabel: stale
 markComment: >
   Hi there! It looks like this issue hasn't had any activity for a while.
   It will be closed if no further activity occurs. If you think your issue
-  is still relevant, feel free to comment on it to keep ot open. (Read more at #912)
+  is still relevant, feel free to comment on it to keep it open. (Read more at #912)
   Thanks!
 # Comment to post when closing a stale issue. Set to `false` to disable
 closeComment: >
