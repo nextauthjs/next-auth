@@ -4,9 +4,13 @@ name: Build Test
 
 on:
   push:
-    branches: [ main, canary ]
+    branches: 
+     - main
+     - canary
   pull_request:
-    branches: [ main, canary ]
+    branches: 
+     - main
+     - canary
 
 jobs:
   build:
