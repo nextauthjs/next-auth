@@ -125,7 +125,7 @@ callbacks: {
    *                               JSON Web Token (if not using database sessions)
    * @return {object}              Session that will be returned to the client 
    */
-  session: async (session, user, sessionToken) => {
+  session: async (session, user) => {
     session.foo = 'bar' // Add property to session
     return Promise.resolve(session)
   }
