@@ -13,10 +13,12 @@ staleLabel: stale
 markComment: >
   Hi there! It looks like this issue hasn't had any activity for a while.
   It will be closed if no further activity occurs. If you think your issue
-  is still relevant, feel free to comment on it to keep ot open. Thanks!
+  is still relevant, feel free to comment on it to keep ot open. (Read more at #912)
+  Thanks!
 # Comment to post when closing a stale issue. Set to `false` to disable
 closeComment: >
   Hi there! It looks like this issue hasn't had any activity for a while.
   To keep things tidy, I am going to close this issue for now.
   If you think your issue is still relevant, just leave a comment
-  and I will reopen it. Thanks!
+  and I will reopen it. (Read more at #912)
+  Thanks!
