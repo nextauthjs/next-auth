@@ -46,7 +46,7 @@
     "jose": "^1.27.2",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^2.2.0",
-    "nodemailer": "^6.4.6",
+    "nodemailer": "^6.4.16",
     "oauth": "^0.9.15",
     "preact": "^10.4.1",
     "preact-render-to-string": "^5.1.7",
