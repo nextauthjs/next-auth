@@ -27,9 +27,9 @@ The Credentials provider is specified like other providers, except that you need
 
   If you return `false` or `null` then an error will be displayed advising the user to check their details.
 
-3. `Promise.Rejected()` with an Error or a URL.
+3. You can throw an Error or a URL (a string).
 
-  If you reject the promise with an Error, the user will be sent to the error page with the error message as a query parameter. If you reject the promise with a URL (a string), the user will be redirected to the URL.
+  If you throw an Error, the user will be sent to the error page with the error message as a query parameter. If throw a URL (a string), the user will be redirected to the URL.
 
 ```js title="pages/api/auth/[...nextauth].js"
 import Providers from `next-auth/providers`
@@ -56,8 +56,8 @@ providers: [
         // If you return null or false then the credentials will be rejected
         return null
         // You can also Reject this callback with an Error or with a URL:
-        // return Promise.reject(new Error('error message')) // Redirect to error page
-        // return Promise.reject('/path/to/redirect')        // Redirect to a URL
+        // throw new Error('error message') // Redirect to error page
+        // throw '/path/to/redirect'        // Redirect to a URL
       }
     }
   })
