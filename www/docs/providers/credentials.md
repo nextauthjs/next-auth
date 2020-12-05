@@ -51,10 +51,10 @@ providers: [
 
       if (user) {
         // Any object returned will be saved in `user` property of the JWT
-        return Promise.resolve(user)
+        return user
       } else {
         // If you return null or false then the credentials will be rejected
-        return Promise.resolve(null)
+        return null
         // You can also Reject this callback with an Error or with a URL:
         // return Promise.reject(new Error('error message')) // Redirect to error page
         // return Promise.reject('/path/to/redirect')        // Redirect to a URL
@@ -84,7 +84,7 @@ As with all providers, the order you specify them is the order they are displaye
       name: "Domain Account",
       authorize: async (credentials) => {
         const user = { /* add function to get user */ }
-        return Promise.resolve(user)
+        return user
       },
       credentials: {
         domain: { label: "Domain", type: "text ", placeholder: "CORPNET", value: "CORPNET" },
@@ -97,7 +97,7 @@ As with all providers, the order you specify them is the order they are displaye
       name: "Two Factor Auth",
       authorize: async (credentials) => {
         const user = { /* add function to get user */ } 
-        return Promise.resolve(user)
+        return user
       },
       credentials: {
         email: { label: "Username", type: "text ", placeholder: "jsmith" },

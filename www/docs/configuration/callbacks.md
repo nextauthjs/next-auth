@@ -17,16 +17,16 @@ You can specify a handler for any of the callbacks below.
 ...
   callbacks: {
     signIn: async (user, account, profile) => {
-      return Promise.resolve(true)
+      return true
     },
     redirect: async (url, baseUrl) => {
-      return Promise.resolve(baseUrl)
+      return baseUrl
     },
     session: async (session, user) => {
-      return Promise.resolve(session)
+      return session
     },
     jwt: async (token, user, account, profile, isNewUser) => {
-      return Promise.resolve(token)
+      return token
     }
 ...
 }
@@ -50,13 +50,13 @@ callbacks: {
   signIn: async (user, account, profile) => {
     const isAllowedToSignIn = true
     if (isAllowedToSignIn) {
-      return Promise.resolve(true)
+      return true
     } else {
       // Return false to display a default error message
-      return Promise.resolve(false)
+      return false
       // You can also Reject this callback with an Error or with a URL:
-      // return Promise.reject(new Error('error message')) // Redirect to error page
-      // return Promise.reject('/path/to/redirect')        // Redirect to a URL
+      // throw new Error('error message') // Redirect to error page
+      // return '/path/to/redirect'        // Redirect to a URL
     }
   }
 }
@@ -97,8 +97,8 @@ callbacks: {
    */
   redirect: async (url, baseUrl) => {
     return url.startsWith(baseUrl)
-      ? Promise.resolve(url)
-      : Promise.resolve(baseUrl)
+      ? url
+      : baseUrl
   }
 }
 ```
@@ -127,7 +127,7 @@ callbacks: {
    */
   session: async (session, user) => {
     session.foo = 'bar' // Add property to session
-    return Promise.resolve(session)
+    return session
   }
 }
 ```
@@ -171,7 +171,7 @@ callbacks: {
     const isSignIn = (user) ? true : false
     // Add auth_time to token on signin in
     if (isSignIn) { token.auth_time = Math.floor(Date.now() / 1000) }
-    return Promise.resolve(token)
+    return token
   }
 }
 ```
