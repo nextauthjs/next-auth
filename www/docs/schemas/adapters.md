@@ -74,7 +74,7 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-export default NextAuth({
+const options = {
   providers: [
     Providers.Google({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -82,7 +82,9 @@ export default NextAuth({
     })
   ],
   adapter: Adapters.Prisma.Adapter({ prisma }),
-})
+}
+
+export default (req, res) => NextAuth(req, res, options)
 ```
 
 :::tip

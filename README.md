@@ -68,7 +68,7 @@ Alternatively you can raise a PR directly with your fixes on [**DefinitelyTyped*
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 
-export default NextAuth({
+const options = {
   providers: [
     // OAuth authentication providers
     Providers.Apple({
@@ -87,7 +87,9 @@ export default NextAuth({
   ],
   // SQL or MongoDB database (or leave empty)
   database: process.env.DATABASE_URL
-})
+}
+
+export default (req, res) => NextAuth(req, res, options)
 ```
 
 ### Add React Component

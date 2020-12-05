@@ -21,7 +21,7 @@ To add NextAuth.js to a project create a file called `[...nextauth].js` in `page
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 
-export default NextAuth({
+const options = {
   // Configure one or more authentication providers
   providers: [
     Providers.GitHub({
@@ -33,7 +33,9 @@ export default NextAuth({
 
   // A database is optional, but required to persist accounts in a database
   database: process.env.DATABASE_URL,
-})
+}
+
+export default (req, res) => NextAuth(req, res, options)
 ```
 
 All requests to `/api/auth/*` (signin, callback, signout, etc) will automatically be handed by NextAuth.js.
