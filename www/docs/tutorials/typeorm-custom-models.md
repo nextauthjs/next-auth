@@ -62,7 +62,7 @@ import Adapters from "next-auth/adapters"
 
 import Models from "../../../models"
 
-export default NextAuth({
+const options = {
   providers: [
     // Your providers
   ],
@@ -77,7 +77,9 @@ export default NextAuth({
       },
     }
   ),
-})
+}
+
+export default (req, res) => NextAuth(req, res, options)
 ```
 
 
