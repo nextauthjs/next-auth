@@ -125,7 +125,7 @@ callbacks: {
    *                               JSON Web Token (if not using database sessions)
    * @return {object}              Session that will be returned to the client 
    */
-  session: async (session, user, sessionToken) => {
+  session: async (session, user) => {
     session.foo = 'bar' // Add property to session
     return Promise.resolve(session)
   }
@@ -148,7 +148,7 @@ If using JSON Web Tokens instead of database sessions, you should use the User I
 ## JWT callback
 
 This JSON Web Token callback is called whenever a JSON Web Token is created (i.e. at sign 
-in) or updated (i.e whenever a session is accesed in the client).
+in) or updated (i.e whenever a session is accessed in the client).
 
 e.g. `/api/auth/signin`, `getSession()`, `useSession()`, `/api/auth/session`
 
