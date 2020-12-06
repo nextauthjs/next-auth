@@ -16,6 +16,7 @@ import Google from './google'
 import IdentityServer4 from './identity-server4'
 import LinkedIn from './linkedin'
 import Mixer from './mixer'
+import Netlify from './netlify'
 import Okta from './okta'
 import Slack from './slack'
 import Spotify from './spotify'
@@ -42,6 +43,7 @@ export default {
   IdentityServer4,
   LinkedIn,
   Mixer,
+  Netlify,
   Okta,
   Slack,
   Spotify,
