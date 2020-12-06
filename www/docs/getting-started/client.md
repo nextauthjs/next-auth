@@ -142,11 +142,15 @@ It can be use useful if you are creating a dynamic custom sign in page.
 import { getProviders } from 'next-auth/client'
 
 export default async (req, res) => {
-  const providers = await getProviders({ req })
+  const providers = await getProviders()
   console.log('Providers', providers)
   res.end()
 }
 ```
+
+:::note
+Unlike `getSession()` and `getCsrfToken()`, when calling `getSession()` server side, you don't need to pass anything, just as calling it client side.
+:::
 
 ---
 
