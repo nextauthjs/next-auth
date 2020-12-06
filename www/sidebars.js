@@ -26,7 +26,6 @@ module.exports = {
       'providers/apple',
       'providers/atlassian',
       'providers/auth0',
-      'providers/azure-ad-b2c',
       'providers/basecamp',
       'providers/battle.net',
       'providers/box',
