@@ -14,7 +14,6 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 * [Apple](/providers/apple)
 * [Atlassian](/providers/atlassian)
 * [Auth0](/providers/auth0)
-* [Azure Active Directory B2C](/providers/azure-ad-b2c)
 * [Basecamp](/providers/basecamp)
 * [Battle.net](/providers/battlenet)
 * [Box](/providers/box)
