@@ -247,7 +247,7 @@ async function _getOAuthAccessToken (code, provider, callback) {
         // Clients of these services suffer a minor performance cost.
         results = querystring.parse(data)
       }
-      const accessToken = results.access_token
+      const accessToken = provider.accessTokenGetter ? provider.accessTokenGetter(results) : results.access_token
       const refreshToken = results.refresh_token
       callback(null, accessToken, refreshToken, results)
     }
