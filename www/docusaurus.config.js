@@ -17,7 +17,7 @@ module.exports = {
         alt: 'NextAuth Logo',
         src: 'img/logo/logo-xs.png'
       },
-      links: [
+      items: [
         {
           to: '/getting-started/introduction',
           activeBasePath: 'docs',
