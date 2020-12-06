@@ -9,5 +9,3 @@ services:
       MONGODB_USERNAME: nextauth
       MONGODB_PASSWORD: password
       MONGODB_DATABASE: nextauth
-    ports:
-      - "27017:27017"

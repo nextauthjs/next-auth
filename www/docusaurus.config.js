@@ -17,7 +17,7 @@ module.exports = {
         alt: 'NextAuth Logo',
         src: 'img/logo/logo-xs.png'
       },
-      links: [
+      items: [
         {
           to: '/getting-started/introduction',
           activeBasePath: 'docs',
@@ -111,7 +111,7 @@ module.exports = {
           editUrl: 'https://github.com/iaincollins/next-auth/edit/main/www'
         },
         theme: {
-          customCss: require.resolve('./src/css/custom.css')
+          customCss: require.resolve('./src/css/index.css')
         }
       }
     ]
