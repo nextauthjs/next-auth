@@ -9,7 +9,7 @@
 
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-link: #289EF9;
+  --ifm-color-link: #289ef9;
   --ifm-color-primary: #1eb1fc;
   --ifm-color-primary-dark: #03a7fa;
   --ifm-color-primary-darker: #039eed;
@@ -21,20 +21,24 @@
   --ifm-color-info: #1eb1fc;
   --ifm-color-success: #1eb1fc;
   --ifm-color-warning: #c94b4b;
-  --ifm-font-family-base: -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  --ifm-font-family-base: -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell,
+    Noto Sans, sans-serif, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   --ifm-background-color: #fff;
   --ifm-footer-background-color: #f9f9f9;
   --ifm-hero-background-color: #f5f5f5;
-  --ifm-navbar-background-color: rgba(255,255,255,0.95);
+  --ifm-navbar-background-color: rgba(255, 255, 255, 0.95);
+  --ifm-h1-font-size: 3rem;
+  --ifm-h1-font-size: 2rem;
 }
 
-html[data-theme='dark']:root {
-  --ifm-color-link: #289EF9;
+html[data-theme="dark"]:root {
+  --ifm-color-link: #289ef9;
   --ifm-footer-background-color: #111;
   --ifm-html-background-color: #242526;
   --ifm-background-color: #000000;
   --ifm-hero-background-color: #111111;
-  --ifm-navbar-background-color: rgba(0,0,0,0.95);
+  --ifm-navbar-background-color: rgba(0, 0, 0, 0.95);
 }
 
 @import "hero.css";
@@ -61,7 +65,6 @@ a {
 a,
 a:hover,
 .navbar .navbar__link:hover {
-  text-decoration: underline;
   color: var(--ifm-color-link);
 }
 
@@ -107,12 +110,12 @@ a:hover,
 
 .navbar__title {
   font-size: 1.2rem;
-  margin-left: .2rem;
+  margin-left: 0.2rem;
   display: none;
 }
 
-.navbar-sidebar__brand .navbar__title { 
-   display: inline;
+.navbar-sidebar__brand .navbar__title {
+  display: inline;
 }
 
 @media screen and (min-width: 420px) {
@@ -124,29 +127,36 @@ a:hover,
 .home-subtitle {
   justify-content: center;
   padding: 0rem 0 2rem 0;
-  opacity: 0.8;
+  opacity: 0.6;
   font-style: italic;
-  margin: 0;
+  margin: 0 auto;
   font-size: 1.2rem;
+  text-align: center;
 }
 
 .home-main .code {
   padding: 0;
   height: 100%;
   font-size: 0.9rem;
-  background: #1E1E1E;
+  background: #1e1e1e;
   overflow: hidden;
-  border-radius: .5rem;
+  border-radius: 0.5rem;
 }
 
 .home-main .code .code-heading {
-  color: rgba(255,255,255,1);
-  background: #191A1B;
+  color: rgba(255, 255, 255, 1);
+  background: #191a1b;
   margin: 0;
   padding: 0.5rem 1rem;
   font-size: 1rem;
   font-weight: 700;
   width: 100%;
+}
+
+.home-main .code .code-heading span {
+  opacity: 0.6;
+  float: right;
+  font-weight: normal;
 }
 
 .home-main .col {
@@ -162,7 +172,7 @@ hr {
   border-color: #ddd;
 }
 
-html[data-theme='dark'] hr {
+html[data-theme="dark"] hr {
   border-color: #242526;
 }
 
@@ -181,7 +191,7 @@ html[data-theme='dark'] hr {
   background-repeat: no-repeat;
 }
 
-html[data-theme='dark'] .navbar__item.navbar__link[href*="github"]:before {
+html[data-theme="dark"] .navbar__item.navbar__link[href*="github"]:before {
   background-image: url("/img/brand-github-inverted.svg");
 }
 
@@ -189,12 +199,12 @@ html[data-theme='dark'] .navbar__item.navbar__link[href*="github"]:before {
   content: "";
   width: 3rem;
   height: 1.2rem;
-  margin-top: .2rem;
+  margin-top: 0.2rem;
   background-image: url("/img/brand-npm.svg");
   background-repeat: no-repeat;
 }
 
-html[data-theme='dark'] .navbar__item.navbar__link[href*="npm"]:before {
+html[data-theme="dark"] .navbar__item.navbar__link[href*="npm"]:before {
   background-image: url("/img/brand-npm-inverted.svg");
 }
 
@@ -205,8 +215,8 @@ html[data-theme='dark'] .navbar__item.navbar__link[href*="npm"]:before {
   }
 }
 
-html[data-theme='dark'] { 
-  --ifm-background-color: #1F201C;
+html[data-theme="dark"] {
+  --ifm-background-color: #1f201c;
 }
 
 .home-main .feature-image-wrapper {
@@ -216,49 +226,49 @@ html[data-theme='dark'] {
   border-radius: 10rem;
   overflow: visible;
   background-color: var(--ifm-color-primary);
-  box-shadow: 0 0 2rem rgba(0,0,0,.1);
-  background-image: linear-gradient(0deg, #1786FB 0%, #45EABA 100%);
+  box-shadow: 0 0 2rem rgba(0, 0, 0, 0.1);
+  background-image: linear-gradient(0deg, #1786fb 0%, #45eaba 100%);
 }
 
 .home-main .section-features .row .col:nth-child(2) .feature-image-wrapper {
-  background-image: linear-gradient(0deg, #605BD4 0%, #E95595 100%);  
+  background-image: linear-gradient(0deg, #605bd4 0%, #e95595 100%);
 }
 
-
 .home-main .section-features .row .col:nth-child(3) .feature-image-wrapper {
-  background-image: linear-gradient(0deg, #FD5D21 0%, #FBB12E 100%);
+  background-image: linear-gradient(0deg, #fd5d21 0%, #fbb12e 100%);
 }
 
 .home-main .feature-image-wrapper img {
   filter: saturate(1.2) contrast(2);
-  zoom: .80;
+  zoom: 0.8;
 }
 
-/* Targets the 'Documentation' button on mobile */
-/* The UX is pretty poor but doing the best we can with it! */
-.button.button--secondary.button--sm.menu__button {
-  position: fixed;
-  right: 1rem;
-  bottom: 1rem;
-  z-index: 1000;
-  width: auto;
-  padding: 0.5rem 1rem;
-  border-radius: 2rem;
-  border: none;
-  background: #fff;
-  box-shadow: 0 0 1rem rgba(0,0,0,0.2);
-}
+@media screen and (max-width: 996px) {
+  /* Targets the 'Documentation' button on mobile */
+  /* The UX is pretty poor but doing the best we can with it! */
+  .button.button--secondary.button--sm.menu__button {
+    position: relative;
+    top: 0;
+    width: 100%;
+    background: none;
+    box-shadow: none;
+    font-size: 1rem !important;
+    color: #000;
+    text-align: left;
+    padding: 0.1rem 2rem;
+    text-decoration: underline;
+    font-weight: bold;
+    display: inline;
+    opacity: 1;
+  }
 
-html[data-theme='dark'] .button.button--secondary.button--sm.menu__button {
-  background: #242526;
-  color: #fff;
-  box-shadow: 0 0 1rem rgba(0,0,0,0.4);
-}
+  html[data-theme="dark"] .button.button--secondary.button--sm.menu__button {
+    color: #fff;
+  }
 
-.button.button--secondary.button--sm.menu__button:before {
-  font-size: 2rem;
-  line-height: 2rem;
-  content: "?";
-  opacity: 0.8;
-  display: block;
+  .button.button--secondary.button--sm.menu__button:before {
+    content: "Documentation";
+    opacity: 0.8;
+    display: block;
+  }
 }

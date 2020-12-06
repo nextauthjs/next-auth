@@ -13,6 +13,7 @@ Configure your database by creating the tables and columns to match the schema e
 
 * [MySQL Schema](/schemas/mysql)
 * [Postgres Schema](/schemas/postgres)
+* [Microsoft SQL Server Schema](/schemas/mssql)
 
 ## TypeORM Adapter
 
@@ -73,7 +74,7 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-const options = {
+export default NextAuth({
   providers: [
     Providers.Google({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -81,9 +82,7 @@ const options = {
     })
   ],
   adapter: Adapters.Prisma.Adapter({ prisma }),
-}
-
-export default (req, res) => NextAuth(req, res, options)
+})
 ```
 
 :::tip

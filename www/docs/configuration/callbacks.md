@@ -38,7 +38,7 @@ The documentation below shows how to implement each callback, their default beha
 
 Use the `signIn()` callback to control if a user is allowed to sign in.
 
-```js title="pages/api/auth/[...nextauth.js]"
+```js title="pages/api/auth/[...nextauth].js"
 callbacks: {
   /**
    * @param  {object} user     User object
@@ -88,7 +88,7 @@ The redirect callback is called anytime the user is redirected to a callback URL
 
 By default only URLs on the same URL as the site are allowed, you can use the redirect callback to customise that behaviour.
 
-```js title="pages/api/auth/[...nextauth.js]"
+```js title="pages/api/auth/[...nextauth].js"
 callbacks: {
   /**
    * @param  {string} url      URL provided as callback URL by the client
@@ -117,7 +117,7 @@ e.g. `getSession()`, `useSession()`, `/api/auth/session`
 * When using database sessions, the User object is passed as an argument.
 * When using JSON Web Tokens for sessions, the JWT payload is provided instead.
 
-```js title="pages/api/auth/[...nextauth.js]"
+```js title="pages/api/auth/[...nextauth].js"
 callbacks: {
   /**
    * @param  {object} session      Session object
@@ -125,7 +125,7 @@ callbacks: {
    *                               JSON Web Token (if not using database sessions)
    * @return {object}              Session that will be returned to the client 
    */
-  session: async (session, user, sessionToken) => {
+  session: async (session, user) => {
     session.foo = 'bar' // Add property to session
     return Promise.resolve(session)
   }
@@ -148,7 +148,7 @@ If using JSON Web Tokens instead of database sessions, you should use the User I
 ## JWT callback
 
 This JSON Web Token callback is called whenever a JSON Web Token is created (i.e. at sign 
-in) or updated (i.e whenever a session is accesed in the client).
+in) or updated (i.e whenever a session is accessed in the client).
 
 e.g. `/api/auth/signin`, `getSession()`, `useSession()`, `/api/auth/session`
 
@@ -157,7 +157,7 @@ e.g. `/api/auth/signin`, `getSession()`, `useSession()`, `/api/auth/session`
 
 The contents *user*, *account*, *profile* and *isNewUser* will vary depending on the provider and on if you are using a database or not. If you want to pass data such as User ID, OAuth Access Token, etc. to the browser, you can persist it in the token and use the `session()` callback to return it.
 
-```js title="pages/api/auth/[...nextauth.js]"
+```js title="pages/api/auth/[...nextauth].js"
 callbacks: {
   /**
    * @param  {object}  token     Decrypted JSON Web Token
