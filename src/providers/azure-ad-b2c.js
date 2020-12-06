@@ -2,8 +2,8 @@ export default (options) => {
   const tenant = options.tenantId ? options.tenantId : 'common'
 
   return {
-    id: 'microsoft',
-    name: 'Microsoft',
+    id: 'azure-ad-b2c',
+    name: 'Azure Active Directory B2C',
     type: 'oauth',
     version: '2.0',
     params: {
