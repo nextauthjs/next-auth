@@ -219,7 +219,7 @@ const serverlessFunctionCode = `
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 
-const options = {
+export default NextAuth({
   providers: [
     // OAuth authentication providers...
     Providers.Apple({
@@ -242,9 +242,7 @@ const options = {
   ],
   // Optional SQL or MongoDB database to persist users
   database: process.env.DATABASE_URL
-}
-
-export default (req, res) => NextAuth(req, res, options)
+})
 `.trim()
 
 export default Home

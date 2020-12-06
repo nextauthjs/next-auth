@@ -48,7 +48,7 @@
     "jose": "^1.27.2",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^2.2.0",
-    "nodemailer": "^6.4.6",
+    "nodemailer": "^6.4.16",
     "oauth": "^0.9.15",
     "preact": "^10.4.1",
     "preact-render-to-string": "^5.1.7",
@@ -57,8 +57,8 @@
     "typeorm": "^0.2.24"
   },
   "peerDependencies": {
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react": "^16.13.1 || ^17",
+    "react-dom": "^16.13.1 || ^17"
   },
   "peerOptionalDependencies": {
     "mongodb": "^3.5.9",
@@ -85,7 +85,7 @@
     "puppeteer": "^5.2.1",
     "puppeteer-extra": "^3.1.15",
     "puppeteer-extra-plugin-stealth": "^2.6.1",
-    "standard": "^14.3.3"
+    "standard": "^16.0.3"
   },
   "standard": {
     "ignore": [

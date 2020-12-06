@@ -58,7 +58,7 @@ $ npm i -D @types/next-auth
 ```
 In you encounter any issue with them, please raise an issue and add the "typescript" label to it, we'll try to help you with it as soon as possible.
 
-Alternatively you can raise a PR directly with your fixes on [**DefinitivelyTyped**](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/next-auth).
+Alternatively you can raise a PR directly with your fixes on [**DefinitelyTyped**](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/next-auth).
 
 ## Example
 
@@ -68,7 +68,7 @@ Alternatively you can raise a PR directly with your fixes on [**DefinitivelyType
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 
-const options = {
+export default NextAuth({
   providers: [
     // OAuth authentication providers
     Providers.Apple({
@@ -87,9 +87,7 @@ const options = {
   ],
   // SQL or MongoDB database (or leave empty)
   database: process.env.DATABASE_URL
-}
-
-export default (req, res) => NextAuth(req, res, options)
+})
 ```
 
 ### Add React Component

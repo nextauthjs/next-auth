@@ -176,7 +176,7 @@ It also supports the following options:
 
 * `cookieName` - (string) Session token cookie name
 
-  The `secureCookie` option is ignored if `cookieName` is explcitly specified.
+  The `secureCookie` option is ignored if `cookieName` is explicitly specified.
 
 * `raw` - (boolean) Get raw token (not decoded)
 
