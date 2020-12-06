@@ -110,7 +110,7 @@ export default async (req, res, options, done) => {
           // e.g. option to send users to a new account landing page on initial login
           // Note that the callback URL is preserved, so the journey can still be resumed
           if (isNewUser && pages.newUser) {
-            return redirect(pages.newUser)
+            return redirect(`${pages.newUser}${pages.newUser.includes('?') ? '&' : '?'}callbackUrl=${encodeURIComponent(callbackUrl)}`)
           }
 
           // Callback URL is already verified at this point, so safe to use if specified
@@ -200,7 +200,7 @@ export default async (req, res, options, done) => {
       // e.g. option to send users to a new account landing page on initial login
       // Note that the callback URL is preserved, so the journey can still be resumed
       if (isNewUser && pages.newUser) {
-        return redirect(pages.newUser)
+        return redirect(`${pages.newUser}${pages.newUser.includes('?') ? '&' : '?'}callbackUrl=${encodeURIComponent(callbackUrl)}`)
       }
 
       // Callback URL is already verified at this point, so safe to use if specified
