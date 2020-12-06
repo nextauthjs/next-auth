@@ -2,12 +2,13 @@ import oAuthClient from '../oauth/client'
 import { createHash } from 'crypto'
 import logger from '../../../lib/logger'
 
-export default (provider, csrfToken, callback) => {
+export default (provider, csrfToken, callback, authParams) => {
   const { callbackUrl } = provider
   const client = oAuthClient(provider)
   if (provider.version && provider.version.startsWith('2.')) {
     // Handle oAuth v2.x
     let url = client.getAuthorizeUrl({
+      ...authParams,
       redirect_uri: provider.callbackUrl,
       scope: provider.scope,
       // A hash of the NextAuth.js CSRF token is used as the state
