@@ -11,5 +11,3 @@ services:
       MYSQL_PASSWORD: password
       MYSQL_DATABASE: nextauth
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
-    ports:
-      - "3306:3306"

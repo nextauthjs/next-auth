@@ -1,0 +1,13 @@
+version: "2"
+
+services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    restart: always
+    environment:
+      SA_PASSWORD: Pa55w0rd # minimum password complexity
+      ACCEPT_EULA: Y
+    # WARN: command overrides, default image start sequence, start.sh starts 'sql-server'
+    command: '/var/setup/start.sh' 
+    volumes:
+      - ./mssql:/var/setup # mount setup files
