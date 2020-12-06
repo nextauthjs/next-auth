@@ -1,6 +1,6 @@
 ---
-id: microsoft
-title: Microsoft
+id: azure-ad-b2c
+title: Azure Active Directory B2C
 ---
 
 ## Documentation
@@ -17,11 +17,11 @@ https://docs.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-tena
 import Providers from 'next-auth/providers';
 ...
 providers: [
-  Providers.Microsoft({
-    clientId: process.env.MS_CLIENT_ID,
-    clientSecret: process.env.MS_CLIENT_SECRET,
-    scope: 'offline_access openid',
-    tenantId: process.env.MS_TENANT_ID,
+  Providers.AzureADB2C({
+    clientId: process.env.AZURE_CLIENT_ID,
+    clientSecret: process.env.AZURE_CLIENT_SECRET,
+    scope: 'offline_access User.Read',
+    tenantId: process.env.AZURE_TENANT_ID,
   }),
 ]
 ...
