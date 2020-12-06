@@ -15,7 +15,7 @@ export default (options) => {
         id: profile.id,
         name: profile.display_name,
         email: profile.email,
-        image: profile.images.length > 0 ? profile.images[0].url : undefined
+        image: profile.images?.[0]?.url
       }
     },
     ...options

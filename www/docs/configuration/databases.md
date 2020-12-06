@@ -59,7 +59,7 @@ database: {
   port: 3306,
   username: 'nextauth',
   password: 'password',
-  database: 'database_name'
+  database: 'database_name',
   entityPrefix: 'nextauth_'
 }
 ```
@@ -144,7 +144,7 @@ Install module:
 #### Example
 
 ```js
-database: 'postgres://username:password@127.0.0.1:3306/database_name'
+database: 'postgres://username:password@127.0.0.1:5432/database_name'
 ```
 
 ### Microsoft SQL Server
@@ -166,7 +166,7 @@ Install module:
 #### Example
 
 ```js
-database: 'mongodb://username:password@127.0.0.1:3306/database_name'
+database: 'mongodb://username:password@127.0.0.1:27017/database_name'
 ```
 
 ### SQLite

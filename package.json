@@ -13,22 +13,19 @@
     "watch": "npm run watch:js | npm run watch:css",
     "watch:js": "babel --watch src --out-dir dist",
     "watch:css": "postcss --watch src/**/*.css --base src --dir dist",
-    "test": "npm run lint",
-    "test:db": "npm run test:db:mysql && npm run test:db:postgres && npm run test:db:mongodb && npm run test:db:mssql",
+    "test:app:start": "docker-compose -f test/docker/app.yml up -d",
+    "test:app:rebuild": "npm run build && docker-compose -f test/docker/app.yml up -d --build",
+    "test:app:stop": "docker-compose -f test/docker/app.yml down",
+    "test": "npm run test:app:rebuild && npm run test:integration && npm run test:app:stop",
+    "test:db": "npm run test:db:mysql && npm run test:db:postgres && npm run test:db:mongodb && npm run test:db:mssql && npm run test:db:fauna",
     "test:db:mysql": "node test/mysql.js",
     "test:db:postgres": "node test/postgres.js",
     "test:db:mongodb": "node test/mongodb.js",
     "test:db:mssql": "node test/mssql.js",
-    "db:start": "docker-compose -f test/docker/docker-compose.yml up -d",
-    "db:start:mongo": "docker-compose -f test/docker/mongo.yml up -d",
-    "db:start:mysql": "docker-compose -f test/docker/mysql.yml up -d",
-    "db:start:postgres": "docker-compose -f test/docker/postgres.yml up -d",
-    "db:start:mssql": "docker-compose -f test/docker/mssql.yml up -d",
-    "db:stop": "docker-compose -f test/docker/docker-compose.yml down",
-    "db:stop:mongo": "docker-compose -f test/docker/mongo.yml down",
-    "db:stop:mysql": "docker-compose -f test/docker/mysql.yml down",
-    "db:stop:postgres": "docker-compose -f test/docker/postgres.yml down",
-    "db:stop:mssql": "docker-compose -f test/docker/mssql.yml down",
+    "test:db:fauna": "node test/fauna.js",
+    "test:integration": "mocha test/integration",
+    "db:start": "docker-compose -f test/docker/databases.yml up -d",
+    "db:stop": "docker-compose -f test/docker/databases.yml down",
     "prepublishOnly": "npm run build",
     "publish:beta": "npm publish --tag beta",
     "publish:canary": "npm publish --tag canary",
@@ -46,11 +43,12 @@
   "license": "ISC",
   "dependencies": {
     "crypto-js": "^4.0.0",
+    "faunadb": "^3.0.1",
     "futoin-hkdf": "^1.3.2",
     "jose": "^1.27.2",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^2.2.0",
-    "nodemailer": "^6.4.6",
+    "nodemailer": "^6.4.16",
     "oauth": "^0.9.15",
     "preact": "^10.4.1",
     "preact-render-to-string": "^5.1.7",
@@ -59,8 +57,8 @@
     "typeorm": "^0.2.24"
   },
   "peerDependencies": {
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react": "^16.13.1 || ^17",
+    "react-dom": "^16.13.1 || ^17"
   },
   "peerOptionalDependencies": {
     "mongodb": "^3.5.9",
@@ -76,12 +74,22 @@
     "autoprefixer": "^9.7.6",
     "babel-preset-preact": "^2.0.0",
     "cssnano": "^4.1.10",
+    "dotenv": "^8.2.0",
+    "mocha": "^8.1.3",
     "mongodb": "^3.5.9",
-    "mysql": "^2.18.1",
     "mssql": "^6.2.1",
+    "mysql": "^2.18.1",
     "pg": "^8.2.1",
     "postcss-cli": "^7.1.1",
     "postcss-nested": "^4.2.1",
-    "standard": "^14.3.3"
+    "puppeteer": "^5.2.1",
+    "puppeteer-extra": "^3.1.15",
+    "puppeteer-extra-plugin-stealth": "^2.6.1",
+    "standard": "^16.0.3"
+  },
+  "standard": {
+    "ignore": [
+      "test/"
+    ]
   }
 }

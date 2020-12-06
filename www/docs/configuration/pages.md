@@ -58,7 +58,7 @@ If you create a custom sign in form for email sign in, you will need to submit b
 import React from 'react'
 import { csrfToken } from 'next-auth/client'
 
-export default function SignIn({ csrfToken }) => {
+export default function SignIn({ csrfToken }) {
   return (
     <form method='post' action='/api/auth/signin/email'>
       <input name='csrfToken' type='hidden' defaultValue={csrfToken}/>
@@ -92,7 +92,7 @@ If you create a sign in form for credentials based authentication, you will need
 import React from 'react'
 import { csrfToken } from 'next-auth/client'
 
-export default function SignIn({ csrfToken }) => {
+export default function SignIn({ csrfToken }) {
   return (
     <form method='post' action='/api/auth/callback/credentials'>
       <input name='csrfToken' type='hidden' defaultValue={csrfToken}/>
