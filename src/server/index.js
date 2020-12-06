@@ -21,7 +21,7 @@ if (!process.env.NEXTAUTH_URL) {
   logger.warn('NEXTAUTH_URL', 'NEXTAUTH_URL environment variable not set')
 }
 
-export default async (req, res, userSuppliedOptions) => {
+async function NextAuth (req, res, userSuppliedOptions) {
   // To the best of my knowledge, we need to return a promise here
   // to avoid early termination of calls to the serverless function
   // (and then return that promise when we are done) - eslint
@@ -312,4 +312,12 @@ export default async (req, res, userSuppliedOptions) => {
       return done()
     }
   })
+}
+
+export default async (...args) => {
+  if (args.length === 1) {
+    return (req, res) => NextAuth(req, res, args[0])
+  }
+
+  return NextAuth(...args)
 }

@@ -3,21 +3,22 @@
   border: none;
   transition-duration: 0s;
   box-shadow: 0 0 2rem rgba(0,0,0,.1);
+  filter: brightness(100%);
 }
 
 .button:hover,
 .button:active {
-  filter: brightness(110%) contrast(.95);
+  filter: brightness(105%);
 }
 
 html[data-theme="dark"] .button:hover,
 html[data-theme="dark"] .button:active {
-  filter: brightness(110%) contrast(.95);
+  filter: brightness(105%);
 }
 
 .button--primary,
 .button--primary:hover{
-  background: linear-gradient(0deg, #157efb 0%, var(--ifm-color-primary) 100%) !important;
+  background: linear-gradient(0deg, #1786FB 0%, #2CFEFE 100%) !important;
   color: #fff;
 }
 
@@ -27,10 +28,12 @@ html[data-theme="dark"] .button:active {
 .button.button--secondary.button--outline:hover,
 .button.button--secondary.button--outline:active {
   background: linear-gradient(0deg, #eeeeee 0%, #ffffff 100%) !important;
-  color: #444 !important
+  background: #fff !important;
+  color: #222 !important
 }
 
 html[data-theme="dark"] .button.button--secondary.button--outline {
   background: linear-gradient(0deg, #000000 0%, #222222 100%) !important;
+  background: #111 !important;
   color: #eee !important
 }

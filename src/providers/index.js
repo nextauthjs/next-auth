@@ -1,5 +1,6 @@
-import Auth0 from './auth0'
 import Apple from './apple'
+import Atlassian from './atlassian'
+import Auth0 from './auth0'
 import Basecamp from './basecamp'
 import BattleNet from './battlenet'
 import Box from './box'
@@ -16,6 +17,7 @@ import Google from './google'
 import IdentityServer4 from './identity-server4'
 import LinkedIn from './linkedin'
 import Mixer from './mixer'
+import Netlify from './netlify'
 import Okta from './okta'
 import Slack from './slack'
 import Spotify from './spotify'
@@ -24,6 +26,7 @@ import Twitter from './twitter'
 import Yandex from './yandex'
 
 export default {
+  Atlassian,
   Auth0,
   Apple,
   Basecamp,
@@ -42,6 +45,7 @@ export default {
   IdentityServer4,
   LinkedIn,
   Mixer,
+  Netlify,
   Okta,
   Slack,
   Spotify,

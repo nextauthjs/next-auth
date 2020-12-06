@@ -9,5 +9,3 @@ services:
       POSTGRES_USER: nextauth
       POSTGRES_PASSWORD: password
       POSTGRES_DB: nextauth
-    ports:
-      - "5432:5432"
