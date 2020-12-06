@@ -62,7 +62,7 @@ import Adapters from "next-auth/adapters"
 
 import Models from "../../../models"
 
-const options = {
+export default NextAuth({
   providers: [
     // Your providers
   ],
@@ -72,14 +72,12 @@ const options = {
     "mysql://username:password@127.0.0.1:3306/database_name",
     // The second argument can be used to pass custom models and schemas
     {
-      customModels: {
+      models: {
         User: Models.User,
       },
     }
   ),
-}
-
-export default (req, res) => NextAuth(req, res, options)
+})
 ```
 
 

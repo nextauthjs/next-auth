@@ -61,7 +61,13 @@ The Email authentication provider can only be used if a database is configured.
 
 #### CALLBACK_CREDENTIALS_JWT_ERROR
 
-The Credentials authentication provider can only be used if JSON Web Tokens are used for sessions.
+The Credentials Provider can only be used if JSON Web Tokens are used for sessions.
+
+JSON Web Tokens are used for Sessions by default if you have not specified a database. However if you are using a database, then Database Sessions are enabled by default and you need to [explictly enable JWT Sessions](https://next-auth.js.org/configuration/options#session) to use the Credentials Provider.
+
+If you are using a Credentials Provider, NextAuth.js will not persist users or sessions in a database - user accounts used with the Credentials Provider must be created and manged outside of NextAuth.js.
+
+In _most cases_ it does not make sense to specify a database in NextAuth.js options and support a Credentials Provider.
 
 #### CALLBACK_CREDENTIALS_HANDLER_ERROR
 ---

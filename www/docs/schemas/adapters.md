@@ -13,6 +13,7 @@ Configure your database by creating the tables and columns to match the schema e
 
 * [MySQL Schema](/schemas/mysql)
 * [Postgres Schema](/schemas/postgres)
+* [Microsoft SQL Server Schema](/schemas/mssql)
 
 ## TypeORM Adapter
 
@@ -49,7 +50,7 @@ The tutorial [Custom models with TypeORM](/tutorials/typeorm-custom-models) expl
 :::tip
 The `synchronize` option in TypeORM will generate SQL that exactly matches the documented schemas for MySQL and Postgres.
 
-However, it should not be enabled against production databases as may cause dataloss if the configured schema does not match the expected schema!
+However, it should not be enabled against production databases as it may cause data loss if the configured schema does not match the expected schema!
 :::
 
 ## Prisma Adapter
@@ -73,7 +74,7 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-const options = {
+export default NextAuth({
   providers: [
     Providers.Google({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -81,9 +82,7 @@ const options = {
     })
   ],
   adapter: Adapters.Prisma.Adapter({ prisma }),
-}
-
-export default (req, res) => NextAuth(req, res, options)
+})
 ```
 
 :::tip
@@ -188,28 +187,28 @@ npx @prisma/cli generate
 
 ### Custom Models
 
-You can add properties to the schema and map them to any database colum names you wish, but you should not change the base properties or types defined in the example schema.
+You can add properties to the schema and map them to any database column names you wish, but you should not change the base properties or types defined in the example schema.
 
-The model names themselves can be changed with a configuration option, and the datasource can be changed to anything supported by Prisma. 
+The model names themselves can be changed with a configuration option, and the datasource can be changed to anything supported by Prisma.
 
 You can use custom model names by using the `modelMapping` option (shown here with default values).
 
 ```javascript title="pages/api/auth/[...nextauth].js"
 ...
-adapter: Adapters.Prisma.Adapter({ 
+adapter: Adapters.Prisma.Adapter({
   prisma,
   modelMapping: {
     User: 'user',
     Account: 'account',
     Session: 'session',
     VerificationRequest: 'verificationRequest'
-  }  
+  }
 })
 ...
 ```
 
 :::tip
-If you experience issues with Prisma opening too many database connections opening in local development mode (e.g. due to Hot Module Reloading) you can use an approach like this when initalising the Prisma Client:
+If you experience issues with Prisma opening too many database connections in local development mode (e.g. due to Hot Module Reloading) you can use an approach like this when initalising the Prisma Client:
 
 ```javascript title="pages/api/auth/[...nextauth].js"
 let prisma

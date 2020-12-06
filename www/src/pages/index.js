@@ -7,9 +7,23 @@ import useBaseUrl from '@docusaurus/useBaseUrl'
 import CodeBlock from '@theme/CodeBlock'
 import ProviderMarquee from '../components/ProviderMarquee'
 import Seo from './seo'
-import styles from './styles.module.css'
+import styles from './index.module.css'
 
 const features = [
+  {
+    title: 'Easy',
+    imageUrl: 'img/undraw_social.svg',
+    description: (
+      <ul>
+        <li>Built in support for popular services<br />
+          <em>(Google, Facebook, Auth0, Apple…)</em>
+        </li>
+        <li>Built in email / passwordless / magic link</li>
+        <li>Use with any username / password store</li>
+        <li>Use with OAuth 1.0 &amp; 2.0 services</li>
+      </ul>
+    )
+  },
   {
     title: 'Flexible',
     imageUrl: 'img/undraw_authentication.svg',
@@ -20,22 +34,8 @@ const features = [
           Bring Your Own Database - or none!<br />
           <em>(MySQL, Postgres, MSSQL, MongoDB…)</em>
         </li>
-        <li>Choose Database Sessions or JWT</li>
+        <li>Choose database sessions or JWT</li>
         <li>Secure web pages and API routes</li>
-      </ul>
-    )
-  },
-  {
-    title: 'Easy',
-    imageUrl: 'img/undraw_social.svg',
-    description: (
-      <ul>
-        <li>Built in support for popular services<br />
-          <em>(Google, Facebook, Auth0, Apple…)</em>
-        </li>
-        <li>API for OAuth service integration</li>
-        <li>Email / Passwordless / Magic Link</li>
-        <li>Use any username/password store</li>
       </ul>
     )
   },
@@ -45,9 +45,9 @@ const features = [
     description: (
       <ul>
         <li>Signed, prefixed, server-only cookies</li>
-        <li>CSRF Tokens on HTTP POST</li>
+        <li>HTTP POST + CSRF Token validation</li>
         <li>JWT with JWS / JWE / JWK / JWK</li>
-        <li>Tab Sync, Auto Revalidation, Keepalive</li>
+        <li>Tab syncing, auto-revalidation, keepalives</li>
         <li>Doesn't rely on client side JavaScript</li>
       </ul>
     )
@@ -122,8 +122,8 @@ function Home () {
             <div className='container'>
               <div className='row'>
                 <div className='col'>
-                  <h2 className='text--center'>
-                    Open Source. Full Stack. Own Your Data.
+                  <h2 className={styles.featuresTitle}>
+                    <span>Open Source.</span> <span>Full Stack.</span> <span>Own Your Data.</span>
                   </h2>
                 </div>
               </div>
@@ -141,7 +141,7 @@ function Home () {
                   <p className='text--center'>
                     <a
                       href='https://www.npmjs.com/package/next-auth'
-                      className='button button--secondary button--outline rounded-pill button--lg'
+                      className='button button--primary button--outline rounded-pill button--lg'
                     >npm install next-auth
                     </a>
                   </p>
@@ -149,21 +149,21 @@ function Home () {
               </div>
               <div className='row'>
                 <div className='col'>
-                  <h2 className='text--center'>
-                    Add authentication in minutes with ready made example code.
+                  <h2 className='text--center' style={{ fontSize: '2.5rem' }}>
+                    Add authentication in minutes!
                   </h2>
                 </div>
               </div>
               <div className='row'>
                 <div className='col col--6'>
                   <div className='code'>
-                    <h4 className='code-heading'>Server</h4>
+                    <h4 className='code-heading'>Server <span>/pages/api/auth/[...nextauth].js</span></h4>
                     <CodeBlock className='javascript'>{serverlessFunctionCode}</CodeBlock>
                   </div>
                 </div>
                 <div className='col col--6'>
                   <div className='code'>
-                    <h4 className='code-heading'>Client</h4>
+                    <h4 className='code-heading'>Client <span>/pages/index.js</span></h4>
                     <CodeBlock className='javascript'>{reactComponentCode}</CodeBlock>
                   </div>
                 </div>
@@ -174,17 +174,16 @@ function Home () {
                     <Link
                       to='/getting-started/example'
                       className='button button--primary button--lg rounded-pill'
-                    >Get Started
+                    >Example Code
                     </Link>
                   </p>
                 </div>
               </div>
             </div>
           </section>
-          <div className='container'>
-            <div className='row home-subtitle'>
-              {siteConfig.title} is not affiliated with Vercel or Next.js
-            </div>
+          <div className='home-subtitle'>
+            <p>NextAuth.js is an open source community project.</p>
+            <p>NextAuth.js is not affiliated with Vercel or Next.js</p>
           </div>
         </main>
       </div>
@@ -220,9 +219,9 @@ const serverlessFunctionCode = `
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 
-const options = {
+export default NextAuth({
   providers: [
-    // OAuth authentication providers
+    // OAuth authentication providers...
     Providers.Apple({
       clientId: process.env.APPLE_ID,
       clientSecret: process.env.APPLE_SECRET
@@ -235,17 +234,15 @@ const options = {
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET
     }),
-    // Sign in with email
+    // Passwordless / email sign in
     Providers.Email({
       server: process.env.MAIL_SERVER,
       from: 'NextAuth.js <no-reply@example.com>'
     }),
   ],
-  // SQL or MongoDB database (or leave empty)
+  // Optional SQL or MongoDB database to persist users
   database: process.env.DATABASE_URL
-}
-
-export default (req, res) => NextAuth(req, res, options)
+})
 `.trim()
 
 export default Home
