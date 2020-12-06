@@ -210,10 +210,12 @@ async function _getOAuthAccessToken (code, provider, callback) {
   if (!params.redirect_uri) { params.redirect_uri = provider.callbackUrl }
 
   if (!headers['Content-Type']) { headers['Content-Type'] = 'application/x-www-form-urlencoded' }
-
   // Added as a fix to accomodate change in Twitch oAuth API
   if (!headers['Client-ID']) { headers['Client-ID'] = provider.clientId }
-
+  // Added as a fix for Reddit Authentication
+  if (provider.id === 'reddit') {
+    headers.Authorization = 'Basic ' + Buffer.from((provider.clientId + ':' + provider.clientSecret)).toString('base64')
+  }
   // Okta errors when this is set. Maybe there are other Providers that also wont like this.
   if (setGetAccessTokenAuthHeader) {
     if (!headers.Authorization) { headers.Authorization = `Bearer ${code}` }
