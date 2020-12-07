@@ -5,7 +5,7 @@ export default (req, res, options, done) => {
   const { providers } = options
 
   const result = {}
-  Object.entries(providers).map(([provider, providerConfig]) => {
+  Object.entries(providers).forEach(([provider, providerConfig]) => {
     result[provider] = {
       id: provider,
       name: providerConfig.name,
