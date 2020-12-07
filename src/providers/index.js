@@ -17,6 +17,7 @@ import IdentityServer4 from './identity-server4'
 import LinkedIn from './linkedin'
 import Mixer from './mixer'
 import Okta from './okta'
+import Osso from './osso'
 import Slack from './slack'
 import Spotify from './spotify'
 import Twitch from './twitch'
@@ -43,6 +44,7 @@ export default {
   LinkedIn,
   Mixer,
   Okta,
+  Osso,
   Slack,
   Spotify,
   Twitter,
