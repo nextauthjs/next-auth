@@ -7,6 +7,8 @@ this project (found in the CODE_OF_CONDUCT.md file).
 Also, please make sure you're familiar with and follow the instructions in the
 contributing guidelines (found in the CONTRIBUTING.md file).
 
+<!-- Note before creating the Pull Request. Even though the CONTRIBUTONG.md tells otherwise, we ask you to use the `canary` branch as base for your PR. We are tranistioning to a new structure, and the CONTRIBUTONG.md file has not been updated yet. Thank you! -->
+
 If you're new to contributing to open source projects, you might find this free
 video course helpful: http://kcd.im/pull-request
 
@@ -39,4 +41,3 @@ merge of your pull request!
       <!-- In your opinion, is this ready to be merged as soon as it's reviewed? -->
 
 <!-- feel free to add additional comments -->
-<!-- Note before creating the Pull Request. The base you should open most pull requests agains is `canary`. -->
