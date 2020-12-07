@@ -11,13 +11,18 @@ export default (options) => {
     accessTokenUrl: 'https://api.instagram.com/oauth/access_token',
     authorizationUrl: 'https://api.instagram.com/oauth/authorize?response_type=code',
     profileUrl: 'https://graph.instagram.com/me?fields=id,username,account_type,name',
-    profile: async (profile) => {
-      const instagramData = await fetch('https://www.instagram.com/' + profile.username + '/?__a=1').then(res => res.json())
-      return {
-        id: profile.id,
-        name: instagramData.graphql.user.full_name,
-        email: null,
-        image: instagramData.graphql.user.profile_pic_url_hd
+    async profile (profile) {
+      try {
+        const response = await fetch(`https://www.instagram.com/${profile.username}/?__a=1`)
+        const data = await response.json()
+        return {
+          id: profile.id,
+          name: data.graphql.user.full_name,
+          email: null,
+          image: data.graphql.user.profile_pic_url_hd
+        }
+      } catch(error) {
+        logger.error("PROFILE_FETCH_ERROR", error)
       }
     },
     ...options
