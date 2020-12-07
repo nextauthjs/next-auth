@@ -1,4 +1,4 @@
-import fetch from 'node-fetch'
+import logger from '../lib/logger'
 
 export default (options) => {
   return {
