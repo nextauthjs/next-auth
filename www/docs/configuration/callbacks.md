@@ -70,6 +70,29 @@ callbacks: {
 
 * When using the **Credentials Provider** the `user` object is the response returned from the `authorization` callback and the `profile` object is the raw body of the `HTTP POST` submission.
 
+:::warning
+Setting your callback as `async` and using try/catch and doing `return Promise.reject(error)` from within the `catch` block will raise a `UnhandledPromiseRejectionWarning`.
+This is benign in your localhost console but when deployed to Vercel it will result in a 502 error being displayed to the user and you will not be redirected to your error page.
+Another way for this problem to occur is to call `Promise.reject` without returning it. If you need to call an async function within your callback,
+instead of using `await` in a try/catch, simply return your function call. If you need to handle `catch` or `finally` on your own function call you can use
+traditional promises syntax as shown below
+:::
+
+```js title="pages/api/auth/[...nextauth].js"
+// example for warning noted above
+callbacks: {
+  // custom userIsOnWhitelist function is defined with async/await. userIsOnWhitelist returns true on success or throws on failure.
+  // Note, signIn callback not defined using `async`
+  signIn: (user, account, profile) => {
+    openDBConnection()
+    return userIsOnWhitelist(user.email)
+      .finally(() => {
+        return closeDBConnection()
+      })
+  },
+}
+```
+
 :::note
 When using NextAuth.js with a database, the User object will be either a user object from the database (including the User ID) if the user has signed in before or a simpler prototype user object (i.e. name, email, image) for users who have not signed in before.
 
