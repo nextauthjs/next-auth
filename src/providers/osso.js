@@ -12,7 +12,7 @@ export default (options) => {
       return {
         id: profile.id,
         name: profile.name,
-        email: profile.email,
+        email: profile.email
       }
     },
     ...options
