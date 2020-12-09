@@ -87,7 +87,8 @@ export default async (req, res, options, done) => {
             const defaultJwtPayload = {
               name: user.name,
               email: user.email,
-              picture: user.image
+              picture: user.image,
+              sub: user.id.toString()
             }
             const jwtPayload = await callbacks.jwt(defaultJwtPayload, user, account, OAuthProfile, isNewUser)
 
@@ -110,7 +111,7 @@ export default async (req, res, options, done) => {
           // e.g. option to send users to a new account landing page on initial login
           // Note that the callback URL is preserved, so the journey can still be resumed
           if (isNewUser && pages.newUser) {
-            return redirect(pages.newUser)
+            return redirect(`${pages.newUser}${pages.newUser.includes('?') ? '&' : '?'}callbackUrl=${encodeURIComponent(callbackUrl)}`)
           }
 
           // Callback URL is already verified at this point, so safe to use if specified
@@ -177,7 +178,8 @@ export default async (req, res, options, done) => {
         const defaultJwtPayload = {
           name: user.name,
           email: user.email,
-          picture: user.image
+          picture: user.image,
+          sub: user.id.toString()
         }
         const jwtPayload = await callbacks.jwt(defaultJwtPayload, user, account, profile, isNewUser)
 
@@ -200,7 +202,7 @@ export default async (req, res, options, done) => {
       // e.g. option to send users to a new account landing page on initial login
       // Note that the callback URL is preserved, so the journey can still be resumed
       if (isNewUser && pages.newUser) {
-        return redirect(pages.newUser)
+        return redirect(`${pages.newUser}${pages.newUser.includes('?') ? '&' : '?'}callbackUrl=${encodeURIComponent(callbackUrl)}`)
       }
 
       // Callback URL is already verified at this point, so safe to use if specified
