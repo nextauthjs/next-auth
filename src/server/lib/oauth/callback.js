@@ -191,7 +191,7 @@ async function _getProfile (error, profileData, accessToken, refreshToken, provi
 async function _getOAuthAccessToken (code, provider, callback, codeVerifier) {
   const url = provider.accessTokenUrl
   const setGetAccessTokenAuthHeader = (provider.setGetAccessTokenAuthHeader !== null) ? provider.setGetAccessTokenAuthHeader : true
-  const params = new URLSearchParams({ ...provider.params } || {})
+  const params = { ...provider.params } || {}
   const headers = { ...provider.headers } || {}
   const codeParam = (params.grant_type === 'refresh_token') ? 'refresh_token' : 'code'
 
