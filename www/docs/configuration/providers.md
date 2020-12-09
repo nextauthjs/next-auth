@@ -14,6 +14,7 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 * [Apple](/providers/apple)
 * [Atlassian](/providers/atlassian)
 * [Auth0](/providers/auth0)
+* [Azure Active Directory B2C](/providers/azure-ad-b2c)
 * [Basecamp](/providers/basecamp)
 * [Battle.net](/providers/battle.net)
 * [Box](/providers/box)
@@ -137,6 +138,7 @@ providers: [
 |      scope       |       OAuth access scopes (expects array or string) |    No    |
 |      params      |       Additional authorization URL parameters       |    No    |
 |  accessTokenUrl  |        Endpoint to retrieve an access token         |   Yes    |
+|  accessTokenGetter  |   Default `(json) => json.access_token`          |    No    |
 | requestTokenUrl  |        Endpoint to retrieve a request token         |    No    |
 | authorizationUrl |   Endpoint to request authorization from the user   |   Yes    |
 |    profileUrl    |       Endpoint to retrieve the user's profile       |    No    |
