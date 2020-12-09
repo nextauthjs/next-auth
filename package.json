@@ -54,7 +54,7 @@
     "preact-render-to-string": "^5.1.7",
     "querystring": "^0.2.0",
     "require_optional": "^1.0.1",
-    "typeorm": "^0.2.24"
+    "typeorm": "^0.2.29"
   },
   "peerDependencies": {
     "react": "^16.13.1 || ^17",
@@ -68,9 +68,9 @@
     "@prisma/client": "^2.12.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.6",
-    "@babel/preset-env": "^7.9.6",
+    "@babel/cli": "^7.12.8",
+    "@babel/core": "^7.12.9",
+    "@babel/preset-env": "^7.12.7",
     "autoprefixer": "^9.7.6",
     "babel-preset-preact": "^2.0.0",
     "cssnano": "^4.1.10",
