@@ -5,7 +5,7 @@ import cookie from '../lib/cookie'
 import logger from '../../lib/logger'
 import dispatchEvent from '../lib/dispatch-event'
 
-export default async (req, res, options, done) => {
+export default async function callback (req, res, options, done, codeVerifier) {
   const {
     provider: providerName,
     providers,
@@ -127,7 +127,7 @@ export default async (req, res, options, done) => {
             return redirect(`${baseUrl}${basePath}/error?error=Callback`)
           }
         }
-      })
+      }, codeVerifier)
     } catch (error) {
       logger.error('OAUTH_CALLBACK_ERROR', error)
       return redirect(`${baseUrl}${basePath}/error?error=Callback`)

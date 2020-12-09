@@ -14,6 +14,7 @@ import session from './routes/session'
 import pages from './pages'
 import adapters from '../adapters'
 import logger from '../lib/logger'
+import pkceChallenge from 'pkce-challenge'
 
 // To work properly in production with OAuth providers the NEXTAUTH_URL
 // environment variable must be set.
@@ -217,6 +218,8 @@ async function NextAuth (req, res, userSuppliedOptions) {
       redirect
     }
 
+    const pkce = options.providers[provider]?.pkce ? pkceChallenge(64) : undefined
+
     // If debug enabled, set ENV VAR so that logger logs debug messages
     if (options.debug === true) { process.env._NEXTAUTH_DEBUG = true }
 
@@ -250,7 +253,7 @@ async function NextAuth (req, res, userSuppliedOptions) {
           break
         case 'callback':
           if (provider && options.providers[provider]) {
-            callback(req, res, options, done)
+            callback(req, res, options, done, pkce?.code_verifier)
           } else {
             res.status(400).end(`Error: HTTP GET is not supported for ${url}`)
             return done()
@@ -279,7 +282,7 @@ async function NextAuth (req, res, userSuppliedOptions) {
           }
 
           if (provider && options.providers[provider]) {
-            signin(req, res, options, done)
+            signin({ req, res, options, done, codeChallenge: pkce.code_challenge })
           }
           break
         case 'signout':
@@ -297,7 +300,7 @@ async function NextAuth (req, res, userSuppliedOptions) {
               return redirect(`${baseUrl}${basePath}/signin?csrf=true`)
             }
 
-            callback(req, res, options, done)
+            callback(req, res, options, done, pkce?.code_verifier)
           } else {
             res.status(400).end(`Error: HTTP POST is not supported for ${url}`)
             return done()

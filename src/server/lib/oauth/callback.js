@@ -13,22 +13,22 @@ import logger from '../../../lib/logger'
 
 // @TODO Refactor to use promises and not callbacks
 // @TODO Refactor to use jsonwebtoken instead of jwt-decode & remove dependancy
-export default async (req, provider, csrfToken, callback) => {
+export default async function oAuthCallback (req, provider, csrfToken, callback, codeVerifier) {
   // The "user" object is specific to apple provider and is provided on first sign in
   // e.g. {"name":{"firstName":"Johnny","lastName":"Appleseed"},"email":"johnny.appleseed@nextauth.com"}
   let { oauth_token, oauth_verifier, code, user, state } = req.query // eslint-disable-line camelcase
   const client = oAuthClient(provider)
 
-  if (provider.version && provider.version.startsWith('2.')) {
+  if (provider.version?.startsWith('2.')) {
     // For OAuth 2.0 flows, check state returned and matches expected value
     // (a hash of the NextAuth.js CSRF token).
     //
     // This check can be disabled for providers that do not support it by
-    // setting `state: false` as a option on the provider (defaults to true).
+    // setting `state: false` as an option on the provider (defaults to true).
     if (!Object.prototype.hasOwnProperty.call(provider, 'state') || provider.state === true) {
       const expectedState = createHash('sha256').update(csrfToken).digest('hex')
       if (state !== expectedState) {
-        return callback(new Error('Invalid state returned from oAuth provider'))
+        return callback(new Error('Invalid state returned from OAuth provider'))
       }
     }
 
@@ -87,7 +87,7 @@ export default async (req, provider, csrfToken, callback) => {
             }
           )
         } else {
-          // Use custom get() method for oAuth2 flows
+          // Use custom get() method for OAuth2 flows
           client.get = _get
 
           client.get(
@@ -100,7 +100,8 @@ export default async (req, provider, csrfToken, callback) => {
             }
           )
         }
-      }
+      },
+      codeVerifier
     )
   } else {
     // Handle oAuth v1.x
@@ -187,12 +188,16 @@ async function _getProfile (error, profileData, accessToken, refreshToken, provi
 }
 
 // Ported from https://github.com/ciaranj/node-oauth/blob/a7f8a1e21c362eb4ed2039431fb9ac2ae749f26a/lib/oauth2.js
-async function _getOAuthAccessToken (code, provider, callback) {
+async function _getOAuthAccessToken (code, provider, callback, codeVerifier) {
   const url = provider.accessTokenUrl
   const setGetAccessTokenAuthHeader = (provider.setGetAccessTokenAuthHeader !== null) ? provider.setGetAccessTokenAuthHeader : true
-  const params = { ...provider.params } || {}
+  const params = new URLSearchParams({ ...provider.params } || {})
   const headers = { ...provider.headers } || {}
   const codeParam = (params.grant_type === 'refresh_token') ? 'refresh_token' : 'code'
+
+  if (provider.pkce) {
+    params.code_verifier = codeVerifier
+  }
 
   if (!params[codeParam]) { params[codeParam] = code }
 
