@@ -317,10 +317,10 @@ function SessionProvider ({ children, session, options }) {
     _getSession()
   }, [hasSession])
 
-  return (
-    <SessionContext.Provider value={[data, loading]}>
-      {children}
-    </SessionContext.Provider>
+  return React.createElement(
+    SessionContext.Provider,
+    { value: [data, loading] },
+    children
   )
 }
 
