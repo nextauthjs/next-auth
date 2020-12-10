@@ -249,7 +249,7 @@ function useSession () {
 /** Provider to wrap the app in to make session data available globally */
 function SessionProvider ({ children, session, options }) {
   setOptions(options)
-  const hasSession = React.useMemo(() => !!session, [])
+  const hasSession = !!session
   const [data, setData] = React.useState(session)
   const [loading, setLoading] = React.useState(() => !hasSession) // Start with loading=false, if we already have the session
 
