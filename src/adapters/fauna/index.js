@@ -270,7 +270,7 @@ const Adapter = (config, options = {}) => {
       _debug('getSession', sessionToken)
 
       try {
-        var session = await faunaClient.query(
+        const session = await faunaClient.query(
           q.Get(
             q.Match(
               q.Index('session_by_token'),
