@@ -28,7 +28,7 @@ export default async (req, provider, csrfToken, callback) => {
     if (!Object.prototype.hasOwnProperty.call(provider, 'state') || provider.state === true) {
       const expectedState = createHash('sha256').update(csrfToken).digest('hex')
       if (state !== expectedState) {
-        return callback(new Error('Invalid state returned from oAuth provider'))
+        return callback(new Error('Invalid state returned from OAuth provider'))
       }
     }
 
@@ -103,7 +103,7 @@ export default async (req, provider, csrfToken, callback) => {
       }
     )
   } else {
-    // Handle oAuth v1.x
+    // Handle OAuth v1.x
     await client.getOAuthAccessToken(
       oauth_token,
       null,
@@ -211,7 +211,7 @@ async function _getOAuthAccessToken (code, provider, callback) {
   if (!params.redirect_uri) { params.redirect_uri = provider.callbackUrl }
 
   if (!headers['Content-Type']) { headers['Content-Type'] = 'application/x-www-form-urlencoded' }
-  // Added as a fix to accomodate change in Twitch oAuth API
+  // Added as a fix to accomodate change in Twitch OAuth API
   if (!headers['Client-ID']) { headers['Client-ID'] = provider.clientId }
   // Added as a fix for Reddit Authentication
   if (provider.id === 'reddit') {

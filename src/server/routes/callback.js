@@ -118,7 +118,7 @@ export default async (req, res, options, done) => {
           return redirect(callbackUrl || baseUrl)
         } catch (error) {
           if (error.name === 'AccountNotLinkedError') {
-            // If the email on the account is already linked, but nto with this oAuth account
+            // If the email on the account is already linked, but nto with this OAuth account
             return redirect(`${baseUrl}${basePath}/error?error=OAuthAccountNotLinked`)
           } else if (error.name === 'CreateUserError') {
             return redirect(`${baseUrl}${basePath}/error?error=OAuthCreateAccount`)

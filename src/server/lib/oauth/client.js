@@ -5,7 +5,7 @@ import { OAuth, OAuth2 } from 'oauth'
 
 export default (provider) => {
   if (provider.version && provider.version.startsWith('2.')) {
-    // Handle oAuth v2.x
+    // Handle OAuth v2.x
     const basePath = new URL(provider.authorizationUrl).origin
     const authorizePath = new URL(provider.authorizationUrl).pathname
     const accessTokenPath = new URL(provider.accessTokenUrl).pathname
@@ -17,7 +17,7 @@ export default (provider) => {
       accessTokenPath,
       provider.headers)
   } else {
-    // Handle oAuth v1.x
+    // Handle OAuth v1.x
     return new OAuth(
       provider.requestTokenUrl,
       provider.accessTokenUrl,

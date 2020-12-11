@@ -62,7 +62,7 @@ async function NextAuth (req, res, userSuppliedOptions) {
     // Secret used salt cookies and tokens (e.g. for CSRF protection).
     // If no secret option is specified then it creates one on the fly
     // based on options passed here. A options contains unique data, such as
-    // oAuth provider secrets and database credentials it should be sufficent.
+    // OAuth provider secrets and database credentials it should be sufficent.
     const secret = userSuppliedOptions.secret || createHash('sha256').update(JSON.stringify({ baseUrl, basePath, ...userSuppliedOptions })).digest('hex')
 
     // Use secure cookies if the site uses HTTPS
