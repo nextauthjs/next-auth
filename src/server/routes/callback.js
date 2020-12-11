@@ -1,11 +1,17 @@
-// Handle callbacks from login services
 import oAuthCallback from '../lib/oauth/callback'
 import callbackHandler from '../lib/callback-handler'
 import cookie from '../lib/cookie'
 import logger from '../../lib/logger'
 import dispatchEvent from '../lib/dispatch-event'
 
-export default async (req, res, options, done) => {
+/**
+ * Handle callbacks from login services
+ * @param {import('next').NextApiRequest} req
+ * @param {import('next').NextApiResponse} res
+ * @param {import('../index').NextAuthOptions} options
+ * @param {(value: any) => void} done
+ */
+export default async function callback (req, res, options, done) {
   const {
     provider: providerName,
     providers,
@@ -91,6 +97,14 @@ export default async (req, res, options, done) => {
               sub: user.id.toString()
             }
             const jwtPayload = await callbacks.jwt(defaultJwtPayload, user, account, OAuthProfile, isNewUser)
+
+            saveOAuthTokensInCookie({
+              res,
+              cookies,
+              account,
+              maxAge: sessionMaxAge,
+              secret: options.secret
+            })
 
             // Sign and encrypt token
             const newEncodedJwt = await jwt.encode({ ...jwt, token: jwtPayload })
@@ -284,5 +298,58 @@ export default async (req, res, options, done) => {
   } else {
     res.status(500).end(`Error: Callback for provider type ${type} not supported`)
     return done()
+  }
+}
+
+/**
+ * A common usecase is to put the access_token into the session token.
+ * While nothing wrong with it, the access_token quickly fills up the 4096 bytes
+ * allowed by most browsers. We therefore put id_token, and access_token/refresh_token
+ * in their own cookies.
+ * @param {{
+ *  cookies: import('../cookies').CookieOptions
+ *  res: import('next').NextApiResponse
+ *  maxAge: number
+ *  account: import('../lib/oauth/index').Account
+ *  secret: string
+ * }} SaveOAuthTokensInCookieParams
+ */
+function saveOAuthTokensInCookie ({ res, cookies, account, maxAge, secret }) {
+  const expires = new Date()
+  expires.setTime(expires.getTime() + (maxAge * 1000))
+
+  if (account.accessToken) {
+    let accessTokenExpires = account.accessTokenExpires
+    if (accessTokenExpires) {
+      accessTokenExpires = new Date(accessTokenExpires)
+    } else {
+      accessTokenExpires = expires
+    }
+    // Save the access_token and refresh_token together
+    const accessToken = {
+      accessToken: account.accessToken,
+      refreshToken: account.refreshToken
+    }
+
+    // TODO: Encrypt with secret
+    const encryptedAccessToken = JSON.stringify(accessToken)
+
+    cookie.set(
+      res,
+      cookies.accessToken.name,
+      encryptedAccessToken,
+      { expires: accessTokenExpires.toISOString(), ...cookies.accessToken.options }
+    )
+  }
+
+  if (account.idToken) {
+    // TODO: Encrypt with secret
+    const encryptedIdToken = account.idToken
+    cookie.set(
+      res,
+      cookies.idToken.name,
+      encryptedIdToken,
+      { expires: expires, ...cookies.idToken.options }
+    )
   }
 }
