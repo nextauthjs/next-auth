@@ -79,6 +79,7 @@
     "mongodb": "^3.5.9",
     "mssql": "^6.2.1",
     "mysql": "^2.18.1",
+    "next": "^10.0.3",
     "pg": "^8.2.1",
     "postcss-cli": "^7.1.1",
     "postcss-nested": "^4.2.1",
@@ -89,7 +90,8 @@
   },
   "standard": {
     "ignore": [
-      "test/"
+      "test/",
+      "**/*.d.ts"
     ]
   }
 }
