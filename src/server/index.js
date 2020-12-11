@@ -5,7 +5,7 @@ import cookie from './lib/cookie'
 import callbackUrlHandler from './lib/callback-url-handler'
 import parseProviders from './lib/providers'
 import events from './lib/events'
-import callbacks from './lib/callbacks'
+import * as defaultCallbacks from './lib/defaultCallbacks'
 import providers from './routes/providers'
 import signin from './routes/signin'
 import signout from './routes/signout'
@@ -21,7 +21,7 @@ if (!process.env.NEXTAUTH_URL) {
   logger.warn('NEXTAUTH_URL', 'NEXTAUTH_URL environment variable not set')
 }
 
-async function NextAuth (req, res, userSuppliedOptions) {
+async function NextAuthHandler (req, res, userSuppliedOptions) {
   // To the best of my knowledge, we need to return a promise here
   // to avoid early termination of calls to the serverless function
   // (and then return that promise when we are done) - eslint
@@ -139,7 +139,7 @@ async function NextAuth (req, res, userSuppliedOptions) {
 
     // Callback functions
     const callbacksOptions = {
-      ...callbacks,
+      ...defaultCallbacks,
       ...userSuppliedOptions.callbacks
     }
 
@@ -314,10 +314,10 @@ async function NextAuth (req, res, userSuppliedOptions) {
   })
 }
 
-export default async (...args) => {
+export default async function NextAuth (...args) {
   if (args.length === 1) {
-    return (req, res) => NextAuth(req, res, args[0])
+    return (req, res) => NextAuthHandler(req, res, args[0])
   }
 
-  return NextAuth(...args)
+  return NextAuthHandler(...args)
 }
