@@ -147,17 +147,17 @@ async function refreshAccessToken ({ token, provider }) {
     method: 'POST'
   })
 
-  const refreshedToken = await response.json()
+  const newTokens = await response.json()
 
   if (!response.ok) {
-    throw new Error({ refreshToken: refreshedToken })
+    throw new Error({ newTokens })
   }
 
   return {
     ...token,
-    accessToken: refreshedToken.access_token,
-    accessTokenExpires: new Date(refreshedToken.expires_in).toISOString(),
+    accessToken: newTokens.access_token,
+    accessTokenExpires: new Date(newTokens.expires_in).toISOString(),
     // Fallback to the previous refresh_token, if it is not rotating/sliding
-    refreshToken: refreshedToken.refresh_token || token.refreshToken
+    refreshToken: newTokens.refresh_token || token.refreshToken
   }
 }
