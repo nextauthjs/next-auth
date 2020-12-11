@@ -11,6 +11,7 @@ import signin from './routes/signin'
 import signout from './routes/signout'
 import callback from './routes/callback'
 import session from './routes/session'
+import tokens from './routes/tokens'
 import pages from './pages'
 import adapters from '../adapters'
 import logger from '../lib/logger'
@@ -21,6 +22,11 @@ if (!process.env.NEXTAUTH_URL) {
   logger.warn('NEXTAUTH_URL', 'NEXTAUTH_URL environment variable not set')
 }
 
+/**
+ * @param {import('next').NextApiRequest} req
+ * @param {import('next').NextApiResponse} res
+ * @param {*} userSuppliedOptions
+ */
 async function NextAuth (req, res, userSuppliedOptions) {
   // To the best of my knowledge, we need to return a promise here
   // to avoid early termination of calls to the serverless function
@@ -75,6 +81,7 @@ async function NextAuth (req, res, userSuppliedOptions) {
     const cookiePrefix = useSecureCookies ? '__Secure-' : ''
 
     // @TODO Review cookie settings (names, options)
+    /** @type import('./cookies').CookieOptions */
     const cookies = {
       // default cookie options
       sessionToken: {
@@ -105,6 +112,25 @@ async function NextAuth (req, res, userSuppliedOptions) {
           secure: useSecureCookies
         }
       },
+      // OAuth tokens stored in different cookies for more space in the session cookie.
+      accessToken: {
+        name: '__Host-next-auth.access-token',
+        options: {
+          httpOnly: true,
+          sameSite: 'lax',
+          path: '/',
+          secure: true
+        }
+      },
+      idToken: {
+        name: '__Host-next-auth.id-token',
+        options: {
+          httpOnly: true,
+          sameSite: 'lax',
+          path: '/',
+          secure: true
+        }
+      },
       // Allow user cookie options to override any cookie settings above
       ...userSuppliedOptions.cookies
     }
@@ -118,6 +144,7 @@ async function NextAuth (req, res, userSuppliedOptions) {
     }
 
     // JWT options
+    /** @type {import("./index").JWTOptions} */
     const jwtOptions = {
       secret, // Use application secret if no keys specified
       maxAge: sessionOptions.maxAge, // maxAge is dereived from session maxAge,
@@ -180,7 +207,7 @@ async function NextAuth (req, res, userSuppliedOptions) {
     // @TODO Refactor into a lib instead of passing as an option
     //       e.g. and call as redirect(req, res, url)
     const redirect = (redirectUrl) => {
-      const reponseAsJson = !!((req.body && req.body.json === 'true'))
+      const reponseAsJson = !!((req.body?.json === 'true'))
       if (reponseAsJson) {
         res.json({ url: redirectUrl })
       } else {
@@ -192,14 +219,15 @@ async function NextAuth (req, res, userSuppliedOptions) {
 
     // User provided options are overriden by other options,
     // except for the options with special handling above
+    /** @type {import("./index").NextAuthOptions} */
     const options = {
       // Defaults options can be overidden
       debug: false, // Enable debug messages to be displayed
       pages: {}, // Custom pages (e.g. sign in, sign out, errors)
       // Custom options override defaults
       ...userSuppliedOptions,
-      // These computed settings can values in userSuppliedOptions but override them
-      // and are request-specific.
+      // These computed settings can have values in userSuppliedOptions but
+      // we override them and are request-specific.
       adapter,
       baseUrl,
       basePath,
@@ -230,6 +258,9 @@ async function NextAuth (req, res, userSuppliedOptions) {
           break
         case 'session':
           session(req, res, options, done)
+          break
+        case 'tokens':
+          tokens(req, res, options, done)
           break
         case 'csrf':
           res.json({ csrfToken })
