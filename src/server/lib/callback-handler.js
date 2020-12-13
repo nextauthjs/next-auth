@@ -52,8 +52,8 @@ export default async (sessionToken, profile, providerAccount, options) => {
       if (useJwtSession) {
         try {
           session = await jwt.decode({ ...jwt, token: sessionToken })
-          if (session && session.user) {
-            user = await getUser(session.user.id)
+          if (session && session.sub) {
+            user = await getUser(session.sub)
             isSignedIn = !!user
           }
         } catch (e) {

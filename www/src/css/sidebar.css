@@ -1,7 +1,10 @@
 /* Targets sidebar (left hand side) */
 .main-wrapper > div > div {
   border-right: none !important;
-  background: var(--ifm-footer-background-color);
+}
+
+.menu__list .menu__link {
+  text-decoration: none;
 }
 
 .menu__list .menu__list-item a[href="#!"],
@@ -11,7 +14,7 @@
 }
 
 .menu__list .menu__list-item a:not(.menu__link--sublist) {
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .menu__list .menu__list-item a:not(.menu__link--sublist):hover {
@@ -23,13 +26,18 @@
   font-weight: 700;
 }
 
-.menu__list .menu__list-item a.menu__link.menu__link--active:not(.menu__link--sublist) {
-  background: transparent;  
+.menu__list
+  .menu__list-item
+  a.menu__link.menu__link--active:not(.menu__link--sublist) {
+  background: transparent;
   color: var(--ifm-color-link);
 }
 
-html[data-theme='dark'] .menu__list .menu__list-item a:not(.menu__link--sublist),
-html[data-theme='dark'] .menu__list .menu__list-item a[href="#!"] {
+html[data-theme="dark"]
+  .menu__list
+  .menu__list-item
+  a:not(.menu__link--sublist),
+html[data-theme="dark"] .menu__list .menu__list-item a[href="#!"] {
   color: #fff;
 }
 
@@ -47,7 +55,9 @@ html[data-theme='dark'] .menu__list .menu__list-item a[href="#!"] {
 @media screen and (max-width: 996px) {
   .menu.menu--responsive {
     top: 3.5rem;
+    overflow: auto;
     padding: 0;
+    background: var(--ifm-background-color);
   }
   .navbar {
     z-index: 1000 !important;

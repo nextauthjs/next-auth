@@ -12,6 +12,7 @@ title: Contributors
 * <a href="https://github.com/geraldnolan">Gerald Nolan</a>
 * <a href="https://github.com/lluia">Lluis Agusti</a>
 * <a href="https://github.com/JeffersonBledsoe">Jefferson Bledsoe</a>
+* <a href="https://github.com/balazsorban44">Balázs Orbán</a>
 
 _Special thanks to Lori Karikari for creating most of the providers, to Nico Domino for creating this site, to Fredrik Pettersen for creating the Prisma adapter, to Gerald Nolan for adding support for Sign in with Apple, to Lluis Agusti for work to add TypeScript definitions and to Jefferson Bledsoe for working on automating testing._
 

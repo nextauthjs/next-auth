@@ -3,29 +3,33 @@ id: providers
 title: Providers
 ---
 
-Authentication Providers in NextAuth.js are how you define services can be used to sign in.
-
-NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1.0A and 2.0 and has built-in support for many popular OAuth sign-in services. It also supports email / passwordless authentication.
+Authentication Providers in NextAuth.js are services that can be used to sign in (OAuth, Email, etc).
 
 ## Sign in with OAuth
 
-### Built-in providers
+NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1.0A and 2.0 and has built-in support for many popular OAuth sign-in services.
+
+### Built-in OAuth providers
 
 * [Apple](/providers/apple)
 * [Atlassian](/providers/atlassian)
 * [Auth0](/providers/auth0)
+* [Azure Active Directory B2C](/providers/azure-ad-b2c)
 * [Basecamp](/providers/basecamp)
-* [Battle.net](/providers/battlenet)
+* [Battle.net](/providers/battle.net)
 * [Box](/providers/box)
 * [Amazon Cognito](/providers/cognito)
 * [Discord](/providers/discord)
 * [Facebook](/providers/facebook)
+* [Foursquare](/providers/foursquare)
+* [FusionAuth](/providers/fusionauth)
 * [GitHub](/providers/github)
 * [GitLab](/providers/gitlab)
 * [Google](/providers/google)
 * [IdentityServer4](/providers/identity-server4)
 * [LinkedIn](/providers/LinkedIn)
 * [Mixer](/providers/Mixer)
+* [Netlify](/providers/Netlify)
 * [Okta](/providers/Okta)
 * [Slack](/providers/slack)
 * [Spotify](/providers/spotify)
@@ -33,7 +37,7 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 * [Twitter](/providers/twitter)
 * [Yandex](/providers/yandex)
 
-### Using a built-in provider
+### Using a built-in OAuth provider
 
 1. Register your application at the developer portal of your provider. There are links above to the developer docs for most supported providers with details on how to register your application.
 
@@ -102,7 +106,7 @@ As an example of what this looks like, this is the the provider object returned 
   clientSecret: ''
 }
 ```
-You can replace all the options in this JSON object with the ones from your custom provider – be sure to give it a unique ID and specify the correct OAuth version - and add it to the providers option:
+You can replace all the options in this JSON object with the ones from your custom provider – be sure to give it a unique ID and specify the correct OAuth version - and add it to the providers option:
 
 ```js title="pages/api/auth/[...nextauth].js"
 ...
@@ -134,6 +138,7 @@ providers: [
 |      scope       |       OAuth access scopes (expects array or string) |    No    |
 |      params      |       Additional authorization URL parameters       |    No    |
 |  accessTokenUrl  |        Endpoint to retrieve an access token         |   Yes    |
+|  accessTokenGetter  |   Default `(json) => json.access_token`          |    No    |
 | requestTokenUrl  |        Endpoint to retrieve a request token         |    No    |
 | authorizationUrl |   Endpoint to request authorization from the user   |   Yes    |
 |    profileUrl    |       Endpoint to retrieve the user's profile       |    No    |
