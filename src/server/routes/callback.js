@@ -67,8 +67,9 @@ export default async (req, res, options, done) => {
             }
           }
 
+          let signInCallbackResponse
           try {
-            const signInCallbackResponse = await callbacks.signIn(userOrProfile, account, OAuthProfile)
+            signInCallbackResponse = await callbacks.signIn(userOrProfile, account, OAuthProfile)
             if (signInCallbackResponse === false) {
               return redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
             }
@@ -84,12 +85,15 @@ export default async (req, res, options, done) => {
           const { user, session, isNewUser } = await callbackHandler(sessionToken, profile, account, options)
 
           if (useJwtSession) {
-            const defaultJwtPayload = {
-              name: user.name,
-              email: user.email,
-              picture: user.image,
-              sub: user.id.toString()
-            }
+            const defaultJwtPayload = signInCallbackResponse === true
+              ? {
+                  name: user.name,
+                  email: user.email,
+                  picture: user.image,
+                  sub: user.id.toString()
+                }
+              : signInCallbackResponse
+
             const jwtPayload = await callbacks.jwt(defaultJwtPayload, user, account, OAuthProfile, isNewUser)
 
             // Sign and encrypt token
@@ -158,8 +162,9 @@ export default async (req, res, options, done) => {
       const account = { id: provider.id, type: 'email', providerAccountId: email }
 
       // Check if user is allowed to sign in
+      let signInCallbackResponse
       try {
-        const signInCallbackResponse = await callbacks.signIn(profile, account, { email })
+        signInCallbackResponse = await callbacks.signIn(profile, account, { email })
         if (signInCallbackResponse === false) {
           return redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
         }
@@ -175,12 +180,14 @@ export default async (req, res, options, done) => {
       const { user, session, isNewUser } = await callbackHandler(sessionToken, profile, account, options)
 
       if (useJwtSession) {
-        const defaultJwtPayload = {
-          name: user.name,
-          email: user.email,
-          picture: user.image,
-          sub: user.id.toString()
-        }
+        const defaultJwtPayload = signInCallbackResponse === true
+          ? {
+              name: user.name,
+              email: user.email,
+              picture: user.image,
+              sub: user.id.toString()
+            }
+          : signInCallbackResponse
         const jwtPayload = await callbacks.jwt(defaultJwtPayload, user, account, profile, isNewUser)
 
         // Sign and encrypt token
