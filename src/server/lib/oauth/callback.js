@@ -1,6 +1,6 @@
 import { createHash } from 'crypto'
 import querystring from 'querystring'
-import jwtDecode from 'jwt-decode'
+import { decode as jwtDecode } from 'jsonwebtoken'
 import oAuthClient from './client'
 import logger from '../../../lib/logger'
 
@@ -12,7 +12,6 @@ import logger from '../../../lib/logger'
  * come up, as the node-oauth package does not seem to be actively maintained.
 
  * @TODO Refactor to use promises and not callbacks
- * @TODO Refactor to use jsonwebtoken instead of jwt-decode & remove dependancy
  */
 export default async function oAuthCallback (req, provider, csrfToken, callback) {
   // The "user" object is specific to apple provider and is provided on first sign in
