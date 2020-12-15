@@ -3,7 +3,7 @@ import cookie from '../lib/cookie'
 import logger from '../../lib/logger'
 import dispatchEvent from '../lib/dispatch-event'
 
-export default async (req, res, options, done) => {
+export default async (req, res, options) => {
   const { cookies, adapter, jwt, events, callbacks } = options
   const useJwtSession = options.session.jwt
   const sessionMaxAge = options.session.maxAge
@@ -12,7 +12,7 @@ export default async (req, res, options, done) => {
   if (!sessionToken) {
     res.setHeader('Content-Type', 'application/json')
     res.json({})
-    return done()
+    return res.end()
   }
 
   let response = {}
@@ -100,5 +100,5 @@ export default async (req, res, options, done) => {
 
   res.setHeader('Content-Type', 'application/json')
   res.json(response)
-  return done()
+  return res.end()
 }

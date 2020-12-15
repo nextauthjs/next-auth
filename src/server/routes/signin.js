@@ -4,21 +4,20 @@ import emailSignin from '../lib/signin/email'
 import logger from '../../lib/logger'
 import baseUrl from '../../lib/baseUrl'
 
-export default async (req, res, options, done) => {
+export default async (req, res, options) => {
   const {
     provider: providerName,
     providers,
     adapter,
     callbacks,
-    csrfToken,
-    redirect
+    csrfToken
   } = options
   const provider = providers[providerName]
   const { type } = provider
 
   if (!type) {
     res.status(500).end(`Error: Type not specified for ${provider}`)
-    return done()
+    return res.end()
   }
 
   if (type === 'oauth' && req.method === 'POST') {
@@ -28,15 +27,15 @@ export default async (req, res, options, done) => {
     oAuthSignin(provider, csrfToken, (error, oAuthSigninUrl) => {
       if (error) {
         logger.error('SIGNIN_OAUTH_ERROR', error)
-        return redirect(`${baseUrl()}/error?error=OAuthSignin`)
+        return res.redirect(`${baseUrl()}/error?error=OAuthSignin`)
       }
 
-      return redirect(oAuthSigninUrl)
+      return res.redirect(oAuthSigninUrl)
     }, authParams)
   } else if (type === 'email' && req.method === 'POST') {
     if (!adapter) {
       logger.error('EMAIL_REQUIRES_ADAPTER_ERROR')
-      return redirect(`${baseUrl()}/error?error=Configuration`)
+      return res.redirect(`${baseUrl()}/error?error=Configuration`)
     }
     const { getUserByEmail } = await adapter.getAdapter(options)
 
@@ -55,13 +54,13 @@ export default async (req, res, options, done) => {
     try {
       const signinCallbackResponse = await callbacks.signIn(profile, account, { email, verificationRequest: true })
       if (signinCallbackResponse === false) {
-        return redirect(`${baseUrl()}/error?error=AccessDenied`)
+        return res.redirect(`${baseUrl()}/error?error=AccessDenied`)
       }
     } catch (error) {
       if (error instanceof Error) {
-        return redirect(`${baseUrl()}/error?error=${encodeURIComponent(error)}`)
+        return res.redirect(`${baseUrl()}/error?error=${encodeURIComponent(error)}`)
       } else {
-        return redirect(error)
+        return res.redirect(error)
       }
     }
 
@@ -69,13 +68,13 @@ export default async (req, res, options, done) => {
       await emailSignin(email, provider, options)
     } catch (error) {
       logger.error('SIGNIN_EMAIL_ERROR', error)
-      return redirect(`${baseUrl()}/error?error=EmailSignin`)
+      return res.redirect(`${baseUrl()}/error?error=EmailSignin`)
     }
 
-    return redirect(`${baseUrl()}/verify-request?provider=${encodeURIComponent(
+    return res.redirect(`${baseUrl()}/verify-request?provider=${encodeURIComponent(
       provider.id
     )}&type=${encodeURIComponent(provider.type)}`)
   } else {
-    return redirect(`${baseUrl()}/signin`)
+    return res.redirect(`${baseUrl()}/signin`)
   }
 }

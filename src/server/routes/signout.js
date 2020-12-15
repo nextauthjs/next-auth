@@ -3,8 +3,8 @@ import cookie from '../lib/cookie'
 import logger from '../../lib/logger'
 import dispatchEvent from '../lib/dispatch-event'
 
-export default async (req, res, options, done) => {
-  const { adapter, cookies, events, jwt, callbackUrl, redirect } = options
+export default async (req, res, options) => {
+  const { adapter, cookies, events, jwt, callbackUrl } = options
   const useJwtSession = options.session.jwt
   const sessionToken = req.cookies[cookies.sessionToken.name]
 
@@ -43,5 +43,5 @@ export default async (req, res, options, done) => {
     maxAge: 0
   })
 
-  return redirect(callbackUrl)
+  return res.redirect(callbackUrl)
 }
