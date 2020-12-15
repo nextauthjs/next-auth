@@ -1,19 +1,20 @@
-
 import { createHash } from 'crypto'
 import querystring from 'querystring'
 import jwtDecode from 'jwt-decode'
 import oAuthClient from './client'
 import logger from '../../../lib/logger'
 
-// @TODO Refactor monkey patching in _getOAuthAccessToken() and _get()
-// These methods have been forked from `node-oauth` to fix bugs; it may make
-// sense to migrate all the methods we need from node-oauth to nexth-auth (with
-// appropriate credit) to make it easier to maintain and address issues as they
-// come up, as the node-oauth package does not seem to be actively maintained.
+/**
+ * @TODO Refactor monkey patching in _getOAuthAccessToken() and _get()
+ * These methods have been forked from `node-oauth` to fix bugs; it may make
+ * sense to migrate all the methods we need from node-oauth to nexth-auth (with
+ * appropriate credit) to make it easier to maintain and address issues as they
+ * come up, as the node-oauth package does not seem to be actively maintained.
 
-// @TODO Refactor to use promises and not callbacks
-// @TODO Refactor to use jsonwebtoken instead of jwt-decode & remove dependancy
-export default async (req, provider, csrfToken, callback) => {
+ * @TODO Refactor to use promises and not callbacks
+ * @TODO Refactor to use jsonwebtoken instead of jwt-decode & remove dependancy
+ */
+export default async function oAuthCallback (req, provider, csrfToken, callback) {
   // The "user" object is specific to apple provider and is provided on first sign in
   // e.g. {"name":{"firstName":"Johnny","lastName":"Appleseed"},"email":"johnny.appleseed@nextauth.com"}
   let { oauth_token, oauth_verifier, code, user, state } = req.query // eslint-disable-line camelcase

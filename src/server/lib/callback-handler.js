@@ -1,17 +1,19 @@
-// This function handles the complex flow of signing users in, and either creating,
-// linking (or not linking) accounts depending on if the user is currently logged
-// in, if they have account already and the authentication mechanism they are using.
-//
-// It prevents insecure behaviour, such as linking OAuth accounts unless a user is
-// signed in and authenticated with an existing valid account.
-//
-// All verification (e.g. OAuth flows or email address verificaiton flows) are
-// done prior to this handler being called to avoid additonal complexity in this
-// handler.
 import { AccountNotLinkedError } from '../../lib/errors'
 import dispatchEvent from '../lib/dispatch-event'
 
-export default async (sessionToken, profile, providerAccount, options) => {
+/**
+ * This function handles the complex flow of signing users in, and either creating,
+ * linking (or not linking) accounts depending on if the user is currently logged
+ * in, if they have account already and the authentication mechanism they are using.
+ *
+ * It prevents insecure behaviour, such as linking OAuth accounts unless a user is
+ * signed in and authenticated with an existing valid account.
+ *
+ * All verification (e.g. OAuth flows or email address verificaiton flows) are
+ * done prior to this handler being called to avoid additonal complexity in this
+ * handler.
+ */
+export default async function callbackHandler (sessionToken, profile, providerAccount, options) {
   try {
     // Input validation
     if (!profile) { throw new Error('Missing profile') }

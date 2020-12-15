@@ -1,17 +1,17 @@
 import { createHash, randomBytes } from 'crypto'
 import jwt from '../lib/jwt'
 import baseUrl from '../lib/baseUrl'
-import cookie from './lib/cookie'
+import * as cookie from './lib/cookie'
 import callbackUrlHandler from './lib/callback-url-handler'
 import parseProviders from './lib/providers'
-import events from './lib/events'
+import * as events from './lib/events'
 import * as defaultCallbacks from './lib/defaultCallbacks'
 import providers from './routes/providers'
 import signin from './routes/signin'
 import signout from './routes/signout'
 import callback from './routes/callback'
 import session from './routes/session'
-import pages from './pages'
+import renderPage from './pages'
 import adapters from '../adapters'
 import logger from '../lib/logger'
 import redirect from './lib/redirect'
@@ -226,12 +226,12 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
             return res.redirect(redirectUrl)
           }
 
-          pages.render(req, res, 'signin', { providers: Object.values(options.providers), callbackUrl, csrfToken })
+          renderPage(req, res, 'signin', { providers: Object.values(options.providers), callbackUrl, csrfToken })
           break
         case 'signout':
           if (options.pages.signOut) { return res.redirect(`${options.pages.signOut}${options.pages.signOut.includes('?') ? '&' : '?'}error=${error}`) }
 
-          pages.render(req, res, 'signout', { csrfToken, callbackUrl })
+          renderPage(req, res, 'signout', { csrfToken, callbackUrl })
           break
         case 'callback':
           if (provider && options.providers[provider]) {
@@ -244,12 +244,12 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
         case 'verify-request':
           if (options.pages.verifyRequest) { return res.redirect(options.pages.verifyRequest) }
 
-          pages.render(req, res, 'verify-request')
+          renderPage(req, res, 'verify-request')
           break
         case 'error':
           if (options.pages.error) { return res.redirect(`${options.pages.error}${options.pages.error.includes('?') ? '&' : '?'}error=${error}`) }
 
-          pages.render(req, res, 'error', { error })
+          renderPage(req, res, 'error', { error })
           break
         default:
           res.status(404).end()
@@ -299,6 +299,7 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
   })
 }
 
+/** Tha main entry point to next-auth */
 export default async function NextAuth (...args) {
   if (args.length === 1) {
     return (req, res) => NextAuthHandler(req, res, args[0])

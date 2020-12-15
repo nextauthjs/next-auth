@@ -1,7 +1,7 @@
 import { randomBytes } from 'crypto'
 import baseUrl from '../../../lib/baseUrl'
 
-export default async (email, provider, options) => {
+export default async function email (email, provider, options) {
   try {
     const { adapter } = options
 

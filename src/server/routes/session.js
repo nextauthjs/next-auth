@@ -1,9 +1,12 @@
-// Return a session object (without any private fields) for Single Page App clients
-import cookie from '../lib/cookie'
+import * as cookie from '../lib/cookie'
 import logger from '../../lib/logger'
 import dispatchEvent from '../lib/dispatch-event'
 
-export default async (req, res) => {
+/**
+ * Return a session object (without any private fields)
+ * for Single Page App clients
+ */
+export default async function session (req, res) {
   const { cookies, adapter, jwt, events, callbacks } = req.options
   const useJwtSession = req.options.session.jwt
   const sessionMaxAge = req.options.session.maxAge

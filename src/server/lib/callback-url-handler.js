@@ -1,7 +1,7 @@
-import cookie from '../lib/cookie'
+import * as cookie from '../lib/cookie'
 import baseUrl from '../../lib/baseUrl'
 
-export default async (req, res) => {
+export default async function callbackUrlHandler (req, res) {
   const { query } = req
   const { body } = req
   const { cookies, defaultCallbackUrl, callbacks } = req.options

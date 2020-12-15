@@ -2,7 +2,7 @@ import { h } from 'preact' // eslint-disable-line no-unused-vars
 import render from 'preact-render-to-string'
 import baseUrl from '../../lib/baseUrl'
 
-export default ({ error, res }) => {
+export default function error ({ error, res }) {
   const signinPageUrl = `${baseUrl()}/signin`
 
   let statusCode = 200

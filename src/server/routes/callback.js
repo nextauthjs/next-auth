@@ -1,12 +1,12 @@
-// Handle callbacks from login services
 import oAuthCallback from '../lib/oauth/callback'
 import callbackHandler from '../lib/callback-handler'
-import cookie from '../lib/cookie'
+import * as cookie from '../lib/cookie'
 import logger from '../../lib/logger'
 import dispatchEvent from '../lib/dispatch-event'
 import baseUrl from '../../lib/baseUrl'
 
-export default async (req, res) => {
+/** Handle callbacks from login services */
+export default async function callback (req, res) {
   const {
     provider: providerName,
     providers,

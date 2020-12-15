@@ -1,16 +1,13 @@
 import baseUrl from '../../lib/baseUrl'
 
-export default function parseProviders (_providers) {
-  const providers = {}
-
-  _providers.forEach(provider => {
+export default function parseProviders (providers) {
+  return providers.reduce((acc, provider) => {
     const providerId = provider.id
-    providers[providerId] = {
+    acc[providerId] = {
       ...provider,
       signinUrl: `${baseUrl()}/signin/${providerId}`,
       callbackUrl: `${baseUrl()}/callback/${providerId}`
     }
-  })
-
-  return providers
+    return acc
+  }, {})
 }

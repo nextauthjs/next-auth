@@ -2,7 +2,7 @@ import { h } from 'preact' // eslint-disable-line no-unused-vars
 import render from 'preact-render-to-string'
 import baseUrl from '../../lib/baseUrl'
 
-export default ({ csrfToken }) => {
+export default function signout ({ csrfToken }) {
   return render(
     <div className='signout'>
       <h1>Are you sure you want to sign out?</h1>

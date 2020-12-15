@@ -1,9 +1,9 @@
-// Handle requests to /api/auth/signout
-import cookie from '../lib/cookie'
+import * as cookie from '../lib/cookie'
 import logger from '../../lib/logger'
 import dispatchEvent from '../lib/dispatch-event'
 
-export default async (req, res) => {
+/** Handle requests to /api/auth/signout */
+export default async function signout (req, res) {
   const { adapter, cookies, events, jwt, callbackUrl } = req.options
   const useJwtSession = req.options.session.jwt
   const sessionToken = req.cookies[cookies.sessionToken.name]

@@ -1,10 +1,10 @@
-// Handle requests to /api/auth/signin
 import oAuthSignin from '../lib/signin/oauth'
 import emailSignin from '../lib/signin/email'
 import logger from '../../lib/logger'
 import baseUrl from '../../lib/baseUrl'
 
-export default async (req, res) => {
+/** Handle requests to /api/auth/signin */
+export default async function signin (req, res) {
   const {
     provider: providerName,
     providers,
