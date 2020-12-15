@@ -2,13 +2,12 @@
 import oAuthSignin from '../lib/signin/oauth'
 import emailSignin from '../lib/signin/email'
 import logger from '../../lib/logger'
+import baseUrl from '../../lib/baseUrl'
 
 export default async (req, res, options, done) => {
   const {
     provider: providerName,
     providers,
-    baseUrl,
-    basePath,
     adapter,
     callbacks,
     csrfToken,
@@ -29,7 +28,7 @@ export default async (req, res, options, done) => {
     oAuthSignin(provider, csrfToken, (error, oAuthSigninUrl) => {
       if (error) {
         logger.error('SIGNIN_OAUTH_ERROR', error)
-        return redirect(`${baseUrl}${basePath}/error?error=OAuthSignin`)
+        return redirect(`${baseUrl()}/error?error=OAuthSignin`)
       }
 
       return redirect(oAuthSigninUrl)
@@ -37,7 +36,7 @@ export default async (req, res, options, done) => {
   } else if (type === 'email' && req.method === 'POST') {
     if (!adapter) {
       logger.error('EMAIL_REQUIRES_ADAPTER_ERROR')
-      return redirect(`${baseUrl}${basePath}/error?error=Configuration`)
+      return redirect(`${baseUrl()}/error?error=Configuration`)
     }
     const { getUserByEmail } = await adapter.getAdapter(options)
 
@@ -56,11 +55,11 @@ export default async (req, res, options, done) => {
     try {
       const signinCallbackResponse = await callbacks.signIn(profile, account, { email, verificationRequest: true })
       if (signinCallbackResponse === false) {
-        return redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
+        return redirect(`${baseUrl()}/error?error=AccessDenied`)
       }
     } catch (error) {
       if (error instanceof Error) {
-        return redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
+        return redirect(`${baseUrl()}/error?error=${encodeURIComponent(error)}`)
       } else {
         return redirect(error)
       }
@@ -70,13 +69,13 @@ export default async (req, res, options, done) => {
       await emailSignin(email, provider, options)
     } catch (error) {
       logger.error('SIGNIN_EMAIL_ERROR', error)
-      return redirect(`${baseUrl}${basePath}/error?error=EmailSignin`)
+      return redirect(`${baseUrl()}/error?error=EmailSignin`)
     }
 
-    return redirect(`${baseUrl}${basePath}/verify-request?provider=${encodeURIComponent(
+    return redirect(`${baseUrl()}/verify-request?provider=${encodeURIComponent(
       provider.id
     )}&type=${encodeURIComponent(provider.type)}`)
   } else {
-    return redirect(`${baseUrl}${basePath}/signin`)
+    return redirect(`${baseUrl()}/signin`)
   }
 }

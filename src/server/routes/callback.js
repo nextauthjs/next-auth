@@ -4,14 +4,13 @@ import callbackHandler from '../lib/callback-handler'
 import cookie from '../lib/cookie'
 import logger from '../../lib/logger'
 import dispatchEvent from '../lib/dispatch-event'
+import baseUrl from '../../lib/baseUrl'
 
 export default async (req, res, options, done) => {
   const {
     provider: providerName,
     providers,
     adapter,
-    baseUrl,
-    basePath,
     secret,
     cookies,
     callbackUrl,
@@ -36,7 +35,7 @@ export default async (req, res, options, done) => {
         try {
           if (error) {
             logger.error('CALLBACK_OAUTH_ERROR', error)
-            return redirect(`${baseUrl}${basePath}/error?error=OAuthCallback`)
+            return redirect(`${baseUrl()}/error?error=OAuthCallback`)
           }
 
           // Make it easier to debug when adding a new provider
@@ -51,7 +50,7 @@ export default async (req, res, options, done) => {
           // should at least be visible to developers what happened if it is an
           // error with the provider.
           if (!profile) {
-            return redirect(`${baseUrl}${basePath}/signin`)
+            return redirect(`${baseUrl()}/signin`)
           }
 
           // Check if user is allowed to sign in
@@ -70,11 +69,11 @@ export default async (req, res, options, done) => {
           try {
             const signInCallbackResponse = await callbacks.signIn(userOrProfile, account, OAuthProfile)
             if (signInCallbackResponse === false) {
-              return redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
+              return redirect(`${baseUrl()}/error?error=AccessDenied`)
             }
           } catch (error) {
             if (error instanceof Error) {
-              return redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
+              return redirect(`${baseUrl()}/error?error=${encodeURIComponent(error)}`)
             } else {
               return redirect(error)
             }
@@ -115,28 +114,28 @@ export default async (req, res, options, done) => {
           }
 
           // Callback URL is already verified at this point, so safe to use if specified
-          return redirect(callbackUrl || baseUrl)
+          return redirect(callbackUrl || baseUrl().origin)
         } catch (error) {
           if (error.name === 'AccountNotLinkedError') {
             // If the email on the account is already linked, but nto with this OAuth account
-            return redirect(`${baseUrl}${basePath}/error?error=OAuthAccountNotLinked`)
+            return redirect(`${baseUrl()}/error?error=OAuthAccountNotLinked`)
           } else if (error.name === 'CreateUserError') {
-            return redirect(`${baseUrl}${basePath}/error?error=OAuthCreateAccount`)
+            return redirect(`${baseUrl()}/error?error=OAuthCreateAccount`)
           } else {
             logger.error('OAUTH_CALLBACK_HANDLER_ERROR', error)
-            return redirect(`${baseUrl}${basePath}/error?error=Callback`)
+            return redirect(`${baseUrl()}/error?error=Callback`)
           }
         }
       })
     } catch (error) {
       logger.error('OAUTH_CALLBACK_ERROR', error)
-      return redirect(`${baseUrl}${basePath}/error?error=Callback`)
+      return redirect(`${baseUrl()}/error?error=Callback`)
     }
   } else if (type === 'email') {
     try {
       if (!adapter) {
         logger.error('EMAIL_REQUIRES_ADAPTER_ERROR')
-        return redirect(`${baseUrl}${basePath}/error?error=Configuration`)
+        return redirect(`${baseUrl()}/error?error=Configuration`)
       }
 
       const { getVerificationRequest, deleteVerificationRequest, getUserByEmail } = await adapter.getAdapter(options)
@@ -146,7 +145,7 @@ export default async (req, res, options, done) => {
       // Verify email and verification token exist in database
       const invite = await getVerificationRequest(email, verificationToken, secret, provider)
       if (!invite) {
-        return redirect(`${baseUrl}${basePath}/error?error=Verification`)
+        return redirect(`${baseUrl()}/error?error=Verification`)
       }
 
       // If verification token is valid, delete verification request token from
@@ -161,11 +160,11 @@ export default async (req, res, options, done) => {
       try {
         const signInCallbackResponse = await callbacks.signIn(profile, account, { email })
         if (signInCallbackResponse === false) {
-          return redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
+          return redirect(`${baseUrl()}/error?error=AccessDenied`)
         }
       } catch (error) {
         if (error instanceof Error) {
-          return redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
+          return redirect(`${baseUrl()}/error?error=${encodeURIComponent(error)}`)
         } else {
           return redirect(error)
         }
@@ -206,28 +205,24 @@ export default async (req, res, options, done) => {
       }
 
       // Callback URL is already verified at this point, so safe to use if specified
-      if (callbackUrl) {
-        return redirect(callbackUrl)
-      } else {
-        return redirect(baseUrl)
-      }
+      return redirect(callbackUrl || baseUrl().origin)
     } catch (error) {
       if (error.name === 'CreateUserError') {
-        return redirect(`${baseUrl}${basePath}/error?error=EmailCreateAccount`)
+        return redirect(`${baseUrl()}/error?error=EmailCreateAccount`)
       } else {
         logger.error('CALLBACK_EMAIL_ERROR', error)
-        return redirect(`${baseUrl}${basePath}/error?error=Callback`)
+        return redirect(`${baseUrl()}/error?error=Callback`)
       }
     }
   } else if (type === 'credentials' && req.method === 'POST') {
     if (!useJwtSession) {
       logger.error('CALLBACK_CREDENTIALS_JWT_ERROR', 'Signin in with credentials is only supported if JSON Web Tokens are enabled')
-      return redirect(`${baseUrl}${basePath}/error?error=Configuration`)
+      return redirect(`${baseUrl()}/error?error=Configuration`)
     }
 
     if (!provider.authorize) {
       logger.error('CALLBACK_CREDENTIALS_HANDLER_ERROR', 'Must define an authorize() handler to use credentials authentication provider')
-      return redirect(`${baseUrl}${basePath}/error?error=Configuration`)
+      return redirect(`${baseUrl()}/error?error=Configuration`)
     }
 
     const credentials = req.body
@@ -236,11 +231,11 @@ export default async (req, res, options, done) => {
     try {
       userObjectReturnedFromAuthorizeHandler = await provider.authorize(credentials)
       if (!userObjectReturnedFromAuthorizeHandler) {
-        return redirect(`${baseUrl}${basePath}/error?error=CredentialsSignin&provider=${encodeURIComponent(provider.id)}`)
+        return redirect(`${baseUrl()}/error?error=CredentialsSignin&provider=${encodeURIComponent(provider.id)}`)
       }
     } catch (error) {
       if (error instanceof Error) {
-        return redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
+        return redirect(`${baseUrl()}/error?error=${encodeURIComponent(error)}`)
       } else {
         return redirect(error)
       }
@@ -252,11 +247,11 @@ export default async (req, res, options, done) => {
     try {
       const signInCallbackResponse = await callbacks.signIn(user, account, credentials)
       if (signInCallbackResponse === false) {
-        return redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
+        return redirect(`${baseUrl()}/error?error=AccessDenied`)
       }
     } catch (error) {
       if (error instanceof Error) {
-        return redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
+        return redirect(`${baseUrl()}/error?error=${encodeURIComponent(error)}`)
       } else {
         return redirect(error)
       }
@@ -280,7 +275,7 @@ export default async (req, res, options, done) => {
 
     await dispatchEvent(events.signIn, { user, account })
 
-    return redirect(callbackUrl || baseUrl)
+    return redirect(callbackUrl || baseUrl().origin)
   } else {
     res.status(500).end(`Error: Callback for provider type ${type} not supported`)
     return done()

@@ -1,8 +1,9 @@
 import { randomBytes } from 'crypto'
+import baseUrl from '../../../lib/baseUrl'
 
 export default async (email, provider, options) => {
   try {
-    const { baseUrl, basePath, adapter } = options
+    const { adapter } = options
 
     const { createVerificationRequest } = await adapter.getAdapter(options)
 
@@ -13,7 +14,7 @@ export default async (email, provider, options) => {
     const token = randomBytes(32).toString('hex')
 
     // Send email with link containing token (the unhashed version)
-    const url = `${baseUrl}${basePath}/callback/${encodeURIComponent(provider.id)}?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`
+    const url = `${baseUrl()}/callback/${encodeURIComponent(provider.id)}?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`
 
     // @TODO Create invite (send secret so can be hashed)
     await createVerificationRequest(email, url, token, secret, provider, options)

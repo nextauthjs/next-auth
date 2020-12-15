@@ -1,6 +1,6 @@
 import { createHash, randomBytes } from 'crypto'
 import jwt from '../lib/jwt'
-import parseUrl from '../lib/parse-url'
+import baseUrl from '../lib/baseUrl'
 import cookie from './lib/cookie'
 import callbackUrlHandler from './lib/callback-url-handler'
 import parseProviders from './lib/providers'
@@ -44,11 +44,6 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
       csrfToken: csrfTokenFromPost
     } = body
 
-    // @todo refactor all existing references to site, baseUrl and basePath
-    const parsedUrl = parseUrl(process.env.NEXTAUTH_URL || process.env.VERCEL_URL)
-    const baseUrl = parsedUrl.baseUrl
-    const basePath = parsedUrl.basePath
-
     // Parse database / adapter
     let adapter
     if (userSuppliedOptions.adapter) {
@@ -63,7 +58,9 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
     // If no secret option is specified then it creates one on the fly
     // based on options passed here. A options contains unique data, such as
     // OAuth provider secrets and database credentials it should be sufficent.
-    const secret = userSuppliedOptions.secret || createHash('sha256').update(JSON.stringify({ baseUrl, basePath, ...userSuppliedOptions })).digest('hex')
+    const secret = userSuppliedOptions.secret || createHash('sha256').update(JSON.stringify({
+      baseUrl: baseUrl(), ...userSuppliedOptions
+    })).digest('hex')
 
     // Use secure cookies if the site uses HTTPS
     // This being conditional allows cookies to work non-HTTPS development URLs
@@ -71,7 +68,7 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
     // prefix, but enable them by default if the site URL is HTTPS; but not for
     // non-HTTPS URLs like http://localhost which are used in development).
     // For more on prefixes see https://googlechrome.github.io/samples/cookie-prefixes/
-    const useSecureCookies = userSuppliedOptions.useSecureCookies || baseUrl.startsWith('https://')
+    const useSecureCookies = userSuppliedOptions.useSecureCookies || baseUrl().protocol.startsWith('https://')
     const cookiePrefix = useSecureCookies ? '__Secure-' : ''
 
     // @TODO Review cookie settings (names, options)
@@ -201,19 +198,16 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
       // These computed settings can values in userSuppliedOptions but override them
       // and are request-specific.
       adapter,
-      baseUrl,
-      basePath,
       action,
       provider,
       cookies,
       secret,
       csrfToken,
-      providers: parseProviders(userSuppliedOptions.providers, baseUrl, basePath),
+      providers: parseProviders(userSuppliedOptions.providers),
       session: sessionOptions,
       jwt: jwtOptions,
       events: eventsOptions,
       callbacks: callbacksOptions,
-      callbackUrl: baseUrl,
       redirect
     }
 
@@ -221,7 +215,7 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
     if (options.debug === true) { process.env._NEXTAUTH_DEBUG = true }
 
     // Get / Set callback URL based on query param / cookie + validation
-    options.callbackUrl = await callbackUrlHandler(req, res, options)
+    const callbackUrl = await callbackUrlHandler(req, res, options)
 
     if (req.method === 'GET') {
       switch (action) {
@@ -236,17 +230,17 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
           return done()
         case 'signin':
           if (options.pages.signIn) {
-            let redirectUrl = `${options.pages.signIn}${options.pages.signIn.includes('?') ? '&' : '?'}callbackUrl=${options.callbackUrl}`
+            let redirectUrl = `${options.pages.signIn}${options.pages.signIn.includes('?') ? '&' : '?'}callbackUrl=${callbackUrl}`
             if (req.query.error) { redirectUrl = `${redirectUrl}&error=${req.query.error}` }
             return redirect(redirectUrl)
           }
 
-          pages.render(req, res, 'signin', { baseUrl, basePath, providers: Object.values(options.providers), callbackUrl: options.callbackUrl, csrfToken }, done)
+          pages.render(req, res, 'signin', { providers: Object.values(options.providers), callbackUrl, csrfToken }, done)
           break
         case 'signout':
           if (options.pages.signOut) { return redirect(`${options.pages.signOut}${options.pages.signOut.includes('?') ? '&' : '?'}error=${error}`) }
 
-          pages.render(req, res, 'signout', { baseUrl, basePath, csrfToken, callbackUrl: options.callbackUrl }, done)
+          pages.render(req, res, 'signout', { csrfToken, callbackUrl }, done)
           break
         case 'callback':
           if (provider && options.providers[provider]) {
@@ -259,12 +253,12 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
         case 'verify-request':
           if (options.pages.verifyRequest) { return redirect(options.pages.verifyRequest) }
 
-          pages.render(req, res, 'verify-request', { baseUrl }, done)
+          pages.render(req, res, 'verify-request', { }, done)
           break
         case 'error':
           if (options.pages.error) { return redirect(`${options.pages.error}${options.pages.error.includes('?') ? '&' : '?'}error=${error}`) }
 
-          pages.render(req, res, 'error', { baseUrl, basePath, error }, done)
+          pages.render(req, res, 'error', { error }, done)
           break
         default:
           res.status(404).end()
@@ -275,7 +269,7 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
         case 'signin':
           // Verified CSRF Token required for all sign in routes
           if (!csrfTokenVerified) {
-            return redirect(`${baseUrl}${basePath}/signin?csrf=true`)
+            return redirect(`${baseUrl()}/signin?csrf=true`)
           }
 
           if (provider && options.providers[provider]) {
@@ -285,7 +279,7 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
         case 'signout':
           // Verified CSRF Token required for signout
           if (!csrfTokenVerified) {
-            return redirect(`${baseUrl}${basePath}/signout?csrf=true`)
+            return redirect(`${baseUrl()}/signout?csrf=true`)
           }
 
           signout(req, res, options, done)
@@ -294,7 +288,7 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
           if (provider && options.providers[provider]) {
             // Verified CSRF Token required for credentials providers only
             if (options.providers[provider].type === 'credentials' && !csrfTokenVerified) {
-              return redirect(`${baseUrl}${basePath}/signin?csrf=true`)
+              return redirect(`${baseUrl()}/signin?csrf=true`)
             }
 
             callback(req, res, options, done)
