@@ -30,103 +30,101 @@ export default async function callback (req, res) {
 
   if (type === 'oauth') {
     try {
-      oAuthCallback(req, provider, csrfToken, async (error, profile, account, OAuthProfile) => {
-        try {
-          if (error) {
-            logger.error('CALLBACK_OAUTH_ERROR', error)
-            return res.redirect(`${baseUrl()}/error?error=OAuthCallback`)
-          }
+      const { profile, account, OAuthProfile } = await oAuthCallback(req, provider, csrfToken)
+      try {
+        // Make it easier to debug when adding a new provider
+        logger.debug('OAUTH_CALLBACK_RESPONSE', { profile, account, OAuthProfile })
 
-          // Make it easier to debug when adding a new provider
-          logger.debug('OAUTH_CALLBACK_RESPONSE', { profile, account, OAuthProfile })
+        // If we don't have a profile object then either something went wrong
+        // or the user cancelled signin in. We don't know which, so we just
+        // direct the user to the signup page for now. We could do something
+        // else in future.
+        //
+        // Note: In oAuthCallback an error is logged with debug info, so it
+        // should at least be visible to developers what happened if it is an
+        // error with the provider.
+        if (!profile) {
+          return res.redirect(`${baseUrl()}/signin`)
+        }
 
-          // If we don't have a profile object then either something went wrong
-          // or the user cancelled signin in. We don't know which, so we just
-          // direct the user to the signup page for now. We could do something
-          // else in future.
-          //
-          // Note: In oAuthCallback an error is logged with debug info, so it
-          // should at least be visible to developers what happened if it is an
-          // error with the provider.
-          if (!profile) {
-            return res.redirect(`${baseUrl()}/signin`)
-          }
-
-          // Check if user is allowed to sign in
-          // Attempt to get Profile from OAuth provider details before invoking
-          // signIn callback - but if no user object is returned, that is fine
-          // (that just means it's a new user signing in for the first time).
-          let userOrProfile = profile
-          if (adapter) {
-            const { getUserByProviderAccountId } = await adapter.getAdapter(req.options)
-            const userFromProviderAccountId = await getUserByProviderAccountId(account.provider, account.id)
-            if (userFromProviderAccountId) {
-              userOrProfile = userFromProviderAccountId
-            }
-          }
-
-          try {
-            const signInCallbackResponse = await callbacks.signIn(userOrProfile, account, OAuthProfile)
-            if (signInCallbackResponse === false) {
-              return res.redirect(`${baseUrl()}/error?error=AccessDenied`)
-            }
-          } catch (error) {
-            if (error instanceof Error) {
-              return res.redirect(`${baseUrl()}/error?error=${encodeURIComponent(error)}`)
-            } else {
-              return res.redirect(error)
-            }
-          }
-
-          // Sign user in
-          const { user, session, isNewUser } = await callbackHandler(sessionToken, profile, account, req.options)
-
-          if (useJwtSession) {
-            const defaultJwtPayload = {
-              name: user.name,
-              email: user.email,
-              picture: user.image,
-              sub: user.id.toString()
-            }
-            const jwtPayload = await callbacks.jwt(defaultJwtPayload, user, account, OAuthProfile, isNewUser)
-
-            // Sign and encrypt token
-            const newEncodedJwt = await jwt.encode({ ...jwt, token: jwtPayload })
-
-            // Set cookie expiry date
-            const cookieExpires = new Date()
-            cookieExpires.setTime(cookieExpires.getTime() + (sessionMaxAge * 1000))
-
-            cookie.set(res, cookies.sessionToken.name, newEncodedJwt, { expires: cookieExpires.toISOString(), ...cookies.sessionToken.options })
-          } else {
-            // Save Session Token in cookie
-            cookie.set(res, cookies.sessionToken.name, session.sessionToken, { expires: session.expires || null, ...cookies.sessionToken.options })
-          }
-
-          await dispatchEvent(events.signIn, { user, account, isNewUser })
-
-          // Handle first logins on new accounts
-          // e.g. option to send users to a new account landing page on initial login
-          // Note that the callback URL is preserved, so the journey can still be resumed
-          if (isNewUser && pages.newUser) {
-            return res.redirect(`${pages.newUser}${pages.newUser.includes('?') ? '&' : '?'}callbackUrl=${encodeURIComponent(callbackUrl)}`)
-          }
-
-          // Callback URL is already verified at this point, so safe to use if specified
-          return res.redirect(callbackUrl || baseUrl().origin)
-        } catch (error) {
-          if (error.name === 'AccountNotLinkedError') {
-            // If the email on the account is already linked, but nto with this OAuth account
-            return res.redirect(`${baseUrl()}/error?error=OAuthAccountNotLinked`)
-          } else if (error.name === 'CreateUserError') {
-            return res.redirect(`${baseUrl()}/error?error=OAuthCreateAccount`)
-          } else {
-            logger.error('OAUTH_CALLBACK_HANDLER_ERROR', error)
-            return res.redirect(`${baseUrl()}/error?error=Callback`)
+        // Check if user is allowed to sign in
+        // Attempt to get Profile from OAuth provider details before invoking
+        // signIn callback - but if no user object is returned, that is fine
+        // (that just means it's a new user signing in for the first time).
+        let userOrProfile = profile
+        if (adapter) {
+          const { getUserByProviderAccountId } = await adapter.getAdapter(req.options)
+          const userFromProviderAccountId = await getUserByProviderAccountId(account.provider, account.id)
+          if (userFromProviderAccountId) {
+            userOrProfile = userFromProviderAccountId
           }
         }
-      })
+
+        try {
+          const signInCallbackResponse = await callbacks.signIn(userOrProfile, account, OAuthProfile)
+          if (signInCallbackResponse === false) {
+            return res.redirect(`${baseUrl()}/error?error=AccessDenied`)
+          }
+        } catch (error) {
+          if (error instanceof Error) {
+            return res.redirect(`${baseUrl()}/error?error=${encodeURIComponent(error)}`)
+          } else {
+            return res.redirect(error)
+          }
+        }
+
+        // Sign user in
+        const { user, session, isNewUser } = await callbackHandler(sessionToken, profile, account, req.options)
+
+        if (useJwtSession) {
+          const defaultJwtPayload = {
+            name: user.name,
+            email: user.email,
+            picture: user.image,
+            sub: user.id.toString()
+          }
+          const jwtPayload = await callbacks.jwt(defaultJwtPayload, user, account, OAuthProfile, isNewUser)
+
+          // Sign and encrypt token
+          const newEncodedJwt = await jwt.encode({ ...jwt, token: jwtPayload })
+
+          // Set cookie expiry date
+          const cookieExpires = new Date()
+          cookieExpires.setTime(cookieExpires.getTime() + (sessionMaxAge * 1000))
+
+          cookie.set(res, cookies.sessionToken.name, newEncodedJwt, { expires: cookieExpires.toISOString(), ...cookies.sessionToken.options })
+        } else {
+          // Save Session Token in cookie
+          cookie.set(res, cookies.sessionToken.name, session.sessionToken, { expires: session.expires || null, ...cookies.sessionToken.options })
+        }
+
+        await dispatchEvent(events.signIn, { user, account, isNewUser })
+
+        // Handle first logins on new accounts
+        // e.g. option to send users to a new account landing page on initial login
+        // Note that the callback URL is preserved, so the journey can still be resumed
+        if (isNewUser && pages.newUser) {
+          return res.redirect(`${pages.newUser}${pages.newUser.includes('?') ? '&' : '?'}callbackUrl=${encodeURIComponent(callbackUrl)}`)
+        }
+
+        // Callback URL is already verified at this point, so safe to use if specified
+        return res.redirect(callbackUrl || baseUrl().origin)
+      } catch (error) {
+        if (error.name === 'AccountNotLinkedError') {
+          // If the email on the account is already linked, but not with this OAuth account
+          return res.redirect(`${baseUrl()}/error?error=OAuthAccountNotLinked`)
+        } else if (error.name === 'CreateUserError') {
+          return res.redirect(`${baseUrl()}/error?error=OAuthCreateAccount`)
+        } else {
+          logger.error('OAUTH_CALLBACK_HANDLER_ERROR', error)
+          return res.redirect(`${baseUrl()}/error?error=Callback`)
+        }
+      }
     } catch (error) {
+      if (error.name === 'OAuthCallbackError') {
+        logger.error('CALLBACK_OAUTH_ERROR', error)
+        return res.redirect(`${baseUrl()}/error?error=OAuthCallback`)
+      }
       logger.error('OAUTH_CALLBACK_ERROR', error)
       return res.redirect(`${baseUrl()}/error?error=Callback`)
     }
