@@ -3,9 +3,9 @@ import cookie from '../lib/cookie'
 import logger from '../../lib/logger'
 import dispatchEvent from '../lib/dispatch-event'
 
-export default async (req, res, options) => {
-  const { adapter, cookies, events, jwt, callbackUrl } = options
-  const useJwtSession = options.session.jwt
+export default async (req, res) => {
+  const { adapter, cookies, events, jwt, callbackUrl } = req.options
+  const useJwtSession = req.options.session.jwt
   const sessionToken = req.cookies[cookies.sessionToken.name]
 
   if (useJwtSession) {
@@ -18,7 +18,7 @@ export default async (req, res, options) => {
     }
   } else {
     // Get session from database
-    const { getSession, deleteSession } = await adapter.getAdapter(options)
+    const { getSession, deleteSession } = await adapter.getAdapter(req.options)
 
     try {
       // Dispatch signout event

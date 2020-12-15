@@ -4,14 +4,14 @@ import emailSignin from '../lib/signin/email'
 import logger from '../../lib/logger'
 import baseUrl from '../../lib/baseUrl'
 
-export default async (req, res, options) => {
+export default async (req, res) => {
   const {
     provider: providerName,
     providers,
     adapter,
     callbacks,
     csrfToken
-  } = options
+  } = req.options
   const provider = providers[providerName]
   const { type } = provider
 
@@ -37,7 +37,7 @@ export default async (req, res, options) => {
       logger.error('EMAIL_REQUIRES_ADAPTER_ERROR')
       return res.redirect(`${baseUrl()}/error?error=Configuration`)
     }
-    const { getUserByEmail } = await adapter.getAdapter(options)
+    const { getUserByEmail } = await adapter.getAdapter(req.options)
 
     // Note: Technically the part of the email address local mailbox element
     // (everything before the @ symbol) should be treated as 'case sensitive'
@@ -65,7 +65,7 @@ export default async (req, res, options) => {
     }
 
     try {
-      await emailSignin(email, provider, options)
+      await emailSignin(email, provider, req.options)
     } catch (error) {
       logger.error('SIGNIN_EMAIL_ERROR', error)
       return res.redirect(`${baseUrl()}/error?error=EmailSignin`)

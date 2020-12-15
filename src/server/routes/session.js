@@ -3,10 +3,10 @@ import cookie from '../lib/cookie'
 import logger from '../../lib/logger'
 import dispatchEvent from '../lib/dispatch-event'
 
-export default async (req, res, options) => {
-  const { cookies, adapter, jwt, events, callbacks } = options
-  const useJwtSession = options.session.jwt
-  const sessionMaxAge = options.session.maxAge
+export default async (req, res) => {
+  const { cookies, adapter, jwt, events, callbacks } = req.options
+  const useJwtSession = req.options.session.jwt
+  const sessionMaxAge = req.options.session.maxAge
   const sessionToken = req.cookies[cookies.sessionToken.name]
 
   if (!sessionToken) {
@@ -58,7 +58,7 @@ export default async (req, res, options) => {
     }
   } else {
     try {
-      const { getUser, getSession, updateSession } = await adapter.getAdapter(options)
+      const { getUser, getSession, updateSession } = await adapter.getAdapter(req.options)
       const session = await getSession(sessionToken)
       if (session) {
         // Trigger update to session object to update session expiry

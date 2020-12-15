@@ -6,7 +6,7 @@ import logger from '../../lib/logger'
 import dispatchEvent from '../lib/dispatch-event'
 import baseUrl from '../../lib/baseUrl'
 
-export default async (req, res, options) => {
+export default async (req, res) => {
   const {
     provider: providerName,
     providers,
@@ -19,11 +19,11 @@ export default async (req, res, options) => {
     events,
     callbacks,
     csrfToken
-  } = options
+  } = req.options
   const provider = providers[providerName]
   const { type } = provider
-  const useJwtSession = options.session.jwt
-  const sessionMaxAge = options.session.maxAge
+  const useJwtSession = req.options.session.jwt
+  const sessionMaxAge = req.options.session.maxAge
 
   // Get session ID (if set)
   const sessionToken = req.cookies ? req.cookies[cookies.sessionToken.name] : null
@@ -58,7 +58,7 @@ export default async (req, res, options) => {
           // (that just means it's a new user signing in for the first time).
           let userOrProfile = profile
           if (adapter) {
-            const { getUserByProviderAccountId } = await adapter.getAdapter(options)
+            const { getUserByProviderAccountId } = await adapter.getAdapter(req.options)
             const userFromProviderAccountId = await getUserByProviderAccountId(account.provider, account.id)
             if (userFromProviderAccountId) {
               userOrProfile = userFromProviderAccountId
@@ -79,7 +79,7 @@ export default async (req, res, options) => {
           }
 
           // Sign user in
-          const { user, session, isNewUser } = await callbackHandler(sessionToken, profile, account, options)
+          const { user, session, isNewUser } = await callbackHandler(sessionToken, profile, account, req.options)
 
           if (useJwtSession) {
             const defaultJwtPayload = {
@@ -137,7 +137,7 @@ export default async (req, res, options) => {
         return res.redirect(`${baseUrl()}/error?error=Configuration`)
       }
 
-      const { getVerificationRequest, deleteVerificationRequest, getUserByEmail } = await adapter.getAdapter(options)
+      const { getVerificationRequest, deleteVerificationRequest, getUserByEmail } = await adapter.getAdapter(req.options)
       const verificationToken = req.query.token
       const email = req.query.email
 
@@ -170,7 +170,7 @@ export default async (req, res, options) => {
       }
 
       // Sign user in
-      const { user, session, isNewUser } = await callbackHandler(sessionToken, profile, account, options)
+      const { user, session, isNewUser } = await callbackHandler(sessionToken, profile, account, req.options)
 
       if (useJwtSession) {
         const defaultJwtPayload = {

@@ -182,9 +182,8 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
     // User provided options are overriden by other options,
     // except for the options with special handling above
     const options = {
-      // Defaults options can be overidden
-      debug: false, // Enable debug messages to be displayed
-      pages: {}, // Custom pages (e.g. sign in, sign out, errors)
+      debug: false,
+      pages: {},
       // Custom options override defaults
       ...userSuppliedOptions,
       // These computed settings can values in userSuppliedOptions but override them
@@ -201,20 +200,21 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
       events: eventsOptions,
       callbacks: callbacksOptions
     }
+    req.options = options
 
     // If debug enabled, set ENV VAR so that logger logs debug messages
     if (options.debug === true) { process.env._NEXTAUTH_DEBUG = true }
 
     // Get / Set callback URL based on query param / cookie + validation
-    const callbackUrl = await callbackUrlHandler(req, res, options)
+    const callbackUrl = await callbackUrlHandler(req, res)
 
     if (req.method === 'GET') {
       switch (action) {
         case 'providers':
-          providers(req, res, options)
+          providers(req, res)
           break
         case 'session':
-          session(req, res, options)
+          session(req, res)
           break
         case 'csrf':
           res.json({ csrfToken })
@@ -235,7 +235,7 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
           break
         case 'callback':
           if (provider && options.providers[provider]) {
-            callback(req, res, options)
+            callback(req, res)
           } else {
             res.status(400).end(`Error: HTTP GET is not supported for ${url}`)
             return res.end()
@@ -264,7 +264,7 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
           }
 
           if (provider && options.providers[provider]) {
-            signin(req, res, options)
+            signin(req, res)
           }
           break
         case 'signout':
@@ -273,7 +273,7 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
             return res.redirect(`${baseUrl()}/signout?csrf=true`)
           }
 
-          signout(req, res, options)
+          signout(req, res)
           break
         case 'callback':
           if (provider && options.providers[provider]) {
@@ -282,7 +282,7 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
               return res.redirect(`${baseUrl()}/signin?csrf=true`)
             }
 
-            callback(req, res, options)
+            callback(req, res)
           } else {
             res.status(400).end(`Error: HTTP POST is not supported for ${url}`)
             return res.end()

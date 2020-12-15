@@ -1,10 +1,10 @@
 import cookie from '../lib/cookie'
 import baseUrl from '../../lib/baseUrl'
 
-export default async (req, res, options) => {
+export default async (req, res) => {
   const { query } = req
   const { body } = req
-  const { cookies, defaultCallbackUrl, callbacks } = options
+  const { cookies, defaultCallbackUrl, callbacks } = req.options
   const homepage = baseUrl().origin
 
   // Handle preserving and validating callback URLs
