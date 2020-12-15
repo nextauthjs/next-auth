@@ -38,6 +38,18 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
     }
     res.redirect = redirect(req, res)
 
+    if (!req.query.nextauth) {
+      const error = 'Cannot find [...nextauth].js in pages/api/auth. Make sure the filename is written correctly.'
+
+      logger.error('MISSING_NEXTAUTH_API_ROUTE_ERROR', error)
+      res
+        .status(500)
+        .end(
+        `Error: ${error}`
+        )
+      return done()
+    }
+
     const { url, query, body } = req
     const {
       nextauth,
