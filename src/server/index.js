@@ -21,7 +21,7 @@ if (!process.env.NEXTAUTH_URL) {
   logger.warn('NEXTAUTH_URL', 'NEXTAUTH_URL environment variable not set')
 }
 
-export default async (req, res, userSuppliedOptions) => {
+async function NextAuth (req, res, userSuppliedOptions) {
   // To the best of my knowledge, we need to return a promise here
   // to avoid early termination of calls to the serverless function
   // (and then return that promise when we are done) - eslint
@@ -31,6 +31,18 @@ export default async (req, res, userSuppliedOptions) => {
     // when they are complete so that the serverless function knows when it is
     // safe to return and that no more data will be sent.
     const done = resolve
+
+    if (!req.query.nextauth) {
+      const error = 'Cannot find [...nextauth].js in pages/api/auth. Make sure the filename is written correctly.'
+
+      logger.error('MISSING_NEXTAUTH_API_ROUTE_ERROR', error)
+      res
+        .status(500)
+        .end(
+        `Error: ${error}`
+        )
+      return done()
+    }
 
     const { url, query, body } = req
     const {
@@ -312,4 +324,12 @@ export default async (req, res, userSuppliedOptions) => {
       return done()
     }
   })
+}
+
+export default async (...args) => {
+  if (args.length === 1) {
+    return (req, res) => NextAuth(req, res, args[0])
+  }
+
+  return NextAuth(...args)
 }

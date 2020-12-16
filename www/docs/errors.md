@@ -70,6 +70,7 @@ If you are using a Credentials Provider, NextAuth.js will not persist users or s
 In _most cases_ it does not make sense to specify a database in NextAuth.js options and support a Credentials Provider.
 
 #### CALLBACK_CREDENTIALS_HANDLER_ERROR
+
 ---
 
 ### Session Handling
@@ -127,3 +128,9 @@ They all indicate a problem interacting with the database.
 This error occurs when the Email Authentication Provider is unable to send an email.
 
 Check your mail server configuration.
+
+#### MISSING_NEXTAUTH_API_ROUTE_ERROR
+
+This error happens when `[...nextauth].js` file is not found inside `pages/api/auth`.
+
+Make sure the file is there and the filename is written correctly.
