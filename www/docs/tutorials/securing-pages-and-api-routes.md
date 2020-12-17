@@ -67,7 +67,7 @@ export async function getServerSideProps(context) {
 ```
 
 :::tip
-This example assumes you have configured `_app.js` to pass the `session` prop through so that it's immediately avalible on page load to `useSession`.
+This example assumes you have configured `_app.js` to pass the `session` prop through so that it's immediately available on page load to `useSession`.
 
 ```js title="pages/_app.js"
 import { Provider } from 'next-auth/client'
