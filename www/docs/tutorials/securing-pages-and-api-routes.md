@@ -3,7 +3,7 @@ id: securing-pages-and-api-routes
 title: Securing pages and API routes
 ---
 
-You can easily protect client and server side side rendered pages and API routes with NextAuth.js.
+You can easily protect client and server side rendered pages and API routes with NextAuth.js.
 
 _You can find working examples of the approaches shown below in the [example project](https://github.com/iaincollins/next-auth-example/)._
 
