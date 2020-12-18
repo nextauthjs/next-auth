@@ -67,7 +67,7 @@ const InitialiseDb = async () => {
     }));
 
     await client.query(q.CreateIndex({
-        name: 'vertification_request_by_token',
+        name: 'verification_request_by_token',
         source: q.Collection('verification_request'),
         unique: true,
         terms: [

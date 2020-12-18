@@ -15,7 +15,7 @@ const Adapter = (config, options = {}) => {
       Account: 'account_by_provider_account_id',
       User: 'user_by_email',
       Session: 'session_by_token',
-      VerificationRequest: 'vertification_request_by_token'
+      VerificationRequest: 'verification_request_by_token'
     }
   } = config
 
