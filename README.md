@@ -1,7 +1,23 @@
-# NextAuth.js
-
-![Build Test](https://github.com/nextauthjs/next-auth/workflows/Build%20Test/badge.svg)
-![Integration Test](https://github.com/nextauthjs/next-auth/workflows/Integration%20Test/badge.svg)
+<p align="center">
+   <br/>
+   <a href="https://next-auth.js.org" target="_blank"><img width="150px" src="https://next-auth.js.org/img/logo/logo-sm.png" /></a>
+   <br/>
+   <h3 align="center">NextAuth.js</h3>
+   <p align="center">Authentication for Next.js</p>
+   <br/>
+   <p align="center">
+   Open Source. Full Stack. Own Your Data.
+   </p>
+   <p align="center" style="align: center;">
+      <img src="https://github.com/nextauthjs/next-auth/workflows/Build%20Test/badge.svg" alt="Build Test" />
+      <img src="https://github.com/nextauthjs/next-auth/workflows/Integration%20Test/badge.svg" alt="Integration Test" />
+      <img src="https://img.shields.io/bundlephobia/minzip/next-auth" alt="Bundle Size"/>
+      <img src="https://img.shields.io/npm/dm/next-auth" alt="Downloads" />
+      <img src="https://img.shields.io/github/issues-pr/nextauthjs/next-auth" alt="Github Pull Requests" />
+      <img src="https://img.shields.io/github/stars/nextauthjs/next-auth" alt="Github Stars" />
+      <img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?include_prereleases" alt="Github Release" />
+   </p>
+</p>
 
 ## Overview
 
@@ -9,9 +25,15 @@ NextAuth.js is a complete open source authentication solution for [Next.js](http
 
 It is designed from the ground up to support Next.js and Serverless.
 
-[Follow the examples](https://next-auth.js.org/getting-started/example) to see how easy it is to use NextAuth.js for authentication.
+## Getting Started
 
-Install: `npm i next-auth`
+```
+npm install --save next-auth
+```
+
+The easiest way to continue getting started, is to follow the [getting started](https://next-auth.js.org/getting-started/example) section in our docs. 
+
+We also have a section of [tutorials](https://next-auth.js.org/tutorials) for those looking for more specific examples.
 
 See [next-auth.js.org](https://next-auth.js.org) for more information and documentation.
 
@@ -52,13 +74,15 @@ Advanced options allow you to define your own routines to handle controlling wha
 
 ### Typescript
 
-This library gained Typescript support recently. You can install the types in the following way:
-```
-$ npm i -D @types/next-auth
-```
-In you encounter any issue with them, please raise an issue and add the "typescript" label to it, we'll try to help you with it as soon as possible.
+You can install the appropriate types via the following command:
 
-Alternatively you can raise a PR directly with your fixes on [**DefinitelyTyped**](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/next-auth).
+```
+npm install --save-dev @types/next-auth
+```
+
+If you encounter any problems with the types package, please create an issue and add the `typescript` label to it.
+
+Alternatively, you can open a pull request directly with your fixes on the [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/next-auth) repository, where you'll find a `next-auth` subfolder.
 
 ## Example
 
@@ -116,14 +140,18 @@ export default function myComponent() {
 }
 ```
 
-## Acknowledgement
+## Acknowledgements
 
-[NextAuth.js is possible thanks to its contributors.](https://next-auth.js.org/contributors)
+[NextAuth.js is made possible thanks to all of its contributors.](https://next-auth.js.org/contributors)
 
-## Getting started
-
-[Follow the examples to get started.](https://next-auth.js.org/getting-started/example)
+<a href="https://github.com/nextauthjs/next-auth/graphs/contributors">
+  <img width="500px" src="https://contrib.rocks/image?repo=nextauthjs/next-auth" />
+</a>
 
 ## Contributing
 
-If you'd like to contribute to you can find useful information in our [Contributing Guide](https://github.com/iaincollins/next-auth/blob/main/CONTRIBUTING.md).
+We're open to all community contributions! If you'd like to contribute in any way, please first read our [Contributing Guide](https://github.com/iaincollins/next-auth/blob/main/CONTRIBUTING.md).
+
+## License
+
+ISC
