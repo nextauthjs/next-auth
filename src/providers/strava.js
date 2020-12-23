@@ -14,9 +14,9 @@ export default (options) => {
       return {
         id: profile.id,
         name: profile.firstname,
-        image: profile.profile,
-      };
+        image: profile.profile
+      }
     },
-    ...options,
-  };
-};
+    ...options
+  }
+}
