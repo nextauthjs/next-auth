@@ -13,7 +13,6 @@
       <img src="https://github.com/nextauthjs/next-auth/workflows/Integration%20Test/badge.svg" alt="Integration Test" />
       <img src="https://img.shields.io/bundlephobia/minzip/next-auth" alt="Bundle Size"/>
       <img src="https://img.shields.io/npm/dm/next-auth" alt="Downloads" />
-      <img src="https://img.shields.io/github/issues-pr/nextauthjs/next-auth" alt="Github Pull Requests" />
       <img src="https://img.shields.io/github/stars/nextauthjs/next-auth" alt="Github Stars" />
       <img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?include_prereleases" alt="Github Release" />
    </p>
