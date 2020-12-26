@@ -1,10 +1,8 @@
 <p align="center">
    <br/>
    <a href="https://next-auth.js.org" target="_blank"><img width="150px" src="https://next-auth.js.org/img/logo/logo-sm.png" /></a>
-   <br/>
    <h3 align="center">NextAuth.js</h3>
    <p align="center">Authentication for Next.js</p>
-   <br/>
    <p align="center">
    Open Source. Full Stack. Own Your Data.
    </p>
