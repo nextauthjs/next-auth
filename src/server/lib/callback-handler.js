@@ -17,7 +17,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
     if (!profile) { throw new Error('Missing profile') }
     if (!providerAccount || !providerAccount.id || !providerAccount.type) { throw new Error('Missing or invalid provider account') }
 
-    const { adapter, jwt, events, linkOAuthWithExistingAccount } = options
+    const { adapter, jwt, events, linkOAuthWithExistingUser } = options
 
     const useJwtSession = options.session.jwt
 
@@ -179,7 +179,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
           // We end up here when we don't have an account with the same [provider].id *BUT*
           // we do already have an account with the same email address as the one in the
           // oAuth profile the user has just tried to sign in with.
-          if (linkOAuthWithExistingAccount) {
+          if (linkOAuthWithExistingUser) {
             await linkAccount(
               userByEmail.id,
               providerAccount.provider,
