@@ -1,6 +1,7 @@
 import Apple from './apple'
 import Atlassian from './atlassian'
 import Auth0 from './auth0'
+import AzureADB2C from './azure-ad-b2c'
 import Basecamp from './basecamp'
 import BattleNet from './battlenet'
 import Box from './box'
@@ -22,6 +23,7 @@ import Netlify from './netlify'
 import Okta from './okta'
 import Slack from './slack'
 import Spotify from './spotify'
+import Strava from './strava'
 import Twitch from './twitch'
 import Twitter from './twitter'
 import Yandex from './yandex'
@@ -30,6 +32,7 @@ export default {
   Atlassian,
   Auth0,
   Apple,
+  AzureADB2C,
   Basecamp,
   BattleNet,
   Box,
@@ -51,6 +54,7 @@ export default {
   Okta,
   Slack,
   Spotify,
+  Strava,
   Twitter,
   Twitch,
   Yandex

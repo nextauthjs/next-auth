@@ -4,6 +4,7 @@ about: Ask a question about NextAuth.js or for help using it
 labels: question
 assignees: ''
 ---
+<!-- NOTE: Questions will be converted to Discussions. You can find them at https://github.com/nextauthjs/next-auth/discussions! -->
 
 **Your question**
 <!-- A clear and concise question. -->
