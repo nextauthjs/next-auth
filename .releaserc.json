@@ -5,7 +5,15 @@
   ],
   "plugins": [
     ["@semantic-release/commit-analyzer", {
-      "preset": "conventionalcommits"
+      "preset": "conventionalcommits",
+      "releaseRules": [
+        { "breaking": true, "release": "major" },
+        { "revert": true, "release": "patch" },
+        { "type": "feat", "release": "minor" },
+        { "type": "fix", "release": "patch" },
+        { "type": "perf", "release": "patch" },
+        { "type": "docs", "release": "patch" }
+      ]
     }],
     ["@semantic-release/release-notes-generator", {
       "preset": "conventionalcommits",
