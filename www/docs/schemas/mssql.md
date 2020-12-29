@@ -84,5 +84,5 @@ CREATE UNIQUE INDEX token
   ON verification_requests(token);
 ```
 
-When using NextAuth.js with SQL Server fir the first time, run NextAuth.js once against your database with `?synchronize=true` on the connection string and export the schema that is created.
+When using NextAuth.js with SQL Server for the first time, run NextAuth.js once against your database with `?synchronize=true` on the connection string and export the schema that is created.
 :::
