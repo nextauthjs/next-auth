@@ -127,7 +127,7 @@ body
 Scope is the part that will help with groupping the different commit types in the release notes.
 
 - **provider** - Provider related changes. (eg.: "feat(provider): add X provider", "docs(provider): fix typo in X documentation"
-- **database** - Database related changes. (eg.: "feat(database): add X database", "docs(database): fix typo in X documentation"
+- **db** - Database related changes. (eg.: "feat(db): add X database", "docs(db): fix typo in X documentation"
 - **core** - Code changes of the core. (eg.: "refactor(core): simplify function", "style(core): fix lint errors")
 
 > NOTE: If you are not sure which scope to use, you can simply ignore it. (eg.: "feat: add something"). Adding the correct type already helps a lot when analyzing the commit messages.
