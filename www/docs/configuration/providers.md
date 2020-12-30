@@ -14,12 +14,14 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 * [Apple](/providers/apple)
 * [Atlassian](/providers/atlassian)
 * [Auth0](/providers/auth0)
+* [Azure Active Directory B2C](/providers/azure-ad-b2c)
 * [Basecamp](/providers/basecamp)
-* [Battle.net](/providers/battlenet)
+* [Battle.net](/providers/battle.net)
 * [Box](/providers/box)
 * [Amazon Cognito](/providers/cognito)
 * [Discord](/providers/discord)
 * [Facebook](/providers/facebook)
+* [Foursquare](/providers/foursquare)
 * [FusionAuth](/providers/fusionauth)
 * [GitHub](/providers/github)
 * [GitLab](/providers/gitlab)
@@ -27,9 +29,11 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 * [IdentityServer4](/providers/identity-server4)
 * [LinkedIn](/providers/LinkedIn)
 * [Mixer](/providers/Mixer)
+* [Netlify](/providers/Netlify)
 * [Okta](/providers/Okta)
 * [Slack](/providers/slack)
 * [Spotify](/providers/spotify)
+* [Strava](/providers/strava)
 * [Twitch](/providers/Twitch)
 * [Twitter](/providers/twitter)
 * [Yandex](/providers/yandex)
@@ -103,7 +107,7 @@ As an example of what this looks like, this is the the provider object returned 
   clientSecret: ''
 }
 ```
-You can replace all the options in this JSON object with the ones from your custom provider – be sure to give it a unique ID and specify the correct OAuth version - and add it to the providers option:
+You can replace all the options in this JSON object with the ones from your custom provider – be sure to give it a unique ID and specify the correct OAuth version - and add it to the providers option:
 
 ```js title="pages/api/auth/[...nextauth].js"
 ...
@@ -135,6 +139,7 @@ providers: [
 |      scope       |       OAuth access scopes (expects array or string) |    No    |
 |      params      |       Additional authorization URL parameters       |    No    |
 |  accessTokenUrl  |        Endpoint to retrieve an access token         |   Yes    |
+|  accessTokenGetter  |   Default `(json) => json.access_token`          |    No    |
 | requestTokenUrl  |        Endpoint to retrieve a request token         |    No    |
 | authorizationUrl |   Endpoint to request authorization from the user   |   Yes    |
 |    profileUrl    |       Endpoint to retrieve the user's profile       |    No    |

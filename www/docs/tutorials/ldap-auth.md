@@ -14,7 +14,7 @@ const ldap = require("ldapjs");
 import NextAuth from "next-auth";
 import Providers from "next-auth/providers";
 
-const options = {
+export default NextAuth({
   providers: [
     Providers.Credentials({
       name: "LDAP",
@@ -64,9 +64,7 @@ const options = {
     secret: process.env.NEXTAUTH_SECRET,
     encryption: true, // Very important to encrypt the JWT, otherwise you're leaking username+password into the browser
   },
-};
-
-export default (req, res) => NextAuth(req, res, options);
+});
 ```
 
 The idea is that once one is authenticated with the LDAP server, one can pass through both the username/DN and password to the JWT stored in the browser. 

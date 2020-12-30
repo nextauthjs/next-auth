@@ -58,10 +58,31 @@ CREATE TABLE verification_requests
     created_at  datetime NOT NULL DEFAULT getdate(),
     updated_at  datetime NOT NULL DEFAULT getdate()
   );
+
+CREATE UNIQUE INDEX compound_id
+  ON accounts(compound_id);
+
+CREATE INDEX provider_account_id
+  ON accounts(provider_account_id);
+
+CREATE INDEX provider_id
+  ON accounts(provider_id);
+
+CREATE INDEX user_id
+  ON accounts(user_id);
+
+CREATE UNIQUE INDEX session_token
+  ON sessions(session_token);
+
+CREATE UNIQUE INDEX access_token
+  ON sessions(access_token);
+
+CREATE UNIQUE INDEX email
+  ON users(email);
+
+CREATE UNIQUE INDEX token
+  ON verification_requests(token);
 ```
 
-:::warning
-The above schema is incomplete, it does not include indexes.
-
-When using NextAuth.js with SQL Server fir the first time, run NextAuth.js once against your database with `?syncronize=true` on the connection string and export the schema that is created.
+When using NextAuth.js with SQL Server for the first time, run NextAuth.js once against your database with `?synchronize=true` on the connection string and export the schema that is created.
 :::

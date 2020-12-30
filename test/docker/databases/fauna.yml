@@ -1,0 +1,7 @@
+version: '2'
+
+services:
+
+  fauna:
+    image: fauna/faunadb
+    restart: always

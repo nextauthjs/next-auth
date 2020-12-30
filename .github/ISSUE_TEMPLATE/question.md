@@ -4,12 +4,16 @@ about: Ask a question about NextAuth.js or for help using it
 labels: question
 assignees: ''
 ---
+<!-- NOTE: Questions will be converted to Discussions. You can find them at https://github.com/nextauthjs/next-auth/discussions! -->
 
 **Your question**
-A clear and concise question.
+<!-- A clear and concise question. -->
 
 **What are you trying to do**
-A description of what you are trying to do, for context.
+<!-- A description of what you are trying to do, for context. -->
+
+**Reproduction**
+<!-- If your question is code related, adding a reproduction to your use case can greatly reduce the time it takes us to figure out how to better help you. -->
 
 **Feedback**
 *Documentation refers to searching through [online documentation](https://next-auth.js.org), code comments and issue history. The example project refers to [next-auth-example](https://github.com/iaincollins/next-auth-example).*
