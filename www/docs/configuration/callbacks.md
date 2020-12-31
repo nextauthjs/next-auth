@@ -14,19 +14,21 @@ If you want to pass data such as an Access Token or User ID to the browser when 
 You can specify a handler for any of the callbacks below.
 
 ```js title="pages/api/auth/[...nextauth].js"
-callbacks: {
-  signIn: async (user, account, profile) => {
-    return Promise.resolve(true)
-  },
-  redirect: async (url, baseUrl) => {
-    return Promise.resolve(baseUrl)
-  },
-  session: async (session, user) => {
-    return Promise.resolve(session)
-  },
-  jwt: async (token, user, account, profile, isNewUser) => {
-    return Promise.resolve(token)
-  }
+...
+  callbacks: {
+    signIn: async (user, account, profile) => {
+      return true
+    },
+    redirect: async (url, baseUrl) => {
+      return baseUrl
+    },
+    session: async (session, user) => {
+      return session
+    },
+    jwt: async (token, user, account, profile, isNewUser) => {
+      return token
+    }
+...
 }
 ```
 
@@ -48,13 +50,13 @@ callbacks: {
   signIn: async (user, account, profile) => {
     const isAllowedToSignIn = true
     if (isAllowedToSignIn) {
-      return Promise.resolve(true)
+      return true
     } else {
       // Return false to display a default error message
-      return Promise.resolve(false)
+      return false
       // You can also Reject this callback with an Error or with a URL:
-      // return Promise.reject(new Error('error message')) // Redirect to error page
-      // return Promise.reject('/path/to/redirect')        // Redirect to a URL
+      // throw new Error('error message') // Redirect to error page
+      // return '/path/to/redirect'        // Redirect to a URL
     }
   }
 }
@@ -95,8 +97,8 @@ callbacks: {
    */
   redirect: async (url, baseUrl) => {
     return url.startsWith(baseUrl)
-      ? Promise.resolve(url)
-      : Promise.resolve(baseUrl)
+      ? url
+      : baseUrl
   }
 }
 ```
@@ -123,9 +125,9 @@ callbacks: {
    *                               JSON Web Token (if not using database sessions)
    * @return {object}              Session that will be returned to the client 
    */
-  session: async (session, user, sessionToken) => {
+  session: async (session, user) => {
     session.foo = 'bar' // Add property to session
-    return Promise.resolve(session)
+    return session
   }
 }
 ```
@@ -146,7 +148,7 @@ If using JSON Web Tokens instead of database sessions, you should use the User I
 ## JWT callback
 
 This JSON Web Token callback is called whenever a JSON Web Token is created (i.e. at sign 
-in) or updated (i.e whenever a session is accesed in the client).
+in) or updated (i.e whenever a session is accessed in the client).
 
 e.g. `/api/auth/signin`, `getSession()`, `useSession()`, `/api/auth/session`
 
@@ -169,7 +171,7 @@ callbacks: {
     const isSignIn = (user) ? true : false
     // Add auth_time to token on signin in
     if (isSignIn) { token.auth_time = Math.floor(Date.now() / 1000) }
-    return Promise.resolve(token)
+    return token
   }
 }
 ```
