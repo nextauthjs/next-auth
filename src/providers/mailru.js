@@ -17,7 +17,7 @@ export default (options) => {
         id: profile.id,
         name: profile.name,
         email: profile.email,
-        image: profile.image,
+        image: profile.image
       }
     },
     setGetAccessTokenProfileUrl: true,
