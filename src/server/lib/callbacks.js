@@ -12,8 +12,9 @@
  * @param  {object} profile  User profile (e.g. user id, name, email)
  * @param  {object} account  Account used to sign in (e.g. OAuth account)
  * @param  {object} metadata Provider specific metadata (e.g. OAuth Profile)
- * @return {boolean|object}  Return `true` (or a modified JWT) to allow sign in
+ * @return {boolean|string}  Return `true` to allow sign in
  *                           Return `false` to deny access
+ *                           Return `string` to redirect to (eg.: "/unauthorized")
  */
 const signIn = async (profile, account, metadata) => {
   const isAllowedToSignIn = true
