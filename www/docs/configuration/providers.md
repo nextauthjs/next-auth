@@ -208,9 +208,9 @@ providers: [
       }
       if (user) {
         // Any user object returned here will be saved in the JSON Web Token
-        return Promise.resolve(user)
+        return user
       } else {
-        return Promise.resolve(null)
+        return null
       }
     }
   })
