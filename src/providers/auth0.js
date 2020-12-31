@@ -9,7 +9,7 @@ export default (options) => {
     accessTokenUrl: `https://${options.domain}/oauth/token`,
     authorizationUrl: `https://${options.domain}/authorize?response_type=code`,
     profileUrl: `https://${options.domain}/userinfo`,
-    profile: (profile) => {
+    profile: options.profile ?? (profile) => {
       return {
         id: profile.sub,
         name: profile.nickname,
