@@ -93,6 +93,7 @@ export default async (req, provider, csrfToken, callback) => {
           client.get(
             provider,
             accessToken,
+            results,
             async (error, profileData) => {
               const { profile, account, OAuthProfile } = await _getProfile(error, profileData, accessToken, refreshToken, provider)
               callback(error, profile, account, OAuthProfile)
@@ -246,16 +247,21 @@ async function _getOAuthAccessToken (code, provider, callback) {
         // Clients of these services suffer a minor performance cost.
         results = querystring.parse(data)
       }
-      const accessToken = results.access_token
+      const accessToken = provider.accessTokenGetter ? provider.accessTokenGetter(results) : results.access_token
       const refreshToken = results.refresh_token
       callback(null, accessToken, refreshToken, results)
     }
   )
 }
 
-// Ported from https://github.com/ciaranj/node-oauth/blob/a7f8a1e21c362eb4ed2039431fb9ac2ae749f26a/lib/oauth2.js
-function _get (provider, accessToken, callback) {
-  const url = provider.profileUrl
+/**
+ * Ported from https://github.com/ciaranj/node-oauth/blob/a7f8a1e21c362eb4ed2039431fb9ac2ae749f26a/lib/oauth2.js
+ *
+ * 18/08/2020 @robertcraigie added results parameter to pass data to an optional request preparer.
+ * e.g. see providers/bungie
+ */
+function _get (provider, accessToken, results, callback) {
+  let url = provider.profileUrl
   const headers = provider.headers || {}
 
   if (this._useAuthorizationHeaderForGET) {
@@ -264,6 +270,11 @@ function _get (provider, accessToken, callback) {
     // This line is required for Twitch
     headers['Client-ID'] = provider.clientId
     accessToken = null
+  }
+
+  const prepareRequest = provider.prepareProfileRequest
+  if (prepareRequest) {
+    url = prepareRequest({ provider, url, headers, results }) || url
   }
 
   this._request('GET', url, headers, null, accessToken, callback)
