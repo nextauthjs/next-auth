@@ -71,13 +71,16 @@ export default async (req, res, options, done) => {
             const signInCallbackResponse = await callbacks.signIn(userOrProfile, account, OAuthProfile)
             if (signInCallbackResponse === false) {
               return redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
+            } else if (typeof signInCallbackResponse === 'string') {
+              return redirect(signInCallbackResponse)
             }
           } catch (error) {
             if (error instanceof Error) {
               return redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
-            } else {
-              return redirect(error)
             }
+            // TODO: Remove in a future major release
+            logger.warn('SIGNIN_CALLBACK_REJECT_REDIRECT')
+            return redirect(error)
           }
 
           // Sign user in
@@ -162,13 +165,16 @@ export default async (req, res, options, done) => {
         const signInCallbackResponse = await callbacks.signIn(profile, account, { email })
         if (signInCallbackResponse === false) {
           return redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
+        } else if (typeof signInCallbackResponse === 'string') {
+          return redirect(signInCallbackResponse)
         }
       } catch (error) {
         if (error instanceof Error) {
           return redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
-        } else {
-          return redirect(error)
         }
+        // TODO: Remove in a future major release
+        logger.warn('SIGNIN_CALLBACK_REJECT_REDIRECT')
+        return redirect(error)
       }
 
       // Sign user in
