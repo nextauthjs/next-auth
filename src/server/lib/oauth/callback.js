@@ -270,9 +270,9 @@ function _get (provider, accessToken, results, callback) {
 
     // Mail.ru requires 'access_token' as URL request parameter
     if (setGetAccessTokenProfileUrl) {
-      if (url) {
-        url = url + '?access_token=' + accessToken
-      }
+      const safeAccessTokenURL = new URL(url)
+      safeAccessTokenURL.searchParams.append('access_token', accessToken)
+      url = safeAccessTokenURL.href
     }
 
     // This line is required for Twitch
