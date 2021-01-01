@@ -134,3 +134,8 @@ Some recommened scopes are:
 - **deps** - Adding/removing/updating a dependency (eg.: "chore(deps): add X")
   
 > NOTE: If you are not sure which scope to use, you can simply ignore it. (eg.: "feat: add something"). Adding the correct type already helps a lot when analyzing the commit messages.
+
+
+### Skipping a release
+
+Every commits that contains [skip release] or [release skip] in their message will be excluded from the commit analysis and won't participate in the release type determination. This is useful, if the PR being merged should not trigger a new `npm` release.
