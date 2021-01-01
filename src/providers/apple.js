@@ -1,5 +1,3 @@
-import jwt from 'jsonwebtoken'
-
 export default (options) => {
   return {
     id: 'apple',
@@ -27,25 +25,6 @@ export default (options) => {
       teamId: null,
       privateKey: null,
       keyId: null
-    },
-    clientSecretCallback: async ({ appleId, keyId, teamId, privateKey }) => {
-      const response = jwt.sign(
-        {
-          iss: teamId,
-          iat: Math.floor(Date.now() / 1000),
-          exp: Math.floor(Date.now() / 1000) + (86400 * 180), // 6 months
-          aud: 'https://appleid.apple.com',
-          sub: appleId
-        },
-        // Automatically convert \\n into \n if found in private key. If the key
-        // is passed in an environment variable \n can get escaped as \\n
-        privateKey.replace(/\\n/g, '\n'),
-        {
-          algorithm: 'ES256',
-          keyid: keyId
-        }
-      )
-      return Promise.resolve(response)
     },
     ...options
   }
