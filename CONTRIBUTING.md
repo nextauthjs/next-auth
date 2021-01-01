@@ -106,14 +106,14 @@ The databases can take a few seconds to start up, so you might need to give it a
 
 ## For maintainers
 
-We use [semantic-release](https://github.com/semantic-release/semantic-release) together with [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0) to automate releases. This makes the maintainenance process easier and less error-prone to human error.
+We use [semantic-release](https://github.com/semantic-release/semantic-release) together with [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0) to automate releases. This makes the maintainenance process easier and less error-prone to human error. Please study the "Conventional Commits" site to understand how to write a good commit message.
 
 When accepting Pull Requests, make sure the following:
 
 * Use "Squash and merge"
-* Rewrite the commit message to conform to `Conventional Commits` style. Check the "Recommended Scopes" section for further advice.
-* Optionally link issues the PR will resolve (you can add "closed" in front of the issue numbers to close the issues automatically, when the PR is merged)
-
+* Make sure you merge contributor PRs into `canary`
+* Rewrite the commit message to conform to the `Conventional Commits` style. Check the "Recommended Scopes" section for further advice.
+* Optionally link issues the PR will resolve (You can add "close" in front of the issue numbers to close the issues automatically, when the PR is merged. `semantic-release` will also comment back to connected issues and PRs, notifying the users that a feature is added/bug fixed, etc.)
 
 ### Recommended Scopes
 
@@ -124,10 +124,13 @@ type(scope): title
 body
 ```
 
-Scope is the part that will help with groupping the different commit types in the release notes.
+Scope is the part that will help groupping the different commit types in the release notes.
+
+Some recommened scopes are:
 
 - **provider** - Provider related changes. (eg.: "feat(provider): add X provider", "docs(provider): fix typo in X documentation"
+- **adapter** - Adapter related changes. (eg.: "feat(adapter): add X provider", "docs(provider): fix typo in X documentation"
 - **db** - Database related changes. (eg.: "feat(db): add X database", "docs(db): fix typo in X documentation"
-- **core** - Code changes of the core. (eg.: "refactor(core): simplify function", "style(core): fix lint errors")
-
+- **deps** - Adding/removing/updating a dependency (eg.: "chore(deps): add X")
+  
 > NOTE: If you are not sure which scope to use, you can simply ignore it. (eg.: "feat: add something"). Adding the correct type already helps a lot when analyzing the commit messages.
