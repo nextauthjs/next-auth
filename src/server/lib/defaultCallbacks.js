@@ -9,20 +9,14 @@
  * requests to sign in and again when they activate the link in the sign in
  * email.
  *
- * @param  {object} profile  User profile (e.g. user id, name, email)
- * @param  {object} account  Account used to sign in (e.g. OAuth account)
- * @param  {object} metadata Provider specific metadata (e.g. OAuth Profile)
- * @return {boolean|string}  Return `true` to allow sign in
- *                           Return `false` to deny access
- *                           Return `string` to redirect to (eg.: "/unauthorized")
+ * @param  {object} profile          User profile (e.g. user id, name, email)
+ * @param  {object} account          Account used to sign in (e.g. OAuth account)
+ * @param  {object} metadata         Provider specific metadata (e.g. OAuth Profile)
+ * @return {Promise<boolean|never>}  Return `true` (or a modified JWT) to allow sign in
+ *                                   Return `false` to deny access
  */
-const signIn = async (profile, account, metadata) => {
-  const isAllowedToSignIn = true
-  if (isAllowedToSignIn) {
-    return Promise.resolve(true)
-  } else {
-    return Promise.resolve(false)
-  }
+export async function signIn () {
+  return true
 }
 
 /**
@@ -32,12 +26,13 @@ const signIn = async (profile, account, metadata) => {
  *
  * @param  {string} url      URL provided as callback URL by the client
  * @param  {string} baseUrl  Default base URL of site (can be used as fallback)
- * @return {string}          URL the client will be redirect to
+ * @return {Promise<string>} URL the client will be redirect to
  */
-const redirect = async (url, baseUrl) => {
-  return url.startsWith(baseUrl)
-    ? Promise.resolve(url)
-    : Promise.resolve(baseUrl)
+export async function redirect (url, baseUrl) {
+  if (url.startsWith(baseUrl)) {
+    return url
+  }
+  return baseUrl
 }
 
 /**
@@ -46,31 +41,24 @@ const redirect = async (url, baseUrl) => {
  *
  * @param  {object} session  Session object
  * @param  {object} token    JSON Web Token (if enabled)
- * @return {object}          Session that will be returned to the client
+ * @return {Promise<object>} Session that will be returned to the client
  */
-const session = async (session, token) => {
-  return Promise.resolve(session)
+export async function session (session) {
+  return session
 }
 
 /**
  * This callback is called whenever a JSON Web Token is created / updated.
  * e.g. On sign in, `getSession()`, `useSession()`, `/api/auth/session` (etc)
  *
- * On initial sign in, the raw oAuthProfile is passed if the user is signing in
+ * On initial sign in, the raw OAuthProfile is passed if the user is signing in
  * with an OAuth provider. It is not avalible on subsequent calls. You can
  * take advantage of this to persist additional data you need to in the JWT.
  *
  * @param  {object} token         Decrypted JSON Web Token
  * @param  {object} oAuthProfile  OAuth profile - only available on sign in
- * @return {object}               JSON Web Token that will be saved
+ * @return {Promise<object>}      JSON Web Token that will be saved
  */
-const jwt = async (token, oAuthProfile) => {
-  return Promise.resolve(token)
-}
-
-export default {
-  signIn,
-  redirect,
-  session,
-  jwt
+export async function jwt (token) {
+  return token
 }

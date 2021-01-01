@@ -2,11 +2,11 @@ import oAuthClient from '../oauth/client'
 import { createHash } from 'crypto'
 import logger from '../../../lib/logger'
 
-export default (provider, csrfToken, callback, authParams) => {
+export default function oauth (provider, csrfToken, callback, authParams) {
   const { callbackUrl } = provider
   const client = oAuthClient(provider)
   if (provider.version && provider.version.startsWith('2.')) {
-    // Handle oAuth v2.x
+    // Handle OAuth v2.x
     let url = client.getAuthorizeUrl({
       ...authParams,
       redirect_uri: provider.callbackUrl,
@@ -31,7 +31,7 @@ export default (provider, csrfToken, callback, authParams) => {
 
     callback(null, url)
   } else {
-    // Handle oAuth v1.x
+    // Handle OAuth v1.x
     client.getOAuthRequestToken((error, oAuthToken) => {
       if (error) {
         logger.error('GET_AUTHORISATION_URL_ERROR', error)

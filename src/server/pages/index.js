@@ -4,7 +4,9 @@ import verifyRequest from './verify-request'
 import error from './error'
 import css from '../../css'
 
-function render (req, res, page, props, done) {
+export default function renderPage ({ req, res, page, props = {} }) {
+  props.baseUrl = req.options.baseUrl
+  props.basePath = req.options.basePath
   let html = ''
   switch (page) {
     case 'signin':
@@ -18,7 +20,7 @@ function render (req, res, page, props, done) {
       break
     case 'error':
       html = error({ ...props, res })
-      if (html === false) return done()
+      if (html === false) return res.end()
       break
     default:
       html = error(props)
@@ -27,9 +29,5 @@ function render (req, res, page, props, done) {
 
   res.setHeader('Content-Type', 'text/html')
   res.send(`<!DOCTYPE html><head><style type="text/css">${css()}</style><meta name="viewport" content="width=device-width, initial-scale=1"></head><body><div class="page">${html}</div></body></html>`)
-  done()
-}
-
-export default {
-  render
+  res.end()
 }

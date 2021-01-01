@@ -1,7 +1,7 @@
 import { h } from 'preact' // eslint-disable-line no-unused-vars
 import render from 'preact-render-to-string'
 
-export default ({ req, csrfToken, providers, callbackUrl }) => {
+export default function signin ({ req, csrfToken, providers, callbackUrl }) {
   const { email, error } = req.query
 
   // We only want to render providers
@@ -59,8 +59,8 @@ export default ({ req, csrfToken, providers, callbackUrl }) => {
               <button type='submit' className='button'>Sign in with {provider.name}</button>
             </form>}
           {(provider.type === 'email' || provider.type === 'credentials') && (i > 0) &&
-            providersToRender[i - 1].type !== 'email' && providersToRender[i - 1].type !== 'credentials' &&
-              <hr />}
+          providersToRender[i - 1].type !== 'email' && providersToRender[i - 1].type !== 'credentials' &&
+            <hr />}
           {provider.type === 'email' &&
             <form action={provider.signinUrl} method='POST'>
               <input type='hidden' name='csrfToken' value={csrfToken} />
