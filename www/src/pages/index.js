@@ -205,11 +205,11 @@ export default function myComponent() {
   return <>
     {!session && <>
       Not signed in <br/>
-      <button onClick={signIn}>Sign in</button>
+      <button onClick={() => signIn()}>Sign in</button>
     </>}
     {session && <>
       Signed in as {session.user.email} <br/>
-      <button onClick={signOut}>Sign out</button>
+      <button onClick={() => signOut()}>Sign out</button>
     </>}
   </>
 }

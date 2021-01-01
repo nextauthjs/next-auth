@@ -28,11 +28,13 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 * [Google](/providers/google)
 * [IdentityServer4](/providers/identity-server4)
 * [LinkedIn](/providers/LinkedIn)
+* [Mail.ru](/providers/Mail.ru)
 * [Mixer](/providers/Mixer)
 * [Netlify](/providers/Netlify)
 * [Okta](/providers/Okta)
 * [Slack](/providers/slack)
 * [Spotify](/providers/spotify)
+* [Strava](/providers/strava)
 * [Twitch](/providers/Twitch)
 * [Twitter](/providers/twitter)
 * [Yandex](/providers/yandex)
@@ -207,9 +209,9 @@ providers: [
       }
       if (user) {
         // Any user object returned here will be saved in the JSON Web Token
-        return Promise.resolve(user)
+        return user
       } else {
-        return Promise.resolve(null)
+        return null
       }
     }
   })
@@ -224,7 +226,7 @@ The Credentials provider can only be used if JSON Web Tokens are enabled for ses
 :::
 
 <!-- React Image Component -->
-export const Image = ({ children, src, alt = '' }) => ( 
+export const Image = ({ children, src, alt = '' }) => (
   <div
     style={{
       padding: '0.2rem',

@@ -1,14 +1,13 @@
-import cookie from '../lib/cookie'
+import * as cookie from '../lib/cookie'
 
-export default async (req, res, options) => {
+export default async function callbackUrlHandler (req, res) {
   const { query } = req
   const { body } = req
-  const { cookies, baseUrl, defaultCallbackUrl, callbacks } = options
+  const { cookies, baseUrl, defaultCallbackUrl, callbacks } = req.options
 
   // Handle preserving and validating callback URLs
   // If no defaultCallbackUrl option specified, default to the homepage for the site
   let callbackUrl = defaultCallbackUrl || baseUrl
-
   // Try reading callbackUrlParamValue from request body (form submission) then from query param (get request)
   const callbackUrlParamValue = body.callbackUrl || query.callbackUrl || null
   const callbackUrlCookieValue = req.cookies[cookies.callbackUrl.name] || null
@@ -21,7 +20,9 @@ export default async (req, res, options) => {
   }
 
   // Save callback URL in a cookie so that can be used for subsequent requests in signin/signout/callback flow
-  if (callbackUrl && (callbackUrl !== callbackUrlCookieValue)) { cookie.set(res, cookies.callbackUrl.name, callbackUrl, cookies.callbackUrl.options) }
+  if (callbackUrl && (callbackUrl !== callbackUrlCookieValue)) {
+    cookie.set(res, cookies.callbackUrl.name, callbackUrl, cookies.callbackUrl.options)
+  }
 
-  return Promise.resolve(callbackUrl)
+  return callbackUrl
 }

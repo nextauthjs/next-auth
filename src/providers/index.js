@@ -18,11 +18,13 @@ import GitLab from './gitlab'
 import Google from './google'
 import IdentityServer4 from './identity-server4'
 import LinkedIn from './linkedin'
+import MailRu from './mailru'
 import Mixer from './mixer'
 import Netlify from './netlify'
 import Okta from './okta'
 import Slack from './slack'
 import Spotify from './spotify'
+import Strava from './strava'
 import Twitch from './twitch'
 import Twitter from './twitter'
 import Yandex from './yandex'
@@ -48,11 +50,13 @@ export default {
   Google,
   IdentityServer4,
   LinkedIn,
+  MailRu,
   Mixer,
   Netlify,
   Okta,
   Slack,
   Spotify,
+  Strava,
   Twitter,
   Twitch,
   Yandex

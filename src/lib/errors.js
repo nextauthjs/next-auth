@@ -25,7 +25,7 @@ class CreateUserError extends UnknownError {
 }
 
 // Thrown when an Email address is already associated with an account
-// but the user is trying an oAuth account that is not linked to it.
+// but the user is trying an OAuth account that is not linked to it.
 class AccountNotLinkedError extends UnknownError {
   constructor (message) {
     super(message)

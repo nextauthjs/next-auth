@@ -1,12 +1,14 @@
-// Function to set cookies server side
-//
-// Credit to @huv1k and @jshttp contributors for the code which this is based on (MIT License).
-// * https://github.com/jshttp/cookie/blob/master/index.js
-// * https://github.com/zeit/next.js/blob/master/examples/api-routes-middleware/utils/cookies.js
-//
-// As only partial functionlity is required, only the code we need has been incorporated here
-// (with fixes for specific issues) to keep dependancy size down.
-const set = (res, name, value, options = {}) => {
+/**
+ * Function to set cookies server side
+ *
+ * Credit to @huv1k and @jshttp contributors for the code which this is based on (MIT License).
+ * * https://github.com/jshttp/cookie/blob/master/index.js
+ * * https://github.com/zeit/next.js/blob/master/examples/api-routes-middleware/utils/cookies.js
+ *
+ * As only partial functionlity is required, only the code we need has been incorporated here
+ * (with fixes for specific issues) to keep dependancy size down.
+ */
+export function set (res, name, value, options = {}) {
   const stringValue = typeof value === 'object' ? 'j:' + JSON.stringify(value) : String(value)
 
   if ('maxAge' in options) {
@@ -97,8 +99,4 @@ function _serialize (name, val, options) {
   }
 
   return str
-}
-
-export default {
-  set
 }
