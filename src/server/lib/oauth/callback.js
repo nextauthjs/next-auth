@@ -191,7 +191,6 @@ async function _getProfile (error, profileData, accessToken, refreshToken, provi
 // Ported from https://github.com/ciaranj/node-oauth/blob/a7f8a1e21c362eb4ed2039431fb9ac2ae749f26a/lib/oauth2.js
 async function _getOAuthAccessToken (code, provider, callback) {
   const url = provider.accessTokenUrl
-  const setGetAccessTokenAuthHeader = (provider.setGetAccessTokenAuthHeader !== null) ? provider.setGetAccessTokenAuthHeader : true
   const params = { ...provider.params } || {}
   const headers = { ...provider.headers } || {}
   const codeParam = (params.grant_type === 'refresh_token') ? 'refresh_token' : 'code'
@@ -219,9 +218,10 @@ async function _getOAuthAccessToken (code, provider, callback) {
   if (provider.id === 'reddit') {
     headers.Authorization = 'Basic ' + Buffer.from((provider.clientId + ':' + provider.clientSecret)).toString('base64')
   }
-  // Okta errors when this is set. Maybe there are other Providers that also wont like this.
-  if (setGetAccessTokenAuthHeader) {
-    if (!headers.Authorization) { headers.Authorization = `Bearer ${code}` }
+
+  const providersNotSupportingAuthHeader = ['okta', 'identity-server4']
+  if (!providersNotSupportingAuthHeader.includes(provider.id) && !headers.Authorization) {
+    headers.Authorization = `Bearer ${code}`
   }
 
   const postData = querystring.stringify(params)

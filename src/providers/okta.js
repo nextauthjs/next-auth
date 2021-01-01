@@ -17,7 +17,6 @@ export default (options) => {
     profile: (profile) => {
       return { ...profile, id: profile.sub }
     },
-    setGetAccessTokenAuthHeader: false,
     ...options
   }
 }
