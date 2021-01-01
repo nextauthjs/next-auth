@@ -270,7 +270,7 @@ function _get (provider, accessToken, results, callback) {
     headers.Authorization = this.buildAuthHeader(accessToken)
 
     // Mail.ru requires 'access_token' as URL request parameter
-    if (provider.id === "mailru") {
+    if (provider.id === 'mailru') {
       const safeAccessTokenURL = new URL(url)
       safeAccessTokenURL.searchParams.append('access_token', accessToken)
       url = safeAccessTokenURL.href
