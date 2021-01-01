@@ -42,8 +42,7 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
       const error = 'Cannot find [...nextauth].js in pages/api/auth. Make sure the filename is written correctly.'
 
       logger.error('MISSING_NEXTAUTH_API_ROUTE_ERROR', error)
-      res.status(500).end(`Error: ${error}`)
-      return res.end()
+      return res.status(500).end(`Error: ${error}`).end()
     }
 
     const { url, query, body } = req
@@ -207,7 +206,7 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
       cookies,
       secret,
       csrfToken,
-      providers: parseProviders({ providers: userSuppliedOptions.providers, basePath, baseUrl }),
+      providers: parseProviders(userSuppliedOptions.providers, basePath, baseUrl),
       session: sessionOptions,
       jwt: jwtOptions,
       events: eventsOptions,
