@@ -65,13 +65,16 @@ export default async function callback (req, res) {
           const signInCallbackResponse = await callbacks.signIn(userOrProfile, account, OAuthProfile)
           if (signInCallbackResponse === false) {
             return res.redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
+          } else if (typeof signInCallbackResponse === 'string') {
+            return res.redirect(signInCallbackResponse)
           }
         } catch (error) {
           if (error instanceof Error) {
             return res.redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
-          } else {
-            return res.redirect(error)
           }
+          // TODO: Remove in a future major release
+          logger.warn('SIGNIN_CALLBACK_REJECT_REDIRECT')
+          return res.redirect(error)
         }
 
         // Sign user in
@@ -82,7 +85,7 @@ export default async function callback (req, res) {
             name: user.name,
             email: user.email,
             picture: user.image,
-            sub: user.id.toString()
+            sub: user.id?.toString()
           }
           const jwtPayload = await callbacks.jwt(defaultJwtPayload, user, account, OAuthProfile, isNewUser)
 
@@ -159,13 +162,16 @@ export default async function callback (req, res) {
         const signInCallbackResponse = await callbacks.signIn(profile, account, { email })
         if (signInCallbackResponse === false) {
           return res.redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
+        } else if (typeof signInCallbackResponse === 'string') {
+          return res.redirect(signInCallbackResponse)
         }
       } catch (error) {
         if (error instanceof Error) {
           return res.redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
-        } else {
-          return res.redirect(error)
         }
+        // TODO: Remove in a future major release
+        logger.warn('SIGNIN_CALLBACK_REJECT_REDIRECT')
+        return res.redirect(error)
       }
 
       // Sign user in
@@ -176,7 +182,7 @@ export default async function callback (req, res) {
           name: user.name,
           email: user.email,
           picture: user.image,
-          sub: user.id.toString()
+          sub: user.id?.toString()
         }
         const jwtPayload = await callbacks.jwt(defaultJwtPayload, user, account, profile, isNewUser)
 

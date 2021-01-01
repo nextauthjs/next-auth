@@ -63,9 +63,9 @@ const options = {
       if (account.provider === 'google' &&
           profile.verified_email === true &&
           profile.email.endsWith('@example.com')) {
-        return Promise.resolve(true)
+        return true
       } else {
-        return Promise.resolve(false)
+        return false
       }
     },
   }
