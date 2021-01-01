@@ -269,6 +269,13 @@ function _get (provider, accessToken, results, callback) {
   if (this._useAuthorizationHeaderForGET) {
     headers.Authorization = this.buildAuthHeader(accessToken)
 
+    // Mail.ru requires 'access_token' as URL request parameter
+    if (provider.id === 'mailru') {
+      const safeAccessTokenURL = new URL(url)
+      safeAccessTokenURL.searchParams.append('access_token', accessToken)
+      url = safeAccessTokenURL.href
+    }
+
     // This line is required for Twitch
     headers['Client-ID'] = provider.clientId
     accessToken = null
