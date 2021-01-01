@@ -31,7 +31,7 @@ export default async function callback (req, res) {
 
   if (type === 'oauth') {
     try {
-      const { profile, account, OAuthProfile } = await oAuthCallback(req, provider, csrfToken)
+      const { profile, account, OAuthProfile } = await oAuthCallback(req, csrfToken)
       try {
         // Make it easier to debug when adding a new provider
         logger.debug('OAUTH_CALLBACK_RESPONSE', { profile, account, OAuthProfile })
