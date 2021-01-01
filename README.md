@@ -117,8 +117,8 @@ export default NextAuth({
 import React from 'react'
 import { 
   useSession, 
-  signin, 
-  signout 
+  signIn,
+  signOut
 } from 'next-auth/client'
 
 export default function myComponent() {
@@ -127,11 +127,11 @@ export default function myComponent() {
   return <p>
     {!session && <>
       Not signed in <br/>
-      <button onClick={signin}>Sign in</button>
+      <button onClick={() => signIn()}>Sign in</button>
     </>}
     {session && <>
       Signed in as {session.user.email} <br/>
-      <button onClick={signout}>Sign out</button>
+      <button onClick={() => signOut()}>Sign out</button>
     </>}
   </p>
 }
