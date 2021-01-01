@@ -1,11 +1,11 @@
-// Handle requests to /api/auth/signout
-import cookie from '../lib/cookie'
+import * as cookie from '../lib/cookie'
 import logger from '../../lib/logger'
 import dispatchEvent from '../lib/dispatch-event'
 
-export default async (req, res, options, done) => {
-  const { adapter, cookies, events, jwt, callbackUrl, redirect } = options
-  const useJwtSession = options.session.jwt
+/** Handle requests to /api/auth/signout */
+export default async function signout (req, res) {
+  const { adapter, cookies, events, jwt, callbackUrl } = req.options
+  const useJwtSession = req.options.session.jwt
   const sessionToken = req.cookies[cookies.sessionToken.name]
 
   if (useJwtSession) {
@@ -18,7 +18,7 @@ export default async (req, res, options, done) => {
     }
   } else {
     // Get session from database
-    const { getSession, deleteSession } = await adapter.getAdapter(options)
+    const { getSession, deleteSession } = await adapter.getAdapter(req.options)
 
     try {
       // Dispatch signout event
@@ -43,5 +43,5 @@ export default async (req, res, options, done) => {
     maxAge: 0
   })
 
-  return redirect(callbackUrl)
+  return res.redirect(callbackUrl)
 }

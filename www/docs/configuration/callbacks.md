@@ -44,8 +44,9 @@ callbacks: {
    * @param  {object} user     User object
    * @param  {object} account  Provider account
    * @param  {object} profile  Provider profile 
-   * @return {boolean}         Return `true` (or a modified JWT) to allow sign in
+   * @return {boolean|string}  Return `true` to allow sign in
    *                           Return `false` to deny access
+   *                           Return `string` to redirect to (eg.: "/unauthorized")
    */
   signIn: async (user, account, profile) => {
     const isAllowedToSignIn = true
@@ -54,9 +55,8 @@ callbacks: {
     } else {
       // Return false to display a default error message
       return false
-      // You can also Reject this callback with an Error or with a URL:
-      // throw new Error('error message') // Redirect to error page
-      // return '/path/to/redirect'        // Redirect to a URL
+      // Or you can return a URL to redirect to:
+      // return '/unauthorized'
     }
   }
 }
