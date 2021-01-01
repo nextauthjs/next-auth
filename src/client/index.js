@@ -10,105 +10,23 @@
 //
 // We use HTTP POST requests with CSRF Tokens to protect against CSRF attacks.
 
-/* global fetch:false */
 import * as React from 'react'
 import logger from '../lib/logger'
-import parseUrl from '../lib/parse-url'
+import {
+  __NEXTAUTH, _apiBaseUrl, _fetchData, _encodedForm, _sendMessage, setOptions
+} from './utils'
 
-// This behaviour mirrors the default behaviour for getting the site name that
-// happens server side in server/index.js
-// 1. An empty value is legitimate when the code is being invoked client side as
-//    relative URLs are valid in that context and so defaults to empty.
-// 2. When invoked server side the value is picked up from an environment
-//    variable and defaults to 'http://localhost:3000'.
-const __NEXTAUTH = {
-  baseUrl: parseUrl(process.env.NEXTAUTH_URL || process.env.VERCEL_URL).baseUrl,
-  basePath: parseUrl(process.env.NEXTAUTH_URL).basePath,
-  keepAlive: 0, // 0 == disabled (don't send); 60 == send every 60 seconds
-  clientMaxAge: 0, // 0 == disabled (only use cache); 60 == sync if last checked > 60 seconds ago
-  // Properties starting with _ are used for tracking internal app state
-  _clientLastSync: 0, // used for timestamp since last sycned (in seconds)
-  _clientSyncTimer: null, // stores timer for poll interval
-  _eventListenersAdded: false, // tracks if event listeners have been added,
-  _clientSession: undefined, // stores last session response from hook,
-  // Generate a unique ID to make it possible to identify when a message
-  // was sent from this tab/window so it can be ignored to avoid event loops.
-  _clientId: Math.random().toString(36).substring(2) + Date.now().toString(36),
-  // Used to store to function export by getSession() hook
-  _getSession: () => {}
-}
-
-// Add event listners on load
-if (typeof window !== 'undefined') {
-  if (__NEXTAUTH._eventListenersAdded === false) {
-    __NEXTAUTH._eventListenersAdded = true
-
-    // Listen for storage events and update session if event fired from
-    // another window (but suppress firing another event to avoid a loop)
-    window.addEventListener('storage', async (event) => {
-      if (event.key === 'nextauth.message') {
-        const message = JSON.parse(event.newValue)
-        if (message.event && message.event === 'session' && message.data) {
-          // Ignore storage events fired from the same window that created them
-          if (__NEXTAUTH._clientId === message.clientId) {
-            return
-          }
-
-          // Fetch new session data but pass 'true' to it not to fire an event to
-          // avoid an infinite loop.
-          //
-          // Note: We could pass session data through and do something like
-          // `setData(message.data)` but that can cause problems depending
-          // on how the session object is being used in the client; it is
-          // more robust to have each window/tab fetch it's own copy of the
-          // session object rather than share it across instances.
-          await __NEXTAUTH._getSession({ event: 'storage' })
-        }
-      }
-    })
-
-    // Listen for window focus/blur events
-    window.addEventListener('focus', async (event) => __NEXTAUTH._getSession({ event: 'focus' }))
-    window.addEventListener('blur', async (event) => __NEXTAUTH._getSession({ event: 'blur' }))
-  }
-}
-
-// Method to set options. The documented way is to use the provider, but this
-// method is being left in as an alternative, that will be helpful if/when we
-// expose a vanilla JavaScript version that doesn't depend on React.
-const setOptions = ({
-  baseUrl,
-  basePath,
-  clientMaxAge,
-  keepAlive
-} = {}) => {
-  if (baseUrl) { __NEXTAUTH.baseUrl = baseUrl }
-  if (basePath) { __NEXTAUTH.basePath = basePath }
-  if (clientMaxAge) { __NEXTAUTH.clientMaxAge = clientMaxAge }
-  if (keepAlive) {
-    __NEXTAUTH.keepAlive = keepAlive
-
-    if (typeof window !== 'undefined' && keepAlive > 0) {
-      // Clear existing timer (if there is one)
-      if (__NEXTAUTH._clientSyncTimer !== null) { clearTimeout(__NEXTAUTH._clientSyncTimer) }
-
-      // Set next timer to trigger in number of seconds
-      __NEXTAUTH._clientSyncTimer = setTimeout(async () => {
-        // Only invoke keepalive when a session exists
-        if (__NEXTAUTH._clientSession) {
-          await __NEXTAUTH._getSession({ event: 'timer' })
-        }
-      }, keepAlive * 1000)
-    }
-  }
-}
-
-// Universal method (client + server)
-const getSession = async ({ req, ctx, triggerEvent = true } = {}) => {
+/**
+ * Universal method (client + server) to get the session.
+ * If you need the session client side, you should probably use `useSession()`.
+ *
+ * When called server-side, you can pass either `ctx` or `req`.
+ */
+export async function getSession ({ req, ctx, triggerEvent = true } = {}) {
   // If passed 'appContext' via getInitialProps() in _app.js then get the req
   // object from ctx and use that for the req value to allow getSession() to
   // work seemlessly in getInitialProps() on server side pages *and* in _app.js.
-  if (!req && ctx && ctx.req) { req = ctx.req }
+  if (!req && ctx?.req) { req = ctx.req }
 
   const baseUrl = _apiBaseUrl()
   const fetchOptions = req ? { headers: { cookie: req.headers.cookie } } : {}
@@ -119,29 +37,48 @@ const getSession = async ({ req, ctx, triggerEvent = true } = {}) => {
   return session
 }
 
-// Universal method (client + server)
-const getCsrfToken = async ({ req, ctx } = {}) => {
+/**
+ * Universal method (client + server) to retrieve a CSRF token.
+ *
+ * Pass either `ctx` or `req`.
+ * */
+export async function getCsrfToken ({ req, ctx } = {}) {
   // If passed 'appContext' via getInitialProps() in _app.js then get the req
   // object from ctx and use that for the req value to allow getCsrfToken() to
   // work seemlessly in getInitialProps() on server side pages *and* in _app.js.
-  if (!req && ctx && ctx.req) { req = ctx.req }
+  if (!req && ctx?.req) { req = ctx.req }
 
   const baseUrl = _apiBaseUrl()
   const fetchOptions = req ? { headers: { cookie: req.headers.cookie } } : {}
   const data = await _fetchData(`${baseUrl}/csrf`, fetchOptions)
-  return data && data.csrfToken ? data.csrfToken : null
+  return data?.csrfToken ?? null
 }
 
-// Universal method (client + server); does not require request headers
-const getProviders = async () => {
+/**
+ *  Universal method (client + server) to get all the providers;
+ *  does not require request headers.
+ */
+async function getProviders () {
   const baseUrl = _apiBaseUrl()
   return _fetchData(`${baseUrl}/providers`)
 }
 
-// Client side method
-const signIn = async (provider, args = {}, authParams = {}) => {
+/**
+ * Client-side function to sign the user in,
+ * and optionally redirect them to somewhere else
+ * afterwards.
+ * @param {string} [provider] Which provider you want to log out from. Will redirect to the signin page, if omitted.
+ * @param {{callbackUrl?: string, [key: string]: any}} params If callbackUrl not set, will redirect to the current location. All params are forwarded as the body of the request.
+ * @example
+ * ```jsx
+ * <button onClick={() => signIn("auth0")}>
+ *   Sign out
+ * </button>
+ * ```
+ */
+export async function signIn (provider, params = {}) {
   const baseUrl = _apiBaseUrl()
-  const callbackUrl = (args && args.callbackUrl) ? args.callbackUrl : window.location
+  const callbackUrl = params.callbackUrl ?? window.location
   const providers = await getProviders()
 
   // Redirect to sign in page if no valid provider specified
@@ -149,105 +86,71 @@ const signIn = async (provider, args = {}, authParams = {}) => {
     // If Provider not recognized, redirect to sign in page
     window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`
   } else {
-    let signInUrl = (providers[provider].type === 'credentials')
+    const signInUrl = (providers[provider].type === 'credentials')
       ? `${baseUrl}/callback/${provider}`
       : `${baseUrl}/signin/${provider}`
 
-    if (authParams) {
-      signInUrl += `?${new URLSearchParams(authParams).toString()}`
-    }
-
     // If is any other provider type, POST to provider URL with CSRF Token,
     // callback URL and any other parameters supplied.
-    const fetchOptions = {
+    const data = await _fetchData(signInUrl, {
       method: 'post',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       body: _encodedForm({
-        ...args,
+        ...params,
         csrfToken: await getCsrfToken(),
-        callbackUrl: callbackUrl,
+        callbackUrl,
         json: true
       })
-    }
-    const res = await fetch(signInUrl, fetchOptions)
-    const data = await res.json()
-    window.location = data.url ? data.url : callbackUrl
+    })
+    window.location = data?.url ?? callbackUrl
   }
 }
 
-// Client side method
-const signOut = async (args = {}) => {
-  const callbackUrl = (args && args.callbackUrl) ? args.callbackUrl : window.location
-
+/**
+ * Client-side function to sign the user out,
+ * and optionally redirect them to somewhere else
+ * afterwards.
+ *
+ * If `callbackUrl` not set, will redirect to the current location
+ * @param {{callbackUrl?: string}} params
+ * @example
+ * ```jsx
+ * <button onClick={() => signOut({callbackUrl: "/you-are-logged-out"})}>
+ *   Sign out
+ * </button>
+ * ```
+ */
+export async function signOut ({ callbackUrl = window.location } = {}) {
   const baseUrl = _apiBaseUrl()
-  const fetchOptions = {
+  const data = await _fetchData(`${baseUrl}/signout`, {
     method: 'post',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     },
     body: _encodedForm({
       csrfToken: await getCsrfToken(),
-      callbackUrl: callbackUrl,
+      callbackUrl,
       json: true
     })
-  }
-  const res = await fetch(`${baseUrl}/signout`, fetchOptions)
-  const data = await res.json()
+  })
   _sendMessage({ event: 'session', data: { trigger: 'signout' } })
-  window.location = data.url ? data.url : callbackUrl
-}
-
-const _fetchData = async (url, options = {}) => {
-  try {
-    const res = await fetch(url, options)
-    const data = await res.json()
-    return Promise.resolve(Object.keys(data).length > 0 ? data : null) // Return null if data empty
-  } catch (error) {
-    logger.error('CLIENT_FETCH_ERROR', url, error)
-    return Promise.resolve(null)
-  }
-}
-
-const _apiBaseUrl = () => {
-  if (typeof window === 'undefined') {
-    // NEXTAUTH_URL should always be set explicitly to support server side calls - log warning if not set
-    if (!process.env.NEXTAUTH_URL) { logger.warn('NEXTAUTH_URL', 'NEXTAUTH_URL environment variable not set') }
-
-    // Return absolute path when called server side
-    return `${__NEXTAUTH.baseUrl}${__NEXTAUTH.basePath}`
-  } else {
-    // Return relative path when called client side
-    return __NEXTAUTH.basePath
-  }
-}
-
-const _encodedForm = (formData) => {
-  return Object.keys(formData).map((key) => {
-    return encodeURIComponent(key) + '=' + encodeURIComponent(formData[key])
-  }).join('&')
-}
-
-const _sendMessage = (message) => {
-  if (typeof localStorage !== 'undefined') {
-    const timestamp = Math.floor(new Date().getTime() / 1000)
-    localStorage.setItem('nextauth.message', JSON.stringify({ ...message, clientId: __NEXTAUTH._clientId, timestamp })) // eslint-disable-line
-  }
+  window.location = data?.url ?? callbackUrl
 }
 
 // React
 
 // Context to store session data globally
-const SessionContext = React.createContext()
+export const _SessionContext = React.createContext()
 
 /** React hook to get the session */
-function useSession () {
-  return React.useContext(SessionContext)
+export function useSession () {
+  return React.useContext(_SessionContext)
 }
 
 /** Provider to wrap the app in to make session data available globally */
-function SessionProvider ({ children, session, options }) {
+export function SessionProvider ({ children, session, options }) {
   setOptions(options)
   const hasSession = !!session
   const [data, setData] = React.useState(session)
@@ -318,29 +221,18 @@ function SessionProvider ({ children, session, options }) {
   }, [hasSession])
 
   return React.createElement(
-    SessionContext.Provider,
+    _SessionContext.Provider,
     { value: [data, loading] },
     children
   )
 }
 
 export default {
-  // React
-  useSession,
-  Provider: SessionProvider,
-  SessionProvider,
-
-  getSession,
-  getCsrfToken,
-  getProviders,
-  signIn,
-  signOut,
-  /* Deprecated / unsupported features below this line */
-  // Use setOptions() set options globally in the app.
-  setOptions,
+  // Deprecated/unsupported features.
   // Some methods are exported with more than one name. This provides some
   // flexibility over how they can be invoked and backwards compatibility
   // with earlier releases.
+  Provider: SessionProvider,
   options: setOptions,
   session: getSession,
   providers: getProviders,
