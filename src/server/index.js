@@ -1,19 +1,20 @@
 import { createHash, randomBytes } from 'crypto'
 import jwt from '../lib/jwt'
 import parseUrl from '../lib/parse-url'
-import cookie from './lib/cookie'
+import * as cookie from './lib/cookie'
 import callbackUrlHandler from './lib/callback-url-handler'
 import parseProviders from './lib/providers'
-import events from './lib/events'
-import callbacks from './lib/callbacks'
+import * as events from './lib/events'
+import * as defaultCallbacks from './lib/defaultCallbacks'
 import providers from './routes/providers'
 import signin from './routes/signin'
 import signout from './routes/signout'
 import callback from './routes/callback'
 import session from './routes/session'
-import pages from './pages'
+import renderPage from './pages'
 import adapters from '../adapters'
 import logger from '../lib/logger'
+import redirect from './lib/redirect'
 
 // To work properly in production with OAuth providers the NEXTAUTH_URL
 // environment variable must be set.
@@ -21,7 +22,7 @@ if (!process.env.NEXTAUTH_URL) {
   logger.warn('NEXTAUTH_URL', 'NEXTAUTH_URL environment variable not set')
 }
 
-async function NextAuth (req, res, userSuppliedOptions) {
+async function NextAuthHandler (req, res, userSuppliedOptions) {
   // To the best of my knowledge, we need to return a promise here
   // to avoid early termination of calls to the serverless function
   // (and then return that promise when we are done) - eslint
@@ -30,18 +31,18 @@ async function NextAuth (req, res, userSuppliedOptions) {
     // This is passed to all methods that handle responses, and must be called
     // when they are complete so that the serverless function knows when it is
     // safe to return and that no more data will be sent.
-    const done = resolve
+    // REVIEW: Why not just call res.end() as is, and remove the Promise wrapper?
+    res.end = () => {
+      resolve()
+      res.end()
+    }
+    res.redirect = redirect(req, res)
 
     if (!req.query.nextauth) {
       const error = 'Cannot find [...nextauth].js in pages/api/auth. Make sure the filename is written correctly.'
 
       logger.error('MISSING_NEXTAUTH_API_ROUTE_ERROR', error)
-      res
-        .status(500)
-        .end(
-        `Error: ${error}`
-        )
-      return done()
+      return res.status(500).end(`Error: ${error}`).end()
     }
 
     const { url, query, body } = req
@@ -56,10 +57,8 @@ async function NextAuth (req, res, userSuppliedOptions) {
       csrfToken: csrfTokenFromPost
     } = body
 
-    // @todo refactor all existing references to site, baseUrl and basePath
-    const parsedUrl = parseUrl(process.env.NEXTAUTH_URL || process.env.VERCEL_URL)
-    const baseUrl = parsedUrl.baseUrl
-    const basePath = parsedUrl.basePath
+    // @todo refactor all existing references to baseUrl and basePath
+    const { basePath, baseUrl } = parseUrl(process.env.NEXTAUTH_URL || process.env.VERCEL_URL)
 
     // Parse database / adapter
     let adapter
@@ -74,8 +73,10 @@ async function NextAuth (req, res, userSuppliedOptions) {
     // Secret used salt cookies and tokens (e.g. for CSRF protection).
     // If no secret option is specified then it creates one on the fly
     // based on options passed here. A options contains unique data, such as
-    // oAuth provider secrets and database credentials it should be sufficent.
-    const secret = userSuppliedOptions.secret || createHash('sha256').update(JSON.stringify({ baseUrl, basePath, ...userSuppliedOptions })).digest('hex')
+    // OAuth provider secrets and database credentials it should be sufficent.
+    const secret = userSuppliedOptions.secret || createHash('sha256').update(JSON.stringify({
+      baseUrl, basePath, ...userSuppliedOptions
+    })).digest('hex')
 
     // Use secure cookies if the site uses HTTPS
     // This being conditional allows cookies to work non-HTTPS development URLs
@@ -151,7 +152,7 @@ async function NextAuth (req, res, userSuppliedOptions) {
 
     // Callback functions
     const callbacksOptions = {
-      ...callbacks,
+      ...defaultCallbacks,
       ...userSuppliedOptions.callbacks
     }
 
@@ -188,26 +189,11 @@ async function NextAuth (req, res, userSuppliedOptions) {
       cookie.set(res, cookies.csrfToken.name, newCsrfTokenCookie, cookies.csrfToken.options)
     }
 
-    // Helper method for handling redirects, this is passed to all routes
-    // @TODO Refactor into a lib instead of passing as an option
-    //       e.g. and call as redirect(req, res, url)
-    const redirect = (redirectUrl) => {
-      const reponseAsJson = !!((req.body && req.body.json === 'true'))
-      if (reponseAsJson) {
-        res.json({ url: redirectUrl })
-      } else {
-        res.status(302).setHeader('Location', redirectUrl)
-        res.end()
-      }
-      return done()
-    }
-
     // User provided options are overriden by other options,
     // except for the options with special handling above
     const options = {
-      // Defaults options can be overidden
-      debug: false, // Enable debug messages to be displayed
-      pages: {}, // Custom pages (e.g. sign in, sign out, errors)
+      debug: false,
+      pages: {},
       // Custom options override defaults
       ...userSuppliedOptions,
       // These computed settings can values in userSuppliedOptions but override them
@@ -220,116 +206,115 @@ async function NextAuth (req, res, userSuppliedOptions) {
       cookies,
       secret,
       csrfToken,
-      providers: parseProviders(userSuppliedOptions.providers, baseUrl, basePath),
+      providers: parseProviders(userSuppliedOptions.providers, basePath, baseUrl),
       session: sessionOptions,
       jwt: jwtOptions,
       events: eventsOptions,
-      callbacks: callbacksOptions,
-      callbackUrl: baseUrl,
-      redirect
+      callbacks: callbacksOptions
     }
+    req.options = options
 
     // If debug enabled, set ENV VAR so that logger logs debug messages
-    if (options.debug === true) { process.env._NEXTAUTH_DEBUG = true }
+    if (options.debug) {
+      process.env._NEXTAUTH_DEBUG = true
+    }
 
     // Get / Set callback URL based on query param / cookie + validation
-    options.callbackUrl = await callbackUrlHandler(req, res, options)
+    const callbackUrl = await callbackUrlHandler(req, res)
 
     if (req.method === 'GET') {
       switch (action) {
         case 'providers':
-          providers(req, res, options, done)
+          providers(req, res)
           break
         case 'session':
-          session(req, res, options, done)
+          session(req, res)
           break
         case 'csrf':
           res.json({ csrfToken })
-          return done()
+          return res.end()
         case 'signin':
           if (options.pages.signIn) {
-            let redirectUrl = `${options.pages.signIn}${options.pages.signIn.includes('?') ? '&' : '?'}callbackUrl=${options.callbackUrl}`
+            let redirectUrl = `${options.pages.signIn}${options.pages.signIn.includes('?') ? '&' : '?'}callbackUrl=${callbackUrl}`
             if (req.query.error) { redirectUrl = `${redirectUrl}&error=${req.query.error}` }
-            return redirect(redirectUrl)
+            return res.redirect(redirectUrl)
           }
 
-          pages.render(req, res, 'signin', { baseUrl, basePath, providers: Object.values(options.providers), callbackUrl: options.callbackUrl, csrfToken }, done)
+          renderPage(req, res, 'signin', { providers: Object.values(options.providers), callbackUrl, csrfToken })
           break
         case 'signout':
-          if (options.pages.signOut) { return redirect(`${options.pages.signOut}${options.pages.signOut.includes('?') ? '&' : '?'}error=${error}`) }
+          if (options.pages.signOut) {
+            return res.redirect(`${options.pages.signOut}${options.pages.signOut.includes('?') ? '&' : '?'}error=${error}`)
+          }
 
-          pages.render(req, res, 'signout', { baseUrl, basePath, csrfToken, callbackUrl: options.callbackUrl }, done)
+          renderPage(req, res, 'signout', { csrfToken, callbackUrl })
           break
         case 'callback':
           if (provider && options.providers[provider]) {
-            callback(req, res, options, done)
+            callback(req, res)
           } else {
-            res.status(400).end(`Error: HTTP GET is not supported for ${url}`)
-            return done()
+            return res.status(400).end(`Error: HTTP GET is not supported for ${url}`).end()
           }
           break
         case 'verify-request':
-          if (options.pages.verifyRequest) { return redirect(options.pages.verifyRequest) }
+          if (options.pages.verifyRequest) { return res.redirect(options.pages.verifyRequest) }
 
-          pages.render(req, res, 'verify-request', { baseUrl }, done)
+          renderPage(req, res, 'verify-request')
           break
         case 'error':
-          if (options.pages.error) { return redirect(`${options.pages.error}${options.pages.error.includes('?') ? '&' : '?'}error=${error}`) }
+          if (options.pages.error) { return res.redirect(`${options.pages.error}${options.pages.error.includes('?') ? '&' : '?'}error=${error}`) }
 
-          pages.render(req, res, 'error', { baseUrl, basePath, error }, done)
+          renderPage(req, res, 'error', { error })
           break
         default:
-          res.status(404).end()
-          return done()
+          return res.status(404).end()
       }
     } else if (req.method === 'POST') {
       switch (action) {
         case 'signin':
           // Verified CSRF Token required for all sign in routes
           if (!csrfTokenVerified) {
-            return redirect(`${baseUrl}${basePath}/signin?csrf=true`)
+            return res.redirect(`${baseUrl}${basePath}/signin?csrf=true`)
           }
 
           if (provider && options.providers[provider]) {
-            signin(req, res, options, done)
+            signin(req, res)
           }
           break
         case 'signout':
           // Verified CSRF Token required for signout
           if (!csrfTokenVerified) {
-            return redirect(`${baseUrl}${basePath}/signout?csrf=true`)
+            return res.redirect(`${baseUrl}${basePath}/signout?csrf=true`)
           }
 
-          signout(req, res, options, done)
+          signout(req, res)
           break
         case 'callback':
           if (provider && options.providers[provider]) {
             // Verified CSRF Token required for credentials providers only
             if (options.providers[provider].type === 'credentials' && !csrfTokenVerified) {
-              return redirect(`${baseUrl}${basePath}/signin?csrf=true`)
+              return res.redirect(`${baseUrl}${basePath}/signin?csrf=true`)
             }
 
-            callback(req, res, options, done)
+            callback(req, res)
           } else {
-            res.status(400).end(`Error: HTTP POST is not supported for ${url}`)
-            return done()
+            return res.status(400).end(`Error: HTTP POST is not supported for ${url}`).end()
           }
           break
         default:
-          res.status(400).end(`Error: HTTP POST is not supported for ${url}`)
-          return done()
+          return res.status(400).end(`Error: HTTP POST is not supported for ${url}`).end()
       }
     } else {
-      res.status(400).end(`Error: HTTP ${req.method} is not supported for ${url}`)
-      return done()
+      return res.status(400).end(`Error: HTTP ${req.method} is not supported for ${url}`).end()
     }
   })
 }
 
-export default async (...args) => {
+/** Tha main entry point to next-auth */
+export default async function NextAuth (...args) {
   if (args.length === 1) {
-    return (req, res) => NextAuth(req, res, args[0])
+    return (req, res) => NextAuthHandler(req, res, args[0])
   }
 
-  return NextAuth(...args)
+  return NextAuthHandler(...args)
 }

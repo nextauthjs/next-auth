@@ -1,38 +1,23 @@
-const signIn = async (message) => {
-  // Event triggered on successful sign in
-}
+/** Event triggered on successful sign in */
+export async function signIn (message) {}
 
-const signOut = async (message) => {
-  // Event triggered on sign out
-}
+/** Event triggered on sign out */
+export async function signOut (message) {}
 
-const createUser = async (message) => {
-  // Event triggered on user creation
-}
+/** Event triggered on user creation */
+export async function createUser (message) {}
 
-const updateUser = async (message) => {
-  // Event triggered when a user object is updated
-}
+/** Event triggered when a user object is updated */
+export async function updateUser (message) {}
 
-const linkAccount = async (message) => {
-  // Event triggered when an account is linked to a user
-}
+/** Event triggered when an account is linked to a user */
+export async function linkAccount (message) {}
 
-const session = async (message) => {
-  // Event triggered when a session is active
-}
+/** Event triggered when a session is active */
+export async function session (message) {}
 
-const error = async (message) => {
-  // @TODO Event triggered when something goes wrong in an authentication flow
-  // This event may be fired multiple times when an error occurs
-}
-
-export default {
-  signIn,
-  signOut,
-  createUser,
-  updateUser,
-  linkAccount,
-  session,
-  error
-}
+/**
+ * @TODO Event triggered when something goes wrong in an authentication flow
+ * This event may be fired multiple times when an error occurs
+ */
+export async function error (message) {}

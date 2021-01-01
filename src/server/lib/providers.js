@@ -1,14 +1,11 @@
-export default (_providers, baseUrl, basePath) => {
-  const providers = {}
-
-  _providers.forEach(provider => {
+export default function parseProviders (providers, baseUrl, basePath) {
+  return providers.reduce((acc, provider) => {
     const providerId = provider.id
-    providers[providerId] = {
+    acc[providerId] = {
       ...provider,
       signinUrl: `${baseUrl}${basePath}/signin/${providerId}`,
       callbackUrl: `${baseUrl}${basePath}/callback/${providerId}`
     }
-  })
-
-  return providers
+    return acc
+  }, {})
 }
