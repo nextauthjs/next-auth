@@ -14,7 +14,7 @@ Anyone can be a contributor. Either you found a typo, or you have an awesome fea
 ### Pull Requests
 
 * The latest changes are always in `canary`, so please make your Pull Request against that branch.
-* Pull Requests should be raised for any changes
+* Pull Requests should be raised for any change
 * Pull Requests need approval of a [core contributor](https://next-auth.js.org/contributors#core-team) before merging
 * Rebasing in Pull Requests is preferred to keep a clean commit history (see below)
 * Running `npm run lint:fix` before committing can make resolving conflicts easier
@@ -138,4 +138,4 @@ Some recommened scopes are:
 
 ### Skipping a release
 
-Every commits that contains [skip release] or [release skip] in their message will be excluded from the commit analysis and won't participate in the release type determination. This is useful, if the PR being merged should not trigger a new `npm` release.
+Every commit that contains [skip release] or [release skip] in their message will be excluded from the commit analysis and won't participate in the release type determination. This is useful, if the PR being merged should not trigger a new `npm` release.
