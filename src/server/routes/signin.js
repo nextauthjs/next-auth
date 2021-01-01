@@ -1,13 +1,14 @@
 import oAuthSignin from '../lib/signin/oauth'
 import emailSignin from '../lib/signin/email'
 import logger from '../../lib/logger'
-import baseUrl from '../../lib/baseUrl'
 
 /** Handle requests to /api/auth/signin */
 export default async function signin (req, res) {
   const {
     provider: providerName,
     providers,
+    baseUrl,
+    basePath,
     adapter,
     callbacks,
     csrfToken
@@ -27,7 +28,7 @@ export default async function signin (req, res) {
     oAuthSignin(provider, csrfToken, (error, oAuthSigninUrl) => {
       if (error) {
         logger.error('SIGNIN_OAUTH_ERROR', error)
-        return res.redirect(`${baseUrl()}/error?error=OAuthSignin`)
+        return res.redirect(`${baseUrl}${basePath}/error?error=OAuthSignin`)
       }
 
       return res.redirect(oAuthSigninUrl)
@@ -35,7 +36,7 @@ export default async function signin (req, res) {
   } else if (type === 'email' && req.method === 'POST') {
     if (!adapter) {
       logger.error('EMAIL_REQUIRES_ADAPTER_ERROR')
-      return res.redirect(`${baseUrl()}/error?error=Configuration`)
+      return res.redirect(`${baseUrl}${basePath}/error?error=Configuration`)
     }
     const { getUserByEmail } = await adapter.getAdapter(req.options)
 
@@ -54,14 +55,13 @@ export default async function signin (req, res) {
     try {
       const signinCallbackResponse = await callbacks.signIn(profile, account, { email, verificationRequest: true })
       if (signinCallbackResponse === false) {
-        return res.redirect(`${baseUrl()}/error?error=AccessDenied`)
+        return res.redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
       }
     } catch (error) {
       if (error instanceof Error) {
-        return res.redirect(`${baseUrl()}/error?error=${encodeURIComponent(error)}`)
-      } else {
-        return res.redirect(error)
+        return res.redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
       }
+      return res.redirect(error)
     }
 
     try {

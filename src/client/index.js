@@ -13,7 +13,7 @@
 /* global fetch:false */
 import { useState, useEffect, useContext, createContext, createElement } from 'react'
 import logger from '../lib/logger'
-import baseUrl from '../lib/baseUrl'
+import parseUrl from '../lib/parse-url'
 
 // This behaviour mirrors the default behaviour for getting the site name that
 // happens server side in server/index.js
@@ -22,7 +22,8 @@ import baseUrl from '../lib/baseUrl'
 // 2. When invoked server side the value is picked up from an environment
 //    variable and defaults to 'http://localhost:3000'.
 const __NEXTAUTH = {
-  baseUrl: baseUrl(),
+  baseUrl: parseUrl(process.env.NEXTAUTH_URL || process.env.VERCEL_URL).baseUrl,
+  basePath: parseUrl(process.env.NEXTAUTH_URL).basePath,
   keepAlive: 0, // 0 == disabled (don't send); 60 == send every 60 seconds
   clientMaxAge: 0, // 0 == disabled (only use cache); 60 == sync if last checked > 60 seconds ago
   // Properties starting with _ are used for tracking internal app state
@@ -76,11 +77,13 @@ if (typeof window !== 'undefined') {
 // method is being left in as an alternative, that will be helpful if/when we
 // expose a vanilla JavaScript version that doesn't depend on React.
 const setOptions = ({
-  baseUrl: _baseUrl,
+  baseUrl,
+  basePath,
   clientMaxAge,
   keepAlive
 } = {}) => {
-  if (baseUrl) { __NEXTAUTH.baseUrl = baseUrl(_baseUrl) }
+  if (baseUrl) { __NEXTAUTH.baseUrl = baseUrl }
+  if (basePath) { __NEXTAUTH.basePath = basePath }
   if (clientMaxAge) { __NEXTAUTH.clientMaxAge = clientMaxAge }
   if (keepAlive) {
     __NEXTAUTH.keepAlive = keepAlive
@@ -303,10 +306,11 @@ const _apiBaseUrl = () => {
     if (!process.env.NEXTAUTH_URL) { logger.warn('NEXTAUTH_URL', 'NEXTAUTH_URL environment variable not set') }
 
     // Return absolute path when called server side
-    return __NEXTAUTH.baseUrl.href
+    return `${__NEXTAUTH.baseUrl}${__NEXTAUTH.basePath}`
+  } else {
+    // Return relative path when called client side
+    return __NEXTAUTH.basePath
   }
-  // Return relative path when called client side
-  return __NEXTAUTH.baseUrl.pathname
 }
 
 const _encodedForm = (formData) => {

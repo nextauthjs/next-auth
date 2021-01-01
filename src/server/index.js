@@ -1,6 +1,6 @@
 import { createHash, randomBytes } from 'crypto'
 import jwt from '../lib/jwt'
-import baseUrl from '../lib/baseUrl'
+import parseUrl from '../lib/parse-url'
 import * as cookie from './lib/cookie'
 import callbackUrlHandler from './lib/callback-url-handler'
 import parseProviders from './lib/providers'
@@ -58,6 +58,9 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
       csrfToken: csrfTokenFromPost
     } = body
 
+    // @todo refactor all existing references to baseUrl and basePath
+    const { basePath, baseUrl } = parseUrl(process.env.NEXTAUTH_URL || process.env.VERCEL_URL)
+
     // Parse database / adapter
     let adapter
     if (userSuppliedOptions.adapter) {
@@ -73,7 +76,7 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
     // based on options passed here. A options contains unique data, such as
     // OAuth provider secrets and database credentials it should be sufficent.
     const secret = userSuppliedOptions.secret || createHash('sha256').update(JSON.stringify({
-      baseUrl: baseUrl(), ...userSuppliedOptions
+      baseUrl, basePath, ...userSuppliedOptions
     })).digest('hex')
 
     // Use secure cookies if the site uses HTTPS
@@ -82,7 +85,7 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
     // prefix, but enable them by default if the site URL is HTTPS; but not for
     // non-HTTPS URLs like http://localhost which are used in development).
     // For more on prefixes see https://googlechrome.github.io/samples/cookie-prefixes/
-    const useSecureCookies = userSuppliedOptions.useSecureCookies || baseUrl().protocol.startsWith('https://')
+    const useSecureCookies = userSuppliedOptions.useSecureCookies || baseUrl.startsWith('https://')
     const cookiePrefix = useSecureCookies ? '__Secure-' : ''
 
     // @TODO Review cookie settings (names, options)
@@ -197,12 +200,14 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
       // These computed settings can values in userSuppliedOptions but override them
       // and are request-specific.
       adapter,
+      baseUrl,
+      basePath,
       action,
       provider,
       cookies,
       secret,
       csrfToken,
-      providers: parseProviders(userSuppliedOptions.providers),
+      providers: parseProviders({ providers: userSuppliedOptions.providers, basePath, baseUrl }),
       session: sessionOptions,
       jwt: jwtOptions,
       events: eventsOptions,
@@ -211,7 +216,9 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
     req.options = options
 
     // If debug enabled, set ENV VAR so that logger logs debug messages
-    if (options.debug === true) { process.env._NEXTAUTH_DEBUG = true }
+    if (options.debug) {
+      process.env._NEXTAUTH_DEBUG = true
+    }
 
     // Get / Set callback URL based on query param / cookie + validation
     const callbackUrl = await callbackUrlHandler(req, res)
@@ -237,7 +244,9 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
           renderPage(req, res, 'signin', { providers: Object.values(options.providers), callbackUrl, csrfToken })
           break
         case 'signout':
-          if (options.pages.signOut) { return res.redirect(`${options.pages.signOut}${options.pages.signOut.includes('?') ? '&' : '?'}error=${error}`) }
+          if (options.pages.signOut) {
+            return res.redirect(`${options.pages.signOut}${options.pages.signOut.includes('?') ? '&' : '?'}error=${error}`)
+          }
 
           renderPage(req, res, 'signout', { csrfToken, callbackUrl })
           break
@@ -245,8 +254,7 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
           if (provider && options.providers[provider]) {
             callback(req, res)
           } else {
-            res.status(400).end(`Error: HTTP GET is not supported for ${url}`)
-            return res.end()
+            return res.status(400).end(`Error: HTTP GET is not supported for ${url}`).end()
           }
           break
         case 'verify-request':
@@ -260,15 +268,14 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
           renderPage(req, res, 'error', { error })
           break
         default:
-          res.status(404).end()
-          return res.end()
+          return res.status(404).end()
       }
     } else if (req.method === 'POST') {
       switch (action) {
         case 'signin':
           // Verified CSRF Token required for all sign in routes
           if (!csrfTokenVerified) {
-            return res.redirect(`${baseUrl()}/signin?csrf=true`)
+            return res.redirect(`${baseUrl}${basePath}/signin?csrf=true`)
           }
 
           if (provider && options.providers[provider]) {
@@ -278,7 +285,7 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
         case 'signout':
           // Verified CSRF Token required for signout
           if (!csrfTokenVerified) {
-            return res.redirect(`${baseUrl()}/signout?csrf=true`)
+            return res.redirect(`${baseUrl}${basePath}/signout?csrf=true`)
           }
 
           signout(req, res)
@@ -287,22 +294,19 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
           if (provider && options.providers[provider]) {
             // Verified CSRF Token required for credentials providers only
             if (options.providers[provider].type === 'credentials' && !csrfTokenVerified) {
-              return res.redirect(`${baseUrl()}/signin?csrf=true`)
+              return res.redirect(`${baseUrl}${basePath}/signin?csrf=true`)
             }
 
             callback(req, res)
           } else {
-            res.status(400).end(`Error: HTTP POST is not supported for ${url}`)
-            return res.end()
+            return res.status(400).end(`Error: HTTP POST is not supported for ${url}`).end()
           }
           break
         default:
-          res.status(400).end(`Error: HTTP POST is not supported for ${url}`)
-          return res.end()
+          return res.status(400).end(`Error: HTTP POST is not supported for ${url}`).end()
       }
     } else {
-      res.status(400).end(`Error: HTTP ${req.method} is not supported for ${url}`)
-      return res.end()
+      return res.status(400).end(`Error: HTTP ${req.method} is not supported for ${url}`).end()
     }
   })
 }

@@ -1,13 +1,12 @@
 import { h } from 'preact' // eslint-disable-line no-unused-vars
 import render from 'preact-render-to-string'
-import baseUrl from '../../lib/baseUrl'
 
-export default function error ({ error, res }) {
-  const signinPageUrl = `${baseUrl()}/signin`
+export default function error ({ baseUrl, basePath, error, res }) {
+  const signinPageUrl = `${baseUrl}${basePath}/signin`
 
   let statusCode = 200
   let heading = <h1>Error</h1>
-  let message = <p><a className='site' href={baseUrl().origin}>{baseUrl().host}</a></p>
+  let message = <p><a className='site' href={baseUrl}>{baseUrl.replace(/^https?:\/\//, '')}</a></p>
 
   switch (error) {
     case 'Signin':
