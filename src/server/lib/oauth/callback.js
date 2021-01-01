@@ -21,10 +21,11 @@ class OAuthCallbackError extends Error {
 
  * @TODO Refactor to use promises and not callbacks
  */
-export default async function oAuthCallback (req, provider, csrfToken) {
+export default async function oAuthCallback (req, csrfToken) {
   // The "user" object is specific to the Apple provider and is provided on first sign in
   // e.g. {"name":{"firstName":"Johnny","lastName":"Appleseed"},"email":"johnny.appleseed@nextauth.com"}
   let { oauth_token, oauth_verifier, code, user, state } = req.query // eslint-disable-line camelcase
+  const provider = req.options.providers[req.options.provider]
   const client = oAuthClient(provider)
 
   if (provider.version?.startsWith('2.')) {
@@ -86,6 +87,8 @@ export default async function oAuthCallback (req, provider, csrfToken) {
           // Support services that use OpenID ID Tokens to encode profile data
           const profileData = decodeIdToken(results.id_token)
 
+          profileData.idToken = results.id_token
+
           return _getProfile(error, profileData, accessToken, refreshToken, provider, user)
         } else {
           // Use custom get() method for oAuth2 flows
@@ -97,6 +100,7 @@ export default async function oAuthCallback (req, provider, csrfToken) {
             accessToken,
             results,
             async (error, profileData) => {
+              profileData.idToken = results.id_token
               result = await _getProfile(error, profileData, accessToken, refreshToken, provider)
             }
           )
@@ -122,6 +126,7 @@ export default async function oAuthCallback (req, provider, csrfToken) {
           accessToken,
           refreshToken,
           async (error, profileData) => {
+            profileData.idToken = results.id_token
             result = await _getProfile(error, profileData, accessToken, refreshToken, provider)
           }
         )
@@ -135,7 +140,7 @@ export default async function oAuthCallback (req, provider, csrfToken) {
  * //6/30/2020 @geraldnolan added userData parameter to attach additional data to the profileData object
  * Returns profile, raw profile and auth provider details
  */
-async function _getProfile (error, profileData, accessToken, refreshToken, provider, userData) {
+async function _getProfile (error, profileData, accessToken, refreshToken, provider, userData, idToken) {
   if (error) {
     logger.error('OAUTH_GET_PROFILE_ERROR', error)
     throw new OAuthCallbackError(error)
@@ -151,6 +156,8 @@ async function _getProfile (error, profileData, accessToken, refreshToken, provi
     if (userData != null) {
       profileData.user = userData
     }
+
+    profileData.idToken = idToken
 
     logger.debug('PROFILE_DATA', profileData)
 
