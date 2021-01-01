@@ -20,7 +20,6 @@ export default (options) => {
         image: profile.image
       }
     },
-    setGetAccessTokenProfileUrl: true,
     ...options
   }
 }

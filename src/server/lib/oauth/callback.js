@@ -265,13 +265,12 @@ async function _getOAuthAccessToken (code, provider, callback) {
 function _get (provider, accessToken, results, callback) {
   let url = provider.profileUrl
   const headers = provider.headers || {}
-  const setGetAccessTokenProfileUrl = provider.setGetAccessTokenProfileUrl !== null ? provider.setGetAccessTokenProfileUrl : true
 
   if (this._useAuthorizationHeaderForGET) {
     headers.Authorization = this.buildAuthHeader(accessToken)
 
     // Mail.ru requires 'access_token' as URL request parameter
-    if (setGetAccessTokenProfileUrl) {
+    if (provider.id === "mailru") {
       const safeAccessTokenURL = new URL(url)
       safeAccessTokenURL.searchParams.append('access_token', accessToken)
       url = safeAccessTokenURL.href
