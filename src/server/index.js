@@ -31,10 +31,11 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
     // This is passed to all methods that handle responses, and must be called
     // when they are complete so that the serverless function knows when it is
     // safe to return and that no more data will be sent.
-    // REVIEW: Why not just call res.end() as is, and remove the Promise wrapper?
-    res.end = () => {
+
+    const originalResEnd = res.end.bind(res)
+    res.end = (...args) => {
       resolve()
-      res.end()
+      return originalResEnd(...args)
     }
     res.redirect = redirect(req, res)
 
@@ -206,7 +207,7 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
       cookies,
       secret,
       csrfToken,
-      providers: parseProviders(userSuppliedOptions.providers, basePath, baseUrl),
+      providers: parseProviders({ providers: userSuppliedOptions.providers, baseUrl, basePath }),
       session: sessionOptions,
       jwt: jwtOptions,
       events: eventsOptions,
@@ -231,8 +232,7 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
           session(req, res)
           break
         case 'csrf':
-          res.json({ csrfToken })
-          return res.end()
+          return res.json({ csrfToken }).end()
         case 'signin':
           if (options.pages.signIn) {
             let redirectUrl = `${options.pages.signIn}${options.pages.signIn.includes('?') ? '&' : '?'}callbackUrl=${callbackUrl}`

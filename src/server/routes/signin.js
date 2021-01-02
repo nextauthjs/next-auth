@@ -17,8 +17,7 @@ export default async function signin (req, res) {
   const { type } = provider
 
   if (!type) {
-    res.status(500).end(`Error: Type not specified for ${provider}`)
-    return res.end()
+    return res.status(500).end(`Error: Type not specified for ${provider}`)
   }
 
   if (type === 'oauth' && req.method === 'POST') {
@@ -72,13 +71,13 @@ export default async function signin (req, res) {
       await emailSignin(email, provider, req.options)
     } catch (error) {
       logger.error('SIGNIN_EMAIL_ERROR', error)
-      return res.redirect(`${baseUrl()}/error?error=EmailSignin`)
+      return res.redirect(`${baseUrl}${basePath}/error?error=EmailSignin`)
     }
 
-    return res.redirect(`${baseUrl()}/verify-request?provider=${encodeURIComponent(
+    return res.redirect(`${baseUrl}${basePath}/verify-request?provider=${encodeURIComponent(
       provider.id
     )}&type=${encodeURIComponent(provider.type)}`)
   } else {
-    return res.redirect(`${baseUrl()}/signin`)
+    return res.redirect(`${baseUrl}${basePath}/signin`)
   }
 }
