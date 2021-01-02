@@ -4,7 +4,7 @@ import verifyRequest from './verify-request'
 import error from './error'
 import css from '../../css'
 
-export default function renderPage ({ req, res, page, props = {} }) {
+export default function renderPage (req, res, page, props = {}) {
   props.baseUrl = req.options.baseUrl
   props.basePath = req.options.basePath
   let html = ''
