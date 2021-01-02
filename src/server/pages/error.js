@@ -19,8 +19,7 @@ export default function error ({ baseUrl, basePath, error, res }) {
     case 'EmailSignin':
     case 'CredentialsSignin':
       // These messages are displayed in line on the sign in page
-      res.status(302).setHeader('Location', `${signinPageUrl}?error=${error}`)
-      res.end()
+      res.redirect(`${signinPageUrl}?error=${error}`)
       return false
     case 'Configuration':
       statusCode = 500

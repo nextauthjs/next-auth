@@ -18,7 +18,5 @@ export default function providers (req, res) {
       }
     }), {})
 
-  res.setHeader('Content-Type', 'application/json')
-  res.json(result)
-  return res.end()
+  return res.setHeader('Content-Type', 'application/json').json(result).end()
 }
