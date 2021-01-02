@@ -64,75 +64,78 @@ export default async function oAuthCallback (req, csrfToken) {
     // Use custom getOAuthAccessToken() method for oAuth2 flows
     client.getOAuthAccessToken = _getOAuthAccessToken
 
-    await client.getOAuthAccessToken(
-      code,
-      provider,
-      async (error, accessToken, refreshToken, results) => {
-        if (error || results.error) {
-          logger.error('OAUTH_GET_ACCESS_TOKEN_ERROR', error, results, provider.id, code)
-          throw new OAuthCallbackError(error || results.error)
-        }
-
-        if (provider.idToken) {
-          // If we don't have an ID Token most likely the user hit a cancel
-          // button when signing in (or the provider is misconfigured).
-          //
-          // Unfortunately, we can't tell which, so we can't treat it as an
-          // error, so instead we just returning nothing, which will cause the
-          // user to be redirected back to the sign in page.
-          if (!results?.id_token) {
-            throw new OAuthCallbackError()
+    return new Promise((resolve) => {
+      client.getOAuthAccessToken(
+        code,
+        provider,
+        async (error, accessToken, refreshToken, results) => {
+          if (error || results.error) {
+            logger.error('OAUTH_GET_ACCESS_TOKEN_ERROR', error, results, provider.id, code)
+            throw new OAuthCallbackError(error || results.error)
           }
-
-          // Support services that use OpenID ID Tokens to encode profile data
-          const profileData = decodeIdToken(results.id_token)
-
-          profileData.idToken = results.id_token
-
-          return _getProfile(error, profileData, accessToken, refreshToken, provider, user)
-        } else {
-          // Use custom get() method for oAuth2 flows
-          client.get = _get
-
-          let result
-          client.get(
-            provider,
-            accessToken,
-            results,
-            async (error, profileData) => {
-              profileData.idToken = results.id_token
-              result = await _getProfile(error, profileData, accessToken, refreshToken, provider)
+          if (provider.idToken) {
+            // If we don't have an ID Token most likely the user hit a cancel
+            // button when signing in (or the provider is misconfigured).
+            //
+            // Unfortunately, we can't tell which, so we can't treat it as an
+            // error, so instead we just returning nothing, which will cause the
+            // user to be redirected back to the sign in page.
+            if (!results?.id_token) {
+              throw new OAuthCallbackError()
             }
-          )
-          return result
+
+            // Support services that use OpenID ID Tokens to encode profile data
+            const profileData = decodeIdToken(results.id_token)
+
+            return _getProfile({
+              error, profileData, accessToken, refreshToken, provider, user, idToken: results.id_token
+            })
+          } else {
+            // Use custom get() method for oAuth2 flows
+            client.get = _get
+
+            client.get(
+              provider,
+              accessToken,
+              results,
+              async (error, profileData) => {
+                const result = await _getProfile({
+                  error, profileData, accessToken, refreshToken, provider, idToken: results.id_token
+                })
+                resolve(result)
+              }
+            )
+          }
         }
-      }
-    )
+      )
+    })
   } else {
     // Handle OAuth v1.x
-    await client.getOAuthAccessToken(
-      oauth_token,
-      null,
-      oauth_verifier,
-      (error, accessToken, refreshToken, results) => {
-        // @TODO Handle error
-        if (error || results.error) {
-          logger.error('OAUTH_V1_GET_ACCESS_TOKEN_ERROR', error, results)
-        }
-
-        let result
-        client.get(
-          provider.profileUrl,
-          accessToken,
-          refreshToken,
-          async (error, profileData) => {
-            profileData.idToken = results.id_token
-            result = await _getProfile(error, profileData, accessToken, refreshToken, provider)
+    return new Promise((resolve) => {
+      client.getOAuthAccessToken(
+        oauth_token,
+        null,
+        oauth_verifier,
+        (error, accessToken, refreshToken, results) => {
+          // @TODO Handle error
+          if (error || results.error) {
+            logger.error('OAUTH_V1_GET_ACCESS_TOKEN_ERROR', error, results)
           }
-        )
-        return result
-      }
-    )
+
+          client.get(
+            provider.profileUrl,
+            accessToken,
+            refreshToken,
+            async (error, profileData) => {
+              const result = await _getProfile({
+                error, profileData, accessToken, refreshToken, provider, idToken: results.id_token
+              })
+              resolve(result)
+            }
+          )
+        }
+      )
+    })
   }
 }
 
@@ -140,7 +143,9 @@ export default async function oAuthCallback (req, csrfToken) {
  * //6/30/2020 @geraldnolan added userData parameter to attach additional data to the profileData object
  * Returns profile, raw profile and auth provider details
  */
-async function _getProfile (error, profileData, accessToken, refreshToken, provider, userData, idToken) {
+async function _getProfile ({
+  error, profileData, accessToken, refreshToken, provider, userData, idToken
+}) {
   if (error) {
     logger.error('OAUTH_GET_PROFILE_ERROR', error)
     throw new OAuthCallbackError(error)
