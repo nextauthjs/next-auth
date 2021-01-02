@@ -206,7 +206,7 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
       cookies,
       secret,
       csrfToken,
-      providers: parseProviders(userSuppliedOptions.providers, basePath, baseUrl),
+      providers: parseProviders({ providers: userSuppliedOptions.providers, baseUrl, basePath }),
       session: sessionOptions,
       jwt: jwtOptions,
       events: eventsOptions,
