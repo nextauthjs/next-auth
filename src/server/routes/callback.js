@@ -281,7 +281,6 @@ export default async function callback (req, res) {
 
     return res.redirect(callbackUrl || baseUrl)
   } else {
-    res.status(500).end(`Error: Callback for provider type ${type} not supported`)
-    return res.end()
+    return res.status(500).end(`Error: Callback for provider type ${type} not supported`)
   }
 }

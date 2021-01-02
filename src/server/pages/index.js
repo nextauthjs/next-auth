@@ -27,7 +27,8 @@ export default function renderPage ({ req, res, page, props = {} }) {
       return
   }
 
-  res.setHeader('Content-Type', 'text/html')
-  res.send(`<!DOCTYPE html><head><style type="text/css">${css()}</style><meta name="viewport" content="width=device-width, initial-scale=1"></head><body><div class="page">${html}</div></body></html>`)
-  res.end()
+  res
+    .setHeader('Content-Type', 'text/html')
+    .send(`<!DOCTYPE html><head><style type="text/css">${css()}</style><meta name="viewport" content="width=device-width, initial-scale=1"></head><body><div class="page">${html}</div></body></html>`)
+    .end()
 }
