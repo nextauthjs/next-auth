@@ -72,13 +72,13 @@ export default async function signin (req, res) {
       await emailSignin(email, provider, req.options)
     } catch (error) {
       logger.error('SIGNIN_EMAIL_ERROR', error)
-      return res.redirect(`${baseUrl()}/error?error=EmailSignin`)
+      return res.redirect(`${baseUrl}${basePath}/error?error=EmailSignin`)
     }
 
-    return res.redirect(`${baseUrl()}/verify-request?provider=${encodeURIComponent(
+    return res.redirect(`${baseUrl}${basePath}/verify-request?provider=${encodeURIComponent(
       provider.id
     )}&type=${encodeURIComponent(provider.type)}`)
   } else {
-    return res.redirect(`${baseUrl()}/signin`)
+    return res.redirect(`${baseUrl}${basePath}/signin`)
   }
 }
