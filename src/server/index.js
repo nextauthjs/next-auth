@@ -31,10 +31,11 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
     // This is passed to all methods that handle responses, and must be called
     // when they are complete so that the serverless function knows when it is
     // safe to return and that no more data will be sent.
-    // REVIEW: Why not just call res.end() as is, and remove the Promise wrapper?
-    res.end = () => {
+
+    const originalResEnd = res.end.bind(res)
+    res.end = (...args) => {
       resolve()
-      res.end()
+      return originalResEnd(...args)
     }
     res.redirect = redirect(req, res)
 
@@ -42,7 +43,8 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
       const error = 'Cannot find [...nextauth].js in pages/api/auth. Make sure the filename is written correctly.'
 
       logger.error('MISSING_NEXTAUTH_API_ROUTE_ERROR', error)
-      return res.status(500).end(`Error: ${error}`).end()
+      res.status(500)
+      return res.end(`Error: ${error}`)
     }
 
     const { url, query, body } = req
@@ -206,7 +208,7 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
       cookies,
       secret,
       csrfToken,
-      providers: parseProviders(userSuppliedOptions.providers, basePath, baseUrl),
+      providers: parseProviders({ providers: userSuppliedOptions.providers, baseUrl, basePath }),
       session: sessionOptions,
       jwt: jwtOptions,
       events: eventsOptions,
@@ -253,7 +255,8 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
           if (provider && options.providers[provider]) {
             callback(req, res)
           } else {
-            return res.status(400).end(`Error: HTTP GET is not supported for ${url}`).end()
+            res.status(400)
+            return res.end(`Error: HTTP GET is not supported for ${url}`)
           }
           break
         case 'verify-request':
@@ -267,7 +270,8 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
           renderPage(req, res, 'error', { error })
           break
         default:
-          return res.status(404).end()
+          res.status(404)
+          return res.end()
       }
     } else if (req.method === 'POST') {
       switch (action) {
@@ -298,14 +302,17 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
 
             callback(req, res)
           } else {
-            return res.status(400).end(`Error: HTTP POST is not supported for ${url}`).end()
+            res.status(400)
+            return res.end(`Error: HTTP POST is not supported for ${url}`)
           }
           break
         default:
-          return res.status(400).end(`Error: HTTP POST is not supported for ${url}`).end()
+          res.status(400)
+          return res.end(`Error: HTTP POST is not supported for ${url}`)
       }
     } else {
-      return res.status(400).end(`Error: HTTP ${req.method} is not supported for ${url}`).end()
+      res.status(400)
+      return res.end(`Error: HTTP ${req.method} is not supported for ${url}`)
     }
   })
 }
