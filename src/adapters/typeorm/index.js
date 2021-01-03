@@ -1,6 +1,7 @@
 import { createConnection, getConnection } from 'typeorm'
 import { createHash } from 'crypto'
 import require_optional from 'require_optional' // eslint-disable-line camelcase
+import process from 'process'
 
 import { CreateUserError } from '../../lib/errors'
 import adapterConfig from './lib/config'

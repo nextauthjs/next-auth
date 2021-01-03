@@ -12,6 +12,7 @@
 
 /* global fetch:false */
 import { useState, useEffect, useContext, createContext, createElement } from 'react'
+import process from 'process'
 import logger from '../lib/logger'
 import parseUrl from '../lib/parse-url'
 

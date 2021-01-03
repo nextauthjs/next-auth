@@ -1,5 +1,6 @@
 import jose from 'jose'
 import hkdf from 'futoin-hkdf'
+import process from 'process'
 import logger from './logger'
 
 // Set default algorithm to use for auto-generated signing key

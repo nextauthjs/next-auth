@@ -1,4 +1,5 @@
 import { createHash, randomBytes } from 'crypto'
+import process from 'process'
 import jwt from '../lib/jwt'
 import parseUrl from '../lib/parse-url'
 import * as cookie from './lib/cookie'

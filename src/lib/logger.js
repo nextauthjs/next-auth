@@ -1,3 +1,5 @@
+import process from 'process'
+
 const logger = {
   error: (errorCode, ...text) => {
     if (!console) { return }
