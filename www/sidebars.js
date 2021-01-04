@@ -4,7 +4,8 @@ module.exports = {
       'getting-started/introduction',
       'getting-started/example',
       'getting-started/client',
-      'getting-started/rest-api'
+      'getting-started/rest-api',
+      'getting-started/typescript'
     ],
     Configuration: [
       'configuration/options',
