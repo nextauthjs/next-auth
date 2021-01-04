@@ -192,28 +192,23 @@ function Home () {
 }
 
 const reactComponentCode = `
-import React from 'react'
 import {
-  signIn, 
-  signOut,
-  useSession
+  useSession, signIn, signOut
 } from 'next-auth/client'
 
-export default function myComponent() {
+export default function Component() {
   const [ session, loading ] = useSession()
-
-  return <>
-    {!session && <>
-      Not signed in <br/>
-      <button onClick={() => signIn()}>Sign in</button>
-    </>}
-    {session && <>
+  if(session) {
+    return <>
       Signed in as {session.user.email} <br/>
       <button onClick={() => signOut()}>Sign out</button>
-    </>}
+    </>
+  }
+  return <>
+    Not signed in <br/>
+    <button onClick={() => signIn()}>Sign in</button>
   </>
-}
-`.trim()
+}`.trim()
 
 const serverlessFunctionCode = `
 import NextAuth from 'next-auth'
