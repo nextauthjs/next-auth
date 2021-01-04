@@ -10,7 +10,7 @@ import logger from '../../../lib/logger'
 export default function oAuthClient (provider) {
   if (provider.version?.startsWith('2.')) {
     // Handle OAuth v2.x
-    const authorizationUrl = new URL(provider.authorizationUrl).origin
+    const authorizationUrl = new URL(provider.authorizationUrl)
     const basePath = authorizationUrl.origin
     const authorizePath = authorizationUrl.pathname
     const accessTokenPath = new URL(provider.accessTokenUrl).pathname
