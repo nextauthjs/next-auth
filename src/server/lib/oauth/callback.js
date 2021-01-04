@@ -91,7 +91,7 @@ export default async function oAuthCallback (req, csrfToken) {
               error, profileData, accessToken, refreshToken, provider, user, idToken: results.id_token
             })
           } else {
-            // Use custom get() method for oAuth2 flows
+            // Use custom get() method for OAuth2 flows
             client.get = _get
 
             client.get(
