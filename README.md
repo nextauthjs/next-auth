@@ -114,7 +114,9 @@ export default NextAuth({
 ### Add React Component
 
 ```javascript
-import { useSession, signIn, signOut } from 'next-auth/client'
+import {
+  useSession, signIn, signOut
+} from 'next-auth/client'
 
 export default function Component() {
   const [ session, loading ] = useSession()
