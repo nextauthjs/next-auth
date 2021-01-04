@@ -75,9 +75,7 @@ export default async function oAuthCallback (req, csrfToken) {
         profileData = await client.get(provider, accessToken, results)
       }
 
-      return _getProfile({
-        profileData, provider, tokens, user
-      })
+      return _getProfile({ profileData, provider, tokens, user })
     } catch (error) {
       logger.error('OAUTH_GET_ACCESS_TOKEN_ERROR', error, provider.id, code)
       throw error
