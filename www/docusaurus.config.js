@@ -68,6 +68,10 @@ module.exports = {
             {
               label: 'Contributors',
               to: '/contributors'
+            },
+            {
+              label: 'Canary release docs',
+              to: 'https://next-auth-git-canary.nextauthjs.vercel.app/'
             }
           ]
         },
