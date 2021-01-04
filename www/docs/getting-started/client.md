@@ -169,7 +169,7 @@ The `signIn()` method can be called from the client in different ways, as shown 
 import { signIn } from 'next-auth/client'
 
 export default () => (
-  <button onClick={signIn}>Sign in</button>
+  <button onClick={() => signIn()}>Sign in</button>
 )
 ```
 
@@ -224,7 +224,7 @@ It reloads the page in the browser when complete.
 import { signOut } from 'next-auth/client'
 
 export default () => (
-  <button onClick={signOut}>Sign out</button>
+  <button onClick={() => signOut()}>Sign out</button>
 )
 ```
 

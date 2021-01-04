@@ -1,18 +1,21 @@
-// Return a session object (without any private fields) for Single Page App clients
-import cookie from '../lib/cookie'
+import * as cookie from '../lib/cookie'
 import logger from '../../lib/logger'
 import dispatchEvent from '../lib/dispatch-event'
 
-export default async (req, res, options, done) => {
-  const { cookies, adapter, jwt, events, callbacks } = options
-  const useJwtSession = options.session.jwt
-  const sessionMaxAge = options.session.maxAge
+/**
+ * Return a session object (without any private fields)
+ * for Single Page App clients
+ */
+export default async function session (req, res) {
+  const { cookies, adapter, jwt, events, callbacks } = req.options
+  const useJwtSession = req.options.session.jwt
+  const sessionMaxAge = req.options.session.maxAge
   const sessionToken = req.cookies[cookies.sessionToken.name]
 
   if (!sessionToken) {
     res.setHeader('Content-Type', 'application/json')
     res.json({})
-    return done()
+    return res.end()
   }
 
   let response = {}
@@ -58,7 +61,7 @@ export default async (req, res, options, done) => {
     }
   } else {
     try {
-      const { getUser, getSession, updateSession } = await adapter.getAdapter(options)
+      const { getUser, getSession, updateSession } = await adapter.getAdapter(req.options)
       const session = await getSession(sessionToken)
       if (session) {
         // Trigger update to session object to update session expiry
@@ -100,5 +103,5 @@ export default async (req, res, options, done) => {
 
   res.setHeader('Content-Type', 'application/json')
   res.json(response)
-  return done()
+  return res.end()
 }

@@ -1,7 +1,7 @@
 import { h } from 'preact' // eslint-disable-line no-unused-vars
 import render from 'preact-render-to-string'
 
-export default ({ baseUrl, basePath, error, res }) => {
+export default function error ({ baseUrl, basePath, error, res }) {
   const signinPageUrl = `${baseUrl}${basePath}/signin`
 
   let statusCode = 200
@@ -19,8 +19,7 @@ export default ({ baseUrl, basePath, error, res }) => {
     case 'EmailSignin':
     case 'CredentialsSignin':
       // These messages are displayed in line on the sign in page
-      res.status(302).setHeader('Location', `${signinPageUrl}?error=${error}`)
-      res.end()
+      res.redirect(`${signinPageUrl}?error=${error}`)
       return false
     case 'Configuration':
       statusCode = 500

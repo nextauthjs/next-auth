@@ -1,17 +1,19 @@
-// This function handles the complex flow of signing users in, and either creating,
-// linking (or not linking) accounts depending on if the user is currently logged
-// in, if they have account already and the authentication mechanism they are using.
-//
-// It prevents insecure behaviour, such as linking oAuth accounts unless a user is
-// signed in and authenticated with an existing valid account.
-//
-// All verification (e.g. oAuth flows or email address verificaiton flows) are
-// done prior to this handler being called to avoid additonal complexity in this
-// handler.
 import { AccountNotLinkedError } from '../../lib/errors'
 import dispatchEvent from '../lib/dispatch-event'
 
-export default async (sessionToken, profile, providerAccount, options) => {
+/**
+ * This function handles the complex flow of signing users in, and either creating,
+ * linking (or not linking) accounts depending on if the user is currently logged
+ * in, if they have account already and the authentication mechanism they are using.
+ *
+ * It prevents insecure behaviour, such as linking OAuth accounts unless a user is
+ * signed in and authenticated with an existing valid account.
+ *
+ * All verification (e.g. OAuth flows or email address verificaiton flows) are
+ * done prior to this handler being called to avoid additonal complexity in this
+ * handler.
+ */
+export default async function callbackHandler (sessionToken, profile, providerAccount, options) {
   try {
     // Input validation
     if (!profile) { throw new Error('Missing profile') }
@@ -136,7 +138,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
         }
       } else {
         if (isSignedIn) {
-          // If the user is already signed in and the oAuth account isn't already associated
+          // If the user is already signed in and the OAuth account isn't already associated
           // with another user account then we can go ahead and link the accounts safely.
           await linkAccount(
             user.id,
@@ -157,28 +159,28 @@ export default async (sessionToken, profile, providerAccount, options) => {
           }
         }
 
-        // If the user is not signed in and it looks like a new oAuth account then we
+        // If the user is not signed in and it looks like a new OAuth account then we
         // check there also isn't an user account already associated with the same
-        // email address as the one in the oAuth profile.
+        // email address as the one in the OAuth profile.
         //
-        // This step is often overlooked in oAuth implementations, but covers the following cases:
+        // This step is often overlooked in OAuth implementations, but covers the following cases:
         //
         // 1. It makes it harder for someone to accidentally create two accounts.
         //    e.g. by signin in with email, then again with an oauth account connected to the same email.
-        // 2. It makes it harder to hijack a user account using a 3rd party oAuth account.
+        // 2. It makes it harder to hijack a user account using a 3rd party OAuth account.
         //    e.g. by creating an oauth account then changing the email address associated with it.
         //
         // It's quite common for services to automatically link accounts in this case, but it's
         // better practice to require the user to sign in *then* link accounts to be sure
-        // someone is not exploiting a problem with a third party oAuth service.
+        // someone is not exploiting a problem with a third party OAuth service.
         //
-        // oAuth providers should require email address verification to prevent this, but in
+        // OAuth providers should require email address verification to prevent this, but in
         // practice that is not always the case; this helps protect against that.
         const userByEmail = profile.email ? await getUserByEmail(profile.email) : null
         if (userByEmail) {
           // We end up here when we don't have an account with the same [provider].id *BUT*
           // we do already have an account with the same email address as the one in the
-          // oAuth profile the user has just tried to sign in with.
+          // OAuth profile the user has just tried to sign in with.
           //
           // We don't want to have two accounts with the same email address, and we don't
           // want to link them in case it's not safe to do so, so instead we prompt the user
@@ -189,7 +191,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
           // accounts (by email or provider account id)...
           //
           // If no account matching the same [provider].id or .email exists, we can
-          // create a new account for the user, link it to the oAuth acccount and
+          // create a new account for the user, link it to the OAuth acccount and
           // create a new session for them so they are signed in with it.
           user = await createUser(profile)
           await dispatchEvent(events.createUser, user)

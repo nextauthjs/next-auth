@@ -1,10 +1,8 @@
 <p align="center">
    <br/>
    <a href="https://next-auth.js.org" target="_blank"><img width="150px" src="https://next-auth.js.org/img/logo/logo-sm.png" /></a>
-   <br/>
    <h3 align="center">NextAuth.js</h3>
    <p align="center">Authentication for Next.js</p>
-   <br/>
    <p align="center">
    Open Source. Full Stack. Own Your Data.
    </p>
@@ -13,7 +11,6 @@
       <img src="https://github.com/nextauthjs/next-auth/workflows/Integration%20Test/badge.svg" alt="Integration Test" />
       <img src="https://img.shields.io/bundlephobia/minzip/next-auth" alt="Bundle Size"/>
       <img src="https://img.shields.io/npm/dm/next-auth" alt="Downloads" />
-      <img src="https://img.shields.io/github/issues-pr/nextauthjs/next-auth" alt="Github Pull Requests" />
       <img src="https://img.shields.io/github/stars/nextauthjs/next-auth" alt="Github Stars" />
       <img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?include_prereleases" alt="Github Release" />
    </p>
@@ -120,8 +117,8 @@ export default NextAuth({
 import React from 'react'
 import { 
   useSession, 
-  signin, 
-  signout 
+  signIn,
+  signOut
 } from 'next-auth/client'
 
 export default function myComponent() {
@@ -130,11 +127,11 @@ export default function myComponent() {
   return <p>
     {!session && <>
       Not signed in <br/>
-      <button onClick={signin}>Sign in</button>
+      <button onClick={() => signIn()}>Sign in</button>
     </>}
     {session && <>
       Signed in as {session.user.email} <br/>
-      <button onClick={signout}>Sign out</button>
+      <button onClick={() => signOut()}>Sign out</button>
     </>}
   </p>
 }
