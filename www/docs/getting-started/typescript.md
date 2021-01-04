@@ -15,7 +15,8 @@ or
 
 ```sh
 yarn add -D @types/next-auth
+```
 
-You can find an initial Pull Request at https://github.com/nextauthjs/next-auth/pull/516 adding TypeScript. At the time of this writing, it looks like we would like to go from a complete migration to a more relaxed, incremental rewrite.
+You can find an initial Pull Request at [next-auth#516](https://github.com/nextauthjs/next-auth/pull/516) adding TypeScript. At the time of this writing, it looks like we would like to go from a complete migration to a more relaxed, incremental rewrite.
 
 Feel free to open a Pull Request, if you would like to contribute!
