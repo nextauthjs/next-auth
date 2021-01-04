@@ -1,6 +1,6 @@
 // Serverless target in Next.js does not work if you try to read in files at runtime
 // that are not JavaScript or JSON (e.g. CSS files).
-// https://github.com/iaincollins/next-auth/issues/281
+// https://github.com/nextauthjs/next-auth/issues/281
 //
 // To work around this issue, this script is a manual step that wraps CSS in a
 // JavaScript file that has the compiled CSS embedded in it, and exports only

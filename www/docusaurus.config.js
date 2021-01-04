@@ -42,7 +42,7 @@ module.exports = {
           position: 'right'
         },
         {
-          href: 'https://github.com/iaincollins/next-auth',
+          href: 'https://github.com/nextauthjs/next-auth',
           label: 'GitHub',
           position: 'right'
         }
@@ -76,7 +76,7 @@ module.exports = {
           items: [
             {
               label: 'GitHub',
-              to: 'https://github.com/iaincollins/next-auth'
+              to: 'https://github.com/nextauthjs/next-auth'
             },
             {
               label: 'NPM',
@@ -108,7 +108,7 @@ module.exports = {
         docs: {
           routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl: 'https://github.com/iaincollins/next-auth/edit/main/www'
+          editUrl: 'https://github.com/nextauthjs/next-auth/edit/main/www'
         },
         theme: {
           customCss: require.resolve('./src/css/index.css')
