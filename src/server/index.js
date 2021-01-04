@@ -22,7 +22,7 @@ if (!process.env.NEXTAUTH_URL) {
   logger.warn('NEXTAUTH_URL', 'NEXTAUTH_URL environment variable not set')
 }
 
-async function NextAuthHandler (req, res, userSuppliedOptions) {
+async function NextAuthHandler (req, res, userOptions) {
   // To the best of my knowledge, we need to return a promise here
   // to avoid early termination of calls to the serverless function
   // (and then return that promise when we are done) - eslint
@@ -64,20 +64,20 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
 
     // Parse database / adapter
     let adapter
-    if (userSuppliedOptions.adapter) {
+    if (userOptions.adapter) {
       // If adapter is provided, use it (advanced usage, overrides database)
-      adapter = userSuppliedOptions.adapter
-    } else if (userSuppliedOptions.database) {
+      adapter = userOptions.adapter
+    } else if (userOptions.database) {
       // If database URI or config object is provided, use it (simple usage)
-      adapter = adapters.Default(userSuppliedOptions.database)
+      adapter = adapters.Default(userOptions.database)
     }
 
     // Secret used salt cookies and tokens (e.g. for CSRF protection).
     // If no secret option is specified then it creates one on the fly
     // based on options passed here. A options contains unique data, such as
     // OAuth provider secrets and database credentials it should be sufficent.
-    const secret = userSuppliedOptions.secret || createHash('sha256').update(JSON.stringify({
-      baseUrl, basePath, ...userSuppliedOptions
+    const secret = userOptions.secret || createHash('sha256').update(JSON.stringify({
+      baseUrl, basePath, ...userOptions
     })).digest('hex')
 
     // Use secure cookies if the site uses HTTPS
@@ -86,7 +86,7 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
     // prefix, but enable them by default if the site URL is HTTPS; but not for
     // non-HTTPS URLs like http://localhost which are used in development).
     // For more on prefixes see https://googlechrome.github.io/samples/cookie-prefixes/
-    const useSecureCookies = userSuppliedOptions.useSecureCookies || baseUrl.startsWith('https://')
+    const useSecureCookies = userOptions.useSecureCookies || baseUrl.startsWith('https://')
     const cookiePrefix = useSecureCookies ? '__Secure-' : ''
 
     // @TODO Review cookie settings (names, options)
@@ -121,7 +121,7 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
         }
       },
       // Allow user cookie options to override any cookie settings above
-      ...userSuppliedOptions.cookies
+      ...userOptions.cookies
     }
 
     // Session options
@@ -129,7 +129,7 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
       jwt: false,
       maxAge: 30 * 24 * 60 * 60, // Sessions expire after 30 days of being idle
       updateAge: 24 * 60 * 60, // Sessions updated only if session is greater than this value (0 = always, 24*60*60 = every 24 hours)
-      ...userSuppliedOptions.session
+      ...userOptions.session
     }
 
     // JWT options
@@ -138,7 +138,7 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
       maxAge: sessionOptions.maxAge, // maxAge is dereived from session maxAge,
       encode: jwt.encode,
       decode: jwt.decode,
-      ...userSuppliedOptions.jwt
+      ...userOptions.jwt
     }
 
     // If no adapter specified, force use of JSON Web Tokens (stateless)
@@ -149,13 +149,13 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
     // Event messages
     const eventsOptions = {
       ...events,
-      ...userSuppliedOptions.events
+      ...userOptions.events
     }
 
     // Callback functions
     const callbacksOptions = {
       ...defaultCallbacks,
-      ...userSuppliedOptions.callbacks
+      ...userOptions.callbacks
     }
 
     // Ensure CSRF Token cookie is set for any subsequent requests.
@@ -197,7 +197,7 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
       debug: false,
       pages: {},
       // Custom options override defaults
-      ...userSuppliedOptions,
+      ...userOptions,
       // These computed settings can values in userSuppliedOptions but override them
       // and are request-specific.
       adapter,
@@ -208,7 +208,7 @@ async function NextAuthHandler (req, res, userSuppliedOptions) {
       cookies,
       secret,
       csrfToken,
-      providers: parseProviders({ providers: userSuppliedOptions.providers, baseUrl, basePath }),
+      providers: parseProviders({ providers: userOptions.providers, baseUrl, basePath }),
       session: sessionOptions,
       jwt: jwtOptions,
       events: eventsOptions,
