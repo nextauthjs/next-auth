@@ -19,15 +19,17 @@ export default async function callback (req, res) {
     jwt,
     events,
     callbacks,
-    csrfToken
+    csrfToken,
+    session: {
+      jwt: useJwtSession,
+      maxAge: sessionMaxAge
+    }
   } = req.options
   const provider = providers[providerName]
   const { type } = provider
-  const useJwtSession = req.options.session.jwt
-  const sessionMaxAge = req.options.session.maxAge
 
   // Get session ID (if set)
-  const sessionToken = req.cookies ? req.cookies[cookies.sessionToken.name] : null
+  const sessionToken = req.cookies?.[cookies.sessionToken.name] ?? null
 
   if (type === 'oauth') {
     try {
