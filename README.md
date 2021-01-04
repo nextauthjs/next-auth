@@ -116,19 +116,18 @@ export default NextAuth({
 ```javascript
 import { useSession, signIn, signOut } from 'next-auth/client'
 
-export default function myComponent() {
+export default function Component() {
   const [ session, loading ] = useSession()
-
-  return <p>
-    {!session && <>
-      Not signed in <br/>
-      <button onClick={() => signIn()}>Sign in</button>
-    </>}
-    {session && <>
+  if(session) {
+    return <>
       Signed in as {session.user.email} <br/>
       <button onClick={() => signOut()}>Sign out</button>
-    </>}
-  </p>
+    </>
+  }
+  return <>
+    Not signed in <br/>
+    <button onClick={() => signIn()}>Sign in</button>
+  </>
 }
 ```
 
