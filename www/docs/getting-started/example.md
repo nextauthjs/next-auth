@@ -47,7 +47,6 @@ See the [options documentation](/configuration/options) for how to configure pro
 The `useSession()` React Hook in the NextAuth.js client is the easiest way to check if someone is signed in.
 
 ```jsx title="pages/index.js"
-import React from 'react'
 import { signIn, signOut, useSession } from 'next-auth/client'
 
 export default function Page() {

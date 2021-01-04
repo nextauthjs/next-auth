@@ -192,12 +192,7 @@ function Home () {
 }
 
 const reactComponentCode = `
-import React from 'react'
-import {
-  signIn, 
-  signOut,
-  useSession
-} from 'next-auth/client'
+import { useSession, signIn, signOut } from 'next-auth/client'
 
 export default function myComponent() {
   const [ session, loading ] = useSession()
