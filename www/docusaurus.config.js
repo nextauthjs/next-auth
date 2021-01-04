@@ -98,7 +98,7 @@ module.exports = {
           ]
         }
       ],
-      copyright: 'NextAuth.js &copy; Iain Collins 2020'
+      copyright: 'NextAuth.js &copy; Iain Collins 2021'
     }
   },
   presets: [
