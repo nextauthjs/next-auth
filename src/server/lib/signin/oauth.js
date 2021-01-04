@@ -2,14 +2,14 @@ import oAuthClient from '../oauth/client'
 import { createHash } from 'crypto'
 import logger from '../../../lib/logger'
 
-export default function oauth (provider, csrfToken, callback, authParams) {
+export default async function oauth (provider, csrfToken, authParams) {
   const { callbackUrl } = provider
   const client = oAuthClient(provider)
-  if (provider.version && provider.version.startsWith('2.')) {
+  if (provider.version?.startsWith('2.')) {
     // Handle OAuth v2.x
     let url = client.getAuthorizeUrl({
       ...authParams,
-      redirect_uri: provider.callbackUrl,
+      redirect_uri: callbackUrl,
       scope: provider.scope,
       // A hash of the NextAuth.js CSRF token is used as the state
       state: createHash('sha256').update(csrfToken).digest('hex'),
@@ -29,15 +29,14 @@ export default function oauth (provider, csrfToken, callback, authParams) {
       url = url.replace(baseUrl, provider.authorizationUrl + '&')
     }
 
-    callback(null, url)
-  } else {
-    // Handle OAuth v1.x
-    client.getOAuthRequestToken((error, oAuthToken) => {
-      if (error) {
-        logger.error('GET_AUTHORISATION_URL_ERROR', error)
-      }
-      const url = `${provider.authorizationUrl}?oauth_token=${oAuthToken}`
-      callback(error, url)
-    }, callbackUrl)
+    return url
+  }
+
+  try {
+    const oAuthToken = await client.getOAuthRequestToken(callbackUrl)
+    return `${provider.authorizationUrl}?oauth_token=${oAuthToken}`
+  } catch (error) {
+    logger.error('GET_AUTHORISATION_URL_ERROR', error)
+    throw error
   }
 }
