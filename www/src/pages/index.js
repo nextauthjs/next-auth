@@ -208,7 +208,6 @@ export default function Component() {
     Not signed in <br/>
     <button onClick={() => signIn()}>Sign in</button>
   </>
-}
 }`.trim()
 
 const serverlessFunctionCode = `
