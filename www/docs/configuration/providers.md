@@ -148,6 +148,7 @@ providers: [
 |   clientSecret   |                 Client Secret of the OAuth provider                 |    No    |
 |     idToken      |     Set to `true` for services that use ID Tokens (e.g. OpenID)     |    No    |
 |      state       | Set to `false` for services that do not support `state` verfication |    No    |
+|     headers      |        Any headers that should be sent to the OAuth provider        |    No    |
 
 :::note
 Feel free to open a PR for your custom configuration if you've created one for a provider that others may be interested in so we can add it to the list of built-in OAuth providers!
