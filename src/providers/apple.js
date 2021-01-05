@@ -21,7 +21,6 @@ export default (options) => {
     },
     clientId: null,
     clientSecret: {
-      appleId: null,
       teamId: null,
       privateKey: null,
       keyId: null
