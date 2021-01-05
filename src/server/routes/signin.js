@@ -22,11 +22,8 @@ export default async function signin (req, res) {
   }
 
   if (type === 'oauth' && req.method === 'POST') {
-    const authParams = { ...req.query }
-    delete authParams.nextauth // This is probably not intended to be sent to the provider, remove
-
     try {
-      const oAuthSigninUrl = await oAuthSignin(provider, csrfToken, authParams)
+      const oAuthSigninUrl = await oAuthSignin(provider, csrfToken)
       return res.redirect(oAuthSigninUrl)
     } catch (error) {
       logger.error('SIGNIN_OAUTH_ERROR', error)
