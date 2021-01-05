@@ -89,8 +89,8 @@ export default function oAuthClient (provider) {
 async function getOAuth2AccessToken (code, provider) {
   const url = provider.accessTokenUrl
   const setGetAccessTokenAuthHeader = (provider.setGetAccessTokenAuthHeader !== null) ? provider.setGetAccessTokenAuthHeader : true
-  const params = { ...provider.params } || {}
-  const headers = { ...provider.headers } || {}
+  const params = { ...provider.params }
+  const headers = { ...provider.headers }
   const codeParam = (params.grant_type === 'refresh_token') ? 'refresh_token' : 'code'
 
   if (!params[codeParam]) { params[codeParam] = code }
@@ -163,7 +163,7 @@ async function getOAuth2AccessToken (code, provider) {
  */
 async function getOAuth2 (provider, accessToken, results) {
   let url = provider.profileUrl
-  const headers = provider.headers || {}
+  const headers = { ...provider.headers }
 
   if (this._useAuthorizationHeaderForGET) {
     headers.Authorization = this.buildAuthHeader(accessToken)
@@ -176,14 +176,14 @@ async function getOAuth2 (provider, accessToken, results) {
     }
 
     // This line is required for Twitch
-    headers['Client-ID'] = provider.clientId
+    if (provider.id === 'twitch') {
+      headers['Client-ID'] = provider.clientId
+    }
     accessToken = null
   }
 
-  // Bungie
-  const prepareRequest = provider.prepareProfileRequest
-  if (prepareRequest) {
-    url = prepareRequest({ provider, url, headers, results }) || url
+  if (provider.id === 'bungie') {
+    url = prepareProfileUrl({ provider, url, results })
   }
 
   return new Promise((resolve, reject) => {
@@ -194,4 +194,19 @@ async function getOAuth2 (provider, accessToken, results) {
       resolve(profileData)
     })
   })
+}
+
+/** Bungie needs special handling */
+function prepareProfileUrl ({ provider, url, results }) {
+  if (!results.membership_id) {
+    // internal error
+    // @TODO: handle better
+    throw new Error('Expected membership_id to be passed.')
+  }
+
+  if (!provider.headers?.['X-API-Key']) {
+    throw new Error('The Bungie provider requires the X-API-Key option to be present in "headers".')
+  }
+
+  return url.replace('{membershipId}', results.membership_id)
 }
