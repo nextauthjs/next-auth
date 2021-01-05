@@ -131,25 +131,24 @@ providers: [
 
 ### OAuth provider options
 
-|        Name         |                             Description                             | Required |
-| :-----------------: | :-----------------------------------------------------------------: | :------: |
-|         id          |                     Unique ID for the provider                      |   Yes    |
-|        name         |                  Descriptive name for the provider                  |   Yes    |
-|        type         |         Type of provider, in this case it should be `oauth`         |   Yes    |
-|       version       |              OAuth version (e.g. '1.0', '1.0a', '2.0')              |   Yes    |
-|        scope        |            OAuth access scopes (expects array or string)            |    No    |
-|       params        |               Additional authorization URL parameters               |    No    |
-|   accessTokenUrl    |                Endpoint to retrieve an access token                 |   Yes    |
-|   requestTokenUrl   |                Endpoint to retrieve a request token                 |    No    |
-|  authorizationUrl   |           Endpoint to request authorization from the user           |   Yes    |
-| authorizationParams |     Additional params to be sent to the authorization endpoint      |    No    |
-|     profileUrl      |               Endpoint to retrieve the user's profile               |    No    |
-|       profile       |                   An object with the user's info                    |    No    |
-|      clientId       |                   Client ID of the OAuth provider                   |   Yes    |
-|    clientSecret     |                 Client Secret of the OAuth provider                 |    No    |
-|       idToken       |     Set to `true` for services that use ID Tokens (e.g. OpenID)     |    No    |
-|        state        | Set to `false` for services that do not support `state` verfication |    No    |
-|       headers       |        Any headers that should be sent to the OAuth provider        |    No    |
+|        Name         |                         Description                         | Required |
+| :-----------------: | :---------------------------------------------------------: | :------: |
+|         id          |                 Unique ID for the provider                  |   Yes    |
+|        name         |              Descriptive name for the provider              |   Yes    |
+|        type         |     Type of provider, in this case it should be `oauth`     |   Yes    |
+|       version       |          OAuth version (e.g. '1.0', '1.0a', '2.0')          |   Yes    |
+|        scope        |        OAuth access scopes (expects array or string)        |    No    |
+|       params        |           Additional authorization URL parameters           |    No    |
+|   accessTokenUrl    |            Endpoint to retrieve an access token             |   Yes    |
+|   requestTokenUrl   |            Endpoint to retrieve a request token             |    No    |
+|  authorizationUrl   |       Endpoint to request authorization from the user       |   Yes    |
+| authorizationParams | Additional params to be sent to the authorization endpoint  |    No    |
+|     profileUrl      |           Endpoint to retrieve the user's profile           |    No    |
+|       profile       |               An object with the user's info                |    No    |
+|      clientId       |               Client ID of the OAuth provider               |   Yes    |
+|    clientSecret     |             Client Secret of the OAuth provider             |    No    |
+|       idToken       | Set to `true` for services that use ID Tokens (e.g. OpenID) |    No    |
+|       headers       |    Any headers that should be sent to the OAuth provider    |    No    |
 
 :::note
 Feel free to open a PR for your custom configuration if you've created one for a provider that others may be interested in so we can add it to the list of built-in OAuth providers!

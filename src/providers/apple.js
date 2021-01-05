@@ -10,7 +10,6 @@ export default (options) => {
     authorizationUrl: 'https://appleid.apple.com/auth/authorize?response_type=code&id_token&response_mode=form_post',
     profileUrl: null,
     idToken: true,
-    state: false, // Apple doesn't support state verfication
     profile: (profile) => {
       // The name of the user will only return on first login
       return {
