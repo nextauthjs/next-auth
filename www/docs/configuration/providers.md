@@ -18,6 +18,7 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 * [Basecamp](/providers/basecamp)
 * [Battle.net](/providers/battle.net)
 * [Box](/providers/box)
+* [Bungie](/providers/bungie)
 * [Amazon Cognito](/providers/cognito)
 * [Discord](/providers/discord)
 * [Facebook](/providers/facebook)
@@ -27,11 +28,11 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 * [GitLab](/providers/gitlab)
 * [Google](/providers/google)
 * [IdentityServer4](/providers/identity-server4)
-* [LinkedIn](/providers/LinkedIn)
-* [Mail.ru](/providers/Mail.ru)
-* [Mixer](/providers/Mixer)
-* [Netlify](/providers/Netlify)
-* [Okta](/providers/Okta)
+* [LinkedIn](/providers/linkedin)
+* [Mail.ru](/providers/mailru)
+* [Mixer](/providers/mixer)
+* [Netlify](/providers/netlify)
+* [Okta](/providers/okta)
 * [Slack](/providers/slack)
 * [Spotify](/providers/spotify)
 * [Strava](/providers/strava)
@@ -84,19 +85,19 @@ You can use an OAuth provider that isn't built-in by using a custom object.
 
 As an example of what this looks like, this is the the provider object returned for the Google provider:
 
-```json
+```js
 {
-  id: 'google',
-  name: 'Google',
-  type: 'oauth',
-  version: '2.0',
-  scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
-  params: { grant_type: 'authorization_code' },
-  accessTokenUrl: 'https://accounts.google.com/o/oauth2/token',
-  requestTokenUrl: 'https://accounts.google.com/o/oauth2/auth',
-  authorizationUrl: 'https://accounts.google.com/o/oauth2/auth?response_type=code',
-  profileUrl: 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json',
-  profile: (profile) => {
+  id: "google",
+  name: "Google",
+  type: "oauth",
+  version: "2.0",
+  scope: "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
+  params: { grant_type: "authorization_code" },
+  accessTokenUrl: "https://accounts.google.com/o/oauth2/token",
+  requestTokenUrl: "https://accounts.google.com/o/oauth2/auth",
+  authorizationUrl: "https://accounts.google.com/o/oauth2/auth?response_type=code",
+  profileUrl: "https://www.googleapis.com/oauth2/v1/userinfo?alt=json",
+  async profile(profile) {
     return {
       id: profile.id,
       name: profile.name,
@@ -104,11 +105,11 @@ As an example of what this looks like, this is the the provider object returned 
       image: profile.picture
     }
   },
-  clientId: '',
-  clientSecret: ''
+  clientId: "",
+  clientSecret: ""
 }
 ```
-You can replace all the options in this JSON object with the ones from your custom provider – be sure to give it a unique ID and specify the correct OAuth version - and add it to the providers option:
+You can replace all the options in this JSON object with the ones from your custom provider - be sure to give it a unique ID and specify the correct OAuth version - and add it to the providers option:
 
 ```js title="pages/api/auth/[...nextauth].js"
 ...
