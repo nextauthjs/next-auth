@@ -89,7 +89,6 @@ export default function oAuthClient (provider) {
  */
 async function getOAuth2AccessToken (code, provider) {
   const url = provider.accessTokenUrl
-  const setGetAccessTokenAuthHeader = (provider.setGetAccessTokenAuthHeader !== null) ? provider.setGetAccessTokenAuthHeader : true
   const params = { ...provider.params }
   const headers = { ...provider.headers }
   const codeParam = (params.grant_type === 'refresh_token') ? 'refresh_token' : 'code'
@@ -128,9 +127,9 @@ async function getOAuth2AccessToken (code, provider) {
   if (provider.id === 'reddit') {
     headers.Authorization = 'Basic ' + Buffer.from((provider.clientId + ':' + provider.clientSecret)).toString('base64')
   }
-  // Okta errors when this is set. Maybe there are other Providers that also wont like this.
-  if (setGetAccessTokenAuthHeader) {
-    if (!headers.Authorization) { headers.Authorization = `Bearer ${code}` }
+
+  if ((provider.id === 'okta' || provider.id === 'identity-server4') && !headers.Authorization) {
+    headers.Authorization = `Bearer ${code}`
   }
 
   const postData = querystring.stringify(params)
