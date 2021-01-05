@@ -62,6 +62,7 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 4. Now you can add the provider settings to the NextAuth options object. You can add as many OAuth providers as you like, as you can see `providers` is an array.
 
   ```js title="pages/api/auth/[...nextauth].js"
+  import Providers from `next-auth/providers`
   ...
   providers: [
     Providers.Twitter({
@@ -112,6 +113,7 @@ As an example of what this looks like, this is the the provider object returned 
 You can replace all the options in this JSON object with the ones from your custom provider - be sure to give it a unique ID and specify the correct OAuth version - and add it to the providers option:
 
 ```js title="pages/api/auth/[...nextauth].js"
+import Providers from `next-auth/providers`
 ...
 providers: [
   Providers.Twitter({
@@ -160,6 +162,8 @@ Adding support for signing in via email in addition to one or more OAuth service
 Configuration is similar to other providers, but the options are different:
 
 ```js title="pages/api/auth/[...nextauth].js"
+import Providers from `next-auth/providers`
+...
 providers: [
   Providers.Email({
     server: process.env.EMAIL_SERVER,
@@ -167,6 +171,7 @@ providers: [
     // maxAge: 24 * 60 * 60, // How long email links are valid for (default 24h)
   }),
 ],
+...
 ```
 
 See the [Email provider documentation](/providers/email) for more information on how to configure email sign in.
@@ -196,7 +201,7 @@ providers: [
       username: { label: "Username", type: "text", placeholder: "jsmith" },
       password: {  label: "Password", type: "password" }
     },
-    authorize: async (credentials) => {
+   async authorize(credentials) {
       const user = (credentials) => {
         // You need to provide your own logic here that takes the credentials
         // submitted and returns either a object representing a user or value

@@ -45,7 +45,7 @@ providers: [
       username: { label: "Username", type: "text", placeholder: "jsmith" },
       password: {  label: "Password", type: "password" }
     },
-    authorize: async (credentials) => {
+    async authorize(credentials) {
       // Add logic here to look up the user from the credentials supplied
       const user = { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
 
@@ -82,7 +82,7 @@ As with all providers, the order you specify them is the order they are displaye
     Providers.Credentials({
       id: 'domain-login',
       name: "Domain Account",
-      authorize: async (credentials) => {
+      async authorize(credentials) {
         const user = { /* add function to get user */ }
         return user
       },
@@ -95,7 +95,7 @@ As with all providers, the order you specify them is the order they are displaye
     Providers.Credentials({
       id: 'intranet-credentials',
       name: "Two Factor Auth",
-      authorize: async (credentials) => {
+      async authorize(credentials) {
         const user = { /* add function to get user */ } 
         return user
       },
