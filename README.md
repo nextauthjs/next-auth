@@ -114,26 +114,22 @@ export default NextAuth({
 ### Add React Component
 
 ```javascript
-import React from 'react'
-import { 
-  useSession, 
-  signIn,
-  signOut
+import {
+  useSession, signIn, signOut
 } from 'next-auth/client'
 
-export default function myComponent() {
+export default function Component() {
   const [ session, loading ] = useSession()
-
-  return <p>
-    {!session && <>
-      Not signed in <br/>
-      <button onClick={() => signIn()}>Sign in</button>
-    </>}
-    {session && <>
+  if(session) {
+    return <>
       Signed in as {session.user.email} <br/>
       <button onClick={() => signOut()}>Sign out</button>
-    </>}
-  </p>
+    </>
+  }
+  return <>
+    Not signed in <br/>
+    <button onClick={() => signIn()}>Sign in</button>
+  </>
 }
 ```
 
@@ -147,7 +143,7 @@ export default function myComponent() {
 
 ## Contributing
 
-We're open to all community contributions! If you'd like to contribute in any way, please first read our [Contributing Guide](https://github.com/iaincollins/next-auth/blob/main/CONTRIBUTING.md).
+We're open to all community contributions! If you'd like to contribute in any way, please first read our [Contributing Guide](https://github.com/nextauthjs/next-auth/blob/canary/CONTRIBUTING.md).
 
 ## License
 

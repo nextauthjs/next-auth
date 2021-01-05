@@ -19,19 +19,21 @@ export default async function callback (req, res) {
     jwt,
     events,
     callbacks,
-    csrfToken
+    csrfToken,
+    session: {
+      jwt: useJwtSession,
+      maxAge: sessionMaxAge
+    }
   } = req.options
   const provider = providers[providerName]
   const { type } = provider
-  const useJwtSession = req.options.session.jwt
-  const sessionMaxAge = req.options.session.maxAge
 
   // Get session ID (if set)
-  const sessionToken = req.cookies ? req.cookies[cookies.sessionToken.name] : null
+  const sessionToken = req.cookies?.[cookies.sessionToken.name] ?? null
 
   if (type === 'oauth') {
     try {
-      const { profile, account, OAuthProfile } = await oAuthCallback(req, provider, csrfToken)
+      const { profile, account, OAuthProfile } = await oAuthCallback(req, csrfToken)
       try {
         // Make it easier to debug when adding a new provider
         logger.debug('OAUTH_CALLBACK_RESPONSE', { profile, account, OAuthProfile })
@@ -112,7 +114,7 @@ export default async function callback (req, res) {
         }
 
         // Callback URL is already verified at this point, so safe to use if specified
-        return res.redirect(callbackUrl || baseUrl().origin)
+        return res.redirect(callbackUrl || baseUrl)
       } catch (error) {
         if (error.name === 'AccountNotLinkedError') {
           // If the email on the account is already linked, but not with this OAuth account
@@ -209,7 +211,7 @@ export default async function callback (req, res) {
       }
 
       // Callback URL is already verified at this point, so safe to use if specified
-      return res.redirect(callbackUrl || baseUrl().origin)
+      return res.redirect(callbackUrl || baseUrl)
     } catch (error) {
       if (error.name === 'CreateUserError') {
         return res.redirect(`${baseUrl}${basePath}/error?error=EmailCreateAccount`)
@@ -279,9 +281,8 @@ export default async function callback (req, res) {
 
     await dispatchEvent(events.signIn, { user, account })
 
-    return res.redirect(callbackUrl || baseUrl().origin)
+    return res.redirect(callbackUrl || baseUrl)
   } else {
-    res.status(500).end(`Error: Callback for provider type ${type} not supported`)
-    return res.end()
+    return res.status(500).end(`Error: Callback for provider type ${type} not supported`)
   }
 }

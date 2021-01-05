@@ -4,7 +4,8 @@ module.exports = {
       'getting-started/introduction',
       'getting-started/example',
       'getting-started/client',
-      'getting-started/rest-api'
+      'getting-started/rest-api',
+      'getting-started/typescript'
     ],
     Configuration: [
       'configuration/options',
@@ -42,6 +43,7 @@ module.exports = {
       'providers/google',
       'providers/identity-server4',
       'providers/linkedin',
+      'providers/Mail.ru',
       'providers/mixer',
       'providers/okta',
       'providers/slack',

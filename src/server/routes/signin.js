@@ -17,22 +17,21 @@ export default async function signin (req, res) {
   const { type } = provider
 
   if (!type) {
-    res.status(500).end(`Error: Type not specified for ${provider}`)
-    return res.end()
+    res.status(500)
+    return res.end(`Error: Type not specified for ${provider}`)
   }
 
   if (type === 'oauth' && req.method === 'POST') {
     const authParams = { ...req.query }
     delete authParams.nextauth // This is probably not intended to be sent to the provider, remove
 
-    oAuthSignin(provider, csrfToken, (error, oAuthSigninUrl) => {
-      if (error) {
-        logger.error('SIGNIN_OAUTH_ERROR', error)
-        return res.redirect(`${baseUrl}${basePath}/error?error=OAuthSignin`)
-      }
-
+    try {
+      const oAuthSigninUrl = await oAuthSignin(provider, csrfToken, authParams)
       return res.redirect(oAuthSigninUrl)
-    }, authParams)
+    } catch (error) {
+      logger.error('SIGNIN_OAUTH_ERROR', error)
+      return res.redirect(`${baseUrl}${basePath}/error?error=OAuthSignin`)
+    }
   } else if (type === 'email' && req.method === 'POST') {
     if (!adapter) {
       logger.error('EMAIL_REQUIRES_ADAPTER_ERROR')
@@ -72,13 +71,13 @@ export default async function signin (req, res) {
       await emailSignin(email, provider, req.options)
     } catch (error) {
       logger.error('SIGNIN_EMAIL_ERROR', error)
-      return res.redirect(`${baseUrl()}/error?error=EmailSignin`)
+      return res.redirect(`${baseUrl}${basePath}/error?error=EmailSignin`)
     }
 
-    return res.redirect(`${baseUrl()}/verify-request?provider=${encodeURIComponent(
+    return res.redirect(`${baseUrl}${basePath}/verify-request?provider=${encodeURIComponent(
       provider.id
     )}&type=${encodeURIComponent(provider.type)}`)
   } else {
-    return res.redirect(`${baseUrl()}/signin`)
+    return res.redirect(`${baseUrl}${basePath}/signin`)
   }
 }

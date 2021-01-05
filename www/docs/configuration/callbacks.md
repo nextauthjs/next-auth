@@ -3,7 +3,7 @@ id: callbacks
 title: Callbacks
 ---
 
-Callbacks are asynchronous functions you can use to control what happens when an action is performed.
+Callbacks are **asynchronous** functions you can use to control what happens when an action is performed.
 
 Callbacks are extremely powerful, especially in scenarios involving JSON Web Tokens as they allow you to implement access controls without a database and to integrate with external databases or APIs.
 
