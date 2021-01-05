@@ -2,7 +2,6 @@ import { createHash } from 'crypto'
 import { decode as jwtDecode } from 'jsonwebtoken'
 import oAuthClient from './client'
 import logger from '../../../lib/logger'
-
 class OAuthCallbackError extends Error {
   constructor (message) {
     super(message)
@@ -22,9 +21,8 @@ export default async function oAuthCallback (req, csrfToken) {
     // For OAuth 2.0 flows, check state returned and matches expected value
     // (a hash of the NextAuth.js CSRF token).
     //
-    // This check can be disabled for providers that do not support it by
-    // setting `state: false` as a option on the provider (defaults to true).
-    if (!Object.prototype.hasOwnProperty.call(provider, 'state') || provider.state === true) {
+    // Apple does not support state verification.
+    if (provider.id !== 'apple') {
       const expectedState = createHash('sha256').update(csrfToken).digest('hex')
       if (state !== expectedState) {
         throw new OAuthCallbackError('Invalid state returned from OAuth provider')

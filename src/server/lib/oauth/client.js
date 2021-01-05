@@ -1,6 +1,7 @@
 import { OAuth, OAuth2 } from 'oauth'
 import querystring from 'querystring'
 import logger from '../../../lib/logger'
+import { sign as jwtSign } from 'jsonwebtoken'
 
 /**
  * @TODO Refactor to remove dependancy on 'oauth' package
@@ -88,23 +89,33 @@ export default function oAuthClient (provider) {
  */
 async function getOAuth2AccessToken (code, provider) {
   const url = provider.accessTokenUrl
-  const setGetAccessTokenAuthHeader = (provider.setGetAccessTokenAuthHeader !== null) ? provider.setGetAccessTokenAuthHeader : true
-  const params = { ...provider.params } || {}
-  const headers = { ...provider.headers } || {}
+  const params = { ...provider.params }
+  const headers = { ...provider.headers }
   const codeParam = (params.grant_type === 'refresh_token') ? 'refresh_token' : 'code'
 
   if (!params[codeParam]) { params[codeParam] = code }
 
   if (!params.client_id) { params.client_id = provider.clientId }
 
-  if (!params.client_secret) {
-    // For some providers it useful to be able to generate the secret on the fly
-    // e.g. For Sign in With Apple a JWT token using the properties in clientSecret
-    if (provider.clientSecretCallback) {
-      params.client_secret = await provider.clientSecretCallback(provider.clientSecret)
-    } else {
-      params.client_secret = provider.clientSecret
-    }
+  // For Apple the client secret must be generated on-the-fly.
+  // Using the properties in clientSecret to create a JWT.
+  if (provider.id === 'apple' && typeof provider.clientSecret === 'object') {
+    const { keyId, teamId, privateKey } = provider.clientSecret
+    const clientSecret = jwtSign({
+      iss: teamId,
+      iat: Math.floor(Date.now() / 1000),
+      exp: Math.floor(Date.now() / 1000) + (86400 * 180), // 6 months
+      aud: 'https://appleid.apple.com',
+      sub: provider.clientId
+    },
+    // Automatically convert \\n into \n if found in private key. If the key
+    // is passed in an environment variable \n can get escaped as \\n
+    privateKey.replace(/\\n/g, '\n'),
+    { algorithm: 'ES256', keyid: keyId }
+    )
+    params.client_secret = clientSecret
+  } else {
+    params.client_secret = provider.clientSecret
   }
 
   if (!params.redirect_uri) { params.redirect_uri = provider.callbackUrl }
@@ -116,9 +127,9 @@ async function getOAuth2AccessToken (code, provider) {
   if (provider.id === 'reddit') {
     headers.Authorization = 'Basic ' + Buffer.from((provider.clientId + ':' + provider.clientSecret)).toString('base64')
   }
-  // Okta errors when this is set. Maybe there are other Providers that also wont like this.
-  if (setGetAccessTokenAuthHeader) {
-    if (!headers.Authorization) { headers.Authorization = `Bearer ${code}` }
+
+  if ((provider.id === 'okta' || provider.id === 'identity-server4') && !headers.Authorization) {
+    headers.Authorization = `Bearer ${code}`
   }
 
   const postData = querystring.stringify(params)
@@ -147,7 +158,12 @@ async function getOAuth2AccessToken (code, provider) {
           // Clients of these services suffer a minor performance cost.
           results = querystring.parse(data)
         }
-        const accessToken = provider.accessTokenGetter ? provider.accessTokenGetter(results) : results.access_token
+        let accessToken
+        if (provider.id === 'spotify') {
+          accessToken = results.authed_user.access_token
+        } else {
+          accessToken = results.access_token
+        }
         const refreshToken = results.refresh_token
         resolve({ accessToken, refreshToken, results })
       }
@@ -163,7 +179,7 @@ async function getOAuth2AccessToken (code, provider) {
  */
 async function getOAuth2 (provider, accessToken, results) {
   let url = provider.profileUrl
-  const headers = provider.headers || {}
+  const headers = { ...provider.headers }
 
   if (this._useAuthorizationHeaderForGET) {
     headers.Authorization = this.buildAuthHeader(accessToken)
@@ -176,14 +192,14 @@ async function getOAuth2 (provider, accessToken, results) {
     }
 
     // This line is required for Twitch
-    headers['Client-ID'] = provider.clientId
+    if (provider.id === 'twitch') {
+      headers['Client-ID'] = provider.clientId
+    }
     accessToken = null
   }
 
-  // Bungie
-  const prepareRequest = provider.prepareProfileRequest
-  if (prepareRequest) {
-    url = prepareRequest({ provider, url, headers, results }) || url
+  if (provider.id === 'bungie') {
+    url = prepareProfileUrl({ provider, url, results })
   }
 
   return new Promise((resolve, reject) => {
@@ -194,4 +210,19 @@ async function getOAuth2 (provider, accessToken, results) {
       resolve(profileData)
     })
   })
+}
+
+/** Bungie needs special handling */
+function prepareProfileUrl ({ provider, url, results }) {
+  if (!results.membership_id) {
+    // internal error
+    // @TODO: handle better
+    throw new Error('Expected membership_id to be passed.')
+  }
+
+  if (!provider.headers?.['X-API-Key']) {
+    throw new Error('The Bungie provider requires the X-API-Key option to be present in "headers".')
+  }
+
+  return url.replace('{membershipId}', results.membership_id)
 }
