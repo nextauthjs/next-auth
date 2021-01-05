@@ -120,8 +120,8 @@ jwt: {
 
   // You can define your own encode/decode functions for signing and encryption
   // if you want to override the default behaviour.
-  // encode: async ({ secret, token, maxAge }) => {},
-  // decode: async ({ secret, token, maxAge }) => {},
+  // async encode({ secret, token, maxAge }) {},
+  // async decode({ secret, token, maxAge }) {},
 }
 ```
 
@@ -132,8 +132,8 @@ An example JSON Web Token contains a payload like this:
   name: 'Iain Collins',
   email: 'me@iaincollins.com',
   picture: 'https://example.com/image.jpg',
-  "iat": 1594601838,
-  "exp": 1597193838
+  iat: 1594601838,
+  exp: 1597193838
 }
 ```
 
@@ -230,16 +230,16 @@ You can specify a handler for any of the callbacks below.
 
 ```js
 callbacks: {
-  signIn: async (user, account, profile) => {
+  async signIn(user, account, profile) {
     return true
   },
-  redirect: async (url, baseUrl) => {
+  async redirect(url, baseUrl) {
     return baseUrl
   },
-  session: async (session, user) => {
+  async session(session, user) {
     return session
   },
-  jwt: async (token, user, account, profile, isNewUser) => {
+  async jwt(token, user, account, profile, isNewUser) {
     return token
   }
 }
@@ -264,14 +264,16 @@ The content of the message object varies depending on the flow (e.g. OAuth or Em
 
 ```js
 events: {
-  signIn: async (message) => { /* on successful sign in */ },
-  signOut: async (message) => { /* on signout */ },
-  createUser: async (message) => { /* user created */ },
-  linkAccount: async (message) => { /* account linked to a user */ },
-  session: async (message) => { /* session is active */ },
-  error: async (message) => { /* error in authentication flow */ }
+  async signIn(message) { /* on successful sign in */ },
+  async signOut(message) { /* on signout */ },
+  async createUser(message) { /* user created */ },
+  async linkAccount(message) { /* account linked to a user */ },
+  async session(message) { /* session is active */ },
+  async error(message) { /* error in authentication flow */ }
 }
 ```
+
+See the [events documentation](/configuration/events) for more information on how to use the events functions.
 
 ---
 

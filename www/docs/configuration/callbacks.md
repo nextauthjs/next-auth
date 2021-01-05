@@ -16,16 +16,16 @@ You can specify a handler for any of the callbacks below.
 ```js title="pages/api/auth/[...nextauth].js"
 ...
   callbacks: {
-    signIn: async (user, account, profile) => {
+    async signIn(user, account, profile) {
       return true
     },
-    redirect: async (url, baseUrl) => {
+    async redirect(url, baseUrl) {
       return baseUrl
     },
-    session: async (session, user) => {
+    async session(session, user) {
       return session
     },
-    jwt: async (token, user, account, profile, isNewUser) => {
+    async jwt(token, user, account, profile, isNewUser) {
       return token
     }
 ...
@@ -39,6 +39,7 @@ The documentation below shows how to implement each callback, their default beha
 Use the `signIn()` callback to control if a user is allowed to sign in.
 
 ```js title="pages/api/auth/[...nextauth].js"
+...
 callbacks: {
   /**
    * @param  {object} user     User object
@@ -48,7 +49,7 @@ callbacks: {
    *                           Return `false` to deny access
    *                           Return `string` to redirect to (eg.: "/unauthorized")
    */
-  signIn: async (user, account, profile) => {
+  async signIn(user, account, profile) {
     const isAllowedToSignIn = true
     if (isAllowedToSignIn) {
       return true
@@ -60,6 +61,7 @@ callbacks: {
     }
   }
 }
+...
 ```
 
 * When using the **Email Provider** the `signIn()` callback is triggered both when the user makes a **Verification Request** (before they are sent email with a link that will allow them to sign in) and again *after* they activate the link in the sign in email.
@@ -89,18 +91,20 @@ The redirect callback is called anytime the user is redirected to a callback URL
 By default only URLs on the same URL as the site are allowed, you can use the redirect callback to customise that behaviour.
 
 ```js title="pages/api/auth/[...nextauth].js"
+...
 callbacks: {
   /**
    * @param  {string} url      URL provided as callback URL by the client
    * @param  {string} baseUrl  Default base URL of site (can be used as fallback)
    * @return {string}          URL the client will be redirect to
    */
-  redirect: async (url, baseUrl) => {
+  async redirect(url, baseUrl) {
     return url.startsWith(baseUrl)
       ? url
       : baseUrl
   }
 }
+...
 ```
 
 
@@ -118,6 +122,7 @@ e.g. `getSession()`, `useSession()`, `/api/auth/session`
 * When using JSON Web Tokens for sessions, the JWT payload is provided instead.
 
 ```js title="pages/api/auth/[...nextauth].js"
+...
 callbacks: {
   /**
    * @param  {object} session      Session object
@@ -125,11 +130,12 @@ callbacks: {
    *                               JSON Web Token (if not using database sessions)
    * @return {object}              Session that will be returned to the client 
    */
-  session: async (session, user) => {
+  async session(session, user) {
     session.foo = 'bar' // Add property to session
     return session
   }
 }
+...
 ```
 
 :::tip
@@ -158,6 +164,7 @@ e.g. `/api/auth/signin`, `getSession()`, `useSession()`, `/api/auth/session`
 The contents *user*, *account*, *profile* and *isNewUser* will vary depending on the provider and on if you are using a database or not. If you want to pass data such as User ID, OAuth Access Token, etc. to the browser, you can persist it in the token and use the `session()` callback to return it.
 
 ```js title="pages/api/auth/[...nextauth].js"
+...
 callbacks: {
   /**
    * @param  {object}  token     Decrypted JSON Web Token
@@ -167,13 +174,14 @@ callbacks: {
    * @param  {boolean} isNewUser True if new user (only available on sign in)
    * @return {object}            JSON Web Token that will be saved
    */
-  jwt: async (token, user, account, profile, isNewUser) => {
+  async jwt(token, user, account, profile, isNewUser) {
     const isSignIn = (user) ? true : false
     // Add auth_time to token on signin in
     if (isSignIn) { token.auth_time = Math.floor(Date.now() / 1000) }
     return token
   }
 }
+...
 ```
 
 :::warning

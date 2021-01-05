@@ -22,7 +22,7 @@ export default NextAuth({
         username: { label: "DN", type: "text", placeholder: "" },
         password: { label: "Password", type: "password" },
       },
-      authorize: async (credentials) => {
+      async authorize(credentials) {
         // You might want to pull this call out so we're not making a new LDAP client on every login attemp
         const client = ldap.createClient({
           url: process.env.LDAP_URI,
@@ -47,7 +47,7 @@ export default NextAuth({
     }),
   ],
   callbacks: {
-    jwt: async (token, user, account, profile, isNewUser) => {
+    async jwt(token, user, account, profile, isNewUser) {
       const isSignIn = user ? true : false;
       if (isSignIn) {
         token.username = user.username;
@@ -55,7 +55,7 @@ export default NextAuth({
       }
       return token;
     },
-    session: async (session, user) => {
+    async session(session, user) {
       return { ...session, user: { username: user.username } };
     },
   },

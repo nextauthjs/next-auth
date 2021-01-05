@@ -59,7 +59,7 @@ You can use this property to restrict access to people with verified accounts at
 const options = {
   ...
   callbacks: {
-    signIn: async (user, account, profile) => {
+    async signIn(user, account, profile) {
       if (account.provider === 'google' &&
           profile.verified_email === true &&
           profile.email.endsWith('@example.com')) {
