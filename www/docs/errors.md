@@ -134,18 +134,3 @@ Check your mail server configuration.
 This error happens when `[...nextauth].js` file is not found inside `pages/api/auth`.
 
 Make sure the file is there and the filename is written correctly.
-
-#### APPLE_CLIENT_SECRET
-
-The Apple Provider expects an object as a `clientSecret` instead of a string. The following properties must be in place:
-
-```js
-{
-  appleId: "",
-  teamId: "",
-  privateKey: "",
-  keyId: ""
-}
-```
-
-It will create a JWT out of these values on the fly.  

@@ -100,17 +100,14 @@ async function getOAuth2AccessToken (code, provider) {
 
   // For Apple the client secret must be generated on-the-fly.
   // Using the properties in clientSecret to create a JWT.
-  if (provider.id === 'apple') {
-    if (typeof provider.clientSecret !== 'object') {
-      logger.error('APPLE_CLIENT_SECRET', 'Client secret must be an object for the Apple provider')
-    }
-    const { appleId, keyId, teamId, privateKey } = provider.clientSecret
+  if (provider.id === 'apple' && typeof provider.clientSecret === 'object') {
+    const { keyId, teamId, privateKey } = provider.clientSecret
     const clientSecret = jwtSign({
       iss: teamId,
       iat: Math.floor(Date.now() / 1000),
       exp: Math.floor(Date.now() / 1000) + (86400 * 180), // 6 months
       aud: 'https://appleid.apple.com',
-      sub: appleId
+      sub: provider.clientId
     },
     // Automatically convert \\n into \n if found in private key. If the key
     // is passed in an environment variable \n can get escaped as \\n
