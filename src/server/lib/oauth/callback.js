@@ -1,5 +1,4 @@
 import { createHash } from 'crypto'
-import { decode as jwtDecode, sign as jwtSign } from 'jsonwebtoken'
 import { decode as jwtDecode } from 'jsonwebtoken'
 import oAuthClient from './client'
 import logger from '../../../lib/logger'

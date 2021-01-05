@@ -1,6 +1,7 @@
 import { OAuth, OAuth2 } from 'oauth'
 import querystring from 'querystring'
 import logger from '../../../lib/logger'
+import { sign as jwtSign } from 'jsonwebtoken'
 
 /**
  * @TODO Refactor to remove dependancy on 'oauth' package
@@ -97,14 +98,28 @@ async function getOAuth2AccessToken (code, provider) {
 
   if (!params.client_id) { params.client_id = provider.clientId }
 
-  if (!params.client_secret) {
-    // For some providers it useful to be able to generate the secret on the fly
-    // e.g. For Sign in With Apple a JWT token using the properties in clientSecret
-    if (provider.clientSecretCallback) {
-      params.client_secret = await provider.clientSecretCallback(provider.clientSecret)
-    } else {
-      params.client_secret = provider.clientSecret
+  // For Apple the client secret must be generated on-the-fly.
+  // Using the properties in clientSecret to create a JWT.
+  if (provider.id === 'apple') {
+    if (typeof provider.clientSecret !== 'object') {
+      logger.error('APPLE_CLIENT_SECRET', 'Client secret must be an object for the Apple provider')
     }
+    const { appleId, keyId, teamId, privateKey } = provider.clientSecret
+    const clientSecret = jwtSign({
+      iss: teamId,
+      iat: Math.floor(Date.now() / 1000),
+      exp: Math.floor(Date.now() / 1000) + (86400 * 180), // 6 months
+      aud: 'https://appleid.apple.com',
+      sub: appleId
+    },
+    // Automatically convert \\n into \n if found in private key. If the key
+    // is passed in an environment variable \n can get escaped as \\n
+    privateKey.replace(/\\n/g, '\n'),
+    { algorithm: 'ES256', keyid: keyId }
+    )
+    params.client_secret = clientSecret
+  } else {
+    params.client_secret = provider.clientSecret
   }
 
   if (!params.redirect_uri) { params.redirect_uri = provider.callbackUrl }
