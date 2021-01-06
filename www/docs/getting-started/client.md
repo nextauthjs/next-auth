@@ -41,13 +41,14 @@ It works best when the [`<Provider>`](#provider) is added to `pages/_app.js`.
 ```jsx
 import { useSession } from 'next-auth/client'
 
-export default () => {
+export default function Component() {
   const [ session, loading ] = useSession()
 
-  return <>
-    {session && <p>Signed in as {session.user.email}</p>}
-    {!session && <p><a href="/api/auth/signin">Sign in</a></p>}
-  </>
+  if(session) {
+    return <p>Signed in as {session.user.email}</p>
+  }
+
+  return <a href="/api/auth/signin">Sign in</a>
 }
 ```
 

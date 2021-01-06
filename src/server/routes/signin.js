@@ -22,17 +22,13 @@ export default async function signin (req, res) {
   }
 
   if (type === 'oauth' && req.method === 'POST') {
-    const authParams = { ...req.query }
-    delete authParams.nextauth // This is probably not intended to be sent to the provider, remove
-
-    oAuthSignin(provider, csrfToken, (error, oAuthSigninUrl) => {
-      if (error) {
-        logger.error('SIGNIN_OAUTH_ERROR', error)
-        return res.redirect(`${baseUrl}${basePath}/error?error=OAuthSignin`)
-      }
-
+    try {
+      const oAuthSigninUrl = await oAuthSignin(provider, csrfToken)
       return res.redirect(oAuthSigninUrl)
-    }, authParams)
+    } catch (error) {
+      logger.error('SIGNIN_OAUTH_ERROR', error)
+      return res.redirect(`${baseUrl}${basePath}/error?error=OAuthSignin`)
+    }
   } else if (type === 'email' && req.method === 'POST') {
     if (!adapter) {
       logger.error('EMAIL_REQUIRES_ADAPTER_ERROR')

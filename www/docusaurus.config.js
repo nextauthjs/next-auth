@@ -42,20 +42,18 @@ module.exports = {
           position: 'right'
         },
         {
-          href: 'https://github.com/iaincollins/next-auth',
+          href: 'https://github.com/nextauthjs/next-auth',
           label: 'GitHub',
           position: 'right'
         }
       ]
     },
-    /*
     announcementBar: {
       id: 'release-candiate-announcement',
-      content: 'NextAuth.js v2.0 has been released <a target="_blank" rel="noopener noreferrer" href="https://www.npmjs.com/package/next-auth">npm i next-auth</a>',
+      content: 'NextAuth.js now has automatic 🤖 releases 🎉! Check out the <a href="https://next-auth-git-canary.nextauthjs.vercel.app">Canary documentation 📚</a>',
       backgroundColor: '#2DB2F9',
       textColor: '#fff'
     },
-    */
     footer: {
       links: [
         {
@@ -68,6 +66,10 @@ module.exports = {
             {
               label: 'Contributors',
               to: '/contributors'
+            },
+            {
+              label: 'Canary docs',
+              to: 'https://next-auth-git-canary.nextauthjs.vercel.app/'
             }
           ]
         },
@@ -76,7 +78,7 @@ module.exports = {
           items: [
             {
               label: 'GitHub',
-              to: 'https://github.com/iaincollins/next-auth'
+              to: 'https://github.com/nextauthjs/next-auth'
             },
             {
               label: 'NPM',
@@ -98,7 +100,7 @@ module.exports = {
           ]
         }
       ],
-      copyright: 'NextAuth.js &copy; Iain Collins 2020'
+      copyright: 'NextAuth.js &copy; Iain Collins 2021'
     }
   },
   presets: [
@@ -108,7 +110,7 @@ module.exports = {
         docs: {
           routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl: 'https://github.com/iaincollins/next-auth/edit/main/www'
+          editUrl: 'https://github.com/nextauthjs/next-auth/edit/main/www'
         },
         theme: {
           customCss: require.resolve('./src/css/index.css')

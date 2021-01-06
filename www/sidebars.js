@@ -4,7 +4,8 @@ module.exports = {
       'getting-started/introduction',
       'getting-started/example',
       'getting-started/client',
-      'getting-started/rest-api'
+      'getting-started/rest-api',
+      'getting-started/typescript'
     ],
     Configuration: [
       'configuration/options',
@@ -36,14 +37,16 @@ module.exports = {
       'providers/email',
       'providers/credentials',
       'providers/facebook',
+      'providers/foursquare',
       'providers/fusionauth',
       'providers/github',
       'providers/gitlab',
       'providers/google',
       'providers/identity-server4',
       'providers/linkedin',
-      'providers/Mail.ru',
+      'providers/mailru',
       'providers/mixer',
+      'providers/netlify',
       'providers/okta',
       'providers/slack',
       'providers/spotify',

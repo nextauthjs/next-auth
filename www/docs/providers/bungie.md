@@ -20,7 +20,9 @@ providers: [
   Providers.Bungie({
     clientId: process.env.BUNGIE_CLIENT_ID,
     clientSecret: process.env.BUNGIE_SECRET,
-    apiKey: process.env.BUNGIE_API_KEY
+    headers: {
+      'X-API-Key': provess.env.BUNGIE_API_KEY
+    }
   }),
 }
 ...
@@ -74,7 +76,7 @@ Add-Content -Path C:\Windows\System32\drivers\etc\hosts -Value "127.0.0.1`tdev.e
 #### Create certificate
 
 
-Creating a certificate for localhost is easy with openssl . Just put the following command in the terminal. The output will be two files: localhost.key and localhost.crt.
+Creating a certificate for localhost is easy with openssl. Just put the following command in the terminal. The output will be two files: localhost.key and localhost.crt.
 
 ```bash
 openssl req -x509 -out localhost.crt -keyout localhost.key \
