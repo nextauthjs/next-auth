@@ -318,7 +318,7 @@ async function NextAuthHandler (req, res, userOptions) {
 }
 
 /** Tha main entry point to next-auth */
-export default async function NextAuth (...args) {
+export default function NextAuth (...args) {
   if (args.length === 1) {
     return (req, res) => NextAuthHandler(req, res, args[0])
   }
