@@ -223,7 +223,7 @@ const _useSessionHook = (session) => {
 }
 
 // Client side method
-const signIn = async (provider, args = {}, authParams = {}) => {
+const signIn = async (provider, args = {}) => {
   const baseUrl = _apiBaseUrl()
   const callbackUrl = (args && args.callbackUrl) ? args.callbackUrl : window.location
   const providers = await getProviders()
@@ -233,13 +233,9 @@ const signIn = async (provider, args = {}, authParams = {}) => {
     // If Provider not recognized, redirect to sign in page
     window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`
   } else {
-    let signInUrl = (providers[provider].type === 'credentials')
+    const signInUrl = (providers[provider].type === 'credentials')
       ? `${baseUrl}/callback/${provider}`
       : `${baseUrl}/signin/${provider}`
-
-    if (authParams) {
-      signInUrl += `?${new URLSearchParams(authParams).toString()}`
-    }
 
     // If is any other provider type, POST to provider URL with CSRF Token,
     // callback URL and any other parameters supplied.
