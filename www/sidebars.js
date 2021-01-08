@@ -53,6 +53,7 @@ module.exports = {
       'providers/strava',
       'providers/twitch',
       'providers/twitter',
+      'providers/vk',
       'providers/yandex'
     ]
   }
