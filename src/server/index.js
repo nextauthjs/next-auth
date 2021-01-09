@@ -5,7 +5,7 @@ import * as cookie from './lib/cookie'
 import callbackUrlHandler from './lib/callback-url-handler'
 import parseProviders from './lib/providers'
 import * as events from './lib/events'
-import * as defaultCallbacks from './lib/defaultCallbacks'
+import extendRes from './lib/extend-req'
 import providers from './routes/providers'
 import signin from './routes/signin'
 import signout from './routes/signout'
@@ -14,7 +14,7 @@ import session from './routes/session'
 import renderPage from './pages'
 import adapters from '../adapters'
 import logger from '../lib/logger'
-import redirect from './lib/redirect'
+import createSecret from './lib/create-secret'
 
 // To work properly in production with OAuth providers the NEXTAUTH_URL
 // environment variable must be set.
@@ -28,17 +28,7 @@ async function NextAuthHandler (req, res, userOptions) {
   // (and then return that promise when we are done) - eslint
   // complains but I'm not sure there is another way to do this.
   return new Promise(async resolve => { // eslint-disable-line no-async-promise-executor
-    // This is passed to all methods that handle responses, and must be called
-    // when they are complete so that the serverless function knows when it is
-    // safe to return and that no more data will be sent.
-
-    const originalResEnd = res.end.bind(res)
-    res.end = (...args) => {
-      resolve()
-      return originalResEnd(...args)
-    }
-    res.redirect = redirect(req, res)
-
+    extendRes(req, res, resolve)
     if (!req.query.nextauth) {
       const error = 'Cannot find [...nextauth].js in pages/api/auth. Make sure the filename is written correctly.'
 
