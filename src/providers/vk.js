@@ -1,5 +1,5 @@
 export default (options) => {
-  const apiVersion = options.apiVersion || '5.126' // https://vk.com/dev/versions
+  const apiVersion = '5.126' // https://vk.com/dev/versions
 
   return {
     id: 'vk',
@@ -16,9 +16,7 @@ export default (options) => {
       `https://oauth.vk.com/authorize?response_type=code&v=${apiVersion}`,
     profileUrl: `https://api.vk.com/method/users.get?fields=photo_100&v=${apiVersion}`,
     profile: (result) => {
-      const profile = result.response?.[0]
-
-      if (!profile) return {}
+      const profile = result.response?.[0] ?? {}
 
       return {
         id: profile.id,
