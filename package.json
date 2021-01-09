@@ -83,12 +83,15 @@
     "mongodb": "^3.5.9",
     "mssql": "^6.2.1",
     "mysql": "^2.18.1",
+    "next": "^10.0.5",
     "pg": "^8.2.1",
     "postcss-cli": "^7.1.1",
     "postcss-nested": "^4.2.1",
     "puppeteer": "^5.2.1",
     "puppeteer-extra": "^3.1.15",
     "puppeteer-extra-plugin-stealth": "^2.6.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "standard": "^16.0.3"
   },
   "standard": {
