@@ -142,7 +142,7 @@ const getProviders = async () => {
 const SessionContext = createContext()
 
 // Client side method
-const useSession = (session) => {
+export const useSession = (session) => {
   // Try to use context if we can
   const value = useContext(SessionContext)
 
@@ -223,7 +223,7 @@ const _useSessionHook = (session) => {
 }
 
 // Client side method
-const signIn = async (provider, args = {}) => {
+export const signIn = async (provider, args = {}) => {
   const baseUrl = _apiBaseUrl()
   const callbackUrl = (args && args.callbackUrl) ? args.callbackUrl : window.location
   const providers = await getProviders()
@@ -258,8 +258,7 @@ const signIn = async (provider, args = {}) => {
 }
 
 // Client side method
-const signOut = async (args = {}) => {
-  const callbackUrl = (args && args.callbackUrl) ? args.callbackUrl : window.location
+export const signOut = async (args = {}) => {
 
   const baseUrl = _apiBaseUrl()
   const fetchOptions = {
@@ -280,7 +279,7 @@ const signOut = async (args = {}) => {
 }
 
 // Provider to wrap the app in to make session data available globally
-const Provider = ({ children, session, options }) => {
+export const Provider = ({ children, session, options }) => {
   setOptions(options)
   return createElement(SessionContext.Provider, { value: useSession(session) }, children)
 }
