@@ -29,12 +29,12 @@ async function NextAuthHandler (req, res, userOptions) {
   // complains but I'm not sure there is another way to do this.
   return new Promise(async resolve => { // eslint-disable-line no-async-promise-executor
     extendRes(req, res, resolve)
+
     if (!req.query.nextauth) {
       const error = 'Cannot find [...nextauth].js in pages/api/auth. Make sure the filename is written correctly.'
 
       logger.error('MISSING_NEXTAUTH_API_ROUTE_ERROR', error)
-      res.status(500)
-      return res.end(`Error: ${error}`)
+      return res.status(500).end(`Error: ${error}`)
     }
 
     const { url, query, body } = req
@@ -223,8 +223,7 @@ async function NextAuthHandler (req, res, userOptions) {
           session(req, res)
           break
         case 'csrf':
-          res.json({ csrfToken })
-          return res.end()
+          return res.json({ csrfToken })
         case 'signin':
           if (options.pages.signIn) {
             let redirectUrl = `${options.pages.signIn}${options.pages.signIn.includes('?') ? '&' : '?'}callbackUrl=${callbackUrl}`
@@ -242,13 +241,10 @@ async function NextAuthHandler (req, res, userOptions) {
           renderPage(req, res, 'signout', { csrfToken, callbackUrl })
           break
         case 'callback':
-          if (provider && options.providers[provider]) {
-            callback(req, res)
-          } else {
-            res.status(400)
-            return res.end(`Error: HTTP GET is not supported for ${url}`)
+          if (provider in providers) {
+            return routes.callback(req, res)
           }
-          break
+          return res.status(400).end(`Error: HTTP GET is not supported for ${req.url}`)
         case 'verify-request':
           if (options.pages.verifyRequest) { return res.redirect(options.pages.verifyRequest) }
 
@@ -260,8 +256,7 @@ async function NextAuthHandler (req, res, userOptions) {
           renderPage(req, res, 'error', { error })
           break
         default:
-          res.status(404)
-          return res.end()
+          return res.status(404).end(`Error: No available HTTP GET method for ${req.url}`)
       }
     } else if (req.method === 'POST') {
       switch (action) {
@@ -284,26 +279,20 @@ async function NextAuthHandler (req, res, userOptions) {
           signout(req, res)
           break
         case 'callback':
-          if (provider && options.providers[provider]) {
+          if (provider in providers) {
             // Verified CSRF Token required for credentials providers only
-            if (options.providers[provider].type === 'credentials' && !csrfTokenVerified) {
+            if (providers[provider].type !== 'credentials' && !csrfTokenVerified) {
               return res.redirect(`${baseUrl}${basePath}/signin?csrf=true`)
             }
 
-            callback(req, res)
-          } else {
-            res.status(400)
-            return res.end(`Error: HTTP POST is not supported for ${url}`)
+            return routes.callback(req, res)
           }
-          break
+          return res.status(400).end(`Error: HTTP POST is not supported for ${req.url}`)
         default:
-          res.status(400)
-          return res.end(`Error: HTTP POST is not supported for ${url}`)
+          return res.status(400).end(`Error: HTTP POST is not supported for ${req.url}`)
       }
-    } else {
-      res.status(400)
-      return res.end(`Error: HTTP ${req.method} is not supported for ${url}`)
     }
+    return res.status(400).end(`Error: HTTP ${req.method} is not supported for ${req.url}`)
   })
 }
 

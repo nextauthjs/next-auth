@@ -17,8 +17,7 @@ export default async function signin (req, res) {
   const { type } = provider
 
   if (!type) {
-    res.status(500)
-    return res.end(`Error: Type not specified for ${provider}`)
+    return res.status(500).end(`Error: Type not specified for ${provider}`)
   }
 
   if (type === 'oauth' && req.method === 'POST') {
