@@ -6,8 +6,8 @@ import Basecamp from './basecamp'
 import BattleNet from './battlenet'
 import Box from './box'
 import Bungie from './bungie'
-import Credentials from './credentials'
 import Cognito from './cognito'
+import Credentials from './credentials'
 import Discord from './discord'
 import Email from './email'
 import Facebook from './facebook'
@@ -27,19 +27,20 @@ import Spotify from './spotify'
 import Strava from './strava'
 import Twitch from './twitch'
 import Twitter from './twitter'
+import VK from './vk'
 import Yandex from './yandex'
 
 export default {
+  Apple,
   Atlassian,
   Auth0,
-  Apple,
   AzureADB2C,
   Basecamp,
   BattleNet,
   Box,
   Bungie,
-  Credentials,
   Cognito,
+  Credentials,
   Discord,
   Email,
   Facebook,
@@ -57,7 +58,8 @@ export default {
   Slack,
   Spotify,
   Strava,
-  Twitter,
   Twitch,
+  Twitter,
+  VK,
   Yandex
 }
