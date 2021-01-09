@@ -2,7 +2,7 @@ import { h } from 'preact' // eslint-disable-line no-unused-vars
 import render from 'preact-render-to-string'
 
 export default function signin ({ req, csrfToken, providers, callbackUrl }) {
-  const { email, error } = req.query
+  let { email, error } = req.query
 
   // We only want to render providers
   const providersToRender = providers.filter(provider => {
@@ -18,7 +18,6 @@ export default function signin ({ req, csrfToken, providers, callbackUrl }) {
     }
   })
 
-  let errorMessage
   if (error) {
     switch (error) {
       case 'Signin':
@@ -27,28 +26,28 @@ export default function signin ({ req, csrfToken, providers, callbackUrl }) {
       case 'OAuthCreateAccount':
       case 'EmailCreateAccount':
       case 'Callback':
-        errorMessage = <p>Try signing with a different account.</p>
+        error = 'Try signing with a different account.'
         break
       case 'OAuthAccountNotLinked':
-        errorMessage = <p>To confirm your identity, sign in with the same account you used originally.</p>
+        error = 'To confirm your identity, sign in with the same account you used originally.'
         break
       case 'EmailSignin':
-        errorMessage = <p>Check your email address.</p>
+        error = 'Check your email address.'
         break
       case 'CredentialsSignin':
-        errorMessage = <p>Sign in failed. Check the details you provided are correct.</p>
+        error = 'Sign in failed. Check the details you provided are correct.'
         break
       default:
-        errorMessage = <p>Unable to sign in.</p>
+        error = 'Unable to sign in.'
         break
     }
   }
 
   return render(
     <div className='signin'>
-      {errorMessage &&
+      {error &&
         <div className='error'>
-          {errorMessage}
+          <p>{error}</p>
         </div>}
       {providersToRender.map((provider, i) =>
         <div key={provider.id} className='provider'>
