@@ -17,7 +17,7 @@ Anyone can be a contributor. Either you found a typo, or you have an awesome fea
 * Pull Requests should be raised for any change
 * Pull Requests need approval of a [core contributor](https://next-auth.js.org/contributors#core-team) before merging
 * Rebasing in Pull Requests is preferred to keep a clean commit history (see below)
-* Running `npm run lint:fix` before committing can make resolving conflicts easier (Tip: if you use VSCode, check out [this extension](https://marketplace.visualstudio.com/items?itemName=chenxsan.vscode-standardjs) to mark/fix lint issues under development)
+* Run `npm run lint:fix` before committing to make resolving conflicts easier (VSCode users, check out [this extension](https://marketplace.visualstudio.com/items?itemName=chenxsan.vscode-standardjs) to fix lint issues in development)
 * We encourage you to test your changes, and if you have the opportunity, please make those tests part of the Pull Request
 * If you add new functionality, please provide the corresponding documentation as well and make it part of the Pull Request
 
