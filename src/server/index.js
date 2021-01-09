@@ -1,15 +1,16 @@
-import { createHash, randomBytes } from 'crypto'
+import adapters from '../adapters'
 import jwt from '../lib/jwt'
 import parseUrl from '../lib/parse-url'
+import logger from '../lib/logger'
 import * as cookie from './lib/cookie'
-import callbackUrlHandler from './lib/callback-url-handler'
+import * as defaultEvents from './lib/default-events'
+import * as defaultCallbacks from './lib/default-callbacks'
 import parseProviders from './lib/providers'
-import * as events from './lib/events'
+import callbackUrlHandler from './lib/callback-url-handler'
 import extendRes from './lib/extend-req'
 import * as routes from './routes'
 import renderPage from './pages'
-import adapters from '../adapters'
-import logger from '../lib/logger'
+import csrfTokenHandler from './lib/csrf-token-handler'
 import createSecret from './lib/create-secret'
 
 // To work properly in production with OAuth providers the NEXTAUTH_URL
@@ -33,149 +34,34 @@ async function NextAuthHandler (req, res, userOptions) {
       return res.status(500).end(`Error: ${error}`)
     }
 
-    const { url, query, body } = req
     const {
       nextauth,
       action = nextauth[0],
       provider = nextauth[1],
       error = nextauth[1]
-    } = query
-
-    const {
-      csrfToken: csrfTokenFromPost
-    } = body
+    } = req.query
 
     // @todo refactor all existing references to baseUrl and basePath
     const { basePath, baseUrl } = parseUrl(process.env.NEXTAUTH_URL || process.env.VERCEL_URL)
 
-    // Parse database / adapter
-    let adapter
-    if (userOptions.adapter) {
-      // If adapter is provided, use it (advanced usage, overrides database)
-      adapter = userOptions.adapter
-    } else if (userOptions.database) {
-      // If database URI or config object is provided, use it (simple usage)
-      adapter = adapters.Default(userOptions.database)
-    }
-
-    // Secret used salt cookies and tokens (e.g. for CSRF protection).
-    // If no secret option is specified then it creates one on the fly
-    // based on options passed here. A options contains unique data, such as
-    // OAuth provider secrets and database credentials it should be sufficent.
-    const secret = userOptions.secret || createHash('sha256').update(JSON.stringify({
-      baseUrl, basePath, ...userOptions
-    })).digest('hex')
-
-    // Use secure cookies if the site uses HTTPS
-    // This being conditional allows cookies to work non-HTTPS development URLs
-    // Honour secure cookie option, which sets 'secure' and also adds '__Secure-'
-    // prefix, but enable them by default if the site URL is HTTPS; but not for
-    // non-HTTPS URLs like http://localhost which are used in development).
-    // For more on prefixes see https://googlechrome.github.io/samples/cookie-prefixes/
-    const useSecureCookies = userOptions.useSecureCookies || baseUrl.startsWith('https://')
-    const cookiePrefix = useSecureCookies ? '__Secure-' : ''
-
-    // @TODO Review cookie settings (names, options)
     const cookies = {
-      // default cookie options
-      sessionToken: {
-        name: `${cookiePrefix}next-auth.session-token`,
-        options: {
-          httpOnly: true,
-          sameSite: 'lax',
-          path: '/',
-          secure: useSecureCookies
-        }
-      },
-      callbackUrl: {
-        name: `${cookiePrefix}next-auth.callback-url`,
-        options: {
-          sameSite: 'lax',
-          path: '/',
-          secure: useSecureCookies
-        }
-      },
-      csrfToken: {
-        // Default to __Host- for CSRF token for additional protection if using useSecureCookies
-        // NB: The `__Host-` prefix is stricter than the `__Secure-` prefix.
-        name: `${useSecureCookies ? '__Host-' : ''}next-auth.csrf-token`,
-        options: {
-          httpOnly: true,
-          sameSite: 'lax',
-          path: '/',
-          secure: useSecureCookies
-        }
-      },
+      ...cookie.defaultCookies(userOptions.useSecureCookies || baseUrl.startsWith('https://')),
       // Allow user cookie options to override any cookie settings above
       ...userOptions.cookies
     }
 
-    // Session options
-    const sessionOptions = {
-      jwt: false,
-      maxAge: 30 * 24 * 60 * 60, // Sessions expire after 30 days of being idle
-      updateAge: 24 * 60 * 60, // Sessions updated only if session is greater than this value (0 = always, 24*60*60 = every 24 hours)
-      ...userOptions.session
-    }
+    const secret = createSecret({ userOptions, basePath, baseUrl })
 
-    // JWT options
-    const jwtOptions = {
-      secret, // Use application secret if no keys specified
-      maxAge: sessionOptions.maxAge, // maxAge is dereived from session maxAge,
-      encode: jwt.encode,
-      decode: jwt.decode,
-      ...userOptions.jwt
-    }
+    const { csrfToken, csrfTokenVerified } = csrfTokenHandler(req, res, cookies, secret)
 
-    // If no adapter specified, force use of JSON Web Tokens (stateless)
-    if (!adapter) {
-      sessionOptions.jwt = true
-    }
+    const providers = parseProviders({ providers: userOptions.providers, baseUrl, basePath })
 
-    // Event messages
-    const eventsOptions = {
-      ...events,
-      ...userOptions.events
-    }
+    const maxAge = 30 * 24 * 60 * 60 // Sessions expire after 30 days of being idle
 
-    // Callback functions
-    const callbacksOptions = {
-      ...defaultCallbacks,
-      ...userOptions.callbacks
-    }
-
-    // Ensure CSRF Token cookie is set for any subsequent requests.
-    // Used as part of the strateigy for mitigation for CSRF tokens.
-    //
-    // Creates a cookie like 'next-auth.csrf-token' with the value 'token|hash',
-    // where 'token' is the CSRF token and 'hash' is a hash made of the token and
-    // the secret, and the two values are joined by a pipe '|'. By storing the
-    // value and the hash of the value (with the secret used as a salt) we can
-    // verify the cookie was set by the server and not by a malicous attacker.
-    //
-    // For more details, see the following OWASP links:
-    // https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie
-    // https://owasp.org/www-chapter-london/assets/slides/David_Johansson-Double_Defeat_of_Double-Submit_Cookie.pdf
-    let csrfToken
-    let csrfTokenVerified = false
-    if (req.cookies[cookies.csrfToken.name]) {
-      const [csrfTokenValue, csrfTokenHash] = req.cookies[cookies.csrfToken.name].split('|')
-      if (csrfTokenHash === createHash('sha256').update(`${csrfTokenValue}${secret}`).digest('hex')) {
-        // If hash matches then we trust the CSRF token value
-        csrfToken = csrfTokenValue
-
-        // If this is a POST request and the CSRF Token in the Post request matches
-        // the cookie we have already verified is one we have set, then token is verified!
-        if (req.method === 'POST' && csrfToken === csrfTokenFromPost) { csrfTokenVerified = true }
-      }
-    }
-    if (!csrfToken) {
-      // If no csrfToken - because it's not been set yet, or because the hash doesn't match
-      // (e.g. because it's been modifed or because the secret has changed) create a new token.
-      csrfToken = randomBytes(32).toString('hex')
-      const newCsrfTokenCookie = `${csrfToken}|${createHash('sha256').update(`${csrfToken}${secret}`).digest('hex')}`
-      cookie.set(res, cookies.csrfToken.name, newCsrfTokenCookie, cookies.csrfToken.options)
-    }
+    // Parse database / adapter
+    // If adapter is provided, use it (advanced usage, overrides database)
+    // If database URI or config object is provided, use it (simple usage)
+    const adapter = userOptions.adapter ?? (userOptions.database && adapters.Default(userOptions.database))
 
     // User provided options are overriden by other options,
     // except for the options with special handling above
@@ -194,11 +80,32 @@ async function NextAuthHandler (req, res, userOptions) {
       cookies,
       secret,
       csrfToken,
-      providers: parseProviders({ providers: userOptions.providers, baseUrl, basePath }),
-      session: sessionOptions,
-      jwt: jwtOptions,
-      events: eventsOptions,
-      callbacks: callbacksOptions
+      providers,
+      // Session options
+      session: {
+        jwt: !adapter, // If no adapter specified, force use of JSON Web Tokens (stateless)
+        maxAge,
+        updateAge: 24 * 60 * 60, // Sessions updated only if session is greater than this value (0 = always, 24*60*60 = every 24 hours)
+        ...userOptions.session
+      },
+      // JWT options
+      jwt: {
+        secret, // Use application secret if no keys specified
+        maxAge, // same as session maxAge,
+        encode: jwt.encode,
+        decode: jwt.decode,
+        ...userOptions.jwt
+      },
+      // Event messages
+      events: {
+        ...defaultEvents,
+        ...userOptions.events
+      },
+      // Callback functions
+      callbacks: {
+        ...defaultCallbacks,
+        ...userOptions.callbacks
+      }
     }
     req.options = options
 
@@ -209,6 +116,9 @@ async function NextAuthHandler (req, res, userOptions) {
 
     // Get / Set callback URL based on query param / cookie + validation
     const callbackUrl = await callbackUrlHandler(req, res)
+    req.options.callbackUrl = callbackUrl
+
+    const render = renderPage(req, res)
 
     if (req.method === 'GET') {
       switch (action) {
@@ -221,34 +131,32 @@ async function NextAuthHandler (req, res, userOptions) {
         case 'signin':
           if (options.pages.signIn) {
             let redirectUrl = `${options.pages.signIn}${options.pages.signIn.includes('?') ? '&' : '?'}callbackUrl=${callbackUrl}`
-            if (req.query.error) { redirectUrl = `${redirectUrl}&error=${req.query.error}` }
+            if (error) { redirectUrl = `${redirectUrl}&error=${error}` }
             return res.redirect(redirectUrl)
           }
 
-          renderPage(req, res, 'signin', { providers: Object.values(options.providers), callbackUrl, csrfToken })
-          break
+          return render.signin({ providers, callbackUrl, csrfToken })
         case 'signout':
           if (options.pages.signOut) {
             return res.redirect(`${options.pages.signOut}${options.pages.signOut.includes('?') ? '&' : '?'}error=${error}`)
           }
-
-          renderPage(req, res, 'signout', { csrfToken, callbackUrl })
-          break
+          return render.signout({ csrfToken, callbackUrl })
         case 'callback':
           if (provider in providers) {
             return routes.callback(req, res)
           }
           return res.status(400).end(`Error: HTTP GET is not supported for ${req.url}`)
         case 'verify-request':
-          if (options.pages.verifyRequest) { return res.redirect(options.pages.verifyRequest) }
-
-          renderPage(req, res, 'verify-request')
-          break
+          if (options.pages.verifyRequest) {
+            return res.redirect(options.pages.verifyRequest)
+          }
+          return render.verifyRequest()
         case 'error':
-          if (options.pages.error) { return res.redirect(`${options.pages.error}${options.pages.error.includes('?') ? '&' : '?'}error=${error}`) }
+          if (options.pages.error) {
+            return res.redirect(`${options.pages.error}${options.pages.error.includes('?') ? '&' : '?'}error=${error}`)
+          }
 
-          renderPage(req, res, 'error', { error })
-          break
+          return render.error({ error })
         default:
           return res.status(404).end(`Error: No available HTTP GET method for ${req.url}`)
       }
