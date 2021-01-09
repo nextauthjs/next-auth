@@ -6,11 +6,7 @@ import callbackUrlHandler from './lib/callback-url-handler'
 import parseProviders from './lib/providers'
 import * as events from './lib/events'
 import extendRes from './lib/extend-req'
-import providers from './routes/providers'
-import signin from './routes/signin'
-import signout from './routes/signout'
-import callback from './routes/callback'
-import session from './routes/session'
+import * as routes from './routes'
 import renderPage from './pages'
 import adapters from '../adapters'
 import logger from '../lib/logger'
@@ -217,11 +213,9 @@ async function NextAuthHandler (req, res, userOptions) {
     if (req.method === 'GET') {
       switch (action) {
         case 'providers':
-          providers(req, res)
-          break
+          return routes.providers(req, res)
         case 'session':
-          session(req, res)
-          break
+          return routes.session(req, res)
         case 'csrf':
           return res.json({ csrfToken })
         case 'signin':
@@ -262,22 +256,17 @@ async function NextAuthHandler (req, res, userOptions) {
       switch (action) {
         case 'signin':
           // Verified CSRF Token required for all sign in routes
-          if (!csrfTokenVerified) {
-            return res.redirect(`${baseUrl}${basePath}/signin?csrf=true`)
+          if (csrfTokenVerified && provider in providers) {
+            return routes.signin(req, res)
           }
 
-          if (provider && options.providers[provider]) {
-            signin(req, res)
-          }
-          break
+          return res.redirect(`${baseUrl}${basePath}/signin?csrf=true`)
         case 'signout':
           // Verified CSRF Token required for signout
-          if (!csrfTokenVerified) {
-            return res.redirect(`${baseUrl}${basePath}/signout?csrf=true`)
+          if (csrfTokenVerified) {
+            return routes.signout(req, res)
           }
-
-          signout(req, res)
-          break
+          return res.redirect(`${baseUrl}${basePath}/signout?csrf=true`)
         case 'callback':
           if (provider in providers) {
             // Verified CSRF Token required for credentials providers only
