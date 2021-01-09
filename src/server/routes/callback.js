@@ -19,7 +19,6 @@ export default async function callback (req, res) {
     jwt,
     events,
     callbacks,
-    csrfToken,
     session: {
       jwt: useJwtSession,
       maxAge: sessionMaxAge
@@ -33,7 +32,7 @@ export default async function callback (req, res) {
 
   if (type === 'oauth') {
     try {
-      const { profile, account, OAuthProfile } = await oAuthCallback(req, csrfToken)
+      const { profile, account, OAuthProfile } = await oAuthCallback(req)
       try {
         // Make it easier to debug when adding a new provider
         logger.debug('OAUTH_CALLBACK_RESPONSE', { profile, account, OAuthProfile })
