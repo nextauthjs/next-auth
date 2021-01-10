@@ -156,6 +156,21 @@ async function NextAuthHandler (req, res, userOptions) {
             return res.redirect(`${pages.error}${pages.error.includes('?') ? '&' : '?'}error=${error}`)
           }
 
+          // These error messages are displayed in line on the sign in page
+          if ([
+            'Signin',
+            'OAuthSignin',
+            'OAuthCallback',
+            'OAuthCreateAccount',
+            'EmailCreateAccount',
+            'Callback',
+            'OAuthAccountNotLinked',
+            'EmailSignin',
+            'CredentialsSignin'
+          ].includes(error)) {
+            return res.redirect(`${baseUrl}${basePath}/signin?error=${error}`)
+          }
+
           return render.error({ error })
         default:
           return res.status(404).end(`Error: No available HTTP GET method for ${req.url}`)
