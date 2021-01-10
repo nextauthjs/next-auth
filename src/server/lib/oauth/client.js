@@ -158,11 +158,9 @@ async function getOAuth2AccessToken (code, provider) {
           // Clients of these services suffer a minor performance cost.
           results = querystring.parse(data)
         }
-        let accessToken
+        let accessToken = results.access_token
         if (provider.id === 'spotify') {
           accessToken = results.authed_user.access_token
-        } else {
-          accessToken = results.access_token
         }
         const refreshToken = results.refresh_token
         resolve({ accessToken, refreshToken, results })
