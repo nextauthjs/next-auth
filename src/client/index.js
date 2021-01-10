@@ -67,9 +67,20 @@ if (typeof window !== 'undefined') {
       }
     })
 
-    // Listen for window focus/blur events
-    window.addEventListener('focus', async (event) => __NEXTAUTH._getSession({ event: 'focus' }))
-    window.addEventListener('blur', async (event) => __NEXTAUTH._getSession({ event: 'blur' }))
+    // Listen for document visibilitychange events
+    let hidden, visibilityChange
+    if (typeof document.hidden !== 'undefined') { // Opera 12.10 and Firefox 18 and later support
+      hidden = 'hidden'
+      visibilityChange = 'visibilitychange'
+    } else if (typeof document.msHidden !== 'undefined') {
+      hidden = 'msHidden'
+      visibilityChange = 'msvisibilitychange'
+    } else if (typeof document.webkitHidden !== 'undefined') {
+      hidden = 'webkitHidden'
+      visibilityChange = 'webkitvisibilitychange'
+    }
+    const handleVisibilityChange = () => !document[hidden] && __NEXTAUTH._getSession({ event: visibilityChange })
+    document.addEventListener('visibilitychange', handleVisibilityChange, false)
   }
 }
 
