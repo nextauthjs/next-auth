@@ -1,7 +1,7 @@
 import { h } from 'preact' // eslint-disable-line no-unused-vars
 import render from 'preact-render-to-string'
 
-export default function signin ({ csrfToken, providers, callbackUrl, email, error }) {
+export default function signin ({ csrfToken, providers, callbackUrl, email, error: errorType }) {
   // We only want to render providers
   const providersToRender = providers.filter(provider => {
     if (provider.type === 'oauth' || provider.type === 'email') {
@@ -15,30 +15,20 @@ export default function signin ({ csrfToken, providers, callbackUrl, email, erro
     return false
   })
 
-  if (error) {
-    switch (error) {
-      case 'Signin':
-      case 'OAuthSignin':
-      case 'OAuthCallback':
-      case 'OAuthCreateAccount':
-      case 'EmailCreateAccount':
-      case 'Callback':
-        error = 'Try signing with a different account.'
-        break
-      case 'OAuthAccountNotLinked':
-        error = 'To confirm your identity, sign in with the same account you used originally.'
-        break
-      case 'EmailSignin':
-        error = 'Check your email address.'
-        break
-      case 'CredentialsSignin':
-        error = 'Sign in failed. Check the details you provided are correct.'
-        break
-      default:
-        error = 'Unable to sign in.'
-        break
-    }
+  const errors = {
+    Signin: 'Try signing with a different account.',
+    OAuthSignin: 'Try signing with a different account.',
+    OAuthCallback: 'Try signing with a different account.',
+    OAuthCreateAccount: 'Try signing with a different account.',
+    EmailCreateAccount: 'Try signing with a different account.',
+    Callback: 'Try signing with a different account.',
+    OAuthAccountNotLinked: 'To confirm your identity, sign in with the same account you used originally.',
+    EmailSignin: 'Check your email address.',
+    CredentialsSignin: 'Sign in failed. Check the details you provided are correct.',
+    default: 'Unable to sign in.'
   }
+
+  const error = errorType && (errors[errorType] ?? errors.default)
 
   return render(
     <div className='signin'>
