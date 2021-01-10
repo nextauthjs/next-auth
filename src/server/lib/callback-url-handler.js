@@ -1,5 +1,10 @@
 import * as cookie from '../lib/cookie'
 
+/**
+ * Get callback URL based on query param / cookie + validation,
+ * and add it to `req.options.callbackUrl`.
+ * @note: `req.options` must already be defined when called.
+ */
 export default async function callbackUrlHandler (req, res) {
   const { query } = req
   const { body } = req
@@ -24,5 +29,5 @@ export default async function callbackUrlHandler (req, res) {
     cookie.set(res, cookies.callbackUrl.name, callbackUrl, cookies.callbackUrl.options)
   }
 
-  return callbackUrl
+  req.options.callbackUrl = callbackUrl
 }

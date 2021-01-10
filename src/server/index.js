@@ -20,6 +20,11 @@ if (!process.env.NEXTAUTH_URL) {
 }
 
 async function NextAuthHandler (req, res, userOptions) {
+  // If debug enabled, set ENV VAR so that logger logs debug messages
+  if (userOptions.debug) {
+    process.env._NEXTAUTH_DEBUG = true
+  }
+
   // To the best of my knowledge, we need to return a promise here
   // to avoid early termination of calls to the serverless function
   // (and then return that promise when we are done) - eslint
@@ -110,14 +115,7 @@ async function NextAuthHandler (req, res, userOptions) {
     }
     req.options = options
 
-    // If debug enabled, set ENV VAR so that logger logs debug messages
-    if (options.debug) {
-      process.env._NEXTAUTH_DEBUG = true
-    }
-
-    // Get / Set callback URL based on query param / cookie + validation
-    const callbackUrl = await callbackUrlHandler(req, res)
-    req.options.callbackUrl = callbackUrl
+    await callbackUrlHandler(req, res)
 
     const render = renderPage(req, res)
 
