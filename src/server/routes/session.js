@@ -13,9 +13,7 @@ export default async function session (req, res) {
   const sessionToken = req.cookies[cookies.sessionToken.name]
 
   if (!sessionToken) {
-    res.setHeader('Content-Type', 'application/json')
-    res.json({})
-    return res.end()
+    return res.json({})
   }
 
   let response = {}
@@ -101,7 +99,5 @@ export default async function session (req, res) {
     }
   }
 
-  res.setHeader('Content-Type', 'application/json')
   res.json(response)
-  return res.end()
 }

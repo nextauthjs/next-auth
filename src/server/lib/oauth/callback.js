@@ -10,13 +10,13 @@ class OAuthCallbackError extends Error {
   }
 }
 
-export default async function oAuthCallback (req, csrfToken) {
-  // The "user" object is specific to the Apple provider and is provided on first sign in
-  // e.g. {"name":{"firstName":"Johnny","lastName":"Appleseed"},"email":"johnny.appleseed@nextauth.com"}
-  const provider = req.options.providers[req.options.provider]
+export default async function oAuthCallback (req) {
+  const { provider, csrfToken } = req.options
   const client = oAuthClient(provider)
 
   if (provider.version?.startsWith('2.')) {
+    // The "user" object is specific to the Apple provider and is provided on first sign in
+    // e.g. {"name":{"firstName":"Johnny","lastName":"Appleseed"},"email":"johnny.appleseed@nextauth.com"}
     let { code, user, state } = req.query // eslint-disable-line camelcase
     // For OAuth 2.0 flows, check state returned and matches expected value
     // (a hash of the NextAuth.js CSRF token).
