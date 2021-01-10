@@ -71,7 +71,7 @@ async function NextAuthHandler (req, res, userOptions) {
 
     // User provided options are overriden by other options,
     // except for the options with special handling above
-    const options = {
+    req.options = {
       debug: false,
       pages: {},
       // Custom options override defaults
@@ -113,7 +113,6 @@ async function NextAuthHandler (req, res, userOptions) {
         ...userOptions.callbacks
       }
     }
-    req.options = options
 
     await callbackUrlHandler(req, res)
 
