@@ -1,9 +1,7 @@
 import { h } from 'preact' // eslint-disable-line no-unused-vars
 import render from 'preact-render-to-string'
 
-export default function signin ({ req, csrfToken, providers, callbackUrl }) {
-  const { email, error } = req.query
-
+export default function signin ({ csrfToken, providers, callbackUrl, email, error: errorType }) {
   // We only want to render providers
   const providersToRender = providers.filter(provider => {
     if (provider.type === 'oauth' || provider.type === 'email') {
@@ -12,43 +10,31 @@ export default function signin ({ req, csrfToken, providers, callbackUrl }) {
     } else if (provider.type === 'credentials' && provider.credentials) {
       // Only render credentials type provider if credentials are defined
       return true
-    } else {
-      // Don't render other provider types
-      return false
     }
+    // Don't render other provider types
+    return false
   })
 
-  let errorMessage
-  if (error) {
-    switch (error) {
-      case 'Signin':
-      case 'OAuthSignin':
-      case 'OAuthCallback':
-      case 'OAuthCreateAccount':
-      case 'EmailCreateAccount':
-      case 'Callback':
-        errorMessage = <p>Try signing with a different account.</p>
-        break
-      case 'OAuthAccountNotLinked':
-        errorMessage = <p>To confirm your identity, sign in with the same account you used originally.</p>
-        break
-      case 'EmailSignin':
-        errorMessage = <p>Check your email address.</p>
-        break
-      case 'CredentialsSignin':
-        errorMessage = <p>Sign in failed. Check the details you provided are correct.</p>
-        break
-      default:
-        errorMessage = <p>Unable to sign in.</p>
-        break
-    }
+  const errors = {
+    Signin: 'Try signing with a different account.',
+    OAuthSignin: 'Try signing with a different account.',
+    OAuthCallback: 'Try signing with a different account.',
+    OAuthCreateAccount: 'Try signing with a different account.',
+    EmailCreateAccount: 'Try signing with a different account.',
+    Callback: 'Try signing with a different account.',
+    OAuthAccountNotLinked: 'To confirm your identity, sign in with the same account you used originally.',
+    EmailSignin: 'Check your email address.',
+    CredentialsSignin: 'Sign in failed. Check the details you provided are correct.',
+    default: 'Unable to sign in.'
   }
+
+  const error = errorType && (errors[errorType] ?? errors.default)
 
   return render(
     <div className='signin'>
-      {errorMessage &&
+      {error &&
         <div className='error'>
-          {errorMessage}
+          <p>{error}</p>
         </div>}
       {providersToRender.map((provider, i) =>
         <div key={provider.id} className='provider'>

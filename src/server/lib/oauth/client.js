@@ -158,11 +158,9 @@ async function getOAuth2AccessToken (code, provider) {
           // Clients of these services suffer a minor performance cost.
           results = querystring.parse(data)
         }
-        let accessToken
+        let accessToken = results.access_token
         if (provider.id === 'spotify') {
           accessToken = results.authed_user.access_token
-        } else {
-          accessToken = results.access_token
         }
         const refreshToken = results.refresh_token
         resolve({ accessToken, refreshToken, results })
@@ -184,8 +182,8 @@ async function getOAuth2 (provider, accessToken, results) {
   if (this._useAuthorizationHeaderForGET) {
     headers.Authorization = this.buildAuthHeader(accessToken)
 
-    // Mail.ru requires 'access_token' as URL request parameter
-    if (provider.id === 'mailru') {
+    // Mail.ru & vk.com require 'access_token' as URL request parameter
+    if (['mailru', 'vk'].includes(provider.id)) {
       const safeAccessTokenURL = new URL(url)
       safeAccessTokenURL.searchParams.append('access_token', accessToken)
       url = safeAccessTokenURL.href
