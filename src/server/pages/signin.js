@@ -1,9 +1,7 @@
 import { h } from 'preact' // eslint-disable-line no-unused-vars
 import render from 'preact-render-to-string'
 
-export default function signin ({ req, csrfToken, providers, callbackUrl }) {
-  let { email, error } = req.query
-
+export default function signin ({ csrfToken, providers, callbackUrl, email, error }) {
   // We only want to render providers
   const providersToRender = providers.filter(provider => {
     if (provider.type === 'oauth' || provider.type === 'email') {

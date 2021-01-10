@@ -118,6 +118,7 @@ async function NextAuthHandler (req, res, userOptions) {
     await callbackUrlHandler(req, res)
 
     const render = renderPage(req, res)
+    const { pages } = req.options
 
     if (req.method === 'GET') {
       switch (action) {
@@ -128,31 +129,31 @@ async function NextAuthHandler (req, res, userOptions) {
         case 'csrf':
           return res.json({ csrfToken })
         case 'signin':
-          if (options.pages.signIn) {
-            let redirectUrl = `${options.pages.signIn}${options.pages.signIn.includes('?') ? '&' : '?'}callbackUrl=${callbackUrl}`
-            if (error) { redirectUrl = `${redirectUrl}&error=${error}` }
-            return res.redirect(redirectUrl)
+          if (pages.signIn) {
+            let signinUrl = `${pages.signIn}${pages.signIn.includes('?') ? '&' : '?'}callbackUrl=${req.options.callbackUrl}`
+            if (error) { signinUrl = `${signinUrl}&error=${error}` }
+            return res.redirect(signinUrl)
           }
 
-          return render.signin({ providers, callbackUrl, csrfToken })
+          return render.signin()
         case 'signout':
-          if (options.pages.signOut) {
-            return res.redirect(`${options.pages.signOut}${options.pages.signOut.includes('?') ? '&' : '?'}error=${error}`)
+          if (pages.signOut) {
+            return res.redirect(`${pages.signOut}${pages.signOut.includes('?') ? '&' : '?'}error=${error}`)
           }
-          return render.signout({ csrfToken, callbackUrl })
+          return render.signout()
         case 'callback':
           if (provider) {
             return routes.callback(req, res)
           }
           return res.status(400).end(`Error: HTTP GET is not supported for ${req.url}`)
         case 'verify-request':
-          if (options.pages.verifyRequest) {
-            return res.redirect(options.pages.verifyRequest)
+          if (pages.verifyRequest) {
+            return res.redirect(pages.verifyRequest)
           }
           return render.verifyRequest()
         case 'error':
-          if (options.pages.error) {
-            return res.redirect(`${options.pages.error}${options.pages.error.includes('?') ? '&' : '?'}error=${error}`)
+          if (pages.error) {
+            return res.redirect(`${pages.error}${pages.error.includes('?') ? '&' : '?'}error=${error}`)
           }
 
           return render.error({ error })
