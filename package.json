@@ -8,11 +8,12 @@
   "main": "index.js",
   "scripts": {
     "build": "npm run build:js && npm run build:css",
-    "build:js": "babel src --out-dir dist",
-    "build:css": "postcss src/**/*.css --base src --dir dist && node scripts/wrap-css.js",
+    "build:js": "babel --config-file ./config/babel.config.json src --out-dir dist",
+    "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir dist && node config/wrap-css.js",
+    "dev": "next | npm run watch:css",
     "watch": "npm run watch:js | npm run watch:css",
-    "watch:js": "babel --watch src --out-dir dist",
-    "watch:css": "postcss --watch src/**/*.css --base src --dir dist",
+    "watch:js": "babel --config-file ./config/babel.config.json --watch src --out-dir dist",
+    "watch:css": "postcss --config config/postcss.config.js --watch src/**/*.css --base src --dir dist",
     "test:app:start": "docker-compose -f test/docker/app.yml up -d",
     "test:app:rebuild": "npm run build && docker-compose -f test/docker/app.yml up -d --build",
     "test:app:stop": "docker-compose -f test/docker/app.yml down",
@@ -83,17 +84,22 @@
     "mongodb": "^3.5.9",
     "mssql": "^6.2.1",
     "mysql": "^2.18.1",
+    "next": "^10.0.5",
     "pg": "^8.2.1",
     "postcss-cli": "^7.1.1",
     "postcss-nested": "^4.2.1",
     "puppeteer": "^5.2.1",
     "puppeteer-extra": "^3.1.15",
     "puppeteer-extra-plugin-stealth": "^2.6.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "standard": "^16.0.3"
   },
   "standard": {
     "ignore": [
-      "test/"
+      "test/",
+      "pages/",
+      "components/"
     ]
   }
 }
