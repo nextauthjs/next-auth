@@ -142,7 +142,7 @@ const getProviders = async () => {
 const SessionContext = createContext()
 
 // Client side method
-const useSession = (session) => {
+export const useSession = (session) => {
   // Try to use context if we can
   const value = useContext(SessionContext)
 
@@ -223,13 +223,13 @@ const _useSessionHook = (session) => {
 }
 
 // Client side method
-const signIn = async (provider, args = {}) => {
+export const signIn = async (provider, args = {}) => {
   const baseUrl = _apiBaseUrl()
-  const callbackUrl = (args && args.callbackUrl) ? args.callbackUrl : window.location
+  const callbackUrl = args.callbackUrl ?? window.location
   const providers = await getProviders()
 
   // Redirect to sign in page if no valid provider specified
-  if (!provider || !providers[provider]) {
+  if (!(provider in providers)) {
     // If Provider not recognized, redirect to sign in page
     window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`
   } else {
@@ -253,13 +253,13 @@ const signIn = async (provider, args = {}) => {
     }
     const res = await fetch(signInUrl, fetchOptions)
     const data = await res.json()
-    window.location = data.url ? data.url : callbackUrl
+    window.location = data.url ?? callbackUrl
   }
 }
 
 // Client side method
-const signOut = async (args = {}) => {
-  const callbackUrl = (args && args.callbackUrl) ? args.callbackUrl : window.location
+export const signOut = async (args = {}) => {
+  const callbackUrl = args.callbackUrl ?? window.location
 
   const baseUrl = _apiBaseUrl()
   const fetchOptions = {
@@ -276,11 +276,11 @@ const signOut = async (args = {}) => {
   const res = await fetch(`${baseUrl}/signout`, fetchOptions)
   const data = await res.json()
   _sendMessage({ event: 'session', data: { trigger: 'signout' } })
-  window.location = data.url ? data.url : callbackUrl
+  window.location = data.url ?? callbackUrl
 }
 
 // Provider to wrap the app in to make session data available globally
-const Provider = ({ children, session, options }) => {
+export const Provider = ({ children, session, options }) => {
   setOptions(options)
   return createElement(SessionContext.Provider, { value: useSession(session) }, children)
 }

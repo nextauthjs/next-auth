@@ -17,70 +17,47 @@ Anyone can be a contributor. Either you found a typo, or you have an awesome fea
 * Pull Requests should be raised for any change
 * Pull Requests need approval of a [core contributor](https://next-auth.js.org/contributors#core-team) before merging
 * Rebasing in Pull Requests is preferred to keep a clean commit history (see below)
-* Running `npm run lint:fix` before committing can make resolving conflicts easier
+* Run `npm run lint:fix` before committing to make resolving conflicts easier (VSCode users, check out [this extension](https://marketplace.visualstudio.com/items?itemName=chenxsan.vscode-standardjs) to fix lint issues in development)
 * We encourage you to test your changes, and if you have the opportunity, please make those tests part of the Pull Request
 * If you add new functionality, please provide the corresponding documentation as well and make it part of the Pull Request
 
 ### Setting up local environment
 
-A quick and dirty guide on how to setup *next-auth* locally to work on it and test out any changes:
+A quick guide on how to setup *next-auth* locally to work on it and test out any changes:
 
 1. Clone the repo:
+```sh
+git clone git@github.com:nextauthjs/next-auth.git
+cd next-auth
+```
 
-       git clone git@github.com:nextauthjs/next-auth.git
-       cd next-auth/
+2. Install packages:
+```sh
+npm i
+```
 
-2. Install packages and run the build command:
+3. Populate `.env.local`:
+   
+    Copy `.env.example` to `.env.local`, and add your env variables for each provider you want to test.
 
-       npm i
-       npm run build
+>NOTE: You can configure providers of the dev app in `pages/api/auth/[...nextauth].js`
 
-3. Link your project back to your local copy of next auth:
+4. Start the dev application/server and CSS watching:
+```sh
+npm run dev
+```
 
-       cd ../your-application
-       npm link ../next-auth
+Your dev application will be available on ```http://localhost:3000```
 
-4. Finally link React between the repo and the version installed in your project:
-
-       cd ../next-auth
-       npm link ../your-application/node_modules/react
-
-*This is an annoying step and not obvious, but is needed because of how React has been written (otherwise React crashes when you try to use the `useSession()` hook in your project).*
-
-That's it!
-
-Notes: You may need to repeat both `npm link` steps if you install / update additional dependencies with `npm i`.
+That's it! 🎉
 
 If you need an example project to link to, you can use [next-auth-example](https://github.com/iaincollins/next-auth-example).
 
 #### Hot reloading
 
-You might find it helpful to use the `npm run watch` command in the next-auth project, which will automatically (and silently) rebuild JS and CSS files as you edit them.
+When running `npm run dev`, you start a Next.js dev server on `http://localhost:3000`, which includes hot reloading out of the box. Make changes on any of the files in `src` and see the changes immediately.
 
-    cd next-auth/
-    npm run watch
-
-If you are working on `next-auth/src/client/index.js` hot reloading will work as normal in your Next.js app.
-
-However, if you are working on anything else (e.g. `next-auth/src/server/*` etc) then you will need to *stop and start* your app for changes to apply as **Next.js will not hot reload those changes by default**. To facilitate this, you can try [this webpack plugin](https://www.npmjs.com/package/webpack-clear-require-cache-plugin). Note that the `next.config.js` syntax in the plugin README may be out of date. It should look like this:
-
-```
-const clearRequireCachePlugin = require('webpack-clear-require-cache-plugin')
-
-module.exports = {
-  webpack: (config, {
-    buildId, dev, isServer, defaultLoaders, webpack,
-  }) => {
-    config.plugins.push(clearRequireCachePlugin([
-      /\.next\/server\/static\/development\/pages/,
-      /\.next\/server\/ssr-module-cache.js/,
-      /next-auth/,
-    ]))
-
-    return config
-  },
-}
-```
+>NOTE: When working on CSS, you will need to manually refresh the page after changes. (Improving this through a PR is very welcome!)
 
 #### Databases
 
@@ -90,7 +67,7 @@ It will use port `3306`, `5432`, and `27017` on localhost respectively; please m
 
 You can start them with `npm run db:start` and stop them with `npm run db:stop`.
 
-You will need Docker installed to be able to start / stop the databases.
+You will need Docker and Docker Compose installed to be able to start / stop the databases.
 
 When stopping the databases, it will reset their contents.
 
