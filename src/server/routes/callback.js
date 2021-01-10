@@ -117,10 +117,9 @@ export default async function callback (req, res) {
           return res.redirect(`${baseUrl}${basePath}/error?error=OAuthAccountNotLinked`)
         } else if (error.name === 'CreateUserError') {
           return res.redirect(`${baseUrl}${basePath}/error?error=OAuthCreateAccount`)
-        } else {
-          logger.error('OAUTH_CALLBACK_HANDLER_ERROR', error)
-          return res.redirect(`${baseUrl}${basePath}/error?error=Callback`)
         }
+        logger.error('OAUTH_CALLBACK_HANDLER_ERROR', error)
+        return res.redirect(`${baseUrl}${basePath}/error?error=Callback`)
       }
     } catch (error) {
       if (error.name === 'OAuthCallbackError') {
@@ -211,10 +210,9 @@ export default async function callback (req, res) {
     } catch (error) {
       if (error.name === 'CreateUserError') {
         return res.redirect(`${baseUrl}${basePath}/error?error=EmailCreateAccount`)
-      } else {
-        logger.error('CALLBACK_EMAIL_ERROR', error)
-        return res.redirect(`${baseUrl}${basePath}/error?error=Callback`)
       }
+      logger.error('CALLBACK_EMAIL_ERROR', error)
+      return res.redirect(`${baseUrl}${basePath}/error?error=Callback`)
     }
   } else if (provider.type === 'credentials' && req.method === 'POST') {
     if (!useJwtSession) {
@@ -238,9 +236,8 @@ export default async function callback (req, res) {
     } catch (error) {
       if (error instanceof Error) {
         return res.redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
-      } else {
-        return res.redirect(error)
       }
+      return res.redirect(error)
     }
 
     const user = userObjectReturnedFromAuthorizeHandler
@@ -254,9 +251,8 @@ export default async function callback (req, res) {
     } catch (error) {
       if (error instanceof Error) {
         return res.redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
-      } else {
-        return res.redirect(error)
       }
+      return res.redirect(error)
     }
 
     const defaultJwtPayload = {

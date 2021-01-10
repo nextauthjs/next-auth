@@ -10,10 +10,9 @@ export default function signin ({ csrfToken, providers, callbackUrl, email, erro
     } else if (provider.type === 'credentials' && provider.credentials) {
       // Only render credentials type provider if credentials are defined
       return true
-    } else {
-      // Don't render other provider types
-      return false
     }
+    // Don't render other provider types
+    return false
   })
 
   if (error) {
