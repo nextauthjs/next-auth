@@ -66,12 +66,11 @@ export default async function callbackHandler (sessionToken, profile, providerAc
       } catch {
         // If session can't be verified, treat as no session
       }
-    } else {
-      session = await getSession(sessionToken)
-      if (session?.userId) {
-        user = await getUser(session.userId)
-        isSignedIn = !!user
-      }
+    }
+    session = await getSession(sessionToken)
+    if (session?.userId) {
+      user = await getUser(session.userId)
+      isSignedIn = !!user
     }
   }
 
@@ -125,21 +124,19 @@ export default async function callbackHandler (sessionToken, profile, providerAc
             user,
             isNewUser
           }
-        } else {
-          // If the user is currently signed in, but the new account they are signing in
-          // with is already associated with another account, then we cannot link them
-          // and need to return an error.
-          throw new AccountNotLinkedError()
         }
-      } else {
-        // If there is no active session, but the account being signed in with is already
-        // associated with a valid user then create session to sign the user in.
-        session = useJwtSession ? {} : await createSession(userByProviderAccountId)
-        return {
-          session,
-          user: userByProviderAccountId,
-          isNewUser
-        }
+        // If the user is currently signed in, but the new account they are signing in
+        // with is already associated with another account, then we cannot link them
+        // and need to return an error.
+        throw new AccountNotLinkedError()
+      }
+      // If there is no active session, but the account being signed in with is already
+      // associated with a valid user then create session to sign the user in.
+      session = useJwtSession ? {} : await createSession(userByProviderAccountId)
+      return {
+        session,
+        user: userByProviderAccountId,
+        isNewUser
       }
     } else {
       if (isSignedIn) {
@@ -191,34 +188,33 @@ export default async function callbackHandler (sessionToken, profile, providerAc
         // want to link them in case it's not safe to do so, so instead we prompt the user
         // to sign in via email to verify their identity and then link the accounts.
         throw new AccountNotLinkedError()
-      } else {
-        // If the current user is not logged in and the profile isn't linked to any user
-        // accounts (by email or provider account id)...
-        //
-        // If no account matching the same [provider].id or .email exists, we can
-        // create a new account for the user, link it to the OAuth acccount and
-        // create a new session for them so they are signed in with it.
-        user = await createUser(profile)
-        await dispatchEvent(events.createUser, user)
+      }
+      // If the current user is not logged in and the profile isn't linked to any user
+      // accounts (by email or provider account id)...
+      //
+      // If no account matching the same [provider].id or .email exists, we can
+      // create a new account for the user, link it to the OAuth acccount and
+      // create a new session for them so they are signed in with it.
+      user = await createUser(profile)
+      await dispatchEvent(events.createUser, user)
 
-        await linkAccount(
-          user.id,
-          providerAccount.provider,
-          providerAccount.type,
-          providerAccount.id,
-          providerAccount.refreshToken,
-          providerAccount.accessToken,
-          providerAccount.accessTokenExpires
-        )
-        await dispatchEvent(events.linkAccount, { user, providerAccount: providerAccount })
+      await linkAccount(
+        user.id,
+        providerAccount.provider,
+        providerAccount.type,
+        providerAccount.id,
+        providerAccount.refreshToken,
+        providerAccount.accessToken,
+        providerAccount.accessTokenExpires
+      )
+      await dispatchEvent(events.linkAccount, { user, providerAccount: providerAccount })
 
-        session = useJwtSession ? {} : await createSession(user)
-        isNewUser = true
-        return {
-          session,
-          user,
-          isNewUser
-        }
+      session = useJwtSession ? {} : await createSession(user)
+      isNewUser = true
+      return {
+        session,
+        user,
+        isNewUser
       }
     }
   }
