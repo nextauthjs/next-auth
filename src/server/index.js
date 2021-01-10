@@ -144,7 +144,7 @@ async function NextAuthHandler (req, res, userOptions) {
           if (provider) {
             return routes.callback(req, res)
           }
-          return res.status(400).end(`Error: HTTP GET is not supported for ${req.url}`)
+          break
         case 'verify-request':
           if (pages.verifyRequest) {
             return res.redirect(pages.verifyRequest)
@@ -172,7 +172,6 @@ async function NextAuthHandler (req, res, userOptions) {
 
           return render.error({ error })
         default:
-          return res.status(404).end(`Error: No available HTTP GET method for ${req.url}`)
       }
     } else if (req.method === 'POST') {
       switch (action) {
@@ -198,9 +197,8 @@ async function NextAuthHandler (req, res, userOptions) {
 
             return routes.callback(req, res)
           }
-          return res.status(400).end(`Error: HTTP POST is not supported for ${req.url}`)
+          break
         default:
-          return res.status(400).end(`Error: HTTP POST is not supported for ${req.url}`)
       }
     }
     return res.status(400).end(`Error: HTTP ${req.method} is not supported for ${req.url}`)
