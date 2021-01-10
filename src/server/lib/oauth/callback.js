@@ -11,8 +11,7 @@ class OAuthCallbackError extends Error {
 }
 
 export default async function oAuthCallback (req) {
-  const { providers, provider: providerName, csrfToken } = req.options
-  const provider = providers[providerName]
+  const { provider, csrfToken } = req.options
   const client = oAuthClient(provider)
 
   if (provider.version?.startsWith('2.')) {

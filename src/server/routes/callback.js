@@ -7,8 +7,7 @@ import dispatchEvent from '../lib/dispatch-event'
 /** Handle callbacks from login services */
 export default async function callback (req, res) {
   const {
-    provider: providerName,
-    providers,
+    provider,
     adapter,
     baseUrl,
     basePath,
@@ -24,13 +23,11 @@ export default async function callback (req, res) {
       maxAge: sessionMaxAge
     }
   } = req.options
-  const provider = providers[providerName]
-  const { type } = provider
 
   // Get session ID (if set)
   const sessionToken = req.cookies?.[cookies.sessionToken.name] ?? null
 
-  if (type === 'oauth') {
+  if (provider.type === 'oauth') {
     try {
       const { profile, account, OAuthProfile } = await oAuthCallback(req)
       try {
@@ -133,7 +130,7 @@ export default async function callback (req, res) {
       logger.error('OAUTH_CALLBACK_ERROR', error)
       return res.redirect(`${baseUrl}${basePath}/error?error=Callback`)
     }
-  } else if (type === 'email') {
+  } else if (provider.type === 'email') {
     try {
       if (!adapter) {
         logger.error('EMAIL_REQUIRES_ADAPTER_ERROR')
@@ -219,7 +216,7 @@ export default async function callback (req, res) {
         return res.redirect(`${baseUrl}${basePath}/error?error=Callback`)
       }
     }
-  } else if (type === 'credentials' && req.method === 'POST') {
+  } else if (provider.type === 'credentials' && req.method === 'POST') {
     if (!useJwtSession) {
       logger.error('CALLBACK_CREDENTIALS_JWT_ERROR', 'Signin in with credentials is only supported if JSON Web Tokens are enabled')
       return res.redirect(`${baseUrl}${basePath}/error?error=Configuration`)
@@ -281,7 +278,6 @@ export default async function callback (req, res) {
     await dispatchEvent(events.signIn, { user, account })
 
     return res.redirect(callbackUrl || baseUrl)
-  } else {
-    return res.status(500).end(`Error: Callback for provider type ${type} not supported`)
   }
+  return res.status(500).end(`Error: Callback for provider type ${provider.type} not supported`)
 }

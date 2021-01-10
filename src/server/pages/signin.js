@@ -5,7 +5,7 @@ export default function signin ({ req, csrfToken, providers, callbackUrl }) {
   let { email, error } = req.query
 
   // We only want to render providers
-  const providersToRender = Object.values(providers).filter(provider => {
+  const providersToRender = providers.filter(provider => {
     if (provider.type === 'oauth' || provider.type === 'email') {
       // Always render oauth and email type providers
       return true

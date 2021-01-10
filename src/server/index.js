@@ -37,7 +37,7 @@ async function NextAuthHandler (req, res, userOptions) {
     const {
       nextauth,
       action = nextauth[0],
-      provider = nextauth[1],
+      providerId = nextauth[1],
       error = nextauth[1]
     } = req.query
 
@@ -55,6 +55,7 @@ async function NextAuthHandler (req, res, userOptions) {
     const { csrfToken, csrfTokenVerified } = csrfTokenHandler(req, res, cookies, secret)
 
     const providers = parseProviders({ providers: userOptions.providers, baseUrl, basePath })
+    const provider = providers.find(({ id }) => id === providerId)
 
     const maxAge = 30 * 24 * 60 * 60 // Sessions expire after 30 days of being idle
 
@@ -70,7 +71,7 @@ async function NextAuthHandler (req, res, userOptions) {
       pages: {},
       // Custom options override defaults
       ...userOptions,
-      // These computed settings can values in userSuppliedOptions but override them
+      // These computed settings can have values in userOptions but we override them
       // and are request-specific.
       adapter,
       baseUrl,
@@ -142,7 +143,7 @@ async function NextAuthHandler (req, res, userOptions) {
           }
           return render.signout({ csrfToken, callbackUrl })
         case 'callback':
-          if (provider in providers) {
+          if (provider) {
             return routes.callback(req, res)
           }
           return res.status(400).end(`Error: HTTP GET is not supported for ${req.url}`)
@@ -164,7 +165,7 @@ async function NextAuthHandler (req, res, userOptions) {
       switch (action) {
         case 'signin':
           // Verified CSRF Token required for all sign in routes
-          if (csrfTokenVerified && provider in providers) {
+          if (csrfTokenVerified && provider) {
             return routes.signin(req, res)
           }
 
@@ -176,9 +177,9 @@ async function NextAuthHandler (req, res, userOptions) {
           }
           return res.redirect(`${baseUrl}${basePath}/signout?csrf=true`)
         case 'callback':
-          if (provider in providers) {
+          if (provider) {
             // Verified CSRF Token required for credentials providers only
-            if (providers[provider].type !== 'credentials' && !csrfTokenVerified) {
+            if (provider.type === 'credentials' && !csrfTokenVerified) {
               return res.redirect(`${baseUrl}${basePath}/signin?csrf=true`)
             }
 
