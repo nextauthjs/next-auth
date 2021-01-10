@@ -1,6 +1,7 @@
 import jose from 'jose'
 import hkdf from 'futoin-hkdf'
 import logger from './logger'
+import jwt from 'jsonwebtoken'
 
 // Set default algorithm to use for auto-generated signing key
 const DEFAULT_SIGNATURE_ALGORITHM = 'HS512'
@@ -10,6 +11,7 @@ const DEFAULT_ENCRYPTION_ALGORITHM = 'A256GCM'
 
 // Use encryption or not by default
 const DEFAULT_ENCRYPTION_ENABLED = false
+const DEFAULT_JSONWEBTOKEN = false
 
 const DEFAULT_MAX_AGE = 30 * 24 * 60 * 60 // 30 days
 
@@ -17,6 +19,7 @@ const encode = async ({
   token = {},
   maxAge = DEFAULT_MAX_AGE,
   secret,
+  jsonwebtoken = DEFAULT_JSONWEBTOKEN,
   signingKey,
   signingOptions = {
     expiresIn: `${maxAge}s`
@@ -29,30 +32,39 @@ const encode = async ({
   },
   encryption = DEFAULT_ENCRYPTION_ENABLED
 } = {}) => {
-  // Signing Key
-  const _signingKey = (signingKey)
-    ? jose.JWK.asKey(JSON.parse(signingKey))
-    : getDerivedSigningKey(secret)
-
-  // Sign token
-  const signedToken = jose.JWT.sign(token, _signingKey, signingOptions)
-
-  if (encryption) {
-    // Encryption Key
-    const _encryptionKey = (encryptionKey)
-      ? jose.JWK.asKey(JSON.parse(encryptionKey))
-      : getDerivedEncryptionKey(secret)
-
-    // Encrypt token
-    return jose.JWE.encrypt(signedToken, _encryptionKey, encryptionOptions)
-  } else {
+  if (jsonwebtoken) {
+    // signing key
+    const signedToken = jwt.sign(token, secret, { algorithm: DEFAULT_SIGNATURE_ALGORITHM })
+    // no support for encrypting tokens yet
+    // return signed token
     return signedToken
+  } else {
+    // Signing Key
+    const _signingKey = (signingKey)
+      ? jose.JWK.asKey(JSON.parse(signingKey))
+      : getDerivedSigningKey(secret)
+
+    // Sign token
+    const signedToken = jose.JWT.sign(token, _signingKey, signingOptions)
+
+    if (encryption) {
+      // Encryption Key
+      const _encryptionKey = (encryptionKey)
+        ? jose.JWK.asKey(JSON.parse(encryptionKey))
+        : getDerivedEncryptionKey(secret)
+
+      // Encrypt token
+      return jose.JWE.encrypt(signedToken, _encryptionKey, encryptionOptions)
+    } else {
+      return signedToken
+    }
   }
 }
 
 const decode = async ({
   secret,
   token,
+  jsonwebtoken = DEFAULT_JSONWEBTOKEN,
   maxAge = DEFAULT_MAX_AGE,
   signingKey,
   verificationKey = signingKey, // Optional (defaults to encryptionKey)
@@ -70,25 +82,28 @@ const decode = async ({
   if (!token) return null
 
   let tokenToVerify = token
+  if (jsonwebtoken) {
+    return jwt.verify(token, secret)
+  } else {
+    if (encryption) {
+      // Encryption Key
+      const _encryptionKey = (decryptionKey)
+        ? jose.JWK.asKey(JSON.parse(decryptionKey))
+        : getDerivedEncryptionKey(secret)
 
-  if (encryption) {
-    // Encryption Key
-    const _encryptionKey = (decryptionKey)
-      ? jose.JWK.asKey(JSON.parse(decryptionKey))
-      : getDerivedEncryptionKey(secret)
+      // Decrypt token
+      const decryptedToken = jose.JWE.decrypt(token, _encryptionKey, decryptionOptions)
+      tokenToVerify = decryptedToken.toString('utf8')
+    }
 
-    // Decrypt token
-    const decryptedToken = jose.JWE.decrypt(token, _encryptionKey, decryptionOptions)
-    tokenToVerify = decryptedToken.toString('utf8')
+    // Signing Key
+    const _signingKey = (verificationKey)
+      ? jose.JWK.asKey(JSON.parse(verificationKey))
+      : getDerivedSigningKey(secret)
+
+    // Verify token
+    return jose.JWT.verify(tokenToVerify, _signingKey, verificationOptions)
   }
-
-  // Signing Key
-  const _signingKey = (verificationKey)
-    ? jose.JWK.asKey(JSON.parse(verificationKey))
-    : getDerivedSigningKey(secret)
-
-  // Verify token
-  return jose.JWT.verify(tokenToVerify, _signingKey, verificationOptions)
 }
 
 const getToken = async (args) => {

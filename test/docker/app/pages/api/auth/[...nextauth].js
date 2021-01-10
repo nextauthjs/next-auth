@@ -75,6 +75,8 @@ const options = {
   jwt: {
     // A secret to use for key generation (you should set this explicitly)
     // secret: 'INp8IvdIyeMcoGAgFGoA61DdBglwwSqnXJZkgz8PSnw',
+    // Set to true when using jsonwebtoken library
+    // jsonwebtoken: true,
 
     // Set to true to use encryption (default: false)
     // encryption: true,
