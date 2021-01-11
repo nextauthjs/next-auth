@@ -1,14 +1,42 @@
 :root {
-  --color-background: #fff;
-  --color-primary: #444;
-  --color-control-border: #bbb;
-  --color-button-active-background: #f9f9f9;
-  --color-button-active-border: #aaa;
   --border-width: 1px;
   --border-radius: .3rem;
   --color-error: #c94b4b;
   --color-info: #157efb;
+}
+
+.__next-auth-theme-auto,
+.__next-auth-theme-light {
+  --color-background: #fff;
+  --color-text: #000;
+  --color-primary: #444;
+  --color-control-border: #bbb;
+  --color-button-active-background: #f9f9f9;
+  --color-button-active-border: #aaa;
   --color-seperator: #ccc;
+}
+
+.__next-auth-theme-dark {
+  --color-background: #000;
+  --color-text: #fff;
+  --color-primary: #ccc;
+  --color-control-border: #555;
+  --color-button-active-background: #060606;
+  --color-button-active-border: #666;
+
+  --color-seperator: #444;
+}
+
+@media (prefers-color-scheme: dark) {
+  .__next-auth-theme-auto {
+    --color-background: #000;
+    --color-text: #fff;
+    --color-primary: #ccc;
+    --color-control-border: #555;
+    --color-button-active-background: #060606;
+    --color-button-active-border: #666;
+    --color-seperator: #444;
+  }
 }
 
 body {
@@ -22,6 +50,7 @@ h1 {
   font-weight: 400;
   margin-bottom: 1.5rem;
   padding: 0 1rem;
+  color: var(--color-text);
 }
 
 form {
@@ -169,7 +198,7 @@ a.site {
     font-weight: 500;
     border-radius: 0.3rem;
     background: var(--color-info);
-    color: #fff;
+    color: var(--color-text);
 
     p {
       text-align: left;

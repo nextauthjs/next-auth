@@ -307,6 +307,17 @@ Set debug to `true` to enable debug messages for authentication and database ope
 
 ---
 
+### theme
+
+* **Default value**: `"auto"`
+* **Required**: *No*
+
+#### Description
+
+Changes the theme of [pages](/configuration/pages). Set to `"light"`, if you want to force pages to always be light. Set to `"dark"`, if you want to force pages to always be dark. Set to `"auto"`, (or leave this option out) if you want the pages to follow the preferred system theme. (Uses the [prefers-color-scheme](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) media query.)
+
+---
+
 ## Advanced Options
 
 Advanced options are passed the same way as basic options, but may have complex implications or side effects. You should try to avoid using advanced options unless you are very comfortable using them.

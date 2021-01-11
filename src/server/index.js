@@ -74,6 +74,7 @@ async function NextAuthHandler (req, res, userOptions) {
     req.options = {
       debug: false,
       pages: {},
+      theme: 'auto',
       // Custom options override defaults
       ...userOptions,
       // These computed settings can have values in userOptions but we override them

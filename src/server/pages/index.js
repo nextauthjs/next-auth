@@ -6,11 +6,11 @@ import css from '../../css'
 
 /** Takes a request and response, and gives renderable pages */
 export default function renderPage (req, res) {
-  const { baseUrl, basePath, callbackUrl, csrfToken, providers } = req.options
+  const { baseUrl, basePath, callbackUrl, csrfToken, providers, theme } = req.options
 
   res.setHeader('Content-Type', 'text/html')
   function send (html) {
-    res.send(`<!DOCTYPE html><head><style type="text/css">${css()}</style><meta name="viewport" content="width=device-width, initial-scale=1"></head><body><div class="page">${html}</div></body></html>`)
+    res.send(`<!DOCTYPE html><head><style type="text/css">${css()}</style><meta name="viewport" content="width=device-width, initial-scale=1"></head><body class="__next-auth-theme-${theme}"><div class="page">${html}</div></body></html>`)
   }
 
   return {
