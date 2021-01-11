@@ -142,7 +142,7 @@ export default function Component() {
 </a>
 
 <div>
-<img align="left" width="150px" src="https://raw.githubusercontent.com/nextauthjs/next-auth/7a1d7120965a01ba23e62277989f4032aa9c9916/www/static/img/powered-by-vercel.svg" alt="Banner" />
+<img align="left" width="170px" src="https://raw.githubusercontent.com/nextauthjs/next-auth/7a1d7120965a01ba23e62277989f4032aa9c9916/www/static/img/powered-by-vercel.svg" alt="Banner" />
 </div>
 
 ## Contributing
