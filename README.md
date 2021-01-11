@@ -141,7 +141,9 @@ export default function Component() {
   <img width="500px" src="https://contrib.rocks/image?repo=nextauthjs/next-auth" />
 </a>
 
-<img align="left" width="200px" src="https://raw.githubusercontent.com/nextauthjs/next-auth/7a1d7120965a01ba23e62277989f4032aa9c9916/www/static/img/powered-by-vercel.svg" alt="Banner" />
+<div>
+<img align="left" width="150px" src="https://raw.githubusercontent.com/nextauthjs/next-auth/7a1d7120965a01ba23e62277989f4032aa9c9916/www/static/img/powered-by-vercel.svg" alt="Banner" />
+</div>
 
 ## Contributing
 
