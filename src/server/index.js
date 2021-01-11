@@ -1,7 +1,7 @@
 import adapters from '../adapters'
 import jwt from '../lib/jwt'
 import parseUrl from '../lib/parse-url'
-import logger from '../lib/logger'
+import logger, { setLogger } from '../lib/logger'
 import * as cookie from './lib/cookie'
 import * as defaultEvents from './lib/default-events'
 import * as defaultCallbacks from './lib/default-callbacks'
@@ -20,6 +20,9 @@ if (!process.env.NEXTAUTH_URL) {
 }
 
 async function NextAuthHandler (req, res, userOptions) {
+  if (userOptions.logger) {
+    setLogger(userOptions.logger)
+  }
   // If debug enabled, set ENV VAR so that logger logs debug messages
   if (userOptions.debug) {
     process.env._NEXTAUTH_DEBUG = true

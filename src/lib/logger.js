@@ -22,4 +22,15 @@ const logger = {
   }
 }
 
+/**
+ * Override the built-in logger.
+ * Any `undefined` level will use the default logger.
+ * @param {Partial<Pick<Console, "log" | "warn" | "debug">>} newLogger
+ */
+export function setLogger (newLogger = {}) {
+  if (newLogger.error) logger.error = newLogger.error
+  if (newLogger.warn) logger.warn = newLogger.warn
+  if (newLogger.debug) logger.debug = newLogger.debug
+}
+
 export default logger
