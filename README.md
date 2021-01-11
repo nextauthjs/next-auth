@@ -144,9 +144,9 @@ export default function Component() {
 <div>
 <img align="left" width="170px" src="https://raw.githubusercontent.com/nextauthjs/next-auth/7a1d7120965a01ba23e62277989f4032aa9c9916/www/static/img/powered-by-vercel.svg" alt="Banner" />
 </div>
-
+<div>
 <p allign="left">Thanks to Vercel sponsoring this project by allowing it to be deployed for free for the entire NextAuth.js Team</p>
-
+</div>
 
 ## Contributing
 
