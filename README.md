@@ -141,6 +141,8 @@ export default function Component() {
   <img width="500px" src="https://contrib.rocks/image?repo=nextauthjs/next-auth" />
 </a>
 
+<img align="left" width="50px" src="https://raw.githubusercontent.com/nextauthjs/next-auth/7a1d7120965a01ba23e62277989f4032aa9c9916/www/static/img/powered-by-vercel.svg" alt="Banner" />
+
 ## Contributing
 
 We're open to all community contributions! If you'd like to contribute in any way, please first read our [Contributing Guide](https://github.com/nextauthjs/next-auth/blob/canary/CONTRIBUTING.md).
@@ -148,5 +150,3 @@ We're open to all community contributions! If you'd like to contribute in any wa
 ## License
 
 ISC
-
-<img align="center" src="https://raw.githubusercontent.com/nextauthjs/next-auth/7a1d7120965a01ba23e62277989f4032aa9c9916/www/static/img/powered-by-vercel.svg" alt="Banner" />
