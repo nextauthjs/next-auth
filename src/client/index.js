@@ -293,7 +293,8 @@ export const signOut = async (args = {}) => {
 // Provider to wrap the app in to make session data available globally
 export const Provider = ({ children, session, options }) => {
   setOptions(options)
-  return createElement(SessionContext.Provider, { value: useSession(session) }, children)
+  const value = session ? [session, false] : useSession(session)
+  return createElement(SessionContext.Provider, { value }, children)
 }
 
 const _fetchData = async (url, options = {}) => {
