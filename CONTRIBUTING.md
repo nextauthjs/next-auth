@@ -38,11 +38,12 @@ npm i
 
 3. Populate `.env.local`:
    
-    Copy `.env.example` to `.env.local`, and add your env variables for each provider you want to test.
+    Copy `.env.local.example` to `.env.local`, and add your env variables for each provider you want to test.
 
->NOTE: You can configure providers of the dev app in `pages/api/auth/[...nextauth].js`
+> NOTE: You can add any environment variables to .env.local that you would like to use in your dev app.
+> You can find the next-auth config under`pages/api/auth/[...nextauth].js`.
 
-4. Start the dev application/server and CSS watching:
+1. Start the dev application/server and CSS watching:
 ```sh
 npm run dev
 ```
