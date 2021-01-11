@@ -5,7 +5,7 @@ title: Securing pages and API routes
 
 You can easily protect client and server side rendered pages and API routes with NextAuth.js.
 
-_You can find working examples of the approaches shown below in the [example project](https://github.com/iaincollins/next-auth-example/)._
+_You can find working examples of the approaches shown below in the [example project](https://github.com/nextauthjs/next-auth-example/)._
 
 :::tip
 The methods `getSession()` and `getToken()` both return an `object` if a session is valid and `null` if a session is invalid or has expired.
