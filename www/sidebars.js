@@ -49,6 +49,7 @@ module.exports = {
       'providers/mixer',
       'providers/netlify',
       'providers/okta',
+      'providers/reddit',
       'providers/slack',
       'providers/spotify',
       'providers/strava',
