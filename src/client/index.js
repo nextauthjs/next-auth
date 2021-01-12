@@ -115,7 +115,7 @@ const setOptions = ({
 }
 
 // Universal method (client + server)
-const getSession = async ({ req, ctx, triggerEvent = true } = {}) => {
+export const getSession = async ({ req, ctx, triggerEvent = true } = {}) => {
   // If passed 'appContext' via getInitialProps() in _app.js then get the req
   // object from ctx and use that for the req value to allow getSession() to
   // work seemlessly in getInitialProps() on server side pages *and* in _app.js.
