@@ -53,6 +53,10 @@ h1 {
   color: var(--color-text);
 }
 
+p {
+  color: var(--color-text)
+}
+
 form {
   margin: 0;
   padding: 0;
