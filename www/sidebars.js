@@ -43,6 +43,7 @@ module.exports = {
       'providers/gitlab',
       'providers/google',
       'providers/identity-server4',
+      'providers/line',
       'providers/linkedin',
       'providers/mailru',
       'providers/mixer',

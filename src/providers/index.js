@@ -17,6 +17,7 @@ import GitHub from './github'
 import GitLab from './gitlab'
 import Google from './google'
 import IdentityServer4 from './identity-server4'
+import LINE from './line'
 import LinkedIn from './linkedin'
 import MailRu from './mailru'
 import Mixer from './mixer'
@@ -50,6 +51,7 @@ export default {
   GitLab,
   Google,
   IdentityServer4,
+  LINE,
   LinkedIn,
   MailRu,
   Mixer,
