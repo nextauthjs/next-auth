@@ -11,37 +11,14 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 
 ### Built-in OAuth providers
 
-* [Apple](/providers/apple)
-* [Atlassian](/providers/atlassian)
-* [Auth0](/providers/auth0)
-* [Azure Active Directory B2C](/providers/azure-ad-b2c)
-* [Basecamp](/providers/basecamp)
-* [Battle.net](/providers/battle.net)
-* [Box](/providers/box)
-* [Bungie](/providers/bungie)
-* [Amazon Cognito](/providers/cognito)
-* [Discord](/providers/discord)
-* [Facebook](/providers/facebook)
-* [Foursquare](/providers/foursquare)
-* [FusionAuth](/providers/fusionauth)
-* [GitHub](/providers/github)
-* [GitLab](/providers/gitlab)
-* [Google](/providers/google)
-* [IdentityServer4](/providers/identity-server4)
-* [LINE](/providers/line)
-* [LinkedIn](/providers/linkedin)
-* [Mail.ru](/providers/mailru)
-* [Mixer](/providers/mixer)
-* [Netlify](/providers/netlify)
-* [Okta](/providers/okta)
-* [Reddit](/providers/reddit)
-* [Slack](/providers/slack)
-* [Spotify](/providers/spotify)
-* [Strava](/providers/strava)
-* [Twitch](/providers/Twitch)
-* [Twitter](/providers/twitter)
-* [VK](/providers/vk)
-* [Yandex](/providers/yandex)
+<ul>
+{Object.entries(require("../../providers.json"))
+  .filter(([key]) => !["email", "credentials"].includes(key))
+  .sort(([, a], [, b]) => a.localeCompare(b))
+  .map(([key, name]) =>
+    <li key={key}><a href={`/providers/${key}`}>{name}</a></li>
+)}
+</ul>
 
 ### Using a built-in OAuth provider
 
