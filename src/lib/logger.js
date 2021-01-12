@@ -1,23 +1,23 @@
 const logger = {
-  error (code, ...text) {
+  error (code, message = '') {
     console.error(
       `[next-auth][error][${code.toLowerCase()}]`,
-      JSON.stringify(text),
-      `\nhttps://next-auth.js.org/errors#${code.toLowerCase()}`
+      `\nhttps://next-auth.js.org/errors#${code.toLowerCase()}\n`,
+      message
     )
   },
-  warn (code, ...text) {
+  warn (code, message = '') {
     console.warn(
       `[next-auth][warn][${code.toLowerCase()}]`,
-      JSON.stringify(text),
-      `\nhttps://next-auth.js.org/warnings#${code.toLowerCase()}`
+      `\nhttps://next-auth.js.org/warnings#${code.toLowerCase()}\n`,
+      message
     )
   },
-  debug (code, ...text) {
+  debug (code, message = '') {
     if (!process?.env?._NEXTAUTH_DEBUG) return
     console.log(
-      `[next-auth][debug][${code.toLowerCase()}]`,
-      JSON.stringify(text)
+      `[next-auth][debug][${code.toLowerCase()}]\n`,
+      message
     )
   }
 }

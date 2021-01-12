@@ -38,7 +38,7 @@ const sendVerificationRequest = ({ identifier: email, url, baseUrl, provider }) 
         html: html({ url, site, email })
       }, (error) => {
         if (error) {
-          logger.error('SEND_VERIFICATION_EMAIL_ERROR', email, error)
+          logger.error('SEND_VERIFICATION_EMAIL_ERROR', { email, ...error })
           return reject(new Error('SEND_VERIFICATION_EMAIL_ERROR', error))
         }
         return resolve()

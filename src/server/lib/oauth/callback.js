@@ -39,7 +39,7 @@ export default async function oAuthCallback (req) {
         code = body.code
         user = body.user != null ? JSON.parse(body.user) : null
       } catch (error) {
-        logger.error('OAUTH_CALLBACK_HANDLER_ERROR', error, req.body, provider.id, code)
+        logger.error('OAUTH_CALLBACK_HANDLER_ERROR', { ...error, body: req.body, provider: provider.id, code })
         throw error
       }
     }
@@ -75,7 +75,7 @@ export default async function oAuthCallback (req) {
 
       return _getProfile({ profileData, provider, tokens, user })
     } catch (error) {
-      logger.error('OAUTH_GET_ACCESS_TOKEN_ERROR', error, provider.id, code)
+      logger.error('OAUTH_GET_ACCESS_TOKEN_ERROR', { ...error, provider: provider.id, code })
       throw error
     }
   }
@@ -125,7 +125,7 @@ async function _getProfile ({
 
     profileData.idToken = idToken
 
-    logger.debug('PROFILE_DATA', profileData)
+    logger.debug('PROFILE_DATA', { profileData })
 
     const profile = await provider.profile(profileData)
     // Return profile, raw profile and auth provider details
@@ -144,7 +144,7 @@ async function _getProfile ({
       },
       OAuthProfile: profileData
     }
-  } catch (exception) {
+  } catch (error) {
     // If we didn't get a response either there was a problem with the provider
     // response *or* the user cancelled the action with the provider.
     //
@@ -152,7 +152,7 @@ async function _getProfile ({
     // all providers, so we return an empty object; the user should then be
     // redirected back to the sign up page. We log the error to help developers
     // who might be trying to debug this when configuring a new provider.
-    logger.error('OAUTH_PARSE_PROFILE_ERROR', exception, profileData)
+    logger.error('OAUTH_PARSE_PROFILE_ERROR', { ...error, profileData })
     return {
       profile: null,
       account: null,

@@ -21,8 +21,8 @@ const Adapter = (config) => {
   }
 
   async function getAdapter (appOptions) {
-    function debug (debugCode, ...args) {
-      logger.debug(`PRISMA_${debugCode}`, ...args)
+    function debug (code, message) {
+      logger.debug(`PRISMA_${code}`, message)
     }
 
     if (appOptions && (!appOptions.session || !appOptions.session.maxAge)) {
@@ -38,7 +38,7 @@ const Adapter = (config) => {
       : 0
 
     async function createUser (profile) {
-      debug('CREATE_USER', profile)
+      debug('CREATE_USER', { profile })
       try {
         return prisma[User].create({
           data: {
@@ -55,7 +55,7 @@ const Adapter = (config) => {
     }
 
     async function getUser (id) {
-      debug('GET_USER', id)
+      debug('GET_USER', { id })
       try {
         return prisma[User].findUnique({ where: { id } })
       } catch (error) {
@@ -65,7 +65,7 @@ const Adapter = (config) => {
     }
 
     async function getUserByEmail (email) {
-      debug('GET_USER_BY_EMAIL', email)
+      debug('GET_USER_BY_EMAIL', { email })
       try {
         if (!email) { return Promise.resolve(null) }
         return prisma[User].findUnique({ where: { email } })
@@ -76,7 +76,7 @@ const Adapter = (config) => {
     }
 
     async function getUserByProviderAccountId (providerId, providerAccountId) {
-      debug('GET_USER_BY_PROVIDER_ACCOUNT_ID', providerId, providerAccountId)
+      debug('GET_USER_BY_PROVIDER_ACCOUNT_ID', { providerId, providerAccountId })
       try {
         const account = await prisma[Account].findUnique({ where: { compoundId: getCompoundId(providerId, providerAccountId) } })
         if (!account) { return null }
@@ -88,7 +88,7 @@ const Adapter = (config) => {
     }
 
     async function updateUser (user) {
-      debug('UPDATE_USER', user)
+      debug('UPDATE_USER', { user })
       try {
         const { id, name, email, image, emailVerified } = user
         return prisma[User].update({
@@ -107,7 +107,7 @@ const Adapter = (config) => {
     }
 
     async function deleteUser (userId) {
-      debug('DELETE_USER', userId)
+      debug('DELETE_USER', { userId })
       try {
         return prisma[User].delete({ where: { id: userId } })
       } catch (error) {
@@ -117,7 +117,7 @@ const Adapter = (config) => {
     }
 
     async function linkAccount (userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires) {
-      debug('LINK_ACCOUNT', userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires)
+      debug('LINK_ACCOUNT', { userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires })
       try {
         return prisma[Account].create({
           data: {
@@ -138,7 +138,7 @@ const Adapter = (config) => {
     }
 
     async function unlinkAccount (userId, providerId, providerAccountId) {
-      debug('UNLINK_ACCOUNT', userId, providerId, providerAccountId)
+      debug('UNLINK_ACCOUNT', { userId, providerId, providerAccountId })
       try {
         return prisma[Account].delete({ where: { compoundId: getCompoundId(providerId, providerAccountId) } })
       } catch (error) {
@@ -148,7 +148,7 @@ const Adapter = (config) => {
     }
 
     async function createSession (user) {
-      debug('CREATE_SESSION', user)
+      debug('CREATE_SESSION', { user })
       try {
         let expires = null
         if (sessionMaxAge) {
@@ -172,7 +172,7 @@ const Adapter = (config) => {
     }
 
     async function getSession (sessionToken) {
-      debug('GET_SESSION', sessionToken)
+      debug('GET_SESSION', { sessionToken })
       try {
         const session = await prisma[Session].findUnique({ where: { sessionToken } })
 
@@ -190,7 +190,7 @@ const Adapter = (config) => {
     }
 
     async function updateSession (session, force) {
-      debug('UPDATE_SESSION', session)
+      debug('UPDATE_SESSION', { session })
       try {
         if (sessionMaxAge && (sessionUpdateAge || sessionUpdateAge === 0) && session.expires) {
           // Calculate last updated date, to throttle write updates to database
@@ -227,7 +227,7 @@ const Adapter = (config) => {
     }
 
     async function deleteSession (sessionToken) {
-      debug('DELETE_SESSION', sessionToken)
+      debug('DELETE_SESSION', { sessionToken })
       try {
         return prisma[Session].delete({ where: { sessionToken } })
       } catch (error) {
@@ -237,7 +237,7 @@ const Adapter = (config) => {
     }
 
     async function createVerificationRequest (identifier, url, token, secret, provider) {
-      debug('CREATE_VERIFICATION_REQUEST', identifier)
+      debug('CREATE_VERIFICATION_REQUEST', { identifier })
       try {
         const { baseUrl } = appOptions
         const { sendVerificationRequest, maxAge } = provider
@@ -275,7 +275,7 @@ const Adapter = (config) => {
     }
 
     async function getVerificationRequest (identifier, token, secret, provider) {
-      debug('GET_VERIFICATION_REQUEST', identifier, token)
+      debug('GET_VERIFICATION_REQUEST', { identifier, token })
       try {
         // Hash token provided with secret before trying to match it with database
         // @TODO Use bcrypt instead of salted SHA-256 hash for token
@@ -296,7 +296,7 @@ const Adapter = (config) => {
     }
 
     async function deleteVerificationRequest (identifier, token, secret, provider) {
-      debug('DELETE_VERIFICATION', identifier, token)
+      debug('DELETE_VERIFICATION', { identifier, token })
       try {
         // Delete verification entry so it cannot be used again
         const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')

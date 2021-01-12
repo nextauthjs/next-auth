@@ -20,8 +20,8 @@ const Adapter = (config, options = {}) => {
   } = config
 
   async function getAdapter (appOptions) {
-    function _debug (debugCode, ...args) {
-      logger.debug(`fauna_${debugCode}`, ...args)
+    function debug (code, message) {
+      logger.debug(`FAUNA_${code}`, message)
     }
 
     const defaultSessionMaxAge = 30 * 24 * 60 * 60 * 1000
@@ -33,7 +33,7 @@ const Adapter = (config, options = {}) => {
       : 0
 
     async function createUser (profile) {
-      _debug('createUser', profile)
+      debug('createUser', { profile })
 
       const timestamp = new Date().toISOString()
       const FQL = q.Create(
@@ -56,13 +56,13 @@ const Adapter = (config, options = {}) => {
 
         return newUser.data
       } catch (error) {
-        console.error('CREATE_USER', error)
+        logger.error('CREATE_USER_ERROR', error)
         return Promise.reject(new Error('CREATE_USER'))
       }
     }
 
     async function getUser (id) {
-      _debug('getUser', id)
+      debug('getUser', { id })
 
       const FQL = q.Get(
         q.Ref(q.Collection(collections.User), id)
@@ -74,13 +74,13 @@ const Adapter = (config, options = {}) => {
 
         return user.data
       } catch (error) {
-        console.error('GET_USER', error)
+        logger.error('GET_USER_ERROR', error)
         return Promise.reject(new Error('GET_USER'))
       }
     }
 
     async function getUserByEmail (email) {
-      _debug('getUserByEmail', email)
+      debug('getUserByEmail', { email })
 
       if (!email) {
         return null
@@ -107,13 +107,13 @@ const Adapter = (config, options = {}) => {
         user.data.id = user.ref.id
         return user.data
       } catch (error) {
-        console.error('GET_USER_BY_EMAIL', error)
+        logger.error('GET_USER_BY_EMAIL_ERROR', error)
         return Promise.reject(new Error('GET_USER_BY_EMAIL'))
       }
     }
 
     async function getUserByProviderAccountId (providerId, providerAccountId) {
-      _debug('getUserByProviderAccountId', providerId, providerAccountId)
+      debug('getUserByProviderAccountId', { providerId, providerAccountId })
 
       const FQL = q.Let(
         {
@@ -147,13 +147,13 @@ const Adapter = (config, options = {}) => {
 
         return user.data
       } catch (error) {
-        console.error('GET_USER_BY_PROVIDER_ACCOUNT_ID', error)
+        logger.error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error)
         return Promise.reject(new Error('GET_USER_BY_PROVIDER_ACCOUNT_ID'))
       }
     }
 
     async function updateUser (user) {
-      _debug('updateUser', user)
+      debug('updateUser', { user })
 
       const timestamp = new Date().toISOString()
       const FQL = q.Update(
@@ -175,13 +175,13 @@ const Adapter = (config, options = {}) => {
 
         return user.data
       } catch (error) {
-        console.error('UPDATE_USER_ERROR', error)
+        logger.error('UPDATE_USER_ERROR_ERROR', error)
         return Promise.reject(new Error('UPDATE_USER_ERROR'))
       }
     }
 
     async function deleteUser (userId) {
-      _debug('deleteUser', userId)
+      debug('deleteUser', { userId })
 
       const FQL = q.Delete(
         q.Ref(q.Collection(collections.User), userId)
@@ -190,13 +190,13 @@ const Adapter = (config, options = {}) => {
       try {
         await faunaClient.query(FQL)
       } catch (error) {
-        console.error('DELETE_USER_ERROR', error)
+        logger.error('DELETE_USER_ERROR_ERROR', error)
         return Promise.reject(new Error('DELETE_USER_ERROR'))
       }
     }
 
     async function linkAccount (userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires) {
-      _debug('linkAccount', userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires)
+      debug('linkAccount', { userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires })
 
       try {
         const timestamp = new Date().toISOString()
@@ -218,13 +218,13 @@ const Adapter = (config, options = {}) => {
 
         return account.data
       } catch (error) {
-        console.error('LINK_ACCOUNT_ERROR', error)
+        logger.error('LINK_ACCOUNT_ERROR_ERROR', error)
         return Promise.reject(new Error('LINK_ACCOUNT_ERROR'))
       }
     }
 
     async function unlinkAccount (userId, providerId, providerAccountId) {
-      _debug('unlinkAccount', userId, providerId, providerAccountId)
+      debug('unlinkAccount', { userId, providerId, providerAccountId })
 
       const FQL = q.Delete(
         q.Select('ref',
@@ -240,13 +240,13 @@ const Adapter = (config, options = {}) => {
       try {
         await faunaClient.query(FQL)
       } catch (error) {
-        console.error('UNLINK_ACCOUNT_ERROR', error)
+        logger.error('UNLINK_ACCOUNT_ERROR_ERROR', error)
         return Promise.reject(new Error('UNLINK_ACCOUNT_ERROR'))
       }
     }
 
     async function createSession (user) {
-      _debug('createSession', user)
+      debug('createSession', { user })
 
       let expires = null
       if (sessionMaxAge) {
@@ -275,13 +275,13 @@ const Adapter = (config, options = {}) => {
 
         return session.data
       } catch (error) {
-        console.error('CREATE_SESSION_ERROR', error)
+        logger.error('CREATE_SESSION_ERROR_ERROR', error)
         return Promise.reject(new Error('CREATE_SESSION_ERROR'))
       }
     }
 
     async function getSession (sessionToken) {
-      _debug('getSession', sessionToken)
+      debug('getSession', { sessionToken })
 
       try {
         const session = await faunaClient.query(
@@ -303,13 +303,13 @@ const Adapter = (config, options = {}) => {
 
         return session.data
       } catch (error) {
-        console.error('GET_SESSION_ERROR', error)
+        logger.error('GET_SESSION_ERROR_ERROR', error)
         return Promise.reject(new Error('GET_SESSION_ERROR'))
       }
     }
 
     async function updateSession (session, force) {
-      _debug('updateSession', session)
+      debug('updateSession', { session })
 
       try {
         const shouldUpdate = sessionMaxAge && (sessionUpdateAge || sessionUpdateAge === 0) && session.expires
@@ -353,7 +353,7 @@ const Adapter = (config, options = {}) => {
 
         return updatedSession.data
       } catch (error) {
-        console.error('UPDATE_SESSION_ERROR', error)
+        logger.error('UPDATE_SESSION_ERROR_ERROR', error)
         return Promise.reject(new Error('UPDATE_SESSION_ERROR'))
       }
     }
@@ -374,18 +374,18 @@ const Adapter = (config, options = {}) => {
     }
 
     async function deleteSession (sessionToken) {
-      _debug('deleteSession', sessionToken)
+      debug('deleteSession', { sessionToken })
 
       try {
         return await _deleteSession(sessionToken)
       } catch (error) {
-        console.error('DELETE_SESSION_ERROR', error)
+        logger.error('DELETE_SESSION_ERROR_ERROR', error)
         return Promise.reject(new Error('DELETE_SESSION_ERROR'))
       }
     }
 
     async function createVerificationRequest (identifier, url, token, secret, provider) {
-      _debug('createVerificationRequest', identifier)
+      debug('createVerificationRequest', { identifier })
 
       const { baseUrl } = appOptions
       const { sendVerificationRequest, maxAge } = provider
@@ -425,13 +425,13 @@ const Adapter = (config, options = {}) => {
 
         return verificationRequest.data
       } catch (error) {
-        console.error('CREATE_VERIFICATION_REQUEST_ERROR', error)
+        logger.error('CREATE_VERIFICATION_REQUEST_ERROR_ERROR', error)
         return Promise.reject(new Error('CREATE_VERIFICATION_REQUEST_ERROR'))
       }
     }
 
     async function getVerificationRequest (identifier, token, secret, provider) {
-      _debug('getVerificationRequest', identifier, token)
+      debug('getVerificationRequest', { identifier, token })
 
       const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
       const FQL = q.Let(
@@ -463,13 +463,13 @@ const Adapter = (config, options = {}) => {
 
         return verificationRequest
       } catch (error) {
-        console.error('GET_VERIFICATION_REQUEST_ERROR', error)
+        logger.error('GET_VERIFICATION_REQUEST_ERROR_ERROR', error)
         return Promise.reject(new Error('GET_VERIFICATION_REQUEST_ERROR'))
       }
     }
 
     async function deleteVerificationRequest (identifier, token, secret, provider) {
-      _debug('deleteVerification', identifier, token)
+      debug('deleteVerification', { identifier, token })
 
       const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
       const FQL = q.Delete(
@@ -485,7 +485,7 @@ const Adapter = (config, options = {}) => {
       try {
         await faunaClient.query(FQL)
       } catch (error) {
-        console.error('DELETE_VERIFICATION_REQUEST_ERROR', error)
+        logger.error('DELETE_VERIFICATION_REQUEST_ERROR_ERROR', error)
         return Promise.reject(new Error('DELETE_VERIFICATION_REQUEST_ERROR'))
       }
     }
