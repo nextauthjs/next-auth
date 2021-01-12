@@ -49,8 +49,7 @@
     "jsonwebtoken": "^8.5.1",
     "oauth": "^0.9.15",
     "preact": "^10.5.9",
-    "preact-render-to-string": "^5.1.12",
-    "querystring": "^0.2.0"
+    "preact-render-to-string": "^5.1.12"
   },
   "peerDependencies": {
     "@prisma/client": "^2.14.0",
@@ -65,14 +64,30 @@
     "typeorm": "^0.2.30"
   },
   "peerDependenciesMeta": {
-    "@prisma/client": { "optional": true },
-    "faunadb": { "optional": true },
-    "mongodb": { "optional": true },
-    "mysql": { "optional": true },
-    "mssql": { "optional": true },
-    "nodemailer": { "optional": true },
-    "pg": { "optional": true },
-    "typeorm": { "optional": true }
+    "@prisma/client": {
+      "optional": true
+    },
+    "faunadb": {
+      "optional": true
+    },
+    "mongodb": {
+      "optional": true
+    },
+    "mysql": {
+      "optional": true
+    },
+    "mssql": {
+      "optional": true
+    },
+    "nodemailer": {
+      "optional": true
+    },
+    "pg": {
+      "optional": true
+    },
+    "typeorm": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",
