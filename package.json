@@ -50,14 +50,9 @@
     "oauth": "^0.9.15",
     "preact": "^10.5.9",
     "preact-render-to-string": "^5.1.12",
-    "querystring": "^0.2.0",
-    "require_optional": "^1.0.1"
+    "querystring": "^0.2.0"
   },
   "peerDependencies": {
-    "react": "^16.13.1 || ^17",
-    "react-dom": "^16.13.1 || ^17"
-  },
-  "peerOptionalDependencies": {
     "@prisma/client": "^2.14.0",
     "faunadb": "^4.0.0",
     "mongodb": "^3.6.3",
@@ -65,7 +60,19 @@
     "mssql": "^6.6.1",
     "nodemailer": "^6.4.17",
     "pg": "^8.5.1",
+    "react": "^16.13.1 || ^17",
+    "react-dom": "^16.13.1 || ^17",
     "typeorm": "^0.2.30"
+  },
+  "peerDependenciesMeta": {
+    "@prisma/client": { "optional": true },
+    "faunadb": { "optional": true },
+    "mongodb": { "optional": true },
+    "mysql": { "optional": true },
+    "mssql": { "optional": true },
+    "nodemailer": { "optional": true },
+    "pg": { "optional": true },
+    "typeorm": { "optional": true }
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",
@@ -86,6 +93,7 @@
     "mssql": "^6.3.1",
     "mysql": "^2.18.1",
     "next": "^10.0.5",
+    "nodemailer": "^6.4.17",
     "pg": "^8.5.1",
     "postcss": "^8.2.4",
     "postcss-cli": "^8.3.1",
@@ -95,7 +103,8 @@
     "puppeteer-extra-plugin-stealth": "^2.6.5",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "standard": "^16.0.3"
+    "standard": "^16.0.3",
+    "typeorm": "^0.2.30"
   },
   "standard": {
     "ignore": [
