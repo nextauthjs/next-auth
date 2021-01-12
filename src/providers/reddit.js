@@ -1,4 +1,3 @@
-// Logging in works but trying to retrieve the profile results in 401 unauthorized
 export default (options) => {
   return {
     id: 'reddit',
@@ -12,12 +11,12 @@ export default (options) => {
       'https://www.reddit.com/api/v1/authorize?response_type=code',
     profileUrl: 'https://oauth.reddit.com/api/v1/me',
     profile: (profile) => {
-      // return {
-      //   id: profile.id,
-      //   name: profile.name,
-      //   image: null,
-      //   email: null,
-      // };
+      return {
+        id: profile.id,
+        name: profile.name,
+        image: null,
+        email: null
+      }
     },
     ...options
   }

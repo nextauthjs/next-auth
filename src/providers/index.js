@@ -23,6 +23,7 @@ import MailRu from './mailru'
 import Mixer from './mixer'
 import Netlify from './netlify'
 import Okta from './okta'
+import Reddit from './reddit'
 import Slack from './slack'
 import Spotify from './spotify'
 import Strava from './strava'
@@ -57,6 +58,7 @@ export default {
   Mixer,
   Netlify,
   Okta,
+  Reddit,
   Slack,
   Spotify,
   Strava,
