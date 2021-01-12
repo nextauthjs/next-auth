@@ -23,7 +23,7 @@ You can use also NextAuth.js with any database using a custom database adapter, 
 
 ### What authentication services does NextAuth.js support?
 
-NextAuth.js includes built-in support for signing in with Amazon Cognito, Apple, Atlassian, Auth0, Azure Active Directory B2C, Basecamp, Battle.net, Box, Bungie, Discord, Facebook, Foursquare, FusionAuth, GitHub, GitLab, Google, IdentityServer4, LinkedIn, Mail.ru, Mixer, Netlify, Okta, Slack, Spotify, Strava, Twitch, Twitter, VK and Yandex. (See also: [Providers](/configuration/providers))
+NextAuth.js includes built-in support for signing in with Amazon Cognito, Apple, Atlassian, Auth0, Azure Active Directory B2C, Basecamp, Battle.net, Box, Bungie, Discord, Facebook, Foursquare, FusionAuth, GitHub, GitLab, Google, IdentityServer4, LINE, LinkedIn, Mail.ru, Mixer, Netlify, Okta, Slack, Spotify, Strava, Twitch, Twitter, VK and Yandex. (See also: [Providers](/configuration/providers))
 
 NextAuth.js also supports email for passwordless sign in, which is useful for account recovery or for people who are not able to use an account with the configured OAuth services (e.g. due to service outage, account suspension or otherwise becoming locked out of an account).
 
