@@ -12,11 +12,11 @@ export default (options) => {
     profileUrl: 'https://oauth.reddit.com/api/v1/me',
     profile: (profile) => {
       return {
-         id: profile.id,
-         name: profile.name,
-         image: null,
-         email: null,
-       };
+        id: profile.id,
+        name: profile.name,
+        image: null,
+        email: null
+      }
     },
     ...options
   }
