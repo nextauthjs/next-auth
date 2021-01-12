@@ -2,8 +2,11 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "next-auth/*": ["./src/*"],
-      "next-auth": ["./src"]
+      "next-auth": ["./src/server"],
+      "next-auth/adapters": ["./src/adapters"],
+      "next-auth/client": ["./src/client"],
+      "next-auth/jwt": ["./src/lib/jwt"],
+      "next-auth/providers": ["./src/providers"]
     }
   }
 }
