@@ -140,6 +140,14 @@ export default function Component() {
 <a href="https://github.com/nextauthjs/next-auth/graphs/contributors">
   <img width="500px" src="https://contrib.rocks/image?repo=nextauthjs/next-auth" />
 </a>
+<div>
+<a href="https://vercel.com?utm_source=next-auth&utm_campaign=oss">
+<img width="170px" src="https://raw.githubusercontent.com/nextauthjs/next-auth/canary/www/static/img/powered-by-vercel.svg" alt="Powered By Vercel" />
+</a>
+</div>
+<div>
+<p align="left">Thanks to Vercel sponsoring this project by allowing it to be deployed for free for the entire NextAuth.js Team</p>
+</div>
 
 ## Contributing
 
