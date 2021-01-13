@@ -15,7 +15,7 @@ Starts an OAuth signin flow for the specified provider.
 
 The POST submission requires CSRF token from `/api/auth/csrf`.
 
-#### GET /api/auth/callback/:provider
+#### GET/POST /api/auth/callback/:provider
 
 Handles returning requests from OAuth services during sign in.
 

@@ -41,6 +41,9 @@ These errors are displayed on the terminal.
 
 #### OAUTH_CALLBACK_HANDLER_ERROR
 
+The process of exchanging an authorization code for tokens (access_token, refresh_token, id_token) and userinfo failed.
+https://www.oauth.com/oauth2-servers/server-side-apps/authorization-code
+
 ---
 
 ### Signin / Callback
@@ -50,6 +53,8 @@ These errors are displayed on the terminal.
 #### SIGNIN_OAUTH_ERROR
 
 #### CALLBACK_OAUTH_ERROR
+
+The callback handler at url /api/auth/callback/:provider failed while processing an OAuth callback request.
 
 #### SIGNIN_EMAIL_ERROR
 
