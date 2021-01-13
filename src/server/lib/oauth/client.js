@@ -1,80 +1,32 @@
-import { OAuth, OAuth2 } from 'oauth'
-import querystring from 'querystring'
-import logger from '../../../lib/logger'
-import { sign as jwtSign } from 'jsonwebtoken'
+import { Issuer } from 'openid-client'
 
 /**
- * @TODO Refactor to remove dependancy on 'oauth' package
- * It is already quite monkey patched, we don't use all the features and and it
- * would be easier to maintain if all the code was native to next-auth.
+ * Creates an OAuth 2.0, OpenID Connect compatible client
  */
-export default function oAuthClient (provider) {
-  if (provider.version?.startsWith('2.')) {
-    // Handle OAuth v2.x
-    const authorizationUrl = new URL(provider.authorizationUrl)
-    const basePath = authorizationUrl.origin
-    const authorizePath = authorizationUrl.pathname
-    const accessTokenPath = new URL(provider.accessTokenUrl).pathname
-    const oauth2Client = new OAuth2(
-      provider.clientId,
-      provider.clientSecret,
-      basePath,
-      authorizePath,
-      accessTokenPath,
-      provider.headers
-    )
-    oauth2Client.getOAuthAccessToken = getOAuth2AccessToken
-    oauth2Client.get = getOAuth2
-    return oauth2Client
-  }
-  // Handle OAuth v1.x
-  const oauth1Client = new OAuth(
-    provider.requestTokenUrl,
-    provider.accessTokenUrl,
-    provider.clientId,
-    provider.clientSecret,
-    provider.version || '1.0',
-    provider.callbackUrl,
-    provider.encoding || 'HMAC-SHA1'
-  )
+export default function getOAuthClient (provider) {
+  const issuer = new Issuer({
+    issuer: provider.id,
+    authorization_endpoint: provider.authorizationUrl,
+    userinfo_endpoint: provider.profileUrl,
+    token_endpoint: provider.accessTokenUrl
+  })
 
-  // Promisify get() and getOAuth2AccessToken() for OAuth1
-  const originalGet = oauth1Client.get
-  oauth1Client.get = (...args) => {
-    return new Promise((resolve, reject) => {
-      originalGet(...args, (error, result) => {
-        if (error) {
-          return reject(error)
-        }
-        resolve(result)
-      })
-    })
-  }
-  const originalGetOAuth1AccessToken = oauth1Client.getOAuthAccessToken
-  oauth1Client.getOAuthAccessToken = (...args) => {
-    return new Promise((resolve, reject) => {
-      originalGetOAuth1AccessToken(...args, (error, accessToken, refreshToken, results) => {
-        if (error) {
-          return reject(error)
-        }
-        resolve({ accessToken, refreshToken, results })
-      })
-    })
-  }
+  const client = new issuer.Client({
+    client_id: provider.clientId,
+    client_secret: provider.clientSecret,
+    redirect_uris: [provider.callbackUrl],
+    response_types: ['code']
+  })
 
-  const originalGetOAuthRequestToken = oauth1Client.getOAuthRequestToken
-  oauth1Client.getOAuthRequestToken = (...args) => {
-    return new Promise((resolve, reject) => {
-      originalGetOAuthRequestToken(...args, (error, oauthToken) => {
-        if (error) {
-          return reject(error)
-        }
-        resolve(oauthToken)
-      })
-    })
-  }
-  return oauth1Client
+  return client
 }
+
+/// LEGACY OAuth 2.0 implementation downwards ///
+// TODO: handle all edge cases below in the code above
+// https://github.com/panva/node-openid-client/blob/master/docs/README.md
+const querystring = require('querystring')
+const logger = require('../../../lib/logger')
+const { sign: jwtSign } = require('jsonwebtoken')
 
 /**
  * @TODO Refactor monkey patching in OAuth2.getOAuthAccessToken() and OAuth2.get()
@@ -87,7 +39,7 @@ export default function oAuthClient (provider) {
 /**
  * Ported from https://github.com/ciaranj/node-oauth/blob/a7f8a1e21c362eb4ed2039431fb9ac2ae749f26a/lib/oauth2.js
  */
-async function getOAuth2AccessToken (code, provider) {
+export async function getOAuth2AccessToken (code, provider) {
   const url = provider.accessTokenUrl
   const params = { ...provider.params }
   const headers = { ...provider.headers }
@@ -175,7 +127,7 @@ async function getOAuth2AccessToken (code, provider) {
  * 18/08/2020 @robertcraigie added results parameter to pass data to an optional request preparer.
  * e.g. see providers/bungie
  */
-async function getOAuth2 (provider, accessToken, results) {
+export async function getOAuth2 (provider, accessToken, results) {
   let url = provider.profileUrl
   const headers = { ...provider.headers }
 
