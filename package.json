@@ -100,7 +100,8 @@
     "ignore": [
       "test/",
       "pages/",
-      "components/"
+      "components/",
+      "**/*/*.d.ts"
     ]
   }
 }
