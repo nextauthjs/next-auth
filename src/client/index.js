@@ -287,7 +287,7 @@ export const signOut = async (args = {}) => {
   const res = await fetch(`${baseUrl}/signout`, fetchOptions)
   const data = await res.json()
   _sendMessage({ event: 'session', data: { trigger: 'signout' } })
-  const finalLocation = new URL(newdata.url ?? callbackUrl)
+  const finalLocation = new URL(data.url ?? callbackUrl)
   window.location = finalLocation
   if (
     window.location.origin === finalLocation.origin &&
