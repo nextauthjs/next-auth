@@ -1,3 +1,7 @@
+/**
+ * @param {import("next-auth").Provider} options
+ * @returns {import("next-auth").Provider}
+ */
 export default (options) => {
   return {
     id: 'github',
@@ -8,7 +12,7 @@ export default (options) => {
     accessTokenUrl: 'https://github.com/login/oauth/access_token',
     authorizationUrl: 'https://github.com/login/oauth/authorize',
     profileUrl: 'https://api.github.com/user',
-    profile: (profile) => {
+    profile (profile) {
       return {
         id: profile.id,
         name: profile.name || profile.login,
@@ -16,6 +20,7 @@ export default (options) => {
         image: profile.avatar_url
       }
     },
+    verifications: ['state', 'pkce'],
     ...options
   }
 }

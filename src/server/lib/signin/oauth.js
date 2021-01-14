@@ -2,6 +2,7 @@ import getOAuthClient from '../oauth/client'
 import getOAuthClientLegacy from '../oauth/client.legacy'
 import { createHash } from 'crypto'
 import logger from '../../../lib/logger'
+import { generators } from 'openid-client'
 
 /**
  * Returns an OAuth `/authorization` url with params.
@@ -31,26 +32,20 @@ export default async function getAuthorizationUrl (req) {
         ...provider.authorizationParams
       }
 
-      switch (provider.verification) {
-        case 'pkce':
-          // TODO: handle PKCE
-          // const codeChallenge generators.codeChallenge(codeVerifier)
-          // logger.debug('OAUTH_AUTHORIZATION_URL', {
-          //   message: 'PKCE code_challenge being sent', codeChallenge
-          // })
-          // params.code_challenge = codeChallenge
-          break
-        case 'state': {
-          const state = createHash('sha256').update(csrfToken).digest('hex')
-          logger.debug('OAUTH_AUTHORIZATION_URL', {
-            message: 'State being sent', state
-          })
-          params.state = state
-          break
-        }
-        case 'none':
-        default:
-          break
+      if (provider.verifications?.includes('pkce')) {
+        const codeChallenge = generators.codeChallenge(secret)
+        logger.debug('OAUTH_AUTHORIZATION_URL', {
+          message: 'PKCE code_challenge being sent', codeChallenge
+        })
+        params.code_challenge_method = 'S256'
+        params.code_challenge = codeChallenge
+      }
+      if (provider.verifications?.includes('state')) {
+        const state = createHash('sha256').update(csrfToken).digest('hex')
+        logger.debug('OAUTH_AUTHORIZATION_URL', {
+          message: 'State being sent', state
+        })
+        params.state = state
       }
 
       logger.debug('OAUTH_AUTHORIZATION_URL', { params, provider })
