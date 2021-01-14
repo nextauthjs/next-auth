@@ -5,18 +5,17 @@ import logger from '../../../lib/logger'
 
 /**
  * Returns an OAuth `/authorization` url with params.
- * @param {import("next").NextApiRequest} req
+ * @param {import("../../index").NextApiRequestWithOptions} req
  * @docs https://tools.ietf.org/html/rfc6749#section-4.1.1 (/authorize)
  * @docs https://tools.ietf.org/html/rfc7636#section-4.3 (PKCE)
  */
 export default async function getAuthorizationUrl (req) {
   try {
-    const { provider } = req.options
+    const { provider, csrfToken, secret } = req.options
     const { callbackUrl } = provider
 
     // Handle OAuth v2.x and OIDC
     if (provider.version?.startsWith('2.')) {
-      const { csrfToken } = provider
       const client = getOAuthClient(provider)
 
       const url = new URL(provider.authorizationUrl)
