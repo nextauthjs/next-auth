@@ -141,7 +141,7 @@ export default function Component() {
   <img width="500px" src="https://contrib.rocks/image?repo=nextauthjs/next-auth" />
 </a>
 <div>
-<a href="https://vercel.com?utm_source=next-auth&utm_campaign=oss">
+<a href="https://vercel.com?utm_source=nextauthjs&utm_campaign=oss">
 <img width="170px" src="https://raw.githubusercontent.com/nextauthjs/next-auth/canary/www/static/img/powered-by-vercel.svg" alt="Powered By Vercel" />
 </a>
 </div>
