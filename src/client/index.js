@@ -287,7 +287,15 @@ export const signOut = async (args = {}) => {
   const res = await fetch(`${baseUrl}/signout`, fetchOptions)
   const data = await res.json()
   _sendMessage({ event: 'session', data: { trigger: 'signout' } })
-  window.location = data.url ?? callbackUrl
+  const finalLocation = new URL(newdata.url ?? callbackUrl)
+  window.location = finalLocation
+  if (
+    window.location.origin === finalLocation.origin &&
+    window.location.pathname === finalLocation.pathname &&
+    window.location.search === finalLocation.search
+  ) {
+    window.location.reload()
+  }
 }
 
 // Provider to wrap the app in to make session data available globally
