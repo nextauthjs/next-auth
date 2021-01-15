@@ -71,3 +71,7 @@ This `dev.to` tutorial walks one through adding NextAuth.js to an existing proje
 ### [Adding Sign in With Apple Next JS](https://thesiddd.com/blog/apple-auth)
 
 This tutorial walks step by step on how to get Sign In with Apple working (both locally and on a deployed website) using NextAuth.js.
+
+### [How To Add Social Login Authentication to Next JS TypeScript in 5 minutes](https://creativedesignsguru.com/next-auth-js-social-login/)
+
+A step-by-step tutorial for adding social login button to Next JS with TypeScript. An example code with types in React.
