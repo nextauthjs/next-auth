@@ -24,6 +24,8 @@ import parseUrl from '../lib/parse-url'
 const __NEXTAUTH = {
   baseUrl: parseUrl(process.env.NEXTAUTH_URL || process.env.VERCEL_URL).baseUrl,
   basePath: parseUrl(process.env.NEXTAUTH_URL).basePath,
+  baseServerUrl: parseUrl(process.env.NEXTAUTH_URL_SERVER || process.env.NEXTAUTH_URL).baseUrl,
+  baseServerPath: parseUrl(process.env.NEXTAUTH_URL_SERVER || process.env.NEXTAUTH_URL).basePath,
   keepAlive: 0, // 0 == disabled (don't send); 60 == send every 60 seconds
   clientMaxAge: 0, // 0 == disabled (only use cache); 60 == sync if last checked > 60 seconds ago
   // Properties starting with _ are used for tracking internal app state
@@ -313,7 +315,7 @@ const _apiBaseUrl = () => {
     if (!process.env.NEXTAUTH_URL) { logger.warn('NEXTAUTH_URL', 'NEXTAUTH_URL environment variable not set') }
 
     // Return absolute path when called server side
-    return `${__NEXTAUTH.baseUrl}${__NEXTAUTH.basePath}`
+    return `${__NEXTAUTH.baseServerUrl}${__NEXTAUTH.baseServerPath}`
   } else {
     // Return relative path when called client side
     return __NEXTAUTH.basePath
