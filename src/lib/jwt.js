@@ -137,19 +137,19 @@ let DERIVED_SIGNING_KEY_WARNING = false
 let DERIVED_ENCRYPTION_KEY_WARNING = false
 
 // Do the better hkdf of Node.js one added in `v15.0.0` and Third Party one
-function hkdf (secret, { BYTE_LENGTH, DIGEST, ENCRYPTION_INFO }) {
+function hkdf (secret, { byteLength, encryptionInfo, digest = 'sha256' }) {
   if (crypto.hkdfSync) {
     return Buffer.from(
       crypto.hkdfSync(
-        DIGEST,
+        digest,
         secret,
         Buffer.alloc(0),
-        ENCRYPTION_INFO,
-        BYTE_LENGTH
+        encryptionInfo,
+        byteLength
       )
     )
   }
-  return require('futoin-hkdf')(secret, BYTE_LENGTH, { info: ENCRYPTION_INFO, hash: DIGEST })
+  return require('futoin-hkdf')(secret, byteLength, { info: encryptionInfo, hash: digest })
 }
 
 function getDerivedSigningKey (secret) {
@@ -159,9 +159,8 @@ function getDerivedSigningKey (secret) {
   }
 
   const buffer = hkdf(secret, {
-    BYTE_LENGTH: 64,
-    DIGEST: 'SHA-256',
-    ENCRYPTION_INFO: 'NextAuth.js Generated Signing Key'
+    byteLength: 64,
+    encryptionInfo: 'NextAuth.js Generated Signing Key'
   })
   const key = jose.JWK.asKey(buffer, { alg: DEFAULT_SIGNATURE_ALGORITHM, use: 'sig', kid: 'nextauth-auto-generated-signing-key' })
   return key
@@ -174,9 +173,8 @@ function getDerivedEncryptionKey (secret) {
   }
 
   const buffer = hkdf(secret, {
-    BYTE_LENGTH: 32,
-    DIGEST: 'SHA-256',
-    ENCRYPTION_INFO: 'NextAuth.js Generated Encryption Key'
+    byteLength: 32,
+    encryptionInfo: 'NextAuth.js Generated Encryption Key'
   })
   const key = jose.JWK.asKey(buffer, { alg: DEFAULT_ENCRYPTION_ALGORITHM, use: 'enc', kid: 'nextauth-auto-generated-encryption-key' })
   return key
