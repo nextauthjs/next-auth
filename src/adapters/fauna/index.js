@@ -42,9 +42,7 @@ const Adapter = (config, options = {}) => {
             name: profile.name,
             email: profile.email,
             image: profile.image,
-            emailVerified: profile.emailVerified
-              ? profile.emailVerified
-              : false,
+            emailVerified: user.emailVerified ? q.Time(user.emailVerified.toISOString()) : false,
             createdAt: q.Time(timestamp),
             updatedAt: q.Time(timestamp)
           }
@@ -163,7 +161,7 @@ const Adapter = (config, options = {}) => {
             name: user.name,
             email: user.email,
             image: user.image,
-            emailVerified: user.emailVerified ? user.emailVerified : false,
+            emailVerified: user.emailVerified ? q.Time(user.emailVerified.toISOString()) : false,
             updatedAt: q.Time(timestamp)
           }
         }
