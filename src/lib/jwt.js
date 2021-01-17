@@ -1,6 +1,5 @@
 import crypto from 'crypto'
 import jose from 'jose'
-import thirdPartyHkdf from 'futoin-hkdf'
 import logger from './logger'
 
 // Set default algorithm to use for auto-generated signing key
@@ -150,7 +149,7 @@ function hkdf (secret, { BYTE_LENGTH, DIGEST, ENCRYPTION_INFO }) {
       )
     )
   }
-  return thirdPartyHkdf(secret, BYTE_LENGTH, { info: ENCRYPTION_INFO, hash: DIGEST })
+  return require('futoin-hkdf')(secret, BYTE_LENGTH, { info: ENCRYPTION_INFO, hash: DIGEST })
 }
 
 function getDerivedSigningKey (secret) {
