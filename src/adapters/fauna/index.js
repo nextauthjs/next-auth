@@ -284,14 +284,17 @@ const Adapter = (config, options = {}) => {
       _debug('getSession', sessionToken)
 
       try {
-        const session = await faunaClient.query(
-          q.Get(
-            q.Match(
-              q.Index(indexes.Session),
-              sessionToken
-            )
-          )
-        )
+        const sessionFQL = q.Get(q.Match(q.Index(indexes.Session), sessionToken))
+
+        const session = await faunaClient.query({
+          id: q.Select(['ref', 'id'], sessionFQL),
+          userId: q.Select(['data', 'userId'], sessionFQL),
+          expires: q.ToMillis(q.Select(['data', 'expires'], sessionFQL)),
+          sessionToken: q.Select(['data', 'sessionToken'], sessionFQL),
+          accessToken: q.Select(['data', 'accessToken'], sessionFQL),
+          createdAt: q.ToMillis(q.Select(['data', 'createdAt'], sessionFQL)),
+          updatedAt: q.ToMillis(q.Select(['data', 'updatedAt'], sessionFQL))
+        })
 
         // Check session has not expired (do not return it if it has)
         if (session && session.expires && new Date() > session.expires) {
@@ -299,9 +302,7 @@ const Adapter = (config, options = {}) => {
           return null
         }
 
-        session.data.id = session.ref.id
-
-        return session.data
+        return session
       } catch (error) {
         console.error('GET_SESSION_ERROR', error)
         return Promise.reject(new Error('GET_SESSION_ERROR'))
