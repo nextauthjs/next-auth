@@ -234,7 +234,7 @@ const _useSessionHook = (session) => {
 }
 
 // Client side method
-export const signIn = async (provider, args = {}) => {
+export const signIn = async (provider, args = {}, authorizationParams = {}) => {
   const baseUrl = _apiBaseUrl()
   const callbackUrl = args.callbackUrl ?? window.location
   const providers = await getProviders()
@@ -257,6 +257,7 @@ export const signIn = async (provider, args = {}) => {
       },
       body: _encodedForm({
         ...args,
+        authorizationParams,
         csrfToken: await getCsrfToken(),
         callbackUrl: callbackUrl,
         json: true
