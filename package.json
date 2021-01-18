@@ -54,7 +54,7 @@
     "preact-render-to-string": "^5.1.7",
     "querystring": "^0.2.0",
     "require_optional": "^1.0.1",
-    "typeorm": "^0.2.24"
+    "typeorm": "^0.2.30"
   },
   "peerDependencies": {
     "react": "^16.13.1 || ^17",
