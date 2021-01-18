@@ -4,7 +4,8 @@
 import fs from 'fs'
 import path from 'path'
 
-const pathToCss = path.join(__dirname, '/index.css')
-const css = fs.readFileSync(pathToCss, 'utf8')
+const pathToCss = path.join(process.cwd(), '/dist/css/index.css')
 
-export default () => css
+export default function css () {
+  return fs.readFileSync(pathToCss, 'utf8')
+}

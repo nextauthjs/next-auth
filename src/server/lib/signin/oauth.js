@@ -2,24 +2,25 @@ import oAuthClient from '../oauth/client'
 import { createHash } from 'crypto'
 import logger from '../../../lib/logger'
 
-export default function oAuthSignin ({ provider, csrfToken, callback, authParams, codeChallenge }) {
-  const { callbackUrl } = provider
+export default async function getAuthorizationUrl (req) {
+  const { provider, csrfToken, pkce } = req.options
+
   const client = oAuthClient(provider)
   if (provider.version?.startsWith('2.')) {
     // Handle OAuth v2.x
-    let url = new URL(client.getAuthorizeUrl({
-      ...authParams,
+    let url = client.getAuthorizeUrl({
+      ...provider.authorizationParams,
+      ...req.body.authorizationParams,
       redirect_uri: provider.callbackUrl,
       scope: provider.scope,
       // A hash of the NextAuth.js CSRF token is used as the state
-      state: createHash('sha256').update(csrfToken).digest('hex'),
-      ...provider.additionalAuthorizeParams
-    }))
+      state: createHash('sha256').update(csrfToken).digest('hex')
+    })
 
     // If the authorizationUrl specified in the config has query parameters on it
     // make sure they are included in the URL we return.
     //
-    // This is a fix for an open issue with the oAuthClient library we are using
+    // This is a fix for an open issue with the OAuthClient library we are using
     // which inadvertantly strips them.
     //
     // https://github.com/ciaranj/node-oauth/pull/193
@@ -29,20 +30,22 @@ export default function oAuthSignin ({ provider, csrfToken, callback, authParams
       url = new URL(newParams.toString(), url)
     }
 
-    if (provider.pkce) {
-      url.searchParams.append('code_challenge', codeChallenge)
+    if (pkce) {
+      url.searchParams.append('code_challenge', pkce.code_challenge)
       url.searchParams.append('code_challenge_method', 'S256')
     }
 
-    callback(null, url)
-  } else {
-    // Handle OAuth v1.x
-    client.getOAuthRequestToken((error, oAuthToken) => {
-      if (error) {
-        logger.error('GET_AUTHORISATION_URL_ERROR', error)
-      }
-      const url = `${provider.authorizationUrl}?oauth_token=${oAuthToken}`
-      callback(error, url)
-    }, callbackUrl)
+    logger.debug('GET_AUTHORIZATION_URL', url)
+    return url
+  }
+
+  try {
+    const oAuthToken = await client.getOAuthRequestToken(provider.callbackUrl)
+    const url = `${provider.authorizationUrl}?oauth_token=${oAuthToken}`
+    logger.debug('GET_AUTHORIZATION_URL', url)
+    return url
+  } catch (error) {
+    logger.error('GET_AUTHORIZATION_URL_ERROR', error)
+    throw error
   }
 }
