@@ -210,6 +210,25 @@ e.g.
 
 The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect). By default it requires the URL to be an absolute URL at the same hostname, or else it will redirect to the homepage. You can define your own redirect callback to allow other URLs, including supporting relative URLs.
 
+#### Additional params
+
+It is also possible to pass additional parameters to the `/authorize` endpoint through the third argument of `signIn()`.
+
+See the [Authorization Request OIDC spec](https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest) for some ideas.
+
+e.g.
+
+* `signIn("identity-server4", null, { prompt: "login" })` *always ask the user to reauthenticate*
+* `signIn("auth0", null, { login_hint: "info@example.com" })` *hints the e-mail address to the provider*
+
+:::note
+You can also set these parameters through [`provider.authorizationParams`](/configuration/providers#oauth-provider-options).
+:::
+
+:::note
+The following parameters are always overridden: `redirect_uri`, `scope`, `state`
+:::
+
 ---
 
 ## signOut()
