@@ -1,4 +1,4 @@
-import oAuthSignin from '../lib/signin/oauth'
+import getAuthorizationUrl from '../lib/signin/oauth'
 import emailSignin from '../lib/signin/email'
 import logger from '../../lib/logger'
 
@@ -9,8 +9,7 @@ export default async function signin (req, res) {
     baseUrl,
     basePath,
     adapter,
-    callbacks,
-    csrfToken
+    callbacks
   } = req.options
 
   if (!provider.type) {
@@ -19,8 +18,8 @@ export default async function signin (req, res) {
 
   if (provider.type === 'oauth' && req.method === 'POST') {
     try {
-      const oAuthSigninUrl = await oAuthSignin(provider, csrfToken)
-      return res.redirect(oAuthSigninUrl)
+      const authorizazionUrl = await getAuthorizationUrl(req)
+      return res.redirect(authorizazionUrl)
     } catch (error) {
       logger.error('SIGNIN_OAUTH_ERROR', error)
       return res.redirect(`${baseUrl}${basePath}/error?error=OAuthSignin`)
