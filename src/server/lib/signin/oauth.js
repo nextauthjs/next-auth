@@ -35,7 +35,7 @@ export default async function oauth (provider, csrfToken) {
     const oAuthToken = await client.getOAuthRequestToken(callbackUrl)
     return `${provider.authorizationUrl}?oauth_token=${oAuthToken}`
   } catch (error) {
-    logger.error('GET_AUTHORISATION_URL_ERROR', error)
+    logger.error('GET_AUTHORIZATION_URL_ERROR', error)
     throw error
   }
 }
