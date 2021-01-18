@@ -34,10 +34,3 @@ services:
       service: postgres
     ports:
       - "5432:5432"
-
-  fauna:
-    extends:
-      file: databases/fauna.yml
-      service: fauna
-    ports:
-      - 8443:8443
