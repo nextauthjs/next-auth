@@ -21,7 +21,7 @@ export default async function signin (req, res) {
       const authorizationUrl = await getAuthorizationUrl(req)
       return res.redirect(authorizationUrl)
     } catch (error) {
-      logger.error('SIGNIN_OAUTH_ERROR', { message: error.message, stack: error.stack })
+      logger.error('SIGNIN_OAUTH_ERROR', error)
       return res.redirect(`${baseUrl}${basePath}/error?error=OAuthSignin`)
     }
   } else if (provider.type === 'email' && req.method === 'POST') {
