@@ -2,15 +2,23 @@ import oAuthClient from '../oauth/client'
 import { createHash } from 'crypto'
 import logger from '../../../lib/logger'
 
-export default async function getAuthorizationUrl (req) {
-  const { provider, csrfToken, pkce } = req.options
+export default async function getAuthorizationUrl (req, codeChallenge) {
+  const { provider, csrfToken } = req.options
 
   const client = oAuthClient(provider)
   if (provider.version?.startsWith('2.')) {
     // Handle OAuth v2.x
+
+    const pkceParams = {}
+    if (provider.pkce) {
+      pkceParams.code_challenge = codeChallenge
+      pkceParams.code_challenge_method = 'S256'
+    }
+
     let url = client.getAuthorizeUrl({
       ...provider.authorizationParams,
       ...req.body.authorizationParams,
+      ...pkceParams,
       redirect_uri: provider.callbackUrl,
       scope: provider.scope,
       // A hash of the NextAuth.js CSRF token is used as the state
@@ -25,14 +33,9 @@ export default async function getAuthorizationUrl (req) {
     //
     // https://github.com/ciaranj/node-oauth/pull/193
     if (provider.authorizationUrl.includes('?')) {
-      const providerParams = new URLSearchParams(provider.authorizationUrl.split('?')[1])
-      const newParams = { ...url.searchParams, ...providerParams }
-      url = new URL(newParams.toString(), url)
-    }
-
-    if (pkce) {
-      url.searchParams.append('code_challenge', pkce.code_challenge)
-      url.searchParams.append('code_challenge_method', 'S256')
+      const parseUrl = new URL(provider.authorizationUrl)
+      const baseUrl = `${parseUrl.origin}${parseUrl.pathname}?`
+      url = url.replace(baseUrl, provider.authorizationUrl + '&')
     }
 
     logger.debug('GET_AUTHORIZATION_URL', url)

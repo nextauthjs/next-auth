@@ -12,7 +12,6 @@ import * as routes from './routes'
 import renderPage from './pages'
 import csrfTokenHandler from './lib/csrf-token-handler'
 import createSecret from './lib/create-secret'
-import pkceChallenge from 'pkce-challenge'
 
 // To work properly in production with OAuth providers the NEXTAUTH_URL
 // environment variable must be set.
@@ -113,8 +112,11 @@ async function NextAuthHandler (req, res, userOptions) {
       callbacks: {
         ...defaultCallbacks,
         ...userOptions.callbacks
-      },
-      pkce: provider?.pkce ? pkceChallenge(64) : undefined
+      }
+    }
+
+    if (provider) {
+      console.log(req.options.pkce)
     }
 
     await callbackUrlHandler(req, res)
