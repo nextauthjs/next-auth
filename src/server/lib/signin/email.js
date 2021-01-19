@@ -1,3 +1,5 @@
+import { randomBytes } from 'crypto'
+
 export default async function email (email, provider, options) {
   try {
     const { baseUrl, basePath, adapter } = options
@@ -8,7 +10,7 @@ export default async function email (email, provider, options) {
     const secret = provider.secret || options.secret
 
     // Generate token
-    const token = provider.generateVerificationToken()
+    const token = provider.generateVerificationToken?.() ?? randomBytes(32).toString('hex')
 
     // Send email with link containing token (the unhashed version)
     const url = `${baseUrl}${basePath}/callback/${encodeURIComponent(provider.id)}?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`
