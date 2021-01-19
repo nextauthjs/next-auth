@@ -10,12 +10,12 @@ You can specify a handler for any of these events below, for debugging or for an
 ```js title="pages/api/auth/[...nextauth].js"
 ...
   events: {
-    signIn: async (message) => { /* on successful sign in */ },
-    signOut: async (message) => { /* on signout */ },
-    createUser: async (message) => { /* user created */ },
-    linkAccount: async (message) => { /* account linked to a user */ },
-    session: async (message) => { /* session is active */ },
-    error: async (message) => { /* error in authentication flow */ }
+    async signIn(message) { /* on successful sign in */ },
+    async signOut(message) { /* on signout */ },
+    async createUser(message) { /* user created */ },
+    async linkAccount(message) { /* account linked to a user */ },
+    async session(message) { /* session is active */ },
+    async error(message) { /* error in authentication flow */ }
   }
 ...
 ```

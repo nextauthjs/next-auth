@@ -11,29 +11,14 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 
 ### Built-in OAuth providers
 
-* [Apple](/providers/apple)
-* [Atlassian](/providers/atlassian)
-* [Auth0](/providers/auth0)
-* [Basecamp](/providers/basecamp)
-* [Battle.net](/providers/battle.net)
-* [Box](/providers/box)
-* [Amazon Cognito](/providers/cognito)
-* [Discord](/providers/discord)
-* [Facebook](/providers/facebook)
-* [FusionAuth](/providers/fusionauth)
-* [GitHub](/providers/github)
-* [GitLab](/providers/gitlab)
-* [Google](/providers/google)
-* [IdentityServer4](/providers/identity-server4)
-* [LinkedIn](/providers/LinkedIn)
-* [Mixer](/providers/Mixer)
-* [Netlify](/providers/Netlify)
-* [Okta](/providers/Okta)
-* [Slack](/providers/slack)
-* [Spotify](/providers/spotify)
-* [Twitch](/providers/Twitch)
-* [Twitter](/providers/twitter)
-* [Yandex](/providers/yandex)
+<ul>
+{Object.entries(require("../../providers.json"))
+  .filter(([key]) => !["email", "credentials"].includes(key))
+  .sort(([, a], [, b]) => a.localeCompare(b))
+  .map(([key, name]) =>
+    <li key={key}><a href={`/providers/${key}`}>{name}</a></li>
+)}
+</ul>
 
 ### Using a built-in OAuth provider
 
@@ -57,6 +42,7 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 4. Now you can add the provider settings to the NextAuth options object. You can add as many OAuth providers as you like, as you can see `providers` is an array.
 
   ```js title="pages/api/auth/[...nextauth].js"
+  import Providers from `next-auth/providers`
   ...
   providers: [
     Providers.Twitter({
@@ -80,19 +66,19 @@ You can use an OAuth provider that isn't built-in by using a custom object.
 
 As an example of what this looks like, this is the the provider object returned for the Google provider:
 
-```json
+```js
 {
-  id: 'google',
-  name: 'Google',
-  type: 'oauth',
-  version: '2.0',
-  scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
-  params: { grant_type: 'authorization_code' },
-  accessTokenUrl: 'https://accounts.google.com/o/oauth2/token',
-  requestTokenUrl: 'https://accounts.google.com/o/oauth2/auth',
-  authorizationUrl: 'https://accounts.google.com/o/oauth2/auth?response_type=code',
-  profileUrl: 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json',
-  profile: (profile) => {
+  id: "google",
+  name: "Google",
+  type: "oauth",
+  version: "2.0",
+  scope: "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
+  params: { grant_type: "authorization_code" },
+  accessTokenUrl: "https://accounts.google.com/o/oauth2/token",
+  requestTokenUrl: "https://accounts.google.com/o/oauth2/auth",
+  authorizationUrl: "https://accounts.google.com/o/oauth2/auth?response_type=code",
+  profileUrl: "https://www.googleapis.com/oauth2/v1/userinfo?alt=json",
+  async profile(profile) {
     return {
       id: profile.id,
       name: profile.name,
@@ -100,13 +86,14 @@ As an example of what this looks like, this is the the provider object returned 
       image: profile.picture
     }
   },
-  clientId: '',
-  clientSecret: ''
+  clientId: "",
+  clientSecret: ""
 }
 ```
-You can replace all the options in this JSON object with the ones from your custom provider – be sure to give it a unique ID and specify the correct OAuth version - and add it to the providers option:
+You can replace all the options in this JSON object with the ones from your custom provider - be sure to give it a unique ID and specify the correct OAuth version - and add it to the providers option:
 
 ```js title="pages/api/auth/[...nextauth].js"
+import Providers from `next-auth/providers`
 ...
 providers: [
   Providers.Twitter({
@@ -127,27 +114,24 @@ providers: [
 
 ### OAuth provider options
 
-|       Name       |                     Description                     | Required |
-| :--------------: | :-------------------------------------------------: | :------: |
-|        id        |        Unique ID for the provider        |   Yes    |
-|       name       |       Descriptive name for the provider       |   Yes    |
-|       type       | Type of provider, in this case it should be `oauth` |   Yes    |
-|     version      |     OAuth version (e.g. '1.0', '1.0a', '2.0')       |   Yes    |
-|      scope       |       OAuth access scopes (expects array or string) |    No    |
-|      params      |       Additional authorization URL parameters       |    No    |
-|  accessTokenUrl  |        Endpoint to retrieve an access token         |   Yes    |
-| requestTokenUrl  |        Endpoint to retrieve a request token         |    No    |
-| authorizationUrl |   Endpoint to request authorization from the user   |   Yes    |
-|    profileUrl    |       Endpoint to retrieve the user's profile       |    No    |
-|     profile      |           An object with the user's info            |    No    |
-|     clientId     |           Client ID of the OAuth provider           |   Yes    |
-|   clientSecret   |         Client Secret of the OAuth provider         |    No    |
-|      idToken     |  Set to `true` for services that use ID Tokens (e.g. OpenID)     |    No    |
-|      state     | Set to `false` for services that do not support `state` verfication |    No    |
-
-:::note
-Feel free to open a PR for your custom configuration if you've created one for a provider that others may be interested in so we can add it to the list of built-in OAuth providers!
-:::
+|        Name         |                         Description                         |              Type               | Required |
+| :-----------------: | :---------------------------------------------------------: | :-----------------------------: | :------: |
+|         id          |                 Unique ID for the provider                  |            `string`             |   Yes    |
+|        name         |              Descriptive name for the provider              |            `string`             |   Yes    |
+|        type         |     Type of provider, in this case it should be `oauth`     | `oauth`, `email`, `credentials` |   Yes    |
+|       version       |          OAuth version (e.g. '1.0', '1.0a', '2.0')          |            `string`             |   Yes    |
+|   accessTokenUrl    |            Endpoint to retrieve an access token             |            `string`             |   Yes    |
+|  authorizationUrl   |       Endpoint to request authorization from the user       |            `string`             |   Yes    |
+|      clientId       |               Client ID of the OAuth provider               |            `string`             |   Yes    |
+|    clientSecret     |             Client Secret of the OAuth provider             |            `string`             |    No    |
+|        scope        |        OAuth access scopes (expects array or string)        |     `string` or `string[]`      |    No    |
+|       params        |           Additional authorization URL parameters           |            `object`             |    No    |
+|   requestTokenUrl   |            Endpoint to retrieve a request token             |            `string`             |    No    |
+| authorizationParams | Additional params to be sent to the authorization endpoint  |            `object`             |    No    |
+|     profileUrl      |           Endpoint to retrieve the user's profile           |            `string`             |    No    |
+|       profile       |    An callback returning an object with the user's info     |            `object`             |    No    |
+|       idToken       | Set to `true` for services that use ID Tokens (e.g. OpenID) |            `boolean`            |    No    |
+|       headers       |    Any headers that should be sent to the OAuth provider    |            `object`             |    No    |
 
 ## Sign in with Email
 
@@ -158,6 +142,8 @@ Adding support for signing in via email in addition to one or more OAuth service
 Configuration is similar to other providers, but the options are different:
 
 ```js title="pages/api/auth/[...nextauth].js"
+import Providers from `next-auth/providers`
+...
 providers: [
   Providers.Email({
     server: process.env.EMAIL_SERVER,
@@ -165,6 +151,7 @@ providers: [
     // maxAge: 24 * 60 * 60, // How long email links are valid for (default 24h)
   }),
 ],
+...
 ```
 
 See the [Email provider documentation](/providers/email) for more information on how to configure email sign in.
@@ -194,7 +181,7 @@ providers: [
       username: { label: "Username", type: "text", placeholder: "jsmith" },
       password: {  label: "Password", type: "password" }
     },
-    authorize: async (credentials) => {
+   async authorize(credentials) {
       const user = (credentials) => {
         // You need to provide your own logic here that takes the credentials
         // submitted and returns either a object representing a user or value
@@ -204,9 +191,9 @@ providers: [
       }
       if (user) {
         // Any user object returned here will be saved in the JSON Web Token
-        return Promise.resolve(user)
+        return user
       } else {
-        return Promise.resolve(null)
+        return null
       }
     }
   })
@@ -221,7 +208,7 @@ The Credentials provider can only be used if JSON Web Tokens are enabled for ses
 :::
 
 <!-- React Image Component -->
-export const Image = ({ children, src, alt = '' }) => ( 
+export const Image = ({ children, src, alt = '' }) => (
   <div
     style={{
       padding: '0.2rem',
