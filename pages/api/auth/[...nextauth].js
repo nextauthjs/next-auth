@@ -12,7 +12,7 @@ export default NextAuth({
       clientId: process.env.AUTH0_ID,
       clientSecret: process.env.AUTH0_SECRET,
       domain: process.env.AUTH0_DOMAIN,
-      pkce: true
+      protection: "pkce"
     })
   ],
   // Database optional. MySQL, Maria DB, Postgres and MongoDB are supported.

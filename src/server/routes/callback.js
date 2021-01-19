@@ -30,7 +30,6 @@ export default async function callback (req, res) {
   if (provider.type === 'oauth') {
     try {
       const { profile, account, OAuthProfile } = await oAuthCallback(req)
-      // cookie.set(res, 'pkce.code_verifier', undefined, { maxAge: 0 })
       try {
         // Make it easier to debug when adding a new provider
         logger.debug('OAUTH_CALLBACK_RESPONSE', { profile, account, OAuthProfile })

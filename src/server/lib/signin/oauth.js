@@ -3,22 +3,16 @@ import { createHash } from 'crypto'
 import logger from '../../../lib/logger'
 
 export default async function getAuthorizationUrl (req, codeChallenge) {
-  const { provider, csrfToken } = req.options
+  const { provider, csrfToken, pkce } = req.options
 
   const client = oAuthClient(provider)
   if (provider.version?.startsWith('2.')) {
     // Handle OAuth v2.x
 
-    const pkceParams = {}
-    if (provider.pkce) {
-      pkceParams.code_challenge = codeChallenge
-      pkceParams.code_challenge_method = 'S256'
-    }
-
     let url = client.getAuthorizeUrl({
       ...provider.authorizationParams,
       ...req.body.authorizationParams,
-      ...pkceParams,
+      ...pkce,
       redirect_uri: provider.callbackUrl,
       scope: provider.scope,
       // A hash of the NextAuth.js CSRF token is used as the state

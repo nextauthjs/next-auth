@@ -1,10 +1,6 @@
 import getAuthorizationUrl from '../lib/signin/oauth'
 import emailSignin from '../lib/signin/email'
 import logger from '../../lib/logger'
-import pkceChallenge from 'pkce-challenge'
-import * as cookie from '../lib/cookie'
-import jwt from 'next-auth/jwt'
-import { encrypt } from 'src/lib/crypto'
 
 /** Handle requests to /api/auth/signin */
 export default async function signin (req, res) {
@@ -22,10 +18,7 @@ export default async function signin (req, res) {
 
   if (provider.type === 'oauth' && req.method === 'POST') {
     try {
-      const pkce = pkceChallenge(64)
-      const authorizationUrl = await getAuthorizationUrl(req, pkce.code_challenge)
-      const codeVerifier = encrypt(pkce.code_verifier)
-      cookie.set(res, 'pkce.code_verifier', codeVerifier)
+      const authorizationUrl = await getAuthorizationUrl(req)
       return res.redirect(authorizationUrl)
     } catch (error) {
       logger.error('SIGNIN_OAUTH_ERROR', { message: error.message, stack: error.stack })
