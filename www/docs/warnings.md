@@ -48,3 +48,23 @@ You can use [node-jose-tools](https://www.npmjs.com/package/node-jose-tools) to 
 
 #### JWT_AUTO_GENERATED_ENCRYPTION_KEY
 
+#### SIGNIN_CALLBACK_REJECT_REDIRECT
+
+You returned something in the `signIn` callback, that is being deprecated.
+
+You probably had something similar in the callback:
+```js
+  return Promise.reject("/some/url")
+```
+
+or
+
+```js
+  throw "/some/url"
+```
+
+To remedy this, simply return the url instead:
+
+```js
+  return "/some/url"
+```

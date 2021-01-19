@@ -144,7 +144,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
       }
 
       try {
-        return manager.findUnique(User, { [idKey]: id })
+        return manager.findOne(User, { [idKey]: id })
       } catch (error) {
         logger.error('GET_USER_BY_ID_ERROR', error)
         return Promise.reject(new Error('GET_USER_BY_ID_ERROR', error))
@@ -155,7 +155,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
       debug('GET_USER_BY_EMAIL', email)
       try {
         if (!email) { return Promise.resolve(null) }
-        return manager.findUnique(User, { email })
+        return manager.findOne(User, { email })
       } catch (error) {
         logger.error('GET_USER_BY_EMAIL_ERROR', error)
         return Promise.reject(new Error('GET_USER_BY_EMAIL_ERROR', error))
@@ -165,9 +165,9 @@ const Adapter = (typeOrmConfig, options = {}) => {
     async function getUserByProviderAccountId (providerId, providerAccountId) {
       debug('GET_USER_BY_PROVIDER_ACCOUNT_ID', providerId, providerAccountId)
       try {
-        const account = await manager.findUnique(Account, { providerId, providerAccountId })
+        const account = await manager.findOne(Account, { providerId, providerAccountId })
         if (!account) { return null }
-        return manager.findUnique(User, { [idKey]: account.userId })
+        return manager.findOne(User, { [idKey]: account.userId })
       } catch (error) {
         logger.error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error)
         return Promise.reject(new Error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error))
@@ -227,7 +227,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
     async function getSession (sessionToken) {
       debug('GET_SESSION', sessionToken)
       try {
-        const session = await manager.findUnique(Session, { sessionToken })
+        const session = await manager.findOne(Session, { sessionToken })
 
         // Check session has not expired (do not return it if it has)
         if (session && session.expires && new Date() > new Date(session.expires)) {
@@ -327,7 +327,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
         // Hash token provided with secret before trying to match it with database
         // @TODO Use bcrypt instead of salted SHA-256 hash for token
         const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
-        const verificationRequest = await manager.findUnique(VerificationRequest, { identifier, token: hashedToken })
+        const verificationRequest = await manager.findOne(VerificationRequest, { identifier, token: hashedToken })
 
         if (verificationRequest && verificationRequest.expires && new Date() > new Date(verificationRequest.expires)) {
           // Delete verification entry so it cannot be used again
