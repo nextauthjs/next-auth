@@ -1,5 +1,3 @@
-import { randomBytes } from 'crypto'
-
 export default async function email (email, provider, options) {
   try {
     const { baseUrl, basePath, adapter } = options
