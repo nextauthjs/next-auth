@@ -45,7 +45,7 @@ These errors are displayed on the terminal.
 
 ### Signin / Callback
 
-#### GET_AUTHORISATION_URL_ERROR
+#### GET_AUTHORIZATION_URL_ERROR
 
 #### SIGNIN_OAUTH_ERROR
 

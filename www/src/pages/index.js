@@ -183,7 +183,6 @@ function Home () {
           </section>
           <div className='home-subtitle'>
             <p>NextAuth.js is an open source community project.</p>
-            <p>NextAuth.js is not affiliated with Vercel or Next.js</p>
           </div>
         </main>
       </div>
