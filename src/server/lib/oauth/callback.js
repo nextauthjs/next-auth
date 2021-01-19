@@ -53,7 +53,7 @@ export default async function oAuthCallback (req) {
     }
 
     try {
-      const { accessToken, refreshToken, results } = await client.getOAuthAccessToken(code, provider, pkce.codeVerifier)
+      const { accessToken, refreshToken, results } = await client.getOAuthAccessToken(code, provider, pkce.code_verifier)
       const tokens = { accessToken, refreshToken, idToken: results.id_token }
       let profileData
       if (provider.idToken) {

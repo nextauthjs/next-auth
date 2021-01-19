@@ -42,7 +42,7 @@ export async function handleSignin (req, res) {
     // Started login flow, add generated pkce to req.options and (encrypted) code_verifier to a cookie
     const pkce = pkceChallenge(PKCE_LENGTH)
     req.options.pkce = {
-      code_challenge: pkce.codeChallenge,
+      code_challenge: pkce.code_challenge,
       code_challenge_method: PKCE_CODE_CHALLENGE_METHOD
     }
     const encryptedCodeVerifier = await jwt.encode({
