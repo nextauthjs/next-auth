@@ -2,13 +2,12 @@ import oAuthClient from '../oauth/client'
 import { createHash } from 'crypto'
 import logger from '../../../lib/logger'
 
-export default async function getAuthorizationUrl (req, codeChallenge) {
+export default async function getAuthorizationUrl (req) {
   const { provider, csrfToken, pkce } = req.options
 
   const client = oAuthClient(provider)
   if (provider.version?.startsWith('2.')) {
     // Handle OAuth v2.x
-
     let url = client.getAuthorizeUrl({
       ...provider.authorizationParams,
       ...req.body.authorizationParams,
