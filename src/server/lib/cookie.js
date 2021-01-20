@@ -142,6 +142,15 @@ export function defaultCookies (useSecureCookies) {
         path: '/',
         secure: useSecureCookies
       }
+    },
+    pkceCodeVerifier: {
+      name: `${cookiePrefix}next-auth.pkce.code_verifier`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: useSecureCookies
+      }
     }
   }
 }

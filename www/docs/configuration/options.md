@@ -395,6 +395,15 @@ cookies: {
       path: '/',
       secure: true
     }
+  },
+  pkceCodeVerifier: {
+    name: `${cookiePrefix}next-auth.pkce.code_verifier`,
+    options: {
+      httpOnly: true,
+      sameSite: 'lax',
+      path: '/',
+      secure: useSecureCookies
+    }
   }
 }
 ```
