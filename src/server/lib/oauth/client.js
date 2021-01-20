@@ -87,7 +87,7 @@ export default function oAuthClient (provider) {
 /**
  * Ported from https://github.com/ciaranj/node-oauth/blob/a7f8a1e21c362eb4ed2039431fb9ac2ae749f26a/lib/oauth2.js
  */
-async function getOAuth2AccessToken (code, provider) {
+async function getOAuth2AccessToken (code, provider, codeVerifier) {
   const url = provider.accessTokenUrl
   const params = { ...provider.params }
   const headers = { ...provider.headers }
@@ -130,6 +130,10 @@ async function getOAuth2AccessToken (code, provider) {
 
   if ((provider.id === 'okta' || provider.id === 'identity-server4') && !headers.Authorization) {
     headers.Authorization = `Bearer ${code}`
+  }
+
+  if (provider.protection === 'pkce') {
+    params.code_verifier = codeVerifier
   }
 
   const postData = querystring.stringify(params)

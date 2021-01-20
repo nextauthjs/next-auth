@@ -11,7 +11,7 @@ class OAuthCallbackError extends Error {
 }
 
 export default async function oAuthCallback (req) {
-  const { provider, csrfToken } = req.options
+  const { provider, csrfToken, pkce } = req.options
   const client = oAuthClient(provider)
 
   if (provider.version?.startsWith('2.')) {
@@ -53,7 +53,7 @@ export default async function oAuthCallback (req) {
     }
 
     try {
-      const { accessToken, refreshToken, results } = await client.getOAuthAccessToken(code, provider)
+      const { accessToken, refreshToken, results } = await client.getOAuthAccessToken(code, provider, pkce.code_verifier)
       const tokens = { accessToken, refreshToken, idToken: results.id_token }
       let profileData
       if (provider.idToken) {

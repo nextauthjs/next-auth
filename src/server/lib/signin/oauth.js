@@ -3,7 +3,7 @@ import { createHash } from 'crypto'
 import logger from '../../../lib/logger'
 
 export default async function getAuthorizationUrl (req) {
-  const { provider, csrfToken } = req.options
+  const { provider, csrfToken, pkce } = req.options
 
   const client = oAuthClient(provider)
   if (provider.version?.startsWith('2.')) {
@@ -11,6 +11,7 @@ export default async function getAuthorizationUrl (req) {
     let url = client.getAuthorizeUrl({
       ...provider.authorizationParams,
       ...req.body.authorizationParams,
+      ...pkce,
       redirect_uri: provider.callbackUrl,
       scope: provider.scope,
       // A hash of the NextAuth.js CSRF token is used as the state

@@ -132,6 +132,7 @@ providers: [
 |       profile       |    An callback returning an object with the user's info     |            `object`             |    No    |
 |       idToken       | Set to `true` for services that use ID Tokens (e.g. OpenID) |            `boolean`            |    No    |
 |       headers       |    Any headers that should be sent to the OAuth provider    |            `object`             |    No    |
+|     protection      |          Additional security for OAuth login flows          |             `pkce`              |    No    |
 
 ## Sign in with Email
 
