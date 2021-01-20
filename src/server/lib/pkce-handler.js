@@ -1,7 +1,7 @@
 import pkceChallenge from 'pkce-challenge'
 import jwt from '../../lib/jwt'
 import * as cookie from '../lib/cookie'
-import logger from 'src/lib/logger'
+import logger from '../../lib/logger'
 
 const PKCE_LENGTH = 64
 const PKCE_CODE_CHALLENGE_METHOD = 'S256' // can be 'plain', not recommended https://tools.ietf.org/html/rfc7636#section-4.2
