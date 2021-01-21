@@ -126,12 +126,15 @@ e.g. `getSession()`, `useSession()`, `/api/auth/session`
 callbacks: {
   /**
    * @param  {object} session      Session object
-   * @param  {object} user         User object    (if using database sessions)
+   * @param  {object} token        User object    (if using database sessions)
    *                               JSON Web Token (if not using database sessions)
    * @return {object}              Session that will be returned to the client 
    */
-  async session(session, user) {
-    session.foo = 'bar' // Add property to session
+  async session(session, token) {
+    if(token?.access_token) {
+      // Add property to session, like an access_token from a provider
+      session.access_token = token.access_token
+    }
     return session
   }
 }
@@ -140,7 +143,11 @@ callbacks: {
 
 :::tip
 When using JSON Web Tokens the `jwt()` callback is invoked before the `session()` callback, so anything you add to the
-JSON Web Token will be immediately available in the session callback.
+JSON Web Token will be immediately available in the session callback, like for example an `access_token` from a provider.
+:::
+
+:::tip
+To better represent its value, when using a JWT session, the second parameter should be called `token` (This is the same thing you return from the `jwt` callback). If you use a database, call it `user`.
 :::
 
 :::warning
@@ -175,14 +182,24 @@ callbacks: {
    * @return {object}            JSON Web Token that will be saved
    */
   async jwt(token, user, account, profile, isNewUser) {
-    const isSignIn = (user) ? true : false
-    // Add auth_time to token on signin in
-    if (isSignIn) { token.auth_time = Math.floor(Date.now() / 1000) }
+    // Add access_token to the token on signin in
+    if (account?.access_token) {
+      token.access_token = account.access_token
+    }
     return token
   }
 }
 ...
 ```
+
+:::tip
+Use an if branch in jwt with checking for existence of any other params than token. If any of those exist, you call jwt for the first time.
+This is a good place to add for example an `access_token` to your jwt, if you want to.
+:::
+
+:::tip
+Check out the content of all the params in addition `token`, to see what info you have available on signin.
+:::
 
 :::warning
 NextAuth.js does not limit how much data you can store in a JSON Web Token, however a ~**4096 byte limit** for all cookies on a domain is commonly imposed by browsers.
