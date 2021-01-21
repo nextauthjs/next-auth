@@ -24,6 +24,7 @@ import Mixer from './mixer'
 import Netlify from './netlify'
 import Okta from './okta'
 import Reddit from './reddit'
+import Salesforce from './salesforce'
 import Slack from './slack'
 import Spotify from './spotify'
 import Strava from './strava'
@@ -59,6 +60,7 @@ export default {
   Netlify,
   Okta,
   Reddit,
+  Salesforce,
   Slack,
   Spotify,
   Strava,
