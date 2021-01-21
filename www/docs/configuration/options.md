@@ -21,6 +21,25 @@ _e.g. `NEXTAUTH_URL=https://example.com/custom-route/api/auth`_
 To set environment variables on Vercel, you can use the [dashboard](https://vercel.com/dashboard) or the `now env` command.
 :::
 
+Alternatively, you can set `NEXTAUTH_URL` value using [Next.js runtime configuration](https://nextjs.org/docs/api-reference/next.config.js/runtime-configuration) rather than using environment variables. To configure it, add `publicRuntimeConfig.NEXTAUTH_URL` in your `next.config.js` file and NextAuth.js will use the runtime configuration value on the server and client.
+
+```js
+module.exports = {
+  publicRuntimeConfig: {
+    NEXTAUTH_URL: "https://example.com",
+
+    // or dynamically from some arbitrary function
+    // NEXTAUTH_URL: getWebsiteUrl(),
+  },
+}
+```
+
+NextAuth.js will prioritize reading `NEXTAUTH_URL` value via environment variable first, so value from runtime configuration is ignored if both is set.
+
+:::warning
+Using Next.js runtime configuration option will add rendering / initialization overhead. Learn more by reading the [Next.js runtime configuration documentation page](https://nextjs.org/docs/api-reference/next.config.js/runtime-configuration).
+:::
+
 ---
 
 ## Options
