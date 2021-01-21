@@ -163,7 +163,7 @@ async function getOAuth2AccessToken (code, provider, codeVerifier) {
           results = querystring.parse(data)
         }
         let accessToken = results.access_token
-        if (provider.id === 'spotify') {
+        if (provider.id === 'slack') {
           accessToken = results.authed_user.access_token
         }
         const refreshToken = results.refresh_token
