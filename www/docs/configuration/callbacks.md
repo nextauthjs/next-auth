@@ -182,7 +182,7 @@ callbacks: {
    * @return {object}            JSON Web Token that will be saved
    */
   async jwt(token, user, account, profile, isNewUser) {
-    // Add access_token to the token on signin in
+    // Add access_token to the token right after signin
     if (account?.access_token) {
       token.access_token = account.access_token
     }
