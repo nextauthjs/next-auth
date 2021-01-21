@@ -3,7 +3,7 @@ id: creating-a-database-adapter
 title: Creating a database adapter
 ---
 
-Using a custom adapter you can connect to any database backend or even several different databases.
+Using a custom adapter you can connect to any database backend or even several different databases.  Custom adapters can be found in the [adapters repository](https://github.com/nextauthjs/adapters).
 
 Creating a custom adapter can be considerable undertaking and will require some trial and error and some reverse engineering using the built-in adapters for reference.
 
