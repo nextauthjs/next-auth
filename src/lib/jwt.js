@@ -2,6 +2,10 @@ import crypto from 'crypto'
 import jose from 'jose'
 import logger from './logger'
 
+import { getNextAuthUrl } from './env'
+
+const NEXTAUTH_URL = getNextAuthUrl()
+
 // Set default algorithm to use for auto-generated signing key
 const DEFAULT_SIGNATURE_ALGORITHM = 'HS512'
 
@@ -104,7 +108,7 @@ async function getToken (params) {
     req,
     // Use secure prefix for cookie name, unless URL is NEXTAUTH_URL is http://
     // or not set (e.g. development or test instance) case use unprefixed name
-    secureCookie = !(!process.env.NEXTAUTH_URL || process.env.NEXTAUTH_URL.startsWith('http://')),
+    secureCookie = !(!NEXTAUTH_URL || NEXTAUTH_URL.startsWith('http://')),
     cookieName = (secureCookie) ? '__Secure-next-auth.session-token' : 'next-auth.session-token',
     raw = false
   } = params

@@ -15,6 +15,10 @@ import { useState, useEffect, useContext, createContext, createElement } from 'r
 import logger from '../lib/logger'
 import parseUrl from '../lib/parse-url'
 
+import { getNextAuthUrl } from '../lib/env'
+
+const NEXTAUTH_URL = getNextAuthUrl()
+
 // This behaviour mirrors the default behaviour for getting the site name that
 // happens server side in server/index.js
 // 1. An empty value is legitimate when the code is being invoked client side as
@@ -22,8 +26,8 @@ import parseUrl from '../lib/parse-url'
 // 2. When invoked server side the value is picked up from an environment
 //    variable and defaults to 'http://localhost:3000'.
 const __NEXTAUTH = {
-  baseUrl: parseUrl(process.env.NEXTAUTH_URL || process.env.VERCEL_URL).baseUrl,
-  basePath: parseUrl(process.env.NEXTAUTH_URL).basePath,
+  baseUrl: parseUrl(NEXTAUTH_URL || process.env.VERCEL_URL).baseUrl,
+  basePath: parseUrl(NEXTAUTH_URL).basePath,
   keepAlive: 0, // 0 == disabled (don't send); 60 == send every 60 seconds
   clientMaxAge: 0, // 0 == disabled (only use cache); 60 == sync if last checked > 60 seconds ago
   // Properties starting with _ are used for tracking internal app state
@@ -311,7 +315,7 @@ const _fetchData = async (url, options = {}) => {
 const _apiBaseUrl = () => {
   if (typeof window === 'undefined') {
     // NEXTAUTH_URL should always be set explicitly to support server side calls - log warning if not set
-    if (!process.env.NEXTAUTH_URL) { logger.warn('NEXTAUTH_URL', 'NEXTAUTH_URL environment variable not set') }
+    if (!NEXTAUTH_URL) { logger.warn('NEXTAUTH_URL', 'NEXTAUTH_URL value not set') }
 
     // Return absolute path when called server side
     return `${__NEXTAUTH.baseUrl}${__NEXTAUTH.basePath}`

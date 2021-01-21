@@ -14,10 +14,14 @@ import csrfTokenHandler from './lib/csrf-token-handler'
 import createSecret from './lib/create-secret'
 import * as pkce from './lib/pkce-handler'
 
+import { getNextAuthUrl } from '../lib/env'
+
+const NEXTAUTH_URL = getNextAuthUrl()
+
 // To work properly in production with OAuth providers the NEXTAUTH_URL
 // environment variable must be set.
-if (!process.env.NEXTAUTH_URL) {
-  logger.warn('NEXTAUTH_URL', 'NEXTAUTH_URL environment variable not set')
+if (!NEXTAUTH_URL) {
+  logger.warn('NEXTAUTH_URL', 'NEXTAUTH_URL value not set')
 }
 
 async function NextAuthHandler (req, res, userOptions) {
@@ -48,7 +52,7 @@ async function NextAuthHandler (req, res, userOptions) {
     } = req.query
 
     // @todo refactor all existing references to baseUrl and basePath
-    const { basePath, baseUrl } = parseUrl(process.env.NEXTAUTH_URL || process.env.VERCEL_URL)
+    const { basePath, baseUrl } = parseUrl(NEXTAUTH_URL || process.env.VERCEL_URL)
 
     const cookies = {
       ...cookie.defaultCookies(userOptions.useSecureCookies || baseUrl.startsWith('https://')),
