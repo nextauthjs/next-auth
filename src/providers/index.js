@@ -20,7 +20,6 @@ import IdentityServer4 from './identity-server4'
 import LINE from './line'
 import LinkedIn from './linkedin'
 import MailRu from './mailru'
-import Mixer from './mixer'
 import Netlify from './netlify'
 import Okta from './okta'
 import Reddit from './reddit'
@@ -56,7 +55,6 @@ export default {
   LINE,
   LinkedIn,
   MailRu,
-  Mixer,
   Netlify,
   Okta,
   Reddit,
