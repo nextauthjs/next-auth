@@ -82,12 +82,12 @@ const Adapter = (config) => {
           debug('GET_USER - Fetched from LRU Cache', cachedUser);
           // stale while revalidate
           (async () => {
-            const user = await prisma[User].findOne({ where: { id } })
+            const user = await prisma[User].findUnique({ where: { id } })
             userCache.set(user.id, user)
           })()
           return cachedUser
         }
-        return prisma[User].findOne({ where: { id } })
+        return prisma[User].findUnique({ where: { id } })
       } catch (error) {
         logger.error('GET_USER_BY_ID_ERROR', error)
         // @ts-ignore
@@ -101,7 +101,7 @@ const Adapter = (config) => {
         if (!email) {
           return Promise.resolve(null)
         }
-        return prisma[User].findOne({ where: { email } })
+        return prisma[User].findUnique({ where: { email } })
       } catch (error) {
         logger.error('GET_USER_BY_EMAIL_ERROR', error)
         // @ts-ignore
@@ -113,7 +113,7 @@ const Adapter = (config) => {
       debug('GET_USER_BY_PROVIDER_ACCOUNT_ID', providerId, providerAccountId)
       try {
         if (!providerId || !providerAccountId) return null
-        const account = await prisma[Account].findOne({
+        const account = await prisma[Account].findUnique({
           where: {
             providerId_providerAccountId_unique: {
               providerId: providerId,
@@ -271,7 +271,7 @@ const Adapter = (config) => {
           debug('GET_SESSION - Fetched from LRU Cache', cachedSession)
           return cachedSession
         }
-        const session = await prisma[Session].findOne({
+        const session = await prisma[Session].findUnique({
           where: { sessionToken: sessionToken }
         })
 
@@ -421,7 +421,7 @@ const Adapter = (config) => {
         const hashedToken = createHash('sha256')
           .update(`${token}${secret}`)
           .digest('hex')
-        const verificationRequest = await prisma[VerificationRequest].findOne({
+        const verificationRequest = await prisma[VerificationRequest].findUnique({
           where: { token: hashedToken }
         })
 
