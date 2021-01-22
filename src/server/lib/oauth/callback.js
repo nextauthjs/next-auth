@@ -2,13 +2,7 @@ import { createHash } from 'crypto'
 import { decode as jwtDecode } from 'jsonwebtoken'
 import oAuthClient from './client'
 import logger from '../../../lib/logger'
-class OAuthCallbackError extends Error {
-  constructor (message) {
-    super(message)
-    this.name = 'OAuthCallbackError'
-    this.message = message
-  }
-}
+import { OAuthCallbackError } from '../../../lib/errors'
 
 export default async function oAuthCallback (req) {
   const { provider, csrfToken, pkce } = req.options
