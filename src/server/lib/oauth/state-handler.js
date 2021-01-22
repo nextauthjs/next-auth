@@ -39,10 +39,10 @@ export async function handleSignin (req, res) {
       return
     }
 
-    if (provider.state) {
+    if ('state' in provider) {
       logger.warn(
         'STATE_OPTION_DEPRECATION',
-        'The "state" provider option is being replaced with `protection: "state"`'
+        'The "state" provider option is being replaced with `protection`. See the docs.'
       )
     }
 
