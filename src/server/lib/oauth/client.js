@@ -89,7 +89,7 @@ export default function oAuthClient (provider) {
  */
 async function getOAuth2AccessToken (code, provider, codeVerifier) {
   const url = provider.accessTokenUrl
-  const params = { ...provider.params }
+  const params = { ...provider.params, code_verifier: codeVerifier }
   const headers = { ...provider.headers }
   const codeParam = (params.grant_type === 'refresh_token') ? 'refresh_token' : 'code'
 
@@ -130,10 +130,6 @@ async function getOAuth2AccessToken (code, provider, codeVerifier) {
 
   if ((provider.id === 'okta' || provider.id === 'identity-server4') && !headers.Authorization) {
     headers.Authorization = `Bearer ${code}`
-  }
-
-  if (provider.protection === 'pkce') {
-    params.code_verifier = codeVerifier
   }
 
   const postData = querystring.stringify(params)

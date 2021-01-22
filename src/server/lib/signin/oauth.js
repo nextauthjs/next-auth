@@ -11,7 +11,6 @@ export default async function getAuthorizationUrl (req) {
     let url = client.getAuthorizeUrl({
       ...provider.authorizationParams,
       ...req.body.authorizationParams,
-      ...pkce,
       redirect_uri: provider.callbackUrl,
       scope: provider.scope,
       // A hash of the NextAuth.js CSRF token is used as the state
