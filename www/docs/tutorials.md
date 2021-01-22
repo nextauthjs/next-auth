@@ -71,3 +71,9 @@ This `dev.to` tutorial walks one through adding NextAuth.js to an existing proje
 ### [Adding Sign in With Apple Next JS](https://thesiddd.com/blog/apple-auth)
 
 This tutorial walks step by step on how to get Sign In with Apple working (both locally and on a deployed website) using NextAuth.js.
+
+### [Using Credentials Provider with a Custom Backend](https://dev.to/twisha/using-credentials-provider-with-a-custom-backend-in-nextauth-js-43k4)
+
+This `dev.to` articles walks you through adding authentication using credentials provider with a custom backend. It also includes handling error responses from your server and displaying them on your custom login page.
+
+
