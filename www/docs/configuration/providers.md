@@ -114,25 +114,26 @@ providers: [
 
 ### OAuth provider options
 
-|        Name         |                         Description                         |              Type               | Required |
-| :-----------------: | :---------------------------------------------------------: | :-----------------------------: | :------: |
-|         id          |                 Unique ID for the provider                  |            `string`             |   Yes    |
-|        name         |              Descriptive name for the provider              |            `string`             |   Yes    |
-|        type         |     Type of provider, in this case it should be `oauth`     | `oauth`, `email`, `credentials` |   Yes    |
-|       version       |          OAuth version (e.g. '1.0', '1.0a', '2.0')          |            `string`             |   Yes    |
-|   accessTokenUrl    |            Endpoint to retrieve an access token             |            `string`             |   Yes    |
-|  authorizationUrl   |       Endpoint to request authorization from the user       |            `string`             |   Yes    |
-|      clientId       |               Client ID of the OAuth provider               |            `string`             |   Yes    |
-|    clientSecret     |             Client Secret of the OAuth provider             |            `string`             |    No    |
-|        scope        |        OAuth access scopes (expects array or string)        |     `string` or `string[]`      |    No    |
-|       params        |           Additional authorization URL parameters           |            `object`             |    No    |
-|   requestTokenUrl   |            Endpoint to retrieve a request token             |            `string`             |    No    |
-| authorizationParams | Additional params to be sent to the authorization endpoint  |            `object`             |    No    |
-|     profileUrl      |           Endpoint to retrieve the user's profile           |            `string`             |    No    |
-|       profile       |    An callback returning an object with the user's info     |            `object`             |    No    |
-|       idToken       | Set to `true` for services that use ID Tokens (e.g. OpenID) |            `boolean`            |    No    |
-|       headers       |    Any headers that should be sent to the OAuth provider    |            `object`             |    No    |
-|     protection      |          Additional security for OAuth login flows          |             `pkce`              |    No    |
+|        Name         |                           Description                            |              Type               | Required |
+| :-----------------: | :--------------------------------------------------------------: | :-----------------------------: | :------: |
+|         id          |                    Unique ID for the provider                    |            `string`             |   Yes    |
+|        name         |                Descriptive name for the provider                 |            `string`             |   Yes    |
+|        type         |       Type of provider, in this case it should be `oauth`        | `oauth`, `email`, `credentials` |   Yes    |
+|       version       |            OAuth version (e.g. '1.0', '1.0a', '2.0')             |            `string`             |   Yes    |
+|   accessTokenUrl    |               Endpoint to retrieve an access token               |            `string`             |   Yes    |
+|  authorizationUrl   |         Endpoint to request authorization from the user          |            `string`             |   Yes    |
+|      clientId       |                 Client ID of the OAuth provider                  |            `string`             |   Yes    |
+|    clientSecret     |               Client Secret of the OAuth provider                |            `string`             |    No    |
+|        scope        |          OAuth access scopes (expects array or string)           |     `string` or `string[]`      |    No    |
+|       params        |             Additional authorization URL parameters              |            `object`             |    No    |
+|   requestTokenUrl   |               Endpoint to retrieve a request token               |            `string`             |    No    |
+| authorizationParams |    Additional params to be sent to the authorization endpoint    |            `object`             |    No    |
+|     profileUrl      |             Endpoint to retrieve the user's profile              |            `string`             |    No    |
+|       profile       |       An callback returning an object with the user's info       |            `object`             |    No    |
+|       idToken       |   Set to `true` for services that use ID Tokens (e.g. OpenID)    |            `boolean`            |    No    |
+|       headers       |      Any headers that should be sent to the OAuth provider       |            `object`             |    No    |
+|     protection      | Additional security for OAuth login flows (defaults to `state`)  |     `pkce`, `state`, `none`     |    No    |
+|        state        | Same as `protection: "state"`. Being deprecated, use protection. |            `boolean`            |    No    |
 
 ## Sign in with Email
 
