@@ -1,33 +1,16 @@
-import { createHash } from 'crypto'
 import { decode as jwtDecode } from 'jsonwebtoken'
 import oAuthClient from './client'
 import logger from '../../../lib/logger'
-class OAuthCallbackError extends Error {
-  constructor (message) {
-    super(message)
-    this.name = 'OAuthCallbackError'
-    this.message = message
-  }
-}
+import { OAuthCallbackError } from '../../../lib/errors'
 
 export default async function oAuthCallback (req) {
-  const { provider, csrfToken, pkce } = req.options
+  const { provider, pkce } = req.options
   const client = oAuthClient(provider)
 
   if (provider.version?.startsWith('2.')) {
     // The "user" object is specific to the Apple provider and is provided on first sign in
     // e.g. {"name":{"firstName":"Johnny","lastName":"Appleseed"},"email":"johnny.appleseed@nextauth.com"}
-    let { code, user, state } = req.query // eslint-disable-line camelcase
-    // For OAuth 2.0 flows, check state returned and matches expected value
-    // (a hash of the NextAuth.js CSRF token).
-    //
-    // Apple does not support state verification.
-    if (provider.id !== 'apple') {
-      const expectedState = createHash('sha256').update(csrfToken).digest('hex')
-      if (state !== expectedState) {
-        throw new OAuthCallbackError('Invalid state returned from OAuth provider')
-      }
-    }
+    let { code, user } = req.query // eslint-disable-line camelcase
 
     if (req.method === 'POST') {
       try {

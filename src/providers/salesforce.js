@@ -8,7 +8,7 @@ export default (options) => {
     accessTokenUrl: 'https://login.salesforce.com/services/oauth2/token',
     authorizationUrl: 'https://login.salesforce.com/services/oauth2/authorize?response_type=code',
     profileUrl: 'https://login.salesforce.com/services/oauth2/userinfo',
-    state: false,
+    protection: 'none', // REVIEW: Can we use "pkce" ?
     profile: (profile) => {
       return {
         ...profile,

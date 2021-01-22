@@ -13,7 +13,7 @@ export default function parseUrl (url) {
   if (!url) { url = `${defaultHost}${defaultPath}` }
 
   // Default to HTTPS if no protocol explictly specified
-  const protocol = url.startsWith("http:") ? "http" : "https"
+  const protocol = url.startsWith('http:') ? 'http' : 'https'
 
   // Normalize URLs by stripping protocol and no trailing slash
   url = url.replace(/^https?:\/\//, '').replace(/\/$/, '')
