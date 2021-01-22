@@ -68,3 +68,10 @@ To remedy this, simply return the url instead:
 ```js
   return "/some/url"
 ```
+
+
+#### STATE_OPTION_DEPRECATION
+You provided `state: true` or `state: false` as a provider option. This is being deprecated in a later release in favour of `protection: "state"` and `protection: "none"` respectively. To remedy this warning:
+
+- If you use `state: true`, just simply remove it. The default is `protection: "state"` already..
+- If you use `state: false`, set `protection: "none"`.
