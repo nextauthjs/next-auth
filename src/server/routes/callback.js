@@ -1,4 +1,5 @@
 import oAuthCallback from '../lib/oauth/callback'
+import openidCallback from '../lib/openid/callback'
 import callbackHandler from '../lib/callback-handler'
 import * as cookie from '../lib/cookie'
 import logger from '../../lib/logger'
@@ -274,6 +275,95 @@ export default async function callback (req, res) {
     await dispatchEvent(events.signIn, { user, account })
 
     return res.redirect(callbackUrl || baseUrl)
-  }
+  } else if (type === 'openid') {
+    try {
+      if (!provider.mapIdentifierToProfile) {
+        logger.error('CALLBACK_OPENID_HANDLER_ERROR', 'Must define an mapIdentifierToProfile() handler to use openid authentication provider')
+        return redirect(`${baseUrl}${basePath}/error?error=Configuration`)
+      }
+
+      let account
+      let profile
+      try {
+        ({ account, profile } = await openidCallback(req, provider))
+      } catch (error) {
+        logger.error('CALLBACK_OPENID_ERROR', error)
+        return redirect(`${baseUrl}${basePath}/error?error=openIdCallback`)
+      }
+
+      try {
+        // Check if user is allowed to sign in
+        let userOrProfile = profile
+        if (adapter) {
+          const { getUserByProviderAccountId } = await adapter.getAdapter(options)
+          const userFromProviderAccountId = await getUserByProviderAccountId(provider.id, account.id)
+          if (userFromProviderAccountId) {
+            userOrProfile = userFromProviderAccountId
+          }
+        }
+
+        try {
+          const signInCallbackResponse = await callbacks.signIn(userOrProfile, account, { email: profile.email })
+          if (signInCallbackResponse === false) {
+            return redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
+          }
+        } catch (error) {
+          if (error instanceof Error) {
+            return redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
+          } else {
+            return redirect(error)
+          }
+        }
+
+        // Sign user in
+        const { user, session, isNewUser } = await callbackHandler(sessionToken, profile, account, options)
+
+        if (useJwtSession) {
+          const defaultJwtPayload = {
+            name: user.name,
+            email: user.email,
+            picture: user.image
+          }
+          const jwtPayload = await callbacks.jwt(defaultJwtPayload, user, account, profile, isNewUser)
+
+          // Sign and encrypt token
+          const newEncodedJwt = await jwt.encode({ ...jwt, token: jwtPayload })
+
+          // Set cookie expiry date
+          const cookieExpires = new Date()
+          cookieExpires.setTime(cookieExpires.getTime() + (sessionMaxAge * 1000))
+
+          cookie.set(res, cookies.sessionToken.name, newEncodedJwt, { expires: cookieExpires.toISOString(), ...cookies.sessionToken.options })
+        } else {
+          // Save Session Token in cookie
+          cookie.set(res, cookies.sessionToken.name, session.sessionToken, { expires: session.expires || null, ...cookies.sessionToken.options })
+        }
+
+        await dispatchEvent(events.signIn, { user, account, isNewUser })
+
+        // Handle first logins on new accounts
+        // e.g. option to send users to a new account landing page on initial login
+        // Note that the callback URL is preserved, so the journey can still be resumed
+        if (isNewUser && pages.newUser) {
+          return redirect(pages.newUser)
+        }
+
+        // Callback URL is already verified at this point, so safe to use if specified
+        return redirect(callbackUrl || baseUrl)
+      } catch (error) {
+        if (error.name === 'AccountNotLinkedError') {
+          // If the email on the account is already linked, but nto with this oAuth account
+          return redirect(`${baseUrl}${basePath}/error?error=OpenIdAccountNotLinked`)
+        } else if (error.name === 'CreateUserError') {
+          return redirect(`${baseUrl}${basePath}/error?error=OpenIdCreateAccount`)
+        } else {
+          logger.error('OPENID_CALLBACK_HANDLER_ERROR', error)
+          return redirect(`${baseUrl}${basePath}/error?error=Callback`)
+        }
+      }
+    } catch (error) {
+      logger.error('OPENID_CALLBACK_ERROR', error)
+      return redirect(`${baseUrl}${basePath}/error?error=Callback`)
+    }
   return res.status(500).end(`Error: Callback for provider type ${provider.type} not supported`)
 }
