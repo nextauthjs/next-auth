@@ -6,10 +6,11 @@ export default async function getAuthorizationUrl (req) {
 
   const client = oAuthClient(provider)
   if (provider.version?.startsWith('2.')) {
+    delete req.query?.nextauth
     // Handle OAuth v2.x
     let url = client.getAuthorizeUrl({
       ...provider.authorizationParams,
-      ...req.body.authorizationParams,
+      ...req.query,
       redirect_uri: provider.callbackUrl,
       scope: provider.scope
     })
