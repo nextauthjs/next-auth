@@ -236,7 +236,7 @@ const _useSessionHook = (session) => {
 // Client side method
 export const signIn = async (provider, args = {}, authorizationParams = {}) => {
   const baseUrl = _apiBaseUrl()
-  const callbackUrl = args.callbackUrl ?? window.location
+  const callbackUrl = args?.callbackUrl ?? window.location
   const providers = await getProviders()
 
   // Redirect to sign in page if no valid provider specified
@@ -256,14 +256,13 @@ export const signIn = async (provider, args = {}, authorizationParams = {}) => {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       body: _encodedForm({
-        ...args,
-        authorizationParams,
         csrfToken: await getCsrfToken(),
         callbackUrl: callbackUrl,
         json: true
       })
     }
-    const res = await fetch(signInUrl, fetchOptions)
+    const _signInUrl = `${signInUrl}?${_encodedForm(authorizationParams)}`
+    const res = await fetch(_signInUrl, fetchOptions)
     const data = await res.json()
     window.location = data.url ?? callbackUrl
   }

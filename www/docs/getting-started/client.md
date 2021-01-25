@@ -214,7 +214,7 @@ The URL must be considered valid by the [redirect callback handler](/configurati
 
 It is also possible to pass additional parameters to the `/authorize` endpoint through the third argument of `signIn()`.
 
-See the [Authorization Request OIDC spec](https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest) for some ideas.
+See the [Authorization Request OIDC spec](https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest) for some ideas. (These are not the only possible ones, all parameters will be forwarded)
 
 e.g.
 
@@ -226,7 +226,7 @@ You can also set these parameters through [`provider.authorizationParams`](/conf
 :::
 
 :::note
-The following parameters are always overridden: `redirect_uri`, `scope`, `state`
+The following parameters are always overridden server-side: `redirect_uri`, `scope`, `state`
 :::
 
 ---
