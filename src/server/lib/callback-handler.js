@@ -17,7 +17,7 @@ export default async function callbackHandler (sessionToken, profile, providerAc
   // Input validation
   if (!profile) throw new Error('Missing profile')
   if (!providerAccount?.id || !providerAccount.type) throw new Error('Missing or invalid provider account')
-  if (!['email', 'oauth'].includes(providerAccount.type)) throw new Error('Provider not supported')
+  if (!['email', 'oauth', 'openid'].includes(providerAccount.type)) throw new Error('Provider not supported')
 
   const {
     adapter,
