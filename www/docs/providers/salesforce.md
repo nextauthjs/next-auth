@@ -17,6 +17,6 @@ providers: [
     clientId: process.env.SALESFORCE_CLIENT_ID,
     clientSecret: process.env.SALESFORCE_CLIENT_SECRET,
   })
-}
+]
 ...
 ```
