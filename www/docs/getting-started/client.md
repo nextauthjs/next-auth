@@ -325,7 +325,7 @@ The value for `clientMaxAge` should always be lower than the value of the sessio
 
 #### Keep Alive
 
-The `keepAlive` option is how often the client should contact the server to avoid a session expirying.
+The `keepAlive` option is how often the client should contact the server to avoid a session expiring.
 
 When `keepAlive` is set to `0` (the default) it will not send a keep alive message.
 
