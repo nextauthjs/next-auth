@@ -24,7 +24,7 @@ providers: [
     clientSecret: process.env.COGNITO_CLIENT_SECRET,
     domain: process.env.COGNITO_DOMAIN,
   })
-}
+]
 ...
 ```
 

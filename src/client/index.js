@@ -48,7 +48,7 @@ if (typeof window !== 'undefined') {
     window.addEventListener('storage', async (event) => {
       if (event.key === 'nextauth.message') {
         const message = JSON.parse(event.newValue)
-        if (message.event && message.event === 'session' && message.data) {
+        if (message?.event === 'session' && message.data) {
           // Ignore storage events fired from the same window that created them
           if (__NEXTAUTH._clientId === message.clientId) {
             return
@@ -236,7 +236,7 @@ const _useSessionHook = (session) => {
 // Client side method
 export const signIn = async (provider, args = {}, authorizationParams = {}) => {
   const baseUrl = _apiBaseUrl()
-  const callbackUrl = args.callbackUrl ?? window.location
+  const callbackUrl = args?.callbackUrl ?? window.location
   const providers = await getProviders()
 
   // Redirect to sign in page if no valid provider specified
@@ -256,14 +256,13 @@ export const signIn = async (provider, args = {}, authorizationParams = {}) => {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       body: _encodedForm({
-        ...args,
-        authorizationParams,
         csrfToken: await getCsrfToken(),
         callbackUrl: callbackUrl,
         json: true
       })
     }
-    const res = await fetch(signInUrl, fetchOptions)
+    const _signInUrl = `${signInUrl}?${_encodedForm(authorizationParams)}`
+    const res = await fetch(_signInUrl, fetchOptions)
     const data = await res.json()
     window.location = data.url ?? callbackUrl
   }

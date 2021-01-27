@@ -1,21 +1,18 @@
 import oAuthClient from '../oauth/client'
-import { createHash } from 'crypto'
 import logger from '../../../lib/logger'
 
 export default async function getAuthorizationUrl (req) {
-  const { provider, csrfToken, pkce } = req.options
+  const { provider } = req.options
 
   const client = oAuthClient(provider)
   if (provider.version?.startsWith('2.')) {
+    delete req.query?.nextauth
     // Handle OAuth v2.x
     let url = client.getAuthorizeUrl({
       ...provider.authorizationParams,
-      ...req.body.authorizationParams,
-      ...pkce,
+      ...req.query,
       redirect_uri: provider.callbackUrl,
-      scope: provider.scope,
-      // A hash of the NextAuth.js CSRF token is used as the state
-      state: createHash('sha256').update(csrfToken).digest('hex')
+      scope: provider.scope
     })
 
     // If the authorizationUrl specified in the config has query parameters on it
