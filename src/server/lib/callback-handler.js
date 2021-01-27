@@ -109,7 +109,7 @@ export default async function callbackHandler (sessionToken, profile, providerAc
       user,
       isNewUser
     }
-  } else if (providerAccount.type === 'oauth') {
+  } else if (providerAccount.type === 'oauth' || providerAccount.type === 'openid') {
     // If signing in with oauth account, check to see if the account exists already
     const userByProviderAccountId = await getUserByProviderAccountId(providerAccount.provider, providerAccount.id)
     if (userByProviderAccountId) {
