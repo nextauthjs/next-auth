@@ -48,7 +48,7 @@ if (typeof window !== 'undefined') {
     window.addEventListener('storage', async (event) => {
       if (event.key === 'nextauth.message') {
         const message = JSON.parse(event.newValue)
-        if (message.event && message.event === 'session' && message.data) {
+        if (message?.event === 'session' && message.data) {
           // Ignore storage events fired from the same window that created them
           if (__NEXTAUTH._clientId === message.clientId) {
             return
