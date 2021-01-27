@@ -24,7 +24,7 @@ providers: [
       'X-API-Key': provess.env.BUNGIE_API_KEY
     }
   }),
-}
+]
 ...
 ```
 

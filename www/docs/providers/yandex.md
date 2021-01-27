@@ -21,6 +21,6 @@ providers: [
     clientId: process.env.YANDEX_CLIENT_ID,
     clientSecret: process.env.YANDEX_CLIENT_SECRET
   })
-}
+]
 ...
 ```
