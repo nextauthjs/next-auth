@@ -71,3 +71,8 @@ This `dev.to` tutorial walks one through adding NextAuth.js to an existing proje
 ### [Adding Sign in With Apple Next JS](https://thesiddd.com/blog/apple-auth)
 
 This tutorial walks step by step on how to get Sign In with Apple working (both locally and on a deployed website) using NextAuth.js.
+
+
+### [How to use NextAuth.js for client-side authentication in Next.js](https://blog.logrocket.com/how-to-use-nextauth-js-for-client-side-authentication-in-next-js)
+
+Learn how to set up client-side authentication that doesn’t require a password in Next.js using the secure library NextAuth.js.
