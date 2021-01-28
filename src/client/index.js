@@ -256,6 +256,7 @@ export const signIn = async (provider, args = {}, authorizationParams = {}) => {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       body: _encodedForm({
+        ...args,
         csrfToken: await getCsrfToken(),
         callbackUrl: callbackUrl,
         json: true
