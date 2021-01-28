@@ -1,13 +1,14 @@
 import { createHash } from 'crypto'
 
 export class Account {
-  constructor (
+  constructor(
     userId,
     providerId,
     providerType,
     providerAccountId,
     refreshToken,
     accessToken,
+    idToken,
     accessTokenExpires
   ) {
     // The compound ID ensures there is only one entry for a given provider and account
@@ -18,6 +19,7 @@ export class Account {
     this.providerAccountId = providerAccountId
     this.refreshToken = refreshToken
     this.accessToken = accessToken
+    this.idToken = idToken
     this.accessTokenExpires = accessTokenExpires
   }
 }
@@ -59,6 +61,10 @@ export const AccountSchema = {
     accessToken: {
       // AccessTokens are not (yet) automatically rotated by NextAuth.js
       // You can update it using the refreshToken and the accessTokenUrl endpoint for the provider
+      type: 'text',
+      nullable: true
+    },
+    idToken: {
       type: 'text',
       nullable: true
     },

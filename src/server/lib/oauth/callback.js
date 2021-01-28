@@ -83,7 +83,8 @@ export default async (req, provider, csrfToken, callback) => {
             results.id_token,
             async (error, profileData) => {
               const { profile, account, OAuthProfile } = await _getProfile(error, profileData, accessToken, refreshToken, provider, user)
-              callback(error, profile, account, OAuthProfile)
+              account.idToken = results.id_token;
+              callback(error, profile, account, OAuthProfile, results.id_token)
             }
           )
         } else {
@@ -131,7 +132,7 @@ export default async (req, provider, csrfToken, callback) => {
  * //6/30/2020 @geraldnolan added userData parameter to attach additional data to the profileData object
  * Returns profile, raw profile and auth provider details
  */
-async function _getProfile (error, profileData, accessToken, refreshToken, provider, userData) {
+async function _getProfile(error, profileData, accessToken, refreshToken, provider, userData) {
   // @TODO Handle error
   if (error) {
     logger.error('OAUTH_GET_PROFILE_ERROR', error)
@@ -186,7 +187,7 @@ async function _getProfile (error, profileData, accessToken, refreshToken, provi
 }
 
 // Ported from https://github.com/ciaranj/node-oauth/blob/a7f8a1e21c362eb4ed2039431fb9ac2ae749f26a/lib/oauth2.js
-async function _getOAuthAccessToken (code, provider, callback) {
+async function _getOAuthAccessToken(code, provider, callback) {
   const url = provider.accessTokenUrl
   const setGetAccessTokenAuthHeader = (provider.setGetAccessTokenAuthHeader !== null) ? provider.setGetAccessTokenAuthHeader : true
   const params = { ...provider.params } || {}
@@ -252,7 +253,7 @@ async function _getOAuthAccessToken (code, provider, callback) {
 }
 
 // Ported from https://github.com/ciaranj/node-oauth/blob/a7f8a1e21c362eb4ed2039431fb9ac2ae749f26a/lib/oauth2.js
-function _get (provider, accessToken, callback) {
+function _get(provider, accessToken, callback) {
   const url = provider.profileUrl
   const headers = provider.headers || {}
 
@@ -267,7 +268,7 @@ function _get (provider, accessToken, callback) {
   this._request('GET', url, headers, null, accessToken, callback)
 }
 
-function _decodeToken (provider, accessToken, refreshToken, idToken, callback) {
+function _decodeToken(provider, accessToken, refreshToken, idToken, callback) {
   if (!idToken) { throw new Error('Missing JWT ID Token', provider, idToken) }
   const decodedToken = jwtDecode(idToken)
   const profileData = JSON.stringify(decodedToken)

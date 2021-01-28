@@ -116,7 +116,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
             return {
               session,
               user,
-              isNewUser
+              isNewUser,
             }
           } else {
             // If the user is currently signed in, but the new account they are signing in
@@ -131,7 +131,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
           return {
             session,
             user: userByProviderAccountId,
-            isNewUser
+            isNewUser,
           }
         }
       } else {
@@ -145,6 +145,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
             providerAccount.id,
             providerAccount.refreshToken,
             providerAccount.accessToken,
+            providerAccount.idToken,
             providerAccount.accessTokenExpires
           )
           await dispatchEvent(events.linkAccount, { user, providerAccount })
@@ -201,6 +202,7 @@ export default async (sessionToken, profile, providerAccount, options) => {
             providerAccount.id,
             providerAccount.refreshToken,
             providerAccount.accessToken,
+            providerAccount.idToken,
             providerAccount.accessTokenExpires
           )
           await dispatchEvent(events.linkAccount, { user, providerAccount })

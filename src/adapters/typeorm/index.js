@@ -40,10 +40,10 @@ const Adapter = (typeOrmConfig, options = {}) => {
 
   let connection = null
 
-  async function getAdapter (appOptions) {
+  async function getAdapter(appOptions) {
     // Helper function to reuse / restablish connections
     // (useful if they drop when after being idle)
-    async function _connect () {
+    async function _connect() {
       // Get current connection by name
       connection = getConnection(config.name)
 
@@ -79,7 +79,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
 
     // Display debug output if debug option enabled
     // @TODO Refactor logger so is passed in appOptions
-    function debug (debugCode, ...args) {
+    function debug(debugCode, ...args) {
       logger.debug(`TYPEORM_${debugCode}`, ...args)
     }
 
@@ -118,7 +118,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
       ? appOptions.session.updateAge * 1000
       : 0
 
-    async function createUser (profile) {
+    async function createUser(profile) {
       debug('CREATE_USER', profile)
       try {
         // Create user account
@@ -130,7 +130,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
       }
     }
 
-    async function getUser (id) {
+    async function getUser(id) {
       debug('GET_USER', id)
 
       // In the very specific case of both using JWT for storing session data
@@ -151,7 +151,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
       }
     }
 
-    async function getUserByEmail (email) {
+    async function getUserByEmail(email) {
       debug('GET_USER_BY_EMAIL', email)
       try {
         if (!email) { return Promise.resolve(null) }
@@ -162,7 +162,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
       }
     }
 
-    async function getUserByProviderAccountId (providerId, providerAccountId) {
+    async function getUserByProviderAccountId(providerId, providerAccountId) {
       debug('GET_USER_BY_PROVIDER_ACCOUNT_ID', providerId, providerAccountId)
       try {
         const account = await manager.findOne(Account, { providerId, providerAccountId })
@@ -174,22 +174,22 @@ const Adapter = (typeOrmConfig, options = {}) => {
       }
     }
 
-    async function updateUser (user) {
+    async function updateUser(user) {
       debug('UPDATE_USER', user)
       return manager.save(User, user)
     }
 
-    async function deleteUser (userId) {
+    async function deleteUser(userId) {
       debug('DELETE_USER', userId)
       // @TODO Delete user from DB
       return false
     }
 
-    async function linkAccount (userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires) {
-      debug('LINK_ACCOUNT', userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires)
+    async function linkAccount(userId, providerId, providerType, providerAccountId, refreshToken, accessToken, idToken, accessTokenExpires) {
+      debug('LINK_ACCOUNT', userId, providerId, providerType, providerAccountId, refreshToken, accessToken, idToken, accessTokenExpires)
       try {
         // Create provider account linked to user
-        const account = new Account(userId, providerId, providerType, providerAccountId, refreshToken, accessToken, accessTokenExpires)
+        const account = new Account(userId, providerId, providerType, providerAccountId, refreshToken, accessToken, idToken, accessTokenExpires)
         return manager.save(account)
       } catch (error) {
         logger.error('LINK_ACCOUNT_ERROR', error)
@@ -197,7 +197,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
       }
     }
 
-    async function unlinkAccount (userId, providerId, providerAccountId) {
+    async function unlinkAccount(userId, providerId, providerAccountId) {
       debug('UNLINK_ACCOUNT', userId, providerId, providerAccountId)
       // @TODO Get current user from DB
       // @TODO Delete [provider] object from user object
@@ -205,7 +205,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
       return false
     }
 
-    async function createSession (user) {
+    async function createSession(user) {
       debug('CREATE_SESSION', user)
       try {
         let expires = null
@@ -224,7 +224,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
       }
     }
 
-    async function getSession (sessionToken) {
+    async function getSession(sessionToken) {
       debug('GET_SESSION', sessionToken)
       try {
         const session = await manager.findOne(Session, { sessionToken })
@@ -242,7 +242,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
       }
     }
 
-    async function updateSession (session, force) {
+    async function updateSession(session, force) {
       debug('UPDATE_SESSION', session)
       try {
         if (sessionMaxAge && (sessionUpdateAge || sessionUpdateAge === 0) && session.expires) {
@@ -278,7 +278,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
       }
     }
 
-    async function deleteSession (sessionToken) {
+    async function deleteSession(sessionToken) {
       debug('DELETE_SESSION', sessionToken)
       try {
         return await manager.delete(Session, { sessionToken })
@@ -288,7 +288,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
       }
     }
 
-    async function createVerificationRequest (identifier, url, token, secret, provider) {
+    async function createVerificationRequest(identifier, url, token, secret, provider) {
       debug('CREATE_VERIFICATION_REQUEST', identifier)
       try {
         const { baseUrl } = appOptions
@@ -321,7 +321,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
       }
     }
 
-    async function getVerificationRequest (identifier, token, secret, provider) {
+    async function getVerificationRequest(identifier, token, secret, provider) {
       debug('GET_VERIFICATION_REQUEST', identifier, token)
       try {
         // Hash token provided with secret before trying to match it with database
@@ -342,7 +342,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
       }
     }
 
-    async function deleteVerificationRequest (identifier, token, secret, provider) {
+    async function deleteVerificationRequest(identifier, token, secret, provider) {
       debug('DELETE_VERIFICATION', identifier, token)
       try {
         // Delete verification entry so it cannot be used again
