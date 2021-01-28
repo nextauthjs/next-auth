@@ -227,4 +227,4 @@ if (process.env.NODE_ENV === "production") {
 
 ## Custom Adapter
 
-See the tutorial for [creating a database adapter](/tutorials/creating-a-database-adapter) for more information on how to create a custom adapter.
+ See the tutorial for [creating a database adapter](/tutorials/creating-a-database-adapter) for more information on how to create a custom adapter. Have a look at the [adapters repository](https://github.com/nextauthjs/adapters) to see community maintained custom adapters or add your own. 
