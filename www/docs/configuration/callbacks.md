@@ -131,9 +131,9 @@ callbacks: {
    * @return {object}              Session that will be returned to the client 
    */
   async session(session, token) {
-    if(token?.access_token) {
+    if(token?.accessToken) {
       // Add property to session, like an access_token from a provider
-      session.access_token = token.access_token
+      session.accessToken = token.accessToken
     }
     return session
   }
@@ -183,8 +183,8 @@ callbacks: {
    */
   async jwt(token, user, account, profile, isNewUser) {
     // Add access_token to the token right after signin
-    if (account?.access_token) {
-      token.access_token = account.access_token
+    if (account?.accessToken) {
+      token.accessToken = account.accessToken
     }
     return token
   }

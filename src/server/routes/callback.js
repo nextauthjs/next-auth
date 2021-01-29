@@ -35,8 +35,8 @@ export default async function callback (req, res) {
         logger.debug('OAUTH_CALLBACK_RESPONSE', { profile, account, OAuthProfile })
 
         // If we don't have a profile object then either something went wrong
-        // or the user cancelled signin in. We don't know which, so we just
-        // direct the user to the signup page for now. We could do something
+        // or the user cancelled signing in. We don't know which, so we just
+        // direct the user to the signin page for now. We could do something
         // else in future.
         //
         // Note: In oAuthCallback an error is logged with debug info, so it
