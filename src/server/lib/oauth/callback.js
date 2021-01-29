@@ -36,27 +36,20 @@ export default async function oAuthCallback (req) {
     }
 
     try {
-      const { accessToken, refreshToken, results } = await client.getOAuthAccessToken(code, provider, pkce.code_verifier)
-      const tokens = { accessToken, refreshToken, idToken: results.id_token }
+      const tokens = await client.getOAuthAccessToken(code, provider, pkce.code_verifier)
       let profileData
       if (provider.idToken) {
-        // If we don't have an ID Token most likely the user hit a cancel
-        // button when signing in (or the provider is misconfigured).
-        //
-        // Unfortunately, we can't tell which, so we can't treat it as an
-        // error, so instead we just returning nothing, which will cause the
-        // user to be redirected back to the sign in page.
-        if (!results?.id_token) {
-          throw new OAuthCallbackError()
+        if (!tokens?.id_token) {
+          throw new OAuthCallbackError('Missing JWT ID Token')
         }
 
         // Support services that use OpenID ID Tokens to encode profile data
-        profileData = decodeIdToken(results.id_token)
+        profileData = jwtDecode(tokens.id_token, { json: true })
       } else {
-        profileData = await client.get(provider, accessToken, results)
+        profileData = await client.get(provider, tokens.accessToken, tokens)
       }
 
-      return _getProfile({ profileData, provider, tokens, user })
+      return getProfile({ profileData, provider, tokens, user })
     } catch (error) {
       logger.error('OAUTH_GET_ACCESS_TOKEN_ERROR', error, provider.id, code)
       throw error
@@ -68,20 +61,14 @@ export default async function oAuthCallback (req) {
     const {
       oauth_token: oauthToken, oauth_verifier: oauthVerifier
     } = req.query
-    const { accessToken, refreshToken, results } = await client.getOAuthAccessToken(oauthToken, null, oauthVerifier)
+    const tokens = await client.getOAuthAccessToken(oauthToken, null, oauthVerifier)
     const profileData = await client.get(
       provider.profileUrl,
-      accessToken,
-      refreshToken
+      tokens.accessToken,
+      tokens.refreshToken
     )
 
-    const tokens = {
-      accessToken, refreshToken, idToken: results.id_token
-    }
-
-    return _getProfile({
-      profileData, tokens, provider
-    })
+    return getProfile({ profileData, tokens, provider })
   } catch (error) {
     logger.error('OAUTH_V1_GET_ACCESS_TOKEN_ERROR', error)
     throw error
@@ -91,10 +78,22 @@ export default async function oAuthCallback (req) {
 /**
  * //6/30/2020 @geraldnolan added userData parameter to attach additional data to the profileData object
  * Returns profile, raw profile and auth provider details
+ * @param {{
+ *   profileData: object | string
+ *   tokens: {
+ *     accessToken: string
+ *     idToken?: string
+ *     refreshToken?: string
+ *     access_token: string
+ *     expires_in?: string | Date | null
+ *     refresh_token?: string
+ *     id_token?: string
+ *   }
+ *   provider: object
+ *   user?: object
+ * }} profileParams
  */
-async function _getProfile ({
-  profileData, tokens: { accessToken, refreshToken, idToken }, provider, user
-}) {
+async function getProfile ({ profileData, tokens, provider, user }) {
   try {
     // Convert profileData into an object if it's a string
     if (typeof profileData === 'string' || profileData instanceof String) {
@@ -105,8 +104,6 @@ async function _getProfile ({
     if (user != null) {
       profileData.user = user
     }
-
-    profileData.idToken = idToken
 
     logger.debug('PROFILE_DATA', profileData)
 
@@ -121,9 +118,7 @@ async function _getProfile ({
         provider: provider.id,
         type: provider.type,
         id: profile.id,
-        refreshToken,
-        accessToken,
-        accessTokenExpires: null
+        ...tokens
       },
       OAuthProfile: profileData
     }
@@ -142,11 +137,4 @@ async function _getProfile ({
       OAuthProfile: profileData
     }
   }
-}
-
-function decodeIdToken (idToken) {
-  if (!idToken) {
-    throw new OAuthCallbackError('Missing JWT ID Token')
-  }
-  return jwtDecode(idToken, { json: true })
 }
