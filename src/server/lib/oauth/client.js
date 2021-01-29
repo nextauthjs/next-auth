@@ -156,18 +156,23 @@ async function getOAuth2AccessToken (code, provider, codeVerifier) {
           // As of http://tools.ietf.org/html/draft-ietf-oauth-v2-07
           // responses should be in JSON
           results = JSON.parse(data)
-        } catch (e) {
+        } catch {
           // However both Facebook + Github currently use rev05 of the spec  and neither
           // seem to specify a content-type correctly in their response headers. :(
           // Clients of these services suffer a minor performance cost.
           results = querystring.parse(data)
         }
-        let accessToken = results.access_token
-        if (provider.id === 'slack') {
-          accessToken = results.authed_user.access_token
-        }
-        const refreshToken = results.refresh_token
-        resolve({ accessToken, refreshToken, results })
+
+        const accessToken = provider.id === 'slack'
+          ? results.authed_user.access_token
+          : results.access_token
+
+        resolve({
+          accessToken,
+          refreshToken: results.refresh_token,
+          idToken: results.id_token,
+          results
+        })
       }
     )
   })

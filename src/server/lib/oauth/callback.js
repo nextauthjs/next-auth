@@ -36,8 +36,7 @@ export default async function oAuthCallback (req) {
     }
 
     try {
-      const { accessToken, refreshToken, results } = await client.getOAuthAccessToken(code, provider, pkce.code_verifier)
-      const tokens = { accessToken, refreshToken, idToken: results.id_token }
+      const tokens = await client.getOAuthAccessToken(code, provider, pkce.code_verifier)
       let profileData
       if (provider.idToken) {
         // If we don't have an ID Token most likely the user hit a cancel
@@ -46,14 +45,14 @@ export default async function oAuthCallback (req) {
         // Unfortunately, we can't tell which, so we can't treat it as an
         // error, so instead we just returning nothing, which will cause the
         // user to be redirected back to the sign in page.
-        if (!results?.id_token) {
+        if (!tokens?.idToken) {
           throw new OAuthCallbackError()
         }
 
         // Support services that use OpenID ID Tokens to encode profile data
-        profileData = decodeIdToken(results.id_token)
+        profileData = decodeIdToken(tokens.idToken)
       } else {
-        profileData = await client.get(provider, accessToken, results)
+        profileData = await client.get(provider, tokens.accessToken, tokens.results)
       }
 
       return _getProfile({ profileData, provider, tokens, user })
@@ -68,20 +67,14 @@ export default async function oAuthCallback (req) {
     const {
       oauth_token: oauthToken, oauth_verifier: oauthVerifier
     } = req.query
-    const { accessToken, refreshToken, results } = await client.getOAuthAccessToken(oauthToken, null, oauthVerifier)
+    const tokens = await client.getOAuthAccessToken(oauthToken, null, oauthVerifier)
     const profileData = await client.get(
       provider.profileUrl,
-      accessToken,
-      refreshToken
+      tokens.accessToken,
+      tokens.refreshToken
     )
 
-    const tokens = {
-      accessToken, refreshToken, idToken: results.id_token
-    }
-
-    return _getProfile({
-      profileData, tokens, provider
-    })
+    return _getProfile({ profileData, tokens, provider })
   } catch (error) {
     logger.error('OAUTH_V1_GET_ACCESS_TOKEN_ERROR', error)
     throw error
@@ -92,9 +85,7 @@ export default async function oAuthCallback (req) {
  * //6/30/2020 @geraldnolan added userData parameter to attach additional data to the profileData object
  * Returns profile, raw profile and auth provider details
  */
-async function _getProfile ({
-  profileData, tokens: { accessToken, refreshToken, idToken }, provider, user
-}) {
+async function _getProfile ({ profileData, tokens: { results, ...tokens }, provider, user }) {
   try {
     // Convert profileData into an object if it's a string
     if (typeof profileData === 'string' || profileData instanceof String) {
@@ -105,8 +96,6 @@ async function _getProfile ({
     if (user != null) {
       profileData.user = user
     }
-
-    profileData.idToken = idToken
 
     logger.debug('PROFILE_DATA', profileData)
 
@@ -121,9 +110,8 @@ async function _getProfile ({
         provider: provider.id,
         type: provider.type,
         id: profile.id,
-        refreshToken,
-        accessToken,
-        accessTokenExpires: null
+        ...tokens,
+        accessTokenExpires: results.expires_in ?? null
       },
       OAuthProfile: profileData
     }
