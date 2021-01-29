@@ -142,11 +142,11 @@ Providing support for secure account linking and unlinking of additional provide
 
 ### Why doesn't NextAuth.js support [a particular feature]?
 
-NextAuth.js is an open source project built by individual contributors who are volunteers who writing code and providing support to help folks out in their spare time.
+NextAuth.js is an open source project built by individual contributors who are volunteers writing code and providing support in their spare time.
 
-If you would like NextAuth.js to support a particular feature the best way to help make that happen is to raise a feature request describing the feature and to offer to work with other contributors to develop and test it.
+If you would like NextAuth.js to support a particular feature, the best way to help make it happen is to raise a feature request describing the feature and offer to work with other contributors to develop and test it.
 
-If you are not able to develop a feature yourself, you can offer sponsor someone to work on it.
+If you are not able to develop a feature yourself, you can offer to sponsor someone to work on it.
 
 ### I disagree with a design decision, how can I change your mind?
 
