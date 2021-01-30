@@ -33,7 +33,7 @@ export default async function getAuthorizationUrl (req) {
   }
 
   try {
-    const oAuthToken = await client.getOAuthRequestToken(provider.callbackUrl)
+    const oAuthToken = await client.getOAuthRequestToken()
     const url = `${provider.authorizationUrl}?oauth_token=${oAuthToken}`
     logger.debug('GET_AUTHORIZATION_URL', url)
     return url
