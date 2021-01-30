@@ -169,7 +169,7 @@ async function getOAuth2AccessToken (code, provider, codeVerifier) {
 
         resolve({
           accessToken,
-          accessTokenExpires: raw.expires_in ?? null,
+          accessTokenExpires: null,
           refreshToken: raw.refresh_token,
           idToken: raw.id_token,
           ...raw
