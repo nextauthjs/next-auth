@@ -39,7 +39,7 @@ export default function oAuthClient (provider) {
   )
 
   // Promisify get() and getOAuth2AccessToken() for OAuth1
-  const originalGet = oauth1Client.get
+  const originalGet = oauth1Client.get.bind(oauth1Client)
   oauth1Client.get = (...args) => {
     return new Promise((resolve, reject) => {
       originalGet(...args, (error, result) => {
@@ -50,7 +50,7 @@ export default function oAuthClient (provider) {
       })
     })
   }
-  const originalGetOAuth1AccessToken = oauth1Client.getOAuthAccessToken
+  const originalGetOAuth1AccessToken = oauth1Client.getOAuthAccessToken.bind(oauth1Client)
   oauth1Client.getOAuthAccessToken = (...args) => {
     return new Promise((resolve, reject) => {
       originalGetOAuth1AccessToken(...args, (error, accessToken, refreshToken, results) => {
@@ -62,7 +62,7 @@ export default function oAuthClient (provider) {
     })
   }
 
-  const originalGetOAuthRequestToken = oauth1Client.getOAuthRequestToken
+  const originalGetOAuthRequestToken = oauth1Client.getOAuthRequestToken.bind(oauth1Client)
   oauth1Client.getOAuthRequestToken = (...args) => {
     return new Promise((resolve, reject) => {
       originalGetOAuthRequestToken(...args, (error, oauthToken) => {
