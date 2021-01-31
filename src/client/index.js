@@ -260,8 +260,9 @@ export async function signIn (provider, options = {}, authorizationParams = {}) 
     window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`
     return
   }
-  const signInUrl = provider === 'credentials'
-    ? `${baseUrl}/callback/credentials`
+  const isCredentials = providers[provider].type === 'credentials'
+  const signInUrl = isCredentials
+    ? `${baseUrl}/callback/${provider}`
     : `${baseUrl}/signin/${provider}`
 
   // If is any other provider type, POST to provider URL with CSRF Token,
@@ -281,7 +282,7 @@ export async function signIn (provider, options = {}, authorizationParams = {}) 
   const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
   const res = await fetch(_signInUrl, fetchOptions)
   const data = await res.json()
-  if (redirect || provider !== 'credentials') {
+  if (redirect || !isCredentials) {
     window.location = data.url ?? callbackUrl
     return
   }
