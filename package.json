@@ -99,6 +99,9 @@
     "project": "./tsconfig.json",
     "ignore": [
       "test/"
+    ],
+    "globals": [
+      "fetch"
     ]
   }
 }
