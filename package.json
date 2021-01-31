@@ -92,13 +92,13 @@
     "puppeteer-extra-plugin-stealth": "^2.6.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "standard": "^16.0.3"
+    "ts-standard": "^10.0.0",
+    "typescript": "^4.1.3"
   },
-  "standard": {
+  "ts-standard": {
+    "project": "./tsconfig.json",
     "ignore": [
-      "test/",
-      "pages/",
-      "components/"
+      "test/"
     ]
   }
 }
