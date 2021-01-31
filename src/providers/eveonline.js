@@ -14,7 +14,7 @@ export default (options) => {
         name: profile.CharacterName,
         image: `https://image.eveonline.com/Character/${profile.CharacterID}_128.jpg`,
         email: null
-      };
+      }
     },
     ...options
   }
