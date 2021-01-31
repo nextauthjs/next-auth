@@ -1,6 +1,6 @@
 {
   "name": "next-auth",
-  "version": "3.1.0",
+  "version": "0.0.0-semantically-released",
   "description": "Authentication for Next.js",
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/next-auth.git",
@@ -8,11 +8,12 @@
   "main": "index.js",
   "scripts": {
     "build": "npm run build:js && npm run build:css",
-    "build:js": "babel src --out-dir dist",
-    "build:css": "postcss src/**/*.css --base src --dir dist && node scripts/wrap-css.js",
+    "build:js": "babel --config-file ./config/babel.config.json src --out-dir dist",
+    "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir dist && node config/wrap-css.js",
+    "dev": "next | npm run watch:css",
     "watch": "npm run watch:js | npm run watch:css",
-    "watch:js": "babel --watch src --out-dir dist",
-    "watch:css": "postcss --watch src/**/*.css --base src --dir dist",
+    "watch:js": "babel --config-file ./config/babel.config.json --watch src --out-dir dist",
+    "watch:css": "postcss --config config/postcss.config.js --watch src/**/*.css --base src --dir dist",
     "test:app:start": "docker-compose -f test/docker/app.yml up -d",
     "test:app:rebuild": "npm run build && docker-compose -f test/docker/app.yml up -d --build",
     "test:app:stop": "docker-compose -f test/docker/app.yml down",
@@ -45,49 +46,59 @@
     "futoin-hkdf": "^1.3.2",
     "jose": "^1.27.2",
     "jsonwebtoken": "^8.5.1",
-    "jwt-decode": "^2.2.0",
-    "nodemailer": "^6.4.6",
+    "nodemailer": "^6.4.16",
     "oauth": "^0.9.15",
+    "pkce-challenge": "^2.1.0",
     "preact": "^10.4.1",
     "preact-render-to-string": "^5.1.7",
     "querystring": "^0.2.0",
     "require_optional": "^1.0.1",
-    "typeorm": "^0.2.24"
+    "typeorm": "^0.2.30"
   },
   "peerDependencies": {
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react": "^16.13.1 || ^17",
+    "react-dom": "^16.13.1 || ^17"
   },
   "peerOptionalDependencies": {
     "mongodb": "^3.5.9",
     "mysql": "^2.18.1",
     "mssql": "^6.2.1",
     "pg": "^8.2.1",
-    "@prisma/client": "^2.3.0"
+    "@prisma/client": "^2.12.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
+    "@semantic-release/commit-analyzer": "^8.0.1",
+    "@semantic-release/github": "^7.2.0",
+    "@semantic-release/npm": "7.0.8",
+    "@semantic-release/release-notes-generator": "^9.0.1",
     "autoprefixer": "^9.7.6",
     "babel-preset-preact": "^2.0.0",
+    "conventional-changelog-conventionalcommits": "4.4.0",
     "cssnano": "^4.1.10",
     "dotenv": "^8.2.0",
     "mocha": "^8.1.3",
     "mongodb": "^3.5.9",
     "mssql": "^6.2.1",
     "mysql": "^2.18.1",
+    "next": "^10.0.5",
     "pg": "^8.2.1",
     "postcss-cli": "^7.1.1",
     "postcss-nested": "^4.2.1",
     "puppeteer": "^5.2.1",
     "puppeteer-extra": "^3.1.15",
     "puppeteer-extra-plugin-stealth": "^2.6.1",
-    "standard": "^14.3.3"
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "standard": "^16.0.3"
   },
   "standard": {
     "ignore": [
-      "test/"
+      "test/",
+      "pages/",
+      "components/"
     ]
   }
 }

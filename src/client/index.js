@@ -48,7 +48,7 @@ if (typeof window !== 'undefined') {
     window.addEventListener('storage', async (event) => {
       if (event.key === 'nextauth.message') {
         const message = JSON.parse(event.newValue)
-        if (message.event && message.event === 'session' && message.data) {
+        if (message?.event === 'session' && message.data) {
           // Ignore storage events fired from the same window that created them
           if (__NEXTAUTH._clientId === message.clientId) {
             return
@@ -67,9 +67,20 @@ if (typeof window !== 'undefined') {
       }
     })
 
-    // Listen for window focus/blur events
-    window.addEventListener('focus', async (event) => __NEXTAUTH._getSession({ event: 'focus' }))
-    window.addEventListener('blur', async (event) => __NEXTAUTH._getSession({ event: 'blur' }))
+    // Listen for document visibilitychange events
+    let hidden, visibilityChange
+    if (typeof document.hidden !== 'undefined') { // Opera 12.10 and Firefox 18 and later support
+      hidden = 'hidden'
+      visibilityChange = 'visibilitychange'
+    } else if (typeof document.msHidden !== 'undefined') {
+      hidden = 'msHidden'
+      visibilityChange = 'msvisibilitychange'
+    } else if (typeof document.webkitHidden !== 'undefined') {
+      hidden = 'webkitHidden'
+      visibilityChange = 'webkitvisibilitychange'
+    }
+    const handleVisibilityChange = () => !document[hidden] && __NEXTAUTH._getSession({ event: visibilityChange })
+    document.addEventListener('visibilitychange', handleVisibilityChange, false)
   }
 }
 
@@ -104,7 +115,7 @@ const setOptions = ({
 }
 
 // Universal method (client + server)
-const getSession = async ({ req, ctx, triggerEvent = true } = {}) => {
+export const getSession = async ({ req, ctx, triggerEvent = true } = {}) => {
   // If passed 'appContext' via getInitialProps() in _app.js then get the req
   // object from ctx and use that for the req value to allow getSession() to
   // work seemlessly in getInitialProps() on server side pages *and* in _app.js.
@@ -142,7 +153,7 @@ const getProviders = async () => {
 const SessionContext = createContext()
 
 // Client side method
-const useSession = (session) => {
+export const useSession = (session) => {
   // Try to use context if we can
   const value = useContext(SessionContext)
 
@@ -223,23 +234,19 @@ const _useSessionHook = (session) => {
 }
 
 // Client side method
-const signIn = async (provider, args = {}, authParams = {}) => {
+export const signIn = async (provider, args = {}, authorizationParams = {}) => {
   const baseUrl = _apiBaseUrl()
-  const callbackUrl = (args && args.callbackUrl) ? args.callbackUrl : window.location
+  const callbackUrl = args?.callbackUrl ?? window.location
   const providers = await getProviders()
 
   // Redirect to sign in page if no valid provider specified
-  if (!provider || !providers[provider]) {
+  if (!(provider in providers)) {
     // If Provider not recognized, redirect to sign in page
     window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`
   } else {
-    let signInUrl = (providers[provider].type === 'credentials')
+    const signInUrl = (providers[provider].type === 'credentials')
       ? `${baseUrl}/callback/${provider}`
       : `${baseUrl}/signin/${provider}`
-
-    if (authParams) {
-      signInUrl += `?${new URLSearchParams(authParams).toString()}`
-    }
 
     // If is any other provider type, POST to provider URL with CSRF Token,
     // callback URL and any other parameters supplied.
@@ -255,15 +262,16 @@ const signIn = async (provider, args = {}, authParams = {}) => {
         json: true
       })
     }
-    const res = await fetch(signInUrl, fetchOptions)
+    const _signInUrl = `${signInUrl}?${_encodedForm(authorizationParams)}`
+    const res = await fetch(_signInUrl, fetchOptions)
     const data = await res.json()
-    window.location = data.url ? data.url : callbackUrl
+    window.location = data.url ?? callbackUrl
   }
 }
 
 // Client side method
-const signOut = async (args = {}) => {
-  const callbackUrl = (args && args.callbackUrl) ? args.callbackUrl : window.location
+export const signOut = async (args = {}) => {
+  const callbackUrl = args.callbackUrl ?? window.location
 
   const baseUrl = _apiBaseUrl()
   const fetchOptions = {
@@ -280,11 +288,11 @@ const signOut = async (args = {}) => {
   const res = await fetch(`${baseUrl}/signout`, fetchOptions)
   const data = await res.json()
   _sendMessage({ event: 'session', data: { trigger: 'signout' } })
-  window.location = data.url ? data.url : callbackUrl
+  window.location = data.url ?? callbackUrl
 }
 
 // Provider to wrap the app in to make session data available globally
-const Provider = ({ children, session, options }) => {
+export const Provider = ({ children, session, options }) => {
   setOptions(options)
   return createElement(SessionContext.Provider, { value: useSession(session) }, children)
 }

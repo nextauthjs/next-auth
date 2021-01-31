@@ -1,6 +1,6 @@
 import logger from '../../lib/logger'
 
-export default async (event, message) => {
+export default async function dispatchEvent (event, message) {
   try {
     await event(message)
   } catch (e) {

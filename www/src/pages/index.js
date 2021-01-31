@@ -183,7 +183,6 @@ function Home () {
           </section>
           <div className='home-subtitle'>
             <p>NextAuth.js is an open source community project.</p>
-            <p>NextAuth.js is not affiliated with Vercel or Next.js</p>
           </div>
         </main>
       </div>
@@ -192,34 +191,29 @@ function Home () {
 }
 
 const reactComponentCode = `
-import React from 'react'
 import {
-  signIn, 
-  signOut,
-  useSession
+  useSession, signIn, signOut
 } from 'next-auth/client'
 
-export default function myComponent() {
+export default function Component() {
   const [ session, loading ] = useSession()
-
-  return <>
-    {!session && <>
-      Not signed in <br/>
-      <button onClick={signIn}>Sign in</button>
-    </>}
-    {session && <>
+  if(session) {
+    return <>
       Signed in as {session.user.email} <br/>
-      <button onClick={signOut}>Sign out</button>
-    </>}
+      <button onClick={() => signOut()}>Sign out</button>
+    </>
+  }
+  return <>
+    Not signed in <br/>
+    <button onClick={() => signIn()}>Sign in</button>
   </>
-}
-`.trim()
+}`.trim()
 
 const serverlessFunctionCode = `
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 
-const options = {
+export default NextAuth({
   providers: [
     // OAuth authentication providers...
     Providers.Apple({
@@ -242,9 +236,7 @@ const options = {
   ],
   // Optional SQL or MongoDB database to persist users
   database: process.env.DATABASE_URL
-}
-
-export default (req, res) => NextAuth(req, res, options)
+})
 `.trim()
 
 export default Home

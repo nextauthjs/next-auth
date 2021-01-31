@@ -48,7 +48,7 @@ export default {
 ```
 
 :::note
-[View source for built-in TypeORM models and schemas](https://github.com/iaincollins/next-auth/tree/main/src/adapters/typeorm/models)
+[View source for built-in TypeORM models and schemas](https://github.com/nextauthjs/next-auth/tree/main/src/adapters/typeorm/models)
 :::
 
 ## Using custom models
@@ -62,7 +62,7 @@ import Adapters from "next-auth/adapters"
 
 import Models from "../../../models"
 
-const options = {
+export default NextAuth({
   providers: [
     // Your providers
   ],
@@ -77,9 +77,7 @@ const options = {
       },
     }
   ),
-}
-
-export default (req, res) => NextAuth(req, res, options)
+})
 ```
 
 
