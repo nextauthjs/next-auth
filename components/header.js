@@ -96,6 +96,11 @@ export default function Header () {
               <a>API</a>
             </Link>
           </li>
+          <li className={styles.navItem}>
+            <Link href='/credentials'>
+              <a>Credentials</a>
+            </Link>
+          </li>
         </ul>
       </nav>
     </header>
