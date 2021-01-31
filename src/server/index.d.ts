@@ -1,5 +1,6 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
 import { CallbacksOptions } from './lib/callbacks'
+import { CookiesOptions } from './lib/cookie'
 import { EventsOptions } from './lib/events'
 
 export interface Provider {
@@ -57,8 +58,7 @@ export interface NextAuthOptions {
   /** @docs https://next-auth.js.org/configuration/options#usesecurecookies */
   useSecureCookies?: boolean
   /** @docs https://next-auth.js.org/configuration/options#cookies */
-  cookies?: any
-
+  cookies?: CookiesOptions
 }
 
 /** Options that are the same both in internal and user provided options. */
