@@ -74,6 +74,7 @@
     "@semantic-release/github": "^7.2.0",
     "@semantic-release/npm": "7.0.8",
     "@semantic-release/release-notes-generator": "^9.0.1",
+    "@types/react": "^17.0.0",
     "autoprefixer": "^9.7.6",
     "babel-preset-preact": "^2.0.0",
     "conventional-changelog-conventionalcommits": "4.4.0",
