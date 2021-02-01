@@ -110,6 +110,7 @@ function _serialize (name, val, options) {
  * For more on prefixes see https://googlechrome.github.io/samples/cookie-prefixes/
  *
  * @TODO Review cookie settings (names, options)
+ * @return {import("./cookie").CookiesOptions}
  */
 export function defaultCookies (useSecureCookies) {
   const cookiePrefix = useSecureCookies ? '__Secure-' : ''
@@ -136,6 +137,15 @@ export function defaultCookies (useSecureCookies) {
       // Default to __Host- for CSRF token for additional protection if using useSecureCookies
       // NB: The `__Host-` prefix is stricter than the `__Secure-` prefix.
       name: `${useSecureCookies ? '__Host-' : ''}next-auth.csrf-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: useSecureCookies
+      }
+    },
+    pkceCodeVerifier: {
+      name: `${cookiePrefix}next-auth.pkce.code_verifier`,
       options: {
         httpOnly: true,
         sameSite: 'lax',

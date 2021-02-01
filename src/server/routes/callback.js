@@ -4,7 +4,11 @@ import * as cookie from '../lib/cookie'
 import logger from '../../lib/logger'
 import dispatchEvent from '../lib/dispatch-event'
 
-/** Handle callbacks from login services */
+/**
+ * Handle callbacks from login services
+ * @param {import("..").NextAuthRequest} req
+ * @param {import("..").NextAuthResponse} res
+ */
 export default async function callback (req, res) {
   const {
     provider,
@@ -35,8 +39,8 @@ export default async function callback (req, res) {
         logger.debug('OAUTH_CALLBACK_RESPONSE', { profile, account, OAuthProfile })
 
         // If we don't have a profile object then either something went wrong
-        // or the user cancelled signin in. We don't know which, so we just
-        // direct the user to the signup page for now. We could do something
+        // or the user cancelled signing in. We don't know which, so we just
+        // direct the user to the signin page for now. We could do something
         // else in future.
         //
         // Note: In oAuthCallback an error is logged with debug info, so it
@@ -217,12 +221,12 @@ export default async function callback (req, res) {
   } else if (provider.type === 'credentials' && req.method === 'POST') {
     if (!useJwtSession) {
       logger.error('CALLBACK_CREDENTIALS_JWT_ERROR', 'Signin in with credentials is only supported if JSON Web Tokens are enabled')
-      return res.redirect(`${baseUrl}${basePath}/error?error=Configuration`)
+      return res.status(500).redirect(`${baseUrl}${basePath}/error?error=Configuration`)
     }
 
     if (!provider.authorize) {
       logger.error('CALLBACK_CREDENTIALS_HANDLER_ERROR', 'Must define an authorize() handler to use credentials authentication provider')
-      return res.redirect(`${baseUrl}${basePath}/error?error=Configuration`)
+      return res.status(500).redirect(`${baseUrl}${basePath}/error?error=Configuration`)
     }
 
     const credentials = req.body
@@ -231,7 +235,7 @@ export default async function callback (req, res) {
     try {
       userObjectReturnedFromAuthorizeHandler = await provider.authorize(credentials)
       if (!userObjectReturnedFromAuthorizeHandler) {
-        return res.redirect(`${baseUrl}${basePath}/error?error=CredentialsSignin&provider=${encodeURIComponent(provider.id)}`)
+        return res.status(401).redirect(`${baseUrl}${basePath}/error?error=CredentialsSignin&provider=${encodeURIComponent(provider.id)}`)
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -246,7 +250,7 @@ export default async function callback (req, res) {
     try {
       const signInCallbackResponse = await callbacks.signIn(user, account, credentials)
       if (signInCallbackResponse === false) {
-        return res.redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
+        return res.status(403).redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
       }
     } catch (error) {
       if (error instanceof Error) {

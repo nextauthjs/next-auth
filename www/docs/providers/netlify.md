@@ -21,6 +21,6 @@ providers: [
     clientId: process.env.NETLIFY_CLIENT_ID,
     clientSecret: process.env.NETLIFY_CLIENT_SECRET
   })
-}
+]
 ...
 ```

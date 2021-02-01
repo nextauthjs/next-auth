@@ -45,7 +45,7 @@ These errors are displayed on the terminal.
 
 ### Signin / Callback
 
-#### GET_AUTHORISATION_URL_ERROR
+#### GET_AUTHORIZATION_URL_ERROR
 
 #### SIGNIN_OAUTH_ERROR
 
@@ -70,6 +70,12 @@ If you are using a Credentials Provider, NextAuth.js will not persist users or s
 In _most cases_ it does not make sense to specify a database in NextAuth.js options and support a Credentials Provider.
 
 #### CALLBACK_CREDENTIALS_HANDLER_ERROR
+
+#### PKCE_ERROR
+
+The provider you tried to use failed when setting [PKCE or Proof Key for Code Exchange](https://tools.ietf.org/html/rfc7636#section-4.2).
+The `code_verifier` is saved in a cookie called (by default) `__Secure-next-auth.pkce.code_verifier` which expires after 15 minutes.
+Check if `cookies.pkceCodeVerifier` is configured correctly. The default `code_challenge_method` is `"S256"`. This is currently not configurable to `"plain"`, as it is not recommended, and in most cases it is only supported for backward compatibility.
 
 ---
 
