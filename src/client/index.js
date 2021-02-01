@@ -10,7 +10,6 @@
 //
 // We use HTTP POST requests with CSRF Tokens to protect against CSRF attacks.
 
-/* global fetch:false */
 import { useState, useEffect, useContext, createContext, createElement } from 'react'
 import logger from '../lib/logger'
 import parseUrl from '../lib/parse-url'

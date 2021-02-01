@@ -110,6 +110,7 @@ function _serialize (name, val, options) {
  * For more on prefixes see https://googlechrome.github.io/samples/cookie-prefixes/
  *
  * @TODO Review cookie settings (names, options)
+ * @return {import("./cookie").CookiesOptions}
  */
 export function defaultCookies (useSecureCookies) {
   const cookiePrefix = useSecureCookies ? '__Secure-' : ''

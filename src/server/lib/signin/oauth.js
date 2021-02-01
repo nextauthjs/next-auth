@@ -1,6 +1,7 @@
 import oAuthClient from '../oauth/client'
 import logger from '../../../lib/logger'
 
+/** @param {import("../..").NextAuthRequest} req */
 export default async function getAuthorizationUrl (req) {
   const { provider } = req.options
 

@@ -4,7 +4,11 @@ import * as cookie from '../lib/cookie'
 import logger from '../../lib/logger'
 import dispatchEvent from '../lib/dispatch-event'
 
-/** Handle callbacks from login services */
+/**
+ * Handle callbacks from login services
+ * @param {import("..").NextAuthRequest} req
+ * @param {import("..").NextAuthResponse} res
+ */
 export default async function callback (req, res) {
   const {
     provider,

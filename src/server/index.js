@@ -21,6 +21,11 @@ if (!process.env.NEXTAUTH_URL) {
   logger.warn('NEXTAUTH_URL', 'NEXTAUTH_URL environment variable not set')
 }
 
+/**
+ * @param {import("next").NextApiRequest} req
+ * @param {import("next").NextApiResponse} res
+ * @param {import(".").NextAuthOptions} userOptions
+ */
 async function NextAuthHandler (req, res, userOptions) {
   // If debug enabled, set ENV VAR so that logger logs debug messages
   if (userOptions.debug) {

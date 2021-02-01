@@ -1,0 +1,48 @@
+{
+  "compilerOptions": {
+    "strictNullChecks": true,
+    "baseUrl": ".",
+    "paths": {
+      "next-auth": [
+        "./src/server"
+      ],
+      "next-auth/adapters": [
+        "./src/adapters"
+      ],
+      "next-auth/client": [
+        "./src/client"
+      ],
+      "next-auth/jwt": [
+        "./src/lib/jwt"
+      ],
+      "next-auth/providers": [
+        "./src/providers"
+      ]
+    },
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve"
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
