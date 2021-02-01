@@ -15,29 +15,29 @@ export default NextAuth({
     }),
     Providers.Twitter({
       clientId: process.env.TWITTER_ID,
-      clientSecret: process.env.TWITTER_SECRET,
+      clientSecret: process.env.TWITTER_SECRET
     }),
     Providers.Credentials({
-      name: "Credentials",
+      name: 'Credentials',
       credentials: {
-        password: {  label: "Password", type: "password" }
+        password: { label: 'Password', type: 'password' }
       },
-      async authorize(credentials) {
-        if (credentials.password === "password") {
+      async authorize (credentials) {
+        if (credentials.password === 'password') {
           return {
             id: 1,
             name: 'Fill Murray',
             email: 'bill@fillmurray.com',
-            image: "https://www.fillmurray.com/64/64"
+            image: 'https://www.fillmurray.com/64/64'
           }
         }
         return null
       }
-    }),
+    })
   ],
   jwt: {
     encryption: true,
-    secret: process.env.SECRET,
+    secret: process.env.SECRET
   },
-  debug: false,
+  debug: false
 })
