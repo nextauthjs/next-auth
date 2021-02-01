@@ -1,6 +1,6 @@
 ---
 id: eveonline
-title: EVEOnline
+title: EVE Online
 ---
 
 ## Documentation
@@ -32,9 +32,6 @@ providers: [
 ```js
 ...
 options: {
-  session: {
-    jwt: true,
-  },
   jwt: {
     secret: process.env.JWT_SECRET,
   },
@@ -42,18 +39,15 @@ options: {
     jwt: async (token, user, account, profile, isNewUser) => {
       if (profile) {
         token = {
+          ...token,
           id: profile.CharacterID,
-          name: profile.CharacterName,
-          image: `https://image.eveonline.com/Character/${profile.CharacterID}_128.jpg`,
         }
       }
       return token;
     },
     session: async (session, token) => {
       if (token) {
-        session.id = token.id;
-        session.name = token.name;
-        session.image = token.image;
+        session.user.id = token.id;
       }
       return session;
     }

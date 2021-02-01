@@ -1,7 +1,7 @@
 export default (options) => {
   return {
     id: 'eveonline',
-    name: 'EVEOnline',
+    name: 'EVE Online',
     type: 'oauth',
     version: '2.0',
     params: { grant_type: 'authorization_code' },
