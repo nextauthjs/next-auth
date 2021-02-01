@@ -10,7 +10,6 @@
 //
 // We use HTTP POST requests with CSRF Tokens to protect against CSRF attacks.
 
-/* global fetch:false */
 import { useState, useEffect, useContext, createContext, createElement } from 'react'
 import logger from '../lib/logger'
 import parseUrl from '../lib/parse-url'
@@ -48,7 +47,7 @@ if (typeof window !== 'undefined') {
     window.addEventListener('storage', async (event) => {
       if (event.key === 'nextauth.message') {
         const message = JSON.parse(event.newValue)
-        if (message.event && message.event === 'session' && message.data) {
+        if (message?.event === 'session' && message.data) {
           // Ignore storage events fired from the same window that created them
           if (__NEXTAUTH._clientId === message.clientId) {
             return
@@ -233,62 +232,101 @@ const _useSessionHook = (session) => {
   return [data, loading]
 }
 
-// Client side method
-export const signIn = async (provider, args = {}, authorizationParams = {}) => {
+/**
+ * Client-side method to initiate a signin flow
+ * or send the user to the signin page listing all possible providers.
+ * (Automatically adds the CSRF token to the request)
+ * @see https://next-auth.js.org/getting-started/client#signin
+ * @param {string} [provider]
+ * @param {SignInOptions} [options]
+ * @param {object} [authorizationParams]
+ * @return {Promise<SignInResponse | undefined>}
+ * @typedef {{callbackUrl?: string; redirect?: boolean}} SignInOptions
+ * @typedef {{error: string | null; status: number; ok: boolean}} SignInResponse
+ */
+export async function signIn (provider, options = {}, authorizationParams = {}) {
+  const {
+    callbackUrl = window.location,
+    redirect = true
+  } = options
+
   const baseUrl = _apiBaseUrl()
-  const callbackUrl = args.callbackUrl ?? window.location
   const providers = await getProviders()
 
   // Redirect to sign in page if no valid provider specified
   if (!(provider in providers)) {
     // If Provider not recognized, redirect to sign in page
     window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`
-  } else {
-    const signInUrl = (providers[provider].type === 'credentials')
-      ? `${baseUrl}/callback/${provider}`
-      : `${baseUrl}/signin/${provider}`
+    return
+  }
+  const isCredentials = providers[provider].type === 'credentials'
+  const signInUrl = isCredentials
+    ? `${baseUrl}/callback/${provider}`
+    : `${baseUrl}/signin/${provider}`
 
-    // If is any other provider type, POST to provider URL with CSRF Token,
-    // callback URL and any other parameters supplied.
-    const fetchOptions = {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: _encodedForm({
-        ...args,
-        authorizationParams,
-        csrfToken: await getCsrfToken(),
-        callbackUrl: callbackUrl,
-        json: true
-      })
-    }
-    const res = await fetch(signInUrl, fetchOptions)
-    const data = await res.json()
+  // If is any other provider type, POST to provider URL with CSRF Token,
+  // callback URL and any other parameters supplied.
+  const fetchOptions = {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: new URLSearchParams({
+      ...options,
+      csrfToken: await getCsrfToken(),
+      callbackUrl,
+      json: true
+    })
+  }
+  const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
+  const res = await fetch(_signInUrl, fetchOptions)
+  const data = await res.json()
+  if (redirect || !isCredentials) {
     window.location = data.url ?? callbackUrl
+    return
+  }
+
+  const error = new URL(data.url).searchParams.get('error')
+  return {
+    error,
+    status: res.status,
+    ok: res.ok
   }
 }
 
-// Client side method
-export const signOut = async (args = {}) => {
-  const callbackUrl = args.callbackUrl ?? window.location
-
+/**
+ * Signs the user out, by removing the session cookie.
+ * (Automatically adds the CSRF token to the request)
+ * @param {SignOutOptions} [options]
+ * @returns {Promise<{url?: string} | undefined>}
+ * @typedef {{callbackUrl?: string; redirect?: boolean;}} SignOutOptions
+ */
+export async function signOut (options = {}) {
+  const {
+    callbackUrl = window.location,
+    redirect = true
+  } = options
   const baseUrl = _apiBaseUrl()
   const fetchOptions = {
     method: 'post',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     },
-    body: _encodedForm({
+    body: new URLSearchParams({
       csrfToken: await getCsrfToken(),
-      callbackUrl: callbackUrl,
+      callbackUrl,
       json: true
     })
   }
   const res = await fetch(`${baseUrl}/signout`, fetchOptions)
   const data = await res.json()
   _sendMessage({ event: 'session', data: { trigger: 'signout' } })
-  window.location = data.url ?? callbackUrl
+  if (redirect) {
+    window.location = data.url ?? callbackUrl
+    return
+  }
+
+  return data
 }
 
 // Provider to wrap the app in to make session data available globally
@@ -319,12 +357,6 @@ const _apiBaseUrl = () => {
     // Return relative path when called client side
     return __NEXTAUTH.basePath
   }
-}
-
-const _encodedForm = (formData) => {
-  return Object.keys(formData).map((key) => {
-    return encodeURIComponent(key) + '=' + encodeURIComponent(formData[key])
-  }).join('&')
 }
 
 const _sendMessage = (message) => {

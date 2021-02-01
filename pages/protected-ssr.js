@@ -5,7 +5,7 @@ import AccessDenied from '../components/access-denied'
 
 export default function Page ({ content, session }) {
   // If no session exists, display access denied message
-  if (!session) { return  <Layout><AccessDenied/></Layout> }
+  if (!session) { return <Layout><AccessDenied /></Layout> }
 
   // If session exists, display content
   return (
@@ -16,7 +16,7 @@ export default function Page ({ content, session }) {
   )
 }
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps (context) {
   const session = await getSession(context)
   let content = null
 
