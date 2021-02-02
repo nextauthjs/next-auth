@@ -8,7 +8,11 @@ const PKCE_LENGTH = 64
 const PKCE_CODE_CHALLENGE_METHOD = 'S256' // can be 'plain', not recommended https://tools.ietf.org/html/rfc7636#section-4.2
 const PKCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 
-/** Adds `code_verifier` to `req.options.pkce`, and removes the corresponding cookie */
+/**
+ * Adds `code_verifier` to `req.options.pkce`, and removes the corresponding cookie
+ * @param {import("../..").NextAuthRequest} req
+ * @param {import("../..").NextAuthResponse} res
+ */
 export async function handleCallback (req, res) {
   const { cookies, provider, baseUrl, basePath } = req.options
   try {
@@ -38,7 +42,11 @@ export async function handleCallback (req, res) {
   }
 }
 
-/** Adds `code_challenge` and `code_challenge_method` to `req.options.pkce`. */
+/**
+ * Adds `code_challenge` and `code_challenge_method` to `req.options.pkce`.
+ * @param {import("../..").NextAuthRequest} req
+ * @param {import("../..").NextAuthResponse} res
+ */
 export async function handleSignin (req, res) {
   const { cookies, provider, baseUrl, basePath } = req.options
   try {
