@@ -130,7 +130,8 @@ async function NextAuthHandler (req, res, userOptions) {
         ...defaultCallbacks,
         ...userOptions.callbacks
       },
-      pkce: {}
+      pkce: {},
+      logger: { ...logger } // Used by adapters. Creating copy, in case adapters try to mutate it.
     }
 
     await callbackUrlHandler(req, res)
