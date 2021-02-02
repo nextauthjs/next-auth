@@ -343,7 +343,7 @@ const _fetchData = async (url, options = {}) => {
     const data = await res.json()
     return Promise.resolve(Object.keys(data).length > 0 ? data : null) // Return null if data empty
   } catch (error) {
-    logger.error('CLIENT_FETCH_ERROR', { url, ...error })
+    logger.error('CLIENT_FETCH_ERROR', error, { url })
     return Promise.resolve(null)
   }
 }
