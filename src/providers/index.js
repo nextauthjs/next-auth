@@ -10,6 +10,7 @@ import Cognito from './cognito'
 import Credentials from './credentials'
 import Discord from './discord'
 import Email from './email'
+import EVEOnline from './eveonline'
 import Facebook from './facebook'
 import Foursquare from './foursquare'
 import FusionAuth from './fusionauth'
@@ -46,6 +47,7 @@ export default {
   Credentials,
   Discord,
   Email,
+  EVEOnline,
   Facebook,
   Foursquare,
   FusionAuth,
