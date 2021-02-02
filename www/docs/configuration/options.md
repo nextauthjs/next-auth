@@ -338,6 +338,10 @@ export default NextAuth({
 If the `debug` level is defined by the user, it will be called regardless of the `debug: false` [option](#debug).
 :::
 
+:::note
+If the user overrides any of the levels, client-side log messages will also be forwarded to the server, which then will be forwarded to the logging service. Logs from the client-side are `POST` requests with a JSON serialized body sent to the `/api/auth/_log` endpoint. It will try to use [`navigator.sendBeacon`](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon) by default, if available.
+:::
+
 ---
 
 ### theme
