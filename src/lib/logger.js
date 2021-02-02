@@ -1,31 +1,24 @@
 const logger = {
-  error: (errorCode, ...text) => {
-    if (!console) { return }
-    if (text && text.length <= 1) { text = text[0] || '' }
+  error (code, ...message) {
     console.error(
-      `[next-auth][error][${errorCode.toLowerCase()}]`,
-      text,
-      `\nhttps://next-auth.js.org/errors#${errorCode.toLowerCase()}`
+      `[next-auth][error][${code.toLowerCase()}]`,
+      `\nhttps://next-auth.js.org/errors#${code.toLowerCase()}`,
+      ...message
     )
   },
-  warn: (warnCode, ...text) => {
-    if (!console) { return }
-    if (text && text.length <= 1) { text = text[0] || '' }
+  warn (code, ...message) {
     console.warn(
-      `[next-auth][warn][${warnCode.toLowerCase()}]`,
-      text,
-      `\nhttps://next-auth.js.org/warnings#${warnCode.toLowerCase()}`
+      `[next-auth][warn][${code.toLowerCase()}]`,
+      `\nhttps://next-auth.js.org/warnings#${code.toLowerCase()}`,
+      ...message
     )
   },
-  debug: (debugCode, ...text) => {
-    if (!console) { return }
-    if (text && text.length <= 1) { text = text[0] || '' }
-    if (process && process.env && process.env._NEXTAUTH_DEBUG) {
-      console.log(
-        `[next-auth][debug][${debugCode.toLowerCase()}]`,
-        text
-      )
-    }
+  debug (code, ...message) {
+    if (!process?.env?._NEXTAUTH_DEBUG) return
+    console.log(
+      `[next-auth][debug][${code.toLowerCase()}]`,
+      ...message
+    )
   }
 }
 

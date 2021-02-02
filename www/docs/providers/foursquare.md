@@ -25,6 +25,6 @@ providers: [
     clientSecret: process.env.FOURSQUARE_CLIENT_SECRET,
     apiVersion: 'YYYYMMDD'
   })
-}
+]
 ...
 ```

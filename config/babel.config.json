@@ -1,0 +1,12 @@
+{
+  "presets": [
+    ["@babel/preset-env", { "targets": { "esmodules": true } }]
+  ],
+  "comments": false,
+  "overrides": [
+    {
+      "test": ["../src/server/pages/**"],
+      "presets": ["preact"]
+    }
+  ]
+}

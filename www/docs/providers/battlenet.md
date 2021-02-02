@@ -22,6 +22,6 @@ providers: [
     clientSecret: process.env.BATTLENET_CLIENT_SECRET,
     region: process.env.BATTLENET_REGION
   })
-}
+]
 ...
 ```

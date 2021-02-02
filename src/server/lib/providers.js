@@ -1,14 +1,8 @@
-export default (_providers, baseUrl, basePath) => {
-  const providers = {}
-
-  _providers.forEach(provider => {
-    const providerId = provider.id
-    providers[providerId] = {
-      ...provider,
-      signinUrl: `${baseUrl}${basePath}/signin/${providerId}`,
-      callbackUrl: `${baseUrl}${basePath}/callback/${providerId}`
-    }
-  })
-
-  return providers
+/** Adds `signinUrl` and `callbackUrl` to each provider. */
+export default function parseProviders ({ providers = [], baseUrl, basePath }) {
+  return providers.map((provider) => ({
+    ...provider,
+    signinUrl: `${baseUrl}${basePath}/signin/${provider.id}`,
+    callbackUrl: `${baseUrl}${basePath}/callback/${provider.id}`
+  }))
 }

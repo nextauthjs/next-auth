@@ -3,9 +3,9 @@ id: securing-pages-and-api-routes
 title: Securing pages and API routes
 ---
 
-You can easily protect client and server side side rendered pages and API routes with NextAuth.js.
+You can easily protect client and server side rendered pages and API routes with NextAuth.js.
 
-_You can find working examples of the approaches shown below in the [example project](https://github.com/iaincollins/next-auth-example/)._
+_You can find working examples of the approaches shown below in the [example project](https://github.com/nextauthjs/next-auth-example/)._
 
 :::tip
 The methods `getSession()` and `getToken()` both return an `object` if a session is valid and `null` if a session is invalid or has expired.
@@ -48,14 +48,13 @@ export default function Page() {
 
   if (typeof window !== 'undefined' && loading) return null
 
-  if (!session) return <p>Access Denied</p>
-
-  return (
-    <>
+  if (session) {
+    return <>
       <h1>Protected Page</h1>
       <p>You can view this page because you are signed in.</p>
     </>
-  )
+  }
+  return <p>Access Denied</p>
 }
 
 export async function getServerSideProps(context) {
@@ -67,7 +66,7 @@ export async function getServerSideProps(context) {
 ```
 
 :::tip
-This example assumes you have configured `_app.js` to pass the `session` prop through so that it's immediately avalible on page load to `useSession`.
+This example assumes you have configured `_app.js` to pass the `session` prop through so that it's immediately available on page load to `useSession`.
 
 ```js title="pages/_app.js"
 import { Provider } from 'next-auth/client'

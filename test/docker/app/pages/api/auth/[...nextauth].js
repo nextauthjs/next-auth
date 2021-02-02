@@ -81,8 +81,8 @@ const options = {
 
     // You can define your own encode/decode functions for signing and encryption
     // if you want to override the default behaviour.
-    // encode: async ({ secret, token, maxAge }) => {},
-    // decode: async ({ secret, token, maxAge }) => {},
+    // async encode({ secret, token, maxAge }) {},
+    // async decode({ secret, token, maxAge }) {},
   },
 
   // You can define custom pages to override the built-in pages.
@@ -101,10 +101,10 @@ const options = {
   // when an action is performed.
   // https://next-auth.js.org/configuration/callbacks
   callbacks: {
-    // signIn: async (user, account, profile) => { return Promise.resolve(true) },
-    // redirect: async (url, baseUrl) => { return Promise.resolve(baseUrl) },
-    // session: async (session, user) => { return Promise.resolve(session) },
-    // jwt: async (token, user, account, profile, isNewUser) => { return Promise.resolve(token) }
+    // async signIn(user, account, profile) { return Promise.resolve(true) },
+    // async redirect(url, baseUrl) { return Promise.resolve(baseUrl) },
+    // async session(session, user) { return Promise.resolve(session) },
+    // async jwt(token, user, account, profile, isNewUser) { return Promise.resolve(token) }
   },
 
   // Events are useful for logging
