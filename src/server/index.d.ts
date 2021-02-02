@@ -1,5 +1,5 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
-import { LoggerInstance } from 'src/lib/logger'
+import { LoggerInstance } from '../lib/logger'
 import { CallbacksOptions } from './lib/callbacks'
 import { CookiesOptions } from './lib/cookie'
 import { EventsOptions } from './lib/events'
