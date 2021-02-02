@@ -11,7 +11,7 @@
 // We use HTTP POST requests with CSRF Tokens to protect against CSRF attacks.
 
 import { useState, useEffect, useContext, createContext, createElement } from 'react'
-import logger from '../lib/logger'
+import _logger, { proxyLogger } from '../lib/logger'
 import parseUrl from '../lib/parse-url'
 
 // This behaviour mirrors the default behaviour for getting the site name that
@@ -36,6 +36,8 @@ const __NEXTAUTH = {
   // Used to store to function export by getSession() hook
   _getSession: () => {}
 }
+
+const logger = proxyLogger(_logger, __NEXTAUTH.basePath)
 
 // Add event listners on load
 if (typeof window !== 'undefined') {
