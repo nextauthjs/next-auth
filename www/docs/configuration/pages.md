@@ -118,3 +118,7 @@ You can also use the `signIn()` function which will handle obtaining the CSRF to
 ```js
 signIn('credentials', { username: 'jsmith', password: '1234' })
 ```
+
+:::tip
+Remember to put any custom pages in a folder outside **/pages/api** which is reserved for API code. As per the examples above, a location convention suggestion is `pages/auth/...`. 
+:::
