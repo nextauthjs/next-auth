@@ -9,7 +9,7 @@ import {
   GenericObject,
   NextApiRequest,
   NextApiResponse,
-  SessionBase,
+  SessionBase
 } from './_utils'
 
 interface InitOptions {
@@ -34,14 +34,14 @@ interface AppOptions {
   baseUrl: string
   basePath: string
   action:
-    | 'providers'
-    | 'session'
-    | 'csrf'
-    | 'signin'
-    | 'signout'
-    | 'callback'
-    | 'verify-request'
-    | 'error'
+  | 'providers'
+  | 'session'
+  | 'csrf'
+  | 'signin'
+  | 'signout'
+  | 'callback'
+  | 'verify-request'
+  | 'error'
   provider?: string
   cookies: Cookies
   secret: string
@@ -84,13 +84,13 @@ interface CookieOptions {
 }
 
 interface Events {
-  signIn?(message: any): Promise<void>
-  signOut?(message: any): Promise<void>
-  createUser?(message: any): Promise<void>
-  updateUser?(message: any): Promise<void>
-  linkAccount?(message: any): Promise<void>
-  session?(message: any): Promise<void>
-  error?(message: any): Promise<void>
+  signIn?: (message: any) => Promise<void>
+  signOut?: (message: any) => Promise<void>
+  createUser?: (message: any) => Promise<void>
+  updateUser?: (message: any) => Promise<void>
+  linkAccount?: (message: any) => Promise<void>
+  session?: (message: any) => Promise<void>
+  error?: (message: any) => Promise<void>
 }
 
 interface Session {
@@ -111,29 +111,29 @@ interface JWTOptions {
   encryption?: boolean
   signingKey?: string
   encryptionKey?: string
-  encode?(options: JWTEncodeParams): Promise<string>
-  decode?(options: JWTDecodeParams): Promise<GenericObject>
+  encode?: (options: JWTEncodeParams) => Promise<string>
+  decode?: (options: JWTDecodeParams) => Promise<GenericObject>
 }
 
 // TODO: Improve callback typings
 interface Callbacks {
-  signIn?(
+  signIn?: (
     user: User,
     account: GenericObject,
     profile: GenericObject
-  ): Promise<boolean>
-  redirect?(url: string, baseUrl: string): Promise<string>
-  session?(session: SessionBase, user: User): Promise<GenericObject>
-  jwt?(
+  ) => Promise<boolean>
+  redirect?: (url: string, baseUrl: string) => Promise<string>
+  session?: (session: SessionBase, user: User) => Promise<GenericObject>
+  jwt?: (
     token: GenericObject,
     user: User,
     account: GenericObject,
     profile: GenericObject,
     isNewUser: boolean
-  ): Promise<GenericObject>
+  ) => Promise<GenericObject>
 }
 
-declare function NextAuth(
+declare function NextAuth (
   req: NextApiRequest,
   res: NextApiResponse,
   options?: InitOptions
@@ -148,5 +148,5 @@ export {
   Session,
   JWTOptions,
   User,
-  Callbacks,
+  Callbacks
 }

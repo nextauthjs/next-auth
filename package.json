@@ -106,7 +106,8 @@
     "project": "./tsconfig.json",
     "ignore": [
       "test/",
-      "next-env.d.ts"
+      "next-env.d.ts",
+      "*.d.ts"
     ],
     "globals": [
       "fetch"

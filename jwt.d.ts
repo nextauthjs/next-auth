@@ -25,12 +25,12 @@ export interface JWTDecodeParams {
   encryption?: boolean
 }
 
-declare function encode(args?: JWTEncodeParams): Promise<string>
-declare function decode(
+declare function encode (args?: JWTEncodeParams): Promise<string>
+declare function decode (
   args?: JWTDecodeParams & { token: string }
 ): Promise<object>
 
-declare function getToken(
+declare function getToken (
   args?: {
     req: NextApiRequest
     secureCookie?: boolean
@@ -38,7 +38,7 @@ declare function getToken(
     raw?: string
   } & JWTDecodeParams
 ): Promise<object>
-declare function getToken(args?: {
+declare function getToken (args?: {
   req: NextApiRequest
   secureCookie?: boolean
   cookieName?: string

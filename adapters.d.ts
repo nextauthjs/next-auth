@@ -43,15 +43,15 @@ export interface AdapterInstance<
   TSession,
   TVerificationRequest
 > {
-  createUser(profile: TProfile): Promise<TUser>
-  getUser(id: string): Promise<TUser | null>
-  getUserByEmail(email: string): Promise<TUser | null>
-  getUserByProviderAccountId(
+  createUser: (profile: TProfile) => Promise<TUser>
+  getUser: (id: string) => Promise<TUser | null>
+  getUserByEmail: (email: string) => Promise<TUser | null>
+  getUserByProviderAccountId: (
     providerId: string,
     providerAccountId: string
-  ): Promise<TUser | null>
-  updateUser(user: TUser): Promise<TUser>
-  linkAccount(
+  ) => Promise<TUser | null>
+  updateUser: (user: TUser) => Promise<TUser>
+  linkAccount: (
     userId: string,
     providerId: string,
     providerType: string,
@@ -59,31 +59,31 @@ export interface AdapterInstance<
     refreshToken: string,
     accessToken: string,
     accessTokenExpires: number
-  ): Promise<void>
-  createSession(user: TUser): Promise<TSession>
-  getSession(sessionToken: string): Promise<TSession | null>
-  updateSession(session: TSession, force?: boolean): Promise<TSession>
-  deleteSession(sessionToken: string): Promise<void>
-  createVerificationRequest?(
+  ) => Promise<void>
+  createSession: (user: TUser) => Promise<TSession>
+  getSession: (sessionToken: string) => Promise<TSession | null>
+  updateSession: (session: TSession, force?: boolean) => Promise<TSession>
+  deleteSession: (sessionToken: string) => Promise<void>
+  createVerificationRequest?: (
     email: string,
     url: string,
     token: string,
     secret: string,
     provider: EmailSessionProvider,
     options: AppOptions
-  ): Promise<TVerificationRequest>
-  getVerificationRequest?(
+  ) => Promise<TVerificationRequest>
+  getVerificationRequest?: (
     email: string,
     verificationToken: string,
     secret: string,
     provider: SessionProvider
-  ): Promise<TVerificationRequest | null>
-  deleteVerificationRequest?(
+  ) => Promise<TVerificationRequest | null>
+  deleteVerificationRequest?: (
     email: string,
     verificationToken: string,
     secret: string,
     provider: SessionProvider
-  ): Promise<void>
+  ) => Promise<void>
 }
 
 interface Adapter<
@@ -92,9 +92,9 @@ interface Adapter<
   TSession extends Session = any,
   TVerificationRequest extends VerificationRequest = any
 > {
-  getAdapter(
+  getAdapter: (
     appOptions: AppOptions
-  ): Promise<AdapterInstance<TUser, TProfile, TSession, TVerificationRequest>>
+  ) => Promise<AdapterInstance<TUser, TProfile, TSession, TVerificationRequest>>
 }
 
 type Schema<T = any> = EntitySchema<T>['options']
@@ -115,7 +115,7 @@ interface TypeORMAdapter<
   S extends TypeORMSessionModel = any,
   VR extends TypeORMVerificationRequestModel = any
 > {
-  Adapter(
+  Adapter: (
     typeOrmConfig: ConnectionOptions,
     options?: {
       models?: {
@@ -137,7 +137,7 @@ interface TypeORMAdapter<
         }
       }
     }
-  ): Adapter<U, Profile, S, VR>
+  ) => Adapter<U, Profile, S, VR>
   Models: {
     Account: {
       model: TypeORMAccountModel
@@ -159,7 +159,7 @@ interface TypeORMAdapter<
 }
 
 interface PrismaAdapter {
-  Adapter(config: {
+  Adapter: (config: {
     prisma: any
     modelMapping?: {
       User: string
@@ -167,7 +167,7 @@ interface PrismaAdapter {
       Session: string
       VerificationRequest: string
     }
-  }): Adapter
+  }) => Adapter
 }
 
 declare const Adapters: Adapters
@@ -182,7 +182,7 @@ declare class TypeORMAccountModel {
   accessToken?: string
   accessTokenExpires?: Date
 
-  constructor(
+  constructor (
     userId: number,
     providerId: string,
     providerType: string,
@@ -199,7 +199,7 @@ declare class TypeORMUserModel implements User {
   image?: string
   emailVerified?: Date
 
-  constructor(
+  constructor (
     name?: string,
     email?: string,
     image?: string,
@@ -213,7 +213,7 @@ declare class TypeORMSessionModel implements Session {
   sessionToken: string
   accessToken: string
 
-  constructor(
+  constructor (
     userId: number,
     expires: Date,
     sessionToken?: string,
@@ -226,7 +226,7 @@ declare class TypeORMVerificationRequestModel implements VerificationRequest {
   token: string
   expires: Date
 
-  constructor(identifier: string, token: string, expires: Date)
+  constructor (identifier: string, token: string, expires: Date)
 }
 
 export default Adapters
@@ -238,5 +238,5 @@ export {
   TypeORMUserModel,
   TypeORMSessionModel,
   TypeORMVerificationRequestModel,
-  PrismaAdapter,
+  PrismaAdapter
 }

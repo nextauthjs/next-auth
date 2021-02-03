@@ -80,9 +80,9 @@ interface ProviderCredentialsOptions {
   id?: string
   name: string
   credentials: CredentialInput
-  authorize(
+  authorize: (
     credentials: Record<string, string>
-  ): Promise<GenericReturnConfig | null>
+  ) => Promise<GenericReturnConfig | null>
 }
 
 interface CredentialInput {
