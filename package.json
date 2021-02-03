@@ -35,10 +35,15 @@
   "files": [
     "dist",
     "index.js",
+    "index.d.ts",
     "providers.js",
+    "providers.d.ts",
     "adapters.js",
+    "adapters.d.ts",
     "client.js",
-    "jwt.js"
+    "client.d.ts",
+    "jwt.js",
+    "jwt.d.ts"
   ],
   "license": "ISC",
   "dependencies": {
