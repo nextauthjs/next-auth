@@ -20,7 +20,7 @@ export default NextAuth({
     Providers.Okta({
       clientId: process.env.OKTA_ID,
       clientSecret: process.env.OKTA_SECRET,
-      domain: process.env.OKTA_DOMAIN,
+      domain: process.env.OKTA_DOMAIN
     }),
     Providers.Credentials({
       name: 'Credentials',
