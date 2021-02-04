@@ -17,11 +17,6 @@ export default NextAuth({
       clientId: process.env.TWITTER_ID,
       clientSecret: process.env.TWITTER_SECRET
     }),
-    Providers.Okta({
-      clientId: process.env.OKTA_ID,
-      clientSecret: process.env.OKTA_SECRET,
-      domain: process.env.OKTA_DOMAIN
-    }),
     Providers.Credentials({
       name: 'Credentials',
       credentials: {
