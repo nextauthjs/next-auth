@@ -132,7 +132,7 @@ async function getOAuth2AccessToken (code, provider, codeVerifier) {
     headers.Authorization = 'Basic ' + Buffer.from((provider.clientId + ':' + provider.clientSecret)).toString('base64')
   }
 
-  if ((provider.id === 'okta' || provider.id === 'identity-server4') && !headers.Authorization) {
+  if (provider.id === 'identity-server4' && !headers.Authorization) {
     headers.Authorization = `Bearer ${code}`
   }
 
