@@ -9,8 +9,6 @@ https://developer.atlassian.com/cloud/jira/platform/oauth-2-authorization-code-g
 
 ## Example
 
-For Jira Platform API access:
-
 ```js
 import Providers from `next-auth/providers`
 ...
