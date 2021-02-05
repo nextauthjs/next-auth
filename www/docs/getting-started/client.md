@@ -133,7 +133,7 @@ The `getProviders()` method returns the list of providers currently configured f
 
 It calls `/api/auth/providers` and returns a list of the currently configured authentication providers.
 
-It can be use useful if you are creating a dynamic custom sign in page.
+It can be useful if you are creating a dynamic custom sign in page.
 
 ---
 
