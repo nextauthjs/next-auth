@@ -18,6 +18,7 @@
   "gitlab": "GitLab",
   "google": "Google",
   "identity-server4": "IdentityServer4",
+  "keycloak": "Keycloak",
   "line": "LINE",
   "linkedin": "LinkedIn",
   "mailru": "Mail.ru",
