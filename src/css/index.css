@@ -80,6 +80,7 @@ input[type] {
   font-size: 1rem;
   border-radius: var(--border-radius);
   box-shadow: inset 0 .1rem .2rem rgba(0, 0, 0, .2);
+  color: var(--color-text);
 
   &:focus {
     box-shadow: none;
