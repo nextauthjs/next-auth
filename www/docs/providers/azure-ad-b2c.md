@@ -19,7 +19,7 @@ https://docs.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-tena
 - When asked for a redirection URL, use http://localhost:3000/api/auth/callback/azure-ad-b2c
 - Create a new secret and remember / copy its value immediately, it will disappear.
 
-In .env create the follwing entries
+In .env.local create the follwing entries
 
 AZURE_CLIENT_ID=<copy Application (client) ID here> 
 AZURE_CLIENT_SECRET=<copy generated secret value here>
