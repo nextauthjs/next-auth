@@ -27,6 +27,8 @@ AZURE_CLIENT_SECRET=<copy generated secret value here>
 AZURE_TENANT_NAME=<copy the name of the tenant here>
 AZURE_TENANT_ID=<copy the tenant id here>
 ```
+
+In pages/api/auth/[...nextauth].js` find or add the AZURE entries:
   
 ```js
 import Providers from 'next-auth/providers';
