@@ -19,6 +19,8 @@ See Osso's complete configuration and testing documentation at https://ossoapp.c
 
 ## Example
 
+A full example application is available at https://github.com/enterprise-oss/osso-next-auth-example and https://nextjs-demo.ossoapp.com
+
 ```js
 import Providers from `next-auth/providers`
 ...
