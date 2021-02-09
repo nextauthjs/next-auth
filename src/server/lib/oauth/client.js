@@ -7,6 +7,7 @@ import { sign as jwtSign } from 'jsonwebtoken'
  * @TODO Refactor to remove dependancy on 'oauth' package
  * It is already quite monkey patched, we don't use all the features and and it
  * would be easier to maintain if all the code was native to next-auth.
+ * @param {import("../..").Provider} provider
  */
 export default function oAuthClient (provider) {
   if (provider.version?.startsWith('2.')) {
@@ -86,6 +87,9 @@ export default function oAuthClient (provider) {
 
 /**
  * Ported from https://github.com/ciaranj/node-oauth/blob/a7f8a1e21c362eb4ed2039431fb9ac2ae749f26a/lib/oauth2.js
+ * @param {string} code
+ * @param {import("../..").Provider} provider
+ * @param {string | undefined} codeVerifier
  */
 async function getOAuth2AccessToken (code, provider, codeVerifier) {
   const url = provider.accessTokenUrl
@@ -128,7 +132,7 @@ async function getOAuth2AccessToken (code, provider, codeVerifier) {
     headers.Authorization = 'Basic ' + Buffer.from((provider.clientId + ':' + provider.clientSecret)).toString('base64')
   }
 
-  if ((provider.id === 'okta' || provider.id === 'identity-server4') && !headers.Authorization) {
+  if (provider.id === 'identity-server4' && !headers.Authorization) {
     headers.Authorization = `Bearer ${code}`
   }
 
@@ -184,6 +188,9 @@ async function getOAuth2AccessToken (code, provider, codeVerifier) {
  *
  * 18/08/2020 @robertcraigie added results parameter to pass data to an optional request preparer.
  * e.g. see providers/bungie
+ * @param {import("../..").Provider} provider
+ * @param {string} accessToken
+ * @param {any} results
  */
 async function getOAuth2 (provider, accessToken, results) {
   let url = provider.profileUrl

@@ -6,6 +6,8 @@ import { OAuthCallbackError } from '../../../lib/errors'
  * For OAuth 2.0 flows, if the provider supports state,
  * check if state matches the one sent on signin
  * (a hash of the NextAuth.js CSRF token).
+ * @param {import("../..").NextAuthRequest} req
+ * @param {import("../..").NextAuthResponse} res
  */
 export async function handleCallback (req, res) {
   const { csrfToken, provider, baseUrl, basePath } = req.options
@@ -31,7 +33,11 @@ export async function handleCallback (req, res) {
   }
 }
 
-/** Adds CSRF token to the authorizationParams. */
+/**
+ * Adds CSRF token to the authorizationParams.
+ * @param {import("../..").NextAuthRequest} req
+ * @param {import("../..").NextAuthResponse} res
+ */
 export async function handleSignin (req, res) {
   const { provider, baseUrl, basePath, csrfToken } = req.options
   try {

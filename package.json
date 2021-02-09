@@ -29,8 +29,8 @@
     "prepublishOnly": "npm run build",
     "publish:beta": "npm publish --tag beta",
     "publish:canary": "npm publish --tag canary",
-    "lint": "standard",
-    "lint:fix": "standard --fix"
+    "lint": "ts-standard",
+    "lint:fix": "ts-standard --fix"
   },
   "files": [
     "dist",
@@ -64,21 +64,24 @@
     "mysql": "^2.18.1",
     "mssql": "^6.2.1",
     "pg": "^8.2.1",
-    "@prisma/client": "^2.12.0"
+    "@prisma/client": "^2.16.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
+    "@prisma/client": "^2.16.1",
     "@semantic-release/commit-analyzer": "^8.0.1",
     "@semantic-release/github": "^7.2.0",
     "@semantic-release/npm": "7.0.8",
     "@semantic-release/release-notes-generator": "^9.0.1",
+    "@types/react": "^17.0.0",
     "autoprefixer": "^9.7.6",
     "babel-preset-preact": "^2.0.0",
     "conventional-changelog-conventionalcommits": "4.4.0",
     "cssnano": "^4.1.10",
     "dotenv": "^8.2.0",
+    "eslint": "^7.19.0",
     "mocha": "^8.1.3",
     "mongodb": "^3.5.9",
     "mssql": "^6.2.1",
@@ -87,18 +90,23 @@
     "pg": "^8.2.1",
     "postcss-cli": "^7.1.1",
     "postcss-nested": "^4.2.1",
+    "prisma": "^2.16.1",
     "puppeteer": "^5.2.1",
     "puppeteer-extra": "^3.1.15",
     "puppeteer-extra-plugin-stealth": "^2.6.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "standard": "^16.0.3"
+    "ts-standard": "^10.0.0",
+    "typescript": "^4.1.3"
   },
-  "standard": {
+  "ts-standard": {
+    "project": "./tsconfig.json",
     "ignore": [
       "test/",
-      "pages/",
-      "components/"
+      "next-env.d.ts"
+    ],
+    "globals": [
+      "fetch"
     ]
   }
 }
