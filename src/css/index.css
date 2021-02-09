@@ -3,6 +3,7 @@
   --border-radius: .3rem;
   --color-error: #c94b4b;
   --color-info: #157efb;
+  --color-info-text: #fff;
 }
 
 .__next-auth-theme-auto,
@@ -23,7 +24,6 @@
   --color-control-border: #555;
   --color-button-active-background: #060606;
   --color-button-active-border: #666;
-
   --color-seperator: #444;
 }
 
@@ -203,13 +203,13 @@ a.site {
     font-weight: 500;
     border-radius: 0.3rem;
     background: var(--color-info);
-    color: var(--color-text);
 
     p {
       text-align: left;
       padding: 0.5rem 1rem;
       font-size: 0.9rem;
       line-height: 1.2rem;
+      color: var(--color-info-text);
     }
   }
 

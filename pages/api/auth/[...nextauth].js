@@ -47,7 +47,8 @@ export default NextAuth({
     encryption: true,
     secret: process.env.SECRET
   },
-  debug: false
+  debug: false,
+  theme: 'auto'
 
   // Default Database Adapter (TypeORM)
   // database: process.env.DATABASE_URL
