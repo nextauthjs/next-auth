@@ -24,7 +24,6 @@ In `.env.local` create the follwing entries:
 ```
 AZURE_CLIENT_ID=<copy Application (client) ID here> 
 AZURE_CLIENT_SECRET=<copy generated secret value here>
-AZURE_TENANT_NAME=<copy the name of the tenant here>
 AZURE_TENANT_ID=<copy the tenant id here>
 ```
 
