@@ -150,7 +150,7 @@ export default async (req, res) => {
 ```
 
 :::note
-Unlike `getSession()` and `getCsrfToken()`, when calling `getSession()` server side, you don't need to pass anything, just as calling it client side.
+Unlike `getSession()` and `getCsrfToken()`, when calling `getProviders()` server side, you don't need to pass anything, just as calling it client side.
 :::
 
 ---
