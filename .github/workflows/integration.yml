@@ -2,9 +2,10 @@ name: Integration Test
 
 on:
   push:
-    branches: [ main, canary ]
+    branches: 
+     - main
+     - next
   pull_request:
-    branches: [ main, canary ]
 
 jobs:
   test:
@@ -28,7 +29,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [10, 12, 14]
 
     steps:
       - uses: actions/checkout@v2
@@ -37,8 +38,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      # Install dependencies
-      - run: npm ci
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
 
       # Run tests (build library, build + start test app in Docker, run tests)
       - run: npm test
