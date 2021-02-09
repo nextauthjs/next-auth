@@ -288,7 +288,7 @@ const Adapter = (config) => {
         })
         if (verificationRequest && verificationRequest.expires && new Date() > verificationRequest.expires) {
           // Delete verification entry so it cannot be used again
-          await prisma[VerificationRequest].delete({ where: { identifier, token: hashedToken } })
+          await prisma[VerificationRequest].deleteMany({ where: { identifier, token: hashedToken } })
           return null
         }
 
@@ -304,7 +304,7 @@ const Adapter = (config) => {
       try {
         // Delete verification entry so it cannot be used again
         const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
-        await prisma[VerificationRequest].delete({ where: { identifier, token: hashedToken } })
+        await prisma[VerificationRequest].deleteMany({ where: { identifier, token: hashedToken } })
       } catch (error) {
         logger.error('DELETE_VERIFICATION_REQUEST_ERROR', error)
         return Promise.reject(new Error('DELETE_VERIFICATION_REQUEST_ERROR', error))
