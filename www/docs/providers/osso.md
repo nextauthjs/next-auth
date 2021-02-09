@@ -33,5 +33,5 @@ providers: [
 ```
 
 :::note
-`base` should be the fully qualified domain – e.g. `demo.ossoapp.com`
+`domain` should be the fully qualified domain – e.g. `demo.ossoapp.com`
 :::
