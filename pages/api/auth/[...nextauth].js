@@ -1,8 +1,16 @@
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 
+// import Adapters from 'next-auth/adapters'
+// import { PrismaClient } from '@prisma/client'
+// const prisma = new PrismaClient()
+
 export default NextAuth({
   providers: [
+    Providers.Email({
+      server: process.env.EMAIL_SERVER,
+      from: process.env.EMAIL_FROM
+    }),
     Providers.GitHub({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET
@@ -40,4 +48,13 @@ export default NextAuth({
     secret: process.env.SECRET
   },
   debug: false
+
+  // Default Database Adapter (TypeORM)
+  // database: process.env.DATABASE_URL
+
+  // Prisma Database Adapter
+  // To configure this app to use the schema in `prisma/schema.prisma` run:
+  // npx prisma generate
+  // npx prisma migrate dev --preview-feature
+  // adapter: Adapters.Prisma.Adapter({ prisma })
 })
