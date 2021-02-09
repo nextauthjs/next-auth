@@ -13,10 +13,9 @@ Please raise any significant new functionality or breaking change an issue for d
 Anyone can be a contributor. Either you found a typo, or you have an awesome feature request you could implement, we encourage you to create a Pull Request.
 ### Pull Requests
 
-* The latest changes are always in `canary`, so please make your Pull Request against that branch.
+* The latest changes are always in `main`, so please make your Pull Request against that branch.
 * Pull Requests should be raised for any change
 * Pull Requests need approval of a [core contributor](https://next-auth.js.org/contributors#core-team) before merging
-* Rebasing in Pull Requests is preferred to keep a clean commit history (see below)
 * Run `npm run lint:fix` before committing to make resolving conflicts easier (VSCode users, check out [this extension](https://marketplace.visualstudio.com/items?itemName=chenxsan.vscode-standardjs) to fix lint issues in development)
 * We encourage you to test your changes, and if you have the opportunity, please make those tests part of the Pull Request
 * If you add new functionality, please provide the corresponding documentation as well and make it part of the Pull Request
@@ -89,7 +88,7 @@ We use [semantic-release](https://github.com/semantic-release/semantic-release) 
 When accepting Pull Requests, make sure the following:
 
 * Use "Squash and merge"
-* Make sure you merge contributor PRs into `canary`
+* Make sure you merge contributor PRs into `main`
 * Rewrite the commit message to conform to the `Conventional Commits` style. Check the "Recommended Scopes" section for further advice.
 * Optionally link issues the PR will resolve (You can add "close" in front of the issue numbers to close the issues automatically, when the PR is merged. `semantic-release` will also comment back to connected issues and PRs, notifying the users that a feature is added/bug fixed, etc.)
 

@@ -1,31 +1,30 @@
 # Simple check that the build is valid and no linting errors.
 # Currently is run as a seperate workflow as it's fast to fail.
-name: Build Test
+name: Lint/Build
 
 on:
   push:
     branches: 
      - main
-     - canary
+     - next
   pull_request:
-    branches: 
+    branches:
      - main
-     - canary
+     - next
 
 jobs:
-  build:
+  lint-and-build:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x]
-
+        node-version: [10, 12, 14]
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
-      - run: npm run build
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
       - run: npm run lint
+      - run: npm run build
