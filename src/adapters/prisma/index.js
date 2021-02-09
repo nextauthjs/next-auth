@@ -280,11 +280,15 @@ const Adapter = (config) => {
         // Hash token provided with secret before trying to match it with database
         // @TODO Use bcrypt instead of salted SHA-256 hash for token
         const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
-        const verificationRequest = await prisma[VerificationRequest].findUnique({ where: { token: hashedToken } })
-
+        const verificationRequest = await prisma[VerificationRequest].findFirst({
+          where: {
+            identifier,
+            token: hashedToken
+          }
+        })
         if (verificationRequest && verificationRequest.expires && new Date() > verificationRequest.expires) {
           // Delete verification entry so it cannot be used again
-          await prisma[VerificationRequest].delete({ where: { token: hashedToken } })
+          await prisma[VerificationRequest].deleteMany({ where: { identifier, token: hashedToken } })
           return null
         }
 
@@ -300,7 +304,7 @@ const Adapter = (config) => {
       try {
         // Delete verification entry so it cannot be used again
         const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
-        await prisma[VerificationRequest].delete({ where: { token: hashedToken } })
+        await prisma[VerificationRequest].deleteMany({ where: { identifier, token: hashedToken } })
       } catch (error) {
         logger.error('DELETE_VERIFICATION_REQUEST_ERROR', error)
         return Promise.reject(new Error('DELETE_VERIFICATION_REQUEST_ERROR', error))

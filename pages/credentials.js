@@ -10,10 +10,6 @@ export default function Page () {
     }
     const response = await signIn('credentials', options)
     setResponse(response)
-    if (response.ok) {
-      window.alert('Manually refreshing to update session, if login was successful')
-      window.location.reload()
-    }
   }
 
   const handleLogout = (options) => async () => {
@@ -22,10 +18,6 @@ export default function Page () {
     }
     const response = await signOut(options)
     setResponse(response)
-    if (response.ok) {
-      window.alert('Manually refreshing to update session, if logout was successful')
-      window.location.reload()
-    }
   }
 
   const [session] = useSession()
