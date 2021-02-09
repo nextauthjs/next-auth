@@ -4,11 +4,14 @@ import * as cookie from '../lib/cookie'
 import logger from '../../lib/logger'
 import dispatchEvent from '../lib/dispatch-event'
 
-/** Handle callbacks from login services */
+/**
+ * Handle callbacks from login services
+ * @param {import("..").NextAuthRequest} req
+ * @param {import("..").NextAuthResponse} res
+ */
 export default async function callback (req, res) {
   const {
-    provider: providerName,
-    providers,
+    provider,
     adapter,
     baseUrl,
     basePath,
@@ -19,28 +22,25 @@ export default async function callback (req, res) {
     jwt,
     events,
     callbacks,
-    csrfToken,
     session: {
       jwt: useJwtSession,
       maxAge: sessionMaxAge
     }
   } = req.options
-  const provider = providers[providerName]
-  const { type } = provider
 
   // Get session ID (if set)
   const sessionToken = req.cookies?.[cookies.sessionToken.name] ?? null
 
-  if (type === 'oauth') {
+  if (provider.type === 'oauth') {
     try {
-      const { profile, account, OAuthProfile } = await oAuthCallback(req, csrfToken)
+      const { profile, account, OAuthProfile } = await oAuthCallback(req)
       try {
         // Make it easier to debug when adding a new provider
         logger.debug('OAUTH_CALLBACK_RESPONSE', { profile, account, OAuthProfile })
 
         // If we don't have a profile object then either something went wrong
-        // or the user cancelled signin in. We don't know which, so we just
-        // direct the user to the signup page for now. We could do something
+        // or the user cancelled signing in. We don't know which, so we just
+        // direct the user to the signin page for now. We could do something
         // else in future.
         //
         // Note: In oAuthCallback an error is logged with debug info, so it
@@ -121,10 +121,9 @@ export default async function callback (req, res) {
           return res.redirect(`${baseUrl}${basePath}/error?error=OAuthAccountNotLinked`)
         } else if (error.name === 'CreateUserError') {
           return res.redirect(`${baseUrl}${basePath}/error?error=OAuthCreateAccount`)
-        } else {
-          logger.error('OAUTH_CALLBACK_HANDLER_ERROR', error)
-          return res.redirect(`${baseUrl}${basePath}/error?error=Callback`)
         }
+        logger.error('OAUTH_CALLBACK_HANDLER_ERROR', error)
+        return res.redirect(`${baseUrl}${basePath}/error?error=Callback`)
       }
     } catch (error) {
       if (error.name === 'OAuthCallbackError') {
@@ -134,7 +133,7 @@ export default async function callback (req, res) {
       logger.error('OAUTH_CALLBACK_ERROR', error)
       return res.redirect(`${baseUrl}${basePath}/error?error=Callback`)
     }
-  } else if (type === 'email') {
+  } else if (provider.type === 'email') {
     try {
       if (!adapter) {
         logger.error('EMAIL_REQUIRES_ADAPTER_ERROR')
@@ -215,20 +214,19 @@ export default async function callback (req, res) {
     } catch (error) {
       if (error.name === 'CreateUserError') {
         return res.redirect(`${baseUrl}${basePath}/error?error=EmailCreateAccount`)
-      } else {
-        logger.error('CALLBACK_EMAIL_ERROR', error)
-        return res.redirect(`${baseUrl}${basePath}/error?error=Callback`)
       }
+      logger.error('CALLBACK_EMAIL_ERROR', error)
+      return res.redirect(`${baseUrl}${basePath}/error?error=Callback`)
     }
-  } else if (type === 'credentials' && req.method === 'POST') {
+  } else if (provider.type === 'credentials' && req.method === 'POST') {
     if (!useJwtSession) {
       logger.error('CALLBACK_CREDENTIALS_JWT_ERROR', 'Signin in with credentials is only supported if JSON Web Tokens are enabled')
-      return res.redirect(`${baseUrl}${basePath}/error?error=Configuration`)
+      return res.status(500).redirect(`${baseUrl}${basePath}/error?error=Configuration`)
     }
 
     if (!provider.authorize) {
       logger.error('CALLBACK_CREDENTIALS_HANDLER_ERROR', 'Must define an authorize() handler to use credentials authentication provider')
-      return res.redirect(`${baseUrl}${basePath}/error?error=Configuration`)
+      return res.status(500).redirect(`${baseUrl}${basePath}/error?error=Configuration`)
     }
 
     const credentials = req.body
@@ -237,14 +235,13 @@ export default async function callback (req, res) {
     try {
       userObjectReturnedFromAuthorizeHandler = await provider.authorize(credentials)
       if (!userObjectReturnedFromAuthorizeHandler) {
-        return res.redirect(`${baseUrl}${basePath}/error?error=CredentialsSignin&provider=${encodeURIComponent(provider.id)}`)
+        return res.status(401).redirect(`${baseUrl}${basePath}/error?error=CredentialsSignin&provider=${encodeURIComponent(provider.id)}`)
       }
     } catch (error) {
       if (error instanceof Error) {
         return res.redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
-      } else {
-        return res.redirect(error)
       }
+      return res.redirect(error)
     }
 
     const user = userObjectReturnedFromAuthorizeHandler
@@ -253,14 +250,13 @@ export default async function callback (req, res) {
     try {
       const signInCallbackResponse = await callbacks.signIn(user, account, credentials)
       if (signInCallbackResponse === false) {
-        return res.redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
+        return res.status(403).redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
       }
     } catch (error) {
       if (error instanceof Error) {
         return res.redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
-      } else {
-        return res.redirect(error)
       }
+      return res.redirect(error)
     }
 
     const defaultJwtPayload = {
@@ -282,7 +278,6 @@ export default async function callback (req, res) {
     await dispatchEvent(events.signIn, { user, account })
 
     return res.redirect(callbackUrl || baseUrl)
-  } else {
-    return res.status(500).end(`Error: Callback for provider type ${type} not supported`)
   }
+  return res.status(500).end(`Error: Callback for provider type ${provider.type} not supported`)
 }

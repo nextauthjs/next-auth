@@ -48,12 +48,12 @@ module.exports = {
         }
       ]
     },
-    announcementBar: {
-      id: 'release-candiate-announcement',
-      content: 'NextAuth.js now has automatic 🤖 releases 🎉! Check out the <a href="https://next-auth-git-canary.nextauthjs.vercel.app">Canary documentation 📚</a>',
-      backgroundColor: '#2DB2F9',
-      textColor: '#fff'
-    },
+    // announcementBar: {
+    //   id: 'release-candiate-announcement',
+    //   content: 'NextAuth.js now has automatic 🤖 releases 🎉! Check out the <a href="https://next-auth-git-canary.nextauthjs.vercel.app">Canary documentation 📚</a>',
+    //   backgroundColor: '#2DB2F9',
+    //   textColor: '#fff'
+    // },
     footer: {
       links: [
         {
@@ -68,7 +68,7 @@ module.exports = {
               to: '/contributors'
             },
             {
-              label: 'Canary docs',
+              label: 'Canary documentation',
               to: 'https://next-auth-git-canary.nextauthjs.vercel.app/'
             }
           ]
@@ -96,6 +96,17 @@ module.exports = {
             {
               label: 'Images by unDraw',
               to: 'https://undraw.co/'
+            },
+            {
+              html: `
+            <a target="_blank" rel="noopener noreferrer" href="https://vercel.com?utm_source=nextauthjs&utm_campaign=oss">
+              <img
+                alt="Powered by Vercel"
+                style="margin-top: 8px"
+                height="32"
+                src="https://raw.githubusercontent.com/nextauthjs/next-auth/canary/www/static/img/powered-by-vercel.svg"
+              />
+            </a>`
             }
           ]
         }

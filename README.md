@@ -69,7 +69,7 @@ NextAuth.js can be used with or without a database.
 
 Advanced options allow you to define your own routines to handle controlling what accounts are allowed to sign in, for encoding and decoding JSON Web Tokens and to set custom cookie security policies and session properties, so you can control who is able to sign in and how often sessions have to be re-validated. 
 
-### Typescript
+### TypeScript
 
 You can install the appropriate types via the following command:
 
@@ -77,9 +77,7 @@ You can install the appropriate types via the following command:
 npm install --save-dev @types/next-auth
 ```
 
-If you encounter any problems with the types package, please create an issue and add the `typescript` label to it.
-
-Alternatively, you can open a pull request directly with your fixes on the [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/next-auth) repository, where you'll find a `next-auth` subfolder.
+As of now, TypeScript is a community effort. If you encounter any problems with the types package, please create an issue at [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/next-auth). Alternatively, you can open a pull request directly with your fixes there. We welcome anyone to start a discussion on migrating this package to TypeScript, or how to improve the TypeScript experience in general.
 
 ## Example
 
@@ -140,6 +138,14 @@ export default function Component() {
 <a href="https://github.com/nextauthjs/next-auth/graphs/contributors">
   <img width="500px" src="https://contrib.rocks/image?repo=nextauthjs/next-auth" />
 </a>
+<div>
+<a href="https://vercel.com?utm_source=nextauthjs&utm_campaign=oss">
+<img width="170px" src="https://raw.githubusercontent.com/nextauthjs/next-auth/canary/www/static/img/powered-by-vercel.svg" alt="Powered By Vercel" />
+</a>
+</div>
+<div>
+<p align="left">Thanks to Vercel sponsoring this project by allowing it to be deployed for free for the entire NextAuth.js Team</p>
+</div>
 
 ## Contributing
 

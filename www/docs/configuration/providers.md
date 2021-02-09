@@ -11,34 +11,14 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 
 ### Built-in OAuth providers
 
-* [Apple](/providers/apple)
-* [Atlassian](/providers/atlassian)
-* [Auth0](/providers/auth0)
-* [Azure Active Directory B2C](/providers/azure-ad-b2c)
-* [Basecamp](/providers/basecamp)
-* [Battle.net](/providers/battle.net)
-* [Box](/providers/box)
-* [Bungie](/providers/bungie)
-* [Amazon Cognito](/providers/cognito)
-* [Discord](/providers/discord)
-* [Facebook](/providers/facebook)
-* [Foursquare](/providers/foursquare)
-* [FusionAuth](/providers/fusionauth)
-* [GitHub](/providers/github)
-* [GitLab](/providers/gitlab)
-* [Google](/providers/google)
-* [IdentityServer4](/providers/identity-server4)
-* [LinkedIn](/providers/linkedin)
-* [Mail.ru](/providers/mailru)
-* [Mixer](/providers/mixer)
-* [Netlify](/providers/netlify)
-* [Okta](/providers/okta)
-* [Slack](/providers/slack)
-* [Spotify](/providers/spotify)
-* [Strava](/providers/strava)
-* [Twitch](/providers/Twitch)
-* [Twitter](/providers/twitter)
-* [Yandex](/providers/yandex)
+<ul>
+{Object.entries(require("../../providers.json"))
+  .filter(([key]) => !["email", "credentials"].includes(key))
+  .sort(([, a], [, b]) => a.localeCompare(b))
+  .map(([key, name]) =>
+    <li key={key}><a href={`/providers/${key}`}>{name}</a></li>
+)}
+</ul>
 
 ### Using a built-in OAuth provider
 
@@ -134,24 +114,26 @@ providers: [
 
 ### OAuth provider options
 
-|        Name         |                         Description                         |              Type               | Required |
-| :-----------------: | :---------------------------------------------------------: | :-----------------------------: | :------: |
-|         id          |                 Unique ID for the provider                  |            `string`             |   Yes    |
-|        name         |              Descriptive name for the provider              |            `string`             |   Yes    |
-|        type         |     Type of provider, in this case it should be `oauth`     | `oauth`, `email`, `credentials` |   Yes    |
-|       version       |          OAuth version (e.g. '1.0', '1.0a', '2.0')          |            `string`             |   Yes    |
-|   accessTokenUrl    |            Endpoint to retrieve an access token             |            `string`             |   Yes    |
-|  authorizationUrl   |       Endpoint to request authorization from the user       |            `string`             |   Yes    |
-|      clientId       |               Client ID of the OAuth provider               |            `string`             |   Yes    |
-|    clientSecret     |             Client Secret of the OAuth provider             |            `string`             |    No    |
-|        scope        |        OAuth access scopes (expects array or string)        |     `string` or `string[]`      |    No    |
-|       params        |           Additional authorization URL parameters           |            `object`             |    No    |
-|   requestTokenUrl   |            Endpoint to retrieve a request token             |            `string`             |    No    |
-| authorizationParams | Additional params to be sent to the authorization endpoint  |            `object`             |    No    |
-|     profileUrl      |           Endpoint to retrieve the user's profile           |            `string`             |    No    |
-|       profile       |    An callback returning an object with the user's info     |            `object`             |    No    |
-|       idToken       | Set to `true` for services that use ID Tokens (e.g. OpenID) |            `boolean`            |    No    |
-|       headers       |    Any headers that should be sent to the OAuth provider    |            `object`             |    No    |
+|        Name         |                           Description                            |              Type               | Required |
+| :-----------------: | :--------------------------------------------------------------: | :-----------------------------: | :------: |
+|         id          |                    Unique ID for the provider                    |            `string`             |   Yes    |
+|        name         |                Descriptive name for the provider                 |            `string`             |   Yes    |
+|        type         |       Type of provider, in this case it should be `oauth`        | `oauth`, `email`, `credentials` |   Yes    |
+|       version       |            OAuth version (e.g. '1.0', '1.0a', '2.0')             |            `string`             |   Yes    |
+|   accessTokenUrl    |               Endpoint to retrieve an access token               |            `string`             |   Yes    |
+|  authorizationUrl   |         Endpoint to request authorization from the user          |            `string`             |   Yes    |
+|      clientId       |                 Client ID of the OAuth provider                  |            `string`             |   Yes    |
+|    clientSecret     |               Client Secret of the OAuth provider                |            `string`             |    No    |
+|        scope        |          OAuth access scopes (expects array or string)           |     `string` or `string[]`      |    No    |
+|       params        |             Additional authorization URL parameters              |            `object`             |    No    |
+|   requestTokenUrl   |               Endpoint to retrieve a request token               |            `string`             |    No    |
+| authorizationParams |    Additional params to be sent to the authorization endpoint    |            `object`             |    No    |
+|     profileUrl      |             Endpoint to retrieve the user's profile              |            `string`             |    No    |
+|       profile       |       An callback returning an object with the user's info       |            `object`             |    No    |
+|       idToken       |   Set to `true` for services that use ID Tokens (e.g. OpenID)    |            `boolean`            |    No    |
+|       headers       |      Any headers that should be sent to the OAuth provider       |            `object`             |    No    |
+|     protection      | Additional security for OAuth login flows (defaults to `state`)  |     `pkce`, `state`, `none`     |    No    |
+|        state        | Same as `protection: "state"`. Being deprecated, use protection. |            `boolean`            |    No    |
 
 ## Sign in with Email
 
@@ -217,7 +199,7 @@ providers: [
       }
     }
   })
-}
+]
 ...
 ```
 

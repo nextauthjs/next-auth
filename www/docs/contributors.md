@@ -20,7 +20,7 @@ _Special thanks to Lori Karikari for creating most of the providers, to Nico Dom
 
 NextAuth.js as it exists today has been possible thanks to the work of many individual contributors.
 
-Thank you to the [dozens of individual contributors](https://github.com/iaincollins/next-auth/graphs/contributors) who have help shaped NextAuth.js. 
+Thank you to the [dozens of individual contributors](https://github.com/nextauthjs/next-auth/graphs/contributors) who have help shaped NextAuth.js. 
 
 ## History
 

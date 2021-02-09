@@ -22,7 +22,7 @@ providers: [
     clientId: process.env.IdentityServer4_CLIENT_ID,
     clientSecret: process.env.IdentityServer4_CLIENT_SECRET
   })
-}
+]
 ...
 ```
 

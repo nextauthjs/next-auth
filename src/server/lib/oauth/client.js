@@ -7,6 +7,7 @@ import { sign as jwtSign } from 'jsonwebtoken'
  * @TODO Refactor to remove dependancy on 'oauth' package
  * It is already quite monkey patched, we don't use all the features and and it
  * would be easier to maintain if all the code was native to next-auth.
+ * @param {import("../..").Provider} provider
  */
 export default function oAuthClient (provider) {
   if (provider.version?.startsWith('2.')) {
@@ -39,7 +40,7 @@ export default function oAuthClient (provider) {
   )
 
   // Promisify get() and getOAuth2AccessToken() for OAuth1
-  const originalGet = oauth1Client.get
+  const originalGet = oauth1Client.get.bind(oauth1Client)
   oauth1Client.get = (...args) => {
     return new Promise((resolve, reject) => {
       originalGet(...args, (error, result) => {
@@ -50,7 +51,7 @@ export default function oAuthClient (provider) {
       })
     })
   }
-  const originalGetOAuth1AccessToken = oauth1Client.getOAuthAccessToken
+  const originalGetOAuth1AccessToken = oauth1Client.getOAuthAccessToken.bind(oauth1Client)
   oauth1Client.getOAuthAccessToken = (...args) => {
     return new Promise((resolve, reject) => {
       originalGetOAuth1AccessToken(...args, (error, accessToken, refreshToken, results) => {
@@ -62,7 +63,7 @@ export default function oAuthClient (provider) {
     })
   }
 
-  const originalGetOAuthRequestToken = oauth1Client.getOAuthRequestToken
+  const originalGetOAuthRequestToken = oauth1Client.getOAuthRequestToken.bind(oauth1Client)
   oauth1Client.getOAuthRequestToken = (...args) => {
     return new Promise((resolve, reject) => {
       originalGetOAuthRequestToken(...args, (error, oauthToken) => {
@@ -86,8 +87,11 @@ export default function oAuthClient (provider) {
 
 /**
  * Ported from https://github.com/ciaranj/node-oauth/blob/a7f8a1e21c362eb4ed2039431fb9ac2ae749f26a/lib/oauth2.js
+ * @param {string} code
+ * @param {import("../..").Provider} provider
+ * @param {string | undefined} codeVerifier
  */
-async function getOAuth2AccessToken (code, provider) {
+async function getOAuth2AccessToken (code, provider, codeVerifier) {
   const url = provider.accessTokenUrl
   const params = { ...provider.params }
   const headers = { ...provider.headers }
@@ -128,8 +132,12 @@ async function getOAuth2AccessToken (code, provider) {
     headers.Authorization = 'Basic ' + Buffer.from((provider.clientId + ':' + provider.clientSecret)).toString('base64')
   }
 
-  if ((provider.id === 'okta' || provider.id === 'identity-server4') && !headers.Authorization) {
+  if (provider.id === 'identity-server4' && !headers.Authorization) {
     headers.Authorization = `Bearer ${code}`
+  }
+
+  if (provider.protection === 'pkce') {
+    params.code_verifier = codeVerifier
   }
 
   const postData = querystring.stringify(params)
@@ -147,25 +155,29 @@ async function getOAuth2AccessToken (code, provider) {
           return reject(error)
         }
 
-        let results
+        let raw
         try {
           // As of http://tools.ietf.org/html/draft-ietf-oauth-v2-07
           // responses should be in JSON
-          results = JSON.parse(data)
-        } catch (e) {
+          raw = JSON.parse(data)
+        } catch {
           // However both Facebook + Github currently use rev05 of the spec  and neither
           // seem to specify a content-type correctly in their response headers. :(
           // Clients of these services suffer a minor performance cost.
-          results = querystring.parse(data)
+          raw = querystring.parse(data)
         }
-        let accessToken
-        if (provider.id === 'spotify') {
-          accessToken = results.authed_user.access_token
-        } else {
-          accessToken = results.access_token
-        }
-        const refreshToken = results.refresh_token
-        resolve({ accessToken, refreshToken, results })
+
+        const accessToken = provider.id === 'slack'
+          ? raw.authed_user.access_token
+          : raw.access_token
+
+        resolve({
+          accessToken,
+          accessTokenExpires: null,
+          refreshToken: raw.refresh_token,
+          idToken: raw.id_token,
+          ...raw
+        })
       }
     )
   })
@@ -176,6 +188,9 @@ async function getOAuth2AccessToken (code, provider) {
  *
  * 18/08/2020 @robertcraigie added results parameter to pass data to an optional request preparer.
  * e.g. see providers/bungie
+ * @param {import("../..").Provider} provider
+ * @param {string} accessToken
+ * @param {any} results
  */
 async function getOAuth2 (provider, accessToken, results) {
   let url = provider.profileUrl
@@ -184,8 +199,8 @@ async function getOAuth2 (provider, accessToken, results) {
   if (this._useAuthorizationHeaderForGET) {
     headers.Authorization = this.buildAuthHeader(accessToken)
 
-    // Mail.ru requires 'access_token' as URL request parameter
-    if (provider.id === 'mailru') {
+    // Mail.ru & vk.com require 'access_token' as URL request parameter
+    if (['mailru', 'vk'].includes(provider.id)) {
       const safeAccessTokenURL = new URL(url)
       safeAccessTokenURL.searchParams.append('access_token', accessToken)
       url = safeAccessTokenURL.href

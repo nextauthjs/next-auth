@@ -6,10 +6,11 @@ import Basecamp from './basecamp'
 import BattleNet from './battlenet'
 import Box from './box'
 import Bungie from './bungie'
-import Credentials from './credentials'
 import Cognito from './cognito'
+import Credentials from './credentials'
 import Discord from './discord'
 import Email from './email'
+import EVEOnline from './eveonline'
 import Facebook from './facebook'
 import Foursquare from './foursquare'
 import FusionAuth from './fusionauth'
@@ -17,32 +18,37 @@ import GitHub from './github'
 import GitLab from './gitlab'
 import Google from './google'
 import IdentityServer4 from './identity-server4'
+import LINE from './line'
 import LinkedIn from './linkedin'
 import MailRu from './mailru'
-import Mixer from './mixer'
+import Medium from './medium'
 import Netlify from './netlify'
 import Okta from './okta'
 import Osso from './osso'
+import Reddit from './reddit'
+import Salesforce from './salesforce'
 import Slack from './slack'
 import Spotify from './spotify'
 import Strava from './strava'
 import Twitch from './twitch'
 import Twitter from './twitter'
+import VK from './vk'
 import Yandex from './yandex'
 
 export default {
+  Apple,
   Atlassian,
   Auth0,
-  Apple,
   AzureADB2C,
   Basecamp,
   BattleNet,
   Box,
   Bungie,
-  Credentials,
   Cognito,
+  Credentials,
   Discord,
   Email,
+  EVEOnline,
   Facebook,
   Foursquare,
   FusionAuth,
@@ -50,16 +56,20 @@ export default {
   GitLab,
   Google,
   IdentityServer4,
+  LINE,
   LinkedIn,
   MailRu,
-  Mixer,
+  Medium,
   Netlify,
   Okta,
   Osso,
+  Reddit,
+  Salesforce,
   Slack,
   Spotify,
   Strava,
-  Twitter,
   Twitch,
+  Twitter,
+  VK,
   Yandex
 }
