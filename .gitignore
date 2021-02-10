@@ -24,6 +24,7 @@ node_modules
 .docusaurus
 .cache-loader
 .next
+www/providers.json
 
 # VS
 /.vs/slnx.sqlite-journal

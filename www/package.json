@@ -3,11 +3,12 @@
   "version": "0.1.1",
   "scripts": {
     "start": "docusaurus start",
-    "build": "docusaurus build",
+    "build": "npm run generate-providers && docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "lint": "standard",
-    "lint:fix": "standard --fix"
+    "lint:fix": "standard --fix",
+    "generate-providers": "node ./scripts/generate-providers.js"
   },
   "dependencies": {
     "@docusaurus/core": "^2.0.0-alpha.66",
