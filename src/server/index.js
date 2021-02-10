@@ -130,7 +130,8 @@ async function NextAuthHandler (req, res, userOptions) {
         ...defaultCallbacks,
         ...userOptions.callbacks
       },
-      pkce: {}
+      pkce: {},
+      logger
     }
 
     await callbackUrlHandler(req, res)
