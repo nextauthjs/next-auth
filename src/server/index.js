@@ -1,7 +1,7 @@
 import adapters from '../adapters'
 import jwt from '../lib/jwt'
 import parseUrl from '../lib/parse-url'
-import logger from '../lib/logger'
+import logger, { setLogger } from '../lib/logger'
 import * as cookie from './lib/cookie'
 import * as defaultEvents from './lib/default-events'
 import * as defaultCallbacks from './lib/default-callbacks'
@@ -27,6 +27,9 @@ if (!process.env.NEXTAUTH_URL) {
  * @param {import(".").NextAuthOptions} userOptions
  */
 async function NextAuthHandler (req, res, userOptions) {
+  if (userOptions.logger) {
+    setLogger(userOptions.logger)
+  }
   // If debug enabled, set ENV VAR so that logger logs debug messages
   if (userOptions.debug) {
     process.env._NEXTAUTH_DEBUG = true
@@ -127,7 +130,8 @@ async function NextAuthHandler (req, res, userOptions) {
         ...defaultCallbacks,
         ...userOptions.callbacks
       },
-      pkce: {}
+      pkce: {},
+      logger
     }
 
     await callbackUrlHandler(req, res)
@@ -220,6 +224,21 @@ async function NextAuthHandler (req, res, userOptions) {
             return routes.callback(req, res)
           }
           break
+        case '_log':
+          try {
+            if (!userOptions.logger) return
+            const {
+              code = 'CLIENT_ERROR',
+              level = 'error',
+              message = '[]'
+            } = req.body
+
+            logger[level](code, ...JSON.parse(message))
+          } catch (error) {
+            // If logging itself failed...
+            logger.error('LOGGER_ERROR', error)
+          }
+          return res.end()
         default:
       }
     }

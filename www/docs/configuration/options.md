@@ -307,6 +307,42 @@ Set debug to `true` to enable debug messages for authentication and database ope
 
 ---
 
+### logger
+
+* **Default value**: `console`
+* **Required**: *No*
+
+#### Description
+
+Override any of the logger levels (`undefined` levels will use the built-in logger), and intercept logs in NextAuth. You can use this to send NextAuth logs to a third-party logging service.
+
+Example:
+```js title="/pages/api/auth/[...nextauth].js"
+import log from "logging-service"
+
+export default NextAuth({
+  ...
+  logger: {
+    error(code, ...message) {
+      log.error(code, message)
+    },
+    warn(code, ...message) {
+      log.warn(code, message)
+    }
+    debug(code, ...message) {
+      log.debug(code, message)
+    }
+  }
+  ...
+})
+```
+
+:::note
+If the `debug` level is defined by the user, it will be called regardless of the `debug: false` [option](#debug).
+:::
+
+---
+
 ### theme
 
 * **Default value**: `"auto"`
