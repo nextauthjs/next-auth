@@ -1,8 +1,17 @@
+// @ts-check
 import { h } from 'preact' // eslint-disable-line no-unused-vars
 import render from 'preact-render-to-string'
 
-/** Renders an error page. */
-export default function error ({ baseUrl, basePath, error, res }) {
+/**
+ * Renders an error page.
+ * @param {{
+ *   baseUrl: string
+ *   basePath: string
+ *   error?: string
+ *   res: import("..").NextAuthResponse
+ * }} params
+ */
+export default function error ({ baseUrl, basePath, error = 'default', res }) {
   const signinPageUrl = `${baseUrl}${basePath}/signin`
 
   const errors = {
@@ -44,7 +53,7 @@ export default function error ({ baseUrl, basePath, error, res }) {
     }
   }
 
-  const { statusCode, heading, message, signin } = errors[error.toLowerCase()] || errors.default
+  const { statusCode, heading, message, signin } = errors[error.toLowerCase()]
 
   res.status(statusCode)
 
