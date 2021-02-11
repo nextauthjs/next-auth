@@ -54,7 +54,7 @@ export default function Header () {
                 className={styles.button}
                 onClick={(e) => {
                   e.preventDefault()
-                  signOut({ redirect: false })
+                  signOut()
                 }}
               >
                 Sign out

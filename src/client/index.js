@@ -278,7 +278,11 @@ export async function signIn (provider, options = {}, authorizationParams = {}) 
   const res = await fetch(_signInUrl, fetchOptions)
   const data = await res.json()
   if (redirect || !isCredentials) {
-    window.location = data.url ?? callbackUrl
+    const url = data.url ?? callbackUrl
+    window.location = url
+    // If url contains a hash, the browser does not reload the page. We reload manually
+    if (url.includes('#')) window.location.reload()
+
     return
   }
 
@@ -324,7 +328,10 @@ export async function signOut (options = {}) {
   const data = await res.json()
   _sendMessage({ event: 'session', data: { trigger: 'signout' } })
   if (redirect) {
-    window.location = data.url ?? callbackUrl
+    const url = data.url ?? callbackUrl
+    window.location = url
+    // If url contains a hash, the browser does not reload the page. We reload manually
+    if (url.includes('#')) window.location.reload()
     return
   }
 
