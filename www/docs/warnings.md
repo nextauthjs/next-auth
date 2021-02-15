@@ -47,9 +47,3 @@ You can use [node-jose-tools](https://www.npmjs.com/package/node-jose-tools) to 
 **Option 2**: Specify custom encode/decode functions on the jwt object. This gives you complete control over signing / verification / etc.
 
 #### JWT_AUTO_GENERATED_ENCRYPTION_KEY
-
-#### STATE_OPTION_DEPRECATION
-You provided `state: true` or `state: false` as a provider option. This is being deprecated in a later release in favour of `protection: "state"` and `protection: "none"` respectively. To remedy this warning:
-
-- If you use `state: true`, just simply remove it. The default is `protection: "state"` already..
-- If you use `state: false`, set `protection: "none"`.
