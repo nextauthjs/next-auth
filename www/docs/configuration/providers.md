@@ -113,9 +113,10 @@ providers: [
 ```
 
 :::tip
-If you think your custom provider might be useful to others, we encourage you to open a PR and add it to the built-in list so others can discover it much more easily! You only need to add two files:
-1. Your config: [`src/providers/{provider}.js`](https://github.com/nextauthjs/next-auth/tree/main/src/providers)
-2. Provider documentation: [`www/docs/providers/{provider}.md`](https://github.com/nextauthjs/next-auth/tree/main/www/docs/providers)
+If you think your custom provider might be useful to others, we encourage you to open a PR and add it to the built-in list so others can discover it much more easily! You only need to add three changes:
+1. Add your config: [`src/providers/{provider}.js`](https://github.com/nextauthjs/next-auth/tree/main/src/providers)
+2. Re-export your config: at [`src/providers/index.js`](https://github.com/nextauthjs/next-auth/blob/main/src/providers/index.js)
+3. Add provider documentation: [`www/docs/providers/{provider}.md`](https://github.com/nextauthjs/next-auth/tree/main/www/docs/providers)
 
 You can look at the existing built-in providers for inspiration.
 :::
