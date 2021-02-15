@@ -2,8 +2,10 @@ name: Release
 on:
   push:
     branches:
-      - main
-      - canary
+      - 'master'
+      - 'next'
+      - '3.x'
+  pull_request:
 jobs:
   release:
     name: 'Release'
