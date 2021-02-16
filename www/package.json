@@ -2,7 +2,7 @@
   "name": "next-auth-docs",
   "version": "0.1.1",
   "scripts": {
-    "start": "docusaurus start",
+    "start": "npm run generate-providers && docusaurus start",
     "build": "npm run generate-providers && docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
