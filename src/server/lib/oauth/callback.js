@@ -62,11 +62,14 @@ export default async function oAuthCallback (req) {
     const {
       oauth_token: oauthToken, oauth_verifier: oauthVerifier
     } = req.query
-    const tokens = await client.getOAuthAccessToken(oauthToken, null, oauthVerifier)
+
+    const { tokenSecret } = await client.getOAuthRequestToken(provider.params)
+    const tokens = await client.getOAuthAccessToken(oauthToken, tokenSecret, oauthVerifier)
+    console.log({ tokens })
     const profileData = await client.get(
       provider.profileUrl,
-      tokens.accessToken,
-      tokens.refreshToken
+      tokens.token,
+      tokens.tokenSecret
     )
 
     return getProfile({ profileData, tokens, provider })
@@ -89,6 +92,10 @@ export default async function oAuthCallback (req) {
  *     expires_in?: string | Date | null
  *     refresh_token?: string
  *     id_token?: string
+ *     token?: string
+ *     token_secret?: string
+ *     tokenSecret?: string
+ *     params?: any
  *   }
  *   provider: import("../..").Provider
  *   user?: object

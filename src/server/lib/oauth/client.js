@@ -54,11 +54,11 @@ export default function oAuthClient (provider) {
   const originalGetOAuth1AccessToken = oauth1Client.getOAuthAccessToken.bind(oauth1Client)
   oauth1Client.getOAuthAccessToken = (...args) => {
     return new Promise((resolve, reject) => {
-      originalGetOAuth1AccessToken(...args, (error, accessToken, refreshToken, results) => {
+      originalGetOAuth1AccessToken(...args, (error, token, tokenSecret, params) => {
         if (error) {
           return reject(error)
         }
-        resolve({ accessToken, refreshToken, results })
+        resolve({ token, tokenSecret, params })
       })
     })
   }
@@ -66,11 +66,11 @@ export default function oAuthClient (provider) {
   const originalGetOAuthRequestToken = oauth1Client.getOAuthRequestToken.bind(oauth1Client)
   oauth1Client.getOAuthRequestToken = (...args) => {
     return new Promise((resolve, reject) => {
-      originalGetOAuthRequestToken(...args, (error, oauthToken) => {
+      originalGetOAuthRequestToken(...args, (error, token, tokenSecret, params) => {
         if (error) {
           return reject(error)
         }
-        resolve(oauthToken)
+        resolve({ token, tokenSecret, params })
       })
     })
   }
