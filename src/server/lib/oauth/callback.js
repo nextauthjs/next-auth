@@ -65,7 +65,6 @@ export default async function oAuthCallback (req) {
 
     const { tokenSecret } = await client.getOAuthRequestToken(provider.params)
     const tokens = await client.getOAuthAccessToken(oauthToken, tokenSecret, oauthVerifier)
-    console.log({ tokens })
     const profileData = await client.get(
       provider.profileUrl,
       tokens.token,
