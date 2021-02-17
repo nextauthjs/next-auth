@@ -7,7 +7,7 @@ export default (options) => {
     scope: '',
     accessTokenUrl: 'https://api.twitter.com/oauth/access_token',
     requestTokenUrl: 'https://api.twitter.com/oauth/request_token',
-    authorizationUrl: 'https://api.twitter.com/oauth/authenticate',
+    authorizationUrl: 'https://api.twitter.com/oauth/authorize',
     profileUrl:
       'https://api.twitter.com/1.1/account/verify_credentials.json?include_email=true',
     profile: (profile) => {
