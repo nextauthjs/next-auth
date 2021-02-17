@@ -37,7 +37,7 @@ export default function error ({ baseUrl, basePath, error, res }) {
       message: (
         <div>
           <p>The sign in link is no longer valid.</p>
-          <p>It may have be used already or it may have expired.</p>
+          <p>It may have been used already or it may have expired.</p>
         </div>
       ),
       signin: <p><a className='button' href={signinPageUrl}>Sign in</a></p>

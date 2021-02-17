@@ -55,13 +55,13 @@ However, it should not be enabled against production databases as it may cause d
 
 ## Prisma Adapter
 
-You can also use NextAuth.js with [Prisma](https://www.prisma.io/docs/).
+You can also use NextAuth.js with the experimental adapter for [Prisma 2](https://www.prisma.io/docs/).
 
 To use this adapter, you need to install Prisma Client and Prisma CLI:
 
 ```
-npm i @prisma/client
-npm add -D @prisma/cli
+npm install @prisma/client
+npm install prisma --save-dev
 ```
 
 Configure your NextAuth.js to use the Prisma adapter:
@@ -91,7 +91,7 @@ While Prisma includes an experimental feature in the migration command that is a
 
 ### Prisma Schema
 
-Create a `schema.prisma` file similar to this one:
+Create a schema file in `prisma/schema.prisma` similar to this one:
 
 ```json title="schema.prisma"
 generator client {
@@ -179,11 +179,21 @@ datasource db {
 
 ### Generate Client
 
-Once you have saved your schema, you can run the Prisma CLI to generate the Prisma Client:
+Once you have saved your schema, use the Prisma CLI to generate the Prisma Client:
 
 ```
-npx @prisma/cli generate
+npx prisma generate
 ```
+
+To configure you database to use the new schema (i.e. create tables and columns) use the `primsa migrate` command:
+
+```
+npx prisma migrate dev --preview-feature
+```
+
+To generate a schema in this way with the above example code, you will need to specify your datbase connection string in the environment variable `DATABASE_URL`. You can do this by setting it in a `.env` file at the root of your project.
+
+As this feature is experimental in Prisma, it is behind a feature flag. You should check your database schema manually after using this option. See the [Prisma documentation](https://www.prisma.io/docs/) for information on how to use `prisma migrate`.
 
 ### Custom Models
 

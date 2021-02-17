@@ -133,7 +133,7 @@ The `getProviders()` method returns the list of providers currently configured f
 
 It calls `/api/auth/providers` and returns a list of the currently configured authentication providers.
 
-It can be use useful if you are creating a dynamic custom sign in page.
+It can be useful if you are creating a dynamic custom sign in page.
 
 ---
 
@@ -210,6 +210,35 @@ e.g.
 
 The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect). By default it requires the URL to be an absolute URL at the same hostname, or else it will redirect to the homepage. You can define your own redirect callback to allow other URLs, including supporting relative URLs.
 
+#### Using the redirect: false option
+
+When you use the `credentials` provider, you might not want the user to redirect to an error page if an error occurs, so you can handle any errors (like wrong credentials given by the user) on the same page. For that, you can pass `redirect: false` in the second parameter object. `signIn` then will return a Promise, that resolves to the following:
+
+```ts
+{
+  /**
+   * Will be different error codes,
+   * depending on the type of error.
+   */
+  error: string | undefined
+  /**
+   * HTTP status code,
+   * hints the kind of error that happened. 
+   */ 
+  status: number
+  /**
+   * `true` if the signin was successful
+   */
+  ok: boolean
+  /**
+   * `null` if there was an error,
+   * otherwise the url the user
+   * should have been redirected to.
+   */
+  url: string | null
+}
+```
+
 #### Additional params
 
 It is also possible to pass additional parameters to the `/authorize` endpoint through the third argument of `signIn()`.
@@ -255,6 +284,16 @@ As with the `signIn()` function, you can specify a `callbackUrl` parameter by pa
 e.g. `signOut({ callbackUrl: 'http://localhost:3000/foo' })`
 
 The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect). By default this means it must be an absolute URL at the same hostname (or else it will default to the homepage); you can define your own custom redirect callback to allow other URLs, including supporting relative URLs.
+
+#### Using the redirect: false option
+
+If you pass `redirect: false` to `signOut`, the page will not reload. The session will be deleted, and the `useSession` hook is notified, so any indication about the user will be shown as logged out automatically. It can give a very nice experience for the user.
+
+:::tip
+If you need to redirect to another page but you want to avoid a page reload, you can try:
+`const data = await signOut({redirect: false, callbackUrl: "/foo"})`
+where `data.url` is the validated url you can redirect the user to without any flicker by using Next.js's `useRouter().push(data.url)`
+:::
 
 ---
 

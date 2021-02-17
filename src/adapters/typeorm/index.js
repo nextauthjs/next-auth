@@ -331,7 +331,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
 
         if (verificationRequest && verificationRequest.expires && new Date() > new Date(verificationRequest.expires)) {
           // Delete verification entry so it cannot be used again
-          await manager.delete(VerificationRequest, { token: hashedToken })
+          await manager.delete(VerificationRequest, { identifier, token: hashedToken })
           return null
         }
 
@@ -347,7 +347,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
       try {
         // Delete verification entry so it cannot be used again
         const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
-        await manager.delete(VerificationRequest, { token: hashedToken })
+        await manager.delete(VerificationRequest, { identifier, token: hashedToken })
       } catch (error) {
         logger.error('DELETE_VERIFICATION_REQUEST_ERROR', error)
         return Promise.reject(new Error('DELETE_VERIFICATION_REQUEST_ERROR', error))
