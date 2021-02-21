@@ -7,12 +7,25 @@
    Open Source. Full Stack. Own Your Data.
    </p>
    <p align="center" style="align: center;">
-      <img src="https://github.com/nextauthjs/next-auth/workflows/Build%20Test/badge.svg" alt="Build Test" />
-      <img src="https://github.com/nextauthjs/next-auth/workflows/Integration%20Test/badge.svg" alt="Integration Test" />
-      <img src="https://img.shields.io/bundlephobia/minzip/next-auth" alt="Bundle Size"/>
-      <img src="https://img.shields.io/npm/dm/next-auth" alt="Downloads" />
-      <img src="https://img.shields.io/github/stars/nextauthjs/next-auth" alt="Github Stars" />
-      <img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?include_prereleases" alt="Github Release" />
+      <a href="https://github.com/nextauthjs/next-auth/actions?query=workflow%3ARelease">
+        <img src="https://github.com/nextauthjs/next-auth/workflows/Release/badge.svg" alt="Release" />
+      </a>
+      <a href="https://github.com/nextauthjs/next-auth/actions?query=workflow%3A%22Integration+Test%22">
+        <img src="https://github.com/nextauthjs/next-auth/workflows/Integration%20Test/badge.svg" alt="Integration Test" />
+      </a>
+      <a href="https://bundlephobia.com/result?p=next-auth">
+        <img src="https://img.shields.io/bundlephobia/minzip/next-auth" alt="Bundle Size"/>
+      </a>
+      <a href="https://www.npmtrends.com/next-auth">
+        <img src="https://img.shields.io/npm/dm/next-auth" alt="Downloads" />
+      </a>
+      <a href="https://github.com/nextauthjs/next-auth/stargazers">
+        <img src="https://img.shields.io/github/stars/nextauthjs/next-auth" alt="Github Stars" />
+      </a>
+      <a href="https://www.npmjs.com/package/next-auth">
+        <img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?label=latest" alt="Github Stable Release" />
+      </a>
+      <img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?include_prereleases&label=prerelease&sort=semver" alt="Github Prelease" />
    </p>
 </p>
 
@@ -154,4 +167,3 @@ We're open to all community contributions! If you'd like to contribute in any wa
 ## License
 
 ISC
-
