@@ -145,6 +145,8 @@ async function NextAuthHandler (req, res, userOptions) {
           return routes.providers(req, res)
         case 'session':
           return routes.session(req, res)
+        case 'tokens':
+          return routes.tokens(req, res)
         case 'csrf':
           return res.json({ csrfToken })
         case 'signin':

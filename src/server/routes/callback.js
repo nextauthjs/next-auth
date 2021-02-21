@@ -281,3 +281,56 @@ export default async function callback (req, res) {
   }
   return res.status(500).end(`Error: Callback for provider type ${provider.type} not supported`)
 }
+
+/**
+ * A common usecase is to put the access_token into the session token.
+ * While nothing wrong with it, the access_token quickly fills up the 4096 bytes
+ * allowed by most browsers. We therefore put id_token, and access_token/refresh_token
+ * in their own cookies.
+ * @param {{
+ *  cookies: import('../cookies').CookieOptions
+ *  res: import('next').NextApiResponse
+ *  maxAge: number
+ *  account: import('../lib/oauth/index').Account
+ *  secret: string
+ * }} SaveOAuthTokensInCookieParams
+ */
+function saveOAuthTokensInCookie ({ res, cookies, account, maxAge, secret }) {
+  const expires = new Date()
+  expires.setTime(expires.getTime() + (maxAge * 1000))
+
+  if (account.accessToken) {
+    let accessTokenExpires = account.accessTokenExpires
+    if (accessTokenExpires) {
+      accessTokenExpires = new Date(accessTokenExpires)
+    } else {
+      accessTokenExpires = expires
+    }
+    // Save the access_token and refresh_token together
+    const accessToken = {
+      accessToken: account.accessToken,
+      refreshToken: account.refreshToken
+    }
+
+    // TODO: Encrypt with secret
+    const encryptedAccessToken = JSON.stringify(accessToken)
+
+    cookie.set(
+      res,
+      cookies.accessToken.name,
+      encryptedAccessToken,
+      { expires: accessTokenExpires.toISOString(), ...cookies.accessToken.options }
+    )
+  }
+
+  if (account.idToken) {
+    // TODO: Encrypt with secret
+    const encryptedIdToken = account.idToken
+    cookie.set(
+      res,
+      cookies.idToken.name,
+      encryptedIdToken,
+      { expires: expires, ...cookies.idToken.options }
+    )
+  }
+}

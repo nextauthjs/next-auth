@@ -289,7 +289,6 @@ export async function signIn (provider, options = {}, authorizationParams = {}) 
   }
 
   const error = new URL(data.url).searchParams.get('error')
-
   if (res.ok) {
     await __NEXTAUTH._getSession({ event: 'storage' })
   }
