@@ -3,15 +3,15 @@ id: refresh-token-rotation
 title: Refresh Token Rotation
 ---
 
-## Refresh Token Rotation
-
 While NextAuth.js doesn't automatically handle access token rotation for OAuth providers, this functionality can be implemented using [callbacks](https://next-auth.js.org/configuration/callbacks).
 
-### Source Code
+## Source Code
 
 _A working example can be accessed [here](https://github.com/lawrencecchen/next-auth-refresh-tokens)._
 
-### Implementation
+## Implementation
+
+### Server Side
 
 Using a [JWT callback](https://next-auth.js.org/configuration/callbacks#jwt-callback) and a [session callback](https://next-auth.js.org/configuration/callbacks#session-callback), we can persist OAuth tokens and refresh them when they expire.
 
@@ -29,7 +29,52 @@ const GOOGLE_AUTHORIZATION_URL =
     response_type: "code",
   });
 
-const options = {
+/**
+ * Takes a token, and returns a new token with updated
+ * `accessToken` and `accessTokenExpires`. If an error occurs,
+ * returns the old token and an error property
+ */
+async function refreshAccessToken(token) {
+  try {
+    const url =
+      "https://oauth2.googleapis.com/token?" +
+      new URLSearchParams({
+        client_id: process.env.GOOGLE_CLIENT_ID,
+        client_secret: process.env.GOOGLE_CLIENT_SECRET,
+        grant_type: "refresh_token",
+        refresh_token: token.refreshToken,
+      });
+
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      method: "POST",
+    });
+
+    const refreshedTokens = await response.json();
+
+    if (!response.ok) {
+      throw refreshedTokens;
+    }
+
+    return {
+      ...token,
+      accessToken: refreshedTokens.access_token,
+      accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
+      refreshToken: refreshedTokens.refresh_token ?? token.refreshToken, // Fall back to old refresh token
+    };
+  } catch (error) {
+    console.log(error);
+
+    return {
+      ...token,
+      error: "RefreshAccessTokenError",
+    };
+  }
+}
+
+export default NextAuth({
   providers: [
     Providers.Google({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -44,7 +89,6 @@ const options = {
         return {
           accessToken: account.accessToken,
           accessTokenExpires: Date.now() + account.expires_in * 1000,
-          refreshToken2: account.refresh_token,
           refreshToken: account.refresh_token,
           user,
         };
@@ -68,50 +112,28 @@ const options = {
       return session;
     },
   },
-};
+});
+```
 
-/**
- * Takes a token, and returns a new token with updated
- * `accessToken` and `accessTokenExpires`. If an error occurs,
- * returns the old token and an error property
- */
-async function refreshAccessToken(token) {
-  try {
-    const url =
-      "https://oauth2.googleapis.com/token?" +
-      new URLSearchParams({
-        client_id: process.env.GOOGLE_CLIENT_ID,
-        client_secret: process.env.GOOGLE_CLIENT_SECRET,
-        grant_type: "refresh_token",
-        refresh_token: token.refreshToken2,
-      });
+### Client Side
 
-    const response = await fetch(url, {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      method: "POST",
-    });
+The `RefreshAccessTokenError` error that is caught in the `refreshAccessToken()` method is passed all the way to the client. This means that you can direct the user to the sign in flow if we cannot refresh their token.
 
-    const refreshedTokens = await response.json();
+We can handle this functionality as a side effect:
 
-    if (!response.ok) {
-      throw refreshedTokens;
+```js title="pages/auth/[...nextauth.js]"
+import { signIn, useSession } from "next-auth/client";
+import { useEffect } from "react";
+
+const HomePage() {
+  const [session] = useSession();
+
+  useEffect(() => {
+    if (session?.error === "RefreshAccessTokenError") {
+      signIn(); // Force sign in to hopefully resolve error
     }
+  }, [session]);
 
-    return {
-      ...token,
-      accessToken: refreshedTokens.access_token,
-      accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
-      refreshToken: refreshedTokens.refresh_token,
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      ...token,
-      error: "RefreshAccessTokenError",
-    };
-  }
+return (...)
 }
-export default (req, res) => NextAuth(req, res, options);
 ```
