@@ -256,6 +256,9 @@ export async function signIn (provider, options = {}, authorizationParams = {}) 
     return
   }
   const isCredentials = providers[provider].type === 'credentials'
+  const isEmail = providers[provider].type === 'email'
+  const canRedirectBeDisabled = isCredentials || isEmail
+
   const signInUrl = isCredentials
     ? `${baseUrl}/callback/${provider}`
     : `${baseUrl}/signin/${provider}`
@@ -277,7 +280,7 @@ export async function signIn (provider, options = {}, authorizationParams = {}) 
   const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
   const res = await fetch(_signInUrl, fetchOptions)
   const data = await res.json()
-  if (redirect || !isCredentials) {
+  if (redirect || !canRedirectBeDisabled) {
     window.location = data.url ?? callbackUrl
     return
   }
