@@ -34,7 +34,10 @@ import Twitter from './twitter'
 import VK from './vk'
 import Yandex from './yandex'
 
-export default {
+/**
+ * @type import("../../providers").DefaultProviders
+ */
+const defaultProviders = {
   Apple,
   Atlassian,
   Auth0,
@@ -71,3 +74,5 @@ export default {
   VK,
   Yandex
 }
+
+export default defaultProviders

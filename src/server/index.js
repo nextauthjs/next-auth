@@ -24,7 +24,7 @@ if (!process.env.NEXTAUTH_URL) {
 /**
  * @param {import("next").NextApiRequest} req
  * @param {import("next").NextApiResponse} res
- * @param {import(".").NextAuthOptions} userOptions
+ * @param {import("../..").NextAuthOptions} userOptions
  */
 async function NextAuthHandler (req, res, userOptions) {
   if (userOptions.logger) {

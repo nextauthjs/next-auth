@@ -39,11 +39,11 @@ export async function redirect (url, baseUrl) {
  * The session callback is called whenever a session is checked.
  * e.g. `getSession()`, `useSession()`, `/api/auth/session` (etc)
  *
- * @param  {object} session  Session object
- * @param  {object} token    JSON Web Token (if enabled)
- * @return {Promise<object>} Session that will be returned to the client
+ * @param  {import("../../..").Session} session  Session object
+ * @param  {import("../../../jwt").JWT} token    JSON Web Token (if enabled)
+ * @return {Promise<import("../../..").Session>} Session that will be returned to the client
  */
-export async function session (session) {
+export async function session (session, token) {
   return session
 }
 
@@ -55,7 +55,7 @@ export async function session (session) {
  * with an OAuth provider. It is not avalible on subsequent calls. You can
  * take advantage of this to persist additional data you need to in the JWT.
  *
- * @param  {object} token         Decrypted JSON Web Token
+ * @param  {import("../../../jwt").JWT} token         Decrypted JSON Web Token
  * @param  {object} oAuthProfile  OAuth profile - only available on sign in
  * @return {Promise<object>}      JSON Web Token that will be saved
  */

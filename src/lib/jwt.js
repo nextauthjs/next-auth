@@ -93,7 +93,7 @@ async function decode ({
 /**
  * Server-side method to retrieve the JWT from `req`.
  * @param {{
- * req: NextApiRequest
+ * req: import("../..").NextApiRequest
  * secureCookie?: boolean
  * cookieName?: string
  * raw?: boolean

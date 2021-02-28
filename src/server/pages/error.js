@@ -8,7 +8,7 @@ import render from 'preact-render-to-string'
  *   baseUrl: string
  *   basePath: string
  *   error?: string
- *   res: import("..").NextAuthResponse
+ *   res: import("../../..").NextAuthResponse
  * }} params
  */
 export default function error ({ baseUrl, basePath, error = 'default', res }) {

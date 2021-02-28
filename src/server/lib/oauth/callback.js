@@ -3,7 +3,7 @@ import oAuthClient from './client'
 import logger from '../../../lib/logger'
 import { OAuthCallbackError } from '../../../lib/errors'
 
-/** @param {import("../..").NextAuthRequest} req */
+/** @param {import("../../../..").NextAuthRequest} req */
 export default async function oAuthCallback (req) {
   const { provider, pkce } = req.options
   const client = oAuthClient(provider)
@@ -90,8 +90,8 @@ export default async function oAuthCallback (req) {
  *     refresh_token?: string
  *     id_token?: string
  *   }
- *   provider: import("../..").Provider
- *   user?: object
+ *   provider: import("../../../../providers").AppProvider
+ *   user?: import("../../../..").User
  * }} profileParams
  */
 async function getProfile ({ profileData, tokens, provider, user }) {
