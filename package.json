@@ -70,6 +70,7 @@
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
+    "@babel/preset-typescript": "^7.13.0",
     "@prisma/client": "^2.16.1",
     "@semantic-release/commit-analyzer": "^8.0.1",
     "@semantic-release/github": "^7.2.0",
@@ -111,8 +112,8 @@
   },
   "funding": [
     {
-      "type" : "github",
-      "url" : "https://github.com/sponsors/balazsorban44"
+      "type": "github",
+      "url": "https://github.com/sponsors/balazsorban44"
     }
   ]
 }
