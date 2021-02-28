@@ -1,32 +1,34 @@
+// Default values
+const defaultHost = 'http://localhost:3000'
+const defaultPath = '/api/auth'
+
 interface ParseUrlReturn {
-  baseUrl: string;
-  basePath: string;
+  baseUrl: string
+  basePath: string
 }
 
 /**
  * Simple universal (client/server) function to split host and path
  * We use this rather than a library because we need to use the same logic both
  * client and server side and we only need to parse out the host and path, while
- * supporting a default value, so a simple split is sufficent.
+ * supporting a default value, so a simple split is sufficient.
  * @param {string} url
  */
-export default function parseUrl (url: string): ParseUrlReturn {
-  // Default values
-  const defaultHost = 'http://localhost:3000';
-  const defaultPath = '/api/auth';
-
-  if (!url) { url = `${defaultHost}${defaultPath}` }
+export default function parseUrl (url?: string): ParseUrlReturn {
+  if (url === undefined || url === '') {
+    url = `${defaultHost}${defaultPath}`
+  }
 
   // Default to HTTPS if no protocol explicitly specified
-  const protocol = url.startsWith('http:') ? 'http' : 'https';
+  const protocol = url.startsWith('http:') ? 'http' : 'https'
 
   // Normalize URLs by stripping protocol and no trailing slash
-  url = url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+  url = url.replace(/^https?:\/\//, '').replace(/\/$/, '')
 
   // Simple split based on first /
-  const [_host, ..._path] = url.split('/');
-  const baseUrl = _host ? `${protocol}://${_host}` : defaultHost;
-  const basePath = _path.length > 0 ? `/${_path.join('/')}` : defaultPath;
+  const [_host, ..._path] = url.split('/')
+  const baseUrl = _host !== '' ? `${protocol}://${_host}` : defaultHost
+  const basePath = _path.length > 0 ? `/${_path.join('/')}` : defaultPath
 
   return { baseUrl, basePath }
 }
