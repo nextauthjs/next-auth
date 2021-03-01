@@ -212,7 +212,18 @@ The URL must be considered valid by the [redirect callback handler](/configurati
 
 #### Using the redirect: false option
 
-When you use the `credentials` provider, you might not want the user to redirect to an error page if an error occurs, so you can handle any errors (like wrong credentials given by the user) on the same page. For that, you can pass `redirect: false` in the second parameter object. `signIn` then will return a Promise, that resolves to the following:
+:::note
+The redirect option is only available for `credentials` and `email` providers.
+:::
+
+In some cases, you might want to deal with the sign in response on the same page and disable the default redirection. For example, if an error occurs (like wrong credentials given by the user), you might want to handle the error on the same page. For that, you can pass `redirect: false` in the second parameter object.
+
+e.g.
+
+- `signIn('credentials', { redirect: false, password: 'password' })`
+- `signIn('email', { redirect: false, email: 'bill@fillmurray.com' })`
+
+`signIn` will then return a Promise, that resolves to the following:
 
 ```ts
 {
