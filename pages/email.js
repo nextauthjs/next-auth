@@ -47,20 +47,16 @@ export default function Page () {
   return (
     <Layout>
       <h1>Test different flows for Email login</h1>
-      <span className='spacing'>Default:</span>
+      <label className='spacing'>
+        Email address:{' '}
+        <input type='text' id='email' name='email' value={email} onChange={handleChange} />
+      </label><br />
       <form onSubmit={handleLogin({ redirect: true, email })}>
-        <label>
-          Email address
-          <input type='text' id='email' name='email' value={email} onChange={handleChange} />
-        </label>
+        <span className='spacing'>Default:</span>
         <button type='submit'>Sign in with Email</button>
       </form>
-      <span className='spacing'>No redirect:</span>
       <form onSubmit={handleLogin({ redirect: false, email })}>
-        <label>
-          Email address
-          <input type='text' id='email' name='email' value={email} onChange={handleChange} />
-        </label>
+        <span className='spacing'>No redirect:</span>
         <button type='submit'>Sign in with Email</button>
       </form>
       <p>Response:</p>
