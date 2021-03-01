@@ -1,9 +1,16 @@
 {
   "presets": [
-    ["@babel/preset-env", { "targets": { "esmodules": true } }]
+    ["@babel/preset-env", { "targets": { "node": "10" } }]
   ],
   "comments": false,
   "overrides": [
+    {
+      "test": ["../src/client/**"],
+      "comments": true,
+      "presets": [
+        ["@babel/preset-env", { "targets": { "ie": "11" } }]
+      ]
+    },
     {
       "test": ["../src/server/pages/**"],
       "presets": ["preact"]
