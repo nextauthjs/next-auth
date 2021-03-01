@@ -42,9 +42,9 @@ export default function SignIn({ providers }) {
   )
 }
 
-SignIn.getInitialProps = async (context) => {
+SignIn.getInitialProps = async () => {
   return {
-    providers: await providers(context)
+    providers: await providers()
   }
 }
 ```
