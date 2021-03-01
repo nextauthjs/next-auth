@@ -328,7 +328,7 @@ export default NextAuth({
     },
     warn(code, ...message) {
       log.warn(code, message)
-    }
+    },
     debug(code, ...message) {
       log.debug(code, message)
     }

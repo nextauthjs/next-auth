@@ -108,7 +108,7 @@ async function getProfile ({ profileData, tokens, provider, user }) {
 
     logger.debug('PROFILE_DATA', profileData)
 
-    const profile = await provider.profile(profileData)
+    const profile = await provider.profile(profileData, tokens)
     // Return profile, raw profile and auth provider details
     return {
       profile: {

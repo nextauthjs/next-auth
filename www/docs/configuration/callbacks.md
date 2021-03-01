@@ -112,52 +112,6 @@ callbacks: {
 The redirect callback may be invoked more than once in the same flow.
 :::
 
-## Session callback
-
-The session callback is called whenever a session is checked.
-
-e.g. `getSession()`, `useSession()`, `/api/auth/session`
-
-* When using database sessions, the User object is passed as an argument.
-* When using JSON Web Tokens for sessions, the JWT payload is provided instead.
-
-```js title="pages/api/auth/[...nextauth].js"
-...
-callbacks: {
-  /**
-   * @param  {object} session      Session object
-   * @param  {object} token        User object    (if using database sessions)
-   *                               JSON Web Token (if not using database sessions)
-   * @return {object}              Session that will be returned to the client 
-   */
-  async session(session, token) {
-    if(token?.accessToken) {
-      // Add property to session, like an access_token from a provider
-      session.accessToken = token.accessToken
-    }
-    return session
-  }
-}
-...
-```
-
-:::tip
-When using JSON Web Tokens the `jwt()` callback is invoked before the `session()` callback, so anything you add to the
-JSON Web Token will be immediately available in the session callback, like for example an `access_token` from a provider.
-:::
-
-:::tip
-To better represent its value, when using a JWT session, the second parameter should be called `token` (This is the same thing you return from the `jwt` callback). If you use a database, call it `user`.
-:::
-
-:::warning
-The session object is not persisted server side, even when using database sessions - only data such as the session token, the user, and the expiry time is stored in the session table.
-
-If you need to persist session data server side, you can use the `accessToken` returned for the session as a key - and connect to the database in the `session()` callback to access it. Session `accessToken` values do not rotate and are valid as long as the session is valid.
-
-If using JSON Web Tokens instead of database sessions, you should use the User ID or a unique key stored in the token (you will need to generate a key for this yourself on sign in, as access tokens for sessions are not generated when using JSON Web Tokens).
-:::
-
 ## JWT callback
 
 This JSON Web Token callback is called whenever a JSON Web Token is created (i.e. at sign 
@@ -205,4 +159,48 @@ Check out the content of all the params in addition `token`, to see what info yo
 NextAuth.js does not limit how much data you can store in a JSON Web Token, however a ~**4096 byte limit** for all cookies on a domain is commonly imposed by browsers.
 
 If you need to persist a large amount of data, you will need to persist it elsewhere (e.g. in a database). You can store a key that can be used to look up that data in the `session()` callback.
+:::
+
+## Session callback
+
+The session callback is called whenever a session is checked. By default, only a subset of the token is returned for increased security. If you want to make something available you added to the token through the `jwt()` callback, you have to explicitely forward it here to make it available to the client.
+
+e.g. `getSession()`, `useSession()`, `/api/auth/session`
+
+* When using database sessions, the User object is passed as an argument.
+* When using JSON Web Tokens for sessions, the JWT payload is provided instead.
+
+```js title="pages/api/auth/[...nextauth].js"
+...
+callbacks: {
+  /**
+   * @param  {object} session      Session object
+   * @param  {object} token        User object    (if using database sessions)
+   *                               JSON Web Token (if not using database sessions)
+   * @return {object}              Session that will be returned to the client 
+   */
+  async session(session, token) {
+    // Add property to session, like an access_token from a provider.
+    session.accessToken = token.accessToken
+    return session
+  }
+}
+...
+```
+
+:::tip
+When using JSON Web Tokens the `jwt()` callback is invoked before the `session()` callback, so anything you add to the
+JSON Web Token will be immediately available in the session callback, like for example an `access_token` from a provider.
+:::
+
+:::tip
+To better represent its value, when using a JWT session, the second parameter should be called `token` (This is the same thing you return from the `jwt()` callback). If you use a database, call it `user`.
+:::
+
+:::warning
+The session object is not persisted server side, even when using database sessions - only data such as the session token, the user, and the expiry time is stored in the session table.
+
+If you need to persist session data server side, you can use the `accessToken` returned for the session as a key - and connect to the database in the `session()` callback to access it. Session `accessToken` values do not rotate and are valid as long as the session is valid.
+
+If using JSON Web Tokens instead of database sessions, you should use the User ID or a unique key stored in the token (you will need to generate a key for this yourself on sign in, as access tokens for sessions are not generated when using JSON Web Tokens).
 :::
