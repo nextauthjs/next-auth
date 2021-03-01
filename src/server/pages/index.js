@@ -14,9 +14,29 @@ export default function renderPage (req, res) {
   }
 
   return {
-    signin (props) { send(signin({ csrfToken, providers, callbackUrl, ...req.query, ...props })) },
-    signout (props) { send(signout({ csrfToken, baseUrl, basePath, ...props })) },
-    verifyRequest (props) { send(verifyRequest({ baseUrl, ...props })) },
-    error (props) { send(error({ basePath, baseUrl, res, ...props })) }
+    signin (props) {
+      send({
+        html: signin({ csrfToken, providers, callbackUrl, ...req.query, ...props }),
+        title: 'Sign In'
+      })
+    },
+    signout (props) {
+      send({
+        html: signout({ csrfToken, baseUrl, basePath, ...props }),
+        title: 'Sign Out'
+      })
+    },
+    verifyRequest (props) {
+      send({
+        html: verifyRequest({ baseUrl, ...props }),
+        title: 'Verify Request'
+      })
+    },
+    error (props) {
+      send({
+        html: error({ basePath, baseUrl, res, ...props }),
+        title: 'Error'
+      })
+    }
   }
 }
