@@ -1,4 +1,5 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
+import { LoggerInstance } from 'src/lib/logger'
 import { CallbacksOptions } from './lib/callbacks'
 import { CookiesOptions } from './lib/cookie'
 import { EventsOptions } from './lib/events'
@@ -59,10 +60,12 @@ export interface NextAuthOptions {
   useSecureCookies?: boolean
   /** @docs https://next-auth.js.org/configuration/options#cookies */
   cookies?: CookiesOptions
+  /** @docs https://next-auth.js.org/configuration/options#logger */
+  logger: LoggerInstance
 }
 
 /** Options that are the same both in internal and user provided options. */
-export type NextAuthSharedOptions = 'pages' | 'jwt' | 'events' | 'callbacks' | 'cookies' | 'secret' | 'adapter' | 'theme' | 'debug'
+export type NextAuthSharedOptions = 'pages' | 'jwt' | 'events' | 'callbacks' | 'cookies' | 'secret' | 'adapter' | 'theme' | 'debug' | 'logger'
 
 export interface NextAuthInternalOptions extends Pick<NextAuthOptions, NextAuthSharedOptions> {
   pkce?: {

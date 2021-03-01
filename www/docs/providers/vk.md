@@ -1,6 +1,6 @@
 ---
 id: vk
-title: vk.com
+title: VK
 ---
 
 ## Documentation

@@ -19,3 +19,17 @@ databases:
   - test/docker/databases/**/*
   - www/docs/configuration/databases.md
   - test/fixtures/**/*
+
+core:
+  - src/**/*
+
+style:
+  - src/css/**/*
+
+client:
+  - src/client/**/*
+  - www/docs/getting-started/client.md
+
+pages:
+  - src/server/pages/**/*
+  - www/docs/configuration/pages.md

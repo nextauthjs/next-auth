@@ -78,7 +78,10 @@ As an example of what this looks like, this is the the provider object returned 
   requestTokenUrl: "https://accounts.google.com/o/oauth2/auth",
   authorizationUrl: "https://accounts.google.com/o/oauth2/auth?response_type=code",
   profileUrl: "https://www.googleapis.com/oauth2/v1/userinfo?alt=json",
-  async profile(profile) {
+  async profile(profile, tokens) {
+    // You can use the tokens, in case you want to fetch more profile information
+    // For example several OAuth provider does not return e-mail by default.
+    // Depending on your provider, will have tokens like `access_token`, `id_token` and or `refresh_token`
     return {
       id: profile.id,
       name: profile.name,
@@ -111,6 +114,16 @@ providers: [
 ]
 ...
 ```
+
+:::tip
+If you think your custom provider might be useful to others, we encourage you to open a PR and add it to the built-in list so others can discover it much more easily! You only need to add three changes:
+1. Add your config: [`src/providers/{provider}.js`](https://github.com/nextauthjs/next-auth/tree/main/src/providers)
+2. Re-export your config: at [`src/providers/index.js`](https://github.com/nextauthjs/next-auth/blob/main/src/providers/index.js)
+3. Add provider documentation: [`www/docs/providers/{provider}.md`](https://github.com/nextauthjs/next-auth/tree/main/www/docs/providers)
+
+You can look at the existing built-in providers for inspiration.
+:::
+
 
 ### OAuth provider options
 

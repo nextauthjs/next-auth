@@ -3,7 +3,7 @@ export default (options) => {
 
   return {
     id: 'vk',
-    name: 'vk.com',
+    name: 'VK',
     type: 'oauth',
     version: '2.0',
     scope: 'email',

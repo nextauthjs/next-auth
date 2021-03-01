@@ -11,7 +11,7 @@
 // We use HTTP POST requests with CSRF Tokens to protect against CSRF attacks.
 
 import { useState, useEffect, useContext, createContext, createElement } from 'react'
-import logger from '../lib/logger'
+import _logger, { proxyLogger } from '../lib/logger'
 import parseUrl from '../lib/parse-url'
 
 // This behaviour mirrors the default behaviour for getting the site name that
@@ -36,6 +36,8 @@ const __NEXTAUTH = {
   // Used to store to function export by getSession() hook
   _getSession: () => {}
 }
+
+const logger = proxyLogger(_logger, __NEXTAUTH.basePath)
 
 // Add event listners on load
 if (typeof window !== 'undefined') {
@@ -278,7 +280,11 @@ export async function signIn (provider, options = {}, authorizationParams = {}) 
   const res = await fetch(_signInUrl, fetchOptions)
   const data = await res.json()
   if (redirect || !isCredentials) {
-    window.location = data.url ?? callbackUrl
+    const url = data.url ?? callbackUrl
+    window.location = url
+    // If url contains a hash, the browser does not reload the page. We reload manually
+    if (url.includes('#')) window.location.reload()
+
     return
   }
 
@@ -324,7 +330,10 @@ export async function signOut (options = {}) {
   const data = await res.json()
   _sendMessage({ event: 'session', data: { trigger: 'signout' } })
   if (redirect) {
-    window.location = data.url ?? callbackUrl
+    const url = data.url ?? callbackUrl
+    window.location = url
+    // If url contains a hash, the browser does not reload the page. We reload manually
+    if (url.includes('#')) window.location.reload()
     return
   }
 

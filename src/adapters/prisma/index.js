@@ -1,7 +1,6 @@
 import { createHash, randomBytes } from 'crypto'
 
 import { CreateUserError } from '../../lib/errors'
-import logger from '../../lib/logger'
 
 const Adapter = (config) => {
   const {
@@ -21,6 +20,7 @@ const Adapter = (config) => {
   }
 
   async function getAdapter (appOptions) {
+    const { logger } = appOptions
     function debug (debugCode, ...args) {
       logger.debug(`PRISMA_${debugCode}`, ...args)
     }
