@@ -1,5 +1,3 @@
-/// Note: fetch() is built in to Next.js 9.4
-//
 // Note about signIn() and signOut() methods:
 //
 // On signIn() and signOut() we pass 'json: true' to request a response in JSON
@@ -20,6 +18,7 @@ import parseUrl from '../lib/parse-url'
 //    relative URLs are valid in that context and so defaults to empty.
 // 2. When invoked server side the value is picked up from an environment
 //    variable and defaults to 'http://localhost:3000'.
+/** @type {import(".").NextAuthConfig} */
 const __NEXTAUTH = {
   baseUrl: parseUrl(process.env.NEXTAUTH_URL || process.env.VERCEL_URL).baseUrl,
   basePath: parseUrl(process.env.NEXTAUTH_URL).basePath,
@@ -88,12 +87,13 @@ if (typeof window !== 'undefined') {
 // Method to set options. The documented way is to use the provider, but this
 // method is being left in as an alternative, that will be helpful if/when we
 // expose a vanilla JavaScript version that doesn't depend on React.
-const setOptions = ({
+/** @type {import(".").SetOptions} */
+export function setOptions ({
   baseUrl,
   basePath,
   clientMaxAge,
   keepAlive
-} = {}) => {
+} = {}) {
   if (baseUrl) { __NEXTAUTH.baseUrl = baseUrl }
   if (basePath) { __NEXTAUTH.basePath = basePath }
   if (clientMaxAge) { __NEXTAUTH.clientMaxAge = clientMaxAge }
@@ -119,6 +119,7 @@ const setOptions = ({
 // If passed 'appContext' via getInitialProps() in _app.js then get the req
 // object from ctx and use that for the req value to allow getSession() to
 // work seemlessly in getInitialProps() on server side pages *and* in _app.js.
+/** @type {import(".").GetSession} */
 export async function getSession ({ ctx, req = ctx?.req, triggerEvent = true } = {}) {
   const baseUrl = _apiBaseUrl()
   const fetchOptions = req ? { headers: { cookie: req.headers.cookie } } : {}
@@ -133,6 +134,7 @@ export async function getSession ({ ctx, req = ctx?.req, triggerEvent = true } =
 // If passed 'appContext' via getInitialProps() in _app.js then get the req
 // object from ctx and use that for the req value to allow getCsrfToken() to
 // work seemlessly in getInitialProps() on server side pages *and* in _app.js.
+/** @type {import(".").GetCsrfToken} */
 async function getCsrfToken ({ ctx, req = ctx?.req } = {}) {
   const baseUrl = _apiBaseUrl()
   const fetchOptions = req ? { headers: { cookie: req.headers.cookie } } : {}
@@ -141,7 +143,8 @@ async function getCsrfToken ({ ctx, req = ctx?.req } = {}) {
 }
 
 // Universal method (client + server); does not require request headers
-const getProviders = async () => {
+/** @type {import(".").GetProviders} */
+export async function getProviders () {
   const baseUrl = _apiBaseUrl()
   return _fetchData(`${baseUrl}/providers`)
 }
@@ -163,7 +166,8 @@ export const useSession = (session) => {
 }
 
 // Internal hook for getting session from the api.
-const _useSessionHook = (session) => {
+/** @type {import(".").UseSession}  */
+function _useSessionHook (session) {
   const [data, setData] = useState(session)
   const [loading, setLoading] = useState(true)
 
@@ -235,12 +239,7 @@ const _useSessionHook = (session) => {
  * or send the user to the signin page listing all possible providers.
  * (Automatically adds the CSRF token to the request)
  * @see https://next-auth.js.org/getting-started/client#signin
- * @param {string} [provider]
- * @param {SignInOptions} [options]
- * @param {object} [authorizationParams]
- * @return {Promise<SignInResponse | undefined>}
- * @typedef {{callbackUrl?: string; redirect?: boolean}} SignInOptions
- * @typedef {{error: string | null; status: number; ok: boolean}} SignInResponse
+ * @type {import(".").SignIn}
  */
 export async function signIn (provider, options = {}, authorizationParams = {}) {
   const {
@@ -308,9 +307,7 @@ export async function signIn (provider, options = {}, authorizationParams = {}) 
 /**
  * Signs the user out, by removing the session cookie.
  * (Automatically adds the CSRF token to the request)
- * @param {SignOutOptions} [options]
- * @returns {Promise<{url?: string} | undefined>}
- * @typedef {{callbackUrl?: string; redirect?: boolean;}} SignOutOptions
+ * @type {import(".").SignOut}
  */
 export async function signOut (options = {}) {
   const {
@@ -346,9 +343,14 @@ export async function signOut (options = {}) {
 }
 
 // Provider to wrap the app in to make session data available globally
-export const Provider = ({ children, session, options }) => {
+/** @type {import(".").Provider} */
+export function Provider ({ children, session, options }) {
   setOptions(options)
-  return createElement(SessionContext.Provider, { value: useSession(session) }, children)
+  return createElement(
+    SessionContext.Provider,
+    { value: useSession(session) },
+    children
+  )
 }
 
 const _fetchData = async (url, options = {}) => {
