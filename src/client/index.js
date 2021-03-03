@@ -390,11 +390,6 @@ function _now () {
  * https://caniuse.com/?search=broadcastchannel
  */
 function BroadcastChannel (name = 'nextauth.message') {
-  /**
-   * Unique ID to make it possible to identify when a message
-   * was sent from this tab/window so it can be ignored to avoid event loops.
-   */
-  const clientId = Math.random().toString(36).substring(2) + Date.now().toString(36)
   return {
     /**
      * Get notified by other tabs/windows.
@@ -406,10 +401,7 @@ function BroadcastChannel (name = 'nextauth.message') {
         if (event.key !== name) return
         /** @type {import(".").BroadcastMessage} */
         const message = JSON.parse(event.newValue)
-        if (message?.event !== 'session' || !message?.data ||
-           // Ignore storage events fired from the same window that created them
-           message?.clientId === clientId
-        ) return
+        if (message?.event !== 'session' || !message?.data) return
 
         onReceive(message)
       })
@@ -418,7 +410,7 @@ function BroadcastChannel (name = 'nextauth.message') {
     post (message) {
       if (typeof localStorage === 'undefined') return
       localStorage.setItem(name,
-        JSON.stringify({ ...message, clientId, timestamp: _now() })
+        JSON.stringify({ ...message, timestamp: _now() })
       )
     }
   }
