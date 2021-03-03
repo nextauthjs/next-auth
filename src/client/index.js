@@ -22,64 +22,39 @@ import parseUrl from '../lib/parse-url'
 const __NEXTAUTH = {
   baseUrl: parseUrl(process.env.NEXTAUTH_URL || process.env.VERCEL_URL).baseUrl,
   basePath: parseUrl(process.env.NEXTAUTH_URL).basePath,
-  keepAlive: 0, // 0 == disabled (don't send); 60 == send every 60 seconds
-  clientMaxAge: 0, // 0 == disabled (only use cache); 60 == sync if last checked > 60 seconds ago
+  keepAlive: 0,
+  clientMaxAge: 0,
   // Properties starting with _ are used for tracking internal app state
-  _clientLastSync: 0, // used for timestamp since last sycned (in seconds)
-  _clientSyncTimer: null, // stores timer for poll interval
-  _eventListenersAdded: false, // tracks if event listeners have been added,
-  _clientSession: undefined, // stores last session response from hook,
-  // Generate a unique ID to make it possible to identify when a message
-  // was sent from this tab/window so it can be ignored to avoid event loops.
-  _clientId: Math.random().toString(36).substring(2) + Date.now().toString(36),
-  // Used to store to function export by getSession() hook
+  _clientLastSync: 0,
+  _clientSyncTimer: null,
+  _eventListenersAdded: false,
+  _clientSession: undefined,
   _getSession: () => {}
 }
 
 const logger = proxyLogger(_logger, __NEXTAUTH.basePath)
 
+const broadcast = BroadcastChannel()
+
 // Add event listners on load
 if (typeof window !== 'undefined' && !__NEXTAUTH._eventListenersAdded) {
   __NEXTAUTH._eventListenersAdded = true
-
   // Listen for storage events and update session if event fired from
   // another window (but suppress firing another event to avoid a loop)
-  window.addEventListener('storage', async (event) => {
-    if (event.key === 'nextauth.message') {
-      const message = JSON.parse(event.newValue)
-      if (message?.event === 'session' && message.data) {
-        // Ignore storage events fired from the same window that created them
-        if (__NEXTAUTH._clientId === message.clientId) {
-          return
-        }
+  // Fetch new session data but tell it to not to fire another event to
+  // avoid an infinite loop.
+  // Note: We could pass session data through and do something like
+  // `setData(message.data)` but that can cause problems depending
+  // on how the session object is being used in the client; it is
+  // more robust to have each window/tab fetch it's own copy of the
+  // session object rather than share it across instances.
+  broadcast.receive(() => __NEXTAUTH._getSession({ event: 'storage' }))
 
-        // Fetch new session data but pass 'true' to it not to fire an event to
-        // avoid an infinite loop.
-        //
-        // Note: We could pass session data through and do something like
-        // `setData(message.data)` but that can cause problems depending
-        // on how the session object is being used in the client; it is
-        // more robust to have each window/tab fetch it's own copy of the
-        // session object rather than share it across instances.
-        await __NEXTAUTH._getSession({ event: 'storage' })
-      }
-    }
-  })
-
-  // Listen for document visibilitychange events
-  let hidden, visibilityChange
-  if (typeof document.hidden !== 'undefined') { // Opera 12.10 and Firefox 18 and later support
-    hidden = 'hidden'
-    visibilityChange = 'visibilitychange'
-  } else if (typeof document.msHidden !== 'undefined') {
-    hidden = 'msHidden'
-    visibilityChange = 'msvisibilitychange'
-  } else if (typeof document.webkitHidden !== 'undefined') {
-    hidden = 'webkitHidden'
-    visibilityChange = 'webkitvisibilitychange'
-  }
-  const handleVisibilityChange = () => !document[hidden] && __NEXTAUTH._getSession({ event: visibilityChange })
-  document.addEventListener('visibilitychange', handleVisibilityChange, false)
+  // Listen for document visibility change events and
+  // if visibility of the document changes, re-fetch the session.
+  document.addEventListener('visibilitychange', () => {
+    !document.hidden && __NEXTAUTH._getSession({ event: 'visibilitychange' })
+  }, false)
 }
 
 // Internal hook for getting session from the api.
@@ -91,17 +66,17 @@ function _useSessionHook (session) {
   useEffect(() => {
     const _getSession = async ({ event = null } = {}) => {
       try {
-        const triggredByEvent = (event !== null)
-        const triggeredByStorageEvent = !!((event && event === 'storage'))
+        const triggredByEvent = event !== null
+        const triggeredByStorageEvent = event === 'storage'
 
         const clientMaxAge = __NEXTAUTH.clientMaxAge
         const clientLastSync = parseInt(__NEXTAUTH._clientLastSync)
-        const currentTime = Math.floor(new Date().getTime() / 1000)
+        const currentTime = _now()
         const clientSession = __NEXTAUTH._clientSession
 
         // Updates triggered by a storage event *always* trigger an update and we
         // always update if we don't have any value for the current session state.
-        if (triggeredByStorageEvent === false && clientSession !== undefined) {
+        if (!triggeredByStorageEvent && clientSession !== undefined) {
           if (clientMaxAge === 0 && triggredByEvent !== true) {
             // If there is no time defined for when a session should be considered
             // stale, then it's okay to use the value we have until an event is
@@ -125,13 +100,14 @@ function _useSessionHook (session) {
         // Update clientLastSync before making response to avoid repeated
         // invokations that would otherwise be triggered while we are still
         // waiting for a response.
-        __NEXTAUTH._clientLastSync = Math.floor(new Date().getTime() / 1000)
+        __NEXTAUTH._clientLastSync = _now()
 
         // If this call was invoked via a storage event (i.e. another window) then
         // tell getSession not to trigger an event when it calls to avoid an
         // infinate loop.
-        const triggerEvent = (triggeredByStorageEvent === false)
-        const newClientSessionData = await getSession({ triggerEvent })
+        const newClientSessionData = await getSession({
+          triggerEvent: !triggeredByStorageEvent
+        })
 
         // Save session state internally, just so we can track that we've checked
         // if a session exists at least once.
@@ -190,7 +166,7 @@ export async function getSession ({ ctx, req = ctx?.req, triggerEvent = true } =
   const fetchOptions = req ? { headers: { cookie: req.headers.cookie } } : {}
   const session = await _fetchData(`${baseUrl}/session`, fetchOptions)
   if (triggerEvent) {
-    _sendMessage({ event: 'session', data: { trigger: 'getSession' } })
+    broadcast.post({ event: 'session', data: { trigger: 'getSession' } })
   }
   return session
 }
@@ -325,7 +301,7 @@ export async function signOut (options = {}) {
   }
   const res = await fetch(`${baseUrl}/signout`, fetchOptions)
   const data = await res.json()
-  _sendMessage({ event: 'session', data: { trigger: 'signout' } })
+  broadcast.post({ event: 'session', data: { trigger: 'signout' } })
   if (redirect) {
     const url = data.url ?? callbackUrl
     window.location = url
@@ -343,30 +319,25 @@ export async function signOut (options = {}) {
 // method is being left in as an alternative, that will be helpful if/when we
 // expose a vanilla JavaScript version that doesn't depend on React.
 /** @type {import(".").SetOptions} */
-export function setOptions ({
-  baseUrl,
-  basePath,
-  clientMaxAge,
-  keepAlive
-} = {}) {
-  if (baseUrl) { __NEXTAUTH.baseUrl = baseUrl }
-  if (basePath) { __NEXTAUTH.basePath = basePath }
-  if (clientMaxAge) { __NEXTAUTH.clientMaxAge = clientMaxAge }
+export function setOptions ({ baseUrl, basePath, clientMaxAge, keepAlive } = {}) {
+  if (baseUrl) __NEXTAUTH.baseUrl = baseUrl
+  if (basePath) __NEXTAUTH.basePath = basePath
+  if (clientMaxAge) __NEXTAUTH.clientMaxAge = clientMaxAge
   if (keepAlive) {
     __NEXTAUTH.keepAlive = keepAlive
+    if (typeof window === 'undefined') return
 
-    if (typeof window !== 'undefined' && keepAlive > 0) {
-      // Clear existing timer (if there is one)
-      if (__NEXTAUTH._clientSyncTimer !== null) { clearTimeout(__NEXTAUTH._clientSyncTimer) }
-
-      // Set next timer to trigger in number of seconds
-      __NEXTAUTH._clientSyncTimer = setTimeout(async () => {
-        // Only invoke keepalive when a session exists
-        if (__NEXTAUTH._clientSession) {
-          await __NEXTAUTH._getSession({ event: 'timer' })
-        }
-      }, keepAlive * 1000)
+    // Clear existing timer (if there is one)
+    if (__NEXTAUTH._clientSyncTimer !== null) {
+      clearTimeout(__NEXTAUTH._clientSyncTimer)
     }
+
+    // Set next timer to trigger in number of seconds
+    __NEXTAUTH._clientSyncTimer = setTimeout(async () => {
+      // Only invoke keepalive when a session exists
+      if (!__NEXTAUTH._clientSession) return
+      await __NEXTAUTH._getSession({ event: 'timer' })
+    }, keepAlive * 1000)
   }
 }
 
@@ -387,7 +358,7 @@ export function Provider ({ children, session, options }) {
   )
 }
 
-const _fetchData = async (url, options = {}) => {
+async function _fetchData (url, options = {}) {
   try {
     const res = await fetch(url, options)
     const data = await res.json()
@@ -398,23 +369,63 @@ const _fetchData = async (url, options = {}) => {
   }
 }
 
-const _apiBaseUrl = () => {
+function _apiBaseUrl () {
   if (typeof window === 'undefined') {
     // NEXTAUTH_URL should always be set explicitly to support server side calls - log warning if not set
-    if (!process.env.NEXTAUTH_URL) { logger.warn('NEXTAUTH_URL', 'NEXTAUTH_URL environment variable not set') }
+    if (!process.env.NEXTAUTH_URL) {
+      logger.warn('NEXTAUTH_URL', 'NEXTAUTH_URL environment variable not set')
+    }
 
     // Return absolute path when called server side
     return `${__NEXTAUTH.baseUrl}${__NEXTAUTH.basePath}`
-  } else {
-    // Return relative path when called client side
-    return __NEXTAUTH.basePath
   }
+  // Return relative path when called client side
+  return __NEXTAUTH.basePath
 }
 
-const _sendMessage = (message) => {
-  if (typeof localStorage !== 'undefined') {
-    const timestamp = Math.floor(new Date().getTime() / 1000)
-    localStorage.setItem('nextauth.message', JSON.stringify({ ...message, clientId: __NEXTAUTH._clientId, timestamp })) // eslint-disable-line
+/** Returns the number of seconds elapsed since January 1, 1970 00:00:00 UTC. */
+function _now () {
+  return Math.floor(Date.now() / 1000)
+}
+
+/**
+ * Inspired by [Broadcast Channel API](https://developer.mozilla.org/en-US/docs/Web/API/Broadcast_Channel_API)
+ * Only not using it directly, because Safari does not support it.
+ *
+ * https://caniuse.com/?search=broadcastchannel
+ */
+function BroadcastChannel (name = 'nextauth.message') {
+  /**
+   * Unique ID to make it possible to identify when a message
+   * was sent from this tab/window so it can be ignored to avoid event loops.
+   */
+  const clientId = Math.random().toString(36).substring(2) + Date.now().toString(36)
+  return {
+    /**
+     * Get notified by other tabs/windows.
+     * @param {(message: import(".").BroadcastMessage) => void} onReceive
+     */
+    receive (onReceive) {
+      if (typeof window === 'undefined') return
+      window.addEventListener('storage', async (event) => {
+        if (event.key !== name) return
+        /** @type {import(".").BroadcastMessage} */
+        const message = JSON.parse(event.newValue)
+        if (message?.event !== 'session' || !message?.data ||
+           // Ignore storage events fired from the same window that created them
+           message?.clientId === clientId
+        ) return
+
+        onReceive(message)
+      })
+    },
+    /** Notify other tabs/windows. */
+    post (message) {
+      if (typeof localStorage === 'undefined') return
+      localStorage.setItem(name,
+        JSON.stringify({ ...message, clientId, timestamp: _now() })
+      )
+    }
   }
 }
 

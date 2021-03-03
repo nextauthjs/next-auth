@@ -10,6 +10,15 @@ interface DefaultSession {
   expires: Date | string
 }
 
+interface BroadcastMessage {
+  event?: 'session'
+  data?: {
+    trigger?: 'signout' | 'getSession'
+  }
+  clientId: string
+  timestamp: number
+}
+
 type GetSession<S extends Record<string, unknown> = DefaultSession> = (options: {
   ctx?: GetServerSidePropsContext
   req?: GetServerSidePropsContext['req']
@@ -32,11 +41,6 @@ export interface NextAuthConfig {
   _eventListenersAdded: boolean
   /** Stores last session response from hook */
   _clientSession: DefaultSession | null | undefined
-  /**
-   * Generate a unique ID to make it possible to identify when a message
-   * was sent from this tab/window so it can be ignored to avoid event loops.
-   */
-  _clientId: string
   /** Used to store to function export by getSession() hook */
   _getSession: any
 }
