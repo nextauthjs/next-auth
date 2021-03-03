@@ -157,15 +157,9 @@ export function useSession (session) {
  * [Documentation](https://next-auth.js.org/getting-started/client#getsession)
  * @type {import(".").GetSession}
  */
-export async function getSession ({ ctx, req = ctx?.req, triggerEvent = true } = {}) {
-  // Universal method (client + server)
-  // If passed 'appContext' via getInitialProps() in _app.js then get the req
-  // object from ctx and use that for the req value to allow getSession() to
-  // work seemlessly in getInitialProps() on server side pages *and* in _app.js.
-  const baseUrl = _apiBaseUrl()
-  const fetchOptions = req ? { headers: { cookie: req.headers.cookie } } : {}
-  const session = await _fetchData(`${baseUrl}/session`, fetchOptions)
-  if (triggerEvent) {
+export async function getSession (ctx) {
+  const session = await _fetchData('session', ctx)
+  if (ctx?.triggerEvent ?? true) {
     broadcast.post({ event: 'session', data: { trigger: 'getSession' } })
   }
   return session
@@ -180,15 +174,8 @@ export async function getSession ({ ctx, req = ctx?.req, triggerEvent = true } =
  * [Documentation](https://next-auth.js.org/getting-started/client#getcsrftoken)
  * @type {import(".").GetCsrfToken}
  */
-async function getCsrfToken ({ ctx, req = ctx?.req } = {}) {
-  // Universal method (client + server)
-  // If passed 'appContext' via getInitialProps() in _app.js then get the req
-  // object from ctx and use that for the req value to allow getCsrfToken() to
-  // work seemlessly in getInitialProps() on server side pages *and* in _app.js.
-  const baseUrl = _apiBaseUrl()
-  const fetchOptions = req ? { headers: { cookie: req.headers.cookie } } : {}
-  const data = await _fetchData(`${baseUrl}/csrf`, fetchOptions)
-  return data?.csrfToken ?? null
+async function getCsrfToken (ctx) {
+  return (await _fetchData('csrf', ctx))?.csrfToken
 }
 
 /**
@@ -200,8 +187,7 @@ async function getCsrfToken ({ ctx, req = ctx?.req } = {}) {
  * @type {import(".").GetProviders}
  */
 export async function getProviders () {
-  const baseUrl = _apiBaseUrl()
-  return _fetchData(`${baseUrl}/providers`)
+  return _fetchData('providers')
 }
 
 /**
@@ -358,13 +344,22 @@ export function Provider ({ children, session, options }) {
   )
 }
 
-async function _fetchData (url, options = {}) {
+/**
+ * If passed 'appContext' via getInitialProps() in _app.js
+ * then get the req object from ctx and use that for the
+ * req value to allow _fetchData to
+ * work seemlessly in getInitialProps() on server side
+ * pages *and* in _app.js.
+ */
+async function _fetchData (path, { ctx, req = ctx?.req } = {}) {
   try {
-    const res = await fetch(url, options)
+    const baseUrl = await _apiBaseUrl()
+    const options = req ? { headers: { cookie: req.headers.cookie } } : {}
+    const res = await fetch(`${baseUrl}/${path}`, options)
     const data = await res.json()
     return Object.keys(data).length > 0 ? data : null // Return null if data empty
   } catch (error) {
-    logger.error('CLIENT_FETCH_ERROR', url, error)
+    logger.error('CLIENT_FETCH_ERROR', path, error)
     return null
   }
 }
