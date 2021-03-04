@@ -57,14 +57,23 @@ if (typeof window !== 'undefined' && !__NEXTAUTH._eventListenersAdded) {
   }, false)
 }
 
-// Internal hook for getting session from the api.
-/** @type {import(".").UseSession}  */
-function _useSessionHook (session) {
-  const [data, setData] = useState(session)
-  const [loading, setLoading] = useState(true)
+// Context to store session data globally
+const SessionContext = createContext()
+
+/**
+ * React Hook that gives you access
+ * to the logged in user's session data.
+ *
+ * [Documentation](https://next-auth.js.org/getting-started/client#usesession)
+ * @type {import(".").UseSession}
+ */
+export function useSession (session) {
+  const context = useContext(SessionContext)
+  const [data, setData] = useState(context?.[0] ?? session)
+  const [loading, setLoading] = useState(!data)
 
   useEffect(() => {
-    const _getSession = async ({ event = null } = {}) => {
+    __NEXTAUTH._getSession = async ({ event = null } = {}) => {
       try {
         const triggredByEvent = event !== null
         const triggeredByStorageEvent = event === 'storage'
@@ -114,39 +123,17 @@ function _useSessionHook (session) {
         __NEXTAUTH._clientSession = newClientSessionData
 
         setData(newClientSessionData)
-        setLoading(false)
       } catch (error) {
         logger.error('CLIENT_USE_SESSION_ERROR', error)
+      } finally {
+        setLoading(false)
       }
     }
 
-    __NEXTAUTH._getSession = _getSession
-
-    _getSession()
+    __NEXTAUTH._getSession()
   })
+
   return [data, loading]
-}
-
-// Context to store session data globally
-const SessionContext = createContext()
-
-/**
- * React Hook that gives you access
- * to the logged in user's session data.
- *
- * [Documentation](https://next-auth.js.org/getting-started/client#usesession)
- * @type {import(".").UseSession}
- */
-export function useSession (session) {
-  // Try to use context if we can
-  const value = useContext(SessionContext)
-
-  // If we have no Provider in the tree, call the actual hook
-  if (value === undefined) {
-    return _useSessionHook(session)
-  }
-
-  return value
 }
 
 /**
