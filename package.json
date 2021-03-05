@@ -106,6 +106,8 @@
       "next-env.d.ts"
     ],
     "globals": [
+      "localStorage",
+      "location",
       "fetch"
     ]
   },
