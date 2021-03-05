@@ -72,7 +72,7 @@ export default async function callback (req, res) {
           }
         } catch (error) {
           if (error instanceof Error) {
-            return res.redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
+            return res.redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error.message)}`)
           }
           // TODO: Remove in a future major release
           logger.warn('SIGNIN_CALLBACK_REJECT_REDIRECT')
@@ -168,7 +168,7 @@ export default async function callback (req, res) {
         }
       } catch (error) {
         if (error instanceof Error) {
-          return res.redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
+          return res.redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error.message)}`)
         }
         // TODO: Remove in a future major release
         logger.warn('SIGNIN_CALLBACK_REJECT_REDIRECT')
@@ -239,7 +239,7 @@ export default async function callback (req, res) {
       }
     } catch (error) {
       if (error instanceof Error) {
-        return res.redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
+        return res.redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error.message)}`)
       }
       return res.redirect(error)
     }
@@ -254,7 +254,7 @@ export default async function callback (req, res) {
       }
     } catch (error) {
       if (error instanceof Error) {
-        return res.redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
+        return res.redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error.message)}`)
       }
       return res.redirect(error)
     }
