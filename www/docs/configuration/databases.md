@@ -136,16 +136,43 @@ Install module:
 database: 'mariadb://username:password@127.0.0.1:3306/database_name'
 ```
 
-### Postgres
+### Postgres / CockroachDB
 
 Install module:
 `npm i pg`
 
 #### Example
 
+PostgresDB
 ```js
 database: 'postgres://username:password@127.0.0.1:5432/database_name'
 ```
+
+CockroachDB
+```js
+database: 'postgres://username:password@127.0.0.1:26257/database_name'
+```
+
+If the node is using Self-signed cert
+
+```js
+database: {
+    type: "cockroachdb",
+    host: process.env.DATABASE_HOST,
+    port: 26257,
+    username: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    database: process.env.DATABASE_NAME,
+    ssl: {
+      rejectUnauthorized: false,
+      ca: fs.readFileSync('/path/to/server-certificates/root.crt').toString()
+    },
+  },
+```
+
+Read more: [https://node-postgres.com/features/ssl](https://node-postgres.com/features/ssl)
+
+---
 
 ### Microsoft SQL Server
 
@@ -166,7 +193,7 @@ Install module:
 #### Example
 
 ```js
-database: 'mongodb://username:password@127.0.0.1:27017/database_name'
+database: 'mongodb://username:password@127.0.0.1:3306/database_name'
 ```
 
 ### SQLite
@@ -181,9 +208,6 @@ Install module:
 ```js
 database: 'sqlite://localhost/:memory:'
 ```
-
-
----
 
 ## Other databases
 
