@@ -29,6 +29,8 @@ type GetSession<S extends Record<string, unknown> = DefaultSession> = (options: 
 export interface NextAuthConfig {
   baseUrl: string
   basePath: string
+  baseUrlServer: string
+  basePathServer: string
   /** 0 means disabled (don't send); 60 means send every 60 seconds */
   keepAlive: number
   /** 0 means disabled (only use cache); 60 means sync if last checked > 60 seconds ago */

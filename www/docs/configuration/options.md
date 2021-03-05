@@ -21,6 +21,14 @@ _e.g. `NEXTAUTH_URL=https://example.com/custom-route/api/auth`_
 To set environment variables on Vercel, you can use the [dashboard](https://vercel.com/dashboard) or the `now env` command.
 :::
 
+### NEXTAUTH_URL_INTERNAL
+
+If provided, server-side calls will use this instead of `NEXTAUTH_URL`. Useful in environments when the server doesn't have access to the canonical URL of your site. Defaults to `NEXTAUTH_URL`.
+
+```
+NEXTAUTH_URL_INTERNAL=http://10.240.8.16
+```
+
 ---
 
 ## Options
