@@ -71,7 +71,12 @@ const SessionContext = createContext()
  */
 export function useSession (session) {
   const context = useContext(SessionContext)
-  const [data, setData] = useState(context?.[0] ?? session)
+  if (context) return context
+  return _useSessionHook(session)
+}
+
+function _useSessionHook (session) {
+  const [data, setData] = useState(session)
   const [loading, setLoading] = useState(!data)
 
   useEffect(() => {
