@@ -356,7 +356,7 @@ export default function App ({ Component, pageProps }) {
 :::note
 **These options have no effect on clients that are not signed in.**
 
-Every tab/window maintains it's own copy of the local session state; the session it is not stored in shared storage like localStorage or sessionStorage. Any update in one tab/window triggers a message to other tabs/windows to update their own session state.
+Every tab/window maintains its own copy of the local session state; the session is not stored in shared storage like localStorage or sessionStorage. Any update in one tab/window triggers a message to other tabs/windows to update their own session state.
 
 Using low values for `clientMaxAge` or `keepAlive` will increase network traffic and load on  authenticated clients and may impact hosting costs and performance.
 :::
