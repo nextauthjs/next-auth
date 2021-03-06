@@ -19,6 +19,7 @@ import GitLab from './gitlab'
 import Google from './google'
 import IdentityServer4 from './identity-server4'
 import Instagram from './instagram'
+import Kakao from './kakao'
 import LINE from './line'
 import LinkedIn from './linkedin'
 import MailRu from './mailru'
@@ -58,6 +59,7 @@ export default {
   Google,
   IdentityServer4,
   Instagram,
+  Kakao,
   LINE,
   LinkedIn,
   MailRu,
