@@ -130,9 +130,9 @@ function _useSessionHook (session) {
         __NEXTAUTH._clientSession = newClientSessionData
 
         setData(newClientSessionData)
+        setLoading(false)
       } catch (error) {
         logger.error('CLIENT_USE_SESSION_ERROR', error)
-      } finally {
         setLoading(false)
       }
     }
