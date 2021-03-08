@@ -1,5 +1,5 @@
 import { h } from 'preact' // eslint-disable-line no-unused-vars
-import render from 'preact-render-to-string'
+import { render } from 'preact-render-to-string'
 
 export default function signin ({ csrfToken, providers, callbackUrl, email, error: errorType }) {
   // We only want to render providers
