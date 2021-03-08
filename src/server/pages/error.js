@@ -1,6 +1,5 @@
 // @ts-check
 import { h } from 'preact' // eslint-disable-line no-unused-vars
-import render from 'preact-render-to-string'
 
 /**
  * Renders an error page.
@@ -57,7 +56,7 @@ export default function error ({ baseUrl, basePath, error = 'default', res }) {
 
   res.status(statusCode)
 
-  return render(
+  return (
     <div className='error'>
       <h1>{heading}</h1>
       <div className='message'>{message}</div>

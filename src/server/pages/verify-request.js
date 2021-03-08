@@ -1,8 +1,7 @@
 import { h } from 'preact' // eslint-disable-line no-unused-vars
-import render from 'preact-render-to-string'
 
 export default function verifyRequest ({ baseUrl }) {
-  return render(
+  return (
     <div className='verify-request'>
       <h1>Check your email</h1>
       <p>A sign in link has been sent to your email address.</p>
