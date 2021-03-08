@@ -71,7 +71,7 @@ export default async function callback (req, res) {
             return res.redirect(signInCallbackResponse)
           }
         } catch (error) {
-          return res.redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
+          return res.redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error.message)}`)
         }
 
         // Sign user in
@@ -162,7 +162,7 @@ export default async function callback (req, res) {
           return res.redirect(signInCallbackResponse)
         }
       } catch (error) {
-        return res.redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
+        return res.redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error.message)}`)
       }
 
       // Sign user in
@@ -230,7 +230,7 @@ export default async function callback (req, res) {
         return res.redirect(userObjectReturnedFromAuthorizeHandler)
       }
     } catch (error) {
-      return res.redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
+      return res.redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error.message)}`)
     }
 
     const user = userObjectReturnedFromAuthorizeHandler
@@ -244,7 +244,7 @@ export default async function callback (req, res) {
         return res.redirect(signInCallbackResponse)
       }
     } catch (error) {
-      return res.redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
+      return res.redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error.message)}`)
     }
 
     const defaultJwtPayload = {

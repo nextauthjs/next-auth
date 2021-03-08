@@ -18,12 +18,15 @@ import GitHub from './github'
 import GitLab from './gitlab'
 import Google from './google'
 import IdentityServer4 from './identity-server4'
+import Instagram from './instagram'
+import Kakao from './kakao'
 import LINE from './line'
 import LinkedIn from './linkedin'
 import MailRu from './mailru'
 import Medium from './medium'
 import Netlify from './netlify'
 import Okta from './okta'
+import Osso from './osso'
 import Reddit from './reddit'
 import Salesforce from './salesforce'
 import Slack from './slack'
@@ -55,12 +58,15 @@ export default {
   GitLab,
   Google,
   IdentityServer4,
+  Instagram,
+  Kakao,
   LINE,
   LinkedIn,
   MailRu,
   Medium,
   Netlify,
   Okta,
+  Osso,
   Reddit,
   Salesforce,
   Slack,
