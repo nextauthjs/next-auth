@@ -1,3 +1,4 @@
+import renderToString from 'preact-render-to-string'
 import signin from './signin'
 import signout from './signout'
 import verifyRequest from './verify-request'
@@ -10,7 +11,7 @@ export default function renderPage (req, res) {
 
   res.setHeader('Content-Type', 'text/html')
   function send ({ html, title }) {
-    res.send(`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>${css()}</style><title>${title}</title></head><body class="__next-auth-theme-${theme}"><div class="page">${html}</div></body></html>`)
+    res.send(`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>${css()}</style><title>${title}</title></head><body class="__next-auth-theme-${theme}"><div class="page">${renderToString(html)}</div></body></html>`)
   }
 
   return {
