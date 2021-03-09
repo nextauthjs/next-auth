@@ -7,10 +7,11 @@ import { h } from 'preact' // eslint-disable-line no-unused-vars
  *   baseUrl: string
  *   basePath: string
  *   error?: string
+ *   locale?: string
  *   res: import("..").NextAuthResponse
  * }} params
  */
-export default function error ({ baseUrl, basePath, error = 'default', res }) {
+export default function error ({ baseUrl, basePath, error = 'default', locale, res }) {
   const signinPageUrl = `${baseUrl}${basePath}/signin`
 
   const errors = {
@@ -59,6 +60,8 @@ export default function error ({ baseUrl, basePath, error = 'default', res }) {
   return (
     <div className='error'>
       <h1>{heading}</h1>
+      {locale &&
+        <p>Locale: {locale ? locale : 'N/A'}</p>}
       <div className='message'>{message}</div>
       {signin}
     </div>

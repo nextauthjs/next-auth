@@ -9,7 +9,8 @@ export default async function signin (req, res) {
     baseUrl,
     basePath,
     adapter,
-    callbacks
+    callbacks,
+    locale
   } = req.options
 
   if (!provider.type) {
@@ -66,9 +67,15 @@ export default async function signin (req, res) {
       return res.redirect(`${baseUrl}${basePath}/error?error=EmailSignin`)
     }
 
-    return res.redirect(`${baseUrl}${basePath}/verify-request?provider=${encodeURIComponent(
-      provider.id
-    )}&type=${encodeURIComponent(provider.type)}`)
+    const params = new URLSearchParams({
+      provider: provider.id,
+      type: provider.type
+    })
+    if (locale) {
+      params.append('locale', locale)
+    }
+
+    return res.redirect(`${baseUrl}${basePath}/verify-request?${params.toString()}`)
   }
   return res.redirect(`${baseUrl}${basePath}/signin`)
 }

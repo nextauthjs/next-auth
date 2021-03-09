@@ -1,6 +1,6 @@
 import { h } from 'preact' // eslint-disable-line no-unused-vars
 
-export default function signin ({ csrfToken, providers, callbackUrl, email, error: errorType }) {
+export default function signin ({ csrfToken, providers, callbackUrl, email, error: errorType, locale }) {
   // We only want to render providers
   const providersToRender = providers.filter(provider => {
     if (provider.type === 'oauth' || provider.type === 'email') {
@@ -31,6 +31,8 @@ export default function signin ({ csrfToken, providers, callbackUrl, email, erro
 
   return (
     <div className='signin'>
+      {locale &&
+        <p>Locale: {locale ? locale : 'N/A'}</p>}
       {error &&
         <div className='error'>
           <p>{error}</p>

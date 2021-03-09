@@ -69,7 +69,9 @@ async function NextAuthHandler (req, res, userOptions) {
 
     const { csrfToken, csrfTokenVerified } = csrfTokenHandler(req, res, cookies, secret)
 
-    const providers = parseProviders({ providers: userOptions.providers, baseUrl, basePath })
+    const locale = req.query.locale || undefined
+
+    const providers = parseProviders({ providers: userOptions.providers, baseUrl, basePath, locale })
     const provider = providers.find(({ id }) => id === providerId)
 
     if (provider &&
@@ -131,6 +133,7 @@ async function NextAuthHandler (req, res, userOptions) {
         ...userOptions.callbacks
       },
       pkce: {},
+      locale,
       logger
     }
 
@@ -149,17 +152,21 @@ async function NextAuthHandler (req, res, userOptions) {
           return res.json({ csrfToken })
         case 'signin':
           if (pages.signIn) {
-            let signinUrl = `${pages.signIn}${pages.signIn.includes('?') ? '&' : '?'}callbackUrl=${req.options.callbackUrl}`
+            // prepend locale to custom page path if available
+            let signinUrl = `${locale ? `/${locale}` : ""}${pages.signIn}${pages.signIn.includes('?') ? '&' : '?'}callbackUrl=${req.options.callbackUrl}`
             if (error) { signinUrl = `${signinUrl}&error=${error}` }
             return res.redirect(signinUrl)
           }
 
-          return render.signin()
+          // pass locale to default component
+          return render.signin({ locale })
         case 'signout':
           if (pages.signOut) {
-            return res.redirect(`${pages.signOut}${pages.signOut.includes('?') ? '&' : '?'}error=${error}`)
+            return res.redirect(`${locale ? `/${locale}` : ""}${pages.signOut}${pages.signOut.includes('?') ? '&' : '?'}error=${error}`)
           }
-          return render.signout()
+
+          // pass locale to default component
+          return render.signout({ locale })
         case 'callback':
           if (provider) {
             if (await pkce.handleCallback(req, res)) return
@@ -169,12 +176,15 @@ async function NextAuthHandler (req, res, userOptions) {
           break
         case 'verify-request':
           if (pages.verifyRequest) {
-            return res.redirect(pages.verifyRequest)
+            // prepend locale to custom page path if available
+            return res.redirect(locale ? `/${locale}` : "" + pages.verifyRequest)
           }
-          return render.verifyRequest()
+
+          // pass locale to default component
+          return render.verifyRequest({ locale })
         case 'error':
           if (pages.error) {
-            return res.redirect(`${pages.error}${pages.error.includes('?') ? '&' : '?'}error=${error}`)
+            return res.redirect(`${locale ? `/${locale}` : ""}${pages.error}${pages.error.includes('?') ? '&' : '?'}error=${error}`)
           }
 
           // These error messages are displayed in line on the sign in page
@@ -192,7 +202,8 @@ async function NextAuthHandler (req, res, userOptions) {
             return res.redirect(`${baseUrl}${basePath}/signin?error=${error}`)
           }
 
-          return render.error({ error })
+          // pass locale to default component
+          return render.error({ error, locale })
         default:
       }
     } else if (req.method === 'POST') {
