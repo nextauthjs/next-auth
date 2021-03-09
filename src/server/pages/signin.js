@@ -32,7 +32,7 @@ export default function signin ({ csrfToken, providers, callbackUrl, email, erro
   return (
     <div className='signin'>
       {locale &&
-        <p>Locale: {locale ? locale : 'N/A'}</p>}
+        <p>Locale: {locale || 'N/A'}</p>}
       {error &&
         <div className='error'>
           <p>{error}</p>

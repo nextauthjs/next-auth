@@ -23,12 +23,12 @@ export default async function signin (req, res) {
       return res.redirect(authorizationUrl)
     } catch (error) {
       logger.error('SIGNIN_OAUTH_ERROR', error)
-      return res.redirect(`${baseUrl}${basePath}/error?error=OAuthSignin`)
+      return res.redirect(`${baseUrl}${basePath}/error?error=OAuthSignin${locale ? '&locale=' + locale : ''}`)
     }
   } else if (provider.type === 'email' && req.method === 'POST') {
     if (!adapter) {
       logger.error('EMAIL_REQUIRES_ADAPTER_ERROR')
-      return res.redirect(`${baseUrl}${basePath}/error?error=Configuration`)
+      return res.redirect(`${baseUrl}${basePath}/error?error=Configuration${locale ? '&locale=' + locale : ''}`)
     }
     const { getUserByEmail } = await adapter.getAdapter(req.options)
 
@@ -47,13 +47,13 @@ export default async function signin (req, res) {
     try {
       const signInCallbackResponse = await callbacks.signIn(profile, account, { email, verificationRequest: true })
       if (signInCallbackResponse === false) {
-        return res.redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
+        return res.redirect(`${baseUrl}${basePath}/error?error=AccessDenied${locale ? '&locale=' + locale : ''}`)
       } else if (typeof signInCallbackResponse === 'string') {
         return res.redirect(signInCallbackResponse)
       }
     } catch (error) {
       if (error instanceof Error) {
-        return res.redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`)
+        return res.redirect(`${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}${locale ? '&locale=' + locale : ''}`)
       }
       // TODO: Remove in a future major release
       logger.warn('SIGNIN_CALLBACK_REJECT_REDIRECT')
@@ -64,7 +64,7 @@ export default async function signin (req, res) {
       await emailSignin(email, provider, req.options)
     } catch (error) {
       logger.error('SIGNIN_EMAIL_ERROR', error)
-      return res.redirect(`${baseUrl}${basePath}/error?error=EmailSignin`)
+      return res.redirect(`${baseUrl}${basePath}/error?error=EmailSignin${locale ? '&locale=' + locale : ''}`)
     }
 
     const params = new URLSearchParams({
@@ -77,5 +77,5 @@ export default async function signin (req, res) {
 
     return res.redirect(`${baseUrl}${basePath}/verify-request?${params.toString()}`)
   }
-  return res.redirect(`${baseUrl}${basePath}/signin`)
+  return res.redirect(`${baseUrl}${basePath}/signin${locale ? '&locale=' + locale : ''}`)
 }

@@ -62,6 +62,8 @@ export interface NextAuthOptions {
   cookies?: CookiesOptions
   /** @docs https://next-auth.js.org/configuration/options#logger */
   logger: LoggerInstance
+  /** @docs https://next-auth.js.org/configuration/options#locale */
+  locale?: string
 }
 
 /** Options that are the same both in internal and user provided options. */

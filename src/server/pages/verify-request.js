@@ -6,7 +6,7 @@ export default function verifyRequest ({ baseUrl, locale }) {
       <h1>Check your email</h1>
       <p>A sign in link has been sent to your email address.</p>
       <p><a className='site' href={baseUrl}>{baseUrl.replace(/^https?:\/\//, '')}</a></p>
-      <p>Locale: {locale ? locale : 'N/A'}</p>
+      <p>Locale: {locale || 'N/A'}</p>
     </div>
   )
 }

@@ -206,9 +206,9 @@ export async function signIn (provider, options = {}, authorizationParams = {}) 
   // Redirect to sign in page if no valid provider specified
   if (!(provider in providers)) {
     const params = new URLSearchParams({
-      callbackUrl,
+      callbackUrl
     })
-    if (__NEXTAUTH.locale) params.append('locale', __NEXTAUTH.locale);
+    if (__NEXTAUTH.locale) params.append('locale', __NEXTAUTH.locale)
     // If Provider not recognized, redirect to sign in page
     window.location = `${baseUrl}/signin?${params.toString()}`
     return
@@ -341,7 +341,7 @@ export function setOptions ({ baseUrl, basePath, clientMaxAge, keepAlive, locale
  */
 export function Provider ({ children, session, options }) {
   // inject locale to options for it to be available later on during auth
-  const { locale } = useRouter();
+  const { locale } = useRouter()
   setOptions({ locale, ...options })
   return createElement(
     SessionContext.Provider,

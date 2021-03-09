@@ -61,7 +61,7 @@ export default function error ({ baseUrl, basePath, error = 'default', locale, r
     <div className='error'>
       <h1>{heading}</h1>
       {locale &&
-        <p>Locale: {locale ? locale : 'N/A'}</p>}
+        <p>Locale: {locale || 'N/A'}</p>}
       <div className='message'>{message}</div>
       {signin}
     </div>
