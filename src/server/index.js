@@ -158,15 +158,13 @@ async function NextAuthHandler (req, res, userOptions) {
             return res.redirect(signinUrl)
           }
 
-          // pass locale to default component
-          return render.signin({ locale })
+          return render.signin()
         case 'signout':
           if (pages.signOut) {
             return res.redirect(`${locale ? `/${locale}` : ''}${pages.signOut}${pages.signOut.includes('?') ? '&' : '?'}error=${error}`)
           }
 
-          // pass locale to default component
-          return render.signout({ locale })
+          return render.signout()
         case 'callback':
           if (provider) {
             if (await pkce.handleCallback(req, res)) return
@@ -180,8 +178,7 @@ async function NextAuthHandler (req, res, userOptions) {
             return res.redirect(locale ? `/${locale}` : '' + pages.verifyRequest)
           }
 
-          // pass locale to default component
-          return render.verifyRequest({ locale })
+          return render.verifyRequest()
         case 'error':
           if (pages.error) {
             return res.redirect(`${locale ? `/${locale}` : ''}${pages.error}${pages.error.includes('?') ? '&' : '?'}error=${error}`)
@@ -202,8 +199,7 @@ async function NextAuthHandler (req, res, userOptions) {
             return res.redirect(`${baseUrl}${basePath}/signin?error=${error}${locale ? '&locale=' + locale : ''}`)
           }
 
-          // pass locale to default component
-          return render.error({ error, locale })
+          return render.error({ error })
         default:
       }
     } else if (req.method === 'POST') {
