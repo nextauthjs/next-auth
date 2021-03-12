@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer'
 import logger from '../lib/logger'
-const merge = require('lodash.merge')
+import defaultTranslations from '../server/lib/default-translations'
+import { mergeDeep } from '../lib/object-utils'
 
 export default (options) => {
   return {
@@ -23,19 +24,9 @@ export default (options) => {
   }
 }
 
-export const defaultTranslations = {
-  subject: 'Sign in to %s',
-  text: 'Sign in to %s',
-  html: {
-    signInAs: 'Sign in as <strong>%s</strong>',
-    signIn: 'Sign In',
-    didNotRequestHint: 'If you did not request this email you can safely ignore it.'
-  }
-}
-
 const sendVerificationRequest = ({ identifier: email, url, baseUrl, provider, locale, locales }) => {
   // merge default and client provided translations
-  const texts = merge({}, defaultTranslations, locales?.[locale]?.email)
+  const texts = mergeDeep({}, defaultTranslations.email, locales[locale]?.email)
 
   return new Promise((resolve, reject) => {
     const { server, from } = provider
