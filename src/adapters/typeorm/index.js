@@ -293,7 +293,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
       try {
         const { baseUrl } = appOptions
         const { sendVerificationRequest, maxAge } = provider
-        const { locale, translations } = options
+        const { locale, locales } = options
 
         // Store hashed token (using secret as salt) so that tokens cannot be exploited
         // even if the contents of the database is compromised.
@@ -313,7 +313,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
 
         // With the verificationCallback on a provider, you can send an email, or queue
         // an email to be sent, or perform some other action (e.g. send a text message)
-        await sendVerificationRequest({ identifier, url, token, baseUrl, provider, locale, translations })
+        await sendVerificationRequest({ identifier, url, token, baseUrl, provider, locale, locales })
 
         return verificationRequest
       } catch (error) {

@@ -60,7 +60,7 @@ export const defaultTranslations = {
 
 /** Takes a request and response, and gives renderable pages */
 export default function renderPage (req, res) {
-  const { baseUrl, basePath, callbackUrl, csrfToken, providers, theme, locale, translations } = req.options
+  const { baseUrl, basePath, callbackUrl, csrfToken, providers, theme, locale, locales } = req.options
 
   res.setHeader('Content-Type', 'text/html')
   function send ({ html, title }) {
@@ -68,7 +68,7 @@ export default function renderPage (req, res) {
   }
 
   // merge default and client provided translations
-  const texts = merge({}, defaultTranslations, translations?.[locale])
+  const texts = merge({}, defaultTranslations, locales?.[locale])
 
   return {
     signin (props) {

@@ -44,8 +44,8 @@ export interface NextAuthOptions {
   jwt?: any
   /** @docs https://next-auth.js.org/configuration/options#pages */
   pages?: NextAuthPages
-  /** @docs https://next-auth.js.org/configuration/options#translations  */
-  translations?: {
+  /** @docs https://next-auth.js.org/configuration/options#locales  */
+  locales?: {
     /** locale key that matches locale set in next.config.js */
     [key: string]: {
       [key: keyof NextAuthPages | 'email']: {
@@ -78,7 +78,7 @@ export interface NextAuthOptions {
 }
 
 /** Options that are the same both in internal and user provided options. */
-export type NextAuthSharedOptions = 'pages' | 'jwt' | 'events' | 'callbacks' | 'cookies' | 'secret' | 'adapter' | 'theme' | 'debug' | 'logger' | 'translations'
+export type NextAuthSharedOptions = 'pages' | 'jwt' | 'events' | 'callbacks' | 'cookies' | 'secret' | 'adapter' | 'theme' | 'debug' | 'logger' | 'locales'
 
 export interface NextAuthInternalOptions extends Pick<NextAuthOptions, NextAuthSharedOptions> {
   pkce?: {

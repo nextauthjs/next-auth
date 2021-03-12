@@ -51,7 +51,7 @@ export default NextAuth({
       }
     })
   ],
-  translations: {
+  locales: {
     // Override default translations per-locale if needed
     es: {
       signIn: {

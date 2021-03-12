@@ -33,9 +33,9 @@ export const defaultTranslations = {
   }
 }
 
-const sendVerificationRequest = ({ identifier: email, url, baseUrl, provider, locale, translations }) => {
+const sendVerificationRequest = ({ identifier: email, url, baseUrl, provider, locale, locales }) => {
   // merge default and client provided translations
-  const texts = merge({}, defaultTranslations, translations?.[locale]?.email)
+  const texts = merge({}, defaultTranslations, locales?.[locale]?.email)
 
   return new Promise((resolve, reject) => {
     const { server, from } = provider
