@@ -10,7 +10,7 @@ export default function Layout ({ children }) {
       <Header />
       <main>
         <p>Current locale: {locale || 'N/A'}</p>
-        <p>Available locales: {locales ? locales.join(', ') : 'N/A'}</p>
+        <p>Available locales: {locales?.join(', ') ?? 'N/A'}</p>
         {children}
       </main>
       <Footer />
