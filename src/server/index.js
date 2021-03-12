@@ -53,7 +53,8 @@ async function NextAuthHandler (req, res, userOptions) {
       nextauth,
       action = nextauth[0],
       providerId = nextauth[1],
-      error = nextauth[1]
+      error = nextauth[1],
+      locale
     } = req.query
 
     // @todo refactor all existing references to baseUrl and basePath
@@ -68,8 +69,6 @@ async function NextAuthHandler (req, res, userOptions) {
     const secret = createSecret({ userOptions, basePath, baseUrl })
 
     const { csrfToken, csrfTokenVerified } = csrfTokenHandler(req, res, cookies, secret)
-
-    const locale = req.query.locale || undefined
 
     const providers = parseProviders({ providers: userOptions.providers, baseUrl, basePath, locale })
     const provider = providers.find(({ id }) => id === providerId)
