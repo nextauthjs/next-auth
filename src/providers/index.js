@@ -12,6 +12,7 @@ import Discord from './discord'
 import Email from './email'
 import EVEOnline from './eveonline'
 import Facebook from './facebook'
+import FACEIT from './faceit'
 import Foursquare from './foursquare'
 import FusionAuth from './fusionauth'
 import GitHub from './github'
@@ -52,6 +53,7 @@ export default {
   Email,
   EVEOnline,
   Facebook,
+  FACEIT,
   Foursquare,
   FusionAuth,
   GitHub,
