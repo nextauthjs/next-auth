@@ -169,7 +169,7 @@ async function NextAuthHandler (req, res, userOptions) {
           break
         case 'verify-request':
           if (pages.verifyRequest) {
-            return res.redirect(pages.verifyRequest)
+            return res.redirect(`${pages.verifyRequest}${pages.verifyRequest.includes('?') ? '&' : '?'}email=${req.body.email?.toLowerCase() || ''}`)
           }
           return render.verifyRequest()
         case 'error':
