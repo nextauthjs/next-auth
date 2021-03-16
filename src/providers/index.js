@@ -37,6 +37,7 @@ import Twitch from './twitch'
 import Twitter from './twitter'
 import VK from './vk'
 import Yandex from './yandex'
+import Zoho from './zoho'
 
 export default {
   Apple,
@@ -77,5 +78,6 @@ export default {
   Twitch,
   Twitter,
   VK,
-  Yandex
+  Yandex,
+  Zoho
 }
