@@ -167,17 +167,16 @@ async function getOAuth2AccessToken (code, provider, codeVerifier) {
           raw = querystring.parse(data)
         }
 
-        let accessToken;
+        let accessToken
         if (provider.id === 'slack') {
-          const { ok, error } = raw;
+          const { ok, error } = raw
           if (!ok) {
-            return reject(error);
+            return reject(error)
           }
 
-          accessToken = raw.authed_user.access_token;
-        }
-        else {
-          accessToken = raw.access_token;
+          accessToken = raw.authed_user.access_token
+        } else {
+          accessToken = raw.access_token
         }
 
         resolve({
