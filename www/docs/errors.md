@@ -77,6 +77,18 @@ The provider you tried to use failed when setting [PKCE or Proof Key for Code Ex
 The `code_verifier` is saved in a cookie called (by default) `__Secure-next-auth.pkce.code_verifier` which expires after 15 minutes.
 Check if `cookies.pkceCodeVerifier` is configured correctly. The default `code_challenge_method` is `"S256"`. This is currently not configurable to `"plain"`, as it is not recommended, and in most cases it is only supported for backward compatibility.
 
+#### ERR_JOSE_ALG_NOT_WHITELISTED
+
+The algorithm used for generating your key isn't listed as supported. You can define what is supported using
+
+````
+  jwt: {
+    signingKey: {"kty":"oct","kid":"--","alg":"HS256","k":"--"}
+    verificationOptions: {
+      algorithms: ["HS256"]
+    }
+  }
+````
 ---
 
 ### Session Handling
