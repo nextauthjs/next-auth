@@ -1,6 +1,7 @@
 import { createHash } from 'crypto'
 import logger from '../../../lib/logger'
 import { OAuthCallbackError } from '../../../lib/errors'
+import URLExtended from '../../../lib/url-extended'
 
 /**
  * For OAuth 2.0 flows, if the provider supports state,
@@ -29,7 +30,7 @@ export async function handleCallback (req, res) {
     }
   } catch (error) {
     logger.error('STATE_ERROR', error)
-    return res.redirect(`${baseUrl}${basePath}/error?error=OAuthCallback${locale ? '&locale=' + locale : ''}`)
+    return res.redirect(new URLExtended(`${basePath}/error`, { error: 'OAuthCallback', locale }, baseUrl).toString())
   }
 }
 
@@ -63,7 +64,7 @@ export async function handleSignin (req, res) {
     )
   } catch (error) {
     logger.error('SIGNIN_OAUTH_ERROR', error)
-    return res.redirect(`${baseUrl}${basePath}/error?error=OAuthSignin${locale ? '&locale=' + locale : ''}`)
+    return res.redirect(new URLExtended(`${basePath}/error`, { error: 'OAuthSignin', locale }, baseUrl).toString())
   }
 }
 
