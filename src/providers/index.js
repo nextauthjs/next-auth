@@ -12,6 +12,7 @@ import Discord from './discord'
 import Email from './email'
 import EVEOnline from './eveonline'
 import Facebook from './facebook'
+import FACEIT from './faceit'
 import Foursquare from './foursquare'
 import FusionAuth from './fusionauth'
 import GitHub from './github'
@@ -36,6 +37,7 @@ import Twitch from './twitch'
 import Twitter from './twitter'
 import VK from './vk'
 import Yandex from './yandex'
+import Zoho from './zoho'
 
 export default {
   Apple,
@@ -52,6 +54,7 @@ export default {
   Email,
   EVEOnline,
   Facebook,
+  FACEIT,
   Foursquare,
   FusionAuth,
   GitHub,
@@ -75,5 +78,6 @@ export default {
   Twitch,
   Twitter,
   VK,
-  Yandex
+  Yandex,
+  Zoho
 }
