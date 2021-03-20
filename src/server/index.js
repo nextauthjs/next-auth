@@ -225,7 +225,7 @@ async function NextAuthHandler (req, res, userOptions) {
           }
           break
         case '_log':
-          if(userOptions.logger) {
+          if (userOptions.logger) {
             try {
               const {
                 code = 'CLIENT_ERROR',
