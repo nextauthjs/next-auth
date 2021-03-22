@@ -136,7 +136,7 @@ async function getOAuth2AccessToken (code, provider, codeVerifier) {
     headers.Authorization = `Bearer ${code}`
   }
 
-  if (["pkce", "both"].includes(provider.protection)) {
+  if (['pkce', 'both'].includes(provider.protection)) {
     params.code_verifier = codeVerifier
   }
 
