@@ -225,6 +225,10 @@ async function getOAuth2 (provider, accessToken, results) {
     url = prepareProfileUrl({ provider, url, results })
   }
 
+  if (provider.id === 'orcid') {
+    url = url.replace('{orcid}', results.orcid)
+  }
+
   return new Promise((resolve, reject) => {
     this._request('GET', url, headers, null, accessToken, (error, profileData) => {
       if (error) {
