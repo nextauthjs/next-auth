@@ -27,6 +27,7 @@ import MailRu from './mailru'
 import Medium from './medium'
 import Netlify from './netlify'
 import Okta from './okta'
+import Orcid from './orcid'
 import Osso from './osso'
 import Reddit from './reddit'
 import Salesforce from './salesforce'
@@ -69,6 +70,7 @@ export default {
   Medium,
   Netlify,
   Okta,
+  Orcid,
   Osso,
   Reddit,
   Salesforce,
