@@ -45,6 +45,7 @@ export default function Instagram (options) {
         email: null,
         image: null
       }
-    }
+    },
+    ...options
   }
 }

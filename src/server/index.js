@@ -227,18 +227,19 @@ async function NextAuthHandler (req, res, userOptions) {
           }
           break
         case '_log':
-          try {
-            if (!userOptions.logger) return
-            const {
-              code = 'CLIENT_ERROR',
-              level = 'error',
-              message = '[]'
-            } = req.body
+          if (userOptions.logger) {
+            try {
+              const {
+                code = 'CLIENT_ERROR',
+                level = 'error',
+                message = '[]'
+              } = req.body
 
-            logger[level](code, ...JSON.parse(message))
-          } catch (error) {
-            // If logging itself failed...
-            logger.error('LOGGER_ERROR', error)
+              logger[level](code, ...JSON.parse(message))
+            } catch (error) {
+              // If logging itself failed...
+              logger.error('LOGGER_ERROR', error)
+            }
           }
           return res.end()
         default:
