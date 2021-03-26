@@ -107,10 +107,11 @@ export default function SignIn({ csrfToken }) {
 }
 
 // This is the recommended way for Next.js 9.3 or newer
-export async function getServerSideProps(context){
-  const csrfToken = await getCsrfToken(context)
+export async function getServerSideProps(context) {
   return {
-    props: { csrfToken }
+    props: {
+      csrfToken: await getCsrfToken(context)
+    }
   }
 }
 
