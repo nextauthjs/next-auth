@@ -9,6 +9,14 @@ _These tutorials are contributed by the community and hosted on this site._
 
 _New submissions and edits are welcome!_
 
+### [NextJS Authentication Crash Course with NextAuth.js](https://youtu.be/o_wZIVmWteQ)
+
+This tutorial dives in to the ins and outs of NextAuth including email, Github, Twitter and integrating with Auth0 in under hour.
+
+### [Create your own NextAuth.js Login Pages](https://youtu.be/kB6YNYZ63fw)
+
+This tutorial shows you how to jump in and create your own custom login pages versus using the ones provided by NextAuth.js
+
 ### [Refresh Token Rotation](tutorials/refresh-token-rotation)
 
 How to implement refresh token rotation.
