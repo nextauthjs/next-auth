@@ -106,11 +106,22 @@ export default function SignIn({ csrfToken }) {
   )
 }
 
+// This is the recommended way for Next.js 9.3 or newer
+export async function getServerSideProps(context){
+  const csrfToken = await getCsrfToken(context)
+  return {
+    props: { csrfToken }
+  }
+}
+
+/*
+// If older than Next.js 9.3
 SignIn.getInitialProps = async (context) => {
   return {
     csrfToken: await csrfToken(context)
   }
 }
+*/
 ```
 
 You can also use the `signIn()` function which will handle obtaining the CSRF token for you:
