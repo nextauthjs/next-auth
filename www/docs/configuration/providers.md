@@ -56,10 +56,6 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 
 <Image src="/img/signin.png" alt="Signin Screenshot" />
 
-:::tip
-If you want to create a custom sign in link you can link to **/api/auth/signin/[provider]** which will sign in the user in directly with that provider.
-:::
-
 ### Using a custom provider
 
 You can use an OAuth provider that isn't built-in by using a custom object.
