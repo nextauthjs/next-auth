@@ -16,7 +16,7 @@ const PKCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 export async function handleCallback (req, res) {
   const { cookies, provider, baseUrl, basePath } = req.options
   try {
-    if (![provider.protection].flat().includes('pkce')) {// Provider does not support PKCE, nothing to do.
+    if (![provider.protection].flat().includes('pkce')) { // Provider does not support PKCE, nothing to do.
       return
     }
 
