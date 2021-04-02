@@ -60,7 +60,7 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 
 You can use an OAuth provider that isn't built-in by using a custom object.
 
-As an example of what this looks like, this is the the provider object returned for the Google provider:
+As an example of what this looks like, this is the provider object returned for the Google provider:
 
 ```js
 {
