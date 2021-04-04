@@ -60,7 +60,7 @@ export default async function callbackHandler (sessionToken, profile, providerAc
       try {
         session = await jwt.decode({ ...jwt, token: sessionToken })
         if (session?.sub) {
-          user = await getUser(session.sub)
+          user = await getUser(parseInt(session.sub))
           isSignedIn = !!user
         }
       } catch {
