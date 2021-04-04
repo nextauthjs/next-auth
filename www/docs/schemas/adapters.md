@@ -185,7 +185,7 @@ Once you have saved your schema, use the Prisma CLI to generate the Prisma Clien
 npx prisma generate
 ```
 
-To configure you database to use the new schema (i.e. create tables and columns) use the `primsa migrate` command:
+To configure you database to use the new schema (i.e. create tables and columns) use the `prisma migrate` command:
 
 ```
 npx prisma migrate dev --preview-feature
