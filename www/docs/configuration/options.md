@@ -18,7 +18,7 @@ If your Next.js application uses a custom base path, specify the route to the AP
 _e.g. `NEXTAUTH_URL=https://example.com/custom-route/api/auth`_
 
 :::tip
-To set environment variables on Vercel, you can use the [dashboard](https://vercel.com/dashboard) or the `now env` command.
+To set environment variables on Vercel, you can use the [dashboard](https://vercel.com/dashboard) or the `vercel env` command.
 :::
 
 ### NEXTAUTH_URL_INTERNAL
