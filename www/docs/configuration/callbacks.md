@@ -79,7 +79,7 @@ When using NextAuth.js without a database, the user object it will always be a p
 :::
 
 :::tip
-If you only want to allow users who already have accounts in the database to sign in, you can check for the existance of a `user.id` property and reject any sign in attempts from accounts that do not have one.
+If you only want to allow users who already have accounts in the database to sign in, you can check for the existence of a `user.id` property and reject any sign in attempts from accounts that do not have one.
 
 If you are using NextAuth.js without database and want to control who can sign in, you can check their email address or profile against a hard coded list in the `signIn()` callback.
 :::
