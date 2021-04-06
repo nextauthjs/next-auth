@@ -141,7 +141,7 @@ You can look at the existing built-in providers for inspiration.
 |       profile       |       An callback returning an object with the user's info       |            `object`             |    No    |
 |       idToken       |   Set to `true` for services that use ID Tokens (e.g. OpenID)    |            `boolean`            |    No    |
 |       headers       |      Any headers that should be sent to the OAuth provider       |            `object`             |    No    |
-|     protection      | Additional security for OAuth login flows (defaults to `state`)  |     `pkce`, `state`, `none`     |    No    |
+|     protection      | Additional security for OAuth login flows (defaults to `state`)  |`[pkce]`,`[state]`,`[pkce,state]`|    No    |
 |        state        | Same as `protection: "state"`. Being deprecated, use protection. |            `boolean`            |    No    |
 
 ## Sign in with Email
