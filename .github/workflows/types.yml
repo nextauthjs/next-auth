@@ -22,4 +22,4 @@ jobs:
       - name: Install dependencies
         uses: bahmutov/npm-install@v1
       - name: Check types
-      - run: npm run test:types
+        run: npm run test:types
