@@ -88,7 +88,7 @@ type Email = (
   options: ProviderEmailOptions
 ) => NonNullParams<ProviderEmailOptions> & { id: "email"; type: "email" }
 
-interface VerificationRequestParams extends Provider {
+export interface VerificationRequestParams extends Provider {
   identifier: string
   url: string
   baseUrl: string
@@ -96,7 +96,7 @@ interface VerificationRequestParams extends Provider {
   provider: ProviderEmailOptions
 }
 
-interface ProviderEmailOptions {
+export interface ProviderEmailOptions {
   name?: string
   server?: string | ProviderEmailServer
   from?: string
@@ -106,7 +106,7 @@ interface ProviderEmailOptions {
   ) => Promise<void>
 }
 
-interface ProviderEmailServer {
+export interface ProviderEmailServer {
   host: string
   port: number
   auth: {
@@ -125,14 +125,14 @@ type Credentials = (
   type: "credentials"
 }
 
-interface ProviderCredentialsOptions {
+export interface ProviderCredentialsOptions {
   id?: string
   name: string
   credentials: CredentialInput
   authorize: (credentials: Record<string, string>) => Promise<User | null>
 }
 
-interface CredentialInput {
+export interface CredentialInput {
   [key: string]: {
     label?: string
     type?: string
@@ -141,7 +141,7 @@ interface CredentialInput {
   }
 }
 
-type OptionsBase = {
+export type OptionsBase = {
   [K in keyof Omit<Provider, "id">]?: Provider[K]
 }
 
@@ -149,7 +149,7 @@ type OptionsBase = {
  * Provider options
  * @link https://next-auth.js.org/configuration/providers#oauth-provider-options
  */
-interface ProviderCommonOptions extends OptionsBase {
+export interface ProviderCommonOptions extends OptionsBase {
   authorizationParams?: Record<string, string>
   clientId: string
   clientSecret: string
