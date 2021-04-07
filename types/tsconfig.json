@@ -7,9 +7,17 @@
     "noImplicitThis": true,
     "strictFunctionTypes": true,
     "strictNullChecks": true,
+    "esModuleInterop": true,
     "noEmit": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
-    "paths": { "next-auth": ["."] }
+    "paths": {
+      "next-auth": ["."],
+      "next-auth/providers": ["./providers"],
+      "next-auth/adapters": ["./adapters"],
+      "next-auth/client": ["./client"],
+      "next-auth/jwt": ["./jwt"],
+      "next": ["./_next"]
+    }
   }
 }

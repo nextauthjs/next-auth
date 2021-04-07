@@ -1,0 +1,3 @@
+./types/tests/
+./types/tests/tsconfig.json
+./types/tests/tslint.json
