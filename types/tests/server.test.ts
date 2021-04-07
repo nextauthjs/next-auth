@@ -1,10 +1,3 @@
-/**
- * Typescript definition tests for next-auth module
- *
- * Note: These tests are intended to test the definitions only
- * in the sense of typing and call signature consistency. They
- * are not intended as functional tests.
- */
 import Providers, { AppProvider, Provider } from "next-auth/providers"
 import Adapters, {
   Adapter,
