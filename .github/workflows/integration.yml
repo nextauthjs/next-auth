@@ -9,17 +9,6 @@ on:
   pull_request:
 
 jobs:
-  types:
-    steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Install dependencies
-        uses: bahmutov/npm-install@v1
-      - name: Test types
-        run: npm run test:types
   test:
     # Only run tests integration against Pull Requests from branches in
     # this repository. We do this as integration tests require access to
