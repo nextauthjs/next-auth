@@ -17,13 +17,14 @@
     "test:app:start": "docker-compose -f test/docker/app.yml up -d",
     "test:app:rebuild": "npm run build && docker-compose -f test/docker/app.yml up -d --build",
     "test:app:stop": "docker-compose -f test/docker/app.yml down",
-    "test": "npm run test:app:rebuild && npm run test:integration && npm run test:app:stop",
+    "test": "npm run test:app:rebuild && npm run test:integration && npm run test:app:stop && npm run test:types",
     "test:db": "npm run test:db:mysql && npm run test:db:postgres && npm run test:db:mongodb && npm run test:db:mssql",
     "test:db:mysql": "node test/mysql.js",
     "test:db:postgres": "node test/postgres.js",
     "test:db:mongodb": "node test/mongodb.js",
     "test:db:mssql": "node test/mssql.js",
     "test:integration": "mocha test/integration",
+    "test:types": "dtslint types",
     "db:start": "docker-compose -f test/docker/databases.yml up -d",
     "db:stop": "docker-compose -f test/docker/databases.yml down",
     "prepublishOnly": "npm run build",
@@ -32,8 +33,10 @@
     "lint": "ts-standard",
     "lint:fix": "ts-standard --fix"
   },
+  "types": "types",
   "files": [
     "dist",
+    "types",
     "index.js",
     "providers.js",
     "adapters.js",
@@ -57,7 +60,7 @@
   },
   "peerDependencies": {
     "react": "^16.13.1 || ^17",
-    "react-dom": "^16.13.1 || ^17"
+    "react-dom": "16.13.1 || ^17"
   },
   "peerOptionalDependencies": {
     "mongodb": "^3.5.9",
@@ -81,6 +84,7 @@
     "conventional-changelog-conventionalcommits": "4.4.0",
     "cssnano": "^4.1.10",
     "dotenv": "^8.2.0",
+    "dtslint": "^4.0.8",
     "eslint": "^7.19.0",
     "mocha": "^8.1.3",
     "mongodb": "^3.5.9",
@@ -90,6 +94,7 @@
     "pg": "^8.2.1",
     "postcss-cli": "^7.1.1",
     "postcss-nested": "^4.2.1",
+    "prettier": "^2.2.1",
     "prisma": "^2.16.1",
     "puppeteer": "^5.2.1",
     "puppeteer-extra": "^3.1.15",
@@ -103,7 +108,8 @@
     "project": "./tsconfig.json",
     "ignore": [
       "test/",
-      "next-env.d.ts"
+      "next-env.d.ts",
+      "types/"
     ],
     "globals": [
       "localStorage",
