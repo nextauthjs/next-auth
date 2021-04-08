@@ -42,11 +42,22 @@ export default function SignIn({ providers }) {
   )
 }
 
+// This is the recommended way for Next.js 9.3 or newer
+export async function getServerSideProps(context){
+  const providers = await providers()
+  return {
+    props: { providers }
+  }
+}
+
+/*
+// If older than Next.js 9.3
 SignIn.getInitialProps = async () => {
   return {
     providers: await providers()
   }
 }
+*/
 ```
 
 ### Email Sign in
@@ -54,7 +65,7 @@ SignIn.getInitialProps = async () => {
 If you create a custom sign in form for email sign in, you will need to submit both fields for the **email** address and **csrfToken** from **/api/auth/csrf** in a POST request to **/api/auth/signin/email**.
 
 ```jsx title="pages/auth/email-signin.js"
-import { csrfToken } from 'next-auth/client'
+import { getCsrfToken } from 'next-auth/client'
 
 export default function SignIn({ csrfToken }) {
   return (
@@ -62,18 +73,29 @@ export default function SignIn({ csrfToken }) {
       <input name='csrfToken' type='hidden' defaultValue={csrfToken}/>
       <label>
         Email address
-        <input type='text' id='email' name='email'/>
+        <input type='email' id='email' name='email'/>
       </label>
       <button type='submit'>Sign in with Email</button>
     </form>
   )
 }
 
-SignIn.getInitialProps = async (context) => {
+// This is the recommended way for Next.js 9.3 or newer
+export async function getServerSideProps(context){
+  const csrfToken = await getCsrfToken(context)
   return {
-    csrfToken: await csrfToken(context)
+    props: { csrfToken }
   }
 }
+
+/*
+// If older than Next.js 9.3
+SignIn.getInitialProps = async (context) => {
+  return {
+    csrfToken: await getCsrfToken(context)
+  }
+}
+*/
 ```
 
 You can also use the `signIn()` function which will handle obtaining the CSRF token for you:
@@ -87,7 +109,7 @@ signIn('email', { email: 'jsmith@example.com' })
 If you create a sign in form for credentials based authentication, you will need to pass a **csrfToken** from **/api/auth/csrf** in a POST request to **/api/auth/callback/credentials**.
 
 ```jsx title="pages/auth/credentials-signin.js"
-import { csrfToken } from 'next-auth/client'
+import { getCsrfToken } from 'next-auth/client'
 
 export default function SignIn({ csrfToken }) {
   return (
@@ -99,18 +121,30 @@ export default function SignIn({ csrfToken }) {
       </label>
       <label>
         Password
-        <input name='password' type='text'/>
+        <input name='password' type='password'/>
       </label>
       <button type='submit'>Sign in</button>
     </form>
   )
 }
 
-SignIn.getInitialProps = async (context) => {
+// This is the recommended way for Next.js 9.3 or newer
+export async function getServerSideProps(context) {
   return {
-    csrfToken: await csrfToken(context)
+    props: {
+      csrfToken: await getCsrfToken(context)
+    }
   }
 }
+
+/*
+// If older than Next.js 9.3
+SignIn.getInitialProps = async (context) => {
+  return {
+    csrfToken: await getCsrfToken(context)
+  }
+}
+*/
 ```
 
 You can also use the `signIn()` function which will handle obtaining the CSRF token for you:
