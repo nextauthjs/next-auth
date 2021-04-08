@@ -122,7 +122,7 @@ jwt: {
   // A secret to use for key generation - you should set this explicitly
   // Defaults to NextAuth.js secret if not explicitly specified.
   // This is used to generate the actual signingKey and produces a warning
-  // message.
+  // message if not defined explicitly.
   // secret: 'INp8IvdIyeMcoGAgFGoA61DdBglwwSqnXJZkgz8PSnw',
   
   // You can generate a signing key using `jose newkey -s 512 -t oct -a HS512`
