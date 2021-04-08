@@ -102,9 +102,10 @@ async function decode ({
 async function getToken (params) {
   const {
     req,
-    // Use secure prefix for cookie name, unless URL is NEXTAUTH_URL is http://
-    // or not set (e.g. development or test instance) case use unprefixed name
-    secureCookie = !(!process.env.NEXTAUTH_URL || process.env.NEXTAUTH_URL.startsWith('http://')),
+    // Use secure prefix for cookie name if:
+    // 1) NEXTAUTH_URL is set and isn't http://
+    // 2) Deployed as a Vercel preview app - these are by default https://
+    secureCookie = !((!process.env.NEXTAUTH_URL && process.env.VERCEL_ENV !== "preview") || process.env.NEXTAUTH_URL.startsWith('http://')),
     cookieName = (secureCookie) ? '__Secure-next-auth.session-token' : 'next-auth.session-token',
     raw = false
   } = params
