@@ -1,7 +1,33 @@
-# NextAuth.js
-
-![Build Test](https://github.com/nextauthjs/next-auth/workflows/Build%20Test/badge.svg)
-![Integration Test](https://github.com/nextauthjs/next-auth/workflows/Integration%20Test/badge.svg)
+<p align="center">
+   <br/>
+   <a href="https://next-auth.js.org" target="_blank"><img width="150px" src="https://next-auth.js.org/img/logo/logo-sm.png" /></a>
+   <h3 align="center">NextAuth.js</h3>
+   <p align="center">Authentication for Next.js</p>
+   <p align="center">
+   Open Source. Full Stack. Own Your Data.
+   </p>
+   <p align="center" style="align: center;">
+      <a href="https://github.com/nextauthjs/next-auth/actions?query=workflow%3ARelease">
+        <img src="https://github.com/nextauthjs/next-auth/workflows/Release/badge.svg" alt="Release" />
+      </a>
+      <a href="https://github.com/nextauthjs/next-auth/actions?query=workflow%3A%22Integration+Test%22">
+        <img src="https://github.com/nextauthjs/next-auth/workflows/Integration%20Test/badge.svg" alt="Integration Test" />
+      </a>
+      <a href="https://bundlephobia.com/result?p=next-auth">
+        <img src="https://img.shields.io/bundlephobia/minzip/next-auth" alt="Bundle Size"/>
+      </a>
+      <a href="https://www.npmtrends.com/next-auth">
+        <img src="https://img.shields.io/npm/dm/next-auth" alt="Downloads" />
+      </a>
+      <a href="https://github.com/nextauthjs/next-auth/stargazers">
+        <img src="https://img.shields.io/github/stars/nextauthjs/next-auth" alt="Github Stars" />
+      </a>
+      <a href="https://www.npmjs.com/package/next-auth">
+        <img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?label=latest" alt="Github Stable Release" />
+      </a>
+      <img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?include_prereleases&label=prerelease&sort=semver" alt="Github Prelease" />
+   </p>
+</p>
 
 ## Overview
 
@@ -9,9 +35,15 @@ NextAuth.js is a complete open source authentication solution for [Next.js](http
 
 It is designed from the ground up to support Next.js and Serverless.
 
-[Follow the examples](https://next-auth.js.org/getting-started/example) to see how easy it is to use NextAuth.js for authentication.
+## Getting Started
 
-Install: `npm i next-auth`
+```
+npm install --save next-auth
+```
+
+The easiest way to continue getting started, is to follow the [getting started](https://next-auth.js.org/getting-started/example) section in our docs. 
+
+We also have a section of [tutorials](https://next-auth.js.org/tutorials) for those looking for more specific examples.
 
 See [next-auth.js.org](https://next-auth.js.org) for more information and documentation.
 
@@ -50,15 +82,15 @@ NextAuth.js can be used with or without a database.
 
 Advanced options allow you to define your own routines to handle controlling what accounts are allowed to sign in, for encoding and decoding JSON Web Tokens and to set custom cookie security policies and session properties, so you can control who is able to sign in and how often sessions have to be re-validated. 
 
-### Typescript
+### TypeScript
 
-This library gained Typescript support recently. You can install the types in the following way:
-```
-$ npm i -D @types/next-auth
-```
-In you encounter any issue with them, please raise an issue and add the "typescript" label to it, we'll try to help you with it as soon as possible.
+You can install the appropriate types via the following command:
 
-Alternatively you can raise a PR directly with your fixes on [**DefinitelyTyped**](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/next-auth).
+```
+npm install --save-dev @types/next-auth
+```
+
+As of now, TypeScript is a community effort. If you encounter any problems with the types package, please create an issue at [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/next-auth). Alternatively, you can open a pull request directly with your fixes there. We welcome anyone to start a discussion on migrating this package to TypeScript, or how to improve the TypeScript experience in general.
 
 ## Example
 
@@ -68,7 +100,7 @@ Alternatively you can raise a PR directly with your fixes on [**DefinitelyTyped*
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 
-const options = {
+export default NextAuth({
   providers: [
     // OAuth authentication providers
     Providers.Apple({
@@ -87,45 +119,51 @@ const options = {
   ],
   // SQL or MongoDB database (or leave empty)
   database: process.env.DATABASE_URL
-}
-
-export default (req, res) => NextAuth(req, res, options)
+})
 ```
 
 ### Add React Component
 
 ```javascript
-import React from 'react'
-import { 
-  useSession, 
-  signin, 
-  signout 
+import {
+  useSession, signIn, signOut
 } from 'next-auth/client'
 
-export default function myComponent() {
+export default function Component() {
   const [ session, loading ] = useSession()
-
-  return <p>
-    {!session && <>
-      Not signed in <br/>
-      <button onClick={signin}>Sign in</button>
-    </>}
-    {session && <>
+  if(session) {
+    return <>
       Signed in as {session.user.email} <br/>
-      <button onClick={signout}>Sign out</button>
-    </>}
-  </p>
+      <button onClick={() => signOut()}>Sign out</button>
+    </>
+  }
+  return <>
+    Not signed in <br/>
+    <button onClick={() => signIn()}>Sign in</button>
+  </>
 }
 ```
 
-## Acknowledgement
+## Acknowledgements
 
-[NextAuth.js is possible thanks to its contributors.](https://next-auth.js.org/contributors)
+[NextAuth.js is made possible thanks to all of its contributors.](https://next-auth.js.org/contributors)
 
-## Getting started
-
-[Follow the examples to get started.](https://next-auth.js.org/getting-started/example)
+<a href="https://github.com/nextauthjs/next-auth/graphs/contributors">
+  <img width="500px" src="https://contrib.rocks/image?repo=nextauthjs/next-auth" />
+</a>
+<div>
+<a href="https://vercel.com?utm_source=nextauthjs&utm_campaign=oss">
+<img width="170px" src="https://raw.githubusercontent.com/nextauthjs/next-auth/canary/www/static/img/powered-by-vercel.svg" alt="Powered By Vercel" />
+</a>
+</div>
+<div>
+<p align="left">Thanks to Vercel sponsoring this project by allowing it to be deployed for free for the entire NextAuth.js Team</p>
+</div>
 
 ## Contributing
 
-If you'd like to contribute to you can find useful information in our [Contributing Guide](https://github.com/iaincollins/next-auth/blob/main/CONTRIBUTING.md).
+We're open to all community contributions! If you'd like to contribute in any way, please first read our [Contributing Guide](https://github.com/nextauthjs/next-auth/blob/canary/CONTRIBUTING.md).
+
+## License
+
+ISC

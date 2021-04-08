@@ -1,7 +1,6 @@
 import { createHash, randomBytes } from 'crypto'
 
 import { CreateUserError } from '../../lib/errors'
-import logger from '../../lib/logger'
 
 const Adapter = (config) => {
   const {
@@ -21,6 +20,7 @@ const Adapter = (config) => {
   }
 
   async function getAdapter (appOptions) {
+    const { logger } = appOptions
     function debug (debugCode, ...args) {
       logger.debug(`PRISMA_${debugCode}`, ...args)
     }
@@ -57,7 +57,7 @@ const Adapter = (config) => {
     async function getUser (id) {
       debug('GET_USER', id)
       try {
-        return prisma[User].findOne({ where: { id } })
+        return prisma[User].findUnique({ where: { id } })
       } catch (error) {
         logger.error('GET_USER_BY_ID_ERROR', error)
         return Promise.reject(new Error('GET_USER_BY_ID_ERROR', error))
@@ -68,7 +68,7 @@ const Adapter = (config) => {
       debug('GET_USER_BY_EMAIL', email)
       try {
         if (!email) { return Promise.resolve(null) }
-        return prisma[User].findOne({ where: { email } })
+        return prisma[User].findUnique({ where: { email } })
       } catch (error) {
         logger.error('GET_USER_BY_EMAIL_ERROR', error)
         return Promise.reject(new Error('GET_USER_BY_EMAIL_ERROR', error))
@@ -78,9 +78,9 @@ const Adapter = (config) => {
     async function getUserByProviderAccountId (providerId, providerAccountId) {
       debug('GET_USER_BY_PROVIDER_ACCOUNT_ID', providerId, providerAccountId)
       try {
-        const account = await prisma[Account].findOne({ where: { compoundId: getCompoundId(providerId, providerAccountId) } })
+        const account = await prisma[Account].findUnique({ where: { compoundId: getCompoundId(providerId, providerAccountId) } })
         if (!account) { return null }
-        return prisma[User].findOne({ where: { id: account.userId } })
+        return prisma[User].findUnique({ where: { id: account.userId } })
       } catch (error) {
         logger.error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error)
         return Promise.reject(new Error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error))
@@ -174,7 +174,7 @@ const Adapter = (config) => {
     async function getSession (sessionToken) {
       debug('GET_SESSION', sessionToken)
       try {
-        const session = await prisma[Session].findOne({ where: { sessionToken } })
+        const session = await prisma[Session].findUnique({ where: { sessionToken } })
 
         // Check session has not expired (do not return it if it has)
         if (session && session.expires && new Date() > session.expires) {
@@ -219,7 +219,7 @@ const Adapter = (config) => {
         }
 
         const { id, expires } = session
-        return prisma[Session].update({ where: { id }, data: { expires } })
+        return prisma[Session].update({ where: { id }, data: { expires: expires.toISOString() } })
       } catch (error) {
         logger.error('UPDATE_SESSION_ERROR', error)
         return Promise.reject(new Error('UPDATE_SESSION_ERROR', error))
@@ -280,11 +280,15 @@ const Adapter = (config) => {
         // Hash token provided with secret before trying to match it with database
         // @TODO Use bcrypt instead of salted SHA-256 hash for token
         const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
-        const verificationRequest = await prisma[VerificationRequest].findOne({ where: { token: hashedToken } })
-
+        const verificationRequest = await prisma[VerificationRequest].findFirst({
+          where: {
+            identifier,
+            token: hashedToken
+          }
+        })
         if (verificationRequest && verificationRequest.expires && new Date() > verificationRequest.expires) {
           // Delete verification entry so it cannot be used again
-          await prisma[VerificationRequest].delete({ where: { token: hashedToken } })
+          await prisma[VerificationRequest].deleteMany({ where: { identifier, token: hashedToken } })
           return null
         }
 
@@ -300,7 +304,7 @@ const Adapter = (config) => {
       try {
         // Delete verification entry so it cannot be used again
         const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
-        await prisma[VerificationRequest].delete({ where: { token: hashedToken } })
+        await prisma[VerificationRequest].deleteMany({ where: { identifier, token: hashedToken } })
       } catch (error) {
         logger.error('DELETE_VERIFICATION_REQUEST_ERROR', error)
         return Promise.reject(new Error('DELETE_VERIFICATION_REQUEST_ERROR', error))

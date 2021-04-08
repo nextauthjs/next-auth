@@ -17,7 +17,7 @@ module.exports = {
         alt: 'NextAuth Logo',
         src: 'img/logo/logo-xs.png'
       },
-      links: [
+      items: [
         {
           to: '/getting-started/introduction',
           activeBasePath: 'docs',
@@ -42,20 +42,18 @@ module.exports = {
           position: 'right'
         },
         {
-          href: 'https://github.com/iaincollins/next-auth',
+          href: 'https://github.com/nextauthjs/next-auth',
           label: 'GitHub',
           position: 'right'
         }
       ]
     },
-    /*
-    announcementBar: {
-      id: 'release-candiate-announcement',
-      content: 'NextAuth.js v2.0 has been released <a target="_blank" rel="noopener noreferrer" href="https://www.npmjs.com/package/next-auth">npm i next-auth</a>',
-      backgroundColor: '#2DB2F9',
-      textColor: '#fff'
-    },
-    */
+    // announcementBar: {
+    //   id: 'release-candiate-announcement',
+    //   content: 'NextAuth.js now has automatic 🤖 releases 🎉! Check out the <a href="https://next-auth-git-canary.nextauthjs.vercel.app">Canary documentation 📚</a>',
+    //   backgroundColor: '#2DB2F9',
+    //   textColor: '#fff'
+    // },
     footer: {
       links: [
         {
@@ -68,6 +66,10 @@ module.exports = {
             {
               label: 'Contributors',
               to: '/contributors'
+            },
+            {
+              label: 'Canary documentation',
+              to: 'https://next-auth-git-canary.nextauthjs.vercel.app/'
             }
           ]
         },
@@ -76,7 +78,7 @@ module.exports = {
           items: [
             {
               label: 'GitHub',
-              to: 'https://github.com/iaincollins/next-auth'
+              to: 'https://github.com/nextauthjs/next-auth'
             },
             {
               label: 'NPM',
@@ -94,11 +96,22 @@ module.exports = {
             {
               label: 'Images by unDraw',
               to: 'https://undraw.co/'
+            },
+            {
+              html: `
+            <a target="_blank" rel="noopener noreferrer" href="https://vercel.com?utm_source=nextauthjs&utm_campaign=oss">
+              <img
+                alt="Powered by Vercel"
+                style="margin-top: 8px"
+                height="32"
+                src="https://raw.githubusercontent.com/nextauthjs/next-auth/canary/www/static/img/powered-by-vercel.svg"
+              />
+            </a>`
             }
           ]
         }
       ],
-      copyright: 'NextAuth.js &copy; Iain Collins 2020'
+      copyright: 'NextAuth.js &copy; Iain Collins 2021'
     }
   },
   presets: [
@@ -108,7 +121,7 @@ module.exports = {
         docs: {
           routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl: 'https://github.com/iaincollins/next-auth/edit/main/www'
+          editUrl: 'https://github.com/nextauthjs/next-auth/edit/main/www'
         },
         theme: {
           customCss: require.resolve('./src/css/index.css')

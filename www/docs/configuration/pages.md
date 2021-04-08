@@ -7,7 +7,7 @@ NextAuth.js automatically creates simple, unbranded authentication pages for han
 
 The options displayed on the sign up page are automatically generated based on the providers specified in the options passed to NextAuth.js.
 
-To add a custom login page, for example. You can use the `pages` option:
+To add a custom login page, you can use the `pages` option:
 
 ```javascript title="pages/api/auth/[...nextauth].js"
 ...
@@ -28,7 +28,6 @@ To add a custom login page, for example. You can use the `pages` option:
 In order to get the available authentication providers and the URLs to use for them, you can make a request to the API endpoint `/api/auth/providers`:
 
 ```jsx title="pages/auth/signin.js"
-import React from 'react'
 import { providers, signIn } from 'next-auth/client'
 
 export default function SignIn({ providers }) {
@@ -43,11 +42,22 @@ export default function SignIn({ providers }) {
   )
 }
 
-SignIn.getInitialProps = async (context) => {
+// This is the recommended way for Next.js 9.3 or newer
+export async function getServerSideProps(context){
+  const providers = await providers()
   return {
-    providers: await providers(context)
+    props: { providers }
   }
 }
+
+/*
+// If older than Next.js 9.3
+SignIn.getInitialProps = async () => {
+  return {
+    providers: await providers()
+  }
+}
+*/
 ```
 
 ### Email Sign in
@@ -55,8 +65,7 @@ SignIn.getInitialProps = async (context) => {
 If you create a custom sign in form for email sign in, you will need to submit both fields for the **email** address and **csrfToken** from **/api/auth/csrf** in a POST request to **/api/auth/signin/email**.
 
 ```jsx title="pages/auth/email-signin.js"
-import React from 'react'
-import { csrfToken } from 'next-auth/client'
+import { getCsrfToken } from 'next-auth/client'
 
 export default function SignIn({ csrfToken }) {
   return (
@@ -64,18 +73,29 @@ export default function SignIn({ csrfToken }) {
       <input name='csrfToken' type='hidden' defaultValue={csrfToken}/>
       <label>
         Email address
-        <input type='text' id='email' name='email'/>
+        <input type='email' id='email' name='email'/>
       </label>
       <button type='submit'>Sign in with Email</button>
     </form>
   )
 }
 
-SignIn.getInitialProps = async (context) => {
+// This is the recommended way for Next.js 9.3 or newer
+export async function getServerSideProps(context){
+  const csrfToken = await getCsrfToken(context)
   return {
-    csrfToken: await csrfToken(context)
+    props: { csrfToken }
   }
 }
+
+/*
+// If older than Next.js 9.3
+SignIn.getInitialProps = async (context) => {
+  return {
+    csrfToken: await getCsrfToken(context)
+  }
+}
+*/
 ```
 
 You can also use the `signIn()` function which will handle obtaining the CSRF token for you:
@@ -89,8 +109,7 @@ signIn('email', { email: 'jsmith@example.com' })
 If you create a sign in form for credentials based authentication, you will need to pass a **csrfToken** from **/api/auth/csrf** in a POST request to **/api/auth/callback/credentials**.
 
 ```jsx title="pages/auth/credentials-signin.js"
-import React from 'react'
-import { csrfToken } from 'next-auth/client'
+import { getCsrfToken } from 'next-auth/client'
 
 export default function SignIn({ csrfToken }) {
   return (
@@ -102,18 +121,30 @@ export default function SignIn({ csrfToken }) {
       </label>
       <label>
         Password
-        <input name='password' type='text'/>
+        <input name='password' type='password'/>
       </label>
       <button type='submit'>Sign in</button>
     </form>
   )
 }
 
-SignIn.getInitialProps = async (context) => {
+// This is the recommended way for Next.js 9.3 or newer
+export async function getServerSideProps(context) {
   return {
-    csrfToken: await csrfToken(context)
+    props: {
+      csrfToken: await getCsrfToken(context)
+    }
   }
 }
+
+/*
+// If older than Next.js 9.3
+SignIn.getInitialProps = async (context) => {
+  return {
+    csrfToken: await getCsrfToken(context)
+  }
+}
+*/
 ```
 
 You can also use the `signIn()` function which will handle obtaining the CSRF token for you:
@@ -121,3 +152,7 @@ You can also use the `signIn()` function which will handle obtaining the CSRF to
 ```js
 signIn('credentials', { username: 'jsmith', password: '1234' })
 ```
+
+:::tip
+Remember to put any custom pages in a folder outside **/pages/api** which is reserved for API code. As per the examples above, a location convention suggestion is `pages/auth/...`. 
+:::

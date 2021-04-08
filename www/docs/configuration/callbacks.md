@@ -3,7 +3,7 @@ id: callbacks
 title: Callbacks
 ---
 
-Callbacks are asynchronous functions you can use to control what happens when an action is performed.
+Callbacks are **asynchronous** functions you can use to control what happens when an action is performed.
 
 Callbacks are extremely powerful, especially in scenarios involving JSON Web Tokens as they allow you to implement access controls without a database and to integrate with external databases or APIs.
 
@@ -16,17 +16,17 @@ You can specify a handler for any of the callbacks below.
 ```js title="pages/api/auth/[...nextauth].js"
 ...
   callbacks: {
-    signIn: async (user, account, profile) => {
-      return Promise.resolve(true)
+    async signIn(user, account, profile) {
+      return true
     },
-    redirect: async (url, baseUrl) => {
-      return Promise.resolve(baseUrl)
+    async redirect(url, baseUrl) {
+      return baseUrl
     },
-    session: async (session, user) => {
-      return Promise.resolve(session)
+    async session(session, user) {
+      return session
     },
-    jwt: async (token, user, account, profile, isNewUser) => {
-      return Promise.resolve(token)
+    async jwt(token, user, account, profile, isNewUser) {
+      return token
     }
 ...
 }
@@ -39,27 +39,29 @@ The documentation below shows how to implement each callback, their default beha
 Use the `signIn()` callback to control if a user is allowed to sign in.
 
 ```js title="pages/api/auth/[...nextauth].js"
+...
 callbacks: {
   /**
    * @param  {object} user     User object
    * @param  {object} account  Provider account
    * @param  {object} profile  Provider profile 
-   * @return {boolean}         Return `true` (or a modified JWT) to allow sign in
+   * @return {boolean|string}  Return `true` to allow sign in
    *                           Return `false` to deny access
+   *                           Return `string` to redirect to (eg.: "/unauthorized")
    */
-  signIn: async (user, account, profile) => {
+  async signIn(user, account, profile) {
     const isAllowedToSignIn = true
     if (isAllowedToSignIn) {
-      return Promise.resolve(true)
+      return true
     } else {
       // Return false to display a default error message
-      return Promise.resolve(false)
-      // You can also Reject this callback with an Error or with a URL:
-      // return Promise.reject(new Error('error message')) // Redirect to error page
-      // return Promise.reject('/path/to/redirect')        // Redirect to a URL
+      return false
+      // Or you can return a URL to redirect to:
+      // return '/unauthorized'
     }
   }
 }
+...
 ```
 
 * When using the **Email Provider** the `signIn()` callback is triggered both when the user makes a **Verification Request** (before they are sent email with a link that will allow them to sign in) and again *after* they activate the link in the sign in email.
@@ -77,7 +79,7 @@ When using NextAuth.js without a database, the user object it will always be a p
 :::
 
 :::tip
-If you only want to allow users who already have accounts in the database to sign in, you can check for the existance of a `user.id` property and reject any sign in attempts from accounts that do not have one.
+If you only want to allow users who already have accounts in the database to sign in, you can check for the existence of a `user.id` property and reject any sign in attempts from accounts that do not have one.
 
 If you are using NextAuth.js without database and want to control who can sign in, you can check their email address or profile against a hard coded list in the `signIn()` callback.
 :::
@@ -89,18 +91,20 @@ The redirect callback is called anytime the user is redirected to a callback URL
 By default only URLs on the same URL as the site are allowed, you can use the redirect callback to customise that behaviour.
 
 ```js title="pages/api/auth/[...nextauth].js"
+...
 callbacks: {
   /**
    * @param  {string} url      URL provided as callback URL by the client
    * @param  {string} baseUrl  Default base URL of site (can be used as fallback)
    * @return {string}          URL the client will be redirect to
    */
-  redirect: async (url, baseUrl) => {
+  async redirect(url, baseUrl) {
     return url.startsWith(baseUrl)
-      ? Promise.resolve(url)
-      : Promise.resolve(baseUrl)
+      ? url
+      : baseUrl
   }
 }
+...
 ```
 
 
@@ -108,47 +112,10 @@ callbacks: {
 The redirect callback may be invoked more than once in the same flow.
 :::
 
-## Session callback
-
-The session callback is called whenever a session is checked.
-
-e.g. `getSession()`, `useSession()`, `/api/auth/session`
-
-* When using database sessions, the User object is passed as an argument.
-* When using JSON Web Tokens for sessions, the JWT payload is provided instead.
-
-```js title="pages/api/auth/[...nextauth].js"
-callbacks: {
-  /**
-   * @param  {object} session      Session object
-   * @param  {object} user         User object    (if using database sessions)
-   *                               JSON Web Token (if not using database sessions)
-   * @return {object}              Session that will be returned to the client 
-   */
-  session: async (session, user, sessionToken) => {
-    session.foo = 'bar' // Add property to session
-    return Promise.resolve(session)
-  }
-}
-```
-
-:::tip
-When using JSON Web Tokens the `jwt()` callback is invoked before the `session()` callback, so anything you add to the
-JSON Web Token will be immediately available in the session callback.
-:::
-
-:::warning
-The session object is not persisted server side, even when using database sessions - only data such as the session token, the user, and the expiry time is stored in the session table.
-
-If you need to persist session data server side, you can use the `accessToken` returned for the session as a key - and connect to the database in the `session()` callback to access it. Session `accessToken` values do not rotate and are valid as long as the session is valid.
-
-If using JSON Web Tokens instead of database sessions, you should use the User ID or a unique key stored in the token (you will need to generate a key for this yourself on sign in, as access tokens for sessions are not generated when using JSON Web Tokens).
-:::
-
 ## JWT callback
 
 This JSON Web Token callback is called whenever a JSON Web Token is created (i.e. at sign 
-in) or updated (i.e whenever a session is accesed in the client).
+in) or updated (i.e whenever a session is accessed in the client).
 
 e.g. `/api/auth/signin`, `getSession()`, `useSession()`, `/api/auth/session`
 
@@ -158,6 +125,7 @@ e.g. `/api/auth/signin`, `getSession()`, `useSession()`, `/api/auth/session`
 The contents *user*, *account*, *profile* and *isNewUser* will vary depending on the provider and on if you are using a database or not. If you want to pass data such as User ID, OAuth Access Token, etc. to the browser, you can persist it in the token and use the `session()` callback to return it.
 
 ```js title="pages/api/auth/[...nextauth].js"
+...
 callbacks: {
   /**
    * @param  {object}  token     Decrypted JSON Web Token
@@ -167,17 +135,72 @@ callbacks: {
    * @param  {boolean} isNewUser True if new user (only available on sign in)
    * @return {object}            JSON Web Token that will be saved
    */
-  jwt: async (token, user, account, profile, isNewUser) => {
-    const isSignIn = (user) ? true : false
-    // Add auth_time to token on signin in
-    if (isSignIn) { token.auth_time = Math.floor(Date.now() / 1000) }
-    return Promise.resolve(token)
+  async jwt(token, user, account, profile, isNewUser) {
+    // Add access_token to the token right after signin
+    if (account?.accessToken) {
+      token.accessToken = account.accessToken
+    }
+    return token
   }
 }
+...
 ```
+
+:::tip
+Use an if branch in jwt with checking for existence of any other params than token. If any of those exist, you call jwt for the first time.
+This is a good place to add for example an `access_token` to your jwt, if you want to.
+:::
+
+:::tip
+Check out the content of all the params in addition `token`, to see what info you have available on signin.
+:::
 
 :::warning
 NextAuth.js does not limit how much data you can store in a JSON Web Token, however a ~**4096 byte limit** for all cookies on a domain is commonly imposed by browsers.
 
 If you need to persist a large amount of data, you will need to persist it elsewhere (e.g. in a database). You can store a key that can be used to look up that data in the `session()` callback.
+:::
+
+## Session callback
+
+The session callback is called whenever a session is checked. By default, only a subset of the token is returned for increased security. If you want to make something available you added to the token through the `jwt()` callback, you have to explicitely forward it here to make it available to the client.
+
+e.g. `getSession()`, `useSession()`, `/api/auth/session`
+
+* When using database sessions, the User object is passed as an argument.
+* When using JSON Web Tokens for sessions, the JWT payload is provided instead.
+
+```js title="pages/api/auth/[...nextauth].js"
+...
+callbacks: {
+  /**
+   * @param  {object} session      Session object
+   * @param  {object} token        User object    (if using database sessions)
+   *                               JSON Web Token (if not using database sessions)
+   * @return {object}              Session that will be returned to the client 
+   */
+  async session(session, token) {
+    // Add property to session, like an access_token from a provider.
+    session.accessToken = token.accessToken
+    return session
+  }
+}
+...
+```
+
+:::tip
+When using JSON Web Tokens the `jwt()` callback is invoked before the `session()` callback, so anything you add to the
+JSON Web Token will be immediately available in the session callback, like for example an `access_token` from a provider.
+:::
+
+:::tip
+To better represent its value, when using a JWT session, the second parameter should be called `token` (This is the same thing you return from the `jwt()` callback). If you use a database, call it `user`.
+:::
+
+:::warning
+The session object is not persisted server side, even when using database sessions - only data such as the session token, the user, and the expiry time is stored in the session table.
+
+If you need to persist session data server side, you can use the `accessToken` returned for the session as a key - and connect to the database in the `session()` callback to access it. Session `accessToken` values do not rotate and are valid as long as the session is valid.
+
+If using JSON Web Tokens instead of database sessions, you should use the User ID or a unique key stored in the token (you will need to generate a key for this yourself on sign in, as access tokens for sessions are not generated when using JSON Web Tokens).
 :::

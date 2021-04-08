@@ -36,7 +36,7 @@ Second, a cypress file for environment variables. These can be defined in `cypre
 {
   "GOOGLE_USER": "username@company.com",
   "GOOGLE_PW": "password",
-  "COOKIE_NAME": "__Secure-next-auth.session-token",
+  "COOKIE_NAME": "next-auth.session-token",
   "SITE_NAME": "http://localhost:3000"
 }
 ```
@@ -111,8 +111,11 @@ describe('Login page', () => {
           })
 
           Cypress.Cookies.defaults({
-            whitelist: cookieName,
+            preserve: cookieName,
           })
+          
+          // remove the two lines below if you need to stay logged in
+          // for your remaining tests
           cy.visit('/api/auth/signout')
           cy.get('form').submit()
         }

@@ -5,13 +5,14 @@ title: Contributors
 
 ## Core Team
 
-* <a href="https://github.com/iaincollins">Iain Collins</a>
-* <a href="https://github.com/LoriKarikari">Lori Karikari</a>
-* <a href="https://github.com/ndom91">Nico Domino</a>
-* <a href="https://github.com/Fumler">Fredrik Pettersen</a>
-* <a href="https://github.com/geraldnolan">Gerald Nolan</a>
-* <a href="https://github.com/lluia">Lluis Agusti</a>
-* <a href="https://github.com/JeffersonBledsoe">Jefferson Bledsoe</a>
+* [Iain Collins](https://github.com/iaincollins)
+* [Lori Karikari](https://github.com/LoriKarikari)
+* [Nico Domino](https://github.com/ndom91)
+* [Fredrik Pettersen](https://github.com/Fumler)
+* [Gerald Nolan](https://github.com/geraldnolan)
+* [Lluis Agusti](https://github.com/lluia)
+* [Jefferson Bledsoe](https://github.com/JeffersonBledsoe)
+* [Balázs Orbán](https://github.com/sponsors/balazsorban44)
 
 _Special thanks to Lori Karikari for creating most of the providers, to Nico Domino for creating this site, to Fredrik Pettersen for creating the Prisma adapter, to Gerald Nolan for adding support for Sign in with Apple, to Lluis Agusti for work to add TypeScript definitions and to Jefferson Bledsoe for working on automating testing._
 
@@ -19,7 +20,7 @@ _Special thanks to Lori Karikari for creating most of the providers, to Nico Dom
 
 NextAuth.js as it exists today has been possible thanks to the work of many individual contributors.
 
-Thank you to the [dozens of individual contributors](https://github.com/iaincollins/next-auth/graphs/contributors) who have help shaped NextAuth.js. 
+Thank you to the [dozens of individual contributors](https://github.com/nextauthjs/next-auth/graphs/contributors) who have help shaped NextAuth.js. 
 
 ## History
 

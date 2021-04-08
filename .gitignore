@@ -11,6 +11,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+yarn.lock
+
 # Dependencies
 node_modules
 
@@ -24,6 +26,7 @@ node_modules
 .docusaurus
 .cache-loader
 .next
+www/providers.json
 
 # VS
 /.vs/slnx.sqlite-journal
@@ -34,3 +37,6 @@ node_modules
 # GitHub Actions runner
 /actions-runner
 /_work
+
+# Prisma migrations
+/prisma/migrations

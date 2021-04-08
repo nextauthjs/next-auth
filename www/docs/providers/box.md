@@ -21,6 +21,6 @@ providers: [
     clientId: process.env.BOX_CLIENT_ID,
     clientSecret: process.env.BOX_CLIENT_SECRET
   })
-}
+]
 ...
 ```

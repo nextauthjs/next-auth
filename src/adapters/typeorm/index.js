@@ -6,7 +6,7 @@ import { CreateUserError } from '../../lib/errors'
 import adapterConfig from './lib/config'
 import adapterTransform from './lib/transform'
 import Models from './models'
-import logger from '../../lib/logger'
+
 import { updateConnectionEntities } from './lib/utils'
 
 const Adapter = (typeOrmConfig, options = {}) => {
@@ -41,6 +41,12 @@ const Adapter = (typeOrmConfig, options = {}) => {
   let connection = null
 
   async function getAdapter (appOptions) {
+    const { logger } = appOptions
+    // Display debug output if debug option enabled
+    function debug (debugCode, ...args) {
+      logger.debug(`TYPEORM_${debugCode}`, ...args)
+    }
+
     // Helper function to reuse / restablish connections
     // (useful if they drop when after being idle)
     async function _connect () {
@@ -76,12 +82,6 @@ const Adapter = (typeOrmConfig, options = {}) => {
     // Get manager from connection object
     // https://github.com/typeorm/typeorm/blob/master/docs/entity-manager-api.md
     const { manager } = connection
-
-    // Display debug output if debug option enabled
-    // @TODO Refactor logger so is passed in appOptions
-    function debug (debugCode, ...args) {
-      logger.debug(`TYPEORM_${debugCode}`, ...args)
-    }
 
     // The models are primarily designed for ANSI SQL database, but some
     // flexiblity is required in the adapter to support non-SQL databases such
@@ -331,7 +331,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
 
         if (verificationRequest && verificationRequest.expires && new Date() > new Date(verificationRequest.expires)) {
           // Delete verification entry so it cannot be used again
-          await manager.delete(VerificationRequest, { token: hashedToken })
+          await manager.delete(VerificationRequest, { identifier, token: hashedToken })
           return null
         }
 
@@ -347,7 +347,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
       try {
         // Delete verification entry so it cannot be used again
         const hashedToken = createHash('sha256').update(`${token}${secret}`).digest('hex')
-        await manager.delete(VerificationRequest, { token: hashedToken })
+        await manager.delete(VerificationRequest, { identifier, token: hashedToken })
       } catch (error) {
         logger.error('DELETE_VERIFICATION_REQUEST_ERROR', error)
         return Promise.reject(new Error('DELETE_VERIFICATION_REQUEST_ERROR', error))

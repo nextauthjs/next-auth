@@ -1,23 +1,25 @@
 import oAuthClient from '../oauth/client'
-import { createHash } from 'crypto'
 import logger from '../../../lib/logger'
 
-export default (provider, csrfToken, callback) => {
-  const { callbackUrl } = provider
+/** @param {import("../..").NextAuthRequest} req */
+export default async function getAuthorizationUrl (req) {
+  const { provider } = req.options
+
   const client = oAuthClient(provider)
-  if (provider.version && provider.version.startsWith('2.')) {
-    // Handle oAuth v2.x
+  if (provider.version?.startsWith('2.')) {
+    delete req.query?.nextauth
+    // Handle OAuth v2.x
     let url = client.getAuthorizeUrl({
+      ...provider.authorizationParams,
+      ...req.query,
       redirect_uri: provider.callbackUrl,
-      scope: provider.scope,
-      // A hash of the NextAuth.js CSRF token is used as the state
-      state: createHash('sha256').update(csrfToken).digest('hex')
+      scope: provider.scope
     })
 
     // If the authorizationUrl specified in the config has query parameters on it
     // make sure they are included in the URL we return.
     //
-    // This is a fix for an open issue with the oAuthClient library we are using
+    // This is a fix for an open issue with the OAuthClient library we are using
     // which inadvertantly strips them.
     //
     // https://github.com/ciaranj/node-oauth/pull/193
@@ -27,15 +29,17 @@ export default (provider, csrfToken, callback) => {
       url = url.replace(baseUrl, provider.authorizationUrl + '&')
     }
 
-    callback(null, url)
-  } else {
-    // Handle oAuth v1.x
-    client.getOAuthRequestToken((error, oAuthToken) => {
-      if (error) {
-        logger.error('GET_AUTHORISATION_URL_ERROR', error)
-      }
-      const url = `${provider.authorizationUrl}?oauth_token=${oAuthToken}`
-      callback(error, url)
-    }, callbackUrl)
+    logger.debug('GET_AUTHORIZATION_URL', url)
+    return url
+  }
+
+  try {
+    const oAuthToken = await client.getOAuthRequestToken()
+    const url = `${provider.authorizationUrl}?oauth_token=${oAuthToken}`
+    logger.debug('GET_AUTHORIZATION_URL', url)
+    return url
+  } catch (error) {
+    logger.error('GET_AUTHORIZATION_URL_ERROR', error)
+    throw error
   }
 }

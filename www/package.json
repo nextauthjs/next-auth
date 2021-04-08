@@ -2,24 +2,25 @@
   "name": "next-auth-docs",
   "version": "0.1.1",
   "scripts": {
-    "start": "docusaurus start",
-    "build": "docusaurus build",
+    "start": "npm run generate-providers && docusaurus start",
+    "build": "npm run generate-providers && docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "lint": "standard",
-    "lint:fix": "standard --fix"
+    "lint:fix": "standard --fix",
+    "generate-providers": "node ./scripts/generate-providers.js"
   },
   "dependencies": {
-    "@docusaurus/core": "^2.0.0-alpha.54",
-    "@docusaurus/preset-classic": "^2.0.0-alpha.54",
+    "@docusaurus/core": "^2.0.0-alpha.70",
+    "@docusaurus/preset-classic": "^2.0.0-alpha.70",
     "classnames": "^2.2.6",
-    "docusaurus-lunr-search": "^1.0.3",
-    "jose": "^1.27.2",
+    "docusaurus-lunr-search": "^2.1.10",
+    "jose": "^2.0.2",
     "lodash.times": "^4.3.2",
-    "react": "^16.8.4",
-    "react-dom": "^16.8.4",
-    "react-marquee-slider": "^1.0.16",
-    "styled-components": "^5.1.1"
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-marquee-slider": "^1.1.2",
+    "styled-components": "^5.2.1"
   },
   "browserslist": {
     "production": [
@@ -34,6 +35,6 @@
     ]
   },
   "devDependencies": {
-    "standard": "^14.3.4"
+    "standard": "^16.0.3"
   }
 }

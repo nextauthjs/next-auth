@@ -17,13 +17,18 @@ It is not commercial software and is not associated with a commercial organizati
 
 ### What databases does NextAuth.js support?
 
-You can use NextAuth.js with MySQL, MariaDB, Postgres, MongoDB and SQLite or without a database.
+You can use NextAuth.js with MySQL, MariaDB, Postgres, MongoDB and SQLite or without a database. (See also: [Databases](/configuration/databases))
 
 You can use also NextAuth.js with any database using a custom database adapter, or by using a custom credentials authentication provider - e.g. to support signing in with a username and password stored in an existing database.
 
 ### What authentication services does NextAuth.js support?
 
-NextAuth.js includes built-in support for signing in with Apple, Atlassian, Auth0, Google, Battle.net, Box, AWS Cognito, Discord, Facebook, FusionAuth, GitHub, GitLab, Google, Open ID Identity Server, Mixer, Okta, Slack, Spotify, Twitch, Twitter and Yandex.
+
+<p>NextAuth.js includes built-in support for signing in with&nbsp;
+{Object.values(require("../providers.json")).sort().join(", ")}.
+(See also: <a href="/configuration/providers">Providers</a>)
+</p>
+
 
 NextAuth.js also supports email for passwordless sign in, which is useful for account recovery or for people who are not able to use an account with the configured OAuth services (e.g. due to service outage, account suspension or otherwise becoming locked out of an account).
 
@@ -43,7 +48,7 @@ NextAuth.js is designed for use with Next.js and Serverless.
 
 If you are using a different framework for you website, you can create a website that handles sign in with Next.js and then access those sessions on a website that does not use Next.js as long as the websites are on the same domain.
 
-If use NextAuth.js on a website with a different subdomain the rest of your website (e.g. `auth.example.com` vs `www.example.com`) you will need to set a custom cookie domain policy for the Session Token cookie.
+If you use NextAuth.js on a website with a different subdomain then the rest of your website (e.g. `auth.example.com` vs `www.example.com`) you will need to set a custom cookie domain policy for the Session Token cookie. (See also: [Cookies](/configuration/options#cookies))
 
 NextAuth.js does not currently support automatically signing into sites on different top level domains (e.g. `www.example.com` vs `www.example.org`) using a single session.
 
@@ -111,7 +116,7 @@ NextAuth.js records Refresh Tokens and Access Tokens on sign in (if supplied by 
 
 You can then look them up from the database or persist them to the JSON Web Token.
 
-Note: NextAuth.js does not current handle Access Token rotation for OAuth providers for you, if this is something you need, currently you will need to write the logic to handle that yourself. 
+Note: NextAuth.js does not currently handle Access Token rotation for OAuth providers for you, however you can check out [this tutorial](/tutorials/refresh-token-rotation) if you want to implement it.
 
 ### When I sign in with another account with the same email address, why are accounts not linked automatically?
 
@@ -123,7 +128,7 @@ With automatic account linking on sign in, this can be exploited by bad actors t
 
 For this reason it is not secure to automatically link accounts between abitrary providers on sign in, which is why this feature is generally not provided by authentication service and is not provided by NextAuth.js.
 
-Automatic acccount linking is seen on some sites, sometimes insecurely. It can be technically possible to do automatic account linking securely if you trust all the providers involved to ensure they have securely verified the email address associated with the account, but requires placing trust (and transferring the risk) to those providers to handle the process securely.
+Automatic account linking is seen on some sites, sometimes insecurely. It can be technically possible to do automatic account linking securely if you trust all the providers involved to ensure they have securely verified the email address associated with the account, but requires placing trust (and transferring the risk) to those providers to handle the process securely.
 
 Examples of scenarios where this is secure include with an OAuth provider you control (e.g. that only authorizes users internal to your organization) or with a provider you explicitly trust to have verified the users email address.
 
@@ -137,11 +142,11 @@ Providing support for secure account linking and unlinking of additional provide
 
 ### Why doesn't NextAuth.js support [a particular feature]?
 
-NextAuth.js is an open source project built by individual contributors who are volunteers who writing code and providing support to help folks out in their spare time.
+NextAuth.js is an open source project built by individual contributors who are volunteers writing code and providing support in their spare time.
 
-If you would like NextAuth.js to support a particular feature the best way to help make that happen is to raise a feature request describing the feature and to offer to work with other contributors to develop and test it.
+If you would like NextAuth.js to support a particular feature, the best way to help make it happen is to raise a feature request describing the feature and offer to work with other contributors to develop and test it.
 
-If you are not able to develop a feature yourself, you can offer sponsor someone to work on it.
+If you are not able to develop a feature yourself, you can offer to sponsor someone to work on it.
 
 ### I disagree with a design decision, how can I change your mind?
 

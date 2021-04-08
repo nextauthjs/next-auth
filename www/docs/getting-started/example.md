@@ -8,7 +8,7 @@ title: Example Code
 The example code below describes to add authentication to a Next.js app.
 
 :::tip
-The easiest way to get started is to clone the [example app](https://github.com/iaincollins/next-auth-example) and follow the instructions in README.md. You can try out a live demo at [next-auth-example.now.sh](https://next-auth-example.now.sh)
+The easiest way to get started is to clone the [example app](https://github.com/nextauthjs/next-auth-example) and follow the instructions in README.md. You can try out a live demo at [next-auth-example.now.sh](https://next-auth-example.now.sh)
 :::
 
 ### Add API route
@@ -21,7 +21,7 @@ To add NextAuth.js to a project create a file called `[...nextauth].js` in `page
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 
-const options = {
+export default NextAuth({
   // Configure one or more authentication providers
   providers: [
     Providers.GitHub({
@@ -33,9 +33,7 @@ const options = {
 
   // A database is optional, but required to persist accounts in a database
   database: process.env.DATABASE_URL,
-}
-
-export default (req, res) => NextAuth(req, res, options)
+})
 ```
 
 All requests to `/api/auth/*` (signin, callback, signout, etc) will automatically be handed by NextAuth.js.
@@ -49,7 +47,6 @@ See the [options documentation](/configuration/options) for how to configure pro
 The `useSession()` React Hook in the NextAuth.js client is the easiest way to check if someone is signed in.
 
 ```jsx title="pages/index.js"
-import React from 'react'
 import { signIn, signOut, useSession } from 'next-auth/client'
 
 export default function Page() {
@@ -58,11 +55,11 @@ export default function Page() {
   return <>
     {!session && <>
       Not signed in <br/>
-      <button onClick={signIn}>Sign in</button>
+      <button onClick={() => signIn()}>Sign in</button>
     </>}
     {session && <>
       Signed in as {session.user.email} <br/>
-      <button onClick={signOut}>Sign out</button>
+      <button onClick={() => signOut()}>Sign out</button>
     </>}
   </>
 }
@@ -103,5 +100,5 @@ NEXTAUTH_URL=https://example.com
 :::tip
 In production, this needs to be set as an environment variable on the service you use to deploy your app.
 
-To set environment variables on Vercel, you can use the [dashboard](https://vercel.com/dashboard) or the `now env` command.
+To set environment variables on Vercel, you can use the [dashboard](https://vercel.com/dashboard) or the `vercel env pull` [command](https://vercel.com/docs/build-step#development-environment-variables).
 :::

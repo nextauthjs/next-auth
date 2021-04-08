@@ -1,0 +1,26 @@
+name: Release
+on:
+  push:
+    branches:
+      - 'main'
+      - 'next'
+      - '3.x'
+  pull_request:
+jobs:
+  release:
+    name: 'Release'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
+      - run: npm run build
+      - run: npx semantic-release@17
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NPM_TOKEN: ${{secrets.NPM_TOKEN}}

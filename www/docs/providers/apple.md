@@ -17,7 +17,7 @@ There are two ways you can use the Sign in with Apple provider.
 
 ### Dynamically generated secret
 
-If you use a dynamically generated secret you never have to to manually update the server.
+If you use a dynamically generated secret you never have to manually update the server.
 
 ```js
 import Providers from `next-auth/providers`
@@ -26,13 +26,12 @@ providers: [
   Providers.Apple({
     clientId: process.env.APPLE_ID,
     clientSecret: { 
-      appleId: process.env.APPLE_ID,
       teamId: process.env.APPLE_TEAM_ID,
       privateKey: process.env.APPLE_PRIVATE_KEY,
       keyId: process.env.APPLE_KEY_ID,
     }
   })
-}
+]
 ...
 ```
 
@@ -65,10 +64,9 @@ import Providers from `next-auth/providers`
 providers: [
   Providers.Apple({
     clientId: process.env.APPLE_ID,
-    clientSecret: process.env.APPLE_KEY_SECRET,
-    clientSecretCallback: false
+    clientSecret: process.env.APPLE_KEY_SECRET
   })
-}
+]
 ...
 ```
 

@@ -41,13 +41,14 @@ It works best when the [`<Provider>`](#provider) is added to `pages/_app.js`.
 ```jsx
 import { useSession } from 'next-auth/client'
 
-export default () => {
+export default function Component() {
   const [ session, loading ] = useSession()
 
-  return <>
-    {session && <p>Signed in as {session.user.email}</p>}
-    {!session && <p><a href="/api/auth/signin">Sign in</a></p>}
-  </>
+  if(session) {
+    return <p>Signed in as {session.user.email}</p>
+  }
+
+  return <a href="/api/auth/signin">Sign in</a>
 }
 ```
 
@@ -132,7 +133,7 @@ The `getProviders()` method returns the list of providers currently configured f
 
 It calls `/api/auth/providers` and returns a list of the currently configured authentication providers.
 
-It can be use useful if you are creating a dynamic custom sign in page.
+It can be useful if you are creating a dynamic custom sign in page.
 
 ---
 
@@ -142,11 +143,15 @@ It can be use useful if you are creating a dynamic custom sign in page.
 import { getProviders } from 'next-auth/client'
 
 export default async (req, res) => {
-  const providers = await getProviders({ req })
+  const providers = await getProviders()
   console.log('Providers', providers)
   res.end()
 }
 ```
+
+:::note
+Unlike `getSession()` and `getCsrfToken()`, when calling `getProviders()` server side, you don't need to pass anything, just as calling it client side.
+:::
 
 ---
 
@@ -165,7 +170,7 @@ The `signIn()` method can be called from the client in different ways, as shown 
 import { signIn } from 'next-auth/client'
 
 export default () => (
-  <button onClick={signIn}>Sign in</button>
+  <button onClick={() => signIn()}>Sign in</button>
 )
 ```
 
@@ -205,6 +210,65 @@ e.g.
 
 The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect). By default it requires the URL to be an absolute URL at the same hostname, or else it will redirect to the homepage. You can define your own redirect callback to allow other URLs, including supporting relative URLs.
 
+#### Using the redirect: false option
+
+:::note
+The redirect option is only available for `credentials` and `email` providers.
+:::
+
+In some cases, you might want to deal with the sign in response on the same page and disable the default redirection. For example, if an error occurs (like wrong credentials given by the user), you might want to handle the error on the same page. For that, you can pass `redirect: false` in the second parameter object.
+
+e.g.
+
+- `signIn('credentials', { redirect: false, password: 'password' })`
+- `signIn('email', { redirect: false, email: 'bill@fillmurray.com' })`
+
+`signIn` will then return a Promise, that resolves to the following:
+
+```ts
+{
+  /**
+   * Will be different error codes,
+   * depending on the type of error.
+   */
+  error: string | undefined
+  /**
+   * HTTP status code,
+   * hints the kind of error that happened. 
+   */ 
+  status: number
+  /**
+   * `true` if the signin was successful
+   */
+  ok: boolean
+  /**
+   * `null` if there was an error,
+   * otherwise the url the user
+   * should have been redirected to.
+   */
+  url: string | null
+}
+```
+
+#### Additional params
+
+It is also possible to pass additional parameters to the `/authorize` endpoint through the third argument of `signIn()`.
+
+See the [Authorization Request OIDC spec](https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest) for some ideas. (These are not the only possible ones, all parameters will be forwarded)
+
+e.g.
+
+* `signIn("identity-server4", null, { prompt: "login" })` *always ask the user to reauthenticate*
+* `signIn("auth0", null, { login_hint: "info@example.com" })` *hints the e-mail address to the provider*
+
+:::note
+You can also set these parameters through [`provider.authorizationParams`](/configuration/providers#oauth-provider-options).
+:::
+
+:::note
+The following parameters are always overridden server-side: `redirect_uri`, `scope`, `state`
+:::
+
 ---
 
 ## signOut()
@@ -220,7 +284,7 @@ It reloads the page in the browser when complete.
 import { signOut } from 'next-auth/client'
 
 export default () => (
-  <button onClick={signOut}>Sign out</button>
+  <button onClick={() => signOut()}>Sign out</button>
 )
 ```
 
@@ -231,6 +295,16 @@ As with the `signIn()` function, you can specify a `callbackUrl` parameter by pa
 e.g. `signOut({ callbackUrl: 'http://localhost:3000/foo' })`
 
 The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect). By default this means it must be an absolute URL at the same hostname (or else it will default to the homepage); you can define your own custom redirect callback to allow other URLs, including supporting relative URLs.
+
+#### Using the redirect: false option
+
+If you pass `redirect: false` to `signOut`, the page will not reload. The session will be deleted, and the `useSession` hook is notified, so any indication about the user will be shown as logged out automatically. It can give a very nice experience for the user.
+
+:::tip
+If you need to redirect to another page but you want to avoid a page reload, you can try:
+`const data = await signOut({redirect: false, callbackUrl: "/foo"})`
+where `data.url` is the validated url you can redirect the user to without any flicker by using Next.js's `useRouter().push(data.url)`
+:::
 
 ---
 
@@ -282,7 +356,7 @@ export default function App ({ Component, pageProps }) {
 :::note
 **These options have no effect on clients that are not signed in.**
 
-Every tab/window maintains it's own copy of the local session state; the session it is not stored in shared storage like localStorage or sessionStorage. Any update in one tab/window triggers a message to other tabs/windows to update their own session state.
+Every tab/window maintains its own copy of the local session state; the session is not stored in shared storage like localStorage or sessionStorage. Any update in one tab/window triggers a message to other tabs/windows to update their own session state.
 
 Using low values for `clientMaxAge` or `keepAlive` will increase network traffic and load on  authenticated clients and may impact hosting costs and performance.
 :::
@@ -301,7 +375,7 @@ The value for `clientMaxAge` should always be lower than the value of the sessio
 
 #### Keep Alive
 
-The `keepAlive` option is how often the client should contact the server to avoid a session expirying.
+The `keepAlive` option is how often the client should contact the server to avoid a session expiring.
 
 When `keepAlive` is set to `0` (the default) it will not send a keep alive message.
 

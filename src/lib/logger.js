@@ -1,32 +1,82 @@
-const logger = {
-  error: (errorCode, ...text) => {
-    if (!console) { return }
-    if (text && text.length <= 1) { text = text[0] || '' }
+/** @type {import("./logger").LoggerInstance} */
+const _logger = {
+  error (code, ...message) {
     console.error(
-      `[next-auth][error][${errorCode.toLowerCase()}]`,
-      text,
-      `\nhttps://next-auth.js.org/errors#${errorCode.toLowerCase()}`
+      `[next-auth][error][${code.toLowerCase()}]`,
+      `\nhttps://next-auth.js.org/errors#${code.toLowerCase()}`,
+      ...message
     )
   },
-  warn: (warnCode, ...text) => {
-    if (!console) { return }
-    if (text && text.length <= 1) { text = text[0] || '' }
+  warn (code, ...message) {
     console.warn(
-      `[next-auth][warn][${warnCode.toLowerCase()}]`,
-      text,
-      `\nhttps://next-auth.js.org/warnings#${warnCode.toLowerCase()}`
+      `[next-auth][warn][${code.toLowerCase()}]`,
+      `\nhttps://next-auth.js.org/warnings#${code.toLowerCase()}`,
+      ...message
     )
   },
-  debug: (debugCode, ...text) => {
-    if (!console) { return }
-    if (text && text.length <= 1) { text = text[0] || '' }
-    if (process && process.env && process.env._NEXTAUTH_DEBUG) {
-      console.log(
-        `[next-auth][debug][${debugCode.toLowerCase()}]`,
-        text
-      )
-    }
+  debug (code, ...message) {
+    if (!process?.env?._NEXTAUTH_DEBUG) return
+    console.log(
+      `[next-auth][debug][${code.toLowerCase()}]`,
+      ...message
+    )
   }
 }
 
-export default logger
+/**
+ * Override the built-in logger.
+ * Any `undefined` level will use the default logger.
+ * @param {Partial<import("./logger").LoggerInstance>} newLogger
+ */
+export function setLogger (newLogger = {}) {
+  if (newLogger.error) _logger.error = newLogger.error
+  if (newLogger.warn) _logger.warn = newLogger.warn
+  if (newLogger.debug) _logger.debug = newLogger.debug
+}
+
+export default _logger
+
+/**
+ * Serializes client-side log messages and sends them to the server
+ * @param {import("./logger").LoggerInstance} logger
+ * @param {string} basePath
+ * @return {import("./logger").LoggerInstance}
+ */
+export function proxyLogger (logger = _logger, basePath) {
+  try {
+    if (typeof window === 'undefined') {
+      return logger
+    }
+
+    const clientLogger = {}
+    for (const level in logger) {
+      clientLogger[level] = (code, ...message) => {
+        _logger[level](code, ...message) // Log on client as usual
+
+        const url = `${basePath}/_log`
+        const body = new URLSearchParams({
+          level,
+          code,
+          message: JSON.stringify(message.map(m => {
+            if (m instanceof Error) {
+              // Serializing errors: https://iaincollins.medium.com/error-handling-in-javascript-a6172ccdf9af
+              return { name: m.name, message: m.message, stack: m.stack }
+            }
+            return m
+          }))
+        })
+        if (navigator.sendBeacon) {
+          return navigator.sendBeacon(url, body)
+        }
+        return fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body
+        })
+      }
+    }
+    return clientLogger
+  } catch {
+    return _logger
+  }
+}

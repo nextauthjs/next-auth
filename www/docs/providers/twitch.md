@@ -11,6 +11,8 @@ https://dev.twitch.tv/docs/authentication
 
 https://dev.twitch.tv/console/apps
 
+Add the following redirect URL into the console `http://<your-next-app-url>/api/auth/callback/twitch`
+
 ## Example
 
 ```js
@@ -21,6 +23,6 @@ providers: [
     clientId: process.env.TWITCH_CLIENT_ID,
     clientSecret: process.env.TWITCH_CLIENT_SECRET
   })
-}
+]
 ...
 ```

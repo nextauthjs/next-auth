@@ -6,6 +6,10 @@
   border: none !important;
 }
 
+.table-of-contents__link {
+  text-decoration: none;
+}
+
 .contents a {
   text-decoration: none;
 }
@@ -36,7 +40,7 @@
 }
 
 .contents li > ul {
-  margin-left: .25rem;
+  margin-left: 0.25rem;
 }
 
 .contents li > ul li > a {

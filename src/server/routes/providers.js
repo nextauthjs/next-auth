@@ -1,21 +1,17 @@
-// Return a JSON object with a list of all outh providers currently configured
-// and their signin and callback URLs. This makes it possible to automatically
-// generate buttons for all providers when rendering client side.
-export default (req, res, options, done) => {
-  const { providers } = options
+/**
+ * Return a JSON object with a list of all OAuth providers currently configured
+ * and their signin and callback URLs. This makes it possible to automatically
+ * generate buttons for all providers when rendering client side.
+ * @param {import("..").NextAuthRequest} req
+ * @param {import("..").NextAuthResponse} res
+ */
+export default function providers (req, res) {
+  const { providers } = req.options
 
-  const result = {}
-  Object.entries(providers).map(([provider, providerConfig]) => {
-    result[provider] = {
-      id: provider,
-      name: providerConfig.name,
-      type: providerConfig.type,
-      signinUrl: providerConfig.signinUrl,
-      callbackUrl: providerConfig.callbackUrl
-    }
-  })
+  const result = providers.reduce((acc, { id, name, type, signinUrl, callbackUrl }) => {
+    acc[id] = { id, name, type, signinUrl, callbackUrl }
+    return acc
+  }, {})
 
-  res.setHeader('Content-Type', 'application/json')
   res.json(result)
-  return done()
 }
