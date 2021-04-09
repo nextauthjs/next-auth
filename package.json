@@ -37,7 +37,7 @@
   "files": [
     "dist",
     "index.js",
-    "index.d.ts"
+    "index.d.ts",
     "providers.js",
     "providers.d.ts",
     "adapters.js",
