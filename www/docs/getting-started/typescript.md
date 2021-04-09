@@ -41,9 +41,9 @@ export default function IndexPage() {
 }
 ```
 
-To extend/augment this type, create a `@types/next-auth.d.ts` file in your project:
+To extend/augment this type, create a `types/next-auth.d.ts` file in your project:
 
-```ts title="@types/next-auth.d.ts"
+```ts title="types/next-auth.d.ts"
 import NextAuth from "next-auth"
 
 declare module "next-auth" {
@@ -56,11 +56,11 @@ declare module "next-auth" {
 }
 ```
 
-Make sure that the `@types` folder is added to [`typeRoots`](https://www.typescriptlang.org/tsconfig/#typeRoots) in your project's `tsconfig.json` file.
+Make sure that the `types` folder is added to [`typeRoots`](https://www.typescriptlang.org/tsconfig/#typeRoots) in your project's `tsconfig.json` file.
 
 2. Check out `JWT` also:
 
-```ts title="@types/next-auth.d.ts"
+```ts title="types/next-auth.d.ts"
 declare module "next-auth/jwt" {
   interface JWT {
     /** OpenID ID Token */
