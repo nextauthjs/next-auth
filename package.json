@@ -34,15 +34,20 @@
     "lint": "ts-standard",
     "lint:fix": "ts-standard --fix"
   },
-  "types": "types",
   "files": [
     "dist",
-    "types",
     "index.js",
+    "index.d.ts"
     "providers.js",
+    "providers.d.ts",
     "adapters.js",
+    "adapters.d.ts",
     "client.js",
-    "jwt.js"
+    "client.d.ts",
+    "jwt.js",
+    "jwt.d.ts",
+    "_next.d.ts",
+    "_utils.d.ts"
   ],
   "license": "ISC",
   "dependencies": {
