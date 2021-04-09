@@ -165,10 +165,10 @@ const allConfig = {
     },
     async jwt(
       token: JWTType.JWT,
-      user: NextAuthTypes.User,
-      account: Record<string, unknown>,
-      profile: Record<string, unknown>,
-      isNewUser: boolean
+      user?: NextAuthTypes.User,
+      account?: Record<string, unknown>,
+      profile?: Record<string, unknown>,
+      isNewUser?: boolean
     ) {
       return token
     },
