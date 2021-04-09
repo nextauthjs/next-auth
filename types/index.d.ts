@@ -4,7 +4,7 @@
 
 import { ConnectionOptions } from "typeorm"
 import { Adapter } from "./adapters"
-import { JWTEncodeParams, JWTDecodeParams, JWTOptions, JWT } from "./jwt"
+import { JWTOptions, JWT } from "./jwt"
 import { AppProvider, Providers } from "./providers"
 import { NextApiRequest, NextApiResponse, NextApiHandler } from "./_next"
 import { NonNullParams, WithAdditionalParams } from "./_utils"
