@@ -10,3 +10,5 @@ export type NullableParams<T> = {
 
 export type WithAdditionalParams<T extends Record<string, any>> = T &
   Record<string, unknown>
+
+export type Awaitable<T> = T | PromiseLike<T>

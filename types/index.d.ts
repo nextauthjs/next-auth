@@ -7,7 +7,7 @@ import { Adapter } from "./adapters"
 import { JWTOptions, JWT } from "./jwt"
 import { AppProvider, Providers } from "./providers"
 import { NextApiRequest, NextApiResponse, NextApiHandler } from "./_next"
-import { NonNullParams, WithAdditionalParams } from "./_utils"
+import { Awaitable, NonNullParams, WithAdditionalParams } from "./_utils"
 
 export interface NextAuthOptions {
   providers: Providers
@@ -62,30 +62,34 @@ export interface AppOptions
   providers: AppProvider[]
 }
 
-export interface CallbacksOptions {
-  signIn?:
-    | (() => true)
-    | ((
-        user: User,
-        account: Record<string, unknown>,
-        profile: Record<string, unknown>
-      ) => Promise<never | string | boolean>)
-  redirect?: (url: string, baseUrl: string) => Promise<string>
-  session?:
-    | ((session: Session) => WithAdditionalParams<Session>)
-    | ((
-        session: Session,
-        userOrToken: User | JWT
-      ) => Promise<WithAdditionalParams<Session>>)
-  jwt?:
-    | ((token: JWT) => WithAdditionalParams<JWT>)
-    | ((
-        token: JWT,
-        user: User,
-        account: Record<string, unknown>,
-        profile: Record<string, unknown>,
-        isNewUser: boolean
-      ) => Promise<WithAdditionalParams<JWT>>)
+export interface Account extends Record<string, unknown> {
+  accessToken: string
+  idToken?: string
+  refreshToken?: string
+  access_token: string
+  expires_in?: number | null
+  refresh_token?: string
+  id_token?: string
+  id: string
+  provider: string
+  type: string
+}
+export interface Profile extends Record<string, unknown> {}
+
+export interface CallbacksOptions<
+  P extends Record<string, unknown> = Profile,
+  A extends Record<string, unknown> = Account
+> {
+  signIn?(user: User, account: A, profile: P): Awaitable<string | boolean>
+  redirect?(url: string, baseUrl: string): Awaitable<string>
+  session?(session: Session, userOrToken: JWT | User): Awaitable<Session>
+  jwt?(
+    token: JWT,
+    user?: User,
+    account?: A,
+    profile?: P,
+    isNewUser?: boolean
+  ): Awaitable<JWT>
 }
 
 export interface CookieOption {
