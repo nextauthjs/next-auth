@@ -5,7 +5,6 @@
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "author": "Iain Collins <me@iaincollins.com>",
-  "main": "index.js",
   "scripts": {
     "build": "npm run build:js && npm run build:css",
     "build:js": "babel --config-file ./config/babel.config.json src --out-dir dist",
@@ -31,6 +30,15 @@
     "publish:canary": "npm publish --tag canary",
     "lint": "ts-standard",
     "lint:fix": "ts-standard --fix"
+  },
+  "main": "index.js",
+  "exports": {
+    ".": "./dist/server/index.js",
+    "./jwt": "./dist/lib/jwt.js",
+    "./adapters": "./dist/adapters/index.js",
+    "./client": "./dist/client/index.js",
+    "./providers": "./dist/providers/index.js",
+    "./providers/*": "./dist/providers/*.js"
   },
   "files": [
     "dist",
