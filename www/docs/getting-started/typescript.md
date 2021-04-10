@@ -3,7 +3,7 @@ id: typescript
 title: TypeScript
 ---
 
-TypeScript comes with its own types, so you can safely use it in your TypeScript projects. Even if you don't use TypeScript, IDEs like VSCode will pick this up, to provide you with a better developer experience. While you are typing, you will get suggestions of what certain objects are, and sometimes also links to documentation, and examples.
+NextAuth.js comes with its own types, so you can safely use it in your TypeScript projects. Even if you don't use TypeScript, IDEs like VSCode will pick this up, to provide you with a better developer experience. While you are typing, you will get suggestions of what certain objects are, and sometimes also links to documentation, and examples.
 
 :::note
  The types at [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) under the name of `@types/next-auth` are now deprecated, and not maintained anymore.
