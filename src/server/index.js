@@ -1,4 +1,3 @@
-import adapters from '../adapters'
 import jwt from '../lib/jwt'
 import parseUrl from '../lib/parse-url'
 import logger, { setLogger } from '../lib/logger'
@@ -14,6 +13,7 @@ import csrfTokenHandler from './lib/csrf-token-handler'
 import createSecret from './lib/create-secret'
 import * as pkce from './lib/oauth/pkce-handler'
 import * as state from './lib/oauth/state-handler'
+import requireOptional from 'require_optional'
 
 // To work properly in production with OAuth providers the NEXTAUTH_URL
 // environment variable must be set.
@@ -86,7 +86,11 @@ async function NextAuthHandler (req, res, userOptions) {
     // Parse database / adapter
     // If adapter is provided, use it (advanced usage, overrides database)
     // If database URI or config object is provided, use it (simple usage)
-    const adapter = userOptions.adapter ?? (userOptions.database && adapters.Default(userOptions.database))
+    let adapter = userOptions.adapter
+    if ((!adapter && !!userOptions.database)) {
+      const TypeOrm = requireOptional('../adapters/typeorm')
+      adapter = TypeOrm.Adapter(userOptions.database)
+    }
 
     // User provided options are overriden by other options,
     // except for the options with special handling above
