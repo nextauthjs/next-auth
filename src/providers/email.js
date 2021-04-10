@@ -1,5 +1,5 @@
-import nodemailer from 'nodemailer'
 import logger from '../lib/logger'
+import requireOptional from 'require_optional'
 
 export default (options) => {
   return {
@@ -27,6 +27,8 @@ const sendVerificationRequest = ({ identifier: email, url, baseUrl, provider }) 
     const { server, from } = provider
     // Strip protocol from URL and use domain as site name
     const site = baseUrl.replace(/^https?:\/\//, '')
+
+    const nodemailer = requireOptional("nodemailer")
 
     nodemailer
       .createTransport(server)
