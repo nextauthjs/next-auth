@@ -12,18 +12,22 @@ import Discord from './discord'
 import Email from './email'
 import EVEOnline from './eveonline'
 import Facebook from './facebook'
+import FACEIT from './faceit'
 import Foursquare from './foursquare'
 import FusionAuth from './fusionauth'
 import GitHub from './github'
 import GitLab from './gitlab'
 import Google from './google'
 import IdentityServer4 from './identity-server4'
+import Instagram from './instagram'
+import Kakao from './kakao'
 import LINE from './line'
 import LinkedIn from './linkedin'
 import MailRu from './mailru'
 import Medium from './medium'
 import Netlify from './netlify'
 import Okta from './okta'
+import Osso from './osso'
 import Reddit from './reddit'
 import Salesforce from './salesforce'
 import Slack from './slack'
@@ -33,6 +37,7 @@ import Twitch from './twitch'
 import Twitter from './twitter'
 import VK from './vk'
 import Yandex from './yandex'
+import Zoho from './zoho'
 
 export default {
   Apple,
@@ -49,18 +54,22 @@ export default {
   Email,
   EVEOnline,
   Facebook,
+  FACEIT,
   Foursquare,
   FusionAuth,
   GitHub,
   GitLab,
   Google,
   IdentityServer4,
+  Instagram,
+  Kakao,
   LINE,
   LinkedIn,
   MailRu,
   Medium,
   Netlify,
   Okta,
+  Osso,
   Reddit,
   Salesforce,
   Slack,
@@ -69,5 +78,6 @@ export default {
   Twitch,
   Twitter,
   VK,
-  Yandex
+  Yandex,
+  Zoho
 }

@@ -7,7 +7,7 @@ import * as defaultEvents from './lib/default-events'
 import * as defaultCallbacks from './lib/default-callbacks'
 import parseProviders from './lib/providers'
 import callbackUrlHandler from './lib/callback-url-handler'
-import extendRes from './lib/extend-req'
+import extendRes from './lib/extend-res'
 import * as routes from './routes'
 import renderPage from './pages'
 import csrfTokenHandler from './lib/csrf-token-handler'
@@ -225,18 +225,19 @@ async function NextAuthHandler (req, res, userOptions) {
           }
           break
         case '_log':
-          try {
-            if (!userOptions.logger) return
-            const {
-              code = 'CLIENT_ERROR',
-              level = 'error',
-              message = '[]'
-            } = req.body
+          if (userOptions.logger) {
+            try {
+              const {
+                code = 'CLIENT_ERROR',
+                level = 'error',
+                message = '[]'
+              } = req.body
 
-            logger[level](code, ...JSON.parse(message))
-          } catch (error) {
-            // If logging itself failed...
-            logger.error('LOGGER_ERROR', error)
+              logger[level](code, ...JSON.parse(message))
+            } catch (error) {
+              // If logging itself failed...
+              logger.error('LOGGER_ERROR', error)
+            }
           }
           return res.end()
         default:
