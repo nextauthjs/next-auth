@@ -12,11 +12,12 @@ import { OAuthCallbackError } from '../../../lib/errors'
 export async function handleCallback (req, res) {
   const { csrfToken, provider, baseUrl, basePath } = req.options
   try {
-    if (provider.protection !== 'state') { // Provider does not support state, nothing to do.
+    // Provider does not support state, nothing to do.
+    if (!provider.protection?.includes('state')) {
       return
     }
 
-    const { state } = req.query
+    const state = req.query.state || req.body.state
     const expectedState = createHash('sha256').update(csrfToken).digest('hex')
 
     logger.debug(
@@ -41,7 +42,7 @@ export async function handleCallback (req, res) {
 export async function handleSignin (req, res) {
   const { provider, baseUrl, basePath, csrfToken } = req.options
   try {
-    if (provider.protection !== 'state') { // Provider does not support state, nothing to do.
+    if (!provider.protection?.includes('state')) { // Provider does not support state, nothing to do.
       return
     }
 

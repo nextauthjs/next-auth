@@ -82,6 +82,7 @@ export interface NextAuthInternalOptions extends Pick<NextAuthOptions, NextAuthS
   basePath?: string
   action?: string
   csrfToken?: string
+  csrfTokenVerified?: boolean
 }
 
 export interface NextAuthRequest extends NextApiRequest {

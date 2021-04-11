@@ -14,29 +14,30 @@ import * as cookie from './cookie'
  * For more details, see the following OWASP links:
  * https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie
  * https://owasp.org/www-chapter-london/assets/slides/David_Johansson-Double_Defeat_of_Double-Submit_Cookie.pdf
+ * @param {import("..").NextAuthRequest} req
+ * @param {import("..").NextAuthResponse} res
  */
-export default function csrfTokenHandler (req, res, cookies, secret) {
-  const { csrfToken: csrfTokenFromRequest } = req.body
-
-  let csrfTokenFromCookie
-  let csrfTokenVerified = false
-  if (req.cookies[cookies.csrfToken.name]) {
-    const [csrfTokenValue, csrfTokenHash] = req.cookies[cookies.csrfToken.name].split('|')
-    if (csrfTokenHash === createHash('sha256').update(`${csrfTokenValue}${secret}`).digest('hex')) {
+export default function csrfTokenHandler (req, res) {
+  const { cookies, secret } = req.options
+  if (cookies.csrfToken.name in req.cookies) {
+    const [csrfToken, csrfTokenHash] = req.cookies[cookies.csrfToken.name].split('|')
+    const expectedCsrfTokenHash = createHash('sha256').update(`${csrfToken}${secret}`).digest('hex')
+    if (csrfTokenHash === expectedCsrfTokenHash) {
       // If hash matches then we trust the CSRF token value
-      csrfTokenFromCookie = csrfTokenValue
-
-      // If this is a POST request and the CSRF Token in the Post request matches
-      // the cookie we have already verified is one we have set, then token is verified!
-      if (req.method === 'POST' && csrfTokenFromCookie === csrfTokenFromRequest) { csrfTokenVerified = true }
+      // If this is a POST request and the CSRF Token in the POST request matches
+      // the cookie we have already verified is the one we have set, then the token is verified!
+      const csrfTokenVerified = req.method === 'POST' && csrfToken === req.body.csrfToken
+      req.options.csrfToken = csrfToken
+      req.options.csrfTokenVerified = csrfTokenVerified
+      return
     }
   }
-  if (!csrfTokenFromCookie) {
-    // If no csrfToken - because it's not been set yet, or because the hash doesn't match
-    // (e.g. because it's been modifed or because the secret has changed) create a new token.
-    csrfTokenFromCookie = randomBytes(32).toString('hex')
-    const newCsrfTokenCookie = `${csrfTokenFromCookie}|${createHash('sha256').update(`${csrfTokenFromCookie}${secret}`).digest('hex')}`
-    cookie.set(res, cookies.csrfToken.name, newCsrfTokenCookie, cookies.csrfToken.options)
-  }
-  return { csrfToken: csrfTokenFromCookie, csrfTokenVerified }
+  // If no csrfToken from cookie - because it's not been set yet,
+  // or because the hash doesn't match (e.g. because it's been modifed or because the secret has changed)
+  // create a new token.
+  const csrfToken = randomBytes(32).toString('hex')
+  const csrfTokenHash = createHash('sha256').update(`${csrfToken}${secret}`).digest('hex')
+  const csrfTokenCookie = `${csrfToken}|${csrfTokenHash}`
+  cookie.set(res, cookies.csrfToken.name, csrfTokenCookie, cookies.csrfToken.options)
+  req.options.csrfToken = csrfToken
 }
