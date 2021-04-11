@@ -79,6 +79,10 @@ async function NextAuthHandler (req, res, userOptions) {
       provider.protection = 'state' // Default to state, as we did in 3.1 REVIEW: should we use "pkce" or "none" as default?
     }
 
+    if (typeof provider.protection === 'string') {
+      provider.protection = [provider.protection]
+    }
+
     const maxAge = 30 * 24 * 60 * 60 // Sessions expire after 30 days of being idle
 
     // Parse database / adapter
