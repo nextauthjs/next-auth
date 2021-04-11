@@ -72,6 +72,7 @@ async function NextAuthHandler (req, res, userOptions) {
     const providers = parseProviders({ providers: userOptions.providers, baseUrl, basePath })
     const provider = providers.find(({ id }) => id === providerId)
 
+    // Protection only works on OAuth 2.x providers
     if (provider?.type === 'oauth' && provider.version?.startsWith('2')) {
       // When provider.state is undefined, we still want this to pass
       if (!provider.protection && provider.state !== false) {
