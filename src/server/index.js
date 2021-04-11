@@ -79,7 +79,7 @@ async function NextAuthHandler (req, res, userOptions) {
       provider.protection = 'state' // Default to state, as we did in 3.1 REVIEW: should we use "pkce" or "none" as default?
     }
 
-    if (typeof provider.protection === 'string') {
+    if (typeof provider?.protection === 'string') {
       provider.protection = [provider.protection]
     }
 
