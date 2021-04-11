@@ -41,7 +41,7 @@ export async function handleCallback (req, res) {
 export async function handleSignin (req, res) {
   const { provider, baseUrl, basePath, csrfToken } = req.options
   try {
-    if (![provider.protection].flat().includes('state')) { // Provider does not support state, nothing to do.
+    if (!provider.protection.includes('state')) { // Provider does not support state, nothing to do.
       return
     }
 
