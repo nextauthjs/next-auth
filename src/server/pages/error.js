@@ -7,7 +7,7 @@ import { h } from 'preact' // eslint-disable-line no-unused-vars
  *   baseUrl: string
  *   basePath: string
  *   error?: string
- *   res: import("..").NextAuthResponse
+ *   res: import("types").NextAuthResponse
  * }} params
  */
 export default function error ({ baseUrl, basePath, error = 'default', res }) {

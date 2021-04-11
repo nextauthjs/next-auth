@@ -2,7 +2,7 @@ import { FC } from "react"
 import { IncomingMessage } from "http"
 import { WithAdditionalParams } from "./_utils"
 import { Session } from "."
-import { AppProvider, DefaultProviders, Providers } from "./providers"
+import { AppProvider, DefaultProviders } from "./providers"
 
 interface ContextProviderProps {
   session: WithAdditionalParams<Session> | null | undefined
@@ -37,14 +37,19 @@ declare function providers(): Promise<Record<
   AppProvider
 > | null>
 declare const getProviders: typeof providers
+
 declare function session(
   context?: NextContext & {
     triggerEvent?: boolean
   }
 ): Promise<Session | null>
+
 declare const getSession: typeof session
+
 declare function csrfToken(context?: NextContext): Promise<string | null>
+
 declare const getCsrfToken: typeof csrfToken
+
 declare function signin(
   provider: "credentials" | "email",
   data?: Record<string, unknown> & {
@@ -57,6 +62,7 @@ declare function signin(
     | Record<string, unknown>
     | URLSearchParams
 ): Promise<SignInResponse>
+
 declare function signin(
   provider?: string,
   data?: Record<string, unknown> & {
@@ -69,14 +75,20 @@ declare function signin(
     | Record<string, unknown>
     | URLSearchParams
 ): Promise<void>
+
 declare const signIn: typeof signin
+
 declare function signout(data?: {
   callbackUrl?: string
   redirect?: boolean
 }): Promise<void>
+
 declare const signOut: typeof signout
+
 declare function options(options: SetOptionsParams): void
+
 declare const setOptions: typeof options
+
 declare const Provider: ContextProvider
 
 export {

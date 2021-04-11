@@ -1,5 +1,5 @@
 /**
- * @param {import("../server").Provider} options
+ * @type {import("types/providers").OAuthProvider} options
  * @example
  *
  * ```js
