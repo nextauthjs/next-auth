@@ -61,9 +61,7 @@
   },
   "peerDependencies": {
     "react": "^16.13.1 || ^17",
-    "react-dom": "^16.13.1 || ^17"
-  },
-  "peerOptionalDependencies": {
+    "react-dom": "^16.13.1 || ^17",
     "mongodb": "^3.5.9",
     "mysql": "^2.18.1",
     "mssql": "^6.2.1",
@@ -71,6 +69,29 @@
     "@prisma/client": "^2.16.1",
     "nodemailer": "^6.4.16",
     "typeorm": "^0.2.30"
+  },
+  "peerDependenciesMeta": {
+    "mongodb": {
+      "optional": true
+    },
+    "mysql": {
+      "optional": true
+    },
+    "mssql": {
+      "optional": true
+    },
+    "pg": {
+      "optional": true
+    },
+    "@prisma/client": {
+      "optional": true
+    },
+    "nodemailer": {
+      "optional": true
+    },
+    "typeorm": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
