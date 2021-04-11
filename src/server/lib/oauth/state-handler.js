@@ -12,7 +12,7 @@ import { OAuthCallbackError } from '../../../lib/errors'
 export async function handleCallback (req, res) {
   const { csrfToken, provider, baseUrl, basePath } = req.options
   try {
-    if (![provider.protection].flat().includes('state')) { // Provider does not support state, nothing to do.
+    if (!provider.protection.includes('state')) { // Provider does not support state, nothing to do.
       return
     }
 
