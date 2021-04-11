@@ -72,7 +72,7 @@ const adapter: Adapter<
   Session,
   VerificationRequest
 > = {
-  async getAdapter(appOptions: NextAuthTypes.NextAuthInternalOptions) {
+  async getAdapter(appOptions: NextAuthTypes.AppOptions) {
     return {
       createUser: async (profile: Profile) => exampleUser,
       getUser: async (id: string) => exampleUser,
@@ -102,7 +102,7 @@ const adapter: Adapter<
         token: string,
         secret: string,
         provider: EmailAppProvider,
-        options: NextAuthTypes.NextAuthInternalOptions
+        options: NextAuthTypes.AppOptions
       ) => exampleVerificatoinRequest,
       getVerificationRequest: async (
         email: string,
