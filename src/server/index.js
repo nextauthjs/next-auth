@@ -72,15 +72,15 @@ async function NextAuthHandler (req, res, userOptions) {
     const providers = parseProviders({ providers: userOptions.providers, baseUrl, basePath })
     const provider = providers.find(({ id }) => id === providerId)
 
-    if (provider &&
-      provider.type === 'oauth' && provider.version?.startsWith('2') &&
-       (!provider.protection && provider.state !== false)
-    ) {
-      provider.protection = 'state' // Default to state, as we did in 3.1 REVIEW: should we use "pkce" or "none" as default?
-    }
-
-    if (typeof provider?.protection === 'string') {
-      provider.protection = [provider.protection]
+    // Protection only works on OAuth 2.x providers
+    if (provider?.type === 'oauth' && provider.version?.startsWith('2')) {
+      // When provider.state is undefined, we still want this to pass
+      if (!provider.protection && provider.state !== false) {
+        // Default to state, as we did in 3.1 REVIEW: should we use "pkce" or "none" as default?
+        provider.protection = ['state']
+      } else if (typeof provider.protection === 'string') {
+        provider.protection = [provider.protection]
+      }
     }
 
     const maxAge = 30 * 24 * 60 * 60 // Sessions expire after 30 days of being idle
