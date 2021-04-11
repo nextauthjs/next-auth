@@ -6,12 +6,12 @@ import * as cookie from './lib/cookie'
 import * as defaultEvents from './lib/default-events'
 import * as defaultCallbacks from './lib/default-callbacks'
 import parseProviders from './lib/providers'
-import callbackUrlHandler from './lib/callback-url-handler'
-import extendRes from './lib/extend-res'
 import * as routes from './routes'
 import renderPage from './pages'
-import csrfTokenHandler from './lib/csrf-token-handler'
 import createSecret from './lib/create-secret'
+import callbackUrlHandler from './lib/callback-url-handler'
+import extendRes from './lib/extend-res'
+import csrfTokenHandler from './lib/csrf-token-handler'
 import * as pkce from './lib/oauth/pkce-handler'
 import * as state from './lib/oauth/state-handler'
 
@@ -67,8 +67,6 @@ async function NextAuthHandler (req, res, userOptions) {
 
     const secret = createSecret({ userOptions, basePath, baseUrl })
 
-    const { csrfToken, csrfTokenVerified } = csrfTokenHandler(req, res, cookies, secret)
-
     const providers = parseProviders({ providers: userOptions.providers, baseUrl, basePath })
     const provider = providers.find(({ id }) => id === providerId)
 
@@ -107,7 +105,6 @@ async function NextAuthHandler (req, res, userOptions) {
       provider,
       cookies,
       secret,
-      csrfToken,
       providers,
       // Session options
       session: {
@@ -138,6 +135,7 @@ async function NextAuthHandler (req, res, userOptions) {
       logger
     }
 
+    csrfTokenHandler(req, res)
     await callbackUrlHandler(req, res)
 
     const render = renderPage(req, res)
@@ -150,7 +148,7 @@ async function NextAuthHandler (req, res, userOptions) {
         case 'session':
           return routes.session(req, res)
         case 'csrf':
-          return res.json({ csrfToken })
+          return res.json({ csrfToken: req.options.csrfToken })
         case 'signin':
           if (pages.signIn) {
             let signinUrl = `${pages.signIn}${pages.signIn.includes('?') ? '&' : '?'}callbackUrl=${req.options.callbackUrl}`
@@ -203,7 +201,7 @@ async function NextAuthHandler (req, res, userOptions) {
       switch (action) {
         case 'signin':
           // Verified CSRF Token required for all sign in routes
-          if (csrfTokenVerified && provider) {
+          if (req.options.csrfTokenVerified && provider) {
             if (await pkce.handleSignin(req, res)) return
             if (await state.handleSignin(req, res)) return
             return routes.signin(req, res)
@@ -212,14 +210,14 @@ async function NextAuthHandler (req, res, userOptions) {
           return res.redirect(`${baseUrl}${basePath}/signin?csrf=true`)
         case 'signout':
           // Verified CSRF Token required for signout
-          if (csrfTokenVerified) {
+          if (req.options.csrfTokenVerified) {
             return routes.signout(req, res)
           }
           return res.redirect(`${baseUrl}${basePath}/signout?csrf=true`)
         case 'callback':
           if (provider) {
             // Verified CSRF Token required for credentials providers only
-            if (provider.type === 'credentials' && !csrfTokenVerified) {
+            if (provider.type === 'credentials' && !req.options.csrfTokenVerified) {
               return res.redirect(`${baseUrl}${basePath}/signin?csrf=true`)
             }
 

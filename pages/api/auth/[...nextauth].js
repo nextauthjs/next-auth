@@ -6,6 +6,27 @@ import Providers from 'next-auth/providers'
 // const prisma = new PrismaClient()
 
 export default NextAuth({
+  // Used to debug https://github.com/nextauthjs/next-auth/issues/1664
+  // cookies: {
+  //   csrfToken: {
+  //     name: 'next-auth.csrf-token',
+  //     options: {
+  //       httpOnly: true,
+  //       sameSite: 'none',
+  //       path: '/',
+  //       secure: true
+  //     }
+  //   },
+  //   pkceCodeVerifier: {
+  //     name: 'next-auth.pkce.code_verifier',
+  //     options: {
+  //       httpOnly: true,
+  //       sameSite: 'none',
+  //       path: '/',
+  //       secure: true
+  //     }
+  //   }
+  // },
   providers: [
     Providers.Email({
       server: process.env.EMAIL_SERVER,
@@ -19,6 +40,11 @@ export default NextAuth({
       clientId: process.env.AUTH0_ID,
       clientSecret: process.env.AUTH0_SECRET,
       domain: process.env.AUTH0_DOMAIN,
+      // Used to debug https://github.com/nextauthjs/next-auth/issues/1664
+      // protection: ["pkce", "state"],
+      // authorizationParams: {
+      //   response_mode: 'form_post'
+      // }
       protection: 'pkce'
     }),
     Providers.Twitter({

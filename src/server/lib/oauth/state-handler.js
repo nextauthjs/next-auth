@@ -17,7 +17,7 @@ export async function handleCallback (req, res) {
       return
     }
 
-    const { state } = req.query
+    const state = req.query.state || req.body.state
     const expectedState = createHash('sha256').update(csrfToken).digest('hex')
 
     logger.debug(
