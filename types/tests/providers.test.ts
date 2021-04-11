@@ -1,12 +1,12 @@
 import Providers from "next-auth/providers"
 
-// $ExpectType NonNullParams<ProviderEmailOptions> & { id: "email"; type: "email"; }
+// $ExpectType EmailConfig
 Providers.Email({
   server: "path/to/server",
   from: "path/from",
 })
 
-// $ExpectType NonNullParams<ProviderEmailOptions> & { id: "email"; type: "email"; }
+// $ExpectType EmailConfig
 Providers.Email({
   server: {
     host: "host",
@@ -19,7 +19,7 @@ Providers.Email({
   from: "path/from",
 })
 
-// $ExpectType NonNullParams<ProviderCredentialsOptions> & { id: "credentials"; type: "credentials"; }
+// $ExpectType CredentialsConfig<{}>
 Providers.Credentials({
   id: "login",
   name: "account",
@@ -41,7 +41,7 @@ Providers.Credentials({
   },
 })
 
-// $ExpectType Provider<"apple", "oauth"> & { protection: "none"; }
+// $ExpectType OAuthConfig<Profile>
 Providers.Apple({
   clientId: "foo123",
   clientSecret: {
@@ -52,64 +52,64 @@ Providers.Apple({
   },
 })
 
-// $ExpectType Provider<"twitter", "oauth">
+// $ExpectType OAuthConfig<Profile>
 Providers.Twitter({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
-// $ExpectType Provider<"facebook", "oauth">
+// $ExpectType OAuthConfig<Profile>
 Providers.Facebook({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
-// $ExpectType Provider<"github", "oauth">
+// $ExpectType OAuthConfig<Profile>
 Providers.GitHub({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
-// $ExpectType Provider<"github", "oauth">
+// $ExpectType OAuthConfig<Profile>
 Providers.GitHub({
   clientId: "foo123",
   clientSecret: "bar123",
   scope: "change:thing read:that",
 })
 
-// $ExpectType Provider<"gitlab", "oauth">
+// $ExpectType OAuthConfig<Profile>
 Providers.GitLab({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
-// $ExpectType Provider<"slack", "oauth">
+// $ExpectType OAuthConfig<Profile>
 Providers.Slack({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
-// $ExpectType Provider<"google", "oauth">
+// $ExpectType OAuthConfig<Profile>
 Providers.Google({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
-// $ExpectType Provider<"google", "oauth">
+// $ExpectType OAuthConfig<Profile>
 Providers.Google({
   clientId: "foo123",
   clientSecret: "bar123",
   authorizationUrl: "https://foo.google.com",
 })
 
-// $ExpectType Provider<"auth0", "oauth"> & { domain: string; }
+// $ExpectType OAuthConfig<Profile>
 Providers.Auth0({
   clientId: "foo123",
   clientSecret: "bar123",
   domain: "https://foo.auth0.com",
 })
 
-// $ExpectType Provider<"auth0", "oauth"> & { domain: string; }
+// $ExpectType OAuthConfig<Profile>
 Providers.Auth0({
   clientId: "foo123",
   clientSecret: "bar123",
@@ -122,7 +122,7 @@ Providers.Auth0({
   }),
 })
 
-// $ExpectType Provider<string, "oauth"> & { domain: string; }
+// $ExpectType OAuthConfig<Profile>
 Providers.IdentityServer4({
   id: "identity-server4",
   name: "IdentityServer4",
@@ -132,85 +132,85 @@ Providers.IdentityServer4({
   clientSecret: "bar123",
 })
 
-// $ExpectType Provider<"discord", "oauth">
+// $ExpectType OAuthConfig<Profile>
 Providers.Discord({
   clientId: "foo123",
   clientSecret: "bar123",
   scope: "identify",
 })
 
-// $ExpectType Provider<"twitch", "oauth">
+// $ExpectType OAuthConfig<Profile>
 Providers.Twitch({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
-// $ExpectType Provider<"okta", "oauth"> & { domain: string; }
+// $ExpectType OAuthConfig<Profile>
 Providers.Okta({
   clientId: "foo123",
   clientSecret: "bar123",
   domain: "https://foo.auth0.com",
 })
 
-// $ExpectType Provider<"battlenet", "oauth"> & { region: string; }
+// $ExpectType OAuthConfig<Profile>
 Providers.BattleNet({
   clientId: "foo123",
   clientSecret: "bar123",
   region: "europe",
 })
 
-// $ExpectType Provider<"box", "oauth">
+// $ExpectType OAuthConfig<Profile>
 Providers.Box({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
-// $ExpectType Provider<"cognito", "oauth"> & { domain: string; }
+// $ExpectType OAuthConfig<Profile>
 Providers.Cognito({
   clientId: "foo123",
   clientSecret: "bar123",
   domain: "https://foo.auth0.com",
 })
 
-// $ExpectType Provider<"yandex", "oauth">
+// $ExpectType OAuthConfig<Profile>
 Providers.Yandex({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
-// $ExpectType Provider<"linkedin", "oauth">
+// $ExpectType OAuthConfig<Profile>
 Providers.LinkedIn({
   clientId: "foo123",
   clientSecret: "bar123",
   scope: "r_emailaddress r_liteprofile",
 })
 
-// $ExpectType Provider<"spotify", "oauth">
+// $ExpectType OAuthConfig<Profile>
 Providers.Spotify({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
-// $ExpectType Provider<"spotify", "oauth">
+// $ExpectType OAuthConfig<Profile>
 Providers.Spotify({
   clientId: "foo123",
   clientSecret: "bar123",
   scope: "user-read-email",
 })
 
-// $ExpectType Provider<"basecamp", "oauth">
+// $ExpectType OAuthConfig<Profile>
 Providers.Basecamp({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
-// $ExpectType Provider<"reddit", "oauth">
+// $ExpectType OAuthConfig<Profile>
 Providers.Reddit({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
-// $ExpectType Provider<"azure-ad-b2c", "oauth">
+// $ExpectType OAuthConfig<Profile>
 Providers.AzureADB2C({
   clientId: "foo123",
   clientSecret: "bar123",
@@ -219,7 +219,7 @@ Providers.AzureADB2C({
   idToken: true,
 })
 
-// $ExpectType Provider<"fusionauth", "oauth">
+// $ExpectType OAuthConfig<Profile>
 Providers.FusionAuth({
   name: "FusionAuth",
   domain: "domain",
@@ -228,31 +228,31 @@ Providers.FusionAuth({
   tenantId: "tenantId",
 })
 
-// $ExpectType Provider<"faceit", "oauth">
+// $ExpectType OAuthConfig<Profile>
 Providers.FACEIT({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
-// $ExpectType Provider<"instagram", "oauth">
+// $ExpectType OAuthConfig<Profile>
 Providers.Instagram({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
-// $ExpectType Provider<"kakao", "oauth">
+// $ExpectType OAuthConfig<Profile>
 Providers.Kakao({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
-// $ExpectType Provider<"osso", "oauth">
+// $ExpectType OAuthConfig<Profile>
 Providers.Osso({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
-// $ExpectType Provider<"zoho", "oauth">
+// $ExpectType OAuthConfig<Profile>
 Providers.Zoho({
   clientId: "foo123",
   clientSecret: "bar123",

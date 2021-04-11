@@ -1,4 +1,4 @@
-import Providers, { AppProvider, Provider } from "next-auth/providers"
+import Providers, { AppProvider, OAuthConfig } from "next-auth/providers"
 import Adapters, {
   Adapter,
   EmailAppProvider,
@@ -37,7 +37,6 @@ const pageOptions = {
 }
 
 const simpleConfig = {
-  site: "https://foo.com",
   providers: [
     Providers.GitHub({
       clientId: "123",
@@ -73,7 +72,7 @@ const adapter: Adapter<
   Session,
   VerificationRequest
 > = {
-  async getAdapter(appOptions: NextAuthTypes.AppOptions) {
+  async getAdapter(appOptions: NextAuthTypes.NextAuthInternalOptions) {
     return {
       createUser: async (profile: Profile) => exampleUser,
       getUser: async (id: string) => exampleUser,
@@ -103,7 +102,7 @@ const adapter: Adapter<
         token: string,
         secret: string,
         provider: EmailAppProvider,
-        options: NextAuthTypes.AppOptions
+        options: NextAuthTypes.NextAuthInternalOptions
       ) => exampleVerificatoinRequest,
       getVerificationRequest: async (
         email: string,
@@ -209,7 +208,12 @@ const allConfig = {
   },
 }
 
-const customProvider: Provider<"google"> = {
+const customProvider: OAuthConfig<{
+  id: string
+  name: string
+  email: string
+  picture: string
+}> = {
   id: "google",
   name: "Google",
   type: "oauth",
@@ -235,7 +239,6 @@ const customProvider: Provider<"google"> = {
 }
 
 const customProviderConfig = {
-  site: "https://foo.com",
   providers: [customProvider],
 }
 
