@@ -181,8 +181,10 @@ callbacks: {
    */
   async session(session, token) {
     // Add property to session, like an access_token from a provider.
-    session.accessToken = token.accessToken
-    return session
+    return {
+      ...session,
+      accessToken: (token as JWT).accessToken
+    } as WithAdditionalParams<Session>
   }
 }
 ...
