@@ -9,7 +9,6 @@ export default (options) => {
       grant_type: 'authorization_code'
     },
     accessTokenUrl: 'https://oauth.mail.ru/token',
-    requestTokenUrl: 'https://oauth.mail.ru/token',
     authorizationUrl: 'https://oauth.mail.ru/login?response_type=code',
     profileUrl: 'https://oauth.mail.ru/userinfo',
     profile: (profile) => {

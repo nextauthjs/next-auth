@@ -7,7 +7,6 @@ export default (options) => {
     scope: 'login:email login:info',
     params: { grant_type: 'authorization_code' },
     accessTokenUrl: 'https://oauth.yandex.ru/token',
-    requestTokenUrl: 'https://oauth.yandex.ru/token',
     authorizationUrl: 'https://oauth.yandex.ru/authorize?response_type=code',
     profileUrl: 'https://login.yandex.ru/info?format=json',
     profile: (profile) => {

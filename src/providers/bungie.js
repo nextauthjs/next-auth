@@ -7,7 +7,6 @@ export default (options) => {
     scope: '',
     params: { reauth: 'true', grant_type: 'authorization_code' },
     accessTokenUrl: 'https://www.bungie.net/platform/app/oauth/token/',
-    requestTokenUrl: 'https://www.bungie.net/platform/app/oauth/token/',
     authorizationUrl: 'https://www.bungie.net/en/OAuth/Authorize?response_type=code',
     profileUrl: 'https://www.bungie.net/platform/User/GetBungieAccount/{membershipId}/254/',
     profile: (profile) => {

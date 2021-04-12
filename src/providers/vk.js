@@ -11,7 +11,6 @@ export default (options) => {
       grant_type: 'authorization_code'
     },
     accessTokenUrl: `https://oauth.vk.com/access_token?v=${apiVersion}`,
-    requestTokenUrl: `https://oauth.vk.com/access_token?v=${apiVersion}`,
     authorizationUrl:
       `https://oauth.vk.com/authorize?response_type=code&v=${apiVersion}`,
     profileUrl: `https://api.vk.com/method/users.get?fields=photo_100&v=${apiVersion}`,

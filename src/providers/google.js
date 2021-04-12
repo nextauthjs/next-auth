@@ -7,7 +7,6 @@ export default (options) => {
     scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
     params: { grant_type: 'authorization_code' },
     accessTokenUrl: 'https://accounts.google.com/o/oauth2/token',
-    requestTokenUrl: 'https://accounts.google.com/o/oauth2/auth',
     authorizationUrl: 'https://accounts.google.com/o/oauth2/auth?response_type=code',
     profileUrl: 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json',
     profile: (profile) => {
