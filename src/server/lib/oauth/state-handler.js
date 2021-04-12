@@ -69,3 +69,15 @@ export async function handleSignin (req, res) {
 }
 
 export default { handleSignin, handleCallback }
+
+/**
+ * Consistently recreate state from the csrfToken
+ * if provider protection supports `"state"`.
+ * @param {import("../../../server").NextAuthRequest} req
+ */
+export function getState ({ options }) {
+  if (!options.provider.protection.includes('state')) {
+    return
+  }
+  return createHash('sha256').update(options.csrfToken).digest('hex')
+}
