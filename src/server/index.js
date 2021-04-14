@@ -13,7 +13,6 @@ import csrfTokenHandler from './lib/csrf-token-handler'
 import createSecret from './lib/create-secret'
 import * as pkce from './lib/oauth/pkce-handler'
 import * as state from './lib/oauth/state-handler'
-import requireOptional from 'require_optional'
 
 // To work properly in production with OAuth providers the NEXTAUTH_URL
 // environment variable must be set.
@@ -88,7 +87,7 @@ async function NextAuthHandler (req, res, userOptions) {
     // If database URI or config object is provided, use it (simple usage)
     let adapter = userOptions.adapter
     if ((!adapter && !!userOptions.database)) {
-      const TypeOrm = requireOptional('../adapters/typeorm')
+      const TypeOrm = (await import('../adapters/typeorm')).default
       adapter = TypeOrm.Adapter(userOptions.database)
     }
 
