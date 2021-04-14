@@ -91,7 +91,7 @@ providers: [
   Providers.Email({
     server: process.env.EMAIL_SERVER, 
     from: process.env.EMAIL_FROM,
-    sendVerificationRequest: ({ identifier: email, url, token, site, provider }) => { /* your function */ }
+    sendVerificationRequest: ({ identifier: email, url, token, baseUrl, provider }) => { /* your function */ }
   })
 ]
 ```
