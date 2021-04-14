@@ -31,8 +31,8 @@
     "prepublishOnly": "npm run build",
     "publish:beta": "npm publish --tag beta",
     "publish:canary": "npm publish --tag canary",
-    "lint": "ts-standard",
-    "lint:fix": "ts-standard --fix"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "files": [
     "dist",
@@ -99,6 +99,7 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
+    "eslint-plugin-standard": "^5.0.0",
     "mocha": "^8.1.3",
     "mongodb": "^3.5.9",
     "mssql": "^6.2.1",
@@ -129,9 +130,13 @@
       "prettier"
     ],
     "ignorePatterns": [
-      "test/",
+      "node_modules",
+      "test",
       "next-env.d.ts",
-      "types/"
+      "types",
+      "www",
+      ".next",
+      "dist"
     ],
     "globals": {
       "localStorage": "readonly",
