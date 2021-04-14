@@ -54,23 +54,36 @@ export default function oAuthClient (provider) {
   const originalGetOAuth1AccessToken = oauth1Client.getOAuthAccessToken.bind(oauth1Client)
   oauth1Client.getOAuthAccessToken = (...args) => {
     return new Promise((resolve, reject) => {
-      originalGetOAuth1AccessToken(...args, (error, accessToken, refreshToken, results) => {
+      // eslint-disable-next-line camelcase
+      originalGetOAuth1AccessToken(...args, (error, oauth_token, oauth_token_secret, params) => {
         if (error) {
           return reject(error)
         }
-        resolve({ accessToken, refreshToken, results })
+
+        resolve({
+          // TODO: Remove, this is only kept for backward compativility
+          // These are not in the OAuth 1.x spec
+          accessToken: oauth_token,
+          refreshToken: oauth_token_secret,
+          results: params,
+
+          oauth_token,
+          oauth_token_secret,
+          params
+        })
       })
     })
   }
 
   const originalGetOAuthRequestToken = oauth1Client.getOAuthRequestToken.bind(oauth1Client)
-  oauth1Client.getOAuthRequestToken = (...args) => {
+  oauth1Client.getOAuthRequestToken = (params = {}) => {
     return new Promise((resolve, reject) => {
-      originalGetOAuthRequestToken(...args, (error, oauthToken) => {
+      // eslint-disable-next-line camelcase
+      originalGetOAuthRequestToken(params, (error, oauth_token, oauth_token_secret, params) => {
         if (error) {
           return reject(error)
         }
-        resolve(oauthToken)
+        resolve({ oauth_token, oauth_token_secret, params })
       })
     })
   }
