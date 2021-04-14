@@ -85,6 +85,8 @@
     "@semantic-release/npm": "7.0.8",
     "@semantic-release/release-notes-generator": "^9.0.1",
     "@types/react": "^17.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
     "autoprefixer": "^9.7.6",
     "babel-preset-preact": "^2.0.0",
     "conventional-changelog-conventionalcommits": "4.4.0",
@@ -92,6 +94,8 @@
     "dotenv": "^8.2.0",
     "dtslint": "^4.0.8",
     "eslint": "^7.19.0",
+    "eslint-config-prettier": "^8.2.0",
+    "eslint-config-standard-with-typescript": "^19.0.1",
     "mocha": "^8.1.3",
     "mongodb": "^3.5.9",
     "mssql": "^6.2.1",
@@ -107,21 +111,30 @@
     "puppeteer-extra-plugin-stealth": "^2.6.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "ts-standard": "^10.0.0",
     "typescript": "^4.1.3"
   },
-  "ts-standard": {
-    "project": "./tsconfig.json",
-    "ignore": [
+  "prettier": {
+    "semi": false
+  },
+  "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "project": "./tsconfig.json"
+    },
+    "extends": [
+      "standard-with-typescript",
+      "prettier"
+    ],
+    "ignorePatterns": [
       "test/",
       "next-env.d.ts",
       "types/"
     ],
-    "globals": [
-      "localStorage",
-      "location",
-      "fetch"
-    ]
+    "globals": {
+      "localStorage": "readonly",
+      "location": "readonly",
+      "fetch": "readonly"
+    }
   },
   "funding": [
     {
