@@ -1,6 +1,5 @@
 // @ts-check
 import { h } from 'preact' // eslint-disable-line no-unused-vars
-import render from 'preact-render-to-string'
 
 /**
  * Renders an error page.
@@ -53,11 +52,11 @@ export default function error ({ baseUrl, basePath, error = 'default', res }) {
     }
   }
 
-  const { statusCode, heading, message, signin } = errors[error.toLowerCase()]
+  const { statusCode, heading, message, signin } = errors[error.toLowerCase()] ?? errors.default
 
   res.status(statusCode)
 
-  return render(
+  return (
     <div className='error'>
       <h1>{heading}</h1>
       <div className='message'>{message}</div>

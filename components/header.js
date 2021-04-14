@@ -100,6 +100,11 @@ export default function Header () {
               <a>Credentials</a>
             </Link>
           </li>
+          <li className={styles.navItem}>
+            <Link href='/email'>
+              <a>Email</a>
+            </Link>
+          </li>
         </ul>
       </nav>
     </header>

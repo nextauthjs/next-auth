@@ -91,7 +91,7 @@ providers: [
   Providers.Email({
     server: process.env.EMAIL_SERVER, 
     from: process.env.EMAIL_FROM,
-    sendVerificationRequest: ({ identifier: email, url, token, site, provider }) => { /* your function */ }
+    sendVerificationRequest: ({ identifier: email, url, token, baseUrl, provider }) => { /* your function */ }
   })
 ]
 ```
@@ -184,3 +184,17 @@ const text = ({ url, site }) => `Sign in to ${site}\n${url}\n\n`
 :::tip
 If you want to generate great looking email client compatible HTML with React, check out https://mjml.io
 :::
+
+
+## Customising the Verification Token
+
+By default, we are generating a random verification token. You can define a `generateVerificationToken` method in your provider options if you want to override it:
+
+```js title="pages/api/auth/[...nextauth].js"
+providers: [
+  Providers.Email({
+    async generateVerificationToken() {
+      return "ABC123"
+    }
+  })
+],

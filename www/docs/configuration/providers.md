@@ -56,15 +56,11 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 
 <Image src="/img/signin.png" alt="Signin Screenshot" />
 
-:::tip
-If you want to create a custom sign in link you can link to **/api/auth/signin/[provider]** which will sign in the user in directly with that provider.
-:::
-
 ### Using a custom provider
 
 You can use an OAuth provider that isn't built-in by using a custom object.
 
-As an example of what this looks like, this is the the provider object returned for the Google provider:
+As an example of what this looks like, this is the provider object returned for the Google provider:
 
 ```js
 {
@@ -78,7 +74,10 @@ As an example of what this looks like, this is the the provider object returned 
   requestTokenUrl: "https://accounts.google.com/o/oauth2/auth",
   authorizationUrl: "https://accounts.google.com/o/oauth2/auth?response_type=code",
   profileUrl: "https://www.googleapis.com/oauth2/v1/userinfo?alt=json",
-  async profile(profile) {
+  async profile(profile, tokens) {
+    // You can use the tokens, in case you want to fetch more profile information
+    // For example several OAuth provider does not return e-mail by default.
+    // Depending on your provider, will have tokens like `access_token`, `id_token` and or `refresh_token`
     return {
       id: profile.id,
       name: profile.name,
@@ -142,7 +141,7 @@ You can look at the existing built-in providers for inspiration.
 |       profile       |       An callback returning an object with the user's info       |            `object`             |    No    |
 |       idToken       |   Set to `true` for services that use ID Tokens (e.g. OpenID)    |            `boolean`            |    No    |
 |       headers       |      Any headers that should be sent to the OAuth provider       |            `object`             |    No    |
-|     protection      | Additional security for OAuth login flows (defaults to `state`)  |     `pkce`, `state`, `none`     |    No    |
+|     protection      | Additional security for OAuth login flows (defaults to `state`)  |`[pkce]`,`[state]`,`[pkce,state]`|    No    |
 |        state        | Same as `protection: "state"`. Being deprecated, use protection. |            `boolean`            |    No    |
 
 ## Sign in with Email

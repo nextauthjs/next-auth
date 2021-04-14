@@ -76,12 +76,30 @@ In _most cases_ it does not make sense to specify a database in NextAuth.js opti
 The provider you tried to use failed when setting [PKCE or Proof Key for Code Exchange](https://tools.ietf.org/html/rfc7636#section-4.2).
 The `code_verifier` is saved in a cookie called (by default) `__Secure-next-auth.pkce.code_verifier` which expires after 15 minutes.
 Check if `cookies.pkceCodeVerifier` is configured correctly. The default `code_challenge_method` is `"S256"`. This is currently not configurable to `"plain"`, as it is not recommended, and in most cases it is only supported for backward compatibility.
-
 ---
 
 ### Session Handling
 
 #### JWT_SESSION_ERROR
+
+https://next-auth.js.org/errors#jwt_session_error JWKKeySupport: the key does not support HS512 verify algorithm
+
+The algorithm used for generating your key isn't listed as supported. You can generate a HS512 key using
+
+````
+  jose newkey -s 512 -t oct -a HS512
+````
+
+If you are unable to use an HS512 key (for example to interoperate with other services) you can define what is supported using
+
+````
+  jwt: {
+    signingKey: {"kty":"oct","kid":"--","alg":"HS256","k":"--"}
+    verificationOptions: {
+      algorithms: ["HS256"]
+    }
+  }
+````
 
 #### SESSION_ERROR
 

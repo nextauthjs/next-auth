@@ -149,7 +149,7 @@ async function getOAuth2AccessToken (code, provider, codeVerifier) {
     headers.Authorization = `Bearer ${code}`
   }
 
-  if (provider.protection === 'pkce') {
+  if (provider.protection.includes('pkce')) {
     params.code_verifier = codeVerifier
   }
 
@@ -180,9 +180,17 @@ async function getOAuth2AccessToken (code, provider, codeVerifier) {
           raw = querystring.parse(data)
         }
 
-        const accessToken = provider.id === 'slack'
-          ? raw.authed_user.access_token
-          : raw.access_token
+        let accessToken
+        if (provider.id === 'slack') {
+          const { ok, error } = raw
+          if (!ok) {
+            return reject(error)
+          }
+
+          accessToken = raw.authed_user.access_token
+        } else {
+          accessToken = raw.access_token
+        }
 
         resolve({
           accessToken,
