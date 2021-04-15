@@ -8,6 +8,8 @@ import Models from './models'
 
 import { updateConnectionEntities } from './lib/utils'
 
+import optionalRequire from 'optional-require'
+
 const Adapter = (typeOrmConfig, options = {}) => {
   // Ensure typeOrmConfigObject is normalized to an object
   const typeOrmConfigObject = (typeof typeOrmConfig === 'string')
@@ -93,7 +95,7 @@ const Adapter = (typeOrmConfig, options = {}) => {
     let ObjectId
     if (config.type === 'mongodb') {
       idKey = '_id'
-      const mongodb = (await import('mongodb')).default
+      const mongodb = optionalRequire('mongodb')
       ObjectId = mongodb.ObjectID
     }
 
