@@ -78,11 +78,6 @@ When using NextAuth.js with a database, the User object will be either a user ob
 When using NextAuth.js without a database, the user object it will always be a prototype user object, with information extracted from the profile.
 :::
 
-:::tip
-If you only want to allow users who already have accounts in the database to sign in, you can check for the existence of a `user.id` property and reject any sign in attempts from accounts that do not have one.
-
-If you are using NextAuth.js without database and want to control who can sign in, you can check their email address or profile against a hard coded list in the `signIn()` callback.
-:::
 
 ## Redirect callback
 
