@@ -5,7 +5,6 @@
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "author": "Iain Collins <me@iaincollins.com>",
-  "main": "index.js",
   "scripts": {
     "build": "npm run build:js && npm run build:css",
     "build:js": "babel --config-file ./config/babel.config.json src --out-dir dist",
@@ -33,6 +32,15 @@
     "lint": "ts-standard",
     "lint:fix": "ts-standard --fix"
   },
+  "main": "index.js",
+  "exports": {
+    ".": "./dist/server/index.js",
+    "./jwt": "./dist/lib/jwt.js",
+    "./adapters": "./dist/adapters/index.js",
+    "./client": "./dist/client/index.js",
+    "./providers": "./dist/providers/index.js",
+    "./providers/*": "./dist/providers/*.js"
+  },
   "files": [
     "dist",
     "index.js",
@@ -43,29 +51,47 @@
   ],
   "license": "ISC",
   "dependencies": {
-    "crypto-js": "^4.0.0",
     "futoin-hkdf": "^1.3.2",
     "jose": "^1.27.2",
     "jsonwebtoken": "^8.5.1",
-    "nodemailer": "^6.4.16",
     "oauth": "^0.9.15",
     "pkce-challenge": "^2.1.0",
     "preact": "^10.4.1",
-    "preact-render-to-string": "^5.1.14",
-    "querystring": "^0.2.0",
-    "require_optional": "^1.0.1",
-    "typeorm": "^0.2.30"
+    "preact-render-to-string": "^5.1.14"
   },
   "peerDependencies": {
     "react": "^16.13.1 || ^17",
-    "react-dom": "^16.13.1 || ^17"
-  },
-  "peerOptionalDependencies": {
-    "mongodb": "^3.5.9",
+    "react-dom": "^16.13.1 || ^17",
+    "mongodb": "^3.6.6",
     "mysql": "^2.18.1",
     "mssql": "^6.2.1",
     "pg": "^8.2.1",
-    "@prisma/client": "^2.16.1"
+    "@prisma/client": "^2.16.1",
+    "nodemailer": "^6.4.16",
+    "typeorm": "^0.2.30"
+  },
+  "peerDependenciesMeta": {
+    "mongodb": {
+      "optional": true
+    },
+    "mysql": {
+      "optional": true
+    },
+    "mssql": {
+      "optional": true
+    },
+    "pg": {
+      "optional": true
+    },
+    "@prisma/client": {
+      "optional": true
+    },
+    "nodemailer": {
+      "optional": true
+    },
+    "typeorm": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
@@ -84,7 +110,7 @@
     "dotenv": "^8.2.0",
     "eslint": "^7.19.0",
     "mocha": "^8.1.3",
-    "mongodb": "^3.5.9",
+    "mongodb": "^3.6.6",
     "mssql": "^6.2.1",
     "mysql": "^2.18.1",
     "next": "^10.0.5",

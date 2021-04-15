@@ -1,6 +1,5 @@
 import { createConnection, getConnection } from 'typeorm'
 import { createHash } from 'crypto'
-import require_optional from 'require_optional' // eslint-disable-line camelcase
 
 import { CreateUserError } from '../../lib/errors'
 import adapterConfig from './lib/config'
@@ -94,12 +93,8 @@ const Adapter = (typeOrmConfig, options = {}) => {
     let ObjectId
     if (config.type === 'mongodb') {
       idKey = '_id'
-      // Using a dynamic import causes problems for some compilers/bundlers
-      // that don't handle dynamic imports. To try and work around this we are
-      // using the same method mongodb uses to load Object ID type, which is to
-      // use the require_optional loader.
-      const mongodb = require_optional('mongodb')
-      ObjectId = mongodb.ObjectId
+      const mongodb = (await import('mongodb')).default
+      ObjectId = mongodb.ObjectID
     }
 
     // These values are stored as seconds, but to use them with dates in

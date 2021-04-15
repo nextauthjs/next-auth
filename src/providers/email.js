@@ -1,4 +1,3 @@
-import nodemailer from 'nodemailer'
 import logger from '../lib/logger'
 
 export default (options) => {
@@ -22,13 +21,13 @@ export default (options) => {
   }
 }
 
-const sendVerificationRequest = ({ identifier: email, url, baseUrl, provider }) => {
-  return new Promise((resolve, reject) => {
-    const { server, from } = provider
-    // Strip protocol from URL and use domain as site name
-    const site = baseUrl.replace(/^https?:\/\//, '')
-
-    nodemailer
+async function sendVerificationRequest ({ identifier: email, url, baseUrl, provider }) {
+  const { server, from } = provider
+  // Strip protocol from URL and use domain as site name
+  const site = baseUrl.replace(/^https?:\/\//, '')
+  try {
+    const nodemailer = (await import('nodemailer')).default
+    await nodemailer
       .createTransport(server)
       .sendMail({
         to: email,
@@ -36,14 +35,11 @@ const sendVerificationRequest = ({ identifier: email, url, baseUrl, provider }) 
         subject: `Sign in to ${site}`,
         text: text({ url, site, email }),
         html: html({ url, site, email })
-      }, (error) => {
-        if (error) {
-          logger.error('SEND_VERIFICATION_EMAIL_ERROR', email, error)
-          return reject(new Error('SEND_VERIFICATION_EMAIL_ERROR', error))
-        }
-        return resolve()
       })
-  })
+  } catch (error) {
+    logger.error('SEND_VERIFICATION_EMAIL_ERROR', email, error)
+    throw new Error('SEND_VERIFICATION_EMAIL_ERROR')
+  }
 }
 
 // Email HTML body

@@ -1,4 +1,3 @@
-import adapters from '../adapters'
 import jwt from '../lib/jwt'
 import parseUrl from '../lib/parse-url'
 import logger, { setLogger } from '../lib/logger'
@@ -86,7 +85,11 @@ async function NextAuthHandler (req, res, userOptions) {
     // Parse database / adapter
     // If adapter is provided, use it (advanced usage, overrides database)
     // If database URI or config object is provided, use it (simple usage)
-    const adapter = userOptions.adapter ?? (userOptions.database && adapters.Default(userOptions.database))
+    let adapter = userOptions.adapter
+    if ((!adapter && !!userOptions.database)) {
+      const TypeOrm = (await import('../adapters/typeorm')).default
+      adapter = TypeOrm.Adapter(userOptions.database)
+    }
 
     // User provided options are overriden by other options,
     // except for the options with special handling above
