@@ -1,10 +1,12 @@
 import { Profile, TokenSet, User } from "."
 import { Awaitable } from "./_utils"
 
+export type ProviderType = "oauth" | "email" | "credentials"
+
 interface CommonProviderOptions {
   id: string
   name: string
-  type: "oauth" | "email" | "credentials"
+  type: ProviderType
 }
 
 /**
@@ -50,7 +52,7 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
   tenantId?: string
 }
 
-export type OAuthProviders =
+export type OAuthProviderType =
   | "Apple"
   | "Attlassian"
   | "Auth0"
@@ -114,7 +116,7 @@ export type CredentialsProvider = (
   options: Partial<CredentialsConfig>
 ) => CredentialsConfig
 
-export type CredentialsProviders = "Credentials"
+export type CredentialsProviderType = "Credentials"
 
 /** Email Provider */
 
@@ -144,7 +146,7 @@ export type EmailProvider = (options: Partial<EmailConfig>) => EmailConfig
 
 // TODO: Rename to Token provider
 // when started working on https://github.com/nextauthjs/next-auth/discussions/1465
-export type EmailProviders = "Email"
+export type EmailProviderType = "Email"
 
 export type Provider = OAuthConfig | EmailConfig | CredentialsConfig
 
@@ -153,14 +155,14 @@ export interface AppProvider extends CommonProviderOptions {
   callbackUrl: string
 }
 
-export type DefaultProviders = Record<OAuthProviders, OAuthProvider> &
-  Record<CredentialsProviders, CredentialsProvider> &
-  Record<EmailProviders, EmailProvider>
+export type BuiltInProviders = Record<OAuthProviderType, OAuthProvider> &
+  Record<CredentialsProviderType, CredentialsProvider> &
+  Record<EmailProviderType, EmailProvider>
 
 export type AppProviders = Array<
-  Provider | ReturnType<DefaultProviders[keyof DefaultProviders]>
+  Provider | ReturnType<BuiltInProviders[keyof BuiltInProviders]>
 >
 
-declare const Providers: DefaultProviders
+declare const Providers: BuiltInProviders
 
 export default Providers

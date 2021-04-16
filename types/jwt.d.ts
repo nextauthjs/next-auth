@@ -1,5 +1,5 @@
 import { JWT, JWE } from "jose"
-import { NextApiRequest } from "./_next"
+import { NextApiRequest } from "next"
 import { WithAdditionalParams } from "./_utils"
 
 export interface JWT extends Record<string, unknown> {

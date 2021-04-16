@@ -18,7 +18,7 @@ import parseUrl from '../lib/parse-url'
 //    relative URLs are valid in that context and so defaults to empty.
 // 2. When invoked server side the value is picked up from an environment
 //    variable and defaults to 'http://localhost:3000'.
-/** @type {import(".").NextAuthConfig} */
+/** @type {import("types/internals/client").NextAuthConfig} */
 const __NEXTAUTH = {
   baseUrl: parseUrl(process.env.NEXTAUTH_URL || process.env.VERCEL_URL).baseUrl,
   basePath: parseUrl(process.env.NEXTAUTH_URL).basePath,
@@ -67,7 +67,6 @@ const SessionContext = createContext()
  * to the logged in user's session data.
  *
  * [Documentation](https://next-auth.js.org/getting-started/client#usesession)
- * @type {import(".").UseSession}
  */
 export function useSession (session) {
   const context = useContext(SessionContext)
@@ -149,7 +148,6 @@ function _useSessionHook (session) {
  * or null if no session exists.
  *
  * [Documentation](https://next-auth.js.org/getting-started/client#getsession)
- * @type {import(".").GetSession}
  */
 export async function getSession (ctx) {
   const session = await _fetchData('session', ctx)
@@ -166,7 +164,6 @@ export async function getSession (ctx) {
  * `signIn()` and `signOut()` methods.
  *
  * [Documentation](https://next-auth.js.org/getting-started/client#getcsrftoken)
- * @type {import(".").GetCsrfToken}
  */
 async function getCsrfToken (ctx) {
   return (await _fetchData('csrf', ctx))?.csrfToken
@@ -178,7 +175,6 @@ async function getCsrfToken (ctx) {
  * It can be useful if you are creating a dynamic custom sign in page.
  *
  * [Documentation](https://next-auth.js.org/getting-started/client#getproviders)
- * @type {import(".").GetProviders}
  */
 export async function getProviders () {
   return _fetchData('providers')
@@ -190,7 +186,6 @@ export async function getProviders () {
  * Automatically adds the CSRF token to the request.
  *
  * [Documentation](https://next-auth.js.org/getting-started/client#signin)
- * @type {import(".").SignIn}
  */
 export async function signIn (provider, options = {}, authorizationParams = {}) {
   const {
@@ -260,7 +255,6 @@ export async function signIn (provider, options = {}, authorizationParams = {}) 
  * Automatically adds the CSRF token to the request.
  *
  * [Documentation](https://next-auth.js.org/getting-started/client#signout)
- * @type {import(".").SignOut}
  */
 export async function signOut (options = {}) {
   const {
@@ -298,7 +292,6 @@ export async function signOut (options = {}) {
 // Method to set options. The documented way is to use the provider, but this
 // method is being left in as an alternative, that will be helpful if/when we
 // expose a vanilla JavaScript version that doesn't depend on React.
-/** @type {import(".").SetOptions} */
 export function setOptions ({ baseUrl, basePath, clientMaxAge, keepAlive } = {}) {
   if (baseUrl) __NEXTAUTH.baseUrl = baseUrl
   if (basePath) __NEXTAUTH.basePath = basePath
@@ -327,7 +320,6 @@ export function setOptions ({ baseUrl, basePath, clientMaxAge, keepAlive } = {})
  * `/api/auth/session`.
  *
  * [Documentation](https://next-auth.js.org/getting-started/client#provider)
- * @type {import(".").Provider}
  */
 export function Provider ({ children, session, options }) {
   setOptions(options)

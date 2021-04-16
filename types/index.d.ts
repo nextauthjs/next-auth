@@ -6,7 +6,7 @@ import { ConnectionOptions } from "typeorm"
 import { Adapter } from "./adapters"
 import { JWTOptions, JWT } from "./jwt"
 import { AppProvider, AppProviders } from "./providers"
-import { NextApiRequest, NextApiResponse, NextApiHandler } from "./_next"
+import { NextApiRequest, NextApiResponse, NextApiHandler } from "next"
 import { Awaitable, WithAdditionalParams } from "./_utils"
 
 /** @docs https://next-auth.js.org/configuration/options */
@@ -133,8 +133,8 @@ export interface PagesOptions {
   newUser?: string
 }
 
-export interface Session {
-  user: WithAdditionalParams<User>
+export interface Session extends Record<string, unknown> {
+  user?: WithAdditionalParams<User>
   accessToken?: string
   expires: string
 }
