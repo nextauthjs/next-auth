@@ -17,7 +17,6 @@ export type GetSessionOptions = CtxOrReq & {
   triggerEvent?: boolean
 }
 
-
 /**
  * React Hook that gives you access
  * to the logged in user's session data.
