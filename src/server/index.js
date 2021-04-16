@@ -14,7 +14,7 @@ import csrfTokenHandler from './lib/csrf-token-handler'
 import * as pkce from './lib/oauth/pkce-handler'
 import * as state from './lib/oauth/state-handler'
 
-import optionalRequire from 'optional-require'
+import optionalRequire from '@balazsorban/require-optional'
 
 // To work properly in production with OAuth providers the NEXTAUTH_URL
 // environment variable must be set.

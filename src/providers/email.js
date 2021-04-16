@@ -1,5 +1,5 @@
 import logger from '../lib/logger'
-import optionalRequire from 'optional-require'
+import requireOptional from '@balazsorban/require-optional'
 
 export default (options) => {
   return {
@@ -27,7 +27,7 @@ async function sendVerificationRequest ({ identifier: email, url, baseUrl, provi
   // Strip protocol from URL and use domain as site name
   const site = baseUrl.replace(/^https?:\/\//, '')
   try {
-    const nodemailer = optionalRequire('nodemailer')
+    const nodemailer = requireOptional('nodemailer')
     await nodemailer
       .createTransport(server)
       .sendMail({
