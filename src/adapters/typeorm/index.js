@@ -8,7 +8,7 @@ import Models from './models'
 
 import { updateConnectionEntities } from './lib/utils'
 
-import optionalRequire from 'optional-require'
+import requireOptional from '@balazsorban/require-optional'
 
 const Adapter = (typeOrmConfig, options = {}) => {
   // Ensure typeOrmConfigObject is normalized to an object
@@ -95,7 +95,11 @@ const Adapter = (typeOrmConfig, options = {}) => {
     let ObjectId
     if (config.type === 'mongodb') {
       idKey = '_id'
-      const mongodb = optionalRequire('mongodb')
+      // We should/could use dynamic import here, but
+      // bundlers like webpack will try to import the module,
+      // even if this conditional branch is never entered.
+      // We work around this with requireOptional.
+      const mongodb = requireOptional('mongodb')
       ObjectId = mongodb.ObjectID
     }
 
