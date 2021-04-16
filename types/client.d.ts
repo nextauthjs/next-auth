@@ -17,10 +17,22 @@ export type GetSessionOptions = CtxOrReq & {
   triggerEvent?: boolean
 }
 
-/** @docs https://next-auth.js.org/getting-started/client#usesession */
+
+/**
+ * React Hook that gives you access
+ * to the logged in user's session data.
+ *
+ * [Documentation](https://next-auth.js.org/getting-started/client#usesession)
+ */
 export function useSession(): [Session | null, boolean]
 
-/** @docs https://next-auth.js.org/getting-started/client#getsession */
+/**
+ * Can be called client or server side to return a session asynchronously.
+ * It calls `/api/auth/session` and returns a promise with a session object,
+ * or null if no session exists.
+ *
+ * [Documentation](https://next-auth.js.org/getting-started/client#getsession)
+ */
 export function getSession(options: GetSessionOptions): Promise<Session | null>
 
 /**
@@ -33,7 +45,14 @@ export const session: typeof getSession
  * CSRF Token types
  ******************/
 
-/** @docs https://next-auth.js.org/getting-started/client#getcsrftoken */
+/**
+ * Returns the current Cross Site Request Forgery Token (CSRF Token)
+ * required to make POST requests (e.g. for signing in and signing out).
+ * You likely only need to use this if you are not using the built-in
+ * `signIn()` and `signOut()` methods.
+ *
+ * [Documentation](https://next-auth.js.org/getting-started/client#getcsrftoken)
+ */
 export function getCsrfToken(ctxOrReq: CtxOrReq): Promise<string | null>
 
 /**
@@ -54,7 +73,13 @@ export interface ClientSafeProvider {
  * Providers types
  *****************/
 
-/** @docs https://next-auth.js.org/getting-started/client#getproviders */
+/**
+ * It calls `/api/auth/providers` and returns
+ * a list of the currently configured authentication providers.
+ * It can be useful if you are creating a dynamic custom sign in page.
+ *
+ * [Documentation](https://next-auth.js.org/getting-started/client#getproviders)
+ */
 export function getProviders(): Promise<Record<
   string,
   ClientSafeProvider
@@ -98,7 +123,13 @@ export type SignInAuthorisationParams =
   | Record<string, string>
   | URLSearchParams
 
-/** @docs https://next-auth.js.org/getting-started/client#signin */
+/**
+ * Client-side method to initiate a signin flow
+ * or send the user to the signin page listing all possible providers.
+ * Automatically adds the CSRF token to the request.
+ *
+ * [Documentation](https://next-auth.js.org/getting-started/client#signin)
+ */
 export function signIn<P extends SignInProvider = undefined>(
   provider?: P,
   options?: SignInOptions,
@@ -129,7 +160,12 @@ export interface SignOutParams<R extends boolean = true> {
   redirect?: R
 }
 
-/** @docs https://next-auth.js.org/getting-started/client#signout */
+/**
+ * Signs the user out, by removing the session cookie.
+ * Automatically adds the CSRF token to the request.
+ *
+ * [Documentation](https://next-auth.js.org/getting-started/client#signout)
+ */
 export function signOut<R extends boolean = true>(
   params?: SignOutParams<R>
 ): Promise<R extends true ? undefined : SignOutResponse>
@@ -151,13 +187,26 @@ export interface SessionProviderOptions {
   keepAlive?: number
 }
 
-/** @docs https://next-auth.js.org/getting-started/client#provider */
+/**
+ * Provider to wrap the app in to make session data available globally.
+ * Can also be used to throttle the number of requests to the endpoint
+ * `/api/auth/session`.
+ *
+ * [Documentation](https://next-auth.js.org/getting-started/client#provider)
+ */
 export type SessionProvider = React.FC<{
   children: React.ReactNode
   session?: Session
   options?: SessionProviderOptions
 }>
 
+/**
+ * Provider to wrap the app in to make session data available globally.
+ * Can also be used to throttle the number of requests to the endpoint
+ * `/api/auth/session`.
+ *
+ * [Documentation](https://next-auth.js.org/getting-started/client#provider)
+ */
 export const Provider: SessionProvider
 
 /** @docs: https://next-auth.js.org/getting-started/client#options */
