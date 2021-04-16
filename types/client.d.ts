@@ -1,109 +1,170 @@
-import { FC } from "react"
+import * as React from "react"
 import { IncomingMessage } from "http"
-import { WithAdditionalParams } from "./_utils"
 import { Session } from "."
-import { AppProvider, DefaultProviders } from "./providers"
+import { BuiltInProviders, ProviderType } from "./providers"
 
-interface ContextProviderProps {
-  session: WithAdditionalParams<Session> | null | undefined
-  options?: SetOptionsParams
+export interface CtxOrReq {
+  req?: IncomingMessage
+  ctx?: { req: IncomingMessage }
 }
 
-interface SetOptionsParams {
-  baseUrl?: string
-  basePath?: string
-  clientMaxAge?: number
-  keepAlive?: number
+/***************
+ * Session types
+ **************/
+
+export type GetSessionOptions = CtxOrReq & {
+  event?: "storage" | "timer" | "hidden" | string
+  triggerEvent?: boolean
 }
 
-interface SignInResponse {
+/** @docs https://next-auth.js.org/getting-started/client#usesession */
+export function useSession(): [Session | null, boolean]
+
+/** @docs https://next-auth.js.org/getting-started/client#getsession */
+export function getSession(options: GetSessionOptions): Promise<Session | null>
+
+/**
+ * Alias for `getSession`
+ * @docs https://next-auth.js.org/getting-started/client#getsession
+ */
+export const session: typeof getSession
+
+/*******************
+ * CSRF Token types
+ ******************/
+
+/** @docs https://next-auth.js.org/getting-started/client#getcsrftoken */
+export function getCsrfToken(ctxOrReq: CtxOrReq): Promise<string | null>
+
+/**
+ * Alias for `getCsrfToken`
+ * @docs https://next-auth.js.org/getting-started/client#getcsrftoken
+ */
+export const csrfToken: typeof getCsrfToken
+
+export interface ClientSafeProvider {
+  id: string
+  name: string
+  type: ProviderType
+  signinUrl: string
+  callbackUrl: string
+}
+
+/******************
+ * Providers types
+ *****************/
+
+/** @docs https://next-auth.js.org/getting-started/client#getproviders */
+export function getProviders(): Promise<Record<
+  string,
+  ClientSafeProvider
+> | null>
+
+/**
+ * Alias for `getProviders`
+ * @docs https://next-auth.js.org/getting-started/client#getproviders
+ */
+export const providers: typeof getProviders
+
+/****************
+ * Sign in types
+ ***************/
+
+export type RedirectableProvider = "email" | "credentials"
+
+export type SignInProvider = RedirectableProvider | string | undefined
+
+export interface SignInOptions extends Record<string, unknown> {
+  /**
+   * Defaults to the current URL.
+   * @docs https://next-auth.js.org/getting-started/client#specifying-a-callbackurl
+   */
+  callbackUrl?: string
+  /** @docs https://next-auth.js.org/getting-started/client#using-the-redirect-false-option */
+  redirect?: boolean
+}
+
+export interface SignInResponse {
   error: string | undefined
   status: number
   ok: boolean
   url: string | null
 }
 
-type ContextProvider = FC<ContextProviderProps>
+/** Match `inputType` of `new URLSearchParams(inputType)` */
+export type SignInAuthorisationParams =
+  | string
+  | string[][]
+  | Record<string, string>
+  | URLSearchParams
 
-interface NextContext {
-  req?: IncomingMessage
-  ctx?: { req: IncomingMessage }
+/** @docs https://next-auth.js.org/getting-started/client#signin */
+export function signIn<P extends SignInProvider = undefined>(
+  provider?: P,
+  options?: SignInOptions,
+  authorizationParams?: SignInAuthorisationParams
+): Promise<
+  P extends RedirectableProvider ? SignInResponse | undefined : undefined
+>
+
+/**
+ * Alias for `signIn`
+ * @docs https://next-auth.js.org/getting-started/client#signin
+ */
+export const signin: typeof signIn
+
+/****************
+ * Sign out types
+ ****************/
+
+/** @docs https://next-auth.js.org/getting-started/client#using-the-redirect-false-option-1 */
+export interface SignOutResponse {
+  url: string
 }
 
-declare function useSession(): [Session | null | undefined, boolean]
-
-declare function providers(): Promise<Record<
-  keyof DefaultProviders | string,
-  AppProvider
-> | null>
-declare const getProviders: typeof providers
-
-declare function session(
-  context?: NextContext & {
-    triggerEvent?: boolean
-  }
-): Promise<Session | null>
-
-declare const getSession: typeof session
-
-declare function csrfToken(context?: NextContext): Promise<string | null>
-
-declare const getCsrfToken: typeof csrfToken
-
-declare function signin(
-  provider: "credentials" | "email",
-  data?: Record<string, unknown> & {
-    callbackUrl?: string
-    redirect?: false
-  },
-  authorizationParams?:
-    | string
-    | string[][]
-    | Record<string, unknown>
-    | URLSearchParams
-): Promise<SignInResponse>
-
-declare function signin(
-  provider?: string,
-  data?: Record<string, unknown> & {
-    callbackUrl?: string
-    redirect?: boolean
-  },
-  authorizationParams?:
-    | string
-    | string[][]
-    | Record<string, unknown>
-    | URLSearchParams
-): Promise<void>
-
-declare const signIn: typeof signin
-
-declare function signout(data?: {
+export interface SignOutParams<R extends boolean = true> {
+  /** @docs https://next-auth.js.org/getting-started/client#specifying-a-callbackurl-1 */
   callbackUrl?: string
-  redirect?: boolean
-}): Promise<void>
-
-declare const signOut: typeof signout
-
-declare function options(options: SetOptionsParams): void
-
-declare const setOptions: typeof options
-
-declare const Provider: ContextProvider
-
-export {
-  useSession,
-  session,
-  getSession,
-  providers,
-  getProviders,
-  csrfToken,
-  getCsrfToken,
-  signin,
-  signIn,
-  signout,
-  signOut,
-  options,
-  setOptions,
-  Provider,
+  /** @docs https://next-auth.js.org/getting-started/client#using-the-redirect-false-option-1 */
+  redirect?: R
 }
+
+/** @docs https://next-auth.js.org/getting-started/client#signout */
+export function signOut<R extends boolean = true>(
+  params?: SignOutParams<R>
+): Promise<R extends true ? undefined : SignOutResponse>
+
+/**
+ * @docs https://next-auth.js.org/getting-started/client#signout
+ * Alias for `signOut`
+ */
+export const signout: typeof signOut
+/************************
+ * SessionProvider types
+ ***********************/
+
+/** @docs: https://next-auth.js.org/getting-started/client#options */
+export interface SessionProviderOptions {
+  baseUrl?: string
+  basePath?: string
+  clientMaxAge?: number
+  keepAlive?: number
+}
+
+/** @docs https://next-auth.js.org/getting-started/client#provider */
+export type SessionProvider = React.FC<{
+  children: React.ReactNode
+  session?: Session
+  options?: SessionProviderOptions
+}>
+
+export const Provider: SessionProvider
+
+/** @docs: https://next-auth.js.org/getting-started/client#options */
+export function setOptions(options: SessionProviderOptions): void
+
+/**
+ * Alias for `setOptions`
+ * @docs: https://next-auth.js.org/getting-started/client#options
+ */
+export const options: typeof setOptions
