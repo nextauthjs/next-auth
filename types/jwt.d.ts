@@ -35,13 +35,18 @@ export interface JWTDecodeParams {
 
 export function decode(params?: JWTDecodeParams): Promise<JWT>
 
-export function getToken(params?: {
+export type GetTokenParams<R extends boolean = false> = {
   req: NextApiRequest
   secureCookie?: boolean
   cookieName?: string
-  raw?: boolean
+  raw?: R
   decode?: typeof decode
-}): Promise<string>
+  secret?: string
+} & Omit<JWTDecodeParams, "secret">
+
+export function getToken<R extends boolean = false>(
+  params?: GetTokenParams<R>
+): Promise<R extends true ? string : JWT>
 
 export interface JWTOptions {
   secret?: string
