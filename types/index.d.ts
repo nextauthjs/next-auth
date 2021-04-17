@@ -6,7 +6,12 @@ import { ConnectionOptions } from "typeorm"
 import { Adapter } from "./adapters"
 import { JWTOptions, JWT } from "./jwt"
 import { AppProviders } from "./providers"
-import { Awaitable, NextApiRequest, NextApiResponse, NextApiHandler } from "internals/utils"
+import {
+  Awaitable,
+  NextApiRequest,
+  NextApiResponse,
+  NextApiHandler,
+} from "internals/utils"
 
 /** @docs https://next-auth.js.org/configuration/options */
 export interface NextAuthOptions {
