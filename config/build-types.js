@@ -6,11 +6,12 @@ const BUILD_TARGETS = [
   'client.d.ts',
   'adapters.d.ts',
   'providers.d.ts',
-  'jwt.d.ts'
+  'jwt.d.ts',
+  'internals'
 ]
 
 BUILD_TARGETS.forEach((target) => {
-  fs.copyFile(
+  fs.copy(
     path.resolve('types', target),
     path.join(process.cwd(), target),
     (err) => {
@@ -19,12 +20,3 @@ BUILD_TARGETS.forEach((target) => {
     }
   )
 })
-
-fs.copy(
-  path.join(process.cwd(), 'types', 'internals'),
-  path.join(process.cwd(), 'internals'),
-  (err) => {
-    if (err) throw err
-    console.log('[build-types] copying "internals" to root folder')
-  }
-)
