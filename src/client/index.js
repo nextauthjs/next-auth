@@ -332,7 +332,7 @@ function BroadcastChannel (name = 'nextauth.message') {
   return {
     /**
      * Get notified by other tabs/windows.
-     * @param {(message: import(".").BroadcastMessage) => void} onReceive
+     * @param {(message: import("types/internals/client").BroadcastMessage) => void} onReceive
      */
     receive (onReceive) {
       if (typeof window === 'undefined') return

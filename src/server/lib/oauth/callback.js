@@ -3,7 +3,7 @@ import oAuthClient from './client'
 import logger from '../../../lib/logger'
 import { OAuthCallbackError } from '../../../lib/errors'
 
-/** @param {import("types").NextAuthRequest} req */
+/** @param {import("types/internals").NextAuthRequest} req */
 export default async function oAuthCallback (req) {
   const { provider, pkce } = req.options
   const client = oAuthClient(provider)
