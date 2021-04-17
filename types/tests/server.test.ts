@@ -1,5 +1,5 @@
-import Providers, { AppProvider, OAuthConfig } from "next-auth/providers"
-import Adapters, {
+import Providers, { OAuthConfig } from "next-auth/providers"
+import {
   Adapter,
   EmailAppProvider,
   Profile,
@@ -10,7 +10,9 @@ import NextAuth, * as NextAuthTypes from "next-auth"
 import { IncomingMessage, ServerResponse } from "http"
 import * as JWTType from "next-auth/jwt"
 import { Socket } from "net"
-import { NextApiRequest, NextApiResponse } from "next"
+import { NextApiRequest, NextApiResponse } from "internals/utils"
+import { AppOptions } from "internals"
+import { AppProvider } from "internals/providers"
 
 const req: NextApiRequest = Object.assign(new IncomingMessage(new Socket()), {
   query: {},
@@ -72,7 +74,7 @@ const adapter: Adapter<
   Session,
   VerificationRequest
 > = {
-  async getAdapter(appOptions: NextAuthTypes.AppOptions) {
+  async getAdapter(appOptions: AppOptions) {
     return {
       createUser: async (profile: Profile) => exampleUser,
       getUser: async (id: string) => exampleUser,
@@ -102,7 +104,7 @@ const adapter: Adapter<
         token: string,
         secret: string,
         provider: EmailAppProvider,
-        options: NextAuthTypes.AppOptions
+        options: AppOptions
       ) => exampleVerificatoinRequest,
       getVerificationRequest: async (
         email: string,

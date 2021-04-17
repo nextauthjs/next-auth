@@ -5,9 +5,8 @@
 import { ConnectionOptions } from "typeorm"
 import { Adapter } from "./adapters"
 import { JWTOptions, JWT } from "./jwt"
-import { AppProvider, AppProviders } from "./providers"
-import { NextApiRequest, NextApiResponse, NextApiHandler } from "next"
-import { Awaitable, WithAdditionalParams } from "./_utils"
+import { AppProviders } from "./providers"
+import { Awaitable, NextApiRequest, NextApiResponse, NextApiHandler } from "internals/utils"
 
 /** @docs https://next-auth.js.org/configuration/options */
 export interface NextAuthOptions {
@@ -68,6 +67,7 @@ export interface Account extends TokenSet, Record<string, unknown> {
   provider: string
   type: string
 }
+
 export interface Profile extends Record<string, unknown> {
   sub?: string
   name?: string
@@ -134,7 +134,7 @@ export interface PagesOptions {
 }
 
 export interface Session extends Record<string, unknown> {
-  user?: WithAdditionalParams<User>
+  user?: User
   accessToken?: string
   expires: string
 }
@@ -150,52 +150,6 @@ export interface User {
   email?: string | null
   image?: string | null
 }
-
-/** Options that are the same both in internal and user provided options. */
-export type NextAuthSharedOptions =
-  | "pages"
-  | "jwt"
-  | "events"
-  | "callbacks"
-  | "cookies"
-  | "secret"
-  | "adapter"
-  | "theme"
-  | "debug"
-  | "logger"
-
-export interface AppOptions
-  extends Pick<NextAuthOptions, NextAuthSharedOptions> {
-  pkce?: {
-    code_verifier?: string
-    /**
-     * Could be `"plain"`, but not recommended.
-     * We ignore it for now.
-     * @spec https://tools.ietf.org/html/rfc7636#section-4.2.
-     */
-    code_challenge_method?: "S256"
-  }
-  provider?: AppProvider
-  providers: AppProvider[]
-  baseUrl?: string
-  basePath?: string
-  action?:
-    | "providers"
-    | "session"
-    | "csrf"
-    | "signin"
-    | "signout"
-    | "callback"
-    | "verify-request"
-    | "error"
-  csrfToken?: string
-}
-
-export interface NextAuthRequest extends NextApiRequest {
-  options: AppOptions
-}
-
-export type NextAuthResponse = NextApiResponse
 
 declare function NextAuth(
   req: NextApiRequest,

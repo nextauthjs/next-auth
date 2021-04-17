@@ -46,8 +46,7 @@
     "client.d.ts",
     "jwt.js",
     "jwt.d.ts",
-    "_next.d.ts",
-    "_utils.d.ts"
+    "internals"
   ],
   "license": "ISC",
   "dependencies": {

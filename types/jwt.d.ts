@@ -1,6 +1,5 @@
 import { JWT, JWE } from "jose"
-import { NextApiRequest } from "next"
-import { WithAdditionalParams } from "./_utils"
+import { NextApiRequest } from "internals/utils"
 
 export interface JWT extends Record<string, unknown> {
   name?: string | null
@@ -9,7 +8,7 @@ export interface JWT extends Record<string, unknown> {
 }
 
 export interface JWTEncodeParams {
-  token?: WithAdditionalParams<JWT>
+  token?: JWT
   maxAge?: number
   secret: string | Buffer
   signingKey?: string
@@ -39,14 +38,14 @@ export interface JWTOptions {
   signingKey?: string
   encryptionKey?: string
   encode?: (options: JWTEncodeParams) => Promise<string>
-  decode?: (options: JWTDecodeParams) => Promise<WithAdditionalParams<JWT>>
+  decode?: (options: JWTDecodeParams) => Promise<JWT>
 }
 
 declare function encode(args?: JWTEncodeParams): Promise<string>
 
 declare function decode(
   args?: JWTDecodeParams & { token: string }
-): Promise<WithAdditionalParams<JWT>>
+): Promise<JWT>
 
 declare function getToken(
   args?: {
@@ -55,7 +54,7 @@ declare function getToken(
     cookieName?: string
     raw?: string
   } & JWTDecodeParams
-): Promise<WithAdditionalParams<JWT>>
+): Promise<JWT>
 
 declare function getToken(args?: {
   req: NextApiRequest

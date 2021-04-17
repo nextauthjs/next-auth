@@ -1,6 +1,6 @@
-import { IncomingMessage, ServerResponse } from "http"
+import { IncomingMessage } from "http"
 import { Socket } from "net"
-import { NextApiRequest } from "next"
+import { NextApiRequest } from "internals/utils"
 
 export const nextReq: NextApiRequest = Object.assign(
   new IncomingMessage(new Socket()),

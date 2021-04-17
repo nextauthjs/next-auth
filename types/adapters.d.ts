@@ -1,6 +1,7 @@
+import { AppOptions } from "internals"
 import { ConnectionOptions, EntitySchema } from "typeorm"
-import { AppOptions, User } from "."
-import { AppProvider } from "./providers"
+import { User } from "."
+import { AppProvider } from "internals/providers"
 
 export interface Profile {
   id: string
@@ -99,7 +100,7 @@ interface Adapter<
 
 type Schema<T = any> = EntitySchema<T>["options"]
 
-interface Adapters {
+interface BuiltInAdapters {
   Default: TypeORMAdapter["Adapter"]
   TypeORM: TypeORMAdapter
   Prisma: PrismaAdapter
@@ -170,8 +171,6 @@ interface PrismaAdapter {
   }) => Adapter
 }
 
-declare const Adapters: Adapters
-
 declare class TypeORMAccountModel {
   compoundId: string
   userId: number
@@ -229,10 +228,13 @@ declare class TypeORMVerificationRequestModel implements VerificationRequest {
   constructor(identifier: string, token: string, expires: Date)
 }
 
+declare const Adapters: BuiltInAdapters
+
 export default Adapters
+
 export {
   Adapter,
-  Adapters,
+  BuiltInAdapters as Adapters,
   TypeORMAdapter,
   TypeORMAccountModel,
   TypeORMUserModel,

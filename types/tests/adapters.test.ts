@@ -1,4 +1,4 @@
-import Adapters, { TypeORMAdapter } from "next-auth/adapters"
+import Adapters from "next-auth/adapters"
 
 // ExpectType TypeORMAdapter["Adapter"]
 Adapters.Default({

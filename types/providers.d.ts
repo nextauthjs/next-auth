@@ -1,9 +1,9 @@
 import { Profile, TokenSet, User } from "."
-import { Awaitable } from "./_utils"
+import { Awaitable } from "internals/utils"
 
 export type ProviderType = "oauth" | "email" | "credentials"
 
-interface CommonProviderOptions {
+export interface CommonProviderOptions {
   id: string
   name: string
   type: ProviderType
@@ -149,11 +149,6 @@ export type EmailProvider = (options: Partial<EmailConfig>) => EmailConfig
 export type EmailProviderType = "Email"
 
 export type Provider = OAuthConfig | EmailConfig | CredentialsConfig
-
-export interface AppProvider extends CommonProviderOptions {
-  signinUrl: string
-  callbackUrl: string
-}
 
 export type BuiltInProviders = Record<OAuthProviderType, OAuthProvider> &
   Record<CredentialsProviderType, CredentialsProvider> &

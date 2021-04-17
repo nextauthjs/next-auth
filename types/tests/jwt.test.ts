@@ -7,7 +7,7 @@ JWTType.encode({
   secret: "secret",
 })
 
-// $ExpectType Promise<WithAdditionalParams<JWT>>
+// $ExpectType Promise<JWT>
 JWTType.decode({
   token: "token",
   secret: "secret",
@@ -19,7 +19,7 @@ JWTType.getToken({
   raw: true,
 })
 
-// $ExpectType Promise<WithAdditionalParams<JWT>>
+// $ExpectType Promise<JWT>
 JWTType.getToken({
   req: nextReq,
   secret: "secret",

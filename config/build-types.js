@@ -1,4 +1,4 @@
-const fs = require('fs')
+const fs = require('fs-extra')
 const path = require('path')
 
 const BUILD_TARGETS = [
@@ -6,9 +6,7 @@ const BUILD_TARGETS = [
   'client.d.ts',
   'adapters.d.ts',
   'providers.d.ts',
-  'jwt.d.ts',
-  '_next.d.ts',
-  '_utils.d.ts'
+  'jwt.d.ts'
 ]
 
 BUILD_TARGETS.forEach((target) => {
@@ -21,3 +19,12 @@ BUILD_TARGETS.forEach((target) => {
     }
   )
 })
+
+fs.copy(
+  path.join(process.cwd(), 'types', 'internals'),
+  path.join(process.cwd(), 'internals'),
+  (err) => {
+    if (err) throw err
+    console.log('[build-types] copying "internals" to root folder')
+  }
+)
