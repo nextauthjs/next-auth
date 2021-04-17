@@ -59,7 +59,7 @@ When running `npm run dev`, you start a Next.js dev server on `http://localhost:
 
 > NOTE: When working on CSS, you will have to manually refresh the page after changes. The reason for this is our pages using CSS are server-side rendered. (Improving this through a PR is very welcome!)
 
-> NOTE: The setup is as following: The development application lives inside the `app` folder, and whenever you make a change to the `src` folder in the root (where next-auth is), it gets copied into `app` every time (gitignored), so Next.js can pick them up and apply hot reloading. This is to avoid some annoying issues with how symlinks are working with different React builds, and also to provide a super fast feedback loop while developing core features.
+> NOTE: The setup is as follows: The development application lives inside the `app` folder, and whenever you make a change to the `src` folder in the root (where next-auth is), it gets copied into `app` every time (gitignored), so Next.js can pick them up and apply hot reloading. This is to avoid some annoying issues with how symlinks are working with different React builds, and also to provide a super-fast feedback loop while developing core features.
 
 #### Databases
 
