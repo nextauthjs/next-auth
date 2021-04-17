@@ -40,3 +40,7 @@ www/providers.json
 
 # Prisma migrations
 /prisma/migrations
+
+
+app/next-auth
+app/dist/css
