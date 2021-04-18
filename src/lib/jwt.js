@@ -106,7 +106,8 @@ async function getToken (params) {
     // or not set (e.g. development or test instance) case use unprefixed name
     secureCookie = !(!process.env.NEXTAUTH_URL || process.env.NEXTAUTH_URL.startsWith('http://')),
     cookieName = (secureCookie) ? '__Secure-next-auth.session-token' : 'next-auth.session-token',
-    raw = false
+    raw = false,
+    decode: _decode = decode
   } = params
   if (!req) throw new Error('Must pass `req` to JWT getToken()')
 
@@ -126,7 +127,7 @@ async function getToken (params) {
   }
 
   try {
-    return decode({ token, ...params })
+    return _decode({ token, ...params })
   } catch {
     return null
   }
