@@ -5,8 +5,7 @@ export default (options) => {
     name: 'Dropbox',
     type: 'oauth',
     version: '2.0',
-    scope:
-      'account_info.read files.metadata.read files.content.read files.content.write',
+    scope: 'account_info.read',
     params: { grant_type: 'authorization_code' },
     accessTokenUrl: 'https://api.dropboxapi.com/oauth2/token',
     authorizationUrl:
