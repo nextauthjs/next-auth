@@ -9,6 +9,7 @@ import Bungie from './bungie'
 import Cognito from './cognito'
 import Credentials from './credentials'
 import Discord from './discord'
+import Dropbox from './dropbox'
 import Email from './email'
 import EVEOnline from './eveonline'
 import Facebook from './facebook'
@@ -51,6 +52,7 @@ export default {
   Cognito,
   Credentials,
   Discord,
+  Dropbox,
   Email,
   EVEOnline,
   Facebook,
