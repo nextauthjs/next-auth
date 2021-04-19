@@ -1,4 +1,4 @@
-/** @type {import("./logger").LoggerInstance} */
+/** @type {import("types").LoggerInstance} */
 const _logger = {
   error (code, ...message) {
     console.error(
@@ -26,7 +26,7 @@ const _logger = {
 /**
  * Override the built-in logger.
  * Any `undefined` level will use the default logger.
- * @param {Partial<import("./logger").LoggerInstance>} newLogger
+ * @param {Partial<import("types").LoggerInstance>} newLogger
  */
 export function setLogger (newLogger = {}) {
   if (newLogger.error) _logger.error = newLogger.error
@@ -38,9 +38,9 @@ export default _logger
 
 /**
  * Serializes client-side log messages and sends them to the server
- * @param {import("./logger").LoggerInstance} logger
+ * @param {import("types").LoggerInstance} logger
  * @param {string} basePath
- * @return {import("./logger").LoggerInstance}
+ * @return {import("types").LoggerInstance}
  */
 export function proxyLogger (logger = _logger, basePath) {
   try {
@@ -48,7 +48,7 @@ export function proxyLogger (logger = _logger, basePath) {
       return logger
     }
 
-    const clientLogger = {}
+    const clientLogger = console
     for (const level in logger) {
       clientLogger[level] = (code, ...message) => {
         _logger[level](code, ...message) // Log on client as usual

@@ -9,7 +9,8 @@
  * (with fixes for specific issues) to keep dependancy size down.
  */
 export function set (res, name, value, options = {}) {
-  const stringValue = typeof value === 'object' ? 'j:' + JSON.stringify(value) : String(value)
+  const stringValue =
+    typeof value === 'object' ? 'j:' + JSON.stringify(value) : String(value)
 
   if ('maxAge' in options) {
     options.expires = new Date(Date.now() + options.maxAge)
@@ -19,7 +20,9 @@ export function set (res, name, value, options = {}) {
   // Preserve any existing cookies that have already been set in the same session
   let setCookieHeader = res.getHeader('Set-Cookie') || []
   // If not an array (i.e. a string with a single cookie) convert it into an array
-  if (!Array.isArray(setCookieHeader)) { setCookieHeader = [setCookieHeader] }
+  if (!Array.isArray(setCookieHeader)) {
+    setCookieHeader = [setCookieHeader]
+  }
   setCookieHeader.push(_serialize(name, String(stringValue), options))
   res.setHeader('Set-Cookie', setCookieHeader)
 }
@@ -30,32 +33,44 @@ function _serialize (name, val, options) {
   const opt = options || {}
   const enc = opt.encode || encodeURIComponent
 
-  if (typeof enc !== 'function') { throw new TypeError('option encode is invalid') }
+  if (typeof enc !== 'function') {
+    throw new TypeError('option encode is invalid')
+  }
 
-  if (!fieldContentRegExp.test(name)) { throw new TypeError('argument name is invalid') }
+  if (!fieldContentRegExp.test(name)) {
+    throw new TypeError('argument name is invalid')
+  }
 
   const value = enc(val)
 
-  if (value && !fieldContentRegExp.test(value)) { throw new TypeError('argument val is invalid') }
+  if (value && !fieldContentRegExp.test(value)) {
+    throw new TypeError('argument val is invalid')
+  }
 
   let str = name + '=' + value
 
   if (opt.maxAge != null) {
     const maxAge = opt.maxAge - 0
 
-    if (isNaN(maxAge) || !isFinite(maxAge)) { throw new TypeError('option maxAge is invalid') }
+    if (isNaN(maxAge) || !isFinite(maxAge)) {
+      throw new TypeError('option maxAge is invalid')
+    }
 
     str += '; Max-Age=' + Math.floor(maxAge)
   }
 
   if (opt.domain) {
-    if (!fieldContentRegExp.test(opt.domain)) { throw new TypeError('option domain is invalid') }
+    if (!fieldContentRegExp.test(opt.domain)) {
+      throw new TypeError('option domain is invalid')
+    }
 
     str += '; Domain=' + opt.domain
   }
 
   if (opt.path) {
-    if (!fieldContentRegExp.test(opt.path)) { throw new TypeError('option path is invalid') }
+    if (!fieldContentRegExp.test(opt.path)) {
+      throw new TypeError('option path is invalid')
+    }
 
     str += '; Path=' + opt.path
   } else {
@@ -73,12 +88,19 @@ function _serialize (name, val, options) {
     str += '; Expires=' + expires
   }
 
-  if (opt.httpOnly) { str += '; HttpOnly' }
+  if (opt.httpOnly) {
+    str += '; HttpOnly'
+  }
 
-  if (opt.secure) { str += '; Secure' }
+  if (opt.secure) {
+    str += '; Secure'
+  }
 
   if (opt.sameSite) {
-    const sameSite = typeof opt.sameSite === 'string' ? opt.sameSite.toLowerCase() : opt.sameSite
+    const sameSite =
+      typeof opt.sameSite === 'string'
+        ? opt.sameSite.toLowerCase()
+        : opt.sameSite
 
     switch (sameSite) {
       case true:
@@ -110,7 +132,7 @@ function _serialize (name, val, options) {
  * For more on prefixes see https://googlechrome.github.io/samples/cookie-prefixes/
  *
  * @TODO Review cookie settings (names, options)
- * @return {import("./cookie").CookiesOptions}
+ * @return {import("types").CookiesOptions}
  */
 export function defaultCookies (useSecureCookies) {
   const cookiePrefix = useSecureCookies ? '__Secure-' : ''

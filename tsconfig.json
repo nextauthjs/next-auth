@@ -3,6 +3,9 @@
     "strictNullChecks": true,
     "baseUrl": ".",
     "paths": {
+      "types": [
+        "./types"
+      ],
       "next-auth": [
         "./src/server"
       ],

@@ -1,6 +1,5 @@
-import { JWT, JWE } from "jose"
-import { NextApiRequest } from "./_next"
-import { WithAdditionalParams } from "./_utils"
+import { JWT as JoseJWT, JWE } from "jose"
+import { NextApiRequest } from "internals/utils"
 
 export interface JWT extends Record<string, unknown> {
   name?: string | null
@@ -9,15 +8,17 @@ export interface JWT extends Record<string, unknown> {
 }
 
 export interface JWTEncodeParams {
-  token?: WithAdditionalParams<JWT>
+  token?: JWT
   maxAge?: number
   secret: string | Buffer
   signingKey?: string
-  signingOptions?: JWT.SignOptions
+  signingOptions?: JoseJWT.SignOptions
   encryptionKey?: string
   encryptionOptions?: object
   encryption?: boolean
 }
+
+export function encode(params?: JWTEncodeParams): Promise<string>
 
 export interface JWTDecodeParams {
   token?: string
@@ -25,12 +26,27 @@ export interface JWTDecodeParams {
   secret: string | Buffer
   signingKey?: string
   verificationKey?: string
-  verificationOptions?: JWT.VerifyOptions<false>
+  verificationOptions?: JoseJWT.VerifyOptions<false>
   encryptionKey?: string
   decryptionKey?: string
   decryptionOptions?: JWE.DecryptOptions<false>
   encryption?: boolean
 }
+
+export function decode(params?: JWTDecodeParams): Promise<JWT>
+
+export type GetTokenParams<R extends boolean = false> = {
+  req: NextApiRequest
+  secureCookie?: boolean
+  cookieName?: string
+  raw?: R
+  decode?: typeof decode
+  secret?: string
+} & Omit<JWTDecodeParams, "secret">
+
+export function getToken<R extends boolean = false>(
+  params?: GetTokenParams<R>
+): Promise<R extends true ? string : JWT>
 
 export interface JWTOptions {
   secret?: string
@@ -38,30 +54,7 @@ export interface JWTOptions {
   encryption?: boolean
   signingKey?: string
   encryptionKey?: string
-  encode?: (options: JWTEncodeParams) => Promise<string>
-  decode?: (options: JWTDecodeParams) => Promise<WithAdditionalParams<JWT>>
+  encode?: typeof encode
+  decode?: typeof decode
+  verificationOptions?: JoseJWT.VerifyOptions<false>
 }
-
-declare function encode(args?: JWTEncodeParams): Promise<string>
-
-declare function decode(
-  args?: JWTDecodeParams & { token: string }
-): Promise<WithAdditionalParams<JWT>>
-
-declare function getToken(
-  args?: {
-    req: NextApiRequest
-    secureCookie?: boolean
-    cookieName?: string
-    raw?: string
-  } & JWTDecodeParams
-): Promise<WithAdditionalParams<JWT>>
-
-declare function getToken(args?: {
-  req: NextApiRequest
-  secureCookie?: boolean
-  cookieName?: string
-  raw: true
-}): Promise<string>
-
-export { encode, decode, getToken }
