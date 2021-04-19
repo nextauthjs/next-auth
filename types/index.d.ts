@@ -264,9 +264,49 @@ export interface CallbacksOptions<
   P extends Record<string, unknown> = Profile,
   A extends Record<string, unknown> = Account
 > {
+  /**
+   * Use this callback to control if a user is allowed to sign in.
+   * Returning true will continue the sign-in flow.
+   * Throwing an error or returning a string will stop the flow, and redirect the user.
+   *
+   * [Documentation](https://next-auth.js.org/configuration/callbacks#sign-in-callback)
+   */
   signIn?(user: User, account: A, profile: P): Awaitable<string | boolean>
+  /**
+   * This callback is called anytime the user is redirected to a callback URL (e.g. on signin or signout).
+   * By default only URLs on the same URL as the site are allowed,
+   * you can use this callback to customise that behaviour.
+   *
+   * [Documentation](https://next-auth.js.org/configuration/callbacks#redirect-callback)
+   */
   redirect?(url: string, baseUrl: string): Awaitable<string>
+  /**
+   * This callback is called whenever a session is checked.
+   * (Eg.: invoking the `/api/session` endpoint, using `useSession` or `getSession`)
+   *
+   * - ⚠ By default, only a subset of the token is returned for increased security.
+   * If you want to make something available you added to the token through the `jwt` callback,
+   * you have to explicitely forward it here to make it available to the client.
+   *
+   * [Documentation](https://next-auth.js.org/configuration/callbacks#session-callback) |
+   * [`jwt` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
+   * [`useSession`](https://next-auth.js.org/getting-started/client#usesession) |
+   * [`getSession`](https://next-auth.js.org/getting-started/client#getsession) |
+   *
+   */
   session?(session: Session, userOrToken: JWT | User): Awaitable<Session>
+  /**
+   * This callback is called whenever a JSON Web Token is created (i.e. at sign in)
+   * or updated (i.e whenever a session is accessed in the client).
+   * Its content is forwarded to the `session` callback,
+   * where you can control what should be returned to the client.
+   * Anything else will be kept from your front-end.
+   *
+   * - ⚠ By default the JWT is signed, but not encrypted.
+   *
+   * [Documentation](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
+   * [`session` callback](https://next-auth.js.org/configuration/callbacks#session-callback)
+   */
   jwt?(
     token: JWT,
     user?: User,
