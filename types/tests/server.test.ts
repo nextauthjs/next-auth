@@ -10,9 +10,9 @@ import NextAuth, * as NextAuthTypes from "next-auth"
 import { IncomingMessage, ServerResponse } from "http"
 import * as JWTType from "next-auth/jwt"
 import { Socket } from "net"
-import { NextApiRequest, NextApiResponse } from "internals/utils"
-import { AppOptions } from "internals"
-import { AppProvider } from "internals/providers"
+import { NextApiRequest, NextApiResponse } from "../internals/utils"
+import { AppOptions } from "../internals"
+import { AppProvider } from "../internals/providers"
 
 const req: NextApiRequest = Object.assign(new IncomingMessage(new Socket()), {
   query: {},

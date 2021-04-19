@@ -17,7 +17,6 @@
       "next-auth/adapters": ["./adapters"],
       "next-auth/client": ["./client"],
       "next-auth/jwt": ["./jwt"],
-      "internals": ["./internals"]
     }
   }
 }

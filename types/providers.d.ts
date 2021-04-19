@@ -1,5 +1,5 @@
 import { Profile, TokenSet, User } from "."
-import { Awaitable } from "internals/utils"
+import { Awaitable } from "./internals/utils"
 
 export type ProviderType = "oauth" | "email" | "credentials"
 

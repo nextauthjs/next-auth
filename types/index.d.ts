@@ -11,7 +11,7 @@ import {
   NextApiRequest,
   NextApiResponse,
   NextApiHandler,
-} from "internals/utils"
+} from "./internals/utils"
 
 /**
  * Configure your NextAuth instance

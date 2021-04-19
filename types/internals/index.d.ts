@@ -1,6 +1,6 @@
-import { NextApiRequest, NextApiResponse } from "internals/utils"
+import { NextApiRequest, NextApiResponse } from "./utils"
 import { NextAuthOptions } from ".."
-import { AppProvider } from "internals/providers"
+import { AppProvider } from "./providers"
 
 /** Options that are the same both in internal and user provided options. */
 export type NextAuthSharedOptions =
