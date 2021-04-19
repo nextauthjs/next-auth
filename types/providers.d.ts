@@ -18,7 +18,8 @@ type ProtectionType = "pkce" | "state" | "both" | "none"
 /**
  * OAuth provider options
  *
- * [Documentation](https://next-auth.js.org/configuration/providers#oauth-provider-options) */
+ * [Documentation](https://next-auth.js.org/configuration/providers#oauth-provider-options)
+ */
 export interface OAuthConfig<P extends Record<string, unknown> = Profile>
   extends CommonProviderOptions {
   authorizationParams?: Record<string, string>
