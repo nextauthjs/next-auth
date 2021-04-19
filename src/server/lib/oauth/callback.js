@@ -93,8 +93,20 @@ export default async function oAuthCallback(req) {
  * Returns profile, raw profile and auth provider details
  * @param {{
  *   profileData: object | string
- *   tokens: import("types").TokenSet
- *   provider: import("types/providers").OAuthConfig
+ *   tokens: {
+ *     accessToken: string
+ *     idToken?: string
+ *     refreshToken?: string
+ *     access_token: string
+ *     expires_in?: string | Date | null
+ *     refresh_token?: string
+ *     id_token?: string
+ *     token?: string
+ *     token_secret?: string
+ *     tokenSecret?: string
+ *     params?: any
+ *   }
+ *   provider: import("../..").Provider
  *   user?: object
  * }} profileParams
  */
