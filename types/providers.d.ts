@@ -121,18 +121,19 @@ export type CredentialsProviderType = "Credentials"
 
 /** Email Provider */
 
+export interface EmailConfigServerOptions {
+  host: string
+  port: number
+  auth: {
+    user: string
+    pass: string
+  }
+}
+
 export interface EmailConfig extends CommonProviderOptions {
   type: "email"
-  server:
-    | string
-    | {
-        host: string
-        port: number
-        auth: {
-          user: string
-          pass: string
-        }
-      }
+  // TODO: Make use of https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html
+  server: string | EmailConfigServerOptions
   from?: string
   maxAge?: number
   sendVerificationRequest(params: {
