@@ -52,7 +52,7 @@ export default function error ({ baseUrl, basePath, error = 'default', res }) {
     }
   }
 
-  const { statusCode, heading, message, signin } = errors[error.toLowerCase()]
+  const { statusCode, heading, message, signin } = errors[error.toLowerCase()] ?? errors.default
 
   res.status(statusCode)
 

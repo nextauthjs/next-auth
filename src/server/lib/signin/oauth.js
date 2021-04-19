@@ -5,13 +5,17 @@ import logger from '../../../lib/logger'
 export default async function getAuthorizationUrl (req) {
   const { provider } = req.options
 
+  delete req.query?.nextauth
+  const params = {
+    ...provider.authorizationParams,
+    ...req.query
+  }
+
   const client = oAuthClient(provider)
   if (provider.version?.startsWith('2.')) {
-    delete req.query?.nextauth
     // Handle OAuth v2.x
     let url = client.getAuthorizeUrl({
-      ...provider.authorizationParams,
-      ...req.query,
+      ...params,
       redirect_uri: provider.callbackUrl,
       scope: provider.scope
     })
@@ -34,8 +38,12 @@ export default async function getAuthorizationUrl (req) {
   }
 
   try {
-    const oAuthToken = await client.getOAuthRequestToken()
-    const url = `${provider.authorizationUrl}?oauth_token=${oAuthToken}`
+    const tokens = await client.getOAuthRequestToken(params)
+    const url = `${provider.authorizationUrl}?${new URLSearchParams({
+      oauth_token: tokens.oauth_token,
+      oauth_token_secret: tokens.oauth_token_secret,
+      ...tokens.params
+    })}`
     logger.debug('GET_AUTHORIZATION_URL', url)
     return url
   } catch (error) {

@@ -1,5 +1,6 @@
 test:
   - test/**/*
+  - types/tests/**/*
 
 documentation:
   - www/**/*
@@ -33,3 +34,6 @@ client:
 pages:
   - src/server/pages/**/*
   - www/docs/configuration/pages.md
+
+TypeScript:
+  - types/**/*

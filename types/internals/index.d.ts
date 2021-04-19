@@ -40,6 +40,7 @@ export interface AppOptions
     | "verify-request"
     | "error"
   csrfToken?: string
+  csrfTokenVerified?: boolean
 }
 
 export interface NextAuthRequest extends NextApiRequest {
