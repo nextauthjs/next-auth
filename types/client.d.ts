@@ -1,7 +1,7 @@
 import * as React from "react"
 import { IncomingMessage } from "http"
 import { Session } from "."
-import { BuiltInProviders, ProviderType } from "./providers"
+import { ProviderType } from "./providers"
 
 export interface CtxOrReq {
   req?: IncomingMessage
