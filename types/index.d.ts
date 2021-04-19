@@ -26,7 +26,7 @@ export interface NextAuthOptions {
    * * **Default value**: `[]`
    * * **Required**: *Yes*
    *
-   * [Documentation](https://next-auth.js.org/configuration/options#providers) | [Providers documentaion](https://next-auth.js.org/configuration/providers)
+   * [Documentation](https://next-auth.js.org/configuration/options#providers) | [Providers documentation](https://next-auth.js.org/configuration/providers)
    */
   providers: AppProviders
   /**
@@ -38,9 +38,9 @@ export interface NextAuthOptions {
    */
   database?: string | Record<string, any> | ConnectionOptions
   /**
-   * A random string used to hash tokens, sign cookies and generate crytographic keys.
+   * A random string used to hash tokens, sign cookies and generate cryptographic keys.
    * If not specified is uses a hash of all configuration options, including Client ID / Secrets for entropy.
-   * The default behaviour is volatile, and **it is strongly recommended** you explicitly specify a value
+   * The default behavior is volatile, and **it is strongly recommended** you explicitly specify a value
    * to avoid invalidating end user sessions when configuration changes are deployed.
    * * **Default value**: `string` (SHA hash of the "options" object)
    * * **Required**: No - **but strongly recommended**!
@@ -51,7 +51,7 @@ export interface NextAuthOptions {
   /**
    * Configure your session like if you want to use JWT or a database,
    * how long until an idle session expires, or to throttle write operations in case you are using a database.
-   * * **Default value**: See the documentaion page
+   * * **Default value**: See the documentation page
    * * **Required**: No
    *
    * [Documentation](https://next-auth.js.org/configuration/options#session)
@@ -86,17 +86,17 @@ export interface NextAuthOptions {
    *   }
    * ```
    *
-   * [Documentation](https://next-auth.js.org/configuration/options#pages) | [Pages documentaion](https://next-auth.js.org/configuration/pages)
+   * [Documentation](https://next-auth.js.org/configuration/options#pages) | [Pages documentation](https://next-auth.js.org/configuration/pages)
    */
   pages?: PagesOptions
   /**
    * Callbacks are asynchronous functions you can use to control what happens when an action is performed.
    * Callbacks are *extremely powerful*, especially in scenarios involving JSON Web Tokens
    * as they **allow you to implement access controls without a database** and to **integrate with external databases or APIs**.
-   * * **Default value**: See the Callbacks documentaion
+   * * **Default value**: See the Callbacks documentation
    * * **Required**: *No*
    *
-   * [Documentation](https://next-auth.js.org/configuration/options#callbacks) | [Callbacks documentaion](https://next-auth.js.org/configuration/callbacks)
+   * [Documentation](https://next-auth.js.org/configuration/options#callbacks) | [Callbacks documentation](https://next-auth.js.org/configuration/callbacks)
    */
   callbacks?: CallbacksOptions
   /**
@@ -109,7 +109,7 @@ export interface NextAuthOptions {
    * * **Default value**: `{}`
    * * **Required**: *No*
    *
-   * [Documentation](https://next-auth.js.org/configuration/options#events) | [Events documentaion](https://next-auth.js.org/configuration/events)
+   * [Documentation](https://next-auth.js.org/configuration/options#events) | [Events documentation](https://next-auth.js.org/configuration/events)
    */
   events?: EventsOptions
   /**
@@ -135,7 +135,7 @@ export interface NextAuthOptions {
    *
    * - ⚠ If you added a custom `logger`, this setting is ignored.
    *
-   * [Documentation](https://next-auth.js.org/configuration/options#debug) | [Logger documentaion](https://next-auth.js.org/configuration/options#logger)
+   * [Documentation](https://next-auth.js.org/configuration/options#debug) | [Logger documentation](https://next-auth.js.org/configuration/options#logger)
    */
   debug?: boolean
   /**
@@ -166,7 +166,8 @@ export interface NextAuthOptions {
    *
    * - ⚠ When set, the `debug` option is ignored
    *
-   * [Documentation](https://next-auth.js.org/configuration/options#logger) | [Debug documentaion](https://next-auth.js.org/configuration/options#debug)
+   * [Documentation](https://next-auth.js.org/configuration/options#logger) |
+   * [Debug documentation](https://next-auth.js.org/configuration/options#debug)
    */
   logger?: LoggerInstance
   /**
@@ -182,7 +183,7 @@ export interface NextAuthOptions {
   theme?: "auto" | "dark" | "light"
   /**
    * When set to `true` then all cookies set by NextAuth.js will only be accessible from HTTPS URLs.
-   * This option defaults to `false` on URLs that start with http:// (e.g. http://localhost:3000) for developer convenience.
+   * This option defaults to `false` on URLs that start with `http://` (e.g. http://localhost:3000) for developer convenience.
    * You can manually set this option to `false` to disable this security feature and allow cookies
    * to be accessible from non-secured URLs (this is not recommended).
    * * **Default value**: `true` for HTTPS and `false` for HTTP sites
@@ -199,7 +200,7 @@ export interface NextAuthOptions {
    * You can override the default cookie names and options for any of the cookies used by NextAuth.js.
    * You can specify one or more cookies with custom properties,
    * but if you specify custom options for a cookie you must provide all the options for that cookie.
-   * If you use this feature, you will likely want to create conditional behaviour
+   * If you use this feature, you will likely want to create conditional behavior
    * to support setting different cookies policies in development and production builds,
    * as you will be opting out of the built-in dynamic policy.
    * * **Default value**: `{}`
@@ -214,12 +215,22 @@ export interface NextAuthOptions {
   cookies?: CookiesOptions
 }
 
+/**
+ * Override any of the methods, and the rest will use the default logger.
+ *
+ * [Documentation](https://next-auth.js.org/configuration/options#logger)
+ */
 export interface LoggerInstance {
   warn(code: string, ...message: unknown[]): void
   error(code: string, ...message: unknown[]): void
   debug(code: string, ...message: unknown[]): void
 }
 
+/**
+ * Different tokens returned by OAuth Providers.
+ * Some of them are available with different casing,
+ * but they refer to the same value.
+ */
 export interface TokenSet {
   accessToken: string
   idToken?: string
@@ -230,12 +241,17 @@ export interface TokenSet {
   id_token?: string
 }
 
+/**
+ * Usually contains information about the provider being used
+ * and also extends `TokenSet`, which is different tokens returned by OAuth Providers.
+ */
 export interface Account extends TokenSet, Record<string, unknown> {
   id: string
   provider: string
   type: string
 }
 
+/** The OAuth profile returned from your provider */
 export interface Profile extends Record<string, unknown> {
   sub?: string
   name?: string
@@ -243,6 +259,7 @@ export interface Profile extends Record<string, unknown> {
   image?: string
 }
 
+/** [Documentation](https://next-auth.js.org/configuration/callbacks) */
 export interface CallbacksOptions<
   P extends Record<string, unknown> = Profile,
   A extends Record<string, unknown> = Account
@@ -259,6 +276,7 @@ export interface CallbacksOptions<
   ): Awaitable<JWT>
 }
 
+/** [Documentation](https://next-auth.js.org/configuration/options#cookies) */
 export interface CookieOption {
   name: string
   options: {
@@ -271,6 +289,7 @@ export interface CookieOption {
   }
 }
 
+/** [Documentation](https://next-auth.js.org/configuration/options#cookies) */
 export interface CookiesOptions {
   sessionToken?: CookieOption
   callbackUrl?: CookieOption
@@ -278,6 +297,7 @@ export interface CookiesOptions {
   pkceCodeVerifier?: CookieOption
 }
 
+/** [Documentation](https://next-auth.js.org/configuration/events) */
 export type EventType =
   | "signIn"
   | "signOut"
@@ -287,10 +307,13 @@ export type EventType =
   | "session"
   | "error"
 
+/** [Documentation](https://next-auth.js.org/configuration/events) */
 export type EventCallback = (message: any) => Promise<void>
 
+/** [Documentation](https://next-auth.js.org/configuration/events) */
 export type EventsOptions = Partial<Record<EventType, EventCallback>>
 
+/** [Documentation](https://next-auth.js.org/configuration/pages) */
 export interface PagesOptions {
   signIn?: string
   signOut?: string
@@ -301,18 +324,38 @@ export interface PagesOptions {
   newUser?: string
 }
 
+/**
+ * Returned by `useSession`, `getSession`, returned by the `session` callback
+ * and also the shape received as a prop on the `Provider` React Context
+ *
+ * [`useSession`](https://next-auth.js.org/getting-started/client#usesession) |
+ * [`getSession`](https://next-auth.js.org/getting-started/client#getsession) |
+ * [`Provider`](https://next-auth.js.org/getting-started/client#provider) |
+ * [`session` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback)
+ */
 export interface Session extends Record<string, unknown> {
   user?: User
   accessToken?: string
   expires: string
 }
 
+/** [Documentation](https://next-auth.js.org/configuration/options#session) */
 export interface SessionOptions {
   jwt?: boolean
   maxAge?: number
   updateAge?: number
 }
 
+/**
+ * The shape of the returned object in the OAuth providers' `profile` callback,
+ * available in the `jwt` and `session` callbacks,
+ * or the second parameter of the `session` callback, when using a database.
+ *
+ * [`signIn` callback](https://next-auth.js.org/configuration/callbacks#sign-in-callback) |
+ * [`session` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
+ * [`jwt` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
+ * [`profile` OAuth provider callback](https://next-auth.js.org/configuration/providers#using-a-custom-provider)
+ */
 export interface User {
   name?: string | null
   email?: string | null

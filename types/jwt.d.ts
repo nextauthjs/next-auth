@@ -1,6 +1,11 @@
 import { JWT as JoseJWT, JWE } from "jose"
 import { NextApiRequest } from "./internals/utils"
 
+/**
+ * Returned by the `jwt` callback and `getToken`, when using JWT sessions
+ *
+ * [`jwt` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback) | [`getToken`](https://next-auth.js.org/tutorials/securing-pages-and-api-routes#using-gettoken)
+ */
 export interface JWT extends Record<string, unknown> {
   name?: string | null
   email?: string | null
@@ -44,9 +49,10 @@ export type GetTokenParams<R extends boolean = false> = {
   secret?: string
 } & Omit<JWTDecodeParams, "secret">
 
+/** [Documentation](https://next-auth.js.org/tutorials/securing-pages-and-api-routes#using-gettoken) */
 export function getToken<R extends boolean = false>(
   params?: GetTokenParams<R>
-): Promise<R extends true ? string : JWT>
+): Promise<R extends true ? string : JWT | null>
 
 export interface JWTOptions {
   secret?: string

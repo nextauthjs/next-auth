@@ -55,7 +55,7 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
 
 export type OAuthProviderType =
   | "Apple"
-  | "Attlassian"
+  | "Atlassian"
   | "Auth0"
   | "AzureADB2C"
   | "Basecamp"
@@ -144,6 +144,7 @@ export interface EmailConfig extends CommonProviderOptions {
     provider: EmailConfig
   }): Awaitable<void>
 }
+
 export type EmailProvider = (options: Partial<EmailConfig>) => EmailConfig
 
 // TODO: Rename to Token provider

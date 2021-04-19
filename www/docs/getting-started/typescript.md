@@ -3,18 +3,19 @@ id: typescript
 title: TypeScript
 ---
 
-NextAuth.js comes with its own types, so you can safely use it in your TypeScript projects. Even if you don't use TypeScript, IDEs like VSCode will pick this up, to provide you with a better developer experience. While you are typing, you will get suggestions of what certain objects are, and sometimes also links to documentation, and examples.
+NextAuth.js comes with its own type definitions, so you can safely use it in your TypeScript projects. Even if you don't use TypeScript, IDEs like VSCode will pick this up, to provide you with a better developer experience. While you are typing, you will get suggestions about how certain objects/functions look like, and sometimes also links to documentation, examples and other useful resources.
 
-:::note
+:::warning
  The types at [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) under the name of `@types/next-auth` are now deprecated, and not maintained anymore.
 :::
 
 ***
-## Module Augmentaion
+## Module Augmentation
 
-`next-auth` comes with certain types/interfaces, that are shared across submodules. Good examples are `Session` and `JWT`. Ideally, you should only need to create these types at a single place, and TS should pick them up in every location where they are referenced. Luckily, this is exactly what Module Agumentation can do for us. Define your shared interfaces in a single location, and get type-safety across your application, when you use `next-auth` (or one of its submodules).
+`next-auth` comes with certain types/interfaces, that are shared across submodules. Good examples are `Session` and `JWT`. Ideally, you should only need to create these types at a single place, and TS should pick them up in every location where they are referenced. Luckily, this is exactly what Module Augmentation can do for us. Define your shared interfaces in a single location, and get type-safety across your application, when you use `next-auth` (or one of its submodules).
 
-1. Let's look at `Session`:
+### Main module
+Let's look at `Session`:
 
 ```ts title="pages/api/[...nextauth].ts"
 import NextAuth from "next-auth"
@@ -47,6 +48,9 @@ To extend/augment this type, create a `types/next-auth.d.ts` file in your projec
 import NextAuth from "next-auth"
 
 declare module "next-auth" {
+  /**
+   * Returned by `useSession`, `getSession` and received as a prop on the `Provider` React Context
+   */
   interface Session {
     user: {
       /** The user's postal address. */
@@ -55,23 +59,47 @@ declare module "next-auth" {
   }
 }
 ```
+#### Popular interfaces to augment
+
+Although you can augment almost anything, here are some of the more common interfaces that you might want to override in the `next-auth` module:
+```ts
+  /**
+   * The shape of the user object returned in the OAuth providers' `profile` callback,
+   * or the second parameter of the `session` callback, when using a database.
+   */
+  interface User {} 
+  /**
+   * Usually contains information about the provider being used
+   * and also extends `TokenSet`, which is different tokens returned by OAuth Providers.
+   */
+  interface Account {}
+  /** The OAuth profile returned from your provider */
+  interface Profile {}
+```
 
 Make sure that the `types` folder is added to [`typeRoots`](https://www.typescriptlang.org/tsconfig/#typeRoots) in your project's `tsconfig.json` file.
 
-2. Check out `JWT` also:
+### Submodules
+The `JWT` interface can be found in the `next-auth/jwt` submodule:
 
 ```ts title="types/next-auth.d.ts"
 declare module "next-auth/jwt" {
-  interface JWT {
+  /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
+  interface JWT { 
     /** OpenID ID Token */
     idToken?: string
   }
 }
 ```
 
-Note that this time we declared `JWT` inside `next-auth/jwt`, as this is its default location.
-
+### Useful links
+1. [TypeScript documentation: Module Augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation)
+2. [Digital Ocean: Module Augmentation in TypeScript](https://www.digitalocean.com/community/tutorials/typescript-module-augmentation)
 
 ## Contributing
 
 Contributions of any kind are always welcome, especially for TypeScript. Please keep in mind that we are a small team working on this project in our free time. We will try our best to give support, but if you think you have a solution for a problem, please open a PR!
+
+:::note
+When contributing to TypeScript, if the actual JavaScript user API does not change in a breaking manner, we reserve the right to push any TypeScript change in a minor release. This is to ensure that we can keep us on a faster release cycle.
+:::
