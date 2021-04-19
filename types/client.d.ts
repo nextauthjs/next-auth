@@ -60,6 +60,10 @@ export function getCsrfToken(ctxOrReq: CtxOrReq): Promise<string | null>
  */
 export const csrfToken: typeof getCsrfToken
 
+/******************
+ * Providers types
+ *****************/
+
 export interface ClientSafeProvider {
   id: string
   name: string
@@ -67,10 +71,6 @@ export interface ClientSafeProvider {
   signinUrl: string
   callbackUrl: string
 }
-
-/******************
- * Providers types
- *****************/
 
 /**
  * It calls `/api/auth/providers` and returns
