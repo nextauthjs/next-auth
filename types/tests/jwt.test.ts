@@ -19,7 +19,7 @@ JWTType.getToken({
   raw: true,
 })
 
-// $ExpectType Promise<JWT>
+// $ExpectType Promise<JWT | null>
 JWTType.getToken({
   req: nextReq,
   secret: "secret",
