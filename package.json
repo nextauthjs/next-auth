@@ -8,7 +8,7 @@
   "main": "index.js",
   "scripts": {
     "build": "npm run build:js && npm run build:css",
-    "build:js": "babel --config-file ./config/babel.config.json src --out-dir dist && node ./config/build.js",
+    "build:js": "node ./config/build.js && babel --config-file ./config/babel.config.json src --out-dir dist",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir dist && node config/wrap-css.js",
     "dev:with-css": "next | npm run watch:css",
     "dev": "next",
