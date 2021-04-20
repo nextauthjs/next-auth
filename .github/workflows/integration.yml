@@ -2,9 +2,10 @@ name: Integration Test
 
 on:
   push:
-    branches: 
-     - main
-     - next
+    branches:
+      - main
+      - beta
+      - next
   pull_request:
 
 jobs:
@@ -17,7 +18,7 @@ jobs:
     if: github.event.pull_request.head.repo.full_name == github.repository
 
     # We use self-hosted runners as cloud based runnners (e.g. AWS, GPC)
-    # fail due to IP Address checks done by providers, which enforce 
+    # fail due to IP Address checks done by providers, which enforce
     # CAPTCHA checks on login request from cloud compute IP addresses to
     # prevent abuse.
     runs-on: self-hosted
@@ -45,7 +46,7 @@ jobs:
       - run: npm test
         # TODO Tests should exit out if env vars not set (currently hangs)
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}} 
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
           NEXTAUTH_TWITTER_ID: ${{secrets.NEXTAUTH_TWITTER_ID}}
           NEXTAUTH_TWITTER_SECRET: ${{secrets.NEXTAUTH_TWITTER_SECRET}}
           NEXTAUTH_TWITTER_USERNAME: ${{secrets.NEXTAUTH_TWITTER_USERNAME}}

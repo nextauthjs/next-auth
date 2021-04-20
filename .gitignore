@@ -27,6 +27,7 @@ node_modules
 .cache-loader
 .next
 www/providers.json
+src/providers/index.js
 
 # VS
 /.vs/slnx.sqlite-journal
