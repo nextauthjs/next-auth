@@ -71,7 +71,7 @@ You can look at the existing built-in providers for inspiration.
 
 #### Databases
 
-Included is a Docker Compose file that starts up MySQL, Postgres, and MongoDB databases on localhost.
+Included is a Docker Compose file that starts up MySQL, PostgreSQL, and MongoDB databases on localhost.
 
 It will use port `3306`, `5432`, and `27017` on localhost respectively; please make sure those ports are not used by other services on localhost.
 
