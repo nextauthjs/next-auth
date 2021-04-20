@@ -1,19 +1,19 @@
-import { decode as jwtDecode } from 'jsonwebtoken'
-import oAuthClient from './client'
-import logger from '../../../lib/logger'
-import { OAuthCallbackError } from '../../../lib/errors'
+import { decode as jwtDecode } from "jsonwebtoken"
+import oAuthClient from "./client"
+import logger from "../../../lib/logger"
+import { OAuthCallbackError } from "../../../lib/errors"
 
-/** @param {import("../..").NextAuthRequest} req */
-export default async function oAuthCallback (req) {
+/** @param {import("types/internals").NextAuthRequest} req */
+export default async function oAuthCallback(req) {
   const { provider, pkce } = req.options
   const client = oAuthClient(provider)
 
-  if (provider.version?.startsWith('2.')) {
+  if (provider.version?.startsWith("2.")) {
     // The "user" object is specific to the Apple provider and is provided on first sign in
     // e.g. {"name":{"firstName":"Johnny","lastName":"Appleseed"},"email":"johnny.appleseed@nextauth.com"}
     let { code, user } = req.query // eslint-disable-line camelcase
 
-    if (req.method === 'POST') {
+    if (req.method === "POST") {
       try {
         const body = JSON.parse(JSON.stringify(req.body))
         if (body.error) {
@@ -23,25 +23,35 @@ export default async function oAuthCallback (req) {
         code = body.code
         user = body.user != null ? JSON.parse(body.user) : null
       } catch (error) {
-        logger.error('OAUTH_CALLBACK_HANDLER_ERROR', error, req.body, provider.id, code)
+        logger.error(
+          "OAUTH_CALLBACK_HANDLER_ERROR",
+          error,
+          req.body,
+          provider.id,
+          code
+        )
         throw error
       }
     }
 
     // REVIEW: Is this used by any of the providers?
     // Pass authToken in header by default (unless 'useAuthTokenHeader: false' is set)
-    if (Object.prototype.hasOwnProperty.call(provider, 'useAuthTokenHeader')) {
+    if (Object.prototype.hasOwnProperty.call(provider, "useAuthTokenHeader")) {
       client.useAuthorizationHeaderforGET(provider.useAuthTokenHeader)
     } else {
       client.useAuthorizationHeaderforGET(true)
     }
 
     try {
-      const tokens = await client.getOAuthAccessToken(code, provider, pkce.code_verifier)
+      const tokens = await client.getOAuthAccessToken(
+        code,
+        provider,
+        pkce.code_verifier
+      )
       let profileData
       if (provider.idToken) {
         if (!tokens?.id_token) {
-          throw new OAuthCallbackError('Missing JWT ID Token')
+          throw new OAuthCallbackError("Missing JWT ID Token")
         }
 
         // Support services that use OpenID ID Tokens to encode profile data
@@ -52,26 +62,28 @@ export default async function oAuthCallback (req) {
 
       return getProfile({ profileData, provider, tokens, user })
     } catch (error) {
-      logger.error('OAUTH_GET_ACCESS_TOKEN_ERROR', error, provider.id, code)
+      logger.error("OAUTH_GET_ACCESS_TOKEN_ERROR", error, provider.id, code)
       throw error
     }
   }
 
   try {
     // Handle OAuth v1.x
-    const {
-      oauth_token: oauthToken, oauth_verifier: oauthVerifier
-    } = req.query
-    const tokens = await client.getOAuthAccessToken(oauthToken, null, oauthVerifier)
+    // eslint-disable-next-line camelcase
+    const { oauth_token, oauth_verifier } = req.query
+
+    // eslint-disable-next-line camelcase
+    const { token_secret } = await client.getOAuthRequestToken(provider.params)
+    const tokens = await client.getOAuthAccessToken(oauth_token, token_secret, oauth_verifier)
     const profileData = await client.get(
       provider.profileUrl,
-      tokens.accessToken,
-      tokens.refreshToken
+      tokens.oauth_token,
+      tokens.oauth_token_secret
     )
 
     return getProfile({ profileData, tokens, provider })
   } catch (error) {
-    logger.error('OAUTH_V1_GET_ACCESS_TOKEN_ERROR', error)
+    logger.error("OAUTH_V1_GET_ACCESS_TOKEN_ERROR", error)
     throw error
   }
 }
@@ -89,15 +101,19 @@ export default async function oAuthCallback (req) {
  *     expires_in?: string | Date | null
  *     refresh_token?: string
  *     id_token?: string
+ *     token?: string
+ *     token_secret?: string
+ *     tokenSecret?: string
+ *     params?: any
  *   }
  *   provider: import("../..").Provider
  *   user?: object
  * }} profileParams
  */
-async function getProfile ({ profileData, tokens, provider, user }) {
+async function getProfile({ profileData, tokens, provider, user }) {
   try {
     // Convert profileData into an object if it's a string
-    if (typeof profileData === 'string' || profileData instanceof String) {
+    if (typeof profileData === "string" || profileData instanceof String) {
       profileData = JSON.parse(profileData)
     }
 
@@ -106,22 +122,22 @@ async function getProfile ({ profileData, tokens, provider, user }) {
       profileData.user = user
     }
 
-    logger.debug('PROFILE_DATA', profileData)
+    logger.debug("PROFILE_DATA", profileData)
 
     const profile = await provider.profile(profileData, tokens)
     // Return profile, raw profile and auth provider details
     return {
       profile: {
         ...profile,
-        email: profile.email?.toLowerCase() ?? null
+        email: profile.email?.toLowerCase() ?? null,
       },
       account: {
         provider: provider.id,
         type: provider.type,
         id: profile.id,
-        ...tokens
+        ...tokens,
       },
-      OAuthProfile: profileData
+      OAuthProfile: profileData,
     }
   } catch (exception) {
     // If we didn't get a response either there was a problem with the provider
@@ -131,11 +147,11 @@ async function getProfile ({ profileData, tokens, provider, user }) {
     // all providers, so we return an empty object; the user should then be
     // redirected back to the sign up page. We log the error to help developers
     // who might be trying to debug this when configuring a new provider.
-    logger.error('OAUTH_PARSE_PROFILE_ERROR', exception, profileData)
+    logger.error("OAUTH_PARSE_PROFILE_ERROR", exception, profileData)
     return {
       profile: null,
       account: null,
-      OAuthProfile: profileData
+      OAuthProfile: profileData,
     }
   }
 }

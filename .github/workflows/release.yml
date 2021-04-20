@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - 'main'
+      - 'beta'
       - 'next'
       - '3.x'
   pull_request:

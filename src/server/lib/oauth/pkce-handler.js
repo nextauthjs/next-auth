@@ -10,13 +10,14 @@ const PKCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 
 /**
  * Adds `code_verifier` to `req.options.pkce`, and removes the corresponding cookie
- * @param {import("../..").NextAuthRequest} req
- * @param {import("../..").NextAuthResponse} res
+ * @param {import("types/internals").NextAuthRequest} req
+ * @param {import("types/internals").NextAuthResponse} res
  */
 export async function handleCallback (req, res) {
   const { cookies, provider, baseUrl, basePath } = req.options
   try {
-    if (![provider.protection].flat().includes('pkce')) { // Provider does not support PKCE, nothing to do.
+    // Provider does not support PKCE, nothing to do.
+    if (!provider.protection?.includes('pkce')) {
       return
     }
 
@@ -44,13 +45,13 @@ export async function handleCallback (req, res) {
 
 /**
  * Adds `code_challenge` and `code_challenge_method` to `req.options.pkce`.
- * @param {import("../..").NextAuthRequest} req
- * @param {import("../..").NextAuthResponse} res
+ * @param {import("types/internals").NextAuthRequest} req
+ * @param {import("types/internals").NextAuthResponse} res
  */
 export async function handleSignin (req, res) {
   const { cookies, provider, baseUrl, basePath } = req.options
   try {
-    if (![provider.protection].flat().includes('pkce')) { // Provider does not support PKCE, nothing to do.
+    if (!provider.protection?.includes('pkce')) { // Provider does not support PKCE, nothing to do.
       return
     }
     // Started login flow, add generated pkce to req.options and (encrypted) code_verifier to a cookie

@@ -84,13 +84,9 @@ Advanced options allow you to define your own routines to handle controlling wha
 
 ### TypeScript
 
-You can install the appropriate types via the following command:
+NextAuth.js comes with built-in types. For more information and usage, check out the [TypeScript section](https://next-auth.js.org/getting-started/typescript) in the documentaion.
 
-```
-npm install --save-dev @types/next-auth
-```
-
-As of now, TypeScript is a community effort. If you encounter any problems with the types package, please create an issue at [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/next-auth). Alternatively, you can open a pull request directly with your fixes there. We welcome anyone to start a discussion on migrating this package to TypeScript, or how to improve the TypeScript experience in general.
+The package at `@types/next-auth` is now deprecated.
 
 ## Example
 
