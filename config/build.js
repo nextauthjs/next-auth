@@ -4,6 +4,7 @@ const path = require("path")
 const MODULE_ENTRIES = {
   SERVER: "index",
   CLIENT: "client",
+  PROVIDERS: "providers",
   ADAPTERS: "adapters",
   JWT: "jwt",
 }
@@ -67,6 +68,6 @@ files.forEach((file) => {
 exportLines += `}\n`
 
 fs.writeFile(
-  path.join(process.cwd(), "providers.js"),
+  path.join(process.cwd(), "src/providers/index.js"),
   [importLines, exportLines].join("\n")
 )
