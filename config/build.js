@@ -4,10 +4,11 @@ const path = require("path")
 const MODULE_ENTRIES = {
   SERVER: "index",
   CLIENT: "client",
-  PROVIDERS: "providers",
   ADAPTERS: "adapters",
   JWT: "jwt",
 }
+
+// Building submodule entries
 
 const BUILD_TARGETS = {
   [`${MODULE_ENTRIES.SERVER}.js`]: "module.exports = require('./dist/server').default\n",
@@ -23,6 +24,8 @@ Object.entries(BUILD_TARGETS).forEach(([target, content]) => {
     console.log(`[build] created "${target}" in root folder`)
   })
 })
+
+// Building types
 
 const TYPES_TARGETS = [
   `${MODULE_ENTRIES.SERVER}.d.ts`,
@@ -43,3 +46,27 @@ TYPES_TARGETS.forEach((target) => {
     }
   )
 })
+
+// Building providers
+
+const providersDir = path.join(process.cwd(), "/src/providers")
+
+const files = fs.readdirSync(providersDir, "utf8")
+
+let importLines = ""
+let exportLines = `export default {\n`
+files.forEach((file) => {
+  const provider = fs.readFileSync(path.join(providersDir, file), "utf8")
+  const { functionName } = provider.match(
+    /export default function (?<functionName>.+)\s?\(/
+  ).groups
+
+  importLines += `import ${functionName} from "./${file}"\n`
+  exportLines += `  ${functionName},\n`
+})
+exportLines += `}\n`
+
+fs.writeFile(
+  path.join(process.cwd(), "providers.js"),
+  [importLines, exportLines].join("\n")
+)
