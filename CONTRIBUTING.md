@@ -32,15 +32,15 @@ cd next-auth
 
 2. Install packages:
 ```sh
-npm i
+npm i && npm dev:setup
 ```
 
 3. Populate `.env.local`:
    
-    Copy `.env.local.example` to `.env.local`, and add your env variables for each provider you want to test.
+    Copy `app/.env.local.example` to `app/.env.local`, and add your env variables for each provider you want to test.
 
 > NOTE: You can add any environment variables to .env.local that you would like to use in your dev app.
-> You can find the next-auth config under`pages/api/auth/[...nextauth].js`.
+> You can find the next-auth config under`app/pages/api/auth/[...nextauth].js`.
 
 1. Start the dev application/server:
 ```sh
@@ -57,7 +57,9 @@ If you need an example project to link to, you can use [next-auth-example](https
 
 When running `npm run dev`, you start a Next.js dev server on `http://localhost:3000`, which includes hot reloading out of the box. Make changes on any of the files in `src` and see the changes immediately.
 
->NOTE: When working on CSS, you will need to manually refresh the page after changes. (Improving this through a PR is very welcome!)
+> NOTE: When working on CSS, you will have to manually refresh the page after changes. The reason for this is our pages using CSS are server-side rendered. (Improving this through a PR is very welcome!)
+
+> NOTE: The setup is as follows: The development application lives inside the `app` folder, and whenever you make a change to the `src` folder in the root (where next-auth is), it gets copied into `app` every time (gitignored), so Next.js can pick them up and apply hot reloading. This is to avoid some annoying issues with how symlinks are working with different React builds, and also to provide a super-fast feedback loop while developing core features.
 
 #### Providers
 

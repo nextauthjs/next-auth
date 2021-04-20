@@ -28,6 +28,23 @@ node_modules
 .next
 www/providers.json
 src/providers/index.js
+internals
+adapters.d.ts
+adapters.js
+client.d.ts
+client.js
+index.d.ts
+index.js
+jwt.d.ts
+jwt.js
+providers.d.ts
+providers.js
+
+# Development app
+app/next-auth
+app/dist/css
+app/package-lock.json
+app/yarn.lock
 
 # VS
 /.vs/slnx.sqlite-journal

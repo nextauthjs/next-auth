@@ -10,8 +10,8 @@
     "build": "npm run build:js && npm run build:css",
     "build:js": "node ./config/build.js && babel --config-file ./config/babel.config.json src --out-dir dist",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir dist && node config/wrap-css.js",
-    "dev:with-css": "next | npm run watch:css",
-    "dev": "next",
+    "dev:setup": "npm run build:css && cd app && npm i",
+    "dev": "cd app && npm run dev",
     "watch": "npm run watch:js | npm run watch:css",
     "watch:js": "babel --config-file ./config/babel.config.json --watch src --out-dir dist",
     "watch:css": "postcss --config config/postcss.config.js --watch src/**/*.css --base src --dir dist",
@@ -142,6 +142,14 @@
       "location": "readonly",
       "fetch": "readonly"
     }
+  },
+  "release": {
+    "branches": [
+      "+([0-9])?(.{+([0-9]),x}).x",
+      "main",
+      { "name": "beta", "prerelease": true },
+      { "name": "next", "prerelease": true }
+    ]
   },
   "funding": [
     {
