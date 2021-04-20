@@ -45,9 +45,7 @@ How to write tests using Cypress.
 
 ### [Usage with class components](tutorials/usage-with-class-components)
 
-How to use `useSession` hook with class components.
-
-How to write tests using Cypress.
+How to use `useSession()` hook with class components.
 
 ## Other tutorials and explainers
 
