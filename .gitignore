@@ -44,3 +44,5 @@ www/providers.json
 
 app/next-auth
 app/dist/css
+app/package-lock.json
+app/yarn.lock
