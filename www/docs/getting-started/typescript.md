@@ -5,16 +5,21 @@ title: TypeScript
 
 NextAuth.js comes with its own type definitions, so you can safely use it in your TypeScript projects. Even if you don't use TypeScript, IDEs like VSCode will pick this up, to provide you with a better developer experience. While you are typing, you will get suggestions about how certain objects/functions look like, and sometimes also links to documentation, examples and other useful resources.
 
+Check out the example repository showcasing how to use `next-auth` on a Next.js application with TypeScript:  
+https://github.com/nextauthjs/next-auth-typescript-example
+
 :::warning
- The types at [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) under the name of `@types/next-auth` are now deprecated, and not maintained anymore.
+The types at [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) under the name of `@types/next-auth` are now deprecated, and not maintained anymore.
 :::
 
-***
+---
+
 ## Module Augmentation
 
 `next-auth` comes with certain types/interfaces, that are shared across submodules. Good examples are `Session` and `JWT`. Ideally, you should only need to create these types at a single place, and TS should pick them up in every location where they are referenced. Luckily, this is exactly what Module Augmentation can do for us. Define your shared interfaces in a single location, and get type-safety across your application, when you use `next-auth` (or one of its submodules).
 
 ### Main module
+
 Let's look at `Session`:
 
 ```ts title="pages/api/[...nextauth].ts"
@@ -24,8 +29,8 @@ export default NextAuth({
   callbacks: {
     session(session, token) {
       return session // The type here should match the one returned in `useSession()`
-    }
-  }
+    },
+  },
 })
 ```
 
@@ -34,7 +39,7 @@ import { useSession } from "next-auth/client"
 
 export default function IndexPage() {
   // `session` should match `callbacks.session()` in `NextAuth()`
-  const [session] = useSession() 
+  const [session] = useSession()
 
   return (
     // Your component
@@ -59,33 +64,36 @@ declare module "next-auth" {
   }
 }
 ```
+
 #### Popular interfaces to augment
 
 Although you can augment almost anything, here are some of the more common interfaces that you might want to override in the `next-auth` module:
+
 ```ts
-  /**
-   * The shape of the user object returned in the OAuth providers' `profile` callback,
-   * or the second parameter of the `session` callback, when using a database.
-   */
-  interface User {} 
-  /**
-   * Usually contains information about the provider being used
-   * and also extends `TokenSet`, which is different tokens returned by OAuth Providers.
-   */
-  interface Account {}
-  /** The OAuth profile returned from your provider */
-  interface Profile {}
+/**
+ * The shape of the user object returned in the OAuth providers' `profile` callback,
+ * or the second parameter of the `session` callback, when using a database.
+ */
+interface User {}
+/**
+ * Usually contains information about the provider being used
+ * and also extends `TokenSet`, which is different tokens returned by OAuth Providers.
+ */
+interface Account {}
+/** The OAuth profile returned from your provider */
+interface Profile {}
 ```
 
 Make sure that the `types` folder is added to [`typeRoots`](https://www.typescriptlang.org/tsconfig/#typeRoots) in your project's `tsconfig.json` file.
 
 ### Submodules
+
 The `JWT` interface can be found in the `next-auth/jwt` submodule:
 
 ```ts title="types/next-auth.d.ts"
 declare module "next-auth/jwt" {
   /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
-  interface JWT { 
+  interface JWT {
     /** OpenID ID Token */
     idToken?: string
   }
@@ -93,6 +101,7 @@ declare module "next-auth/jwt" {
 ```
 
 ### Useful links
+
 1. [TypeScript documentation: Module Augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation)
 2. [Digital Ocean: Module Augmentation in TypeScript](https://www.digitalocean.com/community/tutorials/typescript-module-augmentation)
 
