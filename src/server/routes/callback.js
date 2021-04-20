@@ -262,7 +262,8 @@ export default async function callback (req, res) {
     const defaultJwtPayload = {
       name: user.name,
       email: user.email,
-      picture: user.image
+      picture: user.image,
+      sub: user.id?.toString()
     }
     const jwtPayload = await callbacks.jwt(defaultJwtPayload, user, account, userObjectReturnedFromAuthorizeHandler, false)
 
