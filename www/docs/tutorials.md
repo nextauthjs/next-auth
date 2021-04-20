@@ -43,6 +43,10 @@ This approach can be used to authenticate existing user accounts against any bac
 
 How to write tests using Cypress.
 
+### [Usage with class components](tutorials/usage-with-class-components)
+
+How to use `useSession()` hook with class components.
+
 ## Other tutorials and explainers
 
 _These are tutorials and explainers that have been submitted or that we have found on the web and are hosted elsewhere They include articles, videos and example projects. Submissions for inclusion are welcome!_
