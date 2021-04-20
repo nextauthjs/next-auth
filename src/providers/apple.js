@@ -28,7 +28,7 @@ export default function Apple(options) {
       privateKey: null,
       keyId: null,
     },
-    protection: "none",
+    protection: "none", // REVIEW: Apple does not support state, as far as I know. Can we use "pkce" then?
     ...options,
   }
 }
