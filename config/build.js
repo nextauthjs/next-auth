@@ -52,7 +52,9 @@ TYPES_TARGETS.forEach((target) => {
 
 const providersDir = path.join(process.cwd(), "/src/providers")
 
-const files = fs.readdirSync(providersDir, "utf8")
+const files = fs
+  .readdirSync(providersDir, "utf8")
+  .filter((file) => file !== "index.js")
 
 let importLines = ""
 let exportLines = `export default {\n`
