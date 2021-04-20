@@ -6,8 +6,8 @@ import dispatchEvent from '../lib/dispatch-event'
 
 /**
  * Handle callbacks from login services
- * @param {import("..").NextAuthRequest} req
- * @param {import("..").NextAuthResponse} res
+ * @param {import("types/internals").NextAuthRequest} req
+ * @param {import("types/internals").NextAuthResponse} res
  */
 export default async function callback (req, res) {
   const {
