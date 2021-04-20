@@ -58,16 +58,25 @@ let importLines = ""
 let exportLines = `export default {\n`
 files.forEach((file) => {
   const provider = fs.readFileSync(path.join(providersDir, file), "utf8")
+  try {
+    // NOTE: If this fails, the default export probably wasn't a named function.
+    // Always use a named function as default export.
+    // Eg.: export default function YourProvider ...
+    const { functionName } = provider.match(
+      /export default function (?<functionName>.+)\s?\(/
+    ).groups
 
-  // NOTE: If this fails, the default export probably wasn't a named function.
-  // Always use a named function as default export.
-  // Eg.: export default function YourProvider ...
-  const { functionName } = provider.match(
-    /export default function (?<functionName>.+)\s?\(/
-  ).groups
-
-  importLines += `import ${functionName} from "./${file}"\n`
-  exportLines += `  ${functionName},\n`
+    importLines += `import ${functionName} from "./${file}"\n`
+    exportLines += `  ${functionName},\n`
+  } catch (error) {
+    console.error(
+      [
+        `\nThe provider file '${file}' should have a single named default export`,
+        "Example: 'export default function YourProvider'\n\n",
+      ].join("\n")
+    )
+    process.exit(1)
+  }
 })
 exportLines += `}\n`
 
