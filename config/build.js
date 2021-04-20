@@ -58,6 +58,10 @@ let importLines = ""
 let exportLines = `export default {\n`
 files.forEach((file) => {
   const provider = fs.readFileSync(path.join(providersDir, file), "utf8")
+
+  // NOTE: If this fails, the default export probably wasn't a named function.
+  // Always use a named function as default export.
+  // Eg.: export default function YourProvider ...
   const { functionName } = provider.match(
     /export default function (?<functionName>.+)\s?\(/
   ).groups
