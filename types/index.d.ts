@@ -364,6 +364,15 @@ export interface PagesOptions {
   newUser?: string
 }
 
+export interface DefaultSession extends Record<string, unknown> {
+  user: {
+    name: string | null
+    email: string | null
+    picture: string | null
+  }
+  expires: string
+}
+
 /**
  * Returned by `useSession`, `getSession`, returned by the `session` callback
  * and also the shape received as a prop on the `Provider` React Context
@@ -373,10 +382,7 @@ export interface PagesOptions {
  * [`Provider`](https://next-auth.js.org/getting-started/client#provider) |
  * [`session` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback)
  */
-export interface Session extends Record<string, unknown> {
-  user?: User
-  expires?: string
-}
+export interface Session extends Record<string, unknown>, DefaultSession {}
 
 /** [Documentation](https://next-auth.js.org/configuration/options#session) */
 export interface SessionOptions {
