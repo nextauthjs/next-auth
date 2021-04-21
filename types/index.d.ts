@@ -251,13 +251,15 @@ export interface Account extends TokenSet, Record<string, unknown> {
   type: string
 }
 
-/** The OAuth profile returned from your provider */
-export interface Profile extends Record<string, unknown> {
+export interface DefaultProfile {
   sub?: string
   name?: string
   email?: string
   image?: string
 }
+
+/** The OAuth profile returned from your provider */
+export interface Profile extends Record<string, unknown>, DefaultProfile {}
 
 /** [Documentation](https://next-auth.js.org/configuration/callbacks) */
 export interface CallbacksOptions<
