@@ -1,7 +1,7 @@
 import { AppOptions } from "./internals"
 import { ConnectionOptions, EntitySchema } from "typeorm"
 import { User } from "."
-import { AppProvider } from "./internals/providers"
+import { AppProvider } from "./providers"
 
 export interface Profile {
   id: string
