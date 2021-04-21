@@ -365,12 +365,12 @@ export interface PagesOptions {
 }
 
 export interface DefaultSession extends Record<string, unknown> {
-  user: {
-    name: string | null
-    email: string | null
-    picture: string | null
+  user?: {
+    name?: string | null
+    email?: string | null
+    image?: string | null
   }
-  expires: string
+  expires?: string
 }
 
 /**

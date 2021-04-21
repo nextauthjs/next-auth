@@ -2,10 +2,10 @@ import { JWT as JoseJWT, JWE } from "jose"
 import { NextApiRequest } from "./internals/utils"
 
 export interface DefaultJWT extends Record<string, unknown> {
-  name: string | null
-  email: string | null
-  picture: string | null
-  sub: string | undefined
+  name?: string | null
+  email?: string | null
+  picture?: string | null
+  sub?: string
 }
 
 /**
