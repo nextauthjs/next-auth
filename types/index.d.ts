@@ -375,7 +375,7 @@ export interface PagesOptions {
  */
 export interface Session extends Record<string, unknown> {
   user?: User
-  expires: string
+  expires?: string
 }
 
 /** [Documentation](https://next-auth.js.org/configuration/options#session) */
