@@ -204,6 +204,7 @@ declare class TypeORMUserModel implements User {
     image?: string,
     emailVerified?: Date
   )
+  [x: string]: unknown
 }
 
 declare class TypeORMSessionModel implements Session {

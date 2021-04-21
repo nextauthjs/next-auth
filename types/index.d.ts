@@ -251,13 +251,15 @@ export interface Account extends TokenSet, Record<string, unknown> {
   type: string
 }
 
-/** The OAuth profile returned from your provider */
-export interface Profile extends Record<string, unknown> {
+export interface DefaultProfile {
   sub?: string
   name?: string
   email?: string
   image?: string
 }
+
+/** The OAuth profile returned from your provider */
+export interface Profile extends Record<string, unknown>, DefaultProfile {}
 
 /** [Documentation](https://next-auth.js.org/configuration/callbacks) */
 export interface CallbacksOptions<
@@ -391,6 +393,12 @@ export interface SessionOptions {
   updateAge?: number
 }
 
+export interface DefaultUser {
+  name?: string | null
+  email?: string | null
+  image?: string | null
+}
+
 /**
  * The shape of the returned object in the OAuth providers' `profile` callback,
  * available in the `jwt` and `session` callbacks,
@@ -401,11 +409,7 @@ export interface SessionOptions {
  * [`jwt` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
  * [`profile` OAuth provider callback](https://next-auth.js.org/configuration/providers#using-a-custom-provider)
  */
-export interface User {
-  name?: string | null
-  email?: string | null
-  image?: string | null
-}
+export interface User extends Record<string, unknown>, DefaultUser {}
 
 declare function NextAuth(
   req: NextApiRequest,
