@@ -161,6 +161,11 @@ export type AppProviders = Array<
   Provider | ReturnType<BuiltInProviders[keyof BuiltInProviders]>
 >
 
+export interface AppProvider extends CommonProviderOptions {
+  signinUrl: string
+  callbackUrl: string
+}
+
 declare const Providers: BuiltInProviders
 
 export default Providers
