@@ -10,6 +10,7 @@ export interface JWT extends Record<string, unknown> {
   name?: string | null
   email?: string | null
   picture?: string | null
+  sub?: string
 }
 
 export interface JWTEncodeParams {

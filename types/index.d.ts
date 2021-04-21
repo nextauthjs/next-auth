@@ -375,7 +375,6 @@ export interface PagesOptions {
  */
 export interface Session extends Record<string, unknown> {
   user?: User
-  accessToken?: string
   expires: string
 }
 
