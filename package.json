@@ -7,7 +7,18 @@
   "author": "Iain Collins <me@iaincollins.com>",
   "main": "index.js",
   "types": "./index.d.ts",
-  "keywords": ["react", "nodejs", "oauth", "jwt", "oauth2", "authentication", "nextjs", "csrf", "oidc", "nextauth"],
+  "keywords": [
+    "react",
+    "nodejs",
+    "oauth",
+    "jwt",
+    "oauth2",
+    "authentication",
+    "nextjs",
+    "csrf",
+    "oidc",
+    "nextauth"
+  ],
   "exports": {
     ".": "./dist/server/index.js",
     "./jwt": "./dist/lib/jwt.js",
@@ -87,6 +98,7 @@
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.6",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
     "@babel/preset-env": "^7.9.6",
     "@prisma/client": "^2.16.1",
     "@semantic-release/commit-analyzer": "^8.0.1",
@@ -157,8 +169,14 @@
     "branches": [
       "+([0-9])?(.{+([0-9]),x}).x",
       "main",
-      { "name": "beta", "prerelease": true },
-      { "name": "next", "prerelease": true }
+      {
+        "name": "beta",
+        "prerelease": true
+      },
+      {
+        "name": "next",
+        "prerelease": true
+      }
     ]
   },
   "funding": [
