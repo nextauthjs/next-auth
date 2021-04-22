@@ -25,7 +25,8 @@
     "./adapters": "./dist/adapters/index.js",
     "./client": "./dist/client/index.js",
     "./providers": "./dist/providers/index.js",
-    "./providers/*": "./dist/providers/*.js"
+    "./providers/*": "./dist/providers/*.js",
+    "./errors": "./dist/lib/errors.js"
   },
   "scripts": {
     "build": "npm run build:js && npm run build:css",
@@ -67,7 +68,8 @@
     "client.d.ts",
     "jwt.js",
     "jwt.d.ts",
-    "internals"
+    "internals",
+    "errors.js"
   ],
   "license": "ISC",
   "dependencies": {
