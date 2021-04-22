@@ -25,7 +25,6 @@ node_modules
 # Generated files
 .docusaurus
 .cache-loader
-.next
 www/providers.json
 src/providers/index.js
 internals
@@ -39,6 +38,7 @@ jwt.d.ts
 jwt.js
 providers.d.ts
 providers.js
+errors.js
 
 # Development app
 app/next-auth
