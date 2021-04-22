@@ -11,6 +11,8 @@
   "exports": {
     ".": "./dist/server/index.js",
     "./jwt": "./dist/lib/jwt.js",
+    "./errors": "./dist/lib/errors.js",
+    "./logger": "./dist/lib/logger.js",
     "./adapters": "./dist/adapters/index.js",
     "./client": "./dist/client/index.js",
     "./providers": "./dist/providers/index.js",
