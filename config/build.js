@@ -36,6 +36,7 @@ const TYPES_TARGETS = [
   `${MODULE_ENTRIES.ADAPTERS}.d.ts`,
   `${MODULE_ENTRIES.PROVIDERS}.d.ts`,
   `${MODULE_ENTRIES.JWT}.d.ts`,
+  `${MODULE_ENTRIES.ERRORS}.d.ts`,
   "internals",
 ]
 
