@@ -10,8 +10,8 @@
   "keywords": ["react", "nodejs", "oauth", "jwt", "oauth2", "authentication", "nextjs", "csrf", "oidc", "nextauth"],
   "exports": {
     ".": "./dist/server/index.js",
-    "./jwt": "./dist/lib/jwt.js",
     "./errors": "./dist/lib/errors.js",
+    "./jwt": "./dist/lib/jwt.js",
     "./logger": "./dist/lib/logger.js",
     "./adapters": "./dist/adapters/index.js",
     "./client": "./dist/client/index.js",
