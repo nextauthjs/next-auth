@@ -66,10 +66,11 @@
     "adapters.d.ts",
     "client.js",
     "client.d.ts",
+    "errors.js",
+    "errors.d.ts",
     "jwt.js",
     "jwt.d.ts",
-    "internals",
-    "errors.js"
+    "internals"
   ],
   "license": "ISC",
   "dependencies": {
