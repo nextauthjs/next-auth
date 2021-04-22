@@ -14,9 +14,22 @@ export type NextAuthSharedOptions =
   | "theme"
   | "debug"
   | "logger"
+  | "session"
 
 export interface AppOptions
-  extends Pick<NextAuthOptions, NextAuthSharedOptions> {
+  extends Required<Pick<NextAuthOptions, NextAuthSharedOptions>> {
+  providers: AppProvider[]
+  baseUrl: string
+  basePath: string
+  action:
+    | "providers"
+    | "session"
+    | "csrf"
+    | "signin"
+    | "signout"
+    | "callback"
+    | "verify-request"
+    | "error"
   pkce?: {
     code_verifier?: string
     /**
@@ -27,18 +40,6 @@ export interface AppOptions
     code_challenge_method?: "S256"
   }
   provider?: AppProvider
-  providers: AppProvider[]
-  baseUrl?: string
-  basePath?: string
-  action?:
-    | "providers"
-    | "session"
-    | "csrf"
-    | "signin"
-    | "signout"
-    | "callback"
-    | "verify-request"
-    | "error"
   csrfToken?: string
   csrfTokenVerified?: boolean
 }
