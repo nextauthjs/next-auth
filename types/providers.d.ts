@@ -77,6 +77,7 @@ export type OAuthProviderType =
   | "Kakao"
   | "LINE"
   | "LinkedIn"
+  | "Mailchimp"
   | "MailRu"
   | "Medium"
   | "Netlify"
