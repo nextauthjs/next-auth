@@ -4,22 +4,22 @@ name: Lint/Build
 
 on:
   push:
-    branches: 
-     - main
-     - beta
-     - next
+    branches:
+      - main
+      - beta
+      - next
   pull_request:
     branches:
-     - main
-     - beta
-     - next
+      - main
+      - beta
+      - next
 
 jobs:
   lint-and-build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [10, 12, 14]
+        node-version: [12, 14, 16]
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
