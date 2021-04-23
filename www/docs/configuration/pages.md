@@ -76,7 +76,7 @@ export default function SignIn({ providers }) {
 
 // This is the recommended way for Next.js 9.3 or newer
 export async function getServerSideProps(context){
-  const providers = await providers()
+  const providers = await getProviders()
   return {
     props: { providers }
   }
@@ -86,7 +86,7 @@ export async function getServerSideProps(context){
 // If older than Next.js 9.3
 SignIn.getInitialProps = async () => {
   return {
-    providers: await providers()
+    providers: await getProviders()
   }
 }
 */

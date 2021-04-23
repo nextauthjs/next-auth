@@ -5,12 +5,35 @@
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "author": "Iain Collins <me@iaincollins.com>",
+  "main": "index.js",
+  "types": "./index.d.ts",
+  "keywords": [
+    "react",
+    "nodejs",
+    "oauth",
+    "jwt",
+    "oauth2",
+    "authentication",
+    "nextjs",
+    "csrf",
+    "oidc",
+    "nextauth"
+  ],
+  "exports": {
+    ".": "./dist/server/index.js",
+    "./jwt": "./dist/lib/jwt.js",
+    "./adapters": "./dist/adapters/index.js",
+    "./client": "./dist/client/index.js",
+    "./providers": "./dist/providers/index.js",
+    "./providers/*": "./dist/providers/*.js",
+    "./errors": "./dist/lib/errors.js"
+  },
   "scripts": {
     "build": "npm run build:js && npm run build:css",
     "build:js": "node ./config/build.js && babel --config-file ./config/babel.config.json src --out-dir dist",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir dist && node config/wrap-css.js",
-    "dev:with-css": "next | npm run watch:css",
-    "dev": "next",
+    "dev:setup": "npm run build:css && cd app && npm i",
+    "dev": "cd app && npm run dev",
     "watch": "npm run watch:js | npm run watch:css",
     "watch:js": "babel --config-file ./config/babel.config.json --watch src --out-dir dist",
     "watch:css": "postcss --config config/postcss.config.js --watch src/**/*.css --base src --dir dist",
@@ -32,15 +55,6 @@
     "publish:canary": "npm publish --tag canary",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
-  },
-  "main": "index.js",
-  "exports": {
-    ".": "./dist/server/index.js",
-    "./jwt": "./dist/lib/jwt.js",
-    "./adapters": "./dist/adapters/index.js",
-    "./client": "./dist/client/index.js",
-    "./providers": "./dist/providers/index.js",
-    "./providers/*": "./dist/providers/*.js"
   },
   "files": [
     "dist",
