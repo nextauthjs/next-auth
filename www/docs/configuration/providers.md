@@ -111,14 +111,7 @@ providers: [
 ...
 ```
 
-:::tip
-If you think your custom provider might be useful to others, we encourage you to open a PR and add it to the built-in list so others can discover it much more easily! You only need to add three changes:
-1. Add your config: [`src/providers/{provider}.js`](https://github.com/nextauthjs/next-auth/tree/main/src/providers)
-2. Re-export your config: at [`src/providers/index.js`](https://github.com/nextauthjs/next-auth/blob/main/src/providers/index.js)
-3. Add provider documentation: [`www/docs/providers/{provider}.md`](https://github.com/nextauthjs/next-auth/tree/main/www/docs/providers)
 
-You can look at the existing built-in providers for inspiration.
-:::
 
 
 ### OAuth provider options
@@ -230,3 +223,14 @@ export const Image = ({ children, src, alt = '' }) => (
     <img alt={alt} src={src} />
   </div>
  )
+
+
+## Adding a new built-in provider
+
+If you think your custom provider might be useful to others, we encourage you to open a PR and add it to the built-in list so others can discover it much more easily! You only need to add two changes:
+1. Add your config: [`src/providers/{provider}.js`](https://github.com/nextauthjs/next-auth/tree/main/src/providers) (Make sure you use a named default export, like `export default function YourProvider`!)
+2. Add provider documentation: [`www/docs/providers/{provider}.md`](https://github.com/nextauthjs/next-auth/tree/main/www/docs/providers)
+
+That's it! 🎉 Others will be able to discover this provider much more easily now!
+
+You can look at the existing built-in providers for inspiration.

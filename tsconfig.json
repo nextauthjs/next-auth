@@ -3,6 +3,9 @@
     "strictNullChecks": true,
     "baseUrl": ".",
     "paths": {
+      "types": [
+        "./types"
+      ],
       "next-auth": [
         "./src/server"
       ],
@@ -40,7 +43,8 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "**/*.js"
   ],
   "exclude": [
     "node_modules"

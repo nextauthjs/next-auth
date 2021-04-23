@@ -54,9 +54,14 @@ NextAuth.js does not currently support automatically signing into sites on diffe
 
 ### Can I use NextAuth.js with React Native?
 
-NextAuth.js is designed as a secure, confidental client and implements a server side authentication flow.
+NextAuth.js is designed as a secure, confidential client and implements a server side authentication flow.
 
 It is not intended to be used in native applications on desktop or mobile applications, which typically implement public clients (e.g. with client / secrets embedded in the application).
+
+
+### Is NextAuth.js supporting TypeScript?
+
+Yes! Check out the [TypeScript docs](/getting-started/typescript)
 
 ---
 
@@ -70,7 +75,7 @@ It also provides an Adapter API which allows you to connect it to any database.
 
 ### What does NextAuth.js use databases for?
 
-Databases in NextAuth.js are used for persisting users, oauth accounts, email sign in tokens and sessions.
+Databases in NextAuth.js are used for persisting users, OAuth accounts, email sign in tokens and sessions.
 
 Specifying a database is optional if you don't need to persist user data or support email sign in. If you don't specify a database then JSON Web Tokens will be enabled for session storage and used to store session data.
 
@@ -126,7 +131,7 @@ When an email address is associated with an OAuth account it does not necessaril
 
 With automatic account linking on sign in, this can be exploited by bad actors to hijack accounts by creating an OAuth account associated with the email address of another user.
 
-For this reason it is not secure to automatically link accounts between abitrary providers on sign in, which is why this feature is generally not provided by authentication service and is not provided by NextAuth.js.
+For this reason it is not secure to automatically link accounts between arbitrary providers on sign in, which is why this feature is generally not provided by authentication service and is not provided by NextAuth.js.
 
 Automatic account linking is seen on some sites, sometimes insecurely. It can be technically possible to do automatic account linking securely if you trust all the providers involved to ensure they have securely verified the email address associated with the account, but requires placing trust (and transferring the risk) to those providers to handle the process securely.
 
@@ -169,7 +174,7 @@ NextAuth.js supports both database session tokens and JWT session tokens.
 * If a database is specified, database session tokens will be used by default.
 * If no database is specified, JWT session tokens will be used by default.
 
-You can also choose to use JSON Web Tokens as session tokens with using a database, by explictly setting the `session: { jwt: true }` option.
+You can also choose to use JSON Web Tokens as session tokens with using a database, by explicitly setting the `session: { jwt: true }` option.
 
 ### What are the advantages of JSON Web Tokens?
 
@@ -201,13 +206,13 @@ JSON Web Tokens can be used for session tokens, but are also used for lots of ot
 
   Avoid storing any data in a token that might be problematic if it were to be decrypted in the future.
 
-* If you do not explictly specify a secret for for NextAuth.js, existing sessions will be invalidated any time your NextAuth.js configuration changes, as NextAuth.js will default to an auto-generated secret.
+* If you do not explicitly specify a secret for for NextAuth.js, existing sessions will be invalidated any time your NextAuth.js configuration changes, as NextAuth.js will default to an auto-generated secret.
 
   If using JSON Web Token you should at least specify a secret and ideally configure public/private keys.
 
 ### Are JSON Web Tokens secure?
 
-By default tokens are signed (JWS) but not encrypted (JWE), as encryption adds additional overhead and reduces the amount of space avalible to store data (total cookie size for a domain is limited to 4KB).
+By default tokens are signed (JWS) but not encrypted (JWE), as encryption adds additional overhead and reduces the amount of space available to store data (total cookie size for a domain is limited to 4KB).
 
 * JSON Web Tokens in NextAuth.js use JWS and are signed using HS512 with an auto-generated key.
 
@@ -217,7 +222,7 @@ You can specify other valid algorithms - [as specified in RFC 7518](https://tool
 
 NextAuth.js will generate keys for you, but this will generate a warning at start up.
 
-Using explict public/private keys for signing is strongly recommended.
+Using explicit public/private keys for signing is strongly recommended.
 
 ### What signing and encryption standards does NextAuth.js support?
 

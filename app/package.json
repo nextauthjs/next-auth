@@ -1,0 +1,25 @@
+{
+  "name": "next-auth-app",
+  "version": "1.0.0",
+  "description": "NextAuth.js Developer app",
+  "private": true,
+  "scripts": {
+    "dev": "npm-run-all --parallel copy:app dev:css dev:next",
+    "dev:next": "next dev",
+    "copy:app": "cpx \"../src/**/*\" next-auth --watch",
+    "copy:css": "cpx \"../dist/css/**/*\" dist/css --watch",
+    "watch:css": "cd .. && npm run watch:css",
+    "dev:css": "npm-run-all --parallel watch:css copy:css",
+    "start": "next start"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "next": "^10.1.3",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "cpx": "^1.5.0",
+    "npm-run-all": "^4.1.5"
+  }
+}
