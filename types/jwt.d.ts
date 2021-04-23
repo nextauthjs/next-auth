@@ -1,16 +1,19 @@
 import { JWT as JoseJWT, JWE } from "jose"
 import { NextApiRequest } from "./internals/utils"
 
+export interface DefaultJWT extends Record<string, unknown> {
+  name?: string | null
+  email?: string | null
+  picture?: string | null
+  sub?: string
+}
+
 /**
  * Returned by the `jwt` callback and `getToken`, when using JWT sessions
  *
  * [`jwt` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback) | [`getToken`](https://next-auth.js.org/tutorials/securing-pages-and-api-routes#using-gettoken)
  */
-export interface JWT extends Record<string, unknown> {
-  name?: string | null
-  email?: string | null
-  picture?: string | null
-}
+export interface JWT extends Record<string, unknown>, DefaultJWT {}
 
 export interface JWTEncodeParams {
   token?: JWT

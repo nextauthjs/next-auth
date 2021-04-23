@@ -77,6 +77,7 @@ export type OAuthProviderType =
   | "Kakao"
   | "LINE"
   | "LinkedIn"
+  | "Mailchimp"
   | "MailRu"
   | "Medium"
   | "Netlify"
@@ -160,6 +161,11 @@ export type BuiltInProviders = Record<OAuthProviderType, OAuthProvider> &
 export type AppProviders = Array<
   Provider | ReturnType<BuiltInProviders[keyof BuiltInProviders]>
 >
+
+export interface AppProvider extends CommonProviderOptions {
+  signinUrl: string
+  callbackUrl: string
+}
 
 declare const Providers: BuiltInProviders
 

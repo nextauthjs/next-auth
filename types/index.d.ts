@@ -251,13 +251,15 @@ export interface Account extends TokenSet, Record<string, unknown> {
   type: string
 }
 
-/** The OAuth profile returned from your provider */
-export interface Profile extends Record<string, unknown> {
+export interface DefaultProfile {
   sub?: string
   name?: string
   email?: string
   image?: string
 }
+
+/** The OAuth profile returned from your provider */
+export interface Profile extends Record<string, unknown>, DefaultProfile {}
 
 /** [Documentation](https://next-auth.js.org/configuration/callbacks) */
 export interface CallbacksOptions<
@@ -364,6 +366,15 @@ export interface PagesOptions {
   newUser?: string
 }
 
+export interface DefaultSession extends Record<string, unknown> {
+  user?: {
+    name?: string | null
+    email?: string | null
+    image?: string | null
+  }
+  expires?: string
+}
+
 /**
  * Returned by `useSession`, `getSession`, returned by the `session` callback
  * and also the shape received as a prop on the `Provider` React Context
@@ -373,17 +384,19 @@ export interface PagesOptions {
  * [`Provider`](https://next-auth.js.org/getting-started/client#provider) |
  * [`session` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback)
  */
-export interface Session extends Record<string, unknown> {
-  user?: User
-  accessToken?: string
-  expires: string
-}
+export interface Session extends Record<string, unknown>, DefaultSession {}
 
 /** [Documentation](https://next-auth.js.org/configuration/options#session) */
 export interface SessionOptions {
   jwt?: boolean
   maxAge?: number
   updateAge?: number
+}
+
+export interface DefaultUser {
+  name?: string | null
+  email?: string | null
+  image?: string | null
 }
 
 /**
@@ -396,11 +409,7 @@ export interface SessionOptions {
  * [`jwt` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
  * [`profile` OAuth provider callback](https://next-auth.js.org/configuration/providers#using-a-custom-provider)
  */
-export interface User {
-  name?: string | null
-  email?: string | null
-  image?: string | null
-}
+export interface User extends Record<string, unknown>, DefaultUser {}
 
 declare function NextAuth(
   req: NextApiRequest,

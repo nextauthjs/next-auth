@@ -82,6 +82,6 @@ export default NextAuth({
   // Prisma Database Adapter
   // To configure this app to use the schema in `prisma/schema.prisma` run:
   // npx prisma generate
-  // npx prisma migrate dev --preview-feature
+  // npx prisma migrate dev
   // adapter: Adapters.Prisma.Adapter({ prisma })
 })
