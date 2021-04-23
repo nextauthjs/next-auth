@@ -60,7 +60,7 @@ By default, the built-in pages will follow the system theme, utilizing the [`pre
 In order to get the available authentication providers and the URLs to use for them, you can make a request to the API endpoint `/api/auth/providers`:
 
 ```jsx title="pages/auth/signin.js"
-import { providers, signIn } from 'next-auth/client'
+import { getProviders, signIn } from 'next-auth/client'
 
 export default function SignIn({ providers }) {
   return (
@@ -76,7 +76,7 @@ export default function SignIn({ providers }) {
 
 // This is the recommended way for Next.js 9.3 or newer
 export async function getServerSideProps(context){
-  const providers = await providers()
+  const providers = await getProviders()
   return {
     props: { providers }
   }
@@ -86,7 +86,7 @@ export async function getServerSideProps(context){
 // If older than Next.js 9.3
 SignIn.getInitialProps = async () => {
   return {
-    providers: await providers()
+    providers: await getProviders()
   }
 }
 */
