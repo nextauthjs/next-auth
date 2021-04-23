@@ -145,7 +145,7 @@ export async function getSession (ctx) {
   return session
 }
 
-async function getCsrfToken (ctx) {
+export async function getCsrfToken (ctx) {
   return (await _fetchData('csrf', ctx))?.csrfToken
 }
 
