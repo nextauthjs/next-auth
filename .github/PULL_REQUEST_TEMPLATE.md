@@ -16,19 +16,15 @@ merge of your pull request!
 
 <!-- What changes are being made? (What feature/bug is being fixed here?) -->
 
-## Summary 💭
-
-<!-- Why are these changes necessary? -->
-
-...
-
 ## Reasoning 💡
+
+<!-- What changes are being made? (What feature/bug is being fixed here?) -->
 
 ...
 
 ## Checklist 🧢
 
-<!-- add "N/A" to the end of each line that's irrelevant to your changes -->
+<!-- feel free cross items ( like this `~[] item~` ) if they're irrelevant to your changes -->
 <!-- to check an item, place an "x" in the box like so: "- [x] Documentation" -->
 
 - [ ] Documentation
@@ -36,4 +32,8 @@ merge of your pull request!
 - [ ] Ready to be merged
       <!-- In your opinion, is this ready to be merged as soon as it's reviewed? -->
 
-<!-- feel free to add additional comments -->
+## Affected issues 🎟
+
+<!-- try to browse and link issues that might be solved/affected by this PR to gain visibility -->
+
+...
