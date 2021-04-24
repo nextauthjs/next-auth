@@ -40,7 +40,6 @@ export default NextAuth({
       clientId: process.env.AUTH0_ID,
       clientSecret: process.env.AUTH0_SECRET,
       domain: process.env.AUTH0_DOMAIN,
-      // issuer: `https://${process.env.AUTH0_DOMAIN}/`,
       // Used to debug https://github.com/nextauthjs/next-auth/issues/1664
       // protection: ["pkce", "state"],
       // authorizationParams: {
@@ -83,6 +82,6 @@ export default NextAuth({
   // Prisma Database Adapter
   // To configure this app to use the schema in `prisma/schema.prisma` run:
   // npx prisma generate
-  // npx prisma migrate dev --preview-feature
+  // npx prisma migrate dev
   // adapter: Adapters.Prisma.Adapter({ prisma })
 })

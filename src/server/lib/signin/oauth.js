@@ -1,20 +1,30 @@
-import { openidClient, oAuth1Client } from '../oauth/client'
-import logger from '../../../lib/logger'
-import { getState } from '../oauth/state-handler'
+import { openidClient, oAuth1Client } from "../oauth/client"
+import logger from "../../../lib/logger"
+import { getState } from "../oauth/state-handler"
 
-/** @param {import("../..").NextAuthRequest} req */
-export default async function getAuthorizationUrl (req) {
+/** @param {import("types/internals").NextAuthRequest} req */
+export default async function getAuthorizationUrl(req) {
   const { provider } = req.options
+
+  delete req.query?.nextauth
+  const params = {
+    ...provider.params,
+    ...req.query,
+  }
+
   // Handle OAuth v1.x
-  if (provider.version?.startsWith('1.')) {
+  if (provider.version?.startsWith("1.")) {
     try {
-      const client = await oAuth1Client(req.options)
-      const oAuthToken = await client.getOAuthRequestToken()
-      const url = `${provider.authorizationUrl}?oauth_token=${oAuthToken}`
-      logger.debug('GET_AUTHORIZATION_URL', url)
+      const tokens = await oAuth1Client.getOAuthRequestToken(params)
+      const url = `${provider.authorizationUrl}?${new URLSearchParams({
+        oauth_token: tokens.oauth_token,
+        oauth_token_secret: tokens.oauth_token_secret,
+        ...tokens.params,
+      })}`
+      logger.debug("GET_AUTHORIZATION_URL", url)
       return url
     } catch (error) {
-      logger.error('GET_AUTHORIZATION_URL_ERROR', error)
+      logger.error("GET_AUTHORIZATION_URL_ERROR", error)
       throw error
     }
   }
@@ -22,8 +32,8 @@ export default async function getAuthorizationUrl (req) {
   // TODO: authorizationParams vs params. What's the difference?
   const client = await openidClient(req.options)
   return client.authorizationUrl({
-    ...provider.params,
+    ...params,
     scope: provider.scope,
-    state: getState(req)
+    state: getState(req),
   })
 }

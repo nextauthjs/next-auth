@@ -18,7 +18,7 @@ import parseUrl from '../lib/parse-url'
 //    relative URLs are valid in that context and so defaults to empty.
 // 2. When invoked server side the value is picked up from an environment
 //    variable and defaults to 'http://localhost:3000'.
-/** @type {import(".").NextAuthConfig} */
+/** @type {import("types/internals/client").NextAuthConfig} */
 const __NEXTAUTH = {
   baseUrl: parseUrl(process.env.NEXTAUTH_URL || process.env.VERCEL_URL).baseUrl,
   basePath: parseUrl(process.env.NEXTAUTH_URL).basePath,
@@ -60,15 +60,9 @@ if (typeof window !== 'undefined' && !__NEXTAUTH._eventListenersAdded) {
 }
 
 // Context to store session data globally
+/** @type {import("types/internals/client").SessionContext} */
 const SessionContext = createContext()
 
-/**
- * React Hook that gives you access
- * to the logged in user's session data.
- *
- * [Documentation](https://next-auth.js.org/getting-started/client#usesession)
- * @type {import(".").UseSession}
- */
 export function useSession (session) {
   const context = useContext(SessionContext)
   if (context) return context
@@ -143,14 +137,6 @@ function _useSessionHook (session) {
   return [data, loading]
 }
 
-/**
- * Can be called client or server side to return a session asynchronously.
- * It calls `/api/auth/session` and returns a promise with a session object,
- * or null if no session exists.
- *
- * [Documentation](https://next-auth.js.org/getting-started/client#getsession)
- * @type {import(".").GetSession}
- */
 export async function getSession (ctx) {
   const session = await _fetchData('session', ctx)
   if (ctx?.triggerEvent ?? true) {
@@ -159,39 +145,14 @@ export async function getSession (ctx) {
   return session
 }
 
-/**
- * Returns the current Cross Site Request Forgery Token (CSRF Token)
- * required to make POST requests (e.g. for signing in and signing out).
- * You likely only need to use this if you are not using the built-in
- * `signIn()` and `signOut()` methods.
- *
- * [Documentation](https://next-auth.js.org/getting-started/client#getcsrftoken)
- * @type {import(".").GetCsrfToken}
- */
-async function getCsrfToken (ctx) {
+export async function getCsrfToken (ctx) {
   return (await _fetchData('csrf', ctx))?.csrfToken
 }
 
-/**
- * It calls `/api/auth/providers` and returns
- * a list of the currently configured authentication providers.
- * It can be useful if you are creating a dynamic custom sign in page.
- *
- * [Documentation](https://next-auth.js.org/getting-started/client#getproviders)
- * @type {import(".").GetProviders}
- */
 export async function getProviders () {
   return _fetchData('providers')
 }
 
-/**
- * Client-side method to initiate a signin flow
- * or send the user to the signin page listing all possible providers.
- * Automatically adds the CSRF token to the request.
- *
- * [Documentation](https://next-auth.js.org/getting-started/client#signin)
- * @type {import(".").SignIn}
- */
 export async function signIn (provider, options = {}, authorizationParams = {}) {
   const {
     callbackUrl = window.location,
@@ -255,13 +216,6 @@ export async function signIn (provider, options = {}, authorizationParams = {}) 
   }
 }
 
-/**
- * Signs the user out, by removing the session cookie.
- * Automatically adds the CSRF token to the request.
- *
- * [Documentation](https://next-auth.js.org/getting-started/client#signout)
- * @type {import(".").SignOut}
- */
 export async function signOut (options = {}) {
   const {
     callbackUrl = window.location,
@@ -298,7 +252,6 @@ export async function signOut (options = {}) {
 // Method to set options. The documented way is to use the provider, but this
 // method is being left in as an alternative, that will be helpful if/when we
 // expose a vanilla JavaScript version that doesn't depend on React.
-/** @type {import(".").SetOptions} */
 export function setOptions ({ baseUrl, basePath, clientMaxAge, keepAlive } = {}) {
   if (baseUrl) __NEXTAUTH.baseUrl = baseUrl
   if (basePath) __NEXTAUTH.basePath = basePath
@@ -321,14 +274,6 @@ export function setOptions ({ baseUrl, basePath, clientMaxAge, keepAlive } = {})
   }
 }
 
-/**
- * Provider to wrap the app in to make session data available globally.
- * Can also be used to throttle the number of requests to the endpoint
- * `/api/auth/session`.
- *
- * [Documentation](https://next-auth.js.org/getting-started/client#provider)
- * @type {import(".").Provider}
- */
 export function Provider ({ children, session, options }) {
   setOptions(options)
   return createElement(
@@ -387,13 +332,13 @@ function BroadcastChannel (name = 'nextauth.message') {
   return {
     /**
      * Get notified by other tabs/windows.
-     * @param {(message: import(".").BroadcastMessage) => void} onReceive
+     * @param {(message: import("types/internals/client").BroadcastMessage) => void} onReceive
      */
     receive (onReceive) {
       if (typeof window === 'undefined') return
       window.addEventListener('storage', async (event) => {
         if (event.key !== name) return
-        /** @type {import(".").BroadcastMessage} */
+        /** @type {import("types/internals/client").BroadcastMessage} */
         const message = JSON.parse(event.newValue)
         if (message?.event !== 'session' || !message?.data) return
 

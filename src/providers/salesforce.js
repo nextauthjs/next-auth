@@ -1,21 +1,22 @@
-export default (options) => {
+export default function Salesforce(options) {
   return {
-    id: 'salesforce',
-    name: 'Salesforce',
-    type: 'oauth',
-    version: '2.0',
-    params: { display: 'page', grant_type: 'authorization_code' },
-    accessTokenUrl: 'https://login.salesforce.com/services/oauth2/token',
-    authorizationUrl: 'https://login.salesforce.com/services/oauth2/authorize?response_type=code',
-    profileUrl: 'https://login.salesforce.com/services/oauth2/userinfo',
-    protection: 'none', // REVIEW: Can we use "pkce" ?
-    profile: (profile) => {
+    id: "salesforce",
+    name: "Salesforce",
+    type: "oauth",
+    version: "2.0",
+    params: { display: "page", grant_type: "authorization_code" },
+    accessTokenUrl: "https://login.salesforce.com/services/oauth2/token",
+    authorizationUrl:
+      "https://login.salesforce.com/services/oauth2/authorize?response_type=code",
+    profileUrl: "https://login.salesforce.com/services/oauth2/userinfo",
+    protection: "none",
+    profile(profile) {
       return {
         ...profile,
         id: profile.user_id,
-        image: profile.picture
+        image: profile.picture,
       }
     },
-    ...options
+    ...options,
   }
 }

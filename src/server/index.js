@@ -1,4 +1,3 @@
-import adapters from '../adapters'
 import jwt from '../lib/jwt'
 import parseUrl from '../lib/parse-url'
 import logger, { setLogger } from '../lib/logger'
@@ -15,6 +14,8 @@ import csrfTokenHandler from './lib/csrf-token-handler'
 import * as pkce from './lib/oauth/pkce-handler'
 import * as state from './lib/oauth/state-handler'
 
+import optionalRequire from '@balazsorban/require-optional'
+
 // To work properly in production with OAuth providers the NEXTAUTH_URL
 // environment variable must be set.
 if (!process.env.NEXTAUTH_URL) {
@@ -24,7 +25,7 @@ if (!process.env.NEXTAUTH_URL) {
 /**
  * @param {import("next").NextApiRequest} req
  * @param {import("next").NextApiResponse} res
- * @param {import(".").NextAuthOptions} userOptions
+ * @param {import("types").NextAuthOptions} userOptions
  */
 async function NextAuthHandler (req, res, userOptions) {
   if (userOptions.logger) {
@@ -86,7 +87,11 @@ async function NextAuthHandler (req, res, userOptions) {
     // Parse database / adapter
     // If adapter is provided, use it (advanced usage, overrides database)
     // If database URI or config object is provided, use it (simple usage)
-    const adapter = userOptions.adapter ?? (userOptions.database && adapters.Default(userOptions.database))
+    let adapter = userOptions.adapter
+    if ((!adapter && !!userOptions.database)) {
+      const TypeOrm = optionalRequire('../adapters/typeorm')
+      adapter = TypeOrm.Adapter(userOptions.database)
+    }
 
     // User provided options are overriden by other options,
     // except for the options with special handling above

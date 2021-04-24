@@ -16,7 +16,7 @@ Anyone can be a contributor. Either you found a typo, or you have an awesome fea
 * The latest changes are always in `main`, so please make your Pull Request against that branch.
 * Pull Requests should be raised for any change
 * Pull Requests need approval of a [core contributor](https://next-auth.js.org/contributors#core-team) before merging
-* Run `npm run lint:fix` before committing to make resolving conflicts easier (VSCode users, check out [this extension](https://marketplace.visualstudio.com/items?itemName=chenxsan.vscode-standardjs) to fix lint issues in development)
+* We use ESLint/Prettier for linting/formatting, so please run `npm run lint:fix` before committing to make resolving conflicts easier (VSCode users, check out [this ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) and [this Prettier extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) to fix lint and formatting issues in development)
 * We encourage you to test your changes, and if you have the opportunity, please make those tests part of the Pull Request
 * If you add new functionality, please provide the corresponding documentation as well and make it part of the Pull Request
 
@@ -32,15 +32,15 @@ cd next-auth
 
 2. Install packages:
 ```sh
-npm i
+npm i && npm dev:setup
 ```
 
 3. Populate `.env.local`:
    
-    Copy `.env.local.example` to `.env.local`, and add your env variables for each provider you want to test.
+    Copy `app/.env.local.example` to `app/.env.local`, and add your env variables for each provider you want to test.
 
 > NOTE: You can add any environment variables to .env.local that you would like to use in your dev app.
-> You can find the next-auth config under`pages/api/auth/[...nextauth].js`.
+> You can find the next-auth config under`app/pages/api/auth/[...nextauth].js`.
 
 1. Start the dev application/server:
 ```sh
@@ -57,11 +57,23 @@ If you need an example project to link to, you can use [next-auth-example](https
 
 When running `npm run dev`, you start a Next.js dev server on `http://localhost:3000`, which includes hot reloading out of the box. Make changes on any of the files in `src` and see the changes immediately.
 
->NOTE: When working on CSS, you will need to manually refresh the page after changes. (Improving this through a PR is very welcome!)
+> NOTE: When working on CSS, you will have to manually refresh the page after changes. The reason for this is our pages using CSS are server-side rendered. (Improving this through a PR is very welcome!)
+
+> NOTE: The setup is as follows: The development application lives inside the `app` folder, and whenever you make a change to the `src` folder in the root (where next-auth is), it gets copied into `app` every time (gitignored), so Next.js can pick them up and apply hot reloading. This is to avoid some annoying issues with how symlinks are working with different React builds, and also to provide a super-fast feedback loop while developing core features.
+
+#### Providers
+
+If you think your custom provider might be useful to others, we encourage you to open a PR and add it to the built-in list so others can discover it much more easily! You only need to add two changes:
+1. Add your config: [`src/providers/{provider}.js`](https://github.com/nextauthjs/next-auth/tree/main/src/providers) (Make sure you use a named default export, like `export default function YourProvider`!)
+2. Add provider documentation: [`www/docs/providers/{provider}.md`](https://github.com/nextauthjs/next-auth/tree/main/www/docs/providers)
+
+That's it! 🎉 Others will be able to discover this provider much more easily now!
+
+You can look at the existing built-in providers for inspiration.
 
 #### Databases
 
-Included is a Docker Compose file that starts up MySQL, Postgres, and MongoDB databases on localhost.
+Included is a Docker Compose file that starts up MySQL, PostgreSQL, and MongoDB databases on localhost.
 
 It will use port `3306`, `5432`, and `27017` on localhost respectively; please make sure those ports are not used by other services on localhost.
 
