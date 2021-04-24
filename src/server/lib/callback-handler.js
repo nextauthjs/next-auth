@@ -161,8 +161,7 @@ export default async function callbackHandler(
           providerAccount.id,
           providerAccount.refreshToken,
           providerAccount.accessToken,
-          providerAccount.accessTokenExpires,
-          ...providerAccount
+          providerAccount.accessTokenExpires
         )
         await dispatchEvent(events.linkAccount, {
           user,
@@ -223,8 +222,7 @@ export default async function callbackHandler(
         providerAccount.id,
         providerAccount.refreshToken,
         providerAccount.accessToken,
-        providerAccount.accessTokenExpires,
-        ...providerAccount
+        providerAccount.accessTokenExpires
       )
       await dispatchEvent(events.linkAccount, {
         user,
