@@ -1,8 +1,10 @@
 import { oAuth1Client, openidClient } from "./client"
 import { getState } from "./state-handler"
+import { usePKCECodeVerifier } from "./pkce-handler"
+import { OAuthCallbackError } from "../../../lib/errors"
 
 /** @param {import("types/internals").NextAuthRequest} req */
-export default async function oAuthCallback(req) {
+export default async function oAuthCallback(req, res) {
   const { provider, logger } = req.options
 
   try {
@@ -34,7 +36,7 @@ export default async function oAuthCallback(req) {
         tokens.refreshToken
       )
 
-      return getProfile({ profile: profileData, tokens, provider })
+      return getProfile({ profile: profileData, tokens, provider, logger })
     } catch (error) {
       logger.error("OAUTH_V1_GET_ACCESS_TOKEN_ERROR", error)
       throw error
@@ -47,17 +49,19 @@ export default async function oAuthCallback(req) {
 
     /** @type {import("openid-client").OpenIDCallbackChecks | import("openid-client").OAuthCallbackChecks} */
     const checks = {
-      code_verifier: req.options.pkce.code_verifier,
+      code_verifier: await usePKCECodeVerifier(req, res),
       state: getState(req),
     }
     let profile
     let tokens
 
     if (provider.idToken) {
+      // Handle OIDC
       // TODO: Add nonce check
       tokens = await client.callback(provider.callbackUrl, params, checks)
       profile = tokens.claims()
     } else {
+      // Handle pure OAuth 2
       tokens = await client.oauthCallback(provider.callbackUrl, params, checks)
       profile = await client.userinfo(tokens)
     }
@@ -67,18 +71,14 @@ export default async function oAuthCallback(req) {
 
     return getProfile({ profile, provider, tokens, logger })
   } catch (error) {
-    logger.error("OAUTH_GET_ACCESS_TOKEN_ERROR", error, provider.id)
-    throw error
+    logger.error("OAUTH_CALLBACK_ERROR", error, provider.id)
+    throw new OAuthCallbackError(error)
   }
 }
 
 /**
  * Returns profile, raw profile and auth provider details
- * @param {{
-     profile: import("types").Profile
-     tokens: import("openid-client").TokenSet
-     provider: import("types/providers").AppProvider
- * }} profileParams
+ * @param {import("types/internals/oauth").GetProfileParams} params
  */
 async function getProfile({ profile: OAuthProfile, tokens, provider, logger }) {
   try {
@@ -96,7 +96,7 @@ async function getProfile({ profile: OAuthProfile, tokens, provider, logger }) {
       },
       OAuthProfile,
     }
-  } catch (exception) {
+  } catch (error) {
     // If we didn't get a response either there was a problem with the provider
     // response *or* the user cancelled the action with the provider.
     //
@@ -104,7 +104,7 @@ async function getProfile({ profile: OAuthProfile, tokens, provider, logger }) {
     // all providers, so we return an empty object; the user should then be
     // redirected back to the sign up page. We log the error to help developers
     // who might be trying to debug this when configuring a new provider.
-    logger.error("OAUTH_PARSE_PROFILE_ERROR", exception, OAuthProfile)
+    logger.error("OAUTH_PARSE_PROFILE_ERROR", error, OAuthProfile)
     return {
       profile: null,
       account: null,

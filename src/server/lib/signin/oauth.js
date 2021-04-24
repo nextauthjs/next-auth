@@ -1,13 +1,19 @@
 import { openidClient, oAuth1Client } from "../oauth/client"
 import logger from "../../../lib/logger"
-import { getState } from "../oauth/state-handler"
+import { createState } from "../oauth/state-handler"
+import { createPKCE } from "../oauth/pkce-handler"
 
-/** @param {import("types/internals").NextAuthRequest} req */
-export default async function getAuthorizationUrl(req) {
-  const { provider } = req.options
+/**
+ * @param {import("types/internals").NextAuthRequest} req
+ * @param {import("types/internals").NextAuthResponse} res
+ */
+export default async function getAuthorizationUrl(req, res) {
+  /** @type {import("types/providers").OAuthConfig} */
+  const provider = req.options.provider
 
   delete req.query?.nextauth
   const params = {
+    scope: provider.scope,
     ...provider.params,
     ...req.query,
   }
@@ -31,9 +37,10 @@ export default async function getAuthorizationUrl(req) {
 
   // TODO: authorizationParams vs params. What's the difference?
   const client = await openidClient(req.options)
+  const pkce = await createPKCE(req, res)
   return client.authorizationUrl({
     ...params,
-    scope: provider.scope,
-    state: getState(req),
+    ...pkce,
+    state: createState(req),
   })
 }
