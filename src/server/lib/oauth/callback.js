@@ -63,7 +63,7 @@ export default async function oAuthCallback(req) {
     }
 
     // If a user object is supplied (e.g. Apple provider) add it to the profile object
-    profile.user = req.body.user ?? JSON.parse(req.query.user) ?? undefined
+    profile.user = JSON.parse(req.body.user ?? req.query.user ?? null)
 
     return getProfile({ profile, provider, tokens, logger })
   } catch (error) {
