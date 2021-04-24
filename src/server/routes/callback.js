@@ -133,6 +133,8 @@ export default async function callback (req, res) {
       logger.error('OAUTH_CALLBACK_ERROR', error)
       return res.redirect(`${baseUrl}${basePath}/error?error=Callback`)
     }
+  } else if (provider.type === 'email' && req.method === 'HEAD') {
+    return res.redirect(baseUrl)
   } else if (provider.type === 'email') {
     try {
       if (!adapter) {
