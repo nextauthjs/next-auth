@@ -1,6 +1,6 @@
 import { AppOptions } from "./internals"
 import { User, Profile, Session } from "."
-import { EmailConfig, SendVerificationRequest } from "./providers"
+import { EmailConfig } from "./providers"
 import { ConnectionOptions } from "typeorm"
 
 /** Legacy */
