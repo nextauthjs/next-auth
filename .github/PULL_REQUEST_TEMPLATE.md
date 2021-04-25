@@ -34,6 +34,12 @@ merge of your pull request!
 
 ## Affected issues 🎟
 
-<!-- try to browse and link issues that might be solved/affected by this PR to gain visibility -->
+Please [scout and link issues](https://github.com/nextauthjs/next-auth/issues) that might be solved by this PR.
 
-...
+If you write `"Fixes"` or `"Closes"` before the issue link like so:
+
+```
+Fixes #359
+```
+
+the connected issue will be automatically closed once the PR is merged and hence help with maintenance of the library 😊
