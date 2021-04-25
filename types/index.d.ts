@@ -1,9 +1,14 @@
-// Minimum TypeScript Version: 3.5
+// Minimum TypeScript Version: 3.6
 
 /// <reference types="node" />
 
 import { ConnectionOptions } from "typeorm"
-import { Adapter } from "./adapters"
+import {
+  Adapter,
+  Session as AdapterSession,
+  Profile as AdapterProfile,
+  VerificationRequest,
+} from "./adapters"
 import { JWTOptions, JWT } from "./jwt"
 import { AppProviders } from "./providers"
 import {
@@ -18,7 +23,12 @@ import {
  *
  * [Documentation](https://next-auth.js.org/configuration/options#options)
  */
-export interface NextAuthOptions {
+export interface NextAuthOptions<
+  TUser extends User = User,
+  TProfile extends AdapterProfile = AdapterProfile,
+  TSession extends AdapterSession = AdapterSession,
+  TVerificationRequest extends VerificationRequest = VerificationRequest
+> {
   /**
    * An array of authentication providers for signing in
    * (e.g. Google, Facebook, Twitter, GitHub, Email, etc) in any order.
@@ -111,7 +121,9 @@ export interface NextAuthOptions {
    *
    * [Documentation](https://next-auth.js.org/configuration/options#events) | [Events documentation](https://next-auth.js.org/configuration/events)
    */
-  events?: EventsOptions
+  events?: Partial<
+    JWTEventOptions<TUser> | SessionEventsOptions<TUser, TSession>
+  >
   /**
    * By default NextAuth.js uses a database adapter that uses TypeORM and supports MySQL, MariaDB, Postgres and MongoDB and SQLite databases.
    * An alternative adapter that uses Prisma, which currently supports MySQL, MariaDB and Postgres, is also included.
@@ -127,7 +139,7 @@ export interface NextAuthOptions {
    * [Default adapter](https://next-auth.js.org/schemas/adapters#typeorm-adapter) |
    * [Community adapters](https://github.com/nextauthjs/adapters)
    */
-  adapter?: Adapter
+  adapter?: Adapter<TUser, TProfile, TSession, TVerificationRequest>
   /**
    * Set debug to true to enable debug messages for authentication and database operations.
    * * **Default value**: `false`
@@ -342,20 +354,59 @@ export interface CookiesOptions {
 }
 
 /** [Documentation](https://next-auth.js.org/configuration/events) */
-export type EventType =
-  | "signIn"
-  | "signOut"
-  | "createUser"
-  | "updateUser"
-  | "linkAccount"
-  | "session"
-  | "error"
+export type EventCallback<MessageType = any> = (
+  message: MessageType
+) => Promise<void>
 
-/** [Documentation](https://next-auth.js.org/configuration/events) */
-export type EventCallback = (message: any) => Promise<void>
+export interface SessionEventMessage {
+  session: Session & Record<string, any>
+  jwt?: JWT
+}
 
-/** [Documentation](https://next-auth.js.org/configuration/events) */
-export type EventsOptions = Partial<Record<EventType, EventCallback>>
+/**
+ * If using a `credentials` type auth, the user is the raw response from your
+ * credential provider.
+ * For other providers, you'll get the User object from your adapter, the account,
+ * and an indicator if the user was new to your Adapter.
+ */
+export interface SignInEventMessage<TUser> {
+  user: TUser
+  account: Record<string, unknown>
+  isNewUser?: boolean
+}
+
+export interface LinkAccountEventMessage<TUser> {
+  user: TUser
+  providerAccount: Record<string, unknown>
+}
+
+export interface EventOptions<TUser> {
+  signIn: EventCallback<SignInEventMessage<TUser>>
+  signOut: EventCallback
+  createUser: EventCallback<TUser>
+  updateUser: EventCallback<TUser>
+  linkAccount: EventCallback<LinkAccountEventMessage<TUser>>
+  session: EventCallback
+  error: EventCallback
+}
+
+export interface JWTEventOptions<TUser> extends EventOptions<TUser> {
+  signOut: EventCallback<JWT & Record<string, any>>
+  session: EventCallback<{
+    session: Session & Record<string, any>
+    jwt: JWT
+  }>
+}
+
+export interface SessionEventsOptions<TUser, TAdapterSession>
+  extends EventOptions<TUser> {
+  signOut: EventCallback<TAdapterSession | null>
+  session: EventCallback<{
+    session: Session & Record<string, any>
+  }>
+}
+
+export type EventType = keyof EventOptions<any>
 
 /** [Documentation](https://next-auth.js.org/configuration/pages) */
 export interface PagesOptions {
