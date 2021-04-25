@@ -32,7 +32,7 @@ export function useSession(): [Session | null, boolean]
  *
  * [Documentation](https://next-auth.js.org/getting-started/client#getsession)
  */
-export function getSession(options: GetSessionOptions): Promise<Session | null>
+export function getSession(options?: GetSessionOptions): Promise<Session | null>
 
 /**
  * Alias for `getSession`
