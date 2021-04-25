@@ -52,7 +52,7 @@ export const session: typeof getSession
  *
  * [Documentation](https://next-auth.js.org/getting-started/client#getcsrftoken)
  */
-export function getCsrfToken(ctxOrReq: CtxOrReq): Promise<string | null>
+export function getCsrfToken(ctxOrReq?: CtxOrReq): Promise<string | null>
 
 /**
  * Alias for `getCsrfToken`
