@@ -1,6 +1,6 @@
 ---
-name: Typescript
-about: Ask a question about NextAuth.js Typescript integration
+name: TypeScript
+about: Ask a question about NextAuth.js TypeScript integration
 labels:
   - question
   - TypeScript
