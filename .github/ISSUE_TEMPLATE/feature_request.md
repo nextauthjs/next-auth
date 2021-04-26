@@ -21,7 +21,7 @@ function myAwesomeNextAuthFeature() {
 }
 ```
 
-Take time thinking what you want to say and helps us understand your proposal making sure that this description contains:
+Take time thinking what you want to say and help us understand your proposal making sure that this description contains:
 
 - **purpose of the feature**
 - **potential problems**
