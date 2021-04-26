@@ -1,6 +1,6 @@
 ---
-name: Typescript
-about: Ask a question about NextAuth.js Typescript integration
+name: TypeScript
+about: Ask a question about NextAuth.js TypeScript integration
 labels:
   - question
   - TypeScript
@@ -25,12 +25,12 @@ function myAwesomeNextAuthFeature() {
 
 ## How to reproduce ☕️
 
-Help us help you by explaining here how to reproduce the doubt you're facing on how to use NextAuth.
+We encourage you to use the template set-up on **CodeSandbox** as a playground to represent your question or doubt:
 
-In case the types are wrong or could be improved, past screenshots here showcasing the complains/problems reported by the TS server.
+- [`next-auth-typescript-example`](https://codesandbox.io/s/next-auth-typescript-example-se32w)
 
 ## Contributing 🙌🏽
 
-It takes a lot of work 🏋🏻‍♀️ maintaining a library like `next-auth`, any contribution is more than welcome 💚
+It takes a lot of work 🏋🏻‍♀️ maintaining a library like `next-auth`; any contribution is more than welcome 💚
 
-In case you're willing to help fix this bug please let us know here and we'll reach you 😊 . Otherwise you can have a look at the issues labelled with [`"good first issue"`](https://github.com/nextauthjs/next-auth/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) and pick any of them.
+In case you're willing to help answer this TypeScript question, please let us know here, and we'll reach you 😊 . Otherwise, you can have a look at the issues labelled with [`"good first issue"`](https://github.com/nextauthjs/next-auth/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) and pick any of them.

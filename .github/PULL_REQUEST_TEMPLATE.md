@@ -18,14 +18,13 @@ merge of your pull request!
 
 ## Reasoning 💡
 
-<!-- What changes are being made? (What feature/bug is being fixed here?) -->
-
-...
+What changes are being made? What feature/bug is being fixed here?
 
 ## Checklist 🧢
 
-<!-- feel free cross items ( like this `~[] item~` ) if they're irrelevant to your changes -->
-<!-- to check an item, place an "x" in the box like so: "- [x] Documentation" -->
+Feel free cross items ( like this `~[] item~` ) if they're irrelevant to your changes.
+
+To check an item, place an `x` in the box like so: `- [x] Documentation`.
 
 - [ ] Documentation
 - [ ] Tests
