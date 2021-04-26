@@ -1,12 +1,12 @@
 # Multi stage build to allow us to improve performance
-FROM node:10-alpine as base
+FROM node:12-alpine as base
 WORKDIR /usr/src/app
 
 # Install basic dependancies (Next.js, React)
 COPY test/docker/app/package*.json ./
 RUN npm ci --only=production
 
-FROM node:10-alpine as app
+FROM node:12-alpine as app
 COPY --from=base /usr/src/app ./
 
 # Copy last build of library into the image and install dependences for it.

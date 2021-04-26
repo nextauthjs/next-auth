@@ -1,5 +1,5 @@
-import NextAuth from 'next-auth'
-import Providers from 'next-auth/providers'
+import NextAuth from "next-auth"
+import Providers from "next-auth/providers"
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
@@ -8,7 +8,7 @@ const options = {
   providers: [
     Providers.Email({
       server: process.env.NEXTAUTH_EMAIL_SERVER,
-      from: process.env.NEXTAUTH_EMAIL_FROM
+      from: process.env.NEXTAUTH_EMAIL_FROM,
     }),
     Providers.Apple({
       clientId: process.env.NEXTAUTH_APPLE_ID,
@@ -16,30 +16,30 @@ const options = {
         appleId: process.env.NEXTAUTH_APPLE_ID,
         teamId: process.env.NEXTAUTH_APPLE_TEAM_ID,
         privateKey: process.env.NEXTAUTH_APPLE_PRIVATE_KEY,
-        keyId: process.env.NEXTAUTH_APPLE_KEY_ID
-      }
+        keyId: process.env.NEXTAUTH_APPLE_KEY_ID,
+      },
     }),
     Providers.Auth0({
       clientId: process.env.NEXTAUTH_AUTH0_ID,
       clientSecret: process.env.NEXTAUTH_AUTH0_SECRET,
-      domain: process.env.NEXTAUTH_AUTH0_DOMAIN
+      domain: process.env.NEXTAUTH_AUTH0_DOMAIN,
     }),
     Providers.Facebook({
       clientId: process.env.NEXTAUTH_FACEBOOK_ID,
-      clientSecret: process.env.NEXTAUTH_FACEBOOK_SECRET
+      clientSecret: process.env.NEXTAUTH_FACEBOOK_SECRET,
     }),
     Providers.GitHub({
       clientId: process.env.NEXTAUTH_GITHUB_ID,
-      clientSecret: process.env.NEXTAUTH_GITHUB_SECRET
+      clientSecret: process.env.NEXTAUTH_GITHUB_SECRET,
     }),
     Providers.Google({
       clientId: process.env.NEXTAUTH_GOOGLE_ID,
-      clientSecret: process.env.NEXTAUTH_GOOGLE_SECRET
+      clientSecret: process.env.NEXTAUTH_GOOGLE_SECRET,
     }),
     Providers.Twitter({
       clientId: process.env.NEXTAUTH_TWITTER_ID,
-      clientSecret: process.env.NEXTAUTH_TWITTER_SECRET
-    })
+      clientSecret: process.env.NEXTAUTH_TWITTER_SECRET,
+    }),
   ],
   // Database optional. MySQL, Maria DB, Postgres and MongoDB are supported.
   // https://next-auth.js.org/configuration/database
@@ -47,7 +47,6 @@ const options = {
   // Notes:
   // * You must to install an appropriate node_module for your database
   // * The Email provider requires a database (OAuth providers do not)
-  database: process.env.NEXTAUTH_DATABASE_URL,
 
   // The secret should be set to a reasonably long random string.
   // It is used to sign cookies and to sign and encrypt JSON Web Tokens, unless
@@ -58,7 +57,7 @@ const options = {
     // Use JSON Web Tokens for session instead of database sessions.
     // This option can be used with or without a database for users/accounts.
     // Note: `jwt` is automatically set to `true` if no database is specified.
-    jwt: true
+    jwt: true,
 
     // Seconds - How long until an idle session expires and is no longer valid.
     // maxAge: 30 * 24 * 60 * 60, // 30 days
@@ -75,10 +74,8 @@ const options = {
   jwt: {
     // A secret to use for key generation (you should set this explicitly)
     // secret: 'INp8IvdIyeMcoGAgFGoA61DdBglwwSqnXJZkgz8PSnw',
-
     // Set to true to use encryption (default: false)
     // encryption: true,
-
     // You can define your own encode/decode functions for signing and encryption
     // if you want to override the default behaviour.
     // async encode({ secret, token, maxAge }) {},
@@ -109,10 +106,10 @@ const options = {
 
   // Events are useful for logging
   // https://next-auth.js.org/configuration/events
-  events: { },
+  events: {},
 
   // Enable debug messages in the console if you are having problems
-  debug: false
+  debug: false,
 }
 
 export default (req, res) => NextAuth(req, res, options)
