@@ -1,13 +1,17 @@
 ---
-name: Question
-about: Ask a question about NextAuth.js or for help using it
-labels: question
-assignees: ""
+name: Typescript
+about: Ask a question about NextAuth.js Typescript integration
+labels:
+  - question
+  - TypeScript
+assignees:
+  - lluia
+  - balazsorban44
 ---
 
 ## Question 💬
 
-Please provide an in-depth description of the question you have.
+Please provide an in-depth description of the question you have when using NextAuth.js on a Typescript project or when consuming the built-in types for `next-auth`.
 
 Make sure you [link]() to external documentation if necessary and provide inline code examples like so:
 
@@ -22,6 +26,8 @@ function myAwesomeNextAuthFeature() {
 ## How to reproduce ☕️
 
 Help us help you by explaining here how to reproduce the doubt you're facing on how to use NextAuth.
+
+In case the types are wrong or could be improved, past screenshots here showcasing the complains/problems reported by the TS server.
 
 ## Contributing 🙌🏽
 
