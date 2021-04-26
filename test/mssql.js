@@ -39,8 +39,6 @@ function printSchema() {
           {}
         )
       );
-    } catch (error) {
-      return Promise.reject(error);
     } finally {
       if (connection) {
         connection.close();
@@ -51,34 +49,30 @@ function printSchema() {
 const assert = require('assert');
 /** RUN */
 (async () => {
-  try {
-    const testResultSchema = await printSchema();
-    const actualTables = Object.keys(testResultSchema);
-    assert.equal(
-      TABLES,
-      actualTables.join(),
-      `MSSQL Schema: Expected tables [${TABLES.join()}]\n to be [${actualTables.join()}]`
-    );
-    //cheap deepEquals, with hints
-    for (const tableName of TABLES) {
-      const newLocal = expectedSchema[tableName];
-      for (const columnName of Object.keys(newLocal)) {
-        const expected = expectedSchema[tableName][columnName];
-        const actual = testResultSchema[tableName][columnName];
-        for (const propKey of Object.keys(expected)) {
-          assert.equal(
-            expected[propKey],
-            actual[propKey],
-            `Expected ${tableName}.${columnName}.${propKey}=${actual[propKey]}` +
-              ` to be ${expected[propKey]}`
-          );
-        }
+  const testResultSchema = await printSchema();
+  const actualTables = Object.keys(testResultSchema);
+  assert.equal(
+    TABLES,
+    actualTables.join(),
+    `MSSQL Schema: Expected tables [${TABLES.join()}]\n to be [${actualTables.join()}]`
+  );
+  //cheap deepEquals, with hints
+  for (const tableName of TABLES) {
+    const newLocal = expectedSchema[tableName];
+    for (const columnName of Object.keys(newLocal)) {
+      const expected = expectedSchema[tableName][columnName];
+      const actual = testResultSchema[tableName][columnName];
+      for (const propKey of Object.keys(expected)) {
+        assert.equal(
+          expected[propKey],
+          actual[propKey],
+          `Expected ${tableName}.${columnName}.${propKey}=${actual[propKey]}` +
+            ` to be ${expected[propKey]}`
+        );
       }
     }
-    console.log('mssql: schema ok');
-  } catch (error) {
-    return Promise.reject(error);
   }
+  console.log('mssql: schema ok');
 })()
   .then(() => process.exit())
   .catch((error) => {

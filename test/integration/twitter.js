@@ -18,7 +18,6 @@ describe('Twitter (OAuth 1.1 flow)', async function () {
   before(async () => {
     browser = await puppeteer.launch(puppeteerOptions)
     page = await browser.newPage()
-    return Promise.resolve()
   })
 
   it('should show button on sign in page', async function () {
@@ -26,7 +25,6 @@ describe('Twitter (OAuth 1.1 flow)', async function () {
     await page.goto(`${BASE_URL}/api/auth/signin?callbackUrl=${encodeURIComponent(CALLBACK_URL)}`)
     await page.waitForSelector(`form[action="${BASE_URL}/api/auth/signin/twitter"] button`)
     await page.click(`form[action="${BASE_URL}/api/auth/signin/twitter"] button`)
-    return Promise.resolve()
   })
 
   it('should be redirected to provider', async function () {
@@ -39,13 +37,11 @@ describe('Twitter (OAuth 1.1 flow)', async function () {
     await page.waitForSelector('input[name="session[password]"]')
     await page.click('input[name="session[password]"]')
     await page.keyboard.type(PASSWORD)
-    return Promise.resolve()
   })
 
   it('should be able to sign in with provider', async function () {
     // Click submit
     await page.click('form[action="https://api.twitter.com/oauth/authenticate"] [type="submit"]')
-    return Promise.resolve()
   })
 
   it('should be returned to callback URL', async function () {
@@ -54,18 +50,14 @@ describe('Twitter (OAuth 1.1 flow)', async function () {
 
     // Check we are at the correct callback URL
     assert.equal(page.url(), CALLBACK_URL)
-
-    return Promise.resolve()
   })
 
   it('should be signed in', async function () {
     // Check we are signed in
     await page.waitForSelector('#nextauth-signed-in')
-    return Promise.resolve()
   })
 
   after(async () => {
     await browser.close()
-    return Promise.resolve()
   })
 })

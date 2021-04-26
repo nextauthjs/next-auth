@@ -81,7 +81,7 @@ const Adapter = (config, options = {}) => {
       return null
     }
 
-    return Promise.resolve({
+    return {
       createUser,
       getUser,
       getUserByEmail,
@@ -97,7 +97,7 @@ const Adapter = (config, options = {}) => {
       createVerificationRequest,
       getVerificationRequest,
       deleteVerificationRequest
-    })
+    }
   }
 
   return {
