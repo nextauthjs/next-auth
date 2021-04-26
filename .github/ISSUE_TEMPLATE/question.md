@@ -21,7 +21,7 @@ function myAwesomeNextAuthFeature() {
 
 ## How to reproduce ☕️
 
-We encourage you to use the template set-up on **Codesandbox** as a playground to represent your question or doubt:
+We encourage you to use the template set-up on **CodeSandbox** as a playground to represent your question or doubt:
 
 - [`next-auth-example`](https://codesandbox.io/s/next-auth-example-1kktb)
 

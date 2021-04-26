@@ -27,7 +27,7 @@ Take time thinking about what you want to say and help us understand your propos
 - **potential problems**
 - **potential alternatives**
 
-You can use one of the templates set-up on **Codesandbox** to illustrate better your idea:
+You can use one of the templates set up on **CodeSandbox** to better illustrate your idea:
 
 - [`next-auth-example`](https://codesandbox.io/s/next-auth-example-1kktb)
 - [`next-auth-typescript-example`](https://codesandbox.io/s/next-auth-typescript-example-se32w)

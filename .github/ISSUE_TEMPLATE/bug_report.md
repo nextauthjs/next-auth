@@ -13,7 +13,7 @@ Please provide a clear and concise description of the bug in NextAuth.js.
 
 ## How to reproduce ☕️
 
-We encourage you to use one of the templates set up on **Codesandbox** to reproduce your issue:
+We encourage you to use one of the templates set up on **CodeSandbox** to reproduce your issue:
 
 - [`next-auth-example`](https://codesandbox.io/s/next-auth-example-1kktb)
 - [`next-auth-typescript-example`](https://codesandbox.io/s/next-auth-typescript-example-se32w)
