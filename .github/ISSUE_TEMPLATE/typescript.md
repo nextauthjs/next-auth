@@ -25,9 +25,9 @@ function myAwesomeNextAuthFeature() {
 
 ## How to reproduce ☕️
 
-Help us help you by explaining here how to reproduce the doubt you're facing on how to use NextAuth.
+We encourage you to use the template set-up on **Codesandbox** as a playground to represent your question or doubt:
 
-In case the types are wrong or could be improved, post screenshots here showcasing the complaints/problems reported by the TS server.
+- [`next-auth-typescript-example`](https://codesandbox.io/s/next-auth-typescript-example-se32w)
 
 ## Contributing 🙌🏽
 

@@ -21,7 +21,9 @@ function myAwesomeNextAuthFeature() {
 
 ## How to reproduce ☕️
 
-Help us help you by explaining here how to reproduce the doubt you're facing on how to use NextAuth.
+We encourage you to use the template set-up on **Codesandbox** as a playground to represent your question or doubt:
+
+- [`next-auth-example`](https://codesandbox.io/s/next-auth-example-1kktb)
 
 ## Contributing 🙌🏽
 
