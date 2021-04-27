@@ -35,7 +35,7 @@ export type EmailAppProvider = AppProvider & {
   sendVerificationRequest: (
     params: SendVerificationRequestParams
   ) => Promise<void>
-  maxAge: number | undefined
+  maxAge: number
 }
 
 export interface AdapterInstance<
