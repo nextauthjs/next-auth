@@ -59,7 +59,7 @@ export interface AdapterInstance<
     providerAccountId: string,
     refreshToken: string,
     accessToken: string,
-    accessTokenExpires: number | null
+    accessTokenExpires: null
   ) => Promise<void>
   createSession: (user: TUser) => Promise<TSession>
   getSession: (sessionToken: string) => Promise<TSession | null>
