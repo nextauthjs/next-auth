@@ -15,7 +15,7 @@ Adapters.TypeORM.Adapter({
 })
 
 // ExpectType PrismaAdapter
-Adapters.Prisma.Adapter({
+Adapters.Prisma.LegacyAdapter({
   prisma: {},
   modelMapping: {
     User: "foo",

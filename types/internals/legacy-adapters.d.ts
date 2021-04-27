@@ -87,7 +87,7 @@ export interface AdapterInstance<
   ) => Promise<void>
 }
 
-interface Adapter<
+interface LegacyAdapter<
   TUser extends User = any,
   TProfile extends Profile = any,
   TSession extends Session = any,
@@ -138,7 +138,7 @@ interface TypeORMAdapter<
         }
       }
     }
-  ) => Adapter<U, Profile, S, VR>
+  ) => LegacyAdapter<U, Profile, S, VR>
   Models: {
     Account: {
       model: TypeORMAccountModel
@@ -160,7 +160,7 @@ interface TypeORMAdapter<
 }
 
 interface PrismaAdapter {
-  Adapter: (config: {
+  LegacyAdapter: (config: {
     prisma: any
     modelMapping?: {
       User: string
@@ -168,7 +168,7 @@ interface PrismaAdapter {
       Session: string
       VerificationRequest: string
     }
-  }) => Adapter
+  }) => LegacyAdapter
 }
 
 declare class TypeORMAccountModel {
@@ -230,7 +230,7 @@ declare class TypeORMVerificationRequestModel implements VerificationRequest {
 }
 
 export {
-  Adapter,
+  LegacyAdapter,
   BuiltInAdapters as Adapters,
   TypeORMAdapter,
   TypeORMAccountModel,
@@ -239,6 +239,3 @@ export {
   TypeORMVerificationRequestModel,
   PrismaAdapter,
 }
-
-declare const Adapters: BuiltInAdapters
-export default Adapters

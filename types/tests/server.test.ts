@@ -1,6 +1,6 @@
 import Providers, { AppProvider, OAuthConfig } from "next-auth/providers"
 import {
-  Adapter,
+  LegacyAdapter,
   EmailAppProvider,
   Profile,
   Session,
@@ -67,7 +67,7 @@ const exampleVerificatoinRequest: VerificationRequest = {
   expires: new Date(),
 }
 
-const adapter: Adapter<
+const adapter: LegacyAdapter<
   NextAuthTypes.User,
   Profile,
   Session,

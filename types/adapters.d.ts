@@ -2,15 +2,12 @@ import { AppOptions } from "./internals"
 import { User, Profile, Session } from "."
 import { EmailConfig, SendVerificationRequest } from "./providers"
 
+import { BuiltInAdapters } from "internals/legacy-adapters"
 /** Legacy */
 export * from "internals/legacy-adapters"
 
-export interface VerificationRequest {
-  id: string
-  identifier: string
-  token: string
-  expires: Date
-}
+declare const Adapters: BuiltInAdapters
+export default Adapters
 
 /**
  * Using a custom adapter you can connect to any database backend or even several different databases.
@@ -58,7 +55,12 @@ export interface AdapterInstance<U = User, P = Profile, S = Session> {
     verificationToken: string,
     secret: string,
     provider: Required<EmailConfig>
-  ): Promise<VerificationRequest | null>
+  ): Promise<{
+    id: string
+    identifier: string
+    token: string
+    expires: Date
+  } | null>
   deleteVerificationRequest?(
     identifier: string,
     verificationToken: string,
