@@ -57,13 +57,13 @@ export interface AdapterInstance<U = User, P = Profile, S = Session> {
     identifier: string,
     verificationToken: string,
     secret: string,
-    provider: EmailConfig
+    provider: Required<EmailConfig>
   ): Promise<VerificationRequest | null>
   deleteVerificationRequest?(
     identifier: string,
     verificationToken: string,
     secret: string,
-    provider: EmailConfig
+    provider: Required<EmailConfig>
   ): Promise<void>
 }
 

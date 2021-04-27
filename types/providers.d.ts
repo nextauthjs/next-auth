@@ -148,7 +148,13 @@ export interface EmailConfig extends CommonProviderOptions {
   type: "email"
   // TODO: Make use of https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html
   server: string | EmailConfigServerOptions
+  /** @default "NextAuth <no-reply@example.com>" */
   from?: string
+  /**
+   * How long until the e-mail can be used to log the user in,
+   * in seconds. Defaults to 1 day
+   * @default 86400
+   */
   maxAge?: number
   sendVerificationRequest: SendVerificationRequest
 }
