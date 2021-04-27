@@ -132,16 +132,12 @@ export interface EmailConfigServerOptions {
   }
 }
 
-interface SendVerificationParams {
-  identifier: string
-  url: string
-  baseUrl: string
-  token: string
-  provider: EmailConfig
-}
-
 export type SendVerificationRequest = (
-  params: SendVerificationParams
+  identifier: string,
+  url: string,
+  baseUrl: string,
+  token: string,
+  provider: EmailConfig
 ) => Awaitable<void>
 
 export interface EmailConfig extends CommonProviderOptions {

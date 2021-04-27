@@ -3,7 +3,7 @@
 /// <reference types="node" />
 
 import { ConnectionOptions } from "typeorm"
-import { Adapter, LegacyAdapter } from "./adapters"
+import { Adapter } from "./adapters"
 import { JWTOptions, JWT } from "./jwt"
 import { AppProviders } from "./providers"
 import {
@@ -127,7 +127,7 @@ export interface NextAuthOptions {
    * [Default adapter](https://next-auth.js.org/schemas/adapters#typeorm-adapter) |
    * [Community adapters](https://github.com/nextauthjs/adapters)
    */
-  adapter?: LegacyAdapter | Adapter
+  adapter?: Adapter
   /**
    * Set debug to true to enable debug messages for authentication and database operations.
    * * **Default value**: `false`

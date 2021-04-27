@@ -1,12 +1,14 @@
 import { AppOptions } from "./internals"
 import { User, Profile, Session } from "."
 import { EmailConfig, SendVerificationRequest } from "./providers"
+import { ConnectionOptions } from "typeorm"
 
-import { BuiltInAdapters } from "internals/legacy-adapters"
 /** Legacy */
-export * from "internals/legacy-adapters"
-
-declare const Adapters: BuiltInAdapters
+declare const Adapters: {
+  Default: Adapter<ConnectionOptions>
+  TypeORM: { Adapter: Adapter<ConnectionOptions> }
+  Prisma: { Adapter: Adapter }
+}
 export default Adapters
 
 /**
