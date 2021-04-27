@@ -14,6 +14,7 @@ import extendRes from './lib/extend-res'
 import csrfTokenHandler from './lib/csrf-token-handler'
 import * as pkce from './lib/oauth/pkce-handler'
 import * as state from './lib/oauth/state-handler'
+import adapterErrorHandler from 'src/adapters/error-handler'
 
 // To work properly in production with OAuth providers the NEXTAUTH_URL
 // environment variable must be set.
@@ -86,7 +87,7 @@ async function NextAuthHandler (req, res, userOptions) {
     // Parse database / adapter
     // If adapter is provided, use it (advanced usage, overrides database)
     // If database URI or config object is provided, use it (simple usage)
-    const adapter = userOptions.adapter ?? (userOptions.database && adapters.Default(userOptions.database))
+    const adapter = adapterErrorHandler(userOptions.adapter ?? (userOptions.database && adapters.Default(userOptions.database)))
 
     // User provided options are overriden by other options,
     // except for the options with special handling above
