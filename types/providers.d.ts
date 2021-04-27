@@ -132,19 +132,25 @@ export interface EmailConfigServerOptions {
   }
 }
 
+interface SendVerificationParams {
+  identifier: string
+  url: string
+  baseUrl: string
+  token: string
+  provider: EmailConfig
+}
+
+export type SendVerificationRequest = (
+  params: SendVerificationParams
+) => Awaitable<void>
+
 export interface EmailConfig extends CommonProviderOptions {
   type: "email"
   // TODO: Make use of https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html
   server: string | EmailConfigServerOptions
   from?: string
   maxAge?: number
-  sendVerificationRequest(params: {
-    identifier: string
-    url: string
-    baseUrl: string
-    token: string
-    provider: EmailConfig
-  }): Awaitable<void>
+  sendVerificationRequest: SendVerificationRequest
 }
 
 export type EmailProvider = (options: Partial<EmailConfig>) => EmailConfig
