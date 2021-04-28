@@ -233,6 +233,8 @@ export interface LoggerInstance {
  */
 export interface TokenSet {
   accessToken: string
+  /** Kept for historical reasons, check out `expires_in` */
+  accessTokenExpires: null
   idToken?: string
   refreshToken?: string
   access_token: string
