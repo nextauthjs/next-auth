@@ -42,7 +42,7 @@ export interface AdapterInstance<U = User, P = Profile, S = Session> {
     accessTokenExpires?: null
   ): Promise<void>
   /** @todo Implement */
-  unlinkAccont?(
+  unlinkAccount?(
     userId: string,
     providerId: string,
     providerAccountId: string
