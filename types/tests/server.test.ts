@@ -1,11 +1,9 @@
-import Providers, { AppProvider, OAuthConfig } from "next-auth/providers"
-import {
-  Adapter,
-  EmailAppProvider,
-  Profile,
-  Session,
-  VerificationRequest,
-} from "next-auth/adapters"
+import Providers, {
+  AppProvider,
+  EmailConfig,
+  OAuthConfig,
+} from "next-auth/providers"
+import { Adapter, AdapterInstance } from "next-auth/adapters"
 import NextAuth, * as NextAuthTypes from "next-auth"
 import { IncomingMessage, ServerResponse } from "http"
 import * as JWTType from "next-auth/jwt"
@@ -54,74 +52,86 @@ const exampleUser: NextAuthTypes.User = {
   email: "",
 }
 
-const exampleSession: Session = {
+const exampleSession: NextAuthTypes.Session = {
   userId: "",
   accessToken: "",
   sessionToken: "",
-  expires: new Date(),
 }
 
-const exampleVerificatoinRequest: VerificationRequest = {
+const exampleVerificationRequest = {
+  id: "",
   identifier: "",
   token: "",
   expires: new Date(),
 }
 
-const adapter: Adapter<
-  NextAuthTypes.User,
-  Profile,
-  Session,
-  VerificationRequest
-> = {
-  async getAdapter(appOptions: AppOptions) {
-    return {
-      createUser: async (profile: Profile) => exampleUser,
-      getUser: async (id: string) => exampleUser,
-      getUserByEmail: async (email: string) => exampleUser,
-      getUserByProviderAccountId: async (
-        providerId: string,
-        providerAccountId: string
-      ) => exampleUser,
-      updateUser: async (user: NextAuthTypes.User) => exampleUser,
-      linkAccount: async (
-        userId: string,
-        providerId: string,
-        providerType: string,
-        providerAccountId: string,
-        refreshToken: string,
-        accessToken: string,
-        accessTokenExpires: number
-      ) => undefined,
-      createSession: async (user: NextAuthTypes.User) => exampleSession,
-      getSession: async (sessionToken: string) => exampleSession,
-      updateSession: async (session: Session, force?: boolean) =>
-        exampleSession,
-      deleteSession: async (sessionToken: string) => undefined,
-      createVerificationRequest: async (
-        email: string,
-        url: string,
-        token: string,
-        secret: string,
-        provider: EmailAppProvider,
-        options: AppOptions
-      ) => exampleVerificatoinRequest,
-      getVerificationRequest: async (
-        email: string,
-        verificationToken: string,
-        secret: string,
-        provider: AppProvider
-      ) => exampleVerificatoinRequest,
-      deleteVerificationRequest: async (
-        email: string,
-        verificationToken: string,
-        secret: string,
-        provider: AppProvider
-      ) => undefined,
-    }
-  },
+const adapter: Adapter = () => {
+  return {
+    async getAdapter(appOptions: AppOptions) {
+      return {
+        async createUser(profile) {
+          return exampleUser
+        },
+        async getUser(id) {
+          return exampleUser
+        },
+        async getUserByEmail(email) {
+          return exampleUser
+        },
+        async getUserByProviderAccountId(providerId, providerAccountId) {
+          return exampleUser
+        },
+        async updateUser(user) {
+          return exampleUser
+        },
+        async linkAccount(
+          userId,
+          providerId,
+          providerType,
+          providerAccountId,
+          refreshToken,
+          accessToken,
+          accessTokenExpires
+        ) {
+          return undefined
+        },
+        async createSession(user) {
+          return exampleSession
+        },
+        async getSession(sessionToken) {
+          return exampleSession
+        },
+        async updateSession(session, force) {
+          return exampleSession
+        },
+        async deleteSession(sessionToken) {
+          return undefined
+        },
+        async createVerificationRequest(email, url, token, secret, provider) {
+          return undefined
+        },
+        async getVerificationRequest(
+          email,
+          verificationToken,
+          secret,
+          provider
+        ) {
+          return exampleVerificationRequest
+        },
+        async deleteVerificationRequest(
+          email,
+          verificationToken,
+          secret,
+          provider
+        ) {
+          return undefined
+        },
+      }
+    },
+  }
 }
 
-const allConfig = {
+const allConfig: NextAuthTypes.NextAuthOptions = {
   providers: [
     Providers.Twitter({
       clientId: "123",
@@ -147,49 +157,36 @@ const allConfig = {
   },
   pages: pageOptions,
   callbacks: {
-    async signIn(
-      user: NextAuthTypes.User,
-      account: Record<string, unknown>,
-      profile: Record<string, unknown>
-    ) {
+    async signIn(user, account, profile) {
       return true
     },
-    async redirect(url: string, baseUrl: string) {
+    async redirect(url, baseUrl) {
       return "path/to/foo"
     },
-    async session(
-      session: NextAuthTypes.Session,
-      userOrToken: NextAuthTypes.User
-    ) {
+    async session(session, userOrToken) {
       return { ...session }
     },
-    async jwt(
-      token: JWTType.JWT,
-      user?: NextAuthTypes.User,
-      account?: Record<string, unknown>,
-      profile?: Record<string, unknown>,
-      isNewUser?: boolean
-    ) {
+    async jwt(token, user, account, profile, isNewUser) {
       return token
     },
   },
   events: {
-    async signIn(message: string) {
+    async signIn(message) {
       return undefined
     },
-    async signOut(message: string) {
+    async signOut(message) {
       return undefined
     },
-    async createUser(message: string) {
+    async createUser(message) {
       return undefined
     },
-    async linkAccount(message: string) {
+    async linkAccount(message) {
       return undefined
     },
-    async session(message: string) {
+    async session(message) {
       return undefined
     },
-    async error(message: string) {
+    async error(message) {
       return undefined
     },
   },
