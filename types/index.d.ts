@@ -122,7 +122,7 @@ export interface NextAuthOptions<
    * [Documentation](https://next-auth.js.org/configuration/options#events) | [Events documentation](https://next-auth.js.org/configuration/events)
    */
   events?: Partial<
-    JWTEventOptions<TUser> | SessionEventsOptions<TUser, TSession>
+    JWTEventCallbacks<TUser> | SessionEventCallbacks<TUser, TSession>
   >
   /**
    * By default NextAuth.js uses a database adapter that uses TypeORM and supports MySQL, MariaDB, Postgres and MongoDB and SQLite databases.
@@ -354,14 +354,9 @@ export interface CookiesOptions {
 }
 
 /** [Documentation](https://next-auth.js.org/configuration/events) */
-export type EventCallback<MessageType = any> = (
+export type EventCallback<MessageType = unknown> = (
   message: MessageType
 ) => Promise<void>
-
-export interface SessionEventMessage {
-  session: Session & Record<string, any>
-  jwt?: JWT
-}
 
 /**
  * If using a `credentials` type auth, the user is the raw response from your
@@ -380,33 +375,51 @@ export interface LinkAccountEventMessage<TUser> {
   providerAccount: Record<string, unknown>
 }
 
-export interface EventOptions<TUser> {
+/**
+ * The various event callbacks you can register for from next-auth
+ */
+export interface EventCallbacks<
+  TUser = unknown,
+  TSignOutMessage = unknown,
+  TSessionMessage = unknown
+> {
   signIn: EventCallback<SignInEventMessage<TUser>>
-  signOut: EventCallback
+  signOut: EventCallback<TSignOutMessage>
   createUser: EventCallback<TUser>
   updateUser: EventCallback<TUser>
   linkAccount: EventCallback<LinkAccountEventMessage<TUser>>
-  session: EventCallback
+  session: EventCallback<TSessionMessage>
   error: EventCallback
 }
 
-export interface JWTEventOptions<TUser> extends EventOptions<TUser> {
-  signOut: EventCallback<JWT & Record<string, any>>
-  session: EventCallback<{
+/**
+ * The event callbacks will take this form if you are using JWTs:
+ * signOut will receive the JWT and session will receive the session and JWT.
+ */
+export type JWTEventCallbacks<TUser> = EventCallbacks<
+  TUser,
+  JWT & Record<string, any>,
+  {
     session: Session & Record<string, any>
     jwt: JWT
-  }>
-}
+  }
+>
 
-export interface SessionEventsOptions<TUser, TAdapterSession>
-  extends EventOptions<TUser> {
-  signOut: EventCallback<TAdapterSession | null>
-  session: EventCallback<{
+/**
+ * The event callbacks will take this form if you are using Sessions
+ * and not using JWTs:
+ * signOut will receive the underlying db adapter's session object, and session
+ * will receive the NextAuth client session with extra data.
+ */
+export type SessionEventCallbacks<TUser, TAdapterSession> = EventCallbacks<
+  TUser,
+  TAdapterSession | null,
+  {
     session: Session & Record<string, any>
-  }>
-}
+  }
+>
 
-export type EventType = keyof EventOptions<any>
+export type EventType = keyof EventCallbacks<any>
 
 /** [Documentation](https://next-auth.js.org/configuration/pages) */
 export interface PagesOptions {
