@@ -1,6 +1,6 @@
 export default function FortyTwo(options) {
   return {
-    id: '42',
+    id: '42-school',
     name: '42 School',
     type: 'oauth',
     version: '2.0',
