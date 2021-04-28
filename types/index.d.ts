@@ -3,12 +3,7 @@
 /// <reference types="node" />
 
 import { ConnectionOptions } from "typeorm"
-import {
-  Adapter,
-  Session as AdapterSession,
-  Profile as AdapterProfile,
-  VerificationRequest,
-} from "./adapters"
+import { Adapter } from "./adapters"
 import { JWTOptions, JWT } from "./jwt"
 import { AppProviders } from "./providers"
 import {
@@ -25,9 +20,8 @@ import {
  */
 export interface NextAuthOptions<
   TUser extends User = User,
-  TProfile extends AdapterProfile = AdapterProfile,
-  TSession extends AdapterSession = AdapterSession,
-  TVerificationRequest extends VerificationRequest = VerificationRequest
+  TProfile extends Profile = Profile,
+  TSession extends Session = Session
 > {
   /**
    * An array of authentication providers for signing in
@@ -139,7 +133,7 @@ export interface NextAuthOptions<
    * [Default adapter](https://next-auth.js.org/schemas/adapters#typeorm-adapter) |
    * [Community adapters](https://github.com/nextauthjs/adapters)
    */
-  adapter?: Adapter<TUser, TProfile, TSession, TVerificationRequest>
+  adapter?: Adapter<TUser, TProfile, TSession>
   /**
    * Set debug to true to enable debug messages for authentication and database operations.
    * * **Default value**: `false`
