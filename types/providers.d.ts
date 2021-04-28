@@ -67,6 +67,7 @@ export type OAuthProviderType =
   | "EVEOnline"
   | "Facebook"
   | "FACEIT"
+  | "FortyTwo"
   | "Foursquare"
   | "FusionAuth"
   | "GitHub"
