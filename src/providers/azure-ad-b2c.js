@@ -4,12 +4,12 @@ export default (options) => {
   const tokenUrl = `https://${tenantName}.b2clogin.com/${tenantName}.onmicrosoft.com/${primaryUserFlow}/oauth2/v2.0/token`
 
   return {
-    id: 'azure-ad-b2c',
-    name: 'Azure Active Directory B2C',
-    type: 'oauth',
-    version: '2.0',
+    id: "azure-ad-b2c",
+    name: "Azure Active Directory B2C",
+    type: "oauth",
+    version: "2.0",
     params: {
-      grant_type: 'authorization_code'
+      grant_type: "authorization_code",
     },
     accessTokenUrl: tokenUrl,
     requestTokenUrl: tokenUrl,
@@ -36,6 +36,6 @@ export default (options) => {
         email: profile.emails[0]
       }
     },
-    ...options
+    ...options,
   }
 }

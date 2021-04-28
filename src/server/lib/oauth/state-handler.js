@@ -6,17 +6,18 @@ import { OAuthCallbackError } from '../../../lib/errors'
  * For OAuth 2.0 flows, if the provider supports state,
  * check if state matches the one sent on signin
  * (a hash of the NextAuth.js CSRF token).
- * @param {import("../..").NextAuthRequest} req
- * @param {import("../..").NextAuthResponse} res
+ * @param {import("types/internals").NextAuthRequest} req
+ * @param {import("types/internals").NextAuthResponse} res
  */
 export async function handleCallback (req, res) {
   const { csrfToken, provider, baseUrl, basePath } = req.options
   try {
-    if (provider.protection !== 'state') { // Provider does not support state, nothing to do.
+    // Provider does not support state, nothing to do.
+    if (!provider.protection?.includes('state')) {
       return
     }
 
-    const { state } = req.query
+    const state = req.query.state || req.body.state
     const expectedState = createHash('sha256').update(csrfToken).digest('hex')
 
     logger.debug(
@@ -35,13 +36,13 @@ export async function handleCallback (req, res) {
 
 /**
  * Adds CSRF token to the authorizationParams.
- * @param {import("../..").NextAuthRequest} req
- * @param {import("../..").NextAuthResponse} res
+ * @param {import("types/internals").NextAuthRequest} req
+ * @param {import("types/internals").NextAuthResponse} res
  */
 export async function handleSignin (req, res) {
   const { provider, baseUrl, basePath, csrfToken } = req.options
   try {
-    if (provider.protection !== 'state') { // Provider does not support state, nothing to do.
+    if (!provider.protection?.includes('state')) { // Provider does not support state, nothing to do.
       return
     }
 

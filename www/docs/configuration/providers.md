@@ -56,15 +56,11 @@ NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1
 
 <Image src="/img/signin.png" alt="Signin Screenshot" />
 
-:::tip
-If you want to create a custom sign in link you can link to **/api/auth/signin/[provider]** which will sign in the user in directly with that provider.
-:::
-
 ### Using a custom provider
 
 You can use an OAuth provider that isn't built-in by using a custom object.
 
-As an example of what this looks like, this is the the provider object returned for the Google provider:
+As an example of what this looks like, this is the provider object returned for the Google provider:
 
 ```js
 {
@@ -115,14 +111,7 @@ providers: [
 ...
 ```
 
-:::tip
-If you think your custom provider might be useful to others, we encourage you to open a PR and add it to the built-in list so others can discover it much more easily! You only need to add three changes:
-1. Add your config: [`src/providers/{provider}.js`](https://github.com/nextauthjs/next-auth/tree/main/src/providers)
-2. Re-export your config: at [`src/providers/index.js`](https://github.com/nextauthjs/next-auth/blob/main/src/providers/index.js)
-3. Add provider documentation: [`www/docs/providers/{provider}.md`](https://github.com/nextauthjs/next-auth/tree/main/www/docs/providers)
 
-You can look at the existing built-in providers for inspiration.
-:::
 
 
 ### OAuth provider options
@@ -145,7 +134,7 @@ You can look at the existing built-in providers for inspiration.
 |       profile       |       An callback returning an object with the user's info       |            `object`             |    No    |
 |       idToken       |   Set to `true` for services that use ID Tokens (e.g. OpenID)    |            `boolean`            |    No    |
 |       headers       |      Any headers that should be sent to the OAuth provider       |            `object`             |    No    |
-|     protection      | Additional security for OAuth login flows (defaults to `state`)  |     `pkce`, `state`, `none`     |    No    |
+|     protection      | Additional security for OAuth login flows (defaults to `state`)  |`[pkce]`,`[state]`,`[pkce,state]`|    No    |
 |        state        | Same as `protection: "state"`. Being deprecated, use protection. |            `boolean`            |    No    |
 
 ## Sign in with Email
@@ -234,3 +223,14 @@ export const Image = ({ children, src, alt = '' }) => (
     <img alt={alt} src={src} />
   </div>
  )
+
+
+## Adding a new built-in provider
+
+If you think your custom provider might be useful to others, we encourage you to open a PR and add it to the built-in list so others can discover it much more easily! You only need to add two changes:
+1. Add your config: [`src/providers/{provider}.js`](https://github.com/nextauthjs/next-auth/tree/main/src/providers) (Make sure you use a named default export, like `export default function YourProvider`!)
+2. Add provider documentation: [`www/docs/providers/{provider}.md`](https://github.com/nextauthjs/next-auth/tree/main/www/docs/providers)
+
+That's it! 🎉 Others will be able to discover this provider much more easily now!
+
+You can look at the existing built-in providers for inspiration.

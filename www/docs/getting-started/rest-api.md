@@ -35,7 +35,7 @@ The `POST` submission requires CSRF token from `/api/auth/csrf`.
 
 Returns client-safe session object - or an empty object if there is no session.
 
-The contents of the session object that is returned is configurable with the session callback.
+The contents of the session object that is returned are configurable with the session callback.
 
 #### `GET` /api/auth/csrf
 
@@ -52,7 +52,7 @@ It can be used to dynamically generate custom sign up pages and to check what ca
 ---
 
 :::note
-The default base path is `/api/auth` but it is configurable by specyfing a custom path in `NEXTAUTH_URL`
+The default base path is `/api/auth` but it is configurable by specifying a custom path in `NEXTAUTH_URL`
 
 e.g. 
 

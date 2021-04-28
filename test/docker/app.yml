@@ -2,14 +2,13 @@
 #
 # Note: Uses Docker Compose v2 as v3 doesn't currently support extends.
 # https://docs.docker.com/compose/compose-file/compose-file-v2/
-version: '2.3'
+version: "2.3"
 
 services:
-
   app:
     build:
       context: ../../
-      dockerfile: Dockerfile
+      dockerfile: ./test/Dockerfile
     environment:
       # Set env vars in your current terminal or in .env in the root directory
       - NEXTAUTH_URL=${NEXTAUTH_URL}
