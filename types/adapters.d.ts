@@ -51,7 +51,13 @@ export interface AdapterInstance<U = User, P = Profile, S = Session> {
   getSession(sessionToken: string): Promise<S | null>
   updateSession(session: S, force?: boolean): Promise<S>
   deleteSession(sessionToken: string): Promise<void>
-  createVerificationRequest?: SendVerificationRequest
+  createVerificationRequest?(
+    identifier: string,
+    url: string,
+    token: string,
+    secret: string,
+    provider: EmailConfig & { maxAge: number; from: string }
+  ): Promise<void>
   getVerificationRequest?(
     identifier: string,
     verificationToken: string,
