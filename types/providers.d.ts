@@ -31,11 +31,11 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
   accessTokenUrl: string
   requestTokenUrl?: string
   authorizationUrl: string
-  profileUrl?: string
-  profile?(profile: P, tokens: TokenSet): Awaitable<User & { id: string }>
+  profileUrl: string
+  profile(profile: P, tokens: TokenSet): Awaitable<User & { id: string }>
   protection?: ProtectionType | ProtectionType[]
   clientId: string
-  clientSecret?:
+  clientSecret:
     | string
     // TODO: only allow for Apple
     | Record<"appleId" | "teamId" | "privateKey" | "keyId", string>
