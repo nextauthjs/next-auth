@@ -64,6 +64,7 @@ export type OAuthProviderType =
   | "Bungie"
   | "Cognito"
   | "Discord"
+  | "Dropbox"
   | "EVEOnline"
   | "Facebook"
   | "FACEIT"
