@@ -51,7 +51,6 @@ export default {
   Cognito,
   Credentials,
   Discord,
-  Dropbox,
   Email,
   EVEOnline,
   Facebook,
