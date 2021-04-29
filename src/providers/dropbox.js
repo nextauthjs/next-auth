@@ -1,5 +1,4 @@
-export default (options) => {
-  console.log('> Dropbox')
+export default function Dropbox(options) => {
   return {
     id: 'dropbox',
     name: 'Dropbox',
