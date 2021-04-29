@@ -43,7 +43,7 @@ export default function Dropbox(options) => {
       return {
         id: profile.account_id,
         name: profile.name.display_name,
-        email: profile.login,
+        email: profile.email,
         image: profile.profile_photo_url,
         email_verified: profile.email_verified
       }
