@@ -1,4 +1,4 @@
-export default (options) => {
+export default function AzureADB2C(options) {
   const { tenantName, primaryUserFlow } = options
   const authorizeUrl = `https://${tenantName}.b2clogin.com/${tenantName}.onmicrosoft.com/${primaryUserFlow}/oauth2/v2.0/authorize`
   const tokenUrl = `https://${tenantName}.b2clogin.com/${tenantName}.onmicrosoft.com/${primaryUserFlow}/oauth2/v2.0/token`

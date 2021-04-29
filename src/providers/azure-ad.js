@@ -1,5 +1,5 @@
-export default (options) => {
-  const tenant = options.tenantId ? options.tenantId : 'common'
+export default function AzureAD(options) {
+  const tenant = options.tenantId ?? 'common'
 
   return {
     id: 'azure-ad',
