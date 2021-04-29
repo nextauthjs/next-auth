@@ -1,3 +1,32 @@
+/**
+ * @param {import("../server").Provider} options
+ * @example
+ *
+ * ```js
+ * // pages/api/auth/[...nextauth].js
+ * import Providers from `next-auth/providers`
+ * ...
+ * providers: [
+ *   Providers.Dropbox({
+ *     clientId: process.env.DROPBOX_CLIENT_ID,
+ *     clientSecret: process.env.DROPBOX_CLIENT_SECRET
+ *   })
+ * ]
+ * ...
+ *
+ * // pages/index
+ * import { signIn } from "next-auth/client"
+ * ...
+ * <button onClick={() => signIn("dropbox")}>
+ *   Sign in
+ * </button>
+ * ...
+ * ```
+ * *Resources:*
+ * - [NextAuth.js Documentation](https://next-auth.js.org/providers/dropbox)
+ * - [Dropbox Documentation](ttps://developers.dropbox.com/oauth-guide)
+ * - [Configuration](https://www.dropbox.com/developers/apps)
+ */
 export default function Dropbox(options) => {
   return {
     id: 'dropbox',
