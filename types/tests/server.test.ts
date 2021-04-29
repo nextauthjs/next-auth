@@ -65,7 +65,7 @@ const exampleVerificationRequest = {
   expires: new Date(),
 }
 
-const adapter: Adapter = () => {
+const MyAdapter: Adapter = () => {
   return {
     async getAdapter(appOptions: AppOptions) {
       return {
@@ -190,7 +190,7 @@ const allConfig: NextAuthTypes.NextAuthOptions = {
       return undefined
     },
   },
-  adapter,
+  adapter: MyAdapter(),
   useSecureCookies: true,
   cookies: {
     sessionToken: {
