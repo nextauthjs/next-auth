@@ -125,7 +125,7 @@ providers: [
 |   accessTokenUrl    |               Endpoint to retrieve an access token               |            `string`             |   Yes    |
 |  authorizationUrl   |         Endpoint to request authorization from the user          |            `string`             |   Yes    |
 |      clientId       |                 Client ID of the OAuth provider                  |            `string`             |   Yes    |
-|    clientSecret     |               Client Secret of the OAuth provider                |            `string`             |    No    |
+|    clientSecret     |               Client Secret of the OAuth provider                |            `string`             |   Yes    |
 |        scope        |          OAuth access scopes (expects array or string)           |     `string` or `string[]`      |    No    |
 |       params        |             Additional authorization URL parameters              |            `object`             |    No    |
 |   requestTokenUrl   |               Endpoint to retrieve a request token               |            `string`             |    No    |
