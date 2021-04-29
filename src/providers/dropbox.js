@@ -27,7 +27,7 @@
  * - [Dropbox Documentation](ttps://developers.dropbox.com/oauth-guide)
  * - [Configuration](https://www.dropbox.com/developers/apps)
  */
-export default function Dropbox(options) => {
+export default function Dropbox(options) {
   return {
     id: 'dropbox',
     name: 'Dropbox',
@@ -48,7 +48,7 @@ export default function Dropbox(options) => {
         email_verified: profile.email_verified
       }
     },
-    protection: ["state", "pkce"]
+    protection: ["state", "pkce"],
     ...options
   }
 }
