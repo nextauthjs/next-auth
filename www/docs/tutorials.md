@@ -11,7 +11,7 @@ _New submissions and edits are welcome!_
 
 ### [NextJS Authentication Crash Course with NextAuth.js](https://youtu.be/o_wZIVmWteQ)
 
-This tutorial dives in to the ins and outs of NextAuth including email, Github, Twitter and integrating with Auth0 in under hour.
+This tutorial dives in to the ins and outs of NextAuth including email, GitHub, Twitter and integrating with Auth0 in under hour.
 
 ### [Create your own NextAuth.js Login Pages](https://youtu.be/kB6YNYZ63fw)
 
@@ -42,6 +42,10 @@ This approach can be used to authenticate existing user accounts against any bac
 ### [Testing with Cypress](tutorials/testing-with-cypress)
 
 How to write tests using Cypress.
+
+### [Usage with class components](tutorials/usage-with-class-components)
+
+How to use `useSession()` hook with class components.
 
 ## Other tutorials and explainers
 
@@ -77,7 +81,7 @@ This example shows how to implement a fullstack app in TypeScript with Next.js u
 
 ### [Adding Authentication to an existing Next.js Application in no time!](https://dev.to/ndom91/adding-authentication-to-an-existing-serverless-next-js-app-in-no-time-with-nextauth-js-192h)
 
-This `dev.to` tutorial walks one through adding NextAuth.js to an existing project. Including setting up the OAuth client id and secret, adding the API routes for authentication, protecting pages and api routes behind that authentication, etc.
+This `dev.to` tutorial walks one through adding NextAuth.js to an existing project. Including setting up the OAuth client id and secret, adding the API routes for authentication, protecting pages and API routes behind that authentication, etc.
 
 ### [Adding Sign in With Apple Next JS](https://thesiddd.com/blog/apple-auth)
 

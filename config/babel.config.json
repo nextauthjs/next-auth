@@ -2,6 +2,9 @@
   "presets": [
     ["@babel/preset-env", { "targets": { "esmodules": true } }]
   ],
+  "plugins": [
+    "@babel/plugin-proposal-class-properties"
+  ],
   "comments": false,
   "overrides": [
     {

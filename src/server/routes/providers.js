@@ -2,8 +2,8 @@
  * Return a JSON object with a list of all OAuth providers currently configured
  * and their signin and callback URLs. This makes it possible to automatically
  * generate buttons for all providers when rendering client side.
- * @param {import("..").NextAuthRequest} req
- * @param {import("..").NextAuthResponse} res
+ * @param {import("types/internals").NextAuthRequest} req
+ * @param {import("types/internals").NextAuthResponse} res
  */
 export default function providers (req, res) {
   const { providers } = req.options
