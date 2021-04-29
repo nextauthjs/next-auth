@@ -18,11 +18,7 @@ import {
  *
  * [Documentation](https://next-auth.js.org/configuration/options#options)
  */
-export interface NextAuthOptions<
-  TUser extends User = User,
-  TProfile extends Profile = Profile,
-  TSession extends Session = Session
-> {
+export interface NextAuthOptions {
   /**
    * An array of authentication providers for signing in
    * (e.g. Google, Facebook, Twitter, GitHub, Email, etc) in any order.
@@ -115,9 +111,7 @@ export interface NextAuthOptions<
    *
    * [Documentation](https://next-auth.js.org/configuration/options#events) | [Events documentation](https://next-auth.js.org/configuration/events)
    */
-  events?: Partial<
-    JWTEventCallbacks<TUser> | SessionEventCallbacks<TUser, TSession>
-  >
+  events?: Partial<JWTEventCallbacks | SessionEventCallbacks>
   /**
    * By default NextAuth.js uses a database adapter that uses TypeORM and supports MySQL, MariaDB, Postgres and MongoDB and SQLite databases.
    * An alternative adapter that uses Prisma, which currently supports MySQL, MariaDB and Postgres, is also included.
@@ -133,7 +127,7 @@ export interface NextAuthOptions<
    * [Default adapter](https://next-auth.js.org/schemas/adapters#typeorm-adapter) |
    * [Community adapters](https://github.com/nextauthjs/adapters)
    */
-  adapter?: Adapter<TUser, TProfile, TSession>
+  adapter?: Adapter
   /**
    * Set debug to true to enable debug messages for authentication and database operations.
    * * **Default value**: `false`
@@ -373,15 +367,14 @@ export interface LinkAccountEventMessage<TUser> {
  * The various event callbacks you can register for from next-auth
  */
 export interface EventCallbacks<
-  TUser = unknown,
   TSignOutMessage = unknown,
   TSessionMessage = unknown
 > {
-  signIn: EventCallback<SignInEventMessage<TUser>>
+  signIn: EventCallback<SignInEventMessage<User>>
   signOut: EventCallback<TSignOutMessage>
-  createUser: EventCallback<TUser>
-  updateUser: EventCallback<TUser>
-  linkAccount: EventCallback<LinkAccountEventMessage<TUser>>
+  createUser: EventCallback<User>
+  updateUser: EventCallback<User>
+  linkAccount: EventCallback<LinkAccountEventMessage<User>>
   session: EventCallback<TSessionMessage>
   error: EventCallback
 }
@@ -390,8 +383,7 @@ export interface EventCallbacks<
  * The event callbacks will take this form if you are using JWTs:
  * signOut will receive the JWT and session will receive the session and JWT.
  */
-export type JWTEventCallbacks<TUser> = EventCallbacks<
-  TUser,
+export type JWTEventCallbacks = EventCallbacks<
   JWT & Record<string, any>,
   {
     session: Session & Record<string, any>
@@ -405,9 +397,8 @@ export type JWTEventCallbacks<TUser> = EventCallbacks<
  * signOut will receive the underlying db adapter's session object, and session
  * will receive the NextAuth client session with extra data.
  */
-export type SessionEventCallbacks<TUser, TAdapterSession> = EventCallbacks<
-  TUser,
-  TAdapterSession | null,
+export type SessionEventCallbacks = EventCallbacks<
+  Session | null,
   {
     session: Session & Record<string, any>
   }
