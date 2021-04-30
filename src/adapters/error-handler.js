@@ -7,9 +7,10 @@ import { UnknownError } from "../lib/errors"
  */
 export default function adapterErrorHandler(adapter) {
   return Object.keys(adapter).reduce((acc, method) => {
+    const adapterMethod = adapter[method]
     acc[method] = async (...args) => {
       try {
-        return await acc[method](...args)
+        return await adapterMethod(...args)
       } catch (error) {
         const e = new UnknownError(error)
         e.name = `${method[0].toUpperCase()}${method.slice(1)}Error`
