@@ -11,8 +11,8 @@
     "generate-providers": "node ./scripts/generate-providers.js"
   },
   "dependencies": {
-    "@docusaurus/core": "^2.0.0-alpha.adf2a526e5",
-    "@docusaurus/preset-classic": "^2.0.0-alpha.adf2a526e5",
+    "@docusaurus/core": "2.0.0-alpha.75",
+    "@docusaurus/preset-classic": "2.0.0-alpha.75",
     "classnames": "^2.3.1",
     "docusaurus-lunr-search": "^2.1.12",
     "jose": "^2.0.5",
