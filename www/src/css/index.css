@@ -89,6 +89,12 @@ a:hover,
   font-weight: 600;
 }
 
+@media screen and (max-width: 996px) {
+  .main-wrapper > div {
+    flex-direction: column;
+  }
+}
+
 .docusaurus-highlight-code-line {
   background-color: rgb(72, 77, 91);
   display: block;
