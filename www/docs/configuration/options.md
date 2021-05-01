@@ -68,7 +68,7 @@ See the [providers documentation](/configuration/providers) for a list of suppor
 
 A random string used to hash tokens, sign cookies and generate crytographic keys.
 
-If not specified is uses a hash of all configuration options, including Client ID / Secrets for entropy.
+If not specified, it uses a hash for all configuration options, including Client ID / Secrets for entropy.
 
 The default behaviour is volatile, and it is strongly recommended you explicitly specify a value to avoid invalidating end user sessions when configuration changes are deployed.
 
