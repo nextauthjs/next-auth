@@ -1,12 +1,20 @@
 import { randomBytes } from "crypto"
 import adapterErrorHandler from "../../../adapters/error-handler"
 
+/**
+ *
+ * @param {string} email
+ * @param {import("types/providers").EmailConfig} provider
+ * @param {import("types/internals").AppOptions} options
+ * @returns
+ */
 export default async function email(email, provider, options) {
   try {
-    const { baseUrl, basePath, adapter } = options
+    const { baseUrl, basePath, adapter, logger } = options
 
     const { createVerificationRequest } = adapterErrorHandler(
-      await adapter.getAdapter(options)
+      await adapter.getAdapter(options),
+      logger
     )
 
     // Prefer provider specific secret, but use default secret if none specified

@@ -76,7 +76,8 @@ export default async function session(req, res) {
   } else {
     try {
       const { getUser, getSession, updateSession } = adapterErrorHandler(
-        await adapter.getAdapter(req.options)
+        await adapter.getAdapter(req.options),
+        logger
       )
       const session = await getSession(sessionToken)
       if (session) {

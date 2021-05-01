@@ -54,7 +54,7 @@ export default async function callbackHandler(
     createSession,
     getSession,
     deleteSession,
-  } = adapterErrorHandler(await adapter.getAdapter(options))
+  } = adapterErrorHandler(await adapter.getAdapter(options), logger)
 
   let session = null
   let user = null

@@ -23,7 +23,8 @@ export default async function signout(req, res) {
   } else {
     // Get session from database
     const { getSession, deleteSession } = adapterErrorHandler(
-      await adapter.getAdapter(req.options)
+      await adapter.getAdapter(req.options),
+      logger
     )
 
     try {

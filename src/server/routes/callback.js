@@ -59,7 +59,8 @@ export default async function callback(req, res) {
         let userOrProfile = profile
         if (adapter) {
           const { getUserByProviderAccountId } = adapterErrorHandler(
-            await adapter.getAdapter(req.options)
+            await adapter.getAdapter(req.options),
+            logger
           )
           const userFromProviderAccountId = await getUserByProviderAccountId(
             account.provider,

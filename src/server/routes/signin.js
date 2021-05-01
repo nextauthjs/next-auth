@@ -35,7 +35,8 @@ export default async function signin(req, res) {
       return res.redirect(`${baseUrl}${basePath}/error?error=Configuration`)
     }
     const { getUserByEmail } = adapterErrorHandler(
-      await adapter.getAdapter(req.options)
+      await adapter.getAdapter(req.options),
+      logger
     )
 
     // Note: Technically the part of the email address local mailbox element
