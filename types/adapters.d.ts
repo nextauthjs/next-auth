@@ -124,7 +124,7 @@ export type Adapter<
   P = Profile,
   S = Session
 > = (
-  config: C,
+  config?: C,
   options?: O
 ) => {
   getAdapter(appOptions: AppOptions): Promise<AdapterInstance<U, P, S>>
