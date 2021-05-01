@@ -13,6 +13,10 @@ import adapterErrorHandler from "../../adapters/error-handler"
  * All verification (e.g. OAuth flows or email address verificaiton flows) are
  * done prior to this handler being called to avoid additonal complexity in this
  * handler.
+ * @param {import("types").Session} sessionToken
+ * @param {import("types").Profile} profile
+ * @param {import("types").Account} account
+ * @param {import("types/internals").AppOptions} options
  */
 export default async function callbackHandler(
   sessionToken,
@@ -54,7 +58,7 @@ export default async function callbackHandler(
     createSession,
     getSession,
     deleteSession,
-  } = adapterErrorHandler(await adapter.getAdapter(options), logger)
+  } = adapterErrorHandler(await adapter.getAdapter(options), options.logger)
 
   let session = null
   let user = null
