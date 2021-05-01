@@ -18,7 +18,7 @@ NextAuth.js is designed to work with any OAuth service, it supports **OAuth 1.0*
 
 ## OAuth Providers
 
-### 📓 Available providers
+### Available providers
 
 <ul>
 {Object.entries(require("../../providers.json"))
@@ -29,7 +29,7 @@ NextAuth.js is designed to work with any OAuth service, it supports **OAuth 1.0*
 )}
 </ul>
 
-### 💭 How to
+### How to
 
 1. Register your application at the developer portal of your provider. There are links above to the developer docs for most supported providers with details on how to register your application.
 
@@ -70,7 +70,7 @@ providers: [
 
 <Image src="/img/signin.png" alt="Signin Screenshot" />
 
-### ⚙️ Options
+### Options
 
 |        Name         |                           Description                            |               Type                | Required |
 | :-----------------: | :--------------------------------------------------------------: | :-------------------------------: | :------: |
@@ -96,7 +96,7 @@ providers: [
 |       domain        |                Only when using certain Providers                 |             `string`              |    No    |
 |      tenantId       |     Only when using Azure, Active Directory, B2C, FusionAuth     |             `string`              |    No    |
 
-### 🔖 Using a custom provider
+### Using a custom provider
 
 You can use an OAuth provider that isn't built-in by using a custom object.
 
@@ -152,7 +152,7 @@ providers: [
 ...
 ```
 
-### 🍵 Adding a new provider
+### Adding a new provider
 
 If you think your custom provider might be useful to others, we encourage you to open a PR and add it to the built-in list so others can discover it much more easily!
 
@@ -169,7 +169,7 @@ That's it! 🎉 Others will be able to discover this provider much more easily n
 
 ## Email Provider
 
-### 💭 How to
+### How to
 
 The Email provider uses email to send "magic links" that can be used sign in, you will likely have seen them before if you have used software like Slack.
 
@@ -196,7 +196,7 @@ See the [Email provider documentation](/providers/email) for more information on
 The email provider requires a database, it cannot be used without one.
 :::
 
-### ⚙️ Options
+### Options
 
 |          Name           |                                     Description                                     |               Type               | Required |
 | :---------------------: | :---------------------------------------------------------------------------------: | :------------------------------: | :------: |
@@ -210,7 +210,7 @@ The email provider requires a database, it cannot be used without one.
 
 ## Credentials Provider
 
-### 💭 How to
+### How to
 
 The Credentials provider allows you to handle signing in with arbitrary credentials, such as a username and password, two factor authentication or hardware device (e.g. YubiKey U2F / FIDO).
 
@@ -256,7 +256,7 @@ See the [Credentials provider documentation](/providers/credentials) for more in
 The Credentials provider can only be used if JSON Web Tokens are enabled for sessions. Users authenticated with the Credentials provider are not persisted in the database.
 :::
 
-### ⚙️ Options
+### Options
 
 |    Name     |                    Description                    |               Type               | Required |
 | :---------: | :-----------------------------------------------: | :------------------------------: | :------: |
