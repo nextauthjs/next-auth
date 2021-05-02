@@ -130,7 +130,7 @@ As an example of what this looks like, this is the provider object returned for 
 }
 ```
 
-You can replace all the options in this JSON object with the ones from your custom provider - be sure to give it a unique ID and specify the correct OAuth version - and add it to the providers option when initializing the library:
+Replace all the options in this JSON object with the ones from your custom provider - be sure to give it a unique ID and specify the correct OAuth version - and add it to the providers option when initializing the library:
 
 ```js title="pages/api/auth/[...nextauth].js"
 import Providers from `next-auth/providers`
