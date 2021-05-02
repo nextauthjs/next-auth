@@ -96,6 +96,25 @@ providers: [
 |       domain        |                Only when using certain Providers                 |             `string`              |    No    |
 |      tenantId       |     Only when using Azure, Active Directory, B2C, FusionAuth     |             `string`              |    No    |
 
+:::tip
+Even if you are using a built-in provider, you can override any of these options to tweak the default configuration.
+
+```js title=[...nextauth].js
+import Providers from "next-auth/providers"
+
+Providers.Auth0({
+  clientId: process.env.CLIENT_ID,
+  clientSecret: process.env.CLIENT_SECRET,
+  domain: process.env.DOMAIN,
+  scope: "openid your_custom_scope", // We do provide a default, but this will override it if defined
+  profile(profile) {
+    return {} // Return the profile in a shape that is different from the built-in one.
+  },
+})
+```
+
+:::
+
 ### Using a custom provider
 
 You can use an OAuth provider that isn't built-in by using a custom object.
