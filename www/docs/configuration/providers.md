@@ -20,14 +20,19 @@ NextAuth.js is designed to work with any OAuth service, it supports **OAuth 1.0*
 
 ### Available providers
 
-<ul>
+<div className="provider-name-list">
 {Object.entries(require("../../providers.json"))
   .filter(([key]) => !["email", "credentials"].includes(key))
   .sort(([, a], [, b]) => a.localeCompare(b))
-  .map(([key, name]) =>
-    <li key={key}><a href={`/providers/${key}`}>{name}</a></li>
+  .map(([key, name]) => (
+    <span key={key}>
+      <a href={`/providers/${key}`}>{name}</a>
+      <span className="provider-name-list__comma">,</span>
+    </span>
+  )
+    
 )}
-</ul>
+</div>
 
 ### How to
 
