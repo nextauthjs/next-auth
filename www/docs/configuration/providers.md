@@ -72,29 +72,29 @@ providers: [
 
 ### Options
 
-|        Name         |                           Description                            |               Type                | Required |
-| :-----------------: | :--------------------------------------------------------------: | :-------------------------------: | :------: |
-|         id          |                    Unique ID for the provider                    |             `string`              |   Yes    |
-|        name         |                Descriptive name for the provider                 |             `string`              |   Yes    |
-|        type         |              Type of provider, in this case `oauth`              |              `oauth`              |   Yes    |
-|       version       |            OAuth version (e.g. '1.0', '1.0a', '2.0')             |             `string`              |   Yes    |
-|        scope        |          OAuth access scopes (expects array or string)           |      `string` or `string[]`       |   Yes    |
-|       params        |             Additional authorization URL parameters              |     `{ grant_type: string }`      |   Yes    |
-|   accessTokenUrl    |               Endpoint to retrieve an access token               |             `string`              |   Yes    |
-|  authorizationUrl   |         Endpoint to request authorization from the user          |             `string`              |   Yes    |
-|   requestTokenUrl   |               Endpoint to retrieve a request token               |             `string`              |   Yes    |
-|     profileUrl      |             Endpoint to retrieve the user's profile              |             `string`              |   Yes    |
-|      clientId       |                 Client ID of the OAuth provider                  |             `string`              |   Yes    |
-|    clientSecret     |               Client Secret of the OAuth provider                |             `string`              |   Yes    |
-|       profile       |       A callback returning an object with the user's info        |   `(profile, tokens) => Object`   |   Yes    |
-|     protection      | Additional security for OAuth login flows (defaults to `state`)  | `[pkce]`,`[state]`,`[pkce,state]` |    No    |
-|        state        | Same as `protection: "state"`. Being deprecated, use protection. |             `boolean`             |    No    |
-|       headers       |      Any headers that should be sent to the OAuth provider       |             `Object`              |    No    |
-| authorizationParams |    Additional params to be sent to the authorization endpoint    |             `Object`              |    No    |
-|       idToken       |   Set to `true` for services that use ID Tokens (e.g. OpenID)    |             `boolean`             |    No    |
-|       region        |                    Only when using BattleNet                     |             `string`              |    No    |
-|       domain        |                Only when using certain Providers                 |             `string`              |    No    |
-|      tenantId       |     Only when using Azure, Active Directory, B2C, FusionAuth     |             `string`              |    No    |
+|        Name         |                           Description                            |             Type              | Required |
+| :-----------------: | :--------------------------------------------------------------: | :---------------------------: | :------: |
+|         id          |                    Unique ID for the provider                    |           `string`            |   Yes    |
+|        name         |                Descriptive name for the provider                 |           `string`            |   Yes    |
+|        type         |              Type of provider, in this case `oauth`              |           `"oauth"`           |   Yes    |
+|       version       |            OAuth version (e.g. '1.0', '1.0a', '2.0')             |           `string`            |   Yes    |
+|        scope        |          OAuth access scopes (expects array or string)           |    `string` or `string[]`     |   Yes    |
+|       params        |       Extra URL params sent when calling `accessTokenUrl`        |           `Object`            |   Yes    |
+|   accessTokenUrl    |               Endpoint to retrieve an access token               |           `string`            |   Yes    |
+|  authorizationUrl   |         Endpoint to request authorization from the user          |           `string`            |   Yes    |
+|   requestTokenUrl   |               Endpoint to retrieve a request token               |           `string`            |   Yes    |
+|     profileUrl      |             Endpoint to retrieve the user's profile              |           `string`            |   Yes    |
+|      clientId       |                 Client ID of the OAuth provider                  |           `string`            |   Yes    |
+|    clientSecret     |               Client Secret of the OAuth provider                |           `string`            |   Yes    |
+|       profile       |       A callback returning an object with the user's info        | `(profile, tokens) => Object` |   Yes    |
+|     protection      | Additional security for OAuth login flows (defaults to `state`)  |  `"pkce"`,`"state"`,`"none"`  |    No    |
+|        state        | Same as `protection: "state"`. Being deprecated, use protection. |           `boolean`           |    No    |
+|       headers       |      Any headers that should be sent to the OAuth provider       |           `Object`            |    No    |
+| authorizationParams |    Additional params to be sent to the authorization endpoint    |           `Object`            |    No    |
+|       idToken       |   Set to `true` for services that use ID Tokens (e.g. OpenID)    |           `boolean`           |    No    |
+|       region        |                    Only when using BattleNet                     |           `string`            |    No    |
+|       domain        |                Only when using certain Providers                 |           `string`            |    No    |
+|      tenantId       |     Only when using Azure, Active Directory, B2C, FusionAuth     |           `string`            |    No    |
 
 :::tip
 Even if you are using a built-in provider, you can override any of these options to tweak the default configuration.
@@ -221,7 +221,7 @@ The email provider requires a database, it cannot be used without one.
 | :---------------------: | :---------------------------------------------------------------------------------: | :------------------------------: | :------: |
 |           id            |                             Unique ID for the provider                              |             `string`             |   Yes    |
 |          name           |                          Descriptive name for the provider                          |             `string`             |   Yes    |
-|          type           |                       Type of provider, in this case `email`                        |             `email`              |   Yes    |
+|          type           |                       Type of provider, in this case `email`                        |            `"email"`             |   Yes    |
 |         server          |                     Path or object pointing to the email server                     |       `string` or `Object`       |   Yes    |
 | sendVerificationRequest |               Callback to execute when a verification request is sent               | `(params) => Promise<undefined>` |   Yes    |
 |          from           |   The email address from which emails are sent, default: "<no-reply@example.com>"   |             `string`             |    No    |
@@ -281,6 +281,6 @@ The Credentials provider can only be used if JSON Web Tokens are enabled for ses
 | :---------: | :-----------------------------------------------: | :------------------------------: | :------: |
 |     id      |            Unique ID for the provider             |             `string`             |   Yes    |
 |    name     |         Descriptive name for the provider         |             `string`             |   Yes    |
-|    type     |   Type of provider, in this case `credentials`    |          `credentials`           |   Yes    |
+|    type     |   Type of provider, in this case `credentials`    |         `"credentials"`          |   Yes    |
 | credentials |          The credentials to sign-in with          |             `Object`             |   Yes    |
 |  authorize  | Callback to execute once user is to be authorized | `(credentials) => Promise<User>` |   Yes    |
