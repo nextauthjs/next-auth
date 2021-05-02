@@ -355,6 +355,22 @@ function BroadcastChannel (name = 'nextauth.message') {
   }
 }
 
+
+
+// Some methods are exported with more than one name. This provides some
+// flexibility over how they can be invoked and backwards compatibility
+// with earlier releases. These should be removed in a newer release, as it only
+// creates problems for bundlers and adds confusion to users. TypeScript declarations
+// will provide sufficient help when importing
+export {
+  setOptions as options,
+  getSession as session,
+  getProviders as providers,
+  getCsrfToken as csrfToken,
+  signIn as signin,
+  signOut as signout
+}
+
 export default {
   getSession,
   getCsrfToken,
