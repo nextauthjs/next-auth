@@ -120,9 +120,9 @@ export interface AdapterInstance<U = User, P = Profile, S = Session> {
 export type Adapter<
   C = unknown,
   O = Record<string, unknown>,
-  U = User,
-  P = Profile,
-  S = Session
+  U = unknown,
+  P = unknown,
+  S = unknown
 > = (
   client: C,
   options?: O
