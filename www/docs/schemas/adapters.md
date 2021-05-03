@@ -11,9 +11,9 @@ You do not need to specify an adapter explicitly unless you want to use advanced
 
 Configure your database by creating the tables and columns to match the schema expected by NextAuth.js.
 
-* [MySQL Schema](/schemas/mysql)
-* [Postgres Schema](/schemas/postgres)
-* [Microsoft SQL Server Schema](/schemas/mssql)
+- [MySQL Schema](/schemas/mysql)
+- [Postgres Schema](/schemas/postgres)
+- [Microsoft SQL Server Schema](/schemas/mssql)
 
 ## TypeORM Adapter
 
@@ -31,17 +31,17 @@ database: {
 
 ```javascript
 adapter: Adapters.Default({
-  type: 'sqlite',
-  database: ':memory:',
-  synchronize: true
+  type: "sqlite",
+  database: ":memory:",
+  synchronize: true,
 })
 ```
 
 ```javascript
 adapter: Adapters.TypeORM.Adapter({
-  type: 'sqlite',
-  database: ':memory:',
-  synchronize: true
+  type: "sqlite",
+  database: ":memory:",
+  synchronize: true,
 })
 ```
 
@@ -67,10 +67,10 @@ npm install prisma --save-dev
 Configure your NextAuth.js to use the Prisma adapter:
 
 ```javascript title="pages/api/auth/[...nextauth].js"
-import NextAuth from 'next-auth'
-import Providers from 'next-auth/providers'
-import Adapters from 'next-auth/adapters'
-import { PrismaClient } from '@prisma/client'
+import NextAuth from "next-auth"
+import Providers from "next-auth/providers"
+import Adapters from "next-auth/adapters"
+import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()
 
@@ -78,8 +78,8 @@ export default NextAuth({
   providers: [
     Providers.Google({
       clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET
-    })
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
   ],
   adapter: Adapters.Prisma.Adapter({ prisma }),
 })
@@ -175,6 +175,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 ```
+
 :::
 
 ### Generate Client
@@ -232,9 +233,30 @@ if (process.env.NODE_ENV === "production") {
   prisma = global.prisma
 }
 ```
-:::
 
+:::
 
 ## Custom Adapter
 
- See the tutorial for [creating a database adapter](/tutorials/creating-a-database-adapter) for more information on how to create a custom adapter. Have a look at the [adapters repository](https://github.com/nextauthjs/adapters) to see community maintained custom adapters or add your own. 
+See the tutorial for [creating a database adapter](/tutorials/creating-a-database-adapter) for more information on how to create a custom adapter. Have a look at the [adapters repository](https://github.com/nextauthjs/adapters) to see community maintained custom adapters or add your own.
+
+### Editor integration
+
+When writing your own custom adapter in plain JavaScript, note that you can use **JSDoc** to get helpful editor hints and auto-completion like so:
+
+```js
+/** @type { import("next-auth/adapters").Adapters } */
+const MyAdapter = () => {
+  return {
+    async getAdapter() {
+      return {
+        // your adapter methods here
+      }
+    },
+  }
+}
+```
+
+:::note
+This will work in code editors with a strong Typescript integration like VSCode or WebStorm. It might not work if you're using more lightweight editors like VIM or Atom.
+:::

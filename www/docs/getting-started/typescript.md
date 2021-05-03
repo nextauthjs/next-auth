@@ -100,6 +100,36 @@ declare module "next-auth/jwt" {
 }
 ```
 
+### Adapters
+
+If you're writing your own custom adapter, you can take advantage of the types to make sure your implementation conforms to what's expected:
+
+```ts
+import type { Adapter } from "next-auth/adapters"
+
+const MyAdapter: Adapter = () => {
+  return {
+    async getAdapter() {
+      return {
+        // your adapter methods here
+      }
+    },
+  }
+}
+```
+
+`Adapter` can be [configured through generics](https://github.com/nextauthjs/next-auth/blob/main/types/adapters.d.ts#L120-L131) to suit the needs of your new adapter:
+
+```ts
+import type { Adapter } from "next-auth/adapters"
+
+interface AdapterConfig {
+  foo: string
+}
+
+const MyAdapter: Adapter<AdapterConfig> = () => {
+```
+
 ### Useful links
 
 1. [TypeScript documentation: Module Augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation)
