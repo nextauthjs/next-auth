@@ -46,6 +46,7 @@ html[data-theme="dark"]:root {
 @import "buttons.css";
 @import "table-of-contents.css";
 @import "sidebar.css";
+@import "providers.css";
 
 @media screen and (max-width: 360px) {
   html {
@@ -87,6 +88,12 @@ a:hover,
 
 .main-wrapper h3 {
   font-weight: 600;
+}
+
+@media screen and (max-width: 996px) {
+  .main-wrapper > div {
+    flex-direction: column;
+  }
 }
 
 .docusaurus-highlight-code-line {

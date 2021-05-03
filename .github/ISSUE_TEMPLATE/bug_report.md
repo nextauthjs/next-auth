@@ -2,33 +2,42 @@
 name: Bug report
 about: Report a defect with NextAuth.js
 labels: bug
-assignees: ''
+assignees: ""
 ---
 
-**Describe the bug**
-A clear and concise description of the bug in NextAuth.js.
+## Description 🐜
 
-Do not report bugs with your own project here, ask from help by raising a question instead - this helps us a lot with administration overhead.
+Please provide a clear and concise description of the bug in NextAuth.js.
 
-**Steps to reproduce**
-Steps to reproduce the behavior.
+🚧 – _Do not report bugs with your own project here; ask for help [by raising a question instead](https://github.com/nextauthjs/next-auth/issues/new?assignees=&labels=question&template=question.md) - this helps us a lot with administration overhead._
 
-Include a link to public repository which can be used to reproduce the behaviour.
+## How to reproduce ☕️
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+We encourage you to use one of the templates set up on **CodeSandbox** to reproduce your issue:
 
-**Screenshots or error logs**
-If applicable add screenshots or error logs to help explain the problem.
+- [`next-auth-example`](https://codesandbox.io/s/next-auth-example-1kktb)
+- [`next-auth-typescript-example`](https://codesandbox.io/s/next-auth-typescript-example-se32w)
 
-**Additional context**
-Add any other context about the problem here.
+🚧 – _If you don't provide any way to reproduce the bug, the issue is at risk of being closed._
 
-**Feedback**
-*Documentation refers to searching through [online documentation](https://next-auth.js.org), code comments and issue history. The example project refers to [next-auth-example](https://github.com/iaincollins/next-auth-example).*
+## Screenshots / Logs 📽
 
-* [ ] Found the documentation helpful
-* [ ] Found documentation but was incomplete
-* [ ] Could not find relevant documentation
-* [ ] Found the example project helpful
-* [ ] Did not find the example project helpful
+**Help us help you**. We can address the bug you found much faster if you provide contextual screenshots or screen recordings showcasing the issue.
+
+See [Kap](https://getkap.co/) for a good, easy-to-use, cross-platform screen recording tool.
+
+## Environment 🖥
+
+Please run this command:
+
+```
+$ npx envinfo --system --binaries --browsers --npmPackages "{next-auth}"
+```
+
+and paste the output here.
+
+## Contributing 🙌🏽
+
+It takes a lot of work 🏋🏻‍♀️ maintaining a library like `next-auth`; any contribution is more than welcome 💚
+
+In case you're willing to help fix this bug, please let us know here, and we'll reach you 😊 . Otherwise, you can have a look at the issues labelled with [`"good first issue"`](https://github.com/nextauthjs/next-auth/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) and pick any of them.

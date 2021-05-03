@@ -16,26 +16,29 @@ merge of your pull request!
 
 <!-- What changes are being made? (What feature/bug is being fixed here?) -->
 
-**What**:
+## Reasoning 💡
 
-<!-- Why are these changes necessary? -->
+What changes are being made? What feature/bug is being fixed here?
 
-**Why**:
+## Checklist 🧢
 
-<!-- How were these changes implemented? -->
+Feel free cross items ( like this `~[] item~` ) if they're irrelevant to your changes.
 
-**How**:
-
-<!-- Have you done all of these things?  -->
-
-**Checklist**:
-
-<!-- add "N/A" to the end of each line that's irrelevant to your changes -->
-<!-- to check an item, place an "x" in the box like so: "- [x] Documentation" -->
+To check an item, place an `x` in the box like so: `- [x] Documentation`.
 
 - [ ] Documentation
 - [ ] Tests
 - [ ] Ready to be merged
       <!-- In your opinion, is this ready to be merged as soon as it's reviewed? -->
 
-<!-- feel free to add additional comments -->
+## Affected issues 🎟
+
+Please [scout and link issues](https://github.com/nextauthjs/next-auth/issues) that might be solved by this PR.
+
+If you write `"Fixes"` or `"Closes"` before the issue link like so:
+
+```
+Fixes #359
+```
+
+the connected issue will be automatically closed once the PR is merged and hence help with maintenance of the library 😊
