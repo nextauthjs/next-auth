@@ -180,7 +180,7 @@ export interface NextAuthOptions {
    *
    * [Documentation](https://next-auth.js.org/configuration/options#theme) | [Pages documentation]("https://next-auth.js.org/configuration/pages")
    */
-  theme?: "auto" | "dark" | "light"
+  theme?: Theme
   /**
    * When set to `true` then all cookies set by NextAuth.js will only be accessible from HTTPS URLs.
    * This option defaults to `false` on URLs that start with `http://` (e.g. http://localhost:3000) for developer convenience.
@@ -214,6 +214,14 @@ export interface NextAuthOptions {
    */
   cookies?: CookiesOptions
 }
+
+/**
+ * Change the theme of the built-in pages.
+ *
+ * [Documentation](https://next-auth.js.org/configuration/options#theme) |
+ * [Pages](https://next-auth.js.org/configuration/pages)
+ */
+export type Theme = "auto" | "dark" | "light"
 
 /**
  * Override any of the methods, and the rest will use the default logger.
