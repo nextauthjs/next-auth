@@ -187,7 +187,7 @@ export default async function callback(req, res) {
         getVerificationRequest,
         deleteVerificationRequest,
         getUserByEmail,
-      } = adapterErrorHandler(await adapter.getAdapter(req.options))
+      } = adapterErrorHandler(await adapter.getAdapter(req.options), logger)
       const verificationToken = req.query.token
       const email = req.query.email
 
