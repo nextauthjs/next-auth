@@ -1,15 +1,6 @@
 import { AppOptions } from "./internals"
 import { User, Profile, Session } from "."
-import { EmailConfig, SendVerificationRequest } from "./providers"
-import { ConnectionOptions } from "typeorm"
-
-/** Legacy */
-declare const Adapters: {
-  Default: Adapter<ConnectionOptions>
-  TypeORM: { Adapter: Adapter<ConnectionOptions> }
-  Prisma: { Adapter: Adapter }
-}
-export default Adapters
+import { EmailConfig } from "./providers"
 
 /**
  * Using a custom adapter you can connect to any database backend or even several different databases.

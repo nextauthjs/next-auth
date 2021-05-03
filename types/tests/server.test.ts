@@ -138,7 +138,6 @@ const allConfig: NextAuthTypes.NextAuthOptions = {
       clientSecret: "123",
     }),
   ],
-  database: "path/to/db",
   debug: true,
   secret: "my secret",
   session: {

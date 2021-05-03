@@ -14,8 +14,6 @@ import csrfTokenHandler from './lib/csrf-token-handler'
 import * as pkce from './lib/oauth/pkce-handler'
 import * as state from './lib/oauth/state-handler'
 
-import optionalRequire from '@balazsorban/require-optional'
-
 // To work properly in production with OAuth providers the NEXTAUTH_URL
 // environment variable must be set.
 if (!process.env.NEXTAUTH_URL) {
@@ -84,14 +82,6 @@ async function NextAuthHandler (req, res, userOptions) {
 
     const maxAge = 30 * 24 * 60 * 60 // Sessions expire after 30 days of being idle
 
-    // Parse database / adapter
-    // If adapter is provided, use it (advanced usage, overrides database)
-    // If database URI or config object is provided, use it (simple usage)
-    let adapter = userOptions.adapter
-    if ((!adapter && !!userOptions.database)) {
-      const TypeOrm = optionalRequire('../adapters/typeorm')
-      adapter = TypeOrm.Adapter(userOptions.database)
-    }
 
     // User provided options are overriden by other options,
     // except for the options with special handling above
@@ -103,7 +93,6 @@ async function NextAuthHandler (req, res, userOptions) {
       ...userOptions,
       // These computed settings can have values in userOptions but we override them
       // and are request-specific.
-      adapter,
       baseUrl,
       basePath,
       action,
@@ -113,7 +102,7 @@ async function NextAuthHandler (req, res, userOptions) {
       providers,
       // Session options
       session: {
-        jwt: !adapter, // If no adapter specified, force use of JSON Web Tokens (stateless)
+        jwt: !userOptions.adapter, // If no adapter specified, force use of JSON Web Tokens (stateless)
         maxAge,
         updateAge: 24 * 60 * 60, // Sessions updated only if session is greater than this value (0 = always, 24*60*60 = every 24 hours)
         ...userOptions.session

@@ -15,7 +15,6 @@ const MODULE_ENTRIES = {
 const BUILD_TARGETS = {
   [`${MODULE_ENTRIES.SERVER}.js`]: "module.exports = require('./dist/server').default\n",
   [`${MODULE_ENTRIES.CLIENT}.js`]: "module.exports = require('./dist/client').default\n",
-  [`${MODULE_ENTRIES.ADAPTERS}.js`]: "module.exports = require('./dist/adapters').default\n",
   [`${MODULE_ENTRIES.PROVIDERS}.js`]: "module.exports = require('./dist/providers').default\n",
   [`${MODULE_ENTRIES.JWT}.js`]: "module.exports = require('./dist/lib/jwt').default\n",
   [`${MODULE_ENTRIES.ERRORS}.js`]: "module.exports = require('./dist/lib/errors').default\n",
