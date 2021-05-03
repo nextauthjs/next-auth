@@ -60,7 +60,7 @@ const exampleVerificationRequest = {
   expires: new Date(),
 }
 
-const MyAdapter: Adapter = () => {
+const MyAdapter: Adapter<Record<string, unknown>> = () => {
   return {
     async getAdapter(appOptions: AppOptions) {
       return {
@@ -125,6 +125,8 @@ const MyAdapter: Adapter = () => {
     },
   }
 }
+
+const client = {} // Create a fake db client
 
 const allConfig: NextAuthTypes.NextAuthOptions = {
   providers: [
@@ -192,7 +194,7 @@ const allConfig: NextAuthTypes.NextAuthOptions = {
       return undefined
     },
   },
-  adapter: MyAdapter(),
+  adapter: MyAdapter(client),
   useSecureCookies: true,
   cookies: {
     sessionToken: {
