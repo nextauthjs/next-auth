@@ -65,7 +65,7 @@ const exampleVerificationRequest = {
   expires: new Date(),
 }
 
-const adapter: Adapter = () => {
+const MyAdapter: Adapter<Record<string, unknown>> = () => {
   return {
     async getAdapter(appOptions: AppOptions) {
       return {
@@ -131,6 +131,8 @@ const adapter: Adapter = () => {
   }
 }
 
+const client = {} // Create a fake db client
+
 const allConfig: NextAuthTypes.NextAuthOptions = {
   providers: [
     Providers.Twitter({
@@ -190,7 +192,7 @@ const allConfig: NextAuthTypes.NextAuthOptions = {
       return undefined
     },
   },
-  adapter,
+  adapter: MyAdapter(client),
   useSecureCookies: true,
   cookies: {
     sessionToken: {

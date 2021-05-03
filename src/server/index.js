@@ -158,9 +158,8 @@ async function NextAuthHandler (req, res, userOptions) {
 
           return render.signin()
         case 'signout':
-          if (pages.signOut) {
-            return res.redirect(`${pages.signOut}${pages.signOut.includes('?') ? '&' : '?'}error=${error}`)
-          }
+          if (pages.signOut) return res.redirect(pages.signOut)
+
           return render.signout()
         case 'callback':
           if (provider) {
