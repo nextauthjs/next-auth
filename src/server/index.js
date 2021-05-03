@@ -158,18 +158,8 @@ async function NextAuthHandler (req, res, userOptions) {
 
           return render.signin()
         case 'signout':
-          if (pages.signOut) {
-            let signoutUrl = `${pages.signOut}`
+          if (pages.signOut) return res.redirect(pages.signOut)
 
-            // Append a callback param if one was specified in the request options.
-            if (req.options.callbackUrl)
-              signoutUrl = `${signoutUrl}${pages.signOut.includes('?') ? '&' : '?'}callbackUrl=${req.options.callbackUrl}`
-
-            // Append the error code param when there's an error.
-            if (error) { signoutUrl = `${signoutUrl}${pages.signOut.includes('?') ? '&' : '?'}&error=${error}` }
-
-            return res.redirect(signoutUrl)
-          }
           return render.signout()
         case 'callback':
           if (provider) {
