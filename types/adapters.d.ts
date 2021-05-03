@@ -118,13 +118,13 @@ export interface AdapterInstance<U = User, P = Profile, S = Session> {
  * [Create a custom adapter](https://next-auth.js.org/tutorials/creating-a-database-adapter)
  */
 export type Adapter<
-  C = Record<string, unknown>,
+  C = unknown,
   O = Record<string, unknown>,
   U = unknown,
   P = unknown,
   S = unknown
 > = (
-  config?: C,
+  client: C,
   options?: O
 ) => {
   getAdapter(appOptions: AppOptions): Promise<AdapterInstance<U, P, S>>
