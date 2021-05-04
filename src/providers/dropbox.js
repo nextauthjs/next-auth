@@ -24,7 +24,7 @@
  * ```
  * *Resources:*
  * - [NextAuth.js Documentation](https://next-auth.js.org/providers/dropbox)
- * - [Dropbox Documentation](ttps://developers.dropbox.com/oauth-guide)
+ * - [Dropbox Documentation](https://developers.dropbox.com/oauth-guide)
  * - [Configuration](https://www.dropbox.com/developers/apps)
  */
 export default function Dropbox(options) {
