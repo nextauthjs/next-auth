@@ -123,11 +123,11 @@ const MyAdapter: Adapter = () => {
 ```ts
 import type { Adapter } from "next-auth/adapters"
 
-interface AdapterConfig {
+interface Client {
   foo: string
 }
 
-const MyAdapter: Adapter<AdapterConfig> = () => {
+const MyAdapter: Adapter<Client> = () => {
 ```
 
 ### Useful links
