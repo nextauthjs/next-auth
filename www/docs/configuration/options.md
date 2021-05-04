@@ -404,7 +404,7 @@ Properties on any custom `cookies` that are specified override this option.
 :::
 
 :::warning
-Setting this option to *false* in production is a security risk and may allow sessions to hijacked if used in production. It is intended to support development and testing. Using this option is not recommended.
+Setting this option to *false* in production is a security risk and may allow sessions to be hijacked if used in production. It is intended to support development and testing. Using this option is not recommended.
 :::
 
 ---
