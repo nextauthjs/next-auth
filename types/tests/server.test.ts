@@ -168,9 +168,7 @@ const allConfig: NextAuthTypes.NextAuthOptions = {
     },
   },
   events: {
-    async signIn(
-      message: NextAuthTypes.SignInEventMessage<NextAuthTypes.User>
-    ) {
+    async signIn(message: NextAuthTypes.SignInEventMessage) {
       return undefined
     },
     async signOut(message: NextAuthTypes.Session | null) {
@@ -182,9 +180,7 @@ const allConfig: NextAuthTypes.NextAuthOptions = {
     async updateUser(message: NextAuthTypes.User) {
       return undefined
     },
-    async linkAccount(
-      message: NextAuthTypes.LinkAccountEventMessage<NextAuthTypes.User>
-    ) {
+    async linkAccount(message: NextAuthTypes.LinkAccountEventMessage) {
       return undefined
     },
     async session(message: NextAuthTypes.Session) {
