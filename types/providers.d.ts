@@ -29,7 +29,7 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
   scope: string
   params: { grant_type: string }
   accessTokenUrl: string
-  requestTokenUrl: string
+  requestTokenUrl?: string
   authorizationUrl: string
   profileUrl: string
   profile(profile: P, tokens: TokenSet): Awaitable<User & { id: string }>
