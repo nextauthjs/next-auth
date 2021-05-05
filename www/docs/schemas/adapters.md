@@ -11,37 +11,35 @@ You do not need to specify an adapter explicitly unless you want to use advanced
 
 Configure your database by creating the tables and columns to match the schema expected by NextAuth.js.
 
-* [MySQL Schema](/schemas/mysql)
-* [Postgres Schema](/schemas/postgres)
-* [Microsoft SQL Server Schema](/schemas/mssql)
+- [MySQL Schema](/schemas/mysql)
+- [Postgres Schema](/schemas/postgres)
+- [Microsoft SQL Server Schema](/schemas/mssql)
 
 ## TypeORM Adapter
 
-NextAuth.js comes with a default adapter that uses [TypeORM](https://typeorm.io/) so that it can be used with many different databases without any further configuration, you simply add the node module for the database driver you want to use to your project and pass a database connection string to NextAuth.js.
+NextAuth.js comes with [TypeORM](https://typeorm.io/) support so that it can be paired with many different databases without any further configuration.
 
-The default adapter is the TypeORM adapter, the following configuration options are exactly equivalent.
+### Setup
 
-```javascript
-database: {
-  type: 'sqlite',
-  database: ':memory:',
-  synchronize: true
-}
+Simply add the modules for the database driver you want to use along the package for NextAuth.js TypeORM Adapter:
+
+```bash
+# assuming you're using sqlite3 as your database
+npm install -D sqlite3 @next-auth/typeorm-legacy-adapter
 ```
 
-```javascript
-adapter: Adapters.Default({
-  type: 'sqlite',
-  database: ':memory:',
-  synchronize: true
-})
-```
+Then, when initializing the library, you can pass a database connection string or configuration object to the NextAuth.js TypeORM adapter:
 
-```javascript
-adapter: Adapters.TypeORM.Adapter({
-  type: 'sqlite',
-  database: ':memory:',
-  synchronize: true
+```javascript title="pages/api/auth/[...nextauth].js"
+import TypeORMAdapter from "@next-auth/typeorm-legacy-adapter"
+
+export default NextAuth({
+  // ...
+  adapter: TypeORMAdapter({
+    type: "sqlite",
+    database: ":memory:",
+    synchronize: true,
+  }),
 })
 ```
 
@@ -57,20 +55,19 @@ However, it should not be enabled against production databases as it may cause d
 
 You can also use NextAuth.js with the experimental adapter for [Prisma 2](https://www.prisma.io/docs/).
 
-To use this adapter, you need to install Prisma Client and Prisma CLI:
+To use this adapter, you need to install the Prisma Client, Prisma CLI and NextAuth.js Prisma adapter:
 
 ```
-npm install @prisma/client
-npm install prisma --save-dev
+npm install -D @prisma/client prisma @next-auth/prisma-legacy-adapter
 ```
 
-Configure your NextAuth.js to use the Prisma adapter:
+Then configure NextAuth.js to use the Prisma adapter:
 
 ```javascript title="pages/api/auth/[...nextauth].js"
-import NextAuth from 'next-auth'
-import Providers from 'next-auth/providers'
-import Adapters from 'next-auth/adapters'
-import { PrismaClient } from '@prisma/client'
+import NextAuth from "next-auth"
+import Providers from "next-auth/providers"
+import PrismaAdapter from "@next-auth/prisma-legacy-adapter"
+import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()
 
@@ -78,10 +75,10 @@ export default NextAuth({
   providers: [
     Providers.Google({
       clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET
-    })
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
   ],
-  adapter: Adapters.Prisma.Adapter({ prisma }),
+  adapter: PrismaAdapter({ prisma }),
 })
 ```
 
@@ -175,6 +172,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 ```
+
 :::
 
 ### Generate Client
@@ -205,7 +203,7 @@ You can use custom model names by using the `modelMapping` option (shown here wi
 
 ```javascript title="pages/api/auth/[...nextauth].js"
 ...
-adapter: Adapters.Prisma.Adapter({
+adapter: PrismaAdapter({
   prisma,
   modelMapping: {
     User: 'user',
@@ -232,9 +230,9 @@ if (process.env.NODE_ENV === "production") {
   prisma = global.prisma
 }
 ```
-:::
 
+:::
 
 ## Custom Adapter
 
- See the tutorial for [creating a database adapter](/tutorials/creating-a-database-adapter) for more information on how to create a custom adapter. Have a look at the [adapters repository](https://github.com/nextauthjs/adapters) to see community maintained custom adapters or add your own. 
+See the tutorial for [creating a database adapter](/tutorials/creating-a-database-adapter) for more information on how to create a custom adapter. Have a look at the [adapters repository](https://github.com/nextauthjs/adapters) to see community maintained custom adapters or add your own.
