@@ -360,59 +360,51 @@ export type EventCallback<MessageType = unknown> = (
  * For other providers, you'll get the User object from your adapter, the account,
  * and an indicator if the user was new to your Adapter.
  */
-export interface SignInEventMessage<TUser> {
-  user: TUser
-  account: Record<string, unknown>
+export interface SignInEventMessage {
+  user: User
+  account: Account
   isNewUser?: boolean
 }
 
-export interface LinkAccountEventMessage<TUser> {
-  user: TUser
+export interface LinkAccountEventMessage {
+  user: User
   providerAccount: Record<string, unknown>
 }
 
 /**
  * The various event callbacks you can register for from next-auth
  */
-export interface EventCallbacks<
-  TSignOutMessage = unknown,
-  TSessionMessage = unknown
-> {
-  signIn: EventCallback<SignInEventMessage<User>>
-  signOut: EventCallback<TSignOutMessage>
+export interface CommonEventCallbacks {
+  signIn: EventCallback<SignInEventMessage>
   createUser: EventCallback<User>
   updateUser: EventCallback<User>
-  linkAccount: EventCallback<LinkAccountEventMessage<User>>
-  session: EventCallback<TSessionMessage>
-  error: EventCallback
+  linkAccount: EventCallback<LinkAccountEventMessage>
+  error: EventCallback<unknown>
 }
-
 /**
  * The event callbacks will take this form if you are using JWTs:
  * signOut will receive the JWT and session will receive the session and JWT.
  */
-export type JWTEventCallbacks = EventCallbacks<
-  JWT & Record<string, any>,
-  {
-    session: Session & Record<string, any>
+export interface JWTEventCallbacks extends CommonEventCallbacks {
+  signOut: EventCallback<JWT>
+  session: EventCallback<{
+    session: Session
     jwt: JWT
-  }
->
-
+  }>
+}
 /**
  * The event callbacks will take this form if you are using Sessions
  * and not using JWTs:
- * signOut will receive the underlying db adapter's session object, and session
+ * signOut will receive the underlying DB adapter's session object, and session
  * will receive the NextAuth client session with extra data.
  */
-export type SessionEventCallbacks = EventCallbacks<
-  Session | null,
-  {
-    session: Session & Record<string, any>
-  }
->
+export interface SessionEventCallbacks extends CommonEventCallbacks {
+  signOut: EventCallback<Session | null>
+  session: EventCallback<{ session: Session }>
+}
+export type EventCallbacks = JWTEventCallbacks | SessionEventCallbacks
 
-export type EventType = keyof EventCallbacks<any>
+export type EventType = keyof EventCallbacks
 
 /** [Documentation](https://next-auth.js.org/configuration/pages) */
 export interface PagesOptions {
