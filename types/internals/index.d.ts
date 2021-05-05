@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "./utils"
-import { NextAuthOptions } from ".."
+import { LoggerInstance, NextAuthOptions, SessionOptions, Theme } from ".."
 import { AppProvider } from "../providers"
 
 /** Options that are the same both in internal and user provided options. */
@@ -9,12 +9,7 @@ export type NextAuthSharedOptions =
   | "events"
   | "callbacks"
   | "cookies"
-  | "secret"
   | "adapter"
-  | "theme"
-  | "debug"
-  | "logger"
-  | "session"
 
 export interface AppOptions
   extends Required<Pick<NextAuthOptions, NextAuthSharedOptions>> {
@@ -42,6 +37,11 @@ export interface AppOptions
   provider?: AppProvider
   csrfToken?: string
   csrfTokenVerified?: boolean
+  secret: string
+  theme: Theme
+  debug: boolean
+  logger: LoggerInstance
+  session: Required<SessionOptions>
 }
 
 export interface NextAuthRequest extends NextApiRequest {
