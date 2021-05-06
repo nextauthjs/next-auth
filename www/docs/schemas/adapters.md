@@ -258,5 +258,5 @@ const MyAdapter = () => {
 ```
 
 :::note
-This will work in code editors with a strong Typescript integration like VSCode or WebStorm. It might not work if you're using more lightweight editors like VIM or Atom.
+This will work in code editors with a strong TypeScript integration like VSCode or WebStorm. It might not work if you're using more lightweight editors like VIM or Atom.
 :::
