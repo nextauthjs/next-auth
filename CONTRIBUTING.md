@@ -32,7 +32,7 @@ cd next-auth
 
 2. Install packages:
 ```sh
-npm i && npm dev:setup
+npm i && npm run dev:setup
 ```
 
 3. Populate `.env.local`:
