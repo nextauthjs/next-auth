@@ -379,7 +379,7 @@ export interface CommonEventCallbacks {
   createUser: EventCallback<User>
   updateUser: EventCallback<User>
   linkAccount: EventCallback<LinkAccountEventMessage>
-  error: EventCallback<unknown>
+  error: EventCallback
 }
 /**
  * The event callbacks will take this form if you are using JWTs:
