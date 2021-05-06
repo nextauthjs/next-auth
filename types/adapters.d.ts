@@ -22,6 +22,8 @@ export default Adapters
  * [Create a custom adapter](https://next-auth.js.org/tutorials/creating-a-database-adapter)
  */
 export interface AdapterInstance<U = User, P = Profile, S = Session> {
+  /** Used as a prefix for adapter related log messages. (Defaults to `ADAPTER_`) */
+  displayName?: string
   createUser(profile: P): Promise<U>
   getUser(id: string): Promise<U | null>
   getUserByEmail(email: string): Promise<U | null>
