@@ -78,7 +78,7 @@ The Email Provider can be used with both JSON Web Tokens and database sessions, 
   ```
 3. You can now sign in with an email address at `/api/auth/signin`.
 
-  An account will not be created for the user until the first time they verify their email address. If an email address already associated with an account, the user will be signed in to that account when they use the link in the email.
+  A user account (i.e. an entry in the Users table) will not be created for the user until the first time they verify their email address. If an email address is already associated with an account, the user will be signed in to that account when they use the link in the email. 
 
 ## Customising emails
 
