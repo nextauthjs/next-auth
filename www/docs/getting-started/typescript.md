@@ -16,7 +16,7 @@ The types at [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyType
 
 ## Adapters
 
-If you're writing your own custom adapter, you can take advantage of the types to make sure your implementation conforms to what's expected:
+If you're writing your own custom Adapter, you can take advantage of the types to make sure your implementation conforms to what's expected:
 
 ```ts
 import type { Adapter } from "next-auth/adapters"
@@ -32,7 +32,7 @@ const MyAdapter: Adapter = () => {
 }
 ```
 
-When writing your own custom adapter in plain JavaScript, note that you can use **JSDoc** to get helpful editor hints and auto-completion like so:
+When writing your own custom Adapter in plain JavaScript, note that you can use **JSDoc** to get helpful editor hints and auto-completion like so:
 
 ```js
 /** @type { import("next-auth/adapters").Adapters } */
@@ -48,7 +48,7 @@ const MyAdapter = () => {
 ```
 
 :::note
-This will work in code editors with a strong Typescript integration like VSCode or WebStorm. It might not work if you're using more lightweight editors like VIM or Atom.
+This will work in code editors with a strong TypeScript integration like VSCode or WebStorm. It might not work if you're using more lightweight editors like VIM or Atom.
 :::
 
 ## Module Augmentation

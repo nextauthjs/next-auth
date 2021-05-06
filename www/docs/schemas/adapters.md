@@ -5,7 +5,7 @@ title: Database Adapters
 
 An **Adapter** in NextAuth.js connects your application to whatever database or backend system you want to use to store data for user accounts, sessions, etc.
 
-You do not need to specify an adapter explicitly unless you want to use advanced options such as custom models or schemas, if you want to use the Prisma adapter instead of the default TypeORM adapter, or if you are creating a custom adapter to connect to a database that is not one of the supported databases.
+You do not need to specify an Adapter explicitly unless you want to use advanced options such as custom models or schemas, if you want to use the Prisma Adapter instead of the default TypeORM Adapter, or if you are creating a custom Adapter to connect to a database that is not one of the supported databases.
 
 ### Database Schemas
 
@@ -17,9 +17,9 @@ Configure your database by creating the tables and columns to match the schema e
 
 ## TypeORM Adapter
 
-NextAuth.js comes with a default adapter that uses [TypeORM](https://typeorm.io/) so that it can be used with many different databases without any further configuration, you simply add the node module for the database driver you want to use to your project and pass a database connection string to NextAuth.js.
+NextAuth.js comes with a default Adapter that uses [TypeORM](https://typeorm.io/) so that it can be used with many different databases without any further configuration, you simply add the node module for the database driver you want to use to your project and pass a database connection string to NextAuth.js.
 
-The default adapter is the TypeORM adapter, the following configuration options are exactly equivalent.
+The default Adapter is the TypeORM Adapter, the following configuration options are exactly equivalent.
 
 ```javascript
 database: {
@@ -45,7 +45,7 @@ adapter: Adapters.TypeORM.Adapter({
 })
 ```
 
-The tutorial [Custom models with TypeORM](/tutorials/typeorm-custom-models) explains how to extend the built in models and schemas used by the TypeORM adapter. You can use these models in your own code.
+The tutorial [Custom models with TypeORM](/tutorials/typeorm-custom-models) explains how to extend the built in models and schemas used by the TypeORM Adapter. You can use these models in your own code.
 
 :::tip
 The `synchronize` option in TypeORM will generate SQL that exactly matches the documented schemas for MySQL and Postgres.
@@ -55,16 +55,16 @@ However, it should not be enabled against production databases as it may cause d
 
 ## Prisma Adapter
 
-You can also use NextAuth.js with the experimental adapter for [Prisma 2](https://www.prisma.io/docs/).
+You can also use NextAuth.js with the experimental Adapter for [Prisma 2](https://www.prisma.io/docs/).
 
-To use this adapter, you need to install Prisma Client and Prisma CLI:
+To use this Adapter, you need to install Prisma Client and Prisma CLI:
 
 ```
 npm install @prisma/client
 npm install prisma --save-dev
 ```
 
-Configure your NextAuth.js to use the Prisma adapter:
+Configure your NextAuth.js to use the Prisma Adapter:
 
 ```javascript title="pages/api/auth/[...nextauth].js"
 import NextAuth from "next-auth"
@@ -238,11 +238,11 @@ if (process.env.NODE_ENV === "production") {
 
 ## Custom Adapter
 
-See the tutorial for [creating a database adapter](/tutorials/creating-a-database-adapter) for more information on how to create a custom adapter. Have a look at the [adapters repository](https://github.com/nextauthjs/adapters) to see community maintained custom adapters or add your own.
+See the tutorial for [creating a database Adapter](/tutorials/creating-a-database-adapter) for more information on how to create a custom Adapter. Have a look at the [Adapter repository](https://github.com/nextauthjs/adapters) to see community maintained custom Adapter or add your own.
 
 ### Editor integration
 
-When writing your own custom adapter in plain JavaScript, note that you can use **JSDoc** to get helpful editor hints and auto-completion like so:
+When writing your own custom Adapter in plain JavaScript, note that you can use **JSDoc** to get helpful editor hints and auto-completion like so:
 
 ```js
 /** @type { import("next-auth/adapters").Adapters } */
