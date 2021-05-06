@@ -35,7 +35,7 @@ const MyAdapter: Adapter = () => {
 When writing your own custom Adapter in plain JavaScript, note that you can use **JSDoc** to get helpful editor hints and auto-completion like so:
 
 ```js
-/** @type { import("next-auth/adapters").Adapters } */
+/** @type { import("next-auth/adapters").Adapter } */
 const MyAdapter = () => {
   return {
     async getAdapter() {
