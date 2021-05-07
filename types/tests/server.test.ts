@@ -1,12 +1,7 @@
-import Providers, {
-  AppProvider,
-  EmailConfig,
-  OAuthConfig,
-} from "next-auth/providers"
-import { Adapter, AdapterInstance } from "next-auth/adapters"
+import Providers, { OAuthConfig } from "next-auth/providers"
+import { Adapter } from "next-auth/adapters"
 import NextAuth, * as NextAuthTypes from "next-auth"
 import { IncomingMessage, ServerResponse } from "http"
-import * as JWTType from "next-auth/jwt"
 import { Socket } from "net"
 import { NextApiRequest, NextApiResponse } from "internals/utils"
 import { AppOptions } from "internals"
@@ -173,22 +168,25 @@ const allConfig: NextAuthTypes.NextAuthOptions = {
     },
   },
   events: {
-    async signIn(message) {
+    async signIn(message: NextAuthTypes.SignInEventMessage) {
       return undefined
     },
-    async signOut(message) {
+    async signOut(message: NextAuthTypes.Session | null) {
       return undefined
     },
-    async createUser(message) {
+    async createUser(message: NextAuthTypes.User) {
       return undefined
     },
-    async linkAccount(message) {
+    async updateUser(message: NextAuthTypes.User) {
       return undefined
     },
-    async session(message) {
+    async linkAccount(message: NextAuthTypes.LinkAccountEventMessage) {
       return undefined
     },
-    async error(message) {
+    async session(message: NextAuthTypes.Session) {
+      return undefined
+    },
+    async error(message: any) {
       return undefined
     },
   },

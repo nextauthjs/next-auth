@@ -14,6 +14,43 @@ The types at [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyType
 
 ---
 
+## Adapters
+
+If you're writing your own custom Adapter, you can take advantage of the types to make sure your implementation conforms to what's expected:
+
+```ts
+import type { Adapter } from "next-auth/adapters"
+
+const MyAdapter: Adapter = () => {
+  return {
+    async getAdapter() {
+      return {
+        // your adapter methods here
+      }
+    },
+  }
+}
+```
+
+When writing your own custom Adapter in plain JavaScript, note that you can use **JSDoc** to get helpful editor hints and auto-completion like so:
+
+```js
+/** @type { import("next-auth/adapters").Adapter } */
+const MyAdapter = () => {
+  return {
+    async getAdapter() {
+      return {
+        // your adapter methods here
+      }
+    },
+  }
+}
+```
+
+:::note
+This will work in code editors with a strong TypeScript integration like VSCode or WebStorm. It might not work if you're using more lightweight editors like VIM or Atom.
+:::
+
 ## Module Augmentation
 
 `next-auth` comes with certain types/interfaces, that are shared across submodules. Good examples are `Session` and `JWT`. Ideally, you should only need to create these types at a single place, and TS should pick them up in every location where they are referenced. Luckily, this is exactly what Module Augmentation can do for us. Define your shared interfaces in a single location, and get type-safety across your application, when you use `next-auth` (or one of its submodules).
