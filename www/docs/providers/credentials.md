@@ -15,6 +15,14 @@ It comes with the constraint that users authenticated in this manner are not per
 The functionality provided for credentials based authentication is intentionally limited to discourage use of passwords due to the inherent security risks associated with them and the additional complexity associated with supporting usernames and passwords.
 :::
 
+## Options
+
+The **Credentials Provider** comes with a set of default options:
+
+- [Credentials Provider options](https://github.com/nextauthjs/next-auth/blob/main/src/providers/credentials.js)
+
+You can override any of the options to suit your own use case.
+
 ## Example
 
 The Credentials provider is specified like other providers, except that you need to define a handler for `authorize()` that accepts credentials submitted via HTTP POST as input and returns either:
