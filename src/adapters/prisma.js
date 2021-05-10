@@ -1,5 +1,5 @@
 /*
- * Source code is now at:
+ * Source code can be found at:
  * https://github.com/nextauthjs/adapters/tree/canary/packages/prisma-legacy
  */
 
