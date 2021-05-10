@@ -48,7 +48,7 @@ export default {
 ```
 
 :::note
-[View source for built-in TypeORM models and schemas](https://github.com/nextauthjs/next-auth/tree/main/src/adapters/typeorm/models)
+[View source for built-in TypeORM models and schemas](https://github.com/nextauthjs/adapters/tree/canary/packages/typeorm-legacy/src/models)
 :::
 
 ## Using custom models

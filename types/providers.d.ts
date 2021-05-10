@@ -94,6 +94,7 @@ export type OAuthProviderType =
   | "Twitter"
   | "VK"
   | "WordPress"
+  | "WorkOS"
   | "Yandex"
   | "Zoho"
 
