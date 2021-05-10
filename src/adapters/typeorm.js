@@ -1,8 +1,9 @@
 /*
- * Source code is now at:
+ * Source code can be found at:
  * https://github.com/nextauthjs/adapters/tree/canary/packages/typeorm-legacy
  */
 
-import TypeORMLegacyAdapter from "@next-auth/typeorm-legacy-adapter"
-
-export default TypeORMLegacyAdapter
+export {
+  TypeORMLegacyAdapter as Adapter,
+  Models,
+} from "@next-auth/typeorm-legacy-adapter"
