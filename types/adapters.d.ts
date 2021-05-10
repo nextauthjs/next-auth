@@ -16,15 +16,21 @@ import {
   TypeORMAdapterModels,
 } from "@next-auth/typeorm-legacy-adapter"
 
+import { PrismaLegacyAdapter } from "@next-auth/prisma-legacy-adapter"
+
 export const TypeORM: {
   Models: TypeORMAdapterModels
   Adapter: TypeORMAdapter
 }
 
+export const Prisma: {
+  Adapter: PrismaLegacyAdapter
+}
+
 declare const Adapters: {
   Default: TypeORMAdapter
   TypeORM: typeof TypeORM
-  Prisma: { Adapter: Adapter }
+  Prisma: typeof Prisma
 }
 export default Adapters
 
