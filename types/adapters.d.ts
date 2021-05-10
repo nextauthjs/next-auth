@@ -1,12 +1,29 @@
 import { AppOptions } from "./internals"
 import { User, Profile, Session } from "."
 import { EmailConfig } from "./providers"
-import { ConnectionOptions } from "typeorm"
 
 /** Legacy */
+
+export {
+  TypeORMAccountModel,
+  TypeORMSessionModel,
+  TypeORMUserModel,
+  TypeORMVerificationRequestModel,
+} from "@next-auth/typeorm-legacy-adapter"
+
+import {
+  TypeORMAdapter,
+  TypeORMAdapterModels,
+} from "@next-auth/typeorm-legacy-adapter"
+
+export const TypeORM: {
+  Models: TypeORMAdapterModels
+  Adapter: TypeORMAdapter
+}
+
 declare const Adapters: {
-  Default: Adapter<ConnectionOptions>
-  TypeORM: { Adapter: Adapter<ConnectionOptions> }
+  Default: TypeORMAdapter
+  TypeORM: typeof TypeORM
   Prisma: { Adapter: Adapter }
 }
 export default Adapters
