@@ -17,6 +17,14 @@ You can configure your OAuth Clients on your Osso Admin UI, i.e. https://demo.os
 
 See Osso's complete configuration and testing documentation at https://ossoapp.com/docs/configure/overview
 
+## Options
+
+The **Osso Provider** comes with a set of default options:
+
+- [Osso Provider options](https://github.com/nextauthjs/next-auth/blob/main/src/providers/osso.js)
+
+You can override any of the options to suit your own use case.
+
 ## Example
 
 A full example application is available at https://github.com/enterprise-oss/osso-next-auth-example and https://nextjs-demo.ossoapp.com

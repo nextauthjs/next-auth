@@ -15,6 +15,14 @@ https://manage.auth0.com/dashboard
 Configure your application in Auth0 as a 'Regular Web Application' (not a 'Single Page App').
 :::
 
+## Options
+
+The **Auth0 Provider** comes with a set of default options:
+
+- [Auth0 Provider options](https://github.com/nextauthjs/next-auth/blob/main/src/providers/auth0.js)
+
+You can override any of the options to suit your own use case.
+
 ## Example
 
 ```js

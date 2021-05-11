@@ -11,7 +11,16 @@ https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-c
 
 https://docs.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-tenant
 
+## Options
+
+The **Azure Active Directory Provider** comes with a set of default options:
+
+- [Azure Active Directory Provider options](https://github.com/nextauthjs/next-auth/blob/main/src/providers/azure-ad-b2c.js)
+
+You can override any of the options to suit your own use case.
+
 ## Example
+
 - In https://portal.azure.com/ -> Azure Active Directory create a new App Registration.
 - Make sure to remember / copy
   - Application (client) ID
@@ -22,13 +31,13 @@ https://docs.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-tena
 In `.env.local` create the follwing entries:
 
 ```
-AZURE_CLIENT_ID=<copy Application (client) ID here> 
+AZURE_CLIENT_ID=<copy Application (client) ID here>
 AZURE_CLIENT_SECRET=<copy generated secret value here>
 AZURE_TENANT_ID=<copy the tenant id here>
 ```
 
 In `pages/api/auth/[...nextauth].js` find or add the AZURE entries:
-  
+
 ```js
 import Providers from 'next-auth/providers';
 ...

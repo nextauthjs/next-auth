@@ -11,6 +11,14 @@ https://vk.com/dev/first_guide
 
 https://vk.com/apps?act=manage
 
+## Options
+
+The **VK Provider** comes with a set of default options:
+
+- [VK Provider options](https://github.com/nextauthjs/next-auth/blob/main/src/providers/vk.js)
+
+You can override any of the options to suit your own use case.
+
 ## Example
 
 ```js
