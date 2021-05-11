@@ -4,8 +4,11 @@
   "scripts": {
     "start": "npm run generate-providers && docusaurus start",
     "build": "npm run generate-providers && docusaurus build",
+    "docusaurus": "docusaurus",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
+    "serve": "docusaurus serve",
+    "clear": "docusaurus clear",
     "lint": "standard",
     "lint:fix": "standard --fix",
     "generate-providers": "node ./scripts/generate-providers.js"
@@ -14,7 +17,7 @@
     "@docusaurus/core": "2.0.0-alpha.75",
     "@docusaurus/preset-classic": "2.0.0-alpha.75",
     "classnames": "^2.3.1",
-    "docusaurus-lunr-search": "^2.1.12",
+    "docusaurus-lunr-search": "^2.1.14",
     "jose": "^2.0.5",
     "lodash.times": "^4.3.2",
     "react": "^17.0.2",
