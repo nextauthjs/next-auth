@@ -3,58 +3,122 @@ id: providers
 title: Providers
 ---
 
-Authentication Providers in NextAuth.js are services that can be used to sign in (OAuth, Email, etc).
+Authentication Providers in **NextAuth.js** are services that can be used to sign in a user.
 
-## Sign in with OAuth
+There's four ways a user can be signed in:
 
-NextAuth.js is designed to work with any OAuth service, it supports OAuth 1.0, 1.0A and 2.0 and has built-in support for many popular OAuth sign-in services.
+- [Using a built-in OAuth Provider](#oauth-providers) (e.g Github, Twitter, Google, etc...)
+- [Using a custom OAuth Provider](#-using-a-custom-provider)
+- [Using Email](#email-provider)
+- [Using Credentials](#credentials-provider)
 
-### Built-in OAuth providers
+:::note
+NextAuth.js is designed to work with any OAuth service, it supports **OAuth 1.0**, **1.0A** and **2.0** and has built-in support for most popular sign-in services.
+:::
 
-<ul>
+## OAuth Providers
+
+### Available providers
+
+<div className="provider-name-list">
 {Object.entries(require("../../providers.json"))
   .filter(([key]) => !["email", "credentials"].includes(key))
   .sort(([, a], [, b]) => a.localeCompare(b))
-  .map(([key, name]) =>
-    <li key={key}><a href={`/providers/${key}`}>{name}</a></li>
+  .map(([key, name]) => (
+    <span key={key}>
+      <a href={`/providers/${key}`}>{name}</a>
+      <span className="provider-name-list__comma">,</span>
+    </span>
+  )
+    
 )}
-</ul>
+</div>
 
-### Using a built-in OAuth provider
+### How to
 
 1. Register your application at the developer portal of your provider. There are links above to the developer docs for most supported providers with details on how to register your application.
 
 2. The redirect URI should follow this format:
-  ```
-  [origin]/api/auth/callback/[provider]
-  ```
-  For example, Twitter on `localhost` this would be:
-  ```
-  http://localhost:3000/api/auth/callback/twitter
-  ```
+
+```
+[origin]/api/auth/callback/[provider]
+```
+
+For example, Twitter on `localhost` this would be:
+
+```
+http://localhost:3000/api/auth/callback/twitter
+```
+
 3. Create a `.env` file at the root of your project and add the client ID and client secret. For Twitter this would be:
 
-  ```
-  TWITTER_ID=YOUR_TWITTER_CLIENT_ID
-  TWITTER_SECRET=YOUR_TWITTER_CLIENT_SECRET
-  ```
+```
+TWITTER_ID=YOUR_TWITTER_CLIENT_ID
+TWITTER_SECRET=YOUR_TWITTER_CLIENT_SECRET
+```
 
 4. Now you can add the provider settings to the NextAuth options object. You can add as many OAuth providers as you like, as you can see `providers` is an array.
 
-  ```js title="pages/api/auth/[...nextauth].js"
-  import Providers from `next-auth/providers`
-  ...
-  providers: [
-    Providers.Twitter({
-      clientId: process.env.TWITTER_ID,
-      clientSecret: process.env.TWITTER_SECRET
-    })
-  ],
-  ...
-  ```
-5. Once a provider has been setup, you can sign in at the following URL: `[origin]/api/auth/signin`. This is an unbranded auto-generated page with all the configured providers.   
+```js title="pages/api/auth/[...nextauth].js"
+import Providers from `next-auth/providers`
+...
+providers: [
+  Providers.Twitter({
+    clientId: process.env.TWITTER_ID,
+    clientSecret: process.env.TWITTER_SECRET
+  })
+],
+...
+```
+
+5. Once a provider has been setup, you can sign in at the following URL: `[origin]/api/auth/signin`. This is an unbranded auto-generated page with all the configured providers.
 
 <Image src="/img/signin.png" alt="Signin Screenshot" />
+
+### Options
+
+|        Name         |                           Description                            |             Type              | Required |
+| :-----------------: | :--------------------------------------------------------------: | :---------------------------: | :------: |
+|         id          |                    Unique ID for the provider                    |           `string`            |   Yes    |
+|        name         |                Descriptive name for the provider                 |           `string`            |   Yes    |
+|        type         |              Type of provider, in this case `oauth`              |           `"oauth"`           |   Yes    |
+|       version       |            OAuth version (e.g. '1.0', '1.0a', '2.0')             |           `string`            |   Yes    |
+|        scope        |          OAuth access scopes (expects array or string)           |    `string` or `string[]`     |   Yes    |
+|       params        |       Extra URL params sent when calling `accessTokenUrl`        |           `Object`            |   Yes    |
+|   accessTokenUrl    |               Endpoint to retrieve an access token               |           `string`            |   Yes    |
+|  authorizationUrl   |         Endpoint to request authorization from the user          |           `string`            |   Yes    |
+|   requestTokenUrl   |               Endpoint to retrieve a request token               |           `string`            |   Yes    |
+|     profileUrl      |             Endpoint to retrieve the user's profile              |           `string`            |   Yes    |
+|      clientId       |                 Client ID of the OAuth provider                  |           `string`            |   Yes    |
+|    clientSecret     |               Client Secret of the OAuth provider                |           `string`            |   Yes    |
+|       profile       |       A callback returning an object with the user's info        | `(profile, tokens) => Object` |   Yes    |
+|     protection      | Additional security for OAuth login flows (defaults to `state`)  |  `"pkce"`,`"state"`,`"none"`  |    No    |
+|        state        | Same as `protection: "state"`. Being deprecated, use protection. |           `boolean`           |    No    |
+|       headers       |      Any headers that should be sent to the OAuth provider       |           `Object`            |    No    |
+| authorizationParams |    Additional params to be sent to the authorization endpoint    |           `Object`            |    No    |
+|       idToken       |   Set to `true` for services that use ID Tokens (e.g. OpenID)    |           `boolean`           |    No    |
+|       region        |                    Only when using BattleNet                     |           `string`            |    No    |
+|       domain        |                Only when using certain Providers                 |           `string`            |    No    |
+|      tenantId       |     Only when using Azure, Active Directory, B2C, FusionAuth     |           `string`            |    No    |
+
+:::tip
+Even if you are using a built-in provider, you can override any of these options to tweak the default configuration.
+
+```js title=[...nextauth].js
+import Providers from "next-auth/providers"
+
+Providers.Auth0({
+  clientId: process.env.CLIENT_ID,
+  clientSecret: process.env.CLIENT_SECRET,
+  domain: process.env.DOMAIN,
+  scope: "openid your_custom_scope", // We do provide a default, but this will override it if defined
+  profile(profile) {
+    return {} // Return the profile in a shape that is different from the built-in one.
+  },
+})
+```
+
+:::
 
 ### Using a custom provider
 
@@ -89,7 +153,8 @@ As an example of what this looks like, this is the provider object returned for 
   clientSecret: ""
 }
 ```
-You can replace all the options in this JSON object with the ones from your custom provider - be sure to give it a unique ID and specify the correct OAuth version - and add it to the providers option:
+
+Replace all the options in this JSON object with the ones from your custom provider - be sure to give it a unique ID and specify the correct OAuth version - and add it to the providers option when initializing the library:
 
 ```js title="pages/api/auth/[...nextauth].js"
 import Providers from `next-auth/providers`
@@ -111,33 +176,24 @@ providers: [
 ...
 ```
 
+### Adding a new provider
 
+If you think your custom provider might be useful to others, we encourage you to open a PR and add it to the built-in list so others can discover it much more easily!
 
+You only need to add two changes:
 
-### OAuth provider options
+1. Add your config: [`src/providers/{provider}.js`](https://github.com/nextauthjs/next-auth/tree/main/src/providers)<br />
+   • make sure you use a named default export, like this: `export default function YourProvider`
+2. Add provider documentation: [`www/docs/providers/{provider}.md`](https://github.com/nextauthjs/next-auth/tree/main/www/docs/providers)
+3. Add it to our [provider types](https://github.com/nextauthjs/next-auth/blob/main/types/providers.d.ts) (for TS projects)<br />
+   • you just need to add your new provider name to [this list](https://github.com/nextauthjs/next-auth/blob/main/types/providers.d.ts#L56-L97)<br />
+   • in case you new provider accepts some custom options, you can [add them here](https://github.com/nextauthjs/next-auth/blob/main/types/providers.d.ts#L48-L53)
 
-|        Name         |                           Description                            |              Type               | Required |
-| :-----------------: | :--------------------------------------------------------------: | :-----------------------------: | :------: |
-|         id          |                    Unique ID for the provider                    |            `string`             |   Yes    |
-|        name         |                Descriptive name for the provider                 |            `string`             |   Yes    |
-|        type         |       Type of provider, in this case it should be `oauth`        | `oauth`, `email`, `credentials` |   Yes    |
-|       version       |            OAuth version (e.g. '1.0', '1.0a', '2.0')             |            `string`             |   Yes    |
-|   accessTokenUrl    |               Endpoint to retrieve an access token               |            `string`             |   Yes    |
-|  authorizationUrl   |         Endpoint to request authorization from the user          |            `string`             |   Yes    |
-|      clientId       |                 Client ID of the OAuth provider                  |            `string`             |   Yes    |
-|    clientSecret     |               Client Secret of the OAuth provider                |            `string`             |    No    |
-|        scope        |          OAuth access scopes (expects array or string)           |     `string` or `string[]`      |    No    |
-|       params        |             Additional authorization URL parameters              |            `object`             |    No    |
-|   requestTokenUrl   |               Endpoint to retrieve a request token               |            `string`             |    No    |
-| authorizationParams |    Additional params to be sent to the authorization endpoint    |            `object`             |    No    |
-|     profileUrl      |             Endpoint to retrieve the user's profile              |            `string`             |    No    |
-|       profile       |        A callback returning an object with the user's info       |            `object`             |    No    |
-|       idToken       |   Set to `true` for services that use ID Tokens (e.g. OpenID)    |            `boolean`            |    No    |
-|       headers       |      Any headers that should be sent to the OAuth provider       |            `object`             |    No    |
-|     protection      | Additional security for OAuth login flows (defaults to `state`)  |`[pkce]`,`[state]`,`[pkce,state]`|    No    |
-|        state        | Same as `protection: "state"`. Being deprecated, use protection. |            `boolean`            |    No    |
+That's it! 🎉 Others will be able to discover this provider much more easily now!
 
-## Sign in with Email
+## Email Provider
+
+### How to
 
 The Email provider uses email to send "magic links" that can be used sign in, you will likely have seen them before if you have used software like Slack.
 
@@ -164,8 +220,21 @@ See the [Email provider documentation](/providers/email) for more information on
 The email provider requires a database, it cannot be used without one.
 :::
 
+### Options
 
-## Sign in with Credentials
+|          Name           |                                     Description                                     |               Type               | Required |
+| :---------------------: | :---------------------------------------------------------------------------------: | :------------------------------: | :------: |
+|           id            |                             Unique ID for the provider                              |             `string`             |   Yes    |
+|          name           |                          Descriptive name for the provider                          |             `string`             |   Yes    |
+|          type           |                       Type of provider, in this case `email`                        |            `"email"`             |   Yes    |
+|         server          |                     Path or object pointing to the email server                     |       `string` or `Object`       |   Yes    |
+| sendVerificationRequest |               Callback to execute when a verification request is sent               | `(params) => Promise<undefined>` |   Yes    |
+|          from           |   The email address from which emails are sent, default: "<no-reply@example.com>"   |             `string`             |    No    |
+|         maxAge          | How long until the e-mail can be used to log the user in seconds. Defaults to 1 day |             `number`             |    No    |
+
+## Credentials Provider
+
+### How to
 
 The Credentials provider allows you to handle signing in with arbitrary credentials, such as a username and password, two factor authentication or hardware device (e.g. YubiKey U2F / FIDO).
 
@@ -211,26 +280,12 @@ See the [Credentials provider documentation](/providers/credentials) for more in
 The Credentials provider can only be used if JSON Web Tokens are enabled for sessions. Users authenticated with the Credentials provider are not persisted in the database.
 :::
 
-<!-- React Image Component -->
-export const Image = ({ children, src, alt = '' }) => (
-  <div
-    style={{
-      padding: '0.2rem',
-      width: '100%',
-      display: 'flex',
-      justifyContent: 'center'
-    }}>
-    <img alt={alt} src={src} />
-  </div>
- )
+### Options
 
-
-## Adding a new built-in provider
-
-If you think your custom provider might be useful to others, we encourage you to open a PR and add it to the built-in list so others can discover it much more easily! You only need to add two changes:
-1. Add your config: [`src/providers/{provider}.js`](https://github.com/nextauthjs/next-auth/tree/main/src/providers) (Make sure you use a named default export, like `export default function YourProvider`!)
-2. Add provider documentation: [`www/docs/providers/{provider}.md`](https://github.com/nextauthjs/next-auth/tree/main/www/docs/providers)
-
-That's it! 🎉 Others will be able to discover this provider much more easily now!
-
-You can look at the existing built-in providers for inspiration.
+|    Name     |                    Description                    |               Type               | Required |
+| :---------: | :-----------------------------------------------: | :------------------------------: | :------: |
+|     id      |            Unique ID for the provider             |             `string`             |   Yes    |
+|    name     |         Descriptive name for the provider         |             `string`             |   Yes    |
+|    type     |   Type of provider, in this case `credentials`    |         `"credentials"`          |   Yes    |
+| credentials |          The credentials to sign-in with          |             `Object`             |   Yes    |
+|  authorize  | Callback to execute once user is to be authorized | `(credentials) => Promise<User>` |   Yes    |

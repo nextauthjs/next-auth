@@ -215,6 +215,7 @@ async function getOAuth2AccessToken (code, provider, codeVerifier) {
  */
 async function getOAuth2 (provider, accessToken, results) {
   let url = provider.profileUrl
+  let httpMethod = 'GET'
   const headers = { ...provider.headers }
 
   if (this._useAuthorizationHeaderForGET) {
@@ -238,8 +239,15 @@ async function getOAuth2 (provider, accessToken, results) {
     url = prepareProfileUrl({ provider, url, results })
   }
 
+  /** Dropbox requires POST instead of GET
+   * Read more: https://www.dropbox.com/developers/reference/auth-types#user
+   */
+  if (provider.id === 'dropbox') {
+    httpMethod = 'POST'
+  }
+
   return new Promise((resolve, reject) => {
-    this._request('GET', url, headers, null, accessToken, (error, profileData) => {
+    this._request(httpMethod, url, headers, null, accessToken, (error, profileData) => {
       if (error) {
         return reject(error)
       }
