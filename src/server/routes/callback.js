@@ -336,7 +336,7 @@ export default async function callback(req, res) {
     let userObjectReturnedFromAuthorizeHandler
     try {
       userObjectReturnedFromAuthorizeHandler = await provider.authorize(
-        credentials
+        credentials, provider.type === "credentials" ? req : null
       )
       if (!userObjectReturnedFromAuthorizeHandler) {
         return res
