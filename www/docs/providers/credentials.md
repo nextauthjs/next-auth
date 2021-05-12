@@ -39,7 +39,7 @@ The Credentials provider is specified like other providers, except that you need
 
   If you throw an Error, the user will be sent to the error page with the error message as a query parameter. If throw a URL (a string), the user will be redirected to the URL.
 
-Credentials provider `authorize()` method also provides request object as second parameter `req` (see example below).
+The Credentials provider's `authorize()` method also provides the request object as the second parameter (see example below).
 
 ```js title="pages/api/auth/[...nextauth].js"
 import Providers from `next-auth/providers`
