@@ -115,7 +115,7 @@ interface CredentialsConfig<C extends Record<string, CredentialInput> = {}>
   extends CommonProviderOptions {
   type: "credentials"
   credentials: C
-  authorize(credentials: Record<keyof C, string>, req?: NextApiRequest): Awaitable<User | null>
+  authorize(credentials: Record<keyof C, string>, req: NextApiRequest): Awaitable<User | null>
 }
 
 export type CredentialsProvider = (
