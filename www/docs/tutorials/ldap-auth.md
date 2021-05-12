@@ -22,7 +22,7 @@ export default NextAuth({
         username: { label: "DN", type: "text", placeholder: "" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         // You might want to pull this call out so we're not making a new LDAP client on every login attemp
         const client = ldap.createClient({
           url: process.env.LDAP_URI,

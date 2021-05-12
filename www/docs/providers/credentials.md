@@ -92,7 +92,7 @@ As with all providers, the order you specify them is the order they are displaye
     Providers.Credentials({
       id: 'domain-login',
       name: "Domain Account",
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         const user = { /* add function to get user */ }
         return user
       },
@@ -105,7 +105,7 @@ As with all providers, the order you specify them is the order they are displaye
     Providers.Credentials({
       id: 'intranet-credentials',
       name: "Two Factor Auth",
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         const user = { /* add function to get user */ } 
         return user
       },
