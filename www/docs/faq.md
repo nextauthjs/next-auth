@@ -196,9 +196,9 @@ JSON Web Tokens can be used for session tokens, but are also used for lots of ot
 
   NextAuth.js client includes advanced features to mitigate the downsides of using shorter session expiry times on the user experience, including automatic session token rotation, optionally sending keep alive messages to prevent short lived sessions from expiring if there is an window or tab open, background re-validation, and automatic tab/window syncing that keeps sessions in sync across windows any time session state changes or a window or tab gains or loses focus.
 
-* As with database session tokens, JSON Web Tokens are limited in the amount of data you can store in them. There is typically a limit of around 4096 bytes in total for all cookies on a domain, though the exact limit varies between browsers, proxies and hosting services.
+* As with database session tokens, JSON Web Tokens are limited in the amount of data you can store in them. There is typically a limit of around 4096 bytes per cookie, though the exact limit varies between browsers, proxies and hosting services. If you want to support most browsers, then do not exceed 4096 bytes per cookie. If you want to save more data, you will need to persist your sessions in a database (Source: [browsercookielimits.iain.guru](http://browsercookielimits.iain.guru/))
 
-  The more data you try to store in a token and the more other cookies you set, the closer you will come to this limit. If you wish to store more than ~2 KB of data you probably at the point where you need to store a unique ID in the token and persist the data elsewhere (e.g. in a server side key/value store).
+  The more data you try to store in a token and the more other cookies you set, the closer you will come to this limit. If you wish to store more than ~4 KB of data you're probably at the point where you need to store a unique ID in the token and persist the data elsewhere (e.g. in a server-side key/value store).
 
 * Data stored in an encrypted JSON Web Token (JWE) may be compromised at some point.
 
