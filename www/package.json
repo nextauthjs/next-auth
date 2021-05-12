@@ -4,26 +4,23 @@
   "scripts": {
     "start": "npm run generate-providers && docusaurus start",
     "build": "npm run generate-providers && docusaurus build",
-    "docusaurus": "docusaurus",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
-    "serve": "docusaurus serve",
-    "clear": "docusaurus clear",
     "lint": "standard",
     "lint:fix": "standard --fix",
     "generate-providers": "node ./scripts/generate-providers.js"
   },
   "dependencies": {
-    "@docusaurus/core": "2.0.0-alpha.75",
-    "@docusaurus/preset-classic": "2.0.0-alpha.75",
-    "classnames": "^2.3.1",
-    "docusaurus-lunr-search": "^2.1.14",
-    "jose": "^2.0.5",
+    "@docusaurus/core": "^2.0.0-alpha.70",
+    "@docusaurus/preset-classic": "^2.0.0-alpha.70",
+    "classnames": "^2.2.6",
+    "docusaurus-lunr-search": "^2.1.10",
+    "jose": "^2.0.2",
     "lodash.times": "^4.3.2",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "react-marquee-slider": "^1.1.2",
-    "styled-components": "^5.2.3"
+    "styled-components": "^5.2.1"
   },
   "browserslist": {
     "production": [
