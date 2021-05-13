@@ -17,8 +17,20 @@
   display: none;
 }
 
+.search-icon-keyboard {
+  position: absolute;
+  right: 30px;
+  top: 20px;
+}
+
 .search-icon-hidden {
   visibility: hidden;
+}
+
+.searchbox__input::-webkit-search-decoration,
+.searchbox__input::-webkit-search-cancel-button {
+  visibility: none !important;
+  display: none !important;
 }
 
 @media (max-width: 360px) {
@@ -37,4 +49,13 @@
     display: inline;
     vertical-align: sub;
   }
+
+  .search-icon-keyboard {
+    display: none;
+  }
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  background: none;
 }
