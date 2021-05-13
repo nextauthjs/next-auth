@@ -18,5 +18,16 @@ module.exports = {
       test: ["../src/server/pages/**"],
       presets: ["preact"],
     },
+    {
+      test: ["../src/**/*.test.js"],
+      presets: [
+        [
+          "@babel/preset-react",
+          {
+            runtime: "automatic",
+          },
+        ],
+      ],
+    },
   ],
 }
