@@ -34,9 +34,9 @@
 
 html[data-theme="dark"]:root {
   --ifm-color-link: #289ef9;
-  --ifm-footer-background-color: #111;
+  --ifm-footer-background-color: #000;
   --ifm-html-background-color: #242526;
-  --ifm-background-color: #000000;
+  --ifm-background-color: #090909;
   --ifm-hero-background-color: #111111;
   --ifm-navbar-background-color: rgba(0, 0, 0, 0.95);
 }
@@ -196,6 +196,21 @@ html[data-theme="dark"] hr {
   height: 1.5rem;
   background-image: url("/img/brand-github.svg");
   background-repeat: no-repeat;
+}
+
+.navbar__items .react-toggle {
+  margin-right: 10px;
+}
+
+.navbar__search-input:focus {
+  outline: none;
+  box-shadow: rgb(255, 255, 255) 0px 0px 0px 0px,
+    rgba(19, 19, 19, 0.2) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px;
+  transition: box-shadow 350ms ease-in-out;
+}
+html[data-theme="dark"] .navbar__search-input:focus {
+  box-shadow: rgb(255, 255, 255) 0px 0px 0px 0px,
+    rgba(29, 29, 29, 0.5) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px;
 }
 
 html[data-theme="dark"] .navbar__item.navbar__link[href*="github"]:before {

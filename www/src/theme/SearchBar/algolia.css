@@ -148,7 +148,7 @@
   margin-right: -4px;
   height: 100%;
   vertical-align: middle;
-  content: '';
+  content: "";
 }
 
 .searchbox__submit:hover,
@@ -237,7 +237,7 @@
 .algolia-autocomplete .ds-dropdown-menu:before {
   display: block;
   position: absolute;
-  content: '';
+  content: "";
   width: 14px;
   height: 14px;
   background: #373940;
@@ -308,7 +308,7 @@
   cursor: pointer;
 }
 
-.algolia-autocomplete .ds-dropdown-menu [class^='ds-dataset-'] {
+.algolia-autocomplete .ds-dropdown-menu [class^="ds-dataset-"] {
   position: relative;
   border-radius: 4px;
   overflow: auto;
@@ -369,7 +369,7 @@
 }
 
 .algolia-autocomplete .algolia-docsearch-suggestion--content:before {
-  content: '';
+  content: "";
   position: absolute;
   display: block;
   top: 0;
@@ -413,7 +413,7 @@
 }
 
 .algolia-autocomplete .algolia-docsearch-suggestion--subcategory-column:before {
-  content: '';
+  content: "";
   position: absolute;
   display: block;
   top: 0;
@@ -484,7 +484,7 @@
   color: #222222;
   background-color: #ebebeb;
   border-radius: 3px;
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
