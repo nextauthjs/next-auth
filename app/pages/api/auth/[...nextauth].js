@@ -60,7 +60,7 @@ export default NextAuth({
       credentials: {
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         if (credentials.password === "password") {
           return {
             id: 1,
