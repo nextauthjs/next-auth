@@ -12,6 +12,10 @@ import { useHistory } from "@docusaurus/router"
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext"
 import "./styles.css"
 
+const kFormatter = (num) => {
+  return Math.sign(num) * (Math.abs(num) / 1000).toFixed(1) + "k"
+}
+
 let loaded = false
 const Search = (props) => {
   const initialized = useRef(false)
@@ -84,6 +88,17 @@ const Search = (props) => {
         searchBarRef.current.focus()
       }
     })
+    fetch("https://api.github.com/repos/nextauthjs/next-auth")
+      .then((res) => res.json())
+      .then((data) => {
+        const navLinks = document.getElementsByClassName(
+          "navbar__item navbar__link"
+        )
+        const githubStat = document.createElement("span")
+        githubStat.innerHTML = kFormatter(data.stargazers_count)
+        githubStat.className = "github-counter"
+        navLinks[4].appendChild(githubStat)
+      })
     return () => document.removeEventListener("keypress")
   }, [])
 
