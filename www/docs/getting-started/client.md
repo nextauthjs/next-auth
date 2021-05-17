@@ -328,6 +328,25 @@ export default function App ({ Component, pageProps }) {
 
 If you pass the `session` page prop to the `<Provider>` – as in the example above – you can avoid checking the session twice on pages that support both server and client side rendering.
 
+This only works on pages where you provide the correct `pageProps`, however. This is normally done in `getInitialProps` or `getServerSideProps` like so:
+
+```js
+// pages/index.js
+import {getSession} from "next-auth/client"
+
+...
+
+export async function getServerSideProps(ctx) {
+  return {
+    props: {
+      session: await getSession(ctx)
+    }
+  }
+}
+```
+
+If every one of your pages needs to be protected, you can do this in `_app`, otherwise you can do it on a page-by-page basis.
+
 ### Options
 
 The session state is automatically synchronized across all open tabs/windows and they are all updated whenever they gain or lose focus or the state changes in any of them (e.g. a user signs in or out).
