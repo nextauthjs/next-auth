@@ -33,6 +33,22 @@
   display: none !important;
 }
 
+.github-counter {
+  position: absolute;
+  color: #000;
+  top: -10px;
+  right: 5px;
+  font-size: 9px;
+  background-color: #ccc;
+  padding: 2px 5px;
+  border-radius: 10px;
+  z-index: -1;
+}
+html[data-theme="dark"] .github-counter {
+  background-color: #222;
+  color: #fff;
+}
+
 @media (max-width: 360px) {
   .search-bar {
     width: 0 !important;

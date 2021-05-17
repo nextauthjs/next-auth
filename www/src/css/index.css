@@ -185,7 +185,7 @@ html[data-theme="dark"] hr {
 
 .navbar__item.navbar__link[href*="github"],
 .navbar__item.navbar__link[href*="npmjs"] {
-  padding: 0 1rem 0 0;
+  padding: 0 1.5rem 0 0;
   display: flex;
   font-size: 0;
 }
