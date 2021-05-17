@@ -330,9 +330,8 @@ If you pass the `session` page prop to the `<Provider>` – as in the example ab
 
 This only works on pages where you provide the correct `pageProps`, however. This is normally done in `getInitialProps` or `getServerSideProps` like so:
 
-```js
-// pages/index.js
-import {getSession} from "next-auth/client"
+```js title="pages/index.js"
+import { getSession } from "next-auth/client"
 
 ...
 
