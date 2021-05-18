@@ -7,6 +7,24 @@ An **Adapter** in NextAuth.js connects your application to whatever database or 
 
 You do not need to specify an Adapter explicitly unless you want to use advanced options such as custom models or schemas, if you want to use the Prisma Adapter instead of the default TypeORM Adapter, or if you are creating a custom Adapter to connect to a database that is not one of the supported databases.
 
+We have recently begun moving the adapter code out of the core of `nextauthjs/next-auth` and into their own repository under [`nextauthjs/adapters`](https://github.com/nextauthjs/adapters).
+
+There you can find the following adapters in various stages of maturity:
+
+- TypeORM
+- TypeORM-Legacy
+- Prisma
+- Prisma-Legacy
+- FaunaDB
+- DynamoDB
+- PouchDB (Active PR)
+- Sanity (Active PR)
+- Sequelize (Active PR)
+
+## TypeORM Adapter
+
+NextAuth.js comes with a default Adapter that uses [TypeORM](https://typeorm.io/) so that it can be used with many different databases without any further configuration, you simply add the node module for the database driver you want to use to your project and pass a database connection string to NextAuth.js.
+
 ### Database Schemas
 
 Configure your database by creating the tables and columns to match the schema expected by NextAuth.js.
@@ -15,11 +33,7 @@ Configure your database by creating the tables and columns to match the schema e
 - [Postgres Schema](/schemas/postgres)
 - [Microsoft SQL Server Schema](/schemas/mssql)
 
-## TypeORM Adapter
-
-NextAuth.js comes with a default Adapter that uses [TypeORM](https://typeorm.io/) so that it can be used with many different databases without any further configuration, you simply add the node module for the database driver you want to use to your project and pass a database connection string to NextAuth.js.
-
-The default Adapter is the TypeORM Adapter, the following configuration options are exactly equivalent.
+The default Adapter is the TypeORM Adapter and the default database type for TypeORM is SQLite, the following configuration options are exactly equivalent.
 
 ```javascript
 database: {
@@ -48,9 +62,7 @@ adapter: Adapters.TypeORM.Adapter({
 The tutorial [Custom models with TypeORM](/tutorials/typeorm-custom-models) explains how to extend the built in models and schemas used by the TypeORM Adapter. You can use these models in your own code.
 
 :::tip
-The `synchronize` option in TypeORM will generate SQL that exactly matches the documented schemas for MySQL and Postgres.
-
-However, it should not be enabled against production databases as it may cause data loss if the configured schema does not match the expected schema!
+The `synchronize` option in TypeORM will generate SQL that exactly matches the documented schemas for MySQL and Postgres. This will automatically apply any changes it finds in the entity model, therefore it **should not be enabled against production databases** as it may cause data loss if the configured schema does not match the expected schema!
 :::
 
 ## Prisma Adapter
