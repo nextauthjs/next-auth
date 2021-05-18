@@ -8,7 +8,7 @@ Authentication Providers in **NextAuth.js** are services that can be used to sig
 There's four ways a user can be signed in:
 
 - [Using a built-in OAuth Provider](#oauth-providers) (e.g Github, Twitter, Google, etc...)
-- [Using a custom OAuth Provider](#-using-a-custom-provider)
+- [Using a custom OAuth Provider](#using-a-custom-provider)
 - [Using Email](#email-provider)
 - [Using Credentials](#credentials-provider)
 
