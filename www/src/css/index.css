@@ -310,3 +310,9 @@ html[data-theme="dark"] {
     display: block;
   }
 }
+
+@media screen and (max-width: 740px) {
+  .DocSearch-Container {
+    margin-top: 60px;
+  }
+}
