@@ -7,19 +7,15 @@ An **Adapter** in NextAuth.js connects your application to whatever database or 
 
 You do not need to specify an Adapter explicitly unless you want to use advanced options such as custom models or schemas, if you want to use the Prisma Adapter instead of the default TypeORM Adapter, or if you are creating a custom Adapter to connect to a database that is not one of the supported databases.
 
-We have recently begun moving the adapter code out of the core of `nextauthjs/next-auth` and into their own repository under [`nextauthjs/adapters`](https://github.com/nextauthjs/adapters).
+The adapters have been migrated out of the core of `nextauthjs/next-auth` into their own repository and can now be found under [`nextauthjs/adapters`](https://github.com/nextauthjs/adapters).
 
 There you can find the following adapters in various stages of maturity:
 
 - TypeORM
-- TypeORM-Legacy
 - Prisma
 - Prisma-Legacy
 - FaunaDB
 - DynamoDB
-- PouchDB (Active PR)
-- Sanity (Active PR)
-- Sequelize (Active PR)
 
 ## TypeORM Adapter
 

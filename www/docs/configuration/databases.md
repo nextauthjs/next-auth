@@ -10,7 +10,7 @@ NextAuth.js comes with multiple ways of connecting to a database:
 - **Prisma**<br/>
   _The Prisma 2 adapter supports MySQL, PostgreSQL and SQLite databases._
 - **Fauna**<br/>
-  _The FaunaDB adapter only support FaunaDB._
+  _The FaunaDB adapter only supports FaunaDB._
 - **Custom Adapter**<br/>
   _A custom Adapter can be used to connect to any database._
 
