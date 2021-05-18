@@ -1,6 +1,6 @@
 {
   "name": "next-auth-docs",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "scripts": {
     "start": "npm run generate-providers && docusaurus start",
     "build": "npm run generate-providers && docusaurus build",
@@ -17,8 +17,6 @@
     "@docusaurus/core": "2.0.0-beta.0",
     "@docusaurus/preset-classic": "2.0.0-beta.0",
     "classnames": "^2.3.1",
-    "docusaurus-lunr-search": "^2.1.14",
-    "jose": "^2.0.5",
     "lodash.times": "^4.3.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

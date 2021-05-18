@@ -17,13 +17,13 @@
 }
 
 .heroLogo {
-  margin-bottom: .5rem;  
+  margin-bottom: 0.5rem;
   width: 8rem;
 }
 
 @media screen and (min-width: 689px) {
   .heroLogo {
-    margin-bottom: -.5rem;
+    margin-bottom: -0.5rem;
   }
 }
 
@@ -87,8 +87,8 @@
 }
 
 .features ul li {
-  margin-top: .5rem;
-  margin-bottom: .5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
   font-size: 1rem;
   white-space: nowrap;
   text-align: center;
