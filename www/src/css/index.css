@@ -183,6 +183,22 @@ html[data-theme="dark"] hr {
   border-color: #242526;
 }
 
+.github-counter {
+  position: absolute;
+  color: #000;
+  top: -10px;
+  right: 5px;
+  font-size: 9px;
+  background-color: #ccc;
+  padding: 2px 5px;
+  border-radius: 10px;
+  z-index: -1;
+}
+html[data-theme="dark"] .github-counter {
+  background-color: #222;
+  color: #fff;
+}
+
 .navbar__item.navbar__link[href*="github"],
 .navbar__item.navbar__link[href*="npmjs"] {
   padding: 0 1.5rem 0 0;
@@ -292,5 +308,11 @@ html[data-theme="dark"] {
     content: "Documentation";
     opacity: 0.8;
     display: block;
+  }
+}
+
+@media screen and (max-width: 740px) {
+  .DocSearch-Container {
+    margin-top: 60px;
   }
 }

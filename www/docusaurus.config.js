@@ -11,6 +11,11 @@ module.exports = {
     prism: {
       theme: require("prism-react-renderer/themes/vsDark"),
     },
+    algolia: {
+      apiKey: "b81e3ca39a920b7815e880aea49c00ec",
+      indexName: "next-auth",
+      searchParameters: {},
+    },
     navbar: {
       title: "NextAuth.js",
       logo: {
@@ -129,5 +134,4 @@ module.exports = {
       },
     ],
   ],
-  plugins: ["docusaurus-lunr-search"],
 }
