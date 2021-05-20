@@ -175,7 +175,7 @@ export async function getProviders() {
 }
 
 export async function signIn(provider, options = {}, authorizationParams = {}) {
-  const { callbackUrl = window.location, redirect = true } = options
+  const { callbackUrl = window.location.href, redirect = true } = options
 
   const baseUrl = _apiBaseUrl()
   const providers = await getProviders()
@@ -183,11 +183,12 @@ export async function signIn(provider, options = {}, authorizationParams = {}) {
   // Redirect to sign in page if no valid provider specified
   if (!(provider in providers)) {
     // If Provider not recognized, redirect to sign in page
-    window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(
-      callbackUrl
-    )}`
+    window.location.replace(
+      `${baseUrl}/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`
+    )
     return
   }
+
   const isCredentials = providers[provider].type === "credentials"
   const isEmail = providers[provider].type === "email"
   const canRedirectBeDisabled = isCredentials || isEmail

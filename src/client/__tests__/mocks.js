@@ -10,9 +10,22 @@ export const mockSession = {
   expires: new Date(),
 }
 
+export const mockProviders = [
+  {
+    id: "github",
+    name: "Github",
+    type: "oauth",
+    signinUrl: "path/to/signin",
+    callbackUrl: "path/to/callback",
+  },
+]
+
 export const server = setupServer(
   rest.get("/api/auth/session", (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(mockSession))
+  }),
+  rest.get("/api/auth/providers", (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(mockProviders))
   }),
   rest.post("/api/auth/_log", (req, res, ctx) => {
     return res(ctx.status(200))
