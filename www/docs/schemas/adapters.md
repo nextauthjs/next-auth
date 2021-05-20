@@ -19,7 +19,7 @@ There you can find the following adapters in various stages of maturity:
 
 ## TypeORM Adapter
 
-NextAuth.js comes with a default Adapter that uses [TypeORM](https://typeorm.io/) so that it can be used with many different databases without any further configuration, you simply add the node module for the database driver you want to use to your project and pass a database connection string to NextAuth.js.
+NextAuth.js comes with a default Adapter that uses [TypeORM](https://typeorm.io/) so that it can be used with many different databases without any further configuration, you simply add the node module for the database driver you want to use in your project and pass a database connection string to NextAuth.js.
 
 ### Database Schemas
 
