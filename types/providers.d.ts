@@ -29,7 +29,7 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
   scope: string
   params: { grant_type: string }
   accessTokenUrl: string
-  requestTokenUrl: string
+  requestTokenUrl?: string
   authorizationUrl: string
   profileUrl: string
   profile(profile: P, tokens: TokenSet): Awaitable<User & { id: string }>
@@ -67,6 +67,7 @@ export type OAuthProviderType =
   | "EVEOnline"
   | "Facebook"
   | "FACEIT"
+  | "FortyTwo"
   | "Foursquare"
   | "FusionAuth"
   | "GitHub"
@@ -132,19 +133,27 @@ export interface EmailConfigServerOptions {
   }
 }
 
+export type SendVerificationRequest = (params: {
+  identifier: string
+  url: string
+  baseUrl: string
+  token: string
+  provider: EmailConfig
+}) => Awaitable<void>
+
 export interface EmailConfig extends CommonProviderOptions {
   type: "email"
   // TODO: Make use of https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html
   server: string | EmailConfigServerOptions
+  /** @default "NextAuth <no-reply@example.com>" */
   from?: string
+  /**
+   * How long until the e-mail can be used to log the user in,
+   * in seconds. Defaults to 1 day
+   * @default 86400
+   */
   maxAge?: number
-  sendVerificationRequest(params: {
-    identifier: string
-    url: string
-    baseUrl: string
-    token: string
-    provider: EmailConfig
-  }): Awaitable<void>
+  sendVerificationRequest: SendVerificationRequest
 }
 
 export type EmailProvider = (options: Partial<EmailConfig>) => EmailConfig

@@ -94,7 +94,7 @@ If you are unable to use an HS512 key (for example to interoperate with other se
 
 ````
   jwt: {
-    signingKey: {"kty":"oct","kid":"--","alg":"HS256","k":"--"}
+    signingKey: {"kty":"oct","kid":"--","alg":"HS256","k":"--"},
     verificationOptions: {
       algorithms: ["HS256"]
     }

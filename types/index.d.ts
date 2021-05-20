@@ -127,7 +127,7 @@ export interface NextAuthOptions {
    * [Default adapter](https://next-auth.js.org/schemas/adapters#typeorm-adapter) |
    * [Community adapters](https://github.com/nextauthjs/adapters)
    */
-  adapter?: Adapter
+  adapter?: ReturnType<Adapter>
   /**
    * Set debug to true to enable debug messages for authentication and database operations.
    * * **Default value**: `false`
@@ -233,6 +233,8 @@ export interface LoggerInstance {
  */
 export interface TokenSet {
   accessToken: string
+  /** Kept for historical reasons, check out `expires_in` */
+  accessTokenExpires: null
   idToken?: string
   refreshToken?: string
   access_token: string
