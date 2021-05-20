@@ -8,7 +8,7 @@ Authentication Providers in **NextAuth.js** are services that can be used to sig
 There's four ways a user can be signed in:
 
 - [Using a built-in OAuth Provider](#oauth-providers) (e.g Github, Twitter, Google, etc...)
-- [Using a custom OAuth Provider](#-using-a-custom-provider)
+- [Using a custom OAuth Provider](#using-a-custom-provider)
 - [Using Email](#email-provider)
 - [Using Credentials](#credentials-provider)
 
@@ -254,12 +254,14 @@ providers: [
       username: { label: "Username", type: "text", placeholder: "jsmith" },
       password: {  label: "Password", type: "password" }
     },
-   async authorize(credentials) {
-      const user = (credentials) => {
+   async authorize(credentials, req) {
+      const user = (credentials, req) => {
         // You need to provide your own logic here that takes the credentials
         // submitted and returns either a object representing a user or value
         // that is false/null if the credentials are invalid.
         // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
+        // You can also use the request object to obtain additional parameters 
+        // (i.e., the request IP address)   
         return null
       }
       if (user) {
@@ -282,10 +284,10 @@ The Credentials provider can only be used if JSON Web Tokens are enabled for ses
 
 ### Options
 
-|    Name     |                    Description                    |               Type               | Required |
-| :---------: | :-----------------------------------------------: | :------------------------------: | :------: |
-|     id      |            Unique ID for the provider             |             `string`             |   Yes    |
-|    name     |         Descriptive name for the provider         |             `string`             |   Yes    |
-|    type     |   Type of provider, in this case `credentials`    |         `"credentials"`          |   Yes    |
-| credentials |          The credentials to sign-in with          |             `Object`             |   Yes    |
-|  authorize  | Callback to execute once user is to be authorized | `(credentials) => Promise<User>` |   Yes    |
+|    Name     |                    Description                    |               Type                    | Required |
+| :---------: | :-----------------------------------------------: | :-----------------------------------: | :------: |
+|     id      |            Unique ID for the provider             |             `string`                  |   Yes    |
+|    name     |         Descriptive name for the provider         |             `string`                  |   Yes    |
+|    type     |   Type of provider, in this case `credentials`    |         `"credentials"`               |   Yes    |
+| credentials |          The credentials to sign-in with          |             `Object`                  |   Yes    |
+|  authorize  | Callback to execute once user is to be authorized | `(credentials, req) => Promise<User>` |   Yes    |

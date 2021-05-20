@@ -1,5 +1,5 @@
 import { Profile, TokenSet, User } from "."
-import { Awaitable } from "./internals/utils"
+import { Awaitable, NextApiRequest } from "./internals/utils"
 
 export type ProviderType = "oauth" | "email" | "credentials"
 
@@ -115,7 +115,7 @@ interface CredentialsConfig<C extends Record<string, CredentialInput> = {}>
   extends CommonProviderOptions {
   type: "credentials"
   credentials: C
-  authorize(credentials: Record<keyof C, string>): Awaitable<User | null>
+  authorize(credentials: Record<keyof C, string>, req: NextApiRequest): Awaitable<User | null>
 }
 
 export type CredentialsProvider = (
