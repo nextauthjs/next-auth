@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react"
 import { useEffect, useState } from "react"
 import { rest } from "msw"
-import { setupServer } from "msw/node"
+import { server, mockSession } from "./mocks"
 import { getSession } from "../"
 import logger from "../../lib/logger"
 
@@ -16,24 +16,6 @@ jest.mock("../../lib/logger", () => ({
     return logger
   },
 }))
-
-const mockSession = {
-  user: {
-    image: null,
-    name: "John",
-    email: "john@email.com",
-  },
-  expires: new Date(),
-}
-
-const server = setupServer(
-  rest.get("/api/auth/session", (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(mockSession))
-  }),
-  rest.post("/api/auth/_log", (req, res, ctx) => {
-    return res(ctx.status(200))
-  })
-)
 
 beforeAll(() => server.listen())
 
@@ -79,19 +61,13 @@ test("getSession()", async () => {
   const session = await screen.findByText(new RegExp(mockSession.user.name))
   expect(session).toBeInTheDocument()
 
-  // Simulate error case
-  server.use(
-    rest.get("/api/auth/session", (req, res, ctx) => {
-      return res(ctx.status(500), ctx.body("Server error"))
-    })
-  )
-
   const localStorageCalls = localStorage.setItem.mock.calls.filter(
     (call) => call[0] !== "MSW_COOKIE_STORE"
   )
+
+  // The session should be stored in local storage
   expect(localStorageCalls).toHaveLength(1)
   expect(localStorageCalls[0][0]).toBe("nextauth.message")
-
   expect(JSON.parse(localStorageCalls[0][1])).toEqual(
     expect.objectContaining({
       event: "session",
@@ -99,8 +75,15 @@ test("getSession()", async () => {
     })
   )
 
+  // Re-render, simulating fetching session fail
+  server.use(
+    rest.get("/api/auth/session", (req, res, ctx) => {
+      return res(ctx.status(500), ctx.body("Server error"))
+    })
+  )
   render(<SessionPage />)
 
+  // If fetching the session failed, we should log it
   await waitFor(() => {
     expect(logger.error).toHaveBeenCalledTimes(1)
     expect(logger.error).toBeCalledWith(
