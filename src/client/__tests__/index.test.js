@@ -1,9 +1,9 @@
 import { render, screen, waitFor } from "@testing-library/react"
-import { useEffect, useState } from "react"
 import { rest } from "msw"
 import { server, mockSession } from "./mocks"
-import { getSession } from "../"
 import logger from "../../lib/logger"
+import { useState, useEffect } from "react"
+import { getSession } from ".."
 
 jest.mock("../../lib/logger", () => ({
   __esModule: true,
@@ -20,6 +20,7 @@ jest.mock("../../lib/logger", () => ({
 beforeAll(() => server.listen())
 
 beforeEach(() => {
+  // eslint-disable-next-line no-proto
   jest.spyOn(window.localStorage.__proto__, "setItem")
 })
 
@@ -29,26 +30,6 @@ afterEach(() => {
 })
 
 afterAll(() => server.close())
-
-function SessionPage() {
-  const [session, setSession] = useState(null)
-  useEffect(() => {
-    async function fetchUserSession() {
-      try {
-        const result = await getSession({})
-        setSession(result)
-      } catch (e) {
-        console.error(e)
-      }
-    }
-    fetchUserSession()
-  }, [])
-
-  if (session) {
-    return <pre>{JSON.stringify(session, null, 2)}</pre>
-  }
-  return <p>No session</p>
-}
 
 test("getSession()", async () => {
   render(<SessionPage />)
@@ -93,3 +74,23 @@ test("getSession()", async () => {
     )
   })
 })
+
+function SessionPage() {
+  const [session, setSession] = useState(null)
+  useEffect(() => {
+    async function fetchUserSession() {
+      try {
+        const result = await getSession({})
+        setSession(result)
+      } catch (e) {
+        console.error(e)
+      }
+    }
+    fetchUserSession()
+  }, [])
+
+  if (session) {
+    return <pre>{JSON.stringify(session, null, 2)}</pre>
+  }
+  return <p>No session</p>
+}
