@@ -1,4 +1,6 @@
 export default function WorkOS(options) {
+  const apiUrl = options.apiUrl || 'api.workos.com';
+
   return {
     id: 'workos',
     name: 'WorkOS',
@@ -10,9 +12,9 @@ export default function WorkOS(options) {
       client_id: options.clientId,
       client_secret: options.clientSecret
     },
-    accessTokenUrl: 'https://api.workos.com/sso/token/',
-    authorizationUrl: `https://api.workos.com/sso/authorize/?response_type=code&domain=${options.domain}`,
-    profileUrl: 'https://api.workos.com/sso/profile/',
+    accessTokenUrl: `https://${apiUrl}/sso/token`,
+    authorizationUrl: `https://${apiUrl}/sso/authorize?response_type=code`,
+    profileUrl: `https://${apiUrl}/sso/profile`,
     profile: (profile) => {
       return {
         ...profile,

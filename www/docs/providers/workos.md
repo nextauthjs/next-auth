@@ -24,7 +24,6 @@ providers: [
   Providers.WorkOS({
     clientId: process.env.WORKOS_ID,
     clientSecret: process.env.WORKOS_SECRET,
-    domain: process.env.WORKOS_DOMAIN
   }),
 ],
 ...
