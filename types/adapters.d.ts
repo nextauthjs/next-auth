@@ -49,7 +49,7 @@ export interface AdapterInstance<U = User, P = Profile, S = Session> {
   displayName?: string
   createUser(profile: P): Promise<U>
   getUser(id: string): Promise<U | null>
-  getUserByEmail(email: string): Promise<U | null>
+  getUserByEmail(email: string | null): Promise<U | null>
   getUserByProviderAccountId(
     providerId: string,
     providerAccountId: string
