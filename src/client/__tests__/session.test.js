@@ -31,22 +31,21 @@ afterEach(() => {
 
 afterAll(() => server.close())
 
-test("getSession()", async () => {
-  render(<SessionPage />)
+test("if it can fetch the session, it should store it in `localStorage`", async () => {
+  render(<SessionFlow />)
 
   // In the start, there is no session
   const noSession = await screen.findByText("No session")
   expect(noSession).toBeInTheDocument()
 
-  // After we fetched the session, it should be rendered
+  // After we fetched the session, it should have been rendered by `<SessionFlow />`
   const session = await screen.findByText(new RegExp(mockSession.user.name))
   expect(session).toBeInTheDocument()
 
+  // The session should have been stored in local storage
   const localStorageCalls = localStorage.setItem.mock.calls.filter(
     (call) => call[0] !== "MSW_COOKIE_STORE"
   )
-
-  // The session should be stored in local storage
   expect(localStorageCalls).toHaveLength(1)
   expect(localStorageCalls[0][0]).toBe("nextauth.message")
   expect(JSON.parse(localStorageCalls[0][1])).toEqual(
@@ -55,16 +54,17 @@ test("getSession()", async () => {
       data: { trigger: "getSession" },
     })
   )
+})
 
-  // Re-render, simulating fetching session fail
+test("if there's an error fetching the session, it should log it", async () => {
   server.use(
     rest.get("/api/auth/session", (req, res, ctx) => {
       return res(ctx.status(500), ctx.body("Server error"))
     })
   )
-  render(<SessionPage />)
 
-  // If fetching the session failed, we should log it
+  render(<SessionFlow />)
+
   await waitFor(() => {
     expect(logger.error).toHaveBeenCalledTimes(1)
     expect(logger.error).toBeCalledWith(
@@ -75,7 +75,7 @@ test("getSession()", async () => {
   })
 })
 
-function SessionPage() {
+function SessionFlow() {
   const [session, setSession] = useState(null)
   useEffect(() => {
     async function fetchUserSession() {
