@@ -3,7 +3,7 @@ id: typescript
 title: TypeScript
 ---
 
-NextAuth.js comes with its own type definitions, so you can safely use it in your TypeScript projects. Even if you don't use TypeScript, IDEs like VSCode will pick this up, to provide you with a better developer experience. While you are typing, you will get suggestions about how certain objects/functions look like, and sometimes also links to documentation, examples and other useful resources.
+NextAuth.js comes with its own type definitions, so you can safely use it in your TypeScript projects. Even if you don't use TypeScript, IDEs like VSCode will pick this up, to provide you with a better developer experience. While you are typing, you will get suggestions about what certain objects/functions look like, and sometimes also links to documentation, examples and other useful resources.
 
 Check out the example repository showcasing how to use `next-auth` on a Next.js application with TypeScript:  
 https://github.com/nextauthjs/next-auth-typescript-example

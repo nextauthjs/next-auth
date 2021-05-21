@@ -5,7 +5,7 @@
 module.exports = {
   presets: [["@babel/preset-env", { targets: { node: "10.13" } }]],
   plugins: [
-    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-proposal-optional-catch-binding",
     "@babel/plugin-transform-runtime",
   ],
   comments: false,
