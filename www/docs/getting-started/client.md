@@ -344,7 +344,7 @@ export async function getServerSideProps(ctx) {
 }
 ```
 
-If every one of your pages needs to be protected, you can do this in `_app`, otherwise you can do it on a page-by-page basis.
+If every one of your pages needs to be protected, you can do this in `_app`, otherwise you can do it on a page-by-page basis. Alternatively, there is you can do per page authentication checks client side, instead of having each auth check be blocking (SSR) by using the method described below in [alternative client session handling](#custom-client-session-handling).
 
 ### Options
 
@@ -404,3 +404,70 @@ The value for `keepAlive` should always be lower than the value of the session `
 :::note
 See [**the Next.js documentation**](https://nextjs.org/docs/advanced-features/custom-app) for more information on **_app.js** in Next.js applications.
 :::
+
+## Alternatives
+
+### Custom Client Session Handling
+
+Due to the way Next.js handles `getServerSideProps` / `getInitialProps`, every protected page load has to make a server-side query to check if the session is valid and then generate the requested page. This alternative solution allows for showing a loading state on the initial check and every page transition afterward will be client-side, without having to check with the server and regenerate pages.
+
+```js title="pages/admin.jsx"
+export default function AdminDashboard () {
+  const [session] = useSession() 
+  // session is always non-null inside this page, all the way down the React tree.
+  return "Some super secret dashboard"
+}
+
+AdminDashboard.auth = true
+```
+
+```jsx title="pages/_app.jsx"
+export default function App({ Component, pageProps }) {
+  return (
+    <SessionProvider session={pageProps.session}>
+      {Component.auth
+        ? <Auth><Component {...pageProps} /></Auth>
+        : <Component {...pageProps} />
+      }
+    </SessionProvider>
+  )
+}
+
+function Auth({ children }) {
+  const [session, loading] = useSession()
+  const isUser = !!session?.user
+  React.useEffect(() => {
+    if (loading) return // Do nothing while loading
+    if (!isUser) signIn() // If not authenticated, force log in
+  }, [isUser, loading])
+
+  if (isUser) {
+    return children
+  }
+  
+  // Session is being fetched, or no user.
+  // If no user, useEffect() will redirect.
+  return <div>Loading...</div>
+}
+```
+
+It can be easily be extended/modified to support something like an options object for role based authentication on pages. An example:
+
+```jsx title="pages/admin.jsx"
+AdminDashboard.auth = {
+  role: "admin",
+  loading: <AdminLoadingSkeleton/>,
+  unauthorized: "/login-with-different-user" // redirect to this url
+}
+```
+
+Because of how _app is done, it won't unnecessarily contant the /api/auth/session endpoint for pages that do not require auth.
+
+### NextAuth.js + React-Query
+
+There is also an alternative client-side API library based upon [`react-query`](https://www.npmjs.com/package/react-query) available under [`nextauthjs/react-query`](https://github.com/nextauthjs/react-query). 
+
+If you use `react-query` in your project already, you can leverage it with NextAuth.js to handle the client-side session management for you as well. This replaces NextAuth.js's native `useSession` and `Provider` from `next-auth/client`.
+
+See repository README for more details.
+
