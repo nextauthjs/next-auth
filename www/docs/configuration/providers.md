@@ -264,9 +264,14 @@ providers: [
         // (i.e., the request IP address)   
         return null
       }
-      if (user) {
+      
+      // Get the user details by calling user()
+      const userDetails = user(credentials, req);
+      
+      // Check if user() returned a valid user object
+      if (userDetails) {
         // Any user object returned here will be saved in the JSON Web Token
-        return user
+        return userDetails
       } else {
         return null
       }
