@@ -83,6 +83,10 @@ This example shows how to implement a fullstack app in TypeScript with Next.js u
 
 This `dev.to` tutorial walks one through adding NextAuth.js to an existing project. Including setting up the OAuth client id and secret, adding the API routes for authentication, protecting pages and API routes behind that authentication, etc.
 
+### [Introduction to NextAuth.js](https://www.youtube.com/watch?v=npZsJxWntJM)
+
+This is an introductory video to NextAuth.js for beginners. In this video, it is explained how to set up authentication in a few easy steps and add different configurations to make it more robust and secure.
+
 ### [Adding Sign in With Apple Next JS](https://thesiddd.com/blog/apple-auth)
 
 This tutorial walks step by step on how to get Sign In with Apple working (both locally and on a deployed website) using NextAuth.js.
