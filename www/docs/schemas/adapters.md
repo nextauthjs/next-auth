@@ -7,13 +7,13 @@ An **Adapter** in NextAuth.js connects your application to whatever database or 
 
 The adapters can be found in their own repository under [`nextauthjs/adapters`](https://github.com/nextauthjs/adapters).
 
-There you can find the following adapters in various stages of maturity:
+There you can find the following adapters:
 
-- TypeORM
-- Prisma
-- Prisma-Legacy
-- FaunaDB
-- DynamoDB
+- typeorm-legacy
+- prisma
+- prisma-legacy
+- fauna
+- dynamodb
 
 ## TypeORM Adapter
 
