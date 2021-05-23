@@ -10,11 +10,11 @@ The adapters can be found in their own repository under [`nextauthjs/adapters`](
 There you can find the following adapters:
 
 - [`typeorm-legacy`](./typeorm/typeorm-overview)
-- [`prisma`](./prisma-overview)
-- [`prisma-legacy`](./prisma-overview)
-- [`fauna`](./fauna-overview)
-- [`dynamodb`](./dynamodb-overview)
-- [`firebase`](./firebase-overview)
+- [`prisma`](./prisma)
+- [`prisma-legacy`](./prisma)
+- [`fauna`](./fauna)
+- [`dynamodb`](./dynamodb)
+- [`firebase`](./firebase)
 
 ## Custom Adapter
 
