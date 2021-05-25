@@ -5,13 +5,16 @@
  * @param {import("types/internals").NextAuthRequest} req
  * @param {import("types/internals").NextAuthResponse} res
  */
-export default function providers (req, res) {
+export default function providers(req, res) {
   const { providers } = req.options
 
-  const result = providers.reduce((acc, { id, name, type, signinUrl, callbackUrl }) => {
-    acc[id] = { id, name, type, signinUrl, callbackUrl }
-    return acc
-  }, {})
+  const result = providers.reduce(
+    (acc, { id, name, type, signinUrl, callbackUrl }) => {
+      acc[id] = { id, name, type, signinUrl, callbackUrl }
+      return acc
+    },
+    {}
+  )
 
   res.json(result)
 }

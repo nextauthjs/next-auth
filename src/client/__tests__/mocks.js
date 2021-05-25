@@ -1,5 +1,6 @@
 import { setupServer } from "msw/node"
 import { rest } from "msw"
+import { randomBytes } from "crypto"
 
 export const mockSession = {
   user: {
@@ -7,25 +8,71 @@ export const mockSession = {
     name: "John",
     email: "john@email.com",
   },
-  expires: new Date(),
+  expires: 123213139,
 }
 
-export const mockProviders = [
-  {
+export const mockProviders = {
+  github: {
     id: "github",
     name: "Github",
     type: "oauth",
     signinUrl: "path/to/signin",
     callbackUrl: "path/to/callback",
   },
-]
+  credentials: {
+    id: "credentials",
+    name: "Credentials",
+    type: "credentials",
+    authorize: null,
+    credentials: null,
+  },
+  email: {
+    id: "email",
+    type: "email",
+    name: "Email",
+  },
+}
+
+export const mockCSRFToken = {
+  csrfToken: randomBytes(32).toString("hex"),
+}
+
+export const mockGithubResponse = {
+  ok: true,
+  status: 200,
+  url: "https://path/to/github/url",
+}
+
+export const mockCredentialsResponse = {
+  ok: true,
+  status: 200,
+  url: "https://path/to/credentials/url",
+}
+
+export const mockEmailResponse = {
+  ok: true,
+  status: 200,
+  url: "https://path/to/email/url",
+}
 
 export const server = setupServer(
   rest.get("/api/auth/session", (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(mockSession))
   }),
+  rest.get("/api/auth/csrf", (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(mockCSRFToken))
+  }),
   rest.get("/api/auth/providers", (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(mockProviders))
+  }),
+  rest.post("/api/auth/signin/github*", (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(mockGithubResponse))
+  }),
+  rest.post("/api/auth/callback/credentials", (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(mockCredentialsResponse))
+  }),
+  rest.post("/api/auth/signin/email", (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(mockEmailResponse))
   }),
   rest.post("/api/auth/_log", (req, res, ctx) => {
     return res(ctx.status(200))

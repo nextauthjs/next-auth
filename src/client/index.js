@@ -171,7 +171,7 @@ export async function getCsrfToken(ctx) {
 }
 
 export async function getProviders() {
-  return _fetchData("providers")
+  return await _fetchData("providers")
 }
 
 export async function signIn(provider, options = {}, authorizationParams = {}) {
@@ -191,7 +191,7 @@ export async function signIn(provider, options = {}, authorizationParams = {}) {
 
   const isCredentials = providers[provider].type === "credentials"
   const isEmail = providers[provider].type === "email"
-  const canRedirectBeDisabled = isCredentials || isEmail
+  const nonRedirectProvider = isCredentials || isEmail
 
   const signInUrl = isCredentials
     ? `${baseUrl}/callback/${provider}`
@@ -211,30 +211,29 @@ export async function signIn(provider, options = {}, authorizationParams = {}) {
       json: true,
     }),
   }
+
   const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
   const res = await fetch(_signInUrl, fetchOptions)
   const data = await res.json()
-  if (redirect || !canRedirectBeDisabled) {
-    const url = data.url ?? callbackUrl
-    window.location = url
-    // If url contains a hash, the browser does not reload the page. We reload manually
-    if (url.includes("#")) window.location.reload()
 
-    return
+  if (redirect || !nonRedirectProvider) {
+    const error = new URL(data.url).searchParams.get("error")
+
+    if (res.ok) await __NEXTAUTH._getSession({ event: "storage" })
+    return {
+      error,
+      status: res.status,
+      ok: res.ok,
+      url: error ? null : data.url,
+    }
   }
 
-  const error = new URL(data.url).searchParams.get("error")
+  const url = data.url ?? callbackUrl
 
-  if (res.ok) {
-    await __NEXTAUTH._getSession({ event: "storage" })
-  }
+  window.location.replace(url)
 
-  return {
-    error,
-    status: res.status,
-    ok: res.ok,
-    url: error ? null : data.url,
-  }
+  // If url contains a hash, the browser does not reload the page. We reload manually
+  if (url.includes("#")) window.location.reload()
 }
 
 export async function signOut(options = {}) {
@@ -320,7 +319,7 @@ async function _fetchData(path, { ctx, req = ctx?.req } = {}) {
     const res = await fetch(`${baseUrl}/${path}`, options)
     const data = await res.json()
     if (!res.ok) throw new Error(data)
-    return Object.keys(data).length > 0 ? data : null // Return null if data empty
+    return Object.keys(data).length > 0 ? data : null
   } catch (error) {
     logger.error("CLIENT_FETCH_ERROR", path, error)
     return null
