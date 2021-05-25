@@ -5,7 +5,7 @@ title: Example Code
 
 ## Get started with NextAuth.js
 
-The example code below describes to add authentication to a Next.js app.
+The example code below describes how to add authentication to a Next.js app.
 
 :::tip
 The easiest way to get started is to clone the [example app](https://github.com/nextauthjs/next-auth-example) and follow the instructions in README.md. You can try out a live demo at [next-auth-example.vercel.app](https://next-auth-example.vercel.app)
