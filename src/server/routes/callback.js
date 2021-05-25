@@ -6,8 +6,7 @@ import adapterErrorHandler from "../../adapters/error-handler"
 
 /**
  * Handle callbacks from login services
- * @param {import("types/internals").NextAuthRequest} req
- * @param {import("types/internals").NextAuthResponse} res
+ * @type {import("types/internals").NextAuthHandler}
  */
 export default async function callback(req, res) {
   const {
@@ -336,7 +335,8 @@ export default async function callback(req, res) {
     let userObjectReturnedFromAuthorizeHandler
     try {
       userObjectReturnedFromAuthorizeHandler = await provider.authorize(
-        credentials, {...req, options: {}, cookies: {}}
+        credentials,
+        { ...req, options: {}, cookies: {} }
       )
       if (!userObjectReturnedFromAuthorizeHandler) {
         return res

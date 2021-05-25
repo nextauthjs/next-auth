@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "./utils"
 import { LoggerInstance, NextAuthOptions, SessionOptions, Theme } from ".."
 import { AppProvider } from "../providers"
+import { NextApiHandler } from "./next"
 
 /** Options that are the same both in internal and user provided options. */
 export type NextAuthSharedOptions =
@@ -49,3 +50,8 @@ export interface NextAuthRequest extends NextApiRequest {
 }
 
 export type NextAuthResponse = NextApiResponse
+
+export type NextAuthHandler = (
+  req: NextAuthRequest,
+  res: NextAuthResponse
+) => ReturnType<NextApiHandler>

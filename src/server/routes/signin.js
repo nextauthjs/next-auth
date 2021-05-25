@@ -4,8 +4,7 @@ import adapterErrorHandler from "../../adapters/error-handler"
 
 /**
  * Handle requests to /api/auth/signin
- * @param {import("types/internals").NextAuthRequest} req
- * @param {import("types/internals").NextAuthResponse} res
+ * @type {import("types/internals").NextAuthHandler}
  */
 export default async function signin(req, res) {
   const {
