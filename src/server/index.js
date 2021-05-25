@@ -198,6 +198,12 @@ async function NextAuthHandler(req, res, userOptions) {
             return res.redirect(pages.verifyRequest)
           }
           return render.verifyRequest()
+        case "token": {
+          if (provider) {
+            return routes.token(req, res)
+          }
+          break
+        }
         case "error":
           if (pages.error) {
             return res.redirect(
