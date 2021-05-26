@@ -1,5 +1,5 @@
-import * as React from "react"
 import { IncomingMessage } from "http"
+import * as React from "react"
 import { Session } from "."
 import { ProviderType } from "./providers"
 
@@ -184,6 +184,8 @@ export interface SessionProviderOptions {
   basePath?: string
   clientMaxAge?: number
   keepAlive?: number
+  disableSessionEventBroadcast?: boolean
+  disableLogoutEventBroadcast?: boolean
 }
 
 /**

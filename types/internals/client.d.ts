@@ -19,6 +19,10 @@ export interface NextAuthConfig {
   keepAlive: number
   /** 0 means disabled (only use cache); 60 means sync if last checked > 60 seconds ago */
   clientMaxAge: number
+  /** Disable broadcasting refresh session event */
+  disableSessionEventBroadcast: boolean
+  /** Disable broadcasting logout event */
+  disableLogoutEventBroadcast: boolean
   /** Used for timestamp since last sycned (in seconds) */
   _clientLastSync: number
   /** Stores timer for poll interval */
