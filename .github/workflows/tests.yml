@@ -1,0 +1,39 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - main
+      - beta
+      - next
+  pull_request:
+    branches:
+      - main
+      - beta
+      - next
+
+jobs:
+  types:
+    name: "Types"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Init
+        uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
+      - name: Check types
+        run: npm run test:types
+  tests:
+    name: "Integration Tests"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Init
+        uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
+      - name: Run tests
+        run: npm test -- --ci
