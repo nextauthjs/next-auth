@@ -71,7 +71,7 @@ const options = {
     async signIn(user, account, profile) {
       if (account.provider === 'google' &&
           profile.verified_email === true &&
-          profile.email.endsWith('@example.com')) {
+          profile.email.endsWith('@gmail.com')) {
         return true
       } else {
         return false
