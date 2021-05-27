@@ -64,3 +64,10 @@ const firebaseConfig = {
 ```
 
 See [firebase.google.com/docs/web/setup](https://firebase.google.com/docs/web/setup) for more details.
+
+:::tip **From Firebase**
+
+**Caution**: We do not recommend manually modifying an app's Firebase config file or object. If you initialize an app with invalid or missing values for any of these required "Firebase options", then your end users may experience serious issues.
+
+For open source projects, we generally do not recommend including the app's Firebase config file or object in source control because, in most cases, your users should create their own Firebase projects and point their apps to their own Firebase resources (via their own Firebase config file or object).
+:::
