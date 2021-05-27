@@ -117,7 +117,7 @@ function Home() {
                     "button button--outline button--secondary button--lg rounded-pill",
                     styles.button
                   )}
-                  href="https://next-auth-example.now.sh"
+                  href="https://next-auth-example.vercel.app"
                 >
                   Live Demo
                 </a>
