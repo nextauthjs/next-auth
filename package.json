@@ -26,7 +26,8 @@
     "./client": "./dist/client/index.js",
     "./providers": "./dist/providers/index.js",
     "./providers/*": "./dist/providers/*.js",
-    "./errors": "./dist/lib/errors.js"
+    "./errors": "./dist/lib/errors.js",
+    "./server/lib/cookie": "./dist/server/lib/cookie.js"
   },
   "scripts": {
     "build": "npm run build:js && npm run build:css",
