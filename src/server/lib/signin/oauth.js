@@ -15,9 +15,9 @@ export default async function getAuthorizationUrl (req) {
   if (provider.version?.startsWith('2.')) {
     // Handle OAuth v2.x
     let url = client.getAuthorizeUrl({
+      scope: provider.scope,
       ...params,
-      redirect_uri: provider.callbackUrl,
-      scope: provider.scope
+      redirect_uri: provider.callbackUrl
     })
 
     // If the authorizationUrl specified in the config has query parameters on it
