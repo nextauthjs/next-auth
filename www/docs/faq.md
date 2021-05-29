@@ -216,7 +216,7 @@ By default tokens are signed (JWS) but not encrypted (JWE), as encryption adds a
 
 * JSON Web Tokens in NextAuth.js use JWS and are signed using HS512 with an auto-generated key.
 
-* If encryption is enabled by setting `jwt: { encrypt: true }` option then the JWT will _also_ use JWE to encrypt the token, using A256GCM with an auto-generated key.
+* If encryption is enabled by setting `jwt: { encryption: true }` option then the JWT will _also_ use JWE to encrypt the token, using A256GCM with an auto-generated key.
 
 You can specify other valid algorithms - [as specified in RFC 7518](https://tools.ietf.org/html/rfc7517) - with either a  secret (for symmetric encryption) or a public/private key pair (for a symmetric encryption).
 
