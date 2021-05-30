@@ -34,29 +34,45 @@ afterAll(() => {
 
 const callbackUrl = "https://redirects/to"
 
-test("if no provider, it redirects to the default sign-in page", async () => {
-  render(<SignInFlow />)
+test.each`
+  provider | type
+  ${""}    | ${"no"}
+  ${"foo"} | ${"unknown"}
+`(
+  "if $type provider, it redirects to the default sign-in page",
+  async ({ provider }) => {
+    render(<SignInFlow providerId={provider} callbackUrl={callbackUrl} />)
 
-  userEvent.click(screen.getByRole("button"))
+    userEvent.click(screen.getByRole("button"))
 
-  await waitFor(() => {
-    expect(window.location.replace).toHaveBeenCalledWith(
-      `/api/auth/signin?callbackUrl=${encodeURIComponent(window.location.href)}`
-    )
-  })
-})
+    await waitFor(() => {
+      expect(window.location.replace).toHaveBeenCalledWith(
+        `/api/auth/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`
+      )
+    })
+  }
+)
 
-test("if unknown provider, it redirects to the default sign-in page", async () => {
-  render(<SignInFlow providerId="foo" callbackUrl={callbackUrl} />)
+test.each`
+  provider | type
+  ${""}    | ${"no"}
+  ${"foo"} | ${"unknown"}
+`(
+  "if $type provider supplied and no callback URL, redirects using the current location",
+  async ({ provider }) => {
+    render(<SignInFlow providerId={provider} />)
 
-  userEvent.click(screen.getByRole("button"))
+    userEvent.click(screen.getByRole("button"))
 
-  await waitFor(() => {
-    expect(window.location.replace).toHaveBeenCalledWith(
-      `/api/auth/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`
-    )
-  })
-})
+    await waitFor(() => {
+      expect(window.location.replace).toHaveBeenCalledWith(
+        `/api/auth/signin?callbackUrl=${encodeURIComponent(
+          window.location.href
+        )}`
+      )
+    })
+  }
+)
 
 test("redirection can't be stopped using an oauth provider", async () => {
   render(
