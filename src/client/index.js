@@ -237,9 +237,10 @@ export async function signIn(provider, options = {}, authorizationParams = {}) {
 }
 
 export async function signOut(options = {}) {
-  const { callbackUrl = window.location, redirect = true } = options
+  const { callbackUrl = window.location.href, redirect = true } = options
   const baseUrl = _apiBaseUrl()
-  const fetchOptions = {
+
+  const res = await fetch(`${baseUrl}/signout`, {
     method: "post",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -249,13 +250,17 @@ export async function signOut(options = {}) {
       callbackUrl,
       json: true,
     }),
-  }
-  const res = await fetch(`${baseUrl}/signout`, fetchOptions)
+  })
+
   const data = await res.json()
+
   broadcast.post({ event: "session", data: { trigger: "signout" } })
+
   if (redirect) {
     const url = data.url ?? callbackUrl
-    window.location = url
+
+    window.location.replace(url)
+
     // If url contains a hash, the browser does not reload the page. We reload manually
     if (url.includes("#")) window.location.reload()
     return

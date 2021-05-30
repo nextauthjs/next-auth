@@ -46,6 +46,7 @@ test.each`
     userEvent.click(screen.getByRole("button"))
 
     await waitFor(() => {
+      expect(window.location.replace).toHaveBeenCalledTimes(1)
       expect(window.location.replace).toHaveBeenCalledWith(
         `/api/auth/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`
       )
@@ -65,6 +66,7 @@ test.each`
     userEvent.click(screen.getByRole("button"))
 
     await waitFor(() => {
+      expect(window.location.replace).toHaveBeenCalledTimes(1)
       expect(window.location.replace).toHaveBeenCalledWith(
         `/api/auth/signin?callbackUrl=${encodeURIComponent(
           window.location.href
@@ -129,6 +131,7 @@ test("redirection can be stopped using the 'credentials' provider", async () => 
 
   // if all went well, expect the user to be redirected to the provider post signin URL
   await waitFor(() => {
+    expect(window.location.replace).toHaveBeenCalledTimes(1)
     expect(window.location.replace).toHaveBeenCalledWith(
       mockCredentialsResponse.url
     )
@@ -147,6 +150,7 @@ test("redirection can be stopped using the 'email' provider", async () => {
 
   // if all went well, expect the user to be redirected to the provider post signin URL
   await waitFor(() => {
+    expect(window.location.replace).toHaveBeenCalledTimes(1)
     expect(window.location.replace).toHaveBeenCalledWith(mockEmailResponse.url)
   })
 
@@ -176,8 +180,8 @@ test("if url contains a hash when stopping redirection a page reload happens", a
 
   // if all went well, expect the user to be redirected to the provider post signin URL
   await waitFor(() => {
-    expect(window.location.replace).toHaveBeenCalledWith(mockUrlWithHash)
     expect(window.location.reload).toHaveBeenCalledTimes(1)
+    expect(window.location.replace).toHaveBeenCalledWith(mockUrlWithHash)
   })
 })
 

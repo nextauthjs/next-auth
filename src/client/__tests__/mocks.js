@@ -55,7 +55,16 @@ export const mockEmailResponse = {
   url: "https://path/to/email/url",
 }
 
+export const mockSignOutResponse = {
+  ok: true,
+  status: 200,
+  url: "https://path/to/signout/url",
+}
+
 export const server = setupServer(
+  rest.post("/api/auth/signout", (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(mockSession))
+  }),
   rest.get("/api/auth/session", (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(mockSession))
   }),

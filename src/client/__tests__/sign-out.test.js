@@ -1,13 +1,8 @@
 import { useState } from "react"
 import userEvent from "@testing-library/user-event"
 import { render, screen, waitFor } from "@testing-library/react"
-import {
-  server,
-  mockCredentialsResponse,
-  mockEmailResponse,
-  mockGithubResponse,
-} from "./mocks"
-import { signIn } from ".."
+import { server, mockSignOutResponse } from "./mocks"
+import { signOut } from ".."
 import { rest } from "msw"
 
 const { location } = window
@@ -34,62 +29,70 @@ afterAll(() => {
 
 const callbackUrl = "https://redirects/to"
 
-test("redirection can't be stopped using an oauth provider", async () => {
-  render(
-    <SignInFlow
-      providerId="github"
-      callbackUrl={callbackUrl}
-      redirect={false}
-    />
-  )
+test("by default it redirects to `window.location.href`", async () => {
+  render(<SignOutFlow />)
 
   userEvent.click(screen.getByRole("button"))
 
   // it's a known provider don't redirect back to sign-in page
   await waitFor(() => {
-    expect(window.location.replace).not.toHaveBeenCalledWith(
-      `/api/auth/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`
-    )
+    expect(window.location.replace).toHaveBeenCalledTimes(1)
+    expect(window.location.replace).toHaveBeenCalledWith(window.location.href)
   })
-
-  await waitFor(() => {
-    // we shouldn't have redirected to the provider post signin URL
-    expect(window.location.replace).not.toHaveBeenCalledWith(
-      mockGithubResponse.url
-    )
-
-    // `signIn()` should have returned the XHR response...
-    expect(screen.getByTestId("signin-result").textContent).not.toBe(
-      "no response"
-    )
-  })
-
-  // snapshot the expected return shape from `signIn` oauth
-  expect(JSON.parse(screen.getByTestId("signin-result").textContent))
-    .toMatchInlineSnapshot(`
-    Object {
-      "error": null,
-      "ok": true,
-      "status": 200,
-      "url": "https://path/to/github/url",
-    }
-  `)
 })
 
-function SignInFlow({ providerId, callbackUrl, redirect = true }) {
+test("when supplied, it redirects to `callbackUrl`", async () => {
+  render(<SignOutFlow callbackUrl={callbackUrl} />)
+
+  userEvent.click(screen.getByRole("button"))
+
+  // it's a known provider don't redirect back to sign-in page
+  await waitFor(() => {
+    expect(window.location.replace).toHaveBeenCalledTimes(1)
+    expect(window.location.replace).toHaveBeenCalledWith(callbackUrl)
+  })
+})
+
+test("if url contains a hash during redirection a page reload happens", async () => {
+  const mockUrlWithHash = "https://path/to/email/url#foo-bar-baz"
+
+  server.use(
+    rest.post("/api/auth/signout", (req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({
+          ...mockSignOutResponse,
+          url: mockUrlWithHash,
+        })
+      )
+    })
+  )
+
+  render(<SignOutFlow />)
+
+  userEvent.click(screen.getByRole("button"))
+
+  // if all went well, expect the user to be redirected to the provider post signin URL
+  await waitFor(() => {
+    expect(window.location.reload).toHaveBeenCalledTimes(1)
+    expect(window.location.replace).toHaveBeenCalledWith(mockUrlWithHash)
+  })
+})
+
+function SignOutFlow({ callbackUrl, redirect = true }) {
   const [response, setResponse] = useState(null)
 
-  async function setSignInRes() {
-    const result = await signIn(providerId, { callbackUrl, redirect })
+  async function setSignOutRes() {
+    const result = await signOut({ callbackUrl, redirect })
     setResponse(result)
   }
 
   return (
     <>
-      <p data-testid="signin-result">
+      <p data-testid="signout-result">
         {response ? JSON.stringify(response) : "no response"}
       </p>
-      <button onClick={() => setSignInRes()}>Sign in</button>
+      <button onClick={() => setSignOutRes()}>Sign out</button>
     </>
   )
 }
