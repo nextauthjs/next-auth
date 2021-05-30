@@ -76,6 +76,24 @@ test.each`
   }
 )
 
+test.each`
+  provider         | mockUrl
+  ${`email`}       | ${mockEmailResponse.url}
+  ${`credentials`} | ${mockCredentialsResponse.url}
+`(
+  "$provider provider redirects if `redirect` is `true`",
+  async ({ provider, mockUrl }) => {
+    render(<SignInFlow providerId={provider} redirect={true} />)
+
+    userEvent.click(screen.getByRole("button"))
+
+    await waitFor(() => {
+      expect(window.location.replace).toHaveBeenCalledTimes(1)
+      expect(window.location.replace).toHaveBeenCalledWith(mockUrl)
+    })
+  }
+)
+
 test("redirection can't be stopped using an oauth provider", async () => {
   render(
     <SignInFlow
@@ -87,35 +105,10 @@ test("redirection can't be stopped using an oauth provider", async () => {
 
   userEvent.click(screen.getByRole("button"))
 
-  // it's a known provider don't redirect back to sign-in page
   await waitFor(() => {
-    expect(window.location.replace).not.toHaveBeenCalledWith(
-      `/api/auth/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`
-    )
+    expect(window.location.replace).toHaveBeenCalledTimes(1)
+    expect(window.location.replace).toHaveBeenCalledWith(mockGithubResponse.url)
   })
-
-  await waitFor(() => {
-    // we shouldn't have redirected to the provider post signin URL
-    expect(window.location.replace).not.toHaveBeenCalledWith(
-      mockGithubResponse.url
-    )
-
-    // `signIn()` should have returned the XHR response...
-    expect(screen.getByTestId("signin-result").textContent).not.toBe(
-      "no response"
-    )
-  })
-
-  // snapshot the expected return shape from `signIn` oauth
-  expect(JSON.parse(screen.getByTestId("signin-result").textContent))
-    .toMatchInlineSnapshot(`
-    Object {
-      "error": null,
-      "ok": true,
-      "status": 200,
-      "url": "https://path/to/github/url",
-    }
-  `)
 })
 
 test("redirection can be stopped using the 'credentials' provider", async () => {
@@ -129,16 +122,26 @@ test("redirection can be stopped using the 'credentials' provider", async () => 
 
   userEvent.click(screen.getByRole("button"))
 
-  // if all went well, expect the user to be redirected to the provider post signin URL
   await waitFor(() => {
-    expect(window.location.replace).toHaveBeenCalledTimes(1)
-    expect(window.location.replace).toHaveBeenCalledWith(
+    expect(window.location.replace).not.toHaveBeenCalledWith(
       mockCredentialsResponse.url
+    )
+
+    expect(screen.getByTestId("signin-result").textContent).not.toBe(
+      "no response"
     )
   })
 
-  // `signIn()` should have not returned anything...
-  expect(screen.getByTestId("signin-result").textContent).toBe("no response")
+  // snapshot the expected return shape from `signIn`
+  expect(JSON.parse(screen.getByTestId("signin-result").textContent))
+    .toMatchInlineSnapshot(`
+    Object {
+      "error": null,
+      "ok": true,
+      "status": 200,
+      "url": "https://path/to/credentials/url",
+    }
+  `)
 })
 
 test("redirection can be stopped using the 'email' provider", async () => {
@@ -148,18 +151,31 @@ test("redirection can be stopped using the 'email' provider", async () => {
 
   userEvent.click(screen.getByRole("button"))
 
-  // if all went well, expect the user to be redirected to the provider post signin URL
   await waitFor(() => {
-    expect(window.location.replace).toHaveBeenCalledTimes(1)
-    expect(window.location.replace).toHaveBeenCalledWith(mockEmailResponse.url)
+    expect(window.location.replace).not.toHaveBeenCalledWith(
+      mockEmailResponse.url
+    )
+
+    expect(screen.getByTestId("signin-result").textContent).not.toBe(
+      "no response"
+    )
   })
 
-  // `signIn()` should have not returned anything...
-  expect(screen.getByTestId("signin-result").textContent).toBe("no response")
+  // snapshot the expected return shape from `signIn` oauth
+  expect(JSON.parse(screen.getByTestId("signin-result").textContent))
+    .toMatchInlineSnapshot(`
+    Object {
+      "error": null,
+      "ok": true,
+      "status": 200,
+      "url": "https://path/to/email/url",
+    }
+  `)
 })
 
-test("if url contains a hash when stopping redirection a page reload happens", async () => {
+test("if callback URL contains a hash we force a window reload when re-directing", async () => {
   const mockUrlWithHash = "https://path/to/email/url#foo-bar-baz"
+
   server.use(
     rest.post("/api/auth/signin/email", (req, res, ctx) => {
       return res(
@@ -172,23 +188,22 @@ test("if url contains a hash when stopping redirection a page reload happens", a
     })
   )
 
-  render(
-    <SignInFlow providerId="email" callbackUrl={callbackUrl} redirect={false} />
-  )
+  render(<SignInFlow providerId="email" callbackUrl={mockUrlWithHash} />)
 
   userEvent.click(screen.getByRole("button"))
 
-  // if all went well, expect the user to be redirected to the provider post signin URL
   await waitFor(() => {
-    expect(window.location.reload).toHaveBeenCalledTimes(1)
+    expect(window.location.replace).toHaveBeenCalledTimes(1)
     expect(window.location.replace).toHaveBeenCalledWith(mockUrlWithHash)
+    // the browser when reload the page if the redirect URL contains a hash, hence the client force it, see #1289
+    expect(window.location.reload).toHaveBeenCalledTimes(1)
   })
 })
 
 function SignInFlow({ providerId, callbackUrl, redirect = true }) {
   const [response, setResponse] = useState(null)
 
-  async function setSignInRes() {
+  async function handleSignIn() {
     const result = await signIn(providerId, { callbackUrl, redirect })
     setResponse(result)
   }
@@ -198,7 +213,7 @@ function SignInFlow({ providerId, callbackUrl, redirect = true }) {
       <p data-testid="signin-result">
         {response ? JSON.stringify(response) : "no response"}
       </p>
-      <button onClick={() => setSignInRes()}>Sign in</button>
+      <button onClick={() => handleSignIn()}>Sign in</button>
     </>
   )
 }

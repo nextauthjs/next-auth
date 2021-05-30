@@ -29,7 +29,7 @@ afterAll(() => {
 
 const callbackUrl = "https://redirects/to"
 
-test("by default it redirects to `window.location.href`", async () => {
+test.skip("by default it redirects to the current URL if the server did not provide one", async () => {
   render(<SignOutFlow />)
 
   userEvent.click(screen.getByRole("button"))
@@ -41,15 +41,16 @@ test("by default it redirects to `window.location.href`", async () => {
   })
 })
 
-test("when supplied, it redirects to `callbackUrl`", async () => {
+test("it redirects to the URL allowed by the server", async () => {
   render(<SignOutFlow callbackUrl={callbackUrl} />)
 
   userEvent.click(screen.getByRole("button"))
 
-  // it's a known provider don't redirect back to sign-in page
   await waitFor(() => {
     expect(window.location.replace).toHaveBeenCalledTimes(1)
-    expect(window.location.replace).toHaveBeenCalledWith(callbackUrl)
+    expect(window.location.replace).toHaveBeenCalledWith(
+      mockSignOutResponse.url
+    )
   })
 })
 
@@ -72,7 +73,6 @@ test("if url contains a hash during redirection a page reload happens", async ()
 
   userEvent.click(screen.getByRole("button"))
 
-  // if all went well, expect the user to be redirected to the provider post signin URL
   await waitFor(() => {
     expect(window.location.reload).toHaveBeenCalledTimes(1)
     expect(window.location.replace).toHaveBeenCalledWith(mockUrlWithHash)
