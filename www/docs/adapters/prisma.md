@@ -5,13 +5,13 @@ title: Prisma Adapter
 
 # Prisma
 
-You can also use NextAuth.js with the experimental Adapter for [Prisma](https://www.prisma.io/docs/).
+You can also use NextAuth.js with the new experimental Adapter for [Prisma](https://www.prisma.io/docs/). This version of the Prisma Adapter is not included in the core `next-auth` package, and must be installed separately.
 
 :::info
-You may have noticed there is a `prisma` and `prisma-legacy` adapter. This is due to legacy reasons, but the code has mostly converged so that there is no longer much difference between the two. The legacy adapter does have one feature that the newer one does not, and that is the ability to rename tables.
+You may have noticed there is a `prisma` and `prisma-legacy` adapter. This is due to historical reasons, but the code has mostly converged so that there is no longer much difference between the two. The legacy adapter, however, does have the ability to rename tables which the newer version does not.
 :::
 
-To use this Adapter, you need to install Prisma Client and Prisma CLI:
+To use this Adapter, you need to install Prisma Client, Prisma CLI, and the separate `@next-auth/prisma-adapter` package:
 
 ```
 npm install @prisma/client @next-auth/prisma-adapter
@@ -35,7 +35,7 @@ export default NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
-  adapter: PrismaAdapter({ prisma }),
+  adapter: PrismaAdapter(prisma),
 })
 ```
 
@@ -127,46 +127,6 @@ npx prisma migrate dev
 To generate a schema in this way with the above example code, you will need to specify your datbase connection string in the environment variable `DATABASE_URL`. You can do this by setting it in a `.env` file at the root of your project.
 
 As this feature is experimental in Prisma, it is behind a feature flag. You should check your database schema manually after using this option. See the [Prisma documentation](https://www.prisma.io/docs/) for information on how to use `prisma migrate`.
-
-### Custom Models
-
-You can add properties to the schema and map them to any database column names you wish, but you should not change the base properties or types defined in the example schema.
-
-The model names themselves can be changed with a configuration option, and the datasource can be changed to anything supported by Prisma.
-
-You can use custom model names by using the `modelMapping` option (shown here with default values).
-
-```javascript title="pages/api/auth/[...nextauth].js"
-...
-adapter: PrismaAdapter({
-  prisma,
-  modelMapping: {
-    User: 'user',
-    Account: 'account',
-    Session: 'session',
-    VerificationRequest: 'verificationRequest'
-  }
-})
-...
-```
-
-:::tip
-If you experience issues with Prisma opening too many database connections in local development mode (e.g. due to Hot Module Reloading) you can use an approach like this when initalising the Prisma Client:
-
-```javascript title="pages/api/auth/[...nextauth].js"
-let prisma
-
-if (process.env.NODE_ENV === "production") {
-  prisma = new PrismaClient()
-} else {
-  if (!global.prisma) {
-    global.prisma = new PrismaClient()
-  }
-  prisma = global.prisma
-}
-```
-
-:::
 
 ## Schema History
 

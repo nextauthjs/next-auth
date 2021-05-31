@@ -264,7 +264,7 @@ You can also set these parameters through [`provider.authorizationParams`](/conf
 :::
 
 :::note
-The following parameters are always overridden server-side: `redirect_uri`, `scope`, `state`
+The following parameters are always overridden server-side: `redirect_uri`, `state`
 :::
 
 ---
