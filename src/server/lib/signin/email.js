@@ -5,11 +5,12 @@ import adapterErrorHandler from "../../../adapters/error-handler"
  * Starts an e-mail login flow, by generating a token,
  * and sending it to the user's e-mail (with the help of a DB adapter)
  * @param {string} identifier
- * @param {import("types/providers").EmailConfig} provider
  * @param {import("types/internals").AppOptions} options
  */
-export default async function email(identifier, provider, options) {
+export default async function email(identifier, options) {
   const { baseUrl, basePath, adapter, logger } = options
+  /** @type {import("types/providers").EmailConfig} */
+  const provider = options.provider
 
   // Generate token
   const { generateVerificationToken } = provider
