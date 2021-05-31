@@ -28,7 +28,7 @@ We purposefully restrict the returned error codes for increased security.
 The following errors are passed as error query parameters to the default or overriden error page:
 
 - **Configuration**: There is a problem with the server configuration. Check if your [options](/configuration/options#options) is correct.
-- **AccessDenied**: Usually occurs, when you restriected access through the [`signIn` callback](/configuration/callbacks#sign-in-callback), or [`redirect` callback](/configuration/callbacks#redirect-callback)
+- **AccessDenied**: Usually occurs, when you restricted access through the [`signIn` callback](/configuration/callbacks#sign-in-callback), or [`redirect` callback](/configuration/callbacks#redirect-callback)
 - **Verification**: Related to the Email provider. The token has expired or has already been used
 - **Default**: Catch all, will apply, if none of the above matched
 
