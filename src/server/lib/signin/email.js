@@ -1,4 +1,4 @@
-import { randomBytes } from "crypto"
+import { createHash, randomBytes } from "crypto"
 import adapterErrorHandler from "../../../adapters/error-handler"
 
 /**
@@ -9,39 +9,62 @@ import adapterErrorHandler from "../../../adapters/error-handler"
  * @param {import("types/internals").AppOptions} options
  */
 export default async function email(identifier, provider, options) {
+  const { baseUrl, basePath, adapter, logger } = options
 
-    const { createVerificationRequest } = adapterErrorHandler(
-      await adapter.getAdapter(options),
-      logger
-    )
-
-    // Prefer provider specific secret, but use default secret if none specified
-    const secret = provider.secret || options.secret
-
-    // Generate token
+  // Generate token
   const { generateVerificationToken } = provider
   const token =
     (await generateVerificationToken?.(identifier)) ??
     randomBytes(32).toString("hex")
 
-    // Send email with link containing token (the unhashed version)
-    const url = `${baseUrl}${basePath}/callback/${encodeURIComponent(
-      provider.id
-    )}?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`
+  // Generate the hashed token that will be stored in the DB
+  const hashedToken = hashToken(token, options)
 
-    // @TODO Create invite (send secret so can be hashed)
-    await createVerificationRequest(
-      email,
-      url,
-      token,
-      secret,
-      provider,
-      options
-    )
+  // Generate a link with email and the unhashed token
+  const params = new URLSearchParams({ token, email: identifier })
+  const url = `${baseUrl}${basePath}/callback/${provider.id}?${params}`
 
-    // Return promise
-    return Promise.resolve()
-  } catch (error) {
-    return Promise.reject(error)
-  }
+  const { createVerificationRequest } = adapterErrorHandler(
+    await adapter.getAdapter(options),
+    logger
+  )
+  // TODO: simplify arguments in a future major release to something like:
+  // { identifier, url, hashedToken, provider }
+  await createVerificationRequest(
+    identifier,
+    url,
+    token,
+    // TODO: Drop this, as we can send a already hashed token instead.
+    // Prefer provider specific secret, but use default secret if none specified
+    provider.secret ?? options.secret,
+    {
+      ...provider,
+      // We send this method to the adapter for compatibility reasons,
+      // but we call it ourselves below.
+      sendVerificationRequest() {
+        return Promise.resolve()
+      },
+    },
+    options,
+    hashedToken
+  )
+
+  await provider.sendVerificationRequest({
+    identifier,
+    url,
+    token,
+    baseUrl,
+    provider,
+  })
+}
+
+/**
+ * @todo Use bcrypt or a more secure method
+ * @param {string} token
+ * @param {import("types/internals").AppOptions} options
+ */
+export function hashToken(token, options) {
+  // Prefer provider specific secret, but use default secret if none specified
+  const secret = options.provider.secret ?? options.secret
+  return createHash("sha256").update(`${token}${secret}`).digest("hex")
 }

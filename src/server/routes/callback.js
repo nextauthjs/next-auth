@@ -3,6 +3,7 @@ import callbackHandler from "../lib/callback-handler"
 import * as cookie from "../lib/cookie"
 import dispatchEvent from "../lib/dispatch-event"
 import adapterErrorHandler from "../../adapters/error-handler"
+import { hashToken } from "../lib/signin/email"
 
 /**
  * Handle callbacks from login services
@@ -191,25 +192,33 @@ export default async function callback(req, res) {
       const verificationToken = req.query.token
       const email = req.query.email
 
+      const hashedToken = hashToken(verificationToken, req.options)
       // Verify email and verification token exist in database
       const invite = await getVerificationRequest(
         email,
         verificationToken,
         secret,
-        provider
+        provider,
+        hashedToken
       )
       if (!invite) {
         return res.redirect(`${baseUrl}${basePath}/error?error=Verification`)
       }
 
-      // If verification token is valid, delete verification request token from
-      // the database so it cannot be used again
-      await deleteVerificationRequest(
-        email,
-        verificationToken,
-        secret,
-        provider
-      )
+      // If the adapter already deleted the token in `getVerificationRequest`,
+      // we don't need to do another call to the DB
+      // Drop `deleteVerificationRequest` in future major release.
+      if (!invite.token_deleted) {
+        // If verification token is valid, delete verification request token from
+        // the database so it cannot be used again
+        await deleteVerificationRequest(
+          email,
+          verificationToken,
+          secret,
+          provider,
+          hashedToken
+        )
+      }
 
       // If is an existing user return a user object (otherwise use placeholder)
       const profile = (await getUserByEmail(email)) || { email }
@@ -336,7 +345,8 @@ export default async function callback(req, res) {
     let userObjectReturnedFromAuthorizeHandler
     try {
       userObjectReturnedFromAuthorizeHandler = await provider.authorize(
-        credentials, {...req, options: {}, cookies: {}}
+        credentials,
+        { ...req, options: {}, cookies: {} }
       )
       if (!userObjectReturnedFromAuthorizeHandler) {
         return res
