@@ -111,11 +111,15 @@ interface CredentialInput {
   placeholder?: string
 }
 
-interface CredentialsConfig<C extends Record<string, CredentialInput> = {}>
-  extends CommonProviderOptions {
+export interface CredentialsConfig<
+  C extends Record<string, CredentialInput> = {}
+> extends CommonProviderOptions {
   type: "credentials"
   credentials: C
-  authorize(credentials: Record<keyof C, string>, req: NextApiRequest): Awaitable<User | null>
+  authorize(
+    credentials: Record<keyof C, string>,
+    req: NextApiRequest
+  ): Awaitable<User | null>
 }
 
 export type CredentialsProvider = (
@@ -156,6 +160,22 @@ export interface EmailConfig extends CommonProviderOptions {
    */
   maxAge?: number
   sendVerificationRequest: SendVerificationRequest
+  /**
+   * By default, we are generating a random verification token.
+   * You can make it predictable or modify it as you like with this method.
+   * You receive the identifier (usually e-mail)
+   * in case you need it for the token generation.
+   * @example
+   * ```js
+   *  Providers.Email({
+   *    async generateVerificationToken(email) {
+   *      return "ABC123"
+   *    }
+   *  })
+   * ```
+   * [Documentation](https://next-auth.js.org/providers/email#customising-the-verification-token)
+   */
+  generateVerificationToken?(identifier: string): Awaitable<string>
 }
 
 export type EmailProvider = (options: Partial<EmailConfig>) => EmailConfig

@@ -2,15 +2,13 @@ import { randomBytes } from "crypto"
 import adapterErrorHandler from "../../../adapters/error-handler"
 
 /**
- *
- * @param {string} email
+ * Starts an e-mail login flow, by generating a token,
+ * and sending it to the user's e-mail (with the help of a DB adapter)
+ * @param {string} identifier
  * @param {import("types/providers").EmailConfig} provider
  * @param {import("types/internals").AppOptions} options
- * @returns
  */
-export default async function email(email, provider, options) {
-  try {
-    const { baseUrl, basePath, adapter, logger } = options
+export default async function email(identifier, provider, options) {
 
     const { createVerificationRequest } = adapterErrorHandler(
       await adapter.getAdapter(options),
@@ -21,9 +19,10 @@ export default async function email(email, provider, options) {
     const secret = provider.secret || options.secret
 
     // Generate token
-    const token =
-      (await provider.generateVerificationToken?.()) ??
-      randomBytes(32).toString("hex")
+  const { generateVerificationToken } = provider
+  const token =
+    (await generateVerificationToken?.(identifier)) ??
+    randomBytes(32).toString("hex")
 
     // Send email with link containing token (the unhashed version)
     const url = `${baseUrl}${basePath}/callback/${encodeURIComponent(
