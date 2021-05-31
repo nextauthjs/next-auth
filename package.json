@@ -1,5 +1,5 @@
 {
-  "name": "next-auth",
+  "name": "@mtt/next-auth",
   "version": "0.0.0-semantically-released",
   "description": "Authentication for Next.js",
   "homepage": "https://next-auth.js.org",
