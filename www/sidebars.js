@@ -62,5 +62,7 @@ module.exports = {
         },
       ],
     },
+    "warnings",
+    "errors",
   ],
 }
