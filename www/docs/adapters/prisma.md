@@ -14,7 +14,7 @@ You may have noticed there is a `prisma` and `prisma-legacy` adapter. This is du
 To use this Adapter, you need to install Prisma Client, Prisma CLI, and the separate `@next-auth/prisma-adapter` package:
 
 ```
-npm install @prisma/client @next-auth/prisma-adapter
+npm install @prisma/client @next-auth/prisma-adapter@canary
 npm install prisma --save-dev
 ```
 
