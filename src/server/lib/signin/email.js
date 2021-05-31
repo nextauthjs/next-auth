@@ -14,8 +14,7 @@ export default async function email(identifier, provider, options) {
   // Generate token
   const { generateVerificationToken } = provider
   const token =
-    (await generateVerificationToken?.(identifier)) ??
-    randomBytes(32).toString("hex")
+    (await generateVerificationToken?.()) ?? randomBytes(32).toString("hex")
 
   // Generate the hashed token that will be stored in the DB
   const hashedToken = hashToken(token, options)

@@ -212,12 +212,12 @@ If you want to generate great looking email client compatible HTML with React, c
 
 ## Customizing the Verification Token
 
-By default, we are generating a random verification token. You can define a `generateVerificationToken` method in your provider options if you want to override it. You receive the identifier (usually e-mail) in case you need it for the token generation:
+By default, we are generating a random verification token. You can define a `generateVerificationToken` method in your provider options if you want to override it:
 
 ```js title="pages/api/auth/[...nextauth].js"
 providers: [
   Providers.Email({
-    async generateVerificationToken(identifier) {
+    async generateVerificationToken() {
       return "ABC123"
     }
   })
