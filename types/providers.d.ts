@@ -97,6 +97,7 @@ export type OAuthProviderType =
   | "WorkOS"
   | "Yandex"
   | "Zoho"
+  | "Zoom"
 
 export type OAuthProvider = (options: Partial<OAuthConfig>) => OAuthConfig
 
