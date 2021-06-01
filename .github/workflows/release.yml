@@ -1,4 +1,4 @@
-name: Release
+name: Release Flow
 
 on:
   push:
@@ -22,6 +22,8 @@ jobs:
         uses: bahmutov/npm-install@v1
       - name: Run tests
         run: npm test
+      - name: Build
+        run: npm run build
   release:
     name: Release
     needs: test
