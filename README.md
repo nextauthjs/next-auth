@@ -7,11 +7,8 @@
    Open Source. Full Stack. Own Your Data.
    </p>
    <p align="center" style="align: center;">
-      <a href="https://github.com/nextauthjs/next-auth/actions?query=workflow%3ARelease">
-        <img src="https://github.com/nextauthjs/next-auth/workflows/Release/badge.svg" alt="Release" />
-      </a>
-      <a href="https://github.com/nextauthjs/next-auth/actions?query=workflow%3A%22Integration+Test%22">
-        <img src="https://github.com/nextauthjs/next-auth/workflows/Integration%20Test/badge.svg" alt="Integration Test" />
+      <a href="https://github.com/nextauthjs/next-auth/actions/workflows/release.yml?query=workflow%3ARelease">
+        <img src="https://github.com/nextauthjs/next-auth/actions/workflows/release.yml/badge.svg" alt="Release" />
       </a>
       <a href="https://bundlephobia.com/result?p=next-auth">
         <img src="https://img.shields.io/bundlephobia/minzip/next-auth" alt="Bundle Size"/>
