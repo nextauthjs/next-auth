@@ -4,6 +4,7 @@ import { server, mockSession } from "./mocks"
 import logger from "../../lib/logger"
 import { useState, useEffect } from "react"
 import { getSession } from ".."
+import { getBroadcastEvents } from "./utils"
 
 jest.mock("../../lib/logger", () => ({
   __esModule: true,
@@ -42,18 +43,18 @@ test("if it can fetch the session, it should store it in `localStorage`", async 
   const session = await screen.findByText(new RegExp(mockSession.user.name))
   expect(session).toBeInTheDocument()
 
-  // The session should have been stored in local storage
-  const localStorageCalls = localStorage.setItem.mock.calls.filter(
-    (call) => call[0] !== "MSW_COOKIE_STORE"
-  )
-  expect(localStorageCalls).toHaveLength(1)
-  expect(localStorageCalls[0][0]).toBe("nextauth.message")
-  expect(JSON.parse(localStorageCalls[0][1])).toEqual(
-    expect.objectContaining({
-      event: "session",
-      data: { trigger: "getSession" },
-    })
-  )
+  const broadcastCalls = getBroadcastEvents()
+  const [broadcastedEvent] = broadcastCalls
+
+  expect(broadcastCalls).toHaveLength(1)
+  expect(broadcastCalls).toHaveLength(1)
+  expect(broadcastedEvent.eventName).toBe("nextauth.message")
+  expect(broadcastedEvent.value).toStrictEqual({
+    data: {
+      trigger: "getSession",
+    },
+    event: "session",
+  })
 })
 
 test("if there's an error fetching the session, it should log it", async () => {

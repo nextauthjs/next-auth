@@ -4,6 +4,7 @@ import { render, screen, waitFor } from "@testing-library/react"
 import { server, mockSignOutResponse } from "./mocks"
 import { signOut } from ".."
 import { rest } from "msw"
+import { getBroadcastEvents } from "./utils"
 
 const { location } = window
 
@@ -18,6 +19,11 @@ beforeAll(() => {
 })
 
 beforeEach(() => {
+  // eslint-disable-next-line no-proto
+  jest.spyOn(window.localStorage.__proto__, "setItem")
+})
+
+afterEach(() => {
   jest.resetAllMocks()
   server.resetHandlers()
 })
@@ -81,6 +87,26 @@ test("if url contains a hash during redirection a page reload happens", async ()
   await waitFor(() => {
     expect(window.location.reload).toHaveBeenCalledTimes(1)
     expect(window.location.replace).toHaveBeenCalledWith(mockUrlWithHash)
+  })
+})
+
+test("will broadcast the signout event to other tabs", async () => {
+  render(<SignOutFlow />)
+
+  userEvent.click(screen.getByRole("button"))
+
+  await waitFor(() => {
+    const broadcastCalls = getBroadcastEvents()
+    const [broadcastedEvent] = broadcastCalls
+
+    expect(broadcastCalls).toHaveLength(1)
+    expect(broadcastedEvent.eventName).toBe("nextauth.message")
+    expect(broadcastedEvent.value).toStrictEqual({
+      data: {
+        trigger: "signout",
+      },
+      event: "session",
+    })
   })
 })
 
