@@ -195,16 +195,70 @@ test("if callback URL contains a hash we force a window reload when re-directing
   await waitFor(() => {
     expect(window.location.replace).toHaveBeenCalledTimes(1)
     expect(window.location.replace).toHaveBeenCalledWith(mockUrlWithHash)
-    // the browser when reload the page if the redirect URL contains a hash, hence the client force it, see #1289
+    // the browser will not refresh the page if the redirect URL contains a hash, hence we force it on the client, see #1289
     expect(window.location.reload).toHaveBeenCalledTimes(1)
   })
 })
 
-function SignInFlow({ providerId, callbackUrl, redirect = true }) {
+test("params are propagated to the signin URL when supplied", async () => {
+  let matchedParams = ""
+  const authParams = "foo=bar&bar=foo"
+
+  server.use(
+    rest.post("/api/auth/signin/github", (req, res, ctx) => {
+      matchedParams = req.url.search
+      return res(ctx.status(200), ctx.json(mockGithubResponse))
+    })
+  )
+
+  render(<SignInFlow providerId="github" authorizationParams={authParams} />)
+
+  userEvent.click(screen.getByRole("button"))
+
+  await waitFor(() => {
+    expect(matchedParams).toEqual(`?${authParams}`)
+  })
+})
+
+test("when it fails to fetch the providers, it redirected back to signin page", async () => {
+  server.use(
+    rest.get("/api/auth/providers", (req, res, ctx) =>
+      res(
+        ctx.status(500),
+        ctx.json({ error: new Error("Something unexpected") })
+      )
+    )
+  )
+
+  render(<SignInFlow providerId="github" />)
+
+  userEvent.click(screen.getByRole("button"))
+
+  await waitFor(() => {
+    expect(window.location.replace).toHaveBeenCalledWith(
+      `/api/auth/signin?callbackUrl=${encodeURIComponent(window.location.href)}`
+    )
+  })
+})
+
+function SignInFlow({
+  providerId,
+  callbackUrl,
+  redirect = true,
+  authorizationParams = {},
+}) {
   const [response, setResponse] = useState(null)
 
   async function handleSignIn() {
-    const result = await signIn(providerId, { callbackUrl, redirect })
+    const result = await signIn(
+      providerId,
+      {
+        callbackUrl,
+        redirect,
+      },
+      authorizationParams
+    )
+
     setResponse(result)
   }
 

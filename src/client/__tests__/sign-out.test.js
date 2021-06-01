@@ -29,12 +29,17 @@ afterAll(() => {
 
 const callbackUrl = "https://redirects/to"
 
-test.skip("by default it redirects to the current URL if the server did not provide one", async () => {
+test("by default it redirects to the current URL if the server did not provide one", async () => {
+  server.use(
+    rest.post("/api/auth/signout", (req, res, ctx) =>
+      res(ctx.status(200), ctx.json({ ...mockSignOutResponse, url: undefined }))
+    )
+  )
+
   render(<SignOutFlow />)
 
   userEvent.click(screen.getByRole("button"))
 
-  // it's a known provider don't redirect back to sign-in page
   await waitFor(() => {
     expect(window.location.replace).toHaveBeenCalledTimes(1)
     expect(window.location.replace).toHaveBeenCalledWith(window.location.href)

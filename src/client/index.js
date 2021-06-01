@@ -210,6 +210,7 @@ export async function signIn(provider, options = {}, authorizationParams = {}) {
       json: true,
     }),
   }
+
   const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
   const res = await fetch(_signInUrl, fetchOptions)
   const data = await res.json()
