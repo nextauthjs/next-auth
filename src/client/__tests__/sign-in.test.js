@@ -1,6 +1,7 @@
 import { useState } from "react"
 import userEvent from "@testing-library/user-event"
 import { render, screen, waitFor } from "@testing-library/react"
+import logger from "../../lib/logger"
 import {
   server,
   mockCredentialsResponse,
@@ -11,6 +12,18 @@ import { signIn } from ".."
 import { rest } from "msw"
 
 const { location } = window
+
+jest.mock("../../lib/logger", () => ({
+  __esModule: true,
+  default: {
+    warn: jest.fn(),
+    debug: jest.fn(),
+    error: jest.fn(),
+  },
+  proxyLogger(logger) {
+    return logger
+  },
+}))
 
 beforeAll(() => {
   server.listen()
@@ -221,12 +234,11 @@ test("params are propagated to the signin URL when supplied", async () => {
 })
 
 test("when it fails to fetch the providers, it redirected back to signin page", async () => {
+  const errorMsg = "Error when retrieving providers"
+
   server.use(
     rest.get("/api/auth/providers", (req, res, ctx) =>
-      res(
-        ctx.status(500),
-        ctx.json({ error: new Error("Something unexpected") })
-      )
+      res(ctx.status(500), ctx.json(errorMsg))
     )
   )
 
@@ -235,8 +247,13 @@ test("when it fails to fetch the providers, it redirected back to signin page", 
   userEvent.click(screen.getByRole("button"))
 
   await waitFor(() => {
-    expect(window.location.replace).toHaveBeenCalledWith(
-      `/api/auth/signin?callbackUrl=${encodeURIComponent(window.location.href)}`
+    expect(window.location.replace).toHaveBeenCalledWith(`/api/auth/error`)
+
+    expect(logger.error).toHaveBeenCalledTimes(1)
+    expect(logger.error).toBeCalledWith(
+      "CLIENT_FETCH_ERROR",
+      "providers",
+      errorMsg
     )
   })
 })
