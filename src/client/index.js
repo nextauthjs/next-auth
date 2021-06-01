@@ -173,26 +173,28 @@ export async function getCsrfToken(ctx) {
 }
 
 export async function getProviders() {
-  return _fetchData("providers")
+  return await _fetchData("providers")
 }
 
 export async function signIn(provider, options = {}, authorizationParams = {}) {
-  const { callbackUrl = window.location, redirect = true } = options
+  const { callbackUrl = window.location.href, redirect = true } = options
 
   const baseUrl = _apiBaseUrl()
   const providers = await getProviders()
 
-  // Redirect to sign in page if no valid provider specified
-  if (!(provider in providers)) {
-    // If Provider not recognized, redirect to sign in page
-    window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(
-      callbackUrl
-    )}`
-    return
+  if (!providers) {
+    return window.location.replace(`${baseUrl}/error`)
   }
+
+  if (!(provider in providers)) {
+    return window.location.replace(
+      `${baseUrl}/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`
+    )
+  }
+
   const isCredentials = providers[provider].type === "credentials"
   const isEmail = providers[provider].type === "email"
-  const canRedirectBeDisabled = isCredentials || isEmail
+  const isSupportingReturn = isCredentials || isEmail
 
   const signInUrl = isCredentials
     ? `${baseUrl}/callback/${provider}`
@@ -212,15 +214,16 @@ export async function signIn(provider, options = {}, authorizationParams = {}) {
       json: true,
     }),
   }
+
   const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
   const res = await fetch(_signInUrl, fetchOptions)
   const data = await res.json()
-  if (redirect || !canRedirectBeDisabled) {
+
+  if (redirect || !isSupportingReturn) {
     const url = data.url ?? callbackUrl
-    window.location = url
+    window.location.replace(url)
     // If url contains a hash, the browser does not reload the page. We reload manually
     if (url.includes("#")) window.location.reload()
-
     return
   }
 
@@ -239,7 +242,7 @@ export async function signIn(provider, options = {}, authorizationParams = {}) {
 }
 
 export async function signOut(options = {}) {
-  const { callbackUrl = window.location, redirect = true } = options
+  const { callbackUrl = window.location.href, redirect = true } = options
   const baseUrl = _apiBaseUrl()
   const fetchOptions = {
     method: "post",
@@ -259,7 +262,7 @@ export async function signOut(options = {}) {
   }
   if (redirect) {
     const url = data.url ?? callbackUrl
-    window.location = url
+    window.location.replace(url)
     // If url contains a hash, the browser does not reload the page. We reload manually
     if (url.includes("#")) window.location.reload()
     return
@@ -330,6 +333,7 @@ async function _fetchData(path, { ctx, req = ctx?.req } = {}) {
     const options = req ? { headers: { cookie: req.headers.cookie } } : {}
     const res = await fetch(`${baseUrl}/${path}`, options)
     const data = await res.json()
+    if (!res.ok) throw data
     return Object.keys(data).length > 0 ? data : null // Return null if data empty
   } catch (error) {
     logger.error("CLIENT_FETCH_ERROR", path, error)
