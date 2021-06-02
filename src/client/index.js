@@ -198,9 +198,9 @@ export async function signIn(provider, options = {}, authorizationParams = {}) {
     ? `${baseUrl}/callback/${provider}`
     : `${baseUrl}/signin/${provider}`
 
-  // If is any other provider type, POST to provider URL with CSRF Token,
-  // callback URL and any other parameters supplied.
-  const fetchOptions = {
+  const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
+
+  const res = await fetch(_signInUrl, {
     method: "post",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -211,10 +211,8 @@ export async function signIn(provider, options = {}, authorizationParams = {}) {
       callbackUrl,
       json: true,
     }),
-  }
+  })
 
-  const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
-  const res = await fetch(_signInUrl, fetchOptions)
   const data = await res.json()
 
   if (redirect || !isSupportingReturn) {
