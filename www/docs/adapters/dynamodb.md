@@ -13,10 +13,10 @@ You can find the full schema in the table structure section below.
 
 ## Getting Started
 
-1. Install `next-auth` and `@next-auth/dynamodb-adapter`
+1. Install `next-auth` and `@next-auth/dynamodb-adapter@canary`
 
 ```js
-npm install next-auth @next-auth/dynamodb-adapter
+npm install next-auth @next-auth/dynamodb-adapter@canary
 ```
 
 2. Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object.
