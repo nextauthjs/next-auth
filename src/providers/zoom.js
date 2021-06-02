@@ -16,6 +16,7 @@ export default function Zoom(options) {
         email: profile.email,
       }
     },
+    protection: ["pkce", "state"]
     ...options,
   }
 }
