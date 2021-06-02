@@ -133,11 +133,6 @@
   "prettier": {
     "semi": false
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged --pattern '**/*.*(js|jsx|md|ts|json)'"
-    }
-  },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
