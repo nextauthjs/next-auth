@@ -5,7 +5,7 @@ title: Zoom
 
 ## Documentation
 
-<https://marketplace.zoom.us/docs/guides/auth/oauth>
+https://marketplace.zoom.us/docs/guides/auth/oauth
 
 ## Configuration
 
