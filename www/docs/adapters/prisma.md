@@ -11,7 +11,7 @@ You can also use NextAuth.js with the new experimental Adapter for [Prisma](http
 You may have noticed there is a `prisma` and `prisma-legacy` adapter. This is due to historical reasons, but the code has mostly converged so that there is no longer much difference between the two. The legacy adapter, however, does have the ability to rename tables which the newer version does not.
 :::
 
-To use this Adapter, you need to install Prisma Client, Prisma CLI, and the separate `@next-auth/prisma-adapter` package:
+To use this Adapter, you need to install Prisma Client, Prisma CLI, and the separate `@next-auth/prisma-adapter@canary` package:
 
 ```
 npm install @prisma/client @next-auth/prisma-adapter@canary
