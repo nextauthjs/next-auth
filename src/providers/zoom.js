@@ -1,7 +1,7 @@
 export default function Zoom(options) {
   return {
     id: "zoom",
-    name: "zoom",
+    name: "Zoom",
     type: "oauth",
     version: "2.0",
     params: { grant_type: "authorization_code" },
