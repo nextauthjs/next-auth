@@ -9,7 +9,7 @@ https://marketplace.zoom.us/docs/guides/auth/oauth
 
 ## Configuration
 
-<https://marketplace.zoom.us/>
+https://marketplace.zoom.us
 
 ## Options
 
