@@ -38,6 +38,7 @@
     "watch:js": "babel --config-file ./config/babel.config.js --watch src --out-dir dist",
     "watch:css": "postcss --config config/postcss.config.js --watch src/**/*.css --base src --dir dist",
     "test": "jest --config ./config/jest.config.js",
+    "test:ci": "npm run lint && npm run test:types && npm run test -- --ci",
     "test:types": "dtslint types --onlyTestTsNext",
     "prepublishOnly": "npm run build",
     "lint": "eslint .",
