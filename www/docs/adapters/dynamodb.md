@@ -19,7 +19,7 @@ You can find the full schema in the table structure section below.
 npm install next-auth @next-auth/dynamodb-adapter@canary
 ```
 
-2. Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object.
+2. Add this adapter to your `pages/api/auth/[...nextauth].js` next-auth configuration object.
 
 You need to pass `aws-sdk` to the adapter in addition to the table name.
 
