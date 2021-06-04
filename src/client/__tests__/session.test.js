@@ -27,10 +27,12 @@ beforeEach(() => {
 
 afterEach(() => {
   server.resetHandlers()
-  jest.restoreAllMocks()
+  jest.clearAllMocks()
 })
 
-afterAll(() => server.close())
+afterAll(() => {
+  server.close()
+})
 
 test("if it can fetch the session, it should store it in `localStorage`", async () => {
   render(<SessionFlow />)
@@ -90,8 +92,7 @@ function SessionFlow() {
     fetchUserSession()
   }, [])
 
-  if (session) {
-    return <pre>{JSON.stringify(session, null, 2)}</pre>
-  }
+  if (session) return <pre>{JSON.stringify(session, null, 2)}</pre>
+
   return <p>No session</p>
 }

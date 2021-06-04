@@ -24,7 +24,7 @@ beforeEach(() => {
 })
 
 afterEach(() => {
-  jest.resetAllMocks()
+  jest.clearAllMocks()
   server.resetHandlers()
 })
 
@@ -113,7 +113,7 @@ test("will broadcast the signout event to other tabs", async () => {
 function SignOutFlow({ callbackUrl, redirect = true }) {
   const [response, setResponse] = useState(null)
 
-  async function setSignOutRes() {
+  async function handleSignOut() {
     const result = await signOut({ callbackUrl, redirect })
     setResponse(result)
   }
@@ -123,7 +123,7 @@ function SignOutFlow({ callbackUrl, redirect = true }) {
       <p data-testid="signout-result">
         {response ? JSON.stringify(response) : "no response"}
       </p>
-      <button onClick={() => setSignOutRes()}>Sign out</button>
+      <button onClick={handleSignOut}>Sign out</button>
     </>
   )
 }
