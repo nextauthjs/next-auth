@@ -50,7 +50,7 @@ export default NextAuth({
   ],
   adapter: DynamoDBAdapter(
     new AWS.DynamoDB.DocumentClient(),
-    { tableName: "next-auth-test" }
+    { tableName: "next-auth-test" } // If no tableName is given, it defaults to next-auth
   ),
   ...
 });
