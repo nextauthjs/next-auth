@@ -31,7 +31,7 @@ afterAll(() => {
   server.close()
 })
 
-test("when called it'll return a CSRF token", async () => {
+test("returns the Cross Site Request Forgery Token (CSRF Token) required to make POST requests", async () => {
   render(<CSRFFlow />)
 
   userEvent.click(screen.getByRole("button"))
@@ -86,11 +86,11 @@ test("when the fetch fails it'll throw a client fetch error", async () => {
   })
 })
 
-function CSRFFlow({ callbackUrl, redirect = true }) {
+function CSRFFlow() {
   const [response, setResponse] = useState()
 
   async function handleCSRF() {
-    const result = await getCsrfToken({ callbackUrl, redirect })
+    const result = await getCsrfToken()
     setResponse(result)
   }
 
@@ -99,7 +99,7 @@ function CSRFFlow({ callbackUrl, redirect = true }) {
       <p data-testid="csrf-result">
         {response === null ? "null-response" : response || "no response"}
       </p>
-      <button onClick={handleCSRF}>Check CSRF</button>
+      <button onClick={handleCSRF}>Get CSRF</button>
     </>
   )
 }
