@@ -186,7 +186,7 @@ JSON Web Tokens can be used for session tokens, but are also used for lots of ot
 
 * You can enable encryption (JWE) to store include information directly in a JWT session token that you wish to keep secret and use the token to pass information between services / APIs on the same domain.
 
-* You can use JWT to securely store information you do not mind the client knowing even without encryption, as the JWT is stored in an server-readable-only-token so data in the JWT is not accessible to third party JavaScript running on your site.
+* You can use JWT to securely store information you do not mind the client knowing even without encryption, as the JWT is stored in a server-readable-only-token so data in the JWT is not accessible to third party JavaScript running on your site.
 
 ### What are the disadvantages of JSON Web Tokens?
 
