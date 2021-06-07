@@ -11,13 +11,15 @@ Depending on your architecture you can use PouchDB's http adapter to reach any d
 
 ## Getting Started
 
+> **Prerequesite**: Your PouchDB instance MUST provide the `pouchdb-find` plugin since it is used internally by the adapter to build and manage indexes
+
 1. Install `next-auth` and `@next-auth/pouchdb-adapter@canary`
 
 ```js
 npm install next-auth @next-auth/pouchdb-adapter@canary
 ```
 
-2. Add this adapter to your `pages/api/auth/[...nextauth].js` next-auth configuration object.
+2. Add this adapter to your `pages/api/auth/[...nextauth].js` next-auth configuration object
 
 ```javascript title="pages/api/auth/[...nextauth].js"
 import NextAuth from "next-auth"
@@ -26,8 +28,10 @@ import { PouchDBAdapter } from "@next-auth/pouchdb-adapter"
 import PouchDB from "pouchdb"
 
 // Setup your PouchDB instance and database
-PouchDB.plugin(require("pouchdb-adapter-leveldb")) // or any other adapter
-  .plugin(require("pouchdb-find")) // /!\ don't forget the pouchdb-find plugin
+PouchDB
+  .plugin(require("pouchdb-adapter-leveldb"))   // Any other adapter
+  .plugin(require("pouchdb-find"))              // Don't forget the `pouchdb-find` plugin
+  
 const pouchdb = new PouchDB("auth_db", { adapter: "leveldb" })
 
 // For more information on each option (and a full list of options) go to
@@ -45,12 +49,15 @@ export default NextAuth({
 })
 ```
 
-## Advanced usage : memory-first caching strategy
+## Advanced 
+
+### Memory-First Caching Strategy
 
 If you need to boost your authentication layer performance, you may use PouchDB's powerful sync features and various adapters, to build a memory-first caching strategy.
 
 Use an in-memory PouchDB as your main authentication database, and synchronize it with any other persisted PouchDB. You may do a one way, one-off replication at startup from the persisted PouchDB into the in-memory PouchDB, then two-way, continuous, retriable sync.
 
-To go further, see : <https://pouchdb.com/api.html#sync>
+This will most likely not increase performance much in a serverless environment due to various reasons such as concurrency, function startup time increases, etc.
 
-Caveat : this would probably not work in a serverless environment for various reasons (concurrency, serverless function startup time increase, etc.)
+For more details, please see https://pouchdb.com/api.html#sync
+
