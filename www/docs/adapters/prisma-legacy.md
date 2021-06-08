@@ -133,6 +133,24 @@ To generate a schema in this way with the above example code, you will need to s
 
 As this feature is experimental in Prisma, it is behind a feature flag. You should check your database schema manually after using this option. See the [Prisma documentation](https://www.prisma.io/docs/) for information on how to use `prisma migrate`.
 
+:::tip
+If you experience issues with Prisma opening too many database connections in local development mode (e.g. due to Hot Module Reloading) you can use an approach like this when initalising the Prisma Client:
+
+```javascript title="pages/api/auth/[...nextauth].js"
+let prisma
+
+if (process.env.NODE_ENV === "production") {
+  prisma = new PrismaClient()
+} else {
+  if (!global.prisma) {
+    global.prisma = new PrismaClient()
+  }
+  prisma = global.prisma
+}
+```
+
+:::
+
 ### Custom Models
 
 You can add properties to the schema and map them to any database column names you wish, but you should not change the base properties or types defined in the example schema.
@@ -155,20 +173,3 @@ adapter: Adapters.Prisma.Adapter({
 ...
 ```
 
-:::tip
-If you experience issues with Prisma opening too many database connections in local development mode (e.g. due to Hot Module Reloading) you can use an approach like this when initalising the Prisma Client:
-
-```javascript title="pages/api/auth/[...nextauth].js"
-let prisma
-
-if (process.env.NODE_ENV === "production") {
-  prisma = new PrismaClient()
-} else {
-  if (!global.prisma) {
-    global.prisma = new PrismaClient()
-  }
-  prisma = global.prisma
-}
-```
-
-:::
