@@ -385,7 +385,7 @@ The `clientMaxAge` option is the maximum age a session data can be on the client
 
 When `clientMaxAge` is set to `0` (the default) the cache will always be used when useSession is called and only explicit calls made to get the session status (i.e. `getSession()`) or event triggers, such as signing in or out in another tab/window, or a tab/window gaining or losing focus, will trigger an update of the session state.
 
-If set to any value other than zero, it specifies in seconds the maxium age of session data on the client before the `useSession()` hook will call the server again to sync the session state.
+If set to any value other than zero, it specifies in seconds the maximum age of session data on the client before the `useSession()` hook will call the server again to sync the session state.
 
 Unless you have a short session expiry time (e.g. < 24 hours) you probably don't need to change this option. Setting this option to too short a value will increase load (and potentially hosting costs).
 
@@ -461,7 +461,7 @@ AdminDashboard.auth = {
 }
 ```
 
-Because of how _app is done, it won't unnecessarily contant the /api/auth/session endpoint for pages that do not require auth.
+Because of how _app is done, it won't unnecessarily contact the /api/auth/session endpoint for pages that do not require auth.
 
 More information can be found in the following [Github Issue](https://github.com/nextauthjs/next-auth/issues/1210).
 

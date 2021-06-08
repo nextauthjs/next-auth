@@ -66,7 +66,7 @@ See the [providers documentation](/configuration/providers) for a list of suppor
 
 #### Description
 
-A random string used to hash tokens, sign cookies and generate crytographic keys.
+A random string used to hash tokens, sign cookies and generate cryptographic keys.
 
 If not specified, it uses a hash for all configuration options, including Client ID / Secrets for entropy.
 

@@ -129,7 +129,7 @@ To configure you database to use the new schema (i.e. create tables and columns)
 npx prisma migrate dev
 ```
 
-To generate a schema in this way with the above example code, you will need to specify your datbase connection string in the environment variable `DATABASE_URL`. You can do this by setting it in a `.env` file at the root of your project.
+To generate a schema in this way with the above example code, you will need to specify your database connection string in the environment variable `DATABASE_URL`. You can do this by setting it in a `.env` file at the root of your project.
 
 As this feature is experimental in Prisma, it is behind a feature flag. You should check your database schema manually after using this option. See the [Prisma documentation](https://www.prisma.io/docs/) for information on how to use `prisma migrate`.
 
@@ -172,4 +172,3 @@ adapter: Adapters.Prisma.Adapter({
 })
 ...
 ```
-
