@@ -66,7 +66,7 @@ callbacks: {
 
 * When using the **Email Provider** the `signIn()` callback is triggered both when the user makes a **Verification Request** (before they are sent email with a link that will allow them to sign in) and again *after* they activate the link in the sign in email.
 
-  Email accounts do not have profiles in the same way OAuth accounts do. On the first call during email sign in the `profile` object will include an property `verificationRequest: true` to indicate it is being triggered in the verification request flow. When the callback is invoked *after* a user has clicked on a sign in link, this property will not be present.
+  Email accounts do not have profiles in the same way OAuth accounts do. On the first call during email sign in the `profile` object will include a property `verificationRequest: true` to indicate it is being triggered in the verification request flow. When the callback is invoked *after* a user has clicked on a sign in link, this property will not be present.
   
   You can check for the `verificationRequest` property to avoid sending emails to addresses or domains on a blocklist (or to only explicitly generate them for email address in an allow list).
 
@@ -158,7 +158,7 @@ If you need to persist a large amount of data, you will need to persist it elsew
 
 ## Session callback
 
-The session callback is called whenever a session is checked. By default, only a subset of the token is returned for increased security. If you want to make something available you added to the token through the `jwt()` callback, you have to explicitely forward it here to make it available to the client.
+The session callback is called whenever a session is checked. By default, only a subset of the token is returned for increased security. If you want to make something available you added to the token through the `jwt()` callback, you have to explicitly forward it here to make it available to the client.
 
 e.g. `getSession()`, `useSession()`, `/api/auth/session`
 
