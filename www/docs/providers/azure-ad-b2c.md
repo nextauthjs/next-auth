@@ -28,7 +28,7 @@ You can override any of the options to suit your own use case.
 - When asked for a redirection URL, use http://localhost:3000/api/auth/callback/azure-ad-b2c
 - Create a new secret and remember / copy its value immediately, it will disappear.
 
-In `.env.local` create the follwing entries:
+In `.env.local` create the following entries:
 
 ```
 AZURE_CLIENT_ID=<copy Application (client) ID here>
