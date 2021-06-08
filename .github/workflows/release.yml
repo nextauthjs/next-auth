@@ -21,13 +21,12 @@ jobs:
       - name: Dependencies
         uses: bahmutov/npm-install@v1
       - name: Run tests
-        run: npm test -- --collectCoverage
+        run: npm test -- --coverage --verbose
       - name: Coverage
         uses: codecov/codecov-action@v1
         with:
-          files: ./coverage1.xml,./coverage2.xml # optional
           fail_ci_if_error: false
-          verbose: true # optional (default = false)
+          verbose: true
       - name: Build
         run: npm run build
   release:

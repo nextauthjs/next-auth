@@ -61,4 +61,4 @@ app/yarn.lock
 /prisma/migrations
 
 # Tests
-/config/coverage
+/coverage
