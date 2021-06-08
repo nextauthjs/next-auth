@@ -25,8 +25,8 @@ jobs:
       - name: Coverage
         uses: codecov/codecov-action@v1
         with:
+          directory: ./coverage
           fail_ci_if_error: false
-          verbose: true
       - name: Build
         run: npm run build
   release:
