@@ -1,7 +1,7 @@
 import { useState } from "react"
 import userEvent from "@testing-library/user-event"
 import { render, screen, waitFor } from "@testing-library/react"
-import { server, mockProviders } from "./mocks"
+import { server, mockProviders } from "./helpers/mocks"
 import { getProviders } from ".."
 import logger from "../../lib/logger"
 import { rest } from "msw"

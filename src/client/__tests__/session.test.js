@@ -1,10 +1,10 @@
 import { render, screen, waitFor } from "@testing-library/react"
 import { rest } from "msw"
-import { server, mockSession } from "./mocks"
+import { server, mockSession } from "./helpers/mocks"
 import logger from "../../lib/logger"
 import { useState, useEffect } from "react"
 import { getSession } from ".."
-import { getBroadcastEvents } from "./utils"
+import { getBroadcastEvents } from "./helpers/utils"
 
 jest.mock("../../lib/logger", () => ({
   __esModule: true,
@@ -83,7 +83,7 @@ function SessionFlow() {
   useEffect(() => {
     async function fetchUserSession() {
       try {
-        const result = await getSession({})
+        const result = await getSession()
         setSession(result)
       } catch (e) {
         console.error(e)

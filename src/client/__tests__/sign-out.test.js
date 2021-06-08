@@ -1,10 +1,10 @@
 import { useState } from "react"
 import userEvent from "@testing-library/user-event"
 import { render, screen, waitFor } from "@testing-library/react"
-import { server, mockSignOutResponse } from "./mocks"
+import { server, mockSignOutResponse } from "./helpers/mocks"
 import { signOut } from ".."
 import { rest } from "msw"
-import { getBroadcastEvents } from "./utils"
+import { getBroadcastEvents } from "./helpers/utils"
 
 const { location } = window
 

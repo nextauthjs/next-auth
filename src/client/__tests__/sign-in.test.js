@@ -7,7 +7,7 @@ import {
   mockCredentialsResponse,
   mockEmailResponse,
   mockGithubResponse,
-} from "./mocks"
+} from "./helpers/mocks"
 import { signIn } from ".."
 import { rest } from "msw"
 
