@@ -45,7 +45,7 @@ providers: [
 
 :::tip
 
-You can convert your Apple key to a single line to use it in a environment variable.
+You can convert your Apple key to a single line to use it in an environment variable.
 
 **Mac**
 

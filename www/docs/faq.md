@@ -186,7 +186,7 @@ JSON Web Tokens can be used for session tokens, but are also used for lots of ot
 
 * You can enable encryption (JWE) to store include information directly in a JWT session token that you wish to keep secret and use the token to pass information between services / APIs on the same domain.
 
-* You can use JWT to securely store information you do not mind the client knowing even without encryption, as the JWT is stored in an server-readable-only-token so data in the JWT is not accessible to third party JavaScript running on your site.
+* You can use JWT to securely store information you do not mind the client knowing even without encryption, as the JWT is stored in a server-readable-only-token so data in the JWT is not accessible to third party JavaScript running on your site.
 
 ### What are the disadvantages of JSON Web Tokens?
 
@@ -216,7 +216,7 @@ By default tokens are signed (JWS) but not encrypted (JWE), as encryption adds a
 
 * JSON Web Tokens in NextAuth.js use JWS and are signed using HS512 with an auto-generated key.
 
-* If encryption is enabled by setting `jwt: { encrypt: true }` option then the JWT will _also_ use JWE to encrypt the token, using A256GCM with an auto-generated key.
+* If encryption is enabled by setting `jwt: { encryption: true }` option then the JWT will _also_ use JWE to encrypt the token, using A256GCM with an auto-generated key.
 
 You can specify other valid algorithms - [as specified in RFC 7518](https://tools.ietf.org/html/rfc7517) - with either a  secret (for symmetric encryption) or a public/private key pair (for a symmetric encryption).
 
