@@ -1,4 +1,4 @@
-import * as client from "next-auth/client"
+import * as client from "react"
 import { nextReq } from "./test-helpers"
 
 const clientSession = {

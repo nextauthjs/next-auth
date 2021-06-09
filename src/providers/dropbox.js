@@ -15,7 +15,7 @@
  * ...
  *
  * // pages/index
- * import { signIn } from "next-auth/client"
+ * import { signIn } from "next-auth/react"
  * ...
  * <button onClick={() => signIn("dropbox")}>
  *   Sign in

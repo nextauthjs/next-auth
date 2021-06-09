@@ -122,7 +122,7 @@ The `RefreshAccessTokenError` error that is caught in the `refreshAccessToken()`
 We can handle this functionality as a side effect:
 
 ```js title="pages/auth/[...nextauth.js]"
-import { signIn, useSession } from "next-auth/client";
+import { signIn, useSession } from "next-auth/react";
 import { useEffect } from "react";
 
 const HomePage() {

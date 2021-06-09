@@ -72,7 +72,7 @@ export default NextAuth({
 ```
 
 ```ts title="pages/index.ts"
-import { useSession } from "next-auth/client"
+import { useSession } from "next-auth/react"
 
 export default function IndexPage() {
   // `session` should match `callbacks.session()` in `NextAuth()`
