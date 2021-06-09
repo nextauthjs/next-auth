@@ -29,8 +29,8 @@ You can use the [session callback](/configuration/callbacks#session) to customiz
 
 ## useSession()
 
-* Client Side: **Yes**
-* Server Side: No
+- Client Side: **Yes**
+- Server Side: No
 
 The `useSession()` React Hook in the NextAuth.js client is the easiest way to check if someone is signed in.
 
@@ -39,12 +39,12 @@ It works best when the [`<Provider>`](#provider) is added to `pages/_app.js`.
 #### Example
 
 ```jsx
-import { useSession } from 'next-auth/client'
+import { useSession } from "next-auth/client"
 
 export default function Component() {
-  const [ session, loading ] = useSession()
+  const [session, loading] = useSession()
 
-  if(session) {
+  if (session) {
     return <p>Signed in as {session.user.email}</p>
   }
 
@@ -56,8 +56,8 @@ export default function Component() {
 
 ## getSession()
 
-* Client Side: **Yes**
-* Server Side: **Yes**
+- Client Side: **Yes**
+- Server Side: **Yes**
 
 NextAuth.js provides a `getSession()` method which can be called client or server side to return a session.
 
@@ -75,7 +75,7 @@ async function myFunction() {
 #### Server Side Example
 
 ```js
-import { getSession } from 'next-auth/client'
+import { getSession } from "next-auth/client"
 
 export default async (req, res) => {
   const session = await getSession({ req })
@@ -94,8 +94,8 @@ The tutorial [securing pages and API routes](/tutorials/securing-pages-and-api-r
 
 ## getCsrfToken()
 
-* Client Side: **Yes**
-* Server Side: **Yes**
+- Client Side: **Yes**
+- Server Side: **Yes**
 
 The `getCsrfToken()` method returns the current Cross Site Request Forgery Token (CSRF Token) required to make POST requests (e.g. for signing in and signing out).
 
@@ -113,7 +113,7 @@ async function myFunction() {
 #### Server Side Example
 
 ```js
-import { getCsrfToken } from 'next-auth/client'
+import { getCsrfToken } from "next-auth/client"
 
 export default async (req, res) => {
   const csrfToken = await getCsrfToken({ req })
@@ -126,8 +126,8 @@ export default async (req, res) => {
 
 ## getProviders()
 
-* Client Side: **Yes**
-* Server Side: **Yes**
+- Client Side: **Yes**
+- Server Side: **Yes**
 
 The `getProviders()` method returns the list of providers currently configured for sign in.
 
@@ -140,11 +140,11 @@ It can be useful if you are creating a dynamic custom sign in page.
 #### API Route
 
 ```jsx title="pages/api/example.js"
-import { getProviders } from 'next-auth/client'
+import { getProviders } from "next-auth/client"
 
 export default async (req, res) => {
   const providers = await getProviders()
-  console.log('Providers', providers)
+  console.log("Providers", providers)
   res.end()
 }
 ```
@@ -157,8 +157,8 @@ Unlike `getSession()` and `getCsrfToken()`, when calling `getProviders()` server
 
 ## signIn()
 
-* Client Side: **Yes**
-* Server Side: No
+- Client Side: **Yes**
+- Server Side: No
 
 Using the `signIn()` method ensures the user ends back on the page they started on after completing a sign in flow. It will also handle CSRF Tokens for you automatically when signing in with email.
 
@@ -167,20 +167,18 @@ The `signIn()` method can be called from the client in different ways, as shown 
 #### Redirects to sign in page when clicked
 
 ```js
-import { signIn } from 'next-auth/client'
+import { signIn } from "next-auth/client"
 
-export default () => (
-  <button onClick={() => signIn()}>Sign in</button>
-)
+export default () => <button onClick={() => signIn()}>Sign in</button>
 ```
 
 #### Starts Google OAuth sign-in flow when clicked
 
 ```js
-import { signIn } from 'next-auth/client'
+import { signIn } from "next-auth/client"
 
 export default () => (
-  <button onClick={() => signIn('google')}>Sign in with Google</button>
+  <button onClick={() => signIn("google")}>Sign in with Google</button>
 )
 ```
 
@@ -189,10 +187,10 @@ export default () => (
 When using it with the email flow, pass the target `email` as an option.
 
 ```js
-import { signIn } from 'next-auth/client'
+import { signIn } from "next-auth/client"
 
 export default ({ email }) => (
-  <button onClick={() => signIn('email', { email })}>Sign in with Email</button>
+  <button onClick={() => signIn("email", { email })}>Sign in with Email</button>
 )
 ```
 
@@ -204,9 +202,9 @@ You can specify a different `callbackUrl` by specifying it as the second argumen
 
 e.g.
 
-* `signIn(null, { callbackUrl: 'http://localhost:3000/foo' })`
-* `signIn('google', { callbackUrl: 'http://localhost:3000/foo' })`
-* `signIn('email', { email, callbackUrl: 'http://localhost:3000/foo' })`
+- `signIn(null, { callbackUrl: 'http://localhost:3000/foo' })`
+- `signIn('google', { callbackUrl: 'http://localhost:3000/foo' })`
+- `signIn('email', { email, callbackUrl: 'http://localhost:3000/foo' })`
 
 The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect). By default it requires the URL to be an absolute URL at the same hostname, or else it will redirect to the homepage. You can define your own redirect callback to allow other URLs, including supporting relative URLs.
 
@@ -234,8 +232,8 @@ e.g.
   error: string | undefined
   /**
    * HTTP status code,
-   * hints the kind of error that happened. 
-   */ 
+   * hints the kind of error that happened.
+   */
   status: number
   /**
    * `true` if the signin was successful
@@ -258,34 +256,32 @@ See the [Authorization Request OIDC spec](https://openid.net/specs/openid-connec
 
 e.g.
 
-* `signIn("identity-server4", null, { prompt: "login" })` *always ask the user to reauthenticate*
-* `signIn("auth0", null, { login_hint: "info@example.com" })` *hints the e-mail address to the provider*
+- `signIn("identity-server4", null, { prompt: "login" })` _always ask the user to reauthenticate_
+- `signIn("auth0", null, { login_hint: "info@example.com" })` _hints the e-mail address to the provider_
 
 :::note
 You can also set these parameters through [`provider.authorizationParams`](/configuration/providers#oauth-provider-options).
 :::
 
 :::note
-The following parameters are always overridden server-side: `redirect_uri`, `scope`, `state`
+The following parameters are always overridden server-side: `redirect_uri`, `state`
 :::
 
 ---
 
 ## signOut()
 
-* Client Side: **Yes**
-* Server Side: No
+- Client Side: **Yes**
+- Server Side: No
 
 Using the `signOut()` method ensures the user ends back on the page they started on after completing the sign out flow. It also handles CSRF tokens for you automatically.
 
 It reloads the page in the browser when complete.
 
 ```js
-import { signOut } from 'next-auth/client'
+import { signOut } from "next-auth/client"
 
-export default () => (
-  <button onClick={() => signOut()}>Sign out</button>
-)
+export default () => <button onClick={() => signOut()}>Sign out</button>
 ```
 
 #### Specifying a callbackUrl
@@ -315,9 +311,9 @@ Using the supplied React `<Provider>` allows instances of `useSession()` to shar
 This improves performance, reduces network calls and avoids page flicker when rendering. It is highly recommended and can be easily added to all pages in Next.js apps by using `pages/_app.js`.
 
 ```jsx title="pages/_app.js"
-import { Provider } from 'next-auth/client'
+import { Provider } from "next-auth/client"
 
-export default function App ({ Component, pageProps }) {
+export default function App({ Component, pageProps }) {
   return (
     <Provider session={pageProps.session}>
       <Component {...pageProps} />
@@ -327,6 +323,24 @@ export default function App ({ Component, pageProps }) {
 ```
 
 If you pass the `session` page prop to the `<Provider>` – as in the example above – you can avoid checking the session twice on pages that support both server and client side rendering.
+
+This only works on pages where you provide the correct `pageProps`, however. This is normally done in `getInitialProps` or `getServerSideProps` like so:
+
+```js title="pages/index.js"
+import { getSession } from "next-auth/client"
+
+...
+
+export async function getServerSideProps(ctx) {
+  return {
+    props: {
+      session: await getSession(ctx)
+    }
+  }
+}
+```
+
+If every one of your pages needs to be protected, you can do this in `_app`, otherwise you can do it on a page-by-page basis. Alternatively, you can do per page authentication checks client side, instead of having each auth check be blocking (SSR) by using the method described below in [alternative client session handling](#custom-client-session-handling).
 
 ### Options
 
@@ -342,7 +356,7 @@ import { Provider } from 'next-auth/client'
 export default function App ({ Component, pageProps }) {
   return (
     <Provider session={pageProps.session}
-      options={{ 
+      options={{
         clientMaxAge: 60     // Re-fetch session if cache is older than 60 seconds
         keepAlive:    5 * 60 // Send keepAlive message every 5 minutes
       }}
@@ -358,7 +372,7 @@ export default function App ({ Component, pageProps }) {
 
 Every tab/window maintains its own copy of the local session state; the session is not stored in shared storage like localStorage or sessionStorage. Any update in one tab/window triggers a message to other tabs/windows to update their own session state.
 
-Using low values for `clientMaxAge` or `keepAlive` will increase network traffic and load on  authenticated clients and may impact hosting costs and performance.
+Using low values for `clientMaxAge` or `keepAlive` will increase network traffic and load on authenticated clients and may impact hosting costs and performance.
 :::
 
 #### Client Max Age
@@ -367,7 +381,7 @@ The `clientMaxAge` option is the maximum age a session data can be on the client
 
 When `clientMaxAge` is set to `0` (the default) the cache will always be used when useSession is called and only explicit calls made to get the session status (i.e. `getSession()`) or event triggers, such as signing in or out in another tab/window, or a tab/window gaining or losing focus, will trigger an update of the session state.
 
-If set to any value other than zero, it specifies in seconds the maxium age of session data on the client before the `useSession()` hook will call the server again to sync the session state.
+If set to any value other than zero, it specifies in seconds the maximum age of session data on the client before the `useSession()` hook will call the server again to sync the session state.
 
 Unless you have a short session expiry time (e.g. < 24 hours) you probably don't need to change this option. Setting this option to too short a value will increase load (and potentially hosting costs).
 
@@ -384,5 +398,76 @@ If set to any value other than zero, it specifies in seconds how often the clien
 The value for `keepAlive` should always be lower than the value of the session `maxAge` option.
 
 :::note
-See [**the Next.js documentation**](https://nextjs.org/docs/advanced-features/custom-app) for more information on **_app.js** in Next.js applications.
+See [**the Next.js documentation**](https://nextjs.org/docs/advanced-features/custom-app) for more information on **\_app.js** in Next.js applications.
 :::
+
+## Alternatives
+
+### Custom Client Session Handling
+
+Due to the way Next.js handles `getServerSideProps` / `getInitialProps`, every protected page load has to make a server-side query to check if the session is valid and then generate the requested page. This alternative solution allows for showing a loading state on the initial check and every page transition afterward will be client-side, without having to check with the server and regenerate pages.
+
+```js title="pages/admin.jsx"
+export default function AdminDashboard() {
+  const [session] = useSession()
+  // session is always non-null inside this page, all the way down the React tree.
+  return "Some super secret dashboard"
+}
+
+AdminDashboard.auth = true
+```
+
+```jsx title="pages/_app.jsx"
+export default function App({ Component, pageProps }) {
+  return (
+    <SessionProvider session={pageProps.session}>
+      {Component.auth ? (
+        <Auth>
+          <Component {...pageProps} />
+        </Auth>
+      ) : (
+        <Component {...pageProps} />
+      )}
+    </SessionProvider>
+  )
+}
+
+function Auth({ children }) {
+  const [session, loading] = useSession()
+  const isUser = !!session?.user
+  React.useEffect(() => {
+    if (loading) return // Do nothing while loading
+    if (!isUser) signIn() // If not authenticated, force log in
+  }, [isUser, loading])
+
+  if (isUser) {
+    return children
+  }
+
+  // Session is being fetched, or no user.
+  // If no user, useEffect() will redirect.
+  return <div>Loading...</div>
+}
+```
+
+It can be easily be extended/modified to support something like an options object for role based authentication on pages. An example:
+
+```jsx title="pages/admin.jsx"
+AdminDashboard.auth = {
+  role: "admin",
+  loading: <AdminLoadingSkeleton />,
+  unauthorized: "/login-with-different-user", // redirect to this url
+}
+```
+
+Because of how \_app is done, it won't unnecessarily contact the /api/auth/session endpoint for pages that do not require auth.
+
+More information can be found in the following [Github Issue](https://github.com/nextauthjs/next-auth/issues/1210).
+
+### NextAuth.js + React-Query
+
+There is also an alternative client-side API library based upon [`react-query`](https://www.npmjs.com/package/react-query) available under [`nextauthjs/react-query`](https://github.com/nextauthjs/react-query).
+
+If you use `react-query` in your project already, you can leverage it with NextAuth.js to handle the client-side session management for you as well. This replaces NextAuth.js's native `useSession` and `Provider` from `next-auth/client`.
+
+See repository [`README`](https://github.com/nextauthjs/react-query) for more details.

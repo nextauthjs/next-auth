@@ -1,13 +1,36 @@
 import { AppOptions } from "./internals"
 import { User, Profile, Session } from "."
-import { EmailConfig, SendVerificationRequest } from "./providers"
-import { ConnectionOptions } from "typeorm"
+import { EmailConfig } from "./providers"
 
 /** Legacy */
+
+export {
+  TypeORMAccountModel,
+  TypeORMSessionModel,
+  TypeORMUserModel,
+  TypeORMVerificationRequestModel,
+} from "@next-auth/typeorm-legacy-adapter"
+
+import {
+  TypeORMAdapter,
+  TypeORMAdapterModels,
+} from "@next-auth/typeorm-legacy-adapter"
+
+import { PrismaLegacyAdapter } from "@next-auth/prisma-legacy-adapter"
+
+export const TypeORM: {
+  Models: TypeORMAdapterModels
+  Adapter: TypeORMAdapter
+}
+
+export const Prisma: {
+  Adapter: PrismaLegacyAdapter
+}
+
 declare const Adapters: {
-  Default: Adapter<ConnectionOptions>
-  TypeORM: { Adapter: Adapter<ConnectionOptions> }
-  Prisma: { Adapter: Adapter }
+  Default: TypeORMAdapter
+  TypeORM: typeof TypeORM
+  Prisma: typeof Prisma
 }
 export default Adapters
 
@@ -22,9 +45,11 @@ export default Adapters
  * [Create a custom adapter](https://next-auth.js.org/tutorials/creating-a-database-adapter)
  */
 export interface AdapterInstance<U = User, P = Profile, S = Session> {
+  /** Used as a prefix for adapter related log messages. (Defaults to `ADAPTER_`) */
+  displayName?: string
   createUser(profile: P): Promise<U>
   getUser(id: string): Promise<U | null>
-  getUserByEmail(email: string): Promise<U | null>
+  getUserByEmail(email: string | null): Promise<U | null>
   getUserByProviderAccountId(
     providerId: string,
     providerAccountId: string
@@ -118,13 +143,13 @@ export interface AdapterInstance<U = User, P = Profile, S = Session> {
  * [Create a custom adapter](https://next-auth.js.org/tutorials/creating-a-database-adapter)
  */
 export type Adapter<
-  C = Record<string, unknown>,
+  C = unknown,
   O = Record<string, unknown>,
   U = unknown,
   P = unknown,
   S = unknown
 > = (
-  config?: C,
+  client: C,
   options?: O
 ) => {
   getAdapter(appOptions: AppOptions): Promise<AdapterInstance<U, P, S>>

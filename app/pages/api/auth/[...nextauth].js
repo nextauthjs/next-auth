@@ -1,5 +1,9 @@
-import NextAuth from 'next-auth'
-import Providers from 'next-auth/providers'
+import NextAuth from "next-auth"
+import EmailProvider from "next-auth/providers/email"
+import GitHubProvider from "next-auth/providers/github"
+import Auth0Provider from "next-auth/providers/auth0"
+import TwitterProvider from "next-auth/providers/twitter"
+import CredentialsProvider from "next-auth/providers/credentials"
 
 // import Adapters from 'next-auth/adapters'
 // import { PrismaClient } from '@prisma/client'
@@ -28,15 +32,15 @@ export default NextAuth({
   //   }
   // },
   providers: [
-    Providers.Email({
+    EmailProvider({
       server: process.env.EMAIL_SERVER,
-      from: process.env.EMAIL_FROM
+      from: process.env.EMAIL_FROM,
     }),
-    Providers.GitHub({
+    GitHubProvider({
       clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET
+      clientSecret: process.env.GITHUB_SECRET,
     }),
-    Providers.Auth0({
+    Auth0Provider({
       clientId: process.env.AUTH0_ID,
       clientSecret: process.env.AUTH0_SECRET,
       domain: process.env.AUTH0_DOMAIN,
@@ -45,36 +49,36 @@ export default NextAuth({
       // authorizationParams: {
       //   response_mode: 'form_post'
       // }
-      protection: 'pkce'
+      protection: "pkce",
     }),
-    Providers.Twitter({
+    TwitterProvider({
       clientId: process.env.TWITTER_ID,
-      clientSecret: process.env.TWITTER_SECRET
+      clientSecret: process.env.TWITTER_SECRET,
     }),
-    Providers.Credentials({
-      name: 'Credentials',
+    CredentialsProvider({
+      name: "Credentials",
       credentials: {
-        password: { label: 'Password', type: 'password' }
+        password: { label: "Password", type: "password" },
       },
-      async authorize (credentials) {
-        if (credentials.password === 'password') {
+      async authorize(credentials, req) {
+        if (credentials.password === "password") {
           return {
             id: 1,
-            name: 'Fill Murray',
-            email: 'bill@fillmurray.com',
-            image: 'https://www.fillmurray.com/64/64'
+            name: "Fill Murray",
+            email: "bill@fillmurray.com",
+            image: "https://www.fillmurray.com/64/64",
           }
         }
         return null
-      }
-    })
+      },
+    }),
   ],
   jwt: {
     encryption: true,
-    secret: process.env.SECRET
+    secret: process.env.SECRET,
   },
   debug: false,
-  theme: 'auto'
+  theme: "auto",
 
   // Default Database Adapter (TypeORM)
   // database: process.env.DATABASE_URL

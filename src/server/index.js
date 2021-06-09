@@ -1,25 +1,25 @@
-import jwt from '../lib/jwt'
-import parseUrl from '../lib/parse-url'
-import logger, { setLogger } from '../lib/logger'
-import * as cookie from './lib/cookie'
-import * as defaultEvents from './lib/default-events'
-import * as defaultCallbacks from './lib/default-callbacks'
-import parseProviders from './lib/providers'
-import * as routes from './routes'
-import renderPage from './pages'
-import createSecret from './lib/create-secret'
-import callbackUrlHandler from './lib/callback-url-handler'
-import extendRes from './lib/extend-res'
-import csrfTokenHandler from './lib/csrf-token-handler'
-import * as pkce from './lib/oauth/pkce-handler'
-import * as state from './lib/oauth/state-handler'
+import jwt from "../lib/jwt"
+import parseUrl from "../lib/parse-url"
+import logger, { setLogger } from "../lib/logger"
+import * as cookie from "./lib/cookie"
+import * as defaultEvents from "./lib/default-events"
+import * as defaultCallbacks from "./lib/default-callbacks"
+import parseProviders from "./lib/providers"
+import * as routes from "./routes"
+import renderPage from "./pages"
+import createSecret from "./lib/create-secret"
+import callbackUrlHandler from "./lib/callback-url-handler"
+import extendRes from "./lib/extend-res"
+import csrfTokenHandler from "./lib/csrf-token-handler"
+import * as pkce from "./lib/oauth/pkce-handler"
+import * as state from "./lib/oauth/state-handler"
 
-import optionalRequire from '@balazsorban/require-optional'
+import optionalRequire from "@balazsorban/require-optional"
 
 // To work properly in production with OAuth providers the NEXTAUTH_URL
 // environment variable must be set.
 if (!process.env.NEXTAUTH_URL) {
-  logger.warn('NEXTAUTH_URL', 'NEXTAUTH_URL environment variable not set')
+  logger.warn("NEXTAUTH_URL", "NEXTAUTH_URL environment variable not set")
 }
 
 /**
@@ -27,7 +27,7 @@ if (!process.env.NEXTAUTH_URL) {
  * @param {import("next").NextApiResponse} res
  * @param {import("types").NextAuthOptions} userOptions
  */
-async function NextAuthHandler (req, res, userOptions) {
+async function NextAuthHandler(req, res, userOptions) {
   if (userOptions.logger) {
     setLogger(userOptions.logger)
   }
@@ -40,13 +40,15 @@ async function NextAuthHandler (req, res, userOptions) {
   // to avoid early termination of calls to the serverless function
   // (and then return that promise when we are done) - eslint
   // complains but I'm not sure there is another way to do this.
-  return new Promise(async resolve => { // eslint-disable-line no-async-promise-executor
+  // eslint-disable-next-line no-async-promise-executor
+  return new Promise(async (resolve) => {
     extendRes(req, res, resolve)
 
     if (!req.query.nextauth) {
-      const error = 'Cannot find [...nextauth].js in pages/api/auth. Make sure the filename is written correctly.'
+      const error =
+        "Cannot find [...nextauth].js in pages/api/auth. Make sure the filename is written correctly."
 
-      logger.error('MISSING_NEXTAUTH_API_ROUTE_ERROR', error)
+      logger.error("MISSING_NEXTAUTH_API_ROUTE_ERROR", error)
       return res.status(500).end(`Error: ${error}`)
     }
 
@@ -54,51 +56,59 @@ async function NextAuthHandler (req, res, userOptions) {
       nextauth,
       action = nextauth[0],
       providerId = nextauth[1],
-      error = nextauth[1]
+      error = nextauth[1],
     } = req.query
 
     // @todo refactor all existing references to baseUrl and basePath
-    const { basePath, baseUrl } = parseUrl(process.env.NEXTAUTH_URL || process.env.VERCEL_URL)
+    const { basePath, baseUrl } = parseUrl(
+      process.env.NEXTAUTH_URL || process.env.VERCEL_URL
+    )
 
     const cookies = {
-      ...cookie.defaultCookies(userOptions.useSecureCookies || baseUrl.startsWith('https://')),
+      ...cookie.defaultCookies(
+        userOptions.useSecureCookies || baseUrl.startsWith("https://")
+      ),
       // Allow user cookie options to override any cookie settings above
-      ...userOptions.cookies
+      ...userOptions.cookies,
     }
 
     const secret = createSecret({ userOptions, basePath, baseUrl })
 
-    const providers = parseProviders({ providers: userOptions.providers, baseUrl, basePath })
+    const providers = parseProviders({
+      providers: userOptions.providers,
+      baseUrl,
+      basePath,
+    })
     const provider = providers.find(({ id }) => id === providerId)
 
     // Protection only works on OAuth 2.x providers
-    if (provider?.type === 'oauth' && provider.version?.startsWith('2')) {
-      // When provider.state is undefined, we still want this to pass
-      if (!provider.protection) {
-        // Default to state, as we did in 3.1 REVIEW: should we use "pkce" or "none" as default?
-        provider.protection = ['state']
-      } else if (typeof provider.protection === 'string') {
-        provider.protection = [provider.protection]
+    // TODO:
+    // - rename to `checks` in 4.x, so it is similar to `openid-client`
+    // - stop supporting `protection` as string
+    // - remove `state` property
+    if (provider?.type === "oauth" && provider.version?.startsWith("2")) {
+      // Priority: (protection array > protection string) > state > default
+      if (provider.protection) {
+        provider.protection = Array.isArray(provider.protection)
+          ? provider.protection
+          : [provider.protection]
+      } else if (provider.state !== undefined) {
+        provider.protection = [provider.state ? "state" : "none"]
+      } else {
+        // Default to state, as we did in 3.1
+        // REVIEW: should we use "pkce" or "none" as default?
+        provider.protection = ["state"]
       }
     }
 
     const maxAge = 30 * 24 * 60 * 60 // Sessions expire after 30 days of being idle
-
-    // Parse database / adapter
-    // If adapter is provided, use it (advanced usage, overrides database)
-    // If database URI or config object is provided, use it (simple usage)
-    let adapter = userOptions.adapter
-    if ((!adapter && !!userOptions.database)) {
-      const TypeOrm = optionalRequire('../adapters/typeorm')
-      adapter = TypeOrm.Adapter(userOptions.database)
-    }
 
     // User provided options are overriden by other options,
     // except for the options with special handling above
     req.options = {
       debug: false,
       pages: {},
-      theme: 'auto',
+      theme: "auto",
       // Custom options override defaults
       ...userOptions,
       // These computed settings can have values in userOptions but we override them
@@ -113,10 +123,10 @@ async function NextAuthHandler (req, res, userOptions) {
       providers,
       // Session options
       session: {
-        jwt: !adapter, // If no adapter specified, force use of JSON Web Tokens (stateless)
+        jwt: !userOptions.adapter, // If no adapter specified, force use of JSON Web Tokens (stateless)
         maxAge,
         updateAge: 24 * 60 * 60, // Sessions updated only if session is greater than this value (0 = always, 24*60*60 = every 24 hours)
-        ...userOptions.session
+        ...userOptions.session,
       },
       // JWT options
       jwt: {
@@ -124,20 +134,20 @@ async function NextAuthHandler (req, res, userOptions) {
         maxAge, // same as session maxAge,
         encode: jwt.encode,
         decode: jwt.decode,
-        ...userOptions.jwt
+        ...userOptions.jwt,
       },
       // Event messages
       events: {
         ...defaultEvents,
-        ...userOptions.events
+        ...userOptions.events,
       },
       // Callback functions
       callbacks: {
         ...defaultCallbacks,
-        ...userOptions.callbacks
+        ...userOptions.callbacks,
       },
       pkce: {},
-      logger
+      logger,
     }
 
     csrfTokenHandler(req, res)
@@ -146,65 +156,74 @@ async function NextAuthHandler (req, res, userOptions) {
     const render = renderPage(req, res)
     const { pages } = req.options
 
-    if (req.method === 'GET') {
+    if (req.method === "GET") {
       switch (action) {
-        case 'providers':
+        case "providers":
           return routes.providers(req, res)
-        case 'session':
+        case "session":
           return routes.session(req, res)
-        case 'csrf':
+        case "csrf":
           return res.json({ csrfToken: req.options.csrfToken })
-        case 'signin':
+        case "signin":
           if (pages.signIn) {
-            let signinUrl = `${pages.signIn}${pages.signIn.includes('?') ? '&' : '?'}callbackUrl=${req.options.callbackUrl}`
-            if (error) { signinUrl = `${signinUrl}&error=${error}` }
+            let signinUrl = `${pages.signIn}${
+              pages.signIn.includes("?") ? "&" : "?"
+            }callbackUrl=${req.options.callbackUrl}`
+            if (error) {
+              signinUrl = `${signinUrl}&error=${error}`
+            }
             return res.redirect(signinUrl)
           }
 
           return render.signin()
-        case 'signout':
-          if (pages.signOut) {
-            return res.redirect(`${pages.signOut}${pages.signOut.includes('?') ? '&' : '?'}error=${error}`)
-          }
+        case "signout":
+          if (pages.signOut) return res.redirect(pages.signOut)
+
           return render.signout()
-        case 'callback':
+        case "callback":
           if (provider) {
             if (await pkce.handleCallback(req, res)) return
             if (await state.handleCallback(req, res)) return
             return routes.callback(req, res)
           }
           break
-        case 'verify-request':
+        case "verify-request":
           if (pages.verifyRequest) {
             return res.redirect(pages.verifyRequest)
           }
           return render.verifyRequest()
-        case 'error':
+        case "error":
           if (pages.error) {
-            return res.redirect(`${pages.error}${pages.error.includes('?') ? '&' : '?'}error=${error}`)
+            return res.redirect(
+              `${pages.error}${
+                pages.error.includes("?") ? "&" : "?"
+              }error=${error}`
+            )
           }
 
           // These error messages are displayed in line on the sign in page
-          if ([
-            'Signin',
-            'OAuthSignin',
-            'OAuthCallback',
-            'OAuthCreateAccount',
-            'EmailCreateAccount',
-            'Callback',
-            'OAuthAccountNotLinked',
-            'EmailSignin',
-            'CredentialsSignin'
-          ].includes(error)) {
+          if (
+            [
+              "Signin",
+              "OAuthSignin",
+              "OAuthCallback",
+              "OAuthCreateAccount",
+              "EmailCreateAccount",
+              "Callback",
+              "OAuthAccountNotLinked",
+              "EmailSignin",
+              "CredentialsSignin",
+            ].includes(error)
+          ) {
             return res.redirect(`${baseUrl}${basePath}/signin?error=${error}`)
           }
 
           return render.error({ error })
         default:
       }
-    } else if (req.method === 'POST') {
+    } else if (req.method === "POST") {
       switch (action) {
-        case 'signin':
+        case "signin":
           // Verified CSRF Token required for all sign in routes
           if (req.options.csrfTokenVerified && provider) {
             if (await pkce.handleSignin(req, res)) return
@@ -213,16 +232,19 @@ async function NextAuthHandler (req, res, userOptions) {
           }
 
           return res.redirect(`${baseUrl}${basePath}/signin?csrf=true`)
-        case 'signout':
+        case "signout":
           // Verified CSRF Token required for signout
           if (req.options.csrfTokenVerified) {
             return routes.signout(req, res)
           }
           return res.redirect(`${baseUrl}${basePath}/signout?csrf=true`)
-        case 'callback':
+        case "callback":
           if (provider) {
             // Verified CSRF Token required for credentials providers only
-            if (provider.type === 'credentials' && !req.options.csrfTokenVerified) {
+            if (
+              provider.type === "credentials" &&
+              !req.options.csrfTokenVerified
+            ) {
               return res.redirect(`${baseUrl}${basePath}/signin?csrf=true`)
             }
 
@@ -231,31 +253,33 @@ async function NextAuthHandler (req, res, userOptions) {
             return routes.callback(req, res)
           }
           break
-        case '_log':
+        case "_log":
           if (userOptions.logger) {
             try {
               const {
-                code = 'CLIENT_ERROR',
-                level = 'error',
-                message = '[]'
+                code = "CLIENT_ERROR",
+                level = "error",
+                message = "[]",
               } = req.body
 
               logger[level](code, ...JSON.parse(message))
             } catch (error) {
               // If logging itself failed...
-              logger.error('LOGGER_ERROR', error)
+              logger.error("LOGGER_ERROR", error)
             }
           }
           return res.end()
         default:
       }
     }
-    return res.status(400).end(`Error: HTTP ${req.method} is not supported for ${req.url}`)
+    return res
+      .status(400)
+      .end(`Error: HTTP ${req.method} is not supported for ${req.url}`)
   })
 }
 
 /** Tha main entry point to next-auth */
-export default function NextAuth (...args) {
+export default function NextAuth(...args) {
   if (args.length === 1) {
     return (req, res) => NextAuthHandler(req, res, args[0])
   }

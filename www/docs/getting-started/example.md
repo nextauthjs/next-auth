@@ -5,10 +5,10 @@ title: Example Code
 
 ## Get started with NextAuth.js
 
-The example code below describes to add authentication to a Next.js app.
+The example code below describes how to add authentication to a Next.js app.
 
 :::tip
-The easiest way to get started is to clone the [example app](https://github.com/nextauthjs/next-auth-example) and follow the instructions in README.md. You can try out a live demo at [next-auth-example.now.sh](https://next-auth-example.now.sh)
+The easiest way to get started is to clone the [example app](https://github.com/nextauthjs/next-auth-example) and follow the instructions in README.md. You can try out a live demo at [next-auth-example.vercel.app](https://next-auth-example.vercel.app)
 :::
 
 ### Add API route
@@ -18,15 +18,15 @@ To add NextAuth.js to a project create a file called `[...nextauth].js` in `page
 [Read more about how to add authentication providers.](/configuration/providers)
 
 ```javascript title="pages/api/auth/[...nextauth].js"
-import NextAuth from 'next-auth'
-import Providers from 'next-auth/providers'
+import NextAuth from "next-auth"
+import Providers from "next-auth/providers"
 
 export default NextAuth({
   // Configure one or more authentication providers
   providers: [
     Providers.GitHub({
       clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET
+      clientSecret: process.env.GITHUB_SECRET,
     }),
     // ...add more providers here
   ],
@@ -47,21 +47,27 @@ See the [options documentation](/configuration/options) for how to configure pro
 The `useSession()` React Hook in the NextAuth.js client is the easiest way to check if someone is signed in.
 
 ```jsx title="pages/index.js"
-import { signIn, signOut, useSession } from 'next-auth/client'
+import { signIn, signOut, useSession } from "next-auth/client"
 
 export default function Page() {
-  const [ session, loading ] = useSession()
+  const [session, loading] = useSession()
 
-  return <>
-    {!session && <>
-      Not signed in <br/>
-      <button onClick={() => signIn()}>Sign in</button>
-    </>}
-    {session && <>
-      Signed in as {session.user.email} <br/>
-      <button onClick={() => signOut()}>Sign out</button>
-    </>}
-  </>
+  return (
+    <>
+      {!session && (
+        <>
+          Not signed in <br />
+          <button onClick={() => signIn()}>Sign in</button>
+        </>
+      )}
+      {session && (
+        <>
+          Signed in as {session.user.email} <br />
+          <button onClick={() => signOut()}>Sign out</button>
+        </>
+      )}
+    </>
+  )
 }
 ```
 
@@ -74,9 +80,9 @@ You can use the `useSession` hook from anywhere in your application (e.g. in a h
 To allow session state to be shared between pages - which improves performance, reduces network traffic and avoids component state changes while rendering - you can use the NextAuth.js Provider in `pages/_app.js`.
 
 ```jsx title="pages/_app.js"
-import { Provider } from 'next-auth/client'
+import { Provider } from "next-auth/client"
 
-export default function App ({ Component, pageProps }) {
+export default function App({ Component, pageProps }) {
   return (
     <Provider session={pageProps.session}>
       <Component {...pageProps} />

@@ -29,16 +29,18 @@
     "./errors": "./dist/lib/errors.js"
   },
   "scripts": {
+    "postinstall": "npx husky install",
     "build": "npm run build:js && npm run build:css",
-    "build:js": "node ./config/build.js && babel --config-file ./config/babel.config.json src --out-dir dist",
+    "build:js": "node ./config/build.js && babel --config-file ./config/babel.config.js src --out-dir dist",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir dist && node config/wrap-css.js",
     "dev:setup": "npm run build:css && cd app && npm i",
     "dev": "cd app && npm run dev",
     "watch": "npm run watch:js | npm run watch:css",
-    "watch:js": "babel --config-file ./config/babel.config.json --watch src --out-dir dist",
+    "watch:js": "babel --config-file ./config/babel.config.js --watch src --out-dir dist",
     "watch:css": "postcss --config config/postcss.config.js --watch src/**/*.css --base src --dir dist",
-    "test": "echo \"Write some tests...\"; npm run test:types",
-    "test:types": "dtslint types",
+    "test": "jest --config ./config/jest.config.js",
+    "test:ci": "npm run lint && npm run test:types && npm run test -- --ci",
+    "test:types": "dtslint types --onlyTestTsNext",
     "prepublishOnly": "npm run build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
@@ -61,9 +63,7 @@
   ],
   "license": "ISC",
   "dependencies": {
-    "@balazsorban/require-optional": "^1.0.0",
-    "@next-auth/prisma-legacy-adapter": "canary",
-    "@next-auth/typeorm-legacy-adapter": "canary",
+    "@babel/runtime": "^7.14.0",
     "futoin-hkdf": "^1.3.2",
     "jose": "^1.27.2",
     "jsonwebtoken": "^8.5.1",
@@ -74,52 +74,35 @@
   },
   "peerDependencies": {
     "react": "^16.13.1 || ^17",
-    "react-dom": "^16.13.1 || ^17",
-    "mongodb": "^3.6.6",
-    "mysql": "^2.18.1",
-    "mssql": "^6.2.1",
-    "pg": "^8.2.1",
-    "@prisma/client": "^2.16.1",
-    "nodemailer": "^6.4.16",
-    "typeorm": "^0.2.30"
+    "react-dom": "^16.13.1 || ^17"
+  },
+  "peerOptionalDependencies": {
+    "nodemailer": "^6.4.16"
   },
   "peerDependenciesMeta": {
-    "mongodb": {
-      "optional": true
-    },
-    "mysql": {
-      "optional": true
-    },
-    "mssql": {
-      "optional": true
-    },
-    "pg": {
-      "optional": true
-    },
-    "@prisma/client": {
-      "optional": true
-    },
     "nodemailer": {
-      "optional": true
-    },
-    "typeorm": {
       "optional": true
     }
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.6",
-    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/plugin-proposal-optional-catch-binding": "^7.14.2",
+    "@babel/plugin-transform-runtime": "^7.13.15",
     "@babel/preset-env": "^7.9.6",
-    "@prisma/client": "^2.16.1",
+    "@babel/preset-react": "^7.13.13",
     "@semantic-release/commit-analyzer": "^8.0.1",
     "@semantic-release/github": "^7.2.0",
     "@semantic-release/npm": "7.0.8",
     "@semantic-release/release-notes-generator": "^9.0.1",
+    "@testing-library/jest-dom": "^5.12.0",
+    "@testing-library/react": "^11.2.6",
+    "@testing-library/user-event": "^13.1.9",
     "@types/react": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
     "autoprefixer": "^9.7.6",
+    "babel-jest": "^26.6.3",
     "babel-preset-preact": "^2.0.0",
     "conventional-changelog-conventionalcommits": "4.4.0",
     "cssnano": "^4.1.10",
@@ -129,25 +112,22 @@
     "eslint-config-prettier": "^8.2.0",
     "eslint-config-standard-with-typescript": "^19.0.1",
     "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.3.6",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
     "eslint-plugin-standard": "^5.0.0",
-    "mocha": "^8.1.3",
-    "mongodb": "^3.6.6",
-    "mssql": "^6.2.1",
-    "mysql": "^2.18.1",
+    "husky": "^6.0.0",
+    "jest": "^26.6.3",
+    "msw": "^0.28.2",
     "next": "^10.0.5",
-    "pg": "^8.2.1",
     "postcss-cli": "^7.1.1",
     "postcss-nested": "^4.2.1",
     "prettier": "^2.2.1",
-    "prisma": "^2.16.1",
-    "puppeteer": "^5.2.1",
-    "puppeteer-extra": "^3.1.15",
-    "puppeteer-extra-plugin-stealth": "^2.6.1",
+    "pretty-quick": "^3.1.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "typescript": "^4.1.3"
+    "typescript": "^4.1.3",
+    "whatwg-fetch": "^3.6.2"
   },
   "prettier": {
     "semi": false
@@ -174,7 +154,23 @@
       "localStorage": "readonly",
       "location": "readonly",
       "fetch": "readonly"
-    }
+    },
+    "overrides": [
+      {
+        "files": [
+          "./**/*test.js"
+        ],
+        "env": {
+          "jest/globals": true
+        },
+        "extends": [
+          "plugin:jest/recommended"
+        ],
+        "plugins": [
+          "jest"
+        ]
+      }
+    ]
   },
   "release": {
     "branches": [

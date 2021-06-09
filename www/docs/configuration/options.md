@@ -5,7 +5,7 @@ title: Options
 
 ## Environment Variables
 
-### NEXTAUTH_URL 
+### NEXTAUTH_URL
 
 When deploying to production, set the `NEXTAUTH_URL` environment variable to the canonical URL of your site.
 
@@ -37,10 +37,10 @@ Options are passed to NextAuth.js when initializing it in an API route.
 
 ### providers
 
-* **Default value**: `[]`
-* **Required**: *Yes*
+- **Default value**: `[]`
+- **Required**: _Yes_
 
-#### Description 
+#### Description
 
 An array of authentication providers for signing in (e.g. Google, Facebook, Twitter, GitHub, Email, etc) in any order. This can be one of the built-in providers or an object with a custom provider.
 
@@ -50,10 +50,10 @@ See the [providers documentation](/configuration/providers) for a list of suppor
 
 ### database
 
-* **Default value**: `null`
-* **Required**: *No (unless using email provider)*
+- **Default value**: `null`
+- **Required**: _No (unless using email provider)_
 
-#### Description 
+#### Description
 
 [A database connection string or configuration object.](/configuration/databases)
 
@@ -61,12 +61,12 @@ See the [providers documentation](/configuration/providers) for a list of suppor
 
 ### secret
 
-* **Default value**: `string` (*SHA hash of the "options" object*)
-* **Required**: *No - but strongly recommended!*
+- **Default value**: `string` (_SHA hash of the "options" object_)
+- **Required**: _No - but strongly recommended!_
 
 #### Description
 
-A random string used to hash tokens, sign cookies and generate crytographic keys.
+A random string used to hash tokens, sign cookies and generate cryptographic keys.
 
 If not specified, it uses a hash for all configuration options, including Client ID / Secrets for entropy.
 
@@ -76,8 +76,8 @@ The default behaviour is volatile, and it is strongly recommended you explicitly
 
 ### session
 
-* **Default value**: `object`
-* **Required**: *No*
+- **Default value**: `object`
+- **Required**: _No_
 
 #### Description
 
@@ -90,14 +90,14 @@ session: {
   // Use JSON Web Tokens for session instead of database sessions.
   // This option can be used with or without a database for users/accounts.
   // Note: `jwt` is automatically set to `true` if no database is specified.
-  jwt: false, 
-  
+  jwt: false,
+
   // Seconds - How long until an idle session expires and is no longer valid.
   maxAge: 30 * 24 * 60 * 60, // 30 days
-  
+
   // Seconds - Throttle how frequently to write to database to extend a session.
   // Use it to limit write operations. Set to 0 to always update the database.
-  // Note: This option is ignored if using JSON Web Tokens 
+  // Note: This option is ignored if using JSON Web Tokens
   updateAge: 24 * 60 * 60, // 24 hours
 }
 ```
@@ -106,8 +106,8 @@ session: {
 
 ### jwt
 
-* **Default value**: `object`
-* **Required**: *No*
+- **Default value**: `object`
+- **Required**: _No_
 
 #### Description
 
@@ -124,18 +124,15 @@ jwt: {
   // This is used to generate the actual signingKey and produces a warning
   // message if not defined explicitly.
   // secret: 'INp8IvdIyeMcoGAgFGoA61DdBglwwSqnXJZkgz8PSnw',
-  
   // You can generate a signing key using `jose newkey -s 512 -t oct -a HS512`
   // This gives you direct knowledge of the key used to sign the token so you can use it
   // to authenticate indirectly (eg. to a database driver)
   // signingKey: {"kty":"oct","kid":"Dl893BEV-iVE-x9EC52TDmlJUgGm9oZ99_ZL025Hc5Q","alg":"HS512","k":"K7QqRmJOKRK2qcCKV_pi9PSBv3XP0fpTu30TP8xn4w01xR3ZMZM38yL2DnTVPVw6e4yhdh0jtoah-i4c_pZagA"},
-  
   // If you chose something other than the default algorithm for the signingKey (HS512)
   // you also need to configure the algorithm
   // verificationOptions: {
   //    algorithms: ['HS256']
   // },
-  
   // Set to true to use encryption. Defaults to false (signing only).
   // encryption: true,
   // encryptionKey: "",
@@ -143,7 +140,6 @@ jwt: {
   // decryptionOptions = {
   //    algorithms: ['A256GCM']
   // },
-  
   // You can define your own encode/decode functions for signing and encryption
   // if you want to override the default behaviour.
   // async encode({ secret, token, maxAge }) {},
@@ -168,13 +164,13 @@ An example JSON Web Token contains a payload like this:
 You can use the built-in `getToken()` helper method to verify and decrypt the token, like this:
 
 ```js
-import jwt from 'next-auth/jwt'
+import jwt from "next-auth/jwt"
 
 const secret = process.env.JWT_SECRET
 
 export default async (req, res) => {
   const token = await jwt.getToken({ req, secret })
-  console.log('JSON Web Token', token)
+  console.log("JSON Web Token", token)
   res.end()
 }
 ```
@@ -185,10 +181,10 @@ _For convenience, this helper function is also able to read and decode tokens pa
 
 The getToken() helper requires the following options:
 
-* `req` - (object) Request object
-* `secret` - (string) JWT Secret
+- `req` - (object) Request object
+- `secret` - (string) JWT Secret
 
-You must also pass *any options configured on the `jwt` option* to the helper.
+You must also pass _any options configured on the `jwt` option_ to the helper.
 
 e.g. Including custom session `maxAge` and custom signing and/or encryption keys or options
 
@@ -196,15 +192,15 @@ e.g. Including custom session `maxAge` and custom signing and/or encryption keys
 
 It also supports the following options:
 
-* `secureCookie` - (boolean) Use secure prefixed cookie name
+- `secureCookie` - (boolean) Use secure prefixed cookie name
 
   By default, the helper function will attempt to determine if it should use the secure prefixed cookie (e.g. `true` in production and `false` in development, unless NEXTAUTH_URL contains an HTTPS URL).
 
-* `cookieName` - (string) Session token cookie name
+- `cookieName` - (string) Session token cookie name
 
   The `secureCookie` option is ignored if `cookieName` is explicitly specified.
 
-* `raw` - (boolean) Get raw token (not decoded)
+- `raw` - (boolean) Get raw token (not decoded)
 
   If set to `true` returns the raw token without decrypting or verifying it.
 
@@ -216,8 +212,8 @@ The JWT is stored in the Session Token cookie, the same cookie used for tokens w
 
 ### pages
 
-* **Default value**: `{}`
-* **Required**: *No*
+- **Default value**: `{}`
+- **Required**: _No_
 
 #### Description
 
@@ -225,7 +221,7 @@ Specify URLs to be used if you want to create custom sign in, sign out and error
 
 Pages specified will override the corresponding built-in page.
 
-*For example:*
+_For example:_
 
 ```js
 pages: {
@@ -243,8 +239,8 @@ See the documentation for the [pages option](/configuration/pages) for more info
 
 ### callbacks
 
-* **Default value**: `object`
-* **Required**: *No*
+- **Default value**: `object`
+- **Required**: _No_
 
 #### Description
 
@@ -277,8 +273,8 @@ See the [callbacks documentation](/configuration/callbacks) for more information
 
 ### events
 
-* **Default value**: `object`
-* **Required**: *No*
+- **Default value**: `object`
+- **Required**: _No_
 
 #### Description
 
@@ -286,27 +282,26 @@ Events are asynchronous functions that do not return a response, they are useful
 
 You can specify a handler for any of these events below - e.g. for debugging or to create an audit log.
 
-The content of the message object varies depending on the flow (e.g. OAuth or Email authentication flow, JWT or database sessions, etc), but typically contains a user object and/or contents of the JSON Web Token and other information relevant to the event.
+The content of the message object varies depending on the flow (e.g. OAuth or Email authentication flow, JWT or database sessions, etc). See the [events documentation](/configuration/events) for more information on the form of each message object and how to use the events functions.
 
 ```js
 events: {
   async signIn(message) { /* on successful sign in */ },
   async signOut(message) { /* on signout */ },
   async createUser(message) { /* user created */ },
-  async linkAccount(message) { /* account linked to a user */ },
+  async updateUser(message) { /* user updated - e.g. their email was verified */ },
+  async linkAccount(message) { /* account (e.g. Twitter) linked to a user */ },
   async session(message) { /* session is active */ },
   async error(message) { /* error in authentication flow */ }
 }
 ```
 
-See the [events documentation](/configuration/events) for more information on how to use the events functions.
-
 ---
 
 ### adapter
 
-* **Default value**: *Adapter.Default()*
-* **Required**: *No*
+- **Default value**: _Adapter.Default()_
+- **Required**: _No_
 
 #### Description
 
@@ -314,7 +309,7 @@ By default NextAuth.js uses a database adapter that uses TypeORM and supports My
 
 You can use the `adapter` option to use the Prisma adapter - or pass in your own adapter if you want to use a database that is not supported by one of the built-in adapters.
 
-See the [adapter documentation](/schemas/adapters) for more information.
+See the [adapter documentation](/adapters/overview) for more information.
 
 :::note
 If the `adapter` option is specified it overrides the `database` option, only specify one or the other.
@@ -324,8 +319,8 @@ If the `adapter` option is specified it overrides the `database` option, only sp
 
 ### debug
 
-* **Default value**: `false`
-* **Required**: *No*
+- **Default value**: `false`
+- **Required**: _No_
 
 #### Description
 
@@ -335,14 +330,15 @@ Set debug to `true` to enable debug messages for authentication and database ope
 
 ### logger
 
-* **Default value**: `console`
-* **Required**: *No*
+- **Default value**: `console`
+- **Required**: _No_
 
 #### Description
 
 Override any of the logger levels (`undefined` levels will use the built-in logger), and intercept logs in NextAuth. You can use this to send NextAuth logs to a third-party logging service.
 
 Example:
+
 ```js title="/pages/api/auth/[...nextauth].js"
 import log from "logging-service"
 
@@ -371,8 +367,8 @@ If the `debug` level is defined by the user, it will be called regardless of the
 
 ### theme
 
-* **Default value**: `"auto"`
-* **Required**: *No*
+- **Default value**: `"auto"`
+- **Required**: _No_
 
 #### Description
 
@@ -388,8 +384,8 @@ Advanced options are passed the same way as basic options, but may have complex 
 
 ### useSecureCookies
 
-* **Default value**: `true` for HTTPS sites / `false` for HTTP sites
-* **Required**: *No*
+- **Default value**: `true` for HTTPS sites / `false` for HTTP sites
+- **Required**: _No_
 
 #### Description
 
@@ -404,15 +400,15 @@ Properties on any custom `cookies` that are specified override this option.
 :::
 
 :::warning
-Setting this option to *false* in production is a security risk and may allow sessions to hijacked if used in production. It is intended to support development and testing. Using this option is not recommended.
+Setting this option to _false_ in production is a security risk and may allow sessions to be hijacked if used in production. It is intended to support development and testing. Using this option is not recommended.
 :::
 
 ---
 
 ### cookies
 
-* **Default value**: `{}`
-* **Required**: *No*
+- **Default value**: `{}`
+- **Required**: _No_
 
 #### Description
 
