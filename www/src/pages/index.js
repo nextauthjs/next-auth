@@ -267,9 +267,7 @@ export default NextAuth({
       server: process.env.MAIL_SERVER,
       from: 'NextAuth.js <no-reply@example.com>'
     }),
-  ],
-  // Optional SQL or MongoDB database to persist users
-  database: process.env.DATABASE_URL
+  ]
 })
 `.trim()
 

@@ -22,7 +22,6 @@
   "exports": {
     ".": "./dist/server/index.js",
     "./jwt": "./dist/lib/jwt.js",
-    "./adapters": "./dist/adapters/index.js",
     "./client": "./dist/client/index.js",
     "./providers": "./dist/providers/index.js",
     "./providers/*": "./dist/providers/*.js",
@@ -73,6 +72,7 @@
     "preact-render-to-string": "^5.1.14"
   },
   "peerDependencies": {
+    "nodemailer": "^6.4.16",
     "react": "^16.13.1 || ^17",
     "react-dom": "^16.13.1 || ^17"
   },

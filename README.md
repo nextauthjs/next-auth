@@ -110,8 +110,6 @@ export default NextAuth({
       from: "<no-reply@example.com>",
     }),
   ],
-  // SQL or MongoDB database (or leave empty)
-  database: process.env.DATABASE_URL,
 })
 ```
 

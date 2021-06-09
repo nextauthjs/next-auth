@@ -14,8 +14,6 @@ import csrfTokenHandler from "./lib/csrf-token-handler"
 import * as pkce from "./lib/oauth/pkce-handler"
 import * as state from "./lib/oauth/state-handler"
 
-import optionalRequire from "@balazsorban/require-optional"
-
 // To work properly in production with OAuth providers the NEXTAUTH_URL
 // environment variable must be set.
 if (!process.env.NEXTAUTH_URL) {
@@ -113,7 +111,6 @@ async function NextAuthHandler(req, res, userOptions) {
       ...userOptions,
       // These computed settings can have values in userOptions but we override them
       // and are request-specific.
-      adapter,
       baseUrl,
       basePath,
       action,

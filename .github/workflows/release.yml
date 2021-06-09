@@ -17,7 +17,9 @@ jobs:
       - name: Init
         uses: actions/checkout@v2
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
       - name: Dependencies
         uses: bahmutov/npm-install@v1
       - name: Run tests
@@ -32,7 +34,9 @@ jobs:
       - name: Init
         uses: actions/checkout@v2
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
       - name: Dependencies
         uses: bahmutov/npm-install@v1
       - name: Release

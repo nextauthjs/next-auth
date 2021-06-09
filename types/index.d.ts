@@ -30,14 +30,6 @@ export interface NextAuthOptions {
    */
   providers: AppProviders
   /**
-   * A database connection string or configuration object.
-   * * **Default value**: `null`
-   * * **Required**: *No (unless using email provider)*
-   *
-   * [Documentation](https://next-auth.js.org/configuration/options#database) | [Databases](https://next-auth.js.org/configuration/databases)
-   */
-  database?: string | Record<string, any> | ConnectionOptions
-  /**
    * A random string used to hash tokens, sign cookies and generate cryptographic keys.
    * If not specified is uses a hash of all configuration options, including Client ID / Secrets for entropy.
    * The default behavior is volatile, and **it is strongly recommended** you explicitly specify a value
@@ -113,18 +105,11 @@ export interface NextAuthOptions {
    */
   events?: Partial<JWTEventCallbacks | SessionEventCallbacks>
   /**
-   * By default NextAuth.js uses a database adapter that uses TypeORM and supports MySQL, MariaDB, Postgres and MongoDB and SQLite databases.
-   * An alternative adapter that uses Prisma, which currently supports MySQL, MariaDB and Postgres, is also included.
-   * You can use the adapter option to use the Prisma adapter - or pass in your own adapter
-   * if you want to use a database that is not supported by one of the built-in adapters.
-   * * **Default value**: TypeORM adapter
+   * You can use the adapter option to pass in your database adapter.
+   *
    * * **Required**: *No*
    *
-   * - ⚠ If the `adapter` option is specified it overrides the `database` option, only specify one or the other.
-   * - ⚠ Adapters are being migrated to their own home in a Community maintained repository.
-   *
    * [Documentation](https://next-auth.js.org/configuration/options#adapter) |
-   * [Default adapter](https://next-auth.js.org/schemas/adapters#typeorm-adapter) |
    * [Community adapters](https://github.com/nextauthjs/adapters)
    */
   adapter?: ReturnType<Adapter>
