@@ -181,12 +181,13 @@ export function SessionProvider({ children, session, options }) {
   useEffect(() => {
     __NEXTAUTH._getSession = async ({ event } = {}) => {
       try {
-        // Events from other tabs/windows or
-        // if we don't have a client session should always update.
-        if (event === "storage" || __NEXTAUTH._clientSession === undefined) {
+        const storageEvent = event === "storage"
+        // We should always update if we don't have a client session yet
+        // or if there are events from other tabs/windows
+        if (storageEvent || __NEXTAUTH._clientSession === undefined) {
           __NEXTAUTH._clientLastSync = _now()
           __NEXTAUTH._clientSession = await getSession({
-            broadcast: event !== "storage",
+            broadcast: !storageEvent,
           })
           setData(__NEXTAUTH._clientSession)
           return
