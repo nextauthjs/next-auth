@@ -209,9 +209,7 @@ export function SessionProvider({ children, session, options }) {
         }
 
         __NEXTAUTH._clientLastSync = _now()
-        __NEXTAUTH._clientSession = await getSession({
-          broadcast: event !== "storage",
-        })
+        __NEXTAUTH._clientSession = await getSession()
         setData(__NEXTAUTH._clientSession)
       } catch (error) {
         logger.error("CLIENT_SESSION_ERROR", error)
