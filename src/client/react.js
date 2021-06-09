@@ -44,7 +44,7 @@ const broadcast = BroadcastChannel()
 
 const logger = proxyLogger(_logger, __NEXTAUTH.basePath)
 
-/** @type {import("types/internals/react").SessionContext} */
+/** @type {import("types/internals/react-client").SessionContext} */
 const SessionContext = createContext()
 
 export function useSession() {

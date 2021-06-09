@@ -3,7 +3,7 @@ import { rest } from "msw"
 import { server, mockSession } from "./mocks"
 import logger from "../../lib/logger"
 import { useState, useEffect } from "react"
-import { getSession } from ".."
+import { getSession } from "../react"
 import { getBroadcastEvents } from "./utils"
 
 jest.mock("../../lib/logger", () => ({

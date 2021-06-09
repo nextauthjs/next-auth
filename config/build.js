@@ -36,7 +36,7 @@ Object.entries(BUILD_TARGETS).forEach(([target, content]) => {
 
 const TYPES_TARGETS = [
   `${MODULE_ENTRIES.SERVER}.d.ts`,
-  `${MODULE_ENTRIES.REACT}.d.ts`,
+  `${MODULE_ENTRIES.REACT}-client.d.ts`,
   `${MODULE_ENTRIES.ADAPTERS}.d.ts`,
   `${MODULE_ENTRIES.PROVIDERS}.d.ts`,
   `${MODULE_ENTRIES.JWT}.d.ts`,
@@ -47,7 +47,10 @@ const TYPES_TARGETS = [
 TYPES_TARGETS.forEach((target) => {
   fs.copy(
     path.resolve("types", target),
-    path.join(process.cwd(), target),
+    path.join(
+      process.cwd(),
+      target.startsWith("react-client") ? "react.d.ts" : target
+    ),
     (err) => {
       if (err) throw err
       console.log(`[build-types] copying "${target}" to root folder`)

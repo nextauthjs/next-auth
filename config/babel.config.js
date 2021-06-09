@@ -12,7 +12,10 @@ module.exports = {
   overrides: [
     {
       test: ["../src/client/**"],
-      presets: [["@babel/preset-env", { targets: { ie: "11" } }]],
+      presets: [
+        ["@babel/preset-env", { targets: { ie: "11" } }],
+        "@babel/preset-react",
+      ],
     },
     {
       test: ["../src/server/pages/**"],
