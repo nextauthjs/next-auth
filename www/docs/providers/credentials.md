@@ -136,7 +136,6 @@ You can also [use a custom sign in page](/configuration/pages#credentials-sign-i
 <Image src="/img/signin-complex.png"/>
 
 export const Image = ({ children, src, alt = '' }) => (
-
   <div
     style={{
       padding: '0.2rem',
@@ -146,4 +145,4 @@ export const Image = ({ children, src, alt = '' }) => (
     }}>
     <img alt={alt} src={src} />
   </div>
- )
+)
