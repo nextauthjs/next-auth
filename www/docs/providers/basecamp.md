@@ -11,9 +11,18 @@ https://github.com/basecamp/api/blob/master/sections/authentication.md
 
 https://launchpad.37signals.com/integrations
 
+## Options
+
+The **Basecamp Provider** comes with a set of default options:
+
+- [Basecamp Provider options](https://github.com/nextauthjs/next-auth/blob/main/src/providers/basecamp.js)
+
+You can override any of the options to suit your own use case.
+
 ## Examples
 
 ### Basic profile information
+
 ```js
 import Providers from `next-auth/providers`
 ...
@@ -27,7 +36,7 @@ providers: [
 ```
 
 :::note
-Using the example above, it is only possible to retrieve profile information such as account id, email and name. If you wish to retrieve user data in relation to a specific team, you must provide a different profileUrl and a custom function to handle profile information as shown in the example below. 
+Using the example above, it is only possible to retrieve profile information such as account id, email and name. If you wish to retrieve user data in relation to a specific team, you must provide a different profileUrl and a custom function to handle profile information as shown in the example below.
 :::
 
 ### Profile information in relation to specific team

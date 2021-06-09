@@ -12,9 +12,11 @@ NextAuth.js comes with multiple ways of connecting to a database:
 - **Custom Adapter**<br/>
   _A custom Adapter can be used to connect to any database._
 
+> There are currently efforts in the [`nextauthjs/adapters`](https://github.com/nextauthjs/adapters) repository to get community-based DynamoDB, Sanity, PouchDB and Sequelize Adapters merged. If you are interested in any of the above, feel free to check out the PRs in the `nextauthjs/adapters` repository!
+
 **This document covers the default adapter (TypeORM).**
 
-See the [documentation for adapters](/schemas/adapters) to learn more about using Prisma adapter or using a custom adapter.
+See the [documentation for adapters](/adapters/overview) to learn more about using Prisma adapter or using a custom adapter.
 
 To learn more about databases in NextAuth.js and how they are used, check out [databases in the FAQ](/faq#databases).
 
@@ -233,4 +235,4 @@ adapter: TypeORMAdapter("sqlite://localhost/:memory:")
 
 ## Other databases
 
-See the [documentation for adapters](/schemas/adapters) for more information on advanced configuration, including how to use NextAuth.js with other databases using a [custom adapter](/tutorials/creating-a-database-adapter).
+See the [documentation for adapters](/adapters/overview) for more information on advanced configuration, including how to use NextAuth.js with other databases using a [custom adapter](/tutorials/creating-a-database-adapter).

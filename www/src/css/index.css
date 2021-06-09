@@ -34,9 +34,9 @@
 
 html[data-theme="dark"]:root {
   --ifm-color-link: #289ef9;
-  --ifm-footer-background-color: #111;
+  --ifm-footer-background-color: #000;
   --ifm-html-background-color: #242526;
-  --ifm-background-color: #000000;
+  --ifm-background-color: #090909;
   --ifm-hero-background-color: #111111;
   --ifm-navbar-background-color: rgba(0, 0, 0, 0.95);
 }
@@ -47,6 +47,7 @@ html[data-theme="dark"]:root {
 @import "table-of-contents.css";
 @import "sidebar.css";
 @import "providers.css";
+@import "search.css";
 
 @media screen and (max-width: 360px) {
   html {
@@ -183,9 +184,26 @@ html[data-theme="dark"] hr {
   border-color: #242526;
 }
 
+.github-counter {
+  position: absolute;
+  color: #000;
+  top: -10px;
+  right: 5px;
+  font-size: 9px;
+  background-color: #ccc;
+  padding: 2px 5px;
+  border-radius: 10px;
+  z-index: -1;
+}
+
+html[data-theme="dark"] .github-counter {
+  background-color: #222;
+  color: #fff;
+}
+
 .navbar__item.navbar__link[href*="github"],
 .navbar__item.navbar__link[href*="npmjs"] {
-  padding: 0 1rem 0 0;
+  padding: 0 1.5rem 0 0;
   display: flex;
   font-size: 0;
 }
@@ -196,6 +214,26 @@ html[data-theme="dark"] hr {
   height: 1.5rem;
   background-image: url("/img/brand-github.svg");
   background-repeat: no-repeat;
+}
+
+.navbar__items .react-toggle {
+  margin-right: 5px;
+}
+
+.react-toggle--focus .react-toggle-thumb,
+.react-toggle:hover .react-toggle-thumb {
+  box-shadow: none !important;
+}
+
+.navbar__search-input:focus {
+  outline: none;
+  box-shadow: rgb(255, 255, 255) 0px 0px 0px 0px,
+    rgba(19, 19, 19, 0.2) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px;
+  transition: box-shadow 350ms ease-in-out;
+}
+html[data-theme="dark"] .navbar__search-input:focus {
+  box-shadow: rgb(255, 255, 255) 0px 0px 0px 0px,
+    rgba(29, 29, 29, 0.5) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px;
 }
 
 html[data-theme="dark"] .navbar__item.navbar__link[href*="github"]:before {

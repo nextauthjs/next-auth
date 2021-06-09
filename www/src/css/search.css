@@ -1,0 +1,28 @@
+html[data-theme="light"]:root {
+  --docsearch-searchbox-shadow: inset 0 0 0 2px #a553b3;
+}
+
+html[data-theme="light"] .DocSearch-Modal .DocSearch-Search-Icon {
+  color: #a553b3;
+}
+
+html[data-theme="dark"] .DocSearch-Modal .DocSearch-Search-Icon {
+  color: #7c2f89;
+}
+
+html[data-theme="dark"]:root {
+  --docsearch-searchbox-background: #040404;
+  --docsearch-key-gradient: #000;
+  --docsearch-key-shadow: #ccc;
+  --docsearch-searchbox-shadow: inset 0 0 0 2px #7c2f89;
+}
+
+html[data-theme="dark"] .DocSearch-Button-Key {
+  --docsearch-muted-color: #333;
+}
+
+@media screen and (max-width: 740px) {
+  .DocSearch-Container {
+    margin-top: 60px;
+  }
+}

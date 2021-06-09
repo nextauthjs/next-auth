@@ -11,6 +11,14 @@ https://develop.battle.net/documentation/guides/using-oauth
 
 https://develop.battle.net/access/clients
 
+## Options
+
+The **Battle.net Provider** comes with a set of default options:
+
+- [Battle.net Provider options](https://github.com/nextauthjs/next-auth/blob/main/src/providers/battlenet.js)
+
+You can override any of the options to suit your own use case.
+
 ## Example
 
 ```js

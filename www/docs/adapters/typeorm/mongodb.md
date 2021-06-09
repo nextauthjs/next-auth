@@ -19,4 +19,4 @@ Objects stored in MongoDB use similar datatypes to SQL, with some differences:
 
 4. A sparse index is used on the User `email` property to allow it to be optional, while still enforcing uniqueness if it is specified.
 
-  This is functionally equivalent to the ANSI SQL behaviour for a `unique` but `nullable` property.
+This is functionally equivalent to the ANSI SQL behaviour for a `unique` but `nullable` property.

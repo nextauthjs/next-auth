@@ -11,6 +11,14 @@ https://developer.apple.com/sign-in-with-apple/get-started/
 
 https://developer.apple.com/account/resources/identifiers/list/serviceId
 
+## Options
+
+The **Apple Provider** comes with a set of default options:
+
+- [Apple Provider options](https://github.com/nextauthjs/next-auth/blob/main/src/providers/apple.js)
+
+You can override any of the options to suit your own use case.
+
 ## Example
 
 There are two ways you can use the Sign in with Apple provider.
@@ -25,7 +33,7 @@ import Providers from `next-auth/providers`
 providers: [
   Providers.Apple({
     clientId: process.env.APPLE_ID,
-    clientSecret: { 
+    clientSecret: {
       teamId: process.env.APPLE_TEAM_ID,
       privateKey: process.env.APPLE_PRIVATE_KEY,
       keyId: process.env.APPLE_KEY_ID,
@@ -37,21 +45,21 @@ providers: [
 
 :::tip
 
-You can convert your Apple key to a single line to use it in a environment variable.
+You can convert your Apple key to a single line to use it in an environment variable.
 
 **Mac**
-   
+
 ```bash
 awk 'NF {sub(/\r/, ""); printf "%s\\n",$0;}'  AuthKey_ID.k8
 ```
-  
+
 **Windows**
-  
+
 ```powershell
  $k8file = "AuthKey_ID.k8"
-(Get-Content "C:\Users\$env:UserName\Downloads\${k8file}") -join "\n" 
+(Get-Content "C:\Users\$env:UserName\Downloads\${k8file}") -join "\n"
 ```
-  
+
 :::
 
 ### Pre-generated secret
@@ -92,9 +100,9 @@ Apple doesn't allow you to use localhost in domains or subdomains.
 
 The following guides may be helpful:
 
-* [How to setup localhost with HTTPS with a Next.js app](https://medium.com/@anMagpie/secure-your-local-development-server-with-https-next-js-81ac6b8b3d68)
+- [How to setup localhost with HTTPS with a Next.js app](https://medium.com/@anMagpie/secure-your-local-development-server-with-https-next-js-81ac6b8b3d68)
 
-* [Guide to configuring Sign in with Apple](https://developer.okta.com/blog/2019/06/04/what-the-heck-is-sign-in-with-apple)
+- [Guide to configuring Sign in with Apple](https://developer.okta.com/blog/2019/06/04/what-the-heck-is-sign-in-with-apple)
 
 ### Example server
 
@@ -114,7 +122,6 @@ Add-Content -Path C:\Windows\System32\drivers\etc\hosts -Value "127.0.0.1`tdev.e
 
 #### Create certificate
 
-
 Creating a certificate for localhost is easy with openssl . Just put the following command in the terminal. The output will be two files: localhost.key and localhost.crt.
 
 ```bash
@@ -127,7 +134,7 @@ openssl req -x509 -out localhost.crt -keyout localhost.key \
 :::tip
 **Windows**
 
-The OpenSSL executable is distributed with [Git](https://git-scm.com/download/win]9) for Windows. 
+The OpenSSL executable is distributed with [Git](https://git-scm.com/download/win]9) for Windows.
 Once installed you will find the openssl.exe file in `C:/Program Files/Git/mingw64/bin` which you can add to the system PATH environment variable if it’s not already done.
 
 Add environment variable `OPENSSL_CONF=C:/Program Files/Git/mingw64/ssl/openssl.cnf`
@@ -142,32 +149,30 @@ Add environment variable `OPENSSL_CONF=C:/Program Files/Git/mingw64/ssl/openssl.
 
 Create directory `certificates` and place `localhost.key` and `localhost.crt`
 
-
 You can create a `server.js` in the root of your project and run it with `node server.js` to test Sign in with Apple integration locally:
 
-
 ```js
-const { createServer } = require('https')
-const { parse } = require('url')
-const next = require('next')
-const fs = require('fs')
+const { createServer } = require("https")
+const { parse } = require("url")
+const next = require("next")
+const fs = require("fs")
 
-const dev = process.env.NODE_ENV !== 'production'
+const dev = process.env.NODE_ENV !== "production"
 const app = next({ dev })
 const handle = app.getRequestHandler()
 
 const httpsOptions = {
-  key: fs.readFileSync('./certificates/localhost.key'),
-  cert: fs.readFileSync('./certificates/localhost.crt')
+  key: fs.readFileSync("./certificates/localhost.key"),
+  cert: fs.readFileSync("./certificates/localhost.crt"),
 }
 
 app.prepare().then(() => {
   createServer(httpsOptions, (req, res) => {
     const parsedUrl = parse(req.url, true)
     handle(req, res, parsedUrl)
-  }).listen(3000, err => {
+  }).listen(3000, (err) => {
     if (err) throw err
-    console.log('> Ready on https://localhost:3000')
+    console.log("> Ready on https://localhost:3000")
   })
 })
 ```
@@ -177,25 +182,28 @@ app.prepare().then(() => {
 If you want to pre-generate your secret, this is an example of the code you will need:
 
 ```js
-const jwt = require('jsonwebtoken')
-const fs = require('fs')
+const jwt = require("jsonwebtoken")
+const fs = require("fs")
 
-const appleId = 'myapp.example.com'
-const keyId = ''
-const teamId = ''
-const privateKey = fs.readFileSync('path/to/key')
+const appleId = "myapp.example.com"
+const keyId = ""
+const teamId = ""
+const privateKey = fs.readFileSync("path/to/key")
 
 const secret = jwt.sign(
   {
     iss: teamId,
     iat: Math.floor(Date.now() / 1000),
-    exp: Math.floor(Date.now() / 1000) + ( 86400 * 180 ), // 6 months
-    aud: 'https://appleid.apple.com',
-    sub: appleId
-  }, privateKey, {
-    algorithm: 'ES256',
-    keyid: keyId
-  })
+    exp: Math.floor(Date.now() / 1000) + 86400 * 180, // 6 months
+    aud: "https://appleid.apple.com",
+    sub: appleId,
+  },
+  privateKey,
+  {
+    algorithm: "ES256",
+    keyid: keyId,
+  }
+)
 
 console.log(secret)
 ```
