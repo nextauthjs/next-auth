@@ -83,7 +83,7 @@ See the [callbacks documentation](/configuration/callbacks) for more information
 
 You can specify more than one credentials provider by specifying a unique `id` for each one.
 
-You can also use them in conjuction with other provider options.
+You can also use them in conjunction with other provider options.
 
 As with all providers, the order you specify them is the order they are displayed on the sign in page.
 

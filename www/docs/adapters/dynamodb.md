@@ -63,7 +63,7 @@ export default NextAuth({
 The table respects the single table design pattern. This has many advantages:
 
 - Only one table to manage, monitor and provision.
-- Querying relations is faster than with multi-table schemas (for eg. retreiving all sessions for a user).
+- Querying relations is faster than with multi-table schemas (for eg. retrieving all sessions for a user).
 - Only one table needs to be replicated, if you want to go multi-region.
 
 Here is a schema of the table :

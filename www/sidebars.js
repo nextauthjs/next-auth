@@ -49,6 +49,7 @@ module.exports = {
         "adapters/prisma-legacy",
         "adapters/dynamodb",
         "adapters/firebase",
+        "adapters/pouchdb",
       ],
     },
     {
