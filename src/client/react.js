@@ -185,7 +185,9 @@ export function SessionProvider({ children, session, options }) {
         // if we don't have a client session should always update.
         if (event === "storage" || __NEXTAUTH._clientSession === undefined) {
           __NEXTAUTH._clientLastSync = _now()
-          __NEXTAUTH._clientSession = await getSession({ broadcast: false })
+          __NEXTAUTH._clientSession = await getSession({
+            broadcast: event !== "storage",
+          })
           setData(__NEXTAUTH._clientSession)
           return
         }
