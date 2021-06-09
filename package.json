@@ -29,7 +29,6 @@
     "./errors": "./dist/lib/errors.js"
   },
   "scripts": {
-    "postinstall": "npx husky install",
     "build": "npm run build:js && npm run build:css",
     "build:js": "node ./config/build.js && babel --config-file ./config/babel.config.js src --out-dir dist",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir dist && node config/wrap-css.js",
