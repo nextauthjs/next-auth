@@ -11,6 +11,14 @@ https://developers.line.biz/en/docs/line-login/integrate-line-login/
 
 https://developers.line.biz/console/
 
+## Options
+
+The **Line Provider** comes with a set of default options:
+
+- [Line Provider options](https://github.com/nextauthjs/next-auth/blob/main/src/providers/line.js)
+
+You can override any of the options to suit your own use case.
+
 ## Example
 
 ```js

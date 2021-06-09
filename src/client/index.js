@@ -8,9 +8,15 @@
 //
 // We use HTTP POST requests with CSRF Tokens to protect against CSRF attacks.
 
-import { useState, useEffect, useContext, createContext, createElement } from 'react'
-import _logger, { proxyLogger } from '../lib/logger'
-import parseUrl from '../lib/parse-url'
+import {
+  useState,
+  useEffect,
+  useContext,
+  createContext,
+  createElement,
+} from "react"
+import _logger, { proxyLogger } from "../lib/logger"
+import parseUrl from "../lib/parse-url"
 
 // This behaviour mirrors the default behaviour for getting the site name that
 // happens server side in server/index.js
@@ -18,12 +24,18 @@ import parseUrl from '../lib/parse-url'
 //    relative URLs are valid in that context and so defaults to empty.
 // 2. When invoked server side the value is picked up from an environment
 //    variable and defaults to 'http://localhost:3000'.
-/** @type {import(".").NextAuthConfig} */
+/** @type {import("types/internals/client").NextAuthConfig} */
 const __NEXTAUTH = {
   baseUrl: parseUrl(process.env.NEXTAUTH_URL || process.env.VERCEL_URL).baseUrl,
   basePath: parseUrl(process.env.NEXTAUTH_URL).basePath,
-  baseUrlServer: parseUrl(process.env.NEXTAUTH_URL_INTERNAL || process.env.NEXTAUTH_URL || process.env.VERCEL_URL).baseUrl,
-  basePathServer: parseUrl(process.env.NEXTAUTH_URL_INTERNAL || process.env.NEXTAUTH_URL).basePath,
+  baseUrlServer: parseUrl(
+    process.env.NEXTAUTH_URL_INTERNAL ||
+      process.env.NEXTAUTH_URL ||
+      process.env.VERCEL_URL
+  ).baseUrl,
+  basePathServer: parseUrl(
+    process.env.NEXTAUTH_URL_INTERNAL || process.env.NEXTAUTH_URL
+  ).basePath,
   keepAlive: 0,
   clientMaxAge: 0,
   // Properties starting with _ are used for tracking internal app state
@@ -31,7 +43,7 @@ const __NEXTAUTH = {
   _clientSyncTimer: null,
   _eventListenersAdded: false,
   _clientSession: undefined,
-  _getSession: () => {}
+  _getSession: () => {},
 }
 
 const logger = proxyLogger(_logger, __NEXTAUTH.basePath)
@@ -39,7 +51,7 @@ const logger = proxyLogger(_logger, __NEXTAUTH.basePath)
 const broadcast = BroadcastChannel()
 
 // Add event listners on load
-if (typeof window !== 'undefined' && !__NEXTAUTH._eventListenersAdded) {
+if (typeof window !== "undefined" && !__NEXTAUTH._eventListenersAdded) {
   __NEXTAUTH._eventListenersAdded = true
   // Listen for storage events and update session if event fired from
   // another window (but suppress firing another event to avoid a loop)
@@ -50,32 +62,30 @@ if (typeof window !== 'undefined' && !__NEXTAUTH._eventListenersAdded) {
   // on how the session object is being used in the client; it is
   // more robust to have each window/tab fetch it's own copy of the
   // session object rather than share it across instances.
-  broadcast.receive(() => __NEXTAUTH._getSession({ event: 'storage' }))
+  broadcast.receive(() => __NEXTAUTH._getSession({ event: "storage" }))
 
   // Listen for document visibility change events and
   // if visibility of the document changes, re-fetch the session.
-  document.addEventListener('visibilitychange', () => {
-    !document.hidden && __NEXTAUTH._getSession({ event: 'visibilitychange' })
-  }, false)
+  document.addEventListener(
+    "visibilitychange",
+    () => {
+      !document.hidden && __NEXTAUTH._getSession({ event: "visibilitychange" })
+    },
+    false
+  )
 }
 
 // Context to store session data globally
+/** @type {import("types/internals/client").SessionContext} */
 const SessionContext = createContext()
 
-/**
- * React Hook that gives you access
- * to the logged in user's session data.
- *
- * [Documentation](https://next-auth.js.org/getting-started/client#usesession)
- * @type {import(".").UseSession}
- */
-export function useSession (session) {
+export function useSession(session) {
   const context = useContext(SessionContext)
   if (context) return context
   return _useSessionHook(session)
 }
 
-function _useSessionHook (session) {
+function _useSessionHook(session) {
   const [data, setData] = useState(session)
   const [loading, setLoading] = useState(!data)
 
@@ -83,7 +93,7 @@ function _useSessionHook (session) {
     __NEXTAUTH._getSession = async ({ event = null } = {}) => {
       try {
         const triggredByEvent = event !== null
-        const triggeredByStorageEvent = event === 'storage'
+        const triggeredByStorageEvent = event === "storage"
 
         const clientMaxAge = __NEXTAUTH.clientMaxAge
         const clientLastSync = parseInt(__NEXTAUTH._clientLastSync)
@@ -104,14 +114,19 @@ function _useSessionHook (session) {
             // tab or window that will come through as a triggeredByStorageEvent
             // event and will skip this logic)
             return
-          } else if (clientMaxAge > 0 && currentTime < (clientLastSync + clientMaxAge)) {
+          } else if (
+            clientMaxAge > 0 &&
+            currentTime < clientLastSync + clientMaxAge
+          ) {
             // If the session freshness is within clientMaxAge then don't request
             // it again on this call (avoids too many invokations).
             return
           }
         }
 
-        if (clientSession === undefined) { __NEXTAUTH._clientSession = null }
+        if (clientSession === undefined) {
+          __NEXTAUTH._clientSession = null
+        }
 
         // Update clientLastSync before making response to avoid repeated
         // invokations that would otherwise be triggered while we are still
@@ -122,7 +137,7 @@ function _useSessionHook (session) {
         // tell getSession not to trigger an event when it calls to avoid an
         // infinate loop.
         const newClientSessionData = await getSession({
-          triggerEvent: !triggeredByStorageEvent
+          triggerEvent: !triggeredByStorageEvent,
         })
 
         // Save session state internally, just so we can track that we've checked
@@ -132,7 +147,7 @@ function _useSessionHook (session) {
         setData(newClientSessionData)
         setLoading(false)
       } catch (error) {
-        logger.error('CLIENT_USE_SESSION_ERROR', error)
+        logger.error("CLIENT_USE_SESSION_ERROR", error)
         setLoading(false)
       }
     }
@@ -143,154 +158,112 @@ function _useSessionHook (session) {
   return [data, loading]
 }
 
-/**
- * Can be called client or server side to return a session asynchronously.
- * It calls `/api/auth/session` and returns a promise with a session object,
- * or null if no session exists.
- *
- * [Documentation](https://next-auth.js.org/getting-started/client#getsession)
- * @type {import(".").GetSession}
- */
-export async function getSession (ctx) {
-  const session = await _fetchData('session', ctx)
+export async function getSession(ctx) {
+  const session = await _fetchData("session", ctx)
   if (ctx?.triggerEvent ?? true) {
-    broadcast.post({ event: 'session', data: { trigger: 'getSession' } })
+    broadcast.post({ event: "session", data: { trigger: "getSession" } })
   }
   return session
 }
 
-/**
- * Returns the current Cross Site Request Forgery Token (CSRF Token)
- * required to make POST requests (e.g. for signing in and signing out).
- * You likely only need to use this if you are not using the built-in
- * `signIn()` and `signOut()` methods.
- *
- * [Documentation](https://next-auth.js.org/getting-started/client#getcsrftoken)
- * @type {import(".").GetCsrfToken}
- */
-async function getCsrfToken (ctx) {
-  return (await _fetchData('csrf', ctx))?.csrfToken
+export async function getCsrfToken(ctx) {
+  return (await _fetchData("csrf", ctx))?.csrfToken
 }
 
-/**
- * It calls `/api/auth/providers` and returns
- * a list of the currently configured authentication providers.
- * It can be useful if you are creating a dynamic custom sign in page.
- *
- * [Documentation](https://next-auth.js.org/getting-started/client#getproviders)
- * @type {import(".").GetProviders}
- */
-export async function getProviders () {
-  return _fetchData('providers')
+export async function getProviders() {
+  return await _fetchData("providers")
 }
 
-/**
- * Client-side method to initiate a signin flow
- * or send the user to the signin page listing all possible providers.
- * Automatically adds the CSRF token to the request.
- *
- * [Documentation](https://next-auth.js.org/getting-started/client#signin)
- * @type {import(".").SignIn}
- */
-export async function signIn (provider, options = {}, authorizationParams = {}) {
-  const {
-    callbackUrl = window.location,
-    redirect = true
-  } = options
+export async function signIn(provider, options = {}, authorizationParams = {}) {
+  const { callbackUrl = window.location.href, redirect = true } = options
 
   const baseUrl = _apiBaseUrl()
   const providers = await getProviders()
 
-  // Redirect to sign in page if no valid provider specified
-  if (!(provider in providers)) {
-    // If Provider not recognized, redirect to sign in page
-    window.location = `${baseUrl}/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`
-    return
+  if (!providers) {
+    return window.location.replace(`${baseUrl}/error`)
   }
-  const isCredentials = providers[provider].type === 'credentials'
-  const isEmail = providers[provider].type === 'email'
-  const canRedirectBeDisabled = isCredentials || isEmail
+
+  if (!(provider in providers)) {
+    return window.location.replace(
+      `${baseUrl}/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`
+    )
+  }
+
+  const isCredentials = providers[provider].type === "credentials"
+  const isEmail = providers[provider].type === "email"
+  const isSupportingReturn = isCredentials || isEmail
 
   const signInUrl = isCredentials
     ? `${baseUrl}/callback/${provider}`
     : `${baseUrl}/signin/${provider}`
 
-  // If is any other provider type, POST to provider URL with CSRF Token,
-  // callback URL and any other parameters supplied.
-  const fetchOptions = {
-    method: 'post',
+  const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
+
+  const res = await fetch(_signInUrl, {
+    method: "post",
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
+      "Content-Type": "application/x-www-form-urlencoded",
     },
     body: new URLSearchParams({
       ...options,
       csrfToken: await getCsrfToken(),
       callbackUrl,
-      json: true
-    })
-  }
-  const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
-  const res = await fetch(_signInUrl, fetchOptions)
-  const data = await res.json()
-  if (redirect || !canRedirectBeDisabled) {
-    const url = data.url ?? callbackUrl
-    window.location = url
-    // If url contains a hash, the browser does not reload the page. We reload manually
-    if (url.includes('#')) window.location.reload()
+      json: true,
+    }),
+  })
 
+  const data = await res.json()
+
+  if (redirect || !isSupportingReturn) {
+    const url = data.url ?? callbackUrl
+    window.location.replace(url)
+    // If url contains a hash, the browser does not reload the page. We reload manually
+    if (url.includes("#")) window.location.reload()
     return
   }
 
-  const error = new URL(data.url).searchParams.get('error')
+  const error = new URL(data.url).searchParams.get("error")
 
   if (res.ok) {
-    await __NEXTAUTH._getSession({ event: 'storage' })
+    await __NEXTAUTH._getSession({ event: "storage" })
   }
 
   return {
     error,
     status: res.status,
     ok: res.ok,
-    url: error ? null : data.url
+    url: error ? null : data.url,
   }
 }
 
-/**
- * Signs the user out, by removing the session cookie.
- * Automatically adds the CSRF token to the request.
- *
- * [Documentation](https://next-auth.js.org/getting-started/client#signout)
- * @type {import(".").SignOut}
- */
-export async function signOut (options = {}) {
-  const {
-    callbackUrl = window.location,
-    redirect = true
-  } = options
+export async function signOut(options = {}) {
+  const { callbackUrl = window.location.href, redirect = true } = options
   const baseUrl = _apiBaseUrl()
   const fetchOptions = {
-    method: 'post',
+    method: "post",
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
+      "Content-Type": "application/x-www-form-urlencoded",
     },
     body: new URLSearchParams({
       csrfToken: await getCsrfToken(),
       callbackUrl,
-      json: true
-    })
+      json: true,
+    }),
   }
   const res = await fetch(`${baseUrl}/signout`, fetchOptions)
   const data = await res.json()
-  broadcast.post({ event: 'session', data: { trigger: 'signout' } })
+  broadcast.post({ event: "session", data: { trigger: "signout" } })
+
   if (redirect) {
     const url = data.url ?? callbackUrl
-    window.location = url
+    window.location.replace(url)
     // If url contains a hash, the browser does not reload the page. We reload manually
-    if (url.includes('#')) window.location.reload()
+    if (url.includes("#")) window.location.reload()
     return
   }
 
-  await __NEXTAUTH._getSession({ event: 'storage' })
+  await __NEXTAUTH._getSession({ event: "storage" })
 
   return data
 }
@@ -298,14 +271,18 @@ export async function signOut (options = {}) {
 // Method to set options. The documented way is to use the provider, but this
 // method is being left in as an alternative, that will be helpful if/when we
 // expose a vanilla JavaScript version that doesn't depend on React.
-/** @type {import(".").SetOptions} */
-export function setOptions ({ baseUrl, basePath, clientMaxAge, keepAlive } = {}) {
+export function setOptions({
+  baseUrl,
+  basePath,
+  clientMaxAge,
+  keepAlive,
+} = {}) {
   if (baseUrl) __NEXTAUTH.baseUrl = baseUrl
   if (basePath) __NEXTAUTH.basePath = basePath
   if (clientMaxAge) __NEXTAUTH.clientMaxAge = clientMaxAge
   if (keepAlive) {
     __NEXTAUTH.keepAlive = keepAlive
-    if (typeof window === 'undefined') return
+    if (typeof window === "undefined") return
 
     // Clear existing timer (if there is one)
     if (__NEXTAUTH._clientSyncTimer !== null) {
@@ -316,20 +293,12 @@ export function setOptions ({ baseUrl, basePath, clientMaxAge, keepAlive } = {})
     __NEXTAUTH._clientSyncTimer = setTimeout(async () => {
       // Only invoke keepalive when a session exists
       if (!__NEXTAUTH._clientSession) return
-      await __NEXTAUTH._getSession({ event: 'timer' })
+      await __NEXTAUTH._getSession({ event: "timer" })
     }, keepAlive * 1000)
   }
 }
 
-/**
- * Provider to wrap the app in to make session data available globally.
- * Can also be used to throttle the number of requests to the endpoint
- * `/api/auth/session`.
- *
- * [Documentation](https://next-auth.js.org/getting-started/client#provider)
- * @type {import(".").Provider}
- */
-export function Provider ({ children, session, options }) {
+export function Provider({ children, session, options }) {
   setOptions(options)
   return createElement(
     SessionContext.Provider,
@@ -345,24 +314,25 @@ export function Provider ({ children, session, options }) {
  * work seemlessly in getInitialProps() on server side
  * pages *and* in _app.js.
  */
-async function _fetchData (path, { ctx, req = ctx?.req } = {}) {
+async function _fetchData(path, { ctx, req = ctx?.req } = {}) {
   try {
     const baseUrl = await _apiBaseUrl()
     const options = req ? { headers: { cookie: req.headers.cookie } } : {}
     const res = await fetch(`${baseUrl}/${path}`, options)
     const data = await res.json()
+    if (!res.ok) throw data
     return Object.keys(data).length > 0 ? data : null // Return null if data empty
   } catch (error) {
-    logger.error('CLIENT_FETCH_ERROR', path, error)
+    logger.error("CLIENT_FETCH_ERROR", path, error)
     return null
   }
 }
 
-function _apiBaseUrl () {
-  if (typeof window === 'undefined') {
+function _apiBaseUrl() {
+  if (typeof window === "undefined") {
     // NEXTAUTH_URL should always be set explicitly to support server side calls - log warning if not set
     if (!process.env.NEXTAUTH_URL) {
-      logger.warn('NEXTAUTH_URL', 'NEXTAUTH_URL environment variable not set')
+      logger.warn("NEXTAUTH_URL", "NEXTAUTH_URL environment variable not set")
     }
 
     // Return absolute path when called server side
@@ -373,7 +343,7 @@ function _apiBaseUrl () {
 }
 
 /** Returns the number of seconds elapsed since January 1, 1970 00:00:00 UTC. */
-function _now () {
+function _now() {
   return Math.floor(Date.now() / 1000)
 }
 
@@ -383,31 +353,46 @@ function _now () {
  *
  * https://caniuse.com/?search=broadcastchannel
  */
-function BroadcastChannel (name = 'nextauth.message') {
+function BroadcastChannel(name = "nextauth.message") {
   return {
     /**
      * Get notified by other tabs/windows.
-     * @param {(message: import(".").BroadcastMessage) => void} onReceive
+     * @param {(message: import("types/internals/client").BroadcastMessage) => void} onReceive
      */
-    receive (onReceive) {
-      if (typeof window === 'undefined') return
-      window.addEventListener('storage', async (event) => {
+    receive(onReceive) {
+      if (typeof window === "undefined") return
+      window.addEventListener("storage", async (event) => {
         if (event.key !== name) return
-        /** @type {import(".").BroadcastMessage} */
+        /** @type {import("types/internals/client").BroadcastMessage} */
         const message = JSON.parse(event.newValue)
-        if (message?.event !== 'session' || !message?.data) return
+        if (message?.event !== "session" || !message?.data) return
 
         onReceive(message)
       })
     },
     /** Notify other tabs/windows. */
-    post (message) {
-      if (typeof localStorage === 'undefined') return
-      localStorage.setItem(name,
+    post(message) {
+      if (typeof localStorage === "undefined") return
+      localStorage.setItem(
+        name,
         JSON.stringify({ ...message, timestamp: _now() })
       )
-    }
+    },
   }
+}
+
+// Some methods are exported with more than one name. This provides some
+// flexibility over how they can be invoked and backwards compatibility
+// with earlier releases. These should be removed in a newer release, as it only
+// creates problems for bundlers and adds confusion to users. TypeScript declarations
+// will provide sufficient help when importing
+export {
+  setOptions as options,
+  getSession as session,
+  getProviders as providers,
+  getCsrfToken as csrfToken,
+  signIn as signin,
+  signOut as signout,
 }
 
 export default {
@@ -429,5 +414,5 @@ export default {
   providers: getProviders,
   csrfToken: getCsrfToken,
   signin: signIn,
-  signout: signOut
+  signout: signOut,
 }

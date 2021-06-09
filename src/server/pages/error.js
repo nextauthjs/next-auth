@@ -7,7 +7,7 @@ import { h } from 'preact' // eslint-disable-line no-unused-vars
  *   baseUrl: string
  *   basePath: string
  *   error?: string
- *   res: import("..").NextAuthResponse
+ *   res: import("types/internals").NextAuthResponse
  * }} params
  */
 export default function error ({ baseUrl, basePath, error = 'default', res }) {
@@ -52,7 +52,7 @@ export default function error ({ baseUrl, basePath, error = 'default', res }) {
     }
   }
 
-  const { statusCode, heading, message, signin } = errors[error.toLowerCase()]
+  const { statusCode, heading, message, signin } = errors[error.toLowerCase()] ?? errors.default
 
   res.status(statusCode)
 

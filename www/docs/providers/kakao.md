@@ -11,6 +11,14 @@ https://developers.kakao.com/product/kakaoLogin
 
 https://developers.kakao.com/docs/latest/en/kakaologin/common
 
+## Options
+
+The **Kakao Provider** comes with a set of default options:
+
+- [Kakao Provider options](https://github.com/nextauthjs/next-auth/blob/main/src/providers/kakao.js)
+
+You can override any of the options to suit your own use case.
+
 ## Example
 
 ```js

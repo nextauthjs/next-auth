@@ -1,26 +1,46 @@
-name: Release
+name: Release Flow
+
 on:
   push:
     branches:
-      - 'main'
-      - 'next'
-      - '3.x'
+      - "main"
+      - "beta"
+      - "next"
+      - "3.x"
   pull_request:
+
 jobs:
-  release:
-    name: 'Release'
+  test:
+    name: Tests
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Init
         uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v1
+      - name: Setup Node
+        uses: actions/setup-node@v2
         with:
-          node-version: 14
-      - name: Install dependencies
+          node-version: "16"
+      - name: Dependencies
         uses: bahmutov/npm-install@v1
-      - run: npm run build
-      - run: npx semantic-release@17
+      - name: Run tests
+        run: npm test
+      - name: Build
+        run: npm run build
+  release:
+    name: Release
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Init
+        uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+      - name: Dependencies
+        uses: bahmutov/npm-install@v1
+      - name: Release
+        run: npx semantic-release@17
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
           NPM_TOKEN: ${{secrets.NPM_TOKEN}}

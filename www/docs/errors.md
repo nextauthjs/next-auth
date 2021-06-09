@@ -21,7 +21,7 @@ This error occurs when the `useSession()` React Hook has a problem fetching sess
 
 #### CLIENT_FETCH_ERROR
 
-If you see `CLIENT_FETCH_ERROR` make sure you have configured the `NEXTAUTH_URL` envionment variable.
+If you see `CLIENT_FETCH_ERROR` make sure you have configured the `NEXTAUTH_URL` environment variable.
 
 ---
 
@@ -63,9 +63,9 @@ The Email authentication provider can only be used if a database is configured.
 
 The Credentials Provider can only be used if JSON Web Tokens are used for sessions.
 
-JSON Web Tokens are used for Sessions by default if you have not specified a database. However if you are using a database, then Database Sessions are enabled by default and you need to [explictly enable JWT Sessions](https://next-auth.js.org/configuration/options#session) to use the Credentials Provider.
+JSON Web Tokens are used for Sessions by default if you have not specified a database. However if you are using a database, then Database Sessions are enabled by default and you need to [explicitly enable JWT Sessions](https://next-auth.js.org/configuration/options#session) to use the Credentials Provider.
 
-If you are using a Credentials Provider, NextAuth.js will not persist users or sessions in a database - user accounts used with the Credentials Provider must be created and manged outside of NextAuth.js.
+If you are using a Credentials Provider, NextAuth.js will not persist users or sessions in a database - user accounts used with the Credentials Provider must be created and managed outside of NextAuth.js.
 
 In _most cases_ it does not make sense to specify a database in NextAuth.js options and support a Credentials Provider.
 
@@ -82,6 +82,25 @@ Check if `cookies.pkceCodeVerifier` is configured correctly. The default `code_c
 ### Session Handling
 
 #### JWT_SESSION_ERROR
+
+https://next-auth.js.org/errors#jwt_session_error JWKKeySupport: the key does not support HS512 verify algorithm
+
+The algorithm used for generating your key isn't listed as supported. You can generate a HS512 key using
+
+```
+  jose newkey -s 512 -t oct -a HS512
+```
+
+If you are unable to use an HS512 key (for example to interoperate with other services) you can define what is supported using
+
+```
+  jwt: {
+    signingKey: {"kty":"oct","kid":"--","alg":"HS256","k":"--"},
+    verificationOptions: {
+      algorithms: ["HS256"]
+    }
+  }
+```
 
 #### SESSION_ERROR
 

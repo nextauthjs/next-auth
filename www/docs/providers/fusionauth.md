@@ -7,6 +7,14 @@ title: FusionAuth
 
 https://fusionauth.io/docs/v1/tech/oauth/
 
+## Options
+
+The **FusionAuth Provider** comes with a set of default options:
+
+- [FusionAuth Provider options](https://github.com/nextauthjs/next-auth/blob/main/src/providers/fusionauth.js)
+
+You can override any of the options to suit your own use case.
+
 ## Example
 
 ```js
@@ -14,8 +22,8 @@ import Providers from `next-auth/providers`
 ...
 providers: [
   Providers.FusionAuth({
-    id: "fusionauth", 
-    name: "FusionAuth", 
+    id: "fusionauth",
+    name: "FusionAuth",
     domain:  process.env.FUSIONAUTH_DOMAIN,
     clientId: process.env.FUSIONAUTH_CLIENT_ID,
     clientSecret: process.env.FUSIONAUTH_SECRET,
@@ -40,7 +48,8 @@ For more information, follow the [FusionAuth 5-minute setup guide](https://fusio
 :::
 
 In the OAuth settings for your application, configure the following.
-* Redirect URL
+
+- Redirect URL
   - https://localhost:3000/api/auth/callback/fusionauth
-* Enabled grants
-  - Make sure *Authorization Code* is enabled.
+- Enabled grants
+  - Make sure _Authorization Code_ is enabled.
