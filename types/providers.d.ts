@@ -57,6 +57,7 @@ export type OAuthProviderType =
   | "Apple"
   | "Atlassian"
   | "Auth0"
+  | "AzureAD"
   | "AzureADB2C"
   | "Basecamp"
   | "BattleNet"
