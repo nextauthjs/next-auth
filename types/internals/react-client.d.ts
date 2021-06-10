@@ -16,9 +16,9 @@ export interface NextAuthConfig {
   baseUrlServer: string
   basePathServer: string
   /** 0 means disabled (don't send); 60 means send every 60 seconds */
-  keepAlive: number
+  pollInterval: number
   /** 0 means disabled (only use cache); 60 means sync if last checked > 60 seconds ago */
-  clientMaxAge: number
+  staleTime: number
   /** Used for timestamp since last sycned (in seconds) */
   _clientLastSync: number
   /** Stores timer for poll interval */

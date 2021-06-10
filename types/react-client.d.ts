@@ -34,12 +34,6 @@ export function useSession(): [Session | null, boolean]
  */
 export function getSession(options?: GetSessionOptions): Promise<Session | null>
 
-/**
- * Alias for `getSession`
- * @docs https://next-auth.js.org/getting-started/client#getsession
- */
-export const session: typeof getSession
-
 /*******************
  * CSRF Token types
  ******************/
@@ -53,12 +47,6 @@ export const session: typeof getSession
  * [Documentation](https://next-auth.js.org/getting-started/client#getcsrftoken)
  */
 export function getCsrfToken(ctxOrReq?: CtxOrReq): Promise<string | null>
-
-/**
- * Alias for `getCsrfToken`
- * @docs https://next-auth.js.org/getting-started/client#getcsrftoken
- */
-export const csrfToken: typeof getCsrfToken
 
 /******************
  * Providers types
@@ -83,12 +71,6 @@ export function getProviders(): Promise<Record<
   string,
   ClientSafeProvider
 > | null>
-
-/**
- * Alias for `getProviders`
- * @docs https://next-auth.js.org/getting-started/client#getproviders
- */
-export const providers: typeof getProviders
 
 /****************
  * Sign in types
@@ -137,12 +119,6 @@ export function signIn<P extends SignInProvider = undefined>(
   P extends RedirectableProvider ? SignInResponse | undefined : undefined
 >
 
-/**
- * Alias for `signIn`
- * @docs https://next-auth.js.org/getting-started/client#signin
- */
-export const signin: typeof signIn
-
 /****************
  * Sign out types
  ****************/
@@ -169,11 +145,6 @@ export function signOut<R extends boolean = true>(
   params?: SignOutParams<R>
 ): Promise<R extends true ? undefined : SignOutResponse>
 
-/**
- * @docs https://next-auth.js.org/getting-started/client#signout
- * Alias for `signOut`
- */
-export const signout: typeof signOut
 /************************
  * SessionProvider types
  ***********************/
@@ -201,26 +172,7 @@ export interface SessionProviderOptions {
  *
  * [Documentation](https://next-auth.js.org/getting-started/client#provider)
  */
-export type SessionProvider = React.FC<{
-  children: React.ReactNode
+export const SessionProvider: React.FC<{
   session?: Session
   options?: SessionProviderOptions
 }>
-
-/**
- * Provider to wrap the app in to make session data available globally.
- * Can also be used to throttle the number of requests to the endpoint
- * `/api/auth/session`.
- *
- * [Documentation](https://next-auth.js.org/getting-started/client#provider)
- */
-export const Provider: SessionProvider
-
-/** @docs: https://next-auth.js.org/getting-started/client#options */
-export function setOptions(options: SessionProviderOptions): void
-
-/**
- * Alias for `setOptions`
- * @docs: https://next-auth.js.org/getting-started/client#options
- */
-export const options: typeof setOptions

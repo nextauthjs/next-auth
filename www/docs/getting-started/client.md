@@ -34,7 +34,7 @@ You can use the [session callback](/configuration/callbacks#session-callback) to
 
 The `useSession()` React Hook in the NextAuth.js client is the easiest way to check if someone is signed in.
 
-It works best when the [`<Provider>`](#provider) is added to `pages/_app.js`.
+It works best when the [`<SessionProvider>`](#provider) is added to `pages/_app.js`.
 
 #### Example
 
@@ -306,23 +306,24 @@ where `data.url` is the validated url you can redirect the user to without any f
 
 ## Provider
 
-Using the supplied React `<Provider>` allows instances of `useSession()` to share the session object across components, by using [React Context](https://reactjs.org/docs/context.html) under the hood.
-
-This improves performance, reduces network calls and avoids page flicker when rendering. It is highly recommended and can be easily added to all pages in Next.js apps by using `pages/_app.js`.
+Using the supplied React `<SessionProvider>` allows instances of `useSession()` to share the session object across components, by using [React Context](https://reactjs.org/docs/context.html) under the hood. It also takes care of keeping the session updated and synced between tabs/windows.
 
 ```jsx title="pages/_app.js"
-import { Provider } from "next-auth/react"
+import { SessionProvider } from "next-auth/react"
 
-export default function App({ Component, pageProps }) {
+export default function App({
+  Component, 
+  pageProps: { session, ...pageProps }
+}) {
   return (
-    <Provider session={pageProps.session}>
+    <SessionProvider session={session}>
       <Component {...pageProps} />
-    </Provider>
+    </SessionProvider>
   )
 }
 ```
 
-If you pass the `session` page prop to the `<Provider>` – as in the example above – you can avoid checking the session twice on pages that support both server and client side rendering.
+If you pass the `session` page prop to the `<SessionProvider>` – as in the example above – you can avoid checking the session twice on pages that support both server and client side rendering.
 
 This only works on pages where you provide the correct `pageProps`, however. This is normally done in `getInitialProps` or `getServerSideProps` like so:
 
@@ -351,18 +352,22 @@ If you have session expiry times of 30 days (the default) or more then you proba
 However, if you need to customize the session behavior and/or are using short session expiry times, you can pass options to the provider to customize the behavior of the `useSession()` hook.
 
 ```jsx title="pages/_app.js"
-import { Provider } from "next-auth/react"
+import { SessionProvider } from "next-auth/react"
 
-export default function App ({ Component, pageProps }) {
+
+export default function App({
+  Component, 
+  pageProps: { session, ...pageProps }
+}) {
   return (
-    <Provider session={pageProps.session}
+    <SessionProvider session={session}
       options={{
-        staleTime: 60     // Re-fetch session if cache is older than 60 seconds
-        pollInterval:    5 * 60 // Re-fetch session every 5 minutes
+        staleTime: 60 // Re-fetch session if cache is older than 60 seconds
+        pollInterval: 5 * 60 // Re-fetch session every 5 minutes
       }}
       >
       <Component {...pageProps} />
-    </Provider>
+    </SessionProvider>
   )
 }
 ```
@@ -418,9 +423,12 @@ AdminDashboard.auth = true
 ```
 
 ```jsx title="pages/_app.jsx"
-export default function App({ Component, pageProps }) {
+export default function App({
+  Component, 
+  pageProps: { session, ...pageProps }
+}) {
   return (
-    <SessionProvider session={pageProps.session}>
+    <SessionProvider session={session}>
       {Component.auth ? (
         <Auth>
           <Component {...pageProps} />

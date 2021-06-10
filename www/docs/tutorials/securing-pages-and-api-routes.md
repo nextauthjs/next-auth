@@ -69,13 +69,16 @@ export async function getServerSideProps(context) {
 This example assumes you have configured `_app.js` to pass the `session` prop through so that it's immediately available on page load to `useSession`.
 
 ```js title="pages/_app.js"
-import { Provider } from "next-auth/react"
+import { SessionProvider } from "next-auth/react"
 
-export default ({ Component, pageProps }) => {
+export default function App({
+  Component, 
+  pageProps: { session, ...pageProps }
+}) {
   return (
-    <Provider session={pageProps.session} >
+    <SessionProvider session={session} >
       <Component {...pageProps} />
-    </Provider>
+    </SessionProvider>
   )
 }
 ```
