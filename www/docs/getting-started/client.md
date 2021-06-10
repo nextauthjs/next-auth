@@ -22,7 +22,7 @@ The NextAuth.js client library makes it easy to interact with sessions from Reac
 :::tip
 The session data returned to the client does not contain sensitive information such as the Session Token or OAuth tokens. It contains a minimal payload that includes enough data needed to display information on a page about the user who is signed in for presentation purposes (e.g name, email, image).
 
-You can use the [session callback](/configuration/callbacks#session) to customize the session object returned to the client if you need to return additional data in the session object.
+You can use the [session callback](/configuration/callbacks#session-callback) to customize the session object returned to the client if you need to return additional data in the session object.
 :::
 
 ---
@@ -206,7 +206,7 @@ e.g.
 - `signIn('google', { callbackUrl: 'http://localhost:3000/foo' })`
 - `signIn('email', { email, callbackUrl: 'http://localhost:3000/foo' })`
 
-The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect). By default it requires the URL to be an absolute URL at the same hostname, or else it will redirect to the homepage. You can define your own redirect callback to allow other URLs, including supporting relative URLs.
+The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect-callback). By default it requires the URL to be an absolute URL at the same hostname, or else it will redirect to the homepage. You can define your own [redirect callback](/configuration/callbacks#redirect-callback) to allow other URLs, including supporting relative URLs.
 
 #### Using the redirect: false option
 
@@ -290,7 +290,7 @@ As with the `signIn()` function, you can specify a `callbackUrl` parameter by pa
 
 e.g. `signOut({ callbackUrl: 'http://localhost:3000/foo' })`
 
-The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect). By default this means it must be an absolute URL at the same hostname (or else it will default to the homepage); you can define your own custom redirect callback to allow other URLs, including supporting relative URLs.
+The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect-callback). By default this means it must be an absolute URL at the same hostname (or else it will default to the homepage); you can define your own custom [redirect callback](/configuration/callbacks#redirect-callback) to allow other URLs, including supporting relative URLs.
 
 #### Using the redirect: false option
 

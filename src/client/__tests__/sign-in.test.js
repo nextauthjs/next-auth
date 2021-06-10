@@ -7,7 +7,7 @@ import {
   mockCredentialsResponse,
   mockEmailResponse,
   mockGithubResponse,
-} from "./mocks"
+} from "./helpers/mocks"
 import { signIn } from ".."
 import { rest } from "msw"
 
@@ -36,7 +36,7 @@ beforeAll(() => {
 })
 
 beforeEach(() => {
-  jest.resetAllMocks()
+  jest.clearAllMocks()
   server.resetHandlers()
 })
 
@@ -284,7 +284,7 @@ function SignInFlow({
       <p data-testid="signin-result">
         {response ? JSON.stringify(response) : "no response"}
       </p>
-      <button onClick={() => handleSignIn()}>Sign in</button>
+      <button onClick={handleSignIn}>Sign in</button>
     </>
   )
 }

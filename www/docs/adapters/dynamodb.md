@@ -21,7 +21,8 @@ npm install next-auth @next-auth/dynamodb-adapter@canary
 
 2. Add this adapter to your `pages/api/auth/[...nextauth].js` next-auth configuration object.
 
-You need to pass `aws-sdk` to the adapter in addition to the table name.
+You need to pass `DocumentClient` instance from `aws-sdk` to the adapter.
+The default table name is `next-auth`, but you can customise that by passing `{ tableName: 'your-table-name' }` as the second parameter in the adapter.
 
 ```javascript title="pages/api/auth/[...nextauth].js"
 import AWS from "aws-sdk";
@@ -48,10 +49,9 @@ export default NextAuth({
     }),
     // ...add more providers here
   ],
-  adapter: DynamoDBAdapter({
-    AWS,
-    tableName: "next-auth-test",
-  }),
+  adapter: DynamoDBAdapter(
+    new AWS.DynamoDB.DocumentClient()
+  ),
   ...
 });
 ```

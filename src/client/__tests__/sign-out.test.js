@@ -1,10 +1,10 @@
 import { useState } from "react"
 import userEvent from "@testing-library/user-event"
 import { render, screen, waitFor } from "@testing-library/react"
-import { server, mockSignOutResponse } from "./mocks"
+import { server, mockSignOutResponse } from "./helpers/mocks"
 import { signOut } from ".."
 import { rest } from "msw"
-import { getBroadcastEvents } from "./utils"
+import { getBroadcastEvents } from "./helpers/utils"
 
 const { location } = window
 
@@ -24,7 +24,7 @@ beforeEach(() => {
 })
 
 afterEach(() => {
-  jest.resetAllMocks()
+  jest.clearAllMocks()
   server.resetHandlers()
 })
 
@@ -113,7 +113,7 @@ test("will broadcast the signout event to other tabs", async () => {
 function SignOutFlow({ callbackUrl, redirect = true }) {
   const [response, setResponse] = useState(null)
 
-  async function setSignOutRes() {
+  async function handleSignOut() {
     const result = await signOut({ callbackUrl, redirect })
     setResponse(result)
   }
@@ -123,7 +123,7 @@ function SignOutFlow({ callbackUrl, redirect = true }) {
       <p data-testid="signout-result">
         {response ? JSON.stringify(response) : "no response"}
       </p>
-      <button onClick={() => setSignOutRes()}>Sign out</button>
+      <button onClick={handleSignOut}>Sign out</button>
     </>
   )
 }
