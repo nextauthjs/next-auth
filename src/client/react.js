@@ -8,7 +8,8 @@
 //
 // We use HTTP POST requests with CSRF Tokens to protect against CSRF attacks.
 
-import { useState, useEffect, useContext, createContext, useMemo } from "react"
+// eslint-disable-next-line no-use-before-define
+import * as React from "react"
 import _logger, { proxyLogger } from "../lib/logger"
 import parseUrl from "../lib/parse-url"
 
@@ -18,7 +19,7 @@ import parseUrl from "../lib/parse-url"
 //    relative URLs are valid in that context and so defaults to empty.
 // 2. When invoked server side the value is picked up from an environment
 //    variable and defaults to 'http://localhost:3000'.
-/** @type {import("types/internals/client").NextAuthConfig} */
+/** @type {import("types/internals/react").NextAuthConfig} */
 const __NEXTAUTH = {
   baseUrl: parseUrl(process.env.NEXTAUTH_URL || process.env.VERCEL_URL).baseUrl,
   basePath: parseUrl(process.env.NEXTAUTH_URL).basePath,
@@ -30,13 +31,8 @@ const __NEXTAUTH = {
   basePathServer: parseUrl(
     process.env.NEXTAUTH_URL_INTERNAL || process.env.NEXTAUTH_URL
   ).basePath,
-  pollInterval: 0,
-  staleTime: 0,
-  // Properties starting with _ are used for tracking internal app state
-  _clientLastSync: 0,
-  _clientSyncTimer: null,
-  _eventListenersAdded: false,
-  _clientSession: undefined,
+  _lastSync: 0,
+  _session: undefined,
   _getSession: () => {},
 }
 
@@ -44,11 +40,11 @@ const broadcast = BroadcastChannel()
 
 const logger = proxyLogger(_logger, __NEXTAUTH.basePath)
 
-/** @type {import("types/internals/react-client").SessionContext} */
-const SessionContext = createContext()
+/** @type {import("types/internals/react").SessionContext} */
+const SessionContext = React.createContext()
 
 export function useSession() {
-  return useContext(SessionContext)
+  return React.useContext(SessionContext)
 }
 
 export async function getSession(ctx) {
@@ -162,58 +158,65 @@ export async function signOut(options = {}) {
   return data
 }
 
-function setOptions(options = {}) {
-  const { baseUrl, basePath, staleTime, pollInterval } = options
+/** @param {import("types/react-client").SessionProviderProps} props */
+export function SessionProvider(props) {
+  const { children, baseUrl, basePath, staleTime = 0 } = props
+
   if (baseUrl) __NEXTAUTH.baseUrl = baseUrl
   if (basePath) __NEXTAUTH.basePath = basePath
-  if (staleTime) __NEXTAUTH.staleTime = staleTime
-  if (pollInterval) __NEXTAUTH.pollInterval = pollInterval
-}
 
-export function SessionProvider({ children, session, options }) {
-  useEffect(() => {
-    setOptions(options)
-  }, [options])
+  /**
+   * If session was `null`, there was an attempt to fetch it,
+   * but it failed, but we still treat it as a valid initial value.
+   */
+  const hasInitialSession = props.session !== undefined
 
-  const [data, setData] = useState(session)
-  const [loading, setLoading] = useState(!session)
+  /** If session was passed, initialize as already synced */
+  __NEXTAUTH._lastSync = hasInitialSession ? _now() : 0
 
-  useEffect(() => {
+  const [session, setSession] = React.useState(() => {
+    if (hasInitialSession) __NEXTAUTH._session = props.session
+    return props.session
+  })
+
+  /** If session was passed, initialize as not loading */
+  const [loading, setLoading] = React.useState(hasInitialSession)
+
+  React.useEffect(() => {
     __NEXTAUTH._getSession = async ({ event } = {}) => {
       try {
         const storageEvent = event === "storage"
         // We should always update if we don't have a client session yet
         // or if there are events from other tabs/windows
-        if (storageEvent || __NEXTAUTH._clientSession === undefined) {
-          __NEXTAUTH._clientLastSync = _now()
-          __NEXTAUTH._clientSession = await getSession({
+        if (storageEvent || __NEXTAUTH._session === undefined) {
+          __NEXTAUTH._lastSync = _now()
+          __NEXTAUTH._session = await getSession({
             broadcast: !storageEvent,
           })
-          setData(__NEXTAUTH._clientSession)
+          setSession(__NEXTAUTH._session)
           return
         }
 
-        const staleTime = __NEXTAUTH.staleTime
         if (
           // If there is no time defined for when a session should be considered
           // stale, then it's okay to use the value we have until an event is
-          // triggered which updates it.
+          // triggered which updates it
           (staleTime === 0 && !event) ||
           // If the client doesn't have a session then we don't need to call
           // the server to check if it does (if they have signed in via another
           // tab or window that will come through as a "stroage" event
-          // event and will skip this logic)
-          (staleTime > 0 && __NEXTAUTH._clientSession === null) ||
-          // If the session freshness is within staleTime then don't request
-          // it again on this call (avoids too many invokations).
-          (staleTime > 0 && _now() < __NEXTAUTH.clientLastSync + staleTime)
+          // event anyway)
+          (staleTime > 0 && __NEXTAUTH._session === null) ||
+          // Bail out early if the client session is not stale yet
+          (staleTime > 0 && _now() < __NEXTAUTH._lastSync + staleTime)
         ) {
           return
         }
 
-        __NEXTAUTH._clientLastSync = _now()
-        __NEXTAUTH._clientSession = await getSession()
-        setData(__NEXTAUTH._clientSession)
+        // An event or session staleness occurred, update the client session.
+        __NEXTAUTH._lastSync = _now()
+        __NEXTAUTH._session = await getSession()
+        setSession(__NEXTAUTH._session)
       } catch (error) {
         logger.error("CLIENT_SESSION_ERROR", error)
       } finally {
@@ -222,9 +225,9 @@ export function SessionProvider({ children, session, options }) {
     }
 
     __NEXTAUTH._getSession()
-  }, [])
+  }, [staleTime])
 
-  useEffect(() => {
+  React.useEffect(() => {
     // Listen for storage events and update session if event fired from
     // another window (but suppress firing another event to avoid a loop)
     // Fetch new session data but tell it to not to fire another event to
@@ -234,10 +237,14 @@ export function SessionProvider({ children, session, options }) {
     // on how the session object is being used in the client; it is
     // more robust to have each window/tab fetch it's own copy of the
     // session object rather than share it across instances.
-    const unsubscribeBroadcast = broadcast.receive(
+    const unsubscribe = broadcast.receive(
       async () => await __NEXTAUTH._getSession({ event: "storage" })
     )
 
+    return () => unsubscribe()
+  }, [])
+
+  React.useEffect(() => {
     // Set up visibility change
     // Listen for document visibility change events and
     // if visibility of the document changes, re-fetch the session.
@@ -245,26 +252,24 @@ export function SessionProvider({ children, session, options }) {
       !document.hidden && __NEXTAUTH._getSession({ event: "visibilitychange" })
     }
     document.addEventListener("visibilitychange", visibilityHandler, false)
-
-    // Set up polling
-    if (__NEXTAUTH.pollInterval) {
-      __NEXTAUTH._clientSyncTimer = setTimeout(async () => {
-        if (__NEXTAUTH._clientSession) {
-          await __NEXTAUTH._getSession({ event: "timer" })
-        }
-      }, __NEXTAUTH.pollInterval * 1000)
-    }
-
-    return () => {
-      unsubscribeBroadcast()
+    return () =>
       document.removeEventListener("visibilitychange", visibilityHandler, false)
-      if (__NEXTAUTH.pollInterval) {
-        clearTimeout(__NEXTAUTH._clientSyncTimer)
-      }
-    }
   }, [])
 
-  const value = useMemo(() => [data, loading], [data, loading])
+  React.useEffect(() => {
+    const pollInterval = props.pollInterval ?? 0
+    // Set up polling
+    if (pollInterval) {
+      const pollIntervalTimer = setTimeout(async () => {
+        if (__NEXTAUTH._session) {
+          await __NEXTAUTH._getSession({ event: "timer" })
+        }
+      }, pollInterval * 1000)
+      return () => clearTimeout(pollIntervalTimer)
+    }
+  }, [props.pollInterval])
+
+  const value = React.useMemo(() => [session, loading], [session, loading])
 
   return (
     <SessionContext.Provider value={value}>{children}</SessionContext.Provider>
@@ -321,12 +326,12 @@ function BroadcastChannel(name = "nextauth.message") {
   return {
     /**
      * Get notified by other tabs/windows.
-     * @param {(message: import("types/internals/client").BroadcastMessage) => void} onReceive
+     * @param {(message: import("types/internals/react").BroadcastMessage) => void} onReceive
      */
     receive(onReceive) {
       const handler = (event) => {
         if (event.key !== name) return
-        /** @type {import("types/internals/client").BroadcastMessage} */
+        /** @type {import("types/internals/react").BroadcastMessage} */
         const message = JSON.parse(event.newValue)
         if (message?.event !== "session" || !message?.data) return
 

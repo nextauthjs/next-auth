@@ -41,7 +41,7 @@ test("fetches the session once and re-uses it for different consumers", async ()
 function ProviderFlow({ options = {} }) {
   return (
     <>
-      <SessionProvider options={options}>
+      <SessionProvider {...options}>
         <SessionConsumer />
         <SessionConsumer testId="2" />
       </SessionProvider>

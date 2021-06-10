@@ -150,7 +150,8 @@ export function signOut<R extends boolean = true>(
  ***********************/
 
 /** @docs: https://next-auth.js.org/getting-started/client#options */
-export interface SessionProviderOptions {
+export interface SessionProviderProps {
+  session?: Session
   baseUrl?: string
   basePath?: string
   /**
@@ -172,7 +173,4 @@ export interface SessionProviderOptions {
  *
  * [Documentation](https://next-auth.js.org/getting-started/client#provider)
  */
-export const SessionProvider: React.FC<{
-  session?: Session
-  options?: SessionProviderOptions
-}>
+export const SessionProvider: React.FC<SessionProviderProps>

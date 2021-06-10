@@ -54,11 +54,9 @@ client.signOut({ callbackUrl: "https://foo.com/callback", redirect: false })
 client.SessionProvider({
   children: null,
   session: clientSession,
-  options: {
-    baseUrl: "https://foo.com",
-    basePath: "/",
-    staleTime: 1234,
-  },
+  baseUrl: "https://foo.com",
+  basePath: "/",
+  staleTime: 1234,
 })
 
 // $ExpectType ReactElement<any, any> | null
@@ -70,7 +68,6 @@ client.SessionProvider({
 // $ExpectType ReactElement<any, any> | null
 client.SessionProvider({
   children: null,
-  options: {},
 })
 
 // $ExpectType ReactElement<any, any> | null
@@ -79,10 +76,8 @@ client.SessionProvider({
   session: {
     expires: "",
   },
-  options: {
-    baseUrl: "https://foo.com",
-    basePath: "/",
-    staleTime: 1234,
-    pollInterval: 4321,
-  },
+  baseUrl: "https://foo.com",
+  basePath: "/",
+  staleTime: 1234,
+  pollInterval: 4321,
 })

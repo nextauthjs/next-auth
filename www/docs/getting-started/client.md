@@ -360,12 +360,13 @@ export default function App({
   pageProps: { session, ...pageProps }
 }) {
   return (
-    <SessionProvider session={session}
-      options={{
-        staleTime: 60 // Re-fetch session if cache is older than 60 seconds
-        pollInterval: 5 * 60 // Re-fetch session every 5 minutes
-      }}
-      >
+    <SessionProvider
+      session={session}
+      // Re-fetch session if cache is older than 60 seconds
+      staleTime={60}
+      // Re-fetch session every 5 minutes
+      pollInterval={5* 60}
+    >
       <Component {...pageProps} />
     </SessionProvider>
   )
