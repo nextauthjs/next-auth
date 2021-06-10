@@ -14,7 +14,7 @@ module.exports = {
       test: ["../src/client/**"],
       presets: [
         ["@babel/preset-env", { targets: { ie: "11" } }],
-        "@babel/preset-react",
+        ["@babel/preset-react", { runtime: "automatic" }],
       ],
     },
     {
@@ -23,14 +23,7 @@ module.exports = {
     },
     {
       test: ["../src/**/*.test.js"],
-      presets: [
-        [
-          "@babel/preset-react",
-          {
-            runtime: "automatic",
-          },
-        ],
-      ],
+      presets: [["@babel/preset-react", { runtime: "automatic" }]],
     },
   ],
 }

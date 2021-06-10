@@ -1,7 +1,7 @@
 import { rest } from "msw"
 import { render, screen, waitFor } from "@testing-library/react"
 import { server, mockSession } from "./helpers/mocks"
-import { Provider, useSession } from "../react"
+import { SessionProvider, useSession } from "../react"
 
 beforeAll(() => {
   server.listen()
@@ -41,10 +41,10 @@ test("fetches the session once and re-uses it for different consumers", async ()
 function ProviderFlow({ options = {} }) {
   return (
     <>
-      <Provider options={options}>
+      <SessionProvider options={options}>
         <SessionConsumer />
         <SessionConsumer testId="2" />
-      </Provider>
+      </SessionProvider>
     </>
   )
 }
