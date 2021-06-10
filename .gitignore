@@ -61,3 +61,6 @@ app/yarn.lock
 
 # Prisma migrations
 /prisma/migrations
+
+# Tests
+/coverage

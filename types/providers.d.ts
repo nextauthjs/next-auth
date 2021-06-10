@@ -63,6 +63,7 @@ export type OAuthProviderType =
   | "Box"
   | "Bungie"
   | "Cognito"
+  | "Coinbase"
   | "Discord"
   | "Dropbox"
   | "EVEOnline"
