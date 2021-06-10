@@ -324,7 +324,6 @@ function BroadcastChannel(name = "nextauth.message") {
      * @param {(message: import("types/internals/client").BroadcastMessage) => void} onReceive
      */
     receive(onReceive) {
-      if (typeof window === "undefined") return
       const handler = (event) => {
         if (event.key !== name) return
         /** @type {import("types/internals/client").BroadcastMessage} */
@@ -338,7 +337,6 @@ function BroadcastChannel(name = "nextauth.message") {
     },
     /** Notify other tabs/windows. */
     post(message) {
-      if (typeof window === "undefined") return
       localStorage.setItem(
         name,
         JSON.stringify({ ...message, timestamp: _now() })
