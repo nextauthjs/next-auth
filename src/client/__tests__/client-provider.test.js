@@ -1,9 +1,7 @@
-import { useState } from "react"
 import { rest } from "msw"
 import { render, screen, waitFor } from "@testing-library/react"
 import { server, mockSession } from "./helpers/mocks"
-import { Provider, useSession } from ".."
-import userEvent from "@testing-library/user-event"
+import { Provider, useSession } from "../react"
 
 beforeAll(() => {
   server.listen()
