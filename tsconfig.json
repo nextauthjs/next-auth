@@ -3,31 +3,15 @@
     "strictNullChecks": true,
     "baseUrl": ".",
     "paths": {
-      "types": [
-        "./types"
-      ],
-      "next-auth": [
-        "./src/server"
-      ],
-      "next-auth/adapters": [
-        "./src/adapters"
-      ],
-      "next-auth/client": [
-        "./src/client"
-      ],
-      "next-auth/jwt": [
-        "./src/lib/jwt"
-      ],
-      "next-auth/providers": [
-        "./src/providers"
-      ]
+      "types": ["./types"],
+      "next-auth": ["./src/server"],
+      "next-auth/adapters": ["./src/adapters"],
+      "next-auth/client": ["./src/client"],
+      "next-auth/jwt": ["./src/lib/jwt"],
+      "next-auth/providers": ["./src/providers"]
     },
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -44,9 +28,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "**/*.js"
+    "**/*.js",
+    ".eslintrc.js"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

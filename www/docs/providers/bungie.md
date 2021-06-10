@@ -11,6 +11,14 @@ https://github.com/Bungie-net/api/wiki/OAuth-Documentation
 
 https://www.bungie.net/en/Application
 
+## Options
+
+The **Bungie Provider** comes with a set of default options:
+
+- [Bungie Provider options](https://github.com/nextauthjs/next-auth/blob/main/src/providers/bungie.js)
+
+You can override any of the options to suit your own use case.
+
 ## Example
 
 ```js
@@ -28,8 +36,6 @@ providers: [
 ...
 ```
 
-## Instructions
-
 ### Configuration
 
 :::tip
@@ -42,20 +48,20 @@ Bungie doesn't allow you to use localhost as the website URL, instead you need t
 
 Navigate to https://www.bungie.net/en/Application and fill in the required details:
 
-* Application name
-* Application Status
-* Website
-* OAuth Client Type
+- Application name
+- Application Status
+- Website
+- OAuth Client Type
   - Confidential
-* Redirect URL
+- Redirect URL
   - https://localhost:3000/api/auth/callback/bungie
-* Scope
+- Scope
   - `Access items like your Bungie.net notifications, memberships, and recent Bungie.Net forum activity.`
-* Origin Header
+- Origin Header
 
 The following guide may be helpful:
 
-* [How to setup localhost with HTTPS with a Next.js app](https://medium.com/@anMagpie/secure-your-local-development-server-with-https-next-js-81ac6b8b3d68)
+- [How to setup localhost with HTTPS with a Next.js app](https://medium.com/@anMagpie/secure-your-local-development-server-with-https-next-js-81ac6b8b3d68)
 
 ### Example server
 
@@ -74,7 +80,6 @@ Add-Content -Path C:\Windows\System32\drivers\etc\hosts -Value "127.0.0.1`tdev.e
 ```
 
 #### Create certificate
-
 
 Creating a certificate for localhost is easy with openssl. Just put the following command in the terminal. The output will be two files: localhost.key and localhost.crt.
 
@@ -103,32 +108,30 @@ Add environment variable `OPENSSL_CONF=C:/Program Files/Git/mingw64/ssl/openssl.
 
 Create directory `certificates` and place `localhost.key` and `localhost.crt`
 
-
 You can create a `server.js` in the root of your project and run it with `node server.js` to test Sign in with Bungie integration locally:
 
-
 ```js
-const { createServer } = require('https')
-const { parse } = require('url')
-const next = require('next')
-const fs = require('fs')
+const { createServer } = require("https")
+const { parse } = require("url")
+const next = require("next")
+const fs = require("fs")
 
-const dev = process.env.NODE_ENV !== 'production'
+const dev = process.env.NODE_ENV !== "production"
 const app = next({ dev })
 const handle = app.getRequestHandler()
 
 const httpsOptions = {
-  key: fs.readFileSync('./certificates/localhost.key'),
-  cert: fs.readFileSync('./certificates/localhost.crt')
+  key: fs.readFileSync("./certificates/localhost.key"),
+  cert: fs.readFileSync("./certificates/localhost.crt"),
 }
 
 app.prepare().then(() => {
   createServer(httpsOptions, (req, res) => {
     const parsedUrl = parse(req.url, true)
     handle(req, res, parsedUrl)
-  }).listen(3000, err => {
+  }).listen(3000, (err) => {
     if (err) throw err
-    console.log('> Ready on https://localhost:3000')
+    console.log("> Ready on https://localhost:3000")
   })
 })
 ```

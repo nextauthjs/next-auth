@@ -11,6 +11,14 @@ https://developer.wordpress.com/docs/oauth2/
 
 https://developer.wordpress.com/apps/
 
+## Options
+
+The **Wordpress Provider** comes with a set of default options:
+
+- [Wordpress Provider options](https://github.com/nextauthjs/next-auth/blob/main/src/providers/wordpress.js)
+
+You can override any of the options to suit your own use case.
+
 ## Example
 
 ```js

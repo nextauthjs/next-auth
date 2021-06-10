@@ -7,6 +7,14 @@ title: Azure Active Directory B2C
 
 <!-- https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow -->
 
+## Options
+
+The **Azure Active Directory Provider** comes with a set of default options:
+
+- [Azure Active Directory Provider options](https://github.com/nextauthjs/next-auth/blob/main/src/providers/azure-ad-b2c.js)
+
+You can override any of the options to suit your own use case.
+
 ## Configuration (Basic)
 
 Basic configuration sets up Azure AD B2C to return an ID Token. This should be done as a prerequisite prior to running through the Advanced configuration.
@@ -37,7 +45,7 @@ Note: For the step "User attributes and token claims" you might minimally:
 
 ## Example
 
-In `.env.local` create the follwing entries:
+In `.env.local` create the following entries:
 
 ```
 AZURE_AD_B2C_TENANT_NAME=<copy the B2C tenant name here from Step 1>

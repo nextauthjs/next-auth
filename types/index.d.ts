@@ -1,4 +1,4 @@
-// Minimum TypeScript Version: 3.5
+// Minimum TypeScript Version: 3.6
 
 /// <reference types="node" />
 
@@ -29,14 +29,6 @@ export interface NextAuthOptions {
    * [Documentation](https://next-auth.js.org/configuration/options#providers) | [Providers documentation](https://next-auth.js.org/configuration/providers)
    */
   providers: AppProviders
-  /**
-   * A database connection string or configuration object.
-   * * **Default value**: `null`
-   * * **Required**: *No (unless using email provider)*
-   *
-   * [Documentation](https://next-auth.js.org/configuration/options#database) | [Databases](https://next-auth.js.org/configuration/databases)
-   */
-  database?: string | Record<string, any> | ConnectionOptions
   /**
    * A random string used to hash tokens, sign cookies and generate cryptographic keys.
    * If not specified is uses a hash of all configuration options, including Client ID / Secrets for entropy.
@@ -111,20 +103,13 @@ export interface NextAuthOptions {
    *
    * [Documentation](https://next-auth.js.org/configuration/options#events) | [Events documentation](https://next-auth.js.org/configuration/events)
    */
-  events?: EventsOptions
+  events?: Partial<JWTEventCallbacks | SessionEventCallbacks>
   /**
-   * By default NextAuth.js uses a database adapter that uses TypeORM and supports MySQL, MariaDB, Postgres and MongoDB and SQLite databases.
-   * An alternative adapter that uses Prisma, which currently supports MySQL, MariaDB and Postgres, is also included.
-   * You can use the adapter option to use the Prisma adapter - or pass in your own adapter
-   * if you want to use a database that is not supported by one of the built-in adapters.
-   * * **Default value**: TypeORM adapter
+   * You can use the adapter option to pass in your database adapter.
+   *
    * * **Required**: *No*
    *
-   * - ⚠ If the `adapter` option is specified it overrides the `database` option, only specify one or the other.
-   * - ⚠ Adapters are being migrated to their own home in a Community maintained repository.
-   *
    * [Documentation](https://next-auth.js.org/configuration/options#adapter) |
-   * [Default adapter](https://next-auth.js.org/schemas/adapters#typeorm-adapter) |
    * [Community adapters](https://github.com/nextauthjs/adapters)
    */
   adapter?: ReturnType<Adapter>
@@ -180,7 +165,7 @@ export interface NextAuthOptions {
    *
    * [Documentation](https://next-auth.js.org/configuration/options#theme) | [Pages documentation]("https://next-auth.js.org/configuration/pages")
    */
-  theme?: "auto" | "dark" | "light"
+  theme?: Theme
   /**
    * When set to `true` then all cookies set by NextAuth.js will only be accessible from HTTPS URLs.
    * This option defaults to `false` on URLs that start with `http://` (e.g. http://localhost:3000) for developer convenience.
@@ -214,6 +199,14 @@ export interface NextAuthOptions {
    */
   cookies?: CookiesOptions
 }
+
+/**
+ * Change the theme of the built-in pages.
+ *
+ * [Documentation](https://next-auth.js.org/configuration/options#theme) |
+ * [Pages](https://next-auth.js.org/configuration/pages)
+ */
+export type Theme = "auto" | "dark" | "light"
 
 /**
  * Override any of the methods, and the rest will use the default logger.
@@ -342,20 +335,61 @@ export interface CookiesOptions {
 }
 
 /** [Documentation](https://next-auth.js.org/configuration/events) */
-export type EventType =
-  | "signIn"
-  | "signOut"
-  | "createUser"
-  | "updateUser"
-  | "linkAccount"
-  | "session"
-  | "error"
+export type EventCallback<MessageType = unknown> = (
+  message: MessageType
+) => Promise<void>
 
-/** [Documentation](https://next-auth.js.org/configuration/events) */
-export type EventCallback = (message: any) => Promise<void>
+/**
+ * If using a `credentials` type auth, the user is the raw response from your
+ * credential provider.
+ * For other providers, you'll get the User object from your adapter, the account,
+ * and an indicator if the user was new to your Adapter.
+ */
+export interface SignInEventMessage {
+  user: User
+  account: Account
+  isNewUser?: boolean
+}
 
-/** [Documentation](https://next-auth.js.org/configuration/events) */
-export type EventsOptions = Partial<Record<EventType, EventCallback>>
+export interface LinkAccountEventMessage {
+  user: User
+  providerAccount: Record<string, unknown>
+}
+
+/**
+ * The various event callbacks you can register for from next-auth
+ */
+export interface CommonEventCallbacks {
+  signIn: EventCallback<SignInEventMessage>
+  createUser: EventCallback<User>
+  updateUser: EventCallback<User>
+  linkAccount: EventCallback<LinkAccountEventMessage>
+  error: EventCallback
+}
+/**
+ * The event callbacks will take this form if you are using JWTs:
+ * signOut will receive the JWT and session will receive the session and JWT.
+ */
+export interface JWTEventCallbacks extends CommonEventCallbacks {
+  signOut: EventCallback<JWT>
+  session: EventCallback<{
+    session: Session
+    jwt: JWT
+  }>
+}
+/**
+ * The event callbacks will take this form if you are using Sessions
+ * and not using JWTs:
+ * signOut will receive the underlying DB adapter's session object, and session
+ * will receive the NextAuth client session with extra data.
+ */
+export interface SessionEventCallbacks extends CommonEventCallbacks {
+  signOut: EventCallback<Session | null>
+  session: EventCallback<{ session: Session }>
+}
+export type EventCallbacks = JWTEventCallbacks | SessionEventCallbacks
+
+export type EventType = keyof EventCallbacks
 
 /** [Documentation](https://next-auth.js.org/configuration/pages) */
 export interface PagesOptions {
