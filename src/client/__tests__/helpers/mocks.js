@@ -3,6 +3,7 @@ import { rest } from "msw"
 import { randomBytes } from "crypto"
 
 export const mockSession = {
+  ok: true,
   user: {
     image: null,
     name: "John",
@@ -12,6 +13,7 @@ export const mockSession = {
 }
 
 export const mockProviders = {
+  ok: true,
   github: {
     id: "github",
     name: "Github",
@@ -34,6 +36,7 @@ export const mockProviders = {
 }
 
 export const mockCSRFToken = {
+  ok: true,
   csrfToken: randomBytes(32).toString("hex"),
 }
 
