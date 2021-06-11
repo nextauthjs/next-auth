@@ -63,7 +63,7 @@ By default, the built-in pages will follow the system theme, utilizing the [`pre
 In order to get the available authentication providers and the URLs to use for them, you can make a request to the API endpoint `/api/auth/providers`:
 
 ```jsx title="pages/auth/signin.js"
-import { getProviders, signIn } from "next-auth/client"
+import { getProviders, signIn } from "next-auth/react"
 
 export default function SignIn({ providers }) {
   return (
@@ -102,7 +102,7 @@ SignIn.getInitialProps = async () => {
 If you create a custom sign in form for email sign in, you will need to submit both fields for the **email** address and **csrfToken** from **/api/auth/csrf** in a POST request to **/api/auth/signin/email**.
 
 ```jsx title="pages/auth/email-signin.js"
-import { getCsrfToken } from "next-auth/client"
+import { getCsrfToken } from "next-auth/react"
 
 export default function SignIn({ csrfToken }) {
   return (
@@ -146,7 +146,7 @@ signIn("email", { email: "jsmith@example.com" })
 If you create a sign in form for credentials based authentication, you will need to pass a **csrfToken** from **/api/auth/csrf** in a POST request to **/api/auth/callback/credentials**.
 
 ```jsx title="pages/auth/credentials-signin.js"
-import { getCsrfToken } from "next-auth/client"
+import { getCsrfToken } from "next-auth/react"
 
 export default function SignIn({ csrfToken }) {
   return (

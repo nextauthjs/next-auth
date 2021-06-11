@@ -18,7 +18,7 @@ The methods `getSession()` and `getToken()` both return an `object` if a session
 If data on a page is fetched using calls to secure API routes - i.e. routes which use `getSession()` or `getToken()` to access the session - you can use the `useSession` React Hook to secure pages.
 
 ```js title="pages/client-side-example.js"
-import { useSession, getSession } from 'next-auth/client'
+import { useSession, getSession } from "next-auth/react"
 
 export default function Page() {
   const [ session, loading ] = useSession()
@@ -41,7 +41,7 @@ export default function Page() {
 You can protect server side rendered pages using the `getSession()` method.
 
 ```js title="pages/server-side-example.js"
-import { useSession, getSession } from 'next-auth/client'
+import { useSession, getSession } from "next-auth/react"
 
 export default function Page() {
   const [ session, loading ] = useSession()
@@ -69,13 +69,16 @@ export async function getServerSideProps(context) {
 This example assumes you have configured `_app.js` to pass the `session` prop through so that it's immediately available on page load to `useSession`.
 
 ```js title="pages/_app.js"
-import { Provider } from 'next-auth/client'
+import { SessionProvider } from "next-auth/react"
 
-export default ({ Component, pageProps }) => {
+export default function App({
+  Component, 
+  pageProps: { session, ...pageProps }
+}) {
   return (
-    <Provider session={pageProps.session} >
+    <SessionProvider session={session} >
       <Component {...pageProps} />
-    </Provider>
+    </SessionProvider>
   )
 }
 ```
@@ -88,7 +91,7 @@ export default ({ Component, pageProps }) => {
 You can protect API routes using the `getSession()` method.
 
 ```js title="pages/api/get-session-example.js"
-import { getSession } from 'next-auth/client'
+import { getSession } from "next-auth/react"
 
 export default async (req, res) => {
   const session = await getSession({ req })

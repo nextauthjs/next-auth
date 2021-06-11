@@ -8,7 +8,7 @@ If you want to use the `useSession()` hook in your class components you can do s
 ## Higher Order Component
 
 ```js
-import { useSession } from "next-auth/client"
+import { useSession } from "next-auth/react"
 
 const withSession = Component => props => {
   const [session, loading] = useSession()
@@ -39,7 +39,7 @@ const ClassComponentWithSession = withSession(ClassComponent)
 ## Render Prop
 
 ```js
-import { useSession } from "next-auth/client"
+import { useSession } from "next-auth/react"
 
 const UseSession = ({ children }) => {
   const [session, loading] = useSession()
