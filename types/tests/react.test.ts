@@ -79,5 +79,5 @@ client.SessionProvider({
   baseUrl: "https://foo.com",
   basePath: "/",
   staleTime: 1234,
-  pollInterval: 4321,
+  refetchInterval: 4321,
 })

@@ -23,7 +23,7 @@ export default function App({
       //
       // Note: If a session has expired when keep alive is triggered, all open
       // windows / tabs will be updated to reflect the user is signed out.
-      pollInterval={0}
+      refetchInterval={0}
       session={session}
     >
       <Component {...pageProps} />

@@ -365,7 +365,7 @@ export default function App({
       // Re-fetch session if cache is older than 60 seconds
       staleTime={60}
       // Re-fetch session every 5 minutes
-      pollInterval={5* 60}
+      refetchInterval={5 * 60}
     >
       <Component {...pageProps} />
     </SessionProvider>
@@ -378,7 +378,7 @@ export default function App({
 
 Every tab/window maintains its own copy of the local session state; the session is not stored in shared storage like localStorage or sessionStorage. Any update in one tab/window triggers a message to other tabs/windows to update their own session state.
 
-Using low values for `staleTime` or `pollInterval` will increase network traffic and load on authenticated clients and may impact hosting costs and performance.
+Using low values for `staleTime` or `refetchInterval` will increase network traffic and load on authenticated clients and may impact hosting costs and performance.
 :::
 
 #### Stale time
@@ -393,15 +393,15 @@ Unless you have a short session expiry time (e.g. < 24 hours) you probably don't
 
 The value for `staleTime` should always be lower than the value of the session `maxAge` [session option](/configuration/options#session).
 
-#### Poll interval
+#### Refetch interval
 
-The `pollInterval` option can be used to contact the server to avoid a session expiring.
+The `refetchInterval` option can be used to contact the server to avoid a session expiring.
 
-When `pollInterval` is set to `0` (the default) there will be no session polling.
+When `refetchInterval` is set to `0` (the default) there will be no session polling.
 
 If set to any value other than zero, it specifies in seconds how often the client should contact the server to update the session state. If the session state has expired when it is triggered, all open tabs/windows will be updated to reflect this.
 
-The value for `pollInterval` should always be lower than the value of the session `maxAge` [session option](/configuration/options#session).
+The value for `refetchInterval` should always be lower than the value of the session `maxAge` [session option](/configuration/options#session).
 
 :::note
 See [**the Next.js documentation**](https://nextjs.org/docs/advanced-features/custom-app) for more information on **\_app.js** in Next.js applications.

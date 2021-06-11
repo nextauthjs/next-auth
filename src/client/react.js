@@ -257,17 +257,17 @@ export function SessionProvider(props) {
   }, [])
 
   React.useEffect(() => {
-    const pollInterval = props.pollInterval ?? 0
+    const { refetchInterval } = props
     // Set up polling
-    if (pollInterval) {
-      const pollIntervalTimer = setTimeout(async () => {
+    if (refetchInterval) {
+      const refetchIntervalTimer = setInterval(async () => {
         if (__NEXTAUTH._session) {
-          await __NEXTAUTH._getSession({ event: "timer" })
+          await __NEXTAUTH._getSession({ event: "poll" })
         }
-      }, pollInterval * 1000)
-      return () => clearTimeout(pollIntervalTimer)
+      }, refetchInterval * 1000)
+      return () => clearInterval(refetchIntervalTimer)
     }
-  }, [props.pollInterval])
+  }, [props.refetchInterval])
 
   const value = React.useMemo(() => [session, loading], [session, loading])
 
