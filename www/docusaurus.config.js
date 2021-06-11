@@ -140,7 +140,7 @@ module.exports = {
           showLastUpdateTime: true,
           versions: {
             current: {
-              label: "4.x",
+              label: "v4.0.0-next",
             },
             stable: {
               label: pkg.latest,
