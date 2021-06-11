@@ -2,7 +2,7 @@ const fetch = require("node-fetch")
 const fs = require("fs")
 const path = require("path")
 
-;(getLatestStableVersion = () => {
+;(() => {
   return fetch("https://api.github.com/repos/nextauthjs/next-auth/releases", {
     headers: {
       Accept: "application/vnd.github.v3+json",
