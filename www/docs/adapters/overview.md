@@ -15,6 +15,7 @@ There you can find the following adapters:
 - [`fauna`](./fauna)
 - [`dynamodb`](./dynamodb)
 - [`firebase`](./firebase)
+- [`pouchdb`](./pouchdb)
 
 ## Custom Adapter
 

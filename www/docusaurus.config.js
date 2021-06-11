@@ -42,6 +42,21 @@ module.exports = {
           position: "left",
         },
         {
+          type: "docsVersionDropdown",
+          position: "right",
+          dropdownActiveClassDisabled: true,
+          dropdownItemsAfter: [
+            // {
+            //   to: "https://v1.docusaurus.io",
+            //   label: "1.x.x",
+            // },
+            // {
+            //   to: "/versions",
+            //   label: "All versions",
+            // },
+          ],
+        },
+        {
           href: "https://www.npmjs.com/package/next-auth",
           label: "npm",
           position: "right",
@@ -127,6 +142,17 @@ module.exports = {
           routeBasePath: "/",
           sidebarPath: require.resolve("./sidebars.js"),
           editUrl: "https://github.com/nextauthjs/next-auth/edit/main/www",
+          lastVersion: "stable",
+          showLastUpdateAuthor: true,
+          showLastUpdateTime: true,
+          versions: {
+            current: {
+              label: "4.x",
+            },
+            stable: {
+              label: "stable",
+            },
+          },
         },
         theme: {
           customCss: require.resolve("./src/css/index.css"),
