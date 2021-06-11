@@ -34,7 +34,7 @@ You can use the [session callback](/configuration/callbacks#session-callback) to
 
 The `useSession()` React Hook in the NextAuth.js client is the easiest way to check if someone is signed in.
 
-It works best when the [`<SessionProvider>`](#provider) is added to `pages/_app.js`.
+It works best when the [`<SessionProvider>`](#sessionprovider) is added to `pages/_app.js`.
 
 #### Example
 
@@ -304,9 +304,9 @@ where `data.url` is the validated url you can redirect the user to without any f
 
 ---
 
-## Provider
+## SessionProvider
 
-Using the supplied React `<SessionProvider>` allows instances of `useSession()` to share the session object across components, by using [React Context](https://reactjs.org/docs/context.html) under the hood. It also takes care of keeping the session updated and synced between tabs/windows.
+Using the supplied `<SessionProvider>` allows instances of `useSession()` to share the session object across components, by using [React Context](https://reactjs.org/docs/context.html) under the hood. It also takes care of keeping the session updated and synced between tabs/windows.
 
 ```jsx title="pages/_app.js"
 import { SessionProvider } from "next-auth/react"
@@ -477,6 +477,6 @@ More information can be found in the following [Github Issue](https://github.com
 
 There is also an alternative client-side API library based upon [`react-query`](https://www.npmjs.com/package/react-query) available under [`nextauthjs/react-query`](https://github.com/nextauthjs/react-query).
 
-If you use `react-query` in your project already, you can leverage it with NextAuth.js to handle the client-side session management for you as well. This replaces NextAuth.js's native `useSession` and `Provider` from `next-auth/react`.
+If you use `react-query` in your project already, you can leverage it with NextAuth.js to handle the client-side session management for you as well. This replaces NextAuth.js's native `useSession` and `SessionProvider` from `next-auth/react`.
 
 See repository [`README`](https://github.com/nextauthjs/react-query) for more details.

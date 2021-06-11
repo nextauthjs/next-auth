@@ -171,6 +171,6 @@ export interface SessionProviderProps {
  * Can also be used to throttle the number of requests to the endpoint
  * `/api/auth/session`.
  *
- * [Documentation](https://next-auth.js.org/getting-started/client#provider)
+ * [Documentation](https://next-auth.js.org/getting-started/client#sessionprovider)
  */
 export const SessionProvider: React.FC<SessionProviderProps>

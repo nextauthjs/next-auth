@@ -413,11 +413,11 @@ export interface DefaultSession extends Record<string, unknown> {
 
 /**
  * Returned by `useSession`, `getSession`, returned by the `session` callback
- * and also the shape received as a prop on the `Provider` React Context
+ * and also the shape received as a prop on the `SessionProvider` React Context
  *
  * [`useSession`](https://next-auth.js.org/getting-started/client#usesession) |
  * [`getSession`](https://next-auth.js.org/getting-started/client#getsession) |
- * [`Provider`](https://next-auth.js.org/getting-started/client#provider) |
+ * [`SessionProvider`](https://next-auth.js.org/getting-started/client#sessionprovider) |
  * [`session` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback)
  */
 export interface Session extends Record<string, unknown>, DefaultSession {}
