@@ -1,5 +1,4 @@
 import logger from '../lib/logger'
-import nodemailer from "nodemailer"
 
 export default function Email(options) {
   return {
@@ -27,6 +26,7 @@ async function sendVerificationRequest ({ identifier: email, url, baseUrl, provi
   // Strip protocol from URL and use domain as site name
   const site = baseUrl.replace(/^https?:\/\//, '')
   try {
+    const nodemailer = require('nodemailer')
     await nodemailer
       .createTransport(server)
       .sendMail({
