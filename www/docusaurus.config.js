@@ -1,3 +1,5 @@
+const pkg = require("./scripts/latest.json")
+
 module.exports = {
   title: "NextAuth.js",
   tagline: "Authentication for Next.js",
@@ -45,16 +47,7 @@ module.exports = {
           type: "docsVersionDropdown",
           position: "right",
           dropdownActiveClassDisabled: true,
-          dropdownItemsAfter: [
-            // {
-            //   to: "https://v1.docusaurus.io",
-            //   label: "1.x.x",
-            // },
-            // {
-            //   to: "/versions",
-            //   label: "All versions",
-            // },
-          ],
+          dropdownItemsAfter: [],
         },
         {
           href: "https://www.npmjs.com/package/next-auth",
@@ -150,7 +143,7 @@ module.exports = {
               label: "4.x",
             },
             stable: {
-              label: "stable",
+              label: pkg.latest,
             },
           },
         },

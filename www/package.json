@@ -2,8 +2,8 @@
   "name": "next-auth-docs",
   "version": "0.2.0",
   "scripts": {
-    "start": "npm run generate-providers && docusaurus start",
-    "build": "npm run generate-providers && docusaurus build",
+    "start": "npm run generate-providers && npm run fetch-latest-version && docusaurus start",
+    "build": "npm run generate-providers && npm run fetch-latest-version && docusaurus build",
     "docusaurus": "docusaurus",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
@@ -11,13 +11,15 @@
     "clear": "docusaurus clear",
     "lint": "standard",
     "lint:fix": "standard --fix",
-    "generate-providers": "node ./scripts/generate-providers.js"
+    "generate-providers": "node ./scripts/generate-providers.js",
+    "fetch-latest-version": "node ./scripts/fetch-latest.js"
   },
   "dependencies": {
     "@docusaurus/core": "2.0.0-beta.0",
     "@docusaurus/preset-classic": "2.0.0-beta.0",
     "classnames": "^2.3.1",
     "lodash.times": "^4.3.2",
+    "node-fetch": "^2.6.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-marquee-slider": "^1.1.2",
