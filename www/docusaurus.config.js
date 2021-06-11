@@ -47,7 +47,12 @@ module.exports = {
           type: "docsVersionDropdown",
           position: "right",
           dropdownActiveClassDisabled: true,
-          dropdownItemsAfter: [],
+          dropdownItemsAfter: [
+            {
+              to: "https://github.com/nextauthjs/next-auth/releases",
+              label: "All Releases",
+            },
+          ],
         },
         {
           href: "https://www.npmjs.com/package/next-auth",
@@ -66,6 +71,7 @@ module.exports = {
     //   content: 'NextAuth.js now has automatic 🤖 releases 🎉! Check out the <a href="https://next-auth-git-canary.nextauthjs.vercel.app">Canary documentation 📚</a>',
     //   backgroundColor: '#2DB2F9',
     //   textColor: '#fff'
+    //   isCloseable: true,
     // },
     footer: {
       links: [
@@ -126,6 +132,13 @@ module.exports = {
       ],
       copyright: "NextAuth.js &copy; Iain Collins 2021",
     },
+    colorMode: {
+      respectPrefersColorScheme: true,
+      switchConfig: {
+        darkIcon: "🛰️",
+        lightIcon: "💡",
+      },
+    },
   },
   presets: [
     [
@@ -140,10 +153,10 @@ module.exports = {
           showLastUpdateTime: true,
           versions: {
             current: {
-              label: "v4.0.0-next",
+              label: pkg.prerelease || "v4.0.0-next",
             },
             stable: {
-              label: pkg.latest,
+              label: pkg.latest || "v3.x",
             },
           },
         },

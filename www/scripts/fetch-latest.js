@@ -15,9 +15,20 @@ const path = require("path")
         (rel) => !rel.draft && !rel.prerelease
       )
       const latestStableName = stableReleases[0].name
+      const unstableReleases = allReleases.filter(
+        (rel) => !rel.draft && rel.prerelease
+      )
+      const latestUnstableName = unstableReleases[0].name
       fs.writeFileSync(
         path.join(process.cwd(), "scripts", "latest.json"),
-        JSON.stringify({ latest: latestStableName }, null, 2)
+        JSON.stringify(
+          {
+            latest: latestStableName,
+            prerelease: latestUnstableName,
+          },
+          null,
+          2
+        )
       )
     })
 })()
