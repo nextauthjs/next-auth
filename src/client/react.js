@@ -342,6 +342,7 @@ function BroadcastChannel(name = "nextauth.message") {
     },
     /** Notify other tabs/windows. */
     post(message) {
+      if (typeof window === "undefined") return
       localStorage.setItem(
         name,
         JSON.stringify({ ...message, timestamp: _now() })
