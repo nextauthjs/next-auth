@@ -29,15 +29,15 @@ The Credentials provider is specified like other providers, except that you need
 
 1. A `user` object, which indicates the credentials are valid.
 
-  If you return an object it will be persisted to the JSON Web Token and the user will be signed in, unless a custom `signIn()` callback is configured that subsequently rejects it.
+If you return an object it will be persisted to the JSON Web Token and the user will be signed in, unless a custom `signIn()` callback is configured that subsequently rejects it.
 
 2. Either `false` or `null`, which indicates failure.
 
-  If you return `false` or `null` then an error will be displayed advising the user to check their details.
+If you return `false` or `null` then an error will be displayed advising the user to check their details.
 
 3. You can throw an Error or a URL (a string).
 
-  If you throw an Error, the user will be sent to the error page with the error message as a query parameter. If throw a URL (a string), the user will be redirected to the URL.
+If you throw an Error, the user will be sent to the error page with the error message as a query parameter. If throw a URL (a string), the user will be redirected to the URL.
 
 The Credentials provider's `authorize()` method also provides the request object as the second parameter (see example below).
 
@@ -88,34 +88,43 @@ You can also use them in conjunction with other provider options.
 As with all providers, the order you specify them is the order they are displayed on the sign in page.
 
 ```js
-  providers: [
-    Providers.Credentials({
-      id: 'domain-login',
-      name: "Domain Account",
-      async authorize(credentials, req) {
-        const user = { /* add function to get user */ }
-        return user
+providers: [
+  Providers.Credentials({
+    id: "domain-login",
+    name: "Domain Account",
+    async authorize(credentials, req) {
+      const user = {
+        /* add function to get user */
+      }
+      return user
+    },
+    credentials: {
+      domain: {
+        label: "Domain",
+        type: "text ",
+        placeholder: "CORPNET",
+        value: "CORPNET",
       },
-      credentials: {
-        domain: { label: "Domain", type: "text ", placeholder: "CORPNET", value: "CORPNET" },
-        username: { label: "Username", type: "text ", placeholder: "jsmith" },
-        password: {  label: "Password", type: "password" }
-     }
-    }),
-    Providers.Credentials({
-      id: 'intranet-credentials',
-      name: "Two Factor Auth",
-      async authorize(credentials, req) {
-        const user = { /* add function to get user */ } 
-        return user
-      },
-      credentials: {
-        email: { label: "Username", type: "text ", placeholder: "jsmith" },
-        "2fa-key": {  label: "2FA Key" }
-     },
-    }),
-    /* ... additional providers ... /*/
-  ]
+      username: { label: "Username", type: "text ", placeholder: "jsmith" },
+      password: { label: "Password", type: "password" },
+    },
+  }),
+  Providers.Credentials({
+    id: "intranet-credentials",
+    name: "Two Factor Auth",
+    async authorize(credentials, req) {
+      const user = {
+        /* add function to get user */
+      }
+      return user
+    },
+    credentials: {
+      email: { label: "Username", type: "text ", placeholder: "jsmith" },
+      "2fa-key": { label: "2FA Key" },
+    },
+  }),
+  /* ... additional providers ... /*/
+]
 ```
 
 ### Example UI
@@ -126,7 +135,7 @@ You can also [use a custom sign in page](/configuration/pages#credentials-sign-i
 
 <Image src="/img/signin-complex.png"/>
 
-export const Image = ({ children, src, alt = '' }) => ( 
+export const Image = ({ children, src, alt = '' }) => (
   <div
     style={{
       padding: '0.2rem',
@@ -136,4 +145,4 @@ export const Image = ({ children, src, alt = '' }) => (
     }}>
     <img alt={alt} src={src} />
   </div>
- )
+)

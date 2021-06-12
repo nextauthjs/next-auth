@@ -6,9 +6,9 @@
       "types": ["./types"],
       "next-auth": ["./src/server"],
       "next-auth/adapters": ["./src/adapters"],
-      "next-auth/client": ["./src/client"],
+      "next-auth/react": ["./src/client/react"],
       "next-auth/jwt": ["./src/lib/jwt"],
-      "next-auth/providers": ["./src/providers"]
+      "next-auth/providers": ["./src/providers"],
     },
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
