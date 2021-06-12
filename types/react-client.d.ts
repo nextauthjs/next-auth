@@ -13,8 +13,8 @@ export interface CtxOrReq {
  **************/
 
 export type GetSessionOptions = CtxOrReq & {
-  event?: "storage" | "timer" | "hidden" | string
-  triggerEvent?: boolean
+  /** Wheter to broadcast the session to other tabs/windows */
+  broadcast?: boolean
 }
 
 /**
@@ -164,6 +164,25 @@ export interface SessionProviderProps {
    * If set to `0` (default), the session is not polled.
    */
   refetchInterval?: number
+  /**
+   * If a user leaves your application's tab/window and returns to stale data,
+   * the `SessionProvider` automatically requests
+   * a fresh session in the background.
+   * Disable this by setting this to `false`.
+   */
+  refetchOnWindowFocus?: boolean
+  /**
+   * If your application is opened in multiple tabs/windows (of the same browser instance),
+   * every tab/window will maintain its own copy of the local session state;
+   * the session is not stored in shared storage like `localStorage` or `sessionStorage`.
+   * Any update in one tab/window triggers a message to other tabs/windows
+   * to request an update of their own session state.
+   * Set this to `"signOut"` to only broadcast the `signOut` event
+   * when calling the `signOut` method.
+   * Disable all broadcasting by setting this to `false`.
+   * (Default value is `true`, meaning all events are broadcasted.)
+   */
+  broadcast?: "signOut" | boolean
 }
 
 /**
