@@ -1,5 +1,3 @@
-const pkg = require("./scripts/latest.json")
-
 module.exports = {
   title: "NextAuth.js",
   tagline: "Authentication for Next.js",
