@@ -153,10 +153,10 @@ module.exports = {
           showLastUpdateTime: true,
           versions: {
             current: {
-              label: pkg.prerelease || "v4.0.0-next",
+              label: "v4",
             },
             v3: {
-              label: pkg.latest || "v3.x",
+              label: "v3",
             },
           },
         },

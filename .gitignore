@@ -40,7 +40,6 @@ src/providers/index.js
 /providers.js
 /errors.js
 /errors.d.ts
-/www/scripts/latest.json
 /react.js
 /react.d.ts
 
