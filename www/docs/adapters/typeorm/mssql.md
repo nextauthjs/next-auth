@@ -6,7 +6,7 @@ title: Microsoft SQL Server
 Schema for a Microsoft SQL Server (mssql) database.
 
 :::note
-When using a  Microsoft SQL Server database with the default adapter (TypeORM) all properties of type `timestamp` are transformed to `datetime`.
+When using a Microsoft SQL Server database with the default adapter (TypeORM) all properties of type `timestamp` are transformed to `datetime`.
 
 This transform is also applied to any properties of type `timestamp` when using custom models.
 :::

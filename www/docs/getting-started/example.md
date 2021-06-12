@@ -30,9 +30,6 @@ export default NextAuth({
     }),
     // ...add more providers here
   ],
-
-  // A database is optional, but required to persist accounts in a database
-  database: process.env.DATABASE_URL,
 })
 ```
 
@@ -82,9 +79,12 @@ To allow session state to be shared between pages - which improves performance, 
 ```jsx title="pages/_app.js"
 import { SessionProvider } from "next-auth/react"
 
-export default function App({ Component, pageProps }) {
+export default function App({
+  Component, 
+  pageProps: { session, ...pageProps }
+}) {
   return (
-    <SessionProvider session={pageProps.session}>
+    <SessionProvider session={session}>
       <Component {...pageProps} />
     </SessionProvider>
   )

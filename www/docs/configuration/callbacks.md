@@ -44,7 +44,7 @@ callbacks: {
   /**
    * @param  {object} user     User object
    * @param  {object} account  Provider account
-   * @param  {object} profile  Provider profile 
+   * @param  {object} profile  Provider profile
    * @return {boolean|string}  Return `true` to allow sign in
    *                           Return `false` to deny access
    *                           Return `string` to redirect to (eg.: "/unauthorized")
@@ -64,13 +64,13 @@ callbacks: {
 ...
 ```
 
-* When using the **Email Provider** the `signIn()` callback is triggered both when the user makes a **Verification Request** (before they are sent email with a link that will allow them to sign in) and again *after* they activate the link in the sign in email.
+- When using the **Email Provider** the `signIn()` callback is triggered both when the user makes a **Verification Request** (before they are sent email with a link that will allow them to sign in) and again _after_ they activate the link in the sign in email.
 
-  Email accounts do not have profiles in the same way OAuth accounts do. On the first call during email sign in the `profile` object will include a property `verificationRequest: true` to indicate it is being triggered in the verification request flow. When the callback is invoked *after* a user has clicked on a sign in link, this property will not be present.
-  
+  Email accounts do not have profiles in the same way OAuth accounts do. On the first call during email sign in the `profile` object will include a property `verificationRequest: true` to indicate it is being triggered in the verification request flow. When the callback is invoked _after_ a user has clicked on a sign in link, this property will not be present.
+
   You can check for the `verificationRequest` property to avoid sending emails to addresses or domains on a blocklist (or to only explicitly generate them for email address in an allow list).
 
-* When using the **Credentials Provider** the `user` object is the response returned from the `authorization` callback and the `profile` object is the raw body of the `HTTP POST` submission.
+- When using the **Credentials Provider** the `user` object is the response returned from the `authorization` callback and the `profile` object is the raw body of the `HTTP POST` submission.
 
 :::note
 When using NextAuth.js with a database, the User object will be either a user object from the database (including the User ID) if the user has signed in before or a simpler prototype user object (i.e. name, email, image) for users who have not signed in before.
@@ -107,22 +107,21 @@ callbacks: {
 ...
 ```
 
-
 :::note
 The redirect callback may be invoked more than once in the same flow.
 :::
 
 ## JWT callback
 
-This JSON Web Token callback is called whenever a JSON Web Token is created (i.e. at sign 
+This JSON Web Token callback is called whenever a JSON Web Token is created (i.e. at sign
 in) or updated (i.e whenever a session is accessed in the client).
 
 e.g. `/api/auth/signin`, `getSession()`, `useSession()`, `/api/auth/session`
 
-* As with database session expiry times, token expiry time is extended whenever a session is active.
-* The arguments *user*, *account*, *profile* and *isNewUser* are only passed the first time this callback is called on a new session, after the user signs in.
+- As with database session expiry times, token expiry time is extended whenever a session is active.
+- The arguments _user_, _account_, _profile_ and _isNewUser_ are only passed the first time this callback is called on a new session, after the user signs in.
 
-The contents *user*, *account*, *profile* and *isNewUser* will vary depending on the provider and on if you are using a database or not. If you want to pass data such as User ID, OAuth Access Token, etc. to the browser, you can persist it in the token and use the `session()` callback to return it.
+The contents _user_, _account_, _profile_ and _isNewUser_ will vary depending on the provider and on if you are using a database or not. If you want to pass data such as User ID, OAuth Access Token, etc. to the browser, you can persist it in the token and use the `session()` callback to return it.
 
 ```js title="pages/api/auth/[...nextauth].js"
 ...
@@ -167,8 +166,8 @@ The session callback is called whenever a session is checked. By default, only a
 
 e.g. `getSession()`, `useSession()`, `/api/auth/session`
 
-* When using database sessions, the User object is passed as an argument.
-* When using JSON Web Tokens for sessions, the JWT payload is provided instead.
+- When using database sessions, the User object is passed as an argument.
+- When using JSON Web Tokens for sessions, the JWT payload is provided instead.
 
 ```js title="pages/api/auth/[...nextauth].js"
 ...
@@ -177,7 +176,7 @@ callbacks: {
    * @param  {object} session      Session object
    * @param  {object} token        User object    (if using database sessions)
    *                               JSON Web Token (if not using database sessions)
-   * @return {object}              Session that will be returned to the client 
+   * @return {object}              Session that will be returned to the client
    */
   async session(session, token) {
     // Add property to session, like an access_token from a provider.

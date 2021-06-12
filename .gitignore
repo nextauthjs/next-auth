@@ -41,6 +41,8 @@ src/providers/index.js
 /errors.js
 /errors.d.ts
 /www/scripts/latest.json
+/react.js
+/react.d.ts
 
 # Development app
 app/next-auth

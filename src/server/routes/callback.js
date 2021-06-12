@@ -77,7 +77,7 @@ export default async function callback(req, res) {
             account,
             OAuthProfile
           )
-          if (signInCallbackResponse === false) {
+          if (!signInCallbackResponse) {
             return res.redirect(
               `${baseUrl}${basePath}/error?error=AccessDenied`
             )
@@ -85,16 +85,11 @@ export default async function callback(req, res) {
             return res.redirect(signInCallbackResponse)
           }
         } catch (error) {
-          if (error instanceof Error) {
-            return res.redirect(
-              `${baseUrl}${basePath}/error?error=${encodeURIComponent(
-                error.message
-              )}`
-            )
-          }
-          // TODO: Remove in a future major release
-          logger.warn("SIGNIN_CALLBACK_REJECT_REDIRECT")
-          return res.redirect(error)
+          return res.redirect(
+            `${baseUrl}${basePath}/error?error=${encodeURIComponent(
+              error.message
+            )}`
+          )
         }
 
         // Sign user in
@@ -226,22 +221,17 @@ export default async function callback(req, res) {
           account,
           { email }
         )
-        if (signInCallbackResponse === false) {
+        if (!signInCallbackResponse) {
           return res.redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
         } else if (typeof signInCallbackResponse === "string") {
           return res.redirect(signInCallbackResponse)
         }
       } catch (error) {
-        if (error instanceof Error) {
-          return res.redirect(
-            `${baseUrl}${basePath}/error?error=${encodeURIComponent(
-              error.message
-            )}`
-          )
-        }
-        // TODO: Remove in a future major release
-        logger.warn("SIGNIN_CALLBACK_REJECT_REDIRECT")
-        return res.redirect(error)
+        return res.redirect(
+          `${baseUrl}${basePath}/error?error=${encodeURIComponent(
+            error.message
+          )}`
+        )
       }
 
       // Sign user in
@@ -336,7 +326,8 @@ export default async function callback(req, res) {
     let userObjectReturnedFromAuthorizeHandler
     try {
       userObjectReturnedFromAuthorizeHandler = await provider.authorize(
-        credentials, {...req, options: {}, cookies: {}}
+        credentials,
+        { ...req, options: {}, cookies: {} }
       )
       if (!userObjectReturnedFromAuthorizeHandler) {
         return res
@@ -346,16 +337,13 @@ export default async function callback(req, res) {
               provider.id
             )}`
           )
+      } else if (typeof userObjectReturnedFromAuthorizeHandler === "string") {
+        return res.redirect(userObjectReturnedFromAuthorizeHandler)
       }
     } catch (error) {
-      if (error instanceof Error) {
-        return res.redirect(
-          `${baseUrl}${basePath}/error?error=${encodeURIComponent(
-            error.message
-          )}`
-        )
-      }
-      return res.redirect(error)
+      return res.redirect(
+        `${baseUrl}${basePath}/error?error=${encodeURIComponent(error.message)}`
+      )
     }
 
     const user = userObjectReturnedFromAuthorizeHandler
@@ -367,20 +355,17 @@ export default async function callback(req, res) {
         account,
         credentials
       )
-      if (signInCallbackResponse === false) {
+      if (!signInCallbackResponse) {
         return res
           .status(403)
           .redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
+      } else if (typeof signInCallbackResponse === "string") {
+        return res.redirect(signInCallbackResponse)
       }
     } catch (error) {
-      if (error instanceof Error) {
-        return res.redirect(
-          `${baseUrl}${basePath}/error?error=${encodeURIComponent(
-            error.message
-          )}`
-        )
-      }
-      return res.redirect(error)
+      return res.redirect(
+        `${baseUrl}${basePath}/error?error=${encodeURIComponent(error.message)}`
+      )
     }
 
     const defaultJwtPayload = {
