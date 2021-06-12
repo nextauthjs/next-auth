@@ -73,7 +73,7 @@ function Feature({ imageUrl, title, description }) {
         </div>
       )}
       <h3 className="text--center">{title}</h3>
-      <p>{description}</p>
+      <div>{description}</div>
     </div>
   )
 }
