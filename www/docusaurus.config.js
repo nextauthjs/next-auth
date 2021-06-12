@@ -85,8 +85,8 @@ module.exports = {
               to: "/contributors",
             },
             {
-              label: "Canary documentation",
-              to: "https://next-auth-git-canary.nextauthjs.vercel.app/",
+              label: "Next documentation",
+              to: "https://next-auth-git-next.nextauthjs.vercel.app",
             },
           ],
         },
@@ -121,7 +121,7 @@ module.exports = {
                 alt="Powered by Vercel"
                 style="margin-top: 8px"
                 height="32"
-                src="https://raw.githubusercontent.com/nextauthjs/next-auth/canary/www/static/img/powered-by-vercel.svg"
+                src="https://raw.githubusercontent.com/nextauthjs/next-auth/main/www/static/img/powered-by-vercel.svg"
               />
             </a>`,
             },

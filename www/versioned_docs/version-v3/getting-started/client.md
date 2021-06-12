@@ -420,7 +420,7 @@ AdminDashboard.auth = true
 ```jsx title="pages/_app.jsx"
 export default function App({ Component, pageProps }) {
   return (
-    <SessionProvider session={pageProps.session}>
+    <Provider session={pageProps.session}>
       {Component.auth ? (
         <Auth>
           <Component {...pageProps} />
@@ -428,7 +428,7 @@ export default function App({ Component, pageProps }) {
       ) : (
         <Component {...pageProps} />
       )}
-    </SessionProvider>
+    </Provider>
   )
 }
 
