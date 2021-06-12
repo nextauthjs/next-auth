@@ -7,6 +7,14 @@ title: Atlassian
 
 https://developer.atlassian.com/cloud/jira/platform/oauth-2-authorization-code-grants-3lo-for-apps/#implementing-oauth-2-0--3lo-
 
+## Options
+
+The **Atlassian Provider** comes with a set of default options:
+
+- [Atlassian Provider options](https://github.com/nextauthjs/next-auth/blob/main/src/providers/atlassian.js)
+
+You can override any of the options to suit your own use case.
+
 ## Example
 
 ```js

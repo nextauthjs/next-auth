@@ -9,6 +9,18 @@ _These tutorials are contributed by the community and hosted on this site._
 
 _New submissions and edits are welcome!_
 
+### [NextJS Authentication Crash Course with NextAuth.js](https://youtu.be/o_wZIVmWteQ)
+
+This tutorial dives in to the ins and outs of NextAuth including email, Github, Twitter and integrating with Auth0 in under hour.
+
+### [Create your own NextAuth.js Login Pages](https://youtu.be/kB6YNYZ63fw)
+
+This tutorial shows you how to jump in and create your own custom login pages versus using the ones provided by NextAuth.js
+
+### [Refresh Token Rotation](tutorials/refresh-token-rotation)
+
+How to implement refresh token rotation.
+
 ### [Securing pages and API routes](tutorials/securing-pages-and-api-routes)
 
 How to restrict access to pages and API routes.
@@ -30,6 +42,10 @@ This approach can be used to authenticate existing user accounts against any bac
 ### [Testing with Cypress](tutorials/testing-with-cypress)
 
 How to write tests using Cypress.
+
+### [Usage with class components](tutorials/usage-with-class-components)
+
+How to use `useSession()` hook with class components.
 
 ## Other tutorials and explainers
 
@@ -65,9 +81,16 @@ This example shows how to implement a fullstack app in TypeScript with Next.js u
 
 ### [Adding Authentication to an existing Next.js Application in no time!](https://dev.to/ndom91/adding-authentication-to-an-existing-serverless-next-js-app-in-no-time-with-nextauth-js-192h)
 
-This `dev.to` tutorial walks one through adding NextAuth.js to an existing project. Including setting up the OAuth client id and secret, adding the API routes for authentication, protecting pages and api routes behind that authentication, etc.
+This `dev.to` tutorial walks one through adding NextAuth.js to an existing project. Including setting up the OAuth client id and secret, adding the API routes for authentication, protecting pages and API routes behind that authentication, etc.
 
+### [Introduction to NextAuth.js](https://www.youtube.com/watch?v=npZsJxWntJM)
+
+This is an introductory video to NextAuth.js for beginners. In this video, it is explained how to set up authentication in a few easy steps and add different configurations to make it more robust and secure.
 
 ### [Adding Sign in With Apple Next JS](https://thesiddd.com/blog/apple-auth)
 
 This tutorial walks step by step on how to get Sign In with Apple working (both locally and on a deployed website) using NextAuth.js.
+
+### [How to Authenticate Next.js Apps with Twitter & NextAuth.js](https://spacejelly.dev/posts/how-to-authenticate-next-js-apps-with-twitter-nextauth-js/)
+
+Learn how to add Twitter authentication and login to a Next.js app both clientside and serverside with NextAuth.js.

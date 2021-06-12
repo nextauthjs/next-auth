@@ -14,6 +14,14 @@ https://developer.foursquare.com/
 :::warning
 Foursquare requires an additional `apiVersion` parameter in [`YYYYMMDD` format](https://developer.foursquare.com/docs/places-api/versioning/), which essentially states "I'm prepared for API changes up to this date".
 
+## Options
+
+The **Foursquare Provider** comes with a set of default options:
+
+- [Foursquare Provider options](https://github.com/nextauthjs/next-auth/blob/main/src/providers/foursquare.js)
+
+You can override any of the options to suit your own use case.
+
 ## Example
 
 ```js

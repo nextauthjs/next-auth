@@ -11,6 +11,14 @@ https://docs.gitlab.com/ee/api/oauth2.html
 
 https://gitlab.com/profile/applications
 
+## Options
+
+The **Gitlab Provider** comes with a set of default options:
+
+- [Gitlab Provider options](https://github.com/nextauthjs/next-auth/blob/main/src/providers/gitlab.js)
+
+You can override any of the options to suit your own use case.
+
 ## Example
 
 ```js
@@ -26,5 +34,5 @@ providers: [
 ```
 
 :::tip
-Enable the *"read_user"* option in scope if you want to save the users email address on sign up.
+Enable the _"read_user"_ option in scope if you want to save the users email address on sign up.
 :::

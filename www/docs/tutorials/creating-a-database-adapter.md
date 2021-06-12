@@ -40,141 +40,95 @@ These methods are required to support email / passwordless sign in:
 
 These methods will be required in a future release, but are not yet invoked:
 
-* getUserByCredentials
 * deleteUser
 * unlinkAccount
 
 ### Example code
 
 ```js
-const Adapter = (config, options = {}) => {
-
-  async function getAdapter (appOptions) {
-
-    async function createUser (profile) {
-      return null
-    }
-
-    async function getUser (id) {
-      return null
-    }
-
-    async function getUserByEmail (email) {
-      return null
-    }
-
-    async function getUserByProviderAccountId (
-      providerId,
-      providerAccountId
-    ) {
-      return null
-    }
-
-    async function getUserByCredentials (credentials) {
-      return null
-    }
-
-    async function updateUser (user) {
-      return null
-    }
-
-    async function deleteUser (userId) {
-      return null
-    }
-
-    async function linkAccount (
-      userId,
-      providerId,
-      providerType,
-      providerAccountId,
-      refreshToken,
-      accessToken,
-      accessTokenExpires
-    ) {
-      return null
-    }
-
-    async function unlinkAccount (
-      userId,
-      providerId,
-      providerAccountId
-    ) {
-      return null
-    }
-
-    async function createSession (user) {
-      return null
-    }
-
-    async function getSession (sessionToken) {
-      return null
-    }
-
-    async function updateSession (
-      session,
-      force
-    ) {
-      return null
-    }
-
-    async function deleteSession (sessionToken) {
-      return null
-    }
-
-    async function createVerificationRequest (
-      identifier,
-      url,
-      token,
-      secret,
-      provider
-    ) {
-      return null
-    }
-
-    async function getVerificationRequest (
-      identifier,
-      token,
-      secret,
-      provider
-    ) {
-      return null
-    }
-
-    async function deleteVerificationRequest (
-      identifier,
-      token,
-      secret,
-      provider
-    ) {
-      return null
-    }
-
-    return {
-      createUser,
-      getUser,
-      getUserByEmail,
-      getUserByProviderAccountId,
-      getUserByCredentials,
-      updateUser,
-      deleteUser,
-      linkAccount,
-      unlinkAccount,
-      createSession,
-      getSession,
-      updateSession,
-      deleteSession,
-      createVerificationRequest,
-      getVerificationRequest,
-      deleteVerificationRequest
-    }
-  }
-
+export default function YourAdapter (config, options = {}) {
   return {
-    getAdapter
+    async getAdapter (appOptions) {
+      async createUser (profile) {
+        return null
+      },
+      async getUser (id) {
+        return null
+      },
+      async getUserByEmail (email) {
+        return null
+      },
+      async getUserByProviderAccountId (
+        providerId,
+        providerAccountId
+      ) {
+        return null
+      },
+      async updateUser (user) {
+        return null
+      },
+      async deleteUser (userId) {
+        return null
+      },
+      async linkAccount (
+        userId,
+        providerId,
+        providerType,
+        providerAccountId,
+        refreshToken,
+        accessToken,
+        accessTokenExpires
+      ) {
+        return null
+      },
+      async unlinkAccount (
+        userId,
+        providerId,
+        providerAccountId
+      ) {
+        return null
+      },
+      async createSession (user) {
+        return null
+      },
+      async getSession (sessionToken) {
+        return null
+      },
+      async updateSession (
+        session,
+        force
+      ) {
+        return null
+      },
+      async deleteSession (sessionToken) {
+        return null
+      },
+      async createVerificationRequest (
+        identifier,
+        url,
+        token,
+        secret,
+        provider
+      ) {
+        return null
+      },
+      async getVerificationRequest (
+        identifier,
+        token,
+        secret,
+        provider
+      ) {
+        return null
+      },
+      async deleteVerificationRequest (
+        identifier,
+        token,
+        secret,
+        provider
+      ) {
+        return null
+      }
+    }
   }
-}
-
-export default {
-  Adapter
 }
 ```

@@ -11,6 +11,14 @@ https://developers.eveonline.com/blog/article/sso-to-authenticated-calls
 
 https://developers.eveonline.com/
 
+## Options
+
+The **EVE Online Provider** comes with a set of default options:
+
+- [EVE Online Provider options](https://github.com/nextauthjs/next-auth/blob/main/src/providers/eveonline.js)
+
+You can override any of the options to suit your own use case.
+
 ## Example
 
 ```js

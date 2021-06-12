@@ -11,6 +11,14 @@ https://developers.google.com/identity/protocols/oauth2
 
 https://console.developers.google.com/apis/credentials
 
+## Options
+
+The **Google Provider** comes with a set of default options:
+
+- [Google Provider options](https://github.com/nextauthjs/next-auth/blob/main/src/providers/google.js)
+
+You can override any of the options to suit your own use case.
+
 ## Example
 
 ```js
@@ -48,6 +56,7 @@ const options = {
   ...
 }
 ```
+
 :::
 
 :::tip
@@ -72,4 +81,5 @@ const options = {
   ...
 }
 ```
+
 :::
