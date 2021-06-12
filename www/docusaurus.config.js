@@ -148,14 +148,14 @@ module.exports = {
           routeBasePath: "/",
           sidebarPath: require.resolve("./sidebars.js"),
           editUrl: "https://github.com/nextauthjs/next-auth/edit/main/www",
-          lastVersion: "stable",
+          lastVersion: "current",
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
           versions: {
             current: {
               label: pkg.prerelease || "v4.0.0-next",
             },
-            stable: {
+            v3: {
               label: pkg.latest || "v3.x",
             },
           },

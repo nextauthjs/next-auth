@@ -1,5 +1,5 @@
 {
-  "version-stable/docs": [
+  "version-v3/docs": [
     {
       "collapsed": false,
       "type": "category",
@@ -7,23 +7,23 @@
       "items": [
         {
           "type": "doc",
-          "id": "version-stable/getting-started/introduction"
+          "id": "version-v3/getting-started/introduction"
         },
         {
           "type": "doc",
-          "id": "version-stable/getting-started/example"
+          "id": "version-v3/getting-started/example"
         },
         {
           "type": "doc",
-          "id": "version-stable/getting-started/client"
+          "id": "version-v3/getting-started/client"
         },
         {
           "type": "doc",
-          "id": "version-stable/getting-started/rest-api"
+          "id": "version-v3/getting-started/rest-api"
         },
         {
           "type": "doc",
-          "id": "version-stable/getting-started/typescript"
+          "id": "version-v3/getting-started/typescript"
         }
       ]
     },
@@ -34,27 +34,27 @@
       "items": [
         {
           "type": "doc",
-          "id": "version-stable/configuration/options"
+          "id": "version-v3/configuration/options"
         },
         {
           "type": "doc",
-          "id": "version-stable/configuration/providers"
+          "id": "version-v3/configuration/providers"
         },
         {
           "type": "doc",
-          "id": "version-stable/configuration/databases"
+          "id": "version-v3/configuration/databases"
         },
         {
           "type": "doc",
-          "id": "version-stable/configuration/pages"
+          "id": "version-v3/configuration/pages"
         },
         {
           "type": "doc",
-          "id": "version-stable/configuration/callbacks"
+          "id": "version-v3/configuration/callbacks"
         },
         {
           "type": "doc",
-          "id": "version-stable/configuration/events"
+          "id": "version-v3/configuration/events"
         }
       ]
     },
@@ -65,11 +65,11 @@
       "items": [
         {
           "type": "doc",
-          "id": "version-stable/adapters/overview"
+          "id": "version-v3/adapters/overview"
         },
         {
           "type": "doc",
-          "id": "version-stable/adapters/models"
+          "id": "version-v3/adapters/models"
         },
         {
           "collapsed": true,
@@ -78,49 +78,49 @@
           "items": [
             {
               "type": "doc",
-              "id": "version-stable/adapters/typeorm/typeorm-overview"
+              "id": "version-v3/adapters/typeorm/typeorm-overview"
             },
             {
               "type": "doc",
-              "id": "version-stable/adapters/typeorm/mysql"
+              "id": "version-v3/adapters/typeorm/mysql"
             },
             {
               "type": "doc",
-              "id": "version-stable/adapters/typeorm/postgres"
+              "id": "version-v3/adapters/typeorm/postgres"
             },
             {
               "type": "doc",
-              "id": "version-stable/adapters/typeorm/mssql"
+              "id": "version-v3/adapters/typeorm/mssql"
             },
             {
               "type": "doc",
-              "id": "version-stable/adapters/typeorm/mongodb"
+              "id": "version-v3/adapters/typeorm/mongodb"
             }
           ]
         },
         {
           "type": "doc",
-          "id": "version-stable/adapters/fauna"
+          "id": "version-v3/adapters/fauna"
         },
         {
           "type": "doc",
-          "id": "version-stable/adapters/prisma"
+          "id": "version-v3/adapters/prisma"
         },
         {
           "type": "doc",
-          "id": "version-stable/adapters/prisma-legacy"
+          "id": "version-v3/adapters/prisma-legacy"
         },
         {
           "type": "doc",
-          "id": "version-stable/adapters/dynamodb"
+          "id": "version-v3/adapters/dynamodb"
         },
         {
           "type": "doc",
-          "id": "version-stable/adapters/firebase"
+          "id": "version-v3/adapters/firebase"
         },
         {
           "type": "doc",
-          "id": "version-stable/adapters/pouchdb"
+          "id": "version-v3/adapters/pouchdb"
         }
       ]
     },
@@ -137,11 +137,11 @@
     },
     {
       "type": "doc",
-      "id": "version-stable/warnings"
+      "id": "version-v3/warnings"
     },
     {
       "type": "doc",
-      "id": "version-stable/errors"
+      "id": "version-v3/errors"
     }
   ]
 }
