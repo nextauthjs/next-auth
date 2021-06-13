@@ -51,7 +51,7 @@ To add a custom login page, you can use the `pages` option:
 We can then add a custom login page that displays an input where the user can enter their email address. We then extract the domain from the user's email address and pass it to the `authorizationParams` parameter on the `signIn` function:
 
 ```jsx title="pages/auth/signin.js"
-import { getProviders, signIn } from "next-auth/client"
+import { getProviders, signIn } from "next-auth/react"
 
 export default function SignIn({ providers }) {
   const [email, setEmail] = useState("")

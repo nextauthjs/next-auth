@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event"
 import { render, screen, waitFor } from "@testing-library/react"
 import { server, mockCSRFToken } from "./helpers/mocks"
 import logger from "../../lib/logger"
-import { getCsrfToken } from ".."
+import { getCsrfToken } from "../react"
 import { rest } from "msw"
 
 jest.mock("../../lib/logger", () => ({

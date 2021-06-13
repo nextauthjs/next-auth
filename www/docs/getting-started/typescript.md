@@ -72,7 +72,7 @@ export default NextAuth({
 ```
 
 ```ts title="pages/index.ts"
-import { useSession } from "next-auth/client"
+import { useSession } from "next-auth/react"
 
 export default function IndexPage() {
   // `session` should match `callbacks.session()` in `NextAuth()`
@@ -91,7 +91,7 @@ import NextAuth from "next-auth"
 
 declare module "next-auth" {
   /**
-   * Returned by `useSession`, `getSession` and received as a prop on the `Provider` React Context
+   * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
   interface Session {
     user: {

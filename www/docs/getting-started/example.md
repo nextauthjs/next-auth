@@ -44,7 +44,7 @@ See the [options documentation](/configuration/options) for how to configure pro
 The `useSession()` React Hook in the NextAuth.js client is the easiest way to check if someone is signed in.
 
 ```jsx title="pages/index.js"
-import { signIn, signOut, useSession } from "next-auth/client"
+import { signIn, signOut, useSession } from "next-auth/react"
 
 export default function Page() {
   const [session, loading] = useSession()
@@ -77,13 +77,16 @@ You can use the `useSession` hook from anywhere in your application (e.g. in a h
 To allow session state to be shared between pages - which improves performance, reduces network traffic and avoids component state changes while rendering - you can use the NextAuth.js Provider in `pages/_app.js`.
 
 ```jsx title="pages/_app.js"
-import { Provider } from "next-auth/client"
+import { SessionProvider } from "next-auth/react"
 
-export default function App({ Component, pageProps }) {
+export default function App({
+  Component, 
+  pageProps: { session, ...pageProps }
+}) {
   return (
-    <Provider session={pageProps.session}>
+    <SessionProvider session={session}>
       <Component {...pageProps} />
-    </Provider>
+    </SessionProvider>
   )
 }
 ```

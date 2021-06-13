@@ -15,7 +15,7 @@
       "next-auth": ["."],
       "next-auth/providers": ["./providers"],
       "next-auth/adapters": ["./adapters"],
-      "next-auth/client": ["./client"],
+      "next-auth/react": ["./react-client"],
       "next-auth/jwt": ["./jwt"]
     }
   }

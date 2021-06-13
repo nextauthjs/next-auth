@@ -34,12 +34,12 @@ You can use the [session callback](/configuration/callbacks#session-callback) to
 
 The `useSession()` React Hook in the NextAuth.js client is the easiest way to check if someone is signed in.
 
-It works best when the [`<Provider>`](#provider) is added to `pages/_app.js`.
+It works best when the [`<SessionProvider>`](#sessionprovider) is added to `pages/_app.js`.
 
 #### Example
 
 ```jsx
-import { useSession } from "next-auth/client"
+import { useSession } from "next-auth/react"
 
 export default function Component() {
   const [session, loading] = useSession()
@@ -75,7 +75,7 @@ async function myFunction() {
 #### Server Side Example
 
 ```js
-import { getSession } from "next-auth/client"
+import { getSession } from "next-auth/react"
 
 export default async (req, res) => {
   const session = await getSession({ req })
@@ -113,7 +113,7 @@ async function myFunction() {
 #### Server Side Example
 
 ```js
-import { getCsrfToken } from "next-auth/client"
+import { getCsrfToken } from "next-auth/react"
 
 export default async (req, res) => {
   const csrfToken = await getCsrfToken({ req })
@@ -140,7 +140,7 @@ It can be useful if you are creating a dynamic custom sign in page.
 #### API Route
 
 ```jsx title="pages/api/example.js"
-import { getProviders } from "next-auth/client"
+import { getProviders } from "next-auth/react"
 
 export default async (req, res) => {
   const providers = await getProviders()
@@ -167,7 +167,7 @@ The `signIn()` method can be called from the client in different ways, as shown 
 #### Redirects to sign in page when clicked
 
 ```js
-import { signIn } from "next-auth/client"
+import { signIn } from "next-auth/react"
 
 export default () => <button onClick={() => signIn()}>Sign in</button>
 ```
@@ -175,7 +175,7 @@ export default () => <button onClick={() => signIn()}>Sign in</button>
 #### Starts Google OAuth sign-in flow when clicked
 
 ```js
-import { signIn } from "next-auth/client"
+import { signIn } from "next-auth/react"
 
 export default () => (
   <button onClick={() => signIn("google")}>Sign in with Google</button>
@@ -187,7 +187,7 @@ export default () => (
 When using it with the email flow, pass the target `email` as an option.
 
 ```js
-import { signIn } from "next-auth/client"
+import { signIn } from "next-auth/react"
 
 export default ({ email }) => (
   <button onClick={() => signIn("email", { email })}>Sign in with Email</button>
@@ -279,7 +279,7 @@ Using the `signOut()` method ensures the user ends back on the page they started
 It reloads the page in the browser when complete.
 
 ```js
-import { signOut } from "next-auth/client"
+import { signOut } from "next-auth/react"
 
 export default () => <button onClick={() => signOut()}>Sign out</button>
 ```
@@ -304,30 +304,31 @@ where `data.url` is the validated url you can redirect the user to without any f
 
 ---
 
-## Provider
+## SessionProvider
 
-Using the supplied React `<Provider>` allows instances of `useSession()` to share the session object across components, by using [React Context](https://reactjs.org/docs/context.html) under the hood.
-
-This improves performance, reduces network calls and avoids page flicker when rendering. It is highly recommended and can be easily added to all pages in Next.js apps by using `pages/_app.js`.
+Using the supplied `<SessionProvider>` allows instances of `useSession()` to share the session object across components, by using [React Context](https://reactjs.org/docs/context.html) under the hood. It also takes care of keeping the session updated and synced between tabs/windows.
 
 ```jsx title="pages/_app.js"
-import { Provider } from "next-auth/client"
+import { SessionProvider } from "next-auth/react"
 
-export default function App({ Component, pageProps }) {
+export default function App({
+  Component, 
+  pageProps: { session, ...pageProps }
+}) {
   return (
-    <Provider session={pageProps.session}>
+    <SessionProvider session={session}>
       <Component {...pageProps} />
-    </Provider>
+    </SessionProvider>
   )
 }
 ```
 
-If you pass the `session` page prop to the `<Provider>` – as in the example above – you can avoid checking the session twice on pages that support both server and client side rendering.
+If you pass the `session` page prop to the `<SessionProvider>` – as in the example above – you can avoid checking the session twice on pages that support both server and client side rendering.
 
 This only works on pages where you provide the correct `pageProps`, however. This is normally done in `getInitialProps` or `getServerSideProps` like so:
 
 ```js title="pages/index.js"
-import { getSession } from "next-auth/client"
+import { getSession } from "next-auth/react"
 
 ...
 
@@ -348,21 +349,26 @@ The session state is automatically synchronized across all open tabs/windows and
 
 If you have session expiry times of 30 days (the default) or more then you probably don't need to change any of the default options in the Provider. If you need to, you can can trigger an update of the session object across all tabs/windows by calling `getSession()` from a client side function.
 
-However, if you need to customise the session behaviour and/or are using short session expiry times, you can pass options to the provider to customise the behaviour of the `useSession()` hook.
+However, if you need to customize the session behavior and/or are using short session expiry times, you can pass options to the provider to customize the behavior of the `useSession()` hook.
 
 ```jsx title="pages/_app.js"
-import { Provider } from 'next-auth/client'
+import { SessionProvider } from "next-auth/react"
 
-export default function App ({ Component, pageProps }) {
+
+export default function App({
+  Component, 
+  pageProps: { session, ...pageProps }
+}) {
   return (
-    <Provider session={pageProps.session}
-      options={{
-        clientMaxAge: 60     // Re-fetch session if cache is older than 60 seconds
-        keepAlive:    5 * 60 // Send keepAlive message every 5 minutes
-      }}
-      >
+    <SessionProvider
+      session={session}
+      // Re-fetch session if cache is older than 60 seconds
+      staleTime={60}
+      // Re-fetch session every 5 minutes
+      refetchInterval={5 * 60}
+    >
       <Component {...pageProps} />
-    </Provider>
+    </SessionProvider>
   )
 }
 ```
@@ -372,30 +378,30 @@ export default function App ({ Component, pageProps }) {
 
 Every tab/window maintains its own copy of the local session state; the session is not stored in shared storage like localStorage or sessionStorage. Any update in one tab/window triggers a message to other tabs/windows to update their own session state.
 
-Using low values for `clientMaxAge` or `keepAlive` will increase network traffic and load on authenticated clients and may impact hosting costs and performance.
+Using low values for `staleTime` or `refetchInterval` will increase network traffic and load on authenticated clients and may impact hosting costs and performance.
 :::
 
-#### Client Max Age
+#### Stale time
 
-The `clientMaxAge` option is the maximum age a session data can be on the client before it is considered stale.
+The `staleTime` option is the maximum age a session data can be on the client before it is considered stale.
 
-When `clientMaxAge` is set to `0` (the default) the cache will always be used when useSession is called and only explicit calls made to get the session status (i.e. `getSession()`) or event triggers, such as signing in or out in another tab/window, or a tab/window gaining or losing focus, will trigger an update of the session state.
+When `staleTime` is set to `0` (the default) the cache will always be used when `useSession` is called and only explicit calls made to get the session status (i.e. `getSession()`) or event triggers, such as signing in or out in another tab/window, or a tab/window gaining or losing focus, will trigger an update of the session state.
 
 If set to any value other than zero, it specifies in seconds the maximum age of session data on the client before the `useSession()` hook will call the server again to sync the session state.
 
 Unless you have a short session expiry time (e.g. < 24 hours) you probably don't need to change this option. Setting this option to too short a value will increase load (and potentially hosting costs).
 
-The value for `clientMaxAge` should always be lower than the value of the session `maxAge` option.
+The value for `staleTime` should always be lower than the value of the session `maxAge` [session option](/configuration/options#session).
 
-#### Keep Alive
+#### Refetch interval
 
-The `keepAlive` option is how often the client should contact the server to avoid a session expiring.
+The `refetchInterval` option can be used to contact the server to avoid a session expiring.
 
-When `keepAlive` is set to `0` (the default) it will not send a keep alive message.
+When `refetchInterval` is set to `0` (the default) there will be no session polling.
 
 If set to any value other than zero, it specifies in seconds how often the client should contact the server to update the session state. If the session state has expired when it is triggered, all open tabs/windows will be updated to reflect this.
 
-The value for `keepAlive` should always be lower than the value of the session `maxAge` option.
+The value for `refetchInterval` should always be lower than the value of the session `maxAge` [session option](/configuration/options#session).
 
 :::note
 See [**the Next.js documentation**](https://nextjs.org/docs/advanced-features/custom-app) for more information on **\_app.js** in Next.js applications.
@@ -418,9 +424,12 @@ AdminDashboard.auth = true
 ```
 
 ```jsx title="pages/_app.jsx"
-export default function App({ Component, pageProps }) {
+export default function App({
+  Component, 
+  pageProps: { session, ...pageProps }
+}) {
   return (
-    <SessionProvider session={pageProps.session}>
+    <SessionProvider session={session}>
       {Component.auth ? (
         <Auth>
           <Component {...pageProps} />
@@ -468,6 +477,6 @@ More information can be found in the following [Github Issue](https://github.com
 
 There is also an alternative client-side API library based upon [`react-query`](https://www.npmjs.com/package/react-query) available under [`nextauthjs/react-query`](https://github.com/nextauthjs/react-query).
 
-If you use `react-query` in your project already, you can leverage it with NextAuth.js to handle the client-side session management for you as well. This replaces NextAuth.js's native `useSession` and `Provider` from `next-auth/client`.
+If you use `react-query` in your project already, you can leverage it with NextAuth.js to handle the client-side session management for you as well. This replaces NextAuth.js's native `useSession` and `SessionProvider` from `next-auth/react`.
 
 See repository [`README`](https://github.com/nextauthjs/react-query) for more details.
