@@ -15,9 +15,9 @@ If you are seeing any of these errors in the console, something is wrong.
 
 These errors are returned from the client. As the client is [Universal JavaScript (or "Isomorphic JavaScript")](https://en.wikipedia.org/wiki/Isomorphic_JavaScript) it can be run on the client or server, so these errors can occur in both in the terminal and in the browser console.
 
-#### CLIENT_USE_SESSION_ERROR
+#### CLIENT_SESSION_ERROR
 
-This error occurs when the `useSession()` React Hook has a problem fetching session data.
+This error occurs when the `SessionProvider` Context has a problem fetching session data.
 
 #### CLIENT_FETCH_ERROR
 
@@ -87,20 +87,20 @@ https://next-auth.js.org/errors#jwt_session_error JWKKeySupport: the key does no
 
 The algorithm used for generating your key isn't listed as supported. You can generate a HS512 key using
 
-````
+```
   jose newkey -s 512 -t oct -a HS512
-````
+```
 
 If you are unable to use an HS512 key (for example to interoperate with other services) you can define what is supported using
 
-````
+```
   jwt: {
     signingKey: {"kty":"oct","kid":"--","alg":"HS256","k":"--"},
     verificationOptions: {
       algorithms: ["HS256"]
     }
   }
-````
+```
 
 #### SESSION_ERROR
 

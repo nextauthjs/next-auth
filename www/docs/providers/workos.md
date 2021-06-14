@@ -51,15 +51,15 @@ To add a custom login page, you can use the `pages` option:
 We can then add a custom login page that displays an input where the user can enter their email address. We then extract the domain from the user's email address and pass it to the `authorizationParams` parameter on the `signIn` function:
 
 ```jsx title="pages/auth/signin.js"
-import { getProviders, signIn } from 'next-auth/client'
+import { getProviders, signIn } from "next-auth/react"
 
 export default function SignIn({ providers }) {
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState("")
 
   return (
     <>
       {Object.values(providers).map((provider) => {
-        if (provider.id === 'workos') {
+        if (provider.id === "workos") {
           return (
             <div key={provider.id}>
               <input
@@ -71,14 +71,14 @@ export default function SignIn({ providers }) {
               <button
                 onClick={() =>
                   signIn(provider.id, undefined, {
-                    domain: email.split('@')[1],
+                    domain: email.split("@")[1],
                   })
                 }
               >
                 Sign in with SSO
               </button>
             </div>
-          );
+          )
         }
 
         return (
@@ -87,17 +87,17 @@ export default function SignIn({ providers }) {
               Sign in with {provider.name}
             </button>
           </div>
-        );
+        )
       })}
     </>
-  );
+  )
 }
 
 // This is the recommended way for Next.js 9.3 or newer
-export async function getServerSideProps(context){
+export async function getServerSideProps(context) {
   const providers = await getProviders()
   return {
-    props: { providers }
+    props: { providers },
   }
 }
 
