@@ -300,20 +300,12 @@ events: {
 
 ### adapter
 
-- **Default value**: _Adapter.Default()_
+- **Default value**: none
 - **Required**: _No_
 
 #### Description
 
-By default NextAuth.js uses a database adapter that uses TypeORM and supports MySQL, MariaDB, Postgres and MongoDB and SQLite databases. An alternative adapter that uses Prisma, which currently supports MySQL, MariaDB and Postgres, is also included.
-
-You can use the `adapter` option to use the Prisma adapter - or pass in your own adapter if you want to use a database that is not supported by one of the built-in adapters.
-
-See the [adapter documentation](/adapters/overview) for more information.
-
-:::note
-If the `adapter` option is specified it overrides the `database` option, only specify one or the other.
-:::
+By default NextAuth.js does not include an adapter any longer. If you would like to persist user / account data, please install one of the many available adapters. More information can be found in the [adapter documentation](/adapters/overview).
 
 ---
 
