@@ -83,7 +83,7 @@ providers: [
 |        name         |                Descriptive name for the provider                 |           `string`            |   Yes    |
 |        type         |              Type of provider, in this case `oauth`              |           `"oauth"`           |   Yes    |
 |       version       |            OAuth version (e.g. '1.0', '1.0a', '2.0')             |           `string`            |   Yes    |
-|        scope        |          OAuth access scopes (expects array or string)           |    `string` or `string[]`     |   Yes    |
+|        scope        |   OAuth access scopes (expects string with space as separator)   |           `string`            |   Yes    |
 |       params        |       Extra URL params sent when calling `accessTokenUrl`        |           `Object`            |   Yes    |
 |   accessTokenUrl    |               Endpoint to retrieve an access token               |           `string`            |   Yes    |
 |  authorizationUrl   |         Endpoint to request authorization from the user          |           `string`            |   Yes    |
