@@ -15,6 +15,8 @@ All warnings indicate things which you should take a look at, but do not inhibit
 
 Environment variable `NEXTAUTH_URL` missing. Please set it in your `.env` file.
 
+Please note the URL must include the protocol, i.e. `http://localhost:3000`.
+
 ---
 
 ## Server
@@ -26,6 +28,7 @@ These warnings are displayed on the terminal.
 To remedy this warning, you can either:
 
 **Option 1**: Pass a pre-regenerated Private Key (and, optionally a Public Key) in the jwt options.
+
 ```js title="/pages/api/auth/[...nextauth].js"
 jwt: {
   signingKey: process.env.JWT_SIGNING_PRIVATE_KEY,
@@ -53,24 +56,25 @@ You can use [node-jose-tools](https://www.npmjs.com/package/node-jose-tools) to 
 You returned something in the `signIn` callback, that is being deprecated.
 
 You probably had something similar in the callback:
+
 ```js
-  return Promise.reject("/some/url")
+return Promise.reject("/some/url");
 ```
 
 or
 
 ```js
-  throw "/some/url"
+throw "/some/url";
 ```
 
 To remedy this, simply return the url instead:
 
 ```js
-  return "/some/url"
+return "/some/url";
 ```
 
-
 #### STATE_OPTION_DEPRECATION
+
 You provided `state: true` or `state: false` as a provider option. This is being deprecated in a later release in favour of `protection: "state"` and `protection: "none"` respectively. To remedy this warning:
 
 - If you use `state: true`, just simply remove it. The default is `protection: "state"` already..
