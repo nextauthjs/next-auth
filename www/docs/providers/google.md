@@ -60,7 +60,7 @@ const options = {
 :::
 
 :::tip
-Google also return an `verified_email` boolean property in the OAuth profile.
+Google also returns a `verified_email` boolean property in the OAuth profile.
 
 You can use this property to restrict access to people with verified accounts at a particular domain.
 
