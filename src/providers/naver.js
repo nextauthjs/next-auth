@@ -11,10 +11,7 @@ export default function Naver(options) {
       "https://nid.naver.com/oauth2.0/authorize?response_type=code",
     profileUrl: "https://openapi.naver.com/v1/nid/me",
     profile(profile) {
-      return {
-        ...profile.response,
-        id: profile.response.id,
-      }
+      return profile.response
     },
     ...options,
   }
