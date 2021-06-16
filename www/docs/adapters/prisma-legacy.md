@@ -23,7 +23,7 @@ Configure your NextAuth.js to use the Prisma Adapter:
 ```javascript title="pages/api/auth/[...nextauth].js"
 import NextAuth from "next-auth"
 import Providers from "next-auth/providers"
-import Adapters from "next-auth/adapters"
+import { PrismaLegacyAdapter } from "@next-auth/prisma-legacy-adapter"
 import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()
@@ -35,7 +35,7 @@ export default NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
-  adapter: Adapters.Prisma.Adapter({ prisma }),
+  adapter: PrismaLegacyAdapter({ prisma }),
 })
 ```
 
@@ -161,7 +161,7 @@ You can use custom model names by using the `modelMapping` option (shown here wi
 
 ```javascript title="pages/api/auth/[...nextauth].js"
 ...
-adapter: Adapters.Prisma.Adapter({
+adapter: PrismaLegacyAdapter({
   prisma,
   modelMapping: {
     User: 'user',

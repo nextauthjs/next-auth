@@ -1,4 +1,3 @@
-import adapters from "../adapters"
 import jwt from "../lib/jwt"
 import parseUrl from "../lib/parse-url"
 import logger, { setLogger } from "../lib/logger"
@@ -102,13 +101,6 @@ async function NextAuthHandler(req, res, userOptions) {
 
     const maxAge = 30 * 24 * 60 * 60 // Sessions expire after 30 days of being idle
 
-    // Parse database / adapter
-    // If adapter is provided, use it (advanced usage, overrides database)
-    // If database URI or config object is provided, use it (simple usage)
-    const adapter =
-      userOptions.adapter ??
-      (userOptions.database && adapters.Default(userOptions.database))
-
     // User provided options are overriden by other options,
     // except for the options with special handling above
     req.options = {
@@ -119,7 +111,6 @@ async function NextAuthHandler(req, res, userOptions) {
       ...userOptions,
       // These computed settings can have values in userOptions but we override them
       // and are request-specific.
-      adapter,
       baseUrl,
       basePath,
       action,
@@ -129,7 +120,7 @@ async function NextAuthHandler(req, res, userOptions) {
       providers,
       // Session options
       session: {
-        jwt: !adapter, // If no adapter specified, force use of JSON Web Tokens (stateless)
+        jwt: !userOptions.adapter, // If no adapter specified, force use of JSON Web Tokens (stateless)
         maxAge,
         updateAge: 24 * 60 * 60, // Sessions updated only if session is greater than this value (0 = always, 24*60*60 = every 24 hours)
         ...userOptions.session,

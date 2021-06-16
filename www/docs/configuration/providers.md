@@ -83,7 +83,7 @@ providers: [
 |        name         |                Descriptive name for the provider                 |           `string`            |   Yes    |
 |        type         |              Type of provider, in this case `oauth`              |           `"oauth"`           |   Yes    |
 |       version       |            OAuth version (e.g. '1.0', '1.0a', '2.0')             |           `string`            |   Yes    |
-|        scope        |          OAuth access scopes (expects array or string)           |    `string` or `string[]`     |   Yes    |
+|        scope        |   OAuth access scopes (expects string with space as separator)   |           `string`            |   Yes    |
 |       params        |       Extra URL params sent when calling `accessTokenUrl`        |           `Object`            |   Yes    |
 |   accessTokenUrl    |               Endpoint to retrieve an access token               |           `string`            |   Yes    |
 |  authorizationUrl   |         Endpoint to request authorization from the user          |           `string`            |   Yes    |
@@ -260,14 +260,14 @@ providers: [
       // that is false/null if the credentials are invalid.
       // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
       // You can also use the `req` object to obtain additional parameters
-      // (i.e., the request IP address) 
+      // (i.e., the request IP address)
       const res = await fetch("/your/endpoint", {
         method: 'POST',
         body: JSON.stringify(credentials),
         headers: { "Content-Type": "application/json" }
       })
       const user = await res.json()
-      
+
       // If no error and we have user data, return it
       if (res.ok && user) {
         return user
@@ -288,10 +288,10 @@ The Credentials provider can only be used if JSON Web Tokens are enabled for ses
 
 ### Options
 
-|    Name     |                    Description                    |               Type                    | Required |
+|    Name     |                    Description                    |                 Type                  | Required |
 | :---------: | :-----------------------------------------------: | :-----------------------------------: | :------: |
-|     id      |            Unique ID for the provider             |             `string`                  |   Yes    |
-|    name     |         Descriptive name for the provider         |             `string`                  |   Yes    |
-|    type     |   Type of provider, in this case `credentials`    |         `"credentials"`               |   Yes    |
-| credentials |          The credentials to sign-in with          |             `Object`                  |   Yes    |
+|     id      |            Unique ID for the provider             |               `string`                |   Yes    |
+|    name     |         Descriptive name for the provider         |               `string`                |   Yes    |
+|    type     |   Type of provider, in this case `credentials`    |            `"credentials"`            |   Yes    |
+| credentials |          The credentials to sign-in with          |               `Object`                |   Yes    |
 |  authorize  | Callback to execute once user is to be authorized | `(credentials, req) => Promise<User>` |   Yes    |

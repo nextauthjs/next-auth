@@ -8,7 +8,7 @@ import {
   mockEmailResponse,
   mockGithubResponse,
 } from "./helpers/mocks"
-import { signIn } from ".."
+import { signIn } from "../react"
 import { rest } from "msw"
 
 const { location } = window

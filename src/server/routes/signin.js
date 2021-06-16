@@ -8,14 +8,8 @@ import adapterErrorHandler from "../../adapters/error-handler"
  * @param {import("types/internals").NextAuthResponse} res
  */
 export default async function signin(req, res) {
-  const {
-    provider,
-    baseUrl,
-    basePath,
-    adapter,
-    callbacks,
-    logger,
-  } = req.options
+  const { provider, baseUrl, basePath, adapter, callbacks, logger } =
+    req.options
 
   if (!provider.type) {
     return res.status(500).end(`Error: Type not specified for ${provider.name}`)
@@ -62,14 +56,9 @@ export default async function signin(req, res) {
         return res.redirect(signInCallbackResponse)
       }
     } catch (error) {
-      if (error instanceof Error) {
-        return res.redirect(
-          `${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`
-        )
-      }
-      // TODO: Remove in a future major release
-      logger.warn("SIGNIN_CALLBACK_REJECT_REDIRECT")
-      return res.redirect(error)
+      return res.redirect(
+        `${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`
+      )
     }
 
     try {

@@ -33,7 +33,7 @@ providers: [
 ]
 ...
 // pages/index.jsx
-import { signIn } from "next-auth/client"
+import { signIn } from "next-auth/react"
 ...
 <button onClick={() => signIn("instagram")}>
   Sign in

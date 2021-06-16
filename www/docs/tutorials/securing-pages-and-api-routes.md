@@ -18,10 +18,10 @@ The methods `getSession()` and `getToken()` both return an `object` if a session
 If data on a page is fetched using calls to secure API routes - i.e. routes which use `getSession()` or `getToken()` to access the session - you can use the `useSession` React Hook to secure pages.
 
 ```js title="pages/client-side-example.js"
-import { useSession, getSession } from 'next-auth/client'
+import { useSession, getSession } from "next-auth/react"
 
 export default function Page() {
-  const [ session, loading ] = useSession()
+  const [session, loading] = useSession()
 
   if (loading) return null
 
@@ -41,18 +41,20 @@ export default function Page() {
 You can protect server side rendered pages using the `getSession()` method.
 
 ```js title="pages/server-side-example.js"
-import { useSession, getSession } from 'next-auth/client'
+import { useSession, getSession } from "next-auth/react"
 
 export default function Page() {
-  const [ session, loading ] = useSession()
+  const [session, loading] = useSession()
 
-  if (typeof window !== 'undefined' && loading) return null
+  if (typeof window !== "undefined" && loading) return null
 
   if (session) {
-    return <>
-      <h1>Protected Page</h1>
-      <p>You can view this page because you are signed in.</p>
-    </>
+    return (
+      <>
+        <h1>Protected Page</h1>
+        <p>You can view this page because you are signed in.</p>
+      </>
+    )
   }
   return <p>Access Denied</p>
 }
@@ -60,7 +62,7 @@ export default function Page() {
 export async function getServerSideProps(context) {
   const session = await getSession(context)
   return {
-    props: { session }
+    props: { session },
   }
 }
 ```
@@ -69,16 +71,20 @@ export async function getServerSideProps(context) {
 This example assumes you have configured `_app.js` to pass the `session` prop through so that it's immediately available on page load to `useSession`.
 
 ```js title="pages/_app.js"
-import { Provider } from 'next-auth/client'
+import { SessionProvider } from "next-auth/react"
 
-export default ({ Component, pageProps }) => {
+export default function App({
+  Component, 
+  pageProps: { session, ...pageProps }
+}) {
   return (
-    <Provider session={pageProps.session} >
+    <SessionProvider session={session} >
       <Component {...pageProps} />
-    </Provider>
+    </SessionProvider>
   )
 }
 ```
+
 :::
 
 ## Securing API Routes
@@ -88,13 +94,13 @@ export default ({ Component, pageProps }) => {
 You can protect API routes using the `getSession()` method.
 
 ```js title="pages/api/get-session-example.js"
-import { getSession } from 'next-auth/client'
+import { getSession } from "next-auth/react"
 
 export default async (req, res) => {
   const session = await getSession({ req })
   if (session) {
     // Signed in
-    console.log('Session', JSON.stringify(session, null, 2))
+    console.log("Session", JSON.stringify(session, null, 2))
   } else {
     // Not Signed in
     res.status(401)
@@ -109,7 +115,7 @@ If you are using JSON Web Tokens you can use the `getToken()` helper to access t
 
 ```js title="pages/api/get-token-example.js"
 // This is an example of how to read a JSON Web Token from an API route
-import jwt from 'next-auth/jwt'
+import jwt from "next-auth/jwt"
 
 const secret = process.env.SECRET
 
@@ -117,7 +123,7 @@ export default async (req, res) => {
   const token = await jwt.getToken({ req, secret })
   if (token) {
     // Signed in
-    console.log('JSON Web Token', JSON.stringify(token, null, 2))
+    console.log("JSON Web Token", JSON.stringify(token, null, 2))
   } else {
     // Not Signed in
     res.status(401)

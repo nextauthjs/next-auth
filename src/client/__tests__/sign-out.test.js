@@ -2,7 +2,7 @@ import { useState } from "react"
 import userEvent from "@testing-library/user-event"
 import { render, screen, waitFor } from "@testing-library/react"
 import { server, mockSignOutResponse } from "./helpers/mocks"
-import { signOut } from ".."
+import { signOut } from "../react"
 import { rest } from "msw"
 import { getBroadcastEvents } from "./helpers/utils"
 
