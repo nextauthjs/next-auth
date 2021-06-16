@@ -175,14 +175,35 @@ export interface SessionProviderProps {
    * If your application is opened in multiple tabs/windows (of the same browser instance),
    * every tab/window will maintain its own copy of the local session state;
    * the session is not stored in shared storage like `localStorage` or `sessionStorage`.
-   * Any update in one tab/window triggers a message to other tabs/windows
+   * Any update in one tab/window sends a signal to other tabs/windows
    * to request an update of their own session state.
-   * Set this to `"signOut"` to only broadcast the `signOut` event
-   * when calling the `signOut` method.
-   * Disable all broadcasting by setting this to `false`.
-   * (Default value is `true`, meaning all events are broadcasted.)
+   *
+   * Set `broadcast={false}` for no broadcasting,
+   * or see the object options for more granular control.
    */
-  broadcast?: "signOut" | boolean
+  broadcast?:
+    | {
+        /**
+         * By default, when a session is updated
+         * (eg.: through client-side call of `getSession`,
+         * on window focus, or when a stale session is updated),
+         * a signal is broadcasted to other tabs/windows
+         * to update their copy of the session.
+         *
+         * @note Since `refetchInterval` sets up its own session polling,
+         * that event is never broadcasted.
+         *
+         * Set this option to `false` if you do not need this behaviour.
+         */
+        session?: boolean
+        /**
+         * By default, when you invoke the `signOut` method, this will broadcast
+         * a signal to other tabs/windows, to delete their copy of the session.
+         * Set this option to `false` if you do not need this behaviour.
+         */
+        signOut?: boolean
+      }
+    | false
 }
 
 /**

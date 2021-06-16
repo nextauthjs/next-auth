@@ -169,8 +169,12 @@ export function SessionProvider(props) {
     staleTime = 0,
     refetchOnWindowFocus = true,
     refetchInterval,
-    broadcast: broadcastSession = true,
   } = props
+
+  const broadcastSession =
+    props.broadcast === false ? false : props.broadcast?.session ?? true
+  const broadcastSignOut =
+    props.broadcast === false ? false : props.broadcast?.signOut ?? true
 
   if (baseUrl) __NEXTAUTH.baseUrl = baseUrl
   if (basePath) __NEXTAUTH.basePath = basePath
@@ -244,13 +248,13 @@ export function SessionProvider(props) {
     // avoid an infinite loop.
     return broadcast.receive(async ({ reason }) => {
       if (
-        broadcastSession === true ||
-        (broadcastSession === "signOut" && reason === "signOut")
+        (reason !== "signOut" && broadcastSession) ||
+        (reason === "signOut" && broadcastSignOut)
       ) {
         await __NEXTAUTH._getSession({ event: "storage" })
       }
     })
-  }, [broadcastSession])
+  }, [broadcastSession, broadcastSignOut])
 
   React.useEffect(() => {
     if (!refetchOnWindowFocus) return
