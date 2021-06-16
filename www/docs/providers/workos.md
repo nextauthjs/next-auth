@@ -52,6 +52,7 @@ We can then add a custom login page that displays an input where the user can en
 
 ```jsx title="pages/auth/signin.js"
 import { getProviders, signIn } from 'next-auth/client'
+import React, {useState} from 'react'
 
 export default function SignIn({ providers }) {
   const [email, setEmail] = useState('')
