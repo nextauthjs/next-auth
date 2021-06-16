@@ -84,6 +84,7 @@ export type OAuthProviderType =
   | "Mailchimp"
   | "MailRu"
   | "Medium"
+  | "Naver"
   | "Netlify"
   | "Okta"
   | "Osso"
