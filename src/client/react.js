@@ -171,10 +171,15 @@ export function SessionProvider(props) {
     refetchInterval,
   } = props
 
-  const broadcastSession =
-    props.broadcast === false ? false : props.broadcast?.session ?? true
-  const broadcastSignOut =
-    props.broadcast === false ? false : props.broadcast?.signOut ?? true
+  let broadcastSession
+  let broadcastSignOut
+  if (typeof props.broadcast === "boolean") {
+    broadcastSession = props.broadcast
+    broadcastSignOut = props.broadcast
+  } else {
+    broadcastSession = props.broadcast?.session ?? true
+    broadcastSignOut = props.broadcast?.signOut ?? true
+  }
 
   if (baseUrl) __NEXTAUTH.baseUrl = baseUrl
   if (basePath) __NEXTAUTH.basePath = basePath
