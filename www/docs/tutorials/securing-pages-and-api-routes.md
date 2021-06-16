@@ -21,7 +21,7 @@ If data on a page is fetched using calls to secure API routes - i.e. routes whic
 import { useSession, getSession } from "next-auth/react"
 
 export default function Page() {
-  const [ session, loading ] = useSession()
+  const [session, loading] = useSession()
 
   if (loading) return null
 
@@ -44,15 +44,17 @@ You can protect server side rendered pages using the `getSession()` method.
 import { useSession, getSession } from "next-auth/react"
 
 export default function Page() {
-  const [ session, loading ] = useSession()
+  const [session, loading] = useSession()
 
-  if (typeof window !== 'undefined' && loading) return null
+  if (typeof window !== "undefined" && loading) return null
 
   if (session) {
-    return <>
-      <h1>Protected Page</h1>
-      <p>You can view this page because you are signed in.</p>
-    </>
+    return (
+      <>
+        <h1>Protected Page</h1>
+        <p>You can view this page because you are signed in.</p>
+      </>
+    )
   }
   return <p>Access Denied</p>
 }
@@ -60,7 +62,7 @@ export default function Page() {
 export async function getServerSideProps(context) {
   const session = await getSession(context)
   return {
-    props: { session }
+    props: { session },
   }
 }
 ```
@@ -82,6 +84,7 @@ export default function App({
   )
 }
 ```
+
 :::
 
 ## Securing API Routes
@@ -97,7 +100,7 @@ export default async (req, res) => {
   const session = await getSession({ req })
   if (session) {
     // Signed in
-    console.log('Session', JSON.stringify(session, null, 2))
+    console.log("Session", JSON.stringify(session, null, 2))
   } else {
     // Not Signed in
     res.status(401)
@@ -112,7 +115,7 @@ If you are using JSON Web Tokens you can use the `getToken()` helper to access t
 
 ```js title="pages/api/get-token-example.js"
 // This is an example of how to read a JSON Web Token from an API route
-import jwt from 'next-auth/jwt'
+import jwt from "next-auth/jwt"
 
 const secret = process.env.SECRET
 
@@ -120,7 +123,7 @@ export default async (req, res) => {
   const token = await jwt.getToken({ req, secret })
   if (token) {
     // Signed in
-    console.log('JSON Web Token', JSON.stringify(token, null, 2))
+    console.log("JSON Web Token", JSON.stringify(token, null, 2))
   } else {
     // Not Signed in
     res.status(401)

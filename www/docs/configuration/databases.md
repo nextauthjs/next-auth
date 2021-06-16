@@ -3,26 +3,23 @@ id: databases
 title: Databases
 ---
 
-NextAuth.js comes with multiple ways of connecting to a database:
+NextAuth.js offers multiple database adapters:
 
-- **TypeORM** (default)<br/>
-  _The TypeORM adapter supports MySQL, PostgreSQL, MSSQL, SQLite and MongoDB databases._
-- **Prisma**<br/>
-  _The Prisma 2 adapter supports MySQL, PostgreSQL and SQLite databases._
-- **Fauna**<br/>
-  _The FaunaDB adapter only supports FaunaDB._
-- **Custom Adapter**<br/>
-  _A custom Adapter can be used to connect to any database._
+- [`typeorm-legacy`](./../adapters/typeorm/typeorm-overview)
+- [`prisma`](./../adapters/prisma)
+- [`prisma-legacy`](./../adapters/prisma-legacy)
+- [`fauna`](./../adapters/fauna)
+- [`dynamodb`](./../adapters/dynamodb)
+- [`firebase`](./../adapters/firebase)
+- [`pouchdb`](./../adapters/pouchdb)
 
-> There are currently efforts in the [`nextauthjs/adapters`](https://github.com/nextauthjs/adapters) repository to get community-based DynamoDB, Sanity, PouchDB and Sequelize Adapters merged. If you are interested in any of the above, feel free to check out the PRs in the `nextauthjs/adapters` repository!
-
-**This document covers the default adapter (TypeORM).**
-
-See the [documentation for adapters](/adapters/overview) to learn more about using Prisma adapter or using a custom adapter.
+> As of **v4.0.0** NextAuth.js no longer ships with an adapter included by default. If you would like to persist any information, you need to install one of the many available adapters yourself. See the individual adapter documentation pages for more details.
 
 To learn more about databases in NextAuth.js and how they are used, check out [databases in the FAQ](/faq#databases).
 
 ---
+
+**The rest of this document covers the old default adapter (TypeORM).**
 
 ## How to use a database
 
