@@ -22,8 +22,7 @@
   "exports": {
     ".": "./dist/server/index.js",
     "./jwt": "./dist/lib/jwt.js",
-    "./adapters": "./dist/adapters/index.js",
-    "./client": "./dist/client/index.js",
+    "./react": "./dist/client/react.js",
     "./providers": "./dist/providers/index.js",
     "./providers/*": "./dist/providers/*.js",
     "./errors": "./dist/lib/errors.js"
@@ -52,8 +51,8 @@
     "providers.d.ts",
     "adapters.js",
     "adapters.d.ts",
-    "client.js",
-    "client.d.ts",
+    "react.js",
+    "react.d.ts",
     "errors.js",
     "errors.d.ts",
     "jwt.js",
@@ -63,28 +62,26 @@
   "license": "ISC",
   "dependencies": {
     "@babel/runtime": "^7.14.0",
-    "@next-auth/prisma-legacy-adapter": "0.0.1-canary.127",
-    "@next-auth/typeorm-legacy-adapter": "0.0.2-canary.129",
     "futoin-hkdf": "^1.3.2",
     "jose": "^1.27.2",
     "jsonwebtoken": "^8.5.1",
-    "nodemailer": "^6.4.16",
     "oauth": "^0.9.15",
     "pkce-challenge": "^2.1.0",
     "preact": "^10.4.1",
-    "preact-render-to-string": "^5.1.14",
-    "querystring": "^0.2.0"
+    "preact-render-to-string": "^5.1.14"
   },
   "peerDependencies": {
-    "react": "^16.13.1 || ^17",
-    "react-dom": "^16.13.1 || ^17"
+    "nodemailer": "^6.4.16",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   },
   "peerOptionalDependencies": {
-    "mongodb": "^3.5.9",
-    "mysql": "^2.18.1",
-    "mssql": "^6.2.1",
-    "pg": "^8.2.1",
-    "@prisma/client": "^2.16.1"
+    "nodemailer": "^6.4.16"
+  },
+  "peerDependenciesMeta": {
+    "nodemailer": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
@@ -126,8 +123,8 @@
     "postcss-nested": "^4.2.1",
     "prettier": "^2.2.1",
     "pretty-quick": "^3.1.0",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "typescript": "^4.1.3",
     "whatwg-fetch": "^3.6.2"
   },

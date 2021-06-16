@@ -2,38 +2,6 @@ import { AppOptions } from "./internals"
 import { User, Profile, Session } from "."
 import { EmailConfig } from "./providers"
 
-/** Legacy */
-
-export {
-  TypeORMAccountModel,
-  TypeORMSessionModel,
-  TypeORMUserModel,
-  TypeORMVerificationRequestModel,
-} from "@next-auth/typeorm-legacy-adapter"
-
-import {
-  TypeORMAdapter,
-  TypeORMAdapterModels,
-} from "@next-auth/typeorm-legacy-adapter"
-
-import { PrismaLegacyAdapter } from "@next-auth/prisma-legacy-adapter"
-
-export const TypeORM: {
-  Models: TypeORMAdapterModels
-  Adapter: TypeORMAdapter
-}
-
-export const Prisma: {
-  Adapter: PrismaLegacyAdapter
-}
-
-declare const Adapters: {
-  Default: TypeORMAdapter
-  TypeORM: typeof TypeORM
-  Prisma: typeof Prisma
-}
-export default Adapters
-
 /**
  * Using a custom adapter you can connect to any database backend or even several different databases.
  * Custom adapters created and maintained by our community can be found in the adapters repository.

@@ -11,7 +11,7 @@ _New submissions and edits are welcome!_
 
 ### [NextJS Authentication Crash Course with NextAuth.js](https://youtu.be/o_wZIVmWteQ)
 
-This tutorial dives in to the ins and outs of NextAuth including email, GitHub, Twitter and integrating with Auth0 in under hour.
+This tutorial dives in to the ins and outs of NextAuth including email, Github, Twitter and integrating with Auth0 in under hour.
 
 ### [Create your own NextAuth.js Login Pages](https://youtu.be/kB6YNYZ63fw)
 

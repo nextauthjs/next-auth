@@ -1,9 +1,7 @@
-import { useState } from "react"
 import { rest } from "msw"
 import { render, screen, waitFor } from "@testing-library/react"
 import { server, mockSession } from "./helpers/mocks"
-import { Provider, useSession } from ".."
-import userEvent from "@testing-library/user-event"
+import { SessionProvider, useSession } from "../react"
 
 beforeAll(() => {
   server.listen()
@@ -29,6 +27,8 @@ test("fetches the session once and re-uses it for different consumers", async ()
   )
 
   render(<ProviderFlow />)
+  expect(screen.getByTestId("session-consumer-1")).toHaveTextContent("loading")
+  expect(screen.getByTestId("session-consumer-2")).toHaveTextContent("loading")
 
   await waitFor(() => {
     expect(sessionRouteCall).toHaveBeenCalledTimes(1)
@@ -40,13 +40,24 @@ test("fetches the session once and re-uses it for different consumers", async ()
   })
 })
 
+test("initialize provider with session", () => {
+  render(<ProviderFlow session={mockSession} />)
+
+  expect(screen.getByTestId("session-consumer-1")).not.toHaveTextContent(
+    "loading"
+  )
+  expect(screen.getByTestId("session-consumer-2")).not.toHaveTextContent(
+    "loading"
+  )
+})
+
 function ProviderFlow({ options = {} }) {
   return (
     <>
-      <Provider options={options}>
+      <SessionProvider {...options}>
         <SessionConsumer />
         <SessionConsumer testId="2" />
-      </Provider>
+      </SessionProvider>
     </>
   )
 }
@@ -54,7 +65,8 @@ function ProviderFlow({ options = {} }) {
 function SessionConsumer({ testId = 1 }) {
   const [session, loading] = useSession()
 
-  if (loading) return <span>loading</span>
+  if (loading)
+    return <span data-testid={`session-consumer-${testId}`}>loading</span>
 
   return (
     <div data-testid={`session-consumer-${testId}`}>

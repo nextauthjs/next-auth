@@ -1,16 +1,16 @@
 export default function WorkOS(options) {
-  const domain = options.domain || 'api.workos.com';
+  const domain = options.domain || "api.workos.com"
 
   return {
-    id: 'workos',
-    name: 'WorkOS',
-    type: 'oauth',
-    version: '2.0',
-    scope: '',
+    id: "workos",
+    name: "WorkOS",
+    type: "oauth",
+    version: "2.0",
+    scope: "",
     params: {
-      grant_type: 'authorization_code',
+      grant_type: "authorization_code",
       client_id: options.clientId,
-      client_secret: options.clientSecret
+      client_secret: options.clientSecret,
     },
     accessTokenUrl: `https://${domain}/sso/token`,
     authorizationUrl: `https://${domain}/sso/authorize?response_type=code`,
@@ -18,9 +18,9 @@ export default function WorkOS(options) {
     profile: (profile) => {
       return {
         ...profile,
-        name: `${profile.first_name} ${profile.last_name}`
+        name: `${profile.first_name} ${profile.last_name}`,
       }
     },
-    ...options
+    ...options,
   }
 }
