@@ -9,6 +9,7 @@ export default function Cognito(options) {
     params: { grant_type: "authorization_code" },
     accessTokenUrl: `https://${domain}/oauth2/token`,
     authorizationUrl: `https://${domain}/oauth2/authorize?response_type=code`,
+    idToken: true,
     profileUrl: `https://${domain}/oauth2/userInfo`,
     profile(profile) {
       return {
