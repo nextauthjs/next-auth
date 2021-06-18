@@ -12,6 +12,7 @@ on:
 jobs:
   test:
     name: Tests
+    environment: Production
     runs-on: ubuntu-latest
     steps:
       - name: Init
@@ -31,7 +32,7 @@ jobs:
         run: npm run build
   release:
     name: Release
-    environment: release
+    environment: Production
     needs: test
     runs-on: ubuntu-latest
     steps:
