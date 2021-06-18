@@ -31,6 +31,7 @@ jobs:
         run: npm run build
   release:
     name: Release
+    environement: release
     needs: test
     runs-on: ubuntu-latest
     steps:
