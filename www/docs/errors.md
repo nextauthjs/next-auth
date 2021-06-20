@@ -79,7 +79,7 @@ This can occur during handling of the callback if the `code_verifier` cookie was
 
 #### SIGNIN_EMAIL_ERROR
 
-This error can occur if there was an error signing in a user via Email link, such as if the email token could not be generated or the verification request failed.
+This error can occur when a user tries to sign in via an email link; for example, if the email token could not be generated or the verification request failed.
 
 Please double check your email settings.
 
