@@ -60,7 +60,6 @@ function initOptions(req, res, userOptions) {
   // User provided options are overriden by other options,
   // except for the options with special handling above
   req.options = {
-    init: true,
     debug: false,
     // Custom options override defaults
     ...userOptions,
