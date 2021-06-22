@@ -34,7 +34,7 @@ providers: [
 ```
 
 :::warning
-Google only provide the Refresh Token to an application the first time a user signs in.
+Google only provides Refresh Token to an application the first time a user signs in.
 
 To force Google to re-issue a Refresh Token, the user needs to remove the application from their account and sign in again:
 https://myaccount.google.com/permissions
