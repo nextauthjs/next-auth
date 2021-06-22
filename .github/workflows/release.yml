@@ -12,7 +12,6 @@ on:
 jobs:
   test:
     name: Tests
-    environment: Production
     runs-on: ubuntu-latest
     steps:
       - name: Init
