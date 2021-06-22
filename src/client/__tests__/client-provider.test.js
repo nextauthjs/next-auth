@@ -3,8 +3,19 @@ import { render, screen, waitFor } from "@testing-library/react"
 import { server, mockSession } from "./helpers/mocks"
 import { SessionProvider, useSession } from "../react"
 
+const sessionRouteCall = jest.fn()
+
 beforeAll(() => {
   server.listen()
+})
+
+beforeEach(() => {
+  server.use(
+    rest.get("/api/auth/session", (req, res, ctx) => {
+      sessionRouteCall()
+      res(ctx.status(200), ctx.json(mockSession))
+    })
+  )
 })
 
 afterEach(() => {
@@ -17,15 +28,6 @@ afterAll(() => {
 })
 
 test("fetches the session once and re-uses it for different consumers", async () => {
-  const sessionRouteCall = jest.fn()
-
-  server.use(
-    rest.get("/api/auth/session", (req, res, ctx) => {
-      sessionRouteCall()
-      res(ctx.status(200), ctx.json(mockSession))
-    })
-  )
-
   render(<ProviderFlow />)
 
   expect(screen.getByTestId("session-consumer-1")).toHaveTextContent("loading")
@@ -42,8 +44,6 @@ test("fetches the session once and re-uses it for different consumers", async ()
 })
 
 test("when there's an existing session, it won't initialize as loading", () => {
-  const sessionRouteCall = jest.fn()
-
   server.use(
     rest.get("/api/auth/session", (req, res, ctx) => {
       sessionRouteCall()
@@ -62,6 +62,17 @@ test("when there's an existing session, it won't initialize as loading", () => {
   )
 
   expect(sessionRouteCall).not.toHaveBeenCalled()
+})
+
+test("will refetch the session when the browser tab becomes active again", async () => {
+  render(<ProviderFlow />)
+
+  expect(screen.getByTestId("session-consumer-1")).toHaveTextContent("loading")
+  expect(screen.getByTestId("session-consumer-2")).toHaveTextContent("loading")
+
+  await waitFor(() => {
+    expect(sessionRouteCall).toHaveBeenCalledTimes(1)
+  })
 })
 
 function ProviderFlow({ options = {} }) {

@@ -245,12 +245,13 @@ export function SessionProvider(props) {
   }, [])
 
   React.useEffect(() => {
-    // Set up visibility change
-    // Listen for document visibility change events and
-    // if visibility of the document changes, re-fetch the session.
+    // Listen for when the page is visible, if the user switches tabs
+    // and makes our tab visible again, re-fetch the session.
     const visibilityHandler = () => {
-      !document.hidden && __NEXTAUTH._getSession({ event: "visibilitychange" })
+      if (document.visibilityState === "visible")
+        __NEXTAUTH._getSession({ event: "visibilitychange" })
     }
+
     document.addEventListener("visibilitychange", visibilityHandler, false)
     return () =>
       document.removeEventListener("visibilitychange", visibilityHandler, false)
