@@ -13,7 +13,7 @@ The Email provider can be used in conjunction with (or instead of) one or more O
 
 ### How it works
 
-On initial sign in, a **Verification Token** is sent to the email address provided. By default this token is valid for 24 hours. If the Verification Token is used with that time (i.e. by clicking on the link in the email) an account is created for the user and they are signed in.
+On initial sign in, a **Verification Token** is sent to the email address provided. By default this token is valid for 24 hours. If the Verification Token is used within that time (i.e. by clicking on the link in the email) an account is created for the user and they are signed in.
 
 If someone provides the email address of an _existing account_ when signing in, an email is sent and they are signed into the account associated with that email address when they follow the link in the email.
 
