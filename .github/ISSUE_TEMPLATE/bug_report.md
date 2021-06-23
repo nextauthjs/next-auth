@@ -28,7 +28,7 @@ See [Kap](https://getkap.co/) for a good, easy-to-use, cross-platform screen rec
 
 ## Environment 🖥
 
-Please run this command:
+Please run this command in your project's root folder:
 
 ```sh
 npx envinfo --system --binaries --browsers --npmPackages "next,next-auth,react"
