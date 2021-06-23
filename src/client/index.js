@@ -138,6 +138,8 @@ function _useSessionHook(session) {
         // infinate loop.
         const newClientSessionData = await getSession({
           triggerEvent: !triggeredByStorageEvent,
+          currentSession: !triggeredByStorageEvent && (clientMaxAge === 0 || currentTime < clientLastSync + clientMaxAge)
+            && clientSession ? { ...clientSession } : null
         })
 
         // Save session state internally, just so we can track that we've checked
@@ -159,7 +161,7 @@ function _useSessionHook(session) {
 }
 
 export async function getSession(ctx) {
-  const session = await _fetchData("session", ctx)
+  const session = await _fetchData("session", ctx, ctx?.currentSession)
   if (ctx?.triggerEvent ?? true) {
     broadcast.post({ event: "session", data: { trigger: "getSession" } })
   }
@@ -314,7 +316,7 @@ export function Provider({ children, session, options }) {
  * work seemlessly in getInitialProps() on server side
  * pages *and* in _app.js.
  */
-async function _fetchData(path, { ctx, req = ctx?.req } = {}) {
+async function _fetchData(path, { ctx, req = ctx?.req } = {}, fallback = null) {
   try {
     const baseUrl = await _apiBaseUrl()
     const options = req ? { headers: { cookie: req.headers.cookie } } : {}
@@ -324,7 +326,7 @@ async function _fetchData(path, { ctx, req = ctx?.req } = {}) {
     return Object.keys(data).length > 0 ? data : null // Return null if data empty
   } catch (error) {
     logger.error("CLIENT_FETCH_ERROR", path, error)
-    return null
+    return fallback
   }
 }
 

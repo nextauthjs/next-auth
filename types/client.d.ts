@@ -15,6 +15,7 @@ export interface CtxOrReq {
 export type GetSessionOptions = CtxOrReq & {
   event?: "storage" | "timer" | "hidden" | string
   triggerEvent?: boolean
+  currentSession?: Session
 }
 
 /**
