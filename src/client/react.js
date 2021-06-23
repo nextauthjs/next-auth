@@ -43,8 +43,21 @@ const logger = proxyLogger(_logger, __NEXTAUTH.basePath)
 /** @type {import("types/internals/react").SessionContext} */
 const SessionContext = React.createContext()
 
-export function useSession() {
-  return React.useContext(SessionContext)
+export function useSession(options = {}) {
+  const value = React.useContext(SessionContext)
+
+  if (process.env.NODE_ENV !== "production" && !value) {
+    throw new Error("useSession must be wrapped in a SessionProvider")
+  }
+
+  const { required = false, action = signIn } = options
+  React.useEffect(() => {
+    if (required && value.status === "unauthenticated") {
+      action()
+    }
+  }, [required, action, value.status])
+
+  return value
 }
 
 export async function getSession(ctx) {
@@ -269,7 +282,17 @@ export function SessionProvider(props) {
     }
   }, [props.refetchInterval])
 
-  const value = React.useMemo(() => [session, loading], [session, loading])
+  const value = React.useMemo(
+    () => ({
+      data: session,
+      status: loading
+        ? "loading"
+        : session
+        ? "authenticated"
+        : "unauthenticated",
+    }),
+    [session, loading]
+  )
 
   return (
     <SessionContext.Provider value={value}>{children}</SessionContext.Provider>
