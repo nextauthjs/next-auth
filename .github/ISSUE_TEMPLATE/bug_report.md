@@ -30,8 +30,8 @@ See [Kap](https://getkap.co/) for a good, easy-to-use, cross-platform screen rec
 
 Please run this command:
 
-```
-$ npx envinfo --system --binaries --browsers --npmPackages "{next-auth}"
+```sh
+npx envinfo --system --binaries --browsers --npmPackages "next,next-auth,react"
 ```
 
 and paste the output here.
