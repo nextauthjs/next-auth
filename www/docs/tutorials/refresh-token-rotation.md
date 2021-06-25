@@ -83,7 +83,7 @@ export default NextAuth({
     }),
   ],
   callbacks: {
-    async jwt(token, user, account) {
+    async jwt({ token, user, account }) {
       // Initial sign in
       if (account && user) {
         return {
@@ -102,12 +102,10 @@ export default NextAuth({
       // Access token has expired, try to update it
       return refreshAccessToken(token)
     },
-    async session(session, token) {
-      if (token) {
-        session.user = token.user
-        session.accessToken = token.accessToken
-        session.error = token.error
-      }
+    async session({ session, token }) {
+      session.user = token.user
+      session.accessToken = token.accessToken
+      session.error = token.error
 
       return session
     },
