@@ -83,8 +83,6 @@ Advanced options allow you to define your own routines to handle controlling wha
 
 NextAuth.js comes with built-in types. For more information and usage, check out the [TypeScript section](https://next-auth.js.org/getting-started/typescript) in the documentation.
 
-The package at `@types/next-auth` is now deprecated.
-
 ## Example
 
 ### Add API Route
