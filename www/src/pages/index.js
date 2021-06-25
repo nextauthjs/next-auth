@@ -215,7 +215,7 @@ function Home() {
               </div>
             </div>
           </section>
-          <div className="home-subtitle">
+          <div className={styles.homeSubtitle}>
             <p>NextAuth.js is an open source community project.</p>
           </div>
         </main>
