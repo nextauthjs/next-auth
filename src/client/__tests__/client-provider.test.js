@@ -41,7 +41,7 @@ test("fetches the session once and re-uses it for different consumers", async ()
   })
 })
 
-test("when there's an existing session, it won't initialize as loading", () => {
+test("when there's an existing session, it won't initialize as loading", async () => {
   const sessionRouteCall = jest.fn()
 
   server.use(
@@ -53,7 +53,7 @@ test("when there's an existing session, it won't initialize as loading", () => {
 
   render(<ProviderFlow session={mockSession} />)
 
-  expect(screen.getByTestId("session-consumer-1")).not.toHaveTextContent(
+  expect(await screen.findByTestId("session-consumer-1")).not.toHaveTextContent(
     "loading"
   )
 
