@@ -74,7 +74,7 @@ export default async function callback(req, res) {
           const signInCallbackResponse = await callbacks.signIn({
             user: userOrProfile,
             account,
-            metadata: OAuthProfile,
+            profile: OAuthProfile,
           })
           if (!signInCallbackResponse) {
             return res.redirect(
@@ -218,7 +218,7 @@ export default async function callback(req, res) {
         const signInCallbackResponse = await callbacks.signIn({
           user: profile,
           account,
-          metadata: { email },
+          email: { email },
         })
         if (!signInCallbackResponse) {
           return res.redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
@@ -352,7 +352,7 @@ export default async function callback(req, res) {
       const signInCallbackResponse = await callbacks.signIn({
         user,
         account,
-        metdata: credentials,
+        credentials,
       })
       if (!signInCallbackResponse) {
         return res

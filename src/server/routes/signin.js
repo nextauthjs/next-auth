@@ -49,10 +49,7 @@ export default async function signin(req, res) {
       const signInCallbackResponse = await callbacks.signIn({
         user,
         account,
-        metadata: {
-          email,
-          verificationRequest: true,
-        },
+        email: { email, verificationRequest: true },
       })
       if (signInCallbackResponse === false) {
         return res.redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)

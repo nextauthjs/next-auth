@@ -271,23 +271,24 @@ export interface CallbacksOptions<
     user: User
     account: A
     /**
-     * If OAuth is used, it will contain the full OAuth profile returned by your provider.
-     * If Email is used, it will contain the email, and optionally on the first call a
+     * If OAuth provider is used, it contains the full
+     * OAuth profile returned by your provider.
+     */
+    profile: P & Record<string, unknown>
+    /**
+     * If Email provider is used, it contains the email, and optionally on the first call a
      * `verificationRequest: true` property to indicate it is being triggered in the verification request flow.
      * When the callback is invoked after a user has clicked on a sign in link,
-     * this property will not be present. You can check for the verificationRequest property
+     * this property will not be present. You can check for the `verificationRequest` property
      * to avoid sending emails to addresses or domains on a blocklist or to only explicitly generate them
      * for email address in an allow list.
-     * If you used Credentials, it will contain the user credentials
-     *
-     */
-    metadata:
-      | (P & Record<string, unknown>)
-      | {
-          email: string | null
-          verificationRequest?: boolean
-        }
-      | Credentials
+     * */
+    email: {
+      email: string | null
+      verificationRequest?: boolean
+    }
+    /** If Credentials provider is used, it contains the user credentials */
+    credentials: Credentials
   }): Awaitable<string | boolean>
   /**
    * This callback is called anytime the user is redirected to a callback URL (e.g. on signin or signout).
@@ -296,7 +297,12 @@ export interface CallbacksOptions<
    *
    * [Documentation](https://next-auth.js.org/configuration/callbacks#redirect-callback)
    */
-  redirect(params: { url: string; baseUrl: string }): Awaitable<string>
+  redirect(params: {
+    /** URL provided as callback URL by the client */
+    url: string
+    /** Default base URL of site (can be used as fallback) */
+    baseUrl: string
+  }): Awaitable<string>
   /**
    * This callback is called whenever a session is checked.
    * (Eg.: invoking the `/api/session` endpoint, using `useSession` or `getSession`)
