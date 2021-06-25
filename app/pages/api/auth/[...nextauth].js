@@ -41,11 +41,11 @@ export default NextAuth({
       clientSecret: process.env.AUTH0_SECRET,
       domain: process.env.AUTH0_DOMAIN,
       // Used to debug https://github.com/nextauthjs/next-auth/issues/1664
-      // protection: ["pkce", "state"],
+      // checks: ["pkce", "state"],
       // authorizationParams: {
       //   response_mode: 'form_post'
       // }
-      protection: "pkce",
+      checks: ["pkce"],
     }),
     TwitterProvider({
       clientId: process.env.TWITTER_ID,
