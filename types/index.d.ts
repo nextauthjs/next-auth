@@ -2,7 +2,6 @@
 
 /// <reference types="node" />
 
-import { ConnectionOptions } from "typeorm"
 import { Adapter } from "./adapters"
 import { JWTOptions, JWT } from "./jwt"
 import { AppProviders } from "./providers"
