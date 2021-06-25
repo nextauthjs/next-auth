@@ -28,6 +28,9 @@ test("fetches the session once and re-uses it for different consumers", async ()
 
   render(<ProviderFlow />)
 
+  expect(screen.getByTestId("session-consumer-1")).toHaveTextContent("loading")
+  expect(screen.getByTestId("session-consumer-2")).toHaveTextContent("loading")
+
   await waitFor(() => {
     expect(sessionRouteCall).toHaveBeenCalledTimes(1)
 
@@ -36,6 +39,29 @@ test("fetches the session once and re-uses it for different consumers", async ()
 
     expect(session1).toEqual(session2)
   })
+})
+
+test("when there's an existing session, it won't initialize as loading", () => {
+  const sessionRouteCall = jest.fn()
+
+  server.use(
+    rest.get("/api/auth/session", (req, res, ctx) => {
+      sessionRouteCall()
+      res(ctx.status(200), ctx.json(mockSession))
+    })
+  )
+
+  render(<ProviderFlow session={mockSession} />)
+
+  expect(screen.getByTestId("session-consumer-1")).not.toHaveTextContent(
+    "loading"
+  )
+
+  expect(screen.getByTestId("session-consumer-2")).not.toHaveTextContent(
+    "loading"
+  )
+
+  expect(sessionRouteCall).not.toHaveBeenCalled()
 })
 
 function ProviderFlow({ options = {} }) {
@@ -52,11 +78,9 @@ function ProviderFlow({ options = {} }) {
 function SessionConsumer({ testId = 1 }) {
   const [session, loading] = useSession()
 
-  if (loading) return <span>loading</span>
-
   return (
     <div data-testid={`session-consumer-${testId}`}>
-      {JSON.stringify(session)}
+      {loading ? "loading" : JSON.stringify(session)}
     </div>
   )
 }

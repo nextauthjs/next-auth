@@ -28,10 +28,10 @@ See [Kap](https://getkap.co/) for a good, easy-to-use, cross-platform screen rec
 
 ## Environment 🖥
 
-Please run this command:
+Please run this command in your project's root folder:
 
-```
-$ npx envinfo --system --binaries --browsers --npmPackages "{next-auth}"
+```sh
+npx envinfo --system --binaries --browsers --npmPackages "next,next-auth,react"
 ```
 
 and paste the output here.

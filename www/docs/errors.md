@@ -33,13 +33,29 @@ These errors are displayed on the terminal.
 
 #### OAUTH_GET_ACCESS_TOKEN_ERROR
 
+This occurs when there was an error in the POST request to the OAuth provider and we were not able to retrieve the access token.
+
+Please double check your provider settings.
+
 #### OAUTH_V1_GET_ACCESS_TOKEN_ERROR
+
+This error is explicitly related to older OAuth v1.x providers, if you are using one of these, please double check all available settings.
 
 #### OAUTH_GET_PROFILE_ERROR
 
+N/A
+
 #### OAUTH_PARSE_PROFILE_ERROR
 
+This error is a result of either a problem with the provider response or the user cancelling the action with the provider, unfortunately we can't discern which with the information we have.
+
+This error should also log the exception and available `profileData` to further aid debugging.
+
 #### OAUTH_CALLBACK_HANDLER_ERROR
+
+This error will occur when there was an issue parsing the json request body, for example.
+
+There should also be further details logged when this occurs, such as the error thrown, and the request body itself to aid in debugging.
 
 ---
 
@@ -47,13 +63,31 @@ These errors are displayed on the terminal.
 
 #### GET_AUTHORIZATION_URL_ERROR
 
+This error can occur when we cannot get the OAuth v1 request token and generate the authorization URL.
+
+Please double check your OAuth v1 provider settings, especially the OAuth token and OAuth token secret.
+
 #### SIGNIN_OAUTH_ERROR
+
+This error can occur in one of a few places, first during the redirect to the authorization URL of the provider. Next, in the signin flow while creating the PKCE code verifier. Finally, during the generation of the CSRF Token hash in internal state during signin.
+
+Please check your OAuth provider settings and make sure your URLs and other options are correctly set on the provider side.
 
 #### CALLBACK_OAUTH_ERROR
 
+This can occur during handling of the callback if the `code_verifier` cookie was not found or an invalid state was returned from the OAuth provider.
+
 #### SIGNIN_EMAIL_ERROR
 
+This error can occur when a user tries to sign in via an email link; for example, if the email token could not be generated or the verification request failed.
+
+Please double check your email settings.
+
 #### CALLBACK_EMAIL_ERROR
+
+This can occur during the email callback process. Specifically, if there was an error signing the user in via email, encoding the jwt, etc.
+
+Please double check your Email settings.
 
 #### EMAIL_REQUIRES_ADAPTER_ERROR
 
@@ -70,6 +104,8 @@ If you are using a Credentials Provider, NextAuth.js will not persist users or s
 In _most cases_ it does not make sense to specify a database in NextAuth.js options and support a Credentials Provider.
 
 #### CALLBACK_CREDENTIALS_HANDLER_ERROR
+
+This error occurs when there was no `authorize()` handler defined on the credential authentication provider.
 
 #### PKCE_ERROR
 
@@ -110,6 +146,8 @@ If you are unable to use an HS512 key (for example to interoperate with other se
 
 #### SIGNOUT_ERROR
 
+This error occurs when there was an issue deleting the session from the database, for example.
+
 ---
 
 ### Database
@@ -120,29 +158,55 @@ They all indicate a problem interacting with the database.
 
 #### ADAPTER_CONNECTION_ERROR
 
+This error can occur during the `createConnection()` function. Make sure your database connection string / settings are correct and the database is up and ready to receive connections.
+
 #### CREATE_USER_ERROR
+
+N/A
 
 #### GET_USER_BY_ID_ERROR
 
+N/A
+
 #### GET_USER_BY_EMAIL_ERROR
+
+N/A
 
 #### GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR
 
+N/A
+
 #### LINK_ACCOUNT_ERROR
+
+N/A
 
 #### CREATE_SESSION_ERROR
 
+N/A
+
 #### GET_SESSION_ERROR
+
+N/A
 
 #### UPDATE_SESSION_ERROR
 
+N/A
+
 #### DELETE_SESSION_ERROR
+
+N/A
 
 #### CREATE_VERIFICATION_REQUEST_ERROR
 
+N/A
+
 #### GET_VERIFICATION_REQUEST_ERROR
 
+N/A
+
 #### DELETE_VERIFICATION_REQUEST_ERROR
+
+N/A
 
 ---
 

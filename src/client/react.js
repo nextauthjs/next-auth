@@ -180,7 +180,7 @@ export function SessionProvider(props) {
   })
 
   /** If session was passed, initialize as not loading */
-  const [loading, setLoading] = React.useState(hasInitialSession)
+  const [loading, setLoading] = React.useState(!hasInitialSession)
 
   React.useEffect(() => {
     __NEXTAUTH._getSession = async ({ event } = {}) => {
