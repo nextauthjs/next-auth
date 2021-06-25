@@ -98,6 +98,7 @@
     "@typescript-eslint/parser": "^4.28.0",
     "autoprefixer": "^10.2.6",
     "babel-jest": "^27.0.5",
+    "babel-preset-react": "^6.24.1",
     "conventional-changelog-conventionalcommits": "4.6.0",
     "cssnano": "^5.0.6",
     "dtslint": "^4.1.0",
