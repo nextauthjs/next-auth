@@ -153,14 +153,14 @@ const allConfig: NextAuthTypes.NextAuthOptions = {
   },
   pages: pageOptions,
   callbacks: {
-    async signIn({ user, account, metadata }) {
+    async signIn({ user, account, email, credentials, profile }) {
       return true
     },
     async redirect({ url, baseUrl }) {
       return "path/to/foo"
     },
     async session({ session, user, token }) {
-      return { ...session }
+      return session
     },
     async jwt({ token, user, account, profile, isNewUser }) {
       return token

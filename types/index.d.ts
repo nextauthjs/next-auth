@@ -282,7 +282,7 @@ export interface CallbacksOptions<
      * this property will not be present. You can check for the `verificationRequest` property
      * to avoid sending emails to addresses or domains on a blocklist or to only explicitly generate them
      * for email address in an allow list.
-     * */
+     */
     email: {
       email: string | null
       verificationRequest?: boolean
