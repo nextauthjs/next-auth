@@ -47,7 +47,7 @@ export default NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, user, account, profile, isNewUser }) {
+    async jwt({ token, user }) {
       const isSignIn = user ? true : false
       if (isSignIn) {
         token.username = user.username
