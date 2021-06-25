@@ -1,7 +1,7 @@
 import logger from "../lib/logger"
 import * as routes from "./routes"
 import renderPage from "./pages"
-import initOptions from "./lib/init-options"
+import initReqOptions from "./lib/init-req-options"
 import callbackUrlHandler from "./lib/callback-url-handler"
 import extendRes from "./lib/extend-res"
 import csrfTokenHandler from "./lib/csrf-token-handler"
@@ -16,6 +16,36 @@ if (!process.env.NEXTAUTH_URL) {
 }
 
 /**
+ * @param {import("next").NextPageContext} ctx
+ * @param {import("types").NextAuthOptions} userOptions
+ */
+ export async function getServerSession(ctx, userOptions) {
+  const { req, res } = ctx
+
+  initReqOptions(req, userOptions)
+
+  return session(req, res)
+}
+
+/**
+ * @param {import("next").NextPageContext} ctx
+ * @param {import("types").NextAuthOptions} userOptions
+ */
+export async function getServerProviders(ctx, userOptions) {
+  const { req } = ctx
+
+  initReqOptions(req, userOptions)
+
+  return req.options.providers.reduce(
+    (acc, { id, name, type, signinUrl, callbackUrl }) => {
+      acc[id] = { id, name, type, signinUrl, callbackUrl }
+      return acc
+    },
+    {}
+  )
+}
+
+/**
  * @param {import("next").NextApiRequest} req
  * @param {import("next").NextApiResponse} res
  * @param {import("types").NextAuthOptions} userOptions
@@ -27,9 +57,11 @@ async function NextAuthHandler(req, res, userOptions) {
   // complains but I'm not sure there is another way to do this.
   // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (resolve) => {
+    initReqOptions(req, userOptions)
+
     extendRes(req, res, resolve)
 
-    initOptions(req, res, userOptions)
+    initReqOptions(req, res, userOptions)
 
     if (!req.query.nextauth) {
       const error =
@@ -68,14 +100,11 @@ async function NextAuthHandler(req, res, userOptions) {
       }
     }
 
-    // User provided options are overriden by other options,
-    // except for the options with special handling above
+    // Attach additional options needed for the auth flow.
     req.options = {
       pages: {},
       theme: "auto",
       ...req.options,
-      // These computed settings can have values in userOptions but we override them
-      // and are request-specific.
       action,
       provider,
     }
@@ -206,38 +235,6 @@ async function NextAuthHandler(req, res, userOptions) {
       .status(400)
       .end(`Error: HTTP ${req.method} is not supported for ${req.url}`)
   })
-}
-
-/**
- * @param {import("next").NextPageContext} ctx
- * @param {import("types").NextAuthOptions} userOptions
- */
- export async function getServerSession(context, userOptions) {
-  const { req, res } = context
-
-  initOptions(req, res, userOptions)
-
-  return session(req, res)
-}
-
-/**
- * @param {import("next").NextPageContext} context
- * @param {import("types").NextAuthOptions} userOptions
- */
-export async function getServerProviders(context, userOptions) {
-  const { req, res } = context
-
-  initOptions(req, res, userOptions)
-
-  const { providers } = req.options
-
-  return providers.reduce(
-    (acc, { id, name, type, signinUrl, callbackUrl }) => {
-      acc[id] = { id, name, type, signinUrl, callbackUrl }
-      return acc
-    },
-    {}
-  )
 }
 
 /** Tha main entry point to next-auth */

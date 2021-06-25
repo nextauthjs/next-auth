@@ -9,11 +9,17 @@ import parseProviders from './providers'
 import createSecret from './create-secret'
 
 /**
- * Compute common options shared between `NextAuthHandler` and `getServerSide` functions
+ * Compute options shared between `NextAuthHandler` and `getServerSide` 
+ * functions and attach them to the request object. 
+ * 
+ * All options are included except the ones that are specific to the 
+ * `NextAuthHandler` (action, provider, theme, pages). 
+ * 
+ * Maybe we need to move other specific `NextAuthHandler` options like callbacks, events, pkce, ...
  */
-function initOptions(req, res, userOptions) {
-  // Prevent recomputing options when multiple `getServerSide()` 
-  // are called in the same `getServerSideProps()`
+function initReqOptions(req, userOptions) {
+  // Prevent recomputing options when multiple `getServerSide` calls 
+  // are made in the same `getServerSideProps` function.
   if (req.options) {
     return
   }
@@ -101,4 +107,4 @@ function initOptions(req, res, userOptions) {
   }
 }
 
-export default initOptions
+export default initReqOptions
