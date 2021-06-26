@@ -136,6 +136,10 @@ export interface EmailConfigServerOptions {
     user: string
     pass: string
   }
+  secure?: boolean
+  tls?: {
+    rejectUnauthorized?: boolean
+  }
 }
 
 export type SendVerificationRequest = (params: {
