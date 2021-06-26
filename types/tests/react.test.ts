@@ -11,7 +11,13 @@ const clientSession = {
   expires: "1234",
 }
 
-// $ExpectType { data: Session; status: "authenticated"; loading: false; } | { data: null; status: "unauthenticated" | "loading"; loading: boolean; } | { data: Session; status: "authenticated"; loading: false; } | { data: null; status: "loading"; loading: true; }
+/**
+ * $ExpectType
+ * | { data: Session; status: "authenticated"; loading: false; }
+ * | { data: null; status: "unauthenticated" | "loading"; loading: boolean; }
+ * | { //// data: Session; status: "authenticated"; loading: false; }
+ * | { data: null; status: "loading"; loading: true; }
+ */
 client.useSession()
 
 // $ExpectType { data: Session; status: "authenticated"; loading: false; } | { data: null; status: "loading"; loading: true; }
