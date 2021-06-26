@@ -66,17 +66,15 @@ test("when there's an existing session, it won't initialize as loading", async (
 
 function ProviderFlow({ options = {} }) {
   return (
-    <>
-      <SessionProvider {...options}>
-        <SessionConsumer />
-        <SessionConsumer testId="2" />
-      </SessionProvider>
-    </>
+    <SessionProvider {...options}>
+      <SessionConsumer />
+      <SessionConsumer testId="2" />
+    </SessionProvider>
   )
 }
 
 function SessionConsumer({ testId = 1 }) {
-  const [session, loading] = useSession()
+  const { session, loading } = useSession()
 
   return (
     <div data-testid={`session-consumer-${testId}`}>
