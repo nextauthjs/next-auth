@@ -115,7 +115,9 @@ interface CredentialInput {
   placeholder?: string
 }
 
-interface CredentialsConfig<C extends Record<string, CredentialInput> = {}>
+export type Credentials = Record<string, CredentialInput>
+
+interface CredentialsConfig<C extends Credentials = {}>
   extends CommonProviderOptions {
   type: "credentials"
   credentials: C

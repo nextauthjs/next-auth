@@ -1,18 +1,18 @@
-import { NextApiRequest, NextApiResponse } from "./utils"
-import { LoggerInstance, NextAuthOptions, SessionOptions, Theme } from ".."
+import { Awaitable, NextApiRequest, NextApiResponse } from "./utils"
+import {
+  CallbacksOptions,
+  CookiesOptions,
+  EventCallbacks,
+  LoggerInstance,
+  PagesOptions,
+  SessionOptions,
+  Theme,
+} from ".."
 import { AppProvider } from "../providers"
+import { JWTOptions } from "next-auth/jwt"
+import { Adapter } from "next-auth/adapters"
 
-/** Options that are the same both in internal and user provided options. */
-export type NextAuthSharedOptions =
-  | "pages"
-  | "jwt"
-  | "events"
-  | "callbacks"
-  | "cookies"
-  | "adapter"
-
-export interface AppOptions
-  extends Required<Pick<NextAuthOptions, NextAuthSharedOptions>> {
+export interface InternalOptions {
   providers: AppProvider[]
   baseUrl: string
   basePath: string
@@ -42,10 +42,22 @@ export interface AppOptions
   debug: boolean
   logger: LoggerInstance
   session: Required<SessionOptions>
+  pages: PagesOptions
+  jwt: JWTOptions
+  events: EventCallbacks
+  adapter: ReturnType<Adapter>
+  callbacks: CallbacksOptions
+  cookies: CookiesOptions
+  callbackUrl: string
 }
 
 export interface NextAuthRequest extends NextApiRequest {
-  options: AppOptions
+  options: InternalOptions
 }
 
 export type NextAuthResponse = NextApiResponse
+
+export type NextAuthApiHandler = (
+  req: NextAuthRequest,
+  res: NextAuthResponse
+) => Awaitable<void>

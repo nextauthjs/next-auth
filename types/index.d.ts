@@ -4,7 +4,7 @@
 
 import { Adapter } from "./adapters"
 import { JWTOptions, JWT } from "./jwt"
-import { AppProviders } from "./providers"
+import { AppProviders, Credentials } from "./providers"
 import {
   Awaitable,
   NextApiRequest,
@@ -89,7 +89,7 @@ export interface NextAuthOptions {
    *
    * [Documentation](https://next-auth.js.org/configuration/options#callbacks) | [Callbacks documentation](https://next-auth.js.org/configuration/callbacks)
    */
-  callbacks?: CallbacksOptions
+  callbacks?: Partial<CallbacksOptions>
   /**
    * Events are asynchronous functions that do not return a response, they are useful for audit logging.
    * You can specify a handler for any of these events below - e.g. for debugging or to create an audit log.
@@ -196,7 +196,7 @@ export interface NextAuthOptions {
    *
    * [Documentation](https://next-auth.js.org/configuration/options#cookies) | [Usage example](https://next-auth.js.org/configuration/options#example)
    */
-  cookies?: CookiesOptions
+  cookies?: Partial<CookiesOptions>
 }
 
 /**
@@ -267,7 +267,29 @@ export interface CallbacksOptions<
    *
    * [Documentation](https://next-auth.js.org/configuration/callbacks#sign-in-callback)
    */
-  signIn?(user: User, account: A, profile: P): Awaitable<string | boolean>
+  signIn(params: {
+    user: User
+    account: A
+    /**
+     * If OAuth provider is used, it contains the full
+     * OAuth profile returned by your provider.
+     */
+    profile: P & Record<string, unknown>
+    /**
+     * If Email provider is used, it contains the email, and optionally on the first call a
+     * `verificationRequest: true` property to indicate it is being triggered in the verification request flow.
+     * When the callback is invoked after a user has clicked on a sign in link,
+     * this property will not be present. You can check for the `verificationRequest` property
+     * to avoid sending emails to addresses or domains on a blocklist or to only explicitly generate them
+     * for email address in an allow list.
+     */
+    email: {
+      email: string | null
+      verificationRequest?: boolean
+    }
+    /** If Credentials provider is used, it contains the user credentials */
+    credentials: Credentials
+  }): Awaitable<string | boolean>
   /**
    * This callback is called anytime the user is redirected to a callback URL (e.g. on signin or signout).
    * By default only URLs on the same URL as the site are allowed,
@@ -275,12 +297,19 @@ export interface CallbacksOptions<
    *
    * [Documentation](https://next-auth.js.org/configuration/callbacks#redirect-callback)
    */
-  redirect?(url: string, baseUrl: string): Awaitable<string>
+  redirect(params: {
+    /** URL provided as callback URL by the client */
+    url: string
+    /** Default base URL of site (can be used as fallback) */
+    baseUrl: string
+  }): Awaitable<string>
   /**
    * This callback is called whenever a session is checked.
    * (Eg.: invoking the `/api/session` endpoint, using `useSession` or `getSession`)
    *
-   * - ⚠ By default, only a subset of the token is returned for increased security.
+   * ⚠ By default, only a subset (email, name, imgage)
+   * of the token is returned for increased security.
+   *
    * If you want to make something available you added to the token through the `jwt` callback,
    * you have to explicitely forward it here to make it available to the client.
    *
@@ -290,7 +319,11 @@ export interface CallbacksOptions<
    * [`getSession`](https://next-auth.js.org/getting-started/client#getsession) |
    *
    */
-  session?(session: Session, userOrToken: JWT | User): Awaitable<Session>
+  session(params: {
+    session: Session
+    user: User
+    token: JWT
+  }): Awaitable<Session>
   /**
    * This callback is called whenever a JSON Web Token is created (i.e. at sign in)
    * or updated (i.e whenever a session is accessed in the client).
@@ -298,18 +331,18 @@ export interface CallbacksOptions<
    * where you can control what should be returned to the client.
    * Anything else will be kept from your front-end.
    *
-   * - ⚠ By default the JWT is signed, but not encrypted.
+   * ⚠ By default the JWT is signed, but not encrypted.
    *
    * [Documentation](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
    * [`session` callback](https://next-auth.js.org/configuration/callbacks#session-callback)
    */
-  jwt?(
-    token: JWT,
-    user?: User,
-    account?: A,
-    profile?: P,
+  jwt(params: {
+    token: JWT
+    user?: User
+    account?: A
+    profile?: P
     isNewUser?: boolean
-  ): Awaitable<JWT>
+  }): Awaitable<JWT>
 }
 
 /** [Documentation](https://next-auth.js.org/configuration/options#cookies) */
@@ -327,10 +360,10 @@ export interface CookieOption {
 
 /** [Documentation](https://next-auth.js.org/configuration/options#cookies) */
 export interface CookiesOptions {
-  sessionToken?: CookieOption
-  callbackUrl?: CookieOption
-  csrfToken?: CookieOption
-  pkceCodeVerifier?: CookieOption
+  sessionToken: CookieOption
+  callbackUrl: CookieOption
+  csrfToken: CookieOption
+  pkceCodeVerifier: CookieOption
 }
 
 /** [Documentation](https://next-auth.js.org/configuration/events) */
