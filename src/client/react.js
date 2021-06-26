@@ -290,6 +290,7 @@ export function SessionProvider(props) {
         : session
         ? "authenticated"
         : "unauthenticated",
+      loading,
     }),
     [session, loading]
   )
