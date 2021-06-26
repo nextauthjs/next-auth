@@ -16,6 +16,20 @@ afterAll(() => {
   server.close()
 })
 
+test("throws error without SessionProvider", () => {
+  function App() {
+    useSession()
+    return null
+  }
+
+  jest.spyOn(console, "error")
+  console.error.mockImplementation(() => {})
+  expect(() => render(<App />)).toThrow(
+    "useSession must be wrapped in a SessionProvider"
+  )
+  console.error.mockRestore()
+})
+
 test("fetches the session once and re-uses it for different consumers", async () => {
   const sessionRouteCall = jest.fn()
 
