@@ -99,14 +99,14 @@ The redirect callback may be invoked more than once in the same flow.
 ## JWT callback
 
 This callback is called whenever a JSON Web Token is created (i.e. at sign
-in) or updated (i.e whenever a session is accessed in the client).
+in) or updated (i.e whenever a session is accessed in the client). The returned value will be [signed and optionally encrypted](/configuration/options#jwt), and it is stored in a cookie.
 
 Requests to `/api/auth/signin`, `/api/auth/session` and calls to `getSession()`, `useSession()` will invoke this function, but only if you are using a [JWT session](/configuration/options#session). This method is not invoked when you persist sessions in a database.
 
 - As with database persisted session expiry times, token expiry time is extended whenever a session is active.
 - The arguments _user_, _account_, _profile_ and _isNewUser_ are only passed the first time this callback is called on a new session, after the user signs in. In subsequent calls, only `token` will be available.
 
-The contents _user_, _account_, _profile_ and _isNewUser_ will vary depending on the provider and on if you are using a database or not. If you want, you can to persist data such as User ID, OAuth Access Token in this token. To make it available in the browser, check out the [`session()` callback](#session-callback) as well.
+The contents _user_, _account_, _profile_ and _isNewUser_ will vary depending on the provider and on if you are using a database or not. You can persist data such as User ID, OAuth Access Token in this token. To make it available in the browser, check out the [`session()` callback](#session-callback) as well.
 
 ```js title="pages/api/auth/[...nextauth].js"
 ...
@@ -123,8 +123,7 @@ callbacks: {
 ```
 
 :::tip
-Use an if branch in jwt with checking for existence of any other params than `token`. If any of those exist, you call jwt for the first time.
-This is a good place to add for example an `access_token` to your JWT, if you want to persist it.
+Use an if branch to check for the existence of parameters (apart from `token`). If they exist, this means that the callback is being invoked for the first time (i.e. the user is being signed in). This is a good place to persist additional data like an `access_token` in the JWT. Subsequent invocations will only contain the `token` parameter.
 :::
 
 :::warning
