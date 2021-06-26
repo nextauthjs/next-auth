@@ -16,7 +16,7 @@ import adapterErrorHandler from "../../adapters/error-handler"
  * @param {import("types").Session} sessionToken
  * @param {import("types").Profile} profile
  * @param {import("types").Account} account
- * @param {import("types/internals").AppOptions} options
+ * @param {import("types/internals").InternalOptions} options
  */
 export default async function callbackHandler(
   sessionToken,

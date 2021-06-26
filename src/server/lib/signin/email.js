@@ -5,7 +5,7 @@ import adapterErrorHandler from "../../../adapters/error-handler"
  *
  * @param {string} email
  * @param {import("types/providers").EmailConfig} provider
- * @param {import("types/internals").AppOptions} options
+ * @param {import("types/internals").InternalOptions} options
  * @returns
  */
 export default async function email(email, provider, options) {

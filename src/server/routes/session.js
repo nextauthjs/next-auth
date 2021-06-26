@@ -22,7 +22,7 @@ export default async function session(req, res) {
   if (useJwtSession) {
     try {
       // Decrypt and verify token
-      const decodedJwt = await jwt.decode({ ...jwt, token: sessionToken })
+      const decodedToken = await jwt.decode({ ...jwt, token: sessionToken })
 
       // Generate new session expiry date
       const sessionExpiresDate = new Date()
@@ -33,38 +33,35 @@ export default async function session(req, res) {
 
       // By default, only exposes a limited subset of information to the client
       // as needed for presentation purposes (e.g. "you are logged in as…").
-      const defaultSessionPayload = {
+      const defaultSession = {
         user: {
-          name: decodedJwt.name || null,
-          email: decodedJwt.email || null,
-          image: decodedJwt.picture || null,
+          name: decodedToken.name || null,
+          email: decodedToken.email || null,
+          image: decodedToken.picture || null,
         },
         expires: sessionExpires,
       }
 
       // Pass Session and JSON Web Token through to the session callback
-      const jwtPayload = await callbacks.jwt(decodedJwt)
-      const sessionPayload = await callbacks.session(
-        defaultSessionPayload,
-        jwtPayload
-      )
+      const token = await callbacks.jwt({ token: decodedToken })
+      const session = await callbacks.session({
+        session: defaultSession,
+        token,
+      })
 
       // Return session payload as response
-      response = sessionPayload
+      response = session
 
       // Refresh JWT expiry by re-signing it, with an updated expiry date
-      const newEncodedJwt = await jwt.encode({ ...jwt, token: jwtPayload })
+      const newToken = await jwt.encode({ ...jwt, token })
 
       // Set cookie, to also update expiry date on cookie
-      cookie.set(res, cookies.sessionToken.name, newEncodedJwt, {
+      cookie.set(res, cookies.sessionToken.name, newToken, {
         expires: sessionExpires,
         ...cookies.sessionToken.options,
       })
 
-      await dispatchEvent(events.session, {
-        session: sessionPayload,
-        jwt: jwtPayload,
-      })
+      await dispatchEvent(events.session, { session, token })
     } catch (error) {
       // If JWT not verifiable, make sure the cookie for it is removed and return empty object
       logger.error("JWT_SESSION_ERROR", error)
@@ -88,7 +85,7 @@ export default async function session(req, res) {
 
         // By default, only exposes a limited subset of information to the client
         // as needed for presentation purposes (e.g. "you are logged in as…").
-        const defaultSessionPayload = {
+        const defaultSession = {
           user: {
             name: user.name,
             email: user.email,
@@ -99,10 +96,10 @@ export default async function session(req, res) {
         }
 
         // Pass Session through to the session callback
-        const sessionPayload = await callbacks.session(
-          defaultSessionPayload,
-          user
-        )
+        const sessionPayload = await callbacks.session({
+          session: defaultSession,
+          user,
+        })
 
         // Return session payload as response
         response = sessionPayload
