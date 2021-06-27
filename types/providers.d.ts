@@ -1,5 +1,6 @@
 import { Profile, TokenSet, User } from "."
 import { Awaitable, NextApiRequest } from "./internals/utils"
+import SMTPConnection from 'nodemailer/lib/smtp-connection'
 
 export type ProviderType = "oauth" | "email" | "credentials"
 
@@ -127,20 +128,6 @@ export type CredentialsProvider = (
 
 export type CredentialsProviderType = "Credentials"
 
-/** Email Provider */
-
-export interface EmailConfigServerOptions {
-  host: string
-  port: number
-  auth: {
-    user: string
-    pass: string
-  }
-  secure?: boolean
-  tls?: {
-    rejectUnauthorized?: boolean
-  }
-}
 
 export type SendVerificationRequest = (params: {
   identifier: string
@@ -153,7 +140,7 @@ export type SendVerificationRequest = (params: {
 export interface EmailConfig extends CommonProviderOptions {
   type: "email"
   // TODO: Make use of https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html
-  server: string | EmailConfigServerOptions
+  server: string | SMTPConnection.Options
   /** @default "NextAuth <no-reply@example.com>" */
   from?: string
   /**
