@@ -42,12 +42,12 @@ module.exports = {
           position: "left",
         },
         {
-          href: "https://www.npmjs.com/package/next-auth",
+          to: "https://www.npmjs.com/package/next-auth",
           label: "npm",
           position: "right",
         },
         {
-          href: "https://github.com/nextauthjs/next-auth",
+          to: "https://github.com/nextauthjs/next-auth",
           label: "GitHub",
           position: "right",
         },
@@ -117,6 +117,13 @@ module.exports = {
         },
       ],
       copyright: "NextAuth.js &copy; Iain Collins 2021",
+    },
+    colorMode: {
+      respectPrefersColorScheme: true,
+      switchConfig: {
+        darkIcon: "🌑",
+        lightIcon: "💡",
+      },
     },
   },
   presets: [
