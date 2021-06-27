@@ -10,7 +10,7 @@ export default function GitHub(options) {
     profileUrl: "https://api.github.com/user",
     profile(profile) {
       return {
-        id: profile.id,
+        id: profile.id.toString(),
         name: profile.name || profile.login,
         email: profile.email,
         image: profile.avatar_url,
