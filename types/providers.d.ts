@@ -128,7 +128,6 @@ export type CredentialsProvider = (
 
 export type CredentialsProviderType = "Credentials"
 
-
 export type SendVerificationRequest = (params: {
   identifier: string
   url: string
