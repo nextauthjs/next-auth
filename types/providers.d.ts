@@ -1,6 +1,6 @@
 import { Profile, TokenSet, User } from "."
 import { Awaitable, NextApiRequest } from "./internals/utils"
-import { SMTPConnectionOptions } from 'nodemailer/lib/smtp-connection'
+import { Options as SMTPConnectionOptions } from 'nodemailer/lib/smtp-connection'
 
 export type ProviderType = "oauth" | "email" | "credentials"
 
