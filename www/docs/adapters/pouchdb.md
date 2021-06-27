@@ -13,10 +13,10 @@ Depending on your architecture you can use PouchDB's http adapter to reach any d
 
 > **Prerequesite**: Your PouchDB instance MUST provide the `pouchdb-find` plugin since it is used internally by the adapter to build and manage indexes
 
-1. Install `next-auth` and `@next-auth/pouchdb-adapter@canary`
+1. Install `next-auth` and `@next-auth/pouchdb-adapter`
 
 ```js
-npm install next-auth @next-auth/pouchdb-adapter@canary
+npm install next-auth @next-auth/pouchdb-adapter
 ```
 
 2. Add this adapter to your `pages/api/auth/[...nextauth].js` next-auth configuration object
@@ -28,10 +28,9 @@ import { PouchDBAdapter } from "@next-auth/pouchdb-adapter"
 import PouchDB from "pouchdb"
 
 // Setup your PouchDB instance and database
-PouchDB
-  .plugin(require("pouchdb-adapter-leveldb"))   // Any other adapter
-  .plugin(require("pouchdb-find"))              // Don't forget the `pouchdb-find` plugin
-  
+PouchDB.plugin(require("pouchdb-adapter-leveldb")) // Any other adapter
+  .plugin(require("pouchdb-find")) // Don't forget the `pouchdb-find` plugin
+
 const pouchdb = new PouchDB("auth_db", { adapter: "leveldb" })
 
 // For more information on each option (and a full list of options) go to
@@ -49,7 +48,7 @@ export default NextAuth({
 })
 ```
 
-## Advanced 
+## Advanced
 
 ### Memory-First Caching Strategy
 
@@ -60,4 +59,3 @@ Use an in-memory PouchDB as your main authentication database, and synchronize i
 This will most likely not increase performance much in a serverless environment due to various reasons such as concurrency, function startup time increases, etc.
 
 For more details, please see https://pouchdb.com/api.html#sync
-
