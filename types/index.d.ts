@@ -414,7 +414,7 @@ export interface PagesOptions {
   error?: string
   verifyRequest?: string
   /** If set, new users will be directed here on first sign in */
-  newUser?: string
+  newUser?: string | null
 }
 
 export interface DefaultSession extends Record<string, unknown> {
