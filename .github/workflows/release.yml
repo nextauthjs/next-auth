@@ -21,7 +21,7 @@ jobs:
       - name: Dependencies
         uses: bahmutov/npm-install@v1
       - name: Run tests
-        run: npm test -- --coverage --verbose
+        run: npm test -- --coverage --verbose && npm run test:types
       - name: Coverage
         uses: codecov/codecov-action@v1
         with:
@@ -31,7 +31,7 @@ jobs:
         run: npm run build
   release:
     name: Release
-    environment: Production
+    environment: release
     needs: test
     runs-on: ubuntu-latest
     steps:
