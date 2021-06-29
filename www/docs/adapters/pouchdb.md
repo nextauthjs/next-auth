@@ -13,10 +13,10 @@ Depending on your architecture you can use PouchDB's http adapter to reach any d
 
 > **Prerequesite**: Your PouchDB instance MUST provide the `pouchdb-find` plugin since it is used internally by the adapter to build and manage indexes
 
-1. Install `next-auth` and `@next-auth/pouchdb-adapter@canary`
+1. Install `next-auth` and `@next-auth/pouchdb-adapter`
 
 ```js
-npm install next-auth @next-auth/pouchdb-adapter@canary
+npm install next-auth @next-auth/pouchdb-adapter
 ```
 
 2. Add this adapter to your `pages/api/auth/[...nextauth].js` next-auth configuration object
