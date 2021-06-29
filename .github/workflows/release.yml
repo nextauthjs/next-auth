@@ -10,8 +10,9 @@ on:
   pull_request:
 
 jobs:
-  test:
-    name: Tests
+  release:
+    name: Release
+    environment: release
     runs-on: ubuntu-latest
     steps:
       - name: Init
@@ -20,6 +21,8 @@ jobs:
         uses: actions/setup-node@v1
       - name: Dependencies
         uses: bahmutov/npm-install@v1
+      - name: Build
+        run: npm run build
       - name: Run tests
         run: npm test -- --coverage --verbose && npm run test:types
       - name: Coverage
@@ -27,22 +30,18 @@ jobs:
         with:
           directory: ./coverage
           fail_ci_if_error: false
-      - name: Build
-        run: npm run build
-  release:
-    name: Release
-    environment: release
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Init
-        uses: actions/checkout@v2
-      - name: Setup Node
-        uses: actions/setup-node@v1
-      - name: Dependencies
-        uses: bahmutov/npm-install@v1
-      - name: Release
+      - name: Publish to @latest, @next, @beta
+        if: ${{ github.event_name == 'push' }}
         run: npx semantic-release@17
         env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-          NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish to @experimental
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
+          npm run version:pr
+          npm publish --access public --tag experimental
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          PR_NUMBER: ${{ github.event.number }}
