@@ -42,8 +42,6 @@ jobs:
         uses: actions/setup-node@v1
       - name: Dependencies
         uses: bahmutov/npm-install@v1
-      - name: Build
-        run: npm run build
       - name: Publish to npm and GitHub
         run: npx semantic-release@17
         env:
@@ -62,8 +60,6 @@ jobs:
         uses: actions/setup-node@v1
       - name: Dependencies
         uses: bahmutov/npm-install@v1
-      - name: Build
-        run: npm run build
       - name: Publish to npm
         run: |
           echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
