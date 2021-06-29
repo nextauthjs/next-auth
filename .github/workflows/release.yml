@@ -10,9 +10,8 @@ on:
   pull_request:
 
 jobs:
-  release:
-    name: Release
-    environment: release
+  test:
+    name: Tests
     runs-on: ubuntu-latest
     steps:
       - name: Init
@@ -30,14 +29,42 @@ jobs:
         with:
           directory: ./coverage
           fail_ci_if_error: false
-      - name: Publish to @latest, @next, @beta
-        if: ${{ github.event_name == 'push' }}
+  release-branch:
+    name: Publish to @latest, @next, @beta
+    runs-on: ubuntu-latest
+    needs: test
+    if: ${{ github.event_name == 'push' }}
+    environment: Production
+    steps:
+      - name: Init
+        uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v1
+      - name: Dependencies
+        uses: bahmutov/npm-install@v1
+      - name: Build
+        run: npm run build
+      - name: Publish to npm and GitHub
         run: npx semantic-release@17
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: Publish to @experimental
-        if: ${{ github.event_name == 'pull_request' }}
+  release-pr:
+    name: Publish to @experimental
+    runs-on: ubuntu-latest
+    needs: test
+    if: ${{ github.event_name == 'pull_request' }}
+    environment: Preview
+    steps:
+      - name: Init
+        uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v1
+      - name: Dependencies
+        uses: bahmutov/npm-install@v1
+      - name: Build
+        run: npm run build
+      - name: Publish to npm
         run: |
           echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
           npm run version:pr
