@@ -11,11 +11,11 @@ If you want to use the `useSession()` hook in your class components you can do s
 import { useSession } from "next-auth/react"
 
 const withSession = (Component) => (props) => {
-  const [session, loading] = useSession()
+  const session = useSession()
 
   // if the component has a render property, we are good
   if (Component.prototype.render) {
-    return <Component session={session} loading={loading} {...props} />
+    return <Component session={session} {...props} />
   }
 
   // if the passed component is a function component, there is no need for this wrapper
@@ -30,7 +30,7 @@ const withSession = (Component) => (props) => {
 // Usage
 class ClassComponent extends React.Component {
   render() {
-    const { session, loading } = this.props
+    const { data: session, status } = this.props.session
     return null
   }
 }
@@ -44,8 +44,8 @@ const ClassComponentWithSession = withSession(ClassComponent)
 import { useSession } from "next-auth/react"
 
 const UseSession = ({ children }) => {
-  const [session, loading] = useSession()
-  return children({ session, loading })
+  const session = useSession()
+  return children(session)
 }
 
 // Usage
@@ -53,7 +53,7 @@ class ClassComponent extends React.Component {
   render() {
     return (
       <UseSession>
-        {({ session, loading }) => (
+        {(session) => (
           <pre>{JSON.stringify(session, null, 2)}</pre>
         )}
       </UseSession>

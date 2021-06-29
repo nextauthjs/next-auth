@@ -34,7 +34,7 @@ You can use the [session callback](/configuration/callbacks#session-callback) to
 
 The `useSession()` React Hook in the NextAuth.js client is the easiest way to check if someone is signed in.
 
-It works best when the [`<SessionProvider>`](#sessionprovider) is added to `pages/_app.js`.
+Make sure that [`<SessionProvider>`](#sessionprovider) is added to `pages/_app.js`.
 
 #### Example
 
@@ -42,13 +42,35 @@ It works best when the [`<SessionProvider>`](#sessionprovider) is added to `page
 import { useSession } from "next-auth/react"
 
 export default function Component() {
-  const [session, loading] = useSession()
+  const { data: session, status } = useSession()
 
-  if (session) {
+  if (status === "authenticated) {
     return <p>Signed in as {session.user.email}</p>
   }
 
   return <a href="/api/auth/signin">Sign in</a>
+}
+```
+
+### Require session
+
+Due to the way Next.js handles `getServerSideProps` / `getInitialProps`, every protected page load has to make a server-side query to check if the session is valid and then generate the requested page. You can use `useSession` in a way that makes sure you always have a valid session. After the initial loading state if there was no session found, you can define the appropriate action to respond. By default, you will be redirected to the sign in page.
+
+#### Example
+
+```jsx
+// A protected page
+import { useSession } from "next-auth/react"
+
+export default function Admin() {
+  const session = useSession({ required: true })
+
+  const if (session.status === "loading") {
+    return "Loading..."
+  }
+
+  // You can 
+  return "User is logged in"
 }
 ```
 
@@ -206,7 +228,7 @@ e.g.
 - `signIn('google', { callbackUrl: 'http://localhost:3000/foo' })`
 - `signIn('email', { email, callbackUrl: 'http://localhost:3000/foo' })`
 
-The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect-callback). By default it requires the URL to be an absolute URL at the same hostname, or else it will redirect to the homepage. You can define your own [redirect callback](/configuration/callbacks#redirect-callback) to allow other URLs, including supporting relative URLs.
+The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect-callback). By default it requires the URL to be an absolute URL at the same host name, or else it will redirect to the homepage. You can define your own [redirect callback](/configuration/callbacks#redirect-callback) to allow other URLs, including supporting relative URLs.
 
 #### Using the redirect: false option
 
@@ -248,7 +270,7 @@ e.g.
 }
 ```
 
-#### Additional params
+#### Additional parameters
 
 It is also possible to pass additional parameters to the `/authorize` endpoint through the third argument of `signIn()`.
 
@@ -256,7 +278,7 @@ See the [Authorization Request OIDC spec](https://openid.net/specs/openid-connec
 
 e.g.
 
-- `signIn("identity-server4", null, { prompt: "login" })` _always ask the user to reauthenticate_
+- `signIn("identity-server4", null, { prompt: "login" })` _always ask the user to re-authenticate_
 - `signIn("auth0", null, { login_hint: "info@example.com" })` _hints the e-mail address to the provider_
 
 :::note
@@ -290,7 +312,7 @@ As with the `signIn()` function, you can specify a `callbackUrl` parameter by pa
 
 e.g. `signOut({ callbackUrl: 'http://localhost:3000/foo' })`
 
-The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect-callback). By default this means it must be an absolute URL at the same hostname (or else it will default to the homepage); you can define your own custom [redirect callback](/configuration/callbacks#redirect-callback) to allow other URLs, including supporting relative URLs.
+The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect-callback). By default this means it must be an absolute URL at the same host name (or else it will default to the homepage); you can define your own custom [redirect callback](/configuration/callbacks#redirect-callback) to allow other URLs, including supporting relative URLs.
 
 #### Using the redirect: false option
 
@@ -299,7 +321,7 @@ If you pass `redirect: false` to `signOut`, the page will not reload. The sessio
 :::tip
 If you need to redirect to another page but you want to avoid a page reload, you can try:
 `const data = await signOut({redirect: false, callbackUrl: "/foo"})`
-where `data.url` is the validated url you can redirect the user to without any flicker by using Next.js's `useRouter().push(data.url)`
+where `data.url` is the validated URL you can redirect the user to without any flicker by using Next.js's `useRouter().push(data.url)`
 :::
 
 ---
@@ -341,7 +363,7 @@ export async function getServerSideProps(ctx) {
 }
 ```
 
-If every one of your pages needs to be protected, you can do this in `_app`, otherwise you can do it on a page-by-page basis. Alternatively, you can do per page authentication checks client side, instead of having each auth check be blocking (SSR) by using the method described below in [alternative client session handling](#custom-client-session-handling).
+If every one of your pages needs to be protected, you can do this in `_app`, otherwise you can do it on a page-by-page basis. Alternatively, you can do per page authentication checks client side, instead of having each authentication check be blocking (SSR) by using the method described below in [alternative client session handling](#custom-client-session-handling).
 
 ### Options
 
@@ -415,7 +437,7 @@ Due to the way Next.js handles `getServerSideProps` / `getInitialProps`, every p
 
 ```js title="pages/admin.jsx"
 export default function AdminDashboard() {
-  const [session] = useSession()
+  const { data: session } = useSession()
   // session is always non-null inside this page, all the way down the React tree.
   return "Some super secret dashboard"
 }
@@ -442,7 +464,7 @@ export default function App({
 }
 
 function Auth({ children }) {
-  const [session, loading] = useSession()
+  const { data: session, loading } = useSession()
   const isUser = !!session?.user
   React.useEffect(() => {
     if (loading) return // Do nothing while loading
@@ -469,9 +491,9 @@ AdminDashboard.auth = {
 }
 ```
 
-Because of how \_app is done, it won't unnecessarily contact the /api/auth/session endpoint for pages that do not require auth.
+Because of how `_app` is written, it won't unnecessarily contact the `/api/auth/session` endpoint for pages that do not require authentication.
 
-More information can be found in the following [Github Issue](https://github.com/nextauthjs/next-auth/issues/1210).
+More information can be found in the following [GitHub Issue](https://github.com/nextauthjs/next-auth/issues/1210).
 
 ### NextAuth.js + React-Query
 

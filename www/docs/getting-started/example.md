@@ -33,7 +33,7 @@ export default NextAuth({
 })
 ```
 
-All requests to `/api/auth/*` (signin, callback, signout, etc) will automatically be handed by NextAuth.js.
+All requests to `/api/auth/*` (`signIn`, callback, `signOut`, etc.) will automatically be handled by NextAuth.js.
 
 :::tip
 See the [options documentation](/configuration/options) for how to configure providers, databases and other options.
@@ -43,26 +43,23 @@ See the [options documentation](/configuration/options) for how to configure pro
 
 The `useSession()` React Hook in the NextAuth.js client is the easiest way to check if someone is signed in.
 
-```jsx title="pages/index.js"
-import { signIn, signOut, useSession } from "next-auth/react"
+```javascript
+import { useSession, signIn, signOut } from "next-auth/react"
 
-export default function Page() {
-  const [session, loading] = useSession()
-
+export default function Component() {
+  const { data: session } = useSession()
+  if (session) {
+    return (
+      <>
+        Signed in as {session.user.email} <br />
+        <button onClick={() => signOut()}>Sign out</button>
+      </>
+    )
+  }
   return (
     <>
-      {!session && (
-        <>
-          Not signed in <br />
-          <button onClick={() => signIn()}>Sign in</button>
-        </>
-      )}
-      {session && (
-        <>
-          Signed in as {session.user.email} <br />
-          <button onClick={() => signOut()}>Sign out</button>
-        </>
-      )}
+      Not signed in <br />
+      <button onClick={() => signIn()}>Sign in</button>
     </>
   )
 }
@@ -72,11 +69,12 @@ export default function Page() {
 You can use the `useSession` hook from anywhere in your application (e.g. in a header component).
 :::
 
-### Add session state
+### Share/configure session state
 
-To allow session state to be shared between pages - which improves performance, reduces network traffic and avoids component state changes while rendering - you can use the NextAuth.js Provider in `pages/_app.js`.
+Use the `<SessionProvider>` to allows instances of `useSession()` to share the session object across components. It also takes care of keeping the session updated and synced between tabs/windows.
 
-```jsx title="pages/_app.js"
+```javascript
+// pages/_app.js
 import { SessionProvider } from "next-auth/react"
 
 export default function App({
