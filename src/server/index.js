@@ -210,6 +210,7 @@ async function NextAuthHandler(req, res, userOptions) {
               "OAuthAccountNotLinked",
               "EmailSignin",
               "CredentialsSignin",
+              "SessionRequired",
             ].includes(error)
           ) {
             return res.redirect(`${baseUrl}${basePath}/signin?error=${error}`)

@@ -50,12 +50,24 @@ export function useSession(options = {}) {
     throw new Error("useSession must be wrapped in a SessionProvider")
   }
 
-  const { required = false, action = signIn } = options
+  const { required, action } = options
+
+  const requiredAndNotLoading = required && value.status === "unauthenticated"
+
   React.useEffect(() => {
-    if (required && value.status === "unauthenticated") {
-      action()
+    if (requiredAndNotLoading) {
+      const url = `/api/auth/signin?${new URLSearchParams({
+        error: "SessionRequired",
+        callbackUrl: window.location.href,
+      })}`
+      if (action) action()
+      else window.location.replace(url)
     }
-  }, [required, action, value.status])
+  }, [requiredAndNotLoading, action])
+
+  if (requiredAndNotLoading) {
+    return { data: value.data, loading: true, status: "loading" }
+  }
 
   return value
 }
