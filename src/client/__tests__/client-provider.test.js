@@ -88,7 +88,7 @@ function ProviderFlow({ options = {} }) {
 }
 
 function SessionConsumer({ testId = 1 }) {
-  const { session, loading } = useSession()
+  const { data: session, loading } = useSession()
 
   return (
     <div data-testid={`session-consumer-${testId}`}>
