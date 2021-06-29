@@ -54,22 +54,27 @@ export default function Component() {
 
 ### Require session
 
-Due to the way Next.js handles `getServerSideProps` / `getInitialProps`, every protected page load has to make a server-side query to check if the session is valid and then generate the requested page. You can use `useSession` in a way that makes sure you always have a valid session. After the initial loading state if there was no session found, you can define the appropriate action to respond. By default, you will be redirected to the sign in page.
+Due to the way how Next.js handles `getServerSideProps` and `getInitialProps`, every protected page load has to make a server-side request to check if the session is valid and then generate the requested page (SSR). This increases server load, and if you are good with making the requests from the client, there is an alternative. You can use `useSession` in a way that makes sure you always have a valid session. If after the initial loading state there was no session found, you can define the appropriate action to respond.
+
+The default behavior is to redirect the user to the sign-in page, from where - after a successful login - they will be sent back to the page they started on. You can also define an `action()` callback, if you would like to do something else.
 
 #### Example
 
-```jsx
-// A protected page
+```jsx title="pages/protected.jsx"
 import { useSession } from "next-auth/react"
 
 export default function Admin() {
-  const session = useSession({ required: true })
+  const { status } = useSession({
+    required: true,
+    action() {
+      // The user is not authenticated, handle it here.
+    }
+  })
 
-  const if (session.status === "loading") {
-    return "Loading..."
+  const if (status === "loading") {
+    return "Loading or not authenticated..."
   }
 
-  // You can 
   return "User is logged in"
 }
 ```
