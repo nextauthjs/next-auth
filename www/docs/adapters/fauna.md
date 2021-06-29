@@ -11,10 +11,10 @@ You can find the Fauna schema and seed information in the docs at [next-auth.js.
 
 ## Getting Started
 
-1. Install `next-auth` and `@next-auth/fauna-adapter@canary`
+1. Install `next-auth` and `@next-auth/fauna-adapter`
 
 ```js
-npm install next-auth @next-auth/fauna-adapter@canary
+npm install next-auth @next-auth/fauna-adapter
 ```
 
 2. Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object.
