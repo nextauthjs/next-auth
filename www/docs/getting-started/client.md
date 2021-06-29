@@ -438,7 +438,7 @@ See [**the Next.js documentation**](https://nextjs.org/docs/advanced-features/cu
 
 ### Custom Client Session Handling
 
-Due to the way Next.js handles `getServerSideProps` / `getInitialProps`, every protected page load has to make a server-side query to check if the session is valid and then generate the requested page. This alternative solution allows for showing a loading state on the initial check and every page transition afterward will be client-side, without having to check with the server and regenerate pages.
+Due to the way Next.js handles `getServerSideProps` / `getInitialProps`, every protected page load has to make a server-side request to check if the session is valid and then generate the requested page. This alternative solution allows for showing a loading state on the initial check and every page transition afterward will be client-side, without having to check with the server and regenerate pages.
 
 ```js title="pages/admin.jsx"
 export default function AdminDashboard() {
