@@ -18,6 +18,8 @@ jobs:
         uses: actions/checkout@v2
       - name: Setup Node
         uses: actions/setup-node@v1
+        with:
+          node-version: 16
       - name: Dependencies
         uses: bahmutov/npm-install@v1
       - name: Run tests
@@ -39,6 +41,8 @@ jobs:
         uses: actions/checkout@v2
       - name: Setup Node
         uses: actions/setup-node@v1
+        with:
+          node-version: 16
       - name: Dependencies
         uses: bahmutov/npm-install@v1
       - name: Release
