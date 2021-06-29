@@ -32,7 +32,7 @@
     "build": "npm run build:js && npm run build:css",
     "build:js": "node ./config/build.js && babel --config-file ./config/babel.config.js src --out-dir dist",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir dist && node config/wrap-css.js",
-    "dev:setup": "npm run build:css && cd app && npm i",
+    "dev:setup": "npm i && npm run build:css && cd app && npm i",
     "dev": "cd app && npm run dev",
     "watch": "npm run watch:js | npm run watch:css",
     "watch:js": "babel --config-file ./config/babel.config.js --watch src --out-dir dist",
