@@ -7,7 +7,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        We are glad that you have a question about this library. Please fill out the following information:
+        We are glad that you have a question about this library. Please provide the following information:
   - type: textarea
     id: question
     attributes:

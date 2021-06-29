@@ -8,7 +8,7 @@ body:
   - type: markdown
     attributes:
       value: |
-         Please fill out the following information:
+         Please provide the following information:
   - type: textarea
     id: question
     attributes:
