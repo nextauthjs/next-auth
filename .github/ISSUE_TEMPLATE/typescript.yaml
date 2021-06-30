@@ -28,7 +28,7 @@ body:
 
         **NOTE:** Questions will be converted to Discussions. You can find them [here](https://github.com/nextauthjs/next-auth/discussions)!    
 
-  - type: input
+  - type: textarea
     id: codesandbox
     attributes: 
       label: How to reproduce ☕️ 
