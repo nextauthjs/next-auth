@@ -4,11 +4,10 @@ title: "[TypeScript | Question]: "
 labels: [question, TypeScript]
 assignees: [lluia, balazsorban44]
 
+# note: markdown sections will NOT appear as part of the issue as per documentation, rather they provide context to the user
+# https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-githubs-form-schema#markdown
+
 body:
-  - type: markdown
-    attributes:
-      value: |
-         Please provide the following information:
   - type: textarea
     id: question
     attributes:
@@ -33,21 +32,28 @@ body:
     id: codesandbox
     attributes: 
       label: How to reproduce ☕️ 
-      description: Please provide a link to a minimal reproduction that represents your question
+      description: Please provide a link to a minimal reproduction or code snippets that represents your question
     validations:
-      required: true 
+      required: false 
   - type: markdown
     attributes:
       value: |
         We encourage you to use the template set-up on **CodeSandbox** as a playground to represent your question or doubt:
         - [`next-auth-typescript-example`](https://codesandbox.io/s/next-auth-typescript-example-se32w)
-  - type: markdown
+  
+
+  - type: dropdown
+    id: pr
     attributes:
-      value: "## Contributing 🙌🏽"
+      label: Contributing 🙌🏽
+      multiple: false
+      options:
+        - "Yes, I am willing to help answer this question in a PR"
+        - "No, I am afraid I cannot help regarding this"
+    validations:
+      required: true
   - type: markdown
     attributes: 
       value: |
         It takes a lot of work 🏋🏻‍♀️ maintaining a library like `next-auth`; any contribution is more than welcome 💚
-        In case you're willing to help answer this TypeScript question, please let us know here, and we'll reach you 😊 . Otherwise, you can have a look at the issues labelled with [`"good first issue"`](https://github.com/nextauthjs/next-auth/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) and pick any of them.      
   
-

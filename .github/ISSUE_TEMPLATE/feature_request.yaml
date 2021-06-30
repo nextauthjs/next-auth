@@ -3,18 +3,15 @@ description: Suggest an idea for NextAuth.js
 title: "[Feature Request]: "
 labels: enhancement
 
+# note: markdown sections will NOT appear as part of the issue as per documentation, rather they provide context to the user
+# https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-githubs-form-schema#markdown
+
 body:
   - type: markdown
     attributes:
-      value: |
+      value: | 
         Thank you very much for reaching out to us regarding the awesome feature that you believe should be included in the NextAuth.js library. Please provide the following information:
-  - type: input
-    id: summary
-    attributes:
-      label: Summary 💭
-      description: A clear and concise summary of the feature being proposed
-    validations:
-      required: true
+ 
   - type: textarea
     id: description
     attributes:
@@ -22,6 +19,7 @@ body:
       description: Please provide a more in-depth description of the feature proposed.
     validations:
       required: true
+
   - type: markdown
     attributes:
       value: |
@@ -38,11 +36,12 @@ body:
         - **purpose of the feature**
         - **potential problems**
         - **potential alternatives**
-  - type: input
+
+  - type: textarea
     id: reproduction
     attributes:
       label: How to reproduce ☕️ 
-      description: If you have a CodeSandbox playground to help us visualize your idea better, please provide the link to it here.
+      description: If you have a CodeSandbox playground or some code snippets to help us visualize your idea better, please provide it here.
     validations:
       required: false
   - type: markdown
@@ -52,15 +51,19 @@ body:
 
         - [`next-auth-example`](https://codesandbox.io/s/next-auth-example-1kktb)
         - [`next-auth-typescript-example`](https://codesandbox.io/s/next-auth-typescript-example-se32w)        
-  - type: markdown
+
+  - type: dropdown
+    id: pr
     attributes:
-      value: "## Contributing 🙌🏽"
+      label: Contributing 🙌🏽
+      multiple: false
+      options:
+        - "Yes, I am willing to help implement this feature in a PR"
+        - "No, I am afraid I cannot help regarding this"
+    validations:
+      required: true
   - type: markdown
     attributes: 
       value: |
         It takes a lot of work 🏋🏻‍♀️ maintaining a library like `next-auth`; any contribution is more than welcome 💚
-        In case you're willing to help implement this feature, please let us know here, and we'll reach you 😊 . Otherwise, you can have a look at the issues labelled with [`"good first issue"`](https://github.com/nextauthjs/next-auth/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) and pick any of them.      
-  
-
-
   
