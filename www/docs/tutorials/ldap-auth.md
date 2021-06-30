@@ -47,7 +47,7 @@ export default NextAuth({
     }),
   ],
   callbacks: {
-    async jwt(token, user, account, profile, isNewUser) {
+    async jwt({ token, user }) {
       const isSignIn = user ? true : false
       if (isSignIn) {
         token.username = user.username
@@ -55,8 +55,8 @@ export default NextAuth({
       }
       return token
     },
-    async session(session, user) {
-      return { ...session, user: { username: user.username } }
+    async session({ session, token }) {
+      return { ...session, user: { username: token.username } }
     },
   },
   secret: process.env.NEXTAUTH_SECRET,

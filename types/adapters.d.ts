@@ -1,4 +1,4 @@
-import { AppOptions } from "./internals"
+import { InternalOptions } from "./internals"
 import { User, Profile, Session } from "."
 import { EmailConfig } from "./providers"
 
@@ -120,5 +120,5 @@ export type Adapter<
   client: C,
   options?: O
 ) => {
-  getAdapter(appOptions: AppOptions): Promise<AdapterInstance<U, P, S>>
+  getAdapter(appOptions: InternalOptions): Promise<AdapterInstance<U, P, S>>
 }

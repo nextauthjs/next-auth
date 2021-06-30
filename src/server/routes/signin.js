@@ -41,14 +41,15 @@ export default async function signin(req, res) {
     const email = req.body.email?.toLowerCase() ?? null
 
     // If is an existing user return a user object (otherwise use placeholder)
-    const profile = (await getUserByEmail(email)) || { email }
+    const user = (await getUserByEmail(email)) || { email }
     const account = { id: provider.id, type: "email", providerAccountId: email }
 
     // Check if user is allowed to sign in
     try {
-      const signInCallbackResponse = await callbacks.signIn(profile, account, {
-        email,
-        verificationRequest: true,
+      const signInCallbackResponse = await callbacks.signIn({
+        user,
+        account,
+        email: { email, verificationRequest: true },
       })
       if (signInCallbackResponse === false) {
         return res.redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
