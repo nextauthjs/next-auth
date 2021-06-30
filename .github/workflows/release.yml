@@ -1,4 +1,4 @@
-name: Release Flow
+name: Release
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
 
 jobs:
   test:
-    name: Tests
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - name: Init
@@ -32,7 +32,7 @@ jobs:
           directory: ./coverage
           fail_ci_if_error: false
   release-branch:
-    name: Publish to @latest, @next, @beta
+    name: Publish branch
     runs-on: ubuntu-latest
     needs: test
     if: ${{ github.event_name == 'push' }}
@@ -52,7 +52,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
   release-pr:
-    name: Publish to @experimental
+    name: Publish PR
     runs-on: ubuntu-latest
     needs: test
     if: ${{ github.event_name == 'pull_request' }}
