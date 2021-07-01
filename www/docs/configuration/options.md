@@ -252,16 +252,16 @@ You can specify a handler for any of the callbacks below.
 
 ```js
 callbacks: {
-  async signIn(user, account, profile) {
+  async signIn({ user, account, profile, email, credentials }) {
     return true
   },
-  async redirect(url, baseUrl) {
+  async redirect({ url, baseUrl }) {
     return baseUrl
   },
-  async session(session, user) {
+  async session({ session, token, user }) {
     return session
   },
-  async jwt(token, user, account, profile, isNewUser) {
+  async jwt({ token, user, account, profile, isNewUser }) {
     return token
   }
 }

@@ -43,17 +43,10 @@ test("fetches the session once and re-uses it for different consumers", async ()
   })
 })
 
-test("when there's an existing session, it won't initialize as loading", () => {
-  server.use(
-    rest.get("/api/auth/session", (req, res, ctx) => {
-      sessionRouteCall()
-      res(ctx.status(200), ctx.json(mockSession))
-    })
-  )
-
+test("when there's an existing session, it won't initialize as loading", async () => {
   render(<ProviderFlow session={mockSession} />)
 
-  expect(screen.getByTestId("session-consumer-1")).not.toHaveTextContent(
+  expect(await screen.findByTestId("session-consumer-1")).not.toHaveTextContent(
     "loading"
   )
 
