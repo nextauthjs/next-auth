@@ -42,7 +42,8 @@
     "test:types": "dtslint types --onlyTestTsNext",
     "prepublishOnly": "npm run build",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "version:pr": "node ./config/version-pr"
   },
   "files": [
     "dist",
@@ -93,10 +94,6 @@
     "@babel/plugin-transform-runtime": "^7.13.15",
     "@babel/preset-env": "^7.9.6",
     "@babel/preset-react": "^7.13.13",
-    "@semantic-release/commit-analyzer": "^8.0.1",
-    "@semantic-release/github": "^7.2.0",
-    "@semantic-release/npm": "7.0.8",
-    "@semantic-release/release-notes-generator": "^9.0.1",
     "@testing-library/jest-dom": "^5.12.0",
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^13.1.9",
