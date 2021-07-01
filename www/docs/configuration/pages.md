@@ -16,7 +16,7 @@ To add a custom login page, you can use the `pages` option:
     signOut: '/auth/signout',
     error: '/auth/error', // Error code passed in query string as ?error=
     verifyRequest: '/auth/verify-request', // (used for check email message)
-    newUser: null // If set, new users will be directed here on first sign in
+    newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
   }
 ...
 ```
@@ -46,7 +46,7 @@ The following errors are passed as error query parameters to the default or over
 - **EmailSignin**: Sending the e-mail with the verification token failed
 - **CredentialsSignin**: The `authorize` callback returned `null` in the [Credentials provider](/providers/credentials). We don't recommend providing information about which part of the credentials were wrong, as it might be abused by malicious hackers.
 - **Default**: Catch all, will apply, if none of the above matched
-  
+
 Example: `/auth/error?error=Default`
 
 ## Theming
@@ -186,5 +186,5 @@ signIn('credentials', { username: 'jsmith', password: '1234' })
 ```
 
 :::tip
-Remember to put any custom pages in a folder outside **/pages/api** which is reserved for API code. As per the examples above, a location convention suggestion is `pages/auth/...`. 
+Remember to put any custom pages in a folder outside **/pages/api** which is reserved for API code. As per the examples above, a location convention suggestion is `pages/auth/...`.
 :::
