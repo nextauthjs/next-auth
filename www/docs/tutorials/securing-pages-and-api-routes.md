@@ -73,7 +73,7 @@ export async function getServerSideProps(context) {
 ```
 
 :::tip
-You have to configure `_app.js` to pass it the `session` prop. This way `useSession` won't show a loading state, because it already has the session available.
+When you supply a `session` prop in `_app.js`, `useSession` won't show a loading state, as it'll already have the session available. In this way, you can provide a more seamless user experience.
 
 ```js title="pages/_app.js"
 import { SessionProvider } from "next-auth/react"

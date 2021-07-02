@@ -16,7 +16,7 @@ afterAll(() => {
   server.close()
 })
 
-test("throws error without SessionProvider", () => {
+test("it won't allow to fetch the session in isolation without a session context", () => {
   function App() {
     useSession()
     return null
@@ -24,9 +24,11 @@ test("throws error without SessionProvider", () => {
 
   jest.spyOn(console, "error")
   console.error.mockImplementation(() => {})
+
   expect(() => render(<App />)).toThrow(
     "useSession must be wrapped in a SessionProvider"
   )
+  
   console.error.mockRestore()
 })
 
