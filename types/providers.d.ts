@@ -1,5 +1,6 @@
 import { Profile, TokenSet, User } from "."
 import { Awaitable, NextApiRequest } from "./internals/utils"
+import { Options as SMTPConnectionOptions } from 'nodemailer/lib/smtp-connection'
 
 export type ProviderType = "oauth" | "email" | "credentials"
 
@@ -84,6 +85,7 @@ export type OAuthProviderType =
   | "Mailchimp"
   | "MailRu"
   | "Medium"
+  | "Naver"
   | "Netlify"
   | "Okta"
   | "Osso"
@@ -114,7 +116,9 @@ interface CredentialInput {
   placeholder?: string
 }
 
-interface CredentialsConfig<C extends Record<string, CredentialInput> = {}>
+export type Credentials = Record<string, CredentialInput>
+
+interface CredentialsConfig<C extends Credentials = {}>
   extends CommonProviderOptions {
   type: "credentials"
   credentials: C
@@ -124,22 +128,11 @@ interface CredentialsConfig<C extends Record<string, CredentialInput> = {}>
   ): Awaitable<User | null>
 }
 
-export type CredentialsProvider = (
-  options: Partial<CredentialsConfig>
-) => CredentialsConfig
+export type CredentialsProvider = <C extends Record<string, CredentialInput>>(
+  options: Partial<CredentialsConfig<C>>
+) => CredentialsConfig<C>
 
 export type CredentialsProviderType = "Credentials"
-
-/** Email Provider */
-
-export interface EmailConfigServerOptions {
-  host: string
-  port: number
-  auth: {
-    user: string
-    pass: string
-  }
-}
 
 export type SendVerificationRequest = (params: {
   identifier: string
@@ -152,7 +145,7 @@ export type SendVerificationRequest = (params: {
 export interface EmailConfig extends CommonProviderOptions {
   type: "email"
   // TODO: Make use of https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html
-  server: string | EmailConfigServerOptions
+  server: string | SMTPConnectionOptions
   /** @default "NextAuth <no-reply@example.com>" */
   from?: string
   /**

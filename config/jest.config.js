@@ -8,4 +8,5 @@ module.exports = {
   collectCoverageFrom: ["!client/__tests__/**"],
   testMatch: ["**/*.test.js"],
   coverageDirectory: "../coverage",
+  testEnvironment: "jsdom",
 }

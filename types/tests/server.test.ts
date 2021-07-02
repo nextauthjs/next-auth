@@ -4,7 +4,7 @@ import NextAuth, * as NextAuthTypes from "next-auth"
 import { IncomingMessage, ServerResponse } from "http"
 import { Socket } from "net"
 import { NextApiRequest, NextApiResponse } from "internals/utils"
-import { AppOptions } from "internals"
+import { InternalOptions } from "internals"
 
 const req: NextApiRequest = Object.assign(new IncomingMessage(new Socket()), {
   query: {},
@@ -62,7 +62,7 @@ const exampleVerificationRequest = {
 
 const MyAdapter: Adapter<Record<string, unknown>> = () => {
   return {
-    async getAdapter(appOptions: AppOptions) {
+    async getAdapter(appOptions: InternalOptions) {
       return {
         async createUser(profile) {
           return exampleUser
@@ -153,16 +153,16 @@ const allConfig: NextAuthTypes.NextAuthOptions = {
   },
   pages: pageOptions,
   callbacks: {
-    async signIn(user, account, profile) {
+    async signIn({ user, account, email, credentials, profile }) {
       return true
     },
-    async redirect(url, baseUrl) {
+    async redirect({ url, baseUrl }) {
       return "path/to/foo"
     },
-    async session(session, userOrToken) {
-      return { ...session }
+    async session({ session, user, token }) {
+      return session
     },
-    async jwt(token, user, account, profile, isNewUser) {
+    async jwt({ token, user, account, profile, isNewUser }) {
       return token
     },
   },
