@@ -128,9 +128,9 @@ interface CredentialsConfig<C extends Credentials = {}>
   ): Awaitable<User | null>
 }
 
-export type CredentialsProvider = (
-  options: Partial<CredentialsConfig>
-) => CredentialsConfig
+export type CredentialsProvider = <C extends Record<string, CredentialInput>>(
+  options: Partial<CredentialsConfig<C>>
+) => CredentialsConfig<C>
 
 export type CredentialsProviderType = "Credentials"
 

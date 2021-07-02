@@ -41,7 +41,8 @@
     "test:types": "dtslint types --onlyTestTsNext",
     "prepublishOnly": "npm run build",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "version:pr": "node ./config/version-pr"
   },
   "files": [
     "dist",
