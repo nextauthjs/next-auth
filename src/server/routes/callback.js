@@ -6,8 +6,7 @@ import adapterErrorHandler from "../../adapters/error-handler"
 
 /**
  * Handle callbacks from login services
- * @param {import("types/internals").NextAuthRequest} req
- * @param {import("types/internals").NextAuthResponse} res
+ * @type {import("types/internals").NextAuthApiHandler}
  */
 export default async function callback(req, res) {
   const {
@@ -72,11 +71,11 @@ export default async function callback(req, res) {
         }
 
         try {
-          const signInCallbackResponse = await callbacks.signIn(
-            userOrProfile,
+          const signInCallbackResponse = await callbacks.signIn({
+            user: userOrProfile,
             account,
-            OAuthProfile
-          )
+            profile: OAuthProfile,
+          })
           if (!signInCallbackResponse) {
             return res.redirect(
               `${baseUrl}${basePath}/error?error=AccessDenied`
@@ -101,22 +100,22 @@ export default async function callback(req, res) {
         )
 
         if (useJwtSession) {
-          const defaultJwtPayload = {
+          const defaultToken = {
             name: user.name,
             email: user.email,
             picture: user.image,
             sub: user.id?.toString(),
           }
-          const jwtPayload = await callbacks.jwt(
-            defaultJwtPayload,
+          const token = await callbacks.jwt({
+            token: defaultToken,
             user,
             account,
-            OAuthProfile,
-            isNewUser
-          )
+            profile: OAuthProfile,
+            isNewUser,
+          })
 
           // Sign and encrypt token
-          const newEncodedJwt = await jwt.encode({ ...jwt, token: jwtPayload })
+          const newEncodedJwt = await jwt.encode({ ...jwt, token })
 
           // Set cookie expiry date
           const cookieExpires = new Date()
@@ -216,11 +215,11 @@ export default async function callback(req, res) {
 
       // Check if user is allowed to sign in
       try {
-        const signInCallbackResponse = await callbacks.signIn(
-          profile,
+        const signInCallbackResponse = await callbacks.signIn({
+          user: profile,
           account,
-          { email }
-        )
+          email: { email },
+        })
         if (!signInCallbackResponse) {
           return res.redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
         } else if (typeof signInCallbackResponse === "string") {
@@ -243,22 +242,22 @@ export default async function callback(req, res) {
       )
 
       if (useJwtSession) {
-        const defaultJwtPayload = {
+        const defaultToken = {
           name: user.name,
           email: user.email,
           picture: user.image,
           sub: user.id?.toString(),
         }
-        const jwtPayload = await callbacks.jwt(
-          defaultJwtPayload,
+        const token = await callbacks.jwt({
+          token: defaultToken,
           user,
           account,
           profile,
-          isNewUser
-        )
+          isNewUser,
+        })
 
         // Sign and encrypt token
-        const newEncodedJwt = await jwt.encode({ ...jwt, token: jwtPayload })
+        const newEncodedJwt = await jwt.encode({ ...jwt, token })
 
         // Set cookie expiry date
         const cookieExpires = new Date()
@@ -350,11 +349,11 @@ export default async function callback(req, res) {
     const account = { id: provider.id, type: "credentials" }
 
     try {
-      const signInCallbackResponse = await callbacks.signIn(
+      const signInCallbackResponse = await callbacks.signIn({
         user,
         account,
-        credentials
-      )
+        credentials,
+      })
       if (!signInCallbackResponse) {
         return res
           .status(403)
@@ -368,22 +367,22 @@ export default async function callback(req, res) {
       )
     }
 
-    const defaultJwtPayload = {
+    const defaultToken = {
       name: user.name,
       email: user.email,
       picture: user.image,
       sub: user.id?.toString(),
     }
-    const jwtPayload = await callbacks.jwt(
-      defaultJwtPayload,
+    const token = await callbacks.jwt({
+      token: defaultToken,
       user,
       account,
-      userObjectReturnedFromAuthorizeHandler,
-      false
-    )
+      profile: userObjectReturnedFromAuthorizeHandler,
+      isNewUser: false,
+    })
 
     // Sign and encrypt token
-    const newEncodedJwt = await jwt.encode({ ...jwt, token: jwtPayload })
+    const newEncodedJwt = await jwt.encode({ ...jwt, token })
 
     // Set cookie expiry date
     const cookieExpires = new Date()

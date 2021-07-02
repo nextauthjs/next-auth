@@ -25,6 +25,8 @@ Anyone can be a contributor. Either you found a typo, or you have an awesome fea
 
 A quick guide on how to setup _next-auth_ locally to work on it and test out any changes:
 
+The dev application requires you to use `npm@7`.
+
 1. Clone the repo:
 
 ```sh
@@ -32,10 +34,10 @@ git clone git@github.com:nextauthjs/next-auth.git
 cd next-auth
 ```
 
-2. Install packages:
+2. Install packages, set up the dev application:
 
 ```sh
-npm i && npm run dev:setup
+npm run dev:setup
 ```
 
 3. Populate `.env.local`:
@@ -78,26 +80,12 @@ You can look at the existing built-in providers for inspiration.
 
 #### Databases
 
-Included is a Docker Compose file that starts up MySQL, PostgreSQL, and MongoDB databases on localhost.
-
-It will use port `3306`, `5432`, and `27017` on localhost respectively; please make sure those ports are not used by other services on localhost.
-
-You can start them with `npm run db:start` and stop them with `npm run db:stop`.
-
-You will need Docker and Docker Compose installed to be able to start / stop the databases.
-
-When stopping the databases, it will reset their contents.
-
+If you would like to contribute to an existing database adapter or help create a new one, head over to the [nextauthjs/adapters](https://www.github.com/nextauthjs/adapters) repository and follow the instructions provided there.
 #### Testing
 
 Tests can be run with `npm run test`.
 
 Automated tests are currently crude and limited in functionality, but improvements are in development.
-
-Currently, to run tests you need to first have started local test databases (e.g. using `npm run db:start`).
-
-The databases can take a few seconds to start up, so you might need to give it a minute before running the tests.
-
 ## For maintainers
 
 We use [semantic-release](https://github.com/semantic-release/semantic-release) together with [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0) to automate releases. This makes the maintenance process easier and less error-prone to human error. Please study the "Conventional Commits" site to understand how to write a good commit message.
