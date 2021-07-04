@@ -73,7 +73,7 @@ export interface NextAuthOptions {
    *     signOut: '/auth/signout',
    *     error: '/auth/error',
    *     verifyRequest: '/auth/verify-request',
-   *     newUser: null
+   *     newUser: '/auth/new-user'
    *   }
    * ```
    *
