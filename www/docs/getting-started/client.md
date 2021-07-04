@@ -339,8 +339,8 @@ Using the supplied `<SessionProvider>` allows instances of `useSession()` to sha
 import { SessionProvider } from "next-auth/react"
 
 export default function App({
-  Component, 
-  pageProps: { session, ...pageProps }
+  Component,
+  pageProps: { session, ...pageProps },
 }) {
   return (
     <SessionProvider session={session}>
@@ -381,10 +381,9 @@ However, if you need to customize the session behavior and/or are using short se
 ```jsx title="pages/_app.js"
 import { SessionProvider } from "next-auth/react"
 
-
 export default function App({
-  Component, 
-  pageProps: { session, ...pageProps }
+  Component,
+  pageProps: { session, ...pageProps },
 }) {
   return (
     <SessionProvider
@@ -452,8 +451,8 @@ AdminDashboard.auth = true
 
 ```jsx title="pages/_app.jsx"
 export default function App({
-  Component, 
-  pageProps: { session, ...pageProps }
+  Component,
+  pageProps: { session, ...pageProps },
 }) {
   return (
     <SessionProvider session={session}>
@@ -469,12 +468,12 @@ export default function App({
 }
 
 function Auth({ children }) {
-  const { data: session, loading } = useSession()
+  const { data: session, status } = useSession()
   const isUser = !!session?.user
   React.useEffect(() => {
-    if (loading) return // Do nothing while loading
+    if (status === "loading") return // Do nothing while loading
     if (!isUser) signIn() // If not authenticated, force log in
-  }, [isUser, loading])
+  }, [isUser, status])
 
   if (isUser) {
     return children

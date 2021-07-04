@@ -28,10 +28,10 @@ export interface NextAuthConfig {
 
 export type SessionContextValue<R extends boolean = false> = R extends true
   ?
-      | { data: Session; status: "authenticated"; loading: false }
-      | { data: null; status: "loading"; loading: true }
+      | { data: Session; status: "authenticated" }
+      | { data: null; status: "loading" }
   :
-      | { data: Session; status: "authenticated"; loading: false }
-      | { data: null; status: "unauthenticated" | "loading"; loading: boolean }
+      | { data: Session; status: "authenticated" }
+      | { data: null; status: "unauthenticated" | "loading" }
 
 export type SessionContext = React.Context<SessionContextValue>

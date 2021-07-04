@@ -20,7 +20,7 @@ const clientSession = {
  */
 client.useSession()
 
-// $ExpectType { data: Session; status: "authenticated"; loading: false; } | { data: null; status: "loading"; loading: true; }
+// $ExpectType { data: Session; status: "authenticated";  } | { data: null; status: "loading"; }
 const session = client.useSession({ required: true })
 if (session.status === "loading") {
   // $ExpectType null

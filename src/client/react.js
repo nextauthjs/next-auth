@@ -66,7 +66,7 @@ export function useSession(options = {}) {
   }, [requiredAndNotLoading, action])
 
   if (requiredAndNotLoading) {
-    return { data: value.data, loading: true, status: "loading" }
+    return { data: value.data, status: "loading" }
   }
 
   return value
@@ -302,7 +302,6 @@ export function SessionProvider(props) {
         : session
         ? "authenticated"
         : "unauthenticated",
-      loading,
     }),
     [session, loading]
   )

@@ -28,7 +28,7 @@ test("it won't allow to fetch the session in isolation without a session context
   expect(() => render(<App />)).toThrow(
     "useSession must be wrapped in a SessionProvider"
   )
-  
+
   console.error.mockRestore()
 })
 
@@ -90,11 +90,11 @@ function ProviderFlow({ options = {} }) {
 }
 
 function SessionConsumer({ testId = 1 }) {
-  const { data: session, loading } = useSession()
+  const { data: session, status } = useSession()
 
   return (
     <div data-testid={`session-consumer-${testId}`}>
-      {loading ? "loading" : JSON.stringify(session)}
+      {status === "loading" ? "loading" : JSON.stringify(session)}
     </div>
   )
 }
