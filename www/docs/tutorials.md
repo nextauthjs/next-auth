@@ -85,7 +85,7 @@ title: Tutorials and Explainers
 
 #### [Sign in with Apple in NextJS](https://thesiddd.com/blog/apple-auth) <svg xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '5px', marginBottom:'-6px'}} height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>External</title> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /> </svg>
 
-- This tutorial walks step by step on how to get Sign In with Apple working (both locally and on a deployed website) using NextAuth.js.
+- This tutorial walks step by step on how to get sign in with Apple working (both locally and on a deployed website) using NextAuth.js.
 
 ## Database
 
