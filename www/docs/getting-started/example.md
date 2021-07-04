@@ -41,7 +41,7 @@ See the [options documentation](/configuration/options) for how to configure pro
 
 ### Add React Hook
 
-The `useSession()` React Hook in the NextAuth.js client is the easiest way to check if someone is signed in.
+The [`useSession()`](http://localhost:3000/getting-started/client#usesession) React Hook in the NextAuth.js client is the easiest way to check if someone is signed in.
 
 ```javascript
 import { useSession, signIn, signOut } from "next-auth/react"
@@ -71,15 +71,15 @@ You can use the `useSession` hook from anywhere in your application (e.g. in a h
 
 ### Share/configure session state
 
-Use the `<SessionProvider>` to allows instances of `useSession()` to share the session object across components. It also takes care of keeping the session updated and synced between tabs/windows.
+To be able to use `useSession` first you'll need to expose the session context, [`<SessionProvider />`](http://localhost:3000/getting-started/client#sessionprovider), at the top level of your application:
 
 ```javascript
 // pages/_app.js
 import { SessionProvider } from "next-auth/react"
 
 export default function App({
-  Component, 
-  pageProps: { session, ...pageProps }
+  Component,
+  pageProps: { session, ...pageProps },
 }) {
   return (
     <SessionProvider session={session}>
@@ -88,6 +88,8 @@ export default function App({
   )
 }
 ```
+
+In this way instances of `useSession` can have access to the session data and status, otherwise they'll throw an error... `<SessionProvider />` also takes care of keeping the session updated and synced between browser tabs and windows.
 
 :::tip
 Check out the [client documentation](/getting-started/client) to see how you can improve the user experience and page performance by using the NextAuth.js client.

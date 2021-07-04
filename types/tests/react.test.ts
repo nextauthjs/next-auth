@@ -13,14 +13,14 @@ const clientSession = {
 
 /**
  * $ExpectType
- * | { data: Session; status: "authenticated"; loading: false; }
- * | { data: null; status: "unauthenticated" | "loading"; loading: boolean; }
- * | { //// data: Session; status: "authenticated"; loading: false; }
- * | { data: null; status: "loading"; loading: true; }
+ * | { data: Session; status: "authenticated"; }
+ * | { data: null; status: "unauthenticated" | "loading"; }
+ * | { //// data: Session; status: "authenticated"; }
+ * | { data: null; status: "loading"; }
  */
 client.useSession()
 
-// $ExpectType { data: Session; status: "authenticated";  } | { data: null; status: "loading"; }
+// $ExpectType { data: Session; status: "authenticated"; } | { data: null; status: "loading"; }
 const session = client.useSession({ required: true })
 if (session.status === "loading") {
   // $ExpectType null
