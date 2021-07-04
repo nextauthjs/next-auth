@@ -41,6 +41,10 @@ html[data-theme="dark"]:root {
   --ifm-navbar-background-color: rgba(0, 0, 0, 0.95);
 }
 
+html[data-theme="dark"] {
+  --ifm-background-color: #1f201c;
+}
+
 @import "hero.css";
 @import "admonitions.css";
 @import "buttons.css";
@@ -95,10 +99,6 @@ hr {
 
 html[data-theme="dark"] hr {
   border-color: #242526;
-}
-
-html[data-theme="dark"] {
-  --ifm-background-color: #1f201c;
 }
 
 .home-main .code {
