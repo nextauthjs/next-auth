@@ -39,7 +39,7 @@ title: Tutorials and Explainers
 
 #### [NextJS Authentication Crash Course with NextAuth.js](https://youtu.be/o_wZIVmWteQ) <svg role="img" viewBox="0 0 24 24" height="24" width="24" style={{ marginLeft: '5px', marginBottom:'-6px'}} xmlns="http://www.w3.org/2000/svg"><title>YouTube</title><path fill="#ff0000" d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
 
-- This tutorial dives in to the ins and outs of NextAuth including email, Github, Twitter and integrating with Auth0 in under hour.
+- This tutorial dives into the ins and outs of NextAuth, including using the Email, Github, Twitter and Auth0 providers in under an hour.
 
 #### [Create your own NextAuth.js Login Pages](https://youtu.be/kB6YNYZ63fw) <svg role="img" viewBox="0 0 24 24" height="24" width="24" style={{ marginLeft: '5px', marginBottom:'-6px'}} xmlns="http://www.w3.org/2000/svg"><title>YouTube</title><path fill="#ff0000" d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
 
