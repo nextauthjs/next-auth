@@ -1,6 +1,6 @@
 name: Question
 description: Ask a question about NextAuth.js or for help using it
-title: "[Question]: "
+title: ""
 labels: question
 
 # note: markdown sections will NOT appear as part of the issue as per documentation, rather they provide context to the user
@@ -39,7 +39,7 @@ body:
       label: How to reproduce ☕️ 
       description: Please provide a link to a minimal reproduction or code snippets that represents your question
     validations:
-      required: false 
+      required: true 
   - type: markdown
     attributes:
       value: |

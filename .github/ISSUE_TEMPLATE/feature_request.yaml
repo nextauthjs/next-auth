@@ -1,6 +1,6 @@
 name: Feature Request
 description: Suggest an idea for NextAuth.js
-title: "[Feature Request]: "
+title: ""
 labels: enhancement
 
 # note: markdown sections will NOT appear as part of the issue as per documentation, rather they provide context to the user
@@ -43,7 +43,7 @@ body:
       label: How to reproduce ☕️ 
       description: If you have a CodeSandbox playground or some code snippets to help us visualize your idea better, please provide it here.
     validations:
-      required: false
+      required: true
   - type: markdown
     attributes:
       value: |
