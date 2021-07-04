@@ -57,7 +57,7 @@ title: Tutorials and Explainers
 
 #### [Fullstack Authentication Example with Next.js and NextAuth.js](https://github.com/prisma/prisma-examples/tree/latest/typescript/rest-nextjs-api-routes-auth) <svg xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '5px', marginBottom:'-6px'}} height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>External</title> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /> </svg>
 
-- This example shows how to implement a fullstack app in TypeScript with Next.js using React (frontend), Next.js API routes and Prisma Client (backend). It also demonstrates how to implement authentication using NextAuth.js. By Nikolas Burk at Prisma.
+- This example shows how to implement a full-stack app in TypeScript with Next.js using Prisma Client as a backend. It also demonstrates how to implement authentication using NextAuth.js. By Nikolas Burk at Prisma.
 
 ## Testing
 
