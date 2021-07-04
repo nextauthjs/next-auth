@@ -1,6 +1,5 @@
 name: Bug Report
 description: File a bug report
-title: ""
 labels: bug
 
 # note: markdown sections will NOT appear as part of the issue as per documentation, rather they provide context to the user

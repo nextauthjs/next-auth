@@ -1,6 +1,5 @@
 name: TypeScript
 description: Ask a question about NextAuth.js TypeScript integration
-title: ""
 labels: [question, TypeScript]
 assignees: [lluia, balazsorban44]
 

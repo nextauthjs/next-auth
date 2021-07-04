@@ -1,6 +1,5 @@
 name: Feature Request
 description: Suggest an idea for NextAuth.js
-title: ""
 labels: enhancement
 
 # note: markdown sections will NOT appear as part of the issue as per documentation, rather they provide context to the user
