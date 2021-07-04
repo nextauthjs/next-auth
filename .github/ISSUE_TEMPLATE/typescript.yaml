@@ -1,6 +1,6 @@
 name: TypeScript
 description: Ask a question about NextAuth.js TypeScript integration
-title: "[TypeScript | Question]: "
+title: ""
 labels: [question, TypeScript]
 assignees: [lluia, balazsorban44]
 
@@ -34,7 +34,7 @@ body:
       label: How to reproduce ☕️ 
       description: Please provide a link to a minimal reproduction or code snippets that represents your question
     validations:
-      required: false 
+      required: true 
   - type: markdown
     attributes:
       value: |
