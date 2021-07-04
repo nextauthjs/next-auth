@@ -1,6 +1,5 @@
 name: Question
 description: Ask a question about NextAuth.js or for help using it
-title: ""
 labels: question
 
 # note: markdown sections will NOT appear as part of the issue as per documentation, rather they provide context to the user
