@@ -103,3 +103,13 @@
   height: 220px;
   width: 220px;
 }
+
+.homeSubtitle {
+  justify-content: center;
+  padding: 0rem 0 2rem 0;
+  opacity: 0.6;
+  font-style: italic;
+  margin: 0 auto;
+  font-size: 1.2rem;
+  text-align: center;
+}
