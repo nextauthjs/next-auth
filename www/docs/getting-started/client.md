@@ -74,7 +74,7 @@ import { useSession } from "next-auth/react"
 export default function Admin() {
   const { status } = useSession({
     required: true,
-    onFail() {
+    onUnauthenticated() {
       // The user is not authenticated, handle it here.
     }
   })

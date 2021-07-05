@@ -50,7 +50,7 @@ export function useSession(options = {}) {
     throw new Error("useSession must be wrapped in a SessionProvider")
   }
 
-  const { required, onFail } = options
+  const { required, onUnauthenticated } = options
 
   const requiredAndNotLoading = required && value.status === "unauthenticated"
 
@@ -60,10 +60,10 @@ export function useSession(options = {}) {
         error: "SessionRequired",
         callbackUrl: window.location.href,
       })}`
-      if (onFail) onFail()
+      if (onUnauthenticated) onUnauthenticated()
       else window.location.replace(url)
     }
-  }, [requiredAndNotLoading, onFail])
+  }, [requiredAndNotLoading, onUnauthenticated])
 
   if (requiredAndNotLoading) {
     return { data: value.data, status: "loading" }
