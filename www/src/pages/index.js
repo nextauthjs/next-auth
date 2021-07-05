@@ -193,11 +193,13 @@ function Home() {
                 <div className="col col--6">
                   <div className="code">
                     <h4 className="code-heading">
-                      Client <span>/pages/index.js</span>
+                      Client (App) <span>/pages/_app.jsx</span>
                     </h4>
-                    <CodeBlock className="javascript">
-                      {reactComponentCode}
-                    </CodeBlock>
+                    <CodeBlock className="javascript">{appCode}</CodeBlock>
+                    <h4 className="code-heading">
+                      Client (Page) <span>/pages/index.js</span>
+                    </h4>
+                    <CodeBlock className="javascript">{pageCode}</CodeBlock>
                   </div>
                 </div>
               </div>
@@ -224,13 +226,24 @@ function Home() {
   )
 }
 
-const reactComponentCode = `
-import {
-  useSession, signIn, signOut
-} from "next-auth/react"
+const appCode = `
+import { SessionProvider } from "next-auth/react"
+
+export default App({
+  Component, pageProps: { session, ...pageProps }
+}) {
+  return (
+    <SessionProvider session={session}>
+      <Component {...pageProps}/>
+    </SessionProvide>
+  )
+}`.trim()
+
+const pageCode = `
+import { useSession, signIn, signOut } from "next-auth/react"
 
 export default function Component() {
-  const [ session, loading ] = useSession()
+  const { data: session } = useSession()
   if(session) {
     return <>
       Signed in as {session.user.email} <br/>

@@ -21,11 +21,15 @@ If data on a page is fetched using calls to secure API routes - i.e. routes whic
 import { useSession, getSession } from "next-auth/react"
 
 export default function Page() {
-  const [session, loading] = useSession()
+  const { data: session, status } = useSession()
 
-  if (loading) return null
+  if (status === "loading") {
+    return <p>Loading...</p>
+  }
 
-  if (!loading && !session) return <p>Access Denied</p>
+  if (status === "unauthenticated") {
+    return <p>Access Denied</p>
+  }
 
   return (
     <>
@@ -44,9 +48,9 @@ You can protect server side rendered pages using the `getSession()` method.
 import { useSession, getSession } from "next-auth/react"
 
 export default function Page() {
-  const [session, loading] = useSession()
+  const { data: session } = useSession()
 
-  if (typeof window !== "undefined" && loading) return null
+  if (typeof window !== "undefined") return null
 
   if (session) {
     return (
@@ -60,15 +64,16 @@ export default function Page() {
 }
 
 export async function getServerSideProps(context) {
-  const session = await getSession(context)
   return {
-    props: { session },
+    props: {
+      session: await getSession(context)
+    },
   }
 }
 ```
 
 :::tip
-This example assumes you have configured `_app.js` to pass the `session` prop through so that it's immediately available on page load to `useSession`.
+When you supply a `session` prop in `_app.js`, `useSession` won't show a loading state, as it'll already have the session available. In this way, you can provide a more seamless user experience.
 
 ```js title="pages/_app.js"
 import { SessionProvider } from "next-auth/react"

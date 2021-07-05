@@ -75,8 +75,8 @@ export default NextAuth({
 import { useSession } from "next-auth/react"
 
 export default function IndexPage() {
-  // `session` should match `callbacks.session()` in `NextAuth()`
-  const [session] = useSession()
+  // `session` will match the returned value of `callbacks.session()` from `NextAuth()`
+  const { data: session } = useSession()
 
   return (
     // Your component
