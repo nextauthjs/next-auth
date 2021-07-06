@@ -18,7 +18,7 @@ export default function Yuque(options) {
     profile(profile) {
       return {
         id: profile.data.id,
-        name: profile.data.username,
+        name: profile.data.name,
         image: profile.data.avatar_url,
         // Yuque doesn't expose `email` in api
         email: profile.data.email,
