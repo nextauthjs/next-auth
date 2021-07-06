@@ -56,7 +56,7 @@ export function useSession(options = {}) {
 
   React.useEffect(() => {
     if (requiredAndNotLoading) {
-      const url = `/api/auth/signin?${new URLSearchParams({
+      const url = `${_apiBaseUrl()}/signin?${new URLSearchParams({
         error: "SessionRequired",
         callbackUrl: window.location.href,
       })}`
@@ -337,6 +337,17 @@ function _apiBaseUrl() {
     // NEXTAUTH_URL should always be set explicitly to support server side calls - log warning if not set
     if (!process.env.NEXTAUTH_URL) {
       logger.warn("NEXTAUTH_URL", "NEXTAUTH_URL environment variable not set")
+    }
+
+    if (
+      process.env.NODE_ENV === "development" &&
+      !/^http:\/\/localhost:\d+$/.test(process.env.NEXTAUTH_URL) &&
+      !process.env.NEXT_PUBLIC_NEXTAUTH_URL
+    ) {
+      logger.warn(
+        "NEXT_PUBLIC_NEXTAUTH_URL",
+        `NEXTAUTH_URL is set to "${process.env.NEXTAUTH_URL}" instead of the default "http://localhost:3000", and NEXT_PUBLIC_NEXTAUTH_URL is not set. Client side path detections will fail.`
+      )
     }
 
     // Return absolute path when called server side

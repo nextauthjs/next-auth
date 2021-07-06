@@ -20,6 +20,17 @@ if (!process.env.NEXTAUTH_URL) {
   logger.warn("NEXTAUTH_URL", "NEXTAUTH_URL environment variable not set")
 }
 
+if (
+  process.env.NODE_ENV === "development" &&
+  !/^http:\/\/localhost:\d+$/.test(process.env.NEXTAUTH_URL) &&
+  !process.env.NEXT_PUBLIC_NEXTAUTH_URL
+) {
+  logger.warn(
+    "NEXT_PUBLIC_NEXTAUTH_URL",
+    `NEXTAUTH_URL is set to "${process.env.NEXTAUTH_URL}" instead of the default "http://localhost:\${PORT}", and NEXT_PUBLIC_NEXTAUTH_URL is not set. Client side path detections will fail.`
+  )
+}
+
 /**
  * @param {import("next").NextApiRequest} req
  * @param {import("next").NextApiResponse} res

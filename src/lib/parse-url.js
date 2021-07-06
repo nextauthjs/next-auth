@@ -5,23 +5,36 @@
  * supporting a default value, so a simple split is sufficent.
  * @param {string} url
  */
-export default function parseUrl (url) {
+export default function parseUrl(url) {
   // Default values
-  const defaultHost = 'http://localhost:3000'
-  const defaultPath = '/api/auth'
+  const defaultHost = "http://localhost:3000"
+  const defaultPath = "/api/auth"
 
-  if (!url) { url = `${defaultHost}${defaultPath}` }
-
+  if (!url) {
+    if (process.env.NEXT_PUBLIC_NEXTAUTH_URL) {
+      /* 
+        if the user has defined NEXT_PUBLIC_NEXTAUTH_URL, which should be mandatory
+        if they are using a different path other than 'http://localhost:3000'
+        in NEXTAUTH_URL variable in their .env file, use that variable instead, 
+        otherwise, the clientside path detection will fail.
+      */
+      url = process.env.NEXT_PUBLIC_NEXTAUTH_URL
+    } else {
+      // fallback to default values, user should see a warning if NEXTAUTH_URL is different
+      // and NEXT_PUBLIC_NEXTAUTH_URL is not set
+      url = `${defaultHost}${defaultPath}`
+    }
+  }
   // Default to HTTPS if no protocol explictly specified
-  const protocol = url.startsWith('http:') ? 'http' : 'https'
+  const protocol = url.startsWith("http:") ? "http" : "https"
 
   // Normalize URLs by stripping protocol and no trailing slash
-  url = url.replace(/^https?:\/\//, '').replace(/\/$/, '')
+  url = url.replace(/^https?:\/\//, "").replace(/\/$/, "")
 
   // Simple split based on first /
-  const [_host, ..._path] = url.split('/')
+  const [_host, ..._path] = url.split("/")
   const baseUrl = _host ? `${protocol}://${_host}` : defaultHost
-  const basePath = _path.length > 0 ? `/${_path.join('/')}` : defaultPath
+  const basePath = _path.length > 0 ? `/${_path.join("/")}` : defaultPath
 
   return { baseUrl, basePath }
 }
