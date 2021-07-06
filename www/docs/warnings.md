@@ -5,7 +5,7 @@ title: Warnings
 
 This is a list of warning output from NextAuth.js.
 
-All warnings indicate things which you should take a look at, but do not inhibit normal operation.
+All warnings indicate things which you should take a look at, but in most cases do not inhibit normal operation.
 
 ---
 
@@ -14,6 +14,10 @@ All warnings indicate things which you should take a look at, but do not inhibit
 #### NEXTAUTH_URL
 
 Environment variable `NEXTAUTH_URL` missing. Please set it in your `.env` file.
+
+#### NEXT_PUBLIC_NEXTAUTH_URL
+
+You are using a folder structure and `NEXTAUTH_URL` other than the default one, but you haven't set `NEXT_PUBLIC_NEXTAUTH_URL` or `NEXT_PUBLIC_NEXTAUTH_URL` points to a different endpoint. This will make client side path detections fail if not addressed.
 
 ---
 

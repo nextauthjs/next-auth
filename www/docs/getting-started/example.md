@@ -103,6 +103,21 @@ When deploying your site set the `NEXTAUTH_URL` environment variable to the cano
 NEXTAUTH_URL=https://example.com
 ```
 
+If you are using a URL for the API endpoints that is different than this (hence, a different folder structure as well), for example `NEXTAUTH_URL=https://example.com/api/v1/auth`, you also need to set a second environment variable with the key `NEXT_PUBLIC_NEXTAUTH_URL` and point it to the same URL. Otherwise, client side path detections will fail.
+
+```
+NEXTAUTH_URL=https://example.com/api/v1/auth
+NEXT_PUBLIC_NEXTAUTH_URL=https://example.com/api/v1/auth
+```
+
+This assumes that `[...nextauth].js` is inside `/pages/api/v1/auth/`.
+
+You can use a [Next.js feature](https://nextjs.org/docs/basic-features/environment-variables) to refer to environment variables by their names within the file.
+```
+NEXTAUTH_URL=https://example.com/api/v1
+NEXT_PUBLIC_NEXTAUTH_URL=$NEXTAUTH_URL
+```
+
 :::tip
 In production, this needs to be set as an environment variable on the service you use to deploy your app.
 

@@ -59,4 +59,17 @@ e.g.
  `NEXTAUTH_URL=https://example.com/myapp/api/authentication`
 
 `/api/auth/signin` -> `/myapp/api/authentication/signin`
+
+However, you need to do two things:
+1. You must declare a `NEXT_PUBLIC_NEXTAUTH_URL` environment variable that points to the same URL as above.
+2. Your folder structure must match the above URL. e.g.
+
+```
+.
+└── pages
+    └── api
+        └── authentication
+            └── [...nextauth].js
+
+```
 :::
