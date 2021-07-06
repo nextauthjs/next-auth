@@ -10,6 +10,11 @@ export default function Yuque(options) {
     requestTokenUrl: "https://www.yuque.com/oauth2/authorize",
     authorizationUrl: "https://www.yuque.com/oauth2/authorize?response_type=code",
     profileUrl: "https://www.yuque.com/api/v2/user",
+    authHeaders({ accessToken }) {
+      return {
+        "X-Auth-Token": accessToken,
+      };
+    },
     profile(profile) {
       return {
         id: profile.data.id,
