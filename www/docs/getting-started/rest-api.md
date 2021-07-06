@@ -62,7 +62,7 @@ e.g.
 
 However, you need to do two things:
 1. You must declare a `NEXT_PUBLIC_NEXTAUTH_URL` environment variable that points to the same URL as above.
-2. Your folder structure must match the above URL. e.g.
+2. Your folder structure must match what's set on `NEXT_PUBLIC_NEXTAUTH_URL`, for instance, if it's set to `https://mywebsite.com/api/authentication`, your folder structure should be:
 
 ```
 .
