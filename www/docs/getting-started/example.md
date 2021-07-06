@@ -114,7 +114,7 @@ This assumes that `[...nextauth].js` is inside `/pages/api/v1/auth/`.
 
 You can use a [Next.js feature](https://nextjs.org/docs/basic-features/environment-variables) to refer to environment variables by their names within the file.
 ```
-NEXTAUTH_URL=https://example.com/api/v1
+NEXTAUTH_URL=https://example.com/api/v1/auth
 NEXT_PUBLIC_NEXTAUTH_URL=$NEXTAUTH_URL
 ```
 
