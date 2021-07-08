@@ -29,7 +29,7 @@ export default function Page() {
     setResponse(response)
   }
 
-  const [session] = useSession()
+  const { data: session } = useSession()
 
   if (session) {
     return (

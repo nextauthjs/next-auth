@@ -16,6 +16,22 @@ afterAll(() => {
   server.close()
 })
 
+test("it won't allow to fetch the session in isolation without a session context", () => {
+  function App() {
+    useSession()
+    return null
+  }
+
+  jest.spyOn(console, "error")
+  console.error.mockImplementation(() => {})
+
+  expect(() => render(<App />)).toThrow(
+    "useSession must be wrapped in a SessionProvider"
+  )
+
+  console.error.mockRestore()
+})
+
 test("fetches the session once and re-uses it for different consumers", async () => {
   const sessionRouteCall = jest.fn()
 
@@ -66,21 +82,19 @@ test("when there's an existing session, it won't initialize as loading", async (
 
 function ProviderFlow({ options = {} }) {
   return (
-    <>
-      <SessionProvider {...options}>
-        <SessionConsumer />
-        <SessionConsumer testId="2" />
-      </SessionProvider>
-    </>
+    <SessionProvider {...options}>
+      <SessionConsumer />
+      <SessionConsumer testId="2" />
+    </SessionProvider>
   )
 }
 
 function SessionConsumer({ testId = 1 }) {
-  const [session, loading] = useSession()
+  const { data: session, status } = useSession()
 
   return (
     <div data-testid={`session-consumer-${testId}`}>
-      {loading ? "loading" : JSON.stringify(session)}
+      {status === "loading" ? "loading" : JSON.stringify(session)}
     </div>
   )
 }

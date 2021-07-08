@@ -6,7 +6,7 @@ import styles from "./header.module.css"
 // component that works on pages which support both client and server side
 // rendering, and avoids any flash incorrect content on initial page load.
 export default function Header() {
-  const [session, loading] = useSession()
+  const { data: session, status } = useSession()
 
   return (
     <header>
@@ -16,7 +16,7 @@ export default function Header() {
       <div className={styles.signedInStatus}>
         <p
           className={`nojs-show ${
-            !session && loading ? styles.loading : styles.loaded
+            !session && status === "loading" ? styles.loading : styles.loaded
           }`}
         >
           {!session && (
