@@ -1,11 +1,4 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = Freshbooks;
-
-function Freshbooks(options) {
+export default function Freshbooks(options) {
   return {
   id: 'freshbooks',
   name: 'Freshbooks',
