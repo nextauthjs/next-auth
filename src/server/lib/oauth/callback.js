@@ -1,4 +1,5 @@
-import { oAuth1Client, openidClient } from "./client"
+import { openidClient } from "./client"
+import { oAuth1Client } from "./oauth1"
 import { getState } from "./state-handler"
 import { usePKCECodeVerifier } from "./pkce-handler"
 import { OAuthCallbackError } from "../../../lib/errors"
@@ -21,14 +22,11 @@ export default async function oAuthCallback(req, res) {
     try {
       const client = await oAuth1Client(req.options)
       // Handle OAuth v1.x
-      const {
-        oauth_token: oauthToken,
-        oauth_verifier: oauthVerifier,
-      } = req.query
+      const { oauth_token, oauth_verifier } = req.query
       const tokens = await client.getOAuthAccessToken(
-        oauthToken,
+        oauth_token,
         null,
-        oauthVerifier
+        oauth_verifier
       )
       const profileData = await client.get(
         provider.profileUrl,

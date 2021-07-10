@@ -151,6 +151,9 @@
       "location": "readonly",
       "fetch": "readonly"
     },
+    "rules": {
+      "camelcase": "off"
+    },
     "overrides": [
       {
         "files": [
