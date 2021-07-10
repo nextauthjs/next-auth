@@ -1,0 +1,58 @@
+name: TypeScript
+description: Ask a question about NextAuth.js TypeScript integration
+labels: [question, TypeScript]
+assignees: [lluia, balazsorban44]
+
+# note: markdown sections will NOT appear as part of the issue as per documentation, rather they provide context to the user
+# https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-githubs-form-schema#markdown
+
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Question 💬
+      description: Please provide an in-depth description of the question you have when using NextAuth.js on a Typescript project or when consuming the built-in types for `next-auth`.
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        Make sure you [link]() to external documentation if necessary and provide inline code examples like so:
+
+        ```js
+        function myAwesomeNextAuthFeature() {
+          return 💚
+        }
+        ```
+
+        **NOTE:** Questions will be converted to Discussions. You can find them [here](https://github.com/nextauthjs/next-auth/discussions)!    
+
+  - type: textarea
+    id: codesandbox
+    attributes: 
+      label: How to reproduce ☕️ 
+      description: Please provide a link to a minimal reproduction or code snippets that represents your question
+    validations:
+      required: true 
+  - type: markdown
+    attributes:
+      value: |
+        We encourage you to use the template set-up on **CodeSandbox** as a playground to represent your question or doubt:
+        - [`next-auth-typescript-example`](https://codesandbox.io/s/next-auth-typescript-example-se32w)
+  
+
+  - type: dropdown
+    id: pr
+    attributes:
+      label: Contributing 🙌🏽
+      multiple: false
+      options:
+        - "Yes, I am willing to help answer this question in a PR"
+        - "No, I am afraid I cannot help regarding this"
+    validations:
+      required: true
+  - type: markdown
+    attributes: 
+      value: |
+        It takes a lot of work 🏋🏻‍♀️ maintaining a library like `next-auth`; any contribution is more than welcome 💚
+  

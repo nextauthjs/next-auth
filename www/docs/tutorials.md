@@ -96,3 +96,7 @@ title: Tutorials and Explainers
 #### [Creating a database adapter](tutorials/creating-a-database-adapter)
 
 - How to create a custom adapter, to use any database to fetch and store user / account data.
+
+### [Using NextAuth.js with Magic links](https://dev.to/narciero/using-nextauth-js-with-magic-links-df4)
+
+Learn how to use [Magic](https://magic.link) link authentication with [NextAuth.js](https://next-auth.js.org) to enable passwordless authentication without a database.
