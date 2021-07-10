@@ -33,7 +33,7 @@ export default async function getAuthorizationUrl(req) {
       url = url.replace(baseUrl, provider.authorizationUrl + "&")
     }
 
-    logger.debug("GET_AUTHORIZATION_URL", url)
+    logger.debug("GET_AUTHORIZATION_URL", { url, params })
     return url
   }
 
@@ -44,7 +44,7 @@ export default async function getAuthorizationUrl(req) {
       oauth_token_secret: tokens.oauth_token_secret,
       ...tokens.params,
     })}`
-    logger.debug("GET_AUTHORIZATION_URL", url)
+    logger.debug("GET_AUTHORIZATION_URL", { url, tokens })
     return url
   } catch (error) {
     logger.error("GET_AUTHORIZATION_URL_ERROR", error)

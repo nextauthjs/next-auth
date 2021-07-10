@@ -1,22 +1,38 @@
 /** @type {import("types").LoggerInstance} */
+
+import { UnknownError } from "./errors"
+
+/** Makes sure that error is always serializable */
+function formatError(o) {
+  if (o instanceof Error && !(o instanceof UnknownError)) {
+    return { message: o.message, stack: o.stack, name: o.name }
+  }
+  return o
+}
+
 const _logger = {
-  error(code, ...message) {
+  error(code, metadata) {
+    if (metadata.error) {
+      metadata.error = formatError(metadata.error)
+      metadata.message = metadata.message ?? metadata.error.message
+    } else metadata = formatError(metadata)
+
     console.error(
       `[next-auth][error][${code.toLowerCase()}]`,
       `\nhttps://next-auth.js.org/errors#${code.toLowerCase()}`,
-      ...message
+      metadata.message,
+      metadata
     )
   },
-  warn(code, ...message) {
+  warn(code) {
     console.warn(
       `[next-auth][warn][${code.toLowerCase()}]`,
-      `\nhttps://next-auth.js.org/warnings#${code.toLowerCase()}`,
-      ...message
+      `\nhttps://next-auth.js.org/warnings#${code.toLowerCase()}`
     )
   },
-  debug(code, ...message) {
+  debug(code, metadata) {
     if (!process?.env?._NEXTAUTH_DEBUG) return
-    console.log(`[next-auth][debug][${code.toLowerCase()}]`, ...message)
+    console.log(`[next-auth][debug][${code.toLowerCase()}]`, metadata)
   },
 }
 
