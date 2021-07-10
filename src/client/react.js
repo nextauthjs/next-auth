@@ -326,18 +326,17 @@ async function _fetchData(path, { ctx, req = ctx?.req } = {}) {
     if (!res.ok) throw data
     return Object.keys(data).length > 0 ? data : null // Return null if data empty
   } catch (error) {
-    logger.error("CLIENT_FETCH_ERROR", { error, path, headers: req.headers })
+    logger.error("CLIENT_FETCH_ERROR", {
+      error,
+      path,
+      ...(req ? { header: req.headers } : {}),
+    })
     return null
   }
 }
 
 function _apiBaseUrl() {
   if (typeof window === "undefined") {
-    // NEXTAUTH_URL should always be set explicitly to support server side calls - log warning if not set
-    if (!process.env.NEXTAUTH_URL) {
-      logger.warn("NEXTAUTH_URL")
-    }
-
     // Return absolute path when called server side
     return `${__NEXTAUTH.baseUrlServer}${__NEXTAUTH.basePathServer}`
   }
