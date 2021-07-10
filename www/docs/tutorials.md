@@ -94,3 +94,7 @@ This tutorial walks step by step on how to get Sign In with Apple working (both 
 ### [How to Authenticate Next.js Apps with Twitter & NextAuth.js](https://spacejelly.dev/posts/how-to-authenticate-next-js-apps-with-twitter-nextauth-js/)
 
 Learn how to add Twitter authentication and login to a Next.js app both clientside and serverside with NextAuth.js.
+
+### [Using NextAuth.js with Magic links](https://dev.to/narciero/using-nextauth-js-with-magic-links-df4)
+
+Learn how to use [Magic](https://magic.link) link authentication with [NextAuth.js](https://next-auth.js.org) to enable passwordless authentication without a database.
