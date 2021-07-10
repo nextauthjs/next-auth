@@ -27,7 +27,7 @@ The message will be an object and contain:
 
 Sent when the user signs out.
 
-The message object will contain either of these depending on if you use JWT or database persisted sessions:
+The message object will contain one of these depending on if you use JWT or database persisted sessions:
 
 - `token`: The JWT token for this session.
 - `session`: The session object from your adapter that is being ended
@@ -57,7 +57,7 @@ The message object will contain:
 
 Sent at the end of a request for the current session.
 
-The message object will contain either of these depending on if you use JWT or database persisted sessions:
+The message object will contain one of these depending on if you use JWT or database persisted sessions:
 
 - `token`: The JWT token for this session.
 - `session`: The session object from your adapter.
