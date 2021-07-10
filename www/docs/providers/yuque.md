@@ -34,5 +34,5 @@ providers: [
 ```
 
 :::warning
-Yuque doesn't expose user's email in API
+Yuque doesn't expose the user's email in API
 :::
