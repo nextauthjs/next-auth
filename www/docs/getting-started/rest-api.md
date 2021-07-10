@@ -19,7 +19,7 @@ The POST submission requires CSRF token from `/api/auth/csrf`.
 
 Handles returning requests from OAuth services during sign in.
 
-For OAuth 2.0 providers that support the `state` option, the value of the `state` parameter is checked against the one that was generated when the sign in flow was started - this uses a hash of the CSRF token which MUST match for both the POST and `GET` calls during sign in.
+For OAuth 2.0 providers that support the `checks: ["state"]` option, the state parameter is checked against the one that was generated when the sign in flow was started - this uses a hash of the CSRF token which MUST match for both the POST and `GET` calls during sign in.
 
 #### `GET` /api/auth/signout
 

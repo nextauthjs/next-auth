@@ -13,8 +13,10 @@ const PKCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
  * @param {import("types/internals").NextAuthResponse} res
  */
 export async function createPKCE(req, res) {
-  const { cookies, provider, logger } = req.options
-  if (!provider.protection?.includes("pkce")) {
+  const { cookies, logger } = req.options
+  /** @type {import("types/providers").OAuthConfig} */
+  const provider = req.options.provider
+  if (!provider.checks?.includes("pkce")) {
     // Provider does not support PKCE, return nothing.
     return {}
   }
@@ -64,7 +66,7 @@ export async function usePKCECodeVerifier(req, res) {
   const provider = req.options.provider
   const { cookies } = req.options
   if (
-    !provider?.protection.includes("pkce") ||
+    !provider?.checks.includes("pkce") ||
     !(cookies.pkceCodeVerifier.name in req.cookies)
   ) {
     return
@@ -78,7 +80,10 @@ export async function usePKCECodeVerifier(req, res) {
   })
 
   // remove PKCE cookie after it has been used up
-  cookie.set(res, cookies.pkceCodeVerifier.name, null, { maxAge: 0 })
+  cookie.set(res, cookies.pkceCodeVerifier.name, "", {
+    ...cookies.pkceCodeVerifier.options,
+    maxAge: 0,
+  })
 
   return pkce?.code_verifier ?? undefined
 }

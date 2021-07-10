@@ -6,8 +6,10 @@ import { createHash } from "crypto"
  * @param {import("types/internals").NextAuthResponse} res
  */
 export function createState(req) {
-  const { provider, csrfToken, logger } = req.options
-  if (!provider.protection?.includes("state")) {
+  const { csrfToken, logger } = req.options
+  /** @type {import("types/providers").OAuthConfig} */
+  const provider = req.options.provider
+  if (!provider.checks?.includes("state")) {
     // Provider does not support state, return nothing
     return
   }
@@ -31,7 +33,7 @@ export function createState(req) {
 export function getState({ options }) {
   /** @type {import("types/providers").OAuthConfig} */
   const provider = options.provider
-  if (provider?.protection.includes("state")) {
+  if (provider?.checks.includes("state")) {
     return createHash("sha256").update(options.csrfToken).digest("hex")
   }
 }
