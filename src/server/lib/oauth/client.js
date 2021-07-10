@@ -17,7 +17,7 @@ export async function openidClient({ provider }) {
     jwks_uri: `https://${provider.domain}/.well-known/jwks.json`,
   })
 
-  const client = issuer.Client({
+  const client = new issuer.Client({
     client_id: provider.clientId,
     client_secret: provider.clientSecret,
     redirect_uris: [provider.callbackUrl],
