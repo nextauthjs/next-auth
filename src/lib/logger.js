@@ -69,7 +69,7 @@ export function proxyLogger(logger = _logger, basePath) {
         if (level === "error") {
           metadata = formatError(metadata)
         }
-
+        metadata.client = true
         const url = `${basePath}/_log`
         const body = new URLSearchParams({ level, code, ...metadata })
         if (navigator.sendBeacon) {

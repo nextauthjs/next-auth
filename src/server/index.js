@@ -255,7 +255,6 @@ async function NextAuthHandler(req, res, userOptions) {
           if (userOptions.logger) {
             try {
               const { code, level, ...metadata } = req.body
-              metadata.client = true // Indicate that these logs are from the client
               logger[level](code, metadata)
             } catch (error) {
               // If logging itself failed...
