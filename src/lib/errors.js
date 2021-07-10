@@ -96,3 +96,11 @@ export class GetVerificationRequestError extends UnknownError {
 export class DeleteVerificationRequestError extends UnknownError {
   name = "DeleteVerificationRequestError"
 }
+
+export function upperSnake(s) {
+  return s.replace(/([A-Z])/g, "_$1").toUpperCase()
+}
+
+export function capitalize(s) {
+  return `${s[0].toUpperCase()}${s.slice(1)}`
+}

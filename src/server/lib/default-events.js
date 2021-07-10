@@ -1,15 +1,12 @@
+import { upperSnake } from "../../lib/errors"
+
+/** @type {import("types").EventCallbacks} */
 export const defaultEvents = {
-  /** Event triggered on successful sign in */
   signIn() {},
-  /** Event triggered on sign out */
   signOut() {},
-  /** Event triggered on user creation */
   createUser() {},
-  /** Event triggered when a user object is updated */
   updateUser() {},
-  /** Event triggered when an account is linked to a user */
   linkAccount() {},
-  /** Event triggered when a session is active */
   session() {},
 }
 
@@ -25,7 +22,7 @@ export function withErrorHandling(methods, logger) {
       try {
         return await method(...args)
       } catch (e) {
-        logger.error("EVENT_ERROR", e)
+        logger.error(`${upperSnake(name)}_EVENT_ERROR`, e)
       }
     }
     return acc
