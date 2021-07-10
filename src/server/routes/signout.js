@@ -1,5 +1,4 @@
 import * as cookie from "../lib/cookie"
-import dispatchEvent from "../lib/dispatch-event"
 import adapterErrorHandler from "../../adapters/error-handler"
 
 /**
@@ -16,7 +15,7 @@ export default async function signout(req, res) {
     // Dispatch signout event
     try {
       const decodedJwt = await jwt.decode({ ...jwt, token: sessionToken })
-      await dispatchEvent(events.signOut, decodedJwt)
+      await events.signOut({ token: decodedJwt })
     } catch (error) {
       // Do nothing if decoding the JWT fails
     }
@@ -30,7 +29,7 @@ export default async function signout(req, res) {
     try {
       // Dispatch signout event
       const session = await getSession(sessionToken)
-      await dispatchEvent(events.signOut, session)
+      await events.signOut({ session })
     } catch (error) {
       // Do nothing if looking up the session fails
     }
