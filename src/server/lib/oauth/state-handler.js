@@ -27,7 +27,7 @@ export function createState(req) {
 
 /**
  * Consistently recreate state from the csrfToken
- * if provider protection supports `"state"`.
+ * if `provider.checks` supports `"state"`.
  * @param {import("types/internals").NextAuthRequest} req
  */
 export function getState({ options }) {

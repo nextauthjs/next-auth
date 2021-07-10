@@ -40,7 +40,7 @@ export default NextAuth({
       clientId: process.env.AUTH0_ID,
       clientSecret: process.env.AUTH0_SECRET,
       domain: process.env.AUTH0_DOMAIN,
-      protection: ["pkce", "state"],
+      checks: ["pkce", "state"],
       // params: {
       //   response_mode: "form_post",
       // },
@@ -71,6 +71,6 @@ export default NextAuth({
     encryption: true,
     secret: process.env.SECRET,
   },
-  debug: false,
+  debug: true,
   theme: "auto",
 })
