@@ -17,13 +17,13 @@
 }
 
 .heroLogo {
-  margin-bottom: .5rem;  
+  margin-bottom: 0.5rem;
   width: 8rem;
 }
 
 @media screen and (min-width: 689px) {
   .heroLogo {
-    margin-bottom: -.5rem;
+    margin-bottom: -0.5rem;
   }
 }
 
@@ -87,8 +87,8 @@
 }
 
 .features ul li {
-  margin-top: .5rem;
-  margin-bottom: .5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
   font-size: 1rem;
   white-space: nowrap;
   text-align: center;
@@ -102,4 +102,14 @@
 .featureImage {
   height: 220px;
   width: 220px;
+}
+
+.homeSubtitle {
+  justify-content: center;
+  padding: 0rem 0 2rem 0;
+  opacity: 0.6;
+  font-style: italic;
+  margin: 0 auto;
+  font-size: 1.2rem;
+  text-align: center;
 }

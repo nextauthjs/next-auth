@@ -15,7 +15,10 @@ export default function Twitter(options) {
         id: profile.id_str,
         name: profile.name,
         email: profile.email,
-        image: profile.profile_image_url_https.replace(/_normal\.jpg$/, ".jpg"),
+        image: profile.profile_image_url_https.replace(
+          /_normal\.(jpg|png|gif)$/,
+          ".$1"
+        ),
       }
     },
     ...options,

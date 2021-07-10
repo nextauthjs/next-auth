@@ -1,10 +1,15 @@
 import getAuthorizationUrl from "../lib/signin/oauth"
 import emailSignin from "../lib/signin/email"
-import logger from "../../lib/logger"
+import adapterErrorHandler from "../../adapters/error-handler"
 
-/** Handle requests to /api/auth/signin */
+/**
+ * Handle requests to /api/auth/signin
+ * @param {import("types/internals").NextAuthRequest} req
+ * @param {import("types/internals").NextAuthResponse} res
+ */
 export default async function signin(req, res) {
-  const { provider, baseUrl, basePath, adapter, callbacks } = req.options
+  const { provider, baseUrl, basePath, adapter, callbacks, logger } =
+    req.options
 
   if (!provider.type) {
     return res.status(500).end(`Error: Type not specified for ${provider.name}`)
@@ -23,7 +28,10 @@ export default async function signin(req, res) {
       logger.error("EMAIL_REQUIRES_ADAPTER_ERROR")
       return res.redirect(`${baseUrl}${basePath}/error?error=Configuration`)
     }
-    const { getUserByEmail } = await adapter.getAdapter(req.options)
+    const { getUserByEmail } = adapterErrorHandler(
+      await adapter.getAdapter(req.options),
+      logger
+    )
 
     // Note: Technically the part of the email address local mailbox element
     // (everything before the @ symbol) should be treated as 'case sensitive'
@@ -33,14 +41,15 @@ export default async function signin(req, res) {
     const email = req.body.email?.toLowerCase() ?? null
 
     // If is an existing user return a user object (otherwise use placeholder)
-    const profile = (await getUserByEmail(email)) || { email }
+    const user = (await getUserByEmail(email)) || { email }
     const account = { id: provider.id, type: "email", providerAccountId: email }
 
     // Check if user is allowed to sign in
     try {
-      const signInCallbackResponse = await callbacks.signIn(profile, account, {
-        email,
-        verificationRequest: true,
+      const signInCallbackResponse = await callbacks.signIn({
+        user,
+        account,
+        email: { email, verificationRequest: true },
       })
       if (!signInCallbackResponse) {
         return res.redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)

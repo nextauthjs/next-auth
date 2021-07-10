@@ -1,11 +1,10 @@
-// Minimum TypeScript Version: 3.5
+// Minimum TypeScript Version: 3.6
 
 /// <reference types="node" />
 
-import { ConnectionOptions } from "typeorm"
 import { Adapter } from "./adapters"
 import { JWTOptions, JWT } from "./jwt"
-import { AppProviders } from "./providers"
+import { AppProviders, Credentials } from "./providers"
 import {
   Awaitable,
   NextApiRequest,
@@ -29,14 +28,6 @@ export interface NextAuthOptions {
    * [Documentation](https://next-auth.js.org/configuration/options#providers) | [Providers documentation](https://next-auth.js.org/configuration/providers)
    */
   providers: AppProviders
-  /**
-   * A database connection string or configuration object.
-   * * **Default value**: `null`
-   * * **Required**: *No (unless using email provider)*
-   *
-   * [Documentation](https://next-auth.js.org/configuration/options#database) | [Databases](https://next-auth.js.org/configuration/databases)
-   */
-  database?: string | Record<string, any> | ConnectionOptions
   /**
    * A random string used to hash tokens, sign cookies and generate cryptographic keys.
    * If not specified is uses a hash of all configuration options, including Client ID / Secrets for entropy.
@@ -82,7 +73,7 @@ export interface NextAuthOptions {
    *     signOut: '/auth/signout',
    *     error: '/auth/error',
    *     verifyRequest: '/auth/verify-request',
-   *     newUser: null
+   *     newUser: '/auth/new-user'
    *   }
    * ```
    *
@@ -98,7 +89,7 @@ export interface NextAuthOptions {
    *
    * [Documentation](https://next-auth.js.org/configuration/options#callbacks) | [Callbacks documentation](https://next-auth.js.org/configuration/callbacks)
    */
-  callbacks?: CallbacksOptions
+  callbacks?: Partial<CallbacksOptions>
   /**
    * Events are asynchronous functions that do not return a response, they are useful for audit logging.
    * You can specify a handler for any of these events below - e.g. for debugging or to create an audit log.
@@ -111,23 +102,16 @@ export interface NextAuthOptions {
    *
    * [Documentation](https://next-auth.js.org/configuration/options#events) | [Events documentation](https://next-auth.js.org/configuration/events)
    */
-  events?: EventsOptions
+  events?: Partial<JWTEventCallbacks | SessionEventCallbacks>
   /**
-   * By default NextAuth.js uses a database adapter that uses TypeORM and supports MySQL, MariaDB, Postgres and MongoDB and SQLite databases.
-   * An alternative adapter that uses Prisma, which currently supports MySQL, MariaDB and Postgres, is also included.
-   * You can use the adapter option to use the Prisma adapter - or pass in your own adapter
-   * if you want to use a database that is not supported by one of the built-in adapters.
-   * * **Default value**: TypeORM adapter
+   * You can use the adapter option to pass in your database adapter.
+   *
    * * **Required**: *No*
    *
-   * - ⚠ If the `adapter` option is specified it overrides the `database` option, only specify one or the other.
-   * - ⚠ Adapters are being migrated to their own home in a Community maintained repository.
-   *
    * [Documentation](https://next-auth.js.org/configuration/options#adapter) |
-   * [Default adapter](https://next-auth.js.org/schemas/adapters#typeorm-adapter) |
    * [Community adapters](https://github.com/nextauthjs/adapters)
    */
-  adapter?: Adapter
+  adapter?: ReturnType<Adapter>
   /**
    * Set debug to true to enable debug messages for authentication and database operations.
    * * **Default value**: `false`
@@ -180,7 +164,7 @@ export interface NextAuthOptions {
    *
    * [Documentation](https://next-auth.js.org/configuration/options#theme) | [Pages documentation]("https://next-auth.js.org/configuration/pages")
    */
-  theme?: "auto" | "dark" | "light"
+  theme?: Theme
   /**
    * When set to `true` then all cookies set by NextAuth.js will only be accessible from HTTPS URLs.
    * This option defaults to `false` on URLs that start with `http://` (e.g. http://localhost:3000) for developer convenience.
@@ -212,8 +196,16 @@ export interface NextAuthOptions {
    *
    * [Documentation](https://next-auth.js.org/configuration/options#cookies) | [Usage example](https://next-auth.js.org/configuration/options#example)
    */
-  cookies?: CookiesOptions
+  cookies?: Partial<CookiesOptions>
 }
+
+/**
+ * Change the theme of the built-in pages.
+ *
+ * [Documentation](https://next-auth.js.org/configuration/options#theme) |
+ * [Pages](https://next-auth.js.org/configuration/pages)
+ */
+export type Theme = "auto" | "dark" | "light"
 
 /**
  * Override any of the methods, and the rest will use the default logger.
@@ -233,6 +225,8 @@ export interface LoggerInstance {
  */
 export interface TokenSet {
   accessToken: string
+  /** Kept for historical reasons, check out `expires_in` */
+  accessTokenExpires: null
   idToken?: string
   refreshToken?: string
   access_token: string
@@ -273,7 +267,29 @@ export interface CallbacksOptions<
    *
    * [Documentation](https://next-auth.js.org/configuration/callbacks#sign-in-callback)
    */
-  signIn?(user: User, account: A, profile: P): Awaitable<string | boolean>
+  signIn(params: {
+    user: User
+    account: A
+    /**
+     * If OAuth provider is used, it contains the full
+     * OAuth profile returned by your provider.
+     */
+    profile: P & Record<string, unknown>
+    /**
+     * If Email provider is used, it contains the email, and optionally on the first call a
+     * `verificationRequest: true` property to indicate it is being triggered in the verification request flow.
+     * When the callback is invoked after a user has clicked on a sign in link,
+     * this property will not be present. You can check for the `verificationRequest` property
+     * to avoid sending emails to addresses or domains on a blocklist or to only explicitly generate them
+     * for email address in an allow list.
+     */
+    email: {
+      email: string | null
+      verificationRequest?: boolean
+    }
+    /** If Credentials provider is used, it contains the user credentials */
+    credentials: Credentials
+  }): Awaitable<string | boolean>
   /**
    * This callback is called anytime the user is redirected to a callback URL (e.g. on signin or signout).
    * By default only URLs on the same URL as the site are allowed,
@@ -281,12 +297,19 @@ export interface CallbacksOptions<
    *
    * [Documentation](https://next-auth.js.org/configuration/callbacks#redirect-callback)
    */
-  redirect?(url: string, baseUrl: string): Awaitable<string>
+  redirect(params: {
+    /** URL provided as callback URL by the client */
+    url: string
+    /** Default base URL of site (can be used as fallback) */
+    baseUrl: string
+  }): Awaitable<string>
   /**
    * This callback is called whenever a session is checked.
    * (Eg.: invoking the `/api/session` endpoint, using `useSession` or `getSession`)
    *
-   * - ⚠ By default, only a subset of the token is returned for increased security.
+   * ⚠ By default, only a subset (email, name, imgage)
+   * of the token is returned for increased security.
+   *
    * If you want to make something available you added to the token through the `jwt` callback,
    * you have to explicitely forward it here to make it available to the client.
    *
@@ -296,7 +319,11 @@ export interface CallbacksOptions<
    * [`getSession`](https://next-auth.js.org/getting-started/client#getsession) |
    *
    */
-  session?(session: Session, userOrToken: JWT | User): Awaitable<Session>
+  session(params: {
+    session: Session
+    user: User
+    token: JWT
+  }): Awaitable<Session>
   /**
    * This callback is called whenever a JSON Web Token is created (i.e. at sign in)
    * or updated (i.e whenever a session is accessed in the client).
@@ -304,18 +331,18 @@ export interface CallbacksOptions<
    * where you can control what should be returned to the client.
    * Anything else will be kept from your front-end.
    *
-   * - ⚠ By default the JWT is signed, but not encrypted.
+   * ⚠ By default the JWT is signed, but not encrypted.
    *
    * [Documentation](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
    * [`session` callback](https://next-auth.js.org/configuration/callbacks#session-callback)
    */
-  jwt?(
-    token: JWT,
-    user?: User,
-    account?: A,
-    profile?: P,
+  jwt(params: {
+    token: JWT
+    user?: User
+    account?: A
+    profile?: P
     isNewUser?: boolean
-  ): Awaitable<JWT>
+  }): Awaitable<JWT>
 }
 
 /** [Documentation](https://next-auth.js.org/configuration/options#cookies) */
@@ -333,27 +360,68 @@ export interface CookieOption {
 
 /** [Documentation](https://next-auth.js.org/configuration/options#cookies) */
 export interface CookiesOptions {
-  sessionToken?: CookieOption
-  callbackUrl?: CookieOption
-  csrfToken?: CookieOption
-  pkceCodeVerifier?: CookieOption
+  sessionToken: CookieOption
+  callbackUrl: CookieOption
+  csrfToken: CookieOption
+  pkceCodeVerifier: CookieOption
 }
 
 /** [Documentation](https://next-auth.js.org/configuration/events) */
-export type EventType =
-  | "signIn"
-  | "signOut"
-  | "createUser"
-  | "updateUser"
-  | "linkAccount"
-  | "session"
-  | "error"
+export type EventCallback<MessageType = unknown> = (
+  message: MessageType
+) => Promise<void>
 
-/** [Documentation](https://next-auth.js.org/configuration/events) */
-export type EventCallback = (message: any) => Promise<void>
+/**
+ * If using a `credentials` type auth, the user is the raw response from your
+ * credential provider.
+ * For other providers, you'll get the User object from your adapter, the account,
+ * and an indicator if the user was new to your Adapter.
+ */
+export interface SignInEventMessage {
+  user: User
+  account: Account
+  isNewUser?: boolean
+}
 
-/** [Documentation](https://next-auth.js.org/configuration/events) */
-export type EventsOptions = Partial<Record<EventType, EventCallback>>
+export interface LinkAccountEventMessage {
+  user: User
+  providerAccount: Record<string, unknown>
+}
+
+/**
+ * The various event callbacks you can register for from next-auth
+ */
+export interface CommonEventCallbacks {
+  signIn: EventCallback<SignInEventMessage>
+  createUser: EventCallback<User>
+  updateUser: EventCallback<User>
+  linkAccount: EventCallback<LinkAccountEventMessage>
+  error: EventCallback
+}
+/**
+ * The event callbacks will take this form if you are using JWTs:
+ * signOut will receive the JWT and session will receive the session and JWT.
+ */
+export interface JWTEventCallbacks extends CommonEventCallbacks {
+  signOut: EventCallback<JWT>
+  session: EventCallback<{
+    session: Session
+    jwt: JWT
+  }>
+}
+/**
+ * The event callbacks will take this form if you are using Sessions
+ * and not using JWTs:
+ * signOut will receive the underlying DB adapter's session object, and session
+ * will receive the NextAuth client session with extra data.
+ */
+export interface SessionEventCallbacks extends CommonEventCallbacks {
+  signOut: EventCallback<Session | null>
+  session: EventCallback<{ session: Session }>
+}
+export type EventCallbacks = JWTEventCallbacks | SessionEventCallbacks
+
+export type EventType = keyof EventCallbacks
 
 /** [Documentation](https://next-auth.js.org/configuration/pages) */
 export interface PagesOptions {
@@ -377,11 +445,11 @@ export interface DefaultSession extends Record<string, unknown> {
 
 /**
  * Returned by `useSession`, `getSession`, returned by the `session` callback
- * and also the shape received as a prop on the `Provider` React Context
+ * and also the shape received as a prop on the `SessionProvider` React Context
  *
  * [`useSession`](https://next-auth.js.org/getting-started/client#usesession) |
  * [`getSession`](https://next-auth.js.org/getting-started/client#getsession) |
- * [`Provider`](https://next-auth.js.org/getting-started/client#provider) |
+ * [`SessionProvider`](https://next-auth.js.org/getting-started/client#sessionprovider) |
  * [`session` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback)
  */
 export interface Session extends Record<string, unknown>, DefaultSession {}

@@ -22,39 +22,28 @@
   "exports": {
     ".": "./dist/server/index.js",
     "./jwt": "./dist/lib/jwt.js",
-    "./adapters": "./dist/adapters/index.js",
-    "./client": "./dist/client/index.js",
+    "./react": "./dist/client/react.js",
     "./providers": "./dist/providers/index.js",
     "./providers/*": "./dist/providers/*.js",
     "./errors": "./dist/lib/errors.js"
   },
   "scripts": {
     "build": "npm run build:js && npm run build:css",
-    "build:js": "node ./config/build.js && babel --config-file ./config/babel.config.json src --out-dir dist",
+    "build:js": "node ./config/build.js && babel --config-file ./config/babel.config.js src --out-dir dist",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir dist && node config/wrap-css.js",
-    "dev:setup": "npm run build:css && cd app && npm i",
+    "dev:setup": "npm i && npm run build:css && cd app && npm i",
     "dev": "cd app && npm run dev",
     "watch": "npm run watch:js | npm run watch:css",
-    "watch:js": "babel --config-file ./config/babel.config.json --watch src --out-dir dist",
+    "watch:js": "babel --config-file ./config/babel.config.js --watch src --out-dir dist",
     "watch:css": "postcss --config config/postcss.config.js --watch src/**/*.css --base src --dir dist",
-    "test:app:start": "docker-compose -f test/docker/app.yml up -d",
-    "test:app:rebuild": "npm run build && docker-compose -f test/docker/app.yml up -d --build",
-    "test:app:stop": "docker-compose -f test/docker/app.yml down",
-    "test": "npm run test:app:rebuild && npm run test:integration && npm run test:app:stop && npm run test:types",
-    "test:db": "npm run test:db:mysql && npm run test:db:postgres && npm run test:db:mongodb && npm run test:db:mssql",
-    "test:db:mysql": "node test/mysql.js",
-    "test:db:postgres": "node test/postgres.js",
-    "test:db:mongodb": "node test/mongodb.js",
-    "test:db:mssql": "node test/mssql.js",
-    "test:integration": "mocha test/integration",
-    "test:types": "dtslint types",
-    "db:start": "docker-compose -f test/docker/databases.yml up -d",
-    "db:stop": "docker-compose -f test/docker/databases.yml down",
+    "test": "jest --config ./config/jest.config.js",
+    "test:ci": "npm run lint && npm run test:types && npm run test -- --ci",
+    "test:types": "dtslint types --onlyTestTsNext",
     "prepublishOnly": "npm run build",
-    "publish:beta": "npm publish --tag beta",
-    "publish:canary": "npm publish --tag canary",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "version:pr": "node ./config/version-pr",
+    "website": "cd www && npm run start"
   },
   "files": [
     "dist",
@@ -64,8 +53,8 @@
     "providers.d.ts",
     "adapters.js",
     "adapters.d.ts",
-    "client.js",
-    "client.d.ts",
+    "react.js",
+    "react.d.ts",
     "errors.js",
     "errors.d.ts",
     "jwt.js",
@@ -74,90 +63,67 @@
   ],
   "license": "ISC",
   "dependencies": {
-    "@balazsorban/require-optional": "^1.0.0",
-    "futoin-hkdf": "^1.3.2",
+    "@babel/runtime": "^7.14.6",
+    "futoin-hkdf": "^1.3.3",
     "jose": "^1.27.2",
     "oauth": "^0.9.15",
     "openid-client": "^4.6.0",
-    "preact": "^10.4.1",
-    "preact-render-to-string": "^5.1.14"
+    "preact": "^10.5.13",
+    "preact-render-to-string": "^5.1.19"
   },
   "peerDependencies": {
-    "react": "^16.13.1 || ^17",
-    "react-dom": "^16.13.1 || ^17",
-    "mongodb": "^3.6.6",
-    "mysql": "^2.18.1",
-    "mssql": "^6.2.1",
-    "pg": "^8.2.1",
-    "@prisma/client": "^2.16.1",
-    "nodemailer": "^6.4.16",
-    "typeorm": "^0.2.30"
+    "nodemailer": "^6.6.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "peerOptionalDependencies": {
+    "nodemailer": "^6.6.2"
   },
   "peerDependenciesMeta": {
-    "mongodb": {
-      "optional": true
-    },
-    "mysql": {
-      "optional": true
-    },
-    "mssql": {
-      "optional": true
-    },
-    "pg": {
-      "optional": true
-    },
-    "@prisma/client": {
-      "optional": true
-    },
     "nodemailer": {
-      "optional": true
-    },
-    "typeorm": {
       "optional": true
     }
   },
   "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.6",
-    "@babel/plugin-proposal-class-properties": "^7.13.0",
-    "@babel/preset-env": "^7.9.6",
-    "@prisma/client": "^2.16.1",
-    "@semantic-release/commit-analyzer": "^8.0.1",
-    "@semantic-release/github": "^7.2.0",
-    "@semantic-release/npm": "7.0.8",
-    "@semantic-release/release-notes-generator": "^9.0.1",
-    "@types/react": "^17.0.0",
-    "@typescript-eslint/eslint-plugin": "^4.22.0",
-    "@typescript-eslint/parser": "^4.22.0",
-    "autoprefixer": "^9.7.6",
+    "@babel/cli": "^7.14.5",
+    "@babel/core": "^7.14.6",
+    "@babel/plugin-proposal-optional-catch-binding": "^7.14.5",
+    "@babel/plugin-transform-runtime": "^7.14.5",
+    "@babel/preset-env": "^7.14.7",
+    "@babel/preset-react": "^7.14.5",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.0.0",
+    "@testing-library/user-event": "^13.1.9",
+    "@types/nodemailer": "^6.4.2",
+    "@types/react": "^17.0.11",
+    "@typescript-eslint/eslint-plugin": "^4.28.0",
+    "@typescript-eslint/parser": "^4.28.0",
+    "autoprefixer": "^10.2.6",
+    "babel-jest": "^27.0.5",
     "babel-preset-preact": "^2.0.0",
-    "conventional-changelog-conventionalcommits": "4.4.0",
-    "cssnano": "^4.1.10",
-    "dotenv": "^8.2.0",
-    "dtslint": "^4.0.8",
-    "eslint": "^7.19.0",
-    "eslint-config-prettier": "^8.2.0",
-    "eslint-config-standard-with-typescript": "^19.0.1",
-    "eslint-plugin-import": "^2.22.1",
+    "conventional-changelog-conventionalcommits": "4.6.0",
+    "cssnano": "^5.0.6",
+    "dtslint": "^4.1.0",
+    "eslint": "^7.29.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-standard-with-typescript": "^20.0.0",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-jest": "^24.3.6",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.3.1",
-    "eslint-plugin-standard": "^5.0.0",
-    "mocha": "^8.1.3",
-    "mongodb": "^3.6.6",
-    "mssql": "^6.2.1",
-    "mysql": "^2.18.1",
-    "next": "^10.0.5",
-    "pg": "^8.2.1",
-    "postcss-cli": "^7.1.1",
-    "postcss-nested": "^4.2.1",
-    "prettier": "^2.2.1",
-    "prisma": "^2.16.1",
-    "puppeteer": "^5.2.1",
-    "puppeteer-extra": "^3.1.15",
-    "puppeteer-extra-plugin-stealth": "^2.6.1",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "typescript": "^4.1.3"
+    "eslint-plugin-promise": "^5.1.0",
+    "fs-extra": "^10.0.0",
+    "husky": "^6.0.0",
+    "jest": "^27.0.5",
+    "msw": "^0.30.0",
+    "next": "^11.0.1",
+    "postcss-cli": "^8.3.1",
+    "postcss-nested": "^5.0.5",
+    "prettier": "^2.3.1",
+    "pretty-quick": "^3.1.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "typescript": "^4.3.4",
+    "whatwg-fetch": "^3.6.2"
   },
   "prettier": {
     "semi": false
@@ -184,7 +150,23 @@
       "localStorage": "readonly",
       "location": "readonly",
       "fetch": "readonly"
-    }
+    },
+    "overrides": [
+      {
+        "files": [
+          "./**/*test.js"
+        ],
+        "env": {
+          "jest/globals": true
+        },
+        "extends": [
+          "plugin:jest/recommended"
+        ],
+        "plugins": [
+          "jest"
+        ]
+      }
+    ]
   },
   "release": {
     "branches": [
