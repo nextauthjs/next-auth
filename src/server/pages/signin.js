@@ -32,7 +32,6 @@ export default function signin({
     EmailSignin: "Check your email inbox.",
     CredentialsSignin:
       "Sign in failed. Check the details you provided are correct.",
-    SessionRequired: "Please sign in to access this page.",
     default: "Unable to sign in.",
   }
 
