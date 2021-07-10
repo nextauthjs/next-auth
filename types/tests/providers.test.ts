@@ -33,7 +33,7 @@ Providers.Credentials({
       type: "password",
     },
   },
-  authorize: async ({username, password}) => {
+  authorize: async ({ username, password }) => {
     const user = {
       /* fetched user */
     }
@@ -150,6 +150,13 @@ Providers.Okta({
   clientId: "foo123",
   clientSecret: "bar123",
   domain: "https://foo.auth0.com",
+})
+
+// $ExpectType OAuthConfig<Profile>
+Providers.OneLogin({
+  clientId: "foo123",
+  clientSecret: "bar123",
+  domain: "foo.onelogin.com",
 })
 
 // $ExpectType OAuthConfig<Profile>
