@@ -366,49 +366,40 @@ export interface CookiesOptions {
   pkceCodeVerifier: CookieOption
 }
 
-/** [Documentation](https://next-auth.js.org/configuration/events) */
-export type EventCallback<MessageType = unknown> = (
-  message: MessageType
-) => Promise<void>
-
 /**
- * If using a `credentials` type auth, the user is the raw response from your
- * credential provider.
- * For other providers, you'll get the User object from your adapter, the account,
- * and an indicator if the user was new to your Adapter.
- */
-export interface SignInEventMessage {
-  user: User
-  account: Account
-  isNewUser?: boolean
-}
-
-export interface LinkAccountEventMessage {
-  user: User
-  providerAccount: Record<string, unknown>
-}
-
-/**
- * The various event callbacks you can register for from next-auth
+ *  The various event callbacks you can register for from next-auth
+ *
+ * [Documentation](https://next-auth.js.org/configuration/events)
  */
 export interface CommonEventCallbacks {
-  signIn: EventCallback<SignInEventMessage>
-  createUser: EventCallback<User>
-  updateUser: EventCallback<User>
-  linkAccount: EventCallback<LinkAccountEventMessage>
-  error: EventCallback
+  /**
+   * If using a `credentials` type auth, the user is the raw response from your
+   * credential provider.
+   * For other providers, you'll get the User object from your adapter, the account,
+   * and an indicator if the user was new to your Adapter.
+   */
+  signIn(message: {
+    user: User
+    account: Account
+    isNewUser?: boolean
+  }): Awaitable<void>
+  createUser(message: { user: User }): Awaitable<void>
+  updateUser(message: { user: User }): Awaitable<void>
+  linkAccount(message: {
+    user: User
+    providerAccount: Record<string, unknown>
+  }): Awaitable<void>
 }
+
 /**
  * The event callbacks will take this form if you are using JWTs:
  * signOut will receive the JWT and session will receive the session and JWT.
  */
 export interface JWTEventCallbacks extends CommonEventCallbacks {
-  signOut: EventCallback<JWT>
-  session: EventCallback<{
-    session: Session
-    jwt: JWT
-  }>
+  signOut(message: { token: JWT }): Awaitable<void>
+  session(message: { token: JWT }): Awaitable<void>
 }
+
 /**
  * The event callbacks will take this form if you are using Sessions
  * and not using JWTs:
@@ -416,8 +407,10 @@ export interface JWTEventCallbacks extends CommonEventCallbacks {
  * will receive the NextAuth client session with extra data.
  */
 export interface SessionEventCallbacks extends CommonEventCallbacks {
-  signOut: EventCallback<Session | null>
-  session: EventCallback<{ session: Session }>
+  /** [Documentation](https://next-auth.js.org/configuration/events) */
+  signOut(message: { session: Session }): Awaitable<void>
+  /** [Documentation](https://next-auth.js.org/configuration/events) */
+  session(message: { session: Session }): Awaitable<void>
 }
 export type EventCallbacks = JWTEventCallbacks | SessionEventCallbacks
 
