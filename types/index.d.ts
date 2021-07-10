@@ -102,7 +102,7 @@ export interface NextAuthOptions {
    *
    * [Documentation](https://next-auth.js.org/configuration/options#events) | [Events documentation](https://next-auth.js.org/configuration/events)
    */
-  events?: Partial<JWTEventCallbacks | SessionEventCallbacks>
+  events?: Partial<EventCallbacks>
   /**
    * You can use the adapter option to pass in your database adapter.
    *
@@ -371,7 +371,7 @@ export interface CookiesOptions {
  *
  * [Documentation](https://next-auth.js.org/configuration/events)
  */
-export interface CommonEventCallbacks {
+export interface EventCallbacks {
   /**
    * If using a `credentials` type auth, the user is the raw response from your
    * credential provider.
@@ -383,36 +383,27 @@ export interface CommonEventCallbacks {
     account: Account
     isNewUser?: boolean
   }): Awaitable<void>
+  /**
+   * The message object will contain one of these depending on
+   * if you use JWT or database persisted sessions:
+   * - `token`: The JWT token for this session.
+   * - `session`: The session object from your adapter that is being ended.
+   */
+  signOut(message: { session: Session; token: JWT }): Awaitable<void>
   createUser(message: { user: User }): Awaitable<void>
   updateUser(message: { user: User }): Awaitable<void>
   linkAccount(message: {
     user: User
     providerAccount: Record<string, unknown>
   }): Awaitable<void>
+  /**
+   * The message object will contain one of these depending on
+   * if you use JWT or database persisted sessions:
+   * - `token`: The JWT token for this session.
+   * - `session`: The session object from your adapter.
+   */
+  session(message: { session: Session; token: JWT }): Awaitable<void>
 }
-
-/**
- * The event callbacks will take this form if you are using JWTs:
- * signOut will receive the JWT and session will receive the session and JWT.
- */
-export interface JWTEventCallbacks extends CommonEventCallbacks {
-  signOut(message: { token: JWT }): Awaitable<void>
-  session(message: { token: JWT }): Awaitable<void>
-}
-
-/**
- * The event callbacks will take this form if you are using Sessions
- * and not using JWTs:
- * signOut will receive the underlying DB adapter's session object, and session
- * will receive the NextAuth client session with extra data.
- */
-export interface SessionEventCallbacks extends CommonEventCallbacks {
-  /** [Documentation](https://next-auth.js.org/configuration/events) */
-  signOut(message: { session: Session }): Awaitable<void>
-  /** [Documentation](https://next-auth.js.org/configuration/events) */
-  session(message: { session: Session }): Awaitable<void>
-}
-export type EventCallbacks = JWTEventCallbacks | SessionEventCallbacks
 
 export type EventType = keyof EventCallbacks
 
