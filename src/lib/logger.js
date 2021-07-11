@@ -1,5 +1,3 @@
-/** @type {import("types").LoggerInstance} */
-
 import { UnknownError } from "./errors"
 
 /** Makes sure that error is always serializable */
@@ -14,6 +12,7 @@ function formatError(o) {
   return o
 }
 
+/** @type {import("types").LoggerInstance} */
 const _logger = {
   error(code, metadata) {
     metadata = formatError(metadata)

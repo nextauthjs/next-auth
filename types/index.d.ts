@@ -213,7 +213,12 @@ export type Theme = "auto" | "dark" | "light"
  * [Documentation](https://next-auth.js.org/configuration/options#logger)
  */
 export interface LoggerInstance {
-  warn(code: string): void
+  warn(
+    code:
+      | "JWT_AUTO_GENERATED_SIGNING_KEY"
+      | "JWT_AUTO_GENERATED_ENCRYPTION_KEY"
+      | "NEXTAUTH_URL"
+  ): void
   error(
     code: string,
     /**
