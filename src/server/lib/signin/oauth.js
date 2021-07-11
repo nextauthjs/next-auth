@@ -11,8 +11,6 @@ import { createPKCE } from "../oauth/pkce-handler"
 export default async function getAuthorizationUrl(req, res) {
   /** @type {import("types/providers").OAuthConfig} */
   const provider = req.options.provider
-
-  delete req.query?.nextauth
   const params = {
     scope: provider.scope,
     ...provider.params,

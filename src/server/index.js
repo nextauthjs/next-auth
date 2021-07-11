@@ -55,6 +55,8 @@ async function NextAuthHandler(req, res, userOptions) {
       error = nextauth[1],
     } = req.query
 
+    delete req.query.nextauth
+
     // @todo refactor all existing references to baseUrl and basePath
     const { basePath, baseUrl } = parseUrl(
       process.env.NEXTAUTH_URL || process.env.VERCEL_URL
