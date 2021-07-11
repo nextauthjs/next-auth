@@ -17,7 +17,7 @@ export async function handleCallback(req, res) {
   const { cookies, provider, baseUrl, basePath } = req.options
   try {
     // Provider does not support PKCE, nothing to do.
-    if (!provider.protection?.includes("pkce")) {
+    if (!provider.checks?.includes("pkce")) {
       return
     }
 
@@ -55,7 +55,7 @@ export async function handleCallback(req, res) {
 export async function handleSignin(req, res) {
   const { cookies, provider, baseUrl, basePath } = req.options
   try {
-    if (!provider.protection?.includes("pkce")) {
+    if (!provider.checks?.includes("pkce")) {
       // Provider does not support PKCE, nothing to do.
       return
     }

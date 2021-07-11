@@ -92,8 +92,7 @@ providers: [
 |      clientId       |                 Client ID of the OAuth provider                  |           `string`            |   Yes    |
 |    clientSecret     |               Client Secret of the OAuth provider                |           `string`            |   Yes    |
 |       profile       |       A callback returning an object with the user's info        | `(profile, tokens) => Object` |   Yes    |
-|     protection      | Additional security for OAuth login flows (defaults to `state`)  |  `"pkce"`,`"state"`,`"none"`  |    No    |
-|        state        | Same as `protection: "state"`. Being deprecated, use protection. |           `boolean`           |    No    |
+|     checks      | Additional security checks on OAuth providers (default: [`state`])  |  `("pkce"|"state"|"none")[]`  |    No    |
 |       headers       |      Any headers that should be sent to the OAuth provider       |           `Object`            |    No    |
 | authorizationParams |    Additional params to be sent to the authorization endpoint    |           `Object`            |    No    |
 |       idToken       |   Set to `true` for services that use ID Tokens (e.g. OpenID)    |           `boolean`           |    No    |

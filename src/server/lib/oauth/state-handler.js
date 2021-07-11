@@ -13,7 +13,7 @@ export async function handleCallback(req, res) {
   const { csrfToken, provider, baseUrl, basePath } = req.options
   try {
     // Provider does not support state, nothing to do.
-    if (!provider.protection?.includes("state")) {
+    if (!provider.checks?.includes("state")) {
       return
     }
 
@@ -38,13 +38,9 @@ export async function handleCallback(req, res) {
 export async function handleSignin(req, res) {
   const { provider, baseUrl, basePath, csrfToken } = req.options
   try {
-    if (!provider.protection?.includes("state")) {
+    if (!provider.checks?.includes("state")) {
       // Provider does not support state, nothing to do.
       return
-    }
-
-    if ("state" in provider) {
-      logger.warn("STATE_OPTION_DEPRECATION")
     }
 
     // A hash of the NextAuth.js CSRF token is used as the state

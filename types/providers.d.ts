@@ -14,7 +14,7 @@ export interface CommonProviderOptions {
  * OAuth Provider
  */
 
-type ProtectionType = "pkce" | "state" | "both" | "none"
+type ChecksType = "pkce" | "state" | "both" | "none"
 
 /**
  * OAuth provider options
@@ -34,18 +34,13 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
   authorizationUrl: string
   profileUrl: string
   profile(profile: P, tokens: TokenSet): Awaitable<User & { id: string }>
-  protection?: ProtectionType | ProtectionType[]
+  checks?: ChecksType | ChecksType[]
   clientId: string
   clientSecret:
     | string
     // TODO: only allow for Apple
     | Record<"appleId" | "teamId" | "privateKey" | "keyId", string>
   idToken?: boolean
-  /**
-   * @deprecated Will be removed in an upcoming major release. Use `protection: ["state"]` instead.
-   */
-  state?: boolean
-
   // TODO: only allow for BattleNet
   region?: string
   // TODO: only allow for some

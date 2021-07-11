@@ -52,7 +52,7 @@ providers: [
     domain:  "demo.identityserver.io",
     clientId: "interactive.confidential",
     clientSecret: "secret",
-    protection: "pkce"
+    checks: ["pkce"]
   })
 }
 ...

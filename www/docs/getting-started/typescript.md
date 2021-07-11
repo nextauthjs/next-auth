@@ -8,10 +8,6 @@ NextAuth.js comes with its own type definitions, so you can safely use it in you
 Check out the example repository showcasing how to use `next-auth` on a Next.js application with TypeScript:  
 https://github.com/nextauthjs/next-auth-typescript-example
 
-:::warning
-The types at [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) under the name of `@types/next-auth` are now deprecated, and not maintained anymore.
-:::
-
 ---
 
 ## Adapters
