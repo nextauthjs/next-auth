@@ -1,5 +1,5 @@
 import { openidClient } from "../oauth/client"
-import { oAuth1Client } from "../oauth/oauth1"
+import { oAuth1Client } from "../oauth/client-legacy"
 import logger from "../../../lib/logger"
 import { createState } from "../oauth/state-handler"
 import { createPKCE } from "../oauth/pkce-handler"

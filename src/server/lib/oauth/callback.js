@@ -1,5 +1,5 @@
 import { openidClient } from "./client"
-import { oAuth1Client } from "./oauth1"
+import { oAuth1Client } from "./client-legacy"
 import { getState } from "./state-handler"
 import { usePKCECodeVerifier } from "./pkce-handler"
 import { OAuthCallbackError } from "../../../lib/errors"
