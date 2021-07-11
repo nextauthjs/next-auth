@@ -2,7 +2,7 @@ import jwt from "../lib/jwt"
 import parseUrl from "../lib/parse-url"
 import logger, { setLogger } from "../lib/logger"
 import * as cookie from "./lib/cookie"
-import * as defaultEvents from "./lib/default-events"
+import { withErrorHandling, defaultEvents } from "./lib/default-events"
 import * as defaultCallbacks from "./lib/default-callbacks"
 import parseProviders from "./lib/providers"
 import * as routes from "./routes"
@@ -124,10 +124,10 @@ async function NextAuthHandler(req, res, userOptions) {
         ...userOptions.jwt,
       },
       // Event messages
-      events: {
-        ...defaultEvents,
-        ...userOptions.events,
-      },
+      events: withErrorHandling(
+        { ...defaultEvents, ...userOptions.events },
+        logger
+      ),
       // Callback functions
       callbacks: {
         ...defaultCallbacks,

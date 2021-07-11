@@ -1,11 +1,10 @@
 import { decode as jwtDecode } from "jsonwebtoken"
 import oAuthClient from "./client"
-import logger from "../../../lib/logger"
 import { OAuthCallbackError } from "../../../lib/errors"
 
 /** @param {import("types/internals").NextAuthRequest} req */
 export default async function oAuthCallback(req) {
-  const { provider, pkce } = req.options
+  const { provider, pkce, logger } = req.options
   const client = oAuthClient(provider)
 
   if (provider.version?.startsWith("2.")) {
@@ -59,7 +58,7 @@ export default async function oAuthCallback(req) {
         profileData = await client.get(provider, tokens.accessToken, tokens)
       }
 
-      return getProfile({ profileData, provider, tokens, user })
+      return getProfile({ profileData, provider, tokens, user }, logger)
     } catch (error) {
       logger.error("OAUTH_GET_ACCESS_TOKEN_ERROR", {
         error,
@@ -88,7 +87,7 @@ export default async function oAuthCallback(req) {
       tokens.oauth_token_secret
     )
 
-    return getProfile({ profileData, tokens, provider })
+    return getProfile({ profileData, tokens, provider }, logger)
   } catch (error) {
     logger.error("OAUTH_V1_GET_ACCESS_TOKEN_ERROR", error)
     throw error
@@ -116,8 +115,9 @@ export default async function oAuthCallback(req) {
  *   provider: import("../..").Provider
  *   user?: object
  * }} profileParams
+ * @param {import("types").LoggerInstance} logger
  */
-async function getProfile({ profileData, tokens, provider, user }) {
+async function getProfile({ profileData, tokens, provider, user }, logger) {
   try {
     // Convert profileData into an object if it's a string
     if (typeof profileData === "string") {

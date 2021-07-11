@@ -32,3 +32,11 @@ export class OAuthCallbackError extends UnknownError {
 export class AccountNotLinkedError extends UnknownError {
   name = "AccountNotLinkedError"
 }
+
+export function upperSnake(s) {
+  return s.replace(/([A-Z])/g, "_$1").toUpperCase()
+}
+
+export function capitalize(s) {
+  return `${s[0].toUpperCase()}${s.slice(1)}`
+}

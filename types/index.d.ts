@@ -102,7 +102,7 @@ export interface NextAuthOptions {
    *
    * [Documentation](https://next-auth.js.org/configuration/options#events) | [Events documentation](https://next-auth.js.org/configuration/events)
    */
-  events?: Partial<JWTEventCallbacks | SessionEventCallbacks>
+  events?: Partial<EventCallbacks>
   /**
    * You can use the adapter option to pass in your database adapter.
    *
@@ -379,60 +379,44 @@ export interface CookiesOptions {
   pkceCodeVerifier: CookieOption
 }
 
-/** [Documentation](https://next-auth.js.org/configuration/events) */
-export type EventCallback<MessageType = unknown> = (
-  message: MessageType
-) => Promise<void>
-
 /**
- * If using a `credentials` type auth, the user is the raw response from your
- * credential provider.
- * For other providers, you'll get the User object from your adapter, the account,
- * and an indicator if the user was new to your Adapter.
+ *  The various event callbacks you can register for from next-auth
+ *
+ * [Documentation](https://next-auth.js.org/configuration/events)
  */
-export interface SignInEventMessage {
-  user: User
-  account: Account
-  isNewUser?: boolean
+export interface EventCallbacks {
+  /**
+   * If using a `credentials` type auth, the user is the raw response from your
+   * credential provider.
+   * For other providers, you'll get the User object from your adapter, the account,
+   * and an indicator if the user was new to your Adapter.
+   */
+  signIn(message: {
+    user: User
+    account: Account
+    isNewUser?: boolean
+  }): Awaitable<void>
+  /**
+   * The message object will contain one of these depending on
+   * if you use JWT or database persisted sessions:
+   * - `token`: The JWT token for this session.
+   * - `session`: The session object from your adapter that is being ended.
+   */
+  signOut(message: { session: Session; token: JWT }): Awaitable<void>
+  createUser(message: { user: User }): Awaitable<void>
+  updateUser(message: { user: User }): Awaitable<void>
+  linkAccount(message: {
+    user: User
+    providerAccount: Record<string, unknown>
+  }): Awaitable<void>
+  /**
+   * The message object will contain one of these depending on
+   * if you use JWT or database persisted sessions:
+   * - `token`: The JWT token for this session.
+   * - `session`: The session object from your adapter.
+   */
+  session(message: { session: Session; token: JWT }): Awaitable<void>
 }
-
-export interface LinkAccountEventMessage {
-  user: User
-  providerAccount: Record<string, unknown>
-}
-
-/**
- * The various event callbacks you can register for from next-auth
- */
-export interface CommonEventCallbacks {
-  signIn: EventCallback<SignInEventMessage>
-  createUser: EventCallback<User>
-  updateUser: EventCallback<User>
-  linkAccount: EventCallback<LinkAccountEventMessage>
-  error: EventCallback
-}
-/**
- * The event callbacks will take this form if you are using JWTs:
- * signOut will receive the JWT and session will receive the session and JWT.
- */
-export interface JWTEventCallbacks extends CommonEventCallbacks {
-  signOut: EventCallback<JWT>
-  session: EventCallback<{
-    session: Session
-    jwt: JWT
-  }>
-}
-/**
- * The event callbacks will take this form if you are using Sessions
- * and not using JWTs:
- * signOut will receive the underlying DB adapter's session object, and session
- * will receive the NextAuth client session with extra data.
- */
-export interface SessionEventCallbacks extends CommonEventCallbacks {
-  signOut: EventCallback<Session | null>
-  session: EventCallback<{ session: Session }>
-}
-export type EventCallbacks = JWTEventCallbacks | SessionEventCallbacks
 
 export type EventType = keyof EventCallbacks
 
