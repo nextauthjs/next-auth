@@ -17,7 +17,7 @@ import * as state from "./lib/oauth/state-handler"
 // To work properly in production with OAuth providers the NEXTAUTH_URL
 // environment variable must be set.
 if (!process.env.NEXTAUTH_URL) {
-  logger.warn("NEXTAUTH_URL", "NEXTAUTH_URL environment variable not set")
+  logger.warn("NEXTAUTH_URL")
 }
 
 /**
@@ -43,11 +43,11 @@ async function NextAuthHandler(req, res, userOptions) {
     extendRes(req, res, resolve)
 
     if (!req.query.nextauth) {
-      const error =
+      const message =
         "Cannot find [...nextauth].js in pages/api/auth. Make sure the filename is written correctly."
 
-      logger.error("MISSING_NEXTAUTH_API_ROUTE_ERROR", error)
-      return res.status(500).end(`Error: ${error}`)
+      logger.error("MISSING_NEXTAUTH_API_ROUTE_ERROR", new Error(message))
+      return res.status(500).end(`Error: ${message}`)
     }
 
     const {
@@ -77,26 +77,16 @@ async function NextAuthHandler(req, res, userOptions) {
       baseUrl,
       basePath,
     })
+
     const provider = providers.find(({ id }) => id === providerId)
 
-    // Protection only works on OAuth 2.x providers
-    // TODO:
-    // - rename to `checks` in 4.x, so it is similar to `openid-client`
-    // - stop supporting `protection` as string
-    // - remove `state` property
-    if (provider?.type === "oauth" && provider.version?.startsWith("2")) {
-      // Priority: (protection array > protection string) > state > default
-      if (provider.protection) {
-        provider.protection = Array.isArray(provider.protection)
-          ? provider.protection
-          : [provider.protection]
-      } else if (provider.state !== undefined) {
-        provider.protection = [provider.state ? "state" : "none"]
-      } else {
-        // Default to state, as we did in 3.1
-        // REVIEW: should we use "pkce" or "none" as default?
-        provider.protection = ["state"]
-      }
+    // Checks only work on OAuth 2.x providers
+    if (
+      provider?.type === "oauth" &&
+      provider.version?.startsWith("2") &&
+      !provider.checks
+    ) {
+      provider.checks = ["state"]
     }
 
     const maxAge = 30 * 24 * 60 * 60 // Sessions expire after 30 days of being idle
@@ -254,13 +244,8 @@ async function NextAuthHandler(req, res, userOptions) {
         case "_log":
           if (userOptions.logger) {
             try {
-              const {
-                code = "CLIENT_ERROR",
-                level = "error",
-                message = "[]",
-              } = req.body
-
-              logger[level](code, ...JSON.parse(message))
+              const { code, level, ...metadata } = req.body
+              logger[level](code, metadata)
             } catch (error) {
               // If logging itself failed...
               logger.error("LOGGER_ERROR", error)

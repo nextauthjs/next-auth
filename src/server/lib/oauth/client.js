@@ -173,7 +173,7 @@ async function getOAuth2AccessToken(code, provider, codeVerifier) {
     headers.Authorization = `Bearer ${code}`
   }
 
-  if (provider.protection.includes("pkce")) {
+  if (provider.checks.includes("pkce")) {
     params.code_verifier = codeVerifier
   }
 
@@ -188,7 +188,11 @@ async function getOAuth2AccessToken(code, provider, codeVerifier) {
       null,
       (error, data, response) => {
         if (error) {
-          logger.error("OAUTH_GET_ACCESS_TOKEN_ERROR", error, data, response)
+          logger.error("OAUTH_GET_ACCESS_TOKEN_ERROR", {
+            error,
+            data,
+            response,
+          })
           return reject(error)
         }
 

@@ -48,7 +48,7 @@ export default function Dropbox(options) {
         email_verified: profile.email_verified,
       }
     },
-    protection: ["state", "pkce"],
+    checks: ["state", "pkce"],
     ...options,
   }
 }

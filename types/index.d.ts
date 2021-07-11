@@ -213,9 +213,22 @@ export type Theme = "auto" | "dark" | "light"
  * [Documentation](https://next-auth.js.org/configuration/options#logger)
  */
 export interface LoggerInstance {
-  warn(code: string, ...message: unknown[]): void
-  error(code: string, ...message: unknown[]): void
-  debug(code: string, ...message: unknown[]): void
+  warn(
+    code:
+      | "JWT_AUTO_GENERATED_SIGNING_KEY"
+      | "JWT_AUTO_GENERATED_ENCRYPTION_KEY"
+      | "NEXTAUTH_URL"
+  ): void
+  error(
+    code: string,
+    /**
+     * Either an instance of (JSON serializable) Error
+     * or an object that contains some debug information.
+     * (Error is still available through `metadata.error`)
+     */
+    metadata: Error | { error: Error; [key: string]: unknown }
+  ): void
+  debug(code: string, metadata: unknown): void
 }
 
 /**
