@@ -1,22 +1,37 @@
+import { UnknownError } from "./errors"
+
+/** Makes sure that error is always serializable */
+function formatError(o) {
+  if (o instanceof Error && !(o instanceof UnknownError)) {
+    return { message: o.message, stack: o.stack, name: o.name }
+  }
+  if (o?.error) {
+    o.error = formatError(o.error)
+    o.message = o.message ?? o.error.message
+  }
+  return o
+}
+
 /** @type {import("types").LoggerInstance} */
 const _logger = {
-  error(code, ...message) {
+  error(code, metadata) {
+    metadata = formatError(metadata)
     console.error(
       `[next-auth][error][${code.toLowerCase()}]`,
       `\nhttps://next-auth.js.org/errors#${code.toLowerCase()}`,
-      ...message
+      metadata.message,
+      metadata
     )
   },
-  warn(code, ...message) {
+  warn(code) {
     console.warn(
       `[next-auth][warn][${code.toLowerCase()}]`,
-      `\nhttps://next-auth.js.org/warnings#${code.toLowerCase()}`,
-      ...message
+      `\nhttps://next-auth.js.org/warnings#${code.toLowerCase()}`
     )
   },
-  debug(code, ...message) {
+  debug(code, metadata) {
     if (!process?.env?._NEXTAUTH_DEBUG) return
-    console.log(`[next-auth][debug][${code.toLowerCase()}]`, ...message)
+    console.log(`[next-auth][debug][${code.toLowerCase()}]`, metadata)
   },
 }
 
@@ -47,31 +62,19 @@ export function proxyLogger(logger = _logger, basePath) {
 
     const clientLogger = {}
     for (const level in logger) {
-      clientLogger[level] = (code, ...message) => {
-        _logger[level](code, ...message) // Log on client as usual
+      clientLogger[level] = (code, metadata) => {
+        _logger[level](code, metadata) // Logs to console
 
+        if (level === "error") {
+          metadata = formatError(metadata)
+        }
+        metadata.client = true
         const url = `${basePath}/_log`
-        const body = new URLSearchParams({
-          level,
-          code,
-          message: JSON.stringify(
-            message.map((m) => {
-              if (m instanceof Error) {
-                // Serializing errors: https://iaincollins.medium.com/error-handling-in-javascript-a6172ccdf9af
-                return { name: m.name, message: m.message, stack: m.stack }
-              }
-              return m
-            })
-          ),
-        })
+        const body = new URLSearchParams({ level, code, ...metadata })
         if (navigator.sendBeacon) {
           return navigator.sendBeacon(url, body)
         }
-        return fetch(url, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body,
-        })
+        return fetch(url, { method: "POST", body, keepalive: true })
       }
     }
     return clientLogger

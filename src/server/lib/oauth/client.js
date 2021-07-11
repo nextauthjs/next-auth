@@ -188,7 +188,11 @@ async function getOAuth2AccessToken(code, provider, codeVerifier) {
       null,
       (error, data, response) => {
         if (error) {
-          logger.error("OAUTH_GET_ACCESS_TOKEN_ERROR", error, data, response)
+          logger.error("OAUTH_GET_ACCESS_TOKEN_ERROR", {
+            error,
+            data,
+            response,
+          })
           return reject(error)
         }
 

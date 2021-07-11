@@ -20,11 +20,7 @@ export async function handleCallback(req, res) {
     const state = req.query.state || req.body.state
     const expectedState = createHash("sha256").update(csrfToken).digest("hex")
 
-    logger.debug(
-      "OAUTH_CALLBACK_CHECK",
-      "Comparing received and expected state",
-      { state, expectedState }
-    )
+    logger.debug("STATE_CHECK", { state, expectedState })
     if (state !== expectedState) {
       throw new OAuthCallbackError("Invalid state returned from OAuth provider")
     }
@@ -51,11 +47,7 @@ export async function handleSignin(req, res) {
     const state = createHash("sha256").update(csrfToken).digest("hex")
 
     provider.authorizationParams = { ...provider.authorizationParams, state }
-    logger.debug(
-      "OAUTH_CALLBACK_CHECK",
-      "Added state to authorization params",
-      { state }
-    )
+    logger.debug("STATE_ADDED_TO_PARAMS", { state })
   } catch (error) {
     logger.error("SIGNIN_OAUTH_ERROR", error)
     return res.redirect(`${baseUrl}${basePath}/error?error=OAuthSignin`)

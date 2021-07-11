@@ -1,4 +1,4 @@
-import { UnknownError } from "../lib/errors"
+import { capitalize, UnknownError, upperSnake } from "../lib/errors"
 
 /**
  * Handles adapter induced errors.
@@ -9,7 +9,7 @@ import { UnknownError } from "../lib/errors"
 export default function adapterErrorHandler(adapter, logger) {
   return Object.keys(adapter).reduce((acc, method) => {
     const name = capitalize(method)
-    const code = upperSnake(name, adapter.displayName)
+    const code = `${adapter.displayName ?? "ADAPTER"}_${upperSnake(name)}`
 
     const adapterMethod = adapter[method]
     acc[method] = async (...args) => {
@@ -25,12 +25,4 @@ export default function adapterErrorHandler(adapter, logger) {
     }
     return acc
   }, {})
-}
-
-function capitalize(s) {
-  return `${s[0].toUpperCase()}${s.slice(1)}`
-}
-
-function upperSnake(s, prefix = "ADAPTER") {
-  return `${prefix}_${s.replace(/([A-Z])/g, "_$1")}`.toUpperCase()
 }

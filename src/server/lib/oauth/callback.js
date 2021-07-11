@@ -1,11 +1,10 @@
 import { decode as jwtDecode } from "jsonwebtoken"
 import oAuthClient from "./client"
-import logger from "../../../lib/logger"
 import { OAuthCallbackError } from "../../../lib/errors"
 
 /** @param {import("types/internals").NextAuthRequest} req */
 export default async function oAuthCallback(req) {
-  const { provider, pkce } = req.options
+  const { provider, pkce, logger } = req.options
   const client = oAuthClient(provider)
 
   if (provider.version?.startsWith("2.")) {
@@ -23,13 +22,12 @@ export default async function oAuthCallback(req) {
         code = body.code
         user = body.user != null ? JSON.parse(body.user) : null
       } catch (error) {
-        logger.error(
-          "OAUTH_CALLBACK_HANDLER_ERROR",
+        logger.error("OAUTH_CALLBACK_HANDLER_ERROR", {
           error,
-          req.body,
-          provider.id,
-          code
-        )
+          body: req.body,
+          providerId: provider.id,
+          code,
+        })
         throw error
       }
     }
@@ -60,9 +58,13 @@ export default async function oAuthCallback(req) {
         profileData = await client.get(provider, tokens.accessToken, tokens)
       }
 
-      return getProfile({ profileData, provider, tokens, user })
+      return getProfile({ profileData, provider, tokens, user }, logger)
     } catch (error) {
-      logger.error("OAUTH_GET_ACCESS_TOKEN_ERROR", error, provider.id, code)
+      logger.error("OAUTH_GET_ACCESS_TOKEN_ERROR", {
+        error,
+        providerId: provider.id,
+        code,
+      })
       throw error
     }
   }
@@ -74,14 +76,18 @@ export default async function oAuthCallback(req) {
 
     // eslint-disable-next-line camelcase
     const { token_secret } = await client.getOAuthRequestToken(provider.params)
-    const tokens = await client.getOAuthAccessToken(oauth_token, token_secret, oauth_verifier)
+    const tokens = await client.getOAuthAccessToken(
+      oauth_token,
+      token_secret,
+      oauth_verifier
+    )
     const profileData = await client.get(
       provider.profileUrl,
       tokens.oauth_token,
       tokens.oauth_token_secret
     )
 
-    return getProfile({ profileData, tokens, provider })
+    return getProfile({ profileData, tokens, provider }, logger)
   } catch (error) {
     logger.error("OAUTH_V1_GET_ACCESS_TOKEN_ERROR", error)
     throw error
@@ -109,11 +115,12 @@ export default async function oAuthCallback(req) {
  *   provider: import("../..").Provider
  *   user?: object
  * }} profileParams
+ * @param {import("types").LoggerInstance} logger
  */
-async function getProfile({ profileData, tokens, provider, user }) {
+async function getProfile({ profileData, tokens, provider, user }, logger) {
   try {
     // Convert profileData into an object if it's a string
-    if (typeof profileData === "string" || profileData instanceof String) {
+    if (typeof profileData === "string") {
       profileData = JSON.parse(profileData)
     }
 
@@ -122,7 +129,7 @@ async function getProfile({ profileData, tokens, provider, user }) {
       profileData.user = user
     }
 
-    logger.debug("PROFILE_DATA", profileData)
+    logger.debug("PROFILE_DATA", { profile: profileData })
 
     const profile = await provider.profile(profileData, tokens)
     // Return profile, raw profile and auth provider details
@@ -139,7 +146,7 @@ async function getProfile({ profileData, tokens, provider, user }) {
       },
       OAuthProfile: profileData,
     }
-  } catch (exception) {
+  } catch (error) {
     // If we didn't get a response either there was a problem with the provider
     // response *or* the user cancelled the action with the provider.
     //
@@ -147,7 +154,7 @@ async function getProfile({ profileData, tokens, provider, user }) {
     // all providers, so we return an empty object; the user should then be
     // redirected back to the sign up page. We log the error to help developers
     // who might be trying to debug this when configuring a new provider.
-    logger.error("OAUTH_PARSE_PROFILE_ERROR", exception, profileData)
+    logger.error("OAUTH_PARSE_PROFILE_ERROR", { error, profileData })
     return {
       profile: null,
       account: null,
