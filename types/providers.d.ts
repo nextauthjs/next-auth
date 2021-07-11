@@ -72,6 +72,7 @@ export type OAuthProviderType =
   | "FACEIT"
   | "FortyTwo"
   | "Foursquare"
+  | "Freshbooks"
   | "FusionAuth"
   | "GitHub"
   | "GitLab"
