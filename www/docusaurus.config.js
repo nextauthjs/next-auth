@@ -133,7 +133,7 @@ module.exports = {
     colorMode: {
       respectPrefersColorScheme: true,
       switchConfig: {
-        darkIcon: "🌙",
+        darkIcon: "🌑️",
         lightIcon: "💡",
       },
     },

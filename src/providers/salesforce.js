@@ -9,7 +9,7 @@ export default function Salesforce(options) {
     authorizationUrl:
       "https://login.salesforce.com/services/oauth2/authorize?response_type=code",
     profileUrl: "https://login.salesforce.com/services/oauth2/userinfo",
-    protection: "none",
+    checks: ["none"],
     profile(profile) {
       return {
         ...profile,

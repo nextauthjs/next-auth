@@ -26,4 +26,12 @@ export interface NextAuthConfig {
   _getSession: any
 }
 
-export type SessionContext = React.Context<Session>
+export type SessionContextValue<R extends boolean = false> = R extends true
+  ?
+      | { data: Session; status: "authenticated" }
+      | { data: null; status: "loading" }
+  :
+      | { data: Session; status: "authenticated" }
+      | { data: null; status: "unauthenticated" | "loading" }
+
+export type SessionContext = React.Context<SessionContextValue>

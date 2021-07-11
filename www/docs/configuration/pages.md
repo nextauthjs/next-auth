@@ -16,7 +16,7 @@ To add a custom login page, you can use the `pages` option:
     signOut: '/auth/signout',
     error: '/auth/error', // Error code passed in query string as ?error=
     verifyRequest: '/auth/verify-request', // (used for check email message)
-    newUser: null // If set, new users will be directed here on first sign in
+    newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
   }
 ...
 ```
@@ -48,6 +48,7 @@ The following errors are passed as error query parameters to the default or over
 - **OAuthAccountNotLinked**: If the email on the account is already linked, but not with this OAuth account
 - **EmailSignin**: Sending the e-mail with the verification token failed
 - **CredentialsSignin**: The `authorize` callback returned `null` in the [Credentials provider](/providers/credentials). We don't recommend providing information about which part of the credentials were wrong, as it might be abused by malicious hackers.
+- **SessionRequired**: The content of this page requires you to be signed in at all times. See [useSession](/getting-started/client#require-session) for configuration.
 - **Default**: Catch all, will apply, if none of the above matched
 
 Example: `/auth/error?error=Default`

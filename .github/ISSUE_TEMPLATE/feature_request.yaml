@@ -1,0 +1,68 @@
+name: Feature Request
+description: Suggest an idea for NextAuth.js
+labels: enhancement
+
+# note: markdown sections will NOT appear as part of the issue as per documentation, rather they provide context to the user
+# https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-githubs-form-schema#markdown
+
+body:
+  - type: markdown
+    attributes:
+      value: | 
+        Thank you very much for reaching out to us regarding the awesome feature that you believe should be included in the NextAuth.js library. Please provide the following information:
+ 
+  - type: textarea
+    id: description
+    attributes:
+      label: Description 📓
+      description: Please provide a more in-depth description of the feature proposed.
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        Make sure you provide plenty of [links]() to external documentation and inline code examples like so:
+
+        ```js
+        function myAwesomeNextAuthFeature() {
+          return 💚
+        }
+        ```
+
+        Take time thinking about what you want to say and help us understand your proposal making sure that this description contains:
+
+        - **purpose of the feature**
+        - **potential problems**
+        - **potential alternatives**
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: How to reproduce ☕️ 
+      description: If you have a CodeSandbox playground or some code snippets to help us visualize your idea better, please provide it here.
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        You can use one of the templates set up on **CodeSandbox** to better illustrate your idea:
+
+        - [`next-auth-example`](https://codesandbox.io/s/next-auth-example-1kktb)
+        - [`next-auth-typescript-example`](https://codesandbox.io/s/next-auth-typescript-example-se32w)        
+
+  - type: dropdown
+    id: pr
+    attributes:
+      label: Contributing 🙌🏽
+      multiple: false
+      options:
+        - "Yes, I am willing to help implement this feature in a PR"
+        - "No, I am afraid I cannot help regarding this"
+    validations:
+      required: true
+  - type: markdown
+    attributes: 
+      value: |
+        It takes a lot of work 🏋🏻‍♀️ maintaining a library like `next-auth`; any contribution is more than welcome 💚
+  

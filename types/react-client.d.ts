@@ -2,6 +2,7 @@ import * as React from "react"
 import { IncomingMessage } from "http"
 import { Session } from "."
 import { ProviderType } from "./providers"
+import { SessionContextValue } from "internals/react"
 
 export interface CtxOrReq {
   req?: IncomingMessage
@@ -17,21 +18,22 @@ export type GetSessionOptions = CtxOrReq & {
   triggerEvent?: boolean
 }
 
+export interface UseSessionOptions<R extends boolean> {
+  required: R
+  /** Defaults to `signIn` */
+  action?(): void
+}
+
 /**
  * React Hook that gives you access
  * to the logged in user's session data.
  *
  * [Documentation](https://next-auth.js.org/getting-started/client#usesession)
  */
-export function useSession(): [Session | null, boolean]
+export function useSession<R extends boolean>(
+  options?: UseSessionOptions<R>
+): SessionContextValue<R>
 
-/**
- * Can be called client or server side to return a session asynchronously.
- * It calls `/api/auth/session` and returns a promise with a session object,
- * or null if no session exists.
- *
- * [Documentation](https://next-auth.js.org/getting-started/client#getsession)
- */
 export function getSession(options?: GetSessionOptions): Promise<Session | null>
 
 /*******************

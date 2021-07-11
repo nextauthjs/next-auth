@@ -11,8 +11,24 @@ const clientSession = {
   expires: "1234",
 }
 
-// $ExpectType [Session | null, boolean]
+/**
+ * $ExpectType
+ * | { data: Session; status: "authenticated"; }
+ * | { data: null; status: "unauthenticated" | "loading"; }
+ * | { //// data: Session; status: "authenticated"; }
+ * | { data: null; status: "loading"; }
+ */
 client.useSession()
+
+// $ExpectType { data: Session; status: "authenticated"; } | { data: null; status: "loading"; }
+const session = client.useSession({ required: true })
+if (session.status === "loading") {
+  // $ExpectType null
+  session.data
+} else {
+  // $ExpectType Session
+  session.data
+}
 
 // $ExpectType Promise<Session | null>
 client.getSession({ req: nextReq })
