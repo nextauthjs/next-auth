@@ -8,13 +8,14 @@ import { OAuthCallbackError } from "../../../lib/errors"
 export default async function oAuthCallback(req, res) {
   const { provider, logger } = req.options
 
-  try {
-    const error = req.body.error ?? req.query.error
-    if (error) {
-      throw new Error(error)
-    }
-  } catch (error) {
-    logger.error("OAUTH_CALLBACK_HANDLER_ERROR", error, req.body, provider.id)
+  const errorMessage = req.body.error ?? req.query.error
+  if (errorMessage) {
+    const error = new Error(errorMessage)
+    logger.error("OAUTH_CALLBACK_HANDLER_ERROR", {
+      error,
+      body: req.body,
+      providerId: provider.id,
+    })
     throw error
   }
 
@@ -69,7 +70,7 @@ export default async function oAuthCallback(req, res) {
 
     return getProfile({ profile, provider, tokens, logger })
   } catch (error) {
-    logger.error("OAUTH_CALLBACK_ERROR", error, provider.id)
+    logger.error("OAUTH_CALLBACK_ERROR", { error, providerId: provider.id })
     throw new OAuthCallbackError(error)
   }
 }
@@ -80,7 +81,7 @@ export default async function oAuthCallback(req, res) {
  */
 async function getProfile({ profile: OAuthProfile, tokens, provider, logger }) {
   try {
-    logger.debug("PROFILE_DATA", OAuthProfile)
+    logger.debug("PROFILE_DATA", { OAuthProfile })
     const profile = await provider.profile(OAuthProfile, tokens)
     profile.email = profile.email?.toLowerCase() ?? null
     // Return profile, raw profile and auth provider details
@@ -102,7 +103,7 @@ async function getProfile({ profile: OAuthProfile, tokens, provider, logger }) {
     // all providers, so we return an empty object; the user should then be
     // redirected back to the sign up page. We log the error to help developers
     // who might be trying to debug this when configuring a new provider.
-    logger.error("OAUTH_PARSE_PROFILE_ERROR", error, OAuthProfile)
+    logger.error("OAUTH_PARSE_PROFILE_ERROR", { error, OAuthProfile })
     return {
       profile: null,
       account: null,

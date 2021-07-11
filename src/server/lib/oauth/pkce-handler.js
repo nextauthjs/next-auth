@@ -38,18 +38,14 @@ export async function createPKCE(req, res) {
     ...cookies.pkceCodeVerifier.options,
   })
 
-  logger.debug(
-    "OAUTH_SIGNIN_PROTECTION",
-    "PKCE created, code_verifier saved in cookie",
-    {
-      pkce: {
-        code_challenge: codeChallenge,
-        code_verifier: codeVerifier,
-      },
-      pkceLength: PKCE_LENGTH,
-      method: PKCE_CODE_CHALLENGE_METHOD,
-    }
-  )
+  logger.debug("CREATE_PKCE_CHALLENGE_VERIFIER", {
+    pkce: {
+      code_challenge: codeChallenge,
+      code_verifier: codeVerifier,
+    },
+    pkceLength: PKCE_LENGTH,
+    method: PKCE_CODE_CHALLENGE_METHOD,
+  })
   return {
     code_challenge: codeChallenge,
     code_challenge_method: PKCE_CODE_CHALLENGE_METHOD,

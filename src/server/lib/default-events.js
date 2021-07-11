@@ -1,23 +1,30 @@
-/** Event triggered on successful sign in */
-export async function signIn (message) {}
+import { upperSnake } from "../../lib/errors"
 
-/** Event triggered on sign out */
-export async function signOut (message) {}
-
-/** Event triggered on user creation */
-export async function createUser (message) {}
-
-/** Event triggered when a user object is updated */
-export async function updateUser (message) {}
-
-/** Event triggered when an account is linked to a user */
-export async function linkAccount (message) {}
-
-/** Event triggered when a session is active */
-export async function session (message) {}
+/** @type {import("types").EventCallbacks} */
+export const defaultEvents = {
+  signIn() {},
+  signOut() {},
+  createUser() {},
+  updateUser() {},
+  linkAccount() {},
+  session() {},
+}
 
 /**
- * @TODO Event triggered when something goes wrong in an authentication flow
- * This event may be fired multiple times when an error occurs
+ * Wraps an object of methods and adds error handling.
+ * @param {import("types").EventCallbacks} methods
+ * @param {import("types").LoggerInstance} logger
+ * @return {import("types").EventCallbacks}
  */
-export async function error (message) {}
+export function withErrorHandling(methods, logger) {
+  return Object.entries(methods).reduce((acc, [name, method]) => {
+    acc[name] = async (...args) => {
+      try {
+        return await method(...args)
+      } catch (e) {
+        logger.error(`${upperSnake(name)}_EVENT_ERROR`, e)
+      }
+    }
+    return acc
+  }, {})
+}

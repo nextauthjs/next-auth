@@ -2,7 +2,7 @@ import jwt from "../lib/jwt"
 import parseUrl from "../lib/parse-url"
 import logger, { setLogger } from "../lib/logger"
 import * as cookie from "./lib/cookie"
-import * as defaultEvents from "./lib/default-events"
+import { withErrorHandling, defaultEvents } from "./lib/default-events"
 import * as defaultCallbacks from "./lib/default-callbacks"
 import parseProviders from "./lib/providers"
 import * as routes from "./routes"
@@ -15,7 +15,7 @@ import csrfTokenHandler from "./lib/csrf-token-handler"
 // To work properly in production with OAuth providers the NEXTAUTH_URL
 // environment variable must be set.
 if (!process.env.NEXTAUTH_URL) {
-  logger.warn("NEXTAUTH_URL", "NEXTAUTH_URL environment variable not set")
+  logger.warn("NEXTAUTH_URL")
 }
 
 /**
@@ -41,11 +41,11 @@ async function NextAuthHandler(req, res, userOptions) {
     extendRes(req, res, resolve)
 
     if (!req.query.nextauth) {
-      const error =
+      const message =
         "Cannot find [...nextauth].js in pages/api/auth. Make sure the filename is written correctly."
 
-      logger.error("MISSING_NEXTAUTH_API_ROUTE_ERROR", error)
-      return res.status(500).end(`Error: ${error}`)
+      logger.error("MISSING_NEXTAUTH_API_ROUTE_ERROR", new Error(message))
+      return res.status(500).end(`Error: ${message}`)
     }
 
     const {
@@ -124,10 +124,10 @@ async function NextAuthHandler(req, res, userOptions) {
         ...userOptions.jwt,
       },
       // Event messages
-      events: {
-        ...defaultEvents,
-        ...userOptions.events,
-      },
+      events: withErrorHandling(
+        { ...defaultEvents, ...userOptions.events },
+        logger
+      ),
       // Callback functions
       callbacks: {
         ...defaultCallbacks,
@@ -237,13 +237,8 @@ async function NextAuthHandler(req, res, userOptions) {
         case "_log":
           if (userOptions.logger) {
             try {
-              const {
-                code = "CLIENT_ERROR",
-                level = "error",
-                message = "[]",
-              } = req.body
-
-              logger[level](code, ...JSON.parse(message))
+              const { code, level, ...metadata } = req.body
+              logger[level](code, metadata)
             } catch (error) {
               // If logging itself failed...
               logger.error("LOGGER_ERROR", error)

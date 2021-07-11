@@ -18,10 +18,7 @@ export function createState(req) {
   const state = createHash("sha256").update(csrfToken).digest("hex")
 
   provider.authorizationParams = { ...provider.authorizationParams, state }
-  logger.debug("OAUTH_CALLBACK_PROTECTION", "State created from CSRF token", {
-    state,
-    csrfToken,
-  })
+  logger.debug("OAUTH_CALLBACK_PROTECTION", { state, csrfToken })
   return state
 }
 

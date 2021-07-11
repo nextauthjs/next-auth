@@ -1,6 +1,5 @@
 import { openidClient } from "../oauth/client"
 import { oAuth1Client } from "../oauth/client-legacy"
-import logger from "../../../lib/logger"
 import { createState } from "../oauth/state-handler"
 import { createPKCE } from "../oauth/pkce-handler"
 
@@ -9,6 +8,7 @@ import { createPKCE } from "../oauth/pkce-handler"
  * @param {import("types/internals").NextAuthResponse} res
  */
 export default async function getAuthorizationUrl(req, res) {
+  const { logger } = req.options
   /** @type {import("types/providers").OAuthConfig} */
   const provider = req.options.provider
   const params = {
@@ -26,7 +26,7 @@ export default async function getAuthorizationUrl(req, res) {
         oauth_token_secret: tokens.oauth_token_secret,
         ...tokens.params,
       })}`
-      logger.debug("GET_AUTHORIZATION_URL", url)
+      logger.debug("GET_AUTHORIZATION_URL", { url })
       return url
     } catch (error) {
       logger.error("GET_AUTHORIZATION_URL_ERROR", error)

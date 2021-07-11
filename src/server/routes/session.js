@@ -1,5 +1,4 @@
 import * as cookie from "../lib/cookie"
-import dispatchEvent from "../lib/dispatch-event"
 import adapterErrorHandler from "../../adapters/error-handler"
 
 /**
@@ -61,7 +60,7 @@ export default async function session(req, res) {
         ...cookies.sessionToken.options,
       })
 
-      await dispatchEvent(events.session, { session, token })
+      await events.session({ session, token })
     } catch (error) {
       // If JWT not verifiable, make sure the cookie for it is removed and return empty object
       logger.error("JWT_SESSION_ERROR", error)
@@ -110,7 +109,7 @@ export default async function session(req, res) {
           ...cookies.sessionToken.options,
         })
 
-        await dispatchEvent(events.session, { session: sessionPayload })
+        await events.session({ session: sessionPayload })
       } else if (sessionToken) {
         // If sessionToken was found set but it's not valid for a session then
         // remove the sessionToken cookie from browser.
