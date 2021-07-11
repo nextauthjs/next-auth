@@ -3,12 +3,12 @@ id: events
 title: Events
 ---
 
-Events are asynchronous functions that do not return a response, they are useful for audit logs / reporting.
+Events are asynchronous functions that do not return a response, they are useful for audit logs / reporting or handling any other side-effects.
 
 You can specify a handler for any of these events below, for debugging or for an audit log.
 
 :::note
-Execution of your auth API will be blocked by an `await` on your event handler. If your event handler starts any burdensome work it should not block its own promise on that work.
+The execution of your authentication API will be blocked by an `await` on your event handler. If your event handler starts any burdensome work it should not block its own promise on that work.
 :::
 
 ## Events
@@ -27,40 +27,37 @@ The message will be an object and contain:
 
 Sent when the user signs out.
 
-The message object is the JWT, if using them, or the adapter session object for the session that is being ended.
+The message object will contain one of these depending on if you use JWT or database persisted sessions:
+
+- `token`: The JWT token for this session.
+- `session`: The session object from your adapter that is being ended
 
 ### createUser
 
 Sent when the adapter is told to create a new user.
 
-The message object will be the user.
+The message object will contain the user.
 
 ### updateUser
 
 Sent when the adapter is told to update an existing user. Currently this is only sent when the user verifies their email address.
 
-The message object will be the user.
+The message object will contain the user.
 
 ### linkAccount
 
-Sent when an account in a given provider is linked to a user in our userbase. For example, when a user signs up with Twitter or when an existing user links their Google account.
+Sent when an account in a given provider is linked to a user in our user database. For example, when a user signs up with Twitter or when an existing user links their Google account.
 
-The message will be an object and contain:
+The message object will contain:
 
-- `user`: The user object from your adapter
+- `user`: The user object from your adapter.
 - `providerAccount`: The object returned from the provider.
 
 ### session
 
 Sent at the end of a request for the current session.
 
-The message will be an object and contain:
+The message object will contain one of these depending on if you use JWT or database persisted sessions:
 
-- `session`: The session object from your adapter
-- `jwt`: If using JWT, the token for this session.
-
-### error
-
-Sent when an error occurs
-
-The message could be any object relevant to describing the error.
+- `token`: The JWT token for this session.
+- `session`: The session object from your adapter.

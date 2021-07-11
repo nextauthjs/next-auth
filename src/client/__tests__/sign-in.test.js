@@ -250,11 +250,10 @@ test("when it fails to fetch the providers, it redirected back to signin page", 
     expect(window.location.replace).toHaveBeenCalledWith(`/api/auth/error`)
 
     expect(logger.error).toHaveBeenCalledTimes(1)
-    expect(logger.error).toBeCalledWith(
-      "CLIENT_FETCH_ERROR",
-      "providers",
-      errorMsg
-    )
+    expect(logger.error).toBeCalledWith("CLIENT_FETCH_ERROR", {
+      error: "Error when retrieving providers",
+      path: "providers",
+    })
   })
 })
 
