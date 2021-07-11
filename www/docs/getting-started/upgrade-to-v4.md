@@ -22,7 +22,11 @@ export default NextAuth({
 })
 ```
 
+Also the `AzureADB2C` provider has been renamed `AzureAD`.
+
 See [nextauthjs/adapter](https://github.com/nextauthjs/adapters) for more details.
+
+Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.8
 
 ### 2. next-auth/react
 
@@ -46,9 +50,11 @@ We've also made the following changes to the names of the exports:
 - `signout`: Rename to `signOut`
 - `Provider`: Rename to `SessionProvider`
 
+Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.12
+
 ### 3. SessionProvider
 
-Version 4.0 makes using the `SessionProvider` mandatory. This means that you will have to wrap your application in a provider, if you were not doing so already. The `SessionProvider` has also undergone a few further changes:
+Version 4.0 makes using the `SessionProvider` mandatory. This means that you will have to wrap any part of your application using `useSession` in this provider, if you were not doing so already. The `SessionProvider` has also undergone a few further changes:
 
 - `Provider` is renamed to `SessionProvider`
 - The options prop is now flattened as the props of SessionProvider.
@@ -76,6 +82,8 @@ export default function App({
 }
 ```
 
+Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.12
+
 ### 4. Named Parameters
 
 We have changed the arguments to our callbacks to the named parameters pattern. This way you don't have to use dummy `_` placeholders or other tricks.
@@ -102,6 +110,8 @@ The signatures for the callback methods now look like this:
 + jwt({ token, user, account, profile, isNewUser })
 ```
 
+Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.17
+
 ### 5. useSession Hook
 
 The `useSession` hook has been updated to return an object. This allows you to test states much more cleanly with the new `status` option.
@@ -111,6 +121,34 @@ The `useSession` hook has been updated to return an object. This allows you to t
 + const { data: session, status } = useSession()
 + const loading = status === "loading"
 ```
+
+Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.18
+
+### 6. nodemailer
+
+`nodemailer` is no longer a dependency and added by default. If you are using the Email provider you can install in your project manually, or use any other Email library in the `sendVerificationRequest` callback.
+
+Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.2
+
+### 7. Logger API
+
+The logger API has been simplified to use at most two parameters, where the second is usually an object (`metadata`) containing an `error` object. If you are not using the logger callbacks you can ignore this change.
+
+```diff
+// [...nextauth.js]
+import log from "some-logger-service"
+...
+logger: {
+- error(code, ...message) {},
++ error(code, metadata) {},
+- warn(code, ...message) {},
++ warn(code) {}
+- debug(code, ...message) {}
++ debug(code, metadata) {}
+}
+```
+
+Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.19
 
 ## Summary
 
