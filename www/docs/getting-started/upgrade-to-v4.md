@@ -3,9 +3,9 @@ id: upgrade-v4
 title: Upgrade Guide (v4)
 ---
 
-NextAuth.js version 4.0 included a few breaking changes from the last major version (3.0). So we're here to help you upgrade your applications as smoothly as possible.
+NextAuth.js version 4.0 included a few breaking changes from the last major version (3.0). So we're here to help you upgrade your applications as smoothly as possible. It should be possible to upgrade from any version of 3.x to the latest 4.0 release by following the next few migration steps.
 
-### Database Adapters
+### 1. Database Adapters
 
 If you are using the built-in TypeORM or Prisma adapters, these have been removed from the core `next-auth` package so as to not balloon the package size for users who do not need a database. Thankfully the migration is super easy, you just need to install the external packages for your database now and adapt your `[...nextauth].js` config file a bit.
 
@@ -24,7 +24,7 @@ export default NextAuth({
 
 See [nextauthjs/adapter](https://github.com/nextauthjs/adapters) for more details.
 
-### `next-auth/client` --> `next-auth/react`
+### 2. next-auth/react
 
 We've renamed the clientside import source to `next-auth/react`. To comply with this change, you will simply have to rename anywhere you were using `next-auth/client`.
 
@@ -46,7 +46,7 @@ We've also made the following changes to the names of the exports:
 - `signout`: Rename to `signOut`
 - `Provider`: Rename to `SessionProvider`
 
-### SessionProvider
+### 3. SessionProvider
 
 Version 4.0 makes using the `SessionProvider` mandatory. This means that you will have to wrap your application in a provider, if you were not doing so already. The `SessionProvider` has also undergone a few further changes:
 
@@ -76,7 +76,7 @@ export default function App({
 }
 ```
 
-### Named Parameters
+### 4. Named Parameters
 
 We have changed the arguments to our callbacks to the named parameters pattern. This way you don't have to use dummy `_` placeholders or other tricks.
 
@@ -102,7 +102,7 @@ The signatures for the callback methods now look like this:
 + jwt({ token, user, account, profile, isNewUser })
 ```
 
-### useSession Hook
+### 5. useSession Hook
 
 The `useSession` hook has been updated to return an object. This allows you to test states much more cleanly with the new `status` option.
 
