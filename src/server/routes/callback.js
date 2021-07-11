@@ -139,7 +139,7 @@ export default async function callback(req, res) {
           })
         }
 
-        await dispatchEvent(events.signIn, { user, account, isNewUser })
+        await dispatchEvent(events.signIn, { user, account, profile, isNewUser })
 
         // Handle first logins on new accounts
         // e.g. option to send users to a new account landing page on initial login
@@ -286,7 +286,7 @@ export default async function callback(req, res) {
         })
       }
 
-      await dispatchEvent(events.signIn, { user, account, isNewUser })
+      await dispatchEvent(events.signIn, { user, account, profile, isNewUser })
 
       // Handle first logins on new accounts
       // e.g. option to send users to a new account landing page on initial login
@@ -409,7 +409,7 @@ export default async function callback(req, res) {
       ...cookies.sessionToken.options,
     })
 
-    await dispatchEvent(events.signIn, { user, account })
+    await dispatchEvent(events.signIn, { user, account, profile: null })
 
     return res.redirect(callbackUrl || baseUrl)
   }

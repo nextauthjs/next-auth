@@ -363,6 +363,7 @@ export type EventCallback<MessageType = unknown> = (
 export interface SignInEventMessage {
   user: User
   account: Account
+  profile: Profile | null
   isNewUser?: boolean
 }
 
