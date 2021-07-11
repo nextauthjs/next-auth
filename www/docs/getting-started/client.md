@@ -324,7 +324,7 @@ export default function App({ Component, pageProps }) {
 
 If you pass the `session` page prop to the `<Provider>` – as in the example above – you can avoid checking the session twice on pages that support both server and client side rendering.
 
-This only works on pages where you provide the correct `pageProps`, however. This is normally done in `getInitialProps` or `getServerSideProps` like so:
+This only works on pages where you provide the correct `pageProps`, however. This is normally done in `getInitialProps` or `getServerSideProps` of page files like so:
 
 ```js title="pages/index.js"
 import { getSession } from "next-auth/client"
@@ -340,7 +340,7 @@ export async function getServerSideProps(ctx) {
 }
 ```
 
-If every one of your pages needs to be protected, you can do this in `_app`, otherwise you can do it on a page-by-page basis. Alternatively, you can do per page authentication checks client side, instead of having each auth check be blocking (SSR) by using the method described below in [alternative client session handling](#custom-client-session-handling).
+If every one of your pages needs to be protected, you can do this in `getInitialProps` in `_app`, otherwise you can do it on a page-by-page basis. Alternatively, you can do per page authentication checks client side, instead of having each auth check be blocking (SSR) by using the method described below in [alternative client session handling](#custom-client-session-handling).
 
 ### Options
 
@@ -351,16 +351,17 @@ If you have session expiry times of 30 days (the default) or more then you proba
 However, if you need to customise the session behaviour and/or are using short session expiry times, you can pass options to the provider to customise the behaviour of the `useSession()` hook.
 
 ```jsx title="pages/_app.js"
-import { Provider } from 'next-auth/client'
+import { Provider } from "next-auth/client"
 
-export default function App ({ Component, pageProps }) {
+export default function App({ Component, pageProps }) {
   return (
-    <Provider session={pageProps.session}
+    <Provider
+      session={pageProps.session}
       options={{
-        clientMaxAge: 60,     // Re-fetch session if cache is older than 60 seconds
-        keepAlive:    5 * 60 // Send keepAlive message every 5 minutes
+        clientMaxAge: 60, // Re-fetch session if cache is older than 60 seconds
+        keepAlive: 5 * 60, // Send keepAlive message every 5 minutes
       }}
-      >
+    >
       <Component {...pageProps} />
     </Provider>
   )
