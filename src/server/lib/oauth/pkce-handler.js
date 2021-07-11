@@ -31,15 +31,15 @@ export async function handleCallback(req, res) {
       encryption: true,
     })
     req.options.pkce = pkce
-    logger.debug("OAUTH_CALLBACK_CHECK", "Read PKCE verifier from cookie", {
+    logger.debug("PKCE_VERIFIER_FROM_COOKIE", {
       code_verifier: pkce.code_verifier,
       pkceLength: PKCE_LENGTH,
       method: PKCE_CODE_CHALLENGE_METHOD,
     })
     // remove PKCE after it has been used
-    cookie.set(res, cookies.pkceCodeVerifier.name, "", { 
+    cookie.set(res, cookies.pkceCodeVerifier.name, "", {
       ...cookies.pkceCodeVerifier.options,
-      maxAge: 0 
+      maxAge: 0,
     })
   } catch (error) {
     logger.error("CALLBACK_OAUTH_ERROR", error)
@@ -61,7 +61,7 @@ export async function handleSignin(req, res) {
     }
     // Started login flow, add generated pkce to req.options and (encrypted) code_verifier to a cookie
     const pkce = pkceChallenge(PKCE_LENGTH)
-    logger.debug("OAUTH_SIGNIN_CHECK", "Created PKCE challenge/verifier", {
+    logger.debug("CREATE_PKCE_CHALLENGE_VERIFIER", {
       ...pkce,
       pkceLength: PKCE_LENGTH,
       method: PKCE_CODE_CHALLENGE_METHOD,
@@ -86,10 +86,7 @@ export async function handleSignin(req, res) {
       expires: cookieExpires.toISOString(),
       ...cookies.pkceCodeVerifier.options,
     })
-    logger.debug(
-      "OAUTH_SIGNIN_CHECK",
-      "Created PKCE code_verifier saved in cookie"
-    )
+    logger.debug("PKCE_CODE_VERIFIER_SAVED", { encryptedCodeVerifier })
   } catch (error) {
     logger.error("SIGNIN_OAUTH_ERROR", error)
     return res.redirect(`${baseUrl}${basePath}/error?error=OAuthSignin`)

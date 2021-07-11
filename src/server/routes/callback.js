@@ -303,7 +303,9 @@ export default async function callback(req, res) {
     if (!useJwtSession) {
       logger.error(
         "CALLBACK_CREDENTIALS_JWT_ERROR",
-        "Signin in with credentials is only supported if JSON Web Tokens are enabled"
+        new Error(
+          "Signin in with credentials is only supported if JSON Web Tokens are enabled"
+        )
       )
       return res
         .status(500)
@@ -313,7 +315,9 @@ export default async function callback(req, res) {
     if (!provider.authorize) {
       logger.error(
         "CALLBACK_CREDENTIALS_HANDLER_ERROR",
-        "Must define an authorize() handler to use credentials authentication provider"
+        new Error(
+          "Must define an authorize() handler to use credentials authentication provider"
+        )
       )
       return res
         .status(500)

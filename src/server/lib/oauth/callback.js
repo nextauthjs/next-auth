@@ -23,13 +23,12 @@ export default async function oAuthCallback(req) {
         code = body.code
         user = body.user != null ? JSON.parse(body.user) : null
       } catch (error) {
-        logger.error(
-          "OAUTH_CALLBACK_HANDLER_ERROR",
+        logger.error("OAUTH_CALLBACK_HANDLER_ERROR", {
           error,
-          req.body,
-          provider.id,
-          code
-        )
+          body: req.body,
+          providerId: provider.id,
+          code,
+        })
         throw error
       }
     }
@@ -62,7 +61,11 @@ export default async function oAuthCallback(req) {
 
       return getProfile({ profileData, provider, tokens, user })
     } catch (error) {
-      logger.error("OAUTH_GET_ACCESS_TOKEN_ERROR", error, provider.id, code)
+      logger.error("OAUTH_GET_ACCESS_TOKEN_ERROR", {
+        error,
+        providerId: provider.id,
+        code,
+      })
       throw error
     }
   }
@@ -74,7 +77,11 @@ export default async function oAuthCallback(req) {
 
     // eslint-disable-next-line camelcase
     const { token_secret } = await client.getOAuthRequestToken(provider.params)
-    const tokens = await client.getOAuthAccessToken(oauth_token, token_secret, oauth_verifier)
+    const tokens = await client.getOAuthAccessToken(
+      oauth_token,
+      token_secret,
+      oauth_verifier
+    )
     const profileData = await client.get(
       provider.profileUrl,
       tokens.oauth_token,
@@ -113,7 +120,7 @@ export default async function oAuthCallback(req) {
 async function getProfile({ profileData, tokens, provider, user }) {
   try {
     // Convert profileData into an object if it's a string
-    if (typeof profileData === "string" || profileData instanceof String) {
+    if (typeof profileData === "string") {
       profileData = JSON.parse(profileData)
     }
 
@@ -122,7 +129,7 @@ async function getProfile({ profileData, tokens, provider, user }) {
       profileData.user = user
     }
 
-    logger.debug("PROFILE_DATA", profileData)
+    logger.debug("PROFILE_DATA", { profile: profileData })
 
     const profile = await provider.profile(profileData, tokens)
     // Return profile, raw profile and auth provider details
@@ -139,7 +146,7 @@ async function getProfile({ profileData, tokens, provider, user }) {
       },
       OAuthProfile: profileData,
     }
-  } catch (exception) {
+  } catch (error) {
     // If we didn't get a response either there was a problem with the provider
     // response *or* the user cancelled the action with the provider.
     //
@@ -147,7 +154,7 @@ async function getProfile({ profileData, tokens, provider, user }) {
     // all providers, so we return an empty object; the user should then be
     // redirected back to the sign up page. We log the error to help developers
     // who might be trying to debug this when configuring a new provider.
-    logger.error("OAUTH_PARSE_PROFILE_ERROR", exception, profileData)
+    logger.error("OAUTH_PARSE_PROFILE_ERROR", { error, profileData })
     return {
       profile: null,
       account: null,
