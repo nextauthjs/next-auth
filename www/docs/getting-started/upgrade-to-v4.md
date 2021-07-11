@@ -126,13 +126,13 @@ Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.1
 
 ### 6. nodemailer
 
-`nodemailer` is no longer a dependency and added by default. If you are using the Email provider you can install in your project manually, or use any other Email library in the `sendVerificationRequest` callback.
+`nodemailer` is no longer a dependency and added by default. If you are using the Email provider you can install it in your project manually, or use any other Email library in the [`sendVerificationRequest`](/configuration/providers#options-1#:~:text=sendVerificationRequest) callback.
 
 Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.2
 
 ### 7. Logger API
 
-The logger API has been simplified to use at most two parameters, where the second is usually an object (`metadata`) containing an `error` object. If you are not using the logger callbacks you can ignore this change.
+The logger API has been simplified to use at most two parameters, where the second is usually an object (`metadata`) containing an `error` object. If you are not using the logger settings you can ignore this change.
 
 ```diff
 // [...nextauth.js]
