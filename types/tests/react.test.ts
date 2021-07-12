@@ -8,7 +8,7 @@ const clientSession = {
     image: "path/to/img",
   },
   accessToken: "123z",
-  expires: "1234",
+  expires: new Date(),
 }
 
 /**
@@ -90,7 +90,7 @@ client.SessionProvider({
 client.SessionProvider({
   children: null,
   session: {
-    expires: "",
+    expires: new Date(),
   },
   baseUrl: "https://foo.com",
   basePath: "/",

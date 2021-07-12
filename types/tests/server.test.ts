@@ -4,7 +4,6 @@ import NextAuth, * as NextAuthTypes from "next-auth"
 import { IncomingMessage, ServerResponse } from "http"
 import { Socket } from "net"
 import { NextApiRequest, NextApiResponse } from "internals/utils"
-import { InternalOptions } from "internals"
 
 const req: NextApiRequest = Object.assign(new IncomingMessage(new Socket()), {
   query: {},
@@ -48,9 +47,7 @@ const exampleUser: NextAuthTypes.User = {
 }
 
 const exampleSession: NextAuthTypes.Session = {
-  userId: "",
-  accessToken: "",
-  sessionToken: "",
+  expires: new Date(),
 }
 
 const exampleVerificationRequest = {
@@ -60,73 +57,72 @@ const exampleVerificationRequest = {
   expires: new Date(),
 }
 
-const MyAdapter: Adapter<Record<string, unknown>> = () => {
+interface Client {
+  c(): void
+  r(): void
+  u(): void
+  d(): void
+}
+
+function MyAdapter(client: Client): Adapter {
   return {
-    async getAdapter(appOptions: InternalOptions) {
-      return {
-        async createUser(profile) {
-          return exampleUser
-        },
-        async getUser(id) {
-          return exampleUser
-        },
-        async getUserByEmail(email) {
-          return exampleUser
-        },
-        async getUserByProviderAccountId(providerId, providerAccountId) {
-          return exampleUser
-        },
-        async updateUser(user) {
-          return exampleUser
-        },
-        async linkAccount(
-          userId,
-          providerId,
-          providerType,
-          providerAccountId,
-          refreshToken,
-          accessToken,
-          accessTokenExpires
-        ) {
-          return undefined
-        },
-        async createSession(user) {
-          return exampleSession
-        },
-        async getSession(sessionToken) {
-          return exampleSession
-        },
-        async updateSession(session, force) {
-          return exampleSession
-        },
-        async deleteSession(sessionToken) {
-          return undefined
-        },
-        async createVerificationRequest(email, url, token, secret, provider) {
-          return undefined
-        },
-        async getVerificationRequest(
-          email,
-          verificationToken,
-          secret,
-          provider
-        ) {
-          return exampleVerificationRequest
-        },
-        async deleteVerificationRequest(
-          email,
-          verificationToken,
-          secret,
-          provider
-        ) {
-          return undefined
-        },
-      }
+    displayName: "MyAdapter",
+    async createUser(profile) {
+      return exampleUser
+    },
+    async getUser(id) {
+      return exampleUser
+    },
+    async getUserByEmail(email) {
+      return exampleUser
+    },
+    async getUserByProviderAccountId(providerId, providerAccountId) {
+      return exampleUser
+    },
+    async updateUser(user) {
+      return exampleUser
+    },
+    async linkAccount(
+      userId,
+      providerId,
+      providerType,
+      providerAccountId,
+      refreshToken,
+      accessToken,
+      accessTokenExpires
+    ) {
+      return undefined
+    },
+    async createSession(user) {
+      return exampleSession
+    },
+    async getSession(sessionToken) {
+      return exampleSession
+    },
+    async updateSession(session, force) {
+      return exampleSession
+    },
+    async deleteSession(sessionToken) {
+      return undefined
+    },
+    async createVerificationRequest(email, url, token, secret, provider) {
+      return undefined
+    },
+    async getVerificationRequest(email, verificationToken, secret, provider) {
+      return exampleVerificationRequest
+    },
+    async deleteVerificationRequest(
+      email,
+      verificationToken,
+      secret,
+      provider
+    ) {
+      return undefined
     },
   }
 }
 
-const client = {} // Create a fake db client
+const client = { c() {}, r() {}, u() {}, d() {} } // Create a fake db client
 
 const allConfig: NextAuthTypes.NextAuthOptions = {
   providers: [
@@ -137,6 +133,10 @@ const allConfig: NextAuthTypes.NextAuthOptions = {
   ],
   debug: true,
   secret: "my secret",
+  theme: "dark",
+  logger: {
+    debug: () => undefined,
+  },
   session: {
     jwt: true,
     maxAge: 365,
