@@ -138,11 +138,17 @@ function _useSessionHook (session) {
 }
 
 export async function getSession (ctx) {
-  const session = await _fetchData('session', ctx)
-  if (ctx?.triggerEvent ?? true) {
-    broadcast.post({ event: 'session', data: { trigger: 'getSession' } })
+  if (typeof window === 'undefined') {
+    const session = await _fetchData('session', ctx)
+    return session
   }
-  return session
+  return navigator.locks.request('NEXT_AUTH:GET_SESSION', async () => {
+    const session = await _fetchData('session', ctx)
+    if (ctx?.triggerEvent ?? true) {
+      broadcast.post({ event: 'session', data: { trigger: 'getSession' } })
+    }
+    return session
+  })
 }
 
 export async function getCsrfToken (ctx) {
