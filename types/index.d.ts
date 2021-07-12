@@ -79,7 +79,7 @@ export interface NextAuthOptions {
    *
    * [Documentation](https://next-auth.js.org/configuration/options#pages) | [Pages documentation](https://next-auth.js.org/configuration/pages)
    */
-  pages?: PagesOptions
+  pages?: Partial<PagesOptions>
   /**
    * Callbacks are asynchronous functions you can use to control what happens when an action is performed.
    * Callbacks are *extremely powerful*, especially in scenarios involving JSON Web Tokens
@@ -153,7 +153,7 @@ export interface NextAuthOptions {
    * [Documentation](https://next-auth.js.org/configuration/options#logger) |
    * [Debug documentation](https://next-auth.js.org/configuration/options#debug)
    */
-  logger?: LoggerInstance
+  logger?: Partial<LoggerInstance>
   /**
    * Changes the theme of pages.
    * Set to `"light"` if you want to force pages to always be light.
@@ -422,13 +422,13 @@ export type EventType = keyof EventCallbacks
 
 /** [Documentation](https://next-auth.js.org/configuration/pages) */
 export interface PagesOptions {
-  signIn?: string
-  signOut?: string
+  signIn: string
+  signOut: string
   /** Error code passed in query string as ?error= */
-  error?: string
-  verifyRequest?: string
+  error: string
+  verifyRequest: string
   /** If set, new users will be directed here on first sign in */
-  newUser?: string
+  newUser: string
 }
 
 export interface DefaultSession extends Record<string, unknown> {
@@ -437,7 +437,7 @@ export interface DefaultSession extends Record<string, unknown> {
     email?: string | null
     image?: string | null
   }
-  expires?: string
+  expires: Date
 }
 
 /**
