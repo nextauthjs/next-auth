@@ -111,7 +111,7 @@ export interface NextAuthOptions {
    * [Documentation](https://next-auth.js.org/configuration/options#adapter) |
    * [Community adapters](https://github.com/nextauthjs/adapters)
    */
-  adapter?: ReturnType<Adapter>
+  adapter?: Adapter
   /**
    * Set debug to true to enable debug messages for authentication and database operations.
    * * **Default value**: `false`

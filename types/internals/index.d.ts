@@ -9,8 +9,8 @@ import {
   Theme,
 } from ".."
 import { AppProvider } from "../providers"
-import { JWTOptions } from "next-auth/jwt"
-import { Adapter } from "next-auth/adapters"
+import { JWTOptions } from "../jwt"
+import { Adapter } from "../adapters"
 
 export interface InternalOptions {
   providers: AppProvider[]
@@ -45,7 +45,7 @@ export interface InternalOptions {
   pages: PagesOptions
   jwt: JWTOptions
   events: EventCallbacks
-  adapter: ReturnType<Adapter>
+  adapter: Adapter
   callbacks: CallbacksOptions
   cookies: CookiesOptions
   callbackUrl: string
