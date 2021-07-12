@@ -16,16 +16,16 @@ You can specify a handler for any of the callbacks below.
 ```js title="pages/api/auth/[...nextauth].js"
 ...
   callbacks: {
-    async signIn(user, account, profile) {
+    async signIn({ user, account, profile, email, credentials }) {
       return true
     },
-    async redirect(url, baseUrl) {
+    async redirect({ url, baseUrl }) {
       return baseUrl
     },
-    async session(session, user) {
+    async session({ session, user, token }) {
       return session
     },
-    async jwt(token, user, account, profile, isNewUser) {
+    async jwt({ token, user, account, profile, isNewUser }) {
       return token
     }
 ...
@@ -41,15 +41,7 @@ Use the `signIn()` callback to control if a user is allowed to sign in.
 ```js title="pages/api/auth/[...nextauth].js"
 ...
 callbacks: {
-  /**
-   * @param  {object} user     User object
-   * @param  {object} account  Provider account
-   * @param  {object} profile  Provider profile 
-   * @return {boolean|string}  Return `true` to allow sign in
-   *                           Return `false` to deny access
-   *                           Return `string` to redirect to (eg.: "/unauthorized")
-   */
-  async signIn(user, account, profile) {
+  async signIn({ user, account, profile, email, credentials }) {
     const isAllowedToSignIn = true
     if (isAllowedToSignIn) {
       return true
@@ -64,24 +56,24 @@ callbacks: {
 ...
 ```
 
-* When using the **Email Provider** the `signIn()` callback is triggered both when the user makes a **Verification Request** (before they are sent email with a link that will allow them to sign in) and again *after* they activate the link in the sign in email.
+- When using the **Email Provider** the `signIn()` callback is triggered both when the user makes a **Verification Request** (before they are sent email with a link that will allow them to sign in) and again _after_ they activate the link in the sign in email.
 
-  Email accounts do not have profiles in the same way OAuth accounts do. On the first call during email sign in the `profile` object will include an property `verificationRequest: true` to indicate it is being triggered in the verification request flow. When the callback is invoked *after* a user has clicked on a sign in link, this property will not be present.
-  
+  Email accounts do not have profiles in the same way OAuth accounts do. On the first call during email sign in the `email` object will include a property `verificationRequest: true` to indicate it is being triggered in the verification request flow. When the callback is invoked _after_ a user has clicked on a sign in link, this property will not be present.
+
   You can check for the `verificationRequest` property to avoid sending emails to addresses or domains on a blocklist (or to only explicitly generate them for email address in an allow list).
 
-* When using the **Credentials Provider** the `user` object is the response returned from the `authorization` callback and the `profile` object is the raw body of the `HTTP POST` submission.
+- When using the **Credentials Provider** the `user` object is the response returned from the `authorization` callback and the `credentials` object is the raw body of the `HTTP POST` submission.
 
 :::note
 When using NextAuth.js with a database, the User object will be either a user object from the database (including the User ID) if the user has signed in before or a simpler prototype user object (i.e. name, email, image) for users who have not signed in before.
 
-When using NextAuth.js without a database, the user object it will always be a prototype user object, with information extracted from the profile.
+When using NextAuth.js without a database, the user object will always be a prototype user object, with information extracted from the profile.
 :::
 
-:::tip
-If you only want to allow users who already have accounts in the database to sign in, you can check for the existence of a `user.id` property and reject any sign in attempts from accounts that do not have one.
+:::note
+Redirects returned by this callback cancel the authentication flow. Only redirect to error pages that, for example, tell the user why they're not allowed to sign in.
 
-If you are using NextAuth.js without database and want to control who can sign in, you can check their email address or profile against a hard coded list in the `signIn()` callback.
+To redirect to a page after a successful sign in, please use [the `callbackUrl` option](/getting-started/client#specifying-a-callbackurl) or [the redirect callback](/configuration/callbacks#redirect-callback).
 :::
 
 ## Redirect callback
@@ -93,20 +85,12 @@ By default only URLs on the same URL as the site are allowed, you can use the re
 ```js title="pages/api/auth/[...nextauth].js"
 ...
 callbacks: {
-  /**
-   * @param  {string} url      URL provided as callback URL by the client
-   * @param  {string} baseUrl  Default base URL of site (can be used as fallback)
-   * @return {string}          URL the client will be redirect to
-   */
-  async redirect(url, baseUrl) {
-    return url.startsWith(baseUrl)
-      ? url
-      : baseUrl
+  redirect({ url, baseUrl }) {
+    return url.startsWith(baseUrl) ? url : baseUrl
   }
 }
 ...
 ```
-
 
 :::note
 The redirect callback may be invoked more than once in the same flow.
@@ -114,31 +98,23 @@ The redirect callback may be invoked more than once in the same flow.
 
 ## JWT callback
 
-This JSON Web Token callback is called whenever a JSON Web Token is created (i.e. at sign 
-in) or updated (i.e whenever a session is accessed in the client).
+This callback is called whenever a JSON Web Token is created (i.e. at sign
+in) or updated (i.e whenever a session is accessed in the client). The returned value will be [signed and optionally encrypted](/configuration/options#jwt), and it is stored in a cookie.
 
-e.g. `/api/auth/signin`, `getSession()`, `useSession()`, `/api/auth/session`
+Requests to `/api/auth/signin`, `/api/auth/session` and calls to `getSession()`, `useSession()` will invoke this function, but only if you are using a [JWT session](/configuration/options#session). This method is not invoked when you persist sessions in a database.
 
-* As with database session expiry times, token expiry time is extended whenever a session is active.
-* The arguments *user*, *account*, *profile* and *isNewUser* are only passed the first time this callback is called on a new session, after the user signs in.
+- As with database persisted session expiry times, token expiry time is extended whenever a session is active.
+- The arguments _user_, _account_, _profile_ and _isNewUser_ are only passed the first time this callback is called on a new session, after the user signs in. In subsequent calls, only `token` will be available.
 
-The contents *user*, *account*, *profile* and *isNewUser* will vary depending on the provider and on if you are using a database or not. If you want to pass data such as User ID, OAuth Access Token, etc. to the browser, you can persist it in the token and use the `session()` callback to return it.
+The contents _user_, _account_, _profile_ and _isNewUser_ will vary depending on the provider and on if you are using a database or not. You can persist data such as User ID, OAuth Access Token in this token. To make it available in the browser, check out the [`session()` callback](#session-callback) as well.
 
 ```js title="pages/api/auth/[...nextauth].js"
 ...
 callbacks: {
-  /**
-   * @param  {object}  token     Decrypted JSON Web Token
-   * @param  {object}  user      User object      (only available on sign in)
-   * @param  {object}  account   Provider account (only available on sign in)
-   * @param  {object}  profile   Provider profile (only available on sign in)
-   * @param  {boolean} isNewUser True if new user (only available on sign in)
-   * @return {object}            JSON Web Token that will be saved
-   */
-  async jwt(token, user, account, profile, isNewUser) {
-    // Add access_token to the token right after signin
-    if (account?.accessToken) {
-      token.accessToken = account.accessToken
+  async jwt({ token, account }) {
+    // Persist the OAuth access_token to the token right after signin
+    if (account) {
+      token.accessToken = account.access_token
     }
     return token
   }
@@ -147,40 +123,29 @@ callbacks: {
 ```
 
 :::tip
-Use an if branch in jwt with checking for existence of any other params than token. If any of those exist, you call jwt for the first time.
-This is a good place to add for example an `access_token` to your jwt, if you want to.
-:::
-
-:::tip
-Check out the content of all the params in addition `token`, to see what info you have available on signin.
+Use an if branch to check for the existence of parameters (apart from `token`). If they exist, this means that the callback is being invoked for the first time (i.e. the user is being signed in). This is a good place to persist additional data like an `access_token` in the JWT. Subsequent invocations will only contain the `token` parameter.
 :::
 
 :::warning
-NextAuth.js does not limit how much data you can store in a JSON Web Token, however a ~**4096 byte limit** for all cookies on a domain is commonly imposed by browsers.
+NextAuth.js does not limit how much data you can store in a JSON Web Token, however a ~**4096 byte limit** per cookie is commonly imposed by browsers.
 
-If you need to persist a large amount of data, you will need to persist it elsewhere (e.g. in a database). You can store a key that can be used to look up that data in the `session()` callback.
+If you need to persist a large amount of data, you will need to persist it elsewhere (e.g. in a database). A common solution is to store a key in the cookie that can be used to look up the remaining data in the database, for example, in the `session()` callback. Opt into database persisted sessions by setting [`session: {jwt: false}`](/configuration/options#session).
 :::
 
 ## Session callback
 
-The session callback is called whenever a session is checked. By default, only a subset of the token is returned for increased security. If you want to make something available you added to the token through the `jwt()` callback, you have to explicitely forward it here to make it available to the client.
+The session callback is called whenever a session is checked. By default, only a subset of the token is returned for increased security. If you want to make something available you added to the token through the `jwt()` callback, you have to explicitly forward it here to make it available to the client.
 
 e.g. `getSession()`, `useSession()`, `/api/auth/session`
 
-* When using database sessions, the User object is passed as an argument.
-* When using JSON Web Tokens for sessions, the JWT payload is provided instead.
+- When using database sessions, the User object is passed as an argument.
+- When using JSON Web Tokens for sessions, the JWT payload is provided instead.
 
 ```js title="pages/api/auth/[...nextauth].js"
 ...
 callbacks: {
-  /**
-   * @param  {object} session      Session object
-   * @param  {object} token        User object    (if using database sessions)
-   *                               JSON Web Token (if not using database sessions)
-   * @return {object}              Session that will be returned to the client 
-   */
-  async session(session, token) {
-    // Add property to session, like an access_token from a provider.
+  async session({ session, token, user }) {
+    // Send properties to the client, like an access_token from a provider.
     session.accessToken = token.accessToken
     return session
   }
@@ -191,10 +156,6 @@ callbacks: {
 :::tip
 When using JSON Web Tokens the `jwt()` callback is invoked before the `session()` callback, so anything you add to the
 JSON Web Token will be immediately available in the session callback, like for example an `access_token` from a provider.
-:::
-
-:::tip
-To better represent its value, when using a JWT session, the second parameter should be called `token` (This is the same thing you return from the `jwt()` callback). If you use a database, call it `user`.
 :::
 
 :::warning

@@ -3,16 +3,49 @@ id: typescript
 title: TypeScript
 ---
 
-NextAuth.js comes with its own type definitions, so you can safely use it in your TypeScript projects. Even if you don't use TypeScript, IDEs like VSCode will pick this up, to provide you with a better developer experience. While you are typing, you will get suggestions about how certain objects/functions look like, and sometimes also links to documentation, examples and other useful resources.
+NextAuth.js comes with its own type definitions, so you can safely use it in your TypeScript projects. Even if you don't use TypeScript, IDEs like VSCode will pick this up, to provide you with a better developer experience. While you are typing, you will get suggestions about what certain objects/functions look like, and sometimes also links to documentation, examples and other useful resources.
 
 Check out the example repository showcasing how to use `next-auth` on a Next.js application with TypeScript:  
 https://github.com/nextauthjs/next-auth-typescript-example
 
-:::warning
-The types at [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) under the name of `@types/next-auth` are now deprecated, and not maintained anymore.
-:::
-
 ---
+
+## Adapters
+
+If you're writing your own custom Adapter, you can take advantage of the types to make sure your implementation conforms to what's expected:
+
+```ts
+import type { Adapter } from "next-auth/adapters"
+
+const MyAdapter: Adapter = () => {
+  return {
+    async getAdapter() {
+      return {
+        // your adapter methods here
+      }
+    },
+  }
+}
+```
+
+When writing your own custom Adapter in plain JavaScript, note that you can use **JSDoc** to get helpful editor hints and auto-completion like so:
+
+```js
+/** @type { import("next-auth/adapters").Adapter } */
+const MyAdapter = () => {
+  return {
+    async getAdapter() {
+      return {
+        // your adapter methods here
+      }
+    },
+  }
+}
+```
+
+:::note
+This will work in code editors with a strong TypeScript integration like VSCode or WebStorm. It might not work if you're using more lightweight editors like VIM or Atom.
+:::
 
 ## Module Augmentation
 
@@ -27,19 +60,19 @@ import NextAuth from "next-auth"
 
 export default NextAuth({
   callbacks: {
-    session(session, token) {
-      return session // The type here should match the one returned in `useSession()`
+    session({ session, token, user }) {
+      return session // The return type will match the one returned in `useSession()`
     },
   },
 })
 ```
 
 ```ts title="pages/index.ts"
-import { useSession } from "next-auth/client"
+import { useSession } from "next-auth/react"
 
 export default function IndexPage() {
-  // `session` should match `callbacks.session()` in `NextAuth()`
-  const [session] = useSession()
+  // `session` will match the returned value of `callbacks.session()` from `NextAuth()`
+  const { data: session } = useSession()
 
   return (
     // Your component
@@ -54,7 +87,7 @@ import NextAuth from "next-auth"
 
 declare module "next-auth" {
   /**
-   * Returned by `useSession`, `getSession` and received as a prop on the `Provider` React Context
+   * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
   interface Session {
     user: {

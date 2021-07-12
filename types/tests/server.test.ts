@@ -1,15 +1,10 @@
-import Providers, {
-  AppProvider,
-  EmailConfig,
-  OAuthConfig,
-} from "next-auth/providers"
-import { Adapter, AdapterInstance } from "next-auth/adapters"
+import Providers, { OAuthConfig } from "next-auth/providers"
+import { Adapter } from "next-auth/adapters"
 import NextAuth, * as NextAuthTypes from "next-auth"
 import { IncomingMessage, ServerResponse } from "http"
-import * as JWTType from "next-auth/jwt"
 import { Socket } from "net"
 import { NextApiRequest, NextApiResponse } from "internals/utils"
-import { AppOptions } from "internals"
+import { InternalOptions } from "internals"
 
 const req: NextApiRequest = Object.assign(new IncomingMessage(new Socket()), {
   query: {},
@@ -65,9 +60,9 @@ const exampleVerificationRequest = {
   expires: new Date(),
 }
 
-const MyAdapter: Adapter = () => {
+const MyAdapter: Adapter<Record<string, unknown>> = () => {
   return {
-    async getAdapter(appOptions: AppOptions) {
+    async getAdapter(appOptions: InternalOptions) {
       return {
         async createUser(profile) {
           return exampleUser
@@ -131,6 +126,8 @@ const MyAdapter: Adapter = () => {
   }
 }
 
+const client = {} // Create a fake db client
+
 const allConfig: NextAuthTypes.NextAuthOptions = {
   providers: [
     Providers.Twitter({
@@ -138,7 +135,6 @@ const allConfig: NextAuthTypes.NextAuthOptions = {
       clientSecret: "123",
     }),
   ],
-  database: "path/to/db",
   debug: true,
   secret: "my secret",
   session: {
@@ -157,16 +153,16 @@ const allConfig: NextAuthTypes.NextAuthOptions = {
   },
   pages: pageOptions,
   callbacks: {
-    async signIn(user, account, profile) {
+    async signIn({ user, account, email, credentials, profile }) {
       return true
     },
-    async redirect(url, baseUrl) {
+    async redirect({ url, baseUrl }) {
       return "path/to/foo"
     },
-    async session(session, userOrToken) {
-      return { ...session }
+    async session({ session, user, token }) {
+      return session
     },
-    async jwt(token, user, account, profile, isNewUser) {
+    async jwt({ token, user, account, profile, isNewUser }) {
       return token
     },
   },
@@ -180,17 +176,17 @@ const allConfig: NextAuthTypes.NextAuthOptions = {
     async createUser(message) {
       return undefined
     },
+    async updateUser(message) {
+      return undefined
+    },
     async linkAccount(message) {
       return undefined
     },
     async session(message) {
       return undefined
     },
-    async error(message) {
-      return undefined
-    },
   },
-  adapter: MyAdapter(),
+  adapter: MyAdapter(client),
   useSecureCookies: true,
   cookies: {
     sessionToken: {

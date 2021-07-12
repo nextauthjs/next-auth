@@ -1,4 +1,5 @@
 name: Release
+
 on:
   push:
     branches:
@@ -7,20 +8,69 @@ on:
       - "next"
       - "3.x"
   pull_request:
+
 jobs:
-  release:
-    name: "Release"
+  test:
+    name: Test
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Init
         uses: actions/checkout@v2
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: 14
-      - name: Install dependencies
+          node-version: 16
+      - name: Dependencies
         uses: bahmutov/npm-install@v1
-      - run: npx semantic-release@17
+      - name: Build
+        run: npm run build
+      - name: Run tests
+        run: npm test -- --coverage --verbose && npm run test:types
+      - name: Coverage
+        uses: codecov/codecov-action@v1
+        with:
+          directory: ./coverage
+          fail_ci_if_error: false
+  release-branch:
+    name: Publish branch
+    runs-on: ubuntu-latest
+    needs: test
+    if: ${{ github.event_name == 'push' }}
+    environment: Production
+    steps:
+      - name: Init
+        uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+      - name: Dependencies
+        uses: bahmutov/npm-install@v1
+      - name: Publish to npm and GitHub
+        run: npx semantic-release@17
         env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-          NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+  release-pr:
+    name: Publish PR
+    runs-on: ubuntu-latest
+    needs: test
+    if: ${{ github.event_name == 'pull_request' }}
+    environment: Preview
+    steps:
+      - name: Init
+        uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+      - name: Dependencies
+        uses: bahmutov/npm-install@v1
+      - name: Publish to npm
+        run: |
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
+          npm run version:pr
+          npm publish --access public --tag experimental
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          PR_NUMBER: ${{ github.event.number }}

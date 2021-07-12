@@ -1,5 +1,6 @@
 import { Profile, TokenSet, User } from "."
-import { Awaitable } from "./internals/utils"
+import { Awaitable, NextApiRequest } from "./internals/utils"
+import { Options as SMTPConnectionOptions } from 'nodemailer/lib/smtp-connection'
 
 export type ProviderType = "oauth" | "email" | "credentials"
 
@@ -13,7 +14,7 @@ export interface CommonProviderOptions {
  * OAuth Provider
  */
 
-type ProtectionType = "pkce" | "state" | "both" | "none"
+type ChecksType = "pkce" | "state" | "both" | "none"
 
 /**
  * OAuth provider options
@@ -33,18 +34,13 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
   authorizationUrl: string
   profileUrl: string
   profile(profile: P, tokens: TokenSet): Awaitable<User & { id: string }>
-  protection?: ProtectionType | ProtectionType[]
+  checks?: ChecksType | ChecksType[]
   clientId: string
   clientSecret:
     | string
     // TODO: only allow for Apple
     | Record<"appleId" | "teamId" | "privateKey" | "keyId", string>
   idToken?: boolean
-  /**
-   * @deprecated Will be removed in an upcoming major release. Use `protection: ["state"]` instead.
-   */
-  state?: boolean
-
   // TODO: only allow for BattleNet
   region?: string
   // TODO: only allow for some
@@ -57,13 +53,16 @@ export type OAuthProviderType =
   | "Apple"
   | "Atlassian"
   | "Auth0"
+  | "AzureAD"
   | "AzureADB2C"
   | "Basecamp"
   | "BattleNet"
   | "Box"
   | "Bungie"
   | "Cognito"
+  | "Coinbase"
   | "Discord"
+  | "Dropbox"
   | "EVEOnline"
   | "Facebook"
   | "FACEIT"
@@ -81,6 +80,7 @@ export type OAuthProviderType =
   | "Mailchimp"
   | "MailRu"
   | "Medium"
+  | "Naver"
   | "Netlify"
   | "Okta"
   | "Osso"
@@ -93,8 +93,10 @@ export type OAuthProviderType =
   | "Twitter"
   | "VK"
   | "WordPress"
+  | "WorkOS"
   | "Yandex"
   | "Zoho"
+  | "Zoom"
 
 export type OAuthProvider = (options: Partial<OAuthConfig>) => OAuthConfig
 
@@ -109,29 +111,23 @@ interface CredentialInput {
   placeholder?: string
 }
 
-interface CredentialsConfig<C extends Record<string, CredentialInput> = {}>
+export type Credentials = Record<string, CredentialInput>
+
+interface CredentialsConfig<C extends Credentials = {}>
   extends CommonProviderOptions {
   type: "credentials"
   credentials: C
-  authorize(credentials: Record<keyof C, string>): Awaitable<User | null>
+  authorize(
+    credentials: Record<keyof C, string>,
+    req: NextApiRequest
+  ): Awaitable<User | null>
 }
 
-export type CredentialsProvider = (
-  options: Partial<CredentialsConfig>
-) => CredentialsConfig
+export type CredentialsProvider = <C extends Record<string, CredentialInput>>(
+  options: Partial<CredentialsConfig<C>>
+) => CredentialsConfig<C>
 
 export type CredentialsProviderType = "Credentials"
-
-/** Email Provider */
-
-export interface EmailConfigServerOptions {
-  host: string
-  port: number
-  auth: {
-    user: string
-    pass: string
-  }
-}
 
 export type SendVerificationRequest = (params: {
   identifier: string
@@ -144,7 +140,7 @@ export type SendVerificationRequest = (params: {
 export interface EmailConfig extends CommonProviderOptions {
   type: "email"
   // TODO: Make use of https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html
-  server: string | EmailConfigServerOptions
+  server: string | SMTPConnectionOptions
   /** @default "NextAuth <no-reply@example.com>" */
   from?: string
   /**

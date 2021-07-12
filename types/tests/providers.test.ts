@@ -19,12 +19,12 @@ Providers.Email({
   from: "path/from",
 })
 
-// $ExpectType CredentialsConfig<{}>
+// $ExpectType CredentialsConfig<{ username: { label: string; type: string; }; password: { label: string; type: string; }; }>
 Providers.Credentials({
   id: "login",
   name: "account",
   credentials: {
-    user: {
+    username: {
       label: "Password",
       type: "password",
     },
@@ -33,7 +33,7 @@ Providers.Credentials({
       type: "password",
     },
   },
-  authorize: async (credentials) => {
+  authorize: async ({username, password}) => {
     const user = {
       /* fetched user */
     }
