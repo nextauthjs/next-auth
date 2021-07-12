@@ -21,7 +21,7 @@ The message will be an object and contain:
 
 - `user` (from your adapter or from the provider if a `credentials` type provider)
 - `account` (from your adapter or the provider)
-- `profile` (from the provider, resolves to `null` on `credentials` type provider)
+- `profile` (from the provider, is `undefined` on `credentials` provider, use `user` instead)
 - `isNewUser` (whether your adapter had a user for this account already)
 
 ### signOut

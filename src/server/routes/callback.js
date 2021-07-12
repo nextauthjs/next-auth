@@ -396,7 +396,7 @@ export default async function callback(req, res) {
       ...cookies.sessionToken.options,
     })
 
-    await events.signIn({ user, account, profile: null })
+    await events.signIn({ user, account })
 
     return res.redirect(callbackUrl || baseUrl)
   }

@@ -394,7 +394,7 @@ export interface EventCallbacks {
   signIn(message: {
     user: User
     account: Account
-    profile: Profile | null
+    profile?: Profile
     isNewUser?: boolean
   }): Awaitable<void>
   /**
