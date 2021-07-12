@@ -1,5 +1,4 @@
 import * as cookie from "../lib/cookie"
-import adapterErrorHandler from "../../adapters/error-handler"
 
 /**
  * Handle requests to /api/auth/signout
@@ -21,10 +20,7 @@ export default async function signout(req, res) {
     }
   } else {
     // Get session from database
-    const { getSession, deleteSession } = adapterErrorHandler(
-      await adapter.getAdapter(req.options),
-      logger
-    )
+    const { getSession, deleteSession } = adapter
 
     try {
       // Dispatch signout event

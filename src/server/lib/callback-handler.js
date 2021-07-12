@@ -1,5 +1,4 @@
 import { AccountNotLinkedError } from "../../lib/errors"
-import adapterErrorHandler from "../../adapters/error-handler"
 
 /**
  * This function handles the complex flow of signing users in, and either creating,
@@ -57,7 +56,7 @@ export default async function callbackHandler(
     createSession,
     getSession,
     deleteSession,
-  } = adapterErrorHandler(await adapter.getAdapter(options), options.logger)
+  } = adapter
 
   let session = null
   let user = null

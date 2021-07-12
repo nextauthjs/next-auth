@@ -1,6 +1,5 @@
 import getAuthorizationUrl from "../lib/signin/oauth"
 import emailSignin from "../lib/signin/email"
-import adapterErrorHandler from "../../adapters/error-handler"
 
 /**
  * Handle requests to /api/auth/signin
@@ -28,10 +27,7 @@ export default async function signin(req, res) {
       logger.error("EMAIL_REQUIRES_ADAPTER_ERROR")
       return res.redirect(`${baseUrl}${basePath}/error?error=Configuration`)
     }
-    const { getUserByEmail } = adapterErrorHandler(
-      await adapter.getAdapter(req.options),
-      logger
-    )
+    const { getUserByEmail } = adapter
 
     // Note: Technically the part of the email address local mailbox element
     // (everything before the @ symbol) should be treated as 'case sensitive'

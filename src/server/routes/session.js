@@ -1,5 +1,4 @@
 import * as cookie from "../lib/cookie"
-import adapterErrorHandler from "../../adapters/error-handler"
 
 /**
  * Return a session object (without any private fields)
@@ -71,10 +70,7 @@ export default async function session(req, res) {
     }
   } else {
     try {
-      const { getUser, getSession, updateSession } = adapterErrorHandler(
-        await adapter.getAdapter(req.options),
-        logger
-      )
+      const { getUser, getSession, updateSession } = adapter
       const session = await getSession(sessionToken)
       if (session) {
         // Trigger update to session object to update session expiry

@@ -1,7 +1,6 @@
 import oAuthCallback from "../lib/oauth/callback"
 import callbackHandler from "../lib/callback-handler"
 import * as cookie from "../lib/cookie"
-import adapterErrorHandler from "../../adapters/error-handler"
 
 /**
  * Handle callbacks from login services
@@ -56,14 +55,13 @@ export default async function callback(req, res) {
         // (that just means it's a new user signing in for the first time).
         let userOrProfile = profile
         if (adapter) {
-          const { getUserByProviderAccountId } = adapterErrorHandler(
-            await adapter.getAdapter(req.options),
-            logger
-          )
+          const { getUserByProviderAccountId } = adapter
+
           const userFromProviderAccountId = await getUserByProviderAccountId(
             account.provider,
             account.id
           )
+
           if (userFromProviderAccountId) {
             userOrProfile = userFromProviderAccountId
           }
@@ -180,7 +178,8 @@ export default async function callback(req, res) {
         getVerificationRequest,
         deleteVerificationRequest,
         getUserByEmail,
-      } = adapterErrorHandler(await adapter.getAdapter(req.options), logger)
+      } = adapter
+
       const verificationToken = req.query.token
       const email = req.query.email
 
