@@ -125,7 +125,7 @@ export default async function callback(req, res) {
         } else {
           // Save Session Token in cookie
           cookie.set(res, cookies.sessionToken.name, session.sessionToken, {
-            expires: session.expires || null,
+            expires: session.expires,
             ...cookies.sessionToken.options,
           })
         }
@@ -268,7 +268,7 @@ export default async function callback(req, res) {
       } else {
         // Save Session Token in cookie
         cookie.set(res, cookies.sessionToken.name, session.sessionToken, {
-          expires: session.expires || null,
+          expires: session.expires,
           ...cookies.sessionToken.options,
         })
       }
