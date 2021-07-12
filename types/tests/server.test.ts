@@ -1,5 +1,5 @@
 import Providers, { OAuthConfig } from "next-auth/providers"
-import { Adapter } from "next-auth/adapters"
+import { Adapter, AdapterSession, AdapterUser } from "next-auth/adapters"
 import NextAuth, * as NextAuthTypes from "next-auth"
 import { IncomingMessage, ServerResponse } from "http"
 import { Socket } from "net"
@@ -40,13 +40,13 @@ const simpleConfig = {
   ],
 }
 
-const exampleUser: NextAuthTypes.User = {
+const exampleUser: AdapterUser = {
   name: "",
   image: "",
   email: "",
 }
 
-const exampleSession: NextAuthTypes.Session = {
+const exampleSession: AdapterSession = {
   expires: new Date(),
 }
 

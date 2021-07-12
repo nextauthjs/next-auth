@@ -6,6 +6,10 @@ export interface AdapterUser extends User {
   emailVerified?: Date | null
 }
 
+export interface AdapterSession extends Omit<Session, "expires"> {
+  expires: Date
+}
+
 /**
  * Using a custom adapter you can connect to any database backend or even several different databases.
  * Custom adapters created and maintained by our community can be found in the adapters repository.
@@ -70,9 +74,12 @@ export interface Adapter {
     providerId: string,
     providerAccountId: string
   ): Awaitable<void>
-  createSession(user: AdapterUser): Awaitable<Session>
-  getSession(sessionId: string): Awaitable<Session | null>
-  updateSession(session: Session, force?: boolean): Awaitable<Session | null>
+  createSession(user: AdapterUser): Awaitable<AdapterSession>
+  getSession(sessionId: string): Awaitable<AdapterSession | null>
+  updateSession(
+    session: AdapterSession,
+    force?: boolean
+  ): Awaitable<AdapterSession | null>
   deleteSession(sessionId: string): Awaitable<void>
   createVerificationRequest?(
     identifier: string,

@@ -87,7 +87,7 @@ export default async function session(req, res) {
             image: user.image,
           },
           accessToken: session.accessToken,
-          expires: session.expires,
+          expires: session.expires.toISOString(),
         }
 
         // Pass Session through to the session callback

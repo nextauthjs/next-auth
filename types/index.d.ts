@@ -1,7 +1,3 @@
-// Minimum TypeScript Version: 3.6
-
-/// <reference types="node" />
-
 import { Adapter } from "./adapters"
 import { JWTOptions, JWT } from "./jwt"
 import { AppProviders, Credentials } from "./providers"
@@ -431,13 +427,15 @@ export interface PagesOptions {
   newUser: string
 }
 
+export type ISODateString = string
+
 export interface DefaultSession extends Record<string, unknown> {
   user?: {
     name?: string | null
     email?: string | null
     image?: string | null
   }
-  expires: Date
+  expires: ISODateString
 }
 
 /**
