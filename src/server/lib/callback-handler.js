@@ -102,12 +102,12 @@ export default async function callbackHandler(
       // Update emailVerified property on the user object
       const currentDate = new Date()
       user = await updateUser({ ...userByEmail, emailVerified: currentDate })
-      await events.updateUser({ user })
+      await events.updateUser?.({ user })
     } else {
       // Create user account if there isn't one for the email address already
       const currentDate = new Date()
       user = await createUser({ ...profile, emailVerified: currentDate })
-      await events.createUser({ user })
+      await events.createUser?.({ user })
       isNewUser = true
     }
 
@@ -166,7 +166,7 @@ export default async function callbackHandler(
           providerAccount.accessToken,
           providerAccount.accessTokenExpires
         )
-        await events.linkAccount({ user, providerAccount })
+        await events.linkAccount?.({ user, providerAccount })
 
         // As they are already signed in, we don't need to do anything after linking them
         return {
@@ -213,7 +213,7 @@ export default async function callbackHandler(
       // create a new account for the user, link it to the OAuth acccount and
       // create a new session for them so they are signed in with it.
       user = await createUser(profile)
-      await events.createUser({ user })
+      await events.createUser?.({ user })
 
       await linkAccount(
         user.id,
@@ -224,7 +224,7 @@ export default async function callbackHandler(
         providerAccount.accessToken,
         providerAccount.accessTokenExpires
       )
-      await events.linkAccount({ user, providerAccount })
+      await events.linkAccount?.({ user, providerAccount })
 
       session = useJwtSession ? {} : await createSession(user)
       isNewUser = true

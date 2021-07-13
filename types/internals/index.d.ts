@@ -42,9 +42,9 @@ export interface InternalOptions {
   debug: boolean
   logger: LoggerInstance
   session: Required<SessionOptions>
-  pages: PagesOptions
+  pages: Partial<PagesOptions>
   jwt: JWTOptions
-  events: EventCallbacks
+  events: Partial<EventCallbacks>
   adapter: Adapter
   callbacks: CallbacksOptions
   cookies: CookiesOptions

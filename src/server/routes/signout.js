@@ -14,7 +14,7 @@ export default async function signout(req, res) {
     // Dispatch signout event
     try {
       const decodedJwt = await jwt.decode({ ...jwt, token: sessionToken })
-      await events.signOut({ token: decodedJwt })
+      await events.signOut?.({ token: decodedJwt })
     } catch (error) {
       // Do nothing if decoding the JWT fails
     }
@@ -25,7 +25,7 @@ export default async function signout(req, res) {
     try {
       // Dispatch signout event
       const session = await getSession(sessionToken)
-      await events.signOut({ session })
+      await events.signOut?.({ session })
     } catch (error) {
       // Do nothing if looking up the session fails
     }
