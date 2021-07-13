@@ -49,7 +49,7 @@ export default NextAuth({
 
 ## Schema
 
-Run the following commands inside of the `Shell` tab in the Fauna dashboard to setup the appropriate collected and indexes.
+Run the following commands inside of the `Shell` tab in the Fauna dashboard to setup the appropriate collections and indexes.
 
 ```javascript
 CreateCollection({ name: "accounts" })
