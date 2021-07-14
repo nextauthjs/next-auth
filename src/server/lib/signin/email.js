@@ -1,5 +1,6 @@
 // @ts-check
-import { createHash, randomBytes } from "crypto"
+import { randomBytes } from "crypto"
+import { hashToken } from "../utils"
 
 /**
  * @typedef {import("types/providers").EmailConfig} EmailConfig
@@ -45,18 +46,4 @@ export default async function email(identifier, options) {
     provider,
     token,
   })
-}
-
-/**
- * @param {string} token
- * @param {import("types/internals").InternalOptions<EmailConfig>} options
- */
-export function hashToken(token, options) {
-  const { provider, secret } = options
-  return (
-    createHash("sha256")
-      // Prefer provider specific secret, but use default secret if none specified
-      .update(`${token}${provider.secret ?? secret}`)
-      .digest("hex")
-  )
 }

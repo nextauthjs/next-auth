@@ -1,7 +1,7 @@
 import oAuthCallback from "../lib/oauth/callback"
 import callbackHandler from "../lib/callback-handler"
 import * as cookie from "../lib/cookie"
-import { hashToken } from "../lib/signin/email"
+import { hashToken } from "../lib/utils"
 
 /**
  * Handle callbacks from login services
