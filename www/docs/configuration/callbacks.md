@@ -70,7 +70,7 @@ callbacks: {
   
   You can check for the `verificationRequest` property to avoid sending emails to addresses or domains on a blocklist (or to only explicitly generate them for email address in an allow list).
 
-* When using the **Credentials Provider** the `user` object is the response returned from the `authorization` callback and the `profile` object is the raw body of the `HTTP POST` submission.
+* When using the **Credentials Provider** the `user` object is the response returned from the `authorize` callback and the `profile` object is the raw body of the `HTTP POST` submission.
 
 :::note
 When using NextAuth.js with a database, the User object will be either a user object from the database (including the User ID) if the user has signed in before or a simpler prototype user object (i.e. name, email, image) for users who have not signed in before.
