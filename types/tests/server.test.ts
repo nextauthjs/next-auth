@@ -50,13 +50,6 @@ const exampleSession: AdapterSession = {
   expires: new Date(),
 }
 
-const exampleVerificationRequest = {
-  id: "",
-  identifier: "",
-  token: "",
-  expires: new Date(),
-}
-
 interface Client {
   c(): void
   r(): void
@@ -82,15 +75,7 @@ function MyAdapter(client: Client): Adapter {
     async updateUser(user) {
       return exampleUser
     },
-    async linkAccount(
-      userId,
-      providerId,
-      providerType,
-      providerAccountId,
-      refreshToken,
-      accessToken,
-      accessTokenExpires
-    ) {
+    async linkAccount(userId, {}) {
       return undefined
     },
     async createSession(user) {
@@ -105,19 +90,11 @@ function MyAdapter(client: Client): Adapter {
     async deleteSession(sessionToken) {
       return undefined
     },
-    async createVerificationRequest(email, url, token, secret, provider) {
+    async createVerificationToken(params) {
       return undefined
     },
-    async getVerificationRequest(email, verificationToken, secret, provider) {
-      return exampleVerificationRequest
-    },
-    async deleteVerificationRequest(
-      email,
-      verificationToken,
-      secret,
-      provider
-    ) {
-      return undefined
+    async useVerificationToken(params) {
+      return null
     },
   }
 }
