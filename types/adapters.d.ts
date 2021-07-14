@@ -3,6 +3,7 @@ import { Awaitable } from "./internals/utils"
 
 export interface AdapterUser extends User {
   id: string
+  emailVerified: Date | null
 }
 
 export interface AdapterSession {
