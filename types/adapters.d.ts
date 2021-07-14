@@ -10,7 +10,6 @@ export interface AdapterSession extends Omit<Session, "expires"> {
 }
 
 export interface VerificationToken {
-  id: string
   identifier: string
   url: string
   expires: Date
@@ -80,9 +79,7 @@ export interface Adapter {
     force?: boolean
   ): Awaitable<AdapterSession | null>
   deleteSession(sessionId: string): Awaitable<void>
-  createVerificationToken?(
-    params: Omit<VerificationToken, "id">
-  ): Awaitable<void>
+  createVerificationToken?(params: VerificationToken): Awaitable<void>
   /**
    * Return verification token from the database
    * and delete it so it cannot be used again.
