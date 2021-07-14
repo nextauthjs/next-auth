@@ -12,7 +12,7 @@ import { Provider } from "../providers"
 import { JWTOptions } from "../jwt"
 import { Adapter } from "../adapters"
 
-type InternalProvider = Provider & {
+export type InternalProvider = Provider & {
   signinUrl: string
   callbackUrl: string
 }
