@@ -1,4 +1,5 @@
 import { AccountNotLinkedError } from "../../lib/errors"
+import { fromNow } from "./utils"
 
 /**
  * This function handles the complex flow of signing users in, and either creating,
@@ -112,7 +113,12 @@ export default async function callbackHandler(
     }
 
     // Create new session
-    session = useJwtSession ? {} : await createSession(user)
+    session = useJwtSession
+      ? {}
+      : await createSession({
+          userId: user.id,
+          expires: fromNow(options.session.maxAge),
+        })
 
     return {
       session,
@@ -128,10 +134,7 @@ export default async function callbackHandler(
     if (userByProviderAccountId) {
       if (isSignedIn) {
         // If the user is already signed in with this account, we don't need to do anything
-        // Note: These are cast as strings here to ensure they match as in
-        // some flows (e.g. JWT with a database) one of the values might be a
-        // string and the other might be an ObjectID and would otherwise fail.
-        if (`${userByProviderAccountId.id}` === `${user.id}`) {
+        if (userByProviderAccountId.id === user.id) {
           return {
             session,
             user,
@@ -147,7 +150,11 @@ export default async function callbackHandler(
       // associated with a valid user then create session to sign the user in.
       session = useJwtSession
         ? {}
-        : await createSession(userByProviderAccountId)
+        : await createSession({
+            userId: userByProviderAccountId.id,
+            expires: fromNow(options.session.maxAge),
+          })
+
       return {
         session,
         user: userByProviderAccountId,
@@ -204,7 +211,7 @@ export default async function callbackHandler(
       // If no account matching the same [provider].id or .email exists, we can
       // create a new account for the user, link it to the OAuth acccount and
       // create a new session for them so they are signed in with it.
-      user = await createUser(profile)
+      user = await createUser({ ...profile, emailVerified: null })
       await events.createUser?.({ user })
 
       await linkAccount(
@@ -218,12 +225,17 @@ export default async function callbackHandler(
       )
       await events.linkAccount?.({ user, providerAccount })
 
-      session = useJwtSession ? {} : await createSession(user)
-      isNewUser = true
+      session = useJwtSession
+        ? {}
+        : await createSession({
+            userId: user.id,
+            expires: fromNow(options.session.maxAge),
+          })
+
       return {
         session,
         user,
-        isNewUser,
+        isNewUser: true,
       }
     }
   }

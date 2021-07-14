@@ -1,11 +1,13 @@
-import { User, Session, Account } from "."
+import { Account, User } from "."
 import { Awaitable } from "./internals/utils"
 
 export interface AdapterUser extends User {
-  emailVerified?: Date | null
+  id: string
 }
 
-export interface AdapterSession extends Omit<Session, "expires"> {
+export interface AdapterSession {
+  id: string
+  userId: string
   expires: Date
 }
 
@@ -71,7 +73,11 @@ export interface Adapter {
     providerId: string,
     providerAccountId: string
   ): Awaitable<void>
-  createSession(user: AdapterUser): Awaitable<AdapterSession>
+  /** Creates a session for the user and returns it. */
+  createSession(params: {
+    userId: string
+    expires: Date
+  }): Awaitable<AdapterSession>
   getSession(sessionId: string): Awaitable<AdapterSession | null>
   updateSession(
     session: AdapterSession,
