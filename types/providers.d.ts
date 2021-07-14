@@ -88,6 +88,7 @@ export type OAuthProviderType =
   | "Naver"
   | "Netlify"
   | "Okta"
+  | "OneLogin"
   | "Osso"
   | "Reddit"
   | "Salesforce"
