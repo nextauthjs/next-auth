@@ -1,5 +1,4 @@
-import { User, Session } from "."
-import { EmailConfig } from "./providers"
+import { User, Session, Account } from "."
 import { Awaitable } from "./internals/utils"
 
 export interface AdapterUser extends User {
@@ -59,15 +58,7 @@ export interface Adapter {
   updateUser(user: AdapterUser): Awaitable<AdapterUser>
   /** @todo Implement */
   deleteUser?(userId: string): Awaitable<void>
-  linkAccount(
-    userId: string,
-    providerId: string,
-    providerType: string,
-    providerAccountId: string,
-    refreshToken?: string,
-    accessToken?: string,
-    accessTokenExpires?: null
-  ): Awaitable<void>
+  linkAccount(userId: string, account: Account): Awaitable<void>
   /** @todo Implement */
   unlinkAccount?(
     userId: string,

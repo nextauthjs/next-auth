@@ -157,15 +157,7 @@ export default async function callbackHandler(
       if (isSignedIn) {
         // If the user is already signed in and the OAuth account isn't already associated
         // with another user account then we can go ahead and link the accounts safely.
-        await linkAccount(
-          user.id,
-          providerAccount.provider,
-          providerAccount.type,
-          providerAccount.id,
-          providerAccount.refreshToken,
-          providerAccount.accessToken,
-          providerAccount.accessTokenExpires
-        )
+        await linkAccount(user.id, providerAccount)
         await events.linkAccount?.({ user, providerAccount })
 
         // As they are already signed in, we don't need to do anything after linking them
