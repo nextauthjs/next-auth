@@ -39,9 +39,8 @@ export interface VerificationToken {
  *
  * _(Required to support email / passwordless sign in)_
  *
- * - `createVerificationRequest`
- * - `getVerificationRequest`
- * - `deleteVerificationRequest`
+ * - `createVerificationToken`
+ * - `useVerificationToken`
  *
  * **Unimplemented methods**
  *

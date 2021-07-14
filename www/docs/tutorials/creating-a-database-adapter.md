@@ -32,9 +32,8 @@ These methods are required for all sign in flows:
 
 These methods are required to support email / passwordless sign in:
 
-* createVerificationRequest
-* getVerificationRequest
-* deleteVerificationRequest
+* createVerificationToken
+* useVerificationToken
 
 ### Unimplemented methods
 
@@ -71,15 +70,7 @@ export default function MyAdapter(client, options = {}) {
     async deleteUser (userId) {
       return null
     },
-    async linkAccount (
-      userId,
-      providerId,
-      providerType,
-      providerAccountId,
-      refreshToken,
-      accessToken,
-      accessTokenExpires
-    ) {
+    async linkAccount (userId, account) {
       return null
     },
     async unlinkAccount (
@@ -95,40 +86,26 @@ export default function MyAdapter(client, options = {}) {
     async getSession (sessionToken) {
       return null
     },
-    async updateSession (
-      session,
-      force
-    ) {
+    async updateSession (session, force) {
       return null
     },
     async deleteSession (sessionToken) {
       return null
     },
-    async createVerificationRequest (
+    async createVerificationToken ({
       identifier,
       url,
       token,
-      secret,
-      provider
-    ) {
+      expires
+    }) {
       return null
     },
-    async getVerificationRequest (
+    async useVerificationToken ({
       identifier,
       token,
-      secret,
-      provider
-    ) {
+    }) {
       return null
     },
-    async deleteVerificationRequest (
-      identifier,
-      token,
-      secret,
-      provider
-    ) {
-      return null
-    }
   }
 }
 ```
