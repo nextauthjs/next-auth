@@ -9,6 +9,14 @@ export interface AdapterSession extends Omit<Session, "expires"> {
   expires: Date
 }
 
+export interface VerificationToken {
+  id: string
+  identifier: string
+  url: string
+  expires: Date
+  token: string
+}
+
 /**
  * Using a custom adapter you can connect to any database backend or even several different databases.
  * Custom adapters created and maintained by our community can be found in the adapters repository.
@@ -72,28 +80,15 @@ export interface Adapter {
     force?: boolean
   ): Awaitable<AdapterSession | null>
   deleteSession(sessionId: string): Awaitable<void>
-  createVerificationRequest?(
-    identifier: string,
-    url: string,
-    token: string,
-    secret: string,
-    provider: EmailConfig & { maxAge: number; from: string }
+  createVerificationToken?(
+    params: Omit<VerificationToken, "id">
   ): Awaitable<void>
-  getVerificationRequest?(
-    identifier: string,
-    verificationToken: string,
-    secret: string,
-    provider: Required<EmailConfig>
-  ): Awaitable<{
-    id: string
+  /**
+   * Return verification token from the database
+   * and delete it so it cannot be used again.
+   */
+  useVerificationToken?(params: {
     identifier: string
     token: string
-    expires: Date
-  } | null>
-  deleteVerificationRequest?(
-    identifier: string,
-    verificationToken: string,
-    secret: string,
-    provider: Required<EmailConfig>
-  ): Awaitable<void>
+  }): Awaitable<VerificationToken | null>
 }

@@ -1,6 +1,7 @@
 import oAuthCallback from "../lib/oauth/callback"
 import callbackHandler from "../lib/callback-handler"
 import * as cookie from "../lib/cookie"
+import { hashToken } from "../lib/signin/email"
 
 /**
  * Handle callbacks from login services
@@ -12,7 +13,6 @@ export default async function callback(req, res) {
     adapter,
     baseUrl,
     basePath,
-    secret,
     cookies,
     callbackUrl,
     pages,
@@ -170,45 +170,38 @@ export default async function callback(req, res) {
   } else if (provider.type === "email") {
     try {
       if (!adapter) {
-        logger.error("EMAIL_REQUIRES_ADAPTER_ERROR")
+        logger.error(
+          "EMAIL_REQUIRES_ADAPTER_ERROR",
+          new Error("E-mail login requires an adapter but it was undefined")
+        )
         return res.redirect(`${baseUrl}${basePath}/error?error=Configuration`)
       }
 
-      const {
-        getVerificationRequest,
-        deleteVerificationRequest,
-        getUserByEmail,
-      } = adapter
+      const { useVerificationToken, getUserByEmail } = adapter
 
-      const verificationToken = req.query.token
-      const email = req.query.email
+      const token = req.query.token
+      const identifier = req.query.email
 
-      // Verify email and verification token exist in database
-      const invite = await getVerificationRequest(
-        email,
-        verificationToken,
-        secret,
-        provider
+      const used = Boolean(
+        await useVerificationToken({
+          identifier,
+          token: hashToken(token, req.options),
+        })
       )
-      if (!invite) {
+
+      if (!used) {
         return res.redirect(`${baseUrl}${basePath}/error?error=Verification`)
       }
 
-      // If verification token is valid, delete verification request token from
-      // the database so it cannot be used again
-      await deleteVerificationRequest(
-        email,
-        verificationToken,
-        secret,
-        provider
-      )
-
       // If is an existing user return a user object (otherwise use placeholder)
-      const profile = (await getUserByEmail(email)) || { email }
+      const profile = (await getUserByEmail(identifier)) || {
+        email: identifier,
+      }
+
       const account = {
         id: provider.id,
         type: "email",
-        providerAccountId: email,
+        providerAccountId: identifier,
       }
 
       // Check if user is allowed to sign in
@@ -216,7 +209,7 @@ export default async function callback(req, res) {
         const signInCallbackResponse = await callbacks.signIn({
           user: profile,
           account,
-          email: { email },
+          email: { email: identifier },
         })
         if (!signInCallbackResponse) {
           return res.redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)

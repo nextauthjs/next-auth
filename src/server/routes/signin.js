@@ -3,8 +3,7 @@ import emailSignin from "../lib/signin/email"
 
 /**
  * Handle requests to /api/auth/signin
- * @param {import("types/internals").NextAuthRequest} req
- * @param {import("types/internals").NextAuthResponse} res
+ * @type {import("types/internals").NextAuthApiHandler}
  */
 export default async function signin(req, res) {
   const { provider, baseUrl, basePath, adapter, callbacks, logger } =
@@ -24,7 +23,10 @@ export default async function signin(req, res) {
     }
   } else if (provider.type === "email" && req.method === "POST") {
     if (!adapter) {
-      logger.error("EMAIL_REQUIRES_ADAPTER_ERROR")
+      logger.error(
+        "EMAIL_REQUIRES_ADAPTER_ERROR",
+        new Error("E-mail login requires an adapter but it was undefined")
+      )
       return res.redirect(`${baseUrl}${basePath}/error?error=Configuration`)
     }
     const { getUserByEmail } = adapter
@@ -54,22 +56,23 @@ export default async function signin(req, res) {
       }
     } catch (error) {
       return res.redirect(
-        `${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`
+        `${baseUrl}${basePath}/error?${new URLSearchParams({ error })}}`
       )
     }
 
     try {
-      await emailSignin(email, provider, req.options)
+      await emailSignin(email, req.options)
     } catch (error) {
       logger.error("SIGNIN_EMAIL_ERROR", error)
       return res.redirect(`${baseUrl}${basePath}/error?error=EmailSignin`)
     }
 
-    return res.redirect(
-      `${baseUrl}${basePath}/verify-request?provider=${encodeURIComponent(
-        provider.id
-      )}&type=${encodeURIComponent(provider.type)}`
-    )
+    const params = new URLSearchParams({
+      provider: provider.id,
+      type: provider.type,
+    })
+    const url = `${baseUrl}${basePath}/verify-request?${params}`
+    return res.redirect(url)
   }
   return res.redirect(`${baseUrl}${basePath}/signin`)
 }

@@ -1,6 +1,6 @@
 import { Adapter } from "./adapters"
 import { JWTOptions, JWT } from "./jwt"
-import { AppProviders, Credentials } from "./providers"
+import { Provider, Credentials } from "./providers"
 import {
   Awaitable,
   NextApiRequest,
@@ -23,7 +23,7 @@ export interface NextAuthOptions {
    *
    * [Documentation](https://next-auth.js.org/configuration/options#providers) | [Providers documentation](https://next-auth.js.org/configuration/providers)
    */
-  providers: AppProviders
+  providers: Provider[]
   /**
    * A random string used to hash tokens, sign cookies and generate cryptographic keys.
    * If not specified is uses a hash of all configuration options, including Client ID / Secrets for entropy.

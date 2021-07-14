@@ -8,12 +8,17 @@ import {
   SessionOptions,
   Theme,
 } from ".."
-import { AppProvider } from "../providers"
+import { Provider } from "../providers"
 import { JWTOptions } from "../jwt"
 import { Adapter } from "../adapters"
 
-export interface InternalOptions {
-  providers: AppProvider[]
+type InternalProvider = Provider & {
+  signinUrl: string
+  callbackUrl: string
+}
+
+export interface InternalOptions<P extends InternalProvider = never> {
+  providers: InternalProvider[]
   baseUrl: string
   basePath: string
   action:
@@ -34,7 +39,7 @@ export interface InternalOptions {
      */
     code_challenge_method?: "S256"
   }
-  provider?: AppProvider
+  provider: P
   csrfToken?: string
   csrfTokenVerified?: boolean
   secret: string
