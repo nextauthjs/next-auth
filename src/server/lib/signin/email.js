@@ -52,8 +52,11 @@ export default async function email(identifier, options) {
  * @param {import("types/internals").InternalOptions<EmailConfig>} options
  */
 export function hashToken(token, options) {
-  const { provider } = options
-  // Prefer provider specific secret, but use default secret if none specified
-  const secret = provider.secret ?? options.secret
-  return createHash("sha256").update(`${token}${secret}`).digest("hex")
+  const { provider, secret } = options
+  return (
+    createHash("sha256")
+      // Prefer provider specific secret, but use default secret if none specified
+      .update(`${token}${provider.secret ?? secret}`)
+      .digest("hex")
+  )
 }
