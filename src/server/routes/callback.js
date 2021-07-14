@@ -182,14 +182,12 @@ export default async function callback(req, res) {
       const token = req.query.token
       const identifier = req.query.email
 
-      const used = Boolean(
-        await useVerificationToken({
-          identifier,
-          token: hashToken(token, req.options),
-        })
-      )
+      const invite = await useVerificationToken({
+        identifier,
+        token: hashToken(token, req.options),
+      })
 
-      if (!used) {
+      if (!invite) {
         return res.redirect(`${baseUrl}${basePath}/error?error=Verification`)
       }
 
