@@ -187,7 +187,8 @@ export default async function callback(req, res) {
         token: hashToken(token, req.options),
       })
 
-      if (!invite) {
+      const invalidInvite = !invite || invite.expires.valueOf() < Date.now()
+      if (invalidInvite) {
         return res.redirect(`${baseUrl}${basePath}/error?error=Verification`)
       }
 
