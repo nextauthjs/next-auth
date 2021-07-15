@@ -1,5 +1,5 @@
 import { AccountNotLinkedError } from "../../lib/errors"
-import { fromNow } from "./utils"
+import { fromDate } from "./utils"
 
 /**
  * This function handles the complex flow of signing users in, and either creating,
@@ -118,7 +118,7 @@ export default async function callbackHandler(
       ? {}
       : await createSession({
           userId: user.id,
-          expires: fromNow(options.session.maxAge),
+          expires: fromDate(options.session.maxAge),
         })
 
     return {
@@ -153,7 +153,7 @@ export default async function callbackHandler(
         ? {}
         : await createSession({
             userId: userByProviderAccountId.id,
-            expires: fromNow(options.session.maxAge),
+            expires: fromDate(options.session.maxAge),
           })
 
       return {
@@ -230,7 +230,7 @@ export default async function callbackHandler(
         ? {}
         : await createSession({
             userId: user.id,
-            expires: fromNow(options.session.maxAge),
+            expires: fromDate(options.session.maxAge),
           })
 
       return {
