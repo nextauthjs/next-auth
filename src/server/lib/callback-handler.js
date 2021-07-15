@@ -20,14 +20,13 @@ import { fromDate } from "./utils"
 export default async function callbackHandler(
   sessionToken,
   profile,
-  providerAccount,
+  account,
   options
 ) {
   // Input validation
-  if (!profile) throw new Error("Missing profile")
-  if (!providerAccount?.id || !providerAccount.type)
+  if (!account?.id || !account.type)
     throw new Error("Missing or invalid provider account")
-  if (!["email", "oauth"].includes(providerAccount.type))
+  if (!["email", "oauth"].includes(account.type))
     throw new Error("Provider not supported")
 
   const {
@@ -40,11 +39,7 @@ export default async function callbackHandler(
   // If no adapter is configured then we don't have a database and cannot
   // persist data; in this mode we just return a dummy session object.
   if (!adapter) {
-    return {
-      user: profile,
-      account: providerAccount,
-      session: {},
-    }
+    return { user: profile, account, session: {} }
   }
 
   const {
@@ -84,7 +79,7 @@ export default async function callbackHandler(
     }
   }
 
-  if (providerAccount.type === "email") {
+  if (account.type === "email") {
     // If signing in with an email, check if an account with the same email address exists already
     const userByEmail = profile.email
       ? await getUserByEmail(profile.email)
@@ -121,16 +116,12 @@ export default async function callbackHandler(
           expires: fromDate(options.session.maxAge),
         })
 
-    return {
-      session,
-      user,
-      isNewUser,
-    }
-  } else if (providerAccount.type === "oauth") {
-    // If signing in with oauth account, check to see if the account exists already
+    return { session, user, isNewUser }
+  } else if (account.type === "oauth") {
+    // If signing in with OAuth account, check to see if the account exists already
     const userByProviderAccountId = await getUserByProviderAccountId(
-      providerAccount.provider,
-      providerAccount.id
+      account.provider,
+      account.id
     )
     if (userByProviderAccountId) {
       if (isSignedIn) {
@@ -165,8 +156,8 @@ export default async function callbackHandler(
       if (isSignedIn) {
         // If the user is already signed in and the OAuth account isn't already associated
         // with another user account then we can go ahead and link the accounts safely.
-        await linkAccount(user.id, providerAccount)
-        await events.linkAccount?.({ user, providerAccount })
+        await linkAccount(user.id, account)
+        await events.linkAccount?.({ user, account })
 
         // As they are already signed in, we don't need to do anything after linking them
         return {
@@ -215,16 +206,8 @@ export default async function callbackHandler(
       user = await createUser({ ...profile, emailVerified: null })
       await events.createUser?.({ user })
 
-      await linkAccount(
-        user.id,
-        providerAccount.provider,
-        providerAccount.type,
-        providerAccount.id,
-        providerAccount.refreshToken,
-        providerAccount.accessToken,
-        providerAccount.accessTokenExpires
-      )
-      await events.linkAccount?.({ user, providerAccount })
+      await linkAccount(user.id, account)
+      await events.linkAccount?.({ user, account })
 
       session = useJwtSession
         ? {}
