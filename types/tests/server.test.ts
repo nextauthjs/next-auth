@@ -41,12 +41,16 @@ const simpleConfig = {
 }
 
 const exampleUser: AdapterUser = {
+  id: "",
+  emailVerified: null,
   name: "",
   image: "",
   email: "",
 }
 
 const exampleSession: AdapterSession = {
+  id: "",
+  userId: "",
   expires: new Date(),
 }
 
