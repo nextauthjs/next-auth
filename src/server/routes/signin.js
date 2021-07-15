@@ -39,7 +39,7 @@ export default async function signin(req, res) {
     const email = req.body.email?.toLowerCase() ?? null
 
     // If is an existing user return a user object (otherwise use placeholder)
-    const user = (await getUserByEmail(email)) || { email }
+    const user = (email && (await getUserByEmail(email))) ?? { email }
     const account = { id: provider.id, type: "email", providerAccountId: email }
 
     // Check if user is allowed to sign in

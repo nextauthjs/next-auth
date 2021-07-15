@@ -192,7 +192,7 @@ export default async function callback(req, res) {
       }
 
       // If is an existing user return a user object (otherwise use placeholder)
-      const profile = (await getUserByEmail(identifier)) || {
+      const profile = (identifier && (await getUserByEmail(identifier))) ?? {
         email: identifier,
       }
 

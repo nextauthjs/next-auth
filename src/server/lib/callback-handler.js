@@ -81,9 +81,7 @@ export default async function callbackHandler(
 
   if (account.type === "email") {
     // If signing in with an email, check if an account with the same email address exists already
-    const userByEmail = profile.email
-      ? await getUserByEmail(profile.email)
-      : null
+    const userByEmail = profile.email && (await getUserByEmail(profile.email))
     if (userByEmail) {
       // If they are not already signed in as the same user, this flow will
       // sign them out of the current session and sign them in as the new user
@@ -184,9 +182,7 @@ export default async function callbackHandler(
       //
       // OAuth providers should require email address verification to prevent this, but in
       // practice that is not always the case; this helps protect against that.
-      const userByEmail = profile.email
-        ? await getUserByEmail(profile.email)
-        : null
+      const userByEmail = profile.email && (await getUserByEmail(profile.email))
       if (userByEmail) {
         // We end up here when we don't have an account with the same [provider].id *BUT*
         // we do already have an account with the same email address as the one in the

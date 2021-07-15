@@ -59,7 +59,7 @@ export interface Adapter {
   displayName: string
   createUser(user: AdapterUser): Awaitable<AdapterUser>
   getUser(id: string): Awaitable<AdapterUser | null>
-  getUserByEmail(email: string | null): Awaitable<AdapterUser | null>
+  getUserByEmail(email: string): Awaitable<AdapterUser | null>
   getUserByProviderAccountId(
     providerId: string,
     providerAccountId: string
