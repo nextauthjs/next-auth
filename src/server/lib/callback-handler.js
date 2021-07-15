@@ -66,7 +66,6 @@ export default async function callbackHandler(
         session = await jwt.decode({ ...jwt, token: sessionToken })
         if (session?.sub) {
           user = await getUser(session.sub)
-          isSignedIn = !!user
         }
       } catch {
         // If session can't be verified, treat as no session
@@ -120,14 +119,10 @@ export default async function callbackHandler(
       account.id
     )
     if (userByProviderAccountId) {
-      if (isSignedIn) {
+      if (user) {
         // If the user is already signed in with this account, we don't need to do anything
         if (userByProviderAccountId.id === user.id) {
-          return {
-            session,
-            user,
-            isNewUser,
-          }
+          return { session, user, isNewUser }
         }
         // If the user is currently signed in, but the new account they are signing in
         // with is already associated with another account, then we cannot link them
@@ -143,24 +138,16 @@ export default async function callbackHandler(
             expires: fromDate(options.session.maxAge),
           })
 
-      return {
-        session,
-        user: userByProviderAccountId,
-        isNewUser,
-      }
+      return { session, user: userByProviderAccountId, isNewUser }
     } else {
-      if (isSignedIn) {
+      if (user) {
         // If the user is already signed in and the OAuth account isn't already associated
         // with another user account then we can go ahead and link the accounts safely.
         await linkAccount(user.id, account)
         await events.linkAccount?.({ user, account })
 
         // As they are already signed in, we don't need to do anything after linking them
-        return {
-          session,
-          user,
-          isNewUser,
-        }
+        return { session, user, isNewUser }
       }
 
       // If the user is not signed in and it looks like a new OAuth account then we
@@ -210,11 +197,7 @@ export default async function callbackHandler(
             expires: fromDate(options.session.maxAge),
           })
 
-      return {
-        session,
-        user,
-        isNewUser: true,
-      }
+      return { session, user, isNewUser: true }
     }
   }
 }
