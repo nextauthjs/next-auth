@@ -33,17 +33,16 @@ export default async function email(identifier, options) {
   // @ts-expect-error
   await adapter.createVerificationToken({
     identifier,
-    url,
-    expires,
     token: hashToken(token, options),
+    expires,
   })
 
   // Send to user
   await provider.sendVerificationRequest({
     identifier,
-    url,
-    expires,
-    provider,
     token,
+    expires,
+    url,
+    provider,
   })
 }

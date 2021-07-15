@@ -14,7 +14,6 @@ export interface AdapterSession {
 
 export interface VerificationToken {
   identifier: string
-  url: string
   expires: Date
   token: string
 }
