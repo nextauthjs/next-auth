@@ -1,3 +1,4 @@
+// @ts-check
 import { AccountNotLinkedError } from "../../lib/errors"
 import { fromDate } from "./utils"
 
@@ -12,8 +13,7 @@ import { fromDate } from "./utils"
  * All verification (e.g. OAuth flows or email address verificaiton flows) are
  * done prior to this handler being called to avoid additonal complexity in this
  * handler.
- * @param {import("types").Session} sessionToken
- * @param {import("types").Profile} profile
+ * @param {import("types/internals/cookies").SessionToken | null} sessionToken
  * @param {import("types").Account} account
  * @param {import("types/internals").InternalOptions} options
  */
@@ -85,13 +85,11 @@ export default async function callbackHandler(
     if (userByEmail) {
       // If they are not already signed in as the same user, this flow will
       // sign them out of the current session and sign them in as the new user
-      if (isSignedIn) {
-        if (user.id !== userByEmail.id && !useJwtSession) {
-          // Delete existing session if they are currently signed in as another user.
-          // This will switch user accounts for the session in cases where the user was
-          // already logged in with a different account.
-          await deleteSession(sessionToken)
-        }
+      if (user?.id !== userByEmail.id && !useJwtSession && sessionToken) {
+        // Delete existing session if they are currently signed in as another user.
+        // This will switch user accounts for the session in cases where the user was
+        // already logged in with a different account.
+        await deleteSession(sessionToken)
       }
 
       // Update emailVerified property on the user object
