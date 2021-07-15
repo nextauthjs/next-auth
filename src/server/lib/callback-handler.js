@@ -59,9 +59,10 @@ export default async function callbackHandler(
     deleteSession,
   } = adapter
 
+  /** @type {import("types/adapters").AdapterSession | import("types/jwt").JWT | null} */
   let session = null
+  /** @type {import("types/adapters").AdapterUser | null} */
   let user = null
-  let isSignedIn = null
   let isNewUser = false
 
   if (sessionToken) {

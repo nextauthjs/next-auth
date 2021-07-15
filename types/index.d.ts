@@ -43,7 +43,7 @@ export interface NextAuthOptions {
    *
    * [Documentation](https://next-auth.js.org/configuration/options#session)
    */
-  session?: SessionOptions
+  session?: Partial<SessionOptions>
   /**
    * JSON Web Tokens can be used for session tokens if enabled with the `session: { jwt: true }` option.
    * JSON Web Tokens are enabled by default if you have not specified a database.
@@ -55,7 +55,7 @@ export interface NextAuthOptions {
    *
    * [Documentation](https://next-auth.js.org/configuration/options#jwt)
    */
-  jwt?: JWTOptions
+  jwt?: Partial<JWTOptions>
   /**
    * Specify URLs to be used if you want to create custom sign in, sign out and error pages.
    * Pages specified will override the corresponding built-in page.
@@ -452,9 +452,18 @@ export interface Session extends Record<string, unknown>, DefaultSession {}
 
 /** [Documentation](https://next-auth.js.org/configuration/options#session) */
 export interface SessionOptions {
-  jwt?: boolean
-  maxAge?: number
-  updateAge?: number
+  jwt: boolean
+  /**
+   * Relative time from now in seconds when to expire the session
+   * @default 2592000 // 30 days
+   */
+  maxAge: number
+  /**
+   * How often the session should be updated in seconds.
+   * If set to `0`, session is updated every time.
+   * @default 86400 // 1 day
+   */
+  updateAge: number
 }
 
 export interface DefaultUser {

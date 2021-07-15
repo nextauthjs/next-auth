@@ -89,11 +89,12 @@ async function NextAuthHandler(req, res, userOptions) {
       provider.checks = ["state"]
     }
 
-    const maxAge = 30 * 24 * 60 * 60 // Sessions expire after 30 days of being idle
+    const maxAge = 30 * 24 * 60 * 60 // Sessions expire after 30 days of being idle by default
 
     // User provided options are overriden by other options,
     // except for the options with special handling above
-    req.options = {
+    /** @type {import("types/internals").InternalOptions} */
+    const options = {
       debug: false,
       pages: {},
       theme: "auto",
@@ -112,7 +113,7 @@ async function NextAuthHandler(req, res, userOptions) {
       session: {
         jwt: !userOptions.adapter, // If no adapter specified, force use of JSON Web Tokens (stateless)
         maxAge,
-        updateAge: 24 * 60 * 60, // Sessions updated only if session is greater than this value (0 = always, 24*60*60 = every 24 hours)
+        updateAge: 24 * 60 * 60,
         ...userOptions.session,
       },
       // JWT options
@@ -134,6 +135,8 @@ async function NextAuthHandler(req, res, userOptions) {
       pkce: {},
       logger,
     }
+
+    req.options = options
 
     csrfTokenHandler(req, res)
     await callbackUrlHandler(req, res)
