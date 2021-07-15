@@ -30,12 +30,12 @@ export default async function session(req, res) {
       const sessionExpires = sessionExpiresDate.toISOString()
 
       // By default, only exposes a limited subset of information to the client
-      // as needed for presentation purposes (e.g. "you are logged in as…").
+      // as needed for presentation purposes (e.g. "you are logged in as...").
       const defaultSession = {
         user: {
-          name: decodedToken.name || null,
-          email: decodedToken.email || null,
-          image: decodedToken.picture || null,
+          name: decodedToken?.name,
+          email: decodedToken?.email,
+          image: decodedToken?.picture,
         },
         expires: sessionExpires,
       }
@@ -79,12 +79,12 @@ export default async function session(req, res) {
         const user = await getUser(session.userId)
 
         // By default, only exposes a limited subset of information to the client
-        // as needed for presentation purposes (e.g. "you are logged in as…").
+        // as needed for presentation purposes (e.g. "you are logged in as...").
         const defaultSession = {
           user: {
-            name: user.name,
-            email: user.email,
-            image: user.image,
+            name: user?.name,
+            email: user?.email,
+            image: user?.image,
           },
           accessToken: session.accessToken,
           expires: session.expires.toISOString(),
