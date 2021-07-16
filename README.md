@@ -150,7 +150,7 @@ export default function Component() {
 <a href="https://vercel.com?utm_source=nextauthjs&utm_campaign=oss"></a>
 </div>
 
-## Support
+### Support
 
 We're happy to announce we've recently created an [OpenCollective](https://opencollective.org/nextauth) for individuals and companies looking to contribute financially to the project!
 
