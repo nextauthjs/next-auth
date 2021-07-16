@@ -1,3 +1,4 @@
+import { rest } from "msw"
 import { render, screen, waitFor } from "@testing-library/react"
 import { server, mockSession } from "./helpers/mocks"
 import { printFetchCalls } from "./helpers/utils"
@@ -19,22 +20,6 @@ afterAll(() => {
   server.close()
 })
 
-test("it won't allow to fetch the session in isolation without a session context", () => {
-  function App() {
-    useSession()
-    return null
-  }
-
-  jest.spyOn(console, "error")
-  console.error.mockImplementation(() => {})
-
-  expect(() => render(<App />)).toThrow(
-    "useSession must be wrapped in a SessionProvider"
-  )
-
-  console.error.mockRestore()
-})
-
 test("fetches the session once and re-uses it for different consumers", async () => {
   fetchSpy.mockClear()
 
@@ -43,7 +28,7 @@ test("fetches the session once and re-uses it for different consumers", async ()
   expect(screen.getByTestId("session-consumer-1")).toHaveTextContent("loading")
   expect(screen.getByTestId("session-consumer-2")).toHaveTextContent("loading")
 
-  await waitFor(() => {
+  return waitFor(() => {
     expect(fetchSpy).toHaveBeenCalledTimes(1)
 
     expect(fetchSpy).toHaveBeenCalledWith(
@@ -58,7 +43,7 @@ test("fetches the session once and re-uses it for different consumers", async ()
   })
 })
 
-test("when there's an existing session, it won't initialize as loading", async () => {
+test("when there's an existing session, it won't try to fetch a new one straightaway", async () => {
   fetchSpy.mockClear()
 
   /**
@@ -88,7 +73,7 @@ test("will refetch the session when the browser tab becomes active again", async
   changeTabVisibility("visible")
 
   // Given the user made the tab visible again, now attempts to sync and re-fetch the session
-  await waitFor(() => {
+  return waitFor(() => {
     expect(fetchSpy).toHaveBeenCalledTimes(1)
     expect(fetchSpy).toHaveBeenCalledWith(
       "/api/auth/session",
@@ -114,7 +99,7 @@ test("will refetch the session if told to do so programmatically from another wi
   signOut({ redirect: false })
 
   // Given signed out in another tab, it attempts to sync and re-fetch the session
-  await waitFor(() => {
+  return waitFor(() => {
     expect(fetchSpy).toHaveBeenCalledWith(
       "/api/auth/session",
       expect.anything()
@@ -132,11 +117,51 @@ test("will refetch the session if told to do so programmatically from another wi
   })
 })
 
-test.todo(
-  "allows to customize how often the session will be re-fetched through polling"
-)
+test("allows to customize how often the session will be re-fetched through polling", async () => {
+  jest.useFakeTimers()
 
-test.todo("allows to customize the URL for session fetching")
+  fetchSpy.mockClear()
+
+  render(<ProviderFlow session={mockSession} refetchInterval={1} />)
+
+  // we provided a mock session so it shouldn't try to fetch a new one
+  expect(fetchSpy).not.toHaveBeenCalled()
+
+  jest.advanceTimersByTime(1000)
+
+  await waitFor(() => {
+    expect(fetchSpy).toHaveBeenCalledTimes(1)
+    expect(fetchSpy).toHaveBeenCalledWith(
+      "/api/auth/session",
+      expect.anything()
+    )
+  })
+
+  jest.useRealTimers()
+})
+
+// TODO: Un-skip this once we know how to clear the session cache...
+test.skip("allows to customize the URL for session fetching", async () => {
+  fetchSpy.mockClear()
+
+  const myPath = "/api/v1/auth"
+
+  server.use(
+    rest.get(`${myPath}/session`, (req, res, ctx) =>
+      res(ctx.status(200), ctx.json(mockSession))
+    )
+  )
+
+  render(<ProviderFlow session={mockSession} basePath={myPath} />)
+
+  return waitFor(() => {
+    expect(fetchSpy).toHaveBeenCalledTimes(1)
+    expect(fetchSpy).toHaveBeenCalledWith(
+      `${myPath}/session`,
+      expect.anything()
+    )
+  })
+})
 
 test.todo("allows to customize session stale time")
 

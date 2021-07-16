@@ -47,7 +47,9 @@ export function useSession(options = {}) {
   const value = React.useContext(SessionContext)
 
   if (process.env.NODE_ENV !== "production" && !value) {
-    throw new Error("useSession must be wrapped in a SessionProvider")
+    throw new Error(
+      "[next-auth]: `useSession` must be wrapped in a <SessionProvider />"
+    )
   }
 
   const { required, onUnauthenticated } = options
