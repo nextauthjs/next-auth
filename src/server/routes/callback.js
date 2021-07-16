@@ -1,7 +1,6 @@
 import oAuthCallback from "../lib/oauth/callback"
 import callbackHandler from "../lib/callback-handler"
 import * as cookie from "../lib/cookie"
-import dispatchEvent from "../lib/dispatch-event"
 import adapterErrorHandler from "../../adapters/error-handler"
 
 /**
@@ -133,7 +132,7 @@ export default async function callback(req, res) {
           })
         }
 
-        await dispatchEvent(events.signIn, { user, account, isNewUser })
+        await events.signIn({ user, account, profile, isNewUser })
 
         // Handle first logins on new accounts
         // e.g. option to send users to a new account landing page on initial login
@@ -275,7 +274,7 @@ export default async function callback(req, res) {
         })
       }
 
-      await dispatchEvent(events.signIn, { user, account, isNewUser })
+      await events.signIn({ user, account, profile, isNewUser })
 
       // Handle first logins on new accounts
       // e.g. option to send users to a new account landing page on initial login
@@ -303,7 +302,9 @@ export default async function callback(req, res) {
     if (!useJwtSession) {
       logger.error(
         "CALLBACK_CREDENTIALS_JWT_ERROR",
-        "Signin in with credentials is only supported if JSON Web Tokens are enabled"
+        new Error(
+          "Signin in with credentials is only supported if JSON Web Tokens are enabled"
+        )
       )
       return res
         .status(500)
@@ -313,7 +314,9 @@ export default async function callback(req, res) {
     if (!provider.authorize) {
       logger.error(
         "CALLBACK_CREDENTIALS_HANDLER_ERROR",
-        "Must define an authorize() handler to use credentials authentication provider"
+        new Error(
+          "Must define an authorize() handler to use credentials authentication provider"
+        )
       )
       return res
         .status(500)
@@ -393,7 +396,7 @@ export default async function callback(req, res) {
       ...cookies.sessionToken.options,
     })
 
-    await dispatchEvent(events.signIn, { user, account })
+    await events.signIn({ user, account })
 
     return res.redirect(callbackUrl || baseUrl)
   }

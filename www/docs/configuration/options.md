@@ -329,6 +329,8 @@ Set debug to `true` to enable debug messages for authentication and database ope
 
 Override any of the logger levels (`undefined` levels will use the built-in logger), and intercept logs in NextAuth. You can use this to send NextAuth logs to a third-party logging service.
 
+The `code` parameter for `error` and `warn` are explained in the [Warnings](/warnings) and [Errors](/errors) pages respectively.
+
 Example:
 
 ```js title="/pages/api/auth/[...nextauth].js"
@@ -337,14 +339,14 @@ import log from "logging-service"
 export default NextAuth({
   ...
   logger: {
-    error(code, ...message) {
-      log.error(code, message)
+    error(code, metadata) {
+      log.error(code, metadata)
     },
-    warn(code, ...message) {
-      log.warn(code, message)
+    warn(code) {
+      log.warn(code)
     },
-    debug(code, ...message) {
-      log.debug(code, message)
+    debug(code, metadata) {
+      log.debug(code, metadata)
     }
   }
   ...

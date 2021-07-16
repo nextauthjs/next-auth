@@ -70,11 +70,10 @@ test("if there's an error fetching the session, it should log it", async () => {
 
   await waitFor(() => {
     expect(logger.error).toHaveBeenCalledTimes(1)
-    expect(logger.error).toBeCalledWith(
-      "CLIENT_FETCH_ERROR",
-      "session",
-      new SyntaxError("Unexpected token S in JSON at position 0")
-    )
+    expect(logger.error).toBeCalledWith("CLIENT_FETCH_ERROR", {
+      path: "session",
+      error: new SyntaxError("Unexpected token S in JSON at position 0"),
+    })
   })
 })
 
