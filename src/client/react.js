@@ -74,6 +74,7 @@ export function useSession(options = {}) {
 
 export async function getSession(ctx) {
   const session = await _fetchData("session", ctx)
+
   if (ctx?.broadcast ?? true) {
     broadcast.post({ event: "session", data: { trigger: "getSession" } })
   }
