@@ -99,10 +99,6 @@ module.exports = {
               to: "https://opencollective.com/nextauth",
             },
             {
-              label: "Docusaurus",
-              to: "https://v2.docusaurus.io/",
-            },
-            {
               label: "Images by unDraw",
               to: "https://undraw.co/",
             },
