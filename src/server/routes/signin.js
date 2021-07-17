@@ -29,7 +29,6 @@ export default async function signin(req, res) {
       )
       return res.redirect(`${baseUrl}${basePath}/error?error=Configuration`)
     }
-    const { getUserByEmail } = adapter
 
     // Note: Technically the part of the email address local mailbox element
     // (everything before the @ symbol) should be treated as 'case sensitive'
@@ -38,8 +37,11 @@ export default async function signin(req, res) {
     // complains about this we can make strict RFC 2821 compliance an option.
     const email = req.body.email?.toLowerCase() ?? null
 
+    const { getUserByEmail } = adapter
     // If is an existing user return a user object (otherwise use placeholder)
-    const user = (email && (await getUserByEmail(email))) ?? { email }
+    const user = (email ? await getUserByEmail(email) : null) ?? {
+      email,
+    }
     const account = { id: provider.id, type: "email", providerAccountId: email }
 
     // Check if user is allowed to sign in

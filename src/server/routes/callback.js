@@ -192,8 +192,10 @@ export default async function callback(req, res) {
         return res.redirect(`${baseUrl}${basePath}/error?error=Verification`)
       }
 
-      // If is an existing user return a user object (otherwise use placeholder)
-      const profile = (identifier && (await getUserByEmail(identifier))) ?? {
+      // If it is an existing user, use that, otherwise use a placeholder
+      const profile = (identifier
+        ? await getUserByEmail(identifier)
+        : null) ?? {
         email: identifier,
       }
 
