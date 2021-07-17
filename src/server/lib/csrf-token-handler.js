@@ -3,7 +3,7 @@ import * as cookie from './cookie'
 
 /**
  * Ensure CSRF Token cookie is set for any subsequent requests.
- * Used as part of the strateigy for mitigation for CSRF tokens.
+ * Used as part of the strategy for mitigation for CSRF tokens.
  *
  * Creates a cookie like 'next-auth.csrf-token' with the value 'token|hash',
  * where 'token' is the CSRF token and 'hash' is a hash made of the token and
