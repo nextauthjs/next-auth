@@ -373,7 +373,6 @@ export default async function callback(req, res) {
       token: defaultToken,
       user,
       account,
-      profile: userObjectReturnedFromAuthorizeHandler,
       isNewUser: false,
     })
 
