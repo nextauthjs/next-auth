@@ -142,7 +142,7 @@ jwt: {
   encryption: true,
   encryptionKey: "",
   // decryptionKey = encryptionKey,
-  decryptionOptions = {
+  decryptionOptions: {
      algorithms: ['A256GCM']
   },
   // You can define your own encode/decode functions for signing and encryption
