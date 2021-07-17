@@ -17,7 +17,9 @@ export type InternalProvider = Provider & {
   callbackUrl: string
 }
 
-export interface InternalOptions<P extends InternalProvider = never> {
+export interface InternalOptions<
+  P extends InternalProvider = InternalProvider
+> {
   providers: InternalProvider[]
   baseUrl: string
   basePath: string
