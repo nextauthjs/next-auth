@@ -33,11 +33,8 @@ Providers.Credentials({
       type: "password",
     },
   },
-  authorize: async ({username, password}) => {
-    const user = {
-      /* fetched user */
-    }
-    return user
+  async authorize({ username, password }) {
+    return null
   },
 })
 
