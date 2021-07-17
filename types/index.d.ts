@@ -249,7 +249,11 @@ export interface TokenSet {
  * and also extends `TokenSet`, which is different tokens returned by OAuth Providers.
  */
 export interface Account extends TokenSet, Record<string, unknown> {
-  /** User's id for this account */
+  /**
+   * User's id for this account.
+   * In case of an "email" type provider,
+   * it's the email of the user.
+   */
   id: string
   /** id of the provider used for this account */
   provider: string
@@ -288,7 +292,7 @@ export interface CallbacksOptions<
      */
     profile: P & Record<string, unknown>
     /**
-     * If Email provider is used, it contains the email, and optionally on the first call a
+     * If Email provider is used, on the first call, it contains a
      * `verificationRequest: true` property to indicate it is being triggered in the verification request flow.
      * When the callback is invoked after a user has clicked on a sign in link,
      * this property will not be present. You can check for the `verificationRequest` property
@@ -296,7 +300,6 @@ export interface CallbacksOptions<
      * for email address in an allow list.
      */
     email: {
-      email: string | null
       verificationRequest?: boolean
     }
     /** If Credentials provider is used, it contains the user credentials */

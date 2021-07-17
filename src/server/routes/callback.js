@@ -196,10 +196,11 @@ export default async function callback(req, res) {
         email: identifier,
       }
 
+      /** @type {import("types").Account} */
       const account = {
-        id: provider.id,
+        id: profile.email,
         type: "email",
-        providerAccountId: identifier,
+        provider: provider.id,
       }
 
       // Check if user is allowed to sign in
@@ -241,7 +242,6 @@ export default async function callback(req, res) {
           token: defaultToken,
           user,
           account,
-          profile,
           isNewUser,
         })
 
@@ -264,7 +264,7 @@ export default async function callback(req, res) {
         })
       }
 
-      await events.signIn?.({ user, account, profile, isNewUser })
+      await events.signIn?.({ user, account, isNewUser })
 
       // Handle first logins on new accounts
       // e.g. option to send users to a new account landing page on initial login
@@ -336,7 +336,12 @@ export default async function callback(req, res) {
       )
     }
 
-    const account = { id: provider.id, type: "credentials" }
+    /** @type {import("types").Account} */
+    const account = {
+      id: user.id,
+      type: "credentials",
+      provider: provider.id,
+    }
 
     try {
       const isAllowed = await callbacks.signIn({
