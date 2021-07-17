@@ -4,7 +4,7 @@ import { getState } from "./state-handler"
 import { usePKCECodeVerifier } from "./pkce-handler"
 import { OAuthCallbackError } from "../../../lib/errors"
 
-/** @param {import("types/internals").NextAuthRequest} req */
+/** @type {import("types/internals").NextAuthApiHandler} */
 export default async function oAuthCallback(req, res) {
   const { provider, logger } = req.options
 
