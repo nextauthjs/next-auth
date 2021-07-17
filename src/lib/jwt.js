@@ -200,9 +200,3 @@ function getDerivedEncryptionKey(secret) {
   })
   return key
 }
-
-export default {
-  encode,
-  decode,
-  getToken,
-}

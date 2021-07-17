@@ -1,4 +1,4 @@
-import jwt from "../lib/jwt"
+import * as jwt from "../lib/jwt"
 import parseUrl from "../lib/parse-url"
 import logger, { setLogger } from "../lib/logger"
 import * as cookie from "./lib/cookie"

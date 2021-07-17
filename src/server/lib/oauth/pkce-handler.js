@@ -1,6 +1,6 @@
 import pkceChallenge from "pkce-challenge"
 import * as cookie from "../cookie"
-import jwt from "../../../lib/jwt"
+import * as jwt from "../../../lib/jwt"
 import logger from "../../../lib/logger"
 import { OAuthCallbackError } from "../../../lib/errors"
 
