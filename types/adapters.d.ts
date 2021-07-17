@@ -31,7 +31,7 @@ export interface VerificationToken {
  * - `createUser`
  * - `getUser`
  * - `getUserByEmail`
- * - `getUserByProviderAccountId`
+ * - `getUserByAccount`
  * - `linkAccount`
  * - `createSession`
  * - `getSession`
