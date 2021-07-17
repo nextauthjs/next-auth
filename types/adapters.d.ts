@@ -63,7 +63,7 @@ export interface Adapter {
   getUserByAccount(
     providerAccountId: Pick<Account, "provider" | "id">
   ): Awaitable<AdapterUser | null>
-  updateUser(user: AdapterUser): Awaitable<AdapterUser>
+  updateUser(user: Partial<AdapterUser>): Awaitable<AdapterUser>
   /** @todo Implement */
   deleteUser?(userId: string): Awaitable<void>
   linkAccount(userId: string, account: Account): Awaitable<void>

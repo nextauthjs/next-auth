@@ -65,17 +65,17 @@ export default async function callback(req, res) {
         }
 
         try {
-          const signInCallbackResponse = await callbacks.signIn({
+          const isAllowed = await callbacks.signIn({
             user: userOrProfile,
             account,
             profile: OAuthProfile,
           })
-          if (!signInCallbackResponse) {
+          if (!isAllowed) {
             return res.redirect(
               `${baseUrl}${basePath}/error?error=AccessDenied`
             )
-          } else if (typeof signInCallbackResponse === "string") {
-            return res.redirect(signInCallbackResponse)
+          } else if (typeof isAllowed === "string") {
+            return res.redirect(isAllowed)
           }
         } catch (error) {
           return res.redirect(
@@ -315,22 +315,20 @@ export default async function callback(req, res) {
 
     const credentials = req.body
 
-    let userObjectReturnedFromAuthorizeHandler
+    let user
     try {
-      userObjectReturnedFromAuthorizeHandler = await provider.authorize(
-        credentials,
-        { ...req, options: {}, cookies: {} }
-      )
-      if (!userObjectReturnedFromAuthorizeHandler) {
-        return res
-          .status(401)
-          .redirect(
-            `${baseUrl}${basePath}/error?error=CredentialsSignin&provider=${encodeURIComponent(
-              provider.id
-            )}`
-          )
-      } else if (typeof userObjectReturnedFromAuthorizeHandler === "string") {
-        return res.redirect(userObjectReturnedFromAuthorizeHandler)
+      user = await provider.authorize(credentials, {
+        ...req,
+        options: {},
+        cookies: {},
+      })
+      if (!user) {
+        return res.status(401).redirect(
+          `${baseUrl}${basePath}/error?${new URLSearchParams({
+            error: "CredentialsSignin",
+            provider: provider.id,
+          })}`
+        )
       }
     } catch (error) {
       return res.redirect(
@@ -338,21 +336,20 @@ export default async function callback(req, res) {
       )
     }
 
-    const user = userObjectReturnedFromAuthorizeHandler
     const account = { id: provider.id, type: "credentials" }
 
     try {
-      const signInCallbackResponse = await callbacks.signIn({
+      const isAllowed = await callbacks.signIn({
         user,
         account,
         credentials,
       })
-      if (!signInCallbackResponse) {
+      if (!isAllowed) {
         return res
           .status(403)
           .redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
-      } else if (typeof signInCallbackResponse === "string") {
-        return res.redirect(signInCallbackResponse)
+      } else if (typeof isAllowed === "string") {
+        return res.redirect(isAllowed)
       }
     } catch (error) {
       return res.redirect(
@@ -366,6 +363,7 @@ export default async function callback(req, res) {
       picture: user.image,
       sub: user.id?.toString(),
     }
+
     const token = await callbacks.jwt({
       token: defaultToken,
       user,

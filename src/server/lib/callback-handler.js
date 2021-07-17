@@ -14,6 +14,7 @@ import { fromDate } from "./utils"
  * done prior to this handler being called to avoid additonal complexity in this
  * handler.
  * @param {import("types/internals/cookies").SessionToken | null} sessionToken
+ * @param {import("types").User} profile
  * @param {import("types").Account} account
  * @param {import("types/internals").InternalOptions} options
  */
@@ -94,13 +95,11 @@ export default async function callbackHandler(
       }
 
       // Update emailVerified property on the user object
-      const currentDate = new Date()
-      user = await updateUser({ ...userByEmail, emailVerified: currentDate })
+      user = await updateUser({ emailVerified: new Date() })
       await events.updateUser?.({ user })
     } else {
       // Create user account if there isn't one for the email address already
-      const currentDate = new Date()
-      user = await createUser({ ...profile, emailVerified: currentDate })
+      user = await createUser({ ...profile, emailVerified: new Date() })
       await events.createUser?.({ user })
       isNewUser = true
     }
