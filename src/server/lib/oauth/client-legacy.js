@@ -41,7 +41,16 @@ export async function oAuth1Client({ provider }) {
           if (error) {
             return reject(error)
           }
-          resolve({ oauth_token, oauth_token_secret, params })
+          resolve({
+            // TODO: Remove, this is only kept for backward compativility
+            // These are not in the OAuth 1.x spec
+            accessToken: oauth_token,
+            refreshToken: oauth_token_secret,
+            results: params,
+            oauth_token,
+            oauth_token_secret,
+            params,
+          })
         }
       )
     })
