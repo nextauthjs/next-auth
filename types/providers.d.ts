@@ -1,6 +1,6 @@
 import { Profile, TokenSet, User } from "."
 import { Awaitable, NextApiRequest } from "./internals/utils"
-import { Options as SMTPConnectionOptions } from "nodemailer/lib/smtp-connection"
+import { Options as SMTPConnectionOptions } from 'nodemailer/lib/smtp-connection'
 
 export type ProviderType = "oauth" | "email" | "credentials"
 
@@ -21,7 +21,8 @@ type ChecksType = "pkce" | "state" | "both" | "none"
  *
  * [Documentation](https://next-auth.js.org/configuration/providers#oauth-provider-options)
  */
-export interface OAuthConfig<P = Profile> extends CommonProviderOptions {
+export interface OAuthConfig<P extends Record<string, unknown> = Profile>
+  extends CommonProviderOptions {
   authorizationParams?: Record<string, string>
   headers?: Record<string, any>
   type: "oauth"
@@ -32,7 +33,7 @@ export interface OAuthConfig<P = Profile> extends CommonProviderOptions {
   requestTokenUrl?: string
   authorizationUrl: string
   profileUrl: string
-  profile(profile: P, tokens: TokenSet): Awaitable<User>
+  profile(profile: P, tokens: TokenSet): Awaitable<User & { id: string }>
   checks?: ChecksType | ChecksType[]
   clientId: string
   clientSecret:
