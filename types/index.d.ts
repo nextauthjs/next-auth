@@ -1,6 +1,6 @@
 import { Adapter } from "./adapters"
 import { JWTOptions, JWT } from "./jwt"
-import { Provider, Credentials } from "./providers"
+import { Provider, Credentials, ProviderType } from "./providers"
 import {
   Awaitable,
   NextApiRequest,
@@ -249,9 +249,12 @@ export interface TokenSet {
  * and also extends `TokenSet`, which is different tokens returned by OAuth Providers.
  */
 export interface Account extends TokenSet, Record<string, unknown> {
+  /** User's id for this account */
   id: string
+  /** id of the provider used for this account */
   provider: string
-  type: string
+  /** Provider's type for this account */
+  type: ProviderType
 }
 
 export interface DefaultProfile {

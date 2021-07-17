@@ -46,7 +46,7 @@ export default async function callbackHandler(
     createUser,
     updateUser,
     getUser,
-    getUserByProviderAccountId,
+    getUserByAccount,
     getUserByEmail,
     linkAccount,
     createSession,
@@ -116,14 +116,14 @@ export default async function callbackHandler(
     return { session, user, isNewUser }
   } else if (account.type === "oauth") {
     // If signing in with OAuth account, check to see if the account exists already
-    const userByProviderAccountId = await getUserByProviderAccountId(
-      account.provider,
-      account.id
-    )
-    if (userByProviderAccountId) {
+    const userByAccount = await getUserByAccount({
+      id: account.id,
+      provider: account.provider,
+    })
+    if (userByAccount) {
       if (user) {
         // If the user is already signed in with this account, we don't need to do anything
-        if (userByProviderAccountId.id === user.id) {
+        if (userByAccount.id === user.id) {
           return { session, user, isNewUser }
         }
         // If the user is currently signed in, but the new account they are signing in
@@ -136,11 +136,11 @@ export default async function callbackHandler(
       session = useJwtSession
         ? {}
         : await createSession({
-            userId: userByProviderAccountId.id,
+            userId: userByAccount.id,
             expires: fromDate(options.session.maxAge),
           })
 
-      return { session, user: userByProviderAccountId, isNewUser }
+      return { session, user: userByAccount, isNewUser }
     } else {
       if (user) {
         // If the user is already signed in and the OAuth account isn't already associated

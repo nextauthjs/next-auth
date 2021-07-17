@@ -55,16 +55,13 @@ export default async function callback(req, res) {
         // (that just means it's a new user signing in for the first time).
         let userOrProfile = profile
         if (adapter) {
-          const { getUserByProviderAccountId } = adapter
+          const { getUserByAccount } = adapter
+          const userByAccount = await getUserByAccount({
+            id: account.id,
+            provider: provider.id,
+          })
 
-          const userFromProviderAccountId = await getUserByProviderAccountId(
-            account.provider,
-            account.id
-          )
-
-          if (userFromProviderAccountId) {
-            userOrProfile = userFromProviderAccountId
-          }
+          if (userByAccount) userOrProfile = userByAccount
         }
 
         try {

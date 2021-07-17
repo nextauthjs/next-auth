@@ -21,8 +21,8 @@ These methods are required for all sign in flows:
 
 * createUser
 * getUser
-* getUserByEmail  
-* getUserByProviderAccountId
+* getUserByEmail
+* getUserByAccount
 * linkAccount
 * createSession
 * getSession
@@ -58,10 +58,7 @@ export default function MyAdapter(client, options = {}) {
     async getUserByEmail (email) {
       return null
     },
-    async getUserByProviderAccountId (
-      providerId,
-      providerAccountId
-    ) {
+    async getUserByAccount ({ provider, id }) {
       return null
     },
     async updateUser (user) {

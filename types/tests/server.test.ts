@@ -73,7 +73,7 @@ function MyAdapter(client: Client): Adapter {
     async getUserByEmail(email) {
       return exampleUser
     },
-    async getUserByProviderAccountId(providerId, providerAccountId) {
+    async getUserByAccount(providerAccountId) {
       return exampleUser
     },
     async updateUser(user) {
