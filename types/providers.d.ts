@@ -32,7 +32,7 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
   requestTokenUrl?: string
   authorizationUrl: string
   profileUrl: string
-  profile(profile: P, tokens: TokenSet): Awaitable<User & { id: string }>
+  profile(profile: P, tokens: TokenSet): Awaitable<User>
   checks?: ChecksType | ChecksType[]
   clientId: string
   clientSecret:
