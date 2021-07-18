@@ -1,8 +1,9 @@
+import { useState } from "react"
 import { rest } from "msw"
 import { render, screen, waitFor } from "@testing-library/react"
 import { server, mockSession } from "./helpers/mocks"
 import { printFetchCalls } from "./helpers/utils"
-import { SessionProvider, useSession, signOut } from "../react"
+import { SessionProvider, useSession, signOut, getSession } from "../react"
 
 const origDocumentVisibility = document.visibilityState
 const fetchSpy = jest.spyOn(global, "fetch")
@@ -25,8 +26,8 @@ test("fetches the session once and re-uses it for different consumers", async ()
 
   render(<ProviderFlow />)
 
-  expect(screen.getByTestId("session-consumer-1")).toHaveTextContent("loading")
-  expect(screen.getByTestId("session-consumer-2")).toHaveTextContent("loading")
+  expect(screen.getByTestId("session-1")).toHaveTextContent("loading")
+  expect(screen.getByTestId("session-2")).toHaveTextContent("loading")
 
   return waitFor(() => {
     expect(fetchSpy).toHaveBeenCalledTimes(1)
@@ -36,8 +37,8 @@ test("fetches the session once and re-uses it for different consumers", async ()
       expect.anything()
     )
 
-    const session1 = screen.getByTestId("session-consumer-1").textContent
-    const session2 = screen.getByTestId("session-consumer-2").textContent
+    const session1 = screen.getByTestId("session-1").textContent
+    const session2 = screen.getByTestId("session-2").textContent
 
     expect(session1).toEqual(session2)
   })
@@ -46,11 +47,6 @@ test("fetches the session once and re-uses it for different consumers", async ()
 test("when there's an existing session, it won't try to fetch a new one straightaway", async () => {
   fetchSpy.mockClear()
 
-  /**
-   * TODO: How can we force a clean session state between tests? At the moment
-   *       the library uses this internal constant: __NEXTAUTH to track calls
-   *       and we can't clean it between tests.
-   */
   render(<ProviderFlow session={mockSession} />)
 
   expect(fetchSpy).not.toHaveBeenCalled()
@@ -106,7 +102,6 @@ test("will refetch the session if told to do so programmatically from another wi
     )
 
     // We should have a call to sign-out and a call to refetch the session accordingly
-    // TODO: investigate why the CSRF endpoint is called.
     expect(printFetchCalls(fetchSpy.mock.calls)).toMatchInlineSnapshot(`
       Array [
         "GET /api/auth/csrf",
@@ -117,7 +112,7 @@ test("will refetch the session if told to do so programmatically from another wi
   })
 })
 
-test("allows to customize how often the session will be re-fetched through polling", async () => {
+test("allows to customize how often the session will be re-fetched through polling", () => {
   jest.useFakeTimers()
 
   fetchSpy.mockClear()
@@ -129,19 +124,57 @@ test("allows to customize how often the session will be re-fetched through polli
 
   jest.advanceTimersByTime(1000)
 
-  await waitFor(() => {
-    expect(fetchSpy).toHaveBeenCalledTimes(1)
-    expect(fetchSpy).toHaveBeenCalledWith(
-      "/api/auth/session",
-      expect.anything()
-    )
-  })
+  expect(fetchSpy).toHaveBeenCalledTimes(1)
+  expect(fetchSpy).toHaveBeenCalledWith("/api/auth/session", expect.anything())
 
-  jest.useRealTimers()
+  jest.advanceTimersByTime(1000)
+
+  // it should have tried to refetch the session, hence counting 2 calls to the session endpoint
+  expect(fetchSpy).toHaveBeenCalledTimes(2)
+  expect(printFetchCalls(fetchSpy.mock.calls)).toMatchInlineSnapshot(`
+      Array [
+        "GET /api/auth/session",
+        "GET /api/auth/session",
+      ]
+    `)
 })
 
-// TODO: Un-skip this once we know how to clear the session cache...
-test.skip("allows to customize the URL for session fetching", async () => {
+test.skip("allows to customize session stale time", () => {
+  jest.useFakeTimers()
+
+  fetchSpy.mockClear()
+
+  // session will become stale once 3s pass
+  render(<ProviderFlow session={mockSession} stateTime={3} />)
+
+  // we provided a mock session so it shouldn't try to fetch a new one
+  expect(fetchSpy).not.toHaveBeenCalled()
+
+  // make 1s pass
+  jest.advanceTimersByTime(1000)
+
+  // trigger a session check
+  changeTabVisibility("hidden")
+  changeTabVisibility("visible")
+
+  // should use the cached one and don't try to refetch a new one
+  expect(fetchSpy).not.toHaveBeenCalled()
+
+  // 3s have elapsed, the session should be stale now...
+  jest.advanceTimersByTime(2000)
+
+  // trigger a session check
+  changeTabVisibility("hidden")
+  changeTabVisibility("visible")
+
+  // the session was stale and should have been re-fetched
+  expect(fetchSpy).toHaveBeenCalledTimes(1)
+  expect(fetchSpy).toHaveBeenCalledWith("/api/auth/session", expect.anything())
+})
+
+test.todo(`what happens if you set "refetchInterval=1" and "staleTime=3"?`)
+
+test("allows to customize the URL for session fetching", async () => {
   fetchSpy.mockClear()
 
   const myPath = "/api/v1/auth"
@@ -154,6 +187,13 @@ test.skip("allows to customize the URL for session fetching", async () => {
 
   render(<ProviderFlow session={mockSession} basePath={myPath} />)
 
+  // there's an existing session so it should not try to fetch a new one
+  expect(fetchSpy).not.toHaveBeenCalled()
+
+  // force a session refetch across all clients...
+  // TODO: remove this if we ever have a way to clean the cache in-memory session state...
+  getSession()
+
   return waitFor(() => {
     expect(fetchSpy).toHaveBeenCalledTimes(1)
     expect(fetchSpy).toHaveBeenCalledWith(
@@ -162,8 +202,6 @@ test.skip("allows to customize the URL for session fetching", async () => {
     )
   })
 })
-
-test.todo("allows to customize session stale time")
 
 function ProviderFlow(props) {
   return (
@@ -178,7 +216,7 @@ function SessionConsumer({ testId = 1 }) {
   const { data: session, status } = useSession()
 
   return (
-    <div data-testid={`session-consumer-${testId}`}>
+    <div data-testid={`session-${testId}`}>
       {status === "loading" ? "loading" : JSON.stringify(session)}
     </div>
   )
