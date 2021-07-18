@@ -121,13 +121,14 @@ The `useSession` hook has been updated to return an object. This allows you to t
 + const { data: session, status } = useSession()
 + const loading = status === "loading"
 ```
-[Check the docs](https://next-auth.js.org/getting-started/client#usesession) for the possible values of both `session.status` and `session.data`. 
+
+[Check the docs](https://next-auth.js.org/getting-started/client#usesession) for the possible values of both `session.status` and `session.data`.
 
 Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.18
 
 ### 6. nodemailer
 
-`nodemailer` is no longer a dependency and added by default. If you are using the Email provider you can install it in your project manually, or use any other Email library in the [`sendVerificationRequest`](/configuration/providers#options-1#:~:text=sendVerificationRequest) callback.
+[`nodemailer`](https://npmjs.com/package/nodemailer) is no longer a dependency and added by default. If you are using the Email provider you can install it in your project manually, or use any other Email library in the [`sendVerificationRequest`](/configuration/providers#options-1#:~:text=sendVerificationRequest) callback.
 
 Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.2
 
