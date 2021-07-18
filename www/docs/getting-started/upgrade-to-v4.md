@@ -121,6 +121,7 @@ The `useSession` hook has been updated to return an object. This allows you to t
 + const { data: session, status } = useSession()
 + const loading = status === "loading"
 ```
+[Check the docs](https://next-auth.js.org/getting-started/client#usesession) for the possible values of both `session.status` and `session.data`. 
 
 Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.18
 
