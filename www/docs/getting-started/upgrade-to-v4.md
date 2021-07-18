@@ -41,8 +41,8 @@ For example:
 
 We've also made the following changes to the names of the exports:
 
-- `setOptions`: Not exposed anymore, use `SessionProvider` props
-- `options`: Not exposed anymore, use `SessionProvider` props
+- `setOptions`: Not exposed anymore, use [`SessionProvider` props](https://next-auth.js.org/getting-started/client#options)
+- `options`: Not exposed anymore, [use `SessionProvider` props](https://next-auth.js.org/getting-started/client#options)
 - `session`: Rename to `getSession`
 - `providers`: Rename to `getProviders`
 - `csrfToken`: Rename to `getCsrfToken`
