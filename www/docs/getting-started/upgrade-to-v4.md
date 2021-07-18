@@ -7,7 +7,7 @@ NextAuth.js version 4.0 included a few breaking changes from the last major vers
 
 ### 1. Database Adapters
 
-If you are using the built-in TypeORM or Prisma adapters, these have been removed from the core `next-auth` package so as to not balloon the package size for users who do not need a database. Thankfully the migration is super easy, you just need to install the external packages for your database now and adapt your `[...nextauth].js` config file a bit.
+If you use the built-in TypeORM or Prisma adapters, these have been removed from the core `next-auth` package to not balloon the package size for users who do not need a database. Thankfully the migration is super easy; you just need to install the external packages for your database now and change your `[...nextauth].js` config file a bit.
 
 ```diff
 // [...nextauth].js
