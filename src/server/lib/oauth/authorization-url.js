@@ -13,15 +13,14 @@ import { createPKCE } from "../oauth/pkce-handler"
  */
 export default async function getAuthorizationUrl(req, res) {
   const { logger } = req.options
-  /** @type {import("types/providers").OAuthConfig} */
-  const provider = req.options.provider
-  const params = {
-    scope: provider.scope,
-    ...provider.params,
-    ...req.query,
-  }
-
   try {
+    /** @type {import("types/providers").OAuthConfig} */
+    const provider = req.options.provider
+    const params = {
+      scope: provider.scope,
+      ...provider.params,
+      ...req.query,
+    }
     // Handle OAuth v1.x
     if (provider.version?.startsWith("1.")) {
       const tokens = await oAuth1Client.getOAuthRequestToken(params)
