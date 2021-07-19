@@ -8,7 +8,7 @@ import { Issuer } from "openid-client"
  * Client supporting OAuth 2.x and OIDC
  * @param {import("types/internals").InternalOptions} options
  */
-export async function openidClient({ provider }) {
+export function openidClient({ provider }) {
   const issuer = new Issuer({
     issuer: `https://${provider.domain}`,
     authorization_endpoint: provider.authorizationUrl,

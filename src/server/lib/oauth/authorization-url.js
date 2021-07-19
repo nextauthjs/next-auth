@@ -4,8 +4,12 @@ import { createState } from "../oauth/state-handler"
 import { createPKCE } from "../oauth/pkce-handler"
 
 /**
- * @param {import("types/internals").NextAuthRequest} req
- * @param {import("types/internals").NextAuthResponse} res
+ *
+ * Generates an authorization/request token URL.
+ *
+ * [OAuth 2](https://www.oauth.com/oauth2-servers/authorization/the-authorization-request/) | [OAuth 1](https://oauth.net/core/1.0a/#auth_step2)
+ * @type {import("types/internals").NextAuthApiHandler}
+ * @returns {string}
  */
 export default async function getAuthorizationUrl(req, res) {
   const { logger } = req.options
@@ -17,29 +21,33 @@ export default async function getAuthorizationUrl(req, res) {
     ...req.query,
   }
 
-  // Handle OAuth v1.x
-  if (provider.version?.startsWith("1.")) {
-    try {
+  try {
+    // Handle OAuth v1.x
+    if (provider.version?.startsWith("1.")) {
       const tokens = await oAuth1Client.getOAuthRequestToken(params)
       const url = `${provider.authorizationUrl}?${new URLSearchParams({
         oauth_token: tokens.oauth_token,
         oauth_token_secret: tokens.oauth_token_secret,
         ...tokens.params,
       })}`
+
       logger.debug("GET_AUTHORIZATION_URL", { url })
       return url
-    } catch (error) {
-      logger.error("GET_AUTHORIZATION_URL_ERROR", error)
-      throw error
     }
-  }
+    // TODO: authorizationParams vs params. What's the difference?
+    const client = openidClient(req.options)
+    const pkce = await createPKCE(req, res)
 
-  // TODO: authorizationParams vs params. What's the difference?
-  const client = await openidClient(req.options)
-  const pkce = await createPKCE(req, res)
-  return client.authorizationUrl({
-    ...params,
-    ...pkce,
-    state: createState(req),
-  })
+    const url = client.authorizationUrl({
+      ...params,
+      ...pkce,
+      state: createState(req),
+    })
+
+    logger.debug("GET_AUTHORIZATION_URL", { url })
+    return url
+  } catch (error) {
+    logger.error("GET_AUTHORIZATION_URL_ERROR", error)
+    throw error
+  }
 }

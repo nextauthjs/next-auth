@@ -1,5 +1,5 @@
-import getAuthorizationUrl from "../lib/signin/oauth"
-import emailSignin from "../lib/signin/email"
+import getAuthorizationUrl from "../lib/oauth/authorization-url"
+import emailSignin from "../lib/email/signin"
 import adapterErrorHandler from "../../adapters/error-handler"
 
 /**
