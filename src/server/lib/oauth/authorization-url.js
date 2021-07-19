@@ -34,7 +34,6 @@ export default async function getAuthorizationUrl(req, res) {
       logger.debug("GET_AUTHORIZATION_URL", { url })
       return url
     }
-    // TODO: authorizationParams vs params. What's the difference?
     const client = openidClient(req.options)
     const pkce = await createPKCE(req, res)
 
