@@ -3,12 +3,8 @@ export default function Box(options) {
     id: "box",
     name: "Box",
     type: "oauth",
-
-    scope: "",
-    params: { grant_type: "authorization_code" },
+    authorization: "https://account.box.com/api/oauth2/authorize",
     accessTokenUrl: "https://api.box.com/oauth2/token",
-    authorizationUrl:
-      "https://account.box.com/api/oauth2/authorize?response_type=code",
     profileUrl: "https://api.box.com/2.0/users/me",
     profile(profile) {
       return {

@@ -3,14 +3,16 @@ export default function IdentityServer4(options) {
     id: "identity-server4",
     name: "IdentityServer4",
     type: "oauth",
-
-    scope: "openid profile email",
-    params: { grant_type: "authorization_code" },
+    authorization: `https://${options.domain}/connect/authorize?scope=openid+profile+email`,
     accessTokenUrl: `https://${options.domain}/connect/token`,
-    authorizationUrl: `https://${options.domain}/connect/authorize?response_type=code`,
     profileUrl: `https://${options.domain}/connect/userinfo`,
     profile(profile) {
-      return { ...profile, id: profile.sub }
+      return {
+        id: profile.sub,
+        name: profile.name,
+        email: profile.email,
+        image: null,
+      }
     },
     ...options,
   }

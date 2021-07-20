@@ -1,22 +1,20 @@
 export default function AzureADB2C(options) {
   const { tenantName, primaryUserFlow } = options
-  const authorizeUrl = `https://${tenantName}.b2clogin.com/${tenantName}.onmicrosoft.com/${primaryUserFlow}/oauth2/v2.0/authorize`
-  const tokenUrl = `https://${tenantName}.b2clogin.com/${tenantName}.onmicrosoft.com/${primaryUserFlow}/oauth2/v2.0/token`
 
   return {
     id: "azure-ad-b2c",
     name: "Azure Active Directory B2C",
     type: "oauth",
-
-    params: {
-      grant_type: "authorization_code",
+    authorization: {
+      url: `https://${tenantName}.b2clogin.com/${tenantName}.onmicrosoft.com/${primaryUserFlow}/oauth2/v2.0/authorize`,
+      params: {
+        response_type: "code id_token",
+        response_mode: "query",
+      },
     },
-    accessTokenUrl: tokenUrl,
-    requestTokenUrl: tokenUrl,
-    authorizationUrl: `${authorizeUrl}?response_type=code+id_token&response_mode=query`,
-    profileUrl: "https://graph.microsoft.com/oidc/userinfo",
+    accessTokenUrl: `https://${tenantName}.b2clogin.com/${tenantName}.onmicrosoft.com/${primaryUserFlow}/oauth2/v2.0/token`,
     idToken: true,
-    profile: (profile) => {
+    profile(profile) {
       let name = ""
 
       if (profile.name) {
@@ -31,9 +29,10 @@ export default function AzureADB2C(options) {
       }
 
       return {
-        name,
         id: profile.oid,
+        name,
         email: profile.emails[0],
+        image: null,
       }
     },
     ...options,

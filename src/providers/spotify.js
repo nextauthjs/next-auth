@@ -3,12 +3,9 @@ export default function Spotify(options) {
     id: "spotify",
     name: "Spotify",
     type: "oauth",
-
-    scope: "user-read-email",
-    params: { grant_type: "authorization_code" },
+    authorization:
+      "https://accounts.spotify.com/authorize?scope=user-read-email",
     accessTokenUrl: "https://accounts.spotify.com/api/token",
-    authorizationUrl:
-      "https://accounts.spotify.com/authorize?response_type=code",
     profileUrl: "https://api.spotify.com/v1/me",
     profile(profile) {
       return {

@@ -3,12 +3,9 @@ export default function Yandex(options) {
     id: "yandex",
     name: "Yandex",
     type: "oauth",
-
-    scope: "login:email login:info",
-    params: { grant_type: "authorization_code" },
+    authorization:
+      "https://oauth.yandex.ru/authorize?scope=login:email+login:info",
     accessTokenUrl: "https://oauth.yandex.ru/token",
-    requestTokenUrl: "https://oauth.yandex.ru/token",
-    authorizationUrl: "https://oauth.yandex.ru/authorize?response_type=code",
     profileUrl: "https://login.yandex.ru/info?format=json",
     profile(profile) {
       return {

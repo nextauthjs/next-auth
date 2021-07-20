@@ -3,19 +3,15 @@ export default function Reddit(options) {
     id: "reddit",
     name: "Reddit",
     type: "oauth",
-
-    scope: "identity",
-    params: { grant_type: "authorization_code" },
+    authorization: "https://www.reddit.com/api/v1/authorize?scope=identity",
     accessTokenUrl: " https://www.reddit.com/api/v1/access_token",
-    authorizationUrl:
-      "https://www.reddit.com/api/v1/authorize?response_type=code",
     profileUrl: "https://oauth.reddit.com/api/v1/me",
     profile(profile) {
       return {
         id: profile.id,
         name: profile.name,
-        image: null,
         email: null,
+        image: null,
       }
     },
     ...options,

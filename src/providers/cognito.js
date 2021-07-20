@@ -4,11 +4,8 @@ export default function Cognito(options) {
     id: "cognito",
     name: "Cognito",
     type: "oauth",
-
-    scope: "openid profile email",
-    params: { grant_type: "authorization_code" },
+    authorization: `https://${domain}/oauth2/authorize?scope=openid+profile+email`,
     accessTokenUrl: `https://${domain}/oauth2/token`,
-    authorizationUrl: `https://${domain}/oauth2/authorize?response_type=code`,
     profileUrl: `https://${domain}/oauth2/userInfo`,
     profile(profile) {
       return {

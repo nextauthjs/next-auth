@@ -3,11 +3,8 @@ export default function Mailchimp(options) {
     id: "mailchimp",
     name: "Mailchimp",
     type: "oauth",
-    scope: "",
-    params: { grant_type: "authorization_code" },
+    authorization: "https://login.mailchimp.com/oauth2/authorize",
     accessTokenUrl: "https://login.mailchimp.com/oauth2/token",
-    authorizationUrl:
-      "https://login.mailchimp.com/oauth2/authorize?response_type=code",
     profileUrl: "https://login.mailchimp.com/oauth2/metadata",
     profile: (profile) => {
       return {

@@ -3,13 +3,14 @@ export default function Atlassian(options) {
     id: "atlassian",
     name: "Atlassian",
     type: "oauth",
-
-    params: {
-      grant_type: "authorization_code",
+    authorization: {
+      url: "https://auth.atlassian.com/oauth/authorize",
+      params: {
+        audience: "api.atlassian.com",
+        prompt: "consent",
+      },
     },
     accessTokenUrl: "https://auth.atlassian.com/oauth/token",
-    authorizationUrl:
-      "https://auth.atlassian.com/authorize?audience=api.atlassian.com&response_type=code&prompt=consent",
     profileUrl: "https://api.atlassian.com/me",
     profile(profile) {
       return {

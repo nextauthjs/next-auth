@@ -3,13 +3,9 @@ export default function Coinbase(options) {
     id: "coinbase",
     name: "Coinbase",
     type: "oauth",
-
-    scope: "wallet:user:email wallet:user:read",
-    params: { grant_type: "authorization_code" },
+    authorization:
+      "https://www.coinbase.com/oauth/authorize?scope=wallet:user:email+wallet:user:read",
     accessTokenUrl: "https://api.coinbase.com/oauth/token",
-    requestTokenUrl: "https://api.coinbase.com/oauth/token",
-    authorizationUrl:
-      "https://www.coinbase.com/oauth/authorize?response_type=code",
     profileUrl: "https://api.coinbase.com/v2/user",
     profile(profile) {
       return {

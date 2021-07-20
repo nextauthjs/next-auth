@@ -3,11 +3,8 @@ export default function Auth0(options) {
     id: "auth0",
     name: "Auth0",
     type: "oauth",
-
-    params: { grant_type: "authorization_code" },
-    scope: "openid email profile",
+    authorization: `https://${options.domain}/authorize?scope=openid+email+profile`,
     accessTokenUrl: `https://${options.domain}/oauth/token`,
-    authorizationUrl: `https://${options.domain}/authorize?response_type=code`,
     profileUrl: `https://${options.domain}/userinfo`,
     profile(profile) {
       return {

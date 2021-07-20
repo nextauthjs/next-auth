@@ -3,17 +3,17 @@ export default function FortyTwo(options) {
     id: "42-school",
     name: "42 School",
     type: "oauth",
-    params: { grant_type: "authorization_code" },
+    authorization: "https://api.intra.42.fr/oauth/authorize",
     accessTokenUrl: "https://api.intra.42.fr/oauth/token",
-    authorizationUrl:
-      "https://api.intra.42.fr/oauth/authorize?response_type=code",
     profileUrl: "https://api.intra.42.fr/v2/me",
-    profile: (profile) => ({
-      id: profile.id,
-      email: profile.email,
-      image: profile.image_url,
-      name: profile.usual_full_name,
-    }),
+    profile(profile) {
+      return {
+        id: profile.id,
+        name: profile.usual_full_name,
+        email: profile.email,
+        image: profile.image_url,
+      }
+    },
     ...options,
   }
 }

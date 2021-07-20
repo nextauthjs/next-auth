@@ -3,11 +3,8 @@ export default function Medium(options) {
     id: "medium",
     name: "Medium",
     type: "oauth",
-
-    scope: "basicProfile",
-    params: { grant_type: "authorization_code" },
+    authorization: "https://medium.com/m/oauth/authorize?scope=basicProfile",
     accessTokenUrl: "https://api.medium.com/v1/tokens",
-    authorizationUrl: "https://medium.com/m/oauth/authorize?response_type=code",
     profileUrl: "https://api.medium.com/v1/me",
     profile(profile) {
       return {

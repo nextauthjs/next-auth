@@ -1,18 +1,10 @@
 export default function FusionAuth(options) {
-  let authorizationUrl = `https://${options.domain}/oauth2/authorize?response_type=code`
-  if (options.tenantId) {
-    authorizationUrl += `&tenantId=${options.tenantId}`
-  }
-
   return {
     id: "fusionauth",
     name: "FusionAuth",
     type: "oauth",
-
-    scope: "openid",
-    params: { grant_type: "authorization_code" },
+    authorization: `https://${options.domain}/oauth2/authorize`,
     accessTokenUrl: `https://${options.domain}/oauth2/token`,
-    authorizationUrl,
     profileUrl: `https://${options.domain}/oauth2/userinfo`,
     profile(profile) {
       return {

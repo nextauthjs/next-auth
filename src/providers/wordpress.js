@@ -3,12 +3,9 @@ export default function WordPress(options) {
     id: "wordpress",
     name: "WordPress.com",
     type: "oauth",
-
-    scope: "auth",
-    params: { grant_type: "authorization_code" },
+    authorization:
+      "https://public-api.wordpress.com/oauth2/authorize?scope=auth",
     accessTokenUrl: "https://public-api.wordpress.com/oauth2/token",
-    authorizationUrl:
-      "https://public-api.wordpress.com/oauth2/authorize?response_type=code",
     profileUrl: "https://public-api.wordpress.com/rest/v1/me",
     profile(profile) {
       return {

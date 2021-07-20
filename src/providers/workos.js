@@ -1,24 +1,19 @@
 export default function WorkOS(options) {
-  const domain = options.domain || "api.workos.com"
+  const { domain = "api.workos.com" } = options
 
   return {
     id: "workos",
     name: "WorkOS",
     type: "oauth",
-
-    scope: "",
-    params: {
-      grant_type: "authorization_code",
-      client_id: options.clientId,
-      client_secret: options.clientSecret,
-    },
+    authorization: `https://${domain}/sso/authorize`,
     accessTokenUrl: `https://${domain}/sso/token`,
-    authorizationUrl: `https://${domain}/sso/authorize?response_type=code`,
     profileUrl: `https://${domain}/sso/profile`,
     profile: (profile) => {
       return {
-        ...profile,
+        id: profile.id,
         name: `${profile.first_name} ${profile.last_name}`,
+        email: profile.email,
+        image: null,
       }
     },
     ...options,

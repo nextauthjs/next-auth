@@ -32,20 +32,16 @@ export default function Dropbox(options) {
     id: "dropbox",
     name: "Dropbox",
     type: "oauth",
-
-    scope: "account_info.read",
-    params: { grant_type: "authorization_code" },
+    authorization:
+      "https://www.dropbox.com/oauth2/authorize?token_access_type=offline&scope=account_info.read",
     accessTokenUrl: "https://api.dropboxapi.com/oauth2/token",
-    authorizationUrl:
-      "https://www.dropbox.com/oauth2/authorize?token_access_type=offline&response_type=code",
     profileUrl: "https://api.dropboxapi.com/2/users/get_current_account",
-    profile: (profile) => {
+    profile(profile) {
       return {
         id: profile.account_id,
         name: profile.name.display_name,
         email: profile.email,
         image: profile.profile_photo_url,
-        email_verified: profile.email_verified,
       }
     },
     checks: ["state", "pkce"],

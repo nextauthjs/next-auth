@@ -3,10 +3,8 @@ export default function Netlify(options) {
     id: "netlify",
     name: "Netlify",
     type: "oauth",
-
-    params: { grant_type: "authorization_code" },
+    authorization: "https://app.netlify.com/authorize",
     accessTokenUrl: "https://api.netlify.com/oauth/token",
-    authorizationUrl: "https://app.netlify.com/authorize?response_type=code",
     profileUrl: "https://api.netlify.com/api/v1/user",
     profile(profile) {
       return {

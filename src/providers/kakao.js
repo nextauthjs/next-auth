@@ -3,11 +3,8 @@ export default function Kakao(options) {
     id: "kakao",
     name: "Kakao",
     type: "oauth",
-
-    params: { grant_type: "authorization_code" },
+    authorization: "https://kauth.kakao.com/oauth/authorize",
     accessTokenUrl: "https://kauth.kakao.com/oauth/token",
-    authorizationUrl:
-      "https://kauth.kakao.com/oauth/authorize?response_type=code",
     profileUrl: "https://kapi.kakao.com/v2/user/me",
     profile(profile) {
       return {

@@ -3,12 +3,9 @@ export default function Discord(options) {
     id: "discord",
     name: "Discord",
     type: "oauth",
-
-    scope: "identify email",
-    params: { grant_type: "authorization_code" },
+    authorization:
+      "https://discord.com/api/oauth2/authorize?scope=identify+email",
     accessTokenUrl: "https://discord.com/api/oauth2/token",
-    authorizationUrl:
-      "https://discord.com/api/oauth2/authorize?response_type=code&prompt=none",
     profileUrl: "https://discord.com/api/users/@me",
     profile(profile) {
       if (profile.avatar === null) {

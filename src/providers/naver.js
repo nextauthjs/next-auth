@@ -3,16 +3,15 @@ export default function Naver(options) {
     id: "naver",
     name: "Naver",
     type: "oauth",
-
-    params: { grant_type: "authorization_code" },
-    checks: ["state"],
+    authorization: "https://nid.naver.com/oauth2.0/authorize",
     accessTokenUrl: "https://nid.naver.com/oauth2.0/token",
-    authorizationUrl:
-      "https://nid.naver.com/oauth2.0/authorize?response_type=code",
     profileUrl: "https://openapi.naver.com/v1/nid/me",
     profile(profile) {
+      // REVIEW: By default, we only want to expose the
+      // "id", "name", "email" and "image" fields.
       return profile.response
     },
+    checks: ["state"],
     ...options,
   }
 }
