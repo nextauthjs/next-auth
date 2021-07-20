@@ -9,9 +9,14 @@ import { Issuer } from "openid-client"
  * @param {import("types/internals").InternalOptions} options
  */
 export function openidClient({ provider }) {
+  const authorization_endpoint =
+    typeof provider.authorization === "string"
+      ? provider.authorization
+      : provider.authorization.url
+
   const issuer = new Issuer({
     issuer: `https://${provider.domain}`,
-    authorization_endpoint: provider.authorizationUrl,
+    authorization_endpoint,
     userinfo_endpoint: provider.profileUrl,
     token_endpoint: provider.accessTokenUrl,
     jwks_uri: `https://${provider.domain}/.well-known/jwks.json`,

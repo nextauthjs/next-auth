@@ -1,6 +1,7 @@
 import { Profile, TokenSet, User } from "."
 import { Awaitable, NextApiRequest } from "./internals/utils"
-import { Options as SMTPConnectionOptions } from 'nodemailer/lib/smtp-connection'
+import { Options as SMTPConnectionOptions } from "nodemailer/lib/smtp-connection"
+import { AuthorizationParameters } from "openid-client"
 
 export type ProviderType = "oauth" | "email" | "credentials"
 
@@ -23,6 +24,7 @@ type ChecksType = "pkce" | "state" | "both" | "none"
  */
 export interface OAuthConfig<P extends Record<string, unknown> = Profile>
   extends CommonProviderOptions {
+  authorization: string | { params?: AuthorizationParameters; url: string }
   authorizationParams?: Record<string, string>
   headers?: Record<string, any>
   type: "oauth"
