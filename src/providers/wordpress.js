@@ -3,7 +3,7 @@ export default function WordPress(options) {
     id: "wordpress",
     name: "WordPress.com",
     type: "oauth",
-    version: "2.0",
+
     scope: "auth",
     params: { grant_type: "authorization_code" },
     accessTokenUrl: "https://public-api.wordpress.com/oauth2/token",

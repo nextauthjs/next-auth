@@ -29,7 +29,7 @@ export default function Instagram(options) {
     id: "instagram",
     name: "Instagram",
     type: "oauth",
-    version: "2.0",
+
     scope: "user_profile",
     params: { grant_type: "authorization_code" },
     accessTokenUrl: "https://api.instagram.com/oauth/access_token",

@@ -3,7 +3,7 @@ export default function Google(options) {
     id: "google",
     name: "Google",
     type: "oauth",
-    version: "2.0",
+
     scope:
       "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
     params: { grant_type: "authorization_code" },

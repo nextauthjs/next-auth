@@ -3,7 +3,7 @@ export default function MailRu(options) {
     id: "mailru",
     name: "Mail.ru",
     type: "oauth",
-    version: "2.0",
+
     scope: "userinfo",
     params: {
       grant_type: "authorization_code",

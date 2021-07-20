@@ -5,7 +5,7 @@ export default function VK(options) {
     id: "vk",
     name: "VK",
     type: "oauth",
-    version: "2.0",
+
     scope: "email",
     params: {
       grant_type: "authorization_code",

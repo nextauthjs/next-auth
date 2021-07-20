@@ -3,7 +3,7 @@ export default function Facebook(options) {
     id: "facebook",
     name: "Facebook",
     type: "oauth",
-    version: "2.0",
+
     scope: "email",
     accessTokenUrl: "https://graph.facebook.com/oauth/access_token",
     authorizationUrl:

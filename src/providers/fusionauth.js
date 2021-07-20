@@ -8,7 +8,7 @@ export default function FusionAuth(options) {
     id: "fusionauth",
     name: "FusionAuth",
     type: "oauth",
-    version: "2.0",
+
     scope: "openid",
     params: { grant_type: "authorization_code" },
     accessTokenUrl: `https://${options.domain}/oauth2/token`,

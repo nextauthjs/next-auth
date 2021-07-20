@@ -3,7 +3,7 @@ export default function Strava(options) {
     id: "strava",
     name: "Strava",
     type: "oauth",
-    version: "2.0",
+
     scope: "read",
     params: { grant_type: "authorization_code" },
     accessTokenUrl: "https://www.strava.com/api/v3/oauth/token",

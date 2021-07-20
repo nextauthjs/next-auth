@@ -3,7 +3,7 @@ export default function Spotify(options) {
     id: "spotify",
     name: "Spotify",
     type: "oauth",
-    version: "2.0",
+
     scope: "user-read-email",
     params: { grant_type: "authorization_code" },
     accessTokenUrl: "https://accounts.spotify.com/api/token",

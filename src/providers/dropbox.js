@@ -32,7 +32,7 @@ export default function Dropbox(options) {
     id: "dropbox",
     name: "Dropbox",
     type: "oauth",
-    version: "2.0",
+
     scope: "account_info.read",
     params: { grant_type: "authorization_code" },
     accessTokenUrl: "https://api.dropboxapi.com/oauth2/token",

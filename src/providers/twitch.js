@@ -3,7 +3,7 @@ export default function Twitch(options) {
     id: "twitch",
     name: "Twitch",
     type: "oauth",
-    version: "2.0",
+
     scope: "user:read:email",
     params: { grant_type: "authorization_code" },
     accessTokenUrl: "https://id.twitch.tv/oauth2/token",

@@ -3,7 +3,7 @@ export default function GitLab(options) {
     id: "gitlab",
     name: "GitLab",
     type: "oauth",
-    version: "2.0",
+
     scope: "read_user",
     params: { grant_type: "authorization_code" },
     accessTokenUrl: "https://gitlab.com/oauth/token",

@@ -3,7 +3,7 @@ export default function Okta(options) {
     id: "okta",
     name: "Okta",
     type: "oauth",
-    version: "2.0",
+
     scope: "openid profile email",
     params: {
       grant_type: "authorization_code",

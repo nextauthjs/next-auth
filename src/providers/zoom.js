@@ -3,7 +3,7 @@ export default function Zoom(options) {
     id: "zoom",
     name: "Zoom",
     type: "oauth",
-    version: "2.0",
+
     params: { grant_type: "authorization_code" },
     accessTokenUrl: "https://zoom.us/oauth/token",
     authorizationUrl: "https://zoom.us/oauth/authorize?response_type=code",

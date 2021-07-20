@@ -3,7 +3,7 @@ export default function Apple(options) {
     id: "apple",
     name: "Apple",
     type: "oauth",
-    version: "2.0",
+
     scope: "name email",
     params: { grant_type: "authorization_code" },
     accessTokenUrl: "https://appleid.apple.com/auth/token",

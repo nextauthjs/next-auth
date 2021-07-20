@@ -3,7 +3,7 @@ export default function Reddit(options) {
     id: "reddit",
     name: "Reddit",
     type: "oauth",
-    version: "2.0",
+
     scope: "identity",
     params: { grant_type: "authorization_code" },
     accessTokenUrl: " https://www.reddit.com/api/v1/access_token",

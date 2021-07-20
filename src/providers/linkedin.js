@@ -3,7 +3,7 @@ export default function LinkedIn(options) {
     id: "linkedin",
     name: "LinkedIn",
     type: "oauth",
-    version: "2.0",
+
     scope: "r_liteprofile",
     params: {
       grant_type: "authorization_code",

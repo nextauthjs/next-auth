@@ -5,7 +5,7 @@ export default function WorkOS(options) {
     id: "workos",
     name: "WorkOS",
     type: "oauth",
-    version: "2.0",
+
     scope: "",
     params: {
       grant_type: "authorization_code",

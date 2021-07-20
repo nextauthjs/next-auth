@@ -3,7 +3,7 @@ export default function Basecamp(options) {
     id: "basecamp",
     name: "Basecamp",
     type: "oauth",
-    version: "2.0",
+
     accessTokenUrl:
       "https://launchpad.37signals.com/authorization/token?type=web_server",
     authorizationUrl:

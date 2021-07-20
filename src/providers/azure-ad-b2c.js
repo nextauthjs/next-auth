@@ -7,17 +7,17 @@ export default function AzureADB2C(options) {
     id: "azure-ad-b2c",
     name: "Azure Active Directory B2C",
     type: "oauth",
-    version: "2.0",
+
     params: {
       grant_type: "authorization_code",
     },
     accessTokenUrl: tokenUrl,
     requestTokenUrl: tokenUrl,
     authorizationUrl: `${authorizeUrl}?response_type=code+id_token&response_mode=query`,
-    profileUrl: 'https://graph.microsoft.com/oidc/userinfo',
+    profileUrl: "https://graph.microsoft.com/oidc/userinfo",
     idToken: true,
     profile: (profile) => {
-      let name = ''
+      let name = ""
 
       if (profile.name) {
         // B2C "Display Name"
@@ -33,7 +33,7 @@ export default function AzureADB2C(options) {
       return {
         name,
         id: profile.oid,
-        email: profile.emails[0]
+        email: profile.emails[0],
       }
     },
     ...options,

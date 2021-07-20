@@ -3,7 +3,7 @@ export default function FACEIT(options) {
     id: "faceit",
     name: "FACEIT",
     type: "oauth",
-    version: "2.0",
+
     params: { grant_type: "authorization_code" },
     headers: {
       Authorization: `Basic ${Buffer.from(

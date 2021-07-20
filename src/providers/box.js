@@ -3,7 +3,7 @@ export default function Box(options) {
     id: "box",
     name: "Box",
     type: "oauth",
-    version: "2.0",
+
     scope: "",
     params: { grant_type: "authorization_code" },
     accessTokenUrl: "https://api.box.com/oauth2/token",

@@ -3,7 +3,7 @@ export default function Bungie(options) {
     id: "bungie",
     name: "Bungie",
     type: "oauth",
-    version: "2.0",
+
     scope: "",
     params: { reauth: "true", grant_type: "authorization_code" },
     accessTokenUrl: "https://www.bungie.net/platform/app/oauth/token/",

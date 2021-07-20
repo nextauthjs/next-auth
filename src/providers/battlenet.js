@@ -4,7 +4,7 @@ export default function BattleNet(options) {
     id: "battlenet",
     name: "Battle.net",
     type: "oauth",
-    version: "2.0",
+
     scope: "openid",
     params: { grant_type: "authorization_code" },
     accessTokenUrl:

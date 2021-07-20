@@ -3,7 +3,7 @@ export default function Zoho(options) {
     id: "zoho",
     name: "Zoho",
     type: "oauth",
-    version: "2.0",
+
     scope: "AaaServer.profile.Read",
     params: { grant_type: "authorization_code" },
     accessTokenUrl: "https://accounts.zoho.com/oauth/v2/token",

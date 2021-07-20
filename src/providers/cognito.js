@@ -4,7 +4,7 @@ export default function Cognito(options) {
     id: "cognito",
     name: "Cognito",
     type: "oauth",
-    version: "2.0",
+
     scope: "openid profile email",
     params: { grant_type: "authorization_code" },
     accessTokenUrl: `https://${domain}/oauth2/token`,

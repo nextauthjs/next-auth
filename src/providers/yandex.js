@@ -3,7 +3,7 @@ export default function Yandex(options) {
     id: "yandex",
     name: "Yandex",
     type: "oauth",
-    version: "2.0",
+
     scope: "login:email login:info",
     params: { grant_type: "authorization_code" },
     accessTokenUrl: "https://oauth.yandex.ru/token",

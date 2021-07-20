@@ -3,7 +3,7 @@ export default function Slack(options) {
     id: "slack",
     name: "Slack",
     type: "oauth",
-    version: "2.0",
+
     scope: [],
     params: { grant_type: "authorization_code" },
     accessTokenUrl: "https://slack.com/api/oauth.v2.access",

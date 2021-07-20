@@ -3,7 +3,7 @@ export default function IdentityServer4(options) {
     id: "identity-server4",
     name: "IdentityServer4",
     type: "oauth",
-    version: "2.0",
+
     scope: "openid profile email",
     params: { grant_type: "authorization_code" },
     accessTokenUrl: `https://${options.domain}/connect/token`,

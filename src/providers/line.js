@@ -3,7 +3,7 @@ export default function LINE(options) {
     id: "line",
     name: "LINE",
     type: "oauth",
-    version: "2.0",
+
     scope: "profile openid",
     params: { grant_type: "authorization_code" },
     accessTokenUrl: "https://api.line.me/oauth2/v2.1/token",

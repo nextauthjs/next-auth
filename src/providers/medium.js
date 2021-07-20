@@ -3,7 +3,7 @@ export default function Medium(options) {
     id: "medium",
     name: "Medium",
     type: "oauth",
-    version: "2.0",
+
     scope: "basicProfile",
     params: { grant_type: "authorization_code" },
     accessTokenUrl: "https://api.medium.com/v1/tokens",

@@ -3,7 +3,7 @@ export default function Kakao(options) {
     id: "kakao",
     name: "Kakao",
     type: "oauth",
-    version: "2.0",
+
     params: { grant_type: "authorization_code" },
     accessTokenUrl: "https://kauth.kakao.com/oauth/token",
     authorizationUrl:

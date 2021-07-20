@@ -3,7 +3,7 @@ export default function Naver(options) {
     id: "naver",
     name: "Naver",
     type: "oauth",
-    version: "2.0",
+
     params: { grant_type: "authorization_code" },
     checks: ["state"],
     accessTokenUrl: "https://nid.naver.com/oauth2.0/token",

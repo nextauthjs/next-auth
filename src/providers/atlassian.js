@@ -3,7 +3,7 @@ export default function Atlassian(options) {
     id: "atlassian",
     name: "Atlassian",
     type: "oauth",
-    version: "2.0",
+
     params: {
       grant_type: "authorization_code",
     },

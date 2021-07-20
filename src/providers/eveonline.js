@@ -3,7 +3,7 @@ export default function EVEOnline(options) {
     id: "eveonline",
     name: "EVE Online",
     type: "oauth",
-    version: "2.0",
+
     params: { grant_type: "authorization_code" },
     accessTokenUrl: "https://login.eveonline.com/oauth/token",
     authorizationUrl:

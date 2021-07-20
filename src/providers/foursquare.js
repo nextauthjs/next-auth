@@ -4,7 +4,7 @@ export default function Foursquare(options) {
     id: "foursquare",
     name: "Foursquare",
     type: "oauth",
-    version: "2.0",
+
     params: { grant_type: "authorization_code" },
     accessTokenUrl: "https://foursquare.com/oauth2/access_token",
     authorizationUrl:
