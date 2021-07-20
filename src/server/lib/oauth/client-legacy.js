@@ -7,7 +7,7 @@ import { OAuth } from "oauth"
  * Client supporting OAuth 1.x
  * @param {import("types/internals").InternalOptions} options
  */
-export async function oAuth1Client({ provider }) {
+export function oAuth1Client({ provider }) {
   const oauth1Client = new OAuth(
     provider.requestTokenUrl,
     provider.accessTokenUrl,

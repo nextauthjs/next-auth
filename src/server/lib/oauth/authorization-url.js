@@ -23,7 +23,8 @@ export default async function getAuthorizationUrl(req, res) {
     }
     // Handle OAuth v1.x
     if (provider.version?.startsWith("1.")) {
-      const tokens = await oAuth1Client.getOAuthRequestToken(params)
+      const client = oAuth1Client(req.options)
+      const tokens = await client.getOAuthRequestToken(params)
       const url = `${provider.authorizationUrl}?${new URLSearchParams({
         oauth_token: tokens.oauth_token,
         oauth_token_secret: tokens.oauth_token_secret,
