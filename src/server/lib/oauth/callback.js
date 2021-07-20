@@ -31,8 +31,8 @@ export default async function oAuthCallback(req, res) {
       )
       let profile = await client.get(
         provider.profileUrl,
-        tokens.accessToken,
-        tokens.refreshToken
+        tokens.oauth_token,
+        tokens.oauth_token_secret
       )
 
       if (typeof profile === "string") {
