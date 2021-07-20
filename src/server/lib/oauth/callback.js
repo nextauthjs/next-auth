@@ -29,13 +29,17 @@ export default async function oAuthCallback(req, res) {
         null,
         oauth_verifier
       )
-      const profileData = await client.get(
+      let profile = await client.get(
         provider.profileUrl,
         tokens.accessToken,
         tokens.refreshToken
       )
 
-      return getProfile({ profile: profileData, tokens, provider, logger })
+      if (typeof profile === "string") {
+        profile = JSON.parse(profile)
+      }
+
+      return getProfile({ profile, tokens, provider, logger })
     } catch (error) {
       logger.error("OAUTH_V1_GET_ACCESS_TOKEN_ERROR", error)
       throw error
