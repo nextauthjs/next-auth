@@ -8,7 +8,10 @@ import { Issuer } from "openid-client"
  * Client supporting OAuth 2.x and OIDC
  * @param {import("types/internals").InternalOptions} options
  */
-export function openidClient({ provider }) {
+export function openidClient(options) {
+  /** @type {import("types/providers").OAuthConfig} */
+  const provider = options.provider
+
   const authorization_endpoint =
     typeof provider.authorization === "string"
       ? provider.authorization

@@ -6,7 +6,10 @@ import { OAuthCallbackError } from "../../../lib/errors"
 
 /** @type {import("types/internals").NextAuthApiHandler} */
 export default async function oAuthCallback(req, res) {
-  const { provider, logger } = req.options
+  const { logger } = req.options
+
+  /** @type {import("types/providers").OAuthConfig} */
+  const provider = req.options.provider
 
   const errorMessage = req.body.error ?? req.query.error
   if (errorMessage) {
