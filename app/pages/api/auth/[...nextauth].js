@@ -4,51 +4,42 @@ import GitHubProvider from "next-auth/providers/github"
 import Auth0Provider from "next-auth/providers/auth0"
 import TwitterProvider from "next-auth/providers/twitter"
 import CredentialsProvider from "next-auth/providers/credentials"
+import IDS4Provider from "next-auth/providers/identity-server4"
 
 export default NextAuth({
-  // Used to debug https://github.com/nextauthjs/next-auth/issues/1664
-  // cookies: {
-  //   csrfToken: {
-  //     name: 'next-auth.csrf-token',
-  //     options: {
-  //       httpOnly: true,
-  //       sameSite: 'none',
-  //       path: '/',
-  //       secure: true
-  //     }
-  //   },
-  //   pkceCodeVerifier: {
-  //     name: 'next-auth.pkce.code_verifier',
-  //     options: {
-  //       httpOnly: true,
-  //       sameSite: 'none',
-  //       path: '/',
-  //       secure: true
-  //     }
-  //   }
-  // },
   providers: [
+    // E-mail
     EmailProvider({
       server: process.env.EMAIL_SERVER,
       from: process.env.EMAIL_FROM,
     }),
+
+    // OAuth 2
     GitHubProvider({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET,
     }),
+
+    // OIDC
     Auth0Provider({
       clientId: process.env.AUTH0_ID,
       clientSecret: process.env.AUTH0_SECRET,
-      domain: process.env.AUTH0_DOMAIN,
+      issuer: process.env.AUTH0_ISSUER,
       checks: ["pkce", "state"],
-      // params: {
-      //   response_mode: "form_post",
-      // },
     }),
+    IDS4Provider({
+      clientId: process.env.IDS4_ID,
+      clientSecret: process.env.IDS4_SECRET,
+      issuer: process.env.IDS4_ISSUER,
+      checks: ["pkce"],
+    }),
+
+    // OAuth 1
     TwitterProvider({
       clientId: process.env.TWITTER_ID,
       clientSecret: process.env.TWITTER_SECRET,
     }),
+    // Credentials
     CredentialsProvider({
       name: "Credentials",
       credentials: {
