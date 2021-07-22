@@ -25,8 +25,7 @@ export function openidClient(options) {
     authorization_endpoint,
     token_endpoint,
     userinfo_endpoint: provider.profileUrl,
-    token_endpoint: provider.accessTokenUrl,
-    jwks_uri: `https://${provider.domain}/.well-known/jwks.json`,
+    jwks_uri: provider.jwks_uri,
   })
 
   const client = new issuer.Client({
