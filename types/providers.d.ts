@@ -1,7 +1,7 @@
 import { Profile, TokenSet, User } from "."
 import { Awaitable, NextApiRequest } from "./internals/utils"
 import { Options as SMTPConnectionOptions } from "nodemailer/lib/smtp-connection"
-import { AuthorizationParameters } from "openid-client"
+import { AuthorizationParameters, IssuerMetadata } from "openid-client"
 
 export type ProviderType = "oauth" | "email" | "credentials"
 
@@ -17,13 +17,16 @@ export interface CommonProviderOptions {
 
 type ChecksType = "pkce" | "state" | "both" | "none"
 
+type PartialIssuer = Partial<Pick<IssuerMetadata, "jwks_endpoint" | "issuer">>
+
 /**
  * OAuth provider options
  *
  * [Documentation](https://next-auth.js.org/configuration/providers#oauth-provider-options)
  */
 export interface OAuthConfig<P extends Record<string, unknown> = Profile>
-  extends CommonProviderOptions {
+  extends CommonProviderOptions,
+    PartialIssuer {
   authorization: string | { params?: AuthorizationParameters; url: string }
   authorizationParams?: Record<string, string>
   headers?: Record<string, any>
@@ -46,7 +49,7 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
   // TODO: only allow for BattleNet
   region?: string
   // TODO: only allow for some
-  domain?: string
+  issuer?: string
   // TODO: only allow for Azure Active Directory B2C and FusionAuth
   tenantId?: string
 }

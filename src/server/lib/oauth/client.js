@@ -18,7 +18,7 @@ export function openidClient(options) {
       : provider.authorization.url
 
   const issuer = new Issuer({
-    issuer: `https://${provider.domain}`,
+    issuer: provider.issuer,
     authorization_endpoint,
     userinfo_endpoint: provider.profileUrl,
     token_endpoint: provider.accessTokenUrl,
