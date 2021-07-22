@@ -5,7 +5,7 @@ export default function Foursquare(options) {
     name: "Foursquare",
     type: "oauth",
     authorization: "https://foursquare.com/oauth2/authenticate",
-    accessTokenUrl: "https://foursquare.com/oauth2/access_token",
+    token: "https://foursquare.com/oauth2/access_token",
     profileUrl: `https://api.foursquare.com/v2/users/self?v=${apiVersion}`,
     profile(profile) {
       return {

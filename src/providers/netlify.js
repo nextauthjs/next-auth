@@ -4,7 +4,7 @@ export default function Netlify(options) {
     name: "Netlify",
     type: "oauth",
     authorization: "https://app.netlify.com/authorize",
-    accessTokenUrl: "https://api.netlify.com/oauth/token",
+    token: "https://api.netlify.com/oauth/token",
     profileUrl: "https://api.netlify.com/api/v1/user",
     profile(profile) {
       return {

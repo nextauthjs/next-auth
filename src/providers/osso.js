@@ -3,9 +3,9 @@ export default function Osso(options) {
     id: "osso",
     name: "Osso",
     type: "oauth",
-    authorization: `https://${options.domain}/oauth/authorize`,
-    accessTokenUrl: `https://${options.domain}/oauth/token`,
-    profileUrl: `https://${options.domain}/oauth/me`,
+    authorization: `${options.issuer}oauth/authorize`,
+    token: `${options.issuer}oauth/token`,
+    profileUrl: `${options.issuer}oauth/me`,
     profile(profile) {
       return {
         id: profile.id,

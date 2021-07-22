@@ -4,7 +4,7 @@ export default function Kakao(options) {
     name: "Kakao",
     type: "oauth",
     authorization: "https://kauth.kakao.com/oauth/authorize",
-    accessTokenUrl: "https://kauth.kakao.com/oauth/token",
+    token: "https://kauth.kakao.com/oauth/token",
     profileUrl: "https://kapi.kakao.com/v2/user/me",
     profile(profile) {
       return {

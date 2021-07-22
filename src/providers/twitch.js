@@ -5,7 +5,7 @@ export default function Twitch(options) {
     type: "oauth",
     authorization:
       "https://id.twitch.tv/oauth2/authorize?scope=user:read:email",
-    accessTokenUrl: "https://id.twitch.tv/oauth2/token",
+    token: "https://id.twitch.tv/oauth2/token",
     profileUrl: "https://api.twitch.tv/helix/users",
     profile(profile) {
       const data = profile.data[0]

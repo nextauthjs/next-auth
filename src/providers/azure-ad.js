@@ -6,9 +6,9 @@ export default function AzureAD(options) {
     name: "Azure Active Directory",
     type: "oauth",
     authorization: `https://login.microsoftonline.com/${tenant}/oauth2/v2.0/authorize?response_mode=query`,
-    accessTokenUrl: `https://login.microsoftonline.com/${tenant}/oauth2/v2.0/token`,
+    token: `https://login.microsoftonline.com/${tenant}/oauth2/v2.0/token`,
     profileUrl: "https://graph.microsoft.com/v1.0/me/",
-    profile: (profile) => {
+    profile(profile) {
       return {
         id: profile.id,
         name: profile.displayName,

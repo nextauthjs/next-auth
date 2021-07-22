@@ -3,9 +3,9 @@ export default function FusionAuth(options) {
     id: "fusionauth",
     name: "FusionAuth",
     type: "oauth",
-    authorization: `https://${options.domain}/oauth2/authorize`,
-    accessTokenUrl: `https://${options.domain}/oauth2/token`,
-    profileUrl: `https://${options.domain}/oauth2/userinfo`,
+    authorization: `${options.issuer}oauth2/authorize`,
+    token: `${options.issuer}oauth2/token`,
+    profileUrl: `${options.issuer}oauth2/userinfo`,
     profile(profile) {
       return {
         id: profile.sub,

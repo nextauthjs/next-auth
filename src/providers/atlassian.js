@@ -10,7 +10,7 @@ export default function Atlassian(options) {
         prompt: "consent",
       },
     },
-    accessTokenUrl: "https://auth.atlassian.com/oauth/token",
+    token: "https://auth.atlassian.com/oauth/token",
     profileUrl: "https://api.atlassian.com/me",
     profile(profile) {
       return {

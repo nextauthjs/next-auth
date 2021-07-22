@@ -5,7 +5,7 @@ export default function Spotify(options) {
     type: "oauth",
     authorization:
       "https://accounts.spotify.com/authorize?scope=user-read-email",
-    accessTokenUrl: "https://accounts.spotify.com/api/token",
+    token: "https://accounts.spotify.com/api/token",
     profileUrl: "https://api.spotify.com/v1/me",
     profile(profile) {
       return {

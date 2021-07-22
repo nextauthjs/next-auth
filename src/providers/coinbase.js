@@ -5,7 +5,7 @@ export default function Coinbase(options) {
     type: "oauth",
     authorization:
       "https://www.coinbase.com/oauth/authorize?scope=wallet:user:email+wallet:user:read",
-    accessTokenUrl: "https://api.coinbase.com/oauth/token",
+    token: "https://api.coinbase.com/oauth/token",
     profileUrl: "https://api.coinbase.com/v2/user",
     profile(profile) {
       return {

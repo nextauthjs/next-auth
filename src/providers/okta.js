@@ -3,9 +3,9 @@ export default function Okta(options) {
     id: "okta",
     name: "Okta",
     type: "oauth",
-    authorization: `https://${options.domain}/v1/authorize?scope=openid+profile+email`,
-    accessTokenUrl: `https://${options.domain}/v1/token`,
-    profileUrl: `https://${options.domain}/v1/userinfo/`,
+    authorization: `${options.issuer}v1/authorize?scope=openid+profile+email`,
+    token: `${options.issuer}v1/token`,
+    profileUrl: `${options.issuer}v1/userinfo`,
     profile(profile) {
       return {
         id: profile.sub,

@@ -4,7 +4,7 @@ export default function EVEOnline(options) {
     name: "EVE Online",
     type: "oauth",
     authorization: "https://login.eveonline.com/oauth/authorize",
-    accessTokenUrl: "https://login.eveonline.com/oauth/token",
+    token: "https://login.eveonline.com/oauth/token",
     profileUrl: "https://login.eveonline.com/oauth/verify",
     profile(profile) {
       return {

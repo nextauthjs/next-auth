@@ -5,7 +5,7 @@ export default function Zoho(options) {
     type: "oauth",
     authorization:
       "https://accounts.zoho.com/oauth/v2/auth?scope=AaaServer.profile.Read",
-    accessTokenUrl: "https://accounts.zoho.com/oauth/v2/token",
+    token: "https://accounts.zoho.com/oauth/v2/token",
     profileUrl: "https://accounts.zoho.com/oauth/user/info",
     profile(profile) {
       return {

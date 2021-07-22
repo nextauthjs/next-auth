@@ -4,7 +4,7 @@ export default function Box(options) {
     name: "Box",
     type: "oauth",
     authorization: "https://account.box.com/api/oauth2/authorize",
-    accessTokenUrl: "https://api.box.com/oauth2/token",
+    token: "https://api.box.com/oauth2/token",
     profileUrl: "https://api.box.com/2.0/users/me",
     profile(profile) {
       return {

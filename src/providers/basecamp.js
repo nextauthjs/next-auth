@@ -5,7 +5,7 @@ export default function Basecamp(options) {
     type: "oauth",
     authorization:
       "https://launchpad.37signals.com/authorization/new?type=web_server",
-    accessTokenUrl:
+    token:
       "https://launchpad.37signals.com/authorization/token?type=web_server",
     profileUrl: "https://launchpad.37signals.com/authorization.json",
     profile(profile) {

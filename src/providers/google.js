@@ -8,7 +8,7 @@ export default function Google(options) {
       scope:
         "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
     },
-    accessTokenUrl: "https://accounts.google.com/o/oauth2/token",
+    token: "https://accounts.google.com/o/oauth2/token",
     profileUrl: "https://www.googleapis.com/oauth2/v1/userinfo?alt=json",
     profile(profile) {
       return {

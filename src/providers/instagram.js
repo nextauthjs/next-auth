@@ -31,7 +31,7 @@ export default function Instagram(options) {
     type: "oauth",
     authorization:
       "https://api.instagram.com/oauth/authorize?scope=user_profile",
-    accessTokenUrl: "https://api.instagram.com/oauth/access_token",
+    token: "https://api.instagram.com/oauth/access_token",
     profileUrl:
       "https://graph.instagram.com/me?fields=id,username,account_type,name",
     async profile(profile) {

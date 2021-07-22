@@ -5,7 +5,7 @@ export default function Discord(options) {
     type: "oauth",
     authorization:
       "https://discord.com/api/oauth2/authorize?scope=identify+email",
-    accessTokenUrl: "https://discord.com/api/oauth2/token",
+    token: "https://discord.com/api/oauth2/token",
     profileUrl: "https://discord.com/api/users/@me",
     profile(profile) {
       if (profile.avatar === null) {

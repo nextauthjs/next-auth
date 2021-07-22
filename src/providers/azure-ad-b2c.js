@@ -12,8 +12,11 @@ export default function AzureADB2C(options) {
         response_mode: "query",
       },
     },
-    accessTokenUrl: `https://${tenantName}.b2clogin.com/${tenantName}.onmicrosoft.com/${primaryUserFlow}/oauth2/v2.0/token`,
-    idToken: true,
+    token: {
+      url: `https://${tenantName}.b2clogin.com/${tenantName}.onmicrosoft.com/${primaryUserFlow}/oauth2/v2.0/token`,
+      idToken: true,
+    },
+    jwks_uri: `https://${tenantName}.b2clogin.com/${tenantName}.onmicrosoft.com/${primaryUserFlow}}/discovery/v2.0/keys`,
     profile(profile) {
       let name = ""
 

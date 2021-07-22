@@ -4,7 +4,7 @@ export default function Bungie(options) {
     name: "Bungie",
     type: "oauth",
     authorization: "https://www.bungie.net/en/OAuth/Authorize?reauth=true",
-    accessTokenUrl: "https://www.bungie.net/platform/app/oauth/token/",
+    token: "https://www.bungie.net/platform/app/oauth/token/",
     profileUrl:
       "https://www.bungie.net/platform/User/GetBungieAccount/{membershipId}/254/",
     profile(profile) {

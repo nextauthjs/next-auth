@@ -4,7 +4,7 @@ export default function FortyTwo(options) {
     name: "42 School",
     type: "oauth",
     authorization: "https://api.intra.42.fr/oauth/authorize",
-    accessTokenUrl: "https://api.intra.42.fr/oauth/token",
+    token: "https://api.intra.42.fr/oauth/token",
     profileUrl: "https://api.intra.42.fr/v2/me",
     profile(profile) {
       return {

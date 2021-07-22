@@ -9,7 +9,7 @@ export default function FACEIT(options) {
         `${options.clientId}:${options.clientSecret}`
       ).toString("base64")}`,
     },
-    accessTokenUrl: "https://api.faceit.com/auth/v1/oauth/token",
+    token: "https://api.faceit.com/auth/v1/oauth/token",
     profileUrl: "https://api.faceit.com/auth/v1/resources/userinfo",
     profile(profile) {
       return {

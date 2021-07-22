@@ -4,7 +4,7 @@ export default function Naver(options) {
     name: "Naver",
     type: "oauth",
     authorization: "https://nid.naver.com/oauth2.0/authorize",
-    accessTokenUrl: "https://nid.naver.com/oauth2.0/token",
+    token: "https://nid.naver.com/oauth2.0/token",
     profileUrl: "https://openapi.naver.com/v1/nid/me",
     profile(profile) {
       // REVIEW: By default, we only want to expose the

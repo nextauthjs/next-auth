@@ -12,8 +12,11 @@ export default function Apple(options) {
         response_mode: "form_post",
       },
     },
-    accessTokenUrl: "https://appleid.apple.com/auth/token",
-    idToken: true,
+    token: {
+      url: "https://appleid.apple.com/auth/token",
+      idToken: true,
+    },
+    jwks_endpoint: "https://appleid.apple.com/auth/keys",
     profile(profile) {
       // The name of the user will only be returned on first login
       const name = profile.user

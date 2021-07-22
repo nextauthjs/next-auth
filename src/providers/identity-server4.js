@@ -1,11 +1,13 @@
+/** @return {import("types/providers").OAuthConfig} */
 export default function IdentityServer4(options) {
   return {
     id: "identity-server4",
     name: "IdentityServer4",
     type: "oauth",
-    authorization: `https://${options.domain}/connect/authorize?scope=openid+profile+email`,
-    accessTokenUrl: `https://${options.domain}/connect/token`,
-    profileUrl: `https://${options.domain}/connect/userinfo`,
+    authorization: `${options.issuer}/connect/authorize?scope=openid+profile+email`,
+    token: { url: `${options.issuer}/connect/token`, idToken: true },
+    jwks_uri: `${options.issuer}/.well-known/openid-configuration/jwks`,
+    profileUrl: `${options.issuer}/connect/userinfo`,
     profile(profile) {
       return {
         id: profile.sub,

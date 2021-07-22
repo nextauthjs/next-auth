@@ -5,7 +5,7 @@ export default function LinkedIn(options) {
     type: "oauth",
     authorization:
       "https://www.linkedin.com/oauth/v2/authorization?scope=r_liteprofile",
-    accessTokenUrl: "https://www.linkedin.com/oauth/v2/accessToken",
+    token: "https://www.linkedin.com/oauth/v2/accessToken",
     profileUrl:
       "https://api.linkedin.com/v2/me?projection=(id,localizedFirstName,localizedLastName)",
     profile(profile) {

@@ -5,7 +5,7 @@ export default function Salesforce(options) {
     type: "oauth",
     authorization:
       "https://login.salesforce.com/services/oauth2/authorize?display=page",
-    accessTokenUrl: "https://login.salesforce.com/services/oauth2/token",
+    token: "https://login.salesforce.com/services/oauth2/token",
     profileUrl: "https://login.salesforce.com/services/oauth2/userinfo",
     profile(profile) {
       return {

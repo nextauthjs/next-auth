@@ -4,9 +4,10 @@ export default function GitHub(options) {
     name: "GitHub",
     type: "oauth",
     authorization: "https://github.com/login/oauth/authorize?scope=user",
-    accessTokenUrl: "https://github.com/login/oauth/access_token",
+    token: "https://github.com/login/oauth/access_token",
     profileUrl: "https://api.github.com/user",
     profile(profile) {
+      console.log(profile)
       return {
         id: profile.id.toString(),
         name: profile.name || profile.login,

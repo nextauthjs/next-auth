@@ -9,7 +9,7 @@ export default function Slack(options) {
         user_scope: "identity.basic,identity.email,identity.avatar",
       },
     },
-    accessTokenUrl: "https://slack.com/api/oauth.v2.access",
+    token: "https://slack.com/api/oauth.v2.access",
     profileUrl: "https://slack.com/api/users.identity",
     profile(profile) {
       return {
