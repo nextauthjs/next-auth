@@ -30,6 +30,21 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
   authorization: string | { params?: AuthorizationParameters; url: string }
   authorizationParams?: Record<string, string>
   headers?: Record<string, any>
+  token:
+    | string
+    | {
+        url: string
+        /**
+         * If set to `true`, the user information will be extracted
+         * from the `id_token` claims, instead of
+         * making a request to the userinfo endpoint.
+         *
+         * It is usually present in OpenID Connect (OIDC) compliant providers.
+         *
+         * [`id_token` explanation](https://www.oauth.com/oauth2-servers/openid-connect/id-tokens)
+         */
+        idToken?: boolean
+      }
   type: "oauth"
   version: string
   scope: string

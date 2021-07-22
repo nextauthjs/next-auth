@@ -61,7 +61,7 @@ export default async function oAuthCallback(req, res) {
     let profile
     let tokens
 
-    if (provider.idToken) {
+    if (provider.token.idToken) {
       // Handle OIDC
       // TODO: Add nonce check
       tokens = await client.callback(provider.callbackUrl, params, checks)

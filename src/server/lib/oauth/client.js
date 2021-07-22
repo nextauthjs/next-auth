@@ -17,9 +17,13 @@ export function openidClient(options) {
       ? provider.authorization
       : provider.authorization.url
 
+  const token_endpoint =
+    typeof provider.token === "string" ? provider.token : provider.token.url
+
   const issuer = new Issuer({
     issuer: provider.issuer,
     authorization_endpoint,
+    token_endpoint,
     userinfo_endpoint: provider.profileUrl,
     token_endpoint: provider.accessTokenUrl,
     jwks_uri: `https://${provider.domain}/.well-known/jwks.json`,
