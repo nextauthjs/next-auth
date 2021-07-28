@@ -274,7 +274,7 @@ The following parameters are always overridden server-side: `redirect_uri`, `sta
 - Client Side: **Yes**
 - Server Side: No
 
-Using the `signOut()` method ensures the user ends back on the page they started on after completing the sign out flow. It also handles CSRF tokens for you automatically.
+In order to logout, use the `signOut()` method to ensure the user ends back on the page they started on after completing the sign out flow. It also handles CSRF tokens for you automatically.
 
 It reloads the page in the browser when complete.
 
@@ -351,16 +351,17 @@ If you have session expiry times of 30 days (the default) or more then you proba
 However, if you need to customise the session behaviour and/or are using short session expiry times, you can pass options to the provider to customise the behaviour of the `useSession()` hook.
 
 ```jsx title="pages/_app.js"
-import { Provider } from 'next-auth/client'
+import { Provider } from "next-auth/client"
 
-export default function App ({ Component, pageProps }) {
+export default function App({ Component, pageProps }) {
   return (
-    <Provider session={pageProps.session}
+    <Provider
+      session={pageProps.session}
       options={{
-        clientMaxAge: 60,     // Re-fetch session if cache is older than 60 seconds
-        keepAlive:    5 * 60 // Send keepAlive message every 5 minutes
+        clientMaxAge: 60, // Re-fetch session if cache is older than 60 seconds
+        keepAlive: 5 * 60, // Send keepAlive message every 5 minutes
       }}
-      >
+    >
       <Component {...pageProps} />
     </Provider>
   )
