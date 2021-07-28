@@ -44,6 +44,21 @@ Options are passed to NextAuth.js when initializing it in an API route.
 
 An array of authentication providers for signing in (e.g. Google, Facebook, Twitter, GitHub, Email, etc) in any order. This can be one of the built-in providers or an object with a custom provider.
 
+If you need to use an asynchronous function in your provider instantiation, you can setup your `[...nextauth].js` file like so:
+
+```js
+export default async function handler(req, res) {
+  NextAuth(req, res, {
+    providers: [
+      Providers.IdentityServer4({
+        id: "identity-server",
+        clientSecret: await GetSecret(),
+      }),
+    ],
+  })
+}
+```
+
 See the [providers documentation](/configuration/providers) for a list of supported providers and how to use them.
 
 ---
