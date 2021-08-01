@@ -3,6 +3,7 @@ import { oAuth1Client } from "./client-legacy"
 import { getState } from "./state-handler"
 import { usePKCECodeVerifier } from "./pkce-handler"
 import { OAuthCallbackError } from "../../../lib/errors"
+import { TokenSet } from "openid-client"
 
 /** @type {import("types/internals").NextAuthApiHandler} */
 export default async function oAuthCallback(req, res) {
@@ -51,28 +52,42 @@ export default async function oAuthCallback(req, res) {
 
   try {
     const client = await openidClient(req.options)
+
     const params = client.callbackParams(req)
 
-    /** @type {import("openid-client").OpenIDCallbackChecks | import("openid-client").OAuthCallbackChecks} */
+    /** @type {import("types/providers").OAuthChecks} */
     const checks = {
       code_verifier: await usePKCECodeVerifier(req, res),
       state: getState(req),
     }
-    let profile
-    let tokens
 
-    if (provider.token.idToken) {
-      // Handle OIDC
-      // TODO: Add nonce check
+    /** @type {import("openid-client").TokenSet} */
+    let tokens
+    if (provider.token?.request) {
+      const response = await provider.token.request({
+        provider,
+        params,
+        checks,
+      })
+      tokens = new TokenSet(response.tokens)
+    } else if (provider.idToken) {
       tokens = await client.callback(provider.callbackUrl, params, checks)
+    } else {
+      tokens = await client.oauthCallback(provider.callbackUrl, params, checks)
+    }
+
+    /** @type {import("types").Profile} */
+    let profile
+    if (provider.userinfo?.request) {
+      profile = await provider.userinfo.request(tokens)
+    } else if (provider.idToken) {
       profile = tokens.claims()
     } else {
-      // Handle pure OAuth 2
-      tokens = await client.oauthCallback(provider.callbackUrl, params, checks)
       profile = await client.userinfo(tokens)
     }
 
     // If a user object is supplied (e.g. Apple provider) add it to the profile object
+    // TODO: Remove/extract to Apple provider
     profile.user = JSON.parse(req.body.user ?? req.query.user ?? null)
 
     return getProfile({ profile, provider, tokens, logger })
@@ -90,7 +105,7 @@ async function getProfile({ profile: OAuthProfile, tokens, provider, logger }) {
   try {
     logger.debug("PROFILE_DATA", { OAuthProfile })
     const profile = await provider.profile(OAuthProfile, tokens)
-    profile.email = profile.email?.toLowerCase() ?? null
+    profile.email = profile.email?.toLowerCase()
     // Return profile, raw profile and auth provider details
     return {
       profile,

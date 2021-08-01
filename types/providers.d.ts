@@ -1,7 +1,13 @@
 import { Profile, TokenSet, User } from "."
 import { Awaitable, NextApiRequest } from "./internals/utils"
 import { Options as SMTPConnectionOptions } from "nodemailer/lib/smtp-connection"
-import { AuthorizationParameters, IssuerMetadata } from "openid-client"
+import {
+  AuthorizationParameters,
+  CallbackParamsType,
+  IssuerMetadata,
+  OAuthCallbackChecks,
+  OpenIDCallbackChecks,
+} from "openid-client"
 
 export type ProviderType = "oauth" | "email" | "credentials"
 
@@ -16,6 +22,8 @@ export interface CommonProviderOptions {
  */
 
 type ChecksType = "pkce" | "state" | "both" | "none"
+
+export type OAuthChecks = OpenIDCallbackChecks | OAuthCallbackChecks
 
 type PartialIssuer = Partial<Pick<IssuerMetadata, "jwks_endpoint" | "issuer">>
 
@@ -44,6 +52,30 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
          * [`id_token` explanation](https://www.oauth.com/oauth2-servers/openid-connect/id-tokens)
          */
         idToken?: boolean
+        /**
+         * Control the OAuth `/token` endpoint request completely.
+         * Useful if your provider relies on some custom behaviour.
+         *
+         * - ⚠ **This is an advanced option.**
+         * You should **try to avoid using advanced options** unless you are very comfortable using them.
+         */
+        request?(params: {
+          /** Provider is passed for convenience, but also contains the `callbackUrl`. */
+          provider: OAuthConfig & {
+            signinUrl: string
+            callbackUrl: string
+          }
+          /**
+           * Parameters extracted from the request to the `/api/auth/callback/:providerId` endpoint.
+           * Contains params like `state`.
+           */
+          params: CallbackParamsType
+          /**
+           * When using this custom flow, you are on your own to do all the necessary security checks.
+           * Thist object contains parameters you have to match against the request to make sure it is valid.
+           */
+          checks: OAuthChecks
+        }): Promise<{ profile: Partial<P>; tokens: TokenSet }>
       }
   type: "oauth"
   version: string
