@@ -3,10 +3,10 @@ export default function Auth0(options) {
   return {
     id: "auth0",
     name: "Auth0",
+    wellKnown: `${options.issuer}.well-known/openid-configuration`,
     type: "oauth",
-    authorization: `${options.issuer}authorize?scope=openid+email+profile`,
-    jwks_uri: `${options.issuer}.well-known/jwks.json`,
-    token: { url: `${options.issuer}oauth/token`, idToken: true },
+    authorization: { params: { scope: "openid email profile" } },
+    idToken: true,
     profile(profile) {
       return {
         id: profile.sub,
