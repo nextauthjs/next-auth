@@ -7,7 +7,7 @@ export default function VK(options) {
     type: "oauth",
     authorization: `https://oauth.vk.com/authorize?scope=email&v=${apiVersion}`,
     token: `https://oauth.vk.com/access_token?v=${apiVersion}`,
-    profileUrl: `https://api.vk.com/method/users.get?fields=photo_100&v=${apiVersion}`,
+    userinfo: `https://api.vk.com/method/users.get?fields=photo_100&v=${apiVersion}`,
     profile(result) {
       const profile = result.response?.[0] ?? {}
       return {

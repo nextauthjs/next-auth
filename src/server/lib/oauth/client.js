@@ -16,19 +16,12 @@ export async function openidClient(options) {
   if (provider.wellKnown) {
     issuer = await Issuer.discover(provider.wellKnown)
   } else {
-    const authorization_endpoint =
-      typeof provider.authorization === "string"
-        ? provider.authorization
-        : provider.authorization.url
-
-    const token_endpoint =
-      typeof provider.token === "string" ? provider.token : provider.token.url
-
     issuer = new Issuer({
       issuer: provider.issuer,
-      authorization_endpoint,
-      token_endpoint,
-      userinfo_endpoint: provider.profileUrl,
+      authorization_endpoint:
+        provider.authorization.url ?? provider.authorization,
+      token_endpoint: provider.token.url ?? provider.token,
+      userinfo_endpoint: provider.userinfo.url ?? provider.userinfo,
       jwks_uri: provider.jwks_uri,
     })
   }

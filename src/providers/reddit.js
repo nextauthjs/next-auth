@@ -5,7 +5,7 @@ export default function Reddit(options) {
     type: "oauth",
     authorization: "https://www.reddit.com/api/v1/authorize?scope=identity",
     token: " https://www.reddit.com/api/v1/access_token",
-    profileUrl: "https://oauth.reddit.com/api/v1/me",
+    userinfo: "https://oauth.reddit.com/api/v1/me",
     profile(profile) {
       return {
         id: profile.id,

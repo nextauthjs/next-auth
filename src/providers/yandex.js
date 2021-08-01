@@ -6,7 +6,7 @@ export default function Yandex(options) {
     authorization:
       "https://oauth.yandex.ru/authorize?scope=login:email+login:info",
     token: "https://oauth.yandex.ru/token",
-    profileUrl: "https://login.yandex.ru/info?format=json",
+    userinfo: "https://login.yandex.ru/info?format=json",
     profile(profile) {
       return {
         id: profile.id,

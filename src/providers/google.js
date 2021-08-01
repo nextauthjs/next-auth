@@ -9,7 +9,7 @@ export default function Google(options) {
         "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
     },
     token: "https://accounts.google.com/o/oauth2/token",
-    profileUrl: "https://www.googleapis.com/oauth2/v1/userinfo?alt=json",
+    userinfo: "https://www.googleapis.com/oauth2/v1/userinfo?alt=json",
     profile(profile) {
       return {
         id: profile.id,

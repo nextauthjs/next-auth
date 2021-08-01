@@ -7,7 +7,7 @@ export default function WorkOS(options) {
     type: "oauth",
     authorization: `${issuer}sso/authorize`,
     token: `${issuer}sso/token`,
-    profileUrl: `${issuer}sso/profile`,
+    userinfo: `${issuer}sso/profile`,
     profile(profile) {
       return {
         id: profile.id,

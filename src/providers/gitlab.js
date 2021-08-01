@@ -5,7 +5,7 @@ export default function GitLab(options) {
     type: "oauth",
     authorization: "https://gitlab.com/oauth/authorize?scope=read_user",
     token: "https://gitlab.com/oauth/token",
-    profileUrl: "https://gitlab.com/api/v4/user",
+    userinfo: "https://gitlab.com/api/v4/user",
     profile(profile) {
       return {
         id: profile.id,

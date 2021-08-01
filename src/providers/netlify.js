@@ -5,7 +5,7 @@ export default function Netlify(options) {
     type: "oauth",
     authorization: "https://app.netlify.com/authorize",
     token: "https://api.netlify.com/oauth/token",
-    profileUrl: "https://api.netlify.com/api/v1/user",
+    userinfo: "https://api.netlify.com/api/v1/user",
     profile(profile) {
       return {
         id: profile.id,

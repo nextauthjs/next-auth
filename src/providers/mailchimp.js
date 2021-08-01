@@ -5,7 +5,7 @@ export default function Mailchimp(options) {
     type: "oauth",
     authorization: "https://login.mailchimp.com/oauth2/authorize",
     token: "https://login.mailchimp.com/oauth2/token",
-    profileUrl: "https://login.mailchimp.com/oauth2/metadata",
+    userinfo: "https://login.mailchimp.com/oauth2/metadata",
     profile(profile) {
       return {
         id: profile.login.login_id,

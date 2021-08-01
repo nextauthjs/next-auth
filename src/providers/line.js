@@ -6,7 +6,7 @@ export default function LINE(options) {
     authorization:
       "https://access.line.me/oauth2/v2.1/authorize?scope=openid+profile",
     token: "https://api.line.me/oauth2/v2.1/token",
-    profileUrl: "https://api.line.me/v2/profile",
+    userinfo: "https://api.line.me/v2/profile",
     profile(profile) {
       return {
         id: profile.userId,

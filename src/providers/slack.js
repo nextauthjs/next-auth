@@ -10,7 +10,7 @@ export default function Slack(options) {
       },
     },
     token: "https://slack.com/api/oauth.v2.access",
-    profileUrl: "https://slack.com/api/users.identity",
+    userinfo: "https://slack.com/api/users.identity",
     profile(profile) {
       return {
         id: profile.user.id,

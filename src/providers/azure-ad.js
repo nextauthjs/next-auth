@@ -7,7 +7,7 @@ export default function AzureAD(options) {
     type: "oauth",
     authorization: `https://login.microsoftonline.com/${tenant}/oauth2/v2.0/authorize?response_mode=query`,
     token: `https://login.microsoftonline.com/${tenant}/oauth2/v2.0/token`,
-    profileUrl: "https://graph.microsoft.com/v1.0/me/",
+    userinfo: "https://graph.microsoft.com/v1.0/me/",
     profile(profile) {
       return {
         id: profile.id,

@@ -5,7 +5,7 @@ export default function Bungie(options) {
     type: "oauth",
     authorization: "https://www.bungie.net/en/OAuth/Authorize?reauth=true",
     token: "https://www.bungie.net/platform/app/oauth/token/",
-    profileUrl:
+    userinfo:
       "https://www.bungie.net/platform/User/GetBungieAccount/{membershipId}/254/",
     profile(profile) {
       const { bungieNetUser: user } = profile.Response

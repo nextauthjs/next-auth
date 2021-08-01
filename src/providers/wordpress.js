@@ -6,7 +6,7 @@ export default function WordPress(options) {
     authorization:
       "https://public-api.wordpress.com/oauth2/authorize?scope=auth",
     token: "https://public-api.wordpress.com/oauth2/token",
-    profileUrl: "https://public-api.wordpress.com/rest/v1/me",
+    userinfo: "https://public-api.wordpress.com/rest/v1/me",
     profile(profile) {
       return {
         id: profile.ID,

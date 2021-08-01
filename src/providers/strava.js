@@ -5,7 +5,7 @@ export default function Strava(options) {
     type: "oauth",
     authorization: "https://www.strava.com/api/v3/oauth/authorize?scope=read",
     token: "https://www.strava.com/api/v3/oauth/token",
-    profileUrl: "https://www.strava.com/api/v3/athlete",
+    userinfo: "https://www.strava.com/api/v3/athlete",
     profile(profile) {
       return {
         id: profile.id,

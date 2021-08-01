@@ -10,7 +10,7 @@ export default function FACEIT(options) {
       ).toString("base64")}`,
     },
     token: "https://api.faceit.com/auth/v1/oauth/token",
-    profileUrl: "https://api.faceit.com/auth/v1/resources/userinfo",
+    userinfo: "https://api.faceit.com/auth/v1/resources/userinfo",
     profile(profile) {
       return {
         id: profile.guid,

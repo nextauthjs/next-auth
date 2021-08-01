@@ -5,7 +5,7 @@ export default function FortyTwo(options) {
     type: "oauth",
     authorization: "https://api.intra.42.fr/oauth/authorize",
     token: "https://api.intra.42.fr/oauth/token",
-    profileUrl: "https://api.intra.42.fr/v2/me",
+    userinfo: "https://api.intra.42.fr/v2/me",
     profile(profile) {
       return {
         id: profile.id,

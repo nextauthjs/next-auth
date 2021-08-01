@@ -5,7 +5,7 @@ export default function EVEOnline(options) {
     type: "oauth",
     authorization: "https://login.eveonline.com/oauth/authorize",
     token: "https://login.eveonline.com/oauth/token",
-    profileUrl: "https://login.eveonline.com/oauth/verify",
+    userinfo: "https://login.eveonline.com/oauth/verify",
     profile(profile) {
       return {
         id: profile.CharacterID,

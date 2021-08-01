@@ -5,7 +5,7 @@ export default function MailRu(options) {
     type: "oauth",
     authorization: "https://oauth.mail.ru/login?scope=userinfo",
     token: "https://oauth.mail.ru/token",
-    profileUrl: "https://oauth.mail.ru/userinfo",
+    userinfo: "https://oauth.mail.ru/userinfo",
     profile(profile) {
       return {
         id: profile.id,

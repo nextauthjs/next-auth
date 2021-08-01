@@ -5,7 +5,7 @@ export default function Cognito(options) {
     type: "oauth",
     authorization: `${options.issuer}oauth2/authorize?scope=openid+profile+email`,
     token: `${options.issuer}oauth2/token`,
-    profileUrl: `${options.issuer}oauth2/userInfo`,
+    userinfo: `${options.issuer}oauth2/userInfo`,
     profile(profile) {
       return {
         id: profile.sub,

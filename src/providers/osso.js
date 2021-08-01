@@ -5,7 +5,7 @@ export default function Osso(options) {
     type: "oauth",
     authorization: `${options.issuer}oauth/authorize`,
     token: `${options.issuer}oauth/token`,
-    profileUrl: `${options.issuer}oauth/me`,
+    userinfo: `${options.issuer}oauth/me`,
     profile(profile) {
       return {
         id: profile.id,

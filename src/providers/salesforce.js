@@ -6,7 +6,7 @@ export default function Salesforce(options) {
     authorization:
       "https://login.salesforce.com/services/oauth2/authorize?display=page",
     token: "https://login.salesforce.com/services/oauth2/token",
-    profileUrl: "https://login.salesforce.com/services/oauth2/userinfo",
+    userinfo: "https://login.salesforce.com/services/oauth2/userinfo",
     profile(profile) {
       return {
         id: profile.user_id,

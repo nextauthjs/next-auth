@@ -11,7 +11,7 @@ export default function Atlassian(options) {
       },
     },
     token: "https://auth.atlassian.com/oauth/token",
-    profileUrl: "https://api.atlassian.com/me",
+    userinfo: "https://api.atlassian.com/me",
     profile(profile) {
       return {
         id: profile.account_id,

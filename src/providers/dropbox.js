@@ -35,7 +35,7 @@ export default function Dropbox(options) {
     authorization:
       "https://www.dropbox.com/oauth2/authorize?token_access_type=offline&scope=account_info.read",
     token: "https://api.dropboxapi.com/oauth2/token",
-    profileUrl: "https://api.dropboxapi.com/2/users/get_current_account",
+    userinfo: "https://api.dropboxapi.com/2/users/get_current_account",
     profile(profile) {
       return {
         id: profile.account_id,
