@@ -79,7 +79,12 @@ export default async function oAuthCallback(req, res) {
     /** @type {import("types").Profile} */
     let profile
     if (provider.userinfo?.request) {
-      profile = await provider.userinfo.request(tokens)
+      profile = await provider.userinfo.request({
+        provider,
+        tokens,
+        metadata: client.issuer.metadata,
+        keystore: client.issuer.keystore,
+      })
     } else if (provider.idToken) {
       profile = tokens.claims()
     } else {

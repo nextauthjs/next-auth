@@ -4,6 +4,8 @@ import { Options as SMTPConnectionOptions } from "nodemailer/lib/smtp-connection
 import {
   AuthorizationParameters,
   CallbackParamsType,
+  Client,
+  Issuer,
   IssuerMetadata,
   OAuthCallbackChecks,
   OpenIDCallbackChecks,
@@ -41,16 +43,6 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
     | {
         url: string
         /**
-         * If set to `true`, the user information will be extracted
-         * from the `id_token` claims, instead of
-         * making a request to the userinfo endpoint.
-         *
-         * It is usually present in OpenID Connect (OIDC) compliant providers.
-         *
-         * [`id_token` explanation](https://www.oauth.com/oauth2-servers/openid-connect/id-tokens)
-         */
-        idToken?: boolean
-        /**
          * Control the OAuth `/token` endpoint request completely.
          * Useful if your provider relies on some custom behaviour.
          *
@@ -75,11 +67,35 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
           checks: OAuthChecks
         }): Promise<{ profile: Partial<P>; tokens: TokenSet }>
       }
+  /**
+   * When using an OAuth 2 provider, the user information must be requested
+   * through an additional request from the userinfo endpoing
+   */
+  userinfo?:
+    | string
+    | {
+        url: string
+        /**
+         * Control the OAuth `/userinfo` endpoint request completely.
+         * Useful if your provider relies on some custom behaviour.
+         *
+         * - ⚠ **This is an advanced option.**
+         * You should **try to avoid using advanced options** unless you are very comfortable using them.
+         */
+        request(params: {
+          /** Provider is passed for convenience. */
+          provider: OAuthConfig
+          tokens: TokenSet
+          /** Returns metadata from the issuer's discovery document. */
+          metadata: Issuer<Client>["metadata"]
+          /** Returns the issuer's jwks_uri keys as a `jose` parsed `JWKS.Keystore`. */
+          keystore: Issuer<Client>["keystore"]
+        }): Promise<Profile>
+      }
   type: "oauth"
   version: string
   accessTokenUrl: string
   requestTokenUrl?: string
-  profileUrl: string
   profile(profile: P, tokens: TokenSet): Awaitable<User & { id: string }>
   checks?: ChecksType | ChecksType[]
   clientId: string
@@ -87,6 +103,15 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
     | string
     // TODO: only allow for Apple
     | Record<"appleId" | "teamId" | "privateKey" | "keyId", string>
+  /**
+   * If set to `true`, the user information will be extracted
+   * from the `id_token` claims, instead of
+   * making a request to the userinfo endpoint.
+   *
+   * It is usually present in OpenID Connect (OIDC) compliant providers.
+   *
+   * [`id_token` explanation](https://www.oauth.com/oauth2-servers/openid-connect/id-tokens)
+   */
   idToken?: boolean
   // TODO: only allow for BattleNet
   region?: string
