@@ -36,8 +36,6 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
   extends CommonProviderOptions,
     PartialIssuer {
   authorization: string | { params?: AuthorizationParameters; url: string }
-  authorizationParams?: Record<string, string>
-  headers?: Record<string, any>
   token:
     | string
     | {
@@ -79,11 +77,8 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
       }
   type: "oauth"
   version: string
-  scope: string
-  params: { grant_type: string }
   accessTokenUrl: string
   requestTokenUrl?: string
-  authorizationUrl: string
   profileUrl: string
   profile(profile: P, tokens: TokenSet): Awaitable<User & { id: string }>
   checks?: ChecksType | ChecksType[]
