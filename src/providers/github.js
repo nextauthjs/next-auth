@@ -7,7 +7,6 @@ export default function GitHub(options) {
     token: "https://github.com/login/oauth/access_token",
     userinfo: "https://api.github.com/user",
     profile(profile) {
-      console.log(profile)
       return {
         id: profile.id.toString(),
         name: profile.name || profile.login,
