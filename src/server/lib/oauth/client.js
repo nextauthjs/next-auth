@@ -8,25 +8,30 @@ import { Issuer } from "openid-client"
  * Client supporting OAuth 2.x and OIDC
  * @param {import("types/internals").InternalOptions} options
  */
-export function openidClient(options) {
+export async function openidClient(options) {
   /** @type {import("types/providers").OAuthConfig} */
   const provider = options.provider
 
-  const authorization_endpoint =
-    typeof provider.authorization === "string"
-      ? provider.authorization
-      : provider.authorization.url
+  let issuer
+  if (provider.wellKnown) {
+    issuer = await Issuer.discover(provider.wellKnown)
+  } else {
+    const authorization_endpoint =
+      typeof provider.authorization === "string"
+        ? provider.authorization
+        : provider.authorization.url
 
-  const token_endpoint =
-    typeof provider.token === "string" ? provider.token : provider.token.url
+    const token_endpoint =
+      typeof provider.token === "string" ? provider.token : provider.token.url
 
-  const issuer = new Issuer({
-    issuer: provider.issuer,
-    authorization_endpoint,
-    token_endpoint,
-    userinfo_endpoint: provider.profileUrl,
-    jwks_uri: provider.jwks_uri,
-  })
+    issuer = new Issuer({
+      issuer: provider.issuer,
+      authorization_endpoint,
+      token_endpoint,
+      userinfo_endpoint: provider.profileUrl,
+      jwks_uri: provider.jwks_uri,
+    })
+  }
 
   const client = new issuer.Client({
     client_id: provider.clientId,
