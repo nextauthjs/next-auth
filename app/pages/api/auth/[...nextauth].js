@@ -5,6 +5,7 @@ import Auth0Provider from "next-auth/providers/auth0"
 import TwitterProvider from "next-auth/providers/twitter"
 import CredentialsProvider from "next-auth/providers/credentials"
 import IDS4Provider from "next-auth/providers/identity-server4"
+import Twitch from "next-auth/providers/twitch"
 
 export default NextAuth({
   providers: [
@@ -32,6 +33,10 @@ export default NextAuth({
       clientSecret: process.env.IDS4_SECRET,
       issuer: process.env.IDS4_ISSUER,
       checks: ["pkce"],
+    }),
+    Twitch({
+      clientId: process.env.TWITCH_ID,
+      clientSecret: process.env.TWITCH_SECRET,
     }),
 
     // OAuth 1
