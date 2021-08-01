@@ -24,7 +24,7 @@ export default async function getAuthorizationUrl(req, res) {
       const parsedParams = Object.fromEntries(parsedUrl.searchParams.entries())
       params = { ...params, ...parsedParams }
     } else {
-      params = { ...params, ...provider.authorization.params }
+      params = { ...params, ...provider.authorization?.params }
     }
 
     params = { ...params, ...req.query }
@@ -42,7 +42,7 @@ export default async function getAuthorizationUrl(req, res) {
       logger.debug("GET_AUTHORIZATION_URL", { url })
       return url
     }
-    const client = openidClient(req.options)
+    const client = await openidClient(req.options)
     const pkce = await createPKCE(req, res)
 
     const url = client.authorizationUrl({
