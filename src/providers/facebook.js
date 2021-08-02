@@ -8,9 +8,11 @@ export default function Facebook(options) {
     token: "https://graph.facebook.com/oauth/access_token",
     userinfo: {
       url: "https://graph.facebook.com/me",
-      request({ tokens, client }) {
+      // https://developers.facebook.com/docs/graph-api/reference/user/#fields
+      params: { fields: "id,name,email,picture" },
+      request({ tokens, client, provider }) {
         return client.userinfo(tokens.access_token, {
-          params: { fields: "id,name,email,picture" },
+          params: provider.userinfo.params,
         })
       },
     },

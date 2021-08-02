@@ -53,16 +53,16 @@ export default async function oAuthCallback(req, res) {
   try {
     const client = await openidClient(req.options)
 
-    const params = client.callbackParams(req)
+    /** @type {import("openid-client").TokenSet} */
+    let tokens
 
     /** @type {import("types/providers").OAuthChecks} */
     const checks = {
       code_verifier: await usePKCECodeVerifier(req, res),
       state: getState(req),
     }
+    const params = { ...client.callbackParams(req), ...provider.token?.params }
 
-    /** @type {import("openid-client").TokenSet} */
-    let tokens
     if (provider.token?.request) {
       const response = await provider.token.request({
         provider,
@@ -88,11 +88,13 @@ export default async function oAuthCallback(req, res) {
     } else if (provider.idToken) {
       profile = tokens.claims()
     } else {
-      profile = await client.userinfo(tokens)
+      profile = await client.userinfo(tokens, {
+        params: provider.userinfo.params,
+      })
     }
 
     // If a user object is supplied (e.g. Apple provider) add it to the profile object
-    // TODO: Remove/extract to Apple provider
+    // TODO: Remove/extract to Apple provider?
     profile.user = JSON.parse(req.body.user ?? req.query.user ?? null)
 
     return getProfile({ profile, provider, tokens, logger })

@@ -8,17 +8,14 @@ export default function Foursquare(options) {
     authorization: "https://foursquare.com/oauth2/authenticate",
     token: "https://foursquare.com/oauth2/access_token",
     userinfo: {
-      url: "https://api.foursquare.com/v2/users/self",
-      async request({ tokens, client }) {
-        const result = await client.userinfo(tokens.access_token, {
-          via: "query",
-          method: "GET",
-          params: { v: apiVersion, oauth_token: tokens.access_token },
+      url: `https://api.foursquare.com/v2/users/self?v=${apiVersion}`,
+      request({ tokens, client }) {
+        return client.userinfo(undefined, {
+          params: { oauth_token: tokens.access_token },
         })
-        return result.response.user
       },
     },
-    profile(profile) {
+    profile({ response: { profile } }) {
       return {
         id: profile.id,
         name: `${profile.firstName} ${profile.lastName}`,
