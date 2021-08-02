@@ -29,69 +29,90 @@ export type OAuthChecks = OpenIDCallbackChecks | OAuthCallbackChecks
 
 type PartialIssuer = Partial<Pick<IssuerMetadata, "jwks_endpoint" | "issuer">>
 
-/**
- * OAuth provider options
- *
- * [Documentation](https://next-auth.js.org/configuration/providers#oauth-provider-options)
- */
+type UrlParams = Record<string, unknown>
+
+type EndpointRequest<C, R> = (
+  context: C & {
+    /** `openid-client` Client */
+    client: Client
+    /** Provider is passed for convenience, ans also contains the `callbackUrl`. */
+    provider: OAuthConfig & {
+      signinUrl: string
+      callbackUrl: string
+    }
+  }
+) => Awaitable<R>
+
+/** Gives granular control of the request to the given endpoint */
+type AdvancedEndpointHandler<P extends UrlParams, C, R> = {
+  /** Endpoint URL. Can contain parameters. Optionally, you can use `params`*/
+  url?: string
+  /** These will be prepended to the `url` */
+  params?: P
+  /**
+   * Control the corresponding OAuth endpoint request completely.
+   * Useful if your provider relies on some custom behaviour
+   * or it diverges from the OAuth spec.
+   *
+   * - ⚠ **This is an advanced option.**
+   * You should **try to avoid using advanced options** unless you are very comfortable using them.
+   */
+  request?: EndpointRequest<C, R>
+}
+
+/** Either an URL (containing all the parameters) or an object with more granular control. */
+type EndpointHandler<P extends UrlParams, C = any, R = any> =
+  | string
+  | AdvancedEndpointHandler<P, C, R>
+
 export interface OAuthConfig<P extends Record<string, unknown> = Profile>
   extends CommonProviderOptions,
     PartialIssuer {
-  authorization: string | { params?: AuthorizationParameters; url: string }
-  token:
-    | string
-    | {
-        url: string
-        /**
-         * Control the OAuth `/token` endpoint request completely.
-         * Useful if your provider relies on some custom behaviour.
-         *
-         * - ⚠ **This is an advanced option.**
-         * You should **try to avoid using advanced options** unless you are very comfortable using them.
-         */
-        request?(params: {
-          /** Provider is passed for convenience, but also contains the `callbackUrl`. */
-          provider: OAuthConfig & {
-            signinUrl: string
-            callbackUrl: string
-          }
-          /**
-           * Parameters extracted from the request to the `/api/auth/callback/:providerId` endpoint.
-           * Contains params like `state`.
-           */
-          params: CallbackParamsType
-          /**
-           * When using this custom flow, you are on your own to do all the necessary security checks.
-           * Thist object contains parameters you have to match against the request to make sure it is valid.
-           */
-          checks: OAuthChecks
-          /** `openid-client` Client */
-          client: Client
-        }): Promise<{ profile: Partial<P>; tokens: TokenSet }>
-      }
+  /**
+   * OpenID Connect (OIDC) compliant providers can configure
+   * this instead of `authorize`/`token`/`userinfo` options
+   * without further configuration needed in most cases.
+   * You can still use the `authorize`/`token`/`userinfo`
+   * options for advanced control.
+   *
+   * [Authorization Server Metadata](https://datatracker.ietf.org/doc/html/rfc8414#section-3)
+   */
+  wellKnown?: string
+  /**
+   * The login process will be initiated by sending the user to this URL.
+   *
+   * [Authorization endpoint](https://datatracker.ietf.org/doc/html/rfc6749#section-3.1)
+   */
+  authorization: EndpointHandler<AuthorizationParameters>
+  /**
+   * Endpoint that returns OAuth 2/OIDC tokens and information about them.
+   * This includes `access_token`, `id_token`, `refresh_token`, etc.
+   *
+   * [Token endpoint](https://datatracker.ietf.org/doc/html/rfc6749#section-3.2)
+   */
+  token: EndpointHandler<
+    UrlParams,
+    {
+      /**
+       * Parameters extracted from the request to the `/api/auth/callback/:providerId` endpoint.
+       * Contains params like `state`.
+       */
+      params: CallbackParamsType
+      /**
+       * When using this custom flow, make sure to do all the necessary security checks.
+       * Thist object contains parameters you have to match against the request to make sure it is valid.
+       */
+      checks: OAuthChecks
+    },
+    { tokens: TokenSet }
+  >
   /**
    * When using an OAuth 2 provider, the user information must be requested
    * through an additional request from the userinfo endpoint.
+   *
+   * [Userinfo endpoint](https://www.oauth.com/oauth2-servers/signing-in-with-google/verifying-the-user-info)
    */
-  userinfo?:
-    | string
-    | {
-        url: string
-        /**
-         * Control the OAuth `/userinfo` endpoint request completely.
-         * Useful if your provider relies on some custom behaviour.
-         *
-         * - ⚠ **This is an advanced option.**
-         * You should **try to avoid using advanced options** unless you are very comfortable using them.
-         */
-        request(params: {
-          /** Provider is passed for convenience. */
-          provider: OAuthConfig
-          tokens: TokenSet
-          /** `openid-client` Client */
-          client: Client
-        }): Promise<Profile>
-      }
+  userinfo?: EndpointHandler<UrlParams, { tokens: TokenSet }, Profile>
   type: "oauth"
   version: string
   accessTokenUrl: string
@@ -106,9 +127,9 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
   /**
    * If set to `true`, the user information will be extracted
    * from the `id_token` claims, instead of
-   * making a request to the userinfo endpoint.
+   * making a request to the `userinfo` endpoint.
    *
-   * It is usually present in OpenID Connect (OIDC) compliant providers.
+   * `id_token` is usually present in OpenID Connect (OIDC) compliant providers.
    *
    * [`id_token` explanation](https://www.oauth.com/oauth2-servers/openid-connect/id-tokens)
    */
