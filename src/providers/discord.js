@@ -18,8 +18,8 @@ export default function Discord(options) {
       return {
         id: profile.id,
         name: profile.username,
-        image: profile.image_url,
         email: profile.email,
+        image: profile.image_url,
       }
     },
     ...options,

@@ -6,6 +6,7 @@ export default function IdentityServer4(options) {
     type: "oauth",
     wellKnown: `${options.issuer}/.well-known/openid-configuration`,
     authorization: { params: { scope: "openid profile email" } },
+    checks: ["pkce", "state"],
     idToken: true,
     profile(profile) {
       return {

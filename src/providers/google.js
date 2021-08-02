@@ -3,16 +3,13 @@ export default function Google(options) {
     id: "google",
     name: "Google",
     type: "oauth",
-    authorization: {
-      url: "https://accounts.google.com/o/oauth2/auth",
-      scope:
-        "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
-    },
-    token: "https://accounts.google.com/o/oauth2/token",
-    userinfo: "https://www.googleapis.com/oauth2/v1/userinfo?alt=json",
+    wellKnown: "https://accounts.google.com/.well-known/openid-configuration",
+    authorization: { params: { scope: "openid email profile" } },
+    idToken: true,
+    checks: ["pkce", "state"],
     profile(profile) {
       return {
-        id: profile.id,
+        id: profile.sub,
         name: profile.name,
         email: profile.email,
         image: profile.picture,
