@@ -68,6 +68,7 @@ export default async function oAuthCallback(req, res) {
         provider,
         params,
         checks,
+        client,
       })
       tokens = new TokenSet(response.tokens)
     } else if (provider.idToken) {
@@ -82,8 +83,7 @@ export default async function oAuthCallback(req, res) {
       profile = await provider.userinfo.request({
         provider,
         tokens,
-        metadata: client.issuer.metadata,
-        keystore: client.issuer.keystore,
+        client,
       })
     } else if (provider.idToken) {
       profile = tokens.claims()

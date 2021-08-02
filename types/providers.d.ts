@@ -65,11 +65,13 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
            * Thist object contains parameters you have to match against the request to make sure it is valid.
            */
           checks: OAuthChecks
+          /** `openid-client` Client */
+          client: Client
         }): Promise<{ profile: Partial<P>; tokens: TokenSet }>
       }
   /**
    * When using an OAuth 2 provider, the user information must be requested
-   * through an additional request from the userinfo endpoing
+   * through an additional request from the userinfo endpoint.
    */
   userinfo?:
     | string
@@ -86,10 +88,8 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
           /** Provider is passed for convenience. */
           provider: OAuthConfig
           tokens: TokenSet
-          /** Returns metadata from the issuer's discovery document. */
-          metadata: Issuer<Client>["metadata"]
-          /** Returns the issuer's jwks_uri keys as a `jose` parsed `JWKS.Keystore`. */
-          keystore: Issuer<Client>["keystore"]
+          /** `openid-client` Client */
+          client: Client
         }): Promise<Profile>
       }
   type: "oauth"
