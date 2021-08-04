@@ -1,27 +1,29 @@
-import getAuthorizationUrl from "../lib/signin/oauth"
-import emailSignin from "../lib/signin/email"
+import getAuthorizationUrl from "../lib/oauth/authorization-url"
+import emailSignin from "../lib/email/signin"
 
 /**
  * Handle requests to /api/auth/signin
  * @type {import("types/internals").NextAuthApiHandler}
  */
 export default async function signin(req, res) {
-  const { provider, baseUrl, basePath, adapter, callbacks, logger } =
-    req.options
+  const { baseUrl, basePath, adapter, callbacks, logger } = req.options
+
+  /** @type {import("types/providers").OAuthConfig | import("types/providers").EmailConfig} */
+  const provider = req.options.provider
 
   if (!provider.type) {
     return res.status(500).end(`Error: Type not specified for ${provider.name}`)
   }
 
-  if (provider.type === "oauth" && req.method === "POST") {
+  if (provider.type === "oauth") {
     try {
-      const authorizationUrl = await getAuthorizationUrl(req)
+      const authorizationUrl = await getAuthorizationUrl(req, res)
       return res.redirect(authorizationUrl)
     } catch (error) {
       logger.error("SIGNIN_OAUTH_ERROR", error)
       return res.redirect(`${baseUrl}${basePath}/error?error=OAuthSignin`)
     }
-  } else if (provider.type === "email" && req.method === "POST") {
+  } else if (provider.type === "email") {
     if (!adapter) {
       logger.error(
         "EMAIL_REQUIRES_ADAPTER_ERROR",
@@ -58,7 +60,7 @@ export default async function signin(req, res) {
         account,
         email: { verificationRequest: true },
       })
-      if (signInCallbackResponse === false) {
+      if (!signInCallbackResponse) {
         return res.redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
       } else if (typeof signInCallbackResponse === "string") {
         return res.redirect(signInCallbackResponse)
