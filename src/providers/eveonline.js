@@ -14,6 +14,6 @@ export default function EVEOnline(options) {
         image: `https://image.eveonline.com/Character/${profile.CharacterID}_128.jpg`,
       }
     },
-    ...options,
+    options,
   }
 }

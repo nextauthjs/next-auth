@@ -14,6 +14,6 @@ export default function Mailchimp(options) {
         image: null,
       }
     },
-    ...options,
+    options,
   }
 }

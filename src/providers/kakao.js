@@ -14,6 +14,6 @@ export default function Kakao(options) {
         image: profile.kakao_account?.profile.profile_image_url,
       }
     },
-    ...options,
+    options,
   }
 }

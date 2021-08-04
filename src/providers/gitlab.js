@@ -16,6 +16,6 @@ export default function GitLab(options) {
         image: profile.avatar_url,
       }
     },
-    ...options,
+    options,
   }
 }

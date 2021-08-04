@@ -15,6 +15,6 @@ export default function Google(options) {
         image: profile.picture,
       }
     },
-    ...options,
+    options,
   }
 }

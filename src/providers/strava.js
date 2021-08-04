@@ -14,6 +14,6 @@ export default function Strava(options) {
         image: profile.profile,
       }
     },
-    ...options,
+    options,
   }
 }

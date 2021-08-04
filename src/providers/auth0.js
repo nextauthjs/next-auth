@@ -16,6 +16,6 @@ export default function Auth0(options) {
         image: profile.picture,
       }
     },
-    ...options,
+    options,
   }
 }

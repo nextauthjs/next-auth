@@ -14,6 +14,6 @@ export default function FortyTwo(options) {
         image: profile.image_url,
       }
     },
-    ...options,
+    options,
   }
 }

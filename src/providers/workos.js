@@ -16,6 +16,6 @@ export default function WorkOS(options) {
         image: null,
       }
     },
-    ...options,
+    options,
   }
 }

@@ -42,6 +42,6 @@ export default function Instagram(options) {
         image: null,
       }
     },
-    ...options,
+    options,
   }
 }

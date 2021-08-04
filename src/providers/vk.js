@@ -17,6 +17,6 @@ export default function VK(options) {
         image: profile.photo_100,
       }
     },
-    ...options,
+    options,
   }
 }

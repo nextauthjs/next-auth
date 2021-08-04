@@ -140,6 +140,7 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
   issuer?: string
   // TODO: only allow for Azure Active Directory B2C and FusionAuth
   tenantId?: string
+  options: Omit<OAuthConfig<P>, "options">
 }
 
 export type OAuthProviderType =

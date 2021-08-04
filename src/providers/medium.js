@@ -14,6 +14,6 @@ export default function Medium(options) {
         image: profile.data.imageUrl,
       }
     },
-    ...options,
+    options,
   }
 }

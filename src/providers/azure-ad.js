@@ -16,6 +16,6 @@ export default function AzureAD(options) {
         image: null,
       }
     },
-    ...options,
+    options,
   }
 }

@@ -20,6 +20,6 @@ export default function BattleNet(options) {
         image: null,
       }
     },
-    ...options,
+    options,
   }
 }

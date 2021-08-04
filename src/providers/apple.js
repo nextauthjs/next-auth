@@ -31,6 +31,6 @@ export default function Apple(options) {
       }
     },
     checks: ["none"], // REVIEW: Apple does not support state, as far as I know. Can we use "pkce" then?
-    ...options,
+    options,
   }
 }

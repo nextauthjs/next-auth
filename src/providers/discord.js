@@ -22,6 +22,6 @@ export default function Discord(options) {
         image: profile.image_url,
       }
     },
-    ...options,
+    options,
   }
 }

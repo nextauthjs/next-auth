@@ -15,6 +15,6 @@ export default function Yandex(options) {
         image: null,
       }
     },
-    ...options,
+    options,
   }
 }

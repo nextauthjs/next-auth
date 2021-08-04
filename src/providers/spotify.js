@@ -15,6 +15,6 @@ export default function Spotify(options) {
         image: profile.images?.[0]?.url,
       }
     },
-    ...options,
+    options,
   }
 }

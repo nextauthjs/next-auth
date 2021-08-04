@@ -15,6 +15,6 @@ export default function LINE(options) {
         image: profile.pictureUrl,
       }
     },
-    ...options,
+    options,
   }
 }

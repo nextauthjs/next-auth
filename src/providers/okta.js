@@ -14,6 +14,6 @@ export default function Okta(options) {
         image: null,
       }
     },
-    ...options,
+    options,
   }
 }

@@ -14,6 +14,6 @@ export default function Cognito(options) {
         image: null,
       }
     },
-    ...options,
+    options,
   }
 }

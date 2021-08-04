@@ -5,6 +5,6 @@ export default function Credentials(options) {
     type: "credentials",
     authorize: null,
     credentials: null,
-    ...options,
+    options,
   }
 }

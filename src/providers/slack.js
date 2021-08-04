@@ -19,6 +19,6 @@ export default function Slack(options) {
         image: profile.user.image_512,
       }
     },
-    ...options,
+    options,
   }
 }

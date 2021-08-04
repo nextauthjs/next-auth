@@ -14,6 +14,6 @@ export default function Reddit(options) {
         image: null,
       }
     },
-    ...options,
+    options,
   }
 }

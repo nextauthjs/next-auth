@@ -14,6 +14,6 @@ export default function Box(options) {
         image: profile.avatar_url,
       }
     },
-    ...options,
+    options,
   }
 }

@@ -19,6 +19,6 @@ export default function Bungie(options) {
         }${user.profilePicturePath}`,
       }
     },
-    ...options,
+    options,
   }
 }

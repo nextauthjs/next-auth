@@ -25,6 +25,6 @@ export default function Foursquare(options) {
           : null,
       }
     },
-    ...options,
+    options,
   }
 }

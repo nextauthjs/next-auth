@@ -12,6 +12,6 @@ export default function Naver(options) {
       return profile.response
     },
     checks: ["state"],
-    ...options,
+    options,
   }
 }

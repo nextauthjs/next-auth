@@ -14,6 +14,6 @@ export default function MailRu(options) {
         image: profile.image,
       }
     },
-    ...options,
+    options,
   }
 }

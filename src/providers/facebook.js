@@ -24,6 +24,6 @@ export default function Facebook(options) {
         image: profile.picture.data.url,
       }
     },
-    ...options,
+    options,
   }
 }

@@ -15,6 +15,6 @@ export default function Coinbase(options) {
         image: profile.data.avatar_url,
       }
     },
-    ...options,
+    options,
   }
 }

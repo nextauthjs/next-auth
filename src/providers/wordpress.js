@@ -15,6 +15,6 @@ export default function WordPress(options) {
         image: profile.avatar_URL,
       }
     },
-    ...options,
+    options,
   }
 }

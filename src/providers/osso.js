@@ -14,6 +14,6 @@ export default function Osso(options) {
         image: null,
       }
     },
-    ...options,
+    options,
   }
 }

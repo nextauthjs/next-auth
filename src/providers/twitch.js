@@ -22,6 +22,6 @@ export default function Twitch(options) {
         image: profile.picture,
       }
     },
-    ...options,
+    options,
   }
 }

@@ -16,6 +16,6 @@ export default function LinkedIn(options) {
         image: null,
       }
     },
-    ...options,
+    options,
   }
 }

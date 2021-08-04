@@ -45,6 +45,6 @@ export default function Dropbox(options) {
       }
     },
     checks: ["state", "pkce"],
-    ...options,
+    options,
   }
 }

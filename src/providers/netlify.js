@@ -14,6 +14,6 @@ export default function Netlify(options) {
         image: profile.avatar_url,
       }
     },
-    ...options,
+    options,
   }
 }

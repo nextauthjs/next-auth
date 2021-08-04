@@ -15,6 +15,6 @@ export default function Zoho(options) {
         image: null,
       }
     },
-    ...options,
+    options,
   }
 }

@@ -16,6 +16,6 @@ export default function IdentityServer4(options) {
         image: null,
       }
     },
-    ...options,
+    options,
   }
 }

@@ -14,6 +14,6 @@ export default function FusionAuth(options) {
         image: profile.picture,
       }
     },
-    ...options,
+    options,
   }
 }

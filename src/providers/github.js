@@ -14,6 +14,6 @@ export default function GitHub(options) {
         image: profile.avatar_url,
       }
     },
-    ...options,
+    options,
   }
 }

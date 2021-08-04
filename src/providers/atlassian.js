@@ -20,6 +20,6 @@ export default function Atlassian(options) {
         image: profile.picture,
       }
     },
-    ...options,
+    options,
   }
 }

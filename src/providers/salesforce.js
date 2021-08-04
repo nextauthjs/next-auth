@@ -16,6 +16,6 @@ export default function Salesforce(options) {
       }
     },
     checks: ["none"],
-    ...options,
+    options,
   }
 }

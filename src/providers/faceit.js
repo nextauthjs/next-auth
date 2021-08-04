@@ -19,6 +19,6 @@ export default function FACEIT(options) {
         image: profile.picture,
       }
     },
-    ...options,
+    options,
   }
 }

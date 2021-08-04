@@ -38,6 +38,6 @@ export default function AzureADB2C(options) {
         image: null,
       }
     },
-    ...options,
+    options,
   }
 }

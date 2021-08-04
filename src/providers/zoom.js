@@ -14,6 +14,6 @@ export default function Zoom(options) {
         image: null,
       }
     },
-    ...options,
+    options,
   }
 }
