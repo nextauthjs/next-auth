@@ -8,7 +8,6 @@ import IDS4Provider from "next-auth/providers/identity-server4"
 import Twitch from "next-auth/providers/twitch"
 import GoogleProvider from "next-auth/providers/google"
 import FacebookProvider from "next-auth/providers/facebook"
-import BasecampProvider from "next-auth/providers/basecamp"
 import FoursquareProvider from "next-auth/providers/foursquare"
 // import FreshbooksProvider from "next-auth/providers/freshbooks"
 import GitlabProvider from "next-auth/providers/gitlab"
@@ -69,10 +68,6 @@ export default NextAuth({
     FacebookProvider({
       clientId: process.env.FACEBOOK_ID,
       clientSecret: process.env.FACEBOOK_SECRET,
-    }),
-    BasecampProvider({
-      clientId: process.env.BASECAMP_ID,
-      clientSecret: process.env.BASECAMP_SECRET,
     }),
     FoursquareProvider({
       clientId: process.env.FOURSQUARE_ID,
