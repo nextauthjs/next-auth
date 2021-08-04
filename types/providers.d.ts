@@ -115,7 +115,7 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
   userinfo?: EndpointHandler<UrlParams, { tokens: TokenSet }, Profile>
   type: "oauth"
   version: string
-  accessTokenUrl: string
+  accessTokenUrl?: string
   requestTokenUrl?: string
   profile(profile: P, tokens: TokenSet): Awaitable<User & { id: string }>
   checks?: ChecksType | ChecksType[]
@@ -140,7 +140,7 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
   issuer?: string
   // TODO: only allow for Azure Active Directory B2C and FusionAuth
   tenantId?: string
-  options: Omit<OAuthConfig<P>, "options">
+  options?: Omit<OAuthConfig<P>, "options">
 }
 
 export type OAuthProviderType =
