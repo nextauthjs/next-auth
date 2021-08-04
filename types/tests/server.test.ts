@@ -35,8 +35,12 @@ const simpleConfig = {
     Providers.GitHub({
       clientId: "123",
       clientSecret: "123",
-      scope:
-        "user public_repo repo repo_deployment repo:status read:repo_hook read:org read:public_key read:gpg_key",
+      authorization: {
+        params: {
+          scope:
+            "user public_repo repo repo_deployment repo:status read:repo_hook read:org read:public_key read:gpg_key",
+        },
+      },
     }),
   ],
 }
@@ -212,15 +216,17 @@ const customProvider: OAuthConfig<{
   name: "Google",
   type: "oauth",
   version: "2.0",
-  scope:
-    "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
-  params: { grant_type: "authorization_code" },
-  accessTokenUrl: "https://accounts.google.com/o/oauth2/token",
-  requestTokenUrl: "https://accounts.google.com/o/oauth2/auth",
-  authorizationUrl:
-    "https://accounts.google.com/o/oauth2/auth?response_type=code",
-  profileUrl: "https://www.googleapis.com/oauth2/v1/userinfo?alt=json",
-  async profile(profile, tokens) {
+  authorization: {
+    url: "https://accounts.google.com/o/oauth2/auth",
+    params: {
+      response_type: "code",
+      scope:
+        "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
+    },
+  },
+  token: "https://accounts.google.com/o/oauth2/token",
+  userinfo: "https://www.googleapis.com/oauth2/v1/userinfo?alt=json",
+  async profile(profile) {
     return {
       id: profile.id,
       name: profile.name,

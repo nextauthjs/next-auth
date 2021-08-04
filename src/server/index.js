@@ -11,8 +11,6 @@ import createSecret from "./lib/create-secret"
 import callbackUrlHandler from "./lib/callback-url-handler"
 import extendRes from "./lib/extend-res"
 import csrfTokenHandler from "./lib/csrf-token-handler"
-import * as pkce from "./lib/oauth/pkce-handler"
-import * as state from "./lib/oauth/state-handler"
 
 // To work properly in production with OAuth providers the NEXTAUTH_URL
 // environment variable must be set.
@@ -57,6 +55,8 @@ async function NextAuthHandler(req, res, userOptions) {
       error = nextauth[1],
     } = req.query
 
+    delete req.query.nextauth
+
     // @todo refactor all existing references to baseUrl and basePath
     const { basePath, baseUrl } = parseUrl(
       process.env.NEXTAUTH_URL || process.env.VERCEL_URL
@@ -80,10 +80,10 @@ async function NextAuthHandler(req, res, userOptions) {
 
     const provider = providers.find(({ id }) => id === providerId)
 
-    // Checks only work on OAuth 2.x providers
+    // Checks only work on OAuth 2.x + OIDC providers
     if (
       provider?.type === "oauth" &&
-      provider.version?.startsWith("2") &&
+      !provider.version?.startsWith("1.") &&
       !provider.checks
     ) {
       provider.checks = ["state"]
@@ -133,7 +133,6 @@ async function NextAuthHandler(req, res, userOptions) {
         ...defaultCallbacks,
         ...userOptions.callbacks,
       },
-      pkce: {},
       logger,
     }
 
@@ -169,8 +168,6 @@ async function NextAuthHandler(req, res, userOptions) {
           return render.signout()
         case "callback":
           if (provider) {
-            if (await pkce.handleCallback(req, res)) return
-            if (await state.handleCallback(req, res)) return
             return routes.callback(req, res)
           }
           break
@@ -214,8 +211,6 @@ async function NextAuthHandler(req, res, userOptions) {
         case "signin":
           // Verified CSRF Token required for all sign in routes
           if (req.options.csrfTokenVerified && provider) {
-            if (await pkce.handleSignin(req, res)) return
-            if (await state.handleSignin(req, res)) return
             return routes.signin(req, res)
           }
 
@@ -236,8 +231,6 @@ async function NextAuthHandler(req, res, userOptions) {
               return res.redirect(`${baseUrl}${basePath}/signin?csrf=true`)
             }
 
-            if (await pkce.handleCallback(req, res)) return
-            if (await state.handleCallback(req, res)) return
             return routes.callback(req, res)
           }
           break

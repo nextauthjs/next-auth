@@ -1,21 +1,17 @@
 export default function BattleNet(options) {
   const { region } = options
+  const base =
+    region === "CN"
+      ? "https://www.battlenet.com.cn/oauth"
+      : `https://${region}.battle.net/oauth`
+
   return {
     id: "battlenet",
     name: "Battle.net",
     type: "oauth",
-    version: "2.0",
-    scope: "openid",
-    params: { grant_type: "authorization_code" },
-    accessTokenUrl:
-      region === "CN"
-        ? "https://www.battlenet.com.cn/oauth/token"
-        : `https://${region}.battle.net/oauth/token`,
-    authorizationUrl:
-      region === "CN"
-        ? "https://www.battlenet.com.cn/oauth/authorize?response_type=code"
-        : `https://${region}.battle.net/oauth/authorize?response_type=code`,
-    profileUrl: "https://us.battle.net/oauth/userinfo",
+    authorization: `${base}/authorize`,
+    token: `${base}/token`,
+    userinfo: "https://us.battle.net/oauth/userinfo",
     profile(profile) {
       return {
         id: profile.id,
@@ -24,6 +20,6 @@ export default function BattleNet(options) {
         image: null,
       }
     },
-    ...options,
+    options,
   }
 }

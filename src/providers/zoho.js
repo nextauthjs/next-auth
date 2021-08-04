@@ -3,13 +3,10 @@ export default function Zoho(options) {
     id: "zoho",
     name: "Zoho",
     type: "oauth",
-    version: "2.0",
-    scope: "AaaServer.profile.Read",
-    params: { grant_type: "authorization_code" },
-    accessTokenUrl: "https://accounts.zoho.com/oauth/v2/token",
-    authorizationUrl:
-      "https://accounts.zoho.com/oauth/v2/auth?response_type=code",
-    profileUrl: "https://accounts.zoho.com/oauth/user/info",
+    authorization:
+      "https://accounts.zoho.com/oauth/v2/auth?scope=AaaServer.profile.Read",
+    token: "https://accounts.zoho.com/oauth/v2/token",
+    userinfo: "https://accounts.zoho.com/oauth/user/info",
     profile(profile) {
       return {
         id: profile.ZUID,
@@ -18,6 +15,6 @@ export default function Zoho(options) {
         image: null,
       }
     },
-    ...options,
+    options,
   }
 }

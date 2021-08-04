@@ -1,4 +1,4 @@
-import logger from '../lib/logger'
+import logger from "../lib/logger"
 import nodemailer from "nodemailer"
 
 export default function Email(options) {
@@ -18,27 +18,30 @@ export default function Email(options) {
     from: "NextAuth <no-reply@example.com>",
     maxAge: 24 * 60 * 60,
     sendVerificationRequest,
-    ...options,
+    options,
   }
 }
 
-async function sendVerificationRequest ({ identifier: email, url, baseUrl, provider }) {
+async function sendVerificationRequest({
+  identifier: email,
+  url,
+  baseUrl,
+  provider,
+}) {
   const { server, from } = provider
   // Strip protocol from URL and use domain as site name
-  const site = baseUrl.replace(/^https?:\/\//, '')
+  const site = baseUrl.replace(/^https?:\/\//, "")
   try {
-    await nodemailer
-      .createTransport(server)
-      .sendMail({
-        to: email,
-        from,
-        subject: `Sign in to ${site}`,
-        text: text({ url, site, email }),
-        html: html({ url, site, email })
-      })
+    await nodemailer.createTransport(server).sendMail({
+      to: email,
+      from,
+      subject: `Sign in to ${site}`,
+      text: text({ url, site, email }),
+      html: html({ url, site, email }),
+    })
   } catch (error) {
-    logger.error('SEND_VERIFICATION_EMAIL_ERROR', email, error)
-    throw new Error('SEND_VERIFICATION_EMAIL_ERROR')
+    logger.error("SEND_VERIFICATION_EMAIL_ERROR", email, error)
+    throw new Error("SEND_VERIFICATION_EMAIL_ERROR")
   }
 }
 

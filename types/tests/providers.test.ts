@@ -33,11 +33,10 @@ Providers.Credentials({
       type: "password",
     },
   },
-  authorize: async ({username, password}) => {
-    const user = {
+  async authorize({ username, password }) {
+    return {
       /* fetched user */
     }
-    return user
   },
 })
 
@@ -74,7 +73,7 @@ Providers.GitHub({
 Providers.GitHub({
   clientId: "foo123",
   clientSecret: "bar123",
-  scope: "change:thing read:that",
+  authorization: { params: { scope: "change:thing read:that" } },
 })
 
 // $ExpectType OAuthConfig<Profile>
@@ -99,35 +98,37 @@ Providers.Google({
 Providers.Google({
   clientId: "foo123",
   clientSecret: "bar123",
-  authorizationUrl: "https://foo.google.com",
+  authorization: "https://foo.google.com",
 })
 
 // $ExpectType OAuthConfig<Profile>
 Providers.Auth0({
   clientId: "foo123",
   clientSecret: "bar123",
-  domain: "https://foo.auth0.com",
+  issuer: "https://foo.auth0.com",
 })
 
 // $ExpectType OAuthConfig<Profile>
 Providers.Auth0({
   clientId: "foo123",
   clientSecret: "bar123",
-  domain: "https://foo.auth0.com",
-  profile: () => ({
-    id: "foo123",
-    name: "foo",
-    email: "foo@bar.io",
-    image: "https://foo.auth0.com/image/1.png",
-  }),
+  issuer: "https://foo.auth0.com",
+  profile() {
+    return {
+      id: "foo123",
+      name: "foo",
+      email: "foo@bar.io",
+      image: "https://foo.auth0.com/image/1.png",
+    }
+  },
 })
 
 // $ExpectType OAuthConfig<Profile>
 Providers.IdentityServer4({
   id: "identity-server4",
   name: "IdentityServer4",
-  scope: "change:thing read:that",
-  domain: "https://foo.is4.com",
+  authorization: { params: { scope: "change:thing read:that" } },
+  issuer: "https://foo.is4.com",
   clientId: "foo123",
   clientSecret: "bar123",
 })
@@ -136,7 +137,7 @@ Providers.IdentityServer4({
 Providers.Discord({
   clientId: "foo123",
   clientSecret: "bar123",
-  scope: "identify",
+  authorization: { params: { scope: "identify" } },
 })
 
 // $ExpectType OAuthConfig<Profile>
@@ -149,7 +150,7 @@ Providers.Twitch({
 Providers.Okta({
   clientId: "foo123",
   clientSecret: "bar123",
-  domain: "https://foo.auth0.com",
+  issuer: "https://foo.auth0.com",
 })
 
 // $ExpectType OAuthConfig<Profile>
@@ -169,7 +170,7 @@ Providers.Box({
 Providers.Cognito({
   clientId: "foo123",
   clientSecret: "bar123",
-  domain: "https://foo.auth0.com",
+  issuer: "https://foo.auth0.com",
 })
 
 // $ExpectType OAuthConfig<Profile>
@@ -182,7 +183,7 @@ Providers.Yandex({
 Providers.LinkedIn({
   clientId: "foo123",
   clientSecret: "bar123",
-  scope: "r_emailaddress r_liteprofile",
+  authorization: { params: { scope: "r_emailaddress r_liteprofile" } },
 })
 
 // $ExpectType OAuthConfig<Profile>
@@ -195,13 +196,7 @@ Providers.Spotify({
 Providers.Spotify({
   clientId: "foo123",
   clientSecret: "bar123",
-  scope: "user-read-email",
-})
-
-// $ExpectType OAuthConfig<Profile>
-Providers.Basecamp({
-  clientId: "foo123",
-  clientSecret: "bar123",
+  authorization: { params: { scope: "user-read-email" } },
 })
 
 // $ExpectType OAuthConfig<Profile>
@@ -214,7 +209,7 @@ Providers.Reddit({
 Providers.AzureADB2C({
   clientId: "foo123",
   clientSecret: "bar123",
-  scope: "offline_access User.Read",
+  authorization: { params: { scope: "offline_access User.Read" } },
   tenantId: "tenantId",
   idToken: true,
 })
@@ -222,7 +217,7 @@ Providers.AzureADB2C({
 // $ExpectType OAuthConfig<Profile>
 Providers.FusionAuth({
   name: "FusionAuth",
-  domain: "domain",
+  issuer: "domain",
   clientId: "clientId",
   clientSecret: "clientSecret",
   tenantId: "tenantId",
