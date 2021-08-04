@@ -7,7 +7,10 @@ import { OAuth } from "oauth"
  * Client supporting OAuth 1.x
  * @param {import("types/internals").InternalOptions} options
  */
-export async function oAuth1Client({ provider }) {
+export function oAuth1Client(options) {
+  /** @type {import("types/providers").OAuthConfig} */
+  const provider = options.provider
+
   const oauth1Client = new OAuth(
     provider.requestTokenUrl,
     provider.accessTokenUrl,
@@ -42,11 +45,6 @@ export async function oAuth1Client({ provider }) {
             return reject(error)
           }
           resolve({
-            // TODO: Remove, this is only kept for backward compativility
-            // These are not in the OAuth 1.x spec
-            accessToken: oauth_token,
-            refreshToken: oauth_token_secret,
-            results: params,
             oauth_token,
             oauth_token_secret,
             params,

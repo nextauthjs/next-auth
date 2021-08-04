@@ -1,23 +1,30 @@
+/** @type {import("types/providers").OAuthProvider} */
 export default function Foursquare(options) {
-  const { apiVersion } = options
+  const { apiVersion = "20210801" } = options
   return {
     id: "foursquare",
     name: "Foursquare",
     type: "oauth",
-    version: "2.0",
-    params: { grant_type: "authorization_code" },
-    accessTokenUrl: "https://foursquare.com/oauth2/access_token",
-    authorizationUrl:
-      "https://foursquare.com/oauth2/authenticate?response_type=code",
-    profileUrl: `https://api.foursquare.com/v2/users/self?v=${apiVersion}`,
-    profile(profile) {
+    authorization: "https://foursquare.com/oauth2/authenticate",
+    token: "https://foursquare.com/oauth2/access_token",
+    userinfo: {
+      url: `https://api.foursquare.com/v2/users/self?v=${apiVersion}`,
+      request({ tokens, client }) {
+        return client.userinfo(undefined, {
+          params: { oauth_token: tokens.access_token },
+        })
+      },
+    },
+    profile({ response: { profile } }) {
       return {
         id: profile.id,
         name: `${profile.firstName} ${profile.lastName}`,
-        image: `${profile.prefix}original${profile.suffix}`,
         email: profile.contact.email,
+        image: profile.photo
+          ? `${profile.photo.prefix}original${profile.photo.suffix}`
+          : null,
       }
     },
-    ...options,
+    options,
   }
 }

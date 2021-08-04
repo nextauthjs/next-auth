@@ -3,10 +3,14 @@ import { oAuth1Client } from "./client-legacy"
 import { getState } from "./state-handler"
 import { usePKCECodeVerifier } from "./pkce-handler"
 import { OAuthCallbackError } from "../../../lib/errors"
+import { TokenSet } from "openid-client"
 
 /** @type {import("types/internals").NextAuthApiHandler} */
 export default async function oAuthCallback(req, res) {
-  const { provider, logger } = req.options
+  const { logger } = req.options
+
+  /** @type {import("types/providers").OAuthConfig} */
+  const provider = req.options.provider
 
   const errorMessage = req.body.error ?? req.query.error
   if (errorMessage) {
@@ -29,13 +33,17 @@ export default async function oAuthCallback(req, res) {
         null,
         oauth_verifier
       )
-      const profileData = await client.get(
+      let profile = await client.get(
         provider.profileUrl,
-        tokens.accessToken,
-        tokens.refreshToken
+        tokens.oauth_token,
+        tokens.oauth_token_secret
       )
 
-      return getProfile({ profile: profileData, tokens, provider, logger })
+      if (typeof profile === "string") {
+        profile = JSON.parse(profile)
+      }
+
+      return getProfile({ profile, tokens, provider, logger })
     } catch (error) {
       logger.error("OAUTH_V1_GET_ACCESS_TOKEN_ERROR", error)
       throw error
@@ -44,28 +52,49 @@ export default async function oAuthCallback(req, res) {
 
   try {
     const client = await openidClient(req.options)
-    const params = client.callbackParams(req)
 
-    /** @type {import("openid-client").OpenIDCallbackChecks | import("openid-client").OAuthCallbackChecks} */
+    /** @type {import("openid-client").TokenSet} */
+    let tokens
+
+    /** @type {import("types/providers").OAuthChecks} */
     const checks = {
       code_verifier: await usePKCECodeVerifier(req, res),
       state: getState(req),
     }
-    let profile
-    let tokens
+    const params = { ...client.callbackParams(req), ...provider.token?.params }
 
-    if (provider.idToken) {
-      // Handle OIDC
-      // TODO: Add nonce check
+    if (provider.token?.request) {
+      const response = await provider.token.request({
+        provider,
+        params,
+        checks,
+        client,
+      })
+      tokens = new TokenSet(response.tokens)
+    } else if (provider.idToken) {
       tokens = await client.callback(provider.callbackUrl, params, checks)
+    } else {
+      tokens = await client.oauthCallback(provider.callbackUrl, params, checks)
+    }
+
+    /** @type {import("types").Profile} */
+    let profile
+    if (provider.userinfo?.request) {
+      profile = await provider.userinfo.request({
+        provider,
+        tokens,
+        client,
+      })
+    } else if (provider.idToken) {
       profile = tokens.claims()
     } else {
-      // Handle pure OAuth 2
-      tokens = await client.oauthCallback(provider.callbackUrl, params, checks)
-      profile = await client.userinfo(tokens)
+      profile = await client.userinfo(tokens, {
+        params: provider.userinfo.params,
+      })
     }
 
     // If a user object is supplied (e.g. Apple provider) add it to the profile object
+    // TODO: Remove/extract to Apple provider?
     profile.user = JSON.parse(req.body.user ?? req.query.user ?? null)
 
     return getProfile({ profile, provider, tokens, logger })
@@ -83,7 +112,7 @@ async function getProfile({ profile: OAuthProfile, tokens, provider, logger }) {
   try {
     logger.debug("PROFILE_DATA", { OAuthProfile })
     const profile = await provider.profile(OAuthProfile, tokens)
-    profile.email = profile.email?.toLowerCase() ?? null
+    profile.email = profile.email?.toLowerCase()
     // Return profile, raw profile and auth provider details
     return {
       profile,
