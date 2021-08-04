@@ -44,8 +44,8 @@ type EndpointRequest<C, R> = (
 ) => Awaitable<R>
 
 /** Gives granular control of the request to the given endpoint */
-type AdvancedEndpointHandler<P extends UrlParams, C, R> = {
-  /** Endpoint URL. Can contain parameters. Optionally, you can use `params`*/
+interface AdvancedEndpointHandler<P extends UrlParams, C, R> {
+  /** Endpoint URL. Can contain parameters. Optionally, you can use `params` */
   url?: string
   /** These will be prepended to the `url` */
   params?: P
