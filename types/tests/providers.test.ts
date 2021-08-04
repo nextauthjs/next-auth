@@ -154,6 +154,13 @@ Providers.Okta({
 })
 
 // $ExpectType OAuthConfig<Profile>
+Providers.OneLogin({
+  clientId: "foo123",
+  clientSecret: "bar123",
+  domain: "foo.onelogin.com",
+})
+
+// $ExpectType OAuthConfig<Profile>
 Providers.BattleNet({
   clientId: "foo123",
   clientSecret: "bar123",
@@ -249,6 +256,12 @@ Providers.Osso({
 
 // $ExpectType OAuthConfig<Profile>
 Providers.Zoho({
+  clientId: "foo123",
+  clientSecret: "bar123",
+})
+
+// $ExpectType OAuthConfig<Profile>
+Providers.Freshbooks({
   clientId: "foo123",
   clientSecret: "bar123",
 })

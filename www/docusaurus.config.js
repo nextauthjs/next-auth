@@ -81,8 +81,8 @@ module.exports = {
               to: "/getting-started/introduction",
             },
             {
-              label: "Contributors",
-              to: "/contributors",
+              label: "Next documentation",
+              to: "https://next-auth-git-next.nextauthjs.vercel.app",
             },
             {
               label: "Next documentation",
@@ -107,8 +107,12 @@ module.exports = {
           title: "Acknowledgements",
           items: [
             {
-              label: "Docusaurus",
-              to: "https://v2.docusaurus.io/",
+              label: "Contributors",
+              to: "/contributors",
+            },
+            {
+              label: "Sponsors",
+              to: "https://opencollective.com/nextauth",
             },
             {
               label: "Images by unDraw",

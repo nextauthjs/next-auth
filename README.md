@@ -165,13 +165,43 @@ export default function App({
   <img width="500px" src="https://contrib.rocks/image?repo=nextauthjs/next-auth" />
 </a>
 <div>
-<a href="https://vercel.com?utm_source=nextauthjs&utm_campaign=oss">
-<img width="170px" src="https://raw.githubusercontent.com/nextauthjs/next-auth/canary/www/static/img/powered-by-vercel.svg" alt="Powered By Vercel" />
-</a>
+<a href="https://vercel.com?utm_source=nextauthjs&utm_campaign=oss"></a>
 </div>
-<div>
-<p align="left">Thanks to Vercel sponsoring this project by allowing it to be deployed for free for the entire NextAuth.js Team</p>
-</div>
+
+### Support
+
+We're happy to announce we've recently created an [OpenCollective](https://opencollective.org/nextauth) for individuals and companies looking to contribute financially to the project!
+
+<!--sponsors start-->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top">
+        <a href="https://vercel.com" target="_blank">
+          <img width="128px" src="https://avatars.githubusercontent.com/u/14985020?v=4" alt="Vercel Logo" />
+        </a><br />
+        <div>Vercel</div><br />
+        <sub>🥉 Bronze Financial Sponsor <br /> ☁️ Infrastructure Support</sub>
+      </td>
+      <td align="center" valign="top">
+        <a href="https://prisma.io" target="_blank">
+          <img width="128px" src="https://avatars.githubusercontent.com/u/17219288?v=4" alt="Prisma Logo" />
+        </a><br />
+        <div>Prisma</div><br />
+        <sub>🥉 Bronze Financial Sponsor</sub>
+      </td>
+      <td align="center" valign="top">
+        <a href="https://checklyhq.com" target="_blank">
+          <img width="128px" src="https://avatars.githubusercontent.com/u/25982255?v=4" alt="Checkly Logo" />
+        </a><br />
+        <div>Checkly</div><br />
+        <sub>☁️ Infrastructure Support</sub>
+      </td>
+    </tr><tr></tr>
+  </tbody>
+</table>
+<br />
+<!--sponsors end-->
 
 ## Contributing
 
