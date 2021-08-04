@@ -199,12 +199,6 @@ Providers.Spotify({
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.Basecamp({
-  clientId: "foo123",
-  clientSecret: "bar123",
-})
-
-// $ExpectType OAuthConfig<Profile>
 Providers.Reddit({
   clientId: "foo123",
   clientSecret: "bar123",

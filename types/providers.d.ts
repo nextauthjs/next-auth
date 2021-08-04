@@ -148,7 +148,6 @@ export type OAuthProviderType =
   | "Auth0"
   | "AzureAD"
   | "AzureADB2C"
-  | "Basecamp"
   | "BattleNet"
   | "Box"
   | "Bungie"
