@@ -80,7 +80,7 @@ async function NextAuthHandler(req, res, userOptions) {
 
     const provider = providers.find(({ id }) => id === providerId)
 
-    // Checks only work on OAuth 2.x + providers
+    // Checks only work on OAuth 2.x + OIDC providers
     if (
       provider?.type === "oauth" &&
       !provider.version?.startsWith("1.") &&
