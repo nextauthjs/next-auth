@@ -89,14 +89,14 @@ function MyAdapter(client: Client): Adapter {
     async createSession(user) {
       return exampleSession
     },
-    async getSession(sessionToken) {
-      return exampleSession
+    async getSessionAndUser() {
+      return { session: exampleSession, user: exampleUser }
     },
-    async updateSession(session, force) {
+    async updateSession(session) {
       return exampleSession
     },
     async deleteSession(sessionToken) {
-      return undefined
+      return exampleSession
     },
     async createVerificationToken(params) {
       return undefined
