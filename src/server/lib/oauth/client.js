@@ -2,6 +2,7 @@ import { OAuth, OAuth2 } from 'oauth'
 import querystring from 'querystring'
 import logger from '../../../lib/logger'
 import { sign as jwtSign } from 'jsonwebtoken'
+import UrlLib from 'url'
 import HttpsProxyAgent from 'https-proxy-agent'
 
 /**
@@ -157,7 +158,8 @@ async function getOAuth2AccessToken (code, provider, codeVerifier) {
   const postData = querystring.stringify(params)
 
   return new Promise((resolve, reject) => {
-    if (process.env.http_proxy) {
+    const parsedUrl = UrlLib.parse(url, true)
+    if (parsedUrl.protocol == "https:" && process.env.http_proxy) {
       const agent = new HttpsProxyAgent(process.env.http_proxy)
       this.setAgent(agent)
     }
@@ -253,7 +255,8 @@ async function getOAuth2 (provider, accessToken, results) {
   }
 
   return new Promise((resolve, reject) => {
-    if (process.env.http_proxy) {
+    const parsedUrl = UrlLib.parse(url, true)
+    if (parsedUrl.protocol == "https:" && process.env.http_proxy) {
       const agent = new HttpsProxyAgent(process.env.http_proxy)
       this.setAgent(agent)
     }
