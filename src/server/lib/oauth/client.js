@@ -2,6 +2,7 @@ import { OAuth, OAuth2 } from 'oauth'
 import querystring from 'querystring'
 import logger from '../../../lib/logger'
 import { sign as jwtSign } from 'jsonwebtoken'
+import HttpsProxyAgent from 'https-proxy-agent'
 
 /**
  * @TODO Refactor to remove dependancy on 'oauth' package
@@ -156,6 +157,11 @@ async function getOAuth2AccessToken (code, provider, codeVerifier) {
   const postData = querystring.stringify(params)
 
   return new Promise((resolve, reject) => {
+    if (process.env.http_proxy) {
+      const agent = new HttpsProxyAgent(process.env.http_proxy)
+      this.setAgent(agent)
+    }
+    
     this._request(
       'POST',
       url,
@@ -247,6 +253,11 @@ async function getOAuth2 (provider, accessToken, results) {
   }
 
   return new Promise((resolve, reject) => {
+    if (process.env.http_proxy) {
+      const agent = new HttpsProxyAgent(process.env.http_proxy)
+      this.setAgent(agent)
+    }
+    
     this._request(httpMethod, url, headers, null, accessToken, (error, profileData) => {
       if (error) {
         return reject(error)
