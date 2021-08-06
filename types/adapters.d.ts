@@ -65,7 +65,7 @@ export interface Adapter {
   ): Awaitable<AdapterUser | null>
   updateUser(user: Partial<AdapterUser>): Awaitable<AdapterUser>
   /** @todo Implement */
-  deleteUser?(userId: string): Awaitable<AdapterUser | null | void>
+  deleteUser?(userId: string): Awaitable<AdapterUser | null | undefined>
   linkAccount(userId: string, account: Account): Awaitable<void>
   /** @todo Implement */
   unlinkAccount?(provider_id_userId: {
@@ -83,16 +83,16 @@ export interface Adapter {
   }): Awaitable<{ session: AdapterSession; user: AdapterUser } | null>
   updateSession(
     session: Partial<AdapterSession> & Pick<AdapterSession, "id">
-  ): Awaitable<AdapterSession | null | void>
+  ): Awaitable<AdapterSession | null | undefined>
   /**
    * Deletes a session from the database.
    * It is preferred that this method also returns the session
    * that is being deleted for logging purposes.
    */
-  deleteSession(sessionId: string): Awaitable<AdapterSession | null | void>
+  deleteSession(sessionId: string): Awaitable<AdapterSession | null | undefined>
   createVerificationToken?(
     verificationToken: VerificationToken
-  ): Awaitable<VerificationToken | null | void>
+  ): Awaitable<VerificationToken | null | undefined>
   /**
    * Return verification token from the database
    * and delete it so it cannot be used again.
