@@ -51,7 +51,7 @@ export default async function callbackHandler(
     getUserByEmail,
     linkAccount,
     createSession,
-    getSession,
+    getSessionAndUser,
     deleteSession,
   } = adapter
 
@@ -71,10 +71,14 @@ export default async function callbackHandler(
       } catch {
         // If session can't be verified, treat as no session
       }
-    }
-    session = await getSession(sessionToken)
-    if (session?.userId) {
-      user = await getUser(session.userId)
+    } else {
+      const userAndSession = await getSessionAndUser({
+        sessionId: sessionToken,
+      })
+      if (userAndSession) {
+        session = userAndSession.session
+        user = userAndSession.user
+      }
     }
   }
 
