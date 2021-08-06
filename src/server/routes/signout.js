@@ -19,20 +19,10 @@ export default async function signout(req, res) {
       // Do nothing if decoding the JWT fails
     }
   } else {
-    // Get session from database
-    const { getSession, deleteSession } = adapter
-
     try {
+      const session = await adapter.deleteSession({ sessionId: sessionToken })
       // Dispatch signout event
-      const session = await getSession(sessionToken)
       await events.signOut?.({ session })
-    } catch (error) {
-      // Do nothing if looking up the session fails
-    }
-
-    try {
-      // Remove session from database
-      await deleteSession(sessionToken)
     } catch (error) {
       // If error, log it but continue
       logger.error("SIGNOUT_ERROR", error)
