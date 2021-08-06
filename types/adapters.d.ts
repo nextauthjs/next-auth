@@ -66,13 +66,15 @@ export interface Adapter {
   updateUser(user: Partial<AdapterUser>): Awaitable<AdapterUser>
   /** @todo Implement */
   deleteUser?(userId: string): Awaitable<AdapterUser | null | undefined>
-  linkAccount(userId: string, account: Account): Awaitable<void>
+  linkAccount(
+    userId: string,
+    account: Account
+  ): Promise<void> | Awaitable<Account | null | undefined>
   /** @todo Implement */
-  unlinkAccount?(provider_id_userId: {
+  unlinkAccount?(provider_id: {
     provider: string
     id: string
-    userId: string
-  }): Awaitable<void>
+  }): Promise<void> | Awaitable<Account | undefined>
   /** Creates a session for the user and returns it. */
   createSession(session: {
     userId: string
