@@ -121,7 +121,7 @@ export default async function callback(req, res) {
           })
         } else {
           // Save Session Token in cookie
-          cookie.set(res, cookies.sessionToken.name, session.sessionToken, {
+          cookie.set(res, cookies.sessionToken.name, session.id, {
             expires: session.expires,
             ...cookies.sessionToken.options,
           })

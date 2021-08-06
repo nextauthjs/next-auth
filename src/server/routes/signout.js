@@ -20,7 +20,7 @@ export default async function signout(req, res) {
     }
   } else {
     try {
-      const session = await adapter.deleteSession({ sessionId: sessionToken })
+      const session = await adapter.deleteSession(sessionToken)
       // Dispatch signout event
       await events.signOut?.({ session })
     } catch (error) {
