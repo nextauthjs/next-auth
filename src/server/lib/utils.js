@@ -1,7 +1,7 @@
 import { createHash } from "crypto"
 
 /**
- * Takes a number in seconds and returns the date in the future
+ * Takes a number in seconds and returns the date in the future.
  * Optionally takes a second date parameter. In that case
  * the date in the future will be calculated from that date instead of now.
  */
