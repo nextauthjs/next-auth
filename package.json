@@ -146,7 +146,9 @@
       "fetch": "readonly"
     },
     "rules": {
-      "camelcase": "off"
+      "camelcase": "off",
+      "@typescript-eslint/naming-convention": "off",
+      "@typescript-eslint/strict-boolean-expressions": "off"
     },
     "overrides": [
       {
