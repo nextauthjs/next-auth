@@ -67,7 +67,6 @@ interface Client {
 
 function MyAdapter(client: Client): Adapter {
   return {
-    displayName: "MyAdapter",
     async createUser(profile) {
       return exampleUser
     },

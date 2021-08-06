@@ -11,10 +11,6 @@ Creating a custom adapter can be considerable undertaking and will require some 
 
 _See the code below for practical example._
 
-### Required properties
-
-* displayName
-
 ### Required methods
 
 These methods are required for all sign in flows:
@@ -48,7 +44,6 @@ These methods will be required in a future release, but are not yet invoked:
 /** @return { import("next-auth/adapters").Adapter } */
 export default function MyAdapter(client, options = {}) {
   return {
-    displayName: "foo",
     async createUser (profile) {
       return null
     },

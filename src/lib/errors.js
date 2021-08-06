@@ -71,7 +71,7 @@ export function adapterErrorHandler(adapter, logger) {
 
   return Object.keys(adapter).reduce((acc, method) => {
     const name = capitalize(method)
-    const code = `${adapter.displayName ?? "ADAPTER"}_${upperSnake(name)}`
+    const code = `ADAPTER_${upperSnake(name)}`
 
     const adapterMethod = adapter[method]
     acc[method] = async (...args) => {

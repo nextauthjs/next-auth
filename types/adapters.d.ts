@@ -54,8 +54,6 @@ export interface VerificationToken {
  * [Create a custom adapter](https://next-auth.js.org/tutorials/creating-a-database-adapter)
  */
 export interface Adapter {
-  /** Used as a prefix for adapter related log messages. (Defaults to `ADAPTER_`) */
-  displayName: string
   createUser(user: AdapterUser): Awaitable<AdapterUser>
   getUser(id: string): Awaitable<AdapterUser | null>
   getUserByEmail(email: string): Awaitable<AdapterUser | null>
