@@ -16,8 +16,12 @@ import LineProvider from "next-auth/providers/line"
 import LinkedInProvider from "next-auth/providers/linkedin"
 import MailchimpProvider from "next-auth/providers/mailchimp"
 import DiscordProvider from "next-auth/providers/discord"
+import { PrismaAdapter } from "prisma/adapter"
+import { PrismaClient } from "@prisma/client"
+const prisma = new PrismaClient()
 
 export default NextAuth({
+  adapter: PrismaAdapter(prisma),
   providers: [
     // E-mail
     EmailProvider({
