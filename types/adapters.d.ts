@@ -34,7 +34,7 @@ export interface VerificationToken {
  * - `getUserByAccount`
  * - `linkAccount`
  * - `createSession`
- * - `getSession`
+ * - `getSessionAndUser`
  * - `updateSession`
  * - `deleteSession`
  * - `updateUser`
@@ -65,26 +65,34 @@ export interface Adapter {
   ): Awaitable<AdapterUser | null>
   updateUser(user: Partial<AdapterUser>): Awaitable<AdapterUser>
   /** @todo Implement */
-  deleteUser?(userId: string): Awaitable<void>
+  deleteUser?(userId: string): Awaitable<AdapterUser | null | void>
   linkAccount(userId: string, account: Account): Awaitable<void>
   /** @todo Implement */
-  unlinkAccount?(
-    userId: string,
-    providerId: string,
-    providerAccountId: string
-  ): Awaitable<void>
+  unlinkAccount?(provider_id_userId: {
+    provider: string
+    id: string
+    userId: string
+  }): Awaitable<void>
   /** Creates a session for the user and returns it. */
-  createSession(params: {
+  createSession(session: {
     userId: string
     expires: Date
   }): Awaitable<AdapterSession>
-  getSession(sessionId: string): Awaitable<AdapterSession | null>
+  getSessionAndUser(params: {
+    sessionId: string
+  }): Awaitable<{ session: AdapterSession; user: AdapterUser } | null>
   updateSession(
-    session: AdapterSession,
-    force?: boolean
-  ): Awaitable<AdapterSession | null>
-  deleteSession(sessionId: string): Awaitable<void>
-  createVerificationToken?(params: VerificationToken): Awaitable<void>
+    session: Partial<AdapterSession> & Pick<AdapterSession, "id">
+  ): Awaitable<AdapterSession | null | void>
+  /**
+   * Deletes a session from the database.
+   * It is preferred that this method also returns the session
+   * that is being deleted for logging purposes.
+   */
+  deleteSession(sessionId: string): Awaitable<AdapterSession | null | void>
+  createVerificationToken?(
+    verificationToken: VerificationToken
+  ): Awaitable<VerificationToken | null | void>
   /**
    * Return verification token from the database
    * and delete it so it cannot be used again.
