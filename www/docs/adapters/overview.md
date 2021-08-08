@@ -11,7 +11,6 @@ There you can find the following adapters:
 
 - [`typeorm-legacy`](./typeorm/typeorm-overview)
 - [`prisma`](./prisma)
-- [`prisma-legacy`](./prisma-legacy)
 - [`fauna`](./fauna)
 - [`dynamodb`](./dynamodb)
 - [`firebase`](./firebase)

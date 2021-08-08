@@ -5,12 +5,6 @@ title: Prisma Adapter
 
 # Prisma
 
-You can also use NextAuth.js with the new experimental Adapter for [Prisma](https://www.prisma.io/docs/). This version of the Prisma Adapter is not included in the core `next-auth` package, and must be installed separately.
-
-:::info
-You may have noticed there is a `prisma` and `prisma-legacy` adapter. This is due to historical reasons, but the code has mostly converged so that there is no longer much difference between the two. The legacy adapter, however, does have the ability to rename tables which the newer version does not.
-:::
-
 To use this Adapter, you need to install Prisma Client, Prisma CLI, and the separate `@next-auth/prisma-adapter` package:
 
 ```
