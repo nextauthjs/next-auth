@@ -1,7 +1,7 @@
 // @ts-check
 import { AccountNotLinkedError } from "../../lib/errors"
 import { fromDate } from "./utils"
-import { randomBytes } from "crypto"
+import { randomBytes, randomUUID } from "crypto"
 
 /**
  * This function handles the complex flow of signing users in, and either creating,
@@ -211,5 +211,6 @@ export default async function callbackHandler(
 }
 
 function generateSessionToken() {
-  return randomBytes(32).toString("hex")
+  // Use `randomUUID` if available. (Node 15.6++)
+  return randomUUID?.() ?? randomBytes(32).toString("hex")
 }
