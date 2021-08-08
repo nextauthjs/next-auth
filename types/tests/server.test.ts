@@ -53,6 +53,7 @@ const exampleUser: AdapterUser = {
 }
 
 const exampleSession: AdapterSession = {
+  sessionToken: "0000",
   id: "",
   userId: "",
   expires: new Date(),
