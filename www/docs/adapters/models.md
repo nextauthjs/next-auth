@@ -39,12 +39,12 @@ A single User can have multiple Sessions, each Session can only have one User.
 
 ## Verification Token
 
-The Verification Token model is used to store tokens for passwordless sign in emails.
+The Verification Token model is used to store tokens for passwordless sign in.
 
 A single User can have multiple open Verification Tokens (e.g. to sign in to different devices).
 
-It has been designed to be extendable for other verification purposes in future (e.g. 2FA / short codes).
+It has been designed to be extendable for other verification purposes in the future (e.g. 2FA / short codes).
 
 :::note
-NextAuth.js makes sure that every token is useable only once, and by default has a short lifetime. If your user did not manage to finish the sign-in flow in time (15 minutes by default), they will have to start the sign-in process again.
+NextAuth.js makes sure that every token is usable only once, and by default has a short lifetime. If your user did not manage to finish the sign-in flow in time (15 minutes by default), they will have to start the sign-in process again.
 :::
