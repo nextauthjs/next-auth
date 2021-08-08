@@ -8,6 +8,9 @@ export interface AdapterUser extends User {
 
 export interface AdapterSession {
   id: string
+  /** A randomly generated value that is used to get hold of the session. */
+  sessionToken: string
+  /** Used to connect the session to a particular user */
   userId: string
   expires: Date
 }
@@ -75,21 +78,24 @@ export interface Adapter {
   }): Promise<void> | Awaitable<Account | undefined>
   /** Creates a session for the user and returns it. */
   createSession(session: {
+    sessionToken: string
     userId: string
     expires: Date
   }): Awaitable<AdapterSession>
-  getSessionAndUser(params: {
-    sessionId: string
-  }): Awaitable<{ session: AdapterSession; user: AdapterUser } | null>
+  getSessionAndUser(
+    sessionToken: string
+  ): Awaitable<{ session: AdapterSession; user: AdapterUser } | null>
   updateSession(
-    session: Partial<AdapterSession> & Pick<AdapterSession, "id">
+    session: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">
   ): Awaitable<AdapterSession | null | undefined>
   /**
    * Deletes a session from the database.
    * It is preferred that this method also returns the session
    * that is being deleted for logging purposes.
    */
-  deleteSession(sessionId: string): Awaitable<AdapterSession | null | undefined>
+  deleteSession(
+    sessionToken: string
+  ): Awaitable<AdapterSession | null | undefined>
   createVerificationToken?(
     verificationToken: VerificationToken
   ): Awaitable<VerificationToken | null | undefined>

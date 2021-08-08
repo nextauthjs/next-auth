@@ -1,6 +1,7 @@
 // @ts-check
 import { AccountNotLinkedError } from "../../lib/errors"
 import { fromDate } from "./utils"
+import { randomBytes } from "crypto"
 
 /**
  * This function handles the complex flow of signing users in, and either creating,
@@ -72,9 +73,7 @@ export default async function callbackHandler(
         // If session can't be verified, treat as no session
       }
     } else {
-      const userAndSession = await getSessionAndUser({
-        sessionId: sessionToken,
-      })
+      const userAndSession = await getSessionAndUser(sessionToken)
       if (userAndSession) {
         session = userAndSession.session
         user = userAndSession.user
@@ -111,6 +110,7 @@ export default async function callbackHandler(
     session = useJwtSession
       ? {}
       : await createSession({
+          sessionToken: generateSessionToken(),
           userId: user.id,
           expires: fromDate(options.session.maxAge),
         })
@@ -138,6 +138,7 @@ export default async function callbackHandler(
       session = useJwtSession
         ? {}
         : await createSession({
+            sessionToken: generateSessionToken(),
             userId: userByAccount.id,
             expires: fromDate(options.session.maxAge),
           })
@@ -199,6 +200,7 @@ export default async function callbackHandler(
       session = useJwtSession
         ? {}
         : await createSession({
+            sessionToken: generateSessionToken(),
             userId: user.id,
             expires: fromDate(options.session.maxAge),
           })
@@ -206,4 +208,8 @@ export default async function callbackHandler(
       return { session, user, isNewUser: true }
     }
   }
+}
+
+function generateSessionToken() {
+  return randomBytes(32).toString("hex")
 }

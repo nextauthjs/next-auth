@@ -68,16 +68,14 @@ export default async function session(req, res) {
   } else {
     try {
       const { getSessionAndUser, deleteSession, updateSession } = adapter
-      let userAndSession = await getSessionAndUser({
-        sessionId: sessionToken,
-      })
+      let userAndSession = await getSessionAndUser(sessionToken)
 
       // If session has expired, clean up the database
       if (
         userAndSession &&
         userAndSession.session.expires.valueOf() < Date.now()
       ) {
-        await deleteSession({ sessionId: sessionToken })
+        await deleteSession(sessionToken)
         userAndSession = null
       }
 
@@ -97,7 +95,7 @@ export default async function session(req, res) {
         // Trigger update of session expiry date and write to database, only
         // if the session was last updated more than {sessionUpdateAge} ago
         if (sessionIsDueToBeUpdatedDate <= Date.now()) {
-          await updateSession({ id: sessionToken, expires: newExpires })
+          await updateSession({ sessionToken, expires: newExpires })
         }
 
         // Pass Session through to the session callback

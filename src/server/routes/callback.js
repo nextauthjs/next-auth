@@ -23,7 +23,6 @@ export default async function callback(req, res) {
     logger,
   } = req.options
 
-  // Get session ID (if set)
   const sessionToken = req.cookies?.[cookies.sessionToken.name] ?? null
 
   if (provider.type === "oauth") {
@@ -121,7 +120,7 @@ export default async function callback(req, res) {
           })
         } else {
           // Save Session Token in cookie
-          cookie.set(res, cookies.sessionToken.name, session.id, {
+          cookie.set(res, cookies.sessionToken.name, session.sessionToken, {
             expires: session.expires,
             ...cookies.sessionToken.options,
           })
