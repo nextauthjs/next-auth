@@ -70,18 +70,15 @@ export function adapterErrorHandler(adapter, logger) {
   if (!adapter) return
 
   return Object.keys(adapter).reduce((acc, method) => {
-    const name = capitalize(method)
-    const code = `ADAPTER_${upperSnake(name)}`
-
-    const adapterMethod = adapter[method]
     acc[method] = async (...args) => {
       try {
-        logger.debug(code, ...args)
+        logger.debug(`adapter_${method}`, ...args)
+        const adapterMethod = adapter[method]
         return await adapterMethod(...args)
       } catch (error) {
-        logger.error(`${code}_ERROR`, error)
+        logger.error(`adapter_error_${method}`, error)
         const e = new UnknownError(error)
-        e.name = `${name}Error`
+        e.name = `${capitalize(method)}Error`
         throw e
       }
     }
