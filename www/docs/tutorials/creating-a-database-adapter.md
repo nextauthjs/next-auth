@@ -1,103 +1,91 @@
 ---
 id: creating-a-database-adapter
-title: Creating a database adapter
+title: Create an adapter
 ---
 
-Using a custom adapter you can connect to any database backend or even several different databases.  Custom adapters created and maintained by our community can be found in the [adapters repository](https://github.com/nextauthjs/adapters). Feel free to add a custom adapter from your project to the repository, or even become a maintainer of a certain adapter. Custom adapters can still be created and used in a project without being added to the repository.
-
-Creating a custom adapter can be considerable undertaking and will require some trial and error and some reverse engineering using the built-in adapters for reference.
+Using a custom adapter you can connect to any database backend or even several different databases. Official adapters created and maintained by our community can be found in the [adapters repository](https://github.com/nextauthjs/adapters). Feel free to add a custom adapter from your project to the repository, or even become a maintainer of a certain adapter. Custom adapters can still be created and used in a project without being added to the repository.
 
 ## How to create an adapter
 
 _See the code below for practical example._
 
+### Example code
+
+```ts
+/** @return { import("next-auth/adapters").Adapter } */
+export default function MyAdapter(client, options = {}) {
+  return {
+    async createUser(user) {
+      return
+    },
+    async getUser(id) {
+      return
+    },
+    async getUserByEmail(email) {
+      return
+    },
+    async getUserByAccount({ provider, id }) {
+      return
+    },
+    async updateUser(user) {
+      return
+    },
+    async deleteUser(userId) {
+      return
+    },
+    async linkAccount(userId, account) {
+      return
+    },
+    async unlinkAccount({ provider, id }) {
+      return
+    },
+    async createSession({ sessionToken, userId, expires }) {
+      return
+    },
+    async getSessionAndUser(sessionToken) {
+      return
+    },
+    async updateSession({ sessionToken }) {
+      return
+    },
+    async deleteSession(sessionToken) {
+      return
+    },
+    async createVerificationToken({ identifier, expires, token }) {
+      return
+    },
+    async useVerificationToken({ identifier, token }) {
+      return
+    },
+  }
+}
+```
+
+
 ### Required methods
 
 These methods are required for all sign in flows:
 
-* createUser
-* getUser
-* getUserByEmail
-* getUserByAccount
-* linkAccount
-* createSession
-* getSession
-* updateSession
-* deleteSession
-* updateUser
+* `createUser`
+* `getUser`
+* `getUserByEmail`
+* `getUserByAccount`
+* `linkAccount`
+* `createSession`
+* `getSessionAndUser`
+* `updateSession`
+* `deleteSession`
+* `updateUser`
 
 These methods are required to support email / passwordless sign in:
 
-* createVerificationToken
-* useVerificationToken
+* `createVerificationToken`
+* `useVerificationToken`
 
 ### Unimplemented methods
 
 These methods will be required in a future release, but are not yet invoked:
 
-* deleteUser
-* unlinkAccount
+* `deleteUser`
+* `unlinkAccount`
 
-### Example code
-
-```js
-/** @return { import("next-auth/adapters").Adapter } */
-export default function MyAdapter(client, options = {}) {
-  return {
-    async createUser (profile) {
-      return null
-    },
-    async getUser (id) {
-      return null
-    },
-    async getUserByEmail (email) {
-      return null
-    },
-    async getUserByAccount ({ provider, id }) {
-      return null
-    },
-    async updateUser (user) {
-      return null
-    },
-    async deleteUser (userId) {
-      return null
-    },
-    async linkAccount (userId, account) {
-      return null
-    },
-    async unlinkAccount (
-      userId,
-      providerId,
-      providerAccountId
-    ) {
-      return null
-    },
-    async createSession (user) {
-      return null
-    },
-    async getSession (sessionToken) {
-      return null
-    },
-    async updateSession (session, force) {
-      return null
-    },
-    async deleteSession (sessionToken) {
-      return null
-    },
-    async createVerificationToken ({
-      identifier,
-      url,
-      token,
-      expires
-    }) {
-      return null
-    },
-    async useVerificationToken ({
-      identifier,
-      token,
-    }) {
-      return null
-    },
-  }
-}
-```
