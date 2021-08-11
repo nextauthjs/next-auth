@@ -29,7 +29,7 @@ export default async function callback(req, res) {
 
   if (provider.type === "oauth") {
     try {
-      const { profile, account, OAuthProfile } = await oAuthCallback(req)
+      const { profile, account, OAuthProfile } = await oAuthCallback(req, res)
       try {
         // Make it easier to debug when adding a new provider
         logger.debug("OAUTH_CALLBACK_RESPONSE", {
@@ -132,7 +132,7 @@ export default async function callback(req, res) {
           })
         }
 
-        await events.signIn({ user, account, isNewUser })
+        await events.signIn({ user, account, profile, isNewUser })
 
         // Handle first logins on new accounts
         // e.g. option to send users to a new account landing page on initial login
@@ -274,7 +274,7 @@ export default async function callback(req, res) {
         })
       }
 
-      await events.signIn({ user, account, isNewUser })
+      await events.signIn({ user, account, profile, isNewUser })
 
       // Handle first logins on new accounts
       // e.g. option to send users to a new account landing page on initial login
