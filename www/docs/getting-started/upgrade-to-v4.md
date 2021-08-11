@@ -17,7 +17,7 @@ import NextAuth from "next-auth"
 
 ...
 export default NextAuth({
--  database: Adapters.TypeORM.Adapter(...),
+-  database: "yourconnectionstring",
 +  adapter: TypeORMAdapter("yourconnectionstring")
 })
 ```
