@@ -157,7 +157,7 @@ Providers.Okta({
 Providers.OneLogin({
   clientId: "foo123",
   clientSecret: "bar123",
-  domain: "foo.onelogin.com",
+  issuer: "https://foo.onelogin.com",
 })
 
 // $ExpectType OAuthConfig<Profile>
