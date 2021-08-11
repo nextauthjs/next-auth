@@ -152,6 +152,37 @@ logger: {
 
 Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.19
 
+### 8. Events
+
+Two event signatures changes to also use the named parameterse pattern, `signOut` and `updateUser`.
+
+```diff
+// [...nextauth].js
+...
+events: {
+- signOut(tokenOrSession),
++ signOut({ token, session }), // token if using JWT, session if DB persisted sessions.
+- updateUser(user)
++ updateUser({ user })
+}
+```
+
+Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.20
+
+### 9. Providers
+
+All OAuth providers' `profile` callback are expected to only return these fields by default from now on: `id`, `name`, `email`, and `image` at most. If any of these are missing values, they should be set to `null`.
+
+The following new options are available:
+
+1. `authorization` (replaces `authorizationUrl`, `authorizationParams`, `scope`)
+2. `token` replaces (`accessTokenUrl`, `headers`, `params`)
+3. `userinfo` (replaces `profileUrl`)
+
+For more information on how to use these new options, please checkout the full release notes below.
+
+Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.20
+
 ## Summary
 
 We hope this migration goes smoothly for each and every one of you! If you have any questions or get stuck anywhere, feel free to create [a new issue](https://github.com/nextauthjs/next-auth/issues/new) on GitHub.
