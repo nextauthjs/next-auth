@@ -19,7 +19,7 @@ From the Auth tab get the client ID and client secret. On the same tab, add redi
 
 The **LinkedIn Provider** comes with a set of default options:
 
-- [LinkedIn Provider options](https://github.com/nextauthjs/next-auth/blob/main/src/providers/linked-in.js)
+- [LinkedIn Provider options](https://github.com/nextauthjs/next-auth/blob/main/src/providers/linkedin.js)
 
 You can override any of the options to suit your own use case.
 
