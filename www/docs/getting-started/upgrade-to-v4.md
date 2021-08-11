@@ -154,7 +154,7 @@ Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.1
 
 ### 8. Events
 
-Two event signatures changes to also use the named parameterse pattern, `signOut` and `updateUser`.
+Two event signatures changes to also use the named parameters pattern, `signOut` and `updateUser`.
 
 ```diff
 // [...nextauth].js
