@@ -16,6 +16,7 @@ import LineProvider from "next-auth/providers/line"
 import LinkedInProvider from "next-auth/providers/linkedin"
 import MailchimpProvider from "next-auth/providers/mailchimp"
 import DiscordProvider from "next-auth/providers/discord"
+import OneLoginProvider from "next-auth/providers/onelogin"
 
 export default NextAuth({
   providers: [
@@ -105,6 +106,11 @@ export default NextAuth({
     DiscordProvider({
       clientId: process.env.DISCORD_ID,
       clientSecret: process.env.DISCORD_SECRET,
+    }),
+    OneLoginProvider({
+      clientId: process.env.ONELOGIN_ID,
+      clientSecret: process.env.ONELOGIN_SECRET,
+      issuer: process.env.ONELOGIN_ISSUER,
     }),
   ],
   jwt: {
