@@ -7,6 +7,10 @@ title: OneLogin
 
 https://developers.onelogin.com/openid-connect
 
+## Configuration
+
+https://developers.onelogin.com/openid-connect/connect-to-onelogin
+
 ## Options
 
 The **OneLogin Provider** comes with a set of default options:
