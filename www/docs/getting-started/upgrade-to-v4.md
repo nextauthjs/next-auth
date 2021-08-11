@@ -12,7 +12,6 @@ If you use the built-in TypeORM or Prisma adapters, these have been removed from
 ```diff
 // [...nextauth].js
 import NextAuth from "next-auth"
-- import Adapters from "next-auth/adapters"
 + import TypeORMAdapter from "@next-auth/typeorm-legacy-adapter"
 
 ...
