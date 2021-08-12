@@ -81,10 +81,11 @@ oauthProviderFiles.forEach((file) => {
     const providerModule = `import { OAuthConfig } from "."
 
 declare module "next-auth/providers/${fileName}" {
-  export default ${functionName}Provider(
+  export default function ${functionName}Provider(
     options: Partial<OAuthConfig>
   ): OAuthConfig
-}`
+}
+`
 
     fs.writeFile(
       path.join("types/providers", `${fileName}.d.ts`),
