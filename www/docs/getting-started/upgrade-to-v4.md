@@ -22,8 +22,6 @@ export default NextAuth({
 })
 ```
 
-Also the `AzureADB2C` provider has been renamed `AzureAD`.
-
 See [nextauthjs/adapter](https://github.com/nextauthjs/adapters) for more details.
 
 Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.8
@@ -180,6 +178,8 @@ The following new options are available:
 3. `userinfo` (replaces `profileUrl`)
 
 For more information on how to use these new options, please checkout the full release notes below.
+
+Also the `AzureADB2C` provider has been renamed `AzureAD`.
 
 Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.20
 
