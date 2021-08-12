@@ -1,14 +1,15 @@
 import { OAuthConfig, OAuthProvider, OAuthProviderType } from "./oauth"
-export * from "./oauth"
 
 import { EmailConfig, EmailProvider, EmailProviderType } from "./email"
-export * from "./email"
 
 import {
   CredentialsConfig,
   CredentialsProvider,
   CredentialsProviderType,
-} from "next-auth/providers/credentials"
+} from "./credentials"
+
+export * from "./oauth"
+export * from "./email"
 export * from "./credentials"
 
 export type ProviderType = "oauth" | "email" | "credentials"
