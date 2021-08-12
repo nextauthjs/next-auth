@@ -1,15 +1,18 @@
-import { Profile, TokenSet, User } from "."
-import { Awaitable, NextApiRequest } from "./internals/utils"
+import { Profile, TokenSet, User } from ".."
+import { Awaitable, NextApiRequest } from "../internals/utils"
 import { Options as SMTPConnectionOptions } from "nodemailer/lib/smtp-connection"
 import {
   AuthorizationParameters,
   CallbackParamsType,
   Client,
-  Issuer,
   IssuerMetadata,
   OAuthCallbackChecks,
   OpenIDCallbackChecks,
 } from "openid-client"
+
+import { OAuthProviderType } from "./oauth"
+
+export { OAuthProviderType }
 
 export type ProviderType = "oauth" | "email" | "credentials"
 
@@ -147,56 +150,6 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
    */
   options?: Omit<OAuthConfig<P>, "options">
 }
-
-export type OAuthProviderType =
-  | "Apple"
-  | "Atlassian"
-  | "Auth0"
-  | "AzureAD"
-  | "AzureADB2C"
-  | "BattleNet"
-  | "Box"
-  | "Bungie"
-  | "Cognito"
-  | "Coinbase"
-  | "Discord"
-  | "Dropbox"
-  | "EVEOnline"
-  | "Facebook"
-  | "FACEIT"
-  | "FortyTwo"
-  | "Foursquare"
-  | "Freshbooks"
-  | "FusionAuth"
-  | "GitHub"
-  | "GitLab"
-  | "Google"
-  | "IdentityServer4"
-  | "Instagram"
-  | "Kakao"
-  | "LINE"
-  | "LinkedIn"
-  | "Mailchimp"
-  | "MailRu"
-  | "Medium"
-  | "Naver"
-  | "Netlify"
-  | "Okta"
-  | "OneLogin"
-  | "Osso"
-  | "Reddit"
-  | "Salesforce"
-  | "Slack"
-  | "Spotify"
-  | "Strava"
-  | "Twitch"
-  | "Twitter"
-  | "VK"
-  | "WordPress"
-  | "WorkOS"
-  | "Yandex"
-  | "Zoho"
-  | "Zoom"
 
 export type OAuthProvider = (options: Partial<OAuthConfig>) => OAuthConfig
 
