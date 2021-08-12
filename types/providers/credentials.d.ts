@@ -2,7 +2,7 @@ import { Awaitable, NextApiRequest } from "../internals/utils"
 import { CommonProviderOptions } from "."
 import { User } from ".."
 
-interface CredentialInput {
+export interface CredentialInput {
   label?: string
   type?: string
   value?: string
@@ -11,7 +11,7 @@ interface CredentialInput {
 
 export type Credentials = Record<string, CredentialInput>
 
-interface CredentialsConfig<C extends Credentials = {}>
+export interface CredentialsConfig<C extends Credentials = {}>
   extends CommonProviderOptions {
   type: "credentials"
   credentials: C
@@ -28,7 +28,7 @@ export type CredentialsProvider = <C extends Record<string, CredentialInput>>(
 export type CredentialsProviderType = "Credentials"
 
 declare module "next-auth/providers/credentials" {
-  export default function CredentialsProvider(
-    options: Partial<CredentialsConfig>
-  ): CredentialsConfig
+  export default function CredentialsProvider<
+    C extends Record<string, CredentialInput>
+  >(options: Partial<CredentialsConfig<C>>): CredentialsConfig<C>
 }
