@@ -110,7 +110,7 @@ model VerificationRequest {
 
 ```
 
-If you want to use autoincrement instead of cuid for id, rewrite it as follows.
+If you want to use `autoincrement` instead of `cuid` for id, rewrite it as follows.
 
 ```json title="schema.prisma"
 model Account {
