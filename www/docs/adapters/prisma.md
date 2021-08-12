@@ -112,7 +112,7 @@ model VerificationRequest {
 
 If you want to use `autoincrement` instead of `cuid` for id, rewrite it as follows.
 
-```json title="schema.prisma"
+```diff
 model Account {
 -  id      String  @id @default(cuid())
 -  userId  String
