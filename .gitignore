@@ -28,7 +28,11 @@ node_modules
 www/providers.json
 /internals
 /providers
-/types/providers/oauth.d.ts
+/types/providers/*
+!types/providers/index.d.ts
+!types/providers/email.d.ts
+!types/providers/credentials.d.ts
+!types/providers/oauth.d.ts
 /adapters.d.ts
 /adapters.js
 /client.d.ts
