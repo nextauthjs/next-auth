@@ -60,11 +60,13 @@ TYPES_TARGETS.forEach((target) => {
 
 const providersDirPath = path.join(process.cwd(), "/src/providers")
 
-const providersFiles = fs.readdirSync(providersDirPath, "utf8")
+const oauthProviderFiles = fs
+  .readdirSync(providersDirPath, "utf8")
+  .filter((f) => f !== "credentials.js" && f !== "email.js")
 
 let type = `export type OAuthProviderType =\n`
 
-providersFiles.forEach((file) => {
+oauthProviderFiles.forEach((file) => {
   const provider = fs.readFileSync(path.join(providersDirPath, file), "utf8")
   const fileName = file.split(".")[0]
   try {
@@ -76,14 +78,19 @@ providersFiles.forEach((file) => {
     ).groups
 
     type += `  | "${functionName}"\n`
-    const providerModule = `import { OAuthProvider } from "."
+    const providerModule = `import { OAuthConfig } from "."
 
 declare module "next-auth/providers/${fileName}" {
-  const ${functionName}Provider: OAuthProvider
-  export default ${functionName}Provider
+  export default ${functionName}Provider(
+    options: Partial<OAuthConfig>
+  ): OAuthConfig
 }`
 
-    fs.writeFile(path.join("providers", `${fileName}.d.ts`), providerModule)
+    fs.writeFile(
+      path.join("types/providers", `${fileName}.d.ts`),
+      providerModule
+    )
+
     console.log(
       `[types] created module declaration for "${functionName}" provider`
     )
@@ -98,4 +105,7 @@ declare module "next-auth/providers/${fileName}" {
   }
 })
 
-fs.writeFile(path.join(process.cwd(), "types/providers/oauth.d.ts"), type)
+fs.writeFile(
+  path.join(process.cwd(), "types/providers/oauth-providers.d.ts"),
+  type
+)
