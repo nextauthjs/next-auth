@@ -27,7 +27,7 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
   headers?: Record<string, any>
   type: "oauth"
   version: string
-  scope: string
+  scope: string | string[]
   params: { grant_type: string }
   accessTokenUrl: string
   requestTokenUrl?: string
