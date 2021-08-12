@@ -3,20 +3,19 @@ export default function Salesforce(options) {
     id: "salesforce",
     name: "Salesforce",
     type: "oauth",
-    version: "2.0",
-    params: { display: "page", grant_type: "authorization_code" },
-    accessTokenUrl: "https://login.salesforce.com/services/oauth2/token",
-    authorizationUrl:
-      "https://login.salesforce.com/services/oauth2/authorize?response_type=code",
-    profileUrl: "https://login.salesforce.com/services/oauth2/userinfo",
-    checks: ["none"],
+    authorization:
+      "https://login.salesforce.com/services/oauth2/authorize?display=page",
+    token: "https://login.salesforce.com/services/oauth2/token",
+    userinfo: "https://login.salesforce.com/services/oauth2/userinfo",
     profile(profile) {
       return {
-        ...profile,
         id: profile.user_id,
+        name: null,
+        email: null,
         image: profile.picture,
       }
     },
-    ...options,
+    checks: ["none"],
+    options,
   }
 }

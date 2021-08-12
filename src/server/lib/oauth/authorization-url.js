@@ -16,15 +16,24 @@ export default async function getAuthorizationUrl(req, res) {
   try {
     /** @type {import("types/providers").OAuthConfig} */
     const provider = req.options.provider
-    const params = {
-      scope: provider.scope,
-      ...provider.params,
-      ...req.query,
+
+    let params = {}
+
+    if (typeof provider.authorization === "string") {
+      const parsedUrl = new URL(provider.authorization)
+      const parsedParams = Object.fromEntries(parsedUrl.searchParams.entries())
+      params = { ...params, ...parsedParams }
+    } else {
+      params = { ...params, ...provider.authorization?.params }
     }
+
+    params = { ...params, ...req.query }
+
     // Handle OAuth v1.x
     if (provider.version?.startsWith("1.")) {
-      const tokens = await oAuth1Client.getOAuthRequestToken(params)
-      const url = `${provider.authorizationUrl}?${new URLSearchParams({
+      const client = oAuth1Client(req.options)
+      const tokens = await client.getOAuthRequestToken(params)
+      const url = `${provider.authorization}?${new URLSearchParams({
         oauth_token: tokens.oauth_token,
         oauth_token_secret: tokens.oauth_token_secret,
         ...tokens.params,
@@ -33,7 +42,7 @@ export default async function getAuthorizationUrl(req, res) {
       logger.debug("GET_AUTHORIZATION_URL", { url })
       return url
     }
-    const client = openidClient(req.options)
+    const client = await openidClient(req.options)
     const pkce = await createPKCE(req, res)
 
     const url = client.authorizationUrl({

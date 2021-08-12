@@ -13,6 +13,7 @@ https://developer.foursquare.com/
 
 :::warning
 Foursquare requires an additional `apiVersion` parameter in [`YYYYMMDD` format](https://developer.foursquare.com/docs/places-api/versioning/), which essentially states "I'm prepared for API changes up to this date".
+:::
 
 ## Options
 

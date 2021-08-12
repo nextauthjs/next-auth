@@ -5,18 +5,11 @@ export default function VK(options) {
     id: "vk",
     name: "VK",
     type: "oauth",
-    version: "2.0",
-    scope: "email",
-    params: {
-      grant_type: "authorization_code",
-    },
-    accessTokenUrl: `https://oauth.vk.com/access_token?v=${apiVersion}`,
-    requestTokenUrl: `https://oauth.vk.com/access_token?v=${apiVersion}`,
-    authorizationUrl: `https://oauth.vk.com/authorize?response_type=code&v=${apiVersion}`,
-    profileUrl: `https://api.vk.com/method/users.get?fields=photo_100&v=${apiVersion}`,
-    profile: (result) => {
+    authorization: `https://oauth.vk.com/authorize?scope=email&v=${apiVersion}`,
+    token: `https://oauth.vk.com/access_token?v=${apiVersion}`,
+    userinfo: `https://api.vk.com/method/users.get?fields=photo_100&v=${apiVersion}`,
+    profile(result) {
       const profile = result.response?.[0] ?? {}
-
       return {
         id: profile.id,
         name: [profile.first_name, profile.last_name].filter(Boolean).join(" "),
@@ -24,6 +17,6 @@ export default function VK(options) {
         image: profile.photo_100,
       }
     },
-    ...options,
+    options,
   }
 }
