@@ -110,6 +110,39 @@ model VerificationRequest {
 
 ```
 
+If you want to use autoincrement instead of cuid for id, rewrite it as follows.
+
+```json title="schema.prisma"
+model Account {
+-  id      String  @id @default(cuid())
+-  userId  String
++  id      Int     @id @default(autoincrement())
++  userId  Int
+...
+}
+
+model Session {
+-  id      String  @id @default(cuid())
+-  userId  String
++  id      Int     @id @default(autoincrement())
++  userId  Int
+...
+}
+
+model User {
+-  id  String  @id @default(cuid())
++  id  Int     @id @default(autoincrement())
+...
+}
+
+model VerificationRequest {
+-  id  String  @id @default(cuid())
++  id  Int     @id @default(autoincrement())
+...
+}
+
+```
+
 ### Generate Client
 
 Once you have saved your schema, use the Prisma CLI to generate the Prisma Client:
