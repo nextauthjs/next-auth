@@ -168,17 +168,25 @@ Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.2
 
 ### 9. Providers
 
-All OAuth providers' `profile` callback are expected to only return these fields by default from now on: `id`, `name`, `email`, and `image` at most. If any of these are missing values, they should be set to `null`.
+Importing OAuth providers has changed a bit, they now need to be individually imported.
 
-The following new options are available:
+```diff
+- import Provider from "next-auth/providers"
+- Providers.Auth0({...})
++ import Auth0Provider from "next-auth/providers/auth0"
++ Auth0Provider({...})
+```
+
+> 1. The `AzureADB2C` provider has been renamed `AzureAD`.
+> 2. The `Basecamp` provider has been removed, see explanation [here](https://github.com/basecamp/api/blob/master/sections/authentication.md#on-authenticating-users-via-oauth).
+
+The following new options are available when defining your Providers in the configuration:
 
 1. `authorization` (replaces `authorizationUrl`, `authorizationParams`, `scope`)
 2. `token` replaces (`accessTokenUrl`, `headers`, `params`)
 3. `userinfo` (replaces `profileUrl`)
 
-For more information on how to use these new options, please checkout the full release notes below.
-
-Also the `AzureADB2C` provider has been renamed `AzureAD`.
+When writing your own OAuth provider, the `profile` callback is expected to only return these fields by default from now on: `id`, `name`, `email`, and `image` at most. If any of these are missing values, they should be set to `null`.
 
 Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.20
 
