@@ -23,7 +23,6 @@
     ".": "./dist/server/index.js",
     "./jwt": "./dist/lib/jwt.js",
     "./react": "./dist/client/react.js",
-    "./providers": "./dist/providers/index.js",
     "./providers/*": "./dist/providers/*.js",
     "./errors": "./dist/lib/errors.js"
   },
@@ -49,8 +48,7 @@
     "dist",
     "index.js",
     "index.d.ts",
-    "providers.js",
-    "providers.d.ts",
+    "providers",
     "adapters.js",
     "adapters.d.ts",
     "react.js",

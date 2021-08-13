@@ -4,7 +4,6 @@ const path = require("path")
 const MODULE_ENTRIES = {
   SERVER: "index",
   REACT: "react",
-  PROVIDERS: "providers",
   ADAPTERS: "adapters",
   JWT: "jwt",
   ERRORS: "errors",
@@ -17,8 +16,6 @@ const BUILD_TARGETS = {
     "module.exports = require('./dist/server').default\n",
   [`${MODULE_ENTRIES.REACT}.js`]:
     "module.exports = require('./dist/client/react').default\n",
-  [`${MODULE_ENTRIES.PROVIDERS}.js`]:
-    "module.exports = require('./dist/providers').default\n",
   [`${MODULE_ENTRIES.JWT}.js`]:
     "module.exports = require('./dist/lib/jwt').default\n",
   [`${MODULE_ENTRIES.ERRORS}.js`]:
@@ -33,12 +30,13 @@ Object.entries(BUILD_TARGETS).forEach(([target, content]) => {
 })
 
 // Building types
+fs.mkdirSync("providers", { recursive: true })
 
 const TYPES_TARGETS = [
   `${MODULE_ENTRIES.SERVER}.d.ts`,
   `${MODULE_ENTRIES.REACT}-client.d.ts`,
   `${MODULE_ENTRIES.ADAPTERS}.d.ts`,
-  `${MODULE_ENTRIES.PROVIDERS}.d.ts`,
+  "providers",
   `${MODULE_ENTRIES.JWT}.d.ts`,
   `${MODULE_ENTRIES.ERRORS}.d.ts`,
   "internals",
@@ -53,23 +51,24 @@ TYPES_TARGETS.forEach((target) => {
     ),
     (err) => {
       if (err) throw err
-      console.log(`[build-types] copying "${target}" to root folder`)
+      console.log(`[types] copying "${target}" to root folder`)
     }
   )
 })
 
-// Building providers
+// Generate provider types
 
-const providersDir = path.join(process.cwd(), "/src/providers")
+const providersDirPath = path.join(process.cwd(), "/src/providers")
 
-const files = fs
-  .readdirSync(providersDir, "utf8")
-  .filter((file) => file !== "index.js")
+const oauthProviderFiles = fs
+  .readdirSync(providersDirPath, "utf8")
+  .filter((f) => f !== "credentials.js" && f !== "email.js")
 
-let importLines = ""
-let exportLines = `export default {\n`
-files.forEach((file) => {
-  const provider = fs.readFileSync(path.join(providersDir, file), "utf8")
+let type = `export type OAuthProviderType =\n`
+
+oauthProviderFiles.forEach((file) => {
+  const provider = fs.readFileSync(path.join(providersDirPath, file), "utf8")
+  const fileName = file.split(".")[0]
   try {
     // NOTE: If this fails, the default export probably wasn't a named function.
     // Always use a named function as default export.
@@ -78,8 +77,24 @@ files.forEach((file) => {
       /export default function (?<functionName>.+)\s?\(/
     ).groups
 
-    importLines += `import ${functionName} from "./${file}"\n`
-    exportLines += `  ${functionName},\n`
+    type += `  | "${functionName}"\n`
+    const providerModule = `import { OAuthConfig } from "."
+
+declare module "next-auth/providers/${fileName}" {
+  export default function ${functionName}Provider(
+    options: Partial<OAuthConfig>
+  ): OAuthConfig
+}
+`
+
+    fs.writeFile(
+      path.join("types/providers", `${fileName}.d.ts`),
+      providerModule
+    )
+
+    console.log(
+      `[types] created module declaration for "${functionName}" provider`
+    )
   } catch (error) {
     console.error(
       [
@@ -90,9 +105,8 @@ files.forEach((file) => {
     process.exit(1)
   }
 })
-exportLines += `}\n`
 
 fs.writeFile(
-  path.join(process.cwd(), "src/providers/index.js"),
-  [importLines, exportLines].join("\n")
+  path.join(process.cwd(), "types/providers/oauth-providers.d.ts"),
+  type
 )

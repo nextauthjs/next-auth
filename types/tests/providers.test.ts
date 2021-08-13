@@ -1,13 +1,42 @@
-import Providers from "next-auth/providers"
+import EmailProvider from "next-auth/providers/email"
+import CredentialsProvider from "next-auth/providers/credentials"
+import AppleProvider from "next-auth/providers/apple"
+import TwitterProvider from "next-auth/providers/twitter"
+import FacebookProvider from "next-auth/providers/facebook"
+import GitHubProvider from "next-auth/providers/github"
+import GitLabProvider from "next-auth/providers/gitlab"
+import SlackProvider from "next-auth/providers/slack"
+import GoogleProvider from "next-auth/providers/google"
+import Auth0Provider from "next-auth/providers/auth0"
+import IdentityServer4Provider from "next-auth/providers/identity-server4"
+import DiscordProvider from "next-auth/providers/discord"
+import TwitchProvider from "next-auth/providers/twitch"
+import OktaProvider from "next-auth/providers/okta"
+import OneLoginProvider from "next-auth/providers/onelogin"
+import BattleNetProvider from "next-auth/providers/battlenet"
+import BoxProvider from "next-auth/providers/box"
+import CognitoProvider from "next-auth/providers/cognito"
+import YandexProvider from "next-auth/providers/yandex"
+import LinkedInProvider from "next-auth/providers/linkedin"
+import SpotifyProvider from "next-auth/providers/spotify"
+import RedditProvider from "next-auth/providers/reddit"
+import AzureADB2CProvider from "next-auth/providers/azure-ad-b2c"
+import FusionAuthProvider from "next-auth/providers/fusionauth"
+import FACEITProvider from "next-auth/providers/faceit"
+import InstagramProvider from "next-auth/providers/instagram"
+import KakaoProvider from "next-auth/providers/kakao"
+import OssoProvider from "next-auth/providers/osso"
+import ZohoProvider from "next-auth/providers/zoho"
+import FreshbooksProvider from "next-auth/providers/freshbooks"
 
 // $ExpectType EmailConfig
-Providers.Email({
+EmailProvider({
   server: "path/to/server",
   from: "path/from",
 })
 
 // $ExpectType EmailConfig
-Providers.Email({
+EmailProvider({
   server: {
     host: "host",
     port: 123,
@@ -20,7 +49,7 @@ Providers.Email({
 })
 
 // $ExpectType CredentialsConfig<{ username: { label: string; type: string; }; password: { label: string; type: string; }; }>
-Providers.Credentials({
+CredentialsProvider({
   id: "login",
   name: "account",
   credentials: {
@@ -41,7 +70,7 @@ Providers.Credentials({
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.Apple({
+AppleProvider({
   clientId: "foo123",
   clientSecret: {
     appleId: "foo@icloud.com",
@@ -52,64 +81,64 @@ Providers.Apple({
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.Twitter({
+TwitterProvider({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.Facebook({
+FacebookProvider({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.GitHub({
+GitHubProvider({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.GitHub({
+GitHubProvider({
   clientId: "foo123",
   clientSecret: "bar123",
   authorization: { params: { scope: "change:thing read:that" } },
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.GitLab({
+GitLabProvider({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.Slack({
+SlackProvider({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.Google({
+GoogleProvider({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.Google({
+GoogleProvider({
   clientId: "foo123",
   clientSecret: "bar123",
   authorization: "https://foo.google.com",
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.Auth0({
+Auth0Provider({
   clientId: "foo123",
   clientSecret: "bar123",
   issuer: "https://foo.auth0.com",
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.Auth0({
+Auth0Provider({
   clientId: "foo123",
   clientSecret: "bar123",
   issuer: "https://foo.auth0.com",
@@ -124,7 +153,7 @@ Providers.Auth0({
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.IdentityServer4({
+IdentityServer4Provider({
   id: "identity-server4",
   name: "IdentityServer4",
   authorization: { params: { scope: "change:thing read:that" } },
@@ -134,86 +163,86 @@ Providers.IdentityServer4({
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.Discord({
+DiscordProvider({
   clientId: "foo123",
   clientSecret: "bar123",
   authorization: { params: { scope: "identify" } },
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.Twitch({
+TwitchProvider({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.Okta({
+OktaProvider({
   clientId: "foo123",
   clientSecret: "bar123",
   issuer: "https://foo.auth0.com",
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.OneLogin({
+OneLoginProvider({
   clientId: "foo123",
   clientSecret: "bar123",
   issuer: "https://foo.onelogin.com",
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.BattleNet({
+BattleNetProvider({
   clientId: "foo123",
   clientSecret: "bar123",
   region: "europe",
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.Box({
+BoxProvider({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.Cognito({
+CognitoProvider({
   clientId: "foo123",
   clientSecret: "bar123",
   issuer: "https://foo.auth0.com",
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.Yandex({
+YandexProvider({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.LinkedIn({
+LinkedInProvider({
   clientId: "foo123",
   clientSecret: "bar123",
   authorization: { params: { scope: "r_emailaddress r_liteprofile" } },
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.Spotify({
+SpotifyProvider({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.Spotify({
+SpotifyProvider({
   clientId: "foo123",
   clientSecret: "bar123",
   authorization: { params: { scope: "user-read-email" } },
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.Reddit({
+RedditProvider({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.AzureADB2C({
+AzureADB2CProvider({
   clientId: "foo123",
   clientSecret: "bar123",
   authorization: { params: { scope: "offline_access User.Read" } },
@@ -222,7 +251,7 @@ Providers.AzureADB2C({
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.FusionAuth({
+FusionAuthProvider({
   name: "FusionAuth",
   issuer: "domain",
   clientId: "clientId",
@@ -231,37 +260,37 @@ Providers.FusionAuth({
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.FACEIT({
+FACEITProvider({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.Instagram({
+InstagramProvider({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.Kakao({
+KakaoProvider({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.Osso({
+OssoProvider({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.Zoho({
+ZohoProvider({
   clientId: "foo123",
   clientSecret: "bar123",
 })
 
 // $ExpectType OAuthConfig<Profile>
-Providers.Freshbooks({
+FreshbooksProvider({
   clientId: "foo123",
   clientSecret: "bar123",
 })
