@@ -98,6 +98,7 @@ export type OAuthProviderType =
   | "Twitch"
   | "Twitter"
   | "VK"
+  | "WeChat"
   | "WordPress"
   | "WorkOS"
   | "Yandex"
