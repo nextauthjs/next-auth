@@ -5,6 +5,8 @@ title: Models
 
 NextAuth.js can be used with any database. Models tell you what structures NextAuth.js expects from your database.
 
+![v4 Schema](/img/nextauth_v4_schema.png)
+
 :::note
 You can [create your own adapter](/tutorials/creating-a-database-adapter) if you want to use NextAuth.js with a database that is not supported out of the box, or you have to change fields on any of the models.
 :::
