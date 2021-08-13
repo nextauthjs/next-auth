@@ -57,7 +57,7 @@ export interface VerificationToken {
  * [Create a custom adapter](https://next-auth.js.org/tutorials/creating-a-database-adapter)
  */
 export interface Adapter {
-  createUser(user: AdapterUser): Awaitable<AdapterUser>
+  createUser(user: Omit<AdapterUser, "id">): Awaitable<AdapterUser>
   getUser(id: string): Awaitable<AdapterUser | null>
   getUserByEmail(email: string): Awaitable<AdapterUser | null>
   /** Using the provider id and the id of the user for a specific account, get the user. */

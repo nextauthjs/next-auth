@@ -100,8 +100,11 @@ export default async function callbackHandler(
       user = await updateUser({ emailVerified: new Date() })
       await events.updateUser?.({ user })
     } else {
+      const newUser = { ...profile, emailVerified: new Date() }
+      // @ts-ignore Force the adapter to create its own user id
+      delete newUser.id
       // Create user account if there isn't one for the email address already
-      user = await createUser({ ...profile, emailVerified: new Date() })
+      user = await createUser(newUser)
       await events.createUser?.({ user })
       isNewUser = true
     }
@@ -191,7 +194,10 @@ export default async function callbackHandler(
       // If no account matching the same [provider].id or .email exists, we can
       // create a new account for the user, link it to the OAuth acccount and
       // create a new session for them so they are signed in with it.
-      user = await createUser({ ...profile, emailVerified: null })
+      const newUser = { ...profile, emailVerified: null }
+      // @ts-ignore Force the adapter to create its own user id
+      delete newUser.id
+      user = await createUser(newUser)
       await events.createUser?.({ user })
 
       await linkAccount(user.id, account)
