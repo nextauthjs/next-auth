@@ -131,6 +131,9 @@ async function getOAuth2AccessToken (code, provider, codeVerifier) {
     { algorithm: 'ES256', keyid: keyId }
     )
     params.client_secret = clientSecret
+  } else if (provider.id === 'wechat') {
+    params.appid = provider.clientId || provider.appid
+    params.secret = provider.clientSecret;
   } else {
     params.client_secret = provider.clientSecret
   }
@@ -232,6 +235,17 @@ async function getOAuth2 (provider, accessToken, results) {
     if (provider.id === 'twitch') {
       headers['Client-ID'] = provider.clientId
     }
+
+    // WeChat has different url params design
+    if (provider.id === 'wechat') {
+      const wechatProfileURL = new URL(url)
+
+      wechatProfileURL.searchParams.append('access_token', results.accessToken)
+      wechatProfileURL.searchParams.append('openid', results.openid)
+
+      url = wechatProfileURL.href
+    }
+
     accessToken = null
   }
 
