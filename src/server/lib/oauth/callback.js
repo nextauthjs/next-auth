@@ -119,7 +119,7 @@ async function getProfile({ profile: OAuthProfile, tokens, provider, logger }) {
       account: {
         provider: provider.id,
         type: provider.type,
-        id: profile.id,
+        id: profile.id.toString(),
         ...tokens,
       },
       OAuthProfile,
