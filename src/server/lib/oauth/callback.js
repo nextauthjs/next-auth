@@ -89,7 +89,7 @@ export default async function oAuthCallback(req, res) {
       profile = tokens.claims()
     } else {
       profile = await client.userinfo(tokens, {
-        params: provider.userinfo.params,
+        params: provider.userinfo?.params,
       })
     }
 

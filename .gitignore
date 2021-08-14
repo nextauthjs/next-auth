@@ -26,8 +26,13 @@ node_modules
 .docusaurus
 .cache-loader
 www/providers.json
-src/providers/index.js
 /internals
+/providers
+/types/providers/*
+!types/providers/index.d.ts
+!types/providers/email.d.ts
+!types/providers/credentials.d.ts
+!types/providers/oauth.d.ts
 /adapters.d.ts
 /adapters.js
 /client.d.ts
@@ -36,8 +41,6 @@ src/providers/index.js
 /index.js
 /jwt.d.ts
 /jwt.js
-/providers.d.ts
-/providers.js
 /errors.js
 /errors.d.ts
 /react.js

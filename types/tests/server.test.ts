@@ -1,9 +1,11 @@
-import Providers, { OAuthConfig } from "next-auth/providers"
+import { OAuthConfig } from "next-auth/providers"
 import { Adapter, AdapterSession, AdapterUser } from "next-auth/adapters"
 import NextAuth, * as NextAuthTypes from "next-auth"
 import { IncomingMessage, ServerResponse } from "http"
 import { Socket } from "net"
 import { NextApiRequest, NextApiResponse } from "internals/utils"
+import GitHubProvider from "next-auth/providers/github"
+import TwitterProvider from "next-auth/providers/twitter"
 
 const req: NextApiRequest = Object.assign(new IncomingMessage(new Socket()), {
   query: {},
@@ -31,7 +33,7 @@ const pageOptions = {
 
 const simpleConfig = {
   providers: [
-    Providers.GitHub({
+    GitHubProvider({
       clientId: "123",
       clientSecret: "123",
       authorization: {
@@ -111,7 +113,7 @@ const client = { c() {}, r() {}, u() {}, d() {} } // Create a fake db client
 
 const allConfig: NextAuthTypes.NextAuthOptions = {
   providers: [
-    Providers.Twitter({
+    TwitterProvider({
       clientId: "123",
       clientSecret: "123",
     }),
