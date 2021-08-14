@@ -240,7 +240,6 @@ export type TokenSet = TokenSetParameters
  * and also extends `TokenSet`, which is different tokens returned by OAuth Providers.
  */
 export interface DefaultAccount extends Partial<TokenSet> {
-  id: string
   /**
    * This value depends on the type of the provider being used to create the account.
    * - oauth: The OAuth account's id, returned from the `profile()` callback.
