@@ -19,7 +19,6 @@ export interface EmailConfig extends CommonProviderOptions {
     url: string
     expires: Date
     provider: EmailConfig
-    baseUrl: string
     token: string
   }): Awaitable<void>
   /**

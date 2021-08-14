@@ -13,16 +13,12 @@ import { hashToken } from "../utils"
  * @param {import("types/internals").InternalOptions<EmailConfig>} options
  */
 export default async function email(identifier, options) {
-  const { baseUrl, basePath, adapter, provider } = options
+  const { baseUrl, basePath, adapter, provider, logger } = options
 
   // Generate token
   const token =
     (await provider.generateVerificationToken?.()) ??
     randomBytes(32).toString("hex")
-
-  // Generate a link with email and the unhashed token
-  const params = new URLSearchParams({ token, email: identifier })
-  const url = `${baseUrl}${basePath}/callback/${provider.id}?${params}`
 
   const ONE_DAY_IN_SECONDS = 86400
   const expires = new Date(
@@ -37,12 +33,25 @@ export default async function email(identifier, options) {
     expires,
   })
 
-  // Send to user
-  await provider.sendVerificationRequest({
-    identifier,
-    token,
-    expires,
-    url,
-    provider,
-  })
+  // Generate a link with email and the unhashed token
+  const params = new URLSearchParams({ token, email: identifier })
+  const url = `${baseUrl}${basePath}/callback/${provider.id}?${params}`
+
+  try {
+    // Send to user
+    await provider.sendVerificationRequest({
+      identifier,
+      token,
+      expires,
+      url,
+      provider,
+    })
+  } catch (error) {
+    logger.error("SEND_VERIFICATION_EMAIL_ERROR", {
+      identifier,
+      url,
+      error,
+    })
+    throw new Error("SEND_VERIFICATION_EMAIL_ERROR")
+  }
 }
