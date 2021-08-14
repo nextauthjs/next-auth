@@ -12,6 +12,7 @@ model Account {
   userId             String
   type               String
   provider           String
+  providerAccountId  String
   refresh_token      String?
   access_token       String?
   expires_at         Int?
@@ -26,7 +27,7 @@ model Account {
   updatedAt DateTime @updatedAt
   user      User     @relation(fields: [userId], references: [id])
 
-  @@unique([provider, id])
+  @@unique([provider, providerAccountId])
 }
 
 model Session {
