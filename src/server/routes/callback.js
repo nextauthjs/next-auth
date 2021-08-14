@@ -56,7 +56,7 @@ export default async function callback(req, res) {
         if (adapter) {
           const { getUserByAccount } = adapter
           const userByAccount = await getUserByAccount({
-            id: account.id,
+            providerAccountId: account.providerAccountId,
             provider: provider.id,
           })
 

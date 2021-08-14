@@ -26,7 +26,7 @@ export default async function callbackHandler(
   options
 ) {
   // Input validation
-  if (!account?.id || !account.type)
+  if (!account?.providerAccountId || !account.type)
     throw new Error("Missing or invalid provider account")
   if (!["email", "oauth"].includes(account.type))
     throw new Error("Provider not supported")
@@ -97,7 +97,7 @@ export default async function callbackHandler(
       }
 
       // Update emailVerified property on the user object
-      user = await updateUser({ emailVerified: new Date() })
+      user = await updateUser({ id: userByEmail.id, emailVerified: new Date() })
       await events.updateUser?.({ user })
     } else {
       const newUser = { ...profile, emailVerified: new Date() }
@@ -122,7 +122,7 @@ export default async function callbackHandler(
   } else if (account.type === "oauth") {
     // If signing in with OAuth account, check to see if the account exists already
     const userByAccount = await getUserByAccount({
-      id: account.id,
+      providerAccountId: account.providerAccountId,
       provider: account.provider,
     })
     if (userByAccount) {
