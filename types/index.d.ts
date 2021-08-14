@@ -239,18 +239,24 @@ export type TokenSet = TokenSetParameters
  * Usually contains information about the provider being used
  * and also extends `TokenSet`, which is different tokens returned by OAuth Providers.
  */
-export interface Account extends Partial<TokenSet>, Record<string, unknown> {
-  /**
-   * User's id for this account.
-   * In case of an "email" type provider,
-   * it's the email of the user.
-   */
+export interface DefaultAccount extends Partial<TokenSet> {
   id: string
+  /**
+   * This value depends on the type of the provider being used to create the account.
+   * - oauth: The OAuth account's id, returned from the `profile()` callback.
+   * - email: The user's email address.
+   * - credentials: `id` returned from the `authorize()` callback
+   */
+  providerAccountId: string
+  /** id of the user this account belongs to. */
+  userId: string
   /** id of the provider used for this account */
   provider: string
   /** Provider's type for this account */
   type: ProviderType
 }
+
+export interface Account extends Record<string, unknown>, DefaultAccount {}
 
 export interface DefaultProfile {
   sub?: string

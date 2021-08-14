@@ -197,7 +197,7 @@ export default async function callback(req, res) {
 
       /** @type {import("types").Account} */
       const account = {
-        id: profile.email,
+        providerAccountId: profile.email,
         type: "email",
         provider: provider.id,
       }
@@ -337,7 +337,7 @@ export default async function callback(req, res) {
 
     /** @type {import("types").Account} */
     const account = {
-      id: user.id,
+      providerAccountId: user.id,
       type: "credentials",
       provider: provider.id,
     }

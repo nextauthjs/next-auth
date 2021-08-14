@@ -68,14 +68,12 @@ export interface Adapter {
   /** @todo Implement */
   deleteUser?(userId: string): Awaitable<AdapterUser | null | undefined>
   linkAccount(
-    userId: string,
     account: Account
   ): Promise<void> | Awaitable<Account | null | undefined>
   /** @todo Implement */
-  unlinkAccount?(provider_id: {
-    provider: string
-    id: string
-  }): Promise<void> | Awaitable<Account | undefined>
+  unlinkAccount?(
+    provider_id: Pick<Account, "provider" | "id">
+  ): Promise<void> | Awaitable<Account | undefined>
   /** Creates a session for the user and returns it. */
   createSession(session: {
     sessionToken: string

@@ -85,7 +85,7 @@ function MyAdapter(client: Client): Adapter {
     async updateUser(user) {
       return exampleUser
     },
-    async linkAccount(userId, {}) {
+    async linkAccount({}) {
       return undefined
     },
     async createSession(user) {

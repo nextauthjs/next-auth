@@ -41,14 +41,11 @@ export default async function signin(req, res) {
 
     const { getUserByEmail } = adapter
     // If is an existing user return a user object (otherwise use placeholder)
-    const user = (email ? await getUserByEmail(email) : null) ?? {
-      id: email,
-      email,
-    }
+    const user = (email ? await getUserByEmail(email) : null) ?? { email }
 
     /** @type {import("types").Account} */
     const account = {
-      id: email,
+      providerAccountId: user.email,
       type: "email",
       provider: provider.id,
     }
