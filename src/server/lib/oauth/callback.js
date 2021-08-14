@@ -5,7 +5,7 @@ import { usePKCECodeVerifier } from "./pkce-handler"
 import { OAuthCallbackError } from "../../../lib/errors"
 import { TokenSet } from "openid-client"
 
-/** @type {import("types/internals").NextAuthApiHandler} */
+/** @type {import("types/internals").NextAuthApiHandler<import("types/internals/oauth").GetProfileResult>} */
 export default async function oAuthCallback(req, res) {
   const { logger } = req.options
 
@@ -106,7 +106,7 @@ export default async function oAuthCallback(req, res) {
 
 /**
  * Returns profile, raw profile and auth provider details
- * @param {import("types/internals/oauth").GetProfileParams} params
+ * @type {import("types/internals/oauth").GetProfile}
  */
 async function getProfile({ profile: OAuthProfile, tokens, provider, logger }) {
   try {

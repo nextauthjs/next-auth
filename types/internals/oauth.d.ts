@@ -1,10 +1,18 @@
-import { Provider } from "../providers"
-import { Profile, LoggerInstance } from "../index"
+import { OAuthConfig } from "../providers"
+import { Profile, LoggerInstance, Account } from "../index"
 import { TokenSet } from "openid-client"
 
 export interface GetProfileParams {
   profile: Profile
   tokens: TokenSet
-  provider: Provider
+  provider: OAuthConfig
   logger: LoggerInstance
 }
+
+interface GetProfileResult {
+  profile: ReturnType<OAuthConfig["profile"]> | null
+  account: Omit<Account, "userId"> | null
+  OAuthProfile: Profile
+}
+
+export type GetProfile = (params: GetProfileParams) => Promise<GetProfileResult>

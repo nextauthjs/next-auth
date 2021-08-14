@@ -55,7 +55,7 @@ export interface NextAuthRequest extends NextApiRequest {
 
 export type NextAuthResponse = NextApiResponse
 
-export type NextAuthApiHandler = (
+export type NextAuthApiHandler<R = void> = (
   req: NextAuthRequest,
   res: NextAuthResponse
-) => Awaitable<void>
+) => Awaitable<R>
