@@ -9,7 +9,7 @@ export interface GetProfileParams {
   logger: LoggerInstance
 }
 
-interface GetProfileResult {
+export interface GetProfileResult {
   profile: ReturnType<OAuthConfig["profile"]> | null
   account: Omit<Account, "userId"> | null
   OAuthProfile: Profile
