@@ -62,7 +62,7 @@ export interface Adapter {
   getUserByEmail(email: string): Awaitable<AdapterUser | null>
   /** Using the provider id and the id of the user for a specific account, get the user. */
   getUserByAccount(
-    providerAccountId: Pick<Account, "provider" | "id">
+    providerAccountId: Pick<Account, "provider" | "providerAccountId">
   ): Awaitable<AdapterUser | null>
   updateUser(user: Partial<AdapterUser>): Awaitable<AdapterUser>
   /** @todo Implement */
@@ -72,7 +72,7 @@ export interface Adapter {
   ): Promise<void> | Awaitable<Account | null | undefined>
   /** @todo Implement */
   unlinkAccount?(
-    provider_id: Pick<Account, "provider" | "id">
+    providerAccountId: Pick<Account, "provider" | "providerAccountId">
   ): Promise<void> | Awaitable<Account | undefined>
   /** Creates a session for the user and returns it. */
   createSession(session: {
