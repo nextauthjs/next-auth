@@ -77,6 +77,11 @@ export default async function oAuthCallback(req, res) {
       tokens = await client.oauthCallback(provider.callbackUrl, params, checks)
     }
 
+    // REVIEW: How can scope be returned as an array?
+    if (Array.isArray(tokens.scope)) {
+      tokens.scope = tokens.scope.join(" ")
+    }
+
     /** @type {import("types").Profile} */
     let profile
     if (provider.userinfo?.request) {
