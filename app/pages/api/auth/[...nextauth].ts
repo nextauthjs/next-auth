@@ -24,12 +24,18 @@ export default NextAuth({
   adapter: PrismaAdapter(prisma),
   providers: [
     // E-mail
+    // Start fake e-mail server with `npm run start:email`
     EmailProvider({
-      server: process.env.EMAIL_SERVER,
-      from: process.env.EMAIL_FROM,
+      server: {
+        host: "127.0.0.1",
+        auth: null,
+        secure: false,
+        port: 1025,
+        tls: { rejectUnauthorized: false },
+      },
     }),
     // Credentials
-    CredentialsProvider({
+    CredentialsProvider<{ password: { label: "Password"; type: "password" } }>({
       name: "Credentials",
       credentials: {
         password: { label: "Password", type: "password" },
@@ -37,7 +43,6 @@ export default NextAuth({
       async authorize(credentials, req) {
         if (credentials.password === "password") {
           return {
-            id: 1,
             name: "Fill Murray",
             email: "bill@fillmurray.com",
             image: "https://www.fillmurray.com/64/64",
@@ -111,6 +116,9 @@ export default NextAuth({
       clientSecret: process.env.DISCORD_SECRET,
     }),
   ],
+  session: {
+    jwt: true,
+  },
   jwt: {
     encryption: true,
     secret: process.env.SECRET,
