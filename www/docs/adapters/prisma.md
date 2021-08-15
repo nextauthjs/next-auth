@@ -40,16 +40,17 @@ Schema for the Prisma Adapter (`@next-auth/prisma-adapter`)
 
 ## Setup
 
-Create a schema file in `prisma/schema.prisma` similar to this one:
+You need to use at least Prisma 2.26.0. Create a schema file in `prisma/schema.prisma` similar to this one:
 
 ```json title="schema.prisma"
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "sqlite"
   url      = "file:./dev.db"
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialActions"]
 }
 
 model Account {
@@ -57,6 +58,7 @@ model Account {
   userId             String
   type               String
   provider           String
+  providerAccountId  String
   refresh_token      String?
   access_token       String?
   expires_at         Int?
@@ -67,11 +69,9 @@ model Account {
   oauth_token_secret String?
   oauth_token        String?
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([provider, id])
+  @@unique([provider, providerAccountId])
 }
 
 model Session {
@@ -79,7 +79,7 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id])
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
@@ -99,7 +99,6 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
-
 ```
 
 ### Generate Client
