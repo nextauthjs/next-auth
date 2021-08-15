@@ -7,7 +7,7 @@ NextAuth.js version 4.0 included a few breaking changes from the last major vers
 
 ### 1. Database Adapters
 
-If you use the built-in TypeORM or Prisma adapters, these have been removed from the core `next-auth` package to not balloon the package size for users who do not need a database. Thankfully the migration is super easy; you just need to install the external packages for your database now and change your `[...nextauth].js` config file a bit.
+1.1. If you use the built-in TypeORM or Prisma adapters, these have been removed from the core `next-auth` package to not balloon the package size for users who do not need a database. Thankfully the migration is super easy; you just need to install the external packages for your database now and change your `[...nextauth].js` config file a bit.
 
 ```diff
 // [...nextauth].js
@@ -21,9 +21,13 @@ export default NextAuth({
 })
 ```
 
+1.2. The `prisma-legacy` adapter has been removed, please use the [`@next-auth/prisma-adapter`](https:/npmjs.com/package/@next-auth/prisma-adapter) instead.
+
+1.3. The `typeorm-legacy` adapter will stay as-is for the time being, however we do aim to migrate this to individual lighter weight adapters for each database type in the future.
+
 See [nextauthjs/adapter](https://github.com/nextauthjs/adapters) for more details.
 
-Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.8
+Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.8 and https://github.com/nextauthjs/next-auth/pull/2361
 
 ### 2. next-auth/react
 
