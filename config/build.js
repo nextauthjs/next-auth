@@ -6,7 +6,6 @@ const MODULE_ENTRIES = {
   REACT: "react",
   ADAPTERS: "adapters",
   JWT: "jwt",
-  ERRORS: "errors",
 }
 
 // Building submodule entries
@@ -18,8 +17,6 @@ const BUILD_TARGETS = {
     "module.exports = require('./dist/client/react').default\n",
   [`${MODULE_ENTRIES.JWT}.js`]:
     "module.exports = require('./dist/lib/jwt').default\n",
-  [`${MODULE_ENTRIES.ERRORS}.js`]:
-    "module.exports = require('./dist/lib/errors').default\n",
 }
 
 Object.entries(BUILD_TARGETS).forEach(([target, content]) => {
@@ -38,7 +35,6 @@ const TYPES_TARGETS = [
   `${MODULE_ENTRIES.ADAPTERS}.d.ts`,
   "providers",
   `${MODULE_ENTRIES.JWT}.d.ts`,
-  `${MODULE_ENTRIES.ERRORS}.d.ts`,
   "internals",
 ]
 

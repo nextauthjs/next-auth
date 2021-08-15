@@ -2,14 +2,6 @@ import { CommonProviderOptions } from "."
 import { Options as SMTPConnectionOptions } from "nodemailer/lib/smtp-connection"
 import { Awaitable } from "../internals/utils"
 
-export type SendVerificationRequest = (params: {
-  identifier: string
-  url: string
-  baseUrl: string
-  token: string
-  provider: EmailConfig
-}) => Awaitable<void>
-
 export interface EmailConfig extends CommonProviderOptions {
   type: "email"
   // TODO: Make use of https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html
@@ -22,7 +14,27 @@ export interface EmailConfig extends CommonProviderOptions {
    * @default 86400
    */
   maxAge?: number
-  sendVerificationRequest: SendVerificationRequest
+  sendVerificationRequest(params: {
+    identifier: string
+    url: string
+    expires: Date
+    provider: EmailConfig
+    token: string
+  }): Awaitable<void>
+  /**
+   * By default, we are generating a random verification token.
+   * You can make it predictable or modify it as you like with this method.
+   * @example
+   * ```js
+   *  Providers.Email({
+   *    async generateVerificationToken() {
+   *      return "ABC123"
+   *    }
+   *  })
+   * ```
+   * [Documentation](https://next-auth.js.org/providers/email#customising-the-verification-token)
+   */
+  generateVerificationToken?(): Awaitable<string>
 }
 
 export type EmailProvider = (options: Partial<EmailConfig>) => EmailConfig

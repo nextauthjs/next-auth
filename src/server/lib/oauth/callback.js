@@ -5,7 +5,7 @@ import { usePKCECodeVerifier } from "./pkce-handler"
 import { OAuthCallbackError } from "../../../lib/errors"
 import { TokenSet } from "openid-client"
 
-/** @type {import("types/internals").NextAuthApiHandler} */
+/** @type {import("types/internals").NextAuthApiHandler<import("types/internals/oauth").GetProfileResult>} */
 export default async function oAuthCallback(req, res) {
   const { logger } = req.options
 
@@ -77,6 +77,11 @@ export default async function oAuthCallback(req, res) {
       tokens = await client.oauthCallback(provider.callbackUrl, params, checks)
     }
 
+    // REVIEW: How can scope be returned as an array?
+    if (Array.isArray(tokens.scope)) {
+      tokens.scope = tokens.scope.join(" ")
+    }
+
     /** @type {import("types").Profile} */
     let profile
     if (provider.userinfo?.request) {
@@ -106,7 +111,7 @@ export default async function oAuthCallback(req, res) {
 
 /**
  * Returns profile, raw profile and auth provider details
- * @param {import("types/internals/oauth").GetProfileParams} params
+ * @type {import("types/internals/oauth").GetProfile}
  */
 async function getProfile({ profile: OAuthProfile, tokens, provider, logger }) {
   try {
@@ -119,7 +124,7 @@ async function getProfile({ profile: OAuthProfile, tokens, provider, logger }) {
       account: {
         provider: provider.id,
         type: provider.type,
-        id: profile.id,
+        providerAccountId: profile.id.toString(),
         ...tokens,
       },
       OAuthProfile,

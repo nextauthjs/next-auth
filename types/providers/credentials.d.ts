@@ -18,7 +18,7 @@ export interface CredentialsConfig<C extends Credentials = {}>
   authorize(
     credentials: Record<keyof C, string>,
     req: NextApiRequest
-  ): Awaitable<User | null>
+  ): Awaitable<(Omit<User, "id"> | { id?: string }) | null>
 }
 
 export type CredentialsProvider = <C extends Record<string, CredentialInput>>(

@@ -1,5 +1,5 @@
 import * as cookie from "../lib/cookie"
-import adapterErrorHandler from "../../adapters/error-handler"
+import { fromDate } from "../lib/utils"
 
 /**
  * Return a session object (without any private fields)
@@ -24,21 +24,17 @@ export default async function session(req, res) {
       const decodedToken = await jwt.decode({ ...jwt, token: sessionToken })
 
       // Generate new session expiry date
-      const sessionExpiresDate = new Date()
-      sessionExpiresDate.setTime(
-        sessionExpiresDate.getTime() + sessionMaxAge * 1000
-      )
-      const sessionExpires = sessionExpiresDate.toISOString()
+      const newExpires = fromDate(sessionMaxAge)
 
       // By default, only exposes a limited subset of information to the client
-      // as needed for presentation purposes (e.g. "you are logged in as…").
+      // as needed for presentation purposes (e.g. "you are logged in as...").
       const defaultSession = {
         user: {
-          name: decodedToken.name || null,
-          email: decodedToken.email || null,
-          image: decodedToken.picture || null,
+          name: decodedToken?.name,
+          email: decodedToken?.email,
+          image: decodedToken?.picture,
         },
-        expires: sessionExpires,
+        expires: newExpires.toISOString(),
       }
 
       // Pass Session and JSON Web Token through to the session callback
@@ -56,11 +52,11 @@ export default async function session(req, res) {
 
       // Set cookie, to also update expiry date on cookie
       cookie.set(res, cookies.sessionToken.name, newToken, {
-        expires: sessionExpires,
+        expires: newExpires,
         ...cookies.sessionToken.options,
       })
 
-      await events.session({ session, token })
+      await events.session?.({ session, token })
     } catch (error) {
       // If JWT not verifiable, make sure the cookie for it is removed and return empty object
       logger.error("JWT_SESSION_ERROR", error)
@@ -71,32 +67,49 @@ export default async function session(req, res) {
     }
   } else {
     try {
-      const { getUser, getSession, updateSession } = adapterErrorHandler(
-        await adapter.getAdapter(req.options),
-        logger
-      )
-      const session = await getSession(sessionToken)
-      if (session) {
-        // Trigger update to session object to update session expiry
-        await updateSession(session)
+      const { getSessionAndUser, deleteSession, updateSession } = adapter
+      let userAndSession = await getSessionAndUser(sessionToken)
 
-        const user = await getUser(session.userId)
+      // If session has expired, clean up the database
+      if (
+        userAndSession &&
+        userAndSession.session.expires.valueOf() < Date.now()
+      ) {
+        await deleteSession(sessionToken)
+        userAndSession = null
+      }
 
-        // By default, only exposes a limited subset of information to the client
-        // as needed for presentation purposes (e.g. "you are logged in as…").
-        const defaultSession = {
-          user: {
-            name: user.name,
-            email: user.email,
-            image: user.image,
-          },
-          accessToken: session.accessToken,
-          expires: session.expires,
+      if (userAndSession) {
+        const { user, session } = userAndSession
+
+        const sessionUpdateAge = req.options.session.updateAge
+        // Calculate last updated date to throttle write updates to database
+        // Formula: ({expiry date} - sessionMaxAge) + sessionUpdateAge
+        //     e.g. ({expiry date} - 30 days) + 1 hour
+        const sessionIsDueToBeUpdatedDate =
+          session.expires.valueOf() -
+          sessionMaxAge * 1000 +
+          sessionUpdateAge * 1000
+
+        const newExpires = fromDate(sessionMaxAge)
+        // Trigger update of session expiry date and write to database, only
+        // if the session was last updated more than {sessionUpdateAge} ago
+        if (sessionIsDueToBeUpdatedDate <= Date.now()) {
+          await updateSession({ sessionToken, expires: newExpires })
         }
 
         // Pass Session through to the session callback
         const sessionPayload = await callbacks.session({
-          session: defaultSession,
+          // By default, only exposes a limited subset of information to the client
+          // as needed for presentation purposes (e.g. "you are logged in as...").
+          session: {
+            user: {
+              name: user.name,
+              email: user.email,
+              image: user.image,
+            },
+            expires: session.expires.toISOString(),
+          },
           user,
         })
 
@@ -105,11 +118,11 @@ export default async function session(req, res) {
 
         // Set cookie again to update expiry
         cookie.set(res, cookies.sessionToken.name, sessionToken, {
-          expires: session.expires,
+          expires: newExpires,
           ...cookies.sessionToken.options,
         })
 
-        await events.session({ session: sessionPayload })
+        await events.session?.({ session: sessionPayload })
       } else if (sessionToken) {
         // If sessionToken was found set but it's not valid for a session then
         // remove the sessionToken cookie from browser.

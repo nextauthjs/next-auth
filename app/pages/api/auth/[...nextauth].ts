@@ -16,14 +16,23 @@ import LineProvider from "next-auth/providers/line"
 import LinkedInProvider from "next-auth/providers/linkedin"
 import MailchimpProvider from "next-auth/providers/mailchimp"
 import DiscordProvider from "next-auth/providers/discord"
-import OneLoginProvider from "next-auth/providers/onelogin"
+import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import { PrismaClient } from "@prisma/client"
+const prisma = new PrismaClient()
 
 export default NextAuth({
+  adapter: PrismaAdapter(prisma),
   providers: [
     // E-mail
+    // Start fake e-mail server with `npm run start:email`
     EmailProvider({
-      server: process.env.EMAIL_SERVER,
-      from: process.env.EMAIL_FROM,
+      server: {
+        host: "127.0.0.1",
+        auth: null,
+        secure: false,
+        port: 1025,
+        tls: { rejectUnauthorized: false },
+      },
     }),
     // Credentials
     CredentialsProvider({
@@ -34,7 +43,6 @@ export default NextAuth({
       async authorize(credentials, req) {
         if (credentials.password === "password") {
           return {
-            id: 1,
             name: "Fill Murray",
             email: "bill@fillmurray.com",
             image: "https://www.fillmurray.com/64/64",
@@ -107,12 +115,10 @@ export default NextAuth({
       clientId: process.env.DISCORD_ID,
       clientSecret: process.env.DISCORD_SECRET,
     }),
-    OneLoginProvider({
-      clientId: process.env.ONELOGIN_ID,
-      clientSecret: process.env.ONELOGIN_SECRET,
-      issuer: process.env.ONELOGIN_ISSUER,
-    }),
   ],
+  session: {
+    jwt: true,
+  },
   jwt: {
     encryption: true,
     secret: process.env.SECRET,

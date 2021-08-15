@@ -23,8 +23,7 @@
     ".": "./dist/server/index.js",
     "./jwt": "./dist/lib/jwt.js",
     "./react": "./dist/client/react.js",
-    "./providers/*": "./dist/providers/*.js",
-    "./errors": "./dist/lib/errors.js"
+    "./providers/*": "./dist/providers/*.js"
   },
   "scripts": {
     "build": "npm run build:js && npm run build:css",
@@ -49,12 +48,9 @@
     "index.js",
     "index.d.ts",
     "providers",
-    "adapters.js",
     "adapters.d.ts",
     "react.js",
     "react.d.ts",
-    "errors.js",
-    "errors.d.ts",
     "jwt.js",
     "jwt.d.ts",
     "internals"
@@ -148,7 +144,9 @@
       "fetch": "readonly"
     },
     "rules": {
-      "camelcase": "off"
+      "camelcase": "off",
+      "@typescript-eslint/naming-convention": "off",
+      "@typescript-eslint/strict-boolean-expressions": "off"
     },
     "overrides": [
       {

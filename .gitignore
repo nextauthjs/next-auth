@@ -51,6 +51,8 @@ app/next-auth
 app/dist/css
 app/package-lock.json
 app/yarn.lock
+app/prisma/migrations
+app/prisma/dev.db*
 
 # VS
 /.vs/slnx.sqlite-journal

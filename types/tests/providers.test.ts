@@ -63,9 +63,7 @@ CredentialsProvider({
     },
   },
   async authorize({ username, password }) {
-    return {
-      /* fetched user */
-    }
+    return null
   },
 })
 

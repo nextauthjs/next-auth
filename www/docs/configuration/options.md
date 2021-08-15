@@ -169,12 +169,12 @@ An example JSON Web Token contains a payload like this:
 You can use the built-in `getToken()` helper method to verify and decrypt the token, like this:
 
 ```js
-import jwt from "next-auth/jwt"
+import { getToken } from "next-auth/jwt"
 
 const secret = process.env.JWT_SECRET
 
 export default async (req, res) => {
-  const token = await jwt.getToken({ req, secret })
+  const token = await getToken({ req, secret })
   console.log("JSON Web Token", token)
   res.end()
 }
