@@ -181,6 +181,17 @@ export default async function callback(req, res) {
         deleteVerificationRequest,
         getUserByEmail,
       } = adapterErrorHandler(await adapter.getAdapter(req.options), logger)
+
+      let crossDeviceCallbackUrl
+      if (req.query.crossDeviceCallbackUrl) {
+        try {
+          crossDeviceCallbackUrl = callbacks.redirect(
+            decodeURIComponent(req.query.crossDeviceCallbackUrl),
+            baseUrl
+          )
+        } catch (error) {}
+      }
+
       const verificationToken = req.query.token
       const email = req.query.email
 
@@ -283,12 +294,14 @@ export default async function callback(req, res) {
         return res.redirect(
           `${pages.newUser}${
             pages.newUser.includes("?") ? "&" : "?"
-          }callbackUrl=${encodeURIComponent(callbackUrl)}`
+          }callbackUrl=${encodeURIComponent(
+            crossDeviceCallbackUrl || callbackUrl
+          )}`
         )
       }
 
       // Callback URL is already verified at this point, so safe to use if specified
-      return res.redirect(callbackUrl || baseUrl)
+      return res.redirect(crossDeviceCallbackUrl || callbackUrl || baseUrl)
     } catch (error) {
       if (error.name === "CreateUserError") {
         return res.redirect(
