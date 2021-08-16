@@ -1,5 +1,5 @@
 import * as cookie from "../cookie"
-import jwt from "../../../lib/jwt"
+import * as jwt from "../../../lib/jwt"
 import { generators } from "openid-client"
 
 const PKCE_LENGTH = 64

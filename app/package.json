@@ -10,17 +10,21 @@
     "copy:css": "cpx \"../dist/css/**/*\" dist/css --watch",
     "watch:css": "cd .. && npm run watch:css",
     "dev:css": "npm-run-all --parallel watch:css copy:css",
-    "start": "next start"
+    "start": "next start",
+    "start:email": "npx fake-smtp-server"
   },
   "license": "ISC",
   "dependencies": {
-    "next": "^11.0.1",
-    "nodemailer": "^6.6.1",
+    "@prisma/client": "^2.29.1",
+    "fake-smtp-server": "^0.8.0",
+    "next": "^11.1.0",
+    "nodemailer": "^6.6.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },
   "devDependencies": {
     "cpx": "^1.5.0",
-    "npm-run-all": "^4.1.5"
+    "npm-run-all": "^4.1.5",
+    "prisma": "^2.29.1"
   }
 }

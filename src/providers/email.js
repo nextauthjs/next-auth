@@ -1,6 +1,7 @@
-import logger from "../lib/logger"
+// @ts-check
 import nodemailer from "nodemailer"
 
+/** @type {import("providers").EmailProvider} */
 export default function Email(options) {
   return {
     id: "email",
@@ -17,42 +18,34 @@ export default function Email(options) {
     },
     from: "NextAuth <no-reply@example.com>",
     maxAge: 24 * 60 * 60,
-    sendVerificationRequest,
+    async sendVerificationRequest({
+      identifier: email,
+      url,
+      provider: { server, from },
+    }) {
+      const { host } = new URL(url)
+      console.log(server)
+      const transport = nodemailer.createTransport(server)
+      await transport.sendMail({
+        to: email,
+        from,
+        subject: `Sign in to ${host}`,
+        text: text({ url, host }),
+        html: html({ url, host, email }),
+      })
+    },
     options,
   }
 }
 
-async function sendVerificationRequest({
-  identifier: email,
-  url,
-  baseUrl,
-  provider,
-}) {
-  const { server, from } = provider
-  // Strip protocol from URL and use domain as site name
-  const site = baseUrl.replace(/^https?:\/\//, "")
-  try {
-    await nodemailer.createTransport(server).sendMail({
-      to: email,
-      from,
-      subject: `Sign in to ${site}`,
-      text: text({ url, site, email }),
-      html: html({ url, site, email }),
-    })
-  } catch (error) {
-    logger.error("SEND_VERIFICATION_EMAIL_ERROR", email, error)
-    throw new Error("SEND_VERIFICATION_EMAIL_ERROR")
-  }
-}
-
 // Email HTML body
-const html = ({ url, site, email }) => {
+function html({ url, host, email }) {
   // Insert invisible space into domains and email address to prevent both the
   // email address and the domain from being turned into a hyperlink by email
   // clients like Outlook and Apple mail, as this is confusing because it seems
   // like they are supposed to click on their email address to sign in.
   const escapedEmail = `${email.replace(/\./g, "&#8203;.")}`
-  const escapedSite = `${site.replace(/\./g, "&#8203;.")}`
+  const escapedHost = `${host.replace(/\./g, "&#8203;.")}`
 
   // Some simple styling options
   const backgroundColor = "#f9f9f9"
@@ -67,7 +60,7 @@ const html = ({ url, site, email }) => {
   <table width="100%" border="0" cellspacing="0" cellpadding="0">
     <tr>
       <td align="center" style="padding: 10px 0px 20px 0px; font-size: 22px; font-family: Helvetica, Arial, sans-serif; color: ${textColor};">
-        <strong>${escapedSite}</strong>
+        <strong>${escapedHost}</strong>
       </td>
     </tr>
   </table>
@@ -97,4 +90,6 @@ const html = ({ url, site, email }) => {
 }
 
 // Email Text body (fallback for email clients that don't render HTML, e.g. feature phones)
-const text = ({ url, site }) => `Sign in to ${site}\n${url}\n\n`
+function text({ url, host }) {
+  return `Sign in to ${host}\n${url}\n\n`
+}
