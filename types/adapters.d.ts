@@ -66,7 +66,9 @@ export interface Adapter {
   ): Awaitable<AdapterUser | null>
   updateUser(user: Partial<AdapterUser>): Awaitable<AdapterUser>
   /** @todo Implement */
-  deleteUser?(userId: string): Awaitable<AdapterUser | null | undefined>
+  deleteUser?(
+    userId: string
+  ): Promise<void> | Awaitable<AdapterUser | null | undefined>
   linkAccount(
     account: Account
   ): Promise<void> | Awaitable<Account | null | undefined>
@@ -93,7 +95,7 @@ export interface Adapter {
    */
   deleteSession(
     sessionToken: string
-  ): Awaitable<AdapterSession | null | undefined>
+  ): Promise<void> | Awaitable<AdapterSession | null | undefined>
   createVerificationToken?(
     verificationToken: VerificationToken
   ): Awaitable<VerificationToken | null | undefined>
