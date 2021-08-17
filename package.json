@@ -85,11 +85,11 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
     "@testing-library/user-event": "^13.1.9",
-    "@types/nodemailer": "^6.4.2",
+    "@types/nodemailer": "^6.4.4",
     "@types/oauth": "^0.9.1",
-    "@types/react": "^17.0.11",
-    "@typescript-eslint/eslint-plugin": "^4.28.0",
-    "@typescript-eslint/parser": "^4.28.0",
+    "@types/react": "^17.0.18",
+    "@typescript-eslint/eslint-plugin": "^4.29.2",
+    "@typescript-eslint/parser": "^4.29.2",
     "autoprefixer": "^10.2.6",
     "babel-jest": "^27.0.5",
     "babel-preset-preact": "^2.0.0",
@@ -114,7 +114,7 @@
     "pretty-quick": "^3.1.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "typescript": "^4.3.4",
+    "typescript": "^4.3.5",
     "whatwg-fetch": "^3.6.2"
   },
   "prettier": {
@@ -146,7 +146,8 @@
     "rules": {
       "camelcase": "off",
       "@typescript-eslint/naming-convention": "off",
-      "@typescript-eslint/strict-boolean-expressions": "off"
+      "@typescript-eslint/strict-boolean-expressions": "off",
+      "@typescript-eslint/explicit-function-return-type": "off"
     },
     "overrides": [
       {
