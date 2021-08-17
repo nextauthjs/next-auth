@@ -16,12 +16,23 @@ import LineProvider from "next-auth/providers/line"
 import LinkedInProvider from "next-auth/providers/linkedin"
 import MailchimpProvider from "next-auth/providers/mailchimp"
 import DiscordProvider from "next-auth/providers/discord"
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import { PrismaClient } from "@prisma/client"
-const prisma = new PrismaClient()
+
+// import { PrismaAdapter } from "@next-auth/prisma-adapter"
+// import { PrismaClient } from "@prisma/client"
+// const prisma = new PrismaClient()
+// const adapter = PrismaAdapter(prisma)
+
+// import { Client as FaunaClient } from "faunadb"
+// import { FaunaAdapter } from "@next-auth/fauna-adapter"
+
+// const client = new FaunaClient({
+//   secret: process.env.FAUNA_SECRET,
+//   domain: process.env.FAUNA_DOMAIN,
+// })
+// const adapter = FaunaAdapter(client)
 
 export default NextAuth({
-  adapter: PrismaAdapter(prisma),
+  // adapter,
   providers: [
     // E-mail
     // Start fake e-mail server with `npm run start:email`
@@ -116,9 +127,6 @@ export default NextAuth({
       clientSecret: process.env.DISCORD_SECRET,
     }),
   ],
-  session: {
-    jwt: true,
-  },
   jwt: {
     encryption: true,
     secret: process.env.SECRET,
