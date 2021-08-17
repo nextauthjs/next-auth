@@ -74,3 +74,9 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           PR_NUMBER: ${{ github.event.number }}
+      - name: Comment version on PR
+        uses: NejcZdovc/comment-pr@v1
+        with:
+          message: "Published on npm! 🎉 \n install it via: `npm i next-auth@WIP`"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
