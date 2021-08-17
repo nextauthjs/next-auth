@@ -5,8 +5,9 @@
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "author": "Iain Collins <me@iaincollins.com>",
-  "main": "index.js",
-  "types": "./index.d.ts",
+  "main": "dist/server/index.js",
+  "module": "dist/server/index.js",
+  "types": "types/index.d.ts",
   "keywords": [
     "react",
     "nodejs",
@@ -20,10 +21,18 @@
     "nextauth"
   ],
   "exports": {
-    ".": "./dist/server/index.js",
-    "./jwt": "./dist/lib/jwt.js",
-    "./react": "./dist/client/react.js",
-    "./providers/*": "./dist/providers/*.js"
+    ".": {
+      "import": "./dist/server/index.js"
+    },
+    "./jwt": {
+      "import": "./dist/lib/jwt.js"
+    },
+    "./react": {
+      "import": "./dist/client/react.js"
+    },
+    "./providers/*": {
+      "import": "./dist/providers/*.js"
+    }
   },
   "scripts": {
     "build": "npm run build:js && npm run build:css",
