@@ -1,8 +1,8 @@
-// @ts-check
-import nodemailer from "nodemailer"
+import { createTransport } from "nodemailer"
 
-/** @type {import("providers").EmailProvider} */
-export default function Email(options) {
+import { EmailConfig, EmailUserConfig } from "types/providers"
+
+export default function Email(options: EmailUserConfig): EmailConfig {
   return {
     id: "email",
     type: "email",
@@ -25,7 +25,7 @@ export default function Email(options) {
     }) {
       const { host } = new URL(url)
       console.log(server)
-      const transport = nodemailer.createTransport(server)
+      const transport = createTransport(server)
       await transport.sendMail({
         to: email,
         from,
@@ -39,7 +39,7 @@ export default function Email(options) {
 }
 
 // Email HTML body
-function html({ url, host, email }) {
+function html({ url, host, email }: Record<"url" | "host" | "email", string>) {
   // Insert invisible space into domains and email address to prevent both the
   // email address and the domain from being turned into a hyperlink by email
   // clients like Outlook and Apple mail, as this is confusing because it seems
@@ -90,6 +90,6 @@ function html({ url, host, email }) {
 }
 
 // Email Text body (fallback for email clients that don't render HTML, e.g. feature phones)
-function text({ url, host }) {
+function text({ url, host }: Record<"url" | "host", string>) {
   return `Sign in to ${host}\n${url}\n\n`
 }

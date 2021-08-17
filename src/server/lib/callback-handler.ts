@@ -1,7 +1,11 @@
-// @ts-check
 import { AccountNotLinkedError } from "../../lib/errors"
 import { fromDate } from "./utils"
 import { randomBytes, randomUUID } from "crypto"
+import { SessionToken } from "types/internals/cookies"
+import { InternalOptions } from "types/internals"
+import { AdapterSession, AdapterUser } from "types/adapters"
+import { JWT } from "types/jwt"
+import { Account, User } from "types"
 
 /**
  * This function handles the complex flow of signing users in, and either creating,
@@ -14,16 +18,12 @@ import { randomBytes, randomUUID } from "crypto"
  * All verification (e.g. OAuth flows or email address verificaiton flows) are
  * done prior to this handler being called to avoid additonal complexity in this
  * handler.
- * @param {import("types/internals/cookies").SessionToken | null} sessionToken
- * @param {import("types").User} profile
- * @param {import("types").Account} account
- * @param {import("types/internals").InternalOptions} options
  */
 export default async function callbackHandler(
-  sessionToken,
-  profile,
-  account,
-  options
+  sessionToken: SessionToken,
+  profile: User,
+  account: Account,
+  options: InternalOptions
 ) {
   // Input validation
   if (!account?.providerAccountId || !account.type)
@@ -56,10 +56,8 @@ export default async function callbackHandler(
     deleteSession,
   } = adapter
 
-  /** @type {import("types/adapters").AdapterSession | import("types/jwt").JWT | null} */
-  let session = null
-  /** @type {import("types/adapters").AdapterUser | null} */
-  let user = null
+  let session: AdapterSession | JWT | null = null
+  let user: AdapterUser | null = null
   let isNewUser = false
 
   if (sessionToken) {
@@ -101,8 +99,7 @@ export default async function callbackHandler(
       await events.updateUser?.({ user })
     } else {
       const newUser = { ...profile, emailVerified: new Date() }
-      // @ts-ignore Force the adapter to create its own user id
-      delete newUser.id
+      delete (newUser as Omit<AdapterUser, "id">).id
       // Create user account if there isn't one for the email address already
       user = await createUser(newUser)
       await events.createUser?.({ user })
@@ -195,8 +192,7 @@ export default async function callbackHandler(
       // create a new account for the user, link it to the OAuth acccount and
       // create a new session for them so they are signed in with it.
       const newUser = { ...profile, emailVerified: null }
-      // @ts-ignore Force the adapter to create its own user id
-      delete newUser.id
+      delete (newUser as Omit<AdapterUser, "id">).id
       user = await createUser(newUser)
       await events.createUser?.({ user })
 

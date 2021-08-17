@@ -35,9 +35,10 @@ export interface EmailConfig extends CommonProviderOptions {
    * [Documentation](https://next-auth.js.org/providers/email#customising-the-verification-token)
    */
   generateVerificationToken?(): Awaitable<string>
+  options: EmailUserConfig
 }
 
-export type EmailProvider = (options: Partial<EmailConfig>) => EmailConfig
+export type EmailUserConfig = Partial<Omit<EmailConfig, "options">>
 
 // TODO: Rename to Token provider
 // when started working on https://github.com/nextauthjs/next-auth/discussions/1465
