@@ -2,34 +2,33 @@
   "compilerOptions": {
     "strictNullChecks": true,
     "baseUrl": ".",
+    "outDir": "dist",
     "paths": {
-      "types": ["./types"],
-      "next-auth": ["./src/server"],
-      "next-auth/adapters": ["./src/adapters"],
-      "next-auth/react": ["./src/client/react"],
-      "next-auth/jwt": ["./src/lib/jwt"],
-      "next-auth/providers/*": ["./src/providers/*"],
+      "next-auth": ["dist/server"],
+      "next-auth/providers/*": ["dist/providers/*"],
+      "next-auth/react": ["dist/client/react"]
     },
-    "target": "es5",
+    "target": "es2019",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
     "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve"
+    "jsx": "react-jsx",
+    "declaration": true,
+    "declarationDir": "dist/types"
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.js",
-    ".eslintrc.js"
-  ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "app",
+    "types",
+    "tests",
+    "**/__tests__",
+    "config",
+    "www"
+  ]
 }
