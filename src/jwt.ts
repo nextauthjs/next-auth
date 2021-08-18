@@ -1,6 +1,56 @@
 import crypto from "crypto"
 import jose from "jose"
-import logger from "src/lib/logger"
+import logger from "./lib/logger"
+import { NextApiRequest } from "./types/internals/utils"
+
+export interface DefaultJWT extends Record<string, unknown> {
+  name?: string | null
+  email?: string | null
+  picture?: string | null
+  sub?: string
+}
+
+/**
+ * Returned by the `jwt` callback and `getToken`, when using JWT sessions
+ *
+ * [`jwt` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback) | [`getToken`](https://next-auth.js.org/tutorials/securing-pages-and-api-routes#using-gettoken)
+ */
+export interface JWT extends Record<string, unknown>, DefaultJWT {}
+
+export interface JWTEncodeParams {
+  token?: JWT
+  maxAge?: number
+  secret: string | Buffer
+  signingKey?: string
+  signingOptions?: jose.JWT.SignOptions
+  encryptionKey?: string
+  encryptionOptions?: object
+  encryption?: boolean
+}
+
+export interface JWTDecodeParams {
+  token?: string
+  maxAge?: number
+  secret: string | Buffer
+  signingKey?: string
+  verificationKey?: string
+  verificationOptions?: jose.JWT.VerifyOptions<false>
+  encryptionKey?: string
+  decryptionKey?: string
+  decryptionOptions?: jose.JWE.DecryptOptions<false>
+  encryption?: boolean
+}
+
+export interface JWTOptions {
+  secret: string
+  maxAge: number
+  encryption?: boolean
+  signingKey?: string
+  encryptionKey?: string
+  encode: typeof encode
+  decode: typeof decode
+  verificationOptions?: jose.JWT.VerifyOptions<false>
+}
 
 // Set default algorithm to use for auto-generated signing key
 const DEFAULT_SIGNATURE_ALGORITHM = "HS512"
@@ -28,7 +78,7 @@ export async function encode({
     zip: "DEF",
   },
   encryption = DEFAULT_ENCRYPTION_ENABLED,
-}: any = {}) {
+}: JWTEncodeParams) {
   // Signing Key
   const _signingKey = signingKey
     ? jose.JWK.asKey(JSON.parse(signingKey))
@@ -65,7 +115,7 @@ export async function decode({
     algorithms: [DEFAULT_ENCRYPTION_ALGORITHM],
   },
   encryption = DEFAULT_ENCRYPTION_ENABLED,
-}: any = {}) {
+}: JWTDecodeParams): Promise<JWT | null> {
   if (!token) return null
 
   let tokenToVerify = token
@@ -91,19 +141,26 @@ export async function decode({
     : getDerivedSigningKey(secret)
 
   // Verify token
-  return jose.JWT.verify(tokenToVerify, _signingKey, verificationOptions)
+  return jose.JWT.verify(
+    tokenToVerify,
+    _signingKey,
+    verificationOptions
+  ) as JWT | null
 }
 
-/**
- * Server-side method to retrieve the JWT from `req`.
- * @param {{
- * req: NextApiRequest
- * secureCookie?: boolean
- * cookieName?: string
- * raw?: boolean
- * }} params
- */
-export async function getToken(params) {
+export type GetTokenParams<R extends boolean = false> = {
+  req: NextApiRequest
+  secureCookie?: boolean
+  cookieName?: string
+  raw?: R
+  decode?: typeof decode
+  secret?: string
+} & Omit<JWTDecodeParams, "secret">
+
+/** [Documentation](https://next-auth.js.org/tutorials/securing-pages-and-api-routes#using-gettoken) */
+export async function getToken<R extends boolean = false>(
+  params?: GetTokenParams<R>
+): Promise<R extends true ? string : JWT | null> {
   const {
     req,
     // Use secure prefix for cookie name, unless URL is NEXTAUTH_URL is http://
@@ -117,7 +174,7 @@ export async function getToken(params) {
       : "next-auth.session-token",
     raw = false,
     decode: _decode = decode,
-  } = params
+  } = params ?? {}
   if (!req) throw new Error("Must pass `req` to JWT getToken()")
 
   // Try to get token from cookie
@@ -132,12 +189,15 @@ export async function getToken(params) {
   }
 
   if (raw) {
+    // @ts-expect-error
     return token
   }
 
   try {
-    return _decode({ token, ...params })
+    // @ts-expect-error
+    return await _decode({ token, ...params })
   } catch {
+    // @ts-expect-error
     return null
   }
 }

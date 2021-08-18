@@ -1,13 +1,8 @@
 import { Adapter } from "./adapters"
-import { JWTOptions, JWT } from "./jwt"
-import { Provider, Credentials, ProviderType } from "./providers"
-import {
-  Awaitable,
-  NextApiRequest,
-  NextApiResponse,
-  NextApiHandler,
-} from "./internals/utils"
+import { Provider, CredentialInput, ProviderType } from "../providers"
+import { Awaitable } from "./internals/utils"
 import { TokenSetParameters } from "openid-client"
+import { JWT, JWTOptions } from "../jwt"
 
 /**
  * Configure your NextAuth instance
@@ -299,7 +294,7 @@ export interface CallbacksOptions<
       verificationRequest?: boolean
     }
     /** If Credentials provider is used, it contains the user credentials */
-    credentials: Credentials
+    credentials: Record<string, CredentialInput>
   }): Awaitable<string | boolean>
   /**
    * This callback is called anytime the user is redirected to a callback URL (e.g. on signin or signout).

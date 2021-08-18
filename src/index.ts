@@ -1,5 +1,4 @@
 export { default } from "./server"
 export * from "./types"
-export * from "./types/providers"
-export * from "./types/jwt"
+export * from "./providers"
 export * from "./types/react-client"
