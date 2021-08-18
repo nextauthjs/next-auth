@@ -483,13 +483,3 @@ export interface DefaultUser {
  * [`profile` OAuth provider callback](https://next-auth.js.org/configuration/providers#using-a-custom-provider)
  */
 export interface User extends Record<string, unknown>, DefaultUser {}
-
-declare function NextAuth(
-  req: NextApiRequest,
-  res: NextApiResponse,
-  options: NextAuthOptions
-): ReturnType<NextApiHandler>
-
-declare function NextAuth(options: NextAuthOptions): ReturnType<NextApiHandler>
-
-export default NextAuth

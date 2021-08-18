@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import * as jwt from "../lib/jwt"
 import parseUrl from "../lib/parse-url"
 import logger, { setLogger } from "../lib/logger"
@@ -11,6 +12,8 @@ import callbackUrlHandler from "./lib/callback-url-handler"
 import extendRes from "./lib/extend-res"
 import csrfTokenHandler from "./lib/csrf-token-handler"
 import { eventsErrorHandler, adapterErrorHandler } from "../lib/errors"
+import { NextApiRequest, NextApiResponse } from "types/internals/utils"
+import { NextAuthOptions } from "types"
 
 // To work properly in production with OAuth providers the NEXTAUTH_URL
 // environment variable must be set.
@@ -29,7 +32,7 @@ async function NextAuthHandler(req, res, userOptions) {
   }
   // If debug enabled, set ENV VAR so that logger logs debug messages
   if (userOptions.debug) {
-    process.env._NEXTAUTH_DEBUG = true
+    ;(process.env._NEXTAUTH_DEBUG as any) = true
   }
 
   extendRes(req, res)
@@ -53,7 +56,7 @@ async function NextAuthHandler(req, res, userOptions) {
 
   // @todo refactor all existing references to baseUrl and basePath
   const { basePath, baseUrl } = parseUrl(
-    process.env.NEXTAUTH_URL || process.env.VERCEL_URL
+    process.env.NEXTAUTH_URL ?? (process.env.VERCEL_URL as any)
   )
 
   const cookies = {
@@ -142,7 +145,7 @@ async function NextAuthHandler(req, res, userOptions) {
       case "providers":
         return routes.providers(req, res)
       case "session":
-        return routes.session(req, res)
+        return await routes.session(req, res)
       case "csrf":
         return res.json({ csrfToken: req.options.csrfToken })
       case "signin":
@@ -163,7 +166,7 @@ async function NextAuthHandler(req, res, userOptions) {
         return render.signout()
       case "callback":
         if (provider) {
-          return routes.callback(req, res)
+          return await routes.callback(req, res)
         }
         break
       case "verify-request":
@@ -206,14 +209,14 @@ async function NextAuthHandler(req, res, userOptions) {
       case "signin":
         // Verified CSRF Token required for all sign in routes
         if (req.options.csrfTokenVerified && provider) {
-          return routes.signin(req, res)
+          return await routes.signin(req, res)
         }
 
         return res.redirect(`${baseUrl}${basePath}/signin?csrf=true`)
       case "signout":
         // Verified CSRF Token required for signout
         if (req.options.csrfTokenVerified) {
-          return routes.signout(req, res)
+          return await routes.signout(req, res)
         }
         return res.redirect(`${baseUrl}${basePath}/signout?csrf=true`)
       case "callback":
@@ -226,7 +229,7 @@ async function NextAuthHandler(req, res, userOptions) {
             return res.redirect(`${baseUrl}${basePath}/signin?csrf=true`)
           }
 
-          return routes.callback(req, res)
+          return await routes.callback(req, res)
         }
         break
       case "_log":
@@ -249,9 +252,13 @@ async function NextAuthHandler(req, res, userOptions) {
 }
 
 /** Tha main entry point to next-auth */
-export default function NextAuth(...args) {
+export default function NextAuth(
+  ...args:
+    | [NextApiRequest, NextApiResponse, NextAuthOptions]
+    | [NextAuthOptions]
+) {
   if (args.length === 1) {
-    return (req, res) => NextAuthHandler(req, res, args[0])
+    return async (req, res) => await NextAuthHandler(req, res, args[0])
   }
 
   return NextAuthHandler(...args)
