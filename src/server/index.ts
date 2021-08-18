@@ -12,8 +12,8 @@ import callbackUrlHandler from "./lib/callback-url-handler"
 import extendRes from "./lib/extend-res"
 import csrfTokenHandler from "./lib/csrf-token-handler"
 import { eventsErrorHandler, adapterErrorHandler } from "../lib/errors"
-import { NextApiRequest, NextApiResponse } from "../../types/internals/utils"
-import { NextAuthOptions } from "../../types"
+import { NextApiRequest, NextApiResponse } from "../types/internals/utils"
+import { NextAuthOptions } from "../types"
 
 // To work properly in production with OAuth providers the NEXTAUTH_URL
 // environment variable must be set.
@@ -251,15 +251,18 @@ async function NextAuthHandler(req, res, userOptions) {
     .end(`Error: HTTP ${req.method} is not supported for ${req.url}`)
 }
 
+function NextAuth(options: NextAuthOptions): any
+function NextAuth(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  options: NextAuthOptions
+): any
 /** Tha main entry point to next-auth */
-export default function NextAuth(
-  ...args:
-    | [NextApiRequest, NextApiResponse, NextAuthOptions]
-    | [NextAuthOptions]
-) {
+function NextAuth(...args) {
   if (args.length === 1) {
     return async (req, res) => await NextAuthHandler(req, res, args[0])
   }
-
-  return NextAuthHandler(...args)
+  return NextAuthHandler(args[0], args[1], args[2])
 }
+
+export default NextAuth
