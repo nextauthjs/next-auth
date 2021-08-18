@@ -1,6 +1,6 @@
 import crypto from "crypto"
 import jose from "jose"
-import logger from "./logger"
+import logger from "src/lib/logger"
 
 // Set default algorithm to use for auto-generated signing key
 const DEFAULT_SIGNATURE_ALGORITHM = "HS512"
@@ -28,7 +28,7 @@ export async function encode({
     zip: "DEF",
   },
   encryption = DEFAULT_ENCRYPTION_ENABLED,
-} = {}) {
+}: any = {}) {
   // Signing Key
   const _signingKey = signingKey
     ? jose.JWK.asKey(JSON.parse(signingKey))
@@ -65,7 +65,7 @@ export async function decode({
     algorithms: [DEFAULT_ENCRYPTION_ALGORITHM],
   },
   encryption = DEFAULT_ENCRYPTION_ENABLED,
-} = {}) {
+}: any = {}) {
   if (!token) return null
 
   let tokenToVerify = token
@@ -159,6 +159,7 @@ function hkdf(secret, { byteLength, encryptionInfo, digest = "sha256" }) {
       )
     )
   }
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   return require("futoin-hkdf")(secret, byteLength, {
     info: encryptionInfo,
     hash: digest,
