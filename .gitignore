@@ -40,6 +40,10 @@ www/providers.json
 /adapters.d.ts
 /index.d.ts
 /index.js
+/jwt.d.ts
+/jwt.js
+/react.d.ts
+/react.js
 
 # Development app
 app/next-auth

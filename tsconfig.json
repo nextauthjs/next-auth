@@ -2,6 +2,7 @@
   "compilerOptions": {
     "strictNullChecks": true,
     "baseUrl": ".",
+    "outDir": ".",
     "paths": {
       "next-auth": ["server"],
       "next-auth/providers/*": ["providers/*"],
