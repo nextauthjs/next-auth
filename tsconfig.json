@@ -20,7 +20,7 @@
   "exclude": [
     "app",
     "types",
-    "tests",
+    "**/tests",
     "**/__tests__",
     "config",
     "www"
