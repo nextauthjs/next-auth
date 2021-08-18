@@ -1,0 +1,8 @@
+{
+  "name": "version-pr",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "@actions/core": "^1.4.0"
+  }
+}

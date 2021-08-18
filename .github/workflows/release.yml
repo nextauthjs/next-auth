@@ -66,6 +66,9 @@ jobs:
           node-version: 16
       - name: Dependencies
         uses: bahmutov/npm-install@v1
+      - name: Determine version
+        uses: ./config/version-pr
+        id: determine-version
       - name: Publish to npm
         run: |
           echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
@@ -77,6 +80,7 @@ jobs:
       - name: Comment version on PR
         uses: NejcZdovc/comment-pr@v1
         with:
-          message: "Published on npm! 🎉 \n install it via: `npm i next-auth@WIP`"
+          message: "Experimental release [published on npm](https://www.npmjs.com/package/next-auth/v/${{ VERSION }})! 🎉 \n\nInstall it via: `npm i next-auth@${{ VERSION }}`"
         env:
+          VERSION: ${{ steps.determine-version.outputs.version }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
