@@ -80,7 +80,7 @@ jobs:
       - name: Comment version on PR
         uses: NejcZdovc/comment-pr@v1
         with:
-          message: "Experimental release [published on npm](https://www.npmjs.com/package/next-auth/v/${{ env.VERSION }})! 🎉 \n\nInstall it via: `npm i next-auth@${{ env.VERSION }}`"
+          message: "🎉 Experimental release [published on npm](https://www.npmjs.com/package/next-auth/v/${{ env.VERSION }})!\n\n```sh\nnpm i next-auth@${{ env.VERSION }}\n```\n```sh\nyarn add next-auth@${{ env.VERSION }}\n```"
         env:
           VERSION: ${{ steps.determine-version.outputs.version }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
