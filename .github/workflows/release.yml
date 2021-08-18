@@ -69,14 +69,14 @@ jobs:
       - name: Determine version
         uses: ./config/version-pr
         id: determine-version
+        env:
+          PR_NUMBER: ${{ github.event.number }}
       - name: Publish to npm
         run: |
           echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
-          npm run version:pr
           npm publish --access public --tag experimental
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          PR_NUMBER: ${{ github.event.number }}
       - name: Comment version on PR
         uses: NejcZdovc/comment-pr@v1
         with:
