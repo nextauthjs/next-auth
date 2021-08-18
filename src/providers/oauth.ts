@@ -1,4 +1,4 @@
-import { CommonProviderOptions } from "../types/providers"
+import { CommonProviderOptions } from "../providers"
 import { Profile, TokenSet, User } from "../types"
 import { Awaitable } from "../types/internals/utils"
 
@@ -10,6 +10,9 @@ import {
   OAuthCallbackChecks,
   OpenIDCallbackChecks,
 } from "openid-client"
+
+// TODO: generate
+export type OAuthProviderType = string
 
 type ChecksType = "pkce" | "state" | "both" | "none"
 
