@@ -12,8 +12,8 @@ import callbackUrlHandler from "./lib/callback-url-handler"
 import extendRes from "./lib/extend-res"
 import csrfTokenHandler from "./lib/csrf-token-handler"
 import { eventsErrorHandler, adapterErrorHandler } from "../lib/errors"
-import { NextApiRequest, NextApiResponse } from "types/internals/utils"
-import { NextAuthOptions } from "types"
+import { NextApiRequest, NextApiResponse } from "../../types/internals/utils"
+import { NextAuthOptions } from "../../types"
 
 // To work properly in production with OAuth providers the NEXTAUTH_URL
 // environment variable must be set.
