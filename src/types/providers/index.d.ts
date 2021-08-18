@@ -1,4 +1,8 @@
-import { OAuthConfig, OAuthProvider, OAuthProviderType } from "./oauth"
+import {
+  OAuthConfig,
+  OAuthProvider,
+  OAuthProviderType,
+} from "../../providers/oauth"
 
 import { EmailConfig, EmailProvider, EmailProviderType } from "./email"
 
@@ -8,7 +12,7 @@ import {
   CredentialsProviderType,
 } from "./credentials"
 
-export * from "./oauth"
+export * from "../../providers/oauth"
 export * from "./email"
 export * from "./credentials"
 

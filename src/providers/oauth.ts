@@ -1,6 +1,6 @@
-import { CommonProviderOptions } from "."
-import { Profile, TokenSet, User } from ".."
-import { Awaitable } from "../internals/utils"
+import { CommonProviderOptions } from "../types/providers"
+import { Profile, TokenSet, User } from "../types"
+import { Awaitable } from "../types/internals/utils"
 
 import {
   AuthorizationParameters,
@@ -10,9 +10,6 @@ import {
   OAuthCallbackChecks,
   OpenIDCallbackChecks,
 } from "openid-client"
-
-import { OAuthProviderType } from "./oauth-providers"
-export { OAuthProviderType }
 
 type ChecksType = "pkce" | "state" | "both" | "none"
 
@@ -74,14 +71,14 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
    *
    * [Authorization endpoint](https://datatracker.ietf.org/doc/html/rfc6749#section-3.1)
    */
-  authorization: EndpointHandler<AuthorizationParameters>
+  authorization?: EndpointHandler<AuthorizationParameters>
   /**
    * Endpoint that returns OAuth 2/OIDC tokens and information about them.
    * This includes `access_token`, `id_token`, `refresh_token`, etc.
    *
    * [Token endpoint](https://datatracker.ietf.org/doc/html/rfc6749#section-3.2)
    */
-  token: EndpointHandler<
+  token?: EndpointHandler<
     UrlParams,
     {
       /**
@@ -105,10 +102,10 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
    */
   userinfo?: EndpointHandler<UrlParams, { tokens: TokenSet }, Profile>
   type: "oauth"
-  version: string
+  version?: string
   accessTokenUrl?: string
   requestTokenUrl?: string
-  profile(profile: P, tokens: TokenSet): Awaitable<User & { id: string }>
+  profile?: (profile: P, tokens: TokenSet) => Awaitable<User & { id: string }>
   checks?: ChecksType | ChecksType[]
   clientId: string
   clientSecret:
@@ -136,7 +133,12 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
    * We will perform a deep-merge of these values
    * with the default configuration.
    */
-  options?: Omit<OAuthConfig<P>, "options">
+  options?: OAuthUserConfig<P>
 }
+
+export type OAuthUserConfig<P extends Record<string, unknown> = Profile> = Omit<
+  Partial<OAuthConfig<P>>,
+  "options" | "type"
+>
 
 export type OAuthProvider = (options: Partial<OAuthConfig>) => OAuthConfig
