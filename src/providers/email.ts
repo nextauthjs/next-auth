@@ -1,6 +1,6 @@
 import { createTransport } from "nodemailer"
 
-import { EmailConfig, EmailUserConfig } from "types/providers"
+import { EmailConfig, EmailUserConfig } from "src/types/providers"
 
 export default function Email(options: EmailUserConfig): EmailConfig {
   return {

@@ -1,5 +1,6 @@
-/** @type {import("types/providers").OAuthProvider} */
-export default function Auth0(options) {
+import { OAuthConfig, OAuthUserConfig } from "./oauth"
+
+export default function Auth0(options: OAuthUserConfig): OAuthConfig {
   return {
     id: "auth0",
     name: "Auth0",
@@ -8,7 +9,7 @@ export default function Auth0(options) {
     authorization: { params: { scope: "openid email profile" } },
     checks: ["pkce", "state"],
     idToken: true,
-    profile(profile) {
+    profile(profile: any) {
       return {
         id: profile.sub,
         name: profile.nickname,
@@ -17,5 +18,5 @@ export default function Auth0(options) {
       }
     },
     options,
-  }
+  } as any
 }

@@ -1,4 +1,6 @@
-export default function Google(options) {
+import { OAuthConfig, OAuthUserConfig } from "./oauth"
+
+export default function Google(options: OAuthUserConfig): OAuthConfig {
   return {
     id: "google",
     name: "Google",
@@ -7,7 +9,7 @@ export default function Google(options) {
     authorization: { params: { scope: "openid email profile" } },
     idToken: true,
     checks: ["pkce", "state"],
-    profile(profile) {
+    profile(profile: any) {
       return {
         id: profile.sub,
         name: profile.name,
@@ -16,5 +18,5 @@ export default function Google(options) {
       }
     },
     options,
-  }
+  } as any
 }

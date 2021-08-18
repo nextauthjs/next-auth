@@ -3,11 +3,6 @@
     "strictNullChecks": true,
     "baseUrl": ".",
     "outDir": ".",
-    "paths": {
-      "next-auth": ["server"],
-      "next-auth/providers/*": ["providers/*"],
-      "next-auth/react": ["react"]
-    },
     "target": "es2019",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
