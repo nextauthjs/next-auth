@@ -1,5 +1,5 @@
 /**
- * @type {import("types/providers").OAuthProvider} options
+ * @type {import("src/providers").OAuthProvider} options
  * @example
  *
  * ```js

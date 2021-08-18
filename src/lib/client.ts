@@ -1,6 +1,6 @@
 import type { IncomingMessage } from "http"
 import { NextAuthClientConfig } from "src/react"
-import { LoggerInstance } from "types"
+import { LoggerInstance } from "src/types"
 
 export interface CtxOrReq {
   req?: IncomingMessage

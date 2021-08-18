@@ -5,11 +5,11 @@ import { usePKCECodeVerifier } from "./pkce-handler"
 import { OAuthCallbackError } from "../../../lib/errors"
 import { TokenSet } from "openid-client"
 
-/** @type {import("types/internals").NextAuthApiHandler<import("types/internals/oauth").GetProfileResult>} */
+/** @type {import("src/types/internals").NextAuthApiHandler<import("src/types/internals/oauth").GetProfileResult>} */
 export default async function oAuthCallback(req, res) {
   const { logger } = req.options
 
-  /** @type {import("types/providers").OAuthConfig} */
+  /** @type {import("src/providers").OAuthConfig} */
   const provider = req.options.provider
 
   const errorMessage = req.body.error ?? req.query.error
@@ -56,7 +56,7 @@ export default async function oAuthCallback(req, res) {
     /** @type {import("openid-client").TokenSet} */
     let tokens
 
-    /** @type {import("types/providers").OAuthChecks} */
+    /** @type {import("src/providers").OAuthChecks} */
     const checks = {
       code_verifier: await usePKCECodeVerifier(req, res),
       state: getState(req),
@@ -82,7 +82,7 @@ export default async function oAuthCallback(req, res) {
       tokens.scope = tokens.scope.join(" ")
     }
 
-    /** @type {import("types").Profile} */
+    /** @type {import("src/types").Profile} */
     let profile
     if (provider.userinfo?.request) {
       profile = await provider.userinfo.request({
@@ -111,7 +111,7 @@ export default async function oAuthCallback(req, res) {
 
 /**
  * Returns profile, raw profile and auth provider details
- * @type {import("types/internals/oauth").GetProfile}
+ * @type {import("src/types/internals/oauth").GetProfile}
  */
 async function getProfile({ profile: OAuthProfile, tokens, provider, logger }) {
   try {

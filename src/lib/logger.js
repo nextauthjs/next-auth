@@ -12,7 +12,7 @@ function formatError(o) {
   return o
 }
 
-/** @type {import("types").LoggerInstance} */
+/** @type {import("src/types").LoggerInstance} */
 const _logger = {
   error(code, metadata) {
     metadata = formatError(metadata)
@@ -38,7 +38,7 @@ const _logger = {
 /**
  * Override the built-in logger.
  * Any `undefined` level will use the default logger.
- * @param {Partial<import("types").LoggerInstance>} newLogger
+ * @param {Partial<import("src/types").LoggerInstance>} newLogger
  */
 export function setLogger(newLogger = {}) {
   if (newLogger.error) _logger.error = newLogger.error
@@ -50,9 +50,9 @@ export default _logger
 
 /**
  * Serializes client-side log messages and sends them to the server
- * @param {import("types").LoggerInstance} logger
+ * @param {import("src/types").LoggerInstance} logger
  * @param {string} basePath
- * @return {import("types").LoggerInstance}
+ * @return {import("src/types").LoggerInstance}
  */
 export function proxyLogger(logger = _logger, basePath) {
   try {

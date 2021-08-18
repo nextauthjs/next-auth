@@ -1,4 +1,4 @@
-import { CallbacksOptions } from "types/index"
+import { CallbacksOptions } from "src/types/index"
 
 export const defaultCallbacks: CallbacksOptions = {
   signIn() {

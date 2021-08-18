@@ -1,11 +1,11 @@
 import { AccountNotLinkedError } from "../../lib/errors"
 import { fromDate } from "./utils"
 import { randomBytes, randomUUID } from "crypto"
-import { SessionToken } from "types/internals/cookies"
-import { InternalOptions } from "types/internals"
-import { AdapterSession, AdapterUser } from "types/adapters"
-import { JWT } from "types/jwt"
-import { Account, User } from "types"
+import { SessionToken } from "src/types/internals/cookies"
+import { InternalOptions } from "src/types/internals"
+import { AdapterSession, AdapterUser } from "src/types/adapters"
+import { JWT } from "src/jwt"
+import { Account, User } from "src/types"
 
 /**
  * This function handles the complex flow of signing users in, and either creating,
@@ -64,7 +64,7 @@ export default async function callbackHandler(
     if (useJwtSession) {
       try {
         session = await jwt.decode({ ...jwt, token: sessionToken })
-        if (session?.sub) {
+        if (session && "sub" in session && session.sub) {
           user = await getUser(session.sub)
         }
       } catch {

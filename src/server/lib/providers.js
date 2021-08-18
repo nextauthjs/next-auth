@@ -4,11 +4,11 @@ import { merge } from "../../lib/merge"
  * Adds `signinUrl` and `callbackUrl` to each provider
  * and deep merge user-defined options.
  * @param {{
- *  providers: import("types/providers").Provider[]
+ *  providers: import("src/providers").Provider[]
  *  baseUrl: string
  *  basePath: string
  * }} options
- * @returns {import("types/internals").InternalOptions["providers"]}
+ * @returns {import("src/types/internals").InternalOptions["providers"]}
  */
 export default function parseProviders({ providers = [], baseUrl, basePath }) {
   const base = `${baseUrl}${basePath}`

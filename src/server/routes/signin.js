@@ -3,12 +3,12 @@ import emailSignin from "../lib/email/signin"
 
 /**
  * Handle requests to /api/auth/signin
- * @type {import("types/internals").NextAuthApiHandler}
+ * @type {import("src/types/internals").NextAuthApiHandler}
  */
 export default async function signin(req, res) {
   const { baseUrl, basePath, adapter, callbacks, logger } = req.options
 
-  /** @type {import("types/providers").OAuthConfig | import("types/providers").EmailConfig} */
+  /** @type {import("src/providers").OAuthConfig | import("src/providers").EmailConfig} */
   const provider = req.options.provider
 
   if (!provider.type) {
@@ -43,7 +43,7 @@ export default async function signin(req, res) {
     // If is an existing user return a user object (otherwise use placeholder)
     const user = (email ? await getUserByEmail(email) : null) ?? { email }
 
-    /** @type {import("types").Account} */
+    /** @type {import("src/types").Account} */
     const account = {
       providerAccountId: user.email,
       type: "email",

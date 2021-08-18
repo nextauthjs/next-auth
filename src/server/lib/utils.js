@@ -11,7 +11,7 @@ export function fromDate(time, date = Date.now()) {
 
 /**
  * @param {string} token
- * @param {import("types/internals").InternalOptions<EmailConfig>} options
+ * @param {import("src/types/internals").InternalOptions<EmailConfig>} options
  */
 export function hashToken(token, options) {
   const { provider, secret } = options

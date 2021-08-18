@@ -4,7 +4,7 @@ import * as cookie from "../lib/cookie"
 /**
  * Get callback URL based on query param / cookie + validation,
  * and add it to `req.options.callbackUrl`.
- * @type {import("types/internals").NextAuthApiHandler}
+ * @type {import("src/types/internals").NextAuthApiHandler}
  */
 export default async function callbackUrlHandler(req, res) {
   const { query } = req

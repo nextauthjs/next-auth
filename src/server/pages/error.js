@@ -1,5 +1,5 @@
 // @ts-check
-import { h } from 'preact' // eslint-disable-line no-unused-vars
+import { h } from "preact" // eslint-disable-line no-unused-vars
 
 /**
  * Renders an error page.
@@ -7,59 +7,76 @@ import { h } from 'preact' // eslint-disable-line no-unused-vars
  *   baseUrl: string
  *   basePath: string
  *   error?: string
- *   res: import("types/internals").NextAuthResponse
+ *   res: import("src/types/internals").NextAuthResponse
  * }} params
  */
-export default function error ({ baseUrl, basePath, error = 'default', res }) {
+export default function error({ baseUrl, basePath, error = "default", res }) {
   const signinPageUrl = `${baseUrl}${basePath}/signin`
 
   const errors = {
     default: {
       statusCode: 200,
-      heading: 'Error',
-      message: <p><a className='site' href={baseUrl}>{baseUrl.replace(/^https?:\/\//, '')}</a></p>
+      heading: "Error",
+      message: (
+        <p>
+          <a className="site" href={baseUrl}>
+            {baseUrl.replace(/^https?:\/\//, "")}
+          </a>
+        </p>
+      ),
     },
     configuration: {
       statusCode: 500,
-      heading: 'Server error',
+      heading: "Server error",
       message: (
         <div>
           <p>There is a problem with the server configuration.</p>
           <p>Check the server logs for more information.</p>
         </div>
-      )
+      ),
     },
     accessdenied: {
       statusCode: 403,
-      heading: 'Access Denied',
+      heading: "Access Denied",
       message: (
         <div>
           <p>You do not have permission to sign in.</p>
-          <p><a className='button' href={signinPageUrl}>Sign in</a></p>
+          <p>
+            <a className="button" href={signinPageUrl}>
+              Sign in
+            </a>
+          </p>
         </div>
-      )
+      ),
     },
     verification: {
       statusCode: 403,
-      heading: 'Unable to sign in',
+      heading: "Unable to sign in",
       message: (
         <div>
           <p>The sign in link is no longer valid.</p>
           <p>It may have been used already or it may have expired.</p>
         </div>
       ),
-      signin: <p><a className='button' href={signinPageUrl}>Sign in</a></p>
-    }
+      signin: (
+        <p>
+          <a className="button" href={signinPageUrl}>
+            Sign in
+          </a>
+        </p>
+      ),
+    },
   }
 
-  const { statusCode, heading, message, signin } = errors[error.toLowerCase()] ?? errors.default
+  const { statusCode, heading, message, signin } =
+    errors[error.toLowerCase()] ?? errors.default
 
   res.status(statusCode)
 
   return (
-    <div className='error'>
+    <div className="error">
       <h1>{heading}</h1>
-      <div className='message'>{message}</div>
+      <div className="message">{message}</div>
       {signin}
     </div>
   )

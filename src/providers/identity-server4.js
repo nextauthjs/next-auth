@@ -1,4 +1,4 @@
-/** @return {import("types/providers").OAuthConfig} */
+/** @return {import("src/providers").OAuthConfig} */
 export default function IdentityServer4(options) {
   return {
     id: "identity-server4",

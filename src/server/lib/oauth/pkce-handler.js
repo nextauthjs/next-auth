@@ -9,12 +9,12 @@ const PKCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 /**
  * Returns `code_challenge` and `code_challenge_method`
  * and saves them in a cookie.
- * @type {import("types/internals").NextAuthApiHandler}
+ * @type {import("src/types/internals").NextAuthApiHandler}
  * @returns {Promise<undefined | {code_challenge: string; code_challenge_method: "S256"}>
  */
 export async function createPKCE(req, res) {
   const { cookies, logger } = req.options
-  /** @type {import("types/providers").OAuthConfig} */
+  /** @type {import("src/providers").OAuthConfig} */
   const provider = req.options.provider
   if (!provider.checks?.includes("pkce")) {
     // Provider does not support PKCE, return nothing.
@@ -55,10 +55,10 @@ export async function createPKCE(req, res) {
 /**
  * Returns code_verifier if provider uses PKCE,
  * and clears the cookie afterwards.
- * @param {import("types/internals").NextAuthRequest} req
+ * @param {import("src/types/internals").NextAuthRequest} req
  */
 export async function usePKCECodeVerifier(req, res) {
-  /** @type {import("types/providers").OAuthConfig} */
+  /** @type {import("src/providers").OAuthConfig} */
   const provider = req.options.provider
   const { cookies } = req.options
   if (

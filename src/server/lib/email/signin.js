@@ -3,14 +3,14 @@ import { randomBytes } from "crypto"
 import { hashToken } from "../utils"
 
 /**
- * @typedef {import("types/providers").EmailConfig} EmailConfig
+ * @typedef {import("src/providers").EmailConfig} EmailConfig
  */
 
 /**
  * Starts an e-mail login flow, by generating a token,
  * and sending it to the user's e-mail (with the help of a DB adapter)
  * @param {string} identifier
- * @param {import("types/internals").InternalOptions<EmailConfig>} options
+ * @param {import("src/types/internals").InternalOptions<EmailConfig>} options
  */
 export default async function email(identifier, options) {
   const { baseUrl, basePath, adapter, provider, logger } = options

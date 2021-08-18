@@ -8,115 +8,115 @@
  * As only partial functionlity is required, only the code we need has been incorporated here
  * (with fixes for specific issues) to keep dependancy size down.
  */
-export function set (res, name, value, options = {}) {
+export function set(res, name, value, options = {}) {
   const stringValue =
-    typeof value === 'object' ? 'j:' + JSON.stringify(value) : String(value)
+    typeof value === "object" ? "j:" + JSON.stringify(value) : String(value)
 
-  if ('maxAge' in options) {
+  if ("maxAge" in options) {
     options.expires = new Date(Date.now() + options.maxAge)
     options.maxAge /= 1000
   }
 
   // Preserve any existing cookies that have already been set in the same session
-  let setCookieHeader = res.getHeader('Set-Cookie') || []
+  let setCookieHeader = res.getHeader("Set-Cookie") || []
   // If not an array (i.e. a string with a single cookie) convert it into an array
   if (!Array.isArray(setCookieHeader)) {
     setCookieHeader = [setCookieHeader]
   }
   setCookieHeader.push(_serialize(name, String(stringValue), options))
-  res.setHeader('Set-Cookie', setCookieHeader)
+  res.setHeader("Set-Cookie", setCookieHeader)
 }
 
-function _serialize (name, val, options) {
+function _serialize(name, val, options) {
   const fieldContentRegExp = /^[\u0009\u0020-\u007e\u0080-\u00ff]+$/ // eslint-disable-line no-control-regex
 
   const opt = options || {}
   const enc = opt.encode || encodeURIComponent
 
-  if (typeof enc !== 'function') {
-    throw new TypeError('option encode is invalid')
+  if (typeof enc !== "function") {
+    throw new TypeError("option encode is invalid")
   }
 
   if (!fieldContentRegExp.test(name)) {
-    throw new TypeError('argument name is invalid')
+    throw new TypeError("argument name is invalid")
   }
 
   const value = enc(val)
 
   if (value && !fieldContentRegExp.test(value)) {
-    throw new TypeError('argument val is invalid')
+    throw new TypeError("argument val is invalid")
   }
 
-  let str = name + '=' + value
+  let str = name + "=" + value
 
   if (opt.maxAge != null) {
     const maxAge = opt.maxAge - 0
 
     if (isNaN(maxAge) || !isFinite(maxAge)) {
-      throw new TypeError('option maxAge is invalid')
+      throw new TypeError("option maxAge is invalid")
     }
 
-    str += '; Max-Age=' + Math.floor(maxAge)
+    str += "; Max-Age=" + Math.floor(maxAge)
   }
 
   if (opt.domain) {
     if (!fieldContentRegExp.test(opt.domain)) {
-      throw new TypeError('option domain is invalid')
+      throw new TypeError("option domain is invalid")
     }
 
-    str += '; Domain=' + opt.domain
+    str += "; Domain=" + opt.domain
   }
 
   if (opt.path) {
     if (!fieldContentRegExp.test(opt.path)) {
-      throw new TypeError('option path is invalid')
+      throw new TypeError("option path is invalid")
     }
 
-    str += '; Path=' + opt.path
+    str += "; Path=" + opt.path
   } else {
-    str += '; Path=/'
+    str += "; Path=/"
   }
 
   if (opt.expires) {
     let expires = opt.expires
-    if (typeof opt.expires.toUTCString === 'function') {
+    if (typeof opt.expires.toUTCString === "function") {
       expires = opt.expires.toUTCString()
     } else {
       const dateExpires = new Date(opt.expires)
       expires = dateExpires.toUTCString()
     }
-    str += '; Expires=' + expires
+    str += "; Expires=" + expires
   }
 
   if (opt.httpOnly) {
-    str += '; HttpOnly'
+    str += "; HttpOnly"
   }
 
   if (opt.secure) {
-    str += '; Secure'
+    str += "; Secure"
   }
 
   if (opt.sameSite) {
     const sameSite =
-      typeof opt.sameSite === 'string'
+      typeof opt.sameSite === "string"
         ? opt.sameSite.toLowerCase()
         : opt.sameSite
 
     switch (sameSite) {
       case true:
-        str += '; SameSite=Strict'
+        str += "; SameSite=Strict"
         break
-      case 'lax':
-        str += '; SameSite=Lax'
+      case "lax":
+        str += "; SameSite=Lax"
         break
-      case 'strict':
-        str += '; SameSite=Strict'
+      case "strict":
+        str += "; SameSite=Strict"
         break
-      case 'none':
-        str += '; SameSite=None'
+      case "none":
+        str += "; SameSite=None"
         break
       default:
-        throw new TypeError('option sameSite is invalid')
+        throw new TypeError("option sameSite is invalid")
     }
   }
 
@@ -132,48 +132,48 @@ function _serialize (name, val, options) {
  * For more on prefixes see https://googlechrome.github.io/samples/cookie-prefixes/
  *
  * @TODO Review cookie settings (names, options)
- * @return {import("types").CookiesOptions}
+ * @return {import("src/types").CookiesOptions}
  */
-export function defaultCookies (useSecureCookies) {
-  const cookiePrefix = useSecureCookies ? '__Secure-' : ''
+export function defaultCookies(useSecureCookies) {
+  const cookiePrefix = useSecureCookies ? "__Secure-" : ""
   return {
     // default cookie options
     sessionToken: {
       name: `${cookiePrefix}next-auth.session-token`,
       options: {
         httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
-        secure: useSecureCookies
-      }
+        sameSite: "lax",
+        path: "/",
+        secure: useSecureCookies,
+      },
     },
     callbackUrl: {
       name: `${cookiePrefix}next-auth.callback-url`,
       options: {
-        sameSite: 'lax',
-        path: '/',
-        secure: useSecureCookies
-      }
+        sameSite: "lax",
+        path: "/",
+        secure: useSecureCookies,
+      },
     },
     csrfToken: {
       // Default to __Host- for CSRF token for additional protection if using useSecureCookies
       // NB: The `__Host-` prefix is stricter than the `__Secure-` prefix.
-      name: `${useSecureCookies ? '__Host-' : ''}next-auth.csrf-token`,
+      name: `${useSecureCookies ? "__Host-" : ""}next-auth.csrf-token`,
       options: {
         httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
-        secure: useSecureCookies
-      }
+        sameSite: "lax",
+        path: "/",
+        secure: useSecureCookies,
+      },
     },
     pkceCodeVerifier: {
       name: `${cookiePrefix}next-auth.pkce.code_verifier`,
       options: {
         httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
-        secure: useSecureCookies
-      }
-    }
+        sameSite: "lax",
+        path: "/",
+        secure: useSecureCookies,
+      },
+    },
   }
 }

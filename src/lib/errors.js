@@ -43,9 +43,9 @@ export function capitalize(s) {
 
 /**
  * Wraps an object of methods and adds error handling.
- * @param {import("types").EventCallbacks} methods
- * @param {import("types").LoggerInstance} logger
- * @return {import("types").EventCallbacks}
+ * @param {import("src/types").EventCallbacks} methods
+ * @param {import("src/types").LoggerInstance} logger
+ * @return {import("src/types").EventCallbacks}
  */
 export function eventsErrorHandler(methods, logger) {
   return Object.entries(methods).reduce((acc, [name, method]) => {
@@ -62,9 +62,9 @@ export function eventsErrorHandler(methods, logger) {
 
 /**
  * Handles adapter induced errors.
- * @param {import("types/adapters").Adapter} [adapter]
- * @param {import("types").LoggerInstance} logger
- * @return {import("types/adapters").Adapter}
+ * @param {import("src/types/adapters").Adapter} [adapter]
+ * @param {import("src/types").LoggerInstance} logger
+ * @return {import("src/types/adapters").Adapter}
  */
 export function adapterErrorHandler(adapter, logger) {
   if (!adapter) return

@@ -1,4 +1,4 @@
-/** @return {import("types/providers").OAuthConfig} */
+/** @return {import("src/providers").OAuthConfig} */
 export default function Twitch(options) {
   return {
     wellKnown: "https://id.twitch.tv/oauth2/.well-known/openid-configuration",
