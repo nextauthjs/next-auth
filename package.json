@@ -7,7 +7,7 @@
   "author": "Iain Collins <me@iaincollins.com>",
   "main": "dist/index.js",
   "module": "dist/index.js",
-  "types": "dist/types/index.d.ts",
+  "types": "dist/index.d.ts",
   "keywords": [
     "react",
     "nodejs",
