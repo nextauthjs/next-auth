@@ -2,11 +2,10 @@
   "compilerOptions": {
     "strictNullChecks": true,
     "baseUrl": ".",
-    "outDir": "dist",
     "paths": {
-      "next-auth": ["dist/server"],
-      "next-auth/providers/*": ["dist/providers/*"],
-      "next-auth/react": ["dist/client/react"]
+      "next-auth": ["server"],
+      "next-auth/providers/*": ["providers/*"],
+      "next-auth/react": ["client/react"]
     },
     "target": "es2019",
     "lib": ["dom", "dom.iterable", "esnext"],

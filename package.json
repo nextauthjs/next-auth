@@ -5,9 +5,9 @@
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "author": "Iain Collins <me@iaincollins.com>",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "index.js",
+  "module": "index.js",
+  "types": "index.d.ts",
   "keywords": [
     "react",
     "nodejs",
@@ -22,21 +22,21 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/index.js"
+      "import": "./index.js"
     },
     "./jwt": {
-      "import": "./dist/lib/jwt.js"
+      "import": "./lib/jwt.js"
     },
     "./react": {
-      "import": "./dist/client/react.js"
+      "import": "./client/react.js"
     },
     "./providers/*": {
-      "import": "./dist/providers/*.js"
+      "import": "./providers/*.js"
     }
   },
   "scripts": {
     "build": "npm run build:js && npm run build:css",
-    "build:js": "rm -rf dist && tsc",
+    "build:js": "rm -rf client css lib providers server && tsc",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir dist && node config/wrap-css.js",
     "dev:setup": "npm i && npm run build:css && cd app && npm i",
     "dev": "cd app && npm run dev",
@@ -148,7 +148,8 @@
       "camelcase": "off",
       "@typescript-eslint/naming-convention": "off",
       "@typescript-eslint/strict-boolean-expressions": "off",
-      "@typescript-eslint/explicit-function-return-type": "off"
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/restrict-template-expressions": "off"
     },
     "overrides": [
       {

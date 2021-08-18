@@ -8,10 +8,34 @@
 //
 // We use HTTP POST requests with CSRF Tokens to protect against CSRF attacks.
 
-// eslint-disable-next-line no-use-before-define
 import * as React from "react"
-import _logger, { proxyLogger } from "../lib/logger"
-import parseUrl from "../lib/parse-url"
+import _logger, { proxyLogger } from "src/lib/logger"
+import parseUrl from "src/lib/parse-url"
+import { Session } from "types"
+import { ProviderType } from "types/providers"
+import {
+  BroadcastChannel,
+  CtxOrReq,
+  apiBaseUrl,
+  fetchData,
+  now,
+} from "./lib/client"
+
+export interface NextAuthClientConfig {
+  baseUrl: string
+  basePath: string
+  baseUrlServer: string
+  basePathServer: string
+  /** Stores last session response */
+  _session?: Session | null | undefined
+  /** Used for timestamp since last sycned (in seconds) */
+  _lastSync: number
+  /**
+   * Stores the `SessionProvider`'s session update method to be able to
+   * trigger session updates from places like `signIn` or `signOut`
+   */
+  _getSession: (...args: any[]) => any
+}
 
 // This behaviour mirrors the default behaviour for getting the site name that
 // happens server side in server/index.js
@@ -19,17 +43,16 @@ import parseUrl from "../lib/parse-url"
 //    relative URLs are valid in that context and so defaults to empty.
 // 2. When invoked server side the value is picked up from an environment
 //    variable and defaults to 'http://localhost:3000'.
-/** @type {import("types/internals/react").NextAuthConfig} */
-const __NEXTAUTH = {
-  baseUrl: parseUrl(process.env.NEXTAUTH_URL || process.env.VERCEL_URL).baseUrl,
+const __NEXTAUTH: NextAuthClientConfig = {
+  baseUrl: parseUrl(process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL).baseUrl,
   basePath: parseUrl(process.env.NEXTAUTH_URL).basePath,
   baseUrlServer: parseUrl(
-    process.env.NEXTAUTH_URL_INTERNAL ||
-      process.env.NEXTAUTH_URL ||
+    process.env.NEXTAUTH_URL_INTERNAL ??
+      process.env.NEXTAUTH_URL ??
       process.env.VERCEL_URL
   ).baseUrl,
   basePathServer: parseUrl(
-    process.env.NEXTAUTH_URL_INTERNAL || process.env.NEXTAUTH_URL
+    process.env.NEXTAUTH_URL_INTERNAL ?? process.env.NEXTAUTH_URL
   ).basePath,
   _lastSync: 0,
   _session: undefined,
@@ -40,17 +63,38 @@ const broadcast = BroadcastChannel()
 
 const logger = proxyLogger(_logger, __NEXTAUTH.basePath)
 
-/** @type {import("types/internals/react").SessionContext} */
-const SessionContext = React.createContext()
+export type SessionContextValue<R extends boolean = false> = R extends true
+  ?
+      | { data: Session; status: "authenticated" }
+      | { data: null; status: "loading" }
+  :
+      | { data: Session; status: "authenticated" }
+      | { data: null; status: "unauthenticated" | "loading" }
 
-export function useSession(options = {}) {
-  const value = React.useContext(SessionContext)
+const SessionContext = React.createContext<SessionContextValue | undefined>(
+  undefined
+)
 
-  if (process.env.NODE_ENV !== "production" && !value) {
+export interface UseSessionOptions<R extends boolean> {
+  required: R
+  /** Defaults to `signIn` */
+  onUnauthenticated?: () => void
+}
+
+/**
+ * React Hook that gives you access
+ * to the logged in user's session data.
+ *
+ * [Documentation](https://next-auth.js.org/getting-started/client#usesession)
+ */
+export function useSession<R extends boolean>(options: UseSessionOptions<R>) {
+  // @ts-expect-error Satisfy TS if branch on line below
+  const value: SessionContextValue<R> = React.useContext(SessionContext)
+  if (!value && process.env.NODE_ENV !== "production") {
     throw new Error("useSession must be wrapped in a SessionProvider")
   }
 
-  const { required, onUnauthenticated } = options
+  const { required, onUnauthenticated } = options ?? {}
 
   const requiredAndNotLoading = required && value.status === "unauthenticated"
 
@@ -66,43 +110,129 @@ export function useSession(options = {}) {
   }, [requiredAndNotLoading, onUnauthenticated])
 
   if (requiredAndNotLoading) {
-    return { data: value.data, status: "loading" }
+    return { data: value.data, status: "loading" } as const
   }
 
   return value
 }
 
-export async function getSession(ctx) {
-  const session = await _fetchData("session", ctx)
-  if (ctx?.broadcast ?? true) {
+export type GetSessionParams = CtxOrReq & {
+  event?: "storage" | "timer" | "hidden" | string
+  triggerEvent?: boolean
+  broadcast?: boolean
+}
+
+export async function getSession(params?: GetSessionParams) {
+  const session = await fetchData<Session>(
+    "session",
+    __NEXTAUTH,
+    logger,
+    params
+  )
+  if (params?.broadcast ?? true) {
     broadcast.post({ event: "session", data: { trigger: "getSession" } })
   }
   return session
 }
 
-export async function getCsrfToken(ctx) {
-  const response = await _fetchData("csrf", ctx)
+/**
+ * Returns the current Cross Site Request Forgery Token (CSRF Token)
+ * required to make POST requests (e.g. for signing in and signing out).
+ * You likely only need to use this if you are not using the built-in
+ * `signIn()` and `signOut()` methods.
+ *
+ * [Documentation](https://next-auth.js.org/getting-started/client#getcsrftoken)
+ */
+export async function getCsrfToken(params?: CtxOrReq) {
+  const response = await fetchData<{ csrfToken: string }>(
+    "csrf",
+    __NEXTAUTH,
+    logger,
+    params
+  )
   return response?.csrfToken
 }
 
-export async function getProviders() {
-  return await _fetchData("providers")
+export interface ClientSafeProvider {
+  id: string
+  name: string
+  type: ProviderType
+  signinUrl: string
+  callbackUrl: string
 }
 
-export async function signIn(provider, options = {}, authorizationParams = {}) {
-  const { callbackUrl = window.location.href, redirect = true } = options
+export type RedirectableProvider = "email" | "credentials"
 
-  const baseUrl = _apiBaseUrl()
+/**
+ * It calls `/api/auth/providers` and returns
+ * a list of the currently configured authentication providers.
+ * It can be useful if you are creating a dynamic custom sign in page.
+ *
+ * [Documentation](https://next-auth.js.org/getting-started/client#getproviders)
+ */
+export async function getProviders() {
+  return await fetchData<Record<RedirectableProvider, ClientSafeProvider>>(
+    "providers",
+    __NEXTAUTH,
+    logger
+  )
+}
+
+export interface SignInOptions extends Record<string, unknown> {
+  /**
+   * Defaults to the current URL.
+   * @docs https://next-auth.js.org/getting-started/client#specifying-a-callbackurl
+   */
+  callbackUrl?: string
+  /** @docs https://next-auth.js.org/getting-started/client#using-the-redirect-false-option */
+  redirect?: boolean
+}
+
+export interface SignInResponse {
+  error: string | undefined
+  status: number
+  ok: boolean
+  url: string | null
+}
+
+/** Match `inputType` of `new URLSearchParams(inputType)` */
+export type SignInAuthorisationParams =
+  | string
+  | string[][]
+  | Record<string, string>
+  | URLSearchParams
+
+/**
+ * Client-side method to initiate a signin flow
+ * or send the user to the signin page listing all possible providers.
+ * Automatically adds the CSRF token to the request.
+ *
+ * [Documentation](https://next-auth.js.org/getting-started/client#signin)
+ */
+export async function signIn<
+  P extends RedirectableProvider | undefined = undefined
+>(
+  provider?: RedirectableProvider,
+  options?: SignInOptions,
+  authorizationParams?: SignInAuthorisationParams
+): Promise<
+  P extends RedirectableProvider ? SignInResponse | undefined : undefined
+> {
+  const { callbackUrl = window.location.href, redirect = true } = options ?? {}
+
+  const baseUrl = apiBaseUrl(__NEXTAUTH)
   const providers = await getProviders()
 
   if (!providers) {
-    return window.location.replace(`${baseUrl}/error`)
+    window.location.replace(`${baseUrl}/error`)
+    return
   }
 
-  if (!(provider in providers)) {
-    return window.location.replace(
+  if (!provider || !(provider in providers)) {
+    window.location.replace(
       `${baseUrl}/signin?${new URLSearchParams({ callbackUrl })}`
     )
+    return
   }
 
   const isCredentials = providers[provider].type === "credentials"
@@ -120,6 +250,7 @@ export async function signIn(provider, options = {}, authorizationParams = {}) {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },
+    // @ts-expect-error
     body: new URLSearchParams({
       ...options,
       csrfToken: await getCsrfToken(),
@@ -149,17 +280,38 @@ export async function signIn(provider, options = {}, authorizationParams = {}) {
     status: res.status,
     ok: res.ok,
     url: error ? null : data.url,
-  }
+  } as any
 }
 
-export async function signOut(options = {}) {
-  const { callbackUrl = window.location.href, redirect = true } = options
-  const baseUrl = _apiBaseUrl()
+/** @docs https://next-auth.js.org/getting-started/client#using-the-redirect-false-option-1 */
+export interface SignOutResponse {
+  url: string
+}
+
+export interface SignOutParams<R extends boolean = true> {
+  /** @docs https://next-auth.js.org/getting-started/client#specifying-a-callbackurl-1 */
+  callbackUrl?: string
+  /** @docs https://next-auth.js.org/getting-started/client#using-the-redirect-false-option-1 */
+  redirect?: R
+}
+
+/**
+ * Signs the user out, by removing the session cookie.
+ * Automatically adds the CSRF token to the request.
+ *
+ * [Documentation](https://next-auth.js.org/getting-started/client#signout)
+ */
+export async function signOut<R extends boolean = true>(
+  options?: SignOutParams<R>
+): Promise<R extends true ? undefined : SignOutResponse> {
+  const { callbackUrl = window.location.href } = options ?? {}
+  const baseUrl = apiBaseUrl(__NEXTAUTH)
   const fetchOptions = {
     method: "post",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },
+    // @ts-expect-error
     body: new URLSearchParams({
       csrfToken: await getCsrfToken(),
       callbackUrl,
@@ -170,11 +322,12 @@ export async function signOut(options = {}) {
   const data = await res.json()
   broadcast.post({ event: "session", data: { trigger: "signout" } })
 
-  if (redirect) {
+  if (options?.redirect ?? true) {
     const url = data.url ?? callbackUrl
     window.location.replace(url)
     // If url contains a hash, the browser does not reload the page. We reload manually
     if (url.includes("#")) window.location.reload()
+    // @ts-expect-error
     return
   }
 
@@ -183,8 +336,32 @@ export async function signOut(options = {}) {
   return data
 }
 
-/** @param {import("types/react-client").SessionProviderProps} props */
-export function SessionProvider(props) {
+/** @docs: https://next-auth.js.org/getting-started/client#options */
+export interface SessionProviderProps {
+  children: React.ReactNode
+  session?: Session | null
+  baseUrl?: string
+  basePath?: string
+  /**
+   * The amount of time (in seconds) after a session should be considered stale.
+   * If set to `0` (default), the session will never be re-fetched.
+   */
+  staleTime?: number
+  /**
+   * A time interval (in seconds) after which the session will be re-fetched.
+   * If set to `0` (default), the session is not polled.
+   */
+  refetchInterval?: number
+}
+
+/**
+ * Provider to wrap the app in to make session data available globally.
+ * Can also be used to throttle the number of requests to the endpoint
+ * `/api/auth/session`.
+ *
+ * [Documentation](https://next-auth.js.org/getting-started/client#sessionprovider)
+ */
+export function SessionProvider(props: SessionProviderProps) {
   const { children, baseUrl, basePath, staleTime = 0 } = props
 
   if (baseUrl) __NEXTAUTH.baseUrl = baseUrl
@@ -197,7 +374,7 @@ export function SessionProvider(props) {
   const hasInitialSession = props.session !== undefined
 
   /** If session was passed, initialize as already synced */
-  __NEXTAUTH._lastSync = hasInitialSession ? _now() : 0
+  __NEXTAUTH._lastSync = hasInitialSession ? now() : 0
 
   const [session, setSession] = React.useState(() => {
     if (hasInitialSession) __NEXTAUTH._session = props.session
@@ -214,7 +391,7 @@ export function SessionProvider(props) {
         // We should always update if we don't have a client session yet
         // or if there are events from other tabs/windows
         if (storageEvent || __NEXTAUTH._session === undefined) {
-          __NEXTAUTH._lastSync = _now()
+          __NEXTAUTH._lastSync = now()
           __NEXTAUTH._session = await getSession({
             broadcast: !storageEvent,
           })
@@ -233,13 +410,13 @@ export function SessionProvider(props) {
           // event anyway)
           (staleTime > 0 && __NEXTAUTH._session === null) ||
           // Bail out early if the client session is not stale yet
-          (staleTime > 0 && _now() < __NEXTAUTH._lastSync + staleTime)
+          (staleTime > 0 && now() < __NEXTAUTH._lastSync + staleTime)
         ) {
           return
         }
 
         // An event or session staleness occurred, update the client session.
-        __NEXTAUTH._lastSync = _now()
+        __NEXTAUTH._lastSync = now()
         __NEXTAUTH._session = await getSession()
         setSession(__NEXTAUTH._session)
       } catch (error) {
@@ -262,8 +439,8 @@ export function SessionProvider(props) {
     // on how the session object is being used in the client; it is
     // more robust to have each window/tab fetch it's own copy of the
     // session object rather than share it across instances.
-    const unsubscribe = broadcast.receive(
-      async () => await __NEXTAUTH._getSession({ event: "storage" })
+    const unsubscribe = broadcast.receive(() =>
+      __NEXTAUTH._getSession({ event: "storage" })
     )
 
     return () => unsubscribe()
@@ -285,16 +462,16 @@ export function SessionProvider(props) {
     const { refetchInterval } = props
     // Set up polling
     if (refetchInterval) {
-      const refetchIntervalTimer = setInterval(async () => {
+      const refetchIntervalTimer = setInterval(() => {
         if (__NEXTAUTH._session) {
-          await __NEXTAUTH._getSession({ event: "poll" })
+          __NEXTAUTH._getSession({ event: "poll" })
         }
       }, refetchInterval * 1000)
       return () => clearInterval(refetchIntervalTimer)
     }
   }, [props.refetchInterval])
 
-  const value = React.useMemo(
+  const value: any = React.useMemo(
     () => ({
       data: session,
       status: loading
@@ -309,77 +486,4 @@ export function SessionProvider(props) {
   return (
     <SessionContext.Provider value={value}>{children}</SessionContext.Provider>
   )
-}
-
-/**
- * If passed 'appContext' via getInitialProps() in _app.js
- * then get the req object from ctx and use that for the
- * req value to allow _fetchData to
- * work seemlessly in getInitialProps() on server side
- * pages *and* in _app.js.
- */
-async function _fetchData(path, { ctx, req = ctx?.req } = {}) {
-  try {
-    const options = req ? { headers: { cookie: req.headers.cookie } } : {}
-    const res = await fetch(`${_apiBaseUrl()}/${path}`, options)
-    const data = await res.json()
-    if (!res.ok) throw data
-    return Object.keys(data).length > 0 ? data : null // Return null if data empty
-  } catch (error) {
-    logger.error("CLIENT_FETCH_ERROR", {
-      error,
-      path,
-      ...(req ? { header: req.headers } : {}),
-    })
-    return null
-  }
-}
-
-function _apiBaseUrl() {
-  if (typeof window === "undefined") {
-    // Return absolute path when called server side
-    return `${__NEXTAUTH.baseUrlServer}${__NEXTAUTH.basePathServer}`
-  }
-  // Return relative path when called client side
-  return __NEXTAUTH.basePath
-}
-
-/** Returns the number of seconds elapsed since January 1, 1970 00:00:00 UTC. */
-function _now() {
-  return Math.floor(Date.now() / 1000)
-}
-
-/**
- * Inspired by [Broadcast Channel API](https://developer.mozilla.org/en-US/docs/Web/API/Broadcast_Channel_API)
- * Only not using it directly, because Safari does not support it.
- *
- * https://caniuse.com/?search=broadcastchannel
- */
-function BroadcastChannel(name = "nextauth.message") {
-  return {
-    /**
-     * Get notified by other tabs/windows.
-     * @param {(message: import("types/internals/react").BroadcastMessage) => void} onReceive
-     */
-    receive(onReceive) {
-      const handler = (event) => {
-        if (event.key !== name) return
-        /** @type {import("types/internals/react").BroadcastMessage} */
-        const message = JSON.parse(event.newValue)
-        if (message?.event !== "session" || !message?.data) return
-
-        onReceive(message)
-      }
-      window.addEventListener("storage", handler)
-      return () => window.removeEventListener("storage", handler)
-    },
-    /** Notify other tabs/windows. */
-    post(message) {
-      if (typeof window === "undefined") return
-      localStorage.setItem(
-        name,
-        JSON.stringify({ ...message, timestamp: _now() })
-      )
-    },
-  }
 }
