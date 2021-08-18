@@ -32,11 +32,7 @@ www/providers.json
 /css
 /lib
 /server
-/types/providers/*
-!types/providers/index.d.ts
-!types/providers/email.d.ts
-!types/providers/credentials.d.ts
-!types/providers/oauth.d.ts
+/types
 /adapters.d.ts
 /index.d.ts
 /index.js
