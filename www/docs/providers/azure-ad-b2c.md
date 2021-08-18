@@ -5,11 +5,11 @@ title: Azure Active Directory B2C
 
 ## Documentation
 
-https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow
+https://docs.microsoft.com/azure/active-directory/develop/v2-oauth2-auth-code-flow
 
 ## Configuration
 
-https://docs.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-tenant
+https://docs.microsoft.com/azure/active-directory-b2c/tutorial-create-tenant
 
 ## Options
 
