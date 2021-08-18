@@ -1,6 +1,6 @@
 const fs = require("fs-extra")
 const path = require("path")
-const core = require("@ations/core")
+const core = require("@actions/core")
 
 try {
   const packageJSONPath = path.join(process.cwd(), "package.json")
