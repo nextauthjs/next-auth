@@ -36,7 +36,8 @@
   },
   "scripts": {
     "build": "npm run build:js && npm run build:css",
-    "build:js": "rm -rf client css lib providers server && tsc",
+    "clean": "rm -rf client css dist lib providers server index.d.ts index.js jwt.d.ts jwt.js react.d.ts react.js",
+    "build:js": "npm run clean && tsc",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir dist && node config/wrap-css.js",
     "dev:setup": "npm i && npm run build:css && cd app && npm i",
     "dev": "cd app && npm run dev",
