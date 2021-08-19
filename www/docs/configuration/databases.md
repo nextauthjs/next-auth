@@ -7,7 +7,6 @@ NextAuth.js offers multiple database adapters:
 
 - [`typeorm-legacy`](./../adapters/typeorm/typeorm-overview)
 - [`prisma`](./../adapters/prisma)
-- [`prisma-legacy`](./../adapters/prisma-legacy)
 - [`fauna`](./../adapters/fauna)
 - [`dynamodb`](./../adapters/dynamodb)
 - [`firebase`](./../adapters/firebase)

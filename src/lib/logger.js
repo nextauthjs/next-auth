@@ -17,7 +17,7 @@ const _logger = {
   error(code, metadata) {
     metadata = formatError(metadata)
     console.error(
-      `[next-auth][error][${code.toLowerCase()}]`,
+      `[next-auth][error][${code}]`,
       `\nhttps://next-auth.js.org/errors#${code.toLowerCase()}`,
       metadata.message,
       metadata
@@ -25,13 +25,13 @@ const _logger = {
   },
   warn(code) {
     console.warn(
-      `[next-auth][warn][${code.toLowerCase()}]`,
+      `[next-auth][warn][${code}]`,
       `\nhttps://next-auth.js.org/warnings#${code.toLowerCase()}`
     )
   },
   debug(code, metadata) {
     if (!process?.env?._NEXTAUTH_DEBUG) return
-    console.log(`[next-auth][debug][${code.toLowerCase()}]`, metadata)
+    console.log(`[next-auth][debug][${code}]`, metadata)
   },
 }
 

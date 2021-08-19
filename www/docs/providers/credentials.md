@@ -31,13 +31,9 @@ The Credentials provider is specified like other providers, except that you need
 
 If you return an object it will be persisted to the JSON Web Token and the user will be signed in, unless a custom `signIn()` callback is configured that subsequently rejects it.
 
-2. Either `false` or `null`, which indicates failure.
+2. If you return `null` then an error will be displayed advising the user to check their details.
 
-If you return `false` or `null` then an error will be displayed advising the user to check their details.
-
-3. You can throw an Error or a URL (a string).
-
-If you throw an Error, the user will be sent to the error page with the error message as a query parameter. If throw a URL (a string), the user will be redirected to the URL.
+3. If you throw an Error, the user will be sent to the error page with the error message as a query parameter.
 
 The Credentials provider's `authorize()` method also provides the request object as the second parameter (see example below).
 

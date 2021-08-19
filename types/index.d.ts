@@ -1,10 +1,6 @@
-// Minimum TypeScript Version: 3.6
-
-/// <reference types="node" />
-
 import { Adapter } from "./adapters"
 import { JWTOptions, JWT } from "./jwt"
-import { AppProviders, Credentials } from "./providers"
+import { Provider, Credentials, ProviderType } from "./providers"
 import {
   Awaitable,
   NextApiRequest,
@@ -28,7 +24,7 @@ export interface NextAuthOptions {
    *
    * [Documentation](https://next-auth.js.org/configuration/options#providers) | [Providers documentation](https://next-auth.js.org/configuration/providers)
    */
-  providers: AppProviders
+  providers: Provider[]
   /**
    * A random string used to hash tokens, sign cookies and generate cryptographic keys.
    * If not specified is uses a hash of all configuration options, including Client ID / Secrets for entropy.
@@ -48,7 +44,7 @@ export interface NextAuthOptions {
    *
    * [Documentation](https://next-auth.js.org/configuration/options#session)
    */
-  session?: SessionOptions
+  session?: Partial<SessionOptions>
   /**
    * JSON Web Tokens can be used for session tokens if enabled with the `session: { jwt: true }` option.
    * JSON Web Tokens are enabled by default if you have not specified a database.
@@ -60,7 +56,7 @@ export interface NextAuthOptions {
    *
    * [Documentation](https://next-auth.js.org/configuration/options#jwt)
    */
-  jwt?: JWTOptions
+  jwt?: Partial<JWTOptions>
   /**
    * Specify URLs to be used if you want to create custom sign in, sign out and error pages.
    * Pages specified will override the corresponding built-in page.
@@ -80,7 +76,7 @@ export interface NextAuthOptions {
    *
    * [Documentation](https://next-auth.js.org/configuration/options#pages) | [Pages documentation](https://next-auth.js.org/configuration/pages)
    */
-  pages?: PagesOptions
+  pages?: Partial<PagesOptions>
   /**
    * Callbacks are asynchronous functions you can use to control what happens when an action is performed.
    * Callbacks are *extremely powerful*, especially in scenarios involving JSON Web Tokens
@@ -112,7 +108,7 @@ export interface NextAuthOptions {
    * [Documentation](https://next-auth.js.org/configuration/options#adapter) |
    * [Community adapters](https://github.com/nextauthjs/adapters)
    */
-  adapter?: ReturnType<Adapter>
+  adapter?: Adapter
   /**
    * Set debug to true to enable debug messages for authentication and database operations.
    * * **Default value**: `false`
@@ -154,7 +150,7 @@ export interface NextAuthOptions {
    * [Documentation](https://next-auth.js.org/configuration/options#logger) |
    * [Debug documentation](https://next-auth.js.org/configuration/options#debug)
    */
-  logger?: LoggerInstance
+  logger?: Partial<LoggerInstance>
   /**
    * Changes the theme of pages.
    * Set to `"light"` if you want to force pages to always be light.
@@ -243,11 +239,23 @@ export type TokenSet = TokenSetParameters
  * Usually contains information about the provider being used
  * and also extends `TokenSet`, which is different tokens returned by OAuth Providers.
  */
-export interface Account extends Partial<TokenSet> {
-  id: string
+export interface DefaultAccount extends Partial<TokenSet> {
+  /**
+   * This value depends on the type of the provider being used to create the account.
+   * - oauth: The OAuth account's id, returned from the `profile()` callback.
+   * - email: The user's email address.
+   * - credentials: `id` returned from the `authorize()` callback
+   */
+  providerAccountId: string
+  /** id of the user this account belongs to. */
+  userId: string
+  /** id of the provider used for this account */
   provider: string
-  type: string
+  /** Provider's type for this account */
+  type: ProviderType
 }
+
+export interface Account extends Record<string, unknown>, DefaultAccount {}
 
 export interface DefaultProfile {
   sub?: string
@@ -280,7 +288,7 @@ export interface CallbacksOptions<
      */
     profile: P & Record<string, unknown>
     /**
-     * If Email provider is used, it contains the email, and optionally on the first call a
+     * If Email provider is used, on the first call, it contains a
      * `verificationRequest: true` property to indicate it is being triggered in the verification request flow.
      * When the callback is invoked after a user has clicked on a sign in link,
      * this property will not be present. You can check for the `verificationRequest` property
@@ -288,7 +296,6 @@ export interface CallbacksOptions<
      * for email address in an allow list.
      */
     email: {
-      email: string | null
       verificationRequest?: boolean
     }
     /** If Credentials provider is used, it contains the user credentials */
@@ -397,10 +404,7 @@ export interface EventCallbacks {
   signOut(message: { session: Session; token: JWT }): Awaitable<void>
   createUser(message: { user: User }): Awaitable<void>
   updateUser(message: { user: User }): Awaitable<void>
-  linkAccount(message: {
-    user: User
-    providerAccount: Record<string, unknown>
-  }): Awaitable<void>
+  linkAccount(message: { user: User; account: Account }): Awaitable<void>
   /**
    * The message object will contain one of these depending on
    * if you use JWT or database persisted sessions:
@@ -414,14 +418,16 @@ export type EventType = keyof EventCallbacks
 
 /** [Documentation](https://next-auth.js.org/configuration/pages) */
 export interface PagesOptions {
-  signIn?: string
-  signOut?: string
+  signIn: string
+  signOut: string
   /** Error code passed in query string as ?error= */
-  error?: string
-  verifyRequest?: string
+  error: string
+  verifyRequest: string
   /** If set, new users will be directed here on first sign in */
-  newUser?: string
+  newUser: string
 }
+
+export type ISODateString = string
 
 export interface DefaultSession extends Record<string, unknown> {
   user?: {
@@ -429,7 +435,7 @@ export interface DefaultSession extends Record<string, unknown> {
     email?: string | null
     image?: string | null
   }
-  expires?: string
+  expires: ISODateString
 }
 
 /**
@@ -445,12 +451,22 @@ export interface Session extends Record<string, unknown>, DefaultSession {}
 
 /** [Documentation](https://next-auth.js.org/configuration/options#session) */
 export interface SessionOptions {
-  jwt?: boolean
-  maxAge?: number
-  updateAge?: number
+  jwt: boolean
+  /**
+   * Relative time from now in seconds when to expire the session
+   * @default 2592000 // 30 days
+   */
+  maxAge: number
+  /**
+   * How often the session should be updated in seconds.
+   * If set to `0`, session is updated every time.
+   * @default 86400 // 1 day
+   */
+  updateAge: number
 }
 
 export interface DefaultUser {
+  id: string
   name?: string | null
   email?: string | null
   image?: string | null
