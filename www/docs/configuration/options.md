@@ -123,6 +123,7 @@ jwt: {
   // Defaults to NextAuth.js secret if not explicitly specified.
   // This is used to generate the actual signingKey and produces a warning
   // message if not defined explicitly.
+  // You can generate a secret be using `openssl rand -base64 64`
   secret: 'INp8IvdIyeMcoGAgFGoA61DdBglwwSqnXJZkgz8PSnw',
   // You can generate a signing key using `jose newkey -s 512 -t oct -a HS512`
   // This gives you direct knowledge of the key used to sign the token so you can use it
@@ -140,6 +141,7 @@ jwt: {
   },
   // Set to true to use encryption. Defaults to false (signing only).
   encryption: true,
+  // You can generate an encryption key by using `npx node-jose-tools newkey -s 256 -t oct -a A256GCM -u enc`
   encryptionKey: "",
   // decryptionKey: encryptionKey,
   decryptionOptions: {
