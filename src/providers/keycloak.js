@@ -11,8 +11,9 @@ export default function Keycloak(options) {
     profile(profile) {
       return {
         id: profile.sub,
-        name: profile.name,
+        name: profile.name ?? profile.preferred_username,
         email: profile.email,
+        image: null
       }
     },
     options,
