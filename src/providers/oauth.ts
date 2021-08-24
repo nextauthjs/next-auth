@@ -1,5 +1,5 @@
 import { CommonProviderOptions } from "../providers"
-import { Profile, TokenSet, User } from "../types"
+import { Profile, TokenSet, User } from ".."
 import { Awaitable } from "../types/internals/utils"
 
 import {

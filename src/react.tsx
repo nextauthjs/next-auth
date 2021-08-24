@@ -11,7 +11,7 @@
 import * as React from "react"
 import _logger, { proxyLogger } from "./lib/logger"
 import parseUrl from "./lib/parse-url"
-import { Session } from "./types"
+import { Session } from "."
 import { ProviderType } from "./providers"
 import {
   BroadcastChannel,
