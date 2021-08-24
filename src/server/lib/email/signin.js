@@ -13,7 +13,7 @@ import { hashToken } from "../utils"
  * @param {import("types/internals").InternalOptions<EmailConfig>} options
  */
 export default async function email(identifier, options) {
-  const { baseUrl, basePath, adapter, provider, logger } = options
+  const { baseUrl, basePath, adapter, provider, logger, callbackUrl } = options
 
   // Generate token
   const token =
@@ -33,8 +33,8 @@ export default async function email(identifier, options) {
     expires,
   })
 
-  // Generate a link with email and the unhashed token
-  const params = new URLSearchParams({ token, email: identifier })
+  // Generate a link with email, unhashed token and callback url
+  const params = new URLSearchParams({ callbackUrl, token, email: identifier })
   const url = `${baseUrl}${basePath}/callback/${provider.id}?${params}`
 
   try {
