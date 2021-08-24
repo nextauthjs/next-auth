@@ -54,6 +54,7 @@
   "files": [
     "dist",
     "lib",
+    "css",
     "index.d.ts",
     "index.js",
     "adapters.d.ts",
