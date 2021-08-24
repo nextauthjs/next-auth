@@ -1,6 +1,4 @@
-import { h } from "preact" // eslint-disable-line no-unused-vars
-
-export default function signin({
+export default function Signin({
   csrfToken,
   providers,
   callbackUrl,
@@ -44,7 +42,7 @@ export default function signin({
           <p>{error}</p>
         </div>
       )}
-      {providersToRender.map((provider, i) => (
+      {providersToRender.map((provider, i: number) => (
         <div key={provider.id} className="provider">
           {provider.type === "oauth" && (
             <form action={provider.signinUrl} method="POST">
@@ -64,7 +62,7 @@ export default function signin({
           {provider.type === "email" && (
             <form action={provider.signinUrl} method="POST">
               <input type="hidden" name="csrfToken" value={csrfToken} />
-              <label for={`input-email-for-${provider.id}-provider`}>
+              <label htmlFor={`input-email-for-${provider.id}-provider`}>
                 Email
               </label>
               <input
@@ -85,7 +83,7 @@ export default function signin({
                 return (
                   <div key={`input-group-${provider.id}`}>
                     <label
-                      for={`input-${credential}-for-${provider.id}-provider`}
+                      htmlFor={`input-${credential}-for-${provider.id}-provider`}
                     >
                       {provider.credentials[credential].label || credential}
                     </label>

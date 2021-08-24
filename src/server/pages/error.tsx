@@ -1,6 +1,3 @@
-// @ts-check
-import { h } from "preact" // eslint-disable-line no-unused-vars
-
 /**
  * Renders an error page.
  * @param {{
@@ -10,7 +7,7 @@ import { h } from "preact" // eslint-disable-line no-unused-vars
  *   res: import("src/types/internals").NextAuthResponse
  * }} params
  */
-export default function error({ baseUrl, basePath, error = "default", res }) {
+export default function Error({ baseUrl, basePath, error = "default", res }) {
   const signinPageUrl = `${baseUrl}${basePath}/signin`
 
   const errors = {
