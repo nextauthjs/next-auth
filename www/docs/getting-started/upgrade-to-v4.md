@@ -183,6 +183,7 @@ Importing OAuth providers has changed a bit, they now need to be individually im
 
 > 1. The `AzureADB2C` provider has been renamed `AzureAD`.
 > 2. The `Basecamp` provider has been removed, see explanation [here](https://github.com/basecamp/api/blob/master/sections/authentication.md#on-authenticating-users-via-oauth).
+> 3. The Github provider by default now will not request full write access to user profiles. If you need this scope, please add `user` to the scope option manually.
 
 The following new options are available when defining your Providers in the configuration:
 
