@@ -25,10 +25,10 @@
       "import": "./index.js"
     },
     "./jwt": {
-      "import": "./lib/jwt.js"
+      "import": "./jwt.js"
     },
     "./react": {
-      "import": "./client/react.js"
+      "import": "./react.js"
     },
     "./providers/*": {
       "import": "./providers/*.js"
