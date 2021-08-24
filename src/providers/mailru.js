@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function MailRu(options) {
   return {
     id: "mailru",

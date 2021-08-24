@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function Spotify(options) {
   return {
     id: "spotify",

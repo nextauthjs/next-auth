@@ -1,4 +1,5 @@
 /** @type {import("src/providers").OAuthProvider} */
+/** @type {import(".").OAuthProvider} */
 export default function GitLab(options) {
   return {
     id: "gitlab",

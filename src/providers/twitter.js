@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function Twitter(options) {
   return {
     id: "twitter",

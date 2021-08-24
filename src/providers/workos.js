@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function WorkOS(options) {
   const { issuer = "https://api.workos.com/" } = options
 

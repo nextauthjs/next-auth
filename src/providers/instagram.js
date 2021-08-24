@@ -24,6 +24,7 @@
  * ```
  * [NextAuth.js Documentation](https://next-auth.js.org/providers/instagram) | [Instagram Documentation](https://developers.facebook.com/docs/instagram-basic-display-api/getting-started) | [Configuration](https://developers.facebook.com/apps)
  */
+/** @type {import(".").OAuthProvider} */
 export default function Instagram(options) {
   return {
     id: "instagram",

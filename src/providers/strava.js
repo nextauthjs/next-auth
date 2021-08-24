@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function Strava(options) {
   return {
     id: "strava",

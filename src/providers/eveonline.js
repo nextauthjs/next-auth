@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function EVEOnline(options) {
   return {
     id: "eveonline",

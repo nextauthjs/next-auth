@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function Reddit(options) {
   return {
     id: "reddit",

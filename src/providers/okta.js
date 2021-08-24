@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function Okta(options) {
   return {
     id: "okta",

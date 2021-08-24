@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function Mailchimp(options) {
   return {
     id: "mailchimp",

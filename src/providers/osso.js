@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function Osso(options) {
   return {
     id: "osso",

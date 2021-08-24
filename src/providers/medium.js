@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function Medium(options) {
   return {
     id: "medium",

@@ -1,4 +1,4 @@
-/** @type {import("src/providers").OAuthProvider} */
+/** @type {import(".").OAuthProvider} */
 export default function Facebook(options) {
   return {
     id: "facebook",

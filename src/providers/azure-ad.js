@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function AzureAD(options) {
   const tenant = options.tenantId ?? "common"
 

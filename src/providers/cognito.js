@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function Cognito(options) {
   return {
     id: "cognito",

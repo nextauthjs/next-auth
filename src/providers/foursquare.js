@@ -1,4 +1,5 @@
 /** @type {import("src/providers").OAuthProvider} */
+/** @type {import(".").OAuthProvider} */
 export default function Foursquare(options) {
   const { apiVersion = "20210801" } = options
   return {

@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function BattleNet(options) {
   const { region } = options
   const base =

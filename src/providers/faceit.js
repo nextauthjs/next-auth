@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function FACEIT(options) {
   return {
     id: "faceit",
