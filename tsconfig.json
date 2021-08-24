@@ -6,7 +6,6 @@
     "target": "es2019",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
-    "skipLibCheck": true,
     "strict": false,
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
