@@ -5,14 +5,13 @@
 // To work around this issue, this script is a manual step that wraps CSS in a
 // JavaScript file that has the compiled CSS embedded in it, and exports only
 // a function that returns the CSS as a string.
-const fs = require('fs')
-const path = require('path')
+const fs = require("fs")
+const path = require("path")
 
-const pathToCssJs = path.join(__dirname, '../dist/css/index.js')
-const pathToCss = path.join(__dirname, '../dist/css/index.css')
-
-const css = fs.readFileSync(pathToCss, 'utf8')
+const pathToCss = path.join(__dirname, "../css/index.css")
+const css = fs.readFileSync(pathToCss, "utf8")
 const cssWithEscapedQuotes = css.replace(/"/gm, '\\"')
-const js = `module.exports = function() { return "${cssWithEscapedQuotes}" }`
 
+const js = `module.exports = function() { return "${cssWithEscapedQuotes}" }`
+const pathToCssJs = path.join(__dirname, "../css/index.js")
 fs.writeFileSync(pathToCssJs, js)
