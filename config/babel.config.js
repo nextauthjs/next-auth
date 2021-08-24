@@ -12,6 +12,7 @@ module.exports = {
     "@babel/plugin-transform-runtime",
   ],
   ignore: ["../src/**/__tests__/**", "../src/adapters.ts"],
+  comments: false,
   overrides: [
     {
       test: ["../src/react.tsx"],
