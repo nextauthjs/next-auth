@@ -10,7 +10,7 @@ import renderPage from "./pages"
 import callbackUrlHandler from "./lib/callback-url-handler"
 import extendRes from "./lib/extend-res"
 import csrfTokenHandler from "./lib/csrf-token-handler"
-import { eventsErrorHandler, adapterErrorHandler } from "../errors"
+import { eventsErrorHandler, adapterErrorHandler } from "./errors"
 import { NextApiRequest, NextApiResponse } from "next"
 import { NextAuthOptions } from ".."
 import {

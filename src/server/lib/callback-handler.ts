@@ -1,4 +1,4 @@
-import { AccountNotLinkedError } from "../../errors"
+import { AccountNotLinkedError } from "../errors"
 import { fromDate } from "./utils"
 import { randomBytes, randomUUID } from "crypto"
 import { InternalOptions } from "../../types/internals"

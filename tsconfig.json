@@ -18,6 +18,8 @@
     "declaration": true,
   },
   "exclude": [
+    "./*.js",
+    "./*.d.ts",
     "app",
     "types",
     "**/tests",

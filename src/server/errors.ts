@@ -1,5 +1,5 @@
-import { EventCallbacks, LoggerInstance } from "."
-import { Adapter } from "./adapters"
+import { EventCallbacks, LoggerInstance } from ".."
+import { Adapter } from "../adapters"
 
 /**
  * Same as the default `Error`, but it is JSON serializable.
