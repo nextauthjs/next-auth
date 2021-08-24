@@ -479,3 +479,13 @@ export interface DefaultUser {
  * [`profile` OAuth provider callback](https://next-auth.js.org/configuration/providers#using-a-custom-provider)
  */
 export interface User extends Record<string, unknown>, DefaultUser {}
+
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace NodeJS {
+    interface ProcessEnv {
+      NEXTAUTH_URL?: string
+      VERCEL_URL?: string
+    }
+  }
+}
