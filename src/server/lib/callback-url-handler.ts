@@ -1,12 +1,15 @@
 // @ts-check
+import { NextAuthRequest, NextAuthResponse } from "../../types/internals"
 import * as cookie from "../lib/cookie"
 
 /**
  * Get callback URL based on query param / cookie + validation,
  * and add it to `req.options.callbackUrl`.
- * @type {import("src/types/internals").NextAuthApiHandler}
  */
-export default async function callbackUrlHandler(req, res) {
+export default async function callbackUrlHandler(
+  req: NextAuthRequest,
+  res: NextAuthResponse
+) {
   const { query } = req
   const { body } = req
   const { cookies, baseUrl, callbacks } = req.options

@@ -10,7 +10,7 @@ import { hashToken } from "../utils"
  * Starts an e-mail login flow, by generating a token,
  * and sending it to the user's e-mail (with the help of a DB adapter)
  * @param {string} identifier
- * @param {import("src/types/internals").InternalOptions<EmailConfig>} options
+ * @param {import("src/types/internals").InternalOptions<EmailConfig & import("src/types/internals").InternalProvider>} options
  */
 export default async function email(identifier, options) {
   const { baseUrl, basePath, adapter, provider, logger } = options

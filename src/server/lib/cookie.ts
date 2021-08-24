@@ -1,3 +1,15 @@
+// REVIEW: Is there any way to defer two types of strings?
+
+import { CookiesOptions } from "../.."
+
+/** Stringified form of `JWT`. Extract the content with `jwt.decode` */
+export type JWTString = string
+
+/** If `options.session.jwt` is set to `true`, this is a stringified `JWT`. In case of a database persisted session, this is the `sessionToken` of the session in the database.. */
+export type SessionToken<T extends "jwt" | "db" = "jwt"> = T extends "jwt"
+  ? JWTString
+  : string
+
 /**
  * Function to set cookies server side
  *
@@ -8,13 +20,21 @@
  * As only partial functionlity is required, only the code we need has been incorporated here
  * (with fixes for specific issues) to keep dependancy size down.
  */
-export function set(res, name, value, options = {}) {
+export function set(
+  res,
+  name,
+  value,
+  options: {
+    expires?: Date
+    maxAge?: number
+  } = {}
+) {
   const stringValue =
     typeof value === "object" ? "j:" + JSON.stringify(value) : String(value)
 
   if ("maxAge" in options) {
-    options.expires = new Date(Date.now() + options.maxAge)
-    options.maxAge /= 1000
+    options.expires = new Date(Date.now() + (options.maxAge ?? 0))
+    options.maxAge = (options.maxAge ?? 0) / 1000
   }
 
   // Preserve any existing cookies that have already been set in the same session
@@ -47,7 +67,7 @@ function _serialize(name, val, options) {
     throw new TypeError("argument val is invalid")
   }
 
-  let str = name + "=" + value
+  let str = `${name}=${value}`
 
   if (opt.maxAge != null) {
     const maxAge = opt.maxAge - 0
@@ -56,7 +76,7 @@ function _serialize(name, val, options) {
       throw new TypeError("option maxAge is invalid")
     }
 
-    str += "; Max-Age=" + Math.floor(maxAge)
+    str += `; Max-Age=${Math.floor(maxAge)}`
   }
 
   if (opt.domain) {
@@ -64,7 +84,7 @@ function _serialize(name, val, options) {
       throw new TypeError("option domain is invalid")
     }
 
-    str += "; Domain=" + opt.domain
+    str += `; Domain=${opt.domain}`
   }
 
   if (opt.path) {
@@ -72,7 +92,7 @@ function _serialize(name, val, options) {
       throw new TypeError("option path is invalid")
     }
 
-    str += "; Path=" + opt.path
+    str += `; Path=${opt.path}`
   } else {
     str += "; Path=/"
   }
@@ -85,7 +105,7 @@ function _serialize(name, val, options) {
       const dateExpires = new Date(opt.expires)
       expires = dateExpires.toUTCString()
     }
-    str += "; Expires=" + expires
+    str += `; Expires=${expires}`
   }
 
   if (opt.httpOnly) {
@@ -132,9 +152,8 @@ function _serialize(name, val, options) {
  * For more on prefixes see https://googlechrome.github.io/samples/cookie-prefixes/
  *
  * @TODO Review cookie settings (names, options)
- * @return {import("src/types").CookiesOptions}
  */
-export function defaultCookies(useSecureCookies) {
+export function defaultCookies(useSecureCookies): CookiesOptions {
   const cookiePrefix = useSecureCookies ? "__Secure-" : ""
   return {
     // default cookie options

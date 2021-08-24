@@ -37,6 +37,8 @@ export interface EmailConfig extends CommonProviderOptions {
    * [Documentation](https://next-auth.js.org/providers/email#customising-the-verification-token)
    */
   generateVerificationToken?: () => Awaitable<string>
+  /** If defined, it is used to hash the verification token when saving to the database . */
+  secret?: string
   options: EmailUserConfig
 }
 

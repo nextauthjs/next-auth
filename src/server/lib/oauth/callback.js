@@ -2,7 +2,7 @@ import { openidClient } from "./client"
 import { oAuth1Client } from "./client-legacy"
 import { getState } from "./state-handler"
 import { usePKCECodeVerifier } from "./pkce-handler"
-import { OAuthCallbackError } from "../../../lib/errors"
+import { OAuthCallbackError } from "../../../errors"
 import { TokenSet } from "openid-client"
 
 /** @type {import("src/types/internals").NextAuthApiHandler<import("src/types/internals/oauth").GetProfileResult>} */

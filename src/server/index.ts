@@ -7,13 +7,18 @@ import { defaultCallbacks } from "./lib/default-callbacks"
 import parseProviders from "./lib/providers"
 import * as routes from "./routes"
 import renderPage from "./pages"
-import createSecret from "./lib/create-secret"
 import callbackUrlHandler from "./lib/callback-url-handler"
 import extendRes from "./lib/extend-res"
 import csrfTokenHandler from "./lib/csrf-token-handler"
-import { eventsErrorHandler, adapterErrorHandler } from "../lib/errors"
-import { NextApiRequest, NextApiResponse } from "../types/internals/utils"
-import { NextAuthOptions } from "../types"
+import { eventsErrorHandler, adapterErrorHandler } from "../errors"
+import { NextApiRequest, NextApiResponse } from "next"
+import { NextAuthOptions } from ".."
+import {
+  InternalOptions,
+  NextAuthRequest,
+  NextAuthResponse,
+} from "../types/internals"
+import createSecret from "./lib/utils"
 
 // To work properly in production with OAuth providers the NEXTAUTH_URL
 // environment variable must be set.
@@ -21,12 +26,11 @@ if (!process.env.NEXTAUTH_URL) {
   logger.warn("NEXTAUTH_URL")
 }
 
-/**
- * @param {import("next").NextApiRequest} req
- * @param {import("next").NextApiResponse} res
- * @param {import("types").NextAuthOptions} userOptions
- */
-async function NextAuthHandler(req, res, userOptions) {
+async function NextAuthHandler(
+  req: NextAuthRequest,
+  res: NextAuthResponse,
+  userOptions: NextAuthOptions
+) {
   if (userOptions.logger) {
     setLogger(userOptions.logger)
   }
@@ -61,7 +65,7 @@ async function NextAuthHandler(req, res, userOptions) {
 
   const cookies = {
     ...cookie.defaultCookies(
-      userOptions.useSecureCookies || baseUrl.startsWith("https://")
+      userOptions.useSecureCookies ?? baseUrl.startsWith("https://")
     ),
     // Allow user cookie options to override any cookie settings above
     ...userOptions.cookies,
@@ -90,8 +94,7 @@ async function NextAuthHandler(req, res, userOptions) {
 
   // User provided options are overriden by other options,
   // except for the options with special handling above
-  /** @type {import("types/internals").InternalOptions} */
-  const options = {
+  const options: InternalOptions<any> = {
     debug: false,
     pages: {},
     theme: "auto",
@@ -101,7 +104,7 @@ async function NextAuthHandler(req, res, userOptions) {
     // and are request-specific.
     baseUrl,
     basePath,
-    action,
+    action: action as InternalOptions["action"],
     provider,
     cookies,
     secret,
@@ -130,6 +133,7 @@ async function NextAuthHandler(req, res, userOptions) {
       ...userOptions.callbacks,
     },
     logger,
+    callbackUrl: process.env.NEXTAUTH_URL ?? "http://localhost:3000",
   }
 
   req.options = options
@@ -196,7 +200,7 @@ async function NextAuthHandler(req, res, userOptions) {
             "EmailSignin",
             "CredentialsSignin",
             "SessionRequired",
-          ].includes(error)
+          ].includes(error as string)
         ) {
           return res.redirect(`${baseUrl}${basePath}/signin?error=${error}`)
         }

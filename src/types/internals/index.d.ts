@@ -8,9 +8,9 @@ import {
   SessionOptions,
   Theme,
 } from ".."
-import { Provider } from "../providers"
-import { JWTOptions } from "../jwt"
-import { Adapter } from "../adapters"
+import { Provider } from "../../providers"
+import { JWTOptions } from "../../jwt"
+import { Adapter } from "../../adapters"
 
 export type InternalProvider = Provider & {
   signinUrl: string
@@ -43,7 +43,7 @@ export interface InternalOptions<
   pages: Partial<PagesOptions>
   jwt: JWTOptions
   events: Partial<EventCallbacks>
-  adapter: Adapter
+  adapter?: Adapter
   callbacks: CallbacksOptions
   cookies: CookiesOptions
   callbackUrl: string

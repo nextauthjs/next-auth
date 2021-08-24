@@ -1,11 +1,11 @@
-import { AccountNotLinkedError } from "../../lib/errors"
+import { AccountNotLinkedError } from "../../errors"
 import { fromDate } from "./utils"
 import { randomBytes, randomUUID } from "crypto"
-import { SessionToken } from "src/types/internals/cookies"
-import { InternalOptions } from "src/types/internals"
-import { AdapterSession, AdapterUser } from "src/types/adapters"
-import { JWT } from "src/jwt"
-import { Account, User } from "src/types"
+import { InternalOptions } from "../../types/internals"
+import { AdapterSession, AdapterUser } from "../../adapters"
+import { JWT } from "../../jwt"
+import { Account, User } from "../.."
+import { SessionToken } from "./cookie"
 
 /**
  * This function handles the complex flow of signing users in, and either creating,
@@ -129,9 +129,11 @@ export default async function callbackHandler(
           return { session, user, isNewUser }
         }
         // If the user is currently signed in, but the new account they are signing in
-        // with is already associated with another account, then we cannot link them
+        // with is already associated with another user, then we cannot link them
         // and need to return an error.
-        throw new AccountNotLinkedError()
+        throw new AccountNotLinkedError(
+          "The account is already associated with another user"
+        )
       }
       // If there is no active session, but the account being signed in with is already
       // associated with a valid user then create session to sign the user in.
@@ -183,7 +185,9 @@ export default async function callbackHandler(
         // We don't want to have two accounts with the same email address, and we don't
         // want to link them in case it's not safe to do so, so instead we prompt the user
         // to sign in via email to verify their identity and then link the accounts.
-        throw new AccountNotLinkedError()
+        throw new AccountNotLinkedError(
+          "Another account already exists with the same e-mail address"
+        )
       }
       // If the current user is not logged in and the profile isn't linked to any user
       // accounts (by email or provider account id)...

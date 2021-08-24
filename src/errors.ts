@@ -1,3 +1,6 @@
+import { EventCallbacks, LoggerInstance } from "."
+import { Adapter } from "./adapters"
+
 /**
  * Same as the default `Error`, but it is JSON serializable.
  * @source https://iaincollins.medium.com/error-handling-in-javascript-a6172ccdf9af
@@ -33,55 +36,56 @@ export class AccountNotLinkedError extends UnknownError {
   name = "AccountNotLinkedError"
 }
 
-export function upperSnake(s) {
+type Method = (...args: any[]) => Promise<any>
+
+export function upperSnake(s: string) {
   return s.replace(/([A-Z])/g, "_$1").toUpperCase()
 }
 
-export function capitalize(s) {
+export function capitalize(s: string) {
   return `${s[0].toUpperCase()}${s.slice(1)}`
 }
 
 /**
  * Wraps an object of methods and adds error handling.
- * @param {import("src/types").EventCallbacks} methods
- * @param {import("src/types").LoggerInstance} logger
- * @return {import("src/types").EventCallbacks}
  */
-export function eventsErrorHandler(methods, logger) {
-  return Object.entries(methods).reduce((acc, [name, method]) => {
-    acc[name] = async (...args) => {
+export function eventsErrorHandler(
+  methods: Partial<EventCallbacks>,
+  logger: LoggerInstance
+): Partial<EventCallbacks> {
+  return Object.keys(methods).reduce((acc, name) => {
+    acc[name] = async (...args: any[]) => {
       try {
+        const method: Method = methods[name]
         return await method(...args)
       } catch (e) {
         logger.error(`${upperSnake(name)}_EVENT_ERROR`, e)
       }
     }
     return acc
-  }, {})
+  }, methods)
 }
 
-/**
- * Handles adapter induced errors.
- * @param {import("src/types/adapters").Adapter} [adapter]
- * @param {import("src/types").LoggerInstance} logger
- * @return {import("src/types/adapters").Adapter}
- */
-export function adapterErrorHandler(adapter, logger) {
+/** Handles adapter induced errors. */
+export function adapterErrorHandler(
+  adapter: Adapter | undefined,
+  logger: LoggerInstance
+): Adapter | undefined {
   if (!adapter) return
 
-  return Object.keys(adapter).reduce((acc, method) => {
-    acc[method] = async (...args) => {
+  return Object.keys(adapter).reduce((acc, name) => {
+    acc[name] = async (...args: any[]) => {
       try {
-        logger.debug(`adapter_${method}`, ...args)
-        const adapterMethod = adapter[method]
-        return await adapterMethod(...args)
+        logger.debug(`adapter_${name}`, { args })
+        const method: Method = adapter[name as any]
+        return await method(...args)
       } catch (error) {
-        logger.error(`adapter_error_${method}`, error)
+        logger.error(`adapter_error_${name}`, error)
         const e = new UnknownError(error)
-        e.name = `${capitalize(method)}Error`
+        e.name = `${capitalize(name)}Error`
         throw e
       }
     }
     return acc
-  }, {})
+  }, adapter)
 }
