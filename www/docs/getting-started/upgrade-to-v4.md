@@ -190,7 +190,7 @@ The following new options are available when defining your Providers in the conf
 2. `token` replaces (`accessTokenUrl`, `headers`, `params`)
 3. `userinfo` (replaces `profileUrl`)
 
-When writing your own OAuth provider, the `profile` callback is expected to only return these fields by default from now on: `id`, `name`, `email`, and `image` at most. If any of these are missing values, they should be set to `null`.
+When submitting a new OAuth provider to the repository, the `profile` callback is expected to only return these fields from now on: `id`, `name`, `email`, and `image`. If any of these are missing values, they should be set to `null`.
 
 Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.20
 
