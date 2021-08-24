@@ -3,7 +3,10 @@
 // https://nextjs.org/docs/basic-features/supported-browsers-features
 
 module.exports = {
-  presets: ["@babel/preset-typescript"],
+  presets: [
+    ["@babel/preset-env", { targets: { node: 12 } }],
+    "@babel/preset-typescript",
+  ],
   plugins: [
     "@babel/plugin-proposal-optional-catch-binding",
     "@babel/plugin-transform-runtime",
@@ -13,7 +16,7 @@ module.exports = {
     {
       test: ["../src/react.tsx"],
       presets: [
-        ["@babel/preset-env", { targets: { ie: "11" } }],
+        ["@babel/preset-env", { targets: { ie: 11 } }],
         ["@babel/preset-react", { runtime: "automatic" }],
       ],
     },
