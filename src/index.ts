@@ -1,6 +1,6 @@
 import { Adapter } from "./adapters"
 import { Provider, CredentialInput, ProviderType } from "./providers"
-import { Awaitable } from "./types/internals/utils"
+import { Awaitable } from "./types/internals"
 import { TokenSetParameters } from "openid-client"
 import { JWT, JWTOptions } from "./jwt"
 

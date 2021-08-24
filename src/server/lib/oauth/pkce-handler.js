@@ -1,5 +1,5 @@
 import * as cookie from "../cookie"
-import * as jwt from "../../../lib/jwt"
+import * as jwt from "../../../jwt"
 import { generators } from "openid-client"
 
 const PKCE_LENGTH = 64
@@ -56,6 +56,7 @@ export async function createPKCE(req, res) {
  * Returns code_verifier if provider uses PKCE,
  * and clears the cookie afterwards.
  * @param {import("src/types/internals").NextAuthRequest} req
+ * @return {Promise<string | undefined>}
  */
 export async function usePKCECodeVerifier(req, res) {
   /** @type {import("src/providers").OAuthConfig} */

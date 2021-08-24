@@ -4,6 +4,8 @@ import { getState } from "./state-handler"
 import { usePKCECodeVerifier } from "./pkce-handler"
 import { OAuthCallbackError } from "../../errors"
 import { TokenSet } from "openid-client"
+import { Account, LoggerInstance, Profile } from "src"
+import { OAuthChecks, OAuthConfig } from "src/providers"
 
 /** @type {import("src/types/internals").NextAuthApiHandler<import("src/types/internals/oauth").GetProfileResult>} */
 export default async function oAuthCallback(req, res) {
@@ -28,12 +30,15 @@ export default async function oAuthCallback(req, res) {
       const client = await oAuth1Client(req.options)
       // Handle OAuth v1.x
       const { oauth_token, oauth_verifier } = req.query
-      const tokens = await client.getOAuthAccessToken(
+      // @ts-expect-error
+      const tokens: TokenSet = await client.getOAuthAccessToken(
         oauth_token,
+        // @ts-expect-error
         null,
         oauth_verifier
       )
-      let profile = await client.get(
+      // @ts-expect-error
+      let profile: Profile = await client.get(
         provider.profileUrl,
         tokens.oauth_token,
         tokens.oauth_token_secret
@@ -43,7 +48,7 @@ export default async function oAuthCallback(req, res) {
         profile = JSON.parse(profile)
       }
 
-      return getProfile({ profile, tokens, provider, logger })
+      return await getProfile({ profile, tokens, provider, logger })
     } catch (error) {
       logger.error("OAUTH_V1_GET_ACCESS_TOKEN_ERROR", error)
       throw error
@@ -56,8 +61,7 @@ export default async function oAuthCallback(req, res) {
     /** @type {import("openid-client").TokenSet} */
     let tokens
 
-    /** @type {import("src/providers").OAuthChecks} */
-    const checks = {
+    const checks: OAuthChecks = {
       code_verifier: await usePKCECodeVerifier(req, res),
       state: getState(req),
     }
@@ -102,20 +106,40 @@ export default async function oAuthCallback(req, res) {
     // TODO: Remove/extract to Apple provider?
     profile.user = JSON.parse(req.body.user ?? req.query.user ?? null)
 
-    return getProfile({ profile, provider, tokens, logger })
+    return await getProfile({ profile, provider, tokens, logger })
   } catch (error) {
     logger.error("OAUTH_CALLBACK_ERROR", { error, providerId: provider.id })
     throw new OAuthCallbackError(error)
   }
 }
 
+export interface GetProfileParams {
+  profile: Profile
+  tokens: TokenSet
+  provider: OAuthConfig
+  logger: LoggerInstance
+}
+
+export interface GetProfileResult {
+  // @ts-expect-error
+  profile: ReturnType<OAuthConfig["profile"]> | null
+  account: Omit<Account, "userId"> | null
+  OAuthProfile: Profile
+}
+
 /**
  * Returns profile, raw profile and auth provider details
  * @type {import("src/types/internals/oauth").GetProfile}
  */
-async function getProfile({ profile: OAuthProfile, tokens, provider, logger }) {
+async function getProfile({
+  profile: OAuthProfile,
+  tokens,
+  provider,
+  logger,
+}: GetProfileParams): Promise<GetProfileResult> {
   try {
     logger.debug("PROFILE_DATA", { OAuthProfile })
+    // @ts-expect-error
     const profile = await provider.profile(OAuthProfile, tokens)
     profile.email = profile.email?.toLowerCase()
     // Return profile, raw profile and auth provider details

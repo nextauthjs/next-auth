@@ -2,7 +2,7 @@ import { createTransport } from "nodemailer"
 
 import { CommonProviderOptions } from "."
 import { Options as SMTPConnectionOptions } from "nodemailer/lib/smtp-connection"
-import { Awaitable } from "../types/internals/utils"
+import { Awaitable } from "../types/internals"
 
 export interface EmailConfig extends CommonProviderOptions {
   type: "email"

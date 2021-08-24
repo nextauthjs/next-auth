@@ -71,8 +71,7 @@ export function BroadcastChannel(name = "nextauth.message") {
     receive(onReceive: (message: BroadcastMessage) => void) {
       const handler = (event) => {
         if (event.key !== name) return
-        /** @type {import("types/internals/react").BroadcastMessage} */
-        const message = JSON.parse(event.newValue)
+        const message: BroadcastMessage = JSON.parse(event.newValue)
         if (message?.event !== "session" || !message?.data) return
 
         onReceive(message)

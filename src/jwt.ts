@@ -1,7 +1,7 @@
 import crypto from "crypto"
 import jose from "jose"
 import logger from "./lib/logger"
-import { NextApiRequest } from "./types/internals/utils"
+import { NextApiRequest } from "next"
 
 export interface DefaultJWT extends Record<string, unknown> {
   name?: string | null

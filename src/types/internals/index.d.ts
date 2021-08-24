@@ -1,4 +1,5 @@
-import { Awaitable, NextApiRequest, NextApiResponse } from "./utils"
+import { NextApiRequest, NextApiResponse } from "next"
+
 import {
   CallbacksOptions,
   CookiesOptions,
@@ -7,7 +8,7 @@ import {
   PagesOptions,
   SessionOptions,
   Theme,
-} from ".."
+} from "../.."
 import { Provider } from "../../providers"
 import { JWTOptions } from "../../jwt"
 import { Adapter } from "../../adapters"
@@ -53,9 +54,11 @@ export interface NextAuthRequest extends NextApiRequest {
   options: InternalOptions
 }
 
-export type NextAuthResponse = NextApiResponse
+export type NextAuthResponse<T = any> = NextApiResponse<T>
 
-export type NextAuthApiHandler<R = void> = (
+export type NextAuthApiHandler<Result = void, Response = any> = (
   req: NextAuthRequest,
-  res: NextAuthResponse
-) => Awaitable<R>
+  res: NextAuthResponse<Response>
+) => Awaitable<Result>
+
+export type Awaitable<T> = T | PromiseLike<T>
