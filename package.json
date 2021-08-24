@@ -36,8 +36,8 @@
   },
   "scripts": {
     "build": "npm run build:js && npm run build:css",
-    "clean": "rm -rf client css lib providers server types index.d.ts index.js adapters.d.ts adapters.js jwt.d.ts jwt.js react.d.ts react.js",
-    "build:js": "npm run clean && tsc",
+    "clean": "rm -rf client css lib providers server types index.d.ts index.js adapters.d.ts jwt.d.ts jwt.js react.d.ts react.js",
+    "build:js": "npm run clean && tsc && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir . && node config/wrap-css.js",
     "dev:setup": "npm i && npm run build:css && cd app && npm i",
     "dev": "cd app && npm run dev",
@@ -53,6 +53,7 @@
   },
   "files": [
     "lib",
+    "types",
     "css",
     "index.d.ts",
     "index.js",
@@ -92,6 +93,7 @@
     "@babel/plugin-transform-runtime": "^7.14.5",
     "@babel/preset-env": "^7.14.7",
     "@babel/preset-react": "^7.14.5",
+    "@babel/preset-typescript": "^7.15.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
     "@testing-library/user-event": "^13.1.9",
@@ -103,6 +105,7 @@
     "@typescript-eslint/parser": "^4.29.2",
     "autoprefixer": "^10.2.6",
     "babel-jest": "^27.0.5",
+    "babel-plugin-jsx-pragmatic": "^1.0.2",
     "babel-preset-preact": "^2.0.0",
     "conventional-changelog-conventionalcommits": "4.6.0",
     "cssnano": "^5.0.6",
@@ -146,7 +149,9 @@
       "types",
       "www",
       ".next",
-      "dist"
+      "dist",
+      "/server",
+      "/react.js"
     ],
     "globals": {
       "localStorage": "readonly",
