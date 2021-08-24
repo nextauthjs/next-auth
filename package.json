@@ -53,7 +53,16 @@
   },
   "files": [
     "dist",
-    "types"
+    "lib",
+    "index.d.ts",
+    "index.js",
+    "adapters.d.ts",
+    "jwt.d.ts",
+    "jwt.js",
+    "react.d.ts",
+    "react.js",
+    "providers",
+    "server"
   ],
   "license": "ISC",
   "dependencies": {
