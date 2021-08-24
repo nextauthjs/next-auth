@@ -1,18 +1,16 @@
-// @ts-check
 import { randomBytes } from "crypto"
+import { EmailConfig } from "src/providers"
+import { InternalOptions, InternalProvider } from "src/types/internals"
 import { hashToken } from "../utils"
-
-/**
- * @typedef {import("src/providers").EmailConfig} EmailConfig
- */
 
 /**
  * Starts an e-mail login flow, by generating a token,
  * and sending it to the user's e-mail (with the help of a DB adapter)
- * @param {string} identifier
- * @param {import("src/types/internals").InternalOptions<EmailConfig & import("src/types/internals").InternalProvider>} options
  */
-export default async function email(identifier, options) {
+export default async function email(
+  identifier: string,
+  options: InternalOptions<EmailConfig & InternalProvider>
+) {
   const { baseUrl, basePath, adapter, provider, logger, callbackUrl } = options
 
   // Generate token
