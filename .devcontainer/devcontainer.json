@@ -3,20 +3,27 @@
   "build": {
     "dockerfile": "Dockerfile",
     // Update 'VARIANT' to pick a Node version: 12, 14, 16
-    "args": { "VARIANT": "16" }
+    "args": { "VARIANT": "16" },
+    "context": ".."
   },
 
   // Set *default* container specific settings.json values on container create.
   "settings": {},
 
   // Add the IDs of extensions you want installed when the container is created.
-  "extensions": ["dbaeumer.vscode-eslint"],
+  "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"],
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": {
+      "label": "next-auth-demo-app",
+      "onAutoForward": "notify"
+    }
+  },
 
   // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "cd app && npm install && npm run dev",
+  "postCreateCommand": "npm install && cd app && npm install && npm run dev",
 
   // Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
   "remoteUser": "node"
