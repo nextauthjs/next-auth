@@ -36,7 +36,7 @@
   },
   "scripts": {
     "build": "npm run build:js && npm run build:css",
-    "clean": "rm -rf client css lib providers server types index.d.ts index.js adapters.d.ts jwt.d.ts jwt.js react.d.ts react.js",
+    "clean": "rm -rf client css lib providers server types index.d.ts index.js adapters.d.ts jwt.d.ts jwt.js react.d.ts react.js internals.d.ts",
     "build:js": "npm run clean && tsc && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir . && node config/wrap-css.js",
     "dev:setup": "npm i && npm run build:css && cd app && npm i",
@@ -63,7 +63,8 @@
     "react.d.ts",
     "react.js",
     "providers",
-    "server"
+    "server",
+    "internals.d.ts"
   ],
   "license": "ISC",
   "dependencies": {

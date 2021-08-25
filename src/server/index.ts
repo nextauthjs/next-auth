@@ -36,7 +36,7 @@ async function NextAuthHandler(
   }
   // If debug enabled, set ENV VAR so that logger logs debug messages
   if (userOptions.debug) {
-    process.env._NEXTAUTH_DEBUG = true
+    ;(process.env._NEXTAUTH_DEBUG as any) = true
   }
 
   extendRes(req, res)

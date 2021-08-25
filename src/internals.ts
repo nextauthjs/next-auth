@@ -66,12 +66,3 @@ export type NextAuthApiHandler<Result = void, Response = any> = (
 ) => Awaitable<Result>
 
 export type Awaitable<T> = T | PromiseLike<T>
-
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace NodeJS {
-    interface ProcessEnv {
-      _NEXTAUTH_DEBUG?: boolean
-    }
-  }
-}

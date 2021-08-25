@@ -39,6 +39,7 @@ www/providers.json
 /jwt.js
 /react.d.ts
 /react.js
+/internals.d.ts
 
 # Development app
 app/next-auth
