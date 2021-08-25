@@ -3,6 +3,9 @@ import { Provider, CredentialInput, ProviderType } from "./providers"
 import { Awaitable } from "./types/internals"
 import { TokenSetParameters } from "openid-client"
 import { JWT, JWTOptions } from "./jwt"
+import { LoggerInstance } from "./lib/logger"
+
+export type { LoggerInstance }
 
 export { default } from "./server"
 /**
@@ -199,30 +202,6 @@ export interface NextAuthOptions {
  * [Pages](https://next-auth.js.org/configuration/pages)
  */
 export type Theme = "auto" | "dark" | "light"
-
-/**
- * Override any of the methods, and the rest will use the default logger.
- *
- * [Documentation](https://next-auth.js.org/configuration/options#logger)
- */
-export interface LoggerInstance {
-  warn: (
-    code:
-      | "JWT_AUTO_GENERATED_SIGNING_KEY"
-      | "JWT_AUTO_GENERATED_ENCRYPTION_KEY"
-      | "NEXTAUTH_URL"
-  ) => void
-  error: (
-    code: string,
-    /**
-     * Either an instance of (JSON serializable) Error
-     * or an object that contains some debug information.
-     * (Error is still available through `metadata.error`)
-     */
-    metadata: Error | { error: Error; [key: string]: unknown }
-  ) => void
-  debug: (code: string, metadata: unknown) => void
-}
 
 /**
  * Different tokens returned by OAuth Providers.

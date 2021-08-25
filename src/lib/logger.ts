@@ -12,8 +12,31 @@ function formatError(o) {
   return o
 }
 
-/** @type {import("src/types").LoggerInstance} */
-const _logger = {
+/**
+ * Override any of the methods, and the rest will use the default logger.
+ *
+ * [Documentation](https://next-auth.js.org/configuration/options#logger)
+ */
+export interface LoggerInstance {
+  warn: (
+    code:
+      | "JWT_AUTO_GENERATED_SIGNING_KEY"
+      | "JWT_AUTO_GENERATED_ENCRYPTION_KEY"
+      | "NEXTAUTH_URL"
+  ) => void
+  error: (
+    code: string,
+    /**
+     * Either an instance of (JSON serializable) Error
+     * or an object that contains some debug information.
+     * (Error is still available through `metadata.error`)
+     */
+    metadata: Error | { error: Error; [key: string]: unknown }
+  ) => void
+  debug: (code: string, metadata: unknown) => void
+}
+
+const _logger: LoggerInstance = {
   error(code, metadata) {
     metadata = formatError(metadata)
     console.error(
@@ -38,9 +61,8 @@ const _logger = {
 /**
  * Override the built-in logger.
  * Any `undefined` level will use the default logger.
- * @param {Partial<import("src/types").LoggerInstance>} newLogger
  */
-export function setLogger(newLogger = {}) {
+export function setLogger(newLogger: Partial<LoggerInstance> = {}) {
   if (newLogger.error) _logger.error = newLogger.error
   if (newLogger.warn) _logger.warn = newLogger.warn
   if (newLogger.debug) _logger.debug = newLogger.debug
@@ -48,13 +70,11 @@ export function setLogger(newLogger = {}) {
 
 export default _logger
 
-/**
- * Serializes client-side log messages and sends them to the server
- * @param {import("src/types").LoggerInstance} logger
- * @param {string} basePath
- * @return {import("src/types").LoggerInstance}
- */
-export function proxyLogger(logger = _logger, basePath) {
+/** Serializes client-side log messages and sends them to the server */
+export function proxyLogger(
+  logger: LoggerInstance = _logger,
+  basePath?: string
+): LoggerInstance {
   try {
     if (typeof window === "undefined") {
       return logger
@@ -77,7 +97,7 @@ export function proxyLogger(logger = _logger, basePath) {
         return fetch(url, { method: "POST", body, keepalive: true })
       }
     }
-    return clientLogger
+    return clientLogger as LoggerInstance
   } catch {
     return _logger
   }
