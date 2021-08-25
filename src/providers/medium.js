@@ -3,12 +3,9 @@ export default function Medium(options) {
     id: "medium",
     name: "Medium",
     type: "oauth",
-    version: "2.0",
-    scope: "basicProfile",
-    params: { grant_type: "authorization_code" },
-    accessTokenUrl: "https://api.medium.com/v1/tokens",
-    authorizationUrl: "https://medium.com/m/oauth/authorize?response_type=code",
-    profileUrl: "https://api.medium.com/v1/me",
+    authorization: "https://medium.com/m/oauth/authorize?scope=basicProfile",
+    token: "https://api.medium.com/v1/tokens",
+    userinfo: "https://api.medium.com/v1/me",
     profile(profile) {
       return {
         id: profile.data.id,
@@ -17,6 +14,6 @@ export default function Medium(options) {
         image: profile.data.imageUrl,
       }
     },
-    ...options,
+    options,
   }
 }

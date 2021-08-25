@@ -1,150 +1,133 @@
-import { decode as jwtDecode } from "jsonwebtoken"
-import oAuthClient from "./client"
+import { openidClient } from "./client"
+import { oAuth1Client } from "./client-legacy"
+import { getState } from "./state-handler"
+import { usePKCECodeVerifier } from "./pkce-handler"
 import { OAuthCallbackError } from "../../../lib/errors"
+import { TokenSet } from "openid-client"
 
-/** @param {import("types/internals").NextAuthRequest} req */
-export default async function oAuthCallback(req) {
-  const { provider, pkce, logger } = req.options
-  const client = oAuthClient(provider)
+/** @type {import("types/internals").NextAuthApiHandler<import("types/internals/oauth").GetProfileResult>} */
+export default async function oAuthCallback(req, res) {
+  const { logger } = req.options
 
-  if (provider.version?.startsWith("2.")) {
-    // The "user" object is specific to the Apple provider and is provided on first sign in
-    // e.g. {"name":{"firstName":"Johnny","lastName":"Appleseed"},"email":"johnny.appleseed@nextauth.com"}
-    let { code, user } = req.query // eslint-disable-line camelcase
+  /** @type {import("types/providers").OAuthConfig} */
+  const provider = req.options.provider
 
-    if (req.method === "POST") {
-      try {
-        const body = JSON.parse(JSON.stringify(req.body))
-        if (body.error) {
-          throw new Error(body.error)
-        }
+  const errorMessage = req.body.error ?? req.query.error
+  if (errorMessage) {
+    const error = new Error(errorMessage)
+    logger.error("OAUTH_CALLBACK_HANDLER_ERROR", {
+      error,
+      body: req.body,
+      providerId: provider.id,
+    })
+    throw error
+  }
 
-        code = body.code
-        user = body.user != null ? JSON.parse(body.user) : null
-      } catch (error) {
-        logger.error("OAUTH_CALLBACK_HANDLER_ERROR", {
-          error,
-          body: req.body,
-          providerId: provider.id,
-          code,
-        })
-        throw error
-      }
-    }
-
-    // REVIEW: Is this used by any of the providers?
-    // Pass authToken in header by default (unless 'useAuthTokenHeader: false' is set)
-    if (Object.prototype.hasOwnProperty.call(provider, "useAuthTokenHeader")) {
-      client.useAuthorizationHeaderforGET(provider.useAuthTokenHeader)
-    } else {
-      client.useAuthorizationHeaderforGET(true)
-    }
-
+  if (provider.version?.startsWith("1.")) {
     try {
+      const client = await oAuth1Client(req.options)
+      // Handle OAuth v1.x
+      const { oauth_token, oauth_verifier } = req.query
       const tokens = await client.getOAuthAccessToken(
-        code,
-        provider,
-        pkce.code_verifier
+        oauth_token,
+        null,
+        oauth_verifier
       )
-      let profileData
-      if (provider.idToken) {
-        if (!tokens?.id_token) {
-          throw new OAuthCallbackError("Missing JWT ID Token")
-        }
+      let profile = await client.get(
+        provider.profileUrl,
+        tokens.oauth_token,
+        tokens.oauth_token_secret
+      )
 
-        // Support services that use OpenID ID Tokens to encode profile data
-        profileData = jwtDecode(tokens.id_token, { json: true })
-      } else {
-        profileData = await client.get(provider, tokens.accessToken, tokens)
+      if (typeof profile === "string") {
+        profile = JSON.parse(profile)
       }
 
-      return getProfile({ profileData, provider, tokens, user }, logger)
+      return getProfile({ profile, tokens, provider, logger })
     } catch (error) {
-      logger.error("OAUTH_GET_ACCESS_TOKEN_ERROR", {
-        error,
-        providerId: provider.id,
-        code,
-      })
+      logger.error("OAUTH_V1_GET_ACCESS_TOKEN_ERROR", error)
       throw error
     }
   }
 
   try {
-    // Handle OAuth v1.x
-    // eslint-disable-next-line camelcase
-    const { oauth_token, oauth_verifier } = req.query
+    const client = await openidClient(req.options)
 
-    // eslint-disable-next-line camelcase
-    const { token_secret } = await client.getOAuthRequestToken(provider.params)
-    const tokens = await client.getOAuthAccessToken(
-      oauth_token,
-      token_secret,
-      oauth_verifier
-    )
-    const profileData = await client.get(
-      provider.profileUrl,
-      tokens.oauth_token,
-      tokens.oauth_token_secret
-    )
+    /** @type {import("openid-client").TokenSet} */
+    let tokens
 
-    return getProfile({ profileData, tokens, provider }, logger)
+    /** @type {import("types/providers").OAuthChecks} */
+    const checks = {
+      code_verifier: await usePKCECodeVerifier(req, res),
+      state: getState(req),
+    }
+    const params = { ...client.callbackParams(req), ...provider.token?.params }
+
+    if (provider.token?.request) {
+      const response = await provider.token.request({
+        provider,
+        params,
+        checks,
+        client,
+      })
+      tokens = new TokenSet(response.tokens)
+    } else if (provider.idToken) {
+      tokens = await client.callback(provider.callbackUrl, params, checks)
+    } else {
+      tokens = await client.oauthCallback(provider.callbackUrl, params, checks)
+    }
+
+    // REVIEW: How can scope be returned as an array?
+    if (Array.isArray(tokens.scope)) {
+      tokens.scope = tokens.scope.join(" ")
+    }
+
+    /** @type {import("types").Profile} */
+    let profile
+    if (provider.userinfo?.request) {
+      profile = await provider.userinfo.request({
+        provider,
+        tokens,
+        client,
+      })
+    } else if (provider.idToken) {
+      profile = tokens.claims()
+    } else {
+      profile = await client.userinfo(tokens, {
+        params: provider.userinfo?.params,
+      })
+    }
+
+    // If a user object is supplied (e.g. Apple provider) add it to the profile object
+    // TODO: Remove/extract to Apple provider?
+    profile.user = JSON.parse(req.body.user ?? req.query.user ?? null)
+
+    return getProfile({ profile, provider, tokens, logger })
   } catch (error) {
-    logger.error("OAUTH_V1_GET_ACCESS_TOKEN_ERROR", error)
-    throw error
+    logger.error("OAUTH_CALLBACK_ERROR", { error, providerId: provider.id })
+    throw new OAuthCallbackError(error)
   }
 }
 
 /**
- * //6/30/2020 @geraldnolan added userData parameter to attach additional data to the profileData object
  * Returns profile, raw profile and auth provider details
- * @param {{
- *   profileData: object | string
- *   tokens: {
- *     accessToken: string
- *     idToken?: string
- *     refreshToken?: string
- *     access_token: string
- *     expires_in?: string | Date | null
- *     refresh_token?: string
- *     id_token?: string
- *     token?: string
- *     token_secret?: string
- *     tokenSecret?: string
- *     params?: any
- *   }
- *   provider: import("../..").Provider
- *   user?: object
- * }} profileParams
- * @param {import("types").LoggerInstance} logger
+ * @type {import("types/internals/oauth").GetProfile}
  */
-async function getProfile({ profileData, tokens, provider, user }, logger) {
+async function getProfile({ profile: OAuthProfile, tokens, provider, logger }) {
   try {
-    // Convert profileData into an object if it's a string
-    if (typeof profileData === "string") {
-      profileData = JSON.parse(profileData)
-    }
-
-    // If a user object is supplied (e.g. Apple provider) add it to the profile object
-    if (user != null) {
-      profileData.user = user
-    }
-
-    logger.debug("PROFILE_DATA", { profile: profileData })
-
-    const profile = await provider.profile(profileData, tokens)
+    logger.debug("PROFILE_DATA", { OAuthProfile })
+    const profile = await provider.profile(OAuthProfile, tokens)
+    profile.email = profile.email?.toLowerCase()
     // Return profile, raw profile and auth provider details
     return {
-      profile: {
-        ...profile,
-        email: profile.email?.toLowerCase() ?? null,
-      },
+      profile,
       account: {
         provider: provider.id,
         type: provider.type,
-        id: profile.id,
+        providerAccountId: profile.id.toString(),
         ...tokens,
       },
-      OAuthProfile: profileData,
+      OAuthProfile,
     }
   } catch (error) {
     // If we didn't get a response either there was a problem with the provider
@@ -154,11 +137,11 @@ async function getProfile({ profileData, tokens, provider, user }, logger) {
     // all providers, so we return an empty object; the user should then be
     // redirected back to the sign up page. We log the error to help developers
     // who might be trying to debug this when configuring a new provider.
-    logger.error("OAUTH_PARSE_PROFILE_ERROR", { error, profileData })
+    logger.error("OAUTH_PARSE_PROFILE_ERROR", { error, OAuthProfile })
     return {
       profile: null,
       account: null,
-      OAuthProfile: profileData,
+      OAuthProfile,
     }
   }
 }

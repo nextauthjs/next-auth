@@ -8,12 +8,19 @@ import {
   SessionOptions,
   Theme,
 } from ".."
-import { AppProvider } from "../providers"
-import { JWTOptions } from "next-auth/jwt"
-import { Adapter } from "next-auth/adapters"
+import { Provider } from "../providers"
+import { JWTOptions } from "../jwt"
+import { Adapter } from "../adapters"
 
-export interface InternalOptions {
-  providers: AppProvider[]
+export type InternalProvider = Provider & {
+  signinUrl: string
+  callbackUrl: string
+}
+
+export interface InternalOptions<
+  P extends InternalProvider = InternalProvider
+> {
+  providers: InternalProvider[]
   baseUrl: string
   basePath: string
   action:
@@ -25,16 +32,7 @@ export interface InternalOptions {
     | "callback"
     | "verify-request"
     | "error"
-  pkce?: {
-    code_verifier?: string
-    /**
-     * Could be `"plain"`, but not recommended.
-     * We ignore it for now.
-     * @spec https://tools.ietf.org/html/rfc7636#section-4.2.
-     */
-    code_challenge_method?: "S256"
-  }
-  provider?: AppProvider
+  provider: P
   csrfToken?: string
   csrfTokenVerified?: boolean
   secret: string
@@ -42,10 +40,10 @@ export interface InternalOptions {
   debug: boolean
   logger: LoggerInstance
   session: Required<SessionOptions>
-  pages: PagesOptions
+  pages: Partial<PagesOptions>
   jwt: JWTOptions
-  events: EventCallbacks
-  adapter: ReturnType<Adapter>
+  events: Partial<EventCallbacks>
+  adapter: Adapter
   callbacks: CallbacksOptions
   cookies: CookiesOptions
   callbackUrl: string
@@ -57,7 +55,7 @@ export interface NextAuthRequest extends NextApiRequest {
 
 export type NextAuthResponse = NextApiResponse
 
-export type NextAuthApiHandler = (
+export type NextAuthApiHandler<R = void> = (
   req: NextAuthRequest,
   res: NextAuthResponse
-) => Awaitable<void>
+) => Awaitable<R>

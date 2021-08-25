@@ -309,7 +309,7 @@ The following parameters are always overridden server-side: `redirect_uri`, `sta
 - Client Side: **Yes**
 - Server Side: No
 
-Using the `signOut()` method ensures the user ends back on the page they started on after completing the sign out flow. It also handles CSRF tokens for you automatically.
+In order to logout, use the `signOut()` method to ensure the user ends back on the page they started on after completing the sign out flow. It also handles CSRF tokens for you automatically.
 
 It reloads the page in the browser when complete.
 
@@ -382,7 +382,7 @@ If every one of your pages needs to be protected, you can do this in `getInitial
 
 The session state is automatically synchronized across all open tabs/windows and they are all updated whenever they gain or lose focus or the state changes in any of them (e.g. a user signs in or out).
 
-If you have session expiry times of 30 days (the default) or more then you probably don't need to change any of the default options in the Provider. If you need to, you can can trigger an update of the session object across all tabs/windows by calling `getSession()` from a client side function.
+If you have session expiry times of 30 days (the default) or more then you probably don't need to change any of the default options in the Provider. If you need to, you can trigger an update of the session object across all tabs/windows by calling `getSession()` from a client side function.
 
 However, if you need to customize the session behavior and/or are using short session expiry times, you can pass options to the provider to customize the behavior of the `useSession()` hook.
 
