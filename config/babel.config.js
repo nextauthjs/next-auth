@@ -22,7 +22,7 @@ module.exports = (api) => {
       "@babel/plugin-proposal-optional-catch-binding",
       "@babel/plugin-transform-runtime",
     ],
-    ignore: ["../src/adapters.ts"],
+    ignore: ["../src/**/__tests__/**", "../src/adapters.ts"],
     comments: false,
     overrides: [
       {
