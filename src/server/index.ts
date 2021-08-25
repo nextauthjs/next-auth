@@ -36,7 +36,7 @@ async function NextAuthHandler(
   }
   // If debug enabled, set ENV VAR so that logger logs debug messages
   if (userOptions.debug) {
-    ;(process.env._NEXTAUTH_DEBUG as any) = true
+    process.env._NEXTAUTH_DEBUG = true
   }
 
   extendRes(req, res)
@@ -58,9 +58,8 @@ async function NextAuthHandler(
 
   delete req.query.nextauth
 
-  // @todo refactor all existing references to baseUrl and basePath
   const { basePath, baseUrl } = parseUrl(
-    process.env.NEXTAUTH_URL ?? (process.env.VERCEL_URL as any)
+    process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL
   )
 
   const cookies = {
@@ -75,8 +74,7 @@ async function NextAuthHandler(
 
   const providers = parseProviders({
     providers: userOptions.providers,
-    baseUrl,
-    basePath,
+    base: `${baseUrl}${basePath}`,
   })
 
   const provider = providers.find(({ id }) => id === providerId)

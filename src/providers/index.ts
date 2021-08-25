@@ -18,6 +18,7 @@ export interface CommonProviderOptions {
   id: string
   name: string
   type: ProviderType
+  options?: Record<string, unknown>
 }
 
 export type Provider = OAuthConfig | EmailConfig | CredentialsConfig
