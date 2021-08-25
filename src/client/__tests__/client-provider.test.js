@@ -1,7 +1,7 @@
 import { rest } from "msw"
 import { render, screen, waitFor } from "@testing-library/react"
 import { server, mockSession } from "./helpers/mocks"
-import { SessionProvider, useSession } from "../react"
+import { SessionProvider, useSession } from "../../react"
 
 beforeAll(() => {
   server.listen()

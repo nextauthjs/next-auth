@@ -144,7 +144,6 @@
     ],
     "ignorePatterns": [
       "node_modules",
-      "test",
       "next-env.d.ts",
       "types",
       "www",
