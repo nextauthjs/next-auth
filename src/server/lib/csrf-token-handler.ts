@@ -1,5 +1,5 @@
 import { createHash, randomBytes } from "crypto"
-import { NextAuthRequest, NextAuthResponse } from "../../types/internals"
+import { NextAuthRequest, NextAuthResponse } from "../../internals"
 import * as cookie from "./cookie"
 
 /**

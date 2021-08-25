@@ -8,7 +8,7 @@ import { merge } from "../../lib/merge"
  *  baseUrl: string
  *  basePath: string
  * }} options
- * @returns {import("src/types/internals").InternalOptions["providers"]}
+ * @returns {import("src/internals").InternalOptions["providers"]}
  */
 export default function parseProviders({ providers = [], baseUrl, basePath }) {
   const base = `${baseUrl}${basePath}`

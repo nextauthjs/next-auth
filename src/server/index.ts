@@ -17,7 +17,7 @@ import {
   InternalOptions,
   NextAuthRequest,
   NextAuthResponse,
-} from "../types/internals"
+} from "../internals"
 import createSecret from "./lib/utils"
 
 // To work properly in production with OAuth providers the NEXTAUTH_URL

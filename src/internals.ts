@@ -1,3 +1,5 @@
+// This file contains types used by next-auth internally
+
 import { NextApiRequest, NextApiResponse } from "next"
 
 import {
@@ -8,10 +10,11 @@ import {
   PagesOptions,
   SessionOptions,
   Theme,
-} from "../.."
-import { Provider } from "../../providers"
-import { JWTOptions } from "../../jwt"
-import { Adapter } from "../../adapters"
+} from "."
+
+import { Provider } from "./providers"
+import { JWTOptions } from "./jwt"
+import { Adapter } from "./adapters"
 
 export type InternalProvider = Provider & {
   signinUrl: string
@@ -56,6 +59,7 @@ export interface NextAuthRequest extends NextApiRequest {
 
 export type NextAuthResponse<T = any> = NextApiResponse<T>
 
+// eslint-disable-next-line @typescript-eslint/no-invalid-void-type
 export type NextAuthApiHandler<Result = void, Response = any> = (
   req: NextAuthRequest,
   res: NextAuthResponse<Response>

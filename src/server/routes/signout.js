@@ -2,8 +2,8 @@ import * as cookie from "../lib/cookie"
 
 /**
  * Handle requests to /api/auth/signout
- * @param {import("src/types/internals").NextAuthRequest} req
- * @param {import("src/types/internals").NextAuthResponse} res
+ * @param {import("src/internals").NextAuthRequest} req
+ * @param {import("src/internals").NextAuthResponse} res
  */
 export default async function signout(req, res) {
   const { adapter, cookies, events, jwt, callbackUrl, logger } = req.options

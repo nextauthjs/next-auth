@@ -21,7 +21,6 @@
     "./*.js",
     "./*.d.ts",
     "app",
-    "types",
     "**/tests",
     "**/__tests__",
     "config",

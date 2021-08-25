@@ -1,5 +1,5 @@
 import { Account, User } from "."
-import { Awaitable } from "./types/internals"
+import { Awaitable } from "./internals"
 
 export interface AdapterUser extends User {
   id: string

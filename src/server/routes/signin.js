@@ -3,7 +3,7 @@ import emailSignin from "../lib/email/signin"
 
 /**
  * Handle requests to /api/auth/signin
- * @type {import("src/types/internals").NextAuthApiHandler}
+ * @type {import("src/internals").NextAuthApiHandler}
  */
 export default async function signin(req, res) {
   const { baseUrl, basePath, adapter, callbacks, logger } = req.options
@@ -43,7 +43,7 @@ export default async function signin(req, res) {
     // If is an existing user return a user object (otherwise use placeholder)
     const user = (email ? await getUserByEmail(email) : null) ?? { email }
 
-    /** @type {import("src/types").Account} */
+    /** @type {import("src").Account} */
     const account = {
       providerAccountId: user.email,
       type: "email",

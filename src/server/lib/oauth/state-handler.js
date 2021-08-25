@@ -2,8 +2,8 @@ import { createHash } from "crypto"
 
 /**
  * Returns state if provider supports it
- * @param {import("src/types/internals").NextAuthRequest} req
- * @param {import("src/types/internals").NextAuthResponse} res
+ * @param {import("src/internals").NextAuthRequest} req
+ * @param {import("src/internals").NextAuthResponse} res
  */
 export function createState(req) {
   const { csrfToken, logger } = req.options
@@ -24,7 +24,7 @@ export function createState(req) {
 /**
  * Consistently recreate state from the csrfToken
  * if `provider.checks` supports `"state"`.
- * @param {import("src/types/internals").NextAuthRequest} req
+ * @param {import("src/internals").NextAuthRequest} req
  */
 export function getState({ options }) {
   /** @type {import("src/providers").OAuthConfig} */

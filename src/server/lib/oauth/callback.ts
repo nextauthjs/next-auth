@@ -7,8 +7,10 @@ import { TokenSet } from "openid-client"
 import { Account, LoggerInstance, Profile } from "src"
 import { OAuthChecks, OAuthConfig } from "src/providers"
 
-/** @type {import("src/types/internals").NextAuthApiHandler<import("src/types/internals/oauth").GetProfileResult>} */
-export default async function oAuthCallback(req, res) {
+export default async function oAuthCallback(
+  req,
+  res
+): Promise<GetProfileResult> {
   const { logger } = req.options
 
   /** @type {import("src/providers").OAuthConfig} */
@@ -86,8 +88,7 @@ export default async function oAuthCallback(req, res) {
       tokens.scope = tokens.scope.join(" ")
     }
 
-    /** @type {import("src/types").Profile} */
-    let profile
+    let profile: Profile
     if (provider.userinfo?.request) {
       profile = await provider.userinfo.request({
         provider,
@@ -127,10 +128,7 @@ export interface GetProfileResult {
   OAuthProfile: Profile
 }
 
-/**
- * Returns profile, raw profile and auth provider details
- * @type {import("src/types/internals/oauth").GetProfile}
- */
+/** Returns profile, raw profile and auth provider details */
 async function getProfile({
   profile: OAuthProfile,
   tokens,

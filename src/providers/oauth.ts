@@ -1,6 +1,6 @@
 import { CommonProviderOptions } from "../providers"
 import { Profile, TokenSet, User } from ".."
-import { Awaitable } from "../types/internals"
+import { Awaitable } from "../internals"
 
 import {
   AuthorizationParameters,

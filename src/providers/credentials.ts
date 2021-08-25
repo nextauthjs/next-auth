@@ -1,4 +1,4 @@
-import { Awaitable } from "../types/internals"
+import { Awaitable } from "../internals"
 import { NextApiRequest } from "next"
 import { CommonProviderOptions } from "."
 import { User } from ".."

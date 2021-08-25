@@ -1,6 +1,6 @@
 import { randomBytes } from "crypto"
 import { EmailConfig } from "src/providers"
-import { InternalOptions, InternalProvider } from "src/types/internals"
+import { InternalOptions, InternalProvider } from "src/internals"
 import { hashToken } from "../utils"
 
 /**
