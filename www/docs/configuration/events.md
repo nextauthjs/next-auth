@@ -25,7 +25,7 @@ The message will be an object and contain:
 
 ### signOut
 
-Sent when the user signs out.
+Sent when the user signs out (logout).
 
 The message object is the JWT, if using them, or the adapter session object for the session that is being ended.
 

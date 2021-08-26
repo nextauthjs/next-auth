@@ -23,7 +23,7 @@ For OAuth 2.0 providers that support the `state` option, the value of the `state
 
 #### `GET` /api/auth/signout
 
-Displays the sign out page.
+Displays the sign out page allowing the user to logout.
 
 #### `POST` /api/auth/signout
 
@@ -54,9 +54,9 @@ It can be used to dynamically generate custom sign up pages and to check what ca
 :::note
 The default base path is `/api/auth` but it is configurable by specifying a custom path in `NEXTAUTH_URL`
 
-e.g. 
+e.g.
 
- `NEXTAUTH_URL=https://example.com/myapp/api/authentication`
+`NEXTAUTH_URL=https://example.com/myapp/api/authentication`
 
 `/api/auth/signin` -> `/myapp/api/authentication/signin`
 :::
