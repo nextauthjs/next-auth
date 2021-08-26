@@ -3,9 +3,7 @@ id: oauth-provider
 title: OAuth Provider
 ---
 
-Authentication Providers in **NextAuth.js** are services that can be used to sign in a user.
-
-There's four ways a user can be signed in:
+Authentication Providers in **NextAuth.js** are OAuth definitions which allow your users to sign in with their favorite preexisting logins. You can use any of our many predefined providers, or write your own custom OAuth configuration.
 
 - [Using a built-in OAuth Provider](#oauth-providers) (e.g Github, Twitter, Google, etc...)
 - [Using a custom OAuth Provider](#using-a-custom-provider)
@@ -78,10 +76,10 @@ TWITTER_SECRET=YOUR_TWITTER_CLIENT_SECRET
 4. Now you can add the provider settings to the NextAuth options object. You can add as many OAuth providers as you like, as you can see `providers` is an array.
 
 ```js title="pages/api/auth/[...nextauth].js"
-import Providers from `next-auth/providers`
+import TwitterProvider from "next-auth/providers/"
 ...
 providers: [
-  Providers.Twitter({
+  TwitterProvider({
     clientId: process.env.TWITTER_ID,
     clientSecret: process.env.TWITTER_SECRET
   })
@@ -171,9 +169,9 @@ interface OAuthConfig {
 Even if you are using a built-in provider, you can override any of these options to tweak the default configuration.
 
 ```js title=[...nextauth].js
-import Providers from "next-auth/providers"
+import Auth0Provider from "next-auth/providers/auth0"
 
-Providers.Auth0({
+Auth0Provider({
   clientId: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET,
   domain: process.env.DOMAIN,
@@ -236,10 +234,10 @@ Otherwise, you can pass a more full set of URLs for each OAuth2.0 flow step, for
 Replace all the options in this JSON object with the ones from your custom provider - be sure to give it a unique ID and specify the required URLs, and finally add it to the providers array when initializing the library:
 
 ```js title="pages/api/auth/[...nextauth].js"
-import Providers from `next-auth/providers`
+import TwitterProvider from "next-auth/providers/twitter"
 ...
 providers: [
-  Providers.Twitter({
+  TwitterProvider({
     clientId: process.env.TWITTER_ID,
     clientSecret: process.env.TWITTER_SECRET,
   }),
@@ -263,8 +261,5 @@ You only need to add two changes:
 1. Add your config: [`src/providers/{provider}.js`](https://github.com/nextauthjs/next-auth/tree/main/src/providers)<br />
    • make sure you use a named default export, like this: `export default function YourProvider`
 2. Add provider documentation: [`www/docs/providers/{provider}.md`](https://github.com/nextauthjs/next-auth/tree/main/www/docs/providers)
-3. Add it to our [provider types](https://github.com/nextauthjs/next-auth/blob/main/types/providers.d.ts) (for TS projects)<br />
-   • you just need to add your new provider name to [this list](https://github.com/nextauthjs/next-auth/blob/main/types/providers.d.ts#L56-L97)<br />
-   • in case your new provider accepts some custom options, you can [add them here](https://github.com/nextauthjs/next-auth/blob/main/types/providers.d.ts#L48-L53)
 
-That's it! 🎉 Others will be able to discover this provider much more easily now!
+That's it! 🎉 Others will be able to discover and use this provider much more easily now!
