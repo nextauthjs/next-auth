@@ -31,9 +31,9 @@ export default NextAuth({
 
 Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.8 and https://github.com/nextauthjs/next-auth/pull/2361
 
-#### 1.1 Adapter API
+#### 1.4 Adapter API
 
-The adapter API has been rewritten and significantly simplified in NextAuth v4. Logic has been removed from the adapter's responsibility and is now provided by NextAuth core, such as hashing the token. 
+The Adapter API has been rewritten and significantly simplified in NextAuth v4. Logic has been removed from the adapter's responsibility and is now provided by NextAuth core, such as hashing the token. 
 
 **This does not require any changes from the user**, however if you are an adapter maintainer or are interested in writing your own adapter, you can find more information about this change in https://github.com/nextauthjs/next-auth/pull/2361 and release https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.22.
 
