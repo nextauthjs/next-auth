@@ -12,7 +12,7 @@ To get started, install the dependencies:
 `npm install --save-dev cypress cypress-social-logins @testing-library/cypress`
 
 :::note
-If you are using username/password based login, you will not need the `cypress-social-login` dependency.
+If you are using username/password based login, you will not need the `cypress-social-logins` dependency.
 :::
 
 Cypress will install and initialize the folder structure with example integration tests, a folder for plugins, etc.
@@ -43,7 +43,7 @@ Second, a cypress file for environment variables. These can be defined in `cypre
 
 You must change the login credentials you want to use, but you can also redefine the name of the `GOOGLE_*` variables if you're using a different provider. `COOKIE_NAME`, however, must be set to that value for NextAuth.js.
 
-Third, if you're using the `cypress-social-login` plugin, you must add this to your `/cypress/plugins/index.js` file like so:
+Third, if you're using the `cypress-social-logins` plugin, you must add this to your `/cypress/plugins/index.js` file like so:
 
 ```js title="cypress/plugins/index.js"
 const { GoogleSocialLogin } = require('cypress-social-logins').plugins
