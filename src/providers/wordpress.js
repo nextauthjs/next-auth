@@ -3,13 +3,10 @@ export default function WordPress(options) {
     id: "wordpress",
     name: "WordPress.com",
     type: "oauth",
-    version: "2.0",
-    scope: "auth",
-    params: { grant_type: "authorization_code" },
-    accessTokenUrl: "https://public-api.wordpress.com/oauth2/token",
-    authorizationUrl:
-      "https://public-api.wordpress.com/oauth2/authorize?response_type=code",
-    profileUrl: "https://public-api.wordpress.com/rest/v1/me",
+    authorization:
+      "https://public-api.wordpress.com/oauth2/authorize?scope=auth",
+    token: "https://public-api.wordpress.com/oauth2/token",
+    userinfo: "https://public-api.wordpress.com/rest/v1/me",
     profile(profile) {
       return {
         id: profile.ID,
@@ -18,6 +15,6 @@ export default function WordPress(options) {
         image: profile.avatar_URL,
       }
     },
-    ...options,
+    options,
   }
 }

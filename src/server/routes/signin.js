@@ -1,11 +1,9 @@
 import getAuthorizationUrl from "../lib/oauth/authorization-url"
 import emailSignin from "../lib/email/signin"
-import adapterErrorHandler from "../../adapters/error-handler"
 
 /**
  * Handle requests to /api/auth/signin
- * @param {import("types/internals").NextAuthRequest} req
- * @param {import("types/internals").NextAuthResponse} res
+ * @type {import("types/internals").NextAuthApiHandler}
  */
 export default async function signin(req, res) {
   const { baseUrl, basePath, adapter, callbacks, logger } = req.options
@@ -27,13 +25,12 @@ export default async function signin(req, res) {
     }
   } else if (provider.type === "email") {
     if (!adapter) {
-      logger.error("EMAIL_REQUIRES_ADAPTER_ERROR")
+      logger.error(
+        "EMAIL_REQUIRES_ADAPTER_ERROR",
+        new Error("E-mail login requires an adapter but it was undefined")
+      )
       return res.redirect(`${baseUrl}${basePath}/error?error=Configuration`)
     }
-    const { getUserByEmail } = adapterErrorHandler(
-      await adapter.getAdapter(req.options),
-      logger
-    )
 
     // Note: Technically the part of the email address local mailbox element
     // (everything before the @ symbol) should be treated as 'case sensitive'
@@ -42,16 +39,23 @@ export default async function signin(req, res) {
     // complains about this we can make strict RFC 2821 compliance an option.
     const email = req.body.email?.toLowerCase() ?? null
 
+    const { getUserByEmail } = adapter
     // If is an existing user return a user object (otherwise use placeholder)
-    const user = (await getUserByEmail(email)) || { email }
-    const account = { id: provider.id, type: "email", providerAccountId: email }
+    const user = (email ? await getUserByEmail(email) : null) ?? { email }
+
+    /** @type {import("types").Account} */
+    const account = {
+      providerAccountId: user.email,
+      type: "email",
+      provider: provider.id,
+    }
 
     // Check if user is allowed to sign in
     try {
       const signInCallbackResponse = await callbacks.signIn({
         user,
         account,
-        email: { email, verificationRequest: true },
+        email: { verificationRequest: true },
       })
       if (!signInCallbackResponse) {
         return res.redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
@@ -60,22 +64,23 @@ export default async function signin(req, res) {
       }
     } catch (error) {
       return res.redirect(
-        `${baseUrl}${basePath}/error?error=${encodeURIComponent(error)}`
+        `${baseUrl}${basePath}/error?${new URLSearchParams({ error })}}`
       )
     }
 
     try {
-      await emailSignin(email, provider, req.options)
+      await emailSignin(email, req.options)
     } catch (error) {
       logger.error("SIGNIN_EMAIL_ERROR", error)
       return res.redirect(`${baseUrl}${basePath}/error?error=EmailSignin`)
     }
 
-    return res.redirect(
-      `${baseUrl}${basePath}/verify-request?provider=${encodeURIComponent(
-        provider.id
-      )}&type=${encodeURIComponent(provider.type)}`
-    )
+    const params = new URLSearchParams({
+      provider: provider.id,
+      type: provider.type,
+    })
+    const url = `${baseUrl}${basePath}/verify-request?${params}`
+    return res.redirect(url)
   }
   return res.redirect(`${baseUrl}${basePath}/signin`)
 }

@@ -10,65 +10,58 @@ When using a MySQL database with the default adapter (TypeORM) all timestamp col
 :::
 
 ```sql
-CREATE TABLE accounts
-  (
-    id                   INT NOT NULL AUTO_INCREMENT,
-    compound_id          VARCHAR(255) NOT NULL,
-    user_id              INTEGER NOT NULL,
-    provider_type        VARCHAR(255) NOT NULL,
-    provider_id          VARCHAR(255) NOT NULL,
-    provider_account_id  VARCHAR(255) NOT NULL,
-    refresh_token        TEXT,
-    access_token         TEXT,
-    access_token_expires TIMESTAMP(6),
-    created_at           TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-    updated_at           TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-    PRIMARY KEY (id)
-  );
+CREATE TABLE accounts (
+  id SERIAL,
+  compound_id VARCHAR(255) NOT NULL,
+  user_id INTEGER NOT NULL,
+  `type` VARCHAR(255) NOT NULL,
+  provider VARCHAR(255) NOT NULL,
+  provider_account_id VARCHAR(255) NOT NULL,
+  refresh_token TEXT,
+  access_token TEXT,
+  access_token_expires TIMESTAMP,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+)
 
-CREATE TABLE sessions
-  (
-    id            INT NOT NULL AUTO_INCREMENT,
-    user_id       INTEGER NOT NULL,
-    expires       TIMESTAMP(6) NOT NULL,
-    session_token VARCHAR(255) NOT NULL,
-    access_token  VARCHAR(255) NOT NULL,
-    created_at    TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-    updated_at    TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-    PRIMARY KEY (id)
-  );
+CREATE TABLE sessions (
+  id SERIAL,
+  user_id INTEGER NOT NULL,
+  expires TIMESTAMP NOT NULL,
+  session_token VARCHAR(255) NOT NULL,
+  access_token VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+)
 
-CREATE TABLE users
-  (
-    id             INT NOT NULL AUTO_INCREMENT,
-    name           VARCHAR(255),
-    email          VARCHAR(255),
-    email_verified TIMESTAMP(6),
-    image          VARCHAR(255),
-    created_at     TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-    updated_at     TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-    PRIMARY KEY (id)
-  );
+CREATE TABLE users (
+  id SERIAL,
+  name VARCHAR(255),
+  email VARCHAR(255),
+  email_verified TIMESTAMP,
+  image TEXT,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+)
 
-CREATE TABLE verification_requests
-  (
-    id         INT NOT NULL AUTO_INCREMENT,
-    identifier VARCHAR(255) NOT NULL,
-    token      VARCHAR(255) NOT NULL,
-    expires    TIMESTAMP(6) NOT NULL,
-    created_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-    updated_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-    PRIMARY KEY (id)
-  );
+CREATE TABLE verification_tokens (
+  id SERIAL,
+  identifier VARCHAR(255) NOT NULL,
+  token VARCHAR(255) NOT NULL,
+  expires TIMESTAMP NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+)
 
 CREATE UNIQUE INDEX compound_id
   ON accounts(compound_id);
 
 CREATE INDEX provider_account_id
   ON accounts(provider_account_id);
-
-CREATE INDEX provider_id
-  ON accounts(provider_id);
 
 CREATE INDEX user_id
   ON accounts(user_id);

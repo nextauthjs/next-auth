@@ -1,10 +1,11 @@
-import Providers, { OAuthConfig } from "next-auth/providers"
-import { Adapter } from "next-auth/adapters"
+import { OAuthConfig } from "next-auth/providers"
+import { Adapter, AdapterSession, AdapterUser } from "next-auth/adapters"
 import NextAuth, * as NextAuthTypes from "next-auth"
 import { IncomingMessage, ServerResponse } from "http"
 import { Socket } from "net"
 import { NextApiRequest, NextApiResponse } from "internals/utils"
-import { InternalOptions } from "internals"
+import GitHubProvider from "next-auth/providers/github"
+import TwitterProvider from "next-auth/providers/twitter"
 
 const req: NextApiRequest = Object.assign(new IncomingMessage(new Socket()), {
   query: {},
@@ -32,111 +33,97 @@ const pageOptions = {
 
 const simpleConfig = {
   providers: [
-    Providers.GitHub({
+    GitHubProvider({
       clientId: "123",
       clientSecret: "123",
-      scope:
-        "user public_repo repo repo_deployment repo:status read:repo_hook read:org read:public_key read:gpg_key",
+      authorization: {
+        params: {
+          scope:
+            "user public_repo repo repo_deployment repo:status read:repo_hook read:org read:public_key read:gpg_key",
+        },
+      },
     }),
   ],
 }
 
-const exampleUser: NextAuthTypes.User = {
+const exampleUser: AdapterUser = {
+  id: "",
+  emailVerified: null,
   name: "",
   image: "",
   email: "",
 }
 
-const exampleSession: NextAuthTypes.Session = {
-  userId: "",
-  accessToken: "",
-  sessionToken: "",
-}
-
-const exampleVerificationRequest = {
+const exampleSession: AdapterSession = {
+  sessionToken: "0000",
   id: "",
-  identifier: "",
-  token: "",
+  userId: "",
   expires: new Date(),
 }
 
-const MyAdapter: Adapter<Record<string, unknown>> = () => {
+interface Client {
+  c(): void
+  r(): void
+  u(): void
+  d(): void
+}
+
+function MyAdapter(client: Client): Adapter {
   return {
-    async getAdapter(appOptions: InternalOptions) {
-      return {
-        async createUser(profile) {
-          return exampleUser
-        },
-        async getUser(id) {
-          return exampleUser
-        },
-        async getUserByEmail(email) {
-          return exampleUser
-        },
-        async getUserByProviderAccountId(providerId, providerAccountId) {
-          return exampleUser
-        },
-        async updateUser(user) {
-          return exampleUser
-        },
-        async linkAccount(
-          userId,
-          providerId,
-          providerType,
-          providerAccountId,
-          refreshToken,
-          accessToken,
-          accessTokenExpires
-        ) {
-          return undefined
-        },
-        async createSession(user) {
-          return exampleSession
-        },
-        async getSession(sessionToken) {
-          return exampleSession
-        },
-        async updateSession(session, force) {
-          return exampleSession
-        },
-        async deleteSession(sessionToken) {
-          return undefined
-        },
-        async createVerificationRequest(email, url, token, secret, provider) {
-          return undefined
-        },
-        async getVerificationRequest(
-          email,
-          verificationToken,
-          secret,
-          provider
-        ) {
-          return exampleVerificationRequest
-        },
-        async deleteVerificationRequest(
-          email,
-          verificationToken,
-          secret,
-          provider
-        ) {
-          return undefined
-        },
-      }
+    async createUser(profile) {
+      return exampleUser
+    },
+    async getUser(id) {
+      return exampleUser
+    },
+    async getUserByEmail(email) {
+      return exampleUser
+    },
+    async getUserByAccount(providerAccountId) {
+      return exampleUser
+    },
+    async updateUser(user) {
+      return exampleUser
+    },
+    async linkAccount({}) {
+      return undefined
+    },
+    async createSession(user) {
+      return exampleSession
+    },
+    async getSessionAndUser() {
+      return { session: exampleSession, user: exampleUser }
+    },
+    async updateSession(session) {
+      return exampleSession
+    },
+    async deleteSession(sessionToken) {
+      return exampleSession
+    },
+    async createVerificationToken(params) {
+      return undefined
+    },
+    async useVerificationToken(params) {
+      return null
     },
   }
 }
 
-const client = {} // Create a fake db client
+const client = { c() {}, r() {}, u() {}, d() {} } // Create a fake db client
 
 const allConfig: NextAuthTypes.NextAuthOptions = {
   providers: [
-    Providers.Twitter({
+    TwitterProvider({
       clientId: "123",
       clientSecret: "123",
     }),
   ],
   debug: true,
   secret: "my secret",
+  theme: "dark",
+  logger: {
+    debug: () => undefined,
+  },
   session: {
     jwt: true,
     maxAge: 365,
@@ -212,15 +199,17 @@ const customProvider: OAuthConfig<{
   name: "Google",
   type: "oauth",
   version: "2.0",
-  scope:
-    "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
-  params: { grant_type: "authorization_code" },
-  accessTokenUrl: "https://accounts.google.com/o/oauth2/token",
-  requestTokenUrl: "https://accounts.google.com/o/oauth2/auth",
-  authorizationUrl:
-    "https://accounts.google.com/o/oauth2/auth?response_type=code",
-  profileUrl: "https://www.googleapis.com/oauth2/v1/userinfo?alt=json",
-  async profile(profile, tokens) {
+  authorization: {
+    url: "https://accounts.google.com/o/oauth2/auth",
+    params: {
+      response_type: "code",
+      scope:
+        "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
+    },
+  },
+  token: "https://accounts.google.com/o/oauth2/token",
+  userinfo: "https://www.googleapis.com/oauth2/v1/userinfo?alt=json",
+  async profile(profile) {
     return {
       id: profile.id,
       name: profile.name,

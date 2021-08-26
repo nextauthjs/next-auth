@@ -17,7 +17,6 @@ export function createState(req) {
   // A hash of the NextAuth.js CSRF token is used as the state
   const state = createHash("sha256").update(csrfToken).digest("hex")
 
-  provider.authorizationParams = { ...provider.authorizationParams, state }
   logger.debug("OAUTH_CALLBACK_PROTECTION", { state, csrfToken })
   return state
 }

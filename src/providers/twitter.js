@@ -4,10 +4,9 @@ export default function Twitter(options) {
     name: "Twitter",
     type: "oauth",
     version: "1.0A",
-    scope: "",
+    authorization: "https://api.twitter.com/oauth/authenticate",
     accessTokenUrl: "https://api.twitter.com/oauth/access_token",
     requestTokenUrl: "https://api.twitter.com/oauth/request_token",
-    authorizationUrl: "https://api.twitter.com/oauth/authenticate",
     profileUrl:
       "https://api.twitter.com/1.1/account/verify_credentials.json?include_email=true",
     profile(profile) {
@@ -21,6 +20,6 @@ export default function Twitter(options) {
         ),
       }
     },
-    ...options,
+    options,
   }
 }

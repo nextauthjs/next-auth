@@ -172,7 +172,7 @@ If you are deploying directly to a particular cloud platform you may also want t
 
 Less serious or edge case issues (e.g. queries about compatibility with optional RFC specifications) can be raised as public issues on GitHub.
 
-If you discover what you think may be a potentially serious security problem, please contact a core team member via a private channel (e.g. via email to me@iaincollins.com) or raise a public issue requesting someone get in touch with you via whatever means you prefer for more details.
+If you discover what you think may be a potentially serious security problem, please contact a core team member via a private channel (e.g. via email to me@iaincollins.com or info@balazsorban.com and yo@ndo.dev) or raise a public issue requesting someone get in touch with you via whatever means you prefer for more details.
 
 </p>
 </details>

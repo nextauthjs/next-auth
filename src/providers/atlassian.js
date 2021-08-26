@@ -3,14 +3,15 @@ export default function Atlassian(options) {
     id: "atlassian",
     name: "Atlassian",
     type: "oauth",
-    version: "2.0",
-    params: {
-      grant_type: "authorization_code",
+    authorization: {
+      url: "https://auth.atlassian.com/oauth/authorize",
+      params: {
+        audience: "api.atlassian.com",
+        prompt: "consent",
+      },
     },
-    accessTokenUrl: "https://auth.atlassian.com/oauth/token",
-    authorizationUrl:
-      "https://auth.atlassian.com/authorize?audience=api.atlassian.com&response_type=code&prompt=consent",
-    profileUrl: "https://api.atlassian.com/me",
+    token: "https://auth.atlassian.com/oauth/token",
+    userinfo: "https://api.atlassian.com/me",
     profile(profile) {
       return {
         id: profile.account_id,
@@ -19,6 +20,6 @@ export default function Atlassian(options) {
         image: profile.picture,
       }
     },
-    ...options,
+    options,
   }
 }

@@ -47,7 +47,9 @@ export function useSession(options = {}) {
   const value = React.useContext(SessionContext)
 
   if (process.env.NODE_ENV !== "production" && !value) {
-    throw new Error("useSession must be wrapped in a SessionProvider")
+    throw new Error(
+      "[next-auth]: `useSession` must be wrapped in a <SessionProvider />"
+    )
   }
 
   const { required, onUnauthenticated } = options
@@ -74,6 +76,7 @@ export function useSession(options = {}) {
 
 export async function getSession(ctx) {
   const session = await _fetchData("session", ctx)
+
   if (ctx?.broadcast ?? true) {
     broadcast.post({ event: "session", data: { trigger: "getSession" } })
   }
@@ -166,8 +169,10 @@ export async function signOut(options = {}) {
       json: true,
     }),
   }
+
   const res = await fetch(`${baseUrl}/signout`, fetchOptions)
   const data = await res.json()
+
   broadcast.post({ event: "session", data: { trigger: "signout" } })
 
   if (redirect) {
@@ -185,9 +190,8 @@ export async function signOut(options = {}) {
 
 /** @param {import("types/react-client").SessionProviderProps} props */
 export function SessionProvider(props) {
-  const { children, baseUrl, basePath, staleTime = 0 } = props
+  const { children, basePath, staleTime = 0 } = props
 
-  if (baseUrl) __NEXTAUTH.baseUrl = baseUrl
   if (basePath) __NEXTAUTH.basePath = basePath
 
   /**
@@ -270,12 +274,13 @@ export function SessionProvider(props) {
   }, [])
 
   React.useEffect(() => {
-    // Set up visibility change
-    // Listen for document visibility change events and
-    // if visibility of the document changes, re-fetch the session.
+    // Listen for when the page is visible, if the user switches tabs
+    // and makes our tab visible again, re-fetch the session.
     const visibilityHandler = () => {
-      !document.hidden && __NEXTAUTH._getSession({ event: "visibilitychange" })
+      if (document.visibilityState === "visible")
+        __NEXTAUTH._getSession({ event: "visibilitychange" })
     }
+
     document.addEventListener("visibilitychange", visibilityHandler, false)
     return () =>
       document.removeEventListener("visibilitychange", visibilityHandler, false)

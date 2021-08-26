@@ -10,6 +10,7 @@ module.exports = {
         "getting-started/client",
         "getting-started/rest-api",
         "getting-started/typescript",
+        "getting-started/upgrade-v4",
       ],
     },
     {
@@ -55,7 +56,6 @@ module.exports = {
         },
         "adapters/fauna",
         "adapters/prisma",
-        "adapters/prisma-legacy",
         "adapters/dynamodb",
         "adapters/firebase",
         "adapters/pouchdb",

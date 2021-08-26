@@ -1,7 +1,7 @@
 import oAuthCallback from "../lib/oauth/callback"
 import callbackHandler from "../lib/callback-handler"
 import * as cookie from "../lib/cookie"
-import adapterErrorHandler from "../../adapters/error-handler"
+import { hashToken } from "../lib/utils"
 
 /**
  * Handle callbacks from login services
@@ -13,7 +13,6 @@ export default async function callback(req, res) {
     adapter,
     baseUrl,
     basePath,
-    secret,
     cookies,
     callbackUrl,
     pages,
@@ -24,7 +23,6 @@ export default async function callback(req, res) {
     logger,
   } = req.options
 
-  // Get session ID (if set)
   const sessionToken = req.cookies?.[cookies.sessionToken.name] ?? null
 
   if (provider.type === "oauth") {
@@ -56,31 +54,27 @@ export default async function callback(req, res) {
         // (that just means it's a new user signing in for the first time).
         let userOrProfile = profile
         if (adapter) {
-          const { getUserByProviderAccountId } = adapterErrorHandler(
-            await adapter.getAdapter(req.options),
-            logger
-          )
-          const userFromProviderAccountId = await getUserByProviderAccountId(
-            account.provider,
-            account.id
-          )
-          if (userFromProviderAccountId) {
-            userOrProfile = userFromProviderAccountId
-          }
+          const { getUserByAccount } = adapter
+          const userByAccount = await getUserByAccount({
+            providerAccountId: account.providerAccountId,
+            provider: provider.id,
+          })
+
+          if (userByAccount) userOrProfile = userByAccount
         }
 
         try {
-          const signInCallbackResponse = await callbacks.signIn({
+          const isAllowed = await callbacks.signIn({
             user: userOrProfile,
             account,
             profile: OAuthProfile,
           })
-          if (!signInCallbackResponse) {
+          if (!isAllowed) {
             return res.redirect(
               `${baseUrl}${basePath}/error?error=AccessDenied`
             )
-          } else if (typeof signInCallbackResponse === "string") {
-            return res.redirect(signInCallbackResponse)
+          } else if (typeof isAllowed === "string") {
+            return res.redirect(isAllowed)
           }
         } catch (error) {
           return res.redirect(
@@ -127,12 +121,12 @@ export default async function callback(req, res) {
         } else {
           // Save Session Token in cookie
           cookie.set(res, cookies.sessionToken.name, session.sessionToken, {
-            expires: session.expires || null,
+            expires: session.expires,
             ...cookies.sessionToken.options,
           })
         }
 
-        await events.signIn({ user, account, profile, isNewUser })
+        await events.signIn?.({ user, account, profile, isNewUser })
 
         // Handle first logins on new accounts
         // e.g. option to send users to a new account landing page on initial login
@@ -172,44 +166,40 @@ export default async function callback(req, res) {
   } else if (provider.type === "email") {
     try {
       if (!adapter) {
-        logger.error("EMAIL_REQUIRES_ADAPTER_ERROR")
+        logger.error(
+          "EMAIL_REQUIRES_ADAPTER_ERROR",
+          new Error("E-mail login requires an adapter but it was undefined")
+        )
         return res.redirect(`${baseUrl}${basePath}/error?error=Configuration`)
       }
 
-      const {
-        getVerificationRequest,
-        deleteVerificationRequest,
-        getUserByEmail,
-      } = adapterErrorHandler(await adapter.getAdapter(req.options), logger)
-      const verificationToken = req.query.token
-      const email = req.query.email
+      const { useVerificationToken, getUserByEmail } = adapter
 
-      // Verify email and verification token exist in database
-      const invite = await getVerificationRequest(
-        email,
-        verificationToken,
-        secret,
-        provider
-      )
-      if (!invite) {
+      const token = req.query.token
+      const identifier = req.query.email
+
+      const invite = await useVerificationToken({
+        identifier,
+        token: hashToken(token, req.options),
+      })
+
+      const invalidInvite = !invite || invite.expires.valueOf() < Date.now()
+      if (invalidInvite) {
         return res.redirect(`${baseUrl}${basePath}/error?error=Verification`)
       }
 
-      // If verification token is valid, delete verification request token from
-      // the database so it cannot be used again
-      await deleteVerificationRequest(
-        email,
-        verificationToken,
-        secret,
-        provider
-      )
+      // If it is an existing user, use that, otherwise use a placeholder
+      const profile = (identifier
+        ? await getUserByEmail(identifier)
+        : null) ?? {
+        email: identifier,
+      }
 
-      // If is an existing user return a user object (otherwise use placeholder)
-      const profile = (await getUserByEmail(email)) || { email }
+      /** @type {import("types").Account} */
       const account = {
-        id: provider.id,
+        providerAccountId: profile.email,
         type: "email",
-        providerAccountId: email,
+        provider: provider.id,
       }
 
       // Check if user is allowed to sign in
@@ -217,7 +207,7 @@ export default async function callback(req, res) {
         const signInCallbackResponse = await callbacks.signIn({
           user: profile,
           account,
-          email: { email },
+          email: { email: identifier },
         })
         if (!signInCallbackResponse) {
           return res.redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
@@ -251,7 +241,6 @@ export default async function callback(req, res) {
           token: defaultToken,
           user,
           account,
-          profile,
           isNewUser,
         })
 
@@ -269,12 +258,12 @@ export default async function callback(req, res) {
       } else {
         // Save Session Token in cookie
         cookie.set(res, cookies.sessionToken.name, session.sessionToken, {
-          expires: session.expires || null,
+          expires: session.expires,
           ...cookies.sessionToken.options,
         })
       }
 
-      await events.signIn({ user, account, profile, isNewUser })
+      await events.signIn?.({ user, account, isNewUser })
 
       // Handle first logins on new accounts
       // e.g. option to send users to a new account landing page on initial login
@@ -325,22 +314,20 @@ export default async function callback(req, res) {
 
     const credentials = req.body
 
-    let userObjectReturnedFromAuthorizeHandler
+    let user
     try {
-      userObjectReturnedFromAuthorizeHandler = await provider.authorize(
-        credentials,
-        { ...req, options: {}, cookies: {} }
-      )
-      if (!userObjectReturnedFromAuthorizeHandler) {
-        return res
-          .status(401)
-          .redirect(
-            `${baseUrl}${basePath}/error?error=CredentialsSignin&provider=${encodeURIComponent(
-              provider.id
-            )}`
-          )
-      } else if (typeof userObjectReturnedFromAuthorizeHandler === "string") {
-        return res.redirect(userObjectReturnedFromAuthorizeHandler)
+      user = await provider.authorize(credentials, {
+        ...req,
+        options: {},
+        cookies: {},
+      })
+      if (!user) {
+        return res.status(401).redirect(
+          `${baseUrl}${basePath}/error?${new URLSearchParams({
+            error: "CredentialsSignin",
+            provider: provider.id,
+          })}`
+        )
       }
     } catch (error) {
       return res.redirect(
@@ -348,21 +335,25 @@ export default async function callback(req, res) {
       )
     }
 
-    const user = userObjectReturnedFromAuthorizeHandler
-    const account = { id: provider.id, type: "credentials" }
+    /** @type {import("types").Account} */
+    const account = {
+      providerAccountId: user.id,
+      type: "credentials",
+      provider: provider.id,
+    }
 
     try {
-      const signInCallbackResponse = await callbacks.signIn({
+      const isAllowed = await callbacks.signIn({
         user,
         account,
         credentials,
       })
-      if (!signInCallbackResponse) {
+      if (!isAllowed) {
         return res
           .status(403)
           .redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
-      } else if (typeof signInCallbackResponse === "string") {
-        return res.redirect(signInCallbackResponse)
+      } else if (typeof isAllowed === "string") {
+        return res.redirect(isAllowed)
       }
     } catch (error) {
       return res.redirect(
@@ -376,11 +367,11 @@ export default async function callback(req, res) {
       picture: user.image,
       sub: user.id?.toString(),
     }
+
     const token = await callbacks.jwt({
       token: defaultToken,
       user,
       account,
-      profile: userObjectReturnedFromAuthorizeHandler,
       isNewUser: false,
     })
 
@@ -396,7 +387,7 @@ export default async function callback(req, res) {
       ...cookies.sessionToken.options,
     })
 
-    await events.signIn({ user, account })
+    await events.signIn?.({ user, account })
 
     return res.redirect(callbackUrl || baseUrl)
   }

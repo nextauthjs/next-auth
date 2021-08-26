@@ -2,7 +2,7 @@ import * as React from "react"
 import { IncomingMessage } from "http"
 import { Session } from "."
 import { ProviderType } from "./providers"
-import { SessionContextValue } from "internals/react"
+import { SessionContextValue } from "./internals/react"
 
 export interface CtxOrReq {
   req?: IncomingMessage
