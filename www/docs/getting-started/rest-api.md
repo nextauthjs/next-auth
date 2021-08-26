@@ -23,7 +23,7 @@ For OAuth 2.0 providers that support the `checks: ["state"]` option, the state p
 
 #### `GET` /api/auth/signout
 
-Displays the sign out page.
+Displays the sign out page allowing the user to logout.
 
 #### `POST` /api/auth/signout
 

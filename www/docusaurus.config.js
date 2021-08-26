@@ -84,10 +84,6 @@ module.exports = {
               label: "Next documentation",
               to: "https://next-auth-git-next.nextauthjs.vercel.app",
             },
-            {
-              label: "Next documentation",
-              to: "https://next-auth-git-next.nextauthjs.vercel.app",
-            },
           ],
         },
         {

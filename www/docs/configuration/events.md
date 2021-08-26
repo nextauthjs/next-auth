@@ -26,7 +26,7 @@ The message will be an object and contain:
 
 ### signOut
 
-Sent when the user signs out.
+Sent when the user signs out (logout).
 
 The message object will contain one of these depending on if you use JWT or database persisted sessions:
 

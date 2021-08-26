@@ -44,6 +44,21 @@ Options are passed to NextAuth.js when initializing it in an API route.
 
 An array of authentication providers for signing in (e.g. Google, Facebook, Twitter, GitHub, Email, etc) in any order. This can be one of the built-in providers or an object with a custom provider.
 
+If you need to use an asynchronous function in your provider instantiation, you can setup your `[...nextauth].js` file like so:
+
+```js
+export default async function handler(req, res) {
+  NextAuth(req, res, {
+    providers: [
+      Providers.IdentityServer4({
+        id: "identity-server",
+        clientSecret: await GetSecret(),
+      }),
+    ],
+  })
+}
+```
+
 See the [providers documentation](/configuration/providers) for a list of supported providers and how to use them.
 
 ---
@@ -123,6 +138,7 @@ jwt: {
   // Defaults to NextAuth.js secret if not explicitly specified.
   // This is used to generate the actual signingKey and produces a warning
   // message if not defined explicitly.
+  // You can generate a secret be using `openssl rand -base64 64`
   secret: 'INp8IvdIyeMcoGAgFGoA61DdBglwwSqnXJZkgz8PSnw',
   // You can generate a signing key using `jose newkey -s 512 -t oct -a HS512`
   // This gives you direct knowledge of the key used to sign the token so you can use it
@@ -140,6 +156,7 @@ jwt: {
   },
   // Set to true to use encryption. Defaults to false (signing only).
   encryption: true,
+  // You can generate an encryption key by using `npx node-jose-tools newkey -s 256 -t oct -a A256GCM -u enc`
   encryptionKey: "",
   // decryptionKey: encryptionKey,
   decryptionOptions: {

@@ -153,6 +153,8 @@ callbacks: {
 ...
 ```
 
+If you're using TypeScript, you will want to [augment the session type](/getting-started/typescript#module-augmentation).
+
 :::tip
 When using JSON Web Tokens the `jwt()` callback is invoked before the `session()` callback, so anything you add to the
 JSON Web Token will be immediately available in the session callback, like for example an `access_token` from a provider.
