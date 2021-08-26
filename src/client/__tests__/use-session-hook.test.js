@@ -68,7 +68,7 @@ test("when session is fetched, `data` will contain the session data and `status`
 test("when it fails to fetch the session, `data` will be null and `status` will be 'unauthenticated'", async () => {
   server.use(
     rest.get(`/api/auth/session`, (req, res, ctx) =>
-      res(ctx.status(404), ctx.json(null))
+      res(ctx.status(401), ctx.json({}))
     )
   )
 
@@ -85,7 +85,7 @@ test("when it fails to fetch the session, `data` will be null and `status` will 
 test("it'll redirect to sign-in page if the session is required and the user is not authenticated", async () => {
   server.use(
     rest.get(`/api/auth/session`, (req, res, ctx) =>
-      res(ctx.status(404), ctx.json(null))
+      res(ctx.status(401), ctx.json({}))
     )
   )
 
@@ -95,7 +95,7 @@ test("it'll redirect to sign-in page if the session is required and the user is 
 
   await waitFor(() => {
     expect(result.current.data).toEqual(null)
-    expect(result.current.status).toBe("unauthenticated")
+    expect(result.current.status).toBe("loading")
   })
 
   expect(locationReplace).toHaveBeenCalledTimes(1)
@@ -117,7 +117,7 @@ test("it'll redirect to sign-in page if the session is required and the user is 
 test("will call custom redirect logic if supplied when the user could not authenticate", async () => {
   server.use(
     rest.get(`/api/auth/session`, (req, res, ctx) =>
-      res(ctx.status(404), ctx.json(null))
+      res(ctx.status(401), ctx.json({}))
     )
   )
 
@@ -132,7 +132,7 @@ test("will call custom redirect logic if supplied when the user could not authen
 
   await waitFor(() => {
     expect(result.current.data).toEqual(null)
-    expect(result.current.status).toBe("unauthenticated")
+    expect(result.current.status).toBe("loading")
   })
 
   // it shouldn't have tried to re-direct to sign-in page (default behavior)

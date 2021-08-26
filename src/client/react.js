@@ -62,16 +62,14 @@ export function useSession(options = {}) {
         error: "SessionRequired",
         callbackUrl: window.location.href,
       })}`
-
-      if (onUnauthenticated) {
-        onUnauthenticated()
-      } else {
-        window.location.replace(url)
-      }
-
-      return { data: value.data, status: "unauthenticated" }
+      if (onUnauthenticated) onUnauthenticated()
+      else window.location.replace(url)
     }
-  }, [requiredAndNotLoading])
+  }, [requiredAndNotLoading, onUnauthenticated])
+
+  if (requiredAndNotLoading) {
+    return { data: value.data, status: "loading" }
+  }
 
   return value
 }
@@ -192,7 +190,7 @@ export async function signOut(options = {}) {
 
 /** @param {import("types/react-client").SessionProviderProps} props */
 export function SessionProvider(props) {
-  const { children, basePath } = props
+  const { children, basePath, staleTime = 0 } = props
 
   if (basePath) __NEXTAUTH.basePath = basePath
 
@@ -217,12 +215,9 @@ export function SessionProvider(props) {
     __NEXTAUTH._getSession = async ({ event } = {}) => {
       try {
         const storageEvent = event === "storage"
-        const forceUpdate = storageEvent || __NEXTAUTH._session === undefined
-        const neverStale = !event
-        const unAuthenticated = __NEXTAUTH._session === null
-        const notStale = _now() < __NEXTAUTH._lastSync
-
-        if (forceUpdate) {
+        // We should always update if we don't have a client session yet
+        // or if there are events from other tabs/windows
+        if (storageEvent || __NEXTAUTH._session === undefined) {
           __NEXTAUTH._lastSync = _now()
           __NEXTAUTH._session = await getSession({
             broadcast: !storageEvent,
@@ -230,10 +225,24 @@ export function SessionProvider(props) {
           setSession(__NEXTAUTH._session)
           return
         }
-        if (neverStale || unAuthenticated || notStale) {
+
+        if (
+          // If there is no time defined for when a session should be considered
+          // stale, then it's okay to use the value we have until an event is
+          // triggered which updates it
+          (staleTime === 0 && !event) ||
+          // If the client doesn't have a session then we don't need to call
+          // the server to check if it does (if they have signed in via another
+          // tab or window that will come through as a "stroage" event
+          // event anyway)
+          (staleTime > 0 && __NEXTAUTH._session === null) ||
+          // Bail out early if the client session is not stale yet
+          (staleTime > 0 && _now() < __NEXTAUTH._lastSync + staleTime)
+        ) {
           return
         }
 
+        // An event or session staleness occurred, update the client session.
         __NEXTAUTH._lastSync = _now()
         __NEXTAUTH._session = await getSession()
         setSession(__NEXTAUTH._session)
@@ -245,7 +254,7 @@ export function SessionProvider(props) {
     }
 
     __NEXTAUTH._getSession()
-  }, [])
+  }, [staleTime])
 
   React.useEffect(() => {
     // Listen for storage events and update session if event fired from
