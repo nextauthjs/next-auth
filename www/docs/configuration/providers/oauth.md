@@ -96,6 +96,7 @@ providers: [
 ### Options
 
 ```ts
+interface OAuthConfig {
 /**
    * OpenID Connect (OIDC) compliant providers can configure
    * this instead of `authorize`/`token`/`userinfo` options
@@ -164,6 +165,7 @@ providers: [
   region?: string
   issuer?: string
   tenantId?: string
+}
 ```
 
 Even if you are using a built-in provider, you can override any of these options to tweak the default configuration.
