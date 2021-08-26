@@ -19,7 +19,16 @@ module.exports = {
       collapsed: true,
       items: [
         "configuration/options",
-        "configuration/providers",
+        {
+          type: "category",
+          label: "Providers",
+          collapsed: true,
+          items: [
+            "configuration/providers/oauth-provider",
+            "configuration/providers/email-provider",
+            "configuration/providers/credentials-provider",
+          ],
+        },
         "configuration/databases",
         "configuration/pages",
         "configuration/callbacks",
