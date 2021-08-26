@@ -1,6 +1,5 @@
-import { useState } from "react"
 import { rest } from "msw"
-import { render, screen, waitFor } from "@testing-library/react"
+import { render, screen, waitFor, act } from "@testing-library/react"
 import { server, mockSession } from "./helpers/mocks"
 import { printFetchCalls } from "./helpers/utils"
 import { SessionProvider, useSession, signOut, getSession } from "../react"
@@ -15,6 +14,7 @@ beforeAll(() => {
 afterEach(() => {
   server.resetHandlers()
   changeTabVisibility(origDocumentVisibility)
+  fetchSpy.mockClear()
 })
 
 afterAll(() => {
@@ -22,8 +22,6 @@ afterAll(() => {
 })
 
 test("fetches the session once and re-uses it for different consumers", async () => {
-  fetchSpy.mockClear()
-
   render(<ProviderFlow />)
 
   expect(screen.getByTestId("session-1")).toHaveTextContent("loading")
@@ -45,16 +43,12 @@ test("fetches the session once and re-uses it for different consumers", async ()
 })
 
 test("when there's an existing session, it won't try to fetch a new one straightaway", async () => {
-  fetchSpy.mockClear()
-
   render(<ProviderFlow session={mockSession} />)
 
   expect(fetchSpy).not.toHaveBeenCalled()
 })
 
 test("will refetch the session when the browser tab becomes active again", async () => {
-  fetchSpy.mockClear()
-
   render(<ProviderFlow session={mockSession} />)
 
   expect(fetchSpy).not.toHaveBeenCalled()
@@ -79,8 +73,6 @@ test("will refetch the session when the browser tab becomes active again", async
 })
 
 test("will refetch the session if told to do so programmatically from another window", async () => {
-  fetchSpy.mockClear()
-
   render(<ProviderFlow session={mockSession} />)
 
   expect(fetchSpy).not.toHaveBeenCalled()
@@ -115,8 +107,6 @@ test("will refetch the session if told to do so programmatically from another wi
 test("allows to customize how often the session will be re-fetched through polling", () => {
   jest.useFakeTimers()
 
-  fetchSpy.mockClear()
-
   render(<ProviderFlow session={mockSession} refetchInterval={1} />)
 
   // we provided a mock session so it shouldn't try to fetch a new one
@@ -139,44 +129,7 @@ test("allows to customize how often the session will be re-fetched through polli
     `)
 })
 
-test.skip("allows to customize session stale time", () => {
-  jest.useFakeTimers()
-
-  fetchSpy.mockClear()
-
-  // session will become stale once 3s pass
-  render(<ProviderFlow session={mockSession} stateTime={3} />)
-
-  // we provided a mock session so it shouldn't try to fetch a new one
-  expect(fetchSpy).not.toHaveBeenCalled()
-
-  // make 1s pass
-  jest.advanceTimersByTime(1000)
-
-  // trigger a session check
-  changeTabVisibility("hidden")
-  changeTabVisibility("visible")
-
-  // should use the cached one and don't try to refetch a new one
-  expect(fetchSpy).not.toHaveBeenCalled()
-
-  // 3s have elapsed, the session should be stale now...
-  jest.advanceTimersByTime(2000)
-
-  // trigger a session check
-  changeTabVisibility("hidden")
-  changeTabVisibility("visible")
-
-  // the session was stale and should have been re-fetched
-  expect(fetchSpy).toHaveBeenCalledTimes(1)
-  expect(fetchSpy).toHaveBeenCalledWith("/api/auth/session", expect.anything())
-})
-
-test.todo(`what happens if you set "refetchInterval=1" and "staleTime=3"?`)
-
 test("allows to customize the URL for session fetching", async () => {
-  fetchSpy.mockClear()
-
   const myPath = "/api/v1/auth"
 
   server.use(
@@ -191,7 +144,6 @@ test("allows to customize the URL for session fetching", async () => {
   expect(fetchSpy).not.toHaveBeenCalled()
 
   // force a session refetch across all clients...
-  // TODO: remove this if we ever have a way to clean the cache in-memory session state...
   getSession()
 
   return waitFor(() => {
@@ -212,8 +164,8 @@ function ProviderFlow(props) {
   )
 }
 
-function SessionConsumer({ testId = 1 }) {
-  const { data: session, status } = useSession()
+function SessionConsumer({ testId = 1, ...rest }) {
+  const { data: session, status } = useSession(rest)
 
   return (
     <div data-testid={`session-${testId}`}>

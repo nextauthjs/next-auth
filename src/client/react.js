@@ -62,14 +62,16 @@ export function useSession(options = {}) {
         error: "SessionRequired",
         callbackUrl: window.location.href,
       })}`
-      if (onUnauthenticated) onUnauthenticated()
-      else window.location.replace(url)
-    }
-  }, [requiredAndNotLoading, onUnauthenticated])
 
-  if (requiredAndNotLoading) {
-    return { data: value.data, status: "loading" }
-  }
+      if (onUnauthenticated) {
+        onUnauthenticated()
+      } else {
+        window.location.replace(url)
+      }
+
+      return { data: value.data, status: "unauthenticated" }
+    }
+  }, [requiredAndNotLoading])
 
   return value
 }
@@ -169,8 +171,10 @@ export async function signOut(options = {}) {
       json: true,
     }),
   }
+
   const res = await fetch(`${baseUrl}/signout`, fetchOptions)
   const data = await res.json()
+
   broadcast.post({ event: "session", data: { trigger: "signout" } })
 
   if (redirect) {
@@ -188,7 +192,7 @@ export async function signOut(options = {}) {
 
 /** @param {import("types/react-client").SessionProviderProps} props */
 export function SessionProvider(props) {
-  const { children, basePath, staleTime = 0 } = props
+  const { children, basePath } = props
 
   if (basePath) __NEXTAUTH.basePath = basePath
 
@@ -214,10 +218,9 @@ export function SessionProvider(props) {
       try {
         const storageEvent = event === "storage"
         const forceUpdate = storageEvent || __NEXTAUTH._session === undefined
-        const neverStale = staleTime === 0 && !event
-        const unAuthenticated = staleTime > 0 && __NEXTAUTH._session === null
-        const notStale =
-          staleTime > 0 && _now() < __NEXTAUTH._lastSync + staleTime
+        const neverStale = !event
+        const unAuthenticated = __NEXTAUTH._session === null
+        const notStale = _now() < __NEXTAUTH._lastSync
 
         if (forceUpdate) {
           __NEXTAUTH._lastSync = _now()
@@ -242,7 +245,7 @@ export function SessionProvider(props) {
     }
 
     __NEXTAUTH._getSession()
-  }, [staleTime])
+  }, [])
 
   React.useEffect(() => {
     // Listen for storage events and update session if event fired from
