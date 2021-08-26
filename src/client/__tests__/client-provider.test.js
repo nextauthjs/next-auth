@@ -1,5 +1,5 @@
 import { rest } from "msw"
-import { render, screen, waitFor, act } from "@testing-library/react"
+import { render, screen, waitFor } from "@testing-library/react"
 import { server, mockSession } from "./helpers/mocks"
 import { printFetchCalls } from "./helpers/utils"
 import { SessionProvider, useSession, signOut, getSession } from "../react"
