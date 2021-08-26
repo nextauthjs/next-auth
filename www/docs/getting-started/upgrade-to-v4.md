@@ -3,11 +3,15 @@ id: upgrade-v4
 title: Upgrade Guide (v4)
 ---
 
-NextAuth.js version 4.0 included a few breaking changes from the last major version (3.0). So we're here to help you upgrade your applications as smoothly as possible. It should be possible to upgrade from any version of 3.x to the latest 4.0 release by following the next few migration steps.
+NextAuth.js version 4 included a few breaking changes from the last major version (3.x). So we're here to help you upgrade your applications as smoothly as possible. It should be possible to upgrade from any version of 3.x to the latest 4 release by following the next few migration steps.
 
 ### 1. Database Adapters
 
-1.1. If you use the built-in TypeORM or Prisma adapters, these have been removed from the core `next-auth` package to not balloon the package size for users who do not need a database. Thankfully the migration is super easy; you just need to install the external packages for your database now and change your `[...nextauth].js` config file a bit.
+You can find the official Adapters in the [nextauthjs/adapter](https://github.com/nextauthjs/adapters) repository. Although you can still [create your own](/tutorials/creating-a-database-adapter) with a new, [simplified Adapter API](https://github.com/nextauthjs/next-auth/pull/2361).
+
+1.1. If you use the built-in TypeORM or Prisma adapters, these have been removed from the core `next-auth` package to not balloon the package size for users who do not need a database. Thankfully the migration is super easy; you just need to install the external packages for your database and change the import in your `[...nextauth].js`. 
+
+The `database` option is gone, you can do the following instead:
 
 ```diff
 // [...nextauth].js
@@ -23,9 +27,7 @@ export default NextAuth({
 
 1.2. The `prisma-legacy` adapter has been removed, please use the [`@next-auth/prisma-adapter`](https:/npmjs.com/package/@next-auth/prisma-adapter) instead.
 
-1.3. The `typeorm-legacy` adapter will stay as-is for the time being, however we do aim to migrate this to individual lighter weight adapters for each database type in the future.
-
-See [nextauthjs/adapter](https://github.com/nextauthjs/adapters) for more details.
+1.3. The `typeorm-legacy` adapter will stay as-is for the time being, however we do aim to migrate this to individual lighter weight adapters for each database type in the future, or switch out `typeorm`.
 
 Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.8 and https://github.com/nextauthjs/next-auth/pull/2361
 
@@ -35,9 +37,9 @@ The adapter API has been rewritten and significantly simplified in NextAuth v4. 
 
 **This does not require any changes from the user**, however if you are an adapter maintainer or are interested in writing your own adapter, you can find more information about this change in https://github.com/nextauthjs/next-auth/pull/2361 and release https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.22.
 
-### 2. next-auth/react
+### 2. `next-auth/react`
 
-We've renamed the clientside import source to `next-auth/react`. To comply with this change, you will simply have to rename anywhere you were using `next-auth/client`.
+We've renamed the client-side import source to `next-auth/react`. To comply with this change, you will simply have to rename anywhere you were using `next-auth/client`.
 
 For example:
 
@@ -61,7 +63,7 @@ Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.1
 
 ### 3. SessionProvider
 
-Version 4.0 makes using the `SessionProvider` mandatory. This means that you will have to wrap any part of your application using `useSession` in this provider, if you were not doing so already. The `SessionProvider` has also undergone a few further changes:
+Version 4 makes using the `SessionProvider` mandatory. This means that you will have to wrap any part of your application using `useSession` in this provider, if you were not doing so already. The `SessionProvider` has also undergone a few further changes:
 
 - `Provider` is renamed to `SessionProvider`
 - The options prop is now flattened as the props of SessionProvider.
@@ -95,6 +97,8 @@ Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.1
 
 We have changed the arguments to our callbacks to the named parameters pattern. This way you don't have to use dummy `_` placeholders or other tricks.
 
+### Callbacks
+
 The signatures for the callback methods now look like this:
 
 ```diff
@@ -119,6 +123,23 @@ The signatures for the callback methods now look like this:
 
 Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.17
 
+### Events
+
+Two event signatures changes to also use the named parameters pattern, `signOut` and `updateUser`.
+
+```diff
+// [...nextauth].js
+...
+events: {
+- signOut(tokenOrSession),
++ signOut({ token, session }), // token if using JWT, session if DB persisted sessions.
+- updateUser(user)
++ updateUser({ user })
+}
+```
+
+Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.20
+
 ### 5. useSession Hook
 
 The `useSession` hook has been updated to return an object. This allows you to test states much more cleanly with the new `status` option.
@@ -133,9 +154,9 @@ The `useSession` hook has been updated to return an object. This allows you to t
 
 Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.18
 
-### 6. nodemailer
+### 6. `nodemailer`
 
-[`nodemailer`](https://npmjs.com/package/nodemailer) is no longer a dependency and added by default. If you are using the Email provider you can install it in your project manually, or use any other Email library in the [`sendVerificationRequest`](/configuration/providers#options-1#:~:text=sendVerificationRequest) callback.
+[`nodemailer`](https://npmjs.com/package/nodemailer) is no longer a dependency added by default. If you are using the Email provider you can install it in your project manually, or use any other Email library in the [`sendVerificationRequest`](/configuration/providers#options-1#:~:text=sendVerificationRequest) callback. This reduces bundle size for those not actually using the Email provider.
 
 Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.2
 
@@ -159,24 +180,7 @@ logger: {
 
 Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.19
 
-### 8. Events
-
-Two event signatures changes to also use the named parameters pattern, `signOut` and `updateUser`.
-
-```diff
-// [...nextauth].js
-...
-events: {
-- signOut(tokenOrSession),
-+ signOut({ token, session }), // token if using JWT, session if DB persisted sessions.
-- updateUser(user)
-+ updateUser({ user })
-}
-```
-
-Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.20
-
-### 9. Providers
+### 8. Providers
 
 Importing OAuth providers has changed a bit, they now need to be individually imported.
 
@@ -189,7 +193,7 @@ Importing OAuth providers has changed a bit, they now need to be individually im
 
 > 1. The `AzureADB2C` provider has been renamed `AzureAD`.
 > 2. The `Basecamp` provider has been removed, see explanation [here](https://github.com/basecamp/api/blob/master/sections/authentication.md#on-authenticating-users-via-oauth).
-> 3. The Github provider by default now will not request full write access to user profiles. If you need this scope, please add `user` to the scope option manually.
+> 3. The GitHub provider by default now will not request full write access to user profiles. If you need this scope, please add `user` to the scope option manually.
 
 The following new options are available when defining your Providers in the configuration:
 
@@ -197,7 +201,11 @@ The following new options are available when defining your Providers in the conf
 2. `token` replaces (`accessTokenUrl`, `headers`, `params`)
 3. `userinfo` (replaces `profileUrl`)
 
+Read more about it in this PR: (next-auth#2411)[https://github.com/nextauthjs/next-auth/pull/2411#issue-693918157]
+
 When submitting a new OAuth provider to the repository, the `profile` callback is expected to only return these fields from now on: `id`, `name`, `email`, and `image`. If any of these are missing values, they should be set to `null`.
+
+Also worth noting that the `id` is expected to be returned as a `string` type (For example if your provider returns it as a number, you can simply cast it by the `.toString()` method). This makes the returned profile comply across providers/accounts/adapters, and will hopefully cause less confusion.
 
 Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.20
 
