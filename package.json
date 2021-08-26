@@ -40,8 +40,7 @@
     "prepublishOnly": "npm run build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "version:pr": "node ./config/version-pr",
-    "website": "cd www && npm run start"
+    "version:pr": "node ./config/version-pr"
   },
   "files": [
     "dist",
@@ -135,7 +134,6 @@
       "test",
       "next-env.d.ts",
       "types",
-      "www",
       ".next",
       "dist"
     ],
