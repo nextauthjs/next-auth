@@ -157,11 +157,6 @@ export interface SessionProviderProps {
   baseUrl?: string
   basePath?: string
   /**
-   * The amount of time (in seconds) after a session should be considered stale.
-   * If set to `0` (default), the session will never be re-fetched.
-   */
-  staleTime?: number
-  /**
    * A time interval (in seconds) after which the session will be re-fetched.
    * If set to `0` (default), the session is not polled.
    */
