@@ -1,6 +1,14 @@
+import { Profile } from ".."
 import { OAuthConfig, OAuthUserConfig } from "./oauth"
 
-export default function Google(options: OAuthUserConfig): OAuthConfig {
+export interface GoogleProfile extends Profile {
+  sub: string
+  picture: string
+}
+
+export default function Google<P extends GoogleProfile>(
+  options: OAuthUserConfig
+): OAuthConfig<P> {
   return {
     id: "google",
     name: "Google",
@@ -9,7 +17,7 @@ export default function Google(options: OAuthUserConfig): OAuthConfig {
     authorization: { params: { scope: "openid email profile" } },
     idToken: true,
     checks: ["pkce", "state"],
-    profile(profile: any) {
+    profile(profile) {
       return {
         id: profile.sub,
         name: profile.name,
@@ -18,5 +26,5 @@ export default function Google(options: OAuthUserConfig): OAuthConfig {
       }
     },
     options,
-  } as any
+  }
 }

@@ -110,8 +110,8 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
   requestTokenUrl?: string
   profile?: (profile: P, tokens: TokenSet) => Awaitable<User & { id: string }>
   checks?: ChecksType | ChecksType[]
-  clientId: string
-  clientSecret:
+  clientId?: string
+  clientSecret?:
     | string
     // TODO: only allow for Apple
     | Record<"appleId" | "teamId" | "privateKey" | "keyId", string>
@@ -142,6 +142,7 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
 export type OAuthUserConfig<P extends Record<string, unknown> = Profile> = Omit<
   Partial<OAuthConfig<P>>,
   "options" | "type"
->
+> &
+  Required<Pick<OAuthConfig<P>, "clientId" | "clientSecret">>
 
 export type OAuthProvider = (options: Partial<OAuthConfig>) => OAuthConfig
