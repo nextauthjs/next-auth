@@ -1,5 +1,14 @@
-/** @type {import(".").OAuthProvider} */
-export default function Facebook(options) {
+import { Profile } from "src"
+import { OAuthConfig, OAuthUserConfig } from "./oauth"
+
+export interface FacebookProfile extends Profile {
+  id: string
+  picture: { data: { url: string } }
+}
+
+export default function Facebook<P extends FacebookProfile>(
+  options: OAuthUserConfig<P>
+): OAuthConfig<P> {
   return {
     id: "facebook",
     name: "Facebook",
@@ -10,9 +19,11 @@ export default function Facebook(options) {
       url: "https://graph.facebook.com/me",
       // https://developers.facebook.com/docs/graph-api/reference/user/#fields
       params: { fields: "id,name,email,picture" },
-      request({ tokens, client, provider }) {
-        return client.userinfo(tokens.access_token, {
-          params: provider.userinfo.params,
+      async request({ tokens, client, provider }) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return await client.userinfo(tokens.access_token!, {
+          // @ts-expect-error
+          params: provider.userinfo?.params,
         })
       },
     },
