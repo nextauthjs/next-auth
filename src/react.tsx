@@ -91,7 +91,9 @@ export function useSession<R extends boolean>(options: UseSessionOptions<R>) {
   // @ts-expect-error Satisfy TS if branch on line below
   const value: SessionContextValue<R> = React.useContext(SessionContext)
   if (!value && process.env.NODE_ENV !== "production") {
-    throw new Error("useSession must be wrapped in a SessionProvider")
+    throw new Error(
+      "[next-auth]: `useSession` must be wrapped in a <SessionProvider />"
+    )
   }
 
   const { required, onUnauthenticated } = options ?? {}
@@ -362,9 +364,8 @@ export interface SessionProviderProps {
  * [Documentation](https://next-auth.js.org/getting-started/client#sessionprovider)
  */
 export function SessionProvider(props: SessionProviderProps) {
-  const { children, baseUrl, basePath, staleTime = 0 } = props
+  const { children, basePath, staleTime = 0 } = props
 
-  if (baseUrl) __NEXTAUTH.baseUrl = baseUrl
   if (basePath) __NEXTAUTH.basePath = basePath
 
   /**
@@ -447,11 +448,11 @@ export function SessionProvider(props: SessionProviderProps) {
   }, [])
 
   React.useEffect(() => {
-    // Set up visibility change
-    // Listen for document visibility change events and
-    // if visibility of the document changes, re-fetch the session.
+    // Listen for when the page is visible, if the user switches tabs
+    // and makes our tab visible again, re-fetch the session.
     const visibilityHandler = () => {
-      !document.hidden && __NEXTAUTH._getSession({ event: "visibilitychange" })
+      if (document.visibilityState === "visible")
+        __NEXTAUTH._getSession({ event: "visibilitychange" })
     }
     document.addEventListener("visibilitychange", visibilityHandler, false)
     return () =>

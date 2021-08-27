@@ -49,7 +49,7 @@
     "prepublishOnly": "npm run build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "website": "cd www && npm run start"
+    "version:pr": "node ./config/version-pr"
   },
   "files": [
     "lib",
@@ -97,6 +97,7 @@
     "@babel/preset-typescript": "^7.15.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
+    "@testing-library/react-hooks": "^7.0.1",
     "@testing-library/user-event": "^13.1.9",
     "@types/nodemailer": "^6.4.4",
     "@types/oauth": "^0.9.1",
@@ -147,7 +148,6 @@
       "node_modules",
       "next-env.d.ts",
       "types",
-      "www",
       ".next",
       "dist",
       "/server",

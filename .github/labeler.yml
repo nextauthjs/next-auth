@@ -2,23 +2,15 @@ test:
   - test/**/*
   - types/tests/**/*
 
-documentation:
-  - www/**/*
-  - ./**/*.md
-
 providers:
   - src/providers/**/*
-  - www/docs/configuration/providers.md
   - test/integration/**/*
 
 adapters:
   - src/adapters/**/*
-  - www/docs/schemas/adapters.md
 
 databases:
-  - www/docs/schemas/*.md
   - test/docker/databases/**/*
-  - www/docs/configuration/databases.md
   - test/fixtures/**/*
 
 core:
@@ -29,11 +21,9 @@ style:
 
 client:
   - src/client/**/*
-  - www/docs/getting-started/client.md
 
 pages:
   - src/server/pages/**/*
-  - www/docs/configuration/pages.md
 
 TypeScript:
   - types/**/*

@@ -19,12 +19,11 @@ node_modules
 # Build dirs
 .next
 /build
-/www/build
+/dist
 
 # Generated files
 .docusaurus
 .cache-loader
-www/providers.json
 /internals
 /providers
 /client
