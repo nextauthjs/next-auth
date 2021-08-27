@@ -190,7 +190,7 @@ export async function signOut(options = {}) {
 
 /** @param {import("types/react-client").SessionProviderProps} props */
 export function SessionProvider(props) {
-  const { children, basePath, staleTime = 0 } = props
+  const { children, basePath } = props
 
   if (basePath) __NEXTAUTH.basePath = basePath
 
@@ -230,14 +230,14 @@ export function SessionProvider(props) {
           // If there is no time defined for when a session should be considered
           // stale, then it's okay to use the value we have until an event is
           // triggered which updates it
-          (staleTime === 0 && !event) ||
+          !event ||
           // If the client doesn't have a session then we don't need to call
           // the server to check if it does (if they have signed in via another
           // tab or window that will come through as a "stroage" event
           // event anyway)
-          (staleTime > 0 && __NEXTAUTH._session === null) ||
+          __NEXTAUTH._session === null ||
           // Bail out early if the client session is not stale yet
-          (staleTime > 0 && _now() < __NEXTAUTH._lastSync + staleTime)
+          _now() < __NEXTAUTH._lastSync
         ) {
           return
         }
@@ -254,7 +254,7 @@ export function SessionProvider(props) {
     }
 
     __NEXTAUTH._getSession()
-  }, [staleTime])
+  }, [])
 
   React.useEffect(() => {
     // Listen for storage events and update session if event fired from
@@ -320,7 +320,7 @@ export function SessionProvider(props) {
  * If passed 'appContext' via getInitialProps() in _app.js
  * then get the req object from ctx and use that for the
  * req value to allow _fetchData to
- * work seemlessly in getInitialProps() on server side
+ * work seamlessly in getInitialProps() on server side
  * pages *and* in _app.js.
  */
 async function _fetchData(path, { ctx, req = ctx?.req } = {}) {

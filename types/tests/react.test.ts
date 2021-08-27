@@ -72,7 +72,6 @@ client.SessionProvider({
   session: clientSession,
   baseUrl: "https://foo.com",
   basePath: "/",
-  staleTime: 1234,
 })
 
 // $ExpectType ReactElement<any, any> | null
@@ -94,6 +93,5 @@ client.SessionProvider({
   },
   baseUrl: "https://foo.com",
   basePath: "/",
-  staleTime: 1234,
   refetchInterval: 4321,
 })
