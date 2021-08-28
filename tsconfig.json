@@ -16,6 +16,7 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "declaration": true,
+    "stripInternal": true
   },
   "exclude": [
     "./*.js",

@@ -1,5 +1,3 @@
-// This file contains types used by next-auth internally
-
 import type { NextApiRequest, NextApiResponse } from "next"
 
 import type {
@@ -16,11 +14,17 @@ import type { Provider } from "./providers"
 import type { JWTOptions } from "./jwt"
 import type { Adapter } from "./adapters"
 
+export type Awaitable<T> = T | PromiseLike<T>
+
+// Below are types that are only supposed be used by next-auth internally
+
+/** @internal */
 export type InternalProvider = Provider & {
   signinUrl: string
   callbackUrl: string
 }
 
+/** @internal */
 export interface InternalOptions<
   P extends InternalProvider = InternalProvider
 > {
@@ -53,16 +57,17 @@ export interface InternalOptions<
   callbackUrl: string
 }
 
+/** @internal */
 export interface NextAuthRequest extends NextApiRequest {
   options: InternalOptions
 }
 
+/** @internal */
 export type NextAuthResponse<T = any> = NextApiResponse<T>
 
+/** @internal */
 // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
 export type NextAuthApiHandler<Result = void, Response = any> = (
   req: NextAuthRequest,
   res: NextAuthResponse<Response>
 ) => Awaitable<Result>
-
-export type Awaitable<T> = T | PromiseLike<T>

@@ -30,7 +30,7 @@ module.exports = (api) => {
     comments: false,
     overrides: [
       {
-        test: ["../src/react.tsx"],
+        test: ["../src/react/index.tsx"],
         presets: [
           ["@babel/preset-env", { targets: { ie: 11 } }],
           ["@babel/preset-react", { runtime: "automatic" }],
