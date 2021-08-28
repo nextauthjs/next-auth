@@ -9,33 +9,31 @@
 // We use HTTP POST requests with CSRF Tokens to protect against CSRF attacks.
 
 import * as React from "react"
-import _logger, { proxyLogger } from "./lib/logger"
-import parseUrl from "./lib/parse-url"
-import { Session } from "."
-import { ProviderType } from "./providers"
+import _logger, { proxyLogger } from "../lib/logger"
+import parseUrl from "../lib/parse-url"
+import { Session } from ".."
 import {
   BroadcastChannel,
   CtxOrReq,
   apiBaseUrl,
   fetchData,
   now,
-} from "./lib/client"
+  NextAuthClientConfig,
+} from "../lib/client"
 
-export interface NextAuthClientConfig {
-  baseUrl: string
-  basePath: string
-  baseUrlServer: string
-  basePathServer: string
-  /** Stores last session response */
-  _session?: Session | null | undefined
-  /** Used for timestamp since last sycned (in seconds) */
-  _lastSync: number
-  /**
-   * Stores the `SessionProvider`'s session update method to be able to
-   * trigger session updates from places like `signIn` or `signOut`
-   */
-  _getSession: (...args: any[]) => any
-}
+import type {
+  ClientSafeProvider,
+  RedirectableProvider,
+  SessionProviderProps,
+  SignInAuthorisationParams,
+  SignInOptions,
+  SignInResponse,
+  SignOutParams,
+  SignOutResponse,
+  UseSessionOptions,
+} from "./types"
+
+export * from "./types"
 
 // This behaviour mirrors the default behaviour for getting the site name that
 // happens server side in server/index.js
@@ -74,12 +72,6 @@ export type SessionContextValue<R extends boolean = false> = R extends true
 const SessionContext = React.createContext<SessionContextValue | undefined>(
   undefined
 )
-
-export interface UseSessionOptions<R extends boolean> {
-  required: R
-  /** Defaults to `signIn` */
-  onUnauthenticated?: () => void
-}
 
 /**
  * React Hook that gives you access
@@ -155,16 +147,6 @@ export async function getCsrfToken(params?: CtxOrReq) {
   return response?.csrfToken
 }
 
-export interface ClientSafeProvider {
-  id: string
-  name: string
-  type: ProviderType
-  signinUrl: string
-  callbackUrl: string
-}
-
-export type RedirectableProvider = "email" | "credentials"
-
 /**
  * It calls `/api/auth/providers` and returns
  * a list of the currently configured authentication providers.
@@ -179,30 +161,6 @@ export async function getProviders() {
     logger
   )
 }
-
-export interface SignInOptions extends Record<string, unknown> {
-  /**
-   * Defaults to the current URL.
-   * @docs https://next-auth.js.org/getting-started/client#specifying-a-callbackurl
-   */
-  callbackUrl?: string
-  /** @docs https://next-auth.js.org/getting-started/client#using-the-redirect-false-option */
-  redirect?: boolean
-}
-
-export interface SignInResponse {
-  error: string | undefined
-  status: number
-  ok: boolean
-  url: string | null
-}
-
-/** Match `inputType` of `new URLSearchParams(inputType)` */
-export type SignInAuthorisationParams =
-  | string
-  | string[][]
-  | Record<string, string>
-  | URLSearchParams
 
 /**
  * Client-side method to initiate a signin flow
@@ -285,18 +243,6 @@ export async function signIn<
   } as any
 }
 
-/** @docs https://next-auth.js.org/getting-started/client#using-the-redirect-false-option-1 */
-export interface SignOutResponse {
-  url: string
-}
-
-export interface SignOutParams<R extends boolean = true> {
-  /** @docs https://next-auth.js.org/getting-started/client#specifying-a-callbackurl-1 */
-  callbackUrl?: string
-  /** @docs https://next-auth.js.org/getting-started/client#using-the-redirect-false-option-1 */
-  redirect?: R
-}
-
 /**
  * Signs the user out, by removing the session cookie.
  * Automatically adds the CSRF token to the request.
@@ -336,24 +282,6 @@ export async function signOut<R extends boolean = true>(
   await __NEXTAUTH._getSession({ event: "storage" })
 
   return data
-}
-
-/** @docs: https://next-auth.js.org/getting-started/client#options */
-export interface SessionProviderProps {
-  children: React.ReactNode
-  session?: Session | null
-  baseUrl?: string
-  basePath?: string
-  /**
-   * The amount of time (in seconds) after a session should be considered stale.
-   * If set to `0` (default), the session will never be re-fetched.
-   */
-  staleTime?: number
-  /**
-   * A time interval (in seconds) after which the session will be re-fetched.
-   * If set to `0` (default), the session is not polled.
-   */
-  refetchInterval?: number
 }
 
 /**

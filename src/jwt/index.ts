@@ -1,56 +1,10 @@
 import crypto from "crypto"
 import jose from "jose"
-import logger from "./lib/logger"
+import logger from "../lib/logger"
 import { NextApiRequest } from "next"
+import type { JWT, JWTDecodeParams, JWTEncodeParams } from "./types"
 
-export interface DefaultJWT extends Record<string, unknown> {
-  name?: string | null
-  email?: string | null
-  picture?: string | null
-  sub?: string
-}
-
-/**
- * Returned by the `jwt` callback and `getToken`, when using JWT sessions
- *
- * [`jwt` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback) | [`getToken`](https://next-auth.js.org/tutorials/securing-pages-and-api-routes#using-gettoken)
- */
-export interface JWT extends Record<string, unknown>, DefaultJWT {}
-
-export interface JWTEncodeParams {
-  token?: JWT
-  maxAge?: number
-  secret: string | Buffer
-  signingKey?: string
-  signingOptions?: jose.JWT.SignOptions
-  encryptionKey?: string
-  encryptionOptions?: object
-  encryption?: boolean
-}
-
-export interface JWTDecodeParams {
-  token?: string
-  maxAge?: number
-  secret: string | Buffer
-  signingKey?: string
-  verificationKey?: string
-  verificationOptions?: jose.JWT.VerifyOptions<false>
-  encryptionKey?: string
-  decryptionKey?: string
-  decryptionOptions?: jose.JWE.DecryptOptions<false>
-  encryption?: boolean
-}
-
-export interface JWTOptions {
-  secret: string
-  maxAge: number
-  encryption?: boolean
-  signingKey?: string
-  encryptionKey?: string
-  encode: typeof encode
-  decode: typeof decode
-  verificationOptions?: jose.JWT.VerifyOptions<false>
-}
+export * from "./types"
 
 // Set default algorithm to use for auto-generated signing key
 const DEFAULT_SIGNATURE_ALGORITHM = "HS512"

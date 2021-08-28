@@ -25,10 +25,10 @@
       "import": "./index.js"
     },
     "./jwt": {
-      "import": "./jwt.js"
+      "import": "./jwt/index.js"
     },
     "./react": {
-      "import": "./react.js"
+      "import": "./react/index.js"
     },
     "./providers/*": {
       "import": "./providers/*.js"
@@ -36,7 +36,7 @@
   },
   "scripts": {
     "build": "npm run build:js && npm run build:css",
-    "clean": "rm -rf client css lib providers server types index.d.ts index.js adapters.d.ts jwt.d.ts jwt.js react.d.ts react.js internals.d.ts",
+    "clean": "rm -rf client css lib providers server jwt react index.d.ts index.js adapters.d.ts internals.d.ts",
     "build:js": "npm run clean && tsc && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir . && node config/wrap-css.js",
     "dev:setup": "npm i && npm run build:css && cd app && npm i",
@@ -53,17 +53,14 @@
   },
   "files": [
     "lib",
-    "types",
     "css",
+    "jwt",
+    "react",
+    "providers",
+    "server",
     "index.d.ts",
     "index.js",
     "adapters.d.ts",
-    "jwt.d.ts",
-    "jwt.js",
-    "react.d.ts",
-    "react.js",
-    "providers",
-    "server",
     "internals.d.ts"
   ],
   "license": "ISC",

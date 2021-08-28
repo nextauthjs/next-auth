@@ -1,8 +1,8 @@
 // This file contains types used by next-auth internally
 
-import { NextApiRequest, NextApiResponse } from "next"
+import type { NextApiRequest, NextApiResponse } from "next"
 
-import {
+import type {
   CallbacksOptions,
   CookiesOptions,
   EventCallbacks,
@@ -12,9 +12,9 @@ import {
   Theme,
 } from "."
 
-import { Provider } from "./providers"
-import { JWTOptions } from "./jwt"
-import { Adapter } from "./adapters"
+import type { Provider } from "./providers"
+import type { JWTOptions } from "./jwt"
+import type { Adapter } from "./adapters"
 
 export type InternalProvider = Provider & {
   signinUrl: string

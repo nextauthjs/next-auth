@@ -1,6 +1,21 @@
 import type { IncomingMessage } from "http"
-import { LoggerInstance } from ".."
-import { NextAuthClientConfig } from "../react"
+import type { LoggerInstance, Session } from ".."
+
+export interface NextAuthClientConfig {
+  baseUrl: string
+  basePath: string
+  baseUrlServer: string
+  basePathServer: string
+  /** Stores last session response */
+  _session?: Session | null | undefined
+  /** Used for timestamp since last sycned (in seconds) */
+  _lastSync: number
+  /**
+   * Stores the `SessionProvider`'s session update method to be able to
+   * trigger session updates from places like `signIn` or `signOut`
+   */
+  _getSession: (...args: any[]) => any
+}
 
 export interface CtxOrReq {
   req?: IncomingMessage
