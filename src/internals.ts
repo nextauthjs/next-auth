@@ -13,8 +13,7 @@ import type {
 import type { Provider } from "./providers"
 import type { JWTOptions } from "./jwt"
 import type { Adapter } from "./adapters"
-
-export type Awaitable<T> = T | PromiseLike<T>
+import { Awaitable } from "./server/types"
 
 // Below are types that are only supposed be used by next-auth internally
 

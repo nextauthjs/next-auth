@@ -1,7 +1,6 @@
-import { Awaitable } from "../internals"
 import { NextApiRequest } from "next"
 import { CommonProviderOptions } from "."
-import { User } from ".."
+import { User, Awaitable } from ".."
 
 export interface CredentialInput {
   label?: string

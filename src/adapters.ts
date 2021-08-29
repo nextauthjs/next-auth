@@ -1,5 +1,4 @@
-import { Account, User } from "."
-import { Awaitable } from "./internals"
+import { Account, User, Awaitable } from "."
 
 export interface AdapterUser extends User {
   id: string
