@@ -3,7 +3,7 @@ import emailSignin from "../lib/email/signin"
 
 /**
  * Handle requests to /api/auth/signin
- * @type {import("src/internals").NextAuthApiHandler}
+ * @type {import("src/lib/types").NextAuthApiHandler}
  */
 export default async function signin(req, res) {
   const { baseUrl, basePath, adapter, callbacks, logger } = req.options

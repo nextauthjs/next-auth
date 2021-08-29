@@ -8,12 +8,12 @@ import type {
   PagesOptions,
   SessionOptions,
   Theme,
-} from "."
+  Awaitable,
+} from ".."
 
-import type { Provider } from "./providers"
-import type { JWTOptions } from "./jwt"
-import type { Adapter } from "./adapters"
-import { Awaitable } from "./server/types"
+import type { Provider } from "../providers"
+import type { JWTOptions } from "../jwt"
+import type { Adapter } from "../adapters"
 
 // Below are types that are only supposed be used by next-auth internally
 

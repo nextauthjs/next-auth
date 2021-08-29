@@ -1,7 +1,7 @@
 import { createHash } from "crypto"
 import { NextAuthOptions } from "../.."
 import { EmailConfig } from "../../providers"
-import { InternalOptions, InternalProvider } from "../../internals"
+import { InternalOptions, InternalProvider } from "../../lib/types"
 
 /**
  * Takes a number in seconds and returns the date in the future.

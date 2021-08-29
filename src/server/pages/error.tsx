@@ -4,7 +4,7 @@
  *   baseUrl: string
  *   basePath: string
  *   error?: string
- *   res: import("src/internals").NextAuthResponse
+ *   res: import("src/lib/types").NextAuthResponse
  * }} params
  */
 export default function Error({ baseUrl, basePath, error = "default", res }) {

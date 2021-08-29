@@ -1,5 +1,5 @@
 // @ts-check
-import { NextAuthRequest, NextAuthResponse } from "../../internals"
+import { NextAuthRequest, NextAuthResponse } from "../../lib/types"
 import * as cookie from "../lib/cookie"
 
 /**

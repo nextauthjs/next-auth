@@ -1,7 +1,7 @@
 import { AccountNotLinkedError } from "../errors"
 import { fromDate } from "./utils"
 import { randomBytes, randomUUID } from "crypto"
-import { InternalOptions } from "../../internals"
+import { InternalOptions } from "../../lib/types"
 import { AdapterSession, AdapterUser } from "../../adapters"
 import { JWT } from "../../jwt"
 import { Account, User } from "../.."

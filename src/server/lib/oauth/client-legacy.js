@@ -5,7 +5,7 @@ import { OAuth } from "oauth"
 
 /**
  * Client supporting OAuth 1.x
- * @param {import("src/internals").InternalOptions} options
+ * @param {import("src/lib/types").InternalOptions} options
  */
 export function oAuth1Client(options) {
   /** @type {import("src/providers").OAuthConfig} */

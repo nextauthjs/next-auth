@@ -1,4 +1,4 @@
-import { InternalProvider } from "src/internals"
+import { InternalProvider } from "src/lib/types"
 import { Provider } from "../../providers"
 import { merge } from "../../lib/merge"
 

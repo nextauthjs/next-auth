@@ -5,7 +5,7 @@ import { hashToken } from "../lib/utils"
 
 /**
  * Handle callbacks from login services
- * @type {import("src/internals").NextAuthApiHandler}
+ * @type {import("src/lib/types").NextAuthApiHandler}
  */
 export default async function callback(req, res) {
   const {

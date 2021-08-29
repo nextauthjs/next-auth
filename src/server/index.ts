@@ -11,14 +11,15 @@ import callbackUrlHandler from "./lib/callback-url-handler"
 import extendRes from "./lib/extend-res"
 import csrfTokenHandler from "./lib/csrf-token-handler"
 import { eventsErrorHandler, adapterErrorHandler } from "./errors"
-import { NextApiRequest, NextApiResponse } from "next"
-import { NextAuthOptions } from ".."
-import {
+import createSecret from "./lib/utils"
+
+import type { NextApiRequest, NextApiResponse } from "next"
+import type { NextAuthOptions } from "./types"
+import type {
   InternalOptions,
   NextAuthRequest,
   NextAuthResponse,
-} from "../internals"
-import createSecret from "./lib/utils"
+} from "../lib/types"
 
 // To work properly in production with OAuth providers the NEXTAUTH_URL
 // environment variable must be set.

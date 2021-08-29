@@ -25,7 +25,7 @@ module.exports = (api) => {
     ignore: [
       "../src/**/__tests__/**",
       "../src/adapters.ts",
-      "../src/internals.ts",
+      "../src/lib/types.ts",
     ],
     comments: false,
     overrides: [

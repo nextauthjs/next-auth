@@ -6,7 +6,7 @@ import { Issuer } from "openid-client"
  * Check out `Issuer.discover`
  *
  * Client supporting OAuth 2.x and OIDC
- * @param {import("src/internals").InternalOptions} options
+ * @param {import("src/lib/types").InternalOptions} options
  */
 export async function openidClient(options) {
   /** @type {import("src/providers").OAuthConfig} */

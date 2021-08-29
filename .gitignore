@@ -34,7 +34,6 @@ node_modules
 /adapters.d.ts
 /index.d.ts
 /index.js
-/internals.d.ts
 
 # Development app
 app/next-auth
