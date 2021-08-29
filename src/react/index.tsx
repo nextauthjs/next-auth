@@ -292,7 +292,7 @@ export async function signOut<R extends boolean = true>(
  * [Documentation](https://next-auth.js.org/getting-started/client#sessionprovider)
  */
 export function SessionProvider(props: SessionProviderProps) {
-  const { children, basePath, staleTime = 0 } = props
+  const { children, basePath } = props
 
   if (basePath) __NEXTAUTH.basePath = basePath
 
@@ -332,14 +332,14 @@ export function SessionProvider(props: SessionProviderProps) {
           // If there is no time defined for when a session should be considered
           // stale, then it's okay to use the value we have until an event is
           // triggered which updates it
-          (staleTime === 0 && !event) ||
+          !event ||
           // If the client doesn't have a session then we don't need to call
           // the server to check if it does (if they have signed in via another
           // tab or window that will come through as a "stroage" event
           // event anyway)
-          (staleTime > 0 && __NEXTAUTH._session === null) ||
+          __NEXTAUTH._session === null ||
           // Bail out early if the client session is not stale yet
-          (staleTime > 0 && now() < __NEXTAUTH._lastSync + staleTime)
+          now() < __NEXTAUTH._lastSync
         ) {
           return
         }
@@ -356,7 +356,7 @@ export function SessionProvider(props: SessionProviderProps) {
     }
 
     __NEXTAUTH._getSession()
-  }, [staleTime])
+  }, [])
 
   React.useEffect(() => {
     // Listen for storage events and update session if event fired from
