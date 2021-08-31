@@ -25,7 +25,7 @@ Anyone can be a contributor. Either you found a typo, or you have an awesome fea
 
 A quick guide on how to setup _next-auth_ locally to work on it and test out any changes:
 
-The dev application requires you to use `npm@7`.
+The developer application requires you to use `npm@7`.
 
 1. Clone the repo:
 
@@ -34,7 +34,7 @@ git clone git@github.com:nextauthjs/next-auth.git
 cd next-auth
 ```
 
-2. Install packages, set up the dev application:
+2. Install packages and set up the developer application:
 
 ```sh
 npm run dev:setup
@@ -47,13 +47,13 @@ npm run dev:setup
 > NOTE: You can add any environment variables to .env.local that you would like to use in your dev app.
 > You can find the next-auth config under`app/pages/api/auth/[...nextauth].js`.
 
-1. Start the dev application/server:
+1. Start the developer application/server:
 
 ```sh
 npm run dev
 ```
 
-Your dev application will be available on `http://localhost:3000`
+Your developer application will be available on `http://localhost:3000`
 
 That's it! 🎉
 
@@ -61,9 +61,9 @@ If you need an example project to link to, you can use [next-auth-example](https
 
 #### Hot reloading
 
-When running `npm run dev`, you start a Next.js dev server on `http://localhost:3000`, which includes hot reloading out of the box. Make changes on any of the files in `src` and see the changes immediately.
+When running `npm run dev`, you start a Next.js developer server on `http://localhost:3000`, which includes hot reloading out of the box. Make changes on any of the files in `src` and see the changes immediately.
 
-> NOTE: When working on CSS, you will have to manually refresh the page after changes. The reason for this is our pages using CSS are server-side rendered. (Improving this through a PR is very welcome!)
+> NOTE: When working on CSS, you will have to manually refresh the page after changes. The reason for this is our pages using CSS are server-side rendered (using API routes). (Improving this through a PR is very welcome!)
 
 > NOTE: The setup is as follows: The development application lives inside the `app` folder, and whenever you make a change to the `src` folder in the root (where next-auth is), it gets copied into `app` every time (gitignored), so Next.js can pick them up and apply hot reloading. This is to avoid some annoying issues with how symlinks are working with different React builds, and also to provide a super-fast feedback loop while developing core features.
 

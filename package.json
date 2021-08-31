@@ -41,8 +41,6 @@
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir . && node config/wrap-css.js",
     "dev:setup": "npm i && npm run build:css && cd app && npm i",
     "dev": "cd app && npm run dev",
-    "watch": "npm run watch:js | npm run watch:css",
-    "watch:js": "tsc --watch",
     "watch:css": "postcss --config config/postcss.config.js --watch src/**/*.css --base src --dir .",
     "test": "jest --config ./config/jest.config.js",
     "test:ci": "npm run lint && npm run test -- --ci",
