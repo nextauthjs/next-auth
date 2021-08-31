@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function Zoho(options) {
   return {
     id: "zoho",

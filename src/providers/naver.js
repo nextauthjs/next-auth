@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function Naver(options) {
   return {
     id: "naver",

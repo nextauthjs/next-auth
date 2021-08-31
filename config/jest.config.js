@@ -1,7 +1,10 @@
 /** @type {import('@jest/types').Config.InitialOptions} */
 module.exports = {
   transform: {
-    "\\.js$": ["babel-jest", { configFile: "./config/babel.config.js" }],
+    "\\.(js|jsx|ts|tsx)$": [
+      "babel-jest",
+      { configFile: "./config/babel.config.js" },
+    ],
   },
   rootDir: "../src",
   setupFilesAfterEnv: ["../config/jest-setup.js"],

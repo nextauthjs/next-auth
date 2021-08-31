@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function Apple(options) {
   return {
     id: "apple",

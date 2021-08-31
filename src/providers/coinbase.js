@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function Coinbase(options) {
   return {
     id: "coinbase",

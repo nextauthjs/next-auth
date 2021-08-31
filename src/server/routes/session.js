@@ -4,8 +4,8 @@ import { fromDate } from "../lib/utils"
 /**
  * Return a session object (without any private fields)
  * for Single Page App clients
- * @param {import("types/internals").NextAuthRequest} req
- * @param {import("types/internals").NextAuthResponse} res
+ * @param {import("src/lib/types").NextAuthRequest} req
+ * @param {import("src/lib/types").NextAuthResponse} res
  */
 export default async function session(req, res) {
   const { cookies, adapter, jwt, events, callbacks, logger } = req.options

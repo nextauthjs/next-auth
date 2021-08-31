@@ -6,7 +6,8 @@
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "author": "Iain Collins <me@iaincollins.com>",
   "main": "index.js",
-  "types": "./index.d.ts",
+  "module": "index.js",
+  "types": "index.d.ts",
   "keywords": [
     "react",
     "nodejs",
@@ -20,39 +21,46 @@
     "nextauth"
   ],
   "exports": {
-    ".": "./dist/server/index.js",
-    "./jwt": "./dist/lib/jwt.js",
-    "./react": "./dist/client/react.js",
-    "./providers/*": "./dist/providers/*.js"
+    ".": {
+      "import": "./index.js"
+    },
+    "./jwt": {
+      "import": "./jwt/index.js"
+    },
+    "./react": {
+      "import": "./react/index.js"
+    },
+    "./providers/*": {
+      "import": "./providers/*.js"
+    }
   },
   "scripts": {
     "build": "npm run build:js && npm run build:css",
-    "build:js": "node ./config/build.js && babel --config-file ./config/babel.config.js src --out-dir dist",
-    "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir dist && node config/wrap-css.js",
+    "clean": "rm -rf client css lib providers server jwt react index.d.ts index.js adapters.d.ts",
+    "build:js": "npm run clean && tsc && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
+    "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir . && node config/wrap-css.js",
     "dev:setup": "npm i && npm run build:css && cd app && npm i",
     "dev": "cd app && npm run dev",
     "watch": "npm run watch:js | npm run watch:css",
-    "watch:js": "babel --config-file ./config/babel.config.js --watch src --out-dir dist",
-    "watch:css": "postcss --config config/postcss.config.js --watch src/**/*.css --base src --dir dist",
+    "watch:js": "tsc --watch",
+    "watch:css": "postcss --config config/postcss.config.js --watch src/**/*.css --base src --dir .",
     "test": "jest --config ./config/jest.config.js",
-    "test:ci": "npm run lint && npm run test:types && npm run test -- --ci",
-    "test:types": "dtslint types --onlyTestTsNext",
+    "test:ci": "npm run lint && npm run test -- --ci",
     "prepublishOnly": "npm run build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "version:pr": "node ./config/version-pr"
   },
   "files": [
-    "dist",
-    "index.js",
-    "index.d.ts",
+    "lib",
+    "css",
+    "jwt",
+    "react",
     "providers",
-    "adapters.d.ts",
-    "react.js",
-    "react.d.ts",
-    "jwt.js",
-    "jwt.d.ts",
-    "internals"
+    "server",
+    "index.d.ts",
+    "index.js",
+    "adapters.d.ts"
   ],
   "license": "ISC",
   "dependencies": {
@@ -75,27 +83,30 @@
     }
   },
   "devDependencies": {
+    "@actions/core": "^1.4.0",
     "@babel/cli": "^7.14.5",
     "@babel/core": "^7.14.6",
     "@babel/plugin-proposal-optional-catch-binding": "^7.14.5",
     "@babel/plugin-transform-runtime": "^7.14.5",
     "@babel/preset-env": "^7.14.7",
     "@babel/preset-react": "^7.14.5",
+    "@babel/preset-typescript": "^7.15.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
     "@testing-library/react-hooks": "^7.0.1",
     "@testing-library/user-event": "^13.1.9",
-    "@types/nodemailer": "^6.4.2",
+    "@types/nodemailer": "^6.4.4",
     "@types/oauth": "^0.9.1",
-    "@types/react": "^17.0.11",
-    "@typescript-eslint/eslint-plugin": "^4.28.0",
-    "@typescript-eslint/parser": "^4.28.0",
+    "@types/react": "^17.0.19",
+    "@types/react-dom": "^17.0.9",
+    "@typescript-eslint/eslint-plugin": "^4.29.2",
+    "@typescript-eslint/parser": "^4.29.2",
     "autoprefixer": "^10.2.6",
     "babel-jest": "^27.0.5",
+    "babel-plugin-jsx-pragmatic": "^1.0.2",
     "babel-preset-preact": "^2.0.0",
     "conventional-changelog-conventionalcommits": "4.6.0",
     "cssnano": "^5.0.6",
-    "dtslint": "^4.1.0",
     "eslint": "^7.29.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard-with-typescript": "^20.0.0",
@@ -114,7 +125,7 @@
     "pretty-quick": "^3.1.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "typescript": "^4.3.4",
+    "typescript": "^4.3.5",
     "whatwg-fetch": "^3.6.2"
   },
   "prettier": {
@@ -131,11 +142,12 @@
     ],
     "ignorePatterns": [
       "node_modules",
-      "test",
       "next-env.d.ts",
       "types",
       ".next",
-      "dist"
+      "dist",
+      "/server",
+      "/react.js"
     ],
     "globals": {
       "localStorage": "readonly",
@@ -145,7 +157,9 @@
     "rules": {
       "camelcase": "off",
       "@typescript-eslint/naming-convention": "off",
-      "@typescript-eslint/strict-boolean-expressions": "off"
+      "@typescript-eslint/strict-boolean-expressions": "off",
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/restrict-template-expressions": "off"
     },
     "overrides": [
       {

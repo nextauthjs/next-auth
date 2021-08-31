@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function Slack(options) {
   return {
     id: "slack",

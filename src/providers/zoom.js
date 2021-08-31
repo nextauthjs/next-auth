@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function Zoom(options) {
   return {
     id: "zoom",

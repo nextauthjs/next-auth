@@ -5,10 +5,10 @@ import { OAuth } from "oauth"
 
 /**
  * Client supporting OAuth 1.x
- * @param {import("types/internals").InternalOptions} options
+ * @param {import("src/lib/types").InternalOptions} options
  */
 export function oAuth1Client(options) {
-  /** @type {import("types/providers").OAuthConfig} */
+  /** @type {import("src/providers").OAuthConfig} */
   const provider = options.provider
 
   const oauth1Client = new OAuth(

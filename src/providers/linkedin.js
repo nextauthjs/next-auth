@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function LinkedIn(options) {
   return {
     id: "linkedin",

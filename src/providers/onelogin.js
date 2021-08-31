@@ -1,4 +1,4 @@
-/** @returns {import("types/providers").OAuthConfig} */
+/** @type {import(".").OAuthProvider} */
 export default function OneLogin(options) {
   return {
     id: "onelogin",

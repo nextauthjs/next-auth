@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function Salesforce(options) {
   return {
     id: "salesforce",

@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function Bungie(options) {
   return {
     id: "bungie",

@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function Box(options) {
   return {
     id: "box",

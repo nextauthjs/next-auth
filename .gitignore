@@ -24,25 +24,16 @@ node_modules
 # Generated files
 .docusaurus
 .cache-loader
-/internals
 /providers
-/types/providers/*
-!types/providers/index.d.ts
-!types/providers/email.d.ts
-!types/providers/credentials.d.ts
-!types/providers/oauth.d.ts
+/client
+/css
+/lib
+/server
+/jwt
+/react
 /adapters.d.ts
-/adapters.js
-/client.d.ts
-/client.js
 /index.d.ts
 /index.js
-/jwt.d.ts
-/jwt.js
-/errors.js
-/errors.d.ts
-/react.js
-/react.d.ts
 
 # Development app
 app/next-auth

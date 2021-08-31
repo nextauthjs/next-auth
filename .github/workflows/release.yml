@@ -25,7 +25,7 @@ jobs:
       - name: Build
         run: npm run build
       - name: Run tests
-        run: npm test -- --coverage --verbose && npm run test:types
+        run: npm test -- --coverage --verbose
       - name: Coverage
         uses: codecov/codecov-action@v1
         with:
@@ -66,11 +66,21 @@ jobs:
           node-version: 16
       - name: Dependencies
         uses: bahmutov/npm-install@v1
+      - name: Determine version
+        uses: ./config/version-pr
+        id: determine-version
+        env:
+          PR_NUMBER: ${{ github.event.number }}
       - name: Publish to npm
         run: |
           echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
-          npm run version:pr
           npm publish --access public --tag experimental
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          PR_NUMBER: ${{ github.event.number }}
+      - name: Comment version on PR
+        uses: NejcZdovc/comment-pr@v1
+        with:
+          message: "🎉 Experimental release [published on npm](https://www.npmjs.com/package/next-auth/v/${{ env.VERSION }})!\n\n```sh\nnpm i next-auth@${{ env.VERSION }}\n```\n```sh\nyarn add next-auth@${{ env.VERSION }}\n```"
+        env:
+          VERSION: ${{ steps.determine-version.outputs.version }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

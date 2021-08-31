@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function Kakao(options) {
   return {
     id: "kakao",

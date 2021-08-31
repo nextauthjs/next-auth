@@ -1,4 +1,4 @@
-/** @type {import("types/providers").OAuthProvider} */
+/** @type {import("src/providers").OAuthProvider} */
 export default function Keycloak(options) {
   return {
     id: "keycloak",
@@ -13,7 +13,7 @@ export default function Keycloak(options) {
         id: profile.sub,
         name: profile.name ?? profile.preferred_username,
         email: profile.email,
-        image: null
+        image: null,
       }
     },
     options,

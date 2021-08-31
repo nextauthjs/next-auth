@@ -2,12 +2,12 @@ import { createHash } from "crypto"
 
 /**
  * Returns state if provider supports it
- * @param {import("types/internals").NextAuthRequest} req
- * @param {import("types/internals").NextAuthResponse} res
+ * @param {import("src/lib/types").NextAuthRequest} req
+ * @param {import("src/lib/types").NextAuthResponse} res
  */
 export function createState(req) {
   const { csrfToken, logger } = req.options
-  /** @type {import("types/providers").OAuthConfig} */
+  /** @type {import("src/providers").OAuthConfig} */
   const provider = req.options.provider
   if (!provider.checks?.includes("state")) {
     // Provider does not support state, return nothing
@@ -24,10 +24,10 @@ export function createState(req) {
 /**
  * Consistently recreate state from the csrfToken
  * if `provider.checks` supports `"state"`.
- * @param {import("types/internals").NextAuthRequest} req
+ * @param {import("src/lib/types").NextAuthRequest} req
  */
 export function getState({ options }) {
-  /** @type {import("types/providers").OAuthConfig} */
+  /** @type {import("src/providers").OAuthConfig} */
   const provider = options.provider
   if (provider?.checks.includes("state")) {
     return createHash("sha256").update(options.csrfToken).digest("hex")

@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function AzureADB2C(options) {
   const { tenantName, primaryUserFlow } = options
 

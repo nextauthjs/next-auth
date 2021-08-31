@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function FortyTwo(options) {
   return {
     id: "42-school",

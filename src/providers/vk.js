@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function VK(options) {
   const apiVersion = "5.126" // https://vk.com/dev/versions
 

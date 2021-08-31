@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function Discord(options) {
   return {
     id: "discord",

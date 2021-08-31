@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function Netlify(options) {
   return {
     id: "netlify",

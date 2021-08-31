@@ -2,7 +2,7 @@ import { rest } from "msw"
 import { render, screen, waitFor } from "@testing-library/react"
 import { server, mockSession } from "./helpers/mocks"
 import { printFetchCalls } from "./helpers/utils"
-import { SessionProvider, useSession, signOut, getSession } from "../react"
+import { SessionProvider, useSession, signOut, getSession } from "../../react"
 
 const origDocumentVisibility = document.visibilityState
 const fetchSpy = jest.spyOn(global, "fetch")

@@ -5,7 +5,7 @@ import { hashToken } from "../lib/utils"
 
 /**
  * Handle callbacks from login services
- * @type {import("types/internals").NextAuthApiHandler}
+ * @type {import("src/lib/types").NextAuthApiHandler}
  */
 export default async function callback(req, res) {
   const {
@@ -195,7 +195,7 @@ export default async function callback(req, res) {
         email: identifier,
       }
 
-      /** @type {import("types").Account} */
+      /** @type {import("src").Account} */
       const account = {
         providerAccountId: profile.email,
         type: "email",
@@ -335,7 +335,7 @@ export default async function callback(req, res) {
       )
     }
 
-    /** @type {import("types").Account} */
+    /** @type {import("src").Account} */
     const account = {
       providerAccountId: user.id,
       type: "credentials",

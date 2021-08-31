@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function LINE(options) {
   return {
     id: "line",

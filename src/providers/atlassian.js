@@ -1,3 +1,4 @@
+/** @type {import(".").OAuthProvider} */
 export default function Atlassian(options) {
   return {
     id: "atlassian",

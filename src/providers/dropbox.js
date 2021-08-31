@@ -27,6 +27,7 @@
  * - [Dropbox Documentation](https://developers.dropbox.com/oauth-guide)
  * - [Configuration](https://www.dropbox.com/developers/apps)
  */
+/** @type {import(".").OAuthProvider} */
 export default function Dropbox(options) {
   return {
     id: "dropbox",

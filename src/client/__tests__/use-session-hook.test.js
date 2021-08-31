@@ -1,7 +1,7 @@
 import { rest } from "msw"
 import { renderHook } from "@testing-library/react-hooks"
 import { render, waitFor } from "@testing-library/react"
-import { SessionProvider, useSession, signOut } from "../react"
+import { SessionProvider, useSession, signOut } from "../../react"
 import { server, mockSession } from "./helpers/mocks"
 
 const origConsoleError = console.error
