@@ -25,6 +25,6 @@
   // Use 'postCreateCommand' to run commands after the container is created.
   "postCreateCommand": "npm run dev:setup && npm run dev",
 
-  // Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+  // Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
   "remoteUser": "node"
 }
