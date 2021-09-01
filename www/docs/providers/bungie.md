@@ -39,7 +39,7 @@ providers: [
 ### Configuration
 
 :::tip
-Bungie require all sites to run HTTPS (including local development instances).
+Bungie requires all sites to run HTTPS (including local development instances).
 :::
 
 :::tip
