@@ -53,7 +53,7 @@ export function eventsErrorHandler(
   methods: Partial<EventCallbacks>,
   logger: LoggerInstance
 ): Partial<EventCallbacks> {
-  return Object.keys(methods).reduce((acc, name) => {
+  return Object.keys(methods).reduce<any>((acc, name) => {
     acc[name] = async (...args: any[]) => {
       try {
         const method: Method = methods[name]
@@ -63,7 +63,7 @@ export function eventsErrorHandler(
       }
     }
     return acc
-  }, methods)
+  }, {})
 }
 
 /** Handles adapter induced errors. */
@@ -73,7 +73,7 @@ export function adapterErrorHandler(
 ): Adapter | undefined {
   if (!adapter) return
 
-  return Object.keys(adapter).reduce((acc, name) => {
+  return Object.keys(adapter).reduce<any>((acc, name) => {
     acc[name] = async (...args: any[]) => {
       try {
         logger.debug(`adapter_${name}`, { args })
@@ -87,5 +87,5 @@ export function adapterErrorHandler(
       }
     }
     return acc
-  }, adapter)
+  }, {})
 }
