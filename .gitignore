@@ -36,8 +36,7 @@ node_modules
 /index.js
 
 # Development app
-app/next-auth
-app/dist/css
+app/src/css
 app/package-lock.json
 app/yarn.lock
 app/prisma/migrations
