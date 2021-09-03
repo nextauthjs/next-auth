@@ -172,7 +172,7 @@ export async function getProviders() {
 export async function signIn<
   P extends RedirectableProvider | undefined = undefined
 >(
-  provider?: RedirectableProvider,
+  provider?: string,
   options?: SignInOptions,
   authorizationParams?: SignInAuthorisationParams
 ): Promise<
