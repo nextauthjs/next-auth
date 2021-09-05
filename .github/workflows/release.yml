@@ -25,7 +25,7 @@ jobs:
       - name: Build
         run: npm run build
       - name: Run tests
-        run: npm test -- --coverage --verbose && npm run test:types
+        run: npm test -- --coverage --verbose
       - name: Coverage
         uses: codecov/codecov-action@v1
         with:
