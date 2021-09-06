@@ -79,7 +79,7 @@ const SessionContext = React.createContext<SessionContextValue | undefined>(
  *
  * [Documentation](https://next-auth.js.org/getting-started/client#usesession)
  */
-export function useSession<R extends boolean>(options: UseSessionOptions<R>) {
+export function useSession<R extends boolean>(options?: UseSessionOptions<R>) {
   // @ts-expect-error Satisfy TS if branch on line below
   const value: SessionContextValue<R> = React.useContext(SessionContext)
   if (!value && process.env.NODE_ENV !== "production") {
