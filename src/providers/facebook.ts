@@ -1,4 +1,4 @@
-import { Profile } from "src"
+import { Profile } from ".."
 import { OAuthConfig, OAuthUserConfig } from "./oauth"
 
 export interface FacebookProfile extends Profile {
