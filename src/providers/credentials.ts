@@ -26,13 +26,20 @@ export type CredentialsProvider = <C extends Record<string, CredentialInput>>(
 
 export type CredentialsProviderType = "Credentials"
 
-export default function Credentials(
-  options: Partial<CredentialsConfig>
-): CredentialsConfig {
+type UserCredentialsConfig<C extends Record<string, CredentialInput>> = Partial<
+  Omit<CredentialsConfig<C>, "options">
+> &
+  Pick<CredentialsConfig<C>, "authorize" | "credentials">
+
+export default function Credentials<
+  C extends Record<string, CredentialInput> = Record<string, CredentialInput>
+>(options: UserCredentialsConfig<C>): CredentialsConfig<C> {
   return {
     id: "credentials",
     name: "Credentials",
     type: "credentials",
+    credentials: {} as any,
+    authorize: () => null,
     options,
-  } as any
+  }
 }
