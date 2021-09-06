@@ -1,3 +1,4 @@
+import { OAuthProviderType } from "src/providers/oauth-types"
 import type { Session } from ".."
 import type { ProviderType } from "../providers"
 
@@ -7,7 +8,12 @@ export interface UseSessionOptions<R extends boolean> {
   onUnauthenticated?: () => void
 }
 
-export type RedirectableProvider = "email" | "credentials"
+export type LiteralUnion<T extends U, U = string> =
+  | T
+  | (U & Record<never, never>)
+
+export type RedirectableProviderType = "email"  |  "credentials"
+export type BuiltInProviderType = LiteralUnion<RedirectableProviderType | OAuthProviderType>
 
 export interface ClientSafeProvider {
   id: string

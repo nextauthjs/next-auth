@@ -25,6 +25,7 @@
     "**/tests",
     "**/__tests__",
     "config",
-    "www"
+    "www",
+    "./scripts/*.js"
   ]
 }

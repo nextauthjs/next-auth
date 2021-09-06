@@ -22,8 +22,9 @@ import {
 } from "../lib/client"
 
 import type {
+  BuiltInProviderType,
   ClientSafeProvider,
-  RedirectableProvider,
+  RedirectableProviderType,
   SessionProviderProps,
   SignInAuthorisationParams,
   SignInOptions,
@@ -155,7 +156,7 @@ export async function getCsrfToken(params?: CtxOrReq) {
  * [Documentation](https://next-auth.js.org/getting-started/client#getproviders)
  */
 export async function getProviders() {
-  return await fetchData<Record<RedirectableProvider, ClientSafeProvider>>(
+  return await fetchData<Record<RedirectableProviderType, ClientSafeProvider>>(
     "providers",
     __NEXTAUTH,
     logger
@@ -170,13 +171,13 @@ export async function getProviders() {
  * [Documentation](https://next-auth.js.org/getting-started/client#signin)
  */
 export async function signIn<
-  P extends RedirectableProvider | undefined = undefined
+  P extends RedirectableProviderType | undefined = undefined
 >(
-  provider?: string,
+  provider?: BuiltInProviderType,
   options?: SignInOptions,
   authorizationParams?: SignInAuthorisationParams
 ): Promise<
-  P extends RedirectableProvider ? SignInResponse | undefined : undefined
+  P extends RedirectableProviderType ? SignInResponse | undefined : undefined
 > {
   const { callbackUrl = window.location.href, redirect = true } = options ?? {}
 
