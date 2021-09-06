@@ -18,5 +18,5 @@ export default function Auth0(options: OAuthUserConfig): OAuthConfig {
       }
     },
     options,
-  } as any
+  }
 }

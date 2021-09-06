@@ -55,7 +55,7 @@ type EndpointHandler<P extends UrlParams, C = any, R = any> =
   | string
   | AdvancedEndpointHandler<P, C, R>
 
-export interface OAuthConfig<P extends Record<string, unknown> = Profile>
+export interface OAuthConfig<P extends Record<string, any> = {}>
   extends CommonProviderOptions,
     PartialIssuer {
   /**
@@ -138,7 +138,7 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
   options?: OAuthUserConfig<P>
 }
 
-export type OAuthUserConfig<P extends Record<string, unknown> = Profile> = Omit<
+export type OAuthUserConfig<P = {}> = Omit<
   Partial<OAuthConfig<P>>,
   "options" | "type"
 > &

@@ -6,8 +6,8 @@ export interface GoogleProfile extends Profile {
   picture: string
 }
 
-export default function Google<P extends GoogleProfile>(
-  options: OAuthUserConfig
+export default function Google<P extends Record<string, any> = GoogleProfile>(
+  options: OAuthUserConfig<P>
 ): OAuthConfig<P> {
   return {
     id: "google",
@@ -17,7 +17,7 @@ export default function Google<P extends GoogleProfile>(
     authorization: { params: { scope: "openid email profile" } },
     idToken: true,
     checks: ["pkce", "state"],
-    profile(profile) {
+    profile(profile: P) {
       return {
         id: profile.sub,
         name: profile.name,
