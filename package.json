@@ -37,9 +37,9 @@
   "scripts": {
     "build": "npm run build:js && npm run build:css",
     "clean": "rm -rf client css lib providers server jwt react index.d.ts index.js adapters.d.ts",
-    "build:js": "npm run clean && tsc && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
+    "build:js": "npm run clean && npm run generate-providers && tsc && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir . && node config/wrap-css.js",
-    "dev:setup": "npm i && npm run build:css && cd app && npm i",
+    "dev:setup": "npm i && npm run generate-providers && npm run build:css && cd app && npm i",
     "dev": "cd app && npm run dev",
     "watch:css": "postcss --config config/postcss.config.js --watch src/**/*.css --base src --dir .",
     "test": "jest --config ./config/jest.config.js",
@@ -47,7 +47,8 @@
     "prepublishOnly": "npm run build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "version:pr": "node ./config/version-pr"
+    "version:pr": "node ./config/version-pr",
+    "generate-providers": "node ./config/generate-providers.js"
   },
   "files": [
     "lib",

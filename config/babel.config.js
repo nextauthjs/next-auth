@@ -26,6 +26,7 @@ module.exports = (api) => {
       "../src/**/__tests__/**",
       "../src/adapters.ts",
       "../src/lib/types.ts",
+      "../src/providers/oauth-types.ts",
     ],
     comments: false,
     overrides: [
