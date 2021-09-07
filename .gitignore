@@ -25,6 +25,7 @@ node_modules
 .docusaurus
 .cache-loader
 /providers
+/src/providers/oauth-types.ts
 /client
 /css
 /lib

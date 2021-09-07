@@ -10,8 +10,7 @@ import {
   OpenIDCallbackChecks,
 } from "openid-client"
 
-// TODO: generate
-export type OAuthProviderType = string
+export type { OAuthProviderType } from "./oauth-types"
 
 type ChecksType = "pkce" | "state" | "both" | "none"
 

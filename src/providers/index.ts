@@ -35,3 +35,7 @@ export interface AppProvider extends CommonProviderOptions {
   signinUrl: string
   callbackUrl: string
 }
+
+export type RedirectableProviderType = "email" | "credentials"
+
+export type BuiltInProviderType = RedirectableProviderType | OAuthProviderType

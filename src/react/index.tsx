@@ -22,9 +22,8 @@ import {
 } from "../lib/client"
 
 import type {
-  BuiltInProviderType,
   ClientSafeProvider,
-  RedirectableProviderType,
+  LiteralUnion,
   SessionProviderProps,
   SignInAuthorisationParams,
   SignInOptions,
@@ -33,6 +32,11 @@ import type {
   SignOutResponse,
   UseSessionOptions,
 } from "./types"
+
+import type {
+  BuiltInProviderType,
+  RedirectableProviderType,
+} from "../providers"
 
 export * from "./types"
 
@@ -156,11 +160,9 @@ export async function getCsrfToken(params?: CtxOrReq) {
  * [Documentation](https://next-auth.js.org/getting-started/client#getproviders)
  */
 export async function getProviders() {
-  return await fetchData<Record<RedirectableProviderType, ClientSafeProvider>>(
-    "providers",
-    __NEXTAUTH,
-    logger
-  )
+  return await fetchData<
+    Record<LiteralUnion<BuiltInProviderType>, ClientSafeProvider>
+  >("providers", __NEXTAUTH, logger)
 }
 
 /**
@@ -173,7 +175,7 @@ export async function getProviders() {
 export async function signIn<
   P extends RedirectableProviderType | undefined = undefined
 >(
-  provider?: BuiltInProviderType,
+  provider?: LiteralUnion<BuiltInProviderType>,
   options?: SignInOptions,
   authorizationParams?: SignInAuthorisationParams
 ): Promise<

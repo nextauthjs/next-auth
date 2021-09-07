@@ -48,7 +48,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "version:pr": "node ./config/version-pr",
-    "generate-providers": "node ./scripts/generate-providers.js"
+    "generate-providers": "node ./config/generate-providers.js"
   },
   "files": [
     "lib",
@@ -146,8 +146,7 @@
       ".next",
       "dist",
       "/server",
-      "/react.js",
-      "/scripts"
+      "/react.js"
     ],
     "globals": {
       "localStorage": "readonly",

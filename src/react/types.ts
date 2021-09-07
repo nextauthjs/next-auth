@@ -1,6 +1,5 @@
-import { OAuthProviderType } from "src/providers/oauth-types"
 import type { Session } from ".."
-import type { ProviderType } from "../providers"
+import type { BuiltInProviderType, ProviderType } from "../providers"
 
 export interface UseSessionOptions<R extends boolean> {
   required: R
@@ -8,15 +7,16 @@ export interface UseSessionOptions<R extends boolean> {
   onUnauthenticated?: () => void
 }
 
+/**
+ * Util type that matches some strings literally, but allows any other string as well.
+ * @source https://github.com/microsoft/TypeScript/issues/29729#issuecomment-832522611
+ */
 export type LiteralUnion<T extends U, U = string> =
   | T
   | (U & Record<never, never>)
 
-export type RedirectableProviderType = "email"  |  "credentials"
-export type BuiltInProviderType = LiteralUnion<RedirectableProviderType | OAuthProviderType>
-
 export interface ClientSafeProvider {
-  id: string
+  id: LiteralUnion<BuiltInProviderType>
   name: string
   type: ProviderType
   signinUrl: string
