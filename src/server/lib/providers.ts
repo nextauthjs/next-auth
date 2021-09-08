@@ -13,8 +13,8 @@ export default function parseProviders(params: {
   const { providers = [], base } = params
   return providers.map(({ options, ...defaultOptions }) =>
     merge(defaultOptions, {
-      signinUrl: `${base}/signin/${defaultOptions.id}`,
-      callbackUrl: `${base}/callback/${defaultOptions.id}`,
+      signinUrl: `${base}/signin/${options?.id ?? defaultOptions.id}`,
+      callbackUrl: `${base}/callback/${options?.id ?? defaultOptions.id}`,
       ...options,
     })
   )
