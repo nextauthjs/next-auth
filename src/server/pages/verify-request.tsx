@@ -1,4 +1,8 @@
-export default function VerifyRequest({ baseUrl }) {
+export interface VerifyRequestServerPageParams {
+  baseUrl: string
+}
+
+export default function VerifyRequest({ baseUrl }: VerifyRequestServerPageParams) {
   return (
     <div className="verify-request">
       <h1>Check your email</h1>

@@ -1,16 +1,28 @@
-/**
- * Renders an error page.
- * @param {{
- *   baseUrl: string
- *   basePath: string
- *   error?: string
- *   res: import("src/lib/types").NextAuthResponse
- * }} params
- */
-export default function Error({ baseUrl, basePath, error = "default", res }) {
+import type { NextAuthResponse } from "src/lib/types"
+
+export interface ErrorServerPageParams {
+  baseUrl: string
+  basePath: string
+  error?: string
+  res: NextAuthResponse
+}
+
+interface ErrorView {
+  statusCode: number
+  heading: string
+  message: JSX.Element
+  signin?: JSX.Element
+}
+
+export default function Error({
+  baseUrl,
+  basePath,
+  error = "default",
+  res,
+}: ErrorServerPageParams) {
   const signinPageUrl = `${baseUrl}${basePath}/signin`
 
-  const errors = {
+  const errors: Record<string, ErrorView> = {
     default: {
       statusCode: 200,
       heading: "Error",
@@ -66,7 +78,7 @@ export default function Error({ baseUrl, basePath, error = "default", res }) {
   }
 
   const { statusCode, heading, message, signin } =
-    errors[error.toLowerCase()] ?? errors.default
+    errors[error?.toLowerCase()] ?? errors.default
 
   res.status(statusCode)
 

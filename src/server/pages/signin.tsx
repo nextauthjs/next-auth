@@ -1,10 +1,20 @@
+import { InternalProvider } from "src/lib/types"
+
+export interface SignInServerPageParams {
+  csrfToken: string
+  providers: InternalProvider[]
+  callbackUrl: string
+  email: string
+  error: string
+}
+
 export default function Signin({
   csrfToken,
   providers,
   callbackUrl,
   email,
   error: errorType,
-}) {
+}: SignInServerPageParams) {
   // We only want to render providers
   const providersToRender = providers.filter((provider) => {
     if (provider.type === "oauth" || provider.type === "email") {
@@ -18,7 +28,7 @@ export default function Signin({
     return false
   })
 
-  const errors = {
+  const errors: Record<string, string> = {
     Signin: "Try signing in with a different account.",
     OAuthSignin: "Try signing in with a different account.",
     OAuthCallback: "Try signing in with a different account.",
