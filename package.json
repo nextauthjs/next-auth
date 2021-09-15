@@ -22,16 +22,20 @@
   ],
   "exports": {
     ".": {
-      "import": "./index.js"
+      "import": "./index.js",
+      "node": "./index.js"
     },
     "./jwt": {
-      "import": "./jwt/index.js"
+      "import": "./jwt/index.js",
+      "node": "./jwt/index.js"
     },
     "./react": {
-      "import": "./react/index.js"
+      "import": "./react/index.js",
+      "node": "./react/index.js"
     },
     "./providers/*": {
-      "import": "./providers/*.js"
+      "import": "./providers/*.js",
+      "node": "./providers/*.js"
     }
   },
   "scripts": {
