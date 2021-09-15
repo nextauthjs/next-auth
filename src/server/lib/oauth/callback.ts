@@ -117,7 +117,7 @@ export default async function oAuthCallback(
 export interface GetProfileParams {
   profile: Profile
   tokens: TokenSet
-  provider: OAuthConfig
+  provider: OAuthConfig<any>
   logger: LoggerInstance
 }
 

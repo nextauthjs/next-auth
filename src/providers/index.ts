@@ -21,7 +21,7 @@ export interface CommonProviderOptions {
   options?: Record<string, unknown>
 }
 
-export type Provider = OAuthConfig | EmailConfig | CredentialsConfig
+export type Provider = OAuthConfig<any> | EmailConfig | CredentialsConfig
 
 export type BuiltInProviders = Record<OAuthProviderType, OAuthProvider> &
   Record<CredentialsProviderType, CredentialsProvider> &
