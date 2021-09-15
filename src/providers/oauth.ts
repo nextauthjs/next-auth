@@ -20,12 +20,12 @@ type PartialIssuer = Partial<Pick<IssuerMetadata, "jwks_endpoint" | "issuer">>
 
 type UrlParams = Record<string, unknown>
 
-type EndpointRequest<C, R> = (
+type EndpointRequest<C, R, P> = (
   context: C & {
     /** `openid-client` Client */
     client: Client
     /** Provider is passed for convenience, ans also contains the `callbackUrl`. */
-    provider: OAuthConfig & {
+    provider: OAuthConfig<P> & {
       signinUrl: string
       callbackUrl: string
     }
@@ -46,7 +46,7 @@ interface AdvancedEndpointHandler<P extends UrlParams, C, R> {
    * - ⚠ **This is an advanced option.**
    * You should **try to avoid using advanced options** unless you are very comfortable using them.
    */
-  request?: EndpointRequest<C, R>
+  request?: EndpointRequest<C, R, P>
 }
 
 /** Either an URL (containing all the parameters) or an object with more granular control. */
@@ -54,9 +54,7 @@ type EndpointHandler<P extends UrlParams, C = any, R = any> =
   | string
   | AdvancedEndpointHandler<P, C, R>
 
-export interface OAuthConfig<P extends Record<string, any> = {}>
-  extends CommonProviderOptions,
-    PartialIssuer {
+export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   /**
    * OpenID Connect (OIDC) compliant providers can configure
    * this instead of `authorize`/`token`/`userinfo` options
@@ -137,10 +135,12 @@ export interface OAuthConfig<P extends Record<string, any> = {}>
   options?: OAuthUserConfig<P>
 }
 
-export type OAuthUserConfig<P = {}> = Omit<
+export type OAuthUserConfig<P> = Omit<
   Partial<OAuthConfig<P>>,
   "options" | "type"
 > &
   Required<Pick<OAuthConfig<P>, "clientId" | "clientSecret">>
 
-export type OAuthProvider = (options: Partial<OAuthConfig>) => OAuthConfig
+export type OAuthProvider = (
+  options: Partial<OAuthConfig<any>>
+) => OAuthConfig<any>
