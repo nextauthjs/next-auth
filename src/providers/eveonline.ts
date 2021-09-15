@@ -24,7 +24,7 @@ export default function EVEOnline<P extends Record<string, any> = EVEOnlineProfi
       params: { scope: "publicData" },
       url: "https://login.eveonline.com/oauth/authorize",
     },
-    profile(profile: P) {
+    profile(profile) {
       return {
         id: profile.CharacterID,
         name: profile.CharacterName,
