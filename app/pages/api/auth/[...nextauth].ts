@@ -138,5 +138,9 @@ export default NextAuth({
     secret: process.env.SECRET,
   },
   debug: true,
-  theme: "auto",
+  theme: {
+    color: "auto",
+    logo: "https://crm.newtelco.de/images/logo_newtelco.png",
+    brandColor: "#67B246"
+  },
 })

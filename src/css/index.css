@@ -228,4 +228,22 @@ a.site {
 
     max-width: 300px;
   }
+  .signin-logo {
+    margin-top: 100px;
+    max-width: 300px;
+  }
+  .card {
+    border: 1px solid var(--color-control-border);
+    border-radius: 5px;
+    padding: 20px 50px;
+    margin: 50px auto;
+
+    .header {
+      color: var(--color-primary);
+    }
+  }
+  .section-header {
+    font-weight: 200;
+    color: var(--brand-color);
+  }
 }
