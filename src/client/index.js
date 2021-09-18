@@ -92,7 +92,7 @@ function _useSessionHook(session) {
   useEffect(() => {
     __NEXTAUTH._getSession = async ({ event = null } = {}) => {
       try {
-        const triggredByEvent = event !== null
+        const triggeredByEvent = event !== null
         const triggeredByStorageEvent = event === "storage"
 
         const clientMaxAge = __NEXTAUTH.clientMaxAge
@@ -103,7 +103,7 @@ function _useSessionHook(session) {
         // Updates triggered by a storage event *always* trigger an update and we
         // always update if we don't have any value for the current session state.
         if (!triggeredByStorageEvent && clientSession !== undefined) {
-          if (clientMaxAge === 0 && triggredByEvent !== true) {
+          if (clientMaxAge === 0 && triggeredByEvent !== true) {
             // If there is no time defined for when a session should be considered
             // stale, then it's okay to use the value we have until an event is
             // triggered which updates it.
