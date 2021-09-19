@@ -48,7 +48,7 @@ export default function Signin({
           --brand-color: ${theme.brandColor}
         }
       `}} />
-      <img src={theme.logo} alt="Logo" className="signin-logo" />
+      <img src={theme.logo} alt="Logo" className="logo" />
       <div className="card">
         {error && (
           <div className="error">
@@ -110,7 +110,7 @@ export default function Signin({
                         type={provider.credentials[credential].type || "text"}
                         value={provider.credentials[credential].value || ""}
                         placeholder={
-                          provider.credentials[credential].placeholder || ""
+                          provider.credentials[credential].placeholder || "Password"
                         }
                       />
                     </div>

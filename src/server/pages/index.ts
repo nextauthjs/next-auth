@@ -35,19 +35,19 @@ export default function renderPage(req, res) {
     },
     signout(props?: any) {
       send({
-        html: signout({ csrfToken, baseUrl, basePath, ...props }),
+        html: signout({ csrfToken, baseUrl, basePath, theme, ...props }),
         title: "Sign Out",
       })
     },
     verifyRequest(props?: any) {
       send({
-        html: verifyRequest({ baseUrl, ...props }),
+        html: verifyRequest({ baseUrl, theme, ...props }),
         title: "Verify Request",
       })
     },
     error(props) {
       send({
-        html: error({ basePath, baseUrl, res, ...props }),
+        html: error({ basePath, baseUrl, theme, res, ...props }),
         title: "Error",
       })
     },

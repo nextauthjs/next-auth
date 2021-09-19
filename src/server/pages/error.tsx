@@ -7,7 +7,7 @@
  *   res: import("src/lib/types").NextAuthResponse
  * }} params
  */
-export default function Error({ baseUrl, basePath, error = "default", res }) {
+export default function Error({ baseUrl, basePath, error = "default", theme, res }) {
   const signinPageUrl = `${baseUrl}${basePath}/signin`
 
   const errors = {
@@ -72,9 +72,12 @@ export default function Error({ baseUrl, basePath, error = "default", res }) {
 
   return (
     <div className="error">
-      <h1>{heading}</h1>
-      <div className="message">{message}</div>
-      {signin}
+      <img src={theme.logo} alt="Logo" className="logo" />
+      <div className="card">
+        <h1>{heading}</h1>
+        <div className="message">{message}</div>
+        {signin}
+      </div>
     </div>
   )
 }
