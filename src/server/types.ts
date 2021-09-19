@@ -202,7 +202,7 @@ export interface NextAuthOptions {
  * [Pages](https://next-auth.js.org/configuration/pages)
  */
 export type Theme = {
-  color: "auto" | "dark" | "light"
+  colorScheme: "auto" | "dark" | "light"
   logo?: string
   brandColor?: string
 }

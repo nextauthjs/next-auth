@@ -139,8 +139,8 @@ export default NextAuth({
   },
   debug: true,
   theme: {
-    color: "auto",
-    logo: "https://crm.newtelco.de/images/logo_newtelco.png",
-    brandColor: "#67B246"
+    colorScheme: "auto",
+    logo: "https://next-auth.js.org/img/logo/logo-sm.png",
+    brandColor: "#1786fb"
   },
 })

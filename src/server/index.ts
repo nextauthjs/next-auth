@@ -97,9 +97,9 @@ async function NextAuthHandler(
     debug: false,
     pages: {},
     theme: {
-      color: "auto",
-      logo: 'https://crm.newtelco.de/images/logo_newtelco.png',
-      brandColor: '#67b246'
+      colorScheme: "auto",
+      logo: '',
+      brandColor: ''
     },
     // Custom options override defaults
     ...userOptions,

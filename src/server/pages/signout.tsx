@@ -1,6 +1,11 @@
 export default function Signout({ baseUrl, basePath, csrfToken, theme }) {
   return (
     <div className="signout">
+      <style dangerouslySetInnerHTML={{ __html: `
+        :root {
+          --brand-color: ${theme.brandColor}
+        }
+      `}} />
       <img src={theme.logo} alt="Logo" className="logo" />
       <div className="card">
         <h1>Signout</h1>

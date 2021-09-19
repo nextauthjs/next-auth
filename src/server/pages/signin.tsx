@@ -20,7 +20,6 @@ export default function Signin({
   })
 
   if (typeof document !== "undefined") {
-    console.log(theme)
     document.documentElement.style.setProperty("--brand-color", theme.brandColor)
   }
 

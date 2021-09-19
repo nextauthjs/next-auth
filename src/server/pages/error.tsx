@@ -72,6 +72,11 @@ export default function Error({ baseUrl, basePath, error = "default", theme, res
 
   return (
     <div className="error">
+      <style dangerouslySetInnerHTML={{ __html: `
+        :root {
+          --brand-color: ${theme.brandColor}
+        }
+      `}} />
       <img src={theme.logo} alt="Logo" className="logo" />
       <div className="card">
         <h1>{heading}</h1>

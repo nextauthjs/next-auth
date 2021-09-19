@@ -1,6 +1,11 @@
 export default function VerifyRequest({ baseUrl, theme }) {
   return (
     <div className="verify-request">
+      <style dangerouslySetInnerHTML={{ __html: `
+        :root {
+          --brand-color: ${theme.brandColor}
+        }
+      `}} />
       <img src={theme.logo} alt="Logo" className="logo" />
       <div className="card">
         <h1>Check your email</h1>
