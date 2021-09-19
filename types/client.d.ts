@@ -23,7 +23,7 @@ export type GetSessionOptions = CtxOrReq & {
  *
  * [Documentation](https://next-auth.js.org/getting-started/client#usesession)
  */
-export function useSession(): [Session | null, boolean]
+export function useSession<S = Session>(): [S | null, boolean]
 
 /**
  * Can be called client or server side to return a session asynchronously.
