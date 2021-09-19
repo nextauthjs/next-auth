@@ -96,7 +96,11 @@ async function NextAuthHandler(
   const options: InternalOptions<any> = {
     debug: false,
     pages: {},
-    theme: "auto",
+    theme: {
+      colorScheme: "auto",
+      logo: '',
+      brandColor: ''
+    },
     // Custom options override defaults
     ...userOptions,
     // These computed settings can have values in userOptions but we override them

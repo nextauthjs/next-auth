@@ -138,5 +138,9 @@ export default NextAuth({
     secret: process.env.SECRET,
   },
   debug: true,
-  theme: "auto",
+  theme: {
+    colorScheme: "auto",
+    logo: "https://next-auth.js.org/img/logo/logo-sm.png",
+    brandColor: "#1786fb"
+  },
 })

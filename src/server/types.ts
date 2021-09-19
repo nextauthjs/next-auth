@@ -201,7 +201,11 @@ export interface NextAuthOptions {
  * [Documentation](https://next-auth.js.org/configuration/options#theme) |
  * [Pages](https://next-auth.js.org/configuration/pages)
  */
-export type Theme = "auto" | "dark" | "light"
+export type Theme = {
+  colorScheme: "auto" | "dark" | "light"
+  logo?: string
+  brandColor?: string
+}
 
 /**
  * Different tokens returned by OAuth Providers.

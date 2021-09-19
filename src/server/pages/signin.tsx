@@ -2,6 +2,7 @@ export default function Signin({
   csrfToken,
   providers,
   callbackUrl,
+  theme,
   email,
   error: errorType,
 }) {
@@ -17,6 +18,10 @@ export default function Signin({
     // Don't render other provider types
     return false
   })
+
+  if (typeof document !== "undefined") {
+    document.documentElement.style.setProperty("--brand-color", theme.brandColor)
+  }
 
   const errors = {
     Signin: "Try signing in with a different account.",
@@ -37,75 +42,87 @@ export default function Signin({
 
   return (
     <div className="signin">
-      {error && (
-        <div className="error">
-          <p>{error}</p>
-        </div>
-      )}
-      {providersToRender.map((provider, i: number) => (
-        <div key={provider.id} className="provider">
-          {provider.type === "oauth" && (
-            <form action={provider.signinUrl} method="POST">
-              <input type="hidden" name="csrfToken" value={csrfToken} />
-              {callbackUrl && (
-                <input type="hidden" name="callbackUrl" value={callbackUrl} />
-              )}
-              <button type="submit" className="button">
-                Sign in with {provider.name}
-              </button>
-            </form>
-          )}
-          {(provider.type === "email" || provider.type === "credentials") &&
-            i > 0 &&
-            providersToRender[i - 1].type !== "email" &&
-            providersToRender[i - 1].type !== "credentials" && <hr />}
-          {provider.type === "email" && (
-            <form action={provider.signinUrl} method="POST">
-              <input type="hidden" name="csrfToken" value={csrfToken} />
-              <label htmlFor={`input-email-for-${provider.id}-provider`}>
-                Email
-              </label>
-              <input
-                id={`input-email-for-${provider.id}-provider`}
-                autoFocus
-                type="text"
-                name="email"
-                value={email}
-                placeholder="email@example.com"
-              />
-              <button type="submit">Sign in with {provider.name}</button>
-            </form>
-          )}
-          {provider.type === "credentials" && (
-            <form action={provider.callbackUrl} method="POST">
-              <input type="hidden" name="csrfToken" value={csrfToken} />
-              {Object.keys(provider.credentials).map((credential) => {
-                return (
-                  <div key={`input-group-${provider.id}`}>
-                    <label
-                      htmlFor={`input-${credential}-for-${provider.id}-provider`}
-                    >
-                      {provider.credentials[credential].label || credential}
-                    </label>
-                    <input
-                      name={credential}
-                      id={`input-${credential}-for-${provider.id}-provider`}
-                      type={provider.credentials[credential].type || "text"}
-                      value={provider.credentials[credential].value || ""}
-                      placeholder={
-                        provider.credentials[credential].placeholder || ""
-                      }
-                    />
-                  </div>
-                )
-              })}
-              <button type="submit">Sign in with {provider.name}</button>
-            </form>
-          )}
-          {(provider.type === "email" || provider.type === "credentials") &&
-            i + 1 < providersToRender.length && <hr />}
-        </div>
-      ))}
+      <style dangerouslySetInnerHTML={{ __html: `
+        :root {
+          --brand-color: ${theme.brandColor}
+        }
+      `}} />
+      <img src={theme.logo} alt="Logo" className="logo" />
+      <div className="card">
+        {error && (
+          <div className="error">
+            <p>{error}</p>
+          </div>
+        )}
+        {providersToRender.map((provider, i: number) => (
+          <div key={provider.id} className="provider">
+            {provider.type === "oauth" && (
+              <form action={provider.signinUrl} method="POST">
+                <input type="hidden" name="csrfToken" value={csrfToken} />
+                {callbackUrl && (
+                  <input type="hidden" name="callbackUrl" value={callbackUrl} />
+                )}
+                <button type="submit" className="button">
+                  Sign in with {provider.name}
+                </button>
+              </form>
+            )}
+            {(provider.type === "email" || provider.type === "credentials") &&
+              i > 0 &&
+              providersToRender[i - 1].type !== "email" &&
+              providersToRender[i - 1].type !== "credentials" && <hr />}
+            {provider.type === "email" && (
+              <form action={provider.signinUrl} method="POST">
+                <input type="hidden" name="csrfToken" value={csrfToken} />
+                <label
+                  className="section-header"
+                  htmlFor={`input-email-for-${provider.id}-provider`}
+                >
+                  Email
+                </label>
+                <input
+                  id={`input-email-for-${provider.id}-provider`}
+                  autoFocus
+                  type="text"
+                  name="email"
+                  value={email}
+                  placeholder="email@example.com"
+                />
+                <button type="submit">Sign in with {provider.name}</button>
+              </form>
+            )}
+            {provider.type === "credentials" && (
+              <form action={provider.callbackUrl} method="POST">
+                <input type="hidden" name="csrfToken" value={csrfToken} />
+                {Object.keys(provider.credentials).map((credential) => {
+                  return (
+                    <div key={`input-group-${provider.id}`}>
+                      <label
+                        className="section-header"
+                        htmlFor={`input-${credential}-for-${provider.id}-provider`}
+                      >
+                        {provider.credentials[credential].label || credential}
+                      </label>
+                      <input
+                        name={credential}
+                        id={`input-${credential}-for-${provider.id}-provider`}
+                        type={provider.credentials[credential].type || "text"}
+                        value={provider.credentials[credential].value || ""}
+                        placeholder={
+                          provider.credentials[credential].placeholder || "Password"
+                        }
+                      />
+                    </div>
+                  )
+                })}
+                <button type="submit">Sign in with {provider.name}</button>
+              </form>
+            )}
+            {(provider.type === "email" || provider.type === "credentials") &&
+              i + 1 < providersToRender.length && <hr />}
+          </div>
+        ))}
+      </div>
     </div>
   )
 }

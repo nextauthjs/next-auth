@@ -216,7 +216,6 @@ a.site {
   >div,
   form {
     display: block;
-    margin: 0 auto 0.5rem auto;
 
     input[type] {
       margin-bottom: 0.5rem;
@@ -228,4 +227,30 @@ a.site {
 
     max-width: 300px;
   }
+}
+.signout {
+  .message {
+    margin-bottom: 1.5rem;
+  }
+}
+
+.logo {
+  margin-top: 100px;
+  max-width: 300px;
+}
+
+.card {
+  max-width: max-content;
+  border: 1px solid var(--color-control-border);
+  border-radius: 5px;
+  padding: 20px 50px;
+  margin: 50px auto;
+
+  .header {
+    color: var(--color-primary);
+  }
+}
+
+.section-header {
+  color: var(--brand-color);
 }
