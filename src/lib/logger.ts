@@ -1,15 +1,23 @@
 import { UnknownError } from "../server/errors"
 
 /** Makes sure that error is always serializable */
-function formatError(o) {
+function formatError(
+  o: Error | UnknownError | { error: Error; [key: string]: unknown }
+): { error?: Error; [key: string]: unknown } {
   if (o instanceof Error && !(o instanceof UnknownError)) {
     return { message: o.message, stack: o.stack, name: o.name }
   }
-  if (o?.error) {
+  if (hasErrorProperty(o)) {
     o.error = formatError(o.error)
     o.message = o.message ?? o.error.message
   }
   return o
+}
+
+function hasErrorProperty(
+  x: unknown
+): x is { error: Error; [key: string]: unknown } {
+  return (x as any)?.error !== "undefined"
 }
 
 /**
@@ -17,7 +25,7 @@ function formatError(o) {
  *
  * [Documentation](https://next-auth.js.org/configuration/options#logger)
  */
-export interface LoggerInstance {
+export interface LoggerInstance extends Record<string, Function> {
   warn: (
     code:
       | "JWT_AUTO_GENERATED_SIGNING_KEY"
@@ -80,15 +88,15 @@ export function proxyLogger(
       return logger
     }
 
-    const clientLogger = {}
+    const clientLogger: Record<string, unknown> = {}
     for (const level in logger) {
-      clientLogger[level] = (code, metadata) => {
+      clientLogger[level] = (code: string, metadata: Error) => {
         _logger[level](code, metadata) // Logs to console
 
         if (level === "error") {
           metadata = formatError(metadata)
         }
-        metadata.client = true
+        ;(metadata as any).client = true
         const url = `${basePath}/_log`
         const body = new URLSearchParams({ level, code, ...metadata })
         if (navigator.sendBeacon) {
@@ -97,7 +105,7 @@ export function proxyLogger(
         return fetch(url, { method: "POST", body, keepalive: true })
       }
     }
-    return clientLogger as LoggerInstance
+    return clientLogger as unknown as LoggerInstance
   } catch {
     return _logger
   }

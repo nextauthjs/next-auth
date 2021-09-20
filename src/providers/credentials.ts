@@ -10,7 +10,7 @@ export interface CredentialInput {
 }
 
 export interface CredentialsConfig<
-  C extends Record<string, CredentialInput> = {}
+  C extends Record<string, CredentialInput> = Record<string, CredentialInput>
 > extends CommonProviderOptions {
   type: "credentials"
   credentials: C

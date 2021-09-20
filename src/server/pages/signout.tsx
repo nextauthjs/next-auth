@@ -1,4 +1,10 @@
-export default function Signout({ baseUrl, basePath, csrfToken }) {
+export interface SignOutServerPageParams {
+  csrfToken: string
+  baseUrl: string
+  basePath: string
+}
+
+export default function Signout({ baseUrl, basePath, csrfToken }: SignOutServerPageParams) {
   return (
     <div className="signout">
       <h1>Are you sure you want to sign out?</h1>
