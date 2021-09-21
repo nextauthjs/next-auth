@@ -123,12 +123,14 @@ export async function getToken<R extends boolean = false>(
       !process.env.NEXTAUTH_URL ||
       process.env.NEXTAUTH_URL.startsWith("http://")
     ),
-    cookieName = secureCookie
-      ? "__Secure-next-auth.session-token"
-      : "next-auth.session-token",
+    cookieName: baseCookieName,
     raw = false,
     decode: _decode = decode,
   } = params ?? {}
+  const cookieName =
+    baseCookieName ?? secureCookie
+      ? "__Secure-next-auth.session-token"
+      : "next-auth.session-token"
   if (!req) throw new Error("Must pass `req` to JWT getToken()")
 
   // Try to get token from cookie

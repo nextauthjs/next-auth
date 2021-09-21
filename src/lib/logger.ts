@@ -1,14 +1,13 @@
 import { UnknownError } from "../server/errors"
 
+// TODO: better typing
 /** Makes sure that error is always serializable */
-function formatError(
-  o: Error | UnknownError | { error: Error; [key: string]: unknown }
-): { error?: Error; [key: string]: unknown } {
+function formatError(o: unknown): unknown {
   if (o instanceof Error && !(o instanceof UnknownError)) {
     return { message: o.message, stack: o.stack, name: o.name }
   }
   if (hasErrorProperty(o)) {
-    o.error = formatError(o.error)
+    o.error = formatError(o.error) as Error
     o.message = o.message ?? o.error.message
   }
   return o
@@ -46,7 +45,7 @@ export interface LoggerInstance extends Record<string, Function> {
 
 const _logger: LoggerInstance = {
   error(code, metadata) {
-    metadata = formatError(metadata)
+    metadata = formatError(metadata) as Error
     console.error(
       `[next-auth][error][${code}]`,
       `\nhttps://next-auth.js.org/errors#${code.toLowerCase()}`,
@@ -94,7 +93,7 @@ export function proxyLogger(
         _logger[level](code, metadata) // Logs to console
 
         if (level === "error") {
-          metadata = formatError(metadata)
+          metadata = formatError(metadata) as Error
         }
         ;(metadata as any).client = true
         const url = `${basePath}/_log`

@@ -6,14 +6,14 @@ import { OAuthCallbackError } from "../../errors"
 import { TokenSet } from "openid-client"
 import { Account, LoggerInstance, Profile } from "src"
 import { OAuthChecks, OAuthConfig } from "src/providers"
+import type { NextAuthRequest, NextAuthResponse } from "src/lib/types"
 
 export default async function oAuthCallback(
-  req,
-  res
+  req: NextAuthRequest,
+  res: NextAuthResponse
 ): Promise<GetProfileResult> {
   const { logger } = req.options
 
-  /** @type {import("src/providers").OAuthConfig} */
   const provider = req.options.provider
 
   const errorMessage = req.body.error ?? req.query.error
@@ -27,14 +27,14 @@ export default async function oAuthCallback(
     throw error
   }
 
-  if (provider.version?.startsWith("1.")) {
+  if (provider.type === "oauth" && provider.version?.startsWith("1.")) {
     try {
       const client = await oAuth1Client(req.options)
       // Handle OAuth v1.x
       const { oauth_token, oauth_verifier } = req.query
       // @ts-expect-error
       const tokens: TokenSet = await client.getOAuthAccessToken(
-        oauth_token,
+        oauth_token as string,
         // @ts-expect-error
         null,
         oauth_verifier
@@ -52,7 +52,7 @@ export default async function oAuthCallback(
 
       return await getProfile({ profile, tokens, provider, logger })
     } catch (error) {
-      logger.error("OAUTH_V1_GET_ACCESS_TOKEN_ERROR", error)
+      logger.error("OAUTH_V1_GET_ACCESS_TOKEN_ERROR", error as Error)
       throw error
     }
   }
@@ -159,7 +159,10 @@ async function getProfile({
     // all providers, so we return an empty object; the user should then be
     // redirected back to the sign up page. We log the error to help developers
     // who might be trying to debug this when configuring a new provider.
-    logger.error("OAUTH_PARSE_PROFILE_ERROR", { error, OAuthProfile })
+    logger.error("OAUTH_PARSE_PROFILE_ERROR", {
+      error: error as Error,
+      OAuthProfile,
+    })
     return {
       profile: null,
       account: null,

@@ -95,15 +95,15 @@ export default function Signin({
                     <label
                       htmlFor={`input-${credential}-for-${provider.id}-provider`}
                     >
-                      {provider.credentials[credential].label || credential}
+                      {provider.credentials[credential].label ?? credential}
                     </label>
                     <input
                       name={credential}
                       id={`input-${credential}-for-${provider.id}-provider`}
-                      type={provider.credentials[credential].type || "text"}
-                      value={provider.credentials[credential].value || ""}
+                      type={provider.credentials[credential].type ?? "text"}
+                      value={provider.credentials[credential].value ?? ""}
                       placeholder={
-                        provider.credentials[credential].placeholder || ""
+                        provider.credentials[credential].placeholder ?? ""
                       }
                     />
                   </div>
