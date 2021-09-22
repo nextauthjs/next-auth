@@ -17,6 +17,7 @@ import LineProvider from "next-auth/providers/line"
 import LinkedInProvider from "next-auth/providers/linkedin"
 import MailchimpProvider from "next-auth/providers/mailchimp"
 import DiscordProvider from "next-auth/providers/discord"
+import AzureADProvider from "next-auth/providers/azure-ad"
 
 // import { PrismaAdapter } from "@next-auth/prisma-adapter"
 // import { PrismaClient } from "@prisma/client"
@@ -132,6 +133,11 @@ export default NextAuth({
       clientId: process.env.DISCORD_ID,
       clientSecret: process.env.DISCORD_SECRET,
     }),
+    AzureADProvider({
+      clientId: process.env.AZURE_AD_CLIENT_ID,
+      clientSecret: process.env.AZURE_AD_CLIENT_SECRET,
+      tenantId: process.env.AZURE_AD_TENANT_ID,
+    }),
   ],
   jwt: {
     encryption: true,
@@ -141,6 +147,6 @@ export default NextAuth({
   theme: {
     colorScheme: "auto",
     logo: "https://next-auth.js.org/img/logo/logo-sm.png",
-    brandColor: "#1786fb"
+    brandColor: "#1786fb",
   },
 })
