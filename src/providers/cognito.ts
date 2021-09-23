@@ -1,0 +1,27 @@
+import { OAuthConfig, OAuthUserConfig } from "."
+
+export interface CognitoProfile {
+  sub: string
+  name: string
+  email: string
+}
+
+export default function Cognito<P extends Record<string, any> = CognitoProfile>(
+  options: OAuthUserConfig<P>
+): OAuthConfig<P> {
+  return {
+    id: "cognito",
+    name: "Cognito",
+    type: "oauth",
+    wellKnown: `${options.issuer}/.well-known/openid-configuration`,
+    profile(profile) {
+      return {
+        id: profile.sub,
+        name: profile.name,
+        email: profile.email,
+        image: null,
+      }
+    },
+    options,
+  }
+}
