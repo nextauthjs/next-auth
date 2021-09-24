@@ -21,18 +21,10 @@
     "nextauth"
   ],
   "exports": {
-    ".": {
-      "import": "./index.js"
-    },
-    "./jwt": {
-      "import": "./jwt/index.js"
-    },
-    "./react": {
-      "import": "./react/index.js"
-    },
-    "./providers/*": {
-      "import": "./providers/*.js"
-    }
+    ".": "./index.js",
+    "./jwt": "./jwt/index.js",
+    "./react": "./react/index.js",
+    "./providers/*": "./providers/*.js"
   },
   "scripts": {
     "build": "npm run build:js && npm run build:css",
