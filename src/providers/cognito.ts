@@ -4,6 +4,7 @@ export interface CognitoProfile {
   sub: string
   name: string
   email: string
+  picture: string
 }
 
 export default function Cognito<P extends Record<string, any> = CognitoProfile>(
