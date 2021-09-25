@@ -197,6 +197,13 @@ We're happy to announce we've recently created an [OpenCollective](https://openc
         <div>Checkly</div><br />
         <sub>☁️ Infrastructure Support</sub>
       </td>
+      <td align="center" valign="top">
+        <a href="https://superblog.ai/" target="_blank">
+          <img width="128px" src="https://d33wubrfki0l68.cloudfront.net/cdc4a3833bd878933fcc131655878dbf226ac1c5/10cd6/images/logo_bolt_small.png" alt="superblog Logo" />
+        </a><br />
+        <div>superblog</div><br />
+        <sub>☁️ Infrastructure Support</sub>
+      </td>
     </tr><tr></tr>
   </tbody>
 </table>

@@ -19,6 +19,7 @@ import MailchimpProvider from "next-auth/providers/mailchimp"
 import DiscordProvider from "next-auth/providers/discord"
 import AzureADProvider from "next-auth/providers/azure-ad"
 import SpotifyProvider from "next-auth/providers/spotify"
+import CognitoProvider from "next-auth/providers/cognito"
 
 // import { PrismaAdapter } from "@next-auth/prisma-adapter"
 // import { PrismaClient } from "@prisma/client"
@@ -142,6 +143,11 @@ export default NextAuth({
     SpotifyProvider({
       clientId: process.env.SPOTIFY_ID,
       clientSecret: process.env.SPOTIFY_SECRET,
+    }),
+    CognitoProvider({
+      clientId: process.env.COGNITO_ID,
+      clientSecret: process.env.COGNITO_SECRET,
+      issuer: process.env.COGNITO_ISSUER,
     }),
   ],
   jwt: {
