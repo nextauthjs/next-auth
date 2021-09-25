@@ -19,7 +19,7 @@ export default function Cognito<P extends Record<string, any> = CognitoProfile>(
         id: profile.sub,
         name: profile.name,
         email: profile.email,
-        image: null,
+        image: profile.picture,
       }
     },
     options,
