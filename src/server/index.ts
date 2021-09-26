@@ -73,33 +73,23 @@ async function NextAuthHandler(
 
   const secret = createSecret({ userOptions, basePath, baseUrl })
 
-  const providers = parseProviders({
+  const { providers, provider } = parseProviders({
     providers: userOptions.providers,
     base: `${baseUrl}${basePath}`,
+    providerId: providerId as string | undefined,
   })
-
-  const provider = providers.find(({ id }) => id === providerId)
-
-  // Checks only work on OAuth 2.x + OIDC providers
-  if (
-    provider?.type === "oauth" &&
-    !provider.version?.startsWith("1.") &&
-    !provider.checks
-  ) {
-    provider.checks = ["state"]
-  }
 
   const maxAge = 30 * 24 * 60 * 60 // Sessions expire after 30 days of being idle by default
 
   // User provided options are overriden by other options,
   // except for the options with special handling above
-  const options: InternalOptions<any> = {
+  const options: InternalOptions = {
     debug: false,
     pages: {},
     theme: {
       colorScheme: "auto",
-      logo: '',
-      brandColor: ''
+      logo: "",
+      brandColor: "",
     },
     // Custom options override defaults
     ...userOptions,
