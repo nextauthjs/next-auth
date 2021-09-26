@@ -2,29 +2,29 @@
 // We have the intentions to provide only minor fixes for this in the future.
 
 import { OAuth } from "oauth"
+import { InternalOptions } from "src/lib/types"
 
 /**
  * Client supporting OAuth 1.x
- * @param {import("src/lib/types").InternalOptions} options
  */
-export function oAuth1Client(options) {
-  /** @type {import("src/providers").OAuthConfig} */
+export function oAuth1Client(options: InternalOptions<"oauth">) {
   const provider = options.provider
 
   const oauth1Client = new OAuth(
-    provider.requestTokenUrl,
-    provider.accessTokenUrl,
-    provider.clientId,
-    provider.clientSecret,
-    provider.version || "1.0",
+    provider.requestTokenUrl as string,
+    provider.accessTokenUrl as string,
+    provider.clientId as string,
+    provider.clientSecret as string,
+    provider.version ?? "1.0",
     provider.callbackUrl,
-    provider.encoding || "HMAC-SHA1"
+    provider.encoding ?? "HMAC-SHA1"
   )
 
   // Promisify get()  for OAuth1
   const originalGet = oauth1Client.get.bind(oauth1Client)
-  oauth1Client.get = (...args) => {
-    return new Promise((resolve, reject) => {
+  // @ts-expect-error
+  oauth1Client.get = async (...args) => {
+    return await new Promise((resolve, reject) => {
       originalGet(...args, (error, result) => {
         if (error) {
           return reject(error)
@@ -36,8 +36,8 @@ export function oAuth1Client(options) {
   // Promisify getOAuth1AccessToken()  for OAuth1
   const originalGetOAuth1AccessToken =
     oauth1Client.getOAuthAccessToken.bind(oauth1Client)
-  oauth1Client.getOAuthAccessToken = (...args) => {
-    return new Promise((resolve, reject) => {
+  oauth1Client.getOAuthAccessToken = async (...args: any[]) => {
+    return await new Promise((resolve, reject) => {
       originalGetOAuth1AccessToken(
         ...args,
         (error, oauth_token, oauth_token_secret) => {
@@ -52,8 +52,8 @@ export function oAuth1Client(options) {
 
   const originalGetOAuthRequestToken =
     oauth1Client.getOAuthRequestToken.bind(oauth1Client)
-  oauth1Client.getOAuthRequestToken = (params = {}) => {
-    return new Promise((resolve, reject) => {
+  oauth1Client.getOAuthRequestToken = async (params = {}) => {
+    return await new Promise((resolve, reject) => {
       originalGetOAuthRequestToken(
         params,
         (error, oauth_token, oauth_token_secret, params) => {
