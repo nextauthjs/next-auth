@@ -20,6 +20,7 @@ import DiscordProvider from "next-auth/providers/discord"
 import AzureADProvider from "next-auth/providers/azure-ad"
 import SpotifyProvider from "next-auth/providers/spotify"
 import CognitoProvider from "next-auth/providers/cognito"
+import SlackProvider from "next-auth/providers/slack"
 
 // import { PrismaAdapter } from "@next-auth/prisma-adapter"
 // import { PrismaClient } from "@prisma/client"
@@ -38,6 +39,17 @@ import CognitoProvider from "next-auth/providers/cognito"
 export default NextAuth({
   // adapter,
   providers: [
+    {
+      id: "esri",
+      name: "Esri",
+      type: "oauth",
+      version: "2.0",
+      authorization: `${process.env.ESRI_PORTAL}/oauth2/authorize?response_type=code`,
+      token: `${process.env.ESRI_PORTAL}/oauth2/token?grant_type=authorization_code&client_id=${process.env.ARCGIS_CLIENT_ID}`,
+      userinfo: `${process.env.ESRI_PORTAL}/oauth2/token?grant_type=authorization_code&client_id=${process.env.ARCGIS_CLIENT_ID}`,
+      clientId: process.env.ARCGIS_CLIENT_ID,
+      clientSecret: process.env.ARCGIS_CLIENT_SECRET,
+    },
     // E-mail
     // Start fake e-mail server with `npm run start:email`
     EmailProvider({
@@ -148,6 +160,10 @@ export default NextAuth({
       clientId: process.env.COGNITO_ID,
       clientSecret: process.env.COGNITO_SECRET,
       issuer: process.env.COGNITO_ISSUER,
+    }),
+    SlackProvider({
+      clientId: process.env.SLACK_ID,
+      clientSecret: process.env.SLACK_SECRET,
     }),
   ],
   jwt: {
