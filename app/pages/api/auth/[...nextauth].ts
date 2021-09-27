@@ -39,17 +39,6 @@ import SlackProvider from "next-auth/providers/slack"
 export default NextAuth({
   // adapter,
   providers: [
-    {
-      id: "esri",
-      name: "Esri",
-      type: "oauth",
-      version: "2.0",
-      authorization: `${process.env.ESRI_PORTAL}/oauth2/authorize?response_type=code`,
-      token: `${process.env.ESRI_PORTAL}/oauth2/token?grant_type=authorization_code&client_id=${process.env.ARCGIS_CLIENT_ID}`,
-      userinfo: `${process.env.ESRI_PORTAL}/oauth2/token?grant_type=authorization_code&client_id=${process.env.ARCGIS_CLIENT_ID}`,
-      clientId: process.env.ARCGIS_CLIENT_ID,
-      clientSecret: process.env.ARCGIS_CLIENT_SECRET,
-    },
     // E-mail
     // Start fake e-mail server with `npm run start:email`
     EmailProvider({
