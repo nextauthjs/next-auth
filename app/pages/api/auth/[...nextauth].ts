@@ -21,6 +21,7 @@ import AzureADProvider from "next-auth/providers/azure-ad"
 import SpotifyProvider from "next-auth/providers/spotify"
 import CognitoProvider from "next-auth/providers/cognito"
 import SlackProvider from "next-auth/providers/slack"
+import Okta from "next-auth/providers/okta"
 
 // import { PrismaAdapter } from "@next-auth/prisma-adapter"
 // import { PrismaClient } from "@prisma/client"
@@ -149,6 +150,11 @@ export default NextAuth({
       clientId: process.env.COGNITO_ID,
       clientSecret: process.env.COGNITO_SECRET,
       issuer: process.env.COGNITO_ISSUER,
+    }),
+    Okta({
+      clientId: process.env.OKTA_ID,
+      clientSecret: process.env.OKTA_SECRET,
+      issuer: process.env.OKTA_ISSUER,
     }),
     SlackProvider({
       clientId: process.env.SLACK_ID,
