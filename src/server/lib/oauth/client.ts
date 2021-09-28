@@ -23,11 +23,15 @@ export async function openidClient(options: InternalOptions<"oauth">) {
     })
   }
 
-  const client = new issuer.Client({
-    client_id: provider.clientId,
-    client_secret: provider.clientSecret,
-    redirect_uris: [provider.callbackUrl],
-  })
+  const client = new issuer.Client(
+    {
+      client_id: provider.clientId,
+      client_secret: provider.clientSecret,
+      redirect_uris: [provider.callbackUrl],
+      ...provider.client,
+    },
+    provider.jwks
+  )
 
   return client
 }

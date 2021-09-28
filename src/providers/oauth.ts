@@ -5,10 +5,12 @@ import {
   AuthorizationParameters,
   CallbackParamsType,
   Client,
+  ClientMetadata,
   IssuerMetadata,
   OAuthCallbackChecks,
   OpenIDCallbackChecks,
 } from "openid-client"
+import { JSONWebKeySet } from "jose"
 
 export type { OAuthProviderType } from "./oauth-types"
 
@@ -107,6 +109,8 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   version?: string
   profile?: (profile: P, tokens: TokenSet) => Awaitable<User & { id: string }>
   checks?: ChecksType | ChecksType[]
+  client?: Partial<ClientMetadata>
+  jwks?: JSONWebKeySet
   clientId?: string
   clientSecret?:
     | string
