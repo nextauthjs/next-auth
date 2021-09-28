@@ -24,7 +24,6 @@
     "app",
     "**/tests",
     "**/__tests__",
-    "config",
-    "www"
+    "config"
   ]
 }

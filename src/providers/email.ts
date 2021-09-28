@@ -72,7 +72,6 @@ export default function Email(options: EmailUserConfig): EmailConfig {
       provider: { server, from },
     }) {
       const { host } = new URL(url)
-      console.log(server)
       const transport = createTransport(server)
       await transport.sendMail({
         to: email,

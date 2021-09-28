@@ -17,6 +17,10 @@ import LineProvider from "next-auth/providers/line"
 import LinkedInProvider from "next-auth/providers/linkedin"
 import MailchimpProvider from "next-auth/providers/mailchimp"
 import DiscordProvider from "next-auth/providers/discord"
+import AzureADProvider from "next-auth/providers/azure-ad"
+import SpotifyProvider from "next-auth/providers/spotify"
+import CognitoProvider from "next-auth/providers/cognito"
+import SlackProvider from "next-auth/providers/slack"
 
 // import { PrismaAdapter } from "@next-auth/prisma-adapter"
 // import { PrismaClient } from "@prisma/client"
@@ -132,11 +136,33 @@ export default NextAuth({
       clientId: process.env.DISCORD_ID,
       clientSecret: process.env.DISCORD_SECRET,
     }),
+    AzureADProvider({
+      clientId: process.env.AZURE_AD_CLIENT_ID,
+      clientSecret: process.env.AZURE_AD_CLIENT_SECRET,
+      tenantId: process.env.AZURE_AD_TENANT_ID,
+    }),
+    SpotifyProvider({
+      clientId: process.env.SPOTIFY_ID,
+      clientSecret: process.env.SPOTIFY_SECRET,
+    }),
+    CognitoProvider({
+      clientId: process.env.COGNITO_ID,
+      clientSecret: process.env.COGNITO_SECRET,
+      issuer: process.env.COGNITO_ISSUER,
+    }),
+    SlackProvider({
+      clientId: process.env.SLACK_ID,
+      clientSecret: process.env.SLACK_SECRET,
+    }),
   ],
   jwt: {
     encryption: true,
     secret: process.env.SECRET,
   },
   debug: true,
-  theme: "auto",
+  theme: {
+    colorScheme: "auto",
+    logo: "https://next-auth.js.org/img/logo/logo-sm.png",
+    brandColor: "#1786fb",
+  },
 })

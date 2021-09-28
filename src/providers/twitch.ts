@@ -1,5 +1,15 @@
-/** @type {import(".").OAuthProvider} */
-export default function Twitch(options) {
+import { OAuthConfig, OAuthUserConfig } from "."
+
+export interface TwitchProfile {
+  sub: string
+  preferred_username: string
+  email: string
+  picture: string
+}
+
+export default function Twitch<P extends Record<string, any> = TwitchProfile>(
+  options: OAuthUserConfig<P>
+): OAuthConfig<P> {
   return {
     wellKnown: "https://id.twitch.tv/oauth2/.well-known/openid-configuration",
     id: "twitch",
@@ -8,9 +18,13 @@ export default function Twitch(options) {
     authorization: {
       params: {
         scope: "openid user:read:email",
-        claims: JSON.stringify({
-          id_token: { email: null, picture: null, preferred_username: null },
-        }),
+        claims: {
+          id_token: {
+            email: null,
+            picture: null,
+            preferred_username: null,
+          },
+        },
       },
     },
     idToken: true,

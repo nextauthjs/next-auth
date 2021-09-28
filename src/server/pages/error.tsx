@@ -18,6 +18,7 @@ export default function Error({
   baseUrl,
   basePath,
   error = "default",
+  theme,
   res,
 }: ErrorServerPageParams) {
   const signinPageUrl = `${baseUrl}${basePath}/signin`
@@ -84,9 +85,21 @@ export default function Error({
 
   return (
     <div className="error">
-      <h1>{heading}</h1>
-      <div className="message">{message}</div>
-      {signin}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+        :root {
+          --brand-color: ${theme.brandColor}
+        }
+      `,
+        }}
+      />
+      <img src={theme.logo} alt="Logo" className="logo" />
+      <div className="card">
+        <h1>{heading}</h1>
+        <div className="message">{message}</div>
+        {signin}
+      </div>
     </div>
   )
 }

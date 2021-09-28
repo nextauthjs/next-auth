@@ -1,6 +1,15 @@
 import { OAuthConfig, OAuthUserConfig } from "./oauth"
 
-export default function Auth0(options: OAuthUserConfig): OAuthConfig {
+export interface Auth0Profile {
+  sub: string
+  nicname: string
+  email: string
+  picture: string
+}
+
+export default function Auth0<P extends Record<string, any> = Auth0Profile>(
+  options: OAuthUserConfig<P>
+): OAuthConfig<P> {
   return {
     id: "auth0",
     name: "Auth0",
@@ -9,7 +18,7 @@ export default function Auth0(options: OAuthUserConfig): OAuthConfig {
     authorization: { params: { scope: "openid email profile" } },
     checks: ["pkce", "state"],
     idToken: true,
-    profile(profile: any) {
+    profile(profile) {
       return {
         id: profile.sub,
         name: profile.nickname,

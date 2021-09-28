@@ -11,22 +11,38 @@ import type {
   Awaitable,
 } from ".."
 
-import type { Provider } from "../providers"
+import type {
+  OAuthConfig,
+  EmailConfig,
+  CredentialsConfig,
+  AuthorizationEndpointHandler,
+  TokenEndpointHandler,
+  UserinfoEndpointHandler,
+  ProviderType,
+} from "../providers"
 import type { JWTOptions } from "../jwt"
 import type { Adapter } from "../adapters"
 
 // Below are types that are only supposed be used by next-auth internally
 
 /** @internal */
-export type InternalProvider = Provider & {
+export type InternalProvider<T extends ProviderType = any> = (T extends "oauth"
+  ? Omit<OAuthConfig<any>, "authorization" | "token" | "userinfo"> & {
+      authorization: AuthorizationEndpointHandler
+      token: TokenEndpointHandler
+      userinfo: UserinfoEndpointHandler
+    }
+  : T extends "email"
+  ? EmailConfig
+  : T extends "credentials"
+  ? CredentialsConfig
+  : never) & {
   signinUrl: string
   callbackUrl: string
 }
 
 /** @internal */
-export interface InternalOptions<
-  P extends InternalProvider = InternalProvider
-> {
+export interface InternalOptions<T extends ProviderType = any> {
   providers: InternalProvider[]
   baseUrl: string
   basePath: string
@@ -39,7 +55,9 @@ export interface InternalOptions<
     | "callback"
     | "verify-request"
     | "error"
-  provider: P
+  provider: T extends string
+    ? InternalProvider<T>
+    : InternalProvider<T> | undefined
   csrfToken?: string
   csrfTokenVerified?: boolean
   secret: string

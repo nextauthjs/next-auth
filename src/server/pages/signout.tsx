@@ -4,14 +4,32 @@ export interface SignOutServerPageParams {
   basePath: string
 }
 
-export default function Signout({ baseUrl, basePath, csrfToken }: SignOutServerPageParams) {
+export default function Signout({
+  baseUrl,
+  basePath,
+  csrfToken,
+  theme,
+}: SignOutServerPageParams) {
   return (
     <div className="signout">
-      <h1>Are you sure you want to sign out?</h1>
-      <form action={`${baseUrl}${basePath}/signout`} method="POST">
-        <input type="hidden" name="csrfToken" value={csrfToken} />
-        <button type="submit">Sign out</button>
-      </form>
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+        :root {
+          --brand-color: ${theme.brandColor}
+        }
+      `,
+        }}
+      />
+      <img src={theme.logo} alt="Logo" className="logo" />
+      <div className="card">
+        <h1>Signout</h1>
+        <p>Are you sure you want to sign out?</p>
+        <form action={`${baseUrl}${basePath}/signout`} method="POST">
+          <input type="hidden" name="csrfToken" value={csrfToken} />
+          <button type="submit">Sign out</button>
+        </form>
+      </div>
     </div>
   )
 }
