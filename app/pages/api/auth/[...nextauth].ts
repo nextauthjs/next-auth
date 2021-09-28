@@ -155,7 +155,7 @@ export default NextAuth({
       clientId: process.env.OKTA_ID,
       clientSecret: process.env.OKTA_SECRET,
       issuer: process.env.OKTA_ISSUER,
-    })
+    }),
     SlackProvider({
       clientId: process.env.SLACK_ID,
       clientSecret: process.env.SLACK_SECRET,
