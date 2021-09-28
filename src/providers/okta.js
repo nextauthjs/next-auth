@@ -4,13 +4,12 @@ export default function Okta(options) {
     id: "okta",
     name: "Okta",
     type: "oauth",
-    authorization: `${options.issuer}v1/authorize?scope=openid+profile+email`,
-    token: `${options.issuer}v1/token`,
-    userinfo: `${options.issuer}v1/userinfo`,
+    wellKnown: `${options.issuer}/.well-known/openid-configuration`,
+    authorization: { params: { scope: "openid email profile" } },
     profile(profile) {
       return {
         id: profile.sub,
-        name: profile.name,
+        name: profile.displayName,
         email: profile.email,
         image: null,
       }
