@@ -64,7 +64,7 @@ export default async function callback(req, res) {
         }
 
         try {
-          const isAllowed = await callbacks.signIn({
+          const isAllowed = await callbacks.shouldSignIn({
             user: userOrProfile,
             account,
             profile: OAuthProfile,
@@ -204,7 +204,7 @@ export default async function callback(req, res) {
 
       // Check if user is allowed to sign in
       try {
-        const signInCallbackResponse = await callbacks.signIn({
+        const signInCallbackResponse = await callbacks.shouldSignIn({
           user: profile,
           account,
           email: { email: identifier },
@@ -343,7 +343,7 @@ export default async function callback(req, res) {
     }
 
     try {
-      const isAllowed = await callbacks.signIn({
+      const isAllowed = await callbacks.shouldSignIn({
         user,
         account,
         credentials,

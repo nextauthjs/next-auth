@@ -52,7 +52,7 @@ export default async function signin(req, res) {
 
     // Check if user is allowed to sign in
     try {
-      const signInCallbackResponse = await callbacks.signIn({
+      const signInCallbackResponse = await callbacks.shouldSignIn({
         user,
         account,
         email: { verificationRequest: true },

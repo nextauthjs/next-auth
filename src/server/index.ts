@@ -3,7 +3,7 @@ import * as jwt from "../jwt"
 import parseUrl from "../lib/parse-url"
 import logger, { setLogger } from "../lib/logger"
 import * as cookie from "./lib/cookie"
-import { defaultCallbacks } from "./lib/default-callbacks"
+import { mergeCallbacks } from "./lib/callbacks"
 import parseProviders from "./lib/providers"
 import * as routes from "./routes"
 import renderPage from "./pages"
@@ -121,10 +121,7 @@ async function NextAuthHandler(
     events: eventsErrorHandler(userOptions.events ?? {}, logger),
     adapter: adapterErrorHandler(userOptions.adapter, logger),
     // Callback functions
-    callbacks: {
-      ...defaultCallbacks,
-      ...userOptions.callbacks,
-    },
+    callbacks: mergeCallbacks(userOptions.callbacks, logger),
     logger,
     callbackUrl: process.env.NEXTAUTH_URL ?? "http://localhost:3000",
   }
