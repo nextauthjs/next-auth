@@ -23,6 +23,7 @@ export interface LoggerInstance {
       | "JWT_AUTO_GENERATED_SIGNING_KEY"
       | "JWT_AUTO_GENERATED_ENCRYPTION_KEY"
       | "NEXTAUTH_URL"
+      | "SIGNIN_CALLBACK_RENAMED"
   ) => void
   error: (
     code: string,

@@ -201,7 +201,7 @@ export interface NextAuthOptions {
  * [Documentation](https://next-auth.js.org/configuration/options#theme) |
  * [Pages](https://next-auth.js.org/configuration/pages)
  */
-export type Theme = {
+export interface Theme {
   colorScheme: "auto" | "dark" | "light"
   logo?: string
   brandColor?: string
@@ -246,47 +246,53 @@ export interface DefaultProfile {
 /** The OAuth profile returned from your provider */
 export interface Profile extends Record<string, unknown>, DefaultProfile {}
 
+type ShouldSignInCallback<
+  A extends Record<string, unknown>,
+  P extends Record<string, unknown>
+> = (params: {
+  user: User
+  account: A
+  /**
+   * If OAuth provider is used, it contains the full
+   * OAuth profile returned by your provider.
+   */
+  profile: P & Record<string, unknown>
+  /**
+   * If Email provider is used, on the first call, it contains a
+   * `verificationRequest: true` property to indicate it is being triggered in the verification request flow.
+   * When the callback is invoked after a user has clicked on a sign in link,
+   * this property will not be present. You can check for the `verificationRequest` property
+   * to avoid sending emails to addresses or domains on a blocklist or to only explicitly generate them
+   * for email address in an allow list.
+   */
+  email: {
+    verificationRequest?: boolean
+  }
+  /** If Credentials provider is used, it contains the user credentials */
+  credentials: Record<string, CredentialInput>
+}) => Awaitable<string | boolean>
+
 /** [Documentation](https://next-auth.js.org/configuration/callbacks) */
 export interface CallbacksOptions<
   P extends Record<string, unknown> = Profile,
   A extends Record<string, unknown> = Account
 > {
   /**
+   * @deprecated Use `shouldSignIn` instead.
+   */
+  signIn?: ShouldSignInCallback<A, P>
+  /**
    * Use this callback to control if a user is allowed to sign in.
    * Returning true will continue the sign-in flow.
    * Throwing an error or returning a string will stop the flow, and redirect the user.
    *
-   * [Documentation](https://next-auth.js.org/configuration/callbacks#sign-in-callback)
-   */
-  signIn: (params: {
-    user: User
-    account: A
-    /**
-     * If OAuth provider is used, it contains the full
-     * OAuth profile returned by your provider.
-     */
-    profile: P & Record<string, unknown>
-    /**
-     * If Email provider is used, on the first call, it contains a
-     * `verificationRequest: true` property to indicate it is being triggered in the verification request flow.
-     * When the callback is invoked after a user has clicked on a sign in link,
-     * this property will not be present. You can check for the `verificationRequest` property
-     * to avoid sending emails to addresses or domains on a blocklist or to only explicitly generate them
-     * for email address in an allow list.
-     */
-    email: {
-      verificationRequest?: boolean
-    }
-    /** If Credentials provider is used, it contains the user credentials */
-    credentials: Record<string, CredentialInput>
-  }) => Awaitable<string | boolean>
-  /**
-   * This callback is called anytime the user is redirected to a callback URL (e.g. on signin or signout).
-   * By default only URLs on the same URL as the site are allowed,
-   * you can use this callback to customise that behaviour.
+   * ⚠ This is not the intended place to mutate the `user` object!
+   * If you need to mutate the user, check out the `jwt` callback instead.
    *
-   * [Documentation](https://next-auth.js.org/configuration/callbacks#redirect-callback)
+   * [Documentation](https://next-auth.js.org/configuration/callbacks#sign-in-callback)
+   * [`jwt` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback)
    */
+  shouldSignIn: ShouldSignInCallback<A, P>
   redirect: (params: {
     /** URL provided as callback URL by the client */
     url: string
@@ -297,7 +303,7 @@ export interface CallbacksOptions<
    * This callback is called whenever a session is checked.
    * (Eg.: invoking the `/api/session` endpoint, using `useSession` or `getSession`)
    *
-   * ⚠ By default, only a subset (email, name, imgage)
+   * ⚠ By default, only a subset (email, name, image)
    * of the token is returned for increased security.
    *
    * If you want to make something available you added to the token through the `jwt` callback,
