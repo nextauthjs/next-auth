@@ -48,7 +48,7 @@ export default function Okta<P extends Record<string, any> = OktaProfile>(
         id: profile.sub,
         name: profile.name ?? profile.preferred_username,
         email: profile.email,
-        image: null,
+        image: profile.picture,
       }
     },
     options,
