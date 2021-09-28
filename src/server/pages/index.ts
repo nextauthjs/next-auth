@@ -13,7 +13,7 @@ export default function renderPage(req, res) {
   res.setHeader("Content-Type", "text/html")
   function send({ html, title }) {
     res.send(
-      `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>${css()}</style><title>${title}</title></head><body class="__next-auth-theme-${theme}"><div class="page">${renderToString(
+      `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>${css()}</style><title>${title}</title></head><body class="__next-auth-theme-${theme.colorScheme}"><div class="page">${renderToString(
         html
       )}</div></body></html>`
     )
@@ -26,6 +26,7 @@ export default function renderPage(req, res) {
           csrfToken,
           providers,
           callbackUrl,
+          theme,
           ...req.query,
           ...props,
         }),
@@ -34,19 +35,19 @@ export default function renderPage(req, res) {
     },
     signout(props?: any) {
       send({
-        html: signout({ csrfToken, baseUrl, basePath, ...props }),
+        html: signout({ csrfToken, baseUrl, basePath, theme, ...props }),
         title: "Sign Out",
       })
     },
     verifyRequest(props?: any) {
       send({
-        html: verifyRequest({ baseUrl, ...props }),
+        html: verifyRequest({ baseUrl, theme, ...props }),
         title: "Verify Request",
       })
     },
     error(props) {
       send({
-        html: error({ basePath, baseUrl, res, ...props }),
+        html: error({ basePath, baseUrl, theme, res, ...props }),
         title: "Error",
       })
     },

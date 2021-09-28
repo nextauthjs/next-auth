@@ -1,6 +1,5 @@
 import { randomBytes } from "crypto"
-import { EmailConfig } from "src/providers"
-import { InternalOptions, InternalProvider } from "src/lib/types"
+import { InternalOptions } from "src/lib/types"
 import { hashToken } from "../utils"
 
 /**
@@ -9,7 +8,7 @@ import { hashToken } from "../utils"
  */
 export default async function email(
   identifier: string,
-  options: InternalOptions<EmailConfig & InternalProvider>
+  options: InternalOptions<"email">
 ) {
   const { baseUrl, basePath, adapter, provider, logger, callbackUrl } = options
 

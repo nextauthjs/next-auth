@@ -21,6 +21,7 @@ export default async function oAuthCallback(
     const error = new Error(errorMessage)
     logger.error("OAUTH_CALLBACK_HANDLER_ERROR", {
       error,
+      error_description: req.query?.error_description,
       body: req.body,
       providerId: provider.id,
     })
@@ -117,7 +118,7 @@ export default async function oAuthCallback(
 export interface GetProfileParams {
   profile: Profile
   tokens: TokenSet
-  provider: OAuthConfig
+  provider: OAuthConfig<any>
   logger: LoggerInstance
 }
 

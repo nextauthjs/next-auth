@@ -1,4 +1,5 @@
 import { Issuer } from "openid-client"
+import { InternalOptions } from "src/lib/types"
 
 /**
  * NOTE: We can add auto discovery of the provider's endpoint
@@ -6,10 +7,8 @@ import { Issuer } from "openid-client"
  * Check out `Issuer.discover`
  *
  * Client supporting OAuth 2.x and OIDC
- * @param {import("src/lib/types").InternalOptions} options
  */
-export async function openidClient(options) {
-  /** @type {import("src/providers").OAuthConfig} */
+export async function openidClient(options: InternalOptions<"oauth">) {
   const provider = options.provider
 
   let issuer
@@ -17,11 +16,10 @@ export async function openidClient(options) {
     issuer = await Issuer.discover(provider.wellKnown)
   } else {
     issuer = new Issuer({
-      issuer: provider.issuer,
-      authorization_endpoint:
-        provider.authorization.url ?? provider.authorization,
-      token_endpoint: provider.token.url ?? provider.token,
-      userinfo_endpoint: provider.userinfo.url ?? provider.userinfo,
+      issuer: provider.issuer as string,
+      authorization_endpoint: provider.authorization.url,
+      token_endpoint: provider.token.url,
+      userinfo_endpoint: provider.userinfo.url,
     })
   }
 
