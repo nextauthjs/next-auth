@@ -1,5 +1,5 @@
 import { randomBytes } from "crypto"
-import { InternalOptions } from "src/lib/types"
+import { InternalOptions } from "../../../lib/types"
 import { hashToken } from "../utils"
 
 /**
