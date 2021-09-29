@@ -168,7 +168,14 @@ export async function NextAuthHandler(
       case "signout":
         // Verified CSRF Token required for signout
         if (options.csrfTokenVerified) {
-          return await routes.signout(req, res)
+          const signout = await routes.signout({
+            options,
+            sessionToken: params.cookies[options.cookies.sessionToken.name],
+          })
+          if (signout.cookie) {
+            cookies.push(signout.cookie)
+          }
+          return { ...signout, cookies }
         }
         return { redirect: `${options.base}/signout?csrf=true`, cookies }
       case "callback":
