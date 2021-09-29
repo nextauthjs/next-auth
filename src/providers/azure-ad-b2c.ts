@@ -26,9 +26,6 @@ export default function AzureADB2C<
     name: "Azure Active Directory B2C",
     type: "oauth",
     wellKnown: `https://${tenantId}.b2clogin.com/${tenantId}.onmicrosoft.com/${primaryUserFlow}/v2.0/.well-known/openid-configuration`,
-    authorization: {
-      params: { scope: "openid email profile" },
-    },
     idToken: true,
     profile(profile) {
       return {
