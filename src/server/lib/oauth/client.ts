@@ -1,4 +1,5 @@
 import { Issuer } from "openid-client"
+import { InternalOptions } from "src/lib/types"
 
 /**
  * NOTE: We can add auto discovery of the provider's endpoint
@@ -6,10 +7,8 @@ import { Issuer } from "openid-client"
  * Check out `Issuer.discover`
  *
  * Client supporting OAuth 2.x and OIDC
- * @param {import("src/lib/types").InternalOptions} options
  */
-export async function openidClient(options) {
-  /** @type {import("src/providers").OAuthConfig} */
+export async function openidClient(options: InternalOptions<"oauth">) {
   const provider = options.provider
 
   let issuer
@@ -17,25 +16,34 @@ export async function openidClient(options) {
     issuer = await Issuer.discover(provider.wellKnown)
   } else {
     const issuerConfig = {
-      issuer: provider.issuer,
+      issuer: provider.issuer as string,
       authorization_endpoint:
         provider.authorization.url ?? provider.authorization,
       token_endpoint: provider.token.url ?? provider.token,
       userinfo_endpoint: provider?.userinfo?.url ?? provider?.userinfo,
     }
 
-    if (provider?.jwks_uri) {
+    if (provider.jwks_uri) {
       issuerConfig.jwks_uri = provider.jwks_uri
     }
 
-    issuer = new Issuer(issuerConfig)
+    issuer = new Issuer({
+      issuer: provider.issuer as string,
+      authorization_endpoint: provider.authorization.url,
+      token_endpoint: provider.token.url,
+      userinfo_endpoint: provider.userinfo.url,
+    })
   }
 
-  const client = new issuer.Client({
-    client_id: provider.clientId,
-    client_secret: provider.clientSecret,
-    redirect_uris: [provider.callbackUrl],
-  })
+  const client = new issuer.Client(
+    {
+      client_id: provider.clientId,
+      client_secret: provider.clientSecret,
+      redirect_uris: [provider.callbackUrl],
+      ...provider.client,
+    },
+    provider.jwks
+  )
 
   return client
 }

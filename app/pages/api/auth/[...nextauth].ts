@@ -17,6 +17,12 @@ import LineProvider from "next-auth/providers/line"
 import LinkedInProvider from "next-auth/providers/linkedin"
 import MailchimpProvider from "next-auth/providers/mailchimp"
 import DiscordProvider from "next-auth/providers/discord"
+import AzureADProvider from "next-auth/providers/azure-ad"
+import SpotifyProvider from "next-auth/providers/spotify"
+import CognitoProvider from "next-auth/providers/cognito"
+import SlackProvider from "next-auth/providers/slack"
+import AzureADB2CProvider from "next-auth/providers/azure-ad-b2c"
+import Okta from "next-auth/providers/okta"
 
 // import { PrismaAdapter } from "@next-auth/prisma-adapter"
 // import { PrismaClient } from "@prisma/client"
@@ -32,9 +38,56 @@ import DiscordProvider from "next-auth/providers/discord"
 // })
 // const adapter = FaunaAdapter(client)
 
+const tenantName = process.env.NEXT_PUBLIC_B2C_AUTH_TENANT_NAME
+const tenantId = process.env.NEXT_PUBLIC_B2C_AUTH_TENANT_ID
+const loginFlow = process.env.NEXT_PUBLIC_B2C_LOGIN_FLOW_NAME
+// const maxAge = Number(process.env.NEXT_PUBLIC_CLIENT_SESSION_MAX_AGE)
+const jwtSecret = process.env.NEXTAUTH_JWT_SECRET
+// const appSecret = process.env.NEXTAUTH_APP_SECRET
+const clientId = process.env.NEXT_PUBLIC_B2C_AUTH_CLIENT_ID
+const clientSecret = process.env.B2C_AUTH_CLIENT_SECRET
+// const apiAccessClaim = process.env.B2C_API_ACCESS_CLAIM
+const signingKey = process.env.NEXTAUTH_SIGNING_KEY
+const encryptionKey = process.env.NEXTAUTH_ENCRYPTION_KEY
+const maxAge = 900
+
+// const tokenUrl = `https://${tenantName}.b2clogin.com/${tenantName}.onmicrosoft.com/${loginFlow}/oauth2/v2.0/token`
+
+const azureB2COptions = {
+  tenantName,
+  clientId,
+  clientSecret,
+  primaryUserFlow: loginFlow,
+  scope: `offline_access openid`,
+  // jwks_uri: `https://${tenantName}.b2clogin.com/${tenantName}.onmicrosoft.com/${loginFlow}/discovery/v2.0/keys`,
+  userinfo: {
+    url: `https://${tenantName}.b2clogin.com/${tenantName}.onmicrosoft.com/${loginFlow}/openid/v2.0/userinfo`
+  },
+  idToken: true,
+  issuer: `https://${tenantName}.b2clogin.com/${tenantId}/v2.0/`,
+}
+
 export default NextAuth({
   // adapter,
+  debug: true,
+  theme: {
+    colorScheme: "auto",
+    logo: "https://next-auth.js.org/img/logo/logo-sm.png",
+    brandColor: "#1786fb"
+  },
+  session: {
+    jwt: true,
+    maxAge,
+  },
+  jwt: {
+    secret: jwtSecret,
+    encryption: true,
+    signingKey,
+    encryptionKey,
+  },
+    // adapter,
   providers: [
+    AzureADB2CProvider(azureB2COptions),
     // E-mail
     // Start fake e-mail server with `npm run start:email`
     EmailProvider({
@@ -132,15 +185,34 @@ export default NextAuth({
       clientId: process.env.DISCORD_ID,
       clientSecret: process.env.DISCORD_SECRET,
     }),
+    AzureADProvider({
+      clientId: process.env.AZURE_AD_CLIENT_ID,
+      clientSecret: process.env.AZURE_AD_CLIENT_SECRET,
+      tenantId: process.env.AZURE_AD_TENANT_ID,
+    }),
+    SpotifyProvider({
+      clientId: process.env.SPOTIFY_ID,
+      clientSecret: process.env.SPOTIFY_SECRET,
+    }),
+    CognitoProvider({
+      clientId: process.env.COGNITO_ID,
+      clientSecret: process.env.COGNITO_SECRET,
+      issuer: process.env.COGNITO_ISSUER,
+    }),
+    Okta({
+      clientId: process.env.OKTA_ID,
+      clientSecret: process.env.OKTA_SECRET,
+      issuer: process.env.OKTA_ISSUER,
+    }),
+    SlackProvider({
+      clientId: process.env.SLACK_ID,
+      clientSecret: process.env.SLACK_SECRET,
+    }),
   ],
-  jwt: {
-    encryption: true,
-    secret: process.env.SECRET,
-  },
   debug: true,
   theme: {
     colorScheme: "auto",
     logo: "https://next-auth.js.org/img/logo/logo-sm.png",
-    brandColor: "#1786fb"
+    brandColor: "#1786fb",
   },
 })

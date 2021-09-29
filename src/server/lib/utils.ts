@@ -1,7 +1,6 @@
 import { createHash } from "crypto"
 import { NextAuthOptions } from "../.."
-import { EmailConfig } from "../../providers"
-import { InternalOptions, InternalProvider } from "../../lib/types"
+import { InternalOptions } from "../../lib/types"
 
 /**
  * Takes a number in seconds and returns the date in the future.
@@ -12,10 +11,7 @@ export function fromDate(time, date = Date.now()) {
   return new Date(date + time * 1000)
 }
 
-export function hashToken(
-  token: string,
-  options: InternalOptions<EmailConfig & InternalProvider>
-) {
+export function hashToken(token: string, options: InternalOptions<"email">) {
   const { provider, secret } = options
   return (
     createHash("sha256")
