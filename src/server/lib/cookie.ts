@@ -1,6 +1,7 @@
 // REVIEW: Is there any way to defer two types of strings?
 
 import { CookiesOptions } from "../.."
+import { CookieOption } from "../types"
 
 /** Stringified form of `JWT`. Extract the content with `jwt.decode` */
 export type JWTString = string
@@ -195,4 +196,8 @@ export function defaultCookies(useSecureCookies): CookiesOptions {
       },
     },
   }
+}
+
+export interface Cookie extends CookieOption {
+  value: string
 }

@@ -201,7 +201,7 @@ export interface NextAuthOptions {
  * [Documentation](https://next-auth.js.org/configuration/options#theme) |
  * [Pages](https://next-auth.js.org/configuration/pages)
  */
-export type Theme = {
+export interface Theme {
   colorScheme: "auto" | "dark" | "light"
   logo?: string
   brandColor?: string
@@ -345,6 +345,7 @@ export interface CookieOption {
     secure: boolean
     maxAge?: number
     domain?: string
+    expires?: Date
   }
 }
 

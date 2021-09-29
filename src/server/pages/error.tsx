@@ -4,15 +4,14 @@
  *   baseUrl: string
  *   basePath: string
  *   error?: string
- *   res: import("src/lib/types").NextAuthResponse
  * }} params
  */
-export default function Error({ baseUrl, basePath, error = "default", theme, res }) {
+export default function Error({ baseUrl, basePath, error = "default", theme }) {
   const signinPageUrl = `${baseUrl}${basePath}/signin`
 
   const errors = {
     default: {
-      statusCode: 200,
+      status: 200,
       heading: "Error",
       message: (
         <p>
@@ -23,7 +22,7 @@ export default function Error({ baseUrl, basePath, error = "default", theme, res
       ),
     },
     configuration: {
-      statusCode: 500,
+      status: 500,
       heading: "Server error",
       message: (
         <div>
@@ -33,7 +32,7 @@ export default function Error({ baseUrl, basePath, error = "default", theme, res
       ),
     },
     accessdenied: {
-      statusCode: 403,
+      status: 403,
       heading: "Access Denied",
       message: (
         <div>
@@ -47,7 +46,7 @@ export default function Error({ baseUrl, basePath, error = "default", theme, res
       ),
     },
     verification: {
-      statusCode: 403,
+      status: 403,
       heading: "Unable to sign in",
       message: (
         <div>
@@ -65,24 +64,29 @@ export default function Error({ baseUrl, basePath, error = "default", theme, res
     },
   }
 
-  const { statusCode, heading, message, signin } =
+  const { status, heading, message, signin } =
     errors[error.toLowerCase()] ?? errors.default
 
-  res.status(statusCode)
-
-  return (
-    <div className="error">
-      <style dangerouslySetInnerHTML={{ __html: `
+  return {
+    status,
+    html: (
+      <div className="error">
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
         :root {
           --brand-color: ${theme.brandColor}
         }
-      `}} />
-      <img src={theme.logo} alt="Logo" className="logo" />
-      <div className="card">
-        <h1>{heading}</h1>
-        <div className="message">{message}</div>
-        {signin}
+      `,
+          }}
+        />
+        <img src={theme.logo} alt="Logo" className="logo" />
+        <div className="card">
+          <h1>{heading}</h1>
+          <div className="message">{message}</div>
+          {signin}
+        </div>
       </div>
-    </div>
-  )
+    ),
+  }
 }

@@ -1,23 +1,36 @@
+import { Adapter } from "../../adapters"
+import { InternalOptions } from "../../lib/types"
+import { OutgoingResponse } from ".."
 import * as cookie from "../lib/cookie"
 import { fromDate } from "../lib/utils"
+
+interface SessionParams {
+  options: InternalOptions
+  sessionToken?: string
+}
+
+type SessionResult = Pick<OutgoingResponse, "json"> & { cookie?: cookie.Cookie }
 
 /**
  * Return a session object (without any private fields)
  * for Single Page App clients
- * @param {import("src/lib/types").NextAuthRequest} req
- * @param {import("src/lib/types").NextAuthResponse} res
  */
-export default async function session(req, res) {
-  const { cookies, adapter, jwt, events, callbacks, logger } = req.options
-  const useJwtSession = req.options.session.jwt
-  const sessionMaxAge = req.options.session.maxAge
-  const sessionToken = req.cookies[cookies.sessionToken.name]
+
+export default async function session(
+  params: SessionParams
+): Promise<SessionResult> {
+  const { options, sessionToken } = params
+  const { adapter, jwt, events, callbacks, logger } = options
+  const useJwtSession = options.session.jwt
+  const sessionMaxAge = options.session.maxAge
 
   if (!sessionToken) {
-    return res.json({})
+    return { json: {} }
   }
 
-  let response = {}
+  let sessionCookie: cookie.Cookie | undefined
+
+  let json = {}
   if (useJwtSession) {
     try {
       // Decrypt and verify token
@@ -38,36 +51,45 @@ export default async function session(req, res) {
       }
 
       // Pass Session and JSON Web Token through to the session callback
+      // @ts-expect-error
       const token = await callbacks.jwt({ token: decodedToken })
+      // @ts-expect-error
       const session = await callbacks.session({
         session: defaultSession,
         token,
       })
 
       // Return session payload as response
-      response = session
+      json = session
 
       // Refresh JWT expiry by re-signing it, with an updated expiry date
       const newToken = await jwt.encode({ ...jwt, token })
 
       // Set cookie, to also update expiry date on cookie
-      cookie.set(res, cookies.sessionToken.name, newToken, {
-        expires: newExpires,
-        ...cookies.sessionToken.options,
-      })
+      sessionCookie = {
+        name: options.cookies.sessionToken.name,
+        value: newToken,
+        options: {
+          expires: newExpires,
+          ...options.cookies.sessionToken.options,
+        },
+      }
 
       await events.session?.({ session, token })
     } catch (error) {
       // If JWT not verifiable, make sure the cookie for it is removed and return empty object
       logger.error("JWT_SESSION_ERROR", error)
-      cookie.set(res, cookies.sessionToken.name, "", {
-        ...cookies.sessionToken.options,
-        maxAge: 0,
-      })
+
+      sessionCookie = {
+        name: options.cookies.sessionToken.name,
+        value: "",
+        options: { ...options.cookies.sessionToken.options, maxAge: 0 },
+      }
     }
   } else {
     try {
-      const { getSessionAndUser, deleteSession, updateSession } = adapter
+      const { getSessionAndUser, deleteSession, updateSession } =
+        adapter as Adapter
       let userAndSession = await getSessionAndUser(sessionToken)
 
       // If session has expired, clean up the database
@@ -82,7 +104,7 @@ export default async function session(req, res) {
       if (userAndSession) {
         const { user, session } = userAndSession
 
-        const sessionUpdateAge = req.options.session.updateAge
+        const sessionUpdateAge = options.session.updateAge
         // Calculate last updated date to throttle write updates to database
         // Formula: ({expiry date} - sessionMaxAge) + sessionUpdateAge
         //     e.g. ({expiry date} - 30 days) + 1 hour
@@ -99,6 +121,7 @@ export default async function session(req, res) {
         }
 
         // Pass Session through to the session callback
+        // @ts-expect-error
         const sessionPayload = await callbacks.session({
           // By default, only exposes a limited subset of information to the client
           // as needed for presentation purposes (e.g. "you are logged in as...").
@@ -114,27 +137,33 @@ export default async function session(req, res) {
         })
 
         // Return session payload as response
-        response = sessionPayload
+        json = sessionPayload
 
         // Set cookie again to update expiry
-        cookie.set(res, cookies.sessionToken.name, sessionToken, {
-          expires: newExpires,
-          ...cookies.sessionToken.options,
-        })
+        sessionCookie = {
+          name: options.cookies.sessionToken.name,
+          value: sessionToken,
+          options: {
+            expires: newExpires,
+            ...options.cookies.sessionToken.options,
+          },
+        }
 
+        // @ts-expect-error
         await events.session?.({ session: sessionPayload })
       } else if (sessionToken) {
         // If sessionToken was found set but it's not valid for a session then
         // remove the sessionToken cookie from browser.
-        cookie.set(res, cookies.sessionToken.name, "", {
-          ...cookies.sessionToken.options,
-          maxAge: 0,
-        })
+        sessionCookie = {
+          name: options.cookies.sessionToken.name,
+          value: "",
+          options: { ...options.cookies.sessionToken.options, maxAge: 0 },
+        }
       }
     } catch (error) {
       logger.error("SESSION_ERROR", error)
     }
   }
 
-  res.json(response)
+  return { json, cookie: sessionCookie }
 }

@@ -2,13 +2,12 @@ import { createHash } from "crypto"
 
 /**
  * Returns state if provider supports it
- * @param {import("src/lib/types").NextAuthRequest} req
- * @param {import("src/lib/types").NextAuthResponse} res
+ * @param {import("src/lib/types").InternalOptions} options
  */
-export function createState(req) {
-  const { csrfToken, logger } = req.options
+export function createState(options) {
+  const { csrfToken, logger } = options
   /** @type {import("src/providers").OAuthConfig} */
-  const provider = req.options.provider
+  const provider = options.provider
   if (!provider.checks?.includes("state")) {
     // Provider does not support state, return nothing
     return

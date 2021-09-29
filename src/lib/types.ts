@@ -46,6 +46,11 @@ export interface InternalOptions<T extends ProviderType = any> {
   providers: InternalProvider[]
   baseUrl: string
   basePath: string
+  /**
+   * `baseUrl` and `basePath` combined.
+   * REVIEW: Can we remove those?
+   */
+  base: string
   action:
     | "providers"
     | "session"

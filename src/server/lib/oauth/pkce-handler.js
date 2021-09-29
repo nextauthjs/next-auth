@@ -9,13 +9,17 @@ const PKCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 /**
  * Returns `code_challenge` and `code_challenge_method`
  * and saves them in a cookie.
- * @type {import("src/lib/types").NextAuthApiHandler}
- * @returns {Promise<undefined | {code_challenge: string; code_challenge_method: "S256"}>
+ * @type {import("src/lib/types").InternalOptions}
+ * @returns {Promise<undefined | {
+ *  code_challenge: string
+ *  code_challenge_method: "S256"
+ *  cookie: import("../cookie").Cookie
+ * }>
  */
-export async function createPKCE(req, res) {
-  const { cookies, logger } = req.options
+export async function createPKCE(options) {
+  const { cookies, logger } = options
   /** @type {import("src/providers").OAuthConfig} */
-  const provider = req.options.provider
+  const provider = options.provider
   if (!provider.checks?.includes("pkce")) {
     // Provider does not support PKCE, return nothing.
     return
@@ -26,17 +30,13 @@ export async function createPKCE(req, res) {
   // Encrypt code_verifier and save it to an encrypted cookie
   const encryptedCodeVerifier = await jwt.encode({
     maxAge: PKCE_MAX_AGE,
-    ...req.options.jwt,
+    ...options.jwt,
     token: { code_verifier: codeVerifier },
     encryption: true,
   })
 
   const cookieExpires = new Date()
   cookieExpires.setTime(cookieExpires.getTime() + PKCE_MAX_AGE * 1000)
-  cookie.set(res, cookies.pkceCodeVerifier.name, encryptedCodeVerifier, {
-    expires: cookieExpires.toISOString(),
-    ...cookies.pkceCodeVerifier.options,
-  })
 
   logger.debug("CREATE_PKCE_CHALLENGE_VERIFIER", {
     pkce: {
@@ -47,6 +47,14 @@ export async function createPKCE(req, res) {
     method: PKCE_CODE_CHALLENGE_METHOD,
   })
   return {
+    cookie: {
+      name: cookies.pkceCodeVerifier.name,
+      value: encryptedCodeVerifier,
+      options: {
+        expires: cookieExpires.toISOString(),
+        ...cookies.pkceCodeVerifier.options,
+      },
+    },
     code_challenge: codeChallenge,
     code_challenge_method: PKCE_CODE_CHALLENGE_METHOD,
   }

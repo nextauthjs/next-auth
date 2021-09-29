@@ -1,53 +1,55 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-import * as jwt from "../jwt"
-import parseUrl from "../lib/parse-url"
 import logger, { setLogger } from "../lib/logger"
-import * as cookie from "./lib/cookie"
-import { defaultCallbacks } from "./lib/default-callbacks"
-import parseProviders from "./lib/providers"
 import * as routes from "./routes"
 import renderPage from "./pages"
-import callbackUrlHandler from "./lib/callback-url-handler"
-import extendRes from "./lib/extend-res"
-import csrfTokenHandler from "./lib/csrf-token-handler"
-import { eventsErrorHandler, adapterErrorHandler } from "./errors"
-import createSecret from "./lib/utils"
-
-import type { NextApiRequest, NextApiResponse } from "next"
 import type { NextAuthOptions } from "./types"
-import type {
-  InternalOptions,
-  NextAuthRequest,
-  NextAuthResponse,
-} from "../lib/types"
+import { init } from "./init"
+import { Cookie } from "./lib/cookie"
 
-// To work properly in production with OAuth providers the NEXTAUTH_URL
-// environment variable must be set.
-if (!process.env.NEXTAUTH_URL) {
-  logger.warn("NEXTAUTH_URL")
+import NextAuth from "../next"
+
+export interface IncomingRequest {
+  method?: string
+  headers: Record<string, any>
+  cookies: Record<string, any>
+  query: Record<string, any>
+  body: Record<string, any>
 }
 
-async function NextAuthHandler(
-  req: NextAuthRequest,
-  res: NextAuthResponse,
-  userOptions: NextAuthOptions
-) {
+export interface OutgoingResponse {
+  status?: number
+  headers?: any[]
+  json?: any
+  text?: any
+  redirect?: string
+  cookies?: Cookie[]
+}
+
+export async function NextAuthHandler(
+  params: IncomingRequest & {
+    userOptions: NextAuthOptions
+  }
+): Promise<OutgoingResponse> {
+  const { userOptions, ...req } = params
+
   if (userOptions.logger) {
     setLogger(userOptions.logger)
   }
-  // If debug enabled, set ENV VAR so that logger logs debug messages
-  if (userOptions.debug) {
-    ;(process.env._NEXTAUTH_DEBUG as any) = true
-  }
 
-  extendRes(req, res)
+  // To work properly in production with OAuth providers the NEXTAUTH_URL
+  // environment variable must be set.
+  if (!process.env.NEXTAUTH_URL) {
+    logger.warn("NEXTAUTH_URL")
+  }
 
   if (!req.query.nextauth) {
     const message =
       "Cannot find [...nextauth].js in pages/api/auth. Make sure the filename is written correctly."
 
     logger.error("MISSING_NEXTAUTH_API_ROUTE_ERROR", new Error(message))
-    return res.status(500).end(`Error: ${message}`)
+    return {
+      status: 500,
+      text: `Error: ${message}`,
+    }
   }
 
   const {
@@ -59,125 +61,70 @@ async function NextAuthHandler(
 
   delete req.query.nextauth
 
-  const { basePath, baseUrl } = parseUrl(
-    process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL
-  )
-
-  const cookies = {
-    ...cookie.defaultCookies(
-      userOptions.useSecureCookies ?? baseUrl.startsWith("https://")
-    ),
-    // Allow user cookie options to override any cookie settings above
-    ...userOptions.cookies,
-  }
-
-  const secret = createSecret({ userOptions, basePath, baseUrl })
-
-  const { providers, provider } = parseProviders({
-    providers: userOptions.providers,
-    base: `${baseUrl}${basePath}`,
-    providerId: providerId as string | undefined,
+  const { options, cookies } = await init({
+    userOptions,
+    action,
+    providerId,
+    callbackUrl: req.body.callbackUrl ?? req.query.callbackUrl,
+    csrfToken: req.body.csrfToken,
+    cookies: req.cookies,
+    isPost: req.method === "POST",
   })
 
-  const maxAge = 30 * 24 * 60 * 60 // Sessions expire after 30 days of being idle by default
+  const render = renderPage({ options, query: req.query, cookies })
 
-  // User provided options are overriden by other options,
-  // except for the options with special handling above
-  const options: InternalOptions = {
-    debug: false,
-    pages: {},
-    theme: {
-      colorScheme: "auto",
-      logo: "",
-      brandColor: "",
-    },
-    // Custom options override defaults
-    ...userOptions,
-    // These computed settings can have values in userOptions but we override them
-    // and are request-specific.
-    baseUrl,
-    basePath,
-    action: action as InternalOptions["action"],
-    provider,
-    cookies,
-    secret,
-    providers,
-    // Session options
-    session: {
-      jwt: !userOptions.adapter, // If no adapter specified, force use of JSON Web Tokens (stateless)
-      maxAge,
-      updateAge: 24 * 60 * 60,
-      ...userOptions.session,
-    },
-    // JWT options
-    jwt: {
-      secret, // Use application secret if no keys specified
-      maxAge, // same as session maxAge,
-      encode: jwt.encode,
-      decode: jwt.decode,
-      ...userOptions.jwt,
-    },
-    // Event messages
-    events: eventsErrorHandler(userOptions.events ?? {}, logger),
-    adapter: adapterErrorHandler(userOptions.adapter, logger),
-    // Callback functions
-    callbacks: {
-      ...defaultCallbacks,
-      ...userOptions.callbacks,
-    },
-    logger,
-    callbackUrl: process.env.NEXTAUTH_URL ?? "http://localhost:3000",
-  }
-
-  req.options = options
-
-  csrfTokenHandler(req, res)
-  await callbackUrlHandler(req, res)
-
-  const render = renderPage(req, res)
-  const { pages } = req.options
+  const { pages } = options
 
   if (req.method === "GET") {
     switch (action) {
       case "providers":
-        return routes.providers(req, res)
-      case "session":
-        return await routes.session(req, res)
+        return { json: routes.providers(options.providers), cookies }
+      case "session": {
+        const session = await routes.session({
+          options,
+          sessionToken: req.cookies[options.cookies.sessionToken.name],
+        })
+        if (session.cookie) {
+          cookies.push(session.cookie)
+        }
+        return { json: session.json, cookies }
+      }
       case "csrf":
-        return res.json({ csrfToken: req.options.csrfToken })
+        return { json: { csrfToken: options.csrfToken }, cookies }
       case "signin":
         if (pages.signIn) {
           let signinUrl = `${pages.signIn}${
             pages.signIn.includes("?") ? "&" : "?"
-          }callbackUrl=${req.options.callbackUrl}`
+          }callbackUrl=${options.callbackUrl}`
           if (error) {
             signinUrl = `${signinUrl}&error=${error}`
           }
-          return res.redirect(signinUrl)
+          return { redirect: signinUrl, cookies }
         }
 
         return render.signin()
       case "signout":
-        if (pages.signOut) return res.redirect(pages.signOut)
+        if (pages.signOut) return { redirect: pages.signOut, cookies }
 
         return render.signout()
       case "callback":
-        if (provider) {
+        if (options.provider) {
           return await routes.callback(req, res)
         }
         break
       case "verify-request":
         if (pages.verifyRequest) {
-          return res.redirect(pages.verifyRequest)
+          return { redirect: pages.verifyRequest, cookies }
         }
         return render.verifyRequest()
       case "error":
         if (pages.error) {
-          return res.redirect(
-            `${pages.error}${
+          return {
+            redirect: `${pages.error}${
               pages.error.includes("?") ? "&" : "?"
-            }error=${error}`
-          )
+            }error=${error}`,
+            cookies,
+          }
         }
 
         // These error messages are displayed in line on the sign in page
@@ -195,7 +142,7 @@ async function NextAuthHandler(
             "SessionRequired",
           ].includes(error as string)
         ) {
-          return res.redirect(`${baseUrl}${basePath}/signin?error=${error}`)
+          return { redirect: `${options.base}/signin?error=${error}`, cookies }
         }
 
         return render.error({ error })
@@ -205,25 +152,33 @@ async function NextAuthHandler(
     switch (action) {
       case "signin":
         // Verified CSRF Token required for all sign in routes
-        if (req.options.csrfTokenVerified && provider) {
-          return await routes.signin(req, res)
+        if (options.csrfTokenVerified && options.provider) {
+          const signin = await routes.signin({
+            query: req.query,
+            body: req.body,
+            options,
+          })
+          if (signin.cookies) {
+            cookies.push(...signin.cookies)
+          }
+          return { ...signin, cookies }
         }
 
-        return res.redirect(`${baseUrl}${basePath}/signin?csrf=true`)
+        return { redirect: `${options.base}/signin?csrf=true`, cookies }
       case "signout":
         // Verified CSRF Token required for signout
-        if (req.options.csrfTokenVerified) {
+        if (options.csrfTokenVerified) {
           return await routes.signout(req, res)
         }
-        return res.redirect(`${baseUrl}${basePath}/signout?csrf=true`)
+        return { redirect: `${options.base}/signout?csrf=true`, cookies }
       case "callback":
-        if (provider) {
+        if (options.provider) {
           // Verified CSRF Token required for credentials providers only
           if (
-            provider.type === "credentials" &&
-            !req.options.csrfTokenVerified
+            options.provider.type === "credentials" &&
+            !options.csrfTokenVerified
           ) {
-            return res.redirect(`${baseUrl}${basePath}/signin?csrf=true`)
+            return { redirect: `${options.base}/signin?csrf=true`, cookies }
           }
 
           return await routes.callback(req, res)
@@ -239,27 +194,11 @@ async function NextAuthHandler(
             logger.error("LOGGER_ERROR", error)
           }
         }
-        return res.end()
+        return { cookies }
       default:
     }
   }
-  return res
-    .status(400)
-    .end(`Error: HTTP ${req.method} is not supported for ${req.url}`)
-}
-
-function NextAuth(options: NextAuthOptions): any
-function NextAuth(
-  req: NextApiRequest,
-  res: NextApiResponse,
-  options: NextAuthOptions
-): any
-/** Tha main entry point to next-auth */
-function NextAuth(...args) {
-  if (args.length === 1) {
-    return async (req, res) => await NextAuthHandler(req, res, args[0])
-  }
-  return NextAuthHandler(args[0], args[1], args[2])
+  return { status: 400, cookies: [] }
 }
 
 export default NextAuth

@@ -3,25 +3,32 @@ import emailSignin from "../lib/email/signin"
 
 /**
  * Handle requests to /api/auth/signin
- * @type {import("src/lib/types").NextAuthApiHandler}
+ * @param {{
+ *   options: import("src/lib/types").InternalOptions
+ *   query: import("src/server").IncomingRequest["query"]
+ *   body: import("src/server").IncomingRequest["body"]
+ * }}
+ * @return {import("src/server").OutgoingResponse}
  */
-export default async function signin(req, res) {
-  const { baseUrl, basePath, adapter, callbacks, logger } = req.options
+export default async function signin({ options, query, body }) {
+  const { base, adapter, callbacks, logger } = options
 
   /** @type {import("src/providers").OAuthConfig | import("src/providers").EmailConfig} */
-  const provider = req.options.provider
+  const provider = options.provider
 
   if (!provider.type) {
-    return res.status(500).end(`Error: Type not specified for ${provider.name}`)
+    return {
+      status: 500,
+      text: `Error: Type not specified for ${provider.name}`,
+    }
   }
 
   if (provider.type === "oauth") {
     try {
-      const authorizationUrl = await getAuthorizationUrl(req, res)
-      return res.redirect(authorizationUrl)
+      return await getAuthorizationUrl({ options, query })
     } catch (error) {
       logger.error("SIGNIN_OAUTH_ERROR", { error, provider })
-      return res.redirect(`${baseUrl}${basePath}/error?error=OAuthSignin`)
+      return { redirect: `${base}/error?error=OAuthSignin` }
     }
   } else if (provider.type === "email") {
     if (!adapter) {
@@ -29,7 +36,7 @@ export default async function signin(req, res) {
         "EMAIL_REQUIRES_ADAPTER_ERROR",
         new Error("E-mail login requires an adapter but it was undefined")
       )
-      return res.redirect(`${baseUrl}${basePath}/error?error=Configuration`)
+      return { redirect: `${base}/error?error=Configuration` }
     }
 
     // Note: Technically the part of the email address local mailbox element
@@ -37,7 +44,7 @@ export default async function signin(req, res) {
     // according to RFC 2821, but in practice this causes more problems than
     // it solves. We treat email addresses as all lower case. If anyone
     // complains about this we can make strict RFC 2821 compliance an option.
-    const email = req.body.email?.toLowerCase() ?? null
+    const email = body.email?.toLowerCase() ?? null
 
     const { getUserByEmail } = adapter
     // If is an existing user return a user object (otherwise use placeholder)
@@ -58,29 +65,27 @@ export default async function signin(req, res) {
         email: { verificationRequest: true },
       })
       if (!signInCallbackResponse) {
-        return res.redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
+        return { redirect: `${base}/error?error=AccessDenied` }
       } else if (typeof signInCallbackResponse === "string") {
-        return res.redirect(signInCallbackResponse)
+        return { redirect: signInCallbackResponse }
       }
     } catch (error) {
-      return res.redirect(
-        `${baseUrl}${basePath}/error?${new URLSearchParams({ error })}}`
-      )
+      return { redirect: `${base}/error?${new URLSearchParams({ error })}}` }
     }
 
     try {
-      await emailSignin(email, req.options)
+      await emailSignin(email, options)
     } catch (error) {
       logger.error("SIGNIN_EMAIL_ERROR", error)
-      return res.redirect(`${baseUrl}${basePath}/error?error=EmailSignin`)
+      return { redirect: `${base}/error?error=EmailSignin` }
     }
 
     const params = new URLSearchParams({
       provider: provider.id,
       type: provider.type,
     })
-    const url = `${baseUrl}${basePath}/verify-request?${params}`
-    return res.redirect(url)
+    const url = `${base}/verify-request?${params}`
+    return { redirect: url }
   }
-  return res.redirect(`${baseUrl}${basePath}/signin`)
+  return { redirect: `${base}/signin` }
 }

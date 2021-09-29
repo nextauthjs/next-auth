@@ -8,14 +8,17 @@ import { createPKCE } from "../oauth/pkce-handler"
  * Generates an authorization/request token URL.
  *
  * [OAuth 2](https://www.oauth.com/oauth2-servers/authorization/the-authorization-request/) | [OAuth 1](https://oauth.net/core/1.0a/#auth_step2)
- * @type {import("src/lib/types").NextAuthApiHandler}
- * @returns {string}
+ * @param {{
+ *   options: import("src/lib/types").InternalOptions
+ *   query: import("src/server").IncomingRequest["query"]
+ * }}
+ * @returns {import("src/server").OutgoingResponse}
  */
-export default async function getAuthorizationUrl(req, res) {
-  const { logger } = req.options
+export default async function getAuthorizationUrl({ options, query }) {
+  const { logger } = options
   try {
     /** @type {import("src/providers").OAuthConfig} */
-    const provider = req.options.provider
+    const provider = options.provider
 
     let params = {}
 
@@ -27,11 +30,11 @@ export default async function getAuthorizationUrl(req, res) {
       params = { ...params, ...provider.authorization?.params }
     }
 
-    params = { ...params, ...req.query }
+    params = { ...params, ...query }
 
     // Handle OAuth v1.x
     if (provider.version?.startsWith("1.")) {
-      const client = oAuth1Client(req.options)
+      const client = oAuth1Client(options)
       const tokens = await client.getOAuthRequestToken(params)
       const url = `${provider.authorization}?${new URLSearchParams({
         oauth_token: tokens.oauth_token,
@@ -40,19 +43,27 @@ export default async function getAuthorizationUrl(req, res) {
       })}`
 
       logger.debug("GET_AUTHORIZATION_URL", { url })
-      return url
+      return { redirect: url }
     }
-    const client = await openidClient(req.options)
-    const pkce = await createPKCE(req, res)
+
+    const cookies = []
+    const client = await openidClient(options)
+    const pkce = await createPKCE(options)
+    if (pkce?.cookie) {
+      cookies.push(pkce.cookie)
+    }
 
     const url = client.authorizationUrl({
       ...params,
       ...pkce,
-      state: createState(req),
+      state: createState(options),
     })
 
     logger.debug("GET_AUTHORIZATION_URL", { url })
-    return url
+    return {
+      redirect: url,
+      cookies,
+    }
   } catch (error) {
     logger.error("GET_AUTHORIZATION_URL_ERROR", error)
     throw error
