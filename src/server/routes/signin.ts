@@ -1,31 +1,30 @@
 import getAuthorizationUrl from "../lib/oauth/authorization-url"
 import emailSignin from "../lib/email/signin"
+import { IncomingRequest, OutgoingResponse } from ".."
+import { InternalOptions } from "../../lib/types"
+import { Account, User } from "../.."
 
-/**
- * Handle requests to /api/auth/signin
- * @param {{
- *   options: import("src/lib/types").InternalOptions
- *   query: import("src/server").IncomingRequest["query"]
- *   body: import("src/server").IncomingRequest["body"]
- * }}
- * @return {import("src/server").OutgoingResponse}
- */
-export default async function signin({ options, query, body }) {
-  const { base, adapter, callbacks, logger } = options
-
-  /** @type {import("src/providers").OAuthConfig | import("src/providers").EmailConfig} */
-  const provider = options.provider
+/** Handle requests to /api/auth/signin */
+export default async function signin(params: {
+  options: InternalOptions<"oauth" | "email">
+  query: IncomingRequest["query"]
+  body: IncomingRequest["body"]
+}): Promise<OutgoingResponse> {
+  const { options, query, body } = params
+  const { base, adapter, callbacks, logger, provider } = options
 
   if (!provider.type) {
     return {
       status: 500,
+      // @ts-expect-error this should not be possible if user uses TS
       text: `Error: Type not specified for ${provider.name}`,
     }
   }
 
   if (provider.type === "oauth") {
     try {
-      return await getAuthorizationUrl({ options, query })
+      const response = await getAuthorizationUrl({ options, query })
+      return response
     } catch (error) {
       logger.error("SIGNIN_OAUTH_ERROR", { error, provider })
       return { redirect: `${base}/error?error=OAuthSignin` }
@@ -48,17 +47,21 @@ export default async function signin({ options, query, body }) {
 
     const { getUserByEmail } = adapter
     // If is an existing user return a user object (otherwise use placeholder)
-    const user = (email ? await getUserByEmail(email) : null) ?? { email }
+    const user: User = (email ? await getUserByEmail(email) : null) ?? {
+      email,
+      id: email,
+    }
 
-    /** @type {import("src").Account} */
-    const account = {
-      providerAccountId: user.email,
+    const account: Account = {
+      providerAccountId: email,
+      userId: email,
       type: "email",
       provider: provider.id,
     }
 
     // Check if user is allowed to sign in
     try {
+      // @ts-expect-error
       const signInCallbackResponse = await callbacks.signIn({
         user,
         account,

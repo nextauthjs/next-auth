@@ -2,25 +2,24 @@ import { openidClient } from "../oauth/client"
 import { oAuth1Client } from "../oauth/client-legacy"
 import { createState } from "../oauth/state-handler"
 import { createPKCE } from "../oauth/pkce-handler"
+import { InternalOptions } from "src/lib/types"
+import { IncomingRequest } from "src/server"
+import { Cookie } from "../cookie"
 
 /**
  *
  * Generates an authorization/request token URL.
  *
  * [OAuth 2](https://www.oauth.com/oauth2-servers/authorization/the-authorization-request/) | [OAuth 1](https://oauth.net/core/1.0a/#auth_step2)
- * @param {{
- *   options: import("src/lib/types").InternalOptions
- *   query: import("src/server").IncomingRequest["query"]
- * }}
- * @returns {import("src/server").OutgoingResponse}
  */
-export default async function getAuthorizationUrl({ options, query }) {
-  const { logger } = options
+export default async function getAuthorizationUrl(params: {
+  options: InternalOptions<"oauth">
+  query: IncomingRequest["query"]
+}) {
+  const { options, query } = params
+  const { logger, provider } = options
   try {
-    /** @type {import("src/providers").OAuthConfig} */
-    const provider = options.provider
-
-    let params = {}
+    let params: any = {}
 
     if (typeof provider.authorization === "string") {
       const parsedUrl = new URL(provider.authorization)
@@ -35,8 +34,8 @@ export default async function getAuthorizationUrl({ options, query }) {
     // Handle OAuth v1.x
     if (provider.version?.startsWith("1.")) {
       const client = oAuth1Client(options)
-      const tokens = await client.getOAuthRequestToken(params)
-      const url = `${provider.authorization}?${new URLSearchParams({
+      const tokens = (await client.getOAuthRequestToken(params)) as any
+      const url = `${provider.authorization.url}?${new URLSearchParams({
         oauth_token: tokens.oauth_token,
         oauth_token_secret: tokens.oauth_token_secret,
         ...tokens.params,
@@ -46,7 +45,7 @@ export default async function getAuthorizationUrl({ options, query }) {
       return { redirect: url }
     }
 
-    const cookies = []
+    const cookies: Cookie[] = []
     const client = await openidClient(options)
     const pkce = await createPKCE(options)
     if (pkce?.cookie) {
