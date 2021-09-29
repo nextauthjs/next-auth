@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import { NextAuthOptions } from "."
-import { IncomingRequest, NextAuthHandler } from "./server"
-import extendRes from "./server/lib/extend-res"
-import { set as setCookie } from "./server/lib/cookie"
+import { NextAuthOptions } from ".."
+import { IncomingRequest, NextAuthHandler } from "../server"
+import extendRes from "../server/lib/extend-res"
+import { set as setCookie } from "../server/lib/cookie"
 
 async function NextAuthNextHandler(req, res, userOptions) {
   extendRes(req, res)

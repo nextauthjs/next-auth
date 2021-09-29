@@ -35,6 +35,7 @@ node_modules
 /adapters.d.ts
 /index.d.ts
 /index.js
+/next
 
 # Development app
 app/src/css
