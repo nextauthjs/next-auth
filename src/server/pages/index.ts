@@ -18,8 +18,7 @@ export default function renderPage({
   query: Record<string, any>
   cookies: Cookie[]
 }) {
-  const { baseUrl, basePath, callbackUrl, csrfToken, providers, theme } =
-    options
+  const { base, baseUrl, callbackUrl, csrfToken, providers, theme } = options
 
   function send({ html, title, status }: any): OutgoingResponse {
     return {
@@ -48,7 +47,7 @@ export default function renderPage({
     },
     signout(props?: any) {
       return send({
-        html: signout({ csrfToken, baseUrl, basePath, theme, ...props }),
+        html: signout({ csrfToken, base, theme, ...props }),
         title: "Sign Out",
       })
     },
@@ -60,7 +59,7 @@ export default function renderPage({
     },
     error(props) {
       return send({
-        ...error({ basePath, baseUrl, theme, ...props }),
+        ...error({ base, baseUrl, theme, ...props }),
         title: "Error",
       })
     },

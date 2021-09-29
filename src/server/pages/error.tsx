@@ -6,8 +6,8 @@
  *   error?: string
  * }} params
  */
-export default function Error({ baseUrl, basePath, error = "default", theme }) {
-  const signinPageUrl = `${baseUrl}${basePath}/signin`
+export default function Error({ baseUrl, base, error = "default", theme }) {
+  const signinPageUrl = `${base}/signin`
 
   const errors = {
     default: {

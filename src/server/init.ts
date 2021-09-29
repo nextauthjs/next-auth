@@ -48,12 +48,13 @@ export async function init({
   const { basePath, baseUrl } = parseUrl(
     process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL
   )
+  const base = `${baseUrl}${basePath}`
 
   const secret = createSecret({ userOptions, basePath, baseUrl })
 
   const { providers, provider } = parseProviders({
     providers: userOptions.providers,
-    base: `${baseUrl}${basePath}`,
+    base,
     providerId,
   })
 
@@ -75,7 +76,7 @@ export async function init({
     // and are request-specific.
     baseUrl,
     basePath,
-    base: `${baseUrl}${basePath}`,
+    base,
     action,
     provider,
     cookies: {
