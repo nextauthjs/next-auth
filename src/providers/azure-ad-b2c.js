@@ -19,7 +19,11 @@ export default function AzureADB2C(options) {
     },
     jwks_uri: `https://${tenantName}.b2clogin.com/${tenantName}.onmicrosoft.com/${primaryUserFlow}/discovery/v2.0/keys`,
     profile(profile) {
+      if (!profile) return profile
+
+      let id = ""
       let name = ""
+      let email = ""
 
       if (profile.name) {
         // B2C "Display Name"
@@ -32,10 +36,24 @@ export default function AzureADB2C(options) {
         name = `${profile.given_name}`
       }
 
+      if (profile.email) {
+        email = profile.email
+      }
+      else if (profile.emails) {
+        email = profile.emails[0]
+      }
+
+      if (profile.oid) {
+        id = profile.oid
+      }
+      else if (profile.sub) {
+        id = profile.sub
+      }
+
       return {
-        id: profile.oid,
+        id,
         name,
-        email: profile.emails[0],
+        email,
         image: null,
       }
     },
