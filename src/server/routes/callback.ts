@@ -2,18 +2,29 @@ import oAuthCallback from "../lib/oauth/callback"
 import callbackHandler from "../lib/callback-handler"
 import * as cookie from "../lib/cookie"
 import { hashToken } from "../lib/utils"
+import { InternalOptions } from "../../lib/types"
+import { IncomingRequest, OutgoingResponse } from ".."
 
 /**
  * Handle callbacks from login services
  * @type {import("src/lib/types").NextAuthApiHandler}
  */
-export default async function callback(req, res) {
+export default async function callback(params: {
+  options: InternalOptions<"oauth" | "credentials" | "email">
+  query: IncomingRequest["query"]
+  method: IncomingRequest["method"]
+  body: IncomingRequest["body"]
+  headers: IncomingRequest["headers"]
+  sessionToken?: string
+  codeVerifier?: string
+}): Promise<OutgoingResponse> {
+  const { options, query, body, method, headers, sessionToken, codeVerifier } =
+    params
   const {
     provider,
     adapter,
     baseUrl,
-    basePath,
-    cookies,
+    base,
     callbackUrl,
     pages,
     jwt,
@@ -21,13 +32,27 @@ export default async function callback(req, res) {
     callbacks,
     session: { jwt: useJwtSession, maxAge: sessionMaxAge },
     logger,
-  } = req.options
+  } = options
 
-  const sessionToken = req.cookies?.[cookies.sessionToken.name] ?? null
+  const cookies: cookie.Cookie[] = []
 
   if (provider.type === "oauth") {
     try {
-      const { profile, account, OAuthProfile } = await oAuthCallback(req, res)
+      const {
+        profile,
+        account,
+        OAuthProfile,
+        cookies: oauthCookies,
+      } = await oAuthCallback({
+        query,
+        body,
+        method,
+        options,
+        codeVerifier,
+      })
+
+      if (oauthCookies) cookies.push(...oauthCookies)
+
       try {
         // Make it easier to debug when adding a new provider
         logger.debug("OAUTH_CALLBACK_RESPONSE", {
@@ -45,7 +70,7 @@ export default async function callback(req, res) {
         // should at least be visible to developers what happened if it is an
         // error with the provider.
         if (!profile) {
-          return res.redirect(`${baseUrl}${basePath}/signin`)
+          return { redirect: `${base}/signin`, cookies }
         }
 
         // Check if user is allowed to sign in
@@ -56,6 +81,7 @@ export default async function callback(req, res) {
         if (adapter) {
           const { getUserByAccount } = adapter
           const userByAccount = await getUserByAccount({
+            // @ts-expect-error
             providerAccountId: account.providerAccountId,
             provider: provider.id,
           })
@@ -66,31 +92,33 @@ export default async function callback(req, res) {
         try {
           const isAllowed = await callbacks.signIn({
             user: userOrProfile,
+            // @ts-expect-error
             account,
             profile: OAuthProfile,
           })
           if (!isAllowed) {
-            return res.redirect(
-              `${baseUrl}${basePath}/error?error=AccessDenied`
-            )
+            return { redirect: `${base}/error?error=AccessDenied`, cookies }
           } else if (typeof isAllowed === "string") {
-            return res.redirect(isAllowed)
+            return { redirect: isAllowed, cookies }
           }
         } catch (error) {
-          return res.redirect(
-            `${baseUrl}${basePath}/error?error=${encodeURIComponent(
+          return {
+            redirect: `${base}/error?error=${encodeURIComponent(
               error.message
-            )}`
-          )
+            )}`,
+            cookies,
+          }
         }
 
         // Sign user in
-        const { user, session, isNewUser } = await callbackHandler(
+        // @ts-expect-error
+        const { user, session, isNewUser } = await callbackHandler({
           sessionToken,
           profile,
+          // @ts-expect-error
           account,
-          req.options
-        )
+          options,
+        })
 
         if (useJwtSession) {
           const defaultToken = {
@@ -102,6 +130,7 @@ export default async function callback(req, res) {
           const token = await callbacks.jwt({
             token: defaultToken,
             user,
+            // @ts-expect-error
             account,
             profile: OAuthProfile,
             isNewUser,
@@ -114,54 +143,63 @@ export default async function callback(req, res) {
           const cookieExpires = new Date()
           cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
 
-          cookie.set(res, cookies.sessionToken.name, newEncodedJwt, {
-            expires: cookieExpires.toISOString(),
-            ...cookies.sessionToken.options,
+          cookies.push({
+            name: options.cookies.sessionToken.name,
+            value: newEncodedJwt,
+            options: {
+              expires: cookieExpires,
+              ...options.cookies.sessionToken.options,
+            },
           })
         } else {
           // Save Session Token in cookie
-          cookie.set(res, cookies.sessionToken.name, session.sessionToken, {
-            expires: session.expires,
-            ...cookies.sessionToken.options,
+          cookies.push({
+            name: options.cookies.sessionToken.name,
+            value: session.sessionToken,
+            options: {
+              expires: session.expires,
+              ...options.cookies.sessionToken.options,
+            },
           })
         }
 
+        // @ts-expect-error
         await events.signIn?.({ user, account, profile, isNewUser })
 
         // Handle first logins on new accounts
         // e.g. option to send users to a new account landing page on initial login
         // Note that the callback URL is preserved, so the journey can still be resumed
         if (isNewUser && pages.newUser) {
-          return res.redirect(
-            `${pages.newUser}${
+          return {
+            redirect: `${pages.newUser}${
               pages.newUser.includes("?") ? "&" : "?"
-            }callbackUrl=${encodeURIComponent(callbackUrl)}`
-          )
+            }callbackUrl=${encodeURIComponent(callbackUrl)}`,
+            cookies,
+          }
         }
 
         // Callback URL is already verified at this point, so safe to use if specified
-        return res.redirect(callbackUrl || baseUrl)
+        return { redirect: callbackUrl || baseUrl, cookies }
       } catch (error) {
         if (error.name === "AccountNotLinkedError") {
           // If the email on the account is already linked, but not with this OAuth account
-          return res.redirect(
-            `${baseUrl}${basePath}/error?error=OAuthAccountNotLinked`
-          )
+          return {
+            redirect: `${base}/error?error=OAuthAccountNotLinked`,
+            cookies,
+          }
         } else if (error.name === "CreateUserError") {
-          return res.redirect(
-            `${baseUrl}${basePath}/error?error=OAuthCreateAccount`
-          )
+          return { redirect: `${base}/error?error=OAuthCreateAccount`, cookies }
         }
         logger.error("OAUTH_CALLBACK_HANDLER_ERROR", error)
-        return res.redirect(`${baseUrl}${basePath}/error?error=Callback`)
+        return { redirect: `${base}/error?error=Callback`, cookies }
       }
     } catch (error) {
       if (error.name === "OAuthCallbackError") {
         logger.error("CALLBACK_OAUTH_ERROR", error)
-        return res.redirect(`${baseUrl}${basePath}/error?error=OAuthCallback`)
+        return { redirect: `${base}/error?error=OAuthCallback`, cookies }
       }
       logger.error("OAUTH_CALLBACK_ERROR", error)
-      return res.redirect(`${baseUrl}${basePath}/error?error=Callback`)
+      return { redirect: `${base}/error?error=Callback`, cookies }
     }
   } else if (provider.type === "email") {
     try {
@@ -170,22 +208,22 @@ export default async function callback(req, res) {
           "EMAIL_REQUIRES_ADAPTER_ERROR",
           new Error("E-mail login requires an adapter but it was undefined")
         )
-        return res.redirect(`${baseUrl}${basePath}/error?error=Configuration`)
+        return { redirect: `${base}/error?error=Configuration`, cookies }
       }
 
       const { useVerificationToken, getUserByEmail } = adapter
 
-      const token = req.query.token
-      const identifier = req.query.email
+      const token = query.token
+      const identifier = query.email
 
-      const invite = await useVerificationToken({
+      const invite = await useVerificationToken?.({
         identifier,
-        token: hashToken(token, req.options),
+        token: hashToken(token, options),
       })
 
       const invalidInvite = !invite || invite.expires.valueOf() < Date.now()
       if (invalidInvite) {
-        return res.redirect(`${baseUrl}${basePath}/error?error=Verification`)
+        return { redirect: `${base}/error?error=Verification`, cookies }
       }
 
       // If it is an existing user, use that, otherwise use a placeholder
@@ -205,30 +243,35 @@ export default async function callback(req, res) {
       // Check if user is allowed to sign in
       try {
         const signInCallbackResponse = await callbacks.signIn({
+          // @ts-expect-error
           user: profile,
+          // @ts-expect-error
           account,
+          // @ts-expect-error
           email: { email: identifier },
         })
         if (!signInCallbackResponse) {
-          return res.redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
+          return { redirect: `${base}/error?error=AccessDenied`, cookies }
         } else if (typeof signInCallbackResponse === "string") {
-          return res.redirect(signInCallbackResponse)
+          return { redirect: signInCallbackResponse, cookies }
         }
       } catch (error) {
-        return res.redirect(
-          `${baseUrl}${basePath}/error?error=${encodeURIComponent(
-            error.message
-          )}`
-        )
+        return {
+          redirect: `${base}/error?error=${encodeURIComponent(error.message)}`,
+          cookies,
+        }
       }
 
       // Sign user in
-      const { user, session, isNewUser } = await callbackHandler(
+      // @ts-expect-error
+      const { user, session, isNewUser } = await callbackHandler({
         sessionToken,
+        // @ts-expect-error
         profile,
+        // @ts-expect-error
         account,
-        req.options
-      )
+        options,
+      })
 
       if (useJwtSession) {
         const defaultToken = {
@@ -240,6 +283,7 @@ export default async function callback(req, res) {
         const token = await callbacks.jwt({
           token: defaultToken,
           user,
+          // @ts-expect-error
           account,
           isNewUser,
         })
@@ -251,43 +295,51 @@ export default async function callback(req, res) {
         const cookieExpires = new Date()
         cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
 
-        cookie.set(res, cookies.sessionToken.name, newEncodedJwt, {
-          expires: cookieExpires.toISOString(),
-          ...cookies.sessionToken.options,
+        cookies.push({
+          name: options.cookies.sessionToken.name,
+          value: newEncodedJwt,
+          options: {
+            expires: cookieExpires,
+            ...options.cookies.sessionToken.options,
+          },
         })
       } else {
         // Save Session Token in cookie
-        cookie.set(res, cookies.sessionToken.name, session.sessionToken, {
-          expires: session.expires,
-          ...cookies.sessionToken.options,
+        cookies.push({
+          name: options.cookies.sessionToken.name,
+          value: session.sessionToken,
+          options: {
+            expires: session.expires,
+            ...options.cookies.sessionToken.options,
+          },
         })
       }
 
+      // @ts-expect-error
       await events.signIn?.({ user, account, isNewUser })
 
       // Handle first logins on new accounts
       // e.g. option to send users to a new account landing page on initial login
       // Note that the callback URL is preserved, so the journey can still be resumed
       if (isNewUser && pages.newUser) {
-        return res.redirect(
-          `${pages.newUser}${
+        return {
+          redirect: `${pages.newUser}${
             pages.newUser.includes("?") ? "&" : "?"
-          }callbackUrl=${encodeURIComponent(callbackUrl)}`
-        )
+          }callbackUrl=${encodeURIComponent(callbackUrl)}`,
+          cookies,
+        }
       }
 
       // Callback URL is already verified at this point, so safe to use if specified
-      return res.redirect(callbackUrl || baseUrl)
+      return { redirect: callbackUrl || baseUrl, cookies }
     } catch (error) {
       if (error.name === "CreateUserError") {
-        return res.redirect(
-          `${baseUrl}${basePath}/error?error=EmailCreateAccount`
-        )
+        return { redirect: `${base}/error?error=EmailCreateAccount`, cookies }
       }
       logger.error("CALLBACK_EMAIL_ERROR", error)
-      return res.redirect(`${baseUrl}${basePath}/error?error=Callback`)
+      return { redirect: `${base}/error?error=Callback`, cookies }
     }
-  } else if (provider.type === "credentials" && req.method === "POST") {
+  } else if (provider.type === "credentials" && method === "POST") {
     if (!useJwtSession) {
       logger.error(
         "CALLBACK_CREDENTIALS_JWT_ERROR",
@@ -295,9 +347,11 @@ export default async function callback(req, res) {
           "Signin in with credentials is only supported if JSON Web Tokens are enabled"
         )
       )
-      return res
-        .status(500)
-        .redirect(`${baseUrl}${basePath}/error?error=Configuration`)
+      return {
+        status: 500,
+        redirect: `${base}/error?error=Configuration`,
+        cookies,
+      }
     }
 
     if (!provider.authorize) {
@@ -307,32 +361,38 @@ export default async function callback(req, res) {
           "Must define an authorize() handler to use credentials authentication provider"
         )
       )
-      return res
-        .status(500)
-        .redirect(`${baseUrl}${basePath}/error?error=Configuration`)
+      return {
+        status: 500,
+        redirect: `${base}/error?error=Configuration`,
+        cookies,
+      }
     }
 
-    const credentials = req.body
+    const credentials = body
 
     let user
     try {
       user = await provider.authorize(credentials, {
-        ...req,
-        options: {},
-        cookies: {},
+        query,
+        body,
+        headers,
+        method,
       })
       if (!user) {
-        return res.status(401).redirect(
-          `${baseUrl}${basePath}/error?${new URLSearchParams({
+        return {
+          status: 401,
+          redirect: `${base}/error?${new URLSearchParams({
             error: "CredentialsSignin",
             provider: provider.id,
-          })}`
-        )
+          })}`,
+          cookies,
+        }
       }
     } catch (error) {
-      return res.redirect(
-        `${baseUrl}${basePath}/error?error=${encodeURIComponent(error.message)}`
-      )
+      return {
+        redirect: `${base}/error?error=${encodeURIComponent(error.message)}`,
+        cookies,
+      }
     }
 
     /** @type {import("src").Account} */
@@ -345,20 +405,24 @@ export default async function callback(req, res) {
     try {
       const isAllowed = await callbacks.signIn({
         user,
+        // @ts-expect-error
         account,
         credentials,
       })
       if (!isAllowed) {
-        return res
-          .status(403)
-          .redirect(`${baseUrl}${basePath}/error?error=AccessDenied`)
+        return {
+          status: 403,
+          redirect: `${base}/error?error=AccessDenied`,
+          cookies,
+        }
       } else if (typeof isAllowed === "string") {
-        return res.redirect(isAllowed)
+        return { redirect: isAllowed, cookies }
       }
     } catch (error) {
-      return res.redirect(
-        `${baseUrl}${basePath}/error?error=${encodeURIComponent(error.message)}`
-      )
+      return {
+        redirect: `${base}/error?error=${encodeURIComponent(error.message)}`,
+        cookies,
+      }
     }
 
     const defaultToken = {
@@ -371,6 +435,7 @@ export default async function callback(req, res) {
     const token = await callbacks.jwt({
       token: defaultToken,
       user,
+      // @ts-expect-error
       account,
       isNewUser: false,
     })
@@ -382,16 +447,23 @@ export default async function callback(req, res) {
     const cookieExpires = new Date()
     cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
 
-    cookie.set(res, cookies.sessionToken.name, newEncodedJwt, {
-      expires: cookieExpires.toISOString(),
-      ...cookies.sessionToken.options,
+    cookies.push({
+      name: options.cookies.sessionToken.name,
+      value: newEncodedJwt,
+      options: {
+        expires: cookieExpires,
+        ...options.cookies.sessionToken.options,
+      },
     })
 
+    // @ts-expect-error
     await events.signIn?.({ user, account })
 
-    return res.redirect(callbackUrl || baseUrl)
+    return { redirect: callbackUrl || baseUrl, cookies }
   }
-  return res
-    .status(500)
-    .end(`Error: Callback for provider type ${provider.type} not supported`)
+  return {
+    status: 500,
+    text: `Error: Callback for provider type ${provider.type} not supported`,
+    cookies,
+  }
 }

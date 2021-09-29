@@ -19,12 +19,13 @@ import { SessionToken } from "./cookie"
  * done prior to this handler being called to avoid additonal complexity in this
  * handler.
  */
-export default async function callbackHandler(
-  sessionToken: SessionToken,
-  profile: User,
-  account: Account,
+export default async function callbackHandler(params: {
+  sessionToken?: SessionToken
+  profile: User
+  account: Account
   options: InternalOptions
-) {
+}) {
+  const { sessionToken, profile, account, options } = params
   // Input validation
   if (!account?.providerAccountId || !account.type)
     throw new Error("Missing or invalid provider account")

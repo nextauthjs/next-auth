@@ -1,6 +1,7 @@
 import * as cookie from "../cookie"
 import * as jwt from "../../../jwt"
 import { generators } from "openid-client"
+import { InternalOptions } from "src/lib/types"
 
 const PKCE_LENGTH = 64
 const PKCE_CODE_CHALLENGE_METHOD = "S256"
@@ -63,32 +64,43 @@ export async function createPKCE(options) {
 /**
  * Returns code_verifier if provider uses PKCE,
  * and clears the cookie afterwards.
- * @param {import("src/lib/types").NextAuthRequest} req
- * @return {Promise<string | undefined>}
  */
-export async function usePKCECodeVerifier(req, res) {
-  /** @type {import("src/providers").OAuthConfig} */
-  const provider = req.options.provider
-  const { cookies } = req.options
-  if (
-    !provider?.checks.includes("pkce") ||
-    !(cookies.pkceCodeVerifier.name in req.cookies)
-  ) {
+export async function usePKCECodeVerifier(params: {
+  options: InternalOptions<"oauth">
+  codeVerifier?: string
+}): Promise<
+  | {
+      codeVerifier?: string
+      cookie?: cookie.Cookie
+    }
+  | undefined
+> {
+  const { options, codeVerifier } = params
+  const { cookies, provider } = options
+
+  if (!provider?.checks?.includes("pkce") || !codeVerifier) {
     return
   }
 
   const pkce = await jwt.decode({
-    ...req.options.jwt,
-    token: req.cookies[cookies.pkceCodeVerifier.name],
+    ...options.jwt,
+    token: codeVerifier,
     maxAge: PKCE_MAX_AGE,
     encryption: true,
   })
 
   // remove PKCE cookie after it has been used up
-  cookie.set(res, cookies.pkceCodeVerifier.name, "", {
-    ...cookies.pkceCodeVerifier.options,
-    maxAge: 0,
-  })
+  const cookie: cookie.Cookie = {
+    name: cookies.pkceCodeVerifier.name,
+    value: "",
+    options: {
+      ...cookies.pkceCodeVerifier.options,
+      maxAge: 0,
+    },
+  }
 
-  return pkce?.code_verifier ?? undefined
+  return {
+    codeVerifier: (pkce?.code_verifier as any) ?? undefined,
+    cookie,
+  }
 }

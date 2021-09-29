@@ -1,4 +1,4 @@
-import { Issuer } from "openid-client"
+import { Issuer, Client } from "openid-client"
 import { InternalOptions } from "src/lib/types"
 
 /**
@@ -8,7 +8,9 @@ import { InternalOptions } from "src/lib/types"
  *
  * Client supporting OAuth 2.x and OIDC
  */
-export async function openidClient(options: InternalOptions<"oauth">) {
+export async function openidClient(
+  options: InternalOptions<"oauth">
+): Promise<Client> {
   const provider = options.provider
 
   let issuer

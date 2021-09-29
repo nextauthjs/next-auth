@@ -6,10 +6,15 @@ import { Cookie } from "../lib/cookie"
 /** Handle requests to /api/auth/signout */
 export default async function signout(params: {
   options: InternalOptions
-  sessionToken: string
-}): Promise<Pick<OutgoingResponse, "redirect"> & { cookie: Cookie }> {
+  sessionToken?: string
+}): Promise<Pick<OutgoingResponse, "redirect"> & { cookie?: Cookie }> {
   const { options, sessionToken } = params
   const { adapter, cookies, events, jwt, callbackUrl, logger } = options
+
+  if (!sessionToken) {
+    return { redirect: callbackUrl }
+  }
+
   const useJwtSession = options.session.jwt
 
   if (useJwtSession) {
@@ -37,10 +42,7 @@ export default async function signout(params: {
   const cookie: Cookie = {
     name: cookies.sessionToken.name,
     value: "",
-    options: {
-      ...cookies.sessionToken.options,
-      maxAge: 0,
-    },
+    options: { ...cookies.sessionToken.options, maxAge: 0 },
   }
 
   return { redirect: callbackUrl, cookie }

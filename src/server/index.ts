@@ -8,7 +8,7 @@ import { Cookie } from "./lib/cookie"
 import NextAuth from "../next"
 
 export interface IncomingRequest {
-  method?: string
+  method: string
   headers: Record<string, any>
   cookies: Record<string, any>
   query: Record<string, any>
@@ -71,22 +71,18 @@ export async function NextAuthHandler(
     isPost: req.method === "POST",
   })
 
-  const render = renderPage({ options, query: req.query, cookies })
-
-  const { pages } = options
+  const sessionToken = req.cookies?.[options.cookies.sessionToken.name]
+  const codeVerifier = req.cookies?.[options.cookies.pkceCodeVerifier.name]
 
   if (req.method === "GET") {
+    const render = renderPage({ options, query: req.query, cookies })
+    const { pages } = options
     switch (action) {
       case "providers":
         return { json: routes.providers(options.providers), cookies }
       case "session": {
-        const session = await routes.session({
-          options,
-          sessionToken: req.cookies[options.cookies.sessionToken.name],
-        })
-        if (session.cookie) {
-          cookies.push(session.cookie)
-        }
+        const session = await routes.session({ options, sessionToken })
+        if (session.cookie) cookies.push(session.cookie)
         return { json: session.json, cookies }
       }
       case "csrf":
@@ -109,7 +105,17 @@ export async function NextAuthHandler(
         return render.signout()
       case "callback":
         if (options.provider) {
-          return await routes.callback(req, res)
+          const callback = await routes.callback({
+            body: req.body,
+            query: req.query,
+            method: req.method,
+            headers: req.headers,
+            options,
+            sessionToken,
+            codeVerifier,
+          })
+          if (callback.cookies) cookies.push(...callback.cookies)
+          return { ...callback, cookies }
         }
         break
       case "verify-request":
@@ -168,13 +174,8 @@ export async function NextAuthHandler(
       case "signout":
         // Verified CSRF Token required for signout
         if (options.csrfTokenVerified) {
-          const signout = await routes.signout({
-            options,
-            sessionToken: params.cookies[options.cookies.sessionToken.name],
-          })
-          if (signout.cookie) {
-            cookies.push(signout.cookie)
-          }
+          const signout = await routes.signout({ options, sessionToken })
+          if (signout.cookie) cookies.push(signout.cookie)
           return { ...signout, cookies }
         }
         return { redirect: `${options.base}/signout?csrf=true`, cookies }
@@ -188,7 +189,17 @@ export async function NextAuthHandler(
             return { redirect: `${options.base}/signin?csrf=true`, cookies }
           }
 
-          return await routes.callback(req, res)
+          const callback = await routes.callback({
+            body: req.body,
+            query: req.query,
+            method: req.method,
+            headers: req.headers,
+            options,
+            sessionToken,
+            codeVerifier,
+          })
+          if (callback.cookies) cookies.push(...callback.cookies)
+          return { ...callback, cookies }
         }
         break
       case "_log":

@@ -1,4 +1,4 @@
-import { NextApiRequest } from "next"
+import { IncomingRequest } from "src/server"
 import { CommonProviderOptions } from "."
 import { User, Awaitable } from ".."
 
@@ -16,7 +16,7 @@ export interface CredentialsConfig<
   credentials: C
   authorize: (
     credentials: Record<keyof C, string>,
-    req: NextApiRequest
+    req: Omit<IncomingRequest, "cookies">
   ) => Awaitable<(Omit<User, "id"> | { id?: string }) | null>
 }
 

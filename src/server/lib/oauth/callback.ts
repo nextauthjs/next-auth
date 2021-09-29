@@ -1,28 +1,31 @@
+import { TokenSet } from "openid-client"
 import { openidClient } from "./client"
 import { oAuth1Client } from "./client-legacy"
 import { getState } from "./state-handler"
 import { usePKCECodeVerifier } from "./pkce-handler"
 import { OAuthCallbackError } from "../../errors"
-import { TokenSet } from "openid-client"
-import { Account, LoggerInstance, Profile } from "src"
-import { OAuthChecks, OAuthConfig } from "src/providers"
+import { Account, LoggerInstance, Profile } from "../../.."
+import { OAuthChecks, OAuthConfig } from "../../../providers"
+import { InternalOptions } from "../../../lib/types"
+import { IncomingRequest, OutgoingResponse } from "../../../server"
 
-export default async function oAuthCallback(
-  req,
-  res
-): Promise<GetProfileResult> {
-  const { logger } = req.options
+export default async function oAuthCallback(params: {
+  options: InternalOptions<"oauth">
+  query: IncomingRequest["query"]
+  body: IncomingRequest["body"]
+  method: IncomingRequest["method"]
+  codeVerifier?: string
+}): Promise<GetProfileResult & { cookies?: OutgoingResponse["cookies"] }> {
+  const { options, query, body, method, codeVerifier } = params
+  const { logger, provider } = options
 
-  /** @type {import("src/providers").OAuthConfig} */
-  const provider = req.options.provider
-
-  const errorMessage = req.body.error ?? req.query.error
+  const errorMessage = body.error ?? query.error
   if (errorMessage) {
     const error = new Error(errorMessage)
     logger.error("OAUTH_CALLBACK_HANDLER_ERROR", {
       error,
-      error_description: req.query?.error_description,
-      body: req.body,
+      error_description: query?.error_description,
+      body,
       providerId: provider.id,
     })
     throw error
@@ -30,9 +33,9 @@ export default async function oAuthCallback(
 
   if (provider.version?.startsWith("1.")) {
     try {
-      const client = await oAuth1Client(req.options)
+      const client = await oAuth1Client(options)
       // Handle OAuth v1.x
-      const { oauth_token, oauth_verifier } = req.query
+      const { oauth_token, oauth_verifier } = query
       // @ts-expect-error
       const tokens: TokenSet = await client.getOAuthAccessToken(
         oauth_token,
@@ -59,16 +62,30 @@ export default async function oAuthCallback(
   }
 
   try {
-    const client = await openidClient(req.options)
+    const client = await openidClient(options)
 
     /** @type {import("openid-client").TokenSet} */
     let tokens
 
+    const pkce = await usePKCECodeVerifier({
+      options,
+      codeVerifier,
+    })
     const checks: OAuthChecks = {
-      code_verifier: await usePKCECodeVerifier(req, res),
-      state: getState(req),
+      code_verifier: pkce?.codeVerifier,
+      state: getState(options),
     }
-    const params = { ...client.callbackParams(req), ...provider.token?.params }
+    const params = {
+      ...client.callbackParams({
+        url: `http://n?${new URLSearchParams(query)}`,
+        // TODO: Ask to allow object to be passed upstream:
+        // https://github.com/panva/node-openid-client/blob/3ae206dfc78c02134aa87a07f693052c637cab84/types/index.d.ts#L439
+        // @ts-expect-error
+        body,
+        method,
+      }),
+      ...provider.token?.params,
+    }
 
     if (provider.token?.request) {
       const response = await provider.token.request({
@@ -106,9 +123,18 @@ export default async function oAuthCallback(
 
     // If a user object is supplied (e.g. Apple provider) add it to the profile object
     // TODO: Remove/extract to Apple provider?
-    profile.user = JSON.parse(req.body.user ?? req.query.user ?? null)
+    profile.user = JSON.parse(body.user ?? query.user ?? null)
 
-    return await getProfile({ profile, provider, tokens, logger })
+    const profileResult = await getProfile({
+      profile,
+      provider,
+      tokens,
+      logger,
+    })
+    return {
+      ...profileResult,
+      cookies: pkce?.cookie ? [pkce.cookie] : undefined,
+    }
   } catch (error) {
     logger.error("OAUTH_CALLBACK_ERROR", { error, providerId: provider.id })
     throw new OAuthCallbackError(error)
