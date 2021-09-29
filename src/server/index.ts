@@ -26,13 +26,13 @@ export interface OutgoingResponse {
 
 export interface NextAuthHandlerParams {
   req: IncomingRequest
-  userOptions: NextAuthOptions
+  options: NextAuthOptions
 }
 
 export async function NextAuthHandler(
   params: NextAuthHandlerParams
 ): Promise<OutgoingResponse> {
-  const { userOptions, req } = params
+  const { options: userOptions, req } = params
 
   if (userOptions.logger) {
     setLogger(userOptions.logger)

@@ -4,7 +4,7 @@ import { IncomingRequest, NextAuthHandler } from "../server"
 import extendRes from "../server/lib/extend-res"
 import { set as setCookie } from "../server/lib/cookie"
 
-async function NextAuthNextHandler(req, res, userOptions) {
+async function NextAuthNextHandler(req, res, options) {
   extendRes(req, res)
 
   const request: IncomingRequest = {
@@ -21,7 +21,7 @@ async function NextAuthNextHandler(req, res, userOptions) {
     cookies,
     headers,
     status = 200,
-  } = await NextAuthHandler({ req: request, userOptions })
+  } = await NextAuthHandler({ req: request, options })
 
   res.status(status)
 
