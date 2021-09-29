@@ -24,12 +24,15 @@ export interface OutgoingResponse {
   cookies?: Cookie[]
 }
 
+export interface NextAuthHandlerParams {
+  req: IncomingRequest
+  userOptions: NextAuthOptions
+}
+
 export async function NextAuthHandler(
-  params: IncomingRequest & {
-    userOptions: NextAuthOptions
-  }
+  params: NextAuthHandlerParams
 ): Promise<OutgoingResponse> {
-  const { userOptions, ...req } = params
+  const { userOptions, req } = params
 
   if (userOptions.logger) {
     setLogger(userOptions.logger)

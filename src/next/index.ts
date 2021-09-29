@@ -21,7 +21,7 @@ async function NextAuthNextHandler(req, res, userOptions) {
     cookies,
     headers,
     status = 200,
-  } = await NextAuthHandler({ ...request, userOptions })
+  } = await NextAuthHandler({ req: request, userOptions })
 
   res.status(status)
 
