@@ -1,11 +1,12 @@
-export default function Signin({
-  csrfToken,
-  providers,
-  callbackUrl,
-  theme,
-  email,
-  error: errorType,
-}) {
+export default function SigninPage(props) {
+  const {
+    csrfToken,
+    providers,
+    callbackUrl,
+    theme,
+    email,
+    error: errorType,
+  } = props
   // We only want to render providers
   const providersToRender = providers.filter((provider) => {
     if (provider.type === "oauth" || provider.type === "email") {
@@ -20,7 +21,10 @@ export default function Signin({
   })
 
   if (typeof document !== "undefined") {
-    document.documentElement.style.setProperty("--brand-color", theme.brandColor)
+    document.documentElement.style.setProperty(
+      "--brand-color",
+      theme.brandColor
+    )
   }
 
   const errors = {
@@ -42,11 +46,15 @@ export default function Signin({
 
   return (
     <div className="signin">
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
         :root {
           --brand-color: ${theme.brandColor}
         }
-      `}} />
+      `,
+        }}
+      />
       <img src={theme.logo} alt="Logo" className="logo" />
       <div className="card">
         {error && (
@@ -109,7 +117,8 @@ export default function Signin({
                         type={provider.credentials[credential].type || "text"}
                         value={provider.credentials[credential].value || ""}
                         placeholder={
-                          provider.credentials[credential].placeholder || "Password"
+                          provider.credentials[credential].placeholder ||
+                          "Password"
                         }
                       />
                     </div>

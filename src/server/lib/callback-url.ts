@@ -16,16 +16,22 @@ export async function createCallbackUrl({
   paramValue,
   cookieValue,
 }: CreateCallbackUrlParams) {
-  const { baseUrl, callbacks } = options
+  const { url, callbacks } = options
 
-  let callbackUrl = baseUrl
+  let callbackUrl = url.origin
 
   if (paramValue) {
     // If callbackUrl form field or query parameter is passed try to use it if allowed
-    callbackUrl = await callbacks.redirect({ url: paramValue, baseUrl })
+    callbackUrl = await callbacks.redirect({
+      url: paramValue,
+      baseUrl: url.origin,
+    })
   } else if (cookieValue) {
     // If no callbackUrl specified, try using the value from the cookie if allowed
-    callbackUrl = await callbacks.redirect({ url: cookieValue, baseUrl })
+    callbackUrl = await callbacks.redirect({
+      url: cookieValue,
+      baseUrl: url.origin,
+    })
   }
 
   return {

@@ -11,12 +11,12 @@ export default async function signin(params: {
   body: IncomingRequest["body"]
 }): Promise<OutgoingResponse> {
   const { options, query, body } = params
-  const { base, adapter, callbacks, logger, provider } = options
+  const { url, adapter, callbacks, logger, provider } = options
 
   if (!provider.type) {
     return {
       status: 500,
-      // @ts-expect-error this should not be possible if user uses TS
+      // @ts-expect-error
       text: `Error: Type not specified for ${provider.name}`,
     }
   }
@@ -27,7 +27,7 @@ export default async function signin(params: {
       return response
     } catch (error) {
       logger.error("SIGNIN_OAUTH_ERROR", { error, provider })
-      return { redirect: `${base}/error?error=OAuthSignin` }
+      return { redirect: `${url}/error?error=OAuthSignin` }
     }
   } else if (provider.type === "email") {
     if (!adapter) {
@@ -35,7 +35,7 @@ export default async function signin(params: {
         "EMAIL_REQUIRES_ADAPTER_ERROR",
         new Error("E-mail login requires an adapter but it was undefined")
       )
-      return { redirect: `${base}/error?error=Configuration` }
+      return { redirect: `${url}/error?error=Configuration` }
     }
 
     // Note: Technically the part of the email address local mailbox element
@@ -68,27 +68,27 @@ export default async function signin(params: {
         email: { verificationRequest: true },
       })
       if (!signInCallbackResponse) {
-        return { redirect: `${base}/error?error=AccessDenied` }
+        return { redirect: `${url}/error?error=AccessDenied` }
       } else if (typeof signInCallbackResponse === "string") {
         return { redirect: signInCallbackResponse }
       }
     } catch (error) {
-      return { redirect: `${base}/error?${new URLSearchParams({ error })}}` }
+      return { redirect: `${url}/error?${new URLSearchParams({ error })}}` }
     }
 
     try {
       await emailSignin(email, options)
     } catch (error) {
       logger.error("SIGNIN_EMAIL_ERROR", error)
-      return { redirect: `${base}/error?error=EmailSignin` }
+      return { redirect: `${url}/error?error=EmailSignin` }
     }
 
     const params = new URLSearchParams({
       provider: provider.id,
       type: provider.type,
     })
-    const url = `${base}/verify-request?${params}`
-    return { redirect: url }
+
+    return { redirect: `${url}/verify-request?${params}` }
   }
-  return { redirect: `${base}/signin` }
+  return { redirect: `${url}/signin` }
 }

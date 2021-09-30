@@ -5,10 +5,7 @@ import { hashToken } from "../lib/utils"
 import { InternalOptions } from "../../lib/types"
 import { IncomingRequest, OutgoingResponse } from ".."
 
-/**
- * Handle callbacks from login services
- * @type {import("src/lib/types").NextAuthApiHandler}
- */
+/** Handle callbacks from login services */
 export default async function callback(params: {
   options: InternalOptions<"oauth" | "credentials" | "email">
   query: IncomingRequest["query"]
@@ -23,8 +20,7 @@ export default async function callback(params: {
   const {
     provider,
     adapter,
-    baseUrl,
-    base,
+    url,
     callbackUrl,
     pages,
     jwt,
@@ -70,7 +66,7 @@ export default async function callback(params: {
         // should at least be visible to developers what happened if it is an
         // error with the provider.
         if (!profile) {
-          return { redirect: `${base}/signin`, cookies }
+          return { redirect: `${url}/signin`, cookies }
         }
 
         // Check if user is allowed to sign in
@@ -97,15 +93,13 @@ export default async function callback(params: {
             profile: OAuthProfile,
           })
           if (!isAllowed) {
-            return { redirect: `${base}/error?error=AccessDenied`, cookies }
+            return { redirect: `${url}/error?error=AccessDenied`, cookies }
           } else if (typeof isAllowed === "string") {
             return { redirect: isAllowed, cookies }
           }
         } catch (error) {
           return {
-            redirect: `${base}/error?error=${encodeURIComponent(
-              error.message
-            )}`,
+            redirect: `${url}/error?error=${encodeURIComponent(error.message)}`,
             cookies,
           }
         }
@@ -179,27 +173,27 @@ export default async function callback(params: {
         }
 
         // Callback URL is already verified at this point, so safe to use if specified
-        return { redirect: callbackUrl || baseUrl, cookies }
+        return { redirect: callbackUrl, cookies }
       } catch (error) {
         if (error.name === "AccountNotLinkedError") {
           // If the email on the account is already linked, but not with this OAuth account
           return {
-            redirect: `${base}/error?error=OAuthAccountNotLinked`,
+            redirect: `${url}/error?error=OAuthAccountNotLinked`,
             cookies,
           }
         } else if (error.name === "CreateUserError") {
-          return { redirect: `${base}/error?error=OAuthCreateAccount`, cookies }
+          return { redirect: `${url}/error?error=OAuthCreateAccount`, cookies }
         }
         logger.error("OAUTH_CALLBACK_HANDLER_ERROR", error)
-        return { redirect: `${base}/error?error=Callback`, cookies }
+        return { redirect: `${url}/error?error=Callback`, cookies }
       }
     } catch (error) {
       if (error.name === "OAuthCallbackError") {
         logger.error("CALLBACK_OAUTH_ERROR", error)
-        return { redirect: `${base}/error?error=OAuthCallback`, cookies }
+        return { redirect: `${url}/error?error=OAuthCallback`, cookies }
       }
       logger.error("OAUTH_CALLBACK_ERROR", error)
-      return { redirect: `${base}/error?error=Callback`, cookies }
+      return { redirect: `${url}/error?error=Callback`, cookies }
     }
   } else if (provider.type === "email") {
     try {
@@ -208,7 +202,7 @@ export default async function callback(params: {
           "EMAIL_REQUIRES_ADAPTER_ERROR",
           new Error("E-mail login requires an adapter but it was undefined")
         )
-        return { redirect: `${base}/error?error=Configuration`, cookies }
+        return { redirect: `${url}/error?error=Configuration`, cookies }
       }
 
       const { useVerificationToken, getUserByEmail } = adapter
@@ -223,7 +217,7 @@ export default async function callback(params: {
 
       const invalidInvite = !invite || invite.expires.valueOf() < Date.now()
       if (invalidInvite) {
-        return { redirect: `${base}/error?error=Verification`, cookies }
+        return { redirect: `${url}/error?error=Verification`, cookies }
       }
 
       // If it is an existing user, use that, otherwise use a placeholder
@@ -251,13 +245,13 @@ export default async function callback(params: {
           email: { email: identifier },
         })
         if (!signInCallbackResponse) {
-          return { redirect: `${base}/error?error=AccessDenied`, cookies }
+          return { redirect: `${url}/error?error=AccessDenied`, cookies }
         } else if (typeof signInCallbackResponse === "string") {
           return { redirect: signInCallbackResponse, cookies }
         }
       } catch (error) {
         return {
-          redirect: `${base}/error?error=${encodeURIComponent(error.message)}`,
+          redirect: `${url}/error?error=${encodeURIComponent(error.message)}`,
           cookies,
         }
       }
@@ -331,13 +325,13 @@ export default async function callback(params: {
       }
 
       // Callback URL is already verified at this point, so safe to use if specified
-      return { redirect: callbackUrl || baseUrl, cookies }
+      return { redirect: callbackUrl, cookies }
     } catch (error) {
       if (error.name === "CreateUserError") {
-        return { redirect: `${base}/error?error=EmailCreateAccount`, cookies }
+        return { redirect: `${url}/error?error=EmailCreateAccount`, cookies }
       }
       logger.error("CALLBACK_EMAIL_ERROR", error)
-      return { redirect: `${base}/error?error=Callback`, cookies }
+      return { redirect: `${url}/error?error=Callback`, cookies }
     }
   } else if (provider.type === "credentials" && method === "POST") {
     if (!useJwtSession) {
@@ -349,7 +343,7 @@ export default async function callback(params: {
       )
       return {
         status: 500,
-        redirect: `${base}/error?error=Configuration`,
+        redirect: `${url}/error?error=Configuration`,
         cookies,
       }
     }
@@ -363,7 +357,7 @@ export default async function callback(params: {
       )
       return {
         status: 500,
-        redirect: `${base}/error?error=Configuration`,
+        redirect: `${url}/error?error=Configuration`,
         cookies,
       }
     }
@@ -381,7 +375,7 @@ export default async function callback(params: {
       if (!user) {
         return {
           status: 401,
-          redirect: `${base}/error?${new URLSearchParams({
+          redirect: `${url}/error?${new URLSearchParams({
             error: "CredentialsSignin",
             provider: provider.id,
           })}`,
@@ -390,7 +384,7 @@ export default async function callback(params: {
       }
     } catch (error) {
       return {
-        redirect: `${base}/error?error=${encodeURIComponent(error.message)}`,
+        redirect: `${url}/error?error=${encodeURIComponent(error.message)}`,
         cookies,
       }
     }
@@ -412,7 +406,7 @@ export default async function callback(params: {
       if (!isAllowed) {
         return {
           status: 403,
-          redirect: `${base}/error?error=AccessDenied`,
+          redirect: `${url}/error?error=AccessDenied`,
           cookies,
         }
       } else if (typeof isAllowed === "string") {
@@ -420,7 +414,7 @@ export default async function callback(params: {
       }
     } catch (error) {
       return {
-        redirect: `${base}/error?error=${encodeURIComponent(error.message)}`,
+        redirect: `${url}/error?error=${encodeURIComponent(error.message)}`,
         cookies,
       }
     }
@@ -459,7 +453,7 @@ export default async function callback(params: {
     // @ts-expect-error
     await events.signIn?.({ user, account })
 
-    return { redirect: callbackUrl || baseUrl, cookies }
+    return { redirect: callbackUrl, cookies }
   }
   return {
     status: 500,

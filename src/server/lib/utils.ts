@@ -1,6 +1,7 @@
 import { createHash } from "crypto"
 import { NextAuthOptions } from "../.."
 import { InternalOptions } from "../../lib/types"
+import { InternalUrl } from "../../lib/parse-url"
 
 /**
  * Takes a number in seconds and returns the date in the future.
@@ -27,25 +28,16 @@ export function hashToken(token: string, options: InternalOptions<"email">) {
  * based on options passed here. A options contains unique data, such as
  * OAuth provider secrets and database credentials it should be sufficent.
  */
-export default function createSecret({
-  userOptions,
-  basePath,
-  baseUrl,
-}: {
+export default function createSecret(params: {
   userOptions: NextAuthOptions
-  basePath: string
-  baseUrl: string
+  url: InternalUrl
 }) {
+  const { userOptions, url } = params
+
   return (
     userOptions.secret ??
     createHash("sha256")
-      .update(
-        JSON.stringify({
-          baseUrl,
-          basePath,
-          ...userOptions,
-        })
-      )
+      .update(JSON.stringify({ ...url, ...userOptions }))
       .digest("hex")
   )
 }

@@ -24,10 +24,7 @@ interface InitParams {
   cookies: Record<string, any>
 }
 
-/**
- * Initialize all internal options and
- * cookies that need to be created.
- */
+/** Initialize all internal options and cookies. */
 export async function init({
   userOptions,
   providerId,
@@ -45,16 +42,13 @@ export async function init({
     ;(process.env._NEXTAUTH_DEBUG as any) = true
   }
 
-  const { basePath, baseUrl } = parseUrl(
-    process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL
-  )
-  const base = `${baseUrl}${basePath}`
+  const url = parseUrl(process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL)
 
-  const secret = createSecret({ userOptions, basePath, baseUrl })
+  const secret = createSecret({ userOptions, url })
 
   const { providers, provider } = parseProviders({
     providers: userOptions.providers,
-    base,
+    url,
     providerId,
   })
 
@@ -74,14 +68,12 @@ export async function init({
     ...userOptions,
     // These computed settings can have values in userOptions but we override them
     // and are request-specific.
-    baseUrl,
-    basePath,
-    base,
+    url,
     action,
     provider,
     cookies: {
       ...cookie.defaultCookies(
-        userOptions.useSecureCookies ?? baseUrl.startsWith("https://")
+        userOptions.useSecureCookies ?? url.base.startsWith("https://")
       ),
       // Allow user cookie options to override any cookie settings above
       ...userOptions.cookies,

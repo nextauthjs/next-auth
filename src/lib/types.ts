@@ -22,6 +22,7 @@ import type {
 } from "../providers"
 import type { JWTOptions } from "../jwt"
 import type { Adapter } from "../adapters"
+import { InternalUrl } from "./parse-url"
 
 // Below are types that are only supposed be used by next-auth internally
 
@@ -41,25 +42,26 @@ export type InternalProvider<T extends ProviderType = any> = (T extends "oauth"
   callbackUrl: string
 }
 
+export type NextAuthAction =
+  | "providers"
+  | "session"
+  | "csrf"
+  | "signin"
+  | "signout"
+  | "callback"
+  | "verify-request"
+  | "error"
+  | "_log"
+
 /** @internal */
 export interface InternalOptions<T extends ProviderType = any> {
   providers: InternalProvider[]
-  baseUrl: string
-  basePath: string
   /**
-   * `baseUrl` and `basePath` combined.
-   * REVIEW: Can we remove those?
+   * Parsed from `NEXTAUTH_URL` or `VERCEL_URL`.
+   * @default "http://localhost:3000/api/auth"
    */
-  base: string
-  action:
-    | "providers"
-    | "session"
-    | "csrf"
-    | "signin"
-    | "signout"
-    | "callback"
-    | "verify-request"
-    | "error"
+  url: InternalUrl
+  action: NextAuthAction
   provider: T extends string
     ? InternalProvider<T>
     : InternalProvider<T> | undefined

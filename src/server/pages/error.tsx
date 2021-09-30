@@ -1,13 +1,16 @@
-/**
- * Renders an error page.
- * @param {{
- *   baseUrl: string
- *   basePath: string
- *   error?: string
- * }} params
- */
-export default function Error({ baseUrl, base, error = "default", theme }) {
-  const signinPageUrl = `${base}/signin`
+import { Theme } from "../.."
+import { InternalUrl } from "../../lib/parse-url"
+
+export interface ErrorProps {
+  url: InternalUrl
+  theme: Theme
+  error?: string
+}
+
+/** Renders an error page. */
+export default function ErrorPage(props: ErrorProps) {
+  const { url, error = "default", theme } = props
+  const signinPageUrl = `${url}/signin`
 
   const errors = {
     default: {
@@ -15,8 +18,8 @@ export default function Error({ baseUrl, base, error = "default", theme }) {
       heading: "Error",
       message: (
         <p>
-          <a className="site" href={baseUrl}>
-            {baseUrl.replace(/^https?:\/\//, "")}
+          <a className="site" href={url.origin}>
+            {url.host}
           </a>
         </p>
       ),

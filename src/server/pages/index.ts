@@ -1,8 +1,8 @@
 import renderToString from "preact-render-to-string"
-import signin from "./signin"
-import signout from "./signout"
-import verifyRequest from "./verify-request"
-import error from "./error"
+import SigninPage from "./signin"
+import SignoutPage from "./signout"
+import VerifyRequestPage from "./verify-request"
+import ErrorPage from "./error"
 import css from "../../css"
 import { InternalOptions } from "../../lib/types"
 import { OutgoingResponse } from ".."
@@ -18,7 +18,7 @@ export default function renderPage({
   query: Record<string, any>
   cookies: Cookie[]
 }) {
-  const { base, baseUrl, callbackUrl, csrfToken, providers, theme } = options
+  const { url, callbackUrl, csrfToken, providers, theme } = options
 
   function send({ html, title, status }: any): OutgoingResponse {
     return {
@@ -34,7 +34,7 @@ export default function renderPage({
   return {
     signin(props?: any) {
       return send({
-        html: signin({
+        html: SigninPage({
           csrfToken,
           providers,
           callbackUrl,
@@ -47,19 +47,19 @@ export default function renderPage({
     },
     signout(props?: any) {
       return send({
-        html: signout({ csrfToken, base, theme, ...props }),
+        html: SignoutPage({ csrfToken, url, theme, ...props }),
         title: "Sign Out",
       })
     },
     verifyRequest(props?: any) {
       return send({
-        html: verifyRequest({ baseUrl, theme, ...props }),
+        html: VerifyRequestPage({ url, theme, ...props }),
         title: "Verify Request",
       })
     },
     error(props) {
       return send({
-        ...error({ base, baseUrl, theme, ...props }),
+        ...ErrorPage({ url, theme, ...props }),
         title: "Error",
       })
     },

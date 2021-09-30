@@ -151,7 +151,7 @@ export async function NextAuthHandler(
             "SessionRequired",
           ].includes(error as string)
         ) {
-          return { redirect: `${options.base}/signin?error=${error}`, cookies }
+          return { redirect: `${options.url}/signin?error=${error}`, cookies }
         }
 
         return render.error({ error })
@@ -173,7 +173,7 @@ export async function NextAuthHandler(
           return { ...signin, cookies }
         }
 
-        return { redirect: `${options.base}/signin?csrf=true`, cookies }
+        return { redirect: `${options.url}/signin?csrf=true`, cookies }
       case "signout":
         // Verified CSRF Token required for signout
         if (options.csrfTokenVerified) {
@@ -181,7 +181,7 @@ export async function NextAuthHandler(
           if (signout.cookie) cookies.push(signout.cookie)
           return { ...signout, cookies }
         }
-        return { redirect: `${options.base}/signout?csrf=true`, cookies }
+        return { redirect: `${options.url}/signout?csrf=true`, cookies }
       case "callback":
         if (options.provider) {
           // Verified CSRF Token required for credentials providers only
@@ -189,7 +189,7 @@ export async function NextAuthHandler(
             options.provider.type === "credentials" &&
             !options.csrfTokenVerified
           ) {
-            return { redirect: `${options.base}/signin?csrf=true`, cookies }
+            return { redirect: `${options.url}/signin?csrf=true`, cookies }
           }
 
           const callback = await routes.callback({

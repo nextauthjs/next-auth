@@ -1,6 +1,7 @@
-import { InternalProvider } from "src/lib/types"
+import { InternalProvider } from "../../lib/types"
 import { Provider } from "../../providers"
 import { merge } from "../../lib/merge"
+import { InternalUrl } from "../../lib/parse-url"
 
 /**
  * Adds `signinUrl` and `callbackUrl` to each provider
@@ -8,13 +9,13 @@ import { merge } from "../../lib/merge"
  */
 export default function parseProviders(params: {
   providers: Provider[]
-  base: string
+  url: InternalUrl
   providerId?: string
 }): {
   providers: InternalProvider[]
   provider?: InternalProvider
 } {
-  const { base, providerId } = params
+  const { url, providerId } = params
 
   const providers = params.providers.map(({ options, ...rest }) => {
     const defaultOptions = normalizeProvider(rest as Provider)
@@ -22,8 +23,8 @@ export default function parseProviders(params: {
 
     return merge(defaultOptions, {
       ...userOptions,
-      signinUrl: `${base}/signin/${userOptions?.id ?? rest.id}`,
-      callbackUrl: `${base}/callback/${userOptions?.id ?? rest.id}`,
+      signinUrl: `${url}/signin/${userOptions?.id ?? rest.id}`,
+      callbackUrl: `${url}/callback/${userOptions?.id ?? rest.id}`,
     })
   })
 
