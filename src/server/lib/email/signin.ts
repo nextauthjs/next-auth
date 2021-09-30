@@ -10,7 +10,7 @@ export default async function email(
   identifier: string,
   options: InternalOptions<"email">
 ) {
-  const { base, adapter, provider, logger, callbackUrl } = options
+  const { url, adapter, provider, logger, callbackUrl } = options
 
   // Generate token
   const token =
@@ -32,7 +32,7 @@ export default async function email(
 
   // Generate a link with email, unhashed token and callback url
   const params = new URLSearchParams({ callbackUrl, token, email: identifier })
-  const url = `${base}/callback/${provider.id}?${params}`
+  const _url = `${url}/callback/${provider.id}?${params}`
 
   try {
     // Send to user
@@ -40,7 +40,7 @@ export default async function email(
       identifier,
       token,
       expires,
-      url,
+      url: _url,
       provider,
     })
   } catch (error) {
