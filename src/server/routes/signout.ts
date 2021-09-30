@@ -7,7 +7,7 @@ import { Cookie } from "../lib/cookie"
 export default async function signout(params: {
   options: InternalOptions
   sessionToken?: string
-}): Promise<Pick<OutgoingResponse, "redirect"> & { cookie?: Cookie }> {
+}): Promise<OutgoingResponse> {
   const { options, sessionToken } = params
   const { adapter, cookies, events, jwt, callbackUrl, logger } = options
 
@@ -39,11 +39,11 @@ export default async function signout(params: {
   }
 
   // Remove Session Token
-  const cookie: Cookie = {
+  const sessionCookie: Cookie = {
     name: cookies.sessionToken.name,
     value: "",
     options: { ...cookies.sessionToken.options, maxAge: 0 },
   }
 
-  return { redirect: callbackUrl, cookie }
+  return { redirect: callbackUrl, cookies: [sessionCookie] }
 }

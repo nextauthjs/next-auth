@@ -9,8 +9,6 @@ interface SessionParams {
   sessionToken?: string
 }
 
-type SessionResult = Pick<OutgoingResponse, "json"> & { cookie?: cookie.Cookie }
-
 /**
  * Return a session object (without any private fields)
  * for Single Page App clients
@@ -18,7 +16,7 @@ type SessionResult = Pick<OutgoingResponse, "json"> & { cookie?: cookie.Cookie }
 
 export default async function session(
   params: SessionParams
-): Promise<SessionResult> {
+): Promise<OutgoingResponse> {
   const { options, sessionToken } = params
   const { adapter, jwt, events, callbacks, logger } = options
   const useJwtSession = options.session.jwt
@@ -165,5 +163,5 @@ export default async function session(
     }
   }
 
-  return { json, cookie: sessionCookie }
+  return { json, cookies: sessionCookie ? [sessionCookie] : undefined }
 }

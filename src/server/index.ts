@@ -63,10 +63,10 @@ export async function NextAuthHandler(
     const { pages } = options
     switch (action) {
       case "providers":
-        return { json: routes.providers(options.providers), cookies }
+        return { ...routes.providers(options.providers), cookies }
       case "session": {
         const session = await routes.session({ options, sessionToken })
-        if (session.cookie) cookies.push(session.cookie)
+        if (session.cookies) cookies.push(...session.cookies)
         return { json: session.json, cookies }
       }
       case "csrf":
@@ -159,7 +159,7 @@ export async function NextAuthHandler(
         // Verified CSRF Token required for signout
         if (options.csrfTokenVerified) {
           const signout = await routes.signout({ options, sessionToken })
-          if (signout.cookie) cookies.push(signout.cookie)
+          if (signout.cookies) cookies.push(...signout.cookies)
           return { ...signout, cookies }
         }
         return { redirect: `${options.url}/signout?csrf=true`, cookies }

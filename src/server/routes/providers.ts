@@ -1,3 +1,4 @@
+import { OutgoingResponse } from ".."
 import { InternalProvider } from "../../lib/types"
 
 /**
@@ -5,9 +6,16 @@ import { InternalProvider } from "../../lib/types"
  * and their signin and callback URLs. This makes it possible to automatically
  * generate buttons for all providers when rendering client side.
  */
-export default function providers(providers: InternalProvider[]) {
-  return providers.reduce((acc, { id, name, type, signinUrl, callbackUrl }) => {
-    acc[id] = { id, name, type, signinUrl, callbackUrl }
-    return acc
-  }, {})
+export default function providers(
+  providers: InternalProvider[]
+): OutgoingResponse {
+  return {
+    json: providers.reduce(
+      (acc, { id, name, type, signinUrl, callbackUrl }) => {
+        acc[id] = { id, name, type, signinUrl, callbackUrl }
+        return acc
+      },
+      {}
+    ),
+  }
 }
