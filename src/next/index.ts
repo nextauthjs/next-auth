@@ -3,9 +3,32 @@ import { NextAuthOptions } from ".."
 import { IncomingRequest, NextAuthHandler } from "../server"
 import extendRes from "../server/lib/extend-res"
 import { set as setCookie } from "../server/lib/cookie"
+import logger, { setLogger } from "../lib/logger"
 
 async function NextAuthNextHandler(req, res, options) {
   extendRes(req, res)
+
+  const {
+    nextauth,
+    action = nextauth[0],
+    providerId = nextauth[1],
+    error = nextauth[1],
+  } = req.query
+
+  if (options.logger) {
+    setLogger(options.logger)
+  }
+
+  if (!req.query.nextauth) {
+    const message =
+      "Cannot find [...nextauth].js in pages/api/auth. Make sure the filename is written correctly."
+
+    logger.error("MISSING_NEXTAUTH_API_ROUTE_ERROR", new Error(message))
+    return {
+      status: 500,
+      text: `Error: ${message}`,
+    }
+  }
 
   const request: IncomingRequest = {
     body: req.body,
@@ -13,6 +36,9 @@ async function NextAuthNextHandler(req, res, options) {
     cookies: req.cookies,
     headers: req.headers,
     method: req.method,
+    action,
+    providerId,
+    error,
   }
   const {
     json,

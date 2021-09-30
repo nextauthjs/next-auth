@@ -1,4 +1,4 @@
-import logger, { setLogger } from "../lib/logger"
+import logger from "../lib/logger"
 import * as routes from "./routes"
 import renderPage from "./pages"
 import type { NextAuthOptions } from "./types"
@@ -6,6 +6,7 @@ import { init } from "./init"
 import { Cookie } from "./lib/cookie"
 
 import NextAuth from "../next"
+import { NextAuthAction } from "../lib/types"
 
 export interface IncomingRequest {
   method: string
@@ -13,6 +14,9 @@ export interface IncomingRequest {
   cookies: Record<string, any>
   query: Record<string, any>
   body: Record<string, any>
+  action: NextAuthAction
+  providerId?: string
+  error?: string
 }
 
 export interface OutgoingResponse {
@@ -33,36 +37,13 @@ export async function NextAuthHandler(
   params: NextAuthHandlerParams
 ): Promise<OutgoingResponse> {
   const { options: userOptions, req } = params
-
-  if (userOptions.logger) {
-    setLogger(userOptions.logger)
-  }
+  const { action, providerId, error } = req
 
   // To work properly in production with OAuth providers the NEXTAUTH_URL
   // environment variable must be set.
   if (!process.env.NEXTAUTH_URL) {
     logger.warn("NEXTAUTH_URL")
   }
-
-  if (!req.query.nextauth) {
-    const message =
-      "Cannot find [...nextauth].js in pages/api/auth. Make sure the filename is written correctly."
-
-    logger.error("MISSING_NEXTAUTH_API_ROUTE_ERROR", new Error(message))
-    return {
-      status: 500,
-      text: `Error: ${message}`,
-    }
-  }
-
-  const {
-    nextauth,
-    action = nextauth[0],
-    providerId = nextauth[1],
-    error = nextauth[1],
-  } = req.query
-
-  delete req.query.nextauth
 
   const { options, cookies } = await init({
     userOptions,
@@ -219,7 +200,11 @@ export async function NextAuthHandler(
       default:
     }
   }
-  return { status: 400, cookies: [] }
+
+  return {
+    status: 400,
+    text: `Error: Action ${action} with HTTP ${req.method} is not supported by NextAuth.js`,
+  }
 }
 
 export default NextAuth
