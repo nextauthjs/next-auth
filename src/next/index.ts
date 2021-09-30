@@ -1,5 +1,9 @@
-import { NextApiRequest, NextApiResponse } from "next"
-import { NextAuthOptions } from ".."
+import {
+  GetServerSidePropsContext,
+  NextApiRequest,
+  NextApiResponse,
+} from "next"
+import { NextAuthOptions, Session } from ".."
 import { IncomingRequest, NextAuthHandler } from "../server"
 import extendRes from "../server/lib/extend-res"
 import { set as setCookie } from "../server/lib/cookie"
@@ -87,3 +91,28 @@ function NextAuth(...args) {
 }
 
 export default NextAuth
+
+export async function getServerSession(
+  context:
+    | GetServerSidePropsContext
+    | { req: NextApiRequest; res: NextApiResponse },
+  options: NextAuthOptions
+): Promise<Session | null> {
+  const session = await NextAuthHandler<Session>({
+    options,
+    req: {
+      action: "session",
+      method: "GET",
+      cookies: context.req.cookies,
+    },
+  })
+
+  const { json, cookies } = session
+
+  cookies?.forEach((cookie) => {
+    setCookie(context.res, cookie.name, cookie.value, cookie.options)
+  })
+
+  if (!json) return null
+  return Object.keys(json) ? json : null
+}

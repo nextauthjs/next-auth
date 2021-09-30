@@ -19,7 +19,7 @@ export default async function oAuthCallback(params: {
   const { options, query, body, method, codeVerifier } = params
   const { logger, provider } = options
 
-  const errorMessage = body.error ?? query.error
+  const errorMessage = body?.error ?? query?.error
   if (errorMessage) {
     const error = new Error(errorMessage)
     logger.error("OAUTH_CALLBACK_HANDLER_ERROR", {
@@ -35,7 +35,7 @@ export default async function oAuthCallback(params: {
     try {
       const client = await oAuth1Client(options)
       // Handle OAuth v1.x
-      const { oauth_token, oauth_verifier } = query
+      const { oauth_token, oauth_verifier } = query ?? {}
       // @ts-expect-error
       const tokens: TokenSet = await client.getOAuthAccessToken(
         oauth_token,
@@ -123,7 +123,7 @@ export default async function oAuthCallback(params: {
 
     // If a user object is supplied (e.g. Apple provider) add it to the profile object
     // TODO: Remove/extract to Apple provider?
-    profile.user = JSON.parse(body.user ?? query.user ?? null)
+    profile.user = JSON.parse(body?.user ?? query?.user ?? null)
 
     const profileResult = await getProfile({
       profile,

@@ -15,7 +15,7 @@ export interface CredentialsConfig<
   type: "credentials"
   credentials: C
   authorize: (
-    credentials: Record<keyof C, string>,
+    credentials: Record<keyof C, string> | undefined,
     req: Pick<IncomingRequest, "body" | "query" | "headers" | "method">
   ) => Awaitable<(Omit<User, "id"> | { id?: string }) | null>
 }

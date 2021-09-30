@@ -10,6 +10,7 @@ import * as jwt from "../jwt"
 import { defaultCallbacks } from "./lib/default-callbacks"
 import { createCSRFToken } from "./lib/csrf-token"
 import { createCallbackUrl } from "./lib/callback-url"
+import { IncomingRequest } from "."
 
 interface InitParams {
   userOptions: NextAuthOptions
@@ -21,7 +22,7 @@ interface InitParams {
   csrfToken?: string
   /** Is the incoming request a POST request? */
   isPost: boolean
-  cookies: Record<string, any>
+  cookies: IncomingRequest["cookies"]
 }
 
 /** Initialize all internal options and cookies. */
@@ -114,7 +115,7 @@ export async function init({
     csrfTokenVerified,
   } = createCSRFToken({
     options,
-    cookieValue: reqCookies[options.cookies.csrfToken.name],
+    cookieValue: reqCookies?.[options.cookies.csrfToken.name],
     isPost,
     bodyValue: reqCsrfToken,
   })
@@ -132,7 +133,7 @@ export async function init({
 
   const { callbackUrl, callbackUrlCookie } = await createCallbackUrl({
     options,
-    cookieValue: reqCookies[options.cookies.callbackUrl.name],
+    cookieValue: reqCookies?.[options.cookies.callbackUrl.name],
     paramValue: reqCallbackUrl,
   })
   options.callbackUrl = callbackUrl

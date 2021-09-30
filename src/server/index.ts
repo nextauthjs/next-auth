@@ -10,19 +10,19 @@ import { NextAuthAction } from "../lib/types"
 
 export interface IncomingRequest {
   method: string
-  headers: Record<string, any>
-  cookies: Record<string, any>
-  query: Record<string, any>
-  body: Record<string, any>
+  cookies?: Record<string, any>
+  headers?: Record<string, any>
+  query?: Record<string, any>
+  body?: Record<string, any>
   action: NextAuthAction
   providerId?: string
   error?: string
 }
 
-export interface OutgoingResponse {
+export interface OutgoingResponse<J = any> {
   status?: number
   headers?: any[]
-  json?: any
+  json?: J
   text?: any
   redirect?: string
   cookies?: Cookie[]
@@ -33,9 +33,9 @@ export interface NextAuthHandlerParams {
   options: NextAuthOptions
 }
 
-export async function NextAuthHandler(
+export async function NextAuthHandler<J>(
   params: NextAuthHandlerParams
-): Promise<OutgoingResponse> {
+): Promise<OutgoingResponse<J>> {
   const { options: userOptions, req } = params
   const { action, providerId, error } = req
 
@@ -49,8 +49,8 @@ export async function NextAuthHandler(
     userOptions,
     action,
     providerId,
-    callbackUrl: req.body.callbackUrl ?? req.query.callbackUrl,
-    csrfToken: req.body.csrfToken,
+    callbackUrl: req.body?.callbackUrl ?? req.query?.callbackUrl,
+    csrfToken: req.body?.csrfToken,
     cookies: req.cookies,
     isPost: req.method === "POST",
   })
@@ -70,7 +70,7 @@ export async function NextAuthHandler(
         return { json: session.json, cookies }
       }
       case "csrf":
-        return { json: { csrfToken: options.csrfToken }, cookies }
+        return { json: { csrfToken: options.csrfToken } as any, cookies }
       case "signin":
         if (pages.signIn) {
           let signinUrl = `${pages.signIn}${
@@ -189,7 +189,7 @@ export async function NextAuthHandler(
       case "_log":
         if (userOptions.logger) {
           try {
-            const { code, level, ...metadata } = req.body
+            const { code, level, ...metadata } = req.body ?? {}
             logger[level](code, metadata)
           } catch (error) {
             // If logging itself failed...

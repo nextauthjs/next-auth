@@ -5,7 +5,7 @@ import VerifyRequestPage from "./verify-request"
 import ErrorPage from "./error"
 import css from "../../css"
 import { InternalOptions } from "../../lib/types"
-import { OutgoingResponse } from ".."
+import { IncomingRequest, OutgoingResponse } from ".."
 import { Cookie } from "../lib/cookie"
 
 /** Takes a request and response, and gives renderable pages */
@@ -15,7 +15,7 @@ export default function renderPage({
   cookies,
 }: {
   options: InternalOptions
-  query: Record<string, any>
+  query: IncomingRequest["query"]
   cookies: Cookie[]
 }) {
   const { url, callbackUrl, csrfToken, providers, theme } = options

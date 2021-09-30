@@ -43,7 +43,7 @@ export default async function signin(params: {
     // according to RFC 2821, but in practice this causes more problems than
     // it solves. We treat email addresses as all lower case. If anyone
     // complains about this we can make strict RFC 2821 compliance an option.
-    const email = body.email?.toLowerCase() ?? null
+    const email = body?.email?.toLowerCase() ?? null
 
     const { getUserByEmail } = adapter
     // If is an existing user return a user object (otherwise use placeholder)
