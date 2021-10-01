@@ -104,6 +104,7 @@ export async function getServerSession(
       action: "session",
       method: "GET",
       cookies: context.req.cookies,
+      headers: context.req.headers,
     },
   })
 
