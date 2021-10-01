@@ -51,7 +51,7 @@
     "react",
     "next",
     "providers",
-    "server",
+    "core",
     "index.d.ts",
     "index.js",
     "adapters.d.ts"
