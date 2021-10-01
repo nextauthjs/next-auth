@@ -25,7 +25,6 @@ export function oAuth1Client(options: InternalOptions<"oauth">) {
   // @ts-expect-error
   oauth1Client.get = async (...args) => {
     return await new Promise((resolve, reject) => {
-      // @ts-expect-error
       originalGet(...args, (error, result) => {
         if (error) {
           return reject(error)
@@ -40,7 +39,6 @@ export function oAuth1Client(options: InternalOptions<"oauth">) {
   oauth1Client.getOAuthAccessToken = async (...args: any[]) => {
     return await new Promise((resolve, reject) => {
       originalGetOAuth1AccessToken(
-        // @ts-expect-error
         ...args,
         (error: any, oauth_token: any, oauth_token_secret: any) => {
           if (error) {
