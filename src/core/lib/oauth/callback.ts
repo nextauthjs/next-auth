@@ -7,7 +7,7 @@ import { OAuthCallbackError } from "../../errors"
 import { Account, LoggerInstance, Profile } from "../../.."
 import { OAuthChecks, OAuthConfig } from "../../../providers"
 import { InternalOptions } from "../../../lib/types"
-import { IncomingRequest, OutgoingResponse } from "../../../server"
+import { IncomingRequest, OutgoingResponse } from "../.."
 
 export default async function oAuthCallback(params: {
   options: InternalOptions<"oauth">

@@ -1,4 +1,4 @@
-import { UnknownError } from "../server/errors"
+import { UnknownError } from "../core/errors"
 
 /** Makes sure that error is always serializable */
 function formatError(o) {

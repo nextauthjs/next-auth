@@ -1,5 +1,5 @@
 /**
- * @param {import("../server").Provider} options
+ * @param {import("../core").Provider} options
  * @example
  *
  * ```js

@@ -1,4 +1,4 @@
-import { IncomingRequest } from "src/server"
+import { IncomingRequest } from "src/core"
 import { CommonProviderOptions } from "."
 import { User, Awaitable } from ".."
 

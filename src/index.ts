@@ -1,2 +1,4 @@
-export { default } from "./server"
-export * from "./server/types"
+export * from "./core/types"
+
+export type { IncomingRequest, OutgoingResponse } from "./core"
+export { default } from "./next"

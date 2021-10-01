@@ -4,9 +4,9 @@ import {
   NextApiResponse,
 } from "next"
 import { NextAuthOptions, Session } from ".."
-import { IncomingRequest, NextAuthHandler } from "../server/handler"
-import extendRes from "../server/lib/extend-res"
-import { set as setCookie } from "../server/lib/cookie"
+import { IncomingRequest, NextAuthHandler } from "../core"
+import extendRes from "../core/lib/extend-res"
+import { set as setCookie } from "../core/lib/cookie"
 import logger, { setLogger } from "../lib/logger"
 
 async function NextAuthNextHandler(req, res, options) {

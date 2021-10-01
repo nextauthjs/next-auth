@@ -29,7 +29,7 @@ node_modules
 /client
 /css
 /lib
-/server
+/core
 /jwt
 /react
 /adapters.d.ts

@@ -1,9 +1,9 @@
-import { openidClient } from "../oauth/client"
-import { oAuth1Client } from "../oauth/client-legacy"
-import { createState } from "../oauth/state-handler"
-import { createPKCE } from "../oauth/pkce-handler"
+import { openidClient } from "./client"
+import { oAuth1Client } from "./client-legacy"
+import { createState } from "./state-handler"
+import { createPKCE } from "./pkce-handler"
 import { InternalOptions } from "../../../lib/types"
-import { IncomingRequest } from "../../../server"
+import { IncomingRequest } from "../.."
 import { Cookie } from "../cookie"
 
 /**
