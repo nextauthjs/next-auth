@@ -104,10 +104,6 @@ export default async function oAuthCallback(
       })
     }
 
-    // If a user object is supplied (e.g. Apple provider) add it to the profile object
-    // TODO: Remove/extract to Apple provider?
-    profile.user = JSON.parse(req.body.user ?? req.query.user ?? null)
-
     return await getProfile({ profile, provider, tokens, logger })
   } catch (error) {
     logger.error("OAUTH_CALLBACK_ERROR", { error, providerId: provider.id })
