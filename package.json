@@ -40,7 +40,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "version:pr": "node ./config/version-pr",
-    "generate-providers": "node ./config/generate-providers.js",
+    "generate-providers": "node ./config/generate-providers.js"
   },
   "files": [
     "lib",
