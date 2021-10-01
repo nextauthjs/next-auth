@@ -54,7 +54,10 @@ export async function NextAuthHandler<J>(
     isPost: req.method === "POST",
   })
 
-  const sessionToken = req.cookies?.[options.cookies.sessionToken.name]
+  const sessionToken =
+    req.cookies?.[options.cookies.sessionToken.name] ||
+    req.headers?.Authorization?.replace("Bearer ", "")
+
   const codeVerifier = req.cookies?.[options.cookies.pkceCodeVerifier.name]
 
   if (req.method === "GET") {
