@@ -16,7 +16,7 @@ function formatError(o: unknown): unknown {
 function hasErrorProperty(
   x: unknown
 ): x is { error: Error; [key: string]: unknown } {
-  return (x as any)?.error !== "undefined"
+  return !!(x as any)?.error
 }
 
 /**
