@@ -1,5 +1,8 @@
+import { Theme } from "../..";
+
 export interface VerifyRequestServerPageParams {
-  baseUrl: string
+  baseUrl: string;
+  theme: Theme
 }
 
 export default function VerifyRequest({

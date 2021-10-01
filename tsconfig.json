@@ -16,14 +16,9 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "declaration": true,
-    "stripInternal": true
+    "stripInternal": true,
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true
   },
-  "exclude": [
-    "./*.js",
-    "./*.d.ts",
-    "app",
-    "**/tests",
-    "**/__tests__",
-    "config"
-  ]
+  "exclude": ["./*.js", "./*.d.ts", "app", "**/tests", "**/__tests__", "config"]
 }

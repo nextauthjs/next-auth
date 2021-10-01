@@ -1,10 +1,12 @@
 import type { NextAuthResponse } from "src/lib/types"
+import type { Theme } from "../.."
 
 export interface ErrorServerPageParams {
   baseUrl: string
   basePath: string
   error?: string
   res: NextAuthResponse
+  theme: Theme
 }
 
 interface ErrorView {

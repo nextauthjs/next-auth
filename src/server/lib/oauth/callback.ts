@@ -6,7 +6,11 @@ import { OAuthCallbackError } from "../../errors"
 import { TokenSet } from "openid-client"
 import { Account, LoggerInstance, Profile } from "src"
 import { OAuthChecks, OAuthConfig } from "src/providers"
-import type { NextAuthRequest, NextAuthResponse } from "src/lib/types"
+import type {
+  InternalProvider,
+  NextAuthRequest,
+  NextAuthResponse,
+} from "src/lib/types"
 
 export default async function oAuthCallback(
   req: NextAuthRequest,
@@ -14,7 +18,7 @@ export default async function oAuthCallback(
 ): Promise<GetProfileResult> {
   const { logger } = req.options
 
-  const provider = req.options.provider
+  const provider = req.options.provider as InternalProvider<"oauth">
 
   const errorMessage = req.body.error ?? req.query.error
   if (errorMessage) {
@@ -28,7 +32,7 @@ export default async function oAuthCallback(
     throw error
   }
 
-  if (provider.type === "oauth" && provider.version?.startsWith("1.")) {
+  if (provider.version?.startsWith("1.")) {
     try {
       const client = await oAuth1Client(req.options)
       // Handle OAuth v1.x
@@ -42,7 +46,7 @@ export default async function oAuthCallback(
       )
       // @ts-expect-error
       let profile: Profile = await client.get(
-        provider.profileUrl,
+        (provider as any).profileUrl,
         tokens.oauth_token,
         tokens.oauth_token_secret
       )
@@ -110,8 +114,8 @@ export default async function oAuthCallback(
 
     return await getProfile({ profile, provider, tokens, logger })
   } catch (error) {
-    logger.error("OAUTH_CALLBACK_ERROR", { error, providerId: provider.id })
-    throw new OAuthCallbackError(error)
+    logger.error("OAUTH_CALLBACK_ERROR", { error: error as Error, providerId: provider.id })
+    throw new OAuthCallbackError(error as Error)
   }
 }
 

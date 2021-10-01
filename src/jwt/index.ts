@@ -2,7 +2,7 @@ import crypto from "crypto"
 import jose from "jose"
 import logger from "../lib/logger"
 import { NextApiRequest } from "next"
-import type { JWT, JWTDecodeParams, JWTEncodeParams } from "./types"
+import type { JWT, JWTDecodeParams, JWTEncodeParams, Secret } from "./types"
 
 export * from "./types"
 
@@ -163,7 +163,14 @@ let DERIVED_SIGNING_KEY_WARNING = false
 let DERIVED_ENCRYPTION_KEY_WARNING = false
 
 // Do the better hkdf of Node.js one added in `v15.0.0` and Third Party one
-function hkdf(secret, { byteLength, encryptionInfo, digest = "sha256" }) {
+function hkdf(
+  secret: Secret,
+  {
+    byteLength,
+    encryptionInfo,
+    digest = "sha256",
+  }: { byteLength: number; encryptionInfo: string; digest?: string }
+) {
   if (crypto.hkdfSync) {
     return Buffer.from(
       crypto.hkdfSync(
@@ -182,7 +189,7 @@ function hkdf(secret, { byteLength, encryptionInfo, digest = "sha256" }) {
   })
 }
 
-function getDerivedSigningKey(secret) {
+function getDerivedSigningKey(secret: Secret) {
   if (!DERIVED_SIGNING_KEY_WARNING) {
     logger.warn("JWT_AUTO_GENERATED_SIGNING_KEY")
     DERIVED_SIGNING_KEY_WARNING = true
@@ -200,7 +207,7 @@ function getDerivedSigningKey(secret) {
   return key
 }
 
-function getDerivedEncryptionKey(secret) {
+function getDerivedEncryptionKey(secret: Secret) {
   if (!DERIVED_ENCRYPTION_KEY_WARNING) {
     logger.warn("JWT_AUTO_GENERATED_ENCRYPTION_KEY")
     DERIVED_ENCRYPTION_KEY_WARNING = true

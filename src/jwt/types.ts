@@ -18,7 +18,7 @@ export interface JWT extends Record<string, unknown>, DefaultJWT {}
 export interface JWTEncodeParams {
   token?: JWT
   maxAge?: number
-  secret: string | Buffer
+  secret: Secret
   signingKey?: string
   signingOptions?: JoseJWT.SignOptions
   encryptionKey?: string
@@ -29,7 +29,7 @@ export interface JWTEncodeParams {
 export interface JWTDecodeParams {
   token?: string
   maxAge?: number
-  secret: string | Buffer
+  secret: Secret
   signingKey?: string
   verificationKey?: string
   verificationOptions?: JoseJWT.VerifyOptions<false>
@@ -49,3 +49,5 @@ export interface JWTOptions {
   decode: typeof decode
   verificationOptions?: JoseJWT.VerifyOptions<false>
 }
+
+export type Secret = string | Buffer

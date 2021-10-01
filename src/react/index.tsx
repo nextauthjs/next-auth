@@ -352,7 +352,7 @@ export function SessionProvider(props: SessionProviderProps) {
         __NEXTAUTH._session = await getSession()
         setSession(__NEXTAUTH._session)
       } catch (error) {
-        logger.error("CLIENT_SESSION_ERROR", error)
+        logger.error("CLIENT_SESSION_ERROR", error as Error)
       } finally {
         setLoading(false)
       }

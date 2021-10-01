@@ -1,4 +1,5 @@
-import { InternalProvider } from "src/lib/types"
+import type { InternalProvider } from "src/lib/types"
+import type { Theme } from "../.."
 
 export interface SignInServerPageParams {
   csrfToken: string
@@ -6,6 +7,7 @@ export interface SignInServerPageParams {
   callbackUrl: string
   email: string
   error: string
+  theme: Theme
 }
 
 export default function Signin({
@@ -29,7 +31,7 @@ export default function Signin({
     return false
   })
 
-  if (typeof document !== "undefined") {
+  if (typeof document !== "undefined" && theme.brandColor) {
     document.documentElement.style.setProperty(
       "--brand-color",
       theme.brandColor
@@ -118,15 +120,15 @@ export default function Signin({
                         className="section-header"
                         htmlFor={`input-${credential}-for-${provider.id}-provider`}
                       >
-                        {provider.credentials[credential].label || credential}
+                        {provider.credentials[credential].label ?? credential}
                       </label>
                       <input
                         name={credential}
                         id={`input-${credential}-for-${provider.id}-provider`}
-                        type={provider.credentials[credential].type || "text"}
-                        value={provider.credentials[credential].value || ""}
+                        type={provider.credentials[credential].type ?? "text"}
+                        value={provider.credentials[credential].value ?? ""}
                         placeholder={
-                          provider.credentials[credential].placeholder ||
+                          provider.credentials[credential].placeholder ??
                           "Password"
                         }
                       />

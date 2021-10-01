@@ -1,7 +1,10 @@
+import { Theme } from "../.."
+
 export interface SignOutServerPageParams {
   csrfToken: string
   baseUrl: string
   basePath: string
+  theme: Theme
 }
 
 export default function Signout({

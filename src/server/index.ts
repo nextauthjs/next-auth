@@ -236,7 +236,7 @@ async function NextAuthHandler(
             logger[level](code, metadata)
           } catch (error) {
             // If logging itself failed...
-            logger.error("LOGGER_ERROR", error)
+            logger.error("LOGGER_ERROR", error as Error)
           }
         }
         return res.end()
@@ -254,12 +254,17 @@ function NextAuth(
   res: NextApiResponse,
   options: NextAuthOptions
 ): any
-/** Tha main entry point to next-auth */
-function NextAuth(...args) {
+/** The main entry point to next-auth */
+function NextAuth(
+  ...args:
+    | [NextAuthOptions]
+    | [NextApiRequest, NextApiResponse, NextAuthOptions]
+) {
   if (args.length === 1) {
-    return async (req, res) => await NextAuthHandler(req, res, args[0])
+    return async (req: NextAuthRequest, res: NextAuthResponse) =>
+      await NextAuthHandler(req, res, args[0])
   }
-  return NextAuthHandler(args[0], args[1], args[2])
+  return NextAuthHandler(args[0] as NextAuthRequest, args[1], args[2])
 }
 
 export default NextAuth
