@@ -9,7 +9,7 @@ https://docs.gitlab.com/ee/api/oauth2.html
 
 ## Configuration
 
-https://gitlab.com/profile/applications
+https://gitlab.com/-/profile/applications
 
 ## Options
 
