@@ -18,11 +18,17 @@ export interface IncomingRequest {
   error?: string
 }
 
-export interface OutgoingResponse<J = any> {
+export interface NextAuthHeader {
+  key: string
+  value: string
+}
+
+export interface OutgoingResponse<
+  Body extends string | Record<string, any> | any[] = any
+> {
   status?: number
-  headers?: any[]
-  json?: J
-  text?: any
+  headers?: NextAuthHeader[]
+  body?: Body
   redirect?: string
   cookies?: Cookie[]
 }
@@ -32,9 +38,9 @@ interface NextAuthHandlerParams {
   options: NextAuthOptions
 }
 
-export async function NextAuthHandler<J>(
-  params: NextAuthHandlerParams
-): Promise<OutgoingResponse<J>> {
+export async function NextAuthHandler<
+  Body extends string | Record<string, any> | any[]
+>(params: NextAuthHandlerParams): Promise<OutgoingResponse<Body>> {
   const { options: userOptions, req } = params
   const { action, providerId, error } = req
 
@@ -65,22 +71,21 @@ export async function NextAuthHandler<J>(
     const { pages } = options
     switch (action) {
       case "providers":
-        return { ...routes.providers(options.providers), cookies }
-      case "session": {
-        const session = await routes.session({ options, sessionToken })
-        if (session.cookies) cookies.push(...session.cookies)
-        return { json: session.json, cookies }
-      }
+        return (await routes.providers(options.providers)) as any
+      case "session":
+        return (await routes.session({ options, sessionToken })) as any
       case "csrf":
-        return { json: { csrfToken: options.csrfToken } as any, cookies }
+        return {
+          headers: [{ key: "Content-Type", value: "application/json" }],
+          body: { csrfToken: options.csrfToken } as any,
+          cookies,
+        }
       case "signin":
         if (pages.signIn) {
           let signinUrl = `${pages.signIn}${
             pages.signIn.includes("?") ? "&" : "?"
           }callbackUrl=${options.callbackUrl}`
-          if (error) {
-            signinUrl = `${signinUrl}&error=${error}`
-          }
+          if (error) signinUrl = `${signinUrl}&error=${error}`
           return { redirect: signinUrl, cookies }
         }
 
@@ -150,9 +155,7 @@ export async function NextAuthHandler<J>(
             body: req.body,
             options,
           })
-          if (signin.cookies) {
-            cookies.push(...signin.cookies)
-          }
+          if (signin.cookies) cookies.push(...signin.cookies)
           return { ...signin, cookies }
         }
 
@@ -198,13 +201,13 @@ export async function NextAuthHandler<J>(
             logger.error("LOGGER_ERROR", error)
           }
         }
-        return { cookies }
+        return {}
       default:
     }
   }
 
   return {
     status: 400,
-    text: `Error: Action ${action} with HTTP ${req.method} is not supported by NextAuth.js`,
+    body: `Error: Action ${action} with HTTP ${req.method} is not supported by NextAuth.js` as any,
   }
 }

@@ -4,14 +4,16 @@ import {
   NextApiResponse,
 } from "next"
 import { NextAuthOptions, Session } from ".."
-import { IncomingRequest, NextAuthHandler } from "../core"
-import extendRes from "../core/lib/extend-res"
+import { NextAuthHandler } from "../core"
+import { NextAuthAction } from "../lib/types"
 import { set as setCookie } from "../core/lib/cookie"
 import logger, { setLogger } from "../lib/logger"
 
-async function NextAuthNextHandler(req, res, options) {
-  extendRes(req, res)
-
+async function NextAuthNextHandler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  options: NextAuthOptions
+) {
   const {
     nextauth,
     action = nextauth[0],
@@ -34,24 +36,25 @@ async function NextAuthNextHandler(req, res, options) {
     }
   }
 
-  const request: IncomingRequest = {
-    body: req.body,
-    query: req.query,
-    cookies: req.cookies,
-    headers: req.headers,
-    method: req.method,
-    action,
-    providerId,
-    error,
-  }
   const {
-    json,
+    body,
     redirect,
-    text,
     cookies,
     headers,
     status = 200,
-  } = await NextAuthHandler({ req: request, options })
+  } = await NextAuthHandler({
+    req: {
+      body: req.body,
+      query: req.query,
+      cookies: req.cookies,
+      headers: req.headers,
+      method: req.method ?? "GET",
+      action: action as NextAuthAction,
+      providerId: providerId as string | undefined,
+      error: error as string | undefined,
+    },
+    options,
+  })
 
   res.status(status)
 
@@ -63,15 +66,18 @@ async function NextAuthNextHandler(req, res, options) {
   })
 
   if (redirect) {
-    return res.redirect(redirect)
-  } else if (json) {
-    return res.json(json)
-  } else if (text) {
-    return res.send(text)
+    // If the request expects a return URL, send it as JSON
+    // instead of doing an actual redirect.
+    if (req.body?.json !== "true") {
+      // Could chain. .end() when lowest target is Node 14
+      // https://github.com/nodejs/node/issues/33148
+      res.status(302).setHeader("Location", redirect)
+      return res.end()
+    }
+    return res.json({ url: redirect })
   }
-  return res
-    .status(400)
-    .send(`Error: HTTP ${req.method} is not supported for ${req.url}`)
+
+  return res.send(body)
 }
 
 function NextAuth(options: NextAuthOptions): any
@@ -98,7 +104,7 @@ export async function getServerSession(
     | { req: NextApiRequest; res: NextApiResponse },
   options: NextAuthOptions
 ): Promise<Session | null> {
-  const session = await NextAuthHandler<Session>({
+  const session = await NextAuthHandler<Session | {}>({
     options,
     req: {
       action: "session",
@@ -108,12 +114,12 @@ export async function getServerSession(
     },
   })
 
-  const { json, cookies } = session
+  const { body, cookies } = session
 
   cookies?.forEach((cookie) => {
     setCookie(context.res, cookie.name, cookie.value, cookie.options)
   })
 
-  if (!json) return null
-  return Object.keys(json) ? json : null
+  if (body && Object.keys(body).length) return body as Session
+  return null
 }

@@ -1,7 +1,7 @@
 import { Adapter } from "../../adapters"
 import { InternalOptions } from "../../lib/types"
 import { OutgoingResponse } from ".."
-import * as cookie from "../lib/cookie"
+import { Session } from "../.."
 import { fromDate } from "../lib/utils"
 
 interface SessionParams {
@@ -16,19 +16,20 @@ interface SessionParams {
 
 export default async function session(
   params: SessionParams
-): Promise<OutgoingResponse> {
+): Promise<OutgoingResponse<Session | {}>> {
   const { options, sessionToken } = params
   const { adapter, jwt, events, callbacks, logger } = options
   const useJwtSession = options.session.jwt
   const sessionMaxAge = options.session.maxAge
 
-  if (!sessionToken) {
-    return { json: {} }
+  const response: OutgoingResponse<Session | {}> = {
+    body: {},
+    headers: [{ key: "Content-Type", value: "application/json" }],
+    cookies: [],
   }
 
-  let sessionCookie: cookie.Cookie | undefined
+  if (!sessionToken) return response
 
-  let json = {}
   if (useJwtSession) {
     try {
       // Decrypt and verify token
@@ -58,31 +59,31 @@ export default async function session(
       })
 
       // Return session payload as response
-      json = session
+      response.body = session
 
       // Refresh JWT expiry by re-signing it, with an updated expiry date
       const newToken = await jwt.encode({ ...jwt, token })
 
       // Set cookie, to also update expiry date on cookie
-      sessionCookie = {
+      response.cookies?.push({
         name: options.cookies.sessionToken.name,
         value: newToken,
         options: {
           expires: newExpires,
           ...options.cookies.sessionToken.options,
         },
-      }
+      })
 
       await events.session?.({ session, token })
     } catch (error) {
       // If JWT not verifiable, make sure the cookie for it is removed and return empty object
       logger.error("JWT_SESSION_ERROR", error)
 
-      sessionCookie = {
+      response.cookies?.push({
         name: options.cookies.sessionToken.name,
         value: "",
         options: { ...options.cookies.sessionToken.options, maxAge: 0 },
-      }
+      })
     }
   } else {
     try {
@@ -135,33 +136,33 @@ export default async function session(
         })
 
         // Return session payload as response
-        json = sessionPayload
+        response.body = sessionPayload
 
         // Set cookie again to update expiry
-        sessionCookie = {
+        response.cookies?.push({
           name: options.cookies.sessionToken.name,
           value: sessionToken,
           options: {
             expires: newExpires,
             ...options.cookies.sessionToken.options,
           },
-        }
+        })
 
         // @ts-expect-error
         await events.session?.({ session: sessionPayload })
       } else if (sessionToken) {
         // If sessionToken was found set but it's not valid for a session then
         // remove the sessionToken cookie from browser.
-        sessionCookie = {
+        response.cookies?.push({
           name: options.cookies.sessionToken.name,
           value: "",
           options: { ...options.cookies.sessionToken.options, maxAge: 0 },
-        }
+        })
       }
     } catch (error) {
       logger.error("SESSION_ERROR", error)
     }
   }
 
-  return { json, cookies: sessionCookie ? [sessionCookie] : undefined }
+  return response
 }

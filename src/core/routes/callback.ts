@@ -457,7 +457,7 @@ export default async function callback(params: {
   }
   return {
     status: 500,
-    text: `Error: Callback for provider type ${provider.type} not supported`,
+    body: `Error: Callback for provider type ${provider.type} not supported`,
     cookies,
   }
 }

@@ -1,6 +1,14 @@
 import { OutgoingResponse } from ".."
 import { InternalProvider } from "../../lib/types"
 
+export interface PublicProvider {
+  id: string
+  name: string
+  type: string
+  signinUrl: string
+  callbackUrl: string
+}
+
 /**
  * Return a JSON object with a list of all OAuth providers currently configured
  * and their signin and callback URLs. This makes it possible to automatically
@@ -8,9 +16,10 @@ import { InternalProvider } from "../../lib/types"
  */
 export default function providers(
   providers: InternalProvider[]
-): OutgoingResponse {
+): OutgoingResponse<Record<string, PublicProvider>> {
   return {
-    json: providers.reduce(
+    headers: [{ key: "Content-Type", value: "application/json" }],
+    body: providers.reduce(
       (acc, { id, name, type, signinUrl, callbackUrl }) => {
         acc[id] = { id, name, type, signinUrl, callbackUrl }
         return acc
