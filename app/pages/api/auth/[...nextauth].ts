@@ -21,6 +21,8 @@ import AzureADProvider from "next-auth/providers/azure-ad"
 import SpotifyProvider from "next-auth/providers/spotify"
 import CognitoProvider from "next-auth/providers/cognito"
 import SlackProvider from "next-auth/providers/slack"
+import Okta from "next-auth/providers/okta"
+import AzureB2C from "next-auth/providers/azure-ad-b2c"
 
 // import { PrismaAdapter } from "@next-auth/prisma-adapter"
 // import { PrismaClient } from "@prisma/client"
@@ -150,9 +152,20 @@ export default NextAuth({
       clientSecret: process.env.COGNITO_SECRET,
       issuer: process.env.COGNITO_ISSUER,
     }),
+    Okta({
+      clientId: process.env.OKTA_ID,
+      clientSecret: process.env.OKTA_SECRET,
+      issuer: process.env.OKTA_ISSUER,
+    }),
     SlackProvider({
       clientId: process.env.SLACK_ID,
       clientSecret: process.env.SLACK_SECRET,
+    }),
+    AzureB2C({
+      clientId: process.env.AZURE_B2C_ID,
+      clientSecret: process.env.AZURE_B2C_SECRET,
+      tenantId: process.env.AZURE_B2C_TENANT_ID,
+      primaryUserFlow: process.env.AZURE_B2C_PRIMARY_USER_FLOW,
     }),
   ],
   jwt: {

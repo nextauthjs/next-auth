@@ -125,12 +125,11 @@ export default function Signin({
                       <input
                         name={credential}
                         id={`input-${credential}-for-${provider.id}-provider`}
-                        type={provider.credentials[credential].type ?? "text"}
-                        value={provider.credentials[credential].value ?? ""}
                         placeholder={
                           provider.credentials[credential].placeholder ??
                           "Password"
                         }
+                        {...provider.credentials[credential]}
                       />
                     </div>
                   )
