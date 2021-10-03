@@ -14,27 +14,19 @@ async function NextAuthNextHandler(
   res: NextApiResponse,
   options: NextAuthOptions
 ) {
-  const {
-    nextauth,
-    action = nextauth[0],
-    providerId = nextauth[1],
-    error = nextauth[1],
-  } = req.query
-
-  if (options.logger) {
-    setLogger(options.logger)
-  }
+  setLogger(options.logger)
 
   if (!req.query.nextauth) {
-    const message =
+    const error = new Error(
       "Cannot find [...nextauth].js in pages/api/auth. Make sure the filename is written correctly."
+    )
 
-    logger.error("MISSING_NEXTAUTH_API_ROUTE_ERROR", new Error(message))
-    return {
-      status: 500,
-      text: `Error: ${message}`,
-    }
+    logger.error("MISSING_NEXTAUTH_API_ROUTE_ERROR", error)
+    return res.status(500).send(error.message)
   }
+
+  const host = process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL
+  if (!host) logger.warn("NEXTAUTH_URL")
 
   const {
     body,
@@ -44,14 +36,15 @@ async function NextAuthNextHandler(
     status = 200,
   } = await NextAuthHandler({
     req: {
+      host,
       body: req.body,
       query: req.query,
       cookies: req.cookies,
       headers: req.headers,
       method: req.method ?? "GET",
-      action: action as NextAuthAction,
-      providerId: providerId as string | undefined,
-      error: error as string | undefined,
+      action: req.query.nextauth[0] as NextAuthAction,
+      providerId: req.query.nextauth[1],
+      error: req.query.nextauth[1],
     },
     options,
   })
