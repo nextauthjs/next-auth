@@ -8,6 +8,8 @@ import { Cookie } from "./lib/cookie"
 import { NextAuthAction } from "../lib/types"
 
 export interface IncomingRequest {
+  /** @default "http://localhost:3000" */
+  host?: string
   method: string
   cookies?: Record<string, any>
   headers?: Record<string, any>
@@ -44,16 +46,11 @@ export async function NextAuthHandler<
   const { options: userOptions, req } = params
   const { action, providerId, error } = req
 
-  // To work properly in production with OAuth providers the NEXTAUTH_URL
-  // environment variable must be set.
-  if (!process.env.NEXTAUTH_URL) {
-    logger.warn("NEXTAUTH_URL")
-  }
-
   const { options, cookies } = await init({
     userOptions,
     action,
     providerId,
+    host: req.host,
     callbackUrl: req.body?.callbackUrl ?? req.query?.callbackUrl,
     csrfToken: req.body?.csrfToken,
     cookies: req.cookies,

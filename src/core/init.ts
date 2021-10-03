@@ -13,6 +13,7 @@ import { createCallbackUrl } from "./lib/callback-url"
 import { IncomingRequest } from "."
 
 interface InitParams {
+  host?: string
   userOptions: NextAuthOptions
   providerId?: string
   action: InternalOptions["action"]
@@ -30,6 +31,7 @@ export async function init({
   userOptions,
   providerId,
   action,
+  host,
   cookies: reqCookies,
   callbackUrl: reqCallbackUrl,
   csrfToken: reqCsrfToken,
@@ -43,7 +45,7 @@ export async function init({
     ;(process.env._NEXTAUTH_DEBUG as any) = true
   }
 
-  const url = parseUrl(process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL)
+  const url = parseUrl(host)
 
   const secret = createSecret({ userOptions, url })
 
