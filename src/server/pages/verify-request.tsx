@@ -6,10 +6,8 @@ export default function VerifyRequest({ baseUrl, theme }) {
           --brand-color: ${theme.brandColor}
         }
       `}} />
-      {theme.logo ? (
+      {theme.logo && (
         <img src={theme.logo} alt="Logo" className="logo" />
-      ) : (
-        <span className="logo" />
       )}
       <div className="card">
         <h1>Check your email</h1>

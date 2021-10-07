@@ -6,10 +6,8 @@ export default function Signout({ baseUrl, basePath, csrfToken, theme }) {
           --brand-color: ${theme.brandColor}
         }
       `}} />
-      {theme.logo ? (
+      {theme.logo && (
         <img src={theme.logo} alt="Logo" className="logo" />
-      ) : (
-        <span className="logo" />
       )}
       <div className="card">
         <h1>Signout</h1>

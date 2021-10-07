@@ -47,10 +47,8 @@ export default function Signin({
           --brand-color: ${theme.brandColor}
         }
       `}} />
-      {theme.logo ? (
+      {theme.logo && (
         <img src={theme.logo} alt="Logo" className="logo" />
-      ) : (
-        <span className="logo" />
       )}
       <div className="card">
         {error && (

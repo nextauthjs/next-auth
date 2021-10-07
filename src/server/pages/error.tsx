@@ -77,10 +77,8 @@ export default function Error({ baseUrl, basePath, error = "default", theme, res
           --brand-color: ${theme.brandColor}
         }
       `}} />
-      {theme.logo ? (
+      {theme.logo && (
         <img src={theme.logo} alt="Logo" className="logo" />
-      ) : (
-        <span className="logo" />
       )}
       <div className="card">
         <h1>{heading}</h1>

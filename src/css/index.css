@@ -152,13 +152,12 @@ a.site {
   position: absolute;
   width: 100%;
   height: 100%;
-  display: table;
+  display: grid;
+  place-items: center;
   margin: 0;
   padding: 0;
 
   > div {
-    display: table-cell;
-    vertical-align: middle;
     text-align: center;
     padding: 0.5rem;
   }
