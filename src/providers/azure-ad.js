@@ -15,7 +15,7 @@ export default function AzureAD(options) {
     async profile(profile, tokens) {
       // https://docs.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0#examples
       const profilePicture = await fetch(
-        "https://graph.microsoft.com/v1.0/me/photo/$value",
+        "https://graph.microsoft.com/v1.0/me/photos/64x64/$value",
         {
           headers: {
             Authorization: `Bearer ${tokens.access_token}`,
