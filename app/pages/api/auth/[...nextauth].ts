@@ -120,6 +120,7 @@ export default NextAuth({
     LineProvider({
       clientId: process.env.LINE_ID,
       clientSecret: process.env.LINE_SECRET,
+      issuer: process.env.LINE_PROVIDER
     }),
     LinkedInProvider({
       clientId: process.env.LINKEDIN_ID,
