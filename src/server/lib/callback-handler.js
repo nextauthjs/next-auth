@@ -201,24 +201,14 @@ export default async function callbackHandler(
       const userByEmail = profile.email
         ? await getUserByEmail(profile.email)
         : null
-      if (userByEmail) {
-        // We end up here when we don't have an account with the same [provider].id *BUT*
-        // we do already have an account with the same email address as the one in the
-        // OAuth profile the user has just tried to sign in with.
-        //
-        // We don't want to have two accounts with the same email address, and we don't
-        // want to link them in case it's not safe to do so, so instead we prompt the user
-        // to sign in via email to verify their identity and then link the accounts.
-        throw new AccountNotLinkedError()
-      }
-      // If the current user is not logged in and the profile isn't linked to any user
-      // accounts (by email or provider account id)...
-      //
-      // If no account matching the same [provider].id or .email exists, we can
-      // create a new account for the user, link it to the OAuth acccount and
-      // create a new session for them so they are signed in with it.
-      user = await createUser(profile)
-      await dispatchEvent(events.createUser, user)
+      
+        //change to allow signin with email and oauth providers
+        if (userByEmail) {
+          user = userByEmail;
+        } else {
+          user = await createUser(profile);
+          await (0, _dispatchEvent.default)(events.createUser, user);
+        }
 
       await linkAccount(
         user.id,
