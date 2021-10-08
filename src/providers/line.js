@@ -6,12 +6,12 @@ export default function LINE(options) {
     type: "oauth",
     authorization: { params: { scope: "openid profile" } },
     idToken: true,
-    wellKnown: `${options.issuer}/.well-known/openid-configuration`,
+    wellKnown: "https://access.line.me/.well-known/openid-configuration",
     profile(profile) {
       return {
         id: profile.sub,
         name: profile.name,
-        email: null,
+        email: profile.email,
         image: profile.picture,
       }
     },
