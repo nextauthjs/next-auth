@@ -17,16 +17,23 @@ export default async function getAuthorizationUrl(req, res) {
     /** @type {import("src/providers").OAuthConfig} */
     const provider = req.options.provider
 
-    const params = {
-      ...provider.authorization.params,
-      ...req.query,
+    let params = {}
+
+    if (typeof provider.authorization === "string") {
+      const parsedUrl = new URL(provider.authorization)
+      const parsedParams = Object.fromEntries(parsedUrl.searchParams.entries())
+      params = { ...params, ...parsedParams }
+    } else {
+      params = { ...params, ...provider.authorization?.params }
     }
 
     // Handle OAuth v1.x
     if (provider.version?.startsWith("1.")) {
       const client = oAuth1Client(req.options)
       const tokens = await client.getOAuthRequestToken(params)
-      const url = `${provider.authorization.url}?${new URLSearchParams({
+      const url = `${
+        provider.authorization.url ?? provider.authorization
+      }?${new URLSearchParams({
         oauth_token: tokens.oauth_token,
         oauth_token_secret: tokens.oauth_token_secret,
         ...tokens.params,
