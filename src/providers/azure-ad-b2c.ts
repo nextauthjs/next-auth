@@ -19,7 +19,12 @@ export interface AzureB2CProfile {
 
 export default function AzureADB2C<
   P extends Record<string, any> = AzureB2CProfile
->(options: OAuthUserConfig<P> & { primaryUserFlow: string }): OAuthConfig<P> {
+>(
+  options: OAuthUserConfig<P> & {
+    primaryUserFlow: string
+    tenantId: string
+  }
+): OAuthConfig<P> {
   const { tenantId, primaryUserFlow } = options
   return {
     id: "azure-ad-b2c",
