@@ -130,8 +130,6 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   region?: string
   // TODO: only allow for some
   issuer?: string
-  // TODO: only allow for Azure Active Directory B2C and FusionAuth
-  tenantId?: string
   /**
    * The options provided by the user.
    * We will perform a deep-merge of these values
