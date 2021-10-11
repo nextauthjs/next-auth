@@ -24,6 +24,7 @@ export default function EVEOnline<P extends Record<string, any> = EVEOnlineProfi
         scope: "publicData",
       },
     },
+    idToken: true,
     profile(profile) {
       return {
         id: profile.CharacterID,
