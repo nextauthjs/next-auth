@@ -1,27 +1,56 @@
 import { OAuthConfig, OAuthUserConfig } from "."
 
-export interface NotionResponse {
+interface NotionWorkspaceOwner {
+  type: "workspace"
+  workspace: true
+}
+
+interface NotionUserUser {
+  object: "user"
+  id: string
+  name: string
+  avatar_url: string
+  type: "person"
+  person: { email: string }
+}
+
+interface NotionBotUser {
+  object: "user"
+  id: string
+  name: string
+  avatar_url: string
+  type: "bot"
+  bot: any
+}
+
+interface NotionUserOwner {
+  type: "user"
+  user: NotionUserUser | NotionBotUser
+}
+
+export interface NotionResponseFields {
+  workspace_name: string
+  workspace_id: string
+  workspace_icon: string
+  bot_id: string
+}
+
+export interface NotionResponse extends NotionResponseFields {
   /**
    * https://developers.notion.com/reference/user#all-users
    * https://developers.notion.com/reference/user#people
    */
-  owner: {
-    id: string
-    name: string
-    avatar_url: string
-    email?: string
-    person: any
-  }
-  workspace_name: string
-  workspace_id: string
-  workspace_icon: string
+  owner: NotionWorkspaceOwner | NotionUserOwner
 }
 
-export type NotionProfile = NotionResponse["owner"] &
-  Omit<NotionResponse, "owner">
+export type NotionProfile = NotionResponseFields &
+  (NotionUserOwner | NotionWorkspaceOwner)
 
 export default function Notion<P extends Record<string, any> = NotionProfile>(
-  options: OAuthUserConfig<P>
+  options: OAuthUserConfig<P> & {
+    /** @default "2021-08-16" */
+    notionVersion?: string
+  }
 ): OAuthConfig<P> {
   return {
     id: "notion",
@@ -33,15 +62,27 @@ export default function Notion<P extends Record<string, any> = NotionProfile>(
       request(params) {
         // https://developers.notion.com/docs/authorization#exchanging-the-grant-for-an-access-token
         const tokens = params.tokens as unknown as NotionResponse
-        return {
-          id: tokens.owner.id,
-          name: tokens.owner.name,
-          email: tokens.owner.email,
-          avatar_url: tokens.owner.avatar_url,
+
+        const common = {
           workspace_id: tokens.workspace_id,
           workspace_name: tokens.workspace_name,
           workspace_icon: tokens.workspace_icon,
+          bot_id: tokens.bot_id,
+          ...tokens.owner,
         }
+
+        if (tokens.owner.type === "user") {
+          const commonUser = { ...common, ...tokens.owner.user }
+          // User person
+          if (tokens.owner.user.type === "person") {
+            return { ...commonUser, ...tokens.owner.user.person }
+          }
+          // User bot
+          return { ...commonUser, ...tokens.owner.user.bot }
+        }
+
+        // Workspace bot
+        return { id: tokens.bot_id, ...common, ...tokens.owner }
       },
     },
     profile(profile) {
