@@ -18,11 +18,11 @@ export default function EVEOnline<P extends Record<string, any> = EVEOnlineProfi
     id: "eveonline",
     name: "EVE Online",
     type: "oauth",
-    token: "https://login.eveonline.com/oauth/token",
-    userinfo: "https://login.eveonline.com/oauth/verify",
+    wellKnown: "https://login.eveonline.com/.well-known/oauth-authorization-server",
     authorization: {
-      params: { scope: "publicData" },
-      url: "https://login.eveonline.com/oauth/authorize",
+      params: {
+        scope: "publicData",
+      },
     },
     profile(profile) {
       return {
