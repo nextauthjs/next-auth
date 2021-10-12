@@ -63,10 +63,10 @@ export default function Signin({
         :root {
           --brand-color: ${theme.brandColor}
         }
-      `,
-        }}
-      />
-      <img src={theme.logo} alt="Logo" className="logo" />
+      `}} />
+      {theme.logo && (
+        <img src={theme.logo} alt="Logo" className="logo" />
+      )}
       <div className="card">
         {error && (
           <div className="error">
@@ -125,6 +125,7 @@ export default function Signin({
                       <input
                         name={credential}
                         id={`input-${credential}-for-${provider.id}-provider`}
+                        type={provider.credentials[credential].type || "text"}
                         placeholder={
                           provider.credentials[credential].placeholder ??
                           "Password"
