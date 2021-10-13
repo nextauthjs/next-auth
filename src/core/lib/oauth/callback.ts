@@ -84,10 +84,13 @@ export default async function oAuthCallback(params: {
         body,
         method,
       }),
+      // @ts-expect-error
       ...provider.token?.params,
     }
 
+    // @ts-expect-error
     if (provider.token?.request) {
+      // @ts-expect-error
       const response = await provider.token.request({
         provider,
         params,
@@ -107,7 +110,9 @@ export default async function oAuthCallback(params: {
     }
 
     let profile: Profile
+    // @ts-expect-error
     if (provider.userinfo?.request) {
+      // @ts-expect-error
       profile = await provider.userinfo.request({
         provider,
         tokens,
@@ -117,6 +122,7 @@ export default async function oAuthCallback(params: {
       profile = tokens.claims()
     } else {
       profile = await client.userinfo(tokens, {
+        // @ts-expect-error
         params: provider.userinfo?.params,
       })
     }

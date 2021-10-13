@@ -19,9 +19,13 @@ export async function openidClient(
   } else {
     issuer = new Issuer({
       issuer: provider.issuer as string,
-      authorization_endpoint: provider.authorization.url,
-      token_endpoint: provider.token.url,
-      userinfo_endpoint: provider.userinfo.url,
+      authorization_endpoint:
+        // @ts-expect-error
+        provider.authorization?.url ?? provider.authorization,
+      // @ts-expect-error
+      token_endpoint: provider.token?.url ?? provider.token,
+      // @ts-expect-error
+      userinfo_endpoint: provider.userinfo?.url ?? provider.userinfo,
     })
   }
 
