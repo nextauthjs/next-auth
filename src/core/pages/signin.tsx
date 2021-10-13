@@ -55,7 +55,7 @@ export default function SigninPage(props) {
       `,
         }}
       />
-      <img src={theme.logo} alt="Logo" className="logo" />
+      {theme.logo && <img src={theme.logo} alt="Logo" className="logo" />}
       <div className="card">
         {error && (
           <div className="error">

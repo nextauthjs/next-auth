@@ -83,7 +83,7 @@ export default function ErrorPage(props: ErrorProps) {
       `,
           }}
         />
-        <img src={theme.logo} alt="Logo" className="logo" />
+        {theme.logo && <img src={theme.logo} alt="Logo" className="logo" />}
         <div className="card">
           <h1>{heading}</h1>
           <div className="message">{message}</div>

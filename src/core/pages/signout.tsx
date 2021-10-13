@@ -21,7 +21,7 @@ export default function SignoutPage(props: SignoutProps) {
       `,
         }}
       />
-      <img src={theme.logo} alt="Logo" className="logo" />
+      {theme.logo && <img src={theme.logo} alt="Logo" className="logo" />}
       <div className="card">
         <h1>Signout</h1>
         <p>Are you sure you want to sign out?</p>

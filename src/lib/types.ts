@@ -15,9 +15,6 @@ import type {
   OAuthConfig,
   EmailConfig,
   CredentialsConfig,
-  AuthorizationEndpointHandler,
-  TokenEndpointHandler,
-  UserinfoEndpointHandler,
   ProviderType,
 } from "../providers"
 import type { JWTOptions } from "../jwt"
@@ -28,11 +25,7 @@ import { InternalUrl } from "./parse-url"
 
 /** @internal */
 export type InternalProvider<T extends ProviderType = any> = (T extends "oauth"
-  ? Omit<OAuthConfig<any>, "authorization" | "token" | "userinfo"> & {
-      authorization: AuthorizationEndpointHandler
-      token: TokenEndpointHandler
-      userinfo: UserinfoEndpointHandler
-    }
+  ? OAuthConfig<any>
   : T extends "email"
   ? EmailConfig
   : T extends "credentials"

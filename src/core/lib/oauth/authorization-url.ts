@@ -35,7 +35,10 @@ export default async function getAuthorizationUrl(params: {
     if (provider.version?.startsWith("1.")) {
       const client = oAuth1Client(options)
       const tokens = (await client.getOAuthRequestToken(params)) as any
-      const url = `${provider.authorization.url}?${new URLSearchParams({
+      const url = `${
+        // @ts-expect-error
+        provider.authorization?.url ?? provider.authorization
+      }?${new URLSearchParams({
         oauth_token: tokens.oauth_token,
         oauth_token_secret: tokens.oauth_token_secret,
         ...tokens.params,
