@@ -31,7 +31,12 @@ module.exports = (api) => {
     comments: false,
     overrides: [
       {
-        test: ["../src/react/index.tsx"],
+        test: [
+          "../src/react/index.tsx",
+          "../src/lib/logger.ts",
+          "../src/lib/parse-url.ts",
+          "../src/lib/client.ts",
+        ],
         presets: [
           ["@babel/preset-env", { targets: { ie: 11 } }],
           ["@babel/preset-react", { runtime: "automatic" }],
