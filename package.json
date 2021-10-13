@@ -26,6 +26,7 @@
     "./react": "./react/index.js",
     "./core": "./core/index.js",
     "./next": "./next/index.js",
+    "./client/_utils": "./client/_utils.js",
     "./providers/*": "./providers/*.js"
   },
   "scripts": {
@@ -50,6 +51,7 @@
     "jwt",
     "react",
     "next",
+    "client",
     "providers",
     "core",
     "index.d.ts",

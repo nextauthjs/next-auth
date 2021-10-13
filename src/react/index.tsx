@@ -19,7 +19,7 @@ import {
   fetchData,
   now,
   NextAuthClientConfig,
-} from "../lib/client"
+} from "../client/_utils"
 
 import type {
   ClientSafeProvider,
