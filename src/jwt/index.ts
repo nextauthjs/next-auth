@@ -29,7 +29,6 @@ export async function encode({
   encryptionOptions = {
     alg: "dir",
     enc: DEFAULT_ENCRYPTION_ALGORITHM,
-    zip: "DEF",
   },
   encryption = DEFAULT_ENCRYPTION_ENABLED,
 }: JWTEncodeParams) {
