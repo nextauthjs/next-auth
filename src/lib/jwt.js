@@ -31,7 +31,7 @@ export async function encode({
 } = {}) {
   // Signing Key
   const _signingKey = signingKey
-    ? jose.JWK.asKey(JSON.parse(signingKey))
+    ? jose.JWK.asKey(signingKey)
     : getDerivedSigningKey(secret)
 
   // Sign token

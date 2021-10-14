@@ -32,7 +32,12 @@ export interface JWTDecodeParams {
   token?: string
   maxAge?: number
   secret: string | Buffer
-  signingKey?: string
+  signingKey?: {
+    kty: string;
+    kid: string;
+    alg: string;
+    k: string;
+  };
   verificationKey?: string
   verificationOptions?: JoseJWT.VerifyOptions<false>
   encryptionKey?: string
