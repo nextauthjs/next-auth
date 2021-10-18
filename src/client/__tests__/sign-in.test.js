@@ -27,12 +27,22 @@ jest.mock("../../lib/logger", () => ({
 
 beforeAll(() => {
   server.listen()
+
+  let _href = window.location.href
+  // Allows to mutate `window.location`...
   delete window.location
+
   window.location = {
-    ...location,
-    replace: jest.fn(),
     reload: jest.fn(),
   }
+  Object.defineProperty(window.location, "href", {
+    get: () => _href,
+    // whatwg-fetch or whatwg-url does not seem to work with relative URLs
+    set: (href) => {
+      _href = href.startsWith("/") ? `http://localhost${href}` : href
+      return _href
+    },
+  })
 })
 
 beforeEach(() => {
@@ -59,9 +69,10 @@ test.each`
     userEvent.click(screen.getByRole("button"))
 
     await waitFor(() => {
-      expect(window.location.replace).toHaveBeenCalledTimes(1)
-      expect(window.location.replace).toHaveBeenCalledWith(
-        `/api/auth/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`
+      expect(window.location.href).toBe(
+        `http://localhost/api/auth/signin?${new URLSearchParams({
+          callbackUrl,
+        })}`
       )
     })
   }
@@ -76,14 +87,14 @@ test.each`
   async ({ provider }) => {
     render(<SignInFlow providerId={provider} />)
 
+    const callbackUrl = window.location.href
     userEvent.click(screen.getByRole("button"))
 
     await waitFor(() => {
-      expect(window.location.replace).toHaveBeenCalledTimes(1)
-      expect(window.location.replace).toHaveBeenCalledWith(
-        `/api/auth/signin?callbackUrl=${encodeURIComponent(
-          window.location.href
-        )}`
+      expect(window.location.href).toBe(
+        `http://localhost/api/auth/signin?${new URLSearchParams({
+          callbackUrl,
+        })}`
       )
     })
   }
@@ -101,8 +112,7 @@ test.each`
     userEvent.click(screen.getByRole("button"))
 
     await waitFor(() => {
-      expect(window.location.replace).toHaveBeenCalledTimes(1)
-      expect(window.location.replace).toHaveBeenCalledWith(mockUrl)
+      expect(window.location.href).toBe(mockUrl)
     })
   }
 )
@@ -119,8 +129,7 @@ test("redirection can't be stopped using an oauth provider", async () => {
   userEvent.click(screen.getByRole("button"))
 
   await waitFor(() => {
-    expect(window.location.replace).toHaveBeenCalledTimes(1)
-    expect(window.location.replace).toHaveBeenCalledWith(mockGithubResponse.url)
+    expect(window.location.href).toBe(mockGithubResponse.url)
   })
 })
 
@@ -136,9 +145,7 @@ test("redirection can be stopped using the 'credentials' provider", async () => 
   userEvent.click(screen.getByRole("button"))
 
   await waitFor(() => {
-    expect(window.location.replace).not.toHaveBeenCalledWith(
-      mockCredentialsResponse.url
-    )
+    expect(window.location.href).not.toBe(mockCredentialsResponse.url)
 
     expect(screen.getByTestId("signin-result").textContent).not.toBe(
       "no response"
@@ -165,9 +172,7 @@ test("redirection can be stopped using the 'email' provider", async () => {
   userEvent.click(screen.getByRole("button"))
 
   await waitFor(() => {
-    expect(window.location.replace).not.toHaveBeenCalledWith(
-      mockEmailResponse.url
-    )
+    expect(window.location.href).not.toBe(mockEmailResponse.url)
 
     expect(screen.getByTestId("signin-result").textContent).not.toBe(
       "no response"
@@ -190,7 +195,7 @@ test("if callback URL contains a hash we force a window reload when re-directing
   const mockUrlWithHash = "https://path/to/email/url#foo-bar-baz"
 
   server.use(
-    rest.post("/api/auth/signin/email", (req, res, ctx) => {
+    rest.post("http://localhost/api/auth/signin/email", (req, res, ctx) => {
       return res(
         ctx.status(200),
         ctx.json({
@@ -206,8 +211,7 @@ test("if callback URL contains a hash we force a window reload when re-directing
   userEvent.click(screen.getByRole("button"))
 
   await waitFor(() => {
-    expect(window.location.replace).toHaveBeenCalledTimes(1)
-    expect(window.location.replace).toHaveBeenCalledWith(mockUrlWithHash)
+    expect(window.location.href).toBe(mockUrlWithHash)
     // the browser will not refresh the page if the redirect URL contains a hash, hence we force it on the client, see #1289
     expect(window.location.reload).toHaveBeenCalledTimes(1)
   })
@@ -218,7 +222,7 @@ test("params are propagated to the signin URL when supplied", async () => {
   const authParams = "foo=bar&bar=foo"
 
   server.use(
-    rest.post("/api/auth/signin/github", (req, res, ctx) => {
+    rest.post("http://localhost/api/auth/signin/github", (req, res, ctx) => {
       matchedParams = req.url.search
       return res(ctx.status(200), ctx.json(mockGithubResponse))
     })
@@ -237,7 +241,7 @@ test("when it fails to fetch the providers, it redirected back to signin page", 
   const errorMsg = "Error when retrieving providers"
 
   server.use(
-    rest.get("/api/auth/providers", (req, res, ctx) =>
+    rest.get("http://localhost/api/auth/providers", (req, res, ctx) =>
       res(ctx.status(500), ctx.json(errorMsg))
     )
   )
@@ -247,7 +251,7 @@ test("when it fails to fetch the providers, it redirected back to signin page", 
   userEvent.click(screen.getByRole("button"))
 
   await waitFor(() => {
-    expect(window.location.replace).toHaveBeenCalledWith(`/api/auth/error`)
+    expect(window.location.href).toBe(`http://localhost/api/auth/error`)
 
     expect(logger.error).toHaveBeenCalledTimes(1)
     expect(logger.error).toBeCalledWith("CLIENT_FETCH_ERROR", {
@@ -268,10 +272,7 @@ function SignInFlow({
   async function handleSignIn() {
     const result = await signIn(
       providerId,
-      {
-        callbackUrl,
-        redirect,
-      },
+      { callbackUrl, redirect },
       authorizationParams
     )
 
