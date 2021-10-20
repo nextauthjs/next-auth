@@ -16,7 +16,8 @@ body:
         - Adapter related: https://github.com/nextauthjs/adapters
   - type: markdown
     attributes:
-      value: Please provide the following information:
+      value: |
+        Please provide the following information:
   - type: textarea
     id: description
     attributes: 
