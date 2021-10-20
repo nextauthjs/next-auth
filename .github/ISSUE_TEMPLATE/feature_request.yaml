@@ -9,8 +9,14 @@ body:
   - type: markdown
     attributes:
       value: | 
-        Thank you very much for reaching out to us regarding the awesome feature that you believe should be included in the NextAuth.js library. Please provide the following information:
- 
+        Thank you very much for reaching out to us regarding the awesome feature that you believe should be included in the NextAuth.js library.
+        ### Important :exclamation:
+        Please help us maintain this project more efficiently! Before creating the issue make sure you shouldn't be creating it in one the below repos instead:
+        - Docs related: https://github.com/nextauthjs/docs
+        - Adapter related: https://github.com/nextauthjs/adapters
+        
+        If you are in the correct repo, then proceed by providing the following information:
+  
   - type: textarea
     id: description
     attributes:
