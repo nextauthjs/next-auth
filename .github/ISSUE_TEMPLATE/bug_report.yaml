@@ -10,8 +10,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this bug report! Before creating the issue,
-        please make sure you shouldn't be creating it in one the below repos instead:
+        Thanks for taking the time to fill out this bug report! Before creating the issue please make sure you shouldn't be creating it in one the below repos instead:
         - Docs related: https://github.com/nextauthjs/docs
         - Adapter related: https://github.com/nextauthjs/adapters
   - type: markdown
