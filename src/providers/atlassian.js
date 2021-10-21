@@ -5,7 +5,7 @@ export default function Atlassian(options) {
     name: "Atlassian",
     type: "oauth",
     authorization: {
-      url: "https://auth.atlassian.com/oauth/authorize",
+      url: "https://auth.atlassian.com/authorize",
       params: {
         audience: "api.atlassian.com",
         prompt: "consent",
