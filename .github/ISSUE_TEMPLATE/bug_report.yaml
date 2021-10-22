@@ -10,7 +10,13 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this bug report! Please provide the following information:
+        Thanks for taking the time to fill out this bug report!
+        ### Important :exclamation:
+        Please help us maintain this project more efficiently! Before creating the issue make sure you shouldn't be creating it in one the below repos instead:
+        - Docs related: https://github.com/nextauthjs/docs
+        - Adapter related: https://github.com/nextauthjs/adapters
+        
+        If you are in the correct repo, then proceed by providing the following information:
   - type: textarea
     id: description
     attributes: 
