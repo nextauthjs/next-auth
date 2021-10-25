@@ -1,6 +1,6 @@
 import { Adapter } from "../adapters"
 import { Provider, CredentialInput, ProviderType } from "../providers"
-import { TokenSetParameters } from "openid-client"
+import type { TokenSetParameters } from "openid-client"
 import { JWT, JWTOptions } from "../jwt"
 import { LoggerInstance } from "../lib/logger"
 

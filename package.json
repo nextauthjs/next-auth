@@ -62,9 +62,9 @@
   "dependencies": {
     "@babel/runtime": "^7.15.4",
     "futoin-hkdf": "^1.4.2",
-    "jose": "^1.27.2",
+    "jose": "^2.0.5",
     "oauth": "^0.9.15",
-    "openid-client": "^4.9.0",
+    "openid-client": "^5.0.1",
     "preact": "^10.5.14",
     "preact-render-to-string": "^5.1.19"
   },

@@ -1,16 +1,18 @@
 import { CommonProviderOptions } from "../providers"
 import { Profile, TokenSet, User, Awaitable } from ".."
 
-import {
+import type {
   AuthorizationParameters,
   CallbackParamsType,
-  Client,
+  Issuer,
   ClientMetadata,
   IssuerMetadata,
   OAuthCallbackChecks,
   OpenIDCallbackChecks,
 } from "openid-client"
 import { JSONWebKeySet } from "jose"
+
+type Client = InstanceType<Issuer['Client']>;
 
 export type { OAuthProviderType } from "./oauth-types"
 

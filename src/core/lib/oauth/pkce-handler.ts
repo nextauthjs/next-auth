@@ -3,7 +3,6 @@ import * as jwt from "../../../jwt"
 import { generators } from "openid-client"
 import { InternalOptions } from "src/lib/types"
 
-const PKCE_LENGTH = 64
 const PKCE_CODE_CHALLENGE_METHOD = "S256"
 const PKCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 
@@ -25,7 +24,7 @@ export async function createPKCE(options) {
     // Provider does not support PKCE, return nothing.
     return
   }
-  const codeVerifier = generators.codeVerifier(PKCE_LENGTH)
+  const codeVerifier = generators.codeVerifier()
   const codeChallenge = generators.codeChallenge(codeVerifier)
 
   // Encrypt code_verifier and save it to an encrypted cookie
@@ -33,7 +32,6 @@ export async function createPKCE(options) {
     maxAge: PKCE_MAX_AGE,
     ...options.jwt,
     token: { code_verifier: codeVerifier },
-    encryption: true,
   })
 
   const cookieExpires = new Date()
@@ -44,7 +42,6 @@ export async function createPKCE(options) {
       code_challenge: codeChallenge,
       code_verifier: codeVerifier,
     },
-    pkceLength: PKCE_LENGTH,
     method: PKCE_CODE_CHALLENGE_METHOD,
   })
   return {
@@ -85,8 +82,6 @@ export async function usePKCECodeVerifier(params: {
   const pkce = await jwt.decode({
     ...options.jwt,
     token: codeVerifier,
-    maxAge: PKCE_MAX_AGE,
-    encryption: true,
   })
 
   // remove PKCE cookie after it has been used up
