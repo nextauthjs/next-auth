@@ -125,6 +125,9 @@
     "typescript": "^4.4.3",
     "whatwg-fetch": "^3.6.2"
   },
+  "engines": {
+    "node": "^12.19.0 || ^14.15.0 || ^16.13.0"
+  },
   "prettier": {
     "semi": false
   },
