@@ -24,11 +24,14 @@
     ".": "./index.js",
     "./jwt": "./jwt/index.js",
     "./react": "./react/index.js",
+    "./core": "./core/index.js",
+    "./next": "./next/index.js",
+    "./client/_utils": "./client/_utils.js",
     "./providers/*": "./providers/*.js"
   },
   "scripts": {
     "build": "npm run build:js && npm run build:css",
-    "clean": "rm -rf client css lib providers server jwt react index.d.ts index.js adapters.d.ts",
+    "clean": "rm -rf client css lib providers core jwt react next index.d.ts index.js adapters.d.ts",
     "build:js": "npm run clean && npm run generate-providers && tsc && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir . && node config/wrap-css.js",
     "dev:setup": "npm i && npm run generate-providers && npm run build:css && cd app && npm i",
@@ -47,8 +50,10 @@
     "css",
     "jwt",
     "react",
+    "next",
+    "client",
     "providers",
-    "server",
+    "core",
     "index.d.ts",
     "index.js",
     "adapters.d.ts"
@@ -137,7 +142,7 @@
       "types",
       ".next",
       "dist",
-      "/server",
+      "/core",
       "/react.js"
     ],
     "globals": {

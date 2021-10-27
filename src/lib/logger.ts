@@ -1,4 +1,4 @@
-import { UnknownError } from "../server/errors"
+import { UnknownError } from "../core/errors"
 
 /** Makes sure that error is always serializable */
 function formatError(o) {
@@ -23,6 +23,7 @@ export interface LoggerInstance {
       | "JWT_AUTO_GENERATED_SIGNING_KEY"
       | "JWT_AUTO_GENERATED_ENCRYPTION_KEY"
       | "NEXTAUTH_URL"
+      | "NO_CSRF_TOKEN"
   ) => void
   error: (
     code: string,

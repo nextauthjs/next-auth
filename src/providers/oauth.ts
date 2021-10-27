@@ -140,6 +140,7 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   // These are kept around for backwards compatibility with OAuth 1.x
   accessTokenUrl?: string
   requestTokenUrl?: string
+  profileUrl?: string
   encoding?: string
 }
 

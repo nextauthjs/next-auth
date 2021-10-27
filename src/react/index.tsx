@@ -19,7 +19,7 @@ import {
   fetchData,
   now,
   NextAuthClientConfig,
-} from "../lib/client"
+} from "../client/_utils"
 
 import type {
   ClientSafeProvider,
@@ -47,16 +47,16 @@ export * from "./types"
 // 2. When invoked server side the value is picked up from an environment
 //    variable and defaults to 'http://localhost:3000'.
 const __NEXTAUTH: NextAuthClientConfig = {
-  baseUrl: parseUrl(process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL).baseUrl,
-  basePath: parseUrl(process.env.NEXTAUTH_URL).basePath,
+  baseUrl: parseUrl(process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL).origin,
+  basePath: parseUrl(process.env.NEXTAUTH_URL).path,
   baseUrlServer: parseUrl(
     process.env.NEXTAUTH_URL_INTERNAL ??
       process.env.NEXTAUTH_URL ??
       process.env.VERCEL_URL
-  ).baseUrl,
+  ).origin,
   basePathServer: parseUrl(
     process.env.NEXTAUTH_URL_INTERNAL ?? process.env.NEXTAUTH_URL
-  ).basePath,
+  ).path,
   _lastSync: 0,
   _session: undefined,
   _getSession: () => {},
