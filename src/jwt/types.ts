@@ -15,19 +15,34 @@ export interface DefaultJWT extends Record<string, unknown> {
 export interface JWT extends Record<string, unknown>, DefaultJWT {}
 
 export interface JWTEncodeParams {
+  /** The JWT payload. */
   token?: JWT
-  maxAge?: number
+  /** The secret used to encode the NextAuth.js issued JWT. */
   secret: string | Buffer
+  /**
+   * The maximum age of the NextAuth.js issued JWT in seconds.
+   * @default 30 * 24 * 30 * 60 // 30 days
+   */
+  maxAge?: number
 }
 
 export interface JWTDecodeParams {
+  /** The NextAuth.js issued JWT to be decoded */
   token?: string
+  /** The secret used to decode the NextAuth.js issued JWT. */
   secret: string | Buffer
 }
 
 export interface JWTOptions {
+  /** The secret used to encode/decode the NextAuth.js issued JWT. */
   secret: string
+  /**
+   * The maximum age of the NextAuth.js issued JWT in seconds.
+   * @default 30 * 24 * 30 * 60 // 30 days
+   */
   maxAge: number
+  /** Override this method to control the NextAuth.js issued JWT encoding. */
   encode: typeof encode
+  /** Override this method to control the NextAuth.js issued JWT decoding. */
   decode: typeof decode
 }
