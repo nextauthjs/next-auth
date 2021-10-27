@@ -62,11 +62,12 @@
   "dependencies": {
     "@babel/runtime": "^7.15.4",
     "futoin-hkdf": "^1.4.2",
-    "jose": "^1.27.2",
+    "jose": "^4.1.2",
     "oauth": "^0.9.15",
-    "openid-client": "^4.9.0",
+    "openid-client": "^5.0.1",
     "preact": "^10.5.14",
-    "preact-render-to-string": "^5.1.19"
+    "preact-render-to-string": "^5.1.19",
+    "uuid": "^8.3.2"
   },
   "peerDependencies": {
     "nodemailer": "^6.6.5",
@@ -91,6 +92,7 @@
     "@testing-library/react": "^12.1.2",
     "@testing-library/react-hooks": "^7.0.2",
     "@testing-library/user-event": "^13.2.1",
+    "@types/node": "^16.11.6",
     "@types/nodemailer": "^6.4.4",
     "@types/oauth": "^0.9.1",
     "@types/react": "^17.0.27",
@@ -123,6 +125,9 @@
     "react-dom": "^17.0.2",
     "typescript": "^4.4.3",
     "whatwg-fetch": "^3.6.2"
+  },
+  "engines": {
+    "node": "^12.19.0 || ^14.15.0 || ^16.13.0"
   },
   "prettier": {
     "semi": false

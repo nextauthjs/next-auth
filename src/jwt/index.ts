@@ -1,124 +1,70 @@
 import crypto from "crypto"
-import jose from "jose"
-import logger from "../lib/logger"
+import { EncryptJWT, jwtDecrypt } from "jose"
+import uuid from "uuid"
 import { NextApiRequest } from "next"
-import type { JWT, JWTDecodeParams, JWTEncodeParams } from "./types"
+import type { JWT, JWTDecodeParams, JWTEncodeParams, JWTOptions } from "./types"
 
 export * from "./types"
 
-// Set default algorithm to use for auto-generated signing key
-const DEFAULT_SIGNATURE_ALGORITHM = "HS512"
-
-// Set default algorithm for auto-generated symmetric encryption key
-const DEFAULT_ENCRYPTION_ALGORITHM = "A256GCM"
-
-// Use encryption or not by default
-const DEFAULT_ENCRYPTION_ENABLED = false
-
 const DEFAULT_MAX_AGE = 30 * 24 * 60 * 60 // 30 days
 
+const now = () => (Date.now() / 1000) | 0
+
+/** Issues a JWT. By default, the JWT is encrypted using "A256GCM". */
 export async function encode({
   token = {},
-  maxAge = DEFAULT_MAX_AGE,
   secret,
-  signingKey,
-  signingOptions = {
-    expiresIn: `${maxAge}s`,
-  },
-  encryptionKey,
-  encryptionOptions = {
-    alg: "dir",
-    enc: DEFAULT_ENCRYPTION_ALGORITHM,
-    zip: "DEF",
-  },
-  encryption = DEFAULT_ENCRYPTION_ENABLED,
+  maxAge = DEFAULT_MAX_AGE,
 }: JWTEncodeParams) {
-  // Signing Key
-  const _signingKey = signingKey
-    ? jose.JWK.asKey(JSON.parse(signingKey))
-    : getDerivedSigningKey(secret)
-
-  // Sign token
-  const signedToken = jose.JWT.sign(token, _signingKey, signingOptions)
-
-  if (encryption) {
-    // Encryption Key
-    const _encryptionKey = encryptionKey
-      ? jose.JWK.asKey(JSON.parse(encryptionKey))
-      : getDerivedEncryptionKey(secret)
-
-    // Encrypt token
-    return jose.JWE.encrypt(signedToken, _encryptionKey, encryptionOptions)
-  }
-  return signedToken
+  const encryptionSecret = await getDerivedEncryptionKey(secret)
+  return await new EncryptJWT(token)
+    .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
+    .setIssuedAt()
+    .setExpirationTime(now() + maxAge)
+    .setJti(crypto.randomUUID ? crypto.randomUUID() : uuid())
+    .encrypt(encryptionSecret)
 }
 
+/** Decodes a NextAuth.js issued JWT. */
 export async function decode({
-  secret,
   token,
-  maxAge = DEFAULT_MAX_AGE,
-  signingKey,
-  verificationKey = signingKey, // Optional (defaults to encryptionKey)
-  verificationOptions = {
-    maxTokenAge: `${maxAge}s`,
-    algorithms: [DEFAULT_SIGNATURE_ALGORITHM],
-  },
-  encryptionKey,
-  decryptionKey = encryptionKey, // Optional (defaults to encryptionKey)
-  decryptionOptions = {
-    algorithms: [DEFAULT_ENCRYPTION_ALGORITHM],
-  },
-  encryption = DEFAULT_ENCRYPTION_ENABLED,
+  secret,
 }: JWTDecodeParams): Promise<JWT | null> {
   if (!token) return null
-
-  let tokenToVerify = token
-
-  if (encryption) {
-    // Encryption Key
-    const _encryptionKey = decryptionKey
-      ? jose.JWK.asKey(JSON.parse(decryptionKey))
-      : getDerivedEncryptionKey(secret)
-
-    // Decrypt token
-    const decryptedToken = jose.JWE.decrypt(
-      token,
-      _encryptionKey,
-      decryptionOptions
-    )
-    tokenToVerify = decryptedToken.toString("utf8")
-  }
-
-  // Signing Key
-  const _signingKey = verificationKey
-    ? jose.JWK.asKey(JSON.parse(verificationKey))
-    : getDerivedSigningKey(secret)
-
-  // Verify token
-  return jose.JWT.verify(
-    tokenToVerify,
-    _signingKey,
-    verificationOptions
-  ) as JWT | null
+  const encryptionSecret = await getDerivedEncryptionKey(secret)
+  const { payload } = await jwtDecrypt(token, encryptionSecret, {
+    clockTolerance: 15,
+  })
+  return payload
 }
 
 export type GetTokenParams<R extends boolean = false> = {
+  /** The request containing the JWT either in the cookies or in the `Authorization` header. */
   req: NextApiRequest
+  /**
+   * Use secure prefix for cookie name, unless URL in `NEXTAUTH_URL` is http://
+   * or not set (e.g. development or test instance) case use unprefixed name
+   */
   secureCookie?: boolean
+  /** If the JWT is in the cookie, what name `getToken()` should look for. */
   cookieName?: string
+  /**
+   * `getToken()` will return the raw JWT if this is set to `true`
+   * @default false
+   */
   raw?: R
-  decode?: typeof decode
-  secret?: string
-} & Omit<JWTDecodeParams, "secret">
+} & Pick<JWTOptions, "decode" | "secret">
 
-/** [Documentation](https://next-auth.js.org/tutorials/securing-pages-and-api-routes#using-gettoken) */
+/**
+ * Takes a NextAuth.js request (`req`) and returns either the NextAuth.js issued JWT's payload,
+ * or the raw JWT string. We look for the JWT in the either the cookies, or the `Authorization` header.
+ * [Documentation](https://next-auth.js.org/tutorials/securing-pages-and-api-routes#using-gettoken)
+ */
 export async function getToken<R extends boolean = false>(
   params?: GetTokenParams<R>
 ): Promise<R extends true ? string : JWT | null> {
   const {
     req,
-    // Use secure prefix for cookie name, unless URL is NEXTAUTH_URL is http://
-    // or not set (e.g. development or test instance) case use unprefixed name
     secureCookie = !(
       !process.env.NEXTAUTH_URL ||
       process.env.NEXTAUTH_URL.startsWith("http://")
@@ -126,17 +72,14 @@ export async function getToken<R extends boolean = false>(
     cookieName = secureCookie
       ? "__Secure-next-auth.session-token"
       : "next-auth.session-token",
-    raw = false,
+    raw,
     decode: _decode = decode,
   } = params ?? {}
+
   if (!req) throw new Error("Must pass `req` to JWT getToken()")
 
-  // Try to get token from cookie
   let token = req.cookies[cookieName]
 
-  // If cookie not found in cookie look for bearer token in authorization header.
-  // This allows clients that pass through tokens in headers rather than as
-  // cookies to use this helper function.
   if (!token && req.headers.authorization?.split(" ")[0] === "Bearer") {
     const urlEncodedToken = req.headers.authorization.split(" ")[1]
     token = decodeURIComponent(urlEncodedToken)
@@ -156,22 +99,22 @@ export async function getToken<R extends boolean = false>(
   }
 }
 
-// Generate warning (but only once at startup) when auto-generated keys are used
-let DERIVED_SIGNING_KEY_WARNING = false
-let DERIVED_ENCRYPTION_KEY_WARNING = false
-
-// Do the better hkdf of Node.js one added in `v15.0.0` and Third Party one
-function hkdf(secret, { byteLength, encryptionInfo, digest = "sha256" }) {
-  if (crypto.hkdfSync) {
-    return Buffer.from(
-      crypto.hkdfSync(
+/** Do the better hkdf of Node.js one added in `v15.0.0` and Third Party one */
+async function hkdf(secret, { byteLength, encryptionInfo, digest = "sha256" }) {
+  if (crypto.hkdf) {
+    return await new Promise((resolve, reject) => {
+      crypto.hkdf(
         digest,
         secret,
         Buffer.alloc(0),
         encryptionInfo,
-        byteLength
+        byteLength,
+        (err, derivedKey) => {
+          if (err) reject(err)
+          else resolve(Buffer.from(derivedKey))
+        }
       )
-    )
+    })
   }
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   return require("futoin-hkdf")(secret, byteLength, {
@@ -180,38 +123,9 @@ function hkdf(secret, { byteLength, encryptionInfo, digest = "sha256" }) {
   })
 }
 
-function getDerivedSigningKey(secret) {
-  if (!DERIVED_SIGNING_KEY_WARNING) {
-    logger.warn("JWT_AUTO_GENERATED_SIGNING_KEY")
-    DERIVED_SIGNING_KEY_WARNING = true
-  }
-
-  const buffer = hkdf(secret, {
-    byteLength: 64,
-    encryptionInfo: "NextAuth.js Generated Signing Key",
-  })
-  const key = jose.JWK.asKey(buffer, {
-    alg: DEFAULT_SIGNATURE_ALGORITHM,
-    use: "sig",
-    kid: "nextauth-auto-generated-signing-key",
-  })
-  return key
-}
-
-function getDerivedEncryptionKey(secret) {
-  if (!DERIVED_ENCRYPTION_KEY_WARNING) {
-    logger.warn("JWT_AUTO_GENERATED_ENCRYPTION_KEY")
-    DERIVED_ENCRYPTION_KEY_WARNING = true
-  }
-
-  const buffer = hkdf(secret, {
+async function getDerivedEncryptionKey(secret) {
+  return await hkdf(secret, {
     byteLength: 32,
     encryptionInfo: "NextAuth.js Generated Encryption Key",
   })
-  const key = jose.JWK.asKey(buffer, {
-    alg: DEFAULT_ENCRYPTION_ALGORITHM,
-    use: "enc",
-    kid: "nextauth-auto-generated-encryption-key",
-  })
-  return key
 }
