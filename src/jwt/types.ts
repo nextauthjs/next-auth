@@ -1,4 +1,3 @@
-import type { JWT as JoseJWT, JWE } from "jose"
 import { decode, encode } from "."
 
 export interface DefaultJWT extends Record<string, unknown> {
@@ -19,33 +18,16 @@ export interface JWTEncodeParams {
   token?: JWT
   maxAge?: number
   secret: string | Buffer
-  signingKey?: string
-  signingOptions?: JoseJWT.SignOptions
-  encryptionKey?: string
-  encryptionOptions?: object
-  encryption?: boolean
 }
 
 export interface JWTDecodeParams {
   token?: string
-  maxAge?: number
   secret: string | Buffer
-  signingKey?: string
-  verificationKey?: string
-  verificationOptions?: JoseJWT.VerifyOptions<false>
-  encryptionKey?: string
-  decryptionKey?: string
-  decryptionOptions?: JWE.DecryptOptions<false>
-  encryption?: boolean
 }
 
 export interface JWTOptions {
   secret: string
   maxAge: number
-  encryption?: boolean
-  signingKey?: string
-  encryptionKey?: string
   encode: typeof encode
   decode: typeof decode
-  verificationOptions?: JoseJWT.VerifyOptions<false>
 }
