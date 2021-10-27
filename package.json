@@ -92,6 +92,7 @@
     "@testing-library/react": "^12.1.2",
     "@testing-library/react-hooks": "^7.0.2",
     "@testing-library/user-event": "^13.2.1",
+    "@types/node": "^16.11.6",
     "@types/nodemailer": "^6.4.4",
     "@types/oauth": "^0.9.1",
     "@types/react": "^17.0.27",
