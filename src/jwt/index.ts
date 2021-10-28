@@ -16,7 +16,7 @@ export async function encode({
   secret,
   maxAge = DEFAULT_MAX_AGE,
 }: JWTEncodeParams) {
-  const encryptionSecret = await getDerivedEncryptionKey(secret)
+  const encryptionSecret = getDerivedEncryptionKey(secret)
   return await new EncryptJWT(token)
     .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
     .setIssuedAt()
@@ -31,7 +31,7 @@ export async function decode({
   secret,
 }: JWTDecodeParams): Promise<JWT | null> {
   if (!token) return null
-  const encryptionSecret = await getDerivedEncryptionKey(secret)
+  const encryptionSecret = getDerivedEncryptionKey(secret)
   const { payload } = await jwtDecrypt(token, encryptionSecret, {
     clockTolerance: 15,
   })
@@ -100,21 +100,17 @@ export async function getToken<R extends boolean = false>(
 }
 
 /** Do the better hkdf of Node.js one added in `v15.0.0` and Third Party one */
-async function hkdf(secret, { byteLength, encryptionInfo, digest = "sha256" }) {
-  if (crypto.hkdf) {
-    return await new Promise((resolve, reject) => {
-      crypto.hkdf(
+function hkdf(secret, { byteLength, encryptionInfo, digest = "sha256" }) {
+  if (crypto.hkdfSync) {
+    return Buffer.from(
+      crypto.hkdfSync(
         digest,
         secret,
         Buffer.alloc(0),
         encryptionInfo,
-        byteLength,
-        (err, derivedKey) => {
-          if (err) reject(err)
-          else resolve(Buffer.from(derivedKey))
-        }
+        byteLength
       )
-    })
+    )
   }
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   return require("futoin-hkdf")(secret, byteLength, {
@@ -123,8 +119,8 @@ async function hkdf(secret, { byteLength, encryptionInfo, digest = "sha256" }) {
   })
 }
 
-async function getDerivedEncryptionKey(secret) {
-  return await hkdf(secret, {
+function getDerivedEncryptionKey(secret) {
+  return hkdf(secret, {
     byteLength: 32,
     encryptionInfo: "NextAuth.js Generated Encryption Key",
   })
