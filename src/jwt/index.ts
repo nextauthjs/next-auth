@@ -1,6 +1,6 @@
 import crypto from "crypto"
 import { EncryptJWT, jwtDecrypt } from "jose"
-import uuid from "uuid"
+import { v4 as uuid } from "uuid"
 import { NextApiRequest } from "next"
 import type { JWT, JWTDecodeParams, JWTEncodeParams, JWTOptions } from "./types"
 
