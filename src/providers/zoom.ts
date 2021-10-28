@@ -7,7 +7,7 @@ export interface ZoomProfile {
   image: string
 }
 
-export default function Auth0<P extends Record<string, any> = ZoomProfile>(
+export default function Zoom<P extends Record<string, any> = ZoomProfile>(
   options: OAuthUserConfig<P>
 ): OAuthConfig<P> {
   return {
