@@ -1,16 +1,18 @@
 import { CommonProviderOptions } from "../providers"
 import { Profile, TokenSet, User, Awaitable } from ".."
 
-import {
+import type {
   AuthorizationParameters,
   CallbackParamsType,
-  Client,
+  Issuer,
   ClientMetadata,
   IssuerMetadata,
   OAuthCallbackChecks,
   OpenIDCallbackChecks,
 } from "openid-client"
-import { JSONWebKeySet } from "jose"
+import type { JWK } from "jose"
+
+type Client = InstanceType<Issuer['Client']>;
 
 export type { OAuthProviderType } from "./oauth-types"
 
@@ -110,7 +112,7 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   profile?: (profile: P, tokens: TokenSet) => Awaitable<User & { id: string }>
   checks?: ChecksType | ChecksType[]
   client?: Partial<ClientMetadata>
-  jwks?: JSONWebKeySet
+  jwks?: { keys: JWK[] }
   clientId?: string
   clientSecret?:
     | string
@@ -140,6 +142,7 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   // These are kept around for backwards compatibility with OAuth 1.x
   accessTokenUrl?: string
   requestTokenUrl?: string
+  profileUrl?: string
   encoding?: string
 }
 

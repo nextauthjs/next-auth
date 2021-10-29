@@ -10,7 +10,8 @@
     "copy:css": "cpx \"../css/**/*\" src/css --watch",
     "watch:css": "cd .. && npm run watch:css",
     "start": "next start",
-    "start:email": "npx fake-smtp-server"
+    "email": "npx fake-smtp-server",
+    "start:email": "email"
   },
   "license": "ISC",
   "dependencies": {

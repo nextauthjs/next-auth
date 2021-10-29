@@ -38,7 +38,7 @@ module.exports = (api) => {
         ],
       },
       {
-        test: ["../src/server/pages/*.tsx"],
+        test: ["../src/core/pages/*.tsx"],
         presets: ["preact"],
         plugins: [
           [

@@ -1,4 +1,4 @@
-import NextAuth from "next-auth"
+import NextAuth, { NextAuthOptions } from "next-auth"
 import EmailProvider from "next-auth/providers/email"
 import GitHubProvider from "next-auth/providers/github"
 import Auth0Provider from "next-auth/providers/auth0"
@@ -37,8 +37,7 @@ import AzureB2C from "next-auth/providers/azure-ad-b2c"
 //   domain: process.env.FAUNA_DOMAIN,
 // })
 // const adapter = FaunaAdapter(client)
-
-export default NextAuth({
+export const authOptions: NextAuthOptions = {
   // adapter,
   providers: [
     // E-mail
@@ -58,8 +57,8 @@ export default NextAuth({
       credentials: {
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
-        if (credentials.password === "password") {
+      async authorize(credentials) {
+        if (credentials.password === "pw") {
           return {
             name: "Fill Murray",
             email: "bill@fillmurray.com",
@@ -179,4 +178,6 @@ export default NextAuth({
     logo: "https://next-auth.js.org/img/logo/logo-sm.png",
     brandColor: "#1786fb",
   },
-})
+}
+
+export default NextAuth(authOptions)
