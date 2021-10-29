@@ -1,5 +1,5 @@
-import crypto from "crypto"
 import { EncryptJWT, jwtDecrypt } from "jose"
+import hkdf from '@panva/hkdf'
 import { v4 as uuid } from "uuid"
 import { NextApiRequest } from "next"
 import type { JWT, JWTDecodeParams, JWTEncodeParams, JWTOptions } from "./types"
@@ -21,7 +21,7 @@ export async function encode({
     .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
     .setIssuedAt()
     .setExpirationTime(now() + maxAge)
-    .setJti(crypto.randomUUID ? crypto.randomUUID() : uuid())
+    .setJti(uuid())
     .encrypt(encryptionSecret)
 }
 
@@ -99,33 +99,12 @@ export async function getToken<R extends boolean = false>(
   }
 }
 
-/** Do the better hkdf of Node.js one added in `v15.0.0` and Third Party one */
-async function hkdf(secret, { byteLength, encryptionInfo, digest = "sha256" }) {
-  if (crypto.hkdf) {
-    return await new Promise((resolve, reject) => {
-      crypto.hkdf(
-        digest,
-        secret,
-        Buffer.alloc(0),
-        encryptionInfo,
-        byteLength,
-        (err, derivedKey) => {
-          if (err) reject(err)
-          else resolve(Buffer.from(derivedKey))
-        }
-      )
-    })
-  }
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  return require("futoin-hkdf")(secret, byteLength, {
-    info: encryptionInfo,
-    hash: digest,
-  })
-}
-
 async function getDerivedEncryptionKey(secret) {
-  return await hkdf(secret, {
-    byteLength: 32,
-    encryptionInfo: "NextAuth.js Generated Encryption Key",
-  })
+  return await hkdf(
+    'sha256',
+    secret,
+    "",
+    "NextAuth.js Generated Encryption Key",
+    32
+  )
 }
