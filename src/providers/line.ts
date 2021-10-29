@@ -1,6 +1,20 @@
-/** @type {import(".").OAuthProvider} */
-export default function LINE(options) {
-  const { client, ...rest } = options;
+import { OAuthConfig, OAuthUserConfig } from "."
+
+export interface LineProfile {
+    iss: string;
+    sub: string;
+    aud: string;
+    exp: number;
+    iat: number;
+    amr: string[];
+    name: string;
+    picture: string;
+    user: any;
+}
+
+export default function LINE<
+  P extends Record<string, any> = LineProfile
+>(options: OAuthUserConfig<P>): OAuthConfig<P> {
   return {
     id: "line",
     name: "LINE",
@@ -18,8 +32,7 @@ export default function LINE(options) {
     },
     client: {
       id_token_signed_response_alg: "HS256",
-      ...client
     },
-    ...rest,
+    options
   }
 }
