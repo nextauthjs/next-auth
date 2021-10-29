@@ -104,7 +104,7 @@ export function useSession<R extends boolean>(options?: UseSessionOptions<R>) {
         callbackUrl: window.location.href,
       })}`
       if (onUnauthenticated) onUnauthenticated()
-      else window.location.replace(url)
+      else window.location.href = url
     }
   }, [requiredAndNotLoading, onUnauthenticated])
 
@@ -187,14 +187,14 @@ export async function signIn<
   const providers = await getProviders()
 
   if (!providers) {
-    window.location.replace(`${baseUrl}/error`)
+    window.location.href = `${baseUrl}/error`
     return
   }
 
   if (!provider || !(provider in providers)) {
-    window.location.replace(
-      `${baseUrl}/signin?${new URLSearchParams({ callbackUrl })}`
-    )
+    window.location.href = `${baseUrl}/signin?${new URLSearchParams({
+      callbackUrl,
+    })}`
     return
   }
 
@@ -226,7 +226,7 @@ export async function signIn<
 
   if (redirect || !isSupportingReturn) {
     const url = data.url ?? callbackUrl
-    window.location.replace(url)
+    window.location.href = url
     // If url contains a hash, the browser does not reload the page. We reload manually
     if (url.includes("#")) window.location.reload()
     return
@@ -275,7 +275,7 @@ export async function signOut<R extends boolean = true>(
 
   if (options?.redirect ?? true) {
     const url = data.url ?? callbackUrl
-    window.location.replace(url)
+    window.location.href = url
     // If url contains a hash, the browser does not reload the page. We reload manually
     if (url.includes("#")) window.location.reload()
     // @ts-expect-error

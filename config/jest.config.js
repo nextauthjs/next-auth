@@ -12,4 +12,8 @@ module.exports = {
   testMatch: ["**/*.test.js"],
   coverageDirectory: "../coverage",
   testEnvironment: "jsdom",
+  watchPlugins: [
+    "jest-watch-typeahead/filename",
+    "jest-watch-typeahead/testname",
+  ],
 }
