@@ -61,7 +61,7 @@
   "license": "ISC",
   "dependencies": {
     "@babel/runtime": "^7.15.4",
-    "futoin-hkdf": "^1.4.2",
+    "@panva/hkdf": "^1.0.0",
     "jose": "^4.1.2",
     "oauth": "^0.9.15",
     "openid-client": "^5.0.1",
