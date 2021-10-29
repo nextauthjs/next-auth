@@ -1,5 +1,6 @@
 /** @type {import(".").OAuthProvider} */
 export default function LINE(options) {
+  const { client, ...rest } = options;
   return {
     id: "line",
     name: "LINE",
@@ -15,6 +16,10 @@ export default function LINE(options) {
         image: profile.picture,
       }
     },
-    options,
+    client: {
+      id_token_signed_response_alg: "HS256",
+      ...client
+    },
+    ...rest,
   }
 }
