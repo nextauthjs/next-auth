@@ -467,7 +467,7 @@ More information can be found in the following [Github Issue](https://github.com
 
 ### NextAuth.js + React-Query
 
-There is also an alternative client-side API library based upon [`react-query`](https://www.npmjs.com/package/react-query) available under [`nextauthjs/react-query`](https://github.com/nextauthjs/react-query).
+There is also an alternative first-party client-side API library based upon [`react-query`](https://www.npmjs.com/package/react-query) available under [`nextauthjs/react-query`](https://github.com/nextauthjs/react-query).
 
 If you use `react-query` in your project already, you can leverage it with NextAuth.js to handle the client-side session management for you as well. This replaces NextAuth.js's native `useSession` and `Provider` from `next-auth/client`.
 
