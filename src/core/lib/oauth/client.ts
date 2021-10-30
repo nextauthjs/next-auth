@@ -1,4 +1,4 @@
-import { Issuer, Client } from "openid-client"
+import { Issuer, Client, custom } from "openid-client"
 import { InternalOptions } from "src/lib/types"
 
 /**
@@ -13,7 +13,7 @@ export async function openidClient(
 ): Promise<Client> {
   const provider = options.provider
 
-  let issuer
+  let issuer: Issuer
   if (provider.wellKnown) {
     issuer = await Issuer.discover(provider.wellKnown)
   } else {
@@ -31,13 +31,20 @@ export async function openidClient(
 
   const client = new issuer.Client(
     {
+      // @ts-expect-error
       client_id: provider.clientId,
+      // @ts-expect-error
       client_secret: provider.clientSecret,
       redirect_uris: [provider.callbackUrl],
       ...provider.client,
     },
     provider.jwks
   )
+
+  // allow a 10 second skew
+  // See https://github.com/nextauthjs/next-auth/issues/3032
+  // and https://github.com/nextauthjs/next-auth/issues/3067
+  client[custom.clock_tolerance] = 10
 
   return client
 }
