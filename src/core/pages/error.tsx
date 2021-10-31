@@ -7,6 +7,13 @@ export interface ErrorProps {
   error?: string
 }
 
+interface ErrorView {
+  status: number
+  heading: string
+  message: JSX.Element
+  signin?: JSX.Element
+}
+
 /** Renders an error page. */
 export default function ErrorPage(props: ErrorProps) {
   const { url, error = "default", theme } = props

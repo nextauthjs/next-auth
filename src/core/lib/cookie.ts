@@ -1,6 +1,8 @@
 // REVIEW: Is there any way to defer two types of strings?
+import { NextAuthResponse } from "../../lib/types"
 import { CookiesOptions } from "../.."
 import { CookieOption } from "../types"
+import { ServerResponse } from "http"
 
 /** Stringified form of `JWT`. Extract the content with `jwt.decode` */
 export type JWTString = string
@@ -26,7 +28,7 @@ export type SessionToken<T extends "jwt" | "db" = "jwt"> = T extends "jwt"
  * (with fixes for specific issues) to keep dependancy size down.
  */
 export function set(
-  res: NextAuthResponse,
+  res: NextAuthResponse | ServerResponse,
   name: string,
   value: unknown,
   options: SetCookieOptions = {}
@@ -104,7 +106,7 @@ function _serialize(
   }
 
   if (opt.expires) {
-    let expires = opt.expires
+    let expires: Date | string = opt.expires
     if (typeof (opt.expires as Date).toUTCString === "function") {
       expires = (opt.expires as Date).toUTCString()
     } else {
