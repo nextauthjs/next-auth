@@ -19,7 +19,7 @@ import {
   fetchData,
   now,
   NextAuthClientConfig,
-} from "../lib/client"
+} from "../client/_utils"
 
 import type {
   ClientSafeProvider,
@@ -47,16 +47,16 @@ export * from "./types"
 // 2. When invoked server side the value is picked up from an environment
 //    variable and defaults to 'http://localhost:3000'.
 const __NEXTAUTH: NextAuthClientConfig = {
-  baseUrl: parseUrl(process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL).baseUrl,
-  basePath: parseUrl(process.env.NEXTAUTH_URL).basePath,
+  baseUrl: parseUrl(process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL).origin,
+  basePath: parseUrl(process.env.NEXTAUTH_URL).path,
   baseUrlServer: parseUrl(
     process.env.NEXTAUTH_URL_INTERNAL ??
       process.env.NEXTAUTH_URL ??
       process.env.VERCEL_URL
-  ).baseUrl,
+  ).origin,
   basePathServer: parseUrl(
     process.env.NEXTAUTH_URL_INTERNAL ?? process.env.NEXTAUTH_URL
-  ).basePath,
+  ).path,
   _lastSync: 0,
   _session: undefined,
   _getSession: () => {},
@@ -104,7 +104,7 @@ export function useSession<R extends boolean>(options?: UseSessionOptions<R>) {
         callbackUrl: window.location.href,
       })}`
       if (onUnauthenticated) onUnauthenticated()
-      else window.location.replace(url)
+      else window.location.href = url
     }
   }, [requiredAndNotLoading, onUnauthenticated])
 
@@ -187,14 +187,14 @@ export async function signIn<
   const providers = await getProviders()
 
   if (!providers) {
-    window.location.replace(`${baseUrl}/error`)
+    window.location.href = `${baseUrl}/error`
     return
   }
 
   if (!provider || !(provider in providers)) {
-    window.location.replace(
-      `${baseUrl}/signin?${new URLSearchParams({ callbackUrl })}`
-    )
+    window.location.href = `${baseUrl}/signin?${new URLSearchParams({
+      callbackUrl,
+    })}`
     return
   }
 
@@ -226,7 +226,7 @@ export async function signIn<
 
   if (redirect || !isSupportingReturn) {
     const url = data.url ?? callbackUrl
-    window.location.replace(url)
+    window.location.href = url
     // If url contains a hash, the browser does not reload the page. We reload manually
     if (url.includes("#")) window.location.reload()
     return
@@ -275,7 +275,7 @@ export async function signOut<R extends boolean = true>(
 
   if (options?.redirect ?? true) {
     const url = data.url ?? callbackUrl
-    window.location.replace(url)
+    window.location.href = url
     // If url contains a hash, the browser does not reload the page. We reload manually
     if (url.includes("#")) window.location.reload()
     // @ts-expect-error

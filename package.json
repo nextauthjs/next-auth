@@ -24,11 +24,14 @@
     ".": "./index.js",
     "./jwt": "./jwt/index.js",
     "./react": "./react/index.js",
+    "./core": "./core/index.js",
+    "./next": "./next/index.js",
+    "./client/_utils": "./client/_utils.js",
     "./providers/*": "./providers/*.js"
   },
   "scripts": {
     "build": "npm run build:js && npm run build:css",
-    "clean": "rm -rf client css lib providers server jwt react index.d.ts index.js adapters.d.ts",
+    "clean": "rm -rf client css lib providers core jwt react next index.d.ts index.js adapters.d.ts",
     "build:js": "npm run clean && npm run generate-providers && tsc && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir . && node config/wrap-css.js",
     "dev:setup": "npm i && npm run generate-providers && npm run build:css && cd app && npm i",
@@ -47,8 +50,10 @@
     "css",
     "jwt",
     "react",
+    "next",
+    "client",
     "providers",
-    "server",
+    "core",
     "index.d.ts",
     "index.js",
     "adapters.d.ts"
@@ -56,12 +61,13 @@
   "license": "ISC",
   "dependencies": {
     "@babel/runtime": "^7.15.4",
-    "futoin-hkdf": "^1.4.2",
-    "jose": "^1.27.2",
+    "@panva/hkdf": "^1.0.0",
+    "jose": "^4.1.2",
     "oauth": "^0.9.15",
-    "openid-client": "^4.9.0",
+    "openid-client": "^5.0.2",
     "preact": "^10.5.14",
-    "preact-render-to-string": "^5.1.19"
+    "preact-render-to-string": "^5.1.19",
+    "uuid": "^8.3.2"
   },
   "peerDependencies": {
     "nodemailer": "^6.6.5",
@@ -86,6 +92,7 @@
     "@testing-library/react": "^12.1.2",
     "@testing-library/react-hooks": "^7.0.2",
     "@testing-library/user-event": "^13.2.1",
+    "@types/node": "^16.11.6",
     "@types/nodemailer": "^6.4.4",
     "@types/oauth": "^0.9.1",
     "@types/react": "^17.0.27",
@@ -93,7 +100,7 @@
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "autoprefixer": "^10.3.7",
-    "babel-jest": "^27.2.4",
+    "babel-jest": "^27.3.0",
     "babel-plugin-jsx-pragmatic": "^1.0.2",
     "babel-preset-preact": "^2.0.0",
     "conventional-changelog-conventionalcommits": "4.6.1",
@@ -102,12 +109,13 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard-with-typescript": "^21.0.1",
     "eslint-plugin-import": "^2.24.2",
-    "eslint-plugin-jest": "^24.5.2",
+    "eslint-plugin-jest": "^25.2.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
     "fs-extra": "^10.0.0",
     "husky": "^7.0.2",
-    "jest": "^27.2.4",
+    "jest": "^27.3.0",
+    "jest-watch-typeahead": "^1.0.0",
     "msw": "^0.35.0",
     "next": "v11.1.3-canary.0",
     "postcss-cli": "^9.0.1",
@@ -118,6 +126,9 @@
     "react-dom": "^17.0.2",
     "typescript": "^4.4.3",
     "whatwg-fetch": "^3.6.2"
+  },
+  "engines": {
+    "node": "^12.19.0 || ^14.15.0 || ^16.13.0"
   },
   "prettier": {
     "semi": false
@@ -137,7 +148,7 @@
       "types",
       ".next",
       "dist",
-      "/server",
+      "/core",
       "/react.js"
     ],
     "globals": {

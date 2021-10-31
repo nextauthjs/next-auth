@@ -1,4 +1,4 @@
-import { UnknownError } from "../server/errors"
+import { UnknownError } from "../core/errors"
 
 // TODO: better typing
 /** Makes sure that error is always serializable */
@@ -30,6 +30,7 @@ export interface LoggerInstance extends Record<string, Function> {
       | "JWT_AUTO_GENERATED_SIGNING_KEY"
       | "JWT_AUTO_GENERATED_ENCRYPTION_KEY"
       | "NEXTAUTH_URL"
+      | "NO_CSRF_TOKEN"
   ) => void
   error: (
     code: string,

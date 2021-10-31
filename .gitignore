@@ -29,12 +29,13 @@ node_modules
 /client
 /css
 /lib
-/server
+/core
 /jwt
 /react
 /adapters.d.ts
 /index.d.ts
 /index.js
+/next
 
 # Development app
 app/src/css

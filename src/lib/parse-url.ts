@@ -1,29 +1,30 @@
-/**
- * Simple universal (client/server) function to split host and path.
- * We use this rather than a library because we need to use the same logic both
- * client and server side and we only need to parse out the host and path, while
- * supporting a default value, so a simple split is sufficent.
- * @todo Use `URL` instead of custom parsing. (Remember: `protocol` is not standard)
- */
-export default function parseUrl(url?: string) {
-  // Default values
-  const defaultHost = "http://localhost:3000"
-  const defaultPath = "/api/auth"
+export interface InternalUrl {
+  /** @default "http://localhost:3000" */
+  origin: string
+  /** @default "localhost:3000" */
+  host: string
+  /** @default "/api/auth" */
+  path: string
+  /** @default "http://localhost:3000/api/auth" */
+  base: string
+  /** @default "http://localhost:3000/api/auth" */
+  toString: () => string
+}
 
-  if (!url) {
-    url = `${defaultHost}${defaultPath}`
+export default function parseUrl(url?: string): InternalUrl {
+  const defaultUrl = new URL("http://localhost:3000/api/auth")
+  const _url = new URL(url ?? defaultUrl)
+  const path = (_url.pathname === "/" ? defaultUrl.pathname : _url.pathname)
+    // Remove trailing slash
+    .replace(/\/$/, "")
+
+  const base = `${_url.origin}${path}`
+
+  return {
+    origin: _url.origin,
+    host: _url.host,
+    path,
+    base,
+    toString: () => base,
   }
-
-  // Default to HTTPS if no protocol explictly specified
-  const protocol = url.startsWith("http:") ? "http" : "https"
-
-  // Normalize URLs by stripping protocol and no trailing slash
-  url = url.replace(/^https?:\/\//, "").replace(/\/$/, "")
-
-  // Simple split based on first /
-  const [_host, ..._path] = url.split("/")
-  const baseUrl = _host ? `${protocol}://${_host}` : defaultHost
-  const basePath = _path.length > 0 ? `/${_path.join("/")}` : defaultPath
-
-  return { baseUrl, basePath }
 }
