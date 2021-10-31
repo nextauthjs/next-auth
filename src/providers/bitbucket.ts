@@ -11,7 +11,7 @@ interface BitbucketProfile {
   }
 }
 
-export function Bitbucket<P extends Record<string, any> = BitbucketProfile>(
+export default function Bitbucket<P extends Record<string, any> = BitbucketProfile>(
   options: OAuthUserConfig<P>
 ): OAuthConfig<P> {
   return {
