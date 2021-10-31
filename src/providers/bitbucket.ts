@@ -50,7 +50,6 @@ export default function Bitbucket<P extends Record<string, any> = BitbucketProfi
         name: profile.display_name,
       }
     },
-    checks: ["none"],
     options,
   }
 }
