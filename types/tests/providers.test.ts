@@ -19,6 +19,20 @@ Providers.Email({
   from: "path/from",
 })
 
+// $ExpectType EmailConfig
+Providers.Email({
+  server: {
+    host: "host",
+    port: 123,
+    auth: {
+      user: "foo",
+      pass: "123",
+    },
+  },
+  from: "path/from",
+  generateVerificationToken: () => { return 'abcd' },
+})
+
 // $ExpectType CredentialsConfig<{ username: { label: string; type: string; }; password: { label: string; type: string; }; }>
 Providers.Credentials({
   id: "login",
