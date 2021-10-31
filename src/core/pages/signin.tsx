@@ -1,4 +1,16 @@
-export default function SigninPage(props) {
+import { Theme } from "../.."
+import { InternalProvider } from "../../lib/types"
+
+export interface SignInServerPageParams {
+  csrfToken: string
+  providers: InternalProvider[]
+  callbackUrl: string
+  email: string
+  error: string
+  theme: Theme
+}
+
+export default function SigninPage(props: SignInServerPageParams) {
   const {
     csrfToken,
     providers,
@@ -20,7 +32,7 @@ export default function SigninPage(props) {
     return false
   })
 
-  if (typeof document !== "undefined") {
+  if (typeof document !== "undefined" && theme.brandColor) {
     document.documentElement.style.setProperty(
       "--brand-color",
       theme.brandColor
@@ -114,9 +126,9 @@ export default function SigninPage(props) {
                       <input
                         name={credential}
                         id={`input-${credential}-for-${provider.id}-provider`}
-                        type={provider.credentials[credential].type || "text"}
+                        type={provider.credentials[credential].type ?? "text"}
                         placeholder={
-                          provider.credentials[credential].placeholder ||
+                          provider.credentials[credential].placeholder ??
                           "Password"
                         }
                         {...provider.credentials[credential]}

@@ -67,7 +67,7 @@ export default async function getAuthorizationUrl(params: {
       cookies,
     }
   } catch (error) {
-    logger.error("GET_AUTHORIZATION_URL_ERROR", error)
+    logger.error("GET_AUTHORIZATION_URL_ERROR", error as Error)
     throw error
   }
 }

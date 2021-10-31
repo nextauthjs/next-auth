@@ -34,7 +34,7 @@ export default async function signout(params: {
       await events.signOut?.({ session })
     } catch (error) {
       // If error, log it but continue
-      logger.error("SIGNOUT_ERROR", error)
+      logger.error("SIGNOUT_ERROR", error as Error)
     }
   }
 

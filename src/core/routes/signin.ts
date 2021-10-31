@@ -26,7 +26,7 @@ export default async function signin(params: {
       const response = await getAuthorizationUrl({ options, query })
       return response
     } catch (error) {
-      logger.error("SIGNIN_OAUTH_ERROR", { error, provider })
+      logger.error("SIGNIN_OAUTH_ERROR", { error: error as Error, provider })
       return { redirect: `${url}/error?error=OAuthSignin` }
     }
   } else if (provider.type === "email") {
@@ -73,13 +73,17 @@ export default async function signin(params: {
         return { redirect: signInCallbackResponse }
       }
     } catch (error) {
-      return { redirect: `${url}/error?${new URLSearchParams({ error })}}` }
+      return {
+        redirect: `${url}/error?${new URLSearchParams({
+          error: error as string,
+        })}}`,
+      }
     }
 
     try {
       await emailSignin(email, options)
     } catch (error) {
-      logger.error("SIGNIN_EMAIL_ERROR", error)
+      logger.error("SIGNIN_EMAIL_ERROR", (error as Error))
       return { redirect: `${url}/error?error=EmailSignin` }
     }
 

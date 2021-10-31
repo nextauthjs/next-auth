@@ -5,7 +5,7 @@ import {
 } from "next"
 import { NextAuthOptions, Session } from ".."
 import { NextAuthHandler } from "../core"
-import { NextAuthAction } from "../lib/types"
+import { NextAuthAction, NextAuthRequest, NextAuthResponse } from "../lib/types"
 import { set as setCookie } from "../core/lib/cookie"
 import logger, { setLogger } from "../lib/logger"
 
@@ -81,9 +81,14 @@ function NextAuth(
 ): any
 
 /** Tha main entry point to next-auth */
-function NextAuth(...args) {
+function NextAuth(
+  ...args:
+    | [NextAuthOptions]
+    | [NextApiRequest, NextApiResponse, NextAuthOptions]
+) {
   if (args.length === 1) {
-    return async (req, res) => await NextAuthNextHandler(req, res, args[0])
+    return async (req: NextAuthRequest, res: NextAuthResponse) =>
+      await NextAuthNextHandler(req, res, args[0])
   }
 
   return NextAuthNextHandler(args[0], args[1], args[2])
