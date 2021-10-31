@@ -13,6 +13,11 @@ export interface InternalUrl {
 
 export default function parseUrl(url?: string): InternalUrl {
   const defaultUrl = new URL("http://localhost:3000/api/auth")
+
+  if (url && !url.startsWith("http")) {
+    url = `https://${url}`
+  }
+
   const _url = new URL(url ?? defaultUrl)
   const path = (_url.pathname === "/" ? defaultUrl.pathname : _url.pathname)
     // Remove trailing slash
