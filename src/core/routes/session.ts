@@ -3,10 +3,11 @@ import { InternalOptions } from "../../lib/types"
 import { OutgoingResponse } from ".."
 import { Session } from "../.."
 import { fromDate } from "../lib/utils"
+import { SessionStore } from "../lib/cookie"
 
 interface SessionParams {
   options: InternalOptions
-  sessionToken?: string
+  sessionStore: SessionStore
 }
 
 /**
@@ -17,7 +18,7 @@ interface SessionParams {
 export default async function session(
   params: SessionParams
 ): Promise<OutgoingResponse<Session | {}>> {
-  const { options, sessionToken } = params
+  const { options, sessionStore } = params
   const { adapter, jwt, events, callbacks, logger } = options
   const useJwtSession = options.session.jwt
   const sessionMaxAge = options.session.maxAge
@@ -28,19 +29,22 @@ export default async function session(
     cookies: [],
   }
 
+  const sessionToken = sessionStore.value
+
   if (!sessionToken) return response
 
   if (useJwtSession) {
     try {
-      // Decrypt and verify token
-      const decodedToken = await jwt.decode({ ...jwt, token: sessionToken })
+      const decodedToken = await jwt.decode({
+        ...jwt,
+        token: sessionToken,
+      })
 
-      // Generate new session expiry date
       const newExpires = fromDate(sessionMaxAge)
 
       // By default, only exposes a limited subset of information to the client
       // as needed for presentation purposes (e.g. "you are logged in as...").
-      const defaultSession = {
+      const session = {
         user: {
           name: decodedToken?.name,
           email: decodedToken?.email,
@@ -49,41 +53,35 @@ export default async function session(
         expires: newExpires.toISOString(),
       }
 
-      // Pass Session and JSON Web Token through to the session callback
       // @ts-expect-error
       const token = await callbacks.jwt({ token: decodedToken })
       // @ts-expect-error
-      const session = await callbacks.session({
-        session: defaultSession,
-        token,
-      })
+      const newSession = await callbacks.session({ session, token })
 
       // Return session payload as response
-      response.body = session
+      response.body = newSession
 
       // Refresh JWT expiry by re-signing it, with an updated expiry date
-      const newToken = await jwt.encode({ ...jwt, token })
-
-      // Set cookie, to also update expiry date on cookie
-      response.cookies?.push({
-        name: options.cookies.sessionToken.name,
-        value: newToken,
-        options: {
-          expires: newExpires,
-          ...options.cookies.sessionToken.options,
-        },
+      const newToken = await jwt.encode({
+        ...jwt,
+        token,
+        maxAge: options.session.maxAge,
       })
 
-      await events.session?.({ session, token })
+      // Set cookie, to also update expiry date on cookie
+      const sessionCookies = sessionStore.chunk(newToken, {
+        expires: newExpires,
+        ...options.cookies.sessionToken.options,
+      })
+
+      response.cookies?.push(...sessionCookies)
+
+      await events.session?.({ session: newSession, token })
     } catch (error) {
       // If JWT not verifiable, make sure the cookie for it is removed and return empty object
       logger.error("JWT_SESSION_ERROR", error)
 
-      response.cookies?.push({
-        name: options.cookies.sessionToken.name,
-        value: "",
-        options: { ...options.cookies.sessionToken.options, maxAge: 0 },
-      })
+      response.cookies?.push(...sessionStore.clean())
     }
   } else {
     try {
@@ -151,13 +149,9 @@ export default async function session(
         // @ts-expect-error
         await events.session?.({ session: sessionPayload })
       } else if (sessionToken) {
-        // If sessionToken was found set but it's not valid for a session then
+        // If `sessionToken` was found set but it's not valid for a session then
         // remove the sessionToken cookie from browser.
-        response.cookies?.push({
-          name: options.cookies.sessionToken.name,
-          value: "",
-          options: { ...options.cookies.sessionToken.options, maxAge: 0 },
-        })
+        response.cookies?.push(...sessionStore.clean())
       }
     } catch (error) {
       logger.error("SESSION_ERROR", error)

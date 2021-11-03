@@ -1,16 +1,17 @@
 import { Adapter } from "src/adapters"
 import { InternalOptions } from "../../lib/types"
 import { OutgoingResponse } from ".."
-import { Cookie } from "../lib/cookie"
+import { SessionStore } from "../lib/cookie"
 
 /** Handle requests to /api/auth/signout */
 export default async function signout(params: {
   options: InternalOptions
-  sessionToken?: string
+  sessionStore: SessionStore
 }): Promise<OutgoingResponse> {
-  const { options, sessionToken } = params
-  const { adapter, cookies, events, jwt, callbackUrl, logger } = options
+  const { options, sessionStore } = params
+  const { adapter, events, jwt, callbackUrl, logger } = options
 
+  const sessionToken = sessionStore?.value
   if (!sessionToken) {
     return { redirect: callbackUrl }
   }
@@ -25,6 +26,7 @@ export default async function signout(params: {
       await events.signOut?.({ token: decodedJwt })
     } catch (error) {
       // Do nothing if decoding the JWT fails
+      logger.error("SIGNOUT_ERROR", error)
     }
   } else {
     try {
@@ -39,11 +41,7 @@ export default async function signout(params: {
   }
 
   // Remove Session Token
-  const sessionCookie: Cookie = {
-    name: cookies.sessionToken.name,
-    value: "",
-    options: { ...cookies.sessionToken.options, maxAge: 0 },
-  }
+  const sessionCookies = sessionStore.clean()
 
-  return { redirect: callbackUrl, cookies: [sessionCookie] }
+  return { redirect: callbackUrl, cookies: sessionCookies }
 }
