@@ -3,7 +3,7 @@ import hkdf from "@panva/hkdf"
 import { v4 as uuid } from "uuid"
 import { SessionStore } from "src/core/lib/cookie"
 import type { NextApiRequest } from "next"
-import type { JWT, JWTDecodeParams, JWTEncodeParams, JWTOptions } from "./types"
+import type { JWT, JWTDecodeParams, JWTEncodeParams } from "./types"
 
 export * from "./types"
 
@@ -39,7 +39,7 @@ export async function decode({
   return payload
 }
 
-export type GetTokenParams<R extends boolean = false> = {
+export interface GetTokenParams<R extends boolean = false> {
   /** The request containing the JWT either in the cookies or in the `Authorization` header. */
   req: NextApiRequest
   /**
@@ -54,7 +54,9 @@ export type GetTokenParams<R extends boolean = false> = {
    * @default false
    */
   raw?: R
-} & Pick<JWTOptions, "decode" | "secret">
+  secret: string
+  decode?: typeof decode
+}
 
 /**
  * Takes a NextAuth.js request (`req`) and returns either the NextAuth.js issued JWT's payload,
