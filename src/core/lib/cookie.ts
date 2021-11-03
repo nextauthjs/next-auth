@@ -83,8 +83,8 @@ export class SessionStore {
   constructor(
     option: CookieOption,
     req: {
-      cookies: Record<string, string>
-      headers: Record<string, string> | IncomingHttpHeaders
+      cookies?: Record<string, string>
+      headers?: Record<string, string> | IncomingHttpHeaders
     },
     logger: LoggerInstance
   ) {
