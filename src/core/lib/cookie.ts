@@ -1,5 +1,5 @@
 import { serialize } from "cookie"
-import { IncomingRequest } from ".."
+import type { IncomingHttpHeaders } from "http"
 import type { CookiesOptions } from "../.."
 import type { CookieOption, LoggerInstance } from "../types"
 
@@ -82,7 +82,10 @@ export class SessionStore {
 
   constructor(
     option: CookieOption,
-    req: IncomingRequest,
+    req: {
+      cookies: Record<string, string>
+      headers: Record<string, string> | IncomingHttpHeaders
+    },
     logger: LoggerInstance
   ) {
     this.#logger = logger
@@ -103,7 +106,10 @@ export class SessionStore {
 
     if (chunks.length) this.#chunks = chunks
 
-    const bearer = req.headers?.Authorization?.replace("Bearer ", "")
+    const bearer = (req.headers?.Authorization as string | undefined)?.replace(
+      "Bearer ",
+      ""
+    )
     if (bearer) {
       logger.debug("Found session token in request headers.", {})
       this.type = "bearer"

@@ -1,7 +1,8 @@
 import { EncryptJWT, jwtDecrypt } from "jose"
-import hkdf from '@panva/hkdf'
+import hkdf from "@panva/hkdf"
 import { v4 as uuid } from "uuid"
-import { NextApiRequest } from "next"
+import { SessionStore } from "src/core/lib/cookie"
+import type { NextApiRequest } from "next"
 import type { JWT, JWTDecodeParams, JWTEncodeParams, JWTOptions } from "./types"
 
 export * from "./types"
@@ -78,17 +79,18 @@ export async function getToken<R extends boolean = false>(
 
   if (!req) throw new Error("Must pass `req` to JWT getToken()")
 
-  let token = req.cookies[cookieName]
+  const sessionStore = new SessionStore(
+    { name: cookieName, options: { secure: secureCookie } },
+    { cookies: req.cookies, headers: req.headers },
+    console
+  )
 
-  if (!token && req.headers.authorization?.split(" ")[0] === "Bearer") {
-    const urlEncodedToken = req.headers.authorization.split(" ")[1]
-    token = decodeURIComponent(urlEncodedToken)
-  }
+  const token = sessionStore.value
+  // @ts-expect-error
+  if (!token) return null
 
-  if (raw) {
-    // @ts-expect-error
-    return token
-  }
+  // @ts-expect-error
+  if (raw) return token
 
   try {
     // @ts-expect-error
@@ -101,7 +103,7 @@ export async function getToken<R extends boolean = false>(
 
 async function getDerivedEncryptionKey(secret) {
   return await hkdf(
-    'sha256',
+    "sha256",
     secret,
     "",
     "NextAuth.js Generated Encryption Key",
