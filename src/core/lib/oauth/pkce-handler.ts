@@ -1,7 +1,7 @@
-import * as cookie from "../cookie"
 import * as jwt from "../../../jwt"
 import { generators } from "openid-client"
-import { InternalOptions } from "src/lib/types"
+import type { InternalOptions } from "src/lib/types"
+import type { Cookie } from "../cookie"
 
 const PKCE_CODE_CHALLENGE_METHOD = "S256"
 const PKCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
@@ -9,17 +9,16 @@ const PKCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 /**
  * Returns `code_challenge` and `code_challenge_method`
  * and saves them in a cookie.
- * @type {import("src/lib/types").InternalOptions}
- * @returns {Promise<undefined | {
- *  code_challenge: string
- *  code_challenge_method: "S256"
- *  cookie: import("../cookie").Cookie
- * }>
  */
-export async function createPKCE(options) {
-  const { cookies, logger } = options
-  /** @type {import("src/providers").OAuthConfig} */
-  const provider = options.provider
+export async function createPKCE(options: InternalOptions<"oauth">): Promise<
+  | undefined
+  | {
+      code_challenge: string
+      code_challenge_method: "S256"
+      cookie: Cookie
+    }
+> {
+  const { cookies, logger, provider } = options
   if (!provider.checks?.includes("pkce")) {
     // Provider does not support PKCE, return nothing.
     return
@@ -29,8 +28,8 @@ export async function createPKCE(options) {
 
   // Encrypt code_verifier and save it to an encrypted cookie
   const encryptedCodeVerifier = await jwt.encode({
-    maxAge: PKCE_MAX_AGE,
     ...options.jwt,
+    maxAge: PKCE_MAX_AGE,
     token: { code_verifier: codeVerifier },
   })
 
@@ -49,8 +48,8 @@ export async function createPKCE(options) {
       name: cookies.pkceCodeVerifier.name,
       value: encryptedCodeVerifier,
       options: {
-        expires: cookieExpires.toISOString(),
         ...cookies.pkceCodeVerifier.options,
+        expires: cookieExpires,
       },
     },
     code_challenge: codeChallenge,
@@ -68,7 +67,7 @@ export async function usePKCECodeVerifier(params: {
 }): Promise<
   | {
       codeVerifier?: string
-      cookie?: cookie.Cookie
+      cookie?: Cookie
     }
   | undefined
 > {
@@ -85,7 +84,7 @@ export async function usePKCECodeVerifier(params: {
   })
 
   // remove PKCE cookie after it has been used up
-  const cookie: cookie.Cookie = {
+  const cookie: Cookie = {
     name: cookies.pkceCodeVerifier.name,
     value: "",
     options: {

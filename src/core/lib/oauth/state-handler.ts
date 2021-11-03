@@ -1,5 +1,5 @@
 import { createHash } from "crypto"
-import { InternalOptions } from "src/lib/types"
+import type { InternalOptions } from "src/lib/types"
 
 /** Returns state if provider supports it */
 export function createState(options: InternalOptions<"oauth">) {

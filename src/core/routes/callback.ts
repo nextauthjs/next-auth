@@ -139,8 +139,8 @@ export default async function callback(params: {
           cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
 
           const sessionCookies = sessionStore.chunk(newToken, {
-            expires: cookieExpires,
             ...options.cookies.sessionToken.options,
+            expires: cookieExpires,
           })
           cookies.push(...sessionCookies)
         } else {
@@ -149,8 +149,8 @@ export default async function callback(params: {
             name: options.cookies.sessionToken.name,
             value: session.sessionToken,
             options: {
-              expires: session.expires,
               ...options.cookies.sessionToken.options,
+              expires: session.expires,
             },
           })
         }
@@ -288,8 +288,8 @@ export default async function callback(params: {
         cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
 
         const sessionCookies = sessionStore.chunk(newToken, {
-          expires: cookieExpires,
           ...options.cookies.sessionToken.options,
+          expires: cookieExpires,
         })
         cookies.push(...sessionCookies)
       } else {
@@ -298,8 +298,8 @@ export default async function callback(params: {
           name: options.cookies.sessionToken.name,
           value: session.sessionToken,
           options: {
-            expires: session.expires,
             ...options.cookies.sessionToken.options,
+            expires: session.expires,
           },
         })
       }
@@ -437,8 +437,8 @@ export default async function callback(params: {
     cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
 
     const sessionCookies = sessionStore.chunk(newToken, {
-      expires: cookieExpires,
       ...options.cookies.sessionToken.options,
+      expires: cookieExpires,
     })
 
     cookies.push(...sessionCookies)
