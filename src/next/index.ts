@@ -6,7 +6,7 @@ import {
 import { NextAuthOptions, Session } from ".."
 import { NextAuthHandler } from "../core"
 import { NextAuthAction } from "../lib/types"
-import { set as setCookie } from "../core/lib/cookie"
+import { setCookie } from "./cookie"
 import logger, { setLogger } from "../lib/logger"
 
 async function NextAuthNextHandler(
@@ -52,8 +52,9 @@ async function NextAuthNextHandler(
   res.status(status)
 
   cookies?.forEach((cookie) => {
-    setCookie(res, cookie.name, cookie.value, cookie.options)
+    setCookie(res, cookie)
   })
+
   headers?.forEach((header) => {
     res.setHeader(header.key, header.value)
   })
@@ -110,7 +111,7 @@ export async function getServerSession(
   const { body, cookies } = session
 
   cookies?.forEach((cookie) => {
-    setCookie(context.res, cookie.name, cookie.value, cookie.options)
+    setCookie(context.res, cookie)
   })
 
   if (body && Object.keys(body).length) return body as Session
