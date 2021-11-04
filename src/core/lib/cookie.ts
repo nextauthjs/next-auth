@@ -1,10 +1,16 @@
 // REVIEW: Is there any way to defer two types of strings?
-
+import { NextAuthResponse } from "../../lib/types"
 import { CookiesOptions } from "../.."
 import { CookieOption } from "../types"
+import { ServerResponse } from "http"
 
 /** Stringified form of `JWT`. Extract the content with `jwt.decode` */
 export type JWTString = string
+
+export type SetCookieOptions = Partial<CookieOption["options"]> & {
+  expires?: Date | string
+  encode?: (val: unknown) => string
+}
 
 /** If `options.session.jwt` is set to `true`, this is a stringified `JWT`. In case of a database persisted session, this is the `sessionToken` of the session in the database.. */
 export type SessionToken<T extends "jwt" | "db" = "jwt"> = T extends "jwt"
@@ -22,13 +28,10 @@ export type SessionToken<T extends "jwt" | "db" = "jwt"> = T extends "jwt"
  * (with fixes for specific issues) to keep dependancy size down.
  */
 export function set(
-  res,
-  name,
-  value,
-  options: {
-    expires?: Date
-    maxAge?: number
-  } = {}
+  res: NextAuthResponse | ServerResponse,
+  name: string,
+  value: unknown,
+  options: SetCookieOptions = {}
 ) {
   const stringValue =
     typeof value === "object" ? "j:" + JSON.stringify(value) : String(value)
@@ -39,20 +42,24 @@ export function set(
   }
 
   // Preserve any existing cookies that have already been set in the same session
-  let setCookieHeader = res.getHeader("Set-Cookie") || []
+  let setCookieHeader = res.getHeader("Set-Cookie") ?? []
   // If not an array (i.e. a string with a single cookie) convert it into an array
   if (!Array.isArray(setCookieHeader)) {
-    setCookieHeader = [setCookieHeader]
+    setCookieHeader = [setCookieHeader.toString()]
   }
   setCookieHeader.push(_serialize(name, String(stringValue), options))
   res.setHeader("Set-Cookie", setCookieHeader)
 }
 
-function _serialize(name, val, options) {
+function _serialize(
+  name: string,
+  val: unknown,
+  options: SetCookieOptions = {}
+) {
   const fieldContentRegExp = /^[\u0009\u0020-\u007e\u0080-\u00ff]+$/ // eslint-disable-line no-control-regex
 
   const opt = options || {}
-  const enc = opt.encode || encodeURIComponent
+  const enc = opt.encode ?? encodeURIComponent
 
   if (typeof enc !== "function") {
     throw new TypeError("option encode is invalid")
@@ -62,7 +69,7 @@ function _serialize(name, val, options) {
     throw new TypeError("argument name is invalid")
   }
 
-  const value = enc(val)
+  const value = enc(val as string)
 
   if (value && !fieldContentRegExp.test(value)) {
     throw new TypeError("argument val is invalid")
@@ -99,9 +106,9 @@ function _serialize(name, val, options) {
   }
 
   if (opt.expires) {
-    let expires = opt.expires
-    if (typeof opt.expires.toUTCString === "function") {
-      expires = opt.expires.toUTCString()
+    let expires: Date | string = opt.expires
+    if (typeof (opt.expires as Date).toUTCString === "function") {
+      expires = (opt.expires as Date).toUTCString()
     } else {
       const dateExpires = new Date(opt.expires)
       expires = dateExpires.toUTCString()
@@ -154,7 +161,7 @@ function _serialize(name, val, options) {
  *
  * @TODO Review cookie settings (names, options)
  */
-export function defaultCookies(useSecureCookies): CookiesOptions {
+export function defaultCookies(useSecureCookies: boolean): CookiesOptions {
   const cookiePrefix = useSecureCookies ? "__Secure-" : ""
   return {
     // default cookie options

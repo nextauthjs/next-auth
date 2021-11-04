@@ -47,7 +47,7 @@ export default async function email(
     logger.error("SEND_VERIFICATION_EMAIL_ERROR", {
       identifier,
       url,
-      error,
+      error: error as Error,
     })
     throw new Error("SEND_VERIFICATION_EMAIL_ERROR")
   }

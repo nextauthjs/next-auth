@@ -45,7 +45,7 @@ export async function fetchData<T = any>(
     return Object.keys(data).length > 0 ? data : null // Return null if data empty
   } catch (error) {
     logger.error("CLIENT_FETCH_ERROR", {
-      error,
+      error: error as Error,
       path,
       ...(req ? { header: req.headers } : {}),
     })
@@ -84,9 +84,9 @@ export function BroadcastChannel(name = "nextauth.message") {
   return {
     /** Get notified by other tabs/windows. */
     receive(onReceive: (message: BroadcastMessage) => void) {
-      const handler = (event) => {
+      const handler = (event: StorageEvent) => {
         if (event.key !== name) return
-        const message: BroadcastMessage = JSON.parse(event.newValue)
+        const message: BroadcastMessage = JSON.parse(event.newValue ?? "{}")
         if (message?.event !== "session" || !message?.data) return
 
         onReceive(message)
@@ -95,7 +95,7 @@ export function BroadcastChannel(name = "nextauth.message") {
       return () => window.removeEventListener("storage", handler)
     },
     /** Notify other tabs/windows. */
-    post(message) {
+    post(message: Record<string, unknown>) {
       if (typeof window === "undefined") return
       localStorage.setItem(
         name,

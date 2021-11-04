@@ -40,11 +40,11 @@ export function oAuth1Client(options: InternalOptions<"oauth">) {
     return await new Promise((resolve, reject) => {
       originalGetOAuth1AccessToken(
         ...args,
-        (error, oauth_token, oauth_token_secret) => {
+        (error: any, oauth_token: any, oauth_token_secret: any) => {
           if (error) {
             return reject(error)
           }
-          resolve({ oauth_token, oauth_token_secret })
+          resolve({ oauth_token, oauth_token_secret } as any)
         }
       )
     })
@@ -60,7 +60,7 @@ export function oAuth1Client(options: InternalOptions<"oauth">) {
           if (error) {
             return reject(error)
           }
-          resolve({ oauth_token, oauth_token_secret, params })
+          resolve({ oauth_token, oauth_token_secret, params } as any)
         }
       )
     })

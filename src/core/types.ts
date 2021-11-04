@@ -345,7 +345,7 @@ export interface CookieOption {
     secure: boolean
     maxAge?: number
     domain?: string
-    expires?: Date
+    expires?: Date | string
   }
 }
 

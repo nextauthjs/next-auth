@@ -1,4 +1,16 @@
-export default function SigninPage(props) {
+import { Theme } from "../.."
+import { InternalProvider } from "../../lib/types"
+
+export interface SignInServerPageParams {
+  csrfToken: string
+  providers: InternalProvider[]
+  callbackUrl: string
+  email: string
+  error: string
+  theme: Theme
+}
+
+export default function SigninPage(props: SignInServerPageParams) {
   const {
     csrfToken,
     providers,
@@ -20,14 +32,14 @@ export default function SigninPage(props) {
     return false
   })
 
-  if (typeof document !== "undefined") {
+  if (typeof document !== "undefined" && theme.brandColor) {
     document.documentElement.style.setProperty(
       "--brand-color",
       theme.brandColor
     )
   }
 
-  const errors = {
+  const errors: Record<string, string> = {
     Signin: "Try signing in with a different account.",
     OAuthSignin: "Try signing in with a different account.",
     OAuthCallback: "Try signing in with a different account.",
@@ -109,14 +121,14 @@ export default function SigninPage(props) {
                         className="section-header"
                         htmlFor={`input-${credential}-for-${provider.id}-provider`}
                       >
-                        {provider.credentials[credential].label || credential}
+                        {provider.credentials[credential].label ?? credential}
                       </label>
                       <input
                         name={credential}
                         id={`input-${credential}-for-${provider.id}-provider`}
-                        type={provider.credentials[credential].type || "text"}
+                        type={provider.credentials[credential].type ?? "text"}
                         placeholder={
-                          provider.credentials[credential].placeholder ||
+                          provider.credentials[credential].placeholder ??
                           "Password"
                         }
                         {...provider.credentials[credential]}

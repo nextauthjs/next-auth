@@ -38,14 +38,14 @@ export default async function oAuthCallback(params: {
       const { oauth_token, oauth_verifier } = query ?? {}
       // @ts-expect-error
       const tokens: TokenSet = await client.getOAuthAccessToken(
-        oauth_token,
+        oauth_token as string,
         // @ts-expect-error
         null,
         oauth_verifier
       )
       // @ts-expect-error
       let profile: Profile = await client.get(
-        provider.profileUrl,
+        (provider as any).profileUrl,
         tokens.oauth_token,
         tokens.oauth_token_secret
       )
@@ -56,7 +56,7 @@ export default async function oAuthCallback(params: {
 
       return await getProfile({ profile, tokens, provider, logger })
     } catch (error) {
-      logger.error("OAUTH_V1_GET_ACCESS_TOKEN_ERROR", error)
+      logger.error("OAUTH_V1_GET_ACCESS_TOKEN_ERROR", error as Error)
       throw error
     }
   }
@@ -141,8 +141,8 @@ export default async function oAuthCallback(params: {
       cookies: pkce?.cookie ? [pkce.cookie] : undefined,
     }
   } catch (error) {
-    logger.error("OAUTH_CALLBACK_ERROR", { error, providerId: provider.id })
-    throw new OAuthCallbackError(error)
+    logger.error("OAUTH_CALLBACK_ERROR", { error: error as Error, providerId: provider.id })
+    throw new OAuthCallbackError(error as Error)
   }
 }
 
@@ -191,7 +191,10 @@ async function getProfile({
     // all providers, so we return an empty object; the user should then be
     // redirected back to the sign up page. We log the error to help developers
     // who might be trying to debug this when configuring a new provider.
-    logger.error("OAUTH_PARSE_PROFILE_ERROR", { error, OAuthProfile })
+    logger.error("OAUTH_PARSE_PROFILE_ERROR", {
+      error: error as Error,
+      OAuthProfile,
+    })
     return {
       profile: null,
       account: null,

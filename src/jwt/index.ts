@@ -1,5 +1,5 @@
 import { EncryptJWT, jwtDecrypt } from "jose"
-import hkdf from '@panva/hkdf'
+import hkdf from "@panva/hkdf"
 import { v4 as uuid } from "uuid"
 import { NextApiRequest } from "next"
 import type { JWT, JWTDecodeParams, JWTEncodeParams, JWTOptions } from "./types"
@@ -99,9 +99,9 @@ export async function getToken<R extends boolean = false>(
   }
 }
 
-async function getDerivedEncryptionKey(secret) {
+async function getDerivedEncryptionKey(secret: string | Buffer) {
   return await hkdf(
-    'sha256',
+    "sha256",
     secret,
     "",
     "NextAuth.js Generated Encryption Key",

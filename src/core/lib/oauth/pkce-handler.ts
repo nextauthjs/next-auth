@@ -1,4 +1,4 @@
-import * as cookie from "../cookie"
+import { Cookie } from "../cookie"
 import * as jwt from "../../../jwt"
 import { generators } from "openid-client"
 import { InternalOptions } from "src/lib/types"
@@ -16,7 +16,17 @@ const PKCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
  *  cookie: import("../cookie").Cookie
  * }>
  */
-export async function createPKCE(options) {
+
+type PKCE = Promise<
+  | undefined
+  | {
+      code_challenge: string
+      code_challenge_method: "S256"
+      cookie: Cookie
+    }
+>
+
+export async function createPKCE(options: InternalOptions<"oauth">): PKCE {
   const { cookies, logger } = options
   /** @type {import("src/providers").OAuthConfig} */
   const provider = options.provider
@@ -29,6 +39,7 @@ export async function createPKCE(options) {
 
   // Encrypt code_verifier and save it to an encrypted cookie
   const encryptedCodeVerifier = await jwt.encode({
+    // @ts-expect-error
     maxAge: PKCE_MAX_AGE,
     ...options.jwt,
     token: { code_verifier: codeVerifier },
@@ -68,7 +79,7 @@ export async function usePKCECodeVerifier(params: {
 }): Promise<
   | {
       codeVerifier?: string
-      cookie?: cookie.Cookie
+      cookie?: Cookie
     }
   | undefined
 > {
@@ -85,7 +96,7 @@ export async function usePKCECodeVerifier(params: {
   })
 
   // remove PKCE cookie after it has been used up
-  const cookie: cookie.Cookie = {
+  const cookie: Cookie = {
     name: cookies.pkceCodeVerifier.name,
     value: "",
     options: {

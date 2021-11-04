@@ -195,7 +195,7 @@ export async function NextAuthHandler<
             logger[level](code, metadata)
           } catch (error) {
             // If logging itself failed...
-            logger.error("LOGGER_ERROR", error)
+            logger.error("LOGGER_ERROR", error as Error)
           }
         }
         return {}
