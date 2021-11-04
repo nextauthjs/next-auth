@@ -33,16 +33,18 @@ NextAuth.js is a complete open source authentication solution for [Next.js](http
 It is designed from the ground up to support Next.js and Serverless.
 
 This is the core repo for NextAuth.js. Check the repos below if you are interested in additional information:
+
 - Docs related: https://github.com/nextauthjs/docs
 - Adapter related: https://github.com/nextauthjs/adapters
-         
+
 ## Getting Started
 
 ```
 npm install --save next-auth
 ```
 
-The easiest way to continue getting started, is to follow the [getting started](https://next-auth.js.org/getting-started/example) section in our docs.
+The easiest way to continue getting started, is to follow
+the [getting started](https://next-auth.js.org/getting-started/example) section in our docs.
 
 We also have a section of [tutorials](https://next-auth.js.org/tutorials) for those looking for more specific examples.
 
@@ -65,7 +67,8 @@ NextAuth.js can be used with or without a database.
 
 - An open source solution that allows you to keep control of your data
 - Supports Bring Your Own Database (BYOD) and can be used with any database
-- Built-in support for [MySQL, MariaDB, Postgres, Microsoft SQL Server, MongoDB and SQLite](https://next-auth.js.org/configuration/databases)
+- Built-in support
+  for [MySQL, MariaDB, Postgres, Microsoft SQL Server, MongoDB and SQLite](https://next-auth.js.org/configuration/databases)
 - Works great with databases from popular hosting providers
 - Can also be used _without a database_ (e.g. OAuth + JWT)
 
@@ -81,11 +84,14 @@ NextAuth.js can be used with or without a database.
 - Features tab/window syncing and keepalive messages to support short lived sessions
 - Attempts to implement the latest guidance published by [Open Web Application Security Project](https://owasp.org/)
 
-Advanced options allow you to define your own routines to handle controlling what accounts are allowed to sign in, for encoding and decoding JSON Web Tokens and to set custom cookie security policies and session properties, so you can control who is able to sign in and how often sessions have to be re-validated.
+Advanced options allow you to define your own routines to handle controlling what accounts are allowed to sign in, for
+encoding and decoding JSON Web Tokens and to set custom cookie security policies and session properties, so you can
+control who is able to sign in and how often sessions have to be re-validated.
 
 ### TypeScript
 
-NextAuth.js comes with built-in types. For more information and usage, check out the [TypeScript section](https://next-auth.js.org/getting-started/typescript) in the documentation.
+NextAuth.js comes with built-in types. For more information and usage, check out
+the [TypeScript section](https://next-auth.js.org/getting-started/typescript) in the documentation.
 
 The package at `@types/next-auth` is now deprecated.
 
@@ -129,14 +135,16 @@ export default function Component() {
   if (session) {
     return (
       <>
-        Signed in as {session.user.email} <br />
+        Signed in as {session.user.email}
+        <br />
         <button onClick={() => signOut()}>Sign out</button>
       </>
     )
   }
   return (
     <>
-      Not signed in <br />
+      Not signed in
+      <br />
       <button onClick={() => signIn()}>Sign in</button>
     </>
   )
@@ -156,7 +164,8 @@ export default function Component() {
 
 ### Support
 
-We're happy to announce we've recently created an [OpenCollective](https://opencollective.org/nextauth) for individuals and companies looking to contribute financially to the project!
+We've created an [OpenCollective](https://opencollective.com/nextauth) for individuals and companies looking to
+contribute financially to the project.
 
 <!--sponsors start-->
 <table>
@@ -167,7 +176,7 @@ We're happy to announce we've recently created an [OpenCollective](https://openc
           <img width="128px" src="https://avatars.githubusercontent.com/u/14985020?v=4" alt="Vercel Logo" />
         </a><br />
         <div>Vercel</div><br />
-        <sub>🥉 Bronze Financial Sponsor <br /> ☁️ Infrastructure Support</sub>
+        <sub>🥉 Bronze Financial Sponsor <br /> ☁️  Infrastructure Support</sub>
       </td>
       <td align="center" valign="top">
         <a href="https://prisma.io" target="_blank">
@@ -181,7 +190,7 @@ We're happy to announce we've recently created an [OpenCollective](https://openc
           <img width="128px" src="https://avatars.githubusercontent.com/u/25982255?v=4" alt="Checkly Logo" />
         </a><br />
         <div>Checkly</div><br />
-        <sub>☁️ Infrastructure Support</sub>
+        <sub>☁️  Infrastructure Support</sub>
       </td>
     </tr><tr></tr>
   </tbody>
@@ -191,7 +200,8 @@ We're happy to announce we've recently created an [OpenCollective](https://openc
 
 ## Contributing
 
-We're open to all community contributions! If you'd like to contribute in any way, please first read our [Contributing Guide](https://github.com/nextauthjs/next-auth/blob/canary/CONTRIBUTING.md).
+We're open to all community contributions! If you'd like to contribute in any way, please first read
+our [Contributing Guide](https://github.com/nextauthjs/next-auth/blob/canary/CONTRIBUTING.md).
 
 ## License
 
