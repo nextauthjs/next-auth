@@ -61,6 +61,7 @@ export type OAuthProviderType =
   | "AzureADB2C"
   | "Basecamp"
   | "BattleNet"
+  | "Binance"
   | "Box"
   | "Bungie"
   | "Cognito"
