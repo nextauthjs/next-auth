@@ -221,8 +221,8 @@ async function getOAuth2 (provider, accessToken, results) {
   if (this._useAuthorizationHeaderForGET) {
     headers.Authorization = this.buildAuthHeader(accessToken)
 
-    // Mail.ru & vk.com require 'access_token' as URL request parameter
-    if (['mailru', 'vk'].includes(provider.id)) {
+    // Mail.ru, vk.com, and Binance require 'access_token' as URL request parameter
+    if (['mailru', 'vk', 'binance'].includes(provider.id)) {
       const safeAccessTokenURL = new URL(url)
       safeAccessTokenURL.searchParams.append('access_token', accessToken)
       url = safeAccessTokenURL.href
