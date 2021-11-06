@@ -202,6 +202,15 @@ export function defaultCookies(useSecureCookies: boolean): CookiesOptions {
         secure: useSecureCookies,
       },
     },
+    state: {
+      name: `${cookiePrefix}next-auth.state`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: useSecureCookies,
+      },
+    },
   }
 }
 
