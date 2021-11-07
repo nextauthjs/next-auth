@@ -18,9 +18,14 @@ export default async function session(
   params: SessionParams
 ): Promise<OutgoingResponse<Session | {}>> {
   const { options, sessionToken } = params
-  const { adapter, jwt, events, callbacks, logger } = options
-  const useJwtSession = options.session.jwt
-  const sessionMaxAge = options.session.maxAge
+  const {
+    adapter,
+    jwt,
+    events,
+    callbacks,
+    logger,
+    session: { strategy: sessionStrategy, maxAge: sessionMaxAge },
+  } = options
 
   const response: OutgoingResponse<Session | {}> = {
     body: {},
@@ -30,7 +35,7 @@ export default async function session(
 
   if (!sessionToken) return response
 
-  if (useJwtSession) {
+  if (sessionStrategy === "jwt") {
     try {
       // Decrypt and verify token
       const decodedToken = await jwt.decode({ ...jwt, token: sessionToken })
@@ -77,7 +82,7 @@ export default async function session(
       await events.session?.({ session, token })
     } catch (error) {
       // If JWT not verifiable, make sure the cookie for it is removed and return empty object
-      logger.error("JWT_SESSION_ERROR", (error as Error))
+      logger.error("JWT_SESSION_ERROR", error as Error)
 
       response.cookies?.push({
         name: options.cookies.sessionToken.name,
@@ -160,7 +165,7 @@ export default async function session(
         })
       }
     } catch (error) {
-      logger.error("SESSION_ERROR", (error as Error))
+      logger.error("SESSION_ERROR", error as Error)
     }
   }
 

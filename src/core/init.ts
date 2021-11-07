@@ -85,7 +85,8 @@ export async function init({
     providers,
     // Session options
     session: {
-      jwt: !userOptions.adapter, // If no adapter specified, force use of JSON Web Tokens (stateless)
+      // If no adapter specified, force use of JSON Web Tokens (stateless)
+      strategy: userOptions.adapter ? "database" : "jwt",
       maxAge,
       updateAge: 24 * 60 * 60,
       ...userOptions.session,

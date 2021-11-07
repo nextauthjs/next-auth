@@ -27,11 +27,13 @@ export default async function callback(params: {
     jwt,
     events,
     callbacks,
-    session: { jwt: useJwtSession, maxAge: sessionMaxAge },
+    session: { strategy: sessionStrategy, maxAge: sessionMaxAge },
     logger,
   } = options
 
   const cookies: cookie.Cookie[] = []
+
+  const useJwtSession = sessionStrategy === "jwt"
 
   if (provider.type === "oauth") {
     try {
