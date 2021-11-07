@@ -40,11 +40,6 @@ export async function init({
   options: InternalOptions
   cookies: cookie.Cookie[]
 }> {
-  // If debug enabled, set ENV VAR so that logger logs debug messages
-  if (userOptions.debug) {
-    ;(process.env._NEXTAUTH_DEBUG as any) = true
-  }
-
   const url = parseUrl(host)
 
   const secret = createSecret({ userOptions, url })
