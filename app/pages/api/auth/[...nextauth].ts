@@ -168,10 +168,7 @@ export const authOptions: NextAuthOptions = {
       primaryUserFlow: process.env.AZURE_B2C_PRIMARY_USER_FLOW,
     }),
   ],
-  jwt: {
-    encryption: true,
-    secret: process.env.SECRET,
-  },
+  secret: process.env.SECRET,
   debug: true,
   theme: {
     colorScheme: "auto",
