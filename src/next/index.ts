@@ -44,7 +44,7 @@ async function NextAuthNextHandler(
       method: req.method ?? "GET",
       action: req.query.nextauth[0] as NextAuthAction,
       providerId: req.query.nextauth[1],
-      error: req.query.nextauth[1],
+      error: (req.query.error as string | undefined) ?? req.query.nextauth[1],
     },
     options,
   })
