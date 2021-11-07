@@ -429,9 +429,23 @@ export interface DefaultSession extends Record<string, unknown> {
  */
 export interface Session extends Record<string, unknown>, DefaultSession {}
 
+export type SessionStrategy = "jwt" | "database"
+
 /** [Documentation](https://next-auth.js.org/configuration/options#session) */
 export interface SessionOptions {
-  jwt: boolean
+  /**
+   * Choose how you want to save the user session.
+   * The default is `"jwt"`, an encrypted JWT (JWE) in the session cookie.
+   *
+   * If you use an `adapter` however, we default it to `"database"` instead.
+   * You can still force a JWT session by explicitly defining `"jwt"`.
+   *
+   * When using `"database"`, the session cookie will only contain a `sessionToken` value,
+   * which is used to look up the session in the database.
+   *
+   * [Documentation](https://next-auth.js.org/configuration/options#session) | [Adapter](https://next-auth.js.org/configuration/options#adapter) | [About JSON Web Tokens](https://next-auth.js.org/faq#json-web-tokens)
+   */
+  strategy: SessionStrategy
   /**
    * Relative time from now in seconds when to expire the session
    * @default 2592000 // 30 days
@@ -463,13 +477,3 @@ export interface DefaultUser {
  * [`profile` OAuth provider callback](https://next-auth.js.org/configuration/providers#using-a-custom-provider)
  */
 export interface User extends Record<string, unknown>, DefaultUser {}
-
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace NodeJS {
-    interface ProcessEnv {
-      NEXTAUTH_URL?: string
-      VERCEL_URL?: string
-    }
-  }
-}

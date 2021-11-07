@@ -121,3 +121,13 @@ export async function getServerSession(
   if (body && Object.keys(body).length) return body as Session
   return null
 }
+
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace NodeJS {
+    interface ProcessEnv {
+      NEXTAUTH_URL?: string
+      VERCEL_URL?: string
+    }
+  }
+}

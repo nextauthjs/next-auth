@@ -1,8 +1,8 @@
 // REVIEW: Is there any way to defer two types of strings?
-import { NextAuthResponse } from "../../lib/types"
-import { CookiesOptions } from "../.."
-import { CookieOption } from "../types"
-import { ServerResponse } from "http"
+import type { NextAuthResponse } from "../../lib/types"
+import type { CookiesOptions } from "../.."
+import type { CookieOption, SessionStrategy } from "../types"
+import type { ServerResponse } from "http"
 
 /** Stringified form of `JWT`. Extract the content with `jwt.decode` */
 export type JWTString = string
@@ -12,8 +12,11 @@ export type SetCookieOptions = Partial<CookieOption["options"]> & {
   encode?: (val: unknown) => string
 }
 
-/** If `options.session.jwt` is set to `true`, this is a stringified `JWT`. In case of a database persisted session, this is the `sessionToken` of the session in the database.. */
-export type SessionToken<T extends "jwt" | "db" = "jwt"> = T extends "jwt"
+/**
+ * If `options.session.strategy` is set to `jwt`, this is a stringified `JWT`.
+ * In case of `strategy: "database"`, this is the `sessionToken` of the session in the database.
+ */
+export type SessionToken<T extends SessionStrategy = "jwt"> = T extends "jwt"
   ? JWTString
   : string
 
