@@ -1,11 +1,11 @@
 import { UnknownError } from "../core/errors"
 
-export class MissingRouteError extends UnknownError {
-  name = "MissingRouteError"
-  code = "MISSING_ROUTE"
+export class NoAPIRouteError extends UnknownError {
+  name = "NoAPIRouteError"
+  code = "MISSING_NEXTAUTH_API_ROUTE_ERROR"
 }
 
-export class MissingSecretError extends UnknownError {
-  name = "MissingSecretError"
-  code = "MISSING_SECRET"
+export class NoSecretError extends UnknownError {
+  name = "NoSecretError"
+  code = "NO_SECRET"
 }

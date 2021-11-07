@@ -8,7 +8,7 @@ import { NextAuthHandler } from "../core"
 import { NextAuthAction, NextAuthRequest, NextAuthResponse } from "../lib/types"
 import { set as setCookie } from "../core/lib/cookie"
 import logger, { setLogger } from "../lib/logger"
-import { MissingRouteError, MissingSecretError } from "./errors"
+import { NoAPIRouteError, NoSecretError } from "./errors"
 
 /**
  * Verify that the user configured `next-auth` correctly.
@@ -20,14 +20,14 @@ function assertConfig(options: {
   host?: string
 }) {
   if (!options.query?.nextauth) {
-    return new MissingRouteError(
+    return new NoAPIRouteError(
       "Cannot find [...nextauth].{js,ts} in `/pages/api/auth`. Make sure the filename is written correctly."
     )
   }
 
   if (!options.secret) {
     if (process.env.NODE_ENV === "production") {
-      return new MissingSecretError("Please define a `secret` for production.")
+      return new NoSecretError("Please define a `secret` in production.")
     } else {
       logger.warn("NO_SECRET")
     }
