@@ -6,10 +6,12 @@ import type { Adapter } from "../adapters"
  * @source https://iaincollins.medium.com/error-handling-in-javascript-a6172ccdf9af
  */
 export class UnknownError extends Error {
+  code: string
   constructor(error: Error | string) {
     // Support passing error or string
     super((error as Error)?.message ?? error)
     this.name = "UnknownError"
+    this.code = (error as any).code
     if (error instanceof Error) {
       this.stack = error.stack
     }

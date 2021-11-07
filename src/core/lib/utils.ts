@@ -25,9 +25,8 @@ export function hashToken(token: string, options: InternalOptions<"email">) {
 /**
  * Secret used salt cookies and tokens (e.g. for CSRF protection).
  * If no secret option is specified then it creates one on the fly
- * based on options passed here. A options contains unique data, such as
- * OAuth provider secrets and database credentials it should be sufficent.
- */
+ * based on options passed here. If options contains unique data, such as
+ * OAuth provider secrets and database credentials it should be sufficent. If no secret provided in production, we throw an error. */
 export default function createSecret(params: {
   userOptions: NextAuthOptions
   url: InternalUrl
