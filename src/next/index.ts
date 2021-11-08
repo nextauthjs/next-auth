@@ -1,6 +1,6 @@
-import { setCookie } from "./cookie"
 import logger, { setLogger } from "../lib/logger"
 import { NextAuthHandler } from "../core"
+import { serialize } from "cookie"
 
 import type {
   GetServerSidePropsContext,
@@ -57,7 +57,10 @@ async function NextAuthNextHandler(
   res.status(status)
 
   cookies?.forEach((cookie) => {
-    setCookie(res, cookie)
+    res.setHeader(
+      "Set-Cookie",
+      serialize(cookie.name, cookie.value, cookie.options)
+    )
   })
 
   headers?.forEach((header) => {
@@ -121,7 +124,10 @@ export async function getServerSession(
   const { body, cookies } = session
 
   cookies?.forEach((cookie) => {
-    setCookie(context.res, cookie)
+    context.res.setHeader(
+      "Set-Cookie",
+      serialize(cookie.name, cookie.value, cookie.options)
+    )
   })
 
   if (body && Object.keys(body).length) return body as Session
