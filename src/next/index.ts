@@ -1,6 +1,5 @@
 import logger, { setLogger } from "../lib/logger"
 import { NextAuthHandler } from "../core"
-import { serialize } from "cookie"
 
 import type {
   GetServerSidePropsContext,
@@ -13,6 +12,7 @@ import type {
   NextAuthRequest,
   NextAuthResponse,
 } from "../lib/types"
+import { setCookie } from "./cookie"
 
 async function NextAuthNextHandler(
   req: NextApiRequest,
@@ -56,12 +56,7 @@ async function NextAuthNextHandler(
 
   res.status(status)
 
-  cookies?.forEach((cookie) => {
-    res.setHeader(
-      "Set-Cookie",
-      serialize(cookie.name, cookie.value, cookie.options)
-    )
-  })
+  cookies?.forEach((cookie) => setCookie(res, cookie))
 
   headers?.forEach((header) => {
     res.setHeader(header.key, header.value)
@@ -123,12 +118,7 @@ export async function getServerSession(
 
   const { body, cookies } = session
 
-  cookies?.forEach((cookie) => {
-    context.res.setHeader(
-      "Set-Cookie",
-      serialize(cookie.name, cookie.value, cookie.options)
-    )
-  })
+  cookies?.forEach((cookie) => setCookie(context.res, cookie))
 
   if (body && Object.keys(body).length) return body as Session
   return null
