@@ -57,7 +57,7 @@ export default function renderPage({
         title: "Verify Request",
       })
     },
-    error(props) {
+    error(props?: any) {
       return send({
         ...ErrorPage({ url, theme, ...props }),
         title: "Error",

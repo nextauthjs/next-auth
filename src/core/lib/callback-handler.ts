@@ -36,7 +36,7 @@ export default async function callbackHandler(params: {
     adapter,
     jwt,
     events,
-    session: { jwt: useJwtSession },
+    session: { strategy: sessionStrategy },
   } = options
 
   // If no adapter is configured then we don't have a database and cannot
@@ -60,6 +60,8 @@ export default async function callbackHandler(params: {
   let session: AdapterSession | JWT | null = null
   let user: AdapterUser | null = null
   let isNewUser = false
+
+  const useJwtSession = sessionStrategy === "jwt"
 
   if (sessionToken) {
     if (useJwtSession) {

@@ -1,9 +1,10 @@
-import { Adapter } from "../../adapters"
-import { InternalOptions } from "../../lib/types"
-import { OutgoingResponse } from ".."
-import { Session } from "../.."
 import { fromDate } from "../lib/utils"
-import { SessionStore } from "../lib/cookie"
+
+import type { Adapter } from "../../adapters"
+import type { InternalOptions } from "../../lib/types"
+import type { OutgoingResponse } from ".."
+import type { Session } from "../.."
+import type { SessionStore } from "../lib/cookie"
 
 interface SessionParams {
   options: InternalOptions
@@ -19,9 +20,14 @@ export default async function session(
   params: SessionParams
 ): Promise<OutgoingResponse<Session | {}>> {
   const { options, sessionStore } = params
-  const { adapter, jwt, events, callbacks, logger } = options
-  const useJwtSession = options.session.jwt
-  const sessionMaxAge = options.session.maxAge
+  const {
+    adapter,
+    jwt,
+    events,
+    callbacks,
+    logger,
+    session: { strategy: sessionStrategy, maxAge: sessionMaxAge },
+  } = options
 
   const response: OutgoingResponse<Session | {}> = {
     body: {},
@@ -33,7 +39,7 @@ export default async function session(
 
   if (!sessionToken) return response
 
-  if (useJwtSession) {
+  if (sessionStrategy === "jwt") {
     try {
       const decodedToken = await jwt.decode({
         ...jwt,
@@ -79,7 +85,7 @@ export default async function session(
       await events.session?.({ session: newSession, token })
     } catch (error) {
       // If JWT not verifiable, make sure the cookie for it is removed and return empty object
-      logger.error("JWT_SESSION_ERROR", error)
+      logger.error("JWT_SESSION_ERROR", error as Error)
 
       response.cookies?.push(...sessionStore.clean())
     }
@@ -154,7 +160,7 @@ export default async function session(
         response.cookies?.push(...sessionStore.clean())
       }
     } catch (error) {
-      logger.error("SESSION_ERROR", error)
+      logger.error("SESSION_ERROR", error as Error)
     }
   }
 

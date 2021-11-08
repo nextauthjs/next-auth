@@ -6,9 +6,9 @@ import type { Adapter } from "../adapters"
  * @source https://iaincollins.medium.com/error-handling-in-javascript-a6172ccdf9af
  */
 export class UnknownError extends Error {
-  constructor(error) {
+  constructor(error: Error | string) {
     // Support passing error or string
-    super(error?.message ?? error)
+    super((error as Error)?.message ?? error)
     this.name = "UnknownError"
     if (error instanceof Error) {
       this.stack = error.stack
@@ -56,10 +56,10 @@ export function eventsErrorHandler(
   return Object.keys(methods).reduce<any>((acc, name) => {
     acc[name] = async (...args: any[]) => {
       try {
-        const method: Method = methods[name]
+        const method: Method = methods[name as keyof Method]
         return await method(...args)
       } catch (e) {
-        logger.error(`${upperSnake(name)}_EVENT_ERROR`, e)
+        logger.error(`${upperSnake(name)}_EVENT_ERROR`, e as Error)
       }
     }
     return acc
@@ -77,11 +77,11 @@ export function adapterErrorHandler(
     acc[name] = async (...args: any[]) => {
       try {
         logger.debug(`adapter_${name}`, { args })
-        const method: Method = adapter[name as any]
+        const method: Method = adapter[name as keyof Method]
         return await method(...args)
       } catch (error) {
-        logger.error(`adapter_error_${name}`, error)
-        const e = new UnknownError(error)
+        logger.error(`adapter_error_${name}`, error as Error)
+        const e = new UnknownError(error as Error)
         e.name = `${capitalize(name)}Error`
         throw e
       }

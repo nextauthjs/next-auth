@@ -1,15 +1,24 @@
 import { serialize } from "cookie"
+
 import type { IncomingHttpHeaders } from "http"
 import type { CookiesOptions } from "../.."
-import type { CookieOption, LoggerInstance } from "../types"
+import type { CookieOption, LoggerInstance, SessionStrategy } from "../types"
 
 // REVIEW: Is there any way to defer two types of strings?
 
 /** Stringified form of `JWT`. Extract the content with `jwt.decode` */
 export type JWTString = string
 
-/** If `options.session.jwt` is set to `true`, this is a stringified `JWT`. In case of a database persisted session, this is the `sessionToken` of the session in the database.. */
-export type SessionToken<T extends "jwt" | "db" = "jwt"> = T extends "jwt"
+export type SetCookieOptions = Partial<CookieOption["options"]> & {
+  expires?: Date | string
+  encode?: (val: unknown) => string
+}
+
+/**
+ * If `options.session.strategy` is set to `jwt`, this is a stringified `JWT`.
+ * In case of `strategy: "database"`, this is the `sessionToken` of the session in the database.
+ */
+export type SessionToken<T extends SessionStrategy = "jwt"> = T extends "jwt"
   ? JWTString
   : string
 
@@ -23,7 +32,7 @@ export type SessionToken<T extends "jwt" | "db" = "jwt"> = T extends "jwt"
  *
  * @TODO Review cookie settings (names, options)
  */
-export function defaultCookies(useSecureCookies): CookiesOptions {
+export function defaultCookies(useSecureCookies: boolean): CookiesOptions {
   const cookiePrefix = useSecureCookies ? "__Secure-" : ""
   return {
     // default cookie options

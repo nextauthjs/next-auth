@@ -1,10 +1,11 @@
 import oAuthCallback from "../lib/oauth/callback"
 import callbackHandler from "../lib/callback-handler"
-import * as cookie from "../lib/cookie"
 import { hashToken } from "../lib/utils"
-import { InternalOptions } from "../../lib/types"
-import { IncomingRequest, OutgoingResponse } from ".."
-import { SessionStore } from "../lib/cookie"
+
+import type { InternalOptions } from "../../lib/types"
+import type { IncomingRequest, OutgoingResponse } from ".."
+import type { Cookie, SessionStore } from "../lib/cookie"
+import type { User } from "../.."
 
 /** Handle callbacks from login services */
 export default async function callback(params: {
@@ -27,11 +28,13 @@ export default async function callback(params: {
     jwt,
     events,
     callbacks,
-    session: { jwt: useJwtSession, maxAge: sessionMaxAge },
+    session: { strategy: sessionStrategy, maxAge: sessionMaxAge },
     logger,
   } = options
 
-  const cookies: cookie.Cookie[] = []
+  const cookies: Cookie[] = []
+
+  const useJwtSession = sessionStrategy === "jwt"
 
   if (provider.type === "oauth") {
     try {
@@ -100,7 +103,9 @@ export default async function callback(params: {
           }
         } catch (error) {
           return {
-            redirect: `${url}/error?error=${encodeURIComponent(error.message)}`,
+            redirect: `${url}/error?error=${encodeURIComponent(
+              (error as Error).message
+            )}`,
             cookies,
           }
         }
@@ -173,24 +178,24 @@ export default async function callback(params: {
         // Callback URL is already verified at this point, so safe to use if specified
         return { redirect: callbackUrl, cookies }
       } catch (error) {
-        if (error.name === "AccountNotLinkedError") {
+        if ((error as Error).name === "AccountNotLinkedError") {
           // If the email on the account is already linked, but not with this OAuth account
           return {
             redirect: `${url}/error?error=OAuthAccountNotLinked`,
             cookies,
           }
-        } else if (error.name === "CreateUserError") {
+        } else if ((error as Error).name === "CreateUserError") {
           return { redirect: `${url}/error?error=OAuthCreateAccount`, cookies }
         }
-        logger.error("OAUTH_CALLBACK_HANDLER_ERROR", error)
+        logger.error("OAUTH_CALLBACK_HANDLER_ERROR", error as Error)
         return { redirect: `${url}/error?error=Callback`, cookies }
       }
     } catch (error) {
-      if (error.name === "OAuthCallbackError") {
-        logger.error("CALLBACK_OAUTH_ERROR", error)
+      if ((error as Error).name === "OAuthCallbackError") {
+        logger.error("CALLBACK_OAUTH_ERROR", error as Error)
         return { redirect: `${url}/error?error=OAuthCallback`, cookies }
       }
-      logger.error("OAUTH_CALLBACK_ERROR", error)
+      logger.error("OAUTH_CALLBACK_ERROR", error as Error)
       return { redirect: `${url}/error?error=Callback`, cookies }
     }
   } else if (provider.type === "email") {
@@ -249,7 +254,9 @@ export default async function callback(params: {
         }
       } catch (error) {
         return {
-          redirect: `${url}/error?error=${encodeURIComponent(error.message)}`,
+          redirect: `${url}/error?error=${encodeURIComponent(
+            (error as Error).message
+          )}`,
           cookies,
         }
       }
@@ -322,10 +329,10 @@ export default async function callback(params: {
       // Callback URL is already verified at this point, so safe to use if specified
       return { redirect: callbackUrl, cookies }
     } catch (error) {
-      if (error.name === "CreateUserError") {
+      if ((error as Error).name === "CreateUserError") {
         return { redirect: `${url}/error?error=EmailCreateAccount`, cookies }
       }
-      logger.error("CALLBACK_EMAIL_ERROR", error)
+      logger.error("CALLBACK_EMAIL_ERROR", error as Error)
       return { redirect: `${url}/error?error=Callback`, cookies }
     }
   } else if (provider.type === "credentials" && method === "POST") {
@@ -359,14 +366,14 @@ export default async function callback(params: {
 
     const credentials = body
 
-    let user
+    let user: User
     try {
-      user = await provider.authorize(credentials, {
+      user = (await provider.authorize(credentials, {
         query,
         body,
         headers,
         method,
-      })
+      })) as User
       if (!user) {
         return {
           status: 401,
@@ -379,7 +386,9 @@ export default async function callback(params: {
       }
     } catch (error) {
       return {
-        redirect: `${url}/error?error=${encodeURIComponent(error.message)}`,
+        redirect: `${url}/error?error=${encodeURIComponent(
+          (error as Error).message
+        )}`,
         cookies,
       }
     }
@@ -409,7 +418,9 @@ export default async function callback(params: {
       }
     } catch (error) {
       return {
-        redirect: `${url}/error?error=${encodeURIComponent(error.message)}`,
+        redirect: `${url}/error?error=${encodeURIComponent(
+          (error as Error).message
+        )}`,
         cookies,
       }
     }

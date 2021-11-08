@@ -46,3 +46,5 @@ export interface JWTOptions {
   /** Override this method to control the NextAuth.js issued JWT decoding. */
   decode: typeof decode
 }
+
+export type Secret = string | Buffer

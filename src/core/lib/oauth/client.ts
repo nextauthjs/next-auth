@@ -31,10 +31,8 @@ export async function openidClient(
 
   const client = new issuer.Client(
     {
-      // @ts-expect-error
-      client_id: provider.clientId,
-      // @ts-expect-error
-      client_secret: provider.clientSecret,
+      client_id: provider.clientId as string,
+      client_secret: provider.clientSecret as string,
       redirect_uris: [provider.callbackUrl],
       ...provider.client,
     },

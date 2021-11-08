@@ -1,7 +1,7 @@
-import { Adapter } from "src/adapters"
-import { InternalOptions } from "../../lib/types"
-import { OutgoingResponse } from ".."
-import { SessionStore } from "../lib/cookie"
+import type { Adapter } from "../../adapters"
+import type { InternalOptions } from "../../lib/types"
+import type { OutgoingResponse } from ".."
+import type { SessionStore } from "../lib/cookie"
 
 /** Handle requests to /api/auth/signout */
 export default async function signout(params: {
@@ -9,16 +9,14 @@ export default async function signout(params: {
   sessionStore: SessionStore
 }): Promise<OutgoingResponse> {
   const { options, sessionStore } = params
-  const { adapter, events, jwt, callbackUrl, logger } = options
+  const { adapter, events, jwt, callbackUrl, logger, session } = options
 
   const sessionToken = sessionStore?.value
   if (!sessionToken) {
     return { redirect: callbackUrl }
   }
 
-  const useJwtSession = options.session.jwt
-
-  if (useJwtSession) {
+  if (session.strategy === "jwt") {
     // Dispatch signout event
     try {
       const decodedJwt = await jwt.decode({ ...jwt, token: sessionToken })
@@ -36,7 +34,7 @@ export default async function signout(params: {
       await events.signOut?.({ session })
     } catch (error) {
       // If error, log it but continue
-      logger.error("SIGNOUT_ERROR", error)
+      logger.error("SIGNOUT_ERROR", error as Error)
     }
   }
 

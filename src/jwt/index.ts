@@ -103,7 +103,7 @@ export async function getToken<R extends boolean = false>(
   }
 }
 
-async function getDerivedEncryptionKey(secret) {
+async function getDerivedEncryptionKey(secret: string | Buffer) {
   return await hkdf(
     "sha256",
     secret,

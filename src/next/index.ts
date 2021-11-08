@@ -1,13 +1,18 @@
-import {
+import { setCookie } from "./cookie"
+import logger, { setLogger } from "../lib/logger"
+import { NextAuthHandler } from "../core"
+
+import type {
   GetServerSidePropsContext,
   NextApiRequest,
   NextApiResponse,
 } from "next"
-import { NextAuthOptions, Session } from ".."
-import { NextAuthHandler } from "../core"
-import { NextAuthAction } from "../lib/types"
-import { setCookie } from "./cookie"
-import logger, { setLogger } from "../lib/logger"
+import type { NextAuthOptions, Session } from ".."
+import type {
+  NextAuthAction,
+  NextAuthRequest,
+  NextAuthResponse,
+} from "../lib/types"
 
 async function NextAuthNextHandler(
   req: NextApiRequest,
@@ -44,7 +49,7 @@ async function NextAuthNextHandler(
       method: req.method ?? "GET",
       action: req.query.nextauth[0] as NextAuthAction,
       providerId: req.query.nextauth[1],
-      error: req.query.nextauth[1],
+      error: (req.query.error as string | undefined) ?? req.query.nextauth[1],
     },
     options,
   })
@@ -82,9 +87,14 @@ function NextAuth(
 ): any
 
 /** Tha main entry point to next-auth */
-function NextAuth(...args) {
+function NextAuth(
+  ...args:
+    | [NextAuthOptions]
+    | [NextApiRequest, NextApiResponse, NextAuthOptions]
+) {
   if (args.length === 1) {
-    return async (req, res) => await NextAuthNextHandler(req, res, args[0])
+    return async (req: NextAuthRequest, res: NextAuthResponse) =>
+      await NextAuthNextHandler(req, res, args[0])
   }
 
   return NextAuthNextHandler(args[0], args[1], args[2])
@@ -116,4 +126,14 @@ export async function getServerSession(
 
   if (body && Object.keys(body).length) return body as Session
   return null
+}
+
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace NodeJS {
+    interface ProcessEnv {
+      NEXTAUTH_URL?: string
+      VERCEL_URL?: string
+    }
+  }
 }

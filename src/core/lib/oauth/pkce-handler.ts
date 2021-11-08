@@ -33,9 +33,6 @@ export async function createPKCE(options: InternalOptions<"oauth">): Promise<
     token: { code_verifier: codeVerifier },
   })
 
-  const cookieExpires = new Date()
-  cookieExpires.setTime(cookieExpires.getTime() + PKCE_MAX_AGE * 1000)
-
   logger.debug("CREATE_PKCE_CHALLENGE_VERIFIER", {
     pkce: {
       code_challenge: codeChallenge,
@@ -49,7 +46,7 @@ export async function createPKCE(options: InternalOptions<"oauth">): Promise<
       value: encryptedCodeVerifier,
       options: {
         ...cookies.pkceCodeVerifier.options,
-        expires: cookieExpires,
+        maxAge: PKCE_MAX_AGE,
       },
     },
     code_challenge: codeChallenge,

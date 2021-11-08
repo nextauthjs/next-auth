@@ -36,25 +36,25 @@ export default function parseProviders(params: {
 function normalizeProvider(provider?: Provider) {
   if (!provider) return
 
-  const normalizedProvider: any = Object.entries(provider).reduce(
-    (acc, [key, value]) => {
-      if (
-        ["authorization", "token", "userinfo"].includes(key) &&
-        typeof value === "string"
-      ) {
-        const url = new URL(value)
-        acc[key] = {
-          url: `${url.origin}${url.pathname}`,
-          params: Object.fromEntries(url.searchParams ?? []),
-        }
-      } else {
-        acc[key] = value
+  const normalizedProvider: InternalProvider = Object.entries(
+    provider
+  ).reduce<InternalProvider>((acc, [key, value]) => {
+    if (
+      ["authorization", "token", "userinfo"].includes(key) &&
+      typeof value === "string"
+    ) {
+      const url = new URL(value)
+      ;(acc as any)[key] = {
+        url: `${url.origin}${url.pathname}`,
+        params: Object.fromEntries(url.searchParams ?? []),
       }
+    } else {
+      acc[key as keyof InternalProvider] = value
+    }
 
-      return acc
-    },
-    {}
-  )
+    return acc
+    // eslint-disable-next-line @typescript-eslint/prefer-reduce-type-parameter, @typescript-eslint/consistent-type-assertions
+  }, {} as InternalProvider)
 
   // Checks only work on OAuth 2.x + OIDC providers
   if (
@@ -62,7 +62,7 @@ function normalizeProvider(provider?: Provider) {
     !provider.version?.startsWith("1.") &&
     !provider.checks
   ) {
-    normalizedProvider.checks = ["state"]
+    ;(normalizedProvider as InternalProvider<"oauth">).checks = ["state"]
   }
-  return normalizedProvider as InternalProvider
+  return normalizedProvider
 }
