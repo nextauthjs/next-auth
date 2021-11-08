@@ -57,7 +57,7 @@ export interface GetTokenParams<R extends boolean = false> {
   raw?: R
   secret: string
   decode?: typeof decode
-  logger: LoggerInstance | Console
+  logger?: LoggerInstance | Console
 }
 
 /**
