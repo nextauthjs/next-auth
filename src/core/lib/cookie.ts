@@ -83,7 +83,7 @@ export interface Cookie extends CookieOption {
 export class SessionStore {
   #chunks?: string[]
   #option: CookieOption
-  #logger: LoggerInstance
+  #logger: LoggerInstance | Console
   #ALLOWED_COOKIE_SIZE = 4096
   #CHUNK_SIZE: number
 
@@ -95,7 +95,7 @@ export class SessionStore {
       cookies?: Record<string, string>
       headers?: Record<string, string> | IncomingHttpHeaders
     },
-    logger: LoggerInstance
+    logger: LoggerInstance | Console
   ) {
     this.#logger = logger
     this.#option = option

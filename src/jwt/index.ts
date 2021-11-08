@@ -4,6 +4,7 @@ import { v4 as uuid } from "uuid"
 import { SessionStore } from "../core/lib/cookie"
 import type { NextApiRequest } from "next"
 import type { JWT, JWTDecodeParams, JWTEncodeParams } from "./types"
+import type { LoggerInstance } from ".."
 
 export * from "./types"
 
@@ -56,6 +57,7 @@ export interface GetTokenParams<R extends boolean = false> {
   raw?: R
   secret: string
   decode?: typeof decode
+  logger: LoggerInstance | Console
 }
 
 /**
@@ -77,6 +79,7 @@ export async function getToken<R extends boolean = false>(
       : "next-auth.session-token",
     raw,
     decode: _decode = decode,
+    logger = console,
   } = params ?? {}
 
   if (!req) throw new Error("Must pass `req` to JWT getToken()")
@@ -84,7 +87,7 @@ export async function getToken<R extends boolean = false>(
   const sessionStore = new SessionStore(
     { name: cookieName, options: { secure: secureCookie } },
     { cookies: req.cookies, headers: req.headers },
-    console
+    logger
   )
 
   const token = sessionStore.value
