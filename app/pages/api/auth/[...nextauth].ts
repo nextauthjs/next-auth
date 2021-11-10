@@ -171,7 +171,7 @@ export const authOptions: NextAuthOptions = {
   jwt: {
     secret: process.env.SECRET,
   },
-  debug: false,
+  debug: true,
   theme: {
     colorScheme: "auto",
     logo: "https://next-auth.js.org/img/logo/logo-sm.png",
