@@ -1,7 +1,5 @@
-import { createTransport } from "nodemailer"
-
 import { CommonProviderOptions } from "."
-import { Options as SMTPConnectionOptions } from "nodemailer/lib/smtp-connection"
+import type { Options as SMTPConnectionOptions } from "nodemailer/lib/smtp-connection"
 import { Awaitable } from ".."
 
 export interface EmailConfig extends CommonProviderOptions {
@@ -72,6 +70,7 @@ export default function Email(options: EmailUserConfig): EmailConfig {
       provider: { server, from },
     }) {
       const { host } = new URL(url)
+      const { createTransport } = await import("nodemailer")
       const transport = createTransport(server)
       await transport.sendMail({
         to: email,
