@@ -1,8 +1,28 @@
-import { serialize } from "cookie"
-
 import type { IncomingHttpHeaders } from "http"
 import type { CookiesOptions } from "../.."
 import type { CookieOption, LoggerInstance, SessionStrategy } from "../types"
+
+// Uncomment to recalculate the estimated size
+// of an empty session cookie
+// import { serialize } from "cookie"
+// console.log(
+//   "Cookie estimated to be ",
+//   serialize(`__Secure.next-auth.session-token.0`, "", {
+//     expires: new Date(),
+//     httpOnly: true,
+//     maxAge: Number.MAX_SAFE_INTEGER,
+//     path: "/",
+//     sameSite: "strict",
+//     secure: true,
+//     domain: "example.com",
+//   }).length,
+//   " bytes"
+// )
+
+const ALLOWED_COOKIE_SIZE = 4096
+// Based on commented out section above
+const ESTIMATED_EMPTY_COOKIE_SIZE = 163
+const CHUNK_SIZE = ALLOWED_COOKIE_SIZE - ESTIMATED_EMPTY_COOKIE_SIZE
 
 // REVIEW: Is there any way to defer two types of strings?
 
@@ -80,14 +100,12 @@ export interface Cookie extends CookieOption {
   value: string
 }
 
+type Chunks = Record<string, string>
+
 export class SessionStore {
-  #chunks?: string[]
+  #chunks: Chunks = {}
   #option: CookieOption
   #logger: LoggerInstance | Console
-  #ALLOWED_COOKIE_SIZE = 4096
-  #CHUNK_SIZE: number
-
-  type: "cookie" | "bearer" = "cookie"
 
   constructor(
     option: CookieOption,
@@ -100,58 +118,58 @@ export class SessionStore {
     this.#logger = logger
     this.#option = option
 
-    this.#CHUNK_SIZE =
-      this.#ALLOWED_COOKIE_SIZE -
-      serialize(`${option.name}.0`, "", option.options).length
-
     if (!req) return
 
-    const chunks: string[] = []
     for (const name in req.cookies) {
       if (name.startsWith(option.name)) {
-        chunks.push(req.cookies[name])
+        this.#chunks[name] = req.cookies[name]
       }
-    }
-
-    if (chunks.length) this.#chunks = chunks
-
-    const bearer = (req.headers?.Authorization as string | undefined)?.replace(
-      "Bearer ",
-      ""
-    )
-    if (bearer) {
-      logger.debug("Found session token in request headers.", {})
-      this.type = "bearer"
-      this.#chunks = [bearer]
     }
   }
 
   get value() {
-    return this.#chunks?.join("")
+    return Object.values(this.#chunks)?.join("")
   }
 
   /** Given a cookie, return a list of cookies, chunked to fit the allowed cookie size. */
   #chunk(cookie: Cookie): Cookie[] {
-    const chunkCount = Math.ceil(cookie.value.length / this.#CHUNK_SIZE)
-    if (chunkCount === 1) return [cookie]
+    const chunkCount = Math.ceil(cookie.value.length / CHUNK_SIZE)
 
-    this.#logger.debug(
-      `Cookie value is bigger than ${
-        this.#ALLOWED_COOKIE_SIZE
-      } bytes, needs chunking...`,
-      {
-        cookieSize: cookie.value.length,
-        chunkCount,
-      }
-    )
+    if (chunkCount === 1) {
+      this.#chunks[cookie.name] = cookie.value
+      return [cookie]
+    }
 
     const cookies: Cookie[] = []
     for (let i = 0; i < chunkCount; i++) {
-      const chunk = cookie.value.substr(i * this.#CHUNK_SIZE, this.#CHUNK_SIZE)
-      cookies.push({ ...cookie, name: `${cookie.name}.${i}`, value: chunk })
+      const name = `${cookie.name}.${i}`
+      const value = cookie.value.substr(i * CHUNK_SIZE, CHUNK_SIZE)
+      cookies.push({ ...cookie, name, value })
+      this.#chunks[name] = value
     }
 
+    this.#logger.debug("CHUNKING_SESSION_COOKIE", {
+      message: `Session cookie exceeds allowed ${ALLOWED_COOKIE_SIZE} bytes.`,
+      emptyCookieSize: ESTIMATED_EMPTY_COOKIE_SIZE,
+      valueSize: cookie.value.length,
+      chunks: cookies.map((c) => c.value.length + ESTIMATED_EMPTY_COOKIE_SIZE),
+    })
+
     return cookies
+  }
+
+  /** Returns cleaned cookie chunks. */
+  #clean(): Record<string, Cookie> {
+    const cleanedChunks: Record<string, Cookie> = {}
+    for (const name in this.#chunks) {
+      delete this.#chunks?.[name]
+      cleanedChunks[name] = {
+        name,
+        value: "",
+        options: { ...this.#option.options, maxAge: 0 },
+      }
+    }
+    return cleanedChunks
   }
 
   /**
@@ -159,35 +177,20 @@ export class SessionStore {
    * If the cookie has changed from chunked to unchunked or vice versa,
    * it deletes the old cookies as well.
    */
-  chunk(value: string, cookieOptions: Cookie["options"]): Cookie[] {
-    const cookies: Record<string, Cookie> = {}
+  chunk(value: string, options: Partial<Cookie["options"]>): Cookie[] {
+    // Assume all cookies should be cleaned by default
+    const cookies: Record<string, Cookie> = this.#clean()
 
-    // 1. assume all cookies should be cleaned
-    const cleaned = this.clean()
-    if (cleaned.length === 1) {
-      cookies.unchunked = cleaned[0]
-    } else {
-      cleaned.forEach((cookie, i) => {
-        cookies[i] = cookie
-      })
-    }
-
-    // 2. calculate new chunks
-    const chunkedCookies = this.#chunk({
+    // Calculate new chunks
+    const chunked = this.#chunk({
       name: this.#option.name,
       value,
-      options: cookieOptions,
+      options: { ...this.#option.options, ...options },
     })
-    this.#chunks = chunkedCookies.map((c) => c.value)
 
-    // 3.a If only one new chunk, use it, but don't touch the chunks to be cleaned
-    if (chunkedCookies.length === 1) {
-      cookies.unchunked = chunkedCookies[0]
-    } else {
-      // 3.b If multiple new chunks, override the chunks that was marked for clean-up
-      chunkedCookies.forEach((chunk, i) => {
-        cookies[i] = chunk
-      })
+    // Update stored chunks / cookies
+    for (const chunk of chunked) {
+      cookies[chunk.name] = chunk
     }
 
     return Object.values(cookies)
@@ -195,18 +198,6 @@ export class SessionStore {
 
   /** Returns a list of cookies that should be cleaned. */
   clean(): Cookie[] {
-    if (!this.#chunks) return []
-    const clean = {
-      name: this.#option.name,
-      value: "",
-      options: { ...this.#option.options, maxAge: 0 },
-    }
-
-    if (this.#chunks.length === 1) return [clean]
-
-    return this.#chunks?.map((_, i) => ({
-      ...clean,
-      name: `${this.#option.name}.${i}`,
-    }))
+    return Object.values(this.#clean())
   }
 }
