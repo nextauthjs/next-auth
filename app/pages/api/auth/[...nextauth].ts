@@ -38,21 +38,6 @@ import AzureB2C from "next-auth/providers/azure-ad-b2c"
 // })
 // const adapter = FaunaAdapter(client)
 export const authOptions: NextAuthOptions = {
-  callbacks: {
-    jwt({ token, profile }) {
-      if (profile) {
-        console.log(profile)
-      }
-      return {
-        ...token,
-        value:
-          "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-      }
-    },
-    session({ session, token }) {
-      return { ...session, value: token.value }
-    },
-  },
   // adapter,
   providers: [
     // E-mail
