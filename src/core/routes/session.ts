@@ -76,7 +76,6 @@ export default async function session(
 
       // Set cookie, to also update expiry date on cookie
       const sessionCookies = sessionStore.chunk(newToken, {
-        ...options.cookies.sessionToken.options,
         expires: newExpires,
       })
 

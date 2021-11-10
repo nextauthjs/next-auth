@@ -144,7 +144,6 @@ export default async function callback(params: {
           cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
 
           const sessionCookies = sessionStore.chunk(newToken, {
-            ...options.cookies.sessionToken.options,
             expires: cookieExpires,
           })
           cookies.push(...sessionCookies)
@@ -295,7 +294,6 @@ export default async function callback(params: {
         cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
 
         const sessionCookies = sessionStore.chunk(newToken, {
-          ...options.cookies.sessionToken.options,
           expires: cookieExpires,
         })
         cookies.push(...sessionCookies)
@@ -448,7 +446,6 @@ export default async function callback(params: {
     cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
 
     const sessionCookies = sessionStore.chunk(newToken, {
-      ...options.cookies.sessionToken.options,
       expires: cookieExpires,
     })
 
