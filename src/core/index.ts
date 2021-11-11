@@ -9,7 +9,7 @@ import { NextAuthAction } from "../lib/types"
 
 export interface IncomingRequest {
   /** @default "http://localhost:3000" */
-  host?: string
+  host: string
   method: string
   cookies?: Record<string, any>
   headers?: Record<string, any>

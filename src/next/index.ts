@@ -25,7 +25,7 @@ async function NextAuthNextHandler(
     return res.status(500).send(error.message)
   }
 
-  const host = process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL
+  const host = (process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL) as string
   if (!host) logger.warn("NEXTAUTH_URL")
 
   const {
@@ -105,6 +105,7 @@ export async function getServerSession(
   const session = await NextAuthHandler<Session | {}>({
     options,
     req: {
+      host: (process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL) as string,
       action: "session",
       method: "GET",
       cookies: context.req.cookies,
