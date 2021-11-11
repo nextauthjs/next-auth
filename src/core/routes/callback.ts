@@ -14,11 +14,10 @@ export default async function callback(params: {
   method: IncomingRequest["method"]
   body: IncomingRequest["body"]
   headers: IncomingRequest["headers"]
+  cookies: IncomingRequest["cookies"]
   sessionStore: SessionStore
-  codeVerifier?: string
 }): Promise<OutgoingResponse> {
-  const { options, query, body, method, headers, sessionStore, codeVerifier } =
-    params
+  const { options, query, body, method, headers, sessionStore } = params
   const {
     provider,
     adapter,
@@ -48,7 +47,7 @@ export default async function callback(params: {
         body,
         method,
         options,
-        codeVerifier,
+        cookies: params.cookies,
       })
 
       if (oauthCookies) cookies.push(...oauthCookies)

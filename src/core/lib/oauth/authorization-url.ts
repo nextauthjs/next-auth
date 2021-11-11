@@ -2,9 +2,11 @@ import { openidClient } from "./client"
 import { oAuth1Client } from "./client-legacy"
 import { createState } from "./state-handler"
 import { createPKCE } from "./pkce-handler"
-import { InternalOptions } from "../../../lib/types"
-import { IncomingRequest } from "../.."
-import { Cookie } from "../cookie"
+
+import type { AuthorizationParameters } from "openid-client"
+import type { InternalOptions } from "../../../lib/types"
+import type { IncomingRequest } from "../.."
+import type { Cookie } from "../cookie"
 
 /**
  *
@@ -48,24 +50,28 @@ export default async function getAuthorizationUrl(params: {
       return { redirect: url }
     }
 
-    const cookies: Cookie[] = []
     const client = await openidClient(options)
+
+    const authorizationParams: AuthorizationParameters = params
+    const cookies: Cookie[] = []
+
+    const state = await createState(options)
+    if (state) {
+      authorizationParams.state = state.value
+      cookies.push(state.cookie)
+    }
+
     const pkce = await createPKCE(options)
-    if (pkce?.cookie) {
+    if (pkce) {
+      authorizationParams.code_challenge = pkce.code_challenge
+      authorizationParams.code_challenge_method = pkce.code_challenge_method
       cookies.push(pkce.cookie)
     }
 
-    const url = client.authorizationUrl({
-      ...params,
-      ...pkce,
-      state: createState(options),
-    })
+    const url = client.authorizationUrl(authorizationParams)
 
-    logger.debug("GET_AUTHORIZATION_URL", { url })
-    return {
-      redirect: url,
-      cookies,
-    }
+    logger.debug("GET_AUTHORIZATION_URL", { url, cookies })
+    return { redirect: url, cookies }
   } catch (error) {
     logger.error("GET_AUTHORIZATION_URL_ERROR", error as Error)
     throw error

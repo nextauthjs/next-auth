@@ -63,8 +63,6 @@ export async function NextAuthHandler<
     options.logger
   )
 
-  const codeVerifier = req.cookies?.[options.cookies.pkceCodeVerifier.name]
-
   if (req.method === "GET") {
     const render = renderPage({ options, query: req.query, cookies })
     const { pages } = options
@@ -100,9 +98,9 @@ export async function NextAuthHandler<
             query: req.query,
             method: req.method,
             headers: req.headers,
+            cookies: req.cookies,
             options,
             sessionStore,
-            codeVerifier,
           })
           if (callback.cookies) cookies.push(...callback.cookies)
           return { ...callback, cookies }
@@ -182,9 +180,9 @@ export async function NextAuthHandler<
             query: req.query,
             method: req.method,
             headers: req.headers,
+            cookies: req.cookies,
             options,
             sessionStore,
-            codeVerifier,
           })
           if (callback.cookies) cookies.push(...callback.cookies)
           return { ...callback, cookies }
