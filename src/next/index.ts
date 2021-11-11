@@ -25,7 +25,7 @@ async function NextAuthNextHandler(
     return res.status(500).send(error.message)
   }
 
-  const host = process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL
+  const host = (process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL) as string
   if (!host) logger.warn("NEXTAUTH_URL")
 
   const {
@@ -102,9 +102,13 @@ export async function getServerSession(
     | { req: NextApiRequest; res: NextApiResponse },
   options: NextAuthOptions
 ): Promise<Session | null> {
+  const host = (process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL) as string
+  if (!host) logger.warn("NEXTAUTH_URL")
+
   const session = await NextAuthHandler<Session | {}>({
     options,
     req: {
+      host,
       action: "session",
       method: "GET",
       cookies: context.req.cookies,
