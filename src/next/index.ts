@@ -102,13 +102,10 @@ export async function getServerSession(
     | { req: NextApiRequest; res: NextApiResponse },
   options: NextAuthOptions
 ): Promise<Session | null> {
-  const host = (process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL) as string
-  if (!host) logger.warn("NEXTAUTH_URL")
-
   const session = await NextAuthHandler<Session | {}>({
     options,
     req: {
-      host,
+      host: (process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL) as string,
       action: "session",
       method: "GET",
       cookies: context.req.cookies,
