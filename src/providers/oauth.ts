@@ -140,7 +140,7 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
    */
   options?: OAuthUserConfig<P>
   /** Read more at: https://github.com/panva/node-openid-client/tree/main/docs#customizing-http-requests */
-  httpOptions?: HttpOptions
+  httpOptions?: Pick<HttpOptions, "timeout">
 
   // These are kept around for backwards compatibility with OAuth 1.x
   accessTokenUrl?: string
