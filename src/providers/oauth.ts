@@ -9,10 +9,11 @@ import type {
   IssuerMetadata,
   OAuthCallbackChecks,
   OpenIDCallbackChecks,
+  HttpOptions,
 } from "openid-client"
 import type { JWK } from "jose"
 
-type Client = InstanceType<Issuer['Client']>;
+type Client = InstanceType<Issuer["Client"]>
 
 export type { OAuthProviderType } from "./oauth-types"
 
@@ -138,6 +139,8 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
    * with the default configuration.
    */
   options?: OAuthUserConfig<P>
+  /** Read more at: https://github.com/panva/node-openid-client/tree/main/docs#customizing-http-requests */
+  httpOptions?: HttpOptions
 
   // These are kept around for backwards compatibility with OAuth 1.x
   accessTokenUrl?: string
