@@ -44,5 +44,12 @@ export async function openidClient(
   // and https://github.com/nextauthjs/next-auth/issues/3067
   client[custom.clock_tolerance] = 10
 
+  // https://github.com/nextauthjs/next-auth/discussions/3186
+  if (typeof provider.httpOptions?.timeout === "number") {
+    custom.setHttpOptionsDefaults({
+      timeout: provider.httpOptions.timeout,
+    })
+  }
+
   return client
 }
