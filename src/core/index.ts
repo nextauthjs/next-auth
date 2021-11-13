@@ -1,11 +1,13 @@
-import logger from "../lib/logger"
+import logger, { setLogger } from "../lib/logger"
 import * as routes from "./routes"
 import renderPage from "./pages"
-import type { NextAuthOptions } from "./types"
 import { init } from "./init"
-import { Cookie } from "./lib/cookie"
+import { NoAPIRouteError, NoSecretError } from "./errors"
 
-import { NextAuthAction } from "../lib/types"
+import type { NextAuthOptions } from "./types"
+import type { NextAuthAction } from "../lib/types"
+import type { Cookie } from "./lib/cookie"
+import type { ErrorType } from "./pages/error"
 
 export interface IncomingRequest {
   /** @default "http://localhost:3000" */
@@ -40,10 +42,49 @@ interface NextAuthHandlerParams {
   options: NextAuthOptions
 }
 
+/**
+ * Verify that the user configured `next-auth` correctly.
+ * Good place to mention deprecations as well.
+ *
+ * TODO: Make these less Next.js specific
+ */
+function assertConfig(params: NextAuthHandlerParams) {
+  if (!params.req.query?.nextauth) {
+    return new NoAPIRouteError(
+      "Cannot find [...nextauth].{js,ts} in `/pages/api/auth`. Make sure the filename is written correctly."
+    )
+  }
+
+  if (!params.options.secret) {
+    if (process.env.NODE_ENV === "production") {
+      return new NoSecretError("Please define a `secret` in production.")
+    } else {
+      logger.warn("NO_SECRET")
+    }
+  }
+
+  if (!params.req.host) logger.warn("NEXTAUTH_URL")
+}
+
 export async function NextAuthHandler<
   Body extends string | Record<string, any> | any[]
 >(params: NextAuthHandlerParams): Promise<OutgoingResponse<Body>> {
   const { options: userOptions, req } = params
+  setLogger(userOptions.logger, userOptions.debug)
+
+  const configError = assertConfig(params)
+  // Bail out early if there's an error in the user config
+  if (configError) {
+    logger.error(configError.code, configError)
+    if (userOptions.pages?.error) {
+      return {
+        redirect: `${userOptions.pages.error}?$error=Configuration`,
+      }
+    }
+    const render = renderPage({ theme: params.options.theme })
+    return render.error({ error: "configuration" })
+  }
+
   const { action, providerId, error } = req
 
   const { options, cookies } = await init({
@@ -62,7 +103,7 @@ export async function NextAuthHandler<
     req.headers?.Authorization?.replace("Bearer ", "")
 
   if (req.method === "GET") {
-    const render = renderPage({ options, query: req.query, cookies })
+    const render = renderPage({ ...options, query: req.query, cookies })
     const { pages } = options
     switch (action) {
       case "providers":
@@ -137,7 +178,7 @@ export async function NextAuthHandler<
           return { redirect: `${options.url}/signin?error=${error}`, cookies }
         }
 
-        return render.error({ error })
+        return render.error({ error: error as ErrorType })
       default:
     }
   } else if (req.method === "POST") {

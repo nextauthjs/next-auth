@@ -38,6 +38,16 @@ export class AccountNotLinkedError extends UnknownError {
   name = "AccountNotLinkedError"
 }
 
+export class NoAPIRouteError extends UnknownError {
+  name = "NoAPIRouteError"
+  code = "MISSING_NEXTAUTH_API_ROUTE_ERROR"
+}
+
+export class NoSecretError extends UnknownError {
+  name = "NoSecretError"
+  code = "NO_SECRET"
+}
+
 type Method = (...args: any[]) => Promise<any>
 
 export function upperSnake(s: string) {

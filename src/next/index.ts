@@ -1,60 +1,26 @@
-import {
+import { NextAuthHandler } from "../core"
+import { set as setCookie } from "../core/lib/cookie"
+
+import type {
   GetServerSidePropsContext,
   NextApiRequest,
   NextApiResponse,
 } from "next"
-import { NextAuthOptions, Session } from ".."
-import { NextAuthHandler } from "../core"
-import { NextAuthAction, NextAuthRequest, NextAuthResponse } from "../lib/types"
-import { set as setCookie } from "../core/lib/cookie"
-import logger, { setLogger } from "../lib/logger"
-import { NoAPIRouteError, NoSecretError } from "./errors"
-
-/**
- * Verify that the user configured `next-auth` correctly.
- * Good place to mention deprecations as well.
- */
-function assertConfig(options: {
-  query?: NextApiRequest["query"]
-  secret?: string
-  host?: string
-}) {
-  if (!options.query?.nextauth) {
-    return new NoAPIRouteError(
-      "Cannot find [...nextauth].{js,ts} in `/pages/api/auth`. Make sure the filename is written correctly."
-    )
-  }
-
-  if (!options.secret) {
-    if (process.env.NODE_ENV === "production") {
-      return new NoSecretError("Please define a `secret` in production.")
-    } else {
-      logger.warn("NO_SECRET")
-    }
-  }
-
-  if (!options.host) logger.warn("NEXTAUTH_URL")
-}
+import type { NextAuthOptions, Session } from ".."
+import type {
+  NextAuthAction,
+  NextAuthRequest,
+  NextAuthResponse,
+} from "../lib/types"
 
 async function NextAuthNextHandler(
   req: NextApiRequest,
   res: NextApiResponse,
   options: NextAuthOptions
 ) {
-  setLogger(options.logger, options.debug)
-
-  const host = process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL
-
-  const error = assertConfig({ query: req.query, secret: options.secret, host })
-
-  if (error) {
-    logger.error(error.code, error)
-    return res.status(500).send(error.message)
-  }
-
   const handler = await NextAuthHandler({
     req: {
-      host,
+      host: (process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL) as string,
       body: req.body,
       query: req.query,
       cookies: req.cookies,
