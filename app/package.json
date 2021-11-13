@@ -7,6 +7,7 @@
     "clean": "rm -rf .next",
     "dev": "npm-run-all --parallel dev:next watch:css copy:css ",
     "dev:next": "next dev",
+    "build": "next build",
     "copy:css": "cpx \"../css/**/*\" src/css --watch",
     "watch:css": "cd .. && npm run watch:css",
     "start": "next start",
