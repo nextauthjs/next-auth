@@ -20,7 +20,10 @@ type RenderPageParams = {
   >
 >
 
-/** Takes a request and response, and gives renderable pages */
+/**
+ * Unless the user defines their [own pages](https://next-auth.js.org/configuration/pages),
+ * we render a set of default ones, using Preact SSR.
+ */
 export default function renderPage(params: RenderPageParams) {
   const { url, theme, query, cookies } = params
 
