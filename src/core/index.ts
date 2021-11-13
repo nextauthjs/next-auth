@@ -78,7 +78,7 @@ export async function NextAuthHandler<
     logger.error(configError.code, configError)
     if (userOptions.pages?.error) {
       return {
-        redirect: `${userOptions.pages.error}?$error=Configuration`,
+        redirect: `${userOptions.pages.error}?error=Configuration`,
       }
     }
     const render = renderPage({ theme: params.options.theme })
