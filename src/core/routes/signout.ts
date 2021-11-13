@@ -9,15 +9,14 @@ export default async function signout(params: {
   sessionToken?: string
 }): Promise<OutgoingResponse> {
   const { options, sessionToken } = params
-  const { adapter, cookies, events, jwt, callbackUrl, logger } = options
+  const { adapter, cookies, events, jwt, callbackUrl, logger, session } =
+    options
 
   if (!sessionToken) {
     return { redirect: callbackUrl }
   }
 
-  const useJwtSession = options.session.jwt
-
-  if (useJwtSession) {
+  if (session.strategy === "jwt") {
     // Dispatch signout event
     try {
       const decodedJwt = await jwt.decode({ ...jwt, token: sessionToken })

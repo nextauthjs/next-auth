@@ -62,7 +62,7 @@ async function NextAuthNextHandler(
       method: req.method ?? "GET",
       action: req.query.nextauth[0] as NextAuthAction,
       providerId: req.query.nextauth[1],
-      error: req.query.nextauth[1],
+      error: (req.query.error as string | undefined) ?? req.query.nextauth[1],
     },
     options,
   })
@@ -120,6 +120,7 @@ export async function getServerSession(
   const session = await NextAuthHandler<Session | {}>({
     options,
     req: {
+      host: (process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL) as string,
       action: "session",
       method: "GET",
       cookies: context.req.cookies,
@@ -133,4 +134,14 @@ export async function getServerSession(
 
   if (body && Object.keys(body).length) return body as Session
   return null
+}
+
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace NodeJS {
+    interface ProcessEnv {
+      NEXTAUTH_URL?: string
+      VERCEL_URL?: string
+    }
+  }
 }

@@ -1,22 +1,24 @@
-import { TokenSet } from "openid-client"
+import { CallbackParamsType, TokenSet } from "openid-client"
 import { openidClient } from "./client"
 import { oAuth1Client } from "./client-legacy"
-import { getState } from "./state-handler"
+import { useState } from "./state-handler"
 import { usePKCECodeVerifier } from "./pkce-handler"
 import { OAuthCallbackError } from "../../errors"
-import { Account, LoggerInstance, Profile } from "../../.."
-import { OAuthChecks, OAuthConfig } from "../../../providers"
-import { InternalOptions } from "../../../lib/types"
-import { IncomingRequest, OutgoingResponse } from "../.."
+
+import type { Account, LoggerInstance, Profile } from "../../.."
+import type { OAuthChecks, OAuthConfig } from "../../../providers"
+import type { InternalOptions } from "../../../lib/types"
+import type { IncomingRequest, OutgoingResponse } from "../.."
+import type { Cookie } from "../cookie"
 
 export default async function oAuthCallback(params: {
   options: InternalOptions<"oauth">
   query: IncomingRequest["query"]
   body: IncomingRequest["body"]
   method: IncomingRequest["method"]
-  codeVerifier?: string
+  cookies: IncomingRequest["cookies"]
 }): Promise<GetProfileResult & { cookies?: OutgoingResponse["cookies"] }> {
-  const { options, query, body, method, codeVerifier } = params
+  const { options, query, body, method, cookies } = params
   const { logger, provider } = options
 
   const errorMessage = body?.error ?? query?.error
@@ -66,15 +68,24 @@ export default async function oAuthCallback(params: {
 
     let tokens: TokenSet
 
-    const pkce = await usePKCECodeVerifier({
-      options,
-      codeVerifier,
-    })
-    const checks: OAuthChecks = {
-      code_verifier: pkce?.codeVerifier,
-      state: getState(options),
+    const checks: OAuthChecks = {}
+    const resCookies: Cookie[] = []
+
+    const state = await useState(cookies?.[options.cookies.state.name], options)
+
+    if (state) {
+      checks.state = state.value
+      resCookies.push(state.cookie)
     }
-    const params = {
+
+    const codeVerifier = cookies?.[options.cookies.pkceCodeVerifier.name]
+    const pkce = await usePKCECodeVerifier(codeVerifier, options)
+    if (pkce) {
+      checks.code_verifier = pkce.codeVerifier
+      resCookies.push(pkce.cookie)
+    }
+
+    const params: CallbackParamsType = {
       ...client.callbackParams({
         url: `http://n?${new URLSearchParams(query)}`,
         // TODO: Ask to allow object to be passed upstream:
@@ -136,12 +147,12 @@ export default async function oAuthCallback(params: {
       tokens,
       logger,
     })
-    return {
-      ...profileResult,
-      cookies: pkce?.cookie ? [pkce.cookie] : undefined,
-    }
+    return { ...profileResult, cookies: resCookies }
   } catch (error) {
-    logger.error("OAUTH_CALLBACK_ERROR", { error: error as Error, providerId: provider.id })
+    logger.error("OAUTH_CALLBACK_ERROR", {
+      error: error as Error,
+      providerId: provider.id,
+    })
     throw new OAuthCallbackError(error as Error)
   }
 }

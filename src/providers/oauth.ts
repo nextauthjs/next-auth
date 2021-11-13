@@ -9,10 +9,11 @@ import type {
   IssuerMetadata,
   OAuthCallbackChecks,
   OpenIDCallbackChecks,
+  HttpOptions,
 } from "openid-client"
 import type { JWK } from "jose"
 
-type Client = InstanceType<Issuer['Client']>;
+type Client = InstanceType<Issuer["Client"]>
 
 export type { OAuthProviderType } from "./oauth-types"
 
@@ -132,6 +133,9 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   region?: string
   // TODO: only allow for some
   issuer?: string
+  /** Read more at: https://github.com/panva/node-openid-client/tree/main/docs#customizing-http-requests */
+  httpOptions?: Pick<HttpOptions, "timeout">
+
   /**
    * The options provided by the user.
    * We will perform a deep-merge of these values
