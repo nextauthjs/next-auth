@@ -19,13 +19,15 @@ function hasErrorProperty(
   return !!(x as any)?.error
 }
 
+export type WarningCode = "NEXTAUTH_URL" | "NO_CSRF_TOKEN" | "NO_SECRET"
+
 /**
  * Override any of the methods, and the rest will use the default logger.
  *
  * [Documentation](https://next-auth.js.org/configuration/options#logger)
  */
 export interface LoggerInstance extends Record<string, Function> {
-  warn: (code: "NEXTAUTH_URL" | "NO_CSRF_TOKEN" | "NO_SECRET") => void
+  warn: (code: WarningCode) => void
   error: (
     code: string,
     /**

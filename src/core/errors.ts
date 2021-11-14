@@ -38,14 +38,29 @@ export class AccountNotLinkedError extends UnknownError {
   name = "AccountNotLinkedError"
 }
 
-export class NoAPIRouteError extends UnknownError {
-  name = "NoAPIRouteError"
+export class MissingAPIRoute extends UnknownError {
+  name = "MissingAPIRouteError"
   code = "MISSING_NEXTAUTH_API_ROUTE_ERROR"
 }
 
-export class NoSecretError extends UnknownError {
-  name = "NoSecretError"
+export class MissingSecret extends UnknownError {
+  name = "MissingSecretError"
   code = "NO_SECRET"
+}
+
+export class MissingAuthorize extends UnknownError {
+  name = "MissingAuthorizeError"
+  code = "CALLBACK_CREDENTIALS_HANDLER_ERROR"
+}
+
+export class MissingAdapter extends UnknownError {
+  name = "MissingAdapterError"
+  code = "EMAIL_REQUIRES_ADAPTER_ERROR"
+}
+
+export class UnsupportedStrategy extends UnknownError {
+  name = "UnsupportedStrategyError"
+  code = "CALLBACK_CREDENTIALS_JWT_ERROR"
 }
 
 type Method = (...args: any[]) => Promise<any>

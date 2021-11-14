@@ -30,14 +30,6 @@ export default async function signin(params: {
       return { redirect: `${url}/error?error=OAuthSignin` }
     }
   } else if (provider.type === "email") {
-    if (!adapter) {
-      logger.error(
-        "EMAIL_REQUIRES_ADAPTER_ERROR",
-        new Error("E-mail login requires an adapter but it was undefined")
-      )
-      return { redirect: `${url}/error?error=Configuration` }
-    }
-
     // Note: Technically the part of the email address local mailbox element
     // (everything before the @ symbol) should be treated as 'case sensitive'
     // according to RFC 2821, but in practice this causes more problems than
@@ -45,7 +37,9 @@ export default async function signin(params: {
     // complains about this we can make strict RFC 2821 compliance an option.
     const email = body?.email?.toLowerCase() ?? null
 
-    const { getUserByEmail } = adapter
+    // Verified in `assertConfig`
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const { getUserByEmail } = adapter!
     // If is an existing user return a user object (otherwise use placeholder)
     const user: User = (email ? await getUserByEmail(email) : null) ?? {
       email,
@@ -83,7 +77,7 @@ export default async function signin(params: {
     try {
       await emailSignin(email, options)
     } catch (error) {
-      logger.error("SIGNIN_EMAIL_ERROR", (error as Error))
+      logger.error("SIGNIN_EMAIL_ERROR", error as Error)
       return { redirect: `${url}/error?error=EmailSignin` }
     }
 
