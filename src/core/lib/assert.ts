@@ -3,12 +3,18 @@ import {
   MissingAPIRoute,
   MissingAuthorize,
   MissingSecret,
-  UnknownError,
   UnsupportedStrategy,
 } from "../errors"
 
 import type { NextAuthHandlerParams } from ".."
 import type { WarningCode } from "../../lib/logger"
+
+type ConfigError =
+  | MissingAPIRoute
+  | MissingSecret
+  | UnsupportedStrategy
+  | MissingAuthorize
+  | MissingAdapter
 
 /**
  * Verify that the user configured `next-auth` correctly.
@@ -18,7 +24,7 @@ import type { WarningCode } from "../../lib/logger"
  */
 export function assertConfig(
   params: NextAuthHandlerParams
-): UnknownError | WarningCode | undefined {
+): ConfigError | WarningCode | undefined {
   const { options, req } = params
 
   if (!req.query?.nextauth) {
