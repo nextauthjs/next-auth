@@ -43,7 +43,14 @@ export function assertConfig(
 
   if (!req.host) return "NEXTAUTH_URL"
 
-  if (options.providers.some((p) => p.type === "credentials")) {
+  let hasCredentials, hasEmail
+
+  options.providers.forEach(({ type }) => {
+    if (type === "credentials") hasCredentials = true
+    else if (type === "email") hasEmail = true
+  })
+
+  if (hasCredentials) {
     if (options.session?.strategy === "database" || options.adapter) {
       return new UnsupportedStrategy(
         "Signin in with credentials only supported if JWT strategy is enabled"
@@ -58,7 +65,7 @@ export function assertConfig(
     }
   }
 
-  if (!options.adapter && options.providers.some((p) => p.type === "email")) {
+  if (!options.adapter && hasEmail) {
     return new MissingAdapter("E-mail login requires an adapter.")
   }
 }
