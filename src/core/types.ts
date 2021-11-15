@@ -1,8 +1,9 @@
-import { Adapter } from "../adapters"
-import { Provider, CredentialInput, ProviderType } from "../providers"
+import type { Adapter } from "../adapters"
+import type { Provider, CredentialInput, ProviderType } from "../providers"
 import type { TokenSetParameters } from "openid-client"
-import { JWT, JWTOptions } from "../jwt"
-import { LoggerInstance } from "../lib/logger"
+import type { JWT, JWTOptions } from "../jwt"
+import type { LoggerInstance } from "../lib/logger"
+import type { CookieSerializeOptions } from "cookie"
 
 export type Awaitable<T> = T | PromiseLike<T>
 
@@ -338,15 +339,7 @@ export interface CallbacksOptions<
 /** [Documentation](https://next-auth.js.org/configuration/options#cookies) */
 export interface CookieOption {
   name: string
-  options: {
-    httpOnly?: boolean
-    sameSite: true | "strict" | "lax" | "none"
-    path?: string
-    secure: boolean
-    maxAge?: number
-    domain?: string
-    expires?: Date | string
-  }
+  options: CookieSerializeOptions
 }
 
 /** [Documentation](https://next-auth.js.org/configuration/options#cookies) */

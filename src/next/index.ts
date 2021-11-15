@@ -1,5 +1,5 @@
 import { NextAuthHandler } from "../core"
-import { set as setCookie } from "../core/lib/cookie"
+import { setCookie } from "./cookie"
 
 import type {
   GetServerSidePropsContext,
@@ -35,7 +35,7 @@ async function NextAuthNextHandler(
 
   res.status(handler.status ?? 200)
 
-  handler.cookies?.forEach((c) => setCookie(res, c.name, c.value, c.options))
+  handler.cookies?.forEach((cookie) => setCookie(res, cookie))
 
   handler.headers?.forEach((h) => res.setHeader(h.key, h.value))
 
@@ -96,7 +96,7 @@ export async function getServerSession(
 
   const { body, cookies } = session
 
-  cookies?.forEach((c) => setCookie(context.res, c.name, c.value, c.options))
+  cookies?.forEach((cookie) => setCookie(context.res, cookie))
 
   if (body && Object.keys(body).length) return body as Session
   return null

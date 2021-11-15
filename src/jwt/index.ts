@@ -1,8 +1,10 @@
 import { EncryptJWT, jwtDecrypt } from "jose"
 import hkdf from "@panva/hkdf"
 import { v4 as uuid } from "uuid"
-import { NextApiRequest } from "next"
-import type { JWT, JWTDecodeParams, JWTEncodeParams, JWTOptions } from "./types"
+import { SessionStore } from "../core/lib/cookie"
+import type { NextApiRequest } from "next"
+import type { JWT, JWTDecodeParams, JWTEncodeParams } from "./types"
+import type { LoggerInstance } from ".."
 
 export * from "./types"
 
@@ -38,7 +40,7 @@ export async function decode({
   return payload
 }
 
-export type GetTokenParams<R extends boolean = false> = {
+export interface GetTokenParams<R extends boolean = false> {
   /** The request containing the JWT either in the cookies or in the `Authorization` header. */
   req: NextApiRequest
   /**
@@ -53,7 +55,10 @@ export type GetTokenParams<R extends boolean = false> = {
    * @default false
    */
   raw?: R
-} & Pick<JWTOptions, "decode" | "secret">
+  secret: string
+  decode?: typeof decode
+  logger?: LoggerInstance | Console
+}
 
 /**
  * Takes a NextAuth.js request (`req`) and returns either the NextAuth.js issued JWT's payload,
@@ -74,21 +79,23 @@ export async function getToken<R extends boolean = false>(
       : "next-auth.session-token",
     raw,
     decode: _decode = decode,
+    logger = console,
   } = params ?? {}
 
   if (!req) throw new Error("Must pass `req` to JWT getToken()")
 
-  let token = req.cookies[cookieName]
+  const sessionStore = new SessionStore(
+    { name: cookieName, options: { secure: secureCookie } },
+    { cookies: req.cookies, headers: req.headers },
+    logger
+  )
 
-  if (!token && req.headers.authorization?.split(" ")[0] === "Bearer") {
-    const urlEncodedToken = req.headers.authorization.split(" ")[1]
-    token = decodeURIComponent(urlEncodedToken)
-  }
+  const token = sessionStore.value
+  // @ts-expect-error
+  if (!token) return null
 
-  if (raw) {
-    // @ts-expect-error
-    return token
-  }
+  // @ts-expect-error
+  if (raw) return token
 
   try {
     // @ts-expect-error
