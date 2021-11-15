@@ -42,15 +42,15 @@ export const authOptions: NextAuthOptions = {
   providers: [
     // E-mail
     // Start fake e-mail server with `npm run start:email`
-    EmailProvider({
-      server: {
-        host: "127.0.0.1",
-        auth: null,
-        secure: false,
-        port: 1025,
-        tls: { rejectUnauthorized: false },
-      },
-    }),
+    // EmailProvider({
+    //   server: {
+    //     host: "127.0.0.1",
+    //     auth: null,
+    //     secure: false,
+    //     port: 1025,
+    //     tls: { rejectUnauthorized: false },
+    //   },
+    // }),
     // Credentials
     CredentialsProvider({
       name: "Credentials",
