@@ -51,21 +51,27 @@ export function assertConfig(
   })
 
   if (hasCredentials) {
-    if (options.session?.strategy === "database" || options.adapter) {
+    const dbStrategy = options.session?.strategy === "database"
+    const onlyCredentials = !options.providers.some(
+      (p) => p.type !== "credentials"
+    )
+    if (dbStrategy || onlyCredentials) {
       return new UnsupportedStrategy(
         "Signin in with credentials only supported if JWT strategy is enabled"
       )
     }
-    if (
-      options.providers.every((p) => p.type !== "credentials" || p.authorize)
-    ) {
+
+    const credentialsNoAuthorize = options.providers.some(
+      (p) => p.type === "credentials" && !p.authorize
+    )
+    if (credentialsNoAuthorize) {
       return new MissingAuthorize(
         "Must define an authorize() handler to use credentials authentication provider"
       )
     }
   }
 
-  if (!options.adapter && hasEmail) {
+  if (hasEmail && !options.adapter) {
     return new MissingAdapter("E-mail login requires an adapter.")
   }
 }
