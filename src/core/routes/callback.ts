@@ -1,10 +1,11 @@
 import oAuthCallback from "../lib/oauth/callback"
 import callbackHandler from "../lib/callback-handler"
-import * as cookie from "../lib/cookie"
 import { hashToken } from "../lib/utils"
-import { InternalOptions } from "../../lib/types"
-import { IncomingRequest, OutgoingResponse } from ".."
-import { User } from "../.."
+
+import type { InternalOptions } from "../../lib/types"
+import type { IncomingRequest, OutgoingResponse } from ".."
+import type { Cookie, SessionStore } from "../lib/cookie"
+import type { User } from "../.."
 
 /** Handle callbacks from login services */
 export default async function callback(params: {
@@ -14,9 +15,9 @@ export default async function callback(params: {
   body: IncomingRequest["body"]
   headers: IncomingRequest["headers"]
   cookies: IncomingRequest["cookies"]
-  sessionToken?: string
+  sessionStore: SessionStore
 }): Promise<OutgoingResponse> {
-  const { options, query, body, method, headers, sessionToken } = params
+  const { options, query, body, method, headers, sessionStore } = params
   const {
     provider,
     adapter,
@@ -30,7 +31,7 @@ export default async function callback(params: {
     logger,
   } = options
 
-  const cookies: cookie.Cookie[] = []
+  const cookies: Cookie[] = []
 
   const useJwtSession = sessionStrategy === "jwt"
 
@@ -111,7 +112,7 @@ export default async function callback(params: {
         // Sign user in
         // @ts-expect-error
         const { user, session, isNewUser } = await callbackHandler({
-          sessionToken,
+          sessionToken: sessionStore.value,
           profile,
           // @ts-expect-error
           account,
@@ -134,29 +135,25 @@ export default async function callback(params: {
             isNewUser,
           })
 
-          // Sign and encrypt token
-          const newEncodedJwt = await jwt.encode({ ...jwt, token })
+          // Encode token
+          const newToken = await jwt.encode({ ...jwt, token })
 
           // Set cookie expiry date
           const cookieExpires = new Date()
           cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
 
-          cookies.push({
-            name: options.cookies.sessionToken.name,
-            value: newEncodedJwt,
-            options: {
-              expires: cookieExpires,
-              ...options.cookies.sessionToken.options,
-            },
+          const sessionCookies = sessionStore.chunk(newToken, {
+            expires: cookieExpires,
           })
+          cookies.push(...sessionCookies)
         } else {
           // Save Session Token in cookie
           cookies.push({
             name: options.cookies.sessionToken.name,
             value: session.sessionToken,
             options: {
-              expires: session.expires,
               ...options.cookies.sessionToken.options,
+              expires: session.expires,
             },
           })
         }
@@ -265,7 +262,7 @@ export default async function callback(params: {
       // Sign user in
       // @ts-expect-error
       const { user, session, isNewUser } = await callbackHandler({
-        sessionToken,
+        sessionToken: sessionStore.value,
         // @ts-expect-error
         profile,
         // @ts-expect-error
@@ -288,29 +285,25 @@ export default async function callback(params: {
           isNewUser,
         })
 
-        // Sign and encrypt token
-        const newEncodedJwt = await jwt.encode({ ...jwt, token })
+        // Encode token
+        const newToken = await jwt.encode({ ...jwt, token })
 
         // Set cookie expiry date
         const cookieExpires = new Date()
         cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
 
-        cookies.push({
-          name: options.cookies.sessionToken.name,
-          value: newEncodedJwt,
-          options: {
-            expires: cookieExpires,
-            ...options.cookies.sessionToken.options,
-          },
+        const sessionCookies = sessionStore.chunk(newToken, {
+          expires: cookieExpires,
         })
+        cookies.push(...sessionCookies)
       } else {
         // Save Session Token in cookie
         cookies.push({
           name: options.cookies.sessionToken.name,
           value: session.sessionToken,
           options: {
-            expires: session.expires,
             ...options.cookies.sessionToken.options,
+            expires: session.expires,
           },
         })
       }
@@ -444,21 +437,18 @@ export default async function callback(params: {
       isNewUser: false,
     })
 
-    // Sign and encrypt token
-    const newEncodedJwt = await jwt.encode({ ...jwt, token })
+    // Encode token
+    const newToken = await jwt.encode({ ...jwt, token })
 
     // Set cookie expiry date
     const cookieExpires = new Date()
     cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
 
-    cookies.push({
-      name: options.cookies.sessionToken.name,
-      value: newEncodedJwt,
-      options: {
-        expires: cookieExpires,
-        ...options.cookies.sessionToken.options,
-      },
+    const sessionCookies = sessionStore.chunk(newToken, {
+      expires: cookieExpires,
     })
+
+    cookies.push(...sessionCookies)
 
     // @ts-expect-error
     await events.signIn?.({ user, account })

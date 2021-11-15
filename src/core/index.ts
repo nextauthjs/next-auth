@@ -3,7 +3,7 @@ import * as routes from "./routes"
 import renderPage from "./pages"
 import type { NextAuthOptions } from "./types"
 import { init } from "./init"
-import { Cookie } from "./lib/cookie"
+import { Cookie, SessionStore } from "./lib/cookie"
 
 import { NextAuthAction } from "../lib/types"
 
@@ -11,7 +11,7 @@ export interface IncomingRequest {
   /** @default "http://localhost:3000" */
   host: string
   method: string
-  cookies?: Record<string, any>
+  cookies?: Record<string, string>
   headers?: Record<string, any>
   query?: Record<string, any>
   body?: Record<string, any>
@@ -57,9 +57,11 @@ export async function NextAuthHandler<
     isPost: req.method === "POST",
   })
 
-  const sessionToken =
-    req.cookies?.[options.cookies.sessionToken.name] ||
-    req.headers?.Authorization?.replace("Bearer ", "")
+  const sessionStore = new SessionStore(
+    options.cookies.sessionToken,
+    req,
+    options.logger
+  )
 
   if (req.method === "GET") {
     const render = renderPage({ options, query: req.query, cookies })
@@ -68,7 +70,7 @@ export async function NextAuthHandler<
       case "providers":
         return (await routes.providers(options.providers)) as any
       case "session":
-        return (await routes.session({ options, sessionToken })) as any
+        return (await routes.session({ options, sessionStore })) as any
       case "csrf":
         return {
           headers: [{ key: "Content-Type", value: "application/json" }],
@@ -98,7 +100,7 @@ export async function NextAuthHandler<
             headers: req.headers,
             cookies: req.cookies,
             options,
-            sessionToken,
+            sessionStore,
           })
           if (callback.cookies) cookies.push(...callback.cookies)
           return { ...callback, cookies }
@@ -158,7 +160,7 @@ export async function NextAuthHandler<
       case "signout":
         // Verified CSRF Token required for signout
         if (options.csrfTokenVerified) {
-          const signout = await routes.signout({ options, sessionToken })
+          const signout = await routes.signout({ options, sessionStore })
           if (signout.cookies) cookies.push(...signout.cookies)
           return { ...signout, cookies }
         }
@@ -180,7 +182,7 @@ export async function NextAuthHandler<
             headers: req.headers,
             cookies: req.cookies,
             options,
-            sessionToken,
+            sessionStore,
           })
           if (callback.cookies) cookies.push(...callback.cookies)
           return { ...callback, cookies }

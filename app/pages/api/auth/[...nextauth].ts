@@ -169,7 +169,6 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   jwt: {
-    encryption: true,
     secret: process.env.SECRET,
   },
   debug: true,

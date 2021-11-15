@@ -1,7 +1,7 @@
-import { Cookie } from "../cookie"
 import * as jwt from "../../../jwt"
 import { generators } from "openid-client"
-import { InternalOptions } from "src/lib/types"
+import type { InternalOptions } from "src/lib/types"
+import type { Cookie } from "../cookie"
 
 const PKCE_CODE_CHALLENGE_METHOD = "S256"
 const PKCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
@@ -9,27 +9,16 @@ const PKCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 /**
  * Returns `code_challenge` and `code_challenge_method`
  * and saves them in a cookie.
- * @type {import("src/lib/types").InternalOptions}
- * @returns {Promise<undefined | {
- *  code_challenge: string
- *  code_challenge_method: "S256"
- *  cookie: import("../cookie").Cookie
- * }>
  */
-
-type PKCE = Promise<
+export async function createPKCE(options: InternalOptions<"oauth">): Promise<
   | undefined
   | {
       code_challenge: string
       code_challenge_method: "S256"
       cookie: Cookie
     }
->
-
-export async function createPKCE(options: InternalOptions<"oauth">): PKCE {
-  const { cookies, logger } = options
-  /** @type {import("src/providers").OAuthConfig} */
-  const provider = options.provider
+> {
+  const { cookies, logger, provider } = options
   if (!provider.checks?.includes("pkce")) {
     // Provider does not support PKCE, return nothing.
     return
@@ -41,7 +30,7 @@ export async function createPKCE(options: InternalOptions<"oauth">): PKCE {
   expires.setTime(expires.getTime() + PKCE_MAX_AGE * 1000)
 
   // Encrypt code_verifier and save it to an encrypted cookie
-  const encodedVerifier = await jwt.encode({
+  const encryptedCodeVerifier = await jwt.encode({
     ...options.jwt,
     maxAge: PKCE_MAX_AGE,
     token: { code_verifier },
@@ -59,7 +48,7 @@ export async function createPKCE(options: InternalOptions<"oauth">): PKCE {
     code_challenge_method: PKCE_CODE_CHALLENGE_METHOD,
     cookie: {
       name: cookies.pkceCodeVerifier.name,
-      value: encodedVerifier,
+      value: encryptedCodeVerifier,
       options: { ...cookies.pkceCodeVerifier.options, expires },
     },
   }
