@@ -1,11 +1,14 @@
-import logger from "../lib/logger"
+import logger, { setLogger } from "../lib/logger"
 import * as routes from "./routes"
 import renderPage from "./pages"
-import type { NextAuthOptions } from "./types"
 import { init } from "./init"
-import { Cookie, SessionStore } from "./lib/cookie"
+import { assertConfig } from "./lib/assert"
+import { SessionStore } from "./lib/cookie"
 
-import { NextAuthAction } from "../lib/types"
+import type { NextAuthOptions } from "./types"
+import type { NextAuthAction } from "../lib/types"
+import type { Cookie } from "./lib/cookie"
+import type { ErrorType } from "./pages/error"
 
 export interface IncomingRequest {
   /** @default "http://localhost:3000" */
@@ -35,7 +38,7 @@ export interface OutgoingResponse<
   cookies?: Cookie[]
 }
 
-interface NextAuthHandlerParams {
+export interface NextAuthHandlerParams {
   req: IncomingRequest
   options: NextAuthOptions
 }
@@ -44,6 +47,26 @@ export async function NextAuthHandler<
   Body extends string | Record<string, any> | any[]
 >(params: NextAuthHandlerParams): Promise<OutgoingResponse<Body>> {
   const { options: userOptions, req } = params
+
+  setLogger(userOptions.logger, userOptions.debug)
+
+  const assertionResult = assertConfig(params)
+
+  if (typeof assertionResult === "string") {
+    logger.warn(assertionResult)
+  } else if (assertionResult instanceof Error) {
+    // Bail out early if there's an error in the user config
+    const { pages, theme } = userOptions
+    logger.error(assertionResult.code, assertionResult)
+    if (pages?.error) {
+      return {
+        redirect: `${pages.error}?error=Configuration`,
+      }
+    }
+    const render = renderPage({ theme })
+    return render.error({ error: "configuration" })
+  }
+
   const { action, providerId, error } = req
 
   const { options, cookies } = await init({
@@ -64,7 +87,7 @@ export async function NextAuthHandler<
   )
 
   if (req.method === "GET") {
-    const render = renderPage({ options, query: req.query, cookies })
+    const render = renderPage({ ...options, query: req.query, cookies })
     const { pages } = options
     switch (action) {
       case "providers":
@@ -139,7 +162,7 @@ export async function NextAuthHandler<
           return { redirect: `${options.url}/signin?error=${error}`, cookies }
         }
 
-        return render.error({ error })
+        return render.error({ error: error as ErrorType })
       default:
     }
   } else if (req.method === "POST") {

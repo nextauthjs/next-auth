@@ -19,19 +19,15 @@ function hasErrorProperty(
   return !!(x as any)?.error
 }
 
+export type WarningCode = "NEXTAUTH_URL" | "NO_SECRET"
+
 /**
  * Override any of the methods, and the rest will use the default logger.
  *
  * [Documentation](https://next-auth.js.org/configuration/options#logger)
  */
 export interface LoggerInstance extends Record<string, Function> {
-  warn: (
-    code:
-      | "JWT_AUTO_GENERATED_SIGNING_KEY"
-      | "JWT_AUTO_GENERATED_ENCRYPTION_KEY"
-      | "NEXTAUTH_URL"
-      | "NO_CSRF_TOKEN"
-  ) => void
+  warn: (code: WarningCode) => void
   error: (
     code: string,
     /**
@@ -61,16 +57,21 @@ const _logger: LoggerInstance = {
     )
   },
   debug(code, metadata) {
-    if (!process?.env?._NEXTAUTH_DEBUG) return
     console.log(`[next-auth][debug][${code}]`, metadata)
   },
 }
 
 /**
- * Override the built-in logger.
+ * Override the built-in logger with user's implementation.
  * Any `undefined` level will use the default logger.
  */
-export function setLogger(newLogger: Partial<LoggerInstance> = {}) {
+export function setLogger(
+  newLogger: Partial<LoggerInstance> = {},
+  debug?: boolean
+) {
+  // Turn off debug logging if `debug` isn't set to `true`
+  if (!debug) _logger.debug = () => {}
+
   if (newLogger.error) _logger.error = newLogger.error
   if (newLogger.warn) _logger.warn = newLogger.warn
   if (newLogger.debug) _logger.debug = newLogger.debug

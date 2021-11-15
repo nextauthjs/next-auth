@@ -4,21 +4,28 @@ import SignoutPage from "./signout"
 import VerifyRequestPage from "./verify-request"
 import ErrorPage from "./error"
 import css from "../../css"
-import { InternalOptions } from "../../lib/types"
-import { IncomingRequest, OutgoingResponse } from ".."
-import { Cookie } from "../lib/cookie"
 
-/** Takes a request and response, and gives renderable pages */
-export default function renderPage({
-  options,
-  query,
-  cookies,
-}: {
-  options: InternalOptions
-  query: IncomingRequest["query"]
-  cookies: Cookie[]
-}) {
-  const { url, callbackUrl, csrfToken, providers, theme } = options
+import type { InternalOptions } from "../../lib/types"
+import type { IncomingRequest, OutgoingResponse } from ".."
+import type { Cookie } from "../lib/cookie"
+import type { ErrorType } from "./error"
+
+type RenderPageParams = {
+  query?: IncomingRequest["query"]
+  cookies?: Cookie[]
+} & Partial<
+  Pick<
+    InternalOptions,
+    "url" | "callbackUrl" | "csrfToken" | "providers" | "theme"
+  >
+>
+
+/**
+ * Unless the user defines their [own pages](https://next-auth.js.org/configuration/pages),
+ * we render a set of default ones, using Preact SSR.
+ */
+export default function renderPage(params: RenderPageParams) {
+  const { url, theme, query, cookies } = params
 
   function send({ html, title, status }: any): OutgoingResponse {
     return {
@@ -26,7 +33,7 @@ export default function renderPage({
       status,
       headers: [{ key: "Content-Type", value: "text/html" }],
       body: `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>${css()}</style><title>${title}</title></head><body class="__next-auth-theme-${
-        theme.colorScheme
+        theme?.colorScheme ?? "auto"
       }"><div class="page">${renderToString(html)}</div></body></html>`,
     }
   }
@@ -35,9 +42,9 @@ export default function renderPage({
     signin(props?: any) {
       return send({
         html: SigninPage({
-          csrfToken,
-          providers,
-          callbackUrl,
+          csrfToken: params.csrfToken,
+          providers: params.providers,
+          callbackUrl: params.callbackUrl,
           theme,
           ...query,
           ...props,
@@ -47,7 +54,12 @@ export default function renderPage({
     },
     signout(props?: any) {
       return send({
-        html: SignoutPage({ csrfToken, url, theme, ...props }),
+        html: SignoutPage({
+          csrfToken: params.csrfToken,
+          url,
+          theme,
+          ...props,
+        }),
         title: "Sign Out",
       })
     },
@@ -57,7 +69,7 @@ export default function renderPage({
         title: "Verify Request",
       })
     },
-    error(props?: any) {
+    error(props?: { error?: ErrorType }) {
       return send({
         ...ErrorPage({ url, theme, ...props }),
         title: "Error",

@@ -1,5 +1,5 @@
-import logger, { setLogger } from "../lib/logger"
 import { NextAuthHandler } from "../core"
+import { setCookie } from "./cookie"
 
 import type {
   GetServerSidePropsContext,
@@ -12,36 +12,15 @@ import type {
   NextAuthRequest,
   NextAuthResponse,
 } from "../lib/types"
-import { setCookie } from "./cookie"
 
 async function NextAuthNextHandler(
   req: NextApiRequest,
   res: NextApiResponse,
   options: NextAuthOptions
 ) {
-  setLogger(options.logger)
-
-  if (!req.query.nextauth) {
-    const error = new Error(
-      "Cannot find [...nextauth].js in pages/api/auth. Make sure the filename is written correctly."
-    )
-
-    logger.error("MISSING_NEXTAUTH_API_ROUTE_ERROR", error)
-    return res.status(500).send(error.message)
-  }
-
-  const host = (process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL) as string
-  if (!host) logger.warn("NEXTAUTH_URL")
-
-  const {
-    body,
-    redirect,
-    cookies,
-    headers,
-    status = 200,
-  } = await NextAuthHandler({
+  const handler = await NextAuthHandler({
     req: {
-      host,
+      host: (process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL) as string,
       body: req.body,
       query: req.query,
       cookies: req.cookies,
@@ -54,27 +33,25 @@ async function NextAuthNextHandler(
     options,
   })
 
-  res.status(status)
+  res.status(handler.status ?? 200)
 
-  cookies?.forEach((cookie) => setCookie(res, cookie))
+  handler.cookies?.forEach((cookie) => setCookie(res, cookie))
 
-  headers?.forEach((header) => {
-    res.setHeader(header.key, header.value)
-  })
+  handler.headers?.forEach((h) => res.setHeader(h.key, h.value))
 
-  if (redirect) {
+  if (handler.redirect) {
     // If the request expects a return URL, send it as JSON
     // instead of doing an actual redirect.
     if (req.body?.json !== "true") {
       // Could chain. .end() when lowest target is Node 14
       // https://github.com/nodejs/node/issues/33148
-      res.status(302).setHeader("Location", redirect)
+      res.status(302).setHeader("Location", handler.redirect)
       return res.end()
     }
-    return res.json({ url: redirect })
+    return res.json({ url: handler.redirect })
   }
 
-  return res.send(body)
+  return res.send(handler.body)
 }
 
 function NextAuth(options: NextAuthOptions): any

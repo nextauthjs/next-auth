@@ -198,15 +198,9 @@ export default async function callback(params: {
     }
   } else if (provider.type === "email") {
     try {
-      if (!adapter) {
-        logger.error(
-          "EMAIL_REQUIRES_ADAPTER_ERROR",
-          new Error("E-mail login requires an adapter but it was undefined")
-        )
-        return { redirect: `${url}/error?error=Configuration`, cookies }
-      }
-
-      const { useVerificationToken, getUserByEmail } = adapter
+      // Verified in `assertConfig`
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const { useVerificationToken, getUserByEmail } = adapter!
 
       const token = query?.token
       const identifier = query?.email
@@ -333,34 +327,6 @@ export default async function callback(params: {
       return { redirect: `${url}/error?error=Callback`, cookies }
     }
   } else if (provider.type === "credentials" && method === "POST") {
-    if (!useJwtSession) {
-      logger.error(
-        "CALLBACK_CREDENTIALS_JWT_ERROR",
-        new Error(
-          "Signin in with credentials is only supported if JSON Web Tokens are enabled"
-        )
-      )
-      return {
-        status: 500,
-        redirect: `${url}/error?error=Configuration`,
-        cookies,
-      }
-    }
-
-    if (!provider.authorize) {
-      logger.error(
-        "CALLBACK_CREDENTIALS_HANDLER_ERROR",
-        new Error(
-          "Must define an authorize() handler to use credentials authentication provider"
-        )
-      )
-      return {
-        status: 500,
-        redirect: `${url}/error?error=Configuration`,
-        cookies,
-      }
-    }
-
     const credentials = body
 
     let user: User

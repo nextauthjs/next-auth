@@ -6,10 +6,12 @@ import type { Adapter } from "../adapters"
  * @source https://iaincollins.medium.com/error-handling-in-javascript-a6172ccdf9af
  */
 export class UnknownError extends Error {
+  code: string
   constructor(error: Error | string) {
     // Support passing error or string
     super((error as Error)?.message ?? error)
     this.name = "UnknownError"
+    this.code = (error as any).code
     if (error instanceof Error) {
       this.stack = error.stack
     }
@@ -34,6 +36,31 @@ export class OAuthCallbackError extends UnknownError {
  */
 export class AccountNotLinkedError extends UnknownError {
   name = "AccountNotLinkedError"
+}
+
+export class MissingAPIRoute extends UnknownError {
+  name = "MissingAPIRouteError"
+  code = "MISSING_NEXTAUTH_API_ROUTE_ERROR"
+}
+
+export class MissingSecret extends UnknownError {
+  name = "MissingSecretError"
+  code = "NO_SECRET"
+}
+
+export class MissingAuthorize extends UnknownError {
+  name = "MissingAuthorizeError"
+  code = "CALLBACK_CREDENTIALS_HANDLER_ERROR"
+}
+
+export class MissingAdapter extends UnknownError {
+  name = "MissingAdapterError"
+  code = "EMAIL_REQUIRES_ADAPTER_ERROR"
+}
+
+export class UnsupportedStrategy extends UnknownError {
+  name = "UnsupportedStrategyError"
+  code = "CALLBACK_CREDENTIALS_JWT_ERROR"
 }
 
 type Method = (...args: any[]) => Promise<any>

@@ -2,8 +2,8 @@ import { Theme } from "../.."
 import { InternalUrl } from "../../lib/parse-url"
 
 export interface ErrorProps {
-  url: InternalUrl
-  theme: Theme
+  url?: InternalUrl
+  theme?: Theme
   error?: string
 }
 
@@ -14,19 +14,25 @@ interface ErrorView {
   signin?: JSX.Element
 }
 
+export type ErrorType =
+  | "default"
+  | "configuration"
+  | "accessdenied"
+  | "verification"
+
 /** Renders an error page. */
 export default function ErrorPage(props: ErrorProps) {
   const { url, error = "default", theme } = props
   const signinPageUrl = `${url}/signin`
 
-  const errors: Record<string, ErrorView> = {
+  const errors: Record<ErrorType, ErrorView> = {
     default: {
       status: 200,
       heading: "Error",
       message: (
         <p>
-          <a className="site" href={url.origin}>
-            {url.host}
+          <a className="site" href={url?.origin}>
+            {url?.host}
           </a>
         </p>
       ),
@@ -85,12 +91,12 @@ export default function ErrorPage(props: ErrorProps) {
           dangerouslySetInnerHTML={{
             __html: `
         :root {
-          --brand-color: ${theme.brandColor}
+          --brand-color: ${theme?.brandColor};
         }
       `,
           }}
         />
-        {theme.logo && <img src={theme.logo} alt="Logo" className="logo" />}
+        {theme?.logo && <img src={theme.logo} alt="Logo" className="logo" />}
         <div className="card">
           <h1>{heading}</h1>
           <div className="message">{message}</div>

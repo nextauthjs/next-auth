@@ -42,15 +42,15 @@ export const authOptions: NextAuthOptions = {
   providers: [
     // E-mail
     // Start fake e-mail server with `npm run start:email`
-    EmailProvider({
-      server: {
-        host: "127.0.0.1",
-        auth: null,
-        secure: false,
-        port: 1025,
-        tls: { rejectUnauthorized: false },
-      },
-    }),
+    // EmailProvider({
+    //   server: {
+    //     host: "127.0.0.1",
+    //     auth: null,
+    //     secure: false,
+    //     port: 1025,
+    //     tls: { rejectUnauthorized: false },
+    //   },
+    // }),
     // Credentials
     CredentialsProvider({
       name: "Credentials",
@@ -168,9 +168,7 @@ export const authOptions: NextAuthOptions = {
       primaryUserFlow: process.env.AZURE_B2C_PRIMARY_USER_FLOW,
     }),
   ],
-  jwt: {
-    secret: process.env.SECRET,
-  },
+  secret: process.env.SECRET,
   debug: true,
   theme: {
     colorScheme: "auto",
