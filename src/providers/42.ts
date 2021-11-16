@@ -1,6 +1,6 @@
 import { OAuthConfig, OAuthUserConfig } from "./oauth"
 
-interface UserData {
+export interface UserData {
   id: number
   email: string
   login: string
@@ -25,10 +25,10 @@ interface UserData {
   "is_launched?": boolean
 }
 
-interface CursusUsers {
+export interface CursusUser {
   grade: string | null
   level: number
-  skills: [{ id: number; name: string; level: number }]
+  skills: Array<{ id: number; name: string; level: number }>
   blackholed_at: string | null
   id: number
   begin_at: string | null
@@ -41,7 +41,7 @@ interface CursusUsers {
   cursus: { id: number; created_at: string; name: string; slug: string }
 }
 
-interface ProjectUsers {
+export interface ProjectUser {
   id: number
   occurrence: number
   final_mark: number | null
@@ -54,7 +54,7 @@ interface ProjectUsers {
     slug: string
     parent_id: number | null
   }
-  cursus_ids: [number]
+  cursus_ids: number[]
   marked_at: string | null
   marked: boolean
   retriable_at: string | null
@@ -62,7 +62,7 @@ interface ProjectUsers {
   updated_at: string | null
 }
 
-interface Achievements {
+export interface Achievement {
   id: number
   name: string
   description: string
@@ -74,7 +74,7 @@ interface Achievements {
   users_url: string
 }
 
-interface LanguagesuUsers {
+export interface LanguagesUser {
   id: number
   language_id: number
   user_id: number
@@ -82,7 +82,7 @@ interface LanguagesuUsers {
   created_at: string
 }
 
-interface TitlesUsers {
+export interface TitlesUser {
   id: number
   user_id: number
   title_id: number
@@ -91,7 +91,7 @@ interface TitlesUsers {
   updated_at: string | null
 }
 
-interface ExpertisesUsers {
+export interface ExpertisesUser {
   id: number
   expertise_id: number
   interested: boolean
@@ -101,7 +101,7 @@ interface ExpertisesUsers {
   user_id: number
 }
 
-interface Campus {
+export interface Campus {
   id: number
   name: string
   time_zone: string
@@ -126,7 +126,7 @@ interface Campus {
   default_hidden_phone: boolean
 }
 
-interface CampusUsers {
+export interface CampusUser {
   id: number
   user_id: number
   campus_id: number
@@ -136,20 +136,20 @@ interface CampusUsers {
 }
 
 export interface FortyTwoProfile extends UserData {
-  groups: [{ id: number; name: string }]
-  cursus_users: [CursusUsers]
-  projects_users: [ProjectUsers]
-  languages_users: [LanguagesuUsers]
-  achievements: [Achievements]
-  titles: [{ id: number; name: string }]
-  titles_users: [TitlesUsers]
-  partnerships: [any]
-  patroned: [any]
-  patroning: [any]
-  expertises_users: [ExpertisesUsers]
-  roles: [{ id: number; name: string }]
-  campus: [Campus]
-  campus_users: [CampusUsers]
+  groups: Array<{ id: string; name: string }>
+  cursus_users: CursusUser[]
+  projects_users: ProjectUser[]
+  languages_users: LanguagesUser[]
+  achievements: Achievement[]
+  titles: Array<{ id: string; name: string }>
+  titles_users: TitlesUser[]
+  partnerships: any[]
+  patroned: any[]
+  patroning: any[]
+  expertises_users: ExpertisesUser[]
+  roles: Array<{ id: string; name: string }>
+  campus: Campus[]
+  campus_users: CampusUser[]
   user: any | null
 }
 
