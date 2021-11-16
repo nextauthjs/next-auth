@@ -55,7 +55,7 @@ export function assertConfig(
     const onlyCredentials = !options.providers.some(
       (p) => p.type !== "credentials"
     )
-    if (dbStrategy || onlyCredentials) {
+    if (dbStrategy && onlyCredentials) {
       return new UnsupportedStrategy(
         "Signin in with credentials only supported if JWT strategy is enabled"
       )
