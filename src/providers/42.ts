@@ -1,5 +1,15 @@
-/** @type {import(".").OAuthProvider} */
-export default function FortyTwo(options) {
+import { OAuthConfig, OAuthUserConfig } from "./oauth"
+
+export interface FortyTwoProfile {
+  id: string
+  fullname: string
+  email: string
+  image: string
+}
+
+export default function FortyTwo<
+  P extends Record<string, any> = FortyTwoProfile
+>(options: OAuthUserConfig<P>): OAuthConfig<P> {
   return {
     id: "42-school",
     name: "42 School",
