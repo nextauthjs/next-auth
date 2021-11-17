@@ -15,7 +15,7 @@ export default async function oAuthCallback(params: {
   options: InternalOptions<"oauth">
   query: IncomingRequest["query"]
   body: IncomingRequest["body"]
-  method: IncomingRequest["method"]
+  method: Required<IncomingRequest>["method"]
   cookies: IncomingRequest["cookies"]
 }): Promise<GetProfileResult & { cookies?: OutgoingResponse["cookies"] }> {
   const { options, query, body, method, cookies } = params
