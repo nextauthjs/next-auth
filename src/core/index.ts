@@ -13,7 +13,7 @@ import type { ErrorType } from "./pages/error"
 export interface IncomingRequest {
   /** @default "http://localhost:3000" */
   host: string
-  method: string
+  method?: string
   cookies?: Record<string, string>
   headers?: Record<string, any>
   query?: Record<string, any>
@@ -67,7 +67,7 @@ export async function NextAuthHandler<
     return render.error({ error: "configuration" })
   }
 
-  const { action, providerId, error } = req
+  const { action, providerId, error, method = "GET" } = req
 
   const { options, cookies } = await init({
     userOptions,
@@ -77,7 +77,7 @@ export async function NextAuthHandler<
     callbackUrl: req.body?.callbackUrl ?? req.query?.callbackUrl,
     csrfToken: req.body?.csrfToken,
     cookies: req.cookies,
-    isPost: req.method === "POST",
+    isPost: method === "POST",
   })
 
   const sessionStore = new SessionStore(
@@ -86,7 +86,7 @@ export async function NextAuthHandler<
     options.logger
   )
 
-  if (req.method === "GET") {
+  if (method === "GET") {
     const render = renderPage({ ...options, query: req.query, cookies })
     const { pages } = options
     switch (action) {
@@ -119,9 +119,9 @@ export async function NextAuthHandler<
           const callback = await routes.callback({
             body: req.body,
             query: req.query,
-            method: req.method,
             headers: req.headers,
             cookies: req.cookies,
+            method,
             options,
             sessionStore,
           })
@@ -165,7 +165,7 @@ export async function NextAuthHandler<
         return render.error({ error: error as ErrorType })
       default:
     }
-  } else if (req.method === "POST") {
+  } else if (method === "POST") {
     switch (action) {
       case "signin":
         // Verified CSRF Token required for all sign in routes
@@ -201,9 +201,9 @@ export async function NextAuthHandler<
           const callback = await routes.callback({
             body: req.body,
             query: req.query,
-            method: req.method,
             headers: req.headers,
             cookies: req.cookies,
+            method,
             options,
             sessionStore,
           })
@@ -228,6 +228,6 @@ export async function NextAuthHandler<
 
   return {
     status: 400,
-    body: `Error: Action ${action} with HTTP ${req.method} is not supported by NextAuth.js` as any,
+    body: `Error: Action ${action} with HTTP ${method} is not supported by NextAuth.js` as any,
   }
 }

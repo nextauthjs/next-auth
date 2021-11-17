@@ -11,7 +11,7 @@ import type { User } from "../.."
 export default async function callback(params: {
   options: InternalOptions<"oauth" | "credentials" | "email">
   query: IncomingRequest["query"]
-  method: IncomingRequest["method"]
+  method: Required<IncomingRequest>["method"]
   body: IncomingRequest["body"]
   headers: IncomingRequest["headers"]
   cookies: IncomingRequest["cookies"]
