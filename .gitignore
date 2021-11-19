@@ -50,6 +50,9 @@ app/prisma/dev.db*
 /.vs
 .vscode
 
+# Jetbrains
+.idea
+
 # GitHub Actions runner
 /actions-runner
 /_work

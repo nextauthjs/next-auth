@@ -23,6 +23,7 @@ import CognitoProvider from "next-auth/providers/cognito"
 import SlackProvider from "next-auth/providers/slack"
 import Okta from "next-auth/providers/okta"
 import AzureB2C from "next-auth/providers/azure-ad-b2c"
+import OsuProvider from "next-auth/providers/osu"
 
 // import { PrismaAdapter } from "@next-auth/prisma-adapter"
 // import { PrismaClient } from "@prisma/client"
@@ -167,6 +168,10 @@ export const authOptions: NextAuthOptions = {
       tenantId: process.env.AZURE_B2C_TENANT_ID,
       primaryUserFlow: process.env.AZURE_B2C_PRIMARY_USER_FLOW,
     }),
+    OsuProvider({
+      clientId: process.env.OSU_CLIENT_ID,
+      clientSecret: process.env.OSU_CLIENT_SECRET,
+    })
   ],
   secret: process.env.SECRET,
   debug: true,
