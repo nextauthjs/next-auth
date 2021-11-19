@@ -144,6 +144,11 @@ async function getOAuth2AccessToken (code, provider, codeVerifier) {
   if (provider.id === 'reddit') {
     headers.Authorization = 'Basic ' + Buffer.from((provider.clientId + ':' + provider.clientSecret)).toString('base64')
   }
+  // Added as a fix for TD Ameritrade Authentication
+  if (provider.id === 'td') {
+    params.access_type = 'offline'
+    params.code = decodeURIComponent(params.code)
+  }
 
   if (provider.id === 'identity-server4' && !headers.Authorization) {
     headers.Authorization = `Bearer ${code}`

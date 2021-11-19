@@ -95,6 +95,7 @@ export type OAuthProviderType =
   | "Slack"
   | "Spotify"
   | "Strava"
+  | "TDAmeritrade"
   | "Twitch"
   | "Twitter"
   | "VK"
