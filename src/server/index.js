@@ -203,7 +203,7 @@ async function NextAuthHandler(req, res, userOptions) {
             return res.redirect(
               `${pages.error}${
                 pages.error.includes("?") ? "&" : "?"
-              }error=${error}`
+              }error=${req.query.error}`
             )
           }
 
