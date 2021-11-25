@@ -93,6 +93,7 @@ export type OAuthProviderType =
   | "Reddit"
   | "Salesforce"
   | "Slack"
+  | "SoundCloud"
   | "Spotify"
   | "Strava"
   | "Twitch"

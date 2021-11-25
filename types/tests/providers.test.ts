@@ -193,6 +193,12 @@ Providers.LinkedIn({
 })
 
 // $ExpectType OAuthConfig<Profile>
+Providers.SoundCloud({
+  clientId: "foo123",
+  clientSecret: "bar123",
+})
+
+// $ExpectType OAuthConfig<Profile>
 Providers.Spotify({
   clientId: "foo123",
   clientSecret: "bar123",
