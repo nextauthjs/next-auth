@@ -1,5 +1,5 @@
 import { OAuthConfig, OAuthUserConfig } from "."
-import { JWS } from "jose"
+import { SignJWT } from "jose"
 
 /**
  * See more at:
@@ -124,19 +124,14 @@ export async function generateClientSecret(
   expires_in: number = 86400 * 180 // 6 months
 ) {
   const { keyId, teamId, privateKey, clientId } = components
-  return JWS.sign(
-    {
-      iss: teamId,
-      iat: Math.floor(Date.now() / 1000),
-      exp: Math.floor(Date.now() / 1000) + expires_in,
-      aud: "https://appleid.apple.com",
-      sub: clientId,
-    },
-    // Automatically convert \\n into \n if found in private key. If the key
-    // is passed in an environment variable \n can get escaped as \\n
-    privateKey.replace(/\\n/g, "\n"),
-    { algorithm: "ES256", kid: keyId }
-  )
+  return await new SignJWT({})
+    .setAudience("https://appleid.apple.com")
+    .setIssuer(teamId)
+    .setIssuedAt()
+    .setExpirationTime(Date.now() + expires_in)
+    .setSubject(clientId)
+    .setProtectedHeader({ kid: keyId, alg: "ES256" })
+    .sign(Buffer.from(privateKey.replace(/\\n/g, "\n")))
 }
 
 export default function Apple<P extends Record<string, any> = AppleProfile>(
