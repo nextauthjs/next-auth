@@ -15,23 +15,17 @@ import type {
   OAuthConfig,
   EmailConfig,
   CredentialsConfig,
-  AuthorizationEndpointHandler,
-  TokenEndpointHandler,
-  UserinfoEndpointHandler,
   ProviderType,
 } from "../providers"
 import type { JWTOptions } from "../jwt"
 import type { Adapter } from "../adapters"
+import { InternalUrl } from "./parse-url"
 
 // Below are types that are only supposed be used by next-auth internally
 
 /** @internal */
 export type InternalProvider<T extends ProviderType = any> = (T extends "oauth"
-  ? Omit<OAuthConfig<any>, "authorization" | "token" | "userinfo"> & {
-      authorization: AuthorizationEndpointHandler
-      token: TokenEndpointHandler
-      userinfo: UserinfoEndpointHandler
-    }
+  ? OAuthConfig<any>
   : T extends "email"
   ? EmailConfig
   : T extends "credentials"
@@ -41,20 +35,26 @@ export type InternalProvider<T extends ProviderType = any> = (T extends "oauth"
   callbackUrl: string
 }
 
+export type NextAuthAction =
+  | "providers"
+  | "session"
+  | "csrf"
+  | "signin"
+  | "signout"
+  | "callback"
+  | "verify-request"
+  | "error"
+  | "_log"
+
 /** @internal */
 export interface InternalOptions<T extends ProviderType = any> {
   providers: InternalProvider[]
-  baseUrl: string
-  basePath: string
-  action:
-    | "providers"
-    | "session"
-    | "csrf"
-    | "signin"
-    | "signout"
-    | "callback"
-    | "verify-request"
-    | "error"
+  /**
+   * Parsed from `NEXTAUTH_URL` or `VERCEL_URL`.
+   * @default "http://localhost:3000/api/auth"
+   */
+  url: InternalUrl
+  action: NextAuthAction
   provider: T extends string
     ? InternalProvider<T>
     : InternalProvider<T> | undefined

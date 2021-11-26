@@ -21,6 +21,9 @@ module.exports = {
 
     return config
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   experimental: {
     externalDir: true,
   },

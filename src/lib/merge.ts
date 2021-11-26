@@ -6,7 +6,7 @@ function isObject(item: any): boolean {
 }
 
 /** Deep merge two objects */
-export function merge(target: any, ...sources: any[]) {
+export function merge(target: any, ...sources: any[]): any {
   if (!sources.length) return target
   const source = sources.shift()
 

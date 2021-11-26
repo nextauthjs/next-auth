@@ -31,14 +31,19 @@ module.exports = (api) => {
     comments: false,
     overrides: [
       {
-        test: ["../src/react/index.tsx"],
+        test: [
+          "../src/react/index.tsx",
+          "../src/lib/logger.ts",
+          "../src/core/errors.ts",
+          "../src/client/**",
+        ],
         presets: [
           ["@babel/preset-env", { targets: { ie: 11 } }],
           ["@babel/preset-react", { runtime: "automatic" }],
         ],
       },
       {
-        test: ["../src/server/pages/*.tsx"],
+        test: ["../src/core/pages/*.tsx"],
         presets: ["preact"],
         plugins: [
           [
