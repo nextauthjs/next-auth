@@ -26,18 +26,6 @@ import AzureB2C from "next-auth/providers/azure-ad-b2c"
 import OsuProvider from "next-auth/providers/osu"
 import AppleProvider from "next-auth/providers/apple"
 
-// // Uncomment and copy log to .env.local every 6 months
-// import { generateClientSecret } from "next-auth/providers/apple"
-// const appleSecret = await generateClientSecret({
-//   clientId: process.env.APPLE_ID,
-//   keyId: process.env.APPLE_KEY_ID,
-//   teamId: process.env.APPLE_TEAM_ID,
-//   privateKey: process.env.APPLE_PRIVATE_KEY,
-// })
-// console.log(
-//   `APPLE_SECRET=${appleSecret} # Created: ${new Date().toISOString()} Update if more than 6 months old.`
-// )
-
 // import { PrismaAdapter } from "@next-auth/prisma-adapter"
 // import { PrismaClient } from "@prisma/client"
 // const prisma = new PrismaClient()
