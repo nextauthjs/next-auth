@@ -1,6 +1,4 @@
 import { OAuthConfig, OAuthUserConfig } from "."
-import { SignJWT } from "jose"
-import { createPrivateKey } from "crypto"
 
 /**
  * See more at:
@@ -89,78 +87,13 @@ export interface AppleProfile {
   auth_time: number
 }
 
-/**
- * Creates a JWT from the components `clientId`, `teamId`, `keyId` and `privateKey`.
- * By default, the JWT has a 6 months expiry date. Depending on how/where you call this method in your code,
- * this will rotate either after each user call, or each time you restart the server.
- * @example
- * 
- * ```ts
- *  // Uncomment and copy log to .env.local every 6 months
- *  import { generateClientSecret } from "next-auth/providers/apple"
- *  const appleSecret = await generateClientSecret({
- *    clientId: process.env.APPLE_ID,
- *    keyId: process.env.APPLE_KEY_ID,
- *    teamId: process.env.APPLE_TEAM_ID,
- *    privateKey: process.env.APPLE_PRIVATE_KEY,
- *  })
- *  console.log(
- *    `APPLE_SECRET=${appleSecret} # Created: ${new Date().toISOString()} Update if more than 6 months old.`
- *  )
- * ```
- * Read more at: [Creating the Client Secret
-](https://developer.apple.com/documentation/sign_in_with_apple/generate_and_validate_tokens#3262048)
- */
-export async function generateClientSecret(
-  components: {
-    clientId: string
-    teamId: string
-    keyId: string
-    privateKey: string
-  },
-  /**
-   * How long is the secret valid in seconds.
-   * @default 15780000
-   */
-  expires_in: number = 86400 * 180 // 6 months
-) {
-  const { keyId, teamId, privateKey, clientId } = components
-
-  const expiresAt = Math.ceil(Date.now() / 1000) + expires_in
-  return await new SignJWT({})
-    .setAudience("https://appleid.apple.com")
-    .setIssuer(teamId)
-    .setIssuedAt()
-    .setExpirationTime(expiresAt)
-    .setSubject(clientId)
-    .setProtectedHeader({ alg: "ES256", kid: keyId })
-    .sign(createPrivateKey(privateKey.replace(/\\n/g, "\n")))
-}
-
 export default function Apple<P extends Record<string, any> = AppleProfile>(
   options: Omit<OAuthUserConfig<P>, "clientSecret"> & {
     /**
-     * The Apple provider used a JWT as the client secret. To generate a valid secret,
-     * you need a couple of variables to be defined.
-     * We expose a method called `generateClientSecret` from `next-auth/providers/apple` to help you.
-     *
-     * @example
-     *
-     * ```ts
-     *  // Uncomment and copy log to .env.local every 6 months
-     *  import { generateClientSecret } from "next-auth/providers/apple"
-     *  const appleSecret = await generateClientSecret({
-     *    clientId: process.env.APPLE_ID,
-     *    keyId: process.env.APPLE_KEY_ID,
-     *    teamId: process.env.APPLE_TEAM_ID,
-     *    privateKey: process.env.APPLE_PRIVATE_KEY,
-     *  })
-     *  console.log(
-     *    `APPLE_SECRET=${appleSecret} # Created: ${new Date().toISOString()} Update if more than 6 months old.`
-     *  )
-     * ```
+     * Apple requires the client secret to be a JWT. You can generate one using the following script:
+     * https://bal.so/apple-gen-secret
      * 
-     * Read more at: [Creating the Client Secret
+     * Read more: [Creating the Client Secret
 ](https://developer.apple.com/documentation/sign_in_with_apple/generate_and_validate_tokens#3262048)
      */
     clientSecret: string
