@@ -1,4 +1,4 @@
-import { custom, TokenSet, TokenSetParameters } from "openid-client"
+import {  TokenSet, TokenSetParameters } from "openid-client"
 import { OAuthConfig, OAuthUserConfig } from "."
 
 export interface TikTokProfile {
@@ -28,6 +28,7 @@ export default function TikTok<P extends Record<string, any> = TikTokProfile>(
       url: "https://open-api.tiktok.com/platform/oauth/connect",
     },
     httpOptions: {
+      followRedirect: true,
       timeout: 6000,
     },
     token: {
@@ -51,10 +52,6 @@ export default function TikTok<P extends Record<string, any> = TikTokProfile>(
     userinfo: {
       url: "https://open-api.tiktok.com/oauth/userinfo",
       request: async ({ client, tokens }) => {
-        client[custom.http_options] = (_url, options) => {
-          return { ...options, followRedirect: true }
-        }
-
         const tokenSet = tokens as TokenSet
         const data = await client.userinfo<{ data: TikTokProfile }>(tokenSet, {
           method: "GET",
