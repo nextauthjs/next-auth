@@ -1,5 +1,6 @@
 import { OAuthConfig, OAuthUserConfig } from "."
 import { SignJWT } from "jose"
+import { createPrivateKey } from "crypto"
 
 /**
  * See more at:
@@ -124,14 +125,16 @@ export async function generateClientSecret(
   expires_in: number = 86400 * 180 // 6 months
 ) {
   const { keyId, teamId, privateKey, clientId } = components
+
+  const expiresAt = Math.ceil(Date.now() / 1000) + expires_in
   return await new SignJWT({})
     .setAudience("https://appleid.apple.com")
     .setIssuer(teamId)
     .setIssuedAt()
-    .setExpirationTime(Date.now() + expires_in)
+    .setExpirationTime(expiresAt)
     .setSubject(clientId)
-    .setProtectedHeader({ kid: keyId, alg: "ES256" })
-    .sign(Buffer.from(privateKey.replace(/\\n/g, "\n")))
+    .setProtectedHeader({ alg: "ES256", kid: keyId })
+    .sign(createPrivateKey(privateKey.replace(/\\n/g, "\n")))
 }
 
 export default function Apple<P extends Record<string, any> = AppleProfile>(
