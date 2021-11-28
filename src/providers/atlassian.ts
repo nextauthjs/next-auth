@@ -1,7 +1,6 @@
-import { Profile } from "src"
-import { OAuthConfig, OAuthUserConfig } from "./oauth"
+import type { OAuthConfig, OAuthUserConfig } from "./oauth"
 
-interface AtlassianProfile extends Profile {
+interface AtlassianProfile {
   account_id: string
   name: string
   email: string
@@ -9,7 +8,7 @@ interface AtlassianProfile extends Profile {
 }
 
 export default function Atlassian<P extends AtlassianProfile>(
-  options: OAuthUserConfig
+  options: OAuthUserConfig<P>
 ): OAuthConfig<P> {
   return {
     id: "atlassian",
