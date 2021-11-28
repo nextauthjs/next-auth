@@ -1,4 +1,4 @@
-import { OAuthConfig, OAuthUserConfig } from "."
+import type { OAuthConfig, OAuthUserConfig } from "."
 
 export interface OsuUserCompact {
   avatar_url: string
@@ -60,8 +60,8 @@ export default function Osu<P extends Record<string, any> = OsuProfile>(
     authorization: {
       url: "https://osu.ppy.sh/oauth/authorize",
       params: {
-        scope: "identify"
-      }
+        scope: "identify",
+      },
     },
     userinfo: "https://osu.ppy.sh/api/v2/me",
     profile(profile) {
@@ -69,9 +69,9 @@ export default function Osu<P extends Record<string, any> = OsuProfile>(
         id: profile.id,
         email: null,
         name: profile.username,
-        image: profile.avatar_url
+        image: profile.avatar_url,
       }
     },
-    options
+    options,
   }
 }

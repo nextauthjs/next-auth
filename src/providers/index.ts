@@ -1,8 +1,8 @@
-import { OAuthConfig, OAuthProvider, OAuthProviderType } from "./oauth"
+import type { OAuthConfig, OAuthProvider, OAuthProviderType } from "./oauth"
 
-import { EmailConfig, EmailProvider, EmailProviderType } from "./email"
+import type { EmailConfig, EmailProvider, EmailProviderType } from "./email"
 
-import {
+import type {
   CredentialsConfig,
   CredentialsProvider,
   CredentialsProviderType,

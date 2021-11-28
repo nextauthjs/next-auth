@@ -1,5 +1,5 @@
-import { CommonProviderOptions } from "../providers"
-import { Profile, TokenSet, User, Awaitable } from ".."
+import type { CommonProviderOptions } from "../providers"
+import type { Profile, TokenSet, User, Awaitable } from ".."
 
 import type {
   AuthorizationParameters,

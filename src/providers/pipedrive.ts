@@ -1,4 +1,4 @@
-import { OAuthConfig, OAuthUserConfig } from "./oauth"
+import type { OAuthConfig, OAuthUserConfig } from "."
 
 export interface PipedriveProfile {
   success: boolean

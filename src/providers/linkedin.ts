@@ -1,4 +1,4 @@
-import { OAuthConfig, OAuthUserConfig } from "."
+import type { OAuthConfig, OAuthUserConfig } from "."
 
 interface Identifier {
   identifier: string

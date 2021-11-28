@@ -1,6 +1,6 @@
-import { IncomingRequest } from "src/core"
-import { CommonProviderOptions } from "."
-import { User, Awaitable } from ".."
+import type { IncomingRequest } from "../core"
+import type { CommonProviderOptions } from "."
+import type { User, Awaitable } from ".."
 
 export interface CredentialInput {
   label?: string

@@ -1,4 +1,4 @@
-import { OAuthConfig, OAuthUserConfig } from "./oauth"
+import type { OAuthConfig, OAuthUserConfig } from "."
 
 export interface Auth0Profile {
   sub: string

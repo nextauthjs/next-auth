@@ -1,4 +1,4 @@
-import type { OAuthConfig, OAuthUserConfig } from "./oauth"
+import type { OAuthConfig, OAuthUserConfig } from "."
 
 interface AtlassianProfile {
   account_id: string
