@@ -1,7 +1,6 @@
-import { Profile } from ".."
-import { OAuthConfig, OAuthUserConfig } from "./oauth"
+import type { OAuthConfig, OAuthUserConfig } from "."
 
-export interface FacebookProfile extends Profile {
+export interface FacebookProfile {
   id: string
   picture: { data: { url: string } }
 }

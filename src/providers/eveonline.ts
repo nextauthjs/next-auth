@@ -1,24 +1,24 @@
-import { Profile } from ".."
-import { OAuthConfig, OAuthUserConfig } from "./oauth"
+import type { OAuthConfig, OAuthUserConfig } from "."
 
-export interface EVEOnlineProfile extends Profile {
-  CharacterID: number;
-  CharacterName: string;
-  ExpiresOn: string;
-  Scopes: string;
-  TokenType: string;
-  CharacterOwnerHash: string;
-  IntellectualProperty: string;
+export interface EVEOnlineProfile {
+  CharacterID: number
+  CharacterName: string
+  ExpiresOn: string
+  Scopes: string
+  TokenType: string
+  CharacterOwnerHash: string
+  IntellectualProperty: string
 }
 
-export default function EVEOnline<P extends Record<string, any> = EVEOnlineProfile>(
-  options: OAuthUserConfig<P>
-): OAuthConfig<P> {
+export default function EVEOnline<
+  P extends Record<string, any> = EVEOnlineProfile
+>(options: OAuthUserConfig<P>): OAuthConfig<P> {
   return {
     id: "eveonline",
     name: "EVE Online",
     type: "oauth",
-    wellKnown: "https://login.eveonline.com/.well-known/oauth-authorization-server",
+    wellKnown:
+      "https://login.eveonline.com/.well-known/oauth-authorization-server",
     authorization: {
       params: {
         scope: "publicData",
