@@ -11,35 +11,53 @@ import type {
   Awaitable,
 } from ".."
 
-import type { Provider } from "../providers"
+import type {
+  OAuthConfig,
+  EmailConfig,
+  CredentialsConfig,
+  ProviderType,
+} from "../providers"
 import type { JWTOptions } from "../jwt"
 import type { Adapter } from "../adapters"
+import { InternalUrl } from "./parse-url"
 
 // Below are types that are only supposed be used by next-auth internally
 
 /** @internal */
-export type InternalProvider = Provider & {
+export type InternalProvider<T extends ProviderType = any> = (T extends "oauth"
+  ? OAuthConfig<any>
+  : T extends "email"
+  ? EmailConfig
+  : T extends "credentials"
+  ? CredentialsConfig
+  : never) & {
   signinUrl: string
   callbackUrl: string
 }
 
+export type NextAuthAction =
+  | "providers"
+  | "session"
+  | "csrf"
+  | "signin"
+  | "signout"
+  | "callback"
+  | "verify-request"
+  | "error"
+  | "_log"
+
 /** @internal */
-export interface InternalOptions<
-  P extends InternalProvider = InternalProvider
-> {
+export interface InternalOptions<T extends ProviderType = any> {
   providers: InternalProvider[]
-  baseUrl: string
-  basePath: string
-  action:
-    | "providers"
-    | "session"
-    | "csrf"
-    | "signin"
-    | "signout"
-    | "callback"
-    | "verify-request"
-    | "error"
-  provider: P
+  /**
+   * Parsed from `NEXTAUTH_URL` or `VERCEL_URL`.
+   * @default "http://localhost:3000/api/auth"
+   */
+  url: InternalUrl
+  action: NextAuthAction
+  provider: T extends string
+    ? InternalProvider<T>
+    : InternalProvider<T> | undefined
   csrfToken?: string
   csrfTokenVerified?: boolean
   secret: string

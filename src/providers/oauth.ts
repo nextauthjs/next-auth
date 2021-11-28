@@ -1,17 +1,21 @@
 import { CommonProviderOptions } from "../providers"
 import { Profile, TokenSet, User, Awaitable } from ".."
 
-import {
+import type {
   AuthorizationParameters,
   CallbackParamsType,
-  Client,
+  Issuer,
+  ClientMetadata,
   IssuerMetadata,
   OAuthCallbackChecks,
   OpenIDCallbackChecks,
+  HttpOptions,
 } from "openid-client"
+import type { JWK } from "jose"
 
-// TODO: generate
-export type OAuthProviderType = string
+type Client = InstanceType<Issuer["Client"]>
+
+export type { OAuthProviderType } from "./oauth-types"
 
 type ChecksType = "pkce" | "state" | "both" | "none"
 
@@ -21,12 +25,12 @@ type PartialIssuer = Partial<Pick<IssuerMetadata, "jwks_endpoint" | "issuer">>
 
 type UrlParams = Record<string, unknown>
 
-type EndpointRequest<C, R> = (
+type EndpointRequest<C, R, P> = (
   context: C & {
     /** `openid-client` Client */
     client: Client
     /** Provider is passed for convenience, ans also contains the `callbackUrl`. */
-    provider: OAuthConfig & {
+    provider: OAuthConfig<P> & {
       signinUrl: string
       callbackUrl: string
     }
@@ -47,17 +51,45 @@ interface AdvancedEndpointHandler<P extends UrlParams, C, R> {
    * - ⚠ **This is an advanced option.**
    * You should **try to avoid using advanced options** unless you are very comfortable using them.
    */
-  request?: EndpointRequest<C, R>
+  request?: EndpointRequest<C, R, P>
 }
 
 /** Either an URL (containing all the parameters) or an object with more granular control. */
-type EndpointHandler<P extends UrlParams, C = any, R = any> =
-  | string
-  | AdvancedEndpointHandler<P, C, R>
+export type EndpointHandler<
+  P extends UrlParams,
+  C = any,
+  R = any
+> = AdvancedEndpointHandler<P, C, R>
 
-export interface OAuthConfig<P extends Record<string, unknown> = Profile>
-  extends CommonProviderOptions,
-    PartialIssuer {
+export type AuthorizationEndpointHandler =
+  EndpointHandler<AuthorizationParameters>
+
+export type TokenEndpointHandler = EndpointHandler<
+  UrlParams,
+  {
+    /**
+     * Parameters extracted from the request to the `/api/auth/callback/:providerId` endpoint.
+     * Contains params like `state`.
+     */
+    params: CallbackParamsType
+    /**
+     * When using this custom flow, make sure to do all the necessary security checks.
+     * Thist object contains parameters you have to match against the request to make sure it is valid.
+     */
+    checks: OAuthChecks
+  },
+  {
+    tokens: TokenSet
+  }
+>
+
+export type UserinfoEndpointHandler = EndpointHandler<
+  UrlParams,
+  { tokens: TokenSet },
+  Profile
+>
+
+export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   /**
    * OpenID Connect (OIDC) compliant providers can configure
    * this instead of `authorize`/`token`/`userinfo` options
@@ -73,42 +105,15 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
    *
    * [Authorization endpoint](https://datatracker.ietf.org/doc/html/rfc6749#section-3.1)
    */
-  authorization?: EndpointHandler<AuthorizationParameters>
-  /**
-   * Endpoint that returns OAuth 2/OIDC tokens and information about them.
-   * This includes `access_token`, `id_token`, `refresh_token`, etc.
-   *
-   * [Token endpoint](https://datatracker.ietf.org/doc/html/rfc6749#section-3.2)
-   */
-  token?: EndpointHandler<
-    UrlParams,
-    {
-      /**
-       * Parameters extracted from the request to the `/api/auth/callback/:providerId` endpoint.
-       * Contains params like `state`.
-       */
-      params: CallbackParamsType
-      /**
-       * When using this custom flow, make sure to do all the necessary security checks.
-       * Thist object contains parameters you have to match against the request to make sure it is valid.
-       */
-      checks: OAuthChecks
-    },
-    { tokens: TokenSet }
-  >
-  /**
-   * When using an OAuth 2 provider, the user information must be requested
-   * through an additional request from the userinfo endpoint.
-   *
-   * [Userinfo endpoint](https://www.oauth.com/oauth2-servers/signing-in-with-google/verifying-the-user-info)
-   */
-  userinfo?: EndpointHandler<UrlParams, { tokens: TokenSet }, Profile>
+  authorization?: string | AuthorizationEndpointHandler
+  token?: string | TokenEndpointHandler
+  userinfo?: string | UserinfoEndpointHandler
   type: "oauth"
   version?: string
-  accessTokenUrl?: string
-  requestTokenUrl?: string
   profile?: (profile: P, tokens: TokenSet) => Awaitable<User & { id: string }>
   checks?: ChecksType | ChecksType[]
+  client?: Partial<ClientMetadata>
+  jwks?: { keys: JWK[] }
   clientId?: string
   clientSecret?:
     | string
@@ -128,20 +133,29 @@ export interface OAuthConfig<P extends Record<string, unknown> = Profile>
   region?: string
   // TODO: only allow for some
   issuer?: string
-  // TODO: only allow for Azure Active Directory B2C and FusionAuth
-  tenantId?: string
+  /** Read more at: https://github.com/panva/node-openid-client/tree/main/docs#customizing-http-requests */
+  httpOptions?: HttpOptions
+
   /**
    * The options provided by the user.
    * We will perform a deep-merge of these values
    * with the default configuration.
    */
   options?: OAuthUserConfig<P>
+
+  // These are kept around for backwards compatibility with OAuth 1.x
+  accessTokenUrl?: string
+  requestTokenUrl?: string
+  profileUrl?: string
+  encoding?: string
 }
 
-export type OAuthUserConfig<P extends Record<string, unknown> = Profile> = Omit<
+export type OAuthUserConfig<P> = Omit<
   Partial<OAuthConfig<P>>,
   "options" | "type"
 > &
   Required<Pick<OAuthConfig<P>, "clientId" | "clientSecret">>
 
-export type OAuthProvider = (options: Partial<OAuthConfig>) => OAuthConfig
+export type OAuthProvider = (
+  options: Partial<OAuthConfig<any>>
+) => OAuthConfig<any>

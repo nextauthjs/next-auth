@@ -1,4 +1,4 @@
-import { NextApiRequest } from "next"
+import { IncomingRequest } from "src/core"
 import { CommonProviderOptions } from "."
 import { User, Awaitable } from ".."
 
@@ -10,13 +10,13 @@ export interface CredentialInput {
 }
 
 export interface CredentialsConfig<
-  C extends Record<string, CredentialInput> = {}
+  C extends Record<string, CredentialInput> = Record<string, CredentialInput>
 > extends CommonProviderOptions {
   type: "credentials"
   credentials: C
   authorize: (
-    credentials: Record<keyof C, string>,
-    req: NextApiRequest
+    credentials: Record<keyof C, string> | undefined,
+    req: Pick<IncomingRequest, "body" | "query" | "headers" | "method">
   ) => Awaitable<(Omit<User, "id"> | { id?: string }) | null>
 }
 
@@ -26,13 +26,20 @@ export type CredentialsProvider = <C extends Record<string, CredentialInput>>(
 
 export type CredentialsProviderType = "Credentials"
 
-export default function Credentials(
-  options: Partial<CredentialsConfig>
-): CredentialsConfig {
+type UserCredentialsConfig<C extends Record<string, CredentialInput>> = Partial<
+  Omit<CredentialsConfig<C>, "options">
+> &
+  Pick<CredentialsConfig<C>, "authorize" | "credentials">
+
+export default function Credentials<
+  C extends Record<string, CredentialInput> = Record<string, CredentialInput>
+>(options: UserCredentialsConfig<C>): CredentialsConfig<C> {
   return {
     id: "credentials",
     name: "Credentials",
     type: "credentials",
+    credentials: {} as any,
+    authorize: () => null,
     options,
-  } as any
+  }
 }

@@ -25,15 +25,17 @@ node_modules
 .docusaurus
 .cache-loader
 /providers
+/src/providers/oauth-types.ts
 /client
 /css
 /lib
-/server
+/core
 /jwt
 /react
 /adapters.d.ts
 /index.d.ts
 /index.js
+/next
 
 # Development app
 app/src/css
@@ -49,6 +51,9 @@ app/next-auth
 /.vs/slnx.sqlite
 /.vs
 .vscode
+
+# Jetbrains
+.idea
 
 # GitHub Actions runner
 /actions-runner

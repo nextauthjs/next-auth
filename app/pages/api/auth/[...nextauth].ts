@@ -1,4 +1,4 @@
-import NextAuth from "next-auth"
+import NextAuth, { NextAuthOptions } from "next-auth"
 import EmailProvider from "next-auth/providers/email"
 import GitHubProvider from "next-auth/providers/github"
 import Auth0Provider from "next-auth/providers/auth0"
@@ -17,6 +17,13 @@ import LineProvider from "next-auth/providers/line"
 import LinkedInProvider from "next-auth/providers/linkedin"
 import MailchimpProvider from "next-auth/providers/mailchimp"
 import DiscordProvider from "next-auth/providers/discord"
+import AzureADProvider from "next-auth/providers/azure-ad"
+import SpotifyProvider from "next-auth/providers/spotify"
+import CognitoProvider from "next-auth/providers/cognito"
+import SlackProvider from "next-auth/providers/slack"
+import Okta from "next-auth/providers/okta"
+import AzureB2C from "next-auth/providers/azure-ad-b2c"
+import OsuProvider from "next-auth/providers/osu"
 
 // import { PrismaAdapter } from "@next-auth/prisma-adapter"
 // import { PrismaClient } from "@prisma/client"
@@ -31,29 +38,28 @@ import DiscordProvider from "next-auth/providers/discord"
 //   domain: process.env.FAUNA_DOMAIN,
 // })
 // const adapter = FaunaAdapter(client)
-
-export default NextAuth({
+export const authOptions: NextAuthOptions = {
   // adapter,
   providers: [
     // E-mail
     // Start fake e-mail server with `npm run start:email`
-    EmailProvider({
-      server: {
-        host: "127.0.0.1",
-        auth: null,
-        secure: false,
-        port: 1025,
-        tls: { rejectUnauthorized: false },
-      },
-    }),
+    // EmailProvider({
+    //   server: {
+    //     host: "127.0.0.1",
+    //     auth: null,
+    //     secure: false,
+    //     port: 1025,
+    //     tls: { rejectUnauthorized: false },
+    //   },
+    // }),
     // Credentials
     CredentialsProvider({
       name: "Credentials",
       credentials: {
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
-        if (credentials.password === "password") {
+      async authorize(credentials) {
+        if (credentials.password === "pw") {
           return {
             name: "Fill Murray",
             email: "bill@fillmurray.com",
@@ -132,11 +138,48 @@ export default NextAuth({
       clientId: process.env.DISCORD_ID,
       clientSecret: process.env.DISCORD_SECRET,
     }),
+    AzureADProvider({
+      clientId: process.env.AZURE_AD_CLIENT_ID,
+      clientSecret: process.env.AZURE_AD_CLIENT_SECRET,
+      tenantId: process.env.AZURE_AD_TENANT_ID,
+      profilePhotoSize: 48,
+    }),
+    SpotifyProvider({
+      clientId: process.env.SPOTIFY_ID,
+      clientSecret: process.env.SPOTIFY_SECRET,
+    }),
+    CognitoProvider({
+      clientId: process.env.COGNITO_ID,
+      clientSecret: process.env.COGNITO_SECRET,
+      issuer: process.env.COGNITO_ISSUER,
+    }),
+    Okta({
+      clientId: process.env.OKTA_ID,
+      clientSecret: process.env.OKTA_SECRET,
+      issuer: process.env.OKTA_ISSUER,
+    }),
+    SlackProvider({
+      clientId: process.env.SLACK_ID,
+      clientSecret: process.env.SLACK_SECRET,
+    }),
+    AzureB2C({
+      clientId: process.env.AZURE_B2C_ID,
+      clientSecret: process.env.AZURE_B2C_SECRET,
+      tenantId: process.env.AZURE_B2C_TENANT_ID,
+      primaryUserFlow: process.env.AZURE_B2C_PRIMARY_USER_FLOW,
+    }),
+    OsuProvider({
+      clientId: process.env.OSU_CLIENT_ID,
+      clientSecret: process.env.OSU_CLIENT_SECRET,
+    })
   ],
-  jwt: {
-    encryption: true,
-    secret: process.env.SECRET,
-  },
+  secret: process.env.SECRET,
   debug: true,
-  theme: "auto",
-})
+  theme: {
+    colorScheme: "auto",
+    logo: "https://next-auth.js.org/img/logo/logo-sm.png",
+    brandColor: "#1786fb",
+  },
+}
+
+export default NextAuth(authOptions)

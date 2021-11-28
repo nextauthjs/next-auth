@@ -19,11 +19,11 @@ import {
   fetchData,
   now,
   NextAuthClientConfig,
-} from "../lib/client"
+} from "../client/_utils"
 
 import type {
   ClientSafeProvider,
-  RedirectableProvider,
+  LiteralUnion,
   SessionProviderProps,
   SignInAuthorisationParams,
   SignInOptions,
@@ -32,6 +32,11 @@ import type {
   SignOutResponse,
   UseSessionOptions,
 } from "./types"
+
+import type {
+  BuiltInProviderType,
+  RedirectableProviderType,
+} from "../providers"
 
 export * from "./types"
 
@@ -42,16 +47,16 @@ export * from "./types"
 // 2. When invoked server side the value is picked up from an environment
 //    variable and defaults to 'http://localhost:3000'.
 const __NEXTAUTH: NextAuthClientConfig = {
-  baseUrl: parseUrl(process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL).baseUrl,
-  basePath: parseUrl(process.env.NEXTAUTH_URL).basePath,
+  baseUrl: parseUrl(process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL).origin,
+  basePath: parseUrl(process.env.NEXTAUTH_URL).path,
   baseUrlServer: parseUrl(
     process.env.NEXTAUTH_URL_INTERNAL ??
       process.env.NEXTAUTH_URL ??
       process.env.VERCEL_URL
-  ).baseUrl,
+  ).origin,
   basePathServer: parseUrl(
     process.env.NEXTAUTH_URL_INTERNAL ?? process.env.NEXTAUTH_URL
-  ).basePath,
+  ).path,
   _lastSync: 0,
   _session: undefined,
   _getSession: () => {},
@@ -79,7 +84,7 @@ const SessionContext = React.createContext<SessionContextValue | undefined>(
  *
  * [Documentation](https://next-auth.js.org/getting-started/client#usesession)
  */
-export function useSession<R extends boolean>(options: UseSessionOptions<R>) {
+export function useSession<R extends boolean>(options?: UseSessionOptions<R>) {
   // @ts-expect-error Satisfy TS if branch on line below
   const value: SessionContextValue<R> = React.useContext(SessionContext)
   if (!value && process.env.NODE_ENV !== "production") {
@@ -99,7 +104,7 @@ export function useSession<R extends boolean>(options: UseSessionOptions<R>) {
         callbackUrl: window.location.href,
       })}`
       if (onUnauthenticated) onUnauthenticated()
-      else window.location.replace(url)
+      else window.location.href = url
     }
   }, [requiredAndNotLoading, onUnauthenticated])
 
@@ -155,11 +160,9 @@ export async function getCsrfToken(params?: CtxOrReq) {
  * [Documentation](https://next-auth.js.org/getting-started/client#getproviders)
  */
 export async function getProviders() {
-  return await fetchData<Record<RedirectableProvider, ClientSafeProvider>>(
-    "providers",
-    __NEXTAUTH,
-    logger
-  )
+  return await fetchData<
+    Record<LiteralUnion<BuiltInProviderType>, ClientSafeProvider>
+  >("providers", __NEXTAUTH, logger)
 }
 
 /**
@@ -170,13 +173,13 @@ export async function getProviders() {
  * [Documentation](https://next-auth.js.org/getting-started/client#signin)
  */
 export async function signIn<
-  P extends RedirectableProvider | undefined = undefined
+  P extends RedirectableProviderType | undefined = undefined
 >(
-  provider?: RedirectableProvider,
+  provider?: LiteralUnion<BuiltInProviderType>,
   options?: SignInOptions,
   authorizationParams?: SignInAuthorisationParams
 ): Promise<
-  P extends RedirectableProvider ? SignInResponse | undefined : undefined
+  P extends RedirectableProviderType ? SignInResponse | undefined : undefined
 > {
   const { callbackUrl = window.location.href, redirect = true } = options ?? {}
 
@@ -184,14 +187,14 @@ export async function signIn<
   const providers = await getProviders()
 
   if (!providers) {
-    window.location.replace(`${baseUrl}/error`)
+    window.location.href = `${baseUrl}/error`
     return
   }
 
   if (!provider || !(provider in providers)) {
-    window.location.replace(
-      `${baseUrl}/signin?${new URLSearchParams({ callbackUrl })}`
-    )
+    window.location.href = `${baseUrl}/signin?${new URLSearchParams({
+      callbackUrl,
+    })}`
     return
   }
 
@@ -223,7 +226,7 @@ export async function signIn<
 
   if (redirect || !isSupportingReturn) {
     const url = data.url ?? callbackUrl
-    window.location.replace(url)
+    window.location.href = url
     // If url contains a hash, the browser does not reload the page. We reload manually
     if (url.includes("#")) window.location.reload()
     return
@@ -272,7 +275,7 @@ export async function signOut<R extends boolean = true>(
 
   if (options?.redirect ?? true) {
     const url = data.url ?? callbackUrl
-    window.location.replace(url)
+    window.location.href = url
     // If url contains a hash, the browser does not reload the page. We reload manually
     if (url.includes("#")) window.location.reload()
     // @ts-expect-error
@@ -349,7 +352,7 @@ export function SessionProvider(props: SessionProviderProps) {
         __NEXTAUTH._session = await getSession()
         setSession(__NEXTAUTH._session)
       } catch (error) {
-        logger.error("CLIENT_SESSION_ERROR", error)
+        logger.error("CLIENT_SESSION_ERROR", error as Error)
       } finally {
         setLoading(false)
       }

@@ -1,13 +1,14 @@
-import { Profile } from ".."
 import { OAuthConfig, OAuthUserConfig } from "./oauth"
 
-export interface GoogleProfile extends Profile {
+export interface GoogleProfile {
   sub: string
+  name: string
+  email: string
   picture: string
 }
 
-export default function Google<P extends GoogleProfile>(
-  options: OAuthUserConfig
+export default function Google<P extends Record<string, any> = GoogleProfile>(
+  options: OAuthUserConfig<P>
 ): OAuthConfig<P> {
   return {
     id: "google",

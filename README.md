@@ -191,10 +191,24 @@ We're happy to announce we've recently created an [OpenCollective](https://openc
         <sub>🥉 Bronze Financial Sponsor</sub>
       </td>
       <td align="center" valign="top">
+        <a href="https://clerk.dev" target="_blank">
+          <img width="128px" src="https://avatars.githubusercontent.com/u/49538330?s=200&v=4" alt="Prisma Logo" />
+        </a><br />
+        <div>Clerk</div><br />
+        <sub>🥉 Bronze Financial Sponsor</sub>
+      </td>
+      <td align="center" valign="top">
         <a href="https://checklyhq.com" target="_blank">
           <img width="128px" src="https://avatars.githubusercontent.com/u/25982255?v=4" alt="Checkly Logo" />
         </a><br />
         <div>Checkly</div><br />
+        <sub>☁️ Infrastructure Support</sub>
+      </td>
+      <td align="center" valign="top">
+        <a href="https://superblog.ai/" target="_blank">
+          <img width="128px" src="https://d33wubrfki0l68.cloudfront.net/cdc4a3833bd878933fcc131655878dbf226ac1c5/10cd6/images/logo_bolt_small.png" alt="superblog Logo" />
+        </a><br />
+        <div>superblog</div><br />
         <sub>☁️ Infrastructure Support</sub>
       </td>
     </tr><tr></tr>

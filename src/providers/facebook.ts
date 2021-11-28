@@ -1,4 +1,4 @@
-import { Profile } from "src"
+import { Profile } from ".."
 import { OAuthConfig, OAuthUserConfig } from "./oauth"
 
 export interface FacebookProfile extends Profile {
@@ -6,9 +6,9 @@ export interface FacebookProfile extends Profile {
   picture: { data: { url: string } }
 }
 
-export default function Facebook<P extends FacebookProfile>(
-  options: OAuthUserConfig<P>
-): OAuthConfig<P> {
+export default function Facebook<
+  P extends Record<string, any> = FacebookProfile
+>(options: OAuthUserConfig<P>): OAuthConfig<P> {
   return {
     id: "facebook",
     name: "Facebook",
@@ -27,7 +27,7 @@ export default function Facebook<P extends FacebookProfile>(
         })
       },
     },
-    profile(profile) {
+    profile(profile: P) {
       return {
         id: profile.id,
         name: profile.name,

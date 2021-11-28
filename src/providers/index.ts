@@ -21,7 +21,7 @@ export interface CommonProviderOptions {
   options?: Record<string, unknown>
 }
 
-export type Provider = OAuthConfig | EmailConfig | CredentialsConfig
+export type Provider = OAuthConfig<any> | EmailConfig | CredentialsConfig
 
 export type BuiltInProviders = Record<OAuthProviderType, OAuthProvider> &
   Record<CredentialsProviderType, CredentialsProvider> &
@@ -35,3 +35,7 @@ export interface AppProvider extends CommonProviderOptions {
   signinUrl: string
   callbackUrl: string
 }
+
+export type RedirectableProviderType = "email" | "credentials"
+
+export type BuiltInProviderType = RedirectableProviderType | OAuthProviderType

@@ -5,24 +5,32 @@ import { SessionProvider, useSession, signOut } from "../../react"
 import { server, mockSession } from "./helpers/mocks"
 
 const origConsoleError = console.error
-const origLocation = window.location
-const locationReplace = jest.fn()
+const { location } = window
 
+let _href = window.location.href
 beforeAll(() => {
   // Prevent noise on the terminal... `next-auth` will log to `console.error`
   // every time a request fails, which makes the tests output very noisy...
   console.error = jest.fn()
 
-  // Allows to spy on `window.location.replace`...
+  // Allows to mutate `window.location`...
   delete window.location
-  window.location = { ...origLocation, replace: locationReplace }
+  window.location = {}
+  Object.defineProperty(window.location, "href", {
+    get: () => _href,
+    // whatwg-fetch or whatwg-url does not seem to work with relative URLs
+    set: (href) => {
+      _href = href.startsWith("/") ? `http://localhost${href}` : href
+      return _href
+    },
+  })
 
   server.listen()
 })
 
 afterEach(() => {
   server.resetHandlers()
-  locationReplace.mockClear()
+  _href = "http://localhost/"
 
   // clear the internal session cache...
   signOut({ redirect: false })
@@ -30,7 +38,7 @@ afterEach(() => {
 
 afterAll(() => {
   console.error = origConsoleError
-  window.location = origLocation
+  window.location = location
   server.close()
 })
 
@@ -67,7 +75,7 @@ test("when session is fetched, `data` will contain the session data and `status`
 
 test("when it fails to fetch the session, `data` will be null and `status` will be 'unauthenticated'", async () => {
   server.use(
-    rest.get(`/api/auth/session`, (req, res, ctx) =>
+    rest.get(`http://localhost/api/auth/session`, (_, res, ctx) =>
       res(ctx.status(401), ctx.json({}))
     )
   )
@@ -84,11 +92,12 @@ test("when it fails to fetch the session, `data` will be null and `status` will 
 
 test("it'll redirect to sign-in page if the session is required and the user is not authenticated", async () => {
   server.use(
-    rest.get(`/api/auth/session`, (req, res, ctx) =>
+    rest.get(`http://localhost/api/auth/session`, (req, res, ctx) =>
       res(ctx.status(401), ctx.json({}))
     )
   )
 
+  const callbackUrl = window.location.href
   const { result } = renderHook(() => useSession({ required: true }), {
     wrapper: SessionProvider,
   })
@@ -98,25 +107,17 @@ test("it'll redirect to sign-in page if the session is required and the user is 
     expect(result.current.status).toBe("loading")
   })
 
-  expect(locationReplace).toHaveBeenCalledTimes(1)
-
-  expect(locationReplace).toHaveBeenCalledWith(
-    expect.stringContaining("/api/auth/signin")
-  )
-
-  expect(locationReplace).toHaveBeenCalledWith(
-    expect.stringContaining(
-      new URLSearchParams({
-        error: "SessionRequired",
-        callbackUrl: window.location.href,
-      }).toString()
-    )
+  expect(window.location.href).toBe(
+    `http://localhost/api/auth/signin?${new URLSearchParams({
+      error: "SessionRequired",
+      callbackUrl,
+    })}`
   )
 })
 
 test("will call custom redirect logic if supplied when the user could not authenticate", async () => {
   server.use(
-    rest.get(`/api/auth/session`, (req, res, ctx) =>
+    rest.get(`http://localhost/api/auth/session`, (_, res, ctx) =>
       res(ctx.status(401), ctx.json({}))
     )
   )
@@ -134,9 +135,6 @@ test("will call custom redirect logic if supplied when the user could not authen
     expect(result.current.data).toEqual(null)
     expect(result.current.status).toBe("loading")
   })
-
-  // it shouldn't have tried to re-direct to sign-in page (default behavior)
-  expect(locationReplace).not.toHaveBeenCalled()
 
   expect(customRedirect).toHaveBeenCalledTimes(1)
 })
