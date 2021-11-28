@@ -115,10 +115,7 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   client?: Partial<ClientMetadata>
   jwks?: { keys: JWK[] }
   clientId?: string
-  clientSecret?:
-    | string
-    // TODO: only allow for Apple
-    | Record<"appleId" | "teamId" | "privateKey" | "keyId", string>
+  clientSecret?: string
   /**
    * If set to `true`, the user information will be extracted
    * from the `id_token` claims, instead of

@@ -137,10 +137,6 @@ export default async function oAuthCallback(params: {
       })
     }
 
-    // If a user object is supplied (e.g. Apple provider) add it to the profile object
-    // TODO: Remove/extract to Apple provider?
-    profile.user = JSON.parse(body?.user ?? query?.user ?? null)
-
     const profileResult = await getProfile({
       profile,
       provider,
