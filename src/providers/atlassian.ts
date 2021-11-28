@@ -1,11 +1,21 @@
-/** @type {import(".").OAuthProvider} */
-export default function Atlassian(options) {
+import type { OAuthConfig, OAuthUserConfig } from "./oauth"
+
+interface AtlassianProfile {
+  account_id: string
+  name: string
+  email: string
+  picture: string
+}
+
+export default function Atlassian<P extends AtlassianProfile>(
+  options: OAuthUserConfig<P>
+): OAuthConfig<P> {
   return {
     id: "atlassian",
     name: "Atlassian",
     type: "oauth",
     authorization: {
-      url: "https://auth.atlassian.com/oauth/authorize",
+      url: "https://auth.atlassian.com/authorize",
       params: {
         audience: "api.atlassian.com",
         prompt: "consent",
