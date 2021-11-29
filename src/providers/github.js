@@ -8,7 +8,7 @@ export default function GitHub(options) {
     token: "https://github.com/login/oauth/access_token",
     userinfo: {
       url: "https://api.github.com/user",
-      request: async ({ client, tokens }) => {
+      async request({ client, tokens }) {
         // Get base profile
         const profile = await client.userinfo(tokens)
 
