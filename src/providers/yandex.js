@@ -13,7 +13,9 @@ export default function Yandex(options) {
         id: profile.id,
         name: profile.real_name,
         email: profile.default_email,
-        image: profile.is_avatar_empty ? null : `https://avatars.yandex.net/get-yapic/${profile.default_avatar_id}/islands-200`,
+        image: profile.is_avatar_empty
+          ? null
+          : `https://avatars.yandex.net/get-yapic/${profile.default_avatar_id}/islands-200`,
       }
     },
     options,

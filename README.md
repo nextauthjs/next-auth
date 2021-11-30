@@ -32,6 +32,11 @@ NextAuth.js is a complete open source authentication solution for [Next.js](http
 
 It is designed from the ground up to support Next.js and Serverless.
 
+This is the core repo for NextAuth.js. Check the repos below if you are interested in additional information:
+
+- Docs related: https://github.com/nextauthjs/docs
+- Adapter related: https://github.com/nextauthjs/adapters
+
 ## Getting Started
 
 ```
@@ -81,7 +86,8 @@ Advanced options allow you to define your own routines to handle controlling wha
 
 ### TypeScript
 
-NextAuth.js comes with built-in types. For more information and usage, check out the [TypeScript section](https://next-auth.js.org/getting-started/typescript) in the documentation.
+NextAuth.js comes with built-in types. For more information and usage, check out
+the [TypeScript section](https://next-auth.js.org/getting-started/typescript) in the documentation.
 
 ## Example
 
@@ -219,7 +225,8 @@ We're happy to announce we've recently created an [OpenCollective](https://openc
 
 ## Contributing
 
-We're open to all community contributions! If you'd like to contribute in any way, please first read our [Contributing Guide](https://github.com/nextauthjs/next-auth/blob/canary/CONTRIBUTING.md).
+We're open to all community contributions! If you'd like to contribute in any way, please first read
+our [Contributing Guide](https://github.com/nextauthjs/next-auth/blob/canary/CONTRIBUTING.md).
 
 ## License
 
