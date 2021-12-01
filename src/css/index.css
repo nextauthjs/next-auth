@@ -1,6 +1,6 @@
 :root {
   --border-width: 1px;
-  --border-radius: .3rem;
+  --border-radius: 0.3rem;
   --color-error: #c94b4b;
   --color-info: #157efb;
   --color-info-text: #fff;
@@ -43,7 +43,9 @@ body {
   background-color: var(--color-background);
   margin: 0;
   padding: 0;
-  font-family: -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-family: -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans,
+    sans-serif, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
 h1 {
@@ -54,7 +56,7 @@ h1 {
 }
 
 p {
-  color: var(--color-text)
+  color: var(--color-text);
 }
 
 form {
@@ -67,19 +69,19 @@ label {
   text-align: left;
   margin-bottom: 0.25rem;
   display: block;
-  color: #666;
+  color: var(--color-text);
 }
 
 input[type] {
   box-sizing: border-box;
   display: block;
   width: 100%;
-  padding: .5rem 1rem;
+  padding: 0.5rem 1rem;
   border: var(--border-width) solid var(--color-control-border);
   background: var(--color-background);
   font-size: 1rem;
   border-radius: var(--border-radius);
-  box-shadow: inset 0 .1rem .2rem rgba(0, 0, 0, .2);
+  box-shadow: inset 0 0.1rem 0.2rem rgba(0, 0, 0, 0.2);
   color: var(--color-text);
 
   &:focus {
@@ -107,15 +109,17 @@ a.button {
 
 button,
 a.button {
-  margin: 0 0 .75rem 0;
-  padding: .75rem 1rem;
+  margin: 0 0 0.75rem 0;
+  padding: 0.75rem 1rem;
   border: var(--border-width) solid var(--color-control-border);
   color: var(--color-primary);
   background-color: var(--color-background);
   font-size: 1rem;
   border-radius: var(--border-radius);
-  transition: all .1s ease-in-out;
-  box-shadow: 0 0.15rem 0.3rem rgba(0, 0, 0, .15), inset 0 .1rem .2rem var(--color-background), inset 0 -.1rem .1rem rgba(0, 0, 0, .05);
+  transition: all 0.1s ease-in-out;
+  box-shadow: 0 0.15rem 0.3rem rgba(0, 0, 0, 0.15),
+    inset 0 0.1rem 0.2rem var(--color-background),
+    inset 0 -0.1rem 0.1rem rgba(0, 0, 0, 0.05);
   font-weight: 500;
   position: relative;
 
@@ -124,7 +128,9 @@ a.button {
   }
 
   &:active {
-    box-shadow: 0 0.15rem 0.3rem rgba(0, 0, 0, .15), inset 0 .1rem .2rem var(--color-background), inset 0 -.1rem .1rem rgba(0, 0, 0, .1);
+    box-shadow: 0 0.15rem 0.3rem rgba(0, 0, 0, 0.15),
+      inset 0 0.1rem 0.2rem var(--color-background),
+      inset 0 -0.1rem 0.1rem rgba(0, 0, 0, 0.1);
     background-color: var(--color-button-active-background);
     border-color: var(--color-button-active-border);
     cursor: pointer;
@@ -146,13 +152,12 @@ a.site {
   position: absolute;
   width: 100%;
   height: 100%;
-  display: table;
+  display: grid;
+  place-items: center;
   margin: 0;
   padding: 0;
 
-  >div {
-    display: table-cell;
-    vertical-align: middle;
+  > div {
     text-align: center;
     padding: 0.5rem;
   }
@@ -163,7 +168,7 @@ a.site {
     display: inline-block;
     padding-left: 2rem;
     padding-right: 2rem;
-    margin-top: .5rem;
+    margin-top: 0.5rem;
   }
 
   .message {
@@ -172,7 +177,6 @@ a.site {
 }
 
 .signin {
-
   button,
   a.button,
   input[type="text"] {
@@ -192,9 +196,9 @@ a.site {
       content: "or";
       background: var(--color-background);
       color: #888;
-      padding: 0 .4rem;
+      padding: 0 0.4rem;
       position: relative;
-      top: -.6rem;
+      top: -0.6rem;
     }
   }
 
@@ -213,10 +217,9 @@ a.site {
     }
   }
 
-  >div,
+  > div,
   form {
     display: block;
-    margin: 0 auto 0.5rem auto;
 
     input[type] {
       margin-bottom: 0.5rem;
@@ -228,4 +231,32 @@ a.site {
 
     max-width: 300px;
   }
+}
+.signout {
+  .message {
+    margin-bottom: 1.5rem;
+  }
+}
+
+.logo {
+  display: inline-block;
+  margin-top: 100px;
+  max-width: 300px;
+  max-height: 150px;
+}
+
+.card {
+  max-width: max-content;
+  border: 1px solid var(--color-control-border);
+  border-radius: 5px;
+  padding: 20px 50px;
+  margin: 50px auto;
+
+  .header {
+    color: var(--color-primary);
+  }
+}
+
+.section-header {
+  color: var(--brand-color, var(--color-text));
 }

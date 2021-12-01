@@ -4,22 +4,31 @@
   "description": "NextAuth.js Developer app",
   "private": true,
   "scripts": {
-    "dev": "npm-run-all --parallel copy:app dev:css dev:next",
+    "clean": "rm -rf .next",
+    "dev": "npm-run-all --parallel dev:next watch:css copy:css ",
     "dev:next": "next dev",
-    "copy:app": "cpx \"../src/**/*\" next-auth --watch",
-    "copy:css": "cpx \"../dist/css/**/*\" dist/css --watch",
+    "build": "next build",
+    "copy:css": "cpx \"../css/**/*\" src/css --watch",
     "watch:css": "cd .. && npm run watch:css",
-    "dev:css": "npm-run-all --parallel watch:css copy:css",
-    "start": "next start"
+    "start": "next start",
+    "email": "npx fake-smtp-server",
+    "start:email": "email"
   },
   "license": "ISC",
   "dependencies": {
-    "next": "^11.0.1",
+    "@next-auth/fauna-adapter": "0.2.2-next.4",
+    "@next-auth/prisma-adapter": "0.5.2-next.5",
+    "@prisma/client": "^2.29.1",
+    "fake-smtp-server": "^0.8.0",
+    "faunadb": "^4.3.0",
+    "next": "^11.1.0",
+    "nodemailer": "^6.6.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },
   "devDependencies": {
     "cpx": "^1.5.0",
-    "npm-run-all": "^4.1.5"
+    "npm-run-all": "^4.1.5",
+    "prisma": "^2.29.1"
   }
 }

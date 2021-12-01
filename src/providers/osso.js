@@ -1,20 +1,20 @@
+/** @type {import(".").OAuthProvider} */
 export default function Osso(options) {
   return {
     id: "osso",
-    name: "SAML SSO",
+    name: "Osso",
     type: "oauth",
-    version: "2.0",
-    params: { grant_type: "authorization_code" },
-    accessTokenUrl: `https://${options.domain}/oauth/token`,
-    authorizationUrl: `https://${options.domain}/oauth/authorize?response_type=code`,
-    profileUrl: `https://${options.domain}/oauth/me`,
+    authorization: `${options.issuer}oauth/authorize`,
+    token: `${options.issuer}oauth/token`,
+    userinfo: `${options.issuer}oauth/me`,
     profile(profile) {
       return {
         id: profile.id,
-        name: profile.name || profile.email,
+        name: profile.name,
         email: profile.email,
+        image: null,
       }
     },
-    ...options,
+    options,
   }
 }

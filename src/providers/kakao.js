@@ -1,14 +1,12 @@
+/** @type {import(".").OAuthProvider} */
 export default function Kakao(options) {
   return {
     id: "kakao",
     name: "Kakao",
     type: "oauth",
-    version: "2.0",
-    params: { grant_type: "authorization_code" },
-    accessTokenUrl: "https://kauth.kakao.com/oauth/token",
-    authorizationUrl:
-      "https://kauth.kakao.com/oauth/authorize?response_type=code",
-    profileUrl: "https://kapi.kakao.com/v2/user/me",
+    authorization: "https://kauth.kakao.com/oauth/authorize",
+    token: "https://kauth.kakao.com/oauth/token",
+    userinfo: "https://kapi.kakao.com/v2/user/me",
     profile(profile) {
       return {
         id: profile.id,
@@ -17,6 +15,6 @@ export default function Kakao(options) {
         image: profile.kakao_account?.profile.profile_image_url,
       }
     },
-    ...options,
+    options,
   }
 }

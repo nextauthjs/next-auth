@@ -6,3 +6,9 @@ export function getBroadcastEvents() {
       return { eventName, value: rest }
     })
 }
+
+export function printFetchCalls(mockCalls) {
+  return mockCalls.map(([path, { method = "GET" }]) => {
+    return `${method.toUpperCase()} ${path}`
+  })
+}

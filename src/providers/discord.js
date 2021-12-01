@@ -1,15 +1,13 @@
+/** @type {import(".").OAuthProvider} */
 export default function Discord(options) {
   return {
     id: "discord",
     name: "Discord",
     type: "oauth",
-    version: "2.0",
-    scope: "identify email",
-    params: { grant_type: "authorization_code" },
-    accessTokenUrl: "https://discord.com/api/oauth2/token",
-    authorizationUrl:
-      "https://discord.com/api/oauth2/authorize?response_type=code&prompt=none",
-    profileUrl: "https://discord.com/api/users/@me",
+    authorization:
+      "https://discord.com/api/oauth2/authorize?scope=identify+email",
+    token: "https://discord.com/api/oauth2/token",
+    userinfo: "https://discord.com/api/users/@me",
     profile(profile) {
       if (profile.avatar === null) {
         const defaultAvatarNumber = parseInt(profile.discriminator) % 5
@@ -21,10 +19,10 @@ export default function Discord(options) {
       return {
         id: profile.id,
         name: profile.username,
-        image: profile.image_url,
         email: profile.email,
+        image: profile.image_url,
       }
     },
-    ...options,
+    options,
   }
 }

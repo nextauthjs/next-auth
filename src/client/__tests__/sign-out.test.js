@@ -2,7 +2,7 @@ import { useState } from "react"
 import userEvent from "@testing-library/user-event"
 import { render, screen, waitFor } from "@testing-library/react"
 import { server, mockSignOutResponse } from "./helpers/mocks"
-import { signOut } from ".."
+import { signOut } from "../../react"
 import { rest } from "msw"
 import { getBroadcastEvents } from "./helpers/utils"
 
@@ -10,11 +10,11 @@ const { location } = window
 
 beforeAll(() => {
   server.listen()
+  // Allows to mutate `window.location`...
   delete window.location
   window.location = {
-    ...location,
-    replace: jest.fn(),
     reload: jest.fn(),
+    href: location.href,
   }
 })
 
@@ -37,7 +37,7 @@ const callbackUrl = "https://redirects/to"
 
 test("by default it redirects to the current URL if the server did not provide one", async () => {
   server.use(
-    rest.post("/api/auth/signout", (req, res, ctx) =>
+    rest.post("http://localhost/api/auth/signout", (req, res, ctx) =>
       res(ctx.status(200), ctx.json({ ...mockSignOutResponse, url: undefined }))
     )
   )
@@ -47,8 +47,7 @@ test("by default it redirects to the current URL if the server did not provide o
   userEvent.click(screen.getByRole("button"))
 
   await waitFor(() => {
-    expect(window.location.replace).toHaveBeenCalledTimes(1)
-    expect(window.location.replace).toHaveBeenCalledWith(window.location.href)
+    expect(window.location.href).toBe(window.location.href)
   })
 })
 
@@ -58,10 +57,7 @@ test("it redirects to the URL allowed by the server", async () => {
   userEvent.click(screen.getByRole("button"))
 
   await waitFor(() => {
-    expect(window.location.replace).toHaveBeenCalledTimes(1)
-    expect(window.location.replace).toHaveBeenCalledWith(
-      mockSignOutResponse.url
-    )
+    expect(window.location.href).toBe(mockSignOutResponse.url)
   })
 })
 
@@ -69,7 +65,7 @@ test("if url contains a hash during redirection a page reload happens", async ()
   const mockUrlWithHash = "https://path/to/email/url#foo-bar-baz"
 
   server.use(
-    rest.post("/api/auth/signout", (req, res, ctx) => {
+    rest.post("http://localhost/api/auth/signout", (req, res, ctx) => {
       return res(
         ctx.status(200),
         ctx.json({
@@ -85,8 +81,7 @@ test("if url contains a hash during redirection a page reload happens", async ()
   userEvent.click(screen.getByRole("button"))
 
   await waitFor(() => {
-    expect(window.location.reload).toHaveBeenCalledTimes(1)
-    expect(window.location.replace).toHaveBeenCalledWith(mockUrlWithHash)
+    expect(window.location.href).toBe(mockUrlWithHash)
   })
 })
 

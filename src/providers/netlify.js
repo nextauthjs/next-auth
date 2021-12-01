@@ -1,13 +1,12 @@
+/** @type {import(".").OAuthProvider} */
 export default function Netlify(options) {
   return {
     id: "netlify",
     name: "Netlify",
     type: "oauth",
-    version: "2.0",
-    params: { grant_type: "authorization_code" },
-    accessTokenUrl: "https://api.netlify.com/oauth/token",
-    authorizationUrl: "https://app.netlify.com/authorize?response_type=code",
-    profileUrl: "https://api.netlify.com/api/v1/user",
+    authorization: "https://app.netlify.com/authorize",
+    token: "https://api.netlify.com/oauth/token",
+    userinfo: "https://api.netlify.com/api/v1/user",
     profile(profile) {
       return {
         id: profile.id,
@@ -16,6 +15,6 @@ export default function Netlify(options) {
         image: profile.avatar_url,
       }
     },
-    ...options,
+    options,
   }
 }

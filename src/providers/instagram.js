@@ -1,5 +1,5 @@
 /**
- * @type {import("types/providers").OAuthProvider} options
+ * @type {import("src/providers").OAuthProvider} options
  * @example
  *
  * ```js
@@ -15,7 +15,7 @@
  * ...
  *
  * // pages/index
- * import { signIn } from "next-auth/client"
+ * import { signIn } from "next-auth/react"
  * ...
  * <button onClick={() => signIn("instagram")}>
  *   Sign in
@@ -24,18 +24,16 @@
  * ```
  * [NextAuth.js Documentation](https://next-auth.js.org/providers/instagram) | [Instagram Documentation](https://developers.facebook.com/docs/instagram-basic-display-api/getting-started) | [Configuration](https://developers.facebook.com/apps)
  */
+/** @type {import(".").OAuthProvider} */
 export default function Instagram(options) {
   return {
     id: "instagram",
     name: "Instagram",
     type: "oauth",
-    version: "2.0",
-    scope: "user_profile",
-    params: { grant_type: "authorization_code" },
-    accessTokenUrl: "https://api.instagram.com/oauth/access_token",
-    authorizationUrl:
-      "https://api.instagram.com/oauth/authorize?response_type=code",
-    profileUrl:
+    authorization:
+      "https://api.instagram.com/oauth/authorize?scope=user_profile",
+    token: "https://api.instagram.com/oauth/access_token",
+    userinfo:
       "https://graph.instagram.com/me?fields=id,username,account_type,name",
     async profile(profile) {
       return {
@@ -45,6 +43,6 @@ export default function Instagram(options) {
         image: null,
       }
     },
-    ...options,
+    options,
   }
 }

@@ -20,38 +20,40 @@ node_modules
 .next
 /build
 /dist
-/www/build
 
 # Generated files
 .docusaurus
 .cache-loader
-www/providers.json
-src/providers/index.js
-/internals
+/providers
+/src/providers/oauth-types.ts
+/client
+/css
+/lib
+/core
+/jwt
+/react
 /adapters.d.ts
-/adapters.js
-/client.d.ts
-/client.js
 /index.d.ts
 /index.js
-/jwt.d.ts
-/jwt.js
-/providers.d.ts
-/providers.js
-/errors.js
-/errors.d.ts
+/next
 
 # Development app
-app/next-auth
-app/dist/css
+app/src/css
 app/package-lock.json
 app/yarn.lock
+app/prisma/migrations
+app/prisma/dev.db*
+app/dist
+app/next-auth
 
 # VS
 /.vs/slnx.sqlite-journal
 /.vs/slnx.sqlite
 /.vs
 .vscode
+
+# Jetbrains
+.idea
 
 # GitHub Actions runner
 /actions-runner

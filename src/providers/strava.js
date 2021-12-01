@@ -1,22 +1,20 @@
+/** @type {import(".").OAuthProvider} */
 export default function Strava(options) {
   return {
     id: "strava",
     name: "Strava",
     type: "oauth",
-    version: "2.0",
-    scope: "read",
-    params: { grant_type: "authorization_code" },
-    accessTokenUrl: "https://www.strava.com/api/v3/oauth/token",
-    authorizationUrl:
-      "https://www.strava.com/api/v3/oauth/authorize?response_type=code",
-    profileUrl: "https://www.strava.com/api/v3/athlete",
+    authorization: "https://www.strava.com/api/v3/oauth/authorize?scope=read",
+    token: "https://www.strava.com/api/v3/oauth/token",
+    userinfo: "https://www.strava.com/api/v3/athlete",
     profile(profile) {
       return {
         id: profile.id,
         name: profile.firstname,
+        email: null,
         image: profile.profile,
       }
     },
-    ...options,
+    options,
   }
 }
