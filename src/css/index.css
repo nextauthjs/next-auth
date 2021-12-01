@@ -69,7 +69,7 @@ label {
   text-align: left;
   margin-bottom: 0.25rem;
   display: block;
-  color: #666;
+  color: var(--color-text);
 }
 
 input[type] {
@@ -258,5 +258,5 @@ a.site {
 }
 
 .section-header {
-  color: var(--brand-color);
+  color: var(--brand-color, var(--color-text));
 }

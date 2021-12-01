@@ -11,7 +11,7 @@ export default function VerifyRequestPage(props: VerifyRequestPageProps) {
 
   return (
     <div className="verify-request">
-      <style
+      { theme.brandColor && <style
         dangerouslySetInnerHTML={{
           __html: `
         :root {
@@ -19,7 +19,7 @@ export default function VerifyRequestPage(props: VerifyRequestPageProps) {
         }
       `,
         }}
-      />
+      /> }
       {theme.logo && <img src={theme.logo} alt="Logo" className="logo" />}
       <div className="card">
         <h1>Check your email</h1>

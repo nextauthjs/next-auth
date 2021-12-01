@@ -4,7 +4,7 @@ body {
   max-width: 680px;
   margin: 0 auto;
   background: #fff;
-  color: #333;
+  color: var(--color-text);
 }
 
 li,

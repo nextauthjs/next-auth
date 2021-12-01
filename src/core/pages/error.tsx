@@ -87,15 +87,15 @@ export default function ErrorPage(props: ErrorProps) {
     status,
     html: (
       <div className="error">
-        <style
-          dangerouslySetInnerHTML={{
-            __html: `
+      { theme?.brandColor && <style
+        dangerouslySetInnerHTML={{
+          __html: `
         :root {
-          --brand-color: ${theme?.brandColor};
+          --brand-color: ${theme?.brandColor}
         }
       `,
-          }}
-        />
+        }}
+      /> }
         {theme?.logo && <img src={theme.logo} alt="Logo" className="logo" />}
         <div className="card">
           <h1>{heading}</h1>
