@@ -59,7 +59,8 @@ export default function SigninPage(props: SignInServerPageParams) {
 
   return (
     <div className="signin">
-      <style
+      
+      { theme.brandColor && <style
         dangerouslySetInnerHTML={{
           __html: `
         :root {
@@ -67,7 +68,7 @@ export default function SigninPage(props: SignInServerPageParams) {
         }
       `,
         }}
-      />
+      /> }
       {theme.logo && <img src={theme.logo} alt="Logo" className="logo" />}
       <div className="card">
         {error && (

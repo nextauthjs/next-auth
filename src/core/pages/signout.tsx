@@ -12,7 +12,7 @@ export default function SignoutPage(props: SignoutProps) {
 
   return (
     <div className="signout">
-      <style
+      { theme.brandColor && <style
         dangerouslySetInnerHTML={{
           __html: `
         :root {
@@ -20,7 +20,7 @@ export default function SignoutPage(props: SignoutProps) {
         }
       `,
         }}
-      />
+      /> }
       {theme.logo && <img src={theme.logo} alt="Logo" className="logo" />}
       <div className="card">
         <h1>Signout</h1>
