@@ -5,6 +5,11 @@
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "author": "Iain Collins <me@iaincollins.com>",
+  "contributors": [
+    "Balázs Orbán <info@balazsorban.com>",
+    "Nico Domino <info@ndo.dev>",
+    "Lluis Agusti <hi@llu.lu>"
+  ],
   "main": "index.js",
   "module": "index.js",
   "types": "index.d.ts",
