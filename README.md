@@ -96,21 +96,24 @@ the [TypeScript section](https://next-auth.js.org/getting-started/typescript) in
 ```javascript
 // pages/api/auth/[...nextauth].js
 import NextAuth from "next-auth"
-import Providers from "next-auth/providers"
+import AppleProvider from "next-auth/providers/apple"
+import GoogleProvider from "next-auth/providers/google"
+import EmailProvider from "next-auth/providers/email"
 
 export default NextAuth({
+  secret: process.env.SECRET,
   providers: [
     // OAuth authentication providers
-    Providers.Apple({
+    AppleProvider({
       clientId: process.env.APPLE_ID,
       clientSecret: process.env.APPLE_SECRET,
     }),
-    Providers.Google({
+    GoogleProvider({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET,
     }),
     // Sign in with passwordless email link
-    Providers.Email({
+    EmailProvider({
       server: process.env.MAIL_SERVER,
       from: "<no-reply@example.com>",
     }),
