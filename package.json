@@ -7,7 +7,7 @@
   "author": "Iain Collins <me@iaincollins.com>",
   "contributors": [
     "Balázs Orbán <info@balazsorban.com>",
-    "Nico Domino <info@ndo.dev>",
+    "Nico Domino <yo@ndo.dev>",
     "Lluis Agusti <hi@llu.lu>"
   ],
   "main": "index.js",
@@ -144,10 +144,7 @@
     "parserOptions": {
       "project": "./tsconfig.json"
     },
-    "extends": [
-      "standard-with-typescript",
-      "prettier"
-    ],
+    "extends": ["standard-with-typescript", "prettier"],
     "ignorePatterns": [
       "node_modules",
       "next-env.d.ts",
@@ -171,18 +168,12 @@
     },
     "overrides": [
       {
-        "files": [
-          "./**/*test.js"
-        ],
+        "files": ["./**/*test.js"],
         "env": {
           "jest/globals": true
         },
-        "extends": [
-          "plugin:jest/recommended"
-        ],
-        "plugins": [
-          "jest"
-        ]
+        "extends": ["plugin:jest/recommended"],
+        "plugins": ["jest"]
       }
     ]
   },
@@ -216,6 +207,10 @@
     {
       "type": "github",
       "url": "https://github.com/sponsors/balazsorban44"
+    },
+    {
+      "type": "opencollective",
+      "url": "https://opencollective.com/nextauth"
     }
   ]
 }
