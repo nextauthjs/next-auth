@@ -18,17 +18,18 @@ async function NextAuthNextHandler(
   res: NextApiResponse,
   options: NextAuthOptions
 ) {
+  const { nextauth, ...query } = req.query
   const handler = await NextAuthHandler({
     req: {
       host: (process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL) as string,
       body: req.body,
-      query: req.query,
+      query,
       cookies: req.cookies,
       headers: req.headers,
       method: req.method,
-      action: req.query.nextauth?.[0] as NextAuthAction,
-      providerId: req.query.nextauth?.[1],
-      error: (req.query.error as string | undefined) ?? req.query.nextauth?.[1],
+      action: nextauth?.[0] as NextAuthAction,
+      providerId: nextauth?.[1],
+      error: (req.query.error as string | undefined) ?? nextauth?.[1],
     },
     options,
   })
