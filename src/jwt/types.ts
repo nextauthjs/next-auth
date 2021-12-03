@@ -1,4 +1,4 @@
-import { decode, encode } from "."
+type MaybePromise<T> = T | Promise<T>
 
 export interface DefaultJWT extends Record<string, unknown> {
   name?: string | null
@@ -42,9 +42,9 @@ export interface JWTOptions {
    */
   maxAge: number
   /** Override this method to control the NextAuth.js issued JWT encoding. */
-  encode: typeof encode
+  encode: (params: JWTEncodeParams) => MaybePromise<string>
   /** Override this method to control the NextAuth.js issued JWT decoding. */
-  decode: typeof decode
+  decode: (params: JWTDecodeParams) => MaybePromise<JWT | null>
 }
 
 export type Secret = string | Buffer
