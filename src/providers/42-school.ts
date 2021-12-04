@@ -168,7 +168,7 @@ export default function FortyTwo<
     userinfo: "https://api.intra.42.fr/v2/me",
     profile(profile) {
       return {
-        id: profile.id,
+        id: profile.id.toString(),
         name: profile.usual_full_name,
         email: profile.email,
         image: profile.image_url,
