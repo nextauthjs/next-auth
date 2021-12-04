@@ -1,4 +1,4 @@
-import { decode, encode } from "."
+import type { Awaitable } from ".."
 
 export interface DefaultJWT extends Record<string, unknown> {
   name?: string | null
@@ -42,9 +42,9 @@ export interface JWTOptions {
    */
   maxAge: number
   /** Override this method to control the NextAuth.js issued JWT encoding. */
-  encode: typeof encode
+  encode: (params: JWTEncodeParams) => Awaitable<string>
   /** Override this method to control the NextAuth.js issued JWT decoding. */
-  decode: typeof decode
+  decode: (params: JWTDecodeParams) => Awaitable<JWT | null>
 }
 
 export type Secret = string | Buffer

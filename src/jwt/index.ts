@@ -3,7 +3,7 @@ import hkdf from "@panva/hkdf"
 import { v4 as uuid } from "uuid"
 import { SessionStore } from "../core/lib/cookie"
 import type { NextApiRequest } from "next"
-import type { JWT, JWTDecodeParams, JWTEncodeParams } from "./types"
+import type { JWT, JWTDecodeParams, JWTEncodeParams, JWTOptions } from "./types"
 import type { LoggerInstance } from ".."
 
 export * from "./types"
@@ -56,7 +56,7 @@ export interface GetTokenParams<R extends boolean = false> {
    */
   raw?: R
   secret: string
-  decode?: typeof decode
+  decode?: JWTOptions["decode"]
   logger?: LoggerInstance | Console
 }
 
