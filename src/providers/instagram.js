@@ -32,7 +32,30 @@ export default function Instagram(options) {
     type: "oauth",
     authorization:
       "https://api.instagram.com/oauth/authorize?scope=user_profile",
-    token: "https://api.instagram.com/oauth/access_token",
+    token: {
+      url: "https://api.instagram.com/oauth/access_token",
+      async request(context) {
+        const {
+          provider,
+          params: { code },
+        } = context
+        const body = new URLSearchParams([
+          ["grant_type", "authorization_code"],
+          ["code", code],
+          ["client_id", provider.clientId],
+          ["client_secret", provider.clientSecret],
+          ["redirect_uri", provider.callbackUrl],
+        ])
+        const response = await (
+          await fetch(provider.token.url, {
+            method: "POST",
+            body,
+          })
+        ).json()
+        const { access_token } = response
+        return { tokens: { access_token } }
+      },
+    },
     userinfo:
       "https://graph.instagram.com/me?fields=id,username,account_type,name",
     async profile(profile) {
