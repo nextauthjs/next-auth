@@ -30,9 +30,9 @@ export default function FusionAuth<
     id: "fusionauth",
     name: "FusionAuth",
     type: "oauth",
-    wellKnown: !options?.tenantId
-      ? `${options.issuer}/.well-known/openid-configuration`
-      : `${options.issuer}/.well-known/openid-configuration?tenantId=${options.tenantId}`,
+    wellKnown: options?.tenantId
+      ? `${options.issuer}/.well-known/openid-configuration?tenantId=${options.tenantId}`
+      : `${options.issuer}/.well-known/openid-configuration`,
     jwks_endpoint: `${options.issuer}/.well-known/jwks.json`,
     authorization: {
       params: {
