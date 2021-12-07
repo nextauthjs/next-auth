@@ -33,7 +33,6 @@ export default function FusionAuth<
     wellKnown: options?.tenantId
       ? `${options.issuer}/.well-known/openid-configuration?tenantId=${options.tenantId}`
       : `${options.issuer}/.well-known/openid-configuration`,
-    jwks_endpoint: `${options.issuer}/.well-known/jwks.json`,
     authorization: {
       params: {
         scope: "openid offline_access",
