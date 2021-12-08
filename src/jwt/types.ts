@@ -45,6 +45,14 @@ export interface JWTOptions {
   encode: (params: JWTEncodeParams) => Awaitable<string>
   /** Override this method to control the NextAuth.js issued JWT decoding. */
   decode: (params: JWTDecodeParams) => Awaitable<JWT | null>
+  /**
+   * When enabled, generate a JWT when the session is first established. By default
+   * this will only happen on sign in.
+   * 
+   * For example e-commerce style sites where anonymous tokens are generated on the
+   * first visit and then upgraded to logged in tokens on sign in.
+   */
+   anonymousSessions?: boolean
 }
 
 export type Secret = string | Buffer

@@ -37,14 +37,21 @@ export default async function session(
 
   const sessionToken = sessionStore.value
 
-  if (!sessionToken) return response
-
   if (sessionStrategy === "jwt") {
     try {
-      const decodedToken = await jwt.decode({
-        ...jwt,
-        token: sessionToken,
-      })
+      let decodedToken;
+
+      if(!jwt.anonymousSessions && !sessionToken) {
+        return response
+      } else if(jwt.anonymousSessions && !sessionToken) {
+        // TODO MRB: should we verify a CSRF token here or maybe a separate callback?
+        decodedToken = {}
+      } else {
+        decodedToken = await jwt.decode({
+          ...jwt,
+          token: sessionToken,
+        })
+      }
 
       const newExpires = fromDate(sessionMaxAge)
 
@@ -59,7 +66,6 @@ export default async function session(
         expires: newExpires.toISOString(),
       }
 
-      // @ts-expect-error
       const token = await callbacks.jwt({ token: decodedToken })
       // @ts-expect-error
       const newSession = await callbacks.session({ session, token })
@@ -89,6 +95,8 @@ export default async function session(
       response.cookies?.push(...sessionStore.clean())
     }
   } else {
+    if (!sessionToken) return response
+
     try {
       const { getSessionAndUser, deleteSession, updateSession } =
         adapter as Adapter
