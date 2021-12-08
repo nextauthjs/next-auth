@@ -12,7 +12,7 @@ import type { ErrorType } from "./pages/error"
 
 export interface IncomingRequest {
   /** @default "http://localhost:3000" */
-  host: string
+  host?: string
   method?: string
   cookies?: Record<string, string>
   headers?: Record<string, any>
