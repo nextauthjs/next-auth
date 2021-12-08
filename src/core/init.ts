@@ -100,7 +100,7 @@ export async function init({
     // Callback functions
     callbacks: { ...defaultCallbacks, ...userOptions.callbacks },
     logger,
-    callbackUrl: "http://localhost:3000",
+    callbackUrl: host ?? "http://localhost:3000",
   }
 
   // Init cookies
