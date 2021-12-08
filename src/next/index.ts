@@ -21,10 +21,7 @@ async function NextAuthNextHandler(
   const { nextauth, ...query } = req.query
   const handler = await NextAuthHandler({
     req: {
-      host:
-        process.env.NEXTAUTH_URL ??
-        process.env.VERCEL_URL ??
-        "http://localhost:3000",
+      host: process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL,
       body: req.body,
       query,
       cookies: req.cookies,
@@ -90,7 +87,7 @@ export async function getServerSession(
   const session = await NextAuthHandler<Session | {}>({
     options,
     req: {
-      host: (process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL) as string,
+      host: process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL,
       action: "session",
       method: "GET",
       cookies: context.req.cookies,

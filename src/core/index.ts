@@ -12,7 +12,7 @@ import type { ErrorType } from "./pages/error"
 
 export interface IncomingRequest {
   /** @default "http://localhost:3000" */
-  host: string
+  host?: string
   method?: string
   cookies?: Record<string, string>
   headers?: Record<string, any>
@@ -74,7 +74,7 @@ export async function NextAuthHandler<
     action,
     providerId,
     host: req.host,
-    callbackUrl: req.body?.callbackUrl ?? req.query?.callbackUrl ?? req.host,
+    callbackUrl: req.body?.callbackUrl ?? req.query?.callbackUrl,
     csrfToken: req.body?.csrfToken,
     cookies: req.cookies,
     isPost: method === "POST",
