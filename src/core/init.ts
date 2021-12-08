@@ -100,7 +100,7 @@ export async function init({
     // Callback functions
     callbacks: { ...defaultCallbacks, ...userOptions.callbacks },
     logger,
-    callbackUrl: process.env.NEXTAUTH_URL ?? "http://localhost:3000",
+    callbackUrl: "http://localhost:3000",
   }
 
   // Init cookies

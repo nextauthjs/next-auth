@@ -74,7 +74,7 @@ export async function NextAuthHandler<
     action,
     providerId,
     host: req.host,
-    callbackUrl: req.body?.callbackUrl ?? req.query?.callbackUrl,
+    callbackUrl: req.body?.callbackUrl ?? req.query?.callbackUrl ?? req.host,
     csrfToken: req.body?.csrfToken,
     cookies: req.cookies,
     isPost: method === "POST",
