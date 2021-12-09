@@ -137,6 +137,8 @@ export default async function oAuthCallback(params: {
       })
     }
 
+    profile.user = JSON.parse(body?.user ?? query?.user ?? null)
+
     const profileResult = await getProfile({
       profile,
       provider,
