@@ -109,11 +109,15 @@ export default function Apple<P extends Record<string, any> = AppleProfile>(
     },
     idToken: true,
     profile(profile) {
+      const { firstName, lastName } = profile.user?.name ?? {
+        firstName: "",
+        lastName: "",
+      }
+
       return {
         id: profile.sub,
-        firstName: profile.user?.name?.firstName ?? null,
-        lastName: profile.user?.name?.lastName ?? null,
-        email: profile?.email ?? null,
+        name: `${firstName} ${lastName}`.trim(),
+        email: profile.email ?? null,
         image: null,
       }
     },
