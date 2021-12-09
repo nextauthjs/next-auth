@@ -137,6 +137,9 @@ export default async function oAuthCallback(params: {
       })
     }
 
+    // Contains the email, firstName, and lastName of Apple.
+    // Needed beacuse apple does not send the name in the token (profile callback).
+    // profile: {user: {email: 'johndoe@example.com', name: {firstName: 'John', lastName: 'Doe'}}}
     profile.user = JSON.parse(body?.user ?? query?.user ?? null)
 
     const profileResult = await getProfile({

@@ -111,8 +111,9 @@ export default function Apple<P extends Record<string, any> = AppleProfile>(
     profile(profile) {
       return {
         id: profile.sub,
-        name: profile.name,
-        email: profile.email,
+        firstName: profile.user?.name?.firstName ?? null,
+        lastName: profile.user?.name?.lastName ?? null,
+        email: profile?.email ?? null,
         image: null,
       }
     },
