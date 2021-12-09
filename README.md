@@ -149,7 +149,7 @@ export default function Component() {
 
 ### Share/configure session state
 
-Use the `<SessionProvider>` to allows instances of `useSession()` to share the session object across components. It also takes care of keeping the session updated and synced between tabs/windows.
+Use the `<SessionProvider>` to allow instances of `useSession()` to share the session object across components. It also takes care of keeping the session updated and synced between tabs/windows.
 
 ```jsx title="pages/_app.js"
 import { SessionProvider } from "next-auth/react"
