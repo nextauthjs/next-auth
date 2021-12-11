@@ -3,6 +3,7 @@ const path = require("path")
 module.exports = {
   webpack(config) {
     config.experiments = {
+      ...config.experiments,
       topLevelAwait: true,
     }
     config.resolve = {
