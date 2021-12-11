@@ -43,6 +43,7 @@ export default function Okta<P extends Record<string, any> = OktaProfile>(
     type: "oauth",
     wellKnown: `${options.issuer}/.well-known/openid-configuration`,
     authorization: { params: { scope: "openid email profile" } },
+    idToken: true,
     profile(profile) {
       return {
         id: profile.sub,
