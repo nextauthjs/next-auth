@@ -31,6 +31,7 @@ export default function Keycloak<
     id: "keycloak",
     name: "Keycloak",
     wellKnown: `${options.issuer}/.well-known/openid-configuration`,
+    token: `${options.token}/protocol/openid-connect/token`,
     type: "oauth",
     authorization: { params: { scope: "openid email profile" } },
     checks: ["pkce", "state"],
