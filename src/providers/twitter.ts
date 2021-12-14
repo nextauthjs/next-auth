@@ -1,6 +1,6 @@
 import type { OAuthConfig, OAuthUserConfig } from "."
 
-export interface TwitterProfile {
+export interface TwitterLegacyProfile {
   id: number
   id_str: string
   name: string
@@ -95,12 +95,12 @@ export interface TwitterProfile {
   needs_phone_verification: boolean
 }
 
-export default function Twitter<P extends Record<string, any> = TwitterProfile>(
-  options: OAuthUserConfig<P>
-): OAuthConfig<P> {
+export function TwitterLegacy<
+  P extends Record<string, any> = TwitterLegacyProfile
+>(options: OAuthUserConfig<P>): OAuthConfig<P> {
   return {
     id: "twitter",
-    name: "Twitter",
+    name: "Twitter (Legacy)",
     type: "oauth",
     version: "1.0A",
     authorization: "https://api.twitter.com/oauth/authenticate",
@@ -119,6 +119,102 @@ export default function Twitter<P extends Record<string, any> = TwitterProfile>(
         ),
       }
     },
+    options,
+  }
+}
+
+export interface TwitterProfile {
+  data: {
+    id: string
+    name: string
+    username: string
+    location?: string
+    entities?: {
+      url: {
+        urls: Array<{
+          start: number
+          end: number
+          url: string
+          expanded_url: string
+          display_url: string
+        }>
+      }
+      description: {
+        hashtags: Array<{
+          start: number
+          end: number
+          tag: string
+        }>
+      }
+    }
+    verified?: boolean
+    description?: string
+    url?: string
+    profile_image_url?: string
+    protected?: boolean
+    pinned_tweet_id?: string
+    created_at?: string
+  }
+  includes?: {
+    tweets?: Array<{
+      id: string
+      text: string
+    }>
+  }
+}
+
+export default function Twitter<
+  P extends Record<string, any> = TwitterLegacyProfile | TwitterProfile
+>(options: OAuthUserConfig<P>): OAuthConfig<P> {
+  if (!options.version || options.version === "1.0A") {
+    console.warn("Using Twitter with OAuth 1.0. OAuth 2.0 is recommended.")
+    return TwitterLegacy(options)
+  }
+  return {
+    id: "twitter",
+    name: "Twitter",
+    version: "2.0",
+    type: "oauth",
+    authorization: {
+      url: "https://twitter.com/i/oauth2/authorize",
+      // tweet.read should probably not be necessary for the default userinfo endpoint.
+      // We only need info this info: name, id, image and email.
+      params: { scope: "users.read tweet.read offline.access" },
+    },
+    token: {
+      url: "https://api.twitter.com/2/oauth2/token",
+
+      // TODO: Get rid of the `request` method, if possible.
+      // client_id should be optional when authenticating a confidential client
+      // https://datatracker.ietf.org/doc/html/rfc6749#section-3.2.1
+      // https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3
+      async request({ client, params, checks, provider }) {
+        const response = await client.oauthCallback(
+          provider.callbackUrl,
+          params,
+          checks,
+          { exchangeBody: { client_id: options.clientId } }
+        )
+        return { tokens: response }
+      },
+    },
+    userinfo: {
+      url: "https://api.twitter.com/2/users/me",
+      params: { "user.fields": "profile_image_url" },
+    },
+
+    profile({ data }) {
+      console.log(data)
+
+      return {
+        id: data.id,
+        name: data.name,
+        // TODO: Figure out how to get user's e-mail
+        email: null,
+        image: data.profile_image_url,
+      }
+    },
+    checks: ["pkce", "state"],
     options,
   }
 }
