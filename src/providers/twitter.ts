@@ -123,6 +123,9 @@ export function TwitterLegacy<
   }
 }
 
+/**
+ * [Documentation](https://developer.twitter.com/en/docs/twitter-api/users/lookup/api-reference/get-users-me)
+ */
 export interface TwitterProfile {
   data: {
     id: string
