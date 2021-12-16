@@ -37,6 +37,7 @@ import type {
   BuiltInProviderType,
   RedirectableProviderType,
 } from "../providers"
+import { environment } from "src/core/lib/environment"
 
 export * from "./types"
 
@@ -47,15 +48,13 @@ export * from "./types"
 // 2. When invoked server side the value is picked up from an environment
 //    variable and defaults to 'http://localhost:3000'.
 const __NEXTAUTH: NextAuthClientConfig = {
-  baseUrl: parseUrl(process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL).origin,
-  basePath: parseUrl(process.env.NEXTAUTH_URL).path,
+  baseUrl: parseUrl(environment.authUrl ?? environment.vercelUrl).origin,
+  basePath: parseUrl(environment.authUrl).path,
   baseUrlServer: parseUrl(
-    process.env.NEXTAUTH_URL_INTERNAL ??
-      process.env.NEXTAUTH_URL ??
-      process.env.VERCEL_URL
+    environment.internalAuthUrl ?? environment.authUrl ?? environment.vercelUrl
   ).origin,
   basePathServer: parseUrl(
-    process.env.NEXTAUTH_URL_INTERNAL ?? process.env.NEXTAUTH_URL
+    environment.internalAuthUrl ?? environment.authUrl ?? environment.vercelUrl
   ).path,
   _lastSync: 0,
   _session: undefined,

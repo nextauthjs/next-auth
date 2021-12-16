@@ -12,6 +12,7 @@ import type {
   NextAuthRequest,
   NextAuthResponse,
 } from "../lib/types"
+import { environment } from "src/core/lib/environment"
 
 async function NextAuthNextHandler(
   req: NextApiRequest,
@@ -21,7 +22,7 @@ async function NextAuthNextHandler(
   const { nextauth, ...query } = req.query
   const handler = await NextAuthHandler({
     req: {
-      host: process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL,
+      host: environment.authUrl || environment.vercelUrl,
       body: req.body,
       query,
       cookies: req.cookies,
@@ -87,7 +88,7 @@ export async function getServerSession(
   const session = await NextAuthHandler<Session | {}>({
     options,
     req: {
-      host: process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL,
+      host: envirionment.authUrl ?? envirionment.vercelUrl,
       action: "session",
       method: "GET",
       cookies: context.req.cookies,
