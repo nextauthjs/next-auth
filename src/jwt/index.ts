@@ -5,7 +5,7 @@ import { SessionStore } from "../core/lib/cookie"
 import type { NextApiRequest } from "next"
 import type { JWT, JWTDecodeParams, JWTEncodeParams, JWTOptions } from "./types"
 import type { LoggerInstance } from ".."
-import { envirionment, getConfiguredAuthUrl, getVercelUrl } from "src/core/lib/environment"
+import { environment } from "src/core/lib/environment"
 
 export * from "./types"
 
@@ -71,7 +71,7 @@ export async function getToken<R extends boolean = false>(
 ): Promise<R extends true ? string : JWT | null> {
   const {
     req,
-    secureCookie = envirionment.authUrl?.startsWith("https://") ?? !!getVercelUrl(),
+    secureCookie = envirionment.authUrl?.startsWith("https://") ?? !!environment.vercelUrl,
     cookieName = secureCookie
       ? "__Secure-next-auth.session-token"
       : "next-auth.session-token",
