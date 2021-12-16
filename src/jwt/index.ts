@@ -88,7 +88,13 @@ export async function getToken<R extends boolean = false>(
     logger
   )
 
-  const token = sessionStore.value
+  let token = sessionStore.value
+
+  if (!token && req.headers.authorization?.split(" ")[0] === "Bearer") {
+    const urlEncodedToken = req.headers.authorization.split(" ")[1]
+    token = decodeURIComponent(urlEncodedToken)
+  }
+
   // @ts-expect-error
   if (!token) return null
 
