@@ -54,7 +54,7 @@ const __NEXTAUTH: NextAuthClientConfig = {
     environment.internalAuthUrl ?? environment.authUrl ?? environment.vercelUrl
   ).origin,
   basePathServer: parseUrl(
-    environment.internalAuthUrl ?? environment.authUrl ?? environment.vercelUrl
+    environment.internalAuthUrl ?? environment.authUrl
   ).path,
   _lastSync: 0,
   _session: undefined,
