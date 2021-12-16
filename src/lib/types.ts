@@ -50,7 +50,7 @@ export type NextAuthAction =
 export interface InternalOptions<T extends ProviderType = any> {
   providers: InternalProvider[]
   /**
-   * Parsed from `NEXTAUTH_URL` or `VERCEL_URL`.
+   * Parsed from `NEXT_PUBLIC_NEXTAUTH_URL`, `NEXTAUTH_URL` or `NEXT_PUBLIC_VERCEL_URL`, `VERCEL_URL`.
    * @default "http://localhost:3000/api/auth"
    */
   url: InternalUrl
