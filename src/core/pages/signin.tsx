@@ -130,8 +130,7 @@ export default function SigninPage(props: SignInServerPageParams) {
                         id={`input-${credential}-for-${provider.id}-provider`}
                         type={provider.credentials[credential].type ?? "text"}
                         placeholder={
-                          provider.credentials[credential].placeholder ??
-                          "Password"
+                          provider.credentials[credential].placeholder ?? ""
                         }
                         {...provider.credentials[credential]}
                       />
