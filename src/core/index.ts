@@ -176,7 +176,16 @@ export async function NextAuthHandler<
             options,
           })
           if (signin.cookies) cookies.push(...signin.cookies)
-          return { ...signin, cookies }
+
+          if (req.body?.redirect === false) {
+            return {
+              headers: [{ key: "Content-Type", value: "application/json" }],
+              body: { redirect: signin.redirect } as any,
+              cookies,
+            }
+          } else { 
+            return { ...signin, cookies }
+          }
         }
 
         return { redirect: `${options.url}/signin?csrf=true`, cookies }
