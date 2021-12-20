@@ -6,6 +6,7 @@ import type {
   EventCallbacks,
   LoggerInstance,
   PagesOptions,
+  InvalidMethodResponse,
   SessionOptions,
   Theme,
   Awaitable,
@@ -66,12 +67,13 @@ export interface InternalOptions<T extends ProviderType = any> {
   logger: LoggerInstance
   session: Required<SessionOptions>
   pages: Partial<PagesOptions>
+  invalidMethodResponse:  InvalidMethodResponse,
   jwt: JWTOptions
   events: Partial<EventCallbacks>
   adapter?: Adapter
   callbacks: CallbacksOptions
   cookies: CookiesOptions
-  callbackUrl: string
+  callbackUrl: string,
 }
 
 /** @internal */

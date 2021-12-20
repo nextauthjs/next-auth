@@ -4,7 +4,6 @@ import type { TokenSetParameters } from "openid-client"
 import type { JWT, JWTOptions } from "../jwt"
 import type { LoggerInstance } from "../lib/logger"
 import type { CookieSerializeOptions } from "cookie"
-
 export type Awaitable<T> = T | PromiseLike<T>
 
 export type { LoggerInstance }
@@ -194,6 +193,10 @@ export interface NextAuthOptions {
    * [Documentation](https://next-auth.js.org/configuration/options#cookies) | [Usage example](https://next-auth.js.org/configuration/options#example)
    */
   cookies?: Partial<CookiesOptions>
+  /**
+   *  Changes the response for invalid endpoints 
+   */
+  invalidMethodResponse?: Partial<InvalidMethodResponse>
 }
 
 /**
@@ -207,6 +210,15 @@ export interface Theme {
   logo?: string
   brandColor?: string
 }
+
+
+export interface InvalidMethodResponse<Body extends string | Record<string, any> | any[] = any>{
+  status?: number
+  body?: Body
+  redirect?: string
+}
+
+
 
 /**
  * Different tokens returned by OAuth Providers.

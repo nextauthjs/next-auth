@@ -11,6 +11,7 @@ import { defaultCallbacks } from "./lib/default-callbacks"
 import { createCSRFToken } from "./lib/csrf-token"
 import { createCallbackUrl } from "./lib/callback-url"
 import { IncomingRequest } from "."
+import { defaultInvalidMethodResponse } from "./lib/default-invalidmethodresponse"
 
 interface InitParams {
   host?: string
@@ -27,7 +28,8 @@ interface InitParams {
 }
 
 /** Initialize all internal options and cookies. */
-export async function init({
+export async function 
+init({
   userOptions,
   providerId,
   action,
@@ -101,6 +103,7 @@ export async function init({
     callbacks: { ...defaultCallbacks, ...userOptions.callbacks },
     logger,
     callbackUrl: url.origin,
+    invalidMethodResponse: {...defaultInvalidMethodResponse,...userOptions.invalidMethodResponse}
   }
 
   // Init cookies
