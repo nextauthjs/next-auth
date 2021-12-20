@@ -1,6 +1,6 @@
-import { InvalidMethodResponse } from "../types";
+import { InvalidMethodResponse } from "../types"
 
 export const defaultInvalidMethodResponse: InvalidMethodResponse = {
-    status: 400,
-    body: `Error: Action not supported by NextAuth.js` as any,
-  }
+  status: 400,
+  body: `Error: Action not supported by NextAuth.js` as any,
+}

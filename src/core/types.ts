@@ -213,14 +213,13 @@ export interface Theme {
   brandColor?: string
 }
 
-
-export interface InvalidMethodResponse<Body extends string | Record<string, any> | any[] = any>{
+export interface InvalidMethodResponse<
+  Body extends string | Record<string, any> | any[] = any
+> {
   status?: number
   body?: Body
   redirect?: string
 }
-
-
 
 /**
  * Different tokens returned by OAuth Providers.

@@ -67,13 +67,13 @@ export interface InternalOptions<T extends ProviderType = any> {
   logger: LoggerInstance
   session: Required<SessionOptions>
   pages: Partial<PagesOptions>
-  invalidMethodResponse:  InvalidMethodResponse,
+  invalidMethodResponse: InvalidMethodResponse
   jwt: JWTOptions
   events: Partial<EventCallbacks>
   adapter?: Adapter
   callbacks: CallbacksOptions
   cookies: CookiesOptions
-  callbackUrl: string,
+  callbackUrl: string
 }
 
 /** @internal */

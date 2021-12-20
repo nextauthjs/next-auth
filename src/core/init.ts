@@ -28,8 +28,7 @@ interface InitParams {
 }
 
 /** Initialize all internal options and cookies. */
-export async function 
-init({
+export async function init({
   userOptions,
   providerId,
   action,
@@ -103,7 +102,10 @@ init({
     callbacks: { ...defaultCallbacks, ...userOptions.callbacks },
     logger,
     callbackUrl: url.origin,
-    invalidMethodResponse: {...defaultInvalidMethodResponse,...userOptions.invalidMethodResponse}
+    invalidMethodResponse: {
+      ...defaultInvalidMethodResponse,
+      ...userOptions.invalidMethodResponse,
+    },
   }
 
   // Init cookies
