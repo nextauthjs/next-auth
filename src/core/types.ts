@@ -194,7 +194,9 @@ export interface NextAuthOptions {
    */
   cookies?: Partial<CookiesOptions>
   /**
-   *  Changes the response for invalid endpoints 
+   *  Changes the response for invalid endpoints
+   *  **Default value**: `{status: 400, body: "Error: Action not supported by NextAuth.js"}`
+   *  **Required**: no
    */
   invalidMethodResponse?: Partial<InvalidMethodResponse>
 }
