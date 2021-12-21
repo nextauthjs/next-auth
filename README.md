@@ -179,7 +179,7 @@ export default function App({
 
 ### Support
 
-We're happy to announce we've recently created an [OpenCollective](https://opencollective.org/nextauth) for individuals and companies looking to contribute financially to the project!
+We're happy to announce we've recently created an [OpenCollective](https://opencollective.com/nextauth) for individuals and companies looking to contribute financially to the project!
 
 <!--sponsors start-->
 <table>
