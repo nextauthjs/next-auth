@@ -8,9 +8,12 @@ export default function Naver(options) {
     token: "https://nid.naver.com/oauth2.0/token",
     userinfo: "https://openapi.naver.com/v1/nid/me",
     profile(profile) {
-      // REVIEW: By default, we only want to expose the
-      // "id", "name", "email" and "image" fields.
-      return profile.response
+      return {
+        id: profile.response.id,
+        name: profile.response.name,
+        email: profile.response.email,
+        image: profile.response.profile_image
+      }
     },
     checks: ["state"],
     options,
