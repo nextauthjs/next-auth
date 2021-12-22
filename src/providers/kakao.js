@@ -4,9 +4,12 @@ export default function Kakao(options) {
     id: "kakao",
     name: "Kakao",
     type: "oauth",
-    authorization: "https://kauth.kakao.com/oauth/authorize",
+    authorization: "https://kauth.kakao.com/oauth/authorize?scope=",
     token: "https://kauth.kakao.com/oauth/token",
     userinfo: "https://kapi.kakao.com/v2/user/me",
+    client: {
+      token_endpoint_auth_method: 'client_secret_post'
+    },
     profile(profile) {
       return {
         id: profile.id,
