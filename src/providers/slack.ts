@@ -40,6 +40,7 @@ export default function Slack<P extends Record<string, any> = SlackProfile>(
     name: "Slack",
     type: "oauth",
     wellKnown: "https://slack.com/.well-known/openid-configuration",
+    idToken: true,
     authorization: { params: { scope: "openid profile email" } },
     profile(profile) {
       return {
