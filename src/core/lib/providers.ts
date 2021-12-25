@@ -1,7 +1,8 @@
-import { InternalProvider } from "../../lib/types"
-import { Provider } from "../../providers"
 import { merge } from "../../lib/merge"
-import { InternalUrl } from "../../lib/parse-url"
+
+import type { InternalProvider } from "../../lib/types"
+import type { Provider } from "../../providers"
+import type { InternalUrl } from "../../lib/parse-url"
 
 /**
  * Adds `signinUrl` and `callbackUrl` to each provider
@@ -36,7 +37,7 @@ export default function parseProviders(params: {
 function normalizeProvider(provider?: Provider) {
   if (!provider) return
 
-  const normalizedProvider: InternalProvider = Object.entries(
+  const normalized: InternalProvider = Object.entries(
     provider
   ).reduce<InternalProvider>((acc, [key, value]) => {
     if (
@@ -56,13 +57,18 @@ function normalizeProvider(provider?: Provider) {
     // eslint-disable-next-line @typescript-eslint/prefer-reduce-type-parameter, @typescript-eslint/consistent-type-assertions
   }, {} as InternalProvider)
 
-  // Checks only work on OAuth 2.x + OIDC providers
-  if (
-    provider.type === "oauth" &&
-    !provider.version?.startsWith("1.") &&
-    !provider.checks
-  ) {
-    ;(normalizedProvider as InternalProvider<"oauth">).checks = ["state"]
+  if (provider.type === "oauth" && !provider.version?.startsWith("1.")) {
+    // If provider has as an "openid-configuration" well-known endpoint
+    // or an "openid" scope request, it will also likely be able to receive an `id_token`
+    ;(normalized as any).idToken = Boolean(
+      (normalized as any).idToken ??
+        (normalized as any).wellKnown?.includes("openid-configuration") ??
+        (normalized as any).token?.params?.scope?.includes("openid")
+    )
+
+    if (!provider.checks) {
+      ;(normalized as any).checks = ["state"]
+    }
   }
-  return normalizedProvider
+  return normalized
 }

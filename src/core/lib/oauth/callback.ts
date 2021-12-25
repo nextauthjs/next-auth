@@ -1,10 +1,11 @@
-import { CallbackParamsType, TokenSet } from "openid-client"
+import { TokenSet } from "openid-client"
 import { openidClient } from "./client"
 import { oAuth1Client } from "./client-legacy"
 import { useState } from "./state-handler"
 import { usePKCECodeVerifier } from "./pkce-handler"
 import { OAuthCallbackError } from "../../errors"
 
+import type { CallbackParamsType } from "openid-client"
 import type { Account, LoggerInstance, Profile } from "../../.."
 import type { OAuthChecks, OAuthConfig } from "../../../providers"
 import type { InternalOptions } from "../../../lib/types"
