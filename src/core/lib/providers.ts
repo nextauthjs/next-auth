@@ -57,18 +57,17 @@ function normalizeProvider(provider?: Provider) {
     // eslint-disable-next-line @typescript-eslint/prefer-reduce-type-parameter, @typescript-eslint/consistent-type-assertions
   }, {} as InternalProvider)
 
-  if (provider.type === "oauth" && !provider.version?.startsWith("1.")) {
+  if (normalized.type === "oauth" && !normalized.version?.startsWith("1.")) {
     // If provider has as an "openid-configuration" well-known endpoint
     // or an "openid" scope request, it will also likely be able to receive an `id_token`
-    ;(normalized as any).idToken = Boolean(
-      (normalized as any).idToken ??
-        (normalized as any).wellKnown?.includes("openid-configuration") ??
-        (normalized as any).token?.params?.scope?.includes("openid")
+    normalized.idToken = Boolean(
+      normalized.idToken ??
+        normalized.wellKnown?.includes("openid-configuration") ??
+        // @ts-expect-error
+        normalized.authorization?.params?.scope?.includes("openid")
     )
 
-    if (!provider.checks) {
-      ;(normalized as any).checks = ["state"]
-    }
+    if (!normalized.checks) normalized.checks = ["state"]
   }
   return normalized
 }
