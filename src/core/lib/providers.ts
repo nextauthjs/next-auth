@@ -45,17 +45,17 @@ function normalizeProvider(provider?: Provider) {
       typeof value === "string"
     ) {
       const url = new URL(value)
-      ;(acc as any)[key] = {
+      acc[key] = {
         url: `${url.origin}${url.pathname}`,
         params: Object.fromEntries(url.searchParams ?? []),
       }
     } else {
-      acc[key as keyof InternalProvider] = value
+      acc[key] = value
     }
 
     return acc
     // eslint-disable-next-line @typescript-eslint/prefer-reduce-type-parameter, @typescript-eslint/consistent-type-assertions
-  }, {} as InternalProvider)
+  }, {} as any)
 
   if (normalized.type === "oauth" && !normalized.version?.startsWith("1.")) {
     // If provider has as an "openid-configuration" well-known endpoint
