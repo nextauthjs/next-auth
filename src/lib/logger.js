@@ -1,14 +1,14 @@
 /** @type {import("types").LoggerInstance} */
 const _logger = {
   error(code, ...message) {
-    console.error('\033[0;31m',
+    console.error('\x1b[1;31m',
       `[next-auth][error][${code.toLowerCase()}]`,
       `\nhttps://next-auth.js.org/errors#${code.toLowerCase()}`,
       ...message
     )
   },
   warn(code, ...message) {
-    console.warn('\x1b[33m%s\x1b[0m',
+    console.warn('\x1b[1;33m',
       `[next-auth][warn][${code.toLowerCase()}]`,
       `\nhttps://next-auth.js.org/warnings#${code.toLowerCase()}`,
       ...message
