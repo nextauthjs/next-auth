@@ -81,15 +81,9 @@ export async function getToken<R extends boolean = false>(
   } = params ?? {}
 
   if (!req) throw new Error("Must pass `req` to JWT getToken()")
-
-  const sessionStore = new SessionStore(
-    { name: cookieName, options: { secure: secureCookie } },
-    { cookies: req.cookies, headers: req.headers },
-    logger
-  )
-
-  let token = sessionStore.value
-
+  
+  let token = req.cookies[cookieName]
+  
   if (!token && req.headers.authorization?.split(" ")[0] === "Bearer") {
     const urlEncodedToken = req.headers.authorization.split(" ")[1]
     token = decodeURIComponent(urlEncodedToken)
