@@ -12,7 +12,7 @@
     "watch:css": "cd .. && npm run watch:css",
     "start": "next start",
     "email": "npx fake-smtp-server",
-    "start:email": "email"
+    "start:email": "npm run email"
   },
   "license": "ISC",
   "dependencies": {
