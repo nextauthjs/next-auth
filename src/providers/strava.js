@@ -11,10 +11,10 @@ export default function Strava(options) {
         approval_prompt: "auto",
         response_type: "code",
         redirect_uri: "http://localhost:3000/api/auth/callback/strava",
-      }
+      },
     },
-    token: { 
-      url: "https://www.strava.com/api/v3/oauth/token",      
+    token: {
+      url: "https://www.strava.com/api/v3/oauth/token",
     },
     userinfo: "https://www.strava.com/api/v3/athlete",
     client: {
@@ -27,8 +27,8 @@ export default function Strava(options) {
         name: profile.firstname,
         email: null,
         image: profile.profile,
-      };
+      }
     },
     options,
-  };
+  }
 }
