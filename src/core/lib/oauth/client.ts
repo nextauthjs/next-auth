@@ -46,7 +46,5 @@ export async function openidClient(
   // and https://github.com/nextauthjs/next-auth/issues/3067
   client[custom.clock_tolerance] = 10
 
-  //if (provider.httpOptions) custom.setHttpOptionsDefaults(provider.httpOptions)
-
   return client
 }
