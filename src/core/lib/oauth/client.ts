@@ -12,7 +12,9 @@ export async function openidClient(
   options: InternalOptions<"oauth">
 ): Promise<Client> {
   const provider = options.provider
-
+  
+  if (provider.httpOptions) custom.setHttpOptionsDefaults(provider.httpOptions)
+  
   let issuer: Issuer
   if (provider.wellKnown) {
     issuer = await Issuer.discover(provider.wellKnown)
@@ -43,8 +45,6 @@ export async function openidClient(
   // See https://github.com/nextauthjs/next-auth/issues/3032
   // and https://github.com/nextauthjs/next-auth/issues/3067
   client[custom.clock_tolerance] = 10
-
-  if (provider.httpOptions) custom.setHttpOptionsDefaults(provider.httpOptions)
 
   return client
 }
