@@ -175,12 +175,9 @@
     ]
   },
   "eslintIgnore": [
-    "./*.js",
     "./*.d.ts",
-    "app",
     "**/tests",
-    "**/__tests__",
-    "config"
+    "**/__tests__"
   ],
   "release": {
     "branches": [
