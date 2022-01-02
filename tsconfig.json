@@ -20,5 +20,5 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true
   },
-  "exclude": ["./*.d.ts", "**/tests", "**/__tests__"]
+  "exclude": ["./*.js", "./*.d.ts", "app", "**/tests", "**/__tests__", "config"]
 }
