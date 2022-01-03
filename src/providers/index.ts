@@ -18,6 +18,7 @@ export interface CommonProviderOptions {
   id: string
   name: string
   type: ProviderType
+  allowDangerousEmailAccountLinking?: boolean
   options?: Record<string, unknown>
 }
 
