@@ -34,7 +34,7 @@ export function assertConfig(
     )
   }
 
-  if (!options.secret) {
+  if (!options.secret && !options.jwt?.secret) {
     if (process.env.NODE_ENV === "production") {
       return new MissingSecret("Please define a `secret` in production.")
     } else {
