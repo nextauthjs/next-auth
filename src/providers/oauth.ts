@@ -21,8 +21,6 @@ type ChecksType = "pkce" | "state" | "both" | "none"
 
 export type OAuthChecks = OpenIDCallbackChecks | OAuthCallbackChecks
 
-type PartialIssuer = Partial<Pick<IssuerMetadata, "jwks_endpoint" | "issuer">>
-
 type UrlParams = Record<string, unknown>
 
 type EndpointRequest<C, R, P> = (
@@ -89,7 +87,7 @@ export type UserinfoEndpointHandler = EndpointHandler<
   Profile
 >
 
-export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
+export interface OAuthConfig<P> extends CommonProviderOptions {
   /**
    * OpenID Connect (OIDC) compliant providers can configure
    * this instead of `authorize`/`token`/`userinfo` options
@@ -129,7 +127,10 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   // TODO: only allow for BattleNet
   region?: string
   // TODO: only allow for some
-  issuer?: string
+  /**
+   * Configures the issuer to be used by oidc-client.
+   */
+  issuer?: string|IssuerMetadata
   /** Read more at: https://github.com/panva/node-openid-client/tree/main/docs#customizing-http-requests */
   httpOptions?: HttpOptions
 

@@ -1,4 +1,4 @@
-import { Issuer, Client, custom } from "openid-client"
+import { Client, custom, Issuer, IssuerMetadata } from "openid-client"
 import { InternalOptions } from "src/lib/types"
 
 /**
@@ -19,15 +19,20 @@ export async function openidClient(
   if (provider.wellKnown) {
     issuer = await Issuer.discover(provider.wellKnown)
   } else {
+    // issuer can either be the full oidc-client issuer metadata, or just
+    // the URI of the issuer
+    const metadata: IssuerMetadata = typeof provider.issuer === "object" ?
+      { ...provider.issuer } : { issuer: provider.issuer as string }
+
     issuer = new Issuer({
-      issuer: provider.issuer as string,
+      ...metadata,
       authorization_endpoint:
         // @ts-expect-error
         provider.authorization?.url ?? provider.authorization,
       // @ts-expect-error
       token_endpoint: provider.token?.url ?? provider.token,
       // @ts-expect-error
-      userinfo_endpoint: provider.userinfo?.url ?? provider.userinfo,
+      userinfo_endpoint: provider.userinfo?.url ?? provider.userinfo
     })
   }
 
