@@ -166,49 +166,54 @@ export interface TwitterProfile {
   }
 }
 
+let warned = false
 export default function Twitter<
   P extends Record<string, any> = TwitterLegacyProfile | TwitterProfile
 >(options: OAuthUserConfig<P>): OAuthConfig<P> {
-  if (!options.version || options.version === "1.0A") {
-    console.warn("Using Twitter with OAuth 1.0. OAuth 2.0 is recommended.")
-    return TwitterLegacy(options)
-  }
-  return {
-    id: "twitter",
-    name: "Twitter",
-    version: "2.0",
-    type: "oauth",
-    authorization: {
-      url: "https://twitter.com/i/oauth2/authorize",
-      params: { scope: "users.read tweet.read offline.access" },
-    },
-    token: {
-      url: "https://api.twitter.com/2/oauth2/token",
-      // TODO: Remove this
-      async request({ client, params, checks, provider }) {
-        const response = await client.oauthCallback(
-          provider.callbackUrl,
-          params,
-          checks,
-          { exchangeBody: { client_id: options.clientId } }
-        )
-        return { tokens: response }
+  if (!warned && options.version === "2.0") {
+    warned = true
+    console.warn(
+      "Opted-in to Twitter OAuth 2.0. See the docs https://next-auth.js.org/providers/twitter#oauth-2"
+    )
+    return {
+      id: "twitter",
+      name: "Twitter",
+      version: "2.0",
+      type: "oauth",
+      authorization: {
+        url: "https://twitter.com/i/oauth2/authorize",
+        params: { scope: "users.read tweet.read offline.access" },
       },
-    },
-    userinfo: {
-      url: "https://api.twitter.com/2/users/me",
-      params: { "user.fields": "profile_image_url" },
-    },
-    profile({ data }) {
-      return {
-        id: data.id,
-        name: data.name,
-        // NOTE: E-mail is currently unsupported by OAuth 2 Twitter.
-        email: null,
-        image: data.profile_image_url,
-      }
-    },
-    checks: ["pkce", "state"],
-    options,
+      token: {
+        url: "https://api.twitter.com/2/oauth2/token",
+        // TODO: Remove this
+        async request({ client, params, checks, provider }) {
+          const response = await client.oauthCallback(
+            provider.callbackUrl,
+            params,
+            checks,
+            { exchangeBody: { client_id: options.clientId } }
+          )
+          return { tokens: response }
+        },
+      },
+      userinfo: {
+        url: "https://api.twitter.com/2/users/me",
+        params: { "user.fields": "profile_image_url" },
+      },
+      profile({ data }) {
+        return {
+          id: data.id,
+          name: data.name,
+          // NOTE: E-mail is currently unsupported by OAuth 2 Twitter.
+          email: null,
+          image: data.profile_image_url,
+        }
+      },
+      checks: ["pkce", "state"],
+      options,
+    }
   }
+
+  return TwitterLegacy(options)
 }
