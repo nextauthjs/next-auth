@@ -130,6 +130,7 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   region?: string
   // TODO: only allow for some
   issuer?: string
+  jwksUri?: string
   /** Read more at: https://github.com/panva/node-openid-client/tree/main/docs#customizing-http-requests */
   httpOptions?: HttpOptions
 
