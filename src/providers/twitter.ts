@@ -180,17 +180,11 @@ export default function Twitter<
     type: "oauth",
     authorization: {
       url: "https://twitter.com/i/oauth2/authorize",
-      // tweet.read should probably not be necessary for the default userinfo endpoint.
-      // We only need the following by default: name, id, image and email.
       params: { scope: "users.read tweet.read offline.access" },
     },
     token: {
       url: "https://api.twitter.com/2/oauth2/token",
-
-      // TODO: Get rid of the `request` method, if possible.
-      // client_id should be optional when authenticating a confidential client
-      // https://datatracker.ietf.org/doc/html/rfc6749#section-3.2.1
-      // https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3
+      // TODO: Remove this
       async request({ client, params, checks, provider }) {
         const response = await client.oauthCallback(
           provider.callbackUrl,
@@ -205,12 +199,11 @@ export default function Twitter<
       url: "https://api.twitter.com/2/users/me",
       params: { "user.fields": "profile_image_url" },
     },
-
     profile({ data }) {
       return {
         id: data.id,
         name: data.name,
-        // TODO: Figure out how to get user's e-mail
+        // NOTE: E-mail is currently unsupported by OAuth 2 Twitter.
         email: null,
         image: data.profile_image_url,
       }
