@@ -15,6 +15,7 @@ export default function Cognito<P extends Record<string, any> = CognitoProfile>(
     name: "Cognito",
     type: "oauth",
     wellKnown: `${options.issuer}/.well-known/openid-configuration`,
+    idToken: true,
     profile(profile) {
       return {
         id: profile.sub,
