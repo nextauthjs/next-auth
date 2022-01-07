@@ -181,7 +181,7 @@ export default function Twitter<
     authorization: {
       url: "https://twitter.com/i/oauth2/authorize",
       // tweet.read should probably not be necessary for the default userinfo endpoint.
-      // We only need info this info: name, id, image and email.
+      // We only need the following by default: name, id, image and email.
       params: { scope: "users.read tweet.read offline.access" },
     },
     token: {
@@ -207,8 +207,6 @@ export default function Twitter<
     },
 
     profile({ data }) {
-      console.log(data)
-
       return {
         id: data.id,
         name: data.name,
