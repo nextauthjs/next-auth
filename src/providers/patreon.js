@@ -9,12 +9,8 @@ export default function Patreon(options) {
           url : 'https://www.patreon.com/oauth2/authorize',
           params: { scope: 'identity identity[email] identity.memberships' }
         },
-        token : {
-          url : 'https://www.patreon.com/api/oauth2/token',
-        },
-        userinfo : {
-          url: 'https://www.patreon.com/api/oauth2/api/current_user'
-        },      
+        token: "https://www.patreon.com/api/oauth2/token",
+        userinfo: "https://www.patreon.com/api/oauth2/api/current_user",
         profile(profile) {
           return {
             id: profile.data.id,
