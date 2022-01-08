@@ -6,7 +6,7 @@ export default function Patreon(options) {
         type: 'oauth',
         version: '2.0',
         authorization: { 
-          url : 'https://www.patreon.com/oauth2/authorize?response_type=code',
+          url : 'https://www.patreon.com/oauth2/authorize',
           params: { scope: 'identity identity[email] identity.memberships', grant_type: 'authorization_code' }
         },
         token : {
