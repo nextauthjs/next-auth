@@ -15,11 +15,12 @@ export default function Patreon(options) {
         userinfo : {
           url: 'https://www.patreon.com/api/oauth2/api/current_user'
         },      
-        profile: (profile) => {
+        profile(profile) {
           return {
             id: profile.data.id,
             name: profile.data.attributes.full_name,
-            email: profile.data.attributes.email
+            email: profile.data.attributes.email,
+            image: null,
           }
         },
         options
