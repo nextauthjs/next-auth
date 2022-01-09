@@ -334,6 +334,23 @@ export interface CallbacksOptions<
     profile?: P
     isNewUser?: boolean
   }) => Awaitable<JWT>
+
+  /**
+   * This callback is called at the end of the callback route,
+   * after the user is logged in though before the user is redirected
+   * to their final destination. This callback is an opportunity to dynamically
+   * route a logged in user to another destination using provider, account and the existing
+   * callback url.
+   *
+   * ⚠ If you need to direct a logged in user to their own profile page or trigger
+   * a terms of service review, this is an excellent callback to use.
+   *
+   * [Documentation](https://next-auth.js.org/configuration/callbacks#callback-callback)
+   */
+  callback: (params: {
+    account: Account | Omit<Account, "userId"> | null
+    callbackUrl: string
+  }) => Awaitable<string>
 }
 
 /** [Documentation](https://next-auth.js.org/configuration/options#cookies) */

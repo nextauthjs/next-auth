@@ -173,8 +173,13 @@ export default async function callback(params: {
           }
         }
 
+        const finalizedCallback = await callbacks.callback({
+          account,
+          callbackUrl,
+        })
+
         // Callback URL is already verified at this point, so safe to use if specified
-        return { redirect: callbackUrl, cookies }
+        return { redirect: finalizedCallback, cookies }
       } catch (error) {
         if ((error as Error).name === "AccountNotLinkedError") {
           // If the email on the account is already linked, but not with this OAuth account
@@ -317,8 +322,13 @@ export default async function callback(params: {
         }
       }
 
+      const finalizedCallback = await callbacks.callback({
+        account,
+        callbackUrl,
+      })
+
       // Callback URL is already verified at this point, so safe to use if specified
-      return { redirect: callbackUrl, cookies }
+      return { redirect: finalizedCallback, cookies }
     } catch (error) {
       if ((error as Error).name === "CreateUserError") {
         return { redirect: `${url}/error?error=EmailCreateAccount`, cookies }
@@ -419,7 +429,12 @@ export default async function callback(params: {
     // @ts-expect-error
     await events.signIn?.({ user, account })
 
-    return { redirect: callbackUrl, cookies }
+    const finalizedCallback = await callbacks.callback({
+      account,
+      callbackUrl,
+    })
+
+    return { redirect: finalizedCallback, cookies }
   }
   return {
     status: 500,

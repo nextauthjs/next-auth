@@ -15,4 +15,7 @@ export const defaultCallbacks: CallbacksOptions = {
   jwt({ token }) {
     return token
   },
+  callback({ callbackUrl }) {
+    return callbackUrl
+  },
 }
