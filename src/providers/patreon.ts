@@ -11,13 +11,13 @@ export default function Patreon<P extends Record<string, any> = PatreonProfile>(
   options: OAuthUserConfig<P>
 ): OAuthConfig<P> {
   return {
-    id: 'patreon',
-    name: 'Patreon',
-    type: 'oauth',
-    version: '2.0',
-    authorization: { 
-      url : 'https://www.patreon.com/oauth2/authorize',
-      params: { scope: 'identity identity[email]' }
+    id: "patreon",
+    name: "Patreon",
+    type: "oauth",
+    version: "2.0",
+    authorization: {
+      url: "https://www.patreon.com/oauth2/authorize",
+      params: { scope: "identity identity[email]" },
     },
     token: "https://www.patreon.com/api/oauth2/token",
     userinfo: "https://www.patreon.com/api/oauth2/api/current_user",
@@ -29,6 +29,6 @@ export default function Patreon<P extends Record<string, any> = PatreonProfile>(
         image: profile.data.attributes.image_url,
       }
     },
-    options
+    options,
   }
 }
