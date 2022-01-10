@@ -1,25 +1,21 @@
 import type { OAuthConfig, OAuthUserConfig } from "."
 
-/**
- * https://developers.naver.com/docs/login/profile/profile.md
- */
+/** https://developers.naver.com/docs/login/profile/profile.md */
 export interface NaverProfile {
   resultcode: string
   message: string
-  response: NaverAccount
-}
-
-export interface NaverAccount {
-  id: string
-  nickname?: string
-  name?: string
-  email?: string
-  gender?: "F" | "M" | "U"
-  age?: string
-  birthday?: string
-  profile_image?: string
-  birthyear?: string
-  mobile?: string
+  response: {
+    id: string
+    nickname?: string
+    name?: string
+    email?: string
+    gender?: "F" | "M" | "U"
+    age?: string
+    birthday?: string
+    profile_image?: string
+    birthyear?: string
+    mobile?: string
+  }
 }
 
 export default function Naver<P extends Record<string, any> = NaverProfile>(
@@ -37,7 +33,7 @@ export default function Naver<P extends Record<string, any> = NaverProfile>(
         id: profile.response.id,
         name: profile.response.name,
         email: profile.response.email,
-        image: profile.response.profile_image
+        image: profile.response.profile_image,
       }
     },
     checks: ["state"],
