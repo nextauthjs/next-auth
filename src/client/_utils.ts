@@ -15,6 +15,8 @@ export interface NextAuthClientConfig {
    * trigger session updates from places like `signIn` or `signOut`
    */
   _getSession: (...args: any[]) => any
+  /** Updates session data */
+  _setSession: (session: Session | null | undefined) => void
 }
 
 export interface CtxOrReq {

@@ -60,6 +60,7 @@ const __NEXTAUTH: NextAuthClientConfig = {
   _lastSync: 0,
   _session: undefined,
   _getSession: () => {},
+  _setSession: () => {},
 }
 
 const broadcast = BroadcastChannel()
@@ -121,7 +122,7 @@ export type GetSessionParams = CtxOrReq & {
   broadcast?: boolean
 }
 
-export async function getSession(params?: GetSessionParams) {
+async function fetchSession(params?: GetSessionParams) {
   const session = await fetchData<Session>(
     "session",
     __NEXTAUTH,
@@ -131,6 +132,12 @@ export async function getSession(params?: GetSessionParams) {
   if (params?.broadcast ?? true) {
     broadcast.post({ event: "session", data: { trigger: "getSession" } })
   }
+  return session
+}
+
+export async function getSession(params?: GetSessionParams) {
+  const session = await fetchSession(params)
+  __NEXTAUTH._setSession(session);
   return session
 }
 
@@ -323,11 +330,10 @@ export function SessionProvider(props: SessionProviderProps) {
         // We should always update if we don't have a client session yet
         // or if there are events from other tabs/windows
         if (storageEvent || __NEXTAUTH._session === undefined) {
-          __NEXTAUTH._lastSync = now()
-          __NEXTAUTH._session = await getSession({
+          const data = await fetchSession({
             broadcast: !storageEvent,
           })
-          setSession(__NEXTAUTH._session)
+          __NEXTAUTH._setSession(data)
           return
         }
 
@@ -348,14 +354,19 @@ export function SessionProvider(props: SessionProviderProps) {
         }
 
         // An event or session staleness occurred, update the client session.
-        __NEXTAUTH._lastSync = now()
-        __NEXTAUTH._session = await getSession()
-        setSession(__NEXTAUTH._session)
+        const data = await fetchSession()
+        __NEXTAUTH._setSession(data)
       } catch (error) {
         logger.error("CLIENT_SESSION_ERROR", error as Error)
       } finally {
         setLoading(false)
       }
+    }
+
+    __NEXTAUTH._setSession = (data) => {
+      __NEXTAUTH._lastSync = now()
+      __NEXTAUTH._session = data
+      setSession(__NEXTAUTH._session)
     }
 
     __NEXTAUTH._getSession()
