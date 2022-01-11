@@ -92,8 +92,11 @@ export async function NextAuthHandler<
     switch (action) {
       case "providers":
         return (await routes.providers(options.providers)) as any
-      case "session":
-        return (await routes.session({ options, sessionStore })) as any
+      case "session": {
+        const session = await routes.session({ options, sessionStore })
+        if (session.cookies) cookies.push(...session.cookies)
+        return { ...session, cookies } as any
+      }
       case "csrf":
         return {
           headers: [{ key: "Content-Type", value: "application/json" }],
