@@ -229,7 +229,7 @@ We're happy to announce we've recently created an [OpenCollective](https://openc
 ## Contributing
 
 We're open to all community contributions! If you'd like to contribute in any way, please first read
-our [Contributing Guide](https://github.com/nextauthjs/next-auth/blob/canary/CONTRIBUTING.md).
+our [Contributing Guide](https://github.com/nextauthjs/next-auth/blob/main/CONTRIBUTING.md).
 
 ## License
 

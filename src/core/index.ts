@@ -135,15 +135,6 @@ export async function NextAuthHandler<
         }
         return render.verifyRequest()
       case "error":
-        if (pages.error) {
-          return {
-            redirect: `${pages.error}${
-              pages.error.includes("?") ? "&" : "?"
-            }error=${error}`,
-            cookies,
-          }
-        }
-
         // These error messages are displayed in line on the sign in page
         if (
           [
@@ -160,6 +151,15 @@ export async function NextAuthHandler<
           ].includes(error as string)
         ) {
           return { redirect: `${options.url}/signin?error=${error}`, cookies }
+        }
+
+        if (pages.error) {
+          return {
+            redirect: `${pages.error}${
+              pages.error.includes("?") ? "&" : "?"
+            }error=${error}`,
+            cookies,
+          }
         }
 
         return render.error({ error: error as ErrorType })

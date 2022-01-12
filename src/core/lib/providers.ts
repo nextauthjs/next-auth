@@ -1,7 +1,8 @@
-import { InternalProvider } from "../../lib/types"
-import { Provider } from "../../providers"
 import { merge } from "../../lib/merge"
-import { InternalUrl } from "../../lib/parse-url"
+
+import type { InternalProvider } from "../../lib/types"
+import type { Provider } from "../../providers"
+import type { InternalUrl } from "../../lib/parse-url"
 
 /**
  * Adds `signinUrl` and `callbackUrl` to each provider
@@ -36,7 +37,7 @@ export default function parseProviders(params: {
 function normalizeProvider(provider?: Provider) {
   if (!provider) return
 
-  const normalizedProvider: InternalProvider = Object.entries(
+  const normalized: InternalProvider = Object.entries(
     provider
   ).reduce<InternalProvider>((acc, [key, value]) => {
     if (
@@ -44,25 +45,29 @@ function normalizeProvider(provider?: Provider) {
       typeof value === "string"
     ) {
       const url = new URL(value)
-      ;(acc as any)[key] = {
+      acc[key] = {
         url: `${url.origin}${url.pathname}`,
         params: Object.fromEntries(url.searchParams ?? []),
       }
     } else {
-      acc[key as keyof InternalProvider] = value
+      acc[key] = value
     }
 
     return acc
     // eslint-disable-next-line @typescript-eslint/prefer-reduce-type-parameter, @typescript-eslint/consistent-type-assertions
-  }, {} as InternalProvider)
+  }, {} as any)
 
-  // Checks only work on OAuth 2.x + OIDC providers
-  if (
-    provider.type === "oauth" &&
-    !provider.version?.startsWith("1.") &&
-    !provider.checks
-  ) {
-    ;(normalizedProvider as InternalProvider<"oauth">).checks = ["state"]
+  if (normalized.type === "oauth" && !normalized.version?.startsWith("1.")) {
+    // If provider has as an "openid-configuration" well-known endpoint
+    // or an "openid" scope request, it will also likely be able to receive an `id_token`
+    normalized.idToken = Boolean(
+      normalized.idToken ??
+        normalized.wellKnown?.includes("openid-configuration") ??
+        // @ts-expect-error
+        normalized.authorization?.params?.scope?.includes("openid")
+    )
+
+    if (!normalized.checks) normalized.checks = ["state"]
   }
-  return normalizedProvider
+  return normalized
 }

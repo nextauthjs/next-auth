@@ -3,7 +3,9 @@ import NextAuth, { NextAuthOptions } from "next-auth"
 import GitHubProvider from "next-auth/providers/github"
 import Auth0Provider from "next-auth/providers/auth0"
 import KeycloakProvider from "next-auth/providers/keycloak"
-import TwitterProvider from "next-auth/providers/twitter"
+import TwitterProvider, {
+  TwitterLegacy as TwitterLegacyProvider,
+} from "next-auth/providers/twitter"
 import CredentialsProvider from "next-auth/providers/credentials"
 import IDS4Provider from "next-auth/providers/identity-server4"
 import Twitch from "next-auth/providers/twitch"
@@ -25,6 +27,7 @@ import Okta from "next-auth/providers/okta"
 import AzureB2C from "next-auth/providers/azure-ad-b2c"
 import OsuProvider from "next-auth/providers/osu"
 import AppleProvider from "next-auth/providers/apple"
+import PatreonProvider from "next-auth/providers/patreon"
 
 // import { PrismaAdapter } from "@next-auth/prisma-adapter"
 // import { PrismaClient } from "@prisma/client"
@@ -71,11 +74,17 @@ export const authOptions: NextAuthOptions = {
       },
     }),
     // OAuth 1
+    // TwitterLegacyProvider({
+    //   clientId: process.env.TWITTER_LEGACY_ID,
+    //   clientSecret: process.env.TWITTER_LEGACY_SECRET,
+    // }),
+    // OAuth 2 / OIDC
     TwitterProvider({
+      // Opt-in to the new Twitter API for now. Should be default in the future.
+      version: "2.0",
       clientId: process.env.TWITTER_ID,
       clientSecret: process.env.TWITTER_SECRET,
     }),
-    // OAuth 2 / OIDC
     GitHubProvider({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET,
@@ -177,6 +186,10 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.APPLE_ID,
       clientSecret: process.env.APPLE_SECRET,
     }),
+    PatreonProvider({
+      clientId: process.env.PATREON_ID,
+      clientSecret: process.env.PATREON_SECRET,
+    })
   ],
   secret: process.env.SECRET,
   debug: true,
