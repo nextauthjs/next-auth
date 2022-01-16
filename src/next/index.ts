@@ -1,5 +1,5 @@
 import { NextAuthHandler } from "../core"
-import { setCookie } from "./cookie"
+import { setCookie, detectHost } from "./utils"
 
 import type {
   GetServerSidePropsContext,
@@ -21,7 +21,7 @@ async function NextAuthNextHandler(
   const { nextauth, ...query } = req.query
   const handler = await NextAuthHandler({
     req: {
-      host: process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL,
+      host: detectHost(req.headers["x-forwarded-host"]),
       body: req.body,
       query,
       cookies: req.cookies,
@@ -87,7 +87,7 @@ export async function getServerSession(
   const session = await NextAuthHandler<Session | {}>({
     options,
     req: {
-      host: process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL,
+      host: detectHost(context.req.headers["x-forwarded-host"]),
       action: "session",
       method: "GET",
       cookies: context.req.cookies,
@@ -108,7 +108,7 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       NEXTAUTH_URL?: string
-      VERCEL_URL?: string
+      VERCEL?: "1"
     }
   }
 }
