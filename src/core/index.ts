@@ -222,6 +222,19 @@ export async function NextAuthHandler<
           }
         }
         return {}
+      case "session":
+        // Verified CSRF Token required for session updates
+        if (options.csrfTokenVerified) {
+          const session = await routes.session({
+            method: "POST",
+            user: req.body?.user,
+            options,
+            sessionStore,
+          })
+          if (session.cookies) cookies.push(...session.cookies)
+          return { ...session, cookies } as any
+        }
+        return { cookies, status: 401 }
       default:
     }
   }

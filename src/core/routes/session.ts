@@ -3,10 +3,12 @@ import { fromDate } from "../lib/utils"
 import type { Adapter } from "../../adapters"
 import type { InternalOptions } from "../../lib/types"
 import type { OutgoingResponse } from ".."
-import type { Session } from "../.."
+import type { Session, User } from "../.."
 import type { SessionStore } from "../lib/cookie"
 
-interface SessionParams {
+interface SessionParams<M extends "POST" | undefined> {
+  method?: M
+  user?: M extends "POST" ? Partial<User> : never
   options: InternalOptions
   sessionStore: SessionStore
 }
@@ -16,8 +18,8 @@ interface SessionParams {
  * for Single Page App clients
  */
 
-export default async function session(
-  params: SessionParams
+export default async function session<M extends "POST" | undefined = undefined>(
+  params: SessionParams<M>
 ): Promise<OutgoingResponse<Session | {}>> {
   const { options, sessionStore } = params
   const {
@@ -83,14 +85,15 @@ export default async function session(
 
       await events.session?.({ session: newSession, token })
     } catch (error) {
-      // If JWT not verifiable, make sure the cookie for it is removed and return empty object
+      // If JWT not verifiable, make sure the cookie for it is removed and return
+      // empty object
       logger.error("JWT_SESSION_ERROR", error as Error)
 
       response.cookies?.push(...sessionStore.clean())
     }
   } else {
     try {
-      const { getSessionAndUser, deleteSession, updateSession } =
+      const { getSessionAndUser, deleteSession, updateSession, updateUser } =
         adapter as Adapter
       let userAndSession = await getSessionAndUser(sessionToken)
 
@@ -104,7 +107,7 @@ export default async function session(
       }
 
       if (userAndSession) {
-        const { user, session } = userAndSession
+        let { user, session } = userAndSession
 
         const sessionUpdateAge = options.session.updateAge
         // Calculate last updated date to throttle write updates to database
@@ -114,6 +117,19 @@ export default async function session(
           session.expires.valueOf() -
           sessionMaxAge * 1000 +
           sessionUpdateAge * 1000
+
+        if (params.method === "POST" && params.user) {
+          // TODO: support e-mail change.
+          // This needs work, as all accounts need to be updated,
+          // user has to receive a confirmation e-mail
+          if (params.user.email) {
+            delete params.user.email
+            logger.warn("EMAIL_UPDATE_UNSUPPORTED")
+          }
+
+          const newUser = { ...params.user, id: user.id }
+          user = await updateUser(newUser)
+        }
 
         const newExpires = fromDate(sessionMaxAge)
         // Trigger update of session expiry date and write to database, only
@@ -125,7 +141,8 @@ export default async function session(
         // Pass Session through to the session callback
         // @ts-expect-error
         const sessionPayload = await callbacks.session({
-          // By default, only exposes a limited subset of information to the client
+          // By default, only exposes a limited subset of information to the
+          // client
           // as needed for presentation purposes (e.g. "you are logged in as...").
           session: {
             user: {

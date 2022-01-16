@@ -19,7 +19,10 @@ function hasErrorProperty(
   return !!(x as any)?.error
 }
 
-export type WarningCode = "NEXTAUTH_URL" | "NO_SECRET"
+export type WarningCode =
+  | "NEXTAUTH_URL"
+  | "NO_SECRET"
+  | "EMAIL_UPDATE_UNSUPPORTED"
 
 /**
  * Override any of the methods, and the rest will use the default logger.
