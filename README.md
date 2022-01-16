@@ -54,7 +54,7 @@ See [next-auth.js.org](https://next-auth.js.org) for more information and docume
 ### Flexible and easy to use
 
 - Designed to work with any OAuth service, it supports OAuth 1.0, 1.0A and 2.0
-- Built-in support for [many popular sign-in services](https://next-auth.js.org/configuration/providers)
+- Built-in support for [many popular sign-in services](https://next-auth.js.org/providers/overview)
 - Supports email / passwordless authentication
 - Supports stateless authentication with any backend (Active Directory, LDAP, etc)
 - Supports both JSON Web Tokens and database sessions
