@@ -15,7 +15,7 @@ export function setCookie(res, cookie: Cookie) {
 }
 
 /** Extract the host from the environment */
-export function detectHost(forwardedHost: string) {
+export function detectHost(forwardedHost: any) {
   // If we detect a Vercel environment, we can trust the host
   if (process.env.VERCEL === "1") return forwardedHost
   // If `NEXTAUTH_URL` is `undefined` we fall back to "http://localhost:3000"

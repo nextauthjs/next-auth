@@ -21,7 +21,7 @@ async function NextAuthNextHandler(
   const { nextauth, ...query } = req.query
   const handler = await NextAuthHandler({
     req: {
-      host: detectHost(req.headers["x-forwarded-host"] as string),
+      host: detectHost(req.headers["x-forwarded-host"]),
       body: req.body,
       query,
       cookies: req.cookies,
@@ -87,7 +87,7 @@ export async function getServerSession(
   const session = await NextAuthHandler<Session | {}>({
     options,
     req: {
-      host: detectHost(context.req.headers["x-forwarded-host"] as string),
+      host: detectHost(context.req.headers["x-forwarded-host"]),
       action: "session",
       method: "GET",
       cookies: context.req.cookies,
