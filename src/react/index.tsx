@@ -9,9 +9,11 @@
 // We use HTTP POST requests with CSRF Tokens to protect against CSRF attacks.
 
 import * as React from "react"
+import { flushSync } from "react-dom"
+
 import _logger, { proxyLogger } from "../lib/logger"
 import parseUrl from "../lib/parse-url"
-import { Session } from ".."
+import type { Session, User } from ".."
 import {
   BroadcastChannel,
   CtxOrReq,
@@ -66,13 +68,19 @@ const broadcast = BroadcastChannel()
 
 const logger = proxyLogger(_logger, __NEXTAUTH.basePath)
 
+type UpdateUser = (user: Partial<User>) => Session["user"]
+
 export type SessionContextValue<R extends boolean = false> = R extends true
   ?
-      | { data: Session; status: "authenticated" }
-      | { data: null; status: "loading" }
+      | { updateUser?: UpdateUser; data: Session; status: "authenticated" }
+      | { updateUser?: UpdateUser; data: null; status: "loading" }
   :
-      | { data: Session; status: "authenticated" }
-      | { data: null; status: "unauthenticated" | "loading" }
+      | { updateUser?: UpdateUser; data: Session; status: "authenticated" }
+      | {
+          updateUser?: UpdateUser
+          data: null
+          status: "unauthenticated" | "loading"
+        }
 
 const SessionContext = React.createContext<SessionContextValue | undefined>(
   undefined
@@ -308,7 +316,7 @@ export function SessionProvider(props: SessionProviderProps) {
   /** If session was passed, initialize as already synced */
   __NEXTAUTH._lastSync = hasInitialSession ? now() : 0
 
-  const [session, setSession] = React.useState(() => {
+  const [data, setData] = React.useState(() => {
     if (hasInitialSession) __NEXTAUTH._session = props.session
     return props.session
   })
@@ -327,7 +335,7 @@ export function SessionProvider(props: SessionProviderProps) {
           __NEXTAUTH._session = await getSession({
             broadcast: !storageEvent,
           })
-          setSession(__NEXTAUTH._session)
+          setData(__NEXTAUTH._session)
           return
         }
 
@@ -350,7 +358,7 @@ export function SessionProvider(props: SessionProviderProps) {
         // An event or session staleness occurred, update the client session.
         __NEXTAUTH._lastSync = now()
         __NEXTAUTH._session = await getSession()
-        setSession(__NEXTAUTH._session)
+        setData(__NEXTAUTH._session)
       } catch (error) {
         logger.error("CLIENT_SESSION_ERROR", error as Error)
       } finally {
@@ -403,17 +411,56 @@ export function SessionProvider(props: SessionProviderProps) {
     }
   }, [props.refetchInterval])
 
-  const value: any = React.useMemo(
-    () => ({
-      data: session,
-      status: loading
-        ? "loading"
-        : session
-        ? "authenticated"
-        : "unauthenticated",
-    }),
-    [session, loading]
-  )
+  const value: any = React.useMemo(() => {
+    let status
+
+    if (loading) {
+      if (data) status = "updating"
+      else status = "loading"
+    } else {
+      if (data) status = "authenticated"
+      else status = "unauthenticated"
+    }
+
+    return {
+      status,
+      data,
+      async updateUser(user: Partial<User>) {
+        if (!data) return data
+
+        // REVIEW:
+        if (!data.user) throw new TypeError("Session must have a `user` object")
+
+        try {
+          setLoading(true)
+          const csrfToken = await getCsrfToken()
+          const res = await fetch("/api/auth/session", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ user, csrfToken }),
+          })
+          if (res.ok) {
+            const newSession = await res.json()
+
+            const update = () => {
+              setData(newSession)
+              setLoading(false)
+            }
+
+            const [reactMajorVersion] = React.version.split(".")
+            // https://github.com/reactwg/react-18/discussions/21
+            if (reactMajorVersion >= "18") update()
+            else flushSync(update)
+          }
+        } catch (error) {
+          logger.error("CLIENT_UPDATE_USER_ERROR", error as Error)
+          setLoading(false)
+        }
+      },
+    }
+  }, [data, loading])
 
   return (
     <SessionContext.Provider value={value}>{children}</SessionContext.Provider>
