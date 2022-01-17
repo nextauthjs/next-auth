@@ -28,7 +28,7 @@ export default function AzureAD<P extends Record<string, any> = AzureADProfile>(
     wellKnown: `https://login.microsoftonline.com/${tenant}/v2.0/.well-known/openid-configuration`,
     authorization: {
       params: {
-        scope: "User.Read",
+        scope: "openid profile email",
       },
     },
     async profile(profile, tokens) {
