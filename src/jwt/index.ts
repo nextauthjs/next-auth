@@ -42,7 +42,7 @@ export async function decode({
 
 export interface GetTokenParams<R extends boolean = false> {
   /** The request containing the JWT either in the cookies or in the `Authorization` header. */
-  req: NextApiRequest
+  req: NextApiRequest | Pick<NextApiRequest, "cookies" | "headers">
   /**
    * Use secure prefix for cookie name, unless URL in `NEXTAUTH_URL` is http://
    * or not set (e.g. development or test instance) case use unprefixed name
