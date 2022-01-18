@@ -78,10 +78,12 @@ export async function withAuth(
       )
       return NextResponse.redirect("/api/auth/error?error=Configuration")
     }
+    const req = args[0]
+    if (await getToken({ req: req as any, secret })) return
 
-    if (await getToken({ req: args[0] as any, secret })) return
-
-    return NextResponse.redirect("/api/auth/signin")
+    return NextResponse.redirect(
+      `/api/auth/signin?${new URLSearchParams({ callbackUrl: req.url })}`
+    )
   }
 
   const options = args[0]
@@ -114,6 +116,9 @@ export async function withAuth(
 
     if (isAuthorized) return
 
-    return NextResponse.redirect(pages.signIn ?? "/api/auth/signin")
+    const redirectUrl = pages.signIn ?? "/api/auth/signin"
+    return NextResponse.redirect(
+      `${redirectUrl}?${new URLSearchParams({ callbackUrl: req.url })}`
+    )
   }
 }
