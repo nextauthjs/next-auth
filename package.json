@@ -31,6 +31,7 @@
     "./react": "./react/index.js",
     "./core": "./core/index.js",
     "./next": "./next/index.js",
+    "./next/middleware": "./next/middleware.js",
     "./client/_utils": "./client/_utils.js",
     "./providers/*": "./providers/*.js"
   },
