@@ -31,7 +31,6 @@ export default function Authentik<
     type: "oauth",
     authorization: { params: { scope: "openid email profile" } },
     checks: ["pkce", "state"],
-    idToken: true,
     profile(profile) {
       return {
         id: profile.sub,
