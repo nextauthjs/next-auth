@@ -36,7 +36,7 @@ export default function AzureAD<P extends Record<string, any> = AzureADProfile>(
         id: profile.sub,
         name: profile.name,
         email: profile.email,
-        image: "",
+        image: null,
       };
 
       // https://docs.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0#examples
