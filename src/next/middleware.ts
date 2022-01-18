@@ -122,3 +122,5 @@ export async function withAuth(
     )
   }
 }
+
+export default withAuth

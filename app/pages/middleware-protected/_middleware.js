@@ -1,1 +1,1 @@
-export { withAuth as default } from "next-auth/next/middleware"
+export { default } from "next-auth/next/middleware"
