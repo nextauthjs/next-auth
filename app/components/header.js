@@ -103,6 +103,11 @@ export default function Header() {
               <a>Email</a>
             </Link>
           </li>
+          <li className={styles.navItem}>
+            <Link href="/middleware-protected">
+              <a>Middleware protected</a>
+            </Link>
+          </li>
         </ul>
       </nav>
     </header>
