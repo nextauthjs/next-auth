@@ -79,15 +79,7 @@ export async function withAuth(
       return NextResponse.redirect("/api/auth/error?error=Configuration")
     }
 
-    const req = args[0]
-    const token = await getToken({
-      req: {
-        headers: req.headers as any,
-        cookies: req.cookies,
-      },
-      secret,
-    })
-    if (token) return
+    if (await getToken({ req: args[0] as any, secret })) return
 
     return NextResponse.redirect("/api/auth/signin")
   }
@@ -114,13 +106,7 @@ export async function withAuth(
       )
     }
 
-    const token = await getToken({
-      req: {
-        headers: req.headers as any,
-        cookies: req.cookies,
-      },
-      secret,
-    })
+    const token = await getToken({ req: req as any, secret })
 
     const isAuthorized = options?.authorized
       ? options?.authorized?.({ token, req })
