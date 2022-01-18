@@ -66,18 +66,26 @@ export interface NextAuthMiddlewareOptions {
  */
 export function withAuth(options?: NextAuthMiddlewareOptions) {
   const secret = options?.secret ?? process.env.NEXTAUTH_SECRET
-  if (!secret) {
-    const code = "NO_SECRET"
-    console.error(
-      `[next-auth][error][${code}]`,
-      `\nhttps://next-auth.js.org/errors#${code.toLowerCase()}`
-    )
-    return NextResponse.redirect(
-      options?.pages?.error ?? "/api/auth/error?error=Configuration"
-    )
-  }
-
   return async function middleware(req: NextRequest) {
+    const pages = options?.pages ?? {}
+
+    // Don't trigger infinite redirect on custom pages.
+    const { pathname } = req.nextUrl
+    if (pathname === pages.signIn || pathname === pages.error) {
+      return
+    }
+
+    if (!secret) {
+      const code = "NO_SECRET"
+      console.error(
+        `[next-auth][error][${code}]`,
+        `\nhttps://next-auth.js.org/errors#${code.toLowerCase()}`
+      )
+      return NextResponse.redirect(
+        options?.pages?.error ?? "/api/auth/error?error=Configuration"
+      )
+    }
+
     const token = await getToken({
       req: {
         headers: req.headers as any,
@@ -92,6 +100,6 @@ export function withAuth(options?: NextAuthMiddlewareOptions) {
 
     if (isAuthorized) return
 
-    return NextResponse.redirect(options?.pages?.signIn ?? "/api/auth/signin")
+    return NextResponse.redirect(pages.signIn ?? "/api/auth/signin")
   }
 }
