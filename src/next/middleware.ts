@@ -1,4 +1,4 @@
-import type { NextRequest } from "next/server"
+import type { NextFetchEvent, NextRequest } from "next/server"
 import type { Awaitable, NextAuthOptions } from ".."
 import type { JWT } from "../jwt"
 
@@ -64,7 +64,35 @@ export interface NextAuthMiddlewareOptions {
  * ---
  * [Documentation](https://next-auth.js.org/getting-started/middleware)
  */
-export function withAuth(options?: NextAuthMiddlewareOptions) {
+export async function withAuth(
+  ...args: [NextAuthMiddlewareOptions] | [NextRequest, NextFetchEvent]
+) {
+  if (args.length === 2) {
+    const secret = process.env.NEXTAUTH_SECRET
+
+    if (!secret) {
+      const code = "NO_SECRET"
+      console.error(
+        `[next-auth][error][${code}]`,
+        `\nhttps://next-auth.js.org/errors#${code.toLowerCase()}`
+      )
+      return NextResponse.redirect("/api/auth/error?error=Configuration")
+    }
+
+    const req = args[0]
+    const token = await getToken({
+      req: {
+        headers: req.headers as any,
+        cookies: req.cookies,
+      },
+      secret,
+    })
+    if (token) return
+
+    return NextResponse.redirect("/api/auth/signin")
+  }
+
+  const options = args[0]
   const secret = options?.secret ?? process.env.NEXTAUTH_SECRET
   return async function middleware(req: NextRequest) {
     const pages = options?.pages ?? {}
