@@ -32,13 +32,6 @@ export default function AzureAD<P extends Record<string, any> = AzureADProfile>(
       },
     },
     async profile(profile, tokens) {
-      const profileObject = {
-        id: profile.sub,
-        name: profile.name,
-        email: profile.email,
-        image: null,
-      };
-
       // https://docs.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0#examples
       const profilePicture = await fetch(
         `https://graph.microsoft.com/v1.0/me/photos/${profilePhotoSize}x${profilePhotoSize}/$value`,
@@ -49,13 +42,23 @@ export default function AzureAD<P extends Record<string, any> = AzureADProfile>(
         }
       )
 
+      // Confirm that profile photo was returned
       if (profilePicture.ok) {
-        const pictureBuffer = await profilePicture.arrayBuffer();
-        const pictureBase64 = Buffer.from(pictureBuffer).toString("base64");
-        profileObject.image = `data:image/jpeg;base64, ${pictureBase64}`;
+        const pictureBuffer = await profilePicture.arrayBuffer()
+        const pictureBase64 = Buffer.from(pictureBuffer).toString("base64")
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          image: `data:image/jpeg;base64, ${pictureBase64}`,
+        }
+      } else {
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+        }
       }
-
-      return profileObject;
     },
     options,
   }
