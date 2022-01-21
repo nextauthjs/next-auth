@@ -61,17 +61,15 @@ export type WithAuthArgs =
 /** Check if `secret` has been declared  */
 function initConfig(
   req: NextRequest,
-  options?: NextAuthMiddlewareOptions | NextFetchEvent
+  optionsOrEv?: NextAuthMiddlewareOptions | NextFetchEvent
 ) {
-  // @ts-expect-error
+  const options = optionsOrEv as NextAuthMiddlewareOptions // This is relatively safe as we don't share properties with NextFetchEvent
   const signInPage = options?.pages?.signIn ?? "/api/auth/signin"
-  // @ts-expect-error
   const errorPage = options?.pages?.error ?? "/api/auth/error"
 
   // Avoid infinite redirect loop
   if ([signInPage, errorPage].includes(req.nextUrl.pathname)) return
 
-  // @ts-expect-error
   const secret = options?.secret ?? process.env.NEXTAUTH_SECRET
   // Continue only if the secret is specified
   if (secret)
@@ -80,8 +78,7 @@ function initConfig(
       options,
       secret,
       signInPage,
-      // @ts-expect-error
-      authorized: options?.authorized || (({ token }) => token),
+      authorized: options?.authorized ?? (({ token }) => token),
     }
 
   console.error(
