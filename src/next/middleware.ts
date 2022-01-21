@@ -1,8 +1,9 @@
-import type { NextFetchEvent, NextRequest } from "next/server"
+import type { NextMiddleware, NextFetchEvent } from "next/server"
 import type { Awaitable, NextAuthOptions } from ".."
 import type { JWT } from "../jwt"
 
-import { NextResponse } from "next/server"
+import { NextResponse, NextRequest } from "next/server"
+
 import { getToken } from "../jwt"
 
 export interface NextAuthMiddlewareOptions {
@@ -43,10 +44,54 @@ export interface NextAuthMiddlewareOptions {
    * })
    * ```
    */
-  authorized: (options: {
+  authorized?: (options: {
     token: JWT | null
     req: NextRequest
   }) => Awaitable<boolean>
+}
+
+export type WithAuthArgs =
+  | [NextRequest]
+  | [NextRequest, NextFetchEvent]
+  | [NextRequest, NextAuthMiddlewareOptions]
+  | [NextMiddleware]
+  | [NextMiddleware, NextAuthMiddlewareOptions]
+  | [NextAuthMiddlewareOptions]
+
+/** Check if `secret` has been declared  */
+function initConfig(
+  req: NextRequest,
+  options?: NextAuthMiddlewareOptions | NextFetchEvent
+) {
+  // @ts-expect-error
+  const signInPage = options?.pages?.signIn ?? "/api/auth/signin"
+  // @ts-expect-error
+  const errorPage = options?.pages?.error ?? "/api/auth/error"
+
+  // Avoid infinite redirect loop
+  if ([signInPage, errorPage].includes(req.nextUrl.pathname)) return
+
+  // @ts-expect-error
+  const secret = options?.secret ?? process.env.NEXTAUTH_SECRET
+  // Continue only if the secret is specified
+  if (secret)
+    return {
+      req,
+      options,
+      secret,
+      signInPage,
+      // @ts-expect-error
+      authorized: options?.authorized || (({ token }) => token),
+    }
+
+  console.error(
+    `[next-auth][error][NO_SECRET]`,
+    `\nhttps://next-auth.js.org/errors#no_secret`
+  )
+
+  return {
+    redirect: NextResponse.redirect(`${errorPage}?error=Configuration`),
+  }
 }
 
 /**
@@ -58,67 +103,61 @@ export interface NextAuthMiddlewareOptions {
  *
  * ```js
  * // `pages/_middleware.js`
- * export { withAuth as default } from "next-auth/next/middleware"
+ * export { default } from "next-auth/middleware"
  * ```
  *
  * ---
  * [Documentation](https://next-auth.js.org/getting-started/middleware)
  */
-export async function withAuth(
-  ...args: [NextAuthMiddlewareOptions] | [NextRequest, NextFetchEvent]
-) {
-  if (args.length === 2) {
-    const secret = process.env.NEXTAUTH_SECRET
+export function withAuth(...args: WithAuthArgs) {
+  if (args[0] instanceof NextRequest) {
+    const config = initConfig(args[0], args[1])
+    if (!config || config.redirect) return config?.redirect
+    const { req, secret, signInPage, authorized } = config
 
-    if (!secret) {
-      const code = "NO_SECRET"
-      console.error(
-        `[next-auth][error][${code}]`,
-        `\nhttps://next-auth.js.org/errors#${code.toLowerCase()}`
+    return getToken({ req: req as any, secret }).then(async (token) => {
+      if (await authorized({ req, token })) return
+
+      return NextResponse.redirect(
+        `${signInPage}?${new URLSearchParams({ callbackUrl: req.url })}`
       )
-      return NextResponse.redirect("/api/auth/error?error=Configuration")
-    }
-    const req = args[0]
-    if (await getToken({ req: req as any, secret })) return
+    })
+  }
 
-    return NextResponse.redirect(
-      `/api/auth/signin?${new URLSearchParams({ callbackUrl: req.url })}`
-    )
+  if (typeof args[0] === "function") {
+    const middleware = args[0]
+    const options = args[1] as NextAuthMiddlewareOptions | undefined
+    return async (...args: Parameters<NextMiddleware>) => {
+      const config = initConfig(args[0], options)
+      if (!config || config.redirect) return config?.redirect
+      const { req, secret, signInPage, authorized } = config
+
+      const token = await getToken({ req: req as any, secret })
+
+      if (await authorized({ req, token })) {
+        ;(args[0] as any).token = token
+        return await middleware(...args)
+      }
+
+      return NextResponse.redirect(
+        `${signInPage}?${new URLSearchParams({ callbackUrl: req.url })}`
+      )
+    }
   }
 
   const options = args[0]
-  const secret = options?.secret ?? process.env.NEXTAUTH_SECRET
-  return async function middleware(req: NextRequest) {
-    const pages = options?.pages ?? {}
+  return async (...args: Parameters<NextMiddleware>) => {
+    const config = initConfig(args[0], options)
+    if (!config || config.redirect) return config?.redirect
 
-    // Don't trigger infinite redirect on custom pages.
-    const { pathname } = req.nextUrl
-    if (pathname === pages.signIn || pathname === pages.error) {
-      return
-    }
-
-    if (!secret) {
-      const code = "NO_SECRET"
-      console.error(
-        `[next-auth][error][${code}]`,
-        `\nhttps://next-auth.js.org/errors#${code.toLowerCase()}`
-      )
-      return NextResponse.redirect(
-        options?.pages?.error ?? "/api/auth/error?error=Configuration"
-      )
-    }
+    const { req, secret, signInPage, authorized } = config
 
     const token = await getToken({ req: req as any, secret })
 
-    const isAuthorized = options?.authorized
-      ? options?.authorized?.({ token, req })
-      : !!token
+    if (await authorized({ req, token })) return
 
-    if (isAuthorized) return
-
-    const redirectUrl = pages.signIn ?? "/api/auth/signin"
     return NextResponse.redirect(
-      `${redirectUrl}?${new URLSearchParams({ callbackUrl: req.url })}`
+      `${signInPage}?${new URLSearchParams({ callbackUrl: req.url })}`
     )
   }
 }
