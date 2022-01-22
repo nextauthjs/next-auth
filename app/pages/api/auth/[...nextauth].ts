@@ -4,7 +4,7 @@ import GitHubProvider from "next-auth/providers/github"
 import Auth0Provider from "next-auth/providers/auth0"
 import KeycloakProvider from "next-auth/providers/keycloak"
 import TwitterProvider, {
-  TwitterLegacy as TwitterLegacyProvider,
+  // TwitterLegacy as TwitterLegacyProvider,
 } from "next-auth/providers/twitter"
 import CredentialsProvider from "next-auth/providers/credentials"
 import IDS4Provider from "next-auth/providers/identity-server4"
