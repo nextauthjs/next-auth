@@ -62,7 +62,7 @@ function NextAuth(
   options: NextAuthOptions
 ): any
 
-/** Tha main entry point to next-auth */
+/** The main entry point to next-auth */
 function NextAuth(
   ...args:
     | [NextAuthOptions]
