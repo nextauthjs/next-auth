@@ -126,8 +126,6 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
    * [`id_token` explanation](https://www.oauth.com/oauth2-servers/openid-connect/id-tokens)
    */
   idToken?: boolean
-  // TODO: only allow for BattleNet
-  region?: string
   // TODO: only allow for some
   issuer?: string
   /** Read more at: https://github.com/panva/node-openid-client/tree/main/docs#customizing-http-requests */
