@@ -35,7 +35,8 @@ export default function VK<
             },
           }
         )
-        return { tokens: response }
+        const { user_id, ...tokens } = response
+        return { tokens }
       },
     },
     userinfo: `https://api.vk.com/method/users.get?fields=photo_100&v=${apiVersion}`,
