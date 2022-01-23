@@ -28,7 +28,7 @@ export default function AzureAD<P extends Record<string, any> = AzureADProfile>(
     wellKnown: `https://login.microsoftonline.com/${tenant}/v2.0/.well-known/openid-configuration`,
     authorization: {
       params: {
-        scope: "User.Read",
+        scope: "openid profile email",
       },
     },
     async profile(profile, tokens) {
@@ -41,13 +41,23 @@ export default function AzureAD<P extends Record<string, any> = AzureADProfile>(
           },
         }
       )
-      const pictureBuffer = await profilePicture.arrayBuffer()
-      const pictureBase64 = Buffer.from(pictureBuffer).toString("base64")
-      return {
-        id: profile.sub,
-        name: profile.name,
-        email: profile.email,
-        image: `data:image/jpeg;base64, ${pictureBase64}`,
+
+      // Confirm that profile photo was returned
+      if (profilePicture.ok) {
+        const pictureBuffer = await profilePicture.arrayBuffer()
+        const pictureBase64 = Buffer.from(pictureBuffer).toString("base64")
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          image: `data:image/jpeg;base64, ${pictureBase64}`,
+        }
+      } else {
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+        }
       }
     },
     options,
