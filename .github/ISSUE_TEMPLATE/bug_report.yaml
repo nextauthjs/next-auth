@@ -14,7 +14,9 @@ body:
         ### Important :exclamation:
         Please help us maintain this project more efficiently!
         Is this your first time contributing? See this video https://www.youtube.com/watch?v=cuoNzXFLitc
-        Providing incorrect/insufficient information or skipping steps to reproduce the bug may result in closing the issue or converting to discussion without further explanation.
+        
+        *Providing incorrect/insufficient information or skipping steps to reproduce the bug may result in closing the issue or converting to discussion without further explanation.*
+        
         Before creating the issue make sure you shouldn't be creating it in one the below repos instead:
         - Docs related: https://github.com/nextauthjs/docs
         - Adapter related: https://github.com/nextauthjs/adapters
