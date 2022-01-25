@@ -12,7 +12,10 @@ body:
       value: |
         Thanks for taking the time to fill out this bug report!
         ### Important :exclamation:
-        Please help us maintain this project more efficiently! Before creating the issue make sure you shouldn't be creating it in one the below repos instead:
+        Please help us maintain this project more efficiently!
+        Is this your first time contributing? See this video https://www.youtube.com/watch?v=cuoNzXFLitc
+        Providing incorrect/insufficient information or skipping steps to reproduce the bug may result in closing the issue or converting to discussion without further explanation.
+        Before creating the issue make sure you shouldn't be creating it in one the below repos instead:
         - Docs related: https://github.com/nextauthjs/docs
         - Adapter related: https://github.com/nextauthjs/adapters
         
@@ -50,8 +53,6 @@ body:
         We encourage you to use one of the templates set up on **CodeSandbox** to reproduce your issue:
         - [`next-auth-example`](https://codesandbox.io/s/next-auth-example-1kktb)
         - [`next-auth-typescript-example`](https://codesandbox.io/s/next-auth-typescript-example-se32w)
-
-        🚧 – _If you don't provide any way to reproduce the bug, the issue is at risk of being closed._
   
   - type: textarea
     id: logs
