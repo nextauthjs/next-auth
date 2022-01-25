@@ -70,4 +70,9 @@ export interface SessionProviderProps {
    * If set to `0` (default), the session is not polled.
    */
   refetchInterval?: number
+  /**
+   * `SessionProvider` automatically refetches the session when the user switches between windows.
+   * This option activates this behaviour if set to `true` (default).
+   */
+  refetchOnWindowFocus?: boolean
 }
