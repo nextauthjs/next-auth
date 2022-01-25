@@ -13,7 +13,7 @@ import { createCallbackUrl } from "./lib/callback-url"
 import { IncomingRequest } from "."
 
 interface InitParams {
-  host?: string
+  host: string
   userOptions: NextAuthOptions
   providerId?: string
   action: InternalOptions["action"]
