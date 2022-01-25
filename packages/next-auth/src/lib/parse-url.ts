@@ -12,23 +12,26 @@ export interface InternalUrl {
 }
 
 /** Returns an `URL` like object to make requests/redirects from server-side */
-export default function parseUrl(url?: string): InternalUrl {
-  const defaultUrl = new URL("http://localhost:3000/api/auth")
+export default function parseUrl(nextauthUrl?: string): InternalUrl {
+  const defaultPathname = "/api/auth"
 
-  if (url && !url.startsWith("http")) {
-    url = `https://${url}`
-  }
+  const httpUrl = nextauthUrl.startsWith("http") ? nextauthUrl : (
+    nextauthUrl.startsWith("localhost:")
+      // probably don't want https on localhost:
+      ? `http://${nextauthUrl}`
+      : `https://${nextauthUrl}`
+  )
 
-  const _url = new URL(url ?? defaultUrl)
-  const path = (_url.pathname === "/" ? defaultUrl.pathname : _url.pathname)
+  const urlObj = new URL(httpUrl)
+  const path = (urlObj.pathname === "/" ? defaultPathname : urlObj.pathname)
     // Remove trailing slash
     .replace(/\/$/, "")
 
-  const base = `${_url.origin}${path}`
+  const base = `${urlObj.origin}${path}`
 
   return {
-    origin: _url.origin,
-    host: _url.host,
+    origin: urlObj.origin,
+    host: urlObj.host,
     path,
     base,
     toString: () => base,
