@@ -69,6 +69,10 @@ export async function NextAuthHandler<
 
   const { action, providerId, error, method = "GET" } = req
 
+  if (!req.host) {
+    throw new Error('req.host is undefined')
+  }
+
   const { options, cookies } = await init({
     userOptions,
     action,
