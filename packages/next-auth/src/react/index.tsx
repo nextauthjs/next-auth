@@ -295,9 +295,10 @@ export async function signOut<R extends boolean = true>(
  * [Documentation](https://next-auth.js.org/getting-started/client#sessionprovider)
  */
 export function SessionProvider(props: SessionProviderProps) {
-  const { children, basePath } = props
+  const { children, basePath, fetchOptions } = props
 
   if (basePath) __NEXTAUTH.basePath = basePath
+  if (fetchOptions) __NEXTAUTH.fetchOptions = fetchOptions
 
   /**
    * If session was `null`, there was an attempt to fetch it,

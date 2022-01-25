@@ -155,6 +155,33 @@ test("allows to customize the URL for session fetching", async () => {
   })
 })
 
+test("allows to customize headers for session fetching", async () => {
+  server.use(
+    rest.get(`/api/auth/session`, (req, res, ctx) =>
+      res(ctx.status(200), ctx.json(mockSession))
+    )
+  )
+
+  const fetchOptions = {
+    headers: {
+      'X-Foo-Bar': 'hello'
+    }
+  }
+
+  render(<ProviderFlow session={mockSession} fetchOptions={fetchOptions} />)
+
+  // there's an existing session so it should not try to fetch a new one
+  expect(fetchSpy).not.toHaveBeenCalled()
+
+  // force a session refetch across all clients...
+  getSession()
+
+  return waitFor(() => {
+    expect(fetchSpy).toHaveBeenCalledTimes(1)
+    expect(fetchSpy.mock.calls[0][1].headers).toMatchObject({'X-Foo-Bar': 'hello'})
+  })
+})
+
 function ProviderFlow(props) {
   return (
     <SessionProvider {...props}>
