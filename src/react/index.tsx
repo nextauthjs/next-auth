@@ -379,16 +379,18 @@ export function SessionProvider(props: SessionProviderProps) {
   }, [])
 
   React.useEffect(() => {
+    const { refetchOnWindowFocus = true } = props
     // Listen for when the page is visible, if the user switches tabs
-    // and makes our tab visible again, re-fetch the session.
+    // and makes our tab visible again, re-fetch the session, but only if
+    // this feature is not disabled.
     const visibilityHandler = () => {
-      if (document.visibilityState === "visible")
+      if (refetchOnWindowFocus && document.visibilityState === "visible")
         __NEXTAUTH._getSession({ event: "visibilitychange" })
     }
     document.addEventListener("visibilitychange", visibilityHandler, false)
     return () =>
       document.removeEventListener("visibilitychange", visibilityHandler, false)
-  }, [])
+  }, [props.refetchOnWindowFocus])
 
   React.useEffect(() => {
     const { refetchInterval } = props
