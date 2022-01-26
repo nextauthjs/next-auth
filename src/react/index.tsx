@@ -48,6 +48,8 @@ export * from "./types"
 //    variable and defaults to 'http://localhost:3000'.
 let __basePath: undefined | string = undefined
 const __NEXTAUTH: NextAuthClientConfig = {
+  // TODO: create api get something like `getForwardedHost`
+  // TODO: if process.env.NEXTAUTH_URL is undefined
   baseOrigin: (nextauthUrl) => parseUrl(nextauthUrl).origin,
   basePath(nextauthUrl?: string): string {
     if (__basePath) {
