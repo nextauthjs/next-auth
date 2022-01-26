@@ -326,7 +326,7 @@ export default async function callback(params: {
       logger.error("CALLBACK_EMAIL_ERROR", error as Error)
       return { redirect: `${url}/error?error=Callback`, cookies }
     }
-  } else if (provider.type === "credentials" && method === "POST") {
+  } else if (provider.type === "credentials" && method === "POST" && useJwtSession) {
     const credentials = body
 
     let user: User
@@ -420,7 +420,8 @@ export default async function callback(params: {
     await events.signIn?.({ user, account })
 
     return { redirect: callbackUrl, cookies }
-  } else if (provider.type === "dbCredentials" && method === "POST") {
+  } else if (provider.type === "credentials" && method === "POST" && !useJwtSession) {
+    const { getUser } = adapter!;
     const credentials = body
 
     let user: User
@@ -450,12 +451,12 @@ export default async function callback(params: {
       }
     }
 
-    const profile = user;
+    const profile = await getUser(user.id);
 
     /** @type {import("src").Account} */
     const account = {
       providerAccountId: user.id,
-      type: "dbCredentials",
+      type: "credentials",
       provider: provider.id,
     }
 
@@ -484,57 +485,24 @@ export default async function callback(params: {
       }
     }
 
-    let session;
-    if (account.providerAccountId) {
-      const callbackResponse = await callbackHandler({
-        sessionToken: sessionStore.value,
-        profile,
-        // @ts-expect-error
-        account,
-        options,
-      });
+    // @ts-expect-error
+    const {session} = await callbackHandler({
+      sessionToken: sessionStore.value,
       // @ts-expect-error
-      session = callbackResponse.session;
-    }
+      profile,
+      // @ts-expect-error
+      account,
+      options,
+    });
 
-    if (useJwtSession || !session?.sessionToken) {
-      const defaultToken = {
-        name: user.name,
-        email: user.email,
-        picture: user.image,
-        sub: user.id?.toString(),
-      }
-
-      const token = await callbacks.jwt({
-        token: defaultToken,
-        user,
-        // @ts-expect-error
-        account,
-        isNewUser: false,
-      })
-
-      // Encode token
-      const newToken = await jwt.encode({ ...jwt, token })
-
-      // Set cookie expiry date
-      const cookieExpires = new Date()
-      cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
-
-      const sessionCookies = sessionStore.chunk(newToken, {
-        expires: cookieExpires,
-      })
-
-      cookies.push(...sessionCookies)
-    } else {
-      cookies.push({
-        name: options.cookies.sessionToken.name,
-        value: session.sessionToken,
-        options: {
-          ...options.cookies.sessionToken.options,
-          expires: session.expires,
-        },
-      })
-    }
+    cookies.push({
+      name: options.cookies.sessionToken.name,
+      value: session.sessionToken,
+      options: {
+        ...options.cookies.sessionToken.options,
+        expires: session.expires,
+      },
+    })
 
     // @ts-expect-error
     await events.signIn?.({ user, account })

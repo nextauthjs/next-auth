@@ -12,7 +12,7 @@ export interface CredentialInput {
 export interface CredentialsConfig<
   C extends Record<string, CredentialInput> = Record<string, CredentialInput>
 > extends CommonProviderOptions {
-  type: "credentials"|"dbCredentials"
+  type: "credentials"
   credentials: C
   authorize: (
     credentials: Record<keyof C, string> | undefined,

@@ -24,7 +24,7 @@ export default function SigninPage(props: SignInServerPageParams) {
     if (provider.type === "oauth" || provider.type === "email") {
       // Always render oauth and email type providers
       return true
-    } else if ((provider.type === "credentials" || provider.type === "dbCredentials") && provider.credentials) {
+    } else if (provider.type === "credentials" && provider.credentials) {
       // Only render credentials type provider if credentials are defined
       return true
     }
@@ -89,7 +89,7 @@ export default function SigninPage(props: SignInServerPageParams) {
                 </button>
               </form>
             )}
-            {(provider.type === "email" || provider.type === "credentials" || provider.type === 'dbCredentials') &&
+            {(provider.type === "email" || provider.type === "credentials") &&
               i > 0 &&
               providersToRender[i - 1].type !== "email" &&
               providersToRender[i - 1].type !== "credentials" && <hr />}
@@ -113,7 +113,7 @@ export default function SigninPage(props: SignInServerPageParams) {
                 <button type="submit">Sign in with {provider.name}</button>
               </form>
             )}
-            {(provider.type === "credentials" || provider.type === 'dbCredentials') && (
+            {provider.type === "credentials" && (
               <form action={provider.callbackUrl} method="POST">
                 <input type="hidden" name="csrfToken" value={csrfToken} />
                 {Object.keys(provider.credentials).map((credential) => {
@@ -140,7 +140,7 @@ export default function SigninPage(props: SignInServerPageParams) {
                 <button type="submit">Sign in with {provider.name}</button>
               </form>
             )}
-            {(provider.type === "email" || provider.type === "credentials" || provider.type === "dbCredentials") &&
+            {(provider.type === "email" || provider.type === "credentials") &&
               i + 1 < providersToRender.length && <hr />}
           </div>
         ))}

@@ -12,7 +12,7 @@ export * from "./oauth"
 export * from "./email"
 export * from "./credentials"
 
-export type ProviderType = "oauth" | "email" | "credentials" | "dbCredentials"
+export type ProviderType = "oauth" | "email" | "credentials"
 
 export interface CommonProviderOptions {
   id: string
