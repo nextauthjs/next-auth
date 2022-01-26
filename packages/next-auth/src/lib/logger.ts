@@ -82,7 +82,7 @@ export default _logger
 /** Serializes client-side log messages and sends them to the server */
 export function proxyLogger(
   logger: LoggerInstance = _logger,
-  basePath?: string
+  basePath: string
 ): LoggerInstance {
   try {
     if (typeof window === "undefined") {

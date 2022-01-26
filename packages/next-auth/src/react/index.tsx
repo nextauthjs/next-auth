@@ -46,17 +46,26 @@ export * from "./types"
 //    relative URLs are valid in that context and so defaults to empty.
 // 2. When invoked server side the value is picked up from an environment
 //    variable and defaults to 'http://localhost:3000'.
+let __basePath: undefined | string = undefined
 const __NEXTAUTH: NextAuthClientConfig = {
-  baseUrl: parseUrl(process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL).origin,
-  basePath: parseUrl(process.env.NEXTAUTH_URL).path,
-  baseUrlServer: parseUrl(
-    process.env.NEXTAUTH_URL_INTERNAL ??
-      process.env.NEXTAUTH_URL ??
-      process.env.VERCEL_URL
-  ).origin,
-  basePathServer: parseUrl(
-    process.env.NEXTAUTH_URL_INTERNAL ?? process.env.NEXTAUTH_URL
-  ).path,
+  baseOrigin: (nextauthUrl) => parseUrl(nextauthUrl).origin,
+  basePath(nextauthUrl?: string): string {
+    if (__basePath) {
+      console.log('using set __basePath:', __basePath)
+      return __basePath
+    }
+    if (!nextauthUrl) nextauthUrl = 'nextauth_url.basePath' // "nextauth_url.basePath" will be discarded by parseUrl. TODO: cleanup
+    return parseUrl(nextauthUrl).path // will always be '/api/path'
+  },
+  setBasePath: (basePath) => { __basePath = basePath },
+  // TODO: change to optional? when preparing PR for github?
+  baseOriginServer: (nextauthUrl) => parseUrl(nextauthUrl).origin,
+  basePathServer(nextauthUrl?: string): string {
+    if (!nextauthUrl) nextauthUrl = 'nextauth_url.basePathServer' // "nextauth_url.basePathServer" will be discarded by parseUrl. TODO: cleanup
+    return parseUrl(
+      nextauthUrl
+    ).path
+  },
   _lastSync: 0,
   _session: undefined,
   _getSession: () => {},
@@ -64,7 +73,7 @@ const __NEXTAUTH: NextAuthClientConfig = {
 
 const broadcast = BroadcastChannel()
 
-const logger = proxyLogger(_logger, __NEXTAUTH.basePath)
+const logger = proxyLogger(_logger, __NEXTAUTH.basePath())
 
 export type SessionContextValue<R extends boolean = false> = R extends true
   ?
@@ -182,7 +191,8 @@ export async function signIn<
   P extends RedirectableProviderType ? SignInResponse | undefined : undefined
 > {
   const { callbackUrl = window.location.href, redirect = true } = options ?? {}
-
+  throw new Error("this signIn method is not used by devinrhode2's company")
+  // @ts-expect-error - remove when `throw` is removed.
   const baseUrl = apiBaseUrl(__NEXTAUTH)
   const providers = await getProviders()
 
@@ -190,15 +200,16 @@ export async function signIn<
     window.location.href = `${baseUrl}/error`
     return
   }
-
+  // @ts-expect-error - remove when `throw` is removed.
   if (!provider || !(provider in providers)) {
     window.location.href = `${baseUrl}/signin?${new URLSearchParams({
       callbackUrl,
     })}`
     return
   }
-
+  // @ts-expect-error - remove when `throw` is removed.
   const isCredentials = providers[provider].type === "credentials"
+  // @ts-expect-error - remove when `throw` is removed.
   const isEmail = providers[provider].type === "email"
   const isSupportingReturn = isCredentials || isEmail
 
@@ -256,6 +267,8 @@ export async function signOut<R extends boolean = true>(
   options?: SignOutParams<R>
 ): Promise<R extends true ? undefined : SignOutResponse> {
   const { callbackUrl = window.location.href } = options ?? {}
+  throw new Error('signout not yet supported')
+  // @ts-expect-error
   const baseUrl = apiBaseUrl(__NEXTAUTH)
   const fetchOptions = {
     method: "post",
@@ -298,7 +311,7 @@ export async function signOut<R extends boolean = true>(
 export function SessionProvider(props: SessionProviderProps) {
   const { children, basePath } = props
 
-  if (basePath) __NEXTAUTH.basePath = basePath
+  if (basePath) __NEXTAUTH.setBasePath(basePath)
 
   /**
    * If session was `null`, there was an attempt to fetch it,

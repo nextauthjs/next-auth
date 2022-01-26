@@ -71,7 +71,7 @@ export async function getToken<R extends boolean = false>(
   const {
     req,
     secureCookie = process.env.NEXTAUTH_URL?.startsWith("https://") ??
-      !!process.env.VERCEL,
+      !!(process.env.NEXTAUTH_TRUST_X_FORWARDED_HOST || process.env.VERCEL),
     cookieName = secureCookie
       ? "__Secure-next-auth.session-token"
       : "next-auth.session-token",

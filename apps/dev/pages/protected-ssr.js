@@ -30,7 +30,8 @@ export async function getServerSideProps(context) {
   let content = null
 
   if (session) {
-    const hostname = process.env.NEXTAUTH_URL || "http://localhost:3000"
+    if (!process.env.NEXTAUTH_URL) throw new Error('getServerSideProps does not have NEXTAUTH_URL')
+    const hostname = process.env.NEXTAUTH_URL
     const options = { headers: { cookie: context.req.headers.cookie } }
     const res = await fetch(`${hostname}/api/examples/protected`, options)
     const json = await res.json()

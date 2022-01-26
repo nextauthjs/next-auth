@@ -113,6 +113,7 @@ declare global {
     interface ProcessEnv {
       NEXTAUTH_URL?: string
       VERCEL?: "1"
+      NEXTAUTH_TRUST_X_FORWARDED_HOST?: "1"
     }
   }
 }
