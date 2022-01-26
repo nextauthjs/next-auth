@@ -2,10 +2,11 @@ import type { IncomingMessage } from "http"
 import type { LoggerInstance, Session } from ".."
 
 export interface NextAuthClientConfig {
-  baseUrl: string
-  basePath: string
-  baseUrlServer: string
-  basePathServer: string
+  baseOrigin: (forwardedHost: string) => string
+  basePath: () => string
+  setBasePath: (newBasePath: string) => void
+  baseOriginServer: (forwardedHost: string) => string
+  basePathServer: () => string
   /** Stores last session response */
   _session?: Session | null | undefined
   /** Used for timestamp since last sycned (in seconds) */
@@ -39,7 +40,21 @@ export async function fetchData<T = any>(
     const options = req?.headers.cookie
       ? { headers: { cookie: req.headers.cookie } }
       : {}
-    const res = await fetch(`${apiBaseUrl(__NEXTAUTH)}/${path}`, options)
+    
+    
+    const forwardedHost = req?.headers['x-forwarded-host']
+    if (!forwardedHost) {
+      throw new Error('no forwardedHost. Caller:' + path)
+    }
+
+    if (Array.isArray(forwardedHost)) {
+      throw new Error(
+        'forwardedHost is an array - this case is not handled:' +
+          forwardedHost.join(','),
+      )
+    }
+
+    const res = await fetch(`${apiBaseUrl(__NEXTAUTH, forwardedHost)}/${path}`, options)
     const data = await res.json()
     if (!res.ok) throw data
     return Object.keys(data).length > 0 ? data : null // Return null if data empty
@@ -53,13 +68,16 @@ export async function fetchData<T = any>(
   }
 }
 
-export function apiBaseUrl(__NEXTAUTH: NextAuthClientConfig) {
+export function apiBaseUrl(
+  __NEXTAUTH: NextAuthClientConfig,
+  forwardedHost: string
+): string {
   if (typeof window === "undefined") {
     // Return absolute path when called server side
-    return `${__NEXTAUTH.baseUrlServer}${__NEXTAUTH.basePathServer}`
+    return `${__NEXTAUTH.baseOriginServer(forwardedHost)}${__NEXTAUTH.basePathServer()}`
   }
   // Return relative path when called client side
-  return __NEXTAUTH.basePath
+  return __NEXTAUTH.basePath()
 }
 
 /** Returns the number of seconds elapsed since January 1, 1970 00:00:00 UTC. */
