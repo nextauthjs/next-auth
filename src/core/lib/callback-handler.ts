@@ -29,7 +29,7 @@ export default async function callbackHandler(params: {
   // Input validation
   if (!account?.providerAccountId || !account.type)
     throw new Error("Missing or invalid provider account")
-  if (!["email", "oauth"].includes(account.type))
+  if (!["email", "oauth", "dbCredentials"].includes(account.type))
     throw new Error("Provider not supported")
 
   const {
@@ -216,6 +216,17 @@ export default async function callbackHandler(params: {
 
       return { session, user, isNewUser: true }
     }
+  } else if (account.type === "dbCredentials") {
+      const user = profile;
+      // Create new session
+      session = useJwtSession
+      ? {}
+      : await createSession({
+          sessionToken: generateSessionToken(),
+          userId: user.id,
+          expires: fromDate(options.session.maxAge),
+        })
+      return { session, user, isNewUser }
   }
 }
 

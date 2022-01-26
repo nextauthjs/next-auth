@@ -420,6 +420,126 @@ export default async function callback(params: {
     await events.signIn?.({ user, account })
 
     return { redirect: callbackUrl, cookies }
+  } else if (provider.type === "dbCredentials" && method === "POST") {
+    const credentials = body
+
+    let user: User
+    try {
+      user = (await provider.authorize(credentials, {
+        query,
+        body,
+        headers,
+        method,
+      })) as User
+      if (!user) {
+        return {
+          status: 401,
+          redirect: `${url}/error?${new URLSearchParams({
+            error: "CredentialsSignin",
+            provider: provider.id,
+          })}`,
+          cookies,
+        }
+      }
+    } catch (error) {
+      return {
+        redirect: `${url}/error?error=${encodeURIComponent(
+          (error as Error).message
+        )}`,
+        cookies,
+      }
+    }
+
+    const profile = user;
+
+    /** @type {import("src").Account} */
+    const account = {
+      providerAccountId: user.id,
+      type: "dbCredentials",
+      provider: provider.id,
+    }
+
+    try {
+      const isAllowed = await callbacks.signIn({
+        user,
+        // @ts-expect-error
+        account,
+        credentials,
+      })
+      if (!isAllowed) {
+        return {
+          status: 403,
+          redirect: `${url}/error?error=AccessDenied`,
+          cookies,
+        }
+      } else if (typeof isAllowed === "string") {
+        return { redirect: isAllowed, cookies }
+      }
+    } catch (error) {
+      return {
+        redirect: `${url}/error?error=${encodeURIComponent(
+          (error as Error).message
+        )}`,
+        cookies,
+      }
+    }
+
+    let session;
+    if (account.providerAccountId) {
+      const callbackResponse = await callbackHandler({
+        sessionToken: sessionStore.value,
+        profile,
+        // @ts-expect-error
+        account,
+        options,
+      });
+      // @ts-expect-error
+      session = callbackResponse.session;
+    }
+
+    if (useJwtSession || !session?.sessionToken) {
+      const defaultToken = {
+        name: user.name,
+        email: user.email,
+        picture: user.image,
+        sub: user.id?.toString(),
+      }
+
+      const token = await callbacks.jwt({
+        token: defaultToken,
+        user,
+        // @ts-expect-error
+        account,
+        isNewUser: false,
+      })
+
+      // Encode token
+      const newToken = await jwt.encode({ ...jwt, token })
+
+      // Set cookie expiry date
+      const cookieExpires = new Date()
+      cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
+
+      const sessionCookies = sessionStore.chunk(newToken, {
+        expires: cookieExpires,
+      })
+
+      cookies.push(...sessionCookies)
+    } else {
+      cookies.push({
+        name: options.cookies.sessionToken.name,
+        value: session.sessionToken,
+        options: {
+          ...options.cookies.sessionToken.options,
+          expires: session.expires,
+        },
+      })
+    }
+
+    // @ts-expect-error
+    await events.signIn?.({ user, account })
+
+    return { redirect: callbackUrl, cookies }
   }
   return {
     status: 500,
