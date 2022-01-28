@@ -31,7 +31,6 @@ export default function BattleNet<P extends Record<string, any> = BattleNetProfi
     id: "battlenet",
     name: "Battle.net",
     type: "oauth",
-    idToken: true,
     wellKnown: `${base}/.well-known/openid-configuration`,
     profile(profile) {
       return {
