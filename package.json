@@ -1,6 +1,6 @@
 {
-  "name": "next-auth",
-  "version": "0.0.0-semantically-released",
+  "name": "next-auth-override-redirect",
+  "version": "0.0.3-semantically-released",
   "description": "Authentication for Next.js",
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/next-auth.git",
@@ -48,7 +48,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "version:pr": "node ./config/version-pr",
-    "generate-providers": "node ./config/generate-providers.js"
+    "generate-providers": "node ./config/generate-providers.js",
+    "prepare": "npm run build",
+    "postinstall": "npm run build"
   },
   "files": [
     "lib",

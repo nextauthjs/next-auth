@@ -23,9 +23,9 @@ export default function parseProviders(params: {
     const userOptions = normalizeProvider(options as Provider)
 
     return merge(defaultOptions, {
+      callbackUrl: `${url}/callback/${userOptions?.id ?? rest.id}`,
       ...userOptions,
       signinUrl: `${url}/signin/${userOptions?.id ?? rest.id}`,
-      callbackUrl: `${url}/callback/${userOptions?.id ?? rest.id}`,
     })
   })
 
