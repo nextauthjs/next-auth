@@ -1,6 +1,10 @@
 import { Theme } from "../.."
 import { InternalProvider } from "../../lib/types"
 
+/**
+ * The following errors are passed as error query parameters to the default or overridden sign-in page.
+ *
+ * [Documentation](https://next-auth.js.org/configuration/pages#sign-in-page) */
 export type SignInErrorTypes =
   | "Signin"
   | "OAuthSignin"

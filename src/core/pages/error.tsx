@@ -1,6 +1,10 @@
 import { Theme } from "../.."
 import { InternalUrl } from "../../lib/parse-url"
 
+/**
+ * The following errors are passed as error query parameters to the default or overridden error page.
+ *
+ * [Documentation](https://next-auth.js.org/configuration/pages#error-page) */
 export type ErrorType =
   | "default"
   | "configuration"
