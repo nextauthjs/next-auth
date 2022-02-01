@@ -70,7 +70,7 @@ export default async function signin(params: {
       return {
         redirect: `${url}/error?${new URLSearchParams({
           error: error as string,
-        })}}`,
+        })}`,
       }
     }
 
