@@ -80,8 +80,8 @@
   },
   "peerDependencies": {
     "nodemailer": "^6.6.5",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react": "^17.0.2 || ^18.0.0-0",
+    "react-dom": "^17.0.2 || ^18.0.0-0"
   },
   "peerDependenciesMeta": {
     "nodemailer": {
@@ -123,7 +123,7 @@
     "jest": "^27.4.3",
     "jest-watch-typeahead": "^1.0.0",
     "msw": "^0.36.3",
-    "next": "12.0.7",
+    "next": "12.0.9",
     "postcss-cli": "^9.0.2",
     "postcss-nested": "^5.0.6",
     "prettier": "2.4.1",
