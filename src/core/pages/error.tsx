@@ -1,10 +1,20 @@
 import { Theme } from "../.."
 import { InternalUrl } from "../../lib/parse-url"
 
+/**
+ * The following errors are passed as error query parameters to the default or overridden error page.
+ *
+ * [Documentation](https://next-auth.js.org/configuration/pages#error-page) */
+export type ErrorType =
+  | "default"
+  | "configuration"
+  | "accessdenied"
+  | "verification"
+
 export interface ErrorProps {
   url?: InternalUrl
   theme?: Theme
-  error?: string
+  error?: ErrorType
 }
 
 interface ErrorView {
@@ -13,12 +23,6 @@ interface ErrorView {
   message: JSX.Element
   signin?: JSX.Element
 }
-
-export type ErrorType =
-  | "default"
-  | "configuration"
-  | "accessdenied"
-  | "verification"
 
 /** Renders an error page. */
 export default function ErrorPage(props: ErrorProps) {
@@ -87,15 +91,17 @@ export default function ErrorPage(props: ErrorProps) {
     status,
     html: (
       <div className="error">
-      { theme?.brandColor && <style
-        dangerouslySetInnerHTML={{
-          __html: `
+        {theme?.brandColor && (
+          <style
+            dangerouslySetInnerHTML={{
+              __html: `
         :root {
           --brand-color: ${theme?.brandColor}
         }
       `,
-        }}
-      /> }
+            }}
+          />
+        )}
         {theme?.logo && <img src={theme.logo} alt="Logo" className="logo" />}
         <div className="card">
           <h1>{heading}</h1>
