@@ -43,10 +43,8 @@
     "dev": "cd app && npm run dev",
     "watch:css": "postcss --config config/postcss.config.js --watch src/**/*.css --base src --dir .",
     "test": "jest --config ./config/jest.config.js",
-    "test:ci": "npm run lint && npm run test -- --ci",
+    "test:ci": "npm run test -- --ci",
     "prepublishOnly": "npm run build",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
     "generate-providers": "node ./config/generate-providers.js"
   },
   "files": [
@@ -102,60 +100,23 @@
     "@types/oauth": "^0.9.1",
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.11",
-    "@typescript-eslint/parser": "^4.33.0",
     "autoprefixer": "^10.4.0",
     "babel-jest": "^27.4.2",
     "babel-plugin-jsx-pragmatic": "^1.0.2",
     "babel-preset-preact": "^2.0.0",
-    "conventional-changelog-conventionalcommits": "4.6.1",
     "cssnano": "^5.0.12",
-    "eslint": "^7.32.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-config-standard-with-typescript": "^21.0.1",
-    "eslint-plugin-jest": "^25.3.0",
-    "eslint-plugin-node": "^11.1.0",
     "fs-extra": "^10.0.0",
-    "husky": "^7.0.4",
     "jest": "^27.4.3",
     "jest-watch-typeahead": "^1.0.0",
     "msw": "^0.36.3",
     "next": "12.0.9",
     "postcss-cli": "^9.0.2",
     "postcss-nested": "^5.0.6",
-    "prettier": "2.4.1",
-    "pretty-quick": "^3.1.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "typescript": "^4.5.2",
     "whatwg-fetch": "^3.6.2"
   },
   "engines": {
     "node": "^12.19.0 || ^14.15.0 || ^16.13.0"
-  },
-  "release": {
-    "branches": [
-      "+([0-9])?(.{+([0-9]),x}).x",
-      "main",
-      {
-        "name": "beta",
-        "prerelease": true
-      },
-      {
-        "name": "next",
-        "prerelease": true
-      }
-    ],
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/npm",
-      [
-        "@semantic-release/github",
-        {
-          "releasedLabels": false,
-          "successComment": false
-        }
-      ]
-    ]
   }
 }
