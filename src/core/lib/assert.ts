@@ -16,6 +16,8 @@ type ConfigError =
   | MissingAuthorize
   | MissingAdapter
 
+let twitterWarned = false
+
 /**
  * Verify that the user configured `next-auth` correctly.
  * Good place to mention deprecations as well.
@@ -78,7 +80,8 @@ export function assertConfig(
     return new MissingAdapter("E-mail login requires an adapter.")
   }
 
-  if (hasTwitterProvider) {
+  if (!twitterWarned && hasTwitterProvider) {
+    twitterWarned = true
     return "TWITTER_OAUTH_2_BETA"
   }
 }
