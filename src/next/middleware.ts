@@ -5,7 +5,7 @@ import type { JWT } from "../jwt"
 import { NextResponse, NextRequest } from "next/server"
 
 import { getToken } from "../jwt"
-import parseUrl from "src/lib/parse-url"
+import parseUrl from "../lib/parse-url"
 
 export interface NextAuthMiddlewareOptions {
   /**
@@ -51,20 +51,11 @@ export interface NextAuthMiddlewareOptions {
   }) => Awaitable<boolean>
 }
 
-export type WithAuthArgs =
-  | [NextRequest]
-  | [NextRequest, NextFetchEvent]
-  | [NextRequest, NextAuthMiddlewareOptions]
-  | [NextMiddleware]
-  | [NextMiddleware, NextAuthMiddlewareOptions]
-  | [NextAuthMiddlewareOptions]
-
-/** Check if `secret` has been declared  */
-function initConfig(
+async function handleMiddleware(
   req: NextRequest,
-  optionsOrEv?: NextAuthMiddlewareOptions | NextFetchEvent
+  options: NextAuthMiddlewareOptions | undefined,
+  onSuccess?: (token: JWT | null) => Promise<any>
 ) {
-  const options = optionsOrEv as NextAuthMiddlewareOptions // This is relatively safe as we don't share properties with NextFetchEvent
   const signInPage = options?.pages?.signIn ?? "/api/auth/signin"
   const errorPage = options?.pages?.error ?? "/api/auth/error"
   const basePath = parseUrl(process.env.NEXTAUTH_URL).path
@@ -88,15 +79,26 @@ function initConfig(
     }
   }
 
-  // Continue only if the secret is specified
-  return {
-    req,
-    options,
-    secret,
-    signInPage,
-    authorized: options?.authorized ?? (({ token }) => token),
-  }
+  const token = await getToken({ req: req as any, secret })
+
+  const authorized = options?.authorized ?? (({ token }) => token)
+  const isAuthorized = await authorized({ req, token })
+  // the user is authorized, let the middleware handle the rest
+  if (isAuthorized) return await onSuccess?.(token)
+
+  // the user is not logged in, re-direct to the sign-in page
+  return NextResponse.redirect(
+    `${signInPage}?${new URLSearchParams({ callbackUrl: req.url })}`
+  )
 }
+
+export type WithAuthArgs =
+  | [NextRequest]
+  | [NextRequest, NextFetchEvent]
+  | [NextRequest, NextAuthMiddlewareOptions]
+  | [NextMiddleware]
+  | [NextMiddleware, NextAuthMiddlewareOptions]
+  | [NextAuthMiddlewareOptions]
 
 /**
  * Middleware that checks if the user is authenticated/authorized.
@@ -115,60 +117,23 @@ function initConfig(
  */
 export function withAuth(...args: WithAuthArgs) {
   if (args[0] instanceof NextRequest) {
-    const config = initConfig(args[0], args[1])
-    if (!config) return
-    if (config.redirect) return config.redirect
-
-    const { req, secret, signInPage, authorized } = config
-
-    return getToken({ req: req as any, secret }).then(async (token) => {
-      if (await authorized({ req, token })) return
-
-      return NextResponse.redirect(
-        `${signInPage}?${new URLSearchParams({ callbackUrl: req.url })}`
-      )
-    })
+    // @ts-expect-error
+    return handleMiddleware(...args)
   }
 
   if (typeof args[0] === "function") {
     const middleware = args[0]
     const options = args[1] as NextAuthMiddlewareOptions | undefined
-    return async (...args: Parameters<NextMiddleware>) => {
-      const config = initConfig(args[0], options)
-      if (!config) return
-      if (config.redirect) return config.redirect
-
-      const { req, secret, signInPage, authorized } = config
-
-      const token = await getToken({ req: req as any, secret })
-
-      if (await authorized({ req, token })) {
+    return async (...args: Parameters<NextMiddleware>) =>
+      await handleMiddleware(args[0], options, async (token) => {
         ;(args[0] as any).token = token
         return await middleware(...args)
-      }
-
-      return NextResponse.redirect(
-        `${signInPage}?${new URLSearchParams({ callbackUrl: req.url })}`
-      )
-    }
+      })
   }
 
   const options = args[0]
-  return async (...args: Parameters<NextMiddleware>) => {
-    const config = initConfig(args[0], options)
-    if (!config) return
-    if (config.redirect) return config.redirect
-
-    const { req, secret, signInPage, authorized } = config
-
-    const token = await getToken({ req: req as any, secret })
-
-    if (await authorized({ req, token })) return
-
-    return NextResponse.redirect(
-      `${signInPage}?${new URLSearchParams({ callbackUrl: req.url })}`
-    )
-  }
+  return async (...args: Parameters<NextMiddleware>) =>
+    await handleMiddleware(args[0], options)
 }
 
 export default withAuth
