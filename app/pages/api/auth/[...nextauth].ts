@@ -189,9 +189,8 @@ export const authOptions: NextAuthOptions = {
     PatreonProvider({
       clientId: process.env.PATREON_ID,
       clientSecret: process.env.PATREON_SECRET,
-    })
+    }),
   ],
-  secret: process.env.SECRET,
   debug: true,
   theme: {
     colorScheme: "auto",
