@@ -5,6 +5,7 @@ import type { JWT } from "../jwt"
 import { NextResponse, NextRequest } from "next/server"
 
 import { getToken } from "../jwt"
+import parseUrl from "src/lib/parse-url"
 
 export interface NextAuthMiddlewareOptions {
   /**
@@ -66,28 +67,34 @@ function initConfig(
   const options = optionsOrEv as NextAuthMiddlewareOptions // This is relatively safe as we don't share properties with NextFetchEvent
   const signInPage = options?.pages?.signIn ?? "/api/auth/signin"
   const errorPage = options?.pages?.error ?? "/api/auth/error"
-
+  const basePath = parseUrl(process.env.NEXTAUTH_URL).path
   // Avoid infinite redirect loop
-  if ([signInPage, errorPage].includes(req.nextUrl.pathname)) return
+  if (
+    req.nextUrl.pathname.startsWith(basePath) ||
+    [signInPage, errorPage].includes(req.nextUrl.pathname)
+  ) {
+    return
+  }
 
   const secret = options?.secret ?? process.env.NEXTAUTH_SECRET
-  // Continue only if the secret is specified
-  if (secret)
+  if (!secret) {
+    console.error(
+      `[next-auth][error][NO_SECRET]`,
+      `\nhttps://next-auth.js.org/errors#no_secret`
+    )
+
     return {
-      req,
-      options,
-      secret,
-      signInPage,
-      authorized: options?.authorized ?? (({ token }) => token),
+      redirect: NextResponse.redirect(`${errorPage}?error=Configuration`),
     }
+  }
 
-  console.error(
-    `[next-auth][error][NO_SECRET]`,
-    `\nhttps://next-auth.js.org/errors#no_secret`
-  )
-
+  // Continue only if the secret is specified
   return {
-    redirect: NextResponse.redirect(`${errorPage}?error=Configuration`),
+    req,
+    options,
+    secret,
+    signInPage,
+    authorized: options?.authorized ?? (({ token }) => token),
   }
 }
 
