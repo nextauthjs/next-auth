@@ -116,7 +116,9 @@ function initConfig(
 export function withAuth(...args: WithAuthArgs) {
   if (args[0] instanceof NextRequest) {
     const config = initConfig(args[0], args[1])
-    if (!config || config.redirect) return config?.redirect
+    if (!config) return
+    if (config.redirect) return config.redirect
+
     const { req, secret, signInPage, authorized } = config
 
     return getToken({ req: req as any, secret }).then(async (token) => {
@@ -133,7 +135,9 @@ export function withAuth(...args: WithAuthArgs) {
     const options = args[1] as NextAuthMiddlewareOptions | undefined
     return async (...args: Parameters<NextMiddleware>) => {
       const config = initConfig(args[0], options)
-      if (!config || config.redirect) return config?.redirect
+      if (!config) return
+      if (config.redirect) return config.redirect
+
       const { req, secret, signInPage, authorized } = config
 
       const token = await getToken({ req: req as any, secret })
@@ -152,7 +156,8 @@ export function withAuth(...args: WithAuthArgs) {
   const options = args[0]
   return async (...args: Parameters<NextMiddleware>) => {
     const config = initConfig(args[0], options)
-    if (!config || config.redirect) return config?.redirect
+    if (!config) return
+    if (config.redirect) return config.redirect
 
     const { req, secret, signInPage, authorized } = config
 
