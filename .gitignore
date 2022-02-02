@@ -24,7 +24,7 @@ node_modules
 .docusaurus
 .cache-loader
 /providers
-/src/providers/oauth-types.ts
+packages/next-auth/providers/oauth-types.ts
 /client
 /css
 /lib
@@ -39,13 +39,13 @@ node_modules
 /middleware.js
 
 # Development dev-app
-dev-app/src/css
-dev-app/package-lock.json
-dev-app/yarn.lock
-dev-app/prisma/migrations
-dev-app/prisma/dev.db*
-dev-app/dist
-dev-app/next-auth
+packages/dev-app/src/css
+packages/dev-app/package-lock.json
+packages/dev-app/yarn.lock
+packages/dev-app/prisma/migrations
+packages/dev-app/prisma/dev.db*
+packages/dev-app/dist
+packages/dev-app/next-auth
 
 # VS
 /.vs/slnx.sqlite-journal
@@ -65,3 +65,5 @@ dev-app/next-auth
 
 # Tests
 /coverage
+
+.turbo

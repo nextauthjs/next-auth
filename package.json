@@ -7,24 +7,31 @@
   ],
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "scripts": {
-    "build": "yarn build",
+    "build": "turbo run build",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "test": "turbo run test",
     "version:pr": "node ./config/version-pr"
   },
   "devDependencies": {
     "@actions/core": "^1.6.0",
+    "@typescript-eslint/eslint-plugin": "^5.10.2",
     "@typescript-eslint/parser": "^4.33.0",
     "conventional-changelog-conventionalcommits": "4.6.1",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard-with-typescript": "^21.0.1",
+    "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-jest": "^25.3.0",
     "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.0.0",
     "fs-extra": "^10.0.0",
     "husky": "^7.0.4",
     "prettier": "2.4.1",
     "pretty-quick": "^3.1.2",
     "semantic-release": "^19.0.2",
     "semantic-release-monorepo": "^7.0.5",
+    "turbo": "^1.1.2",
     "typescript": "^4.5.2"
   },
   "engines": {
