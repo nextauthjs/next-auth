@@ -11,7 +11,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-yarn.lock
 
 # Dependencies
 node_modules
