@@ -79,6 +79,6 @@ export function assertConfig(
   }
 
   if (twitterProvider) {
-    return "TWITTER_OAUTH_2"
+    return "TWITTER_OAUTH_2_BETA"
   }
 }
