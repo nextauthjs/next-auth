@@ -136,7 +136,7 @@ export function withAuth(...args: WithAuthArgs) {
     const options = args[1] as NextAuthMiddlewareOptions | undefined
     return async (...args: Parameters<NextMiddleware>) =>
       await handleMiddleware(args[0], options, async (token) => {
-        ;(args[0] as any).token = token
+        ;(args[0] as any).nextauth = { token }
         return await middleware(...args)
       })
   }
