@@ -45,11 +45,13 @@ export function assertConfig(
   if (!req.host) return "NEXTAUTH_URL"
 
   let hasCredentials, hasEmail
+  let hasTwitterProvider
 
-  options.providers.forEach(({ type }) => {
-    if (type === "credentials") hasCredentials = true
-    else if (type === "email") hasEmail = true
-  })
+  for (const provider of options.providers) {
+    if (provider.type === "credentials") hasCredentials = true
+    else if (provider.type === "email") hasEmail = true
+    else if (provider.id === "twitter") hasTwitterProvider = true
+  }
 
   if (hasCredentials) {
     const dbStrategy = options.session?.strategy === "database"
@@ -74,5 +76,9 @@ export function assertConfig(
 
   if (hasEmail && !options.adapter) {
     return new MissingAdapter("E-mail login requires an adapter.")
+  }
+
+  if (hasTwitterProvider) {
+    return "TWITTER_OAUTH_2_BETA"
   }
 }
