@@ -13,11 +13,8 @@ const DEFAULT_MAX_AGE = 30 * 24 * 60 * 60 // 30 days
 const now = () => (Date.now() / 1000) | 0
 
 /** Issues a JWT. By default, the JWT is encrypted using "A256GCM". */
-export async function encode({
-  token = {},
-  secret,
-  maxAge = DEFAULT_MAX_AGE,
-}: JWTEncodeParams) {
+export async function encode(params: JWTEncodeParams) {
+  const { token = {}, secret, maxAge = DEFAULT_MAX_AGE } = params
   const encryptionSecret = await getDerivedEncryptionKey(secret)
   return await new EncryptJWT(token)
     .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
@@ -28,10 +25,8 @@ export async function encode({
 }
 
 /** Decodes a NextAuth.js issued JWT. */
-export async function decode({
-  token,
-  secret,
-}: JWTDecodeParams): Promise<JWT | null> {
+export async function decode(params: JWTDecodeParams): Promise<JWT | null> {
+  const { token, secret } = params
   if (!token) return null
   const encryptionSecret = await getDerivedEncryptionKey(secret)
   const { payload } = await jwtDecrypt(token, encryptionSecret, {
@@ -55,7 +50,11 @@ export interface GetTokenParams<R extends boolean = false> {
    * @default false
    */
   raw?: R
-  secret: string
+  /**
+   * The same `secret` used in the `NextAuth` configuration.
+   * Defaults to the `NEXTAUTH_SECRET` environment variable.
+   */
+  secret?: string
   decode?: JWTOptions["decode"]
   logger?: LoggerInstance | Console
 }
@@ -78,6 +77,7 @@ export async function getToken<R extends boolean = false>(
     raw,
     decode: _decode = decode,
     logger = console,
+    secret = process.env.NEXTAUTH_SECRET,
   } = params ?? {}
 
   if (!req) throw new Error("Must pass `req` to JWT getToken()")
@@ -103,7 +103,7 @@ export async function getToken<R extends boolean = false>(
 
   try {
     // @ts-expect-error
-    return await _decode({ token, ...params })
+    return await _decode({ token, secret })
   } catch {
     // @ts-expect-error
     return null
