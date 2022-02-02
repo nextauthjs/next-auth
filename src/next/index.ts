@@ -19,6 +19,10 @@ async function NextAuthNextHandler(
   options: NextAuthOptions
 ) {
   const { nextauth, ...query } = req.query
+
+  options.secret =
+    options.secret ?? options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
+
   const handler = await NextAuthHandler({
     req: {
       host: detectHost(req.headers["x-forwarded-host"]),
