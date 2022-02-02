@@ -7,6 +7,11 @@ import { NextResponse, NextRequest } from "next/server"
 import { getToken } from "../jwt"
 import parseUrl from "../lib/parse-url"
 
+type AuthorizedCallback = (params: {
+  token: JWT | null
+  req: NextRequest
+}) => Awaitable<boolean>
+
 export interface NextAuthMiddlewareOptions {
   /**
    * The secret used to create the session.
@@ -16,7 +21,7 @@ export interface NextAuthMiddlewareOptions {
    * ---
    * [Documentation](https://next-auth.js.org/configuration/options#secret)
    */
-  secret?: string
+  secret?: NextAuthOptions["secret"]
   /**
    * Where to redirect the user in case of an error if they weren't logged in.
    * Similar to `pages` in `NextAuth`.
@@ -25,30 +30,34 @@ export interface NextAuthMiddlewareOptions {
    * [Documentation](https://next-auth.js.org/configuration/pages)
    */
   pages?: NextAuthOptions["pages"]
-  /**
-   * Callback that receives the user's JWT payload
-   * and returns `true` to allow the user to continue.
-   *
-   * If it returns `false`, the user is redirected to the sign-in page instead
-   *
-   * The default is to let the user continue if they have a valid JWT (basic authentication).
-   *
-   * How to restrict a page and all of it's subpages for admins-only:
-   * @example
-   *
-   * ```js
-   * // `pages/admin/_middleware.js`
-   * import { withAuth } from "next-auth/next/middleware"
-   *
-   * export default withAuth({
-   *   authorized: ({ token }) => token?.user.isAdmin
-   * })
-   * ```
-   */
-  authorized?: (options: {
-    token: JWT | null
-    req: NextRequest
-  }) => Awaitable<boolean>
+  callbacks?: {
+    /**
+     * Callback that receives the user's JWT payload
+     * and returns `true` to allow the user to continue.
+     *
+     * This is similar to the `signIn` callback in `NextAuthOptions`.
+     *
+     * If it returns `false`, the user is redirected to the sign-in page instead
+     *
+     * The default is to let the user continue if they have a valid JWT (basic authentication).
+     *
+     * How to restrict a page and all of it's subpages for admins-only:
+     * @example
+     *
+     * ```js
+     * // `pages/admin/_middleware.js`
+     * import { withAuth } from "next-auth/next/middleware"
+     *
+     * export default withAuth({
+     *   authorized: ({ token }) => token?.user.isAdmin
+     * })
+     * ```
+     *
+     * ---
+     * [Documentation](https://next-auth.js.org/getting-started/nextjs/middleware#api) | [`signIn` callback](configuration/callbacks#sign-in-callback)
+     */
+    authorized?: AuthorizedCallback
+  }
 }
 
 async function handleMiddleware(
@@ -81,7 +90,8 @@ async function handleMiddleware(
 
   const token = await getToken({ req: req as any, secret })
 
-  const authorized = options?.authorized ?? (({ token }) => token)
+  const authorized: AuthorizedCallback =
+    options?.callbacks?.authorized ?? (({ token }) => !!token)
   const isAuthorized = await authorized({ req, token })
   // the user is authorized, let the middleware handle the rest
   if (isAuthorized) return await onSuccess?.(token)

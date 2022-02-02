@@ -16,7 +16,9 @@ export { default } from "next-auth/middleware"
 // export function middleware(req, ev) {
 //   return withAuth(req, {
 //     secret: process.env.NEXTAUTH_SECRET,
-//     authorized: ({ token }) => !!token,
+//     callbacks: {
+//       authorized: ({ token }) => !!token,
+//     },
 //   })
 // }
 
@@ -31,11 +33,15 @@ export { default } from "next-auth/middleware"
 //   },
 //   {
 //     secret: process.env.NEXTAUTH_SECRET,
-//     authorized: ({ token }) => token.name === "Balázs Orbán",
+//     callbacks: {
+//       authorized: ({ token }) => token.name === "Balázs Orbán",
+//     }
 //   }
 // )
 
 // export default withAuth({
 //   secret: process.env.NEXTAUTH_SECRET,
-//   authorized: ({ token }) => !!token,
+//   callbacks: {
+//     authorized: ({ token }) => !!token,
+//   },
 // })
