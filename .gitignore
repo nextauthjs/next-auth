@@ -39,14 +39,14 @@ node_modules
 /middleware.d.ts
 /middleware.js
 
-# Development app
-app/src/css
-app/package-lock.json
-app/yarn.lock
-app/prisma/migrations
-app/prisma/dev.db*
-app/dist
-app/next-auth
+# Development dev-app
+dev-app/src/css
+dev-app/package-lock.json
+dev-app/yarn.lock
+dev-app/prisma/migrations
+dev-app/prisma/dev.db*
+dev-app/dist
+dev-app/next-auth
 
 # VS
 /.vs/slnx.sqlite-journal
