@@ -23,20 +23,18 @@ node_modules
 # Generated files
 .docusaurus
 .cache-loader
-/providers
-packages/next-auth/providers/oauth-types.ts
-/client
-/css
-/lib
-/core
-/jwt
-/react
-/adapters.d.ts
-/index.d.ts
-/index.js
-/next
-/middleware.d.ts
-/middleware.js
+packages/next-auth/providers
+packages/next-auth/src/providers/oauth-types.ts
+packages/next-auth/client
+packages/next-auth/css
+packages/next-auth/lib
+packages/next-auth/core
+packages/next-auth/jwt
+packages/next-auth/react
+packages/next-auth/adapters.d.ts
+packages/next-auth/index.d.ts
+packages/next-auth/index.js
+packages/next-auth/next
 
 # Development dev-app
 packages/dev-app/src/css
