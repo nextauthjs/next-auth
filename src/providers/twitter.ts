@@ -170,11 +170,13 @@ let warned = false
 export default function Twitter<
   P extends Record<string, any> = TwitterLegacyProfile | TwitterProfile
 >(options: OAuthUserConfig<P>): OAuthConfig<P> {
-  if (!warned && options.version === "2.0") {
-    warned = true
-    console.warn(
-      "Opted-in to Twitter OAuth 2.0. See the docs https://next-auth.js.org/providers/twitter#oauth-2"
-    )
+  if (options.version === "2.0") {
+    if (!warned) {
+      warned = true
+      console.warn(
+        "Opted-in to Twitter OAuth 2.0. See the docs https://next-auth.js.org/providers/twitter#oauth-2"
+      )
+    }
     return {
       id: "twitter",
       name: "Twitter",
