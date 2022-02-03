@@ -91,33 +91,6 @@
     "**/tests",
     "**/__tests__"
   ],
-  "release": {
-    "extends": "semantic-release-monorepo",
-    "branches": [
-      "+([0-9])?(.{+([0-9]),x}).x",
-      "main",
-      {
-        "name": "beta",
-        "prerelease": true
-      },
-      {
-        "name": "next",
-        "prerelease": true
-      }
-    ],
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/npm",
-      [
-        "@semantic-release/github",
-        {
-          "releasedLabels": false,
-          "successComment": false
-        }
-      ]
-    ]
-  },
   "packageManager": "yarn@1.22.17",
   "funding": [
     {
@@ -129,5 +102,4 @@
       "url": "https://opencollective.com/nextauth"
     }
   ],
-  "dependencies": {}
 }
