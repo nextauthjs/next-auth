@@ -11,6 +11,7 @@ export interface InternalUrl {
   toString: () => string
 }
 
+/** Returns an `URL` like object to make requests/redirects from server-side */
 export default function parseUrl(url?: string): InternalUrl {
   const defaultUrl = new URL("http://localhost:3000/api/auth")
 
