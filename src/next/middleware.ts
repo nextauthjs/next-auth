@@ -75,7 +75,7 @@ async function handleMiddleware(
       `\nhttps://next-auth.js.org/errors#no_secret`
     )
 
-    const errorUrl = new URL(errorPage, req.nextUrl.host)
+    const errorUrl = new URL(errorPage, req.nextUrl.origin)
     errorUrl.searchParams.append("error", "Configuration")
 
     return NextResponse.redirect(errorUrl)
@@ -90,7 +90,7 @@ async function handleMiddleware(
   if (isAuthorized) return await onSuccess?.(token)
 
   // the user is not logged in, redirect to the sign-in page
-  const signInUrl = new URL(signInPage, req.nextUrl.host)
+  const signInUrl = new URL(signInPage, req.nextUrl.origin)
   signInUrl.searchParams.append("callbackUrl", req.url)
   return NextResponse.redirect(signInUrl)
 }
