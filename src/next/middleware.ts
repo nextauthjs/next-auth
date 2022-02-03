@@ -14,15 +14,6 @@ type AuthorizedCallback = (params: {
 
 export interface NextAuthMiddlewareOptions {
   /**
-   * The secret used to create the session.
-   * @note Must match as `secret` in `NextAuth`.
-   * @default process.env.NEXTAUTH_SECRET
-   *
-   * ---
-   * [Documentation](https://next-auth.js.org/configuration/options#secret)
-   */
-  secret?: NextAuthOptions["secret"]
-  /**
    * Where to redirect the user in case of an error if they weren't logged in.
    * Similar to `pages` in `NextAuth`.
    *
@@ -46,10 +37,12 @@ export interface NextAuthMiddlewareOptions {
      *
      * ```js
      * // `pages/admin/_middleware.js`
-     * import { withAuth } from "next-auth/next/middleware"
+     * import { withAuth } from "next-auth/middleware"
      *
      * export default withAuth({
-     *   authorized: ({ token }) => token?.user.isAdmin
+     *   callbacks: {
+     *     authorized: ({ token }) => token?.user.isAdmin
+     *   }
      * })
      * ```
      *
@@ -76,7 +69,7 @@ async function handleMiddleware(
     return
   }
 
-  const secret = options?.secret ?? process.env.NEXTAUTH_SECRET
+  const secret = process.env.NEXTAUTH_SECRET
   if (!secret) {
     console.error(
       `[next-auth][error][NO_SECRET]`,
