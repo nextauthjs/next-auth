@@ -69,8 +69,7 @@ async function handleMiddleware(
     return
   }
 
-  const secret = process.env.NEXTAUTH_SECRET
-  if (!secret) {
+  if (!process.env.NEXTAUTH_SECRET) {
     console.error(
       `[next-auth][error][NO_SECRET]`,
       `\nhttps://next-auth.js.org/errors#no_secret`
@@ -81,11 +80,11 @@ async function handleMiddleware(
     }
   }
 
-  const token = await getToken({ req: req as any, secret })
+  const token = await getToken({ req: req as any })
 
-  const authorized: AuthorizedCallback =
-    options?.callbacks?.authorized ?? (({ token }) => !!token)
-  const isAuthorized = await authorized({ req, token })
+  const isAuthorized =
+    (await options?.callbacks?.authorized?.({ req, token })) ?? !!token
+
   // the user is authorized, let the middleware handle the rest
   if (isAuthorized) return await onSuccess?.(token)
 

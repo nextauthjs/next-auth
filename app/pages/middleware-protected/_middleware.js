@@ -22,7 +22,7 @@ export { default } from "next-auth/middleware"
 // }
 
 // export default withAuth(function middleware(req, ev) {
-//   console.log(req.token)
+//   console.log(req.nextauth.token)
 // })
 
 // export default withAuth(
