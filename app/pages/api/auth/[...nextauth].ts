@@ -28,6 +28,7 @@ import AzureB2C from "next-auth/providers/azure-ad-b2c"
 import OsuProvider from "next-auth/providers/osu"
 import AppleProvider from "next-auth/providers/apple"
 import PatreonProvider from "next-auth/providers/patreon"
+import TraktProvider from "next-auth/providers/trakt"
 
 // import { PrismaAdapter } from "@next-auth/prisma-adapter"
 // import { PrismaClient } from "@prisma/client"
@@ -189,6 +190,10 @@ export const authOptions: NextAuthOptions = {
     PatreonProvider({
       clientId: process.env.PATREON_ID,
       clientSecret: process.env.PATREON_SECRET,
+    }),
+    TraktProvider({
+      clientId: process.env.TRAKT_ID,
+      clientSecret: process.env.TRAKT_SECRET,
     }),
   ],
   debug: true,
