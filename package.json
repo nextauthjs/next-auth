@@ -2,15 +2,22 @@
   "name": "root",
   "version": "0.0.0",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/react", "**/react/**", "**/react-dom", "**/react-dom/**"
+    ]
+  },
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "scripts": {
     "build": "turbo run build",
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix .",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint -- --fix",
     "test": "turbo run test",
+    "setup": "turbo run setup",
+    "dev": "turbo run dev --parallel --no-deps --no-cache",
     "version:pr": "node ./config/version-pr"
   },
   "devDependencies": {
@@ -41,9 +48,6 @@
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-      "project": "./tsconfig.eslint.json"
-    },
     "extends": [
       "standard-with-typescript",
       "prettier"
@@ -101,5 +105,5 @@
       "type": "opencollective",
       "url": "https://opencollective.com/nextauth"
     }
-  ],
+  ]
 }

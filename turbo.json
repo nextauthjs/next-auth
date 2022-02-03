@@ -2,18 +2,20 @@
   "baseBranch": "origin/main",
   "pipeline": {
     "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["**/dist/**"]
+      "dependsOn": ["^build"]
     },
-    "test": {
-      "dependsOn": ["^build"],
-      "outputs": []
+    "test": {},
+    "test:ci": {
+      "dependsOn": ["lint"]
     },
-    "lint": {
-      "outputs": []
-    },
+    "lint": {},
+    "setup": {},
     "dev": {
       "cache": false
+    },
+    "next-auth-app#dev": {
+      "cache": false,
+      "dependsOn": ["next-auth#setup", "next-auth#build"]
     }
   }
 }
