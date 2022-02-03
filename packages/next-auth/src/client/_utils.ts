@@ -42,15 +42,37 @@ export async function fetchData<T = any>(
       : {}
     
     
-    const forwardedHost = req?.headers['x-forwarded-host']
+    let forwardedHost = req?.headers['x-forwarded-host']
     if (!forwardedHost) {
-      throw new Error('no forwardedHost. Caller:' + path)
+      console.debug('[next-auth atlas fork] No X-Forwarded-Host')
+      if (typeof location !== 'undefined' && location.host?.length > 0) {
+        console.debug('[next-auth atlas fork] Defaulting to location.host:', location.host)
+        forwardedHost = location.host
+      } else {
+        // Running on server
+        const hostHeader = req?.headers.host
+        if (!hostHeader) {
+          throw new Error('[next-auth atlas fork] No Host header. This is not expected.')
+        }
+        if (process.env.TRUST_HOST_HEADER) {
+          console.debug('[next-auth atlas fork] Defaulting to Host header:', hostHeader)
+          forwardedHost = hostHeader
+        } else {
+          throw new Error('[next-auth atlas fork] No X-Forwarded-Host fallback.')
+        }
+      }
     }
 
     if (Array.isArray(forwardedHost)) {
       throw new Error(
-        'forwardedHost is an array - this case is not handled:' +
-          forwardedHost.join(','),
+        [
+          'Received multiple X-Forwarded-Host headers:',
+          ' ' + forwardedHost.join(','),
+          'This case is not handled.',
+          '',
+          'rawHeaders:',
+          ' ' + req?.rawHeaders,
+        ].join('\n'),
       )
     }
 

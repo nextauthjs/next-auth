@@ -114,6 +114,7 @@ declare global {
       NEXTAUTH_URL?: string
       VERCEL?: "1"
       NEXTAUTH_TRUST_X_FORWARDED_HOST?: "1"
+      TRUST_HOST_HEADER?: "1"
     }
   }
 }
