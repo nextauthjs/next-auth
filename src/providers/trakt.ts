@@ -23,7 +23,7 @@ export default function Trakt<
     name: "Trakt",
     type: "oauth",
     authorization: {
-      url: "https://api.trakt.tv/oauth/authorize",
+      url: "https://trakt.tv/oauth/authorize",
       params: { scope: "" }, // when default, trakt returns auth error
     },
     token: "https://api.trakt.tv/oauth/token",
