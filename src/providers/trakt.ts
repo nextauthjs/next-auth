@@ -29,29 +29,18 @@ export default function Trakt<
     token: "https://api.trakt.tv/oauth/token",
 
     userinfo: {
-      // custom data fetcher to compensate for
-      // unique headers required by the trakt api
       async request(context) {
-        if (!context.provider.clientId) {
-          throw new Error("clientId is required")
-        }
-
-        const headers = new Headers()
-        headers.set("Content-Type", "application/json")
-        headers.set("Authorization", `Bearer ${context.tokens.access_token}`)
-        headers.set("trakt-api-version", "2")
-        headers.set("trakt-api-key", context.provider.clientId)
-
         const res = await fetch("https://api.trakt.tv/users/me?extended=full", {
-          headers: headers,
+          headers: {
+            Authorization: `Bearer ${context.tokens.access_token}`,
+            "trakt-api-version": "2"
+            "trakt-api-key": context.provider.clientId as string,
+          },
         })
 
-        if (res.status !== 200) {
-          throw new Error("Expected 200 OK from the userinfo endpoint")
-        }
+        if (res.ok) return await res.json()
 
-        const data = await res.json()
-        return data
+        throw new Error("Expected 200 OK from the userinfo endpoint")
       },
     },
     profile(profile) {
