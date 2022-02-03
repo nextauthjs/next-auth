@@ -33,7 +33,7 @@ export default function Trakt<
         const res = await fetch("https://api.trakt.tv/users/me?extended=full", {
           headers: {
             Authorization: `Bearer ${context.tokens.access_token}`,
-            "trakt-api-version": "2"
+            "trakt-api-version": "2",
             "trakt-api-key": context.provider.clientId as string,
           },
         })
