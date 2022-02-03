@@ -75,9 +75,10 @@ async function handleMiddleware(
       `\nhttps://next-auth.js.org/errors#no_secret`
     )
 
-    return {
-      redirect: NextResponse.redirect(`${errorPage}?error=Configuration`),
-    }
+    const errorUrl = new URL(errorPage, req.nextUrl.origin)
+    errorUrl.searchParams.append("error", "Configuration")
+
+    return NextResponse.redirect(errorUrl)
   }
 
   const token = await getToken({ req: req as any })
@@ -88,10 +89,10 @@ async function handleMiddleware(
   // the user is authorized, let the middleware handle the rest
   if (isAuthorized) return await onSuccess?.(token)
 
-  // the user is not logged in, re-direct to the sign-in page
-  return NextResponse.redirect(
-    `${signInPage}?${new URLSearchParams({ callbackUrl: req.url })}`
-  )
+  // the user is not logged in, redirect to the sign-in page
+  const signInUrl = new URL(signInPage, req.nextUrl.origin)
+  signInUrl.searchParams.append("callbackUrl", req.url)
+  return NextResponse.redirect(signInUrl)
 }
 
 export type WithAuthArgs =
@@ -101,6 +102,7 @@ export type WithAuthArgs =
   | [NextMiddleware]
   | [NextMiddleware, NextAuthMiddlewareOptions]
   | [NextAuthMiddlewareOptions]
+  | []
 
 /**
  * Middleware that checks if the user is authenticated/authorized.
@@ -118,7 +120,7 @@ export type WithAuthArgs =
  * [Documentation](https://next-auth.js.org/getting-started/middleware)
  */
 export function withAuth(...args: WithAuthArgs) {
-  if (args[0] instanceof NextRequest) {
+  if (!args.length || args[0] instanceof NextRequest) {
     // @ts-expect-error
     return handleMiddleware(...args)
   }
