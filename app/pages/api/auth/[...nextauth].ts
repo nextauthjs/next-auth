@@ -196,7 +196,6 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.TRAKT_SECRET,
     }),
   ],
-  secret: process.env.SECRET,
   debug: true,
   theme: {
     colorScheme: "auto",
