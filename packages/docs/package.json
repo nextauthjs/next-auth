@@ -6,7 +6,7 @@
     "url": "git://github.com/nextauthjs/docs.git"
   },
   "scripts": {
-    "start": "npm run generate-providers && docusaurus start",
+    "start": "npm run generate-providers && docusaurus start --port 8000",
     "dev": "npm run start",
     "build": "npm run generate-providers && docusaurus build",
     "docusaurus": "docusaurus",
