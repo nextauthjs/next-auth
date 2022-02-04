@@ -40,6 +40,7 @@ export function db(
         token_identifier
       )
       if (!verificationToken) return null
+      // @ts-expect-error
       const { id: _, ...rest } = verificationToken
       return rest
     },
