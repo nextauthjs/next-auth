@@ -3,8 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "workspaces": {
-    "packages": ["packages/*"],
-    "nohoist": ["**/react", "**/react/**", "**/react-dom", "**/react-dom/**"]
+    "packages": ["packages/*"]
   },
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "scripts": {
