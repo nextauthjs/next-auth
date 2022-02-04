@@ -1,0 +1,41 @@
+{
+  "name": "@next-auth/sequelize-adapter",
+  "version": "1.0.1",
+  "description": "Sequelize adapter for next-auth.",
+  "homepage": "https://next-auth.js.org",
+  "repository": "https://github.com/nextauthjs/adapters",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/adapters/issues"
+  },
+  "author": "github.com/luke-j",
+  "main": "dist/index.js",
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "oauth",
+    "sequelize"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test:wip": "jest",
+    "build": "tsc"
+  },
+  "files": [
+    "README.md",
+    "dist"
+  ],
+  "peerDependencies": {
+    "next-auth": "^4.0.1",
+    "sequelize": "^6.6.5"
+  },
+  "devDependencies": {
+    "sequelize": "^6.6.5"
+  },
+  "jest": {
+    "preset": "adapter-test/jest"
+  }
+}

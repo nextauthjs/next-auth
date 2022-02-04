@@ -1,0 +1,50 @@
+{
+  "name": "@next-auth/dgraph-adapter",
+  "version": "1.0.2",
+  "description": "Dgraph adapter for next-auth.",
+  "homepage": "https://next-auth.js.org",
+  "repository": "https://github.com/nextauthjs/adapters",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/adapters/issues"
+  },
+  "author": "Arnaud Derbey <arnaud@derbey.dev>",
+  "contributors": [],
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "index.d.ts"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "dgraph",
+    "graphql"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "./tests/test.sh"
+  },
+  "peerDependencies": {
+    "jsonwebtoken": "^8.5.1",
+    "next-auth": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.24",
+    "@types/jsonwebtoken": "^8.5.5",
+    "@types/node-fetch": "^2.5.11",
+    "jest": "^27.0.6",
+    "ts-jest": "^27.0.3"
+  },
+  "dependencies": {
+    "jsonwebtoken": "^8.5.1",
+    "node-fetch": "^2.6.1"
+  },
+  "jest": {
+    "preset": "adapter-test/jest"
+  }
+}

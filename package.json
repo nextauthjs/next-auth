@@ -3,16 +3,17 @@
   "version": "0.0.0",
   "private": true,
   "workspaces": {
-    "packages": [
-      "packages/*"
-    ]
+    "packages": ["packages/*"]
   },
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "scripts": {
     "build": "turbo run build",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint -- --fix",
-    "test": "turbo run test",
+    "test:serial:adapters2": "turbo run test --concurrency=1 --scope=@next-auth/prisma-adapter --scope=@next-auth/typeorm-legacy-adapter",
+    "test:serial:adapters": "turbo run test --concurrency=1 --scope=@next-auth/*adapter*",
+    "test:serial": "turbo run test --concurrency=1 --ignore=packages/adapter-pouch/*",
+    "test": "turbo run test --ignore=packages/adapter-pouch/*",
     "setup": "turbo run setup",
     "dev": "turbo run dev --parallel --no-deps --no-cache",
     "version:pr": "node ./config/version-pr"
@@ -30,7 +31,6 @@
     "eslint-plugin-jest": "^25.3.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
-    "fs-extra": "^10.0.0",
     "husky": "^7.0.4",
     "prettier": "2.4.1",
     "pretty-quick": "^3.1.2",
@@ -45,10 +45,7 @@
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
-    "extends": [
-      "standard-with-typescript",
-      "prettier"
-    ],
+    "extends": ["standard-with-typescript", "prettier"],
     "ignorePatterns": [
       "node_modules",
       "next-env.d.ts",
@@ -72,26 +69,16 @@
     },
     "overrides": [
       {
-        "files": [
-          "./**/*test.js"
-        ],
+        "files": ["./**/*test.js"],
         "env": {
           "jest/globals": true
         },
-        "extends": [
-          "plugin:jest/recommended"
-        ],
-        "plugins": [
-          "jest"
-        ]
+        "extends": ["plugin:jest/recommended"],
+        "plugins": ["jest"]
       }
     ]
   },
-  "eslintIgnore": [
-    "./*.d.ts",
-    "**/tests",
-    "**/__tests__"
-  ],
+  "eslintIgnore": ["./*.d.ts", "**/tests", "**/__tests__"],
   "packageManager": "yarn@1.22.17",
   "funding": [
     {

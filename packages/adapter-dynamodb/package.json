@@ -1,0 +1,45 @@
+{
+  "name": "@next-auth/dynamodb-adapter",
+  "repository": "https://github.com/nextauthjs/adapters",
+  "version": "1.0.2",
+  "description": "AWS DynamoDB adapter for next-auth.",
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "oauth",
+    "dynamodb"
+  ],
+  "homepage": "https://next-auth.js.org",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "main": "dist/index.js",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test:default": "jest",
+    "test:custom": "CUSTOM_MODEL=1 jest",
+    "test": "yarn test:default && yarn test:custom",
+    "build": "tsc"
+  },
+  "files": [
+    "README.md",
+    "dist"
+  ],
+  "author": "Pol Marnette",
+  "license": "ISC",
+  "peerDependencies": {
+    "@aws-sdk/lib-dynamodb": "^3.36.1",
+    "next-auth": "^4.0.1"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-dynamodb": "^3.36.1",
+    "@aws-sdk/lib-dynamodb": "^3.36.1",
+    "@shelf/jest-dynamodb": "^2.1.0"
+  },
+  "jest": {
+    "preset": "adapter-test/jest"
+  }
+}

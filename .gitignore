@@ -10,6 +10,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+firebase-debug.log
 
 
 # Dependencies
@@ -17,8 +18,8 @@ node_modules
 
 # Build dirs
 .next
-/build
-/dist
+build
+dist
 
 # Generated files
 .docusaurus
@@ -44,7 +45,6 @@ packages/dev-app/css
 packages/dev-app/package-lock.json
 packages/dev-app/yarn.lock
 packages/dev-app/prisma/migrations
-packages/dev-app/prisma/dev.db*
 packages/dev-app/dist
 packages/dev-app/next-auth
 
@@ -61,10 +61,20 @@ packages/dev-app/next-auth
 /actions-runner
 /_work
 
-# Prisma migrations
-/prisma/migrations
+# DB
+prisma/migrations
+dev.db*
+packages/adapter-prisma/prisma/dev.db
+db.sqlite
 
 # Tests
 coverage
+dynamodblocal-bin
+firestore-debug.log
+test.schema.gql
 
+# Turborepo
 .turbo
+
+# docusaurus
+packages/docs/.docusaurus
