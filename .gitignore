@@ -44,7 +44,6 @@ packages/dev-app/css
 packages/dev-app/package-lock.json
 packages/dev-app/yarn.lock
 packages/dev-app/prisma/migrations
-packages/dev-app/prisma/dev.db*
 packages/dev-app/dist
 packages/dev-app/next-auth
 
@@ -61,13 +60,13 @@ packages/dev-app/next-auth
 /actions-runner
 /_work
 
-# Prisma migrations
+# Prisma
 /prisma/migrations
+dev.db*
 
 # Tests
 coverage
 dynamodblocal-bin
-packages/adapter-typeorm-legacy/tests/sqlite/dev.db
 
 # Turborepo
 .turbo
