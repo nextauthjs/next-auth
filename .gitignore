@@ -65,7 +65,7 @@ packages/dev-app/next-auth
 /prisma/migrations
 
 # Tests
-/coverage
+coverage
 dynamodblocal-bin
 packages/adapter-typeorm-legacy/tests/sqlite/dev.db
 
