@@ -4,5 +4,5 @@
     "rootDir": "src",
     "outDir": "dist"
   },
-  "exclude": ["tests", "dist", "jest.config.js"]
+  "exclude": ["tests", "dist", "jest.config.js", "jest-dynamodb-config.js"]
 }
