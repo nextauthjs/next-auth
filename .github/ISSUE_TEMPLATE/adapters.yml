@@ -10,7 +10,10 @@ body:
     attributes:
       value: |
         Thanks for taking the time to fill out this issue!
+
         ### Important :exclamation:
+
+        **Providing incorrect/insufficient information or skipping steps to reproduce the bug may result in closing the issue or converting to discussion without further explanation.**
   - type: input
     id: title
     attributes:
