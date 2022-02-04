@@ -68,3 +68,7 @@ packages/dev-app/next-auth
 /coverage
 
 .turbo
+
+# docusaurus
+packages/docs/build
+packages/docs/.docusaurus
