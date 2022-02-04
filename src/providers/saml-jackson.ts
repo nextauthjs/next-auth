@@ -3,10 +3,7 @@ import type { OAuthConfig, OAuthUserConfig } from "."
 export interface SAMLJacksonProfile {
   id: string
   email: string
-  firstName: string
-  lastName: string
   name: string
-  email_verified: boolean
   image: null
 }
 
@@ -22,30 +19,19 @@ export default function SAMLJackson<
     authorization: {
       url: `${options.issuer}/api/oauth/authorize`,
       params: {
-        scope: "",
-        response_type: "code",
         provider: "saml",
       },
     },
-    token: {
-      url: `${options.issuer}/api/oauth/token`,
-      params: { grant_type: "authorization_code" },
-    },
+    token: `${options.issuer}/api/oauth/token`,
     userinfo: `${options.issuer}/api/oauth/userinfo`,
     profile(profile) {
       return {
-        id: profile.id || "",
-        firstName: profile.firstName || "",
-        lastName: profile.lastName || "",
+        id: profile.id,
         email: profile.email || "",
-        name: `${profile.firstName || ""} ${profile.lastName || ""}`.trim(),
-        email_verified: true,
+        name: [profile.firstName, profile.lastName].filter(Boolean).join(" "),
         image: null,
       }
     },
-    options: {
-      clientId: options.clientId || "dummy",
-      clientSecret: options.clientSecret || "dummy",
-    },
+    options,
   }
 }
