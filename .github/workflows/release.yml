@@ -25,32 +25,32 @@ jobs:
       - name: Build
         run: npm run build
       - name: Run tests
-        run: npm test -- --coverage --verbose
+        run: yarn test --coverage --verbose
       - name: Coverage
         uses: codecov/codecov-action@v1
         with:
           directory: ./coverage
           fail_ci_if_error: false
-  release-branch:
-    name: Publish branch
-    runs-on: ubuntu-latest
-    needs: test
-    if: ${{ github.event_name == 'push' }}
-    environment: Production
-    steps:
-      - name: Init
-        uses: actions/checkout@v2
-      - name: Setup Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 16
-      - name: Dependencies
-        uses: bahmutov/npm-install@v1
-      - name: Publish to npm and GitHub
-        run: npx semantic-release@17
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+  # release-branch:
+  #   name: Publish branch
+  #   runs-on: ubuntu-latest
+  #   needs: test
+  #   if: ${{ github.event_name == 'push' }}
+  #   environment: Production
+  #   steps:
+  #     - name: Init
+  #       uses: actions/checkout@v2
+  #     - name: Setup Node
+  #       uses: actions/setup-node@v1
+  #       with:
+  #         node-version: 16
+  #     - name: Dependencies
+  #       uses: bahmutov/npm-install@v1
+  #     - name: Publish to npm and GitHub
+  #       run: npx semantic-release@17
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
   release-pr:
     name: Publish PR
     runs-on: ubuntu-latest
@@ -67,14 +67,15 @@ jobs:
       - name: Dependencies
         uses: bahmutov/npm-install@v1
       - name: Determine version
-        uses: ./config/version-pr
+        uses: ./packages/next-auth/config/version-pr
         id: determine-version
         env:
           PR_NUMBER: ${{ github.event.number }}
       - name: Publish to npm
         run: |
+          cd packages/next-auth
           echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
-          npm publish --access public --tag experimental
+          npm publish --dry-run --access public --tag experimental
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Comment version on PR
