@@ -67,7 +67,7 @@ jobs:
       - name: Dependencies
         uses: bahmutov/npm-install@v1
       - name: Determine version
-        uses: ./packages/next-auth/config/version-pr
+        uses: ./.github/version-pr
         id: determine-version
         env:
           PR_NUMBER: ${{ github.event.number }}

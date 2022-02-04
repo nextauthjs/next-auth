@@ -3,7 +3,10 @@ const path = require("path")
 const core = require("@actions/core")
 
 try {
-  const packageJSONPath = path.join(process.cwd(), "package.json")
+  const packageJSONPath = path.join(
+    process.cwd(),
+    "packages/next-auth/package.json"
+  )
   const packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, "utf8"))
 
   const sha8 = process.env.GITHUB_SHA.substr(0, 8)
