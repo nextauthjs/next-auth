@@ -40,11 +40,11 @@ Example: `/auth/error?error=Configuration`
 
 The following errors are passed as error query parameters to the default or overridden sign-in page:
 
-- **OAuthSignin**: Error in constructing an authorization URL ([1](https://github.com/nextauthjs/next-auth/blob/457952bb5abf08b09861b0e5da403080cd5525be/src/server/lib/signin/oauth.js), [2](https://github.com/nextauthjs/next-auth/blob/main/src/server/lib/oauth/pkce-handler.js), [3](https://github.com/nextauthjs/next-auth/blob/main/src/server/lib/oauth/state-handler.js)),
-- **OAuthCallback**: Error in handling the response ([1](https://github.com/nextauthjs/next-auth/blob/main/src/server/lib/oauth/callback.js), [2](https://github.com/nextauthjs/next-auth/blob/main/src/server/lib/oauth/pkce-handler.js), [3](https://github.com/nextauthjs/next-auth/blob/main/src/server/lib/oauth/state-handler.js)) from an OAuth provider.
+- **OAuthSignin**: Error in constructing an authorization URL ([1](https://github.com/nextauthjs/next-auth/blob/457952bb5abf08b09861b0e5da403080cd5525be/src/server/lib/signin/oauth.js), [2](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/lib/oauth/pkce-handler.ts), [3](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/lib/oauth/state-handler.ts)),
+- **OAuthCallback**: Error in handling the response ([1](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/lib/oauth/callback.ts), [2](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/lib/oauth/pkce-handler.ts), [3](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/lib/oauth/state-handler.ts)) from an OAuth provider.
 - **OAuthCreateAccount**: Could not create OAuth provider user in the database.
 - **EmailCreateAccount**: Could not create email provider user in the database.
-- **Callback**: Error in the [OAuth callback handler route](https://github.com/nextauthjs/next-auth/blob/main/src/core/routes/callback.ts)
+- **Callback**: Error in the [OAuth callback handler route](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/routes/callback.ts)
 - **OAuthAccountNotLinked**: If the email on the account is already linked, but not with this OAuth account
 - **EmailSignin**: Sending the e-mail with the verification token failed
 - **CredentialsSignin**: The `authorize` callback returned `null` in the [Credentials provider](/providers/credentials). We don't recommend providing information about which part of the credentials were wrong, as it might be abused by malicious hackers.
