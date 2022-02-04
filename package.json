@@ -11,9 +11,9 @@
     "build": "turbo run build",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint -- --fix",
-    "test:serial:adapters": "turbo run test --concurrency=1 --scope=@next-auth/*adapter* --ignore=\"packages/adapter-pouch/*\"",
-    "test:serial": "turbo run test --concurrency=1 --ignore=\"packages/adapter-pouch/*\"",
-    "test": "turbo run test --ignore=\"packages/adapter-pouch/*\"",
+    "test:serial:adapters": "turbo run test --concurrency=1 --scope=@next-auth/prisma-adapter --scope=@next-auth/typeorm-legacy-adapter",
+    "test:serial": "turbo run test --concurrency=1 --ignore=packages/adapter-pouch/*",
+    "test": "turbo run test --ignore=packages/adapter-pouch/*",
     "setup": "turbo run setup",
     "dev": "turbo run dev --parallel --no-deps --no-cache",
     "version:pr": "node ./config/version-pr"
