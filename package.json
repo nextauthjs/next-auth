@@ -3,19 +3,17 @@
   "version": "0.0.0",
   "private": true,
   "workspaces": {
-    "packages": [
-      "packages/*"
-    ],
-    "nohoist": [
-      "**/react", "**/react/**", "**/react-dom", "**/react-dom/**"
-    ]
+    "packages": ["packages/*"],
+    "nohoist": ["**/react", "**/react/**", "**/react-dom", "**/react-dom/**"]
   },
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "scripts": {
     "build": "turbo run build",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint -- --fix",
-    "test": "turbo run test --concurrency=1",
+    "test:serial:adapters": "turbo run test --concurrency=1 --scope=@next-auth/*adapter*",
+    "test:serial": "turbo run test --concurrency=1",
+    "test": "turbo run test",
     "setup": "turbo run setup",
     "dev": "turbo run dev --parallel --no-deps --no-cache",
     "version:pr": "node ./config/version-pr"
@@ -48,10 +46,7 @@
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
-    "extends": [
-      "standard-with-typescript",
-      "prettier"
-    ],
+    "extends": ["standard-with-typescript", "prettier"],
     "ignorePatterns": [
       "node_modules",
       "next-env.d.ts",
@@ -75,26 +70,16 @@
     },
     "overrides": [
       {
-        "files": [
-          "./**/*test.js"
-        ],
+        "files": ["./**/*test.js"],
         "env": {
           "jest/globals": true
         },
-        "extends": [
-          "plugin:jest/recommended"
-        ],
-        "plugins": [
-          "jest"
-        ]
+        "extends": ["plugin:jest/recommended"],
+        "plugins": ["jest"]
       }
     ]
   },
-  "eslintIgnore": [
-    "./*.d.ts",
-    "**/tests",
-    "**/__tests__"
-  ],
+  "eslintIgnore": ["./*.d.ts", "**/tests", "**/__tests__"],
   "packageManager": "yarn@1.22.17",
   "funding": [
     {
