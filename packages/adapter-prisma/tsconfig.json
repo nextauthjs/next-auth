@@ -4,5 +4,6 @@
     "rootDir": "src",
     "outDir": "dist"
   },
+  "include": ["."],
   "exclude": ["tests", "dist", "jest.config.js"]
 }
