@@ -15,7 +15,7 @@
     "build": "turbo run build",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint -- --fix",
-    "test": "turbo run test",
+    "test": "turbo run test --concurrency=1",
     "setup": "turbo run setup",
     "dev": "turbo run dev --parallel --no-deps --no-cache",
     "version:pr": "node ./config/version-pr"
