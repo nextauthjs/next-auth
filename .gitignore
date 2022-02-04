@@ -10,6 +10,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+firebase-debug.log
 
 
 # Dependencies
@@ -60,9 +61,10 @@ packages/dev-app/next-auth
 /actions-runner
 /_work
 
-# Prisma
+# DB
 /prisma/migrations
 dev.db*
+db.sqlite
 
 # Tests
 coverage
