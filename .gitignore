@@ -17,7 +17,7 @@ node_modules
 
 # Build dirs
 .next
-/build
+build
 dist
 
 # Generated files
@@ -72,5 +72,4 @@ dynamodblocal-bin
 .turbo
 
 # docusaurus
-packages/docs/build
 packages/docs/.docusaurus
