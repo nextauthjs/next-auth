@@ -5,7 +5,9 @@
   "private": true,
   "scripts": {
     "clean": "rm -rf .next",
-    "dev": "yarn run dev:next",
+    "copy:css": "cpx \"../next-auth/css/**/*\" src/css --watch",
+    "watch:css": "cd ../next-auth && npm run watch:css",
+    "dev": "npm-run-all --parallel dev:next watch:css copy:css",
     "dev:next": "npx next dev",
     "build": "npx next build",
     "start": "next start",

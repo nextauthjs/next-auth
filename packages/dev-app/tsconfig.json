@@ -18,7 +18,11 @@
     "isolatedModules": true,
     "incremental": true,
     "jsx": "preserve",
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "next-auth": [ "../next-auth/src" ],
+      "next-auth/*": [ "../next-auth/src/*" ]
+    }
   },
   "include": [
     "next-env.d.ts",

@@ -15,7 +15,7 @@
     },
     "next-auth-app#dev": {
       "cache": false,
-      "dependsOn": ["next-auth#setup", "next-auth#build"]
+      "dependsOn": ["next-auth#setup"]
     }
   }
 }
