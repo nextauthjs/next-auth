@@ -15,7 +15,7 @@ https://console.developers.google.com/apis/credentials
 
 The **Google Provider** comes with a set of default options:
 
-- [Google Provider options](https://github.com/nextauthjs/next-auth/blob/main/src/providers/google.ts)
+- [Google Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/google.ts)
 
 You can override any of the options to suit your own use case.
 

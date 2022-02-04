@@ -19,7 +19,7 @@ https://developer.twitter.com/en/apps
 
 The **Twitter Provider** comes with a set of default options:
 
-- [Twitter Provider options](https://github.com/nextauthjs/next-auth/blob/main/src/providers/twitter.ts)
+- [Twitter Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/twitter.ts)
 
 You can override any of the options to suit your own use case.
 
