@@ -1,5 +1,5 @@
 name: Adapters
-description: File a support request for the any of the adapter packages
+description: File a support request for any of the adapter packages
 labels: [adapter]
 
 # note: markdown sections will NOT appear as part of the issue as per documentation, rather they provide context to the user
