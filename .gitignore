@@ -67,8 +67,9 @@ packages/dev-app/next-auth
 # Tests
 /coverage
 dynamodblocal-bin
+packages/adapter-typeorm-legacy/tests/sqlite/dev.db
 
-
+# Turborepo
 .turbo
 
 # docusaurus
