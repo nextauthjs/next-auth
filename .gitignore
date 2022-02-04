@@ -66,6 +66,8 @@ packages/dev-app/next-auth
 
 # Tests
 /coverage
+dynamodblocal-bin
+
 
 .turbo
 
