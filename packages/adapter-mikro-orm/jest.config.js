@@ -1,1 +1,1 @@
-module.exports = require("../../jest.config")
+module.exports = require("../adapter-test/jest.config")

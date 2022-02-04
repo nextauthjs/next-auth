@@ -1,5 +1,5 @@
 module.exports = {
-  ...require("../../jest.config"),
+  ...require("../adapter-test/jest.config"),
   transform: {
     "^.+\\.jsx?$": "babel-jest",
   },
