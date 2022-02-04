@@ -1,0 +1,72 @@
+{
+  "name": "@next-auth/typeorm-legacy-adapter",
+  "version": "1.0.1",
+  "description": "TypeORM (legacy) adapter for next-auth.",
+  "homepage": "https://next-auth.js.org",
+  "repository": "https://github.com/nextauthjs/adapters",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/adapters/issues"
+  },
+  "author": "Iain Collins",
+  "contributors": [
+    "Balázs Orbán <info@balazsorban.com>"
+  ],
+  "main": "dist/index.js",
+  "files": [
+    "README.md",
+    "dist"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "oauth",
+    "typeorm"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc",
+    "init:db": "tests/init.sh",
+    "test:containers": "tests/test.sh",
+    "test": "tests/test.sh",
+    "mysql": "yarn init:db && tests/mysql/test.sh",
+    "postgres": "yarn init:db && tests/postgresql/test.sh",
+    "sqlite": "tests/sqlite/test.sh"
+  },
+  "devDependencies": {
+    "mssql": "^7.2.1",
+    "mysql": "^2.18.1",
+    "pg": "^8.7.1",
+    "sqlite3": "^5.0.2",
+    "typeorm": "^0.2.37",
+    "typeorm-naming-strategies": "^2.0.0"
+  },
+  "peerDependencies": {
+    "mssql": "^6.2.1 || 7",
+    "mysql": "^2.18.1",
+    "next-auth": "^4.0.1",
+    "pg": "^8.2.1",
+    "sqlite3": "^5.0.2",
+    "typeorm": "^0.2.31"
+  },
+  "peerDependenciesMeta": {
+    "mysql": {
+      "optional": true
+    },
+    "mssql": {
+      "optional": true
+    },
+    "pg": {
+      "optional": true
+    },
+    "sqlite3": {
+      "optional": true
+    }
+  },
+  "jest": {
+    "preset": "adapter-test/jest"
+  }
+}
