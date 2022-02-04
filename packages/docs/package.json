@@ -1,0 +1,54 @@
+{
+  "name": "next-auth-docs",
+  "version": "0.2.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nextauthjs/docs.git"
+  },
+  "scripts": {
+    "start": "npm run generate-providers && docusaurus start --port 8000",
+    "dev": "npm run start",
+    "build": "npm run generate-providers && docusaurus build",
+    "docusaurus": "docusaurus",
+    "swizzle": "docusaurus swizzle",
+    "deploy": "docusaurus deploy",
+    "serve": "docusaurus serve",
+    "clear": "docusaurus clear",
+    "lint": "standard",
+    "lint:fix": "standard --fix",
+    "generate-providers": "node ./scripts/generate-providers.js"
+  },
+  "dependencies": {
+    "@docusaurus/core": "2.0.0-beta.9",
+    "@docusaurus/preset-classic": "2.0.0-beta.9",
+    "@docusaurus/remark-plugin-npm2yarn": "^2.0.0-beta.9",
+    "classnames": "^2.3.1",
+    "lodash.times": "^4.3.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-marquee-slider": "^1.1.5",
+    "remark-github": "^10.1.0",
+    "remark-mermaid-dataurl": "^1.0.2",
+    "styled-components": "^5.3.3"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": false
+  },
+  "devDependencies": {
+    "prettier": "^2.5.0",
+    "standard": "^16.0.4"
+  }
+}
