@@ -7,5 +7,5 @@
     "emitDecoratorMetadata": true,
     "stripInternal": true
   },
-  "exclude": ["tests", "dist"]
+  "exclude": ["tests", "dist", "jest.config.js"]
 }
