@@ -1,10 +1,9 @@
 name: Bug Report
 description: File a bug report
-labels: bug
+labels: [bug]
 
 # note: markdown sections will NOT appear as part of the issue as per documentation, rather they provide context to the user
 # https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-githubs-form-schema#markdown
-
 
 body:
   - type: markdown
@@ -14,25 +13,21 @@ body:
         ### Important :exclamation:
         Please help us maintain this project more efficiently!
         Is this your first time contributing? See this video https://www.youtube.com/watch?v=cuoNzXFLitc
-        
+
         **Providing incorrect/insufficient information or skipping steps to reproduce the bug may result in closing the issue or converting to discussion without further explanation.**
-        
-        Before creating the issue make sure you shouldn't be creating it in one the below repos instead:
-        - Docs related: https://github.com/nextauthjs/docs
-        - Adapter related: https://github.com/nextauthjs/adapters
-        
-        If you are in the correct repo, then proceed by providing the following information:
+
+        Please proceed by providing the following information:
   - type: textarea
     id: description
-    attributes: 
+    attributes:
       label: Description 🐜
       description: Please provide a clear and concise description of the bug in NextAuth.js
     validations:
-      required: true  
+      required: true
 
   - type: dropdown
     id: ownproject
-    attributes: 
+    attributes:
       label: Is this a bug in your own project?
       description: 🚧 – _Do not report bugs with your own project here; ask for help [by raising a question instead](https://github.com/nextauthjs/next-auth/issues/new?assignees=&labels=question&template=question.md) or use the [Discussions tab](https://github.com/nextauthjs/next-auth/discussions) - this helps us reduce the maintenance overhead._
       multiple: false
@@ -41,24 +36,23 @@ body:
         - "No"
     validations:
       required: true
-      
+
   - type: textarea
     id: reproduction
     attributes:
-      label: How to reproduce ☕️ 
+      label: How to reproduce ☕️
       description: Please provide a link or code snippets to a minimal reproduction of the bug
     validations:
-      required: true 
+      required: true
   - type: markdown
     attributes:
       value: |
         We encourage you to use one of the templates set up on **CodeSandbox** to reproduce your issue:
         - [`next-auth-example`](https://codesandbox.io/s/next-auth-example-1kktb)
-        - [`next-auth-typescript-example`](https://codesandbox.io/s/next-auth-typescript-example-se32w)
-  
+
   - type: textarea
     id: logs
-    attributes: 
+    attributes:
       label: Screenshots / Logs 📽
       description: We can address the bug you found much faster if you provide contextual screenshots or screen recordings showcasing the issue.
   - type: markdown
@@ -70,7 +64,7 @@ body:
 
   - type: textarea
     id: environment
-    attributes: 
+    attributes:
       label: Environment 🖥
     validations:
       required: true
@@ -82,7 +76,7 @@ body:
         ```sh
         npx envinfo --system --binaries --browsers --npmPackages "next,next-auth,react"
         ```
- 
+
   - type: dropdown
     id: pr
     attributes:
@@ -94,7 +88,6 @@ body:
     validations:
       required: true
   - type: markdown
-    attributes: 
+    attributes:
       value: |
         It takes a lot of work 🏋🏻‍♀️ maintaining a library like `next-auth`; any contribution is more than welcome 💚
-  
