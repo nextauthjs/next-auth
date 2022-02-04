@@ -23,7 +23,7 @@
   "scripts": {
     "build": "tsc",
     "tdd": "jest --watch",
-    "test": "jest"
+    "test:wip": "jest"
   },
   "files": [
     "README.md",

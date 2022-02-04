@@ -1,4 +1,4 @@
-import { runBasicTests } from "../../../basic-tests"
+import { runBasicTests } from "adapter-test"
 import { FirebaseAdapter } from "../src"
 import { docSnapshotToObject, querySnapshotToObject } from "../src/utils"
 

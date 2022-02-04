@@ -1,4 +1,4 @@
-import { runBasicTests } from "../../../basic-tests"
+import { runBasicTests } from "adapter-test"
 import { PrismaClient } from "@prisma/client"
 import { PrismaAdapter } from "../src"
 const prisma = new PrismaClient()

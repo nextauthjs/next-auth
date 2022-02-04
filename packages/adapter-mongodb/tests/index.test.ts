@@ -1,4 +1,4 @@
-import { runBasicTests } from "../../../basic-tests"
+import { runBasicTests } from "adapter-test"
 import { defaultCollections, format, MongoDBAdapter, _id } from "../src"
 import { MongoClient } from "mongodb"
 

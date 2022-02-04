@@ -7,7 +7,7 @@ import {
   Property,
   Unique,
 } from "@mikro-orm/core"
-import { randomUUID } from "../../../basic-tests"
+import { randomUUID } from "adapter-test"
 import type { defaultEntities } from "../src"
 import { Account, Session } from "../src/entities"
 

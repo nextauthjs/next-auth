@@ -1,5 +1,5 @@
 import upstashRedisClient from "@upstash/redis"
-import { runBasicTests } from "../../../basic-tests"
+import { runBasicTests } from "adapter-test"
 import { reviveFromJson, UpstashRedisAdapter } from "../src"
 import "dotenv/config"
 

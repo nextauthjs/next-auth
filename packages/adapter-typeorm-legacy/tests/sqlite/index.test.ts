@@ -1,4 +1,4 @@
-import { runBasicTests } from "../../../../basic-tests"
+import { runBasicTests } from "../../../adapter-test"
 import { TypeORMLegacyAdapter } from "../../src"
 import { db } from "../helpers"
 import { SnakeNamingStrategy } from "typeorm-naming-strategies"

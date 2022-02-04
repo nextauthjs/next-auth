@@ -1,5 +1,5 @@
 import { MikroORM, wrap } from "@mikro-orm/core"
-import { runBasicTests } from "../../../basic-tests"
+import { runBasicTests } from "adapter-test"
 import { MikroOrmAdapter, defaultEntities } from "../src"
 import { User, VeryImportantEntity } from "./testEntities"
 

@@ -6,7 +6,7 @@ import find from "pouchdb-find"
 import { ulid } from "ulid"
 import Providers from "next-auth/providers"
 import { PouchDBAdapter } from "../src"
-import { runBasicTests } from "../../../basic-tests"
+import { runBasicTests } from "adapter-test"
 
 // pouchdb setup
 PouchDB.plugin(memoryAdapter).plugin(find)

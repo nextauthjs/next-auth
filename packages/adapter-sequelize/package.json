@@ -21,7 +21,7 @@
     "access": "public"
   },
   "scripts": {
-    "test": "jest",
+    "test:wip": "jest",
     "build": "tsc"
   },
   "files": [

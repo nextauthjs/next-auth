@@ -26,7 +26,7 @@
     "init:custom": "prisma migrate dev --name init-custom --schema ./prisma/custom.prisma",
     "test:default": "yarn init:default && jest",
     "test:custom": "yarn init:custom && CUSTOM_MODEL=1 jest",
-    "test": "yarn test:default && yarn test:custom",
+    "test:wip": "yarn test:default && yarn test:custom",
     "build": "prisma generate && tsc",
     "studio": "prisma studio"
   },
