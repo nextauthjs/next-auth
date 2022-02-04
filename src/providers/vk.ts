@@ -14,7 +14,7 @@ export interface VkProfile {
 export default function VK<
   P extends Record<string, any> = VkProfile
 >(options: OAuthUserConfig<P>): OAuthConfig<P> {
-  const apiVersion = "5.126" // https://vk.com/dev/versions
+  const apiVersion = "5.131" // https://vk.com/dev/versions
 
   return {
     id: "vk",
