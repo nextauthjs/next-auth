@@ -5,9 +5,6 @@
   "workspaces": {
     "packages": [
       "packages/*"
-    ],
-    "nohoist": [
-      "**/react", "**/react/**", "**/react-dom", "**/react-dom/**"
     ]
   },
   "repository": "https://github.com/nextauthjs/next-auth.git",
