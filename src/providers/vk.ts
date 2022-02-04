@@ -21,24 +21,10 @@ export default function VK<
     name: "VK",
     type: "oauth",
     authorization: `https://oauth.vk.com/authorize?scope=email&v=${apiVersion}`,
-    token: {
-      url: `https://oauth.vk.com/access_token?v=${apiVersion}`,
-      async request({ client, params, checks, provider }) {
-        const response = await client.oauthCallback(
-          provider.callbackUrl,
-          params,
-          checks,
-          {
-            exchangeBody: {
-              client_id: options.clientId,
-              client_secret: options.clientSecret,
-            },
-          }
-        )
-        const { user_id, ...tokens } = response
-        return { tokens }
-      },
+    client: {
+      token_endpoint_auth_method: "client_secret_post",
     },
+    token: `https://oauth.vk.com/access_token?v=${apiVersion}`,
     userinfo: `https://api.vk.com/method/users.get?fields=photo_100&v=${apiVersion}`,
     profile(result: P) {
       const profile = result.response?.[0] ?? {}
