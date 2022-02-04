@@ -4,7 +4,9 @@
     "build": {
       "dependsOn": ["^build"]
     },
-    "test": {},
+    "test": {
+      "dependsOn": ["build"]
+    },
     "test:ci": {
       "dependsOn": ["lint"]
     },
