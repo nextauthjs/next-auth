@@ -65,6 +65,6 @@ packages/dev-app/next-auth
 /prisma/migrations
 
 # Tests
-/coverage
+coverage
 
 .turbo
