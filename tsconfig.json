@@ -2,8 +2,6 @@
   "compilerOptions": {
     "emitDeclarationOnly": true,
     "strictNullChecks": true,
-    "baseUrl": ".",
-    "outDir": ".",
     "target": "es2019",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -20,5 +18,5 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true
   },
-  "exclude": ["./*.js", "./*.d.ts", "app", "**/tests", "**/__tests__", "config"]
+  "exclude": ["./*.js", "./*.d.ts", "packages/dev-app", "**/tests", "**/__tests__"]
 }

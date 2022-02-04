@@ -1,0 +1,100 @@
+.navbar {
+  box-shadow: none;
+}
+
+.navbar__toggle {
+  margin-right: 1rem !important;
+}
+
+.navbar__title {
+  font-size: 1.2rem;
+  margin-left: 0.2rem;
+  display: none;
+}
+
+.navbar-sidebar__brand .navbar__title {
+  display: inline;
+}
+
+.navbar__item.navbar__link[href*="github"],
+.navbar__item.navbar__link[href*="npmjs"] {
+  position: relative;
+  padding: 0 1.5rem 0 0;
+  display: flex;
+  font-size: 0;
+}
+
+.navbar__item.navbar__link[href*="github"]:before {
+  content: "";
+  width: 1.5rem;
+  height: 1.5rem;
+  background-image: url("/img/brand-github.svg");
+  background-repeat: no-repeat;
+}
+
+.navbar__items .react-toggle {
+  margin-right: 5px;
+}
+
+.react-toggle--focus .react-toggle-thumb,
+.react-toggle:hover .react-toggle-thumb {
+  box-shadow: none !important;
+}
+
+.navbar__search-input:focus {
+  outline: none;
+  box-shadow: rgb(255, 255, 255) 0px 0px 0px 0px,
+    rgba(19, 19, 19, 0.2) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px;
+  transition: box-shadow 350ms ease-in-out;
+}
+html[data-theme="dark"] .navbar__search-input:focus {
+  box-shadow: rgb(255, 255, 255) 0px 0px 0px 0px,
+    rgba(29, 29, 29, 0.5) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px;
+}
+
+html[data-theme="dark"] .navbar__item.navbar__link[href*="github"]:before {
+  background-image: url("/img/brand-github-inverted.svg");
+}
+
+.navbar__item.navbar__link[href*="npmjs"]:before {
+  content: "";
+  width: 3rem;
+  height: 1.2rem;
+  margin-top: 0.2rem;
+  background-image: url("/img/brand-npm.svg");
+  background-repeat: no-repeat;
+}
+
+html[data-theme="dark"] .navbar__item.navbar__link[href*="npm"]:before {
+  background-image: url("/img/brand-npm-inverted.svg");
+}
+
+@media screen and (max-width: 966px) {
+  .navbar__item.navbar__link[href*="github"],
+  .navbar__item.navbar__link[href*="npmjs"] {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 420px) {
+  .navbar__title {
+    display: inline;
+  }
+}
+
+.github-counter {
+  position: absolute;
+  color: #000;
+  top: -10px;
+  right: 5px;
+  font-size: 9px;
+  background-color: #ccc;
+  padding: 2px 5px;
+  border-radius: 10px;
+  z-index: -1;
+}
+
+html[data-theme="dark"] .github-counter {
+  background-color: #222;
+  color: #fff;
+}

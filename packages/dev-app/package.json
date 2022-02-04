@@ -1,0 +1,35 @@
+{
+  "name": "next-auth-app",
+  "version": "1.0.0",
+  "description": "NextAuth.js Developer app",
+  "private": true,
+  "scripts": {
+    "clean": "rm -rf .next",
+    "copy:css": "cpx \"../next-auth/css/**/*\" src/css --watch",
+    "watch:css": "cd ../next-auth && npm run watch:css",
+    "dev": "npm-run-all --parallel dev:next watch:css copy:css",
+    "dev:next": "npx next dev",
+    "build": "npx next build",
+    "start": "next start",
+    "email": "npx fake-smtp-server",
+    "start:email": "npm run email"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "@next-auth/fauna-adapter": "^1.0.1",
+    "@next-auth/prisma-adapter": "^1.0.1",
+    "@prisma/client": "^3.7.0",
+    "fake-smtp-server": "^0.8.0",
+    "faunadb": "^4.4.1",
+    "next": "^12.0.8",
+    "next-auth": "4.1.2",
+    "nodemailer": "^6.7.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.37",
+    "@types/react-dom": "^17.0.11",
+    "prisma": "^3.7.0"
+  }
+}
