@@ -3,27 +3,28 @@ test:
   - types/tests/**/*
 
 providers:
-  - src/providers/**/*
+  - packages/next-auth/src/providers/**/*
   - test/integration/**/*
 
 adapters:
-  - src/adapters/**/*
-
-databases:
-  - test/docker/databases/**/*
-  - test/fixtures/**/*
+  - packages/next-auth/src/adapters.ts
+  - packages/*-adapter/**
 
 core:
-  - src/**/*
+  - packages/next-auth/src/**/*
 
 style:
-  - src/css/**/*
+  - packages/next-auth/src/css/**/*
 
 client:
-  - src/client/**/*
+  - packages/next-auth/src/client/**/*
+  - packages/next-auth/src/react/**/*
 
 pages:
-  - src/server/pages/**/*
+  - packages/next-auth/src/core/pages/**/*
 
 TypeScript:
-  - types/**/*
+  - packages/next-auth/src/**/types.ts
+
+docs:
+  - packages/docs/docs/**/*

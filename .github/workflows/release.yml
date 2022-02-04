@@ -25,7 +25,7 @@ jobs:
       - name: Build
         run: npm run build
       - name: Run tests
-        run: npm test -- --coverage --verbose
+        run: npm run test -- -- --coverage --verbose
       - name: Coverage
         uses: codecov/codecov-action@v1
         with:
@@ -47,7 +47,9 @@ jobs:
       - name: Dependencies
         uses: bahmutov/npm-install@v1
       - name: Publish to npm and GitHub
-        run: npx semantic-release@17
+        run: |
+          cd packages/next-auth
+          npx semantic-release@17
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -67,12 +69,13 @@ jobs:
       - name: Dependencies
         uses: bahmutov/npm-install@v1
       - name: Determine version
-        uses: ./config/version-pr
+        uses: ./.github/version-pr
         id: determine-version
         env:
           PR_NUMBER: ${{ github.event.number }}
       - name: Publish to npm
         run: |
+          cd packages/next-auth
           echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
           npm publish --access public --tag experimental
         env:
