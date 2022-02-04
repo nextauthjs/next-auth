@@ -69,6 +69,8 @@ db.sqlite
 # Tests
 coverage
 dynamodblocal-bin
+firestore-debug.log
+test.schema.gql
 
 # Turborepo
 .turbo
