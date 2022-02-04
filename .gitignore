@@ -64,6 +64,7 @@ packages/dev-app/next-auth
 # DB
 /prisma/migrations
 dev.db*
+packages/adapter-prisma/prisma/dev.db
 db.sqlite
 
 # Tests
