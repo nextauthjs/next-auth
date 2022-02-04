@@ -32,10 +32,12 @@ NextAuth.js is a complete open source authentication solution for [Next.js](http
 
 It is designed from the ground up to support Next.js and Serverless.
 
-This is the core repo for NextAuth.js. Check the repos below if you are interested in additional information:
+This is a monorepo containing the following packages / projects:
 
-- Docs related: https://github.com/nextauthjs/docs
-- Adapter related: https://github.com/nextauthjs/adapters
+1. The primary `next-auth` package
+2. A development test application
+3. All `@next-auth/*-adapter` packages
+4. The documentation site
 
 ## Getting Started
 
@@ -155,7 +157,7 @@ Use the `<SessionProvider>` to allow instances of `useSession()` to share the se
 import { SessionProvider } from "next-auth/react"
 
 export default function App({
-  Component, 
+  Component,
   pageProps: { session, ...pageProps }
 }) {
   return (
