@@ -1,0 +1,9 @@
+.provider-name-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.provider-name-list__comma {
+  display: inline-flex;
+  margin-right: 5px;
+}
