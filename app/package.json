@@ -22,7 +22,7 @@
     "@prisma/client": "^3.7.0",
     "fake-smtp-server": "^0.8.0",
     "faunadb": "^4.4.1",
-    "next": "^12.0.7",
+    "next": "^12.0.8",
     "nodemailer": "^6.7.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"

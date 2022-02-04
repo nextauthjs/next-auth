@@ -36,6 +36,8 @@ node_modules
 /index.d.ts
 /index.js
 /next
+/middleware.d.ts
+/middleware.js
 
 # Development app
 app/src/css
