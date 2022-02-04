@@ -20,8 +20,8 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "next-auth": [ "../src" ],
-      "next-auth/*": [ "../src/*" ]
+      "next-auth": [ "../next-auth/src" ],
+      "next-auth/*": [ "../next-auth/src/*" ]
     }
   },
   "include": [

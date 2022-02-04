@@ -5,12 +5,11 @@
   "private": true,
   "scripts": {
     "clean": "rm -rf .next",
-    "postinstall": "rm -rf node_modules/next-auth",
-    "dev": "npm-run-all --parallel dev:next watch:css copy:css ",
-    "dev:next": "next dev",
-    "build": "next build",
-    "copy:css": "cpx \"../css/**/*\" src/css --watch",
-    "watch:css": "cd .. && npm run watch:css",
+    "copy:css": "cpx \"../next-auth/css/**/*\" src/css --watch",
+    "watch:css": "cd ../next-auth && npm run watch:css",
+    "dev": "npm-run-all --parallel dev:next watch:css copy:css",
+    "dev:next": "npx next dev",
+    "build": "npx next build",
     "start": "next start",
     "email": "npx fake-smtp-server",
     "start:email": "npm run email"
@@ -23,13 +22,14 @@
     "fake-smtp-server": "^0.8.0",
     "faunadb": "^4.4.1",
     "next": "^12.0.8",
+    "next-auth": "4.1.2",
     "nodemailer": "^6.7.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },
   "devDependencies": {
-    "cpx": "^1.5.0",
-    "npm-run-all": "^4.1.5",
+    "@types/react": "^17.0.37",
+    "@types/react-dom": "^17.0.11",
     "prisma": "^3.7.0"
   }
 }

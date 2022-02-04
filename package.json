@@ -1,137 +1,44 @@
 {
-  "name": "next-auth",
-  "version": "0.0.0-semantically-released",
-  "description": "Authentication for Next.js",
-  "homepage": "https://next-auth.js.org",
+  "name": "root",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/react", "**/react/**", "**/react-dom", "**/react-dom/**"
+    ]
+  },
   "repository": "https://github.com/nextauthjs/next-auth.git",
-  "author": "Iain Collins <me@iaincollins.com>",
-  "contributors": [
-    "Balázs Orbán <info@balazsorban.com>",
-    "Nico Domino <yo@ndo.dev>",
-    "Lluis Agusti <hi@llu.lu>"
-  ],
-  "main": "index.js",
-  "module": "index.js",
-  "types": "index.d.ts",
-  "keywords": [
-    "react",
-    "nodejs",
-    "oauth",
-    "jwt",
-    "oauth2",
-    "authentication",
-    "nextjs",
-    "csrf",
-    "oidc",
-    "nextauth"
-  ],
-  "exports": {
-    ".": "./index.js",
-    "./jwt": "./jwt/index.js",
-    "./react": "./react/index.js",
-    "./core": "./core/index.js",
-    "./next": "./next/index.js",
-    "./middleware": "./middleware.js",
-    "./client/_utils": "./client/_utils.js",
-    "./providers/*": "./providers/*.js"
-  },
   "scripts": {
-    "build": "npm run build:js && npm run build:css",
-    "clean": "rm -rf client css lib providers core jwt react next index.d.ts index.js adapters.d.ts middleware.d.ts middleware.js",
-    "build:js": "npm run clean && npm run generate-providers && tsc && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
-    "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir . && node config/wrap-css.js",
-    "dev:setup": "npm i && npm run generate-providers && npm run build:css && cd app && npm i",
-    "dev": "cd app && npm run dev",
-    "watch:css": "postcss --config config/postcss.config.js --watch src/**/*.css --base src --dir .",
-    "test": "jest --config ./config/jest.config.js",
-    "test:ci": "npm run lint && npm run test -- --ci",
-    "prepublishOnly": "npm run build",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "version:pr": "node ./config/version-pr",
-    "generate-providers": "node ./config/generate-providers.js"
-  },
-  "files": [
-    "lib",
-    "css",
-    "jwt",
-    "react",
-    "next",
-    "client",
-    "providers",
-    "core",
-    "index.d.ts",
-    "index.js",
-    "adapters.d.ts",
-    "middleware.d.ts",
-    "middleware.js"
-  ],
-  "license": "ISC",
-  "dependencies": {
-    "@babel/runtime": "^7.16.3",
-    "@panva/hkdf": "^1.0.1",
-    "cookie": "^0.4.1",
-    "jose": "^4.3.7",
-    "oauth": "^0.9.15",
-    "openid-client": "^5.1.0",
-    "preact": "^10.6.3",
-    "preact-render-to-string": "^5.1.19",
-    "uuid": "^8.3.2"
-  },
-  "peerDependencies": {
-    "nodemailer": "^6.6.5",
-    "react": "^17.0.2 || ^18.0.0-0",
-    "react-dom": "^17.0.2 || ^18.0.0-0"
-  },
-  "peerDependenciesMeta": {
-    "nodemailer": {
-      "optional": true
-    }
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint -- --fix",
+    "test": "turbo run test",
+    "setup": "turbo run setup",
+    "dev": "turbo run dev --parallel --no-deps --no-cache",
+    "version:pr": "node ./config/version-pr"
   },
   "devDependencies": {
     "@actions/core": "^1.6.0",
-    "@babel/cli": "^7.16.0",
-    "@babel/core": "^7.16.0",
-    "@babel/plugin-proposal-optional-catch-binding": "^7.16.0",
-    "@babel/plugin-transform-runtime": "^7.16.4",
-    "@babel/preset-env": "^7.16.4",
-    "@babel/preset-react": "^7.16.0",
-    "@babel/preset-typescript": "^7.16.0",
-    "@testing-library/jest-dom": "^5.16.1",
-    "@testing-library/react": "^12.1.2",
-    "@testing-library/react-hooks": "^7.0.2",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/node": "^16.11.12",
-    "@types/nodemailer": "^6.4.4",
-    "@types/oauth": "^0.9.1",
-    "@types/react": "^17.0.37",
-    "@types/react-dom": "^17.0.11",
+    "@changesets/cli": "^2.20.0",
+    "@typescript-eslint/eslint-plugin": "^5.10.2",
     "@typescript-eslint/parser": "^4.33.0",
-    "autoprefixer": "^10.4.0",
-    "babel-jest": "^27.4.2",
-    "babel-plugin-jsx-pragmatic": "^1.0.2",
-    "babel-preset-preact": "^2.0.0",
     "conventional-changelog-conventionalcommits": "4.6.1",
-    "cssnano": "^5.0.12",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard-with-typescript": "^21.0.1",
+    "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-jest": "^25.3.0",
     "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.0.0",
     "fs-extra": "^10.0.0",
     "husky": "^7.0.4",
-    "jest": "^27.4.3",
-    "jest-watch-typeahead": "^1.0.0",
-    "msw": "^0.36.3",
-    "next": "12.0.9",
-    "postcss-cli": "^9.0.2",
-    "postcss-nested": "^5.0.6",
     "prettier": "2.4.1",
     "pretty-quick": "^3.1.2",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "typescript": "^4.5.2",
-    "whatwg-fetch": "^3.6.2"
+    "turbo": "^1.1.2",
+    "typescript": "^4.5.2"
   },
   "engines": {
     "node": "^12.19.0 || ^14.15.0 || ^16.13.0"
@@ -141,9 +48,6 @@
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-      "project": "./tsconfig.eslint.json"
-    },
     "extends": [
       "standard-with-typescript",
       "prettier"
@@ -191,32 +95,7 @@
     "**/tests",
     "**/__tests__"
   ],
-  "release": {
-    "branches": [
-      "+([0-9])?(.{+([0-9]),x}).x",
-      "main",
-      {
-        "name": "beta",
-        "prerelease": true
-      },
-      {
-        "name": "next",
-        "prerelease": true
-      }
-    ],
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/npm",
-      [
-        "@semantic-release/github",
-        {
-          "releasedLabels": false,
-          "successComment": false
-        }
-      ]
-    ]
-  },
+  "packageManager": "yarn@1.22.17",
   "funding": [
     {
       "type": "github",

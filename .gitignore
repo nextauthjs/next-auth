@@ -11,7 +11,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-yarn.lock
 
 # Dependencies
 node_modules
@@ -24,29 +23,30 @@ node_modules
 # Generated files
 .docusaurus
 .cache-loader
-/providers
-/src/providers/oauth-types.ts
-/client
-/css
-/lib
-/core
-/jwt
-/react
-/adapters.d.ts
-/index.d.ts
-/index.js
-/next
-/middleware.d.ts
-/middleware.js
+packages/next-auth/providers
+packages/next-auth/src/providers/oauth-types.ts
+packages/next-auth/client
+packages/next-auth/css
+packages/next-auth/lib
+packages/next-auth/core
+packages/next-auth/jwt
+packages/next-auth/react
+packages/next-auth/adapters.d.ts
+packages/next-auth/index.d.ts
+packages/next-auth/index.js
+packages/next-auth/next
+packages/next-auth/middleware.d.ts
+packages/next-auth/middleware.js
 
-# Development app
-app/src/css
-app/package-lock.json
-app/yarn.lock
-app/prisma/migrations
-app/prisma/dev.db*
-app/dist
-app/next-auth
+# Development dev-app
+packages/dev-app/src/css
+packages/dev-app/css
+packages/dev-app/package-lock.json
+packages/dev-app/yarn.lock
+packages/dev-app/prisma/migrations
+packages/dev-app/prisma/dev.db*
+packages/dev-app/dist
+packages/dev-app/next-auth
 
 # VS
 /.vs/slnx.sqlite-journal
@@ -66,3 +66,5 @@ app/next-auth
 
 # Tests
 /coverage
+
+.turbo
