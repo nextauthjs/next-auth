@@ -22,10 +22,10 @@ jobs:
           node-version: 16
       - name: Dependencies
         uses: bahmutov/npm-install@v1
-      - name: Build
-        run: npm run build
+      # - name: Build
+      #   run: npm run build
       - name: Run tests
-        run: yarn test --coverage --verbose
+        run: npm run test -- -- --coverage --verbose
       - name: Coverage
         uses: codecov/codecov-action@v1
         with:
