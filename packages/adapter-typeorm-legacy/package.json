@@ -65,5 +65,8 @@
     "sqlite3": {
       "optional": true
     }
+  },
+  "jest": {
+    "preset": "adapter-test/jest"
   }
 }

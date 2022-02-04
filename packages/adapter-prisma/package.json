@@ -34,5 +34,8 @@
   "devDependencies": {
     "@prisma/client": "^3.0.2",
     "prisma": "^3.0.2"
+  },
+  "jest": {
+    "preset": "adapter-test/jest"
   }
 }

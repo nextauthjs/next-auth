@@ -34,5 +34,8 @@
   },
   "devDependencies": {
     "sequelize": "^6.6.5"
+  },
+  "jest": {
+    "preset": "adapter-test/jest"
   }
 }

@@ -43,5 +43,8 @@
   "dependencies": {
     "jsonwebtoken": "^8.5.1",
     "node-fetch": "^2.6.1"
+  },
+  "jest": {
+    "preset": "adapter-test/jest"
   }
 }

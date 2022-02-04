@@ -26,5 +26,8 @@
   },
   "devDependencies": {
     "mongodb": "^4.1.1"
+  },
+  "jest": {
+    "preset": "adapter-test/jest"
   }
 }

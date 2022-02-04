@@ -6,6 +6,9 @@
     "Balázs Orbán <info@balazsorban.com>",
     "Nico Domino <yo@ndo.dev>"
   ],
+  "files": [
+    "jest"
+  ],
   "license": "ISC",
   "private": true,
   "devDependencies": {

@@ -38,5 +38,8 @@
   "devDependencies": {
     "@mikro-orm/core": "^5.0.0-dev.527",
     "@mikro-orm/sqlite": "^5.0.0-dev.527"
+  },
+  "jest": {
+    "preset": "adapter-test/jest"
   }
 }

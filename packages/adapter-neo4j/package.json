@@ -42,5 +42,8 @@
   },
   "dependencies": {
     "uuid": "^8.3.2"
+  },
+  "jest": {
+    "preset": "adapter-test/jest"
   }
 }
