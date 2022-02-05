@@ -5,7 +5,43 @@ title: Models
 
 NextAuth.js can be used with any database. Models tell you what structures NextAuth.js expects from your database. Models will vary slightly depending on which adapter you use, but in general will look something like this.
 
-![v4 Schema](/img/nextauth_v4_schema.png)
+```mermaid
+erDiagram
+  User ||--|{ Account : ""
+  User {
+  string name
+  string email
+  timestamp emailVerified
+  string image
+  }
+  User ||--|{ Session : ""
+  Session {
+  timestamp expires
+  string sessionToken
+  string userId
+  }
+  Account {
+  string id
+  string userId
+  string type
+  string provider
+  string providerAccountId
+  string refresh_token
+  string access_token
+  int expires_at
+  string token_type
+  string scope
+  string id_token
+  string session_state
+  string oauth_token_secret
+  string oauth_token
+  }
+  VerificationToken {
+  string token
+  timestamp expires
+  string identifier
+  }
+```
 
 More information about each Model / Table can be found below.
 

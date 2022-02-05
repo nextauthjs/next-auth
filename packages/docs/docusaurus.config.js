@@ -152,8 +152,8 @@ module.exports = {
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
           remarkPlugins: [
-            require("remark-mermaid-dataurl"),
             require("remark-github"),
+            require("mdx-mermaid"),
             [require("@docusaurus/remark-plugin-npm2yarn"), { sync: true }],
           ],
           versions: {

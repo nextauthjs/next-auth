@@ -45,6 +45,10 @@ html[data-theme="dark"] {
   --ifm-background-color: #1f201c;
 }
 
+html[data-theme="dark"] svg[id^="mermaid-svg"] text[id*="-attr"] {
+  fill: var(--ifm-background-color) !important;
+}
+
 @import "hero.css";
 @import "admonitions.css";
 @import "buttons.css";
