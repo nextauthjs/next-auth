@@ -9,6 +9,7 @@ NextAuth.js can be used with any database. Models tell you what structures NextA
 erDiagram
   User ||--|{ Account : ""
   User {
+  string id
   string name
   string email
   timestamp emailVerified
@@ -16,6 +17,7 @@ erDiagram
   }
   User ||--|{ Session : ""
   Session {
+  string id
   timestamp expires
   string sessionToken
   string userId
@@ -37,9 +39,9 @@ erDiagram
   string oauth_token
   }
   VerificationToken {
+  string identifier
   string token
   timestamp expires
-  string identifier
   }
 ```
 
