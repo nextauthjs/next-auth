@@ -1,0 +1,49 @@
+{
+  "name": "@next-auth/neo4j-adapter",
+  "version": "1.0.2",
+  "description": "neo4j adapter for next-auth.",
+  "homepage": "https://next-auth.js.org",
+  "repository": "https://github.com/nextauthjs/adapters",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "Davey Brown",
+  "contributors": [
+    "Balázs Orbán <info@balazsorban.com>"
+  ],
+  "main": "dist/index.js",
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "oauth",
+    "neo4j"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test:watch": "./tests/test.sh -w",
+    "test": "./tests/test.sh",
+    "build": "tsc"
+  },
+  "files": [
+    "README.md",
+    "dist"
+  ],
+  "peerDependencies": {
+    "neo4j-driver": "^4.0.0",
+    "next-auth": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/uuid": "^8.3.3",
+    "neo4j-driver": "^4.4.0"
+  },
+  "dependencies": {
+    "uuid": "^8.3.2"
+  },
+  "jest": {
+    "preset": "adapter-test/jest"
+  }
+}

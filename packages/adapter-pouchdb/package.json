@@ -1,0 +1,42 @@
+{
+  "name": "@next-auth/pouchdb-adapter",
+  "version": "0.1.3",
+  "description": "PouchDB adapter for next-auth.",
+  "homepage": "https://next-auth.js.org",
+  "repository": "https://github.com/nextauthjs/adapters",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "jpbourgeon <jeanphilippe.bourgeon@gmail.com> (https://github.com/jpbourgeon)",
+  "main": "dist/index.js",
+  "license": "ISC",
+  "keywords": ["next-auth", "next.js", "oauth", "pouchdb"],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build:wip": "tsc",
+    "tdd": "jest --watch",
+    "test:wip": "jest"
+  },
+  "files": ["README.md", "dist"],
+  "peerDependencies": {
+    "next-auth": "^3.23.3",
+    "pouchdb": "^7.2.2",
+    "pouchdb-find": "^7.2.2"
+  },
+  "dependencies": {
+    "crypto": "^1.0.1",
+    "ulid": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/pouchdb": "^6.4.0",
+    "pouchdb": "^7.2.2",
+    "pouchdb-adapter-memory": "^7.2.2",
+    "pouchdb-find": "^7.2.2"
+  },
+  "jest": {
+    "preset": "adapter-test/jest"
+  }
+}

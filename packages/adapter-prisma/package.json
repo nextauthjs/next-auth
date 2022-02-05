@@ -1,0 +1,41 @@
+{
+  "name": "@next-auth/prisma-adapter",
+  "version": "1.0.1",
+  "description": "Prisma adapter for next-auth.",
+  "homepage": "https://next-auth.js.org",
+  "repository": "https://github.com/nextauthjs/adapters",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "William Luke",
+  "main": "dist/index.js",
+  "license": "ISC",
+  "keywords": ["next-auth", "next.js", "oauth", "prisma"],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "clean": "rm -rf ./prisma/migrations && rm ./prisma/dev.db*",
+    "init:default": "prisma migrate dev --name init --skip-seed",
+    "init:custom": "prisma migrate dev --name init-custom --schema ./prisma/custom.prisma",
+    "test": "yarn init:default && jest ./tests/*.test.ts",
+    "test:default": "yarn init:default && jest ./tests/**/*.test.ts",
+    "test:custom": "yarn init:custom && CUSTOM_MODEL=1 jest ./tests/**/*.test.ts",
+    "test:wip": "yarn test:default && yarn test:custom",
+    "build": "prisma generate && tsc",
+    "studio": "prisma studio"
+  },
+  "files": ["README.md", "dist"],
+  "peerDependencies": {
+    "@prisma/client": ">=2.26.0 || >=3",
+    "next-auth": "^4.0.1"
+  },
+  "devDependencies": {
+    "@prisma/client": "^3.0.2",
+    "prisma": "^3.0.2"
+  },
+  "jest": {
+    "preset": "adapter-test/jest"
+  }
+}
