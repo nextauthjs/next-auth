@@ -73,6 +73,13 @@ In addition, you can define a `theme.brandColor` to define a custom accent color
 
 In order to get the available authentication providers and the URLs to use for them, you can make a request to the API endpoint `/api/auth/providers`:
 
+<iframe src="https://codesandbox.io/embed/next-auth-example-oauth-signin-2h6ej?fontsize=14&hidenavigation=1&initialpath=%2Fauth%2Foauth-signin&module=%2Fpages%2Fauth%2Foauth-signin.jsx&theme=dark"
+     style={{ width:'100%', height:'500px', border:'0',  borderRadius: '4px', overflow:'hidden' }}
+     title="next-auth-example-oauth-signin"
+     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+   ></iframe>
+
 ```jsx title="pages/auth/signin.js"
 import { getProviders, signIn } from "next-auth/react"
 
@@ -90,25 +97,22 @@ export default function SignIn({ providers }) {
   )
 }
 
-// This is the recommended way for Next.js 9.3 or newer
 export async function getServerSideProps(context) {
   const providers = await getProviders()
   return {
     props: { providers },
   }
 }
-
-/*
-// If older than Next.js 9.3
-SignIn.getInitialProps = async () => {
-  return {
-    providers: await getProviders()
-  }
-}
-*/
 ```
 
 ### Email Sign in
+
+<iframe src="https://codesandbox.io/embed/next-auth-example-email-signin-pyce6?fontsize=14&hidenavigation=1&initialpath=%2Fauth%2Femail-signin&module=%2Fpages%2Fauth%2Femail-signin.jsx&theme=dark"
+     style={{ width:'100%', height:'500px', border:'0',  borderRadius: '4px', overflow:'hidden' }}
+     title="next-auth-example-email-signin"
+     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+   ></iframe>
 
 If you create a custom sign in form for email sign in, you will need to submit both fields for the **email** address and **csrfToken** from **/api/auth/csrf** in a POST request to **/api/auth/signin/email**.
 
@@ -128,22 +132,12 @@ export default function SignIn({ csrfToken }) {
   )
 }
 
-// This is the recommended way for Next.js 9.3 or newer
 export async function getServerSideProps(context) {
   const csrfToken = await getCsrfToken(context)
   return {
     props: { csrfToken },
   }
 }
-
-/*
-// If older than Next.js 9.3
-SignIn.getInitialProps = async (context) => {
-  return {
-    csrfToken: await getCsrfToken(context)
-  }
-}
-*/
 ```
 
 You can also use the `signIn()` function which will handle obtaining the CSRF token for you:
@@ -153,6 +147,13 @@ signIn("email", { email: "jsmith@example.com" })
 ```
 
 ### Credentials Sign in
+
+<iframe src="https://codesandbox.io/embed/next-auth-example-pcc6k?autoresize=1&fontsize=12&hidenavigation=1&initialpath=%2Fauth%2Fcredential-signin&module=%2Fpages%2Fauth%2Fcredential-signin.jsx&theme=dark"
+     style={{ width:'100%', height:'500px', border:'0',  borderRadius: '4px', overflow:'hidden' }}
+     title="next-auth-example"
+     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+   ></iframe>
 
 If you create a sign in form for credentials based authentication, you will need to pass a **csrfToken** from **/api/auth/csrf** in a POST request to **/api/auth/callback/credentials**.
 
@@ -176,7 +177,6 @@ export default function SignIn({ csrfToken }) {
   )
 }
 
-// This is the recommended way for Next.js 9.3 or newer
 export async function getServerSideProps(context) {
   return {
     props: {
@@ -184,15 +184,6 @@ export async function getServerSideProps(context) {
     },
   }
 }
-
-/*
-// If older than Next.js 9.3
-SignIn.getInitialProps = async (context) => {
-  return {
-    csrfToken: await getCsrfToken(context)
-  }
-}
-*/
 ```
 
 You can also use the `signIn()` function which will handle obtaining the CSRF token for you:
