@@ -1,9 +1,8 @@
 import type { OAuthConfig, OAuthUserConfig } from "."
 
-export default function Atlassian<P extends {}>(
+export default function Asgardeo<P extends {}>(
   options: OAuthUserConfig<P> & {
-    domain: string
-    tenantId: string
+    organizationName: string
     scopes?: string
   }
 ): OAuthConfig<P> {
@@ -13,14 +12,33 @@ export default function Atlassian<P extends {}>(
     clientId: options?.clientId,
     clientSecret: options?.clientSecret,
     type: "oauth",
-    wellKnown: `https://${options.domain}/t/${options?.tenantId}/oauth2/token/.well-known/openid-configuration`,
+    wellKnown: `https://api.asgardeo.io/t/${options?.organizationName}/oauth2/token/.well-known/openid-configuration`,
     authorization: {
-      params: { scope: options?.scopes || "openid email profile internal_login" } 
+      params: { scope: options?.scopes || "openid email profile" } 
     },
-    token: `https://${options?.domain}/t/${options?.tenantId}/oauth2/token`,
-    userinfo: `https://${options?.domain}/t/${options?.tenantId}/scim2/Me`,
     idToken: true,
     checks: ["pkce", "state"],
+    async profile(profile, tokens) {
+      const config = {
+          method: 'GET',
+          headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'authorization': `Bearer ${tokens.access_token}`
+          },
+      }
+
+      const response = await fetch(`https://api.asgardeo.io/t/${options?.organizationName}/oauth2/userinfo`, config);
+
+      const userResponse = await response.json();
+      
+      return {
+          id: userResponse?.sub,
+          name: userResponse?.given_name.trim(),
+          email: userResponse?.email,
+          image: userResponse?.profile
+      }
+    },
     options,
   }
 }
