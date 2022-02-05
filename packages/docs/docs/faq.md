@@ -69,7 +69,7 @@ _If you use a custom credentials provider user accounts will not be persisted in
 
 NextAuth.js is designed for use with Next.js and Serverless.
 
-If you are using a different framework for you website, you can create a website that handles sign in with Next.js and then access those sessions on a website that does not use Next.js as long as the websites are on the same domain.
+If you are using a different framework for your website, you can create a website that handles sign in with Next.js and then access those sessions on a website that does not use Next.js as long as the websites are on the same domain.
 
 If you use NextAuth.js on a website with a different subdomain then the rest of your website (e.g. `auth.example.com` vs `www.example.com`) you will need to set a custom cookie domain policy for the Session Token cookie. (See also: [Cookies](/configuration/options#cookies))
 
