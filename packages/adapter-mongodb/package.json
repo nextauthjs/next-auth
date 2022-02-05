@@ -1,0 +1,33 @@
+{
+  "name": "@next-auth/mongodb-adapter",
+  "version": "1.0.1",
+  "description": "mongoDB adapter for next-auth.",
+  "homepage": "https://next-auth.js.org",
+  "repository": "https://github.com/nextauthjs/adapters",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "Balázs Orbán <info@balazsorban.com>",
+  "main": "dist/index.js",
+  "license": "ISC",
+  "keywords": ["next-auth", "next.js", "oauth", "mongodb", "adapter"],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test:wip": "./tests/test.sh",
+    "build:wip": "tsc"
+  },
+  "files": ["README.md", "dist"],
+  "peerDependencies": {
+    "mongodb": "^4.1.1",
+    "next-auth": "^4.0.1"
+  },
+  "devDependencies": {
+    "mongodb": "^4.1.1"
+  },
+  "jest": {
+    "preset": "adapter-test/jest"
+  }
+}

@@ -10,8 +10,8 @@
       <a href="https://github.com/nextauthjs/next-auth/actions/workflows/release.yml?query=workflow%3ARelease">
         <img src="https://github.com/nextauthjs/next-auth/actions/workflows/release.yml/badge.svg" alt="Release" />
       </a>
-      <a href="https://bundlephobia.com/result?p=next-auth">
-        <img src="https://img.shields.io/bundlephobia/minzip/next-auth" alt="Bundle Size"/>
+      <a href="https://packagephobia.com/result?p=next-auth">
+        <img src="https://packagephobia.com/badge?p=next-auth" alt="Bundle Size"/>
       </a>
       <a href="https://www.npmtrends.com/next-auth">
         <img src="https://img.shields.io/npm/dm/next-auth" alt="Downloads" />
@@ -22,7 +22,6 @@
       <a href="https://www.npmjs.com/package/next-auth">
         <img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?label=latest" alt="Github Stable Release" />
       </a>
-      <img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?include_prereleases&label=prerelease&sort=semver" alt="Github Prelease" />
    </p>
 </p>
 
@@ -32,10 +31,12 @@ NextAuth.js is a complete open source authentication solution for [Next.js](http
 
 It is designed from the ground up to support Next.js and Serverless.
 
-This is the core repo for NextAuth.js. Check the repos below if you are interested in additional information:
+This is a monorepo containing the following packages / projects:
 
-- Docs related: https://github.com/nextauthjs/docs
-- Adapter related: https://github.com/nextauthjs/adapters
+1. The primary `next-auth` package
+2. A development test application
+3. All `@next-auth/*-adapter` packages
+4. The documentation site
 
 ## Getting Started
 
@@ -155,8 +156,8 @@ Use the `<SessionProvider>` to allow instances of `useSession()` to share the se
 import { SessionProvider } from "next-auth/react"
 
 export default function App({
-  Component, 
-  pageProps: { session, ...pageProps }
+  Component,
+  pageProps: { session, ...pageProps },
 }) {
   return (
     <SessionProvider session={session}>

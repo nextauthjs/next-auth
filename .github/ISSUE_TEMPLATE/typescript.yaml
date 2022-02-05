@@ -25,21 +25,20 @@ body:
         }
         ```
 
-        **NOTE:** Questions will be converted to Discussions. You can find them [here](https://github.com/nextauthjs/next-auth/discussions)!    
+        **NOTE:** Questions will be converted to Discussions. You can find them [here](https://github.com/nextauthjs/next-auth/discussions)!
 
   - type: textarea
     id: codesandbox
-    attributes: 
-      label: How to reproduce ☕️ 
+    attributes:
+      label: How to reproduce ☕️
       description: Please provide a link to a minimal reproduction or code snippets that represents your question
     validations:
-      required: true 
+      required: true
   - type: markdown
     attributes:
       value: |
         We encourage you to use the template set-up on **CodeSandbox** as a playground to represent your question or doubt:
-        - [`next-auth-typescript-example`](https://codesandbox.io/s/next-auth-typescript-example-se32w)
-  
+        - [`next-auth-example`](https://codesandbox.io/s/next-auth-example-1kktb)
 
   - type: dropdown
     id: pr
@@ -52,7 +51,6 @@ body:
     validations:
       required: true
   - type: markdown
-    attributes: 
+    attributes:
       value: |
         It takes a lot of work 🏋🏻‍♀️ maintaining a library like `next-auth`; any contribution is more than welcome 💚
-  

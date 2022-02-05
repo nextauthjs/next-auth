@@ -1,0 +1,45 @@
+{
+  "name": "@next-auth/mikro-orm-adapter",
+  "version": "1.0.1",
+  "description": "MikroORM adapter for next-auth.",
+  "homepage": "https://next-auth.js.org",
+  "repository": "https://github.com/nextauthjs/adapters",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "Jonas Strassel <info@jonas-strassel.de>",
+  "contributors": [
+    "Balázs Orbán <info@balazsorban.com>"
+  ],
+  "main": "dist/index.js",
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "oauth",
+    "mikro-orm"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "jest --runInBand",
+    "build": "tsc"
+  },
+  "files": [
+    "README.md",
+    "dist"
+  ],
+  "peerDependencies": {
+    "@mikro-orm/core": ">5 || 5.0.0-dev.527 - 5.0.0-dev.x",
+    "next-auth": "^4.0.1"
+  },
+  "devDependencies": {
+    "@mikro-orm/core": "^5.0.0-dev.527",
+    "@mikro-orm/sqlite": "^5.0.0-dev.527"
+  },
+  "jest": {
+    "preset": "adapter-test/jest"
+  }
+}
