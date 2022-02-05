@@ -3,11 +3,11 @@
 Deploying NextAuth.js only requires a few steps. It can be run anywhere a Next.js application can. Therefore, in a default configuration using only JWT session strategy, i.e. without a database, you will only need these few things in addition to your application:
 
 1. NextAuth.js environment variables
-   a. `NEXTAUTH_SECRET`
-   b. `NEXTAUTH_URL`
+   - `NEXTAUTH_SECRET`
+   - `NEXTAUTH_URL`
 
 2. NextAuth.js API Route and its configuration (`/pages/api/auth/[...nextauth].js`).
-   a. OAuth Provider `clientId` / `clientSecret`
+   - OAuth Provider `clientId` / `clientSecret`
 
 Deploying a modern JavaScript application using NextAuth.js consists of making sure your environment variables are set correctly as well as the configuration in the NextAuth.js API route is setup, as well as any configuration (like Callback URLs, etc.) are correctly done in your OAuth provider(s) themselves.
 
@@ -39,44 +39,41 @@ Some things to be aware of here, include:
 - Do not let this potential testing-only user have access to any critical data
 - If possible, maybe do not even connect this preview deployment to your production database
 
-For example
+##### Example
 
 ```js title="/pages/api/auth/[...nextauth].js"
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import CredentialsProvider from "next-auth/providers/credentials"
 
-const previewLogin = CredentialsProvider({
-  name: "Credentials",
-  credentials: {
-    username: { label: "Username", type: "text", placeholder: "jsmith" },
-    password: { label: "Password", type: "password" },
-  },
-  async authorize() {
-    const user = () => {
-      return {
-        id: 1,
-        name: "J Smith",
-        email: "jsmith@example.com",
-        image: "https://i.pravatar.cc/150?u=jsmith@example.com",
-      }
-    }
-    return user()
-  },
-})
-
-const options = {
+export default NextAuth({
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_SECRET,
-    }),
-    process.env.VERCEL_ENV === "preview" && previewLogin,
+    process.env.VERCEL_ENV === "preview"
+      ? CredentialsProvider({
+          name: "Credentials",
+          credentials: {
+            username: {
+              label: "Username",
+              type: "text",
+              placeholder: "jsmith",
+            },
+            password: { label: "Password", type: "password" },
+          },
+          async authorize() {
+            return {
+              id: 1,
+              name: "J Smith",
+              email: "jsmith@example.com",
+              image: "https://i.pravatar.cc/150?u=jsmith@example.com",
+            }
+          },
+        })
+      : GoogleProvider({
+          clientId: process.env.GOOGLE_ID,
+          clientSecret: process.env.GOOGLE_SECRET,
+        }),
   ],
-  ...
-}
-
-export default (req, res) => NextAuth(req, res, options)
+})
 ```
 
 #### Using the branch based preview URL
