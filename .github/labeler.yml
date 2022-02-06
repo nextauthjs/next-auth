@@ -62,5 +62,5 @@ pages:
 TypeScript:
   - packages/next-auth/src/**/types.ts
 
-docs:
+documentation:
   - packages/docs/docs/**/*
