@@ -1,3 +1,5 @@
+> NOTE: The example repository is maintained from a monorepo. The source code can be found here: https://github.com/nextauthjs/next-auth/tree/main/apps/example. Pull Requests should be opened against https://github.com/nextauthjs/next-auth.
+
 <p align="center">
    <br/>
    <a href="https://next-auth.js.org" target="_blank"><img width="150px" src="https://next-auth.js.org/img/logo/logo-sm.png" /></a>
@@ -20,8 +22,6 @@
       </a>
    </p>
 </p>
-
-> NOTE: This repository is maintained from a monorepo. The source code can be found here: https://github.com/nextauthjs/next-auth/tree/main/apps/example. Pull Requests regarding this example repository should be open opened against https://github.com/nextauthjs/next-auth.
 
 ## Overview
 
