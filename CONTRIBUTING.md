@@ -34,7 +34,7 @@ git clone git@github.com:nextauthjs/next-auth.git
 cd next-auth
 ```
 
-1. Install packages. Developing requires node v16:
+1. Install packages. Developing requires Node.js v16:
 
 ```sh
 yarn
