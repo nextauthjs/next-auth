@@ -1,0 +1,82 @@
+type Account
+  @auth(
+    delete: { rule: "{$nextAuth: { eq: true } }" }
+    add: { rule: "{$nextAuth: { eq: true } }" }
+    query: { rule: "{$nextAuth: { eq: true } }" }
+    update: { rule: "{$nextAuth: { eq: true } }" }
+  ) {
+  id: ID
+  type: String
+  provider: String @search(by: [hash])
+  providerAccountId: String @search(by: [hash])
+  refreshToken: String
+  expires_at: Int64
+  accessToken: String
+  token_type: String
+  refresh_token: String
+  access_token: String
+  scope: String
+  id_token: String
+  session_state: String
+  user: User @hasInverse(field: "accounts")
+}
+type Session
+  @auth(
+    delete: { rule: "{$nextAuth: { eq: true } }" }
+    add: { rule: "{$nextAuth: { eq: true } }" }
+    query: { rule: "{$nextAuth: { eq: true } }" }
+    update: { rule: "{$nextAuth: { eq: true } }" }
+  ) {
+  id: ID
+  expires: DateTime
+  sessionToken: String @search(by: [hash])
+  user: User @hasInverse(field: "sessions")
+}
+type User
+  @auth(
+    query: {
+      or: [
+        {
+          rule: """
+          query ($userId: String!) {queryUser(filter: { id: { eq: $userId } } ) {id}}
+          """
+        }
+        { rule: "{$nextAuth: { eq: true } }" }
+      ]
+    }
+    delete: { rule: "{$nextAuth: { eq: true } }" }
+    add: { rule: "{$nextAuth: { eq: true } }" }
+    update: {
+      or: [
+        {
+          rule: """
+          query ($userId: String!) {queryUser(filter: { id: { eq: $userId } } ) {id}}
+          """
+        }
+        { rule: "{$nextAuth: { eq: true } }" }
+      ]
+    }
+  ) {
+  id: ID
+  name: String
+  email: String @search(by: [hash])
+  emailVerified: DateTime
+  image: String
+  accounts: [Account] @hasInverse(field: "user")
+  sessions: [Session] @hasInverse(field: "user")
+}
+
+type VerificationToken
+  @auth(
+    delete: { rule: "{$nextAuth: { eq: true } }" }
+    add: { rule: "{$nextAuth: { eq: true } }" }
+    query: { rule: "{$nextAuth: { eq: true } }" }
+    update: { rule: "{$nextAuth: { eq: true } }" }
+  ) {
+  id: ID
+  identifier: String @search(by: [hash])
+  token: String @search(by: [hash])
+  expires: DateTime
+}
+
+# Dgraph.Authorization {"VerificationKey":"<YOUR JWT SECRET HERE>","Header":"<YOUR AUTH HEADER HERE>","Namespace":"<YOUR CUSTOM NAMESPACE HERE>","Algo":"RS256"}

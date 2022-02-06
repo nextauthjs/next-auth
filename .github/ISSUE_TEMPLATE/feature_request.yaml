@@ -1,6 +1,6 @@
 name: Feature Request
 description: Suggest an idea for NextAuth.js
-labels: enhancement
+labels: [enhancement]
 
 # note: markdown sections will NOT appear as part of the issue as per documentation, rather they provide context to the user
 # https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-githubs-form-schema#markdown
@@ -8,15 +8,11 @@ labels: enhancement
 body:
   - type: markdown
     attributes:
-      value: | 
+      value: |
         Thank you very much for reaching out to us regarding the awesome feature that you believe should be included in the NextAuth.js library.
         ### Important :exclamation:
-        Please help us maintain this project more efficiently! Before creating the issue make sure you shouldn't be creating it in one the below repos instead:
-        - Docs related: https://github.com/nextauthjs/docs
-        - Adapter related: https://github.com/nextauthjs/adapters
-        
-        If you are in the correct repo, then proceed by providing the following information:
-  
+
+        Please proceed by providing the following information:
   - type: textarea
     id: description
     attributes:
@@ -45,7 +41,7 @@ body:
   - type: textarea
     id: reproduction
     attributes:
-      label: How to reproduce ☕️ 
+      label: How to reproduce ☕️
       description: If you have a CodeSandbox playground or some code snippets to help us visualize your idea better, please provide it here.
     validations:
       required: true
@@ -55,7 +51,6 @@ body:
         You can use one of the templates set up on **CodeSandbox** to better illustrate your idea:
 
         - [`next-auth-example`](https://codesandbox.io/s/next-auth-example-1kktb)
-        - [`next-auth-typescript-example`](https://codesandbox.io/s/next-auth-typescript-example-se32w)        
 
   - type: dropdown
     id: pr
@@ -68,6 +63,6 @@ body:
     validations:
       required: true
   - type: markdown
-    attributes: 
+    attributes:
       value: |
         It takes a lot of work 🏋🏻‍♀️ maintaining a library like `next-auth`; any contribution is more than welcome 💚
