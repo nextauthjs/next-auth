@@ -35,7 +35,9 @@ export default function BattleNet<P extends Record<string, any> = BattleNetProfi
     profile(profile) {
       return {
         id: profile.sub,
-        name: profile.battle_tag
+        name: profile.battle_tag,
+        email: null,
+        image: null,
       }
     },
     options,
