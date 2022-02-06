@@ -47,9 +47,7 @@ jobs:
       - name: Dependencies
         uses: bahmutov/npm-install@v1
       - name: Publish to npm and GitHub
-        run: |
-          cd packages/next-auth
-          npx semantic-release@17
+        run: yarn release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
