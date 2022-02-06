@@ -1,4 +1,4 @@
-nextauthjs/next-auth-example-sync-test@main:
+nextauthjs/next-auth-example@main:
   - .github/FUNDING.yml
   - LICENSE
   - source: apps/example
