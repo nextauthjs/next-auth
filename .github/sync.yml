@@ -1,6 +1,6 @@
 nextauthjs/next-auth-example@main:
-  - .github/FUNDING.yml
-  - LICENSE
   - source: apps/example
     dest: .
     deleteOrphaned: true
+  - .github/FUNDING.yml
+  - LICENSE
