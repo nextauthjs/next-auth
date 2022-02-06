@@ -17,15 +17,15 @@ Anyone can be a contributor. Either you found a typo, or you have an awesome fea
 - The latest changes are always in `main`, so please make your Pull Request against that branch.
 - Pull Requests should be raised for any change
 - Pull Requests need approval of a [core contributor](https://next-auth.js.org/contributors#core-team) before merging
-- We use ESLint/Prettier for linting/formatting, so please run `npm run lint:fix` before committing to make resolving conflicts easier (VSCode users, check out [this ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) and [this Prettier extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) to fix lint and formatting issues in development)
+- We use ESLint/Prettier for linting/formatting, so please run `yarn lint:fix` before committing to make resolving conflicts easier (VSCode users, check out [this ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) and [this Prettier extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) to fix lint and formatting issues in development)
 - We encourage you to test your changes, and if you have the opportunity, please make those tests part of the Pull Request
 - If you add new functionality, please provide the corresponding documentation as well and make it part of the Pull Request
 
 ### Setting up local environment
 
+
 A quick guide on how to setup _next-auth_ locally to work on it and test out any changes:
 
-The developer application requires you to use `npm@7`.
 
 1. Clone the repo:
 
@@ -34,25 +34,29 @@ git clone git@github.com:nextauthjs/next-auth.git
 cd next-auth
 ```
 
-2. Install packages and set up the developer application:
+1. Install packages. Developing requires Node.js v16:
 
 ```sh
-npm run dev:setup
+yarn
 ```
 
 3. Populate `.env.local`:
 
-   Copy `app/.env.local.example` to `app/.env.local`, and add your env variables for each provider you want to test.
-
-> NOTE: You can add any environment variables to .env.local that you would like to use in your dev app.
-> You can find the next-auth config under`app/pages/api/auth/[...nextauth].js`.
-
-1. Start the developer application/server:
+Copy `packages/dev-app/.env.local.example` to `packages/dev-app/.env.local`, and add your env variables for each provider you want to test.
 
 ```sh
-npm run dev
+cd packages/dev-app
+cp .env.local.example .env.local
 ```
 
+> NOTE: You can add any environment variables to .env.local that you would like to use in your dev app.
+> You can find the next-auth config under`packages/dev-app/pages/api/auth/[...nextauth].js`.
+
+4. Start the developer application/server:
+
+```sh
+yarn dev:app
+```
 Your developer application will be available on `http://localhost:3000`
 
 That's it! 🎉
@@ -61,7 +65,7 @@ If you need an example project to link to, you can use [next-auth-example](https
 
 #### Hot reloading
 
-When running `npm run dev`, you start a Next.js developer server on `http://localhost:3000`, which includes hot reloading out of the box. Make changes on any of the files in `src` and see the changes immediately.
+When running `yarn dev:app`, you start a Next.js developer server on `http://localhost:3000`, which includes hot reloading out of the box. Make changes on any of the files in `src` and see the changes immediately.
 
 > NOTE: When working on CSS, you will have to manually refresh the page after changes. The reason for this is our pages using CSS are server-side rendered (using API routes). (Improving this through a PR is very welcome!)
 
@@ -83,7 +87,7 @@ You can look at the existing built-in providers for inspiration.
 If you would like to contribute to an existing database adapter or help create a new one, head over to the [nextauthjs/adapters](https://www.github.com/nextauthjs/adapters) repository and follow the instructions provided there.
 #### Testing
 
-Tests can be run with `npm run test`.
+Tests can be run with `yarn test`.
 
 Automated tests are currently crude and limited in functionality, but improvements are in development.
 ## For maintainers
