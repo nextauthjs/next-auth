@@ -21,6 +21,8 @@
    </p>
 </p>
 
+> NOTE: This repository is maintained from a monorepo. The source code can be found here: https://github.com/nextauthjs/next-auth/tree/main/apps/example. Pull Requests regarding this example repository should be open opened against https://github.com/nextauthjs/next-auth.
+
 ## Overview
 
 NextAuth.js is a complete open source authentication solution for [Next.js](http://nextjs.org/) applications.
