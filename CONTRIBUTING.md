@@ -17,7 +17,7 @@ Anyone can be a contributor. Either you found a typo, or you have an awesome fea
 - The latest changes are always in `main`, so please make your Pull Request against that branch.
 - Pull Requests should be raised for any change
 - Pull Requests need approval of a [core contributor](https://next-auth.js.org/contributors#core-team) before merging
-- We use ESLint/Prettier for linting/formatting, so please run `yarn run lint:fix` before committing to make resolving conflicts easier (VSCode users, check out [this ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) and [this Prettier extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) to fix lint and formatting issues in development)
+- We use ESLint/Prettier for linting/formatting, so please run `yarn lint:fix` before committing to make resolving conflicts easier (VSCode users, check out [this ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) and [this Prettier extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) to fix lint and formatting issues in development)
 - We encourage you to test your changes, and if you have the opportunity, please make those tests part of the Pull Request
 - If you add new functionality, please provide the corresponding documentation as well and make it part of the Pull Request
 
@@ -55,7 +55,7 @@ cp .env.local.example .env.local
 4. Start the developer application/server:
 
 ```sh
-yarn run dev:app
+yarn dev:app
 ```
 Your developer application will be available on `http://localhost:3000`
 
@@ -65,7 +65,7 @@ If you need an example project to link to, you can use [next-auth-example](https
 
 #### Hot reloading
 
-When running `yarn run dev:app`, you start a Next.js developer server on `http://localhost:3000`, which includes hot reloading out of the box. Make changes on any of the files in `src` and see the changes immediately.
+When running `yarn dev:app`, you start a Next.js developer server on `http://localhost:3000`, which includes hot reloading out of the box. Make changes on any of the files in `src` and see the changes immediately.
 
 > NOTE: When working on CSS, you will have to manually refresh the page after changes. The reason for this is our pages using CSS are server-side rendered (using API routes). (Improving this through a PR is very welcome!)
 
@@ -87,7 +87,7 @@ You can look at the existing built-in providers for inspiration.
 If you would like to contribute to an existing database adapter or help create a new one, head over to the [nextauthjs/adapters](https://www.github.com/nextauthjs/adapters) repository and follow the instructions provided there.
 #### Testing
 
-Tests can be run with `yarn run test`.
+Tests can be run with `yarn test`.
 
 Automated tests are currently crude and limited in functionality, but improvements are in development.
 ## For maintainers
