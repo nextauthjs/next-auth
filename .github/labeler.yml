@@ -10,6 +10,42 @@ adapters:
   - packages/next-auth/src/adapters.ts
   - packages/*-adapter/**
 
+dgraph:
+  - packages/adapter-dgraph/**
+
+dynamodb:
+  - packages/adapter-dynamodb/**
+
+fauna:
+  - packages/adapter-fauna/**
+
+firebase:
+  - packages/adapter-firebase/**
+
+mikro-orm:
+  - packages/adapter-mikro-orm/**
+
+mongodb:
+  - packages/adapter-mongodb/**
+
+neo4j:
+  - packages/adapter-neo4j/**
+
+pouchdb:
+  - packages/adapter-pouchdb/**
+
+prisma:
+  - packages/adapter-prisma/**
+
+sequelize:
+  - packages/adapter-sequelize/**
+
+typeorm-legacy:
+  - packages/adapter-typeorm-legacy/**
+
+upstash-redis:
+  - packages/adapter-upstash-redis/**
+
 core:
   - packages/next-auth/src/**/*
 
