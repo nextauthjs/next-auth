@@ -111,7 +111,7 @@ interface OAuthConfig {
       params: CallbackParamsType
       /**
        * When using this custom flow, make sure to do all the necessary security checks.
-       * Thist object contains parameters you have to match against the request to make sure it is valid.
+       * This object contains parameters you have to match against the request to make sure it is valid.
        */
       checks: OAuthChecks
     },
