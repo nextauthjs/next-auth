@@ -15,7 +15,9 @@
     "test:serial": "turbo run test --concurrency=1 --ignore=packages/adapter-pouch/*",
     "test": "turbo run test --ignore=packages/adapter-pouch/*",
     "setup": "turbo run setup",
-    "dev": "turbo run dev --parallel --no-deps --no-cache",
+    "dev": "yarn dev:app",
+    "dev:app": "turbo run dev --parallel --no-deps --no-cache --scope=next-auth-app",
+    "dev:docs": "turbo run dev --parallel --no-deps --no-cache --scope=next-auth-docs",
     "version:pr": "node ./config/version-pr"
   },
   "devDependencies": {
