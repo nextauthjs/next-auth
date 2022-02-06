@@ -123,9 +123,7 @@ session: {
 
 #### Description
 
-JSON Web Tokens can be used for session tokens if enabled with `session: { strategy: "jwt" }` option. JSON Web Tokens are enabled by default if you have not specified an adapter.
-
-JSON Web Tokens are encrypted (JWE) by default. We recommend you keep this behaviour, but you can override this using the `encode` and `decode` methods.
+JSON Web Tokens can be used for session tokens if enabled with `session: { strategy: "jwt" }` option. JSON Web Tokens are enabled by default if you have not specified an adapter. JSON Web Tokens are encrypted (JWE) by default. We recommend you keep this behaviour. See the [Override JWT `encode` and `decode` methods] advanced option.(#override-jwt-encode-and-decode-methods)
 
 #### JSON Web Token Options
 
@@ -135,9 +133,8 @@ jwt: {
   // Defaults to `session.maxAge`.
   maxAge: 60 * 60 * 24 * 30,
   // You can define your own encode/decode functions for signing and encryption
-  // if you want to override the default behavior.
-  async encode({ secret, token, maxAge }) {},
-  async decode({ secret, token }) {},
+  async encode() {},
+  async decode() {},
 }
 ```
 
@@ -478,3 +475,29 @@ cookies: {
 :::warning
 Using a custom cookie policy may introduce security flaws into your application and is intended as an option for advanced users who understand the implications. Using this option is not recommended.
 :::
+
+---
+
+### Override JWT `encode` and `decode` methods
+
+NextAuth.js uses encrypted JSON Web Tokens ([JWE](https://datatracker.ietf.org/doc/html/rfc7516)) by default. Unless you have a good reason, we recommend keeping this behaviour. Although you can override this using the `encode` and `decode` methods. Both methods must be defined at the same time.
+
+```js
+jwt: {
+  async encode(params: {
+    token: JWT
+    secret: string
+    maxAge: number
+  }): Promise<string> {
+    // return a custom encoded JWT string
+    return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+  },
+  async decode(params: {
+    token: string
+    secret: string
+  }: Prmoise<JWT | null>) {
+    // return a `JWT` object, or `null` if decoding failed
+    return {}
+  },
+}
+```
