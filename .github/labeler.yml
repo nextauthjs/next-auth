@@ -63,4 +63,4 @@ TypeScript:
   - packages/next-auth/src/**/types.ts
 
 documentation:
-  - packages/docs/docs/**/*
+  - docs/docs/**/*
