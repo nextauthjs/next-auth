@@ -11,8 +11,6 @@
     "build": "npm run generate-providers && docusaurus build",
     "docusaurus": "docusaurus",
     "swizzle": "docusaurus swizzle",
-    "deploy": "docusaurus deploy",
-    "serve": "docusaurus serve",
     "clear": "docusaurus clear",
     "lint": "standard",
     "lint:fix": "standard --fix",
