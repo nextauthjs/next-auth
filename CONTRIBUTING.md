@@ -26,7 +26,6 @@ Anyone can be a contributor. Either you found a typo, or you have an awesome fea
 
 A quick guide on how to setup _next-auth_ locally to work on it and test out any changes:
 
-The developer application requires you to use `npm@7`.
 
 1. Clone the repo:
 
@@ -35,10 +34,9 @@ git clone git@github.com:nextauthjs/next-auth.git
 cd next-auth
 ```
 
-2. Install packages:
+1. Install packages. Developing requires node v16:
 
 ```sh
-nvm use
 yarn
 ```
 
