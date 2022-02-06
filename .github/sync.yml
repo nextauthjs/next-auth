@@ -1,5 +1,6 @@
-nextauthjs/next-auth-example-sync-test@main:
-  - .github/FUNDING.yml
+nextauthjs/next-auth-example@main:
   - source: apps/example
     dest: .
     deleteOrphaned: true
+  - .github/FUNDING.yml
+  - LICENSE
