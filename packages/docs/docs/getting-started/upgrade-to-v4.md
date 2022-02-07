@@ -439,6 +439,104 @@ See the [`session` option docs](https://next-auth.js.org/configuration/options#s
 
 Introduced in https://github.com/nextauthjs/next-auth/pull/3144
 
+## Database migration
+
+NextAuth.js v4 has a slightly different database schema compared to v3. If you're using any of our adapters and want to upgrade, you can use on of the below schemas.
+
+They are designed to be run directly against the database itself. So instead of having one in Prisma syntax, one in TypeORM syntax, etc. we've decided to just make one for each underlying database type. i.e. one for Postgres, one for MySQL, one for MongoDB, etc.
+
+#### MySQL
+
+```mysql
+/* ACCOUNT */
+ALTER TABLE accounts
+DROP COLUMN "compound_id"
+CHANGE "user_id" "userId" varchar(191)
+ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id)
+RENAME COLUMN "provider_id" "provider"
+DROP COLUMN "provider_type"
+RENAME COLUMN "provider_account_id" "providerAccountId"
+CHANGE "access_token_expires" "expires_at" int
+DROP COLUMN "created_at"
+DROP COLUMN "updated_at"
+
+ADD COLUMN "token_type" varchar(191) NULL
+ADD COLUMN "scope" varchar(191) NOT NULL
+ADD COLUMN "id_token" varchar(191) NOT NULL
+ADD COLUMN "oauth_token_secret" varchar(191) NOT NULL
+ADD COLUMN "oauth_token" varchar(191) NOT NULL
+ADD COLUMN "session_state" varchar(191) NOT NULL
+
+/* USER */
+ALTER TABLE users
+DROP COLUMN "created_at"
+DROP COLUMN "updated_at"
+RENAME COLUMN "email_verified" "emailVerified"
+
+/* SESSION */
+ALTER TABLE sessions
+CHANGE "user_id" "userId" varchar(191)
+ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id)
+RENAME COLUMN "session_token" "sessionToken"
+DROP COLUMN "access_token"
+DROP COLUMN "created_at"
+DROP COLUMN "updated_at"
+
+/* VERIFICATION REQUESTS */
+ALTER TABLE verification_requests
+DROP COLUMN id
+DROP COLUMN "created_at"
+DROP COLUMN "updated_at"
+```
+
+#### Postgres
+
+```postgresql
+/* ACCOUNT */
+ALTER TABLE accounts
+DROP COLUMN "compound_id"
+CHANGE "user_id" "userId" text
+ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id)
+RENAME COLUMN "provider_id" "provider"
+DROP COLUMN "provider_type"
+RENAME COLUMN "provider_account_id" "providerAccountId"
+CHANGE "access_token_expires" "expires_at" int
+DROP COLUMN "created_at"
+DROP COLUMN "updated_at"
+
+ADD COLUMN "token_type" text NULL
+ADD COLUMN "scope" text NOT NULL
+ADD COLUMN "id_token" text NOT NULL
+ADD COLUMN "oauth_token_secret" text NOT NULL
+ADD COLUMN "oauth_token" text NOT NULL
+ADD COLUMN "session_state" text NOT NULL
+
+/* USER */
+ALTER TABLE users
+DROP COLUMN "created_at"
+DROP COLUMN "updated_at"
+RENAME COLUMN "email_verified" "emailVerified"
+
+/* SESSION */
+ALTER TABLE sessions
+CHANGE "user_id" "userId" text
+ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id)
+RENAME COLUMN "session_token" "sessionToken"
+DROP COLUMN "access_token"
+DROP COLUMN "created_at"
+DROP COLUMN "updated_at"
+
+/* VERIFICATION REQUESTS */
+ALTER TABLE verification_requests
+DROP COLUMN id
+DROP COLUMN "created_at"
+DROP COLUMN "updated_at"
+```
+
+```mongodb
+
+```
+
 ## Summary
 
 We hope this migration goes smoothly for each and every one of you! If you have any questions or get stuck anywhere, feel free to create [a new issue](https://github.com/nextauthjs/next-auth/issues/new) on GitHub.
