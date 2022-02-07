@@ -1,4 +1,4 @@
-> NOTE: The example repository is maintained from a monorepo. The source code can be found here: https://github.com/nextauthjs/next-auth/tree/main/apps/example. Pull Requests should be opened against https://github.com/nextauthjs/next-auth.
+> NOTE: The example repository is maintained from a monorepo. The source code can be found here: https://github.com/nextauthjs/next-auth/tree/main/apps/example-nextjs. Pull Requests should be opened against https://github.com/nextauthjs/next-auth.
 
 <p align="center">
    <br/>
@@ -25,15 +25,15 @@
 
 ## Overview
 
-NextAuth.js is a complete open source authentication solution for [Next.js](http://nextjs.org/) applications.
+NextAuth.js is a complete open source authentication solution.
 
-This is an example application which shows how `next-auth` is applied to a basic Next.js app. It is also used in many of our CI workflows and other places where a concrete usage example is necessary. 
+This is an example application that shows how `next-auth` is applied to a basic Next.js app.
 
-It can be found at [`next-auth-example.vercel.app`](https://next-auth-example.vercel.app/)
+The deployed version can be found at [`next-auth-example.vercel.app`](https://next-auth-example.vercel.app)
 
 ### About NextAuth.js
 
-NextAuth.js is an easy to implement, full-stack (client/server) open source authentication library designed for [Next.js](https://nextjs.org) and [Serverless](https://vercel.com).
+NextAuth.js is an easy to implement, full-stack (client/server) open source authentication library originally designed for [Next.js](https://nextjs.org) and [Serverless](https://vercel.com). Our goal is to [support even more frameworks](https://github.com/nextauthjs/next-auth/issues/2294) in the future.
 
 Go to [next-auth.js.org](https://next-auth.js.org) for more information and documentation.
 
@@ -99,17 +99,7 @@ npm run start
 
 ### 5. Preparing for Production
 
-You must set the `NEXTAUTH_URL` environment variable with the URL of your site, before deploying to production.
-
-e.g. in your `.env.local` file - `NEXTAUTH_URL=https://example.com`
-
-To do this with Vercel, you can use the [Vercel project dashboard](https://vercel.com/dashboard) or their cli via the `vc env` command:
-
-```
-vc env add NEXTAUTH_URL production
-```
-
-Do not forget to set the environment variables for the Client ID and Client Secret values for all your configured authentication providers in your hosting providers dashboard, i.e. with Vercel as described above.
+Follow the [Deployment documentation](https://next-auth.js.org/deployment)
 
 ## Acknowledgements
 

@@ -1,6 +1,17 @@
-nextauthjs/next-auth-example@main:
-  - source: apps/example
+group:
+  - files:
+      - .github/FUNDING.yml
+      - LICENSE
+    repos: |
+      nextauthjs/next-auth-example
+      nextauthjs/next-auth-gatsby-example
+
+nextauthjs/next-auth-example:
+  - source: apps/example-nextjs
     dest: .
     deleteOrphaned: true
-  - .github/FUNDING.yml
-  - LICENSE
+
+nextauthjs/next-auth-gatsby-example:
+  - source: apps/example-gatsby
+    dest: .
+    deleteOrphaned: true
