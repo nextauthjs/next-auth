@@ -447,16 +447,16 @@ They are designed to be run directly against the database itself. So instead of 
 
 #### MySQL
 
-```mysql
+```sql
 /* ACCOUNT */
 ALTER TABLE accounts
-DROP COLUMN "compound_id"
+CHANGE "access_token_expires" "expires_at" int
 CHANGE "user_id" "userId" varchar(191)
 ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id)
 RENAME COLUMN "provider_id" "provider"
-DROP COLUMN "provider_type"
 RENAME COLUMN "provider_account_id" "providerAccountId"
-CHANGE "access_token_expires" "expires_at" int
+DROP COLUMN "provider_type"
+DROP COLUMN "compound_id"
 DROP COLUMN "created_at"
 DROP COLUMN "updated_at"
 
@@ -475,9 +475,9 @@ RENAME COLUMN "email_verified" "emailVerified"
 
 /* SESSION */
 ALTER TABLE sessions
+RENAME COLUMN "session_token" "sessionToken"
 CHANGE "user_id" "userId" varchar(191)
 ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id)
-RENAME COLUMN "session_token" "sessionToken"
 DROP COLUMN "access_token"
 DROP COLUMN "created_at"
 DROP COLUMN "updated_at"
@@ -491,16 +491,16 @@ DROP COLUMN "updated_at"
 
 #### Postgres
 
-```postgresql
+```sql
 /* ACCOUNT */
 ALTER TABLE accounts
-DROP COLUMN "compound_id"
+CHANGE "access_token_expires" "expires_at" int
 CHANGE "user_id" "userId" text
 ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id)
 RENAME COLUMN "provider_id" "provider"
-DROP COLUMN "provider_type"
 RENAME COLUMN "provider_account_id" "providerAccountId"
-CHANGE "access_token_expires" "expires_at" int
+DROP COLUMN "provider_type"
+DROP COLUMN "compound_id"
 DROP COLUMN "created_at"
 DROP COLUMN "updated_at"
 
@@ -519,9 +519,9 @@ RENAME COLUMN "email_verified" "emailVerified"
 
 /* SESSION */
 ALTER TABLE sessions
+RENAME COLUMN "session_token" "sessionToken"
 CHANGE "user_id" "userId" text
 ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id)
-RENAME COLUMN "session_token" "sessionToken"
 DROP COLUMN "access_token"
 DROP COLUMN "created_at"
 DROP COLUMN "updated_at"
@@ -533,8 +533,10 @@ DROP COLUMN "created_at"
 DROP COLUMN "updated_at"
 ```
 
-```mongodb
+#### MongoDB
 
+```sql
+TBA
 ```
 
 ## Summary
