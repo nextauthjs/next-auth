@@ -15,7 +15,13 @@ The **Okta Provider** comes with a set of default options:
 
 You can override any of the options to suit your own use case.
 
-## Example
+## Environment variables
+
+| clientId                              | clientSecret                           | issuer                                                                  |
+|---------------------------------------|----------------------------------------|-------------------------------------------------------------------------|
+| Public key provided by Okta dashboard | Private key provided by Okta dashboard | URL of issuer  (e.g https://youroktainstance.okta.com/oauth2/default)   |
+
+## Usage
 
 ```js
 import OktaProvider from "next-auth/providers/okta";
