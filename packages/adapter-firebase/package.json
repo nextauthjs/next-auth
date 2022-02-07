@@ -28,18 +28,18 @@
     "access": "public"
   },
   "scripts": {
-    "build:wip": "tsc",
-    "test:wip": "FIRESTORE_EMULATOR_HOST=localhost:8080 firebase emulators:exec --only firestore --project next-auth-test jest"
+    "build": "tsc",
+    "test": "FIRESTORE_EMULATOR_HOST=localhost:8080 firebase emulators:exec --only firestore --project next-auth-test jest"
   },
   "peerDependencies": {
-    "firebase": "^8.6.2",
+    "firebase": "^9.7.0",
     "next-auth": "workspace:*"
   },
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:^0.0.0",
     "@next-auth/tsconfig": "workspace:^0.0.0",
-    "firebase": "^8.6.2",
-    "firebase-tools": "^9.11.0",
+    "firebase": "^9.7.0",
+    "firebase-tools": "^10.7.2",
     "jest": "^27.4.3",
     "next-auth": "workspace:*"
   }
