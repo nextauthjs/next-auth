@@ -457,21 +457,25 @@ RENAME COLUMN "provider_id" "provider"
 RENAME COLUMN "provider_account_id" "providerAccountId"
 DROP COLUMN "provider_type"
 DROP COLUMN "compound_id"
+/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
 DROP COLUMN "created_at"
 DROP COLUMN "updated_at"
 
 ADD COLUMN "token_type" varchar(191) NULL
-ADD COLUMN "scope" varchar(191) NOT NULL
-ADD COLUMN "id_token" varchar(191) NOT NULL
-ADD COLUMN "oauth_token_secret" varchar(191) NOT NULL
-ADD COLUMN "oauth_token" varchar(191) NOT NULL
-ADD COLUMN "session_state" varchar(191) NOT NULL
+ADD COLUMN "scope" varchar(191) NULL
+ADD COLUMN "id_token" varchar(191) NULL
+ADD COLUMN "session_state" varchar(191) NULL
+
+/* Note: These are only needed if you're going to be using the old Twitter OAuth 1.0 provider. */
+ADD COLUMN "oauth_token_secret" varchar(191) NULL
+ADD COLUMN "oauth_token" varchar(191) NULL
 
 /* USER */
 ALTER TABLE users
+RENAME COLUMN "email_verified" "emailVerified"
+/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
 DROP COLUMN "created_at"
 DROP COLUMN "updated_at"
-RENAME COLUMN "email_verified" "emailVerified"
 
 /* SESSION */
 ALTER TABLE sessions
@@ -479,12 +483,14 @@ RENAME COLUMN "session_token" "sessionToken"
 CHANGE "user_id" "userId" varchar(191)
 ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id)
 DROP COLUMN "access_token"
+/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
 DROP COLUMN "created_at"
 DROP COLUMN "updated_at"
 
 /* VERIFICATION REQUESTS */
 ALTER TABLE verification_requests
 DROP COLUMN id
+/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
 DROP COLUMN "created_at"
 DROP COLUMN "updated_at"
 ```
@@ -501,21 +507,25 @@ RENAME COLUMN "provider_id" "provider"
 RENAME COLUMN "provider_account_id" "providerAccountId"
 DROP COLUMN "provider_type"
 DROP COLUMN "compound_id"
+/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
 DROP COLUMN "created_at"
 DROP COLUMN "updated_at"
 
 ADD COLUMN "token_type" text NULL
-ADD COLUMN "scope" text NOT NULL
-ADD COLUMN "id_token" text NOT NULL
-ADD COLUMN "oauth_token_secret" text NOT NULL
-ADD COLUMN "oauth_token" text NOT NULL
-ADD COLUMN "session_state" text NOT NULL
+ADD COLUMN "scope" text NULL
+ADD COLUMN "id_token" text NULL
+ADD COLUMN "session_state" text NULL
+
+/* Note: These are only needed if you're going to be using the old Twitter OAuth 1.0 provider. */
+ADD COLUMN "oauth_token_secret" text NULL
+ADD COLUMN "oauth_token" text NULL
 
 /* USER */
 ALTER TABLE users
+RENAME COLUMN "email_verified" "emailVerified"
+/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
 DROP COLUMN "created_at"
 DROP COLUMN "updated_at"
-RENAME COLUMN "email_verified" "emailVerified"
 
 /* SESSION */
 ALTER TABLE sessions
@@ -523,12 +533,14 @@ RENAME COLUMN "session_token" "sessionToken"
 CHANGE "user_id" "userId" text
 ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id)
 DROP COLUMN "access_token"
+/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
 DROP COLUMN "created_at"
 DROP COLUMN "updated_at"
 
 /* VERIFICATION REQUESTS */
 ALTER TABLE verification_requests
 DROP COLUMN id
+/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
 DROP COLUMN "created_at"
 DROP COLUMN "updated_at"
 ```
