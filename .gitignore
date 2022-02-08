@@ -39,14 +39,9 @@ packages/next-auth/next
 packages/next-auth/middleware.d.ts
 packages/next-auth/middleware.js
 
-# Development dev-app
-packages/dev-app/src/css
-packages/dev-app/css
-packages/dev-app/package-lock.json
-packages/dev-app/yarn.lock
-packages/dev-app/prisma/migrations
-packages/dev-app/dist
-packages/dev-app/next-auth
+# Development app
+apps/dev/src/css
+apps/dev/prisma/migrations
 
 # VS
 /.vs/slnx.sqlite-journal
