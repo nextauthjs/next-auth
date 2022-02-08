@@ -77,4 +77,4 @@ test.schema.gql
 .turbo
 
 # docusaurus
-packages/docs/.docusaurus
+docs/.docusaurus

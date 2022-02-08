@@ -92,7 +92,7 @@ module.exports = {
                 alt="Powered by Vercel"
                 style="margin-top: 8px"
                 height="32"
-                src="https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/docs/static/img/powered-by-vercel.svg"
+                src="https://raw.githubusercontent.com/nextauthjs/next-auth/main/docs/static/img/powered-by-vercel.svg"
               />
             </a>`,
             },
@@ -146,8 +146,7 @@ module.exports = {
         docs: {
           routeBasePath: "/",
           sidebarPath: require.resolve("./sidebars.js"),
-          editUrl:
-            "https://github.com/nextauthjs/next-auth/edit/main/packages/docs",
+          editUrl: "https://github.com/nextauthjs/next-auth/edit/main/docs",
           lastVersion: "current",
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
