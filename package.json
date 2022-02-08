@@ -13,7 +13,7 @@
     "test:serial:adapters2": "turbo run test --concurrency=1 --scope=@next-auth/prisma-adapter --scope=@next-auth/typeorm-legacy-adapter",
     "test:serial:adapters": "turbo run test --concurrency=1 --scope=@next-auth/*adapter*",
     "test:serial": "turbo run test --concurrency=1 --ignore=packages/adapter-pouch/*",
-    "test": "turbo run test --concurrency=3 --ignore=packages/adapter-pouch/*",
+    "test": "turbo run test --concurrency=1 --ignore=packages/adapter-pouch/*",
     "setup": "turbo run setup",
     "dev": "yarn dev:app",
     "dev:app": "turbo run dev --parallel --no-deps --no-cache --scope=next-auth-app",
