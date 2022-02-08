@@ -40,7 +40,7 @@ packages/next-auth/middleware.d.ts
 packages/next-auth/middleware.js
 
 # Development dev-app
-apps/dev/css
+apps/dev/src/css
 apps/dev/prisma/migrations
 
 # VS
