@@ -199,11 +199,6 @@ export const authOptions: NextAuthOptions = {
     WorkOSProvider({
       clientId: process.env.WORKOS_ID,
       clientSecret: process.env.WORKOS_SECRET,
-      authorization: {
-        params: {
-          organization: "org_01FNNDG6P2VHRPXPP5Y438RB2E",
-        },
-      },
     }),
   ],
   debug: true,
