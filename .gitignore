@@ -39,7 +39,7 @@ packages/next-auth/next
 packages/next-auth/middleware.d.ts
 packages/next-auth/middleware.js
 
-# Development dev-app
+# Development app
 apps/dev/src/css
 apps/dev/prisma/migrations
 
@@ -72,4 +72,4 @@ test.schema.gql
 .turbo
 
 # docusaurus
-packages/docs/.docusaurus
+docs/.docusaurus

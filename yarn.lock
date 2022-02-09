@@ -9434,7 +9434,7 @@ fastq@^1.6.0:
   dependencies:
     reusify "^1.0.4"
 
-faunadb@^4.3.0, faunadb@^4.4.1:
+faunadb@^4.3.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/faunadb/-/faunadb-4.5.0.tgz#e9864272ca5b6bc85c753b1a1a07b067fb123911"
   integrity sha512-QNSw4XD53aHdikld1rt3kiiVbgx8DiXeeL5Z1/1TfhoiwgAEfYZ9VyGfXjwmthrlLy3YilU+bRPFyysK8q+kMg==
@@ -9447,6 +9447,22 @@ faunadb@^4.3.0, faunadb@^4.4.1:
     cross-fetch "^3.1.5"
     dotenv "^8.2.0"
     fn-annotate "^1.1.3"
+    object-assign "^4.1.0"
+    util-deprecate "^1.0.2"
+
+faunadb@^4.4.1:
+  version "4.5.2"
+  resolved "https://registry.yarnpkg.com/faunadb/-/faunadb-4.5.2.tgz#b58175f2da62d7655e4c13ee0478898d174cbde2"
+  integrity sha512-XQ2yDoPZc5/IqC4eS4tP5tjewFbAK8UdQYLDGlUiJy5E9F3rpvYCMdjlkRWcaxOMD2yPYr8NSoql10zy1CNoCA==
+  dependencies:
+    base64-js "^1.2.0"
+    boxen "^5.0.1"
+    btoa-lite "^1.0.0"
+    chalk "^4.1.1"
+    cross-fetch "^3.1.5"
+    dotenv "^8.2.0"
+    fn-annotate "^1.1.3"
+    node-abort-controller "^3.0.1"
     object-assign "^4.1.0"
     util-deprecate "^1.0.2"
 
@@ -14098,6 +14114,11 @@ node-abort-controller@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/node-abort-controller/-/node-abort-controller-2.0.0.tgz#800e0d250d3b977175e48df4f74c2d3960076a79"
   integrity sha512-L8RfEgjBTHAISTuagw51PprVAqNZoG6KSB6LQ6H1bskMVkFs5E71IyjauLBv3XbuomJlguWF/VnRHdJ1gqiAqA==
+
+node-abort-controller@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/node-abort-controller/-/node-abort-controller-3.0.1.tgz#f91fa50b1dee3f909afabb7e261b1e1d6b0cb74e"
+  integrity sha512-/ujIVxthRs+7q6hsdjHMaj8hRG9NuWmwrz+JdRwZ14jdFoKSkm+vDsCbF9PLpnSqjaWQJuTmVtcWHNLr+vrOFw==
 
 node-addon-api@^3.0.0:
   version "3.2.1"
