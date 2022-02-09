@@ -5,8 +5,8 @@
   "private": true,
   "scripts": {
     "clean": "rm -rf .next",
-    "copy:css": "cpx \"../next-auth/css/**/*\" src/css --watch",
-    "watch:css": "cd ../next-auth && npm run watch:css",
+    "copy:css": "cpx \"../../packages/next-auth/css/**/*\" src/css --watch",
+    "watch:css": "cd ../../packages/next-auth && npm run watch:css",
     "dev": "npm-run-all --parallel dev:next watch:css copy:css",
     "dev:next": "npx next dev",
     "build": "npx next build",
@@ -22,7 +22,6 @@
     "fake-smtp-server": "^0.8.0",
     "faunadb": "^4.4.1",
     "next": "^12.0.8",
-    "next-auth": "4.1.2",
     "nodemailer": "^6.7.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"

@@ -21,7 +21,7 @@
   "exclude": [
     "./*.js",
     "./*.d.ts",
-    "packages/dev-app",
+    "apps/dev",
     "**/tests",
     "**/__tests__",
     "jest.config.js"

@@ -42,15 +42,15 @@ yarn
 
 3. Populate `.env.local`:
 
-Copy `packages/dev-app/.env.local.example` to `packages/dev-app/.env.local`, and add your env variables for each provider you want to test.
+Copy `apps/dev/.env.local.example` to `apps/dev/.env.local`, and add your env variables for each provider you want to test.
 
 ```sh
-cd packages/dev-app
+cd apps/dev
 cp .env.local.example .env.local
 ```
 
 > NOTE: You can add any environment variables to .env.local that you would like to use in your dev app.
-> You can find the next-auth config under`packages/dev-app/pages/api/auth/[...nextauth].js`.
+> You can find the next-auth config under`apps/dev/pages/api/auth/[...nextauth].js`.
 
 4. Start the developer application/server:
 
