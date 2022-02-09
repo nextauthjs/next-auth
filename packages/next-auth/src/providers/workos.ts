@@ -40,7 +40,7 @@ export default function WorkOS<P extends Record<string, any> = WorkOSProfile>(
         id: profile.id,
         name: `${profile.first_name} ${profile.last_name}`,
         email: profile.email,
-        image: null,
+        image: profile.raw_attributes.picture ?? null,
       }
     },
     options,
