@@ -15,24 +15,26 @@ import streamToArray from "stream-to-array"
 
 const rootDir = path.resolve(__dirname, "..")
 
+const releaseCommitMsg = 'chore(release): "bump version"'
+const skipCI = "[skip ci]"
+
 /*
- * 1. Get list of commits since the last tag
- * 2. Filter out commits that did not touch package code
- * 3. Group commits by package
- * 4. For each package
- *    4.1. Group commits by type (Features, Bug fixes, Other)
- *    4.2. Determine the next version
- *    4.3. Update package.json with the new version
- *    4.4. Create the changelog
- *    4.5. Create git tag/release
- * 5. Commit changes
- * 6. Push git tag/release/commits
- * 7. Push to npm
+ * 1. Get a list of commits since the last tag
+ * 2. Early bailout ([skip ci] or chore(release): "bump version")
+ * 3. Filter out commits that did not touch package code
+ * 4. Group commits by package
+ * 5. For each package
+ *    5.1. Group commits by type (Features, Bug fixes, Other)
+ *    5.2. Determine the next version
+ *    5.3. Update package.json with the new version
+ *    5.4. Create the changelog
+ *    5.5. Create git tag/release
+ * 6. Commit changes
+ * 7. Push git tag/release/commits
+ * 8. Push to npm
  */
 
 async function run() {
-  const releaseCommitTypes = ["feat", "fix", "chore"]
-
   // TODO: Generate this from the package.json
   const packages = {
     "next-auth": "packages/next-auth",
@@ -78,17 +80,6 @@ async function run() {
     return commitsSinceLatestTag
   }
 
-  function getReleaseCommits(commits: Commit[]) {
-    const releaseCommits = commits.filter((commit) =>
-      releaseCommitTypes.includes(commit.parsed.type)
-    )
-    console.log(
-      releaseCommits.length,
-      `were release commits (${releaseCommitTypes})`
-    )
-    return releaseCommits
-  }
-
   function getChangedFiles(commitSha: string) {
     return execSync(`git diff-tree --no-commit-id --name-only -r ${commitSha}`)
       .toString()
@@ -111,10 +102,13 @@ async function run() {
     return packageCommits
   }
 
-  // 1. Get list of commits since the last tag
+  // 1. Get a list of commits since the last tag
   const commitsSinceLatestTag = await getCommitsSinceLatestTag(latestTag)
 
-  // 2. Filter out commits that did not touch package code
+  // 2. Early bailout ([skip ci] or chore(release): "bump version")
+  // TODO:
+
+  // 3. Filter out commits that did not touch package code
   const packageCommits = getPackageCommits(
     commitsSinceLatestTag,
     packageFolders
@@ -122,7 +116,7 @@ async function run() {
 
   console.log()
 
-  // 3. Group commits by package
+  // 4. Group commits by package
   const commitsByPackage = packageCommits.reduce((acc, commit) => {
     const changedFiles = getChangedFiles(commit.commit.short)
 
@@ -142,9 +136,9 @@ async function run() {
     `packages need a new release: ${Object.keys(commitsByPackage).join(", ")}`
   )
 
-  // 4. For each package
+  // 5. For each package
   for (const packageName in commitsByPackage) {
-    // 4.1. Group commits by type (Features, Bug fixes, Other)
+    // 5.1. Group commits by type (Features, Bug fixes, Other)
     const grouppedPackage = commitsByPackage[
       packageName as keyof typeof commitsByPackage
     ].reduce(
@@ -161,7 +155,7 @@ async function run() {
       >
     )
 
-    // 4.2. Determine the next version
+    // 5.2. Determine the next version
     const releaseType: semver.ReleaseType = grouppedPackage.features.length
       ? grouppedPackage.features.some((c) =>
           c.parsed.raw.includes("BREAKING CHANGE")
@@ -172,7 +166,7 @@ async function run() {
       ? "patch"
       : "prerelease"
 
-    // 4.3. Update package.json with the new version
+    // 5.3. Update package.json with the new version
     const file = path.join(
       rootDir,
       packages[packageName as keyof typeof packages],
@@ -190,7 +184,7 @@ async function run() {
       { spaces: 2 }
     )
 
-    // 4.4. Create the changelog
+    // 5.4. Create the changelog
     let changelog = `
 # Changes
 ---
@@ -217,12 +211,12 @@ ${grouppedPackage.other.map((c) => `  - ${c.parsed.raw}`).join("\n")}`
     console.log("\n=========================\n")
 
     console.log(`${packageName}@${newVersion}`, "\n", changelog)
-    // 4.5. Create git tag/release
+    // 5.5. Create git tag/release
   }
 
-  // 5. Commit changes
-  // 6. Push git tag/release/commits
-  // 7. Push to npm
+  // 6. Commit changes
+  // 7. Push git tag/release/commits
+  // 8. Push to npm
 
   return
 }
