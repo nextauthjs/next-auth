@@ -26,6 +26,9 @@ jobs:
         run: npm run build
       - name: Run tests
         run: npm run test -- -- --coverage --verbose
+        env:
+          UPSTASH_REDIS_URL: ${{ secrets.UPSTASH_REDIS_URL }}
+          UPSTASH_REDIS_KEY: ${{ secrets.UPSTASH_REDIS_KEY }}
       - name: Coverage
         uses: codecov/codecov-action@v1
         with:
