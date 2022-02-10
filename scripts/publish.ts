@@ -12,11 +12,15 @@ import parseCommit from "@commitlint/parse"
 import gitLog from "git-log-parser"
 // @ts-ignore
 import streamToArray from "stream-to-array"
-
-const rootDir = path.resolve(__dirname, "..")
-
-const releaseCommitMsg = 'chore(release): "bump version"'
-const skipCI = "[skip ci]"
+import {
+  BREAKING_COMMIT_MSG,
+  PackageName,
+  packages,
+  RELEASE_COMMIT_MSG,
+  RELEASE_COMMIT_TYPES,
+  rootDir,
+  SKIP_CI_COMMIT_MSG,
+} from "./config"
 
 /*
  * 1. Get a list of commits since the last tag
@@ -35,23 +39,19 @@ const skipCI = "[skip ci]"
  */
 
 async function run() {
-  // TODO: Generate this from the package.json
-  const packages = {
-    "next-auth": "packages/next-auth",
-    "@next-auth/prisma-adapter": "packages/adapter-prisma",
-    "next-auth-docs": "docs",
-  }
-
+  const dryRun = false
   const packageFolders = Object.values(packages)
 
   // Get the latest tag
+  console.log("Identifying latest tag...")
   const latestTag = execSync("git describe --tags --abbrev=0").toString().trim()
+  console.log(`Latest tag identified: ${latestTag}`)
 
   console.log()
 
-  async function getCommitsSinceLatestTag(latestTag: string) {
-    console.log(`Latest tag identified: ${latestTag}\n`)
+  console.log("Identifying commits since the latest tag...")
 
+  async function getCommitsSinceLatestTag(latestTag: string) {
     const range = `${latestTag}..HEAD`
 
     // Get the commits since the latest tag
@@ -88,6 +88,9 @@ async function run() {
   }
 
   function getPackageCommits(commits: Commit[], packageFolders: string[]) {
+    console.log()
+    console.log("Identifying commits that touched package code...")
+
     const packageCommits = commits.filter(({ commit }) => {
       const changedFiles = getChangedFiles(commit.short)
       return packageFolders.some((packageFolder) =>
@@ -97,7 +100,7 @@ async function run() {
       )
     })
 
-    console.log(packageCommits.length, "touched package code")
+    console.log(packageCommits.length, "commits touched package code")
 
     return packageCommits
   }
@@ -106,7 +109,14 @@ async function run() {
   const commitsSinceLatestTag = await getCommitsSinceLatestTag(latestTag)
 
   // 2. Early bailout ([skip ci] or chore(release): "bump version")
-  // TODO:
+  const lastCommit = commitsSinceLatestTag[0]
+  const shouldSkipCI =
+    lastCommit.parsed.raw.includes(SKIP_CI_COMMIT_MSG) || process.env.SKIP_CI
+  const justReleased = lastCommit.parsed.raw === RELEASE_COMMIT_MSG
+  if (shouldSkipCI || justReleased) {
+    console.log(shouldSkipCI ? "Skipping CI..." : "Already released...")
+    return
+  }
 
   // 3. Filter out commits that did not touch package code
   const packageCommits = getPackageCommits(
@@ -116,8 +126,13 @@ async function run() {
 
   console.log()
 
+  console.log("Identifying packages that need a new release...")
   // 4. Group commits by package
   const commitsByPackage = packageCommits.reduce((acc, commit) => {
+    if (!RELEASE_COMMIT_TYPES.includes(commit.parsed.type)) {
+      return acc
+    }
+
     const changedFiles = getChangedFiles(commit.commit.short)
 
     Object.entries(packages).forEach(([packageName, src]) => {
@@ -131,12 +146,21 @@ async function run() {
     return acc
   }, {} as Record<string, Commit[]>)
 
-  console.log(
-    Object.keys(commitsByPackage).length,
-    `packages need a new release: ${Object.keys(commitsByPackage).join(", ")}`
-  )
+  const changedPackages = Object.keys(commitsByPackage)
+  if (changedPackages.length) {
+    console.log(
+      changedPackages.length,
+      `packages need a new release: ${changedPackages.join(", ")}`
+    )
+  } else {
+    console.log("No packages needed a new release, BYE!")
+    return
+  }
+
+  console.log()
 
   // 5. For each package
+  const packagesToRelease = []
   for (const packageName in commitsByPackage) {
     // 5.1. Group commits by type (Features, Bug fixes, Other)
     const grouppedPackage = commitsByPackage[
@@ -155,68 +179,132 @@ async function run() {
       >
     )
 
+    const featuresHasBreaking = grouppedPackage.features.some((c) =>
+      c.parsed.raw.includes(BREAKING_COMMIT_MSG)
+    )
+
     // 5.2. Determine the next version
     const releaseType: semver.ReleaseType = grouppedPackage.features.length
-      ? grouppedPackage.features.some((c) =>
-          c.parsed.raw.includes("BREAKING CHANGE")
-        )
-        ? "major"
-        : "minor"
+      ? featuresHasBreaking
+        ? "major" // 1.x.x
+        : "minor" // x.1.x
       : grouppedPackage.bugfixes.length
-      ? "patch"
-      : "prerelease"
+      ? "patch" // x.x.1
+      : "prerelease" // x.x.x-prerelease.1
 
-    // 5.3. Update package.json with the new version
     const file = path.join(
       rootDir,
-      packages[packageName as keyof typeof packages],
+      packages[packageName as PackageName],
       "package.json"
     )
+
     const packageJson = (await jsonfile.readFile(file)) as PackageJson
+    async function getVersions() {
+      const oldVersion = packageJson.version!
+      const newSemVer = semver.parse(semver.inc(oldVersion, releaseType))!
 
-    const oldVersion = semver.parse(packageJson.version)!
+      return {
+        oldVersion,
+        newVersion: `${newSemVer.major}.${newSemVer.minor}.${newSemVer.patch}`,
+      }
+    }
 
-    const newSemVer = semver.parse(semver.inc(oldVersion, releaseType))!
-    const newVersion = `${newSemVer.major}.${newSemVer.minor}.${newSemVer.patch}`
-    await jsonfile.writeFile(
-      file,
-      { ...packageJson, version: newVersion },
-      { spaces: 2 }
-    )
+    async function writeNewVersion(version: string) {
+      await jsonfile.writeFile(file, { ...packageJson, version }, { spaces: 2 })
+    }
 
-    // 5.4. Create the changelog
-    let changelog = `
+    function createChangelog() {
+      let changelog = `
 # Changes
 ---
 `
-    if (grouppedPackage.features.length) {
-      changelog += `
+      if (grouppedPackage.features.length) {
+        changelog += `
 ## Features
 
 ${grouppedPackage.features.map((c) => `  - ${c.parsed.raw}`).join("\n")}`
-    }
-    if (grouppedPackage.bugfixes.length) {
-      changelog += `
+      }
+      if (grouppedPackage.bugfixes.length) {
+        changelog += `
 ## Bug Fixes
 
 ${grouppedPackage.bugfixes.map((c) => `  - ${c.parsed.raw}`).join("\n")}`
-    }
-    if (grouppedPackage.other.length) {
-      changelog += `
+      }
+      if (grouppedPackage.other.length) {
+        changelog += `
 ## Other
 
 ${grouppedPackage.other.map((c) => `  - ${c.parsed.raw}`).join("\n")}`
+      }
+
+      return changelog
     }
 
-    console.log("\n=========================\n")
+    // 5.3. Update package.json with the new version
+    const { oldVersion, newVersion } = await getVersions()
 
-    console.log(`${packageName}@${newVersion}`, "\n", changelog)
-    // 5.5. Create git tag/release
+    if (dryRun) {
+      console.log("Dry run, skip writing package.json...")
+    } else {
+      await writeNewVersion(newVersion)
+    }
+
+    // 5.4. Create the changelog
+    const changelog = createChangelog()
+
+    packagesToRelease.push({
+      name: packageName,
+      newVersion,
+      oldVersion,
+      changelog,
+    })
   }
 
-  // 6. Commit changes
-  // 7. Push git tag/release/commits
-  // 8. Push to npm
+  console.log()
+
+  if (dryRun) {
+    console.log("Dry run, skip release commit...")
+  } else {
+    // 6. Commit changes
+    execSync(`git add -A && git commit -m "${RELEASE_COMMIT_MSG}"`)
+    console.log("Release commit created")
+  }
+
+  if (dryRun) {
+    console.log(
+      `Dry run, skip npm publish, GitHub tag, release and push for packages: ${packagesToRelease
+        .map((p) => p.name)
+        .join(", ")}`
+    )
+  } else {
+    // 8. Push to npm
+    packagesToRelease.forEach((p) => {
+      const cd = `cd ${packages[p.name as PackageName]}`
+      if (p.name !== "next-auth") {
+        // When publishing a `@next-auth` package, we need a different token
+        process.env.NPM_TOKEN = process.env.NEXT_AUTH_ORG_NPM_TOKEN
+      }
+      const npmPublish = `npm publish --access public --tag experimental --dry-run`
+      execSync(`${cd} && ${npmPublish}`, { stdio: "inherit" })
+    })
+
+    packagesToRelease.forEach((p) => {
+      const { name, oldVersion, newVersion, changelog } = p
+      const gitTag = `${name}@v${newVersion}`
+
+      console.log(`${name} ${oldVersion} -> ${newVersion}`)
+      // 7. Push git tag/release/commits
+      execSync(`git tag ${gitTag}`)
+      console.log(`Creating github release...`)
+
+      execSync(`gh release create ${gitTag} --draft --notes '${changelog}'`)
+    })
+
+    execSync(`git push --tags`)
+    execSync(`git push`)
+  }
+
+  console.log()
 
   return
 }
