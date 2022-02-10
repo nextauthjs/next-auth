@@ -16,11 +16,12 @@ jobs:
     steps:
       - name: Init
         uses: actions/checkout@v2
-      - name: Setup Node & Install dependencies
+      - name: Setup Node
         uses: actions/setup-node@v2
         with:
           node-version: 16
           cache: 'yarn'
+      - name: Install dependencies 
         run: yarn --frozen-lockfile
       - name: Build
         run: npm run build
@@ -43,11 +44,12 @@ jobs:
     steps:
       - name: Init
         uses: actions/checkout@v2
-      - name: Setup Node & Install dependencies
+      - name: Setup Node
         uses: actions/setup-node@v2
         with:
           node-version: 16
           cache: 'yarn'
+      - name: Install dependencies 
         run: yarn --frozen-lockfile
       - name: Publish to npm and GitHub
         run: |
@@ -65,11 +67,12 @@ jobs:
     steps:
       - name: Init
         uses: actions/checkout@v2
-      - name: Setup Node & Install dependencies
+      - name: Setup Node
         uses: actions/setup-node@v2
         with:
           node-version: 16
           cache: 'yarn'
+      - name: Install dependencies 
         run: yarn --frozen-lockfile
       - name: Determine version
         uses: ./.github/version-pr
