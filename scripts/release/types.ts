@@ -44,3 +44,11 @@ export interface BranchConfig {
   prerelease: boolean
   ghRelease: boolean
 }
+
+export interface PackageToRelease {
+  name: string
+  newVersion: string
+  oldVersion: string
+  changelog: string
+  path: string
+}

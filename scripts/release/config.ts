@@ -1,4 +1,4 @@
-import path from "path"
+export const releaseBranches = ["main"]
 
 // TODO: Generate dynamically
 export const packages = {
@@ -19,8 +19,9 @@ export const packages = {
 
 export type PackageName = keyof typeof packages
 
-export const rootDir = path.resolve(__dirname, "..")
+export const rootDir = process.cwd()
 export const RELEASE_COMMIT_MSG = "chore(release): bump version"
 export const BREAKING_COMMIT_MSG = "BREAKING CHANGE"
 export const SKIP_CI_COMMIT_MSG = "[skip ci]"
-export const RELEASE_COMMIT_TYPES = ["feat", "fix", "chore"]
+export const RELEASE_COMMIT_TYPES = ["feat", "fix"]
+export const dryRun = !!process.env.DRY_RUN

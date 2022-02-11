@@ -20,7 +20,7 @@
     "dev:app": "turbo run dev --parallel --no-deps --no-cache --scope=next-auth-app",
     "dev:docs": "turbo run dev --parallel --no-deps --no-cache --scope=next-auth-docs",
     "version:pr": "node ./config/version-pr",
-    "release": "ts-node scripts/publish.ts"
+    "release": "ts-node scripts/release"
   },
   "devDependencies": {
     "@actions/core": "^1.6.0",
