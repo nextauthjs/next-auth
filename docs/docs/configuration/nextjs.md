@@ -102,7 +102,7 @@ With the above code, you just made sure that only user's with the `admin` role c
 
 ```ts title="pages/admin/_middleware.ts"
 import type { NextRequest } from "next/server"
-import type { JWT } from "next-auth"
+import type { JWT } from "next-auth/jwt"
 
 import { withAuth } from "next-auth/middleware"
 
