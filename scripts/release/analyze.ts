@@ -20,7 +20,7 @@ export async function analyze(options: {
   RELEASE_COMMIT_TYPES: string[]
   rootDir: string
   SKIP_CI_COMMIT_MSG: string
-}) {
+}): Promise<PackageToRelease[]> {
   const {
     packages,
     BREAKING_COMMIT_MSG,
@@ -63,12 +63,15 @@ export async function analyze(options: {
   console.log(commitsSinceLatestTag.length, `commits found since ${latestTag}`)
 
   const lastCommit = commitsSinceLatestTag[0]
-  const shouldSkipCI =
-    lastCommit.parsed.raw.includes(SKIP_CI_COMMIT_MSG) || process.env.SKIP_CI
-  const justReleased = lastCommit.parsed.raw === RELEASE_COMMIT_MSG
-  if (shouldSkipCI || justReleased) {
-    console.log(shouldSkipCI ? "Skipping CI..." : "Already released...")
-    return
+  if (lastCommit.parsed.raw.includes(SKIP_CI_COMMIT_MSG)) {
+    console.log(
+      `Last commit contained ${SKIP_CI_COMMIT_MSG}, skipping skipping release...`
+    )
+    return []
+  }
+  if (lastCommit.parsed.raw === RELEASE_COMMIT_MSG) {
+    console.log("Already released...")
+    return []
   }
 
   console.log()
@@ -117,7 +120,8 @@ export async function analyze(options: {
     )
   } else {
     console.log("No packages needed a new release, BYE!")
-    return
+
+    return []
   }
 
   console.log()

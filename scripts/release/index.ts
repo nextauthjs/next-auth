@@ -21,9 +21,12 @@ async function run() {
   }
 
   const packages = await analyze(config)
-  console.log(packages)
 
-  // await publish({ ...config, packages })
+  if (!packages.length) return
+
+  if (process.env.DEBUG) console.log("[debug] packages", packages)
+
+  await publish({ ...config, packages })
 }
 
 run().catch((err) => {
