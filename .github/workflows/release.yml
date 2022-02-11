@@ -55,11 +55,6 @@ jobs:
         run: yarn release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # We save default token elsewhere so we can safely swap later on
-          # None of the current maintainers have access to the original token to change
-          # or get a new one from npm.
-          # When all packages have been migrated to `@next-auth`, we can have a single token
-          # because we have access to that npm account.
           NPM_TOKEN_PKG: ${{ secrets.NPM_TOKEN }}
           NPM_TOKEN_ORG: ${{ secrets.NPM_TOKEN_ORG }}
           DRY_RUN: true
