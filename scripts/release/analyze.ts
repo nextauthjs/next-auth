@@ -89,29 +89,39 @@ export async function analyze(options: {
   console.log()
 
   console.log("Identifying packages that need a new release...")
-  const commitsByPackage = packageCommits.reduce((acc, commit) => {
-    if (!RELEASE_COMMIT_TYPES.includes(commit.parsed.type)) {
-      return acc
-    }
 
-    const changedFiles = getChangedFiles(commit.commit.short)
+  const packagesNeedRelease: string[] = []
+  const grouppedPackages = packageCommits.reduce((acc, commit) => {
+    const changedFilesInCommit = getChangedFiles(commit.commit.short)
 
-    Object.entries(packages).forEach(([packageName, src]) => {
-      if (changedFiles.some((changedFile) => changedFile.startsWith(src))) {
-        if (!(packageName in acc)) {
-          acc[packageName] = []
+    for (const [pkgName, src] of Object.entries(packages)) {
+      if (
+        changedFilesInCommit.some((changedFile) => changedFile.startsWith(src))
+      ) {
+        const pkg = acc[pkgName]
+        if (!pkg) {
+          acc[pkgName] = { features: [], bugfixes: [], other: [] }
         }
-        acc[packageName].push(commit)
+        const { type } = commit.parsed
+        if (RELEASE_COMMIT_TYPES.includes(type)) {
+          if (!packagesNeedRelease.includes(pkgName)) {
+            packagesNeedRelease.push(pkgName)
+          }
+          if (type === "feat") pkg.features.push(commit)
+          else pkg.bugfixes.push(commit)
+        } else {
+          pkg.other.push(commit)
+        }
       }
-    })
+    }
     return acc
-  }, {} as Record<string, Commit[]>)
+  }, {} as Record<string, { features: Commit[]; bugfixes: Commit[]; other: Commit[] }>)
 
-  const changedPackages = Object.keys(commitsByPackage)
-  if (changedPackages.length) {
+  if (packagesNeedRelease.length) {
     console.log(
-      changedPackages.length,
-      `packages need a new release: ${changedPackages.join(", ")}`
+      `${
+        packagesNeedRelease.length
+      } packages need a new release: ${packagesNeedRelease.join(", ")}`
     )
   } else {
     console.log("No packages needed a new release, BYE!")
@@ -122,36 +132,18 @@ export async function analyze(options: {
   console.log()
 
   const packagesToRelease: PackageToRelease[] = []
-  for (const pkgName in commitsByPackage) {
-    const grouppedPackage = commitsByPackage[
-      pkgName as keyof typeof commitsByPackage
-    ].reduce(
-      (acc, commit) => {
-        const { type } = commit.parsed
-        if (type === "feat") acc.features.push(commit)
-        else if (type === "fix") acc.bugfixes.push(commit)
-        else acc.other.push(commit)
-        return acc
-      },
-      { features: [], bugfixes: [], other: [] } as Record<
-        "features" | "bugfixes" | "other",
-        Commit[]
-      >
-    )
-
-    const featuresHasBreaking = grouppedPackage.features.some((c) =>
+  for await (const pkgName of packagesNeedRelease) {
+    const commits = grouppedPackages[pkgName]
+    const featuresHasBreaking = commits.features.some((c) =>
       c.parsed.raw.includes(BREAKING_COMMIT_MSG)
     )
-    const releaseType: semver.ReleaseType = grouppedPackage.features.length
+    const releaseType: semver.ReleaseType = commits.features.length
       ? featuresHasBreaking
         ? "major" // 1.x.x
         : "minor" // x.1.x
-      : grouppedPackage.bugfixes.length
-      ? "patch" // x.x.1
-      : "prerelease" // x.x.x-prerelease.1
+      : "patch" // x.x.1
 
-    const file = path.join(rootDir, packages[pkgName], "package.json")
-    const packageJson = (await jsonfile.readFile(file)) as PackageJson
+    const packageJson = await pkgJson.read(packages[pkgName])
     const oldVersion = packageJson.version!
     const newSemVer = semver.parse(semver.inc(oldVersion, releaseType))!
 
@@ -159,7 +151,7 @@ export async function analyze(options: {
       name: pkgName,
       oldVersion,
       newVersion: `${newSemVer.major}.${newSemVer.minor}.${newSemVer.patch}`,
-      changelog: createChangelog(grouppedPackage),
+      changelog: createChangelog(commits),
       path: packages[pkgName],
     })
   }
