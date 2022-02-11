@@ -1,5 +1,4 @@
-import * as config from "./config"
-
+import { config } from "./config"
 import { shouldSkip } from "./skip"
 import { verify as verify } from "./verify"
 import { analyze } from "./analyze"
@@ -10,7 +9,7 @@ async function run() {
     console.log("\nPerforming dry run, no packages will be published!\n")
   }
 
-  if (await shouldSkip({ releaseBranches: config.releaseBranches })) {
+  if (shouldSkip({ releaseBranches: config.releaseBranches })) {
     return
   }
 

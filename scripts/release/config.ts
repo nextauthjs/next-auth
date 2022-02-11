@@ -1,27 +1,25 @@
-export const releaseBranches = ["main"]
-
-// TODO: Generate dynamically
-export const packages = {
-  "next-auth": "packages/next-auth",
-  "adapter-dgraph": "packages/@next-auth/dgraph-adapter",
-  "adapter-fauna": "packages/@next-auth/fauna-adapter",
-  "adapter-mikro-orm": "packages/@next-auth/mikro-orm-adapter",
-  "adapter-neo4j": "packages/@next-auth/neo4j-adapter",
-  "adapter-prisma": "packages/@next-auth/prisma-adapter",
-  "adapter-upstash-redis": "packages/@next-auth/upstash-redis-adapter",
-  "adapter-dynamodb": "packages/@next-auth/dynamodb-adapter",
-  "adapter-firebase": "packages/@next-auth/firebase-adapter",
-  "adapter-mongodb": "packages/@next-auth/mongodb-adapter",
-  "adapter-pouchdb": "packages/@next-auth/pouchdb-adapter",
-  "adapter-sequelize": "packages/@next-auth/sequelize-adapter",
-  "adapter-typeorm-legacy": "packages/@next-auth/typeorm-legacy-adapter",
+export const config = {
+  releaseBranches: ["main"],
+  // TODO: Generate dynamically
+  packages: {
+    "next-auth": "packages/next-auth",
+    "adapter-dgraph": "packages/dgraph-adapter",
+    "adapter-fauna": "packages/fauna-adapter",
+    "adapter-mikro-orm": "packages/mikro-orm-adapter",
+    "adapter-neo4j": "packages/neo4j-adapter",
+    "adapter-prisma": "packages/prisma-adapter",
+    "adapter-upstash-redis": "packages/upstash-redis-adapter",
+    "adapter-dynamodb": "packages/dynamodb-adapter",
+    "adapter-firebase": "packages/firebase-adapter",
+    "adapter-mongodb": "packages/mongodb-adapter",
+    "adapter-pouchdb": "packages/pouchdb-adapter",
+    "adapter-sequelize": "packages/sequelize-adapter",
+    "adapter-typeorm-legacy": "packages/typeorm-legacy-adapter",
+  },
+  rootDir: process.cwd(),
+  RELEASE_COMMIT_MSG: "chore(release): bump version",
+  BREAKING_COMMIT_MSG: "BREAKING CHANGE",
+  SKIP_CI_COMMIT_MSG: "[skip ci]",
+  RELEASE_COMMIT_TYPES: ["feat", "fix"],
+  dryRun: !!process.env.DRY_RUN,
 }
-
-export type PackageName = keyof typeof packages
-
-export const rootDir = process.cwd()
-export const RELEASE_COMMIT_MSG = "chore(release): bump version"
-export const BREAKING_COMMIT_MSG = "BREAKING CHANGE"
-export const SKIP_CI_COMMIT_MSG = "[skip ci]"
-export const RELEASE_COMMIT_TYPES = ["feat", "fix"]
-export const dryRun = !!process.env.DRY_RUN

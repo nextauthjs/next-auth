@@ -1,10 +1,7 @@
 import type { Commit, PackageToRelease } from "./types"
-import type { PackageJson } from "type-fest"
 
-import path from "path"
 import { execSync } from "child_process"
-// @ts-ignore
-import jsonfile from "jsonfile"
+import { pkgJson } from "./utils"
 import semver from "semver"
 import parseCommit from "@commitlint/parse"
 // @ts-ignore
@@ -18,7 +15,6 @@ export async function analyze(options: {
   BREAKING_COMMIT_MSG: string
   RELEASE_COMMIT_MSG: string
   RELEASE_COMMIT_TYPES: string[]
-  rootDir: string
   SKIP_CI_COMMIT_MSG: string
 }): Promise<PackageToRelease[]> {
   const {
@@ -26,7 +22,6 @@ export async function analyze(options: {
     BREAKING_COMMIT_MSG,
     RELEASE_COMMIT_MSG,
     RELEASE_COMMIT_TYPES,
-    rootDir,
     SKIP_CI_COMMIT_MSG,
   } = options
 
@@ -45,8 +40,8 @@ export async function analyze(options: {
   // Get the commits since the latest tag
   const commitsSinceLatestTag = await new Promise<Commit[]>(
     (resolve, reject) => {
-      const stream: ReadableStream = gitLog.parse({ _: range })
-      streamToArray(stream, function (err: Error, arr: any[]) {
+      const stream = gitLog.parse({ _: range })
+      streamToArray(stream, (err: Error, arr: any[]) => {
         if (err) return reject(err)
 
         Promise.all(
@@ -65,7 +60,7 @@ export async function analyze(options: {
   const lastCommit = commitsSinceLatestTag[0]
   if (lastCommit.parsed.raw.includes(SKIP_CI_COMMIT_MSG)) {
     console.log(
-      `Last commit contained ${SKIP_CI_COMMIT_MSG}, skipping skipping release...`
+      `Last commit contained ${SKIP_CI_COMMIT_MSG}, skipping release...`
     )
     return []
   }

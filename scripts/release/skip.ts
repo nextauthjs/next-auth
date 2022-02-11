@@ -1,4 +1,4 @@
-export async function shouldSkip(options: { releaseBranches: string[] }) {
+export function shouldSkip(options: { releaseBranches: string[] }) {
   const { releaseBranches } = options
 
   if (!releaseBranches.includes(process.env.GITHUB_REF_NAME)) {
