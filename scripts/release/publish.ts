@@ -65,6 +65,8 @@ export async function publish(options: {
     }
   }
 
-  execSync(`git push --tags`)
-  execSync(`git push`)
+  if (!dryRun) {
+    execSync(`git push --tags`)
+    execSync(`git push`)
+  }
 }
