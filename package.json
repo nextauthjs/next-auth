@@ -25,6 +25,7 @@
   "devDependencies": {
     "@actions/core": "^1.6.0",
     "@commitlint/parse": "16.0.0",
+    "@types/semver": "7.3.9",
     "@typescript-eslint/eslint-plugin": "^5.10.2",
     "@typescript-eslint/parser": "^4.33.0",
     "eslint": "^7.32.0",
@@ -39,6 +40,7 @@
     "jsonfile": "6.1.0",
     "prettier": "2.4.1",
     "pretty-quick": "^3.1.2",
+    "semver": "7.3.5",
     "stream-to-array": "2.3.0",
     "ts-node": "10.5.0",
     "turbo": "^1.1.2",
