@@ -46,7 +46,7 @@ If you want to override the default entities (for example to add a `role` field 
 
 1. create a file containing your modified entities:
 
-(The file below is based on the [default entities](https://github.com/nextauthjs/adapters/blob/next/packages/typeorm-legacy/src/entities.ts))
+(The file below is based on the [default entities](https://github.com/nextauthjs/next-auth/blob/main/packages/adapter-typeorm-legacy/src/entities.ts))
 
 ```diff title="lib/entities.ts"
 import {

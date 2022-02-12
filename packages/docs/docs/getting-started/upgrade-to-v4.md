@@ -287,7 +287,9 @@ Introduced in https://github.com/nextauthjs/next-auth/pull/3144
 
 Most importantly, the core `next-auth` package no longer ships with `typeorm` or any other database adapter by default. This brings the default bundle size down significantly for those not needing to persist user data to a database.
 
-You can find the official Adapters in the newly created [nextauthjs/adapter](https://github.com/nextauthjs/adapters) repository. Although you can still [create your own](/tutorials/creating-a-database-adapter) with a new, [simplified Adapter API](https://github.com/nextauthjs/next-auth/pull/2361).
+You can find the official Adapters in the `packages` directory in the primary monorepo ([nextauthjs/next-auth](https://github.com/nextauthjs/next-auth)). Although you can still [create your own](/tutorials/creating-a-database-adapter) with a new, [simplified Adapter API](https://github.com/nextauthjs/next-auth/pull/2361).
+
+If you have a database that was created with a `3.x.x` or earlier version of NextAuth.js, you will need to run a migration to update the schema to the new version 4 database model. See the bottom of this migration guide for database specific migration examples.
 
 1. If you use the built-in TypeORM or Prisma adapters, these have been removed from the core `next-auth` package. Thankfully the migration is easy; you just need to install the external packages for your database and change the import in your `[...nextauth].js`.
 
@@ -547,8 +549,28 @@ DROP COLUMN "updated_at"
 
 #### MongoDB
 
-```sql
-TBA
+MongoDB is a document database and as such new fields will be automatically populated. You do, however, need to update the names of existing fields which are going to be reused.
+
+```mongo
+db.getCollection('accounts').updateMany({}, {
+  $rename: {
+    "provider_id": "provider",
+    "provider_account_id": "providerAccountId",
+    "user_id": "userId",
+    "access_token_expires": "expires_at"
+  }
+})
+db.getCollection('users').updateMany({}, {
+  $rename: {
+    "email_verified": "emailVerified"
+  }
+})
+db.getCollection('sessions').updateMany({}, {
+  $rename: {
+    "session_token": "sessionToken",
+    "user_id": "userId"
+  }
+})
 ```
 
 ## Summary
