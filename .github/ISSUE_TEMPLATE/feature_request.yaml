@@ -10,6 +10,7 @@ body:
     attributes:
       value: |
         Thank you very much for reaching out to us regarding the awesome feature that you believe should be included in the NextAuth.js library.
+        NOTE: Feature requests will be converted to discussions (Ideas 💡)
         ### Important :exclamation:
 
         Please proceed by providing the following information:
