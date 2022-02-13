@@ -49,7 +49,7 @@ export interface PackageToRelease {
   name: string
   newVersion: string
   oldVersion: string
-  changelog: string
+  commits: GroupedCommits
   path: string
 }
 

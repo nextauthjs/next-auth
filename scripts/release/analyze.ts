@@ -157,55 +157,10 @@ export async function analyze(options: {
       name: pkgName,
       oldVersion,
       newVersion: `${newSemVer.major}.${newSemVer.minor}.${newSemVer.patch}`,
-      changelog: createChangelog(commits),
+      commits,
       path: packages[pkgName],
     })
   }
 
   return packagesToRelease
-}
-
-function createChangelog(pkg: GroupedCommits) {
-  let changelog = ``
-  changelog += listGroup("Features", pkg.features)
-  changelog += listGroup("Bugfixes", pkg.bugfixes)
-  changelog += listGroup("Other", pkg.other)
-
-  if (pkg.breaking.length) {
-    changelog += `
-## BREAKING CHANGES
-
-${pkg.breaking.map((c) => `  - ${c.body}`).join("\n")}`
-  }
-
-  return changelog
-}
-
-function sortByScope(commits: Commit[]) {
-  return commits.sort((a, b) => {
-    if (a.parsed.scope && b.parsed.scope) {
-      return a.parsed.scope.localeCompare(b.parsed.scope)
-    } else if (a.parsed.scope) return -1
-    else if (b.parsed.scope) return 1
-    return a.body.localeCompare(b.body)
-  })
-}
-
-function header(c: Commit) {
-  let h = c.parsed.subject
-  if (c.parsed.scope) {
-    h = `**${c.parsed.scope}**: ${h} (${c.commit.short})`
-  }
-  return h
-}
-
-function listGroup(heading: string, commits: Commit[]) {
-  if (!commits.length) return ""
-  const list = sortByScope(commits)
-    .map((c) => `  - ${header(c)}`)
-    .join("\n")
-  return `## ${heading}
-
-${list}
-`
 }
