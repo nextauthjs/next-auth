@@ -25,3 +25,9 @@ async function update(
 }
 
 export const pkgJson = { read, update }
+
+export function debug(...args: any[]): void {
+  if (!process.env.DEBUG) return
+  const [first, ...rest] = args
+  console.log(`\n[debug] ${first}\n`, ...rest, "\n")
+}

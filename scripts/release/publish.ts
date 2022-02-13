@@ -25,20 +25,22 @@ export async function publish(options: {
   }
 
   for (const pkg of packages) {
-    // We need different tokens for `next-auth` and `@next-auth/*` packages
+    let npmPublish = `npm publish --access public --registry=https://registry.npmjs.org`
+    // We use different tokens for `next-auth` and `@next-auth/*` packages
     if (pkg.name === "next-auth") {
       process.env.NPM_TOKEN = process.env.NPM_TOKEN_PKG
     } else {
       process.env.NPM_TOKEN = process.env.NPM_TOKEN_ORG
     }
 
-    let npmPublish = `npm publish --access public`
     if (dryRun) {
       console.log(`Dry run, skip npm publish for package ${pkg.name}...`)
       npmPublish += " --dry-run"
     }
 
-    execSync(`cd ${pkg.path} && ${npmPublish}`)
+    const npmrc = 'echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc'
+    execSync(npmrc, { cwd: pkg.path })
+    execSync(npmPublish, { cwd: pkg.path })
   }
 
   for (const pkg of packages) {
@@ -57,7 +59,6 @@ export async function publish(options: {
   }
 
   if (!dryRun) {
-    execSync(`git push --tags`)
     execSync(`git push`)
   }
 }

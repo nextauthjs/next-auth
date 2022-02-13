@@ -3,6 +3,7 @@ import { shouldSkip } from "./skip"
 import { verify as verify } from "./verify"
 import { analyze } from "./analyze"
 import { publish } from "./publish"
+import { debug } from "./utils"
 
 async function run() {
   if (config.dryRun) {
@@ -23,7 +24,10 @@ async function run() {
 
   if (!packages.length) return
 
-  if (process.env.DEBUG) console.log("[debug] packages", packages)
+  debug(
+    "Packages to release:",
+    packages.map((p) => JSON.stringify(p, null, 2)).join("\n")
+  )
 
   await publish({ ...config, packages })
 }

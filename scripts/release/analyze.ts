@@ -1,7 +1,7 @@
 import type { Commit, GroupedCommits, PackageToRelease } from "./types"
 
 import { execSync } from "child_process"
-import { pkgJson } from "./utils"
+import { debug, pkgJson } from "./utils"
 import semver from "semver"
 import parseCommit from "@commitlint/parse"
 // @ts-ignore
@@ -15,14 +15,14 @@ export async function analyze(options: {
   BREAKING_COMMIT_MSG: string
   RELEASE_COMMIT_MSG: string
   RELEASE_COMMIT_TYPES: string[]
-  SKIP_CI_COMMIT_MSG: string
+  SKIP_RELEASE_MSG: string
 }): Promise<PackageToRelease[]> {
   const {
     packages,
     BREAKING_COMMIT_MSG,
     RELEASE_COMMIT_MSG,
     RELEASE_COMMIT_TYPES,
-    SKIP_CI_COMMIT_MSG,
+    SKIP_RELEASE_MSG,
   } = options
 
   const packageFolders = Object.values(options.packages)
@@ -56,16 +56,20 @@ export async function analyze(options: {
   )
 
   console.log(commitsSinceLatestTag.length, `commits found since ${latestTag}`)
+  debug(
+    "Analyzing the following commits:",
+    commitsSinceLatestTag.map((c) => `  ${c.subject}`).join("\n")
+  )
 
   const lastCommit = commitsSinceLatestTag[0]
-  if (lastCommit.parsed.raw.includes(SKIP_CI_COMMIT_MSG)) {
+  if (lastCommit?.parsed.raw.includes(SKIP_RELEASE_MSG)) {
     console.log(
-      `Last commit contained ${SKIP_CI_COMMIT_MSG}, skipping release...`
+      `Last commit contained ${SKIP_RELEASE_MSG}, skipping release...`
     )
     return []
   }
-  if (lastCommit.parsed.raw === RELEASE_COMMIT_MSG) {
-    console.log("Already released...")
+  if (lastCommit?.parsed.raw === RELEASE_COMMIT_MSG) {
+    debug("Already released...")
     return []
   }
 
@@ -125,9 +129,8 @@ export async function analyze(options: {
 
   if (packagesNeedRelease.length) {
     console.log(
-      `${
-        packagesNeedRelease.length
-      } packages need a new release: ${packagesNeedRelease.join(", ")}`
+      packagesNeedRelease.length,
+      `new release(s) needed: ${packagesNeedRelease.join(", ")}`
     )
   } else {
     console.log("No packages needed a new release, BYE!")
@@ -163,9 +166,7 @@ export async function analyze(options: {
 }
 
 function createChangelog(pkg: GroupedCommits) {
-  let changelog = `
-# Changes
-`
+  let changelog = ``
   changelog += listGroup("Features", pkg.features)
   changelog += listGroup("Bugfixes", pkg.bugfixes)
   changelog += listGroup("Other", pkg.other)
@@ -193,7 +194,7 @@ function sortByScope(commits: Commit[]) {
 function header(c: Commit) {
   let h = c.parsed.subject
   if (c.parsed.scope) {
-    h = `**${c.parsed.scope}**: ${h}`
+    h = `**${c.parsed.scope}**: ${h} (${c.commit.short})`
   }
   return h
 }
