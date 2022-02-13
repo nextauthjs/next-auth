@@ -1,0 +1,25 @@
+export const config = {
+  releaseBranches: ["main"],
+  // TODO: Generate dynamically
+  packages: {
+    "next-auth": "packages/next-auth",
+    "adapter-dgraph": "packages/dgraph-adapter",
+    "adapter-fauna": "packages/fauna-adapter",
+    "adapter-mikro-orm": "packages/mikro-orm-adapter",
+    "adapter-neo4j": "packages/neo4j-adapter",
+    "adapter-prisma": "packages/prisma-adapter",
+    "adapter-upstash-redis": "packages/upstash-redis-adapter",
+    "adapter-dynamodb": "packages/dynamodb-adapter",
+    "adapter-firebase": "packages/firebase-adapter",
+    "adapter-mongodb": "packages/mongodb-adapter",
+    "adapter-pouchdb": "packages/pouchdb-adapter",
+    "adapter-sequelize": "packages/sequelize-adapter",
+    "adapter-typeorm-legacy": "packages/typeorm-legacy-adapter",
+  },
+  rootDir: process.cwd(),
+  RELEASE_COMMIT_MSG: "chore(release): bump version",
+  BREAKING_COMMIT_MSG: "BREAKING CHANGE",
+  SKIP_RELEASE_MSG: "[skip release]",
+  RELEASE_COMMIT_TYPES: ["feat", "fix"],
+  dryRun: !!process.env.DRY_RUN,
+}

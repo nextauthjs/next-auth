@@ -1,6 +1,6 @@
 {
   "name": "next-auth",
-  "version": "4.1.2",
+  "version": "4.2.1",
   "description": "Authentication for Next.js",
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/next-auth.git",
@@ -86,7 +86,6 @@
     }
   },
   "devDependencies": {
-    "@actions/core": "^1.6.0",
     "@babel/cli": "^7.16.0",
     "@babel/core": "^7.16.0",
     "@babel/plugin-proposal-optional-catch-binding": "^7.16.0",
@@ -133,31 +132,5 @@
     "./*.d.ts",
     "**/tests",
     "**/__tests__"
-  ],
-  "release": {
-    "branches": [
-      "+([0-9])?(.{+([0-9]),x}).x",
-      "main",
-      {
-        "name": "beta",
-        "prerelease": true
-      },
-      {
-        "name": "next",
-        "prerelease": true
-      }
-    ],
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/npm",
-      [
-        "@semantic-release/github",
-        {
-          "releasedLabels": false,
-          "successComment": false
-        }
-      ]
-    ]
-  }
+  ]
 }
