@@ -29,6 +29,7 @@ import OsuProvider from "next-auth/providers/osu"
 import AppleProvider from "next-auth/providers/apple"
 import PatreonProvider from "next-auth/providers/patreon"
 import TraktProvider from "next-auth/providers/trakt"
+import ShopifyProvider from "next-auth/providers/shopify"
 
 // import { PrismaAdapter } from "@next-auth/prisma-adapter"
 // import { PrismaClient } from "@prisma/client"
@@ -89,6 +90,13 @@ export const authOptions: NextAuthOptions = {
     GitHubProvider({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET,
+    }),
+    ShopifyProvider({
+      clientId: process.env.SHOPIFY_ID,
+      clientSecret: process.env.SHOPIFY_SECRET,
+      shop: "unique-master", // Don't include .myshopify.com
+      scope: "read_products,write_products,read_orders,write_orders",
+      apiVersion: "2022-01",
     }),
     Auth0Provider({
       clientId: process.env.AUTH0_ID,
