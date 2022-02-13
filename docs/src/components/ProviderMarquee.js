@@ -14,6 +14,7 @@ const icons = [
   "/img/providers/gitlab.svg",
   "/img/providers/google-icon.svg",
   "/img/providers/okta-3.svg",
+  "/img/providers/shopify.svg",
   "/img/providers/openid.svg",
   "/img/providers/slack.svg",
   "/img/providers/spotify.svg",
