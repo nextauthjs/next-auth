@@ -1,6 +1,5 @@
 import type { PackageToRelease } from "./types"
 
-import path from "path"
 import { execSync } from "child_process"
 
 import { pkgJson } from "./utils"
@@ -17,8 +16,7 @@ export async function publish(options: {
   } else {
     for await (const pkg of packages) {
       console.log(`Writing version to package.json for package ${pkg.name}`)
-      const file = path.join(pkg.path, "package.json")
-      await pkgJson.update(file, { version: pkg.newVersion })
+      await pkgJson.update(pkg.path, { version: pkg.newVersion })
     }
 
     console.log("All package.json files have been written, committing...")
