@@ -94,23 +94,22 @@ export async function analyze(options: {
   const grouppedPackages = packageCommits.reduce((acc, commit) => {
     const changedFilesInCommit = getChangedFiles(commit.commit.short)
 
-    for (const [pkgName, src] of Object.entries(packages)) {
+    for (const [pkg, src] of Object.entries(packages)) {
       if (
         changedFilesInCommit.some((changedFile) => changedFile.startsWith(src))
       ) {
-        const pkg = acc[pkgName]
-        if (!pkg) {
-          acc[pkgName] = { features: [], bugfixes: [], other: [] }
+        if (!(pkg in acc)) {
+          acc[pkg] = { features: [], bugfixes: [], other: [] }
         }
         const { type } = commit.parsed
         if (RELEASE_COMMIT_TYPES.includes(type)) {
-          if (!packagesNeedRelease.includes(pkgName)) {
-            packagesNeedRelease.push(pkgName)
+          if (!packagesNeedRelease.includes(pkg)) {
+            packagesNeedRelease.push(pkg)
           }
-          if (type === "feat") pkg.features.push(commit)
-          else pkg.bugfixes.push(commit)
+          if (type === "feat") acc[pkg].features.push(commit)
+          else acc[pkg].bugfixes.push(commit)
         } else {
-          pkg.other.push(commit)
+          acc[pkg].other.push(commit)
         }
       }
     }
