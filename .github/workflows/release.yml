@@ -63,7 +63,6 @@ jobs:
           NPM_TOKEN_PKG: ${{ secrets.NPM_TOKEN }}
           NPM_TOKEN_ORG: ${{ secrets.NPM_TOKEN_ORG }}
           DRY_RUN: true
-          DEBUG: true
   release-pr:
     name: Publish PR
     runs-on: ubuntu-latest
