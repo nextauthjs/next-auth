@@ -1,4 +1,5 @@
 # https://github.com/probot/stale#usage
+
 daysUntilStale: 60
 daysUntilClose: 7
 exemptLabels:
