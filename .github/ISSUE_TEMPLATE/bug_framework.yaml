@@ -1,0 +1,60 @@
+name: Bug report
+description: Report an issue so we can improve
+labels: [triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this issue!
+        Is this your first time contributing? Check out this video: https://www.youtube.com/watch?v=cuoNzXFLitc
+
+        ### Important :exclamation:
+
+        _Providing incorrect/insufficient information or skipping steps to reproduce the issue may result in closing the issue or converting to a discussion without further explanation._
+
+        If you have a generic question specific to your project, it is best asked in Discussions under the [Questions category](https://github.com/nextauthjs/next-auth/discussions/new?category=Questions)
+  # Let's wait with this until adoption in other frameworks.
+  # - type: dropdown
+  #   attributes:
+  #     label: Framework
+  #     description: Which framework(s) is this issue related to?
+  #     multiple: true
+  #     options:
+  #       - "Next.js"
+  #       - "Other"
+  - type: textarea
+    attributes:
+      label: Environment
+      description: |
+        Run this command in your project's root folder and paste the result:
+
+        ```sh
+        npx envinfo --system --binaries --browsers --npmPackages "next,react,next-auth" && npx envinfo --npmPackages "@next-auth/*"
+        ```
+        Alternatively, you can manually gather the version information from your package.json for these packages: "next", "react" and "next-auth". Please also mention your OS and Node.js version, as well as the browser you are using.
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Reproduction URL
+      description: A URL to a repository/code that clearly reproduces your issue. You can use our [`next-auth-example`](https://github.com/nextauthjs/next-auth-example) template repository to get started more easily, or link to your project if it's public
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Describe the issue
+      description: Describe us what the issue is and what have you tried so far to fix it. Add any extra useful information in this section. Feel free to use screenshots (but prefer [code blocks](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-and-highlighting-code-blocks#syntax-highlighting) over a picture of your code) or a video explanation.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: How to reproduce
+      description: Explain with clear steps how to reproduce the issue
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Expected behavior
+      description: Explain what should have happened instead of what actually happened
+    validations:
+      required: true
