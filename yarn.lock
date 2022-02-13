@@ -3219,34 +3219,34 @@
     mermaid "^8.9.0"
     puppeteer "^13.0.0"
 
-"@mikro-orm/core@^5.0.0-dev.527":
-  version "5.0.0-rc.2"
-  resolved "https://registry.yarnpkg.com/@mikro-orm/core/-/core-5.0.0-rc.2.tgz#bba3e56eeccfbbdfb0137d4a1677d7039e054365"
-  integrity sha512-gUL8s4PxtVdBsTAmk4SWbXzP9nDQyjPJlZwu1eiz5sn7/N33RHbmtSSM0oM6C/O6HNxrDj5kFlSlEFHkVa6CVA==
+"@mikro-orm/core@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@mikro-orm/core/-/core-5.0.0.tgz#4a463d68a11f1e2a36737fad73155dcf0563a428"
+  integrity sha512-zJ1e3OiCbmFtQ6MxDxESB9VJ/GkAoa8hB62aqsXANOEGzFeYLSzxenE6hA/Z/LUQ/b2F3VnAbKfL8If3s7m0fQ==
   dependencies:
     clone "2.1.2"
     dotenv "16.0.0"
     escaya "0.0.61"
     fs-extra "10.0.0"
     globby "11.0.4"
-    mikro-orm "^5.0.0-rc.2"
+    mikro-orm "^5.0.0"
     reflect-metadata "0.1.13"
 
-"@mikro-orm/knex@^5.0.0-rc.2":
-  version "5.0.0-rc.2"
-  resolved "https://registry.yarnpkg.com/@mikro-orm/knex/-/knex-5.0.0-rc.2.tgz#f2a65376f25214a41e794253e319e427cb787554"
-  integrity sha512-XVidT3r7OzCRu7qHz4yv9jRwmOoI4P8A3WNTye2pbsb8UVS8Bv7lcJ8zOQjSQ77uZNqE++MazKATiYZDWQ/3ZQ==
+"@mikro-orm/knex@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@mikro-orm/knex/-/knex-5.0.0.tgz#586f9452c65952c7230d9e75d99178934773b1a5"
+  integrity sha512-EuMt0KPsqfpTktWC+VeCuG3thbMX3Z8bf+XOg1GY+hm2aHf2849MfZ6voqwQnYtQeQnIYyZuWJo4ZbghoF+9PQ==
   dependencies:
     fs-extra "10.0.0"
     knex "1.0.1"
     sqlstring "2.3.2"
 
-"@mikro-orm/sqlite@^5.0.0-dev.527":
-  version "5.0.0-rc.2"
-  resolved "https://registry.yarnpkg.com/@mikro-orm/sqlite/-/sqlite-5.0.0-rc.2.tgz#cc58efa84d3ba3aa0d912393391f97538072115d"
-  integrity sha512-93kobowF7kFixz20rjL/kx/O3QIy8nA9EGIED5evNztHrbLB5lsH0Z9hdBMqJpi8/P4aaOwezRycml7MerhV7Q==
+"@mikro-orm/sqlite@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@mikro-orm/sqlite/-/sqlite-5.0.0.tgz#cd6b81d1a2c4295289294d18f8be8d55c2969baa"
+  integrity sha512-65tQ7W4pdAFH7lvDHiVYGl0rjmYI8kDWu5hpt3MQvLRSTpg7RLiFAmusiOXF0k/NOCAzYAx+UvuLd8U+evCcKA==
   dependencies:
-    "@mikro-orm/knex" "^5.0.0-rc.2"
+    "@mikro-orm/knex" "^5.0.0"
     "@vscode/sqlite3" "5.0.7"
     fs-extra "10.0.0"
     sqlstring-sqlite "0.1.1"
@@ -13300,10 +13300,10 @@ micromatch@^4.0.2, micromatch@^4.0.4:
     braces "^3.0.1"
     picomatch "^2.2.3"
 
-mikro-orm@^5.0.0-rc.2:
-  version "5.0.0-rc.2"
-  resolved "https://registry.yarnpkg.com/mikro-orm/-/mikro-orm-5.0.0-rc.2.tgz#f057d533ed76ee26aa12bd20e248d95d92c6bfa3"
-  integrity sha512-ZLca7Ny2KH8MhLiYz22+8fDJoiVAm50DOjCpfFKsP7/s0rQwPc78D0EoIQtPNi7s7jpUMmjIC9CrZt/QdfLGTg==
+mikro-orm@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/mikro-orm/-/mikro-orm-5.0.0.tgz#5ab8b74ce4ae3dc502e004ab62b9d5639d0da562"
+  integrity sha512-uEZPmlWEmzCTYKGQfOukR/LtHJc9JxeP8d4nLZJh4ucuQueaJ7QK1Eo0KLC69SoB9xIV+HdlrFMzh31mtfUJTQ==
 
 mime-db@1.51.0, "mime-db@>= 1.43.0 < 2":
   version "1.51.0"
