@@ -11,14 +11,13 @@ export async function publish(options: {
 }) {
   const { dryRun, packages, RELEASE_COMMIT_MSG } = options
 
+  for await (const pkg of packages) {
+    console.log(`Writing version to package.json for package ${pkg.name}`)
+    await pkgJson.update(pkg.path, { version: pkg.newVersion })
+  }
   if (dryRun) {
     console.log("Dry run, skip release commit...")
   } else {
-    for await (const pkg of packages) {
-      console.log(`Writing version to package.json for package ${pkg.name}`)
-      await pkgJson.update(pkg.path, { version: pkg.newVersion })
-    }
-
     console.log("All package.json files have been written, committing...")
     execSync(`git add -A && git commit -m "${RELEASE_COMMIT_MSG}"`)
     console.log("Commited.")
