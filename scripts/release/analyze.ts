@@ -1,4 +1,4 @@
-import type { Commit, PackageToRelease } from "./types"
+import type { Commit, GroupedCommits, PackageToRelease } from "./types"
 
 import { execSync } from "child_process"
 import { pkgJson } from "./utils"
@@ -99,22 +99,29 @@ export async function analyze(options: {
         changedFilesInCommit.some((changedFile) => changedFile.startsWith(src))
       ) {
         if (!(pkg in acc)) {
-          acc[pkg] = { features: [], bugfixes: [], other: [] }
+          acc[pkg] = { features: [], bugfixes: [], other: [], breaking: [] }
         }
         const { type } = commit.parsed
         if (RELEASE_COMMIT_TYPES.includes(type)) {
           if (!packagesNeedRelease.includes(pkg)) {
             packagesNeedRelease.push(pkg)
           }
-          if (type === "feat") acc[pkg].features.push(commit)
-          else acc[pkg].bugfixes.push(commit)
+          if (type === "feat") {
+            acc[pkg].features.push(commit)
+            if (commit.body.includes(BREAKING_COMMIT_MSG)) {
+              acc[pkg].breaking.push({
+                ...commit,
+                body: commit.body.replace(BREAKING_COMMIT_MSG, "").trim(),
+              })
+            }
+          } else acc[pkg].bugfixes.push(commit)
         } else {
           acc[pkg].other.push(commit)
         }
       }
     }
     return acc
-  }, {} as Record<string, { features: Commit[]; bugfixes: Commit[]; other: Commit[] }>)
+  }, {} as Record<string, GroupedCommits>)
 
   if (packagesNeedRelease.length) {
     console.log(
@@ -133,13 +140,10 @@ export async function analyze(options: {
   const packagesToRelease: PackageToRelease[] = []
   for await (const pkgName of packagesNeedRelease) {
     const commits = grouppedPackages[pkgName]
-    const featuresHasBreaking = commits.features.some((c) =>
-      c.parsed.raw.includes(BREAKING_COMMIT_MSG)
-    )
-    const releaseType: semver.ReleaseType = commits.features.length
-      ? featuresHasBreaking
-        ? "major" // 1.x.x
-        : "minor" // x.1.x
+    const releaseType: semver.ReleaseType = commits.breaking.length
+      ? "major" // 1.x.x
+      : commits.features.length
+      ? "minor" // x.1.x
       : "patch" // x.x.1
 
     const packageJson = await pkgJson.read(packages[pkgName])
@@ -158,33 +162,49 @@ export async function analyze(options: {
   return packagesToRelease
 }
 
-function createChangelog(pkg: {
-  features: any[]
-  bugfixes: any[]
-  other: any[]
-}) {
+function createChangelog(pkg: GroupedCommits) {
   let changelog = `
 # Changes
----
 `
-  if (pkg.features.length) {
-    changelog += `
-## Features
+  changelog += listGroup("Features", pkg.features)
+  changelog += listGroup("Bugfixes", pkg.bugfixes)
+  changelog += listGroup("Other", pkg.other)
 
-${pkg.features.map((c) => `  - ${c.parsed.raw}`).join("\n")}`
-  }
-  if (pkg.bugfixes.length) {
+  if (pkg.breaking.length) {
     changelog += `
-## Bug Fixes
+## BREAKING CHANGES
 
-${pkg.bugfixes.map((c) => `  - ${c.parsed.raw}`).join("\n")}`
-  }
-  if (pkg.other.length) {
-    changelog += `
-## Other
-
-${pkg.other.map((c) => `  - ${c.parsed.raw}`).join("\n")}`
+${pkg.breaking.map((c) => `  - ${c.body}`).join("\n")}`
   }
 
   return changelog
+}
+
+function sortByScope(commits: Commit[]) {
+  return commits.sort((a, b) => {
+    if (a.parsed.scope && b.parsed.scope) {
+      return a.parsed.scope.localeCompare(b.parsed.scope)
+    } else if (a.parsed.scope) return -1
+    else if (b.parsed.scope) return 1
+    return a.body.localeCompare(b.body)
+  })
+}
+
+function header(c: Commit) {
+  let h = c.parsed.subject
+  if (c.parsed.scope) {
+    h = `**${c.parsed.scope}**: ${h}`
+  }
+  return h
+}
+
+function listGroup(heading: string, commits: Commit[]) {
+  if (!commits.length) return ""
+  const list = sortByScope(commits)
+    .map((c) => `  - ${header(c)}`)
+    .join("\n")
+  return `## ${heading}
+
+${list}
+`
 }

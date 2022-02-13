@@ -52,3 +52,10 @@ export interface PackageToRelease {
   changelog: string
   path: string
 }
+
+export interface GroupedCommits {
+  features: Commit[]
+  bugfixes: Commit[]
+  other: Commit[]
+  breaking: Commit[]
+}
