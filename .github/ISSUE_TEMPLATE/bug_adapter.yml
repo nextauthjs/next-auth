@@ -1,11 +1,11 @@
-name: Adapter bug report
+name: Bug report (Adapter)
 description: Create an adapter-specific report
 labels: [triage, adapters]
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this issue!
+        Thanks for taking the time to fill out this [Adapter](https://next-auth.js.org/adapters/overview) related issue!
         Is this your first time contributing? Check out this video: https://www.youtube.com/watch?v=cuoNzXFLitc
 
         ### Important :exclamation:

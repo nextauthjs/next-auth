@@ -1,11 +1,11 @@
-name: Provider bug report
+name: Bug report (Provider)
 description: Create a provider-specific report
 labels: [triage, providers]
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this issue!
+        Thanks for taking the time to fill out this [Provider](https://next-auth.js.org/providers/overview) related issue!
         Is this your first time contributing? Check out this video: https://www.youtube.com/watch?v=cuoNzXFLitc
 
         ### Important :exclamation:
