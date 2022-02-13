@@ -29,9 +29,9 @@ export async function publish(options: {
   for (const pkg of packages) {
     // We need different tokens for `next-auth` and `@next-auth/*` packages
     if (pkg.name === "next-auth") {
-      process.env.NPM_TOKEN = process.env.NEXT_AUTH_PKG_NPM_TOKEN
+      process.env.NPM_TOKEN = process.env.NPM_TOKEN_PKG
     } else {
-      process.env.NPM_TOKEN = process.env.NEXT_AUTH_ORG_NPM_TOKEN
+      process.env.NPM_TOKEN = process.env.NPM_TOKEN_ORG
     }
 
     let npmPublish = `npm publish --access public`
