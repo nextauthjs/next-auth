@@ -5,21 +5,21 @@ title: Contributors
 
 ## Core team
 
+Without these people, the project could not have become one of the most used authentication library in its category.
+
 * [Iain Collins](https://github.com/iaincollins) - Author
 * [Balázs Orbán](https://github.com/balazsorban44) - **Lead Maintainer**
 * [Nico Domino](https://github.com/ndom91) - Maintainer (Documentation, Core)
 * [Lluis Agusti](https://github.com/lluia) - Maintainer (Documentation, Testing, TypeScript)
 
-Without these people, the project could not have become one of the most used authentication library in its category.
-
 ## Special thanks
+
+Special thanks to Lori Karikari for creating most of the original provider configurations to Fredrik Pettersen for creating the original Prisma Adapter, to Gerald Nolan for adding support for Sign in with Apple, and to Jefferson Bledsoe for working on original testing automations.
 
 * [Lori Karikari](https://github.com/LoriKarikari)
 * [Fredrik Pettersen](https://github.com/Fumler)
 * [Gerald Nolan](https://github.com/geraldnolan)
 * [Jefferson Bledsoe](https://github.com/JeffersonBledsoe)
-
-_Special thanks to Lori Karikari for creating most of the original provider configurations to Fredrik Pettersen for creating the original Prisma Adapter, to Gerald Nolan for adding support for Sign in with Apple, and to Jefferson Bledsoe for working on original testing automations._
 
 ## Other contributors
 
