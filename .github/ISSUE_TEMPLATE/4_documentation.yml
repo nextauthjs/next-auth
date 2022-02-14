@@ -1,6 +1,6 @@
-name: "Docs Request for an Update or Improvement"
-description: A request to update or improve NextAuth.js documentation
-labels: ["documentation"]
+name: "Documentation"
+description: Request to update or improve NextAuth.js documentation
+labels: ["triage", "documentation"]
 body:
   - type: textarea
     attributes:
