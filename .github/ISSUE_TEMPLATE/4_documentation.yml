@@ -1,0 +1,22 @@
+name: "Docs Request for an Update or Improvement"
+description: A request to update or improve NextAuth.js documentation
+labels: ["documentation"]
+body:
+  - type: textarea
+    attributes:
+      label: What is the improvement or update you wish to see?
+      description: "Example: The `next-auth` docs are missing information about X."
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Is there any context that might help us understand?
+      description: A clear description of any added context that might help us understand.
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Does the docs page already exist? Please link to it.
+      description: "Example: https://next-auth.js.org/getting-started/introduction"
+    validations:
+      required: false
