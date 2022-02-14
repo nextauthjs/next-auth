@@ -120,5 +120,6 @@ function listGroup(heading: string, commits: Commit[]) {
   return `## ${heading}
 
 ${list}
+
 `
 }

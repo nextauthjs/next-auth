@@ -1,12 +1,14 @@
 export function shouldSkip(options: { releaseBranches: string[] }) {
+  if (!process.env.CI) {
+    return false
+  }
   const { releaseBranches } = options
 
-  if (!releaseBranches.includes(process.env.GITHUB_REF_NAME)) {
+  const branch = process.env.GITHUB_REF_NAME
+  if (!branch || !releaseBranches.includes(branch)) {
+    console.log(`\nSkipping release for branch "${branch}"`)
     console.log(
-      `\nSkipping release for branch "${process.env.GITHUB_REF_NAME}"`
-    )
-    console.log(
-      `Release is only triggered for the following branches: ${releaseBranches.join(
+      `Releases are only triggered for the following branches: ${releaseBranches.join(
         ", "
       )}\n`
     )

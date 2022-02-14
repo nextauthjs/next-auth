@@ -113,9 +113,10 @@ export async function analyze(options: {
           if (type === "feat") {
             acc[pkg].features.push(commit)
             if (commit.body.includes(BREAKING_COMMIT_MSG)) {
+              const [, changesBody] = commit.body.split(BREAKING_COMMIT_MSG)
               acc[pkg].breaking.push({
                 ...commit,
-                body: commit.body.replace(BREAKING_COMMIT_MSG, "").trim(),
+                body: changesBody.trim(),
               })
             }
           } else acc[pkg].bugfixes.push(commit)
