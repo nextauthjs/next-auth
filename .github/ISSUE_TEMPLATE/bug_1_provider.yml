@@ -21,7 +21,7 @@ body:
       options:
         - "Credentials"
         - "Email"
-        - "Custom"
+        - "Custom provider"
         - "42 School"
         - "Apple"
         - "Atlassian"
@@ -76,7 +76,6 @@ body:
         - "Yandex"
         - "Zoho"
         - "Zoom"
-        - "Custom provider"
     validations:
       required: true
   - type: textarea

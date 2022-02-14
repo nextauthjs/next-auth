@@ -19,6 +19,7 @@ body:
       description: Adapter(s) this issue is related to
       multiple: true
       options:
+        - "Custom adapter"
         - "@next-auth/dgraph-adapter"
         - "@next-auth/dynamodb-adapter"
         - "@next-auth/fauna-adapter"
@@ -31,7 +32,6 @@ body:
         - "@next-auth/sequelize-adapter"
         - "@next-auth/typeorm-legacy-adapter"
         - "@next-auth/upstash-redis-adapter"
-        - "Custom adapter"
     validations:
       required: true
   - type: textarea
