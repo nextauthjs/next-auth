@@ -1,4 +1,4 @@
-name: Sync Example Repository
+name: Sync Example Repositories
 on:
   push:
     branches:
@@ -11,7 +11,8 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
       - name: Run GitHub File Sync
-        uses: BetaHuhn/repo-file-sync-action@v1
+        # Can update to v1 when https://github.com/BetaHuhn/repo-file-sync-action/issues/168 is resolved
+        uses: BetaHuhn/repo-file-sync-action@v1.16.5
         with:
           GH_PAT: ${{ secrets.SYNC_EXAMPLE_PAT }}
           SKIP_PR: true
