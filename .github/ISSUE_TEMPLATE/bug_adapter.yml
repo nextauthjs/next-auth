@@ -16,7 +16,7 @@ body:
   - type: dropdown
     attributes:
       label: Adapter type
-      description: Which adapter(s) is this issue related to?
+      description: Adapter(s) this issue is related to
       multiple: true
       options:
         - "@next-auth/dgraph-adapter"

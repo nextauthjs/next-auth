@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this issue!
+        Thanks for taking the time to fill out this issue after reading/searching through the [documentation](https://next-auth.js.org) first!
         Is this your first time contributing? Check out this video: https://www.youtube.com/watch?v=cuoNzXFLitc
 
         ### Important :exclamation:
@@ -29,7 +29,7 @@ body:
         Run this command in your project's root folder and paste the result:
 
         ```sh
-        npx envinfo --system --binaries --browsers --npmPackages "next,react,next-auth" && npx envinfo --npmPackages "@next-auth/*"
+        npx envinfo --system --binaries --browsers --npmPackages "next,react,next-auth"
         ```
         Alternatively, you can manually gather the version information from your package.json for these packages: "next", "react" and "next-auth". Please also mention your OS and Node.js version, as well as the browser you are using.
     validations:

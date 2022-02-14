@@ -79,7 +79,7 @@ body:
         - "Custom provider"
     validations:
       required: true
-    - type: textarea
+  - type: textarea
     attributes:
       label: Environment
       description: |
