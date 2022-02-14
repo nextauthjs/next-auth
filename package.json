@@ -49,7 +49,8 @@
     "node": "^12.19.0 || ^14.15.0 || ^16.13.0"
   },
   "prettier": {
-    "semi": false
+    "semi": false,
+    "singleQuote": false
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
