@@ -20,8 +20,8 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 16
-          cache: 'yarn'
-      - name: Install dependencies 
+          cache: "yarn"
+      - name: Install dependencies
         run: yarn --frozen-lockfile
       - name: Build
         run: npm run build
@@ -44,20 +44,25 @@ jobs:
     steps:
       - name: Init
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
           node-version: 16
-          cache: 'yarn'
-      - name: Install dependencies 
+          cache: "yarn"
+      - name: Install dependencies
         run: yarn --frozen-lockfile
       - name: Publish to npm and GitHub
         run: |
-          cd packages/next-auth
-          npx semantic-release@17
+          git config --global user.email "balazsorban44@users.noreply.github.com"
+          git config --global user.name "Balázs Orbán"
+          yarn release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN_PKG: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN_ORG: ${{ secrets.NPM_TOKEN_ORG }}
+          DRY_RUN: true
   release-pr:
     name: Publish PR
     runs-on: ubuntu-latest
@@ -71,8 +76,8 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 16
-          cache: 'yarn'
-      - name: Install dependencies 
+          cache: "yarn"
+      - name: Install dependencies
         run: yarn --frozen-lockfile
       - name: Determine version
         uses: ./.github/version-pr

@@ -3,7 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "workspaces": {
-    "packages": ["packages/*", "apps/dev", "docs"]
+    "packages": [
+      "packages/*",
+      "apps/dev",
+      "docs"
+    ]
   },
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "scripts": {
@@ -15,14 +19,15 @@
     "dev": "yarn dev:app",
     "dev:app": "turbo run dev --parallel --no-deps --no-cache --scope=next-auth-app",
     "dev:docs": "turbo run dev --parallel --no-deps --no-cache --scope=next-auth-docs",
-    "version:pr": "node ./config/version-pr"
+    "version:pr": "node ./config/version-pr",
+    "release": "ts-node scripts/release"
   },
   "devDependencies": {
     "@actions/core": "^1.6.0",
-    "@changesets/cli": "^2.20.0",
+    "@commitlint/parse": "16.0.0",
+    "@types/semver": "7.3.9",
     "@typescript-eslint/eslint-plugin": "^5.10.2",
     "@typescript-eslint/parser": "^4.33.0",
-    "conventional-changelog-conventionalcommits": "4.6.1",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard-with-typescript": "^21.0.1",
@@ -30,9 +35,13 @@
     "eslint-plugin-jest": "^25.3.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
+    "git-log-parser": "1.2.0",
     "husky": "^7.0.4",
     "prettier": "2.4.1",
     "pretty-quick": "^3.1.2",
+    "semver": "7.3.5",
+    "stream-to-array": "2.3.0",
+    "ts-node": "10.5.0",
     "turbo": "^1.1.2",
     "typescript": "^4.5.2"
   },
@@ -44,7 +53,10 @@
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
-    "extends": ["standard-with-typescript", "prettier"],
+    "extends": [
+      "standard-with-typescript",
+      "prettier"
+    ],
     "ignorePatterns": [
       "node_modules",
       "next-env.d.ts",
@@ -68,16 +80,26 @@
     },
     "overrides": [
       {
-        "files": ["./**/*test.js"],
+        "files": [
+          "./**/*test.js"
+        ],
         "env": {
           "jest/globals": true
         },
-        "extends": ["plugin:jest/recommended"],
-        "plugins": ["jest"]
+        "extends": [
+          "plugin:jest/recommended"
+        ],
+        "plugins": [
+          "jest"
+        ]
       }
     ]
   },
-  "eslintIgnore": ["./*.d.ts", "**/tests", "**/__tests__"],
+  "eslintIgnore": [
+    "./*.d.ts",
+    "**/tests",
+    "**/__tests__"
+  ],
   "packageManager": "yarn@1.22.17",
   "funding": [
     {

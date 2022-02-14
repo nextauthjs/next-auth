@@ -30,6 +30,7 @@ import AppleProvider from "next-auth/providers/apple"
 import PatreonProvider from "next-auth/providers/patreon"
 import TraktProvider from "next-auth/providers/trakt"
 import ShopifyProvider from "next-auth/providers/shopify"
+import WorkOSProvider from "next-auth/providers/workos"
 
 // import { PrismaAdapter } from "@next-auth/prisma-adapter"
 // import { PrismaClient } from "@prisma/client"
@@ -202,6 +203,10 @@ export const authOptions: NextAuthOptions = {
     TraktProvider({
       clientId: process.env.TRAKT_ID,
       clientSecret: process.env.TRAKT_SECRET,
+    }),
+    WorkOSProvider({
+      clientId: process.env.WORKOS_ID,
+      clientSecret: process.env.WORKOS_SECRET,
     }),
   ],
   debug: true,
