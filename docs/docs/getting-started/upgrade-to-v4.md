@@ -287,7 +287,9 @@ Introduced in https://github.com/nextauthjs/next-auth/pull/3144
 
 Most importantly, the core `next-auth` package no longer ships with `typeorm` or any other database adapter by default. This brings the default bundle size down significantly for those not needing to persist user data to a database.
 
-You can find the official Adapters in the newly created [nextauthjs/adapter](https://github.com/nextauthjs/adapters) repository. Although you can still [create your own](/tutorials/creating-a-database-adapter) with a new, [simplified Adapter API](https://github.com/nextauthjs/next-auth/pull/2361).
+You can find the official Adapters in the `packages` directory in the primary monorepo ([nextauthjs/next-auth](https://github.com/nextauthjs/next-auth)). Although you can still [create your own](/tutorials/creating-a-database-adapter) with a new, [simplified Adapter API](https://github.com/nextauthjs/next-auth/pull/2361).
+
+If you have a database that was created with a `3.x.x` or earlier version of NextAuth.js, you will need to run a migration to update the schema to the new version 4 database model. See the bottom of this migration guide for database specific migration examples.
 
 1. If you use the built-in TypeORM or Prisma adapters, these have been removed from the core `next-auth` package. Thankfully the migration is easy; you just need to install the external packages for your database and change the import in your `[...nextauth].js`.
 
@@ -438,6 +440,138 @@ Previously, the way you configured this was through the `jwt: boolean` flag in t
 See the [`session` option docs](https://next-auth.js.org/configuration/options#session) for more details.
 
 Introduced in https://github.com/nextauthjs/next-auth/pull/3144
+
+## Database migration
+
+NextAuth.js v4 has a slightly different database schema compared to v3. If you're using any of our adapters and want to upgrade, you can use on of the below schemas.
+
+They are designed to be run directly against the database itself. So instead of having one in Prisma syntax, one in TypeORM syntax, etc. we've decided to just make one for each underlying database type. i.e. one for Postgres, one for MySQL, one for MongoDB, etc.
+
+#### MySQL
+
+```sql
+/* ACCOUNT */
+ALTER TABLE accounts
+CHANGE "access_token_expires" "expires_at" int
+CHANGE "user_id" "userId" varchar(191)
+ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id)
+RENAME COLUMN "provider_id" "provider"
+RENAME COLUMN "provider_account_id" "providerAccountId"
+DROP COLUMN "provider_type"
+DROP COLUMN "compound_id"
+/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
+DROP COLUMN "created_at"
+DROP COLUMN "updated_at"
+
+ADD COLUMN "token_type" varchar(191) NULL
+ADD COLUMN "scope" varchar(191) NULL
+ADD COLUMN "id_token" varchar(191) NULL
+ADD COLUMN "session_state" varchar(191) NULL
+
+/* Note: These are only needed if you're going to be using the old Twitter OAuth 1.0 provider. */
+ADD COLUMN "oauth_token_secret" varchar(191) NULL
+ADD COLUMN "oauth_token" varchar(191) NULL
+
+/* USER */
+ALTER TABLE users
+RENAME COLUMN "email_verified" "emailVerified"
+/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
+DROP COLUMN "created_at"
+DROP COLUMN "updated_at"
+
+/* SESSION */
+ALTER TABLE sessions
+RENAME COLUMN "session_token" "sessionToken"
+CHANGE "user_id" "userId" varchar(191)
+ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id)
+DROP COLUMN "access_token"
+/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
+DROP COLUMN "created_at"
+DROP COLUMN "updated_at"
+
+/* VERIFICATION REQUESTS */
+ALTER TABLE verification_requests
+DROP COLUMN id
+/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
+DROP COLUMN "created_at"
+DROP COLUMN "updated_at"
+```
+
+#### Postgres
+
+```sql
+/* ACCOUNT */
+ALTER TABLE accounts
+CHANGE "access_token_expires" "expires_at" int
+CHANGE "user_id" "userId" text
+ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id)
+RENAME COLUMN "provider_id" "provider"
+RENAME COLUMN "provider_account_id" "providerAccountId"
+DROP COLUMN "provider_type"
+DROP COLUMN "compound_id"
+/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
+DROP COLUMN "created_at"
+DROP COLUMN "updated_at"
+
+ADD COLUMN "token_type" text NULL
+ADD COLUMN "scope" text NULL
+ADD COLUMN "id_token" text NULL
+ADD COLUMN "session_state" text NULL
+
+/* Note: These are only needed if you're going to be using the old Twitter OAuth 1.0 provider. */
+ADD COLUMN "oauth_token_secret" text NULL
+ADD COLUMN "oauth_token" text NULL
+
+/* USER */
+ALTER TABLE users
+RENAME COLUMN "email_verified" "emailVerified"
+/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
+DROP COLUMN "created_at"
+DROP COLUMN "updated_at"
+
+/* SESSION */
+ALTER TABLE sessions
+RENAME COLUMN "session_token" "sessionToken"
+CHANGE "user_id" "userId" text
+ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id)
+DROP COLUMN "access_token"
+/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
+DROP COLUMN "created_at"
+DROP COLUMN "updated_at"
+
+/* VERIFICATION REQUESTS */
+ALTER TABLE verification_requests
+DROP COLUMN id
+/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
+DROP COLUMN "created_at"
+DROP COLUMN "updated_at"
+```
+
+#### MongoDB
+
+MongoDB is a document database and as such new fields will be automatically populated. You do, however, need to update the names of existing fields which are going to be reused.
+
+```mongo
+db.getCollection('accounts').updateMany({}, {
+  $rename: {
+    "provider_id": "provider",
+    "provider_account_id": "providerAccountId",
+    "user_id": "userId",
+    "access_token_expires": "expires_at"
+  }
+})
+db.getCollection('users').updateMany({}, {
+  $rename: {
+    "email_verified": "emailVerified"
+  }
+})
+db.getCollection('sessions').updateMany({}, {
+  $rename: {
+    "session_token": "sessionToken",
+    "user_id": "userId"
+  }
+})
+```
 
 ## Summary
 
