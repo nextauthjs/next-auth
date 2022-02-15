@@ -21,8 +21,17 @@ jobs:
         with:
           node-version: 16
           cache: "yarn"
+      - name: Cache Node Modules
+        id: cache-node
+        uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: cache-node_modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
+          restore-keys: |
+            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
+            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-
       - name: Install dependencies
-        run: yarn --frozen-lockfile
+        run: yarn --prefer-offline --frozen-lockfile
       - name: Build
         run: npm run build
       - name: Run tests
@@ -51,8 +60,17 @@ jobs:
         with:
           node-version: 16
           cache: "yarn"
+      - name: Cache Node Modules
+        id: cache-node
+        uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: cache-node_modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
+          restore-keys: |
+            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
+            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-
       - name: Install dependencies
-        run: yarn --frozen-lockfile
+        run: yarn --prefer-offline --frozen-lockfile
       - name: Publish to npm and GitHub
         run: |
           git config --global user.email "balazsorban44@users.noreply.github.com"
@@ -77,8 +95,17 @@ jobs:
         with:
           node-version: 16
           cache: "yarn"
+      - name: Cache Node Modules
+        id: cache-node
+        uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: cache-node_modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
+          restore-keys: |
+            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
+            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-
       - name: Install dependencies
-        run: yarn --frozen-lockfile
+        run: yarn --prefer-offline --frozen-lockfile
       - name: Determine version
         uses: ./.github/version-pr
         id: determine-version
