@@ -3,7 +3,7 @@ id: models
 title: Models
 ---
 
-NextAuth.js can be used with any database. Models tell you what structures NextAuth.js expects from your database. Models will vary slightly depending on which adapter you use, but in general will look something like this. Each adapter's model / schema will be slightly adapted for its needs, but will look very much like this schema below:
+NextAuth.js can be used with any database. Models tell you what structures NextAuth.js expects from your database. Models will vary slightly depending on which adapter you use, but in general, will look something like this. Each adapter's model/schema will be slightly adapted for its needs, but will look very much like this schema below:
 
 ```mermaid
 erDiagram

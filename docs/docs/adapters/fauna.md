@@ -81,4 +81,4 @@ CreateIndex({
 })
 ```
 
-> This schema is adapted for use in FaunaDB and based upon our master [schema](/adapters/models)
+> This schema is adapted for use in Fauna and based upon our main [schema](/adapters/models)
