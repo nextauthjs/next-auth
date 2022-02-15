@@ -45,6 +45,8 @@ The quickest way to use Dgraph is by applying the unsecure schema to your [local
 This approach is not secure or for production use, and does not require a `jwtSecret`.
 :::
 
+> This schema is adapted for use in Dgraph and based upon our main [schema](/adapters/models)
+
 #### Unsecure schema
 
 ```graphql
