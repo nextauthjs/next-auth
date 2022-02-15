@@ -3,9 +3,19 @@ id: shopify
 title: Shopify
 ---
 
-## Documentation for Shopify apps
-https://shopify.dev/apps
+## Documentation
 
+https://shopify.dev/apps/auth/oauth/getting-started
+
+## Configuration
+
+This is your **Redirect URL** <ins>http://localhost:3000/api/auth/callback/shopify</ins>. Add this callback URL in your app settings.
+
+:::tip
+This guide doesn't apply if you created a custom app in the Shopify admin. Refer to [Access tokens for custom apps in the Shopify admin](https://shopify.dev/apps/auth/admin-app-access-tokens).
+
+If you're building an embedded app, then refer to our tutorial on [authenticating an embedded app using OAuth and session tokens](https://shopify.dev/apps/auth/oauth/session-tokens/getting-started).
+:::
 
 ## Options
 
@@ -33,18 +43,3 @@ providers: [
 ```
 
 ## Instructions
-
-### Configuration
-
-:::tip
-Here is the docs for Shopify Oauth https://shopify.dev/apps/auth/oauth/getting-started
-:::
-
-:::tip
-Create your shopify partner account https://www.shopify.com/shopifypartnersvap and create an app from there
-
-Under "URLs" in the App Setup, configure the following for "OAuth 2.0":
-
-- Redirect URL
-  - http://localhost:3000/api/auth/callback/shopify
-:::

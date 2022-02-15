@@ -1,11 +1,5 @@
 export default function Shopify(options) {
-  const {
-    shop = "",
-    scope = "",
-    clientId = "",
-    clientSecret = "",
-    apiVersion = "",
-  } = options
+  const { shop, scope, apiVersion = "2022-01" } = options
 
   return {
     id: "shopify",
@@ -17,36 +11,10 @@ export default function Shopify(options) {
         scope,
       },
     },
-    token: {
-      request: async (context) => {
-        if (!context.params.code)
-          throw new Error("No code returned by shopify server")
-        const payload = JSON.stringify({
-          client_id: clientId,
-          client_secret: clientSecret,
-          code: context.params.code,
-        })
-        const res = await fetch(
-          `https://${shop}.myshopify.com/admin/oauth/access_token`,
-          {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: payload,
-          }
-        )
-        if (res.ok) {
-          const result = await res.json()
-          return { tokens: result }
-        }
-
-        throw new Error(
-          "Something went wrong while trying to get the access_token"
-        )
-      },
+    client: {
+      token_endpoint_auth_method: "client_secret_post",
     },
+    token: `https://${shop}.myshopify.com/admin/oauth/access_token`,
     userinfo: {
       request: async ({ tokens }) => {
         const { access_token = "" } = tokens
@@ -72,8 +40,10 @@ export default function Shopify(options) {
       return {
         id: profile.shop.id,
         name: profile.shop.name,
+        email: null,
+        image: null,
       }
     },
-    ...options,
+    options,
   }
 }

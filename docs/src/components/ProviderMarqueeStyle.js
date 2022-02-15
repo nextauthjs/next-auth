@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from "styled-components"
 
 export const Circle = styled.div`
   position: absolute;
@@ -35,7 +35,7 @@ export const FullWidth = styled.div`
 export const Height = styled.div`
   position: relative;
   width: 100%;
-  height: ${(props) => (props.height ? props.height + 'px' : 'auto')};
+  height: ${(props) => (props.height ? props.height + "px" : "auto")};
 `
 
 export const Company = styled.div`
