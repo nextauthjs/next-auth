@@ -85,43 +85,27 @@ You can look at the existing built-in providers for inspiration.
 #### Databases
 
 If you would like to contribute to an existing database adapter or help create a new one, head over to the [nextauthjs/adapters](https://www.github.com/nextauthjs/adapters) repository and follow the instructions provided there.
+
 #### Testing
 
 Tests can be run with `yarn test`.
 
 Automated tests are currently crude and limited in functionality, but improvements are in development.
+
 ## For maintainers
 
-We use [semantic-release](https://github.com/semantic-release/semantic-release) together with [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0) to automate releases. This makes the maintenance process easier and less error-prone to human error. Please study the "Conventional Commits" site to understand how to write a good commit message.
+We use [a custom script](https://github.com/nextauthjs/next-auth/tree/main/scripts/index.ts) together with [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0) to automate releases. This makes the maintenance process easier and less error-prone. Please study the "Conventional Commits" site to understand how to write a good commit message.
 
 When accepting Pull Requests, make sure the following:
 
 - Use "Squash and merge"
 - Make sure you merge contributor PRs into `main`
-- Rewrite the commit message to conform to the `Conventional Commits` style. Check the "Recommended Scopes" section for further advice.
+- Rewrite the commit message to conform to the `Conventional Commits` style.
+  - Using `fix` releases a patch (x.x.1)
+  - Using `feat` releases a minor (x.1.x)
+  - Using `feat` when `BREAKING CHANGE` is present in the commit messgae releases a major (1.x.x)
 - Optionally link issues the PR will resolve (You can add "close" in front of the issue numbers to close the issues automatically, when the PR is merged. `semantic-release` will also comment back to connected issues and PRs, notifying the users that a feature is added/bug fixed, etc.)
-
-### Recommended Scopes
-
-A typical conventional commit looks like this:
-
-```
-type(scope): title
-
-body
-```
-
-Scope is the part that will help grouping the different commit types in the release notes.
-
-Some recommended scopes are:
-
-- **provider** - Provider related changes. (eg.: "feat(provider): add X provider", "docs(provider): fix typo in X documentation"
-- **adapter** - Adapter related changes. (eg.: "feat(adapter): add X provider", "docs(provider): fix typo in X documentation"
-- **db** - Database related changes. (eg.: "feat(db): add X database", "docs(db): fix typo in X documentation"
-- **deps** - Adding/removing/updating a dependency (eg.: "chore(deps): add X")
-
-> NOTE: If you are not sure which scope to use, you can simply ignore it. (eg.: "feat: add something"). Adding the correct type already helps a lot when analyzing the commit messages.
 
 ### Skipping a release
 
-Every commit that contains [skip release] or [release skip] in their message will be excluded from the commit analysis and won't participate in the release type determination. This is useful, if the PR being merged should not trigger a new `npm` release.
+If a commit contains `[skip release]` in their message will be excluded from the commit analysis and won't participate in the release type determination. This is useful, if the PR being merged should not trigger a new `npm` release.
