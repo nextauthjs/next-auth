@@ -40,12 +40,28 @@ export default function Page() {
 }
 ```
 
+### Next.js (Middleware)
+
+With NextAuth.js 4.2.0 and Next.js 12, you can now protect your pages via the middleware pattern more easily. If you would like to protect all pages, you can create a `_middleware.js` file in your root `pages` directory which looks like this.
+
+```js title="/pages/_middleware.js"
+export { default } from "next-auth/middleware"
+```
+
+Otherwise, if you only want to protect a subset of pages, you could put it in a subdirectory as well, for example in `/pages/admin/_middleware.js` would protect all pages under `/admin`.
+
+This new `withAuth` middleware client only supports the `"jwt"` [session strategy](https://next-auth.js.org/configuration/options#session) at the moment.
+
+More details can be found [here](https://next-auth.js.org/configuration/nextjs#middleware).
+
 ### Server Side
 
-You can protect server side rendered pages using the `getSession()` method.
+You can protect server side rendered pages using the `getServerSession` method. This is different from the old `getSession()` method, in that it does not do an extra fetch out over the internet to confirm data from itself, increasing performance significantly.
+
+You need to add this to every server rendered page you want to protect.
 
 ```js title="pages/server-side-example.js"
-import { useSession, getSession } from "next-auth/react"
+import { useSession, getServerSession } from "next-auth/react"
 
 export default function Page() {
   const { data: session } = useSession()
@@ -66,7 +82,7 @@ export default function Page() {
 export async function getServerSideProps(context) {
   return {
     props: {
-      session: await getSession(context),
+      session: await getServerSession(context),
     },
   }
 }
