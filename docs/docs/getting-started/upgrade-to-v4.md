@@ -407,41 +407,7 @@ VerificationToken {
 
 For more info, see the [Models page](/adapters/models).
 
-## Missing `secret`
-
-NextAuth.js used to generate a secret for convenience, when the user did not define one. This might have been useful in development, but can be a concern in production. We have always been clear about that in the docs, but from now on, if you forget to define a `secret` property in production, we will show the user an error page. Read more about this option [here](https://next-auth.js.org/configuration/options#secret)
-
-You can generate a secret to be placed in the `secret` configuration option via the following command:
-
-```bash
-$ openssl rand -base64 32
-```
-
-Therefore, your NextAuth.js config should look something like this:
-
-```javascript title="/pages/api/auth/[...nextauth].js"
-...
-export default NextAuth({
-  ...
-  providers: [...],
-  secret: "LlKq6ZtYbr+hTC073mAmAh9/h2HwMfsFo4hrfCx5mLg=",
-  ...
-})
-```
-
-Introduced in https://github.com/nextauthjs/next-auth/issues/3143
-
-## Session `strategy`
-
-We have always supported two different session strategies. The first being our most popular and default strategy - the JWT based one. The second is the database adapter persisted session strategy. Both have their advantages/disadvantages, you can learn more about them on the [FAQ](https://next-auth.js.org/faq) page.
-
-Previously, the way you configured this was through the `jwt: boolean` flag in the `session` option. The names `session` and `jwt` might have been a bit overused in the options, and so for a clearer message, we renamed this option to `strategy: "jwt" | "database"`, it is still in the `session` object. This will hopefully better indicate the purpose of this option as well as make very explicit which type of session you are going to use.
-
-See the [`session` option docs](https://next-auth.js.org/configuration/options#session) for more details.
-
-Introduced in https://github.com/nextauthjs/next-auth/pull/3144
-
-## Database migration
+### Database migration
 
 NextAuth.js v4 has a slightly different database schema compared to v3. If you're using any of our adapters and want to upgrade, you can use on of the below schemas.
 
@@ -572,6 +538,40 @@ db.getCollection('sessions').updateMany({}, {
   }
 })
 ```
+
+## Missing `secret`
+
+NextAuth.js used to generate a secret for convenience, when the user did not define one. This might have been useful in development, but can be a concern in production. We have always been clear about that in the docs, but from now on, if you forget to define a `secret` property in production, we will show the user an error page. Read more about this option [here](https://next-auth.js.org/configuration/options#secret)
+
+You can generate a secret to be placed in the `secret` configuration option via the following command:
+
+```bash
+$ openssl rand -base64 32
+```
+
+Therefore, your NextAuth.js config should look something like this:
+
+```javascript title="/pages/api/auth/[...nextauth].js"
+...
+export default NextAuth({
+  ...
+  providers: [...],
+  secret: "LlKq6ZtYbr+hTC073mAmAh9/h2HwMfsFo4hrfCx5mLg=",
+  ...
+})
+```
+
+Introduced in https://github.com/nextauthjs/next-auth/issues/3143
+
+## Session `strategy`
+
+We have always supported two different session strategies. The first being our most popular and default strategy - the JWT based one. The second is the database adapter persisted session strategy. Both have their advantages/disadvantages, you can learn more about them on the [FAQ](https://next-auth.js.org/faq) page.
+
+Previously, the way you configured this was through the `jwt: boolean` flag in the `session` option. The names `session` and `jwt` might have been a bit overused in the options, and so for a clearer message, we renamed this option to `strategy: "jwt" | "database"`, it is still in the `session` object. This will hopefully better indicate the purpose of this option as well as make very explicit which type of session you are going to use.
+
+See the [`session` option docs](https://next-auth.js.org/configuration/options#session) for more details.
+
+Introduced in https://github.com/nextauthjs/next-auth/pull/3144
 
 ## Summary
 
