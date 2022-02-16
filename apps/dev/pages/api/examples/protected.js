@@ -2,7 +2,7 @@
 import { getServerSession } from "next-auth/next"
 
 export default async (req, res) => {
-  const session = await getServerSession({ req })
+  const session = await getServerSession({ req, res }, options)
 
   if (session) {
     res.send({
