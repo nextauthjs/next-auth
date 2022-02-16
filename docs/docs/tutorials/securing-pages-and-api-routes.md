@@ -110,15 +110,15 @@ export default function App({
 
 ## Securing API Routes
 
-### Using getSession()
+### Using getServerSession()
 
-You can protect API routes using the `getSession()` method.
+You can protect API routes using the `getServerSession()` method.
 
 ```js title="pages/api/get-session-example.js"
-import { getSession } from "next-auth/react"
+import { getServerSession } from "next-auth/react"
 
 export default async (req, res) => {
-  const session = await getSession({ req })
+  const session = await getServerSession({ req })
   if (session) {
     // Signed in
     console.log("Session", JSON.stringify(session, null, 2))

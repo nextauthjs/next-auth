@@ -1,4 +1,4 @@
-import { useSession, getSession } from "next-auth/react"
+import { useSession, getServerSession } from "next-auth/react"
 import Layout from "../components/layout"
 import type { NextPageContext } from "next"
 
@@ -14,11 +14,11 @@ export default function ServerSidePage() {
     <Layout>
       <h1>Server Side Rendering</h1>
       <p>
-        This page uses the universal <strong>getSession()</strong> method in{" "}
-        <strong>getServerSideProps()</strong>.
+        This page uses the universal <strong>getServerSession()</strong> method
+        in <strong>getServerSideProps()</strong>.
       </p>
       <p>
-        Using <strong>getSession()</strong> in{" "}
+        Using <strong>getServerSession()</strong> in{" "}
         <strong>getServerSideProps()</strong> is the recommended approach if you
         need to support Server Side Rendering with authentication.
       </p>
@@ -38,7 +38,7 @@ export default function ServerSidePage() {
 export async function getServerSideProps(context: NextPageContext) {
   return {
     props: {
-      session: await getSession(context),
+      session: await getServerSession(context),
     },
   }
 }

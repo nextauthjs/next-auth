@@ -79,7 +79,7 @@ export default function Admin() {
     required: true,
     onUnauthenticated() {
       // The user is not authenticated, handle it here.
-    }
+    },
   })
 
   if (status === "loading") {
@@ -123,7 +123,7 @@ export default function App({
 }
 
 function Auth({ children }) {
-  const { data: session, status } = useSession({required: true})
+  const { data: session, status } = useSession({ required: true })
   const isUser = !!session?.user
 
   if (isUser) {
@@ -165,11 +165,11 @@ See repository [`README`](https://github.com/nextauthjs/react-query) for more de
 - Client Side: **Yes**
 - Server Side: **Yes**
 
-NextAuth.js provides a `getSession()` method which can be called client or server side to return a session.
+NextAuth.js provides a `getSession()` helper which should be called **client side only** to return the current active session.
 
-It calls `/api/auth/session` and returns a promise with a session object, or null if no session exists.
+This helper is helpful in case you want to read the session outside of the context of React.
 
-#### Client Side Example
+When called, `getSession()` will send a request to `/api/auth/session` and returns a promise with a [session object](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/types.ts#L407-L425), or `null` if no session exists.
 
 ```js
 async function myFunction() {
@@ -178,23 +178,28 @@ async function myFunction() {
 }
 ```
 
-#### Server Side Example
+Read the tutorial [securing pages and API routes](/tutorials/securing-pages-and-api-routes) to know how to
+fetch the session in server side calls using `getServerSession()`.
+
+## getServerSession()
+
+NextAuth.js also provides a `getServerSession()` helper which should be called **server side only** to return the current active session:
 
 ```js
-import { getSession } from "next-auth/react"
+import { getServerSession } from "next-auth/react"
 
-export default async (req, res) => {
-  const session = await getSession({ req })
-  /* ... */
-  res.end()
+export async function getServerSideProps(context) {
+  return {
+    props: {
+      session: await getServerSession(context),
+    },
+  }
 }
 ```
 
-:::note
-When calling `getSession()` server side, you need to pass `{req}` or `context` object.
-:::
+You can add this to every server rendered page you want to protect.
 
-The tutorial [securing pages and API routes](/tutorials/securing-pages-and-api-routes) shows how to use `getSession()` in server side calls.
+To know more on how to protect pages and API routes, read the tutorial [securing pages and API routes](/tutorials/securing-pages-and-api-routes).
 
 ---
 
@@ -256,7 +261,7 @@ export default async (req, res) => {
 ```
 
 :::note
-Unlike `getSession()` and `getCsrfToken()`, when calling `getProviders()` server side, you don't need to pass anything, just as calling it client side.
+Unlike and `getCsrfToken()`, when calling `getProviders()` server side, you don't need to pass anything, just as calling it client side.
 :::
 
 ---
@@ -280,7 +285,7 @@ export default () => <button onClick={() => signIn()}>Sign in</button>
 
 ### Starts OAuth sign-in flow when clicked
 
-By default, when calling the `signIn()` method with no arguments, you will be redirected to the NextAuth.js sign-in page. If you want to skip that and get redirected to your provider's page immediately, call the `signIn()` method with the provider's `id`. 
+By default, when calling the `signIn()` method with no arguments, you will be redirected to the NextAuth.js sign-in page. If you want to skip that and get redirected to your provider's page immediately, call the `signIn()` method with the provider's `id`.
 
 For example to sign in with Google:
 
@@ -438,14 +443,14 @@ If you pass the `session` page prop to the `<SessionProvider>` – as in the exa
 This only works on pages where you provide the correct `pageProps`, however. This is normally done in `getInitialProps` or `getServerSideProps` on an individual page basis like so:
 
 ```js title="pages/index.js"
-import { getSession } from "next-auth/react"
+import { getServerSession } from "next-auth/react"
 
 ...
 
 export async function getServerSideProps(ctx) {
   return {
     props: {
-      session: await getSession(ctx)
+      session: await getServerSession(ctx)
     }
   }
 }
@@ -457,7 +462,7 @@ If every one of your pages needs to be protected, you can do this in `getInitial
 
 The session state is automatically synchronized across all open tabs/windows and they are all updated whenever they gain or lose focus or the state changes (e.g. a user signs in or out) when `refetchOnWindowFocus` is `true`.
 
-If you have session expiry times of 30 days (the default) or more then you probably don't need to change any of the default options in the Provider. If you need to, you can trigger an update of the session object across all tabs/windows by calling `getSession()` from a client side function.
+If you have session expiry times of 30 days (the default) or more then you probably don't need to change any of the default options in the Provider. If you need to, you can trigger an update of the session object across all tabs/windows by calling [`getSession()`](/getting-started/client#getsession) from a client side function.
 
 However, if you need to customize the session behavior and/or are using short session expiry times, you can pass options to the provider to customize the behavior of the `useSession()` hook.
 
