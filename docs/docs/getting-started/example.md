@@ -36,7 +36,7 @@ All requests to `/api/auth/*` (`signIn`, `callback`, `signOut`, etc.) will autom
 **Further Reading**:
 
 - See the [options documentation](/configuration/options) for more details on how to configure providers, databases and other options.
-- Read more about how to add authentication providers [here](/providers/overview).
+- Read more about how to add authentication providers [here](/providers).
 
 #### Configure Shared session state
 
