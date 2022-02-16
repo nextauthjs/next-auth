@@ -41,6 +41,8 @@ Schema for the Prisma Adapter (`@next-auth/prisma-adapter`)
 
 You need to use at least Prisma 2.26.0. Create a schema file in `prisma/schema.prisma` similar to this one:
 
+> This schema is adapted for use in Prisma and based upon our main [schema](/adapters/models)
+
 ```json title="schema.prisma"
 datasource db {
   provider = "postgresql"

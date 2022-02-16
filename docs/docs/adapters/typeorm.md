@@ -44,7 +44,9 @@ The TypeORM adapter uses [`Entity` classes](https://github.com/typeorm/typeorm/b
 
 If you want to override the default entities (for example to add a `role` field to your `UserEntity`), you will have to do the following:
 
-1. create a file containing your modified entities:
+> This schema is adapted for use in TypeORM and based upon our main [schema](/adapters/models)
+
+1. Create a file containing your modified entities:
 
 (The file below is based on the [default entities](https://github.com/nextauthjs/next-auth/blob/main/packages/adapter-typeorm-legacy/src/entities.ts))
 
