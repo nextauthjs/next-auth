@@ -50,7 +50,7 @@ export { default } from "next-auth/middleware"
 
 Otherwise, if you only want to protect a subset of pages, you could put it in a subdirectory as well, for example in `/pages/admin/_middleware.js` would protect all pages under `/admin`.
 
-This new `withAuth` middleware client only supports the `"jwt"` [session strategy](https://next-auth.js.org/configuration/options#session) at the moment.
+For the time being, the `withAuth` middleware only supports `"jwt"` as [session strategy](https://next-auth.js.org/configuration/options#session).
 
 More details can be found [here](https://next-auth.js.org/configuration/nextjs#middleware).
 
