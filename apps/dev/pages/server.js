@@ -1,4 +1,4 @@
-import { getServerSession } from "next-auth/react"
+import { getServerSession } from "next-auth/next"
 import Layout from "../components/layout"
 
 export default function Page() {

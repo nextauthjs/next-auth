@@ -61,7 +61,7 @@ You can protect server side rendered pages using the `getServerSession` method. 
 You need to add this to every server rendered page you want to protect.
 
 ```js title="pages/server-side-example.js"
-import { useSession, getServerSession } from "next-auth/react"
+import { useSession, getServerSession } from "next-auth/next"
 
 export default function Page() {
   const { data: session } = useSession()
@@ -115,7 +115,7 @@ export default function App({
 You can protect API routes using the `getServerSession()` method.
 
 ```js title="pages/api/get-session-example.js"
-import { getServerSession } from "next-auth/react"
+import { getServerSession } from "next-auth/next"
 
 export default async (req, res) => {
   const session = await getServerSession({ req })

@@ -97,7 +97,7 @@ You can use the `useSession` hook from anywhere in your application (e.g. in a h
 To protect an API Route, you can use the [`getServerSession()`](/getting-started/client#getserversession) method in the NextAuth.js client.
 
 ```javascript
-import { getServerSession } from "next-auth/react"
+import { getServerSession } from "next-auth/next"
 
 export default async (req, res) => {
   const session = await getServerSession({ req })

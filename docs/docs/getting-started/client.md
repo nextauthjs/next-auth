@@ -444,7 +444,7 @@ If you pass the `session` page prop to the `<SessionProvider>` – as in the exa
 This only works on pages where you provide the correct `pageProps`, however. This is normally done in `getInitialProps` or `getServerSideProps` on an individual page basis like so:
 
 ```js title="pages/index.js"
-import { getServerSession } from "next-auth/react"
+import { getServerSession } from "next-auth/next"
 
 ...
 
