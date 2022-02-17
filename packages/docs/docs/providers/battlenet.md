@@ -21,7 +21,7 @@ You can override any of the options to suit your own use case.
 
 ### Issuer
 
-Battle.net oprrate with account partitions, an issuer should be selected according to the region: https://develop.battle.net/documentation/guides/regionality-and-apis
+Battle.net operates with account partitions, an issuer should be selected according to [the region](https://develop.battle.net/documentation/guides/regionality-and-apis). If the issuer is omitted, the provider will fall back to the US region.
 
 | Region | Issuer                             |
 | ------ | ---------------------------------- |
