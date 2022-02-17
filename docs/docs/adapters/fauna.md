@@ -80,3 +80,5 @@ CreateIndex({
   terms: [{ field: ["data", "identifier"] }, { field: ["data", "token"] }],
 })
 ```
+
+> This schema is adapted for use in Fauna and based upon our main [schema](/adapters/models)

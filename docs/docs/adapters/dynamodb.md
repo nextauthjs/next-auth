@@ -7,7 +7,7 @@ title: DynamoDB
 
 This is the AWS DynamoDB Adapter for next-auth. This package can only be used in conjunction with the primary next-auth package. It is not a standalone package.
 
-By default, the adapter expects a table with a partition key `pk` and a sort key `sk`, as well as a global secondary index named `GSI1` with `GSI1PK` as partition key and `GSI1SK` as sorting key. To automatically delete sessions and verification requests after they expire using [dynamodb TTL](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TTL.html) you should [enable the TTL](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/time-to-live-ttl-how-to.html) with attribute name 'expires'. You can set whatever you want as the table name and the billing method. 
+By default, the adapter expects a table with a partition key `pk` and a sort key `sk`, as well as a global secondary index named `GSI1` with `GSI1PK` as partition key and `GSI1SK` as sorting key. To automatically delete sessions and verification requests after they expire using [dynamodb TTL](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TTL.html) you should [enable the TTL](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/time-to-live-ttl-how-to.html) with attribute name 'expires'. You can set whatever you want as the table name and the billing method.
 
 You can find the full schema in the table structure section below.
 
@@ -77,22 +77,22 @@ The table respects the single table design pattern. This has many advantages:
 - Querying relations is faster than with multi-table schemas (for eg. retrieving all sessions for a user).
 - Only one table needs to be replicated, if you want to go multi-region.
 
-Here is the default schema of the table:
+> This schema is adapted for use in DynamoDB and based upon our main [schema](/adapters/models)
 
 ![DynamoDB Table](https://i.imgur.com/hGZtWDq.png)
 
-You can create this table with infrastructure as code using [aws cdk](https://github.com/aws/aws-cdk) with the following table definition:
+You can create this table with infrastructure as code using [`aws-cdk`](https://github.com/aws/aws-cdk) with the following table definition:
 
 ```javascript title=stack.ts
 new dynamodb.Table(this, `NextAuthTable`, {
-  tableName: 'next-auth',
-  partitionKey: { name: 'pk', type: dynamodb.AttributeType.STRING },
-  sortKey: { name: 'sk', type: dynamodb.AttributeType.STRING },
-  timeToLiveAttribute: 'expires',
+  tableName: "next-auth",
+  partitionKey: { name: "pk", type: dynamodb.AttributeType.STRING },
+  sortKey: { name: "sk", type: dynamodb.AttributeType.STRING },
+  timeToLiveAttribute: "expires",
 }).addGlobalSecondaryIndex({
-  indexName: 'GSI1',
-  partitionKey: { name: 'GSI1PK', type: dynamodb.AttributeType.STRING },
-  sortKey: { name: 'GSI1SK', type: dynamodb.AttributeType.STRING },
+  indexName: "GSI1",
+  partitionKey: { name: "GSI1PK", type: dynamodb.AttributeType.STRING },
+  sortKey: { name: "GSI1SK", type: dynamodb.AttributeType.STRING },
 })
 ```
 
