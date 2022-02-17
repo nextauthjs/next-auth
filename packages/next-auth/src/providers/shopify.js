@@ -1,5 +1,5 @@
 export default function Shopify(options) {
-  const { shop, scope, apiVersion = "2022-01" } = options
+  const { shop, apiVersion = "2022-01" } = options
 
   return {
     id: "shopify",
@@ -7,9 +7,6 @@ export default function Shopify(options) {
     type: "oauth",
     authorization: {
       url: `https://${shop}.myshopify.com/admin/oauth/authorize`,
-      params: {
-        scope,
-      },
     },
     client: {
       token_endpoint_auth_method: "client_secret_post",

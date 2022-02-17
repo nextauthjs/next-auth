@@ -96,7 +96,6 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.SHOPIFY_ID,
       clientSecret: process.env.SHOPIFY_SECRET,
       shop: "unique-master", // Don't include .myshopify.com
-      scope: "read_products,write_products,read_orders,write_orders",
       apiVersion: "2022-01",
     }),
     Auth0Provider({

@@ -9,7 +9,7 @@ https://shopify.dev/apps/auth/oauth/getting-started
 
 ## Configuration
 
-This is your **Redirect URL** <ins>http://localhost:3000/api/auth/callback/shopify</ins>. Add this callback URL in your app settings.
+Add `/api/auth/callback/shopify` in your app settings as the **callback URL**. For instance, if you're trying the sign in locally it'll be: `http://localhost:3000/api/auth/callback`.
 
 :::tip
 This guide doesn't apply if you created a custom app in the Shopify admin. Refer to [Access tokens for custom apps in the Shopify admin](https://shopify.dev/apps/auth/admin-app-access-tokens).
@@ -35,8 +35,12 @@ providers: [
     clientId: process.env.SHOPIFY_ID,
     clientSecret: process.env.SHOPIFY_SECRET,
     shop: "unique-master", // Don't include .myshopify.com
-    scope: "read_products,write_products,read_orders,write_orders",
     apiVersion: "2022-01",
+    authorization: {
+      params: {
+        scope: "read_products,write_products,read_orders,write_orders",
+      },
+    },
   })
 ]
 ...
