@@ -70,7 +70,7 @@ model Account {
   session_state      String?
   oauth_token_secret String?
   oauth_token        String?
-
+  refresh_token_expires_in Int?
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
