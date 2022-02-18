@@ -1,8 +1,9 @@
 {
   "extends": "tsconfig/base.json",
   "compilerOptions": {
+    "emitDeclarationOnly": true,
     "baseUrl": ".",
-    "outDir": ".",
+    "outDir": "."
   },
   "exclude": ["config"]
 }
