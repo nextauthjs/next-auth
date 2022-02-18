@@ -1,4 +1,6 @@
 import type { Options } from "@mikro-orm/core"
+import type { SqliteDriver } from "@mikro-orm/sqlite"
+
 import { MikroORM, wrap } from "@mikro-orm/core"
 import { runBasicTests } from "adapter-test"
 import { MikroOrmAdapter, defaultEntities } from "../src"
@@ -14,7 +16,7 @@ const entities = [
   VeryImportantEntity,
 ]
 
-const config: Options = {
+const config: Options<SqliteDriver> = {
   dbName: "./db.sqlite",
   type: "sqlite",
   entities,

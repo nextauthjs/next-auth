@@ -35,7 +35,6 @@ This is the MikroORM Adapter for [`next-auth`](https://next-auth.js.org). This p
    export default NextAuth({
       // https://next-auth.js.org/configuration/providers
       providers: [],
-      // optionally pass extended models as { entities: { } }
       adapter: MikroOrmAdapter({
          dbName: "./db.sqlite",
          type: "sqlite",
