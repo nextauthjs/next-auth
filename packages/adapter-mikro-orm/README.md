@@ -41,6 +41,8 @@ This is the MikroORM Adapter for [`next-auth`](https://next-auth.js.org). This p
          type: "sqlite",
          debug: process.env.DEBUG === "true" || process.env.DEBUG?.includes("db"),
          ...
+      }, {
+         // pass extended models as { entities: { } } if needed
       }),
       ...
    });
