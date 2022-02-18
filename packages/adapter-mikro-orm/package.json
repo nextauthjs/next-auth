@@ -32,12 +32,12 @@
     "dist"
   ],
   "peerDependencies": {
-    "@mikro-orm/core": "^5.0.0",
+    "@mikro-orm/core": "^5.0.2",
     "next-auth": "^4.0.1"
   },
   "devDependencies": {
-    "@mikro-orm/core": "^5.0.0",
-    "@mikro-orm/sqlite": "^5.0.0"
+    "@mikro-orm/core": "^5.0.2",
+    "@mikro-orm/sqlite": "^5.0.2"
   },
   "jest": {
     "preset": "adapter-test/jest"
