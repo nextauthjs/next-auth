@@ -494,7 +494,7 @@ Using low values for `refetchInterval` will increase network traffic and load on
 
 #### Base path
 
-If for some reason you're using a custom path, and your application entry point is not the root of the domain "/" but something else, for example "/my-app/" you can use the `basePath` prop to make NextAuth.js aware of that so that all redirects and session handling work as expected.
+If you are using a custom base path, and your application entry point is not at the root of the domain "/" but something else, for example "/my-app/" you can use the `basePath` prop to make NextAuth.js aware of that so that all redirects and session handling work as expected.
 
 #### Refetch interval
 
