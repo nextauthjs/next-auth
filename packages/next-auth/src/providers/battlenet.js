@@ -13,6 +13,7 @@ export default function BattleNet(options) {
     authorization: `${base}/authorize`,
     token: `${base}/token`,
     userinfo: "https://us.battle.net/oauth/userinfo",
+    idToken: true,
     profile(profile) {
       return {
         id: profile.id,
