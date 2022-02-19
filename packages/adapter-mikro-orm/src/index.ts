@@ -1,55 +1,68 @@
-import type { Options } from "@mikro-orm/core"
+import type {
+  AnyEntity,
+  Connection,
+  EntityClass,
+  EntityClassGroup,
+  EntitySchema,
+  IDatabaseDriver,
+  Options as ORMOptions,
+} from "@mikro-orm/core"
 import { MikroORM, wrap } from "@mikro-orm/core"
 import * as defaultEntities from "./entities"
 
 import type { Adapter } from "next-auth/adapters"
-import { isPromise } from "util/types"
 
 export * as defaultEntities from "./entities"
 
 /**
- * The MikroORM adapter accepts a MikroORM instance or configuration and returns a NextAuth adapter.
- * @param ormConnection can either be an instance promise or a MikroORM connection configuration (https://mikro-orm.io/docs/next/configuration#driver)
- * @param options entities in the options object will be passed to the MikroORM init function as entities
+ * The MikroORM adapter accepts a MikroORM configuration and returns a NextAuth adapter.
+ * @param ormConnection a MikroORM connection configuration (https://mikro-orm.io/docs/next/configuration#driver)
+ * @param options entities in the options object will be passed to the MikroORM init function as entities. Has to be provided if overridden!
  * @returns
  */
-export function MikroOrmAdapter(
-  ormConnection: Promise<MikroORM> | Options,
+export function MikroOrmAdapter<D extends IDatabaseDriver<Connection> = IDatabaseDriver<Connection>>(
+  ormOptions: ORMOptions<D>,
   options?: {
     entities?: Partial<typeof defaultEntities>
   }
 ): Adapter {
-  const {
-    User: UserModel,
-    Account: AccountModel,
-    Session: SessionModel,
-    VerificationToken: VerificationTokenModel,
-  } = { ...defaultEntities, ...options?.entities }
+  const UserModel = options?.entities?.User ?? defaultEntities.User
+  const AccountModel = options?.entities?.Account ?? defaultEntities.Account
+  const SessionModel = options?.entities?.Session ?? defaultEntities.Session
+  const VerificationTokenModel =
+    options?.entities?.VerificationToken ?? defaultEntities.VerificationToken
+
+  let _orm: MikroORM
 
   const getEM = async () => {
-    if (!isPromise(ormConnection)) {
-      if (typeof ormConnection.entities === "string")
-        throw new Error("You have to pass class entities to MikroORM.init")
-
+    if (!_orm) {
       // filter out default entities from the passed entities
-      const connectionEntities = ormConnection.entities?.filter((e) => {
-        if (typeof e !== "string" && "name" in e && typeof e.name === "string")
-          return !["User", "Account", "Session", "VerificationToken"].includes(
-            e.name
+      const optionsEntities =
+        ormOptions.entities?.filter((e) => {
+          if (
+            typeof e !== "string" &&
+            "name" in e &&
+            typeof e.name === "string"
           )
-        return true
-      })
+            return ![
+              "User",
+              "Account",
+              "Session",
+              "VerificationToken",
+            ].includes(e.name)
+          return true
+        }) ?? []
       // add the (un-)enhanced entities to the connection
-      ormConnection.entities = [
-        ...(connectionEntities ?? []),
+      ormOptions.entities = [
+        ...optionsEntities,
         UserModel,
         AccountModel,
         SessionModel,
         VerificationTokenModel,
       ]
-      ormConnection = MikroORM.init(ormConnection)
+      _orm = await MikroORM.init(ormOptions)
     }
-    return await ormConnection.then((orm) => orm.em.fork())
+    return _orm.em.fork()
   }
 
   return {
