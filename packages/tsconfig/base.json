@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "emitDeclarationOnly": true,
     "strictNullChecks": true,
     "target": "es2019",
     "lib": ["dom", "dom.iterable", "esnext"],
