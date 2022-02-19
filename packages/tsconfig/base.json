@@ -16,13 +16,5 @@
     "stripInternal": true,
     "skipLibCheck": true,
     "skipDefaultLibCheck": true
-  },
-  "exclude": [
-    "./*.js",
-    "./*.d.ts",
-    "apps/dev",
-    "**/tests",
-    "**/__tests__",
-    "jest.config.js"
-  ]
+  }
 }
