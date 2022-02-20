@@ -5,9 +5,14 @@ export interface BattleNetProfile {
   battle_tag: string
 }
 
-export default function BattleNet(
-  options: { clientId: string, clientSecret: string, region: 'US' | 'EU' | 'KR' | 'TW' | 'CN' }
-): OAuthConfig<BattleNetProfile> {
+export default function BattleNet<
+  P extends Record<string, any> = BattleNetProfile
+>(
+  options: OAuthUserConfig<P> & {
+    /** Defaults to `"CN"` */
+    region?: "US" | "EU" | "KR" | "TW" | "CN"
+  }
+): OAuthConfig<P> {
 
   const wellKnown = options.region === 'CN' 
     ? 'https://www.battlenet.com.cn/oauth/.well-known/openid-configuration' 
