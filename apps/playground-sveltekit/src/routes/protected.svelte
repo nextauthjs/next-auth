@@ -1,22 +1,22 @@
 <script context="module" lang="ts">
-	export async function load({ session }) {
-		const { user } = session;
-		if (!user) {
-			return {
-				status: 302,
-				redirect: '/'
-			};
-		}
-		return {
-			props: {
-				session
-			}
-		};
-	}
+  export async function load({ session }) {
+    const { user } = session;
+    if (!user) {
+      return {
+        status: 302,
+        redirect: '/'
+      };
+    }
+    return {
+      props: {
+        session
+      }
+    };
+  }
 </script>
 
 <script lang="ts">
-	export let session;
+  export let session;
 </script>
 
 <h1>Protected page</h1>

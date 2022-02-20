@@ -11,14 +11,14 @@ import NextAuth from '$lib';
 import GithubProvider from 'next-auth/providers/github';
 
 const nextAuthOptions = {
-	// Configure one or more authentication providers
-	providers: [
-		GithubProvider({
-			clientId: import.meta.env.VITE_GITHUB_CLIENT_ID,
-			clientSecret: import.meta.env.VITE_GITHUB_CLIENT_SECRET
-		})
-		// ...add more providers here
-	]
+  // Configure one or more authentication providers
+  providers: [
+    GithubProvider({
+      clientId: import.meta.env.VITE_GITHUB_CLIENT_ID,
+      clientSecret: import.meta.env.VITE_GITHUB_CLIENT_SECRET
+    })
+    // ...add more providers here
+  ]
 };
 
 export const { get, post } = NextAuth(nextAuthOptions);
@@ -28,26 +28,26 @@ export const { get, post } = NextAuth(nextAuthOptions);
 
 ```html
 <script context="module">
-	export async function load({ session }) {
-		const { user } = session;
+  export async function load({ session }) {
+    const { user } = session;
 
-		if (!user) {
-			return {
-				status: 302,
-				redirect: '/'
-			};
-		}
+    if (!user) {
+      return {
+        status: 302,
+        redirect: '/'
+      };
+    }
 
-		return {
-			props: {
-				session
-			}
-		};
-	}
+    return {
+      props: {
+        session
+      }
+    };
+  }
 </script>
 
 <script>
-	export let session;
+  export let session;
 </script>
 
 <p>Session expiry: {session.expires}</p>
