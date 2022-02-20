@@ -1,4 +1,4 @@
-import NextAuth from '$lib/next-auth';
+import NextAuth from '$lib';
 import type { NextAuthOptions } from 'next-auth';
 import GithubProvider from 'next-auth/providers/github';
 
