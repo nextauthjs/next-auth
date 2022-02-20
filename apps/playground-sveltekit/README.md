@@ -1,0 +1,3 @@
+# SvelteKit + NextAuth Playground
+
+TODO
