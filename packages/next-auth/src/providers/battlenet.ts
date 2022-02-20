@@ -22,9 +22,6 @@ export default function BattleNet<
     id: "battlenet",
     name: "Battle.net",
     wellKnown,
-    idToken: true,
-    clientId: options.clientId,
-    clientSecret: options.clientSecret,
     profile(profile) {
       return {
         id: profile.sub,
