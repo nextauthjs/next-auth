@@ -24,6 +24,33 @@ const nextAuthOptions = {
 export const { get, post } = NextAuth(nextAuthOptions);
 ```
 
+### Add [hook](https://kit.svelte.dev/docs/hooks)
+
+```ts
+import { getServerSession } from '$lib';
+import GithubProvider from 'next-auth/providers/github';
+
+const nextAuthOptions = {
+  providers: [
+    GithubProvider({
+      clientId: import.meta.env.VITE_GITHUB_CLIENT_ID,
+      clientSecret: import.meta.env.VITE_GITHUB_CLIENT_SECRET
+    })
+  ]
+};
+
+export async function handle({ event, resolve }) {
+  const session = await getServerSession(event.request, nextAuthOptions);
+  event.locals.session = session;
+
+  return resolve(event);
+}
+
+export function getSession(event) {
+  return event.locals.session || {};
+}
+```
+
 ### Protecting a route
 
 ```html
