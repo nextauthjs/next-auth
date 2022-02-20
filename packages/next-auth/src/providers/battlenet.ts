@@ -1,5 +1,5 @@
-import type { OAuthConfig } from "."
-import OAuthProvider from './auth0'
+import type { OAuthConfig, OAuthUserConfig } from "."
+
 export interface BattleNetProfile {
   sub: string
   battle_tag: string
