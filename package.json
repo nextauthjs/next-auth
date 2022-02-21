@@ -12,8 +12,8 @@
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "scripts": {
     "build:app": "turbo run build --scope=next-auth-app --include-dependencies",
-    "build": "turbo run build --scope=next-auth --scope=@next-auth/* --no-deps",
-    "lint": "turbo run lint",
+    "build": "turbo run build --scope=next-auth --scope=@next-auth/* --no-deps --ignore=docs",
+    "lint": "turbo run lint --ignore=docs",
     "lint:fix": "turbo run lint -- --fix",
     "test": "turbo run test --concurrency=1 --ignore=packages/adapter-pouch/*",
     "setup": "turbo run setup",
