@@ -18,7 +18,7 @@ npm install next-auth @next-auth/dgraph-adapter
 2. Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object.
 
 ```javascript title="pages/api/auth/[...nextauth].js"
-import NextAuth from "next-auth"
+import NextAuth from "next-auth/client"
 import { DgraphAdapter } from "@next-auth/dgraph-adapter"
 
 // For more information on each option (and a full list of options) go to
@@ -225,7 +225,7 @@ Dgraph only works with HS256 or RS256 algorithms. If you want to use session jwt
 database you must customize next-auth `encode` and `decode` functions, as the default algorithm is HS512. You can
 further customize the jwt with roles if you want to implement [`RBAC logic`](https://dgraph.io/docs/graphql/authorization/directive/#role-based-access-control).
 
-```js
+```javascript title="pages/api/auth/[...nextauth].js
 import * as jwt from "jsonwebtoken";
 export default NextAuth({
   session: {
