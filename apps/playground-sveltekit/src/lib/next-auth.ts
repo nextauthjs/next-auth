@@ -58,7 +58,7 @@ async function SKNextAuthHandler(
   } catch {
     // no formData passed
   }
-
+  options.secret = import.meta.env.VITE_NEXTAUTH_SECRET
   const req: IncomingRequest = {
     host: import.meta.env.VITE_NEXTAUTH_URL,
     body,
