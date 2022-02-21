@@ -1,5 +1,9 @@
 # SvelteKit + NextAuth.js Playground
 
+NextAuth.js is committed to bringing easy authentication to other frameworks. https://github.com/nextauthjs/next-auth/issues/2294
+
+SvelteKit support with NextAuth.js is currently experimental. This directory contains a minimal, proof-of-concept application. Parts of this is expected to be abstracted away into a package like `@next-auth/sveltekit`
+
 ## Existing Project
 
 ### Add API route
