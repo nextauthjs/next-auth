@@ -1,4 +1,4 @@
-# SvelteKit + NextAuth Playground
+# SvelteKit + NextAuth.js Playground
 
 ## Existing Project
 
