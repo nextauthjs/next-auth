@@ -11,6 +11,7 @@ import { defaultCallbacks } from "./lib/default-callbacks"
 import { createCSRFToken } from "./lib/csrf-token"
 import { createCallbackUrl } from "./lib/callback-url"
 import { IncomingRequest } from "."
+import { defaultRoutesHandler } from "./handle-routes"
 
 interface InitParams {
   host?: string
@@ -97,10 +98,14 @@ export async function init({
     // Event messages
     events: eventsErrorHandler(userOptions.events ?? {}, logger),
     adapter: adapterErrorHandler(userOptions.adapter, logger),
+
     // Callback functions
     callbacks: { ...defaultCallbacks, ...userOptions.callbacks },
     logger,
     callbackUrl: url.origin,
+
+    // Routes handling
+    routesHandler: userOptions.routesHandler || defaultRoutesHandler,
   }
 
   // Init cookies

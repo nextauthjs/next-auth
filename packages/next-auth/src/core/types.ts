@@ -4,6 +4,9 @@ import type { TokenSetParameters } from "openid-client"
 import type { JWT, JWTOptions } from "../jwt"
 import type { LoggerInstance } from "../lib/logger"
 import type { CookieSerializeOptions } from "cookie"
+import { SessionStore, Cookie } from "./lib/cookie"
+import { InternalOptions } from "../lib/types"
+import { IncomingRequest, OutgoingResponse } from "../core"
 
 export type Awaitable<T> = T | PromiseLike<T>
 
@@ -195,6 +198,19 @@ export interface NextAuthOptions {
    * [Documentation](https://next-auth.js.org/configuration/options#cookies) | [Usage example](https://next-auth.js.org/configuration/options#example)
    */
   cookies?: Partial<CookiesOptions>
+
+  /**
+   * You can override the default route handler by specifying a custom route handler. This allows you
+   * to handle custom types of providers that are not supported by NextAuth.js.
+   *
+   * By default the routes are handles by the defaultRoutesHandler function. You can manually call
+   * this function inside your custom routesHandler by calling `nextAuth.defaultRoutesHandler(...args)`.
+   *
+   * - ⚠ **This is an advanced option.** Advanced options are passed the same way as basic options,
+   * but **may have complex implications** or side effects.
+   * You should **try to avoid using advanced options** unless you are very comfortable using them.
+   */
+  routesHandler?: RoutesHandler
 }
 
 /**
@@ -472,3 +488,16 @@ export interface DefaultUser {
  * [`profile` OAuth provider callback](https://next-auth.js.org/configuration/providers#using-a-custom-provider)
  */
 export interface User extends Record<string, unknown>, DefaultUser {}
+
+export interface RoutesHandlerParams {
+  error?: string
+  cookies: Cookie[]
+  sessionStore: SessionStore
+  req: IncomingRequest
+  userOptions: NextAuthOptions
+  options: InternalOptions
+}
+
+export type RoutesHandler = (
+  p: RoutesHandlerParams
+) => Promise<OutgoingResponse<Body>>

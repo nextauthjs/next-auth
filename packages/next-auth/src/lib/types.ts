@@ -9,6 +9,7 @@ import type {
   SessionOptions,
   Theme,
   Awaitable,
+  RoutesHandler,
 } from ".."
 
 import type {
@@ -72,6 +73,7 @@ export interface InternalOptions<T extends ProviderType = any> {
   callbacks: CallbacksOptions
   cookies: CookiesOptions
   callbackUrl: string
+  routesHandler: RoutesHandler
 }
 
 /** @internal */
