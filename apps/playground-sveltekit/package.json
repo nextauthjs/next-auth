@@ -33,5 +33,9 @@
   "dependencies": {
     "cookie": "0.4.1",
     "next-auth": "^4.2.1"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": false
   }
 }
