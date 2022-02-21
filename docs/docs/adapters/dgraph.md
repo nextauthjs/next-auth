@@ -100,10 +100,10 @@ by next-auth. The main form of access control used in Dgraph is via `@auth` dire
 ```graphql
 type Account
   @auth(
-    delete: { rule: "{$nextAuth { eq: true } }" }
-    add: { rule: "{$nextAuth { eq: true } }" }
-    query: { rule: "{$nextAuth { eq: true } }" }
-    update: { rule: "{$nextAuth { eq: true } }" }
+    delete: { rule: "{$nextAuth: { eq: true } }" }
+    add: { rule: "{$nextAuth: { eq: true } }" }
+    query: { rule: "{$nextAuth: { eq: true } }" }
+    update: { rule: "{$nextAuth: { eq: true } }" }
   ) {
   id: ID
   type: String
@@ -122,10 +122,10 @@ type Account
 }
 type Session
   @auth(
-    delete: { rule: "{$nextAuth { eq: true } }" }
-    add: { rule: "{$nextAuth { eq: true } }" }
-    query: { rule: "{$nextAuth { eq: true } }" }
-    update: { rule: "{$nextAuth { eq: true } }" }
+    delete: { rule: "{$nextAuth: { eq: true } }" }
+    add: { rule: "{$nextAuth: { eq: true } }" }
+    query: { rule: "{$nextAuth: { eq: true } }" }
+    update: { rule: "{$nextAuth: { eq: true } }" }
   ) {
   id: ID
   expires: DateTime
@@ -141,11 +141,11 @@ type User
           query ($userId: String!) {queryUser(filter: { id: { eq: $userId } } ) {id}}
           """
         }
-        { rule: "{$nextAuth { eq: true } }" }
+        { rule: "{$nextAuth: { eq: true } }" }
       ]
     }
-    delete: { rule: "{$nextAuth { eq: true } }" }
-    add: { rule: "{$nextAuth { eq: true } }" }
+    delete: { rule: "{$nextAuth: { eq: true } }" }
+    add: { rule: "{$nextAuth: { eq: true } }" }
     update: {
       or: [
         {
@@ -153,7 +153,7 @@ type User
           query ($userId: String!) {queryUser(filter: { id: { eq: $userId } } ) {id}}
           """
         }
-        { rule: "{$nextAuth { eq: true } }" }
+        { rule: "{$nextAuth: { eq: true } }" }
       ]
     }
   ) {
@@ -168,10 +168,10 @@ type User
 
 type VerificationToken
   @auth(
-    delete: { rule: "{$nextAuth { eq: true } }" }
-    add: { rule: "{$nextAuth { eq: true } }" }
-    query: { rule: "{$nextAuth { eq: true } }" }
-    update: { rule: "{$nextAuth { eq: true } }" }
+    delete: { rule: "{$nextAuth: { eq: true } }" }
+    add: { rule: "{$nextAuth: { eq: true } }" }
+    query: { rule: "{$nextAuth: { eq: true } }" }
+    update: { rule: "{$nextAuth: { eq: true } }" }
   ) {
   id: ID
   identifier: String @search(by: [hash])
