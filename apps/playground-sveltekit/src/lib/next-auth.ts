@@ -83,6 +83,9 @@ export async function getServerSession(
   request: Request,
   options: NextAuthOptions
 ): Promise<Session | null> {
+  
+  options.secret = import.meta.env.VITE_NEXTAUTH_SECRET
+  
   const session = await NextAuthHandler<Session>({
     req: {
       host: import.meta.env.VITE_NEXTAUTH_URL,
