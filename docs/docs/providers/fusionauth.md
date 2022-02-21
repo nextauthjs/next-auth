@@ -53,7 +53,7 @@ In the OAuth settings for your application, configure the following.
   - https://localhost:3000/api/auth/callback/fusionauth
 - Enabled grants
   - Make sure _Authorization Code_ is enabled.
-  
+
 If using JSON Web Tokens, you need to make sure the signing algorithm is RS256, you can create an RS256 key pair by
-going to Settings,  Key Master, generate RSA and choosing SHA-256 as algorithm. After that, go to the JWT settings of
+going to Settings, Key Master, generate RSA and choosing SHA-256 as algorithm. After that, go to the JWT settings of
 your application and select this key as Access Token signing key and Id Token signing key.

@@ -196,11 +196,15 @@ function Home() {
                     <h4 className="code-heading">
                       Client (App) <span>/pages/_app.jsx</span>
                     </h4>
-                    <CodeBlock className="prism-code language-js">{appCode}</CodeBlock>
+                    <CodeBlock className="prism-code language-js">
+                      {appCode}
+                    </CodeBlock>
                     <h4 className="code-heading">
                       Client (Page) <span>/pages/index.js</span>
                     </h4>
-                    <CodeBlock className="prism-code language-js">{pageCode}</CodeBlock>
+                    <CodeBlock className="prism-code language-js">
+                      {pageCode}
+                    </CodeBlock>
                   </div>
                 </div>
               </div>

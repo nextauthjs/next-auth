@@ -34,7 +34,6 @@ import { withAuth } from "next-auth/middleware"
 
 Callbacks are asynchronous functions you can use to control what happens when an action is performed.
 
-
 #### Example (default value)
 
 ```js
@@ -91,8 +90,8 @@ import { withAuth } from "next-auth/middleware"
 
 export default withAuth({
   callbacks: {
-    authorized: ({ token }) => token?.role === "admin"
-  }
+    authorized: ({ token }) => token?.role === "admin",
+  },
 })
 ```
 
@@ -106,13 +105,16 @@ import type { JWT } from "next-auth/jwt"
 
 import { withAuth } from "next-auth/middleware"
 
-export default withAuth(function middleware(req: NextRequest & { nextauth: { token: JWT } }) {
-  console.log(req.nextauth.token)
-}, {
-  callbacks: {
-    authorized: ({ token }) => token?.role === "admin"
+export default withAuth(
+  function middleware(req: NextRequest & { nextauth: { token: JWT } }) {
+    console.log(req.nextauth.token)
+  },
+  {
+    callbacks: {
+      authorized: ({ token }) => token?.role === "admin",
+    },
   }
-})
+)
 ```
 
 The `middleware` function will only be invoked if the `authorized` callback returns `true`.

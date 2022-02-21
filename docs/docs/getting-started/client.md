@@ -79,7 +79,7 @@ export default function Admin() {
     required: true,
     onUnauthenticated() {
       // The user is not authenticated, handle it here.
-    }
+    },
   })
 
   if (status === "loading") {
@@ -123,7 +123,7 @@ export default function App({
 }
 
 function Auth({ children }) {
-  const { data: session, status } = useSession({required: true})
+  const { data: session, status } = useSession({ required: true })
   const isUser = !!session?.user
 
   if (isUser) {
@@ -280,7 +280,7 @@ export default () => <button onClick={() => signIn()}>Sign in</button>
 
 ### Starts OAuth sign-in flow when clicked
 
-By default, when calling the `signIn()` method with no arguments, you will be redirected to the NextAuth.js sign-in page. If you want to skip that and get redirected to your provider's page immediately, call the `signIn()` method with the provider's `id`. 
+By default, when calling the `signIn()` method with no arguments, you will be redirected to the NextAuth.js sign-in page. If you want to skip that and get redirected to your provider's page immediately, call the `signIn()` method with the provider's `id`.
 
 For example to sign in with Google:
 
