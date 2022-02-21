@@ -5,6 +5,24 @@
     "build": {
       "dependsOn": ["^build"]
     },
+    "next-auth#build": {
+      "dependsOn": ["^build"],
+      "outputs": [
+        "lib/**",
+        "css/**",
+        "jwt/**",
+        "react/**",
+        "next/**",
+        "client/**",
+        "providers/**",
+        "core/**",
+        "index.d.ts",
+        "index.js",
+        "adapters.d.ts",
+        "middleware.d.ts",
+        "middleware.js"
+      ]
+    },
     "test": {
       "dependsOn": ["lint", "build"],
       "outputs": []
