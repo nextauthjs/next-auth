@@ -1,54 +1,60 @@
-import type { RequestEvent } from '@sveltejs/kit';
-import type { IncomingRequest, NextAuthOptions, Session } from 'next-auth';
-import type { NextAuthAction } from 'next-auth/lib/types';
-import type { OutgoingResponse } from 'next-auth/core';
-import { NextAuthHandler } from 'next-auth/core';
-import cookie from 'cookie';
-import getFormBody from './utils/get-form-body';
+import type { RequestEvent } from "@sveltejs/kit"
+import type { IncomingRequest, NextAuthOptions, Session } from "next-auth"
+import type { NextAuthAction } from "next-auth/lib/types"
+import type { OutgoingResponse } from "next-auth/core"
+import { NextAuthHandler } from "next-auth/core"
+import cookie from "cookie"
+import getFormBody from "./utils/get-form-body"
 
-async function toSvelteKitResponse(request: Request, nextAuthResponse: OutgoingResponse<unknown>) {
-  const { headers, cookies, body, redirect, status = 200 } = nextAuthResponse;
+async function toSvelteKitResponse(
+  request: Request,
+  nextAuthResponse: OutgoingResponse<unknown>
+) {
+  const { headers, cookies, body, redirect, status = 200 } = nextAuthResponse
 
   const response = {
     status,
-    headers: {}
-  };
+    headers: {},
+  }
 
   headers?.forEach((header) => {
-    response.headers[header.key] = header.value;
-  });
+    response.headers[header.key] = header.value
+  })
 
-  response.headers['set-cookie'] = cookies?.map((item) => {
-    return cookie.serialize(item.name, item.value, item.options);
-  });
+  response.headers["set-cookie"] = cookies?.map((item) => {
+    return cookie.serialize(item.name, item.value, item.options)
+  })
 
   if (redirect) {
-    let formData = null;
+    let formData = null
     try {
-      formData = await request.formData();
-      formData = getFormBody(formData);
+      formData = await request.formData()
+      formData = getFormBody(formData)
     } catch {
       // no formData passed
     }
-    if (formData?.json !== 'true') {
-      response.status = 302;
-      response.headers['Location'] = redirect;
+    if (formData?.json !== "true") {
+      response.status = 302
+      response.headers["Location"] = redirect
     } else {
-      response['body'] = { url: redirect };
+      response["body"] = { url: redirect }
     }
   } else {
-    response['body'] = body;
+    response["body"] = body
   }
 
-  return response;
+  return response
 }
 
-async function SKNextAuthHandler({ request, url, params }: RequestEvent, options: NextAuthOptions) {
-  const nextauth = params.nextauth.split('/');
-  let body = null;
+async function SKNextAuthHandler(
+  { request, url, params }: RequestEvent,
+  options: NextAuthOptions
+) {
+  const nextauth = params.nextauth.split("/")
+  let body = null
   try {
-    body = await request.formData();
-    body = getFormBody(body);
+    body = await request.formData()
+    body = getFormBody(body)
   } catch {
     // no formData passed
   }
@@ -59,18 +65,18 @@ async function SKNextAuthHandler({ request, url, params }: RequestEvent, options
     query: Object.fromEntries(url.searchParams),
     headers: request.headers,
     method: request.method,
-    cookies: cookie.parse(request.headers.get('cookie')),
+    cookies: cookie.parse(request.headers.get("cookie")),
     action: nextauth[0] as NextAuthAction,
     providerId: nextauth[1],
-    error: nextauth[1]
-  };
+    error: nextauth[1],
+  }
 
   const response = await NextAuthHandler({
     req,
-    options
-  });
+    options,
+  })
 
-  return toSvelteKitResponse(request, response);
+  return toSvelteKitResponse(request, response)
 }
 
 export async function getServerSession(
@@ -80,26 +86,26 @@ export async function getServerSession(
   const session = await NextAuthHandler<Session>({
     req: {
       host: import.meta.env.VITE_NEXTAUTH_URL,
-      action: 'session',
-      method: 'GET',
-      cookies: cookie.parse(request.headers.get('cookie')),
-      headers: request.headers
+      action: "session",
+      method: "GET",
+      cookies: cookie.parse(request.headers.get("cookie")),
+      headers: request.headers,
     },
-    options
-  });
+    options,
+  })
 
-  const { body } = session;
+  const { body } = session
 
-  if (body && Object.keys(body).length) return body as Session;
-  return null;
+  if (body && Object.keys(body).length) return body as Session
+  return null
 }
 
 export default (
   options: NextAuthOptions
 ): {
-  get: (req: RequestEvent) => Promise<unknown>;
-  post: (req: RequestEvent) => Promise<unknown>;
+  get: (req: RequestEvent) => Promise<unknown>
+  post: (req: RequestEvent) => Promise<unknown>
 } => ({
   get: (req) => SKNextAuthHandler(req, options),
-  post: (req) => SKNextAuthHandler(req, options)
-});
+  post: (req) => SKNextAuthHandler(req, options),
+})

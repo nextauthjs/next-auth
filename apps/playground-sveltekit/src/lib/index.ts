@@ -1,4 +1,4 @@
-import NextAuth, { getServerSession } from './next-auth';
+import NextAuth, { getServerSession } from "./next-auth"
 
-export default NextAuth;
-export { getServerSession };
+export default NextAuth
+export { getServerSession }

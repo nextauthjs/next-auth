@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { session } from '$app/stores';
+  import { session } from "$app/stores"
 </script>
 
 <div>
@@ -8,7 +8,10 @@
       <p class="nojs-show loaded">
         {#if Object.keys($session).length}
           {#if $session.user.image}
-            <span style="background-image: url('{$session.user.image}')" class="avatar" />
+            <span
+              style="background-image: url('{$session.user.image}')"
+              class="avatar"
+            />
           {/if}
           <span class="signedInText">
             <small>Signed in as</small><br />
@@ -33,9 +36,9 @@
 
 <style>
   :global(body) {
-    font-family: -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif,
-      BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji',
-      'Segoe UI Emoji', 'Segoe UI Symbol';
+    font-family: -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans,
+      sans-serif, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif,
+      "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     padding: 0 1rem 1rem 1rem;
     max-width: 680px;
     margin: 0 auto;
