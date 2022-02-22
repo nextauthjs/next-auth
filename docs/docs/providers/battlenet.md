@@ -28,8 +28,19 @@ providers: [
   BattleNetProvider({
     clientId: process.env.BATTLENET_CLIENT_ID,
     clientSecret: process.env.BATTLENET_CLIENT_SECRET,
-    region: process.env.BATTLENET_REGION
+    issuer: process.env.BATTLENET_ISSUER
   })
 ]
 ...
+```
+
+`issuer` must be one of these values, based on the [available regions](https://develop.battle.net/documentation/guides/regionality-and-apis):
+
+```ts
+type BattleNetIssuer =
+  | "https://www.battlenet.com.cn/oauth"
+  | "https://us.battle.net/oauth"
+  | "https://eu.battle.net/oauth"
+  | "https://kr.battle.net/oauth"
+  | "https://tw.battle.net/oauth"
 ```

@@ -5,15 +5,14 @@ export interface BattleNetProfile {
   battle_tag: string
 }
 
+/** See the [available regions](https://develop.battle.net/documentation/guides/regionality-and-apis) */
+export type BattleNetIssuer =
+  | "https://www.battlenet.com.cn/oauth"
+  | `https://${"us" | "eu" | "kr" | "tw"}.battle.net/oauth`
+
 export default function BattleNet<
   P extends Record<string, any> = BattleNetProfile
->(
-  options: OAuthUserConfig<P> & {
-    issuer:
-      | "https://www.battlenet.com.cn/oauth"
-      | `https://${"US" | "EU" | "KR" | "TW"}.battle.net/oauth`
-  }
-): OAuthConfig<P> {
+>(options: OAuthUserConfig<P> & { issuer: BattleNetIssuer }): OAuthConfig<P> {
   return {
     id: "battlenet",
     name: "Battle.net",
