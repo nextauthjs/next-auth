@@ -6,7 +6,7 @@ title: PouchDB
 # PouchDB
 
 :::warning
-This adapter is still experimental and does not work with NextAuth.js 4 or newer. If you would like to help out upgrading it, please [open a PR](https://github.com/nextauthjs/adapters)
+This adapter is still experimental and does not work with NextAuth.js 4 or newer. If you would like to help out upgrading it, please [open a PR](https://github.com/nextauthjs/next-auth/tree/main/packages)
 :::
 
 This is the PouchDB Adapter for [`next-auth`](https://next-auth.js.org). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.

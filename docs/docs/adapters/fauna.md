@@ -51,6 +51,7 @@ CreateCollection({ name: "sessions" })
 CreateCollection({ name: "users" })
 CreateCollection({ name: "verification_tokens" })
 ```
+
 ```javascript
 CreateIndex({
   name: "account_by_provider_and_provider_account_id",
@@ -80,3 +81,5 @@ CreateIndex({
   terms: [{ field: ["data", "identifier"] }, { field: ["data", "token"] }],
 })
 ```
+
+> This schema is adapted for use in Fauna and based upon our main [schema](/adapters/models)

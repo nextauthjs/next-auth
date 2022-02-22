@@ -47,7 +47,6 @@ The TeamID is located on the top right after logging in.
 The KeyID is located after you create the key. Look for it before you download the k8 file.
 :::
 
-
 ## Testing on a development server
 
 :::tip
@@ -63,11 +62,13 @@ Apple doesn't allow you to use localhost in domains or subdomains.
 Edit your host file and point your site to `127.0.0.1`.
 
 _Linux/macOS_
+
 ```
 sudo echo '127.0.0.1 dev.example.com' >> /etc/hosts
 ```
 
 _Windows_ (run PowerShell as administrator)
+
 ```ps
 Add-Content -Path C:\Windows\System32\drivers\etc\hosts -Value "127.0.0.1 dev.example.com" -Force
 ```
@@ -79,6 +80,7 @@ More info: [How to edit my host file?](https://phoenixnap.com/kb/how-to-edit-hos
 Create a directory `certificates` and add the certificate files `localhost.key` and `localhost.crt`, which you generate using OpenSSL:
 
 _Linux/macOS_
+
 ```bash
 openssl req -x509 -out localhost.crt -keyout localhost.key \
   -newkey rsa:2048 -nodes -sha256 \

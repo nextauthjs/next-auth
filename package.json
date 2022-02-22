@@ -11,8 +11,9 @@
   },
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "scripts": {
-    "build": "turbo run build",
-    "lint": "turbo run lint",
+    "build:app": "turbo run build --scope=next-auth-app --include-dependencies",
+    "build": "turbo run build --scope=next-auth --scope=@next-auth/* --no-deps --ignore=docs",
+    "lint": "turbo run lint --ignore=docs",
     "lint:fix": "turbo run lint -- --fix",
     "test": "turbo run test --concurrency=1 --ignore=packages/adapter-pouch/*",
     "setup": "turbo run setup",
@@ -49,7 +50,8 @@
     "node": "^12.19.0 || ^14.15.0 || ^16.13.0"
   },
   "prettier": {
-    "semi": false
+    "semi": false,
+    "singleQuote": false
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",

@@ -7,7 +7,6 @@ title: IdentityServer4
 [IdentityServer4 is discontinued](https://identityserver4.readthedocs.io/en/latest/#:~:text=until%20November%202022.) and only releases security updates until November 2022. You should consider an alternative provider.
 :::
 
-
 ## Documentation
 
 https://identityserver4.readthedocs.io/en/latest/

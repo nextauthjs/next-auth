@@ -5,6 +5,7 @@ title: Azure Active Directory B2C
 
 :::note
 Azure AD B2C returns the following fields on `Account`:
+
 - `refresh_token_expires_in` (number)
 - `not_before` (number)
 - `id_token_expires_in` (number)
