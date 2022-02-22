@@ -13,15 +13,16 @@ export default function BattleNet<
     region?: "US" | "EU" | "KR" | "TW" | "CN"
   }
 ): OAuthConfig<P> {
-
-  const wellKnown = options.region === 'CN' 
-    ? 'https://www.battlenet.com.cn/oauth/.well-known/openid-configuration' 
-    : `https://us.battle.net/oauth/.well-known/openid-configuration` 
+  const { region } = options
+  const domain =
+    region === "CN"
+      ? "https://www.battlenet.com.cn"
+      : `https://${region}.battle.net`
 
   return OAuthProvider({
     id: "battlenet",
     name: "Battle.net",
-    wellKnown,
+    wellKnown: `${domain}/oauth/.well-known/openid-configuration`,
     profile(profile) {
       return {
         id: profile.sub,
