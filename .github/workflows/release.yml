@@ -33,9 +33,9 @@ jobs:
       - name: Install dependencies
         run: yarn --prefer-offline --frozen-lockfile
       - name: Build
-        run: npm run build
+        run: yarn build
       - name: Run tests
-        run: npm run test -- -- --coverage --verbose
+        run: yarn test
         env:
           UPSTASH_REDIS_URL: ${{ secrets.UPSTASH_REDIS_URL }}
           UPSTASH_REDIS_KEY: ${{ secrets.UPSTASH_REDIS_KEY }}

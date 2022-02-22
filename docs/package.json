@@ -14,8 +14,8 @@
     "deploy": "docusaurus deploy",
     "serve": "docusaurus serve",
     "clear": "docusaurus clear",
-    "lint": "standard",
-    "lint:fix": "standard --fix",
+    "lint": "prettier .",
+    "lint:fix": "prettier --write .",
     "generate-providers": "node ./scripts/generate-providers.js"
   },
   "dependencies": {
@@ -33,8 +33,7 @@
     "styled-components": "^5.3.3"
   },
   "devDependencies": {
-    "prettier": "^2.5.0",
-    "standard": "^16.0.4"
+    "prettier": "^2.5.0"
   },
   "browserslist": {
     "production": [

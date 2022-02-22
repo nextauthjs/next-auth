@@ -3,6 +3,7 @@
 Deploying NextAuth.js only requires a few steps. It can be run anywhere a Next.js application can. Therefore, in a default configuration using only JWT session strategy, i.e. without a database, you will only need these few things in addition to your application:
 
 1. NextAuth.js environment variables
+
    - `NEXTAUTH_SECRET`
    - `NEXTAUTH_URL`
 
