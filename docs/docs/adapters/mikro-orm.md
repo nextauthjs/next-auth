@@ -15,7 +15,6 @@ Configure NextAuth.js to use the MikroORM Adapter:
 import NextAuth from "next-auth"
 import { MikroOrmAdapter } from "@next-auth/mikro-orm-adapter"
 
-
 export default NextAuth({
   adapter: MikroOrmAdapter({
     // MikroORM options object. Ref: https://mikro-orm.io/docs/next/configuration#driver
@@ -91,7 +90,7 @@ export class User implements defaultEntities.User {
 }
 
 export default NextAuth({
-  adapter: MikroOrmAdapter(config, { entities: { User } })
+  adapter: MikroOrmAdapter(config, { entities: { User } }),
 })
 ```
 
