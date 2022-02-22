@@ -3,6 +3,7 @@ import type { OAuthConfig, OAuthUserConfig } from "."
 export interface BattleNetProfile {
   sub: string
   battle_tag: string
+  name: string
 }
 
 export default function BattleNet<
