@@ -9,19 +9,16 @@ export default function BattleNet<
   P extends Record<string, any> = BattleNetProfile
 >(
   options: OAuthUserConfig<P> & {
-    region: "US" | "EU" | "KR" | "TW" | "CN"
+    issuer:
+      | "https://www.battlenet.com.cn/oauth"
+      | `https://${"US" | "EU" | "KR" | "TW"}.battle.net/oauth`
   }
 ): OAuthConfig<P> {
-  const { region } = options
-  const domain =
-    region === "CN"
-      ? "https://www.battlenet.com.cn"
-      : `https://${region}.battle.net`
-
   return {
     id: "battlenet",
     name: "Battle.net",
-    wellKnown: `${domain}/oauth/.well-known/openid-configuration`,
+    type: "oauth",
+    wellKnown: `${options.issuer}/.well-known/openid-configuration`,
     profile(profile) {
       return {
         id: profile.sub,
