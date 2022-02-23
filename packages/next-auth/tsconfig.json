@@ -5,5 +5,5 @@
     "baseUrl": ".",
     "outDir": "."
   },
-  "exclude": ["config"]
+  "exclude": ["./*.js", "./*.d.ts", "config", "**/__tests__"]
 }

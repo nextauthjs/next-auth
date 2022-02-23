@@ -42,7 +42,6 @@
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir . && node config/wrap-css.js",
     "watch:css": "postcss --config config/postcss.config.js --watch src/**/*.css --base src --dir .",
     "test": "jest --config ./config/jest.config.js",
-    "test:ci": "yarn run test -- --ci",
     "prepublishOnly": "yarn run build",
     "generate-providers": "node ./config/generate-providers.js",
     "setup": "yarn run generate-providers",

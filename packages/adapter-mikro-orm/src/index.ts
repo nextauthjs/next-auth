@@ -1,16 +1,14 @@
 import type {
-  AnyEntity,
   Connection,
-  EntityClass,
-  EntityClassGroup,
-  EntitySchema,
   IDatabaseDriver,
   Options as ORMOptions,
 } from "@mikro-orm/core"
-import { MikroORM, wrap } from "@mikro-orm/core"
-import * as defaultEntities from "./entities"
 
 import type { Adapter } from "next-auth/adapters"
+
+import { MikroORM, wrap } from "@mikro-orm/core"
+
+import * as defaultEntities from "./entities"
 
 export * as defaultEntities from "./entities"
 
@@ -20,7 +18,9 @@ export * as defaultEntities from "./entities"
  * @param options entities in the options object will be passed to the MikroORM init function as entities. Has to be provided if overridden!
  * @returns
  */
-export function MikroOrmAdapter<D extends IDatabaseDriver<Connection> = IDatabaseDriver<Connection>>(
+export function MikroOrmAdapter<
+  D extends IDatabaseDriver<Connection> = IDatabaseDriver<Connection>
+>(
   ormOptions: ORMOptions<D>,
   options?: {
     entities?: Partial<typeof defaultEntities>
