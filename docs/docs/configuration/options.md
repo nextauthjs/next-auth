@@ -18,7 +18,7 @@ If your Next.js application uses a custom base path, specify the route to the AP
 _e.g. `NEXTAUTH_URL=https://example.com/custom-route/api/auth`_
 
 :::note
-Using [Vercel system environment variables](https://vercel.com/docs/concepts/projects/environment-variables#system-environment-variables) we automatically detect when you deploy to [Vercel](https://vercel.com) so you don't have to define this variable. Make sure **Automatically expose System Environment Variables** is checked in your Project Settings, or to manualy expose a `VERCEL` environment variable.  
+Using [System Environment Variables](https://vercel.com/docs/concepts/projects/environment-variables#system-environment-variables) we automatically detect when you deploy to [Vercel](https://vercel.com) so you don't have to define this variable. Make sure **Automatically expose System Environment Variables** is checked in your Project Settings.
 :::
 
 ### NEXTAUTH_SECRET
