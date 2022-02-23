@@ -1,94 +1,86 @@
-import type { RequestEvent } from "@sveltejs/kit"
-import type { IncomingRequest, NextAuthOptions, Session } from "next-auth"
+import type { EndpointOutput, RequestEvent } from "@sveltejs/kit"
+import type { NextAuthOptions, Session } from "next-auth"
 import type { NextAuthAction } from "next-auth/lib/types"
 import type { OutgoingResponse } from "next-auth/core"
 import { NextAuthHandler } from "next-auth/core"
 import cookie from "cookie"
-import getFormBody from "./utils/get-form-body"
 
-async function toSvelteKitResponse(
-  request: Request,
-  nextAuthResponse: OutgoingResponse<unknown>
-) {
-  const { headers, cookies, body, redirect, status = 200 } = nextAuthResponse
+function getHeaders(opts: OutgoingResponse): Record<string, any> {
+  return {
+    ...opts.headers?.reduce((acc, { key, value }) => {
+      acc[key] = value
+      return acc
+    }, {}),
+    ["set-cookie"]: opts.cookies?.map((item) => {
+      return cookie.serialize(item.name, item.value, item.options)
+    }),
+  }
+}
+
+async function SvelteKitNextAuthHandler(
+  reqEvent: RequestEvent,
+  options: NextAuthOptions
+): Promise<EndpointOutput> {
+  const { request, url, params } = reqEvent
+
+  const nextauth = params.nextauth?.split("/") ?? []
+
+  const body = Object.fromEntries(
+    // @ts-expect-error: Entries property type missing
+    (await request.formData().catch(() => [])).entries()
+  )
+
+  options.secret = import.meta.env.VITE_NEXTAUTH_SECRET
+
+  const res = await NextAuthHandler({
+    req: {
+      host: url.origin,
+      body,
+      query: Object.fromEntries(url.searchParams),
+      headers: request.headers,
+      method: request.method,
+      cookies: cookie.parse(request.headers.get("cookie")),
+      action: nextauth[0] as NextAuthAction,
+      providerId: nextauth[1],
+      error: nextauth[1],
+    },
+    options: options,
+  })
 
   const response = {
-    status,
-    headers: {},
+    body: res.body,
+    status: res.status ?? 200,
+    headers: getHeaders(res),
   }
 
-  headers?.forEach((header) => {
-    response.headers[header.key] = header.value
-  })
-
-  response.headers["set-cookie"] = cookies?.map((item) => {
-    return cookie.serialize(item.name, item.value, item.options)
-  })
-
-  if (redirect) {
-    let formData = null
-    try {
-      formData = await request.formData()
-      formData = getFormBody(formData)
-    } catch {
-      // no formData passed
-    }
-    if (formData?.json !== "true") {
-      response.status = 302
-      response.headers["Location"] = redirect
+  if (res.redirect) {
+    if (body?.json === "true") {
+      response["body"] = { url: res.redirect }
     } else {
-      response["body"] = { url: redirect }
+      response.status = 302
+      response.headers["Location"] = res.redirect
     }
-  } else {
-    response["body"] = body
   }
 
   return response
 }
 
-async function SKNextAuthHandler(
-  { request, url, params }: RequestEvent,
+export default (
   options: NextAuthOptions
-) {
-  const nextauth = params.nextauth.split("/")
-  let body = null
-  try {
-    body = await request.formData()
-    body = getFormBody(body)
-  } catch {
-    // no formData passed
-  }
-  options.secret = import.meta.env.VITE_NEXTAUTH_SECRET
-  const req: IncomingRequest = {
-    host: import.meta.env.VITE_NEXTAUTH_URL,
-    body,
-    query: Object.fromEntries(url.searchParams),
-    headers: request.headers,
-    method: request.method,
-    cookies: cookie.parse(request.headers.get("cookie")),
-    action: nextauth[0] as NextAuthAction,
-    providerId: nextauth[1],
-    error: nextauth[1],
-  }
-
-  const response = await NextAuthHandler({
-    req,
-    options,
-  })
-
-  return toSvelteKitResponse(request, response)
+): Record<"get" | "post", (req: RequestEvent) => Promise<EndpointOutput>> => {
+  const handler = (req) => SvelteKitNextAuthHandler(req, options)
+  return { get: handler, post: handler }
 }
 
 export async function getServerSession(
   request: Request,
   options: NextAuthOptions
 ): Promise<Session | null> {
-  
   options.secret = import.meta.env.VITE_NEXTAUTH_SECRET
-  
-  const session = await NextAuthHandler<Session>({
+
+  const { body } = await NextAuthHandler<Session>({
     req: {
-      host: import.meta.env.VITE_NEXTAUTH_URL,
+      host: new URL(request.url).origin,
       action: "session",
       method: "GET",
       cookies: cookie.parse(request.headers.get("cookie")),
@@ -97,18 +89,7 @@ export async function getServerSession(
     options,
   })
 
-  const { body } = session
+  if (!body || !Object.keys(body).length) return null
 
-  if (body && Object.keys(body).length) return body as Session
-  return null
+  return body
 }
-
-export default (
-  options: NextAuthOptions
-): {
-  get: (req: RequestEvent) => Promise<unknown>
-  post: (req: RequestEvent) => Promise<unknown>
-} => ({
-  get: (req) => SKNextAuthHandler(req, options),
-  post: (req) => SKNextAuthHandler(req, options),
-})
