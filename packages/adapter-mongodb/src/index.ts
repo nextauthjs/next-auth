@@ -111,9 +111,10 @@ export function MongoDBAdapter(
       return from<AdapterUser>(user)
     },
     async updateUser(data) {
+      const { id, ...rest } = data
       const { value: user } = await (
         await db
-      ).U.findOneAndUpdate({ _id: _id(data.id) }, { $set: data })
+      ).U.findOneAndUpdate({ _id: _id(id) }, { $set: rest })
       return from<AdapterUser>(user!)
     },
     async deleteUser(id) {
