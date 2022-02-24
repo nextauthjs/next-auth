@@ -155,6 +155,20 @@ export default function Component() {
 }
 ```
 
+## Configuring callback URL (OAuth only)
+
+Either if you're using OAuth as a authentication method, either through one of our [built-in OAuth providers](https://next-auth.js.org/configuration/providers/oauth)
+or through a [custom provider](https://next-auth.js.org/configuration/providers/oauth#using-a-custom-provider), you'll need to declare
+a callback URL on the provider so the whole [OAuth flow](https://next-auth.js.org/configuration/providers/oauth) works correctly.
+
+When adding the callback URL, make sure you point it to the callback route:
+
+```
+{DOMAIN}/api/auth/callback/{PROVIDER_ID}
+```
+
+For instance, if you're trying your application auth in your development environment, using the Github provider, this might be: `http://localhost:3000/api/auth/callback/github` or in production `https://myapp.com/api/auth/callback/github`.
+
 ## Deploying to production
 
 When deploying your site set the `NEXTAUTH_URL` environment variable to the canonical URL of the website.
