@@ -1,7 +1,6 @@
 import type { Commit, GroupedCommits, PackageToRelease } from "./types"
 
-import { execSync } from "child_process"
-import { debug, pkgJson } from "./utils"
+import { debug, pkgJson, execSync } from "./utils"
 import semver from "semver"
 import parseCommit from "@commitlint/parse"
 // @ts-ignore
@@ -28,7 +27,11 @@ export async function analyze(options: {
   const packageFolders = Object.values(options.packages)
 
   console.log("Identifying latest tag...")
-  const latestTag = execSync("git describe --tags --abbrev=0").toString().trim()
+  const latestTag = execSync("git describe --tags --abbrev=0", {
+    stdio: "pipe",
+  })
+    .toString()
+    .trim()
   console.log(`Latest tag identified: ${latestTag}`)
 
   console.log()
@@ -76,7 +79,10 @@ export async function analyze(options: {
   console.log()
   console.log("Identifying commits that touched package code...")
   function getChangedFiles(commitSha: string) {
-    return execSync(`git diff-tree --no-commit-id --name-only -r ${commitSha}`)
+    return execSync(
+      `git diff-tree --no-commit-id --name-only -r ${commitSha}`,
+      { stdio: "pipe" }
+    )
       .toString()
       .trim()
       .split("\n")
