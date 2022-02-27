@@ -39,11 +39,11 @@ jobs:
         env:
           UPSTASH_REDIS_URL: ${{ secrets.UPSTASH_REDIS_URL }}
           UPSTASH_REDIS_KEY: ${{ secrets.UPSTASH_REDIS_KEY }}
-      - name: Coverage
-        uses: codecov/codecov-action@v1
-        with:
-          directory: ./coverage
-          fail_ci_if_error: false
+      # - name: Coverage
+      #   uses: codecov/codecov-action@v1
+      #   with:
+      #     directory: ./coverage
+      #     fail_ci_if_error: false
   release-branch:
     name: Publish branch
     runs-on: ubuntu-latest

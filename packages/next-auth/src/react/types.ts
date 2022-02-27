@@ -41,7 +41,7 @@ export interface SignInResponse {
 }
 
 /** Match `inputType` of `new URLSearchParams(inputType)` */
-export type SignInAuthorisationParams =
+export type SignInAuthorizationParams =
   | string
   | string[][]
   | Record<string, string>

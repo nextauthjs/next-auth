@@ -38,8 +38,5 @@
     "@aws-sdk/client-dynamodb": "^3.36.1",
     "@aws-sdk/lib-dynamodb": "^3.36.1",
     "@shelf/jest-dynamodb": "^2.1.0"
-  },
-  "jest": {
-    "preset": "adapter-test/jest"
   }
 }

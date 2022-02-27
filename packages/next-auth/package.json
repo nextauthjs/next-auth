@@ -36,7 +36,7 @@
     "./providers/*": "./providers/*.js"
   },
   "scripts": {
-    "build": "yarn run build:js && yarn run build:css",
+    "build": "yarn clean && yarn run build:js && yarn run build:css",
     "clean": "rm -rf client css lib providers core jwt react next index.d.ts index.js adapters.d.ts middleware.d.ts middleware.js",
     "build:js": "yarn run clean && yarn run generate-providers && tsc && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir . && node config/wrap-css.js",
