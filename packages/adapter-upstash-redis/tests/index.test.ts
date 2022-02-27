@@ -4,11 +4,9 @@ import { reviveFromJson, UpstashRedisAdapter } from "../src"
 import "dotenv/config"
 
 if (!process.env.UPSTASH_REDIS_URL || !process.env.UPSTASH_REDIS_KEY) {
-  console.log(
-    "Skipping UpstashRedisAdapter tests, since we are running without required environment variables."
-  )
-
-  expect(true).toBe(true)
+  test("Skipping UpstashRedisAdapter tests, since required environment variables aren't available", () => {
+    expect(true).toBe(true)
+  })
 } else {
   const client = upstashRedisClient(
     process.env.UPSTASH_REDIS_URL,
