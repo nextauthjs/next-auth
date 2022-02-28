@@ -161,7 +161,7 @@ If you are using an OAuth provider either through one of our [built-in providers
 or through a [custom provider](/configuration/providers/oauth#using-a-custom-provider), you'll need to configure 
 a callback URL in your provider's settings. Each provider has a "Configuration" section that should give you pointers on how to do that.
 
-Follow [these steps](/configuration/providers/oauth#how-to) to learn how to integrate with an external authentication provider.
+Follow [these steps](/configuration/providers/oauth#how-to) to learn how to integrate with an OAuth provider.
 
 ## Deploying to production
 
