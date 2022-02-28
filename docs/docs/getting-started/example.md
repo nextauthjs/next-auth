@@ -157,7 +157,7 @@ export default function Component() {
 
 ## Configuring callback URL (OAuth only)
 
-Either if you're using OAuth as a authentication method, either through one of our [built-in OAuth providers](/configuration/providers/oauth)
+If you are using an OAuth provider either through one of our [built-in providers](/configuration/providers/oauth)
 or through a [custom provider](/configuration/providers/oauth#using-a-custom-provider), you'll need to declare
 a callback URL on the provider so the whole [OAuth flow](/configuration/providers/oauth) works correctly.
 
