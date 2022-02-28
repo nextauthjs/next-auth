@@ -47,7 +47,7 @@ export const format = {
   /** Takes a plain old JavaScript object and turns it into a mongoDB object */
   to<T = Record<string, unknown>>(object: Record<string, any>) {
     const newObject: Record<string, unknown> = {
-      _id: new ObjectId(object.id),
+      _id: _id(object.id),
     }
     for (const key in object) {
       const value = object[key]
