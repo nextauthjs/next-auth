@@ -16,8 +16,9 @@
     "access": "public"
   },
   "scripts": {
-    "test:wip": "./tests/test.sh",
-    "build:wip": "tsc"
+    "test": "./tests/test.sh",
+    "test:watch": "./tests/test.sh -w",
+    "build": "tsc"
   },
   "files": ["README.md", "dist"],
   "peerDependencies": {
