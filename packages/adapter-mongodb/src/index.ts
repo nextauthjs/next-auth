@@ -155,14 +155,17 @@ export function MongoDBAdapter(
       return from<AdapterSession>(session)
     },
     async updateSession(data) {
-      const { value: session } = await (
+      // @ts-expect-error
+      const { _id, ...session } = to<AdapterSession>(data)
+
+      const result = await (
         await db
       ).S.findOneAndUpdate(
-        { sessionToken: data.sessionToken },
-        { $set: data },
+        { sessionToken: session.sessionToken },
+        { $set: session },
         { returnDocument: "after" }
       )
-      return from<AdapterSession>(session!)
+      return from<AdapterSession>(result.value!)
     },
     async deleteSession(sessionToken) {
       const { value: session } = await (
