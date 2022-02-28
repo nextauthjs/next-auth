@@ -33,6 +33,7 @@ export function PrismaAdapter(p: PrismaClient): Adapter {
     deleteSession: (sessionToken) =>
       p.session.delete({ where: { sessionToken } }),
     async createVerificationToken(data) {
+      // @ts-ignore
       const { id: _, ...verificationToken } = await p.verificationToken.create({
         data,
       })
@@ -40,6 +41,7 @@ export function PrismaAdapter(p: PrismaClient): Adapter {
     },
     async useVerificationToken(identifier_token) {
       try {
+        // @ts-ignore
         const { id: _, ...verificationToken } =
           await p.verificationToken.delete({ where: { identifier_token } })
         return verificationToken
