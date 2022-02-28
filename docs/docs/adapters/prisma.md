@@ -133,7 +133,7 @@ npx prisma migrate dev
 
 ### MongoDB
 
-Prisma supports MongoDB, and so does NextAuth.js. Following the instructions of the [Prisma documentation](https://www.prisma.io/docs/concepts/database-connectors/mongodb)on the MongoDB connector, the only thing you have to change is making sure that the `id` field is mapped correctly:
+Prisma supports MongoDB, and so does NextAuth.js. Following the instructions of the [Prisma documentation](https://www.prisma.io/docs/concepts/database-connectors/mongodb)on the MongoDB connector, the only thing you have to change is making sure that the `id` fields are mapped correctly:
 
 ```prisma
 id  String  @id @default(auto()) @map("_id") @db.ObjectId
