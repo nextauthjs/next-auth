@@ -25,7 +25,7 @@ import type {
   ClientSafeProvider,
   LiteralUnion,
   SessionProviderProps,
-  SignInAuthorisationParams,
+  SignInAuthorizationParams,
   SignInOptions,
   SignInResponse,
   SignOutParams,
@@ -177,7 +177,7 @@ export async function signIn<
 >(
   provider?: LiteralUnion<BuiltInProviderType>,
   options?: SignInOptions,
-  authorizationParams?: SignInAuthorisationParams
+  authorizationParams?: SignInAuthorizationParams
 ): Promise<
   P extends RedirectableProviderType ? SignInResponse | undefined : undefined
 > {

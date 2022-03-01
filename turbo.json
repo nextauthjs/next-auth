@@ -27,6 +27,14 @@
       "dependsOn": ["lint", "build"],
       "outputs": []
     },
+    "@next-auth/upstash-redis-adapter#test": {
+      "dependsOn": [
+        "lint",
+        "build",
+        "$UPSTASH_REDIS_KEY",
+        "$UPSTASH_REDIS_URL"
+      ]
+    },
     "lint": {},
     "setup": {},
     "dev": {

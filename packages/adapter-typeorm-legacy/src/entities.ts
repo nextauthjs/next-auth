@@ -60,7 +60,7 @@ export class AccountEntity {
   providerAccountId!: string
 
   @Column({ type: "varchar", nullable: true })
-  refresh_token!: string
+  refresh_token!: string | null
 
   @Column({ type: "varchar", nullable: true })
   access_token!: string | null

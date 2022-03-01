@@ -2,9 +2,9 @@ import type { OAuthConfig, OAuthUserConfig } from "."
 
 export interface SAMLJacksonProfile {
   id: string;
-  email: string;
-  firstName: string | null | undefined;
-  lastName: string | null | undefined;
+  email?: string;
+  firstName?: string | null;
+  lastName?: string | null;
 }
 
 export default function SAMLJackson<
