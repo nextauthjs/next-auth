@@ -349,6 +349,7 @@ export interface CookiesOptions {
   csrfToken: CookieOption
   pkceCodeVerifier: CookieOption
   state: CookieOption
+  nonce: CookieOption
 }
 
 /**

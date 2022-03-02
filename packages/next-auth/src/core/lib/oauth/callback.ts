@@ -11,6 +11,7 @@ import type { OAuthChecks, OAuthConfig } from "../../../providers"
 import type { InternalOptions } from "../../../lib/types"
 import type { IncomingRequest, OutgoingResponse } from "../.."
 import type { Cookie } from "../cookie"
+import { useNonce } from "./nonce-handler"
 
 export default async function oAuthCallback(params: {
   options: InternalOptions<"oauth">
@@ -33,6 +34,7 @@ export default async function oAuthCallback(params: {
     })
     throw error
   }
+  
 
   if (provider.version?.startsWith("1.")) {
     try {
@@ -69,14 +71,21 @@ export default async function oAuthCallback(params: {
 
     let tokens: TokenSet
 
-    const checks: OAuthChecks = {}
+    const checks: OAuthChecks = {
+      nonce: undefined,
+    }
     const resCookies: Cookie[] = []
 
     const state = await useState(cookies?.[options.cookies.state.name], options)
-
     if (state) {
       checks.state = state.value
       resCookies.push(state.cookie)
+    }
+
+    const nonce = await useNonce(cookies?.[options.cookies.nonce.name], options)
+    if (nonce) {
+      checks.nonce = nonce.value
+      resCookies.push(nonce.cookie)
     }
 
     const codeVerifier = cookies?.[options.cookies.pkceCodeVerifier.name]
