@@ -11,7 +11,7 @@ export default function SAMLJackson<
   P extends Record<string, any> = SAMLJacksonProfile
 >(options: OAuthUserConfig<P>): OAuthConfig<P> {
   return {
-    id: "saml-jackson",
+    id: "boxyhq-saml",
     name: "BoxyHQ SAML Jackson",
     type: "oauth",
     version: "2.0",

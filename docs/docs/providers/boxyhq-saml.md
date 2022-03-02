@@ -1,5 +1,5 @@
 ---
-id: saml-jackson
+id: boxyhq-saml
 title: BoxyHQ SAML Jackson
 ---
 
@@ -17,19 +17,19 @@ Check out the [documentation](https://boxyhq.com/docs/jackson/saml-flow#2-saml-c
 
 ## Options
 
-The **SAML Jackson Provider** comes with a set of default options:
+The **BoxyHQ SAML Provider** comes with a set of default options:
 
-- [BoxyHQ Provider options](https://github.com/nextauthjs/next-auth/tree/main/packages/next-auth/src/providers/saml-jackson.ts)
+- [BoxyHQ Provider options](https://github.com/nextauthjs/next-auth/tree/main/packages/next-auth/src/providers/boxyhq-saml.ts)
 
 You can override any of the options to suit your own use case.
 
 ## Example
 
 ```ts
-import SAMLJacksonProvider from "next-auth/providers/saml-jackson"
+import BoxyHQSAMLProvider from "next-auth/providers/boxyhq-saml"
 ...
 providers: [
-  SAMLJacksonProvider({
+  BoxyHQSAMLProvider({
     issuer: "http://localhost:5000",
     clientId: "dummy", // The dummy here is necessary since we'll pass tenant and product custom attributes in the client code
     clientSecret: "dummy", // The dummy here is necessary since we'll pass tenant and product custom attributes in the client code

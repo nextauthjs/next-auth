@@ -30,7 +30,7 @@ import AppleProvider from "next-auth/providers/apple"
 import PatreonProvider from "next-auth/providers/patreon"
 import TraktProvider from "next-auth/providers/trakt"
 import WorkOSProvider from "next-auth/providers/workos"
-import BoxyHQSAMLProvider from "next-auth/providers/saml-jackson"
+import BoxyHQSAMLProvider from "next-auth/providers/boxyhq-saml"
 
 // import { PrismaAdapter } from "@next-auth/prisma-adapter"
 // import { PrismaClient } from "@prisma/client"
