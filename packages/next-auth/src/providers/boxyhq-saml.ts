@@ -27,7 +27,7 @@ export default function SAMLJackson<
     profile(profile) {
       return {
         id: profile.id,
-        email: profile.email || "",
+        email: profile.email,
         name: [profile.firstName, profile.lastName].filter(Boolean).join(" "),
         image: null,
       }
