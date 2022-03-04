@@ -1,5 +1,60 @@
 # Next.js
 
+## `getServerSession`
+
+> 🚧 This is experimental and may be removed in the future.
+
+When calling from server side i.e. in API routes or in `getServerSideProps`, we recommend use this function instead of `getSession` to retrieve the `session` object. This method is especially useful when you are using NextAuth.js with a database. Otherwise, if you only want to get the token, see [`getToken`](tutorials/securing-pages-and-api-routes#using-gettoken).
+
+`getServerSession` requires passing the `authOptions` object. This is the same object you would pass to `NextAuth` when initializing NextAuth.js.
+
+In `[...nextauth.js]`:
+```js 
+export const authOptions: NextAuthOptions = {
+  // your configs
+}
+
+export default NextAuth(authOptions);
+```
+
+In `getServerSideProps`:
+```js
+import authOptions from 'pages/api/[...nextauth]'
+
+export async function getServerSideProps(context) {
+  const session = await getServerSession(context.req, context.res, authOptions)
+
+  if (session) {
+    // do something with the session
+  }
+
+  return {
+    props: {
+      session,
+    },
+  }
+}
+```
+In API routes:
+```js
+import authOptions from 'pages/api/[...nextauth]'
+
+export async function handler(req, res) {
+  const session = await getServerSession(req, res, authOptions)
+
+  if (session) {
+    // do something with the session
+  }
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      message: 'Success',
+    })
+  }
+}
+```
+
 ## Middleware
 
 You can use a Next.js Middleware with NextAuth.js to protect your site.

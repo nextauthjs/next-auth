@@ -26,7 +26,7 @@ export default function Page({ content, session }) {
 }
 
 export async function getServerSideProps(context) {
-  const session = await getServerSession(context, authOptions)
+  const session = await getServerSession(context.req, context.res, authOptions)
   let content = null
 
   if (session) {
