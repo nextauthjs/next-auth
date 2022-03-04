@@ -202,9 +202,9 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.WORKOS_SECRET,
     }),
     BoxyHQSAMLProvider({
-      issuer: process.env.BOXYHQSAML_ISSUER || "https://jackson-demo.boxyhq.com",
-      clientId: process.env.BOXYHQSAML_ID || "tenant=boxyhq.com&product=saml-demo.boxyhq.com",
-      clientSecret: process.env.BOXYHQSAML_SECRET || "dummy",
+      issuer: process.env.BOXYHQSAML_ISSUER,
+      clientId: process.env.BOXYHQSAML_ID,
+      clientSecret: process.env.BOXYHQSAML_SECRET,
     }),
   ],
   debug: true,

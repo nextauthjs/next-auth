@@ -1,13 +1,13 @@
 ---
 id: boxyhq-saml
-title: BoxyHQ SAML Jackson
+title: BoxyHQ SAML
 ---
 
 ## Documentation
 
-BoxyHQ SAML Jackson is an open source service that handles the SAML login flow as an OAuth 2.0 flow, abstracting away all the complexities of the SAML protocol.
+BoxyHQ SAML is an open source service that handles the SAML login flow as an OAuth 2.0 flow, abstracting away all the complexities of the SAML protocol.
 
-You can deploy SAML Jackson as a separate service or embed it into your app using our NPM library. [Check out the documentation for more details](https://boxyhq.com/docs/jackson/deploy)
+You can deploy BoxyHQ SAML as a separate service or embed it into your app using our NPM library. [Check out the documentation for more details](https://boxyhq.com/docs/jackson/deploy)
 
 ## Configuration
 
@@ -38,7 +38,7 @@ providers: [
 ...
 ```
 
-On the client side you'll need to pass additional parameters `tenant` and `product` to the `signIn` function. This will allow SAML Jackson to figure out the right SAML configuration and take your user to the right SAML Identity Provider to sign them in.
+On the client side you'll need to pass additional parameters `tenant` and `product` to the `signIn` function. This will allow BoxyHQL SAML to figure out the right SAML configuration and take your user to the right SAML Identity Provider to sign them in.
 
 ```tsx
 import { signIn } from "next-auth/react";
@@ -52,7 +52,7 @@ import { signIn } from "next-auth/react";
     onClick={async (event) => {
       event.preventDefault();
 
-      signIn("saml", {}, { tenant, product });
+      signIn("boxyhq-saml", {}, { tenant, product });
     }}>
 ...
 ```
