@@ -6,7 +6,9 @@
 This is experimental and may be removed or changed in the future.
 :::
 
-When calling from server side i.e. in API routes or in `getServerSideProps`, we recommend use this function instead of `getSession` to retrieve the `session` object. This method is especially useful when you are using NextAuth.js with a database. Otherwise, if you only want to get the token, see [`getToken`](tutorials/securing-pages-and-api-routes#using-gettoken).
+When calling from server-side i.e. in API routes or in `getServerSideProps`, we recommend using this function instead of `getSession` to retrieve the `session` object. This method is especially useful when you are using NextAuth.js with a database. This method can _drastically_ reduce response time when used over `getSession` server-side, due to avoiding an extra `fetch` to an API Route (this is generally not recommended in Next.js). In addition, `getServerSession` will correctly update the cookie expiry time and update the session content if `callbacks.jwt` or `callbacks.session` changed something.
+
+Otherwise, if you only want to get the token, see [`getToken`](tutorials/securing-pages-and-api-routes#using-gettoken).
 
 `getServerSession` requires passing the `authOptions` object. This is the same object you would pass to `NextAuth` when initializing NextAuth.js.
 
