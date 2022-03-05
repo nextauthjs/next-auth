@@ -2,7 +2,9 @@
 
 ## `getServerSession`
 
-> 🚧 This is experimental and may be removed in the future.
+:::warning
+This is experimental and may be removed or changed in the future.
+:::
 
 When calling from server side i.e. in API routes or in `getServerSideProps`, we recommend use this function instead of `getSession` to retrieve the `session` object. This method is especially useful when you are using NextAuth.js with a database. Otherwise, if you only want to get the token, see [`getToken`](tutorials/securing-pages-and-api-routes#using-gettoken).
 
