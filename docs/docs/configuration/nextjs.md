@@ -23,7 +23,7 @@ export default NextAuth(authOptions);
 
 In `getServerSideProps`:
 ```js
-import authOptions from 'pages/api/[...nextauth]'
+import { authOptions } from 'pages/api/[...nextauth]'
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions)
