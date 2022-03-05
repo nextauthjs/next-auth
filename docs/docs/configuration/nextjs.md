@@ -41,7 +41,7 @@ export async function getServerSideProps(context) {
 ```
 In API routes:
 ```js
-import authOptions from 'pages/api/[...nextauth]'
+import { authOptions } from 'pages/api/[...nextauth]'
 
 export async function handler(req, res) {
   const session = await getServerSession(req, res, authOptions)
