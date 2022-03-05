@@ -50,12 +50,9 @@ export async function handler(req, res) {
     // do something with the session
   }
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: 'Success',
-    })
-  }
+  return res.json({
+    message: 'Success',
+  })
 }
 ```
 
