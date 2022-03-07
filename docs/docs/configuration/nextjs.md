@@ -28,8 +28,13 @@ import { authOptions } from 'pages/api/[...nextauth]'
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions)
 
-  if (session) {
-    // do something with the session
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
   }
 
   return {
@@ -46,8 +51,9 @@ import { authOptions } from 'pages/api/[...nextauth]'
 export async function handler(req, res) {
   const session = await getServerSession(req, res, authOptions)
 
-  if (session) {
-    // do something with the session
+  if (!session) {
+    res.status(401).json({ message: "You must be logged in." });
+    return;
   }
 
   return res.json({

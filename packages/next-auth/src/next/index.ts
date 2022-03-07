@@ -90,7 +90,8 @@ export async function getServerSession(
   console.warn(
     "[next-auth][warn][EXPERIMENTAL_API]",
     "\n`getServerSession` is experimental and may be removed or changed in the future.",
-    `\nhttps://next-auth.js.org/configuration/nextjs#getServerSession}`
+    `\nhttps://next-auth.js.org/configuration/nextjs#getServerSession}`,
+    `\nhttps://next-auth.js.org/warnings#EXPERIMENTAL_API`
     )
 
     const [req, res, options] = args;
