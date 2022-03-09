@@ -51,11 +51,9 @@ export const format = {
     }
     for (const key in object) {
       const value = object[key]
-      if (key === "userId") {
-        newObject[key] = _id(value)
-      } else {
-        newObject[key] = value
-      }
+      if (key === "userId") newObject[key] = _id(value)
+      else if (key === "id") continue
+      else newObject[key] = value
     }
     return newObject as T
   },
@@ -111,17 +109,20 @@ export function MongoDBAdapter(
       return from<AdapterUser>(user)
     },
     async updateUser(data) {
-      const { value: user } = await (
+      const { _id, ...user } = to<AdapterUser>(data)
+
+      const result = await (
         await db
-      ).U.findOneAndUpdate({ _id: _id(data.id) }, { $set: data })
-      return from<AdapterUser>(user!)
+      ).U.findOneAndUpdate({ _id }, { $set: user }, { returnDocument: "after" })
+
+      return from<AdapterUser>(result.value!)
     },
     async deleteUser(id) {
       const userId = _id(id)
       const m = await db
       await Promise.all([
         m.A.deleteMany({ userId }),
-        m.S.deleteMany({ userId }),
+        m.S.deleteMany({ userId: userId as any }),
         m.U.deleteOne({ _id: userId }),
       ])
     },
@@ -154,10 +155,17 @@ export function MongoDBAdapter(
       return from<AdapterSession>(session)
     },
     async updateSession(data) {
-      const { value: session } = await (
+      // @ts-expect-error
+      const { _id, ...session } = to<AdapterSession>(data)
+
+      const result = await (
         await db
-      ).S.findOneAndUpdate({ sessionToken: data.sessionToken }, { $set: data })
-      return from<AdapterSession>(session!)
+      ).S.findOneAndUpdate(
+        { sessionToken: session.sessionToken },
+        { $set: session },
+        { returnDocument: "after" }
+      )
+      return from<AdapterSession>(result.value!)
     },
     async deleteSession(sessionToken) {
       const { value: session } = await (

@@ -55,7 +55,7 @@ See [next-auth.js.org](https://next-auth.js.org) for more information and docume
 ### Flexible and easy to use
 
 - Designed to work with any OAuth service, it supports OAuth 1.0, 1.0A and 2.0
-- Built-in support for [many popular sign-in services](https://next-auth.js.org/providers/overview)
+- Built-in support for [many popular sign-in services](https://next-auth.js.org/providers)
 - Supports email / passwordless authentication
 - Supports stateless authentication with any backend (Active Directory, LDAP, etc)
 - Supports both JSON Web Tokens and database sessions
@@ -212,6 +212,13 @@ We're happy to announce we've recently created an [OpenCollective](https://openc
           <img width="128px" src="https://avatars.githubusercontent.com/u/47087496?s=200&v=4" alt="Lowdefy Logo" />
         </a><br />
         <div>Lowdefy</div><br />
+        <sub>🥉 Bronze Financial Sponsor</sub>
+      </td>
+      <td align="center" valign="top">
+        <a href="https://workos.com" target="_blank">
+          <img width="128px" src="https://avatars.githubusercontent.com/u/47638084?s=200&v=4" alt="WorkOS Logo" />
+        </a><br />
+        <div>WorkOS</div><br />
         <sub>🥉 Bronze Financial Sponsor</sub>
       </td>
       <td align="center" valign="top">

@@ -8,9 +8,9 @@ module.exports = {
   },
   rootDir: "../src",
   setupFilesAfterEnv: ["../config/jest-setup.js"],
-  collectCoverageFrom: ["!client/__tests__/**"],
   testMatch: ["**/*.test.js"],
-  coverageDirectory: "../coverage",
+  // collectCoverageFrom: ["!client/__tests__/**"],
+  // coverageDirectory: "../coverage",
   testEnvironment: "jsdom",
   watchPlugins: [
     "jest-watch-typeahead/filename",
