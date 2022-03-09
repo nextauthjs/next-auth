@@ -13,7 +13,7 @@ export function PrismaAdapter(p: PrismaClient): Adapter {
       })
       return account?.user ?? null
     },
-    updateUser: (data) => p.user.update({ where: { id: data.id }, data }),
+    updateUser: ({ id, ...data }) => p.user.update({ where: { id }, data }),
     deleteUser: (id) => p.user.delete({ where: { id } }),
     linkAccount: (data) => p.account.create({ data }) as any,
     unlinkAccount: (provider_providerAccountId) =>
@@ -29,13 +29,22 @@ export function PrismaAdapter(p: PrismaClient): Adapter {
     },
     createSession: (data) => p.session.create({ data }),
     updateSession: (data) =>
-      p.session.update({ data, where: { sessionToken: data.sessionToken } }),
+      p.session.update({ where: { sessionToken: data.sessionToken }, data }),
     deleteSession: (sessionToken) =>
       p.session.delete({ where: { sessionToken } }),
-    createVerificationToken: (data) => p.verificationToken.create({ data }),
+    async createVerificationToken(data) {
+      // @ts-ignore
+      const { id: _, ...verificationToken } = await p.verificationToken.create({
+        data,
+      })
+      return verificationToken
+    },
     async useVerificationToken(identifier_token) {
       try {
-        return await p.verificationToken.delete({ where: { identifier_token } })
+        // @ts-ignore
+        const { id: _, ...verificationToken } =
+          await p.verificationToken.delete({ where: { identifier_token } })
+        return verificationToken
       } catch (error) {
         // If token already used/deleted, just return null
         // https://www.prisma.io/docs/reference/api-reference/error-reference#p2025

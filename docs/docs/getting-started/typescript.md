@@ -97,7 +97,7 @@ By default, TypeScript will merge new interface properties and overwrite existin
 If you want to keep the default session user properties, you need to add them back into the newly declared interface:
 
 ```ts title="types/next-auth.d.ts"
-import NextAuth, { DefaultSession } from "next-auth";
+import NextAuth, { DefaultSession } from "next-auth"
 
 declare module "next-auth" {
   /**

@@ -47,12 +47,13 @@ export function assertConfig(
   if (!req.host) return "NEXTAUTH_URL"
 
   let hasCredentials, hasEmail
-  let hasTwitterProvider
+  let hasTwitterOAuth2
 
   for (const provider of options.providers) {
     if (provider.type === "credentials") hasCredentials = true
     else if (provider.type === "email") hasEmail = true
-    else if (provider.id === "twitter") hasTwitterProvider = true
+    else if (provider.id === "twitter" && provider.version === "2.0")
+      hasTwitterOAuth2 = true
   }
 
   if (hasCredentials) {
@@ -80,7 +81,7 @@ export function assertConfig(
     return new MissingAdapter("E-mail login requires an adapter.")
   }
 
-  if (!twitterWarned && hasTwitterProvider) {
+  if (!twitterWarned && hasTwitterOAuth2) {
     twitterWarned = true
     return "TWITTER_OAUTH_2_BETA"
   }

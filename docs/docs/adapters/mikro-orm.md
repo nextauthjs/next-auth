@@ -6,7 +6,7 @@ title: MikroORM
 To use this Adapter, you need to install Mikro ORM, the driver that suits your database, and the separate `@next-auth/mikro-orm-adapter` package:
 
 ```bash npm2yarn
-npm install next-auth @next-auth/mikro-orm-adapter @mikro-orm/core@next @mikro-orm/[YOUR DRIVER]@next
+npm install next-auth @next-auth/mikro-orm-adapter @mikro-orm/core @mikro-orm/[YOUR DRIVER]
 ```
 
 Configure NextAuth.js to use the MikroORM Adapter:
@@ -14,7 +14,6 @@ Configure NextAuth.js to use the MikroORM Adapter:
 ```typescript title="pages/api/auth/[...nextauth].ts"
 import NextAuth from "next-auth"
 import { MikroOrmAdapter } from "@next-auth/mikro-orm-adapter"
-
 
 export default NextAuth({
   adapter: MikroOrmAdapter({
@@ -31,7 +30,7 @@ export default NextAuth({
 
 ### Passing custom entities
 
-The MikroORM adapter ships with its own set of entities. If you'd like to override them, you can optionally pass them to the adapter.
+The MikroORM adapter ships with its own set of entities. If you'd like to extend them, you can optionally pass them to the adapter.
 
 > This schema is adapted for use in MikroORM and based upon our main [schema](/adapters/models)
 
@@ -91,7 +90,7 @@ export class User implements defaultEntities.User {
 }
 
 export default NextAuth({
-  adapter: MikroOrmAdapter(config, { entities: { User } })
+  adapter: MikroOrmAdapter(config, { entities: { User } }),
 })
 ```
 
