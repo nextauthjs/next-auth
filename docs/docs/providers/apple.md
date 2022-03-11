@@ -57,9 +57,20 @@ Apple requires all sites to run HTTPS (including local development instances).
 Apple doesn't allow you to use localhost in domains or subdomains.
 :::
 
-### Host name resolution
+### Using a tunnel
 
-Edit your host file and point your site to `127.0.0.1`.
+One developemnt option to avoid using HTTP or localhost is to access your site through a tunnel such as [ngrok](https://ngrok.com/).
+
+1. Follow the instructions to set up the tunnel and install the agent.
+2. In `.env.local`, set `NEXTAUTH_URL` to be your assigned tunnel URL, something like `https://12345.ngrok.io`.
+3. Temporarily add the tunnel domain (`12345.ngrok.io`) and reply URL (`https://12345.ngrok.io/api/auth/callback/apple`) into your sign-in service identifier in [Certificates, Identifiers & Profiles](https://developer.apple.com/account/resources/identifiers/serviceId/edit/). 
+4. Browse to your tunnel URL and test sign in.
+
+Once you've tested authentication and created a local account, you can switch back to using localhost.
+
+### Modifying your local host name
+
+An altnerative approach is to make your development computer see itself as a non-local website. Edit your host file and point your site to `127.0.0.1`.
 
 _Linux/macOS_
 
@@ -75,7 +86,7 @@ Add-Content -Path C:\Windows\System32\drivers\etc\hosts -Value "127.0.0.1 dev.ex
 
 More info: [How to edit my host file?](https://phoenixnap.com/kb/how-to-edit-hosts-file-in-windows-mac-or-linux)
 
-### Create certificate
+#### Create certificate
 
 Create a directory `certificates` and add the certificate files `localhost.key` and `localhost.crt`, which you generate using OpenSSL:
 
@@ -100,7 +111,7 @@ Add environment variable `OPENSSL_CONF=C:\Program Files\Git\mingw64\ssl\openssl.
   -subj "/CN=localhost"
 ```
 
-### Deploy to server
+#### Deploy to server
 
 You can create a `server.js` in the root of your project and run it with `node server.js` to test Sign in with Apple integration locally:
 
