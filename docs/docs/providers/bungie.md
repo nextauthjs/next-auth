@@ -29,7 +29,7 @@ providers: [
     clientId: process.env.BUNGIE_CLIENT_ID,
     clientSecret: process.env.BUNGIE_SECRET,
     headers: {
-      "X-API-Key": provess.env.BUNGIE_API_KEY
+      "X-API-Key": process.env.BUNGIE_API_KEY
     }
   }),
 ]

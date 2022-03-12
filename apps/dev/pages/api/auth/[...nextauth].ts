@@ -30,6 +30,7 @@ import AppleProvider from "next-auth/providers/apple"
 import PatreonProvider from "next-auth/providers/patreon"
 import TraktProvider from "next-auth/providers/trakt"
 import WorkOSProvider from "next-auth/providers/workos"
+import BoxyHQSAMLProvider from "next-auth/providers/boxyhq-saml"
 
 // import { PrismaAdapter } from "@next-auth/prisma-adapter"
 // import { PrismaClient } from "@prisma/client"
@@ -199,6 +200,11 @@ export const authOptions: NextAuthOptions = {
     WorkOSProvider({
       clientId: process.env.WORKOS_ID,
       clientSecret: process.env.WORKOS_SECRET,
+    }),
+    BoxyHQSAMLProvider({
+      issuer: process.env.BOXYHQSAML_ISSUER,
+      clientId: process.env.BOXYHQSAML_ID,
+      clientSecret: process.env.BOXYHQSAML_SECRET,
     }),
   ],
   debug: true,
