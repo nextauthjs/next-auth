@@ -23,7 +23,6 @@ export default NextAuth({
 
 const layoutCode = `
 import Header from "./header"
-import type { ReactChildren } from "react"
 
 export default function Layout({ children }) {
   return (
@@ -324,8 +323,6 @@ const tsConfig = `
 
 const indexJsx = `import React, { StrictMode } from "react";
 import ReactDOM from "react-dom";
-import "./styles.css";
-import App from "./App";
 const rootElement = document.getElementById("root");
 ReactDOM.render(
   <StrictMode>

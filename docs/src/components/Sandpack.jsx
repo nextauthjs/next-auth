@@ -15,8 +15,8 @@ import {
   globalStyle,
   sessionProviderCode,
   // tsConfig,
-  indexJsx,
-  publicHtml,
+  // indexJsx,
+  // publicHtml,
 } from "./sandpackCode.js"
 
 export const CustomSandpack = () => (
@@ -29,16 +29,16 @@ export const CustomSandpack = () => (
         "next-auth": "latest",
       },
       devDependencies: {
-        "@types/node": "^17.0.14",
-        "@types/react": "^17.0.39",
-        typescript: "^4.5.5",
+        // "@types/node": "^17.0.14",
+        // "@types/react": "^17.0.39",
+        // typescript: "^4.5.5",
       },
-      entry: "/",
+      entry: "/pages/index.js",
       environment: "next",
       files: {
-        "/public/index.html": {
-          code: publicHtml,
-        },
+        // "/public/index.html": {
+        //   code: publicHtml,
+        // },
         // "/index.jsx": {
         //   code: indexJsx,
         // },
