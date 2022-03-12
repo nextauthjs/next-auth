@@ -11,7 +11,7 @@ It is intended to support use cases where you have an existing system you need t
 
 It comes with the constraint that users authenticated in this manner are not persisted in the database, and consequently that the Credentials provider can only be used if JSON Web Tokens are enabled for sessions.
 
-:::note
+:::warning
 The functionality provided for credentials based authentication is intentionally limited to discourage use of passwords due to the inherent security risks associated with them and the additional complexity associated with supporting usernames and passwords.
 :::
 
@@ -62,8 +62,8 @@ providers: [
       } else {
         // If you return null then an error will be displayed advising the user to check their details.
         return null
-        
-        // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter        
+
+        // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
       }
     }
   })

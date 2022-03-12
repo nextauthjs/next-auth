@@ -13,7 +13,7 @@ It is designed from the ground up to support Next.js and Serverless.
 
 ### Flexible and easy to use
 
-- Designed to work with any [OAuth service, it supports OAuth 1.0, 1.0A, 2.0 and OpenID Connect](/providers/overview)
+- Designed to work with any [OAuth service, it supports OAuth 1.0, 1.0A, 2.0 and OpenID Connect](/providers)
 - Built-in support for [many popular sign-in services](/configuration/providers/oauth)
 - Supports [email / passwordless authentication](/providers/email)
 - Supports stateless authentication with [any backend](/adapters/overview) (Active Directory, LDAP, etc)

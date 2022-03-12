@@ -58,7 +58,7 @@ The following relationships and relationship labels are used.
 
 ### Properties
 
-See [models](/adapters/models) for the node properties. Relationships have no properties.
+This schema is adapted for use in Neo4J and is based upon our main [models](/adapters/models). Please check there for the node properties. Relationships have no properties.
 
 ### Indexes
 
@@ -84,7 +84,7 @@ CREATE INDEX session_session_token_index IF NOT EXISTS
 FOR (s:Session) ON (s.sessionToken);
 ```
 
-2.a.  For Community Edition **only** create single-property indexes
+2.a. For Community Edition **only** create single-property indexes
 
 ```cypher
 CREATE INDEX account_provider_index IF NOT EXISTS
@@ -100,16 +100,16 @@ CREATE INDEX verification_token_token_index IF NOT EXISTS
 FOR (v:VerificationToken) ON (v.token);
 ```
 
-2.b. For Enterprise Edition  **only** create composite node key constraints and indexes 
+2.b. For Enterprise Edition **only** create composite node key constraints and indexes
 
 ```cypher
-CREATE CONSTRAINT account_provider_composite_constraint IF NOT EXISTS 
+CREATE CONSTRAINT account_provider_composite_constraint IF NOT EXISTS
 ON (a:Account) ASSERT (a.provider, a.providerAccountId) IS NODE KEY;
 
 CREATE INDEX account_provider_composite_index IF NOT EXISTS
 FOR (a:Account) ON (a.provider, a.providerAccountId);
 
-CREATE CONSTRAINT verification_token_composite_constraint IF NOT EXISTS 
+CREATE CONSTRAINT verification_token_composite_constraint IF NOT EXISTS
 ON (v:VerificationToken) ASSERT (v.identifier, v.token) IS NODE KEY;
 
 CREATE INDEX verification_token_composite_index IF NOT EXISTS

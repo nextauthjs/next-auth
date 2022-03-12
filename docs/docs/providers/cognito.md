@@ -40,7 +40,7 @@ providers: [
 The issuer is a URL, that looks like this: `https://cognito-idp.{region}.amazonaws.com/{PoolId}`
 :::
 
-`PoolId` is from `General Settings` in Cognito, not to be confused with the App Client ID. 
+`PoolId` is from `General Settings` in Cognito, not to be confused with the App Client ID.
 
 :::warning
 Make sure you select all the appropriate client settings or the OAuth flow will not work.
