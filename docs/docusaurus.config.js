@@ -12,7 +12,7 @@ module.exports = {
     },
     algolia: {
       appId: "OUEDA16KPG",
-      apiKey: "b81e3ca39a920b7815e880aea49c00ec",
+      apiKey: "97c0894508f2d1d4a2fef4fe6db28448",
       indexName: "next-auth",
       searchParameters: {},
     },
