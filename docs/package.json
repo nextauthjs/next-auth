@@ -19,6 +19,7 @@
     "generate-providers": "node ./scripts/generate-providers.js"
   },
   "dependencies": {
+    "@codesandbox/sandpack-react": "^0.13.12",
     "@docusaurus/core": "^2.0.0-beta.15",
     "@docusaurus/preset-classic": "^2.0.0-beta.15",
     "@docusaurus/remark-plugin-npm2yarn": "^2.0.0-beta.15",
@@ -36,11 +37,7 @@
     "prettier": "^2.5.0"
   },
   "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
+    "production": [">0.2%", "not dead", "not op_mini all"],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
