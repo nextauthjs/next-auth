@@ -22,7 +22,6 @@
       <a href="https://www.npmjs.com/package/next-auth">
         <img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?label=latest" alt="Github Stable Release" />
       </a>
-      <img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?include_prereleases&label=prerelease&sort=semver" alt="Github Prelease" />
    </p>
 </p>
 
