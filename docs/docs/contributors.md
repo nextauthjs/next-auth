@@ -5,8 +5,6 @@ title: Contributors
 
 ## Core team
 
-DUMMY UPDATE
-
 Without these people, the project could not have become one of the most used authentication library in its category.
 
 - [Iain Collins](https://github.com/iaincollins) - Author
