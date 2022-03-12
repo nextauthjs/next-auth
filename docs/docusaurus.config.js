@@ -11,9 +11,9 @@ module.exports = {
       theme: require("prism-react-renderer/themes/vsDark"),
     },
     algolia: {
+      appId: "OUEDA16KPG",
       apiKey: "b81e3ca39a920b7815e880aea49c00ec",
       indexName: "next-auth",
-      searchParameters: {},
     },
     navbar: {
       title: "NextAuth.js",
@@ -133,10 +133,6 @@ module.exports = {
     },
     colorMode: {
       respectPrefersColorScheme: true,
-      switchConfig: {
-        darkIcon: "🌑️",
-        lightIcon: "💡",
-      },
     },
   },
   presets: [
