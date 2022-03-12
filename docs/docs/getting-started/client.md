@@ -180,28 +180,6 @@ async function myFunction() {
 
 Read the tutorial [securing pages and API routes](/tutorials/securing-pages-and-api-routes) to know how to fetch the session in server side calls using `getServerSession()`.
 
-## getServerSession()
-
-NextAuth.js also provides a `getServerSession()` helper which should be called **server side only** to return the current active session:
-
-#### Server Side Example
-
-```js
-import { getServerSession } from "next-auth/next"
-
-export async function getServerSideProps(context) {
-  return {
-    props: {
-      session: await getServerSession(context),
-    },
-  }
-}
-```
-
-You can add this to every server rendered page you want to protect.
-
-To know more on how to protect pages and API routes, read the tutorial [securing pages and API routes](/tutorials/securing-pages-and-api-routes).
-
 ---
 
 ## getCsrfToken()
