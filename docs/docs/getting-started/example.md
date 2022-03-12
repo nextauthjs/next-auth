@@ -36,7 +36,7 @@ All requests to `/api/auth/*` (`signIn`, `callback`, `signOut`, etc.) will autom
 **Further Reading**:
 
 - See the [options documentation](/configuration/options) for more details on how to configure providers, databases and other options.
-- Read more about how to add authentication providers [here](/providers/overview).
+- Read more about how to add authentication providers [here](/providers).
 
 #### Configure Shared session state
 
@@ -154,6 +154,14 @@ export default function Component() {
   return <div>Access Token: {accessToken}</div>
 }
 ```
+
+## Configuring callback URL (OAuth only)
+
+If you are using an OAuth provider either through one of our [built-in providers](/configuration/providers/oauth)
+or through a [custom provider](/configuration/providers/oauth#using-a-custom-provider), you'll need to configure 
+a callback URL in your provider's settings. Each provider has a "Configuration" section that should give you pointers on how to do that.
+
+Follow [these steps](/configuration/providers/oauth#how-to) to learn how to integrate with an OAuth provider.
 
 ## Deploying to production
 

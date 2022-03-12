@@ -10,7 +10,7 @@ https://docs.patreon.com/#apiv2-oauth
 ## Configuration
 
 :::tip
-  Create a API v2 client on [Patreon Platform](https://www.patreon.com/portal/registration/register-clients)
+Create a API v2 client on [Patreon Platform](https://www.patreon.com/portal/registration/register-clients)
 :::
 
 ## Options

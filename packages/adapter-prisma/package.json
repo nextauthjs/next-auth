@@ -19,10 +19,10 @@
     "clean": "rm -rf ./prisma/migrations && rm ./prisma/dev.db*",
     "init:default": "prisma migrate dev --name init --skip-seed",
     "init:custom": "prisma migrate dev --name init-custom --schema ./prisma/custom.prisma",
-    "test": "yarn init:default && jest ./tests/*.test.ts",
-    "test:default": "yarn init:default && jest ./tests/**/*.test.ts",
-    "test:custom": "yarn init:custom && CUSTOM_MODEL=1 jest ./tests/**/*.test.ts",
-    "test:wip": "yarn test:default && yarn test:custom",
+    "test:default": "yarn init:default && jest",
+    "test:custom": "yarn init:custom && CUSTOM_MODEL=1 jest",
+    "test:mongodb": "./tests/mongodb.test.sh",
+    "test": "yarn test:default && yarn test:custom && yarn test:mongodb",
     "build": "prisma generate && tsc",
     "studio": "prisma studio"
   },
@@ -32,8 +32,8 @@
     "next-auth": "^4.0.1"
   },
   "devDependencies": {
-    "@prisma/client": "^3.0.2",
-    "prisma": "^3.0.2"
+    "@prisma/client": "^3.10.0",
+    "prisma": "^3.10.0"
   },
   "jest": {
     "preset": "adapter-test/jest"
