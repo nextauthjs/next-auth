@@ -12,12 +12,14 @@ import {
   layoutCode,
   headerCode,
   headerCss,
+  globalStyle,
   sessionProviderCode,
+  tsConfig,
 } from "./sandpackCode.js"
 
 export const CustomSandpack = () => (
   <SandpackProvider
-    template="react-ts"
+    // template="react-ts"
     customSetup={{
       dependencies: {
         react: "17.0.2",
@@ -30,9 +32,17 @@ export const CustomSandpack = () => (
         "@types/react": "^17.0.39",
         typescript: "^4.5.5",
       },
-      // entry: "/pages/index.tsx",
+      entry: "/pages/index.tsx",
+      main: "/pages/index.tsx",
       environment: "next",
       files: {
+        "tsconfig.json": {
+          code: tsConfig,
+        },
+        "/pages/styles.css": {
+          code: globalStyle,
+          hidden: true,
+        },
         "/pages/_app.tsx": {
           code: sessionProviderCode,
           hidden: true,
