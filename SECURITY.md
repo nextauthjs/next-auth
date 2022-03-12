@@ -1,3 +1,5 @@
+# DUMMY COMMIT TO ALLOW VERCEL TO BUILD DOCS PREVIEW
+
 # Security Policy
 
 NextAuth.js practices responsible disclosure.
