@@ -32,8 +32,8 @@ export const CustomSandpack = () => (
         "@types/react": "^17.0.39",
         typescript: "^4.5.5",
       },
-      entry: "/pages/index.tsx",
-      main: "/pages/index.tsx",
+      entry: "/pages/index",
+      main: "/pages/index",
       environment: "next",
       files: {
         "tsconfig.json": {
