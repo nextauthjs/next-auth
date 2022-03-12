@@ -18,11 +18,11 @@
     "lint:fix": "prettier --write .",
     "generate-providers": "node ./scripts/generate-providers.js"
   },
-  "dependencies": {
+  "dependencies": {    
     "@codesandbox/sandpack-react": "^0.13.12",
-    "@docusaurus/core": "^2.0.0-beta.15",
-    "@docusaurus/preset-classic": "^2.0.0-beta.15",
-    "@docusaurus/remark-plugin-npm2yarn": "^2.0.0-beta.15",
+    "@docusaurus/core": "^2.0.0-beta.17",
+    "@docusaurus/preset-classic": "^2.0.0-beta.17",
+    "@docusaurus/remark-plugin-npm2yarn": "^2.0.0-beta.17",
     "classnames": "^2.3.1",
     "lodash.times": "^4.3.2",
     "mdx-mermaid": "^1.2.1",
