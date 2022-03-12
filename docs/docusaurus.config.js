@@ -14,6 +14,7 @@ module.exports = {
       appId: "OUEDA16KPG",
       apiKey: "b81e3ca39a920b7815e880aea49c00ec",
       indexName: "next-auth",
+      searchParameters: {},
     },
     navbar: {
       title: "NextAuth.js",
