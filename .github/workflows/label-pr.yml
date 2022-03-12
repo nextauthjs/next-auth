@@ -1,0 +1,16 @@
+# https://github.com/actions/labeler#create-workflow
+
+name: Label Pull Requests
+
+on:
+  pull_request_target:
+
+jobs:
+  prs:
+    name: Triage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/labeler@v3
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          configuration-path: ".github/pr-labeler.yml"

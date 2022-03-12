@@ -1,3 +1,6 @@
+import type { Options } from "@mikro-orm/core"
+import type { SqliteDriver } from "@mikro-orm/sqlite"
+
 import { MikroORM, wrap } from "@mikro-orm/core"
 import { runBasicTests } from "adapter-test"
 import { MikroOrmAdapter, defaultEntities } from "../src"
@@ -13,34 +16,22 @@ const entities = [
   VeryImportantEntity,
 ]
 
+const config: Options<SqliteDriver> = {
+  dbName: "./db.sqlite",
+  type: "sqlite",
+  entities,
+  debug: process.env.DEBUG === "true" || process.env.DEBUG?.includes("db"),
+}
+
 async function getORM() {
   if (_init) return _init
 
-  _init = await MikroORM.init({
-    dbName: "./db.sqlite",
-    type: "sqlite",
-    entities,
-    debug: process.env.DEBUG === "true" || process.env.DEBUG?.includes("db"),
-  })
+  _init = await MikroORM.init(config)
   return _init
 }
 
 runBasicTests({
-  adapter: MikroOrmAdapter(
-    {
-      dbName: "./db.sqlite",
-      type: "sqlite",
-      entities: [
-        defaultEntities.User,
-        defaultEntities.Account,
-        defaultEntities.Session,
-        defaultEntities.VerificationToken,
-        VeryImportantEntity,
-      ],
-      debug: process.env.DEBUG === "true" || process.env.DEBUG?.includes("db"),
-    },
-    { entities: { User } }
-  ),
+  adapter: MikroOrmAdapter(config, { entities: { User } }),
   db: {
     async connect() {
       const orm = await getORM()

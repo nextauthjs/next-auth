@@ -1,0 +1,37 @@
+# https://github.com/github/issue-labeler#basic-examples
+
+dgraph:
+  - "@next-auth/dgraph-adapter"
+
+dynamodb:
+  - "@next-auth/dynamodb-adapter"
+
+fauna:
+  - "@next-auth/fauna-adapter"
+
+firebase:
+  - "@next-auth/firebase-adapter"
+
+mikro-orm:
+  - "@next-auth/mikro-orm-adapter"
+
+mongodb:
+  - "@next-auth/mongodb-adapter"
+
+neo4j:
+  - "@next-auth/neo4j-adapter"
+
+pouchdb:
+  - "@next-auth/pouchdb-adapter"
+
+prisma:
+  - "@next-auth/prisma-adapter"
+
+sequelize:
+  - "@next-auth/sequelize-adapter"
+
+typeorm-legacy:
+  - "@next-auth/typeorm-legacy-adapter"
+
+upstash-redis:
+  - "@next-auth/upstash-redis-adapter"
