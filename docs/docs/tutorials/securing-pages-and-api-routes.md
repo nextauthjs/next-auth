@@ -66,7 +66,7 @@ import { useSession, getServerSession } from "next-auth/next"
 export default function Page() {
   const { data: session } = useSession()
 
-  if (typeof window !== "undefined") return null
+  if (typeof window === "undefined") return null
 
   if (session) {
     return (

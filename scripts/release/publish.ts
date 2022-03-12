@@ -1,8 +1,6 @@
 import type { Commit, PackageToRelease } from "./types"
 
-import { execSync } from "child_process"
-
-import { debug, pkgJson } from "./utils"
+import { debug, pkgJson, execSync } from "./utils"
 
 export async function publish(options: {
   dryRun: boolean
@@ -10,6 +8,8 @@ export async function publish(options: {
   RELEASE_COMMIT_MSG: string
 }) {
   const { dryRun, packages, RELEASE_COMMIT_MSG } = options
+
+  execSync("yarn build")
 
   for await (const pkg of packages) {
     if (dryRun) {
