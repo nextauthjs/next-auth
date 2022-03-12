@@ -14,12 +14,13 @@ import {
   headerCss,
   globalStyle,
   sessionProviderCode,
-  tsConfig,
+  // tsConfig,
+  indexJsx,
+  publicHtml,
 } from "./sandpackCode.js"
 
 export const CustomSandpack = () => (
   <SandpackProvider
-    // template="react-ts"
     customSetup={{
       dependencies: {
         react: "17.0.2",
@@ -32,18 +33,23 @@ export const CustomSandpack = () => (
         "@types/react": "^17.0.39",
         typescript: "^4.5.5",
       },
-      entry: "/pages/index",
-      main: "/pages/index",
+      entry: "/",
       environment: "next",
       files: {
-        "tsconfig.json": {
-          code: tsConfig,
+        "/public/index.html": {
+          code: publicHtml,
         },
+        // "/index.jsx": {
+        //   code: indexJsx,
+        // },
+        // "tsconfig.json": {
+        //   code: tsConfig,
+        // },
         "/pages/styles.css": {
           code: globalStyle,
           hidden: true,
         },
-        "/pages/_app.tsx": {
+        "/pages/_app.jsx": {
           code: sessionProviderCode,
           hidden: true,
         },
@@ -55,23 +61,34 @@ export const CustomSandpack = () => (
           code: headerCss,
           hidden: true,
         },
-        "/components/header.tsx": {
+        "/components/header.jsx": {
           code: headerCode,
           hidden: true,
         },
-        "/components/layout.tsx": {
+        "/components/layout.jsx": {
           code: layoutCode,
           hidden: true,
         },
-        "/pages/index.tsx": {
+        "/pages/index.jsx": {
           code: indexCode,
         },
       },
     }}
   >
     <SandpackLayout theme="sandpack-dark">
-      <SandpackCodeEditor showLineNumbers={true} showTabs={true} />
-      <SandpackPreview showNavigator={true} />
+      <SandpackCodeEditor
+        showLineNumbers={true}
+        showTabs={true}
+        showRunButton={true}
+        customStyle={{ height: "900px" }}
+      />
+      <SandpackPreview
+        showNavigator={true}
+        showRefreshButton={true}
+        showOpenInCodeSandbox={false}
+        showSandpackErrorOverlay={true}
+        customStyle={{ height: "900px" }}
+      />
     </SandpackLayout>
   </SandpackProvider>
 )

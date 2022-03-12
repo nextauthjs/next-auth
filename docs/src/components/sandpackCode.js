@@ -22,14 +22,10 @@ export default NextAuth({
 `
 
 const layoutCode = `
-  import Header from "./header"
+import Header from "./header"
 import type { ReactChildren } from "react"
 
-interface Props {
-  children: React.ReactNode
-}
-
-export default function Layout({ children }: Props) {
+export default function Layout({ children }) {
   return (
     <>
       <Header />
@@ -60,9 +56,6 @@ import Link from "next/link"
 import { signIn, signOut, useSession } from "next-auth/react"
 import styles from "./header.module.css"
 
-// The approach used in this component shows how to build a sign in and sign out
-// component that works on pages which support both client and server side
-// rendering, and avoids any flash incorrect content on initial page load.
 export default function Header() {
   const { data: session, status } = useSession()
   const loading = status === "loading"
@@ -163,7 +156,7 @@ export default function Header() {
 }
 `
 
-const headerCss = `/* Set min-height to avoid page reflow while session loading */
+const headerCss = `
 .signedInStatus {
   display: block;
   min-height: 4rem;
@@ -292,10 +285,9 @@ iframe {
 }`
 
 const sessionProviderCode = `import { SessionProvider } from "next-auth/react"
-import type { AppProps } from "next/app"
 import "./styles.css"
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps }) {
   return (
     <SessionProvider session={pageProps.session} refetchInterval={0}>
       <Component {...pageProps} />
@@ -330,6 +322,30 @@ const tsConfig = `
   "exclude": ["node_modules"]
 }`
 
+const indexJsx = `import React, { StrictMode } from "react";
+import ReactDOM from "react-dom";
+import "./styles.css";
+import App from "./App";
+const rootElement = document.getElementById("root");
+ReactDOM.render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+  rootElement
+);`
+
+const publicHtml = `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>`
+
 export {
   nextAuthCode,
   layoutCode,
@@ -338,5 +354,7 @@ export {
   headerCss,
   globalStyle,
   sessionProviderCode,
-  tsConfig
+  tsConfig,
+  indexJsx,
+  publicHtml
 }
