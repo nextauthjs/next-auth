@@ -385,8 +385,8 @@ If you think your custom provider might be useful to others, we encourage you to
 
 You only need to add two changes:
 
-1. Add your config: [`src/providers/{provider}.ts`](https://github.com/nextauthjs/next-auth/tree/main/src/providers)<br />
+1. Add your config: [`src/providers/{provider}.ts`](https://github.com/nextauthjs/next-auth/tree/main/packages/next-auth/src/providers)<br />
    • make sure you use a named default export, like this: `export default function YourProvider`
-2. Add provider documentation: [`/docs/providers/{provider}.md`](https://github.com/nextauthjs/docs/tree/main/docs/providers)
+2. Add provider documentation: [`/docs/providers/{provider}.md`](https://github.com/nextauthjs/next-auth/tree/main/docs/docs/providers)
 
 That's it! 🎉 Others will be able to discover and use this provider much more easily now!
