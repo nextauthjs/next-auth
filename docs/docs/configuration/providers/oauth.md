@@ -21,8 +21,33 @@ Without going into too much detail, the OAuth flow generally has 6 parts:
 5. The application requests the resource from the resource server (API) and presents the access token for authentication
 6. If the access token is valid, the resource server (API) serves the resource to the application
 
-<img src="https://i2.wp.com/blogs.innovationm.com/wp-content/uploads/2019/07/blog-open1.png" alt="OAuth Flow Diagram" /><br />
-<small>Source: https://dzone.com/articles/open-id-connect-authentication-with-oauth20-author</small>
+```mermaid
+sequenceDiagram
+    participant Browser
+    participant App Server
+    participant Auth Server (Github)
+    Note left of Browser: User clicks on "Sign in"
+    Browser->>App Server: GET<br/>"api/auth/signin"
+    App Server->>App Server: Computes the available<br/>sign in providers<br/>from the "providers" option
+    App Server->>Browser: Redirects to Sign in page
+    Note left of Browser: Sign in options<br/>are shown the user<br/>(Github, Twitter, etc...)
+    Note left of Browser: User clicks on<br/>"Sign in with Github"
+    Browser->>App Server: POST<br/>"api/auth/signin/github"
+    App Server->>App Server: Computes sign in<br/>options for Github<br/>(scopes, callback URL, etc...)
+    App Server->>Auth Server (Github): GET<br/>"github.com/login/oauth/authorize"
+    Note left of Auth Server (Github): Sign in options<br> are supplied as<br/>query params<br/>(clientId, <br/>scope, etc...)
+    Auth Server (Github)->>Browser: Shows sign in page<br/>in Github.com<br/>to the user
+    Note left of Browser: User inserts their<br/>credentials in Github
+    Browser->>Auth Server (Github): Github validates the inserted credentials
+    Auth Server (Github)->>Auth Server (Github): Generates one time access code<br/>and calls callback<br>URL defined in<br/>App settings
+    Auth Server (Github)->>App Server: GET<br/>"api/auth/github/callback?code=123"
+    App Server->>App Server: Grabs code<br/>to exchange it for<br/>access token
+    App Server->>Auth Server (Github): POST<br/>"github.com/login/oauth/access_token"<br/>{code: 123}
+    Auth Server (Github)->>Auth Server (Github): Verifies code is<br/>valid and generates<br/>access token
+    Auth Server (Github)->>App Server: { access_token: 16C7x... }
+    App Server->>App Server: Generates session token<br/>and stores session
+    App Server->>Browser: You're now logged in!
+```
 
 For more details, check out Aaron Parecki's blog post [OAuth2 Simplified](https://aaronparecki.com/oauth-2-simplified/) or Postman's blog post [OAuth 2.0: Implicit Flow is Dead, Try PKCE Instead](https://blog.postman.com/pkce-oauth-how-to/).
 
