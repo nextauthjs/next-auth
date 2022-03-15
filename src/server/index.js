@@ -280,7 +280,9 @@ async function NextAuthHandler(req, res, userOptions) {
     }
     return res
       .status(400)
-      .end(`Error: HTTP ${req.method} is not supported for ${req.url}`)
+      .end(
+        `Error: This action with HTTP ${req.method} is not supported by NextAuth.js`
+      )
   })
 }
 
