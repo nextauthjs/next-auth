@@ -80,7 +80,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN_PKG: ${{ secrets.NPM_TOKEN }}
           NPM_TOKEN_ORG: ${{ secrets.NPM_TOKEN_ORG }}
-          DRY_RUN: true
   release-pr:
     name: Publish PR
     runs-on: ubuntu-latest
