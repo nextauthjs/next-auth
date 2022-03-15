@@ -231,6 +231,6 @@ export async function NextAuthHandler<
 
   return {
     status: 400,
-    body: `Error: Action ${action} with HTTP ${method} is not supported by NextAuth.js` as any,
+    body: `Error: This action with HTTP ${method} is not supported by NextAuth.js` as any,
   }
 }
