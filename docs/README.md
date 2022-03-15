@@ -10,8 +10,8 @@
       <a href="https://github.com/nextauthjs/next-auth/actions/workflows/release.yml?query=workflow%3ARelease">
         <img src="https://github.com/nextauthjs/next-auth/actions/workflows/release.yml/badge.svg" alt="Release" />
       </a>
-      <a href="https://bundlephobia.com/result?p=next-auth">
-        <img src="https://img.shields.io/bundlephobia/minzip/next-auth" alt="Bundle Size"/>
+      <a href="https://packagephobia.com/result?p=next-auth">
+        <img src="https://packagephobia.com/badge?p=next-auth" alt="Bundle Size"/>
       </a>
       <a href="https://www.npmtrends.com/next-auth">
         <img src="https://img.shields.io/npm/dm/next-auth" alt="Downloads" />
@@ -22,7 +22,6 @@
       <a href="https://www.npmjs.com/package/next-auth">
         <img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?label=latest" alt="Github Stable Release" />
       </a>
-      <img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?include_prereleases&label=prerelease&sort=semver" alt="Github Prelease" />
    </p>
 </p>
 
