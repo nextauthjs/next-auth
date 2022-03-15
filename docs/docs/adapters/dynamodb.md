@@ -119,6 +119,8 @@ NextAuthTable:
         KeyType: RANGE
     GlobalSecondaryIndexes:
       - IndexName: GSI1
+        Projection:
+          ProjectionType: ALL
         KeySchema:
           - AttributeName: GSI1PK
             KeyType: HASH
