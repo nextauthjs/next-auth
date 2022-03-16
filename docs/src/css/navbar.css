@@ -86,7 +86,7 @@ html[data-theme="dark"] .navbar__item.navbar__link[href*="npm"]:before {
   position: absolute;
   color: #000;
   top: -10px;
-  right: 5px;
+  right: -45px;
   font-size: 9px;
   background-color: #ccc;
   padding: 2px 5px;

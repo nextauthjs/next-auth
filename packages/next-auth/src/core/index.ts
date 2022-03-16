@@ -107,8 +107,8 @@ export async function NextAuthHandler<
         if (pages.signIn) {
           let signinUrl = `${pages.signIn}${
             pages.signIn.includes("?") ? "&" : "?"
-          }callbackUrl=${options.callbackUrl}`
-          if (error) signinUrl = `${signinUrl}&error=${error}`
+          }callbackUrl=${encodeURIComponent(options.callbackUrl)}`
+          if (error) signinUrl = `${signinUrl}&error=${encodeURIComponent(error)}`
           return { redirect: signinUrl, cookies }
         }
 
@@ -231,6 +231,6 @@ export async function NextAuthHandler<
 
   return {
     status: 400,
-    body: `Error: Action ${action} with HTTP ${method} is not supported by NextAuth.js` as any,
+    body: `Error: This action with HTTP ${method} is not supported by NextAuth.js` as any,
   }
 }

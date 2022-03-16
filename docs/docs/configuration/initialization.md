@@ -119,5 +119,5 @@ For more details on all available actions and which methods are supported, pleas
 This way of initializing `NextAuth` is very powerful, but should be used sparingly.
 
 :::warning
-Changing parts of the request that is essential to `NextAuth` to do it's job - like messing with the [default cookies](/configuration/options#cookies) - can have unforeseen consequences, and have the potential to introduce security holes if done incorrectly. Only change those this if you understand these consequences.
+Changing parts of the request that is essential to `NextAuth` to do it's job - like messing with the [default cookies](/configuration/options#cookies) - can have unforeseen consequences, and have the potential to introduce security holes if done incorrectly. Only change those if you understand consequences.
 :::

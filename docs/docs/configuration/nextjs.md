@@ -95,7 +95,7 @@ export default withAuth({
 })
 ```
 
-With the above code, you just made sure that only user's with the `admin` role can access any of the pages under thge `/admin` route. (Including nested routes as well, like `/admin/settings` etc.).
+With the above code, you just made sure that only user's with the `admin` role can access any of the pages under the `/admin` route. (Including nested routes as well, like `/admin/settings` etc.).
 
 #### wrap middleware
 

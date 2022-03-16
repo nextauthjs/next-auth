@@ -16,8 +16,9 @@
     "access": "public"
   },
   "scripts": {
-    "test:wip": "./tests/test.sh",
-    "build:wip": "tsc"
+    "test": "./tests/test.sh",
+    "test:watch": "./tests/test.sh -w",
+    "build": "tsc"
   },
   "files": ["README.md", "dist"],
   "peerDependencies": {
@@ -25,7 +26,7 @@
     "next-auth": "^4.0.1"
   },
   "devDependencies": {
-    "mongodb": "^4.1.1"
+    "mongodb": "^4.4.0"
   },
   "jest": {
     "preset": "adapter-test/jest"

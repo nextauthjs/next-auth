@@ -229,7 +229,7 @@ further customize the jwt with roles if you want to implement [`RBAC logic`](htt
 import * as jwt from "jsonwebtoken";
 export default NextAuth({
   session: {
-    jwt: true
+    strategy: "jwt"
   },
   jwt: {
     secret: process.env.SECRET,
@@ -237,7 +237,7 @@ export default NextAuth({
       return jwt.sign({...token, userId: token.id}, secret, {
         algorithm: "HS256",
         expiresIn: 30 * 24 * 60 * 60; // 30 days
-      });;
+      });
     },
     decode: async ({ secret, token }) => {
       return jwt.verify(token, secret, { algorithms: ["HS256"] });

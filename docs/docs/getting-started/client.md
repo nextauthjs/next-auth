@@ -471,6 +471,8 @@ export default function App({
   return (
     <SessionProvider
       session={session}
+      // In case you use a custom path and your app lives at "/cool-app" rather than at the root "/"
+      basePath="cool-app"
       // Re-fetch session every 5 minutes
       refetchInterval={5 * 60}
       // Re-fetches session when window is focused
@@ -489,6 +491,10 @@ Every tab/window maintains its own copy of the local session state; the session 
 
 Using low values for `refetchInterval` will increase network traffic and load on authenticated clients and may impact hosting costs and performance.
 :::
+
+#### Base path
+
+If you are using a custom base path, and your application entry point is not at the root of the domain "/" but something else, for example "/my-app/" you can use the `basePath` prop to make NextAuth.js aware of that so that all redirects and session handling work as expected.
 
 #### Refetch interval
 
