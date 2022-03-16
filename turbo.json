@@ -1,0 +1,40 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "baseBranch": "origin/main",
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"]
+    },
+    "next-auth#build": {
+      "dependsOn": ["^build"],
+      "outputs": [
+        "lib/**",
+        "css/**",
+        "jwt/**",
+        "react/**",
+        "next/**",
+        "client/**",
+        "providers/**",
+        "core/**",
+        "index.d.ts",
+        "index.js",
+        "adapters.d.ts",
+        "middleware.d.ts",
+        "middleware.js"
+      ]
+    },
+    "test": {
+      "dependsOn": ["lint", "build"],
+      "outputs": []
+    },
+    "lint": {},
+    "setup": {},
+    "dev": {
+      "cache": false
+    },
+    "next-auth-app#dev": {
+      "cache": false,
+      "dependsOn": ["next-auth#setup"]
+    }
+  }
+}

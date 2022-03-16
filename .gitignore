@@ -10,41 +10,38 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+firebase-debug.log
 
-yarn.lock
 
 # Dependencies
 node_modules
 
 # Build dirs
 .next
-/build
-/dist
+build
+dist
 
 # Generated files
 .docusaurus
 .cache-loader
-/providers
-/src/providers/oauth-types.ts
-/client
-/css
-/lib
-/core
-/jwt
-/react
-/adapters.d.ts
-/index.d.ts
-/index.js
-/next
+packages/next-auth/providers
+packages/next-auth/src/providers/oauth-types.ts
+packages/next-auth/client
+packages/next-auth/css
+packages/next-auth/lib
+packages/next-auth/core
+packages/next-auth/jwt
+packages/next-auth/react
+packages/next-auth/adapters.d.ts
+packages/next-auth/index.d.ts
+packages/next-auth/index.js
+packages/next-auth/next
+packages/next-auth/middleware.d.ts
+packages/next-auth/middleware.js
 
 # Development app
-app/src/css
-app/package-lock.json
-app/yarn.lock
-app/prisma/migrations
-app/prisma/dev.db*
-app/dist
-app/next-auth
+apps/dev/src/css
+apps/dev/prisma/migrations
 
 # VS
 /.vs/slnx.sqlite-journal
@@ -59,8 +56,20 @@ app/next-auth
 /actions-runner
 /_work
 
-# Prisma migrations
-/prisma/migrations
+# DB
+prisma/migrations
+dev.db*
+packages/adapter-prisma/prisma/dev.db
+db.sqlite
 
 # Tests
-/coverage
+coverage
+dynamodblocal-bin
+firestore-debug.log
+test.schema.gql
+
+# Turborepo
+.turbo
+
+# docusaurus
+docs/.docusaurus

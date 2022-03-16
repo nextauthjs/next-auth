@@ -1,0 +1,12 @@
+{
+  "extends": "tsconfig/base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "stripInternal": true
+  },
+  "include": ["."],
+  "exclude": ["tests", "dist", "jest.config.js"]
+}

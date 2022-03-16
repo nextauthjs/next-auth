@@ -1,0 +1,9 @@
+{
+  "extends": "tsconfig/base.json",
+  "compilerOptions": {
+    "emitDeclarationOnly": true,
+    "baseUrl": ".",
+    "outDir": "."
+  },
+  "exclude": ["./*.js", "./*.d.ts", "config", "**/__tests__"]
+}
