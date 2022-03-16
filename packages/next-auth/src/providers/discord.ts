@@ -1,6 +1,6 @@
 import type { OAuthConfig, OAuthUserConfig } from "."
 
-export interface DiscordProfile {
+export interface DiscordProfile extends Record<string, any> {
   accent_color: number
   avatar: string
   banner: string
