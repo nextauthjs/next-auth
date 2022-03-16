@@ -124,7 +124,7 @@
   },
   "eslintConfig": {
     "parserOptions": {
-      "project": "./tsconfig.eslint.json"
+      "project": "./packages/next-auth/tsconfig.eslint.json"
     }
   },
   "eslintIgnore": [
