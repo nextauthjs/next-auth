@@ -66,7 +66,7 @@ function NextAuth(
   options: NextAuthOptions
 ): any
 
-/** Tha main entry point to next-auth */
+/** The main entry point to next-auth */
 function NextAuth(
   ...args:
     | [NextAuthOptions]
@@ -94,7 +94,7 @@ export async function getServerSession(
     `\nhttps://next-auth.js.org/warnings#EXPERIMENTAL_API`
     )
 
-    const [req, res, options] = args;
+  const [req, res, options] = args;
   const session = await NextAuthHandler<Session | {}>({
     options,
     req: {
