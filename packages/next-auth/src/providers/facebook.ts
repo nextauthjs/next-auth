@@ -1,13 +1,20 @@
 import type { OAuthConfig, OAuthUserConfig } from "."
 
-export interface FacebookProfile {
-  id: string
-  picture: { data: { url: string } }
+interface FacebookPictureData {
+  url: string
 }
 
-export default function Facebook<
-  P extends Record<string, any> = FacebookProfile
->(options: OAuthUserConfig<P>): OAuthConfig<P> {
+interface FacebookPicture {
+  data: FacebookPictureData
+}
+export interface FacebookProfile extends Record<string, any> {
+  id: string
+  picture: FacebookPicture
+}
+
+export default function Facebook<P extends FacebookProfile>(
+  options: OAuthUserConfig<P>
+): OAuthConfig<P> {
   return {
     id: "facebook",
     name: "Facebook",
