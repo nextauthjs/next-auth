@@ -12,7 +12,7 @@
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "scripts": {
     "build:app": "turbo run build --scope=next-auth-app --include-dependencies",
-    "build": "turbo run build --scope=next-auth --scope=@next-auth/* --no-deps",
+    "build": "turbo run build --scope=next-auth --scope=@next-auth/* --scope=!@next-auth/firebase-adapter --no-deps",
     "lint": "turbo run lint --scope=!next-auth-docs",
     "lint:fix": "turbo run lint -- --fix",
     "test": "turbo run test --concurrency=1 --scope=!@next-auth/pouchdb-adapter --scope=!next-auth-*",
