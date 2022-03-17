@@ -30,11 +30,11 @@
     "dist"
   ],
   "peerDependencies": {
-    "@upstash/redis": "^0.2.1",
+    "@upstash/redis": "0.2.1",
     "next-auth": "^4.0.1"
   },
   "devDependencies": {
-    "@upstash/redis": "^0.2.1",
+    "@upstash/redis": "0.2.1",
     "dotenv": "^10.0.0"
   },
   "dependencies": {
