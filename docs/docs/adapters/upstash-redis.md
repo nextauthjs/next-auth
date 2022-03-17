@@ -8,8 +8,10 @@ title: Upstash Redis
 To use this Adapter, you need to install `@upstash/redis` and `@next-auth/upstash-redis-adapter` package:
 
 ```bash npm2yarn
-npm install @upstash/redis @next-auth/upstash-redis-adapter
+npm install @upstash/redis@0.2.1 @next-auth/upstash-redis-adapter
 ```
+Please make sure to use `@usptash/redis` version `0.2.1`. Later versions are incompatible right now.
+Progress is tracked [here](https://github.com/nextauthjs/next-auth/issues/4183)
 
 Configure your NextAuth.js to use the Upstash Redis Adapter:
 
