@@ -1,6 +1,6 @@
-import upstashRedisClient from "@upstash/redis"
+import { Redis } from "@upstash/redis"
 import { runBasicTests } from "adapter-test"
-import { reviveFromJson, UpstashRedisAdapter } from "../src"
+import { hydrateDates, UpstashRedisAdapter } from "../src"
 import "dotenv/config"
 
 if (!process.env.UPSTASH_REDIS_URL || !process.env.UPSTASH_REDIS_KEY) {
@@ -8,35 +8,39 @@ if (!process.env.UPSTASH_REDIS_URL || !process.env.UPSTASH_REDIS_KEY) {
     expect(true).toBe(true)
   })
 } else {
-  const client = upstashRedisClient(
-    process.env.UPSTASH_REDIS_URL,
-    process.env.UPSTASH_REDIS_KEY
-  )
+  const client = new Redis({
+    url: process.env.UPSTASH_REDIS_URL,
+    token: process.env.UPSTASH_REDIS_KEY,
+  })
 
   runBasicTests({
     adapter: UpstashRedisAdapter(client, { baseKeyPrefix: "testApp:" }),
     db: {
       async user(id: string) {
-        const { data } = await client.get(`testApp:user:${id}`)
-        return reviveFromJson(data)
+        const data = await client.get<object>(`testApp:user:${id}`)
+        if (!data) return null
+        return hydrateDates(data)
       },
       async account({ provider, providerAccountId }) {
-        const { data } = await client.get(
+        const data = await client.get<object>(
           `testApp:user:account:${provider}:${providerAccountId}`
         )
-        return reviveFromJson(data)
+        if (!data) return null
+        return hydrateDates(data)
       },
       async session(sessionToken) {
-        const { data } = await client.get(
+        const data = await client.get<object>(
           `testApp:user:session:${sessionToken}`
         )
-        return reviveFromJson(data)
+        if (!data) return null
+        return hydrateDates(data)
       },
       async verificationToken(where) {
-        const { data } = await client.get(
+        const data = await client.get<object>(
           `testApp:user:token:${where.identifier}`
         )
-        return reviveFromJson(data)
+        if (!data) return null
+        return hydrateDates(data)
       },
     },
   })
