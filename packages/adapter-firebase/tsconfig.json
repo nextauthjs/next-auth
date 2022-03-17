@@ -1,7 +1,6 @@
 {
-  "extends": "tsconfig/adapters.json",
+  "extends": "tsconfig/base.json",
   "compilerOptions": {
-    "strict": false,
     "rootDir": "src",
     "outDir": "dist"
   },
