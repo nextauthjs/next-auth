@@ -5059,7 +5059,7 @@
     "@typescript-eslint/types" "5.10.2"
     eslint-visitor-keys "^3.0.0"
 
-"@upstash/redis@^0.2.1":
+"@upstash/redis@0.2.1":
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/@upstash/redis/-/redis-0.2.1.tgz#ace56d27e69e766066c33d0a9ddc0d9286e76b8c"
   integrity sha512-Qxpa81oCy68x5nXlkMKEQL32mEO6tUvYj0sIVNNuYLohYrdWpKZC0vGLLwKl/6HU1FoRiaD1Vdq177ZF4RyoSw==
