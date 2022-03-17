@@ -1,7 +1,7 @@
 {
   "extends": "./base.json",
   "compilerOptions": {
-    "module": "commonjs",
-    "strict": true
+    "target": "ES2019",
+    "module": "commonjs"
   }
 }
