@@ -92,7 +92,8 @@ export async function getToken<R extends boolean = false>(
   const authHeaderType = req.headers.authorization?.split(" ")[0]
   if (!token && authHeaderType === "Bearer" || "Basic") {
     const secret = req.headers.authorization.split(" ")[1]
-    token = authHeaderType === "Bearer" ? decodeURIComponent(secret) : atob(secret)
+    token = authHeaderType === "Basic" ? atob(secret) : secret
+    token = decodeURIComponent(secret)
   }
 
   // @ts-expect-error
