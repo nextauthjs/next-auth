@@ -1,7 +1,12 @@
 {
   "extends": "./base.json",
   "compilerOptions": {
+    "target": "ES2019",
     "module": "commonjs",
-    "strict": true
+    "declaration": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   }
 }

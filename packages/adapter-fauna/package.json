@@ -1,6 +1,6 @@
 {
   "name": "@next-auth/fauna-adapter",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Fauna Adapter for NextAuth",
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/adapters",
