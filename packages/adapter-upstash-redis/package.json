@@ -35,7 +35,8 @@
   },
   "devDependencies": {
     "@upstash/redis": "^1.0.1",
-    "dotenv": "^10.0.0"
+    "dotenv": "^10.0.0",
+    "next-auth": "^4.0.1"
   },
   "dependencies": {
     "uuid": "^8.3.2"

@@ -38,7 +38,8 @@
   },
   "devDependencies": {
     "@types/uuid": "^8.3.3",
-    "neo4j-driver": "^4.4.0"
+    "neo4j-driver": "^4.4.0",
+    "next-auth": "^4.0.1"
   },
   "dependencies": {
     "uuid": "^8.3.2"
