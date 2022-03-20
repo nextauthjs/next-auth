@@ -89,10 +89,10 @@ export async function getToken<R extends boolean = false>(
   )
 
   let token = sessionStore.value
-
-  if (!token && req.headers.authorization?.split(" ")[0] === "Bearer" || "Basic") {
-    const urlEncodedToken = req.headers.authorization.split(" ")[1]
-    token = decodeURIComponent(urlEncodedToken)
+  const authHeaderType = req.headers.authorization?.split(" ")[0]
+  if (!token && authHeaderType === "Bearer" || "Basic") {
+    const secret = req.headers.authorization.split(" ")[1]
+    token = authHeaderType === "Bearer" ? decodeURIComponent(secret) : atob(secret)
   }
 
   // @ts-expect-error
