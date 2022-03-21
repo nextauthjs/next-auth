@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@prisma/client": "^3.10.0",
+    "next-auth": "^4.0.1",
     "prisma": "^3.10.0"
   },
   "jest": {

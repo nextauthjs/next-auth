@@ -37,6 +37,7 @@
   "devDependencies": {
     "@aws-sdk/client-dynamodb": "^3.36.1",
     "@aws-sdk/lib-dynamodb": "^3.36.1",
-    "@shelf/jest-dynamodb": "^2.1.0"
+    "@shelf/jest-dynamodb": "^2.1.0",
+    "next-auth": "^4.0.1"
   }
 }

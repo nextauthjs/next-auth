@@ -33,6 +33,7 @@
     "sequelize": "^6.6.5"
   },
   "devDependencies": {
+    "next-auth": "^4.0.1",
     "sequelize": "^6.6.5"
   },
   "jest": {
