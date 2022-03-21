@@ -8,7 +8,7 @@ export interface AsgardeoProfile {
 
 export default function Asgardeo<P extends Record<string, any> = AsgardeoProfile>(
   options: OAuthUserConfig<P> & {
-    serverOrigin: string
+    organization: string
     scopes?: string
   }
 ): OAuthConfig<P> {
@@ -16,7 +16,7 @@ export default function Asgardeo<P extends Record<string, any> = AsgardeoProfile
     id: "asgardeo",
     name: "Asgardeo",
     type: "oauth",
-    wellKnown: `${options?.serverOrigin}/oauth2/token/.well-known/openid-configuration`,
+    wellKnown: `https://api.asgardeo.io/t/${options?.organization}/oauth2/token/.well-known/openid-configuration`,
     authorization: {
       params: { scope: options?.scopes || "openid email profile" } 
     },
