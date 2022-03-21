@@ -124,7 +124,7 @@ export default function App({
 
 function Auth({ children }) {
   const { data: session, status } = useSession({ required: true })
-  const isUser = !!session?.user
+  const isUser = session?.user
 
   if (isUser) {
     return children
