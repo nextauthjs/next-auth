@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "firebase": "^8.6.2",
-    "firebase-tools": "^9.11.0"
+    "firebase-tools": "^9.11.0",
+    "next-auth": "^4.0.1"
   }
 }

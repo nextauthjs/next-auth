@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "@types/pouchdb": "^6.4.0",
+    "next-auth": "^4.0.1",
     "pouchdb": "^7.2.2",
     "pouchdb-adapter-memory": "^7.2.2",
     "pouchdb-find": "^7.2.2"

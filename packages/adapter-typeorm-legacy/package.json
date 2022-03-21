@@ -37,6 +37,7 @@
     "sqlite": "tests/sqlite/test.sh"
   },
   "devDependencies": {
+    "next-auth": "^4.0.1",
     "mssql": "^7.2.1",
     "mysql": "^2.18.1",
     "pg": "^8.7.1",
