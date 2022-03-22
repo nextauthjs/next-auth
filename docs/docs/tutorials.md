@@ -21,14 +21,6 @@ title: Tutorials and Explainers
 
 - This tutorial walks one through adding NextAuth.js to an existing project. Including setting up the OAuth client id and secret, adding the API routes for authentication, protecting pages and API routes behind that authentication, etc.
 
-#### [Securing pages and API routes](tutorials/securing-pages-and-api-routes)
-
-- How to restrict access to pages and API routes.
-
-#### [Usage with class components](tutorials/usage-with-class-components)
-
-- How to use `useSession()` hook with class components.
-
 #### [Adding social authentication support to a Next.js app](https://getstarted.sh/bulletproof-next/add-social-authentication) <svg xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '5px', marginBottom:'-6px'}} height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>External</title> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /> </svg>
 
 - A tutorial by Arunoda Susirpiala. Checkout [GetStarted](https://getstarted.sh/) for more examples.
@@ -75,21 +67,7 @@ This tutorial covers:
 
 - This example shows how to implement a full-stack app in TypeScript with Next.js using Prisma Client as a backend. It also demonstrates how to implement authentication using NextAuth.js. By Nikolas Burk at Prisma.
 
-## Testing
-
-#### [Testing with Cypress](tutorials/testing-with-cypress)
-
-- How to write tests using Cypress.
-
 ## Advanced
-
-#### [Refresh Token Rotation](tutorials/refresh-token-rotation)
-
-- How to implement refresh token rotation.
-
-#### [LDAP Authentication](tutorials/ldap-auth-example)
-
-- How to use the Credentials Provider to authenticate against an LDAP database. This approach can be used to authenticate existing user accounts against any backend.
 
 #### [Add auth support to a Next.js app with a custom backend](https://arunoda.me/blog/add-auth-support-to-a-next-js-app-with-a-custom-backend) <svg xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '5px', marginBottom:'-6px'}} height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>External</title> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /> </svg>
 
@@ -109,14 +87,6 @@ This tutorial covers:
 
 ## Database
 
-#### [Custom models with TypeORM](adapters/typeorm#custom-models)
-
-- How to use models with custom properties using the TypeORM adapter.
-
-#### [Creating a database adapter](tutorials/creating-a-database-adapter)
-
-- How to create a custom adapter, to use any database to fetch and store user / account data.
-
-#### [Using NextAuth.js with Prisma and PlanetScale serverless databases](https://github.com/planetscale/nextjs-planetscale-starter)
+#### [Using NextAuth.js with Prisma and PlanetScale serverless databases](https://github.com/planetscale/nextjs-planetscale-starter) <svg xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '5px', marginBottom:'-6px'}} height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>External</title> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /> </svg>
 
 - How to set up a PlanetScale database to fetch and store user / account data with the Prisma adapter.

@@ -99,7 +99,7 @@ export function proxyLogger(
         }
         ;(metadata as any).client = true
         const url = `${basePath}/_log`
-        const body = new URLSearchParams({ level, code, ...metadata })
+        const body = new URLSearchParams({ level, code, ...(metadata as any) })
         if (navigator.sendBeacon) {
           return navigator.sendBeacon(url, body)
         }

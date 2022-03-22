@@ -28,7 +28,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsc",
+    "build:wip": "tsc",
     "test:wip": "FIRESTORE_EMULATOR_HOST=localhost:8080 firebase emulators:exec --only firestore --project next-auth-test jest"
   },
   "peerDependencies": {
@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "firebase": "^8.6.2",
-    "firebase-tools": "^9.11.0"
+    "firebase-tools": "^9.11.0",
+    "next-auth": "^4.0.1"
   }
 }

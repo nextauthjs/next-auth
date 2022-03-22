@@ -2,6 +2,17 @@
   "extends": "tsconfig/base.json",
   "compilerOptions": {
     "emitDeclarationOnly": true,
+    "strictNullChecks": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "strict": false,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "stripInternal": true,
+    "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "outDir": "."
   },

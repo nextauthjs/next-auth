@@ -1,6 +1,6 @@
 {
   "name": "@next-auth/dgraph-adapter",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Dgraph adapter for next-auth.",
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/adapters",
@@ -38,6 +38,7 @@
     "@types/jsonwebtoken": "^8.5.5",
     "@types/node-fetch": "^2.5.11",
     "jest": "^27.0.6",
+    "next-auth": "^4.0.1",
     "ts-jest": "^27.0.3"
   },
   "dependencies": {
