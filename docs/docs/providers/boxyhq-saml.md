@@ -30,7 +30,7 @@ import BoxyHQSAMLProvider from "next-auth/providers/boxyhq-saml"
 ...
 providers: [
   BoxyHQSAMLProvider({
-    issuer: "http://localhost:5000",
+    issuer: "http://localhost:5225",
     clientId: "dummy", // The dummy here is necessary since we'll pass tenant and product custom attributes in the client code
     clientSecret: "dummy", // The dummy here is necessary since we'll pass tenant and product custom attributes in the client code
   })

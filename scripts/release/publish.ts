@@ -63,6 +63,7 @@ export async function publish(options: {
     } else {
       console.log(`Creating git tag...`)
       execSync(`git tag ${gitTag}`)
+      execSync("git push --tags")
       console.log(`Creating GitHub release notes...`)
       execSync(`gh release create ${gitTag} --notes '${changelog}'`)
     }
