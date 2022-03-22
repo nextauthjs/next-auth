@@ -74,5 +74,15 @@ module.exports = {
     "warnings",
     "errors",
     "deployment",
+    {
+      type: "category",
+      label: "Guides",
+      collapsed: true,
+      items: [
+        "guides/basics",
+        "guides/fullstack",
+        "guides/testing",
+      ],
+    },
   ],
 }

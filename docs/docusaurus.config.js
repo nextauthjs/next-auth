@@ -11,7 +11,8 @@ module.exports = {
       theme: require("prism-react-renderer/themes/vsDark"),
     },
     algolia: {
-      apiKey: "b81e3ca39a920b7815e880aea49c00ec",
+      appId: "OUEDA16KPG",
+      apiKey: "97c0894508f2d1d4a2fef4fe6db28448",
       indexName: "next-auth",
       searchParameters: {},
     },
@@ -133,10 +134,6 @@ module.exports = {
     },
     colorMode: {
       respectPrefersColorScheme: true,
-      switchConfig: {
-        darkIcon: "🌑️",
-        lightIcon: "💡",
-      },
     },
   },
   presets: [

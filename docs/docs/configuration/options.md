@@ -123,7 +123,7 @@ session: {
 
 #### Description
 
-JSON Web Tokens can be used for session tokens if enabled with `session: { strategy: "jwt" }` option. JSON Web Tokens are enabled by default if you have not specified an adapter. JSON Web Tokens are encrypted (JWE) by default. We recommend you keep this behaviour. See the [Override JWT `encode` and `decode` methods] advanced option.(#override-jwt-encode-and-decode-methods)
+JSON Web Tokens can be used for session tokens if enabled with `session: { strategy: "jwt" }` option. JSON Web Tokens are enabled by default if you have not specified an adapter. JSON Web Tokens are encrypted (JWE) by default. We recommend you keep this behaviour. See the [Override JWT `encode` and `decode` methods](#override-jwt-encode-and-decode-methods) advanced option.
 
 #### JSON Web Token Options
 

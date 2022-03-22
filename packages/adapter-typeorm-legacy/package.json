@@ -1,6 +1,6 @@
 {
   "name": "@next-auth/typeorm-legacy-adapter",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "TypeORM (legacy) adapter for next-auth.",
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/adapters",
@@ -37,6 +37,7 @@
     "sqlite": "tests/sqlite/test.sh"
   },
   "devDependencies": {
+    "next-auth": "^4.0.1",
     "mssql": "^7.2.1",
     "mysql": "^2.18.1",
     "pg": "^8.7.1",
