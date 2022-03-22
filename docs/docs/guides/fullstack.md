@@ -11,6 +11,10 @@ title: Fullstack
 
 - How to use the Credentials Provider to authenticate against an LDAP database. This approach can be used to authenticate existing user accounts against any backend.
 
+### [Adding HTTP(S) Proxy Support](/tutorials/corporate-proxy)
+
+- Add support for HTTP/HTTPS Proxy support to `openid-client` in order to use NextAuth.js behind a corporate proxy or other locked down network.
+
 ## Database
 
 ### [Custom models with TypeORM](/adapters/typeorm#custom-models)
