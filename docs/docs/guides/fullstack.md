@@ -15,6 +15,10 @@ title: Fullstack
 
 - Add support for HTTP/HTTPS Proxy support to `openid-client` in order to use NextAuth.js behind a corporate proxy or other locked down network.
 
+### [Using the Email Provider behind Corporate Email Scanning Services](/tutorials/avoid-corporate-link-checking-email-provider)
+
+- An internal tutorial on modifying the catch-all API Route to gracefully handle `HEAD` requests.
+
 ## Database
 
 ### [Custom models with TypeORM](/adapters/typeorm#custom-models)
