@@ -36,6 +36,7 @@ export function oAuth1Client(options: InternalOptions<"oauth">) {
   // Promisify getOAuth1AccessToken()  for OAuth1
   const originalGetOAuth1AccessToken =
     oauth1Client.getOAuthAccessToken.bind(oauth1Client)
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
   oauth1Client.getOAuthAccessToken = async (...args: any[]) => {
     return await new Promise((resolve, reject) => {
       originalGetOAuth1AccessToken(
@@ -52,6 +53,7 @@ export function oAuth1Client(options: InternalOptions<"oauth">) {
 
   const originalGetOAuthRequestToken =
     oauth1Client.getOAuthRequestToken.bind(oauth1Client)
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
   oauth1Client.getOAuthRequestToken = async (params = {}) => {
     return await new Promise((resolve, reject) => {
       originalGetOAuthRequestToken(
