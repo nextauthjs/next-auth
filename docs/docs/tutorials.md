@@ -51,12 +51,9 @@ title: Tutorials and Explainers
 
 ## Fullstack
 
-### [[FREE COURSE] Build a FullStack App with Next.js, Supabase & Prisma](https://themodern.dev/courses/build-a-fullstack-app-with-nextjs-supabase-and-prisma-322389284337222224)
-<svg xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '5px', marginBottom:'-6px'}} height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>External</title> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /> </svg>
+#### [Build a FullStack App with Next.js, NextAuth.js, Supabase & Prisma](https://themodern.dev/courses/build-a-fullstack-app-with-nextjs-supabase-and-prisma-322389284337222224) <svg xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '5px', marginBottom:'-6px'}} height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>External</title> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /> </svg>
 
-[![Build a FullStack App with Next js, Supabase   Prisma](https://user-images.githubusercontent.com/4352286/156037135-3f9fafb8-3f78-4393-8aae-d5447fd24dc8.png)](https://themodern.dev/courses/build-a-fullstack-app-with-nextjs-supabase-and-prisma-322389284337222224)
-
-In this course, you'll learn how to build a full-stack app using the following technologies: 
+In this [free course](https://themodern.dev/courses/build-a-fullstack-app-with-nextjs-supabase-and-prisma-322389284337222224), you'll learn how to build a full-stack app using the following technologies: 
 
 - **Next.js** -  The React framework for building the UI of the app and the REST API
 - **NextAuth.js** - For implementing passwordless and OAuth authentication 
