@@ -1,5 +1,5 @@
 ---
-id: corporate-link-checking-email-provider
+id: avoid-corporate-link-checking-email-provider
 title: Allow Email Signups Behind Corporate Link Checker
 ---
 
