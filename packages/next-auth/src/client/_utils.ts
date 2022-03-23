@@ -39,7 +39,10 @@ export async function fetchData<T = any>(
     const options = req?.headers.cookie
       ? { headers: { cookie: req.headers.cookie } }
       : {}
-    const res = await fetch(`${apiBaseUrl(__NEXTAUTH)}/${path}`, options)
+    const res = await fetch(`${apiBaseUrl(__NEXTAUTH)}/${path}`, {
+      ...options,
+      credentials: "same-origin",
+    })
     const data = await res.json()
     if (!res.ok) throw data
     return Object.keys(data).length > 0 ? data : null // Return null if data empty
