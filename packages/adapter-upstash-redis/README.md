@@ -29,9 +29,12 @@ npm install next-auth @next-auth/upstash-redis-adapter @upstash/redis
 ```js
 import NextAuth from "next-auth"
 import { UpstashRedisAdapter } from "@next-auth/upstash-adapter"
-import upstashRedisClient from "@upstash/redis"
+import { Redis } from "@upstash/redis"
 
-const redis = upstashRedisClient("UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN")
+const redis = new Redis({
+  url:"UPSTASH_REDIS_REST_URL", 
+  token:"UPSTASH_REDIS_REST_TOKEN",
+})
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options

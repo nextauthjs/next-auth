@@ -215,6 +215,13 @@ We're happy to announce we've recently created an [OpenCollective](https://openc
         <sub>🥉 Bronze Financial Sponsor</sub>
       </td>
       <td align="center" valign="top">
+        <a href="https://workos.com" target="_blank">
+          <img width="128px" src="https://avatars.githubusercontent.com/u/47638084?s=200&v=4" alt="WorkOS Logo" />
+        </a><br />
+        <div>WorkOS</div><br />
+        <sub>🥉 Bronze Financial Sponsor</sub>
+      </td>
+      <td align="center" valign="top">
         <a href="https://checklyhq.com" target="_blank">
           <img width="128px" src="https://avatars.githubusercontent.com/u/25982255?v=4" alt="Checkly Logo" />
         </a><br />
