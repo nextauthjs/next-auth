@@ -379,7 +379,11 @@ export interface EventCallbacks {
   signOut: (message: { session: Session; token: JWT }) => Awaitable<void>
   createUser: (message: { user: User }) => Awaitable<void>
   updateUser: (message: { user: User }) => Awaitable<void>
-  linkAccount: (message: { user: User; account: Account }) => Awaitable<void>
+  linkAccount: (message: {
+    user: User
+    account: Account
+    profile: User
+  }) => Awaitable<void>
   /**
    * The message object will contain one of these depending on
    * if you use JWT or database persisted sessions:
