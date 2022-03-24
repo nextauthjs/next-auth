@@ -247,13 +247,12 @@ html[data-theme="dark"] hr {
 }
 
 #carbonads .carbon-text {
-  font-size: 13px;
-  padding: 10px;
+  font-size: 11px;
+  padding: 8px;
   margin-bottom: 16px;
   line-height: 1.5;
   text-align: left;
 }
-
 #carbonads .carbon-poweredby {
   display: block;
   padding: 6px 8px;
@@ -268,4 +267,19 @@ html[data-theme="dark"] hr {
   position: absolute;
   bottom: 0;
   right: 0;
+}
+
+html[data-theme="dark"] #carbonads .carbon-text {
+  color: #ddd;
+}
+
+html[data-theme="dark"] #carbonads > span {
+  background: #1a1a1a;
+  box-shadow: 0 0 1px hsl(0deg 0% 0% / 9%), 0 0 2px hsl(0deg 0% 0% / 9%),
+    0 0 4px hsl(0deg 0% 0% / 9%), 0 0 8px hsl(0deg 0% 0% / 9%);
+}
+
+html[data-theme="dark"] #carbonads .carbon-poweredby {
+  color: #aaa;
+  background: #1e2021;
 }
