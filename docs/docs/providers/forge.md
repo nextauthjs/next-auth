@@ -36,11 +36,11 @@ const options = {
     ForgeProvider({
       clientId: process.env.FORGE_CLIENT_ID,
       clientSecret: process.env.FORGE_CLIENT_SECRET
-		  authorization: {
-		    params: {
-				  scope: "data:read data:write" 
-			  }
-			}
+      authorization: {
+        params: {
+          scope: "data:read data:write" 
+        }
+      }
     })
   ],
   ...
@@ -61,7 +61,7 @@ const options = {
     async signIn({ account, profile }) {
       if (account.provider === "forge") {
         const forgeProfile = profile as ForgeProfile;
-				return forgeProfile.emailVerified && forgeProfile.emailId.endsWith("@example.com");
+        return forgeProfile.emailVerified && forgeProfile.emailId.endsWith("@example.com");
       }
       return true // Do different verification for other providers that don't have `email_verified`
     },
