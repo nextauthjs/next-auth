@@ -19,6 +19,7 @@ const Seo = () => {
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={tagline} />
       <meta name="twitter:image" content={`${url}/img/social-media-card.png`} />
+      <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEAI6K3N&placement=next-authjsorg" id="_carbonads_js"></script>
     </Head>
   )
 }
