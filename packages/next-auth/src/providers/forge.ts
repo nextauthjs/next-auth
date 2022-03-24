@@ -23,7 +23,14 @@ export interface ForgeProfile extends Record<string, unknown> {
     // sizeX<pixels> is an integer where <pixels> represents both height and width of square profile images and values are URLs for downloading the images via HTTP.
     sizeX20: string;
     sizeX40: string;
+    sizeX50: string;
+    sizeX58: string;
     sizeX80: string;
+    sizeX120: string;
+    sizeX160: string;
+    sizeX176: string;
+    sizeX240: string;
+    sizeX360: string;
   };
   websiteUrl: string; // Website URL of the user.
   eidemGuid: string; // If the EIDM GUID value is not null, then returns EIDM Identifier otherwise returns the User Id.
