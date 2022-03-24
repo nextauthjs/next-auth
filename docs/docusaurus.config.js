@@ -136,13 +136,13 @@ module.exports = {
       respectPrefersColorScheme: true,
     },
   },
-  scripts: [
-    {
-      src: '//cdn.carbonads.com/carbon.js?serve=CEAI6K3N&placement=next-authjsorg',
-      id: '_carbonads_js',
-      async: true,
-    },
-  ],
+  // scripts: [
+  //   {
+  //     src: '//cdn.carbonads.com/carbon.js?serve=CEAI6K3N&placement=next-authjsorg',
+  //     id: '_carbonads_js',
+  //     async: true,
+  //   },
+  // ],
   presets: [
     [
       "@docusaurus/preset-classic",
