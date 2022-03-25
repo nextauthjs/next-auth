@@ -215,6 +215,7 @@ html[data-theme="dark"] hr {
   background-color: hsl(0, 0%, 98%);
   box-shadow: 0 1px 4px 1px hsla(0, 0%, 0%, 0.1);
   z-index: 100;
+  margin-top: 30px;
 }
 
 #carbonads a {
