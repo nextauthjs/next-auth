@@ -495,7 +495,7 @@ jwt: {
   async decode(params: {
     token: string
     secret: string
-  }: Promise<JWT | null>) {
+  }): Promise<JWT | null> {
     // return a `JWT` object, or `null` if decoding failed
     return {}
   },
