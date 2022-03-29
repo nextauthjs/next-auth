@@ -303,14 +303,15 @@ export function SessionProvider(props: SessionProviderProps) {
    * If session was `null`, there was an attempt to fetch it,
    * but it failed, but we still treat it as a valid initial value.
    */
-  const hasInitialSession = props.session !== undefined
+  const hasInitialSession =
+    props.session !== undefined || __NEXTAUTH._session !== undefined
 
   /** If session was passed, initialize as already synced */
   __NEXTAUTH._lastSync = hasInitialSession ? now() : 0
 
   const [session, setSession] = React.useState(() => {
-    if (hasInitialSession) __NEXTAUTH._session = props.session
-    return props.session
+    if (props.session !== undefined) __NEXTAUTH._session = props.session
+    return __NEXTAUTH._session
   })
 
   /** If session was passed, initialize as not loading */
