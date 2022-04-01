@@ -1,33 +1,20 @@
 import type { CommonProviderOptions } from "../providers"
 import type { Profile, TokenSet, User, Awaitable } from ".."
 
-import type {
-  AuthorizationParameters,
-  CallbackParamsType,
-  Issuer,
-  ClientMetadata,
-  IssuerMetadata,
-  OAuthCallbackChecks,
-  OpenIDCallbackChecks,
-  HttpOptions,
-} from "openid-client"
 import type { JWK } from "jose"
-
-type Client = InstanceType<Issuer["Client"]>
+import type { AuthorizationServer, Client } from "@panva/oauth4webapi"
 
 export type { OAuthProviderType } from "./oauth-types"
 
 type ChecksType = "pkce" | "state" | "both" | "none"
 
-export type OAuthChecks = OpenIDCallbackChecks | OAuthCallbackChecks
-
-type PartialIssuer = Partial<Pick<IssuerMetadata, "jwks_endpoint" | "issuer">>
+type PartialIssuer = Partial<Pick<AuthorizationServer, "jwks_uri" | "issuer">>
 
 type UrlParams = Record<string, unknown>
 
 type EndpointRequest<C, R, P> = (
   context: C & {
-    /** `openid-client` Client */
+    /** `oauth4webapi` Client */
     client: Client
     /** Provider is passed for convenience, ans also contains the `callbackUrl`. */
     provider: OAuthConfig<P> & {
@@ -61,8 +48,7 @@ export type EndpointHandler<
   R = any
 > = AdvancedEndpointHandler<P, C, R>
 
-export type AuthorizationEndpointHandler =
-  EndpointHandler<AuthorizationParameters>
+export type AuthorizationEndpointHandler = EndpointHandler<UrlParams>
 
 export type TokenEndpointHandler = EndpointHandler<
   UrlParams,
@@ -71,12 +57,12 @@ export type TokenEndpointHandler = EndpointHandler<
      * Parameters extracted from the request to the `/api/auth/callback/:providerId` endpoint.
      * Contains params like `state`.
      */
-    params: CallbackParamsType
+    params: URLSearchParams
     /**
      * When using this custom flow, make sure to do all the necessary security checks.
-     * Thist object contains parameters you have to match against the request to make sure it is valid.
+     * This object contains parameters you have to match against the request to make sure it is valid.
      */
-    checks: OAuthChecks
+    checks: URLSearchParams
   },
   {
     tokens: TokenSet
@@ -112,8 +98,8 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   version?: string
   profile?: (profile: P, tokens: TokenSet) => Awaitable<User & { id: string }>
   checks?: ChecksType | ChecksType[]
-  client?: Partial<ClientMetadata>
-  jwks?: { keys: JWK[] }
+  client?: Partial<Client>
+  // jwks?: { keys: JWK[] }
   clientId?: string
   clientSecret?: string
   /**
@@ -130,9 +116,6 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   region?: string
   // TODO: only allow for some
   issuer?: string
-  /** Read more at: https://github.com/panva/node-openid-client/tree/main/docs#customizing-http-requests */
-  httpOptions?: HttpOptions
-
   /**
    * The options provided by the user.
    * We will perform a deep-merge of these values

@@ -1,5 +1,8 @@
 import * as jwt from "../../../jwt"
-import { generators } from "openid-client"
+import {
+  generateRandomCodeVerifier,
+  calculatePKCECodeChallenge,
+} from "@panva/oauth4webapi"
 import type { InternalOptions } from "src/lib/types"
 import type { Cookie } from "../cookie"
 
@@ -23,8 +26,8 @@ export async function createPKCE(options: InternalOptions<"oauth">): Promise<
     // Provider does not support PKCE, return nothing.
     return
   }
-  const code_verifier = generators.codeVerifier()
-  const code_challenge = generators.codeChallenge(code_verifier)
+  const code_verifier = generateRandomCodeVerifier()
+  const code_challenge = await calculatePKCECodeChallenge(code_verifier)
 
   const expires = new Date()
   expires.setTime(expires.getTime() + PKCE_MAX_AGE * 1000)

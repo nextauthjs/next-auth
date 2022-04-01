@@ -182,15 +182,15 @@ export default function Twitter<
       token: {
         url: "https://api.twitter.com/2/oauth2/token",
         // TODO: Remove this
-        async request({ client, params, checks, provider }) {
-          const response = await client.oauthCallback(
-            provider.callbackUrl,
-            params,
-            checks,
-            { exchangeBody: { client_id: options.clientId } }
-          )
-          return { tokens: response }
-        },
+        // async request({ client, params, checks, provider }) {
+        //   const response = await client.oauthCallback(
+        //     provider.callbackUrl,
+        //     params,
+        //     checks,
+        //     { exchangeBody: { client_id: options.clientId } }
+        //   )
+        //   return { tokens: response }
+        // },
       },
       userinfo: {
         url: "https://api.twitter.com/2/users/me",

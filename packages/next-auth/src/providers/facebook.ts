@@ -18,13 +18,13 @@ export default function Facebook<
       url: "https://graph.facebook.com/me",
       // https://developers.facebook.com/docs/graph-api/reference/user/#fields
       params: { fields: "id,name,email,picture" },
-      async request({ tokens, client, provider }) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return await client.userinfo(tokens.access_token!, {
-          // @ts-expect-error
-          params: provider.userinfo?.params,
-        })
-      },
+      // async request({ tokens, client, provider }) {
+      //   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      //   return await client.userinfo(tokens.access_token!, {
+      //     // @ts-expect-error
+      //     params: provider.userinfo?.params,
+      //   })
+      // },
     },
     profile(profile: P) {
       return {

@@ -66,10 +66,10 @@
   "dependencies": {
     "@babel/runtime": "^7.16.3",
     "@panva/hkdf": "^1.0.1",
+    "@panva/oauth4webapi": "^0.0.10",
     "cookie": "^0.4.1",
     "jose": "^4.3.7",
     "oauth": "^0.9.15",
-    "openid-client": "^5.1.0",
     "preact": "^10.6.3",
     "preact-render-to-string": "^5.1.19",
     "uuid": "^8.3.2"

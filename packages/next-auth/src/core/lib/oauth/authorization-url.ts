@@ -1,9 +1,8 @@
-import { openidClient } from "./client"
 import { oAuth1Client } from "./client-legacy"
 import { createState } from "./state-handler"
 import { createPKCE } from "./pkce-handler"
+import getAuthorizationServer from "./authorization-server"
 
-import type { AuthorizationParameters } from "openid-client"
 import type { InternalOptions } from "../../../lib/types"
 import type { IncomingRequest } from "../.."
 import type { Cookie } from "../cookie"
@@ -50,28 +49,55 @@ export default async function getAuthorizationUrl(params: {
       return { redirect: url }
     }
 
-    const client = await openidClient(options)
+    const authorizationServer = await getAuthorizationServer(provider)
 
-    const authorizationParams: AuthorizationParameters = params
+    if (!authorizationServer.authorization_endpoint) throw new Error()
+    const authorizationUrl = new URL(authorizationServer.authorization_endpoint)
+
+    for (const [key, value] of Object.entries(params)) {
+      authorizationUrl.searchParams.set(key, value as string)
+    }
+
+    authorizationUrl.searchParams.set("client_id", provider.clientId as string)
+    authorizationUrl.searchParams.set("redirect_uri", provider.callbackUrl)
+
+    if (typeof provider.authorization !== "string" && provider.authorization) {
+      const { params: authorizationEndpointParams } = provider.authorization
+
+      authorizationUrl.searchParams.set(
+        "response_type",
+        (authorizationEndpointParams?.response_type as string) ?? "code"
+      )
+
+      if (!authorizationUrl.searchParams.get("scope")) {
+        authorizationUrl.searchParams.set(
+          "scope",
+          (authorizationEndpointParams?.scope as string) ??
+            "openid email profile"
+        )
+      }
+    }
+
     const cookies: Cookie[] = []
 
     const state = await createState(options)
     if (state) {
-      authorizationParams.state = state.value
+      authorizationUrl.searchParams.set("state", state.value)
       cookies.push(state.cookie)
     }
 
     const pkce = await createPKCE(options)
     if (pkce) {
-      authorizationParams.code_challenge = pkce.code_challenge
-      authorizationParams.code_challenge_method = pkce.code_challenge_method
+      authorizationUrl.searchParams.set("code_challenge", pkce.code_challenge)
+      authorizationUrl.searchParams.set(
+        "code_challenge_method",
+        pkce.code_challenge_method
+      )
       cookies.push(pkce.cookie)
     }
 
-    const url = client.authorizationUrl(authorizationParams)
-
-    logger.debug("GET_AUTHORIZATION_URL", { url, cookies })
-    return { redirect: url, cookies }
+    logger.debug("GET_AUTHORIZATION_URL", { authorizationUrl, cookies })
+    return { redirect: authorizationUrl.href, cookies }
   } catch (error) {
     logger.error("GET_AUTHORIZATION_URL_ERROR", error as Error)
     throw error

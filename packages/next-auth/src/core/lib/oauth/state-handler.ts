@@ -1,5 +1,4 @@
-import { generators } from "openid-client"
-
+import { generateRandomCodeVerifier } from "@panva/oauth4webapi"
 import type { InternalOptions } from "src/lib/types"
 import type { Cookie } from "../cookie"
 
@@ -16,7 +15,8 @@ export async function createState(
     return
   }
 
-  const state = generators.state()
+  // TODO: replace with something like generateState()
+  const state = generateRandomCodeVerifier()
 
   const encodedState = await jwt.encode({
     ...jwt,

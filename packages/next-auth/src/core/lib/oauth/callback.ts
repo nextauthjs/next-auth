@@ -1,13 +1,27 @@
-import { TokenSet } from "openid-client"
 import { openidClient } from "./client"
 import { oAuth1Client } from "./client-legacy"
 import { useState } from "./state-handler"
 import { usePKCECodeVerifier } from "./pkce-handler"
 import { OAuthCallbackError } from "../../errors"
+import {
+  authorizationCodeGrantRequest,
+  getValidatedIdTokenClaims,
+  IDToken,
+  isOAuth2Error,
+  OAuth2Error,
+  OAuth2TokenEndpointResponse,
+  OpenIDTokenEndpointResponse,
+  processAuthorizationCodeOAuth2Response,
+  processAuthorizationCodeOpenIDResponse,
+  processUserInfoResponse,
+  userInfoRequest,
+  UserInfoResponse,
+  validateAuthResponse,
+} from "@panva/oauth4webapi"
+import getAuthorizationServer from "./authorization-server"
 
-import type { CallbackParamsType } from "openid-client"
 import type { Account, LoggerInstance, Profile } from "../../.."
-import type { OAuthChecks, OAuthConfig } from "../../../providers"
+import type { OAuthConfig } from "../../../providers"
 import type { InternalOptions } from "../../../lib/types"
 import type { IncomingRequest, OutgoingResponse } from "../.."
 import type { Cookie } from "../cookie"
@@ -65,62 +79,64 @@ export default async function oAuthCallback(params: {
   }
 
   try {
-    const client = await openidClient(options)
+    const client = openidClient(provider)
+    const authorizationServer = await getAuthorizationServer(provider)
 
-    let tokens: TokenSet
+    let tokens:
+      | OpenIDTokenEndpointResponse
+      | OAuth2TokenEndpointResponse
+      | OAuth2Error
 
-    const checks: OAuthChecks = {}
     const resCookies: Cookie[] = []
 
     const state = await useState(cookies?.[options.cookies.state.name], options)
 
     if (state) {
-      checks.state = state.value
       resCookies.push(state.cookie)
     }
 
     const codeVerifier = cookies?.[options.cookies.pkceCodeVerifier.name]
     const pkce = await usePKCECodeVerifier(codeVerifier, options)
     if (pkce) {
-      checks.code_verifier = pkce.codeVerifier
       resCookies.push(pkce.cookie)
     }
 
-    const params: CallbackParamsType = {
-      ...client.callbackParams({
-        url: `http://n?${new URLSearchParams(query)}`,
-        // TODO: Ask to allow object to be passed upstream:
-        // https://github.com/panva/node-openid-client/blob/3ae206dfc78c02134aa87a07f693052c637cab84/types/index.d.ts#L439
-        // @ts-expect-error
-        body,
-        method,
-      }),
-      // @ts-expect-error
-      ...provider.token?.params,
+    const callbackParameters = validateAuthResponse(
+      authorizationServer,
+      client,
+      new URLSearchParams(query),
+      state?.value
+    )
+    if (isOAuth2Error(callbackParameters)) {
+      throw new Error()
     }
 
-    // @ts-expect-error
-    if (provider.token?.request) {
-      // @ts-expect-error
-      const response = await provider.token.request({
-        provider,
-        params,
-        checks,
+    const response = await authorizationCodeGrantRequest(
+      authorizationServer,
+      client,
+      callbackParameters,
+      provider.callbackUrl,
+      pkce?.codeVerifier as string
+    )
+    if (provider.idToken) {
+      tokens = await processAuthorizationCodeOpenIDResponse(
+        authorizationServer,
         client,
-      })
-      tokens = new TokenSet(response.tokens)
-    } else if (provider.idToken) {
-      tokens = await client.callback(provider.callbackUrl, params, checks)
+        response
+      )
     } else {
-      tokens = await client.oauthCallback(provider.callbackUrl, params, checks)
+      tokens = await processAuthorizationCodeOAuth2Response(
+        authorizationServer,
+        client,
+        response
+      )
     }
 
-    // REVIEW: How can scope be returned as an array?
-    if (Array.isArray(tokens.scope)) {
-      tokens.scope = tokens.scope.join(" ")
+    if (isOAuth2Error(tokens)) {
+      throw new Error()
     }
 
-    let profile: Profile
+    let profile: Profile | Response
     // @ts-expect-error
     if (provider.userinfo?.request) {
       // @ts-expect-error
@@ -130,16 +146,25 @@ export default async function oAuthCallback(params: {
         client,
       })
     } else if (provider.idToken) {
-      profile = tokens.claims()
+      const idToken = getValidatedIdTokenClaims(tokens)!
+
+      const { sub } = idToken
+      profile = await processUserInfoResponse(
+        authorizationServer,
+        client,
+        sub,
+        response
+      )
     } else {
-      profile = await client.userinfo(tokens, {
-        // @ts-expect-error
-        params: provider.userinfo?.params,
-      })
+      profile = await userInfoRequest(
+        authorizationServer,
+        client,
+        tokens.access_token
+      )
     }
 
     const profileResult = await getProfile({
-      profile,
+      profile: profile as Profile,
       provider,
       tokens,
       logger,
@@ -156,7 +181,7 @@ export default async function oAuthCallback(params: {
 
 export interface GetProfileParams {
   profile: Profile
-  tokens: TokenSet
+  tokens: OpenIDTokenEndpointResponse | OAuth2TokenEndpointResponse
   provider: OAuthConfig<any>
   logger: LoggerInstance
 }

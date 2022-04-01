@@ -1,9 +1,9 @@
 import type { Adapter } from "../adapters"
 import type { Provider, CredentialInput, ProviderType } from "../providers"
-import type { TokenSetParameters } from "openid-client"
 import type { JWT, JWTOptions } from "../jwt"
 import type { LoggerInstance } from "../lib/logger"
 import type { CookieSerializeOptions } from "cookie"
+import type { TokenEndpointResponse } from "@panva/oauth4webapi"
 
 export type Awaitable<T> = T | PromiseLike<T>
 
@@ -214,7 +214,7 @@ export interface Theme {
  * Some of them are available with different casing,
  * but they refer to the same value.
  */
-export type TokenSet = TokenSetParameters
+export type TokenSet = TokenEndpointResponse
 
 /**
  * Usually contains information about the provider being used

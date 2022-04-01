@@ -3631,6 +3631,11 @@
   resolved "https://registry.yarnpkg.com/@panva/hkdf/-/hkdf-1.0.1.tgz#ed0da773bd5f794d0603f5a5b5cee6d2354e5660"
   integrity sha512-mMyQ9vjpuFqePkfe5bZVIf/H3Dmk6wA8Kjxff9RcO4kqzJo+Ek9pGKwZHpeMr7Eku0QhLXMCd7fNCSnEnRMubg==
 
+"@panva/oauth4webapi@^0.0.10":
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/@panva/oauth4webapi/-/oauth4webapi-0.0.10.tgz#1c23574253d96f9734fa3c49179b136a285c7ccd"
+  integrity sha512-bDlNsdCw/xPMe6iN08dRkcOiU3U8TYvexhQqS+26rfqaK3e81wIY4aUNvrsOfdp23/gd08AI1z391Kx1fTKfXA==
+
 "@polka/url@^1.0.0-next.20":
   version "1.0.0-next.21"
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.21.tgz#5de5a2385a35309427f6011992b544514d559aa1"
