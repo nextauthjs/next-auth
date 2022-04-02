@@ -141,7 +141,7 @@ Prisma supports MongoDB, and so does NextAuth.js. Following the instructions of 
 id  String  @id @default(auto()) @map("_id") @db.ObjectId
 ```
 
-2. The Native database type attribute to @db.String from @db.Text.
+2. The Native database type attribute to `@db.String` from `@db.Text`.
 
 ```prisma
 refresh_token      String?  @db.String
