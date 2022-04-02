@@ -2,10 +2,10 @@ import type { NextMiddleware, NextFetchEvent } from "next/server"
 import type { Awaitable, NextAuthOptions } from ".."
 import type { JWT } from "../jwt"
 
-import { NextResponse, NextRequest } from "next/server"
+import { NextRequest, NextResponse } from "next/server";
 
-import { getToken } from "../jwt"
-import parseUrl from "../lib/parse-url"
+import { getToken } from "../jwt";
+import parseUrl from "../lib/parse-url";
 
 type AuthorizedCallback = (params: {
   token: JWT | null
@@ -21,6 +21,26 @@ export interface NextAuthMiddlewareOptions {
    * [Documentation](https://next-auth.js.org/configuration/pages)
    */
   pages?: NextAuthOptions["pages"]
+
+  /**
+   * Pages to exclude from middleware, can be used for api routes, or unprotected routes.
+   * 
+   * ---
+   * [Documentation](https://next-auth.js.org/getting-started/nextjs/middleware#ignored)
+   */
+  ignored: {
+    /**
+   * The root of paths to ignore, such as `/api`. This would exclude all paths starting with `/api`.
+   * 
+   * ---
+   * [Documentation](https://next-auth.js.org/getting-started/nextjs/middleware#ignored-pages)
+   */
+    roots: string[]
+    /**
+     * Full paths to ignore, such as `/terms`. This would exclude all paths equal to `/terms`. 
+    */
+    paths: string[]
+  }
   callbacks?: {
     /**
      * Callback that receives the user's JWT payload
@@ -61,10 +81,14 @@ async function handleMiddleware(
   const signInPage = options?.pages?.signIn ?? "/api/auth/signin"
   const errorPage = options?.pages?.error ?? "/api/auth/error"
   const basePath = parseUrl(process.env.NEXTAUTH_URL).path
+  const ignoredRoots = options?.ignored?.roots ?? []
+  const ignoredPaths = options?.ignored?.paths ?? []
   // Avoid infinite redirect loop
   if (
     req.nextUrl.pathname.startsWith(basePath) ||
-    [signInPage, errorPage].includes(req.nextUrl.pathname)
+    [signInPage, errorPage].includes(req.nextUrl.pathname) ||
+    ignoredRoots.some(root => req.nextUrl.pathname.startsWith(root)) ||
+    ignoredPaths.includes(req.nextUrl.pathname)
   ) {
     return
   }
@@ -130,7 +154,7 @@ export function withAuth(...args: WithAuthArgs) {
     const options = args[1] as NextAuthMiddlewareOptions | undefined
     return async (...args: Parameters<NextMiddleware>) =>
       await handleMiddleware(args[0], options, async (token) => {
-        ;(args[0] as any).nextauth = { token }
+        ; (args[0] as any).nextauth = { token }
         return await middleware(...args)
       })
   }

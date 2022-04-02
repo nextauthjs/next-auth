@@ -67,6 +67,25 @@ See the documentation for the [pages option](/configuration/pages) for more info
 
 ---
 
+### `ignored`
+
+- **Required**: _No_
+
+#### Description
+
+Exclude specific paths or roots from middleware.
+
+#### Example (default value)
+
+```js
+ignored: {
+  roots: ["/api"], // Any pages beginning with `/api` will be excluded from middleware. 
+  paths: ["/terms", "/folder/page"] // Any pages equal to the given paths will be excluded from middleware. 
+}
+```
+
+---
+
 ### Examples
 
 `withAuth` is very flexible, there are multiple ways to use it.
