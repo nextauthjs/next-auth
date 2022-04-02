@@ -2,10 +2,10 @@ import type { NextMiddleware, NextFetchEvent } from "next/server"
 import type { Awaitable, NextAuthOptions } from ".."
 import type { JWT } from "../jwt"
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server"
 
-import { getToken } from "../jwt";
-import parseUrl from "../lib/parse-url";
+import { getToken } from "../jwt"
+import parseUrl from "../lib/parse-url"
 
 type AuthorizedCallback = (params: {
   token: JWT | null
@@ -31,9 +31,6 @@ export interface NextAuthMiddlewareOptions {
   ignored: {
     /**
    * The root of paths to ignore, such as `/api`. This would exclude all paths starting with `/api`.
-   * 
-   * ---
-   * [Documentation](https://next-auth.js.org/getting-started/nextjs/middleware#ignored-pages)
    */
     roots: string[]
     /**
