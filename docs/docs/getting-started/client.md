@@ -123,7 +123,7 @@ export default function App({
 }
 
 function Auth({ children }) {
-  // with required:true status can only be loading or authenticated
+  // if `{ required: true }` is supplied, `status` can only be "loading" or "authenticated"
   const { status } = useSession({ required: true })
 
   if (status === 'loading') {
