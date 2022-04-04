@@ -285,7 +285,7 @@ JSON Web Tokens can be used for session tokens, but are also used for lots of ot
 
 - Advantages of using a JWT as a session token include that they do not require a database to store sessions, this can be faster and cheaper to run and easier to scale.
 
-- JSON Web Tokens in NextAuth.js are secured using cryptographic encryption (JWE) to store include information directly in a JWT session token that you wish to keep secret and use the token to pass information between services / APIs on the same domain without having to contact a database to verify them.
+- JSON Web Tokens in NextAuth.js are secured using cryptographic encryption (JWE) to store the included information directly in a JWT session token. You may then use the token to pass information between services and APIs on the same domain without having to contact a database to verify the included information.
 
 - You can use JWT to securely store information you do not mind the client knowing even without encryption, as the JWT is stored in a server-readable-only cookie so data in the JWT is not accessible to third party JavaScript running on your site.
 
