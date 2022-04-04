@@ -84,5 +84,10 @@ module.exports = {
         "guides/testing",
       ],
     },
+    {
+      type: "html",
+      value: '<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEAI6K3N&placement=next-authjsorg" id="_carbonads_js"></script>',
+      defaultStyle: true
+    },
   ],
 }
