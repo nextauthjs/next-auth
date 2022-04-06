@@ -107,7 +107,7 @@ export default async function oAuthCallback(params: {
       state?.value
     )
     if (isOAuth2Error(callbackParameters)) {
-      throw new Error()
+      throw new OAuthCallbackError(callbackParameters.error)
     }
 
     const response = await authorizationCodeGrantRequest(
@@ -147,7 +147,7 @@ export default async function oAuthCallback(params: {
     }
 
     if (isOAuth2Error(tokens)) {
-      throw new Error()
+      throw new OAuthCallbackError(tokens.error)
     }
 
     let profile: Profile | Response
