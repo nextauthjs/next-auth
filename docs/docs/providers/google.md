@@ -11,6 +11,11 @@ https://developers.google.com/identity/protocols/oauth2
 
 https://console.developers.google.com/apis/credentials
 
+The "Authorized redirect URIs" used when creating the credentials must include your full domain and end in the callback path. For example;
+
+- `https://example.com/api/auth/callback/google`
+- For development `http://localhost:3000/api/auth/callback/google`
+
 ## Options
 
 The **Google Provider** comes with a set of default options:
