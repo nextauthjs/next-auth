@@ -6,7 +6,7 @@ import type { AuthorizationServer, Client } from "@panva/oauth4webapi"
 
 export type { OAuthProviderType } from "./oauth-types"
 
-type ChecksType = "pkce" | "state" | "both" | "none"
+type ChecksType = "pkce" | "state" | "none"
 
 type PartialIssuer = Partial<Pick<AuthorizationServer, "jwks_uri" | "issuer">>
 

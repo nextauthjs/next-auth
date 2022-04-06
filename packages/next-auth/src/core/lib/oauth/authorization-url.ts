@@ -64,27 +64,23 @@ export default async function getAuthorizationUrl(params: {
     if (typeof provider.authorization !== "string" && provider.authorization) {
       const { params: authorizationEndpointParams } = provider.authorization
 
-      authorizationUrl.searchParams.set(
-        "response_type",
-        (authorizationEndpointParams?.response_type as string) ?? "code"
-      )
+      if (authorizationEndpointParams) {
+        if (typeof authorizationEndpointParams.response_type === "string")
+          authorizationUrl.searchParams.set(
+            "response_type",
+            authorizationEndpointParams.response_type
+          )
 
-      if (!authorizationUrl.searchParams.get("scope")) {
-        authorizationUrl.searchParams.set(
-          "scope",
-          (authorizationEndpointParams?.scope as string) ??
-            "openid email profile"
-        )
+        if (typeof authorizationEndpointParams.scope === "string") {
+          authorizationUrl.searchParams.set(
+            "scope",
+            authorizationEndpointParams.scope
+          )
+        }
       }
     }
 
     const cookies: Cookie[] = []
-
-    const state = await createState(options)
-    if (state) {
-      authorizationUrl.searchParams.set("state", state.value)
-      cookies.push(state.cookie)
-    }
 
     const pkce = await createPKCE(options)
     if (pkce) {
@@ -94,6 +90,12 @@ export default async function getAuthorizationUrl(params: {
         pkce.code_challenge_method
       )
       cookies.push(pkce.cookie)
+    } else {
+      const state = await createState(options)
+      if (state) {
+        authorizationUrl.searchParams.set("state", state.value)
+        cookies.push(state.cookie)
+      }
     }
 
     logger.debug("GET_AUTHORIZATION_URL", { authorizationUrl, cookies })
