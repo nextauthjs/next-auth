@@ -1,6 +1,6 @@
-import { generateRandomCodeVerifier } from "@panva/oauth4webapi"
 import type { InternalOptions } from "src/lib/types"
 import type { Cookie } from "../cookie"
+import { generateRandomState } from "./helper"
 
 const STATE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 
@@ -15,8 +15,7 @@ export async function createState(
     return
   }
 
-  // TODO: replace with something like generateState()
-  const state = generateRandomCodeVerifier()
+  const state = generateRandomState()
 
   const encodedState = await jwt.encode({
     ...jwt,

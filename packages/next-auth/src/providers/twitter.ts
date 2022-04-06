@@ -1,4 +1,10 @@
 import type { OAuthConfig, OAuthUserConfig } from "."
+import {
+  authorizationCodeGrantRequest,
+  AuthorizationServer,
+  isOAuth2Error,
+  processAuthorizationCodeOAuth2Response,
+} from "@panva/oauth4webapi"
 
 export interface TwitterLegacyProfile {
   id: number
@@ -182,15 +188,35 @@ export default function Twitter<
       token: {
         url: "https://api.twitter.com/2/oauth2/token",
         // TODO: Remove this
-        // async request({ client, params, checks, provider }) {
-        //   const response = await client.oauthCallback(
-        //     provider.callbackUrl,
-        //     params,
-        //     checks,
-        //     { exchangeBody: { client_id: options.clientId } }
-        //   )
-        //   return { tokens: response }
-        // },
+        async request({ client, params, checks, provider }) {
+          const as: AuthorizationServer = {
+            issuer: options.issuer as string,
+            // @ts-expect-error
+            token_endpoint: provider.token?.url,
+          }
+          const additionalParameters = new URLSearchParams()
+          additionalParameters.append("client_id", options.clientId)
+          const response = await authorizationCodeGrantRequest(
+            as,
+            client,
+            params,
+            provider.callbackUrl,
+            checks.get("code_verifier") as string,
+            {
+              additionalParameters,
+            }
+          )
+          const tokens = await processAuthorizationCodeOAuth2Response(
+            as,
+            client,
+            response
+          )
+
+          if (isOAuth2Error(tokens)) {
+            throw new Error()
+          }
+          return { tokens }
+        },
       },
       userinfo: {
         url: "https://api.twitter.com/2/users/me",

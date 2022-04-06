@@ -72,7 +72,7 @@ export type TokenEndpointHandler = EndpointHandler<
 export type UserinfoEndpointHandler = EndpointHandler<
   UrlParams,
   { tokens: TokenSet },
-  Profile
+  Profile | Response
 >
 
 export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
@@ -99,7 +99,7 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   profile?: (profile: P, tokens: TokenSet) => Awaitable<User & { id: string }>
   checks?: ChecksType | ChecksType[]
   client?: Partial<Client>
-  // jwks?: { keys: JWK[] }
+  jwks?: { keys: JWK[] }
   clientId?: string
   clientSecret?: string
   /**

@@ -6,7 +6,6 @@ import { OAuthCallbackError } from "../../errors"
 import {
   authorizationCodeGrantRequest,
   getValidatedIdTokenClaims,
-  IDToken,
   isOAuth2Error,
   OAuth2Error,
   OAuth2TokenEndpointResponse,
@@ -15,7 +14,6 @@ import {
   processAuthorizationCodeOpenIDResponse,
   processUserInfoResponse,
   userInfoRequest,
-  UserInfoResponse,
   validateAuthResponse,
 } from "@panva/oauth4webapi"
 import getAuthorizationServer from "./authorization-server"
@@ -25,6 +23,7 @@ import type { OAuthConfig } from "../../../providers"
 import type { InternalOptions } from "../../../lib/types"
 import type { IncomingRequest, OutgoingResponse } from "../.."
 import type { Cookie } from "../cookie"
+import { URLSearchParams } from "url"
 
 export default async function oAuthCallback(params: {
   options: InternalOptions<"oauth">
@@ -33,7 +32,7 @@ export default async function oAuthCallback(params: {
   method: Required<IncomingRequest>["method"]
   cookies: IncomingRequest["cookies"]
 }): Promise<GetProfileResult & { cookies?: OutgoingResponse["cookies"] }> {
-  const { options, query, body, method, cookies } = params
+  const { options, query, body, cookies } = params
   const { logger, provider } = options
 
   const errorMessage = body?.error ?? query?.error
@@ -118,7 +117,22 @@ export default async function oAuthCallback(params: {
       provider.callbackUrl,
       pkce?.codeVerifier as string
     )
-    if (provider.idToken) {
+    if (typeof provider.token !== "string" && provider.token?.request) {
+      const params = {
+        ...callbackParameters,
+        ...provider.token?.params,
+      }
+      const checks = new URLSearchParams()
+      if (state) checks.append("state", state.value)
+      if (pkce) checks.append("code_verifier", pkce.codeVerifier)
+      const response = await provider.token.request({
+        provider,
+        params,
+        checks,
+        client,
+      })
+      tokens = response.tokens
+    } else if (provider.idToken) {
       tokens = await processAuthorizationCodeOpenIDResponse(
         authorizationServer,
         client,
@@ -137,22 +151,19 @@ export default async function oAuthCallback(params: {
     }
 
     let profile: Profile | Response
-    // @ts-expect-error
-    if (provider.userinfo?.request) {
-      // @ts-expect-error
+    if (typeof provider.userinfo !== "string" && provider.userinfo?.request) {
       profile = await provider.userinfo.request({
         provider,
         tokens,
         client,
       })
     } else if (provider.idToken) {
-      const idToken = getValidatedIdTokenClaims(tokens)!
+      const idToken = getValidatedIdTokenClaims(tokens)
 
-      const { sub } = idToken
       profile = await processUserInfoResponse(
         authorizationServer,
         client,
-        sub,
+        idToken?.sub as string,
         response
       )
     } else {

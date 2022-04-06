@@ -1,3 +1,4 @@
+import { AuthorizationServer, userInfoRequest } from "@panva/oauth4webapi"
 import type { OAuthConfig, OAuthUserConfig } from "."
 
 export interface FacebookProfile {
@@ -18,13 +19,19 @@ export default function Facebook<
       url: "https://graph.facebook.com/me",
       // https://developers.facebook.com/docs/graph-api/reference/user/#fields
       params: { fields: "id,name,email,picture" },
-      // async request({ tokens, client, provider }) {
-      //   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      //   return await client.userinfo(tokens.access_token!, {
-      //     // @ts-expect-error
-      //     params: provider.userinfo?.params,
-      //   })
-      // },
+      async request({ tokens, client, provider }) {
+        // @ts-expect-error
+        const userinfo_endpoint = new URL(provider.userinfo?.url)
+        // @ts-expect-error
+        Object.entries(provider.userinfo?.params).forEach(([key, value]) => {
+          userinfo_endpoint.searchParams.append(key, value as string)
+        })
+        const as: AuthorizationServer = {
+          issuer: options.issuer as string,
+          userinfo_endpoint: userinfo_endpoint.href,
+        }
+        return await userInfoRequest(as, client, tokens.access_token)
+      },
     },
     profile(profile: P) {
       return {

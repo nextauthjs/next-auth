@@ -8,8 +8,8 @@ export default async function getAuthorizationServer(
 ): Promise<AuthorizationServer> {
   if (provider.idToken) {
     const issuer = new URL(provider.issuer as string)
-    return await discoveryRequest(issuer).then((response) =>
-      processDiscoveryResponse(issuer, response)
+    return await discoveryRequest(issuer).then(
+      async (response) => await processDiscoveryResponse(issuer, response)
     )
   } else {
     return {
