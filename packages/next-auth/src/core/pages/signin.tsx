@@ -123,7 +123,7 @@ export default function SigninPage(props: SignInServerPageParams) {
                 <input
                   id={`input-email-for-${provider.id}-provider`}
                   autoFocus
-                  type="text"
+                  type="email"
                   name="email"
                   value={email}
                   placeholder="email@example.com"
