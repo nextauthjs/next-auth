@@ -123,16 +123,14 @@ export default function App({
 }
 
 function Auth({ children }) {
-  const { data: session, status } = useSession({ required: true })
-  const isUser = session?.user
+  // if `{ required: true }` is supplied, `status` can only be "loading" or "authenticated"
+  const { status } = useSession({ required: true })
 
-  if (isUser) {
-    return children
+  if (status === 'loading') {
+    return <div>Loading...</div>
   }
-
-  // Session is being fetched, or no user.
-  // If no user, useEffect() will redirect.
-  return <div>Loading...</div>
+  
+  return children
 }
 ```
 
