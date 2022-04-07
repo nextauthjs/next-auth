@@ -114,8 +114,6 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   idToken?: boolean
   // TODO: only allow for BattleNet
   region?: string
-  // TODO: only allow for some
-  issuer?: string
   /**
    * The options provided by the user.
    * We will perform a deep-merge of these values

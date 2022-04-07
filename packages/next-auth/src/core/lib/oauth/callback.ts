@@ -5,11 +5,10 @@ import { usePKCECodeVerifier } from "./pkce-handler"
 import { OAuthCallbackError } from "../../errors"
 import {
   authorizationCodeGrantRequest,
+  clientCredentialsGrantRequest,
+  expectNoState,
   getValidatedIdTokenClaims,
   isOAuth2Error,
-  OAuth2Error,
-  OAuth2TokenEndpointResponse,
-  OpenIDTokenEndpointResponse,
   processAuthorizationCodeOAuth2Response,
   processAuthorizationCodeOpenIDResponse,
   processUserInfoResponse,
@@ -23,7 +22,11 @@ import type { OAuthConfig } from "../../../providers"
 import type { InternalOptions } from "../../../lib/types"
 import type { IncomingRequest, OutgoingResponse } from "../.."
 import type { Cookie } from "../cookie"
-import { URLSearchParams } from "url"
+import type {
+  OAuth2Error,
+  OAuth2TokenEndpointResponse,
+  OpenIDTokenEndpointResponse,
+} from "@panva/oauth4webapi"
 
 export default async function oAuthCallback(params: {
   options: InternalOptions<"oauth">
@@ -86,25 +89,30 @@ export default async function oAuthCallback(params: {
       | OAuth2TokenEndpointResponse
       | OAuth2Error
 
+    let expectedState: string | typeof expectNoState | undefined
     const resCookies: Cookie[] = []
 
+    const codeVerifier = cookies?.[options.cookies.pkceCodeVerifier.name]
+    const pkce = await usePKCECodeVerifier(
+      codeVerifier,
+      authorizationServer,
+      options
+    )
     const state = await useState(cookies?.[options.cookies.state.name], options)
 
-    if (state) {
-      resCookies.push(state.cookie)
-    }
-
-    const codeVerifier = cookies?.[options.cookies.pkceCodeVerifier.name]
-    const pkce = await usePKCECodeVerifier(codeVerifier, options)
     if (pkce) {
       resCookies.push(pkce.cookie)
+      expectedState = expectNoState
+    } else if (state) {
+      resCookies.push(state.cookie)
+      expectedState = state.value
     }
 
     const callbackParameters = validateAuthResponse(
       authorizationServer,
       client,
       new URLSearchParams(query),
-      state?.value
+      expectedState
     )
     if (isOAuth2Error(callbackParameters)) {
       throw new OAuthCallbackError(callbackParameters.error)
@@ -117,6 +125,7 @@ export default async function oAuthCallback(params: {
       provider.callbackUrl,
       pkce?.codeVerifier as string
     )
+
     if (typeof provider.token !== "string" && provider.token?.request) {
       const params = {
         ...callbackParameters,

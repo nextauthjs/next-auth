@@ -64,25 +64,23 @@ export default async function getAuthorizationUrl(params: {
     if (typeof provider.authorization !== "string" && provider.authorization) {
       const { params: authorizationEndpointParams } = provider.authorization
 
-      if (authorizationEndpointParams) {
-        if (typeof authorizationEndpointParams.response_type === "string")
-          authorizationUrl.searchParams.set(
-            "response_type",
-            authorizationEndpointParams.response_type
-          )
-
-        if (typeof authorizationEndpointParams.scope === "string") {
-          authorizationUrl.searchParams.set(
-            "scope",
-            authorizationEndpointParams.scope
-          )
-        }
+      if (typeof authorizationEndpointParams?.response_type === "string") {
+        authorizationUrl.searchParams.set(
+          "response_type",
+          authorizationEndpointParams.response_type
+        )
+      }
+      if (typeof authorizationEndpointParams?.scope === "string") {
+        authorizationUrl.searchParams.set(
+          "scope",
+          authorizationEndpointParams.scope
+        )
       }
     }
 
     const cookies: Cookie[] = []
 
-    const pkce = await createPKCE(options)
+    const pkce = await createPKCE(authorizationServer, options)
     if (pkce) {
       authorizationUrl.searchParams.set("code_challenge", pkce.code_challenge)
       authorizationUrl.searchParams.set(

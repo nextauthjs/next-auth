@@ -5,6 +5,7 @@ import {
 } from "@panva/oauth4webapi"
 import type { InternalOptions } from "src/lib/types"
 import type { Cookie } from "../cookie"
+import type { AuthorizationServer } from "@panva/oauth4webapi"
 
 const PKCE_CODE_CHALLENGE_METHOD = "S256"
 const PKCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
@@ -13,7 +14,10 @@ const PKCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
  * Returns `code_challenge` and `code_challenge_method`
  * and saves them in a cookie.
  */
-export async function createPKCE(options: InternalOptions<"oauth">): Promise<
+export async function createPKCE(
+  authorizationServer: AuthorizationServer,
+  options: InternalOptions<"oauth">
+): Promise<
   | undefined
   | {
       code_challenge: string
@@ -22,7 +26,11 @@ export async function createPKCE(options: InternalOptions<"oauth">): Promise<
     }
 > {
   const { cookies, logger, provider } = options
-  if (!provider.checks?.includes("pkce")) {
+  const { code_challenge_methods_supported } = authorizationServer
+  if (
+    !provider.checks?.includes("pkce") ||
+    code_challenge_methods_supported?.length === 0
+  ) {
     // Provider does not support PKCE, return nothing.
     return
   }
@@ -63,11 +71,17 @@ export async function createPKCE(options: InternalOptions<"oauth">): Promise<
  */
 export async function usePKCECodeVerifier(
   codeVerifier: string | undefined,
+  authorizationServer: AuthorizationServer,
   options: InternalOptions<"oauth">
 ): Promise<{ codeVerifier: string; cookie: Cookie } | undefined> {
   const { cookies, provider } = options
+  const { code_challenge_methods_supported } = authorizationServer
 
-  if (!provider?.checks?.includes("pkce") || !codeVerifier) {
+  if (
+    !provider?.checks?.includes("pkce") ||
+    !codeVerifier ||
+    code_challenge_methods_supported?.length === 0
+  ) {
     return
   }
 
