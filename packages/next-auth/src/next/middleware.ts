@@ -1,6 +1,6 @@
 import type { NextMiddleware, NextFetchEvent } from "next/server"
 import type { Awaitable, NextAuthOptions } from ".."
-import type { JWT } from "../jwt"
+import type { JWT, JWTOptions } from "../jwt"
 
 import { NextResponse, NextRequest } from "next/server"
 
@@ -20,7 +20,8 @@ export interface NextAuthMiddlewareOptions {
    * ---
    * [Documentation](https://next-auth.js.org/configuration/pages)
    */
-  pages?: NextAuthOptions["pages"]
+  pages?: NextAuthOptions["pages"],
+  decode?: JWTOptions["decode"],
   callbacks?: {
     /**
      * Callback that receives the user's JWT payload
@@ -81,7 +82,7 @@ async function handleMiddleware(
     return NextResponse.redirect(errorUrl)
   }
 
-  const token = await getToken({ req: req as any })
+  const token = await getToken({ req: req as any, decode: options?.decode })
 
   const isAuthorized =
     (await options?.callbacks?.authorized?.({ req, token })) ?? !!token
