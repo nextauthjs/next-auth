@@ -5,7 +5,6 @@ import {
 } from "@panva/oauth4webapi"
 import type { InternalOptions } from "src/lib/types"
 import type { Cookie } from "../cookie"
-import type { AuthorizationServer } from "@panva/oauth4webapi"
 
 const PKCE_CODE_CHALLENGE_METHOD = "S256"
 const PKCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
@@ -14,26 +13,12 @@ const PKCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
  * Returns `code_challenge` and `code_challenge_method`
  * and saves them in a cookie.
  */
-export async function createPKCE(
-  authorizationServer: AuthorizationServer,
-  options: InternalOptions<"oauth">
-): Promise<
-  | undefined
-  | {
-      code_challenge: string
-      code_challenge_method: "S256"
-      cookie: Cookie
-    }
-> {
-  const { cookies, logger, provider } = options
-  const { code_challenge_methods_supported } = authorizationServer
-  if (
-    !provider.checks?.includes("pkce") ||
-    code_challenge_methods_supported?.length === 0
-  ) {
-    // Provider does not support PKCE, return nothing.
-    return
-  }
+export async function createPKCE(options: InternalOptions<"oauth">): Promise<{
+  code_challenge: string
+  code_challenge_method: "S256"
+  cookie: Cookie
+}> {
+  const { cookies, logger } = options
   const code_verifier = generateRandomCodeVerifier()
   const code_challenge = await calculatePKCECodeChallenge(code_verifier)
 
@@ -66,32 +51,26 @@ export async function createPKCE(
 }
 
 /**
- * Returns code_verifier if provider uses PKCE,
+ * Returns `code_verifier`,
  * and clears the container cookie afterwards.
  */
 export async function usePKCECodeVerifier(
   codeVerifier: string | undefined,
-  authorizationServer: AuthorizationServer,
   options: InternalOptions<"oauth">
-): Promise<{ codeVerifier: string; cookie: Cookie } | undefined> {
-  const { cookies, provider } = options
-  const { code_challenge_methods_supported } = authorizationServer
+): Promise<{ codeVerifier: string; cookie: Cookie }> {
+  if (codeVerifier === undefined) throw new Error("Invalid code verifier")
 
-  if (
-    !provider?.checks?.includes("pkce") ||
-    !codeVerifier ||
-    code_challenge_methods_supported?.length === 0
-  ) {
-    return
-  }
+  const { cookies } = options
 
-  const pkce = (await jwt.decode({
+  const pkce = await jwt.decode({
     ...options.jwt,
     token: codeVerifier,
-  })) as any
+  })
+
+  if (pkce === null) throw new Error("Invalid code verifier")
 
   return {
-    codeVerifier: pkce?.code_verifier ?? undefined,
+    codeVerifier: pkce.code_verifier as string,
     cookie: {
       name: cookies.pkceCodeVerifier.name,
       value: "",

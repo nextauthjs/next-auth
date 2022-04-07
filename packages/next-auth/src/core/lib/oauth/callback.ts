@@ -5,7 +5,6 @@ import { usePKCECodeVerifier } from "./pkce-handler"
 import { OAuthCallbackError } from "../../errors"
 import {
   authorizationCodeGrantRequest,
-  clientCredentialsGrantRequest,
   expectNoState,
   getValidatedIdTokenClaims,
   isOAuth2Error,
@@ -89,29 +88,26 @@ export default async function oAuthCallback(params: {
       | OAuth2TokenEndpointResponse
       | OAuth2Error
 
-    let expectedState: string | typeof expectNoState | undefined
+    let expectedState: string | typeof expectNoState = expectNoState
     const resCookies: Cookie[] = []
+    const authParams = new URLSearchParams(query)
 
     const codeVerifier = cookies?.[options.cookies.pkceCodeVerifier.name]
-    const pkce = await usePKCECodeVerifier(
-      codeVerifier,
-      authorizationServer,
-      options
-    )
+    const pkce = await usePKCECodeVerifier(codeVerifier, options)
+    resCookies.push(pkce.cookie)
+
     const state = await useState(cookies?.[options.cookies.state.name], options)
 
-    if (pkce) {
-      resCookies.push(pkce.cookie)
-      expectedState = expectNoState
-    } else if (state) {
+    if (state) {
       resCookies.push(state.cookie)
       expectedState = state.value
+      authParams.append("state", state.value)
     }
 
     const callbackParameters = validateAuthResponse(
       authorizationServer,
       client,
-      new URLSearchParams(query),
+      authParams,
       expectedState
     )
     if (isOAuth2Error(callbackParameters)) {
@@ -123,7 +119,7 @@ export default async function oAuthCallback(params: {
       client,
       callbackParameters,
       provider.callbackUrl,
-      pkce?.codeVerifier as string
+      pkce.codeVerifier
     )
 
     if (typeof provider.token !== "string" && provider.token?.request) {

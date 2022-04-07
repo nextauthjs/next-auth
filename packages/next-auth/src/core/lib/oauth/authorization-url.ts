@@ -80,20 +80,18 @@ export default async function getAuthorizationUrl(params: {
 
     const cookies: Cookie[] = []
 
-    const pkce = await createPKCE(authorizationServer, options)
-    if (pkce) {
-      authorizationUrl.searchParams.set("code_challenge", pkce.code_challenge)
-      authorizationUrl.searchParams.set(
-        "code_challenge_method",
-        pkce.code_challenge_method
-      )
-      cookies.push(pkce.cookie)
-    } else {
-      const state = await createState(options)
-      if (state) {
-        authorizationUrl.searchParams.set("state", state.value)
-        cookies.push(state.cookie)
-      }
+    const pkce = await createPKCE(options)
+    authorizationUrl.searchParams.set("code_challenge", pkce.code_challenge)
+    authorizationUrl.searchParams.set(
+      "code_challenge_method",
+      pkce.code_challenge_method
+    )
+    cookies.push(pkce.cookie)
+
+    const state = await createState(options)
+    if (state) {
+      authorizationUrl.searchParams.set("state", state.value)
+      cookies.push(state.cookie)
     }
 
     logger.debug("GET_AUTHORIZATION_URL", { authorizationUrl, cookies })
