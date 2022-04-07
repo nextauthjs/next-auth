@@ -400,7 +400,7 @@ As with the `signIn()` function, you can specify a `callbackUrl` parameter by pa
 
 e.g. `signOut({ callbackUrl: 'http://localhost:3000/foo' })`
 
-The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect-callback). By default it requires the URL to be an absolute URL at the same host name, or a relative url starting with a slash. If it does not match it will redirect to the homepage. You can define your own [redirect callback](/configuration/callbacks#redirect-callback) to allow other URLs.
+The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect-callback). By default, it requires the URL to be an absolute URL at the same host name, or you can also supply a relative URL starting with a slash. If it does not match it will redirect to the homepage. You can define your own [redirect callback](/configuration/callbacks#redirect-callback) to allow other URLs.
 
 ### Using the `redirect: false` option
 
