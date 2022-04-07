@@ -310,7 +310,7 @@ You can specify a different `callbackUrl` by specifying it as the second argumen
 
 e.g.
 
-- `signIn(null, { callbackUrl: 'http://localhost:3000/foo' })`
+- `signIn(undefined, { callbackUrl: 'http://localhost:3000/foo' })`
 - `signIn('google', { callbackUrl: 'http://localhost:3000/foo' })`
 - `signIn('email', { email, callbackUrl: 'http://localhost:3000/foo' })`
 
