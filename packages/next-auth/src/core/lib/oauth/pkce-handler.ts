@@ -5,9 +5,20 @@ import {
 } from "@panva/oauth4webapi"
 import type { InternalOptions } from "src/lib/types"
 import type { Cookie } from "../cookie"
+import type { AuthorizationServer } from "@panva/oauth4webapi"
 
 const PKCE_CODE_CHALLENGE_METHOD = "S256"
 const PKCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
+
+/**
+ * Check if PKCE is supported by the authorization server.
+ * @see {@link https://datatracker.ietf.org/doc/html/rfc8414#section-2 code_challenge_methods_supported}
+ * @param as The authorization server. @see {@link https://github.com/panva/oauth4webapi/blob/main/docs/interfaces/AuthorizationServer.md AuthorizationServer}
+ * @returns boolean
+ */
+export function isPKCENotSupported(as: AuthorizationServer) {
+  return as.code_challenge_methods_supported?.includes("S256")
+}
 
 /**
  * Returns `code_challenge` and `code_challenge_method`

@@ -1,7 +1,10 @@
 import { openidClient } from "./client"
 import { oAuth1Client } from "./client-legacy"
 import { useState } from "./state-handler"
-import { usePKCECodeVerifier } from "./pkce-handler"
+import {
+  usePKCECodeVerifier,
+  isPKCENotSupported as isPKCESupported,
+} from "./pkce-handler"
 import { OAuthCallbackError } from "../../errors"
 import {
   authorizationCodeGrantRequest,
@@ -96,9 +99,10 @@ export default async function oAuthCallback(params: {
     const pkce = await usePKCECodeVerifier(codeVerifier, options)
     resCookies.push(pkce.cookie)
 
+    const shouldIncludeState = !isPKCESupported(authorizationServer)
     const state = await useState(cookies?.[options.cookies.state.name], options)
 
-    if (state) {
+    if (shouldIncludeState && state) {
       resCookies.push(state.cookie)
       expectedState = state.value
       authParams.append("state", state.value)
@@ -129,7 +133,7 @@ export default async function oAuthCallback(params: {
       }
       const checks = new URLSearchParams()
       if (state) checks.append("state", state.value)
-      if (pkce) checks.append("code_verifier", pkce.codeVerifier)
+      checks.append("code_verifier", pkce.codeVerifier)
       const response = await provider.token.request({
         provider,
         params,
