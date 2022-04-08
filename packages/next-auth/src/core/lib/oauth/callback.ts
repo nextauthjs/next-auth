@@ -1,10 +1,7 @@
 import { openidClient } from "./client"
 import { oAuth1Client } from "./client-legacy"
 import { useState } from "./state-handler"
-import {
-  usePKCECodeVerifier,
-  isPKCENotSupported as isPKCESupported,
-} from "./pkce-handler"
+import { usePKCECodeVerifier } from "./pkce-handler"
 import { OAuthCallbackError } from "../../errors"
 import {
   authorizationCodeGrantRequest,
@@ -96,13 +93,16 @@ export default async function oAuthCallback(params: {
     const authParams = new URLSearchParams(query)
 
     const codeVerifier = cookies?.[options.cookies.pkceCodeVerifier.name]
-    const pkce = await usePKCECodeVerifier(codeVerifier, options)
+    const pkce = await usePKCECodeVerifier(
+      codeVerifier,
+      options,
+      authorizationServer
+    )
     resCookies.push(pkce.cookie)
 
-    const shouldIncludeState = !isPKCESupported(authorizationServer)
     const state = await useState(cookies?.[options.cookies.state.name], options)
 
-    if (shouldIncludeState && state) {
+    if (!pkce.isSupported && state) {
       resCookies.push(state.cookie)
       expectedState = state.value
       authParams.append("state", state.value)

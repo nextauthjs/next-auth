@@ -14,20 +14,25 @@ const PKCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
  * Check if PKCE is supported by the authorization server.
  * @see {@link https://datatracker.ietf.org/doc/html/rfc8414#section-2 code_challenge_methods_supported}
  * @param as The authorization server. @see {@link https://github.com/panva/oauth4webapi/blob/main/docs/interfaces/AuthorizationServer.md AuthorizationServer}
- * @returns boolean
  */
-export function isPKCENotSupported(as: AuthorizationServer) {
-  return as.code_challenge_methods_supported?.includes("S256")
+function isPKCESupported(as: AuthorizationServer) {
+  return !!as.code_challenge_methods_supported?.includes(
+    PKCE_CODE_CHALLENGE_METHOD
+  )
 }
 
 /**
  * Returns `code_challenge` and `code_challenge_method`
  * and saves them in a cookie.
  */
-export async function createPKCE(options: InternalOptions<"oauth">): Promise<{
+export async function createPKCE(
+  options: InternalOptions<"oauth">,
+  as: AuthorizationServer
+): Promise<{
   code_challenge: string
   code_challenge_method: "S256"
   cookie: Cookie
+  isSupported: boolean
 }> {
   const { cookies, logger } = options
   const code_verifier = generateRandomCodeVerifier()
@@ -58,6 +63,7 @@ export async function createPKCE(options: InternalOptions<"oauth">): Promise<{
       value: encryptedCodeVerifier,
       options: { ...cookies.pkceCodeVerifier.options, expires },
     },
+    isSupported: isPKCESupported(as),
   }
 }
 
@@ -67,8 +73,9 @@ export async function createPKCE(options: InternalOptions<"oauth">): Promise<{
  */
 export async function usePKCECodeVerifier(
   codeVerifier: string | undefined,
-  options: InternalOptions<"oauth">
-): Promise<{ codeVerifier: string; cookie: Cookie }> {
+  options: InternalOptions<"oauth">,
+  as: AuthorizationServer
+): Promise<{ codeVerifier: string; cookie: Cookie; isSupported: boolean }> {
   if (codeVerifier === undefined) throw new Error("Invalid code verifier")
 
   const { cookies } = options
@@ -87,5 +94,6 @@ export async function usePKCECodeVerifier(
       value: "",
       options: { ...cookies.pkceCodeVerifier.options, maxAge: 0 },
     },
+    isSupported: isPKCESupported(as),
   }
 }
