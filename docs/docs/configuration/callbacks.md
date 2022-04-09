@@ -87,7 +87,7 @@ The default redirect callback looks like this:
 ```js title="pages/api/auth/[...nextauth].js"
 ...
 callbacks: {
-  redirect({ url, baseUrl }) {
+  async redirect({ url, baseUrl }) {
     if (url.startsWith(baseUrl)) return url
     // Allows relative callback URLs
     else if (url.startsWith("/")) return new URL(url, baseUrl).toString()
