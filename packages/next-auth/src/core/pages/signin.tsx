@@ -127,6 +127,7 @@ export default function SigninPage(props: SignInServerPageParams) {
                   name="email"
                   value={email}
                   placeholder="email@example.com"
+                  required
                 />
                 <button type="submit">Sign in with {provider.name}</button>
               </form>
