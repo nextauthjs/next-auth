@@ -45,6 +45,10 @@ title: Tutorials and Explainers
 
 - Learn how to use Sign-In With Ethereum to authenticate your users with their existing Ethereum wallets - identifiers they personally control.
 
+#### [Create a Typescript-friendly getServerSideProps HOC to perform server-side auth](https://github.com/timfee/nextauthjs-server-side-props-wrapper) <svg xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '5px', marginBottom:'-6px'}} height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>External</title> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /> </svg>
+
+- Take advantage of `InferGetServerSidePropsType` in your pages' `getServerSideProps` with this approach to adding NextAuth session information using a  `withAuthSsr` HOC
+
 ## Fullstack
 
 #### [Build a FullStack App with Next.js, NextAuth.js, Supabase & Prisma](https://themodern.dev/courses/build-a-fullstack-app-with-nextjs-supabase-and-prisma-322389284337222224) <svg xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '5px', marginBottom:'-6px'}} height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>External</title> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /> </svg>
