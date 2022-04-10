@@ -87,7 +87,7 @@ The default redirect callback looks like this:
 ```js title="pages/api/auth/[...nextauth].js"
 ...
 callbacks: {
-  redirect({ url, baseUrl }) {
+  async redirect({ url, baseUrl }) {
     if (url.startsWith(baseUrl)) return url
     // Allows relative callback URLs
     else if (url.startsWith("/")) return new URL(url, baseUrl).toString()
@@ -104,7 +104,7 @@ The redirect callback may be invoked more than once in the same flow.
 ## JWT callback
 
 This callback is called whenever a JSON Web Token is created (i.e. at sign
-in) or updated (i.e whenever a session is accessed in the client). The returned value will be [signed and optionally encrypted](/configuration/options#jwt), and it is stored in a cookie.
+in) or updated (i.e whenever a session is accessed in the client). The returned value will be [encrypted](/configuration/options#jwt), and it is stored in a cookie.
 
 Requests to `/api/auth/signin`, `/api/auth/session` and calls to `getSession()`, `useSession()` will invoke this function, but only if you are using a [JWT session](/configuration/options#session). This method is not invoked when you persist sessions in a database.
 
