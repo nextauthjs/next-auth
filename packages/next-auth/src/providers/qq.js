@@ -45,7 +45,6 @@ export default function TencentQQ(options) {
         return {...await userInfoResponse.json(), openid: openIDInfo.openid};
       },
     },
-
     profile(profile) {
       return {
         id: profile.openid,
@@ -54,7 +53,6 @@ export default function TencentQQ(options) {
         image: profile.figureurl_qq_2 || profile.figureurl_qq_1
       };
     },
-
     options
   };
 }
