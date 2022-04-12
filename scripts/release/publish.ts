@@ -39,8 +39,10 @@ export async function publish(options: {
     } else {
       console.log("token is set?:", process.env.NPM_TOKEN?.length)
 
-      const npmrc = `echo "//registry.npmjs.org/:_authToken=${process.env.NPM_TOKEN}" >> .npmrc`
+      const npmrc =
+        'echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc'
       execSync(npmrc, { cwd: pkg.path })
+      execSync("cat .npmrc", { cwd: pkg.path })
     }
 
     execSync(npmPublish, { cwd: pkg.path })
