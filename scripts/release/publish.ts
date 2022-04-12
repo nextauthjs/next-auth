@@ -25,9 +25,10 @@ export async function publish(options: {
     }
 
     let npmPublish = `npm publish --access public --registry=https://registry.npmjs.org`
+    const isPkg = pkg.name === "next-auth"
     // We use different tokens for `next-auth` and `@next-auth/*` packages
 
-    if (pkg.name === "next-auth") {
+    if (isPkg) {
       process.env.NPM_TOKEN = process.env.NPM_TOKEN_PKG
     } else {
       process.env.NPM_TOKEN = process.env.NPM_TOKEN_ORG
@@ -37,10 +38,15 @@ export async function publish(options: {
       console.log(`Dry run, skip npm publish for package ${pkg.name}...`)
       npmPublish += " --dry-run"
     } else {
-      const npmrc = `echo "//registry.npmjs.org/:_authToken=${process.env.NPM_TOKEN}" >> .npmrc`
+      console.log("token is set?:", process.env.NPM_TOKEN?.length)
+
+      const npmrc = `echo "//registry.npmjs.${
+        isPkg ? "com" : "org"
+      }/:_authToken=${process.env.NPM_TOKEN}" >> .npmrc`
       execSync(npmrc, { cwd: pkg.path })
     }
 
+    execSync("ls", { cwd: pkg.path })
     execSync(npmPublish, { cwd: pkg.path })
   }
 
