@@ -38,9 +38,11 @@ export async function publish(options: {
       npmPublish += " --dry-run"
     } else {
       const npmrc =
-        'echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc'
+        'echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc'
       execSync(npmrc, { cwd: pkg.path })
     }
+
+    execSync("npm whoami", { cwd: pkg.path })
 
     execSync(npmPublish, { cwd: pkg.path })
   }
