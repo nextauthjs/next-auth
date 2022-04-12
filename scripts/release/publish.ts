@@ -42,7 +42,6 @@ export async function publish(options: {
       const npmrc =
         'echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc'
       execSync(npmrc, { cwd: pkg.path })
-      execSync("cat .npmrc", { cwd: pkg.path })
     }
 
     execSync(npmPublish, { cwd: pkg.path })
