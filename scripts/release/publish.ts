@@ -22,12 +22,10 @@ export async function publish(options: {
       )
       await pkgJson.update(pkg.path, { version: pkg.newVersion })
       console.log("package.json file has been written, publishing...")
-      console.log("updated package.json", await pkgJson.read(pkg.path))
     }
 
     let npmPublish = `npm publish --access public --registry=https://registry.npmjs.org`
     // We use different tokens for `next-auth` and `@next-auth/*` packages
-    console.log("pkg", pkg)
 
     if (pkg.name === "next-auth") {
       process.env.NPM_TOKEN = process.env.NPM_TOKEN_PKG
