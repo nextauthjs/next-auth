@@ -21,6 +21,23 @@ export interface NextAuthMiddlewareOptions {
    * [Documentation](https://next-auth.js.org/configuration/pages)
    */
   pages?: NextAuthOptions["pages"]
+
+  /**
+   * You can override the default cookie names and options for any of the cookies
+   * by this middleware. Similar to `cookies` in `NextAuth`.
+   * 
+   * Useful if the token is stored in not a default cookie.
+   * 
+   * ---
+   * [Documentation](https://next-auth.js.org/configuration/options#cookies)
+   *
+   * - ⚠ **This is an advanced option.** Advanced options are passed the same way as basic options,
+   * but **may have complex implications** or side effects.
+   * You should **try to avoid using advanced options** unless you are very comfortable using them.
+   *
+   */
+  cookies?: Partial<NextAuthOptions["cookies"]>
+
   callbacks?: {
     /**
      * Callback that receives the user's JWT payload
@@ -81,7 +98,7 @@ async function handleMiddleware(
     return NextResponse.redirect(errorUrl)
   }
 
-  const token = await getToken({ req: req as any })
+  const token = await getToken({ req: req as any, cookieName: options?.cookies?.sessionToken?.name })
 
   const isAuthorized =
     (await options?.callbacks?.authorized?.({ req, token })) ?? !!token
