@@ -1,6 +1,5 @@
 # Misc
 .DS_Store
-.npmrc
 
 .env
 .env.local
