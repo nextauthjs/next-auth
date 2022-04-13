@@ -1,3 +1,4 @@
+import { createHash } from "crypto"
 import type { Commit, PackageToRelease } from "./types"
 
 import { debug, pkgJson, execSync } from "./utils"
@@ -36,7 +37,14 @@ export async function publish(options: {
     if (dryRun) {
       console.log(`Dry run, skip npm publish for package ${pkg.name}...`)
       npmPublish += " --dry-run"
+    } else {
+      execSync(
+        "echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > .npmrc",
+        { cwd: pkg.path }
+      )
     }
+
+    execSync("npm config list", { cwd: pkg.path })
 
     execSync(npmPublish, { cwd: pkg.path })
   }
