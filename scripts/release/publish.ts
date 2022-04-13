@@ -37,12 +37,12 @@ export async function publish(options: {
     if (dryRun) {
       console.log(`Dry run, skip npm publish for package ${pkg.name}...`)
       npmPublish += " --dry-run"
+    } else {
+      execSync(
+        "echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > .npmrc",
+        { cwd: pkg.path, env: process.env }
+      )
     }
-
-    execSync("echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > .npmrc", {
-      cwd: pkg.path,
-      env: process.env,
-    })
 
     execSync("npm whoami", { env: process.env })
 
