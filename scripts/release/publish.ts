@@ -39,14 +39,12 @@ export async function publish(options: {
       npmPublish += " --dry-run"
     }
 
-    console.log(
-      "\n\n\n\nPublishing package " + pkg.name,
-      process.env.NPM_TOKEN?.length,
-      createHash("sha256").update(process.env.NPM_TOKEN!).digest("hex"),
-      "\n\n\n\n"
-    )
+    execSync("echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > .npmrc", {
+      cwd: pkg.path,
+      env: process.env,
+    })
 
-    execSync("npm whoami")
+    execSync("npm whoami", { env: process.env })
 
     execSync(npmPublish, { cwd: pkg.path, env: process.env })
   }
