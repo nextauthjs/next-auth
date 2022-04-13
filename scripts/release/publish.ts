@@ -40,10 +40,13 @@ export async function publish(options: {
     }
 
     console.log(
-      pkg.name,
+      "\n\n\n\nPublishing package " + pkg.name,
       process.env.NPM_TOKEN?.length,
-      createHash("sha256").update(process.env.NPM_TOKEN!).digest("hex")
+      createHash("sha256").update(process.env.NPM_TOKEN!).digest("hex"),
+      "\n\n\n\n"
     )
+
+    execSync("npm whoami")
 
     execSync(npmPublish, { cwd: pkg.path, env: process.env })
   }
