@@ -1,3 +1,4 @@
+import { createHash } from "crypto"
 import type { Commit, PackageToRelease } from "./types"
 
 import { debug, pkgJson, execSync } from "./utils"
@@ -38,7 +39,13 @@ export async function publish(options: {
       npmPublish += " --dry-run"
     }
 
-    execSync(npmPublish, { cwd: pkg.path })
+    console.log(
+      pkg.name,
+      process.env.NPM_TOKEN?.length,
+      createHash("sha256").update(process.env.NPM_TOKEN!).digest("hex")
+    )
+
+    execSync(npmPublish, { cwd: pkg.path, env: process.env })
   }
 
   if (dryRun) {
