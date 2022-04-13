@@ -40,13 +40,13 @@ export async function publish(options: {
     } else {
       execSync(
         "echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > .npmrc",
-        { cwd: pkg.path, env: process.env }
+        { cwd: pkg.path }
       )
     }
 
-    execSync("npm whoami", { env: process.env })
+    execSync("npm config list", { cwd: pkg.path })
 
-    execSync(npmPublish, { cwd: pkg.path, env: process.env })
+    execSync(npmPublish, { cwd: pkg.path })
   }
 
   if (dryRun) {
