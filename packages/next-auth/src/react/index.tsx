@@ -359,6 +359,12 @@ export function SessionProvider(props: SessionProviderProps) {
     }
 
     __NEXTAUTH._getSession()
+
+    return () => {
+      __NEXTAUTH._lastSync = 0
+      __NEXTAUTH._session = undefined
+      __NEXTAUTH._getSession = () => {}
+    }
   }, [])
 
   React.useEffect(() => {
