@@ -82,9 +82,9 @@ export default function Kakao<P extends Record<string, any> = KakaoProfile>(
     profile(profile) {
       return {
         id: profile.id,
-        name: profile.kakao_account?.profile.nickname,
+        name: profile.kakao_account?.profile?.nickname,
         email: profile.kakao_account?.email,
-        image: profile.kakao_account?.profile.profile_image_url,
+        image: profile.kakao_account?.profile?.profile_image_url,
       }
     },
     options,
