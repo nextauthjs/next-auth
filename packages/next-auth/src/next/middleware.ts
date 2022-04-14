@@ -1,5 +1,5 @@
 import type { NextMiddleware, NextFetchEvent } from "next/server"
-import type { Awaitable, NextAuthOptions } from ".."
+import type { Awaitable, CookieOption, NextAuthOptions } from ".."
 import type { JWT } from "../jwt"
 
 import { NextResponse, NextRequest } from "next/server"
@@ -36,7 +36,7 @@ export interface NextAuthMiddlewareOptions {
    * You should **try to avoid using advanced options** unless you are very comfortable using them.
    *
    */
-  cookies?: Partial<NextAuthOptions["cookies"]>
+  cookies?: Partial<Record<keyof Pick<keyof NextAuthOptions["cookies"], "sessionToken">, Omit<CookieOption, "options">>>
 
   callbacks?: {
     /**
