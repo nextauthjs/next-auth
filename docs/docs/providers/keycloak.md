@@ -37,5 +37,5 @@ providers: [
 ```
 
 :::note
-`issuer` should include the realm – e.g. `https://my-keycloak-domain.com/auth/realms/My_Realm`
+`issuer` should include the realm – e.g. `https://my-keycloak-domain.com/realms/My_Realm`
 :::
