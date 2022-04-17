@@ -67,32 +67,6 @@ See the documentation for the [pages option](/configuration/pages) for more info
 
 ---
 
-### `cookies`
-
-- **Required**: _No_
-
-#### Description
-
-If you are using middleware to protect your routes and you use specific cookies in your NextAuth
-specific cookies in your NextAuth configuration, or you want to use two different tokens for two different
-for two different middlewares, you can specify the cookie in which the token is stored 
-the token.
-
-:::note
-Currently, only the `sessionToken` cookie can be overwritten
-:::
-
-#### Example (default value)
-```js
-cookies: {
-  sessionToken: {
-    name: `__s42.auth-token`,
-  }
-}
-```
-
----
-
 ### Examples
 
 `withAuth` is very flexible, there are multiple ways to use it.
