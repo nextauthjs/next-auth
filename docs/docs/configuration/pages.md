@@ -51,7 +51,7 @@ The following errors are passed as error query parameters to the default or over
 - **SessionRequired**: The content of this page requires you to be signed in at all times. See [useSession](/getting-started/client#require-session) for configuration.
 - **Default**: Catch all, will apply, if none of the above matched
 
-Example: `/auth/error?error=Default`
+Example: `/auth/signin?error=Default`
 
 ## Theming
 
