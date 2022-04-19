@@ -16,26 +16,27 @@ jobs:
     steps:
       - name: Init
         uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.0.1
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
           node-version: 16
-          cache: "yarn"
+          cache: "pnpm"
       - name: Cache Node Modules
         id: cache-node
         uses: actions/cache@v2
         with:
           path: "**/node_modules"
-          key: cache-node_modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
+          key: cache-node_modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ github.run_id }}
           restore-keys: |
-            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
-            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-
+            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ github.run_id }}
+            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-
       - name: Install dependencies
-        run: yarn --prefer-offline --frozen-lockfile
+        run: pnpm install
       - name: Build
-        run: yarn build
+        run: pnpm run build
       - name: Run tests
-        run: yarn test
+        run: pnpm run test
         env:
           UPSTASH_REDIS_URL: ${{ secrets.UPSTASH_REDIS_URL }}
           UPSTASH_REDIS_KEY: ${{ secrets.UPSTASH_REDIS_KEY }}
@@ -59,23 +60,23 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 16
-          cache: "yarn"
+          cache: "pnpm"
       - name: Cache Node Modules
         id: cache-node
         uses: actions/cache@v2
         with:
           path: "**/node_modules"
-          key: cache-node_modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
+          key: cache-node_modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ github.run_id }}
           restore-keys: |
-            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
-            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-
+            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ github.run_id }}
+            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-
       - name: Install dependencies
-        run: yarn --prefer-offline --frozen-lockfile
+        run: pnpm install
       - name: Publish to npm and GitHub
         run: |
           git config --global user.email "balazsorban44@users.noreply.github.com"
           git config --global user.name "Balázs Orbán"
-          yarn release
+          pnpm run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN_PKG: ${{ secrets.NPM_TOKEN_PKG }}
@@ -93,18 +94,18 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 16
-          cache: "yarn"
+          cache: "pnpm"
       - name: Cache Node Modules
         id: cache-node
         uses: actions/cache@v2
         with:
           path: "**/node_modules"
-          key: cache-node_modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
+          key: cache-node_modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ github.run_id }}
           restore-keys: |
-            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
-            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-
+            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ github.run_id }}
+            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-
       - name: Install dependencies
-        run: yarn --prefer-offline --frozen-lockfile
+        run: pnpm install
       - name: Determine version
         uses: ./.github/version-pr
         id: determine-version
