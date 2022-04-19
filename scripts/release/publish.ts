@@ -10,7 +10,7 @@ export async function publish(options: {
 }) {
   const { dryRun, packages, RELEASE_COMMIT_MSG } = options
 
-  execSync("yarn build")
+  execSync("pnpm run build")
 
   for await (const pkg of packages) {
     if (dryRun) {

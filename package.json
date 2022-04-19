@@ -17,7 +17,7 @@
     "lint:fix": "turbo run lint -- --fix",
     "test": "turbo run test --concurrency=1 --scope=!@next-auth/pouchdb-adapter --scope=!next-auth-*",
     "setup": "turbo run setup",
-    "dev": "yarn dev:app",
+    "dev": "pnpm run dev:app",
     "dev:app": "turbo run dev --parallel --no-deps --no-cache --scope=next-auth-app",
     "dev:docs": "turbo run dev --parallel --no-deps --no-cache --scope=next-auth-docs",
     "version:pr": "node ./config/version-pr",
@@ -26,6 +26,7 @@
   "devDependencies": {
     "@actions/core": "^1.6.0",
     "@commitlint/parse": "16.0.0",
+    "@types/node": "^17.0.25",
     "@types/semver": "7.3.9",
     "@typescript-eslint/eslint-plugin": "^5.10.2",
     "@typescript-eslint/parser": "^4.33.0",
@@ -38,6 +39,7 @@
     "eslint-plugin-promise": "^6.0.0",
     "git-log-parser": "1.2.0",
     "husky": "^7.0.4",
+    "pnpm": "^6.32.8",
     "prettier": "2.4.1",
     "pretty-quick": "^3.1.2",
     "semver": "7.3.5",
@@ -102,7 +104,7 @@
     "**/tests",
     "**/__tests__"
   ],
-  "packageManager": "yarn@1.22.17",
+  "packageManager": "pnpm@6.32.8",
   "funding": [
     {
       "type": "github",
