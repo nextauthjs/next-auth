@@ -97,7 +97,7 @@ Default values for this option are shown below:
 ```js
 session: {
   // Choose how you want to save the user session.
-  // The default is `"jwt"`, an encrypted JWT (JWE) in the session cookie.
+  // The default is `"jwt"`, an encrypted JWT (JWE) stored in the session cookie.
   // If you use an `adapter` however, we default it to `"database"` instead.
   // You can still force a JWT session by explicitly defining `"jwt"`.
   // When using `"database"`, the session cookie will only contain a `sessionToken` value,
