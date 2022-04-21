@@ -2,7 +2,7 @@ import { EncryptJWT, jwtDecrypt } from "jose"
 import hkdf from "@panva/hkdf"
 import { v4 as uuid } from "uuid"
 import { SessionStore } from "../core/lib/cookie"
-import type { NextApiRequest } from "next"
+import type { NextApiRequest, NextRequest } from "next"
 import type { JWT, JWTDecodeParams, JWTEncodeParams, JWTOptions } from "./types"
 import type { LoggerInstance } from ".."
 
