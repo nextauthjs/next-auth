@@ -2,13 +2,6 @@
   "name": "root",
   "version": "0.0.0",
   "private": true,
-  "workspaces": {
-    "packages": [
-      "packages/*",
-      "apps/dev",
-      "docs"
-    ]
-  },
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "scripts": {
     "build:app": "turbo run build --scope=next-auth-app --include-dependencies",
@@ -39,7 +32,6 @@
     "eslint-plugin-promise": "^6.0.0",
     "git-log-parser": "1.2.0",
     "husky": "^7.0.4",
-    "pnpm": "^6.32.8",
     "prettier": "2.4.1",
     "pretty-quick": "^3.1.2",
     "semver": "7.3.5",
@@ -49,7 +41,8 @@
     "typescript": "^4.5.2"
   },
   "engines": {
-    "node": "^12.19.0 || ^14.15.0 || ^16.13.0"
+    "node": "^12.19.0 || ^14.15.0 || ^16.13.0",
+    "pnpm": ">=6.32.3"
   },
   "prettier": {
     "semi": false,
