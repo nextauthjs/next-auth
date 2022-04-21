@@ -6,13 +6,13 @@
   "scripts": {
     "clean": "rm -rf .next",
     "copy:css": "cpx \"../../packages/next-auth/css/**/*\" src/css --watch",
-    "watch:css": "cd ../../packages/next-auth && npm run watch:css",
-    "dev": "npm-run-all --parallel dev:next watch:css copy:css",
-    "dev:next": "npx next dev",
-    "build": "npx next build",
+    "watch:css": "cd ../../packages/next-auth && pnpm run watch:css",
+    "dev": "concurrently \"pnpm run dev:next\" \"pnpm run watch:css\" \"pnpm run copy:css\"",
+    "dev:next": "next dev",
+    "build": "next build",
     "start": "next start",
-    "email": "npx fake-smtp-server",
-    "start:email": "npm run email"
+    "email": "fake-smtp-server",
+    "start:email": "pnpm run email"
   },
   "license": "ISC",
   "dependencies": {
@@ -24,13 +24,13 @@
     "faunadb": "^4.4.1",
     "next": "^12.1.0",
     "nodemailer": "^6.7.2",
-    "npm-run-all": "^4.1.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },
   "devDependencies": {
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.11",
+    "concurrently": "^7.1.0",
     "prisma": "^3.10.0"
   }
 }

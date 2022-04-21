@@ -44,7 +44,7 @@ export async function publish(options: {
       )
     }
 
-    execSync(`${npmPublish}`, { cwd: pkg.path })
+    execSync(npmPublish, { cwd: pkg.path })
   }
 
   if (dryRun) {
