@@ -75,9 +75,9 @@ export default function IndexPage() {
 To extend/augment this type, create a `types/next-auth.d.ts` file in your project:
 
 ```ts title="types/next-auth.d.ts"
-import NextAuth from "next-auth"
+import NextAuth from "next-auth/core/types"
 
-declare module "next-auth" {
+declare module "next-auth/core/types" {
   /**
    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
@@ -97,9 +97,9 @@ By default, TypeScript will merge new interface properties and overwrite existin
 If you want to keep the default session user properties, you need to add them back into the newly declared interface:
 
 ```ts title="types/next-auth.d.ts"
-import NextAuth, { DefaultSession } from "next-auth"
+import NextAuth, { DefaultSession } from "next-auth/core/types"
 
-declare module "next-auth" {
+declare module "next-auth/core/types" {
   /**
    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
