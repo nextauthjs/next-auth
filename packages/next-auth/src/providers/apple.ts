@@ -5,7 +5,7 @@ import { OAuthConfig, OAuthUserConfig } from "."
  * [Retrieve the User's Information from Apple ID Servers
 ](https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_rest_api/authenticating_users_with_sign_in_with_apple#3383773)
  */
-export interface AppleProfile {
+export interface AppleProfile extends Record<string, any> {
   /**
    * The issuer registered claim identifies the principal that issued the identity token.
    * Since Apple generates the token, the value is `https://appleid.apple.com`.
@@ -87,7 +87,7 @@ export interface AppleProfile {
   auth_time: number
 }
 
-export default function Apple<P extends Record<string, any> = AppleProfile>(
+export default function Apple<P extends AppleProfile>(
   options: Omit<OAuthUserConfig<P>, "clientSecret"> & {
     /**
      * Apple requires the client secret to be a JWT. You can generate one using the following script:
