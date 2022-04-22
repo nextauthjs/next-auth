@@ -1,6 +1,6 @@
 import type { OAuthConfig, OAuthUserConfig } from "."
 
-export interface SlackProfile {
+export interface SlackProfile extends Record<string, any> {
   ok: boolean
   sub: string
   "https://slack.com/user_id": string
@@ -32,7 +32,7 @@ export interface SlackProfile {
   "https://slack.com/team_image_default": boolean
 }
 
-export default function Slack<P extends Record<string, any> = SlackProfile>(
+export default function Slack<P extends SlackProfile>(
   options: OAuthUserConfig<P>
 ): OAuthConfig<P> {
   return {

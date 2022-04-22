@@ -1,6 +1,6 @@
 import type { OAuthConfig, OAuthUserConfig } from "."
 
-export interface ZoomProfile {
+export interface ZoomProfile extends Record<string, any> {
   id: string
   first_name: string
   last_name: string
@@ -29,7 +29,7 @@ export interface ZoomProfile {
   status: string
 }
 
-export default function Zoom<P extends Record<string, any> = ZoomProfile>(
+export default function Zoom<P extends ZoomProfile>(
   options: OAuthUserConfig<P>
 ): OAuthConfig<P> {
   return {

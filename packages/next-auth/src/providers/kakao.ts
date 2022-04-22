@@ -19,7 +19,7 @@ export type AgeRange =
  * https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#req-user-info
  * type from : https://gist.github.com/ziponia/cdce1ebd88f979b2a6f3f53416b56a77
  */
-export interface KakaoProfile {
+export interface KakaoProfile extends Record<string, any> {
   id: number
   has_signed_up?: boolean
   connected_at?: DateTime
@@ -66,7 +66,7 @@ export interface KakaoProfile {
   }
 }
 
-export default function Kakao<P extends Record<string, any> = KakaoProfile>(
+export default function Kakao<P extends KakaoProfile>(
   options: OAuthUserConfig<P>
 ): OAuthConfig<P> {
   return {
@@ -81,7 +81,7 @@ export default function Kakao<P extends Record<string, any> = KakaoProfile>(
     },
     profile(profile) {
       return {
-        id: profile.id,
+        id: String(profile.id),
         name: profile.kakao_account?.profile?.nickname,
         email: profile.kakao_account?.email,
         image: profile.kakao_account?.profile?.profile_image_url,

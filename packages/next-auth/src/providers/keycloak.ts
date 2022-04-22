@@ -1,6 +1,6 @@
 import type { OAuthConfig, OAuthUserConfig } from "."
 
-export interface KeycloakProfile {
+export interface KeycloakProfile extends Record<string, any> {
   exp: number
   iat: number
   auth_time: number
@@ -24,9 +24,9 @@ export interface KeycloakProfile {
   user: any
 }
 
-export default function Keycloak<
-  P extends Record<string, any> = KeycloakProfile
->(options: OAuthUserConfig<P>): OAuthConfig<P> {
+export default function Keycloak<P extends KeycloakProfile>(
+  options: OAuthUserConfig<P>
+): OAuthConfig<P> {
   return {
     id: "keycloak",
     name: "Keycloak",
