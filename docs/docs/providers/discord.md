@@ -15,7 +15,7 @@ https://discord.com/developers/applications
 
 The **Discord Provider** comes with a set of default options:
 
-- [Discord Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/discord.js)
+- [Discord Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/discord.ts)
 
 You can override any of the options to suit your own use case.
 
