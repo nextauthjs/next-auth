@@ -90,23 +90,15 @@ export default function SignIn({ providers }) {
   )
 }
 
-// This is the recommended way for Next.js 9.3 or newer
 export async function getServerSideProps(context) {
   const providers = await getProviders()
   return {
     props: { providers },
   }
 }
-
-/*
-// If older than Next.js 9.3
-SignIn.getInitialProps = async () => {
-  return {
-    providers: await getProviders()
-  }
-}
-*/
 ```
+
+There is another, more fully styled example signin page available [here](https://github.com/ndom91/next-auth-example-sign-in-page).
 
 ### Email Sign in
 
@@ -128,22 +120,12 @@ export default function SignIn({ csrfToken }) {
   )
 }
 
-// This is the recommended way for Next.js 9.3 or newer
 export async function getServerSideProps(context) {
   const csrfToken = await getCsrfToken(context)
   return {
     props: { csrfToken },
   }
 }
-
-/*
-// If older than Next.js 9.3
-SignIn.getInitialProps = async (context) => {
-  return {
-    csrfToken: await getCsrfToken(context)
-  }
-}
-*/
 ```
 
 You can also use the `signIn()` function which will handle obtaining the CSRF token for you:
@@ -176,7 +158,6 @@ export default function SignIn({ csrfToken }) {
   )
 }
 
-// This is the recommended way for Next.js 9.3 or newer
 export async function getServerSideProps(context) {
   return {
     props: {
@@ -184,15 +165,6 @@ export async function getServerSideProps(context) {
     },
   }
 }
-
-/*
-// If older than Next.js 9.3
-SignIn.getInitialProps = async (context) => {
-  return {
-    csrfToken: await getCsrfToken(context)
-  }
-}
-*/
 ```
 
 You can also use the `signIn()` function which will handle obtaining the CSRF token for you:

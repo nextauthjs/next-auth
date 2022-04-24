@@ -23,7 +23,7 @@ The **Credentials Provider** comes with a set of default options:
 
 You can override any of the options to suit your own use case.
 
-## Example
+## Example - Username / Password
 
 The Credentials provider is specified like other providers, except that you need to define a handler for `authorize()` that accepts credentials submitted via HTTP POST as input and returns either:
 
@@ -73,9 +73,15 @@ providers: [
 
 See the [callbacks documentation](/configuration/callbacks) for more information on how to interact with the token.
 
+## Example - Web3 / Signin With Ethereum
+
+The credentials provider is very flexible and can be used to integrate with a service like [SIWE](https://login.xyz), for example.
+
+For more information, check out the [tutorial](https://docs.login.xyz/integrations/nextauth.js) and [example app](https://github.com/spruceid/siwe-next-auth-example).
+
 ## Multiple providers
 
-### Example code
+### Example
 
 You can specify more than one credentials provider by specifying a unique `id` for each one.
 
