@@ -75,9 +75,13 @@ See the [callbacks documentation](/configuration/callbacks) for more information
 
 ## Example - Web3 / Signin With Ethereum
 
-The credentials provider is very flexible and can be used to integrate with a service like [SIWE](https://login.xyz), for example.
+The credentials provider can also be used to integrate with a service like [Sign-in With Ethereum](https://login.xyz).
 
-For more information, check out the [tutorial](https://docs.login.xyz/integrations/nextauth.js) and [example app](https://github.com/spruceid/siwe-next-auth-example).
+For more information, check out the links below:
+
+- [Tutorial](https://docs.login.xyz/integrations/nextauth.js)
+- [Example App Repo](https://github.com/spruceid/siwe-next-auth-example).
+- [Example App Demo](https://siwe-next-auth-example2.vercel.app/).
 
 ## Multiple providers
 
