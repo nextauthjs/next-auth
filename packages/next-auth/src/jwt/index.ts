@@ -91,7 +91,7 @@ export async function getToken<R extends boolean = false>(
 
   let token = sessionStore.value
 
-  let authorizationHeader =
+  const authorizationHeader =
     req.headers instanceof Headers
       ? req.headers.get("authorization")
       : req.headers.authorization
