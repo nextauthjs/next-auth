@@ -16,12 +16,10 @@ jobs:
     steps:
       - name: Init
         uses: actions/checkout@v2
-      - uses: pnpm/action-setup@v2.0.1
-      - name: Setup Node
-        uses: actions/setup-node@v2
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.1
         with:
-          node-version: 16
-          cache: "pnpm"
+          version: 6.32.8
       - name: Cache Node Modules
         id: cache-node
         uses: actions/cache@v2
@@ -56,11 +54,10 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Setup Node
-        uses: actions/setup-node@v2
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.1
         with:
-          node-version: 16
-          cache: "pnpm"
+          version: 6.32.8
       - name: Cache Node Modules
         id: cache-node
         uses: actions/cache@v2
@@ -90,11 +87,10 @@ jobs:
     steps:
       - name: Init
         uses: actions/checkout@v2
-      - name: Setup Node
-        uses: actions/setup-node@v2
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.1
         with:
-          node-version: 16
-          cache: "pnpm"
+          version: 6.32.8
       - name: Cache Node Modules
         id: cache-node
         uses: actions/cache@v2
