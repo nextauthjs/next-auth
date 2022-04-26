@@ -2,7 +2,8 @@ import { EncryptJWT, jwtDecrypt } from "jose"
 import hkdf from "@panva/hkdf"
 import { v4 as uuid } from "uuid"
 import { SessionStore } from "../core/lib/cookie"
-import type { NextApiRequest } from "next"
+import { NextRequest } from "next/server"
+import type { NextApiRequest} from "next"
 import type { JWT, JWTDecodeParams, JWTEncodeParams, JWTOptions } from "./types"
 import type { LoggerInstance } from ".."
 
@@ -37,7 +38,7 @@ export async function decode(params: JWTDecodeParams): Promise<JWT | null> {
 
 export interface GetTokenParams<R extends boolean = false> {
   /** The request containing the JWT either in the cookies or in the `Authorization` header. */
-  req: NextApiRequest | Pick<NextApiRequest, "cookies" | "headers">
+  req: NextRequest | NextApiRequest | Pick<NextApiRequest, "cookies" | "headers">
   /**
    * Use secure prefix for cookie name, unless URL in `NEXTAUTH_URL` is http://
    * or not set (e.g. development or test instance) case use unprefixed name
