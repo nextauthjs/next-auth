@@ -120,7 +120,7 @@ export class SessionStore {
     option: CookieOption,
     req: {
       cookies?: Record<string, string>
-      headers?: Headers | IncomingHttpHeaders
+      headers?: Headers | IncomingHttpHeaders | Record<string, string>
     },
     logger: LoggerInstance | Console
   ) {
