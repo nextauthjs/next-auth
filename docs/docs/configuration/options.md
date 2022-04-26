@@ -285,7 +285,6 @@ events: {
   async updateUser(message) { /* user updated - e.g. their email was verified */ },
   async linkAccount(message) { /* account (e.g. Twitter) linked to a user */ },
   async session(message) { /* session is active */ },
-  async error(message) { /* error in authentication flow */ }
 }
 ```
 

@@ -134,8 +134,7 @@ export interface CampusUser {
   created_at: string
   updated_at: string | null
 }
-
-export interface FortyTwoProfile extends UserData {
+export interface FortyTwoProfile extends UserData, Record<string, any> {
   groups: Array<{ id: string; name: string }>
   cursus_users: CursusUser[]
   projects_users: ProjectUser[]
@@ -153,9 +152,9 @@ export interface FortyTwoProfile extends UserData {
   user: any | null
 }
 
-export default function FortyTwo<
-  P extends Record<string, any> = FortyTwoProfile
->(options: OAuthUserConfig<P>): OAuthConfig<P> {
+export default function FortyTwo<P extends FortyTwoProfile>(
+  options: OAuthUserConfig<P>
+): OAuthConfig<P> {
   return {
     id: "42-school",
     name: "42 School",
