@@ -20,21 +20,17 @@ jobs:
         uses: pnpm/action-setup@v2.2.1
         with:
           version: 6.32.8
-      - name: Cache Node Modules
-        id: cache-node
-        uses: actions/cache@v2
+      - name: Setup Node
+        uses: actions/setup-node@v3
         with:
-          path: "**/node_modules"
-          key: cache-node_modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ github.run_id }}
-          restore-keys: |
-            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ github.run_id }}
-            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-
+          node-version: 16
+          cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
       - name: Build
-        run: pnpm run build
+        run: pnpm build
       - name: Run tests
-        run: pnpm run test
+        run: pnpm test
         env:
           UPSTASH_REDIS_URL: ${{ secrets.UPSTASH_REDIS_URL }}
           UPSTASH_REDIS_KEY: ${{ secrets.UPSTASH_REDIS_KEY }}
@@ -58,22 +54,18 @@ jobs:
         uses: pnpm/action-setup@v2.2.1
         with:
           version: 6.32.8
-      - name: Cache Node Modules
-        id: cache-node
-        uses: actions/cache@v2
+      - name: Setup Node
+        uses: actions/setup-node@v3
         with:
-          path: "**/node_modules"
-          key: cache-node_modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ github.run_id }}
-          restore-keys: |
-            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ github.run_id }}
-            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-
+          node-version: 16
+          cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
       - name: Publish to npm and GitHub
         run: |
           git config --global user.email "balazsorban44@users.noreply.github.com"
           git config --global user.name "Balázs Orbán"
-          pnpm run release
+          pnpm release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN_PKG: ${{ secrets.NPM_TOKEN_PKG }}
@@ -91,15 +83,6 @@ jobs:
         uses: pnpm/action-setup@v2.2.1
         with:
           version: 6.32.8
-      - name: Cache Node Modules
-        id: cache-node
-        uses: actions/cache@v2
-        with:
-          path: "**/node_modules"
-          key: cache-node_modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ github.run_id }}
-          restore-keys: |
-            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ github.run_id }}
-            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-
       - name: Install dependencies
         run: pnpm install
       - name: Determine version
