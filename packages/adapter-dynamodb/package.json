@@ -21,7 +21,7 @@
   "scripts": {
     "test:default": "jest",
     "test:custom": "CUSTOM_MODEL=1 jest",
-    "test": "pnpm run test:default && pnpm run test:custom",
+    "test": "pnpm test:default && pnpm test:custom",
     "build": "tsc"
   },
   "files": [

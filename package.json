@@ -10,7 +10,7 @@
     "lint:fix": "turbo run lint -- --fix",
     "test": "turbo run test --concurrency=1 --scope=!@next-auth/pouchdb-adapter --scope=!next-auth-*",
     "setup": "turbo run setup",
-    "dev": "pnpm run dev:app",
+    "dev": "pnpm dev:app",
     "dev:app": "turbo run dev --parallel --no-deps --no-cache --scope=next-auth-app",
     "dev:docs": "turbo run dev --parallel --no-deps --no-cache --scope=next-auth-docs",
     "version:pr": "node ./config/version-pr",

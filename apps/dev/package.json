@@ -6,13 +6,13 @@
   "scripts": {
     "clean": "rm -rf .next",
     "copy:css": "cpx \"../../packages/next-auth/css/**/*\" src/css --watch",
-    "watch:css": "cd ../../packages/next-auth && pnpm run watch:css",
-    "dev": "concurrently \"pnpm run dev:next\" \"pnpm run watch:css\" \"pnpm run copy:css\"",
+    "watch:css": "cd ../../packages/next-auth && pnpm watch:css",
+    "dev": "concurrently \"pnpm dev:next\" \"pnpm watch:css\" \"pnpm copy:css\"",
     "dev:next": "next dev",
     "build": "next build",
     "start": "next start",
     "email": "fake-smtp-server",
-    "start:email": "pnpm run email"
+    "start:email": "pnpm email"
   },
   "license": "ISC",
   "dependencies": {

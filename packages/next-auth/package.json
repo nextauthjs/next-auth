@@ -36,15 +36,15 @@
     "./providers/*": "./providers/*.js"
   },
   "scripts": {
-    "build": "pnpm run clean && pnpm run build:js && pnpm run build:css",
+    "build": "pnpm clean && pnpm build:js && pnpm build:css",
     "clean": "rm -rf client css lib providers core jwt react next index.d.ts index.js adapters.d.ts middleware.d.ts middleware.js",
-    "build:js": "pnpm run clean && pnpm run generate-providers && tsc && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
+    "build:js": "pnpm clean && pnpm generate-providers && tsc && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir . && node config/wrap-css.js",
     "watch:css": "postcss --config config/postcss.config.js --watch src/**/*.css --base src --dir .",
     "test": "jest --config ./config/jest.config.js",
-    "prepublishOnly": "pnpm run build",
+    "prepublishOnly": "pnpm build",
     "generate-providers": "node ./config/generate-providers.js",
-    "setup": "pnpm run generate-providers",
+    "setup": "pnpm generate-providers",
     "lint": "eslint src config"
   },
   "files": [
