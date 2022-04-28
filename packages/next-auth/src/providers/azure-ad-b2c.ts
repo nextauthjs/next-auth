@@ -1,6 +1,6 @@
 import type { OAuthConfig, OAuthUserConfig } from "."
 
-export interface AzureB2CProfile {
+export interface AzureB2CProfile extends Record<string, any> {
   exp: number
   nbf: number
   ver: string
@@ -17,9 +17,7 @@ export interface AzureB2CProfile {
   tfp: string
 }
 
-export default function AzureADB2C<
-  P extends Record<string, any> = AzureB2CProfile
->(
+export default function AzureADB2C<P extends AzureB2CProfile>(
   options: OAuthUserConfig<P> & {
     primaryUserFlow: string
     tenantId: string

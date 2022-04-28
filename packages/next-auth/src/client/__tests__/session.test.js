@@ -61,7 +61,7 @@ test("if it can fetch the session, it should store it in `localStorage`", async 
 
 test("if there's an error fetching the session, it should log it", async () => {
   server.use(
-    rest.get("/api/auth/session", (req, res, ctx) => {
+    rest.get("*/api/auth/session", (req, res, ctx) => {
       return res(ctx.status(500), ctx.body("Server error"))
     })
   )
