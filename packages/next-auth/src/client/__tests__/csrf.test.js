@@ -45,7 +45,7 @@ test("returns the Cross Site Request Forgery Token (CSRF Token) required to make
 
 test("when there's no CSRF token returned, it'll reflect that", async () => {
   server.use(
-    rest.get("/api/auth/csrf", (req, res, ctx) =>
+    rest.get("*/api/auth/csrf", (req, res, ctx) =>
       res(
         ctx.status(200),
         ctx.json({
@@ -67,7 +67,7 @@ test("when there's no CSRF token returned, it'll reflect that", async () => {
 
 test("when the fetch fails it'll throw a client fetch error", async () => {
   server.use(
-    rest.get("/api/auth/csrf", (req, res, ctx) =>
+    rest.get("*/api/auth/csrf", (req, res, ctx) =>
       res(ctx.status(500), ctx.text("some error happened"))
     )
   )
