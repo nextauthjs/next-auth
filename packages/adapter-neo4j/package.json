@@ -37,6 +37,7 @@
     "next-auth": "^4.0.1"
   },
   "devDependencies": {
+    "@next-auth/tsconfig": "workspace:^0.0.0",
     "@types/uuid": "^8.3.3",
     "neo4j-driver": "^4.4.0",
     "next-auth": "^4.0.1"

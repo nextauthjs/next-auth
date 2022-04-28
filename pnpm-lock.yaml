@@ -118,6 +118,7 @@ importers:
 
   packages/adapter-dgraph:
     specifiers:
+      '@next-auth/tsconfig': workspace:^0.0.0
       '@types/jest': ^26.0.24
       '@types/jsonwebtoken': ^8.5.5
       '@types/node-fetch': ^2.5.11
@@ -130,6 +131,7 @@ importers:
       jsonwebtoken: 8.5.1
       node-fetch: 2.6.7
     devDependencies:
+      '@next-auth/tsconfig': link:../tsconfig
       '@types/jest': 26.0.24
       '@types/jsonwebtoken': 8.5.8
       '@types/node-fetch': 2.6.1
@@ -141,30 +143,36 @@ importers:
     specifiers:
       '@aws-sdk/client-dynamodb': ^3.36.1
       '@aws-sdk/lib-dynamodb': ^3.36.1
+      '@next-auth/tsconfig': workspace:^0.0.0
       '@shelf/jest-dynamodb': ^2.1.0
       next-auth: ^4.0.1
     devDependencies:
       '@aws-sdk/client-dynamodb': 3.72.0
       '@aws-sdk/lib-dynamodb': 3.72.0_@aws-sdk+client-dynamodb@3.72.0
+      '@next-auth/tsconfig': link:../tsconfig
       '@shelf/jest-dynamodb': 2.2.3_70bbe550ed4dab3e4cec763e81a667b3
       next-auth: link:../next-auth
 
   packages/adapter-fauna:
     specifiers:
       '@fauna-labs/fauna-schema-migrate': ^2.1.3
+      '@next-auth/tsconfig': workspace:^0.0.0
       faunadb: ^4.3.0
       next-auth: ^4.0.1
     devDependencies:
       '@fauna-labs/fauna-schema-migrate': 2.2.1_faunadb@4.5.4
+      '@next-auth/tsconfig': link:../tsconfig
       faunadb: 4.5.4
       next-auth: link:../next-auth
 
   packages/adapter-firebase:
     specifiers:
+      '@next-auth/tsconfig': workspace:^0.0.0
       firebase: ^8.6.2
       firebase-tools: ^9.11.0
       next-auth: ^4.0.1
     devDependencies:
+      '@next-auth/tsconfig': link:../tsconfig
       firebase: 8.10.1
       firebase-tools: 9.23.3
       next-auth: link:../next-auth
@@ -173,22 +181,27 @@ importers:
     specifiers:
       '@mikro-orm/core': ^5.0.2
       '@mikro-orm/sqlite': ^5.0.2
+      '@next-auth/tsconfig': workspace:^0.0.0
       next-auth: ^4.0.1
     devDependencies:
       '@mikro-orm/core': 5.1.2_@mikro-orm+sqlite@5.1.2
       '@mikro-orm/sqlite': 5.1.2_@mikro-orm+core@5.1.2
+      '@next-auth/tsconfig': link:../tsconfig
       next-auth: link:../next-auth
 
   packages/adapter-mongodb:
     specifiers:
+      '@next-auth/tsconfig': workspace:^0.0.0
       mongodb: ^4.4.0
       next-auth: ^4.0.1
     devDependencies:
+      '@next-auth/tsconfig': link:../tsconfig
       mongodb: 4.5.0
       next-auth: link:../next-auth
 
   packages/adapter-neo4j:
     specifiers:
+      '@next-auth/tsconfig': workspace:^0.0.0
       '@types/uuid': ^8.3.3
       neo4j-driver: ^4.4.0
       next-auth: ^4.0.1
@@ -196,12 +209,14 @@ importers:
     dependencies:
       uuid: 8.3.2
     devDependencies:
+      '@next-auth/tsconfig': link:../tsconfig
       '@types/uuid': 8.3.4
       neo4j-driver: 4.4.5
       next-auth: link:../next-auth
 
   packages/adapter-pouchdb:
     specifiers:
+      '@next-auth/tsconfig': workspace:^0.0.0
       '@types/pouchdb': ^6.4.0
       crypto: ^1.0.1
       next-auth: ^4.0.1
@@ -213,6 +228,7 @@ importers:
       crypto: 1.0.1
       ulid: 2.3.0
     devDependencies:
+      '@next-auth/tsconfig': link:../tsconfig
       '@types/pouchdb': 6.4.0
       next-auth: link:../next-auth
       pouchdb: 7.3.0
@@ -221,19 +237,23 @@ importers:
 
   packages/adapter-prisma:
     specifiers:
+      '@next-auth/tsconfig': workspace:^0.0.0
       '@prisma/client': ^3.10.0
       next-auth: ^4.0.1
       prisma: ^3.10.0
     devDependencies:
+      '@next-auth/tsconfig': link:../tsconfig
       '@prisma/client': 3.12.0_prisma@3.12.0
       next-auth: link:../next-auth
       prisma: 3.12.0
 
   packages/adapter-sequelize:
     specifiers:
+      '@next-auth/tsconfig': workspace:^0.0.0
       next-auth: ^4.0.1
       sequelize: ^6.6.5
     devDependencies:
+      '@next-auth/tsconfig': link:../tsconfig
       next-auth: link:../next-auth
       sequelize: 6.19.0
 
@@ -279,6 +299,7 @@ importers:
 
   packages/adapter-typeorm-legacy:
     specifiers:
+      '@next-auth/tsconfig': workspace:^0.0.0
       mssql: ^7.2.1
       mysql: ^2.18.1
       next-auth: ^4.0.1
@@ -287,6 +308,7 @@ importers:
       typeorm: ^0.2.37
       typeorm-naming-strategies: ^2.0.0
     devDependencies:
+      '@next-auth/tsconfig': link:../tsconfig
       mssql: 7.3.1
       mysql: 2.18.1
       next-auth: link:../next-auth
@@ -297,6 +319,7 @@ importers:
 
   packages/adapter-upstash-redis:
     specifiers:
+      '@next-auth/tsconfig': workspace:^0.0.0
       '@upstash/redis': ^1.0.1
       dotenv: ^10.0.0
       next-auth: ^4.0.1
@@ -304,6 +327,7 @@ importers:
     dependencies:
       uuid: 8.3.2
     devDependencies:
+      '@next-auth/tsconfig': link:../tsconfig
       '@upstash/redis': 1.2.0
       dotenv: 10.0.0
       next-auth: link:../next-auth
@@ -318,6 +342,7 @@ importers:
       '@babel/preset-react': ^7.16.0
       '@babel/preset-typescript': ^7.16.0
       '@babel/runtime': ^7.16.3
+      '@next-auth/tsconfig': workspace:^0.0.0
       '@panva/hkdf': ^1.0.1
       '@testing-library/dom': ^8.11.3
       '@testing-library/jest-dom': ^5.16.1
@@ -369,6 +394,7 @@ importers:
       '@babel/preset-env': 7.16.11_@babel+core@7.17.9
       '@babel/preset-react': 7.16.7_@babel+core@7.17.9
       '@babel/preset-typescript': 7.16.7_@babel+core@7.17.9
+      '@next-auth/tsconfig': link:../tsconfig
       '@testing-library/dom': 8.13.0
       '@testing-library/jest-dom': 5.16.4
       '@testing-library/react': 12.1.5_react-dom@17.0.2+react@17.0.2

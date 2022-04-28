@@ -34,6 +34,7 @@
     "next-auth": "^4.0.1"
   },
   "devDependencies": {
+    "@next-auth/tsconfig": "workspace:^0.0.0",
     "@types/jest": "^26.0.24",
     "@types/jsonwebtoken": "^8.5.5",
     "@types/node-fetch": "^2.5.11",

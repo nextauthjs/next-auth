@@ -92,6 +92,7 @@
     "@babel/preset-env": "^7.16.4",
     "@babel/preset-react": "^7.16.0",
     "@babel/preset-typescript": "^7.16.0",
+    "@next-auth/tsconfig": "workspace:^0.0.0",
     "@testing-library/dom": "^8.11.3",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
@@ -123,7 +124,7 @@
   },
   "eslintConfig": {
     "parserOptions": {
-      "project": "./tsconfig.eslint.json"
+      "project": "../packages/next-auth/tsconfig.eslint.json"
     }
   },
   "eslintIgnore": [

@@ -10,7 +10,12 @@
   "author": "jpbourgeon <jeanphilippe.bourgeon@gmail.com> (https://github.com/jpbourgeon)",
   "main": "dist/index.js",
   "license": "ISC",
-  "keywords": ["next-auth", "next.js", "oauth", "pouchdb"],
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "oauth",
+    "pouchdb"
+  ],
   "private": false,
   "publishConfig": {
     "access": "public"
@@ -20,7 +25,10 @@
     "tdd": "jest --watch",
     "test:wip": "jest"
   },
-  "files": ["README.md", "dist"],
+  "files": [
+    "README.md",
+    "dist"
+  ],
   "peerDependencies": {
     "next-auth": "^3.23.3",
     "pouchdb": "^7.2.2",
@@ -31,6 +39,7 @@
     "ulid": "^2.3.0"
   },
   "devDependencies": {
+    "@next-auth/tsconfig": "workspace:^0.0.0",
     "@types/pouchdb": "^6.4.0",
     "next-auth": "^4.0.1",
     "pouchdb": "^7.2.2",
