@@ -47,15 +47,15 @@ export * from "./types"
 // 2. When invoked server side the value is picked up from an environment
 //    variable and defaults to 'http://localhost:3000'.
 const __NEXTAUTH: NextAuthClientConfig = {
-  baseUrl: parseUrl(process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL).origin,
+  baseUrl: parseUrl(process.env.NEXTAUTH_URL || process.env.VERCEL_URL).origin,
   basePath: parseUrl(process.env.NEXTAUTH_URL).path,
   baseUrlServer: parseUrl(
-    process.env.NEXTAUTH_URL_INTERNAL ??
-      process.env.NEXTAUTH_URL ??
+    process.env.NEXTAUTH_URL_INTERNAL ||
+      process.env.NEXTAUTH_URL ||
       process.env.VERCEL_URL
   ).origin,
   basePathServer: parseUrl(
-    process.env.NEXTAUTH_URL_INTERNAL ?? process.env.NEXTAUTH_URL
+    process.env.NEXTAUTH_URL_INTERNAL || process.env.NEXTAUTH_URL
   ).path,
   _lastSync: 0,
   _session: undefined,
