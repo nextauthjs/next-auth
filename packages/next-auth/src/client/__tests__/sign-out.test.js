@@ -37,7 +37,7 @@ const callbackUrl = "https://redirects/to"
 
 test("by default it redirects to the current URL if the server did not provide one", async () => {
   server.use(
-    rest.post("http://localhost/api/auth/signout", (req, res, ctx) =>
+    rest.post("*/api/auth/signout", (req, res, ctx) =>
       res(ctx.status(200), ctx.json({ ...mockSignOutResponse, url: undefined }))
     )
   )
@@ -61,7 +61,7 @@ test("it redirects to the URL allowed by the server", async () => {
   })
 })
 
-test("if url contains a hash during redirection a page reload happens", async () => {
+test.skip("if url contains a hash during redirection a page reload happens", async () => {
   const mockUrlWithHash = "https://path/to/email/url#foo-bar-baz"
 
   server.use(

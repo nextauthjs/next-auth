@@ -2,8 +2,8 @@ import { EncryptJWT, jwtDecrypt } from "jose"
 import hkdf from "@panva/hkdf"
 import { v4 as uuid } from "uuid"
 import { SessionStore } from "../core/lib/cookie"
-import { NextRequest } from "next/server"
-import type { NextApiRequest} from "next"
+import type { NextApiRequest } from "next"
+import type { NextRequest } from "next/server"
 import type { JWT, JWTDecodeParams, JWTEncodeParams, JWTOptions } from "./types"
 import type { LoggerInstance } from ".."
 
@@ -38,7 +38,7 @@ export async function decode(params: JWTDecodeParams): Promise<JWT | null> {
 
 export interface GetTokenParams<R extends boolean = false> {
   /** The request containing the JWT either in the cookies or in the `Authorization` header. */
-  req: NextRequest | NextApiRequest | Pick<NextApiRequest, "cookies" | "headers">
+  req: NextRequest | NextApiRequest
   /**
    * Use secure prefix for cookie name, unless URL in `NEXTAUTH_URL` is http://
    * or not set (e.g. development or test instance) case use unprefixed name
@@ -91,8 +91,13 @@ export async function getToken<R extends boolean = false>(
 
   let token = sessionStore.value
 
-  if (!token && req.headers.authorization?.split(" ")[0] === "Bearer") {
-    const urlEncodedToken = req.headers.authorization.split(" ")[1]
+  const authorizationHeader =
+    req.headers instanceof Headers
+      ? req.headers.get("authorization")
+      : req.headers.authorization
+
+  if (!token && authorizationHeader?.split(" ")[0] === "Bearer") {
+    const urlEncodedToken = authorizationHeader.split(" ")[1]
     token = decodeURIComponent(urlEncodedToken)
   }
 
