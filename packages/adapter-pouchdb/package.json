@@ -39,6 +39,7 @@
     "ulid": "^2.3.0"
   },
   "devDependencies": {
+    "@next-auth/adapter-test": "workspace:^0.0.0",
     "@next-auth/tsconfig": "workspace:^0.0.0",
     "@types/pouchdb": "^6.4.0",
     "next-auth": "^4.0.1",
@@ -47,6 +48,6 @@
     "pouchdb-find": "^7.2.2"
   },
   "jest": {
-    "preset": "adapter-test/jest"
+    "preset": "@next-auth/adapter-test/jest"
   }
 }
