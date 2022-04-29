@@ -271,6 +271,7 @@ importers:
       '@next-auth/tsconfig': workspace:^0.0.0
       '@prisma/client': ^3.10.0
       jest: ^27.4.3
+      mongodb: ^4.4.0
       next-auth: workspace:*
       prisma: ^3.10.0
     devDependencies:
@@ -278,6 +279,7 @@ importers:
       '@next-auth/tsconfig': link:../tsconfig
       '@prisma/client': 3.12.0_prisma@3.12.0
       jest: 27.5.1_ts-node@10.5.0
+      mongodb: 4.5.0
       next-auth: link:../next-auth
       prisma: 3.12.0
 
