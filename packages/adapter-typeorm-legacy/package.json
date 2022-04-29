@@ -41,7 +41,7 @@
     "@next-auth/tsconfig": "workspace:^0.0.0",
     "mssql": "^7.2.1",
     "mysql": "^2.18.1",
-    "next-auth": "^4.0.1",
+    "next-auth": "workspace:*",
     "pg": "^8.7.1",
     "sqlite3": "^5.0.2",
     "typeorm": "^0.2.37",
@@ -50,7 +50,7 @@
   "peerDependencies": {
     "mssql": "^6.2.1 || 7",
     "mysql": "^2.18.1",
-    "next-auth": "^4.0.1",
+    "next-auth": "workspace:*",
     "pg": "^8.2.1",
     "sqlite3": "^5.0.2",
     "typeorm": "^0.2.31"

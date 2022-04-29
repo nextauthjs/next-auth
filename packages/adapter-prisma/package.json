@@ -37,13 +37,13 @@
   ],
   "peerDependencies": {
     "@prisma/client": ">=2.26.0 || >=3",
-    "next-auth": "^4.0.1"
+    "next-auth": "workspace:*"
   },
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:^0.0.0",
     "@next-auth/tsconfig": "workspace:^0.0.0",
     "@prisma/client": "^3.10.0",
-    "next-auth": "^4.0.1",
+    "next-auth": "workspace:*",
     "prisma": "^3.10.0"
   },
   "jest": {

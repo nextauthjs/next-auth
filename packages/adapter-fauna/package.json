@@ -41,14 +41,14 @@
   },
   "peerDependencies": {
     "faunadb": "^4.3.0",
-    "next-auth": "^4.0.1"
+    "next-auth": "workspace:*"
   },
   "devDependencies": {
     "@fauna-labs/fauna-schema-migrate": "^2.1.3",
     "@next-auth/adapter-test": "workspace:^0.0.0",
     "@next-auth/tsconfig": "workspace:^0.0.0",
     "faunadb": "^4.3.0",
-    "next-auth": "^4.0.1"
+    "next-auth": "workspace:*"
   },
   "jest": {
     "preset": "@next-auth/adapter-test/jest"

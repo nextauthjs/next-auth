@@ -125,7 +125,7 @@ importers:
       '@types/node-fetch': ^2.5.11
       jest: ^27.0.6
       jsonwebtoken: ^8.5.1
-      next-auth: ^4.0.1
+      next-auth: workspace:*
       node-fetch: ^2.6.1
       ts-jest: ^27.0.3
     dependencies:
@@ -148,7 +148,7 @@ importers:
       '@next-auth/adapter-test': workspace:^0.0.0
       '@next-auth/tsconfig': workspace:^0.0.0
       '@shelf/jest-dynamodb': ^2.1.0
-      next-auth: ^4.0.1
+      next-auth: workspace:*
     devDependencies:
       '@aws-sdk/client-dynamodb': 3.72.0
       '@aws-sdk/lib-dynamodb': 3.72.0_@aws-sdk+client-dynamodb@3.72.0
@@ -163,7 +163,7 @@ importers:
       '@next-auth/adapter-test': workspace:^0.0.0
       '@next-auth/tsconfig': workspace:^0.0.0
       faunadb: ^4.3.0
-      next-auth: ^4.0.1
+      next-auth: workspace:*
     devDependencies:
       '@fauna-labs/fauna-schema-migrate': 2.2.1_faunadb@4.5.4
       '@next-auth/adapter-test': link:../adapter-test
@@ -177,7 +177,7 @@ importers:
       '@next-auth/tsconfig': workspace:^0.0.0
       firebase: ^8.6.2
       firebase-tools: ^9.11.0
-      next-auth: ^4.0.1
+      next-auth: workspace:*
     devDependencies:
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
@@ -191,7 +191,7 @@ importers:
       '@mikro-orm/sqlite': ^5.0.2
       '@next-auth/adapter-test': workspace:^0.0.0
       '@next-auth/tsconfig': workspace:^0.0.0
-      next-auth: ^4.0.1
+      next-auth: workspace:*
     devDependencies:
       '@mikro-orm/core': 5.1.2_@mikro-orm+sqlite@5.1.2
       '@mikro-orm/sqlite': 5.1.2_@mikro-orm+core@5.1.2
@@ -204,7 +204,7 @@ importers:
       '@next-auth/adapter-test': workspace:^0.0.0
       '@next-auth/tsconfig': workspace:^0.0.0
       mongodb: ^4.4.0
-      next-auth: ^4.0.1
+      next-auth: workspace:*
     devDependencies:
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
@@ -217,7 +217,7 @@ importers:
       '@next-auth/tsconfig': workspace:^0.0.0
       '@types/uuid': ^8.3.3
       neo4j-driver: ^4.4.0
-      next-auth: ^4.0.1
+      next-auth: workspace:*
       uuid: ^8.3.2
     dependencies:
       uuid: 8.3.2
@@ -234,7 +234,7 @@ importers:
       '@next-auth/tsconfig': workspace:^0.0.0
       '@types/pouchdb': ^6.4.0
       crypto: ^1.0.1
-      next-auth: ^4.0.1
+      next-auth: workspace:*
       pouchdb: ^7.2.2
       pouchdb-adapter-memory: ^7.2.2
       pouchdb-find: ^7.2.2
@@ -256,7 +256,7 @@ importers:
       '@next-auth/adapter-test': workspace:^0.0.0
       '@next-auth/tsconfig': workspace:^0.0.0
       '@prisma/client': ^3.10.0
-      next-auth: ^4.0.1
+      next-auth: workspace:*
       prisma: ^3.10.0
     devDependencies:
       '@next-auth/adapter-test': link:../adapter-test
@@ -269,7 +269,7 @@ importers:
     specifiers:
       '@next-auth/adapter-test': workspace:^0.0.0
       '@next-auth/tsconfig': workspace:^0.0.0
-      next-auth: ^4.0.1
+      next-auth: workspace:*
       sequelize: ^6.6.5
     devDependencies:
       '@next-auth/adapter-test': link:../adapter-test
@@ -293,7 +293,7 @@ importers:
       eslint-plugin-node: ^11.1.0
       eslint-plugin-promise: ^5.1.0
       jest: ^27.0.3
-      next-auth: latest
+      next-auth: workspace:*
       prettier: ^2.3.0
       ts-jest: ^27.0.3
       typescript: ^4.2.4
@@ -312,7 +312,7 @@ importers:
       eslint-plugin-node: 11.1.0_eslint@7.32.0
       eslint-plugin-promise: 5.2.0_eslint@7.32.0
       jest: 27.5.1_ts-node@10.5.0
-      next-auth: 4.3.3
+      next-auth: link:../next-auth
       prettier: 2.6.2
       ts-jest: 27.1.4_9388cf538a35759e912083e4d830ade3
       typescript: 4.6.3
@@ -323,7 +323,7 @@ importers:
       '@next-auth/tsconfig': workspace:^0.0.0
       mssql: ^7.2.1
       mysql: ^2.18.1
-      next-auth: ^4.0.1
+      next-auth: workspace:*
       pg: ^8.7.1
       sqlite3: ^5.0.2
       typeorm: ^0.2.37
@@ -345,7 +345,7 @@ importers:
       '@next-auth/tsconfig': workspace:^0.0.0
       '@upstash/redis': ^1.0.1
       dotenv: ^10.0.0
-      next-auth: ^4.0.1
+      next-auth: workspace:*
       uuid: ^8.3.2
     dependencies:
       uuid: 8.3.2
@@ -580,7 +580,7 @@ packages:
     resolution: {integrity: sha512-hoyByceqwKirw7w3Z7gnIIZC3Wx3J484Y3L/cMpXFbr7d9ZQj2mODrirNzcJa+SM3UlpWXYvKV4RlRpFXlWgXg==}
     engines: {node: '>=6.0.0'}
     dependencies:
-      '@jridgewell/trace-mapping': 0.3.4
+      '@jridgewell/trace-mapping': 0.3.9
 
   /@apidevtools/json-schema-ref-parser/9.0.9:
     resolution: {integrity: sha512-GBD2Le9w2+lVFoc4vswGI/TjkNIZSVp7+9xPf+X3uidBfWnAeUWmquteSyt0+VCrhNMWj/FTABISQrD3Z/YA+w==}
@@ -4994,7 +4994,7 @@ packages:
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     dependencies:
       '@jest/types': 27.5.1
-      '@types/node': 16.11.27
+      '@types/node': 17.0.25
       chalk: 4.1.2
       jest-message-util: 27.5.1
       jest-util: 27.5.1
@@ -5015,7 +5015,7 @@ packages:
       '@jest/test-result': 27.5.1
       '@jest/transform': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 16.11.27
+      '@types/node': 17.0.25
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       emittery: 0.8.1
@@ -5052,7 +5052,7 @@ packages:
     dependencies:
       '@jest/fake-timers': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 16.11.27
+      '@types/node': 17.0.25
       jest-mock: 27.5.1
     dev: true
 
@@ -5062,7 +5062,7 @@ packages:
     dependencies:
       '@jest/types': 27.5.1
       '@sinonjs/fake-timers': 8.1.0
-      '@types/node': 16.11.27
+      '@types/node': 17.0.25
       jest-message-util: 27.5.1
       jest-mock: 27.5.1
       jest-util: 27.5.1
@@ -5091,7 +5091,7 @@ packages:
       '@jest/test-result': 27.5.1
       '@jest/transform': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 16.11.27
+      '@types/node': 17.0.25
       chalk: 4.1.2
       collect-v8-coverage: 1.0.1
       exit: 0.1.2
@@ -5186,7 +5186,7 @@ packages:
     dependencies:
       '@types/istanbul-lib-coverage': 2.0.4
       '@types/istanbul-reports': 3.0.1
-      '@types/node': 16.11.27
+      '@types/node': 17.0.25
       '@types/yargs': 16.0.4
       chalk: 4.1.2
     dev: true
@@ -5200,6 +5200,13 @@ packages:
 
   /@jridgewell/trace-mapping/0.3.4:
     resolution: {integrity: sha512-vFv9ttIedivx0ux3QSjhgtCVjPZd5l46ZOMDSCwnH1yUO2e964gO8LZGyv2QkqcgR6TnBU1v+1IFqmeoG+0UJQ==}
+    dependencies:
+      '@jridgewell/resolve-uri': 3.0.5
+      '@jridgewell/sourcemap-codec': 1.4.11
+    dev: true
+
+  /@jridgewell/trace-mapping/0.3.9:
+    resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
     dependencies:
       '@jridgewell/resolve-uri': 3.0.5
       '@jridgewell/sourcemap-codec': 1.4.11
@@ -5708,6 +5715,7 @@ packages:
 
   /@panva/hkdf/1.0.1:
     resolution: {integrity: sha512-mMyQ9vjpuFqePkfe5bZVIf/H3Dmk6wA8Kjxff9RcO4kqzJo+Ek9pGKwZHpeMr7Eku0QhLXMCd7fNCSnEnRMubg==}
+    dev: false
 
   /@polka/url/1.0.0-next.21:
     resolution: {integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==}
@@ -6252,7 +6260,7 @@ packages:
   /@types/graceful-fs/4.1.5:
     resolution: {integrity: sha512-anKkLmZZ+xm4p8JWBf4hElkM4XR+EZeA2M9BAkkTldmcyDY4mbdIJnRghDJH3Ov5ooY7/UAoENtmdMSkaAd7Cw==}
     dependencies:
-      '@types/node': 16.11.27
+      '@types/node': 17.0.25
     dev: true
 
   /@types/hast/2.3.4:
@@ -13763,7 +13771,7 @@ packages:
       '@jest/environment': 27.5.1
       '@jest/test-result': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 16.11.27
+      '@types/node': 17.0.25
       chalk: 4.1.2
       co: 4.6.0
       dedent: 0.7.0
@@ -13899,7 +13907,7 @@ packages:
       '@jest/environment': 27.5.1
       '@jest/fake-timers': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 16.11.27
+      '@types/node': 17.0.25
       jest-mock: 27.5.1
       jest-util: 27.5.1
       jsdom: 16.7.0
@@ -13917,7 +13925,7 @@ packages:
       '@jest/environment': 27.5.1
       '@jest/fake-timers': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 16.11.27
+      '@types/node': 17.0.25
       jest-mock: 27.5.1
       jest-util: 27.5.1
     dev: true
@@ -13938,7 +13946,7 @@ packages:
     dependencies:
       '@jest/types': 27.5.1
       '@types/graceful-fs': 4.1.5
-      '@types/node': 16.11.27
+      '@types/node': 17.0.25
       anymatch: 3.1.2
       fb-watchman: 2.0.1
       graceful-fs: 4.2.10
@@ -13960,7 +13968,7 @@ packages:
       '@jest/source-map': 27.5.1
       '@jest/test-result': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 16.11.27
+      '@types/node': 17.0.25
       chalk: 4.1.2
       co: 4.6.0
       expect: 27.5.1
@@ -14015,7 +14023,7 @@ packages:
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     dependencies:
       '@jest/types': 27.5.1
-      '@types/node': 16.11.27
+      '@types/node': 17.0.25
     dev: true
 
   /jest-pnp-resolver/1.2.2_jest-resolve@27.5.1:
@@ -14071,7 +14079,7 @@ packages:
       '@jest/test-result': 27.5.1
       '@jest/transform': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 16.11.27
+      '@types/node': 17.0.25
       chalk: 4.1.2
       emittery: 0.8.1
       graceful-fs: 4.2.10
@@ -14128,7 +14136,7 @@ packages:
     resolution: {integrity: sha512-jZCyo6iIxO1aqUxpuBlwTDMkzOAJS4a3eYz3YzgxxVQFwLeSA7Jfq5cbqCY+JLvTDrWirgusI/0KwxKMgrdf7w==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     dependencies:
-      '@types/node': 16.11.27
+      '@types/node': 17.0.25
       graceful-fs: 4.2.10
     dev: true
 
@@ -14208,7 +14216,7 @@ packages:
     dependencies:
       '@jest/test-result': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 16.11.27
+      '@types/node': 17.0.25
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       jest-util: 27.5.1
@@ -14268,6 +14276,7 @@ packages:
 
   /jose/4.6.1:
     resolution: {integrity: sha512-EFnufEivlIB6j7+JwaenYQzdUDs/McajDr9WnhT6EI0WxbexnfuZimpWX1GnobF6OnQsUFmWFXUXdWyZHWdQow==}
+    dev: false
 
   /js-beautify/1.14.3:
     resolution: {integrity: sha512-f1ra8PHtOEu/70EBnmiUlV8nJePS58y9qKjl4JHfYWlFH6bo7ogZBz//FAZp7jDuXtYnGYKymZPlrg2I/9Zo4g==}
@@ -15822,28 +15831,6 @@ packages:
     engines: {node: '>= 0.4.0'}
     dev: true
 
-  /next-auth/4.3.3:
-    resolution: {integrity: sha512-bUs+oOOPT18Pq/+4v9q4PA/DGoVoAX6jwY7RTfE/akFXwlny+y/mNS6lPSUwpqcHjljqBaq34PQA3+01SdOOPw==}
-    engines: {node: ^12.19.0 || ^14.15.0 || ^16.13.0}
-    peerDependencies:
-      nodemailer: ^6.6.5
-      react: ^17.0.2 || ^18.0.0-0
-      react-dom: ^17.0.2 || ^18.0.0-0
-    peerDependenciesMeta:
-      nodemailer:
-        optional: true
-    dependencies:
-      '@babel/runtime': 7.17.9
-      '@panva/hkdf': 1.0.1
-      cookie: 0.4.2
-      jose: 4.6.1
-      oauth: 0.9.15
-      openid-client: 5.1.5
-      preact: 10.7.1
-      preact-render-to-string: 5.1.21_preact@10.7.1
-      uuid: 8.3.2
-    dev: true
-
   /next-tick/1.1.0:
     resolution: {integrity: sha512-CXdUiJembsNjuToQvxayPZF9Vqht7hewsvy2sOWafLvi2awflj9mOC6bHIg50orX8IJvWKY9wYQ/zB2kogPslQ==}
 
@@ -16052,7 +16039,7 @@ packages:
     dependencies:
       hosted-git-info: 4.1.0
       is-core-module: 2.8.1
-      semver: 7.3.5
+      semver: 7.3.7
       validate-npm-package-license: 3.0.4
     dev: true
 
@@ -16151,6 +16138,7 @@ packages:
 
   /oauth/0.9.15:
     resolution: {integrity: sha1-vR/vr2hslrdUda7VGWQS/2DPucE=}
+    dev: false
 
   /object-assign/4.1.1:
     resolution: {integrity: sha1-IQmtx5ZYh8/AXLvUQsrIv7s2CGM=}
@@ -16236,6 +16224,7 @@ packages:
   /oidc-token-hash/5.0.1:
     resolution: {integrity: sha512-EvoOtz6FIEBzE+9q253HsLCVRiK/0doEJ2HCvvqMQb3dHZrP3WlJKYtJ55CRTw4jmYomzH4wkPuCj/I3ZvpKxQ==}
     engines: {node: ^10.13.0 || >=12.0.0}
+    dev: false
 
   /on-finished/2.3.0:
     resolution: {integrity: sha1-IPEzZIGwg811M3mSoWlxqi2QaUc=}
@@ -16321,6 +16310,7 @@ packages:
       lru-cache: 6.0.0
       object-hash: 2.2.0
       oidc-token-hash: 5.0.1
+    dev: false
 
   /optionator/0.8.3:
     resolution: {integrity: sha512-+IW9pACdk3XWmmTXG8m3upGUJst5XRGzxMRjXzAuJ1XnIFNvfhjjIuYkDvysnPQ7qzqVzLt78BCruntqRhWQbA==}
@@ -17387,9 +17377,11 @@ packages:
     dependencies:
       preact: 10.7.1
       pretty-format: 3.8.0
+    dev: false
 
   /preact/10.7.1:
     resolution: {integrity: sha512-MufnRFz39aIhs9AMFisonjzTud1PK1bY+jcJLo6m2T9Uh8AqjD77w11eAAawmjUogoGOnipECq7e/1RClIKsxg==}
+    dev: false
 
   /prebuild-install/7.0.1:
     resolution: {integrity: sha512-QBSab31WqkyxpnMWQxubYAHR5S9B2+r81ucocew34Fkl98FhvKIF50jIJnNOBmAZfyNV7vE5T6gd3hTVWgY6tg==}
@@ -17471,6 +17463,7 @@ packages:
 
   /pretty-format/3.8.0:
     resolution: {integrity: sha1-v77VbV6ad2ZF9LH/eqGjrE+jw4U=}
+    dev: false
 
   /pretty-hrtime/1.0.3:
     resolution: {integrity: sha1-t+PqQkNaTJsnWdmeDyAesZWALuE=}

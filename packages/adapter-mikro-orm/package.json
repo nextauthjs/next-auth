@@ -33,14 +33,14 @@
   ],
   "peerDependencies": {
     "@mikro-orm/core": "^5.0.2",
-    "next-auth": "^4.0.1"
+    "next-auth": "workspace:*"
   },
   "devDependencies": {
     "@mikro-orm/core": "^5.0.2",
     "@mikro-orm/sqlite": "^5.0.2",
     "@next-auth/adapter-test": "workspace:^0.0.0",
     "@next-auth/tsconfig": "workspace:^0.0.0",
-    "next-auth": "^4.0.1"
+    "next-auth": "workspace:*"
   },
   "jest": {
     "preset": "@next-auth/adapter-test/jest"
