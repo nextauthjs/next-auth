@@ -134,7 +134,7 @@ function Auth({ children }) {
 }
 ```
 
-It can be easily be extended/modified to support something like an options object for role based authentication on pages. An example:
+It can be easily extended/modified to support something like an options object for role based authentication on pages. An example:
 
 ```jsx title="pages/admin.jsx"
 AdminDashboard.auth = {
