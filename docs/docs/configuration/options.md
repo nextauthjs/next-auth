@@ -18,7 +18,7 @@ If your Next.js application uses a custom base path, specify the route to the AP
 _e.g. `NEXTAUTH_URL=https://example.com/custom-route/api/auth`_
 
 :::note
-We automatically detect when you deploy to [Vercel](https://vercel.com) so you don't have to define this variable.
+Using [System Environment Variables](https://vercel.com/docs/concepts/projects/environment-variables#system-environment-variables) we automatically detect when you deploy to [Vercel](https://vercel.com) so you don't have to define this variable. Make sure **Automatically expose System Environment Variables** is checked in your Project Settings.
 :::
 
 ### NEXTAUTH_SECRET
@@ -97,7 +97,7 @@ Default values for this option are shown below:
 ```js
 session: {
   // Choose how you want to save the user session.
-  // The default is `"jwt"`, an encrypted JWT (JWE) in the session cookie.
+  // The default is `"jwt"`, an encrypted JWT (JWE) stored in the session cookie.
   // If you use an `adapter` however, we default it to `"database"` instead.
   // You can still force a JWT session by explicitly defining `"jwt"`.
   // When using `"database"`, the session cookie will only contain a `sessionToken` value,
@@ -123,7 +123,7 @@ session: {
 
 #### Description
 
-JSON Web Tokens can be used for session tokens if enabled with `session: { strategy: "jwt" }` option. JSON Web Tokens are enabled by default if you have not specified an adapter. JSON Web Tokens are encrypted (JWE) by default. We recommend you keep this behaviour. See the [Override JWT `encode` and `decode` methods] advanced option.(#override-jwt-encode-and-decode-methods)
+JSON Web Tokens can be used for session tokens if enabled with `session: { strategy: "jwt" }` option. JSON Web Tokens are enabled by default if you have not specified an adapter. JSON Web Tokens are encrypted (JWE) by default. We recommend you keep this behaviour. See the [Override JWT `encode` and `decode` methods](#override-jwt-encode-and-decode-methods) advanced option.
 
 #### JSON Web Token Options
 
@@ -285,7 +285,6 @@ events: {
   async updateUser(message) { /* user updated - e.g. their email was verified */ },
   async linkAccount(message) { /* account (e.g. Twitter) linked to a user */ },
   async session(message) { /* session is active */ },
-  async error(message) { /* error in authentication flow */ }
 }
 ```
 
@@ -495,7 +494,7 @@ jwt: {
   async decode(params: {
     token: string
     secret: string
-  }: Promise<JWT | null>) {
+  }): Promise<JWT | null> {
     // return a `JWT` object, or `null` if decoding failed
     return {}
   },

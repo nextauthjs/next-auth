@@ -1,4 +1,4 @@
-> NOTE: The example repository is maintained from a monorepo. The source code can be found here: https://github.com/nextauthjs/next-auth/tree/main/apps/example-gatsby. Pull Requests should be opened against https://github.com/nextauthjs/next-auth.
+> The example repository is maintained from a [monorepo](https://github.com/nextauthjs/next-auth/tree/main/apps/example-gatsby). Pull Requests should be opened against [`nextauthjs/next-auth`](https://github.com/nextauthjs/next-auth).
 
 <p align="center">
    <br/>

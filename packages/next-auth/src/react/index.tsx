@@ -25,7 +25,7 @@ import type {
   ClientSafeProvider,
   LiteralUnion,
   SessionProviderProps,
-  SignInAuthorisationParams,
+  SignInAuthorizationParams,
   SignInOptions,
   SignInResponse,
   SignOutParams,
@@ -177,7 +177,7 @@ export async function signIn<
 >(
   provider?: LiteralUnion<BuiltInProviderType>,
   options?: SignInOptions,
-  authorizationParams?: SignInAuthorisationParams
+  authorizationParams?: SignInAuthorizationParams
 ): Promise<
   P extends RedirectableProviderType ? SignInResponse | undefined : undefined
 > {
@@ -271,6 +271,7 @@ export async function signOut<R extends boolean = true>(
   }
   const res = await fetch(`${baseUrl}/signout`, fetchOptions)
   const data = await res.json()
+
   broadcast.post({ event: "session", data: { trigger: "signout" } })
 
   if (options?.redirect ?? true) {
@@ -359,6 +360,12 @@ export function SessionProvider(props: SessionProviderProps) {
     }
 
     __NEXTAUTH._getSession()
+
+    return () => {
+      __NEXTAUTH._lastSync = 0
+      __NEXTAUTH._session = undefined
+      __NEXTAUTH._getSession = () => {}
+    }
   }, [])
 
   React.useEffect(() => {

@@ -1,6 +1,6 @@
 {
   "name": "@next-auth/mongodb-adapter",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "mongoDB adapter for next-auth.",
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/adapters",
@@ -16,8 +16,9 @@
     "access": "public"
   },
   "scripts": {
-    "test:wip": "./tests/test.sh",
-    "build:wip": "tsc"
+    "test": "./tests/test.sh",
+    "test:watch": "./tests/test.sh -w",
+    "build": "tsc"
   },
   "files": ["README.md", "dist"],
   "peerDependencies": {
@@ -25,7 +26,8 @@
     "next-auth": "^4.0.1"
   },
   "devDependencies": {
-    "mongodb": "^4.1.1"
+    "mongodb": "^4.4.0",
+    "next-auth": "^4.0.1"
   },
   "jest": {
     "preset": "adapter-test/jest"
