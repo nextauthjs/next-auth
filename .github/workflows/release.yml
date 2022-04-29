@@ -99,7 +99,7 @@ jobs:
         run: |
           cd packages/next-auth
           echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
-          pnpm publish --access public --tag experimental
+          pnpm publish --no-git-checks --access public --tag experimental
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Comment version on PR
