@@ -40,6 +40,7 @@
     "@next-auth/adapter-test": "workspace:^0.0.0",
     "@next-auth/tsconfig": "workspace:^0.0.0",
     "@shelf/jest-dynamodb": "^2.1.0",
+    "jest": "^28.0.2",
     "next-auth": "workspace:*"
   }
 }

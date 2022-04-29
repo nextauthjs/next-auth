@@ -42,6 +42,7 @@
     "@next-auth/adapter-test": "workspace:^0.0.0",
     "@next-auth/tsconfig": "workspace:^0.0.0",
     "@types/pouchdb": "^6.4.0",
+    "jest": "^28.0.2",
     "next-auth": "workspace:*",
     "pouchdb": "^7.2.2",
     "pouchdb-adapter-memory": "^7.2.2",

@@ -48,6 +48,7 @@
     "@next-auth/adapter-test": "workspace:^0.0.0",
     "@next-auth/tsconfig": "workspace:^0.0.0",
     "faunadb": "^4.3.0",
+    "jest": "^28.0.2",
     "next-auth": "workspace:*"
   },
   "jest": {
