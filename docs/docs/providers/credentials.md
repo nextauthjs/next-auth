@@ -11,7 +11,7 @@ It is intended to support use cases where you have an existing system you need t
 
 It comes with the constraint that users authenticated in this manner are not persisted in the database, and consequently that the Credentials provider can only be used if JSON Web Tokens are enabled for sessions.
 
-:::note
+:::warning
 The functionality provided for credentials based authentication is intentionally limited to discourage use of passwords due to the inherent security risks associated with them and the additional complexity associated with supporting usernames and passwords.
 :::
 
@@ -23,7 +23,7 @@ The **Credentials Provider** comes with a set of default options:
 
 You can override any of the options to suit your own use case.
 
-## Example
+## Example - Username / Password
 
 The Credentials provider is specified like other providers, except that you need to define a handler for `authorize()` that accepts credentials submitted via HTTP POST as input and returns either:
 
@@ -73,9 +73,19 @@ providers: [
 
 See the [callbacks documentation](/configuration/callbacks) for more information on how to interact with the token.
 
+## Example - Web3 / Signin With Ethereum
+
+The credentials provider can also be used to integrate with a service like [Sign-in With Ethereum](https://login.xyz).
+
+For more information, check out the links below:
+
+- [Tutorial](https://docs.login.xyz/integrations/nextauth.js)
+- [Example App Repo](https://github.com/spruceid/siwe-next-auth-example).
+- [Example App Demo](https://siwe-next-auth-example2.vercel.app/).
+
 ## Multiple providers
 
-### Example code
+### Example
 
 You can specify more than one credentials provider by specifying a unique `id` for each one.
 

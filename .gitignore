@@ -1,5 +1,6 @@
 # Misc
 .DS_Store
+.npmrc
 
 .env
 .env.local
@@ -57,9 +58,9 @@ apps/dev/prisma/migrations
 /_work
 
 # DB
-prisma/migrations
 dev.db*
 packages/adapter-prisma/prisma/dev.db
+packages/adapter-prisma/prisma/migrations
 db.sqlite
 
 # Tests
@@ -73,3 +74,4 @@ test.schema.gql
 
 # docusaurus
 docs/.docusaurus
+docs/providers.json

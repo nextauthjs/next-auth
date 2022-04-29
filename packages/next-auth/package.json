@@ -1,6 +1,6 @@
 {
   "name": "next-auth",
-  "version": "4.2.1",
+  "version": "4.3.4",
   "description": "Authentication for Next.js",
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/next-auth.git",
@@ -36,7 +36,7 @@
     "./providers/*": "./providers/*.js"
   },
   "scripts": {
-    "build": "yarn run build:js && yarn run build:css",
+    "build": "yarn clean && yarn run build:js && yarn run build:css",
     "clean": "rm -rf client css lib providers core jwt react next index.d.ts index.js adapters.d.ts middleware.d.ts middleware.js",
     "build:js": "yarn run clean && yarn run generate-providers && tsc && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir . && node config/wrap-css.js",
@@ -76,8 +76,8 @@
   },
   "peerDependencies": {
     "nodemailer": "^6.6.5",
-    "react": "^17.0.2 || ^18.0.0-0",
-    "react-dom": "^17.0.2 || ^18.0.0-0"
+    "react": "^17.0.2 || ^18",
+    "react-dom": "^17.0.2 || ^18"
   },
   "peerDependenciesMeta": {
     "nodemailer": {

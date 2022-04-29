@@ -11,10 +11,6 @@ https://auth0.com/docs/api/authentication#authorize-application
 
 https://manage.auth0.com/dashboard
 
-:::tip
-Configure your application in Auth0 as a "Regular Web Application" (not a "Single Page App").
-:::
-
 ## Options
 
 The **Auth0 Provider** comes with a set of default options:

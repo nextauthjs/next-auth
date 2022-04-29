@@ -1,7 +1,8 @@
 import type { PackageJson } from "type-fest"
 
-import fs from "fs/promises"
-import path from "path"
+import fs from "node:fs/promises"
+import path from "node:path"
+import { execSync as nodeExecSync } from "node:child_process"
 
 async function read(directory: string): Promise<PackageJson> {
   const content = await fs.readFile(
@@ -30,4 +31,8 @@ export function debug(...args: any[]): void {
   if (!process.env.DEBUG) return
   const [first, ...rest] = args
   console.log(`\n[debug] ${first}\n`, ...rest, "\n")
+}
+
+export function execSync(...args: Parameters<typeof nodeExecSync>) {
+  return nodeExecSync(args[0], { stdio: "inherit", ...args[1] })
 }

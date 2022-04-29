@@ -1,6 +1,11 @@
 import type { Account as AdapterAccount } from "next-auth"
-import type { Adapter, AdapterUser, AdapterSession } from "next-auth/adapters"
-import type { Upstash } from "@upstash/redis/src/types"
+import type {
+  Adapter,
+  AdapterUser,
+  AdapterSession,
+  VerificationToken,
+} from "next-auth/adapters"
+import type { Redis } from "@upstash/redis"
 
 import { v4 as uuid } from "uuid"
 
@@ -32,14 +37,15 @@ function isDate(value: any) {
   return value && isoDateRE.test(value) && !isNaN(Date.parse(value))
 }
 
-export function reviveFromJson(json: string) {
-  return JSON.parse(json, (_, value) =>
-    isDate(value) ? new Date(value) : value
-  )
+export function hydrateDates(json: object) {
+  return Object.entries(json).reduce((acc, [key, val]) => {
+    acc[key] = isDate(val) ? new Date(val as string) : val
+    return acc
+  }, {} as any)
 }
 
 export function UpstashRedisAdapter(
-  client: Upstash,
+  client: Redis,
   options: UpstashRedisAdapterOptions = {}
 ): Adapter {
   const mergedOptions = {
@@ -70,12 +76,15 @@ export function UpstashRedisAdapter(
   }
 
   const getAccount = async (id: string) => {
-    const response = await client.get(accountKeyPrefix + id)
-    if (!response.data) return null
-    return reviveFromJson(response.data)
+    const account = await client.get<AdapterAccount>(accountKeyPrefix + id)
+    if (!account) return null
+    return hydrateDates(account)
   }
 
-  const setSession = async (id: string, session: AdapterSession) => {
+  const setSession = async (
+    id: string,
+    session: AdapterSession
+  ): Promise<AdapterSession> => {
     const sessionKey = sessionKeyPrefix + id
     await setObjectAsJson(sessionKey, session)
     await client.set(sessionByUserIdKeyPrefix + session.userId, sessionKey)
@@ -83,21 +92,24 @@ export function UpstashRedisAdapter(
   }
 
   const getSession = async (id: string) => {
-    const response = await client.get(sessionKeyPrefix + id)
-    if (!response.data) return null
-    return reviveFromJson(response.data)
+    const session = await client.get<AdapterSession>(sessionKeyPrefix + id)
+    if (!session) return null
+    return hydrateDates(session)
   }
 
-  const setUser = async (id: string, user: AdapterUser) => {
+  const setUser = async (
+    id: string,
+    user: AdapterUser
+  ): Promise<AdapterUser> => {
     await setObjectAsJson(userKeyPrefix + id, user)
     await client.set(`${emailKeyPrefix}${user.email as string}`, id)
     return user
   }
 
   const getUser = async (id: string) => {
-    const response = await client.get(userKeyPrefix + id)
-    if (!response.data) return null
-    return reviveFromJson(response.data)
+    const user = await client.get<AdapterUser>(userKeyPrefix + id)
+    if (!user) return null
+    return hydrateDates(user)
   }
 
   return {
@@ -110,9 +122,11 @@ export function UpstashRedisAdapter(
     },
     getUser,
     async getUserByEmail(email) {
-      const emailResponse = await client.get(emailKeyPrefix + email)
-      if (!emailResponse.data) return null
-      return await getUser(emailResponse.data)
+      const userId = await client.get<string>(emailKeyPrefix + email)
+      if (!userId) {
+        return null
+      }
+      return await getUser(userId)
     },
     async getUserByAccount(account) {
       const dbAccount = await getAccount(
@@ -124,7 +138,7 @@ export function UpstashRedisAdapter(
     async updateUser(updates) {
       const userId = updates.id as string
       const user = await getUser(userId)
-      return await setUser(userId, { ...user, ...updates })
+      return await setUser(userId, { ...(user as AdapterUser), ...updates })
     },
     async linkAccount(account) {
       const id = `${account.provider}:${account.providerAccountId}`
@@ -158,10 +172,13 @@ export function UpstashRedisAdapter(
     },
     async useVerificationToken(verificationToken) {
       const tokenKey = verificationTokenKeyPrefix + verificationToken.identifier
-      const tokenResponse = await client.get(tokenKey)
-      if (!tokenResponse.data) return null
+
+      const token = await client.get<VerificationToken>(tokenKey)
+      if (!token) return null
+
       await client.del(tokenKey)
-      return reviveFromJson(tokenResponse.data)
+      return hydrateDates(token)
+      // return reviveFromJson(token)
     },
     async unlinkAccount(account) {
       const id = `${account.provider}:${account.providerAccountId}`
@@ -177,17 +194,15 @@ export function UpstashRedisAdapter(
       const user = await getUser(userId)
       if (!user) return
       const accountByUserKey = accountByUserIdPrefix + userId
-      const accountRequest = await client.get(accountByUserKey)
-      const accountKey = accountRequest.data
+      const accountKey = await client.get<string>(accountByUserKey)
       const sessionByUserIdKey = sessionByUserIdKeyPrefix + userId
-      const sessionRequest = await client.get(sessionByUserIdKey)
-      const sessionKey = sessionRequest.data
+      const sessionKey = await client.get<string>(sessionByUserIdKey)
       await client.del(
         userKeyPrefix + userId,
         `${emailKeyPrefix}${user.email as string}`,
-        accountKey,
+        accountKey as string,
         accountByUserKey,
-        sessionKey,
+        sessionKey as string,
         sessionByUserIdKey
       )
     },
