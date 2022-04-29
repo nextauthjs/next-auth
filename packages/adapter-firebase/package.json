@@ -40,7 +40,7 @@
     "@next-auth/tsconfig": "workspace:^0.0.0",
     "firebase": "^8.6.2",
     "firebase-tools": "^9.11.0",
-    "jest": "^28.0.2",
+    "jest": "^27.4.3",
     "next-auth": "workspace:*"
   }
 }
