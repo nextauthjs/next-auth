@@ -61,11 +61,11 @@ test("it redirects to the URL allowed by the server", async () => {
   })
 })
 
-test.skip("if url contains a hash during redirection a page reload happens", async () => {
+test("if url contains a hash during redirection a page reload happens", async () => {
   const mockUrlWithHash = "https://path/to/email/url#foo-bar-baz"
 
   server.use(
-    rest.post("http://localhost/api/auth/signout", (req, res, ctx) => {
+    rest.post("*/api/auth/signout", (req, res, ctx) => {
       return res(
         ctx.status(200),
         ctx.json({
