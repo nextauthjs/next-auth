@@ -28,22 +28,38 @@ You can override any of the options to suit your own use case.
 ## Example
 
 ```js
+File: [...nextauth].ts
+
 import ShopifyProvider from "next-auth/providers/shopify";
 ...
-providers: [
-  ShopifyProvider({
-    clientId: process.env.SHOPIFY_ID,
-    clientSecret: process.env.SHOPIFY_SECRET,
-    shop: "unique-master", // Don't include .myshopify.com
-    apiVersion: "2022-01",
-    authorization: {
-      params: {
-        scope: "read_products,write_products,read_orders,write_orders",
-      },
-    },
+export default async function auth(req: NextApiRequest, res: NextApiResponse) {
+  // Do whatever you want here, before the request is passed down to `NextAuth`
+  return await NextAuth(req, res, {
+    providers: [
+      ...providers,
+      ShopifyProvider({
+        clientId: process.env.SHOPIFY_ID,
+        clientSecret: process.env.SHOPIFY_SECRET,
+        shop: req.query.shop,
+        apiVersion: "2022-01",
+      }),
+    ],
   })
-]
+}
 ...
-```
 
-## Instructions
+File: signIn.ts
+// To Sign In a shopify app
+import { signIn } from "next-auth/react"
+
+export default function Page() {
+  const handlerSignIn = async () => {
+    signIn("shopify", null, {
+      shop: "hello-world",
+    })
+  }
+  return (
+    <button onClick={handlerSignIn}>Shopify Login</button>
+  )
+}
+```
