@@ -19,7 +19,7 @@
     "setup": "turbo run setup",
     "dev": "yarn dev:app",
     "dev:app": "turbo run dev --parallel --no-deps --no-cache --filter=next-auth-app",
-    "dev:docs": "turbo run dev --parallel --no-deps --no-cache --scope=next-auth-docs",
+    "dev:docs": "turbo run dev --parallel --no-deps --no-cache --filter=next-auth-docs",
     "version:pr": "node ./config/version-pr",
     "release": "ts-node scripts/release"
   },
