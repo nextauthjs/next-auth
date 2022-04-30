@@ -105,7 +105,8 @@ There is another, more fully styled example signin page available [here](https:/
 If you create a custom sign in form for email sign in, you will need to submit both fields for the **email** address and **csrfToken** from **/api/auth/csrf** in a POST request to **/api/auth/signin/email**.
 
 ```jsx title="pages/auth/email-signin.js"
-import { getCsrfToken } from "next-auth/react"
+import { getServerCsrfToken } from "next-auth/next"
+import { authOptions } from "../api/auth/[...nextauth]"
 
 export default function SignIn({ csrfToken }) {
   return (
@@ -121,7 +122,7 @@ export default function SignIn({ csrfToken }) {
 }
 
 export async function getServerSideProps(context) {
-  const csrfToken = await getCsrfToken(context)
+  const csrfToken = await getServerCsrfToken(context, authOptions)
   return {
     props: { csrfToken },
   }
@@ -139,7 +140,8 @@ signIn("email", { email: "jsmith@example.com" })
 If you create a sign in form for credentials based authentication, you will need to pass a **csrfToken** from **/api/auth/csrf** in a POST request to **/api/auth/callback/credentials**.
 
 ```jsx title="pages/auth/credentials-signin.js"
-import { getCsrfToken } from "next-auth/react"
+import { getServerCsrfToken } from "next-auth/next"
+import { authOptions } from "../api/auth/[...nextauth]"
 
 export default function SignIn({ csrfToken }) {
   return (
@@ -161,7 +163,7 @@ export default function SignIn({ csrfToken }) {
 export async function getServerSideProps(context) {
   return {
     props: {
-      csrfToken: await getCsrfToken(context),
+      csrfToken: await getServerCsrfToken(context, authOptions),
     },
   }
 }

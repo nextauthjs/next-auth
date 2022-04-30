@@ -107,6 +107,33 @@ export async function getServerSession(
   return null
 }
 
+export async function getServerCsrfToken(
+  context:
+    | GetServerSidePropsContext
+    | { req: NextApiRequest; res: NextApiResponse },
+  options: NextAuthOptions
+): Promise<string | null> {
+  const session = await NextAuthHandler<{ csrfToken: string }>({
+    options: {
+      ...options,
+      secret: options.secret ?? process.env.NEXTAUTH_SECRET,
+    },
+    req: {
+      host: detectHost(context.req.headers["x-forwarded-host"]),
+      action: "csrf",
+      method: "GET",
+      cookies: context.req.cookies,
+      headers: context.req.headers,
+    },
+  })
+
+  const { body, cookies } = session
+
+  cookies?.forEach((cookie) => setCookie(context.res, cookie))
+
+  return body?.csrfToken ?? null
+}
+
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace NodeJS {
