@@ -18,7 +18,7 @@
     "test": "turbo run test --concurrency=1 --scope=!@next-auth/pouchdb-adapter --scope=!next-auth-* --filter=[HEAD^1]",
     "setup": "turbo run setup",
     "dev": "yarn dev:app",
-    "dev:app": "turbo run dev --parallel --no-deps --no-cache --scope=next-auth-app",
+    "dev:app": "turbo run dev --parallel --no-deps --no-cache --filter=next-auth-app",
     "dev:docs": "turbo run dev --parallel --no-deps --no-cache --scope=next-auth-docs",
     "version:pr": "node ./config/version-pr",
     "release": "ts-node scripts/release"
