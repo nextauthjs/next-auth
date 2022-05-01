@@ -34,6 +34,8 @@ export function PrismaAdapter(p: PrismaClient): Adapter {
       try {
         return p.session.delete({ where: { sessionToken } })
       } catch (error) {
+        // If session does not exist, just return null
+        // https://www.prisma.io/docs/reference/api-reference/error-reference#p2025
         if ((error as Prisma.PrismaClientKnownRequestError).code === "P2025")
           return null
         throw error
