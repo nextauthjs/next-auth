@@ -30,8 +30,15 @@ export function PrismaAdapter(p: PrismaClient): Adapter {
     createSession: (data) => p.session.create({ data }),
     updateSession: (data) =>
       p.session.update({ where: { sessionToken: data.sessionToken }, data }),
-    deleteSession: (sessionToken) =>
-      p.session.delete({ where: { sessionToken } }),
+    deleteSession: (sessionToken) => {
+      try {
+        return p.session.delete({ where: { sessionToken } })
+      } catch (error) {
+        if ((error as Prisma.PrismaClientKnownRequestError).code === "P2025")
+          return null
+        throw error
+      }
+    },
     async createVerificationToken(data) {
       // @ts-ignore
       const { id: _, ...verificationToken } = await p.verificationToken.create({
