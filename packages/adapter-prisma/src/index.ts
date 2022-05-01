@@ -30,9 +30,9 @@ export function PrismaAdapter(p: PrismaClient): Adapter {
     createSession: (data) => p.session.create({ data }),
     updateSession: (data) =>
       p.session.update({ where: { sessionToken: data.sessionToken }, data }),
-    deleteSession: (sessionToken) => {
+    async deleteSession(sessionToken) {
       try {
-        return p.session.delete({ where: { sessionToken } })
+        return await p.session.delete({ where: { sessionToken } })
       } catch (error) {
         // If session does not exist, just return null
         // https://www.prisma.io/docs/reference/api-reference/error-reference#p2025
