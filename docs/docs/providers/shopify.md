@@ -41,6 +41,9 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
         clientId: process.env.SHOPIFY_ID,
         clientSecret: process.env.SHOPIFY_SECRET,
         shop: req.query.shop,
+        authorization: {
+          params: { scope: "read_orders write_orders" },
+        },
         apiVersion: "2022-01",
       }),
     ],
