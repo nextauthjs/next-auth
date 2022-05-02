@@ -31,4 +31,4 @@ title: Fullstack
 
 ### [Adding role based login to database session strategy](/tutorials/role-based-login-strategy)
 
-- Implement a roll based login system by adding a custom session callback.
+- Implement a role based login system by adding a custom session callback.
