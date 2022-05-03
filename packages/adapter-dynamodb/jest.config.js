@@ -3,7 +3,7 @@
  * https://jestjs.io/docs/en/configuration.html
  */
 module.exports = {
-  ...require("adapter-test/jest/jest-preset"),
+  ...require("@next-auth/adapter-test/jest/jest-preset"),
   // // Indicates whether the coverage information should be collected while executing the test
   // collectCoverage: true,
   // // Indicates which provider should be used to instrument code for coverage

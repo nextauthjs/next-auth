@@ -31,17 +31,20 @@
   ],
   "peerDependencies": {
     "@upstash/redis": "^1.0.1",
-    "next-auth": "^4.0.1"
+    "next-auth": "workspace:*"
   },
   "devDependencies": {
+    "@next-auth/adapter-test": "workspace:^0.0.0",
+    "@next-auth/tsconfig": "workspace:^0.0.0",
     "@upstash/redis": "^1.0.1",
     "dotenv": "^10.0.0",
-    "next-auth": "^4.0.1"
+    "jest": "^27.4.3",
+    "next-auth": "workspace:*"
   },
   "dependencies": {
     "uuid": "^8.3.2"
   },
   "jest": {
-    "preset": "adapter-test/jest"
+    "preset": "@next-auth/adapter-test/jest"
   }
 }

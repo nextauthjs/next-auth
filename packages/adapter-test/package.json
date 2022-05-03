@@ -1,5 +1,5 @@
 {
-  "name": "adapter-test",
+  "name": "@next-auth/adapter-test",
   "version": "0.0.0",
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "contributors": [
@@ -19,6 +19,7 @@
     "@types/nodemailer": "^6.4.4",
     "@typescript-eslint/eslint-plugin": "^4.24.0",
     "@typescript-eslint/parser": "^4.24.0",
+    "babel-jest": "^27.4.2",
     "eslint": "^7.27.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard-with-typescript": "^20.0.0",
@@ -26,7 +27,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
     "jest": "^27.0.3",
-    "next-auth": "latest",
+    "next-auth": "workspace:*",
     "prettier": "^2.3.0",
     "ts-jest": "^27.0.3",
     "typescript": "^4.2.4"

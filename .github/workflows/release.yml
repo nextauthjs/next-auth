@@ -16,26 +16,21 @@ jobs:
     steps:
       - name: Init
         uses: actions/checkout@v2
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.1
+        with:
+          version: 6.32.8
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: "yarn"
-      - name: Cache Node Modules
-        id: cache-node
-        uses: actions/cache@v2
-        with:
-          path: "**/node_modules"
-          key: cache-node_modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
-          restore-keys: |
-            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
-            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-
+          cache: "pnpm"
       - name: Install dependencies
-        run: yarn --prefer-offline --frozen-lockfile
+        run: pnpm install
       - name: Build
-        run: yarn build
+        run: pnpm build
       - name: Run tests
-        run: yarn test
+        run: pnpm test
         env:
           UPSTASH_REDIS_URL: ${{ secrets.UPSTASH_REDIS_URL }}
           UPSTASH_REDIS_KEY: ${{ secrets.UPSTASH_REDIS_KEY }}
@@ -55,27 +50,22 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.1
+        with:
+          version: 6.32.8
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: "yarn"
-      - name: Cache Node Modules
-        id: cache-node
-        uses: actions/cache@v2
-        with:
-          path: "**/node_modules"
-          key: cache-node_modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
-          restore-keys: |
-            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
-            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-
+          cache: "pnpm"
       - name: Install dependencies
-        run: yarn --prefer-offline --frozen-lockfile
+        run: pnpm install
       - name: Publish to npm and GitHub
         run: |
           git config --global user.email "balazsorban44@users.noreply.github.com"
           git config --global user.name "Balázs Orbán"
-          yarn release
+          pnpm release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN_PKG: ${{ secrets.NPM_TOKEN_PKG }}
@@ -89,22 +79,17 @@ jobs:
     steps:
       - name: Init
         uses: actions/checkout@v2
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.1
+        with:
+          version: 6.32.8
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: "yarn"
-      - name: Cache Node Modules
-        id: cache-node
-        uses: actions/cache@v2
-        with:
-          path: "**/node_modules"
-          key: cache-node_modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
-          restore-keys: |
-            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
-            cache-node_modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-
+          cache: "pnpm"
       - name: Install dependencies
-        run: yarn --prefer-offline --frozen-lockfile
+        run: pnpm install
       - name: Determine version
         uses: ./.github/version-pr
         id: determine-version
@@ -114,7 +99,7 @@ jobs:
         run: |
           cd packages/next-auth
           echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
-          npm publish --access public --tag experimental
+          pnpm publish --no-git-checks --access public --tag experimental
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Comment version on PR
