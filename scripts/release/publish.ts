@@ -10,7 +10,7 @@ export async function publish(options: {
 }) {
   const { dryRun, packages, RELEASE_COMMIT_MSG } = options
 
-  execSync("yarn build")
+  execSync("pnpm build")
 
   for await (const pkg of packages) {
     if (dryRun) {
@@ -25,7 +25,7 @@ export async function publish(options: {
       console.log("package.json file has been written, publishing...")
     }
 
-    let npmPublish = `npm publish --access public --registry=https://registry.npmjs.org`
+    let npmPublish = `pnpm publish --access public --registry=https://registry.npmjs.org`
     // We use different tokens for `next-auth` and `@next-auth/*` packages
 
     if (pkg.name === "next-auth") {
@@ -44,7 +44,7 @@ export async function publish(options: {
       )
     }
 
-    execSync(`${npmPublish} --no-workspaces`, { cwd: pkg.path })
+    execSync(npmPublish, { cwd: pkg.path })
   }
 
   if (dryRun) {

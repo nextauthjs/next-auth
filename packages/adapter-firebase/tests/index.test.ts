@@ -1,4 +1,4 @@
-import { runBasicTests } from "adapter-test"
+import { runBasicTests } from "@next-auth/adapter-test"
 import { FirebaseAdapter } from "../src"
 import { docSnapshotToObject, querySnapshotToObject } from "../src/utils"
 
