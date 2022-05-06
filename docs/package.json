@@ -20,24 +20,29 @@
   },
   "dependencies": {
     "@codesandbox/sandpack-react": "^0.13.12",
-    "@docusaurus/core": "^2.0.0-beta.17",
-    "@docusaurus/preset-classic": "^2.0.0-beta.17",
-    "@docusaurus/remark-plugin-npm2yarn": "^2.0.0-beta.17",
+    "@docusaurus/core": "^2.0.0-beta.20",
+    "@docusaurus/preset-classic": "^2.0.0-beta.20",
+    "@docusaurus/remark-plugin-npm2yarn": "^2.0.0-beta.20",
+    "@mdx-js/react": "^2.1.1",
     "classnames": "^2.3.1",
     "lodash.times": "^4.3.2",
-    "mdx-mermaid": "^1.2.1",
-    "mermaid": "^8.13.10",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "mdx-mermaid": "^1.2.2",
+    "mermaid": "^9.0.1",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
     "react-marquee-slider": "^1.1.5",
     "remark-github": "^10.1.0",
-    "styled-components": "^5.3.3"
+    "styled-components": "^5.3.5"
   },
   "devDependencies": {
-    "prettier": "^2.5.0"
+    "prettier": "^2.6.2"
   },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
