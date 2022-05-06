@@ -6,7 +6,7 @@
     "url": "git://github.com/nextauthjs/docs.git"
   },
   "scripts": {
-    "start": "npm run generate-providers && docusaurus start --port 8000",
+    "start": "npm run generate-providers && docusaurus start --no-open --port 8000",
     "dev": "npm run start",
     "build": "npm run generate-providers && docusaurus build",
     "docusaurus": "docusaurus",
@@ -29,7 +29,8 @@
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-marquee-slider": "^1.1.5",
-    "remark-github": "^10.1.0"
+    "remark-github": "^10.1.0",
+    "styled-components": "5.3.3"
   },
   "devDependencies": {
     "prettier": "^2.6.2"
