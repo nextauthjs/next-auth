@@ -1,7 +1,6 @@
 import React from "react"
-import Marquee, { Motion, randomIntFromInterval } from "react-marquee-slider"
-import * as S from "./ProviderMarqueeStyle"
-import times from "lodash.times"
+import Marquee, {Motion, randomIntFromInterval} from "react-marquee-slider"
+import styles from "./ProviderMarqueeStyle.module.css"
 
 const icons = [
   "/img/providers/apple-black.svg",
@@ -20,7 +19,7 @@ const icons = [
   "/img/providers/twitter.svg",
 ]
 
-const ProviderMarquee = React.memo(({ size }) => {
+const ProviderMarquee = React.memo(() => {
   let scale = 0.4
 
   if (typeof window !== "undefined") {
@@ -39,8 +38,8 @@ const ProviderMarquee = React.memo(({ size }) => {
   }
 
   return (
-    <S.FullWidth>
-      <S.Height height={500}>
+    <div className={styles.fullWidth}>
+      <div className={styles.height}>
         <Marquee
           key="1"
           velocity={5}
@@ -48,24 +47,33 @@ const ProviderMarquee = React.memo(({ size }) => {
           minScale={0.5}
           resetAfterTries={200}
         >
-          {times(icons.length, Number).map((id) => (
+          {icons.map((icon) => (
             <Motion
-              key={`marquee-example-company-${id}`}
+              key={`marquee-example-company-${icon}`}
               initDeg={randomIntFromInterval(0, 360)}
               direction={Math.random() > 0.5 ? "clockwise" : "counterclockwise"}
               velocity={10}
               radius={scale * 70}
             >
-              <S.Company scale={scale}>
-                <S.Circle scale={scale}>
-                  <S.Logo src={icons[id]} alt="" />
-                </S.Circle>
-              </S.Company>
+              <div
+                className={styles.company}
+                style={{height: `${scale * 75}px`, width: `${scale * 75}px`}}
+              >
+                <div
+                  className={styles.circle}
+                  style={{
+                    height: `${scale * 150}px`,
+                    width: `${scale * 150}px`,
+                  }}
+                >
+                  <img className={styles.logo} src={icon} alt="" />
+                </div>
+              </div>
             </Motion>
           ))}
         </Marquee>
-      </S.Height>
-    </S.FullWidth>
+      </div>
+    </div>
   )
 })
 
