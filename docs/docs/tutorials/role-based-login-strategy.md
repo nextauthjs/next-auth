@@ -1,52 +1,60 @@
-First modify the 'user' table to include a "role" column.
+To add based authentication to your application, you must do three things.
 
-The example below shows an update to the suggested Prisma schema file.
-```javascript
+1. Update your database schema
+2. Add the `role` to the session object
+3. Check for `role` in your pages/components
 
-//schema.prisma
+First modify the `user` table and add a `role` column with the type of `String?`.
+
+Below is an example Prisma schema file.
+
+```javascript title="/prisma/schema.prisma"
 model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    role          String?  //<-- ADD THIS COLUMN
-    accounts      Account[]
-    sessions      Session[]
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  role          String?  // New Column
+  accounts      Account[]
+  sessions      Session[]
 }
 
 ```
 
-Next implement a custom session callback in the [...nextauth].js file, as shown below.
+Next, implement a custom session callback in the `[...nextauth].js` file, as shown below.
 
-```javascript
-
-//[...nextauth].js
-    callbacks: {
-      async session({ session, token, user }) {
-        console.log("--Session CALLED--", session, "--user--", user, "--token--", token);
-        session.user.role = user.role; //ADD THIS LINE SO THAT ROLE IS INCLUDED AS PART OF SESSION INFO.
-        return session;
-    },
-    
+```javascript title="/pages/api/auth/[...nextauth].js"
+callbacks: {
+  async session({ session, token, user }) {
+    session.user.role = user.role; // Add role value to user object so it is passed along with session
+    return session;
+},
 ```
 
-Going forward, when using the getSession hook, check that session.user.role matches the required role. Example below assumes the role 'admin' is required.
+Going forward, when using the `getSession` hook, check that `session.user.role` matches the required role. The example below assumes the role `'admin'` is required.
 
-```javascript
+```javascript title="/pages/admin.js"
+import { getSession } from "next-auth/react"
 
-const session = await getSession({ req });
+export default function Page() {
+	const session = await getSession({ req })
 
-if (session && session.user.role === "admin") {
-
-  //Allow access
-
-} else {
-
-  //Deny access
-
+	if (session && session.user.role === "admin") {
+		return (
+			<div>
+				<h1>Admin</h1>
+				<p>Welcome to the Admin Portal!</p>
+			</div>
+		)
+	} else {
+		return (
+			<div>
+				<h1>You are not authorized to view this page!</h1>
+			</div>
+		)
+	}
 }
-  
 ```
 
-It's up to you how you manage your roles, either through direct database access or building your own role update API.
+Then it is up to you how you manage your roles, either through direct database access or building your own role update API.
