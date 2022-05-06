@@ -28,3 +28,7 @@ title: Fullstack
 ### [Creating a database adapter](/tutorials/creating-a-database-adapter)
 
 - How to create a custom adapter, to use any database to fetch and store user / account data.
+
+### [Adding role based login to database session strategy](/tutorials/role-based-login-strategy)
+
+- Implement a role based login system by adding a custom session callback.
