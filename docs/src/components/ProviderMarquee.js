@@ -1,6 +1,6 @@
 import React from "react"
 import Marquee, {Motion, randomIntFromInterval} from "react-marquee-slider"
-import styles from "./index.module.css"
+import styles from "./ProviderMarqueeStyle.module.css"
 
 const icons = [
   "/img/providers/apple-black.svg",
