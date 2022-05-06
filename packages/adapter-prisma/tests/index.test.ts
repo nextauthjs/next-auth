@@ -1,4 +1,4 @@
-import { randomUUID, runBasicTests } from "adapter-test"
+import { randomUUID, runBasicTests } from "@next-auth/adapter-test"
 import { PrismaClient } from "@prisma/client"
 import { PrismaAdapter } from "../src"
 const prisma = new PrismaClient()
