@@ -24,7 +24,7 @@ importers:
       semver: 7.3.5
       stream-to-array: 2.3.0
       ts-node: 10.5.0
-      turbo: ^1.1.6
+      turbo: ^1.2.5
       typescript: ^4.5.2
     devDependencies:
       '@actions/core': registry.npmjs.org/@actions/core/1.8.0

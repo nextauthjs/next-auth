@@ -4,15 +4,15 @@
   "private": true,
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "scripts": {
-    "build:app": "turbo run build --scope=next-auth-app --include-dependencies",
-    "build": "turbo run build --scope=next-auth --scope=@next-auth/* --no-deps",
-    "lint": "turbo run lint --scope=!next-auth-docs",
+    "build:app": "turbo run build --filter=next-auth-app --include-dependencies",
+    "build": "turbo run build --filter=next-auth --filter=@next-auth/* --no-deps",
+    "lint": "turbo run lint --filter=!next-auth-docs",
     "lint:fix": "turbo run lint -- --fix",
-    "test": "turbo run test --concurrency=1 --scope=!@next-auth/pouchdb-adapter --scope=!next-auth-*",
+    "test": "turbo run test --concurrency=1 --filter=!@next-auth/pouchdb-adapter --filter=!next-auth-* --filter=[HEAD^1]",
     "setup": "turbo run setup",
     "dev": "pnpm dev:app",
-    "dev:app": "turbo run dev --parallel --no-deps --no-cache --scope=next-auth-app",
-    "dev:docs": "turbo run dev --parallel --no-deps --no-cache --scope=next-auth-docs",
+    "dev:app": "turbo run dev --parallel --no-deps --no-cache --filter=next-auth-app",
+    "dev:docs": "turbo run dev --parallel --no-deps --no-cache --filter=next-auth-docs",
     "version:pr": "node ./config/version-pr",
     "release": "ts-node scripts/release"
   },
@@ -37,7 +37,7 @@
     "semver": "7.3.5",
     "stream-to-array": "2.3.0",
     "ts-node": "10.5.0",
-    "turbo": "^1.1.6",
+    "turbo": "^1.2.5",
     "typescript": "^4.5.2"
   },
   "engines": {
