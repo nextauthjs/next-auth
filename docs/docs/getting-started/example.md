@@ -43,9 +43,12 @@ All requests to `/api/auth/*` (`signIn`, `callback`, `signOut`, etc.) will autom
 To be able to use `useSession` first you'll need to expose the session context, [`<SessionProvider />`](/getting-started/client#sessionprovider), at the top level of your application:
 
 ```jsx title="pages/_app.jsx" showLineNumbers
-import {SessionProvider} from "next-auth/react"
+import { SessionProvider } from "next-auth/react"
 
-export default function App({Component, pageProps: {session, ...pageProps}}) {
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}) {
   return (
     <SessionProvider session={session}>
       <Component {...pageProps} />
@@ -65,10 +68,10 @@ Check out the [client documentation](/getting-started/client) to see how you can
 The [`useSession()`](/getting-started/client#usesession) React Hook in the NextAuth.js client is the easiest way to check if someone is signed in.
 
 ```jsx title="components/login-btn.jsx" showLineNumbers
-import {useSession, signIn, signOut} from "next-auth/react"
+import { useSession, signIn, signOut } from "next-auth/react"
 
 export default function Component() {
-  const {data: session} = useSession()
+  const { data: session } = useSession()
   if (session) {
     return (
       <>
@@ -93,10 +96,10 @@ You can use the `useSession` hook from anywhere in your application (e.g. in a h
 To protect an API Route, you can use the [`getSession()`](/getting-started/client#getsession) method in the NextAuth.js client.
 
 ```javascript title="pages/api/restricted.js" showLineNumbers
-import {getSession} from "next-auth/react"
+import { getSession } from "next-auth/react"
 
 export default async (req, res) => {
-  const session = await getSession({req})
+  const session = await getSession({ req })
 
   if (session) {
     res.send({
@@ -143,12 +146,12 @@ callbacks: {
 Now whenever you call `getSession` or `useSession`, the data object which is returned will include the `accessToken` value.
 
 ```jsx title="components/accessToken.jsx" showLineNumbers
-import {useSession, signIn, signOut} from "next-auth/react"
+import { useSession, signIn, signOut } from "next-auth/react"
 
 export default function Component() {
   // highlight-next-line
-  const {data} = useSession()
-  const {accessToken} = data
+  const { data } = useSession()
+  const { accessToken } = data
 
   return <div>Access Token: {accessToken}</div>
 }

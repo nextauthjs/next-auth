@@ -1,4 +1,4 @@
-import React, {useEffect} from "react"
+import React, { useEffect } from "react"
 import classnames from "classnames"
 import Layout from "@theme/Layout"
 import Link from "@docusaurus/Link"
@@ -61,7 +61,7 @@ const kFormatter = (num) => {
   return Math.sign(num) * (Math.abs(num) / 1000).toFixed(1) + "k"
 }
 
-function Feature({imageUrl, title, description}) {
+function Feature({ imageUrl, title, description }) {
   const imgUrl = useBaseUrl(imageUrl)
   return (
     <div className={classnames("col col--4", styles.feature)}>
@@ -80,7 +80,7 @@ function Feature({imageUrl, title, description}) {
 
 function Home() {
   const context = useDocusaurusContext()
-  const {siteConfig = {}} = context
+  const { siteConfig = {} } = context
 
   useEffect(() => {
     window
@@ -175,7 +175,7 @@ function Home() {
               </div>
               <div className="row">
                 <div className="col">
-                  <h2 className="text--center" style={{fontSize: "2.5rem"}}>
+                  <h2 className="text--center" style={{ fontSize: "2.5rem" }}>
                     Add authentication in minutes!
                   </h2>
                 </div>
@@ -210,7 +210,7 @@ function Home() {
               </div>
               <div className="row">
                 <div className="col">
-                  <p className="text--center" style={{marginTop: "2rem"}}>
+                  <p className="text--center" style={{ marginTop: "2rem" }}>
                     <Link
                       to="/getting-started/example"
                       className="button button--primary button--lg rounded-pill"

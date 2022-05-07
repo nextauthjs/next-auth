@@ -1,5 +1,5 @@
 import React from "react"
-import Marquee, {Motion, randomIntFromInterval} from "react-marquee-slider"
+import Marquee, { Motion, randomIntFromInterval } from "react-marquee-slider"
 import styles from "./ProviderMarqueeStyle.module.css"
 
 const icons = [
@@ -57,7 +57,7 @@ const ProviderMarquee = React.memo(() => {
             >
               <div
                 className={styles.company}
-                style={{height: `${scale * 75}px`, width: `${scale * 75}px`}}
+                style={{ height: `${scale * 75}px`, width: `${scale * 75}px` }}
               >
                 <div
                   className={styles.circle}

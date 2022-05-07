@@ -13,7 +13,7 @@ module.exports = {
         {
           className: "theme-code-block-highlighted-line",
           line: "highlight-next-line",
-          block: {start: "highlight-start", end: "highlight-end"},
+          block: { start: "highlight-start", end: "highlight-end" },
         },
       ],
     },
@@ -157,7 +157,7 @@ module.exports = {
           remarkPlugins: [
             require("remark-github"),
             require("mdx-mermaid"),
-            [require("@docusaurus/remark-plugin-npm2yarn"), {sync: true}],
+            [require("@docusaurus/remark-plugin-npm2yarn"), { sync: true }],
           ],
           versions: {
             current: {

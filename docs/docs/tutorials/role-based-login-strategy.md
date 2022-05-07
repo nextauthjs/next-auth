@@ -38,22 +38,22 @@ Going forward, when using the `getSession` hook, check that `session.user.role` 
 import { getSession } from "next-auth/react"
 
 export default function Page() {
-	const session = await getSession({ req })
+  const session = await getSession({ req })
 
-	if (session && session.user.role === "admin") {
-		return (
-			<div>
-				<h1>Admin</h1>
-				<p>Welcome to the Admin Portal!</p>
-			</div>
-		)
-	} else {
-		return (
-			<div>
-				<h1>You are not authorized to view this page!</h1>
-			</div>
-		)
-	}
+  if (session && session.user.role === "admin") {
+    return (
+      <div>
+        <h1>Admin</h1>
+        <p>Welcome to the Admin Portal!</p>
+      </div>
+    )
+  } else {
+    return (
+      <div>
+        <h1>You are not authorized to view this page!</h1>
+      </div>
+    )
+  }
 }
 ```
 
