@@ -1,5 +1,5 @@
 import * as neo4j from "neo4j-driver"
-import { runBasicTests } from "adapter-test"
+import { runBasicTests } from "@next-auth/adapter-test"
 import statements from "./resources/statements"
 
 import { Neo4jAdapter, format } from "../src"

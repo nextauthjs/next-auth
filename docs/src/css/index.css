@@ -7,11 +7,6 @@
 
 /* @TODO Move as many styles for the homepage as possible into styles.module.css */
 
-/**
- * Sandpack integration
- */
-@import "@codesandbox/sandpack-react/dist/index.css";
-
 /* You can override the default Infima variables here. */
 :root {
   --ifm-color-link: #289ef9;
