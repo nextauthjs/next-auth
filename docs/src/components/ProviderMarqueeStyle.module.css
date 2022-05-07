@@ -36,6 +36,4 @@
 
 .company {
   position: relative;
-  /* width: ${(props) => props.scale * 75}px; */
-  /* height: ${(props) => props.scale * 75}px; */
 }

@@ -40,7 +40,7 @@ module.exports = {
     {
       type: "category",
       label: "Providers",
-      link: {type: "doc", id: "providers/overview"},
+      link: { type: "doc", id: "providers/overview" },
       collapsed: true,
       items: [
         {
@@ -52,7 +52,7 @@ module.exports = {
     {
       type: "category",
       label: "Adapters",
-      link: {type: "doc", id: "adapters/overview"},
+      link: { type: "doc", id: "adapters/overview" },
       collapsed: true,
       items: [
         "adapters/models",
@@ -76,7 +76,7 @@ module.exports = {
     {
       type: "category",
       label: "Guides",
-      link: {type: "doc", id: "guides/guides"},
+      link: { type: "doc", id: "guides/guides" },
       collapsed: true,
       items: ["guides/basics", "guides/fullstack", "guides/testing"],
     },
