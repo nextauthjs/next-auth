@@ -25,7 +25,7 @@ Using [System Environment Variables](https://vercel.com/docs/concepts/projects/e
 
 Used to encrypt the NextAuth.js JWT, and to hash [email verification tokens](/adapters/models#verification-token). This is the default value for the [`secret`](/configuration/options#secret) option. The `secret` option might be removed in the future in favor of this.
 
-If you are using [Middleware](/configuration/nextjs#prerequisites) this environment variables must be set.
+If you are using [Middleware](/configuration/nextjs#prerequisites) this environment variable must be set.
 
 ### NEXTAUTH_URL_INTERNAL
 
