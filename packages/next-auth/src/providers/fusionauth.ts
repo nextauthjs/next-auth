@@ -3,7 +3,7 @@ import { OAuthConfig, OAuthUserConfig } from "./oauth"
 /** This is the default openid signature returned from FusionAuth
  * it can be customized using [lambda functions](https://fusionauth.io/docs/v1/tech/lambdas)
  */
-export interface FusionAuthProfile {
+export interface FusionAuthProfile extends Record<string, any> {
   aud: string
   exp: number
   iat: number
@@ -20,9 +20,7 @@ export interface FusionAuthProfile {
   sid: string
 }
 
-export default function FusionAuth<
-  P extends Record<string, any> = FusionAuthProfile
->(
+export default function FusionAuth<P extends FusionAuthProfile>(
   // tenantId only needed if there is more than one tenant configured on the server
   options: OAuthUserConfig<P> & { tenantId?: string }
 ): OAuthConfig<P> {

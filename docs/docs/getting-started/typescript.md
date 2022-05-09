@@ -47,7 +47,7 @@ This will work in code editors with a strong TypeScript integration like VSCode 
 
 Let's look at `Session`:
 
-```ts title="pages/api/[...nextauth].ts"
+```ts title="pages/api/auth/[...nextauth].ts"
 import NextAuth from "next-auth"
 
 export default NextAuth({
