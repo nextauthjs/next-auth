@@ -33,11 +33,14 @@
   },
   "peerDependencies": {
     "firebase": "^8.6.2",
-    "next-auth": "latest"
+    "next-auth": "workspace:*"
   },
   "devDependencies": {
+    "@next-auth/adapter-test": "workspace:^0.0.0",
+    "@next-auth/tsconfig": "workspace:^0.0.0",
     "firebase": "^8.6.2",
     "firebase-tools": "^9.11.0",
-    "next-auth": "^4.0.1"
+    "jest": "^27.4.3",
+    "next-auth": "workspace:*"
   }
 }

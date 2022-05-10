@@ -91,7 +91,7 @@ async function handleMiddleware(
     return NextResponse.redirect(errorUrl)
   }
 
-  const token = await getToken({ req: req as any, decode: options?.jwt?.decode })
+  const token = await getToken({ req, decode: options?.jwt?.decode })
 
   const isAuthorized =
     (await options?.callbacks?.authorized?.({ req, token })) ?? !!token

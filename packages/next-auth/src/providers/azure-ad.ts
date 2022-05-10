@@ -1,13 +1,13 @@
 import type { OAuthConfig, OAuthUserConfig } from "."
 
-export interface AzureADProfile {
+export interface AzureADProfile extends Record<string, any> {
   sub: string
   nicname: string
   email: string
   picture: string
 }
 
-export default function AzureAD<P extends Record<string, any> = AzureADProfile>(
+export default function AzureAD<P extends AzureADProfile>(
   options: OAuthUserConfig<P> & {
     /**
      * https://docs.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0#examples
