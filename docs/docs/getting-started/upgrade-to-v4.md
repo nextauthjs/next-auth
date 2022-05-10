@@ -331,7 +331,7 @@ The way we save data with adapters have slightly changed. With the new Adapter A
 - `user_id`/`userId` consistently named `userId`.
 - `compound_id`/`compoundId` is removed from Account.
 - `access_token`/`accessToken` is removed from Session.
-- `email_verified`/`emailVerified` on User is consistently named `email_verified`.
+- `email_verified`/`emailVerified` on User is consistently named `emailVerified`.
 - `provider_id`/`providerId` renamed to `provider` on Account
 - `provider_type`/`providerType` renamed to `type` on Account
 - `provider_account_id`/`providerAccountId` on Account is consistently named `providerAccountId`
@@ -419,8 +419,8 @@ They are designed to be run directly against the database itself. So instead of 
 /* ACCOUNT */
 ALTER TABLE accounts
 CHANGE "access_token_expires" "expires_at" int
-CHANGE "user_id" "userId" varchar(191)
-ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id)
+CHANGE "user_id" "userId" varchar(255)
+ADD CONSTRAINT fk_user_id FOREIGN KEY (userId) REFERENCES users(id)
 RENAME COLUMN "provider_id" "provider"
 RENAME COLUMN "provider_account_id" "providerAccountId"
 DROP COLUMN "provider_type"
@@ -429,14 +429,14 @@ DROP COLUMN "compound_id"
 DROP COLUMN "created_at"
 DROP COLUMN "updated_at"
 
-ADD COLUMN "token_type" varchar(191) NULL
-ADD COLUMN "scope" varchar(191) NULL
-ADD COLUMN "id_token" varchar(191) NULL
-ADD COLUMN "session_state" varchar(191) NULL
+ADD COLUMN "token_type" varchar(255) NULL
+ADD COLUMN "scope" varchar(255) NULL
+ADD COLUMN "id_token" varchar(255) NULL
+ADD COLUMN "session_state" varchar(255) NULL
 
 /* Note: These are only needed if you're going to be using the old Twitter OAuth 1.0 provider. */
-ADD COLUMN "oauth_token_secret" varchar(191) NULL
-ADD COLUMN "oauth_token" varchar(191) NULL
+ADD COLUMN "oauth_token_secret" varchar(255) NULL
+ADD COLUMN "oauth_token" varchar(255) NULL
 
 /* USER */
 ALTER TABLE users
@@ -448,15 +448,16 @@ DROP COLUMN "updated_at"
 /* SESSION */
 ALTER TABLE sessions
 RENAME COLUMN "session_token" "sessionToken"
-CHANGE "user_id" "userId" varchar(191)
-ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id)
+CHANGE "user_id" "userId" varchar(255)
+ADD CONSTRAINT fk_user_id FOREIGN KEY (userId) REFERENCES users(id)
 DROP COLUMN "access_token"
 /* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
 DROP COLUMN "created_at"
 DROP COLUMN "updated_at"
 
 /* VERIFICATION REQUESTS */
-ALTER TABLE verification_requests
+ALTER TABLE verification_requests RENAME verification_tokens
+ALTER TABLE verification_tokens
 DROP COLUMN id
 /* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
 DROP COLUMN "created_at"
@@ -467,50 +468,84 @@ DROP COLUMN "updated_at"
 
 ```sql
 /* ACCOUNT */
+ALTER TABLE accounts RENAME COLUMN "user_id" TO "userId";
+ALTER TABLE accounts RENAME COLUMN "provider_id" TO "provider";
+ALTER TABLE accounts RENAME COLUMN "provider_account_id" TO "providerAccountId";
+ALTER TABLE accounts RENAME COLUMN "access_token_expires" TO "expires_at";
+ALTER TABLE accounts RENAME COLUMN "provider_type" TO "type";
+
+/* Do conversion of TIMESTAMPTZ to BIGINT */
+ALTER TABLE accounts ALTER COLUMN "expires_at" TYPE TEXT USING CAST(extract(epoch FROM "expires_at") AS BIGINT)*1000;
+
+/* Keep id as SERIAL with autoincrement when using ORM. Using new v4 uuid format won't work because of incompatibility */
+/* ALTER TABLE accounts ALTER COLUMN "id" TYPE TEXT; */
+/* ALTER TABLE accounts ALTER COLUMN "userId" TYPE TEXT; */
+ALTER TABLE accounts ALTER COLUMN "type" TYPE TEXT;
+ALTER TABLE accounts ALTER COLUMN "provider" TYPE TEXT;
+ALTER TABLE accounts ALTER COLUMN "providerAccountId" TYPE TEXT;
+
+ALTER TABLE accounts ADD CONSTRAINT fk_user_id FOREIGN KEY ("userId") REFERENCES users(id);
 ALTER TABLE accounts
-CHANGE "access_token_expires" "expires_at" int
-CHANGE "user_id" "userId" text
-ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id)
-RENAME COLUMN "provider_id" "provider"
-RENAME COLUMN "provider_account_id" "providerAccountId"
-DROP COLUMN "provider_type"
-DROP COLUMN "compound_id"
+DROP COLUMN IF EXISTS "compound_id";
 /* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
-DROP COLUMN "created_at"
-DROP COLUMN "updated_at"
+ALTER TABLE accounts
+DROP COLUMN IF EXISTS "created_at",
+DROP COLUMN IF EXISTS "updated_at";
 
-ADD COLUMN "token_type" text NULL
-ADD COLUMN "scope" text NULL
-ADD COLUMN "id_token" text NULL
-ADD COLUMN "session_state" text NULL
-
+ALTER TABLE accounts
+ADD COLUMN IF NOT EXISTS "token_type" TEXT NULL,
+ADD COLUMN IF NOT EXISTS "scope" TEXT NULL,
+ADD COLUMN IF NOT EXISTS "id_token" TEXT NULL,
+ADD COLUMN IF NOT EXISTS "session_state" TEXT NULL;
 /* Note: These are only needed if you're going to be using the old Twitter OAuth 1.0 provider. */
-ADD COLUMN "oauth_token_secret" text NULL
-ADD COLUMN "oauth_token" text NULL
+/* ALTER TABLE accounts
+ADD COLUMN IF NOT EXISTS "oauth_token_secret" TEXT NULL,
+ADD COLUMN IF NOT EXISTS "oauth_token" TEXT NULL; */
 
 /* USER */
-ALTER TABLE users
-RENAME COLUMN "email_verified" "emailVerified"
+ALTER TABLE users RENAME COLUMN "email_verified" TO "emailVerified";
+
+/* Keep id as SERIAL with autoincrement when using ORM. Using new v4 uuid format won't work because of incompatibility */
+/* ALTER TABLE users ALTER COLUMN "id" TYPE TEXT; */
+ALTER TABLE users ALTER COLUMN "name" TYPE TEXT;
+ALTER TABLE users ALTER COLUMN "email" TYPE TEXT;
+ALTER TABLE users ALTER COLUMN "image" TYPE TEXT;
+/* Do conversion of TIMESTAMPTZ to BIGINT and then TEXT */
+ALTER TABLE users ALTER COLUMN "emailVerified" TYPE TEXT USING CAST(CAST(extract(epoch FROM "emailVerified") AS BIGINT)*1000 AS TEXT);
 /* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
-DROP COLUMN "created_at"
-DROP COLUMN "updated_at"
+ALTER TABLE users
+DROP COLUMN IF EXISTS "created_at",
+DROP COLUMN IF EXISTS "updated_at";
 
 /* SESSION */
-ALTER TABLE sessions
-RENAME COLUMN "session_token" "sessionToken"
-CHANGE "user_id" "userId" text
-ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id)
-DROP COLUMN "access_token"
+ALTER TABLE sessions RENAME COLUMN "session_token" TO "sessionToken";
+ALTER TABLE sessions RENAME COLUMN "user_id" TO "userId";
+
+/* Keep id as SERIAL with autoincrement when using ORM. Using new v4 uuid format won't work because of incompatibility */
+/* ALTER TABLE sessions ALTER COLUMN "id" TYPE TEXT; */
+/* ALTER TABLE sessions ALTER COLUMN "userId" TYPE TEXT; */
+ALTER TABLE sessions ALTER COLUMN "sessionToken" TYPE TEXT;
+ALTER TABLE sessions ADD CONSTRAINT fk_user_id FOREIGN KEY ("userId") REFERENCES users(id);
+/* Do conversion of TIMESTAMPTZ to BIGINT and then TEXT */
+ALTER TABLE sessions ALTER COLUMN "expires" TYPE TEXT USING CAST(CAST(extract(epoch FROM "expires") AS BIGINT)*1000 AS TEXT);
+ALTER TABLE sessions DROP COLUMN IF EXISTS "access_token";
 /* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
-DROP COLUMN "created_at"
-DROP COLUMN "updated_at"
+ALTER TABLE sessions
+DROP COLUMN IF EXISTS "created_at",
+DROP COLUMN IF EXISTS "updated_at";
 
 /* VERIFICATION REQUESTS */
-ALTER TABLE verification_requests
-DROP COLUMN id
+ALTER TABLE verification_requests RENAME TO verification_tokens;
+/* Keep id as ORM needs it */
+/* ALTER TABLE verification_tokens DROP COLUMN IF EXISTS id; */
+ALTER TABLE verification_tokens ALTER COLUMN "identifier" TYPE TEXT;
+ALTER TABLE verification_tokens ALTER COLUMN "token" TYPE TEXT;
+/* Do conversion of TIMESTAMPTZ to BIGINT and then TEXT */
+ALTER TABLE verification_tokens ALTER COLUMN "expires" TYPE TEXT USING CAST(CAST(extract(epoch FROM "expires") AS BIGINT)*1000 AS TEXT);
 /* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
-DROP COLUMN "created_at"
-DROP COLUMN "updated_at"
+ALTER TABLE verification_tokens
+DROP COLUMN IF EXISTS "created_at",
+DROP COLUMN IF EXISTS "updated_at";
 ```
 
 #### MongoDB

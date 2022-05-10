@@ -1,6 +1,6 @@
 import type { OAuthConfig, OAuthUserConfig } from "."
 
-export interface WorkOSProfile {
+export interface WorkOSProfile extends Record<string, any> {
   object: string
   id: string
   organization_id: string
@@ -15,10 +15,11 @@ export interface WorkOSProfile {
     email: string
     lastName: string
     firstName: string
+    picture: string
   }
 }
 
-export default function WorkOS<P extends Record<string, any> = WorkOSProfile>(
+export default function WorkOS<P extends WorkOSProfile>(
   options: OAuthUserConfig<P>
 ): OAuthConfig<P> {
   const { issuer = "https://api.workos.com/" } = options
