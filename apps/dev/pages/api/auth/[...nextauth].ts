@@ -195,10 +195,9 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.PATREON_SECRET,
     }),
     AsgardeoProvider({
-      organization: process.env.ASGARDEO_ORGANIZATION,
       clientId: process.env.ASGARDEO_CLIENT_ID,
       clientSecret: process.env.ASGARDEO_CLIENT_SECRET,
-      scopes: process.env.ASGARDEO_SCOPES,
+      issuer: process.env.ASGARDEO_ISSUER
     }),
     TraktProvider({
       clientId: process.env.TRAKT_ID,
