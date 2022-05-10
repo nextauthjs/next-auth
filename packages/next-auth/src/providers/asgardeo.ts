@@ -2,8 +2,9 @@ import type { OAuthConfig, OAuthUserConfig } from "."
 
 export interface AsgardeoProfile {
   sub: string
-  name: string
+  given_name: string
   email: string
+  picture: string
 }
 
 export default function Asgardeo<P extends Record<string, any> = AsgardeoProfile>(
