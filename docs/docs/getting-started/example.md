@@ -63,6 +63,30 @@ Instances of `useSession` will then have access to the session data and status. 
 Check out the [client documentation](/getting-started/client) to see how you can improve the user experience and page performance by using the NextAuth.js client.
 :::
 
+## Setting Enviroment Variables
+
+To set your enviroment variables, we will need to create `.env.local` file in the root directory. We have to add the required enviroment variables that we are using for authentication.
+
+```.env title=".env.local" showLineNumbers
+  GITHUB_ID="< your github ID >"
+  GITHUB_SECRET="< your github secret key >"
+```
+
+Next JS is a server side language, so our enviroment variables will not be accessed anywhere in the app, to access those enviroment variables that we have defined in `.env.local` we have to configure `next.config.js`
+
+```jsx title="next.config.js" showLineNumbers
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  env: {
+    GITHUB_ID: process.env.GITHUB_ID,
+    GITHUB_SECRET: process.env.GITHUB_SECRET
+  }
+}
+
+module.exports = nextConfig
+```
+
 ### Frontend - Add React Hook
 
 The [`useSession()`](/getting-started/client#usesession) React Hook in the NextAuth.js client is the easiest way to check if someone is signed in.
