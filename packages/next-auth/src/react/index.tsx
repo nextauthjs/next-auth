@@ -193,25 +193,20 @@ export async function signIn<
   P extends RedirectableProviderType ? SignInResponse | undefined : undefined
 > {
   const { callbackUrl = window.location.href, redirect = true } = options ?? {}
-  throw new Error("this signIn method is not used by devinrhode2's company")
-  // @ts-expect-error - remove when `throw` is removed.
-  const baseUrl = apiBaseUrl(__NEXTAUTH)
+  const baseUrl = apiBaseUrl(__NEXTAUTH, window.location.host)
   const providers = await getProviders()
 
   if (!providers) {
     window.location.href = `${baseUrl}/error`
     return
   }
-  // @ts-expect-error - remove when `throw` is removed.
   if (!provider || !(provider in providers)) {
     window.location.href = `${baseUrl}/signin?${new URLSearchParams({
       callbackUrl,
     })}`
     return
   }
-  // @ts-expect-error - remove when `throw` is removed.
   const isCredentials = providers[provider].type === "credentials"
-  // @ts-expect-error - remove when `throw` is removed.
   const isEmail = providers[provider].type === "email"
   const isSupportingReturn = isCredentials || isEmail
 
@@ -269,9 +264,7 @@ export async function signOut<R extends boolean = true>(
   options?: SignOutParams<R>
 ): Promise<R extends true ? undefined : SignOutResponse> {
   const { callbackUrl = window.location.href } = options ?? {}
-  throw new Error('signout not yet supported')
-  // @ts-expect-error
-  const baseUrl = apiBaseUrl(__NEXTAUTH)
+  const baseUrl = apiBaseUrl(__NEXTAUTH, window.location.host)
   const fetchOptions = {
     method: "post",
     headers: {
