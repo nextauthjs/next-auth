@@ -104,13 +104,8 @@ export default function Header() {
             </Link>
           </li>
           <li className={styles.navItem}>
-            <Link href="/middleware-protected">
+            <Link href="/middleware-protected?with-params">
               <a>Middleware protected</a>
-            </Link>
-          </li>
-          <li className={styles.navItem}>
-            <Link href="/middleware-protected?params=next">
-              <a>Middleware protected with params</a>
             </Link>
           </li>
         </ul>
