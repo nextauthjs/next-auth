@@ -57,12 +57,6 @@ html[data-theme="dark"] svg[id^="mermaid-svg"] text[id*="-attr"] {
 @import "navbar.css";
 @import "search.css";
 
-@media screen and (max-width: 360px) {
-  html {
-    font-size: 0.8rem;
-  }
-}
-
 a {
   font-weight: 600;
 }
