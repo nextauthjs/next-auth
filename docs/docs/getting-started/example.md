@@ -3,6 +3,21 @@ id: example
 title: Getting Started
 ---
 
+## Installtion
+
+Install with npm
+
+```sh
+  npm i next-auth
+```
+
+Install with yarn
+
+```sh
+  yarn add next-auth
+```
+
+
 The example code below describes how to add authentication to a Next.js app.
 
 ## New Project
