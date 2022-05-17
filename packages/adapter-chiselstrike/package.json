@@ -1,0 +1,47 @@
+{
+    "name": "@next-auth/chiselstrike-adapter",
+    "version": "1.0.0",
+    "description": "ChiselStrike adapter for next-auth.",
+    "homepage": "https://next-auth.js.org",
+    "repository": "https://github.com/nextauthjs/next-auth",
+    "bugs": {
+        "url": "https://github.com/nextauthjs/next-auth/issues"
+    },
+    "author": "Dejan Mircevski",
+    "main": "dist/index.js",
+    "license": "ISC",
+    "keywords": [
+        "next-auth",
+        "next.js",
+        "oauth",
+        "chiselstrike"
+    ],
+    "private": false,
+    "publishConfig": {
+        "access": "public"
+    },
+    "scripts": {
+        "test": "jest"
+    },
+    "files": [
+        "README.md",
+        "dist"
+    ],
+    "dependencies": {
+        "cross-fetch": "^3.1.5",
+        "next-auth": "workspace:"
+    },
+    "peerDependencies": {
+        "cross-fetch": "^3.1.5",
+        "next-auth": "workspace:"
+    },
+    "devDependencies": {
+        "@next-auth/adapter-test": "workspace:^0.0.0",
+        "@next-auth/tsconfig": "workspace:^0.0.0",
+        "jest": "^27.4.3",
+        "@types/jest": "^26.0.24"
+    },
+    "jest": {
+        "preset": "@next-auth/adapter-test/jest"
+    }
+}
