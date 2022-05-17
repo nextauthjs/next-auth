@@ -6,7 +6,7 @@ export interface UnitedEffectsProfile extends Record<string, any> {
 }
 
 export default function UnitedEffects<P extends UnitedEffectsProfile>(
-  options: OAuthUserConfig<P> & { issuer: string } 
+  options: OAuthUserConfig<P> & { issuer: string }
 ): OAuthConfig<P> {
   return {
     id: "united-effects",
@@ -21,7 +21,9 @@ export default function UnitedEffects<P extends UnitedEffectsProfile>(
     profile(profile) {
       return {
         id: profile.sub,
+        name: null,
         email: profile.email,
+        image: null,
       }
     },
     options,
