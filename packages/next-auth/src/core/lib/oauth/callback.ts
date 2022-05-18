@@ -131,6 +131,17 @@ export default async function oAuthCallback(params: {
       })
     } else if (provider.idToken) {
       profile = tokens.claims()
+      if (!profile.user && body?.user && provider.id === 'apple' ) {
+        try {
+          profile.user = typeof body.user === 'string' ? JSON.parse(body.user) : body.user
+        } catch (error) {
+          profile.user = body.user
+          logger.debug("ERR_PARSING_BODY_USER_OBJECT_APPLE", {
+            error: error as Error,
+            providerId: provider.id,
+          })
+        } 
+      }
     } else {
       profile = await client.userinfo(tokens, {
         // @ts-expect-error
