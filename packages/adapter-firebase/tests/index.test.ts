@@ -1,5 +1,5 @@
 import { runBasicTests } from "@next-auth/adapter-test"
-import { FirebaseAdapter } from "../src"
+import { FirestoreAdapter } from "../src"
 
 import { getFirestore, connectFirestoreEmulator, terminate, collection, query, where, limit, getDocs, getDoc, doc } from "firebase/firestore"
 import { initializeApp } from "firebase/app";
@@ -20,7 +20,7 @@ const Accounts = collection(firestore, 'accounts').withConverter(getConverter<Ac
 const VerificationTokens = collection(firestore, 'verificationTokens').withConverter(getConverter<VerificationToken & IndexableObject>({ excludeId: true }));
 
 runBasicTests({
-  adapter: FirebaseAdapter({ projectId: "next-auth-test" }),
+  adapter: FirestoreAdapter({ projectId: "next-auth-test" }),
   db: {
     async disconnect() {
       await terminate(firestore);

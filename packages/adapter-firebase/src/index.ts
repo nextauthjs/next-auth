@@ -29,9 +29,12 @@ export interface FirestoreAdapterOptions {
   };
 }
 
-export const FirebaseAdapter = ({ emulator, ...firebaseOptions }: FirebaseOptions & FirebaseAdapterOptions): Adapter => {
-  const firebaseApp = initializeApp(firebaseOptions);
-  const db = getFirestore(firebaseApp);
+export function FirestoreAdapter({
+  emulator,
+  ...firebaseOptions
+}: FirebaseOptions & FirestoreAdapterOptions): Adapter {
+  const firebaseApp = initializeApp(firebaseOptions)
+  const db = getFirestore(firebaseApp)
 
   if (emulator) {
     connectFirestoreEmulator(db, emulator?.host ?? 'localhost', emulator?.port ?? 3001);

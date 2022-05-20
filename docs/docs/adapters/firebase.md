@@ -5,14 +5,14 @@ title: Firebase
 
 # Firebase
 
-This is the Firebase Adapter for [`next-auth`](https://next-auth.js.org). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
+This is the Firebase (Firestore) Adapter for [`next-auth`](https://next-auth.js.org). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
 
 ## Getting Started
 
 1. Install the necessary packages
 
 ```bash npm2yarn2pnpm
-npm install next-auth @next-auth/firebase-adapter@experimental
+npm install next-auth @next-auth/firebase-adapter
 ```
 
 2. Add this adapter to your `pages/api/auth/[...nextauth].js` next-auth configuration object.
@@ -20,7 +20,7 @@ npm install next-auth @next-auth/firebase-adapter@experimental
 ```javascript title="pages/api/auth/[...nextauth].js"
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
-import { FirebaseAdapter } from "@next-auth/firebase-adapter"
+import { FirestoreAdapter } from "@next-auth/firebase-adapter"
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
@@ -32,7 +32,7 @@ export default NextAuth({
       clientSecret: process.env.GOOGLE_SECRET,
     }),
   ],
-  adapter: FirebaseAdapter({
+  adapter: FirestoreAdapter({
     apiKey: process.env.FIREBASE_API_KEY,
     appId: process.env.FIREBASE_APP_ID,
     authDomain: process.env.FIREBASE_AUTH_DOMAIN,
@@ -40,9 +40,10 @@ export default NextAuth({
     projectId: process.env.FIREBASE_PROJECT_ID,
     storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
     messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+    // Optional emulator config (see below for options)
     emulator: {},
   }),
-  ...
+  // ...
 });
 ```
 
@@ -70,7 +71,7 @@ See [firebase.google.com/docs/web/setup](https://firebase.google.com/docs/web/se
 You can optionally pass in emulator options to automatically connect to your local Firebase emulator.
 
 ```js
-FirebaseAdapter({
+FirestoreAdapter({
   // ...
   // Passing in an enable object will enable the emulator
   emulator: {
