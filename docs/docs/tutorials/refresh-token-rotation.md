@@ -61,7 +61,7 @@ async function refreshAccessToken(token) {
     return {
       ...token,
       accessToken: refreshedTokens.access_token,
-      accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
+      accessTokenExpires: Date.now() + refreshedTokens.expires_at * 1000,
       refreshToken: refreshedTokens.refresh_token ?? token.refreshToken, // Fall back to old refresh token
     }
   } catch (error) {
@@ -88,7 +88,7 @@ export default NextAuth({
       if (account && user) {
         return {
           accessToken: account.access_token,
-          accessTokenExpires: Date.now() + account.expires_in * 1000,
+          accessTokenExpires: Date.now() + account.expires_at * 1000,
           refreshToken: account.refresh_token,
           user,
         }
