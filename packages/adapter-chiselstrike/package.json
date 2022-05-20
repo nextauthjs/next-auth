@@ -28,12 +28,12 @@
         "dist"
     ],
     "dependencies": {
-        "cross-fetch": "^3.1.5",
-        "next-auth": "workspace:"
+        "next-auth": "workspace:",
+        "node-fetch": "^2.6.1"
     },
     "peerDependencies": {
-        "cross-fetch": "^3.1.5",
-        "next-auth": "workspace:"
+        "next-auth": "workspace:",
+        "node-fetch": "^2.6.1"
     },
     "devDependencies": {
         "@next-auth/adapter-test": "workspace:^0.0.0",

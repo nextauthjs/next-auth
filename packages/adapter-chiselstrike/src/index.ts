@@ -1,6 +1,7 @@
-import { fetch, Headers } from "cross-fetch";
 import { Account } from "next-auth";
 import type { Adapter, AdapterSession, AdapterUser, VerificationToken } from "next-auth/adapters"
+import { Headers, RequestInfo, RequestInit, Response } from "node-fetch"
+import fetch from "node-fetch"
 
 export class ChiselStrikeAuthFetcher {
     url: string; /// ChiselStrike backend.
