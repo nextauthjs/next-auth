@@ -26,7 +26,7 @@ npm install next-auth @next-auth/chiselstrike-adapter
 Configure NextAuth with the ChiselStrike adapter and a session callback to record the user ID.  In
 `pages/api/auth/[...nextauth].js`:
 ```js
-const adapter = new CSAdapter(<url>, <auth-secret>)
+const adapter = ChiselStrikeAdapter(new ChiselStrikeAuthFetcher(<url>, <auth-secret>))
 
 export default NextAuth({
   adapter,
@@ -64,7 +64,7 @@ Before running a build/test cycle, please set up a ChiselStrike backend, either 
 ```json
 { "CHISELD_AUTH_SECRET" : "1234" }
 ```
-If running a ChiselStrike backend in the cloud, please edit all instances of `new ChiselStrikeAdapter` in the `tests/` directory to reflect your backend's URL and auth secret.
+If running a ChiselStrike backend in the cloud, please edit all instances of `new ChiselStrikeAuthFetcher` in the `tests/` directory to reflect your backend's URL and auth secret.
 
 Build and test:
 ```bash

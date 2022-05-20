@@ -9,13 +9,14 @@
 
 import fetch from "cross-fetch"
 import { Account } from "next-auth"
-import { ChiselStrikeAdapter } from "../src"
+import { ChiselStrikeAdapter, ChiselStrikeAuthFetcher } from "../src"
 export { }
 
-const a = new ChiselStrikeAdapter('http://localhost:8080', '1234')
+const fetcher = new ChiselStrikeAuthFetcher('http://localhost:8080', '1234')
+const a = ChiselStrikeAdapter(fetcher)
 
 beforeEach(async () => {
-    await a.deleteEverything()
+    await fetcher.deleteEverything()
 })
 
 test('createUser returns payload', async () => {
