@@ -3,6 +3,7 @@ export const config = {
   // TODO: Generate dynamically
   packages: {
     "next-auth": "packages/next-auth",
+    "@next-auth/airtable-adapter": "packages/adapter-airtable",
     "@next-auth/dgraph-adapter": "packages/adapter-dgraph",
     "@next-auth/fauna-adapter": "packages/adapter-fauna",
     "@next-auth/mikro-orm-adapter": "packages/adapter-mikro-orm",

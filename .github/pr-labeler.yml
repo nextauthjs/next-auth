@@ -12,6 +12,9 @@ adapters:
   - packages/next-auth/src/adapters.ts
   - packages/*-adapter/**
 
+airtable:
+  - packages/adapter-airtable/**
+
 dgraph:
   - packages/adapter-dgraph/**
 

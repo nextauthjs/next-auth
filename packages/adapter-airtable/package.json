@@ -1,0 +1,52 @@
+{
+  "name": "@next-auth/adapter-airtable",
+  "version": "1.0.0",
+  "description": "Airtable adapter for next-auth",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "airtable",
+    "adapter"
+  ],
+  "bugs": {
+    "url": "https://github.com/kyen99/next-auth-adapter-airtable/issues"
+  },
+  "repository": "https://github.com/nextauthjs/adapters",
+  "homepage": "https://next-auth.js.org",
+  "author": "Kai Yen <kai@c4k.net>",
+  "license": "ISC",
+  "files": [
+    "README.md",
+    "dist"
+  ],
+  "private": false,
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "dependencies": {
+    "airtable": "^0.11.3",
+    "encoding": "^0.1.13",
+    "next-auth": "^4.3.4"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.18.0",
+    "@babel/preset-env": "^7.18.0",
+    "@babel/preset-typescript": "^7.16.7",
+    "@next-auth/adapter-test": "workspace:^0.0.0",
+    "@next-auth/tsconfig": "workspace:^0.0.0",
+    "@types/jest": "^27.5.1",
+    "babel-jest": "^27.4.2",
+    "dotenv": "^16.0.0",
+    "jest": "^27.4.2",
+    "ts-jest": "^27.0.3"
+  },
+  "peerDependencies": {
+    "next-auth": "workspace:*"
+  },
+  "jest": {
+    "preset": "@next-auth/adapter-test/jest"
+  }
+}
