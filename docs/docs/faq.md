@@ -270,7 +270,7 @@ Ultimately if your request is not accepted or is not actively in development, yo
 </summary>
 <p>
 
-NextAuth.js by default uses JSON Web Tokens for saving the user's session. However, if you use a [database adapter](/adapters/overview), the database will be used to persist the user's session. You can force the usage of JWT when using a database [through the configuration options](/configuration/options#session).
+NextAuth.js by default uses JSON Web Tokens for saving the user's session. However, if you use a [database adapter](/adapters/overview), the database will be used to persist the user's session. You can force the usage of JWT when using a database [through the configuration options](/configuration/options#session). Since v4 all our JWT tokens are now encrypted by default with A256GCM.
 
 </p>
 </details>
@@ -285,11 +285,9 @@ JSON Web Tokens can be used for session tokens, but are also used for lots of ot
 
 - Advantages of using a JWT as a session token include that they do not require a database to store sessions, this can be faster and cheaper to run and easier to scale.
 
-- JSON Web Tokens in NextAuth.js are secured using cryptographic signing (JWS) by default and it is easy for services and API endpoints to verify tokens without having to contact a database to verify them.
+- JSON Web Tokens in NextAuth.js are secured using cryptographic encryption (JWE) to store the included information directly in a JWT session token. You may then use the token to pass information between services and APIs on the same domain without having to contact a database to verify the included information.
 
-- You can enable encryption (JWE) to store include information directly in a JWT session token that you wish to keep secret and use the token to pass information between services / APIs on the same domain.
-
-- You can use JWT to securely store information you do not mind the client knowing even without encryption, as the JWT is stored in a server-readable-only-token so data in the JWT is not accessible to third party JavaScript running on your site.
+- You can use JWT to securely store information you do not mind the client knowing even without encryption, as the JWT is stored in a server-readable-only cookie so data in the JWT is not accessible to third party JavaScript running on your site.
 
 </p>
 </details>
@@ -308,7 +306,7 @@ JSON Web Tokens can be used for session tokens, but are also used for lots of ot
 
 - As with database session tokens, JSON Web Tokens are limited in the amount of data you can store in them. There is typically a limit of around 4096 bytes per cookie, though the exact limit varies between browsers, proxies and hosting services. If you want to support most browsers, then do not exceed 4096 bytes per cookie. If you want to save more data, you will need to persist your sessions in a database (Source: [browsercookielimits.iain.guru](http://browsercookielimits.iain.guru/))
 
-  The more data you try to store in a token and the more other cookies you set, the closer you will come to this limit. If you wish to store more than ~4 KB of data you're probably at the point where you need to store a unique ID in the token and persist the data elsewhere (e.g. in a server-side key/value store).
+  The more data you try to store in a token and the more other cookies you set, the closer you will come to this limit. Since v4 we have implemented cookie chunking so that cookies over the 4kb limit get split and reassembled upon parsing. However since this data needs to be transmitted on every request, if you wish to store more than ~4 KB of data you're probably at the point where you want to store a unique ID in the token and persist the data elsewhere (e.g. in a server-side key/value store).
 
 - Data stored in an encrypted JSON Web Token (JWE) may be compromised at some point.
 
@@ -316,9 +314,8 @@ JSON Web Tokens can be used for session tokens, but are also used for lots of ot
 
   Avoid storing any data in a token that might be problematic if it were to be decrypted in the future.
 
-- If you do not explicitly specify a secret for for NextAuth.js, existing sessions will be invalidated any time your NextAuth.js configuration changes, as NextAuth.js will default to an auto-generated secret.
+- If you do not explicitly specify a secret for for NextAuth.js, existing sessions will be invalidated any time your NextAuth.js configuration changes, as NextAuth.js will default to an auto-generated secret. Since v4 this only impacts development and generating a secret is required in production.
 
-  If using JSON Web Token you should at least specify a secret and ideally configure public/private keys.
 
 </p>
 </details>

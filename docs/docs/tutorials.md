@@ -13,21 +13,13 @@ title: Tutorials and Explainers
 
 - This is an introductory video to NextAuth.js for beginners. In this video, it is explained how to set up authentication in a few easy steps and add different configurations to make it more robust and secure.
 
-#### [Authentication patterns for Next.js](https://leerob.io/blog/nextjs-authentication) <svg xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '5px', marginBottom:'-6px'}} height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>External</title><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /> </svg>
+#### [Authentication patterns for Next.js](https://nextjs.org/docs/authentication) <svg xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '5px', marginBottom:'-6px'}} height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>External</title><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /> </svg>
 
 - Next.js supports multiple patterns for authentication, each designed for different use cases. This guide will allow you to choose your adventure based on your constraints. By Lee Robinson.
 
 #### [Adding Authentication to an existing Next.js Application in no time!](https://dev.to/ndom91/adding-authentication-to-an-existing-serverless-next-js-app-in-no-time-with-nextauth-js-192h) <svg style={{ marginLeft: '5px', marginBottom:'-6px'}} width="30" height="25" viewBox="0 0 50 40" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="50" height="40" rx="3" style={{ fill: '#000' }}></rect><path d="M19.099 23.508c0 1.31-.423 2.388-1.27 3.234-.838.839-1.942 1.258-3.312 1.258h-4.403V12.277h4.492c1.31 0 2.385.423 3.224 1.27.846.838 1.269 1.912 1.269 3.223v6.738zm-2.808 0V16.77c0-.562-.187-.981-.562-1.258-.374-.285-.748-.427-1.122-.427h-1.685v10.107h1.684c.375 0 .75-.138 1.123-.415.375-.285.562-.708.562-1.27zM28.185 28h-5.896c-.562 0-1.03-.187-1.404-.561-.375-.375-.562-.843-.562-1.404V14.243c0-.562.187-1.03.562-1.404.374-.375.842-.562 1.404-.562h5.896v2.808H23.13v3.65h3.088v2.808h-3.088v3.65h5.054V28zm7.12 0c-.936 0-1.684-.655-2.246-1.965l-3.65-13.758h3.089l2.807 10.804 2.808-10.804H41.2l-3.65 13.758C36.99 27.345 36.241 28 35.305 28z" style={{ fill: '#fff' }}></path></svg>
 
 - This tutorial walks one through adding NextAuth.js to an existing project. Including setting up the OAuth client id and secret, adding the API routes for authentication, protecting pages and API routes behind that authentication, etc.
-
-#### [Securing pages and API routes](tutorials/securing-pages-and-api-routes)
-
-- How to restrict access to pages and API routes.
-
-#### [Usage with class components](tutorials/usage-with-class-components)
-
-- How to use `useSession()` hook with class components.
 
 #### [Adding social authentication support to a Next.js app](https://getstarted.sh/bulletproof-next/add-social-authentication) <svg xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '5px', marginBottom:'-6px'}} height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>External</title> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /> </svg>
 
@@ -49,7 +41,25 @@ title: Tutorials and Explainers
 
 - A video tutorial by Xiaoru Li from Prisma.
 
+#### [How to authenticate Next.js Apps with Sign-In With Ethereum (SIWE) & NextAuth.js](https://docs.login.xyz/integrations/nextauth.js) <svg xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '5px', marginBottom:'-6px'}} height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>External</title> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /> </svg>
+
+- Learn how to use Sign-In With Ethereum to authenticate your users with their existing Ethereum wallets - identifiers they personally control.
+- Example application: [spruceid/siwe-next-auth-example](https://github.com/spruceid/siwe-next-auth-example)
+
 ## Fullstack
+
+#### [Build a FullStack App with Next.js, NextAuth.js, Supabase & Prisma](https://themodern.dev/courses/build-a-fullstack-app-with-nextjs-supabase-and-prisma-322389284337222224) <svg xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '5px', marginBottom:'-6px'}} height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>External</title> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /> </svg>
+
+In this [free course](https://themodern.dev/courses/build-a-fullstack-app-with-nextjs-supabase-and-prisma-322389284337222224), you'll learn how to build a full-stack app using the following technologies:
+
+- **Next.js** - The React framework for building the UI of the app and the REST API
+- **NextAuth.js** - For implementing passwordless and OAuth authentication
+- **Supabase** - For persisting the app data into a PostgreSQL database and storing media files
+- **Prisma** - For making it easy to read and write data from our app from and to the database
+
+The app that we'll work on in this course is called **_SupaVacation_**. It is an online marketplace for vacation rentals where users can browse through all the properties for rent, bookmark their favorite ones, and even rent their own properties.
+
+> Here's [a live demo](https://supa-vacation.vercel.app/) of the app's final version. It is what your app should look likes after completing this course. Feel free to play with it to get an overview of all the features you'll be working on.
 
 #### [Magic Link Authentication in Next.js with NextAuth and Fauna](https://alterclass.io/tutorials/magic-link-authentication-in-nextjs-with-nextauth-and-fauna) <svg xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '5px', marginBottom:'-6px'}} height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>External</title> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /> </svg>
 
@@ -75,21 +85,7 @@ This tutorial covers:
 
 - This example shows how to implement a full-stack app in TypeScript with Next.js using Prisma Client as a backend. It also demonstrates how to implement authentication using NextAuth.js. By Nikolas Burk at Prisma.
 
-## Testing
-
-#### [Testing with Cypress](tutorials/testing-with-cypress)
-
-- How to write tests using Cypress.
-
 ## Advanced
-
-#### [Refresh Token Rotation](tutorials/refresh-token-rotation)
-
-- How to implement refresh token rotation.
-
-#### [LDAP Authentication](tutorials/ldap-auth-example)
-
-- How to use the Credentials Provider to authenticate against an LDAP database. This approach can be used to authenticate existing user accounts against any backend.
 
 #### [Add auth support to a Next.js app with a custom backend](https://arunoda.me/blog/add-auth-support-to-a-next-js-app-with-a-custom-backend) <svg xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '5px', marginBottom:'-6px'}} height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>External</title> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /> </svg>
 
@@ -109,14 +105,6 @@ This tutorial covers:
 
 ## Database
 
-#### [Custom models with TypeORM](adapters/typeorm#custom-models)
-
-- How to use models with custom properties using the TypeORM adapter.
-
-#### [Creating a database adapter](tutorials/creating-a-database-adapter)
-
-- How to create a custom adapter, to use any database to fetch and store user / account data.
-
-#### [Using NextAuth.js with Prisma and PlanetScale serverless databases](https://github.com/planetscale/nextjs-planetscale-starter)
+#### [Using NextAuth.js with Prisma and PlanetScale serverless databases](https://github.com/planetscale/nextjs-planetscale-starter) <svg xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '5px', marginBottom:'-6px'}} height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>External</title> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /> </svg>
 
 - How to set up a PlanetScale database to fetch and store user / account data with the Prisma adapter.

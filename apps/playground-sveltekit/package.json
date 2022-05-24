@@ -30,7 +30,7 @@
   "type": "module",
   "dependencies": {
     "cookie": "0.4.1",
-    "next-auth": "^4.2.1"
+    "next-auth": "^4.3.2"
   },
   "prettier": {
     "semi": false,
