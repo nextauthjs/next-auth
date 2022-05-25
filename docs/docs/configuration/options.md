@@ -226,6 +226,8 @@ pages: {
 }
 ```
 
+> Note: Ensure that these pages actually exist if using this configuration. For example `error: '/auth/error'` refers to a page file at, for example, `/src/pages/auth/error.js`.
+
 See the documentation for the [pages option](/configuration/pages) for more information.
 
 ---
