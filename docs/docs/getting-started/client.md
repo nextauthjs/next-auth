@@ -329,6 +329,19 @@ e.g.
 - `signIn('credentials', { redirect: false, password: 'password' })`
 - `signIn('email', { redirect: false, email: 'bill@fillmurray.com' })`
 
+### Using the `email` or `credentials` as redirectable provider type
+
+:::note
+The redirectable provider type is only available for `credentials` and `email` providers.
+:::
+
+If you are using credentials or email as provider, you have to pass an additional type param, so that results be correctly typed.
+
+e.g.
+
+- `signIn<'credentials'>('credentials', { password: 'password' })`
+- `signIn<'email'>('email', { email: 'bill@fillmurray.com' })`
+
 `signIn` will then return a Promise, that resolves to the following:
 
 ```ts
