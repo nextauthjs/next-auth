@@ -21,7 +21,9 @@ To add a custom login page, you can use the `pages` option:
 ...
 ```
 
-> Note: Ensure that these pages actually exist if using this configuration. For example `error: '/auth/error'` refers to a page file at, for example, `/src/pages/auth/error.js`.
+:::note
+When using this configuration, ensure that these pages actually exist. For example `error: '/auth/error'` refers to a page file at `pages/auth/error.js`.
+:::
 
 ## Error codes
 
