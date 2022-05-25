@@ -1,4 +1,4 @@
-To add based authentication to your application, you must do three things.
+To add role based authentication to your application, you must do three things.
 
 1. Update your database schema
 2. Add the `role` to the session object
