@@ -25,7 +25,7 @@ Using [System Environment Variables](https://vercel.com/docs/concepts/projects/e
 
 Used to encrypt the NextAuth.js JWT, and to hash [email verification tokens](/adapters/models#verification-token). This is the default value for the [`secret`](/configuration/options#secret) option. The `secret` option might be removed in the future in favor of this.
 
-If you are using [Middleware](/configuration/nextjs#prerequisites) this environment variables must be set.
+If you are using [Middleware](/configuration/nextjs#prerequisites) this environment variable must be set.
 
 ### NEXTAUTH_URL_INTERNAL
 
@@ -97,7 +97,7 @@ Default values for this option are shown below:
 ```js
 session: {
   // Choose how you want to save the user session.
-  // The default is `"jwt"`, an encrypted JWT (JWE) in the session cookie.
+  // The default is `"jwt"`, an encrypted JWT (JWE) stored in the session cookie.
   // If you use an `adapter` however, we default it to `"database"` instead.
   // You can still force a JWT session by explicitly defining `"jwt"`.
   // When using `"database"`, the session cookie will only contain a `sessionToken` value,
@@ -123,7 +123,7 @@ session: {
 
 #### Description
 
-JSON Web Tokens can be used for session tokens if enabled with `session: { strategy: "jwt" }` option. JSON Web Tokens are enabled by default if you have not specified an adapter. JSON Web Tokens are encrypted (JWE) by default. We recommend you keep this behaviour. See the [Override JWT `encode` and `decode` methods] advanced option.(#override-jwt-encode-and-decode-methods)
+JSON Web Tokens can be used for session tokens if enabled with `session: { strategy: "jwt" }` option. JSON Web Tokens are enabled by default if you have not specified an adapter. JSON Web Tokens are encrypted (JWE) by default. We recommend you keep this behaviour. See the [Override JWT `encode` and `decode` methods](#override-jwt-encode-and-decode-methods) advanced option.
 
 #### JSON Web Token Options
 
@@ -226,6 +226,10 @@ pages: {
 }
 ```
 
+:::note
+When using this configuration, ensure that these pages actually exist. For example `error: '/auth/error'` refers to a page file at `pages/auth/error.js`.
+:::
+
 See the documentation for the [pages option](/configuration/pages) for more information.
 
 ---
@@ -285,7 +289,6 @@ events: {
   async updateUser(message) { /* user updated - e.g. their email was verified */ },
   async linkAccount(message) { /* account (e.g. Twitter) linked to a user */ },
   async session(message) { /* session is active */ },
-  async error(message) { /* error in authentication flow */ }
 }
 ```
 
@@ -495,7 +498,7 @@ jwt: {
   async decode(params: {
     token: string
     secret: string
-  }: Promise<JWT | null>) {
+  }): Promise<JWT | null> {
     // return a `JWT` object, or `null` if decoding failed
     return {}
   },

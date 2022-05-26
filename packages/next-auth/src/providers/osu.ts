@@ -16,7 +16,7 @@ export interface OsuUserCompact {
   username: string
 }
 
-export interface OsuProfile extends OsuUserCompact {
+export interface OsuProfile extends OsuUserCompact, Record<string, any> {
   discord: string | null
   has_supported: boolean
   interests: string | null
@@ -49,7 +49,7 @@ export interface OsuProfile extends OsuUserCompact {
   is_restricted: boolean
 }
 
-export default function Osu<P extends Record<string, any> = OsuProfile>(
+export default function Osu<P extends OsuProfile>(
   options: OAuthUserConfig<P>
 ): OAuthConfig<P> {
   return {

@@ -1,15 +1,15 @@
 import type { OAuthConfig, OAuthUserConfig } from "."
 
-export interface BoxyHQSAMLProfile {
+export interface BoxyHQSAMLProfile extends Record<string, any> {
   id: string
   email: string
   firstName?: string
   lastName?: string
 }
 
-export default function SAMLJackson<
-  P extends Record<string, any> = BoxyHQSAMLProfile
->(options: OAuthUserConfig<P>): OAuthConfig<P> {
+export default function SAMLJackson<P extends BoxyHQSAMLProfile>(
+  options: OAuthUserConfig<P>
+): OAuthConfig<P> {
   return {
     id: "boxyhq-saml",
     name: "BoxyHQ SAML",

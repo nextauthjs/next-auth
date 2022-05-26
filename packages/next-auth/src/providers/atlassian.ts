@@ -1,6 +1,6 @@
 import type { OAuthConfig, OAuthUserConfig } from "."
 
-interface AtlassianProfile {
+interface AtlassianProfile extends Record<string, any> {
   account_id: string
   name: string
   email: string

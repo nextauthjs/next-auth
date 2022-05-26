@@ -87,10 +87,11 @@ The default redirect callback looks like this:
 ```js title="pages/api/auth/[...nextauth].js"
 ...
 callbacks: {
-  redirect({ url, baseUrl   }) {
-    if (url.startsWith(baseUrl)) return url
+  async redirect({ url, baseUrl }) {
     // Allows relative callback URLs
-    else if (url.startsWith("/")) return new URL(url, baseUrl).toString()
+    if (url.startsWith("/")) return `${baseUrl}${url}`
+    // Allows callback URLs on the same origin
+    else if (new URL(url).origin === baseUrl) return url
     return baseUrl
   }
 }
@@ -104,7 +105,7 @@ The redirect callback may be invoked more than once in the same flow.
 ## JWT callback
 
 This callback is called whenever a JSON Web Token is created (i.e. at sign
-in) or updated (i.e whenever a session is accessed in the client). The returned value will be [signed and optionally encrypted](/configuration/options#jwt), and it is stored in a cookie.
+in) or updated (i.e whenever a session is accessed in the client). The returned value will be [encrypted](/configuration/options#jwt), and it is stored in a cookie.
 
 Requests to `/api/auth/signin`, `/api/auth/session` and calls to `getSession()`, `useSession()` will invoke this function, but only if you are using a [JWT session](/configuration/options#session). This method is not invoked when you persist sessions in a database.
 
@@ -129,12 +130,6 @@ callbacks: {
 
 :::tip
 Use an if branch to check for the existence of parameters (apart from `token`). If they exist, this means that the callback is being invoked for the first time (i.e. the user is being signed in). This is a good place to persist additional data like an `access_token` in the JWT. Subsequent invocations will only contain the `token` parameter.
-:::
-
-:::warning
-NextAuth.js does not limit how much data you can store in a JSON Web Token, however a ~**4096 byte limit** per cookie is commonly imposed by browsers.
-
-If you need to persist a large amount of data, you will need to persist it elsewhere (e.g. in a database). A common solution is to store a key in the cookie that can be used to look up the remaining data in the database, for example, in the `session()` callback. Opt into database persisted sessions by setting [`session: {strategy: "database"}`](/configuration/options#session).
 :::
 
 ## Session callback

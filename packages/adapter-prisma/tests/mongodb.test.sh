@@ -16,7 +16,7 @@ done
 # Start db
 docker run -d --rm -p 27017:27017 --name ${CONTAINER_NAME} "prismagraphql/mongo-single-replica:4.4.3-bionic"
 
-yarn prisma generate --schema ./prisma/mongodb.prisma
+pnpm prisma generate --schema ./prisma/mongodb.prisma
 
 if $JEST_WATCH; then
     # Run jest in watch mode
