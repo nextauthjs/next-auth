@@ -57,9 +57,9 @@ const __NEXTAUTH: NextAuthClientConfig = {
   basePathServer: parseUrl(
     process.env.NEXTAUTH_URL_INTERNAL ?? process.env.NEXTAUTH_URL
   ).path,
-  _lastSync: 0,
-  _session: undefined,
-  _getSession: () => {},
+  // _lastSync: 0,
+  // _session: undefined,
+  // _getSession: () => {},
 }
 
 const broadcast = BroadcastChannel()
@@ -78,6 +78,20 @@ const SessionContext = React.createContext<SessionContextValue | undefined>(
   undefined
 )
 
+const _getSessionContext = React.createContext<
+  (({ event }?: { event?: string | undefined }) => Promise<void>) | undefined
+>(undefined)
+
+function useGetSession() {
+  const value = React.useContext(_getSessionContext)
+  if (!value) {
+    throw new Error(
+      "[next-auth]: `useSession` must be wrapped in a <SessionProvider />"
+    )
+  }
+  return value
+}
+
 /**
  * React Hook that gives you access
  * to the logged in user's session data.
@@ -87,7 +101,7 @@ const SessionContext = React.createContext<SessionContextValue | undefined>(
 export function useSession<R extends boolean>(options?: UseSessionOptions<R>) {
   // @ts-expect-error Satisfy TS if branch on line below
   const value: SessionContextValue<R> = React.useContext(SessionContext)
-  if (!value && process.env.NODE_ENV !== "production") {
+  if (!value) {
     throw new Error(
       "[next-auth]: `useSession` must be wrapped in a <SessionProvider />"
     )
@@ -159,6 +173,7 @@ export async function getCsrfToken(params?: CtxOrReq) {
  *
  * [Documentation](https://next-auth.js.org/getting-started/client#getproviders)
  */
+
 export async function getProviders() {
   return await fetchData<
     Record<LiteralUnion<BuiltInProviderType>, ClientSafeProvider>
@@ -172,78 +187,88 @@ export async function getProviders() {
  *
  * [Documentation](https://next-auth.js.org/getting-started/client#signin)
  */
-export async function signIn<
-  P extends RedirectableProviderType | undefined = undefined
->(
-  provider?: LiteralUnion<BuiltInProviderType>,
-  options?: SignInOptions,
-  authorizationParams?: SignInAuthorizationParams
-): Promise<
-  P extends RedirectableProviderType ? SignInResponse | undefined : undefined
-> {
-  const { callbackUrl = window.location.href, redirect = true } = options ?? {}
+export function useSignIn() {
+  const _getSession = useGetSession()
+  const signIn = React.useCallback(
+    async <P extends RedirectableProviderType | undefined = undefined>(
+      provider?: LiteralUnion<BuiltInProviderType>,
+      options?: SignInOptions,
+      authorizationParams?: SignInAuthorizationParams
+    ): Promise<
+      P extends RedirectableProviderType
+        ? SignInResponse | undefined
+        : undefined
+    > => {
+      const { callbackUrl = window.location.href, redirect = true } =
+        options ?? {}
 
-  const baseUrl = apiBaseUrl(__NEXTAUTH)
-  const providers = await getProviders()
+      const baseUrl = apiBaseUrl(__NEXTAUTH)
+      const providers = await getProviders()
 
-  if (!providers) {
-    window.location.href = `${baseUrl}/error`
-    return
-  }
+      if (!providers) {
+        window.location.href = `${baseUrl}/error`
+        return
+      }
 
-  if (!provider || !(provider in providers)) {
-    window.location.href = `${baseUrl}/signin?${new URLSearchParams({
-      callbackUrl,
-    })}`
-    return
-  }
+      if (!provider || !(provider in providers)) {
+        window.location.href = `${baseUrl}/signin?${new URLSearchParams({
+          callbackUrl,
+        })}`
+        return
+      }
 
-  const isCredentials = providers[provider].type === "credentials"
-  const isEmail = providers[provider].type === "email"
-  const isSupportingReturn = isCredentials || isEmail
+      const isCredentials = providers[provider].type === "credentials"
+      const isEmail = providers[provider].type === "email"
+      const isSupportingReturn = isCredentials || isEmail
 
-  const signInUrl = `${baseUrl}/${
-    isCredentials ? "callback" : "signin"
-  }/${provider}`
+      const signInUrl = `${baseUrl}/${
+        isCredentials ? "callback" : "signin"
+      }/${provider}`
 
-  const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
+      const _signInUrl = `${signInUrl}?${new URLSearchParams(
+        authorizationParams
+      )}`
 
-  const res = await fetch(_signInUrl, {
-    method: "post",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
+      const res = await fetch(_signInUrl, {
+        method: "post",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        // @ts-expect-error
+        body: new URLSearchParams({
+          ...options,
+          csrfToken: await getCsrfToken(),
+          callbackUrl,
+          json: true,
+        }),
+      })
+
+      const data = await res.json()
+
+      if (redirect || !isSupportingReturn) {
+        const url = data.url ?? callbackUrl
+        window.location.href = url
+        // If url contains a hash, the browser does not reload the page. We reload manually
+        if (url.includes("#")) window.location.reload()
+        return
+      }
+
+      const error = new URL(data.url).searchParams.get("error")
+
+      if (res.ok) {
+        await _getSession({ event: "storage" })
+      }
+
+      return {
+        error,
+        status: res.status,
+        ok: res.ok,
+        url: error ? null : data.url,
+      } as any
     },
-    // @ts-expect-error
-    body: new URLSearchParams({
-      ...options,
-      csrfToken: await getCsrfToken(),
-      callbackUrl,
-      json: true,
-    }),
-  })
-
-  const data = await res.json()
-
-  if (redirect || !isSupportingReturn) {
-    const url = data.url ?? callbackUrl
-    window.location.href = url
-    // If url contains a hash, the browser does not reload the page. We reload manually
-    if (url.includes("#")) window.location.reload()
-    return
-  }
-
-  const error = new URL(data.url).searchParams.get("error")
-
-  if (res.ok) {
-    await __NEXTAUTH._getSession({ event: "storage" })
-  }
-
-  return {
-    error,
-    status: res.status,
-    ok: res.ok,
-    url: error ? null : data.url,
-  } as any
+    [_getSession]
+  )
+  return signIn
 }
 
 /**
@@ -252,40 +277,48 @@ export async function signIn<
  *
  * [Documentation](https://next-auth.js.org/getting-started/client#signout)
  */
-export async function signOut<R extends boolean = true>(
-  options?: SignOutParams<R>
-): Promise<R extends true ? undefined : SignOutResponse> {
-  const { callbackUrl = window.location.href } = options ?? {}
-  const baseUrl = apiBaseUrl(__NEXTAUTH)
-  const fetchOptions = {
-    method: "post",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
+export function useSignOut() {
+  const _getSession = useGetSession()
+  const signOut = React.useCallback(
+    async <R extends boolean = true>(
+      options?: SignOutParams<R>
+    ): Promise<R extends true ? undefined : SignOutResponse> => {
+      const { callbackUrl = window.location.href } = options ?? {}
+      const baseUrl = apiBaseUrl(__NEXTAUTH)
+      const fetchOptions = {
+        method: "post",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        // @ts-expect-error
+        body: new URLSearchParams({
+          csrfToken: await getCsrfToken(),
+          callbackUrl,
+          json: true,
+        }),
+      }
+      const res = await fetch(`${baseUrl}/signout`, fetchOptions)
+      const data = await res.json()
+
+      broadcast.post({ event: "session", data: { trigger: "signout" } })
+
+      if (options?.redirect ?? true) {
+        const url = data.url ?? callbackUrl
+        window.location.href = url
+        // If url contains a hash, the browser does not reload the page. We reload manually
+        if (url.includes("#")) window.location.reload()
+        // @ts-expect-error
+        return
+      }
+
+      await _getSession({ event: "storage" })
+
+      return data
     },
-    // @ts-expect-error
-    body: new URLSearchParams({
-      csrfToken: await getCsrfToken(),
-      callbackUrl,
-      json: true,
-    }),
-  }
-  const res = await fetch(`${baseUrl}/signout`, fetchOptions)
-  const data = await res.json()
+    [_getSession]
+  )
 
-  broadcast.post({ event: "session", data: { trigger: "signout" } })
-
-  if (options?.redirect ?? true) {
-    const url = data.url ?? callbackUrl
-    window.location.href = url
-    // If url contains a hash, the browser does not reload the page. We reload manually
-    if (url.includes("#")) window.location.reload()
-    // @ts-expect-error
-    return
-  }
-
-  await __NEXTAUTH._getSession({ event: "storage" })
-
-  return data
+  return signOut
 }
 
 /**
@@ -296,39 +329,47 @@ export async function signOut<R extends boolean = true>(
  * [Documentation](https://next-auth.js.org/getting-started/client#sessionprovider)
  */
 export function SessionProvider(props: SessionProviderProps) {
-  const { children, basePath } = props
+  const {
+    children,
+    basePath,
+    refetchInterval,
+    refetchOnWindowFocus = true,
+  } = props
 
+  const hasInitialSession = props.session !== undefined
+
+  const _lastSync = React.useRef(hasInitialSession ? now() : 0)
+  const _session = React.useRef(props.session)
   if (basePath) __NEXTAUTH.basePath = basePath
 
   /**
    * If session was `null`, there was an attempt to fetch it,
    * but it failed, but we still treat it as a valid initial value.
    */
-  const hasInitialSession = props.session !== undefined
 
   /** If session was passed, initialize as already synced */
-  __NEXTAUTH._lastSync = hasInitialSession ? now() : 0
+  _lastSync.current = hasInitialSession ? now() : 0
 
   const [session, setSession] = React.useState(() => {
-    if (hasInitialSession) __NEXTAUTH._session = props.session
+    if (hasInitialSession) _session.current = props.session
     return props.session
   })
 
   /** If session was passed, initialize as not loading */
   const [loading, setLoading] = React.useState(!hasInitialSession)
 
-  React.useEffect(() => {
-    __NEXTAUTH._getSession = async ({ event } = {}) => {
+  const _getSession = React.useCallback(
+    async ({ event }: { event?: string } = {}) => {
       try {
         const storageEvent = event === "storage"
         // We should always update if we don't have a client session yet
         // or if there are events from other tabs/windows
-        if (storageEvent || __NEXTAUTH._session === undefined) {
-          __NEXTAUTH._lastSync = now()
-          __NEXTAUTH._session = await getSession({
+        if (storageEvent || _session.current === undefined) {
+          _lastSync.current = now()
+          _session.current = await getSession({
             broadcast: !storageEvent,
           })
-          setSession(__NEXTAUTH._session)
+          setSession(_session.current)
           return
         }
 
@@ -341,32 +382,34 @@ export function SessionProvider(props: SessionProviderProps) {
           // the server to check if it does (if they have signed in via another
           // tab or window that will come through as a "stroage" event
           // event anyway)
-          __NEXTAUTH._session === null ||
+          _session.current === null ||
           // Bail out early if the client session is not stale yet
-          now() < __NEXTAUTH._lastSync
+          now() < _lastSync.current
         ) {
           return
         }
 
         // An event or session staleness occurred, update the client session.
-        __NEXTAUTH._lastSync = now()
-        __NEXTAUTH._session = await getSession()
-        setSession(__NEXTAUTH._session)
+        _lastSync.current = now()
+        _session.current = await getSession()
+        setSession(_session.current)
       } catch (error) {
         logger.error("CLIENT_SESSION_ERROR", error as Error)
       } finally {
         setLoading(false)
       }
-    }
+    },
+    []
+  )
 
-    __NEXTAUTH._getSession()
+  React.useEffect(() => {
+    _getSession()
 
     return () => {
-      __NEXTAUTH._lastSync = 0
-      __NEXTAUTH._session = undefined
-      __NEXTAUTH._getSession = () => {}
+      _lastSync.current = 0
+      _session.current = undefined
     }
-  }, [])
+  }, [_getSession])
 
   React.useEffect(() => {
     // Listen for storage events and update session if event fired from
@@ -379,38 +422,36 @@ export function SessionProvider(props: SessionProviderProps) {
     // more robust to have each window/tab fetch it's own copy of the
     // session object rather than share it across instances.
     const unsubscribe = broadcast.receive(() =>
-      __NEXTAUTH._getSession({ event: "storage" })
+      _getSession({ event: "storage" })
     )
 
     return () => unsubscribe()
-  }, [])
+  }, [_getSession])
 
   React.useEffect(() => {
-    const { refetchOnWindowFocus = true } = props
     // Listen for when the page is visible, if the user switches tabs
     // and makes our tab visible again, re-fetch the session, but only if
     // this feature is not disabled.
     const visibilityHandler = () => {
       if (refetchOnWindowFocus && document.visibilityState === "visible")
-        __NEXTAUTH._getSession({ event: "visibilitychange" })
+        _getSession({ event: "visibilitychange" })
     }
     document.addEventListener("visibilitychange", visibilityHandler, false)
     return () =>
       document.removeEventListener("visibilitychange", visibilityHandler, false)
-  }, [props.refetchOnWindowFocus])
+  }, [_getSession, refetchOnWindowFocus])
 
   React.useEffect(() => {
-    const { refetchInterval } = props
     // Set up polling
     if (refetchInterval) {
       const refetchIntervalTimer = setInterval(() => {
-        if (__NEXTAUTH._session) {
-          __NEXTAUTH._getSession({ event: "poll" })
+        if (_session.current) {
+          _getSession({ event: "poll" })
         }
       }, refetchInterval * 1000)
       return () => clearInterval(refetchIntervalTimer)
     }
-  }, [props.refetchInterval])
+  }, [_getSession, refetchInterval])
 
   const value: any = React.useMemo(
     () => ({
@@ -425,6 +466,10 @@ export function SessionProvider(props: SessionProviderProps) {
   )
 
   return (
-    <SessionContext.Provider value={value}>{children}</SessionContext.Provider>
+    <_getSessionContext.Provider value={_getSession}>
+      <SessionContext.Provider value={value}>
+        {children}
+      </SessionContext.Provider>
+    </_getSessionContext.Provider>
   )
 }
