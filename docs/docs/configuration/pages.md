@@ -172,6 +172,7 @@ export async function getServerSideProps(context) {
 ```
 
 You can also use the `signIn()` function which will handle obtaining the CSRF token for you:
+(When I tried to follow the documentation to create a Credential Login Provider, it's not specified that the signIn() function uses the "id" that is defined in the NextAuth(). For the CredentialsProvider, I only defined a "name" property as suggested in the documentation and I spend hours figuring out why my custom login page is not working. The problem was I was missing the "id" property and I was using the name property instead. Because of that, the signIn function wasn't aware of which provider to use. Please specify here that when a Credential Provider is defined, in order to use the signIn function with the defined Credential Provider, the defined CredentialProvider must have an "id" property.)
 
 ```js
 signIn("credentials", { username: "jsmith", password: "1234" })
