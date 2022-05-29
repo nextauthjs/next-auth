@@ -154,7 +154,7 @@ callbacks: {
 ```
 
 :::tip
-When using JSON Web Tokens the `jwt()` callback is invoked before the `session()` callback, so anything you add to the
+When using JSON Web Tokens, the `jwt()` callback is invoked before the `session()` callback. So, anything you add to the
 JSON Web Token will be immediately available in the session callback, like for example an `access_token` from a provider.
 :::
 
