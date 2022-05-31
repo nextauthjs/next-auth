@@ -1,6 +1,6 @@
 import type { NextMiddleware, NextFetchEvent } from "next/server"
 import type { Awaitable, NextAuthOptions } from ".."
-import type { JWT } from "../jwt"
+import type { JWT, JWTOptions } from "../jwt"
 
 import { NextResponse, NextRequest } from "next/server"
 
@@ -21,6 +21,16 @@ export interface NextAuthMiddlewareOptions {
    * [Documentation](https://next-auth.js.org/configuration/pages)
    */
   pages?: NextAuthOptions["pages"]
+
+  /**
+   * If a custom jwt `decode` method is set in `[...nextauth].ts`, the same method should be set here also.
+   * 
+   * ---
+   * [Documentation](https://next-auth.js.org/configuration/nextjs#custom-jwt-decode-method)
+   */
+  jwt?: Partial<Pick<JWTOptions, "decode">>
+
+
   callbacks?: {
     /**
      * Callback that receives the user's JWT payload
@@ -81,7 +91,7 @@ async function handleMiddleware(
     return NextResponse.redirect(errorUrl)
   }
 
-  const token = await getToken({ req })
+  const token = await getToken({ req, decode: options?.jwt?.decode })
 
   const isAuthorized =
     (await options?.callbacks?.authorized?.({ req, token })) ?? !!token

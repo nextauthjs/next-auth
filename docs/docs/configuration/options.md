@@ -485,6 +485,8 @@ Using a custom cookie policy may introduce security flaws into your application 
 
 NextAuth.js uses encrypted JSON Web Tokens ([JWE](https://datatracker.ietf.org/doc/html/rfc7516)) by default. Unless you have a good reason, we recommend keeping this behaviour. Although you can override this using the `encode` and `decode` methods. Both methods must be defined at the same time.
 
+**IMPORTANT: If you use middleware to protect routes, make sure the same method is also set in the [`_middleware.ts` options](/configuration/nextjs#custom-jwt-decode-method)**
+
 ```js
 jwt: {
   async encode(params: {
