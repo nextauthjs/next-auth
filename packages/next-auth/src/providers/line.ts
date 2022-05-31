@@ -1,6 +1,6 @@
 import type { OAuthConfig, OAuthUserConfig } from "."
 
-export interface LineProfile {
+export interface LineProfile extends Record<string, any> {
   iss: string
   sub: string
   aud: string
@@ -12,7 +12,7 @@ export interface LineProfile {
   user: any
 }
 
-export default function LINE<P extends Record<string, any> = LineProfile>(
+export default function LINE<P extends LineProfile>(
   options: OAuthUserConfig<P>
 ): OAuthConfig<P> {
   return {

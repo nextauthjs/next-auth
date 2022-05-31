@@ -6,19 +6,20 @@
   "scripts": {
     "clean": "rm -rf .next",
     "copy:css": "cpx \"../../packages/next-auth/css/**/*\" src/css --watch",
-    "watch:css": "cd ../../packages/next-auth && npm run watch:css",
-    "dev": "npm-run-all --parallel dev:next watch:css copy:css",
-    "dev:next": "npx next dev",
-    "build": "npx next build",
+    "watch:css": "cd ../../packages/next-auth && pnpm watch:css",
+    "dev": "concurrently \"pnpm dev:next\" \"pnpm watch:css\" \"pnpm copy:css\"",
+    "dev:next": "next dev",
+    "build": "next build",
     "start": "next start",
-    "email": "npx fake-smtp-server",
-    "start:email": "npm run email"
+    "email": "fake-smtp-server",
+    "start:email": "pnpm email"
   },
   "license": "ISC",
   "dependencies": {
     "@next-auth/fauna-adapter": "^1.0.1",
     "@next-auth/prisma-adapter": "^1.0.1",
     "@prisma/client": "^3.10.0",
+    "cpx": "^1.5.0",
     "fake-smtp-server": "^0.8.0",
     "faunadb": "^4.4.1",
     "next": "^12.1.0",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.11",
+    "concurrently": "^7.1.0",
     "prisma": "^3.10.0"
   }
 }

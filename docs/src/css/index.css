@@ -7,11 +7,6 @@
 
 /* @TODO Move as many styles for the homepage as possible into styles.module.css */
 
-/**
- * Sandpack integration
- */
-@import "@codesandbox/sandpack-react/dist/index.css";
-
 /* You can override the default Infima variables here. */
 :root {
   --ifm-color-link: #289ef9;
@@ -61,12 +56,6 @@ html[data-theme="dark"] svg[id^="mermaid-svg"] text[id*="-attr"] {
 @import "providers.css";
 @import "navbar.css";
 @import "search.css";
-
-@media screen and (max-width: 360px) {
-  html {
-    font-size: 0.8rem;
-  }
-}
 
 a {
   font-weight: 600;

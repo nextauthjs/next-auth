@@ -32,14 +32,17 @@
     "init:db": "tests/init.sh",
     "test:containers": "tests/test.sh",
     "test": "tests/test.sh",
-    "mysql": "yarn init:db && tests/mysql/test.sh",
-    "postgres": "yarn init:db && tests/postgresql/test.sh",
+    "mysql": "pnpm init:db && tests/mysql/test.sh",
+    "postgres": "pnpm init:db && tests/postgresql/test.sh",
     "sqlite": "tests/sqlite/test.sh"
   },
   "devDependencies": {
-    "next-auth": "^4.0.1",
+    "@next-auth/adapter-test": "workspace:^0.0.0",
+    "@next-auth/tsconfig": "workspace:^0.0.0",
+    "jest": "^27.4.3",
     "mssql": "^7.2.1",
     "mysql": "^2.18.1",
+    "next-auth": "workspace:*",
     "pg": "^8.7.1",
     "sqlite3": "^5.0.2",
     "typeorm": "^0.2.37",
@@ -48,7 +51,7 @@
   "peerDependencies": {
     "mssql": "^6.2.1 || 7",
     "mysql": "^2.18.1",
-    "next-auth": "^4.0.1",
+    "next-auth": "workspace:*",
     "pg": "^8.2.1",
     "sqlite3": "^5.0.2",
     "typeorm": "^0.2.31"
@@ -68,6 +71,6 @@
     }
   },
   "jest": {
-    "preset": "adapter-test/jest"
+    "preset": "@next-auth/adapter-test/jest"
   }
 }

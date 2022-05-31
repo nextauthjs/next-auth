@@ -1,6 +1,6 @@
 import type { OAuthConfig, OAuthUserConfig } from "."
 
-export interface EVEOnlineProfile {
+export interface EVEOnlineProfile extends Record<string, any> {
   CharacterID: number
   CharacterName: string
   ExpiresOn: string
@@ -10,9 +10,9 @@ export interface EVEOnlineProfile {
   IntellectualProperty: string
 }
 
-export default function EVEOnline<
-  P extends Record<string, any> = EVEOnlineProfile
->(options: OAuthUserConfig<P>): OAuthConfig<P> {
+export default function EVEOnline<P extends EVEOnlineProfile>(
+  options: OAuthUserConfig<P>
+): OAuthConfig<P> {
   return {
     id: "eveonline",
     name: "EVE Online",
@@ -27,7 +27,7 @@ export default function EVEOnline<
     idToken: true,
     profile(profile) {
       return {
-        id: profile.CharacterID,
+        id: String(profile.CharacterID),
         name: profile.CharacterName,
         email: null,
         image: `https://image.eveonline.com/Character/${profile.CharacterID}_128.jpg`,
