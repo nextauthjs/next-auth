@@ -175,7 +175,7 @@ export async function getProviders() {
 export async function signIn<
   P extends RedirectableProviderType | undefined = undefined
 >(
-  provider?: LiteralUnion<P | BuiltInProviderType>,
+  provider?: LiteralUnion<BuiltInProviderType>,
   options?: SignInOptions,
   authorizationParams?: SignInAuthorizationParams
 ): Promise<
