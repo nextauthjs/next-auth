@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Init
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.1
         with:
