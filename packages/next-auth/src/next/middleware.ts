@@ -101,7 +101,7 @@ async function handleMiddleware(
 
   // the user is not logged in, redirect to the sign-in page
   const signInUrl = new URL(signInPage, req.nextUrl.origin)
-  signInUrl.searchParams.append("callbackUrl", req.url)
+  signInUrl.searchParams.append("callbackUrl", `${req.nextUrl.pathname}${req.nextUrl.search}`)
   return NextResponse.redirect(signInUrl)
 }
 
