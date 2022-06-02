@@ -11,12 +11,12 @@ export interface AdapterSession {
   sessionToken: string
   /** Used to connect the session to a particular user */
   userId: string
-  expires: Date
+  expires: Date | false
 }
 
 export interface VerificationToken {
   identifier: string
-  expires: Date
+  expires: Date | false
   token: string
 }
 
@@ -79,7 +79,7 @@ export interface Adapter {
   createSession: (session: {
     sessionToken: string
     userId: string
-    expires: Date
+    expires: Date | false
   }) => Awaitable<AdapterSession>
   getSessionAndUser: (
     sessionToken: string

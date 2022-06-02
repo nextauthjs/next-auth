@@ -28,7 +28,7 @@ export default async function session(
     logger,
     session: { strategy: sessionStrategy, maxAge: sessionMaxAge },
   } = options
-
+  const isSessionMaxAge = sessionMaxAge === false;
   const response: OutgoingResponse<Session | {}> = {
     body: {},
     headers: [{ key: "Content-Type", value: "application/json" }],
@@ -46,7 +46,7 @@ export default async function session(
         token: sessionToken,
       })
 
-      const newExpires = fromDate(sessionMaxAge)
+      const newExpires = isSessionMaxAge ? sessionMaxAge : fromDate(sessionMaxAge)
 
       // By default, only exposes a limited subset of information to the client
       // as needed for presentation purposes (e.g. "you are logged in as...").
@@ -56,7 +56,7 @@ export default async function session(
           email: decodedToken?.email,
           image: decodedToken?.picture,
         },
-        expires: newExpires.toISOString(),
+        expires: newExpires === false ? sessionMaxAge : newExpires.toISOString(),
       }
 
       // @ts-expect-error
@@ -71,7 +71,7 @@ export default async function session(
       const newToken = await jwt.encode({
         ...jwt,
         token,
-        maxAge: options.session.maxAge,
+        maxAge: options.session.maxAge  ||  0,
       })
 
       // Set cookie, to also update expiry date on cookie
@@ -96,7 +96,7 @@ export default async function session(
 
       // If session has expired, clean up the database
       if (
-        userAndSession &&
+        userAndSession && userAndSession.session.expires !== false &&
         userAndSession.session.expires.valueOf() < Date.now()
       ) {
         await deleteSession(sessionToken)
@@ -110,16 +110,20 @@ export default async function session(
         // Calculate last updated date to throttle write updates to database
         // Formula: ({expiry date} - sessionMaxAge) + sessionUpdateAge
         //     e.g. ({expiry date} - 30 days) + 1 hour
-        const sessionIsDueToBeUpdatedDate =
-          session.expires.valueOf() -
-          sessionMaxAge * 1000 +
-          sessionUpdateAge * 1000
-
-        const newExpires = fromDate(sessionMaxAge)
-        // Trigger update of session expiry date and write to database, only
-        // if the session was last updated more than {sessionUpdateAge} ago
-        if (sessionIsDueToBeUpdatedDate <= Date.now()) {
-          await updateSession({ sessionToken, expires: newExpires })
+        let newExpires;
+        if (session.expires !== false && sessionMaxAge !== false) {
+          const sessionIsDueToBeUpdatedDate =
+            session.expires.valueOf() -
+            sessionMaxAge * 1000 +
+            sessionUpdateAge * 1000
+          newExpires = fromDate(sessionMaxAge)
+          // Trigger update of session expiry date and write to database, only
+          // if the session was last updated more than {sessionUpdateAge} ago
+          if (sessionIsDueToBeUpdatedDate <= Date.now()) {
+            await updateSession({ sessionToken, expires: newExpires })
+          }
+        } else {
+          newExpires = false
         }
 
         // Pass Session through to the session callback
@@ -133,7 +137,7 @@ export default async function session(
               email: user.email,
               image: user.image,
             },
-            expires: session.expires.toISOString(),
+            expires: session.expires === false ? session.expires : session.expires.toISOString(),
           },
           user,
         })

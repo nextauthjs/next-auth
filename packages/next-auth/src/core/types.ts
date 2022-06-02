@@ -409,7 +409,7 @@ export interface DefaultSession extends Record<string, unknown> {
     email?: string | null
     image?: string | null
   }
-  expires: ISODateString
+  expires: ISODateString | false
 }
 
 /**
@@ -444,7 +444,7 @@ export interface SessionOptions {
    * Relative time from now in seconds when to expire the session
    * @default 2592000 // 30 days
    */
-  maxAge: number
+  maxAge: number | false
   /**
    * How often the session should be updated in seconds.
    * If set to `0`, session is updated every time.

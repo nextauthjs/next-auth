@@ -26,6 +26,9 @@ export default async function callbackHandler(params: {
   options: InternalOptions
 }) {
   const { sessionToken, profile, account, options } = params
+  const { session: { maxAge } } = options;
+  const newExpires = maxAge === false ? maxAge: fromDate(maxAge);
+
   // Input validation
   if (!account?.providerAccountId || !account.type)
     throw new Error("Missing or invalid provider account")
@@ -115,7 +118,7 @@ export default async function callbackHandler(params: {
       : await createSession({
           sessionToken: generateSessionToken(),
           userId: user.id,
-          expires: fromDate(options.session.maxAge),
+          expires: newExpires,
         })
 
     return { session, user, isNewUser }
@@ -145,7 +148,7 @@ export default async function callbackHandler(params: {
         : await createSession({
             sessionToken: generateSessionToken(),
             userId: userByAccount.id,
-            expires: fromDate(options.session.maxAge),
+            expires: newExpires,
           })
 
       return { session, user: userByAccount, isNewUser }
@@ -211,7 +214,7 @@ export default async function callbackHandler(params: {
         : await createSession({
             sessionToken: generateSessionToken(),
             userId: user.id,
-            expires: fromDate(options.session.maxAge),
+            expires: newExpires,
           })
 
       return { session, user, isNewUser: true }

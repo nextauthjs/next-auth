@@ -7,6 +7,17 @@ import type { IncomingRequest, OutgoingResponse } from ".."
 import type { Cookie, SessionStore } from "../lib/cookie"
 import type { User } from "../.."
 
+function getUpdatedExpires(sessionMaxAge: number | false) : Date | false {
+  // Set cookie expiry date
+  if (sessionMaxAge === false) {
+    return sessionMaxAge;
+  }
+  const cookieExpires = new Date()
+  cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
+  return cookieExpires;
+
+}
+
 /** Handle callbacks from login services */
 export default async function callback(params: {
   options: InternalOptions<"oauth" | "credentials" | "email">
@@ -138,12 +149,8 @@ export default async function callback(params: {
           // Encode token
           const newToken = await jwt.encode({ ...jwt, token })
 
-          // Set cookie expiry date
-          const cookieExpires = new Date()
-          cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
-
           const sessionCookies = sessionStore.chunk(newToken, {
-            expires: cookieExpires,
+            expires: getUpdatedExpires(sessionMaxAge),
           })
           cookies.push(...sessionCookies)
         } else {
@@ -283,8 +290,15 @@ export default async function callback(params: {
         const newToken = await jwt.encode({ ...jwt, token })
 
         // Set cookie expiry date
-        const cookieExpires = new Date()
-        cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
+
+        let cookieExpires: Date | false;
+        if (sessionMaxAge === false) {
+          cookieExpires = sessionMaxAge;
+        }
+        else {
+          cookieExpires = new Date()
+          cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
+        }
 
         const sessionCookies = sessionStore.chunk(newToken, {
           expires: cookieExpires,
@@ -406,12 +420,8 @@ export default async function callback(params: {
     // Encode token
     const newToken = await jwt.encode({ ...jwt, token })
 
-    // Set cookie expiry date
-    const cookieExpires = new Date()
-    cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
-
     const sessionCookies = sessionStore.chunk(newToken, {
-      expires: cookieExpires,
+      expires: getUpdatedExpires(sessionMaxAge),
     })
 
     cookies.push(...sessionCookies)

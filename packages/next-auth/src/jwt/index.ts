@@ -17,12 +17,14 @@ const now = () => (Date.now() / 1000) | 0
 export async function encode(params: JWTEncodeParams) {
   const { token = {}, secret, maxAge = DEFAULT_MAX_AGE } = params
   const encryptionSecret = await getDerivedEncryptionKey(secret)
-  return await new EncryptJWT(token)
+  let jwt  = new EncryptJWT(token)
     .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
     .setIssuedAt()
-    .setExpirationTime(now() + maxAge)
     .setJti(uuid())
-    .encrypt(encryptionSecret)
+  if (maxAge) {
+    jwt = jwt.setExpirationTime(now() + maxAge)
+  }
+  return await jwt.encrypt(encryptionSecret)
 }
 
 /** Decodes a NextAuth.js issued JWT. */
