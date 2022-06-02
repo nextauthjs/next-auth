@@ -75,6 +75,11 @@ In `pages/api/auth/[...nextauth].js` find or add the AZURE_AD_B2C entries:
 ```js
 import AzureADB2CProvider from "next-auth/providers/azure-ad-b2c";
 ...
+// explicitly add "jwt" session strategy because adding an oauth provider defaults session strategy to "database".
+// https://next-auth.js.org/configuration/options#session
+session: {
+  strategy: "jwt",
+},
 providers: [
   AzureADB2CProvider({
     tenantId: process.env.AZURE_AD_B2C_TENANT_NAME,
