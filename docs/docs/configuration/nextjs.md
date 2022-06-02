@@ -34,8 +34,8 @@ import jwt from "jsonwebtoken";
 
 export default NextAuth({
   providers: [...],
+  // secret: PLEASE USE process.env.NEXTAUTH_SECRET
   jwt: {
-    // secret: PLEASE USE process.env.NEXTAUTH_SECRET
     encode: async ({ secret, token }) => {
       return jwt.sign(token as any, secret);
     },
