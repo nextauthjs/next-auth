@@ -551,26 +551,35 @@ DROP COLUMN IF EXISTS "updated_at";
 
 MongoDB is a document database and as such new fields will be automatically populated. You do, however, need to update the names of existing fields which are going to be reused.
 
-```mongo
-db.getCollection('accounts').updateMany({}, {
-  $rename: {
-    "provider_id": "provider",
-    "provider_account_id": "providerAccountId",
-    "user_id": "userId",
-    "access_token_expires": "expires_at"
+```javascript
+db.getCollection("accounts").updateMany(
+  {},
+  {
+    $rename: {
+      provider_id: "provider",
+      provider_account_id: "providerAccountId",
+      user_id: "userId",
+      access_token_expires: "expires_at",
+    },
   }
-})
-db.getCollection('users').updateMany({}, {
-  $rename: {
-    "email_verified": "emailVerified"
+)
+db.getCollection("users").updateMany(
+  {},
+  {
+    $rename: {
+      email_verified: "emailVerified",
+    },
   }
-})
-db.getCollection('sessions').updateMany({}, {
-  $rename: {
-    "session_token": "sessionToken",
-    "user_id": "userId"
+)
+db.getCollection("sessions").updateMany(
+  {},
+  {
+    $rename: {
+      session_token: "sessionToken",
+      user_id: "userId",
+    },
   }
-})
+)
 ```
 
 ## Missing `secret`

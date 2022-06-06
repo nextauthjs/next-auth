@@ -72,7 +72,7 @@ providers: [
 
 5. Once a provider has been setup, you can sign in at the following URL: `[origin]/api/auth/signin`. This is an unbranded auto-generated page with all the configured providers.
 
-<Image src="/img/signin.png" alt="Signin Screenshot" />
+![](/img/signin.png)
 
 ### Options
 

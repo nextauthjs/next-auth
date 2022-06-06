@@ -7,7 +7,7 @@ title: Guides
 
 We have internal guides in three levels of difficulty.
 
-```mdx-code-block
+```markdown
 import DocCardList from '@theme/DocCardList';
 import {useCurrentSidebarCategory} from '@docusaurus/theme-common';
 

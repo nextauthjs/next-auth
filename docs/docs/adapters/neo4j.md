@@ -66,7 +66,7 @@ Optimum indexes will vary on your edition of Neo4j i.e. community or enterprise,
 
 1. For **both** Community Edition & Enterprise Edition create constraints and indexes
 
-```cypher
+```sql
 
 CREATE CONSTRAINT user_id_constraint IF NOT EXISTS
 ON (u:User) ASSERT u.id IS UNIQUE;
@@ -86,7 +86,7 @@ FOR (s:Session) ON (s.sessionToken);
 
 2.a. For Community Edition **only** create single-property indexes
 
-```cypher
+```sql
 CREATE INDEX account_provider_index IF NOT EXISTS
 FOR (a:Account) ON (a.provider);
 
@@ -102,7 +102,7 @@ FOR (v:VerificationToken) ON (v.token);
 
 2.b. For Enterprise Edition **only** create composite node key constraints and indexes
 
-```cypher
+```sql
 CREATE CONSTRAINT account_provider_composite_constraint IF NOT EXISTS
 ON (a:Account) ASSERT (a.provider, a.providerAccountId) IS NODE KEY;
 
