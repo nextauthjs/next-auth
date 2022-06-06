@@ -17,9 +17,7 @@ The methods `getSession()` and `getToken()` both return an `object` if a session
 
 If data on a page is fetched using calls to secure API routes - i.e. routes which use `getSession()` or `getToken()` to access the session - you can use the `useSession` React Hook to secure pages.
 
-<CH.Scrollycoding>
-
-```js title="pages/client-side-example.js"
+```js pages/client-side-example.js
 import { useSession, getSession } from "next-auth/react"
 
 export default function Page() {
@@ -138,8 +136,6 @@ export default async (req, res) => {
   res.end()
 }
 ```
-
-</CH.Scrollycoding>
 
 :::tip
 You can use the `getToken()` helper function in any application as long as you set the `NEXTAUTH_URL` environment variable and the application is able to read the JWT cookie (e.g. is on the same domain).

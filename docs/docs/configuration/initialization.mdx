@@ -3,17 +3,21 @@ id: initialization
 title: Initialization
 ---
 
+import Admonition from "@theme/Admonition"
+
 In Next.js, you can define an API route that will catch all requests that begin with a certain path. Conveniently, this is called [Catch all API routes](https://nextjs.org/docs/api-routes/dynamic-api-routes#catch-all-api-routes).
 
 When you define a `/pages/api/auth/[...nextauth]` JS/TS file, you instruct NextAuth.js that every API request beginning with `/api/auth/*` should be handled by the code written in the `[...nextauth]` file.
 
 Depending on your use case, you can initialize NextAuth.js in two different ways:
 
+<CH.Scrollycoding>
+
 ## Simple initialization
 
 In most cases, you won't need to worry about what `NextAuth.js` does, and you will get by just fine with the following initialization:
 
-```ts title="/pages/api/auth/[...nextauth].js"
+```ts /pages/api/auth/[...nextauth].ts focus=1
 import NextAuth from "next-auth"
 
 export default NextAuth({
@@ -29,9 +33,11 @@ This is the preferred initialization in tutorials/other parts of the documentati
 
 If you have a specific use case and need to make NextAuth.js do something slightly different than what it is designed for, keep in mind, the `[...nextauth].js` config file is still just **a regular [API Route](https://nextjs.org/docs/api-routes/introduction)** at the end of the day.
 
+---
+
 That said, you can initialize NextAuth.js like this:
 
-```ts title="/pages/api/auth/[...nextauth].ts"
+```ts /pages/api/auth/[...nextauth].ts bg=6:8
 import type { NextApiRequest, NextApiResponse } from "next"
 import NextAuth from "next-auth"
 
@@ -47,19 +53,24 @@ The `...` section will still be your [options](/configuration/options), but you 
 
 You could for example log the request, add headers, read `query` or `body` parameters, whatever you would do in an API route.
 
-:::tip
+<Admonition type="tip">
 Since this is a catch-all route, remember to check what kind of NextAuth.js "action" is running. Compare the REST API with the `req.query.nextauth` parameter.
 
 For example to execute something on the "callback" action when the request is a POST method, you can check for `req.query.nextauth.includes("callback") && req.method === "POST"`
-:::
 
-:::note
-`NextAuth` will implicitly close the response (by calling `res.end`, `res.send` or similar), so you should not run code **after** `NextAuth` in the function body. Using `return NextAuth` makes sure you don't forget that.
-:::
+</Admonition>
+
+---
+
+<Admonition type="note">
+  `NextAuth` will implicitly close the response (by calling `res.end`,
+  `res.send` or similar), so you should not run code **after** `NextAuth` in the
+  function body. Using `return NextAuth` makes sure you don't forget that.
+</Admonition>
 
 Any variable you create this way will be available in the `NextAuth` options as well, since they are in the same scope.
 
-```ts title="/pages/api/auth/[...nextauth].ts"
+```ts /pages/api/auth/[...nextauth].ts
 import type { NextApiRequest, NextApiResponse } from "next"
 import NextAuth from "next-auth"
 
@@ -89,9 +100,11 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
 }
 ```
 
+---
+
 A practical example could be to not show a certain provider on the default sign-in page, but still be able to sign in with it. (The idea is taken from [this discussion](https://github.com/nextauthjs/next-auth/discussions/3133)):
 
-```js title="/pages/api/auth/[...nextauth].js"
+```js /pages/api/auth/[...nextauth].ts
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
@@ -113,6 +126,10 @@ export default async function auth(req, res) {
   })
 }
 ```
+
+---
+
+</CH.Scrollycoding>
 
 For more details on all available actions and which methods are supported, please check out the [REST API documentation](/getting-started/rest-api) or the appropriate area in [the source code](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/index.ts)
 

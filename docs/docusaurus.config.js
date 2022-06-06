@@ -1,4 +1,4 @@
-const theme = require("shiki/themes/nord.json")
+const theme = require("shiki/themes/material-palenight.json")
 const { remarkCodeHike } = require("@code-hike/mdx")
 
 module.exports = {
@@ -158,7 +158,12 @@ module.exports = {
           lastVersion: "current",
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
-          beforeDefaultRemarkPlugins: [[remarkCodeHike, { theme }]],
+          beforeDefaultRemarkPlugins: [
+            [
+              remarkCodeHike,
+              { theme, lineNumbers: true, showCopyButton: true },
+            ],
+          ],
           admonitions: false,
           remarkPlugins: [
             require("remark-github"),
