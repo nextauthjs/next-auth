@@ -16,16 +16,53 @@ You must set the [`NEXTAUTH_SECRET`](/configuration/options#nextauth_secret) env
 
 **We strongly recommend** replacing the `secret` value completely with this `NEXTAUTH_SECRET` environment variable. This environment variable will be picked up by both the [NextAuth config](/configuration/options#options), as well as the middleware config.
 
----
 
+### Basic usage
 ```js
 import withAuth from "next-auth/middleware"
 // or
 import { withAuth } from "next-auth/middleware"
 ```
 
----
+### Custom JWT decode method
 
+If you have custom jwt decode method set in `[...nextauth].ts`, you must also pass the same `decode` method to `withAuth` in order to read the custom-signed JWT correctly. You may want to extract the encode/decode logic to a separate function for consistency.
+
+`[...nextauth].ts`
+```ts
+import jwt from "jsonwebtoken";
+
+export default NextAuth({
+  providers: [...],
+  secret: /* Please use `process.env.NEXTAUTH_SECRET` */,
+  jwt: {
+    encode: async ({ secret, token }) => {
+      return jwt.sign(token as any, secret);
+    },
+    decode: async ({ secret, token }) => {
+      return jwt.verify(token as string, secret) as any;
+    },
+  },
+})
+```
+
+Any `_middleware.ts`
+```ts
+import withAuth from "next-auth/middleware"
+import jwt from "jsonwebtoken";
+
+export default withAuth({
+  jwt: {
+    decode: async ({ secret, token }) => {
+      return jwt.verify(token, secret) as any;
+    },
+  },
+  callbacks: {
+    authorized: ({ token }) => !!token,
+  },
+})
+```
+---
 ### `callbacks`
 
 - **Required:** No
