@@ -23,7 +23,8 @@ You can use also NextAuth.js with any database using a custom database adapter, 
 
 ### What authentication services does NextAuth.js support?
 
-<p>NextAuth.js includes built-in support for signing in with&nbsp;
+<p>
+NextAuth.js includes built-in support for signing in with&nbsp;
 {Object.values(require("../../providers.json")).sort().join(", ")}.
 (See also: <a href="/configuration/providers/oauth">Providers</a>)
 </p>

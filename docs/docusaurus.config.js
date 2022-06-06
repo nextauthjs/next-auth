@@ -1,3 +1,6 @@
+const theme = require("shiki/themes/nord.json")
+const { remarkCodeHike } = require("@code-hike/mdx")
+
 module.exports = {
   title: "NextAuth.js",
   tagline: "Authentication for Next.js",
@@ -143,6 +146,7 @@ module.exports = {
       respectPrefersColorScheme: true,
     },
   },
+  themes: ["mdx-v2"],
   presets: [
     [
       "@docusaurus/preset-classic",
@@ -154,6 +158,8 @@ module.exports = {
           lastVersion: "current",
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
+          beforeDefaultRemarkPlugins: [[remarkCodeHike, { theme }]],
+          admonitions: false,
           remarkPlugins: [
             require("remark-github"),
             require("mdx-mermaid"),
@@ -169,7 +175,10 @@ module.exports = {
           },
         },
         theme: {
-          customCss: require.resolve("./src/css/index.css"),
+          customCss: [
+            require.resolve("./src/css/index.css"),
+            require.resolve("@code-hike/mdx/styles.css"),
+          ],
         },
       },
     ],

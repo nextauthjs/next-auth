@@ -339,7 +339,6 @@ The way we save data with adapters have slightly changed. With the new Adapter A
 - New fields on Account: `token_type`, `scope`, `id_token`, `session_state`
 - `verification_requests` table has been renamed to `verification_tokens`
 
-<!-- REVIEW: Would something like this below be helpful? -->
 <details>
 <summary>
 See the changes

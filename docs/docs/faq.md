@@ -34,9 +34,12 @@ You can use also NextAuth.js with any database using a custom database adapter, 
 </summary>
 <p>
 
-<p>NextAuth.js includes built-in support for signing in with&nbsp;
+<p>
+NextAuth.js includes built-in support for signing in with&nbsp;
 {Object.values(require("../providers.json")).sort().join(", ")}.
+
 (See also: <a href="/configuration/providers/oauth">Providers</a>)
+
 </p>
 
 NextAuth.js also supports email for passwordless sign in, which is useful for account recovery or for people who are not able to use an account with the configured OAuth services (e.g. due to service outage, account suspension or otherwise becoming locked out of an account).
@@ -315,7 +318,6 @@ JSON Web Tokens can be used for session tokens, but are also used for lots of ot
   Avoid storing any data in a token that might be problematic if it were to be decrypted in the future.
 
 - If you do not explicitly specify a secret for for NextAuth.js, existing sessions will be invalidated any time your NextAuth.js configuration changes, as NextAuth.js will default to an auto-generated secret. Since v4 this only impacts development and generating a secret is required in production.
-
 
 </p>
 </details>
