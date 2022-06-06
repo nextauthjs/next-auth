@@ -148,4 +148,4 @@ export const Image = ({ children, src, alt = "" }) => {
   )
 }
 
-<Image src="/img/signin-complex.png" />
+![](/img/signin-complex.png)
