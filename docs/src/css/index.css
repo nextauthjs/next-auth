@@ -31,6 +31,8 @@
   --ifm-navbar-background-color: rgba(255, 255, 255, 0.95);
   --ifm-h1-font-size: 3rem;
   --ifm-h1-font-size: 2rem;
+
+  --ch-scrollycoding-code-min-height: 500px;
 }
 
 html[data-theme="dark"]:root {
