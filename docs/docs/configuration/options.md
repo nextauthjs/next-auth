@@ -54,10 +54,17 @@ See the [providers documentation](/configuration/providers/oauth) for a list of 
 
 ---
 
-### secret
+## Secret
 
 - **Default value**: `string` (_SHA hash of the "options" object_) in development, no default in production.
-- **Required**: _Yes, in production!_
+- **Required**: Production
+
+This setting is required in production inside `pages/api/auth/[...nextauth].js`, `SECRET` can be a random value or reuse `NEXTAUTH_SECRET`
+```
+  providers: [ Some providers... ],
+  secret: process.env.SECRET,
+  pages: { Some pages... },
+```
 
 #### Description
 
