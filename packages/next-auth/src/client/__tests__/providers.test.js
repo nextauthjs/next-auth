@@ -45,7 +45,7 @@ test("when called it'll return the currently configured providers for sign in", 
 
 test("when failing to fetch the providers, it'll log the error", async () => {
   server.use(
-    rest.get("/api/auth/providers", (req, res, ctx) =>
+    rest.get("*/api/auth/providers", (req, res, ctx) =>
       res(ctx.status(500), ctx.text("some error happened"))
     )
   )

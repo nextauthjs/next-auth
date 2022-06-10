@@ -10,7 +10,13 @@
   "author": "Balázs Orbán <info@balazsorban.com>",
   "main": "dist/index.js",
   "license": "ISC",
-  "keywords": ["next-auth", "next.js", "oauth", "mongodb", "adapter"],
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "oauth",
+    "mongodb",
+    "adapter"
+  ],
   "private": false,
   "publishConfig": {
     "access": "public"
@@ -20,16 +26,22 @@
     "test:watch": "./tests/test.sh -w",
     "build": "tsc"
   },
-  "files": ["README.md", "dist"],
+  "files": [
+    "README.md",
+    "dist"
+  ],
   "peerDependencies": {
     "mongodb": "^4.1.1",
-    "next-auth": "^4.0.1"
+    "next-auth": "workspace:*"
   },
   "devDependencies": {
+    "@next-auth/adapter-test": "workspace:^0.0.0",
+    "@next-auth/tsconfig": "workspace:^0.0.0",
+    "jest": "^27.4.3",
     "mongodb": "^4.4.0",
-    "next-auth": "^4.0.1"
+    "next-auth": "workspace:*"
   },
   "jest": {
-    "preset": "adapter-test/jest"
+    "preset": "@next-auth/adapter-test/jest"
   }
 }

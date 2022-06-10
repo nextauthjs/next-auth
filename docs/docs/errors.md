@@ -111,9 +111,13 @@ This error occurs when there was no `authorize()` handler defined on the credent
 
 #### PKCE_ERROR
 
-The provider you tried to use failed when setting [PKCE or Proof Key for Code Exchange](https://tools.ietf.org/html/rfc7636#section-4.2).
+The provider you tried to use failed when setting [PKCE or Proof Key for Code Exchange](https://tools.ietf.org/html/rfc7636#section-4).
 The `code_verifier` is saved in a cookie called (by default) `__Secure-next-auth.pkce.code_verifier` which expires after 15 minutes.
-Check if `cookies.pkceCodeVerifier` is configured correctly. The default `code_challenge_method` is `"S256"`. This is currently not configurable to `"plain"`, as it is not recommended, and in most cases, it is only supported for backward compatibility.
+Check if `cookies.pkceCodeVerifier` is configured correctly.
+
+The default `code_challenge_method` is `"S256"`. This is currently not configurable to `"plain"`, [as per RFC7636](https://datatracker.ietf.org/doc/html/rfc7636#section-4.2): 
+> If the client is capable of using "S256", it MUST use "S256", as
+  S256" is Mandatory To Implement (MTI) on the server.
 
 ---
 

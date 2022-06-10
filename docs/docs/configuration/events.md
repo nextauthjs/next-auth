@@ -52,7 +52,7 @@ Sent when an account in a given provider is linked to a user in our user databas
 The message object will contain:
 
 - `user`: The user object from your adapter.
-- `providerAccount`: The object returned from the provider.
+- `account`: The object returned from the provider.
 
 ### session
 

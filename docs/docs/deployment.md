@@ -85,6 +85,8 @@ Preview deployments at Vercel are often available via multiple URLs. For example
 
 Netlify is very similar to Vercel in that you can deploy a Next.js project without almost any extra work.
 
-In order to setup NextAuth.js correctly here, you will want to make sure you add your `NEXTAUTH_SECRET` and `NEXTAUTH_URL` environment variables in the project settings. Netlify also exposes some [system environment variables](https://docs.netlify.com/configure-builds/environment-variables/) from which you can check which `NODE_ENV` you are currently in and much more.
+In order to setup NextAuth.js correctly here, you will want to make sure you add your `NEXTAUTH_SECRET` environment variable in the project settings. If you are using the [Essential Next.js Build Plugin](https://github.com/netlify/netlify-plugin-nextjs) within your project, you **do not** need to set the `NEXTAUTH_URL` environment variable as it is set automatically as part of the build process. 
+
+Netlify also exposes some [system environment variables](https://docs.netlify.com/configure-builds/environment-variables/) from which you can check which `NODE_ENV` you are currently in and much more.
 
 After this, just make sure you either have your OAuth provider setup correctly with `clientId` / `clientSecret`'s and callback URLs.

@@ -123,20 +123,18 @@ export default function App({
 }
 
 function Auth({ children }) {
-  const { data: session, status } = useSession({ required: true })
-  const isUser = session?.user
+  // if `{ required: true }` is supplied, `status` can only be "loading" or "authenticated"
+  const { status } = useSession({ required: true })
 
-  if (isUser) {
-    return children
+  if (status === 'loading') {
+    return <div>Loading...</div>
   }
-
-  // Session is being fetched, or no user.
-  // If no user, useEffect() will redirect.
-  return <div>Loading...</div>
+  
+  return children
 }
 ```
 
-It can be easily be extended/modified to support something like an options object for role based authentication on pages. An example:
+It can be easily extended/modified to support something like an options object for role based authentication on pages. An example:
 
 ```jsx title="pages/admin.jsx"
 AdminDashboard.auth = {
@@ -312,11 +310,11 @@ You can specify a different `callbackUrl` by specifying it as the second argumen
 
 e.g.
 
-- `signIn(null, { callbackUrl: 'http://localhost:3000/foo' })`
-- `signIn('google', { callbackUrl: 'http://localhost:3000/foo' })`
+- `signIn(undefined, { callbackUrl: '/foo' })`
+- `signIn('google', { callbackUrl: 'http://localhost:3000/bar' })`
 - `signIn('email', { email, callbackUrl: 'http://localhost:3000/foo' })`
 
-The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect-callback). By default it requires the URL to be an absolute URL at the same host name, or else it will redirect to the homepage. You can define your own [redirect callback](/configuration/callbacks#redirect-callback) to allow other URLs, including supporting relative URLs.
+The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect-callback). By default it requires the URL to be an absolute URL at the same host name, or a relative url starting with a slash. If it does not match it will redirect to the homepage. You can define your own [redirect callback](/configuration/callbacks#redirect-callback) to allow other URLs.
 
 ### Using the `redirect: false` option
 
@@ -400,7 +398,7 @@ As with the `signIn()` function, you can specify a `callbackUrl` parameter by pa
 
 e.g. `signOut({ callbackUrl: 'http://localhost:3000/foo' })`
 
-The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect-callback). By default this means it must be an absolute URL at the same host name (or else it will default to the homepage); you can define your own custom [redirect callback](/configuration/callbacks#redirect-callback) to allow other URLs, including supporting relative URLs.
+The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect-callback). By default, it requires the URL to be an absolute URL at the same host name, or you can also supply a relative URL starting with a slash. If it does not match it will redirect to the homepage. You can define your own [redirect callback](/configuration/callbacks#redirect-callback) to allow other URLs.
 
 ### Using the `redirect: false` option
 

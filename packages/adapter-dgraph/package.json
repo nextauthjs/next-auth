@@ -31,14 +31,16 @@
   },
   "peerDependencies": {
     "jsonwebtoken": "^8.5.1",
-    "next-auth": "^4.0.1"
+    "next-auth": "workspace:*"
   },
   "devDependencies": {
+    "@next-auth/adapter-test": "workspace:^0.0.0",
+    "@next-auth/tsconfig": "workspace:^0.0.0",
     "@types/jest": "^26.0.24",
     "@types/jsonwebtoken": "^8.5.5",
     "@types/node-fetch": "^2.5.11",
-    "jest": "^27.0.6",
-    "next-auth": "^4.0.1",
+    "jest": "^27.4.3",
+    "next-auth": "workspace:*",
     "ts-jest": "^27.0.3"
   },
   "dependencies": {
@@ -46,6 +48,6 @@
     "node-fetch": "^2.6.1"
   },
   "jest": {
-    "preset": "adapter-test/jest"
+    "preset": "@next-auth/adapter-test/jest"
   }
 }
