@@ -21,6 +21,14 @@ if (!process.env.NEXTAUTH_URL) {
   logger.warn("NEXTAUTH_URL", "NEXTAUTH_URL environment variable not set")
 }
 
+function isValidHttpUrl(url) {
+  try {
+    return /^https?:/.test(new URL(url).protocol)
+  } catch {
+    return false
+  }
+}
+
 /**
  * @param {import("next").NextApiRequest} req
  * @param {import("next").NextApiResponse} res
@@ -69,6 +77,23 @@ async function NextAuthHandler(req, res, userOptions) {
       ),
       // Allow user cookie options to override any cookie settings above
       ...userOptions.cookies,
+    }
+
+    const errorPage = userOptions.pages?.error ?? `${baseUrl}${basePath}/error`
+
+    const callbackUrlParam = req.query?.callbackUrl
+    if (callbackUrlParam && !isValidHttpUrl(callbackUrlParam)) {
+      return res.redirect(`${errorPage}?error=Configuration`)
+    }
+
+    const { callbackUrl: defaultCallbackUrl } = defaultCookies(
+      userOptions.useSecureCookies ?? baseUrl.startsWith("https://")
+    )
+    const callbackUrlCookie =
+      req.cookies?.[cookies?.callbackUrl?.name ?? defaultCallbackUrl.name]
+
+    if (callbackUrlCookie && !isValidHttpUrl(callbackUrlCookie)) {
+      return res.redirect(`${errorPage}?error=Configuration`)
     }
 
     const secret = createSecret({ userOptions, basePath, baseUrl })
