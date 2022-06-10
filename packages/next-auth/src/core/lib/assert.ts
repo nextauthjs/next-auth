@@ -4,7 +4,10 @@ import {
   MissingAuthorize,
   MissingSecret,
   UnsupportedStrategy,
+  InvalidCallbackUrl,
 } from "../errors"
+import parseUrl from "../../lib/parse-url"
+import { defaultCookies } from "./cookie"
 
 import type { NextAuthHandlerParams } from ".."
 import type { WarningCode } from "../../lib/logger"
@@ -17,6 +20,14 @@ type ConfigError =
   | MissingAdapter
 
 let twitterWarned = false
+
+function isValidHttpUrl(url: string) {
+  try {
+    return /^https?:/.test(new URL(url).protocol)
+  } catch {
+    return false
+  }
+}
 
 /**
  * Verify that the user configured `next-auth` correctly.
@@ -44,7 +55,29 @@ export function assertConfig(
     }
   }
 
+  const callbackUrlParam = req.query?.callbackUrl as string | undefined
+
+  if (callbackUrlParam && !isValidHttpUrl(callbackUrlParam)) {
+    return new InvalidCallbackUrl(
+      `Invalid callback URL. Received: ${callbackUrlParam}`
+    )
+  }
+
   if (!req.host) return "NEXTAUTH_URL"
+
+  const url = parseUrl(req.host)
+
+  const { callbackUrl: defaultCallbackUrl } = defaultCookies(
+    options.useSecureCookies ?? url.base.startsWith("https://")
+  )
+  const callbackUrlCookie =
+    req.cookies?.[options.cookies?.callbackUrl?.name ?? defaultCallbackUrl.name]
+
+  if (callbackUrlCookie && !isValidHttpUrl(callbackUrlCookie)) {
+    return new InvalidCallbackUrl(
+      `Invalid callback URL. Received: ${callbackUrlCookie}`
+    )
+  }
 
   let hasCredentials, hasEmail
   let hasTwitterOAuth2

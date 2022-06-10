@@ -108,7 +108,8 @@ export async function NextAuthHandler<
           let signinUrl = `${pages.signIn}${
             pages.signIn.includes("?") ? "&" : "?"
           }callbackUrl=${encodeURIComponent(options.callbackUrl)}`
-          if (error) signinUrl = `${signinUrl}&error=${encodeURIComponent(error)}`
+          if (error)
+            signinUrl = `${signinUrl}&error=${encodeURIComponent(error)}`
           return { redirect: signinUrl, cookies }
         }
 
