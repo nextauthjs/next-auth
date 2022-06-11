@@ -193,7 +193,18 @@ export interface NextAuthOptions {
    *
    * [Documentation](https://next-auth.js.org/configuration/options#cookies) | [Usage example](https://next-auth.js.org/configuration/options#example)
    */
-  cookies?: Partial<CookiesOptions>
+  cookies?: Partial<CookiesOptions>,
+    /**
+   * You can customize the canonical url for callbacks.
+   * * **Required**: No
+   *
+   * [Documentation](https://next-auth.js.org/configuration/options#canonical_url)
+   *
+   * - ⚠ **This is an advanced option.** Advanced options are passed the same way as basic options,
+   * but **may have complex implications** or side effects.
+   * You should **try to avoid using advanced options** unless you are very comfortable using them.
+   */
+  canonical_url?: string,
 }
 
 /**

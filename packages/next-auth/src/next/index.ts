@@ -20,12 +20,14 @@ async function NextAuthNextHandler(
 ) {
   const { nextauth, ...query } = req.query
 
+  options.canonical_url = options.canonical_url ?? req.headers["x-forwarded-host"]
+
   options.secret =
     options.secret ?? options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
 
   const handler = await NextAuthHandler({
     req: {
-      host: detectHost(req.headers["x-forwarded-host"]),
+      host: detectHost(options.canonical_url),
       body: req.body,
       query,
       cookies: req.cookies,
