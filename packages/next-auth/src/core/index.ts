@@ -65,7 +65,7 @@ async function toInternalRequest(
       cookies: {},
       providerId: nextauth[1],
       error: url.searchParams.get("error") ?? nextauth[1],
-      host: detectHost(headers["x-forwarded-host"] ?? headers["host"]),
+      host: detectHost(headers["x-forwarded-host"] ?? headers.host),
       query: query,
     }
   }
