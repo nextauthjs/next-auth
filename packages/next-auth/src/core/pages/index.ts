@@ -6,12 +6,12 @@ import ErrorPage from "./error"
 import css from "../../css"
 
 import type { InternalOptions } from "../../lib/types"
-import type { IncomingRequest, OutgoingResponse } from ".."
+import type { RequestInternal, OutgoingResponse } from ".."
 import type { Cookie } from "../lib/cookie"
 import type { ErrorType } from "./error"
 
 type RenderPageParams = {
-  query?: IncomingRequest["query"]
+  query?: RequestInternal["query"]
   cookies?: Cookie[]
 } & Partial<
   Pick<

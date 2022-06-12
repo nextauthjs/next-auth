@@ -9,8 +9,9 @@ import type { NextAuthOptions } from "./types"
 import type { NextAuthAction } from "../lib/types"
 import type { Cookie } from "./lib/cookie"
 import type { ErrorType } from "./pages/error"
+import { detectHost } from "../next/utils"
 
-export interface IncomingRequest {
+export interface RequestInternal {
   /** @default "http://localhost:3000" */
   host?: string
   method?: string
@@ -39,18 +40,51 @@ export interface OutgoingResponse<
 }
 
 export interface NextAuthHandlerParams {
-  req: IncomingRequest
+  req: Request | RequestInternal
   options: NextAuthOptions
+}
+
+// TODO:
+async function toInternalRequest(
+  req: RequestInternal | Request
+): Promise<RequestInternal> {
+  if (req instanceof Request) {
+    const url = new URL(req.url)
+    const nextauth = url.pathname.split("/").slice(3)
+    const headers = Object.fromEntries(req.headers.entries())
+    const query = {
+      ...Object.fromEntries(url.searchParams.entries()),
+      nextauth,
+    }
+
+    return {
+      action: nextauth[0] as NextAuthAction,
+      method: req.method,
+      headers,
+      // body: await req.json(),
+      cookies: {},
+      providerId: nextauth[1],
+      error: url.searchParams.get("error") ?? nextauth[1],
+      host: detectHost(headers["x-forwarded-host"] ?? headers["host"]),
+      query: query,
+    }
+  }
+  return req
 }
 
 export async function NextAuthHandler<
   Body extends string | Record<string, any> | any[]
 >(params: NextAuthHandlerParams): Promise<OutgoingResponse<Body>> {
-  const { options: userOptions, req } = params
+  const { options: userOptions, req: incomingRequest } = params
+
+  const req = await toInternalRequest(incomingRequest)
 
   setLogger(userOptions.logger, userOptions.debug)
 
-  const assertionResult = assertConfig(params)
+  const assertionResult = assertConfig({
+    options: userOptions,
+    req,
+  })
 
   if (typeof assertionResult === "string") {
     logger.warn(assertionResult)

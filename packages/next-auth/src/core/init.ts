@@ -10,7 +10,7 @@ import * as jwt from "../jwt"
 import { defaultCallbacks } from "./lib/default-callbacks"
 import { createCSRFToken } from "./lib/csrf-token"
 import { createCallbackUrl } from "./lib/callback-url"
-import { IncomingRequest } from "."
+import { RequestInternal } from "."
 
 interface InitParams {
   host?: string
@@ -23,7 +23,7 @@ interface InitParams {
   csrfToken?: string
   /** Is the incoming request a POST request? */
   isPost: boolean
-  cookies: IncomingRequest["cookies"]
+  cookies: RequestInternal["cookies"]
 }
 
 /** Initialize all internal options and cookies. */

@@ -9,7 +9,7 @@ import {
 import parseUrl from "../../lib/parse-url"
 import { defaultCookies } from "./cookie"
 
-import type { NextAuthHandlerParams } from ".."
+import type { NextAuthHandlerParams, RequestInternal } from ".."
 import type { WarningCode } from "../../lib/logger"
 
 type ConfigError =
@@ -36,7 +36,9 @@ function isValidHttpUrl(url: string) {
  * REVIEW: Make some of these and corresponding docs less Next.js specific?
  */
 export function assertConfig(
-  params: NextAuthHandlerParams
+  params: NextAuthHandlerParams & {
+    req: RequestInternal
+  }
 ): ConfigError | WarningCode | undefined {
   const { options, req } = params
 
