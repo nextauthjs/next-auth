@@ -21,9 +21,11 @@ type ConfigError =
 
 let twitterWarned = false
 
-function isValidHttpUrl(url: string) {
+function isValidHttpUrl(url: string, baseUrl: string) {
   try {
-    return /^https?:/.test(new URL(url).protocol)
+    return /^https?:/.test(
+      new URL(url, url.startsWith("/") ? baseUrl : undefined).protocol
+    )
   } catch {
     return false
   }
@@ -59,15 +61,16 @@ export function assertConfig(
 
   const callbackUrlParam = req.query?.callbackUrl as string | undefined
 
-  if (callbackUrlParam && !isValidHttpUrl(callbackUrlParam)) {
+  const url = parseUrl(req.host)
+
+  if (callbackUrlParam && !isValidHttpUrl(callbackUrlParam, url.base)) {
     return new InvalidCallbackUrl(
       `Invalid callback URL. Received: ${callbackUrlParam}`
     )
   }
 
+  // This is below the callbackUrlParam check because it would obscure the error
   if (!req.host) return "NEXTAUTH_URL"
-
-  const url = parseUrl(req.host)
 
   const { callbackUrl: defaultCallbackUrl } = defaultCookies(
     options.useSecureCookies ?? url.base.startsWith("https://")
@@ -75,7 +78,7 @@ export function assertConfig(
   const callbackUrlCookie =
     req.cookies?.[options.cookies?.callbackUrl?.name ?? defaultCallbackUrl.name]
 
-  if (callbackUrlCookie && !isValidHttpUrl(callbackUrlCookie)) {
+  if (callbackUrlCookie && !isValidHttpUrl(callbackUrlCookie, url.base)) {
     return new InvalidCallbackUrl(
       `Invalid callback URL. Received: ${callbackUrlCookie}`
     )
