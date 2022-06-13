@@ -1,7 +1,6 @@
 import { NextAuthOptions } from ".."
-import logger from "../lib/logger"
-import parseUrl from "../lib/parse-url"
-import { InternalOptions } from "../lib/types"
+import logger from "../utils/logger"
+import parseUrl from "../utils/parse-url"
 import { adapterErrorHandler, eventsErrorHandler } from "./errors"
 import parseProviders from "./lib/providers"
 import createSecret from "./lib/utils"
@@ -11,6 +10,8 @@ import { defaultCallbacks } from "./lib/default-callbacks"
 import { createCSRFToken } from "./lib/csrf-token"
 import { createCallbackUrl } from "./lib/callback-url"
 import { RequestInternal } from "."
+
+import type { InternalOptions } from "./types"
 
 interface InitParams {
   host?: string

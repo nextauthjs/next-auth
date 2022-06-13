@@ -1,7 +1,8 @@
 import { createHash } from "crypto"
-import { NextAuthOptions } from "../.."
-import { InternalOptions } from "../../lib/types"
-import { InternalUrl } from "../../lib/parse-url"
+
+import type { NextAuthOptions } from "../.."
+import type { InternalOptions } from "../types"
+import type { InternalUrl } from "../../utils/parse-url"
 
 /**
  * Takes a number in seconds and returns the date in the future.

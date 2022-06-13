@@ -6,11 +6,11 @@ import {
   UnsupportedStrategy,
   InvalidCallbackUrl,
 } from "../errors"
-import parseUrl from "../../lib/parse-url"
+import parseUrl from "../../utils/parse-url"
 import { defaultCookies } from "./cookie"
 
 import type { NextAuthHandlerParams, RequestInternal } from ".."
-import type { WarningCode } from "../../lib/logger"
+import type { WarningCode } from "../../utils/logger"
 
 type ConfigError =
   | MissingAPIRoute

@@ -1,15 +1,14 @@
-import logger, { setLogger } from "../lib/logger"
+import logger, { setLogger } from "../utils/logger"
+import { detectHost } from "../utils/detect-host"
 import * as routes from "./routes"
 import renderPage from "./pages"
 import { init } from "./init"
 import { assertConfig } from "./lib/assert"
 import { SessionStore } from "./lib/cookie"
 
-import type { NextAuthOptions } from "./types"
-import type { NextAuthAction } from "../lib/types"
+import type { NextAuthAction, NextAuthOptions } from "./types"
 import type { Cookie } from "./lib/cookie"
 import type { ErrorType } from "./pages/error"
-import { detectHost } from "../next/utils"
 
 export interface RequestInternal {
   /** @default "http://localhost:3000" */

@@ -1,11 +1,12 @@
+import { randomBytes, randomUUID } from "crypto"
 import { AccountNotLinkedError } from "../errors"
 import { fromDate } from "./utils"
-import { randomBytes, randomUUID } from "crypto"
-import { InternalOptions } from "../../lib/types"
-import { AdapterSession, AdapterUser } from "../../adapters"
-import { JWT } from "../../jwt"
-import { Account, User } from "../.."
-import { SessionToken } from "./cookie"
+
+import type { InternalOptions } from "../types"
+import type { AdapterSession, AdapterUser } from "../../adapters"
+import type { JWT } from "../../jwt"
+import type { Account, User } from "../.."
+import type { SessionToken } from "./cookie"
 
 /**
  * This function handles the complex flow of signing users in, and either creating,

@@ -8,7 +8,7 @@ import { OAuthCallbackError } from "../../errors"
 import type { CallbackParamsType } from "openid-client"
 import type { Account, LoggerInstance, Profile } from "../../.."
 import type { OAuthChecks, OAuthConfig } from "../../../providers"
-import type { InternalOptions } from "../../../lib/types"
+import type { InternalOptions } from "../../types"
 import type { RequestInternal, OutgoingResponse } from "../.."
 import type { Cookie } from "../cookie"
 

@@ -5,7 +5,7 @@ import type { JWT, JWTOptions } from "../jwt"
 import { NextResponse, NextRequest } from "next/server"
 
 import { getToken } from "../jwt"
-import parseUrl from "../lib/parse-url"
+import parseUrl from "../utils/parse-url"
 
 type AuthorizedCallback = (params: {
   token: JWT | null
@@ -25,9 +25,9 @@ export interface NextAuthMiddlewareOptions {
   /**
    * You can override the default cookie names and options for any of the cookies
    * by this middleware. Similar to `cookies` in `NextAuth`.
-   * 
+   *
    * Useful if the token is stored in not a default cookie.
-   * 
+   *
    * ---
    * [Documentation](https://next-auth.js.org/configuration/options#cookies)
    *
@@ -36,11 +36,16 @@ export interface NextAuthMiddlewareOptions {
    * You should **try to avoid using advanced options** unless you are very comfortable using them.
    *
    */
-  cookies?: Partial<Record<keyof Pick<keyof NextAuthOptions["cookies"], "sessionToken">, Omit<CookieOption, "options">>>
+  cookies?: Partial<
+    Record<
+      keyof Pick<keyof NextAuthOptions["cookies"], "sessionToken">,
+      Omit<CookieOption, "options">
+    >
+  >
 
   /**
    * If a custom jwt `decode` method is set in `[...nextauth].ts`, the same method should be set here also.
-   * 
+   *
    * ---
    * [Documentation](https://next-auth.js.org/configuration/nextjs#custom-jwt-decode-method)
    */
@@ -109,7 +114,7 @@ async function handleMiddleware(
   const token = await getToken({
     req,
     decode: options?.jwt?.decode,
-    cookieName: options?.cookies?.sessionToken?.name
+    cookieName: options?.cookies?.sessionToken?.name,
   })
 
   const isAuthorized =
@@ -120,7 +125,10 @@ async function handleMiddleware(
 
   // the user is not logged in, redirect to the sign-in page
   const signInUrl = new URL(signInPage, req.nextUrl.origin)
-  signInUrl.searchParams.append("callbackUrl", `${req.nextUrl.pathname}${req.nextUrl.search}`)
+  signInUrl.searchParams.append(
+    "callbackUrl",
+    `${req.nextUrl.pathname}${req.nextUrl.search}`
+  )
   return NextResponse.redirect(signInUrl)
 }
 
