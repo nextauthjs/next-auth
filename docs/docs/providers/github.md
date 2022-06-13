@@ -42,5 +42,5 @@ Only allows one callback URL per Client ID / Client Secret.
 :::
 
 :::tip
-Email address is always returned, even if the user doesn't have a public email address on their profile.
+By default email address is not returned, you have to grant access to the app to get it.
 :::
