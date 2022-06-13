@@ -3,10 +3,10 @@ import userEvent from "@testing-library/user-event"
 import { render, screen, waitFor } from "@testing-library/react"
 import { server, mockProviders } from "./helpers/mocks"
 import { getProviders } from "../../react"
-import logger from "../../lib/logger"
+import logger from "../../utils/logger"
 import { rest } from "msw"
 
-jest.mock("../../lib/logger", () => ({
+jest.mock("../../utils/logger", () => ({
   __esModule: true,
   default: {
     warn: jest.fn(),
