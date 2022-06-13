@@ -10,7 +10,12 @@
   "author": "William Luke",
   "main": "dist/index.js",
   "license": "ISC",
-  "keywords": ["next-auth", "next.js", "oauth", "prisma"],
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "oauth",
+    "prisma"
+  ],
   "private": false,
   "publishConfig": {
     "access": "public"
@@ -19,24 +24,31 @@
     "clean": "rm -rf ./prisma/migrations && rm ./prisma/dev.db*",
     "init:default": "prisma migrate dev --name init --skip-seed",
     "init:custom": "prisma migrate dev --name init-custom --schema ./prisma/custom.prisma",
-    "test:default": "yarn init:default && jest",
-    "test:custom": "yarn init:custom && CUSTOM_MODEL=1 jest",
+    "test:default": "pnpm init:default && jest",
+    "test:custom": "pnpm init:custom && CUSTOM_MODEL=1 jest",
     "test:mongodb": "./tests/mongodb.test.sh",
-    "test": "yarn test:default && yarn test:custom && yarn test:mongodb",
+    "test": "pnpm test:default && pnpm test:custom && pnpm test:mongodb",
     "build": "prisma generate && tsc",
     "studio": "prisma studio"
   },
-  "files": ["README.md", "dist"],
+  "files": [
+    "README.md",
+    "dist"
+  ],
   "peerDependencies": {
     "@prisma/client": ">=2.26.0 || >=3",
-    "next-auth": "^4.0.1"
+    "next-auth": "workspace:*"
   },
   "devDependencies": {
+    "@next-auth/adapter-test": "workspace:^0.0.0",
+    "@next-auth/tsconfig": "workspace:^0.0.0",
     "@prisma/client": "^3.10.0",
-    "next-auth": "^4.0.1",
+    "jest": "^27.4.3",
+    "mongodb": "^4.4.0",
+    "next-auth": "workspace:*",
     "prisma": "^3.10.0"
   },
   "jest": {
-    "preset": "adapter-test/jest"
+    "preset": "@next-auth/adapter-test/jest"
   }
 }

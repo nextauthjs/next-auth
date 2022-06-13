@@ -21,7 +21,7 @@
   "scripts": {
     "test:default": "jest",
     "test:custom": "CUSTOM_MODEL=1 jest",
-    "test": "yarn test:default && yarn test:custom",
+    "test": "pnpm test:default && pnpm test:custom",
     "build": "tsc"
   },
   "files": [
@@ -32,12 +32,15 @@
   "license": "ISC",
   "peerDependencies": {
     "@aws-sdk/lib-dynamodb": "^3.36.1",
-    "next-auth": "^4.0.1"
+    "next-auth": "workspace:*"
   },
   "devDependencies": {
     "@aws-sdk/client-dynamodb": "^3.36.1",
     "@aws-sdk/lib-dynamodb": "^3.36.1",
+    "@next-auth/adapter-test": "workspace:^0.0.0",
+    "@next-auth/tsconfig": "workspace:^0.0.0",
     "@shelf/jest-dynamodb": "^2.1.0",
-    "next-auth": "^4.0.1"
+    "jest": "^27.4.3",
+    "next-auth": "workspace:*"
   }
 }

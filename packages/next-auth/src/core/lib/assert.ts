@@ -4,7 +4,10 @@ import {
   MissingAuthorize,
   MissingSecret,
   UnsupportedStrategy,
+  InvalidCallbackUrl,
 } from "../errors"
+import parseUrl from "../../lib/parse-url"
+import { defaultCookies } from "./cookie"
 
 import type { NextAuthHandlerParams } from ".."
 import type { WarningCode } from "../../lib/logger"
@@ -17,6 +20,16 @@ type ConfigError =
   | MissingAdapter
 
 let twitterWarned = false
+
+function isValidHttpUrl(url: string, baseUrl: string) {
+  try {
+    return /^https?:/.test(
+      new URL(url, url.startsWith("/") ? baseUrl : undefined).protocol
+    )
+  } catch {
+    return false
+  }
+}
 
 /**
  * Verify that the user configured `next-auth` correctly.
@@ -44,7 +57,30 @@ export function assertConfig(
     }
   }
 
+  const callbackUrlParam = req.query?.callbackUrl as string | undefined
+
+  const url = parseUrl(req.host)
+
+  if (callbackUrlParam && !isValidHttpUrl(callbackUrlParam, url.base)) {
+    return new InvalidCallbackUrl(
+      `Invalid callback URL. Received: ${callbackUrlParam}`
+    )
+  }
+
+  // This is below the callbackUrlParam check because it would obscure the error
   if (!req.host) return "NEXTAUTH_URL"
+
+  const { callbackUrl: defaultCallbackUrl } = defaultCookies(
+    options.useSecureCookies ?? url.base.startsWith("https://")
+  )
+  const callbackUrlCookie =
+    req.cookies?.[options.cookies?.callbackUrl?.name ?? defaultCallbackUrl.name]
+
+  if (callbackUrlCookie && !isValidHttpUrl(callbackUrlCookie, url.base)) {
+    return new InvalidCallbackUrl(
+      `Invalid callback URL. Received: ${callbackUrlCookie}`
+    )
+  }
 
   let hasCredentials, hasEmail
   let hasTwitterOAuth2

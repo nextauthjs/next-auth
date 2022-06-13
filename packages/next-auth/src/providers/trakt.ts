@@ -1,6 +1,6 @@
 import type { OAuthConfig, OAuthUserConfig } from "."
 
-export interface TraktUser {
+export interface TraktUser extends Record<string, any> {
   username: string
   private: boolean
   name: string
@@ -15,9 +15,9 @@ export interface TraktUser {
   images: { avatar: { full: string } }
 }
 
-export default function Trakt<
-  P extends Record<string, any> = TraktUser
->(options: OAuthUserConfig<P>): OAuthConfig<P> {
+export default function Trakt<P extends TraktUser>(
+  options: OAuthUserConfig<P>
+): OAuthConfig<P> {
   return {
     id: "trakt",
     name: "Trakt",

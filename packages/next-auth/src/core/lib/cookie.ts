@@ -68,6 +68,7 @@ export function defaultCookies(useSecureCookies: boolean): CookiesOptions {
     callbackUrl: {
       name: `${cookiePrefix}next-auth.callback-url`,
       options: {
+        httpOnly: true,
         sameSite: "lax",
         path: "/",
         secure: useSecureCookies,
@@ -120,7 +121,7 @@ export class SessionStore {
     option: CookieOption,
     req: {
       cookies?: Record<string, string>
-      headers?: Record<string, string> | IncomingHttpHeaders
+      headers?: Headers | IncomingHttpHeaders | Record<string, string>
     },
     logger: LoggerInstance | Console
   ) {

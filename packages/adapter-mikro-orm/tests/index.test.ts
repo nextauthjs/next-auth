@@ -2,7 +2,7 @@ import type { Options } from "@mikro-orm/core"
 import type { SqliteDriver } from "@mikro-orm/sqlite"
 
 import { MikroORM, wrap } from "@mikro-orm/core"
-import { runBasicTests } from "adapter-test"
+import { runBasicTests } from "@next-auth/adapter-test"
 import { MikroOrmAdapter, defaultEntities } from "../src"
 import { User, VeryImportantEntity } from "./testEntities"
 
