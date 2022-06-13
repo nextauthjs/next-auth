@@ -43,29 +43,36 @@ export interface NextAuthHandlerParams {
   options: NextAuthOptions
 }
 
+async function getBody(req: Request): Promise<Record<string, any> | undefined> {
+  try {
+    return await req.json()
+  } catch {}
+}
+
 // TODO:
 async function toInternalRequest(
   req: RequestInternal | Request
 ): Promise<RequestInternal> {
   if (req instanceof Request) {
     const url = new URL(req.url)
+    // TODO: handle custom paths?
     const nextauth = url.pathname.split("/").slice(3)
     const headers = Object.fromEntries(req.headers.entries())
-    const query = {
-      ...Object.fromEntries(url.searchParams.entries()),
-      nextauth,
-    }
+    const query: Record<string, any> = Object.fromEntries(
+      url.searchParams.entries()
+    )
+    query.nextauth = nextauth
 
     return {
       action: nextauth[0] as NextAuthAction,
       method: req.method,
       headers,
-      // body: await req.json(),
+      body: await getBody(req),
       cookies: {},
       providerId: nextauth[1],
       error: url.searchParams.get("error") ?? nextauth[1],
       host: detectHost(headers["x-forwarded-host"] ?? headers.host),
-      query: query,
+      query,
     }
   }
   return req
@@ -80,10 +87,7 @@ export async function NextAuthHandler<
 
   setLogger(userOptions.logger, userOptions.debug)
 
-  const assertionResult = assertConfig({
-    options: userOptions,
-    req,
-  })
+  const assertionResult = assertConfig({ options: userOptions, req })
 
   if (typeof assertionResult === "string") {
     logger.warn(assertionResult)
