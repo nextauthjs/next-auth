@@ -349,6 +349,7 @@ export default async function callback(params: {
       }
     } catch (error) {
       return {
+        status: 401,
         redirect: `${url}/error?error=${encodeURIComponent(
           (error as Error).message
         )}`,

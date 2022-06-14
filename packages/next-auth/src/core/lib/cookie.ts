@@ -68,6 +68,7 @@ export function defaultCookies(useSecureCookies: boolean): CookiesOptions {
     callbackUrl: {
       name: `${cookiePrefix}next-auth.callback-url`,
       options: {
+        httpOnly: true,
         sameSite: "lax",
         path: "/",
         secure: useSecureCookies,
