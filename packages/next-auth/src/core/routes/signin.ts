@@ -1,14 +1,14 @@
 import getAuthorizationUrl from "../lib/oauth/authorization-url"
 import emailSignin from "../lib/email/signin"
-import { IncomingRequest, OutgoingResponse } from ".."
-import { InternalOptions } from "../../lib/types"
-import { Account, User } from "../.."
+import type { RequestInternal, OutgoingResponse } from ".."
+import type { InternalOptions } from "../types"
+import type { Account, User } from "../.."
 
 /** Handle requests to /api/auth/signin */
 export default async function signin(params: {
   options: InternalOptions<"oauth" | "email">
-  query: IncomingRequest["query"]
-  body: IncomingRequest["body"]
+  query: RequestInternal["query"]
+  body: RequestInternal["body"]
 }): Promise<OutgoingResponse> {
   const { options, query, body } = params
   const { url, adapter, callbacks, logger, provider } = options

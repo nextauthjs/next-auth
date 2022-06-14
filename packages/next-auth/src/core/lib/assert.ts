@@ -6,11 +6,11 @@ import {
   UnsupportedStrategy,
   InvalidCallbackUrl,
 } from "../errors"
-import parseUrl from "../../lib/parse-url"
+import parseUrl from "../../utils/parse-url"
 import { defaultCookies } from "./cookie"
 
-import type { NextAuthHandlerParams } from ".."
-import type { WarningCode } from "../../lib/logger"
+import type { NextAuthHandlerParams, RequestInternal } from ".."
+import type { WarningCode } from "../../utils/logger"
 
 type ConfigError =
   | MissingAPIRoute
@@ -38,7 +38,9 @@ function isValidHttpUrl(url: string, baseUrl: string) {
  * REVIEW: Make some of these and corresponding docs less Next.js specific?
  */
 export function assertConfig(
-  params: NextAuthHandlerParams
+  params: NextAuthHandlerParams & {
+    req: RequestInternal
+  }
 ): ConfigError | WarningCode | undefined {
   const { options, req } = params
 
