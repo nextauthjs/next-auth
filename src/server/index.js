@@ -86,7 +86,7 @@ async function NextAuthHandler(req, res, userOptions) {
       return res.redirect(`${errorPage}?error=Configuration`)
     }
 
-    const { callbackUrl: defaultCallbackUrl } = defaultCookies(
+    const { callbackUrl: defaultCallbackUrl } = cookie.defaultCookies(
       userOptions.useSecureCookies ?? baseUrl.startsWith("https://")
     )
     const callbackUrlCookie =
