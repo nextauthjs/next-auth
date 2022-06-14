@@ -82,15 +82,15 @@ function NextAuth(
 
 export default NextAuth
 
-export async function getServerSession(
+export async function unstable_getServerSession(
   ...args:
     | [GetServerSidePropsContext['req'], GetServerSidePropsContext['res'], NextAuthOptions]
     | [NextApiRequest, NextApiResponse, NextAuthOptions]
 ): Promise<Session | null> {
   console.warn(
     "[next-auth][warn][EXPERIMENTAL_API]",
-    "\n`getServerSession` is experimental and may be removed or changed in the future.",
-    `\nhttps://next-auth.js.org/configuration/nextjs#getServerSession}`,
+    "\n`unstable_getServerSession` is experimental and may be removed or changed in the future, as the name suggested.",
+    `\nhttps://next-auth.js.org/configuration/nextjs#unstable_getServerSession}`,
     `\nhttps://next-auth.js.org/warnings#EXPERIMENTAL_API`
     )
 

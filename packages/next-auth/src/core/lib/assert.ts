@@ -40,7 +40,7 @@ export function assertConfig(
 ): ConfigError | WarningCode | undefined {
   const { options, req } = params
 
-  // req.query isn't defined when asserting `getServerSession` for example
+  // req.query isn't defined when asserting `unstable_getServerSession` for example
   if (!req.query?.nextauth && !req.action) {
     return new MissingAPIRoute(
       "Cannot find [...nextauth].{js,ts} in `/pages/api/auth`. Make sure the filename is written correctly."
