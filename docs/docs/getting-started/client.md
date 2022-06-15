@@ -419,7 +419,7 @@ Using the supplied `<SessionProvider>` allows instances of `useSession()` to sha
 ```jsx title="pages/_app.js"
 import { SessionProvider } from "next-auth/react"
 
-export default function MyApp({
+export default function App({
   Component,
   pageProps: { session, ...pageProps },
 }) {
@@ -452,10 +452,21 @@ export async function getServerSideProps(ctx) {
 If every one of your pages needs to be protected, you can do this in `getInitialProps` in `_app`, otherwise you can do it on a page-by-page basis. 
 
 ```jsx title="pages/_app.js"
-import type { AppContext, AppInitialProps } from "next/app";
+import type { AppContext, AppInitialProps, AppProps } from "next/app";
 import App from "next/app";
-import { getSession } from "next-auth/react";
+import { getSession, SessionProvider } from "next-auth/react";
 import { Session } from "next-auth";
+
+export default function MyApp({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppProps) {
+  return (
+    <SessionProvider session={session}>
+      <Component {...pageProps} />
+    </SessionProvider>
+  )
+}
 
 MyApp.getInitialProps = async (
   appContext: AppContext
