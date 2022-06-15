@@ -1,12 +1,12 @@
 import { render, screen, waitFor } from "@testing-library/react"
 import { rest } from "msw"
 import { server, mockSession } from "./helpers/mocks"
-import logger from "../../lib/logger"
+import logger from "../../utils/logger"
 import { useState, useEffect } from "react"
 import { getSession } from "../../react"
 import { getBroadcastEvents } from "./helpers/utils"
 
-jest.mock("../../lib/logger", () => ({
+jest.mock("../../utils/logger", () => ({
   __esModule: true,
   default: {
     warn: jest.fn(),

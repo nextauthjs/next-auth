@@ -1,6 +1,6 @@
 import { randomBytes } from "crypto"
-import { InternalOptions } from "../../../lib/types"
 import { hashToken } from "../utils"
+import type { InternalOptions } from "../../types"
 
 /**
  * Starts an e-mail login flow, by generating a token,

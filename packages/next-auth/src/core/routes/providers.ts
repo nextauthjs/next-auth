@@ -1,5 +1,5 @@
-import { OutgoingResponse } from ".."
-import { InternalProvider } from "../../lib/types"
+import type { OutgoingResponse } from ".."
+import type { InternalProvider } from "../types"
 
 export interface PublicProvider {
   id: string

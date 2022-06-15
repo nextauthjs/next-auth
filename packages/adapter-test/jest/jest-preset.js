@@ -1,7 +1,7 @@
 module.exports = {
   transform: {
-    ".(ts|tsx)$": "ts-jest",
-    ".(js|jsx)$": "babel-jest", // jest's default
+    ".(ts|tsx)$": "@swc/jest",
+    ".(js|jsx)$": "@swc/jest", // jest's default
   },
   transformIgnorePatterns: ["[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$"],
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],

@@ -1,6 +1,6 @@
 import * as jwt from "../../../jwt"
 import { generators } from "openid-client"
-import type { InternalOptions } from "src/lib/types"
+import type { InternalOptions } from "../../types"
 import type { Cookie } from "../cookie"
 
 const PKCE_CODE_CHALLENGE_METHOD = "S256"

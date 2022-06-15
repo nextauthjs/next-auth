@@ -1,6 +1,6 @@
 import { generators } from "openid-client"
 
-import type { InternalOptions } from "src/lib/types"
+import type { InternalOptions } from "../../types"
 import type { Cookie } from "../cookie"
 
 const STATE_MAX_AGE = 60 * 15 // 15 minutes in seconds
