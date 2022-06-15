@@ -17,17 +17,18 @@ export async function createState(
   }
 
   const state = generators.state()
+  const maxAge = cookies.state.options.maxAge ?? STATE_MAX_AGE
 
   const encodedState = await jwt.encode({
     ...jwt,
-    maxAge: STATE_MAX_AGE,
+    maxAge,
     token: { state },
   })
 
-  logger.debug("CREATE_STATE", { state, maxAge: STATE_MAX_AGE })
+  logger.debug("CREATE_STATE", { state, maxAge })
 
   const expires = new Date()
-  expires.setTime(expires.getTime() + STATE_MAX_AGE * 1000)
+  expires.setTime(expires.getTime() + maxAge * 1000)
   return {
     value: state,
     cookie: {
