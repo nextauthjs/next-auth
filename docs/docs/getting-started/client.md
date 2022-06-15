@@ -419,7 +419,7 @@ Using the supplied `<SessionProvider>` allows instances of `useSession()` to sha
 ```jsx title="pages/_app.js"
 import { SessionProvider } from "next-auth/react"
 
-export default function App({
+export default function MyApp({
   Component,
   pageProps: { session, ...pageProps },
 }) {
@@ -449,7 +449,24 @@ export async function getServerSideProps(ctx) {
 }
 ```
 
-If every one of your pages needs to be protected, you can do this in `getInitialProps` in `_app`, otherwise you can do it on a page-by-page basis. Alternatively, you can do per page authentication checks client side, instead of having each authentication check be blocking (SSR) by using the method described below in [alternative client session handling](#custom-client-session-handling).
+If every one of your pages needs to be protected, you can do this in `getInitialProps` in `_app`, otherwise you can do it on a page-by-page basis. 
+
+```jsx title="pages/_app.js"
+import type { AppContext, AppInitialProps } from "next/app";
+import App from "next/app";
+import { getSession } from "next-auth/react";
+import { Session } from "next-auth";
+
+MyApp.getInitialProps = async (
+  appContext: AppContext
+): Promise<AppInitialProps & { session: Session | null }> => {
+  const session = await getSession(appContext.ctx);
+  const appProps = await App.getInitialProps(appContext);
+  return { ...appProps, session: session };
+};
+```
+
+Alternatively, you can do per page authentication checks client side, instead of having each authentication check be blocking (SSR) by using the method described below in [alternative client session handling](#custom-client-session-handling).
 
 ### Options
 
