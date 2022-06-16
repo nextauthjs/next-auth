@@ -36,7 +36,8 @@ import AsgardeoProvider from "next-auth/providers/asgardeo";
 providers: [
   AsgardeoProvider({
     clientId: process.env.ASGARDEO_CLIENT_ID,
-    clientSecret: process.env.ASGARDEO_CLIENT_SECRET
+    clientSecret: process.env.ASGARDEO_CLIENT_SECRET,
+    issuer: process.env.ASGARDEO_ISSUER
   }),
 ],
 secret: process.env.SECRET,
