@@ -25,7 +25,7 @@ Using [System Environment Variables](https://vercel.com/docs/concepts/projects/e
 
 Used to encrypt the NextAuth.js JWT, and to hash [email verification tokens](/adapters/models#verification-token). This is the default value for the [`secret`](/configuration/options#secret) option. The `secret` option might be removed in the future in favor of this.
 
-If you are using [Middleware](/configuration/nextjs#prerequisites) this environment variables must be set.
+If you are using [Middleware](/configuration/nextjs#prerequisites) this environment variable must be set.
 
 ### NEXTAUTH_URL_INTERNAL
 
@@ -225,6 +225,10 @@ pages: {
   newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
 }
 ```
+
+:::note
+When using this configuration, ensure that these pages actually exist. For example `error: '/auth/error'` refers to a page file at `pages/auth/error.js`.
+:::
 
 See the documentation for the [pages option](/configuration/pages) for more information.
 
@@ -480,6 +484,8 @@ Using a custom cookie policy may introduce security flaws into your application 
 ### Override JWT `encode` and `decode` methods
 
 NextAuth.js uses encrypted JSON Web Tokens ([JWE](https://datatracker.ietf.org/doc/html/rfc7516)) by default. Unless you have a good reason, we recommend keeping this behaviour. Although you can override this using the `encode` and `decode` methods. Both methods must be defined at the same time.
+
+**IMPORTANT: If you use middleware to protect routes, make sure the same method is also set in the [`_middleware.ts` options](/configuration/nextjs#custom-jwt-decode-method)**
 
 ```js
 jwt: {

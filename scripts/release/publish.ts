@@ -25,7 +25,7 @@ export async function publish(options: {
       console.log("package.json file has been written, publishing...")
     }
 
-    let npmPublish = `pnpm publish --access public --registry=https://registry.npmjs.org`
+    let npmPublish = `pnpm publish --access public --registry=https://registry.npmjs.org --no-git-checks`
     // We use different tokens for `next-auth` and `@next-auth/*` packages
 
     if (pkg.name === "next-auth") {
