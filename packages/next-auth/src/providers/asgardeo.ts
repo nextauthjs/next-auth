@@ -8,9 +8,7 @@ export interface AsgardeoProfile {
 }
 
 export default function Asgardeo<P extends Record<string, any> = AsgardeoProfile>(
-  options: OAuthUserConfig<P> & {
-    issuer: string
-  }
+  options: OAuthUserConfig<P>
 ): OAuthConfig<P> {
   return {
     id: "asgardeo",
