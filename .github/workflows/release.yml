@@ -103,7 +103,7 @@ jobs:
           echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
           pnpm publish --no-git-checks --access public --tag experimental
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN_PKG }}
       - name: Comment version on PR
         uses: NejcZdovc/comment-pr@v1
         with:
