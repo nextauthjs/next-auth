@@ -64,7 +64,7 @@ NextAuth.js can be used with or without a database.
 
 * An open source solution that allows you to keep control of your data
 * Supports Bring Your Own Database (BYOD) and can be used with any database
-* Built-in support for [MySQL, MariaDB, Postgres, Microsoft SQL Server, MongoDB and SQLite](https://next-auth.js.org/configuration/databases)
+* Built-in support for [MySQL, MariaDB, Postgres, Microsoft SQL Server,Firebase, MongoDB and SQLite](https://next-auth.js.org/configuration/databases)
 * Works great with databases from popular hosting providers
 * Can also be used *without a database* (e.g. OAuth + JWT)
 
