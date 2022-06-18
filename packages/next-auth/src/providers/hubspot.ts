@@ -14,12 +14,9 @@ interface HubSpotProfile extends Record<string, any> {
 
 
 const HubSpotConfig = {
-  clientId: process.env.HUBSPOT_CLIENT_ID ?? "DEFAULT_CLIENT_ID",
-  clientSecret: process.env.HUBSPOT_CLIENT_SECRET ?? "DEFAULT_CLIENT_SECRET",
-  redirectUri: process.env.HUBSPOT_REDIRECT_URI ?? "DEFAULT_REDIRECT_URI",
   authorizationUrl: "https://app.hubspot.com/oauth/authorize",
   tokenUrl: "https://api.hubapi.com/oauth/v1/token",
-  profileUrl: "https://api.hubapi.com/oauth/v1/access-tokens/"
+  profileUrl: "https://api.hubapi.com/oauth/v1/access-tokens"
 }
 
 export default function HubSpot<P extends HubSpotProfile>(
@@ -36,9 +33,9 @@ export default function HubSpot<P extends HubSpotProfile>(
     authorization: {
       url: HubSpotConfig.authorizationUrl,
       params: {
-        scope: "oauth contacts",
-        redirect_uri: HubSpotConfig.redirectUri,
-        client_id: HubSpotConfig.clientId,
+        scope: "oauth",
+        redirect_uri: options.redirectURL,
+        client_id: options.clientId,
       },
 
     },
@@ -46,14 +43,18 @@ export default function HubSpot<P extends HubSpotProfile>(
       url: HubSpotConfig.tokenUrl,
       async request(context) {
 
-        const url = HubSpotConfig.tokenUrl + "?" +
-          new URLSearchParams({
-            client_id: HubSpotConfig.clientId,
-            client_secret: HubSpotConfig.clientSecret,
-            grant_type: "authorization_code",
-            redirect_uri: HubSpotConfig.redirectUri,
-            code: context.params.code ?? "DEFAULT_CODE",
-          });
+        if (!context.params.code) {
+          throw new Error("Missing HubSpot authentication code in the callback request parameters")
+        }
+        const urlParams = new URLSearchParams({
+          client_id: options.clientId,
+          client_secret: options.clientSecret,
+          grant_type: "authorization_code",
+          redirect_uri: options.redirectURL,
+          code: context.params.code,
+        });
+        
+        const url = `${HubSpotConfig.tokenUrl}?${urlParams}`
 
         const response = await fetch(url, {
           headers: {
@@ -96,7 +97,7 @@ export default function HubSpot<P extends HubSpotProfile>(
 
         // TODO: get image from profile once it's available 
         // Details available https://community.hubspot.com/t5/APIs-Integrations/Profile-photo-is-not-retrieved-with-User-API/m-p/325521
-        image: "https://avatars.hubspot.net/default-100",
+        image: null
       }
     },
     options,

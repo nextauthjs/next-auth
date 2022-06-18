@@ -31,7 +31,8 @@ import HubspotProvider from "next-auth/providers/hubspot";
 providers: [
   HubspotProvider({
     clientId: process.env.HUBSPOT_CLIENT_ID,
-    clientSecret: process.env.HUBSPOT_CLIENT_SECRET
+    clientSecret: process.env.HUBSPOT_CLIENT_SECRET,
+    redirectURL: process.env.HUBSPOT_REDIRECT_URL
   })
 ]
 ...
