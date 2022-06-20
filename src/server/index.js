@@ -21,9 +21,11 @@ if (!process.env.NEXTAUTH_URL) {
   logger.warn("NEXTAUTH_URL", "NEXTAUTH_URL environment variable not set")
 }
 
-function isValidHttpUrl(url) {
+function isValidHttpUrl(url, baseUrl) {
   try {
-    return /^https?:/.test(new URL(url).protocol)
+    return /^https?:/.test(
+      new URL(url, url.startsWith("/") ? baseUrl : undefined).protocol
+    )
   } catch {
     return false
   }
@@ -82,7 +84,7 @@ async function NextAuthHandler(req, res, userOptions) {
     const errorPage = userOptions.pages?.error ?? `${baseUrl}${basePath}/error`
 
     const callbackUrlParam = req.query?.callbackUrl
-    if (callbackUrlParam && !isValidHttpUrl(callbackUrlParam)) {
+    if (callbackUrlParam && !isValidHttpUrl(callbackUrlParam, baseUrl)) {
       return res.redirect(`${errorPage}?error=Configuration`)
     }
 
@@ -92,7 +94,7 @@ async function NextAuthHandler(req, res, userOptions) {
     const callbackUrlCookie =
       req.cookies?.[cookies?.callbackUrl?.name ?? defaultCallbackUrl.name]
 
-    if (callbackUrlCookie && !isValidHttpUrl(callbackUrlCookie)) {
+    if (callbackUrlCookie && !isValidHttpUrl(callbackUrlCookie, baseUrl)) {
       return res.redirect(`${errorPage}?error=Configuration`)
     }
 
