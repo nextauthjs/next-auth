@@ -1,4 +1,4 @@
-import { InternalOptions } from "../../lib/types"
+import type { InternalOptions } from "../types"
 
 interface CreateCallbackUrlParams {
   options: InternalOptions

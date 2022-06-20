@@ -17,9 +17,9 @@ import {
 import getAuthorizationServer from "./authorization-server"
 
 import type { Account, LoggerInstance, Profile } from "../../.."
-import type { OAuthConfig } from "../../../providers"
-import type { InternalOptions } from "../../../lib/types"
-import type { IncomingRequest, OutgoingResponse } from "../.."
+import type { OAuthChecks, OAuthConfig } from "../../../providers"
+import type { InternalOptions } from "../../types"
+import type { RequestInternal, OutgoingResponse } from "../.."
 import type { Cookie } from "../cookie"
 import type {
   OAuth2Error,
@@ -29,10 +29,10 @@ import type {
 
 export default async function oAuthCallback(params: {
   options: InternalOptions<"oauth">
-  query: IncomingRequest["query"]
-  body: IncomingRequest["body"]
-  method: Required<IncomingRequest>["method"]
-  cookies: IncomingRequest["cookies"]
+  query: RequestInternal["query"]
+  body: RequestInternal["body"]
+  method: Required<RequestInternal>["method"]
+  cookies: RequestInternal["cookies"]
 }): Promise<GetProfileResult & { cookies?: OutgoingResponse["cookies"] }> {
   const { options, query, body, cookies } = params
   const { logger, provider } = options

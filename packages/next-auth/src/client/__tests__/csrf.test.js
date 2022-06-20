@@ -2,11 +2,11 @@ import { useState } from "react"
 import userEvent from "@testing-library/user-event"
 import { render, screen, waitFor } from "@testing-library/react"
 import { server, mockCSRFToken } from "./helpers/mocks"
-import logger from "../../lib/logger"
+import logger from "../../utils/logger"
 import { getCsrfToken } from "../../react"
 import { rest } from "msw"
 
-jest.mock("../../lib/logger", () => ({
+jest.mock("../../utils/logger", () => ({
   __esModule: true,
   default: {
     warn: jest.fn(),

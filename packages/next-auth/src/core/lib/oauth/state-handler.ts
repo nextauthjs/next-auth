@@ -1,4 +1,6 @@
-import type { InternalOptions } from "src/lib/types"
+import { generators } from "openid-client"
+
+import type { InternalOptions } from "../../types"
 import type { Cookie } from "../cookie"
 import { generateRandomState } from "./helper"
 
