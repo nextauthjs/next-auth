@@ -117,7 +117,7 @@ export interface NextAuthOptions {
    * * **Required**: *No*
    *
    * [Documentation](https://next-auth.js.org/configuration/options#adapter) |
-   * [Community adapters](https://github.com/nextauthjs/adapters)
+   * [Adapters Overview](https://next-auth.js.org/adapters/overview)
    */
   adapter?: Adapter
   /**

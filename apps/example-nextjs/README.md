@@ -68,7 +68,6 @@ You **can** skip configuring a database and come back to it later if you want.
 For more information about setting up a database, please check out the following links:
 
 * Docs: [next-auth.js.org/adapters/overview](https://next-auth.js.org/adapters/overview)
-* Adapters Repo: [nextauthjs/adapters](https://github.com/nextauthjs/adapters)
 
 ### 3. Configure Authentication Providers
 
