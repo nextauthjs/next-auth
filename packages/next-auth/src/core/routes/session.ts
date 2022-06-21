@@ -9,6 +9,7 @@ import type { SessionStore } from "../lib/cookie"
 interface SessionParams {
   options: InternalOptions
   sessionStore: SessionStore
+  isUpdate: boolean
 }
 
 /**
@@ -19,7 +20,7 @@ interface SessionParams {
 export default async function session(
   params: SessionParams
 ): Promise<OutgoingResponse<Session | {}>> {
-  const { options, sessionStore } = params
+  const { options, sessionStore, isUpdate } = params
   const {
     adapter,
     jwt,
@@ -60,9 +61,13 @@ export default async function session(
       }
 
       // @ts-expect-error
-      const token = await callbacks.jwt({ token: decodedToken })
+      const token = await callbacks.jwt({ token: decodedToken, isUpdate })
       // @ts-expect-error
-      const newSession = await callbacks.session({ session, token })
+      const newSession = await callbacks.session({
+        session,
+        token,
+        isUpdate,
+      })
 
       // Return session payload as response
       response.body = newSession

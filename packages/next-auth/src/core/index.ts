@@ -130,7 +130,14 @@ export async function NextAuthHandler<
       case "providers":
         return (await routes.providers(options.providers)) as any
       case "session": {
-        const session = await routes.session({ options, sessionStore })
+        const isUpdate =
+          req.query !== undefined && req.query.hasOwnProperty("update")
+
+        const session = await routes.session({
+          options,
+          sessionStore,
+          isUpdate,
+        })
         if (session.cookies) cookies.push(...session.cookies)
         return { ...session, cookies } as any
       }
