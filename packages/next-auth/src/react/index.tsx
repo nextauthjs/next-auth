@@ -134,6 +134,10 @@ export async function getSession(params?: GetSessionParams) {
   return session
 }
 
+export async function updateSession() {
+  __NEXTAUTH._getSession({ event: "update" })
+}
+
 /**
  * Returns the current Cross Site Request Forgery Token (CSRF Token)
  * required to make POST requests (e.g. for signing in and signing out).
