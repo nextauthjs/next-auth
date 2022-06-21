@@ -165,6 +165,17 @@ export async function getProviders() {
   >("providers", __NEXTAUTH, logger)
 }
 
+/*
+ * Encodes json to base64, returns string
+ */
+function encodeUserInfoValue(value: Record<string, any> | string) {
+  if (!value) {
+    return null
+  }
+
+  return Buffer.from(JSON.stringify(value), "ascii").toString("base64")
+}
+
 /**
  * Client-side method to initiate a signin flow
  * or send the user to the signin page listing all possible providers.
@@ -185,6 +196,10 @@ export async function signIn<
 
   const baseUrl = apiBaseUrl(__NEXTAUTH)
   const providers = await getProviders()
+
+  if (options?.newUserInfo) {
+    options.newUserInfo = encodeUserInfoValue(options.newUserInfo)
+  }
 
   if (!providers) {
     window.location.href = `${baseUrl}/error`

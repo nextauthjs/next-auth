@@ -1,6 +1,6 @@
 import { randomBytes } from "crypto"
 import { hashToken } from "../utils"
-import type { InternalOptions } from "../../types"
+import type { EncodedNewUserInfo, InternalOptions } from "../../types"
 
 /**
  * Starts an e-mail login flow, by generating a token,
@@ -8,7 +8,8 @@ import type { InternalOptions } from "../../types"
  */
 export default async function email(
   identifier: string,
-  options: InternalOptions<"email">
+  options: InternalOptions<"email">,
+  newUserInfo: EncodedNewUserInfo
 ) {
   const { url, adapter, provider, logger, callbackUrl } = options
 
@@ -31,7 +32,13 @@ export default async function email(
   })
 
   // Generate a link with email, unhashed token and callback url
-  const params = new URLSearchParams({ callbackUrl, token, email: identifier })
+  const params = new URLSearchParams({
+    callbackUrl,
+    token,
+    email: identifier,
+    // Adding newUserInfo if present
+    ...(newUserInfo && { newUserInfo }),
+  })
   const _url = `${url}/callback/${provider.id}?${params}`
 
   try {

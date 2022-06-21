@@ -31,6 +31,7 @@ export interface SignInOptions extends Record<string, unknown> {
   callbackUrl?: string
   /** @docs https://next-auth.js.org/getting-started/client#using-the-redirect-false-option */
   redirect?: boolean
+  newUserInfo?: Record<string, any> | string | null
 }
 
 export interface SignInResponse {

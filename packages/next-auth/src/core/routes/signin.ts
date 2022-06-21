@@ -12,7 +12,6 @@ export default async function signin(params: {
 }): Promise<OutgoingResponse> {
   const { options, query, body } = params
   const { url, adapter, callbacks, logger, provider } = options
-
   if (!provider.type) {
     return {
       status: 500,
@@ -23,7 +22,11 @@ export default async function signin(params: {
 
   if (provider.type === "oauth") {
     try {
-      const response = await getAuthorizationUrl({ options, query })
+      const response = await getAuthorizationUrl({
+        options,
+        query,
+        newUserInfo: body?.newUserInfo,
+      })
       return response
     } catch (error) {
       logger.error("SIGNIN_OAUTH_ERROR", { error: error as Error, provider })
@@ -36,11 +39,11 @@ export default async function signin(params: {
     // it solves. We treat email addresses as all lower case. If anyone
     // complains about this we can make strict RFC 2821 compliance an option.
     const email = body?.email?.toLowerCase() ?? null
-
     // Verified in `assertConfig`
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { getUserByEmail } = adapter!
     // If is an existing user return a user object (otherwise use placeholder)
+    const newUserInfo = body?.newUserInfo
     const user: User = (email ? await getUserByEmail(email) : null) ?? {
       email,
       id: email,
@@ -75,7 +78,7 @@ export default async function signin(params: {
     }
 
     try {
-      await emailSignin(email, options)
+      await emailSignin(email, options, newUserInfo)
     } catch (error) {
       logger.error("SIGNIN_EMAIL_ERROR", error as Error)
       return { redirect: `${url}/error?error=EmailSignin` }

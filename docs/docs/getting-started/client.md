@@ -126,10 +126,10 @@ function Auth({ children }) {
   // if `{ required: true }` is supplied, `status` can only be "loading" or "authenticated"
   const { status } = useSession({ required: true })
 
-  if (status === 'loading') {
+  if (status === "loading") {
     return <div>Loading...</div>
   }
-  
+
   return children
 }
 ```
@@ -355,6 +355,25 @@ e.g.
   url: string | null
 }
 ```
+
+### Using the `newUserInfo` option
+
+You can pass additional data to save when creating a new user by passing a `newUserInfo` option to the second argument of `signIn()`.
+
+`newUserInfo` can take a string or an object
+
+e.g.
+
+- `signIn("email", {email, newUserInfo: {displayName: 'Bill Johnson'}})`
+- `signIn("google", {email, newUserInfo: 'Bill Johnson'})`
+
+:::note
+ Your database adapter has to be configured to accept the new `newUserInfo` parameter when creating a user or an error will be triggered.
+:::
+
+:::note
+`newUserInfo` will be ignored when the user already exists
+:::
 
 ### Additional parameters
 

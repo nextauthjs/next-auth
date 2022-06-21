@@ -7,6 +7,18 @@ import type { RequestInternal, OutgoingResponse } from ".."
 import type { Cookie, SessionStore } from "../lib/cookie"
 import type { User } from "../.."
 
+/*
+ * Decode base64 string to json
+ */
+function decodeUserInfoValue(
+  value: string
+): Record<string, string> | string | null {
+  if (!value) {
+    return null
+  }
+  return JSON.parse(Buffer.from(value, "base64").toString("ascii"))
+}
+
 /** Handle callbacks from login services */
 export default async function callback(params: {
   options: InternalOptions<"oauth" | "credentials" | "email">
@@ -17,7 +29,15 @@ export default async function callback(params: {
   cookies: RequestInternal["cookies"]
   sessionStore: SessionStore
 }): Promise<OutgoingResponse> {
-  const { options, query, body, method, headers, sessionStore } = params
+  const {
+    options,
+    query,
+    body,
+    method,
+    headers,
+    sessionStore,
+    cookies: callbackCookies,
+  } = params
   const {
     provider,
     adapter,
@@ -32,7 +52,6 @@ export default async function callback(params: {
   } = options
 
   const cookies: Cookie[] = []
-
   const useJwtSession = sessionStrategy === "jwt"
 
   if (provider.type === "oauth") {
@@ -70,6 +89,23 @@ export default async function callback(params: {
         // error with the provider.
         if (!profile) {
           return { redirect: `${url}/signin`, cookies }
+        }
+
+        // If new user info present, pass it's value to profile
+        if (callbackCookies?.[options.cookies.newUserInfo.name]) {
+          // Value is encoded in base64
+          profile.newUserInfo = decodeUserInfoValue(
+            callbackCookies[options.cookies.newUserInfo.name]
+          )
+          // Clear new-user-info cookie
+          cookies.push({
+            name: options.cookies.newUserInfo.name,
+            value: "",
+            options: {
+              ...options.cookies.newUserInfo.options,
+              maxAge: 0,
+            },
+          })
         }
 
         // Check if user is allowed to sign in
@@ -220,6 +256,13 @@ export default async function callback(params: {
         ? await getUserByEmail(identifier)
         : null) ?? {
         email: identifier,
+        newUserInfo: undefined,
+      }
+
+      // If new user info present, pass it's value to profile
+      if (query?.newUserInfo) {
+        // Value is encoded in base64
+        profile.newUserInfo = decodeUserInfoValue(query.newUserInfo)
       }
 
       /** @type {import("src").Account} */

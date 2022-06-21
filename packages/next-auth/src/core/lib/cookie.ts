@@ -103,6 +103,15 @@ export function defaultCookies(useSecureCookies: boolean): CookiesOptions {
         secure: useSecureCookies,
       },
     },
+    newUserInfo: {
+      name: `${cookiePrefix}next-auth.new-user-info`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: useSecureCookies,
+      },
+    },
   }
 }
 

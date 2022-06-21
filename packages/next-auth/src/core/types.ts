@@ -360,6 +360,7 @@ export interface CookiesOptions {
   csrfToken: CookieOption
   pkceCodeVerifier: CookieOption
   state: CookieOption
+  newUserInfo: CookieOption
 }
 
 /**
@@ -463,6 +464,8 @@ export interface SessionOptions {
    */
   updateAge: number
 }
+
+export type EncodedNewUserInfo = string
 
 export interface DefaultUser {
   id: string

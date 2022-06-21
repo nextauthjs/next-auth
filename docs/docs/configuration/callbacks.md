@@ -62,6 +62,8 @@ callbacks: {
 
   You can check for the `verificationRequest` property to avoid sending emails to addresses or domains on a blocklist (or to only explicitly generate them for email address in an allow list).
 
+- If you pass additional info for new users to the `newUserInfo` option of the client `signIn()` method, that information can be found in `user.newUserInfo`. This can help you determine if the new user can be created based on the additional information you provide.
+
 * When using the **Credentials Provider** the `user` object is the response returned from the `authorize` callback and the `profile` object is the raw body of the `HTTP POST` submission.
 
 :::note

@@ -3,6 +3,7 @@ import { Account, User, Awaitable } from "."
 export interface AdapterUser extends User {
   id: string
   emailVerified: Date | null
+  newUserInfo?: Record<string, any> | string | null
 }
 
 export interface AdapterSession {

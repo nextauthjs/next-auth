@@ -4,10 +4,11 @@ import { createState } from "./state-handler"
 import { createPKCE } from "./pkce-handler"
 
 import type { AuthorizationParameters } from "openid-client"
-import type { InternalOptions } from "../../types"
+import type { EncodedNewUserInfo, InternalOptions } from "../../types"
 import type { RequestInternal } from "../.."
 import type { Cookie } from "../cookie"
 
+const USER_INFO_MAX_AGE = 60 * 15 // 15 minutes in seconds
 /**
  *
  * Generates an authorization/request token URL.
@@ -17,11 +18,27 @@ import type { Cookie } from "../cookie"
 export default async function getAuthorizationUrl(params: {
   options: InternalOptions<"oauth">
   query: RequestInternal["query"]
+  newUserInfo?: EncodedNewUserInfo
 }) {
-  const { options, query } = params
+  const { options, query, newUserInfo } = params
   const { logger, provider } = options
   try {
     let params: any = {}
+    const cookies: Cookie[] = []
+
+    // If present create cookie holding newUserInfo
+    if (newUserInfo) {
+      const expires = new Date()
+      expires.setTime(expires.getTime() + USER_INFO_MAX_AGE * 1000)
+      cookies.push({
+        name: options.cookies.newUserInfo.name,
+        value: newUserInfo,
+        options: {
+          ...options.cookies.newUserInfo.options,
+          expires,
+        },
+      })
+    }
 
     if (typeof provider.authorization === "string") {
       const parsedUrl = new URL(provider.authorization)
@@ -47,13 +64,12 @@ export default async function getAuthorizationUrl(params: {
       })}`
 
       logger.debug("GET_AUTHORIZATION_URL", { url })
-      return { redirect: url }
+      return { redirect: url, cookies }
     }
 
     const client = await openidClient(options)
 
     const authorizationParams: AuthorizationParameters = params
-    const cookies: Cookie[] = []
 
     const state = await createState(options)
     if (state) {
