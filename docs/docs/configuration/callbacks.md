@@ -22,10 +22,10 @@ You can specify a handler for any of the callbacks below.
     async redirect({ url, baseUrl }) {
       return baseUrl
     },
-    async session({ session, user, token }) {
+    async session({ session, user, token, isUpdate }) {
       return session
     },
-    async jwt({ token, user, account, profile, isNewUser }) {
+    async jwt({ token, user, account, profile, isNewUser, isUpdate }) {
       return token
     }
 ...
@@ -107,12 +107,14 @@ The redirect callback may be invoked more than once in the same flow.
 This callback is called whenever a JSON Web Token is created (i.e. at sign
 in) or updated (i.e whenever a session is accessed in the client). The returned value will be [encrypted](/configuration/options#jwt), and it is stored in a cookie.
 
-Requests to `/api/auth/signin`, `/api/auth/session` and calls to `getSession()`, `useSession()` will invoke this function, but only if you are using a [JWT session](/configuration/options#session). This method is not invoked when you persist sessions in a database.
+Requests to `/api/auth/signin`, `/api/auth/session` and calls to `getSession()`, `useSession()` and `updateSession()` will invoke this function, but only if you are using a [JWT session](/configuration/options#session). This method is not invoked when you persist sessions in a database.
 
 - As with database persisted session expiry times, token expiry time is extended whenever a session is active.
 - The arguments _user_, _account_, _profile_ and _isNewUser_ are only passed the first time this callback is called on a new session, after the user signs in. In subsequent calls, only `token` will be available.
 
 The contents _user_, _account_, _profile_ and _isNewUser_ will vary depending on the provider and on if you are using a database or not. You can persist data such as User ID, OAuth Access Token in this token. To make it available in the browser, check out the [`session()` callback](#session-callback) as well.
+
+The _isUpdate_ parameter is only `true` for requests initiated with `updateSession()`.
 
 ```js title="pages/api/auth/[...nextauth].js"
 ...
@@ -136,15 +138,17 @@ Use an if branch to check for the existence of parameters (apart from `token`). 
 
 The session callback is called whenever a session is checked. By default, only a subset of the token is returned for increased security. If you want to make something available you added to the token through the `jwt()` callback, you have to explicitly forward it here to make it available to the client.
 
-e.g. `getSession()`, `useSession()`, `/api/auth/session`
+e.g. `getSession()`, `useSession()`, `updateSession()`, `/api/auth/session`
 
 - When using database sessions, the User object is passed as an argument.
 - When using JSON Web Tokens for sessions, the JWT payload is provided instead.
 
+The _isUpdate_ parameter is only `true` for requests initiated with `updateSession()`.
+
 ```js title="pages/api/auth/[...nextauth].js"
 ...
 callbacks: {
-  async session({ session, token, user }) {
+  async session({ session, token, user, isUpdate }) {
     // Send properties to the client, like an access_token from a provider.
     session.accessToken = token.accessToken
     return session
