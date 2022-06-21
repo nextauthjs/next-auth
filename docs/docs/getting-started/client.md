@@ -196,6 +196,28 @@ The tutorial [securing pages and API routes](/tutorials/securing-pages-and-api-r
 
 ---
 
+## updateSession()
+
+- Client Side: **Yes**
+- Server Side: No
+
+The `updateSession()` method can be used client-side to update the SessionProvider's state. This is especially useful, when the token or session has to be updated without a full page reload.
+
+#### Example
+
+```js
+import { updateSession } from "next-auth/react"
+
+const updateUser = async () => {
+  // Update the user, e.g. via a POST request
+
+  // Then update the SessionProvider's state
+  await updateSession()
+}
+```
+
+---
+
 ## getCsrfToken()
 
 - Client Side: **Yes**
