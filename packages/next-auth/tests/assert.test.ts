@@ -13,6 +13,22 @@ it("Show error page if secret is not defined", async () => {
   expect(log.error).toBeCalledWith("NO_SECRET", expect.anything())
 })
 
+it("Should show configuration error page on invalid `callbackUrl`", async () => {
+  const { res, log } = await handler(
+    { providers: [] },
+    { prod: true, params: { callbackUrl: "invalid-callback" } }
+  )
+
+  expect(res.status).toBe(500)
+  expect(res.html).toMatch(/there is a problem with the server configuration./i)
+  expect(res.html).toMatch(/check the server logs for more information./i)
+
+  expect(log.error).toBeCalledWith(
+    "INVALID_CALLBACK_URL_ERROR",
+    expect.anything()
+  )
+})
+
 it("Allow relative `callbackUrl`", async () => {
   const { res, log } = await handler(
     { providers: [] },
