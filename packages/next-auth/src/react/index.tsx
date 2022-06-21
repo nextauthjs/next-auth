@@ -9,8 +9,8 @@
 // We use HTTP POST requests with CSRF Tokens to protect against CSRF attacks.
 
 import * as React from "react"
-import _logger, { proxyLogger } from "../lib/logger"
-import parseUrl from "../lib/parse-url"
+import _logger, { proxyLogger } from "../utils/logger"
+import parseUrl from "../utils/parse-url"
 import { Session } from ".."
 import {
   BroadcastChannel,

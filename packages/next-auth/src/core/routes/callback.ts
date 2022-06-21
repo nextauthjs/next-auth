@@ -2,19 +2,19 @@ import oAuthCallback from "../lib/oauth/callback"
 import callbackHandler from "../lib/callback-handler"
 import { hashToken } from "../lib/utils"
 
-import type { InternalOptions } from "../../lib/types"
-import type { IncomingRequest, OutgoingResponse } from ".."
+import type { InternalOptions } from "../types"
+import type { RequestInternal, OutgoingResponse } from ".."
 import type { Cookie, SessionStore } from "../lib/cookie"
 import type { User } from "../.."
 
 /** Handle callbacks from login services */
 export default async function callback(params: {
   options: InternalOptions<"oauth" | "credentials" | "email">
-  query: IncomingRequest["query"]
-  method: Required<IncomingRequest>["method"]
-  body: IncomingRequest["body"]
-  headers: IncomingRequest["headers"]
-  cookies: IncomingRequest["cookies"]
+  query: RequestInternal["query"]
+  method: Required<RequestInternal>["method"]
+  body: RequestInternal["body"]
+  headers: RequestInternal["headers"]
+  cookies: RequestInternal["cookies"]
   sessionStore: SessionStore
 }): Promise<OutgoingResponse> {
   const { options, query, body, method, headers, sessionStore } = params
@@ -349,6 +349,7 @@ export default async function callback(params: {
       }
     } catch (error) {
       return {
+        status: 401,
         redirect: `${url}/error?error=${encodeURIComponent(
           (error as Error).message
         )}`,

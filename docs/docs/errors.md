@@ -99,7 +99,7 @@ This is required to store the verification token. Please see the [email provider
 
 The Credentials Provider can only be used if JSON Web Tokens are used for sessions.
 
-JSON Web Tokens are used for Sessions by default if you have not specified a database. However, if you are using a database, then Database Sessions are enabled by default and you need to [explicitly enable JWT Sessions](https://next-auth.js.org/configuration/options#session) to use the Credentials Provider.
+JSON Web Tokens are used for Sessions by default if you have not specified a database. However, if you are using a database, then Database Sessions are enabled by default and you need to [explicitly enable JWT Sessions](/configuration/options#session) to use the Credentials Provider.
 
 If you are using a Credentials Provider, NextAuth.js will not persist users or sessions in a database - user accounts used with the Credentials Provider must be created and managed outside of NextAuth.js.
 
@@ -119,13 +119,17 @@ The default `code_challenge_method` is `"S256"`. This is currently not configura
 > If the client is capable of using "S256", it MUST use "S256", as
   S256" is Mandatory To Implement (MTI) on the server.
 
+#### INVALID_CALLBACK_URL_ERROR
+
+The `callbackUrl` provided was either invalid or not defined. See [specifying a `callbackUrl`](/getting-started/client#specifying-a-callbackurl) for more information.
+
 ---
 
 ### Session Handling
 
 #### JWT_SESSION_ERROR
 
-https://next-auth.js.org/errors#jwt_session_error JWKKeySupport: the key does not support HS512 verify algorithm
+JWKKeySupport: the key does not support HS512 verify algorithm
 
 The algorithm used for generating your key isn't listed as supported. You can generate a HS512 key using
 
@@ -161,7 +165,7 @@ Make sure the file is there and the filename is written correctly.
 
 #### NO_SECRET
 
-In production, we expect you to define a `secret` property in your configuration. In development, this is shown as a warning for convenience. [Read more](https://next-auth.js.org/configuration/options#secret)
+In production, we expect you to define a `secret` property in your configuration. In development, this is shown as a warning for convenience. [Read more](/configuration/options#secret)
 
 #### oauth_callback_error expected 200 OK with body but no body was returned
 
