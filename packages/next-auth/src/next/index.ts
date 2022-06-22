@@ -1,5 +1,6 @@
 import { NextAuthHandler } from "../core"
-import { setCookie, detectHost } from "./utils"
+import { detectHost } from "../utils/detect-host"
+import { setCookie } from "./utils"
 
 import type {
   GetServerSidePropsContext,
@@ -11,7 +12,7 @@ import type {
   NextAuthAction,
   NextAuthRequest,
   NextAuthResponse,
-} from "../lib/types"
+} from "../core/types"
 
 async function NextAuthNextHandler(
   req: NextApiRequest,

@@ -16,5 +16,5 @@
     "baseUrl": ".",
     "outDir": "."
   },
-  "exclude": ["./*.js", "./*.d.ts", "config", "**/__tests__"]
+  "exclude": ["./*.js", "./*.d.ts", "config", "**/__tests__", "tests"]
 }

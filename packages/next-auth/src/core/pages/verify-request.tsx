@@ -1,5 +1,5 @@
 import { Theme } from "../.."
-import { InternalUrl } from "../../lib/parse-url"
+import { InternalUrl } from "../../utils/parse-url"
 
 interface VerifyRequestPageProps {
   url: InternalUrl
@@ -11,15 +11,17 @@ export default function VerifyRequestPage(props: VerifyRequestPageProps) {
 
   return (
     <div className="verify-request">
-      { theme.brandColor && <style
-        dangerouslySetInnerHTML={{
-          __html: `
+      {theme.brandColor && (
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
         :root {
           --brand-color: ${theme.brandColor}
         }
       `,
-        }}
-      /> }
+          }}
+        />
+      )}
       {theme.logo && <img src={theme.logo} alt="Logo" className="logo" />}
       <div className="card">
         <h1>Check your email</h1>

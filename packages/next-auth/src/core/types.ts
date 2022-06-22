@@ -1,9 +1,20 @@
 import type { Adapter } from "../adapters"
-import type { Provider, CredentialInput, ProviderType } from "../providers"
+import type {
+  Provider,
+  CredentialInput,
+  ProviderType,
+  OAuthConfig,
+  EmailConfig,
+  CredentialsConfig,
+} from "../providers"
 import type { TokenSetParameters } from "openid-client"
 import type { JWT, JWTOptions } from "../jwt"
-import type { LoggerInstance } from "../lib/logger"
+import type { LoggerInstance } from "../utils/logger"
 import type { CookieSerializeOptions } from "cookie"
+
+import type { NextApiRequest, NextApiResponse } from "next"
+
+import { InternalUrl } from "../utils/parse-url"
 
 export type Awaitable<T> = T | PromiseLike<T>
 
@@ -471,3 +482,71 @@ export interface DefaultUser {
  * [`profile` OAuth provider callback](https://next-auth.js.org/configuration/providers#using-a-custom-provider)
  */
 export interface User extends Record<string, unknown>, DefaultUser {}
+
+// Below are types that are only supposed be used by next-auth internally
+
+/** @internal */
+export type InternalProvider<T extends ProviderType = any> = (T extends "oauth"
+  ? OAuthConfig<any>
+  : T extends "email"
+  ? EmailConfig
+  : T extends "credentials"
+  ? CredentialsConfig
+  : never) & {
+  signinUrl: string
+  callbackUrl: string
+}
+
+export type NextAuthAction =
+  | "providers"
+  | "session"
+  | "csrf"
+  | "signin"
+  | "signout"
+  | "callback"
+  | "verify-request"
+  | "error"
+  | "_log"
+
+/** @internal */
+export interface InternalOptions<T extends ProviderType = any> {
+  providers: InternalProvider[]
+  /**
+   * Parsed from `NEXTAUTH_URL` or `x-forwarded-host` on Vercel.
+   * @default "http://localhost:3000/api/auth"
+   */
+  url: InternalUrl
+  action: NextAuthAction
+  provider: T extends string
+    ? InternalProvider<T>
+    : InternalProvider<T> | undefined
+  csrfToken?: string
+  csrfTokenVerified?: boolean
+  secret: string
+  theme: Theme
+  debug: boolean
+  logger: LoggerInstance
+  session: Required<SessionOptions>
+  pages: Partial<PagesOptions>
+  jwt: JWTOptions
+  events: Partial<EventCallbacks>
+  adapter?: Adapter
+  callbacks: CallbacksOptions
+  cookies: CookiesOptions
+  callbackUrl: string
+}
+
+/** @internal */
+export interface NextAuthRequest extends NextApiRequest {
+  options: InternalOptions
+}
+
+/** @internal */
+export type NextAuthResponse<T = any> = NextApiResponse<T>
+
+/** @internal */
+// eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+export type NextAuthApiHandler<Result = void, Response = any> = (
+  req: NextAuthRequest,
+  res: NextAuthResponse<Response>
+) => Awaitable<Result>
