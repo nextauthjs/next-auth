@@ -3,7 +3,7 @@
   "version": "1.0.3",
   "description": "Fauna Adapter for NextAuth",
   "homepage": "https://next-auth.js.org",
-  "repository": "https://github.com/nextauthjs/adapters",
+  "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
