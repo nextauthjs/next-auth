@@ -27,6 +27,7 @@ export default NextAuth(authOptions);
 In `getServerSideProps`:
 ```js
 import { authOptions } from 'pages/api/[...nextauth]'
+import { unstable_getServerSession } from "next-auth/next"
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions)
@@ -50,6 +51,8 @@ export async function getServerSideProps(context) {
 In API routes:
 ```js
 import { authOptions } from 'pages/api/[...nextauth]'
+import { unstable_getServerSession } from "next-auth/next"
+
 
 export async function handler(req, res) {
   const session = await getServerSession(req, res, authOptions)
