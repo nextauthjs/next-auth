@@ -44,11 +44,11 @@ export class ChiselStrikeAuthFetcher {
 
     /// Fetches url and returns the first element of the resulting array (or null if anything goes wrong).
     public async filter(url: string): Promise<null | { [_: string]: string }> {
-        const res = await this.fetch(url);
+        const res = await this.fetch(url)
         if (!res.ok) { return null }
         const jres = await res.json()
-        if (!Array.isArray(jres) || jres.length < 1) { return null }
-        return jres[0]
+        if (!Array.isArray(jres.results) || jres.results.length < 1) { return null }
+        return jres.results[0]
     }
 
     public async deleteEverything() {
@@ -107,7 +107,7 @@ export function ChiselStrikeAdapter(fetcher: ChiselStrikeAuthFetcher): Adapter {
             const body = JSON.stringify(account);
             const resp = await fetcher.fetch(fetcher.accounts(), { method: 'POST', body })
             await ensureOK(resp, `posting account ${body}`);
-            return await resp.json()
+            return (await resp.json()).results
         },
         // unlinkAccount?: ((providerAccountId: Pick<Account, "provider" | "providerAccountId">) => Promise<void> | Awaitable<Account | undefined>) | undefined;
         unlinkAccount: async (providerAccountId: Pick<Account, "provider" | "providerAccountId">): Promise<void> => {
@@ -163,7 +163,8 @@ export function ChiselStrikeAdapter(fetcher: ChiselStrikeAuthFetcher): Adapter {
     }
 }
 
-function userFromJson(user: any): AdapterUser {
+function userFromJson(json: any): AdapterUser {
+    const user = json?.results ?? json
     return user ? { ...user, emailVerified: new Date(user.emailVerified) } : null
 }
 
@@ -175,7 +176,8 @@ async function ensureOK(resp: Response, during: string) {
     }
 }
 
-function sessionFromJson(session: any): AdapterSession {
+function sessionFromJson(json: any): AdapterSession {
+    const session = json?.results ?? json
     return { ...session, expires: new Date(session.expires), id: session.id ?? 'impossible: fetched CSession has null ID' }
 }
 
