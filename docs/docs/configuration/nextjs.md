@@ -86,50 +86,27 @@ You must set the [`NEXTAUTH_SECRET`](/configuration/options#nextauth_secret) env
 
 
 ### Basic usage
+
+The most simple usage is when you want to require authentication for your entire site. You can add a `middleware.js` file with the following:
+
 ```js
-import withAuth from "next-auth/middleware"
-// or
-import { withAuth } from "next-auth/middleware"
+export { default } from "next-auth/middleware"
 ```
 
-### Custom JWT decode method
+That's it! Your application is not secured. 🎉
 
-If you have custom jwt decode method set in `[...nextauth].ts`, you must also pass the same `decode` method to `withAuth` in order to read the custom-signed JWT correctly. You may want to extract the encode/decode logic to a separate function for consistency.
+If you only want to secure certain pages, export a `config` object with a `matcher`:
 
-`[...nextauth].ts`
-```ts
-import jwt from "jsonwebtoken";
+```js
+export { default } from "next-auth/middleware"
 
-export default NextAuth({
-  providers: [...],
-  secret: /* Please use `process.env.NEXTAUTH_SECRET` */,
-  jwt: {
-    encode: async ({ secret, token }) => {
-      return jwt.sign(token as any, secret);
-    },
-    decode: async ({ secret, token }) => {
-      return jwt.verify(token as string, secret) as any;
-    },
-  },
-})
+export const config = { matcher: ["/dashboard"] }
 ```
 
-Any `_middleware.ts`
-```ts
-import withAuth from "next-auth/middleware"
-import jwt from "jsonwebtoken";
+Now you will still be able to visit every page, but only `/dashboard` will require authentication.
 
-export default withAuth({
-  jwt: {
-    decode: async ({ secret, token }) => {
-      return jwt.verify(token, secret) as any;
-    },
-  },
-  callbacks: {
-    authorized: ({ token }) => !!token,
-  },
-})
-```
+If a user is not logged in, the default behavior is to redirect them to the sign-in page.
+
 ---
 ### `callbacks`
 
@@ -172,46 +149,24 @@ See the documentation for the [pages option](/configuration/pages) for more info
 
 ---
 
-### Examples
+### Advanced usage
 
-`withAuth` is very flexible, there are multiple ways to use it.
+NextAuth.js Middleware is very flexible, there are multiple ways to use it.
 
 :::note
 If you do not define the options, NextAuth.js will use the default values for the omitted options.
 :::
 
-#### default re-export
-
-```js title="pages/_middleware.js"
-export { default } from "next-auth/middleware"
-```
-
-With this one line, when someone tries to load any of your pages, they will have to be logged-in first. Otherwise, they are redirected to the login page. It will assume that you are using the `NEXTAUTH_SECRET` environment variable.
-
-#### default `withAuth` export
-
-```js title="pages/admin/_middleware.js"
-import { withAuth } from "next-auth/middleware"
-
-export default withAuth({
-  callbacks: {
-    authorized: ({ token }) => token?.role === "admin",
-  },
-})
-```
-
-With the above code, you just made sure that only user's with the `admin` role can access any of the pages under the `/admin` route. (Including nested routes as well, like `/admin/settings` etc.).
-
 #### wrap middleware
 
-```ts title="pages/admin/_middleware.ts"
+```ts title="middleware.ts"
 import type { NextRequest } from "next/server"
 import type { JWT } from "next-auth/jwt"
-
 import { withAuth } from "next-auth/middleware"
 
 export default withAuth(
-  function middleware(req: NextRequest & { nextauth: { token: JWT } }) {
+  // `withAuth` can augment your Request with the user's token.
+  function middleware(req: NextRequest & { nextauth: { token: JWT | null } }) {
     console.log(req.nextauth.token)
   },
   {
@@ -220,11 +175,52 @@ export default withAuth(
     },
   }
 )
+
+export const config = { matcher: ["/admin"] }
 ```
 
 The `middleware` function will only be invoked if the `authorized` callback returns `true`.
 
 ---
+
+#### Custom JWT decode method
+
+If you have a custom jwt decode method set in `[...nextauth].ts`, you must also pass the same `decode` method to `withAuth` in order to read the custom-signed JWT correctly. You may want to extract the encode/decode logic to a separate function for consistency.
+
+``
+```ts title="/api/auth/[...nextauth].ts"
+import type { NextAuthOptions } from "next-auth"
+import NextAuth from "next-auth"
+import jwt from "jsonwebtoken"
+
+export const authOptions: NextAuthOptions = {
+  providers: [...],
+  jwt: {
+    async encode({ secret, token }) {
+      return jwt.sign(token, secret)
+    },
+    async decode({ secret, token }) {
+      return jwt.verify(token, secret)
+    },
+  },
+}
+
+export default NextAuth(authOptions)
+```
+
+And:
+
+```ts title="middleware.ts"
+import withAuth from "next-auth/middleware"
+import { authOptions } from "pages/api/auth/[...nextauth]";
+
+export default withAuth({
+  jwt: { decode: authOptions.jwt },
+  callbacks: {
+    authorized: ({ token }) => !!token,
+  },
+})
+```
 
 ### Caveats
 
