@@ -134,7 +134,13 @@ export function ChiselStrikeAdapter(fetcher: ChiselStrikeAuthFetcher): Adapter {
             // TODO: use PATCH
             const dbSession = await fetcher.filter(fetcher.sessions(`?.sessionToken=${session.sessionToken}`))
             if (!dbSession) { return null }
-            Object.keys(session).forEach(key => dbSession[key] = session[key])
+            Object.entries(session).forEach(([key, entry]) => {
+                if (entry instanceof Date) {
+                    dbSession[key] = entry.toISOString();
+                } else {
+                    dbSession[key] = entry;
+                }
+           });
             const body = JSON.stringify(dbSession)
             const put = await fetcher.fetch(fetcher.sessions(`/${dbSession.id}`), { method: 'PUT', body })
             await ensureOK(put, `writing user ${body}`)
