@@ -1,5 +1,7 @@
 export { default } from "next-auth/middleware"
 
+export const config = { matcher: ["/middleware-protected"] }
+
 // Other ways to use this middleware
 
 // import withAuth from "next-auth/middleware"
