@@ -62,7 +62,8 @@
     "index.js",
     "adapters.d.ts",
     "middleware.d.ts",
-    "middleware.js"
+    "middleware.js",
+    "utils"
   ],
   "license": "ISC",
   "dependencies": {
