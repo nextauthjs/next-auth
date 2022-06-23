@@ -56,12 +56,12 @@ More details can be found [here](https://next-auth.js.org/configuration/nextjs#m
 
 ### Server Side
 
-You can protect server side rendered pages using the `getServerSession` method. This is different from the old `getSession()` method, in that it does not do an extra fetch out over the internet to confirm data from itself, increasing performance significantly.
+You can protect server side rendered pages using the `unstable_getServerSession` method. This is different from the old `getSession()` method, in that it does not do an extra fetch out over the internet to confirm data from itself, increasing performance significantly.
 
 You need to add this to every server rendered page you want to protect.
 
 ```js title="pages/server-side-example.js"
-import { useSession, getServerSession } from "next-auth/next"
+import { useSession, unstable_getServerSession } from "next-auth/next"
 
 export default function Page() {
   const { data: session } = useSession()
@@ -82,7 +82,7 @@ export default function Page() {
 export async function getServerSideProps(context) {
   return {
     props: {
-      session: await getServerSession(context),
+      session: await unstable_getServerSession(context),
     },
   }
 }
@@ -110,15 +110,15 @@ export default function App({
 
 ## Securing API Routes
 
-### Using getServerSession()
+### Using unstable_getServerSession()
 
-You can protect API routes using the `getServerSession()` method.
+You can protect API routes using the `unstable_getServerSession()` method.
 
 ```js title="pages/api/get-session-example.js"
-import { getServerSession } from "next-auth/next"
+import { unstable_getServerSession } from "next-auth/next"
 
 export default async (req, res) => {
-  const session = await getServerSession({ req })
+  const session = await unstable_getServerSession({ req })
   if (session) {
     // Signed in
     console.log("Session", JSON.stringify(session, null, 2))

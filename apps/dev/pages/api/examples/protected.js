@@ -1,8 +1,8 @@
 // This is an example of to protect an API route
-import { getServerSession } from "next-auth/next"
+import { unstable_getServerSession } from "next-auth/next"
 
 export default async (req, res) => {
-  const session = await getServerSession({ req, res }, options)
+  const session = await unstable_getServerSession({ req, res }, options)
 
   if (session) {
     res.send({

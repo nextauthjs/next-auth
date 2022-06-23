@@ -126,10 +126,10 @@ function Auth({ children }) {
   // if `{ required: true }` is supplied, `status` can only be "loading" or "authenticated"
   const { status } = useSession({ required: true })
 
-  if (status === 'loading') {
+  if (status === "loading") {
     return <div>Loading...</div>
   }
-  
+
   return children
 }
 ```
@@ -161,7 +161,7 @@ See repository [`README`](https://github.com/nextauthjs/react-query) for more de
 ## getSession()
 
 - Client Side: **Yes**
-- Server Side: **No** (See: [`getServerSession()`](/getting-started/client#getserversession)
+- Server Side: **No** (See: [`unstable_getServerSession()`](/getting-started/client#getserversession)
 
 NextAuth.js provides a `getSession()` helper which should be called **client side only** to return the current active session.
 
@@ -176,7 +176,7 @@ async function myFunction() {
 }
 ```
 
-Read the tutorial [securing pages and API routes](/tutorials/securing-pages-and-api-routes) to know how to fetch the session in server side calls using `getServerSession()`.
+Read the tutorial [securing pages and API routes](/tutorials/securing-pages-and-api-routes) to know how to fetch the session in server side calls using `unstable_getServerSession()`.
 
 ---
 
@@ -420,14 +420,14 @@ If you pass the `session` page prop to the `<SessionProvider>` – as in the exa
 This only works on pages where you provide the correct `pageProps`, however. This is normally done in `getInitialProps` or `getServerSideProps` on an individual page basis like so:
 
 ```js title="pages/index.js"
-import { getServerSession } from "next-auth/next"
+import { unstable_getServerSession } from "next-auth/next"
 
 ...
 
 export async function getServerSideProps(ctx) {
   return {
     props: {
-      session: await getServerSession(ctx)
+      session: await unstable_getServerSession(ctx)
     }
   }
 }
