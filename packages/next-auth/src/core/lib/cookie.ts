@@ -133,7 +133,7 @@ export class SessionStore {
 
     if (cookies instanceof Map) {
       for (const name of cookies.keys()) {
-        if (name.startsWith(cookieName)) this.#chunks[name] = cookies.get(name)!
+        if (name.startsWith(cookieName)) this.#chunks[name] = cookies.get(name)
       }
     } else {
       for (const name in cookies) {
