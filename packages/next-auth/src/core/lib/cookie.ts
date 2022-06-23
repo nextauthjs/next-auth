@@ -128,17 +128,16 @@ export class SessionStore {
     this.#logger = logger
     this.#option = option
 
-    if (req.cookies instanceof Map) {
-      for (const name of req.cookies.keys()) {
-        if (name.startsWith(option.name)) {
-          this.#chunks[name] = req.cookies.get(name)
-        }
+    const { cookies } = req
+    const { name: cookieName } = option
+
+    if (cookies instanceof Map) {
+      for (const name of cookies.keys()) {
+        if (name.startsWith(cookieName)) this.#chunks[name] = cookies.get(name)
       }
     } else {
-      for (const name in req.cookies) {
-        if (name.startsWith(option.name)) {
-          this.#chunks[name] = req.cookies[name]
-        }
+      for (const name in cookies) {
+        if (name.startsWith(cookieName)) this.#chunks[name] = cookies[name]
       }
     }
   }
