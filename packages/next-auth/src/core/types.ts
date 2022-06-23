@@ -14,7 +14,7 @@ import type { CookieSerializeOptions } from "cookie"
 
 import type { NextApiRequest, NextApiResponse } from "next"
 
-import { InternalUrl } from "../utils/parse-url"
+import type { InternalUrl } from "../utils/parse-url"
 
 export type Awaitable<T> = T | PromiseLike<T>
 
@@ -117,7 +117,7 @@ export interface NextAuthOptions {
    * * **Required**: *No*
    *
    * [Documentation](https://next-auth.js.org/configuration/options#adapter) |
-   * [Community adapters](https://github.com/nextauthjs/adapters)
+   * [Adapters Overview](https://next-auth.js.org/adapters/overview)
    */
   adapter?: Adapter
   /**

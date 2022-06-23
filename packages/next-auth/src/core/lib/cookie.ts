@@ -122,7 +122,7 @@ export class SessionStore {
   constructor(
     option: CookieOption,
     req: {
-      cookies?: Record<string, string>
+      cookies?: Record<string, string> | { get: (key: string) => string }
       headers?: Headers | IncomingHttpHeaders | Record<string, string>
     },
     logger: LoggerInstance | Console
@@ -134,7 +134,10 @@ export class SessionStore {
 
     for (const name in req.cookies) {
       if (name.startsWith(option.name)) {
-        this.#chunks[name] = req.cookies[name]
+        this.#chunks[name] =
+          typeof req.cookies.get === "function"
+            ? req.cookies.get(name)
+            : req.cookies[name]
       }
     }
   }
