@@ -120,8 +120,8 @@ export class SessionStore {
   constructor(
     option: CookieOption,
     req: {
-      cookies: Partial<Record<string, string> | Map<string, string>>
-      headers: Headers | IncomingHttpHeaders | Record<string, string>
+      cookies?: Partial<Record<string, string> | Map<string, string>>
+      headers?: Headers | IncomingHttpHeaders | Record<string, string>
     },
     logger: LoggerInstance | Console
   ) {
@@ -133,7 +133,7 @@ export class SessionStore {
 
     if (cookies instanceof Map) {
       for (const name of cookies.keys()) {
-        if (name.startsWith(cookieName)) this.#chunks[name] = cookies.get(name)
+        if (name.startsWith(cookieName)) this.#chunks[name] = cookies.get(name)!
       }
     } else {
       for (const name in cookies) {
