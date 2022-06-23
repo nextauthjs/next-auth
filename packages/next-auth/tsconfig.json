@@ -1,7 +1,7 @@
 {
   "extends": "@next-auth/tsconfig/base.json",
   "compilerOptions": {
-    // "emitDeclarationOnly": true,
+    "emitDeclarationOnly": true,
     "strictNullChecks": true,
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
