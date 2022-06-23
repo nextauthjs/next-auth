@@ -114,13 +114,13 @@
     "jest": "^28.1.1",
     "jest-environment-jsdom": "^28.1.1",
     "jest-watch-typeahead": "^1.1.0",
-    "msw": "^0.42.1",
-    "next": "^12.1.6",
+    "msw": "^0.42.3",
+    "next": "12.1.7-canary.45",
     "postcss": "^8.4.14",
     "postcss-cli": "^9.1.0",
     "postcss-nested": "^5.0.6",
-    "react": "^18.1.0",
-    "react-dom": "^18.1.0",
+    "react": "^18",
+    "react-dom": "^18",
     "whatwg-fetch": "^3.6.2"
   },
   "engines": {

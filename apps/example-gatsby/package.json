@@ -12,9 +12,9 @@
   "dependencies": {
     "dotenv": "^16.0.0",
     "gatsby": "next",
-    "next-auth": "^4.2.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "next-auth": "workspace:*",
+    "react": "^18",
+    "react-dom": "^18"
   },
   "devDependencies": {
     "vercel": "^23.1.2"
