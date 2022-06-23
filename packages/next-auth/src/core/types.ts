@@ -14,7 +14,7 @@ import type { CookieSerializeOptions } from "cookie"
 
 import type { NextApiRequest, NextApiResponse } from "next"
 
-import { InternalUrl } from "../utils/parse-url"
+import type { InternalUrl } from "../utils/parse-url"
 
 export type Awaitable<T> = T | PromiseLike<T>
 

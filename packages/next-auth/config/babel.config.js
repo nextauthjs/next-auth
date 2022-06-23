@@ -25,7 +25,6 @@ module.exports = (api) => {
     ignore: [
       "../src/**/__tests__/**",
       "../src/adapters.ts",
-      "../src/core/types.ts",
       "../src/providers/oauth-types.ts",
     ],
     comments: false,
