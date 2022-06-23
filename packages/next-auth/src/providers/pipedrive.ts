@@ -1,6 +1,6 @@
 import type { OAuthConfig, OAuthUserConfig } from "."
 
-export interface PipedriveProfile {
+export interface PipedriveProfile extends Record<string, any> {
   success: boolean
   data: {
     id: number
@@ -35,9 +35,9 @@ export interface PipedriveProfile {
   }
 }
 
-export default function Pipedrive<
-  P extends Record<string, any> = PipedriveProfile
->(options: OAuthUserConfig<P>): OAuthConfig<P> {
+export default function Pipedrive<P extends PipedriveProfile>(
+  options: OAuthUserConfig<P>
+): OAuthConfig<P> {
   return {
     id: "pipedrive",
     name: "Pipedrive",
@@ -48,7 +48,7 @@ export default function Pipedrive<
     userinfo: "https://api.pipedrive.com/users/me",
     profile: ({ data: profile }) => {
       return {
-        id: profile.id,
+        id: String(profile.id),
         name: profile.name,
         email: profile.email,
         image: profile.icon_url,

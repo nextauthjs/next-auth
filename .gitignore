@@ -1,5 +1,6 @@
 # Misc
 .DS_Store
+.npmrc
 
 .env
 .env.local
@@ -11,6 +12,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 firebase-debug.log
+.pnpm-debug.log
 
 
 # Dependencies
@@ -28,7 +30,7 @@ packages/next-auth/providers
 packages/next-auth/src/providers/oauth-types.ts
 packages/next-auth/client
 packages/next-auth/css
-packages/next-auth/lib
+packages/next-auth/utils
 packages/next-auth/core
 packages/next-auth/jwt
 packages/next-auth/react

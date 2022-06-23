@@ -1,7 +1,7 @@
 import { useState } from "react"
 import userEvent from "@testing-library/user-event"
 import { render, screen, waitFor } from "@testing-library/react"
-import logger from "../../lib/logger"
+import logger from "../../utils/logger"
 import {
   server,
   mockCredentialsResponse,
@@ -13,7 +13,7 @@ import { rest } from "msw"
 
 const { location } = window
 
-jest.mock("../../lib/logger", () => ({
+jest.mock("../../utils/logger", () => ({
   __esModule: true,
   default: {
     warn: jest.fn(),
@@ -195,7 +195,7 @@ test("if callback URL contains a hash we force a window reload when re-directing
   const mockUrlWithHash = "https://path/to/email/url#foo-bar-baz"
 
   server.use(
-    rest.post("http://localhost/api/auth/signin/email", (req, res, ctx) => {
+    rest.post("*/api/auth/signin/email", (req, res, ctx) => {
       return res(
         ctx.status(200),
         ctx.json({
@@ -222,7 +222,7 @@ test("params are propagated to the signin URL when supplied", async () => {
   const authParams = "foo=bar&bar=foo"
 
   server.use(
-    rest.post("http://localhost/api/auth/signin/github", (req, res, ctx) => {
+    rest.post("*/auth/signin/github", (req, res, ctx) => {
       matchedParams = req.url.search
       return res(ctx.status(200), ctx.json(mockGithubResponse))
     })
@@ -241,7 +241,7 @@ test("when it fails to fetch the providers, it redirected back to signin page", 
   const errorMsg = "Error when retrieving providers"
 
   server.use(
-    rest.get("http://localhost/api/auth/providers", (req, res, ctx) =>
+    rest.get("*/api/auth/providers", (req, res, ctx) =>
       res(ctx.status(500), ctx.json(errorMsg))
     )
   )

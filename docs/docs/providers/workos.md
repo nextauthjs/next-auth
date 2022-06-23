@@ -15,7 +15,7 @@ https://dashboard.workos.com
 
 The **WorkOS Provider** comes with a set of default options:
 
-- [WorkOS Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/workos.js)
+- [WorkOS Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/workos.ts)
 
 You can override any of the options to suit your own use case.
 
@@ -94,20 +94,10 @@ export default function SignIn({ providers }) {
   )
 }
 
-// This is the recommended way for Next.js 9.3 or newer
 export async function getServerSideProps(context) {
   const providers = await getProviders()
   return {
     props: { providers },
   }
 }
-
-/*
-// If older than Next.js 9.3
-SignIn.getInitialProps = async () => {
-  return {
-    providers: await getProviders()
-  }
-}
-*/
 ```

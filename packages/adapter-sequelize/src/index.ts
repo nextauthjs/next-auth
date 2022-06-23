@@ -1,4 +1,4 @@
-import type { Account as ApadterAccount } from "next-auth"
+import type { Account as AdapterAccount } from "next-auth"
 import type {
   Adapter,
   AdapterUser,
@@ -12,8 +12,8 @@ export { defaultModels as models }
 
 // @see https://sequelize.org/master/manual/typescript.html
 interface AccountInstance
-  extends Model<ApadterAccount, Partial<ApadterAccount>>,
-    ApadterAccount {}
+  extends Model<AdapterAccount, Partial<AdapterAccount>>,
+    AdapterAccount {}
 interface UserInstance
   extends Model<AdapterUser, Partial<AdapterUser>>,
     AdapterUser {}

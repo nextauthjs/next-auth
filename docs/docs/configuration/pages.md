@@ -21,6 +21,10 @@ To add a custom login page, you can use the `pages` option:
 ...
 ```
 
+:::note
+When using this configuration, ensure that these pages actually exist. For example `error: '/auth/error'` refers to a page file at `pages/auth/error.js`.
+:::
+
 ## Error codes
 
 We purposefully restrict the returned error codes for increased security.
@@ -51,7 +55,7 @@ The following errors are passed as error query parameters to the default or over
 - **SessionRequired**: The content of this page requires you to be signed in at all times. See [useSession](/getting-started/client#require-session) for configuration.
 - **Default**: Catch all, will apply, if none of the above matched
 
-Example: `/auth/error?error=Default`
+Example: `/auth/signin?error=Default`
 
 ## Theming
 
@@ -97,6 +101,8 @@ export async function getServerSideProps(context) {
   }
 }
 ```
+
+There is another, more fully styled example signin page available [here](https://github.com/ndom91/next-auth-example-sign-in-page).
 
 ### Email Sign in
 

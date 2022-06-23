@@ -1,5 +1,5 @@
 {
-  "extends": "tsconfig/base.json",
+  "extends": "@next-auth/tsconfig/adapters.json",
   "compilerOptions": {
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,

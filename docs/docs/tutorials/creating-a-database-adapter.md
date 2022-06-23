@@ -7,6 +7,8 @@ Using a custom adapter you can connect to any database back-end or even several 
 
 ## How to create an adapter
 
+For more information about the data these methods need to manage see [models](/adapters/models).
+
 _See the code below for practical example._
 
 ### Example code

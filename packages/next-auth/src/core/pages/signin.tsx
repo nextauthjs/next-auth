@@ -1,5 +1,4 @@
-import { Theme } from "../.."
-import { InternalProvider } from "../../lib/types"
+import type { InternalProvider, Theme } from "../types"
 
 /**
  * The following errors are passed as error query parameters to the default or overridden sign-in page.
@@ -123,10 +122,11 @@ export default function SigninPage(props: SignInServerPageParams) {
                 <input
                   id={`input-email-for-${provider.id}-provider`}
                   autoFocus
-                  type="text"
+                  type="email"
                   name="email"
                   value={email}
                   placeholder="email@example.com"
+                  required
                 />
                 <button type="submit">Sign in with {provider.name}</button>
               </form>

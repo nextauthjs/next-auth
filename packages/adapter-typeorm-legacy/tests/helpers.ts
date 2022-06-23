@@ -1,5 +1,5 @@
 import { ConnectionManager, ConnectionOptions } from "typeorm"
-import { TestOptions } from "adapter-test"
+import { TestOptions } from "@next-auth/adapter-test"
 import * as defaultEntities from "../src/entities"
 import { parseConnectionConfig } from "../src/utils"
 

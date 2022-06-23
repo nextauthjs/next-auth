@@ -33,6 +33,10 @@ In development, we generate a `secret` based on your configuration for convenien
 
 Twitter OAuth 2.0 is currently in beta as certain changes might still be necessary. This is not covered by semver. See the docs https://next-auth.js.org/providers/twitter#oauth-2
 
+#### EXPERIMENTAL_API
+
+Some APIs are still experimental; they may be changed or removed in the future. Use at your own risk.
+
 ## Adapter
 
 ### ADAPTER_TYPEORM_UPDATING_ENTITIES
