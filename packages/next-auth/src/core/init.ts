@@ -1,7 +1,6 @@
 import { NextAuthOptions } from ".."
-import logger from "../lib/logger"
-import parseUrl from "../lib/parse-url"
-import { InternalOptions } from "../lib/types"
+import logger from "../utils/logger"
+import parseUrl from "../utils/parse-url"
 import { adapterErrorHandler, eventsErrorHandler } from "./errors"
 import parseProviders from "./lib/providers"
 import createSecret from "./lib/utils"
@@ -10,7 +9,9 @@ import * as jwt from "../jwt"
 import { defaultCallbacks } from "./lib/default-callbacks"
 import { createCSRFToken } from "./lib/csrf-token"
 import { createCallbackUrl } from "./lib/callback-url"
-import { IncomingRequest } from "."
+import { RequestInternal } from "."
+
+import type { InternalOptions } from "./types"
 
 interface InitParams {
   host?: string
@@ -23,7 +24,7 @@ interface InitParams {
   csrfToken?: string
   /** Is the incoming request a POST request? */
   isPost: boolean
-  cookies: IncomingRequest["cookies"]
+  cookies: RequestInternal["cookies"]
 }
 
 /** Initialize all internal options and cookies. */

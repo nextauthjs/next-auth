@@ -69,7 +69,7 @@ jobs:
           git config --global user.name "Balázs Orbán"
           pnpm release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
           NPM_TOKEN_PKG: ${{ secrets.NPM_TOKEN_PKG }}
           NPM_TOKEN_ORG: ${{ secrets.NPM_TOKEN_ORG }}
   release-pr:
@@ -103,7 +103,7 @@ jobs:
           echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
           pnpm publish --no-git-checks --access public --tag experimental
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN_PKG }}
       - name: Comment version on PR
         uses: NejcZdovc/comment-pr@v1
         with:
