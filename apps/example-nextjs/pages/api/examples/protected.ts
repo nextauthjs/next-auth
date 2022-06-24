@@ -3,7 +3,7 @@ import { unstable_getServerSession } from "next-auth/next"
 import type { NextApiRequest, NextApiResponse } from "next"
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = await unstable_getServerSession({ req, res })
+  const session = await unstable_getServerSession(req, res, authOptions)
 
   if (session) {
     res.send({

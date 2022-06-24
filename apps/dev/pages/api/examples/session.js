@@ -2,6 +2,6 @@
 import { unstable_getServerSession } from "next-auth/next"
 
 export default async (req, res) => {
-  const session = await unstable_getServerSession({ req })
+  const session = await unstable_getServerSession(req, res, authOptions)
   res.send(JSON.stringify(session, null, 2))
 }

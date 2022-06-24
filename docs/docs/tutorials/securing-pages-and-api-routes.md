@@ -82,7 +82,7 @@ export default function Page() {
 export async function getServerSideProps(context) {
   return {
     props: {
-      session: await unstable_getServerSession(context),
+      session: await unstable_getServerSession(context.req, context.res, authOptions),
     },
   }
 }
@@ -118,7 +118,7 @@ You can protect API routes using the `unstable_getServerSession()` method.
 import { unstable_getServerSession } from "next-auth/next"
 
 export default async (req, res) => {
-  const session = await unstable_getServerSession({ req })
+  const session = await unstable_getServerSession(req, res, authOptions)
   if (session) {
     // Signed in
     console.log("Session", JSON.stringify(session, null, 2))

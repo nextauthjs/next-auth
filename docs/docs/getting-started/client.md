@@ -161,7 +161,7 @@ See repository [`README`](https://github.com/nextauthjs/react-query) for more de
 ## getSession()
 
 - Client Side: **Yes**
-- Server Side: **No** (See: [`unstable_getServerSession()`](/getting-started/client#getserversession)
+- Server Side: **No** (See: [`unstable_getServerSession()`](/configuration/nextjs#unstable_getserversession)
 
 NextAuth.js provides a `getSession()` helper which should be called **client side only** to return the current active session.
 

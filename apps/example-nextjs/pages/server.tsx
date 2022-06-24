@@ -36,7 +36,7 @@ export default function ServerSidePage({ session }) {
 export async function getServerSideProps(context: NextPageContext) {
   return {
     props: {
-      session: await unstable_getServerSession(context, authOptions),
+      session: await unstable_getServerSession(context.req, context.res, authOptions),
     },
   }
 }

@@ -39,7 +39,7 @@ export default function Page() {
 export async function getServerSideProps(context) {
   return {
     props: {
-      session: await unstable_getServerSession(context),
+      session: await unstable_getServerSession(contex.req, contex.res, authOptions),
     },
   }
 }
