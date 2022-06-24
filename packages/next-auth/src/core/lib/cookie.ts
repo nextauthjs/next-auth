@@ -120,7 +120,7 @@ export class SessionStore {
   constructor(
     option: CookieOption,
     req: {
-      cookies?: Record<string, string> | { get: (key: string) => string }
+      cookies?: Partial<Record<string, string> | Map<string, string>>
       headers?: Headers | IncomingHttpHeaders | Record<string, string>
     },
     logger: LoggerInstance | Console
@@ -128,14 +128,16 @@ export class SessionStore {
     this.#logger = logger
     this.#option = option
 
-    if (!req) return
+    const { cookies } = req
+    const { name: cookieName } = option
 
-    for (const name in req.cookies) {
-      if (name.startsWith(option.name)) {
-        this.#chunks[name] =
-          typeof req.cookies.get === "function"
-            ? req.cookies.get(name)
-            : req.cookies[name]
+    if (cookies instanceof Map) {
+      for (const name of cookies.keys()) {
+        if (name.startsWith(cookieName)) this.#chunks[name] = cookies.get(name)
+      }
+    } else {
+      for (const name in cookies) {
+        if (name.startsWith(cookieName)) this.#chunks[name] = cookies[name]
       }
     }
   }
