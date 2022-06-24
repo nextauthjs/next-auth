@@ -3,7 +3,7 @@ id: corporate-proxy
 title: Add support for HTTP Proxy
 --
 
-Using NextAuth.js behind a corporate proxy is not supported out of the box. This is due to the fact that the underlying library we use, [`openid-client`](https://npm.im/openid-client), uses the built-in Node.js `http` / `https` libraries ([Source](As)), which do not support proxys by default. (See: [`http` docs](https://nodejs.org/dist/latest-v16.x/docs/api/http.html), [`https` docs](https://nodejs.org/dist/latest-v16.x/docs/api/https.html)).
+Using NextAuth.js behind a corporate proxy is not supported out of the box. This is due to the fact that the underlying library we use, [`openid-client`](https://npm.im/openid-client), uses the built-in Node.js `http` / `https` libraries, which do not support proxys by default. (See: [`http` docs](https://nodejs.org/dist/latest-v16.x/docs/api/http.html), [`https` docs](https://nodejs.org/dist/latest-v16.x/docs/api/https.html)).
 
 Therefore, we'll need to an additional proxy agent to the http client, such as `https-proxy-agent`. `openid-client` allows the user to set an `agent` for requests ([Source](https://github.com/panva/node-openid-client/blob/main/docs/README.md#customizing-individual-http-requests).
 

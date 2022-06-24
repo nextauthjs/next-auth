@@ -63,6 +63,11 @@ export class UnsupportedStrategy extends UnknownError {
   code = "CALLBACK_CREDENTIALS_JWT_ERROR"
 }
 
+export class InvalidCallbackUrl extends UnknownError {
+  name = "InvalidCallbackUrl"
+  code = "INVALID_CALLBACK_URL_ERROR"
+}
+
 type Method = (...args: any[]) => Promise<any>
 
 export function upperSnake(s: string) {

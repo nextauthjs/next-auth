@@ -1,3 +1,4 @@
+import { createHash } from "crypto"
 import type { Commit, PackageToRelease } from "./types"
 
 import { debug, pkgJson, execSync } from "./utils"
@@ -9,7 +10,7 @@ export async function publish(options: {
 }) {
   const { dryRun, packages, RELEASE_COMMIT_MSG } = options
 
-  execSync("yarn build")
+  execSync("pnpm build")
 
   for await (const pkg of packages) {
     if (dryRun) {
@@ -17,13 +18,16 @@ export async function publish(options: {
         `Dry run, npm publish for package ${pkg.name} will show the wrong version (${pkg.oldVersion}). In normal run, it would be ${pkg.newVersion}`
       )
     } else {
-      console.log(`Writing version to package.json for package ${pkg.name}`)
+      console.log(
+        `Writing version ${pkg.newVersion} to package.json for package ${pkg.name}`
+      )
       await pkgJson.update(pkg.path, { version: pkg.newVersion })
       console.log("package.json file has been written, publishing...")
     }
 
-    let npmPublish = `npm publish --access public --registry=https://registry.npmjs.org`
+    let npmPublish = `pnpm publish --access public --registry=https://registry.npmjs.org --no-git-checks`
     // We use different tokens for `next-auth` and `@next-auth/*` packages
+
     if (pkg.name === "next-auth") {
       process.env.NPM_TOKEN = process.env.NPM_TOKEN_PKG
     } else {
@@ -34,9 +38,10 @@ export async function publish(options: {
       console.log(`Dry run, skip npm publish for package ${pkg.name}...`)
       npmPublish += " --dry-run"
     } else {
-      const npmrc =
-        'echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc'
-      execSync(npmrc, { cwd: pkg.path })
+      execSync(
+        "echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > .npmrc",
+        { cwd: pkg.path }
+      )
     }
 
     execSync(npmPublish, { cwd: pkg.path })

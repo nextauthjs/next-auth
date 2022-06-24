@@ -1,12 +1,12 @@
 import { render, screen, waitFor } from "@testing-library/react"
 import { rest } from "msw"
 import { server, mockSession } from "./helpers/mocks"
-import logger from "../../lib/logger"
+import logger from "../../utils/logger"
 import { useState, useEffect } from "react"
 import { getSession } from "../../react"
 import { getBroadcastEvents } from "./helpers/utils"
 
-jest.mock("../../lib/logger", () => ({
+jest.mock("../../utils/logger", () => ({
   __esModule: true,
   default: {
     warn: jest.fn(),
@@ -61,7 +61,7 @@ test("if it can fetch the session, it should store it in `localStorage`", async 
 
 test("if there's an error fetching the session, it should log it", async () => {
   server.use(
-    rest.get("/api/auth/session", (req, res, ctx) => {
+    rest.get("*/api/auth/session", (req, res, ctx) => {
       return res(ctx.status(500), ctx.body("Server error"))
     })
   )

@@ -77,8 +77,7 @@ NextAuth.js can be used with or without a database.
 - Designed to be secure by default and encourage best practices for safeguarding user data
 - Uses Cross-Site Request Forgery (CSRF) Tokens on POST routes (sign in, sign out)
 - Default cookie policy aims for the most restrictive policy appropriate for each cookie
-- When JSON Web Tokens are enabled, they are signed by default (JWS) with HS512
-- Use JWT encryption (JWE) by setting the option `encryption: true` (defaults to A256GCM)
+- When JSON Web Tokens are enabled, they are encrypted by default (JWE) with A256GCM
 - Auto-generates symmetric signing and encryption keys for developer convenience
 - Features tab/window syncing and session polling to support short lived sessions
 - Attempts to implement the latest guidance published by [Open Web Application Security Project](https://owasp.org)

@@ -1,5 +1,6 @@
 import { NextAuthHandler } from "../core"
-import { setCookie, detectHost } from "./utils"
+import { detectHost } from "../utils/detect-host"
+import { setCookie } from "./utils"
 
 import type {
   GetServerSidePropsContext,
@@ -11,7 +12,7 @@ import type {
   NextAuthAction,
   NextAuthRequest,
   NextAuthResponse,
-} from "../lib/types"
+} from "../core/types"
 
 async function NextAuthNextHandler(
   req: NextApiRequest,
@@ -66,7 +67,7 @@ function NextAuth(
   options: NextAuthOptions
 ): any
 
-/** Tha main entry point to next-auth */
+/** The main entry point to next-auth */
 function NextAuth(
   ...args:
     | [NextAuthOptions]
@@ -82,26 +83,33 @@ function NextAuth(
 
 export default NextAuth
 
-export async function getServerSession(
-  context:
-    | GetServerSidePropsContext
-    | { req: NextApiRequest; res: NextApiResponse },
-  options: NextAuthOptions
+export async function unstable_getServerSession(
+  ...args:
+    | [GetServerSidePropsContext['req'], GetServerSidePropsContext['res'], NextAuthOptions]
+    | [NextApiRequest, NextApiResponse, NextAuthOptions]
 ): Promise<Session | null> {
+  console.warn(
+    "[next-auth][warn][EXPERIMENTAL_API]",
+    "\n`unstable_getServerSession` is experimental and may be removed or changed in the future, as the name suggested.",
+    `\nhttps://next-auth.js.org/configuration/nextjs#unstable_getServerSession}`,
+    `\nhttps://next-auth.js.org/warnings#EXPERIMENTAL_API`
+    )
+
+  const [req, res, options] = args;
   const session = await NextAuthHandler<Session | {}>({
     options,
     req: {
-      host: detectHost(context.req.headers["x-forwarded-host"]),
+      host: detectHost(req.headers["x-forwarded-host"]),
       action: "session",
       method: "GET",
-      cookies: context.req.cookies,
-      headers: context.req.headers,
+      cookies: req.cookies,
+      headers: req.headers,
     },
   })
 
   const { body, cookies } = session
 
-  cookies?.forEach((cookie) => setCookie(context.res, cookie))
+  cookies?.forEach((cookie) => setCookie(res, cookie))
 
   if (body && Object.keys(body).length) return body as Session
   return null

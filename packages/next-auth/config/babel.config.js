@@ -25,7 +25,6 @@ module.exports = (api) => {
     ignore: [
       "../src/**/__tests__/**",
       "../src/adapters.ts",
-      "../src/lib/types.ts",
       "../src/providers/oauth-types.ts",
     ],
     comments: false,
@@ -33,7 +32,7 @@ module.exports = (api) => {
       {
         test: [
           "../src/react/index.tsx",
-          "../src/lib/logger.ts",
+          "../src/utils/logger.ts",
           "../src/core/errors.ts",
           "../src/client/**",
         ],
