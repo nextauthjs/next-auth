@@ -12,13 +12,13 @@ export default function Page() {
       <h1>Server Side Rendering</h1>
       <p>
         This page uses the <strong>unstable_getServerSession()</strong> method
-        in <strong>unstable_getServerSideProps()</strong>.
+        in <strong>getServerSideProps()</strong>.
       </p>
       <p>
         Using <strong>unstable_getServerSession()</strong> in{" "}
-        <strong>unstable_getServerSideProps()</strong> is the recommended
-        approach if you need to support Server Side Rendering with
-        authentication.
+        <strong>getServerSideProps()</strong> is currently the recommended
+        approach, although the API may still change, if you need to support
+        Server Side Rendering with authentication.
       </p>
       <p>
         Using <strong>getSession()</strong> is still recommended on the client.
@@ -39,7 +39,11 @@ export default function Page() {
 export async function getServerSideProps(context) {
   return {
     props: {
-      session: await unstable_getServerSession(contex.req, contex.res, authOptions),
+      session: await unstable_getServerSession(
+        contex.req,
+        contex.res,
+        authOptions
+      ),
     },
   }
 }
