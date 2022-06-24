@@ -28,21 +28,15 @@
         "README.md",
         "dist"
     ],
-    "dependencies": {
-        "next-auth": "workspace:",
-        "node-fetch": "^2.6.1"
-    },
     "peerDependencies": {
-        "next-auth": "workspace:",
-        "node-fetch": "^2.6.1"
+        "next-auth": "workspace:*"
     },
     "devDependencies": {
         "@next-auth/adapter-test": "workspace:^0.0.0",
         "@next-auth/tsconfig": "workspace:^0.0.0",
+        "@types/jest": "^26.0.24",
         "jest": "^27.4.3",
-        "@types/jest": "^26.0.24"
-    },
-    "jest": {
-        "preset": "@next-auth/adapter-test/jest"
+        "next-auth": "workspace:*",
+        "node-fetch": "^2.6.1"
     }
 }

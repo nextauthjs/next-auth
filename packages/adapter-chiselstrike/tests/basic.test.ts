@@ -1,6 +1,5 @@
 import { runBasicTests } from "@next-auth/adapter-test"
 import { ChiselStrikeAdapter, ChiselStrikeAuthFetcher } from "../src"
-import fetch from "node-fetch"
 
 const fetcher = new ChiselStrikeAuthFetcher('http://localhost:8080', '1234')
 const adapter = ChiselStrikeAdapter(fetcher)

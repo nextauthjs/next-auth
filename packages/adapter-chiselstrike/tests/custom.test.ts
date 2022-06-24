@@ -7,7 +7,6 @@
  * Start `chiseld` in the directory of that .env file, then run `jest` here in this directory.
  */
 
-import fetch from "node-fetch"
 import { Account } from "next-auth"
 import { ChiselStrikeAdapter, ChiselStrikeAuthFetcher } from "../src"
 export { }
