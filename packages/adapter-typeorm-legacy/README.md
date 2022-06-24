@@ -6,7 +6,7 @@
    Open Source. Full Stack. Own Your Data.
    </p>
    <p align="center" style="align: center;">
-      <img src="https://github.com/nextauthjs/adapters/actions/workflows/release.yml/badge.svg" alt="Canary CI Test" />
+      <img src="https://github.com/nextauthjs/next-auth/actions/workflows/release.yml/badge.svg?branch=main" alt="Canary CI Test" />
       <img src="https://img.shields.io/bundlephobia/minzip/@next-auth/typeorm-legacy-adapter/canary" alt="Bundle Size"/>
       <img src="https://img.shields.io/npm/v/@next-auth/typeorm-legacy-adapter" alt="@next-auth/typeorm-legacy-adapter Version" />
    </p>
