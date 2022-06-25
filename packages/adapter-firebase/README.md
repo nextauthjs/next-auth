@@ -7,7 +7,7 @@
    Open Source. Full Stack. Own Your Data.
    </p>
    <p align="center" style="align: center;">
-      <img src="https://github.com/nextauthjs/adapters/actions/workflows/release.yml/badge.svg" alt="Build Test" />
+      <img src="https://github.com/nextauthjs/next-auth/actions/workflows/release.yml/badge.svg?branch=main" alt="Build Test" />
       <img src="https://img.shields.io/bundlephobia/minzip/@next-auth/firebase-adapter/latest" alt="Bundle Size"/>
       <img src="https://img.shields.io/npm/v/@next-auth/firebase-adapter" alt="@next-auth/firebase-adapter Version" />
    </p>
@@ -83,7 +83,7 @@ See [firebase.google.com/docs/web/setup](https://firebase.google.com/docs/web/se
 
 ## Contributing
 
-We're open to all community contributions! If you'd like to contribute in any way, please read our [Contributing Guide](https://github.com/nextauthjs/adapters/blob/main/CONTRIBUTING.md).
+We're open to all community contributions! If you'd like to contribute in any way, please read our [Contributing Guide](https://github.com/nextauthjs/next-auth/blob/main/CONTRIBUTING.md).
 
 ## License
 
