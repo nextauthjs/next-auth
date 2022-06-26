@@ -8,56 +8,43 @@ import type {
   NextApiResponse,
 } from "next"
 import type { NextAuthOptions, Session } from ".."
-import type {
-  NextAuthAction,
-  NextAuthRequest,
-  NextAuthResponse,
-} from "../core/types"
+import type { NextAuthRequest, NextAuthResponse } from "../core/types"
 
 async function NextAuthNextHandler(
   req: NextApiRequest,
   res: NextApiResponse,
   options: NextAuthOptions
 ) {
-  const { nextauth, ...query } = req.query
-
   options.secret =
     options.secret ?? options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
 
-  const handler = await NextAuthHandler({
-    req: {
-      host: detectHost(req.headers["x-forwarded-host"]),
-      body: req.body,
-      query,
-      cookies: req.cookies,
-      headers: req.headers,
-      method: req.method,
-      action: nextauth?.[0] as NextAuthAction,
-      providerId: nextauth?.[1],
-      error: (req.query.error as string | undefined) ?? nextauth?.[1],
-    },
-    options,
+  const shouldUseBody =
+    req.method !== "GET" && req.headers["content-type"] === "application/json"
+
+  const _req = new Request(req.url!, {
+    headers: new Headers(req.headers as any),
+    method: req.method,
+    ...((shouldUseBody
+      ? { body: JSON.stringify(Object.fromEntries(Object.entries(req.body))) }
+      : {}) as any),
   })
 
-  res.status(handler.status ?? 200)
+  const _res = await NextAuthHandler(_req, options)
 
-  handler.cookies?.forEach((cookie) => setCookie(res, cookie))
+  res.status(_res.status ?? 200)
 
-  handler.headers?.forEach((h) => res.setHeader(h.key, h.value))
-
-  if (handler.redirect) {
-    // If the request expects a return URL, send it as JSON
-    // instead of doing an actual redirect.
-    if (req.body?.json !== "true") {
-      // Could chain. .end() when lowest target is Node 14
-      // https://github.com/nodejs/node/issues/33148
-      res.status(302).setHeader("Location", handler.redirect)
-      return res.end()
-    }
-    return res.json({ url: handler.redirect })
+  for (const [key, value] of _res.headers.entries()) {
+    res.setHeader(key, value)
   }
 
-  return res.send(handler.body)
+  // If the request expects a return URL, send it as JSON
+  // instead of doing an actual redirect.
+  const redirect = _res.headers.get("Location")
+  if (req.body?.json === "true" && redirect) {
+    return res.json({ url: redirect })
+  }
+
+  return res.send(_res.body)
 }
 
 function NextAuth(options: NextAuthOptions): any
@@ -85,7 +72,11 @@ export default NextAuth
 
 export async function unstable_getServerSession(
   ...args:
-    | [GetServerSidePropsContext['req'], GetServerSidePropsContext['res'], NextAuthOptions]
+    | [
+        GetServerSidePropsContext["req"],
+        GetServerSidePropsContext["res"],
+        NextAuthOptions
+      ]
     | [NextApiRequest, NextApiResponse, NextAuthOptions]
 ): Promise<Session | null> {
   console.warn(
@@ -93,9 +84,9 @@ export async function unstable_getServerSession(
     "\n`unstable_getServerSession` is experimental and may be removed or changed in the future, as the name suggested.",
     `\nhttps://next-auth.js.org/configuration/nextjs#unstable_getServerSession}`,
     `\nhttps://next-auth.js.org/warnings#EXPERIMENTAL_API`
-    )
+  )
 
-  const [req, res, options] = args;
+  const [req, res, options] = args
   const session = await NextAuthHandler<Session | {}>({
     options,
     req: {

@@ -1,10 +1,10 @@
 import logger, { setLogger } from "../utils/logger"
-import { detectHost } from "../utils/detect-host"
 import * as routes from "./routes"
 import renderPage from "./pages"
 import { init } from "./init"
-import { assertConfig } from "./lib/assert"
+import { assertConfig as assert } from "./lib/assert"
 import { SessionStore } from "./lib/cookie"
+import { fromRequest, toResponse } from "./lib/spec"
 
 import type { NextAuthAction, NextAuthOptions } from "./types"
 import type { Cookie } from "./lib/cookie"
@@ -39,92 +39,48 @@ export interface OutgoingResponse<
 }
 
 export interface NextAuthHandlerParams {
-  req: Request | RequestInternal
+  req: Request
   options: NextAuthOptions
 }
 
-async function getBody(req: Request): Promise<Record<string, any> | undefined> {
-  try {
-    return await req.json()
-  } catch {}
-}
-
-// TODO:
-async function toInternalRequest(
-  req: RequestInternal | Request
-): Promise<RequestInternal> {
-  if (req instanceof Request) {
-    const url = new URL(req.url)
-    // TODO: handle custom paths?
-    const nextauth = url.pathname.split("/").slice(3)
-    const headers = Object.fromEntries(req.headers.entries())
-    const query: Record<string, any> = Object.fromEntries(
-      url.searchParams.entries()
-    )
-    query.nextauth = nextauth
-
-    return {
-      action: nextauth[0] as NextAuthAction,
-      method: req.method,
-      headers,
-      body: await getBody(req),
-      cookies: {},
-      providerId: nextauth[1],
-      error: url.searchParams.get("error") ?? nextauth[1],
-      host: detectHost(headers["x-forwarded-host"] ?? headers.host),
-      query,
-    }
-  }
-  return req
-}
-
-export async function NextAuthHandler<
+async function NextAuthHandlerInternal<
   Body extends string | Record<string, any> | any[]
->(params: NextAuthHandlerParams): Promise<OutgoingResponse<Body>> {
-  const { options: userOptions, req: incomingRequest } = params
+>(
+  request: Request,
+  userOptions: NextAuthOptions
+): Promise<OutgoingResponse<Body>> {
+  const internalRequest = await fromRequest(request)
 
-  const req = await toInternalRequest(incomingRequest)
-
-  setLogger(userOptions.logger, userOptions.debug)
-
-  const assertionResult = assertConfig({ options: userOptions, req })
-
-  if (typeof assertionResult === "string") {
-    logger.warn(assertionResult)
-  } else if (assertionResult instanceof Error) {
-    // Bail out early if there's an error in the user config
-    const { pages, theme } = userOptions
-    logger.error(assertionResult.code, assertionResult)
-    if (pages?.error) {
-      return {
-        redirect: `${pages.error}?error=Configuration`,
-      }
-    }
-    const render = renderPage({ theme })
-    return render.error({ error: "configuration" })
-  }
-
-  const { action, providerId, error, method = "GET" } = req
+  const {
+    action,
+    providerId,
+    error,
+    method = "GET",
+    body,
+    query,
+    host,
+    headers,
+  } = internalRequest
 
   const { options, cookies } = await init({
     userOptions,
     action,
     providerId,
-    host: req.host,
-    callbackUrl: req.body?.callbackUrl ?? req.query?.callbackUrl,
-    csrfToken: req.body?.csrfToken,
-    cookies: req.cookies,
+    host: host,
+    callbackUrl: body?.callbackUrl ?? query?.callbackUrl,
+    csrfToken: body?.csrfToken,
+    cookies: internalRequest.cookies,
     isPost: method === "POST",
   })
 
   const sessionStore = new SessionStore(
     options.cookies.sessionToken,
-    req,
+    internalRequest,
     options.logger
   )
 
   if (method === "GET") {
-    const render = renderPage({ ...options, query: req.query, cookies })
+    const render = renderPage({ ...options, query, cookies })
     const { pages } = options
     switch (action) {
       case "providers":
@@ -158,10 +114,10 @@ export async function NextAuthHandler<
       case "callback":
         if (options.provider) {
           const callback = await routes.callback({
-            body: req.body,
-            query: req.query,
-            headers: req.headers,
-            cookies: req.cookies,
+            body,
+            query,
+            headers,
+            cookies: internalRequest.cookies,
             method,
             options,
             sessionStore,
@@ -211,11 +167,7 @@ export async function NextAuthHandler<
       case "signin":
         // Verified CSRF Token required for all sign in routes
         if (options.csrfTokenVerified && options.provider) {
-          const signin = await routes.signin({
-            query: req.query,
-            body: req.body,
-            options,
-          })
+          const signin = await routes.signin({ query, body, options })
           if (signin.cookies) cookies.push(...signin.cookies)
           return { ...signin, cookies }
         }
@@ -240,10 +192,10 @@ export async function NextAuthHandler<
           }
 
           const callback = await routes.callback({
-            body: req.body,
-            query: req.query,
-            headers: req.headers,
-            cookies: req.cookies,
+            body,
+            query,
+            headers,
+            cookies: internalRequest.cookies,
             method,
             options,
             sessionStore,
@@ -255,7 +207,7 @@ export async function NextAuthHandler<
       case "_log":
         if (userOptions.logger) {
           try {
-            const { code, level, ...metadata } = req.body ?? {}
+            const { code, level, ...metadata } = body ?? {}
             logger[level](code, metadata)
           } catch (error) {
             // If logging itself failed...
@@ -271,4 +223,35 @@ export async function NextAuthHandler<
     status: 400,
     body: `Error: This action with HTTP ${method} is not supported by NextAuth.js` as any,
   }
+}
+
+/**
+ * The core functionality of `next-auth`.
+ * It receives a standard [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request)
+ * and returns a standard [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response).
+ */
+export async function NextAuthHandler(
+  req: Request,
+  options: NextAuthHandlerParams["options"]
+): Promise<Response> {
+  setLogger(options.logger, options.debug)
+  const assertionResult = assert({ req, options })
+
+  if (typeof assertionResult === "string") {
+    logger.warn(assertionResult)
+  } else if (assertionResult instanceof Error) {
+    // Bail out early if there's an error in the user config
+    const { pages, theme } = options
+    logger.error(assertionResult.code, assertionResult)
+    if (pages?.error) {
+      return new Response(null, {
+        status: 302,
+        headers: { Location: `${pages.error}?error=Configuration` },
+      })
+    }
+    const render = renderPage({ theme })
+    return toResponse(render.error({ error: "configuration" }))
+  }
+
+  return toResponse(await NextAuthHandlerInternal(req, options))
 }

@@ -9,7 +9,7 @@ import {
 import parseUrl from "../../utils/parse-url"
 import { defaultCookies } from "./cookie"
 
-import type { NextAuthHandlerParams, RequestInternal } from ".."
+import type { NextAuthOptions } from "../types"
 import type { WarningCode } from "../../utils/logger"
 
 type ConfigError =
@@ -37,11 +37,10 @@ function isValidHttpUrl(url: string, baseUrl: string) {
  *
  * REVIEW: Make some of these and corresponding docs less Next.js specific?
  */
-export function assertConfig(
-  params: NextAuthHandlerParams & {
-    req: RequestInternal
-  }
-): ConfigError | WarningCode | undefined {
+export function assertConfig(params: {
+  req: Request
+  options: NextAuthOptions
+}): ConfigError | WarningCode | undefined {
   const { options, req } = params
 
   // req.query isn't defined when asserting `unstable_getServerSession` for example
