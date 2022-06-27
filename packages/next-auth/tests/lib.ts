@@ -1,6 +1,12 @@
 import type { LoggerInstance, NextAuthOptions } from "../src"
 import { NextAuthHandler } from "../src/core"
 
+export const mockLogger: () => LoggerInstance = () => ({
+  error: jest.fn(() => {}),
+  warn: jest.fn(() => {}),
+  debug: jest.fn(() => {}),
+})
+
 export async function handler(
   options: NextAuthOptions,
   {
@@ -16,11 +22,6 @@ export async function handler(
   // @ts-ignore
   if (prod) process.env.NODE_ENV = "production"
 
-  const mockLogger: LoggerInstance = {
-    error: jest.fn(),
-    warn: jest.fn(),
-    debug: jest.fn(),
-  }
   const url = new URL(
     `http://localhost/api/auth/${path ?? "signin"}?${new URLSearchParams(
       params ?? {}
@@ -31,9 +32,10 @@ export async function handler(
       host: "",
     },
   })
+  const logger = mockLogger()
   const response = await NextAuthHandler({
     req,
-    options: { secret: "secret", ...options, logger: mockLogger },
+    options: { secret: "secret", ...options, logger },
   })
   // @ts-ignore
   if (prod) process.env.NODE_ENV = "test"
@@ -44,6 +46,6 @@ export async function handler(
       html:
         response.headers?.[0].value === "text/html" ? response.body : undefined,
     },
-    log: mockLogger,
+    log: logger,
   }
 }

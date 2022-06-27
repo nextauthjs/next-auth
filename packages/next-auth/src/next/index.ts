@@ -96,6 +96,9 @@ export async function unstable_getServerSession(
     )
 
   const [req, res, options] = args;
+  
+  options.secret = options.secret ?? process.env.NEXTAUTH_SECRET
+
   const session = await NextAuthHandler<Session | {}>({
     options,
     req: {
