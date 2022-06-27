@@ -53,6 +53,7 @@ The message object will contain:
 
 - `user`: The user object from your adapter.
 - `account`: The object returned from the provider.
+- `profile`: The object returned from the `profile` callback of the OAuth provider.
 
 ### session
 

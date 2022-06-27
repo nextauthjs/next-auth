@@ -66,7 +66,7 @@ export interface NextAuthMiddlewareOptions {
      * @example
      *
      * ```js
-     * // `pages/admin/_middleware.js`
+     * // `middleware.js`
      * import { withAuth } from "next-auth/middleware"
      *
      * export default withAuth({
@@ -74,6 +74,9 @@ export interface NextAuthMiddlewareOptions {
      *     authorized: ({ token }) => token?.user.isAdmin
      *   }
      * })
+     *
+     * export const config = { matcher: ["/admin"] }
+     *
      * ```
      *
      * ---
@@ -149,7 +152,7 @@ export type WithAuthArgs =
  * @example
  *
  * ```js
- * // `pages/_middleware.js`
+ * // `middleware.js`
  * export { default } from "next-auth/middleware"
  * ```
  *
