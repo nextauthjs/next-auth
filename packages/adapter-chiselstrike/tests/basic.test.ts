@@ -16,7 +16,10 @@ runBasicTests(
                 return s ? { ...s, expires: new Date(s.expires) } : null
             },
             user: async (id: string) => {
-                return await adapter.getUser(id)
+                const resp = await fetcher.fetch(fetcher.users(`/${id}`))
+                if (!resp.ok) { return null }
+                const json = await resp.json()
+                return { ...json, emailVerified: new Date(json.emailVerified) }
             },
             account: async (providerAccountId: { provider: string; providerAccountId: string }) => {
                 const providerFilter = providerAccountId.provider ? `.provider=${providerAccountId.provider}` : ''
