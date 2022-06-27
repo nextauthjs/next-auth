@@ -50,10 +50,12 @@ export class ChiselStrikeAuthFetcher {
     }
 
     public async deleteEverything() {
-        await this.fetch(this.sessions('?all=true'), { method: 'DELETE' })
-        await this.fetch(this.accounts('?all=true'), { method: 'DELETE' })
-        await this.fetch(this.users('?all=true'), { method: 'DELETE' })
-        await this.fetch(this.tokens('?all=true'), { method: 'DELETE' })
+        await Promise.all([
+            this.fetch(this.sessions('?all=true'), { method: 'DELETE' }),
+            this.fetch(this.accounts('?all=true'), { method: 'DELETE' }),
+            this.fetch(this.users('?all=true'), { method: 'DELETE' }),
+            this.fetch(this.tokens('?all=true'), { method: 'DELETE' })
+        ])
     }
 }
 
@@ -138,7 +140,7 @@ export function ChiselStrikeAdapter(fetcher: ChiselStrikeAuthFetcher): Adapter {
                 } else {
                     dbSession[key] = entry;
                 }
-           });
+            });
             const body = JSON.stringify(dbSession)
             const put = await fetcher.fetch(fetcher.sessions(`/${dbSession.id}`), { method: 'PUT', body })
             await ensureOK(put, `writing user ${body}`)
