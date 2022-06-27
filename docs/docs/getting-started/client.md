@@ -168,7 +168,7 @@ NextAuth.js provides a `getSession()` helper which should be called **client sid
 On the server side, **this is still available to use**, however, we recommend using `unstable_getServerSession` going forward. The idea behind this is to avoid an additional unnecessary `fetch` call on the server side. For more information, please check out [this issue](https://github.com/nextauthjs/next-auth/issues/1535).
 
 :::note
-The `unstable_getServerSession` only has the prefix `unstable_` at the moment, because the API may change in the future. There are no known bugs at the moment and it is safe to use. If you discover any issues, please do report them as a Github Issue and we will patch them as soon as possible.
+The `unstable_getServerSession` only has the prefix `unstable_` at the moment, because the API may change in the future. There are no known bugs at the moment and it is safe to use. If you discover any issues, please do report them as a [GitHub Issue](https://github.com/nextauthjs/next-auth/issues) and we will patch them as soon as possible.
 :::
 
 This helper is helpful in case you want to read the session outside of the context of React.
