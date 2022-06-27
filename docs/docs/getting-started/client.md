@@ -165,6 +165,8 @@ See repository [`README`](https://github.com/nextauthjs/react-query) for more de
 
 NextAuth.js provides a `getSession()` helper which should be called **client side only** to return the current active session.
 
+On the server side, **this is still available to use**, however, we recommend using `unstable_getServerSession` going forward. The idea behind this is to avoid an additional unnecessary `fetch` call on the server side. For more information, please check out [this issue](https://github.com/nextauthjs/next-auth/issues/1535).
+
 This helper is helpful in case you want to read the session outside of the context of React.
 
 When called, `getSession()` will send a request to `/api/auth/session` and returns a promise with a [session object](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/types.ts#L407-L425), or `null` if no session exists.
