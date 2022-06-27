@@ -32,9 +32,10 @@ export async function handler(
       host: "",
     },
   })
+  const logger = mockLogger()
   const response = await NextAuthHandler({
     req,
-    options: { secret: "secret", ...options, logger: mockLogger() },
+    options: { secret: "secret", ...options, logger },
   })
   // @ts-ignore
   if (prod) process.env.NODE_ENV = "test"
@@ -45,6 +46,6 @@ export async function handler(
       html:
         response.headers?.[0].value === "text/html" ? response.body : undefined,
     },
-    log: mockLogger,
+    log: logger,
   }
 }
