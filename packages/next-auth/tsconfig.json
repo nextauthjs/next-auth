@@ -17,5 +17,5 @@
     "outDir": ".",
     
   },
-  "exclude": ["./*.js", "./*.d.ts", "config", "**/__tests__", "tests"]
+  "exclude": ["./*.js", "./*.d.ts", "config"]
 }
