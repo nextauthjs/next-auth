@@ -1,4 +1,3 @@
-import type { NextApiRequest } from "next"
 import { MissingSecret } from "../src/core/errors"
 import { unstable_getServerSession } from "../src/next"
 import { mockLogger } from "./lib"
