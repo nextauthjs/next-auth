@@ -97,7 +97,7 @@
     "**/tests",
     "**/__tests__"
   ],
-  "packageManager": "pnpm@6.32.8",
+  "packageManager": "pnpm@7.3.0",
   "funding": [
     {
       "type": "github",
