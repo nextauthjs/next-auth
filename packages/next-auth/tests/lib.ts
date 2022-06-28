@@ -1,5 +1,5 @@
-import type { LoggerInstance, NextAuthOptions } from "../src"
 import { NextAuthHandler } from "../src/core"
+import type { LoggerInstance, NextAuthOptions } from "../src"
 
 export const mockLogger: () => LoggerInstance = () => ({
   error: jest.fn(() => {}),

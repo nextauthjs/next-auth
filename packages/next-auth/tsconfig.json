@@ -14,8 +14,7 @@
     "stripInternal": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "outDir": ".",
-    
+    "outDir": "."
   },
   "exclude": ["./*.js", "./*.d.ts", "config"]
 }
