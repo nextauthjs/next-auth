@@ -236,7 +236,7 @@ export default NextAuth({
     encode: async ({ secret, token }) => {
       return jwt.sign({...token, userId: token.id}, secret, {
         algorithm: "HS256",
-        expiresIn: 30 * 24 * 60 * 60; // 30 days
+        expiresIn: 30 * 24 * 60 * 60, // 30 days
       });
     },
     decode: async ({ secret, token }) => {
