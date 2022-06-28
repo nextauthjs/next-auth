@@ -117,7 +117,7 @@
     "jest-environment-jsdom": "^28.1.1",
     "jest-watch-typeahead": "^1.1.0",
     "msw": "^0.42.3",
-    "next": "12.1.7-canary.45",
+    "next": "12.1.7-canary.51",
     "postcss": "^8.4.14",
     "postcss-cli": "^9.1.0",
     "postcss-nested": "^5.0.6",

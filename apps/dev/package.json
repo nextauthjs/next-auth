@@ -20,7 +20,7 @@
     "@next-auth/prisma-adapter": "^1",
     "@prisma/client": "^3",
     "faunadb": "^4",
-    "next": "12.1.7-canary.45",
+    "next": "12.1.7-canary.51",
     "nodemailer": "^6",
     "react": "^18",
     "react-dom": "^18"
