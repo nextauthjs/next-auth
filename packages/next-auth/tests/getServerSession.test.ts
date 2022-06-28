@@ -7,6 +7,7 @@ let originalWarn = console.warn
 let logger = mockLogger()
 
 beforeEach(() => {
+  // @ts-expect-error
   process.env.NODE_ENV = "production"
   process.env.NEXTAUTH_URL = "http://localhost"
   console.warn = jest.fn()
@@ -14,6 +15,7 @@ beforeEach(() => {
 
 afterEach(() => {
   logger = mockLogger()
+  // @ts-expect-error
   process.env.NODE_ENV = "test"
   delete process.env.NEXTAUTH_URL
   console.warn = originalWarn
