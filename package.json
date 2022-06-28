@@ -38,11 +38,11 @@
     "stream-to-array": "2.3.0",
     "ts-node": "10.5.0",
     "turbo": "^1.2.5",
-    "typescript": "^4.5.2"
+    "typescript": "4.7.4"
   },
   "engines": {
     "node": "^12.19.0 || ^14.15.0 || ^16.13.0",
-    "pnpm": ">=6.32.3"
+    "pnpm": ">=7"
   },
   "prettier": {
     "semi": false,
