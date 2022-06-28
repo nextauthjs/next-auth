@@ -38,7 +38,8 @@
   "scripts": {
     "build": "pnpm clean && pnpm build:js && pnpm build:css",
     "clean": "rm -rf client css utils providers core jwt react next index.d.ts index.js adapters.d.ts middleware.d.ts middleware.js",
-    "build:js": "pnpm clean && pnpm generate-providers && tsc && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
+    "build:types": "tsc --project tsconfig.build.json",
+    "build:js": "pnpm clean && pnpm generate-providers && pnpm build:types && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir . && node config/wrap-css.js",
     "watch:css": "postcss --config config/postcss.config.js --watch src/**/*.css --base src --dir .",
     "test:client": "jest --config ./config/jest.client.config.js",
@@ -130,12 +131,8 @@
   },
   "eslintConfig": {
     "parserOptions": {
-      "project": "./tsconfig.eslint.json"
-    }
-  },
-  "eslintIgnore": [
-    "./*.d.ts",
-    "**/tests",
-    "**/__tests__"
-  ]
+      "project": "./packages/next-auth/tsconfig.json"
+    },
+    "plugins": []
+  }
 }

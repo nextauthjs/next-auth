@@ -92,11 +92,6 @@
       }
     ]
   },
-  "eslintIgnore": [
-    "./*.d.ts",
-    "**/tests",
-    "**/__tests__"
-  ],
   "packageManager": "pnpm@7.3.0",
   "funding": [
     {
