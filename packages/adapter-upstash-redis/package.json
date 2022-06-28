@@ -36,6 +36,7 @@
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:^0.0.0",
     "@next-auth/tsconfig": "workspace:^0.0.0",
+    "@types/uuid": "^8.3.3",
     "@upstash/redis": "^1.0.1",
     "dotenv": "^10.0.0",
     "jest": "^27.4.3",
