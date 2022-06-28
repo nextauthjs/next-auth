@@ -48,19 +48,14 @@
     "singleQuote": false
   },
   "eslintConfig": {
+    "root": true,
     "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "project": "./packages/tsconfig/tsconfig.eslint.json"
+    },
     "extends": [
       "standard-with-typescript",
       "prettier"
-    ],
-    "ignorePatterns": [
-      "node_modules",
-      "next-env.d.ts",
-      "types",
-      ".next",
-      "dist",
-      "/core",
-      "/react.js"
     ],
     "globals": {
       "localStorage": "readonly",
@@ -73,23 +68,7 @@
       "@typescript-eslint/strict-boolean-expressions": "off",
       "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/restrict-template-expressions": "off"
-    },
-    "overrides": [
-      {
-        "files": [
-          "./**/*test.js"
-        ],
-        "env": {
-          "jest/globals": true
-        },
-        "extends": [
-          "plugin:jest/recommended"
-        ],
-        "plugins": [
-          "jest"
-        ]
-      }
-    ]
+    }
   },
   "packageManager": "pnpm@7.3.0",
   "funding": [

@@ -1,6 +1,7 @@
 {
-  "extends": "@next-auth/tsconfig/base.json",
+  "extends": "@next-auth/tsconfig/tsconfig.base.json",
   "compilerOptions": {
+    "declaration": true,
     "emitDeclarationOnly": true,
     "strictNullChecks": true,
     "lib": ["dom", "dom.iterable", "esnext"],
