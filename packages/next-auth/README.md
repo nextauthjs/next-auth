@@ -166,6 +166,10 @@ export default function App({
 }
 ```
 
+## Security
+
+If you think you have found a vulnerability (or not sure) in NextAuth.js or any of the related packages (i.e. Adapters), we ask you to have a read of our [Security Policy](https://github.com/nextauthjs/next-auth/blob/main/SECURITY.md) to reach out responsibly. Please do not open Pull Requests/Issues/Discussions before consulting with us.
+
 ## Acknowledgments
 
 [NextAuth.js is made possible thanks to all of its contributors.](https://next-auth.js.org/contributors)
