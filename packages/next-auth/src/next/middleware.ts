@@ -12,6 +12,11 @@ type AuthorizedCallback = (params: {
   req: NextRequest
 }) => Awaitable<boolean>
 
+type UnAuthorizedCallback = (params: {
+  token: JWT | null
+  req: NextRequest
+}) => NextResponse | null
+
 export interface NextAuthMiddlewareOptions {
   /**
    * Where to redirect the user in case of an error if they weren't logged in.
@@ -83,6 +88,8 @@ export interface NextAuthMiddlewareOptions {
      * [Documentation](https://next-auth.js.org/getting-started/nextjs/middleware#api) | [`signIn` callback](configuration/callbacks#sign-in-callback)
      */
     authorized?: AuthorizedCallback
+
+    unAuthorized?: UnAuthorizedCallback
   }
 }
 
@@ -94,6 +101,16 @@ async function handleMiddleware(
   const signInPage = options?.pages?.signIn ?? "/api/auth/signin"
   const errorPage = options?.pages?.error ?? "/api/auth/error"
   const basePath = parseUrl(process.env.NEXTAUTH_URL).path
+
+  const noUser = () => {
+    const signInUrl = new URL(signInPage, req.nextUrl.origin)
+    signInUrl.searchParams.append(
+      "callbackUrl",
+      `${req.nextUrl.pathname}${req.nextUrl.search}`
+    )
+    return NextResponse.redirect(signInUrl)
+  }
+
   // Avoid infinite redirect loop
   if (
     req.nextUrl.pathname.startsWith(basePath) ||
@@ -124,15 +141,15 @@ async function handleMiddleware(
     (await options?.callbacks?.authorized?.({ req, token })) ?? !!token
 
   // the user is authorized, let the middleware handle the rest
-  if (isAuthorized) return await onSuccess?.(token)
+  if (isAuthorized) return onSuccess?.(token)
+
+
+  if (!!token && !isAuthorized) return (options?.callbacks?.unAuthorized?.({ req, token })) ?? noUser();
+
+  // the user is not authorized, custom Handle
 
   // the user is not logged in, redirect to the sign-in page
-  const signInUrl = new URL(signInPage, req.nextUrl.origin)
-  signInUrl.searchParams.append(
-    "callbackUrl",
-    `${req.nextUrl.pathname}${req.nextUrl.search}`
-  )
-  return NextResponse.redirect(signInUrl)
+  return noUser();
 }
 
 export type WithAuthArgs =
