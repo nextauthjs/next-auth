@@ -157,7 +157,7 @@ module.exports = {
           remarkPlugins: [
             require("remark-github"),
             require("mdx-mermaid"),
-            [require("@docusaurus/remark-plugin-npm2yarn"), { sync: true }],
+            require("@sapphire/docusaurus-plugin-npm2yarn2pnpm"),
           ],
           versions: {
             current: {
