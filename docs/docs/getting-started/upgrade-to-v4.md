@@ -13,7 +13,7 @@ We encourage users to try it out and report any and all issues they come across.
 
 You can upgrade to the new version by running:
 
-```sh npm2yarn2pnpm
+```bash npm2yarn2pnpm
 npm install next-auth
 ```
 
