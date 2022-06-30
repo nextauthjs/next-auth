@@ -93,7 +93,7 @@ The most simple usage is when you want to require authentication for your entire
 export { default } from "next-auth/middleware"
 ```
 
-That's it! Your application is not secured. 🎉
+That's it! Your application is now secured. 🎉
 
 If you only want to secure certain pages, export a `config` object with a `matcher`:
 
