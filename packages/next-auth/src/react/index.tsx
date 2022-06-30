@@ -78,6 +78,9 @@ const SessionContext = React.createContext<SessionContextValue | undefined>(
   undefined
 )
 
+// DisplayName for React Context Devtools
+SessionContext.displayName = "SessionContext";
+
 /**
  * React Hook that gives you access
  * to the logged in user's session data.
