@@ -8,14 +8,8 @@ import adapterErrorHandler from "../../adapters/error-handler"
  * @param {import("types/internals").NextAuthResponse} res
  */
 export default async function signin(req, res) {
-  const {
-    provider,
-    baseUrl,
-    basePath,
-    adapter,
-    callbacks,
-    logger,
-  } = req.options
+  const { provider, baseUrl, basePath, adapter, callbacks, logger } =
+    req.options
 
   if (!provider.type) {
     return res.status(500).end(`Error: Type not specified for ${provider.name}`)
@@ -44,7 +38,20 @@ export default async function signin(req, res) {
     // according to RFC 2821, but in practice this causes more problems than
     // it solves. We treat email addresses as all lower case. If anyone
     // complains about this we can make strict RFC 2821 compliance an option.
-    const email = req.body.email?.toLowerCase() ?? null
+    let email = req.body.email?.toLowerCase() ?? null
+
+    if (!email) {
+      return res.redirect(`${baseUrl}${basePath}/error?error=EmailSignin`)
+    }
+
+    email = email
+      .split(",")[0]
+      .trim()
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#x27;")
 
     // If is an existing user return a user object (otherwise use placeholder)
     const profile = (await getUserByEmail(email)) || { email }
