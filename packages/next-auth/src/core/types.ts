@@ -14,7 +14,7 @@ import type { CookieSerializeOptions } from "cookie"
 
 import type { NextApiRequest, NextApiResponse } from "next"
 
-import { InternalUrl } from "../utils/parse-url"
+import type { InternalUrl } from "../utils/parse-url"
 
 export type Awaitable<T> = T | PromiseLike<T>
 
@@ -117,7 +117,7 @@ export interface NextAuthOptions {
    * * **Required**: *No*
    *
    * [Documentation](https://next-auth.js.org/configuration/options#adapter) |
-   * [Community adapters](https://github.com/nextauthjs/adapters)
+   * [Adapters Overview](https://next-auth.js.org/adapters/overview)
    */
   adapter?: Adapter
   /**
@@ -390,7 +390,11 @@ export interface EventCallbacks {
   signOut: (message: { session: Session; token: JWT }) => Awaitable<void>
   createUser: (message: { user: User }) => Awaitable<void>
   updateUser: (message: { user: User }) => Awaitable<void>
-  linkAccount: (message: { user: User; account: Account }) => Awaitable<void>
+  linkAccount: (message: {
+    user: User
+    account: Account
+    profile: User
+  }) => Awaitable<void>
   /**
    * The message object will contain one of these depending on
    * if you use JWT or database persisted sessions:
