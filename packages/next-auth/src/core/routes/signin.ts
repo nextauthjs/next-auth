@@ -41,15 +41,6 @@ export default async function signin(params: {
 
     if (!email) return { redirect: `${url}/error?error=EmailSignin` }
 
-    email = email
-      .split(",")[0]
-      .trim()
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#x27;")
-
     // Verified in `assertConfig`
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { getUserByEmail } = adapter!
