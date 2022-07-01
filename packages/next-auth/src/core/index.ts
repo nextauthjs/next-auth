@@ -69,7 +69,7 @@ async function toInternalRequest(
       method: req.method,
       headers,
       body: await getBody(req),
-      cookies: parseCookie(req.headers.get("cookie")),
+      cookies: parseCookie(req.headers.get("cookie") ?? ""),
       providerId: nextauth[1],
       error: url.searchParams.get("error") ?? nextauth[1],
       host: detectHost(headers["x-forwarded-host"] ?? headers.host),
