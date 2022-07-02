@@ -86,10 +86,12 @@ export interface NextAuthMiddlewareOptions {
   }
 }
 
+type NextMiddlewareResult = ReturnType<NextMiddleware>
+
 async function handleMiddleware(
   req: NextRequest,
   options: NextAuthMiddlewareOptions | undefined,
-  onSuccess?: (token: JWT | null) => Promise<any>
+  onSuccess?: (token: JWT | null) => Promise<NextMiddlewareResult>
 ) {
   const signInPage = options?.pages?.signIn ?? "/api/auth/signin"
   const errorPage = options?.pages?.error ?? "/api/auth/error"
