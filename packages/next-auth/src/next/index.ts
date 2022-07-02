@@ -93,14 +93,14 @@ export async function unstable_getServerSession(
       ]
     | [NextApiRequest, NextApiResponse, NextAuthOptions]
 ): Promise<Session | null> {
-  if (!shown && process.env.NODE_ENV !== "production") {
+  if (!experimentalWarningShown && process.env.NODE_ENV !== "production") {
     console.warn(
       "[next-auth][warn][EXPERIMENTAL_API]",
       "\n`unstable_getServerSession` is experimental and may be removed or changed in the future, as the name suggested.",
       `\nhttps://next-auth.js.org/configuration/nextjs#unstable_getServerSession}`,
       `\nhttps://next-auth.js.org/warnings#EXPERIMENTAL_API`
     )
-    shown = true
+    experimentalWarningShown = true
   }
 
   const [req, res, options] = args
