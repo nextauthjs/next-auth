@@ -82,8 +82,8 @@ function NextAuth(
 }
 
 export default NextAuth
-let shown = false
 
+let experimentalWarningShown = false
 export async function unstable_getServerSession(
   ...args:
     | [
