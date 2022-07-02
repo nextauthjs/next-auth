@@ -147,6 +147,7 @@ module.exports = {
     [
       "@docusaurus/preset-classic",
       {
+        debug: true,
         docs: {
           routeBasePath: "/",
           sidebarPath: require.resolve("./sidebars.js"),
@@ -155,9 +156,9 @@ module.exports = {
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
           remarkPlugins: [
+            require("@sapphire/docusaurus-plugin-npm2yarn2pnpm"),
             require("remark-github"),
             require("mdx-mermaid"),
-            require("@sapphire/docusaurus-plugin-npm2yarn2pnpm"),
           ],
           versions: {
             current: {
