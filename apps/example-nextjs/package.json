@@ -23,7 +23,7 @@
   ],
   "license": "ISC",
   "dependencies": {
-    "next": "12.1.7-canary.45",
+    "next": "12.1.7-canary.51",
     "next-auth": "latest",
     "nodemailer": "^6",
     "react": "^18",

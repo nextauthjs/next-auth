@@ -69,7 +69,7 @@ jobs:
           git config --global user.name "Balázs Orbán"
           pnpm release
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
           NPM_TOKEN_PKG: ${{ secrets.NPM_TOKEN_PKG }}
           NPM_TOKEN_ORG: ${{ secrets.NPM_TOKEN_ORG }}
   release-pr:

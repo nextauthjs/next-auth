@@ -58,7 +58,7 @@ More details can be found [here](https://next-auth.js.org/configuration/nextjs#m
 
 You can protect server side rendered pages using the `unstable_getServerSession` method. This is different from the old `getSession()` method, in that it does not do an extra fetch out over the internet to confirm data from itself, increasing performance significantly.
 
-You need to add this to every server rendered page you want to protect.
+You need to add this to every server rendered page you want to protect. Be aware, `unstable_getServerSession` takes slightly different arguments than the method it is replacing, `getSession`.
 
 ```js title="pages/server-side-example.js"
 import { useSession, unstable_getServerSession } from "next-auth/next"
@@ -82,7 +82,11 @@ export default function Page() {
 export async function getServerSideProps(context) {
   return {
     props: {
-      session: await unstable_getServerSession(context.req, context.res, authOptions),
+      session: await unstable_getServerSession(
+        context.req,
+        context.res,
+        authOptions
+      ),
     },
   }
 }
