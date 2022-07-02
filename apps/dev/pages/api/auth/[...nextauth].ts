@@ -31,7 +31,7 @@ import PatreonProvider from "next-auth/providers/patreon"
 import TraktProvider from "next-auth/providers/trakt"
 import WorkOSProvider from "next-auth/providers/workos"
 import BoxyHQSAMLProvider from "next-auth/providers/boxyhq-saml"
-
+import WikimediaProvider from "next-auth/providers/wikimedia"
 // import { PrismaAdapter } from "@next-auth/prisma-adapter"
 // import { PrismaClient } from "@prisma/client"
 // const prisma = new PrismaClient()
@@ -205,6 +205,10 @@ export const authOptions: NextAuthOptions = {
       issuer: process.env.BOXYHQSAML_ISSUER,
       clientId: process.env.BOXYHQSAML_ID,
       clientSecret: process.env.BOXYHQSAML_SECRET,
+    }),
+    WikimediaProvider({
+      clientId: process.env.WIKIMEDIA_ID,
+      clientSecret: process.env.WIKIMEDIA_SECRET,
     }),
   ],
   debug: true,
