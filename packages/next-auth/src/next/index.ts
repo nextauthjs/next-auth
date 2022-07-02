@@ -82,6 +82,7 @@ function NextAuth(
 }
 
 export default NextAuth
+let shown = false
 
 export async function unstable_getServerSession(
   ...args:
@@ -92,8 +93,6 @@ export async function unstable_getServerSession(
       ]
     | [NextApiRequest, NextApiResponse, NextAuthOptions]
 ): Promise<Session | null> {
-  let shown = false
-
   if (!shown || process.env.NODE_ENV !== "production") {
     console.warn(
       "[next-auth][warn][EXPERIMENTAL_API]",
