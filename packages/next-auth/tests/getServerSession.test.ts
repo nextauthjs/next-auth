@@ -50,4 +50,19 @@ describe("Treat secret correctly", () => {
     expect(logger.error).toBeCalledTimes(1)
     expect(logger.error).toBeCalledWith("NO_SECRET", expect.any(MissingSecret))
   })
+
+  it("Only logs warning once and in development", async () => {
+    // Expect console.warn to NOT be called due to NODE_ENV=production
+    await unstable_getServerSession(req, res, { providers: [], logger })
+    expect(console.warn).toBeCalledTimes(0)
+
+    // Expect console.warn to be called ONCE due to NODE_ENV=development
+    process.env.NODE_ENV = "development"
+    await unstable_getServerSession(req, res, { providers: [], logger })
+    expect(console.warn).toBeCalledTimes(1)
+
+    // Expect console.warn to be still only be called ONCE
+    await unstable_getServerSession(req, res, { providers: [], logger })
+    expect(console.warn).toBeCalledTimes(1)
+  })
 })
