@@ -69,7 +69,7 @@ export default function Email(options: EmailUserConfig): EmailConfig {
       url,
       provider: { server, from },
     }) {
-      const { createTransport } = await impot('nodemailer')
+      const { createTransport } = await import('nodemailer')
       const { host } = new URL(url)
       const transport = createTransport(server)
       await transport.sendMail({
