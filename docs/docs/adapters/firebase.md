@@ -15,7 +15,7 @@ This is the Firebase Adapter for [`next-auth`](https://next-auth.js.org). This p
 
 1. Install the necessary packages
 
-```bash npm2yarn
+```bash npm2yarn2pnpm
 npm install next-auth @next-auth/firebase-adapter@experimental
 ```
 

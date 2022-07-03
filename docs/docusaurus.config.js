@@ -1,3 +1,5 @@
+const { npm2yarn2pnpm } = require("@sapphire/docusaurus-plugin-npm2yarn2pnpm")
+
 module.exports = {
   title: "NextAuth.js",
   tagline: "Authentication for Next.js",
@@ -156,7 +158,7 @@ module.exports = {
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
           remarkPlugins: [
-            require("@sapphire/docusaurus-plugin-npm2yarn2pnpm"),
+            npm2yarn2pnpm,
             require("remark-github"),
             require("mdx-mermaid"),
           ],
