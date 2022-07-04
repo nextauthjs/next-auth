@@ -76,6 +76,10 @@ Next.js 12 has introduced [Middleware](https://nextjs.org/docs/middleware). It i
 
 If the following options look familiar, this is because they are a subset of [these options](/configuration/options#options). You can extract these to a common configuration object to reuse them. In the future, we would like to be able to run everything in Middleware. (See [Caveats](#caveats)).
 
+:::caution
+Middleware only supports the `"jwt"` [session strategy](/configuration/options#session). (See [Caveats](#caveats) for more)
+:::
+
 You can get the `withAuth` middleware function from `next-auth/middleware` either as a default or a named import:
 
 ### Prerequisites
