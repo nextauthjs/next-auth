@@ -372,7 +372,7 @@ The sign-in button's background color will match the `brandColor` and defaults t
 theme: {
   colorScheme: "auto", // "auto" | "dark" | "light"
   brandColor: "", // Hex color code
-  logo: "" // Absolute URL to image
+  logo: "", // Absolute URL to image
   buttonText: "" // Hex color code
 }
 ```
