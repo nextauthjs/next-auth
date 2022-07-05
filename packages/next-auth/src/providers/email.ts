@@ -86,23 +86,14 @@ export default function Email(options: EmailUserConfig): EmailConfig {
 
 /**
  * Email HTML body
- * Insert invisible space into domains and email address to prevent both the
- * email address and the domain from being turned into a hyperlink by email
+ * Insert invisible space into domains from being turned into a hyperlink by email
  * clients like Outlook and Apple mail, as this is confusing because it seems
- * like they are supposed to click on their email address to sign in.
+ * like they are supposed to click on it to sign in.
+ *
+ * @note We don't add the email address to avoid needing to escape it, if you do, remember to sanitize it!
  */
-function html(params: Record<"url" | "host" | "email", string>) {
-  const { url, host, email } = params
-  const escapedEmail = email
-    .split(/[,;]/)[0]
-    .trim()
-    .replace(/\./g, "&#8203;.")
-    // Escape any HTML in the email.
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#x27;")
+function html(params: { url: string; host: string; theme: Theme }) {
+  const { url, host, theme } = params
 
   const escapedHost = host.replace(/\./g, "&#8203;.")
 
@@ -121,15 +112,9 @@ function html(params: Record<"url" | "host" | "email", string>) {
   <table width="100%" border="0" cellspacing="20" cellpadding="0"
     style="background: ${color.mainBackground}; max-width: 600px; margin: auto; border-radius: 10px;">
     <tr>
-      <td align="center" style="padding: 10px 0px 20px 0px; font-size: 22px; font-family: Helvetica, Arial, sans-serif; color: ${color.text};">
-        <strong>${escapedHost}</strong>
-      </td>
-    </tr>
-  </table>
-  <table width="100%" border="0" cellspacing="20" cellpadding="0" style="background: ${color.mainBackground}; max-width: 600px; margin: auto; border-radius: 10px;">
-    <tr>
-      <td align="center" style="padding: 10px 0px 0px 0px; font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: ${color.text};">
-        Sign in as <strong>${escapedEmail}</strong>
+      <td align="center"
+        style="padding: 10px 0px; font-size: 22px; font-family: Helvetica, Arial, sans-serif; color: ${color.text};">
+        Sign in to <strong>${escapedHost}</strong>
       </td>
     </tr>
     <tr>
