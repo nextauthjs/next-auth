@@ -80,10 +80,11 @@ You can get the `withAuth` middleware function from `next-auth/middleware` eithe
 
 ### Prerequisites
 
-You must set the [`NEXTAUTH_SECRET`](/configuration/options#nextauth_secret) environment variable when using this middleware. If you are using the [`secret` option](/configuration/options#secret) this value must match.
+You must set the same secret in the middleware that you use in NextAuth. The easiest way is to set the [`NEXTAUTH_SECRET`](/configuration/options#nextauth_secret) environment variable. It will be picked up by both the [NextAuth config](/configuration/options#options), as well as the middleware config.
 
-**We strongly recommend** replacing the `secret` value completely with this `NEXTAUTH_SECRET` environment variable. This environment variable will be picked up by both the [NextAuth config](/configuration/options#options), as well as the middleware config.
+**We strongly recommend** replacing the `secret` value completely with this `NEXTAUTH_SECRET` environment variable.
 
+Alternatively, you can provide the secret using the [`secret`](#secret) option in the middleware config.
 
 ### Basic usage
 
@@ -146,6 +147,22 @@ pages: {
 ```
 
 See the documentation for the [pages option](/configuration/pages) for more information.
+
+---
+
+### `secret`
+
+- **Required**: _No_
+
+#### Description
+
+The same `secret` used in the [NextAuth config](/configuration/options#options).
+
+#### Example (default value)
+
+```js
+secret: process.env.NEXTAUTH_SECRET
+```
 
 ---
 
