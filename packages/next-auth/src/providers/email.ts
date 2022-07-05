@@ -1,9 +1,9 @@
 import { createTransport } from "nodemailer"
 
-import { type CommonProviderOptions } from "."
-import { type Options as SMTPConnectionOptions } from "nodemailer/lib/smtp-connection"
-import { type Awaitable } from ".."
-import { type Theme } from "../core/types"
+import type { CommonProviderOptions } from "."
+import type { Options as SMTPConnectionOptions } from "nodemailer/lib/smtp-connection"
+import type { Awaitable } from ".."
+import type { Theme } from "../core/types"
 
 export interface SendVerificationRequestParams {
   identifier: string
@@ -27,7 +27,9 @@ export interface EmailConfig extends CommonProviderOptions {
    */
   maxAge?: number
   /** [Documentation](https://next-auth.js.org/providers/email#customizing-emails) */
-  sendVerificationRequest: (params: SendVerificationRequestParams) => Awaitable<void>
+  sendVerificationRequest: (
+    params: SendVerificationRequestParams
+  ) => Awaitable<void>
   /**
    * By default, we are generating a random verification token.
    * You can make it predictable or modify it as you like with this method.
@@ -97,14 +99,18 @@ function html(params: { url: string; host: string; theme: Theme }) {
 
   const escapedHost = host.replace(/\./g, "&#8203;.")
 
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const brandColor = theme.brandColor || "#346df1"
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  const buttonText = theme.buttonText || "#fff"
+
   const color = {
     background: "#f9f9f9",
     text: "#444",
     mainBackground: "#fff",
     buttonBackground: brandColor,
     buttonBorder: brandColor,
-    buttonText: theme.buttonText || "#fff",
+    buttonText,
   }
 
   return `
