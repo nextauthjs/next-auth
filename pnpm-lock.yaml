@@ -88,9 +88,9 @@ importers:
       '@docusaurus/core': ^2.0.0-beta.21
       '@docusaurus/module-type-aliases': 2.0.0-beta.20
       '@docusaurus/preset-classic': ^2.0.0-beta.21
-      '@docusaurus/remark-plugin-npm2yarn': ^2.0.0-beta.21
       '@docusaurus/theme-common': 2.0.0-beta.21
       '@mdx-js/react': 1.6.22
+      '@sapphire/docusaurus-plugin-npm2yarn2pnpm': ^1.1.0
       classnames: ^2.3.1
       mdx-mermaid: ^1.2.2
       mermaid: ^9.0.1
@@ -104,9 +104,9 @@ importers:
     dependencies:
       '@docusaurus/core': 2.0.0-beta.21_biqbaboplfbrettd7655fr4n2y
       '@docusaurus/preset-classic': 2.0.0-beta.21_biqbaboplfbrettd7655fr4n2y
-      '@docusaurus/remark-plugin-npm2yarn': 2.0.0-beta.21
       '@docusaurus/theme-common': 2.0.0-beta.21_biqbaboplfbrettd7655fr4n2y
       '@mdx-js/react': 1.6.22_react@18.2.0
+      '@sapphire/docusaurus-plugin-npm2yarn2pnpm': 1.1.0
       classnames: 2.3.1
       mdx-mermaid: 1.2.3_mermaid@9.1.2+react@18.2.0
       mermaid: 9.1.2
@@ -4155,15 +4155,6 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@docusaurus/remark-plugin-npm2yarn/2.0.0-beta.21:
-    resolution: {integrity: sha512-CqvmoFEj05NzaQBKxnsfI90aM8KHJZWyCzED/Qg5odUD9VtR9zNQJ1Nu/X1ctqCN7FBIxBYk2tz1Xb1+zCP8gg==}
-    engines: {node: '>=16.14'}
-    dependencies:
-      npm-to-yarn: 1.0.1
-      tslib: 2.4.0
-      unist-util-visit: 2.0.3
-    dev: false
-
   /@docusaurus/theme-classic/2.0.0-beta.21_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-Ge0WNdTefD0VDQfaIMRRWa8tWMG9+8/OlBRd5MK88/TZfqdBq7b/gnCSaalQlvZwwkj6notkKhHx72+MKwWUJA==}
     engines: {node: '>=16.14'}
@@ -5806,6 +5797,14 @@ packages:
   /@protobufjs/utf8/1.1.0:
     resolution: {integrity: sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==}
     dev: true
+
+  /@sapphire/docusaurus-plugin-npm2yarn2pnpm/1.1.0:
+    resolution: {integrity: sha512-AQGsbaxxJEFGWbLfzoXndT5waPNSQ708qvOz31aKwNilsftV22aBW1NMizxjLCQBooRr4dEWWBLxTGl9y4vKLg==}
+    engines: {node: '>=v16.6.0', npm: '>=7.0.0'}
+    dependencies:
+      npm-to-yarn: 1.0.1
+      unist-util-visit: 2.0.3
+    dev: false
 
   /@shelf/jest-dynamodb/2.2.4_qsruu6yolbxs4rh6ixjhkibvwu:
     resolution: {integrity: sha512-OAnkP5sPcIoqL+q/tpp54psuK1gssm+nZLOHRy0S1eyAZGmuqiYAUzyAvmH5AhyqvDPSEHFkIkfbqlp1+KpHgw==}
