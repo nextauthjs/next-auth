@@ -82,9 +82,9 @@ You can get the `withAuth` middleware function from `next-auth/middleware` eithe
 
 You must set the same secret in the middleware that you use in NextAuth. The easiest way is to set the [`NEXTAUTH_SECRET`](/configuration/options#nextauth_secret) environment variable. It will be picked up by both the [NextAuth config](/configuration/options#options), as well as the middleware config.
 
-**We strongly recommend** replacing the `secret` value completely with this `NEXTAUTH_SECRET` environment variable.
-
 Alternatively, you can provide the secret using the [`secret`](#secret) option in the middleware config.
+
+**We strongly recommend** replacing the `secret` value completely with this `NEXTAUTH_SECRET` environment variable.
 
 ### Basic usage
 
