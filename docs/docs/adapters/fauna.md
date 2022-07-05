@@ -13,7 +13,7 @@ You can find the Fauna schema and seed information in the docs at [next-auth.js.
 
 1. Install the necessary packages
 
-```bash npm2yarn
+```bash npm2yarn2pnpm
 npm install next-auth @next-auth/fauna-adapter faunadb
 ```
 
