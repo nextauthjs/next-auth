@@ -1,8 +1,18 @@
 import { createTransport } from "nodemailer"
 
-import type { CommonProviderOptions } from "."
-import type { Options as SMTPConnectionOptions } from "nodemailer/lib/smtp-connection"
-import type { Awaitable } from ".."
+import { type CommonProviderOptions } from "."
+import { type Options as SMTPConnectionOptions } from "nodemailer/lib/smtp-connection"
+import { type Awaitable } from ".."
+import { type Theme } from "../core/types"
+
+export interface SendVerificationRequestParams {
+  identifier: string
+  url: string
+  expires: Date
+  provider: EmailConfig
+  token: string
+  theme: Theme
+}
 
 export interface EmailConfig extends CommonProviderOptions {
   type: "email"
@@ -16,13 +26,8 @@ export interface EmailConfig extends CommonProviderOptions {
    * @default 86400
    */
   maxAge?: number
-  sendVerificationRequest: (params: {
-    identifier: string
-    url: string
-    expires: Date
-    provider: EmailConfig
-    token: string
-  }) => Awaitable<void>
+  /** [Documentation](https://next-auth.js.org/providers/email#customizing-emails) */
+  sendVerificationRequest: (params: SendVerificationRequestParams) => Awaitable<void>
   /**
    * By default, we are generating a random verification token.
    * You can make it predictable or modify it as you like with this method.
@@ -56,30 +61,24 @@ export default function Email(options: EmailUserConfig): EmailConfig {
     type: "email",
     name: "Email",
     // Server can be an SMTP connection string or a nodemailer config object
-    server: {
-      host: "localhost",
-      port: 25,
-      auth: {
-        user: "",
-        pass: "",
-      },
-    },
+    server: { host: "localhost", port: 25, auth: { user: "", pass: "" } },
     from: "NextAuth <no-reply@example.com>",
     maxAge: 24 * 60 * 60,
-    async sendVerificationRequest({
-      identifier: email,
-      url,
-      provider: { server, from },
-    }) {
+    async sendVerificationRequest(params) {
+      const { identifier, url, provider, theme } = params
       const { host } = new URL(url)
-      const transport = createTransport(server)
-      await transport.sendMail({
-        to: email,
-        from,
+      const transport = createTransport(provider.server)
+      const result = await transport.sendMail({
+        to: identifier,
+        from: provider.from,
         subject: `Sign in to ${host}`,
         text: text({ url, host }),
-        html: html({ url, host, email }),
+        html: html({ url, host, theme }),
       })
+      const failed = result.rejected.concat(result.pending).filter(Boolean)
+      if (failed.length) {
+        throw new Error(`Email(s) (${failed.join(", ")}) could not be sent`)
+      }
     },
     options,
   }
@@ -107,18 +106,20 @@ function html(params: Record<"url" | "host" | "email", string>) {
 
   const escapedHost = host.replace(/\./g, "&#8203;.")
 
+  const brandColor = theme.brandColor || "#346df1"
   const color = {
     background: "#f9f9f9",
-    text: "#444444",
-    mainBackground: "#ffffff",
-    buttonBackground: "#346df1",
-    buttonBorder: "#346df1",
-    buttonText: "#ffffff",
+    text: "#444",
+    mainBackground: "#fff",
+    buttonBackground: brandColor,
+    buttonBorder: brandColor,
+    buttonText: theme.buttonText || "#fff",
   }
 
   return `
 <body style="background: ${color.background};">
-  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <table width="100%" border="0" cellspacing="20" cellpadding="0"
+    style="background: ${color.mainBackground}; max-width: 600px; margin: auto; border-radius: 10px;">
     <tr>
       <td align="center" style="padding: 10px 0px 20px 0px; font-size: 22px; font-family: Helvetica, Arial, sans-serif; color: ${color.text};">
         <strong>${escapedHost}</strong>
@@ -135,13 +136,17 @@ function html(params: Record<"url" | "host" | "email", string>) {
       <td align="center" style="padding: 20px 0;">
         <table border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td align="center" style="border-radius: 5px;" bgcolor="${color.buttonBackground}"><a href="${url}" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: ${color.buttonText}; text-decoration: none; border-radius: 5px; padding: 10px 20px; border: 1px solid ${color.buttonBorder}; display: inline-block; font-weight: bold;">Sign in</a></td>
+            <td align="center" style="border-radius: 5px;" bgcolor="${color.buttonBackground}"><a href="${url}"
+                target="_blank"
+                style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: ${color.buttonText}; text-decoration: none; border-radius: 5px; padding: 10px 20px; border: 1px solid ${color.buttonBorder}; display: inline-block; font-weight: bold;">Sign
+                in</a></td>
           </tr>
         </table>
       </td>
     </tr>
     <tr>
-      <td align="center" style="padding: 0px 0px 10px 0px; font-size: 16px; line-height: 22px; font-family: Helvetica, Arial, sans-serif; color: ${color.text};">
+      <td align="center"
+        style="padding: 0px 0px 10px 0px; font-size: 16px; line-height: 22px; font-family: Helvetica, Arial, sans-serif; color: ${color.text};">
         If you did not request this email you can safely ignore it.
       </td>
     </tr>
@@ -150,7 +155,7 @@ function html(params: Record<"url" | "host" | "email", string>) {
 `
 }
 
-// Email Text body (fallback for email clients that don't render HTML, e.g. feature phones)
-function text({ url, host }: Record<"url" | "host", string>) {
+/** Email Text body (fallback for email clients that don't render HTML, e.g. feature phones) */
+function text({ url, host }: { url: string; host: string }) {
   return `Sign in to ${host}\n${url}\n\n`
 }
