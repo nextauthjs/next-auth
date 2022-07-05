@@ -10,7 +10,7 @@ export default async function email(
   identifier: string,
   options: InternalOptions<"email">
 ) {
-  const { url, adapter, provider, logger, callbackUrl } = options
+  const { url, adapter, provider, logger, callbackUrl, theme } = options
 
   // Generate token
   const token =
@@ -42,6 +42,7 @@ export default async function email(
       expires,
       url: _url,
       provider,
+      theme,
     })
   } catch (error) {
     logger.error("SEND_VERIFICATION_EMAIL_ERROR", {
