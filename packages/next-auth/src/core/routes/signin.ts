@@ -37,7 +37,7 @@ export default async function signin(params: {
      * it solves. We treat email addresses as all lower case. If anyone
      * complains about this we can make strict RFC 2821 compliance an option.
      */
-    let email = body?.email?.toLowerCase()
+    const email = body?.email?.toLowerCase()
 
     if (!email) return { redirect: `${url}/error?error=EmailSignin` }
 
