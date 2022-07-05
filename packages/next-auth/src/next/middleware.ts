@@ -89,7 +89,7 @@ export interface NextAuthMiddlewareOptions {
    * The same `secret` used in the `NextAuth` configuration.
    * Defaults to the `NEXTAUTH_SECRET` environment variable.
    */
-  secret: string
+  secret?: string
 }
 
 async function handleMiddleware(
