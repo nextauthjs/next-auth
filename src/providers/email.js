@@ -53,12 +53,11 @@ const sendVerificationRequest = ({
 }
 
 // Email HTML body
-const html = ({ url, site, email }) => {
-  // Insert invisible space into domains and email address to prevent both the
-  // email address and the domain from being turned into a hyperlink by email
+const html = ({ url, site }) => {
+  // Insert invisible space into domains to prevent the
+  // the domain from being turned into a hyperlink by email
   // clients like Outlook and Apple mail, as this is confusing because it seems
-  // like they are supposed to click on their email address to sign in.
-  const escapedEmail = `${email.replace(/\./g, "&#8203;.")}`
+  // like they are supposed to click it to sign in.
   const escapedSite = `${site.replace(/\./g, "&#8203;.")}`
 
   // Some simple styling options
@@ -73,17 +72,12 @@ const html = ({ url, site, email }) => {
 <body style="background: ${backgroundColor};">
   <table width="100%" border="0" cellspacing="0" cellpadding="0">
     <tr>
-      <td align="center" style="padding: 10px 0px 20px 0px; font-size: 22px; font-family: Helvetica, Arial, sans-serif; color: ${textColor};">
-        <strong>${escapedSite}</strong>
+      <td align="center" style="padding: 10px 0px; font-size: 22px; font-family: Helvetica, Arial, sans-serif; color: ${textColor};">
+        Sign in to <strong>${escapedSite}</strong>
       </td>
     </tr>
   </table>
   <table width="100%" border="0" cellspacing="20" cellpadding="0" style="background: ${mainBackgroundColor}; max-width: 600px; margin: auto; border-radius: 10px;">
-    <tr>
-      <td align="center" style="padding: 10px 0px 0px 0px; font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: ${textColor};">
-        Sign in as <strong>${escapedEmail}</strong>
-      </td>
-    </tr>
     <tr>
       <td align="center" style="padding: 20px 0;">
         <table border="0" cellspacing="0" cellpadding="0">
