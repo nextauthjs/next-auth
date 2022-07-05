@@ -95,15 +95,15 @@ export default function Email(options: EmailUserConfig): EmailConfig {
 function html(params: Record<"url" | "host" | "email", string>) {
   const { url, host, email } = params
   const escapedEmail = email
-    .split(",")[0]
+    .split(/[,;]/)[0]
     .trim()
     .replace(/\./g, "&#8203;.")
     // Escape any HTML in the email.
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#x27;")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#x27;")
 
   const escapedHost = host.replace(/\./g, "&#8203;.")
 
