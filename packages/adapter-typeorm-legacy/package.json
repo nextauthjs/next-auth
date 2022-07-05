@@ -39,7 +39,7 @@
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:*",
     "@next-auth/tsconfig": "workspace:*",
-    "jest": "^28.1.2",
+    "jest": "^27.4.3",
     "mssql": "^7.2.1",
     "mysql": "^2.18.1",
     "next-auth": "workspace:*",
