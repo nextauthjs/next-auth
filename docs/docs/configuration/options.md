@@ -366,11 +366,14 @@ Changes the color scheme theme of [pages](/configuration/pages) as well as allow
 
 In addition, you can define a logo URL in `theme.logo` which will be rendered above the main card in the default signin/signout/error/verify-request pages, as well as a `theme.brandColor` which will affect the accent color of these pages.
 
+The sign-in button's background color will match the `brandColor` and defaults to `"#346df1"`. The text color is `#fff` by default, but if your brand color gives a weak contrast, correct it with the `buttonText` color option.
+
 ```js
 theme: {
   colorScheme: "auto", // "auto" | "dark" | "light"
   brandColor: "", // Hex color code
-  logo: "" // Absolute URL to image
+  logo: "", // Absolute URL to image
+  buttonText: "" // Hex color code
 }
 ```
 

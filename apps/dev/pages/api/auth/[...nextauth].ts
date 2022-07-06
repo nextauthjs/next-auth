@@ -46,7 +46,10 @@ import BoxyHQSAMLProvider from "next-auth/providers/boxyhq-saml"
 // })
 // const adapter = FaunaAdapter(client)
 export const authOptions: NextAuthOptions = {
-  // adapter,
+  // adapter: {
+  //   getUserByEmail: (email) => ({ id: "1", email, emailVerified: null }),
+  //   createVerificationToken: (token) => token,
+  // } as any,
   providers: [
     // E-mail
     // Start fake e-mail server with `npm run start:email`
