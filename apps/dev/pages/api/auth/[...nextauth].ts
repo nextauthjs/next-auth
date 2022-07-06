@@ -8,6 +8,7 @@ import TwitterProvider, {
 } from "next-auth/providers/twitter"
 import CredentialsProvider from "next-auth/providers/credentials"
 import IDS4Provider from "next-auth/providers/identity-server4"
+import DuendeIDS6Provider from "next-auth/providers/duende-identity-server6"
 import Twitch from "next-auth/providers/twitch"
 import GoogleProvider from "next-auth/providers/google"
 import FacebookProvider from "next-auth/providers/facebook"
@@ -149,6 +150,11 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.IDS4_ID,
       clientSecret: process.env.IDS4_SECRET,
       issuer: process.env.IDS4_ISSUER,
+    }),
+    DuendeIDS6Provider({
+      clientId: process.env.DUENDE_IDS6_ID,
+      clientSecret: process.env.DUENDE_IDS6_SECRET,
+      issuer: process.env.DUENDE_IDS6_ISSUER,
     }),
     DiscordProvider({
       clientId: process.env.DISCORD_ID,
