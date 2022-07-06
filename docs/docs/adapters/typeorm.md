@@ -19,7 +19,7 @@ In the future, we might split up this adapter to support single flavors of SQL f
 
 To use this Adapter, you need to install the following packages:
 
-```bash npm2yarn
+```bash npm2yarn2pnpm
 npm install next-auth @next-auth/typeorm-legacy-adapter typeorm
 ```
 

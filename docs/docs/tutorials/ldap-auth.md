@@ -7,7 +7,7 @@ NextAuth.js provides the ability to setup a [custom Credential provider](/config
 
 You will need an additional dependency, `ldapjs`, which you can install by running
 
-```bash npm2yarn
+```bash npm2yarn2pnpm
 npm install ldapjs
 ```
 

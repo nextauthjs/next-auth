@@ -62,6 +62,7 @@ You need to add this to every server rendered page you want to protect. Be aware
 
 ```js title="pages/server-side-example.js"
 import { useSession, unstable_getServerSession } from "next-auth/next"
+import { authOptions } from "./api/auth/[...nextauth]"
 
 export default function Page() {
   const { data: session } = useSession()
@@ -120,6 +121,7 @@ You can protect API routes using the `unstable_getServerSession()` method.
 
 ```js title="pages/api/get-session-example.js"
 import { unstable_getServerSession } from "next-auth/next"
+import { authOptions } from "./api/auth/[...nextauth]"
 
 export default async (req, res) => {
   const session = await unstable_getServerSession(req, res, authOptions)
