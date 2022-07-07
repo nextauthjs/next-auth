@@ -5,7 +5,7 @@ title: DuendeIdentityServer6
 
 ## Documentation
 
-https://duende-identityserver6.readthedocs.io/en/latest/
+https://docs.duendesoftware.com/identityserver/v6
 
 ## Options
 
