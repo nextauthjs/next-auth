@@ -44,9 +44,9 @@ import DuendeIDS6Provider from "next-auth/providers/duende-identity-server6"
 ...
 providers: [
   DuendeIDS6Provider({
-    clientId: process.env.DUENDE_IDS6_ID,
-    clientSecret: process.env.DUENDE_IDS6_SECRET,
-    issuer: "demo.duendesoftware.com",
+    clientId: "interactive.confidential",
+    clientSecret: "secret",
+    issuer: "https://demo.duendesoftware.com",
   })
 ]
 ...
