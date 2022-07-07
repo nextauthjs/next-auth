@@ -11,7 +11,7 @@ https://docs.duendesoftware.com/identityserver/v6
 
 The **DuendeIdentityServer6 Provider** comes with a set of default options:
 
-- [DuendeIdentityServer6 Provider options](https://github.com/nextauthjs/next-auth/blob/main/src/providers/duende-identity-server6.ts)
+- [DuendeIdentityServer6 Provider options](https://github.com/nextauthjs/next-auth/tree/main/packages/next-auth/src/providers/duende-identity-server6.ts)
 
 You can override any of the options to suit your own use case.
 
