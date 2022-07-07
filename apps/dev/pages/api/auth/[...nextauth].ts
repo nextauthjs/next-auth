@@ -32,14 +32,14 @@ import TraktProvider from "next-auth/providers/trakt"
 import WorkOSProvider from "next-auth/providers/workos"
 import BoxyHQSAMLProvider from "next-auth/providers/boxyhq-saml"
 
-// // TypeORM
-// import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
-// const adapter = TypeORMLegacyAdapter({
-//   type: "sqlite",
-//   name: "next-auth-test-memory",
-//   database: "./typeorm/dev.db",
-//   synchronize: true,
-// })
+// TypeORM
+import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
+const adapter = TypeORMLegacyAdapter({
+  type: "sqlite",
+  name: "next-auth-test-memory",
+  database: "./typeorm/dev.db",
+  synchronize: true,
+})
 
 // // Prisma
 // import { PrismaAdapter } from "@next-auth/prisma-adapter"
@@ -63,7 +63,7 @@ import BoxyHQSAMLProvider from "next-auth/providers/boxyhq-saml"
 // }
 
 export const authOptions: NextAuthOptions = {
-  // adapter,
+  adapter,
   providers: [
     // E-mail
     // Start fake e-mail server with `npm run start:email`
