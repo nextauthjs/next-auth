@@ -214,7 +214,7 @@ export interface NextAuthOptions {
  * [Pages](https://next-auth.js.org/configuration/pages)
  */
 export interface Theme {
-  colorScheme: "auto" | "dark" | "light"
+  colorScheme?: "auto" | "dark" | "light"
   logo?: string
   brandColor?: string
   buttonText?: string
