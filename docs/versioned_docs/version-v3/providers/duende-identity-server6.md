@@ -18,16 +18,14 @@ You can override any of the options to suit your own use case.
 ## Example
 
 ```js
-import Providers from `next-auth/providers`
+import DuendeIDS6Provider from "next-auth/providers/duende-identity-server6"
+
 ...
 providers: [
-  Providers.DuendeIdentityServer6({
-    id: "duende-identity-server6",
-    name: "DuendeIdentityServer6",
-    scope: "openid profile email api offline_access", // Allowed Scopes
-    domain:  process.env.IdentityServer4_Domain,
-    clientId: process.env.IdentityServer4_CLIENT_ID,
-    clientSecret: process.env.IdentityServer4_CLIENT_SECRET
+  DuendeIDS6Provider({
+    clientId: process.env.DUENDE_IDS6_ID,
+    clientSecret: process.env.DUENDE_IDS6_SECRET,
+    issuer: process.env.DUENDE_IDS6_ISSUER,
   })
 ]
 ...
