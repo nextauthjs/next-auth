@@ -7,7 +7,6 @@ export interface DuendeISUser extends Record<string, any> {
   verified: boolean
 }
 
-/** @type {import(".").OAuthProvider} */
 export default function DuendeIdentityServer6<P extends DuendeISUser> (options :OAuthUserConfig<P>) : OAuthConfig<P> {
   return {
     id: "duende-identityserver6",
