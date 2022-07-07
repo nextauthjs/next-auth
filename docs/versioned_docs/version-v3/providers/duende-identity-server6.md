@@ -40,17 +40,13 @@ If you want to try it out, you can copy and paste the configuration below.
 You can sign in to the demo service with either <b>bob/bob</b> or <b>alice/alice</b>.
 
 ```js
-import Providers from `next-auth/providers`
+import DuendeIDS6Provider from "next-auth/providers/duende-identity-server6"
 ...
 providers: [
-  Providers.DuendeIdentityServer6({
-    id: "demo-identity-server",
-    name: "Demo IdentityServer6",
-    scope: "openid profile email api offline_access",
-    domain:  "demo.duendesoftware.com/",
-    clientId: "interactive.confidential",
-    clientSecret: "secret",
-    protection: "pkce"
+  DuendeIDS6Provider({
+    clientId: process.env.DUENDE_IDS6_ID,
+    clientSecret: process.env.DUENDE_IDS6_SECRET,
+    issuer: "demo.duendesoftware.com",
   })
 ]
 ...
