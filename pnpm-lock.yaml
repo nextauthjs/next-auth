@@ -52,8 +52,9 @@ importers:
 
   apps/dev:
     specifiers:
-      '@next-auth/fauna-adapter': ^1
-      '@next-auth/prisma-adapter': ^1
+      '@next-auth/fauna-adapter': workspace:*
+      '@next-auth/prisma-adapter': workspace:*
+      '@next-auth/typeorm-legacy-adapter': workspace:*
       '@prisma/client': ^3
       '@types/react': ^18.0.15
       '@types/react-dom': ^18.0.6
@@ -66,9 +67,12 @@ importers:
       prisma: ^3
       react: ^18
       react-dom: ^18
+      sqlite3: ^5.0.8
+      typeorm: ^0.3.7
     dependencies:
       '@next-auth/fauna-adapter': link:../../packages/adapter-fauna
       '@next-auth/prisma-adapter': link:../../packages/adapter-prisma
+      '@next-auth/typeorm-legacy-adapter': link:../../packages/adapter-typeorm-legacy
       '@prisma/client': 3.15.2_prisma@3.15.2
       faunadb: 4.6.0
       next: 12.2.0_biqbaboplfbrettd7655fr4n2y
@@ -82,6 +86,8 @@ importers:
       cpx: 1.5.0
       fake-smtp-server: 0.8.0
       prisma: 3.15.2
+      sqlite3: 5.0.8
+      typeorm: 0.3.7_sqlite3@5.0.8
 
   docs:
     specifiers:
@@ -21297,6 +21303,86 @@ packages:
       mkdirp: 1.0.4
       mssql: 7.3.5
       pg: 8.7.3
+      reflect-metadata: 0.1.13
+      sha.js: 2.4.11
+      sqlite3: 5.0.8
+      tslib: 2.4.0
+      uuid: 8.3.2
+      xml2js: 0.4.23
+      yargs: 17.5.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /typeorm/0.3.7_sqlite3@5.0.8:
+    resolution: {integrity: sha512-MsPJeP6Zuwfe64c++l80+VRqpGEGxf0CkztIEnehQ+CMmQPSHjOnFbFxwBuZ2jiLqZTjLk2ZqQdVF0RmvxNF3Q==}
+    engines: {node: '>= 12.9.0'}
+    hasBin: true
+    peerDependencies:
+      '@google-cloud/spanner': ^5.18.0
+      '@sap/hana-client': ^2.12.25
+      better-sqlite3: ^7.1.2
+      hdb-pool: ^0.1.6
+      ioredis: ^5.0.4
+      mongodb: ^3.6.0
+      mssql: ^7.3.0
+      mysql2: ^2.2.5
+      oracledb: ^5.1.0
+      pg: ^8.5.1
+      pg-native: ^3.0.0
+      pg-query-stream: ^4.0.0
+      redis: ^3.1.1 || ^4.0.0
+      sql.js: ^1.4.0
+      sqlite3: ^5.0.3
+      ts-node: ^10.7.0
+      typeorm-aurora-data-api-driver: ^2.0.0
+    peerDependenciesMeta:
+      '@google-cloud/spanner':
+        optional: true
+      '@sap/hana-client':
+        optional: true
+      better-sqlite3:
+        optional: true
+      hdb-pool:
+        optional: true
+      ioredis:
+        optional: true
+      mongodb:
+        optional: true
+      mssql:
+        optional: true
+      mysql2:
+        optional: true
+      oracledb:
+        optional: true
+      pg:
+        optional: true
+      pg-native:
+        optional: true
+      pg-query-stream:
+        optional: true
+      redis:
+        optional: true
+      sql.js:
+        optional: true
+      sqlite3:
+        optional: true
+      ts-node:
+        optional: true
+      typeorm-aurora-data-api-driver:
+        optional: true
+    dependencies:
+      '@sqltools/formatter': 1.2.3
+      app-root-path: 3.0.0
+      buffer: 6.0.3
+      chalk: 4.1.2
+      cli-highlight: 2.1.11
+      date-fns: 2.28.0
+      debug: 4.3.4
+      dotenv: 16.0.1
+      glob: 7.2.3
+      js-yaml: 4.1.0
+      mkdirp: 1.0.4
       reflect-metadata: 0.1.13
       sha.js: 2.4.11
       sqlite3: 5.0.8
