@@ -21,5 +21,8 @@ export const config = {
   BREAKING_COMMIT_MSG: "BREAKING CHANGE",
   SKIP_RELEASE_MSG: "[skip release]",
   RELEASE_COMMIT_TYPES: ["feat", "fix"],
-  dryRun: !process.env.CI || !!process.env.DRY_RUN,
+  dryRun:
+    !process.env.CI ||
+    !!process.env.DRY_RUN ||
+    process.argv.includes("--dry-run"),
 }
