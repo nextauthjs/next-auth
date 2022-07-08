@@ -18,11 +18,12 @@ export const config = {
   },
   rootDir: process.cwd(),
   RELEASE_COMMIT_MSG: "chore(release): bump version",
-  BREAKING_COMMIT_MSG: "BREAKING CHANGE",
+  BREAKING_COMMIT_MSG: "BREAKING CHANGE:",
   SKIP_RELEASE_MSG: "[skip release]",
   RELEASE_COMMIT_TYPES: ["feat", "fix"],
   dryRun:
     !process.env.CI ||
     !!process.env.DRY_RUN ||
     process.argv.includes("--dry-run"),
+  verbose: !!process.env.VERBOSE || process.argv.includes("--verbose"),
 }
