@@ -33,24 +33,38 @@ import TraktProvider from "next-auth/providers/trakt"
 import WorkOSProvider from "next-auth/providers/workos"
 import BoxyHQSAMLProvider from "next-auth/providers/boxyhq-saml"
 
+// TypeORM
+import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
+const adapter = TypeORMLegacyAdapter({
+  type: "sqlite",
+  name: "next-auth-test-memory",
+  database: "./typeorm/dev.db",
+  synchronize: true,
+})
+
+// // Prisma
 // import { PrismaAdapter } from "@next-auth/prisma-adapter"
 // import { PrismaClient } from "@prisma/client"
 // const prisma = new PrismaClient()
 // const adapter = PrismaAdapter(prisma)
 
+// // Fauna
 // import { Client as FaunaClient } from "faunadb"
 // import { FaunaAdapter } from "@next-auth/fauna-adapter"
-
 // const client = new FaunaClient({
 //   secret: process.env.FAUNA_SECRET,
 //   domain: process.env.FAUNA_DOMAIN,
 // })
 // const adapter = FaunaAdapter(client)
+
+// // Dummy
+// const adapter: any = {
+//   getUserByEmail: (email) => ({ id: "1", email, emailVerified: null }),
+//   createVerificationToken: (token) => token,
+// }
+
 export const authOptions: NextAuthOptions = {
-  // adapter: {
-  //   getUserByEmail: (email) => ({ id: "1", email, emailVerified: null }),
-  //   createVerificationToken: (token) => token,
-  // } as any,
+  adapter,
   providers: [
     // E-mail
     // Start fake e-mail server with `npm run start:email`
