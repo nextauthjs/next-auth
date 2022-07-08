@@ -209,13 +209,18 @@ importers:
       '@mikro-orm/sqlite': ^5.0.2
       '@next-auth/adapter-test': workspace:^0.0.0
       '@next-auth/tsconfig': workspace:^0.0.0
+      '@types/uuid': ^8.3.3
       jest: ^27.4.3
       next-auth: workspace:*
+      uuid: ^8.3.2
+    dependencies:
+      uuid: 8.3.2
     devDependencies:
       '@mikro-orm/core': 5.2.1_@mikro-orm+sqlite@5.2.1
       '@mikro-orm/sqlite': 5.2.1_@mikro-orm+core@5.2.1
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
+      '@types/uuid': 8.3.4
       jest: 27.5.1
       next-auth: link:../next-auth
 
