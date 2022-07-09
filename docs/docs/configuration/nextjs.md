@@ -8,7 +8,7 @@ This feature is experimental and may be removed or changed in the future.
 
 When calling from server-side i.e. in API routes or in `getServerSideProps`, we recommend using this function instead of `getSession` to retrieve the `session` object. This method is especially useful when you are using NextAuth.js with a database. This method can _drastically_ reduce response time when used over `getSession` server-side, due to avoiding an extra `fetch` to an API Route (this is generally [not recommended in Next.js](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props#getserversideprops-or-api-routes)). In addition, `unstable_getServerSession` will correctly update the cookie expiry time and update the session content if `callbacks.jwt` or `callbacks.session` changed something.
 
-Otherwise, if you only want to get the session token, see [`getToken`](tutorials/securing-pages-and-api-routes#using-gettoken).
+Otherwise, if you only want to get the session token, see [`getToken`](/tutorials/securing-pages-and-api-routes#using-gettoken).
 
 `unstable_getServerSession` requires passing the same object you would pass to `NextAuth` when initializing NextAuth.js. To do so, you can export your NextAuth.js options in the following way:
 
