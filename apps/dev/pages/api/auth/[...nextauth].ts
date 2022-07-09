@@ -8,6 +8,7 @@ import TwitterProvider, {
 } from "next-auth/providers/twitter"
 import CredentialsProvider from "next-auth/providers/credentials"
 import IDS4Provider from "next-auth/providers/identity-server4"
+import DuendeIDS6Provider from "next-auth/providers/duende-identity-server6"
 import Twitch from "next-auth/providers/twitch"
 import GoogleProvider from "next-auth/providers/google"
 import FacebookProvider from "next-auth/providers/facebook"
@@ -32,11 +33,22 @@ import TraktProvider from "next-auth/providers/trakt"
 import WorkOSProvider from "next-auth/providers/workos"
 import BoxyHQSAMLProvider from "next-auth/providers/boxyhq-saml"
 
+// TypeORM
+import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
+const adapter = TypeORMLegacyAdapter({
+  type: "sqlite",
+  name: "next-auth-test-memory",
+  database: "./typeorm/dev.db",
+  synchronize: true,
+})
+
+// // Prisma
 // import { PrismaAdapter } from "@next-auth/prisma-adapter"
 // import { PrismaClient } from "@prisma/client"
 // const prisma = new PrismaClient()
 // const adapter = PrismaAdapter(prisma)
 
+// // Fauna
 // import { Client as FaunaClient } from "faunadb"
 // import { FaunaAdapter } from "@next-auth/fauna-adapter"
 
@@ -45,8 +57,16 @@ import BoxyHQSAMLProvider from "next-auth/providers/boxyhq-saml"
 //   domain: process.env.FAUNA_DOMAIN,
 // })
 // const adapter = FaunaAdapter(client)
+
+// // Dummy
+// const adapter: any = {
+//   getUserByEmail: (email) => ({ id: "1", email, emailVerified: null }),
+//   createVerificationToken: (token) => token,
+// }
+
 export const authOptions: NextAuthOptions = {
   // adapter,
+  adapter,
   providers: [
     // E-mail
     // Start fake e-mail server with `npm run start:email`
@@ -60,9 +80,156 @@ export const authOptions: NextAuthOptions = {
     //   },
     // }),
     // Credentials
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (credentials.password === "pw") {
+          return {
+            name: "Fill Murray",
+            email: "bill@fillmurray.com",
+            image: "https://www.fillmurray.com/64/64",
+          }
+        }
+        return null
+      },
+    }),
+    // OAuth 1
+    // TwitterLegacyProvider({
+    //   clientId: process.env.TWITTER_LEGACY_ID,
+    //   clientSecret: process.env.TWITTER_LEGACY_SECRET,
+    // }),
+    // OAuth 2 / OIDC
+    TwitterProvider({
+      // Opt-in to the new Twitter API for now. Should be default in the future.
+      version: "2.0",
+      clientId: process.env.TWITTER_ID,
+      clientSecret: process.env.TWITTER_SECRET,
+    }),
     GitHubProvider({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET,
+    }),
+    Auth0Provider({
+      clientId: process.env.AUTH0_ID,
+      clientSecret: process.env.AUTH0_SECRET,
+      issuer: process.env.AUTH0_ISSUER,
+    }),
+    KeycloakProvider({
+      clientId: process.env.KEYCLOAK_ID,
+      clientSecret: process.env.KEYCLOAK_SECRET,
+      issuer: process.env.KEYCLOAK_ISSUER,
+    }),
+    Twitch({
+      clientId: process.env.TWITCH_ID,
+      clientSecret: process.env.TWITCH_SECRET,
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_ID,
+      clientSecret: process.env.GOOGLE_SECRET,
+    }),
+    FacebookProvider({
+      clientId: process.env.FACEBOOK_ID,
+      clientSecret: process.env.FACEBOOK_SECRET,
+    }),
+    FoursquareProvider({
+      clientId: process.env.FOURSQUARE_ID,
+      clientSecret: process.env.FOURSQUARE_SECRET,
+    }),
+    // FreshbooksProvider({
+    //   clientId: process.env.FRESHBOOKS_ID,
+    //   clientSecret: process.env.FRESHBOOKS_SECRET,
+    // }),
+    GitlabProvider({
+      clientId: process.env.GITLAB_ID,
+      clientSecret: process.env.GITLAB_SECRET,
+    }),
+    InstagramProvider({
+      clientId: process.env.INSTAGRAM_ID,
+      clientSecret: process.env.INSTAGRAM_SECRET,
+    }),
+    LineProvider({
+      clientId: process.env.LINE_ID,
+      clientSecret: process.env.LINE_SECRET,
+    }),
+    LinkedInProvider({
+      clientId: process.env.LINKEDIN_ID,
+      clientSecret: process.env.LINKEDIN_SECRET,
+    }),
+    MailchimpProvider({
+      clientId: process.env.MAILCHIMP_ID,
+      clientSecret: process.env.MAILCHIMP_SECRET,
+    }),
+    IDS4Provider({
+      clientId: process.env.IDS4_ID,
+      clientSecret: process.env.IDS4_SECRET,
+      issuer: process.env.IDS4_ISSUER,
+    }),
+    DuendeIDS6Provider({
+      clientId: "interactive.confidential",
+      clientSecret: "secret",
+      issuer: "https://demo.duendesoftware.com",
+    }),
+    DiscordProvider({
+      clientId: process.env.DISCORD_ID,
+      clientSecret: process.env.DISCORD_SECRET,
+    }),
+    AzureADProvider({
+      clientId: process.env.AZURE_AD_CLIENT_ID,
+      clientSecret: process.env.AZURE_AD_CLIENT_SECRET,
+      tenantId: process.env.AZURE_AD_TENANT_ID,
+      profilePhotoSize: 48,
+    }),
+    SpotifyProvider({
+      clientId: process.env.SPOTIFY_ID,
+      clientSecret: process.env.SPOTIFY_SECRET,
+    }),
+    CognitoProvider({
+      clientId: process.env.COGNITO_ID,
+      clientSecret: process.env.COGNITO_SECRET,
+      issuer: process.env.COGNITO_ISSUER,
+    }),
+    Okta({
+      clientId: process.env.OKTA_ID,
+      clientSecret: process.env.OKTA_SECRET,
+      issuer: process.env.OKTA_ISSUER,
+    }),
+    SlackProvider({
+      clientId: process.env.SLACK_ID,
+      clientSecret: process.env.SLACK_SECRET,
+    }),
+    AzureB2C({
+      clientId: process.env.AZURE_B2C_ID,
+      clientSecret: process.env.AZURE_B2C_SECRET,
+      tenantId: process.env.AZURE_B2C_TENANT_ID,
+      primaryUserFlow: process.env.AZURE_B2C_PRIMARY_USER_FLOW,
+    }),
+    OsuProvider({
+      clientId: process.env.OSU_CLIENT_ID,
+      clientSecret: process.env.OSU_CLIENT_SECRET,
+    }),
+    AppleProvider({
+      clientId: process.env.APPLE_ID,
+      clientSecret: process.env.APPLE_SECRET,
+    }),
+    PatreonProvider({
+      clientId: process.env.PATREON_ID,
+      clientSecret: process.env.PATREON_SECRET,
+    }),
+    TraktProvider({
+      clientId: process.env.TRAKT_ID,
+      clientSecret: process.env.TRAKT_SECRET,
+    }),
+    WorkOSProvider({
+      clientId: process.env.WORKOS_ID,
+      clientSecret: process.env.WORKOS_SECRET,
+    }),
+    BoxyHQSAMLProvider({
+      issuer: process.env.BOXYHQSAML_ISSUER,
+      clientId: process.env.BOXYHQSAML_ID,
+      clientSecret: process.env.BOXYHQSAML_SECRET,
     }),
   ],
   debug: true,

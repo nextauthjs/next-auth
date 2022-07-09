@@ -70,6 +70,7 @@ jobs:
           pnpm release
         env:
           RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
           NPM_TOKEN_PKG: ${{ secrets.NPM_TOKEN_PKG }}
           NPM_TOKEN_ORG: ${{ secrets.NPM_TOKEN_ORG }}
   release-pr:
