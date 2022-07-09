@@ -1,13 +1,5 @@
 import type { OutgoingResponse } from ".."
-import type { InternalProvider } from "../types"
-
-export interface PublicProvider {
-  id: string
-  name: string
-  type: string
-  signinUrl: string
-  callbackUrl: string
-}
+import type { InternalProvider, PublicProvider } from "../types"
 
 /**
  * Return a JSON object with a list of all OAuth providers currently configured

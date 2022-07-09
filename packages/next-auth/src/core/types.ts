@@ -555,3 +555,12 @@ export type NextAuthApiHandler<Result = void, Response = any> = (
   req: NextAuthRequest,
   res: NextAuthResponse<Response>
 ) => Awaitable<Result>
+
+/** @internal */
+export interface PublicProvider {
+  id: string
+  name: string
+  type: string
+  signinUrl: string
+  callbackUrl: string
+}
