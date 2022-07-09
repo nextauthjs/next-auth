@@ -8,6 +8,7 @@ import TwitterProvider, {
 } from "next-auth/providers/twitter"
 import CredentialsProvider from "next-auth/providers/credentials"
 import IDS4Provider from "next-auth/providers/identity-server4"
+import DuendeIDS6Provider from "next-auth/providers/duende-identity-server6"
 import Twitch from "next-auth/providers/twitch"
 import GoogleProvider from "next-auth/providers/google"
 import FacebookProvider from "next-auth/providers/facebook"
@@ -32,21 +33,38 @@ import TraktProvider from "next-auth/providers/trakt"
 import WorkOSProvider from "next-auth/providers/workos"
 import BoxyHQSAMLProvider from "next-auth/providers/boxyhq-saml"
 
+// TypeORM
+import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
+const adapter = TypeORMLegacyAdapter({
+  type: "sqlite",
+  name: "next-auth-test-memory",
+  database: "./typeorm/dev.db",
+  synchronize: true,
+})
+
+// // Prisma
 // import { PrismaAdapter } from "@next-auth/prisma-adapter"
 // import { PrismaClient } from "@prisma/client"
 // const prisma = new PrismaClient()
 // const adapter = PrismaAdapter(prisma)
 
+// // Fauna
 // import { Client as FaunaClient } from "faunadb"
 // import { FaunaAdapter } from "@next-auth/fauna-adapter"
-
 // const client = new FaunaClient({
 //   secret: process.env.FAUNA_SECRET,
 //   domain: process.env.FAUNA_DOMAIN,
 // })
 // const adapter = FaunaAdapter(client)
+
+// // Dummy
+// const adapter: any = {
+//   getUserByEmail: (email) => ({ id: "1", email, emailVerified: null }),
+//   createVerificationToken: (token) => token,
+// }
+
 export const authOptions: NextAuthOptions = {
-  // adapter,
+  adapter,
   providers: [
     // E-mail
     // Start fake e-mail server with `npm run start:email`
@@ -146,6 +164,11 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.IDS4_ID,
       clientSecret: process.env.IDS4_SECRET,
       issuer: process.env.IDS4_ISSUER,
+    }),
+    DuendeIDS6Provider({
+      clientId: "interactive.confidential",
+      clientSecret: "secret",
+      issuer: "https://demo.duendesoftware.com",
     }),
     DiscordProvider({
       clientId: process.env.DISCORD_ID,

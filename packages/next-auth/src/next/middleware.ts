@@ -84,6 +84,12 @@ export interface NextAuthMiddlewareOptions {
      */
     authorized?: AuthorizedCallback
   }
+
+  /**
+   * The same `secret` used in the `NextAuth` configuration.
+   * Defaults to the `NEXTAUTH_SECRET` environment variable.
+   */
+  secret?: string
 }
 
 type NextMiddlewareResult = ReturnType<NextMiddleware>
@@ -104,7 +110,8 @@ async function handleMiddleware(
     return
   }
 
-  if (!process.env.NEXTAUTH_SECRET) {
+  const secret = options?.secret ?? process.env.NEXTAUTH_SECRET
+  if (!secret) {
     console.error(
       `[next-auth][error][NO_SECRET]`,
       `\nhttps://next-auth.js.org/errors#no_secret`
@@ -120,6 +127,7 @@ async function handleMiddleware(
     req,
     decode: options?.jwt?.decode,
     cookieName: options?.cookies?.sessionToken?.name,
+    secret,
   })
 
   const isAuthorized =
