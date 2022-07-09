@@ -140,7 +140,16 @@ export function getServerProviders(
   })
 
   return Object.fromEntries(
-    providers.map((provider) => [provider.id, provider])
+    providers.map((provider) => [
+      provider.id,
+      {
+        id: provider.id,
+        name: provider.name,
+        type: provider.type,
+        signinUrl: provider.signinUrl,
+        callbackUrl: provider.callbackUrl,
+      } as PublicProvider,
+    ])
   )
 }
 
