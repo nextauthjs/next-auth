@@ -181,7 +181,6 @@ In this case, given we want to try our authentication working locally on our mac
 http://localhost:3000/api/auth/callback/github
 ```
 
-```
 :::info
 NextAuth will already magically create this API endpoint for you when we start the application later. Note that because we're using NextJS, locally it starts our server on the port `3000`, hence the origin is `http://localhost:3000`.
 :::
@@ -257,16 +256,39 @@ You can create your own Sign In page instead of using the default one from NextA
 
 ## 4. Deploying to production
 
-When deploying your site set the `NEXTAUTH_URL` environment variable to the canonical URL of the website.
+### Configuring different environments
+
+It's normal to test your application under different environments. Usually you'll have a development environment (when you run the application locally in your machine), a staging environment (for teams members to try the application) and a production environment.
+
+For each environment, you're going to need to create an OAuth application in your provider respectively, as [we did previously](#2-configuring-oauth-provider), and point the **callback URL** to it. 
+
+For instance in the previous section, we pointed the callback URL to:
+```
+http://localhost:3000/api/auth/callback/github
+``` 
+as we wanted to test our application in the development environment.
+
+If we were to deploy our app to production, we would need to create again a new **OAuth App** in Github (calling it something like "Van life – prod") and point the **callback URL** to our production domain:
+```
+https://example.com/api/auth/callback/github
+```
+
+Finally, we would need just to point the environment variables we set ( `GITHUB_ID` and `GITHUB_SECRET` ) to the credentials of the OAuth app we want our application to run against. 
+
+### Setting up `NEXTAUTH_URL`
+
+When deploying your site, **you need to set** the `NEXTAUTH_URL` environment variable to the canonical URL of your website:
 
 ```
 NEXTAUTH_URL=https://example.com
 ```
 
-:::tip
+:::warning
 In production, this needs to be set as an environment variable on the service you use to deploy your app.
 
 To set environment variables on Vercel, you can use the [dashboard](https://vercel.com/dashboard) or the `vercel env pull` [command](https://vercel.com/docs/build-step#development-environment-variables).
 :::
 
 For more information please check out our [deployment page](/deployment).
+
+
