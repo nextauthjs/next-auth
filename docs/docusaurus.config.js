@@ -6,6 +6,8 @@ module.exports = {
   favicon: "img/favicon.ico",
   organizationName: "nextauthjs",
   projectName: "next-auth",
+  // TODO: remove this once BETA is ready
+  onBrokenLinks: "log",
   themeConfig: {
     prism: {
       theme: require("prism-react-renderer/themes/vsDark"),
