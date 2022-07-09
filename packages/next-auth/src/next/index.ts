@@ -1,3 +1,5 @@
+import parseProviders from "../core/lib/providers"
+import parseUrl from "../utils/parse-url"
 import { NextAuthHandler } from "../core"
 import { detectHost } from "../utils/detect-host"
 import { setCookie } from "./utils"
@@ -12,6 +14,7 @@ import type {
   NextAuthAction,
   NextAuthRequest,
   NextAuthResponse,
+  PublicProvider,
 } from "../core/types"
 
 async function NextAuthNextHandler(
@@ -124,6 +127,21 @@ export async function unstable_getServerSession(
 
   if (body && Object.keys(body).length) return body as Session
   return null
+}
+
+export function getServerProviders(
+  options: NextAuthOptions
+): Record<string, PublicProvider> {
+  const url = parseUrl(`${process.env.NEXTAUTH_URL}/api/auth`)
+
+  const { providers } = parseProviders({
+    providers: options.providers,
+    url,
+  })
+
+  return Object.fromEntries(
+    providers.map((provider) => [provider.id, provider])
+  )
 }
 
 declare global {
