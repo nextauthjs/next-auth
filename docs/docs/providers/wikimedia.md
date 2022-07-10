@@ -21,12 +21,11 @@ Please be aware that Wikimedia accounts do not have to have an associated email 
 
 1. Go to and accept the Consumer Registration doc: https://meta.wikimedia.org/wiki/Special:OAuthConsumerRegistration
 2. Request a new OAuth 2.0 consumer to get the `clientId` and `clientSecret`: https://meta.wikimedia.org/wiki/Special:OAuthConsumerRegistration/propose/oauth2
-  2a. Do not check the box next to `This consumer is only for [your username]`
-  2b. Unless you explicitly need a larger scope, feel free to select the radio button labelled `User identity verification only - no ability to read pages or act on the users behalf.`
+  2a. Add the following redirect URL into the console `http://<your-next-app-url>/api/auth/callback/wikimedia`
+  2b. Do not check the box next to `This consumer is only for [your username]`
+  2c. Unless you explicitly need a larger scope, feel free to select the radio button labelled `User identity verification only - no ability to read pages or act on the users behalf.`
 
-After registration, you can initally test your application only with your Wikimedia account, but you may have to wait several days for the application to be approved for it to be used by everyone.
-
-Add the following redirect URL into the console `http://<your-next-app-url>/api/auth/callback/wikimedia`
+After registration, you can initally test your application only with your own Wikimedia account. You may have to wait several days for the application to be approved for it to be used by everyone.
 
 ## Options
 
