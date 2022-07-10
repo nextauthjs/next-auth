@@ -1,10 +1,10 @@
-import { Connection, ConnectionOptions } from "typeorm"
+import type { DataSource, DataSourceOptions } from "typeorm"
 import * as defaultEntities from "./entities"
 
 /** Ensure configOrString is normalized to an object. */
-export function parseConnectionConfig(
-  configOrString: string | ConnectionOptions
-): ConnectionOptions {
+export function parseDataSourceConfig(
+  configOrString: string | DataSourceOptions
+): DataSourceOptions {
   if (typeof configOrString !== "string") {
     return {
       ...configOrString,
@@ -89,22 +89,22 @@ function entitiesChanged(
 }
 
 export async function updateConnectionEntities(
-  connection: Connection,
+  dataSource: DataSource,
   entities: any[]
 ) {
-  if (!entitiesChanged(connection.options.entities, entities)) return
+  if (!entitiesChanged(dataSource.entityMetadatas, entities)) return
 
   // @ts-expect-error
-  connection.options.entities = entities
+  dataSource.entityMetadatas = entities
 
   // @ts-expect-error
-  connection.buildMetadatas()
+  dataSource.buildMetadatas()
 
-  if (connection.options.synchronize !== false) {
+  if (dataSource.options.synchronize !== false) {
     console.warn(
       "[next-auth][warn][adapter_typeorm_updating_entities]",
       "\nhttps://next-auth.js.org/warnings#adapter_typeorm_updating_entities"
     )
-    await connection.synchronize()
+    await dataSource.synchronize()
   }
 }

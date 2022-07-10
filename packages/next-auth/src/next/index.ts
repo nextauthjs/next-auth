@@ -83,20 +83,28 @@ function NextAuth(
 
 export default NextAuth
 
+let experimentalWarningShown = false
 export async function unstable_getServerSession(
   ...args:
-    | [GetServerSidePropsContext['req'], GetServerSidePropsContext['res'], NextAuthOptions]
+    | [
+        GetServerSidePropsContext["req"],
+        GetServerSidePropsContext["res"],
+        NextAuthOptions
+      ]
     | [NextApiRequest, NextApiResponse, NextAuthOptions]
 ): Promise<Session | null> {
-  console.warn(
-    "[next-auth][warn][EXPERIMENTAL_API]",
-    "\n`unstable_getServerSession` is experimental and may be removed or changed in the future, as the name suggested.",
-    `\nhttps://next-auth.js.org/configuration/nextjs#unstable_getServerSession}`,
-    `\nhttps://next-auth.js.org/warnings#EXPERIMENTAL_API`
+  if (!experimentalWarningShown && process.env.NODE_ENV !== "production") {
+    console.warn(
+      "[next-auth][warn][EXPERIMENTAL_API]",
+      "\n`unstable_getServerSession` is experimental and may be removed or changed in the future, as the name suggested.",
+      `\nhttps://next-auth.js.org/configuration/nextjs#unstable_getServerSession}`,
+      `\nhttps://next-auth.js.org/warnings#EXPERIMENTAL_API`
     )
+    experimentalWarningShown = true
+  }
 
-  const [req, res, options] = args;
-  
+  const [req, res, options] = args
+
   options.secret = options.secret ?? process.env.NEXTAUTH_SECRET
 
   const session = await NextAuthHandler<Session | {}>({

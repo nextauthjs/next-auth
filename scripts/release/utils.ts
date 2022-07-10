@@ -3,6 +3,7 @@ import type { PackageJson } from "type-fest"
 import fs from "node:fs/promises"
 import path from "node:path"
 import { execSync as nodeExecSync } from "node:child_process"
+import { config } from "./config"
 
 async function read(directory: string): Promise<PackageJson> {
   const content = await fs.readFile(
@@ -28,7 +29,7 @@ async function update(
 export const pkgJson = { read, update }
 
 export function debug(...args: any[]): void {
-  if (!process.env.DEBUG) return
+  if (!config.verbose) return
   const [first, ...rest] = args
   console.log(`\n[debug] ${first}\n`, ...rest, "\n")
 }

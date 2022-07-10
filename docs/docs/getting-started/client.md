@@ -427,13 +427,14 @@ This only works on pages where you provide the correct `pageProps`, however. Thi
 
 ```js title="pages/index.js"
 import { unstable_getServerSession } from "next-auth/next"
+import { authOptions } from './api/auth/[...nextauth]'
 
 ...
 
-export async function getServerSideProps(ctx) {
+export async function getServerSideProps({ req, res }) {
   return {
     props: {
-      session: await unstable_getServerSession(ctx)
+      session: await unstable_getServerSession(req, res, authOptions)
     }
   }
 }
@@ -505,3 +506,29 @@ However, if it was set to `false`, it stops re-fetching the session and the comp
 :::note
 See [**the Next.js documentation**](https://nextjs.org/docs/advanced-features/custom-app) for more information on **\_app.js** in Next.js applications.
 :::
+
+### Custom base path
+When your Next.js application uses a custom base path, set the `NEXTAUTH_URL` environment variable to the route to the API endpoint in full - as in the example below and as explained [here](/configuration/options#nextauth_url).
+
+Also, make sure to pass the `basePath` page prop to the `<SessionProvider>` – as in the example below – so your custom base path is fully configured and used by NextAuth.js.
+
+#### Example
+In this example, the custom base path used is `/custom-route`.
+
+```
+NEXTAUTH_URL=https://example.com/custom-route/api/auth
+```
+
+```jsx title="pages/_app.js"
+import { SessionProvider } from "next-auth/react"
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}) {
+  return (
+    <SessionProvider session={session} basePath="/custom-route/api/auth">
+      <Component {...pageProps} />
+    </SessionProvider>
+  )
+}
+```

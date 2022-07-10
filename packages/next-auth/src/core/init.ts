@@ -62,6 +62,7 @@ export async function init({
       colorScheme: "auto",
       logo: "",
       brandColor: "",
+      buttonText: "",
     },
     // Custom options override defaults
     ...userOptions,
