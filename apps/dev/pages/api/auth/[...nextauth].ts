@@ -227,7 +227,7 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.WORKOS_SECRET,
     }),
     BoxyHQSAMLProvider({
-      issuer: process.env.BOXYHQSAML_ISSUER,
+      issuer: process.env.BOXYHQSAML_ISSUER ?? "https://example.com",
       clientId: process.env.BOXYHQSAML_ID,
       clientSecret: process.env.BOXYHQSAML_SECRET,
     }),
