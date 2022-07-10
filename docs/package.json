@@ -19,11 +19,11 @@
     "generate-providers": "node ./scripts/generate-providers.js"
   },
   "dependencies": {
-    "@docusaurus/core": "^2.0.0-beta.20",
-    "@docusaurus/preset-classic": "^2.0.0-beta.20",
-    "@docusaurus/remark-plugin-npm2yarn": "^2.0.0-beta.20",
-    "@docusaurus/theme-common": "2.0.0-beta.20",
+    "@docusaurus/core": "^2.0.0-beta.21",
+    "@docusaurus/preset-classic": "^2.0.0-beta.21",
+    "@docusaurus/theme-common": "2.0.0-beta.21",
     "@mdx-js/react": "1.6.22",
+    "@sapphire/docusaurus-plugin-npm2yarn2pnpm": "^1.1.0",
     "classnames": "^2.3.1",
     "mdx-mermaid": "^1.2.2",
     "mermaid": "^9.0.1",

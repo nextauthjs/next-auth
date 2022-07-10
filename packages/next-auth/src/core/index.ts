@@ -9,12 +9,13 @@ import { SessionStore } from "./lib/cookie"
 import type { NextAuthAction, NextAuthOptions } from "./types"
 import type { Cookie } from "./lib/cookie"
 import type { ErrorType } from "./pages/error"
+import { parse as parseCookie } from "cookie"
 
 export interface RequestInternal {
   /** @default "http://localhost:3000" */
   host?: string
   method?: string
-  cookies?: Record<string, string>
+  cookies?: Partial<Record<string, string>>
   headers?: Record<string, any>
   query?: Record<string, any>
   body?: Record<string, any>
@@ -68,7 +69,7 @@ async function toInternalRequest(
       method: req.method,
       headers,
       body: await getBody(req),
-      cookies: {},
+      cookies: parseCookie(req.headers.get("cookie") ?? ""),
       providerId: nextauth[1],
       error: url.searchParams.get("error") ?? nextauth[1],
       host: detectHost(headers["x-forwarded-host"] ?? headers.host),

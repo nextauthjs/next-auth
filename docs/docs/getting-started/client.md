@@ -165,6 +165,12 @@ See repository [`README`](https://github.com/nextauthjs/react-query) for more de
 
 NextAuth.js provides a `getSession()` helper which should be called **client side only** to return the current active session.
 
+On the server side, **this is still available to use**, however, we recommend using `unstable_getServerSession` going forward. The idea behind this is to avoid an additional unnecessary `fetch` call on the server side. For more information, please check out [this issue](https://github.com/nextauthjs/next-auth/issues/1535).
+
+:::note
+The `unstable_getServerSession` only has the prefix `unstable_` at the moment, because the API may change in the future. There are no known bugs at the moment and it is safe to use. If you discover any issues, please do report them as a [GitHub Issue](https://github.com/nextauthjs/next-auth/issues) and we will patch them as soon as possible.
+:::
+
 This helper is helpful in case you want to read the session outside of the context of React.
 
 When called, `getSession()` will send a request to `/api/auth/session` and returns a promise with a [session object](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/types.ts#L407-L425), or `null` if no session exists.
@@ -421,13 +427,14 @@ This only works on pages where you provide the correct `pageProps`, however. Thi
 
 ```js title="pages/index.js"
 import { unstable_getServerSession } from "next-auth/next"
+import { authOptions } from './api/auth/[...nextauth]'
 
 ...
 
-export async function getServerSideProps(ctx) {
+export async function getServerSideProps({ req, res }) {
   return {
     props: {
-      session: await unstable_getServerSession(ctx)
+      session: await unstable_getServerSession(req, res, authOptions)
     }
   }
 }
@@ -499,3 +506,29 @@ However, if it was set to `false`, it stops re-fetching the session and the comp
 :::note
 See [**the Next.js documentation**](https://nextjs.org/docs/advanced-features/custom-app) for more information on **\_app.js** in Next.js applications.
 :::
+
+### Custom base path
+When your Next.js application uses a custom base path, set the `NEXTAUTH_URL` environment variable to the route to the API endpoint in full - as in the example below and as explained [here](/configuration/options#nextauth_url).
+
+Also, make sure to pass the `basePath` page prop to the `<SessionProvider>` – as in the example below – so your custom base path is fully configured and used by NextAuth.js.
+
+#### Example
+In this example, the custom base path used is `/custom-route`.
+
+```
+NEXTAUTH_URL=https://example.com/custom-route/api/auth
+```
+
+```jsx title="pages/_app.js"
+import { SessionProvider } from "next-auth/react"
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}) {
+  return (
+    <SessionProvider session={session} basePath="/custom-route/api/auth">
+      <Component {...pageProps} />
+    </SessionProvider>
+  )
+}
+```
