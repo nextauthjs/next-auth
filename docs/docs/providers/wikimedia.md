@@ -19,7 +19,8 @@ Please be aware that Wikimedia accounts do not have to have an associated email 
 
 ## Configuration
 
-https://meta.wikimedia.org/wiki/Special:OAuthConsumerRegistration
+1. Go to and accept the Consumer Registration doc: https://meta.wikimedia.org/wiki/Special:OAuthConsumerRegistration
+2. Request a new OAuth 2.0 consumer to get the `clientId` and `clientSecret`: https://meta.wikimedia.org/wiki/Special:OAuthConsumerRegistration/propose/oauth2
 
 After registration, you can initally test your application only with your Wikimedia account, but you may have to wait several days for the application to be approved for it to be used by everyone.
 
