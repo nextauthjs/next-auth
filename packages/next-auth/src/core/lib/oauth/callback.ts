@@ -20,7 +20,7 @@ export default async function oAuthCallback(params: {
   cookies: RequestInternal["cookies"]
 }): Promise<GetProfileResult & { cookies?: OutgoingResponse["cookies"] }> {
   const { options, query, body, method, cookies } = params
-  const { logger, provider } = options
+  const { logger, provider, allowedAccountTokens } = options
 
   const errorMessage = body?.error ?? query?.error
   if (errorMessage) {
@@ -57,7 +57,13 @@ export default async function oAuthCallback(params: {
         profile = JSON.parse(profile)
       }
 
-      return await getProfile({ profile, tokens, provider, logger })
+      return await getProfile({
+        profile,
+        tokens,
+        provider,
+        allowedAccountTokens,
+        logger,
+      })
     } catch (error) {
       logger.error("OAUTH_V1_GET_ACCESS_TOKEN_ERROR", error as Error)
       throw error
@@ -142,6 +148,7 @@ export default async function oAuthCallback(params: {
       profile,
       provider,
       tokens,
+      allowedAccountTokens,
       logger,
     })
     return { ...profileResult, cookies: resCookies }
@@ -158,6 +165,7 @@ export interface GetProfileParams {
   profile: Profile
   tokens: TokenSet
   provider: OAuthConfig<any>
+  allowedAccountTokens?: string[]
   logger: LoggerInstance
 }
 
@@ -173,6 +181,7 @@ async function getProfile({
   profile: OAuthProfile,
   tokens,
   provider,
+  allowedAccountTokens,
   logger,
 }: GetProfileParams): Promise<GetProfileResult> {
   try {
@@ -180,6 +189,15 @@ async function getProfile({
     // @ts-expect-error
     const profile = await provider.profile(OAuthProfile, tokens)
     profile.email = profile.email?.toLowerCase()
+
+    let accountTokens = { ...tokens }
+    if (allowedAccountTokens) {
+      accountTokens = Object.fromEntries(
+        Object.entries(accountTokens).filter(([key]) =>
+          allowedAccountTokens.includes(key)
+        )
+      )
+    }
     // Return profile, raw profile and auth provider details
     return {
       profile,
@@ -187,7 +205,7 @@ async function getProfile({
         provider: provider.id,
         type: provider.type,
         providerAccountId: profile.id.toString(),
-        ...tokens,
+        ...accountTokens,
       },
       OAuthProfile,
     }

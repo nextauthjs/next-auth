@@ -29,7 +29,6 @@ Using [System Environment Variables](https://vercel.com/docs/concepts/projects/e
 
 Used to encrypt the NextAuth.js JWT, and to hash [email verification tokens](/adapters/models#verification-token). This is the default value for the `secret` option in [NextAuth](/configuration/options#secret) and [Middleware](/configuration/nextjs#secret).
 
-
 ### NEXTAUTH_URL_INTERNAL
 
 If provided, server-side calls will use this instead of `NEXTAUTH_URL`. Useful in environments when the server doesn't have access to the canonical URL of your site. Defaults to `NEXTAUTH_URL`.
@@ -305,6 +304,34 @@ events: {
 #### Description
 
 By default NextAuth.js does not include an adapter any longer. If you would like to persist user / account data, please install one of the many available adapters. More information can be found in the [adapter documentation](/adapters/overview).
+
+---
+
+### allowedAccountTokens
+
+- **Default value**: All tokens are allowed
+- **Required**: _No_
+
+#### Description
+
+By default NextAuth.js stores all information about an OAuth account gathered by the provider on the [Account Model](/adapters/models#account).
+These tokens can include fields that are not defined on the database schema. With this option the tokens can be filtered before being stored on the Account.
+
+_For example:_
+
+```js
+allowedAccountTokens: [
+  "refresh_token",
+  "access_token",
+  "expires_at",
+  "token_type",
+  "scope",
+  "id_token",
+  "session_state",
+],
+```
+
+ensures only the fields that are supported by the [default Prisma schema](/adapters/prisma) are stored.
 
 ---
 

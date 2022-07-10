@@ -72,7 +72,7 @@ User creation in the database is automatic, and happens when the user is logging
 The Account model is for information about OAuth accounts associated with a User. It will usually contain `access_token`, `id_token` and other OAuth specific data. [`TokenSet`](https://github.com/panva/node-openid-client/blob/main/docs/README.md#new-tokensetinput) from `openid-client` might give you an idea of all the fields.
 
 :::note
-In case of an OAuth 1.0 provider (like Twitter), you will have to look for `oauth_token` and `oauth_token_secret` string fields. GitHub also has an extra `refresh_token_expires_in` integer field. You have to make sure that your database schema includes these fields.
+In case of an OAuth 1.0 provider (like Twitter), you will have to look for `oauth_token` and `oauth_token_secret` string fields. GitHub also has an extra `refresh_token_expires_in` integer field. You have to make sure that your database schema includes these fields or configure the [`allowedAccountTokens`](/configuration/options#allowedaccounttokens) option.
 :::
 
 A single User can have multiple Accounts, but each Account can only have one User.

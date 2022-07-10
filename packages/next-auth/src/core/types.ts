@@ -121,6 +121,15 @@ export interface NextAuthOptions {
    */
   adapter?: Adapter
   /**
+   * Filter the tokens from the provider before storing it in the Account.
+   *
+   * * **Default value**: All tokens are allowed
+   * * **Required**: *No*
+   *
+   * [Documentation](https://next-auth.js.org/configuration/options#allowedaccounttokens) |
+   */
+  allowedAccountTokens?: string[]
+  /**
    * Set debug to true to enable debug messages for authentication and database operations.
    * * **Default value**: `false`
    * * **Required**: *No*
@@ -536,6 +545,7 @@ export interface InternalOptions<T extends ProviderType = any> {
   jwt: JWTOptions
   events: Partial<EventCallbacks>
   adapter?: Adapter
+  allowedAccountTokens?: string[]
   callbacks: CallbacksOptions
   cookies: CookiesOptions
   callbackUrl: string
