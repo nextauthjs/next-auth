@@ -35,13 +35,13 @@ import BoxyHQSAMLProvider from "next-auth/providers/boxyhq-saml"
 import WikimediaProvider from "next-auth/providers/wikimedia"
 
 // TypeORM
-import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
-const adapter = TypeORMLegacyAdapter({
-  type: "sqlite",
-  name: "next-auth-test-memory",
-  database: "./typeorm/dev.db",
-  synchronize: true,
-})
+// import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
+// const adapter = TypeORMLegacyAdapter({
+//   type: "sqlite",
+//   name: "next-auth-test-memory",
+//   database: "./typeorm/dev.db",
+//   synchronize: true,
+// })
 
 // // Prisma
 // import { PrismaAdapter } from "@next-auth/prisma-adapter"
@@ -65,7 +65,7 @@ const adapter = TypeORMLegacyAdapter({
 // }
 
 export const authOptions: NextAuthOptions = {
-  adapter,
+  // adapter,
   providers: [
     // E-mail
     // Start fake e-mail server with `npm run start:email`
