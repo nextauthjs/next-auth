@@ -55,7 +55,7 @@ cp .env.local.example .env.local
 4. Start the developer application/server:
 
 ```sh
-pnpm dev:app
+pnpm dev
 ```
 Your developer application will be available on `http://localhost:3000`
 
@@ -65,7 +65,7 @@ If you need an example project to link to, you can use [next-auth-example](https
 
 #### Hot reloading
 
-When running `pnpm dev:app`, you start a Next.js developer server on `http://localhost:3000`, which includes hot reloading out of the box. Make changes on any of the files in `src` and see the changes immediately.
+When running `pnpm dev`, you start a Next.js developer server on `http://localhost:3000`, which includes hot reloading out of the box. Make changes on any of the files in `src` and see the changes immediately.
 
 > NOTE: When working on CSS, you will have to manually refresh the page after changes. The reason for this is our pages using CSS are server-side rendered (using API routes). (Improving this through a PR is very welcome!)
 
