@@ -1,0 +1,45 @@
+{
+  "name": "@next-auth/postgres-adapter",
+  "description": "Postgres adapter for next-auth.",
+  "homepage": "https://next-auth.js.org",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "Jake Coppinger",
+  "main": "dist/index.js",
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "oauth",
+    "postgres"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "init:default": "bash create-database-tables.sh",
+    "test": "pnpm init:default && jest",
+    "build": "tsc"
+  },
+  "files": [
+    "README.md",
+    "dist"
+  ],
+  "peerDependencies": {
+    "next-auth": "workspace:*"
+  },
+  "devDependencies": {
+    "@next-auth/adapter-test": "workspace:^0.0.0",
+    "@next-auth/tsconfig": "workspace:^0.0.0",
+    "@types/pg": "^8.6.5",
+    "jest": "^27.4.3",
+    "next-auth": "workspace:*",
+    "pg": "^8.7.1"
+  },
+  "jest": {
+    "preset": "@next-auth/adapter-test/jest"
+  }
+}
