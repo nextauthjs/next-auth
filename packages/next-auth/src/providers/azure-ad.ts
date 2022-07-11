@@ -2,7 +2,7 @@ import type { OAuthConfig, OAuthUserConfig } from "."
 
 export interface AzureADProfile extends Record<string, any> {
   sub: string
-  nicname: string
+  nickname: string
   email: string
   picture: string
 }
