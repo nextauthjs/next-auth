@@ -71,7 +71,7 @@ export default async function session(
       const newToken = await jwt.encode({
         ...jwt,
         token,
-        maxAge: options.session.maxAge,
+        maxAge: options.jwt.maxAge ?? options.session.maxAge,
       })
 
       // Set cookie, to also update expiry date on cookie
