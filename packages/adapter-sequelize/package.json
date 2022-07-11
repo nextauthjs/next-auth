@@ -29,7 +29,7 @@
     "dist"
   ],
   "peerDependencies": {
-    "next-auth": "workspace:*",
+    "next-auth": "^4",
     "sequelize": "^6.6.5"
   },
   "devDependencies": {

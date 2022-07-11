@@ -1,4 +1,8 @@
-import type { Commit, GroupedCommits, PackageToRelease } from "./types"
+import type {
+  Commit,
+  GroupedCommits as GrouppedCommits,
+  PackageToRelease,
+} from "./types"
 
 import { debug, pkgJson, execSync } from "./utils"
 import semver from "semver"
@@ -132,7 +136,7 @@ export async function analyze(options: {
       }
     }
     return acc
-  }, {} as Record<string, GroupedCommits>)
+  }, {} as Record<string, GrouppedCommits>)
 
   if (packagesNeedRelease.length) {
     console.log(

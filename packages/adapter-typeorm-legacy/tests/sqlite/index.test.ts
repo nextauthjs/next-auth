@@ -3,9 +3,9 @@ import { TypeORMLegacyAdapter } from "../../src"
 import { db } from "../helpers"
 import { SnakeNamingStrategy } from "typeorm-naming-strategies"
 
-import type { ConnectionOptions } from "typeorm"
+import type { DataSourceOptions } from "typeorm"
 
-const sqliteConfig: ConnectionOptions = {
+const sqliteConfig: DataSourceOptions = {
   type: "sqlite" as const,
   name: "next-auth-test-memory",
   database: "./tests/sqlite/dev.db",

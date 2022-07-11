@@ -44,6 +44,7 @@ packages/next-auth/middleware.js
 # Development app
 apps/dev/src/css
 apps/dev/prisma/migrations
+apps/dev/typeorm
 
 # VS
 /.vs/slnx.sqlite-journal
