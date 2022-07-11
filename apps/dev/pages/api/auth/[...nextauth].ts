@@ -32,6 +32,7 @@ import PatreonProvider from "next-auth/providers/patreon"
 import TraktProvider from "next-auth/providers/trakt"
 import WorkOSProvider from "next-auth/providers/workos"
 import BoxyHQSAMLProvider from "next-auth/providers/boxyhq-saml"
+import WikimediaProvider from "next-auth/providers/wikimedia"
 
 // TypeORM
 import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
@@ -228,6 +229,10 @@ export const authOptions: NextAuthOptions = {
       issuer: process.env.BOXYHQSAML_ISSUER ?? "https://example.com",
       clientId: process.env.BOXYHQSAML_ID,
       clientSecret: process.env.BOXYHQSAML_SECRET,
+    }),
+    WikimediaProvider({
+      clientId: process.env.WIKIMEDIA_ID,
+      clientSecret: process.env.WIKIMEDIA_SECRET,
     }),
   ],
   debug: true,
