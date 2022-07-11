@@ -14,7 +14,6 @@ const DEFAULT_MAX_AGE = 30 * 24 * 60 * 60 // 30 days
 const now = () => (Date.now() / 1000) | 0
 
 /** Issues a JWT. By default, the JWT is encrypted using "A256GCM". */
-
 export async function encode(params: JWTEncodeParams) {
   const { token = {}, secret, maxAge = DEFAULT_MAX_AGE } = params
   const encryptionSecret = await getDerivedEncryptionKey(secret)
