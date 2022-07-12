@@ -1,9 +1,9 @@
 {
   "name": "@next-auth/mikro-orm-adapter",
-  "version": "1.0.1",
+  "version": "2.0.1",
   "description": "MikroORM adapter for next-auth.",
   "homepage": "https://next-auth.js.org",
-  "repository": "https://github.com/nextauthjs/adapters",
+  "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
@@ -32,14 +32,22 @@
     "dist"
   ],
   "peerDependencies": {
-    "@mikro-orm/core": ">5 || 5.0.0-dev.527 - 5.0.0-dev.x",
-    "next-auth": "^4.0.1"
+    "@mikro-orm/core": "^5.0.2",
+    "next-auth": "^4"
   },
   "devDependencies": {
-    "@mikro-orm/core": "^5.0.0-dev.527",
-    "@mikro-orm/sqlite": "^5.0.0-dev.527"
+    "@mikro-orm/core": "^5.0.2",
+    "@mikro-orm/sqlite": "^5.0.2",
+    "@next-auth/adapter-test": "workspace:^0.0.0",
+    "@next-auth/tsconfig": "workspace:^0.0.0",
+    "@types/uuid": "^8.3.3",
+    "jest": "^27.4.3",
+    "next-auth": "workspace:*"
   },
   "jest": {
-    "preset": "adapter-test/jest"
+    "preset": "@next-auth/adapter-test/jest"
+  },
+  "dependencies": {
+    "uuid": "^8.3.2"
   }
 }

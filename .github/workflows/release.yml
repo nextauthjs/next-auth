@@ -16,21 +16,31 @@ jobs:
     steps:
       - name: Init
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.1
+        with:
+          version: 6.32.8
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: 16
-      - name: Dependencies
-        uses: bahmutov/npm-install@v1
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
       - name: Build
-        run: npm run build
+        run: pnpm build
       - name: Run tests
-        run: npm run test -- -- --coverage --verbose
-      - name: Coverage
-        uses: codecov/codecov-action@v1
-        with:
-          directory: ./coverage
-          fail_ci_if_error: false
+        run: pnpm test
+        env:
+          UPSTASH_REDIS_URL: ${{ secrets.UPSTASH_REDIS_URL }}
+          UPSTASH_REDIS_KEY: ${{ secrets.UPSTASH_REDIS_KEY }}
+      # - name: Coverage
+      #   uses: codecov/codecov-action@v1
+      #   with:
+      #     directory: ./coverage
+      #     fail_ci_if_error: false
   release-branch:
     name: Publish branch
     runs-on: ubuntu-latest
@@ -40,19 +50,29 @@ jobs:
     steps:
       - name: Init
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.1
+        with:
+          version: 6.32.8
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: 16
-      - name: Dependencies
-        uses: bahmutov/npm-install@v1
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
       - name: Publish to npm and GitHub
         run: |
-          cd packages/next-auth
-          npx semantic-release@17
+          git config --global user.email "balazsorban44@users.noreply.github.com"
+          git config --global user.name "Balázs Orbán"
+          pnpm release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          NPM_TOKEN_PKG: ${{ secrets.NPM_TOKEN_PKG }}
+          NPM_TOKEN_ORG: ${{ secrets.NPM_TOKEN_ORG }}
   release-pr:
     name: Publish PR
     runs-on: ubuntu-latest
@@ -62,12 +82,17 @@ jobs:
     steps:
       - name: Init
         uses: actions/checkout@v2
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.1
+        with:
+          version: 6.32.8
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: 16
-      - name: Dependencies
-        uses: bahmutov/npm-install@v1
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
       - name: Determine version
         uses: ./.github/version-pr
         id: determine-version
@@ -77,9 +102,9 @@ jobs:
         run: |
           cd packages/next-auth
           echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
-          npm publish --access public --tag experimental
+          pnpm publish --no-git-checks --access public --tag experimental
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN_PKG }}
       - name: Comment version on PR
         uses: NejcZdovc/comment-pr@v1
         with:

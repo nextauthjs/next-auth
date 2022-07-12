@@ -1,11 +1,11 @@
 import type { NextMiddleware, NextFetchEvent } from "next/server"
-import type { Awaitable, NextAuthOptions } from ".."
-import type { JWT } from "../jwt"
+import type { Awaitable, CookieOption, NextAuthOptions } from ".."
+import type { JWT, JWTOptions } from "../jwt"
 
 import { NextResponse, NextRequest } from "next/server"
 
 import { getToken } from "../jwt"
-import parseUrl from "../lib/parse-url"
+import parseUrl from "../utils/parse-url"
 
 type AuthorizedCallback = (params: {
   token: JWT | null
@@ -21,6 +21,36 @@ export interface NextAuthMiddlewareOptions {
    * [Documentation](https://next-auth.js.org/configuration/pages)
    */
   pages?: NextAuthOptions["pages"]
+
+  /**
+   * You can override the default cookie names and options for any of the cookies
+   * by this middleware. Similar to `cookies` in `NextAuth`.
+   *
+   * Useful if the token is stored in not a default cookie.
+   *
+   * ---
+   * [Documentation](https://next-auth.js.org/configuration/options#cookies)
+   *
+   * - ⚠ **This is an advanced option.** Advanced options are passed the same way as basic options,
+   * but **may have complex implications** or side effects.
+   * You should **try to avoid using advanced options** unless you are very comfortable using them.
+   *
+   */
+  cookies?: Partial<
+    Record<
+      keyof Pick<keyof NextAuthOptions["cookies"], "sessionToken">,
+      Omit<CookieOption, "options">
+    >
+  >
+
+  /**
+   * If a custom jwt `decode` method is set in `[...nextauth].ts`, the same method should be set here also.
+   *
+   * ---
+   * [Documentation](https://next-auth.js.org/configuration/nextjs#custom-jwt-decode-method)
+   */
+  jwt?: Partial<Pick<JWTOptions, "decode">>
+
   callbacks?: {
     /**
      * Callback that receives the user's JWT payload
@@ -36,7 +66,7 @@ export interface NextAuthMiddlewareOptions {
      * @example
      *
      * ```js
-     * // `pages/admin/_middleware.js`
+     * // `middleware.js`
      * import { withAuth } from "next-auth/middleware"
      *
      * export default withAuth({
@@ -44,6 +74,9 @@ export interface NextAuthMiddlewareOptions {
      *     authorized: ({ token }) => token?.user.isAdmin
      *   }
      * })
+     *
+     * export const config = { matcher: ["/admin"] }
+     *
      * ```
      *
      * ---
@@ -51,6 +84,12 @@ export interface NextAuthMiddlewareOptions {
      */
     authorized?: AuthorizedCallback
   }
+
+  /**
+   * The same `secret` used in the `NextAuth` configuration.
+   * Defaults to the `NEXTAUTH_SECRET` environment variable.
+   */
+  secret?: string
 }
 
 async function handleMiddleware(
@@ -69,7 +108,8 @@ async function handleMiddleware(
     return
   }
 
-  if (!process.env.NEXTAUTH_SECRET) {
+  const secret = options?.secret ?? process.env.NEXTAUTH_SECRET
+  if (!secret) {
     console.error(
       `[next-auth][error][NO_SECRET]`,
       `\nhttps://next-auth.js.org/errors#no_secret`
@@ -81,7 +121,12 @@ async function handleMiddleware(
     return NextResponse.redirect(errorUrl)
   }
 
-  const token = await getToken({ req: req as any })
+  const token = await getToken({
+    req,
+    decode: options?.jwt?.decode,
+    cookieName: options?.cookies?.sessionToken?.name,
+    secret,
+  })
 
   const isAuthorized =
     (await options?.callbacks?.authorized?.({ req, token })) ?? !!token
@@ -91,7 +136,10 @@ async function handleMiddleware(
 
   // the user is not logged in, redirect to the sign-in page
   const signInUrl = new URL(signInPage, req.nextUrl.origin)
-  signInUrl.searchParams.append("callbackUrl", req.url)
+  signInUrl.searchParams.append(
+    "callbackUrl",
+    `${req.nextUrl.pathname}${req.nextUrl.search}`
+  )
   return NextResponse.redirect(signInUrl)
 }
 
@@ -112,7 +160,7 @@ export type WithAuthArgs =
  * @example
  *
  * ```js
- * // `pages/_middleware.js`
+ * // `middleware.js`
  * export { default } from "next-auth/middleware"
  * ```
  *

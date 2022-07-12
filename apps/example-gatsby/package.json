@@ -1,0 +1,22 @@
+{
+  "name": "next-auth-gatsby",
+  "private": true,
+  "scripts": {
+    "build": "gatsby build",
+    "dev": "gatsby develop --port 3000",
+    "dev:local": "vercel dev",
+    "start": "npm run develop",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "gatsby": "next",
+    "next-auth": "latest",
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "devDependencies": {
+    "vercel": "^23.1.2"
+  }
+}

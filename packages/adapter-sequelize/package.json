@@ -1,11 +1,11 @@
 {
   "name": "@next-auth/sequelize-adapter",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "Sequelize adapter for next-auth.",
   "homepage": "https://next-auth.js.org",
-  "repository": "https://github.com/nextauthjs/adapters",
+  "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
-    "url": "https://github.com/nextauthjs/adapters/issues"
+    "url": "https://github.com/nextauthjs/next-auth/issues"
   },
   "author": "github.com/luke-j",
   "main": "dist/index.js",
@@ -29,13 +29,17 @@
     "dist"
   ],
   "peerDependencies": {
-    "next-auth": "^4.0.1",
+    "next-auth": "^4",
     "sequelize": "^6.6.5"
   },
   "devDependencies": {
+    "@next-auth/adapter-test": "workspace:^0.0.0",
+    "@next-auth/tsconfig": "workspace:^0.0.0",
+    "jest": "^27.4.3",
+    "next-auth": "workspace:*",
     "sequelize": "^6.6.5"
   },
   "jest": {
-    "preset": "adapter-test/jest"
+    "preset": "@next-auth/adapter-test/jest"
   }
 }

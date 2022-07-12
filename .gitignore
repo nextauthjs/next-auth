@@ -1,5 +1,6 @@
 # Misc
 .DS_Store
+.npmrc
 
 .env
 .env.local
@@ -11,6 +12,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 firebase-debug.log
+.pnpm-debug.log
 
 
 # Dependencies
@@ -28,7 +30,7 @@ packages/next-auth/providers
 packages/next-auth/src/providers/oauth-types.ts
 packages/next-auth/client
 packages/next-auth/css
-packages/next-auth/lib
+packages/next-auth/utils
 packages/next-auth/core
 packages/next-auth/jwt
 packages/next-auth/react
@@ -39,14 +41,10 @@ packages/next-auth/next
 packages/next-auth/middleware.d.ts
 packages/next-auth/middleware.js
 
-# Development dev-app
-packages/dev-app/src/css
-packages/dev-app/css
-packages/dev-app/package-lock.json
-packages/dev-app/yarn.lock
-packages/dev-app/prisma/migrations
-packages/dev-app/dist
-packages/dev-app/next-auth
+# Development app
+apps/dev/src/css
+apps/dev/prisma/migrations
+apps/dev/typeorm
 
 # VS
 /.vs/slnx.sqlite-journal
@@ -62,9 +60,9 @@ packages/dev-app/next-auth
 /_work
 
 # DB
-prisma/migrations
 dev.db*
 packages/adapter-prisma/prisma/dev.db
+packages/adapter-prisma/prisma/migrations
 db.sqlite
 
 # Tests
@@ -77,4 +75,5 @@ test.schema.gql
 .turbo
 
 # docusaurus
-packages/docs/.docusaurus
+docs/.docusaurus
+docs/providers.json

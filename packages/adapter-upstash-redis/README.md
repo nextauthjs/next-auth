@@ -6,7 +6,7 @@
    Open Source. Full Stack. Own Your Data.
    </p>
    <p align="center" style="align: center;">
-      <img src="https://github.com/nextauthjs/adapters/actions/workflows/release.yml/badge.svg" alt="CI Test" />
+      <img src="https://github.com/nextauthjs/next-auth/actions/workflows/release.yml/badge.svg?branch=main" alt="CI Test" />
       <img src="https://img.shields.io/bundlephobia/minzip/@next-auth/upstash-adapter" alt="Bundle Size"/>
       <img src="https://img.shields.io/npm/v/@next-auth/upstash-adapter" alt="@next-auth/upstash-adapter Version" />
    </p>
@@ -29,9 +29,12 @@ npm install next-auth @next-auth/upstash-redis-adapter @upstash/redis
 ```js
 import NextAuth from "next-auth"
 import { UpstashRedisAdapter } from "@next-auth/upstash-adapter"
-import upstashRedisClient from "@upstash/redis"
+import { Redis } from "@upstash/redis"
 
-const redis = upstashRedisClient("UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN")
+const redis = new Redis({
+  url:"UPSTASH_REDIS_REST_URL", 
+  token:"UPSTASH_REDIS_REST_TOKEN",
+})
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
@@ -77,7 +80,7 @@ export default NextAuth({
 
 ## Contributing
 
-We're open to all community contributions! If you'd like to contribute in any way, please read our [Contributing Guide](https://github.com/nextauthjs/adapters/blob/main/CONTRIBUTING.md).
+We're open to all community contributions! If you'd like to contribute in any way, please read our [Contributing Guide](https://github.com/nextauthjs/next-auth/blob/main/CONTRIBUTING.md).
 
 ## License
 

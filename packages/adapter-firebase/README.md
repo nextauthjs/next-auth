@@ -7,7 +7,7 @@
    Open Source. Full Stack. Own Your Data.
    </p>
    <p align="center" style="align: center;">
-      <img src="https://github.com/nextauthjs/adapters/actions/workflows/release.yml/badge.svg" alt="Build Test" />
+      <img src="https://github.com/nextauthjs/next-auth/actions/workflows/release.yml/badge.svg?branch=main" alt="Build Test" />
       <img src="https://img.shields.io/bundlephobia/minzip/@next-auth/firebase-adapter/latest" alt="Bundle Size"/>
       <img src="https://img.shields.io/npm/v/@next-auth/firebase-adapter" alt="@next-auth/firebase-adapter Version" />
    </p>
@@ -32,14 +32,13 @@ npm install next-auth @next-auth/firebase-adapter
 ```js
 import NextAuth from "next-auth"
 import Providers from "next-auth/providers"
-import { FirebaseAdapter } from "@next-auth/firebase-adapter"
+import { FirestoreAdapter } from "@next-auth/firebase-adapter"
 
-import firebase from "firebase/app"
-import "firebase/firestore"
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore"
 
-const firestore = (
-  firebase.apps[0] ?? firebase.initializeApp(/* your config */)
-).firestore()
+const app = initializeApp({ projectId: "next-auth-test" });
+const firestore = getFirestore(app);
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
@@ -51,7 +50,7 @@ export default NextAuth({
       clientSecret: process.env.GOOGLE_SECRET,
     }),
   ],
-  adapter: FirebaseAdapter(firestore),
+  adapter: FirestoreAdapter(firestore),
   ...
 })
 ```
@@ -83,7 +82,7 @@ See [firebase.google.com/docs/web/setup](https://firebase.google.com/docs/web/se
 
 ## Contributing
 
-We're open to all community contributions! If you'd like to contribute in any way, please read our [Contributing Guide](https://github.com/nextauthjs/adapters/blob/main/CONTRIBUTING.md).
+We're open to all community contributions! If you'd like to contribute in any way, please read our [Contributing Guide](https://github.com/nextauthjs/next-auth/blob/main/CONTRIBUTING.md).
 
 ## License
 

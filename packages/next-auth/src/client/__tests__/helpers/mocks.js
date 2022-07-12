@@ -65,28 +65,26 @@ export const mockSignOutResponse = {
 }
 
 export const server = setupServer(
-  rest.post("http://localhost/api/auth/signout", (req, res, ctx) =>
+  rest.post("*/api/auth/signout", (req, res, ctx) =>
     res(ctx.status(200), ctx.json(mockSignOutResponse))
   ),
-  rest.get("http://localhost/api/auth/session", (req, res, ctx) =>
+  rest.get("*/api/auth/session", (req, res, ctx) =>
     res(ctx.status(200), ctx.json(mockSession))
   ),
-  rest.get("http://localhost/api/auth/csrf", (req, res, ctx) =>
+  rest.get("*/api/auth/csrf", (req, res, ctx) =>
     res(ctx.status(200), ctx.json(mockCSRFToken))
   ),
-  rest.get("http://localhost/api/auth/providers", (req, res, ctx) =>
+  rest.get("*/api/auth/providers", (req, res, ctx) =>
     res(ctx.status(200), ctx.json(mockProviders))
   ),
-  rest.post("http://localhost/api/auth/signin/github", (req, res, ctx) =>
+  rest.post("*/api/auth/signin/github", (req, res, ctx) =>
     res(ctx.status(200), ctx.json(mockGithubResponse))
   ),
-  rest.post("http://localhost/api/auth/callback/credentials", (req, res, ctx) =>
+  rest.post("*/api/auth/callback/credentials", (req, res, ctx) =>
     res(ctx.status(200), ctx.json(mockCredentialsResponse))
   ),
-  rest.post("http://localhost/api/auth/signin/email", (req, res, ctx) =>
+  rest.post("*/api/auth/signin/email", (req, res, ctx) =>
     res(ctx.status(200), ctx.json(mockEmailResponse))
   ),
-  rest.post("http://localhost/api/auth/_log", (req, res, ctx) =>
-    res(ctx.status(200))
-  )
+  rest.post("*/api/auth/_log", (req, res, ctx) => res(ctx.status(200)))
 )

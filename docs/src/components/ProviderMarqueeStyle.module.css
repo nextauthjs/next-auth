@@ -1,0 +1,39 @@
+.circle {
+  position: absolute;
+  object-position: center center;
+  will-change: transform, opacity;
+  top: -50%;
+  left: -50%;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.logo {
+  display: block;
+  width: 65%;
+  height: 65%;
+  filter: grayscale(100%);
+  opacity: 0.1;
+}
+
+.fullWidth {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
+.height {
+  position: relative;
+  width: 100%;
+  height: 500px;
+}
+
+.company {
+  position: relative;
+}

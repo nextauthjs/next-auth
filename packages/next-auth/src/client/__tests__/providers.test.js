@@ -3,10 +3,10 @@ import userEvent from "@testing-library/user-event"
 import { render, screen, waitFor } from "@testing-library/react"
 import { server, mockProviders } from "./helpers/mocks"
 import { getProviders } from "../../react"
-import logger from "../../lib/logger"
+import logger from "../../utils/logger"
 import { rest } from "msw"
 
-jest.mock("../../lib/logger", () => ({
+jest.mock("../../utils/logger", () => ({
   __esModule: true,
   default: {
     warn: jest.fn(),
@@ -45,7 +45,7 @@ test("when called it'll return the currently configured providers for sign in", 
 
 test("when failing to fetch the providers, it'll log the error", async () => {
   server.use(
-    rest.get("/api/auth/providers", (req, res, ctx) =>
+    rest.get("*/api/auth/providers", (req, res, ctx) =>
       res(ctx.status(500), ctx.text("some error happened"))
     )
   )

@@ -2,28 +2,27 @@
   "name": "root",
   "version": "0.0.0",
   "private": true,
-  "workspaces": {
-    "packages": ["packages/*"]
-  },
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "scripts": {
-    "build": "turbo run build",
-    "lint": "turbo run lint",
+    "build:app": "turbo run build --filter=next-auth-app --include-dependencies",
+    "build": "turbo run build --filter=next-auth --filter=@next-auth/* --no-deps",
+    "lint": "turbo run lint --filter=!next-auth-docs",
     "lint:fix": "turbo run lint -- --fix",
-    "test:serial:adapters2": "turbo run test --concurrency=1 --scope=@next-auth/prisma-adapter --scope=@next-auth/typeorm-legacy-adapter",
-    "test:serial:adapters": "turbo run test --concurrency=1 --scope=@next-auth/*adapter*",
-    "test:serial": "turbo run test --concurrency=1 --ignore=packages/adapter-pouch/*",
-    "test": "turbo run test --ignore=packages/adapter-pouch/*",
+    "test": "turbo run test --concurrency=1 --filter=!@next-auth/pouchdb-adapter --filter=!next-auth-* --filter=[HEAD^1]",
     "setup": "turbo run setup",
-    "dev": "turbo run dev --parallel --no-deps --no-cache",
-    "version:pr": "node ./config/version-pr"
+    "dev": "pnpm dev:app",
+    "dev:app": "turbo run dev --parallel --no-deps --no-cache --filter=next-auth-app",
+    "dev:docs": "turbo run dev --parallel --no-deps --no-cache --filter=next-auth-docs",
+    "version:pr": "node ./config/version-pr",
+    "release": "ts-node scripts/release"
   },
   "devDependencies": {
     "@actions/core": "^1.6.0",
-    "@changesets/cli": "^2.20.0",
+    "@commitlint/parse": "16.0.0",
+    "@types/node": "^17.0.25",
+    "@types/semver": "7.3.9",
     "@typescript-eslint/eslint-plugin": "^5.10.2",
     "@typescript-eslint/parser": "^4.33.0",
-    "conventional-changelog-conventionalcommits": "4.6.1",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard-with-typescript": "^21.0.1",
@@ -31,21 +30,30 @@
     "eslint-plugin-jest": "^25.3.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
+    "git-log-parser": "1.2.0",
     "husky": "^7.0.4",
     "prettier": "2.4.1",
     "pretty-quick": "^3.1.2",
-    "turbo": "^1.1.2",
+    "semver": "7.3.5",
+    "stream-to-array": "2.3.0",
+    "ts-node": "10.5.0",
+    "turbo": "^1.2.5",
     "typescript": "^4.5.2"
   },
   "engines": {
-    "node": "^12.19.0 || ^14.15.0 || ^16.13.0"
+    "node": "^12.19.0 || ^14.15.0 || ^16.13.0",
+    "pnpm": ">=6.32.3"
   },
   "prettier": {
-    "semi": false
+    "semi": false,
+    "singleQuote": false
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
-    "extends": ["standard-with-typescript", "prettier"],
+    "extends": [
+      "standard-with-typescript",
+      "prettier"
+    ],
     "ignorePatterns": [
       "node_modules",
       "next-env.d.ts",
@@ -69,17 +77,27 @@
     },
     "overrides": [
       {
-        "files": ["./**/*test.js"],
+        "files": [
+          "./**/*test.js"
+        ],
         "env": {
           "jest/globals": true
         },
-        "extends": ["plugin:jest/recommended"],
-        "plugins": ["jest"]
+        "extends": [
+          "plugin:jest/recommended"
+        ],
+        "plugins": [
+          "jest"
+        ]
       }
     ]
   },
-  "eslintIgnore": ["./*.d.ts", "**/tests", "**/__tests__"],
-  "packageManager": "yarn@1.22.17",
+  "eslintIgnore": [
+    "./*.d.ts",
+    "**/tests",
+    "**/__tests__"
+  ],
+  "packageManager": "pnpm@6.32.8",
   "funding": [
     {
       "type": "github",

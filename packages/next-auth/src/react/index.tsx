@@ -9,8 +9,8 @@
 // We use HTTP POST requests with CSRF Tokens to protect against CSRF attacks.
 
 import * as React from "react"
-import _logger, { proxyLogger } from "../lib/logger"
-import parseUrl from "../lib/parse-url"
+import _logger, { proxyLogger } from "../utils/logger"
+import parseUrl from "../utils/parse-url"
 import { Session } from ".."
 import {
   BroadcastChannel,
@@ -25,7 +25,7 @@ import type {
   ClientSafeProvider,
   LiteralUnion,
   SessionProviderProps,
-  SignInAuthorisationParams,
+  SignInAuthorizationParams,
   SignInOptions,
   SignInResponse,
   SignOutParams,
@@ -175,9 +175,9 @@ export async function getProviders() {
 export async function signIn<
   P extends RedirectableProviderType | undefined = undefined
 >(
-  provider?: LiteralUnion<BuiltInProviderType>,
+  provider?: LiteralUnion<P extends RedirectableProviderType ? P | BuiltInProviderType : BuiltInProviderType>,
   options?: SignInOptions,
-  authorizationParams?: SignInAuthorisationParams
+  authorizationParams?: SignInAuthorizationParams
 ): Promise<
   P extends RedirectableProviderType ? SignInResponse | undefined : undefined
 > {
@@ -271,6 +271,7 @@ export async function signOut<R extends boolean = true>(
   }
   const res = await fetch(`${baseUrl}/signout`, fetchOptions)
   const data = await res.json()
+
   broadcast.post({ event: "session", data: { trigger: "signout" } })
 
   if (options?.redirect ?? true) {
@@ -359,6 +360,12 @@ export function SessionProvider(props: SessionProviderProps) {
     }
 
     __NEXTAUTH._getSession()
+
+    return () => {
+      __NEXTAUTH._lastSync = 0
+      __NEXTAUTH._session = undefined
+      __NEXTAUTH._getSession = () => {}
+    }
   }, [])
 
   React.useEffect(() => {

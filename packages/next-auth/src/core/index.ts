@@ -1,20 +1,21 @@
-import logger, { setLogger } from "../lib/logger"
+import logger, { setLogger } from "../utils/logger"
+import { detectHost } from "../utils/detect-host"
 import * as routes from "./routes"
 import renderPage from "./pages"
 import { init } from "./init"
 import { assertConfig } from "./lib/assert"
 import { SessionStore } from "./lib/cookie"
 
-import type { NextAuthOptions } from "./types"
-import type { NextAuthAction } from "../lib/types"
+import type { NextAuthAction, NextAuthOptions } from "./types"
 import type { Cookie } from "./lib/cookie"
 import type { ErrorType } from "./pages/error"
+import { parse as parseCookie } from "cookie"
 
-export interface IncomingRequest {
+export interface RequestInternal {
   /** @default "http://localhost:3000" */
   host?: string
   method?: string
-  cookies?: Record<string, string>
+  cookies?: Partial<Record<string, string>>
   headers?: Record<string, any>
   query?: Record<string, any>
   body?: Record<string, any>
@@ -39,18 +40,55 @@ export interface OutgoingResponse<
 }
 
 export interface NextAuthHandlerParams {
-  req: IncomingRequest
+  req: Request | RequestInternal
   options: NextAuthOptions
+}
+
+async function getBody(req: Request): Promise<Record<string, any> | undefined> {
+  try {
+    return await req.json()
+  } catch {}
+}
+
+// TODO:
+async function toInternalRequest(
+  req: RequestInternal | Request
+): Promise<RequestInternal> {
+  if (req instanceof Request) {
+    const url = new URL(req.url)
+    // TODO: handle custom paths?
+    const nextauth = url.pathname.split("/").slice(3)
+    const headers = Object.fromEntries(req.headers.entries())
+    const query: Record<string, any> = Object.fromEntries(
+      url.searchParams.entries()
+    )
+    query.nextauth = nextauth
+
+    return {
+      action: nextauth[0] as NextAuthAction,
+      method: req.method,
+      headers,
+      body: await getBody(req),
+      cookies: parseCookie(req.headers.get("cookie") ?? ""),
+      providerId: nextauth[1],
+      error: url.searchParams.get("error") ?? nextauth[1],
+      host: detectHost(headers["x-forwarded-host"] ?? headers.host),
+      query,
+    }
+  }
+  return req
 }
 
 export async function NextAuthHandler<
   Body extends string | Record<string, any> | any[]
 >(params: NextAuthHandlerParams): Promise<OutgoingResponse<Body>> {
-  const { options: userOptions, req } = params
+  const { options: userOptions, req: incomingRequest } = params
+
+  const req = await toInternalRequest(incomingRequest)
 
   setLogger(userOptions.logger, userOptions.debug)
 
-  const assertionResult = assertConfig(params)
+  const assertionResult = assertConfig({ options: userOptions, req })
 
   if (typeof assertionResult === "string") {
     logger.warn(assertionResult)
@@ -107,8 +145,9 @@ export async function NextAuthHandler<
         if (pages.signIn) {
           let signinUrl = `${pages.signIn}${
             pages.signIn.includes("?") ? "&" : "?"
-          }callbackUrl=${options.callbackUrl}`
-          if (error) signinUrl = `${signinUrl}&error=${error}`
+          }callbackUrl=${encodeURIComponent(options.callbackUrl)}`
+          if (error)
+            signinUrl = `${signinUrl}&error=${encodeURIComponent(error)}`
           return { redirect: signinUrl, cookies }
         }
 
@@ -231,6 +270,6 @@ export async function NextAuthHandler<
 
   return {
     status: 400,
-    body: `Error: Action ${action} with HTTP ${method} is not supported by NextAuth.js` as any,
+    body: `Error: This action with HTTP ${method} is not supported by NextAuth.js` as any,
   }
 }
