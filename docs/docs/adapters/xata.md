@@ -45,10 +45,10 @@ To get setup with this adapter, you'll need to create a database on Xata and cre
 
 ```json title="schema.json"
 {
-  "formatVersion": "1.0.0",
+  "formatVersion": "",
   "tables": [
     {
-      "name": "users",
+      "name": "nextauth_users",
       "columns": [
         {
           "name": "email",
@@ -77,13 +77,13 @@ To get setup with this adapter, you'll need to create a database on Xata and cre
       ]
     },
     {
-      "name": "accounts",
+      "name": "nextauth_accounts",
       "columns": [
         {
           "name": "user",
           "type": "link",
           "link": {
-            "table": "users"
+            "table": "nextauth_users"
           }
         },
         {
@@ -129,7 +129,7 @@ To get setup with this adapter, you'll need to create a database on Xata and cre
       ]
     },
     {
-      "name": "verificationTokens",
+      "name": "nextauth_verificationTokens",
       "columns": [
         {
           "name": "identifier",
@@ -146,45 +146,45 @@ To get setup with this adapter, you'll need to create a database on Xata and cre
       ]
     },
     {
-      "name": "users_accounts",
+      "name": "nextauth_users_accounts",
       "columns": [
         {
           "name": "user",
           "type": "link",
           "link": {
-            "table": "users"
+            "table": "nextauth_users"
           }
         },
         {
           "name": "account",
           "type": "link",
           "link": {
-            "table": "accounts"
+            "table": "nextauth_accounts"
           }
         }
       ]
     },
     {
-      "name": "users_sessions",
+      "name": "nextauth_users_sessions",
       "columns": [
         {
           "name": "user",
           "type": "link",
           "link": {
-            "table": "users"
+            "table": "nextauth_users"
           }
         },
         {
           "name": "session",
           "type": "link",
           "link": {
-            "table": "sessions"
+            "table": "nextauth_sessions"
           }
         }
       ]
     },
     {
-      "name": "sessions",
+      "name": "nextauth_sessions",
       "columns": [
         {
           "name": "sessionToken",
@@ -198,7 +198,7 @@ To get setup with this adapter, you'll need to create a database on Xata and cre
           "name": "user",
           "type": "link",
           "link": {
-            "table": "users"
+            "table": "nextauth_users"
           }
         }
       ]

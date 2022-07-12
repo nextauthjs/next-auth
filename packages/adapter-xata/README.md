@@ -25,7 +25,7 @@ You can find the expected schema Xata expects to work with this adapter below. I
   "formatVersion": "",
   "tables": [
     {
-      "name": "users",
+      "name": "nextauth_users",
       "columns": [
         {
           "name": "email",
@@ -54,13 +54,13 @@ You can find the expected schema Xata expects to work with this adapter below. I
       ]
     },
     {
-      "name": "accounts",
+      "name": "nextauth_accounts",
       "columns": [
         {
           "name": "user",
           "type": "link",
           "link": {
-            "table": "users"
+            "table": "nextauth_users"
           }
         },
         {
@@ -106,7 +106,7 @@ You can find the expected schema Xata expects to work with this adapter below. I
       ]
     },
     {
-      "name": "verificationTokens",
+      "name": "nextauth_verificationTokens",
       "columns": [
         {
           "name": "identifier",
@@ -123,45 +123,45 @@ You can find the expected schema Xata expects to work with this adapter below. I
       ]
     },
     {
-      "name": "users_accounts",
+      "name": "nextauth_users_accounts",
       "columns": [
         {
           "name": "user",
           "type": "link",
           "link": {
-            "table": "users"
+            "table": "nextauth_users"
           }
         },
         {
           "name": "account",
           "type": "link",
           "link": {
-            "table": "accounts"
+            "table": "nextauth_accounts"
           }
         }
       ]
     },
     {
-      "name": "users_sessions",
+      "name": "nextauth_users_sessions",
       "columns": [
         {
           "name": "user",
           "type": "link",
           "link": {
-            "table": "users"
+            "table": "nextauth_users"
           }
         },
         {
           "name": "session",
           "type": "link",
           "link": {
-            "table": "sessions"
+            "table": "nextauth_sessions"
           }
         }
       ]
     },
     {
-      "name": "sessions",
+      "name": "nextauth_sessions",
       "columns": [
         {
           "name": "sessionToken",
@@ -175,7 +175,7 @@ You can find the expected schema Xata expects to work with this adapter below. I
           "name": "user",
           "type": "link",
           "link": {
-            "table": "users"
+            "table": "nextauth_users"
           }
         }
       ]
