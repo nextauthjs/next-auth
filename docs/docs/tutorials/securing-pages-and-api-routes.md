@@ -44,7 +44,7 @@ export default function Page() {
 
 With NextAuth.js 4.2.0 and Next.js 12, you can now protect your pages via the middleware pattern more easily. If you would like to protect all pages, you can create a `_middleware.js` file in your root `pages` directory which looks like this.
 
-```js title="/pages/_middleware.js"
+```js title="/middleware.js"
 export { default } from "next-auth/middleware"
 ```
 
