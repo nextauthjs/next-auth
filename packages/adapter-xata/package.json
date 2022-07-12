@@ -20,7 +20,11 @@
   "publishConfig": {
     "access": "public"
   },
-  "scripts": {},
+  "scripts": {
+    "build": "tsc",
+    "preversion": "build",
+    "prepublish": "build"
+  },
   "files": [
     "README.md",
     "dist"
