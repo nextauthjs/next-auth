@@ -65,7 +65,7 @@ If you need an example project to link to, you can use [next-auth-example](https
 
 #### Hot reloading
 
-When running `pnpm dev`, you start a Next.js developer server on `http://localhost:3000`, which includes hot reloading out of the box. Make changes on any of the files in `src` and see the changes immediately.
+When running `pnpm dev`, you start a Next.js developer server on `http://localhost:3000`, which includes hot reloading out-of-the-box. Make changes on any of the files in `src` and see the changes immediately.
 
 > NOTE: When working on CSS, you will have to manually refresh the page after changes. The reason for this is our pages using CSS are server-side rendered (using API routes). (Improving this through a PR is very welcome!)
 
@@ -94,7 +94,7 @@ Automated tests are currently crude and limited in functionality, but improvemen
 
 ## For maintainers
 
-We use [a custom script](https://github.com/nextauthjs/next-auth/tree/main/scripts/index.ts) together with [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0) to automate releases. This makes the maintenance process easier and less error-prone. Please study the "Conventional Commits" site to understand how to write a good commit message.
+We use [a custom script](https://github.com/nextauthjs/next-auth/blob/main/scripts/release/index.ts) together with [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0) to automate releases. This makes the maintenance process easier and less error-prone. Please study the "Conventional Commits" site to understand how to write a good commit message.
 
 When accepting Pull Requests, make sure the following:
 
@@ -103,9 +103,9 @@ When accepting Pull Requests, make sure the following:
 - Rewrite the commit message to conform to the `Conventional Commits` style.
   - Using `fix` releases a patch (x.x.1)
   - Using `feat` releases a minor (x.1.x)
-  - Using `feat` when `BREAKING CHANGE` is present in the commit messgae releases a major (1.x.x)
+  - Using `feat` when `BREAKING CHANGE` is present in the commit message releases a major (1.x.x)
 - Optionally link issues the PR will resolve (You can add "close" in front of the issue numbers to close the issues automatically, when the PR is merged. `semantic-release` will also comment back to connected issues and PRs, notifying the users that a feature is added/bug fixed, etc.)
 
 ### Skipping a release
 
-If a commit contains `[skip release]` in their message will be excluded from the commit analysis and won't participate in the release type determination. This is useful, if the PR being merged should not trigger a new `npm` release.
+If a commit contains `[skip release]` in their message, it will be excluded from the commit analysis and won't participate in the release type determination. This is useful, if the PR being merged should not trigger a new `npm` release.

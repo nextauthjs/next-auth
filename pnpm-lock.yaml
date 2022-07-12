@@ -98,7 +98,7 @@ importers:
       '@docusaurus/preset-classic': ^2.0.0-beta.21
       '@docusaurus/theme-common': 2.0.0-beta.21
       '@mdx-js/react': 1.6.22
-      '@sapphire/docusaurus-plugin-npm2yarn2pnpm': ^1.1.0
+      '@sapphire/docusaurus-plugin-npm2yarn2pnpm': 1.1.3
       classnames: ^2.3.1
       mdx-mermaid: ^1.2.2
       mermaid: ^9.0.1
@@ -114,7 +114,7 @@ importers:
       '@docusaurus/preset-classic': 2.0.0-beta.21_biqbaboplfbrettd7655fr4n2y
       '@docusaurus/theme-common': 2.0.0-beta.21_biqbaboplfbrettd7655fr4n2y
       '@mdx-js/react': 1.6.22_react@18.2.0
-      '@sapphire/docusaurus-plugin-npm2yarn2pnpm': 1.1.0
+      '@sapphire/docusaurus-plugin-npm2yarn2pnpm': 1.1.3
       classnames: 2.3.1
       mdx-mermaid: 1.2.3_mermaid@9.1.2+react@18.2.0
       mermaid: 9.1.2
@@ -632,6 +632,11 @@ packages:
       call-me-maybe: 1.0.1
       js-yaml: 4.1.0
     dev: true
+
+  /@armano/npm-to-yarn/1.1.3:
+    resolution: {integrity: sha512-qe3OXj/GivgkRcFZ2KQFDYfPW+qwOWvNXwIrw4u7g+R8WPmc8LzfV5NiEE8bxrIirD1A0oYerNsdyB9RrK1Ysw==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    dev: false
 
   /@aws-crypto/ie11-detection/2.0.0:
     resolution: {integrity: sha512-pkVXf/dq6PITJ0jzYZ69VhL8VFOFoPZLZqtU/12SGnzYuJOOGNfF41q9GxdI1yqC8R13Rq3jOLKDFpUJFT5eTA==}
@@ -3644,6 +3649,7 @@ packages:
   /@colors/colors/1.5.0:
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
     engines: {node: '>=0.1.90'}
+    requiresBuild: true
 
   /@commitlint/parse/16.0.0:
     resolution: {integrity: sha512-F9EjFlMw4MYgBEqoRrWZZKQBzdiJzPBI0qFDFqwUvfQsMmXEREZ242T4R5bFwLINWaALFLHEIa/FXEPa6QxCag==}
@@ -5911,7 +5917,6 @@ packages:
   /@prisma/engines/3.15.1-1.461d6a05159055555eb7dfb337c9fb271cbd4d7e:
     resolution: {integrity: sha512-NHlojO1DFTsSi3FtEleL9QWXeSF/UjhCW0fgpi7bumnNZ4wj/eQ+BJJ5n2pgoOliTOGv9nX2qXvmHap7rJMNmg==}
     requiresBuild: true
-    dev: true
 
   /@protobufjs/aspromise/1.1.2:
     resolution: {integrity: sha512-j+gKExEuLmKwvz3OgROXtrJ2UG2x8Ch2YZUxahh+s1F2HZ+wAceUNLkvy6zKCPVRkU++ZWQrdxsUeQXmcg4uoQ==}
@@ -5956,11 +5961,11 @@ packages:
     resolution: {integrity: sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==}
     dev: true
 
-  /@sapphire/docusaurus-plugin-npm2yarn2pnpm/1.1.0:
-    resolution: {integrity: sha512-AQGsbaxxJEFGWbLfzoXndT5waPNSQ708qvOz31aKwNilsftV22aBW1NMizxjLCQBooRr4dEWWBLxTGl9y4vKLg==}
+  /@sapphire/docusaurus-plugin-npm2yarn2pnpm/1.1.3:
+    resolution: {integrity: sha512-wbTVwK3xGSD4Zu1gxHH86/XJ0HzI+jp8cB1g8Lh9+pqWN7uv3OnNwoCo/qGUBl6in5OvTVocq/lyq7Mwcrv+Eg==}
     engines: {node: '>=v16.6.0', npm: '>=7.0.0'}
     dependencies:
-      npm-to-yarn: 1.0.1
+      '@armano/npm-to-yarn': 1.1.3
       unist-util-visit: 2.0.3
     dev: false
 
@@ -16884,11 +16889,6 @@ packages:
     dependencies:
       path-key: 3.1.1
 
-  /npm-to-yarn/1.0.1:
-    resolution: {integrity: sha512-bp8T8oNMfLW+N/fE0itFfSu7RReytwhqNd9skbkfHfzGYC+5CCdzS2HnaXz6JiG4AlK2eA0qlT6NJN1SoFvcWQ==}
-    engines: {node: '>=6.0.0'}
-    dev: false
-
   /npmlog/5.0.1:
     resolution: {integrity: sha512-AqZtDUWOMKs1G/8lwylVjrdYgqA4d9nu8hc+0gzRxlDb1I10+FHBGMXs6aiQHFdCUUlqH99MUMuLfzWDNDtfxw==}
     dependencies:
@@ -18320,7 +18320,6 @@ packages:
     requiresBuild: true
     dependencies:
       '@prisma/engines': 3.15.1-1.461d6a05159055555eb7dfb337c9fb271cbd4d7e
-    dev: true
 
   /prismjs/1.28.0:
     resolution: {integrity: sha512-8aaXdYvl1F7iC7Xm1spqSaY/OJBpYW3v+KJ+F17iYxvdc8sfjW194COK5wVhMZX45tGteiBQgdvD/nhxcRwylw==}
