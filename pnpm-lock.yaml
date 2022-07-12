@@ -399,6 +399,29 @@ importers:
       jest: 27.5.1
       next-auth: link:../next-auth
 
+  packages/adapter-xata:
+    specifiers:
+      '@next-auth/adapter-test': workspace:^0.0.0
+      '@next-auth/tsconfig': workspace:^0.0.0
+      '@prisma/client': ^3.10.0
+      '@xata.io/client': ^0.13.0
+      jest: ^27.4.3
+      mongodb: ^4.4.0
+      next-auth: workspace:*
+      prisma: ^3.10.0
+      typescript: ^4.7.4
+    dependencies:
+      '@xata.io/client': 0.13.0_typescript@4.7.4
+    devDependencies:
+      '@next-auth/adapter-test': link:../adapter-test
+      '@next-auth/tsconfig': link:../tsconfig
+      '@prisma/client': 3.15.2_prisma@3.15.2
+      jest: 27.5.1
+      mongodb: 4.7.0
+      next-auth: link:../next-auth
+      prisma: 3.15.2
+      typescript: 4.7.4
+
   packages/next-auth:
     specifiers:
       '@babel/cli': ^7.17.10
@@ -9159,6 +9182,14 @@ packages:
       '@webassemblyjs/ast': 1.11.1
       '@xtuc/long': 4.2.2
     dev: true
+
+  /@xata.io/client/0.13.0_typescript@4.7.4:
+    resolution: {integrity: sha512-/s4yiCSWRR5iXpDT49dMXcpeZjJmptmgFCs1MAW4btxqg5b4PONpf8JgWIfb0p9FT+4LXPICwVlXa33IEtTmRg==}
+    peerDependencies:
+      typescript: '>=4.5'
+    dependencies:
+      typescript: 4.7.4
+    dev: false
 
   /@xmldom/xmldom/0.7.5:
     resolution: {integrity: sha512-V3BIhmY36fXZ1OtVcI9W+FxQqxVLsPKcNjWigIaa81dLC9IolJl5Mt4Cvhmr0flUnjSpTdrbMTSbXqYqV5dT6A==}
@@ -23324,7 +23355,6 @@ packages:
     resolution: {integrity: sha512-C0WQT0gezHuw6AdY1M2jxUO83Rjf0HP7Sk1DtXj6j1EwkQNZrHAg2XPWlq62oqEhYvONq5pkC2Y9oPljWToLmQ==}
     engines: {node: '>=4.2.0'}
     hasBin: true
-    dev: true
 
   /typescript/4.8.4:
     resolution: {integrity: sha512-QCh+85mCy+h0IGff8r5XWzOVSbBO+KfeYrMQh7NJ58QujwcE22u+NUSmUxqF+un70P9GXKxa2HCNiTTMJknyjQ==}
