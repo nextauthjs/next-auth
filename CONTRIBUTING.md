@@ -108,4 +108,4 @@ When accepting Pull Requests, make sure the following:
 
 ### Skipping a release
 
-If a commit contains `[skip release]` in their message it will be excluded from the commit analysis and won't participate in the release type determination. This is useful, if the PR being merged should not trigger a new `npm` release.
+If a commit contains `[skip release]` in their message, it will be excluded from the commit analysis and won't participate in the release type determination. This is useful, if the PR being merged should not trigger a new `npm` release.
