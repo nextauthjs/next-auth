@@ -94,7 +94,7 @@ Automated tests are currently crude and limited in functionality, but improvemen
 
 ## For maintainers
 
-We use [a custom script](https://github.com/nextauthjs/next-auth/tree/main/scripts/index.ts) together with [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0) to automate releases. This makes the maintenance process easier and less error-prone. Please study the "Conventional Commits" site to understand how to write a good commit message.
+We use [a custom script](https://github.com/nextauthjs/next-auth/blob/main/scripts/release/index.ts) together with [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0) to automate releases. This makes the maintenance process easier and less error-prone. Please study the "Conventional Commits" site to understand how to write a good commit message.
 
 When accepting Pull Requests, make sure the following:
 
