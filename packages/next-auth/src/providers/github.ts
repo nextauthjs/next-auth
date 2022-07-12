@@ -98,7 +98,7 @@ export default function Github<P extends GithubProfile>(
     profile(profile) {
       return {
         id: profile.id.toString(),
-        name: profile.name || profile.login,
+        name: profile.name ?? profile.login,
         email: profile.email,
         image: profile.avatar_url,
       }
