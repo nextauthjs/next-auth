@@ -3,7 +3,7 @@
    <a href="https://next-auth.js.org" target="_blank"><img height="64px" src="https://next-auth.js.org/img/logo/logo-sm.png" /></a>&nbsp;&nbsp;&nbsp;&nbsp;<img height="64px" src="logo.svg" />
    <h3 align="center"><b>Xata Adapter</b> - NextAuth.js</h3>
    <p align="center">
-   Open Source. Full Stack. Own Your Data.
+   Think data, not databases.
    </p>
    <p align="center" style="align: center;">
       <img src="https://github.com/nextauthjs/next-auth/actions/workflows/release.yml/badge.svg?branch=main" alt="CI Test" />
