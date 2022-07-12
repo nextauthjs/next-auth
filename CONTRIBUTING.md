@@ -75,7 +75,7 @@ When running `pnpm dev`, you start a Next.js developer server on `http://localho
 
 If you think your custom provider might be useful to others, we encourage you to open a PR and add it to the built-in list so others can discover it much more easily! You only need to add two changes:
 
-1. Add your config: [`src/providers/{provider}.js`](https://github.com/nextauthjs/next-auth/tree/main/src/providers) (Make sure you use a named default export, like `export default function YourProvider`!)
+1. Add your config: [`src/providers/{provider}.js`](https://github.com/nextauthjs/next-auth/tree/main/packages/next-auth/src/providers) (Make sure you use a named default export, like `export default function YourProvider`!)
 2. Add provider documentation: [`www/docs/providers/{provider}.md`](https://github.com/nextauthjs/next-auth/tree/main/www/docs/providers)
 
 That's it! 🎉 Others will be able to discover this provider much more easily now!
