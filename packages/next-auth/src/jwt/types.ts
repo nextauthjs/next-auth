@@ -23,7 +23,7 @@ export interface JWTEncodeParams {
    * The maximum age of the NextAuth.js issued JWT in seconds.
    * @default 30 * 24 * 30 * 60 // 30 days
    */
-  maxAge?: number
+  maxAge: number
 }
 
 export interface JWTDecodeParams {
