@@ -16,7 +16,7 @@
 
 This is the Xata Adapter for [`next-auth`](https://next-auth.js.org). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
 
-You can find the expected schema Xata expects to work with this adapter below. If you'd like to set up a database on Xata to work with next-auth, you can restore this file to your database with `xata schema restore [./path/to/schema.json]`. More in the [docs](https://docs.xata.io/cli/getting-started).
+You can find the expected schema Xata expects to work with this adapter below. If you'd like to set up a database on Xata to work with next-auth, you can create a new database, andd then run `xata init --schema [./path/to/schema.json]`. More in the [docs](https://docs.xata.io/cli/getting-started).
 
 ### Xata Schema
 

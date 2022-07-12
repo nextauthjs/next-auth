@@ -41,7 +41,7 @@ Schema for the Xata Adapter (`@next-auth/prisma-adapter`)
 
 ## Setup
 
-To get setup with this adapter, you'll need to create a database on Xata and create a schema (a collection of tables with specific structures) that next-auth can use. You can do this using the `xata schema restore` command from the Xata CLI. To do this, copy and paste the following schema into a `.json` file somewhere on your file system:
+To get setup with this adapter, you'll need to [create a database](https://docs.xata.io) on Xata and create a schema (a collection of tables with specific structures) that next-auth can use. You can do this using the the Xata CLI. To do this, copy and paste the following schema into a `.json` file somewhere on your file system:
 
 ```json title="schema.json"
 {
@@ -207,7 +207,7 @@ To get setup with this adapter, you'll need to create a database on Xata and cre
 }
 ```
 
-Once you've done that, run `xata schema restore [./path/to/this/file.json]` from the Xata CLI, and your database will be ready to use with next-auth, assuming you've already authenticated with Xata and you're ready to go. If you haven't, please [authenticate first](https://docs.xata.io/cli/getting-started#usage) and follow these steps.
+Once you've done that, run `xata init --schema [./path/to/this/file.json]` from the Xata CLI, and your database will be ready to use with next-auth, assuming you've already authenticated with Xata and you're ready to go. If you haven't, please [authenticate first](https://docs.xata.io/cli/getting-started#usage) and follow these steps.
 
 Once your database is ready, your next-auth routes should _just work_ and send all relevant data to Xata.
 
