@@ -1,4 +1,4 @@
-import { buildClient, BaseClientOptions, XataRecord } from "@xata.io/client";
+import { buildClient, BaseClientOptions, XataRecord, ClientConstructor } from "@xata.io/client";
 
 export interface NextauthUser {
     email?: string | null;
@@ -76,7 +76,7 @@ const tables = [
     "nextauth_sessions",
 ];
 
-const DatabaseClient = buildClient();
+const DatabaseClient = buildClient() as ClientConstructor<any>;
 
 export class XataClient extends DatabaseClient<DatabaseSchema> {
     constructor(options?: BaseClientOptions) {
