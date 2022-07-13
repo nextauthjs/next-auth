@@ -74,6 +74,7 @@ export default function Github<P extends GithubProfile>(
       url: "https://api.github.com/user",
       async request({ client, tokens }) {
         // Get base profile
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const profile = await client.userinfo(tokens.access_token!)
 
         // If user has email hidden, get their primary email from the GitHub API
