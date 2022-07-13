@@ -31,7 +31,7 @@ async function run() {
         JSON.stringify(
           {
             ...p,
-            commits: `${p.commits.features.length} feature(s), ${p.commits.bugfixes.length} bugfixe(s), ${p.commits.other.length} othe(r) and ${p.commits.breaking.length} breaking change(s)`,
+            commits: `${p.commits.features.length} feature(s), ${p.commits.bugfixes.length} bugfixe(s), ${p.commits.other.length} other(s) and ${p.commits.breaking.length} breaking change(s)`,
           },
           null,
           2
