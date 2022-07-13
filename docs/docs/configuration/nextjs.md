@@ -177,13 +177,11 @@ If you do not define the options, NextAuth.js will use the default values for th
 #### wrap middleware
 
 ```ts title="middleware.ts"
-import type { NextRequest } from "next/server"
-import type { JWT } from "next-auth/jwt"
 import { withAuth } from "next-auth/middleware"
 
 export default withAuth(
-  // `withAuth` can augment your Request with the user's token.
-  function middleware(req: NextRequest & { nextauth: { token: JWT | null } }) {
+  // `withAuth` augments your `Request` with the user's token.
+  function middleware(req) {
     console.log(req.nextauth.token)
   },
   {
