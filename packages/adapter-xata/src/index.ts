@@ -1,4 +1,4 @@
-import { Adapter } from "next-auth/src/adapters"
+import type { Adapter } from "next-auth/adapters"
 import type { XataClient } from "./xata";
 
 const XataAdapter = (client: XataClient): Adapter => {
