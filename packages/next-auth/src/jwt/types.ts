@@ -44,7 +44,7 @@ export interface JWTOptions {
    * The maximum age of the NextAuth.js issued JWT in seconds.
    * @default 30 * 24 * 30 * 60 // 30 days
    */
-  maxAge?: number
+  maxAge: number
   /** Override this method to control the NextAuth.js issued JWT encoding. */
   encode: (params: JWTEncodeParams) => Awaitable<string>
   /** Override this method to control the NextAuth.js issued JWT decoding. */
