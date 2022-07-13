@@ -65,14 +65,6 @@ To get setup with this adapter, you'll need to [create a database](https://docs.
         {
           "name": "image",
           "type": "string"
-        },
-        {
-          "name": "username",
-          "type": "string"
-        },
-        {
-          "name": "location",
-          "type": "string"
         }
       ]
     },

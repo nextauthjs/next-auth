@@ -15,8 +15,6 @@ export interface NextauthUser {
   emailVerified?: Date | null
   name?: string | null
   image?: string | null
-  username?: string | null
-  location?: string | null
 }
 
 export type NextauthUserRecord = NextauthUser & XataRecord

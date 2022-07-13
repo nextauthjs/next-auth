@@ -42,14 +42,6 @@ You can find the expected schema Xata expects to work with this adapter below. I
         {
           "name": "image",
           "type": "string"
-        },
-        {
-          "name": "username",
-          "type": "string"
-        },
-        {
-          "name": "location",
-          "type": "string"
         }
       ]
     },
