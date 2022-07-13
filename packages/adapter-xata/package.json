@@ -23,7 +23,8 @@
   "scripts": {
     "build": "tsc",
     "preversion": "build",
-    "prepublish": "build"
+    "prepublish": "build",
+    "test": "echo 'Test skipped'"
   },
   "files": [
     "README.md",
