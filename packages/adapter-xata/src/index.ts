@@ -1,7 +1,7 @@
 import type { Adapter } from "next-auth/adapters"
 import type { XataClient } from "./xata";
 
-const XataAdapter = (client: XataClient): Adapter => {
+export function XataAdapter(client: XataClient): Adapter {
   return {
     async createUser(user) {
       const newUser = await client.db.nextauth_users.create(user);
