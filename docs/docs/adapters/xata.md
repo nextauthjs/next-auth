@@ -37,7 +37,7 @@ export default NextAuth({
 })
 ```
 
-Schema for the Xata Adapter (`@next-auth/prisma-adapter`)
+Schema for the Xata Adapter (`@next-auth/xata-adapter`)
 
 ## Setup
 
