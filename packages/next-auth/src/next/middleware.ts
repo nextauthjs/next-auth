@@ -94,7 +94,7 @@ export interface NextAuthMiddlewareOptions {
 
 // TODO: `NextMiddleware` should allow returning `void`
 // Simplify when https://github.com/vercel/next.js/pull/38625 is merged.
-type NextMiddlewareResult = ReturnType<NextMiddleware> | void
+type NextMiddlewareResult = ReturnType<NextMiddleware> | void // eslint-disable-line @typescript-eslint/no-invalid-void-type
 
 async function handleMiddleware(
   req: NextRequest,
