@@ -66,7 +66,7 @@ export interface NextAuthMiddlewareOptions {
      * @example
      *
      * ```js
-     * // `pages/admin/_middleware.js`
+     * // `middleware.js`
      * import { withAuth } from "next-auth/middleware"
      *
      * export default withAuth({
@@ -74,6 +74,9 @@ export interface NextAuthMiddlewareOptions {
      *     authorized: ({ token }) => token?.user.isAdmin
      *   }
      * })
+     *
+     * export const config = { matcher: ["/admin"] }
+     *
      * ```
      *
      * ---
@@ -81,6 +84,12 @@ export interface NextAuthMiddlewareOptions {
      */
     authorized?: AuthorizedCallback
   }
+
+  /**
+   * The same `secret` used in the `NextAuth` configuration.
+   * Defaults to the `NEXTAUTH_SECRET` environment variable.
+   */
+  secret?: string
 }
 
 async function handleMiddleware(
@@ -99,7 +108,8 @@ async function handleMiddleware(
     return
   }
 
-  if (!process.env.NEXTAUTH_SECRET) {
+  const secret = options?.secret ?? process.env.NEXTAUTH_SECRET
+  if (!secret) {
     console.error(
       `[next-auth][error][NO_SECRET]`,
       `\nhttps://next-auth.js.org/errors#no_secret`
@@ -115,6 +125,7 @@ async function handleMiddleware(
     req,
     decode: options?.jwt?.decode,
     cookieName: options?.cookies?.sessionToken?.name,
+    secret,
   })
 
   const isAuthorized =
@@ -149,7 +160,7 @@ export type WithAuthArgs =
  * @example
  *
  * ```js
- * // `pages/_middleware.js`
+ * // `middleware.js`
  * export { default } from "next-auth/middleware"
  * ```
  *

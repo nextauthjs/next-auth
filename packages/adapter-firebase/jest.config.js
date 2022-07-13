@@ -1,1 +1,1 @@
-module.exports = require("@next-auth/adapter-test/jest.config")
+module.exports = require("@next-auth/adapter-test/jest/jest-preset")

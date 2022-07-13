@@ -4,10 +4,11 @@ import GitHubProvider from "next-auth/providers/github"
 import Auth0Provider from "next-auth/providers/auth0"
 import KeycloakProvider from "next-auth/providers/keycloak"
 import TwitterProvider, {
-  TwitterLegacy as TwitterLegacyProvider,
+  // TwitterLegacy as TwitterLegacyProvider,
 } from "next-auth/providers/twitter"
 import CredentialsProvider from "next-auth/providers/credentials"
 import IDS4Provider from "next-auth/providers/identity-server4"
+import DuendeIDS6Provider from "next-auth/providers/duende-identity-server6"
 import Twitch from "next-auth/providers/twitch"
 import GoogleProvider from "next-auth/providers/google"
 import FacebookProvider from "next-auth/providers/facebook"
@@ -32,20 +33,39 @@ import AsgardeoProvider from "next-auth/providers/asgardeo"
 import TraktProvider from "next-auth/providers/trakt"
 import WorkOSProvider from "next-auth/providers/workos"
 import BoxyHQSAMLProvider from "next-auth/providers/boxyhq-saml"
+import WikimediaProvider from "next-auth/providers/wikimedia"
+import VkProvider from "next-auth/providers/vk"
 
+// TypeORM
+// import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
+// const adapter = TypeORMLegacyAdapter({
+//   type: "sqlite",
+//   name: "next-auth-test-memory",
+//   database: "./typeorm/dev.db",
+//   synchronize: true,
+// })
+
+// // Prisma
 // import { PrismaAdapter } from "@next-auth/prisma-adapter"
 // import { PrismaClient } from "@prisma/client"
 // const prisma = new PrismaClient()
 // const adapter = PrismaAdapter(prisma)
 
+// // Fauna
 // import { Client as FaunaClient } from "faunadb"
 // import { FaunaAdapter } from "@next-auth/fauna-adapter"
-
 // const client = new FaunaClient({
 //   secret: process.env.FAUNA_SECRET,
 //   domain: process.env.FAUNA_DOMAIN,
 // })
 // const adapter = FaunaAdapter(client)
+
+// // Dummy
+// const adapter: any = {
+//   getUserByEmail: (email) => ({ id: "1", email, emailVerified: null }),
+//   createVerificationToken: (token) => token,
+// }
+
 export const authOptions: NextAuthOptions = {
   // adapter,
   providers: [
@@ -148,6 +168,11 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.IDS4_SECRET,
       issuer: process.env.IDS4_ISSUER,
     }),
+    DuendeIDS6Provider({
+      clientId: "interactive.confidential",
+      clientSecret: "secret",
+      issuer: "https://demo.duendesoftware.com",
+    }),
     DiscordProvider({
       clientId: process.env.DISCORD_ID,
       clientSecret: process.env.DISCORD_SECRET,
@@ -208,9 +233,17 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.WORKOS_SECRET,
     }),
     BoxyHQSAMLProvider({
-      issuer: process.env.BOXYHQSAML_ISSUER,
+      issuer: process.env.BOXYHQSAML_ISSUER ?? "https://example.com",
       clientId: process.env.BOXYHQSAML_ID,
       clientSecret: process.env.BOXYHQSAML_SECRET,
+    }),
+    WikimediaProvider({
+      clientId: process.env.WIKIMEDIA_ID,
+      clientSecret: process.env.WIKIMEDIA_SECRET,
+    }),
+    VkProvider({
+      clientId: process.env.VK_ID,
+      clientSecret: process.env.VK_SECRET
     }),
   ],
   debug: true,
