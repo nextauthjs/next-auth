@@ -18,7 +18,7 @@ xata init
 
 Configure your `./pages/api/auth/[...nextauth]` route to use the Xata adapter:
 
-```javascript title="pages/api/auth/[...nextauth].js"
+```typescript title="pages/api/auth/[...nextauth].ts"
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import { XataAdapter } from "@next-auth/xata-adapter"
