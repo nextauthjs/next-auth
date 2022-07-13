@@ -109,5 +109,3 @@ export function XataAdapter(client: XataClient): Adapter {
     },
   }
 }
-
-export default XataAdapter;
