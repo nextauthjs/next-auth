@@ -120,7 +120,7 @@ To get setup with this adapter, you'll need to [create a database](https://docs.
         },
         {
           "name": "id_token",
-          "type": "string"
+          "type": "text"
         },
         {
           "name": "session_state",

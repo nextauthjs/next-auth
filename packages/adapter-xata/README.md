@@ -97,7 +97,7 @@ You can find the expected schema Xata expects to work with this adapter below. I
         },
         {
           "name": "id_token",
-          "type": "string"
+          "type": "text"
         },
         {
           "name": "session_state",
