@@ -17,9 +17,8 @@ export const config = {
     "@next-auth/typeorm-legacy-adapter": "packages/adapter-typeorm-legacy",
   },
   rootDir: process.cwd(),
-  RELEASE_COMMIT_MSG: "chore(release): bump version",
   BREAKING_COMMIT_MSG: "BREAKING CHANGE:",
-  SKIP_RELEASE_MSG: "[skip release]",
+  RELEASE_COMMIT_MSG: "chore(release): bump package version(s) [skip ci]",
   RELEASE_COMMIT_TYPES: ["feat", "fix"],
   dryRun:
     !process.env.CI ||
