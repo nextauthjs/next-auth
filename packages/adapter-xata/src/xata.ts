@@ -1,3 +1,8 @@
+/**
+ * This file is auto-generated from Xata and corresponds
+ * to the database types in the Xata database. Please do not
+ * augment by hand.
+ */
 import {
   buildClient,
   BaseClientOptions,
