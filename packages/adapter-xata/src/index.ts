@@ -1,35 +1,19 @@
 import type { Adapter } from "next-auth/src/adapters"
-import type { XataClient } from "./xata";
+import type { XataClient } from "./xata"
 
 export function XataAdapter(client: XataClient): Adapter {
   return {
     async createUser(user) {
       const newUser = await client.db.nextauth_users.create(user)
-      return { emailVerified: newUser.emailVerified || null, id: newUser.id }
+      return newUser
     },
     async getUser(id) {
       const user = await client.db.nextauth_users.filter({ id }).getFirst()
-      return user
-        ? {
-          emailVerified: user.emailVerified ?? null,
-          id: user.id,
-          email: user?.email ?? null,
-          image: user?.image ?? null,
-          name: user?.name ?? null,
-        }
-        : null
+      return user ?? null
     },
     async getUserByEmail(email) {
       const user = await client.db.nextauth_users.filter({ email }).getFirst()
-      return user
-        ? {
-          emailVerified: user.emailVerified ?? null,
-          id: user.id,
-          email: user?.email ?? null,
-          image: user?.image ?? null,
-          name: user?.name ?? null,
-        }
-        : null
+      return user ?? null
     },
     async getUserByAccount({ providerAccountId, provider }) {
       const result = await client.db.nextauth_users_accounts
@@ -40,27 +24,17 @@ export function XataAdapter(client: XataClient): Adapter {
         })
         .getFirst()
       const user = result?.user
-      return user
-        ? {
-          emailVerified: user.emailVerified ?? null,
-          id: user.id,
-          email: user?.email ?? null,
-          image: user?.image ?? null,
-          name: user?.name ?? null,
-        }
-        : null
+      return user ?? null
     },
     async updateUser(user) {
       const result = await client.db.nextauth_users.update(user.id!, user)
-      return result
-        ? {
-          emailVerified: user.emailVerified ?? null,
+      return (
+        result ?? {
+          ...user,
           id: user.id!,
-          email: user?.email ?? null,
-          image: user?.image ?? null,
-          name: user?.name ?? null,
+          emailVerified: user.emailVerified ?? null,
         }
-        : { ...user, id: user.id!, emailVerified: user.emailVerified ?? null }
+      )
     },
     async deleteUser(id) {
       return await client.db.nextauth_users.delete(id)
