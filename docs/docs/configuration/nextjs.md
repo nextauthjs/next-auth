@@ -183,7 +183,7 @@ import { withAuth } from "next-auth/middleware"
 
 export default withAuth(
   // `withAuth` can augment your Request with the user's token.
-  function middleware(req: NextRequest & { nextauth: { token: JWT | null } }) {
+  function middleware(req: NextRequest & { nextauth?: { token: JWT | null } }) {
     console.log(req.nextauth.token)
   },
   {
