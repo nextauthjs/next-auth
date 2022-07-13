@@ -37,7 +37,6 @@
     "@next-auth/adapter-test": "workspace:^0.0.0",
     "@next-auth/tsconfig": "workspace:^0.0.0",
     "jest": "^27.4.3",
-    "mongodb": "^4.4.0",
     "next-auth": "workspace:*",
     "@xata.io/client": "^0.13.0",
     "typescript": "^4.7.4"
