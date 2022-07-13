@@ -21,8 +21,6 @@ https://wso2.com/asgardeo/docs/guides/authentication
 In `.env` add the following entries:
 
 ```
-NEXTAUTH_URL=<Your application url e.g: http://localhost:3000>
-SECRET=<Your secret here>
 ASGARDEO_CLIENT_ID=<copy Application (client) ID here>
 ASGARDEO_CLIENT_SECRET=<copy generated client secret value here>
 ASGARDEO_ISSUER=<copy the serverOrigin param taken from asgardeo console here>
@@ -40,10 +38,6 @@ providers: [
     issuer: process.env.ASGARDEO_ISSUER
   }),
 ],
-secret: process.env.SECRET,
-session: {
-  strategy: "jwt",
-},
   
 ...
 ```
