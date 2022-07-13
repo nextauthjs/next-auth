@@ -191,17 +191,16 @@ npx @xata.io/cli init
 ```js
 import NextAuth from "next-auth"
 import { XataAdapter } from "@next-auth/xata-adapter"
-import { XataClient } from "../../../xata/client" // or wherever you've stored your Xata client
+import { XataClient } from "../../../xata" // or wherever you've stored your Xata client
 
-const client = new XataClient();
+const client = new XataClient()
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
 export default NextAuth({
   // https://next-auth.js.org/configuration/providers
   providers: [],
-  adapter: XataAdapter(client)
-  ...
+  adapter: XataAdapter(client),
 })
 ```
 

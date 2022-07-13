@@ -22,7 +22,7 @@ Configure your `./pages/api/auth/[...nextauth]` route to use the Xata adapter:
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import { XataAdapter } from "@next-auth/xata-adapter"
-import { XataClient } from "../../../../xata.ts" // or wherever you've chosen to create the client
+import { XataClient } from "../../../xata" // or wherever you've chosen to create the client
 
 const client = new XataClient()
 
