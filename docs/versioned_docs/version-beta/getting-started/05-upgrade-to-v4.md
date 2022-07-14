@@ -1,5 +1,4 @@
 ---
-id: upgrade-v4
 title: Upgrade Guide (v4)
 ---
 

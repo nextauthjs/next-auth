@@ -1,5 +1,4 @@
 ---
-id: typescript
 title: TypeScript
 ---
 

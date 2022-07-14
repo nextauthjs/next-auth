@@ -1,40 +1,6 @@
 ---
-id: options
-title: Options
----
-
-## Environment Variables
-
-### NEXTAUTH_URL
-
-When deploying to production, set the `NEXTAUTH_URL` environment variable to the canonical URL of your site.
-
-```
-NEXTAUTH_URL=https://example.com
-```
-
-If your Next.js application uses a custom base path, specify the route to the API endpoint in full.
-
-_e.g. `NEXTAUTH_URL=https://example.com/custom-route/api/auth`_
-
-:::note
-Using [System Environment Variables](https://vercel.com/docs/concepts/projects/environment-variables#system-environment-variables) we automatically detect when you deploy to [Vercel](https://vercel.com) so you don't have to define this variable. Make sure **Automatically expose System Environment Variables** is checked in your Project Settings.
-:::
-
-### NEXTAUTH_SECRET
-
-Used to encrypt the NextAuth.js JWT, and to hash [email verification tokens](/adapters/models#verification-token). This is the default value for the [`secret`](/configuration/options#secret) option. The `secret` option might be removed in the future in favor of this.
-
-If you are using [Middleware](/configuration/nextjs#prerequisites) this environment variable must be set.
-
-### NEXTAUTH_URL_INTERNAL
-
-If provided, server-side calls will use this instead of `NEXTAUTH_URL`. Useful in environments when the server doesn't have access to the canonical URL of your site. Defaults to `NEXTAUTH_URL`.
-
-```
-NEXTAUTH_URL_INTERNAL=http://10.240.8.16
-```
-
+title: Initialization
+sidebar_label: Init options
 ---
 
 ## Options
@@ -478,31 +444,3 @@ cookies: {
 :::warning
 Using a custom cookie policy may introduce security flaws into your application and is intended as an option for advanced users who understand the implications. Using this option is not recommended.
 :::
-
----
-
-### Override JWT `encode` and `decode` methods
-
-NextAuth.js uses encrypted JSON Web Tokens ([JWE](https://datatracker.ietf.org/doc/html/rfc7516)) by default. Unless you have a good reason, we recommend keeping this behaviour. Although you can override this using the `encode` and `decode` methods. Both methods must be defined at the same time.
-
-**IMPORTANT: If you use middleware to protect routes, make sure the same method is also set in the [`_middleware.ts` options](/configuration/nextjs#custom-jwt-decode-method)**
-
-```js
-jwt: {
-  async encode(params: {
-    token: JWT
-    secret: string
-    maxAge: number
-  }): Promise<string> {
-    // return a custom encoded JWT string
-    return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
-  },
-  async decode(params: {
-    token: string
-    secret: string
-  }): Promise<JWT | null> {
-    // return a `JWT` object, or `null` if decoding failed
-    return {}
-  },
-}
-```

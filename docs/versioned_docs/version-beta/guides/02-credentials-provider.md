@@ -1,9 +1,7 @@
 ---
-id: credentials
-title: Credentials
+title: Using the Credentials Provider
+sidebar_label: Credentials Provider
 ---
-
-### How to
 
 The Credentials provider allows you to handle signing in with arbitrary credentials, such as a username and password, two-factor authentication or hardware device (e.g. YubiKey U2F / FIDO).
 
@@ -55,13 +53,3 @@ See the [Credentials provider documentation](/providers/credentials) for more in
 :::note
 The Credentials provider can only be used if JSON Web Tokens are enabled for sessions. Users authenticated with the Credentials provider are not persisted in the database.
 :::
-
-### Options
-
-|    Name     |                    Description                    |                 Type                  | Required |
-| :---------: | :-----------------------------------------------: | :-----------------------------------: | :------: |
-|     id      |            Unique ID for the provider             |               `string`                |   Yes    |
-|    name     |         Descriptive name for the provider         |               `string`                |   Yes    |
-|    type     |   Type of provider, in this case `credentials`    |            `"credentials"`            |   Yes    |
-| credentials |          The credentials to sign-in with          |               `Object`                |   Yes    |
-|  authorize  | Callback to execute once user is to be authorized | `(credentials, req) => Promise<User>` |   Yes    |

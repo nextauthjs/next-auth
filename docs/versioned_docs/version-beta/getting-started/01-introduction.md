@@ -1,5 +1,4 @@
 ---
-id: introduction
 title: Introduction
 ---
 

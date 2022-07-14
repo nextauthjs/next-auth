@@ -1,104 +1,9 @@
 ---
-id: oauth
-title: OAuth
+title: OAuth Provider Options
+sidebar_label: Custom OAuth provider
 ---
 
-Authentication Providers in **NextAuth.js** are OAuth definitions that allow your users to sign in with their favorite preexisting logins. You can use any of our many predefined providers, or write your own custom OAuth configuration.
-
-- [Using a built-in OAuth Provider](#built-in-providers) (e.g Github, Twitter, Google, etc...)
-- [Using a custom OAuth Provider](#using-a-custom-provider)
-
-:::note
-NextAuth.js is designed to work with any OAuth service, it supports **OAuth 1.0**, **1.0A**, **2.0** and **OpenID Connect** and has built-in support for most popular sign-in services.
-:::
-
-Without going into too much detail, the OAuth flow generally has 6 parts:
-
-1. The application requests authorization to access service resources from the user
-2. If the user authorized the request, the application receives an authorization grant
-3. The application requests an access token from the authorization server (API) by presenting authentication of its own identity, and the authorization grant
-4. If the application identity is authenticated and the authorization grant is valid, the authorization server (API) issues an access token to the application. Authorization is complete.
-5. The application requests the resource from the resource server (API) and presents the access token for authentication
-6. If the access token is valid, the resource server (API) serves the resource to the application
-
-```mermaid
-sequenceDiagram
-    participant Browser
-    participant App Server
-    participant Auth Server (Github)
-    Note left of Browser: User clicks on "Sign in"
-    Browser->>App Server: GET<br/>"api/auth/signin"
-    App Server->>App Server: Computes the available<br/>sign in providers<br/>from the "providers" option
-    App Server->>Browser: Redirects to Sign in page
-    Note left of Browser: Sign in options<br/>are shown the user<br/>(Github, Twitter, etc...)
-    Note left of Browser: User clicks on<br/>"Sign in with Github"
-    Browser->>App Server: POST<br/>"api/auth/signin/github"
-    App Server->>App Server: Computes sign in<br/>options for Github<br/>(scopes, callback URL, etc...)
-    App Server->>Auth Server (Github): GET<br/>"github.com/login/oauth/authorize"
-    Note left of Auth Server (Github): Sign in options<br> are supplied as<br/>query params<br/>(clientId, <br/>scope, etc...)
-    Auth Server (Github)->>Browser: Shows sign in page<br/>in Github.com<br/>to the user
-    Note left of Browser: User inserts their<br/>credentials in Github
-    Browser->>Auth Server (Github): Github validates the inserted credentials
-    Auth Server (Github)->>Auth Server (Github): Generates one time access code<br/>and calls callback<br>URL defined in<br/>App settings
-    Auth Server (Github)->>App Server: GET<br/>"api/auth/github/callback?code=123"
-    App Server->>App Server: Grabs code<br/>to exchange it for<br/>access token
-    App Server->>Auth Server (Github): POST<br/>"github.com/login/oauth/access_token"<br/>{code: 123}
-    Auth Server (Github)->>Auth Server (Github): Verifies code is<br/>valid and generates<br/>access token
-    Auth Server (Github)->>App Server: { access_token: 16C7x... }
-    App Server->>App Server: Generates session token<br/>and stores session
-    App Server->>Browser: You're now logged in!
-```
-
-For more details, check out Aaron Parecki's blog post [OAuth2 Simplified](https://aaronparecki.com/oauth-2-simplified/) or Postman's blog post [OAuth 2.0: Implicit Flow is Dead, Try PKCE Instead](https://blog.postman.com/pkce-oauth-how-to/).
-
-## How to
-
-1. Register your application at the developer portal of your provider. There are usually links to the portals included in the aforementioned documentation pages for each supported provider with details on how to register your application.
-
-2. The redirect URI (sometimes called Callback URL) should follow this format:
-
-```
-[origin]/api/auth/callback/[provider]
-```
-
-`[provider]` refers to the `id` of your provider (see [options](#options)). For example, Twitter on `localhost` this would be:
-
-```
-http://localhost:3000/api/auth/callback/twitter
-```
-
-Using Google in our example application would look like this:
-
-```
-https://next-auth-example.vercel.app/api/auth/callback/google
-```
-
-3. Create a `.env` file at the root of your project and add the client ID and client secret. For Twitter this would be:
-
-```
-TWITTER_ID=YOUR_TWITTER_CLIENT_ID
-TWITTER_SECRET=YOUR_TWITTER_CLIENT_SECRET
-```
-
-4. Now you can add the provider settings to the NextAuth options object. You can add as many OAuth providers as you like, as you can see `providers` is an array.
-
-```js title="pages/api/auth/[...nextauth].js"
-import TwitterProvider from "next-auth/providers/"
-...
-providers: [
-  TwitterProvider({
-    clientId: process.env.TWITTER_ID,
-    clientSecret: process.env.TWITTER_SECRET
-  })
-],
-...
-```
-
-5. Once a provider has been setup, you can sign in at the following URL: `[origin]/api/auth/signin`. This is an unbranded auto-generated page with all the configured providers.
-
-<img src="/img/signin.png" alt="Signin Screenshot" />
-
-## Options
+## Summary
 
 Whenever you configure a custom or a built-in OAuth provider, you have the following options available:
 
@@ -348,13 +253,6 @@ providers: [
 ...
 ```
 
-## Built-in providers
-
-NextAuth.js comes with a set of built-in providers. You can find them [here](https://github.com/nextauthjs/next-auth/tree/main/src/providers). Each built-in provider has its own documentation page:
-
-<div className="provider-name-list">
---------- DISPLAY PROVIDERS HERE ----------
-</div>
 
 ### Override default options
 

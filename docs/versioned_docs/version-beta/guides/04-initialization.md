@@ -1,6 +1,5 @@
 ---
-id: initialization
-title: Initialization
+title: Custom Initialization 
 ---
 
 In Next.js, you can define an API route that will catch all requests that begin with a certain path. Conveniently, this is called [Catch all API routes](https://nextjs.org/docs/api-routes/dynamic-api-routes#catch-all-api-routes).
