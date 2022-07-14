@@ -175,7 +175,11 @@ export async function getProviders() {
 export async function signIn<
   P extends RedirectableProviderType | undefined = undefined
 >(
-  provider?: LiteralUnion<P extends RedirectableProviderType ? P | BuiltInProviderType : BuiltInProviderType>,
+  provider?: LiteralUnion<
+    P extends RedirectableProviderType
+      ? P | BuiltInProviderType
+      : BuiltInProviderType
+  >,
   options?: SignInOptions,
   authorizationParams?: SignInAuthorizationParams
 ): Promise<
@@ -404,13 +408,15 @@ export function SessionProvider(props: SessionProviderProps) {
     // Set up polling
     if (refetchInterval) {
       const refetchIntervalTimer = setInterval(() => {
-        if (__NEXTAUTH._session) {
+        const shouldRefetch =
+          props.refetchWhenOffline !== false || navigator.onLine
+        if (__NEXTAUTH._session && shouldRefetch) {
           __NEXTAUTH._getSession({ event: "poll" })
         }
       }, refetchInterval * 1000)
       return () => clearInterval(refetchIntervalTimer)
     }
-  }, [props.refetchInterval])
+  }, [props.refetchInterval, props.refetchWhenOffline])
 
   const value: any = React.useMemo(
     () => ({
