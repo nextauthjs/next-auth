@@ -36,8 +36,9 @@
     "pretty-quick": "^3.1.2",
     "semver": "7.3.5",
     "stream-to-array": "2.3.0",
-    "ts-node": "10.5.0",
-    "turbo": "^1.2.5",
+    "ts-node": "10.8.2",
+    "turbo": "1.3.1",
+    "type-fest": "2.16.0",
     "typescript": "^4.5.2"
   },
   "engines": {
@@ -97,7 +98,7 @@
     "**/tests",
     "**/__tests__"
   ],
-  "packageManager": "pnpm@6.32.8",
+  "packageManager": "pnpm@7.5.1",
   "funding": [
     {
       "type": "github",

@@ -4,7 +4,7 @@ import GitHubProvider from "next-auth/providers/github"
 import Auth0Provider from "next-auth/providers/auth0"
 import KeycloakProvider from "next-auth/providers/keycloak"
 import TwitterProvider, {
-  TwitterLegacy as TwitterLegacyProvider,
+  // TwitterLegacy as TwitterLegacyProvider,
 } from "next-auth/providers/twitter"
 import CredentialsProvider from "next-auth/providers/credentials"
 import IDS4Provider from "next-auth/providers/identity-server4"
@@ -32,15 +32,17 @@ import PatreonProvider from "next-auth/providers/patreon"
 import TraktProvider from "next-auth/providers/trakt"
 import WorkOSProvider from "next-auth/providers/workos"
 import BoxyHQSAMLProvider from "next-auth/providers/boxyhq-saml"
+import WikimediaProvider from "next-auth/providers/wikimedia"
+import VkProvider from "next-auth/providers/vk"
 
 // TypeORM
-import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
-const adapter = TypeORMLegacyAdapter({
-  type: "sqlite",
-  name: "next-auth-test-memory",
-  database: "./typeorm/dev.db",
-  synchronize: true,
-})
+// import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
+// const adapter = TypeORMLegacyAdapter({
+//   type: "sqlite",
+//   name: "next-auth-test-memory",
+//   database: "./typeorm/dev.db",
+//   synchronize: true,
+// })
 
 // // Prisma
 // import { PrismaAdapter } from "@next-auth/prisma-adapter"
@@ -230,6 +232,14 @@ export const authOptions: NextAuthOptions = {
       issuer: process.env.BOXYHQSAML_ISSUER ?? "https://example.com",
       clientId: process.env.BOXYHQSAML_ID,
       clientSecret: process.env.BOXYHQSAML_SECRET,
+    }),
+    WikimediaProvider({
+      clientId: process.env.WIKIMEDIA_ID,
+      clientSecret: process.env.WIKIMEDIA_SECRET,
+    }),
+    VkProvider({
+      clientId: process.env.VK_ID,
+      clientSecret: process.env.VK_SECRET
     }),
   ],
   debug: true,
