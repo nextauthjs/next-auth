@@ -189,12 +189,10 @@ export function withAuth(...args: WithAuthArgs) {
   if (typeof args[0] === "function") {
     const middleware = args[0]
     const options = args[1] as NextAuthMiddlewareOptions | undefined
-    return async (...args: Parameters<NextMiddleware>) =>
+    return async (...args: Parameters<NextMiddlewareWithAuth>) =>
       await handleMiddleware(args[0], options, async (token) => {
-        const [req, ...rest] = args
-        // @ts-expect-error
-        req.nextauth = { token }
-        return await middleware(req as NextRequestWithAuth, ...rest)
+        args[0].nextauth = { token }
+        return await middleware(...args)
       })
   }
 
