@@ -5,18 +5,14 @@ title: Firebase
 
 # Firebase
 
-:::warning
-This adapter is still experimental and does not work with NextAuth.js 4 or newer. If you would like to help out upgrading it, please visit [this PR](https://github.com/nextauthjs/next-auth/pull/3873)
-:::
-
-This is the Firebase Adapter for [`next-auth`](https://next-auth.js.org). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
+This is the Firebase (Firestore) Adapter for [`next-auth`](https://next-auth.js.org). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
 
 ## Getting Started
 
 1. Install the necessary packages
 
 ```bash npm2yarn2pnpm
-npm install next-auth @next-auth/firebase-adapter@experimental
+npm install next-auth @next-auth/firebase-adapter
 ```
 
 2. Add this adapter to your `pages/api/auth/[...nextauth].js` next-auth configuration object.
@@ -24,14 +20,7 @@ npm install next-auth @next-auth/firebase-adapter@experimental
 ```javascript title="pages/api/auth/[...nextauth].js"
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
-import { FirebaseAdapter } from "@next-auth/firebase-adapter"
-
-import firebase from "firebase/app"
-import "firebase/firestore"
-
-const firestore = (
-  firebase.apps[0] ?? firebase.initializeApp(/* your config */)
-).firestore()
+import { FirestoreAdapter } from "@next-auth/firebase-adapter"
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
@@ -43,9 +32,19 @@ export default NextAuth({
       clientSecret: process.env.GOOGLE_SECRET,
     }),
   ],
-  adapter: FirebaseAdapter(firestore),
-  ...
-})
+  adapter: FirestoreAdapter({
+    apiKey: process.env.FIREBASE_API_KEY,
+    appId: process.env.FIREBASE_APP_ID,
+    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+    databaseURL: process.env.FIREBASE_DATABASE_URL,
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+    // Optional emulator config (see below for options)
+    emulator: {},
+  }),
+  // ...
+});
 ```
 
 ## Options
@@ -68,6 +67,21 @@ const firebaseConfig = {
 ```
 
 See [firebase.google.com/docs/web/setup](https://firebase.google.com/docs/web/setup) for more details.
+
+You can optionally pass in emulator options to automatically connect to your local Firebase emulator.
+
+```js
+FirestoreAdapter({
+  // ...
+  // Passing in an enable object will enable the emulator
+  emulator: {
+    // Optional host, defaults to `localhost`
+    host: 'localhost',
+  // Optional port, defaults to `3001`
+    port: 3001,
+  },
+}),
+```
 
 :::tip **From Firebase**
 

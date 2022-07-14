@@ -7,9 +7,7 @@ import type {
 import { debug, pkgJson, execSync } from "./utils"
 import semver from "semver"
 import parseCommit from "@commitlint/parse"
-// @ts-ignore
 import gitLog from "git-log-parser"
-// @ts-ignore
 import streamToArray from "stream-to-array"
 
 export async function analyze(options: {
@@ -18,14 +16,12 @@ export async function analyze(options: {
   BREAKING_COMMIT_MSG: string
   RELEASE_COMMIT_MSG: string
   RELEASE_COMMIT_TYPES: string[]
-  SKIP_RELEASE_MSG: string
 }): Promise<PackageToRelease[]> {
   const {
     packages,
     BREAKING_COMMIT_MSG,
     RELEASE_COMMIT_MSG,
     RELEASE_COMMIT_TYPES,
-    SKIP_RELEASE_MSG,
   } = options
 
   const packageFolders = Object.values(options.packages)
@@ -69,12 +65,7 @@ export async function analyze(options: {
   )
 
   const lastCommit = commitsSinceLatestTag[0]
-  if (lastCommit?.parsed.raw.includes(SKIP_RELEASE_MSG)) {
-    console.log(
-      `Last commit contained ${SKIP_RELEASE_MSG}, skipping release...`
-    )
-    return []
-  }
+
   if (lastCommit?.parsed.raw === RELEASE_COMMIT_MSG) {
     debug("Already released...")
     return []

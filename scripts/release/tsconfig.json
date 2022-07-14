@@ -1,21 +1,12 @@
 {
   "compilerOptions": {
-    "target": "ES2018",
-    "module": "commonjs",
+    "target": "ESNext",
+    "module": "NodeNext",
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "noImplicitAny": true,
     "skipLibCheck": true,
-    "checkJs": true,
-    "resolveJsonModule": true
+    "skipDefaultLibCheck": true
   },
   "ts-node": {
-    "transpileOnly": true,
-    "files": true,
-    "compilerOptions": {
-      "sourceMap": true,
-      "inlineSources": true
-    }
+    "swc": true
   }
 }

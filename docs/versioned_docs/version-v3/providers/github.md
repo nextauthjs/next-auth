@@ -15,7 +15,7 @@ https://github.com/settings/apps
 
 The **Github Provider** comes with a set of default options:
 
-- [Github Provider options](https://github.com/nextauthjs/next-auth/blob/main/src/providers/github.js)
+- [Github Provider options](https://github.com/nextauthjs/next-auth/blob/main/src/providers/github.ts)
 
 You can override any of the options to suit your own use case.
 

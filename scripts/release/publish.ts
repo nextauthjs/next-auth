@@ -1,4 +1,3 @@
-import { createHash } from "crypto"
 import type { Commit, PackageToRelease } from "./types"
 
 import { debug, pkgJson, execSync } from "./utils"
