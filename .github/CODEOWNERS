@@ -1,4 +1,6 @@
-/types/ @balazsorban44 @lluia
-/docs/ @balazsorban44 @ndom91
-/adapters/ @balazsorban44 @ndom91
-/__tests__/ @lluia
+*                     @balazsorban44
+/packages/            @ThangHuuVu
+/docs/                @ndom91 @lluia
+/packages/adapter-*/  @ndom91
+/**/*type*            @lluia
+/**/*test*            @lluia
