@@ -408,6 +408,7 @@ export function SessionProvider(props: SessionProviderProps) {
     // Set up polling
     if (refetchInterval) {
       const refetchIntervalTimer = setInterval(() => {
+        // TODO: Flip this behavior in next major version
         const shouldRefetch =
           props.refetchWhenOffline !== false || navigator.onLine
         if (__NEXTAUTH._session && shouldRefetch) {
