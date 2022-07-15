@@ -92,7 +92,9 @@ export interface NextAuthMiddlewareOptions {
   secret?: string
 }
 
-type NextMiddlewareResult = ReturnType<NextMiddleware>
+// TODO: `NextMiddleware` should allow returning `void`
+// Simplify when https://github.com/vercel/next.js/pull/38625 is merged.
+type NextMiddlewareResult = ReturnType<NextMiddleware> | void // eslint-disable-line @typescript-eslint/no-invalid-void-type
 
 async function handleMiddleware(
   req: NextRequest,
@@ -145,12 +147,21 @@ async function handleMiddleware(
   return NextResponse.redirect(signInUrl)
 }
 
+export interface NextRequestWithAuth extends NextRequest {
+  nextauth: { token: JWT | null }
+}
+
+export type NextMiddlewareWithAuth = (
+  request: NextRequestWithAuth,
+  event: NextFetchEvent
+) => NextMiddlewareResult | Promise<NextMiddlewareResult>
+
 export type WithAuthArgs =
-  | [NextRequest]
-  | [NextRequest, NextFetchEvent]
-  | [NextRequest, NextAuthMiddlewareOptions]
-  | [NextMiddleware]
-  | [NextMiddleware, NextAuthMiddlewareOptions]
+  | [NextRequestWithAuth]
+  | [NextRequestWithAuth, NextFetchEvent]
+  | [NextRequestWithAuth, NextAuthMiddlewareOptions]
+  | [NextMiddlewareWithAuth]
+  | [NextMiddlewareWithAuth, NextAuthMiddlewareOptions]
   | [NextAuthMiddlewareOptions]
   | []
 
@@ -178,9 +189,9 @@ export function withAuth(...args: WithAuthArgs) {
   if (typeof args[0] === "function") {
     const middleware = args[0]
     const options = args[1] as NextAuthMiddlewareOptions | undefined
-    return async (...args: Parameters<NextMiddleware>) =>
+    return async (...args: Parameters<NextMiddlewareWithAuth>) =>
       await handleMiddleware(args[0], options, async (token) => {
-        ;(args[0] as any).nextauth = { token }
+        args[0].nextauth = { token }
         return await middleware(...args)
       })
   }
