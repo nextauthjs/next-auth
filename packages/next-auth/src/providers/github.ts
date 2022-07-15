@@ -1,8 +1,6 @@
 import type { OAuthConfig, OAuthUserConfig } from "."
 
-/**
- * Source https://docs.github.com/en/rest/users/users#get-the-authenticated-user
- */
+/** @see https://docs.github.com/en/rest/users/users#get-the-authenticated-user */
 export interface GithubProfile extends Record<string, any> {
   login: string
   id: number
@@ -55,7 +53,7 @@ export interface GithubEmail extends Record<string, any> {
   email: string
   primary: boolean
   verified: boolean
-  visibility: string | null
+  visibility: "public" | "private"
 }
 
 export default function Github<P extends GithubProfile>(
@@ -67,29 +65,25 @@ export default function Github<P extends GithubProfile>(
     type: "oauth",
     authorization: {
       url: "https://github.com/login/oauth/authorize",
-      params: { scope: "read:user+user:email" },
+      params: { scope: "read:user user:email" },
     },
     token: "https://github.com/login/oauth/access_token",
     userinfo: {
       url: "https://api.github.com/user",
       async request({ client, tokens }) {
-        // Get base profile
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const profile = await client.userinfo(tokens.access_token!)
 
-        // If user has email hidden, get their primary email from the GitHub API
         if (!profile.email) {
-          const emails: GithubEmail[] = await (
-            await fetch("https://api.github.com/user/emails", {
-              headers: { Authorization: `token ${tokens.access_token}` },
-            })
-          ).json()
+          // If the user does not have a public email, get another via the GitHub API
+          // See https://docs.github.com/en/rest/users/emails#list-public-email-addresses-for-the-authenticated-user
+          const res = await fetch("https://api.github.com/user/emails", {
+            headers: { Authorization: `token ${tokens.access_token}` },
+          })
 
-          if (emails?.length > 0) {
-            // Get primary email
-            profile.email = emails.find((email) => email.primary)?.email
-            // And if for some reason it doesn't exist, just use the first
-            if (!profile.email) profile.email = emails[0].email
+          if (res.ok) {
+            const emails: GithubEmail[] = await res.json()
+            profile.email = (emails.find((e) => e.primary) ?? emails[0]).email
           }
         }
 
