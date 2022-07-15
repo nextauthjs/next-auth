@@ -34,7 +34,7 @@ const client = new Pool({
 export default NextAuth({
   // https://next-auth.js.org/configuration/providers
   providers: [],
-  adapter: PostrgesAdapter(client)
+  adapter: PostgresAdapter(client)
   ...
 })
 ```
