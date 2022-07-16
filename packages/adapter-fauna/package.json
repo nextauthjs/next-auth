@@ -41,7 +41,7 @@
   },
   "peerDependencies": {
     "faunadb": "^4.3.0",
-    "next-auth": "workspace:*"
+    "next-auth": "^4"
   },
   "devDependencies": {
     "@fauna-labs/fauna-schema-migrate": "^2.1.3",
