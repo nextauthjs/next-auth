@@ -15,7 +15,10 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "outDir": ".",
-    
+    "paths": {
+      // We also generate a `next.js` and `next.d.ts` file in the root which would otherwise conflict constantly.
+      "next": ["node_modules/next"]
+    }
   },
   "exclude": ["./*.js", "./*.d.ts", "config", "**/__tests__", "tests"]
 }
