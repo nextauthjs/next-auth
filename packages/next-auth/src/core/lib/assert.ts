@@ -12,7 +12,6 @@ import { defaultCookies } from "./cookie"
 
 import type { NextAuthHandlerParams, RequestInternal } from ".."
 import type { WarningCode } from "../../utils/logger"
-import { Adapter } from "src/adapters"
 
 type ConfigError =
   | MissingAPIRoute
