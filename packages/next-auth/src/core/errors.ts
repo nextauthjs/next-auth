@@ -58,9 +58,9 @@ export class MissingAdapter extends UnknownError {
   code = "EMAIL_REQUIRES_ADAPTER_ERROR"
 }
 
-export class IncompleteAdapter extends UnknownError {
-  name = "IncompleteAdapterError"
-  code = "INCOMPLETE_ADAPTER_ERROR"
+export class MissingAdapterMethods extends UnknownError {
+  name = "MissingAdapterMethodsError"
+  code = "MISSING_ADAPTER_METHODS_ERROR"
 }
 
 export class UnsupportedStrategy extends UnknownError {

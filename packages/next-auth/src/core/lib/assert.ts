@@ -5,7 +5,7 @@ import {
   MissingSecret,
   UnsupportedStrategy,
   InvalidCallbackUrl,
-  IncompleteAdapter,
+  MissingAdapterMethods,
 } from "../errors"
 import parseUrl from "../../utils/parse-url"
 import { defaultCookies } from "./cookie"
@@ -129,7 +129,7 @@ export function assertConfig(
     ].filter((method) => !adapter[method])
 
     if (missingMethods.length) {
-      return new IncompleteAdapter(
+      return new MissingAdapterMethods(
         `Required adapter methods were missing: ${missingMethods.join(", ")}`
       )
     }
