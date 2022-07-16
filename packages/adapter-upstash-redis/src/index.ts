@@ -1,7 +1,7 @@
-import type { Account as AdapterAccount } from "next-auth"
 import type {
   Adapter,
   AdapterUser,
+  AdapterAccount,
   AdapterSession,
   VerificationToken,
 } from "next-auth/adapters"

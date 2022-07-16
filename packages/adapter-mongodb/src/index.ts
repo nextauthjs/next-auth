@@ -3,12 +3,13 @@ import { ObjectId } from "mongodb"
 
 import type {
   Adapter,
-  AdapterSession,
   AdapterUser,
+  AdapterAccount,
+  AdapterSession,
   VerificationToken,
 } from "next-auth/adapters"
+
 import type { MongoClient } from "mongodb"
-import type { Account } from "next-auth"
 
 export interface MongoDBAdapterOptions {
   collections?: {
@@ -77,7 +78,7 @@ export function MongoDBAdapter(
     const c = { ...defaultCollections, ...collections }
     return {
       U: _db.collection<AdapterUser>(c.Users),
-      A: _db.collection<Account>(c.Accounts),
+      A: _db.collection<AdapterAccount>(c.Accounts),
       S: _db.collection<AdapterSession>(c.Sessions),
       V: _db.collection<VerificationToken>(c?.VerificationTokens),
     }
@@ -127,7 +128,7 @@ export function MongoDBAdapter(
       ])
     },
     linkAccount: async (data) => {
-      const account = to<Account>(data)
+      const account = to<AdapterAccount>(data)
       await (await db).A.insertOne(account)
       return account
     },
@@ -135,7 +136,7 @@ export function MongoDBAdapter(
       const { value: account } = await (
         await db
       ).A.findOneAndDelete(provider_providerAccountId)
-      return from<Account>(account!)
+      return from<AdapterAccount>(account!)
     },
     async getSessionAndUser(sessionToken) {
       const session = await (await db).S.findOne({ sessionToken })

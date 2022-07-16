@@ -11,10 +11,10 @@ import {
   ManyToOne,
 } from "@mikro-orm/core"
 
-import type { DefaultAccount } from "next-auth"
 import type {
-  AdapterSession,
   AdapterUser,
+  AdapterAccount,
+  AdapterSession,
   VerificationToken as AdapterVerificationToken,
 } from "next-auth/adapters"
 import type { ProviderType } from "next-auth/providers"
@@ -84,7 +84,7 @@ export class Session implements AdapterSession {
 
 @Entity()
 @Unique({ properties: ["provider", "providerAccountId"] })
-export class Account implements RemoveIndex<DefaultAccount> {
+export class Account implements RemoveIndex<AdapterAccount> {
   @PrimaryKey()
   id: string = randomUUID()
 

@@ -15,11 +15,12 @@ import {
   where,
   connectFirestoreEmulator,
 } from "firebase/firestore"
-import type { Account } from "next-auth"
+
 import type {
   Adapter,
-  AdapterSession,
   AdapterUser,
+  AdapterAccount,
+  AdapterSession,
   VerificationToken,
 } from "next-auth/adapters"
 
@@ -56,7 +57,7 @@ export function FirestoreAdapter({
     getConverter<AdapterSession & IndexableObject>()
   )
   const Accounts = collection(db, "accounts").withConverter(
-    getConverter<Account>()
+    getConverter<AdapterAccount>()
   )
   const VerificationTokens = collection(db, "verificationTokens").withConverter(
     getConverter<VerificationToken & IndexableObject>({ excludeId: true })
@@ -249,12 +250,8 @@ export function FirestoreAdapter({
       const verificationTokenSnapshot = await getDoc(verificationTokenRef)
 
       if (verificationTokenSnapshot.exists() && VerificationTokens.converter) {
-        const {
-          id,
-          ...verificationToken
-        } = VerificationTokens.converter.fromFirestore(
-          verificationTokenSnapshot
-        )
+        const { id, ...verificationToken } =
+          VerificationTokens.converter.fromFirestore(verificationTokenSnapshot)
 
         return verificationToken
       }
@@ -273,12 +270,8 @@ export function FirestoreAdapter({
       if (verificationTokenSnapshot?.exists() && VerificationTokens.converter) {
         await deleteDoc(verificationTokenSnapshot.ref)
 
-        const {
-          id,
-          ...verificationToken
-        } = VerificationTokens.converter.fromFirestore(
-          verificationTokenSnapshot
-        )
+        const { id, ...verificationToken } =
+          VerificationTokens.converter.fromFirestore(verificationTokenSnapshot)
 
         return verificationToken
       }
