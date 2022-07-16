@@ -2,6 +2,7 @@ import { Account, User, Awaitable } from "."
 
 export interface AdapterUser extends User {
   id: string
+  email: string
   emailVerified: Date | null
 }
 

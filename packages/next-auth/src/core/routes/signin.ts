@@ -59,7 +59,6 @@ export default async function signin(params: {
 
     // Check if user is allowed to sign in
     try {
-      // @ts-expect-error
       const signInCallbackResponse = await callbacks.signIn({
         user,
         account,

@@ -23,7 +23,7 @@ export default async function email(
   )
 
   // Save in database
-  // @ts-expect-error
+  // @ts-expect-error Verified in `assertConfig`
   await adapter.createVerificationToken({
     identifier,
     token: hashToken(token, options),

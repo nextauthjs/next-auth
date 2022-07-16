@@ -58,6 +58,11 @@ export class MissingAdapter extends UnknownError {
   code = "EMAIL_REQUIRES_ADAPTER_ERROR"
 }
 
+export class IncompleteAdapter extends UnknownError {
+  name = "IncompleteAdapterError"
+  code = "INCOMPLETE_ADAPTER_ERROR"
+}
+
 export class UnsupportedStrategy extends UnknownError {
   name = "UnsupportedStrategyError"
   code = "CALLBACK_CREDENTIALS_JWT_ERROR"

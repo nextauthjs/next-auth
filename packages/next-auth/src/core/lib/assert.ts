@@ -5,12 +5,14 @@ import {
   MissingSecret,
   UnsupportedStrategy,
   InvalidCallbackUrl,
+  IncompleteAdapter,
 } from "../errors"
 import parseUrl from "../../utils/parse-url"
 import { defaultCookies } from "./cookie"
 
 import type { NextAuthHandlerParams, RequestInternal } from ".."
 import type { WarningCode } from "../../utils/logger"
+import { Adapter } from "src/adapters"
 
 type ConfigError =
   | MissingAPIRoute
@@ -115,8 +117,23 @@ export function assertConfig(
     }
   }
 
-  if (hasEmail && !options.adapter) {
-    return new MissingAdapter("E-mail login requires an adapter.")
+  if (hasEmail) {
+    const { adapter } = options
+    if (!adapter) {
+      return new MissingAdapter("E-mail login requires an adapter.")
+    }
+
+    const missingMethods = [
+      "createVerificationToken",
+      "useVerificationToken",
+      "getUserByEmail",
+    ].filter((method) => !adapter[method])
+
+    if (missingMethods.length) {
+      return new IncompleteAdapter(
+        `Required adapter methods were missing: ${missingMethods.join(", ")}`
+      )
+    }
   }
 
   if (!twitterWarned && hasTwitterOAuth2) {

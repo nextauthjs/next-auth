@@ -1,4 +1,4 @@
-import type { Adapter } from "../adapters"
+import type { Adapter, AdapterUser } from "../adapters"
 import type {
   Provider,
   CredentialInput,
@@ -231,7 +231,7 @@ export type TokenSet = TokenSetParameters
  * Usually contains information about the provider being used
  * and also extends `TokenSet`, which is different tokens returned by OAuth Providers.
  */
-export interface DefaultAccount extends Partial<TokenSet> {
+export interface Account extends Partial<TokenSet> {
   /**
    * This value depends on the type of the provider being used to create the account.
    * - oauth: The OAuth account's id, returned from the `profile()` callback.
@@ -240,30 +240,23 @@ export interface DefaultAccount extends Partial<TokenSet> {
    */
   providerAccountId: string
   /** id of the user this account belongs to. */
-  userId: string
+  userId?: string
   /** id of the provider used for this account */
   provider: string
   /** Provider's type for this account */
   type: ProviderType
 }
 
-export interface Account extends Record<string, unknown>, DefaultAccount {}
-
-export interface DefaultProfile {
+/** The OAuth profile returned from your provider */
+export interface Profile {
   sub?: string
   name?: string
   email?: string
   image?: string
 }
 
-/** The OAuth profile returned from your provider */
-export interface Profile extends Record<string, unknown>, DefaultProfile {}
-
 /** [Documentation](https://next-auth.js.org/configuration/callbacks) */
-export interface CallbacksOptions<
-  P extends Record<string, unknown> = Profile,
-  A extends Record<string, unknown> = Account
-> {
+export interface CallbacksOptions<P = Profile, A = Account> {
   /**
    * Use this callback to control if a user is allowed to sign in.
    * Returning true will continue the sign-in flow.
@@ -272,13 +265,13 @@ export interface CallbacksOptions<
    * [Documentation](https://next-auth.js.org/configuration/callbacks#sign-in-callback)
    */
   signIn: (params: {
-    user: User
-    account: A
+    user: User | { email: string }
+    account: A | null
     /**
      * If OAuth provider is used, it contains the full
      * OAuth profile returned by your provider.
      */
-    profile: P & Record<string, unknown>
+    profile?: P
     /**
      * If Email provider is used, on the first call, it contains a
      * `verificationRequest: true` property to indicate it is being triggered in the verification request flow.
@@ -287,7 +280,7 @@ export interface CallbacksOptions<
      * to avoid sending emails to addresses or domains on a blocklist or to only explicitly generate them
      * for email address in an allow list.
      */
-    email: {
+    email?: {
       verificationRequest?: boolean
     }
     /** If Credentials provider is used, it contains the user credentials */
@@ -341,8 +334,8 @@ export interface CallbacksOptions<
    */
   jwt: (params: {
     token: JWT
-    user?: User
-    account?: A
+    user?: User | AdapterUser
+    account?: A | null
     profile?: P
     isNewUser?: boolean
   }) => Awaitable<JWT>
@@ -377,7 +370,7 @@ export interface EventCallbacks {
    */
   signIn: (message: {
     user: User
-    account: Account
+    account: Account | null
     profile?: Profile
     isNewUser?: boolean
   }) => Awaitable<void>
@@ -391,9 +384,9 @@ export interface EventCallbacks {
   createUser: (message: { user: User }) => Awaitable<void>
   updateUser: (message: { user: User }) => Awaitable<void>
   linkAccount: (message: {
-    user: User
+    user: User | AdapterUser | { email: string }
     account: Account
-    profile: User
+    profile: User | AdapterUser | { email: string }
   }) => Awaitable<void>
   /**
    * The message object will contain one of these depending on
@@ -419,7 +412,7 @@ export interface PagesOptions {
 
 export type ISODateString = string
 
-export interface DefaultSession extends Record<string, unknown> {
+export interface DefaultSession {
   user?: {
     name?: string | null
     email?: string | null
@@ -437,7 +430,7 @@ export interface DefaultSession extends Record<string, unknown> {
  * [`SessionProvider`](https://next-auth.js.org/getting-started/client#sessionprovider) |
  * [`session` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback)
  */
-export interface Session extends Record<string, unknown>, DefaultSession {}
+export interface Session extends DefaultSession {}
 
 export type SessionStrategy = "jwt" | "database"
 
@@ -486,7 +479,7 @@ export interface DefaultUser {
  * [`jwt` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
  * [`profile` OAuth provider callback](https://next-auth.js.org/configuration/providers#using-a-custom-provider)
  */
-export interface User extends Record<string, unknown>, DefaultUser {}
+export interface User extends DefaultUser {}
 
 // Below are types that are only supposed be used by next-auth internally
 

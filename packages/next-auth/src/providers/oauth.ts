@@ -110,7 +110,7 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   userinfo?: string | UserinfoEndpointHandler
   type: "oauth"
   version?: string
-  profile?: (profile: P, tokens: TokenSet) => Awaitable<User & { id: string }>
+  profile: (profile: P, tokens: TokenSet) => Awaitable<User & { id: string }>
   checks?: ChecksType | ChecksType[]
   client?: Partial<ClientMetadata>
   jwks?: { keys: JWK[] }
