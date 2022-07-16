@@ -132,8 +132,8 @@ importers:
 
   packages/adapter-dgraph:
     specifiers:
-      '@next-auth/adapter-test': workspace:^0.0.0
-      '@next-auth/tsconfig': workspace:^0.0.0
+      '@next-auth/adapter-test': workspace:*
+      '@next-auth/tsconfig': workspace:*
       '@types/jest': ^26.0.24
       '@types/jsonwebtoken': ^8.5.5
       '@types/node-fetch': ^2.5.11
@@ -159,8 +159,8 @@ importers:
     specifiers:
       '@aws-sdk/client-dynamodb': ^3.36.1
       '@aws-sdk/lib-dynamodb': ^3.36.1
-      '@next-auth/adapter-test': workspace:^0.0.0
-      '@next-auth/tsconfig': workspace:^0.0.0
+      '@next-auth/adapter-test': workspace:*
+      '@next-auth/tsconfig': workspace:*
       '@shelf/jest-dynamodb': ^2.1.0
       jest: ^27.4.3
       next-auth: workspace:*
@@ -176,8 +176,8 @@ importers:
   packages/adapter-fauna:
     specifiers:
       '@fauna-labs/fauna-schema-migrate': ^2.1.3
-      '@next-auth/adapter-test': workspace:^0.0.0
-      '@next-auth/tsconfig': workspace:^0.0.0
+      '@next-auth/adapter-test': workspace:*
+      '@next-auth/tsconfig': workspace:*
       faunadb: ^4.3.0
       jest: ^27.4.3
       next-auth: workspace:*
@@ -191,8 +191,8 @@ importers:
 
   packages/adapter-firebase:
     specifiers:
-      '@next-auth/adapter-test': workspace:^0.0.0
-      '@next-auth/tsconfig': workspace:^0.0.0
+      '@next-auth/adapter-test': workspace:*
+      '@next-auth/tsconfig': workspace:*
       firebase: ^9.7.0
       firebase-tools: ^10.7.2
       jest: ^27.4.3
@@ -209,8 +209,8 @@ importers:
     specifiers:
       '@mikro-orm/core': ^5.0.2
       '@mikro-orm/sqlite': ^5.0.2
-      '@next-auth/adapter-test': workspace:^0.0.0
-      '@next-auth/tsconfig': workspace:^0.0.0
+      '@next-auth/adapter-test': workspace:*
+      '@next-auth/tsconfig': workspace:*
       '@types/uuid': ^8.3.3
       jest: ^27.4.3
       next-auth: workspace:*
@@ -228,8 +228,8 @@ importers:
 
   packages/adapter-mongodb:
     specifiers:
-      '@next-auth/adapter-test': workspace:^0.0.0
-      '@next-auth/tsconfig': workspace:^0.0.0
+      '@next-auth/adapter-test': workspace:*
+      '@next-auth/tsconfig': workspace:*
       jest: ^27.4.3
       mongodb: ^4.4.0
       next-auth: workspace:*
@@ -242,8 +242,8 @@ importers:
 
   packages/adapter-neo4j:
     specifiers:
-      '@next-auth/adapter-test': workspace:^0.0.0
-      '@next-auth/tsconfig': workspace:^0.0.0
+      '@next-auth/adapter-test': workspace:*
+      '@next-auth/tsconfig': workspace:*
       '@types/uuid': ^8.3.3
       jest: ^27.4.3
       neo4j-driver: ^4.4.0
@@ -261,8 +261,8 @@ importers:
 
   packages/adapter-pouchdb:
     specifiers:
-      '@next-auth/adapter-test': workspace:^0.0.0
-      '@next-auth/tsconfig': workspace:^0.0.0
+      '@next-auth/adapter-test': workspace:*
+      '@next-auth/tsconfig': workspace:*
       '@types/pouchdb': ^6.4.0
       crypto: ^1.0.1
       jest: ^27.4.3
@@ -286,8 +286,8 @@ importers:
 
   packages/adapter-prisma:
     specifiers:
-      '@next-auth/adapter-test': workspace:^0.0.0
-      '@next-auth/tsconfig': workspace:^0.0.0
+      '@next-auth/adapter-test': workspace:*
+      '@next-auth/tsconfig': workspace:*
       '@prisma/client': ^3.10.0
       jest: ^27.4.3
       mongodb: ^4.4.0
@@ -304,8 +304,8 @@ importers:
 
   packages/adapter-sequelize:
     specifiers:
-      '@next-auth/adapter-test': workspace:^0.0.0
-      '@next-auth/tsconfig': workspace:^0.0.0
+      '@next-auth/adapter-test': workspace:*
+      '@next-auth/tsconfig': workspace:*
       jest: ^27.4.3
       next-auth: workspace:*
       sequelize: ^6.6.5
@@ -384,8 +384,8 @@ importers:
 
   packages/adapter-upstash-redis:
     specifiers:
-      '@next-auth/adapter-test': workspace:^0.0.0
-      '@next-auth/tsconfig': workspace:^0.0.0
+      '@next-auth/adapter-test': workspace:*
+      '@next-auth/tsconfig': workspace:*
       '@types/uuid': ^8.3.3
       '@upstash/redis': ^1.0.1
       dotenv: ^10.0.0
@@ -413,7 +413,7 @@ importers:
       '@babel/preset-react': ^7.17.12
       '@babel/preset-typescript': ^7.17.12
       '@babel/runtime': ^7.16.3
-      '@next-auth/tsconfig': workspace:^0.0.0
+      '@next-auth/tsconfig': workspace:*
       '@panva/hkdf': ^1.0.1
       '@swc/core': ^1.2.198
       '@swc/jest': ^0.2.21

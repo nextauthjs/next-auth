@@ -6,16 +6,16 @@
   "scripts": {
     "build:app": "turbo run build --filter=next-auth-app --include-dependencies",
     "build": "turbo run build --filter=next-auth --filter=@next-auth/* --no-deps",
-    "lint": "turbo run lint --filter=!next-auth-docs",
-    "lint:fix": "turbo run lint -- --fix",
-    "test": "turbo run test --concurrency=1 --filter=!@next-auth/pouchdb-adapter --filter=!next-auth-* --filter=[HEAD^1]",
-    "setup": "turbo run setup",
+    "clean": "turbo run clean --no-cache",
+    "dev:app": "turbo run dev --parallel --filter=next-auth-app",
+    "dev:docs": "turbo run dev --parallel --no-deps --no-cache --filter=next-auth-docs",
     "dev": "pnpm dev:app",
     "email": "cd apps/dev && pnpm email",
-    "dev:app": "turbo run dev --parallel --no-deps --no-cache --filter=next-auth-app",
-    "dev:docs": "turbo run dev --parallel --no-deps --no-cache --filter=next-auth-docs",
-    "version:pr": "node ./config/version-pr",
-    "release": "ts-node scripts/release"
+    "lint:fix": "turbo run lint -- --fix",
+    "lint": "turbo run lint --filter=!next-auth-docs",
+    "release": "ts-node scripts/release",
+    "test": "turbo run test --concurrency=1 --filter=!@next-auth/pouchdb-adapter --filter=!next-auth-* --filter=[HEAD^1]",
+    "version:pr": "node ./config/version-pr"
   },
   "devDependencies": {
     "@actions/core": "^1.6.0",
