@@ -11,6 +11,7 @@
     "test": "turbo run test --concurrency=1 --filter=!@next-auth/pouchdb-adapter --filter=!next-auth-* --filter=[HEAD^1]",
     "setup": "turbo run setup",
     "dev": "pnpm dev:app",
+    "email": "cd apps/dev && pnpm email",
     "dev:app": "turbo run dev --parallel --no-deps --no-cache --filter=next-auth-app",
     "dev:docs": "turbo run dev --parallel --no-deps --no-cache --filter=next-auth-docs",
     "version:pr": "node ./config/version-pr",
@@ -47,7 +48,15 @@
   },
   "prettier": {
     "semi": false,
-    "singleQuote": false
+    "singleQuote": false,
+    "overrides": [
+      {
+        "files": "apps/dev/pages/api/auth/[...nextauth].ts",
+        "options": {
+          "printWidth": 150
+        }
+      }
+    ]
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
