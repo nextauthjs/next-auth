@@ -61,8 +61,9 @@ You can protect server side rendered pages using the `unstable_getServerSession`
 You need to add this to every server rendered page you want to protect. Be aware, `unstable_getServerSession` takes slightly different arguments than the method it is replacing, `getSession`.
 
 ```js title="pages/server-side-example.js"
-import { useSession, unstable_getServerSession } from "next-auth/next"
+import { unstable_getServerSession } from "next-auth/next"
 import { authOptions } from "./api/auth/[...nextauth]"
+import {useSession} from "next-auth/react"
 
 export default function Page() {
   const { data: session } = useSession()
