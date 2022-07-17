@@ -1,6 +1,8 @@
 import { runBasicTests } from "@next-auth/adapter-test"
 import { FirestoreAdapter } from "../src"
 
+import type { IndexableObject } from "../src"
+
 import {
   getFirestore,
   connectFirestoreEmulator,
@@ -27,10 +29,8 @@ const firestore = getFirestore(app)
 
 connectFirestoreEmulator(firestore, "localhost", 8080)
 
-type IndexableObject = Record<string, unknown>
-
 const Users = collection(firestore, "users").withConverter(
-  getConverter<AdapterUser>()
+  getConverter<AdapterUser & IndexableObject>()
 )
 const Sessions = collection(firestore, "sessions").withConverter(
   getConverter<AdapterSession & IndexableObject>()

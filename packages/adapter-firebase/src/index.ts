@@ -26,7 +26,7 @@ import type {
 
 import { getConverter } from "./converter"
 
-type IndexableObject = Record<string, unknown>
+export type IndexableObject = Record<string, unknown>
 
 export interface FirestoreAdapterOptions {
   emulator?: {
@@ -51,7 +51,7 @@ export function FirestoreAdapter({
   }
 
   const Users = collection(db, "users").withConverter(
-    getConverter<AdapterUser>()
+    getConverter<AdapterUser & IndexableObject>()
   )
   const Sessions = collection(db, "sessions").withConverter(
     getConverter<AdapterSession & IndexableObject>()
