@@ -26,8 +26,12 @@ Next, implement a custom session callback in the `[...nextauth].js` file, as sho
 
 ```javascript title="/pages/api/auth/[...nextauth].js"
 callbacks: {
-  async session({ session, token, user }) {
-    session.user.role = user.role; // Add role value to user object so it is passed along with session
+ async jwt({ token, user }) {
+    token.user = { role: user.role }; // Add user role value to token object so it is passed along to the session callback
+    return token;
+},
+  async session({ session, token }) {
+    session.user.role = token.user.role; // Add role value to user object so it is passed along with session
     return session;
 },
 ```
