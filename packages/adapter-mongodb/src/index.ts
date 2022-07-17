@@ -8,7 +8,6 @@ import type {
   AdapterSession,
   VerificationToken,
 } from "next-auth/adapters"
-
 import type { MongoClient } from "mongodb"
 
 export interface MongoDBAdapterOptions {
