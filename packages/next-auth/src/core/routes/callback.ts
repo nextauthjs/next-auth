@@ -215,7 +215,7 @@ export default async function callback(params: {
 
       // If it is an existing user, use that, otherwise use a placeholder
       const profile = (identifier
-        ? // @ts-expect-errorVerified in `assertConfig`
+        ? // @ts-expect-error Verified in `assertConfig`
           await adapter.getUserByEmail(identifier)
         : null) ?? {
         email: identifier,
