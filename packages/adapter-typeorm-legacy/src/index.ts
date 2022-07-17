@@ -121,11 +121,9 @@ export function TypeORMLegacyAdapter(
       const m = await getManager(c)
       await m.delete<AdapterAccount>("AccountEntity", providerAccountId)
     },
-    // @ts-expect-error
     async createSession(data) {
       const m = await getManager(c)
-      const session = await m.save("SessionEntity", data)
-      return session
+      return m.save("SessionEntity", data)
     },
     async getSessionAndUser(sessionToken) {
       const m = await getManager(c)

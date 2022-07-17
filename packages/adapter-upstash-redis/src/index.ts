@@ -143,10 +143,7 @@ export function UpstashRedisAdapter(
       const id = `${account.provider}:${account.providerAccountId}`
       return await setAccount(id, { ...account, id })
     },
-    async createSession(session) {
-      const id = session.sessionToken
-      return await setSession(id, { ...session, id })
-    },
+    createSession: (session) => setSession(session.sessionToken, session),
     async getSessionAndUser(sessionToken) {
       const session = await getSession(sessionToken)
       if (!session) return null

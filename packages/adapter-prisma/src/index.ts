@@ -36,17 +36,18 @@ export function PrismaAdapter(p: PrismaClient): Adapter {
     deleteSession: (sessionToken) =>
       p.session.delete({ where: { sessionToken } }),
     async createVerificationToken(data) {
-      // @ts-ignore
-      const { id: _, ...verificationToken } = await p.verificationToken.create({
-        data,
-      })
+      const verificationToken = await p.verificationToken.create({ data })
+      // @ts-ignore // MongoDB needs an ID, but we don't
+      if (verificationToken.id) delete verificationToken.id
       return verificationToken
     },
     async useVerificationToken(identifier_token) {
       try {
-        // @ts-ignore
-        const { id: _, ...verificationToken } =
-          await p.verificationToken.delete({ where: { identifier_token } })
+        const verificationToken = await p.verificationToken.delete({
+          where: { identifier_token },
+        })
+        // @ts-ignore // MongoDB needs an ID, but we don't
+        if (verificationToken.id) delete verificationToken.id
         return verificationToken
       } catch (error) {
         // If token already used/deleted, just return null

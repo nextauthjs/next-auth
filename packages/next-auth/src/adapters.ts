@@ -11,7 +11,6 @@ export interface AdapterAccount extends Account {
 }
 
 export interface AdapterSession {
-  id: string
   /** A randomly generated value that is used to get hold of the session. */
   sessionToken: string
   /** Used to connect the session to a particular user */
