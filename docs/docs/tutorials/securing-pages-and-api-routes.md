@@ -63,7 +63,7 @@ You need to add this to every server rendered page you want to protect. Be aware
 ```js title="pages/server-side-example.js"
 import { unstable_getServerSession } from "next-auth/next"
 import { authOptions } from "./api/auth/[...nextauth]"
-import {useSession} from "next-auth/react"
+import { useSession } from "next-auth/react"
 
 export default function Page() {
   const { data: session } = useSession()
@@ -145,10 +145,9 @@ If you are using JSON Web Tokens you can use the `getToken()` helper to access t
 // This is an example of how to read a JSON Web Token from an API route
 import { getToken } from "next-auth/jwt"
 
-const secret = process.env.SECRET
-
 export default async (req, res) => {
-  const token = await getToken({ req, secret })
+  // If you don't have NEXTAUTH_SECRET set, you will have to pass your secret as `secret` to `getToken`
+  const token = await getToken({ req })
   if (token) {
     // Signed in
     console.log("JSON Web Token", JSON.stringify(token, null, 2))
