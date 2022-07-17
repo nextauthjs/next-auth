@@ -56,7 +56,7 @@ export const format = {
       else if (key === "id") continue
       else newObject[key] = value
     }
-    return newObject as T
+    return newObject as T & { _id: ObjectId }
   },
 }
 
@@ -156,7 +156,6 @@ export function MongoDBAdapter(
       return from<AdapterSession>(session)
     },
     async updateSession(data) {
-      // @ts-expect-error
       const { _id, ...session } = to<AdapterSession>(data)
 
       const result = await (
