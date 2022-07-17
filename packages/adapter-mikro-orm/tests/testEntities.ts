@@ -19,9 +19,8 @@ export class User implements defaultEntities.User {
   @Property({ nullable: true })
   name?: string
 
-  @Property({ nullable: true })
-  @Unique()
-  email?: string
+  @Property({ unique: true })
+  email!: string
 
   @Property({ type: "Date", nullable: true })
   emailVerified: Date | null = null
@@ -48,7 +47,7 @@ export class User implements defaultEntities.User {
   accounts = new Collection<Account>(this)
 
   @Property({ hidden: true })
-  role = "ADMIN"
+  role: "ADMIN" = "ADMIN"
 }
 
 @Entity()
@@ -57,5 +56,5 @@ export class VeryImportantEntity {
   id: string = randomUUID()
 
   @Property()
-  important = true
+  important: boolean = true
 }

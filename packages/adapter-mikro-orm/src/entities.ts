@@ -32,9 +32,8 @@ export class User implements RemoveIndex<AdapterUser> {
   @Property({ nullable: true })
   name?: string
 
-  @Property({ nullable: true })
-  @Unique()
-  email?: string
+  @Property({ unique: true })
+  email!: string
 
   @Property({ type: "Date", nullable: true })
   emailVerified: Date | null = null

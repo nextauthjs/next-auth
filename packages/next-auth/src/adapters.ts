@@ -6,7 +6,9 @@ export interface AdapterUser extends User {
   emailVerified: Date | null
 }
 
-export type { Account as AdapterAccount }
+export interface AdapterAccount extends Account {
+  userId: string
+}
 
 export interface AdapterSession {
   id: string
@@ -64,7 +66,7 @@ export interface Adapter {
   getUserByEmail: (email: string) => Awaitable<AdapterUser | null>
   /** Using the provider id and the id of the user for a specific account, get the user. */
   getUserByAccount: (
-    providerAccountId: Pick<Account, "provider" | "providerAccountId">
+    providerAccountId: Pick<AdapterAccount, "provider" | "providerAccountId">
   ) => Awaitable<AdapterUser | null>
   updateUser: (user: Partial<AdapterUser>) => Awaitable<AdapterUser>
   /** @todo Implement */
@@ -72,12 +74,12 @@ export interface Adapter {
     userId: string
   ) => Promise<void> | Awaitable<AdapterUser | null | undefined>
   linkAccount: (
-    account: Account
-  ) => Promise<void> | Awaitable<Account | null | undefined>
+    account: AdapterAccount
+  ) => Promise<void> | Awaitable<AdapterAccount | null | undefined>
   /** @todo Implement */
   unlinkAccount?: (
-    providerAccountId: Pick<Account, "provider" | "providerAccountId">
-  ) => Promise<void> | Awaitable<Account | undefined>
+    providerAccountId: Pick<AdapterAccount, "provider" | "providerAccountId">
+  ) => Promise<void> | Awaitable<AdapterAccount | undefined>
   /** Creates a session for the user and returns it. */
   createSession: (session: {
     sessionToken: string

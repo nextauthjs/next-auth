@@ -117,7 +117,6 @@ export function UpstashRedisAdapter(
       const id = uuid()
       // TypeScript thinks the emailVerified field is missing
       // but all fields are copied directly from user, so it's there
-      // @ts-expect-error
       return await setUser(id, { ...user, id })
     },
     getUser,

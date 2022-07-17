@@ -1,5 +1,5 @@
 import type { PrismaClient, Prisma } from "@prisma/client"
-import type { Adapter } from "next-auth/adapters"
+import type { Adapter, AdapterAccount } from "next-auth/adapters"
 
 export function PrismaAdapter(p: PrismaClient): Adapter {
   return {
@@ -15,9 +15,12 @@ export function PrismaAdapter(p: PrismaClient): Adapter {
     },
     updateUser: ({ id, ...data }) => p.user.update({ where: { id }, data }),
     deleteUser: (id) => p.user.delete({ where: { id } }),
-    linkAccount: (data) => p.account.create({ data }) as any,
+    linkAccount: (data) =>
+      p.account.create({ data }) as unknown as AdapterAccount,
     unlinkAccount: (provider_providerAccountId) =>
-      p.account.delete({ where: { provider_providerAccountId } }) as any,
+      p.account.delete({
+        where: { provider_providerAccountId },
+      }) as unknown as AdapterAccount,
     async getSessionAndUser(sessionToken) {
       const userAndSession = await p.session.findUnique({
         where: { sessionToken },
