@@ -41,6 +41,7 @@
     "firebase": "^9.7.0",
     "firebase-tools": "^10.7.2",
     "jest": "^27.4.3",
-    "next-auth": "workspace:*"
+    "next-auth": "workspace:*",
+    "typescript": "^4.7.4"
   }
 }
