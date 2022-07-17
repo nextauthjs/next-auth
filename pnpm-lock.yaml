@@ -197,7 +197,6 @@ importers:
       firebase-tools: ^10.7.2
       jest: ^27.4.3
       next-auth: workspace:*
-      typescript: ^4.7.4
     devDependencies:
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
@@ -205,7 +204,6 @@ importers:
       firebase-tools: 10.9.2
       jest: 27.5.1
       next-auth: link:../next-auth
-      typescript: 4.7.4
 
   packages/adapter-mikro-orm:
     specifiers:
