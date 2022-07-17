@@ -73,7 +73,9 @@ export default function PostgresAdapter(client: Pool): Adapter {
       return result.rowCount !== 0 ? result.rows[0] : null
     },
     async updateUser(user: Partial<AdapterUser>): Promise<AdapterUser> {
-      const oldUser = await this.getUser(user.id as string);
+      const fetchSql = `select * from users where id = $1`;
+      const query1 = await client.query(fetchSql, [user.id]);
+      const oldUser = query1.rows[0];
 
       const newUser = {
         ...oldUser,
@@ -81,14 +83,14 @@ export default function PostgresAdapter(client: Pool): Adapter {
       }
 
       const { id, name, email, emailVerified, image } = newUser;
-      const sql = `
+      const updateSql = `
         UPDATE users set
         name = $2, email = $3, "emailVerified" = $4, image = $5
         where id = $1
         RETURNING name, email, "emailVerified", image
       `;
-      const result = await client.query(sql, [id, name, email, emailVerified, image]);
-      return result.rows[0];
+      const query2 = await client.query(updateSql, [id, name, email, emailVerified, image]);
+      return query2.rows[0];
     },
     async linkAccount(account) {
       const sql = `
