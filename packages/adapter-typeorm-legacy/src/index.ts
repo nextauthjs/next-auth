@@ -123,7 +123,8 @@ export function TypeORMLegacyAdapter(
     },
     async createSession(data) {
       const m = await getManager(c)
-      return m.save("SessionEntity", data)
+      const session = await m.save("SessionEntity", data)
+      return session
     },
     async getSessionAndUser(sessionToken) {
       const m = await getManager(c)
