@@ -34,7 +34,7 @@
   ],
   "peerDependencies": {
     "neo4j-driver": "^4.0.0",
-    "next-auth": "workspace:*"
+    "next-auth": "^4"
   },
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:^0.0.0",
