@@ -54,6 +54,6 @@ providers: [
     clientSecret: "secret",
     protection: "pkce"
   })
-}
+]
 ...
 ```

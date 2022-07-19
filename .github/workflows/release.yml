@@ -21,7 +21,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.1
         with:
-          version: 6.32.8
+          version: 7.5.1
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
@@ -55,7 +55,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.1
         with:
-          version: 6.32.8
+          version: 7.5.1
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
@@ -69,7 +69,8 @@ jobs:
           git config --global user.name "Balázs Orbán"
           pnpm release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
           NPM_TOKEN_PKG: ${{ secrets.NPM_TOKEN_PKG }}
           NPM_TOKEN_ORG: ${{ secrets.NPM_TOKEN_ORG }}
   release-pr:
@@ -84,7 +85,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.1
         with:
-          version: 6.32.8
+          version: 7.5.1
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
@@ -103,11 +104,15 @@ jobs:
           echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
           pnpm publish --no-git-checks --access public --tag experimental
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN_PKG }}
       - name: Comment version on PR
         uses: NejcZdovc/comment-pr@v1
         with:
-          message: "🎉 Experimental release [published on npm](https://www.npmjs.com/package/next-auth/v/${{ env.VERSION }})!\n\n```sh\nnpm i next-auth@${{ env.VERSION }}\n```\n```sh\nyarn add next-auth@${{ env.VERSION }}\n```"
+          message:
+            "🎉 Experimental release [published 📦️ on npm](https://npmjs.com/package/next-auth/v/${{ env.VERSION }})!\n \
+            ```sh\npnpm add next-auth@${{ env.VERSION }}\n```\n \
+            ```sh\nyarn add next-auth@${{ env.VERSION }}\n```\n \
+            ```sh\nnpm i next-auth@${{ env.VERSION }}\n```"
         env:
           VERSION: ${{ steps.determine-version.outputs.version }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

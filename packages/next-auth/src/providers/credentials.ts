@@ -1,4 +1,4 @@
-import type { IncomingRequest } from "../core"
+import type { RequestInternal } from "../core"
 import type { CommonProviderOptions } from "."
 import type { User, Awaitable } from ".."
 
@@ -16,7 +16,7 @@ export interface CredentialsConfig<
   credentials: C
   authorize: (
     credentials: Record<keyof C, string> | undefined,
-    req: Pick<IncomingRequest, "body" | "query" | "headers" | "method">
+    req: Pick<RequestInternal, "body" | "query" | "headers" | "method">
   ) => Awaitable<(Omit<User, "id"> | { id?: string }) | null>
 }
 

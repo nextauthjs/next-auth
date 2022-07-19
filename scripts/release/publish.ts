@@ -1,4 +1,3 @@
-import { createHash } from "crypto"
 import type { Commit, PackageToRelease } from "./types"
 
 import { debug, pkgJson, execSync } from "./utils"
@@ -15,17 +14,17 @@ export async function publish(options: {
   for await (const pkg of packages) {
     if (dryRun) {
       console.log(
-        `Dry run, npm publish for package ${pkg.name} will show the wrong version (${pkg.oldVersion}). In normal run, it would be ${pkg.newVersion}`
+        `Dry run, \`npm publish\` would have released package \`${pkg.name}\` with version "${pkg.newVersion}".`
       )
     } else {
       console.log(
-        `Writing version ${pkg.newVersion} to package.json for package ${pkg.name}`
+        `Writing version "${pkg.newVersion}" to package.json for package \`${pkg.name}\``
       )
       await pkgJson.update(pkg.path, { version: pkg.newVersion })
       console.log("package.json file has been written, publishing...")
     }
 
-    let npmPublish = `pnpm publish --access public --registry=https://registry.npmjs.org`
+    let npmPublish = `pnpm publish --access public --registry=https://registry.npmjs.org --no-git-checks`
     // We use different tokens for `next-auth` and `@next-auth/*` packages
 
     if (pkg.name === "next-auth") {
@@ -35,8 +34,10 @@ export async function publish(options: {
     }
 
     if (dryRun) {
-      console.log(`Dry run, skip npm publish for package ${pkg.name}...`)
-      npmPublish += " --dry-run"
+      console.log(
+        `Dry run, skip \`npm publish\` for package \`${pkg.name}\`...\n`
+      )
+      npmPublish += " --dry-run --silent"
     } else {
       execSync(
         "echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > .npmrc",
@@ -58,13 +59,15 @@ export async function publish(options: {
     const { name, oldVersion, newVersion } = pkg
     const gitTag = `${name}@v${newVersion}`
 
-    console.log(`${name} ${oldVersion} -> ${newVersion}`)
+    console.log(
+      `\n\n-------------------------------\n${name} ${oldVersion} -> ${newVersion}`
+    )
 
     const changelog = createChangelog(pkg)
-    debug(`Generated changelog for package ${name}`, changelog)
+    debug("Changelog generated", changelog)
 
     if (dryRun) {
-      console.log(`Dry run, skip git tag/release notes for package ${name}`)
+      console.log(`Dry run, skip git tag/release notes for package \`${name}\``)
     } else {
       console.log(`Creating git tag...`)
       execSync(`git tag ${gitTag}`)
@@ -83,7 +86,7 @@ function createChangelog(pkg: PackageToRelease) {
   const {
     commits: { features, breaking, bugfixes, other },
   } = pkg
-  console.log(`Creating changelog for package ${pkg.name}...`)
+  console.log(`Creating changelog for package \`${pkg.name}\`...`)
 
   let changelog = ``
   changelog += listGroup("Features", features)

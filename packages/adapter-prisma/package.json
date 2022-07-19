@@ -3,7 +3,7 @@
   "version": "1.0.3",
   "description": "Prisma adapter for next-auth.",
   "homepage": "https://next-auth.js.org",
-  "repository": "https://github.com/nextauthjs/adapters",
+  "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
@@ -37,7 +37,7 @@
   ],
   "peerDependencies": {
     "@prisma/client": ">=2.26.0 || >=3",
-    "next-auth": "workspace:*"
+    "next-auth": "^4"
   },
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:^0.0.0",

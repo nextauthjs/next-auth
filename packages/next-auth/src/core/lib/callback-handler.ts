@@ -1,11 +1,12 @@
+import { randomBytes, randomUUID } from "crypto"
 import { AccountNotLinkedError } from "../errors"
 import { fromDate } from "./utils"
-import { randomBytes, randomUUID } from "crypto"
-import { InternalOptions } from "../../lib/types"
-import { AdapterSession, AdapterUser } from "../../adapters"
-import { JWT } from "../../jwt"
-import { Account, User } from "../.."
-import { SessionToken } from "./cookie"
+
+import type { InternalOptions } from "../types"
+import type { AdapterSession, AdapterUser } from "../../adapters"
+import type { JWT } from "../../jwt"
+import type { Account, User } from "../.."
+import type { SessionToken } from "./cookie"
 
 /**
  * This function handles the complex flow of signing users in, and either creating,
@@ -154,7 +155,7 @@ export default async function callbackHandler(params: {
         // If the user is already signed in and the OAuth account isn't already associated
         // with another user account then we can go ahead and link the accounts safely.
         await linkAccount({ ...account, userId: user.id })
-        await events.linkAccount?.({ user, account })
+        await events.linkAccount?.({ user, account, profile })
 
         // As they are already signed in, we don't need to do anything after linking them
         return { session, user, isNewUser }
@@ -204,7 +205,7 @@ export default async function callbackHandler(params: {
       await events.createUser?.({ user })
 
       await linkAccount({ ...account, userId: user.id })
-      await events.linkAccount?.({ user, account })
+      await events.linkAccount?.({ user, account, profile })
 
       session = useJwtSession
         ? {}

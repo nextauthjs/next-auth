@@ -3,9 +3,9 @@
   "version": "1.0.3",
   "description": "Dgraph adapter for next-auth.",
   "homepage": "https://next-auth.js.org",
-  "repository": "https://github.com/nextauthjs/adapters",
+  "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
-    "url": "https://github.com/nextauthjs/adapters/issues"
+    "url": "https://github.com/nextauthjs/next-auth/issues"
   },
   "author": "Arnaud Derbey <arnaud@derbey.dev>",
   "contributors": [],
@@ -31,7 +31,7 @@
   },
   "peerDependencies": {
     "jsonwebtoken": "^8.5.1",
-    "next-auth": "workspace:*"
+    "next-auth": "^4"
   },
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:^0.0.0",

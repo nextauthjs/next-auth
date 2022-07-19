@@ -1,7 +1,7 @@
 import { useState } from "react"
 import userEvent from "@testing-library/user-event"
 import { render, screen, waitFor } from "@testing-library/react"
-import logger from "../../lib/logger"
+import logger from "../../utils/logger"
 import {
   server,
   mockCredentialsResponse,
@@ -13,7 +13,7 @@ import { rest } from "msw"
 
 const { location } = window
 
-jest.mock("../../lib/logger", () => ({
+jest.mock("../../utils/logger", () => ({
   __esModule: true,
   default: {
     warn: jest.fn(),

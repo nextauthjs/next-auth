@@ -30,7 +30,7 @@ packages/next-auth/providers
 packages/next-auth/src/providers/oauth-types.ts
 packages/next-auth/client
 packages/next-auth/css
-packages/next-auth/lib
+packages/next-auth/utils
 packages/next-auth/core
 packages/next-auth/jwt
 packages/next-auth/react
@@ -44,6 +44,7 @@ packages/next-auth/middleware.js
 # Development app
 apps/dev/src/css
 apps/dev/prisma/migrations
+apps/dev/typeorm
 
 # VS
 /.vs/slnx.sqlite-journal

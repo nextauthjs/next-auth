@@ -35,6 +35,9 @@ export default function Instagram(options) {
     token: "https://api.instagram.com/oauth/access_token",
     userinfo:
       "https://graph.instagram.com/me?fields=id,username,account_type,name",
+    client: {
+      token_endpoint_auth_method: 'client_secret_post',
+    },
     async profile(profile) {
       return {
         id: profile.id,

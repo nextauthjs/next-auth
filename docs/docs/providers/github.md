@@ -19,7 +19,7 @@ https://github.com/settings/apps
 
 The **GitHub Provider** comes with a set of default options:
 
-- [GitHub Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/github.js)
+- [GitHub Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/github.ts)
 
 You can override any of the options to suit your own use case.
 
@@ -30,8 +30,8 @@ import GitHubProvider from "next-auth/providers/github";
 ...
 providers: [
   GitHubProvider({
-    clientId: process.env.GITHUB_CLIENT_ID,
-    clientSecret: process.env.GITHUB_CLIENT_SECRET
+    clientId: process.env.GITHUB_ID,
+    clientSecret: process.env.GITHUB_SECRET
   })
 ]
 ...

@@ -52,7 +52,7 @@ export interface VerificationToken {
  * - `deleteUser`
  * - `unlinkAccount`
  *
- * [Community adapters](https://github.com/nextauthjs/adapters) |
+ * [Adapters Overview](https://next-auth.js.org/adapters/overview) |
  * [Create a custom adapter](https://next-auth.js.org/tutorials/creating-a-database-adapter)
  */
 export interface Adapter {

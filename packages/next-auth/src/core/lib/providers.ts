@@ -1,8 +1,8 @@
-import { merge } from "../../lib/merge"
+import { merge } from "../../utils/merge"
 
-import type { InternalProvider } from "../../lib/types"
+import type { InternalProvider } from "../types"
 import type { Provider } from "../../providers"
-import type { InternalUrl } from "../../lib/parse-url"
+import type { InternalUrl } from "../../utils/parse-url"
 
 /**
  * Adds `signinUrl` and `callbackUrl` to each provider

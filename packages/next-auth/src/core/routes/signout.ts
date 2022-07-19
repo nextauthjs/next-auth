@@ -1,5 +1,5 @@
 import type { Adapter } from "../../adapters"
-import type { InternalOptions } from "../../lib/types"
+import type { InternalOptions } from "../types"
 import type { OutgoingResponse } from ".."
 import type { SessionStore } from "../lib/cookie"
 

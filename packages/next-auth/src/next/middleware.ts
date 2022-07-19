@@ -5,7 +5,7 @@ import type { JWT, JWTOptions } from "../jwt"
 import { NextResponse, NextRequest } from "next/server"
 
 import { getToken } from "../jwt"
-import parseUrl from "../lib/parse-url"
+import parseUrl from "../utils/parse-url"
 
 type AuthorizedCallback = (params: {
   token: JWT | null
@@ -25,9 +25,9 @@ export interface NextAuthMiddlewareOptions {
   /**
    * You can override the default cookie names and options for any of the cookies
    * by this middleware. Similar to `cookies` in `NextAuth`.
-   * 
+   *
    * Useful if the token is stored in not a default cookie.
-   * 
+   *
    * ---
    * [Documentation](https://next-auth.js.org/configuration/options#cookies)
    *
@@ -36,11 +36,16 @@ export interface NextAuthMiddlewareOptions {
    * You should **try to avoid using advanced options** unless you are very comfortable using them.
    *
    */
-  cookies?: Partial<Record<keyof Pick<keyof NextAuthOptions["cookies"], "sessionToken">, Omit<CookieOption, "options">>>
+  cookies?: Partial<
+    Record<
+      keyof Pick<keyof NextAuthOptions["cookies"], "sessionToken">,
+      Omit<CookieOption, "options">
+    >
+  >
 
   /**
    * If a custom jwt `decode` method is set in `[...nextauth].ts`, the same method should be set here also.
-   * 
+   *
    * ---
    * [Documentation](https://next-auth.js.org/configuration/nextjs#custom-jwt-decode-method)
    */
@@ -61,7 +66,7 @@ export interface NextAuthMiddlewareOptions {
      * @example
      *
      * ```js
-     * // `pages/admin/_middleware.js`
+     * // `middleware.js`
      * import { withAuth } from "next-auth/middleware"
      *
      * export default withAuth({
@@ -69,6 +74,9 @@ export interface NextAuthMiddlewareOptions {
      *     authorized: ({ token }) => token?.user.isAdmin
      *   }
      * })
+     *
+     * export const config = { matcher: ["/admin"] }
+     *
      * ```
      *
      * ---
@@ -76,12 +84,22 @@ export interface NextAuthMiddlewareOptions {
      */
     authorized?: AuthorizedCallback
   }
+
+  /**
+   * The same `secret` used in the `NextAuth` configuration.
+   * Defaults to the `NEXTAUTH_SECRET` environment variable.
+   */
+  secret?: string
 }
+
+// TODO: `NextMiddleware` should allow returning `void`
+// Simplify when https://github.com/vercel/next.js/pull/38625 is merged.
+type NextMiddlewareResult = ReturnType<NextMiddleware> | void // eslint-disable-line @typescript-eslint/no-invalid-void-type
 
 async function handleMiddleware(
   req: NextRequest,
   options: NextAuthMiddlewareOptions | undefined,
-  onSuccess?: (token: JWT | null) => Promise<any>
+  onSuccess?: (token: JWT | null) => Promise<NextMiddlewareResult>
 ) {
   const signInPage = options?.pages?.signIn ?? "/api/auth/signin"
   const errorPage = options?.pages?.error ?? "/api/auth/error"
@@ -94,7 +112,8 @@ async function handleMiddleware(
     return
   }
 
-  if (!process.env.NEXTAUTH_SECRET) {
+  const secret = options?.secret ?? process.env.NEXTAUTH_SECRET
+  if (!secret) {
     console.error(
       `[next-auth][error][NO_SECRET]`,
       `\nhttps://next-auth.js.org/errors#no_secret`
@@ -109,7 +128,8 @@ async function handleMiddleware(
   const token = await getToken({
     req,
     decode: options?.jwt?.decode,
-    cookieName: options?.cookies?.sessionToken?.name
+    cookieName: options?.cookies?.sessionToken?.name,
+    secret,
   })
 
   const isAuthorized =
@@ -120,16 +140,28 @@ async function handleMiddleware(
 
   // the user is not logged in, redirect to the sign-in page
   const signInUrl = new URL(signInPage, req.nextUrl.origin)
-  signInUrl.searchParams.append("callbackUrl", `${req.nextUrl.pathname}${req.nextUrl.search}`)
+  signInUrl.searchParams.append(
+    "callbackUrl",
+    `${req.nextUrl.pathname}${req.nextUrl.search}`
+  )
   return NextResponse.redirect(signInUrl)
 }
 
+export interface NextRequestWithAuth extends NextRequest {
+  nextauth: { token: JWT | null }
+}
+
+export type NextMiddlewareWithAuth = (
+  request: NextRequestWithAuth,
+  event: NextFetchEvent
+) => NextMiddlewareResult | Promise<NextMiddlewareResult>
+
 export type WithAuthArgs =
-  | [NextRequest]
-  | [NextRequest, NextFetchEvent]
-  | [NextRequest, NextAuthMiddlewareOptions]
-  | [NextMiddleware]
-  | [NextMiddleware, NextAuthMiddlewareOptions]
+  | [NextRequestWithAuth]
+  | [NextRequestWithAuth, NextFetchEvent]
+  | [NextRequestWithAuth, NextAuthMiddlewareOptions]
+  | [NextMiddlewareWithAuth]
+  | [NextMiddlewareWithAuth, NextAuthMiddlewareOptions]
   | [NextAuthMiddlewareOptions]
   | []
 
@@ -141,7 +173,7 @@ export type WithAuthArgs =
  * @example
  *
  * ```js
- * // `pages/_middleware.js`
+ * // `middleware.js`
  * export { default } from "next-auth/middleware"
  * ```
  *
@@ -157,9 +189,9 @@ export function withAuth(...args: WithAuthArgs) {
   if (typeof args[0] === "function") {
     const middleware = args[0]
     const options = args[1] as NextAuthMiddlewareOptions | undefined
-    return async (...args: Parameters<NextMiddleware>) =>
+    return async (...args: Parameters<NextMiddlewareWithAuth>) =>
       await handleMiddleware(args[0], options, async (token) => {
-        ;(args[0] as any).nextauth = { token }
+        args[0].nextauth = { token }
         return await middleware(...args)
       })
   }
