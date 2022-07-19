@@ -196,7 +196,7 @@ export function withAuth(...args: WithAuthArgs) {
       })
   }
 
-  const options = args[0] as NextAuthMiddlewareOptions
+  const options = args[0]
   return async (...args: Parameters<NextMiddleware>) =>
     await handleMiddleware(args[0], options)
 }
