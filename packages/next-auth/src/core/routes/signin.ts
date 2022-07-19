@@ -87,7 +87,6 @@ export default async function signin(params: {
     } catch (error) {
       logger.error("SIGNIN_EMAIL_ERROR", {
         error: error as Error,
-        url,
         providerId: provider.id,
       })
       return { redirect: `${url}/error?error=EmailSignin` }
