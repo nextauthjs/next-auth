@@ -47,7 +47,7 @@ import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
 const adapters = {
   prisma() {
     const client = globalThis.prisma || new PrismaClient()
-    if (process.env.NODE_ENV !== "production") global.prisma = client
+    if (process.env.NODE_ENV !== "production") globalThis.prisma = client
     return PrismaAdapter(client)
   },
   typeorm() {
@@ -127,15 +127,7 @@ if (authOptions.adapter) {
   authOptions.providers.unshift(
     // NOTE: You can start a fake e-mail server with `pnpm email`
     // and then go to `http://localhost:1080` in the browser
-    Email({
-      server: {
-        host: "127.0.0.1",
-        auth: null,
-        secure: false,
-        port: 1025,
-        tls: { rejectUnauthorized: false },
-      },
-    })
+    Email({ server: "smtp://127.0.0.1:1025?tls.rejectUnauthorized=false" })
   )
 }
 
