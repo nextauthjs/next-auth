@@ -3,28 +3,36 @@ import type {
   GroupedCommits as GrouppedCommits,
   PackageToRelease,
 } from "./types"
+import type { ConfigType } from "./config"
 
 import { debug, pkgJson, execSync } from "./utils"
 import semver from "semver"
 import parseCommit from "@commitlint/parse"
 import gitLog from "git-log-parser"
 import streamToArray from "stream-to-array"
+import fs from "node:fs"
+import path from "node:path"
 
-export async function analyze(options: {
-  dryRun: boolean
-  packages: Record<string, string>
-  BREAKING_COMMIT_MSG: string
-  RELEASE_COMMIT_MSG: string
-  RELEASE_COMMIT_TYPES: string[]
-}): Promise<PackageToRelease[]> {
-  const {
-    packages,
-    BREAKING_COMMIT_MSG,
-    RELEASE_COMMIT_MSG,
-    RELEASE_COMMIT_TYPES,
-  } = options
+function getPackages(rootDir: string, packageDirectories: string[]) {
+  const packages = []
 
-  const packageFolders = Object.values(options.packages)
+  for (const dir of packageDirectories) {
+    const packagesPath = path.join(rootDir, dir)
+    for (const d of fs.readdirSync(packagesPath)) {
+      const packageJSONPath = path.join(packagesPath, d, "package.json")
+      const packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, "utf8"))
+      if (!packageJSON.private) packages.push(packageJSON.name)
+    }
+  }
+
+  return packages
+}
+
+export async function analyze(config: ConfigType): Promise<PackageToRelease[]> {
+  const { BREAKING_COMMIT_MSG, RELEASE_COMMIT_MSG, RELEASE_COMMIT_TYPES } =
+    config
+
+  const packages = getPackages(config.rootDir, config.packageDirectories)
 
   console.log("Identifying latest tag...")
   const latestTag = execSync("git describe --tags --abbrev=0", {
@@ -84,7 +92,7 @@ export async function analyze(options: {
   }
   const packageCommits = commitsSinceLatestTag.filter(({ commit }) => {
     const changedFiles = getChangedFiles(commit.short)
-    return packageFolders.some((packageFolder) =>
+    return packages.some((packageFolder) =>
       changedFiles.some((changedFile) => changedFile.startsWith(packageFolder))
     )
   })
