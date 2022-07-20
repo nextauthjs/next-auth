@@ -150,7 +150,7 @@ More information can be found in the following [GitHub Issue](https://github.com
 
 ### NextAuth.js + React-Query
 
-There was once an alternative client-side API library based upon [`react-query`](https://www.npmjs.com/package/react-query) available under [`nextauthjs/react-query`](https://github.com/nextauthjs/react-query). This project has been archived, but if use `react-query` in your project already, you can leverage it with NextAuth.js to handle the client-side session management for you as well. You can use the [original implementation from the `@next-auth/react-query` repo](https://github.com/nextauthjs/react-query/blob/4b985a79df43dc2be72da320677d6db068104aa1/package.json).
+You can create your own session management solution using data fetching libraries like [React Query](https://tanstack.com/query/v4/docs/adapters/react-query) or [SWR](https://swr.vercel.app). You can use the [original implementation of `@next-auth/react-query`](https://github.com/nextauthjs/react-query) and look at the [`next-auth/react` source code](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/react/index.tsx) as a starting point.
 
 ---
 
