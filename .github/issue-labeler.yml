@@ -21,6 +21,9 @@ mongodb:
 neo4j:
   - "@next-auth/neo4j-adapter"
 
+pg:
+  - "@next-auth/pg-adapter"
+
 pouchdb:
   - "@next-auth/pouchdb-adapter"
 
