@@ -8,11 +8,11 @@ If you find any bugs please report them - this adapter is new!
 
 ## Getting Started
 
-1. Install `next-auth` and `@next-auth/postgres-adapter`. You'll also need the Postgres package `pg`
+1. Install `next-auth` and `@next-auth/pg-adapter`. You'll also need the Postgres package `pg`
 itself, though you'll likely have this already,
 
 ```js
-npm install next-auth @next-auth/postgres-adapter
+npm install next-auth @next-auth/pg-adapter
 npm install pg
 ```
 
@@ -20,7 +20,7 @@ npm install pg
 
 ```js
 import NextAuth from "next-auth"
-import { PostgresAdapter } from "@next-auth/postgres-adapter"
+import { PostgresAdapter } from "@next-auth/pg-adapter"
 import { Pool } from "pg";
 
 const connectionString = "postgresql://localhost/adapter-postgres-test"

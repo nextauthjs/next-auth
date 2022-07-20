@@ -1,5 +1,5 @@
 {
-  "name": "@next-auth/postgres-adapter",
+  "name": "@next-auth/pg-adapter",
   "description": "Postgres adapter for next-auth.",
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/next-auth",
