@@ -148,7 +148,7 @@ Because of how `_app` is written, it won't unnecessarily contact the `/api/auth/
 
 More information can be found in the following [GitHub Issue](https://github.com/nextauthjs/next-auth/issues/1210).
 
-### NextAuth.js + React-Query
+### NextAuth.js + React Query
 
 You can create your own session management solution using data fetching libraries like [React Query](https://tanstack.com/query/v4/docs/adapters/react-query) or [SWR](https://swr.vercel.app). You can use the [original implementation of `@next-auth/react-query`](https://github.com/nextauthjs/react-query) and look at the [`next-auth/react` source code](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/react/index.tsx) as a starting point.
 
