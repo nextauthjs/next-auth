@@ -5,7 +5,7 @@ importers:
   .:
     specifiers:
       '@actions/core': ^1.6.0
-      '@balazsorban/monorepo-release': 0.0.3
+      '@balazsorban/monorepo-release': 0.0.4
       '@types/node': ^17.0.25
       '@typescript-eslint/eslint-plugin': ^5.10.2
       '@typescript-eslint/parser': ^4.33.0
@@ -23,7 +23,7 @@ importers:
       typescript: ^4.5.2
     devDependencies:
       '@actions/core': 1.9.0
-      '@balazsorban/monorepo-release': 0.0.3
+      '@balazsorban/monorepo-release': 0.0.4
       '@types/node': 17.0.45
       '@typescript-eslint/eslint-plugin': 5.29.0_3ekaj7j3owlolnuhj3ykrb7u7i
       '@typescript-eslint/parser': 4.33.0_hxadhbs2xogijvk7vq4t2azzbu
@@ -3630,8 +3630,8 @@ packages:
       '@babel/helper-validator-identifier': 7.16.7
       to-fast-properties: 2.0.0
 
-  /@balazsorban/monorepo-release/0.0.3:
-    resolution: {integrity: sha512-O2p8B5UndTgHmn3I5q9y3U8h0eFmR/EDZOAbHRLRaXzxkbnQAPfizlrQUvHYcK5G1aQu9Uo49khVmiwYI4AFvA==}
+  /@balazsorban/monorepo-release/0.0.4:
+    resolution: {integrity: sha512-jjYc05vcRueT+nC7BD7C0D2JjE+H8xDdAIfwjtlbMHTnTwPx2KYXrbWohbL7bGVN8ZbhJDmXkXOQjppSrZCQBw==}
     engines: {node: '>=16.16.0'}
     hasBin: true
     dependencies:
