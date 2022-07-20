@@ -87,12 +87,7 @@ const SessionContext = React.createContext<SessionContextValue | undefined>(
 export function useSession<R extends boolean>(options?: UseSessionOptions<R>) {
   // @ts-expect-error Satisfy TS if branch on line below
   const value: SessionContextValue<R> = React.useContext(SessionContext)
-  if (!value && process.env.NODE_ENV !== "production") {
-    throw new Error(
-      "[next-auth]: `useSession` must be wrapped in a <SessionProvider />"
-    )
-  }
-
+  
   const { required, onUnauthenticated } = options ?? {}
 
   const requiredAndNotLoading = required && value.status === "unauthenticated"
