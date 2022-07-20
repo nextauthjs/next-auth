@@ -10,7 +10,7 @@ providers:
 
 adapters:
   - packages/next-auth/src/adapters.ts
-  - packages/*-adapter/**
+  - packages/adapter-*/**
 
 dgraph:
   - packages/adapter-dgraph/**

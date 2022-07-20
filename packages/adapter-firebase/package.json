@@ -33,7 +33,7 @@
   },
   "peerDependencies": {
     "firebase": "^9.7.0",
-    "next-auth": "workspace:*"
+    "next-auth": "^4"
   },
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:^0.0.0",
