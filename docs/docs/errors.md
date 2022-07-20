@@ -70,7 +70,7 @@ Either PKCE code verifier or the generation of the CSRF token hash in the intern
 
 If set, check your [`cookies` configuration](/configuration/options#cookies), and make sure the browser is not blocking/restricting cookies.
 
-1. OAuth misconfiguration
+2. OAuth misconfiguration
 
 Please check your OAuth provider and make sure your URLs  and other options are correctly set.
 
