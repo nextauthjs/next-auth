@@ -30,7 +30,7 @@ export default async function oAuthCallback(params: {
       error_description: query?.error_description,
       providerId: provider.id,
     })
-    logger.debug("OAUTH_CALLBACK_HANDLER_ERROR_DETAILS", { body })
+    logger.debug("OAUTH_CALLBACK_HANDLER_ERROR", { body })
     throw error
   }
 
