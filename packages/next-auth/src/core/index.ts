@@ -90,8 +90,8 @@ export async function NextAuthHandler<
 
   const assertionResult = assertConfig({ options: userOptions, req })
 
-  if (typeof assertionResult === "string") {
-    logger.warn(assertionResult)
+  if (Array.isArray(assertionResult)) {
+    assertionResult.forEach(logger.warn)
   } else if (assertionResult instanceof Error) {
     // Bail out early if there's an error in the user config
     const { pages, theme } = userOptions

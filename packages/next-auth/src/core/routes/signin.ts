@@ -26,7 +26,10 @@ export default async function signin(params: {
       const response = await getAuthorizationUrl({ options, query })
       return response
     } catch (error) {
-      logger.error("SIGNIN_OAUTH_ERROR", { error: error as Error, provider })
+      logger.error("SIGNIN_OAUTH_ERROR", {
+        error: error as Error,
+        providerId: provider.id,
+      })
       return { redirect: `${url}/error?error=OAuthSignin` }
     }
   } else if (provider.type === "email") {
@@ -79,18 +82,15 @@ export default async function signin(params: {
     }
 
     try {
-      await emailSignin(email, options)
+      const redirect = await emailSignin(email, options)
+      return { redirect }
     } catch (error) {
-      logger.error("SIGNIN_EMAIL_ERROR", error as Error)
+      logger.error("SIGNIN_EMAIL_ERROR", {
+        error: error as Error,
+        providerId: provider.id,
+      })
       return { redirect: `${url}/error?error=EmailSignin` }
     }
-
-    const params = new URLSearchParams({
-      provider: provider.id,
-      type: provider.type,
-    })
-
-    return { redirect: `${url}/verify-request?${params}` }
   }
   return { redirect: `${url}/signin` }
 }

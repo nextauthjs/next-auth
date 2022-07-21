@@ -61,17 +61,20 @@ There should also be further details logged when this occurs, such as the error 
 
 ### Signin / Callback
 
-#### GET_AUTHORIZATION_URL_ERROR
-
-This error can occur when we cannot get the OAuth v1 request token and generate the authorization URL.
-
-Please double check your OAuth v1 provider settings, especially the OAuth token and OAuth token secret.
-
 #### SIGNIN_OAUTH_ERROR
 
-This error can occur in one of a few places, first during the redirect to the authorization URL of the provider. Next, in the signin flow while creating the PKCE code verifier. Finally, during the generation of the CSRF Token hash in the internal state during signin.
+This error occurs during the redirection to the authorization URL of the OAuth provider. Possible causes:
 
-Please check your OAuth provider settings and make sure your URLs and other options are correctly set on the provider side.
+1. Cookie handling
+Either PKCE code verifier or the generation of the CSRF token hash in the internal state failed.
+
+If set, check your [`cookies` configuration](/configuration/options#cookies), and make sure the browser is not blocking/restricting cookies.
+
+2. OAuth misconfiguration
+
+Please check your OAuth provider and make sure your URLs  and other options are correctly set.
+
+If you are using an OAuth v1 provider, check your OAuth v1 provider settings, especially the OAuth token and OAuth token secret.
 
 #### CALLBACK_OAUTH_ERROR
 
@@ -150,12 +153,6 @@ This error occurs when there was an issue deleting the session from the database
 ---
 
 ### Other
-
-#### SEND_VERIFICATION_EMAIL_ERROR
-
-This error occurs when the Email Authentication Provider is unable to send an email.
-
-Check your mail server configuration.
 
 #### MISSING_NEXTAUTH_API_ROUTE_ERROR
 
