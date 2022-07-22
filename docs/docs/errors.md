@@ -175,8 +175,8 @@ If you do not use a Middleware, make sure you don't try redirecting the user to 
 
 Useful links:
 
-- http://localhost:8000/configuration/nextjs#pages
-- http://localhost:8000/configuration/pages
+- https://next-auth.js.org/configuration/nextjs#pages
+- https://next-auth.js.org/configuration/pages
 - https://nextjs.org/docs/advanced-features/middleware#matcher
   
 ### Other
