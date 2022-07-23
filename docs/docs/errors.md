@@ -152,7 +152,7 @@ This error occurs when there was an issue deleting the session from the database
 
 ---
 
-### Other
+### Configuration
 
 #### MISSING_NEXTAUTH_API_ROUTE_ERROR
 
@@ -163,6 +163,23 @@ Make sure the file is there and the filename is written correctly.
 #### NO_SECRET
 
 In production, we expect you to define a `secret` property in your configuration. In development, this is shown as a warning for convenience. [Read more](/configuration/options#secret)
+
+
+#### AUTH_ON_ERROR_PAGE_ERROR
+
+You have a custom error page defined that was rendered due to an error, but the page also required authentication. To avoid an infinite redirect loop, NextAuth.js bailed out and rendered its default error page instead.
+
+If you are using a Middleware, make sure you include the same `pages` configuration in your `middleware.ts` and `[...nextauth].ts` files. Or use the `matcher` option to only require authentication for certain sites (and exclude your custom error page).
+
+If you do not use a Middleware, make sure you don't try redirecting the user to the sign-in page when hitting your custom error page.
+
+Useful links:
+
+- https://next-auth.js.org/configuration/nextjs#pages
+- https://next-auth.js.org/configuration/pages
+- https://nextjs.org/docs/advanced-features/middleware#matcher
+  
+### Other
 
 #### oauth_callback_error expected 200 OK with body but no body was returned
 

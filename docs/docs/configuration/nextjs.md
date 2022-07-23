@@ -137,6 +137,10 @@ Callbacks are asynchronous functions you can use to control what happens when an
 
 Specify URLs to be used if you want to create custom sign in, and error pages. Pages specified will override the corresponding built-in page.
 
+:::note
+This should match the `pages` configuration that's found in `[...nextauth].ts`.
+:::
+
 #### Example (default value)
 
 ```js
