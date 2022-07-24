@@ -46,30 +46,19 @@ This Provider template only has a one hour access token to it and only has the "
 
 ```js
 providers: [
-  {
-    id: 'reddit',
-      name: 'Reddit',
-      clientId: process.env.REDDIT_CLIENT_ID,
-      clientSecret: process.env.REDDIT_CLIENT_SECRET,
-      authorization: {
-        url: 'https://www.reddit.com/api/v1/authorize?response_type=code&duration=permanent',
-        params: { scope: 'identity mysubreddits read' },
+  RedditProvider({
+    clientId: process.env.REDDIT_CLIENT_ID,
+    clientSecret: process.env.REDDIT_CLIENT_SECRET,
+    version: '2.0',
+    authorization: {
+      url: 'https://www.reddit.com/api/v1/authorize',
+      params: {
+        scope: 'identity',
+        duration: 'permanent',
+        response_type: 'code',
       },
-      type: 'oauth',
-      version: '2.0',
-      token: {
-        url: 'https://www.reddit.com/api/v1/access_token',
-        params: { grant_type: 'authorization_code' },
-      },
-      userinfo: 'https://oauth.reddit.com/api/v1/me',
-      profile: profile => {
-        return {
-          id: profile.id,
-          name: profile.name,
-          email: null,
-        }
-      },
-  },
+    },
+  }),
 ]
 ```
 
