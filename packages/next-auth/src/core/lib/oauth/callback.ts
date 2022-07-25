@@ -2,6 +2,7 @@ import { TokenSet } from "openid-client"
 import { openidClient } from "./client"
 import { oAuth1Client } from "./client-legacy"
 import { useState } from "./state-handler"
+import { useNonce } from "./nonce-handler"
 import { usePKCECodeVerifier } from "./pkce-handler"
 import { OAuthCallbackError } from "../../errors"
 
@@ -77,6 +78,13 @@ export default async function oAuthCallback(params: {
     if (state) {
       checks.state = state.value
       resCookies.push(state.cookie)
+    }
+
+    const nonce = await useNonce(cookies?.[options.cookies.nonce.name], options)
+
+    if (nonce) {
+      checks.nonce = nonce.value
+      resCookies.push(nonce.cookie)
     }
 
     const codeVerifier = cookies?.[options.cookies.pkceCodeVerifier.name]
