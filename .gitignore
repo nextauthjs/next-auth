@@ -62,3 +62,8 @@ app/yarn.lock
 
 # Tests
 /coverage
+
+# v4
+packages
+apps
+docs/providers.json
