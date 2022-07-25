@@ -17,7 +17,7 @@ type Client = InstanceType<Issuer["Client"]>
 
 export type { OAuthProviderType } from "./oauth-types"
 
-type ChecksType = "pkce" | "state" | "none"
+type ChecksType = "pkce" | "state" | "nonce" | "none"
 
 export type OAuthChecks = OpenIDCallbackChecks | OAuthCallbackChecks
 
