@@ -43,7 +43,7 @@ const sendVerificationRequest = ({
       },
       (error) => {
         if (error) {
-          logger.error("SEND_VERIFICATION_EMAIL_ERROR", email, error)
+          logger.error("SEND_VERIFICATION_EMAIL_ERROR", error)
           return reject(new Error("SEND_VERIFICATION_EMAIL_ERROR", error))
         }
         return resolve()

@@ -30,6 +30,7 @@ export default async function oAuthCallback(req) {
           provider.id,
           code
         )
+        logger.debug("OAUTH_CALLBACK_HANDLER_ERROR", req.body)
         throw error
       }
     }
@@ -62,7 +63,7 @@ export default async function oAuthCallback(req) {
 
       return getProfile({ profileData, provider, tokens, user })
     } catch (error) {
-      logger.error("OAUTH_GET_ACCESS_TOKEN_ERROR", error, provider.id, code)
+      logger.error("OAUTH_GET_ACCESS_TOKEN_ERROR", error, provider.id)
       throw error
     }
   }
@@ -74,7 +75,11 @@ export default async function oAuthCallback(req) {
 
     // eslint-disable-next-line camelcase
     const { token_secret } = await client.getOAuthRequestToken(provider.params)
-    const tokens = await client.getOAuthAccessToken(oauth_token, token_secret, oauth_verifier)
+    const tokens = await client.getOAuthAccessToken(
+      oauth_token,
+      token_secret,
+      oauth_verifier
+    )
     const profileData = await client.get(
       provider.profileUrl,
       tokens.oauth_token,
@@ -143,11 +148,11 @@ async function getProfile({ profileData, tokens, provider, user }) {
     // If we didn't get a response either there was a problem with the provider
     // response *or* the user cancelled the action with the provider.
     //
-    // Unfortuately, we can't tell which - at least not in a way that works for
+    // Unfortunately, we can't tell which - at least not in a way that works for
     // all providers, so we return an empty object; the user should then be
     // redirected back to the sign up page. We log the error to help developers
     // who might be trying to debug this when configuring a new provider.
-    logger.error("OAUTH_PARSE_PROFILE_ERROR", exception, profileData)
+    logger.error("OAUTH_PARSE_PROFILE_ERROR", exception)
     return {
       profile: null,
       account: null,
