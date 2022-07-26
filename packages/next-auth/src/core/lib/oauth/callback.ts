@@ -146,7 +146,7 @@ export default async function oAuthCallback(params: {
     })
     return { ...profileResult, cookies: resCookies }
   } catch (error) {
-    logger.error("OAUTH_CALLBACK_ERROR", {
+    logger.error("CALLBACK_OAUTH_ERROR", {
       error: error as Error,
       providerId: provider.id,
     })

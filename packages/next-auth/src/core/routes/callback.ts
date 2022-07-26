@@ -193,7 +193,7 @@ export default async function callback(params: {
         logger.error("CALLBACK_OAUTH_ERROR", error as Error)
         return { redirect: `${url}/error?error=OAuthCallback`, cookies }
       }
-      logger.error("OAUTH_CALLBACK_ERROR", error as Error)
+      logger.error("CALLBACK_OAUTH_ERROR", error as Error)
       return { redirect: `${url}/error?error=Callback`, cookies }
     }
   } else if (provider.type === "email") {
