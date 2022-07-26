@@ -329,7 +329,7 @@ JSON Web Tokens can be used for session tokens, but are also used for lots of ot
 
   Avoid storing any data in a token that might be problematic if it were to be decrypted in the future.
 
-- If you do not explicitly specify a secret for for NextAuth.js, existing sessions will be invalidated any time your NextAuth.js configuration changes, as NextAuth.js will default to an auto-generated secret. Since v4 this only impacts development and generating a secret is required in production.
+- If you do not explicitly specify a secret for NextAuth.js, existing sessions will be invalidated any time your NextAuth.js configuration changes, as NextAuth.js will default to an auto-generated secret. Since v4 this only impacts development and generating a secret is required in production.
 
 
 </p>
