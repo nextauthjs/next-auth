@@ -49,13 +49,9 @@ providers: [
   RedditProvider({
     clientId: process.env.REDDIT_CLIENT_ID,
     clientSecret: process.env.REDDIT_CLIENT_SECRET,
-    version: '2.0',
     authorization: {
-      url: 'https://www.reddit.com/api/v1/authorize',
       params: {
-        scope: 'identity',
         duration: 'permanent',
-        response_type: 'code',
       },
     },
   }),
