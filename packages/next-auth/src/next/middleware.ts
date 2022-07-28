@@ -180,7 +180,7 @@ export type WithAuthArgs =
  * ```
  *
  * ---
- * [Documentation](https://next-auth.js.org/getting-started/middleware)
+ * [Documentation](https://next-auth.js.org/configuration/nextjs#middleware)
  */
 export function withAuth(...args: WithAuthArgs) {
   if (!args.length || args[0] instanceof NextRequest) {
