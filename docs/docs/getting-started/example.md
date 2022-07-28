@@ -23,7 +23,9 @@ or
 yarn add next-auth
 ```
 
+:::info
 If you are using TypeScript, NextAuth comes with its types definitions within the package. To learn more about TypeScript for `next-auth`, check out the [TypeScript documentation](/getting-started/typescript)
+:::
 
 
 ### Add API route
@@ -74,10 +76,9 @@ export default function App({
 
 Instances of `useSession` will then have access to the session data and status. The `<SessionProvider />` also takes care of keeping the session updated and synced between browser tabs and windows.
 
-```tip
-...
+:::tip
 Check out the [client documentation](/getting-started/client) to see how you can improve the user experience and page performance by using the NextAuth.js client.
-```
+:::
 
 ### Frontend - Add React Hook
 
