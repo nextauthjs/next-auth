@@ -14,7 +14,7 @@ The easiest way to get started is to clone the [example app](https://github.com/
 ### Install NextAuth
 
 ```
-npm install --save next-auth
+npm i next-auth
 ```
 
 or
