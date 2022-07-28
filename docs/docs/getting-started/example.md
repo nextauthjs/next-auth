@@ -23,8 +23,8 @@ or
 yarn add next-auth
 ```
 
-:::TIP
-If you are using TypeScript in your project, you don't need to types definition for `next-auth`. NextAuth has its own types definitions which has been done for you! To learn more about TypeScript for `next-auth`, check out the [TypeScript documentation](/getting-started/typescript)
+:::info
+If you are using TypeScript, NextAuth comes with its types definitions within the package. To learn more about TypeScript for `next-auth`, check out the [TypeScript documentation](/getting-started/typescript)
 :::
 
 
