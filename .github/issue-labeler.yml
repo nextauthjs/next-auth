@@ -30,6 +30,9 @@ prisma:
 sequelize:
   - "@next-auth/sequelize-adapter"
 
+supabase:
+  - "@next-auth/supabase-adapter"
+
 typeorm-legacy:
   - "@next-auth/typeorm-legacy-adapter"
 

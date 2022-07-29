@@ -42,6 +42,9 @@ prisma:
 sequelize:
   - packages/adapter-sequelize/**
 
+supabase:
+  - packages/adapter-supabase/**
+
 typeorm-legacy:
   - packages/adapter-typeorm-legacy/**
 
