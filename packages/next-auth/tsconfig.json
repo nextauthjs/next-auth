@@ -15,7 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "outDir": ".",
-    
+    "paths": {
+      "next": ["node_modules/next"]
+    }
   },
   "exclude": ["./*.js", "./*.d.ts", "config", "**/__tests__", "tests"]
 }

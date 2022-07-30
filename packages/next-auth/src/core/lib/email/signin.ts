@@ -9,9 +9,8 @@ import type { InternalOptions } from "../../types"
 export default async function email(
   identifier: string,
   options: InternalOptions<"email">
-) {
-  const { url, adapter, provider, logger, callbackUrl, theme } = options
-
+): Promise<string> {
+  const { url, adapter, provider, callbackUrl, theme } = options
   // Generate token
   const token =
     (await provider.generateVerificationToken?.()) ??
@@ -34,22 +33,18 @@ export default async function email(
   const params = new URLSearchParams({ callbackUrl, token, email: identifier })
   const _url = `${url}/callback/${provider.id}?${params}`
 
-  try {
-    // Send to user
-    await provider.sendVerificationRequest({
-      identifier,
-      token,
-      expires,
-      url: _url,
-      provider,
-      theme,
-    })
-  } catch (error) {
-    logger.error("SEND_VERIFICATION_EMAIL_ERROR", {
-      identifier,
-      url,
-      error: error as Error,
-    })
-    throw new Error("SEND_VERIFICATION_EMAIL_ERROR")
-  }
+  // Send to user
+  await provider.sendVerificationRequest({
+    identifier,
+    token,
+    expires,
+    url: _url,
+    provider,
+    theme,
+  })
+
+  return `${url}/verify-request?${new URLSearchParams({
+    provider: provider.id,
+    type: provider.type,
+  })}`
 }

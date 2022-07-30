@@ -79,7 +79,7 @@ test("when the fetch fails it'll throw a client fetch error", async () => {
   await waitFor(() => {
     expect(logger.error).toHaveBeenCalledTimes(1)
     expect(logger.error).toBeCalledWith("CLIENT_FETCH_ERROR", {
-      path: "csrf",
+      url: "/api/auth/csrf",
       error: new SyntaxError("Unexpected token s in JSON at position 0"),
     })
   })
