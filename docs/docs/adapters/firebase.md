@@ -17,7 +17,7 @@ npm install next-auth @next-auth/firebase-adapter
 
 2. Add this adapter to your `pages/api/auth/[...nextauth].js` next-auth configuration object.
 
-```javascript title="pages/api/auth/[...nextauth].js"
+```typescript title="pages/api/auth/[...nextauth].ts"
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import { FirestoreAdapter } from "@next-auth/firebase-adapter"
@@ -47,13 +47,38 @@ export default NextAuth({
 });
 ```
 
+Additionally, if you've initialized your app on the client you can pass in the project options:
+
+```typescript title="firebase.ts"
+import { initializeApp } from "firebase/app"
+
+export const firebaseApp = initializeApp({
+  // ...firebase options
+});
+```
+
+```typescript title="pages/api/auth/[...nextauth].ts"
+import NextAuth from "next-auth"
+import { FirestoreAdapter } from "@next-auth/firebase-adapter"
+
+import { firebaseApp } from "../../../firebase"
+
+export default NextAuth({
+  providers: [
+    //...
+  ],
+  adapter: FirestoreAdapter({ ...firebaseApp.options }),
+})
+
+```
+
 ## Options
 
 When initializing the firestore adapter, you must pass in the firebase config object with the details from your project. More details on how to obtain that config object can be found [here](https://support.google.com/firebase/answer/7015592).
 
 An example firebase config looks like this:
 
-```js
+```typescript
 const firebaseConfig = {
   apiKey: "AIzaSyDOCAbC123dEf456GhI789jKl01-MnO",
   authDomain: "myapp-project-123.firebaseapp.com",
@@ -70,7 +95,7 @@ See [firebase.google.com/docs/web/setup](https://firebase.google.com/docs/web/se
 
 You can optionally pass in emulator options to automatically connect to your local Firebase emulator.
 
-```js
+```typescript
 FirestoreAdapter({
   // ...
   // Passing in an enable object will enable the emulator

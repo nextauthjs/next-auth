@@ -24,10 +24,11 @@ import type {
 } from "next-auth/adapters"
 
 import { getConverter } from "./converter"
+import { getFirebaseApp } from "./firebase-initializer"
 
 type IndexableObject = Record<string, unknown>
 
-export interface FirestoreAdapterOptions {
+export interface FirestoreAdapterOptions extends FirebaseOptions {
   emulator?: {
     host?: string
     port?: number
@@ -37,8 +38,8 @@ export interface FirestoreAdapterOptions {
 export function FirestoreAdapter({
   emulator,
   ...firebaseOptions
-}: FirebaseOptions & FirestoreAdapterOptions): Adapter {
-  const firebaseApp = initializeApp(firebaseOptions)
+}: FirestoreAdapterOptions): Adapter {
+  const firebaseApp = getFirebaseApp(firebaseOptions)
   const db = getFirestore(firebaseApp)
 
   if (emulator) {
