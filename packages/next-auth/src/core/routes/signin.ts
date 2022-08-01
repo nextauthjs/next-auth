@@ -33,16 +33,26 @@ export default async function signin(params: {
       return { redirect: `${url}/error?error=OAuthSignin` }
     }
   } else if (provider.type === "email") {
-    /**
-     * @note Technically the part of the email address local mailbox element
-     * (everything before the @ symbol) should be treated as 'case sensitive'
-     * according to RFC 2821, but in practice this causes more problems than
-     * it solves. We treat email addresses as all lower case. If anyone
-     * complains about this we can make strict RFC 2821 compliance an option.
-     */
-    const email = body?.email?.toLowerCase()
-
+    let email: string = body?.email
     if (!email) return { redirect: `${url}/error?error=EmailSignin` }
+    const normalizer: (identifier: string) => string =
+      provider.normalizeIdentifier ??
+      ((identifier) => {
+        // Get the first two elements only,
+        // separated by `@` from user input.
+        let [local, domain] = identifier.toLowerCase().trim().split("@")
+        // The part before "@" can contain a ","
+        // but we remove it on the domain part
+        domain = domain.split(",")[0]
+        return `${local}@${domain}`
+      })
+
+    try {
+      email = normalizer(body?.email)
+    } catch (error) {
+      logger.error("SIGNIN_EMAIL_ERROR", { error, providerId: provider.id })
+      return { redirect: `${url}/error?error=EmailSignin` }
+    }
 
     // Verified in `assertConfig`
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -85,10 +95,7 @@ export default async function signin(params: {
       const redirect = await emailSignin(email, options)
       return { redirect }
     } catch (error) {
-      logger.error("SIGNIN_EMAIL_ERROR", {
-        error: error as Error,
-        providerId: provider.id,
-      })
+      logger.error("SIGNIN_EMAIL_ERROR", { error, providerId: provider.id })
       return { redirect: `${url}/error?error=EmailSignin` }
     }
   }

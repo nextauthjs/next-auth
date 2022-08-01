@@ -21,27 +21,28 @@ export default async function email(
     Date.now() + (provider.maxAge ?? ONE_DAY_IN_SECONDS) * 1000
   )
 
-  // Save in database
-  // @ts-expect-error
-  await adapter.createVerificationToken({
-    identifier,
-    token: hashToken(token, options),
-    expires,
-  })
-
   // Generate a link with email, unhashed token and callback url
   const params = new URLSearchParams({ callbackUrl, token, email: identifier })
   const _url = `${url}/callback/${provider.id}?${params}`
 
-  // Send to user
-  await provider.sendVerificationRequest({
-    identifier,
-    token,
-    expires,
-    url: _url,
-    provider,
-    theme,
-  })
+  await Promise.all([
+    // Send to user
+    provider.sendVerificationRequest({
+      identifier,
+      token,
+      expires,
+      url: _url,
+      provider,
+      theme,
+    }),
+    // Save in database
+    // @ts-expect-error // verified in `assertConfig`
+    adapter.createVerificationToken({
+      identifier,
+      token: hashToken(token, options),
+      expires,
+    }),
+  ])
 
   return `${url}/verify-request?${new URLSearchParams({
     provider: provider.id,
