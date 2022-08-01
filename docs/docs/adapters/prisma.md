@@ -148,6 +148,14 @@ refresh_token      String?  @db.String
 access_token       String?  @db.String
 id_token           String?  @db.String
 ```
+3. When using email verification, MongoDB requires an `id`
+
+```prisma
+model VerificationToken {
+  id  String  @id @default(auto()) @map("_id") @db.ObjectId
+  ...
+}
+```
 
 Everything else should be the same.
 
