@@ -38,11 +38,19 @@ export default async function signin(req, res) {
     // according to RFC 2821, but in practice this causes more problems than
     // it solves. We treat email addresses as all lower case. If anyone
     // complains about this we can make strict RFC 2821 compliance an option.
-    const email = req.body.email?.toLowerCase() ?? null
+    let email = req.body.email?.toLowerCase() ?? null
 
     if (!email) {
       return res.redirect(`${baseUrl}${basePath}/error?error=EmailSignin`)
     }
+
+    // Get the first two elements only,
+    // separated by `@` from user input.
+    let [local, domain] = email.split("@")
+    // The part before "@" can contain a ","
+    // but we remove it on the domain part
+    domain = domain.split(",")[0]
+    email = `${local}@${domain}`
 
     // If is an existing user return a user object (otherwise use placeholder)
     const profile = (await getUserByEmail(email)) || { email }
