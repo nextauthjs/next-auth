@@ -76,8 +76,8 @@ module.exports = {
     {
       type: "category",
       label: "Guides",
-      link: { type: "doc", id: "guides/guides" },
       collapsed: true,
+      link: { type: "doc", id: "guides/guides" },
       items: ["guides/basics", "guides/fullstack", "guides/testing"],
     },
     {

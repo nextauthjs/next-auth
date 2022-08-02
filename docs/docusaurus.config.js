@@ -7,6 +7,7 @@ module.exports = {
   organizationName: "nextauthjs",
   projectName: "next-auth",
   themeConfig: {
+    /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     prism: {
       theme: require("prism-react-renderer/themes/vsDark"),
       magicComments: [
@@ -145,7 +146,8 @@ module.exports = {
   },
   presets: [
     [
-      "@docusaurus/preset-classic",
+      "classic",
+      /** @type {import('@docusaurus/preset-classic').Options} */
       {
         docs: {
           routeBasePath: "/",
