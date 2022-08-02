@@ -203,7 +203,7 @@ export default async function callback(params: {
       const { useVerificationToken, getUserByEmail } = adapter!
 
       const token = query?.token
-      const identifier = query?.email
+      const identifier = query?.email?.toLowerCase()
 
       const invite = await useVerificationToken?.({
         identifier,
