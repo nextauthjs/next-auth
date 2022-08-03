@@ -326,7 +326,7 @@ Set debug to `true` to enable debug messages for authentication and database ope
 
 #### Description
 
-Override any of the logger levels (`undefined` levels will use the built-in logger), and intercept logs in NextAuth. You can use this to send NextAuth logs to a third-party logging service.
+Override any of the logger levels (`undefined` levels will use the built-in logger), and intercept logs in NextAuth.js. You can use this to send NextAuth.js logs to a third-party logging service.
 
 The `code` parameter for `error` and `warn` are explained in the [Warnings](/warnings) and [Errors](/errors) pages respectively.
 
