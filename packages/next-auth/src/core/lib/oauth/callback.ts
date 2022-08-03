@@ -29,9 +29,9 @@ export default async function oAuthCallback(params: {
     logger.error("OAUTH_CALLBACK_HANDLER_ERROR", {
       error,
       error_description: query?.error_description,
-      body,
       providerId: provider.id,
     })
+    logger.debug("OAUTH_CALLBACK_HANDLER_ERROR", { body })
     throw error
   }
   
@@ -208,10 +208,7 @@ async function getProfile({
     // all providers, so we return an empty object; the user should then be
     // redirected back to the sign up page. We log the error to help developers
     // who might be trying to debug this when configuring a new provider.
-    logger.error("OAUTH_PARSE_PROFILE_ERROR", {
-      error: error as Error,
-      OAuthProfile,
-    })
+    logger.error("OAUTH_PARSE_PROFILE_ERROR", error as Error)
     return {
       profile: null,
       account: null,

@@ -16,8 +16,9 @@
   },
   "license": "ISC",
   "dependencies": {
-    "@next-auth/fauna-adapter": "^1",
-    "@next-auth/prisma-adapter": "^1",
+    "@next-auth/fauna-adapter": "workspace:*",
+    "@next-auth/prisma-adapter": "workspace:*",
+    "@next-auth/typeorm-legacy-adapter": "workspace:*",
     "@prisma/client": "^3",
     "faunadb": "^4",
     "next": "12.2.0",
@@ -31,6 +32,9 @@
     "concurrently": "^7",
     "cpx": "^1.5.0",
     "fake-smtp-server": "^0.8.0",
-    "prisma": "^3"
+    "pg": "^8.7.3",
+    "prisma": "^3",
+    "sqlite3": "^5.0.8",
+    "typeorm": "0.3.7"
   }
 }

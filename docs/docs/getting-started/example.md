@@ -11,6 +11,23 @@ The easiest way to get started is to clone the [example app](https://github.com/
 
 ## Existing Project
 
+### Install NextAuth
+
+```
+npm i next-auth
+```
+
+or
+
+```
+yarn add next-auth
+```
+
+:::info
+If you are using TypeScript, NextAuth comes with its types definitions within the package. To learn more about TypeScript for `next-auth`, check out the [TypeScript documentation](/getting-started/typescript)
+:::
+
+
 ### Add API route
 
 To add NextAuth.js to a project create a file called `[...nextauth].js` in `pages/api/auth`. This contains the dynamic route handler for NextAuth.js which will also contain all of your global NextAuth.js configurations.
