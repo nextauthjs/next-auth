@@ -192,6 +192,8 @@ export default async function callback(params: {
       if ((error as Error).name === "OAuthCallbackError") {
         logger.error("CALLBACK_OAUTH_ERROR", error as Error)
         return { redirect: `${url}/error?error=OAuthCallback`, cookies }
+      } else if ((error as Error).message === "access_denied") {
+        return { redirect: `${url}/error?error=OAuthDenied`, cookies }
       }
       logger.error("OAUTH_CALLBACK_ERROR", error as Error)
       return { redirect: `${url}/error?error=Callback`, cookies }

@@ -198,6 +198,7 @@ export async function NextAuthHandler<
             "Signin",
             "OAuthSignin",
             "OAuthCallback",
+            "OAuthDenied",
             "OAuthCreateAccount",
             "EmailCreateAccount",
             "Callback",
