@@ -54,6 +54,8 @@ The following errors are passed as error query parameters to the default or over
 - **EmailSignin**: Sending the e-mail with the verification token failed
 - **CredentialsSignin**: The `authorize` callback returned `null` in the [Credentials provider](/providers/credentials). We don't recommend providing information about which part of the credentials were wrong, as it might be abused by malicious hackers.
 - **SessionRequired**: The content of this page requires you to be signed in at all times. See [useSession](/getting-started/client#require-session) for configuration.
+- **Configuration**: The provider was configured wrongly, check the debug log to see detailed information from the provider.
+- **UnavailableService**: The provider is currently not reachable or has internal server problems.
 - **Default**: Catch all, will apply, if none of the above matched
 
 Example: `/auth/signin?error=Default`

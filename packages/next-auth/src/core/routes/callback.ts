@@ -1,4 +1,4 @@
-import oAuthCallback from "../lib/oauth/callback"
+import oAuthCallback, { OAuthError, oAuthErrors, oAuthErrorNames } from "../lib/oauth/callback"
 import callbackHandler from "../lib/callback-handler"
 import { hashToken } from "../lib/utils"
 
@@ -6,6 +6,7 @@ import type { InternalOptions } from "../types"
 import type { RequestInternal, OutgoingResponse } from ".."
 import type { Cookie, SessionStore } from "../lib/cookie"
 import type { User } from "../.."
+import { SignInErrorTypes } from "../pages/signin"
 
 /** Handle callbacks from login services */
 export default async function callback(params: {
@@ -192,11 +193,16 @@ export default async function callback(params: {
       if ((error as Error).name === "OAuthCallbackError") {
         logger.error("CALLBACK_OAUTH_ERROR", error as Error)
         return { redirect: `${url}/error?error=OAuthCallback`, cookies }
-      } else if ((error as Error).message === "access_denied") {
-        return { redirect: `${url}/error?error=OAuthDenied`, cookies }
       }
-      logger.error("OAUTH_CALLBACK_ERROR", error as Error)
-      return { redirect: `${url}/error?error=Callback`, cookies }
+      const errorMessage = (error as Error).message as OAuthError
+      if (!oAuthErrorNames.includes(errorMessage) || !oAuthErrors.has(errorMessage)) {
+        logger.error("OAUTH_CALLBACK_ERROR", error as Error)
+        return { redirect: `${url}/error?error=Callback`, cookies }
+      }
+      return {
+        redirect: `${url}/error?error=${signInErrorFromOAuthError(errorMessage)}`,
+        cookies
+      }
     }
   } else if (provider.type === "email") {
     try {
@@ -428,5 +434,20 @@ export default async function callback(params: {
     status: 500,
     body: `Error: Callback for provider type ${provider.type} not supported`,
     cookies,
+  }
+}
+
+function signInErrorFromOAuthError(error: OAuthError): SignInErrorTypes {
+  const type = oAuthErrors.get(error)
+  if (type === "developer") {
+    return "Configuration"
+  } else if (type === "other") {
+    return "ServiceUnavailable"
+  }
+  switch (error) {
+    case "access_denied":
+      return "OAuthDenied"
+    default:
+      return "default"
   }
 }

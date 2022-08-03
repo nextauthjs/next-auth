@@ -12,6 +12,33 @@ import type { InternalOptions } from "../../types"
 import type { RequestInternal, OutgoingResponse } from "../.."
 import type { Cookie } from "../cookie"
 
+export const oAuthErrors: Map<OAuthError, OAuthErrorCause> = new Map([
+  ["invalid_request", "developer"],
+  ["access_denied", "user"],
+  ["unauthorized_client", "developer"],
+  ["unsupported_response_type", "developer"],
+  ["invalid_scope", "developer"],
+  ["server_error", "other"],
+  ["temporarily_unavailable", "other"],
+])
+
+export const oAuthErrorNames = [
+  'invalid_request',
+  'access_denied',
+  'unauthorized_client',
+  'unsupported_response_type',
+  'invalid_scope',
+  'server_error',
+  'temporarily_unavailable',
+] as const
+
+export type OAuthError = typeof oAuthErrorNames[number]
+
+export type OAuthErrorCause =
+  | "developer"
+  | "user"
+  | "other"
+
 export default async function oAuthCallback(params: {
   options: InternalOptions<"oauth">
   query: RequestInternal["query"]
@@ -25,12 +52,18 @@ export default async function oAuthCallback(params: {
   const errorMessage = body?.error ?? query?.error
   if (errorMessage) {
     const error = new Error(errorMessage)
-    logger.error("OAUTH_CALLBACK_HANDLER_ERROR", {
-      error,
-      error_description: query?.error_description,
-      providerId: provider.id,
+    if (!oAuthErrorNames.includes(errorMessage)) {
+      logger.error("OAUTH_CALLBACK_HANDLER_ERROR", {
+        error,
+        error_description: query?.error_description,
+        providerId: provider.id,
+      })
+    }
+    logger.debug("OAUTH_CALLBACK_HANDLER_ERROR", {
+      body,
+      query,
+      errorType: oAuthErrors.get(errorMessage)
     })
-    logger.debug("OAUTH_CALLBACK_HANDLER_ERROR", { body })
     throw error
   }
 

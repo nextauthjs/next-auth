@@ -16,6 +16,8 @@ export type SignInErrorTypes =
   | "EmailSignin"
   | "CredentialsSignin"
   | "SessionRequired"
+  | "Configuration"
+  | "ServiceUnavailable"
   | "default"
 
 export interface SignInServerPageParams {
@@ -59,7 +61,7 @@ export default function SigninPage(props: SignInServerPageParams) {
   const errors: Record<SignInErrorTypes, string> = {
     Signin: "Try signing in with a different account.",
     OAuthSignin: "Try signing in with a different account.",
-    OAuthDenied: "You canceled the signin",
+    OAuthDenied: "You canceled the signin.",
     OAuthCallback: "Try signing in with a different account.",
     OAuthCreateAccount: "Try signing in with a different account.",
     EmailCreateAccount: "Try signing in with a different account.",
@@ -70,6 +72,8 @@ export default function SigninPage(props: SignInServerPageParams) {
     CredentialsSignin:
       "Sign in failed. Check the details you provided are correct.",
     SessionRequired: "Please sign in to access this page.",
+    Configuration: "Please contact an administrator and choose another provider.",
+    ServiceUnavailable: "This service is currently unavailable, please choose another.",
     default: "Unable to sign in.",
   }
 
