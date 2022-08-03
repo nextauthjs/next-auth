@@ -90,19 +90,34 @@ export async function NextAuthHandler<
 
   const assertionResult = assertConfig({ options: userOptions, req })
 
-  if (typeof assertionResult === "string") {
-    logger.warn(assertionResult)
+  if (Array.isArray(assertionResult)) {
+    assertionResult.forEach(logger.warn)
   } else if (assertionResult instanceof Error) {
     // Bail out early if there's an error in the user config
     const { pages, theme } = userOptions
     logger.error(assertionResult.code, assertionResult)
-    if (pages?.error) {
-      return {
-        redirect: `${pages.error}?error=Configuration`,
+
+    const authOnErrorPage =
+      pages?.error &&
+      req.action === "signin" &&
+      req.query?.callbackUrl.startsWith(pages.error)
+
+    if (!pages?.error || authOnErrorPage) {
+      if (authOnErrorPage) {
+        logger.error(
+          "AUTH_ON_ERROR_PAGE_ERROR",
+          new Error(
+            `The error page ${pages?.error} should not require authentication`
+          )
+        )
       }
+      const render = renderPage({ theme })
+      return render.error({ error: "configuration" })
     }
-    const render = renderPage({ theme })
-    return render.error({ error: "configuration" })
+
+    return {
+      redirect: `${pages.error}?error=Configuration`,
+    }
   }
 
   const { action, providerId, error, method = "GET" } = req

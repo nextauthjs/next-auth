@@ -137,6 +137,10 @@ Callbacks are asynchronous functions you can use to control what happens when an
 
 Specify URLs to be used if you want to create custom sign in, and error pages. Pages specified will override the corresponding built-in page.
 
+:::note
+This should match the `pages` configuration that's found in `[...nextauth].ts`.
+:::
+
 #### Example (default value)
 
 ```js
@@ -177,13 +181,11 @@ If you do not define the options, NextAuth.js will use the default values for th
 #### wrap middleware
 
 ```ts title="middleware.ts"
-import type { NextRequest } from "next/server"
-import type { JWT } from "next-auth/jwt"
 import { withAuth } from "next-auth/middleware"
 
 export default withAuth(
-  // `withAuth` can augment your Request with the user's token.
-  function middleware(req: NextRequest & { nextauth: { token: JWT | null } }) {
+  // `withAuth` augments your `Request` with the user's token.
+  function middleware(req) {
     console.log(req.nextauth.token)
   },
   {

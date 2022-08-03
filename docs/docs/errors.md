@@ -61,17 +61,20 @@ There should also be further details logged when this occurs, such as the error 
 
 ### Signin / Callback
 
-#### GET_AUTHORIZATION_URL_ERROR
-
-This error can occur when we cannot get the OAuth v1 request token and generate the authorization URL.
-
-Please double check your OAuth v1 provider settings, especially the OAuth token and OAuth token secret.
-
 #### SIGNIN_OAUTH_ERROR
 
-This error can occur in one of a few places, first during the redirect to the authorization URL of the provider. Next, in the signin flow while creating the PKCE code verifier. Finally, during the generation of the CSRF Token hash in the internal state during signin.
+This error occurs during the redirection to the authorization URL of the OAuth provider. Possible causes:
 
-Please check your OAuth provider settings and make sure your URLs and other options are correctly set on the provider side.
+1. Cookie handling
+Either PKCE code verifier or the generation of the CSRF token hash in the internal state failed.
+
+If set, check your [`cookies` configuration](/configuration/options#cookies), and make sure the browser is not blocking/restricting cookies.
+
+2. OAuth misconfiguration
+
+Please check your OAuth provider and make sure your URLs  and other options are correctly set.
+
+If you are using an OAuth v1 provider, check your OAuth v1 provider settings, especially the OAuth token and OAuth token secret.
 
 #### CALLBACK_OAUTH_ERROR
 
@@ -149,13 +152,7 @@ This error occurs when there was an issue deleting the session from the database
 
 ---
 
-### Other
-
-#### SEND_VERIFICATION_EMAIL_ERROR
-
-This error occurs when the Email Authentication Provider is unable to send an email.
-
-Check your mail server configuration.
+### Configuration
 
 #### MISSING_NEXTAUTH_API_ROUTE_ERROR
 
@@ -166,6 +163,23 @@ Make sure the file is there and the filename is written correctly.
 #### NO_SECRET
 
 In production, we expect you to define a `secret` property in your configuration. In development, this is shown as a warning for convenience. [Read more](/configuration/options#secret)
+
+
+#### AUTH_ON_ERROR_PAGE_ERROR
+
+You have a custom error page defined that was rendered due to an error, but the page also required authentication. To avoid an infinite redirect loop, NextAuth.js bailed out and rendered its default error page instead.
+
+If you are using a Middleware, make sure you include the same `pages` configuration in your `middleware.ts` and `[...nextauth].ts` files. Or use the `matcher` option to only require authentication for certain sites (and exclude your custom error page).
+
+If you do not use a Middleware, make sure you don't try redirecting the user to the sign-in page when hitting your custom error page.
+
+Useful links:
+
+- https://next-auth.js.org/configuration/nextjs#pages
+- https://next-auth.js.org/configuration/pages
+- https://nextjs.org/docs/advanced-features/middleware#matcher
+  
+### Other
 
 #### oauth_callback_error expected 200 OK with body but no body was returned
 

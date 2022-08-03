@@ -1,7 +1,7 @@
 {
   "name": "@next-auth/dynamodb-adapter",
   "repository": "https://github.com/nextauthjs/next-auth",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "AWS DynamoDB adapter for next-auth.",
   "keywords": [
     "next-auth",
@@ -32,7 +32,7 @@
   "license": "ISC",
   "peerDependencies": {
     "@aws-sdk/lib-dynamodb": "^3.36.1",
-    "next-auth": "workspace:*"
+    "next-auth": "^4"
   },
   "devDependencies": {
     "@aws-sdk/client-dynamodb": "^3.36.1",
