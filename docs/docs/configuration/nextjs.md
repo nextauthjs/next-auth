@@ -160,7 +160,7 @@ See the documentation for the [pages option](/configuration/pages) for more info
 
 #### Description
 
-The same `secret` used in the [NextAuth config](/configuration/options#options).
+The same `secret` used in the [NextAuth.js config](/configuration/options#options).
 
 #### Example (default value)
 
