@@ -1,6 +1,4 @@
----
-title: NextJS
----
+# NextJS
 
 ## `unstable_getServerSession`
 

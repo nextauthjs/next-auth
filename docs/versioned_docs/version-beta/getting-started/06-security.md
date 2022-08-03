@@ -1,7 +1,4 @@
----
-id: security
-title: Security
----
+# Security
 
 ## Reporting a Vulnerability
 

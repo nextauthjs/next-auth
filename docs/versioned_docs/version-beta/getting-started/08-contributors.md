@@ -1,15 +1,12 @@
----
-id: contributors
-title: Contributors
----
+# Contributors
 
 ## Core team
 
 Without these people, the project could not have become one of the most used authentication library in its category.
 
-- [Iain Collins](https://github.com/iaincollins) - Author
 - [Balázs Orbán](https://github.com/balazsorban44) - **Lead Maintainer**
-- [Nico Domino](https://github.com/ndom91) - Maintainer (Documentation, Core)
+- [Thang Vu](https://github.com/ThangHuuVu) - Maintainer (Core)
+- [Nico Domino](https://github.com/ndom91) - Maintainer (Core, Documentation)
 - [Lluis Agusti](https://github.com/lluia) - Maintainer (Documentation, Testing, TypeScript)
 
 ## Special thanks

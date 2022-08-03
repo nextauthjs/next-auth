@@ -39,8 +39,8 @@ module.exports = {
           position: "left",
         },
         {
-          to: "/beta/guides/index",
-          activeBasePath: "/beta/guides",
+          to: "/beta/guides/overview",
+          activeBasePath: "/beta/guides/",
           label: "Guides",
           position: "left",
         },
