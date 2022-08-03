@@ -1,7 +1,4 @@
----
-id: testing-with-cypress
-title: Testing with Cypress
----
+# Testing with Cypress
 
 To test an implementation of NextAuth.js, we encourage you to use [Cypress](https://cypress.io).
 
@@ -9,7 +6,7 @@ To test an implementation of NextAuth.js, we encourage you to use [Cypress](http
 
 To get started, install the dependencies:
 
-```bash npm2yarn
+```bash npm2yarn2pnpm
 npm install --save-dev cypress cypress-social-logins @testing-library/cypress
 ```
 

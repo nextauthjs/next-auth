@@ -1,7 +1,4 @@
----
-id: securing-pages-and-api-routes
-title: Securing pages and API routes
----
+# Securing Pages & API routes
 
 You can easily protect client and server side rendered pages and API routes with NextAuth.js.
 
@@ -44,7 +41,7 @@ export default function Page() {
 
 With NextAuth.js 4.2.0 and Next.js 12, you can now protect your pages via the middleware pattern more easily. If you would like to protect all pages, you can create a `_middleware.js` file in your root `pages` directory which looks like this.
 
-```js title="/pages/_middleware.js"
+```js title="/middleware.js"
 export { default } from "next-auth/middleware"
 ```
 
@@ -61,7 +58,9 @@ You can protect server side rendered pages using the `unstable_getServerSession`
 You need to add this to every server rendered page you want to protect. Be aware, `unstable_getServerSession` takes slightly different arguments than the method it is replacing, `getSession`.
 
 ```js title="pages/server-side-example.js"
-import { useSession, unstable_getServerSession } from "next-auth/next"
+import { unstable_getServerSession } from "next-auth/next"
+import { authOptions } from "./api/auth/[...nextauth]"
+import { useSession } from "next-auth/react"
 
 export default function Page() {
   const { data: session } = useSession()
@@ -120,6 +119,7 @@ You can protect API routes using the `unstable_getServerSession()` method.
 
 ```js title="pages/api/get-session-example.js"
 import { unstable_getServerSession } from "next-auth/next"
+import { authOptions } from "./api/auth/[...nextauth]"
 
 export default async (req, res) => {
   const session = await unstable_getServerSession(req, res, authOptions)
@@ -142,10 +142,9 @@ If you are using JSON Web Tokens you can use the `getToken()` helper to access t
 // This is an example of how to read a JSON Web Token from an API route
 import { getToken } from "next-auth/jwt"
 
-const secret = process.env.SECRET
-
 export default async (req, res) => {
-  const token = await getToken({ req, secret })
+  // If you don't have NEXTAUTH_SECRET set, you will have to pass your secret as `secret` to `getToken`
+  const token = await getToken({ req })
   if (token) {
     // Signed in
     console.log("JSON Web Token", JSON.stringify(token, null, 2))

@@ -1,9 +1,6 @@
----
-id: refresh-token-rotation
-title: Refresh Token Rotation
----
+# Refresh Token Rotation
 
-While NextAuth.js doesn't automatically handle access token rotation for OAuth providers yet, this functionality can be implemented using [callbacks](https://next-auth.js.org/configuration/callbacks).
+While NextAuth.js doesn't automatically handle access token rotation for [OAuth providers](/beta/reference/providers/oauth-builtin) yet, this functionality can be implemented using [callbacks](https://next-auth.js.org/configuration/callbacks).
 
 ## Source Code
 

@@ -1,7 +1,4 @@
----
-id: usage-with-class-components
-title: Usage with class components
----
+# Usage with class components
 
 If you want to use the `useSession()` hook in your class components you can do so with the help of a higher order component or with a render prop.
 

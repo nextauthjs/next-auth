@@ -1,7 +1,4 @@
----
-id: avoid-corporate-link-checking-email-provider
-title: Allow Email Signups Behind Corporate Link Checker
----
+# Corporate email sign up
 
 If you use Office 365 or Outlook, or potentially other Email systems, you may notice your Email invitation Links not working.
 
