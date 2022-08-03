@@ -45,6 +45,7 @@ Example: `/auth/error?error=Configuration`
 The following errors are passed as error query parameters to the default or overridden sign-in page:
 
 - **OAuthSignin**: Error in constructing an authorization URL ([1](https://github.com/nextauthjs/next-auth/blob/457952bb5abf08b09861b0e5da403080cd5525be/src/server/lib/signin/oauth.js), [2](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/lib/oauth/pkce-handler.ts), [3](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/lib/oauth/state-handler.ts)),
+- **OAuthDenied**: User canceled OAuth request.
 - **OAuthCallback**: Error in handling the response ([1](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/lib/oauth/callback.ts), [2](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/lib/oauth/pkce-handler.ts), [3](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/lib/oauth/state-handler.ts)) from an OAuth provider.
 - **OAuthCreateAccount**: Could not create OAuth provider user in the database.
 - **EmailCreateAccount**: Could not create email provider user in the database.

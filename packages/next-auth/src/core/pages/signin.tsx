@@ -7,6 +7,7 @@ import type { InternalProvider, Theme } from "../types"
 export type SignInErrorTypes =
   | "Signin"
   | "OAuthSignin"
+  | "OAuthDenied"
   | "OAuthCallback"
   | "OAuthCreateAccount"
   | "EmailCreateAccount"
@@ -58,6 +59,7 @@ export default function SigninPage(props: SignInServerPageParams) {
   const errors: Record<SignInErrorTypes, string> = {
     Signin: "Try signing in with a different account.",
     OAuthSignin: "Try signing in with a different account.",
+    OAuthDenied: "You canceled the signin",
     OAuthCallback: "Try signing in with a different account.",
     OAuthCreateAccount: "Try signing in with a different account.",
     EmailCreateAccount: "Try signing in with a different account.",
