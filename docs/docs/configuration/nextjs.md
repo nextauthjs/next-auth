@@ -16,7 +16,7 @@ In `[...nextauth.js]`:
 ```ts
 import { NextAuth } from 'next-auth'
 import type { NextAuthOptions } from 'next-auth'
- 
+
 export const authOptions: NextAuthOptions = {
   // your configs
 }
@@ -145,8 +145,8 @@ This should match the `pages` configuration that's found in `[...nextauth].ts`.
 
 ```js
 pages: {
-  signIn: '/auth/signin',
-  error: '/auth/error',
+  signIn: '/api/auth/signin',
+  error: '/api/auth/error',
 }
 ```
 
