@@ -35,6 +35,8 @@ const ProviderMarquee = React.memo(() => {
     if (width > 1400) {
       scale = 0.8
     }
+  } else {
+    return <>LOL</>
   }
 
   return (
@@ -49,7 +51,7 @@ const ProviderMarquee = React.memo(() => {
         >
           {icons.map((icon) => (
             <Motion
-              key={`marquee-example-company-${icon}`}
+              key={`company-${icon}`}
               initDeg={randomIntFromInterval(0, 360)}
               direction={Math.random() > 0.5 ? "clockwise" : "counterclockwise"}
               velocity={10}
