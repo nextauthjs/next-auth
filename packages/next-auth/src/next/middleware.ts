@@ -6,6 +6,7 @@ import { NextResponse, NextRequest } from "next/server"
 
 import { getToken } from "../jwt"
 import parseUrl from "../utils/parse-url"
+import getNextJsBasePath from "../utils/nextjs-base-path"
 
 type AuthorizedCallback = (params: {
   token: JWT | null
@@ -103,8 +104,9 @@ async function handleMiddleware(
 ) {
   const { pathname, search, origin } = req.nextUrl
 
-  const signInPage = options?.pages?.signIn ?? "/api/auth/signin"
-  const errorPage = options?.pages?.error ?? "/api/auth/error"
+  const nextJsBasePath = getNextJsBasePath(req.nextUrl);
+  const signInPage = options?.pages?.signIn ?? `${nextJsBasePath}/api/auth/signin`
+  const errorPage = options?.pages?.error ?? `${nextJsBasePath}/api/auth/error`
   const basePath = parseUrl(process.env.NEXTAUTH_URL).path
   const publicPaths = [signInPage, errorPage, "/_next", "/favicon.ico"]
 
@@ -145,7 +147,7 @@ async function handleMiddleware(
 
   // the user is not logged in, redirect to the sign-in page
   const signInUrl = new URL(signInPage, origin)
-  signInUrl.searchParams.append("callbackUrl", `${pathname}${search}`)
+  signInUrl.searchParams.append("callbackUrl", `${nextJsBasePath}${pathname}${search}`)
   return NextResponse.redirect(signInUrl)
 }
 
