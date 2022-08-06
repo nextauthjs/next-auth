@@ -16,7 +16,7 @@ In `[...nextauth.js]`:
 ```ts
 import { NextAuth } from 'next-auth'
 import type { NextAuthOptions } from 'next-auth'
- 
+
 export const authOptions: NextAuthOptions = {
   // your configs
 }
@@ -145,8 +145,8 @@ This should match the `pages` configuration that's found in `[...nextauth].ts`.
 
 ```js
 pages: {
-  signIn: '/auth/signin',
-  error: '/auth/error',
+  signIn: '/api/auth/signin',
+  error: '/api/auth/error',
 }
 ```
 
@@ -160,7 +160,7 @@ See the documentation for the [pages option](/configuration/pages) for more info
 
 #### Description
 
-The same `secret` used in the [NextAuth config](/configuration/options#options).
+The same `secret` used in the [NextAuth.js config](/configuration/options#options).
 
 #### Example (default value)
 
