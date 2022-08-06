@@ -86,7 +86,6 @@ importers:
       '@docusaurus/core': ^2.0.1
       '@docusaurus/module-type-aliases': 2.0.1
       '@docusaurus/preset-classic': ^2.0.1
-      '@docusaurus/theme-common': 2.0.1
       '@mdx-js/react': 1.6.22
       '@sapphire/docusaurus-plugin-npm2yarn2pnpm': 1.1.3
       classnames: ^2.3.1
@@ -102,7 +101,6 @@ importers:
     dependencies:
       '@docusaurus/core': 2.0.1_sfoxds7t5ydpegc3knd667wn6m
       '@docusaurus/preset-classic': 2.0.1_sfoxds7t5ydpegc3knd667wn6m
-      '@docusaurus/theme-common': 2.0.1_sfoxds7t5ydpegc3knd667wn6m
       '@mdx-js/react': 1.6.22_react@17.0.2
       '@sapphire/docusaurus-plugin-npm2yarn2pnpm': 1.1.3
       classnames: 2.3.1
@@ -5765,46 +5763,6 @@ packages:
       '@docusaurus/plugin-content-docs': 2.0.1_sfoxds7t5ydpegc3knd667wn6m
       '@docusaurus/plugin-content-pages': 2.0.1_sfoxds7t5ydpegc3knd667wn6m
       '@docusaurus/utils': 2.0.1_@docusaurus+types@2.0.1
-      '@types/history': 4.7.11
-      '@types/react': 18.0.15
-      '@types/react-router-config': 5.0.6
-      clsx: 1.2.1
-      parse-numeric-range: 1.3.0
-      prism-react-renderer: 1.3.5_react@17.0.2
-      react: 17.0.2
-      react-dom: 17.0.2_react@17.0.2
-      tslib: 2.4.0
-      utility-types: 3.10.0
-    transitivePeerDependencies:
-      - '@docusaurus/types'
-      - '@parcel/css'
-      - '@swc/core'
-      - bufferutil
-      - csso
-      - debug
-      - esbuild
-      - eslint
-      - supports-color
-      - typescript
-      - uglify-js
-      - utf-8-validate
-      - vue-template-compiler
-      - webpack-cli
-    dev: false
-
-  /@docusaurus/theme-common/2.0.1_sfoxds7t5ydpegc3knd667wn6m:
-    resolution: {integrity: sha512-I3b6e/ryiTQMsbES40cP0DRGnfr0E2qghVq+XecyMKjBPejISoSFEDn0MsnbW8Q26k1Dh/0qDH8QKDqaZZgLhA==}
-    engines: {node: '>=16.14'}
-    peerDependencies:
-      react: ^16.8.4 || ^17.0.0
-      react-dom: ^16.8.4 || ^17.0.0
-    dependencies:
-      '@docusaurus/mdx-loader': 2.0.1_sfoxds7t5ydpegc3knd667wn6m
-      '@docusaurus/module-type-aliases': 2.0.1_sfoxds7t5ydpegc3knd667wn6m
-      '@docusaurus/plugin-content-blog': 2.0.1_sfoxds7t5ydpegc3knd667wn6m
-      '@docusaurus/plugin-content-docs': 2.0.1_sfoxds7t5ydpegc3knd667wn6m
-      '@docusaurus/plugin-content-pages': 2.0.1_sfoxds7t5ydpegc3knd667wn6m
-      '@docusaurus/utils': 2.0.1
       '@types/history': 4.7.11
       '@types/react': 18.0.15
       '@types/react-router-config': 5.0.6
