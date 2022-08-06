@@ -18,8 +18,6 @@ TABLESPACE pg_default;
 ALTER TABLE IF EXISTS public.users
     OWNER to postgres;
 
-GRANT ALL ON TABLE public.users TO anon;
-
 GRANT ALL ON TABLE public.users TO authenticated;
 
 GRANT ALL ON TABLE public.users TO postgres;

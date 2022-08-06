@@ -7,7 +7,7 @@ if [ "$CI" = true ]; then
 fi
 
 # Start Supabase, grep key and set it as SUPABASE_KEY environment variable
-line=$(supabase start | grep 'anon key')
+line=$(supabase start | grep 'service_role key')
 IFS=':'; arr=($line); unset IFS;
 export SUPABASE_KEY=${arr[1]}
 

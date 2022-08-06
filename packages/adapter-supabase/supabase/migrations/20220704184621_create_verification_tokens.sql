@@ -17,8 +17,6 @@ TABLESPACE pg_default;
 ALTER TABLE IF EXISTS public.verification_tokens
     OWNER to postgres;
 
-GRANT ALL ON TABLE public.verification_tokens TO anon;
-
 GRANT ALL ON TABLE public.verification_tokens TO authenticated;
 
 GRANT ALL ON TABLE public.verification_tokens TO postgres;

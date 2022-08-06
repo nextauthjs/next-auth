@@ -21,8 +21,6 @@ TABLESPACE pg_default;
 ALTER TABLE IF EXISTS public.sessions
     OWNER to postgres;
 
-GRANT ALL ON TABLE public.sessions TO anon;
-
 GRANT ALL ON TABLE public.sessions TO authenticated;
 
 GRANT ALL ON TABLE public.sessions TO postgres;
