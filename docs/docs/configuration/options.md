@@ -68,7 +68,7 @@ A random string is used to hash tokens, sign/encrypt cookies and generate crypto
 
 If you set [`NEXTAUTH_SECRET`](#nextauth_secret) as an environment variable, you don't have to define this option.
 
-If no value specified in development (and there is no `NEXTAUTH_SECRET` variable either), it uses a hash for all configuration options, including OAuth Client ID / Secrets for entropy.
+If no value is specified in development (and there is no `NEXTAUTH_SECRET` variable either), it uses a hash for all configuration options, including OAuth Client ID / Secrets for entropy.
 
 :::warning
 Not providing any `secret` or `NEXTAUTH_SECRET` will throw [an error](/errors#no_secret) in production.
