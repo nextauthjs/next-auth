@@ -104,17 +104,18 @@ async function handleMiddleware(
 ) {
   const { pathname, search, origin } = req.nextUrl
 
-  const nextJsBasePath = getNextJsBasePath(req.nextUrl);
+  const nextJsBasePath = getNextJsBasePath(req.nextUrl)
+  const fullPathname = nextJsBasePath + pathname
   const signInPage = options?.pages?.signIn ?? `${nextJsBasePath}/api/auth/signin`
   const errorPage = options?.pages?.error ?? `${nextJsBasePath}/api/auth/error`
   const basePath = parseUrl(process.env.NEXTAUTH_URL).path
-  const publicPaths = [signInPage, errorPage, "/_next", "/favicon.ico"]
+  const publicPaths = [signInPage, errorPage, `${nextJsBasePath}/_next`, `${nextJsBasePath}/favicon.ico`]
 
   // Avoid infinite redirects/invalid response
   // on paths that never require authentication
   if (
-    pathname.startsWith(basePath) ||
-    publicPaths.some((p) => pathname.startsWith(p))
+    fullPathname.startsWith(basePath) ||
+    publicPaths.some((p) => fullPathname.startsWith(p))
   ) {
     return
   }
@@ -147,7 +148,7 @@ async function handleMiddleware(
 
   // the user is not logged in, redirect to the sign-in page
   const signInUrl = new URL(signInPage, origin)
-  signInUrl.searchParams.append("callbackUrl", `${nextJsBasePath}${pathname}${search}`)
+  signInUrl.searchParams.append("callbackUrl", `${fullPathname}${search}`)
   return NextResponse.redirect(signInUrl)
 }
 
