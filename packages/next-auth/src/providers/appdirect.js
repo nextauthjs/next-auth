@@ -7,7 +7,7 @@ export default function AppDirect(options) {
         id: "appdirect",
         name: "AppDirect",
         type: "oauth",
-        wellKnown: `https://${marketplaceUrl}/.well-known/openid-configuration`,
+        wellKnown: `${marketplaceUrl}/.well-known/openid-configuration`,
         authorization: {
           params: {
             scope: "openid email profile company",
