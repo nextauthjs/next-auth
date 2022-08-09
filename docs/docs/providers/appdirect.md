@@ -20,6 +20,22 @@ The **AppDirect Provider** comes with a set of default options:
 You can override any of the options to suit your own use case.
 
 ## Example
+Create an API Client in the target marketplace following the [configuration instructions](https://help.appdirect.com/products/Default.htm#MarketplaceManager/mm-set-integ-api.htm).
+
+Make sure to save your consumer secret after creating your client.
+- the AppDirect Consumer Key is your APPDIRECT_CLIENT_ID
+- the AppDirect Consumer Secret is your APPDIRECT_CLIENT_SECRET
+- the URL of your marketplace is your APPDIRECT_URL. This will default to `https://marketplace.appdirect.com` if not provided.
+
+In .env.local create the following entries:
+
+```
+APPDIRECT_CLIENT_ID=abc123
+APPDIRECT_CLIENT_SECRET=abc123
+APPDIRECT_URL=https://marketplace.example.com
+```
+
+In pages/api/auth/[...nextauth].js find or add the APPDIRECT entries:
 
 ```js
 import Providers from `next-auth/providers`
