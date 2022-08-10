@@ -80,7 +80,7 @@ TWITTER_ID=YOUR_TWITTER_CLIENT_ID
 TWITTER_SECRET=YOUR_TWITTER_CLIENT_SECRET
 ```
 
-4. Now you can add the provider settings to the NextAuth options object. You can add as many OAuth providers as you like, as you can see `providers` is an array.
+4. Now you can add the provider settings to the NextAuth.js options object. You can add as many OAuth providers as you like, as you can see `providers` is an array.
 
 ```js title="pages/api/auth/[...nextauth].js"
 import TwitterProvider from "next-auth/providers/"
