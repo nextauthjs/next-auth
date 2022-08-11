@@ -6,12 +6,12 @@ import ErrorPage from "./error"
 import css from "../../css"
 
 import type { InternalOptions } from "../types"
-import type { RequestInternal, OutgoingResponse } from ".."
+import type { InternalRequest, InternalResponse } from ".."
 import type { Cookie } from "../lib/cookie"
 import type { ErrorType } from "./error"
 
 type RenderPageParams = {
-  query?: RequestInternal["query"]
+  query?: InternalRequest["query"]
   cookies?: Cookie[]
 } & Partial<
   Pick<
@@ -27,7 +27,7 @@ type RenderPageParams = {
 export default function renderPage(params: RenderPageParams) {
   const { url, theme, query, cookies } = params
 
-  function send({ html, title, status }: any): OutgoingResponse {
+  function send({ html, title, status }: any): InternalResponse {
     return {
       cookies,
       status,

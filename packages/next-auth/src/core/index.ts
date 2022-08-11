@@ -9,9 +9,8 @@ import { fromRequest, toResponse } from "./lib/spec"
 import type { NextAuthAction, NextAuthOptions } from "./types"
 import type { Cookie } from "./lib/cookie"
 import type { ErrorType } from "./pages/error"
-import { parse as parseCookie } from "cookie"
 
-export interface RequestInternal {
+export interface InternalRequest {
   /** @default "http://localhost:3000" */
   host?: string
   method?: string
@@ -24,12 +23,7 @@ export interface RequestInternal {
   error?: string
 }
 
-export interface NextAuthHeader {
-  key: string
-  value: string
-}
-
-export interface OutgoingResponse<
+export interface InternalResponse<
   Body extends string | Record<string, any> | any[] = any
 > {
   status?: number

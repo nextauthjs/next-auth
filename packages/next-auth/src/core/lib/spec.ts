@@ -1,6 +1,6 @@
 import { serialize, parse as parseCookie } from "cookie"
 import { detectHost } from "../../utils/detect-host"
-import type { OutgoingResponse, RequestInternal } from ".."
+import type { InternalResponse, InternalRequest } from ".."
 import type { NextAuthAction } from "../types"
 
 async function readBody(
@@ -23,7 +23,7 @@ async function readBody(
 }
 
 // TODO:
-export async function fromRequest(req: Request): Promise<RequestInternal> {
+): Promise<InternalRequest> {
   // TODO: handle custom url
   const url = new URL(req.url, "http://localhost:3000")
   const nextauth = url.pathname.split("/").slice(3)
@@ -52,7 +52,7 @@ export async function fromRequest(req: Request): Promise<RequestInternal> {
   }
 }
 
-export function toResponse(_res: OutgoingResponse): Response {
+export function toResponse(res: InternalResponse): Response {
   const headers = new Headers(
     _res.headers?.reduce((acc, { key, value }) => {
       acc[key] = value

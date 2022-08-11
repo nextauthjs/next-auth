@@ -9,16 +9,16 @@ import type { CallbackParamsType } from "openid-client"
 import type { Account, LoggerInstance, Profile } from "../../.."
 import type { OAuthChecks, OAuthConfig } from "../../../providers"
 import type { InternalOptions } from "../../types"
-import type { RequestInternal, OutgoingResponse } from "../.."
+import type { InternalRequest, InternalResponse } from "../.."
 import type { Cookie } from "../cookie"
 
 export default async function oAuthCallback(params: {
   options: InternalOptions<"oauth">
-  query: RequestInternal["query"]
-  body: RequestInternal["body"]
-  method: Required<RequestInternal>["method"]
-  cookies: RequestInternal["cookies"]
-}): Promise<GetProfileResult & { cookies?: OutgoingResponse["cookies"] }> {
+  query: InternalRequest["query"]
+  body: InternalRequest["body"]
+  method: Required<InternalRequest>["method"]
+  cookies: InternalRequest["cookies"]
+}): Promise<GetProfileResult & { cookies?: InternalResponse["cookies"] }> {
   const { options, query, body, method, cookies } = params
   const { logger, provider } = options
 
