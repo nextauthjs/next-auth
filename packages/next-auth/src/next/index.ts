@@ -1,4 +1,5 @@
-import { NextAuthHandler } from "../core"
+import { serialize } from "cookie"
+import { AuthHandlerInternal } from "../core"
 import { detectHost } from "../utils/detect-host"
 import { setCookie } from "./utils"
 
@@ -8,67 +9,83 @@ import type {
   NextApiResponse,
 } from "next"
 import type { NextAuthOptions, Session } from ".."
-import type { NextAuthRequest, NextAuthResponse } from "../core/types"
+import type {
+  NextAuthAction,
+  NextAuthRequest,
+  NextAuthResponse,
+} from "../core/types"
 
-async function NextAuthNextHandler(
+async function NextAuthHandler(
   req: NextApiRequest,
   res: NextApiResponse,
   options: NextAuthOptions
 ) {
+  const { nextauth, ...query } = req.query
+
   options.secret =
     options.secret ?? options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
 
-  const shouldUseBody =
-    req.method !== "GET" && req.headers["content-type"] === "application/json"
-
-  const _req = new Request(req.url!, {
-    headers: new Headers(req.headers as any),
-    method: req.method,
-    ...((shouldUseBody
-      ? { body: JSON.stringify(Object.fromEntries(Object.entries(req.body))) }
-      : {}) as any),
+  const handler = await AuthHandlerInternal({
+    req: {
+      host: detectHost(req.headers["x-forwarded-host"]),
+      body: req.body,
+      query,
+      cookies: req.cookies,
+      headers: req.headers,
+      method: req.method,
+      action: nextauth?.[0] as NextAuthAction,
+      providerId: nextauth?.[1],
+      error: (req.query.error as string | undefined) ?? nextauth?.[1],
+    },
+    options,
   })
 
-  const _res = await NextAuthHandler(_req, options)
+  res.status(handler.status ?? 200)
 
-  res.status(_res.status ?? 200)
+  handler.cookies?.forEach((cookie) => {
+    const { name, value, options } = cookie
+    const cookieHeader = serialize(name, value, options)
+    setCookie(res, cookieHeader)
+  })
 
-  for (const [key, value] of _res.headers.entries()) {
-    res.setHeader(key, value)
+  handler.headers?.forEach((h) => res.setHeader(h.key, h.value))
+
+  if (handler.redirect) {
+    // If the request expects a return URL, send it as JSON
+    // instead of doing an actual redirect.
+    if (req.body?.json !== "true") {
+      // Could chain. .end() when lowest target is Node 14
+      // https://github.com/nodejs/node/issues/33148
+      res.status(302).setHeader("Location", handler.redirect)
+      return res.end()
+    }
+    return res.json({ url: handler.redirect })
   }
 
-  // If the request expects a return URL, send it as JSON
-  // instead of doing an actual redirect.
-  const redirect = _res.headers.get("Location")
-  if (req.body?.json === "true" && redirect) {
-    return res.json({ url: redirect })
-  }
-
-  return res.send(_res.body)
+  return res.send(handler.body)
 }
 
-function NextAuth(options: NextAuthOptions): any
-function NextAuth(
+export default function NextAuth(options: NextAuthOptions): any
+export default function NextAuth(
   req: NextApiRequest,
   res: NextApiResponse,
   options: NextAuthOptions
 ): any
 
 /** The main entry point to next-auth */
-function NextAuth(
+export default function NextAuth(
   ...args:
     | [NextAuthOptions]
     | [NextApiRequest, NextApiResponse, NextAuthOptions]
 ) {
   if (args.length === 1) {
-    return async (req: NextAuthRequest, res: NextAuthResponse) =>
-      await NextAuthNextHandler(req, res, args[0])
+    return function handler(req: NextAuthRequest, res: NextAuthResponse) {
+      return NextAuthHandler(req, res, args[0])
+    }
   }
 
-  return NextAuthNextHandler(args[0], args[1], args[2])
+  return NextAuthHandler(args[0], args[1], args[2])
 }
-
-export default NextAuth
 
 let experimentalWarningShown = false
 export async function unstable_getServerSession(
@@ -94,7 +111,7 @@ export async function unstable_getServerSession(
 
   options.secret = options.secret ?? process.env.NEXTAUTH_SECRET
 
-  const session = await NextAuthHandler<Session | {}>({
+  const session = await AuthHandlerInternal<Session | {}>({
     options,
     req: {
       host: detectHost(req.headers["x-forwarded-host"]),
@@ -107,7 +124,11 @@ export async function unstable_getServerSession(
 
   const { body, cookies } = session
 
-  cookies?.forEach((cookie) => setCookie(res, cookie))
+  cookies?.forEach((cookie) => {
+    const { name, value, options } = cookie
+    const cookieHeader = serialize(name, value, options)
+    setCookie(res, cookieHeader)
+  })
 
   if (body && Object.keys(body).length) return body as Session
   return null

@@ -2,7 +2,7 @@ import logger, { setLogger } from "../utils/logger"
 import * as routes from "./routes"
 import renderPage from "./pages"
 import { init } from "./init"
-import { assertConfig as assert } from "./lib/assert"
+import { assertConfig } from "./lib/assert"
 import { SessionStore } from "./lib/cookie"
 import { fromRequest, toResponse } from "./lib/spec"
 
@@ -33,53 +33,20 @@ export interface InternalResponse<
   cookies?: Cookie[]
 }
 
-export interface NextAuthHandlerParams {
-  req: Request
-  options: NextAuthOptions
+export interface NextAuthHeader {
+  key: string
+  value: string
 }
 
-async function getBody(req: Request): Promise<Record<string, any> | undefined> {
-  try {
-    return await req.json()
-  } catch {}
-}
-
-// TODO:
-async function toInternalRequest(
-  req: RequestInternal | Request
-): Promise<RequestInternal> {
-  if (req instanceof Request) {
-    const url = new URL(req.url)
-    // TODO: handle custom paths?
-    const nextauth = url.pathname.split("/").slice(3)
-    const headers = Object.fromEntries(req.headers.entries())
-    const query: Record<string, any> = Object.fromEntries(
-      url.searchParams.entries()
-    )
-    query.nextauth = nextauth
-
-    return {
-      action: nextauth[0] as NextAuthAction,
-      method: req.method,
-      headers,
-      body: await getBody(req),
-      cookies: parseCookie(req.headers.get("cookie") ?? ""),
-      providerId: nextauth[1],
-      error: url.searchParams.get("error") ?? nextauth[1],
-      host: detectHost(headers["x-forwarded-host"] ?? headers.host),
-      query,
-    }
-  }
-  return req
-}
-
-export async function NextAuthHandler<
+export async function AuthHandlerInternal<
   Body extends string | Record<string, any> | any[]
->(params: NextAuthHandlerParams): Promise<OutgoingResponse<Body>> {
-  const { options: userOptions, req: incomingRequest } = params
-
-  const req = await toInternalRequest(incomingRequest)
-
+>(params: {
+  req: InternalRequest
+  options: NextAuthOptions
+  /** REVIEW: Is this the best way to skip parsing the body in Node.js? */
+  parsedBody?: any
+}): Promise<InternalResponse<Body>> {
+  const { options: userOptions, req } = params
   setLogger(userOptions.logger, userOptions.debug)
 
   const assertionResult = assertConfig({ options: userOptions, req })
@@ -120,21 +87,21 @@ export async function NextAuthHandler<
     userOptions,
     action,
     providerId,
-    host: host,
-    callbackUrl: body?.callbackUrl ?? query?.callbackUrl,
-    csrfToken: body?.csrfToken,
-    cookies: internalRequest.cookies,
+    host: req.host,
+    callbackUrl: req.body?.callbackUrl ?? req.query?.callbackUrl,
+    csrfToken: req.body?.csrfToken,
+    cookies: req.cookies,
     isPost: method === "POST",
   })
 
   const sessionStore = new SessionStore(
     options.cookies.sessionToken,
-    internalRequest,
+    req,
     options.logger
   )
 
   if (method === "GET") {
-    const render = renderPage({ ...options, query, cookies })
+    const render = renderPage({ ...options, query: req.query, cookies })
     const { pages } = options
     switch (action) {
       case "providers":
@@ -168,10 +135,10 @@ export async function NextAuthHandler<
       case "callback":
         if (options.provider) {
           const callback = await routes.callback({
-            body,
-            query,
-            headers,
-            cookies: internalRequest.cookies,
+            body: req.body,
+            query: req.query,
+            headers: req.headers,
+            cookies: req.cookies,
             method,
             options,
             sessionStore,
@@ -221,7 +188,11 @@ export async function NextAuthHandler<
       case "signin":
         // Verified CSRF Token required for all sign in routes
         if (options.csrfTokenVerified && options.provider) {
-          const signin = await routes.signin({ query, body, options })
+          const signin = await routes.signin({
+            query: req.query,
+            body: req.body,
+            options,
+          })
           if (signin.cookies) cookies.push(...signin.cookies)
           return { ...signin, cookies }
         }
@@ -246,10 +217,10 @@ export async function NextAuthHandler<
           }
 
           const callback = await routes.callback({
-            body,
-            query,
-            headers,
-            cookies: internalRequest.cookies,
+            body: req.body,
+            query: req.query,
+            headers: req.headers,
+            cookies: req.cookies,
             method,
             options,
             sessionStore,
@@ -261,7 +232,7 @@ export async function NextAuthHandler<
       case "_log":
         if (userOptions.logger) {
           try {
-            const { code, level, ...metadata } = body ?? {}
+            const { code, level, ...metadata } = req.body ?? {}
             logger[level](code, metadata)
           } catch (error) {
             // If logging itself failed...
@@ -284,28 +255,11 @@ export async function NextAuthHandler<
  * It receives a standard [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request)
  * and returns a standard [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response).
  */
-export async function NextAuthHandler(
-  req: Request,
-  options: NextAuthHandlerParams["options"]
-): Promise<Response> {
-  setLogger(options.logger, options.debug)
-  const assertionResult = assert({ req, options })
-
-  if (typeof assertionResult === "string") {
-    logger.warn(assertionResult)
-  } else if (assertionResult instanceof Error) {
-    // Bail out early if there's an error in the user config
-    const { pages, theme } = options
-    logger.error(assertionResult.code, assertionResult)
-    if (pages?.error) {
-      return new Response(null, {
-        status: 302,
-        headers: { Location: `${pages.error}?error=Configuration` },
-      })
-    }
-    const render = renderPage({ theme })
-    return toResponse(render.error({ error: "configuration" }))
-  }
-
-  return toResponse(await NextAuthHandlerInternal(req, options))
+export async function AuthHandler(params: {
+  req: Request
+  options: NextAuthOptions
+  parsedBody?: any
+}): Promise<Response> {
+  const req = await fromRequest(params.req, params.parsedBody)
+  return toResponse(await AuthHandlerInternal({ ...params, req }))
 }
