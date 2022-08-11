@@ -19,16 +19,19 @@ export interface AzureB2CProfile extends Record<string, any> {
 
 export default function AzureADB2C<P extends AzureB2CProfile>(
   options: OAuthUserConfig<P> & {
-    primaryUserFlow: string
-    tenantId: string
+    primaryUserFlow?: string
+    tenantId?: string
   }
 ): OAuthConfig<P> {
   const { tenantId, primaryUserFlow } = options
+  const issuer =
+    options.issuer ??
+    `https://${tenantId}.b2clogin.com/${tenantId}.onmicrosoft.com/${primaryUserFlow}/v2.0`
   return {
     id: "azure-ad-b2c",
     name: "Azure Active Directory B2C",
     type: "oauth",
-    wellKnown: `https://${tenantId}.b2clogin.com/${tenantId}.onmicrosoft.com/${primaryUserFlow}/v2.0/.well-known/openid-configuration`,
+    wellKnown: `${issuer}/.well-known/openid-configuration`,
     idToken: true,
     profile(profile) {
       return {

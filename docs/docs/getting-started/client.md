@@ -148,13 +148,9 @@ Because of how `_app` is written, it won't unnecessarily contact the `/api/auth/
 
 More information can be found in the following [GitHub Issue](https://github.com/nextauthjs/next-auth/issues/1210).
 
-### NextAuth.js + React-Query
+### NextAuth.js + React Query
 
-There is also an alternative client-side API library based upon [`react-query`](https://www.npmjs.com/package/react-query) available under [`nextauthjs/react-query`](https://github.com/nextauthjs/react-query).
-
-If you use `react-query` in your project already, you can leverage it with NextAuth.js to handle the client-side session management for you as well. This replaces NextAuth.js's native `useSession` and `SessionProvider` from `next-auth/react`.
-
-See repository [`README`](https://github.com/nextauthjs/react-query) for more details.
+You can create your own session management solution using data fetching libraries like [React Query](https://tanstack.com/query/v4/docs/adapters/react-query) or [SWR](https://swr.vercel.app). You can use the [original implementation of `@next-auth/react-query`](https://github.com/nextauthjs/react-query) and look at the [`next-auth/react` source code](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/react/index.tsx) as a starting point.
 
 ---
 
@@ -164,6 +160,12 @@ See repository [`README`](https://github.com/nextauthjs/react-query) for more de
 - Server Side: **No** (See: [`unstable_getServerSession()`](/configuration/nextjs#unstable_getserversession)
 
 NextAuth.js provides a `getSession()` helper which should be called **client side only** to return the current active session.
+
+On the server side, **this is still available to use**, however, we recommend using `unstable_getServerSession` going forward. The idea behind this is to avoid an additional unnecessary `fetch` call on the server side. For more information, please check out [this issue](https://github.com/nextauthjs/next-auth/issues/1535).
+
+:::note
+The `unstable_getServerSession` only has the prefix `unstable_` at the moment, because the API may change in the future. There are no known bugs at the moment and it is safe to use. If you discover any issues, please do report them as a [GitHub Issue](https://github.com/nextauthjs/next-auth/issues) and we will patch them as soon as possible.
+:::
 
 This helper is helpful in case you want to read the session outside of the context of React.
 
@@ -421,13 +423,14 @@ This only works on pages where you provide the correct `pageProps`, however. Thi
 
 ```js title="pages/index.js"
 import { unstable_getServerSession } from "next-auth/next"
+import { authOptions } from './api/auth/[...nextauth]'
 
 ...
 
-export async function getServerSideProps(ctx) {
+export async function getServerSideProps({ req, res }) {
   return {
     props: {
-      session: await unstable_getServerSession(ctx)
+      session: await unstable_getServerSession(req, res, authOptions)
     }
   }
 }
@@ -499,3 +502,29 @@ However, if it was set to `false`, it stops re-fetching the session and the comp
 :::note
 See [**the Next.js documentation**](https://nextjs.org/docs/advanced-features/custom-app) for more information on **\_app.js** in Next.js applications.
 :::
+
+### Custom base path
+When your Next.js application uses a custom base path, set the `NEXTAUTH_URL` environment variable to the route to the API endpoint in full - as in the example below and as explained [here](/configuration/options#nextauth_url).
+
+Also, make sure to pass the `basePath` page prop to the `<SessionProvider>` – as in the example below – so your custom base path is fully configured and used by NextAuth.js.
+
+#### Example
+In this example, the custom base path used is `/custom-route`.
+
+```
+NEXTAUTH_URL=https://example.com/custom-route/api/auth
+```
+
+```jsx title="pages/_app.js"
+import { SessionProvider } from "next-auth/react"
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}) {
+  return (
+    <SessionProvider session={session} basePath="/custom-route/api/auth">
+      <Component {...pageProps} />
+    </SessionProvider>
+  )
+}
+```

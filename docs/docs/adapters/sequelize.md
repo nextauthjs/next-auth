@@ -11,7 +11,7 @@ This is the Sequelize Adapter for [`next-auth`](https://next-auth.js.org).
 
 1. Install the necessary packages
 
-```bash npm2yarn
+```bash npm2yarn2pnpm
 npm install next-auth @next-auth/sequelize-adapter sequelize
 ```
 

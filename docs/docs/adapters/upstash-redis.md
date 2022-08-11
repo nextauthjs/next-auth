@@ -7,7 +7,7 @@ title: Upstash Redis
 
 To use this Adapter, you need to install `@upstash/redis` and `@next-auth/upstash-redis-adapter` package:
 
-```bash npm2yarn
+```bash npm2yarn2pnpm
 npm install @upstash/redis @next-auth/upstash-redis-adapter
 ```
 

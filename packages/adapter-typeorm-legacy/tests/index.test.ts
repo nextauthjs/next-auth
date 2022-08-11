@@ -1,11 +1,9 @@
-// eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
-// @ts-ignore
-import { parseConnectionString } from "../src/lib/config"
+import { parseDataSourceConfig } from "../src/utils"
 
 const connectionString = "mysql://root:password@localhost:3306/next-auth"
 
 test("could parse connection string", () => {
-  expect(parseConnectionString(connectionString)).toEqual(
+  expect(parseDataSourceConfig(connectionString)).toEqual(
     expect.objectContaining({
       type: "mysql",
       host: "localhost",

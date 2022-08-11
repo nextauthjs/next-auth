@@ -1,46 +1,49 @@
-import { ConnectionManager, ConnectionOptions } from "typeorm"
-import { TestOptions } from "@next-auth/adapter-test"
+import { DataSource } from "typeorm"
+import type { DataSourceOptions } from "typeorm"
+import type { TestOptions } from "@next-auth/adapter-test"
 import * as defaultEntities from "../src/entities"
-import { parseConnectionConfig } from "../src/utils"
+import { parseDataSourceConfig } from "../src/utils"
 
 export { defaultEntities }
 
+console.warn = jest.fn()
+
 /** Set up Test Database */
 export function db(
-  config: string | ConnectionOptions,
+  config: string | DataSourceOptions,
   entities: typeof defaultEntities = defaultEntities
 ): TestOptions["db"] {
-  const connection = new ConnectionManager().create({
-    ...parseConnectionConfig(config),
+  const connection = new DataSource({
+    ...parseDataSourceConfig(config),
     entities: Object.values(entities),
-  })
+  }).manager.connection
 
   const m = connection.manager
   return {
-    connect: async () => await connection.connect(),
-    disconnect: async () => await connection.close(),
+    connect: async () => await connection.initialize(),
+    disconnect: async () => await connection.destroy(),
     async user(id) {
-      const user = await m.findOne(entities.UserEntity, id)
+      const user = await m.findOne(entities.UserEntity, { where: { id } })
       return user ?? null
     },
     async account(provider_providerAccountId) {
-      const account = await m.findOne(
-        entities.AccountEntity,
-        provider_providerAccountId
-      )
+      const account = await m.findOne(entities.AccountEntity, {
+        where: provider_providerAccountId,
+      })
       return account ?? null
     },
     async session(sessionToken) {
-      const session = await m.findOne(entities.SessionEntity, { sessionToken })
+      const session = await m.findOne(entities.SessionEntity, {
+        where: { sessionToken },
+      })
       return session ?? null
     },
     async verificationToken(token_identifier) {
       const verificationToken = await m.findOne(
         entities.VerificationTokenEntity,
-        token_identifier
+        { where: token_identifier }
       )
       if (!verificationToken) return null
-      // @ts-expect-error
       const { id: _, ...rest } = verificationToken
       return rest
     },

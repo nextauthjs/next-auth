@@ -1,5 +1,4 @@
 /// <reference types="next" />
-/// <reference types="next/dist/styled-jsx-types/global" />
 /// <reference types="next/image-types/global" />
 
 // NOTE: This file should not be edited
