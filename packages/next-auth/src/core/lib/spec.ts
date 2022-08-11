@@ -11,10 +11,7 @@ async function readBody(
 }
 
 // TODO:
-export async function fromRequest(
-  req: Request,
-  parsedBody?: any
-): Promise<InternalRequest> {
+export async function fromRequest(req: Request): Promise<InternalRequest> {
   // TODO: handle custom url
   const url = new URL(req.url, "http://localhost:3000")
   const nextauth = url.pathname.split("/").slice(3)
@@ -34,7 +31,7 @@ export async function fromRequest(
     action: nextauth[0] as NextAuthAction,
     method: req.method,
     headers,
-    body: parsedBody ?? (await readBody(req.body)),
+    body: await readBody(req.body),
     cookies: cookies,
     providerId: nextauth[1],
     error: url.searchParams.get("error") ?? undefined,
