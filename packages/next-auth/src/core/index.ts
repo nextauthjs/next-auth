@@ -9,6 +9,7 @@ import { fromRequest, toResponse } from "./lib/spec"
 import type { NextAuthAction, NextAuthOptions } from "./types"
 import type { Cookie } from "./lib/cookie"
 import type { ErrorType } from "./pages/error"
+import { parse as parseCookie } from "cookie"
 
 export interface RequestInternal {
   /** @default "http://localhost:3000" */
@@ -43,24 +44,83 @@ export interface NextAuthHandlerParams {
   options: NextAuthOptions
 }
 
-async function NextAuthHandlerInternal<
-  Body extends string | Record<string, any> | any[]
->(
-  request: Request,
-  userOptions: NextAuthOptions
-): Promise<OutgoingResponse<Body>> {
-  const internalRequest = await fromRequest(request)
+async function getBody(req: Request): Promise<Record<string, any> | undefined> {
+  try {
+    return await req.json()
+  } catch {}
+}
 
-  const {
-    action,
-    providerId,
-    error,
-    method = "GET",
-    body,
-    query,
-    host,
-    headers,
-  } = internalRequest
+// TODO:
+async function toInternalRequest(
+  req: RequestInternal | Request
+): Promise<RequestInternal> {
+  if (req instanceof Request) {
+    const url = new URL(req.url)
+    // TODO: handle custom paths?
+    const nextauth = url.pathname.split("/").slice(3)
+    const headers = Object.fromEntries(req.headers.entries())
+    const query: Record<string, any> = Object.fromEntries(
+      url.searchParams.entries()
+    )
+    query.nextauth = nextauth
+
+    return {
+      action: nextauth[0] as NextAuthAction,
+      method: req.method,
+      headers,
+      body: await getBody(req),
+      cookies: parseCookie(req.headers.get("cookie") ?? ""),
+      providerId: nextauth[1],
+      error: url.searchParams.get("error") ?? nextauth[1],
+      host: detectHost(headers["x-forwarded-host"] ?? headers.host),
+      query,
+    }
+  }
+  return req
+}
+
+export async function NextAuthHandler<
+  Body extends string | Record<string, any> | any[]
+>(params: NextAuthHandlerParams): Promise<OutgoingResponse<Body>> {
+  const { options: userOptions, req: incomingRequest } = params
+
+  const req = await toInternalRequest(incomingRequest)
+
+  setLogger(userOptions.logger, userOptions.debug)
+
+  const assertionResult = assertConfig({ options: userOptions, req })
+
+  if (Array.isArray(assertionResult)) {
+    assertionResult.forEach(logger.warn)
+  } else if (assertionResult instanceof Error) {
+    // Bail out early if there's an error in the user config
+    const { pages, theme } = userOptions
+    logger.error(assertionResult.code, assertionResult)
+
+    const authOnErrorPage =
+      pages?.error &&
+      req.action === "signin" &&
+      req.query?.callbackUrl.startsWith(pages.error)
+
+    if (!pages?.error || authOnErrorPage) {
+      if (authOnErrorPage) {
+        logger.error(
+          "AUTH_ON_ERROR_PAGE_ERROR",
+          new Error(
+            `The error page ${pages?.error} should not require authentication`
+          )
+        )
+      }
+      const render = renderPage({ theme })
+      return render.error({ error: "configuration" })
+    }
+
+    return {
+      redirect: `${pages.error}?error=Configuration`,
+    }
+  }
+
+  const { action, providerId, error, method = "GET" } = req
 
   const { options, cookies } = await init({
     userOptions,

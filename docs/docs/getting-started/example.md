@@ -11,6 +11,17 @@ The easiest way to get started is to clone the [example app](https://github.com/
 
 ## Existing Project
 
+### Install NextAuth
+
+```bash npm2yarn2pnpm
+npm install next-auth
+```
+
+:::info
+If you are using TypeScript, NextAuth.js comes with its types definitions within the package. To learn more about TypeScript for `next-auth`, check out the [TypeScript documentation](/getting-started/typescript)
+:::
+
+
 ### Add API route
 
 To add NextAuth.js to a project create a file called `[...nextauth].js` in `pages/api/auth`. This contains the dynamic route handler for NextAuth.js which will also contain all of your global NextAuth.js configurations.
@@ -97,6 +108,7 @@ To protect an API Route, you can use the [`unstable_getServerSession()`](/config
 
 ```javascript title="pages/api/restricted.js" showLineNumbers
 import { unstable_getServerSession } from "next-auth/next"
+import { authOptions } from "./api/auth/[...nextauth]"
 
 export default async (req, res) => {
   const session = await unstable_getServerSession(req, res, authOptions)

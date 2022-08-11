@@ -56,7 +56,7 @@ TWITTER_ID=YOUR_TWITTER_CLIENT_ID
 TWITTER_SECRET=YOUR_TWITTER_CLIENT_SECRET
 ```
 
-4. Now you can add the provider settings to the NextAuth options object. You can add as many OAuth providers as you like, as you can see `providers` is an array.
+4. Now you can add the provider settings to the NextAuth.js options object. You can add as many OAuth providers as you like, as you can see `providers` is an array.
 
 ```js title="pages/api/auth/[...nextauth].js"
 import Providers from `next-auth/providers`
@@ -181,7 +181,7 @@ If you think your custom provider might be useful to others, we encourage you to
 
 You only need to add two changes:
 
-1. Add your config: [`src/providers/{provider}.js`](https://github.com/nextauthjs/next-auth/tree/main/src/providers)<br />
+1. Add your config: [`src/providers/{provider}.js`](https://github.com/nextauthjs/next-auth/tree/main/packages/next-auth/src/providers)<br />
    • make sure you use a named default export, like this: `export default function YourProvider`
 2. Add provider documentation: [`www/docs/providers/{provider}.md`](https://github.com/nextauthjs/next-auth/tree/ead715219a5d7a6e882a6ba27fa56b03954d062d/www/docs/providers)
 3. Add it to our [provider types](https://github.com/nextauthjs/next-auth/blob/ead715219a5d7a6e882a6ba27fa56b03954d062d/types/providers.d.ts) (for TS projects)<br />

@@ -9,9 +9,8 @@ import type { InternalOptions } from "../../types"
 export default async function email(
   identifier: string,
   options: InternalOptions<"email">
-) {
-  const { url, adapter, provider, logger, callbackUrl } = options
-
+): Promise<string> {
+  const { url, adapter, provider, callbackUrl, theme } = options
   // Generate token
   const token =
     (await provider.generateVerificationToken?.()) ??
@@ -22,33 +21,31 @@ export default async function email(
     Date.now() + (provider.maxAge ?? ONE_DAY_IN_SECONDS) * 1000
   )
 
-  // Save in database
-  // @ts-expect-error
-  await adapter.createVerificationToken({
-    identifier,
-    token: hashToken(token, options),
-    expires,
-  })
-
   // Generate a link with email, unhashed token and callback url
   const params = new URLSearchParams({ callbackUrl, token, email: identifier })
   const _url = `${url}/callback/${provider.id}?${params}`
 
-  try {
+  await Promise.all([
     // Send to user
-    await provider.sendVerificationRequest({
+    provider.sendVerificationRequest({
       identifier,
       token,
       expires,
       url: _url,
       provider,
-    })
-  } catch (error) {
-    logger.error("SEND_VERIFICATION_EMAIL_ERROR", {
+      theme,
+    }),
+    // Save in database
+    // @ts-expect-error // verified in `assertConfig`
+    adapter.createVerificationToken({
       identifier,
-      url,
-      error: error as Error,
-    })
-    throw new Error("SEND_VERIFICATION_EMAIL_ERROR")
-  }
+      token: hashToken(token, options),
+      expires,
+    }),
+  ])
+
+  return `${url}/verify-request?${new URLSearchParams({
+    provider: provider.id,
+    type: provider.type,
+  })}`
 }
