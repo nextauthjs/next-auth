@@ -3,23 +3,41 @@ import { detectHost } from "../../utils/detect-host"
 import type { InternalResponse, InternalRequest } from ".."
 import type { NextAuthAction } from "../types"
 
-// TODO: Implement
-async function readBody(
-  body: ReadableStream | null
+const decoder = new TextDecoder()
+
+async function readJSONBody(
+  body: ReadableStream | Buffer
 ): Promise<Record<string, any> | undefined> {
-  throw new Error("Not implemented")
+  try {
+    if (body instanceof ReadableStream) {
+      const reader = body.getReader()
+      const bytes: number[] = []
+      while (true) {
+        const { value, done } = await reader.read()
+        if (done) break
+        bytes.push(...value)
+      }
+      const b = new Uint8Array(bytes)
+      return JSON.parse(decoder.decode(b))
+    }
+
+    // Handle `node-fetch` implementation of `body`
+    // We expect it to be a JSON.stringify'd object in a `Buffer`
+    return JSON.parse(body.toString())
+  } catch (e) {
+    console.error(e)
+  }
 }
 
-// TODO:
-export async function fromRequest(req: Request): Promise<InternalRequest> {
-  // TODO: handle custom url
-  const url = new URL(req.url, "http://localhost:3000")
+export async function toInternalRequest(
+  req: Request
+): Promise<InternalRequest> {
+  const url = new URL(req.url)
   const nextauth = url.pathname.split("/").slice(3)
   const headers = Object.fromEntries(req.headers.entries())
   const query: Record<string, any> = Object.fromEntries(
     url.searchParams.entries()
   )
-  query.nextauth = nextauth
 
   const cookieHeader = req.headers.get("cookie") ?? ""
   const cookies =
@@ -31,7 +49,7 @@ export async function fromRequest(req: Request): Promise<InternalRequest> {
     action: nextauth[0] as NextAuthAction,
     method: req.method,
     headers,
-    body: await readBody(req.body),
+    body: req.body ? await readJSONBody(req.body) : undefined,
     cookies: cookies,
     providerId: nextauth[1],
     error: url.searchParams.get("error") ?? undefined,
@@ -59,8 +77,7 @@ export function toResponse(res: InternalResponse): Response {
   })
 
   const body =
-    res.headers?.find(({ key }) => key === "Content-Type")?.value ===
-    "application/json"
+    headers.get("content-type") === "application/json"
       ? JSON.stringify(res.body)
       : res.body
 

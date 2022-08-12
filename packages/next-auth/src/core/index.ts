@@ -4,7 +4,7 @@ import renderPage from "./pages"
 import { init } from "./init"
 import { assertConfig } from "./lib/assert"
 import { SessionStore } from "./lib/cookie"
-import { fromRequest, toResponse } from "./lib/spec"
+import { toInternalRequest, toResponse } from "./lib/spec"
 
 import type { NextAuthAction, NextAuthOptions } from "./types"
 import type { Cookie } from "./lib/cookie"
@@ -255,11 +255,11 @@ export async function AuthHandlerInternal<
  * It receives a standard [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request)
  * and returns a standard [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response).
  */
-export async function AuthHandler(params: {
-  req: Request
+export async function AuthHandler(
+  request: Request,
   options: NextAuthOptions
-  parsedBody?: any
-}): Promise<Response> {
-  const req = await fromRequest(params.req, params.parsedBody)
-  return toResponse(await AuthHandlerInternal({ ...params, req }))
+): Promise<Response> {
+  const req = await toInternalRequest(request)
+  const internalResponse = await AuthHandlerInternal({ req, options })
+  return toResponse(internalResponse)
 }

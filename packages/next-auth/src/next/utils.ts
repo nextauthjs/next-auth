@@ -1,3 +1,6 @@
+import type { GetServerSidePropsContext, NextApiRequest } from "next"
+import type { NextRequest } from "next/server"
+
 export function setCookie(res, value: string) {
   // Preserve any existing cookies that have already been set in the same session
   let setCookieHeader = res.getHeader("Set-Cookie") ?? []
@@ -7,4 +10,16 @@ export function setCookie(res, value: string) {
   }
   setCookieHeader.push(value)
   res.setHeader("Set-Cookie", setCookieHeader)
+}
+
+export function getBody(
+  req: NextApiRequest | NextRequest | GetServerSidePropsContext["req"]
+) {
+  if (!("body" in req) || !req.body || req.method !== "POST") {
+    return
+  }
+  return {
+    body:
+      req.body instanceof ReadableStream ? req.body : JSON.stringify(req.body),
+  }
 }
