@@ -19,7 +19,7 @@ async function NextAuthHandler(
   options.secret ??= options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
 
   // TODO: verify (detect host), normalize (full url), fallback (localhost)
-  const url = new URL(req.url!, "http://localhost:3000")
+  const url = new URL(req.url ?? "", "http://localhost:3000")
 
   const { status, headers, body } = await AuthHandler(
     new Request(url, {
@@ -51,27 +51,28 @@ async function NextAuthHandler(
   return res.send(body)
 }
 
-export default function NextAuth(options: NextAuthOptions): any
-export default function NextAuth(
+function NextAuth(options: NextAuthOptions): any
+function NextAuth(
   req: NextApiRequest,
   res: NextApiResponse,
   options: NextAuthOptions
 ): any
 
 /** The main entry point to next-auth */
-export default function NextAuth(
+function NextAuth(
   ...args:
     | [NextAuthOptions]
     | [NextApiRequest, NextApiResponse, NextAuthOptions]
 ) {
   if (args.length === 1) {
-    return function handler(req: NextAuthRequest, res: NextAuthResponse) {
-      return NextAuthHandler(req, res, args[0])
-    }
+    return async (req: NextAuthRequest, res: NextAuthResponse) =>
+      await NextAuthHandler(req, res, args[0])
   }
 
   return NextAuthHandler(args[0], args[1], args[2])
 }
+
+export default NextAuth
 
 let experimentalWarningShown = false
 export async function unstable_getServerSession(
