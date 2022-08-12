@@ -1,7 +1,7 @@
 import { serialize } from "cookie"
-import { AuthHandlerInternal } from "../core"
+import { AuthHandler, AuthHandlerInternal } from "../core"
 import { detectHost } from "../utils/detect-host"
-import { setCookie } from "./utils"
+import { setCookie, getBody } from "./utils"
 
 import type {
   GetServerSidePropsContext,
@@ -9,60 +9,46 @@ import type {
   NextApiResponse,
 } from "next"
 import type { NextAuthOptions, Session } from ".."
-import type {
-  NextAuthAction,
-  NextAuthRequest,
-  NextAuthResponse,
-} from "../core/types"
+import type { NextAuthRequest, NextAuthResponse } from "../core/types"
 
 async function NextAuthHandler(
   req: NextApiRequest,
   res: NextApiResponse,
   options: NextAuthOptions
 ) {
-  const { nextauth, ...query } = req.query
+  options.secret ??= options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
 
-  options.secret =
-    options.secret ?? options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
+  // TODO: verify (detect host), normalize (full url), fallback (localhost)
+  const url = new URL(req.url!, "http://localhost:3000")
 
-  const handler = await AuthHandlerInternal({
-    req: {
-      host: detectHost(req.headers["x-forwarded-host"]),
-      body: req.body,
-      query,
-      cookies: req.cookies,
-      headers: req.headers,
+  const { status, headers, body } = await AuthHandler(
+    new Request(url, {
+      headers: new Headers(req.headers as any),
       method: req.method,
-      action: nextauth?.[0] as NextAuthAction,
-      providerId: nextauth?.[1],
-      error: (req.query.error as string | undefined) ?? nextauth?.[1],
-    },
-    options,
-  })
+      ...getBody(req),
+    }),
+    options
+  )
 
-  res.status(handler.status ?? 200)
+  res.status(status)
 
-  handler.cookies?.forEach((cookie) => {
-    const { name, value, options } = cookie
-    const cookieHeader = serialize(name, value, options)
-    setCookie(res, cookieHeader)
-  })
-
-  handler.headers?.forEach((h) => res.setHeader(h.key, h.value))
-
-  if (handler.redirect) {
-    // If the request expects a return URL, send it as JSON
-    // instead of doing an actual redirect.
-    if (req.body?.json !== "true") {
-      // Could chain. .end() when lowest target is Node 14
-      // https://github.com/nodejs/node/issues/33148
-      res.status(302).setHeader("Location", handler.redirect)
-      return res.end()
+  for (const [key, value] of headers.entries()) {
+    if (key === "set-cookie") {
+      res.setHeader("set-cookie", value.split(","))
+    } else {
+      res.setHeader(key, value)
     }
-    return res.json({ url: handler.redirect })
   }
 
-  return res.send(handler.body)
+  // If the request expects a return URL, send it as JSON
+  // instead of doing an actual redirect.
+  const redirect = headers.get("Location")
+  if (req.body?.json === "true" && redirect) {
+    res.removeHeader("Location")
+    return res.json({ url: redirect })
+  }
+
+  return res.send(body)
 }
 
 export default function NextAuth(options: NextAuthOptions): any
