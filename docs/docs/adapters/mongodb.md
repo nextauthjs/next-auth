@@ -53,7 +53,7 @@ if (process.env.NODE_ENV === "development") {
 export default clientPromise
 ```
 
-3. Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object.
+3. Add this adapter to your `pages/api/auth/[...nextauth].js` next-auth configuration object.
 
 ```js
 import NextAuth from "next-auth"
