@@ -1,5 +1,5 @@
 import { createHash } from "crypto"
-import { NextAuthHandler } from "../src/core"
+import { AuthHandler } from "../src/core"
 import type { LoggerInstance, NextAuthOptions } from "../src"
 import type { Adapter } from "../src/adapters"
 
@@ -30,9 +30,10 @@ export async function handler(
   )
   const req = new Request(url, { headers: { host: "" }, ...requestInit })
   const logger = mockLogger()
-  const response = await NextAuthHandler({
-    req,
-    options: { secret: "secret", ...options, logger },
+  const response = await AuthHandler(req, {
+    secret: "secret",
+    ...options,
+    logger,
   })
   // @ts-ignore
   if (prod) process.env.NODE_ENV = "test"
@@ -62,5 +63,5 @@ export function mockAdapter(): Adapter {
   return {
     createVerificationToken: jest.fn(() => {}),
     getUserByEmail: jest.fn(() => {}),
-  } as Adapter
+  } as unknown as Adapter
 }
