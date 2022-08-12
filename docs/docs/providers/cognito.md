@@ -47,3 +47,19 @@ Make sure you select all the appropriate client settings or the OAuth flow will 
 :::
 
 ![cognito](https://user-images.githubusercontent.com/7902980/83951604-cd096e80-a832-11ea-8bd2-c496ec9a16cb.PNG)
+
+:::tip
+To properly sign out of Cognito, you need to call the [logout](https://docs.aws.amazon.com/cognito/latest/developerguide/logout-endpoint.html) endpoint.
+For example:
+```js
+import { signOut } from 'next-auth/react';
+
+const handleSignOut = async e => {
+  e.preventDefault()
+  await signOut(); // this only clears the cookie session
+  const url = `https://YOUR_PREFIX.auth.YOUR_REGION.amazoncognito.com/logout?client_id=YOUR_CLIENT_ID&logout_uri=http://localhost:3000`;
+  window.location.href = url;
+};
+```
+Make sure that the `logout_uri` matches **exactly** the *Sign out URL(s)*.
+:::
