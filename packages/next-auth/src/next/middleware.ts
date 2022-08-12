@@ -92,14 +92,10 @@ export interface NextAuthMiddlewareOptions {
   secret?: string
 }
 
-// TODO: `NextMiddleware` should allow returning `void`
-// Simplify when https://github.com/vercel/next.js/pull/38625 is merged.
-type NextMiddlewareResult = ReturnType<NextMiddleware> | void // eslint-disable-line @typescript-eslint/no-invalid-void-type
-
 async function handleMiddleware(
   req: NextRequest,
   options: NextAuthMiddlewareOptions | undefined,
-  onSuccess?: (token: JWT | null) => Promise<NextMiddlewareResult>
+  onSuccess?: (token: JWT | null) => ReturnType<NextMiddleware>
 ) {
   const { pathname, search, origin } = req.nextUrl
 
@@ -156,7 +152,7 @@ export interface NextRequestWithAuth extends NextRequest {
 export type NextMiddlewareWithAuth = (
   request: NextRequestWithAuth,
   event: NextFetchEvent
-) => NextMiddlewareResult | Promise<NextMiddlewareResult>
+) => ReturnType<NextMiddleware>
 
 export type WithAuthArgs =
   | [NextRequestWithAuth]
