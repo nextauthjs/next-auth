@@ -2,6 +2,6 @@
 import { getToken } from "next-auth/jwt"
 
 export default async (req, res) => {
-  const token = await getToken({ req, secret: process.env.SECRET })
+  const token = await getToken({ req })
   res.send(JSON.stringify(token, null, 2))
 }

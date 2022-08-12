@@ -68,7 +68,7 @@ EMAIL_SERVER_HOST=smtp.example.com
 	EMAIL_FROM=noreply@example.com
 ```
 
-Now you can add the provider settings to the NextAuth options object in the Email Provider.
+Now you can add the provider settings to the NextAuth.js options object in the Email Provider.
 
 ```js title="pages/api/auth/[...nextauth].js"
 providers: [

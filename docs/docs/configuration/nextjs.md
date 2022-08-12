@@ -16,7 +16,7 @@ In `[...nextauth.js]`:
 ```ts
 import { NextAuth } from 'next-auth'
 import type { NextAuthOptions } from 'next-auth'
- 
+
 export const authOptions: NextAuthOptions = {
   // your configs
 }
@@ -137,12 +137,16 @@ Callbacks are asynchronous functions you can use to control what happens when an
 
 Specify URLs to be used if you want to create custom sign in, and error pages. Pages specified will override the corresponding built-in page.
 
+:::note
+This should match the `pages` configuration that's found in `[...nextauth].ts`.
+:::
+
 #### Example (default value)
 
 ```js
 pages: {
-  signIn: '/auth/signin',
-  error: '/auth/error',
+  signIn: '/api/auth/signin',
+  error: '/api/auth/error',
 }
 ```
 
@@ -156,7 +160,7 @@ See the documentation for the [pages option](/configuration/pages) for more info
 
 #### Description
 
-The same `secret` used in the [NextAuth config](/configuration/options#options).
+The same `secret` used in the [NextAuth.js config](/configuration/options#options).
 
 #### Example (default value)
 
@@ -177,13 +181,11 @@ If you do not define the options, NextAuth.js will use the default values for th
 #### wrap middleware
 
 ```ts title="middleware.ts"
-import type { NextRequest } from "next/server"
-import type { JWT } from "next-auth/jwt"
 import { withAuth } from "next-auth/middleware"
 
 export default withAuth(
-  // `withAuth` can augment your Request with the user's token.
-  function middleware(req: NextRequest & { nextauth: { token: JWT | null } }) {
+  // `withAuth` augments your `Request` with the user's token.
+  function middleware(req) {
     console.log(req.nextauth.token)
   },
   {
