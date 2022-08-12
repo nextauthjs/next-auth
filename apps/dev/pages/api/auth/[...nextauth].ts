@@ -39,9 +39,9 @@ import WorkOS from "next-auth/providers/workos"
 // Adapters
 import { PrismaClient } from "@prisma/client"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
-// import { Client as FaunaClient } from "faunadb"
-// import { FaunaAdapter } from "@next-auth/fauna-adapter"
-// import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
+import { Client as FaunaClient } from "faunadb"
+import { FaunaAdapter } from "@next-auth/fauna-adapter"
+import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
 
 // Add an adapter you want to test here.
 const adapters = {
@@ -50,24 +50,24 @@ const adapters = {
     if (process.env.NODE_ENV !== "production") globalThis.prisma = client
     return PrismaAdapter(client)
   },
-  // typeorm() {
-  //   return TypeORMLegacyAdapter({
-  //     type: "sqlite",
-  //     name: "next-auth-test-memory",
-  //     database: "./typeorm/dev.db",
-  //     synchronize: true,
-  //   })
-  // },
-  // fauna() {
-  //   const client =
-  //     globalThis.fauna ||
-  //     new FaunaClient({
-  //       secret: process.env.FAUNA_SECRET,
-  //       domain: process.env.FAUNA_DOMAIN,
-  //     })
-  //   if (process.env.NODE_ENV !== "production") global.fauna = client
-  //   return FaunaAdapter(client)
-  // },
+  typeorm() {
+    return TypeORMLegacyAdapter({
+      type: "sqlite",
+      name: "next-auth-test-memory",
+      database: "./typeorm/dev.db",
+      synchronize: true,
+    })
+  },
+  fauna() {
+    const client =
+      globalThis.fauna ||
+      new FaunaClient({
+        secret: process.env.FAUNA_SECRET,
+        domain: process.env.FAUNA_DOMAIN,
+      })
+    if (process.env.NODE_ENV !== "production") global.fauna = client
+    return FaunaAdapter(client)
+  },
   noop() {
     return undefined
   },
@@ -75,7 +75,7 @@ const adapters = {
 
 export const authOptions: NextAuthOptions = {
   adapter: adapters.noop(),
-  // debug: true,
+  debug: true,
   theme: {
     logo: "https://next-auth.js.org/img/logo/logo-sm.png",
     brandColor: "#1786fb",
