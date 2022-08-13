@@ -1,5 +1,5 @@
 {
-  "name": "@next-auth/adapter-airtable",
+  "name": "@next-auth/airtable-adapter",
   "version": "1.0.0",
   "description": "Airtable adapter for next-auth",
   "main": "dist/index.js",
