@@ -11,7 +11,7 @@
     "adapter"
   ],
   "bugs": {
-    "url": "https://github.com/kyen99/next-auth-adapter-airtable/issues"
+    "url": "https://github.com/nextauthjs/next-auth/issues"
   },
   "repository": "https://github.com/nextauthjs/adapters",
   "homepage": "https://next-auth.js.org",
