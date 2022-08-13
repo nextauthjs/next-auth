@@ -5,11 +5,6 @@
    <p align="center">
    Open Source. Full Stack. Own Your Data.
    </p>
-   <!-- <p align="center" style="align: center;">
-      <img src="https://github.com/nextauthjs/adapters/actions/workflows/release.yml/badge.svg" alt="CI Test" />
-      <img src="https://img.shields.io/bundlephobia/minzip/@next-auth/prisma-adapter" alt="Bundle Size"/>
-      <img src="https://img.shields.io/npm/v/@next-auth/prisma-adapter" alt="@next-auth/prisma-adapter Version" />
-   </p> -->
 </p>
 
 ## Overview

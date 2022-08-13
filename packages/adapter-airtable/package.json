@@ -23,13 +23,8 @@
   ],
   "private": false,
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --project tsconfig.build.json",
     "test": "jest"
-  },
-  "dependencies": {
-    "airtable": "^0.11.3",
-    "encoding": "^0.1.13",
-    "next-auth": "^4.3.4"
   },
   "devDependencies": {
     "@babel/core": "^7.18.0",
@@ -37,15 +32,21 @@
     "@babel/preset-typescript": "^7.16.7",
     "@next-auth/adapter-test": "workspace:^0.0.0",
     "@next-auth/tsconfig": "workspace:^0.0.0",
+    "@swc/core": "^1.2.198",
+    "@swc/jest": "^0.2.21",
     "@types/jest": "^27.5.1",
+    "airtable": "^0.11.4",
     "babel-jest": "^27.4.2",
     "dotenv": "^16.0.0",
     "jest": "^27.4.2",
-    "ts-jest": "^27.0.3"
+    "next-auth": "workspace:*",
+    "ts-jest": "^27.0.3",
+    "typescript": "^4.7.4"
   },
   "peerDependencies": {
-    "next-auth": "^4",
-    "airtable": "^0.11.3",
+    "airtable": "^0.11.4",
+    "encoding": "^0.1.13",
+    "next-auth": "^4.3.4"
   },
   "jest": {
     "preset": "@next-auth/adapter-test/jest"
