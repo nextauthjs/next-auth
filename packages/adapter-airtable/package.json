@@ -44,7 +44,8 @@
     "ts-jest": "^27.0.3"
   },
   "peerDependencies": {
-    "next-auth": "workspace:*"
+    "next-auth": "^4",
+    "airtable": "^0.11.3",
   },
   "jest": {
     "preset": "@next-auth/adapter-test/jest"
