@@ -13,7 +13,7 @@
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
-  "repository": "https://github.com/nextauthjs/adapters",
+  "repository": "https://github.com/nextauthjs/next-auth",
   "homepage": "https://next-auth.js.org",
   "author": "Kai Yen <kai@c4k.net>",
   "license": "ISC",
