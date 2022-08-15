@@ -34,7 +34,8 @@ export async function createNonce(options: InternalOptions<"oauth">): Promise<
   })
 
   logger.debug("CREATE_ENCRYPTED_NONCE", {
-    NONCE_MAX_AGE: NONCE_MAX_AGE,
+    nonce,
+    maxAge: NONCE_MAX_AGE,
   })
 
   return {
