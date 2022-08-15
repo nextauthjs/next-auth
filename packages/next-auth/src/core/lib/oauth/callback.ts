@@ -5,7 +5,7 @@ import { useState } from "./state-handler"
 import { usePKCECodeVerifier } from "./pkce-handler"
 import { OAuthCallbackError } from "../../errors"
 
-import type { CallbackParamsType } from "openid-client"
+import type { CallbackParamsType, OpenIDCallbackChecks } from "openid-client"
 import type { Account, LoggerInstance, Profile } from "../../.."
 import type { OAuthChecks, OAuthConfig } from "../../../providers"
 import type { InternalOptions } from "../../types"
@@ -71,9 +71,7 @@ export default async function oAuthCallback(params: {
 
     let tokens: TokenSet
 
-    const checks: OAuthChecks = {
-      nonce: undefined,
-    }
+    const checks: OAuthChecks = {}
     const resCookies: Cookie[] = []
 
     const state = await useState(cookies?.[options.cookies.state.name], options)
@@ -84,7 +82,7 @@ export default async function oAuthCallback(params: {
 
     const nonce = await useNonce(cookies?.[options.cookies.nonce.name], options)
     if (nonce && provider.idToken) {
-      checks.nonce = nonce.value
+      (checks as OpenIDCallbackChecks).nonce = nonce.value
       resCookies.push(nonce.cookie)
     }
 
