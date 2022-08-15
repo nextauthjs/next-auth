@@ -83,7 +83,7 @@ export default async function oAuthCallback(params: {
     }
 
     const nonce = await useNonce(cookies?.[options.cookies.nonce.name], options)
-    if (nonce) {
+    if (nonce && provider.idToken) {
       checks.nonce = nonce.value
       resCookies.push(nonce.cookie)
     }
