@@ -71,7 +71,7 @@ EMAIL_SERVER_PORT=587
 EMAIL_FROM=noreply@example.com
 ```
 
-Now you can add the provider settings to the NextAuth options object in the Email Provider.
+Now you can add the provider settings to the NextAuth.js options object in the Email Provider.
 
 ```js title="pages/api/auth/[...nextauth].js"
 import EmailProvider from "next-auth/providers/email";
