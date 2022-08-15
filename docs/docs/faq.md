@@ -236,6 +236,10 @@ Automatic account linking is not a planned feature of NextAuth.js, however there
 
 Providing support for secure account linking and unlinking of additional providers - which can only be done if a user is already signed in already - was originally a feature in v1.x but has not been present since v2.0, is planned to return in a future release.
 
+:::note
+If the user first signs in using Email and then tries to sign in again using an OAuth provider, NextAuth.js default behavior is to allow account linking even if the OAuth account's email address does not match the previous email address of the user.
+:::
+
 </p>
 </details>
 

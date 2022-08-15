@@ -13,18 +13,12 @@ The easiest way to get started is to clone the [example app](https://github.com/
 
 ### Install NextAuth
 
-```
-npm i next-auth
-```
-
-or
-
-```
-yarn add next-auth
+```bash npm2yarn2pnpm
+npm install next-auth
 ```
 
 :::info
-If you are using TypeScript, NextAuth comes with its types definitions within the package. To learn more about TypeScript for `next-auth`, check out the [TypeScript documentation](/getting-started/typescript)
+If you are using TypeScript, NextAuth.js comes with its types definitions within the package. To learn more about TypeScript for `next-auth`, check out the [TypeScript documentation](/getting-started/typescript)
 :::
 
 
@@ -114,7 +108,7 @@ To protect an API Route, you can use the [`unstable_getServerSession()`](/config
 
 ```javascript title="pages/api/restricted.js" showLineNumbers
 import { unstable_getServerSession } from "next-auth/next"
-import { authOptions } from "./api/auth/[...nextauth]"
+import { authOptions } from "./auth/[...nextauth]"
 
 export default async (req, res) => {
   const session = await unstable_getServerSession(req, res, authOptions)
