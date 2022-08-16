@@ -83,7 +83,7 @@ NextAuth.js was originally designed for use with Next.js and Serverless. However
 **Same root domain, different subdomains**: If you use NextAuth.js on a website with a different subdomain than the rest of your website (e.g. `auth.example.com` vs. `www.example.com`) you will need to set a custom cookie domain policy for the Session Token cookie. (See also: [Cookies](/configuration/options#cookies)).
 
 :::warning
-Changing the default cookies domain policy is advanced and can lead to security issues if not done correctly. Make sure you're aware of the security implication before proceeding.
+Changing the default cookies domain policy can lead to security issues if done incorrectly. Make sure you're aware of the implications before proceeding.
 :::
 
 A working example can be found at <a href="https://github.com/vercel/examples/tree/main/solutions/subdomain-auth" target="_blank">this example repo</a>.
