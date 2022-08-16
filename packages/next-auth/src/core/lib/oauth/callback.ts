@@ -3,6 +3,7 @@ import { openidClient } from "./client"
 import { oAuth1Client } from "./client-legacy"
 import { useState } from "./state-handler"
 import { usePKCECodeVerifier } from "./pkce-handler"
+import { useNonce } from "./nonce-handler"
 import { OAuthCallbackError } from "../../errors"
 
 import type { CallbackParamsType, OpenIDCallbackChecks } from "openid-client"
@@ -11,7 +12,6 @@ import type { OAuthChecks, OAuthConfig } from "../../../providers"
 import type { InternalOptions } from "../../types"
 import type { RequestInternal, OutgoingResponse } from "../.."
 import type { Cookie } from "../cookie"
-import { useNonce } from "./nonce-handler"
 
 export default async function oAuthCallback(params: {
   options: InternalOptions<"oauth">

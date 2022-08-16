@@ -1,13 +1,13 @@
 import { openidClient } from "./client"
 import { oAuth1Client } from "./client-legacy"
 import { createState } from "./state-handler"
+import { createNonce } from "./nonce-handler"
 import { createPKCE } from "./pkce-handler"
 
 import type { AuthorizationParameters } from "openid-client"
 import type { InternalOptions } from "../../types"
 import type { RequestInternal } from "../.."
 import type { Cookie } from "../cookie"
-import { createNonce } from "./nonce-handler"
 
 /**
  *
