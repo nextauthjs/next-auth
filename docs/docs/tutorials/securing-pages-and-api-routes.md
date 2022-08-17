@@ -48,8 +48,6 @@ With NextAuth.js 4.2.0 and Next.js 12, you can now protect your pages via the mi
 export { default } from "next-auth/middleware"
 ```
 
-Otherwise, if you only want to protect a subset of pages, you could put it in a subdirectory as well, for example in `/pages/admin/_middleware.js` would protect all pages under `/admin`.
-
 For the time being, the `withAuth` middleware only supports `"jwt"` as [session strategy](https://next-auth.js.org/configuration/options#session).
 
 More details can be found [here](https://next-auth.js.org/configuration/nextjs#middleware).
