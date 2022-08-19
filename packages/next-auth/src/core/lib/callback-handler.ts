@@ -149,6 +149,13 @@ export default async function callbackHandler(params: {
             expires: fromDate(options.session.maxAge),
           })
 
+      if (account.access_token ?? account.refresh_token ?? account.id_token) {
+        // If we have any tokens in the request, then these need updating in the stored Account information.
+        // This is important as some auth providers will only allow one refresh token at a time for a given
+        // application (looking at you twitter). Failure to update them can leave the tokens in an non-working state.
+        await linkAccount({ ...account, userId: userByAccount.id })
+      }
+
       return { session, user: userByAccount, isNewUser }
     } else {
       if (user) {
