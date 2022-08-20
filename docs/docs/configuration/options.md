@@ -478,6 +478,15 @@ cookies: {
       secure: useSecureCookies,
     },
   },
+  nonce: {
+    name: `${cookiePrefix}next-auth.nonce`,
+    options: {
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/",
+      secure: useSecureCookies,
+    },
+  },
 }
 ```
 
