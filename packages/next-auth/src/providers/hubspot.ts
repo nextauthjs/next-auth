@@ -20,7 +20,7 @@ const HubSpotConfig = {
 }
 
 export default function HubSpot<P extends HubSpotProfile>(
-  options: OAuthUserConfig<P> & { "redirectURL": string }
+  options: OAuthUserConfig<P>
 ): OAuthConfig<P> {
 
   return {
@@ -34,7 +34,6 @@ export default function HubSpot<P extends HubSpotProfile>(
       url: HubSpotConfig.authorizationUrl,
       params: {
         scope: "oauth",
-        redirect_uri: options.redirectURL,
         client_id: options.clientId,
       },
 
@@ -50,7 +49,7 @@ export default function HubSpot<P extends HubSpotProfile>(
           client_id: options.clientId,
           client_secret: options.clientSecret,
           grant_type: "authorization_code",
-          redirect_uri: options.redirectURL,
+          redirect_uri: context.provider.callbackUrl,
           code: context.params.code,
         });
         

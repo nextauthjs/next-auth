@@ -31,14 +31,13 @@ import HubspotProvider from "next-auth/providers/hubspot";
 providers: [
   HubspotProvider({
     clientId: process.env.HUBSPOT_CLIENT_ID,
-    clientSecret: process.env.HUBSPOT_CLIENT_SECRET,
-    redirectURL: process.env.HUBSPOT_REDIRECT_URL
+    clientSecret: process.env.HUBSPOT_CLIENT_SECRET
   })
 ]
 ...
 ```
 
 :::warning
-Only allows one callback URL per Client ID / Client Secret and the redirect URL must be the same as the one on the HubSpot APP Settings page.
+The **Redirect URL** under the **Auth** tab on the HubSpot App Settings page must match the callback url which would be http://localhost:3000/api/auth/callback/hubspot for local development. Only one callback URL per Client ID and Client Secret pair is allowed, so it might be easier to create a new app for local development then fiddle with the url changes.  
 :::
 
