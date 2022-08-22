@@ -76,7 +76,11 @@ Please check your OAuth provider and make sure your URLs  and other options are 
 
 If you are using an OAuth v1 provider, check your OAuth v1 provider settings, especially the OAuth token and OAuth token secret.
 
-#### CALLBACK_OAUTH_ERROR
+3. `openid-client` version mismatch
+
+If you are seeing `expected 200 OK with body but no body was returned`, it might have happened due to `openid-client` (which is peer dependency) node version mismatch. For instance, `openid-client` requires `>=14.2.0` for `lts/fermium` and has similar limits for the other versions. For the full list of the compatible node versions please see [package.json](https://github.com/panva/node-openid-client/blob/2a84e46992e1ebeaf685c3f87b65663d126e81aa/package.json#L78).
+
+#### OAUTH_CALLBACK_ERROR
 
 This can occur during the handling of the callback if the `code_verifier` cookie was not found or an invalid state was returned from the OAuth provider.
 
@@ -179,8 +183,3 @@ Useful links:
 - https://next-auth.js.org/configuration/pages
 - https://nextjs.org/docs/advanced-features/middleware#matcher
   
-### Other
-
-#### oauth_callback_error expected 200 OK with body but no body was returned
-
-This error might happen with some of the providers. It happens due to `openid-client`(which is peer dependency) node version mismatch. For instance, `openid-client` requires `>=14.2.0` for `lts/fermium` and has similar limits for the other versions. For the full list of the compatible node versions please see [package.json](https://github.com/panva/node-openid-client/blob/2a84e46992e1ebeaf685c3f87b65663d126e81aa/package.json#L78)
