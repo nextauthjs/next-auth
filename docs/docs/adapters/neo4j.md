@@ -15,7 +15,7 @@ This is the Neo4j Adapter for [`next-auth`](https://next-auth.js.org). This pack
 npm install next-auth @next-auth/neo4j-adapter neo4j-driver
 ```
 
-2. Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object.
+2. Add this adapter to your `pages/api/auth/[...nextauth].js` next-auth configuration object.
 
 ```javascript title="pages/api/auth/[...nextauth].js"
 import neo4j from "neo4j-driver"

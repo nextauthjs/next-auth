@@ -107,6 +107,8 @@ When using the MySQL connector for Prisma, the [Prisma `String` type](https://ww
 
 ### Create the database schema with Prisma Migrate
 
+**Warning:** Make sure to back up your database before running using Prisma Migrate.
+
 ```
 npx prisma migrate dev
 ```
