@@ -1,11 +1,3 @@
-import NextAuth from "$lib"
-import GithubProvider from "next-auth/providers/github"
+import { NextAuth, options } from "$lib/next-auth"
 
-export const { get, post } = NextAuth({
-  providers: [
-    GithubProvider({
-      clientId: import.meta.env.VITE_GITHUB_CLIENT_ID,
-      clientSecret: import.meta.env.VITE_GITHUB_CLIENT_SECRET,
-    }),
-  ],
-})
+export const { GET, POST } = NextAuth(options)
