@@ -119,7 +119,15 @@ export default async function oAuthCallback(params: {
     } else if (provider.idToken) {
       tokens = await client.callback(provider.callbackUrl, params, checks)
     } else {
-      tokens = await client.oauthCallback(provider.callbackUrl, params, checks)
+      let additionalParams = {}
+      if(provider.id === "linkedin") {
+        // LinkedIn requires a client_id and client_secret to be passed in the
+        // request body.
+        additionalParams = {
+          exchangeBody: {client_id: provider.clientId, client_secret: provider.clientSecret},
+        }
+      }
+      tokens = await client.oauthCallback(provider.callbackUrl, params, checks, additionalParams)
     }
 
     // REVIEW: How can scope be returned as an array?
