@@ -32,6 +32,7 @@
     "./react": "./react/index.js",
     "./core": "./core/index.js",
     "./next": "./next/index.js",
+    "./expo": "./expo/index.js",
     "./middleware": "./middleware.js",
     "./client/_utils": "./client/_utils.js",
     "./providers/*": "./providers/*.js"
@@ -54,6 +55,7 @@
     "jwt",
     "react",
     "next",
+    "expo",
     "client",
     "providers",
     "core",
@@ -77,9 +79,11 @@
     "uuid": "^8.3.2"
   },
   "peerDependencies": {
+    "expo": "^46",
     "nodemailer": "^6.6.5",
     "react": "^17.0.2 || ^18",
-    "react-dom": "^17.0.2 || ^18"
+    "react-dom": "^17.0.2 || ^18",
+    "react-native": ">= 0.63.0"
   },
   "peerDependenciesMeta": {
     "nodemailer": {
@@ -95,6 +99,7 @@
     "@babel/preset-react": "^7.17.12",
     "@babel/preset-typescript": "^7.17.12",
     "@next-auth/tsconfig": "workspace:^0.0.0",
+    "@react-navigation/native": "^6.0.12",
     "@swc/core": "^1.2.198",
     "@swc/jest": "^0.2.21",
     "@testing-library/dom": "^8.13.0",
@@ -112,6 +117,10 @@
     "babel-plugin-jsx-pragmatic": "^1.0.2",
     "babel-preset-preact": "^2.0.0",
     "cssnano": "^5.1.11",
+    "expo": "^46",
+    "expo-auth-session": "^3.7.1",
+    "expo-constants": "^13.2.4",
+    "expo-secure-store": "^11.3.0",
     "jest": "^28.1.1",
     "jest-environment-jsdom": "^28.1.1",
     "jest-watch-typeahead": "^1.1.0",
@@ -122,6 +131,7 @@
     "postcss-nested": "^5.0.6",
     "react": "^18",
     "react-dom": "^18",
+    "react-native": "0.69.4",
     "whatwg-fetch": "^3.6.2"
   },
   "engines": {
