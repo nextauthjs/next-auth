@@ -13,6 +13,7 @@ import { NextAuthClientConfig, now } from "../client/_utils"
 import _logger, { LoggerInstance, proxyLogger } from "../utils/logger"
 import parseUrl from "../utils/parse-url"
 import * as React from "react"
+import "react-native-url-polyfill/auto"
 
 import type {
   ClientSafeProvider,
@@ -29,11 +30,10 @@ import type {
   RedirectableProviderType,
 } from "../providers"
 
-import { useFocusEffect } from "@react-navigation/native"
 import * as SecureStore from "expo-secure-store"
 import Constants from "expo-constants"
 import { Alert } from "react-native"
-import { defaultCookies } from "src/core/lib/cookie"
+import { defaultCookies } from "../core/lib/cookie"
 import * as AuthSession from "expo-auth-session"
 
 const storageKeys = {
@@ -380,16 +380,16 @@ export function SessionProvider(props: SessionProviderProps) {
     }
   }, [])
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const { refetchOnWindowFocus = true } = props
-      // Listen for when the page is visible, if the user switches tabs
-      // and makes our tab visible again, re-fetch the session, but only if
-      // this feature is not disabled.
-      if (refetchOnWindowFocus)
-        __NEXTAUTH._getSession({ event: "visibilitychange" })
-    }, [props])
-  )
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const { refetchOnWindowFocus = true } = props
+  //     // Listen for when the page is visible, if the user switches tabs
+  //     // and makes our tab visible again, re-fetch the session, but only if
+  //     // this feature is not disabled.
+  //     if (refetchOnWindowFocus)
+  //       __NEXTAUTH._getSession({ event: "visibilitychange" })
+  //   }, [props])
+  // )
 
   React.useEffect(() => {
     // Set up polling
