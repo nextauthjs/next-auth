@@ -216,7 +216,6 @@ export interface SigninResult {
   csrfTokenCookie: string
   stateEncrypted: string
   codeVerifier?: string
-  proxyRedirectUri: string
   provider: string
 }
 
@@ -256,7 +255,6 @@ export async function signIn<
     state,
     codeVerifier,
     csrfTokenCookie,
-    // proxyRedirectUri,
     stateEncrypted,
     provider: nativeProvider,
   } = signinResult
