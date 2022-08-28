@@ -36,7 +36,7 @@ export default function Strava<P extends StravaProfile>(
         scope: "read",
         approval_prompt: "auto",
         response_type: "code",
-        redirect_uri: `${process.env.NEXTAUTH_URL}/api/auth/callback/strava`,
+        redirect_uri: `${process.env.NEXTAUTH_URL|| `https:localhost:3000`}/api/auth/callback/strava`,
       },
     },
     token: {
