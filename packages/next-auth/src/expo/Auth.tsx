@@ -38,7 +38,6 @@ import * as AuthSession from "expo-auth-session"
 
 const storageKeys = {
   sessionToken: "next-auth.sessionToken",
-  csrfToken: "next-auth.csrfToken",
 }
 
 export async function fetchData<T = any>(
@@ -50,11 +49,6 @@ export async function fetchData<T = any>(
   const url = `${apiBaseUrl(__NEXTAUTH)}/proxy`
   const sessionToken = await SecureStore.getItemAsync(storageKeys.sessionToken)
   try {
-    let csrfToken = await SecureStore.getItemAsync(storageKeys.csrfToken)
-    if (!csrfToken) {
-      csrfToken = (await getCsrfToken())?.csrfTokenCookie ?? null
-    }
-
     const options: RequestInit = {
       method: "POST",
       headers: {
@@ -63,7 +57,6 @@ export async function fetchData<T = any>(
       body: JSON.stringify({
         action: path,
         sessionToken,
-        csrfToken,
         ...params,
       }), // TODO: populate this
     }
@@ -157,45 +150,10 @@ export async function getSession() {
   return session
 }
 
-const getCookieFromHeader = (name: string, headers: Headers) => {
-  return headers
-    .get("set-cookie")
-    ?.split(", ")
-    .filter((s) => s.startsWith(`${name}=`))[0]
-    ?.split("=")[1]
-    ?.split(";")[0]
-}
-
 export const authCookies = defaultCookies(
   // useSecureCookies ??
   __NEXTAUTH.baseUrl.startsWith("https://")
 )
-
-/**
- * Returns the current Cross Site Request Forgery Token (CSRF Token)
- * required to make POST requests (e.g. for signing in and signing out).
- * You likely only need to use this if you are not using the built-in
- * `signIn()` and `signOut()` methods.
- *
- * [Documentation](https://next-auth.js.org/getting-started/client#getcsrftoken)
- */
-export async function getCsrfToken() {
-  const csrfTokenRes = await fetch(`${apiBaseUrl(__NEXTAUTH)}/csrf`)
-  const csrfToken = (await csrfTokenRes.json()).csrfToken
-  const csrfTokenCookie = getCookieFromHeader(
-    authCookies.csrfToken.name,
-    csrfTokenRes.headers
-  ) as string
-  console.log("debug getCsrfToken", { csrfToken, csrfTokenCookie })
-  // const { csrfToken, csrfTokenCookie } = await trpcClient.query("auth.csrf")
-
-  // await SafeStorage.set(storageKeys.csrfToken, csrfTokenCookie)
-
-  return {
-    csrfToken,
-    csrfTokenCookie,
-  }
-}
 
 /**
  * It calls `/api/auth/providers` and returns
@@ -309,18 +267,7 @@ export async function signIn<
 export async function signOut<R extends boolean = true>(
   options?: SignOutParams<R>
 ): Promise<void> {
-  const sessionToken = await SecureStore.getItemAsync(storageKeys.sessionToken)
-  if (!sessionToken) throw new Error("No sessionToken")
-
-  let csrfToken = await SecureStore.getItemAsync(storageKeys.csrfToken)
-  if (!csrfToken) {
-    csrfToken = (await getCsrfToken())?.csrfTokenCookie ?? null
-  }
-
-  const data = await fetchData("signout", __NEXTAUTH, logger, {
-    csrfToken,
-    sessionToken,
-  })
+  const data = await fetchData("signout", __NEXTAUTH, logger)
 
   console.log("debug signOut", data)
   if (data) {

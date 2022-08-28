@@ -229,8 +229,8 @@ export async function NextAuthHandler<
         if (req.body?.sessionToken) {
           cookies[options.cookies.sessionToken.name] = req.body.sessionToken
         }
-        if (req.body?.csrfToken) {
-          cookies[options.cookies.csrfToken.name] = req.body.csrfToken
+        if (req.body?.csrfTokenCookie) {
+          cookies[options.cookies.csrfToken.name] = req.body.csrfTokenCookie
         }
         if (req.body?.stateEncrypted) {
           cookies[options.cookies.state.name] = req.body.stateEncrypted
@@ -337,7 +337,34 @@ export async function NextAuthHandler<
             return { body: { sessionToken } as any }
           }
           case "signout": {
-            return {} // TODO:
+            // Get csrf token
+            const csrfTokenRes = await NextAuthHandler({
+              req: {
+                action: "csrf",
+              },
+              options: userOptions,
+            })
+            const csrfToken = (csrfTokenRes.body as any).csrfToken
+            const csrfTokenCookie = csrfTokenRes.cookies?.find(
+              (c) => c.name === options.cookies.csrfToken.name
+            )?.value
+            if (csrfTokenCookie) {
+              cookies[options.cookies.csrfToken.name] = csrfTokenCookie
+            }
+
+            await NextAuthHandler({
+              req: {
+                action: "signout",
+                method: "POST",
+                cookies,
+                body: {
+                  csrfToken,
+                },
+              },
+              options: userOptions,
+            })
+
+            return { body: { signedOut: true } as any }
           }
         }
         return await NextAuthHandler({
