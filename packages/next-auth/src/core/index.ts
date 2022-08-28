@@ -143,104 +143,6 @@ export async function NextAuthHandler<
     const render = renderPage({ ...options, query: req.query, cookies })
     const { pages } = options
     switch (action) {
-      case "proxy": {
-        // const getCookieFromHeader = (name: string, headers: Headers) => {
-        //   return headers
-        //     .get("set-cookie")
-        //     ?.split(", ")
-        //     .filter((s) => s.startsWith(`${name}=`))[0]
-        //     ?.split("=")[1]
-        //     ?.split(";")[0]
-        // }
-
-        const cookies: Record<string, string> = {}
-        if (req.body?.sessionToken) {
-          cookies[options.cookies.sessionToken.name] = req.body.sessionToken
-        }
-        if (req.body?.csrfToken) {
-          cookies[options.cookies.csrfToken.name] = req.body.sessionToken
-        }
-        if (req.body?.stateEncrypted) {
-          cookies[options.cookies.state.name] = req.body.stateEncrypted
-        }
-        if (req.body?.codeVerifier) {
-          cookies[options.cookies.pkceCodeVerifier.name] = req.body.codeVerifier
-        }
-        if (req.body?.providerId) {
-          req.providerId = req.body.providerId
-        }
-        switch (req.body?.action) {
-          case "signin": {
-            // Get csrf token
-            // const csrfTokenRes = await fetch(`${webHost}/api/auth/csrf`)
-            const csrfTokenRes = await NextAuthHandler({
-              req: {
-                action: "csrf",
-              },
-              options: userOptions,
-            })
-            // const csrfToken = (await csrfTokenRes.json()).csrfToken
-            const csrfToken = (csrfTokenRes.body as any).csrfToken
-            const csrfTokenCookie =
-              csrfTokenRes.cookies?.[options.cookies.csrfToken.name]
-            cookies[options.cookies.csrfToken.name] = csrfTokenCookie
-
-            // Get authorizationUrl
-            const callbackUrl = req.body?.callbackUrl
-            cookies[options.cookies.callbackUrl.name] = callbackUrl
-
-            const signInRes = await NextAuthHandler({
-              req: {
-                action: "signin",
-                method: "POST",
-                cookies,
-                body: {
-                  csrfToken,
-                  callbackUrl,
-                },
-              },
-              options: userOptions,
-            })
-
-            const authorizationUrl = signInRes.redirect as string
-            const url = new URL(authorizationUrl)
-            const params = new URLSearchParams(url.search)
-
-            // state
-            const stateEncrypted =
-              signInRes.cookies?.[options.cookies.state.name]
-            const state = params.get("state") as string
-
-            // pkce code verifier
-            const codeChallenge = params.get("code_challenge") as string
-            const codeVerifier =
-              signInRes.cookies?.[options.cookies.pkceCodeVerifier.name]
-
-            return {
-              body: {
-                state,
-                stateEncrypted,
-                csrfTokenCookie,
-                codeVerifier,
-                codeChallenge,
-              } as any,
-            }
-          }
-          case "callback": {
-            return {} // TODO:
-          }
-          case "signout": {
-            return {} // TODO:
-          }
-        }
-        return await NextAuthHandler({
-          req: {
-            cookies,
-            action: req.body?.action,
-          },
-          options: userOptions,
-        })
-      }
       case "providers":
         return (await routes.providers(options.providers)) as any
       case "session": {
@@ -322,6 +224,116 @@ export async function NextAuthHandler<
     }
   } else if (method === "POST") {
     switch (action) {
+      case "proxy": {
+        // const getCookieFromHeader = (name: string, headers: Headers) => {
+        //   return headers
+        //     .get("set-cookie")
+        //     ?.split(", ")
+        //     .filter((s) => s.startsWith(`${name}=`))[0]
+        //     ?.split("=")[1]
+        //     ?.split(";")[0]
+        // }
+
+        const cookies: Record<string, string> = {}
+        if (req.body?.sessionToken) {
+          cookies[options.cookies.sessionToken.name] = req.body.sessionToken
+        }
+        if (req.body?.csrfToken) {
+          cookies[options.cookies.csrfToken.name] = req.body.sessionToken
+        }
+        if (req.body?.stateEncrypted) {
+          cookies[options.cookies.state.name] = req.body.stateEncrypted
+        }
+        if (req.body?.codeVerifier) {
+          cookies[options.cookies.pkceCodeVerifier.name] = req.body.codeVerifier
+        }
+        switch (req.body?.action) {
+          case "signin": {
+            // Get csrf token
+            const csrfTokenRes = await NextAuthHandler({
+              req: {
+                action: "csrf",
+              },
+              options: userOptions,
+            })
+            const csrfToken = (csrfTokenRes.body as any).csrfToken
+            const csrfTokenCookie = csrfTokenRes.cookies?.filter(
+              (c) => c.name === options.cookies.csrfToken.name
+            )[0]?.value
+            if (csrfTokenCookie) {
+              cookies[options.cookies.csrfToken.name] = csrfTokenCookie
+            }
+
+            // Get authorizationUrl
+            const callbackUrl = req.body?.callbackUrl
+            cookies[options.cookies.callbackUrl.name] = callbackUrl
+
+            const signInRes = await NextAuthHandler({
+              req: {
+                action: "signin",
+                method: "POST",
+                cookies,
+                body: {
+                  csrfToken,
+                  callbackUrl,
+                },
+                providerId: req.body?.providerId,
+              },
+              options: userOptions,
+            })
+
+            const authorizationUrl = signInRes.redirect as string
+            const url = new URL(authorizationUrl)
+            const params = new URLSearchParams(url.search)
+
+            // state
+            const stateEncrypted = signInRes.cookies?.filter(
+              (c) => c.name === options.cookies.state.name
+            )[0]?.value
+            const state = params.get("state") as string
+
+            // pkce code verifier
+            const codeChallenge = params.get("code_challenge") as string
+            const codeVerifier = signInRes.cookies?.filter(
+              (c) => c.name === options.cookies.pkceCodeVerifier.name
+            )[0]?.value
+
+            // also return the provider client_id
+            const provider = options.providers.find(
+              ({ id }) => id === req.body?.providerId
+            )
+            let clientId: string | undefined
+            if (provider?.type === "oauth") {
+              clientId = provider.clientId
+            }
+
+            return {
+              headers: [{ key: "Content-Type", value: "application/json" }],
+              body: {
+                state,
+                stateEncrypted,
+                csrfTokenCookie,
+                codeVerifier,
+                codeChallenge,
+                clientId,
+              } as any,
+            }
+          }
+          case "callback": {
+            return {} // TODO:
+          }
+          case "signout": {
+            return {} // TODO:
+          }
+        }
+        return await NextAuthHandler({
+          req: {
+            cookies,
+            action: req.body?.action,
+          },
+          options: userOptions,
+        })
+      }
       case "signin":
         // Verified CSRF Token required for all sign in routes
         if (options.csrfTokenVerified && options.provider) {

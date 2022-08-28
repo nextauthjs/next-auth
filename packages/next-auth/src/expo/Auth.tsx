@@ -45,7 +45,7 @@ export async function fetchData<T = any>(
   path: string,
   __NEXTAUTH: NextAuthClientConfig,
   logger: LoggerInstance,
-  params?: {} // TODO: populate this
+  params?: Record<string, any>
 ): Promise<T | null> {
   const url = `${apiBaseUrl(__NEXTAUTH)}/proxy`
   const sessionToken = await SecureStore.getItemAsync(storageKeys.sessionToken)
@@ -56,7 +56,16 @@ export async function fetchData<T = any>(
     }
 
     const options: RequestInit = {
-      body: JSON.stringify({ action: path, sessionToken, csrfToken }), // TODO: populate this
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        action: path,
+        sessionToken,
+        csrfToken,
+        ...params,
+      }), // TODO: populate this
     }
     const res = await fetch(url, options)
     const data = await res.json()
@@ -66,6 +75,27 @@ export async function fetchData<T = any>(
     logger.error("CLIENT_FETCH_ERROR", { error: error as Error, url })
     return null
   }
+}
+
+export async function getSignInInfo({
+  provider,
+  proxyRedirectUri,
+}: {
+  provider: string
+  proxyRedirectUri: string
+}) {
+  return await fetchData<{
+    state: string
+    stateEncrypted: string
+    csrfTokenCookie: string
+    codeVerifier: string
+    codeChallenge: string
+    clientId: string
+  }>("proxy", __NEXTAUTH, logger, {
+    action: "signin",
+    providerId: provider,
+    callbackUrl: proxyRedirectUri,
+  })
 }
 
 export function apiBaseUrl(__NEXTAUTH: NextAuthClientConfig) {
