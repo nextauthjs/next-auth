@@ -256,7 +256,7 @@ export async function signIn<
     state,
     codeVerifier,
     csrfTokenCookie,
-    proxyRedirectUri,
+    // proxyRedirectUri,
     stateEncrypted,
     provider: nativeProvider,
   } = signinResult
@@ -268,15 +268,16 @@ export async function signIn<
     __NEXTAUTH,
     logger,
     {
-      provider: nativeProvider,
+      providerId: nativeProvider,
       code: result.params.code,
-      csrfTokenCookie,
+      csrfToken: csrfTokenCookie,
       state,
       stateEncrypted,
-      callbackUrl: proxyRedirectUri,
+      // callbackUrl: proxyRedirectUri,
       codeVerifier,
     }
   )
+  console.log("next-auth/expo callback data", data)
   if (!data) {
     Alert.alert("Error", "Callback error.")
     return

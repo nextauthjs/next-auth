@@ -225,21 +225,12 @@ export async function NextAuthHandler<
   } else if (method === "POST") {
     switch (action) {
       case "proxy": {
-        // const getCookieFromHeader = (name: string, headers: Headers) => {
-        //   return headers
-        //     .get("set-cookie")
-        //     ?.split(", ")
-        //     .filter((s) => s.startsWith(`${name}=`))[0]
-        //     ?.split("=")[1]
-        //     ?.split(";")[0]
-        // }
-
         const cookies: Record<string, string> = {}
         if (req.body?.sessionToken) {
           cookies[options.cookies.sessionToken.name] = req.body.sessionToken
         }
         if (req.body?.csrfToken) {
-          cookies[options.cookies.csrfToken.name] = req.body.sessionToken
+          cookies[options.cookies.csrfToken.name] = req.body.csrfToken
         }
         if (req.body?.stateEncrypted) {
           cookies[options.cookies.state.name] = req.body.stateEncrypted
@@ -257,9 +248,9 @@ export async function NextAuthHandler<
               options: userOptions,
             })
             const csrfToken = (csrfTokenRes.body as any).csrfToken
-            const csrfTokenCookie = csrfTokenRes.cookies?.filter(
+            const csrfTokenCookie = csrfTokenRes.cookies?.find(
               (c) => c.name === options.cookies.csrfToken.name
-            )[0]?.value
+            )?.value
             if (csrfTokenCookie) {
               cookies[options.cookies.csrfToken.name] = csrfTokenCookie
             }
@@ -287,16 +278,16 @@ export async function NextAuthHandler<
             const params = new URLSearchParams(url.search)
 
             // state
-            const stateEncrypted = signInRes.cookies?.filter(
+            const stateEncrypted = signInRes.cookies?.find(
               (c) => c.name === options.cookies.state.name
-            )[0]?.value
+            )?.value
             const state = params.get("state") as string
 
             // pkce code verifier
             const codeChallenge = params.get("code_challenge") as string
-            const codeVerifier = signInRes.cookies?.filter(
+            const codeVerifier = signInRes.cookies?.find(
               (c) => c.name === options.cookies.pkceCodeVerifier.name
-            )[0]?.value
+            )?.value
 
             // also return the provider client_id
             const provider = options.providers.find(
@@ -320,7 +311,30 @@ export async function NextAuthHandler<
             }
           }
           case "callback": {
-            return {} // TODO:
+            // Callback
+            const callbackRes = await NextAuthHandler({
+              req: {
+                action: "callback",
+                cookies,
+                providerId: req.body?.providerId,
+                query: {
+                  state: req.body?.state,
+                  code: req.body?.code,
+                },
+              },
+              options: userOptions,
+            })
+            const location = callbackRes.redirect as string
+            const url = new URL(location)
+            const params = new URLSearchParams(url.search)
+            const error = params.get("error")
+            if (error) {
+              return { body: { error } as any }
+            }
+            const sessionToken = callbackRes.cookies?.find(
+              (c) => c.name === options.cookies.sessionToken.name
+            )?.value
+            return { body: { sessionToken } as any }
           }
           case "signout": {
             return {} // TODO:
