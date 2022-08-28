@@ -366,6 +366,27 @@ export async function NextAuthHandler<
 
             return { body: { signedOut: true } as any }
           }
+          case "session": {
+            if (req.body?.sessionToken) {
+              cookies[options.cookies.sessionToken.name] = req.body.sessionToken
+            }
+
+            return await NextAuthHandler({
+              req: {
+                cookies,
+                action: "session",
+              },
+              options: userOptions,
+            })
+          }
+          case "providers": {
+            return await NextAuthHandler({
+              req: {
+                action: "providers",
+              },
+              options: userOptions,
+            })
+          }
         }
         // No proxy action handled, so bad request it is.
         return { status: 400 }
