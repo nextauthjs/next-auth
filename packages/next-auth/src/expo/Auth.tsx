@@ -21,7 +21,6 @@ import type {
   SessionProviderProps,
   SignInOptions,
   SignInResponse,
-  SignOutParams,
   UseSessionOptions,
 } from "./types"
 
@@ -233,7 +232,6 @@ export async function signIn<
       codeVerifier,
     }
   )
-  console.log("next-auth/expo callback data", data)
   if (!data) {
     Alert.alert("Error", "Callback error.")
     return
@@ -251,7 +249,6 @@ export async function signIn<
     }
     return
   }
-  console.log("sessionToken received in Client", sessionToken)
   if (sessionToken) {
     await SecureStore.setItemAsync(storageKeys.sessionToken, sessionToken)
     await __NEXTAUTH._getSession({ event: "storage" })
@@ -264,12 +261,9 @@ export async function signIn<
  *
  * [Documentation](https://next-auth.js.org/getting-started/client#signout)
  */
-export async function signOut<R extends boolean = true>(
-  options?: SignOutParams<R>
-): Promise<void> {
+export async function signOut() {
   const data = await fetchData("signout", __NEXTAUTH, logger)
 
-  console.log("debug signOut", data)
   if (data) {
     await SecureStore.deleteItemAsync(storageKeys.sessionToken)
 
