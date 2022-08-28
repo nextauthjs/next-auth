@@ -8,12 +8,11 @@
 //
 // We use HTTP POST requests with CSRF Tokens to protect against CSRF attacks.
 
+import * as React from "react"
 import { Session } from ".."
 import { NextAuthClientConfig, now } from "../client/_utils"
 import _logger, { LoggerInstance, proxyLogger } from "../utils/logger"
 import parseUrl from "../utils/parse-url"
-import * as React from "react"
-import "react-native-url-polyfill/auto"
 
 import type {
   ClientSafeProvider,
@@ -29,14 +28,18 @@ import type {
   RedirectableProviderType,
 } from "../providers"
 
-import * as SecureStore from "expo-secure-store"
-import Constants from "expo-constants"
-import { Alert } from "react-native"
-import { defaultCookies } from "../core/lib/cookie"
 import * as AuthSession from "expo-auth-session"
+import Constants from "expo-constants"
+import * as SecureStore from "expo-secure-store"
+import { Alert } from "react-native"
+import "react-native-url-polyfill/auto"
 
 const storageKeys = {
   sessionToken: "next-auth.sessionToken",
+}
+
+export function apiBaseUrl(__NEXTAUTH: NextAuthClientConfig) {
+  return `${__NEXTAUTH.baseUrlServer}${__NEXTAUTH.basePathServer}`
 }
 
 export async function fetchData<T = any>(
@@ -57,7 +60,7 @@ export async function fetchData<T = any>(
         action: path,
         sessionToken,
         ...params,
-      }), // TODO: populate this
+      }),
     }
     const res = await fetch(url, options)
     const data = await res.json()
@@ -79,7 +82,6 @@ export async function getSignInInfo({
   return await fetchData<{
     state: string
     stateEncrypted: string
-    csrfTokenCookie: string
     codeVerifier: string
     codeChallenge: string
     clientId: string
@@ -88,10 +90,6 @@ export async function getSignInInfo({
     providerId: provider,
     callbackUrl: proxyRedirectUri,
   })
-}
-
-export function apiBaseUrl(__NEXTAUTH: NextAuthClientConfig) {
-  return `${__NEXTAUTH.baseUrlServer}${__NEXTAUTH.basePathServer}`
 }
 
 const nextAuthUrl = Constants.manifest?.extra?.nextAuthUrl
@@ -149,11 +147,6 @@ export async function getSession() {
   return session
 }
 
-export const authCookies = defaultCookies(
-  // useSecureCookies ??
-  __NEXTAUTH.baseUrl.startsWith("https://")
-)
-
 /**
  * It calls `/api/auth/providers` and returns
  * a list of the currently configured authentication providers.
@@ -170,7 +163,6 @@ export async function getProviders() {
 export interface SigninResult {
   result: AuthSession.AuthSessionResult
   state: string
-  csrfTokenCookie: string
   stateEncrypted: string
   codeVerifier?: string
   provider: string
@@ -211,7 +203,6 @@ export async function signIn<
     result,
     state,
     codeVerifier,
-    csrfTokenCookie,
     stateEncrypted,
     provider: nativeProvider,
   } = signinResult
@@ -225,10 +216,8 @@ export async function signIn<
     {
       providerId: nativeProvider,
       code: result.params.code,
-      csrfToken: csrfTokenCookie,
       state,
       stateEncrypted,
-      // callbackUrl: proxyRedirectUri,
       codeVerifier,
     }
   )
