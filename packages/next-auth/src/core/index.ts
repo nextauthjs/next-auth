@@ -226,18 +226,7 @@ export async function NextAuthHandler<
     switch (action) {
       case "proxy": {
         const cookies: Record<string, string> = {}
-        if (req.body?.sessionToken) {
-          cookies[options.cookies.sessionToken.name] = req.body.sessionToken
-        }
-        if (req.body?.csrfTokenCookie) {
-          cookies[options.cookies.csrfToken.name] = req.body.csrfTokenCookie
-        }
-        if (req.body?.stateEncrypted) {
-          cookies[options.cookies.state.name] = req.body.stateEncrypted
-        }
-        if (req.body?.codeVerifier) {
-          cookies[options.cookies.pkceCodeVerifier.name] = req.body.codeVerifier
-        }
+
         switch (req.body?.action) {
           case "signin": {
             // Get csrf token
@@ -258,7 +247,6 @@ export async function NextAuthHandler<
             // Get authorizationUrl
             const callbackUrl = req.body?.callbackUrl
             cookies[options.cookies.callbackUrl.name] = callbackUrl
-
             const signInRes = await NextAuthHandler({
               req: {
                 action: "signin",
@@ -272,8 +260,8 @@ export async function NextAuthHandler<
               },
               options: userOptions,
             })
-
             const authorizationUrl = signInRes.redirect as string
+
             const url = new URL(authorizationUrl)
             const params = new URLSearchParams(url.search)
 
@@ -289,7 +277,7 @@ export async function NextAuthHandler<
               (c) => c.name === options.cookies.pkceCodeVerifier.name
             )?.value
 
-            // also return the provider client_id
+            // provider client_id
             const provider = options.providers.find(
               ({ id }) => id === req.body?.providerId
             )
@@ -303,7 +291,6 @@ export async function NextAuthHandler<
               body: {
                 state,
                 stateEncrypted,
-                csrfTokenCookie,
                 codeVerifier,
                 codeChallenge,
                 clientId,
@@ -311,7 +298,14 @@ export async function NextAuthHandler<
             }
           }
           case "callback": {
-            // Callback
+            if (req.body?.codeVerifier) {
+              cookies[options.cookies.pkceCodeVerifier.name] =
+                req.body.codeVerifier
+            }
+            if (req.body?.stateEncrypted) {
+              cookies[options.cookies.state.name] = req.body.stateEncrypted
+            }
+
             const callbackRes = await NextAuthHandler({
               req: {
                 action: "callback",
@@ -331,12 +325,18 @@ export async function NextAuthHandler<
             if (error) {
               return { body: { error } as any }
             }
+
             const sessionToken = callbackRes.cookies?.find(
               (c) => c.name === options.cookies.sessionToken.name
             )?.value
+
             return { body: { sessionToken } as any }
           }
           case "signout": {
+            if (req.body?.sessionToken) {
+              cookies[options.cookies.sessionToken.name] = req.body.sessionToken
+            }
+
             // Get csrf token
             const csrfTokenRes = await NextAuthHandler({
               req: {
@@ -367,13 +367,8 @@ export async function NextAuthHandler<
             return { body: { signedOut: true } as any }
           }
         }
-        return await NextAuthHandler({
-          req: {
-            cookies,
-            action: req.body?.action,
-          },
-          options: userOptions,
-        })
+        // No proxy action handled, so bad request it is.
+        return { status: 400 }
       }
       case "signin":
         // Verified CSRF Token required for all sign in routes
