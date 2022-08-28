@@ -198,7 +198,7 @@ export async function signIn<
 > {
   const providers = await getProviders()
   if (!providers) {
-    Alert.alert("Error", "Provider not valid.")
+    Alert.alert("Error", "Unable to fetch providers.")
     return
   }
   if (!provider || !(provider in providers)) {
