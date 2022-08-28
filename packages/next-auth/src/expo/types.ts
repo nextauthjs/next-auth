@@ -39,25 +39,6 @@ export interface SignInResponse {
   url: string | null
 }
 
-/** Match `inputType` of `new URLSearchParams(inputType)` */
-export type SignInAuthorizationParams =
-  | string
-  | string[][]
-  | Record<string, string>
-  | URLSearchParams
-
-/** @docs https://next-auth.js.org/getting-started/client#using-the-redirect-false-option-1 */
-export interface SignOutResponse {
-  url: string
-}
-
-export interface SignOutParams<R extends boolean = true> {
-  /** @docs https://next-auth.js.org/getting-started/client#specifying-a-callbackurl-1 */
-  callbackUrl?: string
-  /** @docs https://next-auth.js.org/getting-started/client#using-the-redirect-false-option-1 */
-  redirect?: R
-}
-
 /** @docs: https://next-auth.js.org/getting-started/client#options */
 export interface SessionProviderProps {
   children: React.ReactNode
