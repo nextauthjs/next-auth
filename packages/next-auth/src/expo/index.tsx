@@ -85,8 +85,7 @@ export async function getSignInInfo({
     codeVerifier: string
     codeChallenge: string
     clientId: string
-  }>("proxy", __NEXTAUTH, logger, {
-    action: "signin",
+  }>("signin", __NEXTAUTH, logger, {
     providerId: provider,
     callbackUrl: proxyRedirectUri,
   })
