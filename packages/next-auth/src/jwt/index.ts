@@ -66,7 +66,7 @@ export interface GetTokenParams<R extends boolean = false> {
  * [Documentation](https://next-auth.js.org/tutorials/securing-pages-and-api-routes#using-gettoken)
  */
 export async function getToken<R extends boolean = false>(
-  params?: GetTokenParams<R>
+  params: GetTokenParams<R>
 ): Promise<R extends true ? string : JWT | null> {
   const {
     req,
