@@ -12,7 +12,7 @@ Otherwise, if you only want to get the session token, see [`getToken`](/tutorial
 
 `unstable_getServerSession` requires passing the same object you would pass to `NextAuth` when initializing NextAuth.js. To do so, you can export your NextAuth.js options in the following way:
 
-In `[...nextauth].js`:
+In `[...nextauth].ts`:
 ```ts
 import { NextAuth } from 'next-auth'
 import type { NextAuthOptions } from 'next-auth'
