@@ -27,7 +27,6 @@ providers: [
     authorization: {
         params: {
           scope: process.env.STRAVA_SCOPES,
-          redirect_uri: `${process.env.NEXTAUTH_URL || `https:localhost:3000`}/api/auth/callback/strava`, 
         },
       },
   })
