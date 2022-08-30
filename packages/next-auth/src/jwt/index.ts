@@ -79,7 +79,7 @@ export async function getToken<R extends boolean = false>(
     decode: _decode = decode,
     logger = console,
     secret = process.env.NEXTAUTH_SECRET,
-  } = params ?? {}
+  } = params
 
   if (!req) throw new Error("Must pass `req` to JWT getToken()")
 
