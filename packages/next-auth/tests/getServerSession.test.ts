@@ -45,8 +45,12 @@ describe("Treat secret correctly", () => {
   })
 
   it("Error if missing NEXTAUTH_SECRET and secret", async () => {
-    await unstable_getServerSession(req, res, { providers: [], logger })
+    const session = await unstable_getServerSession(req, res, {
+      providers: [],
+      logger,
+    })
 
+    expect(session).toEqual(null)
     expect(logger.error).toBeCalledTimes(1)
     expect(logger.error).toBeCalledWith("NO_SECRET", expect.any(MissingSecret))
   })
@@ -80,17 +84,6 @@ describe("Return correct data", () => {
       providers: [],
       logger,
       secret: "secret",
-    })
-
-    expect(session).toEqual(null)
-  })
-
-  it("Should return null if there is a config error", async () => {
-    // Forced a `NO_SECRET` error underneath because no secret in the config
-    // and NEXTAUTH_SECRET doesn't exist either.
-    const session = await unstable_getServerSession(req, res, {
-      providers: [],
-      logger,
     })
 
     expect(session).toEqual(null)
