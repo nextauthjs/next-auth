@@ -19,7 +19,7 @@ import GoogleProvider from "next-auth/providers/google"
 import { UpstashRedisAdapter } from "@next-auth/upstash-redis-adapter"
 import { Redis } from "@upstash/redis";
 
-const redis =const redis = new Redis({
+const redis = new Redis({
   url:  process.env.UPSTASH_REDIS_URL,
   token:  process.env.UPSTASH_REDIS_TOKEN
 });
