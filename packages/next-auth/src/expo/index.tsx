@@ -182,7 +182,7 @@ export async function signIn<
       ? P | BuiltInProviderType
       : BuiltInProviderType
   >,
-  initiateExpoAuthFlow: () => Promise<SigninResult>,
+  initiateExpoAuthFlow: () => Promise<SigninResult | null>,
   options?: SignInOptions // TODO: use this
 ): Promise<
   P extends RedirectableProviderType ? SignInResponse | undefined : undefined
