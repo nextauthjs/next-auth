@@ -1,21 +1,24 @@
 <script lang="ts">
-  import { session } from "$app/stores"
+  import { page } from "$app/stores"
 </script>
 
 <div>
   <header>
     <div class="signedInStatus">
       <p class="nojs-show loaded">
-        {#if Object.keys($session).length}
-          {#if $session.user.image}
+        {#if Object.keys($page.data.session || {}).length}
+          {#if $page.data.session.user.image}
             <span
-              style="background-image: url('{$session.user.image}')"
+              style="background-image: url('{$page.data.session.user.image}')"
               class="avatar"
             />
           {/if}
           <span class="signedInText">
             <small>Signed in as</small><br />
-            <strong>{$session.user.email || $session.user.name}</strong>
+            <strong
+              >{$page.data.session.user.email ||
+                $page.data.session.user.name}</strong
+            >
           </span>
           <a href="/api/auth/signout" class="button">Sign out</a>
         {:else}
@@ -38,7 +41,8 @@
   :global(body) {
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
       "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
-      "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+      "Noto Color Emoji";
     padding: 0 1rem 1rem 1rem;
     max-width: 680px;
     margin: 0 auto;
