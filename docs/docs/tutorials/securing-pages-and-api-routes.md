@@ -122,7 +122,7 @@ You can protect API routes using the `unstable_getServerSession()` method.
 
 ```js title="pages/api/get-session-example.js"
 import { unstable_getServerSession } from "next-auth/next"
-import { authOptions } from "./api/auth/[...nextauth]"
+import { authOptions } from "./auth/[...nextauth]"
 
 export default async (req, res) => {
   const session = await unstable_getServerSession(req, res, authOptions)

@@ -107,7 +107,7 @@ export async function unstable_getServerSession(
 
   options.secret = options.secret ?? process.env.NEXTAUTH_SECRET
 
-  const session = await NextAuthHandler<Session | {}>({
+  const session = await NextAuthHandler<Session | {} | string>({
     options,
     req: {
       host: detectHost(req.headers["x-forwarded-host"]),
@@ -122,7 +122,9 @@ export async function unstable_getServerSession(
 
   cookies?.forEach((cookie) => setCookie(res, cookie))
 
-  if (body && Object.keys(body).length) return body as Session
+  if (body && typeof body !== "string" && Object.keys(body).length)
+    return body as Session
+
   return null
 }
 

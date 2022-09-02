@@ -68,7 +68,7 @@ A random string is used to hash tokens, sign/encrypt cookies and generate crypto
 
 If you set [`NEXTAUTH_SECRET`](#nextauth_secret) as an environment variable, you don't have to define this option.
 
-If no value specified specified in development (and there is no `NEXTAUTH_SECRET` variable either), it uses a hash for all configuration options, including OAuth Client ID / Secrets for entropy.
+If no value is specified in development (and there is no `NEXTAUTH_SECRET` variable either), it uses a hash for all configuration options, including OAuth Client ID / Secrets for entropy.
 
 :::warning
 Not providing any `secret` or `NEXTAUTH_SECRET` will throw [an error](/errors#no_secret) in production.
@@ -326,7 +326,7 @@ Set debug to `true` to enable debug messages for authentication and database ope
 
 #### Description
 
-Override any of the logger levels (`undefined` levels will use the built-in logger), and intercept logs in NextAuth. You can use this to send NextAuth logs to a third-party logging service.
+Override any of the logger levels (`undefined` levels will use the built-in logger), and intercept logs in NextAuth.js. You can use this to send NextAuth.js logs to a third-party logging service.
 
 The `code` parameter for `error` and `warn` are explained in the [Warnings](/warnings) and [Errors](/errors) pages respectively.
 
@@ -471,6 +471,15 @@ cookies: {
   },
   state: {
     name: `${cookiePrefix}next-auth.state`,
+    options: {
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/",
+      secure: useSecureCookies,
+    },
+  },
+  nonce: {
+    name: `${cookiePrefix}next-auth.nonce`,
     options: {
       httpOnly: true,
       sameSite: "lax",

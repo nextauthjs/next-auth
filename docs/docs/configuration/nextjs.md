@@ -12,11 +12,11 @@ Otherwise, if you only want to get the session token, see [`getToken`](/tutorial
 
 `unstable_getServerSession` requires passing the same object you would pass to `NextAuth` when initializing NextAuth.js. To do so, you can export your NextAuth.js options in the following way:
 
-In `[...nextauth.js]`:
+In `[...nextauth].ts`:
 ```ts
 import { NextAuth } from 'next-auth'
 import type { NextAuthOptions } from 'next-auth'
- 
+
 export const authOptions: NextAuthOptions = {
   // your configs
 }
@@ -26,7 +26,7 @@ export default NextAuth(authOptions);
 
 In `getServerSideProps`:
 ```js
-import { authOptions } from 'pages/api/[...nextauth]'
+import { authOptions } from 'pages/api/auth/[...nextauth]'
 import { unstable_getServerSession } from "next-auth/next"
 
 export async function getServerSideProps(context) {
@@ -50,7 +50,7 @@ export async function getServerSideProps(context) {
 ```
 In API routes:
 ```js
-import { authOptions } from 'pages/api/[...nextauth]'
+import { authOptions } from 'pages/api/auth/[...nextauth]'
 import { unstable_getServerSession } from "next-auth/next"
 
 
@@ -145,8 +145,8 @@ This should match the `pages` configuration that's found in `[...nextauth].ts`.
 
 ```js
 pages: {
-  signIn: '/auth/signin',
-  error: '/auth/error',
+  signIn: '/api/auth/signin',
+  error: '/api/auth/error',
 }
 ```
 
@@ -160,7 +160,7 @@ See the documentation for the [pages option](/configuration/pages) for more info
 
 #### Description
 
-The same `secret` used in the [NextAuth config](/configuration/options#options).
+The same `secret` used in the [NextAuth.js config](/configuration/options#options).
 
 #### Example (default value)
 
