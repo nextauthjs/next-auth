@@ -177,34 +177,17 @@ export interface SigninResult {
 export async function signIn<
   P extends RedirectableProviderType | undefined = undefined
 >(
-  provider: LiteralUnion<
-    P extends RedirectableProviderType
-      ? P | BuiltInProviderType
-      : BuiltInProviderType
-  >,
   initiateExpoAuthFlow: () => Promise<SigninResult | null>,
   options?: SignInOptions // TODO: use this
 ): Promise<
   P extends RedirectableProviderType ? SignInResponse | undefined : undefined
 > {
-  const providers = await getProviders()
-  if (!providers) {
-    Alert.alert("Error", "Unable to fetch providers.")
-    return
-  }
-  if (!provider || !(provider in providers)) {
-    Alert.alert("Error", "Provider not valid.")
-    return
-  }
-
   const signinResult = await initiateExpoAuthFlow()
-  const {
-    result,
-    state,
-    codeVerifier,
-    stateEncrypted,
-    provider: nativeProvider,
-  } = signinResult
+  if (signinResult === null) {
+    // The initiate function should show the error themselves
+    return
+  }
+  const { result, state, codeVerifier, stateEncrypted, provider } = signinResult
 
   if (result.type !== "success") return // TODO: handle other results
 
@@ -213,7 +196,7 @@ export async function signIn<
     __NEXTAUTH,
     logger,
     {
-      providerId: nativeProvider,
+      providerId: provider,
       code: result.params.code,
       state,
       stateEncrypted,
