@@ -25,10 +25,10 @@ providers: [
     clientId: process.env.STRAVA_CLIENT_ID,
     clientSecret: process.env.STRAVA_CLIENT_SECRET,
     authorization: {
-        params: {
-          scope: process.env.STRAVA_SCOPES,
-        },
+      params: {
+        scope: process.env.STRAVA_SCOPES,
       },
+    },
   })
 ]
 ...
