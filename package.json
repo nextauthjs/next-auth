@@ -27,7 +27,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard-with-typescript": "^21.0.1",
     "eslint-plugin-import": "^2.25.4",
-    "eslint-plugin-jest": "^25.3.0",
+    "eslint-plugin-jest": "^25.7.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
     "git-log-parser": "1.2.0",
@@ -46,29 +46,6 @@
   "prettier": {
     "semi": false,
     "singleQuote": false
-  },
-  "eslintConfig": {
-    "root": true,
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-      "project": "./packages/tsconfig/tsconfig.eslint.json"
-    },
-    "extends": [
-      "standard-with-typescript",
-      "prettier"
-    ],
-    "globals": {
-      "localStorage": "readonly",
-      "location": "readonly",
-      "fetch": "readonly"
-    },
-    "rules": {
-      "camelcase": "off",
-      "@typescript-eslint/naming-convention": "off",
-      "@typescript-eslint/strict-boolean-expressions": "off",
-      "@typescript-eslint/explicit-function-return-type": "off",
-      "@typescript-eslint/restrict-template-expressions": "off"
-    }
   },
   "packageManager": "pnpm@7.3.0",
   "funding": [

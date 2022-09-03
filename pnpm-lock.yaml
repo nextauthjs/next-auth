@@ -14,7 +14,7 @@ importers:
       eslint-config-prettier: ^8.3.0
       eslint-config-standard-with-typescript: ^21.0.1
       eslint-plugin-import: ^2.25.4
-      eslint-plugin-jest: ^25.3.0
+      eslint-plugin-jest: ^25.7.0
       eslint-plugin-node: ^11.1.0
       eslint-plugin-promise: ^6.0.0
       git-log-parser: 1.2.0
@@ -67,8 +67,8 @@ importers:
       react: ^18
       react-dom: ^18
     dependencies:
-      '@next-auth/fauna-adapter': link:../../packages/adapter-fauna
-      '@next-auth/prisma-adapter': link:../../packages/adapter-prisma
+      '@next-auth/fauna-adapter': 1.0.4_faunadb@4.6.0
+      '@next-auth/prisma-adapter': 1.0.4_@prisma+client@3.15.2
       '@prisma/client': 3.15.2_prisma@3.15.2
       faunadb: 4.6.0
       next: 12.1.7-canary.51_biqbaboplfbrettd7655fr4n2y
@@ -398,7 +398,7 @@ importers:
       '@babel/preset-react': ^7.17.12
       '@babel/preset-typescript': ^7.17.12
       '@babel/runtime': ^7.16.3
-      '@next-auth/tsconfig': workspace:^0.0.0
+      '@next-auth/tsconfig': workspace:*
       '@panva/hkdf': ^1.0.1
       '@swc/core': ^1.2.198
       '@swc/jest': ^0.2.21
@@ -5899,6 +5899,24 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@next-auth/fauna-adapter/1.0.4_faunadb@4.6.0:
+    resolution: {integrity: sha512-pqZSirkZTwMlTalXn1lvqW0nKB9c3ozIelfgiLXhy1EK3EsgdXAPLfMSFuOnAj2otRXSChmgHuhNrqGiSv/dSg==}
+    peerDependencies:
+      faunadb: ^4.3.0
+      next-auth: ^4
+    dependencies:
+      faunadb: 4.6.0
+    dev: false
+
+  /@next-auth/prisma-adapter/1.0.4_@prisma+client@3.15.2:
+    resolution: {integrity: sha512-jIOM6CzCbl2/Mzbx9kb2IjtHoJOeRN9wtQgLk4EUm5bhneSVGv1rtz5TDskvp2UfCa+EK9nDmug+lje41z80Gg==}
+    peerDependencies:
+      '@prisma/client': '>=2.26.0 || >=3'
+      next-auth: ^4
+    dependencies:
+      '@prisma/client': 3.15.2_prisma@3.15.2
+    dev: false
 
   /@next/env/12.1.7-canary.51:
     resolution: {integrity: sha512-QhHmbBcLEvtKWJyaUnwEajww9OamQuGIZ93FJ0CSlcX4gbYQ3qUbFF0yU2GCnFR3WCm/2Qv2TvL4xaN2sZWLYQ==}

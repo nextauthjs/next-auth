@@ -96,7 +96,7 @@
     "@babel/preset-env": "^7.18.2",
     "@babel/preset-react": "^7.17.12",
     "@babel/preset-typescript": "^7.17.12",
-    "@next-auth/tsconfig": "workspace:^0.0.0",
+    "@next-auth/tsconfig": "workspace:*",
     "@swc/core": "^1.2.198",
     "@swc/jest": "^0.2.21",
     "@testing-library/dom": "^8.13.0",
