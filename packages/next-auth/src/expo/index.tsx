@@ -91,7 +91,7 @@ export async function getSignInInfo({
   })
 }
 
-const nextAuthUrl = Constants.manifest?.extra?.nextAuthUrl
+const nextAuthUrl = Constants.expoConfig?.extra?.nextAuthUrl
 
 const __NEXTAUTH: NextAuthClientConfig = {
   baseUrl: parseUrl(nextAuthUrl).origin,
