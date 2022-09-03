@@ -232,6 +232,7 @@ export async function NextAuthHandler<
             // Get csrf token
             const csrfTokenRes = await NextAuthHandler({
               req: {
+                host: req.host, // To detect secure cookies
                 action: "csrf",
               },
               options: userOptions,
@@ -249,6 +250,7 @@ export async function NextAuthHandler<
             cookies[options.cookies.callbackUrl.name] = callbackUrl
             const signInRes = await NextAuthHandler({
               req: {
+                host: req.host, // To detect secure cookies
                 action: "signin",
                 method: "POST",
                 cookies,
@@ -308,6 +310,7 @@ export async function NextAuthHandler<
 
             const callbackRes = await NextAuthHandler({
               req: {
+                host: req.host, // To detect secure cookies
                 action: "callback",
                 cookies,
                 providerId: req.body?.providerId,
@@ -340,6 +343,7 @@ export async function NextAuthHandler<
             // Get csrf token
             const csrfTokenRes = await NextAuthHandler({
               req: {
+                host: req.host, // To detect secure cookies
                 action: "csrf",
               },
               options: userOptions,
@@ -354,6 +358,7 @@ export async function NextAuthHandler<
 
             await NextAuthHandler({
               req: {
+                host: req.host, // To detect secure cookies
                 action: "signout",
                 method: "POST",
                 cookies,
@@ -373,6 +378,7 @@ export async function NextAuthHandler<
 
             return await NextAuthHandler({
               req: {
+                host: req.host, // To detect secure cookies
                 cookies,
                 action: "session",
               },
