@@ -39,7 +39,7 @@
   "scripts": {
     "build": "pnpm clean && pnpm build:js && pnpm build:css",
     "clean": "rm -rf client css utils providers core jwt react next index.d.ts index.js adapters.d.ts middleware.d.ts middleware.js",
-    "build:types": "tsc --project tsconfig.build.json",
+    "build:types": "tsc --project tsconfig.json",
     "build:js": "pnpm clean && pnpm generate-providers && pnpm build:types && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir . && node config/wrap-css.js",
     "watch:css": "postcss --config config/postcss.config.js --watch src/**/*.css --base src --dir .",
@@ -47,7 +47,7 @@
     "prepublishOnly": "pnpm build",
     "generate-providers": "node ./config/generate-providers.js",
     "setup": "pnpm generate-providers",
-    "lint": "eslint src config"
+    "lint": "eslint src config tests"
   },
   "files": [
     "lib",

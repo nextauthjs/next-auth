@@ -1,7 +1,6 @@
 {
   "extends": "@next-auth/tsconfig/tsconfig.base.json",
   "compilerOptions": {
-    "declaration": true,
     "emitDeclarationOnly": true,
     "strictNullChecks": true,
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -18,7 +17,14 @@
     "outDir": ".",
     "paths": {
       "next": ["node_modules/next"]
-    }
+    },
   },
-  "exclude": ["./*.js", "./*.d.ts"]
+  "exclude": [
+    "./*.js", 
+    "./*.d.ts", 
+    "./config",
+    "./tests",
+    "./coverage",
+    "./**/__test__"
+  ]
 }

@@ -5,7 +5,8 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   parserOptions: {
     project: [
-      path.resolve(__dirname, './packages/next-auth/tsconfig.json'),
+      path.resolve(__dirname, './packages/adapter-**/tsconfig.json'),
+      path.resolve(__dirname, './packages/next-auth/tsconfig.eslint.json'),
       path.resolve(__dirname, 'tsconfig.json')
     ],
     tsconfigRootDir: __dirname
@@ -26,7 +27,7 @@ module.exports = {
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/restrict-template-expressions": "off"
   },
-  plugins: ['jest'],
+  "plugins": ["jest"],
   "env": {
     "jest/globals": true
   }
