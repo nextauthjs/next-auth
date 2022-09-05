@@ -7,7 +7,7 @@ title: Prisma
 
 To use this Adapter, you need to install Prisma Client, Prisma CLI, and the separate `@next-auth/prisma-adapter` package:
 
-```bash npm2yarn
+```bash npm2yarn2pnpm
 npm install next-auth @prisma/client @next-auth/prisma-adapter
 npm install prisma --save-dev
 ```
@@ -106,6 +106,8 @@ When using the MySQL connector for Prisma, the [Prisma `String` type](https://ww
 :::
 
 ### Create the database schema with Prisma Migrate
+
+**Warning:** Make sure to back up your database before running using Prisma Migrate.
 
 ```
 npx prisma migrate dev

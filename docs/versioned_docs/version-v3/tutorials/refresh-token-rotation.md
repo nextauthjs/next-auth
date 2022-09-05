@@ -17,7 +17,7 @@ Using a [JWT callback](https://next-auth.js.org/configuration/callbacks#jwt-call
 
 Below is a sample implementation using Google's Identity Provider. Please note that the OAuth 2.0 request in the `refreshAccessToken()` function will vary between different providers, but the core logic should remain similar.
 
-```js title="pages/auth/[...nextauth.js]"
+```js title="pages/api/auth/[...nextauth].js"
 import NextAuth from "next-auth"
 import Providers from "next-auth/providers"
 
@@ -121,7 +121,7 @@ The `RefreshAccessTokenError` error that is caught in the `refreshAccessToken()`
 
 We can handle this functionality as a side effect:
 
-```js title="pages/auth/[...nextauth.js]"
+```js title="pages/api/auth/[...nextauth].js"
 import { signIn, useSession } from "next-auth/client";
 import { useEffect } from "react";
 

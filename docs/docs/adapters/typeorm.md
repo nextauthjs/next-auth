@@ -5,21 +5,25 @@ title: TypeORM
 
 # TypeORM
 
-This Adapter is used to support SQL-flavored databases (like SQLite, MySQL, MSSQL, MariaDB, CockroachDB, etc.) through [TypeORM](https://typeorm.io), and mostly kept around for legacy reasons. (See the warning below.)
+This Adapter is used to support SQL-flavored databases (like SQLite, MySQL, MSSQL, MariaDB, CockroachDB, etc.) through [TypeORM](https://typeorm.io).
 
 :::note
 If you previously used this Adapter with MongoDB, check out the [MongoDB Adapter](/adapters/mongodb) instead.
 :::
 
-:::warning
+:::note
 In the future, we might split up this adapter to support single flavors of SQL for easier maintenance and reduced bundle size.
 :::
 
 ## Usage
 
+:::warning
+[`typeorm`](https://github.com/typeorm/typeorm) is still in active development and has not yet published a stable release. Because of this, you can expect breaking changes in minor versions. This adapter expects `typeorm@0.3.7` and is not validated against previous or future releases.
+:::
+
 To use this Adapter, you need to install the following packages:
 
-```bash npm2yarn
+```bash npm2yarn2pnpm
 npm install next-auth @next-auth/typeorm-legacy-adapter typeorm
 ```
 
@@ -36,7 +40,7 @@ export default NextAuth({
 })
 ```
 
-`TypeORMLegacyAdapter` takes either a connection string, or a [`ConnectionOptions`](https://github.com/typeorm/typeorm/blob/master/docs/connection-options.md) object as its first parameter.
+`TypeORMLegacyAdapter` takes either a connection string, or a [`DataSourceOptions`](https://github.com/typeorm/typeorm/blob/master/docs/data-source-options.md) object as its first parameter.
 
 ## Custom models
 
@@ -217,9 +221,9 @@ For example, you can add the naming convention option to the connection object i
 import NextAuth from "next-auth"
 import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
-import { ConnectionOptions } from "typeorm"
 
-const connection: ConnectionOptions = {
+export default NextAuth({
+  adapter: TypeORMLegacyAdapter({
     type: "mysql",
     host: "localhost",
     port: 3306,
@@ -227,10 +231,7 @@ const connection: ConnectionOptions = {
     password: "test",
     database: "test",
     namingStrategy: new SnakeNamingStrategy()
-}
-
-export default NextAuth({
-  adapter: TypeORMLegacyAdapter(connection),
+  }),
   ...
 })
 ```

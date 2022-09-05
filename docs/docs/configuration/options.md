@@ -13,9 +13,13 @@ When deploying to production, set the `NEXTAUTH_URL` environment variable to the
 NEXTAUTH_URL=https://example.com
 ```
 
-If your Next.js application uses a custom base path, specify the route to the API endpoint in full.
+If your Next.js application uses a custom base path, specify the route to the API endpoint in full. More informations about the usage of custom base path [here](/getting-started/client#custom-base-path).
 
 _e.g. `NEXTAUTH_URL=https://example.com/custom-route/api/auth`_
+
+:::tip
+When you're using a custom base path, you will need to pass the `basePath` page prop to the `<SessionProvider>`. More informations [here](/getting-started/client#custom-base-path).
+:::
 
 :::note
 Using [System Environment Variables](https://vercel.com/docs/concepts/projects/environment-variables#system-environment-variables) we automatically detect when you deploy to [Vercel](https://vercel.com) so you don't have to define this variable. Make sure **Automatically expose System Environment Variables** is checked in your Project Settings.
@@ -23,9 +27,8 @@ Using [System Environment Variables](https://vercel.com/docs/concepts/projects/e
 
 ### NEXTAUTH_SECRET
 
-Used to encrypt the NextAuth.js JWT, and to hash [email verification tokens](/adapters/models#verification-token). This is the default value for the [`secret`](/configuration/options#secret) option. The `secret` option might be removed in the future in favor of this.
+Used to encrypt the NextAuth.js JWT, and to hash [email verification tokens](/adapters/models#verification-token). This is the default value for the `secret` option in [NextAuth](/configuration/options#secret) and [Middleware](/configuration/nextjs#secret).
 
-If you are using [Middleware](/configuration/nextjs#prerequisites) this environment variable must be set.
 
 ### NEXTAUTH_URL_INTERNAL
 
@@ -65,7 +68,7 @@ A random string is used to hash tokens, sign/encrypt cookies and generate crypto
 
 If you set [`NEXTAUTH_SECRET`](#nextauth_secret) as an environment variable, you don't have to define this option.
 
-If no value specified specified in development (and there is no `NEXTAUTH_SECRET` variable either), it uses a hash for all configuration options, including OAuth Client ID / Secrets for entropy.
+If no value is specified in development (and there is no `NEXTAUTH_SECRET` variable either), it uses a hash for all configuration options, including OAuth Client ID / Secrets for entropy.
 
 :::warning
 Not providing any `secret` or `NEXTAUTH_SECRET` will throw [an error](/errors#no_secret) in production.
@@ -323,7 +326,7 @@ Set debug to `true` to enable debug messages for authentication and database ope
 
 #### Description
 
-Override any of the logger levels (`undefined` levels will use the built-in logger), and intercept logs in NextAuth. You can use this to send NextAuth logs to a third-party logging service.
+Override any of the logger levels (`undefined` levels will use the built-in logger), and intercept logs in NextAuth.js. You can use this to send NextAuth.js logs to a third-party logging service.
 
 The `code` parameter for `error` and `warn` are explained in the [Warnings](/warnings) and [Errors](/errors) pages respectively.
 
@@ -366,11 +369,14 @@ Changes the color scheme theme of [pages](/configuration/pages) as well as allow
 
 In addition, you can define a logo URL in `theme.logo` which will be rendered above the main card in the default signin/signout/error/verify-request pages, as well as a `theme.brandColor` which will affect the accent color of these pages.
 
+The sign-in button's background color will match the `brandColor` and defaults to `"#346df1"`. The text color is `#fff` by default, but if your brand color gives a weak contrast, correct it with the `buttonText` color option.
+
 ```js
 theme: {
   colorScheme: "auto", // "auto" | "dark" | "light"
   brandColor: "", // Hex color code
-  logo: "" // Absolute URL to image
+  logo: "", // Absolute URL to image
+  buttonText: "" // Hex color code
 }
 ```
 
@@ -465,6 +471,15 @@ cookies: {
   },
   state: {
     name: `${cookiePrefix}next-auth.state`,
+    options: {
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/",
+      secure: useSecureCookies,
+    },
+  },
+  nonce: {
+    name: `${cookiePrefix}next-auth.nonce`,
     options: {
       httpOnly: true,
       sameSite: "lax",

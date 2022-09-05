@@ -33,7 +33,7 @@
   ],
   "peerDependencies": {
     "@mikro-orm/core": "^5.0.2",
-    "next-auth": "workspace:*"
+    "next-auth": "^4"
   },
   "devDependencies": {
     "@mikro-orm/core": "^5.0.2",
@@ -46,5 +46,8 @@
   },
   "jest": {
     "preset": "@next-auth/adapter-test/jest"
+  },
+  "dependencies": {
+    "uuid": "^8.3.2"
   }
 }

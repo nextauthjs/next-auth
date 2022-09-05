@@ -7,7 +7,7 @@ title: Upstash Redis
 
 To use this Adapter, you need to install `@upstash/redis` and `@next-auth/upstash-redis-adapter` package:
 
-```bash npm2yarn
+```bash npm2yarn2pnpm
 npm install @upstash/redis @next-auth/upstash-redis-adapter
 ```
 
@@ -17,12 +17,12 @@ Configure your NextAuth.js to use the Upstash Redis Adapter:
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import { UpstashRedisAdapter } from "@next-auth/upstash-redis-adapter"
-import upstashRedisClient from "@upstash/redis"
+import { Redis } from "@upstash/redis"
 
-const redis = upstashRedisClient(
-  process.env.UPSTASH_REDIS_URL,
-  process.env.UPSTASH_REDIS_TOKEN
-)
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_URL,
+  token: process.env.UPSTASH_REDIS_TOKEN
+})
 
 export default NextAuth({
   adapter: UpstashRedisAdapter(redis),

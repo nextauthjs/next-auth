@@ -15,7 +15,10 @@
     "stripInternal": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "outDir": "."
+    "outDir": ".",
+    "paths": {
+      "next": ["node_modules/next"]
+    }
   },
   "exclude": ["./*.js", "./*.d.ts"]
 }

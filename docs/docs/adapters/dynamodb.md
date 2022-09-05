@@ -15,7 +15,7 @@ You can find the full schema in the table structure section below.
 
 1. Install `next-auth` and `@next-auth/dynamodb-adapter`
 
-```bash npm2yarn
+```bash npm2yarn2pnpm
 npm install next-auth @next-auth/dynamodb-adapter
 ```
 

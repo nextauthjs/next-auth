@@ -11,7 +11,7 @@ The MongoDB adapter does not handle connections automatically, so you will have 
 
 1. Install the necessary packages
 
-```bash npm2yarn
+```bash npm2yarn2pnpm
 npm install next-auth @next-auth/mongodb-adapter mongodb
 ```
 
@@ -53,12 +53,12 @@ if (process.env.NODE_ENV === "development") {
 export default clientPromise
 ```
 
-3. Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object.
+3. Add this adapter to your `pages/api/auth/[...nextauth].js` next-auth configuration object.
 
 ```js
 import NextAuth from "next-auth"
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
-import clientPromise from "lib/mongodb"
+import clientPromise from "../../../lib/mongodb"
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options

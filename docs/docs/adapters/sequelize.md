@@ -11,7 +11,7 @@ This is the Sequelize Adapter for [`next-auth`](https://next-auth.js.org).
 
 1. Install the necessary packages
 
-```bash npm2yarn
+```bash npm2yarn2pnpm
 npm install next-auth @next-auth/sequelize-adapter sequelize
 ```
 
@@ -19,7 +19,7 @@ npm install next-auth @next-auth/sequelize-adapter sequelize
 You'll also have to manually install [the driver for your database](https://sequelize.org/master/manual/getting-started.html) of choice.
 :::
 
-2. Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object.
+2. Add this adapter to your `pages/api/auth/[...nextauth].js` next-auth configuration object.
 
 ```javascript title="pages/api/auth/[...nextauth].js"
 import NextAuth from "next-auth"

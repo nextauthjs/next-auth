@@ -9,6 +9,7 @@ import { SessionStore } from "./lib/cookie"
 import type { NextAuthAction, NextAuthOptions } from "./types"
 import type { Cookie } from "./lib/cookie"
 import type { ErrorType } from "./pages/error"
+import { parse as parseCookie } from "cookie"
 
 export interface RequestInternal {
   /** @default "http://localhost:3000" */
@@ -68,7 +69,7 @@ async function toInternalRequest(
       method: req.method,
       headers,
       body: await getBody(req),
-      cookies: {},
+      cookies: parseCookie(req.headers.get("cookie") ?? ""),
       providerId: nextauth[1],
       error: url.searchParams.get("error") ?? nextauth[1],
       host: detectHost(headers["x-forwarded-host"] ?? headers.host),
@@ -89,19 +90,34 @@ export async function NextAuthHandler<
 
   const assertionResult = assertConfig({ options: userOptions, req })
 
-  if (typeof assertionResult === "string") {
-    logger.warn(assertionResult)
+  if (Array.isArray(assertionResult)) {
+    assertionResult.forEach(logger.warn)
   } else if (assertionResult instanceof Error) {
     // Bail out early if there's an error in the user config
     const { pages, theme } = userOptions
     logger.error(assertionResult.code, assertionResult)
-    if (pages?.error) {
-      return {
-        redirect: `${pages.error}?error=Configuration`,
+
+    const authOnErrorPage =
+      pages?.error &&
+      req.action === "signin" &&
+      req.query?.callbackUrl.startsWith(pages.error)
+
+    if (!pages?.error || authOnErrorPage) {
+      if (authOnErrorPage) {
+        logger.error(
+          "AUTH_ON_ERROR_PAGE_ERROR",
+          new Error(
+            `The error page ${pages?.error} should not require authentication`
+          )
+        )
       }
+      const render = renderPage({ theme })
+      return render.error({ error: "configuration" })
     }
-    const render = renderPage({ theme })
-    return render.error({ error: "configuration" })
+
+    return {
+      redirect: `${pages.error}?error=Configuration`,
+    }
   }
 
   const { action, providerId, error, method = "GET" } = req

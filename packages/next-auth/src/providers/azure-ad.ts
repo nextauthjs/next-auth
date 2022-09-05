@@ -2,7 +2,7 @@ import type { OAuthConfig, OAuthUserConfig } from "."
 
 export interface AzureADProfile extends Record<string, any> {
   sub: string
-  nicname: string
+  nickname: string
   email: string
   picture: string
 }
@@ -25,7 +25,7 @@ export default function AzureAD<P extends AzureADProfile>(
     id: "azure-ad",
     name: "Azure Active Directory",
     type: "oauth",
-    wellKnown: `https://login.microsoftonline.com/${tenant}/v2.0/.well-known/openid-configuration`,
+    wellKnown: `https://login.microsoftonline.com/${tenant}/v2.0/.well-known/openid-configuration?appid=${options.clientId}`,
     authorization: {
       params: {
         scope: "openid profile email",

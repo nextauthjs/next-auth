@@ -17,7 +17,7 @@ Anyone can be a contributor. Either you found a typo, or you have an awesome fea
 - The latest changes are always in `main`, so please make your Pull Request against that branch.
 - Pull Requests should be raised for any change
 - Pull Requests need approval of a [core contributor](https://next-auth.js.org/contributors#core-team) before merging
-- We use ESLint/Prettier for linting/formatting, so please run `yarn lint:fix` before committing to make resolving conflicts easier (VSCode users, check out [this ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) and [this Prettier extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) to fix lint and formatting issues in development)
+- We use ESLint/Prettier for linting/formatting, so please run `pnpm lint:fix` before committing to make resolving conflicts easier (VSCode users, check out [this ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) and [this Prettier extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) to fix lint and formatting issues in development)
 - We encourage you to test your changes, and if you have the opportunity, please make those tests part of the Pull Request
 - If you add new functionality, please provide the corresponding documentation as well and make it part of the Pull Request
 
@@ -37,7 +37,7 @@ cd next-auth
 1. Install packages. Developing requires Node.js v16:
 
 ```sh
-yarn
+pnpm install
 ```
 
 3. Populate `.env.local`:
@@ -55,7 +55,7 @@ cp .env.local.example .env.local
 4. Start the developer application/server:
 
 ```sh
-yarn dev:app
+pnpm dev
 ```
 Your developer application will be available on `http://localhost:3000`
 
@@ -65,7 +65,7 @@ If you need an example project to link to, you can use [next-auth-example](https
 
 #### Hot reloading
 
-When running `yarn dev:app`, you start a Next.js developer server on `http://localhost:3000`, which includes hot reloading out of the box. Make changes on any of the files in `src` and see the changes immediately.
+When running `pnpm dev`, you start a Next.js developer server on `http://localhost:3000`, which includes hot reloading out-of-the-box. Make changes on any of the files in `src` and see the changes immediately.
 
 > NOTE: When working on CSS, you will have to manually refresh the page after changes. The reason for this is our pages using CSS are server-side rendered (using API routes). (Improving this through a PR is very welcome!)
 
@@ -75,7 +75,7 @@ When running `yarn dev:app`, you start a Next.js developer server on `http://loc
 
 If you think your custom provider might be useful to others, we encourage you to open a PR and add it to the built-in list so others can discover it much more easily! You only need to add two changes:
 
-1. Add your config: [`src/providers/{provider}.js`](https://github.com/nextauthjs/next-auth/tree/main/src/providers) (Make sure you use a named default export, like `export default function YourProvider`!)
+1. Add your config: [`src/providers/{provider}.js`](https://github.com/nextauthjs/next-auth/tree/main/packages/next-auth/src/providers) (Make sure you use a named default export, like `export default function YourProvider`!)
 2. Add provider documentation: [`www/docs/providers/{provider}.md`](https://github.com/nextauthjs/next-auth/tree/main/www/docs/providers)
 
 That's it! 🎉 Others will be able to discover this provider much more easily now!
@@ -88,13 +88,13 @@ If you would like to contribute to an existing database adapter or help create a
 
 #### Testing
 
-Tests can be run with `yarn test`.
+Tests can be run with `pnpm test`.
 
 Automated tests are currently crude and limited in functionality, but improvements are in development.
 
 ## For maintainers
 
-We use [a custom script](https://github.com/nextauthjs/next-auth/tree/main/scripts/index.ts) together with [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0) to automate releases. This makes the maintenance process easier and less error-prone. Please study the "Conventional Commits" site to understand how to write a good commit message.
+We use [a custom script](https://github.com/nextauthjs/next-auth/blob/main/scripts/release/index.ts) together with [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0) to automate releases. This makes the maintenance process easier and less error-prone. Please study the "Conventional Commits" site to understand how to write a good commit message.
 
 When accepting Pull Requests, make sure the following:
 
@@ -103,9 +103,9 @@ When accepting Pull Requests, make sure the following:
 - Rewrite the commit message to conform to the `Conventional Commits` style.
   - Using `fix` releases a patch (x.x.1)
   - Using `feat` releases a minor (x.1.x)
-  - Using `feat` when `BREAKING CHANGE` is present in the commit messgae releases a major (1.x.x)
+  - Using `feat` when `BREAKING CHANGE` is present in the commit message releases a major (1.x.x)
 - Optionally link issues the PR will resolve (You can add "close" in front of the issue numbers to close the issues automatically, when the PR is merged. `semantic-release` will also comment back to connected issues and PRs, notifying the users that a feature is added/bug fixed, etc.)
 
 ### Skipping a release
 
-If a commit contains `[skip release]` in their message will be excluded from the commit analysis and won't participate in the release type determination. This is useful, if the PR being merged should not trigger a new `npm` release.
+If a commit contains `[skip release]` in their message, it will be excluded from the commit analysis and won't participate in the release type determination. This is useful, if the PR being merged should not trigger a new `npm` release.

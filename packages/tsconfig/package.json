@@ -1,6 +1,7 @@
 {
   "private": true,
   "name": "@next-auth/tsconfig",
+  "private": true,
   "version": "0.0.0",
   "files": [
     "tsconfig.adapters.json",

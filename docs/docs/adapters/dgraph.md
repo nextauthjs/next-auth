@@ -11,11 +11,11 @@ This is the Dgraph Adapter for [`next-auth`](https://next-auth.js.org).
 
 1. Install the necessary packages
 
-```bash npm2yarn
+```bash npm2yarn2pnpm
 npm install next-auth @next-auth/dgraph-adapter
 ```
 
-2. Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object.
+2. Add this adapter to your `pages/api/auth/[...nextauth].js` next-auth configuration object.
 
 ```javascript title="pages/api/auth/[...nextauth].js"
 import NextAuth from "next-auth"
@@ -226,22 +226,22 @@ database you must customize next-auth `encode` and `decode` functions, as the de
 further customize the jwt with roles if you want to implement [`RBAC logic`](https://dgraph.io/docs/graphql/authorization/directive/#role-based-access-control).
 
 ```js
-import * as jwt from "jsonwebtoken";
+import * as jwt from "jsonwebtoken"
 export default NextAuth({
   session: {
-    strategy: "jwt"
+    strategy: "jwt",
   },
   jwt: {
     secret: process.env.SECRET,
     encode: async ({ secret, token }) => {
-      return jwt.sign({...token, userId: token.id}, secret, {
+      return jwt.sign({ ...token, userId: token.id }, secret, {
         algorithm: "HS256",
-        expiresIn: 30 * 24 * 60 * 60; // 30 days
-      });
+        expiresIn: 30 * 24 * 60 * 60, // 30 days
+      })
     },
     decode: async ({ secret, token }) => {
-      return jwt.verify(token, secret, { algorithms: ["HS256"] });
-    }
+      return jwt.verify(token, secret, { algorithms: ["HS256"] })
+    },
   },
 })
 ```
