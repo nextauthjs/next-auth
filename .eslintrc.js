@@ -5,8 +5,7 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   parserOptions: {
     project: [
-      path.resolve(__dirname, './packages/adapter-**/tsconfig.json'),
-      path.resolve(__dirname, './packages/next-auth/tsconfig.eslint.json'),
+      path.resolve(__dirname, './packages/**/tsconfig.eslint.json'),
     ],
     tsconfigRootDir: __dirname
   },
