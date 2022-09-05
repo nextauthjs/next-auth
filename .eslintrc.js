@@ -7,7 +7,6 @@ module.exports = {
     project: [
       path.resolve(__dirname, './packages/adapter-**/tsconfig.json'),
       path.resolve(__dirname, './packages/next-auth/tsconfig.eslint.json'),
-      path.resolve(__dirname, 'tsconfig.json')
     ],
     tsconfigRootDir: __dirname
   },
