@@ -16,7 +16,8 @@
     "baseUrl": ".",
     "outDir": ".",
     "paths": {
-      "next": ["node_modules/next"]
+      "next": ["node_modules/next"],
+      "react": ["node_modules/react"]
     },
   },
   "exclude": [
