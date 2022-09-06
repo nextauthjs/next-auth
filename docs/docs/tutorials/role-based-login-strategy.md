@@ -29,7 +29,8 @@ callbacks: {
   async session({ session, token, user }) {
     session.user.role = user.role; // Add role value to user object so it is passed along with session
     return session;
-}},
+  }
+},
 ```
 
 Going forward, when using the `getSession` hook, check that `session.user.role` matches the required role. The example below assumes the role `'admin'` is required.
