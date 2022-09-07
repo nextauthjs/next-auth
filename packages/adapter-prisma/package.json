@@ -21,7 +21,7 @@
     "access": "public"
   },
   "scripts": {
-    "clean": "rm -rf ./prisma/migrations && rm ./prisma/dev.db*",
+    "clean": "rm -rf ./prisma/migrations && rm ./prisma/dev.db* || echo 'File deleted'",
     "init:default": "prisma migrate dev --name init --skip-seed",
     "init:custom": "prisma migrate dev --name init-custom --schema ./prisma/custom.prisma",
     "test:default": "pnpm init:default && jest",

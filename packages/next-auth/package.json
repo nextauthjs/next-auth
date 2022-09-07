@@ -38,7 +38,7 @@
   },
   "scripts": {
     "build": "pnpm clean && pnpm build:js && pnpm build:css",
-    "clean": "rm -rf client css utils providers core jwt react next index.d.ts index.js adapters.d.ts middleware.d.ts middleware.js",
+    "clean": "rm -rf coverage client css utils providers core jwt react next index.d.ts index.js adapters.d.ts middleware.d.ts middleware.js",
     "build:js": "pnpm clean && pnpm generate-providers && tsc && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir . && node config/wrap-css.js",
     "watch:css": "postcss --config config/postcss.config.js --watch src/**/*.css --base src --dir .",
