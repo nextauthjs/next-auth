@@ -14,7 +14,7 @@
     "lint:fix": "turbo run lint -- --fix",
     "lint": "turbo run lint --filter=!next-auth-docs",
     "release": "release",
-    "test": "turbo run test --concurrency=1 --filter=!@next-auth/pouchdb-adapter --filter=!@next-auth/upstash-redis-adapter --filter=!next-auth-* --filter=[HEAD^1]",
+    "test": "turbo run test --concurrency=1 --filter=!@next-auth/pouchdb-adapter --filter=!@next-auth/upstash-redis-adapter  --filter=!@next-auth/mikro-orm-adapter --filter=!next-auth-* --filter=[HEAD^1]",
     "version:pr": "node ./config/version-pr"
   },
   "devDependencies": {
