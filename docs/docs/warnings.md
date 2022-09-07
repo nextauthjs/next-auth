@@ -37,6 +37,12 @@ Twitter OAuth 2.0 is currently in beta as certain changes might still be necessa
 
 Some APIs are still experimental; they may be changed or removed in the future. Use at your own risk.
 
+#### DEBUG_ENABLED
+
+You have enabled the `debug` option. It is meant for development only, to help you catch issues in your authentication flow and you should consider removing this option when deploying to production. One way of only allowing debugging while not in production is to set `debug: process.env.NODE_ENV !== "production"`, so you can commit this without needing to change the value.
+
+If you want to log debug messages during production anyway, we recommend setting the [`logger` option](/configuration/options#logger) with proper sanitization of potentially sensitive user information.
+
 ## Adapter
 
 ### ADAPTER_TYPEORM_UPDATING_ENTITIES

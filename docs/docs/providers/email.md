@@ -71,7 +71,7 @@ EMAIL_SERVER_PORT=587
 EMAIL_FROM=noreply@example.com
 ```
 
-Now you can add the provider settings to the NextAuth options object in the Email Provider.
+Now you can add the provider settings to the NextAuth.js options object in the Email Provider.
 
 ```js title="pages/api/auth/[...nextauth].js"
 import EmailProvider from "next-auth/providers/email";
@@ -223,3 +223,31 @@ providers: [
   })
 ],
 ```
+
+## Normalizing the email address
+
+By default, NextAuth.js will normalize the email address. It treats values as case-insensitive (which is technically not compliant to the [RFC 2821 spec](https://datatracker.ietf.org/doc/html/rfc2821), but in practice this causes more problems than it solves, eg. when looking up users by e-mail from databases.) and also removes any secondary email address that was passed in as a comma-separated list. You can apply your own normalization via the `normalizeIdentifier` method on the `EmailProvider`. The following example shows the default behavior:
+```ts
+  EmailProvider({
+    // ...
+    normalizeIdentifier(identifier: string): string {
+      // Get the first two elements only,
+      // separated by `@` from user input.
+      let [local, domain] = identifier.toLowerCase().trim().split("@")
+      // The part before "@" can contain a ","
+      // but we remove it on the domain part
+      domain = domain.split(",")[0]
+      return `${local}@${domain}`
+
+      // You can also throw an error, which will redirect the user
+      // to the error page with error=EmailSignin in the URL
+      // if (identifier.split("@").length > 2) {
+      //   throw new Error("Only one email allowed")
+      // }
+    },
+  })
+```
+
+:::warning
+Always make sure this returns a single e-mail address, even if multiple ones were passed in.
+:::

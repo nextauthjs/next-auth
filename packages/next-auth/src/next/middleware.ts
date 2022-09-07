@@ -101,13 +101,18 @@ async function handleMiddleware(
   options: NextAuthMiddlewareOptions | undefined,
   onSuccess?: (token: JWT | null) => Promise<NextMiddlewareResult>
 ) {
+  const { pathname, search, origin } = req.nextUrl
+
   const signInPage = options?.pages?.signIn ?? "/api/auth/signin"
   const errorPage = options?.pages?.error ?? "/api/auth/error"
   const basePath = parseUrl(process.env.NEXTAUTH_URL).path
-  // Avoid infinite redirect loop
+  const publicPaths = [signInPage, errorPage, "/_next", "/favicon.ico"]
+
+  // Avoid infinite redirects/invalid response
+  // on paths that never require authentication
   if (
-    req.nextUrl.pathname.startsWith(basePath) ||
-    [signInPage, errorPage].includes(req.nextUrl.pathname)
+    pathname.startsWith(basePath) ||
+    publicPaths.some((p) => pathname.startsWith(p))
   ) {
     return
   }
@@ -119,7 +124,7 @@ async function handleMiddleware(
       `\nhttps://next-auth.js.org/errors#no_secret`
     )
 
-    const errorUrl = new URL(errorPage, req.nextUrl.origin)
+    const errorUrl = new URL(errorPage, origin)
     errorUrl.searchParams.append("error", "Configuration")
 
     return NextResponse.redirect(errorUrl)
@@ -139,11 +144,8 @@ async function handleMiddleware(
   if (isAuthorized) return await onSuccess?.(token)
 
   // the user is not logged in, redirect to the sign-in page
-  const signInUrl = new URL(signInPage, req.nextUrl.origin)
-  signInUrl.searchParams.append(
-    "callbackUrl",
-    `${req.nextUrl.pathname}${req.nextUrl.search}`
-  )
+  const signInUrl = new URL(signInPage, origin)
+  signInUrl.searchParams.append("callbackUrl", `${pathname}${search}`)
   return NextResponse.redirect(signInUrl)
 }
 
@@ -178,7 +180,7 @@ export type WithAuthArgs =
  * ```
  *
  * ---
- * [Documentation](https://next-auth.js.org/getting-started/middleware)
+ * [Documentation](https://next-auth.js.org/configuration/nextjs#middleware)
  */
 export function withAuth(...args: WithAuthArgs) {
   if (!args.length || args[0] instanceof NextRequest) {

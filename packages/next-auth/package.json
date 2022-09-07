@@ -1,6 +1,6 @@
 {
   "name": "next-auth",
-  "version": "4.10.0",
+  "version": "4.10.3",
   "description": "Authentication for Next.js",
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/next-auth.git",
@@ -42,9 +42,7 @@
     "build:js": "pnpm clean && pnpm generate-providers && tsc && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir . && node config/wrap-css.js",
     "watch:css": "postcss --config config/postcss.config.js --watch src/**/*.css --base src --dir .",
-    "test:client": "jest --config ./config/jest.client.config.js",
-    "test:core": "jest --config ./config/jest.core.config.js",
-    "test": "pnpm test:core && pnpm test:client",
+    "test": "jest --config ./config/jest.config.js",
     "prepublishOnly": "pnpm build",
     "generate-providers": "node ./config/generate-providers.js",
     "lint": "eslint src config"

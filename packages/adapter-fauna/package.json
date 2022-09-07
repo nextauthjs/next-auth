@@ -1,6 +1,6 @@
 {
   "name": "@next-auth/fauna-adapter",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Fauna Adapter for NextAuth",
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -42,7 +42,7 @@
   },
   "peerDependencies": {
     "faunadb": "^4.3.0",
-    "next-auth": "workspace:*"
+    "next-auth": "^4"
   },
   "devDependencies": {
     "@fauna-labs/fauna-schema-migrate": "^2.1.3",

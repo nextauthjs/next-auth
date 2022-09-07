@@ -1,6 +1,6 @@
 {
   "name": "@next-auth/neo4j-adapter",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "neo4j adapter for next-auth.",
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -34,7 +34,7 @@
   ],
   "peerDependencies": {
     "neo4j-driver": "^4.0.0",
-    "next-auth": "workspace:*"
+    "next-auth": "^4"
   },
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:*",
