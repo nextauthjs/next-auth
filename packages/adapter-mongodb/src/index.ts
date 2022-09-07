@@ -17,7 +17,7 @@ export interface MongoDBAdapterOptions {
     Sessions?: string
     VerificationTokens?: string
   }
-  dataBaseName?: string
+  databaseName?: string
 }
 
 export const defaultCollections: Required<
@@ -74,7 +74,7 @@ export function MongoDBAdapter(
   const { from, to } = format
 
   const db = (async () => {
-    const _db = (await client).db(options.dataBaseName)
+    const _db = (await client).db(options.databaseName)
     const c = { ...defaultCollections, ...collections }
     return {
       U: _db.collection<AdapterUser>(c.Users),

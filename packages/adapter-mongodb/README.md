@@ -73,7 +73,7 @@ import clientPromise from "lib/mongodb"
 // https://next-auth.js.org/configuration/options
 export default NextAuth({
   adapter: MongoDBAdapter(clientPromise, {
-    dataBaseName: 'my-data-base-name'
+    databaseName: 'my-data-base-name'
   }),
   ...
 })
