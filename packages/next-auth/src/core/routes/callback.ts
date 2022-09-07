@@ -6,6 +6,7 @@ import type { InternalOptions } from "../types"
 import type { RequestInternal, OutgoingResponse } from ".."
 import type { Cookie, SessionStore } from "../lib/cookie"
 import type { User } from "../.."
+import { JWT } from "src/jwt"
 
 /** Handle callbacks from login services */
 export default async function callback(params: {
@@ -126,14 +127,26 @@ export default async function callback(params: {
             picture: user.image,
             sub: user.id?.toString(),
           }
-          const token = await callbacks.jwt({
-            token: defaultToken,
-            user,
-            // @ts-expect-error
-            account,
-            profile: OAuthProfile,
-            isNewUser,
-          })
+
+          let token: JWT
+          try {
+            token = await callbacks.jwt({
+              token: defaultToken,
+              user,
+              // @ts-expect-error
+              account,
+              profile: OAuthProfile,
+              isNewUser,
+            })
+          } catch (error) {
+            return {
+              status: 500,
+              redirect: `${url}/error?error=${encodeURIComponent(
+                (error as Error).message
+              )}`,
+              cookies,
+            }
+          }
 
           // Encode token
           const newToken = await jwt.encode({ ...jwt, token })
@@ -274,14 +287,25 @@ export default async function callback(params: {
           picture: user.image,
           sub: user.id?.toString(),
         }
-        const token = await callbacks.jwt({
-          token: defaultToken,
-          user,
-          // @ts-expect-error
-          account,
-          isNewUser,
-        })
 
+        let token: JWT
+        try {
+          token = await callbacks.jwt({
+            token: defaultToken,
+            user,
+            // @ts-expect-error
+            account,
+            isNewUser,
+          })
+        } catch (error) {
+          return {
+            status: 500,
+            redirect: `${url}/error?error=${encodeURIComponent(
+              (error as Error).message
+            )}`,
+            cookies,
+          }
+        }
         // Encode token
         const newToken = await jwt.encode({ ...jwt, token })
 
@@ -399,13 +423,24 @@ export default async function callback(params: {
       sub: user.id?.toString(),
     }
 
-    const token = await callbacks.jwt({
-      token: defaultToken,
-      user,
-      // @ts-expect-error
-      account,
-      isNewUser: false,
-    })
+    let token: JWT
+    try {
+      token = await callbacks.jwt({
+        token: defaultToken,
+        user,
+        // @ts-expect-error
+        account,
+        isNewUser: false,
+      })
+    } catch (error) {
+      return {
+        status: 500,
+        redirect: `${url}/error?error=${encodeURIComponent(
+          (error as Error).message
+        )}`,
+        cookies,
+      }
+    }
 
     // Encode token
     const newToken = await jwt.encode({ ...jwt, token })
