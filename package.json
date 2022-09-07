@@ -8,7 +8,7 @@
     "build": "turbo run build --filter=next-auth --filter=@next-auth/* --no-deps",
     "clean": "turbo run clean --no-cache",
     "dev:app": "turbo run dev --filter=next-auth-app...",
-    "dev:docs": "turbo run dev --parallel --no-deps --no-cache --filter=next-auth-docs",
+    "dev:docs": "turbo run dev --filter=next-auth-docs",
     "dev": "pnpm dev:app",
     "email": "cd apps/dev && pnpm email",
     "lint:fix": "turbo run lint -- --fix",
