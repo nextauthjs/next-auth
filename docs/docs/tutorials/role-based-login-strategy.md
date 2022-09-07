@@ -38,7 +38,7 @@ Going forward, when using the `getSession` hook, check that `session.user.role` 
 ```javascript title="/pages/admin.js"
 import { getSession } from "next-auth/react"
 
-export default function Page() {
+export default async function Page() {
   const session = await getSession({ req })
 
   if (session && session.user.role === "admin") {
