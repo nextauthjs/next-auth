@@ -30,24 +30,9 @@ export default function LinkedIn<P extends LinkedInProfile>(
       url: "https://www.linkedin.com/oauth/v2/authorization",
       params: { scope: "r_liteprofile r_emailaddress" },
     },
-    token: {
-      url: "https://www.linkedin.com/oauth/v2/accessToken",
-      async request({
-                      client,
-                      params,
-                      checks,
-                      provider
-                    }) {
-        const response = await client.oauthCallback(provider.callbackUrl, params, checks, {
-          exchangeBody: {
-            client_id: options.clientId,
-            client_secret: options.clientSecret,
-          }
-        });
-        return {
-          tokens: response
-        };
-      }
+    token: "https://www.linkedin.com/oauth/v2/accessToken",
+    client: {
+      token_endpoint_auth_method: "client_secret_post",
     },
     userinfo: {
       url: "https://api.linkedin.com/v2/me",
