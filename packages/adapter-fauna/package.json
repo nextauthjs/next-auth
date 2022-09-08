@@ -36,6 +36,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "dev": "tsc -w",
     "clean": "rm -rf dist",
     "migrate": "fauna-schema-migrate generate",
     "test": "./tests/test.sh"

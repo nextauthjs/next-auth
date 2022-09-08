@@ -26,8 +26,7 @@
       "cache": false
     },
     "dev": {
-      "cache": false,
-      "dependsOn": ["^build"]
+      "cache": false
     },
     "lint": {
       "outputs": []

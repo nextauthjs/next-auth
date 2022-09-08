@@ -29,6 +29,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "dev": "tsc -w",
     "clean": "rm -rf dist",
     "init:db": "tests/init.sh",
     "mysql": "pnpm init:db && tests/mysql/test.sh",
