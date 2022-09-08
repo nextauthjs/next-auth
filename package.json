@@ -54,6 +54,37 @@
       }
     ]
   },
+  "eslintConfig": {
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "project": [
+        "./packages/**/tsconfig.eslint.json"
+      ]
+    },
+    "extends": [
+      "standard-with-typescript",
+      "prettier"
+    ],
+    "globals": {
+      "localStorage": "readonly",
+      "location": "readonly",
+      "fetch": "readonly"
+    },
+    "rules": {
+      "camelcase": "off",
+      "@typescript-eslint/naming-convention": "off",
+      "@typescript-eslint/strict-boolean-expressions": "off",
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/restrict-template-expressions": "off"
+    },
+    "plugins": [
+      "jest"
+    ],
+    "env": {
+      "jest/globals": true
+    }
+  },
   "packageManager": "pnpm@7.5.1",
   "funding": [
     {
