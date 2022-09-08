@@ -7,15 +7,14 @@
     "build:app": "turbo run build --filter=next-auth-app --include-dependencies",
     "build": "turbo run build --filter=next-auth --filter=@next-auth/* --no-deps",
     "lint": "turbo run lint --filter=!next-auth-docs --parallel",
-    "lint:fix": "turbo run lint -- --fix",
     "test": "turbo run test --concurrency=1 --filter=!@next-auth/pouchdb-adapter  --filter=!@next-auth/mikro-orm-adapter --filter=!@next-auth/upstash-redis-adapter --filter=!next-auth-* --filter=[HEAD^1]",
-    "setup": "turbo run setup",
+    "clean": "turbo run clean --no-cache",
+    "dev:app": "turbo run dev --parallel --continue --filter=next-auth-app...",
+    "dev:docs": "turbo run dev --filter=next-auth-docs",
     "dev": "pnpm dev:app",
     "email": "cd apps/dev && pnpm email",
-    "dev:app": "turbo run dev --parallel --no-deps --no-cache --filter=next-auth-app",
-    "dev:docs": "turbo run dev --parallel --no-deps --no-cache --filter=next-auth-docs",
-    "version:pr": "node ./config/version-pr",
-    "release": "release"
+    "release": "release",
+    "version:pr": "node ./config/version-pr"
   },
   "devDependencies": {
     "@actions/core": "^1.6.0",

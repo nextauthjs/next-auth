@@ -15,10 +15,6 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "outDir": ".",
-    "paths": {
-      "next": ["node_modules/next"],
-      "react": ["node_modules/react"]
-    },
   },
   "exclude": [
     "./*.js", 
