@@ -4,7 +4,7 @@
   "description": "NextAuth.js Developer app",
   "private": true,
   "scripts": {
-    "clean": "rm -rf .next src/css",
+    "clean": "rm -rf .next",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
