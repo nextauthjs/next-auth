@@ -47,6 +47,9 @@ The following errors are passed as error query parameters to the default or over
 - **OAuthSignin**: Error in constructing an authorization URL ([1](https://github.com/nextauthjs/next-auth/blob/457952bb5abf08b09861b0e5da403080cd5525be/src/server/lib/signin/oauth.js), [2](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/lib/oauth/pkce-handler.ts), [3](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/lib/oauth/state-handler.ts)),
 - **OAuthCallback**: Error in handling the response ([1](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/lib/oauth/callback.ts), [2](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/lib/oauth/pkce-handler.ts), [3](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/lib/oauth/state-handler.ts)) from an OAuth provider.
 - **OAuthCreateAccount**: Could not create OAuth provider user in the database.
+  - This error mostly happens because the **customization** you make to the default [`schema`](/adapters/prisma#create-the-prisma-schema). To avoid this error assign a default value to any column you add using [`@default(value)`](https://www.prisma.io/docs/concepts/components/prisma-schema/data-model#defining-a-default-value). Ask the user to edit it later.  
+
+
 - **EmailCreateAccount**: Could not create email provider user in the database.
 - **Callback**: Error in the [OAuth callback handler route](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/routes/callback.ts)
 - **OAuthAccountNotLinked**: If the email on the account is already linked, but not with this OAuth account
