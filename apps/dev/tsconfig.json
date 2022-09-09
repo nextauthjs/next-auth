@@ -15,10 +15,6 @@
     "incremental": true,
     "jsx": "preserve",
     "baseUrl": ".",
-    "paths": {
-      "next-auth": ["../../packages/next-auth/src"],
-      "next-auth/*": ["../../packages/next-auth/src/*"]
-    }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", "jest.config.js"]
