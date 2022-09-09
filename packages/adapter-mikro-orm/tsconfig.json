@@ -8,5 +8,6 @@
     "outDir": "dist",
     "stripInternal": true
   },
-  "exclude": ["dist"]
+  "include": ["src"],
+  "exclude": ["src/*.test.ts"]
 }

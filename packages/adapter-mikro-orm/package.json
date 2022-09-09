@@ -41,7 +41,6 @@
     "@next-auth/adapter-test": "workspace:*",
     "@next-auth/tsconfig": "workspace:*",
     "@types/uuid": "^8.3.3",
-    "jest": "^27.0.0",
     "next-auth": "workspace:*"
   },
   "dependencies": {
