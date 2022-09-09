@@ -39,13 +39,13 @@
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:*",
     "@next-auth/tsconfig": "workspace:*",
-    "@types/uuid": "^8.3.3",
+    "@types/uuid": ">=8",
     "jest": "^27.4.3",
     "neo4j-driver": "^4.4.0",
     "next-auth": "workspace:*"
   },
   "dependencies": {
-    "uuid": "^8.3.2"
+    "uuid": "^9.0.0"
   },
   "jest": {
     "preset": "@next-auth/adapter-test/jest"

@@ -40,7 +40,7 @@
     "@mikro-orm/sqlite": "^5.0.2",
     "@next-auth/adapter-test": "workspace:*",
     "@next-auth/tsconfig": "workspace:*",
-    "@types/uuid": "^8.3.3",
+    "@types/uuid": ">=8",
     "jest": "^27.4.3",
     "next-auth": "workspace:*"
   },
@@ -48,6 +48,6 @@
     "preset": "@next-auth/adapter-test/jest"
   },
   "dependencies": {
-    "uuid": "^8.3.2"
+    "uuid": "^9.0.0"
   }
 }
