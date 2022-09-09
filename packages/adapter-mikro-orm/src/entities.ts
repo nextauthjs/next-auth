@@ -43,16 +43,16 @@ export class User implements RemoveIndex<AdapterUser> {
   image?: string
 
   @OneToMany({
-    entity: () => Session,
-    mappedBy: (session) => session.user,
+    entity: 'Session',
+    mappedBy: (session: Session) => session.user,
     hidden: true,
     orphanRemoval: true,
   })
   sessions = new Collection<Session>(this)
 
   @OneToMany({
-    entity: () => Account,
-    mappedBy: (account) => account.user,
+    entity: 'Account',
+    mappedBy: (account: Account) => account.user,
     hidden: true,
     orphanRemoval: true,
   })
@@ -66,7 +66,7 @@ export class Session implements AdapterSession {
   id: string = randomUUID()
 
   @ManyToOne({
-    entity: () => User,
+    entity: 'User',
     hidden: true,
     onDelete: "cascade",
   })
@@ -91,7 +91,7 @@ export class Account implements RemoveIndex<DefaultAccount> {
   id: string = randomUUID()
 
   @ManyToOne({
-    entity: () => User,
+    entity: 'User',
     hidden: true,
     onDelete: "cascade",
   })
