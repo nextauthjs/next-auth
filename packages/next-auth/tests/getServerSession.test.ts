@@ -3,13 +3,14 @@ import { MissingSecret } from "../src/core/errors"
 import { unstable_getServerSession } from "../src/next"
 import { mockLogger } from "./lib"
 
-let originalWarn = console.warn
+const originalWarn = console.warn
 let logger = mockLogger()
 
 const req: any = { headers: {} }
 const res: any = { setHeader: jest.fn(), getHeader: jest.fn() }
 
 beforeEach(() => {
+  // @ts-expect-error
   process.env.NODE_ENV = "production"
   process.env.NEXTAUTH_URL = "http://localhost"
   console.warn = jest.fn()
@@ -17,6 +18,7 @@ beforeEach(() => {
 
 afterEach(() => {
   logger = mockLogger()
+  // @ts-expect-error
   process.env.NODE_ENV = "test"
   delete process.env.NEXTAUTH_URL
   console.warn = originalWarn
@@ -61,6 +63,7 @@ describe("Treat secret correctly", () => {
     expect(console.warn).toBeCalledTimes(0)
 
     // Expect console.warn to be called ONCE due to NODE_ENV=development
+    // @ts-expect-error
     process.env.NODE_ENV = "development"
     await unstable_getServerSession(req, res, { providers: [], logger })
     expect(console.warn).toBeCalledTimes(1)
@@ -78,6 +81,7 @@ describe("Return correct data", () => {
 
   it("Should return null if there is no session", async () => {
     const spy = jest.spyOn(core, "NextAuthHandler")
+    // @ts-expect-error
     spy.mockReturnValue({ body: {} })
 
     const session = await unstable_getServerSession(req, res, {
@@ -103,6 +107,7 @@ describe("Return correct data", () => {
     }
 
     const spy = jest.spyOn(core, "NextAuthHandler")
+    // @ts-expect-error
     spy.mockReturnValue(mockedResponse)
 
     const session = await unstable_getServerSession(req, res, {

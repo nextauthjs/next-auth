@@ -1,5 +1,5 @@
 {
-  "extends": "@next-auth/tsconfig/base.json",
+  "extends": "@next-auth/tsconfig/tsconfig.base.json",
   "compilerOptions": {
     "emitDeclarationOnly": true,
     "strictNullChecks": true,
@@ -17,11 +17,11 @@
     "outDir": ".",
   },
   "exclude": [
-    "./*.js",
-    "./*.d.ts",
-    "config",
-    "**/__tests__",
-    "tests",
-    "coverage"
+    "./*.js", 
+    "./*.d.ts", 
+    "./config",
+    "./tests",
+    "./coverage",
+    "./**/__test__"
   ]
 }
