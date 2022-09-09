@@ -76,7 +76,7 @@ export class Session implements AdapterSession {
   @Property({ type: types.string, persist: false })
   userId!: string
 
-  @Property({ type: types.datetime })
+  @Property({ type: 'Date' })
   expires!: Date
 
   @Property({ type: types.string })
@@ -139,7 +139,7 @@ export class VerificationToken implements AdapterVerificationToken {
   @Property({ type: types.string })
   token!: string
 
-  @Property({ type: types.datetime })
+  @Property({ type: 'Date' })
   expires!: Date
 
   @Property({ type: types.string })

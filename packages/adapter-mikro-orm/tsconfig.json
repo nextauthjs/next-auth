@@ -9,5 +9,5 @@
     "stripInternal": true
   },
   "include": ["src"],
-  "exclude": ["src/*.test.ts"]
+  "exclude": ["dist", "test", "node_modules"]
 }

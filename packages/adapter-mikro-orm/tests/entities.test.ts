@@ -2,7 +2,7 @@ import { Options, types } from "@mikro-orm/core"
 import type { SqliteDriver } from "@mikro-orm/sqlite"
 import { MikroORM, wrap } from "@mikro-orm/core"
 import { runBasicTests } from "@next-auth/adapter-test"
-import { MikroOrmAdapter, defaultEntities } from "."
+import { MikroOrmAdapter, defaultEntities } from "../src"
 import {
   Cascade,
   Collection,
@@ -13,7 +13,6 @@ import {
   Unique,
 } from "@mikro-orm/core"
 import { randomUUID } from "@next-auth/adapter-test"
-import { Account, Session } from "./entities"
 
 @Entity()
 export class User implements defaultEntities.User {
@@ -28,7 +27,7 @@ export class User implements defaultEntities.User {
   @Unique()
   email?: string
 
-  @Property({ type: types.datetime, nullable: true })
+  @Property({ type: 'Date', nullable: true })
   emailVerified: Date | null = null
 
   @Property({ type: types.string, nullable: true })
@@ -36,21 +35,21 @@ export class User implements defaultEntities.User {
 
   @OneToMany({
     entity: 'Session',
-    mappedBy: (session: Session) => session.user,
+    mappedBy: (session: defaultEntities.Session) => session.user,
     hidden: true,
     orphanRemoval: true,
     cascade: [Cascade.ALL],
   })
-  sessions = new Collection<Session>(this)
+  sessions = new Collection<defaultEntities.Session>(this)
 
   @OneToMany({
     entity: 'Account',
-    mappedBy: (account: Account) => account.user,
+    mappedBy: (account: defaultEntities.Account) => account.user,
     hidden: true,
     orphanRemoval: true,
     cascade: [Cascade.ALL],
   })
-  accounts = new Collection<Account>(this)
+  accounts = new Collection<defaultEntities.Account>(this)
 
   @Property({ type: types.string, hidden: true })
   role = "ADMIN"
