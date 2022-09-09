@@ -201,23 +201,21 @@ importers:
 
   packages/adapter-mikro-orm:
     specifiers:
-      '@mikro-orm/core': ^5.0.2
-      '@mikro-orm/sqlite': ^5.0.2
+      '@mikro-orm/core': ^5.4.1
+      '@mikro-orm/sqlite': ^5.4.1
       '@next-auth/adapter-test': workspace:*
       '@next-auth/tsconfig': workspace:*
       '@types/uuid': ^8.3.3
-      jest: ^27.4.3
       next-auth: workspace:*
       uuid: ^8.3.2
     dependencies:
       uuid: 8.3.2
     devDependencies:
-      '@mikro-orm/core': 5.2.1_@mikro-orm+sqlite@5.2.1
-      '@mikro-orm/sqlite': 5.2.1_@mikro-orm+core@5.2.1
+      '@mikro-orm/core': 5.4.1_@mikro-orm+sqlite@5.4.1
+      '@mikro-orm/sqlite': 5.4.1_@mikro-orm+core@5.4.1
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
       '@types/uuid': 8.3.4
-      jest: 27.5.1
       next-auth: link:../next-auth
 
   packages/adapter-mongodb:
@@ -5581,14 +5579,15 @@ packages:
     resolution: {integrity: sha512-H1rQc1ZOHANWBvPcW+JpGwr+juXSxM8Q8YCkm3GhZd8REu1fHR3z99CErO1p9pkcfcxZnMdIZdIsXkOHY0NilA==}
     dev: false
 
-  /@mikro-orm/core/5.2.1_@mikro-orm+sqlite@5.2.1:
-    resolution: {integrity: sha512-p6+fdltIP8DfGSnxWO8yE5c71VsDxogSrk9BAlfry+4KQKQLWEiogJ+zuVCGVTB1xozczNCgRIA8ZYAjHnnBPg==}
+  /@mikro-orm/core/5.4.1_@mikro-orm+sqlite@5.4.1:
+    resolution: {integrity: sha512-aSpV/F/N3xeGNrH6OgtI00Da6KMaiYWl0hdLa4vL0/Jx1RfbM0IUb4I44kSQm4V7giKPf3pLqTnD1hfxY3Futw==}
     engines: {node: '>= 14.0.0'}
     peerDependencies:
       '@mikro-orm/better-sqlite': ^5.0.0
       '@mikro-orm/entity-generator': ^5.0.0
       '@mikro-orm/mariadb': ^5.0.0
       '@mikro-orm/migrations': ^5.0.0
+      '@mikro-orm/migrations-mongodb': ^5.0.0
       '@mikro-orm/mongodb': ^5.0.0
       '@mikro-orm/mysql': ^5.0.0
       '@mikro-orm/postgresql': ^5.0.0
@@ -5603,6 +5602,8 @@ packages:
         optional: true
       '@mikro-orm/migrations':
         optional: true
+      '@mikro-orm/migrations-mongodb':
+        optional: true
       '@mikro-orm/mongodb':
         optional: true
       '@mikro-orm/mysql':
@@ -5614,17 +5615,18 @@ packages:
       '@mikro-orm/sqlite':
         optional: true
     dependencies:
-      '@mikro-orm/sqlite': 5.2.1_@mikro-orm+core@5.2.1
-      dotenv: 16.0.1
-      escaya: 0.0.61
+      '@mikro-orm/sqlite': 5.4.1_@mikro-orm+core@5.4.1
+      acorn-loose: 8.3.0
+      acorn-walk: 8.2.0
+      dotenv: 16.0.2
       fs-extra: 10.1.0
       globby: 11.0.4
-      mikro-orm: 5.2.0
+      mikro-orm: 5.4.1
       reflect-metadata: 0.1.13
     dev: true
 
-  /@mikro-orm/knex/5.2.1_bx7gmw5e7iithikein4k6pwylm:
-    resolution: {integrity: sha512-Lw91BqftBZZqJ9LEA62x84TF8akC6H4UfRIAXPnE+95JM6kQ+kWy7WTCI2n6v/PrzFyeNShOvPRnHpdOXpnzKQ==}
+  /@mikro-orm/knex/5.4.1_c3akoi5nqsakxn3y7mcnukjmnu:
+    resolution: {integrity: sha512-cOCNxtktLLcDz8YxqEwxjy4q/ysgLmos2Z8QDj9VFSO9BvaiA1nHPuQAOIDlHOJ4yNjoKaw0CNI+koICtSvG7Q==}
     engines: {node: '>= 14.0.0'}
     peerDependencies:
       '@mikro-orm/core': ^5.0.0
@@ -5654,10 +5656,10 @@ packages:
       sqlite3:
         optional: true
     dependencies:
-      '@mikro-orm/core': 5.2.1_@mikro-orm+sqlite@5.2.1
+      '@mikro-orm/core': 5.4.1_@mikro-orm+sqlite@5.4.1
       fs-extra: 10.1.0
-      knex: 2.1.0_sqlite3@5.0.8
-      sqlite3: 5.0.8
+      knex: 2.3.0_sqlite3@5.0.11
+      sqlite3: 5.0.11
       sqlstring: 2.3.3
     transitivePeerDependencies:
       - pg-native
@@ -5665,8 +5667,8 @@ packages:
       - tedious
     dev: true
 
-  /@mikro-orm/sqlite/5.2.1_@mikro-orm+core@5.2.1:
-    resolution: {integrity: sha512-2IZt51Eyshf7d94L4boYcbeHZ8Yqz6iQ03rD9wqab4MVvtn8Lk2X2339vuqW2oy3+x4yNCI4ytkWbFJI4YMvgw==}
+  /@mikro-orm/sqlite/5.4.1_@mikro-orm+core@5.4.1:
+    resolution: {integrity: sha512-hxkdxBaHyO6A/hcl2WY8tSILq4E0vmQg4G1cXLwDIAkyAe/u5b0Vw069bSsfHCQbmC11Bb64SQ8Jk+zWgWm8ag==}
     engines: {node: '>= 14.0.0'}
     peerDependencies:
       '@mikro-orm/core': ^5.0.0
@@ -5681,10 +5683,10 @@ packages:
       '@mikro-orm/seeder':
         optional: true
     dependencies:
-      '@mikro-orm/core': 5.2.1_@mikro-orm+sqlite@5.2.1
-      '@mikro-orm/knex': 5.2.1_bx7gmw5e7iithikein4k6pwylm
+      '@mikro-orm/core': 5.4.1_@mikro-orm+sqlite@5.4.1
+      '@mikro-orm/knex': 5.4.1_c3akoi5nqsakxn3y7mcnukjmnu
       fs-extra: 10.1.0
-      sqlite3: 5.0.8
+      sqlite3: 5.0.11
       sqlstring-sqlite: 0.1.1
     transitivePeerDependencies:
       - better-sqlite3
@@ -7472,6 +7474,13 @@ packages:
       acorn: 7.4.1
     dev: true
 
+  /acorn-loose/8.3.0:
+    resolution: {integrity: sha512-75lAs9H19ldmW+fAbyqHdjgdCrz0pWGXKmnqFoh8PyVd1L2RIb4RzYrSjmopeqv3E1G3/Pimu6GgLlrGbrkF7w==}
+    engines: {node: '>=0.4.0'}
+    dependencies:
+      acorn: 8.7.1
+    dev: true
+
   /acorn-walk/7.2.0:
     resolution: {integrity: sha512-OPdCF6GsMIP+Az+aWfAAOEt2/+iVDKE7oy6lJ098aoe59oAmK76qV6Gw60SbZ8jHuG2wH058GF4pLFbYamYrVA==}
     engines: {node: '>=0.4.0'}
@@ -8920,13 +8929,8 @@ packages:
   /colord/2.9.2:
     resolution: {integrity: sha512-Uqbg+J445nc1TKn4FoDPS6ZZqAvEDnwrH42yo8B40JSOgSLxMZ/gt3h4nmCtPLQeXhjJJkqBx7SCY35WnIixaQ==}
 
-  /colorette/2.0.16:
-    resolution: {integrity: sha512-hUewv7oMjCp+wkBv5Rm0v87eJhq4woh5rSR+42YSQJKecCqgIqNkZ6lAlQms/BwHPJA5NKMRlpxPRv0n8HQW6g==}
-    dev: true
-
   /colorette/2.0.19:
     resolution: {integrity: sha512-3tlv/dIP7FWvj3BsbHrGLJ6l/oKh1O3TcgBqMn+yyCagOxc23fyzDS6HypQbgxWbkpDnf52p1LuR4eWDQ/K9WQ==}
-    dev: false
 
   /colors/1.0.3:
     resolution: {integrity: sha1-BDP0TYCWgP3rYO0mDxsMJi6CpAs=}
@@ -9030,7 +9034,7 @@ packages:
       - supports-color
 
   /concat-map/0.0.1:
-    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
+    resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
 
   /concurrently/7.2.2:
     resolution: {integrity: sha512-DcQkI0ruil5BA/g7Xy3EWySGrFJovF5RYAYxwGvv9Jf9q9B1v3jPFP2tl6axExNf1qgF30kjoNYrangZ0ey4Aw==}
@@ -10504,6 +10508,11 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
+  /dotenv/16.0.2:
+    resolution: {integrity: sha512-JvpYKUmzQhYoIFgK2MOnF3bciIZoItIIoryihy0rIA+H4Jy0FmgyKYAHCTN98P5ybGSJcIFbh6QKeJdtZd1qhA==}
+    engines: {node: '>=12'}
+    dev: true
+
   /dotenv/6.2.0:
     resolution: {integrity: sha512-HygQCKUBSFl8wKQZBSemMywRWcEDNidvNbjGVyZu3nbZ8qq9ubiPoGLMdRDpfSrpkkm9BXYFkpKxxFX38o/76w==}
     engines: {node: '>=6'}
@@ -10831,11 +10840,6 @@ packages:
   /escape-string-regexp/4.0.0:
     resolution: {integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==}
     engines: {node: '>=10'}
-
-  /escaya/0.0.61:
-    resolution: {integrity: sha512-WLLmvdG72Z0pCq8XUBd03GEJlAiMceXFanjdQeEzeSiuV1ZgrJqbkU7ZEe/hu0OsBlg5wLlySEeOvfzcGoO8mg==}
-    engines: {node: '>=6.0.0'}
-    dev: true
 
   /escodegen/1.14.3:
     resolution: {integrity: sha512-qFcX0XJkdg+PB3xjZZG/wKSuT1PnQWx57+TVSjIMmILd2yC/6ByYElPwJnslDsuWuSAp4AwJGumarAAmJch5Kw==}
@@ -14823,8 +14827,8 @@ packages:
     engines: {node: '>= 8'}
     dev: false
 
-  /knex/2.1.0_sqlite3@5.0.8:
-    resolution: {integrity: sha512-vVsnD6UJdSJy55TvCXfFF9syfwyXNxfE9mvr2hJL/4Obciy2EPGoqjDpgRSlMruHuPWDOeYAG25nyrGvU+jJog==}
+  /knex/2.3.0_sqlite3@5.0.11:
+    resolution: {integrity: sha512-WMizPaq9wRMkfnwKXKXgBZeZFOSHGdtoSz5SaLAVNs3WRDfawt9O89T4XyH52PETxjV8/kRk0Yf+8WBEP/zbYw==}
     engines: {node: '>=12'}
     hasBin: true
     peerDependencies:
@@ -14851,7 +14855,7 @@ packages:
       tedious:
         optional: true
     dependencies:
-      colorette: 2.0.16
+      colorette: 2.0.19
       commander: 9.3.0
       debug: 4.3.4
       escalade: 3.1.1
@@ -14863,7 +14867,7 @@ packages:
       pg-connection-string: 2.5.0
       rechoir: 0.8.0
       resolve-from: 5.0.0
-      sqlite3: 5.0.8
+      sqlite3: 5.0.11
       tarn: 3.0.2
       tildify: 2.0.0
     transitivePeerDependencies:
@@ -15543,8 +15547,8 @@ packages:
       braces: 3.0.2
       picomatch: 2.3.1
 
-  /mikro-orm/5.2.0:
-    resolution: {integrity: sha512-t6up4g6PHN2Davm9djB3yGzdhgUGiPsX1JM6pFx7U3Qei1pFcmZtmZa65jthQOpTsMIFTXPSn8isp1NNemwm6w==}
+  /mikro-orm/5.4.1:
+    resolution: {integrity: sha512-m5EPWdIsRs3Xz4jhTB1BzitPGhxrTgZ32rg0YBUnKszIHKB5ZXTz6hUM26zh4eUHXObyiOVkAQnyEIrbV+tJlg==}
     engines: {node: '>= 14.0.0'}
     dev: true
 
@@ -19193,6 +19197,24 @@ packages:
     resolution: {integrity: sha512-VE0SOVEHCk7Qc8ulkWw3ntAzXuqf7S2lvwQaDLRnUeIEaKNQJzV6BwmLKhOqT61aGhfUMrXeaBk+oDGCzvhcug==}
     dev: true
 
+  /sqlite3/5.0.11:
+    resolution: {integrity: sha512-4akFOr7u9lJEeAWLJxmwiV43DJcGV7w3ab7SjQFAFaTVyknY3rZjvXTKIVtWqUoY4xwhjwoHKYs2HDW2SoHVsA==}
+    requiresBuild: true
+    peerDependenciesMeta:
+      node-gyp:
+        optional: true
+    dependencies:
+      '@mapbox/node-pre-gyp': 1.0.9
+      node-addon-api: 4.3.0
+      tar: 6.1.11
+    optionalDependencies:
+      node-gyp: 8.4.1
+    transitivePeerDependencies:
+      - bluebird
+      - encoding
+      - supports-color
+    dev: true
+
   /sqlite3/5.0.8:
     resolution: {integrity: sha512-f2ACsbSyb2D1qFFcqIXPfFscLtPVOWJr5GmUzYxf4W+0qelu5MWrR+FAQE1d5IUArEltBrzSDxDORG8P/IkqyQ==}
     requiresBuild: true
@@ -19212,7 +19234,7 @@ packages:
     dev: true
 
   /sqlstring-sqlite/0.1.1:
-    resolution: {integrity: sha1-yMYYEGY/LlmmsNc3twqHUr2joHg=}
+    resolution: {integrity: sha512-9CAYUJ0lEUPYJrswqiqdINNSfq3jqWo/bFJ7tufdoNeSK0Fy+d1kFTxjqO9PIqza0Kri+ZtYMfPVf1aZaFOvrQ==}
     engines: {node: '>= 0.6'}
     dev: true
 
