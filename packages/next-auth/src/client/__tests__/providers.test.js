@@ -57,7 +57,7 @@ test("when failing to fetch the providers, it'll log the error", async () => {
   await waitFor(() => {
     expect(logger.error).toHaveBeenCalledTimes(1)
     expect(logger.error).toBeCalledWith("CLIENT_FETCH_ERROR", {
-      path: "providers",
+      url: "/api/auth/providers",
       error: new SyntaxError("Unexpected token s in JSON at position 0"),
     })
   })

@@ -1,4 +1,13 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["./*.d.ts", "**/tests", "**/__tests__"]
+  "include": ["./tests", "./src", "./config"],
+  "compilerOptions": {
+    "types": ["@types/jest"],
+    "typeRoots": ["./node_modules/@types"]
+  },
+  "exclude": [
+    "./coverage",
+    "./*.js",
+    "./*.d.ts",
+  ]
 }

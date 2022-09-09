@@ -1,29 +1,53 @@
-import type { RequestEvent } from "@sveltejs/kit"
-import type { IncomingRequest, NextAuthOptions, Session } from "next-auth"
-import type { NextAuthAction } from "next-auth/lib/types"
-import type { OutgoingResponse } from "next-auth/core"
+import type { ServerLoadEvent } from "@sveltejs/kit"
+import type { RequestInternal } from "next-auth"
+import type { NextAuthAction, NextAuthOptions } from "next-auth/core/types"
+import type { OutgoingResponse as NextAuthResponse } from "next-auth/core"
 import { NextAuthHandler } from "next-auth/core"
+import GithubProvider from "next-auth/providers/github"
 import cookie from "cookie"
+import {
+  GITHUB_CLIENT_ID,
+  GITHUB_CLIENT_SECRET,
+  NEXTAUTH_SECRET,
+} from "$env/static/private"
+import { PUBLIC_NEXTAUTH_URL } from "$env/static/public"
 import getFormBody from "./utils/get-form-body"
 
-async function toSvelteKitResponse(
-  request: Request,
-  nextAuthResponse: OutgoingResponse<unknown>
-) {
-  const { headers, cookies, body, redirect, status = 200 } = nextAuthResponse
+const github = GithubProvider?.default || GithubProvider
 
-  const response = {
-    status,
-    headers: {},
+export const options: NextAuthOptions = {
+  providers: [
+    github({
+      clientId: GITHUB_CLIENT_ID,
+      clientSecret: GITHUB_CLIENT_SECRET,
+    }),
+  ],
+}
+
+const toSvelteKitResponse = async (
+  request: Request,
+  nextAuthResponse: NextAuthResponse<unknown>
+): Promise<Response> => {
+  const { cookies, redirect } = nextAuthResponse
+
+  const headers = new Headers()
+  for (const header of nextAuthResponse?.headers || []) {
+    // pass headers along from next-auth
+    headers.set(header.key, header.value)
   }
 
-  headers?.forEach((header) => {
-    response.headers[header.key] = header.value
-  })
+  // set-cookie header
+  if (cookies?.length) {
+    headers.set(
+      "set-cookie",
+      cookies
+        ?.map((item) => cookie.serialize(item.name, item.value, item.options))
+        .join(",") as string
+    )
+  }
 
-  response.headers["set-cookie"] = cookies?.map((item) => {
-    return cookie.serialize(item.name, item.value, item.options)
-  })
+  let body = undefined
+  let status = nextAuthResponse.status || 200
 
   if (redirect) {
     let formData = null
@@ -34,41 +58,45 @@ async function toSvelteKitResponse(
       // no formData passed
     }
     if (formData?.json !== "true") {
-      response.status = 302
-      response.headers["Location"] = redirect
+      status = 302
+      headers.set("Location", redirect)
     } else {
-      response["body"] = { url: redirect }
+      body = { url: redirect }
     }
   } else {
-    response["body"] = body
+    body = nextAuthResponse.body
   }
 
-  return response
+  // @ts-expect-error - body is a known HTML document or JSON object
+  return new Response(body, {
+    status,
+    headers,
+  })
 }
 
-async function SKNextAuthHandler(
-  { request, url, params }: RequestEvent,
+const SKNextAuthHandler = async (
+  { request, url, params }: ServerLoadEvent,
   options: NextAuthOptions
-) {
-  const nextauth = params.nextauth.split("/")
-  let body = null
+): Promise<Response> => {
+  const [action, provider] = params.nextauth!.split("/")
+  let body = undefined
   try {
     body = await request.formData()
     body = getFormBody(body)
   } catch {
     // no formData passed
   }
-  options.secret = import.meta.env.VITE_NEXTAUTH_SECRET
-  const req: IncomingRequest = {
-    host: import.meta.env.VITE_NEXTAUTH_URL,
+  options.secret = NEXTAUTH_SECRET
+  const req: RequestInternal = {
+    host: PUBLIC_NEXTAUTH_URL,
     body,
     query: Object.fromEntries(url.searchParams),
     headers: request.headers,
     method: request.method,
-    cookies: cookie.parse(request.headers.get("cookie") ?? ""),
-    action: nextauth[0] as NextAuthAction,
-    providerId: nextauth[1],
-    error: nextauth[1],
+    cookies: cookie.parse(request.headers.get("cookie") || ""),
+    action: action as NextAuthAction,
+    providerId: provider,
+    error: provider,
   }
 
   const response = await NextAuthHandler({
@@ -79,19 +107,18 @@ async function SKNextAuthHandler(
   return toSvelteKitResponse(request, response)
 }
 
-export async function getServerSession(
+export const getServerSession = async (
   request: Request,
   options: NextAuthOptions
-): Promise<Session | null> {
-  
-  options.secret = import.meta.env.VITE_NEXTAUTH_SECRET
-  
-  const session = await NextAuthHandler<Session>({
+): Promise<App.Session | null> => {
+  options.secret = NEXTAUTH_SECRET
+
+  const session = await NextAuthHandler<App.Session>({
     req: {
-      host: import.meta.env.VITE_NEXTAUTH_URL,
+      host: PUBLIC_NEXTAUTH_URL,
       action: "session",
       method: "GET",
-      cookies: cookie.parse(request.headers.get("cookie") ?? ""),
+      cookies: cookie.parse(request.headers.get("cookie") || ""),
       headers: request.headers,
     },
     options,
@@ -99,16 +126,18 @@ export async function getServerSession(
 
   const { body } = session
 
-  if (body && Object.keys(body).length) return body as Session
+  if (body && Object.keys(body).length) {
+    return body as App.Session
+  }
   return null
 }
 
-export default (
+export const NextAuth = (
   options: NextAuthOptions
 ): {
-  get: (req: RequestEvent) => Promise<unknown>
-  post: (req: RequestEvent) => Promise<unknown>
+  GET: (event) => Promise<unknown>
+  POST: (event) => Promise<unknown>
 } => ({
-  get: (req) => SKNextAuthHandler(req, options),
-  post: (req) => SKNextAuthHandler(req, options),
+  GET: (event) => SKNextAuthHandler(event, options),
+  POST: (event) => SKNextAuthHandler(event, options),
 })

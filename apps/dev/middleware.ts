@@ -30,12 +30,11 @@ export const config = { matcher: ["/middleware-protected"] }
 // export default withAuth(
 //   function middleware(req, ev) {
 //     console.log(req, ev)
-//     return undefined // NOTE: `NextMiddleware` should allow returning `void`
 //   },
 //   {
 //     callbacks: {
 //       authorized: ({ token }) => token.name === "Balázs Orbán",
-//     }
+//     },
 //   }
 // )
 

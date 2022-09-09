@@ -1,8 +1,8 @@
 import { randomUUID, runBasicTests } from "@next-auth/adapter-test"
 import { PrismaClient } from "@prisma/client"
 import { PrismaAdapter } from "../src"
-const prisma = new PrismaClient()
 import { ObjectId } from "mongodb"
+const prisma = new PrismaClient()
 
 runBasicTests({
   adapter: PrismaAdapter(prisma),

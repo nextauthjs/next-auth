@@ -1,6 +1,7 @@
 import { createHash } from "crypto"
-import type { LoggerInstance, NextAuthOptions } from "../src"
 import { NextAuthHandler } from "../src/core"
+import type { LoggerInstance, NextAuthOptions } from "../src"
+import type { Adapter } from "../src/adapters"
 
 export const mockLogger: () => LoggerInstance = () => ({
   error: jest.fn(() => {}),
@@ -19,7 +20,7 @@ export async function handler(
   options: NextAuthOptions,
   { prod, path, params, requestInit }: HandlerOptions
 ) {
-  // @ts-ignore
+  // @ts-expect-error
   if (prod) process.env.NODE_ENV = "production"
 
   const url = new URL(
@@ -33,7 +34,7 @@ export async function handler(
     req,
     options: { secret: "secret", ...options, logger },
   })
-  // @ts-ignore
+  // @ts-expect-error
   if (prod) process.env.NODE_ENV = "test"
 
   return {
@@ -55,4 +56,13 @@ export function createCSRF() {
     secret,
     csrf: { value, token, cookie: `next-auth.csrf-token=${value}|${token}` },
   }
+}
+
+export function mockAdapter(): Adapter {
+  // @ts-expect-error
+  const adapter: Adapter = {
+    createVerificationToken: jest.fn(() => {}),
+    getUserByEmail: jest.fn(() => {}),
+  }
+  return adapter;
 }
