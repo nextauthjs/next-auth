@@ -14,19 +14,20 @@ import { Account, Session } from "../src/entities"
 @Entity()
 export class User implements defaultEntities.User {
   @PrimaryKey()
+  @Property({ type: 'string' })
   id: string = randomUUID()
 
-  @Property({ nullable: true })
+  @Property({ type: 'string', nullable: true })
   name?: string
 
-  @Property({ nullable: true })
+  @Property({ type: 'string', nullable: true })
   @Unique()
   email?: string
 
   @Property({ type: "Date", nullable: true })
   emailVerified: Date | null = null
 
-  @Property({ nullable: true })
+  @Property({ type: 'string', nullable: true })
   image?: string
 
   @OneToMany({
@@ -47,15 +48,16 @@ export class User implements defaultEntities.User {
   })
   accounts = new Collection<Account>(this)
 
-  @Property({ hidden: true })
+  @Property({ type: 'string', hidden: true })
   role = "ADMIN"
 }
 
 @Entity()
 export class VeryImportantEntity {
   @PrimaryKey()
+  @Property({ type: 'string' })
   id: string = randomUUID()
 
-  @Property()
+  @Property({ type: 'boolean' })
   important = true
 }

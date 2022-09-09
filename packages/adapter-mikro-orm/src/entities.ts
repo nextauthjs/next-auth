@@ -29,17 +29,17 @@ export class User implements RemoveIndex<AdapterUser> {
   @PrimaryKey()
   id: string = randomUUID()
 
-  @Property({ nullable: true })
+  @Property({ type: 'string', nullable: true })
   name?: string
 
-  @Property({ nullable: true })
+  @Property({ type: 'string', nullable: true })
   @Unique()
   email?: string
 
-  @Property({ type: "Date", nullable: true })
+  @Property({ type: 'Date', nullable: true })
   emailVerified: Date | null = null
 
-  @Property({ nullable: true })
+  @Property({ type: 'string', nullable: true })
   image?: string
 
   @OneToMany({
@@ -62,6 +62,7 @@ export class User implements RemoveIndex<AdapterUser> {
 @Entity()
 export class Session implements AdapterSession {
   @PrimaryKey()
+  @Property({ type: 'string' })
   id: string = randomUUID()
 
   @ManyToOne({
@@ -71,13 +72,13 @@ export class Session implements AdapterSession {
   })
   user!: User
 
-  @Property({ persist: false })
+  @Property({ type: 'string', persist: false })
   userId!: string
 
-  @Property()
+  @Property({ type: 'Date' })
   expires!: Date
 
-  @Property()
+  @Property({ type: 'string' })
   @Unique()
   sessionToken!: string
 }
@@ -86,6 +87,7 @@ export class Session implements AdapterSession {
 @Unique({ properties: ["provider", "providerAccountId"] })
 export class Account implements RemoveIndex<DefaultAccount> {
   @PrimaryKey()
+  @Property({ type: 'string' })
   id: string = randomUUID()
 
   @ManyToOne({
@@ -95,37 +97,37 @@ export class Account implements RemoveIndex<DefaultAccount> {
   })
   user!: User
 
-  @Property({ persist: false })
+  @Property({ type: 'string', persist: false })
   userId!: string
 
-  @Enum()
+  @Enum({ type: 'string' })
   type!: ProviderType
 
-  @Property()
+  @Property({ type: 'string' })
   provider!: string
 
-  @Property()
+  @Property({ type: 'string' })
   providerAccountId!: string
 
-  @Property({ nullable: true })
+  @Property({ type: 'string', nullable: true })
   refresh_token?: string
 
-  @Property({ nullable: true })
+  @Property({ type: 'string', nullable: true })
   access_token?: string
 
-  @Property({ nullable: true })
+  @Property({ type: 'number', nullable: true })
   expires_at?: number
 
-  @Property({ nullable: true })
+  @Property({ type: 'string', nullable: true })
   token_type?: string
 
-  @Property({ nullable: true })
+  @Property({ type: 'string', nullable: true })
   scope?: string
 
-  @Property({ nullable: true })
+  @Property({ type: 'string', nullable: true })
   id_token?: string
 
-  @Property({ nullable: true })
+  @Property({ type: 'string', nullable: true })
   session_state?: string
 }
 
@@ -133,12 +135,12 @@ export class Account implements RemoveIndex<DefaultAccount> {
 @Unique({ properties: ["token", "identifier"] })
 export class VerificationToken implements AdapterVerificationToken {
   @PrimaryKey()
-  @Property()
+  @Property({ type: 'string' })
   token!: string
 
-  @Property()
+  @Property({ type: 'Date' })
   expires!: Date
 
-  @Property()
+  @Property({ type: 'string' })
   identifier!: string
 }
