@@ -9,6 +9,7 @@ import {
   OneToMany,
   Collection,
   ManyToOne,
+  types,
 } from "@mikro-orm/core"
 
 import type { DefaultAccount } from "next-auth"
@@ -29,17 +30,17 @@ export class User implements RemoveIndex<AdapterUser> {
   @PrimaryKey()
   id: string = randomUUID()
 
-  @Property({ type: 'string', nullable: true })
+  @Property({ type: types.string, nullable: true })
   name?: string
 
-  @Property({ type: 'string', nullable: true })
+  @Property({ type: types.string, nullable: true })
   @Unique()
   email?: string
 
-  @Property({ type: 'Date', nullable: true })
+  @Property({ type: types.datetime, nullable: true })
   emailVerified: Date | null = null
 
-  @Property({ type: 'string', nullable: true })
+  @Property({ type: types.string, nullable: true })
   image?: string
 
   @OneToMany({
@@ -62,7 +63,7 @@ export class User implements RemoveIndex<AdapterUser> {
 @Entity()
 export class Session implements AdapterSession {
   @PrimaryKey()
-  @Property({ type: 'string' })
+  @Property({ type: types.string })
   id: string = randomUUID()
 
   @ManyToOne({
@@ -72,13 +73,13 @@ export class Session implements AdapterSession {
   })
   user!: User
 
-  @Property({ type: 'string', persist: false })
+  @Property({ type: types.string, persist: false })
   userId!: string
 
-  @Property({ type: 'Date' })
+  @Property({ type: types.datetime })
   expires!: Date
 
-  @Property({ type: 'string' })
+  @Property({ type: types.string })
   @Unique()
   sessionToken!: string
 }
@@ -87,7 +88,7 @@ export class Session implements AdapterSession {
 @Unique({ properties: ["provider", "providerAccountId"] })
 export class Account implements RemoveIndex<DefaultAccount> {
   @PrimaryKey()
-  @Property({ type: 'string' })
+  @Property({ type: types.string })
   id: string = randomUUID()
 
   @ManyToOne({
@@ -97,37 +98,37 @@ export class Account implements RemoveIndex<DefaultAccount> {
   })
   user!: User
 
-  @Property({ type: 'string', persist: false })
+  @Property({ type: types.string, persist: false })
   userId!: string
 
-  @Enum({ type: 'string' })
+  @Property({ type: types.string })
   type!: ProviderType
 
-  @Property({ type: 'string' })
+  @Property({ type: types.string })
   provider!: string
 
-  @Property({ type: 'string' })
+  @Property({ type: types.string })
   providerAccountId!: string
 
-  @Property({ type: 'string', nullable: true })
+  @Property({ type: types.string, nullable: true })
   refresh_token?: string
 
-  @Property({ type: 'string', nullable: true })
+  @Property({ type: types.string, nullable: true })
   access_token?: string
 
-  @Property({ type: 'number', nullable: true })
+  @Property({ type: types.integer, nullable: true })
   expires_at?: number
 
-  @Property({ type: 'string', nullable: true })
+  @Property({ type: types.string, nullable: true })
   token_type?: string
 
-  @Property({ type: 'string', nullable: true })
+  @Property({ type: types.string, nullable: true })
   scope?: string
 
-  @Property({ type: 'string', nullable: true })
+  @Property({ type: types.text, nullable: true })
   id_token?: string
 
-  @Property({ type: 'string', nullable: true })
+  @Property({ type: types.string, nullable: true })
   session_state?: string
 }
 
@@ -135,12 +136,12 @@ export class Account implements RemoveIndex<DefaultAccount> {
 @Unique({ properties: ["token", "identifier"] })
 export class VerificationToken implements AdapterVerificationToken {
   @PrimaryKey()
-  @Property({ type: 'string' })
+  @Property({ type: types.string })
   token!: string
 
-  @Property({ type: 'Date' })
+  @Property({ type: types.datetime })
   expires!: Date
 
-  @Property({ type: 'string' })
+  @Property({ type: types.string })
   identifier!: string
 }

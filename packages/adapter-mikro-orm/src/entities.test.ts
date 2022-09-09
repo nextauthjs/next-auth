@@ -1,4 +1,4 @@
-import type { Options } from "@mikro-orm/core"
+import { Options, types } from "@mikro-orm/core"
 import type { SqliteDriver } from "@mikro-orm/sqlite"
 import { MikroORM, wrap } from "@mikro-orm/core"
 import { runBasicTests } from "@next-auth/adapter-test"
@@ -18,20 +18,20 @@ import { Account, Session } from "./entities"
 @Entity()
 export class User implements defaultEntities.User {
   @PrimaryKey()
-  @Property({ type: 'string' })
+  @Property({ type: types.string })
   id: string = randomUUID()
 
-  @Property({ type: 'string', nullable: true })
+  @Property({ type: types.string, nullable: true })
   name?: string
 
-  @Property({ type: 'string', nullable: true })
+  @Property({ type: types.string, nullable: true })
   @Unique()
   email?: string
 
-  @Property({ type: "Date", nullable: true })
+  @Property({ type: types.datetime, nullable: true })
   emailVerified: Date | null = null
 
-  @Property({ type: 'string', nullable: true })
+  @Property({ type: types.string, nullable: true })
   image?: string
 
   @OneToMany({
@@ -52,17 +52,17 @@ export class User implements defaultEntities.User {
   })
   accounts = new Collection<Account>(this)
 
-  @Property({ type: 'string', hidden: true })
+  @Property({ type: types.string, hidden: true })
   role = "ADMIN"
 }
 
 @Entity()
 export class VeryImportantEntity {
   @PrimaryKey()
-  @Property({ type: 'string' })
+  @Property({ type: types.string })
   id: string = randomUUID()
 
-  @Property({ type: 'boolean' })
+  @Property({ type: types.boolean })
   important = true
 }
 
