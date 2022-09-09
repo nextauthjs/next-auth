@@ -38,8 +38,8 @@
   },
   "scripts": {
     "build": "pnpm clean && pnpm build:js && pnpm build:css",
+    "build:js": "pnpm clean && pnpm generate-providers && pnpm tsc --project tsconfig.json && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
     "clean": "rm -rf coverage client css utils providers core jwt react next index.d.ts index.js adapters.d.ts middleware.d.ts middleware.js",
-    "build:js": "pnpm generate-providers && tsc && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir . && node config/wrap-css.js",
     "dev": "pnpm clean && pnpm generate-providers && concurrently \"pnpm watch:css\" \"pnpm watch:ts\"",
     "watch:ts": "pnpm tsc --project tsconfig.dev.json",
@@ -47,7 +47,7 @@
     "test": "jest --config ./config/jest.config.js",
     "prepublishOnly": "pnpm build",
     "generate-providers": "node ./config/generate-providers.js",
-    "lint": "eslint src config"
+    "lint": "eslint src config tests"
   },
   "files": [
     "lib",
@@ -128,15 +128,5 @@
   },
   "engines": {
     "node": "^12.19.0 || ^14.15.0 || ^16.13.0"
-  },
-  "eslintConfig": {
-    "parserOptions": {
-      "project": "./tsconfig.eslint.json"
-    }
-  },
-  "eslintIgnore": [
-    "./*.d.ts",
-    "**/tests",
-    "**/__tests__"
-  ]
+  }
 }
