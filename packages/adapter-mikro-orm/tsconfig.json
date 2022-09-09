@@ -8,5 +8,5 @@
     "outDir": "dist",
     "stripInternal": true
   },
-  "exclude": ["tests", "dist", "jest.config.js"]
+  "exclude": ["tests", "dist", "jest.config.ts"]
 }

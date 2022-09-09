@@ -32,20 +32,19 @@
     "dist"
   ],
   "peerDependencies": {
-    "@mikro-orm/core": "^5.0.2",
+    "@mikro-orm/core": "^5.4.1",
     "next-auth": "^4"
   },
   "devDependencies": {
-    "@mikro-orm/core": "^5.0.2",
-    "@mikro-orm/sqlite": "^5.0.2",
+    "@mikro-orm/core": "^5.4.1",
+    "@mikro-orm/sqlite": "^5.4.1",
     "@next-auth/adapter-test": "workspace:*",
     "@next-auth/tsconfig": "workspace:*",
     "@types/uuid": "^8.3.3",
-    "jest": "^27.4.3",
-    "next-auth": "workspace:*"
-  },
-  "jest": {
-    "preset": "@next-auth/adapter-test/jest"
+    "jest": "^27.0.0",
+    "next-auth": "workspace:*",
+    "ts-jest": "^27.0.3",
+    "typescript": "^4.8.3"
   },
   "dependencies": {
     "uuid": "^8.3.2"
