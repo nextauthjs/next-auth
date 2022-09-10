@@ -31,6 +31,9 @@ export default function LinkedIn<P extends LinkedInProfile>(
       params: { scope: "r_liteprofile r_emailaddress" },
     },
     token: "https://www.linkedin.com/oauth/v2/accessToken",
+    client: {
+      token_endpoint_auth_method: "client_secret_post",
+    },
     userinfo: {
       url: "https://api.linkedin.com/v2/me",
       params: {

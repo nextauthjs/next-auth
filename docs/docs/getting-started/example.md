@@ -30,7 +30,7 @@ To add NextAuth.js to a project create a file called `[...nextauth].js` in `page
 import NextAuth from "next-auth"
 import GithubProvider from "next-auth/providers/github"
 
-export default NextAuth({
+export const authOptions = {
   // Configure one or more authentication providers
   providers: [
     GithubProvider({
@@ -39,7 +39,9 @@ export default NextAuth({
     }),
     // ...add more providers here
   ],
-})
+}
+
+export default NextAuth(authOptions)
 ```
 
 All requests to `/api/auth/*` (`signIn`, `callback`, `signOut`, etc.) will automatically be handled by NextAuth.js.
@@ -120,7 +122,7 @@ export default async (req, res) => {
     })
   } else {
     res.send({
-      error: "You must be sign in to view the protected content on this page.",
+      error: "You must be signed in to view the protected content on this page.",
     })
   }
 }
