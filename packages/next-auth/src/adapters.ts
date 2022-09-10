@@ -59,7 +59,24 @@ export interface VerificationToken {
  * [Adapters Overview](https://next-auth.js.org/adapters/overview) |
  * [Create a custom adapter](https://next-auth.js.org/tutorials/creating-a-database-adapter)
  */
-export interface Adapter {
+export type Adapter<WithVerificationToken = boolean> = DefaultAdapter &
+  (WithVerificationToken extends true
+    ? {
+        createVerificationToken: (
+          verificationToken: VerificationToken
+        ) => Awaitable<VerificationToken | null | undefined>
+        /**
+         * Return verification token from the database
+         * and delete it so it cannot be used again.
+         */
+        useVerificationToken: (params: {
+          identifier: string
+          token: string
+        }) => Awaitable<VerificationToken | null>
+      }
+    : {})
+
+export interface DefaultAdapter {
   createUser: (user: Omit<AdapterUser, "id">) => Awaitable<AdapterUser>
   getUser: (id: string) => Awaitable<AdapterUser | null>
   getUserByEmail: (email: string) => Awaitable<AdapterUser | null>

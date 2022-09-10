@@ -1,12 +1,13 @@
 import oAuthCallback from "../lib/oauth/callback"
 import callbackHandler from "../lib/callback-handler"
 import { hashToken } from "../lib/utils"
+import getUserFromEmail from "../lib/email/getUserFromEmail"
 
 import type { InternalOptions } from "../types"
 import type { RequestInternal, OutgoingResponse } from ".."
 import type { Cookie, SessionStore } from "../lib/cookie"
 import type { User } from "../.."
-import type { AdapterSession } from "../../adapters"
+import type { Adapter, AdapterSession } from "../../adapters"
 
 /** Handle callbacks from login services */
 export default async function callback(params: {
@@ -205,8 +206,7 @@ export default async function callback(params: {
         return { redirect: `${url}/error?error=configuration`, cookies }
       }
 
-      // @ts-expect-error Verified in `assertConfig`
-      const invite = await adapter.useVerificationToken({
+      const invite = await (adapter as Adapter<true>).useVerificationToken({
         identifier,
         token: hashToken(token, options),
       })
@@ -216,13 +216,7 @@ export default async function callback(params: {
         return { redirect: `${url}/error?error=Verification`, cookies }
       }
 
-      // If it is an existing user, use that, otherwise use a placeholder
-      const profile = (identifier
-        ? // @ts-expect-error Verified in `assertConfig`
-          await adapter.getUserByEmail(identifier)
-        : null) ?? {
-        email: identifier,
-      }
+      const profile = await getUserFromEmail(identifier, options, false)
 
       const account = {
         providerAccountId: profile.email,

@@ -3,9 +3,9 @@ import type {
   Provider,
   CredentialInput,
   ProviderType,
-  OAuthConfig,
   EmailConfig,
   CredentialsConfig,
+  InternalOAuthConfig,
 } from "../providers"
 import type { TokenSetParameters } from "openid-client"
 import type { JWT, JWTOptions } from "../jwt"
@@ -485,8 +485,8 @@ export interface User extends DefaultUser {}
 // Below are types that are only supposed be used by next-auth internally
 
 /** @internal */
-export type InternalProvider<T extends ProviderType = any> = (T extends "oauth"
-  ? OAuthConfig<any>
+export type InternalProvider<T = ProviderType> = (T extends "oauth"
+  ? InternalOAuthConfig<any>
   : T extends "email"
   ? EmailConfig
   : T extends "credentials"
@@ -508,7 +508,10 @@ export type NextAuthAction =
   | "_log"
 
 /** @internal */
-export interface InternalOptions<T extends ProviderType = any> {
+export interface InternalOptions<
+  TProviderType = ProviderType,
+  WithVerificationToken = TProviderType extends "email" ? true : false
+> {
   providers: InternalProvider[]
   /**
    * Parsed from `NEXTAUTH_URL` or `x-forwarded-host` on Vercel.
@@ -516,9 +519,9 @@ export interface InternalOptions<T extends ProviderType = any> {
    */
   url: InternalUrl
   action: NextAuthAction
-  provider: T extends string
-    ? InternalProvider<T>
-    : InternalProvider<T> | undefined
+  provider: TProviderType extends ProviderType
+    ? InternalProvider<TProviderType>
+    : InternalProvider<TProviderType> | undefined
   csrfToken?: string
   csrfTokenVerified?: boolean
   secret: string
@@ -529,7 +532,9 @@ export interface InternalOptions<T extends ProviderType = any> {
   pages: Partial<PagesOptions>
   jwt: JWTOptions
   events: Partial<EventCallbacks>
-  adapter?: Adapter
+  adapter: WithVerificationToken extends true
+    ? Adapter<WithVerificationToken>
+    : Adapter<WithVerificationToken> | undefined
   callbacks: CallbacksOptions
   cookies: CookiesOptions
   callbackUrl: string

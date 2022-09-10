@@ -1,5 +1,4 @@
 import type { EventCallbacks, LoggerInstance } from ".."
-import type { Adapter } from "../adapters"
 
 /**
  * Same as the default `Error`, but it is JSON serializable.
@@ -104,10 +103,10 @@ export function eventsErrorHandler(
 }
 
 /** Handles adapter induced errors. */
-export function adapterErrorHandler(
-  adapter: Adapter | undefined,
+export function adapterErrorHandler<TAdapter>(
+  adapter: TAdapter | undefined,
   logger: LoggerInstance
-): Adapter | undefined {
+): TAdapter | undefined {
   if (!adapter) return
 
   return Object.keys(adapter).reduce<any>((acc, name) => {
