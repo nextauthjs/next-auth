@@ -6,7 +6,6 @@ import {
 } from "../src/core/errors"
 import { handler } from "./lib"
 import EmailProvider from "../src/providers/email"
-import { Adapter } from "../src/adapters"
 
 it("Show error page if secret is not defined", async () => {
   const { res, log } = await handler(
