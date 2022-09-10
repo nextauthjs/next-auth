@@ -1,5 +1,12 @@
-import { InvalidCallbackUrl, MissingSecret } from "../src/core/errors"
+import {
+  InvalidCallbackUrl,
+  MissingAdapter,
+  MissingAdapterMethods,
+  MissingSecret,
+} from "../src/core/errors"
 import { handler } from "./lib"
+import EmailProvider from "../src/providers/email"
+import { Adapter } from "../src/adapters"
 
 it("Show error page if secret is not defined", async () => {
   const { res, log } = await handler(
@@ -12,6 +19,48 @@ it("Show error page if secret is not defined", async () => {
   expect(res.html).toMatch(/check the server logs for more information./i)
 
   expect(log.error).toBeCalledWith("NO_SECRET", expect.any(MissingSecret))
+})
+
+it("Show error page if adapter is missing functions when using with email", async () => {
+  const sendVerificationRequest = jest.fn()
+  const missingFunctionAdapter: any = {}
+  const { res, log } = await handler(
+    {
+      adapter: missingFunctionAdapter,
+      providers: [EmailProvider({ sendVerificationRequest })],
+      secret: "secret",
+    },
+    { prod: true }
+  )
+
+  expect(res.status).toBe(500)
+  expect(res.html).toMatch(/there is a problem with the server configuration./i)
+  expect(res.html).toMatch(/check the server logs for more information./i)
+
+  expect(log.error).toBeCalledWith(
+    "MISSING_ADAPTER_METHODS_ERROR",
+    expect.any(MissingAdapterMethods)
+  )
+})
+
+it("Show error page if adapter is not configured when using with email", async () => {
+  const sendVerificationRequest = jest.fn()
+  const { res, log } = await handler(
+    {
+      providers: [EmailProvider({ sendVerificationRequest })],
+      secret: "secret",
+    },
+    { prod: true }
+  )
+
+  expect(res.status).toBe(500)
+  expect(res.html).toMatch(/there is a problem with the server configuration./i)
+  expect(res.html).toMatch(/check the server logs for more information./i)
+
+  expect(log.error).toBeCalledWith(
+    "EMAIL_REQUIRES_ADAPTER_ERROR",
+    expect.any(MissingAdapter)
+  )
 })
 
 it("Should show configuration error page on invalid `callbackUrl`", async () => {
