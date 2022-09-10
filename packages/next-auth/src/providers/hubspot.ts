@@ -38,35 +38,10 @@ export default function HubSpot<P extends HubSpotProfile>(
       },
 
     },
-    token: {
-      url: HubSpotConfig.tokenUrl,
-      async request(context) {
-
-        if (!context.params.code) {
-          throw new Error("Missing HubSpot authentication code in the callback request parameters")
-        }
-        const urlParams = new URLSearchParams({
-          client_id: options.clientId,
-          client_secret: options.clientSecret,
-          grant_type: "authorization_code",
-          redirect_uri: context.provider.callbackUrl,
-          code: context.params.code,
-        });
-        
-        const url = `${HubSpotConfig.tokenUrl}?${urlParams}`
-
-        const response = await fetch(url, {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          method: "POST",
-        });
-
-        const tokens = await response.json()
-
-        return { tokens };
-      },
+    client: {
+      token_endpoint_auth_method: "client_secret_post",
     },
+    token: HubSpotConfig.tokenUrl,
     userinfo: {
       url: HubSpotConfig.profileUrl,
       async request(context) {
