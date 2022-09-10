@@ -46,6 +46,21 @@ export interface EmailConfig extends CommonProviderOptions {
   generateVerificationToken?: () => Awaitable<string>
   /** If defined, it is used to hash the verification token when saving to the database . */
   secret?: string
+  /**
+   * Normalizes the user input before sending the verification request.
+   *
+   * ⚠️ Always make sure this method returns a single email address.
+   *
+   * @note Technically, the part of the email address local mailbox element
+   * (everything before the `@` symbol) should be treated as 'case sensitive'
+   * according to RFC 2821, but in practice this causes more problems than
+   * it solves, e.g.: when looking up users by e-mail from databases.
+   * By default, we treat email addresses as all lower case,
+   * but you can override this function to change this behavior.
+   *
+   * [Documentation](https://next-auth.js.org/providers/email#normalizing-the-e-mail-address) | [RFC 2821](https://tools.ietf.org/html/rfc2821) | [Email syntax](https://en.wikipedia.org/wiki/Email_address#Syntax)
+   */
+  normalizeIdentifier?: (identifier: string) => string
   options: EmailUserConfig
 }
 
@@ -79,7 +94,7 @@ export default function Email(options: EmailUserConfig): EmailConfig {
       })
       const failed = result.rejected.concat(result.pending).filter(Boolean)
       if (failed.length) {
-        throw new Error(`Email(s) (${failed.join(", ")}) could not be sent`)
+        throw new Error(`Email (${failed.join(", ")}) could not be sent`)
       }
     },
     options,

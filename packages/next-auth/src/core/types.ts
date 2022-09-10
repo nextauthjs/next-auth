@@ -307,7 +307,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    * of the token is returned for increased security.
    *
    * If you want to make something available you added to the token through the `jwt` callback,
-   * you have to explicitely forward it here to make it available to the client.
+   * you have to explicitly forward it here to make it available to the client.
    *
    * [Documentation](https://next-auth.js.org/configuration/callbacks#session-callback) |
    * [`jwt` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
@@ -354,6 +354,7 @@ export interface CookiesOptions {
   csrfToken: CookieOption
   pkceCodeVerifier: CookieOption
   state: CookieOption
+  nonce: CookieOption
 }
 
 /**

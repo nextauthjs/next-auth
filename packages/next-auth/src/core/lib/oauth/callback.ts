@@ -3,9 +3,10 @@ import { openidClient } from "./client"
 import { oAuth1Client } from "./client-legacy"
 import { useState } from "./state-handler"
 import { usePKCECodeVerifier } from "./pkce-handler"
+import { useNonce } from "./nonce-handler"
 import { OAuthCallbackError } from "../../errors"
 
-import type { CallbackParamsType } from "openid-client"
+import type { CallbackParamsType, OpenIDCallbackChecks } from "openid-client"
 import type { LoggerInstance, Profile } from "../../.."
 import type { OAuthChecks, OAuthConfig } from "../../../providers"
 import type { InternalOptions } from "../../types"
@@ -28,9 +29,9 @@ export default async function oAuthCallback(params: {
     logger.error("OAUTH_CALLBACK_HANDLER_ERROR", {
       error,
       error_description: query?.error_description,
-      body,
       providerId: provider.id,
     })
+    logger.debug("OAUTH_CALLBACK_HANDLER_ERROR", { body })
     throw error
   }
 
@@ -71,10 +72,15 @@ export default async function oAuthCallback(params: {
     const resCookies: Cookie[] = []
 
     const state = await useState(cookies?.[options.cookies.state.name], options)
-
     if (state) {
       checks.state = state.value
       resCookies.push(state.cookie)
+    }
+
+    const nonce = await useNonce(cookies?.[options.cookies.nonce.name], options)
+    if (nonce && provider.idToken) {
+      ;(checks as OpenIDCallbackChecks).nonce = nonce.value
+      resCookies.push(nonce.cookie)
     }
 
     const codeVerifier = cookies?.[options.cookies.pkceCodeVerifier.name]
@@ -144,10 +150,6 @@ export default async function oAuthCallback(params: {
     })
     return { ...profileResult, cookies: resCookies }
   } catch (error) {
-    logger.error("OAUTH_CALLBACK_ERROR", {
-      error: error as Error,
-      providerId: provider.id,
-    })
     throw new OAuthCallbackError(error as Error)
   }
 }

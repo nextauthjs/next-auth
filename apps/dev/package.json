@@ -5,10 +5,7 @@
   "private": true,
   "scripts": {
     "clean": "rm -rf .next",
-    "copy:css": "cpx \"../../packages/next-auth/css/**/*\" src/css --watch",
-    "watch:css": "cd ../../packages/next-auth && pnpm watch:css",
-    "dev": "concurrently \"pnpm dev:next\" \"pnpm watch:css\" \"pnpm copy:css\"",
-    "dev:next": "next dev",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "email": "fake-smtp-server",
@@ -22,6 +19,7 @@
     "@prisma/client": "^3",
     "faunadb": "^4",
     "next": "12.2.0",
+    "next-auth": "workspace:*",
     "nodemailer": "^6",
     "react": "^18",
     "react-dom": "^18"
@@ -29,8 +27,6 @@
   "devDependencies": {
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
-    "concurrently": "^7",
-    "cpx": "^1.5.0",
     "fake-smtp-server": "^0.8.0",
     "pg": "^8.7.3",
     "prisma": "^3",
