@@ -131,7 +131,7 @@ export function assertConfig(params: {
       "createVerificationToken",
       "useVerificationToken",
       "getUserByEmail",
-    ].filter((method) => adapter[method])
+    ].filter((method) => !adapter[method])
 
     if (missingMethods.length) {
       return new MissingAdapterMethods(
