@@ -15,7 +15,7 @@ If you contact us regarding a serious issue:
 
 The best way to report an issue is by contacting us via email at info@balazsorban.com, yo@ndo.dev, thvu@hey.com and me@iaincollins.com, or raise a public issue requesting someone get in touch with you via whatever means you prefer for more details. (Please do not disclose sensitive details publicly at this stage.)
 
-> For less serious issues (e.g. RFC compliance for unsupported flows or potential issues that may cause a problem in the future) it is appropriate to submit these these publically as bug reports or feature requests or to raise a question to open a discussion around them.
+> For less serious issues (e.g. RFC compliance for unsupported flows or potential issues that may cause a problem in the future) it is appropriate to submit these publicly as bug reports or feature requests or to raise a question to open a discussion around them.
 
 ## Supported Versions
 
