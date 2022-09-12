@@ -7,11 +7,11 @@ import type { InternalOptions } from "../types"
 import type { RequestInternal, OutgoingResponse } from ".."
 import type { Cookie, SessionStore } from "../lib/cookie"
 import type { User } from "../.."
-import type { Adapter, AdapterSession } from "../../adapters"
+import type { AdapterSession } from "../../adapters"
 
 /** Handle callbacks from login services */
 export default async function callback(params: {
-  options: InternalOptions<"oauth" | "credentials" | "email">
+  options: InternalOptions
   query: RequestInternal["query"]
   method: Required<RequestInternal>["method"]
   body: RequestInternal["body"]
@@ -206,7 +206,8 @@ export default async function callback(params: {
         return { redirect: `${url}/error?error=configuration`, cookies }
       }
 
-      const invite = await (adapter as Adapter<true>).useVerificationToken({
+      // @ts-expect-error -- Verified in `assertConfig`. adapter: Adapter<true>
+      const invite = await adapter.useVerificationToken({
         identifier,
         token: hashToken(token, options),
       })
@@ -216,7 +217,11 @@ export default async function callback(params: {
         return { redirect: `${url}/error?error=Verification`, cookies }
       }
 
-      const profile = await getUserFromEmail(identifier, options, false)
+      const profile = await getUserFromEmail({
+        email: identifier,
+        // @ts-expect-error -- Verified in `assertConfig`. adapter: Adapter<true>
+        adapter,
+      })
 
       const account = {
         providerAccountId: profile.email,

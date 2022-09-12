@@ -55,7 +55,12 @@ export default async function signin(params: {
       return { redirect: `${url}/error?error=EmailSignin` }
     }
 
-    const user = await getUserFromEmail(email, options, true)
+    const user = await getUserFromEmail({
+      email,
+      // @ts-expect-error -- Verified in `assertConfig`. adapter: Adapter<true>
+      adapter: options.adapter,
+      withId: true,
+    })
 
     const account: Account = {
       providerAccountId: email,
