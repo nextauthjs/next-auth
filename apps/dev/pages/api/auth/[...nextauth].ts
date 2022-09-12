@@ -18,6 +18,7 @@ import Freshbooks from "next-auth/providers/freshbooks"
 import GitHub from "next-auth/providers/github"
 import Gitlab from "next-auth/providers/gitlab"
 import Google from "next-auth/providers/google"
+import Hubspot from "next-auth/providers/hubspot"
 import IDS4 from "next-auth/providers/identity-server4"
 import Instagram from "next-auth/providers/instagram"
 import Keycloak from "next-auth/providers/keycloak"
@@ -102,6 +103,7 @@ export const authOptions: NextAuthOptions = {
     GitHub({ clientId: process.env.GITHUB_ID, clientSecret: process.env.GITHUB_SECRET }),
     Gitlab({ clientId: process.env.GITLAB_ID, clientSecret: process.env.GITLAB_SECRET }),
     Google({ clientId: process.env.GOOGLE_ID, clientSecret: process.env.GOOGLE_SECRET }),
+    Hubspot({ clientId: process.env.HUBSPOT_ID, clientSecret: process.env.HUBSPOT_SECRET }),
     IDS4({ clientId: process.env.IDS4_ID, clientSecret: process.env.IDS4_SECRET, issuer: process.env.IDS4_ISSUER }),
     Instagram({ clientId: process.env.INSTAGRAM_ID, clientSecret: process.env.INSTAGRAM_SECRET }),
     Keycloak({ clientId: process.env.KEYCLOAK_ID, clientSecret: process.env.KEYCLOAK_SECRET, issuer: process.env.KEYCLOAK_ISSUER }),
