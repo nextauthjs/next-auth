@@ -35,6 +35,8 @@ import Twitter, { TwitterLegacy } from "next-auth/providers/twitter"
 import Vk from "next-auth/providers/vk"
 import Wikimedia from "next-auth/providers/wikimedia"
 import WorkOS from "next-auth/providers/workos"
+import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
+import clientPromise from "../../../lib/mongodb/client"
 
 // Adapters
 import { PrismaClient } from "@prisma/client"
@@ -75,7 +77,7 @@ const adapters = {
 }
 
 export const authOptions: NextAuthOptions = {
-  adapter: adapters.noop(),
+  adapter: MongoDBAdapter(clientPromise),
   debug: true,
   theme: {
     logo: "https://next-auth.js.org/img/logo/logo-sm.png",
@@ -88,6 +90,17 @@ export const authOptions: NextAuthOptions = {
         if (credentials.password !== "pw") return null
         return { name: "Fill Murray", email: "bill@fillmurray.com", image: "https://www.fillmurray.com/64/64" }
       },
+    }),
+    Email({
+      server: {
+        host: process.env.SMTP_HOST,
+        port: Number(process.env.SMTP_PORT),
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASSWORD
+        }
+      },
+      from: process.env.EMAIL_FROM
     }),
     Apple({ clientId: process.env.APPLE_ID, clientSecret: process.env.APPLE_SECRET }),
     Auth0({ clientId: process.env.AUTH0_ID, clientSecret: process.env.AUTH0_SECRET, issuer: process.env.AUTH0_ISSUER }),
@@ -122,14 +135,6 @@ export const authOptions: NextAuthOptions = {
     Wikimedia({ clientId: process.env.WIKIMEDIA_ID, clientSecret: process.env.WIKIMEDIA_SECRET }),
     WorkOS({ clientId: process.env.WORKOS_ID, clientSecret: process.env.WORKOS_SECRET }),
   ],
-}
-
-if (authOptions.adapter) {
-  authOptions.providers.unshift(
-    // NOTE: You can start a fake e-mail server with `pnpm email`
-    // and then go to `http://localhost:1080` in the browser
-    Email({ server: "smtp://127.0.0.1:1025?tls.rejectUnauthorized=false" })
-  )
 }
 
 export default NextAuth(authOptions)

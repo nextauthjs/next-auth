@@ -6,6 +6,7 @@ importers:
     specifiers:
       '@actions/core': ^1.6.0
       '@balazsorban/monorepo-release': 0.0.4
+      '@next-auth/mongodb-adapter': workspace:^1.0.4
       '@types/node': ^17.0.25
       '@typescript-eslint/eslint-plugin': ^5.10.2
       '@typescript-eslint/parser': ^4.33.0
@@ -17,6 +18,7 @@ importers:
       eslint-plugin-node: ^11.1.0
       eslint-plugin-promise: ^6.0.0
       husky: ^7.0.4
+      mongodb: ^4.4.0
       prettier: 2.4.1
       pretty-quick: ^3.1.2
       turbo: 1.3.1
@@ -24,6 +26,7 @@ importers:
     devDependencies:
       '@actions/core': 1.9.0
       '@balazsorban/monorepo-release': 0.0.4
+      '@next-auth/mongodb-adapter': link:packages/adapter-mongodb
       '@types/node': 17.0.45
       '@typescript-eslint/eslint-plugin': 5.29.0_3ekaj7j3owlolnuhj3ykrb7u7i
       '@typescript-eslint/parser': 4.33.0_hxadhbs2xogijvk7vq4t2azzbu
@@ -35,6 +38,7 @@ importers:
       eslint-plugin-node: 11.1.0_eslint@7.32.0
       eslint-plugin-promise: 6.0.0_eslint@7.32.0
       husky: 7.0.4
+      mongodb: 4.7.0
       prettier: 2.4.1
       pretty-quick: 3.1.3_prettier@2.4.1
       turbo: 1.3.1
@@ -43,6 +47,7 @@ importers:
   apps/dev:
     specifiers:
       '@next-auth/fauna-adapter': workspace:*
+      '@next-auth/mongodb-adapter': workspace:^1.0.4
       '@next-auth/prisma-adapter': workspace:*
       '@next-auth/typeorm-legacy-adapter': workspace:*
       '@prisma/client': ^3
@@ -52,6 +57,7 @@ importers:
       cpx: ^1.5.0
       fake-smtp-server: ^0.8.0
       faunadb: ^4
+      mongodb: ^4.4.0
       next: 12.2.0
       nodemailer: ^6
       pg: ^8.7.3
@@ -71,15 +77,17 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     devDependencies:
+      '@next-auth/mongodb-adapter': link:../../packages/adapter-mongodb
       '@types/react': 18.0.15
       '@types/react-dom': 18.0.6
       concurrently: 7.2.2
       cpx: 1.5.0
       fake-smtp-server: 0.8.0
+      mongodb: 4.7.0
       pg: 8.7.3
       prisma: 3.15.2
       sqlite3: 5.0.8
-      typeorm: 0.3.7_pg@8.7.3+sqlite3@5.0.8
+      typeorm: 0.3.7_6jmrjmznhzpvk7pfpnis6wcbvm
 
   docs:
     specifiers:
@@ -23322,7 +23330,7 @@ packages:
       - supports-color
     dev: true
 
-  /typeorm/0.3.7_pg@8.7.3+sqlite3@5.0.8:
+  /typeorm/0.3.7_6jmrjmznhzpvk7pfpnis6wcbvm:
     resolution: {integrity: sha512-MsPJeP6Zuwfe64c++l80+VRqpGEGxf0CkztIEnehQ+CMmQPSHjOnFbFxwBuZ2jiLqZTjLk2ZqQdVF0RmvxNF3Q==}
     engines: {node: '>= 12.9.0'}
     hasBin: true
@@ -23391,6 +23399,7 @@ packages:
       glob: 7.2.3
       js-yaml: 4.1.0
       mkdirp: 1.0.4
+      mongodb: 4.7.0
       pg: 8.7.3
       reflect-metadata: 0.1.13
       sha.js: 2.4.11

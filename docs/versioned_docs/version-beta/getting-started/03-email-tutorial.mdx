@@ -2,9 +2,9 @@
 title: Email authentication
 ---
 
-import smtpConfig from "./img/sendinblue-smtp.png"
+import smtpConfig from "./img/dashboard-smtp.png"
 
-Aside from authenticating users in NextAuth.js via (OAuth)[/getting-started/oauth-tutorial], you can also enable the option to authenticate them via "magic links". These are links that are sent to the user's email and when clicking on them they'll sign up the user automatically.
+Aside from authenticating users in NextAuth.js via [OAuth](/getting-started/oauth-tutorial), you can also enable the option to authenticate them via "magic links". These are links that are sent to the user's email and when clicking on them they'll sign up the user automatically.
 
 Adding support for signing in via email in addition to one or more OAuth services provides a way for users to sign in if they lose access to their OAuth account (e.g. if it is locked or deleted).
 
@@ -33,27 +33,29 @@ npm install -D nodemailer
 Next we need a [SMTP service](https://sendgrid.com/blog/what-is-an-smtp-server/) which will be in charge of sending emails from our application. There's a number of services available for this, however [here are the ones](http://nodemailer.com/smtp/well-known/) known to work with `nodemailer`.
 
 :::info
-For this tutorial, we're gonna be using [Sendinblue](https://www.sendinblue.com/), but any of the services linked above should work the same
+For this tutorial, we're gonna be using [Sendgrid](https://sendgrid.com/), but any of the services linked above should work the same
 :::
 
-First create an account in and then login to see the dashboard:
+First create an account in and then login to the dashboard, then navigate to "Settings → API Keys" and create an API key:
 
 <img src={smtpConfig} />
 
-1. Navigate to `SMTP & API`
-2. Copy **hots**,**port**,**login** and **password** to a safe location
-
-Next, let's add the config we copied to a safe location as environment variables in our NextJS app:
-
-```bash title=".env.local"
-SMTP_USER=foo
-SMTP_PASSWORD=123
-SMTP_HOST=smtp-relay.sendinblue.com
-SMTP_PROT=587
-EMAIL_FROM=sith@darkside.com
+Next paste the API in your terminal as so, and run the command:
+```bash
+echo -n '<YOUR_API_KEY>' | openssl base64
 ```
 
-Note that we're also specifying from which domain email are going to be sent from. You'll need to create a "Sender" in **Sendinblue** by linking the email account you want to send emails as to it. Navigate to "Sender & IPs" and follow the instructions.
+Next, as [per Sendgrid documentation](https://docs.sendgrid.com/for-developers/sending-email/integrating-with-the-smtp-api), let's add the following [environment variables](https://nextjs.org/docs/basic-features/environment-variables) in our NextJS app:
+
+```bash title=".env.local"
+SMTP_USER=apikey
+SMTP_PASSWORD={API_KEY}
+SMTP_HOST=smtp.sendgrid.net
+SMTP_PROT=587
+EMAIL_FROM={SENDER_EMAIL}
+```
+
+Note that we're also specifying from which domain email are going to be sent from. You're gonna need to verify [a sender identity](https://docs.sendgrid.com/for-developers/sending-email/sender-identity) so that Sendgrid can send emails from your domain.
 
 Nice! We're getting there. Now we need to read supply this values as the configuration for our Email Provider. Open `pages/api/auth/[...nextauth].ts` and do the following:
 
@@ -64,10 +66,10 @@ import EmailProvider from "next-auth/providers/email"
 export default NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
-    EmailProvider({
+    Email({
       server: {
         host: process.env.EMAIL_SERVER_HOST,
-        port: process.env.EMAIL_SERVER_PORT,
+        port: Number(process.env.EMAIL_SERVER_PORT),
         auth: {
           user: process.env.EMAIL_SERVER_USER,
           pass: process.env.EMAIL_SERVER_PASSWORD
@@ -79,7 +81,7 @@ export default NextAuth({
 })
 ```
 
-3. Setting up an adapter
+## 3. Setting up an adapter
 
 Finally, we'll need to set up a database adapter to store verification tokens the Email Provider will emit when verifying users.
 
