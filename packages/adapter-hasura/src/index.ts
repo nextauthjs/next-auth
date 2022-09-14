@@ -4,7 +4,7 @@ import { format } from "./utils"
 import { Models, Model, models } from "./graphql/models"
 
 import type { Adapter, AdapterUser } from "next-auth/adapters"
-import { Account } from "next-auth"
+import type { Account } from "next-auth"
 
 export type { Models, Model }
 
