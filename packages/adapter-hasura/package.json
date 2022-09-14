@@ -1,0 +1,44 @@
+{
+  "name": "@next-auth/hasura-adapter",
+  "version": "1.0.0",
+  "description": "Hasura adapter for next-auth.",
+  "homepage": "https://next-auth.js.org",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "Balázs Orbán <info@balazsorban.com>",
+  "contributors": [],
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "index.d.ts"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "hasura",
+    "graphql"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc",
+    "test": "./tests/test.sh"
+  },
+  "peerDependencies": {
+    "next-auth": "^4"
+  },
+  "devDependencies": {
+    "@next-auth/adapter-test": "workspace:*",
+    "@next-auth/tsconfig": "workspace:*",
+    "next-auth": "workspace:*"
+  },
+  "jest": {
+    "preset": "@next-auth/adapter-test/jest"
+  }
+}
