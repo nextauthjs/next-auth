@@ -436,7 +436,7 @@ importers:
       babel-plugin-jsx-pragmatic: ^1.0.2
       babel-preset-preact: ^2.0.0
       concurrently: ^7
-      cookie: ^0.4.1
+      cookie: ^0.5.0
       cssnano: ^5.1.11
       jest: ^28.1.1
       jest-environment-jsdom: ^28.1.1
@@ -458,7 +458,7 @@ importers:
     dependencies:
       '@babel/runtime': 7.18.3
       '@panva/hkdf': 1.0.2
-      cookie: 0.4.2
+      cookie: 0.5.0
       jose: 4.8.1
       oauth: 0.9.15
       openid-client: 5.1.6
@@ -10926,11 +10926,11 @@ packages:
   /cookie/0.4.2:
     resolution: {integrity: sha512-aSWTXFzaKWkvHO1Ny/s+ePFpvKsPnjc551iI41v3ny/ow6tBG5Vd+FuqGNhh1LxOmVzOlGUriIlOaokOvhaStA==}
     engines: {node: '>= 0.6'}
+    dev: true
 
   /cookie/0.5.0:
     resolution: {integrity: sha512-YZ3GUyn/o8gfKJlnlX7g7xq4gyO6OSuhGPKaaGssGB2qgDUS0gPgtTvoyZLTt9Ab6dC4hfc9dV5arkvc/OCmrw==}
     engines: {node: '>= 0.6'}
-    dev: true
 
   /copy-text-to-clipboard/3.0.1:
     resolution: {integrity: sha512-rvVsHrpFcL4F2P8ihsoLdFHmd404+CMg71S756oRSeQgqk51U3kicGdnvfkrxva0xXH92SjGS62B0XIJsbh+9Q==}
