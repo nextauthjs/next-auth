@@ -72,7 +72,8 @@ export type SessionContextValue<R extends boolean = false> = R extends true
       | { data: null; status: "loading" }
   :
       | { data: Session; status: "authenticated" }
-      | { data: null; status: "unauthenticated" | "loading" }
+      | { data: null; status: "unauthenticated" }
+      | { data: null; status: "loading" }
 
 const SessionContext = React.createContext<SessionContextValue | undefined>(
   undefined
