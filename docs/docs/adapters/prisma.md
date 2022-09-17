@@ -33,6 +33,10 @@ export default NextAuth({
 })
 ```
 
+:::note
+In development, to prevent multiple client instances from creating, apply the [Best practice for instantiating PrismaClient with Next.js](https://www.prisma.io/docs/guides/database/troubleshooting-orm/help-articles/nextjs-prisma-client-dev-practices).
+:::
+
 Schema for the Prisma Adapter (`@next-auth/prisma-adapter`)
 
 ## Setup
