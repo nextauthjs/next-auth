@@ -38,7 +38,9 @@ export default function parseProviders(params: {
       return merge(rest, {
         ...userOptions,
         signinUrl: `${url}/signin/${id}`,
-        callbackUrl: `${url}/callback/${id}`,
+        callbackUrl:
+          userOptions?.callbackUrl ??
+          `${url}/callback/${userOptions?.id ?? rest.id}`,
       })
     }
   )

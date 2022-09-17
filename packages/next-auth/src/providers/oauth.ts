@@ -125,6 +125,7 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   jwks?: { keys: JWK[] }
   clientId?: string
   clientSecret?: string
+  callbackUrl?: string
   /**
    * If set to `true`, the user information will be extracted
    * from the `id_token` claims, instead of
