@@ -38,10 +38,10 @@ function isDate(value: any) {
 }
 
 export function hydrateDates(json: object) {
-  return Object.entries(json).reduce((acc, [key, val]) => {
+  return Object.entries(json).reduce<any>((acc, [key, val]) => {
     acc[key] = isDate(val) ? new Date(val as string) : val
     return acc
-  }, {} as any)
+  }, {})
 }
 
 export function UpstashRedisAdapter(
@@ -174,7 +174,7 @@ export function UpstashRedisAdapter(
       const tokenKey = verificationTokenKeyPrefix + verificationToken.identifier
 
       const token = await client.get<VerificationToken>(tokenKey)
-      if (!token) return null
+      if (!token || verificationToken.token !== token.token) return null
 
       await client.del(tokenKey)
       return hydrateDates(token)
