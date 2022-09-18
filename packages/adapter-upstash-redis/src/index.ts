@@ -38,10 +38,10 @@ function isDate(value: any) {
 }
 
 export function hydrateDates(json: object) {
-  return Object.entries(json).reduce<any>((acc, [key, val]) => {
+  return Object.entries(json).reduce((acc, [key, val]) => {
     acc[key] = isDate(val) ? new Date(val as string) : val
     return acc
-  }, {})
+  }, {} as any)
 }
 
 export function UpstashRedisAdapter(
