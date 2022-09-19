@@ -21,7 +21,7 @@
     "access": "public"
   },
   "scripts": {
-    "clean": "rm -rf ./prisma/migrations && rm ./prisma/dev.db*",
+    "clean": "rm ./prisma/dev.db* || echo 'File deleted'",
     "init:default": "prisma migrate dev --name init --skip-seed",
     "init:custom": "prisma migrate dev --name init-custom --schema ./prisma/custom.prisma",
     "test:default": "pnpm init:default && jest",
@@ -29,6 +29,7 @@
     "test:mongodb": "./tests/mongodb.test.sh",
     "test": "pnpm test:default && pnpm test:custom && pnpm test:mongodb",
     "build": "prisma generate && tsc",
+    "dev": "prisma generate && tsc -w",
     "studio": "prisma studio"
   },
   "files": [
@@ -40,8 +41,8 @@
     "next-auth": "^4"
   },
   "devDependencies": {
-    "@next-auth/adapter-test": "workspace:^0.0.0",
-    "@next-auth/tsconfig": "workspace:^0.0.0",
+    "@next-auth/adapter-test": "workspace:*",
+    "@next-auth/tsconfig": "workspace:*",
     "@prisma/client": "^3.10.0",
     "jest": "^27.4.3",
     "mongodb": "^4.4.0",
