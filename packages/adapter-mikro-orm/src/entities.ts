@@ -49,7 +49,7 @@ export class User implements RemoveIndex<AdapterUser> {
     hidden: true,
     orphanRemoval: true,
   })
-  sessions = new Collection<Session>(this)
+  sessions = new Collection<Session, object>(this)
 
   @OneToMany({
     entity: 'Account',
@@ -57,7 +57,7 @@ export class User implements RemoveIndex<AdapterUser> {
     hidden: true,
     orphanRemoval: true,
   })
-  accounts = new Collection<Account>(this)
+  accounts = new Collection<Account, object>(this)
 }
 
 @Entity()
