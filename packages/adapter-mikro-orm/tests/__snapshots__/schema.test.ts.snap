@@ -22,14 +22,14 @@ pragma foreign_keys = on;
 `;
 
 exports[`run migrations: targetSchema 1`] = `
-Object {
+{
   "name": undefined,
-  "namespaces": Array [],
-  "tables": Array [
-    Object {
-      "checks": Array [],
-      "columns": Object {
-        "email": Object {
+  "namespaces": [],
+  "tables": [
+    {
+      "checks": [],
+      "columns": {
+        "email": {
           "autoincrement": false,
           "comment": undefined,
           "default": undefined,
@@ -45,7 +45,7 @@ Object {
           "type": "text",
           "unsigned": false,
         },
-        "email_verified": Object {
+        "email_verified": {
           "autoincrement": false,
           "comment": undefined,
           "default": undefined,
@@ -61,7 +61,7 @@ Object {
           "type": "datetime",
           "unsigned": false,
         },
-        "id": Object {
+        "id": {
           "autoincrement": false,
           "comment": undefined,
           "default": undefined,
@@ -77,7 +77,7 @@ Object {
           "type": "text",
           "unsigned": false,
         },
-        "image": Object {
+        "image": {
           "autoincrement": false,
           "comment": undefined,
           "default": undefined,
@@ -93,7 +93,7 @@ Object {
           "type": "text",
           "unsigned": false,
         },
-        "name": Object {
+        "name": {
           "autoincrement": false,
           "comment": undefined,
           "default": undefined,
@@ -111,10 +111,10 @@ Object {
         },
       },
       "comment": undefined,
-      "foreignKeys": Object {},
-      "indexes": Array [
-        Object {
-          "columnNames": Array [
+      "foreignKeys": {},
+      "indexes": [
+        {
+          "columnNames": [
             "email",
           ],
           "composite": false,
@@ -122,8 +122,8 @@ Object {
           "primary": false,
           "unique": true,
         },
-        Object {
-          "columnNames": Array [
+        {
+          "columnNames": [
             "id",
           ],
           "composite": false,
@@ -137,10 +137,10 @@ Object {
       "name": "user",
       "schema": undefined,
     },
-    Object {
-      "checks": Array [],
-      "columns": Object {
-        "expires": Object {
+    {
+      "checks": [],
+      "columns": {
+        "expires": {
           "autoincrement": false,
           "comment": undefined,
           "default": undefined,
@@ -156,7 +156,7 @@ Object {
           "type": "datetime",
           "unsigned": false,
         },
-        "id": Object {
+        "id": {
           "autoincrement": false,
           "comment": undefined,
           "default": undefined,
@@ -172,7 +172,7 @@ Object {
           "type": "text",
           "unsigned": false,
         },
-        "session_token": Object {
+        "session_token": {
           "autoincrement": false,
           "comment": undefined,
           "default": undefined,
@@ -188,7 +188,7 @@ Object {
           "type": "text",
           "unsigned": false,
         },
-        "user_id": Object {
+        "user_id": {
           "autoincrement": false,
           "comment": undefined,
           "default": undefined,
@@ -206,24 +206,24 @@ Object {
         },
       },
       "comment": undefined,
-      "foreignKeys": Object {
-        "session_user_id_foreign": Object {
-          "columnNames": Array [
+      "foreignKeys": {
+        "session_user_id_foreign": {
+          "columnNames": [
             "user_id",
           ],
           "constraintName": "session_user_id_foreign",
           "deleteRule": "cascade",
           "localTableName": "session",
-          "referencedColumnNames": Array [
+          "referencedColumnNames": [
             "id",
           ],
           "referencedTableName": "user",
           "updateRule": "cascade",
         },
       },
-      "indexes": Array [
-        Object {
-          "columnNames": Array [
+      "indexes": [
+        {
+          "columnNames": [
             "user_id",
           ],
           "composite": false,
@@ -231,8 +231,8 @@ Object {
           "primary": false,
           "unique": false,
         },
-        Object {
-          "columnNames": Array [
+        {
+          "columnNames": [
             "session_token",
           ],
           "composite": false,
@@ -240,8 +240,8 @@ Object {
           "primary": false,
           "unique": true,
         },
-        Object {
-          "columnNames": Array [
+        {
+          "columnNames": [
             "id",
           ],
           "composite": false,
@@ -255,10 +255,10 @@ Object {
       "name": "session",
       "schema": undefined,
     },
-    Object {
-      "checks": Array [],
-      "columns": Object {
-        "access_token": Object {
+    {
+      "checks": [],
+      "columns": {
+        "access_token": {
           "autoincrement": false,
           "comment": undefined,
           "default": undefined,
@@ -274,7 +274,7 @@ Object {
           "type": "text",
           "unsigned": false,
         },
-        "expires_at": Object {
+        "expires_at": {
           "autoincrement": false,
           "comment": undefined,
           "default": undefined,
@@ -290,7 +290,7 @@ Object {
           "type": "integer",
           "unsigned": false,
         },
-        "id": Object {
+        "id": {
           "autoincrement": false,
           "comment": undefined,
           "default": undefined,
@@ -306,7 +306,7 @@ Object {
           "type": "text",
           "unsigned": false,
         },
-        "id_token": Object {
+        "id_token": {
           "autoincrement": false,
           "comment": undefined,
           "default": undefined,
@@ -322,7 +322,7 @@ Object {
           "type": "text",
           "unsigned": false,
         },
-        "provider": Object {
+        "provider": {
           "autoincrement": false,
           "comment": undefined,
           "default": undefined,
@@ -338,7 +338,7 @@ Object {
           "type": "text",
           "unsigned": false,
         },
-        "provider_account_id": Object {
+        "provider_account_id": {
           "autoincrement": false,
           "comment": undefined,
           "default": undefined,
@@ -354,7 +354,7 @@ Object {
           "type": "text",
           "unsigned": false,
         },
-        "refresh_token": Object {
+        "refresh_token": {
           "autoincrement": false,
           "comment": undefined,
           "default": undefined,
@@ -370,7 +370,7 @@ Object {
           "type": "text",
           "unsigned": false,
         },
-        "scope": Object {
+        "scope": {
           "autoincrement": false,
           "comment": undefined,
           "default": undefined,
@@ -386,7 +386,7 @@ Object {
           "type": "text",
           "unsigned": false,
         },
-        "session_state": Object {
+        "session_state": {
           "autoincrement": false,
           "comment": undefined,
           "default": undefined,
@@ -402,7 +402,7 @@ Object {
           "type": "text",
           "unsigned": false,
         },
-        "token_type": Object {
+        "token_type": {
           "autoincrement": false,
           "comment": undefined,
           "default": undefined,
@@ -418,7 +418,7 @@ Object {
           "type": "text",
           "unsigned": false,
         },
-        "type": Object {
+        "type": {
           "autoincrement": false,
           "comment": undefined,
           "default": undefined,
@@ -434,7 +434,7 @@ Object {
           "type": "text",
           "unsigned": false,
         },
-        "user_id": Object {
+        "user_id": {
           "autoincrement": false,
           "comment": undefined,
           "default": undefined,
@@ -452,24 +452,24 @@ Object {
         },
       },
       "comment": undefined,
-      "foreignKeys": Object {
-        "account_user_id_foreign": Object {
-          "columnNames": Array [
+      "foreignKeys": {
+        "account_user_id_foreign": {
+          "columnNames": [
             "user_id",
           ],
           "constraintName": "account_user_id_foreign",
           "deleteRule": "cascade",
           "localTableName": "account",
-          "referencedColumnNames": Array [
+          "referencedColumnNames": [
             "id",
           ],
           "referencedTableName": "user",
           "updateRule": "cascade",
         },
       },
-      "indexes": Array [
-        Object {
-          "columnNames": Array [
+      "indexes": [
+        {
+          "columnNames": [
             "user_id",
           ],
           "composite": false,
@@ -477,8 +477,8 @@ Object {
           "primary": false,
           "unique": false,
         },
-        Object {
-          "columnNames": Array [
+        {
+          "columnNames": [
             "provider",
             "provider_account_id",
           ],
@@ -489,8 +489,8 @@ Object {
           "type": undefined,
           "unique": true,
         },
-        Object {
-          "columnNames": Array [
+        {
+          "columnNames": [
             "id",
           ],
           "composite": false,
@@ -504,10 +504,10 @@ Object {
       "name": "account",
       "schema": undefined,
     },
-    Object {
-      "checks": Array [],
-      "columns": Object {
-        "expires": Object {
+    {
+      "checks": [],
+      "columns": {
+        "expires": {
           "autoincrement": false,
           "comment": undefined,
           "default": undefined,
@@ -523,7 +523,7 @@ Object {
           "type": "datetime",
           "unsigned": false,
         },
-        "identifier": Object {
+        "identifier": {
           "autoincrement": false,
           "comment": undefined,
           "default": undefined,
@@ -539,7 +539,7 @@ Object {
           "type": "text",
           "unsigned": false,
         },
-        "token": Object {
+        "token": {
           "autoincrement": false,
           "comment": undefined,
           "default": undefined,
@@ -557,10 +557,10 @@ Object {
         },
       },
       "comment": undefined,
-      "foreignKeys": Object {},
-      "indexes": Array [
-        Object {
-          "columnNames": Array [
+      "foreignKeys": {},
+      "indexes": [
+        {
+          "columnNames": [
             "token",
             "identifier",
           ],
@@ -571,8 +571,8 @@ Object {
           "type": undefined,
           "unique": true,
         },
-        Object {
-          "columnNames": Array [
+        {
+          "columnNames": [
             "token",
           ],
           "composite": false,
