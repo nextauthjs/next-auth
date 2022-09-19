@@ -27,6 +27,9 @@
     "nextauth"
   ],
   "exports": {
+    "./adapters": {
+      "types":"./adapters.d.ts"
+    },
     ".": "./index.js",
     "./jwt": "./jwt/index.js",
     "./react": "./react/index.js",
