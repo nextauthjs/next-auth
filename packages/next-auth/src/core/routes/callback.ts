@@ -6,7 +6,7 @@ import type { InternalOptions } from "../types"
 import type { RequestInternal, OutgoingResponse } from ".."
 import type { Cookie, SessionStore } from "../lib/cookie"
 import type { User } from "../.."
-import { JWT } from "src/jwt"
+import type { JWT } from "../../../jwt"
 
 /** Handle callbacks from login services */
 export default async function callback(params: {
