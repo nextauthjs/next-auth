@@ -8,5 +8,6 @@
     "outDir": "dist",
     "stripInternal": true
   },
-  "exclude": ["tests", "dist", "jest.config.js"]
+  "include": ["src"],
+  "exclude": ["dist", "test", "node_modules"]
 }
