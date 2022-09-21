@@ -111,7 +111,7 @@ export function defaultCookies(useSecureCookies: boolean): CookiesOptions {
         path: "/",
         secure: useSecureCookies,
       },
-    }
+    },
   }
 }
 
@@ -120,6 +120,18 @@ export interface Cookie extends CookieOption {
 }
 
 type Chunks = Record<string, string>
+
+/**
+ * Sort cookies by chunk name to avoid joining them in the wrong order
+ */
+function sortedObject(obj) {
+  const index = Object.keys(obj).sort()
+  const sorted = {}
+  index.forEach((key) => {
+    sorted[key] = obj[key]
+  })
+  return sorted
+}
 
 export class SessionStore {
   #chunks: Chunks = {}
@@ -152,7 +164,7 @@ export class SessionStore {
   }
 
   get value() {
-    return Object.values(this.#chunks)?.join("")
+    return Object.values(sortedObject(this.#chunks))?.join("")
   }
 
   /** Given a cookie, return a list of cookies, chunked to fit the allowed cookie size. */
