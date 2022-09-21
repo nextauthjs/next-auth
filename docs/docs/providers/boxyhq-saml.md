@@ -5,7 +5,7 @@ title: BoxyHQ SAML
 
 ## Documentation
 
-BoxyHQ SAML is an open source service that handles the SAML login flow as an OAuth 2.0 flow, abstracting away all the complexities of the SAML protocol.
+BoxyHQ SAML is an open source service that handles the SAML SSO login flow as an OAuth 2.0 flow, abstracting away all the complexities of the SAML protocol. Enable Enterprise single-sign-on in your app with ease.
 
 You can deploy BoxyHQ SAML as a separate service or embed it into your app using our NPM library. [Check out the documentation for more details](https://boxyhq.com/docs/jackson/deploy)
 
@@ -25,15 +25,40 @@ You can override any of the options to suit your own use case.
 
 ## Example
 
+### OAuth 2.0 flow
+
 ```ts
 import BoxyHQSAMLProvider from "next-auth/providers/boxyhq-saml"
 ...
-providers: [
-  BoxyHQSAMLProvider({
-    issuer: "http://localhost:5225",
-    clientId: "dummy", // The dummy here is necessary since we'll pass tenant and product custom attributes in the client code
-    clientSecret: "dummy", // The dummy here is necessary since we'll pass tenant and product custom attributes in the client code
-  })
+export default NextAuth({
+  providers: [
+    BoxyHQSAMLProvider({
+      authorization: { params: { scope: "" } }, // This is needed for OAuth 2.0 flow, otherwise default to openid
+      issuer: "http://localhost:5225",
+      clientId: "dummy", // The dummy here is necessary since we'll pass tenant and product custom attributes in the client code
+      clientSecret: "dummy", // The dummy here is necessary since we'll pass tenant and product custom attributes in the client code
+    })
+  ],
+}
+...
+```
+
+### OIDC flow
+
+```ts
+import BoxyHQSAMLProvider from "next-auth/providers/boxyhq-saml"
+...
+export default NextAuth({
+  providers: [
+    BoxyHQSAMLProvider({
+      id: "boxyhq-saml-oidc",
+      wellKnown: `http://localhost:5225/.well-known/openid-configuration`,
+      authorization: { params: { scope: "openid email" } },
+      issuer: "http://localhost:5225",
+      clientId: "dummy", // The dummy here is necessary since we'll pass tenant and product custom attributes in the client code
+      clientSecret: "dummy", // The dummy here is necessary since we'll pass tenant and product custom attributes in the client code
+    })
+  ],
 }
 ...
 ```
