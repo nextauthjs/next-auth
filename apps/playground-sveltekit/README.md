@@ -6,82 +6,60 @@ SvelteKit support with NextAuth.js is currently experimental. This directory con
 
 ## Existing Project
 
-### Add API route
+### Add API Route
 
-To add NextAuth.js to a project create a file called `[...nextauth].js` in routes/api/auth. This contains the dynamic route handler for NextAuth.js which will also contain all of your global NextAuth.js configurations.
+To add NextAuth.js to a project create a file called `[...nextauth]/+server.js` in routes/api/auth. This contains the dynamic route handler for NextAuth.js which will also contain all of your global NextAuth.js configurations.
 
 ```ts
-import NextAuth from "$lib"
-import GithubProvider from "next-auth/providers/github"
+import { NextAuth, options } from "$lib/next-auth"
 
-const nextAuthOptions = {
-  // Configure one or more authentication providers
-  providers: [
-    GithubProvider({
-      clientId: import.meta.env.VITE_GITHUB_CLIENT_ID,
-      clientSecret: import.meta.env.VITE_GITHUB_CLIENT_SECRET,
-    }),
-    // ...add more providers here
-  ],
-}
-
-export const { get, post } = NextAuth(nextAuthOptions)
+export const { GET, POST } = NextAuth(options)
 ```
 
 ### Add [hook](https://kit.svelte.dev/docs/hooks)
 
 ```ts
-import { getServerSession } from "$lib"
-import GithubProvider from "next-auth/providers/github"
+import type { Handle } from "@sveltejs/kit"
+import { getServerSession, options as nextAuthOptions } from "$lib/next-auth"
 
-const nextAuthOptions = {
-  providers: [
-    GithubProvider({
-      clientId: import.meta.env.VITE_GITHUB_CLIENT_ID,
-      clientSecret: import.meta.env.VITE_GITHUB_CLIENT_SECRET,
-    }),
-  ],
-}
-
-export async function handle({ event, resolve }) {
+export const handle: Handle = async function handle({
+  event,
+  resolve,
+}): Promise<Response> {
   const session = await getServerSession(event.request, nextAuthOptions)
   event.locals.session = session
 
   return resolve(event)
 }
+```
 
-export function getSession(event) {
-  return event.locals.session || {}
+### Load Session from Primary Layout
+
+```ts
+// src/lib/routes/+layout.server.ts
+import type { LayoutServerLoad } from "./$types"
+
+export const load: LayoutServerLoad = ({ locals }) => {
+  return {
+    session: locals.session,
+  }
 }
 ```
 
-### Protecting a route
+### Protecting a Route
 
-```html
-<script context="module">
-  export async function load({ session }) {
-    const { user } = session
+```ts
+// src/lib/routes/protected/+page.ts
+import { redirect } from "@sveltejs/kit"
+import type { PageLoad } from "./$types"
 
-    if (!user) {
-      return {
-        status: 302,
-        redirect: "/",
-      }
-    }
-
-    return {
-      props: {
-        session,
-      },
-    }
+export const load: PageLoad = async ({ parent }) => {
+  const { session } = await parent()
+  if (!session?.user) {
+    throw redirect(302, "/")
   }
-</script>
-
-<script>
-  export let session
-</script>
-
-<p>Session expiry: {session.expires}</p>
+  return {}
+}
 ```
 
 ## Packaging lib
