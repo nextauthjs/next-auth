@@ -1,0 +1,51 @@
+{
+  "name": "@next-auth/kysely-adapter",
+  "version": "0.1.0",
+  "description": "Kysely adapter for next-auth.",
+  "homepage": "https://next-auth.js.org",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "mwojtul <mark.wojtul@gmail.com> (https://github.com/mwojtul)",
+  "main": "dist/index.js",
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "oauth",
+    "kysely"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build:wip": "tsc",
+    "tdd": "jest --watch",
+    "test:wip": "jest",
+    "test": "./tests/test.sh"
+  },
+  "files": [
+    "README.md",
+    "dist"
+  ],
+  "peerDependencies": {
+    "kysely": "^0.21.6"
+  },
+  "devDependencies": {
+    "@next-auth/adapter-test": "workspace:*",
+    "@next-auth/tsconfig": "workspace:*",
+    "@types/better-sqlite3": "^7.6.0",
+    "@types/pg": "^8.6.5",
+    "better-sqlite3": "^7.6.2",
+    "jest": "^27.4.3",
+    "kysely": "^0.21.6",
+    "mysql2": "^2.3.3",
+    "next-auth": "workspace:*",
+    "pg": "^8.7.3"
+  },
+  "jest": {
+    "preset": "@next-auth/adapter-test/jest"
+  }
+}
