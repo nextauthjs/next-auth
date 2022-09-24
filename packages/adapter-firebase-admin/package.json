@@ -1,0 +1,42 @@
+{
+  "name": "@next-auth/firebase-adapter-admin",
+  "version": "1.0.1",
+  "description": "Firebase adapter (with Admin SDK) for next-auth.",
+  "homepage": "https://next-auth.js.org",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "Norbert Huethmayr",
+  "contributors": [],
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "index.d.ts"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "firebase"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "FIRESTORE_EMULATOR_HOST=localhost:8080 firebase emulators:exec --only firestore --project next-auth-test jest"
+  },
+  "peerDependencies": {
+    "next-auth": "^4"
+  },
+  "devDependencies": {
+    "@next-auth/adapter-test": "workspace:*",
+    "@next-auth/tsconfig": "workspace:*",
+    "firebase-admin": "^11.0.1",
+    "firebase-tools": "^10.7.2",
+    "jest": "^27.4.3",
+    "next-auth": "workspace:*"
+  }
+}
