@@ -6,11 +6,14 @@ import {
   PostgresDialect,
   SchemaModule,
   sql,
+  SqliteAdapter,
+  SqliteDialect,
 } from "kysely"
 import { KyselyAdapter } from "../src"
 import type { Database } from "../src/database"
 import { createPool } from "mysql2"
 import { DataTypeExpression } from "kysely/dist/cjs/parser/data-type-parser"
+import SqliteDatabase from "better-sqlite3"
 
 type BuiltInDialect = "postgres" | "mysql" | "sqlite"
 
@@ -149,7 +152,13 @@ async function createDatabase(
     .execute()
 }
 
-const runDialectBasicTests = (db: Kysely<Database>, dialect: BuiltInDialect) =>
+const runDialectBasicTests = (
+  db: Kysely<Database>,
+  dialect: BuiltInDialect
+) => {
+  const datesStoredAsISOStrings =
+    db.getExecutor().adapter instanceof SqliteAdapter
+
   runBasicTests({
     adapter: KyselyAdapter(db),
     db: {
@@ -161,13 +170,15 @@ const runDialectBasicTests = (db: Kysely<Database>, dialect: BuiltInDialect) =>
         await db.destroy()
       },
       async user(userId) {
-        return (
+        const user =
           (await db
             .selectFrom("User")
             .selectAll()
             .where("id", "=", userId)
             .executeTakeFirst()) ?? null
-        )
+        if (datesStoredAsISOStrings && user?.emailVerified)
+          user.emailVerified = new Date(user.emailVerified)
+        return user
       },
       async account({ provider, providerAccountId }) {
         const result = await db
@@ -183,24 +194,30 @@ const runDialectBasicTests = (db: Kysely<Database>, dialect: BuiltInDialect) =>
         return account
       },
       async session(sessionToken) {
-        return (
+        const session =
           (await db
             .selectFrom("Session")
             .selectAll()
             .where("sessionToken", "=", sessionToken)
             .executeTakeFirst()) ?? null
-        )
+        if (datesStoredAsISOStrings && session?.expires)
+          session.expires = new Date(session.expires)
+        return session
       },
       async verificationToken({ identifier, token }) {
-        return await db
+        const verificationToken = await db
           .selectFrom("VerificationToken")
           .selectAll()
           .where("identifier", "=", identifier)
           .where("token", "=", token)
           .executeTakeFirstOrThrow()
+        if (datesStoredAsISOStrings)
+          verificationToken.expires = new Date(verificationToken.expires)
+        return verificationToken
       },
     },
   })
+}
 
 describe("Testing PostgresDialect", () => {
   const db = new Kysely<Database>({
@@ -218,4 +235,14 @@ describe("Testing MysqlDialect", () => {
     }),
   })
   runDialectBasicTests(db, "mysql")
+})
+
+describe("Testing SqliteDialect", () => {
+  const db = new Kysely<Database>({
+    dialect: new SqliteDialect({
+      database: async () =>
+        new SqliteDatabase(DIALECT_CONFIGS.sqlite.databasePath),
+    }),
+  })
+  runDialectBasicTests(db, "sqlite")
 })

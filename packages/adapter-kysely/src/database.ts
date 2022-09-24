@@ -4,7 +4,7 @@ interface User {
   id: Generated<string>
   name: string | null
   email: string | null
-  emailVerified: Date | null
+  emailVerified: Date | string | null
   image: string | null
 }
 
@@ -29,13 +29,13 @@ interface Session {
   id: Generated<string>
   userId: string
   sessionToken: string
-  expires: Date
+  expires: Date | string
 }
 
 interface VerificationToken {
   identifier: string
   token: string
-  expires: Date
+  expires: Date | string
 }
 
 export interface Database {

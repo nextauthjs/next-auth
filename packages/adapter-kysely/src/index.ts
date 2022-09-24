@@ -1,43 +1,71 @@
-import { Kysely } from "kysely"
+import { Kysely, SqliteAdapter } from "kysely"
 import type { Adapter } from "next-auth/adapters"
 import type { Database } from "./database"
 
 export function KyselyAdapter(db: Kysely<Database>): Adapter {
-  const supportsReturning = db.getExecutor().adapter.supportsReturning
+  const adapter = db.getExecutor().adapter
+  const supportsReturning = adapter.supportsReturning
+  const storeDatesAsISOStrings = adapter instanceof SqliteAdapter
 
   return {
     async createUser(data) {
-      const query = db.insertInto("User").values(data)
+      const userData = storeDatesAsISOStrings
+        ? { ...data, emailVerified: (data.emailVerified as Date).toISOString() }
+        : data
+      const query = db.insertInto("User").values(userData)
 
-      if (supportsReturning)
-        return await query.returningAll().executeTakeFirstOrThrow()
-      await query.executeTakeFirstOrThrow()
-      return await db
-        .selectFrom("User")
-        .selectAll()
-        .where("email", "=", `${data.email}`)
-        .executeTakeFirstOrThrow()
+      const result = supportsReturning
+        ? await query.returningAll().executeTakeFirstOrThrow()
+        : await query.executeTakeFirstOrThrow().then(async () => {
+            return await db
+              .selectFrom("User")
+              .selectAll()
+              .where("email", "=", `${userData.email}`)
+              .executeTakeFirstOrThrow()
+          })
+
+      return {
+        ...result,
+        emailVerified:
+          typeof result.emailVerified === "string"
+            ? new Date(result.emailVerified)
+            : result.emailVerified,
+      }
     },
     async getUser(id) {
-      return (
+      const result =
         (await db
           .selectFrom("User")
           .selectAll()
           .where("id", "=", id)
           .executeTakeFirst()) ?? null
-      )
+      if (!result) return null
+      return {
+        ...result,
+        emailVerified:
+          typeof result.emailVerified === "string"
+            ? new Date(result.emailVerified)
+            : result.emailVerified,
+      }
     },
     async getUserByEmail(email) {
-      return (
+      const result =
         (await db
           .selectFrom("User")
           .selectAll()
           .where("email", "=", email)
           .executeTakeFirst()) ?? null
-      )
+      if (!result) return null
+      return {
+        ...result,
+        emailVerified:
+          typeof result.emailVerified === "string"
+            ? new Date(result.emailVerified)
+            : result.emailVerified,
+      }
     },
     async getUserByAccount({ providerAccountId, provider }) {
-      return (
+      const result =
         (await db
           .selectFrom("User")
           .innerJoin("Account", "User.id", "Account.userId")
@@ -45,27 +73,40 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
           .where("Account.providerAccountId", "=", providerAccountId)
           .where("Account.provider", "=", provider)
           .executeTakeFirst()) ?? null
-      )
+      if (!result) return null
+      return {
+        ...result,
+        emailVerified:
+          typeof result.emailVerified === "string"
+            ? new Date(result.emailVerified)
+            : result.emailVerified,
+      }
     },
     async updateUser({ id, ...user }) {
       if (!id) throw new Error("User not found")
-      const result = await db
-        .updateTable("User")
-        .set(user)
-        .where("User.id", "=", id)
-        .if(supportsReturning, (qb) => qb.returningAll())
-        .executeTakeFirstOrThrow()
-
-      if (supportsReturning) return result as Required<typeof result>
-      return await db
-        .selectFrom("User")
-        .selectAll()
-        .where("User.id", "=", id)
-        .executeTakeFirstOrThrow()
+      const userData = storeDatesAsISOStrings
+        ? { ...user, emailVerified: user.emailVerified?.toISOString() }
+        : user
+      const query = db.updateTable("User").set(userData).where("id", "=", id)
+      const result = supportsReturning
+        ? await query.returningAll().executeTakeFirstOrThrow()
+        : await query.executeTakeFirstOrThrow().then(async () => {
+            return await db
+              .selectFrom("User")
+              .selectAll()
+              .where("id", "=", id)
+              .executeTakeFirstOrThrow()
+          })
+      return {
+        ...result,
+        emailVerified:
+          typeof result.emailVerified === "string"
+            ? new Date(result.emailVerified)
+            : result.emailVerified,
+      }
     },
     async deleteUser(userId) {
       await db.deleteFrom("User").where("User.id", "=", userId).execute()
-      return null
     },
     async linkAccount(account) {
       await db.insertInto("Account").values(account).executeTakeFirstOrThrow()
@@ -78,16 +119,28 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
         .executeTakeFirstOrThrow()
     },
     async createSession(data) {
-      const query = db.insertInto("Session").values(data)
+      const sessionData = storeDatesAsISOStrings
+        ? { ...data, expires: data.expires.toISOString() }
+        : data
+      const query = db.insertInto("Session").values(sessionData)
+      const result = supportsReturning
+        ? await query.returningAll().executeTakeFirstOrThrow()
+        : await (async () => {
+            await query.executeTakeFirstOrThrow()
+            return await db
+              .selectFrom("Session")
+              .selectAll()
+              .where("sessionToken", "=", sessionData.sessionToken)
+              .executeTakeFirstOrThrow()
+          })()
 
-      if (supportsReturning)
-        return await query.returningAll().executeTakeFirstOrThrow()
-      await query.executeTakeFirstOrThrow()
-      return await db
-        .selectFrom("Session")
-        .selectAll()
-        .where("sessionToken", "=", data.sessionToken)
-        .executeTakeFirstOrThrow()
+      return {
+        ...result,
+        expires:
+          typeof result.expires === "string"
+            ? new Date(result.expires)
+            : result.expires,
+      }
     },
     async getSessionAndUser(sessionTokenArg) {
       const result = await db
@@ -104,30 +157,51 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
         .executeTakeFirst()
       if (!result) return null
       const { sessionId: id, userId, sessionToken, expires, ...user } = result
+      if (user.emailVerified) user.emailVerified = new Date(user.emailVerified)
       return {
-        user,
+        user: {
+          ...user,
+          emailVerified:
+            typeof user.emailVerified === "string"
+              ? new Date(user.emailVerified)
+              : user.emailVerified,
+        },
         session: {
           id,
           userId,
           sessionToken,
-          expires,
+          expires: typeof expires === "string" ? new Date(expires) : expires,
         },
       }
     },
     async updateSession(session) {
-      const result = await db
+      const sessionData = storeDatesAsISOStrings
+        ? {
+            ...session,
+            expires: session.expires
+              ? session.expires.toISOString()
+              : session.expires,
+          }
+        : session
+      const query = db
         .updateTable("Session")
-        .set(session)
+        .set(sessionData)
         .where("Session.sessionToken", "=", session.sessionToken)
-        .if(supportsReturning, (qb) => qb.returningAll())
-        .executeTakeFirstOrThrow()
-
-      if (supportsReturning) return result as Required<typeof result>
-      return await db
-        .selectFrom("Session")
-        .selectAll()
-        .where("Session.sessionToken", "=", session.sessionToken)
-        .executeTakeFirstOrThrow()
+      const result = supportsReturning
+        ? await query.returningAll().executeTakeFirstOrThrow()
+        : await query.executeTakeFirstOrThrow().then(async () => {
+            return await db
+              .selectFrom("Session")
+              .selectAll()
+              .where("Session.sessionToken", "=", sessionData.sessionToken)
+              .executeTakeFirstOrThrow()
+          })
+      return Object.assign(result, {
+        expires:
+          typeof result.expires === "string"
+            ? new Date(result.expires)
+            : result.expires,
+      })
     },
     async deleteSession(sessionToken) {
       await db
@@ -136,31 +210,54 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
         .executeTakeFirstOrThrow()
     },
     async createVerificationToken(verificationToken) {
-      const query = db.insertInto("VerificationToken").values(verificationToken)
-      if (supportsReturning)
-        return await query.returningAll().executeTakeFirstOrThrow()
-      await query.executeTakeFirstOrThrow()
-      return await db
-        .selectFrom("VerificationToken")
-        .selectAll()
-        .where("token", "=", verificationToken.token)
-        .executeTakeFirstOrThrow()
+      const verificationTokenData = supportsReturning
+        ? {
+            ...verificationToken,
+            expires: verificationToken.expires.toISOString(),
+          }
+        : verificationToken
+      const query = db
+        .insertInto("VerificationToken")
+        .values(verificationTokenData)
+      const result = supportsReturning
+        ? await query.returningAll().executeTakeFirstOrThrow()
+        : await query.executeTakeFirstOrThrow().then(async () => {
+            return await db
+              .selectFrom("VerificationToken")
+              .selectAll()
+              .where("token", "=", verificationTokenData.token)
+              .executeTakeFirstOrThrow()
+          })
+      return Object.assign(result, {
+        expires:
+          typeof result.expires === "string"
+            ? new Date(result.expires)
+            : result.expires,
+      })
     },
     async useVerificationToken({ identifier, token }) {
       const query = db
         .deleteFrom("VerificationToken")
         .where("VerificationToken.token", "=", token)
         .where("VerificationToken.identifier", "=", identifier)
-      if (supportsReturning)
-        return (await query.returningAll().executeTakeFirst()) ?? null
-
-      const verificationToken = await db
-        .selectFrom("VerificationToken")
-        .selectAll()
-        .where("token", "=", token)
-        .executeTakeFirst()
-      await query.execute()
-      return verificationToken ?? null
+      const result = supportsReturning
+        ? (await query.returningAll().executeTakeFirst()) ?? null
+        : await db
+            .selectFrom("VerificationToken")
+            .selectAll()
+            .where("token", "=", token)
+            .executeTakeFirst()
+            .then(async (res) => {
+              await query.executeTakeFirst()
+              return res
+            })
+      if (!result) return null
+      return Object.assign(result, {
+        expires:
+          typeof result.expires === "string"
+            ? new Date(result.expires)
+            : result.expires,
+      })
     },
   }
 }
