@@ -165,16 +165,23 @@ export function UpstashRedisAdapter(
     },
     async createVerificationToken(verificationToken) {
       await setObjectAsJson(
-        verificationTokenKeyPrefix + verificationToken.identifier,
+        verificationTokenKeyPrefix +
+          verificationToken.identifier +
+          ":" +
+          verificationToken.token,
         verificationToken
       )
       return verificationToken
     },
     async useVerificationToken(verificationToken) {
-      const tokenKey = verificationTokenKeyPrefix + verificationToken.identifier
+      const tokenKey =
+        verificationTokenKeyPrefix +
+        verificationToken.identifier +
+        ":" +
+        verificationToken.token
 
       const token = await client.get<VerificationToken>(tokenKey)
-      if (!token || verificationToken.token !== token.token) return null
+      if (!token) return null
 
       await client.del(tokenKey)
       return hydrateDates(token)
