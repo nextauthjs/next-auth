@@ -453,7 +453,7 @@ importers:
       jest: ^28.1.1
       jest-environment-jsdom: ^28.1.1
       jest-watch-typeahead: ^1.1.0
-      jose: ^4.3.7
+      jose: ^4.9.3
       msw: ^0.42.3
       next: 12.2.5
       oauth: ^0.9.15
@@ -471,7 +471,7 @@ importers:
       '@babel/runtime': 7.18.3
       '@panva/hkdf': 1.0.2
       cookie: 0.5.0
-      jose: 4.8.1
+      jose: 4.9.3
       oauth: 0.9.15
       openid-client: 5.1.6
       preact: 10.8.2
@@ -15603,14 +15603,8 @@ packages:
       valid-url: 1.0.9
     dev: true
 
-  /jose/2.0.6:
-    resolution: {integrity: sha512-FVoPY7SflDodE4lknJmbAHSUjLCzE2H1F6MS0RYKMQ8SR+lNccpMf8R4eqkNYyyUjR5qZReOzZo5C5YiHOCjjg==}
-    engines: {node: '>=10.13.0 < 13 || >=13.7.0'}
-    dependencies:
-      '@panva/asn1.js': 1.0.0
-
-  /jose/4.8.1:
-    resolution: {integrity: sha512-+/hpTbRcCw9YC0TOfN1W47pej4a9lRmltdOVdRLz5FP5UvUq3CenhXjQK7u/8NdMIIShMXYAh9VLPhc7TjhvFw==}
+  /jose/4.9.3:
+    resolution: {integrity: sha512-f8E/z+T3Q0kA9txzH2DKvH/ds2uggcw0m3vVPSB9HrSkrQ7mojjifvS7aR8cw+lQl2Fcmx9npwaHpM/M3GD8UQ==}
     dev: false
 
   /js-beautify/1.14.4:
@@ -17549,7 +17543,7 @@ packages:
     resolution: {integrity: sha512-HTFaXWdUHvLFw4GaEMgC0jXYBgpjgzQQNHW1pZsSqJorSgrXzxJ+4u/LWCGaClDEse5HLjXRV+zU5Bn3OefiZw==}
     engines: {node: ^12.19.0 || ^14.15.0 || ^16.13.0}
     dependencies:
-      jose: 4.8.1
+      jose: 4.9.3
       lru-cache: 6.0.0
       object-hash: 2.2.0
       oidc-token-hash: 5.0.1
