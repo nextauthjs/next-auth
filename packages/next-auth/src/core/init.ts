@@ -88,7 +88,7 @@ export async function init({
       maxAge,
       updateAge: 24 * 60 * 60,
       generateSessionToken: () => {
-        // Use `randomUUID` if available. (Node 15.6++)
+        // Use `randomUUID` if available. (Node 15.6+)
         return randomUUID?.() ?? randomBytes(32).toString("hex")
       },
       ...userOptions.session,
