@@ -29,7 +29,7 @@ Configure your NextAuth.js to use the Prisma Adapter:
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import prisma from "../../../lib/prisma"
+import prisma from "../../../lib/prismadb"
 
 export default NextAuth({
   adapter: PrismaAdapter(prisma),
