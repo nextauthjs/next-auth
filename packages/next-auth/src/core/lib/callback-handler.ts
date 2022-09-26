@@ -1,4 +1,3 @@
-import { randomBytes, randomUUID } from "crypto"
 import { AccountNotLinkedError } from "../errors"
 import { fromDate } from "./utils"
 
@@ -37,7 +36,7 @@ export default async function callbackHandler(params: {
     adapter,
     jwt,
     events,
-    session: { strategy: sessionStrategy },
+    session: { strategy: sessionStrategy, generateSessionToken },
   } = options
 
   // If no adapter is configured then we don't have a database and cannot
@@ -218,9 +217,4 @@ export default async function callbackHandler(params: {
       return { session, user, isNewUser: true }
     }
   }
-}
-
-function generateSessionToken() {
-  // Use `randomUUID` if available. (Node 15.6++)
-  return randomUUID?.() ?? randomBytes(32).toString("hex")
 }

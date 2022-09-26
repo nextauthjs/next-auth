@@ -35,6 +35,7 @@ packages/next-auth/core
 packages/next-auth/jwt
 packages/next-auth/react
 packages/next-auth/adapters.d.ts
+packages/next-auth/adapters.js
 packages/next-auth/index.d.ts
 packages/next-auth/index.js
 packages/next-auth/next

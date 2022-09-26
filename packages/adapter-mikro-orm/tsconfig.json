@@ -1,5 +1,5 @@
 {
-  "extends": "@next-auth/tsconfig/adapters.json",
+  "extends": "@next-auth/tsconfig/tsconfig.adapters.json",
   "compilerOptions": {
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
@@ -8,5 +8,6 @@
     "outDir": "dist",
     "stripInternal": true
   },
-  "exclude": ["tests", "dist", "jest.config.js"]
+  "include": ["src"],
+  "exclude": ["dist", "test", "node_modules"]
 }
