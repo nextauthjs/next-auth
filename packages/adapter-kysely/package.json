@@ -21,9 +21,7 @@
     "access": "public"
   },
   "scripts": {
-    "build:wip": "tsc",
-    "tdd": "jest --watch",
-    "test:wip": "jest",
+    "build": "tsc",
     "test": "./tests/test.sh"
   },
   "files": [
@@ -31,7 +29,8 @@
     "dist"
   ],
   "peerDependencies": {
-    "kysely": "^0.21.6"
+    "kysely": "^0.21.6",
+    "next-auth": "^4"
   },
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:*",

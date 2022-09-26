@@ -189,8 +189,8 @@ const runDialectBasicTests = (
           .executeTakeFirst()
         if (!result) return null
         const { oauth_token, oauth_token_secret, ...account } = result
-        // TODO: why is this necessary?
-        account.expires_at = Number(account.expires_at)
+        if (typeof account.expires_at === "string")
+          account.expires_at = Number(account.expires_at)
         return account
       },
       async session(sessionToken) {
