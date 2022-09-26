@@ -63,7 +63,7 @@ export interface Adapter {
   getUserByAccount: (
     providerAccountId: Pick<Account, "provider" | "providerAccountId">
   ) => Awaitable<AdapterUser | null>
-  updateUser: (user: Partial<AdapterUser>) => Awaitable<AdapterUser>
+  updateUser: (user: Partial<Omit<AdapterUser, "id">> & Pick<AdapterUser, "id">) => Awaitable<AdapterUser>
   /** @todo Implement */
   deleteUser?: (
     userId: string
