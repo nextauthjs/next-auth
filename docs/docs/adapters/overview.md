@@ -12,6 +12,7 @@ When using a database, you can still use JWT for session handling for fast acces
 We have a list of official adapters that are distributed as their own packages under the `@next-auth/{name}-adapter` namespace. Their source code is available in their various adapters package directories at [`nextauthjs/next-auth`](https://github.com/nextauthjs/next-auth/tree/main/packages).
 
 - [`prisma`](./prisma)
+- [`kysely`](./kysely)
 - [`fauna`](./fauna)
 - [`dynamodb`](./dynamodb)
 - [`firebase`](./firebase)

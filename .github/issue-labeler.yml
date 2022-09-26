@@ -12,6 +12,9 @@ fauna:
 firebase:
   - "@next-auth/firebase-adapter"
 
+kysely:
+  - "@next-auth/kysely-adapter"
+
 mikro-orm:
   - "@next-auth/mikro-orm-adapter"
 

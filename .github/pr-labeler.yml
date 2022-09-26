@@ -24,6 +24,9 @@ fauna:
 firebase:
   - packages/adapter-firebase/**
 
+kysely:
+  - packages/adapter-kysely/**
+
 mikro-orm:
   - packages/adapter-mikro-orm/**
 

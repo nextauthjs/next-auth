@@ -24,6 +24,7 @@ body:
         - "@next-auth/dynamodb-adapter"
         - "@next-auth/fauna-adapter"
         - "@next-auth/firebase-adapter"
+        - "@next-auth/kysely-adapter"
         - "@next-auth/mikro-orm-adapter"
         - "@next-auth/mongodb-adapter"
         - "@next-auth/neo4j-adapter"
