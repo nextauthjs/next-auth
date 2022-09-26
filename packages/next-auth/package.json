@@ -32,6 +32,7 @@
     "./react": "./react/index.js",
     "./core": "./core/index.js",
     "./next": "./next/index.js",
+    "./expo": "./expo/index.js",
     "./middleware": "./middleware.js",
     "./client/_utils": "./client/_utils.js",
     "./providers/*": "./providers/*.js"
@@ -39,7 +40,7 @@
   "scripts": {
     "build": "pnpm clean && pnpm build:js && pnpm build:css",
     "build:js": "pnpm clean && pnpm generate-providers && pnpm tsc --project tsconfig.json && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
-    "clean": "rm -rf coverage client css utils providers core jwt react next index.d.ts index.js adapters.d.ts middleware.d.ts middleware.js",
+    "clean": "rm -rf coverage client css utils providers core jwt react next expo index.d.ts index.js adapters.d.ts middleware.d.ts middleware.js",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir . && node config/wrap-css.js",
     "dev": "pnpm clean && pnpm generate-providers && concurrently \"pnpm watch:css\" \"pnpm watch:ts\"",
     "watch:ts": "pnpm tsc --project tsconfig.dev.json",
@@ -55,6 +56,7 @@
     "jwt",
     "react",
     "next",
+    "expo",
     "client",
     "providers",
     "core",
@@ -75,13 +77,16 @@
     "openid-client": "^5.1.0",
     "preact": "^10.6.3",
     "preact-render-to-string": "^5.1.19",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "react-native-url-polyfill": "^1.3.0"
   },
   "peerDependencies": {
+    "expo": "^46",
     "next": "12.2.5",
     "nodemailer": "^6.6.5",
     "react": "^17.0.2 || ^18",
-    "react-dom": "^17.0.2 || ^18"
+    "react-dom": "^17.0.2 || ^18",
+    "react-native": ">= 0.63.0"
   },
   "peerDependenciesMeta": {
     "nodemailer": {
@@ -115,6 +120,10 @@
     "babel-preset-preact": "^2.0.0",
     "concurrently": "^7",
     "cssnano": "^5.1.11",
+    "expo": "^46",
+    "expo-auth-session": "^3.7.1",
+    "expo-constants": "^13.2.4",
+    "expo-secure-store": "^11.3.0",
     "jest": "^28.1.1",
     "jest-environment-jsdom": "^28.1.1",
     "jest-watch-typeahead": "^1.1.0",
@@ -125,6 +134,7 @@
     "postcss-nested": "^5.0.6",
     "react": "^18",
     "react-dom": "^18",
+    "react-native": "0.69.4",
     "whatwg-fetch": "^3.6.2"
   },
   "engines": {

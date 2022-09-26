@@ -224,6 +224,179 @@ export async function NextAuthHandler<
     }
   } else if (method === "POST") {
     switch (action) {
+      case "proxy": {
+        const cookies: Record<string, string> = {}
+
+        switch (req.body?.action) {
+          case "signin": {
+            // Get csrf token
+            const csrfTokenRes = await NextAuthHandler({
+              req: {
+                host: req.host, // To detect secure cookies
+                action: "csrf",
+              },
+              options: userOptions,
+            })
+            const csrfToken = (csrfTokenRes.body as any).csrfToken
+            const csrfTokenCookie = csrfTokenRes.cookies?.find(
+              (c) => c.name === options.cookies.csrfToken.name
+            )?.value
+            if (csrfTokenCookie) {
+              cookies[options.cookies.csrfToken.name] = csrfTokenCookie
+            }
+
+            // Get authorizationUrl
+            const callbackUrl = req.body?.callbackUrl
+            cookies[options.cookies.callbackUrl.name] = callbackUrl
+            const signInRes = await NextAuthHandler({
+              req: {
+                host: req.host, // To detect secure cookies
+                action: "signin",
+                method: "POST",
+                cookies,
+                body: {
+                  csrfToken,
+                  callbackUrl,
+                },
+                providerId: req.body?.providerId,
+              },
+              options: userOptions,
+            })
+            const authorizationUrl = signInRes.redirect as string
+
+            const url = new URL(authorizationUrl)
+            const params = new URLSearchParams(url.search)
+
+            // state
+            const stateEncrypted = signInRes.cookies?.find(
+              (c) => c.name === options.cookies.state.name
+            )?.value
+            const state = params.get("state") as string
+
+            // pkce code verifier
+            const codeChallenge = params.get("code_challenge") as string
+            const codeVerifier = signInRes.cookies?.find(
+              (c) => c.name === options.cookies.pkceCodeVerifier.name
+            )?.value
+
+            // provider client_id
+            const provider = options.providers.find(
+              ({ id }) => id === req.body?.providerId
+            )
+            let clientId: string | undefined
+            if (provider?.type === "oauth") {
+              clientId = provider.clientId
+            }
+
+            return {
+              headers: [{ key: "Content-Type", value: "application/json" }],
+              body: {
+                state,
+                stateEncrypted,
+                codeVerifier,
+                codeChallenge,
+                clientId,
+              } as any,
+            }
+          }
+          case "callback": {
+            if (req.body?.codeVerifier) {
+              cookies[options.cookies.pkceCodeVerifier.name] =
+                req.body.codeVerifier
+            }
+            if (req.body?.stateEncrypted) {
+              cookies[options.cookies.state.name] = req.body.stateEncrypted
+            }
+
+            const callbackRes = await NextAuthHandler({
+              req: {
+                host: req.host, // To detect secure cookies
+                action: "callback",
+                cookies,
+                providerId: req.body?.providerId,
+                query: {
+                  state: req.body?.state,
+                  code: req.body?.code,
+                },
+              },
+              options: userOptions,
+            })
+            const location = callbackRes.redirect as string
+            const url = new URL(location)
+            const params = new URLSearchParams(url.search)
+            const error = params.get("error")
+            if (error) {
+              return { body: { error } as any }
+            }
+
+            const sessionToken = callbackRes.cookies?.find(
+              (c) => c.name === options.cookies.sessionToken.name
+            )?.value
+
+            return { body: { sessionToken } as any }
+          }
+          case "signout": {
+            if (req.body?.sessionToken) {
+              cookies[options.cookies.sessionToken.name] = req.body.sessionToken
+            }
+
+            // Get csrf token
+            const csrfTokenRes = await NextAuthHandler({
+              req: {
+                host: req.host, // To detect secure cookies
+                action: "csrf",
+              },
+              options: userOptions,
+            })
+            const csrfToken = (csrfTokenRes.body as any).csrfToken
+            const csrfTokenCookie = csrfTokenRes.cookies?.find(
+              (c) => c.name === options.cookies.csrfToken.name
+            )?.value
+            if (csrfTokenCookie) {
+              cookies[options.cookies.csrfToken.name] = csrfTokenCookie
+            }
+
+            await NextAuthHandler({
+              req: {
+                host: req.host, // To detect secure cookies
+                action: "signout",
+                method: "POST",
+                cookies,
+                body: {
+                  csrfToken,
+                },
+              },
+              options: userOptions,
+            })
+
+            return { body: { signedOut: true } as any }
+          }
+          case "session": {
+            if (req.body?.sessionToken) {
+              cookies[options.cookies.sessionToken.name] = req.body.sessionToken
+            }
+
+            return await NextAuthHandler({
+              req: {
+                host: req.host, // To detect secure cookies
+                cookies,
+                action: "session",
+              },
+              options: userOptions,
+            })
+          }
+          case "providers": {
+            return await NextAuthHandler({
+              req: {
+                action: "providers",
+              },
+              options: userOptions,
+            })
+          }
+        }
+        // No proxy action handled, so bad request it is.
+        return { status: 400 }
+      }
       case "signin":
         // Verified CSRF Token required for all sign in routes
         if (options.csrfTokenVerified && options.provider) {
