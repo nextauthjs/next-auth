@@ -63,7 +63,7 @@ More details can be found [here](https://next-auth.js.org/configuration/nextjs#m
 :::tip
 To inclue all `dashboard` nested routes (sub pages like `/dashboard/settings`, `/dashboard/profile`) you can pass `matcher: "/dashboard/:path*"` to `config`.
 
-For other patterns check out the [NextJS middleware documentation](https://nextjs.org/docs/advanced-features/middleware#matcher).
+For other patterns check out the [Next.js Middleware documentation](https://nextjs.org/docs/advanced-features/middleware#matcher).
 :::
 
 ### Server Side
