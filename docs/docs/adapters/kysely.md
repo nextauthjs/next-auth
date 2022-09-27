@@ -118,12 +118,12 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("id", "uuid", (col) =>
       col.primaryKey().defaultTo(sql`gen_random_uuid()`)
     )
-    .addColumn("name", "varchar(255)")
-    .addColumn("email", "varchar(255)", (col) => col.unique())
+    .addColumn("name", "text")
+    .addColumn("email", "text", (col) => col.unique())
     .addColumn("emailVerified", "timestamptz", (col) =>
       col.defaultTo(sql`NOW()`)
     )
-    .addColumn("image", "varchar(255)")
+    .addColumn("image", "text")
     .execute();
 
   await db.schema
@@ -134,18 +134,18 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("userId", "uuid", (col) =>
       col.references("User.id").onDelete("cascade").notNull()
     )
-    .addColumn("type", "varchar(255)", (col) => col.notNull())
-    .addColumn("provider", "varchar(255)", (col) => col.notNull())
-    .addColumn("providerAccountId", "varchar(255)", (col) => col.notNull())
-    .addColumn("refresh_token", "varchar(255)")
-    .addColumn("access_token", "varchar(255)")
+    .addColumn("type", "text", (col) => col.notNull())
+    .addColumn("provider", "text", (col) => col.notNull())
+    .addColumn("providerAccountId", "text", (col) => col.notNull())
+    .addColumn("refresh_token", "text")
+    .addColumn("access_token", "text")
     .addColumn("expires_at", "bigint")
-    .addColumn("token_type", "varchar(255)")
-    .addColumn("scope", "varchar(255)")
-    .addColumn("id_token", "varchar(255)")
-    .addColumn("session_state", "varchar(255)")
-    .addColumn("oauth_token_secret", "varchar(255)")
-    .addColumn("oauth_token", "varchar(255)")
+    .addColumn("token_type", "text")
+    .addColumn("scope", "text")
+    .addColumn("id_token", "text")
+    .addColumn("session_state", "text")
+    .addColumn("oauth_token_secret", "text")
+    .addColumn("oauth_token", "text")
     .execute();
 
   await db.schema
@@ -156,14 +156,14 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("userId", "uuid", (col) =>
       col.references("User.id").onDelete("cascade").notNull()
     )
-    .addColumn("sessionToken", "varchar(255)", (col) => col.notNull().unique())
+    .addColumn("sessionToken", "text", (col) => col.notNull().unique())
     .addColumn("expires", "timestamptz", (col) => col.notNull())
     .execute();
 
   await db.schema
     .createTable("VerificationToken")
-    .addColumn("identifier", "varchar(255)", (col) => col.notNull())
-    .addColumn("token", "varchar(255)", (col) => col.notNull().unique())
+    .addColumn("identifier", "text", (col) => col.notNull())
+    .addColumn("token", "text", (col) => col.notNull().unique())
     .addColumn("expires", "timestamptz", (col) => col.notNull())
     .execute();
 }

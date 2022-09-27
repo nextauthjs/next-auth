@@ -83,34 +83,35 @@ async function createDatabase(
     dialect === "mysql" ? "varchar(36)" : "uuid"
   const dateColumnType: DataTypeExpression =
     dialect === "mysql" ? sql`DATETIME(3)` : "timestamptz"
+  const textColumnType: DataTypeExpression = dialect === "mysql" ? "varchar(255)" : "text"
 
   await dropDatabase(db)
 
   await createTableWithId(db.schema, dialect, "User")
-    .addColumn("name", "varchar(255)")
-    .addColumn("email", "varchar(255)", (col) => col.unique())
+    .addColumn("name", textColumnType)
+    .addColumn("email", textColumnType, (col) => col.unique())
     .addColumn("emailVerified", dateColumnType, (col) =>
       col.defaultTo(defaultTimestamp)
     )
-    .addColumn("image", "varchar(255)")
+    .addColumn("image", textColumnType)
     .execute()
 
   let createAccountTable = createTableWithId(db.schema, dialect, "Account")
     .addColumn("userId", uuidColumnType, (col) =>
       col.references("User.id").onDelete("cascade").notNull()
     )
-    .addColumn("type", "varchar(255)", (col) => col.notNull())
-    .addColumn("provider", "varchar(255)", (col) => col.notNull())
-    .addColumn("providerAccountId", "varchar(255)", (col) => col.notNull())
-    .addColumn("refresh_token", "varchar(255)")
-    .addColumn("access_token", "varchar(255)")
+    .addColumn("type", textColumnType, (col) => col.notNull())
+    .addColumn("provider", textColumnType, (col) => col.notNull())
+    .addColumn("providerAccountId", textColumnType, (col) => col.notNull())
+    .addColumn("refresh_token", textColumnType)
+    .addColumn("access_token", textColumnType)
     .addColumn("expires_at", "bigint")
-    .addColumn("token_type", "varchar(255)")
-    .addColumn("scope", "varchar(255)")
-    .addColumn("id_token", "varchar(255)")
-    .addColumn("session_state", "varchar(255)")
-    .addColumn("oauth_token_secret", "varchar(255)")
-    .addColumn("oauth_token", "varchar(255)")
+    .addColumn("token_type", textColumnType)
+    .addColumn("scope", textColumnType)
+    .addColumn("id_token", textColumnType)
+    .addColumn("session_state", textColumnType)
+    .addColumn("oauth_token_secret", textColumnType)
+    .addColumn("oauth_token", textColumnType)
   if (dialect === "mysql")
     createAccountTable = createAccountTable.addForeignKeyConstraint(
       "Account_userId_fk",
@@ -125,7 +126,7 @@ async function createDatabase(
     .addColumn("userId", uuidColumnType, (col) =>
       col.references("User.id").onDelete("cascade").notNull()
     )
-    .addColumn("sessionToken", "varchar(255)", (col) => col.notNull().unique())
+    .addColumn("sessionToken", textColumnType, (col) => col.notNull().unique())
     .addColumn("expires", dateColumnType, (col) => col.notNull())
 
   if (dialect === "mysql")
@@ -140,8 +141,8 @@ async function createDatabase(
 
   await db.schema
     .createTable("VerificationToken")
-    .addColumn("identifier", "varchar(255)", (col) => col.notNull())
-    .addColumn("token", "varchar(255)", (col) => col.notNull().unique())
+    .addColumn("identifier", textColumnType, (col) => col.notNull())
+    .addColumn("token", textColumnType, (col) => col.notNull().unique())
     .addColumn("expires", dateColumnType, (col) => col.notNull())
     .execute()
 
