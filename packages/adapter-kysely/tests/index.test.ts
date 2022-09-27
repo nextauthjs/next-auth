@@ -83,7 +83,8 @@ async function createDatabase(
     dialect === "mysql" ? "varchar(36)" : "uuid"
   const dateColumnType: DataTypeExpression =
     dialect === "mysql" ? sql`DATETIME(3)` : "timestamptz"
-  const textColumnType: DataTypeExpression = dialect === "mysql" ? "varchar(255)" : "text"
+  const textColumnType: DataTypeExpression =
+    dialect === "mysql" ? "varchar(255)" : "text"
 
   await dropDatabase(db)
 
