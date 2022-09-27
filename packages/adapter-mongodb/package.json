@@ -1,6 +1,6 @@
 {
   "name": "@next-auth/mongodb-adapter",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "mongoDB adapter for next-auth.",
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/next-auth",
