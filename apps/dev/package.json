@@ -18,6 +18,8 @@
     "@next-auth/typeorm-legacy-adapter": "workspace:*",
     "@prisma/client": "^3",
     "faunadb": "^4",
+    "@next-auth/firebase-adapter-admin": "workspace:*",
+    "firebase-admin": "^11.0.1",
     "next": "12.2.0",
     "next-auth": "workspace:*",
     "nodemailer": "^6",
