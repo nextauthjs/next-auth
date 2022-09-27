@@ -164,6 +164,18 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("token", "text", (col) => col.notNull().unique())
     .addColumn("expires", "timestamptz", (col) => col.notNull())
     .execute();
+
+  await db.schema
+    .createIndex("Account_userId_index")
+    .on("Account")
+    .column("userId")
+    .execute();
+
+  await db.schema
+    .createIndex("Session_userId_index")
+    .on("Session")
+    .column("userId")
+    .execute();
 }
 
 export async function down(db: Kysely<any>): Promise<void> {
