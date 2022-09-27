@@ -111,8 +111,6 @@ This schema is based on the NextAuth main [schema](/adapters/models).
 import { Kysely, sql } from "kysely";
 
 export async function up(db: Kysely<any>): Promise<void> {
-  await sql`CREATE EXTENSION IF NOT EXISTS pgcrypto;`.execute(db);
-
   await db.schema
     .createTable("User")
     .addColumn("id", "uuid", (col) =>
