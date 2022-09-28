@@ -9,7 +9,7 @@ import {
   SqliteAdapter,
   SqliteDialect,
 } from "kysely"
-import { KyselyAdapter } from "../src"
+import { KyselyAdapter, AuthedKysely } from "../src"
 import type { Database } from "../src/database"
 import { createPool } from "mysql2"
 import { DataTypeExpression } from "kysely/dist/cjs/parser/data-type-parser"
@@ -222,7 +222,7 @@ const runDialectBasicTests = (
 }
 
 describe("Testing PostgresDialect", () => {
-  const db = new Kysely<Database>({
+  const db = new AuthedKysely<Database>({
     dialect: new PostgresDialect({
       pool: new Pool(DIALECT_CONFIGS.postgres),
     }),
@@ -231,7 +231,7 @@ describe("Testing PostgresDialect", () => {
 })
 
 describe("Testing MysqlDialect", () => {
-  const db = new Kysely<Database>({
+  const db = new AuthedKysely<Database>({
     dialect: new MysqlDialect({
       pool: createPool(DIALECT_CONFIGS.mysql),
     }),
@@ -240,7 +240,7 @@ describe("Testing MysqlDialect", () => {
 })
 
 describe("Testing SqliteDialect", () => {
-  const db = new Kysely<Database>({
+  const db = new AuthedKysely<Database>({
     dialect: new SqliteDialect({
       database: async () =>
         new SqliteDatabase(DIALECT_CONFIGS.sqlite.databasePath),

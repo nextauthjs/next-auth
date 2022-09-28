@@ -35,9 +35,11 @@ export default NextAuth({
 
 ## Setup
 
-[Kysely](https://github.com/koskimas/kysely) (pronounce “Key-Seh-Lee”) is a type-safe and autocompletion-friendly typescript SQL query builder inspired by knex. To use Kysely, you define interfaces for each of your database tables and pass them to the `Kysely` constructor.
+[Kysely](https://github.com/koskimas/kysely) (pronounce “Key-Seh-Lee”) is a type-safe and autocompletion-friendly TypeScript SQL query builder inspired by Knex. To use Kysely, you define interfaces for each of your database tables and pass them to the `Kysely` constructor.
 
 ### Create type definitions and the Kysely instance
+This Adapter exports a wrapper around the original Kysely class, `AuthedKysely`, that can be used to provide an additional level of type safety. While using it isn't required, it is recommended as it will verify that the database interface has all the fields that NextAuth requires.
+
 :::note
 An alternative to manually defining types is generating them from the database schema using [kysely-codegen](https://github.com/RobinBlomberg/kysely-codegen).
 :::
@@ -45,6 +47,7 @@ An alternative to manually defining types is generating them from the database s
 import { Kysely, PostgresDialect } from "kysely";
 import type { Generated } from "kysely";
 import { Pool } from "pg";
+import { AuthedKysely } from "@next-auth/kysely-adapter"
 
 interface User {
   id: Generated<string>;
@@ -91,7 +94,7 @@ export interface Database {
   VerificationToken: VerificationToken;
 }
 
-export const db = new Kysely<Database>({
+export const db = new AuthedKysely<Database>({
   dialect: new PostgresDialect({
     pool: new Pool({
       host: process.env.DATABASE_HOST,
