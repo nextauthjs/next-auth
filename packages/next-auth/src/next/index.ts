@@ -122,8 +122,10 @@ export async function unstable_getServerSession(
 
   cookies?.forEach((cookie) => setCookie(res, cookie))
 
-  if (body && typeof body !== "string" && Object.keys(body).length)
+  if (body && typeof body !== "string" && Object.keys(body).length) {
+    if (session.status === 500) throw new Error((body as any).message)
     return body as Session
+  }
 
   return null
 }
