@@ -96,7 +96,7 @@ export async function NextAuthHandler<
     // Bail out early if there's an error in the user config
     logger.error(assertionResult.code, assertionResult)
 
-    const htmlPages = ["signin", "verify-request", "signout"]
+    const htmlPages = ["signin", "signout", "error", "verify-request"]
     if (!htmlPages.includes(req.action) || req.method !== "GET") {
       const message = `There is a problem with the server configuration. Check the server logs for more information.`
       return {
@@ -108,7 +108,7 @@ export async function NextAuthHandler<
     const { pages, theme } = userOptions
 
     const authOnErrorPage =
-      pages?.error && req.query?.callbackUrl.startsWith(pages.error)
+      pages?.error && req.query?.callbackUrl?.startsWith(pages.error)
 
     if (!pages?.error || authOnErrorPage) {
       if (authOnErrorPage) {
