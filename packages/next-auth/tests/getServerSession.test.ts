@@ -47,17 +47,19 @@ describe("Treat secret correctly", () => {
   })
 
   it("Error if missing NEXTAUTH_SECRET and secret", async () => {
-    const session = await unstable_getServerSession(req, res, {
-      providers: [],
-      logger,
-    })
+    const configError = new Error(
+      "There is a problem with the server configuration. Check the server logs for more information."
+    )
+    await expect(
+      unstable_getServerSession(req, res, { providers: [], logger })
+    ).rejects.toThrowError(configError)
 
-    expect(session).toEqual(null)
     expect(logger.error).toBeCalledTimes(1)
     expect(logger.error).toBeCalledWith("NO_SECRET", expect.any(MissingSecret))
   })
 
   it("Only logs warning once and in development", async () => {
+    process.env.NEXTAUTH_SECRET = "secret"
     // Expect console.warn to NOT be called due to NODE_ENV=production
     await unstable_getServerSession(req, res, { providers: [], logger })
     expect(console.warn).toBeCalledTimes(0)
@@ -71,6 +73,7 @@ describe("Treat secret correctly", () => {
     // Expect console.warn to be still only be called ONCE
     await unstable_getServerSession(req, res, { providers: [], logger })
     expect(console.warn).toBeCalledTimes(1)
+    delete process.env.NEXTAUTH_SECRET
   })
 })
 
