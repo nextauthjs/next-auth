@@ -5,7 +5,7 @@ importers:
   .:
     specifiers:
       '@actions/core': ^1.6.0
-      '@balazsorban/monorepo-release': 0.0.4
+      '@balazsorban/monorepo-release': 0.0.5
       '@types/jest': ^28.1.3
       '@types/node': ^17.0.25
       '@typescript-eslint/eslint-plugin': ^5.10.2
@@ -27,7 +27,7 @@ importers:
       typescript: 4.7.4
     devDependencies:
       '@actions/core': 1.9.0
-      '@balazsorban/monorepo-release': 0.0.4
+      '@balazsorban/monorepo-release': 0.0.5
       '@types/jest': 28.1.3
       '@types/node': 17.0.45
       '@typescript-eslint/eslint-plugin': 5.29.0_3ekaj7j3owlolnuhj3ykrb7u7i
@@ -3638,8 +3638,8 @@ packages:
       '@babel/helper-validator-identifier': 7.16.7
       to-fast-properties: 2.0.0
 
-  /@balazsorban/monorepo-release/0.0.4:
-    resolution: {integrity: sha512-jjYc05vcRueT+nC7BD7C0D2JjE+H8xDdAIfwjtlbMHTnTwPx2KYXrbWohbL7bGVN8ZbhJDmXkXOQjppSrZCQBw==}
+  /@balazsorban/monorepo-release/0.0.5:
+    resolution: {integrity: sha512-IeLswLrG7a+us5cQVxb1w8hbfgYYLIoIuodU6yDTo4Ln0qzS6AZGnwiL9ykAxewirFYCEjBGa0tqOymOpEvLtA==}
     engines: {node: '>=16.16.0'}
     hasBin: true
     dependencies:
@@ -7919,10 +7919,8 @@ packages:
       clean-stack: 2.2.0
       indent-string: 4.0.0
 
-  /ajv-formats/2.1.1_ajv@8.11.0:
+  /ajv-formats/2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
-    peerDependencies:
-      ajv: ^8.0.0
     peerDependenciesMeta:
       ajv:
         optional: true
@@ -9531,8 +9529,8 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
-      JSONStream: 1.3.5
       is-text-path: 1.0.1
+      JSONStream: 1.3.5
       lodash: 4.17.21
       meow: 8.1.2
       split2: 3.2.2
@@ -11709,7 +11707,7 @@ packages:
     dependencies:
       '@apidevtools/json-schema-ref-parser': 9.0.9
       ajv: 8.11.0
-      ajv-formats: 2.1.1_ajv@8.11.0
+      ajv-formats: 2.1.1
       body-parser: 1.20.0
       content-type: 1.0.4
       deep-freeze: 0.0.1
@@ -12618,7 +12616,7 @@ packages:
     dev: true
 
   /git-log-parser/1.2.0:
-    resolution: {integrity: sha1-LmpMGxP8AAKCB7p5WnrDFme5/Uo=}
+    resolution: {integrity: sha512-rnCVNfkTL8tdNryFuaY0fYiBWEBcgF748O6ZI61rslBvr2o7U65c2/6npCRqH40vuAhtgtDiqLTJjBVdrejCzA==}
     dependencies:
       argv-formatter: 1.0.0
       spawn-error-forwarder: 1.0.0
@@ -18833,12 +18831,6 @@ packages:
   /react-dev-utils/12.0.1_webpack@5.73.0:
     resolution: {integrity: sha512-84Ivxmr17KjUupyqzFode6xKhjwuEJDROWKJy/BthkL7Wn6NJ8h4WE6k/exAv6ImS+0oZLRRW5j/aINMHyeGeQ==}
     engines: {node: '>=14'}
-    peerDependencies:
-      typescript: '>=2.7'
-      webpack: '>=4'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
     dependencies:
       '@babel/code-frame': 7.16.7
       address: 1.2.0
@@ -18868,7 +18860,9 @@ packages:
     transitivePeerDependencies:
       - eslint
       - supports-color
+      - typescript
       - vue-template-compiler
+      - webpack
     dev: false
 
   /react-dom/18.2.0_react@18.2.0:
@@ -19570,7 +19564,7 @@ packages:
     dependencies:
       '@types/json-schema': 7.0.11
       ajv: 8.11.0
-      ajv-formats: 2.1.1_ajv@8.11.0
+      ajv-formats: 2.1.1
       ajv-keywords: 5.1.0_ajv@8.11.0
     dev: false
 
