@@ -9,6 +9,7 @@ import {
   OneToMany,
   Collection,
   ManyToOne,
+  types,
 } from "@mikro-orm/core"
 
 import type { DefaultAccount } from "next-auth"
@@ -29,55 +30,56 @@ export class User implements RemoveIndex<AdapterUser> {
   @PrimaryKey()
   id: string = randomUUID()
 
-  @Property({ nullable: true })
+  @Property({ type: types.string, nullable: true })
   name?: string
 
-  @Property({ nullable: true })
+  @Property({ type: types.string, nullable: true })
   @Unique()
   email?: string
 
-  @Property({ type: "Date", nullable: true })
+  @Property({ type: types.datetime, nullable: true })
   emailVerified: Date | null = null
 
-  @Property({ nullable: true })
+  @Property({ type: types.string, nullable: true })
   image?: string
 
   @OneToMany({
-    entity: () => Session,
-    mappedBy: (session) => session.user,
+    entity: 'Session',
+    mappedBy: (session: Session) => session.user,
     hidden: true,
     orphanRemoval: true,
   })
-  sessions = new Collection<Session>(this)
+  sessions = new Collection<Session, object>(this)
 
   @OneToMany({
-    entity: () => Account,
-    mappedBy: (account) => account.user,
+    entity: 'Account',
+    mappedBy: (account: Account) => account.user,
     hidden: true,
     orphanRemoval: true,
   })
-  accounts = new Collection<Account>(this)
+  accounts = new Collection<Account, object>(this)
 }
 
 @Entity()
 export class Session implements AdapterSession {
   @PrimaryKey()
+  @Property({ type: types.string })
   id: string = randomUUID()
 
   @ManyToOne({
-    entity: () => User,
+    entity: 'User',
     hidden: true,
     onDelete: "cascade",
   })
   user!: User
 
-  @Property({ persist: false })
+  @Property({ type: types.string, persist: false })
   userId!: string
 
-  @Property()
+  @Property({ type: 'Date' })
   expires!: Date
 
-  @Property()
+  @Property({ type: types.string })
   @Unique()
   sessionToken!: string
 }
@@ -86,46 +88,47 @@ export class Session implements AdapterSession {
 @Unique({ properties: ["provider", "providerAccountId"] })
 export class Account implements RemoveIndex<DefaultAccount> {
   @PrimaryKey()
+  @Property({ type: types.string })
   id: string = randomUUID()
 
   @ManyToOne({
-    entity: () => User,
+    entity: 'User',
     hidden: true,
     onDelete: "cascade",
   })
   user!: User
 
-  @Property({ persist: false })
+  @Property({ type: types.string, persist: false })
   userId!: string
 
-  @Enum()
+  @Property({ type: types.string })
   type!: ProviderType
 
-  @Property()
+  @Property({ type: types.string })
   provider!: string
 
-  @Property()
+  @Property({ type: types.string })
   providerAccountId!: string
 
-  @Property({ nullable: true })
+  @Property({ type: types.string, nullable: true })
   refresh_token?: string
 
-  @Property({ nullable: true })
+  @Property({ type: types.string, nullable: true })
   access_token?: string
 
-  @Property({ nullable: true })
+  @Property({ type: types.integer, nullable: true })
   expires_at?: number
 
-  @Property({ nullable: true })
+  @Property({ type: types.string, nullable: true })
   token_type?: string
 
-  @Property({ nullable: true })
+  @Property({ type: types.string, nullable: true })
   scope?: string
 
-  @Property({ nullable: true })
+  @Property({ type: types.text, nullable: true })
   id_token?: string
 
-  @Property({ nullable: true })
+  @Property({ type: types.string, nullable: true })
   session_state?: string
 }
 
@@ -133,12 +136,12 @@ export class Account implements RemoveIndex<DefaultAccount> {
 @Unique({ properties: ["token", "identifier"] })
 export class VerificationToken implements AdapterVerificationToken {
   @PrimaryKey()
-  @Property()
+  @Property({ type: types.string })
   token!: string
 
-  @Property()
+  @Property({ type: 'Date' })
   expires!: Date
 
-  @Property()
+  @Property({ type: types.string })
   identifier!: string
 }

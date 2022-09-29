@@ -10,7 +10,7 @@ import { MikroORM, wrap } from "@mikro-orm/core"
 
 import * as defaultEntities from "./entities"
 
-export * as defaultEntities from "./entities"
+export { defaultEntities }
 
 /**
  * The MikroORM adapter accepts a MikroORM configuration and returns a NextAuth adapter.

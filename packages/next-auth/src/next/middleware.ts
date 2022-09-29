@@ -106,12 +106,13 @@ async function handleMiddleware(
   const signInPage = options?.pages?.signIn ?? "/api/auth/signin"
   const errorPage = options?.pages?.error ?? "/api/auth/error"
   const basePath = parseUrl(process.env.NEXTAUTH_URL).path
-  const publicPaths = [signInPage, errorPage, "/_next", "/favicon.ico"]
+  const publicPaths = ["/_next", "/favicon.ico"]
 
   // Avoid infinite redirects/invalid response
   // on paths that never require authentication
   if (
     pathname.startsWith(basePath) ||
+    [signInPage, errorPage].includes(pathname) ||
     publicPaths.some((p) => pathname.startsWith(p))
   ) {
     return
