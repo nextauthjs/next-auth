@@ -1,5 +1,5 @@
-import { initializeApp } from "firebase/app"
-import type { FirebaseOptions } from "firebase/app"
+import { FirebaseApp } from "firebase/app"
+//import type { FirebaseOptions } from "firebase/app"
 import {
   addDoc,
   collection,
@@ -13,7 +13,7 @@ import {
   runTransaction,
   setDoc,
   where,
-  connectFirestoreEmulator,
+  //connectFirestoreEmulator,
 } from "firebase/firestore"
 import type { Account } from "next-auth"
 import type {
@@ -27,27 +27,24 @@ import { getConverter } from "./converter"
 
 type IndexableObject = Record<string, unknown>
 
-export interface FirestoreAdapterOptions {
-  emulator?: {
-    host?: string
-    port?: number
-  }
-}
+// export interface FirestoreAdapterOptions {
+//   emulator?: {
+//     host?: string
+//     port?: number
+//   }
+// }
 
-export function FirestoreAdapter({
-  emulator,
-  ...firebaseOptions
-}: FirebaseOptions & FirestoreAdapterOptions): Adapter {
-  const firebaseApp = initializeApp(firebaseOptions)
+export function FirestoreAdapter(firebaseApp: FirebaseApp): Adapter {
   const db = getFirestore(firebaseApp)
 
-  if (emulator) {
-    connectFirestoreEmulator(
-      db,
-      emulator?.host ?? "localhost",
-      emulator?.port ?? 3001
-    )
-  }
+  // TODO: Figure out a way to include support for this.
+  // if (emulator) {
+  //   connectFirestoreEmulator(
+  //     db,
+  //     emulator?.host ?? "localhost",
+  //     emulator?.port ?? 3001
+  //   )
+  // }
 
   const Users = collection(db, "users").withConverter(
     getConverter<AdapterUser>()
