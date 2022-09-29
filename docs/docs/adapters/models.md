@@ -115,4 +115,4 @@ Due to users forgetting or failing at the sign-in flow, you might end up with un
 
 ## RDBMS Naming Convention
 
-In the NextAuth.js v4 some schemas for the providers which support classic RDBMS type databases, like Prisma and TypeORM, have ended up with column names with mixed casing, i.e. snake_case and camelCase. If this is an issue for you or your underlying database system, please take a look at the "Naming Convention" section in the Prisma or TypeORM page.
+In the NextAuth.js v4 some schemas for the providers which support classic RDBMS type databases, like Prisma and Kysely and TypeORM, have ended up with column names with mixed casing, i.e. snake_case and camelCase. If this is an issue for you or your underlying database system, please take a look at the "Naming Convention" section in the Prisma, Kysely, or TypeORM page.

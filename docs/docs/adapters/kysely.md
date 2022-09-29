@@ -38,7 +38,7 @@ export default NextAuth({
 [Kysely](https://github.com/koskimas/kysely) (pronounce “Key-Seh-Lee”) is a type-safe and autocompletion-friendly TypeScript SQL query builder inspired by Knex. To use Kysely, you define interfaces for each of your database tables and pass them to the `Kysely` constructor.
 
 ### Create type definitions and the Kysely instance
-This Adapter exports a wrapper around the original Kysely class, `AuthedKysely`, that can be used to provide an additional level of type safety. While using it isn't required, it is recommended as it will verify that the database interface has all the fields that NextAuth requires.
+This Adapter exports a wrapper around the original Kysely class, `AuthedKysely`, that can be used to provide an additional level of type safety. While using it isn't required, it is recommended as it will verify that the database interface has all the fields that NextAuth.js requires.
 
 :::note
 An alternative to manually defining types is generating them from the database schema using [kysely-codegen](https://github.com/RobinBlomberg/kysely-codegen).
@@ -109,7 +109,7 @@ export const db = new AuthedKysely<Database>({
 
 ### Create migrations
 
-This schema is based on the NextAuth main [schema](/adapters/models).
+This schema is based on the NextAuth.js main [schema](/adapters/models).
 ```ts title="db/migrations/001_create_db.ts"
 import { Kysely, sql } from "kysely";
 
@@ -258,4 +258,8 @@ migrateToLatest();
 ### Run the migrations
 ```ts
 npx tsx db/migrate.ts
+```
 
+## Naming Conventions
+
+If mixed snake_case and camelCase column names is an issue for you and/or your underlying database system, we recommend using Kysely's `CamelCasePlugin` ([see the documentation here](https://koskimas.github.io/kysely/classes/CamelCasePlugin.html)) feature to change the field names. This won't affect NextAuth.js, but will allow you to have consistent casing when using Kysely.
