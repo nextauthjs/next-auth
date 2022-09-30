@@ -136,7 +136,7 @@ The `callbackUrl` provided was either invalid or not defined. See [specifying a 
 
 #### JWT_SESSION_ERROR
 
-JWKKeySupport: the key does not support HS512 verify algorithm
+JWTKeySupport: the key does not support HS512 verify algorithm
 
 The algorithm used for generating your key isn't listed as supported. You can generate a HS512 key using
 

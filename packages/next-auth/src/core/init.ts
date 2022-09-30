@@ -1,3 +1,4 @@
+import { randomBytes, randomUUID } from "crypto"
 import { NextAuthOptions } from ".."
 import logger from "../utils/logger"
 import parseUrl from "../utils/parse-url"
@@ -86,6 +87,10 @@ export async function init({
       strategy: userOptions.adapter ? "database" : "jwt",
       maxAge,
       updateAge: 24 * 60 * 60,
+      generateSessionToken: () => {
+        // Use `randomUUID` if available. (Node 15.6+)
+        return randomUUID?.() ?? randomBytes(32).toString("hex")
+      },
       ...userOptions.session,
     },
     // JWT options
