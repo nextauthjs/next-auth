@@ -123,7 +123,10 @@ export interface OAuthConfig<P, A = any>
    * If set to `"minimal"`
    * @default "pass-through"
    */
-  account?: "minimal" | "pass-through" | ((account: A) => Awaitable<Account>)
+  account?:
+    | "minimal"
+    | "pass-through"
+    | ((account: A & TokenSet) => Awaitable<Account>)
   checks?: ChecksType | ChecksType[]
   client?: Partial<ClientMetadata>
   jwks?: { keys: JWK[] }
