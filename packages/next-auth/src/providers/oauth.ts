@@ -1,5 +1,5 @@
 import type { CommonProviderOptions } from "../providers"
-import type { Profile, TokenSet, User, Awaitable } from ".."
+import type { Profile, TokenSet, User, Awaitable, Account } from ".."
 
 import type {
   AuthorizationParameters,
@@ -25,12 +25,12 @@ type PartialIssuer = Partial<Pick<IssuerMetadata, "jwks_endpoint" | "issuer">>
 
 type UrlParams = Record<string, unknown>
 
-type EndpointRequest<C, R, P> = (
+type EndpointRequest<C, R, P, A> = (
   context: C & {
     /** `openid-client` Client */
     client: Client
     /** Provider is passed for convenience, ans also contains the `callbackUrl`. */
-    provider: OAuthConfig<P> & {
+    provider: OAuthConfig<P, A> & {
       signinUrl: string
       callbackUrl: string
     }
@@ -38,7 +38,7 @@ type EndpointRequest<C, R, P> = (
 ) => Awaitable<R>
 
 /** Gives granular control of the request to the given endpoint */
-interface AdvancedEndpointHandler<P extends UrlParams, C, R> {
+interface AdvancedEndpointHandler<P extends UrlParams, C, R, A> {
   /** Endpoint URL. Can contain parameters. Optionally, you can use `params` */
   url?: string
   /** These will be prepended to the `url` */
@@ -51,15 +51,16 @@ interface AdvancedEndpointHandler<P extends UrlParams, C, R> {
    * - ⚠ **This is an advanced option.**
    * You should **try to avoid using advanced options** unless you are very comfortable using them.
    */
-  request?: EndpointRequest<C, R, P>
+  request?: EndpointRequest<C, R, P, A>
 }
 
 /** Either an URL (containing all the parameters) or an object with more granular control. */
 export type EndpointHandler<
   P extends UrlParams,
   C = any,
-  R = any
-> = AdvancedEndpointHandler<P, C, R>
+  R = any,
+  A = any
+> = AdvancedEndpointHandler<P, C, R, A>
 
 export type AuthorizationEndpointHandler =
   EndpointHandler<AuthorizationParameters>
@@ -89,7 +90,9 @@ export type UserinfoEndpointHandler = EndpointHandler<
   Profile
 >
 
-export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
+export interface OAuthConfig<P, A = any>
+  extends CommonProviderOptions,
+    PartialIssuer {
   /**
    * OpenID Connect (OIDC) compliant providers can configure
    * this instead of `authorize`/`token`/`userinfo` options
@@ -110,7 +113,24 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   userinfo?: string | UserinfoEndpointHandler
   type: "oauth"
   version?: string
+  /**
+   * Which part of the provider profile should be used to create the user in the database.
+   * By default, `name`, ``email`` and ``image`` are used only.
+   */
   profile?: (profile: P, tokens: TokenSet) => Awaitable<User & { id: string }>
+  /**
+   * Which part of the provider account should be saved in the database.
+   * If set to `"minimal"`
+   * @default "pass-through"
+   */
+  account?:
+    | "minimal"
+    | "pass-through"
+    | ((
+        account: A
+      ) => Awaitable<
+        Omit<Account, "provider" | "type" | "providerAccountId" | "userId">
+      >)
   checks?: ChecksType | ChecksType[]
   client?: Partial<ClientMetadata>
   jwks?: { keys: JWK[] }
@@ -138,7 +158,7 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
    * We will perform a deep-merge of these values
    * with the default configuration.
    */
-  options?: OAuthUserConfig<P>
+  options?: OAuthUserConfig<P, A>
 
   // These are kept around for backwards compatibility with OAuth 1.x
   accessTokenUrl?: string
@@ -147,11 +167,11 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   encoding?: string
 }
 
-export type OAuthUserConfig<P> = Omit<
-  Partial<OAuthConfig<P>>,
+export type OAuthUserConfig<P, A = any> = Omit<
+  Partial<OAuthConfig<P, A>>,
   "options" | "type"
 > &
-  Required<Pick<OAuthConfig<P>, "clientId" | "clientSecret">>
+  Required<Pick<OAuthConfig<P, A>, "clientId" | "clientSecret">>
 
 export type OAuthProvider = (
   options: Partial<OAuthConfig<any>>

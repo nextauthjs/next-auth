@@ -1,8 +1,25 @@
-import { Account, User, Awaitable } from "."
+import type { Account, User, Awaitable } from "."
+import type { ProviderType } from "./providers"
 
 export interface AdapterUser extends User {
   id: string
   emailVerified: Date | null
+}
+
+export interface AdapterAccount extends Account {
+  /**
+   * This value depends on the type of the provider being used to create the account.
+   * - oauth: The OAuth account's id, returned from the `profile()` callback.
+   * - email: The user's email address.
+   * - credentials: `id` returned from the `authorize()` callback
+   */
+  providerAccountId: string
+  /** id of the user this account belongs to. */
+  userId: string
+  /** id of the provider used for this account */
+  provider: string
+  /** Provider's type for this account */
+  type: ProviderType
 }
 
 export interface AdapterSession {
@@ -61,7 +78,7 @@ export interface Adapter {
   getUserByEmail: (email: string) => Awaitable<AdapterUser | null>
   /** Using the provider id and the id of the user for a specific account, get the user. */
   getUserByAccount: (
-    providerAccountId: Pick<Account, "provider" | "providerAccountId">
+    providerAccountId: Pick<AdapterAccount, "provider" | "providerAccountId">
   ) => Awaitable<AdapterUser | null>
   updateUser: (user: Partial<AdapterUser>) => Awaitable<AdapterUser>
   /** @todo Implement */
@@ -69,12 +86,12 @@ export interface Adapter {
     userId: string
   ) => Promise<void> | Awaitable<AdapterUser | null | undefined>
   linkAccount: (
-    account: Account
-  ) => Promise<void> | Awaitable<Account | null | undefined>
+    account: AdapterAccount
+  ) => Promise<void> | Awaitable<AdapterAccount | null | undefined>
   /** @todo Implement */
   unlinkAccount?: (
-    providerAccountId: Pick<Account, "provider" | "providerAccountId">
-  ) => Promise<void> | Awaitable<Account | undefined>
+    providerAccountId: Pick<AdapterAccount, "provider" | "providerAccountId">
+  ) => Promise<void> | Awaitable<AdapterAccount | undefined>
   /** Creates a session for the user and returns it. */
   createSession: (session: {
     sessionToken: string

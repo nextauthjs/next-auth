@@ -151,9 +151,14 @@ export default async function callbackHandler(params: {
       return { session, user: userByAccount, isNewUser }
     } else {
       if (user) {
+        const newAccount = await getAccount(
+          (options as InternalOptions<"oauth">).provider,
+          { ...account, userId: user.id }
+        )
+
         // If the user is already signed in and the OAuth account isn't already associated
         // with another user account then we can go ahead and link the accounts safely.
-        await linkAccount({ ...account, userId: user.id })
+        await linkAccount(newAccount)
         await events.linkAccount?.({ user, account, profile })
 
         // As they are already signed in, we don't need to do anything after linking them
@@ -203,7 +208,12 @@ export default async function callbackHandler(params: {
       user = await createUser(newUser)
       await events.createUser?.({ user })
 
-      await linkAccount({ ...account, userId: user.id })
+      const newAccount = await getAccount(
+        (options as InternalOptions<"oauth">).provider,
+        { ...account, userId: user.id }
+      )
+
+      await linkAccount(newAccount)
       await events.linkAccount?.({ user, account, profile })
 
       session = useJwtSession
@@ -217,4 +227,36 @@ export default async function callbackHandler(params: {
       return { session, user, isNewUser: true }
     }
   }
+}
+
+async function getAccount(
+  providerConfig: InternalOptions<"oauth">["provider"],
+  account: Account
+) {
+  const { version, account: accountFilter } = providerConfig
+  if (!accountFilter || accountFilter === "pass-through") {
+    return account
+  }
+  const { provider, providerAccountId, userId, type, ...rest } = account
+  const required = { provider, providerAccountId, userId, type }
+  if (accountFilter === "minimal") {
+    if (version?.startsWith("1")) {
+      return {
+        ...required,
+        oauth_token_secret: rest.oauth_token_secret,
+        oauth_token: rest.oauth_token,
+      }
+    }
+    return {
+      ...required,
+      access_token: rest.access_token,
+      token_type: rest.token_type,
+      id_token: rest.id_token,
+      refresh_token: rest.refresh_token,
+      scope: rest.scope,
+      expires_at: rest.expires_at,
+      session_state: rest.session_state,
+    }
+  }
+  return { ...required, ...(await accountFilter(account)) }
 }
