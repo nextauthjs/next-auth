@@ -120,7 +120,6 @@ export interface OAuthConfig<P, A = any>
   profile?: (profile: P, tokens: TokenSet) => Awaitable<User & { id: string }>
   /**
    * Which part of the provider account should be saved in the database.
-   * If set to `"minimal"`
    * @default "pass-through"
    */
   account?:
