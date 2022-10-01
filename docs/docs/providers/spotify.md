@@ -25,7 +25,7 @@ You can override any of the options to suit your own use case.
 import SpotifyProvider from "next-auth/providers/spotify";
 ...
 providers: [
-  SpotifyProvider({
+  Spotify({
     clientId: process.env.SPOTIFY_CLIENT_ID,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET
   })
