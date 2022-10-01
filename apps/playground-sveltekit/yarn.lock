@@ -1161,9 +1161,9 @@ isexe@^2.0.0:
   integrity sha1-6PvzdNxVb/iUehDcsFctYz8s+hA=
 
 jose@^4.1.4, jose@^4.3.7:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/jose/-/jose-4.5.0.tgz#92829d8cf846351eb55aaaf94f252fb1d191f2d5"
-  integrity sha512-GFcVFQwYQKbQTUOo2JlpFGXTkgBw26uzDsRMD2q1WgSKNSnpKS9Ug7bdQ8dS+p4sZHNH6iRPu6WK2jLIjspaMA==
+  version "4.9.3"
+  resolved "https://registry.yarnpkg.com/jose/-/jose-4.9.3.tgz#890abd3f26725fe0f2aa720bc2f7835702b624db"
+  integrity sha512-f8E/z+T3Q0kA9txzH2DKvH/ds2uggcw0m3vVPSB9HrSkrQ7mojjifvS7aR8cw+lQl2Fcmx9npwaHpM/M3GD8UQ==
 
 js-yaml@^4.1.0:
   version "4.1.0"

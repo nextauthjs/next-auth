@@ -12,15 +12,24 @@ npm install next-auth @prisma/client @next-auth/prisma-adapter
 npm install prisma --save-dev
 ```
 
+Create a file with your Prisma Client:
+
+```javascript title="lib/prismadb.js"
+import { PrismaClient } from "@prisma/client"
+
+const client = globalThis.prisma || new PrismaClient()
+if (process.env.NODE_ENV !== "production") globalThis.prisma = client
+
+export default client
+```
+
 Configure your NextAuth.js to use the Prisma Adapter:
 
 ```javascript title="pages/api/auth/[...nextauth].js"
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import { PrismaClient } from "@prisma/client"
-
-const prisma = new PrismaClient()
+import prisma from "../../../lib/prismadb"
 
 export default NextAuth({
   adapter: PrismaAdapter(prisma),
