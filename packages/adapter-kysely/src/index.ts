@@ -39,11 +39,23 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
     }
   }
 
+  /** Helper function to return the passed in object and its specified prop
+   * as an ISO string if SQLite is being used.
+   **/
+  function coerceInputData<
+    T extends Partial<Record<K, Date | null>>,
+    K extends keyof T
+  >(data: T, key: K) {
+    const value = data[key]
+    return {
+      ...data,
+      [key]: value && storeDatesAsISOStrings ? value.toISOString() : value,
+    }
+  }
+
   return {
     async createUser(data) {
-      const userData = storeDatesAsISOStrings
-        ? { ...data, emailVerified: (data.emailVerified as Date).toISOString() }
-        : data
+      const userData = coerceInputData(data, "emailVerified")
       const query = db.insertInto("User").values(userData)
       const result = supportsReturning
         ? await query.returningAll().executeTakeFirstOrThrow()
@@ -90,9 +102,7 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
     },
     async updateUser({ id, ...user }) {
       if (!id) throw new Error("User not found")
-      const userData = storeDatesAsISOStrings
-        ? { ...user, emailVerified: user.emailVerified?.toISOString() }
-        : user
+      const userData = coerceInputData(user, "emailVerified")
       const query = db.updateTable("User").set(userData).where("id", "=", id)
       const result = supportsReturning
         ? await query.returningAll().executeTakeFirstOrThrow()
@@ -119,9 +129,7 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
         .executeTakeFirstOrThrow()
     },
     async createSession(data) {
-      const sessionData = storeDatesAsISOStrings
-        ? { ...data, expires: data.expires.toISOString() }
-        : data
+      const sessionData = coerceInputData(data, "expires")
       const query = db.insertInto("Session").values(sessionData)
       const result = supportsReturning
         ? await query.returningAll().executeTakeFirstOrThrow()
@@ -159,14 +167,7 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
       }
     },
     async updateSession(session) {
-      const sessionData = storeDatesAsISOStrings
-        ? {
-            ...session,
-            expires: session.expires
-              ? session.expires.toISOString()
-              : session.expires,
-          }
-        : session
+      const sessionData = coerceInputData(session, "expires")
       const query = db
         .updateTable("Session")
         .set(sessionData)
@@ -189,12 +190,10 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
         .executeTakeFirstOrThrow()
     },
     async createVerificationToken(verificationToken) {
-      const verificationTokenData = supportsReturning
-        ? {
-            ...verificationToken,
-            expires: verificationToken.expires.toISOString(),
-          }
-        : verificationToken
+      const verificationTokenData = coerceInputData(
+        verificationToken,
+        "expires"
+      )
       const query = db
         .insertInto("VerificationToken")
         .values(verificationTokenData)
