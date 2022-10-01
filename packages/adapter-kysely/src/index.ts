@@ -9,29 +9,6 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
   const supportsReturning = adapter.supportsReturning
   const storeDatesAsISOStrings = adapter instanceof SqliteAdapter
 
-  /**
-   * Helper function to return the passed in object and its specified prop as a date.
-   * Necessary because SQLite has no date type so we store dates as ISO strings.
-   **/
-  function coerceReturnData<T extends ReturnData, K extends keyof T>(
-    data: T,
-    key: K
-  ): Omit<T, K> & Record<K, Date>
-  function coerceReturnData<T extends ReturnData<null>, K extends keyof T>(
-    data: T,
-    key: K
-  ): Omit<T, K> & Record<K, Date | null>
-  function coerceReturnData<T extends ReturnData<null>, K extends keyof T>(
-    data: T,
-    key: K
-  ) {
-    const value = data[key]
-    return {
-      ...data,
-      [key]: value && typeof value === "string" ? new Date(value) : value,
-    }
-  }
-
   /** Helper function to return the passed in object and its specified prop
    * as an ISO string if SQLite is being used.
    **/
@@ -44,6 +21,28 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
       ...data,
       [key]: value && storeDatesAsISOStrings ? value.toISOString() : value,
     }
+  }
+
+  /**
+   * Helper function to return the passed in object and its specified prop as a date.
+   * Necessary because SQLite has no date type so we store dates as ISO strings.
+   **/
+  function coerceReturnData<T extends Partial<ReturnData>, K extends keyof T>(
+    data: T,
+    key: K
+  ): Omit<T, K> & Record<K, Date>
+  function coerceReturnData<
+    T extends Partial<ReturnData<null>>,
+    K extends keyof T
+  >(data: T, key: K): Omit<T, K> & Record<K, Date | null>
+  function coerceReturnData<
+    T extends Partial<ReturnData<null>>,
+    K extends keyof T
+  >(data: T, key: K) {
+    const value = data[key]
+    return Object.assign(data, {
+      [key]: value && typeof value === "string" ? new Date(value) : value,
+    })
   }
 
   return {
@@ -229,4 +228,4 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
  * also be used, but wrapping it ensures the database interface
  * implements the fields that NextAuth requires.
  **/
- export class AuthedKysely<DB extends Database> extends Kysely<DB> {}
+export class AuthedKysely<DB extends Database> extends Kysely<DB> {}
