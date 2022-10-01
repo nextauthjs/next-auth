@@ -3,13 +3,6 @@ import type { Adapter } from "next-auth/adapters"
 import type { Database } from "./database"
 
 type ReturnData<T = never> = Record<string, Date | string | T>
-/**
- * Wrapper over the original Kysely class in order to validate
- * the passed in database interface. A regular Kysely instance may
- * also be used, but wrapping it ensures the database interface
- * implements the fields that NextAuth requires.
- **/
-export class AuthedKysely<DB extends Database> extends Kysely<DB> {}
 
 export function KyselyAdapter(db: Kysely<Database>): Adapter {
   const adapter = db.getExecutor().adapter
@@ -229,3 +222,11 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
     },
   }
 }
+
+/**
+ * Wrapper over the original Kysely class in order to validate
+ * the passed in database interface. A regular Kysely instance may
+ * also be used, but wrapping it ensures the database interface
+ * implements the fields that NextAuth requires.
+ **/
+ export class AuthedKysely<DB extends Database> extends Kysely<DB> {}
