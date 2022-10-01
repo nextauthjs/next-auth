@@ -117,10 +117,11 @@ The contents _user_, _account_, _profile_ and _isNewUser_ will vary depending on
 ```js title="pages/api/auth/[...nextauth].js"
 ...
 callbacks: {
-  async jwt({ token, account }) {
+  async jwt({ token, account, profile }) {
     // Persist the OAuth access_token to the token right after signin
     if (account) {
       token.accessToken = account.access_token
+      token.id = profile.id
     }
     return token
   }
@@ -147,6 +148,9 @@ callbacks: {
   async session({ session, token, user }) {
     // Send properties to the client, like an access_token from a provider.
     session.accessToken = token.accessToken
+    session.user = {
+      id: token.id,
+    };
     return session
   }
 }
