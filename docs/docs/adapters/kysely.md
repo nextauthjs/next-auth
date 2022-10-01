@@ -44,7 +44,7 @@ This Adapter exports a wrapper around the original Kysely class, `AuthedKysely`,
 An alternative to manually defining types is generating them from the database schema using [kysely-codegen](https://github.com/RobinBlomberg/kysely-codegen).
 :::
 ```ts title="db/index.ts"
-import { Kysely, PostgresDialect } from "kysely";
+import { PostgresDialect } from "kysely";
 import type { Generated } from "kysely";
 import { Pool } from "pg";
 import { AuthedKysely } from "@next-auth/kysely-adapter"
