@@ -68,6 +68,7 @@ AZURE_AD_B2C_TENANT_NAME=<copy the B2C tenant name here from Step 1>
 AZURE_AD_B2C_CLIENT_ID=<copy Application (client) ID here from Step 2>
 AZURE_AD_B2C_CLIENT_SECRET=<copy generated secret value here from Step 2>
 AZURE_AD_B2C_PRIMARY_USER_FLOW=<copy the name of the signin user flow you created from Step 3>
+REDIRECT_URI=<uri to redirect browser after authentication>
 ```
 
 In `pages/api/auth/[...nextauth].js` find or add the AZURE_AD_B2C entries:
@@ -81,7 +82,14 @@ providers: [
     clientId: process.env.AZURE_AD_B2C_CLIENT_ID,
     clientSecret: process.env.AZURE_AD_B2C_CLIENT_SECRET,
     primaryUserFlow: process.env.AZURE_AD_B2C_PRIMARY_USER_FLOW,
-    authorization: { params: { scope: "offline_access openid" } },
+    authorization: {
+      params: {
+        scope: 'openid profile',
+        response_type: 'code',
+        redirect_uri: process.env.REDIRECT_URI,
+      },
+    },
+    checks: 'pkce',
   }),
 ]
 ...
