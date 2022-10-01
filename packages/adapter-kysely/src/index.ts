@@ -2,6 +2,7 @@ import { Kysely, SqliteAdapter } from "kysely"
 import type { Adapter } from "next-auth/adapters"
 import type { Database } from "./database"
 
+type ReturnData<T = never> = Record<string, Date | string | T>
 /**
  * Wrapper over the original Kysely class in order to validate
  * the passed in database interface. A regular Kysely instance may
@@ -14,6 +15,29 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
   const adapter = db.getExecutor().adapter
   const supportsReturning = adapter.supportsReturning
   const storeDatesAsISOStrings = adapter instanceof SqliteAdapter
+
+  /**
+   * Helper function to return the passed in object and its specified prop as a date.
+   * Necessary because SQLite has no date type so we store dates as ISO strings.
+   **/
+  function coerceReturnData<T extends ReturnData, K extends keyof T>(
+    data: T,
+    key: K
+  ): Omit<T, K> & Record<K, Date>
+  function coerceReturnData<T extends ReturnData<null>, K extends keyof T>(
+    data: T,
+    key: K
+  ): Omit<T, K> & Record<K, Date | null>
+  function coerceReturnData<T extends ReturnData<null>, K extends keyof T>(
+    data: T,
+    key: K
+  ) {
+    const value = data[key]
+    return {
+      ...data,
+      [key]: value && typeof value === "string" ? new Date(value) : value,
+    }
+  }
 
   return {
     async createUser(data) {
@@ -30,13 +54,7 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
               .where("email", "=", `${userData.email}`)
               .executeTakeFirstOrThrow()
           })
-
-      return Object.assign(result, {
-        emailVerified:
-          typeof result.emailVerified === "string"
-            ? new Date(result.emailVerified)
-            : result.emailVerified,
-      })
+      return coerceReturnData(result, "emailVerified")
     },
     async getUser(id) {
       const result =
@@ -45,14 +63,8 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
           .selectAll()
           .where("id", "=", id)
           .executeTakeFirst()) ?? null
-
       if (!result) return null
-      return Object.assign(result, {
-        emailVerified:
-          typeof result.emailVerified === "string"
-            ? new Date(result.emailVerified)
-            : result.emailVerified,
-      })
+      return coerceReturnData(result, "emailVerified")
     },
     async getUserByEmail(email) {
       const result =
@@ -61,14 +73,8 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
           .selectAll()
           .where("email", "=", email)
           .executeTakeFirst()) ?? null
-
       if (!result) return null
-      return Object.assign(result, {
-        emailVerified:
-          typeof result.emailVerified === "string"
-            ? new Date(result.emailVerified)
-            : result.emailVerified,
-      })
+      return coerceReturnData(result, "emailVerified")
     },
     async getUserByAccount({ providerAccountId, provider }) {
       const result =
@@ -79,14 +85,8 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
           .where("Account.providerAccountId", "=", providerAccountId)
           .where("Account.provider", "=", provider)
           .executeTakeFirst()) ?? null
-
       if (!result) return null
-      return Object.assign(result, {
-        emailVerified:
-          typeof result.emailVerified === "string"
-            ? new Date(result.emailVerified)
-            : result.emailVerified,
-      })
+      return coerceReturnData(result, "emailVerified")
     },
     async updateUser({ id, ...user }) {
       if (!id) throw new Error("User not found")
@@ -103,13 +103,7 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
               .where("id", "=", id)
               .executeTakeFirstOrThrow()
           })
-
-      return Object.assign(result, {
-        emailVerified:
-          typeof result.emailVerified === "string"
-            ? new Date(result.emailVerified)
-            : result.emailVerified,
-      })
+      return coerceReturnData(result, "emailVerified")
     },
     async deleteUser(userId) {
       await db.deleteFrom("User").where("User.id", "=", userId).execute()
@@ -139,13 +133,7 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
               .where("sessionToken", "=", sessionData.sessionToken)
               .executeTakeFirstOrThrow()
           })()
-
-      return Object.assign(result, {
-        expires:
-          typeof result.expires === "string"
-            ? new Date(result.expires)
-            : result.expires,
-      })
+      return coerceReturnData(result, "expires")
     },
     async getSessionAndUser(sessionTokenArg) {
       const result = await db
@@ -162,21 +150,12 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
         .executeTakeFirst()
       if (!result) return null
       const { sessionId: id, userId, sessionToken, expires, ...user } = result
-
       return {
-        user: {
-          ...user,
-          emailVerified:
-            typeof user.emailVerified === "string"
-              ? new Date(user.emailVerified)
-              : user.emailVerified,
-        },
-        session: {
-          id,
-          userId,
-          sessionToken,
-          expires: typeof expires === "string" ? new Date(expires) : expires,
-        },
+        user: coerceReturnData({ ...user }, "emailVerified"),
+        session: coerceReturnData(
+          { id, userId, sessionToken, expires },
+          "expires"
+        ),
       }
     },
     async updateSession(session) {
@@ -201,13 +180,7 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
               .where("Session.sessionToken", "=", sessionData.sessionToken)
               .executeTakeFirstOrThrow()
           })
-
-      return Object.assign(result, {
-        expires:
-          typeof result.expires === "string"
-            ? new Date(result.expires)
-            : result.expires,
-      })
+      return coerceReturnData(result, "expires")
     },
     async deleteSession(sessionToken) {
       await db
@@ -234,13 +207,7 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
               .where("token", "=", verificationTokenData.token)
               .executeTakeFirstOrThrow()
           })
-
-      return Object.assign(result, {
-        expires:
-          typeof result.expires === "string"
-            ? new Date(result.expires)
-            : result.expires,
-      })
+      return coerceReturnData(result, "expires")
     },
     async useVerificationToken({ identifier, token }) {
       const query = db
@@ -258,14 +225,8 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
               await query.executeTakeFirst()
               return res
             })
-
       if (!result) return null
-      return Object.assign(result, {
-        expires:
-          typeof result.expires === "string"
-            ? new Date(result.expires)
-            : result.expires,
-      })
+      return coerceReturnData(result, "expires")
     },
   }
 }
