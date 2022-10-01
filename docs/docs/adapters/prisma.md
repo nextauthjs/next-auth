@@ -14,16 +14,6 @@ npm install prisma --save-dev
 
 Create a file with your Prisma Client:
 
-```javascript title="lib/prismadb.js"
-import { PrismaClient } from "@prisma/client"
-
-const client = globalThis.prisma || new PrismaClient()
-if (process.env.NODE_ENV !== "production") globalThis.prisma = client
-
-export default client
-```
-
-OR if you are using **typescript**, then it must be:
 ```typescript title="lib/prismadb.ts"
 import { PrismaClient } from "@prisma/client";
 
