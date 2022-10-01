@@ -23,6 +23,20 @@ if (process.env.NODE_ENV !== "production") globalThis.prisma = client
 export default client
 ```
 
+OR if you are using **typescript**, then it must be:
+```typescript title="lib/prismadb.ts"
+import { PrismaClient } from "@prisma/client";
+
+declare global {
+  var prisma: PrismaClient | undefined
+}
+
+const client = globalThis.prisma || new PrismaClient()
+if (process.env.NODE_ENV !== "production") globalThis.prisma = client;
+
+export default client;
+```
+
 Configure your NextAuth.js to use the Prisma Adapter:
 
 ```javascript title="pages/api/auth/[...nextauth].js"
