@@ -42,11 +42,11 @@ export default NextAuth({
 This Adapter exports a wrapper around the original Kysely class, `AuthedKysely`, that can be used to provide an additional level of type safety. While using it isn't required, it is recommended as it will verify that the database interface has all the fields that NextAuth.js requires.
 
 :::note
-An alternative to manually defining types is generating them from the database schema using [kysely-codegen](https://github.com/RobinBlomberg/kysely-codegen). When using the generated types with AuthedKysely, import `CodeGen` and pass it as the second generic arg:
+An alternative to manually defining types is generating them from the database schema using [kysely-codegen](https://github.com/RobinBlomberg/kysely-codegen). When using the generated types with AuthedKysely, import `Codegen` and pass it as the second generic arg:
 
 ```
-import type { CodeGen } from "@next-auth/kysely-adapter"
-new AuthedKysely<Database, CodeGen>(...)
+import type { Codegen } from "@next-auth/kysely-adapter"
+new AuthedKysely<Database, Codegen>(...)
 
 ```
 
