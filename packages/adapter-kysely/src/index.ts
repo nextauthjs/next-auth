@@ -223,9 +223,15 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
 }
 
 /**
- * Wrapper over the original Kysely class in order to validate
- * the passed in database interface. A regular Kysely instance may
- * also be used, but wrapping it ensures the database interface
- * implements the fields that NextAuth requires.
+ * Wrapper over the original Kysely class in order to validate the passed in
+ * database interface. A regular Kysely instance may also be used, but wrapping
+ * it ensures the database interface implements the fields that NextAuth
+ * requires. When used with kysely-codegen, the CodeGen type can be passed as
+ * the second generic argument. The generated types will be used, and
+ * AuthedKysely will only verify that the correct fields exist.
  **/
-export class AuthedKysely<DB extends Database> extends Kysely<DB> {}
+export class AuthedKysely<DB extends T, T = Database> extends Kysely<DB> {}
+
+export type CodeGen = {
+  [K in keyof Database]: { [J in keyof Database[K]]: unknown }
+}
