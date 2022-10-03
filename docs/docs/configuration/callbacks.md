@@ -112,7 +112,7 @@ Requests to `/api/auth/signin`, `/api/auth/session` and calls to `getSession()`,
 - As with database persisted session expiry times, token expiry time is extended whenever a session is active.
 - The arguments _user_, _account_, _profile_ and _isNewUser_ are only passed the first time this callback is called on a new session, after the user signs in. In subsequent calls, only `token` will be available.
 
-The contents _user_, _account_, _profile_ and _isNewUser_ will vary depending on the provider and on if you are using a database or not. You can persist data such as User ID, OAuth Access Token in this token, see example below for `Access Token` and `User ID`. To make it available in the browser, check out the [`session()` callback](#session-callback) as well.
+The contents _user_, _account_, _profile_ and _isNewUser_ will vary depending on the provider and if you are using a database. You can persist data such as User ID, OAuth Access Token in this token, see the example below for `access_token` and `user.id`. To expose it on the client side, check out the [`session()` callback](#session-callback) as well.
 
 ```js title="pages/api/auth/[...nextauth].js"
 ...
@@ -135,7 +135,7 @@ Use an if branch to check for the existence of parameters (apart from `token`). 
 
 ## Session callback
 
-The session callback is called whenever a session is checked. By default, **only a subset of the token is returned for increased security**. If you want to make something available you added to the token (like `Access Token` and `User ID` from above) through the `jwt()` callback, you have to explicitly forward it here to make it available to the client.
+The session callback is called whenever a session is checked. By default, **only a subset of the token is returned for increased security**. If you want to make something available you added to the token (like `access_token` and `user.id` from above) via the `jwt()` callback, you have to explicitly forward it here to make it available to the client.
 
 e.g. `getSession()`, `useSession()`, `/api/auth/session`
 
