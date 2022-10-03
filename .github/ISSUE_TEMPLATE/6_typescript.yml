@@ -17,6 +17,7 @@ body:
   - type: markdown
     attributes:
       value: |
+        **NOTE:** Issues that are potentially security related should be reported to us by following the [Security guidelines](https://next-auth.js.org/security) rather than on GitHub.
         Make sure you [link]() to external documentation if necessary and provide inline code examples like so:
 
         ```js
