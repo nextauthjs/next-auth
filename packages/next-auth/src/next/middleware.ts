@@ -80,7 +80,7 @@ export interface NextAuthMiddlewareOptions {
      * ```
      *
      * ---
-     * [Documentation](https://next-auth.js.org/getting-started/nextjs/middleware#api) | [`signIn` callback](configuration/callbacks#sign-in-callback)
+     * [Documentation](https://next-auth.js.org/configuration/nextjs#middleware) | [`signIn` callback](configuration/callbacks#sign-in-callback)
      */
     authorized?: AuthorizedCallback
   }
