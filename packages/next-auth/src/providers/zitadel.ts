@@ -45,11 +45,8 @@ export default function Zitadel<P extends ZitadelProfile>(
       return {
         id: profile.sub,
         name: profile.name,
-        firstName: profile.given_name,
-        lastName: profile.family_name,
         email: profile.email,
         image: profile.picture,
-        loginName: profile.preferred_username,
       }
     },
     options,
