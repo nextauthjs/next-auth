@@ -1,7 +1,6 @@
-import { serialize } from "cookie"
-import { AuthHandler, AuthHandlerInternal } from "../core"
+import { AuthHandler } from "../core"
 import { detectHost } from "../utils/detect-host"
-import { setCookie, getBody } from "./utils"
+import { getBody } from "./utils"
 
 import type {
   GetServerSidePropsContext,
@@ -18,8 +17,8 @@ async function NextAuthHandler(
 ) {
   options.secret ??= options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
 
-  // TODO: verify (detect host), normalize (full url), fallback (localhost)
-  const url = new URL(req.url ?? "", "http://localhost:3000")
+  const host = detectHost(req.headers["x-forwarded-host"])
+  const url = new URL(req.url ?? "", host)
 
   const { status, headers, body } = await AuthHandler(
     new Request(url, {
@@ -32,12 +31,9 @@ async function NextAuthHandler(
 
   res.status(status)
 
-  for (const [key, value] of headers.entries()) {
-    if (key === "set-cookie") {
-      res.setHeader("set-cookie", value.split(","))
-    } else {
-      res.setHeader(key, value)
-    }
+  for (const [key, val] of headers.entries()) {
+    const value = key === "set-cookie" ? val.split(",") : val
+    res.setHeader(key, value)
   }
 
   // If the request expects a return URL, send it as JSON
@@ -97,39 +93,35 @@ export async function unstable_getServerSession(
   const [req, res, options] = args
 
   options.secret = options.secret ?? process.env.NEXTAUTH_SECRET
+  const host = detectHost(req.headers["x-forwarded-host"])
+  const url = new URL("/api/auth/session", host)
 
-  const session = await AuthHandlerInternal<Session | {}>({
-    options,
-    req: {
-      host: detectHost(req.headers["x-forwarded-host"]),
-      action: "session",
-      method: "GET",
-      cookies: req.cookies,
-      headers: req.headers,
-    },
-  })
+  const response = await AuthHandler(
+    new Request(url, { headers: req.headers as any }),
+    options
+  )
 
-  const { body, cookies, status = 200 } = session
+  const { status = 200, headers, body } = response
 
-  cookies?.forEach((cookie) => {
-    const { name, value, options } = cookie
-    const cookieHeader = serialize(name, value, options)
-    setCookie(res, cookieHeader)
-  })
-
-  if (body && typeof body !== "string" && Object.keys(body).length) {
-    if (status === 200) return body as Session
-    throw new Error((body as any).message)
+  for (const [key, val] of headers.entries()) {
+    const value = key === "set-cookie" ? val.split(",") : val
+    res.setHeader(key, value)
   }
 
-  return null
+  const data = JSON.parse((body as unknown as Buffer).toString()) // REVIEW: response.json() should work (node-fetch?)
+
+  if (!data || !Object.keys(data).length) return null
+  if (status === 200) return data as Session
+  throw new Error(data.message)
 }
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace NodeJS {
     interface ProcessEnv {
+      AUTH_TRUST_HOST?: string
       NEXTAUTH_URL?: string
+      NEXTAUTH_SECRET?: string
       VERCEL?: "1"
     }
   }
