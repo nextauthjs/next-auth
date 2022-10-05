@@ -9,6 +9,7 @@ body:
   - type: markdown
     attributes:
       value: |
+        **NOTE:** Issues that are potentially security related should be reported to us by following the [Security guidelines](https://next-auth.js.org/security) rather than on GitHub.
         We are glad that you have a question about this library. Please provide the following information:
 
   - type: textarea
