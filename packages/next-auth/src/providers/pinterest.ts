@@ -21,14 +21,15 @@ const PinterestProvider = <P extends PinterestProfile>(
       },
     },
     checks: ["state"],
-    token: {
-      url: "https://api.pinterest.com/v5/oauth/token",
-    },
-    userinfo: {
-      url: "https://api.pinterest.com/v5/user_account",
-    },
+    token: "https://api.pinterest.com/v5/oauth/token",
+    userinfo: "https://api.pinterest.com/v5/user_account",
     profile({ username, profile_image, ...profile }) {
-      return { id: username, name: username, image: profile_image, ...profile  };
+      return {
+        id: username,
+        name: username,
+        image: profile_image,
+        email: null
+      }
     },
     options
   };
