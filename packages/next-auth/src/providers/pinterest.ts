@@ -1,15 +1,15 @@
-import { OAuthConfig, OAuthUserConfig } from ".";
+import { OAuthConfig, OAuthUserConfig } from "."
 
 export interface PinterestProfile extends Record<string, any> {
-  account_type: "BUSINESS" | "PINNER";
-  profile_image: string;
-  website_url: string;
-  username: string;
+  account_type: "BUSINESS" | "PINNER"
+  profile_image: string
+  website_url: string
+  username: string
 }
 
-const PinterestProvider = <P extends PinterestProfile>(
+export default function PinterestProvider<P extends PinterestProfile>(
   options: OAuthUserConfig<P>
-): OAuthConfig<P> => {
+): OAuthConfig<P> {
   return {
     id: "pinterest",
     name: "Pinterest",
@@ -23,16 +23,14 @@ const PinterestProvider = <P extends PinterestProfile>(
     checks: ["state"],
     token: "https://api.pinterest.com/v5/oauth/token",
     userinfo: "https://api.pinterest.com/v5/user_account",
-    profile({ username, profile_image, ...profile }) {
+    profile({ username, profile_image }) {
       return {
         id: username,
         name: username,
         image: profile_image,
-        email: null
+        email: null,
       }
     },
-    options
-  };
-};
-
-export default PinterestProvider;
+    options,
+  }
+}
