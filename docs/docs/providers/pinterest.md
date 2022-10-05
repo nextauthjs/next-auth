@@ -21,8 +21,8 @@ You can override any of the options to suit your own use case.
 
 ## Example
 
-```js
-import PinterestProvider from "next-auth/providers/pinterest";
+```ts
+import PinterestProvider from "next-auth/providers/pinterest"
 ...
 providers: [
   PinterestProvider({
@@ -31,7 +31,6 @@ providers: [
   })
 ]
 ...
-```
 
 :::tip
 To use in production, make sure the app has standard API access and not trial access
