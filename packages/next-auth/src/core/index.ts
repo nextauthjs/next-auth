@@ -38,7 +38,7 @@ export interface NextAuthHeader {
   value: string
 }
 
-export async function AuthHandlerInternal<
+async function AuthHandlerInternal<
   Body extends string | Record<string, any> | any[]
 >(params: {
   req: InternalRequest
@@ -117,6 +117,7 @@ export async function AuthHandlerInternal<
       case "session": {
         const session = await routes.session({ options, sessionStore })
         if (session.cookies) cookies.push(...session.cookies)
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
         return { ...session, cookies } as any
       }
       case "csrf":
