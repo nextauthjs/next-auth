@@ -38,9 +38,6 @@ export default function Zitadel<P extends ZitadelProfile>(
     authorization: { params: { scope: "openid email profile" } },
     idToken: true,
     checks: ["pkce", "state"],
-    client: {
-      token_endpoint_auth_method: "none",
-    },
     async profile(profile) {
       return {
         id: profile.sub,
