@@ -37,11 +37,11 @@ export interface NextAuthMiddlewareOptions {
    *
    */
   cookies?: Partial<
-      Record<
-          keyof Pick<keyof NextAuthOptions["cookies"], "sessionToken">,
-          Omit<CookieOption, "options">
-          >
-      >
+    Record<
+      keyof Pick<keyof NextAuthOptions["cookies"], "sessionToken">,
+      Omit<CookieOption, "options">
+    >
+  >
 
   /**
    * If a custom jwt `decode` method is set in `[...nextauth].ts`, the same method should be set here also.
@@ -97,9 +97,9 @@ export interface NextAuthMiddlewareOptions {
 type NextMiddlewareResult = ReturnType<NextMiddleware> | void // eslint-disable-line @typescript-eslint/no-invalid-void-type
 
 async function handleMiddleware(
-    req: NextRequest,
-    options: NextAuthMiddlewareOptions | undefined,
-    onSuccess?: (token: JWT | null) => Promise<NextMiddlewareResult>
+  req: NextRequest,
+  options: NextAuthMiddlewareOptions | undefined,
+  onSuccess?: (token: JWT | null) => Promise<NextMiddlewareResult>
 ) {
   const { pathname, search, origin, basePath: nextJsBasePath } = req.nextUrl
 
@@ -122,8 +122,8 @@ async function handleMiddleware(
   const secret = options?.secret ?? process.env.NEXTAUTH_SECRET
   if (!secret) {
     console.error(
-        `[next-auth][error][NO_SECRET]`,
-        `\nhttps://next-auth.js.org/errors#no_secret`
+      `[next-auth][error][NO_SECRET]`,
+      `\nhttps://next-auth.js.org/errors#no_secret`
     )
 
     const errorUrl = new URL(errorPage, origin)
@@ -140,7 +140,7 @@ async function handleMiddleware(
   })
 
   const isAuthorized =
-      (await options?.callbacks?.authorized?.({ req, token })) ?? !!token
+    (await options?.callbacks?.authorized?.({ req, token })) ?? !!token
 
   // the user is authorized, let the middleware handle the rest
   if (isAuthorized) return await onSuccess?.(token)
@@ -156,18 +156,18 @@ export interface NextRequestWithAuth extends NextRequest {
 }
 
 export type NextMiddlewareWithAuth = (
-    request: NextRequestWithAuth,
-    event: NextFetchEvent
+  request: NextRequestWithAuth,
+  event: NextFetchEvent
 ) => NextMiddlewareResult | Promise<NextMiddlewareResult>
 
 export type WithAuthArgs =
-    | [NextRequestWithAuth]
-    | [NextRequestWithAuth, NextFetchEvent]
-    | [NextRequestWithAuth, NextAuthMiddlewareOptions]
-    | [NextMiddlewareWithAuth]
-    | [NextMiddlewareWithAuth, NextAuthMiddlewareOptions]
-    | [NextAuthMiddlewareOptions]
-    | []
+  | [NextRequestWithAuth]
+  | [NextRequestWithAuth, NextFetchEvent]
+  | [NextRequestWithAuth, NextAuthMiddlewareOptions]
+  | [NextMiddlewareWithAuth]
+  | [NextMiddlewareWithAuth, NextAuthMiddlewareOptions]
+  | [NextAuthMiddlewareOptions]
+  | []
 
 /**
  * Middleware that checks if the user is authenticated/authorized.
@@ -194,15 +194,15 @@ export function withAuth(...args: WithAuthArgs) {
     const middleware = args[0]
     const options = args[1] as NextAuthMiddlewareOptions | undefined
     return async (...args: Parameters<NextMiddlewareWithAuth>) =>
-        await handleMiddleware(args[0], options, async (token) => {
-          args[0].nextauth = { token }
-          return await middleware(...args)
-        })
+      await handleMiddleware(args[0], options, async (token) => {
+        args[0].nextauth = { token }
+        return await middleware(...args)
+      })
   }
 
   const options = args[0]
   return async (...args: Parameters<NextMiddleware>) =>
-      await handleMiddleware(args[0], options)
+    await handleMiddleware(args[0], options)
 }
 
 export default withAuth
