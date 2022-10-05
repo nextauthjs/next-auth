@@ -6,7 +6,6 @@ import { NextResponse, NextRequest } from "next/server"
 
 import { getToken } from "../jwt"
 import parseUrl from "../utils/parse-url"
-import getNextJsBasePath from "../utils/nextjs-base-path"
 
 type AuthorizedCallback = (params: {
   token: JWT | null
@@ -102,22 +101,20 @@ async function handleMiddleware(
     options: NextAuthMiddlewareOptions | undefined,
     onSuccess?: (token: JWT | null) => Promise<NextMiddlewareResult>
 ) {
-  const { pathname, search, origin } = req.nextUrl
+  const { pathname, search, origin, basePath: nextJsBasePath } = req.nextUrl
 
-  const nextJsBasePath = getNextJsBasePath(req.nextUrl)
   const fullPathname = nextJsBasePath + pathname
   const signInPage = options?.pages?.signIn ?? `${nextJsBasePath}/api/auth/signin`
   const errorPage = options?.pages?.error ?? `${nextJsBasePath}/api/auth/error`
   const basePath = parseUrl(process.env.NEXTAUTH_URL).path
-  // add signIn and errorPage in case they located outside the NEXTAUTH_URL
-  const publicPaths = [signInPage, errorPage, `${nextJsBasePath}/favicon.ico`]
+  const publicPaths = ["/_next", "/favicon.ico"]
 
   // Avoid infinite redirects/invalid response
   // on paths that never require authentication
   if (
       fullPathname.startsWith(basePath) ||
-      fullPathname.startsWith(`${nextJsBasePath}/_next`) ||
-      publicPaths.some((p) => fullPathname === p)
+      [signInPage, errorPage].includes(fullPathname) ||
+      publicPaths.some((p) => fullPathname.startsWith(p))
   ) {
     return
   }
