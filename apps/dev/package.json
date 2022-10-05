@@ -29,6 +29,7 @@
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "fake-smtp-server": "^0.8.0",
+    "json-server": "^0.17.0",
     "mongodb": "^4.4.0",
     "pg": "^8.7.3",
     "prisma": "^3",
