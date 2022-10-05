@@ -85,10 +85,33 @@ export const authOptions: NextAuthOptions = {
   },
   providers: [
     Credentials({
-      credentials: { password: { label: "Password", type: "password" } },
+      name: 'Credentials',
+      credentials: {
+        email: { label: "Email", type: "email", placeholder: "foo@bar.com" },
+        password: {  label: "Password", type: "password", placeholder: "•••••••••" }
+      },
       async authorize(credentials) {
-        if (credentials.password !== "pw") return null
-        return { name: "Fill Murray", email: "bill@fillmurray.com", image: "https://www.fillmurray.com/64/64" }
+        // TODO: in a real API probably you would instead make a POST request to a `/user/login` 
+        //       endpoint and if the user exists this would return you the user details.
+        //       In this example, to keep it simple we just make a GET request.
+        try {
+          const authResult = await fetch('http://localhost:3004/users/1xdf6', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+          })
+
+          if (authResult.status !== 200) throw new Error('Invalid user or password')
+  
+          const authResponse = await authResult.json()
+          
+          console.log(authResponse)
+          return authResponse
+        } catch(e) {
+          console.error("Invalid auth", e)
+          return null
+        }
       },
     }),
     Email({

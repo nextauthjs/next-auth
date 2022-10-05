@@ -1,8 +1,10 @@
 {
-  "users": {
-    "login": {
-      "id": "12345-abc",
-      "token": "E5PWX4T9dcPriIo..."
-    }
-  }
+  "users": [
+    {
+        "id": "1xdf6",
+        "name": "Steven Seagal",
+        "email": "steven@karate.com",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Steven_Seagal_November_2016.jpg/440px-Steven_Seagal_November_2016.jpg"
+    } 
+  ]
 }

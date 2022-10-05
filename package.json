@@ -66,5 +66,8 @@
       "type": "opencollective",
       "url": "https://opencollective.com/nextauth"
     }
-  ]
+  ],
+  "msw": {
+    "workerDirectory": "apps/dev/public"
+  }
 }
