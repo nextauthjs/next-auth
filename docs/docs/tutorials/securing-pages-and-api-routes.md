@@ -42,17 +42,29 @@ export default function Page() {
 
 ### Next.js (Middleware)
 
-With NextAuth.js 4.2.0 and Next.js 12, you can now protect your pages via the middleware pattern more easily. If you would like to protect all pages, you can create a `_middleware.js` file in your root `pages` directory which looks like this.
+With NextAuth.js 4.2.0 and Next.js 12, you can now protect your pages via the middleware pattern more easily. If you would like to protect all pages, you can create a `middleware.js` file in your root `pages` directory which looks like this:
 
 ```js title="/middleware.js"
 export { default } from "next-auth/middleware"
 ```
 
-Otherwise, if you only want to protect a subset of pages, you could put it in a subdirectory as well, for example in `/pages/admin/_middleware.js` would protect all pages under `/admin`.
+If you only want to secure certain pages, export a `config` object with a `matcher`:
+
+```js
+export { default } from "next-auth/middleware"
+
+export const config = { matcher: ["/dashboard"] }
+```
 
 For the time being, the `withAuth` middleware only supports `"jwt"` as [session strategy](https://next-auth.js.org/configuration/options#session).
 
 More details can be found [here](https://next-auth.js.org/configuration/nextjs#middleware).
+
+:::tip
+To inclue all `dashboard` nested routes (sub pages like `/dashboard/settings`, `/dashboard/profile`) you can pass `matcher: "/dashboard/:path*"` to `config`.
+
+For other patterns check out the [Next.js Middleware documentation](https://nextjs.org/docs/advanced-features/middleware#matcher).
+:::
 
 ### Server Side
 
@@ -122,7 +134,7 @@ You can protect API routes using the `unstable_getServerSession()` method.
 
 ```js title="pages/api/get-session-example.js"
 import { unstable_getServerSession } from "next-auth/next"
-import { authOptions } from "./api/auth/[...nextauth]"
+import { authOptions } from "./auth/[...nextauth]"
 
 export default async (req, res) => {
   const session = await unstable_getServerSession(req, res, authOptions)

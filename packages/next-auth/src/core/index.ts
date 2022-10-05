@@ -55,13 +55,21 @@ export async function AuthHandlerInternal<
     assertionResult.forEach(logger.warn)
   } else if (assertionResult instanceof Error) {
     // Bail out early if there's an error in the user config
-    const { pages, theme } = userOptions
     logger.error(assertionResult.code, assertionResult)
 
+    const htmlPages = ["signin", "signout", "error", "verify-request"]
+    if (!htmlPages.includes(req.action) || req.method !== "GET") {
+      const message = `There is a problem with the server configuration. Check the server logs for more information.`
+      return {
+        status: 500,
+        headers: [{ key: "Content-Type", value: "application/json" }],
+        body: { message } as any,
+      }
+    }
+    const { pages, theme } = userOptions
+
     const authOnErrorPage =
-      pages?.error &&
-      req.action === "signin" &&
-      req.query?.callbackUrl.startsWith(pages.error)
+      pages?.error && req.query?.callbackUrl?.startsWith(pages.error)
 
     if (!pages?.error || authOnErrorPage) {
       if (authOnErrorPage) {

@@ -29,12 +29,14 @@
   },
   "scripts": {
     "build": "tsc",
+    "dev": "tsc -w",
+    "clean": "rm -rf dist",
     "init:db": "tests/init.sh",
-    "test:containers": "tests/test.sh",
-    "test": "tests/test.sh",
     "mysql": "pnpm init:db && tests/mysql/test.sh",
     "postgres": "pnpm init:db && tests/postgresql/test.sh",
-    "sqlite": "tests/sqlite/test.sh"
+    "sqlite": "tests/sqlite/test.sh",
+    "test:containers": "tests/test.sh",
+    "test": "tests/test.sh"
   },
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:*",

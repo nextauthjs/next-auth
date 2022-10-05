@@ -109,7 +109,7 @@ export async function unstable_getServerSession(
     },
   })
 
-  const { body, cookies } = session
+  const { body, cookies, status = 200 } = session
 
   cookies?.forEach((cookie) => {
     const { name, value, options } = cookie
@@ -117,7 +117,11 @@ export async function unstable_getServerSession(
     setCookie(res, cookieHeader)
   })
 
-  if (body && Object.keys(body).length) return body as Session
+  if (body && typeof body !== "string" && Object.keys(body).length) {
+    if (status === 200) return body as Session
+    throw new Error((body as any).message)
+  }
+
   return null
 }
 

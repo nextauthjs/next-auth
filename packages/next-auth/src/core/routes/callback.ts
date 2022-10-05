@@ -190,7 +190,10 @@ export default async function callback(params: {
       }
     } catch (error) {
       if ((error as Error).name === "OAuthCallbackError") {
-        logger.error("CALLBACK_OAUTH_ERROR", error as Error)
+        logger.error("OAUTH_CALLBACK_ERROR", {
+          error: error as Error,
+          providerId: provider.id,
+        })
         return { redirect: `${url}/error?error=OAuthCallback`, cookies }
       }
       logger.error("OAUTH_CALLBACK_ERROR", error as Error)

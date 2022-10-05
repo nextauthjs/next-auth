@@ -36,8 +36,8 @@
     "next-auth": "^4"
   },
   "devDependencies": {
-    "@next-auth/adapter-test": "workspace:^0.0.0",
-    "@next-auth/tsconfig": "workspace:^0.0.0",
+    "@next-auth/adapter-test": "workspace:*",
+    "@next-auth/tsconfig": "workspace:*",
     "firebase": "^9.7.0",
     "firebase-tools": "^10.7.2",
     "jest": "^27.4.3",

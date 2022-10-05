@@ -20,7 +20,7 @@ export async function handler(
   options: NextAuthOptions,
   { prod, path, params, requestInit }: HandlerOptions
 ) {
-  // @ts-ignore
+  // @ts-expect-error
   if (prod) process.env.NODE_ENV = "production"
 
   const url = new URL(
@@ -35,7 +35,7 @@ export async function handler(
     ...options,
     logger,
   })
-  // @ts-ignore
+  // @ts-expect-error
   if (prod) process.env.NODE_ENV = "test"
 
   return {
@@ -60,8 +60,9 @@ export function createCSRF() {
 }
 
 export function mockAdapter(): Adapter {
-  return {
+  const adapter: Adapter = {
     createVerificationToken: jest.fn(() => {}),
     getUserByEmail: jest.fn(() => {}),
   } as unknown as Adapter
+  return adapter
 }

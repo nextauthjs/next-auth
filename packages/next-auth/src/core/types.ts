@@ -314,7 +314,7 @@ export interface CallbacksOptions<
    * of the token is returned for increased security.
    *
    * If you want to make something available you added to the token through the `jwt` callback,
-   * you have to explicitely forward it here to make it available to the client.
+   * you have to explicitly forward it here to make it available to the client.
    *
    * [Documentation](https://next-auth.js.org/configuration/callbacks#session-callback) |
    * [`jwt` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
@@ -361,6 +361,7 @@ export interface CookiesOptions {
   csrfToken: CookieOption
   pkceCodeVerifier: CookieOption
   state: CookieOption
+  nonce: CookieOption
 }
 
 /**
@@ -467,6 +468,13 @@ export interface SessionOptions {
    * @default 86400 // 1 day
    */
   updateAge: number
+  /**
+   * Generate a custom session token for database-based sessions.
+   * By default, a random UUID or string is generated depending on the Node.js version.
+   * However, you can specify your own custom string (such as CUID) to be used.
+   * @default `randomUUID` or `randomBytes.toHex` depending on the Node.js version
+   */
+  generateSessionToken: () => string
 }
 
 export interface DefaultUser {
