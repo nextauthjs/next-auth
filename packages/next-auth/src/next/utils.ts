@@ -18,8 +18,9 @@ export function getBody(
   if (!("body" in req) || !req.body || req.method !== "POST") {
     return
   }
-  return {
-    body:
-      req.body instanceof ReadableStream ? req.body : JSON.stringify(req.body),
+
+  if (req.body instanceof ReadableStream) {
+    return { body: req.body }
   }
+  return { body: JSON.stringify(req.body) }
 }
