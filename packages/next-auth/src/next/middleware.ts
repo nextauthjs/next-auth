@@ -103,18 +103,17 @@ async function handleMiddleware(
 ) {
   const { pathname, search, origin, basePath: nextJsBasePath } = req.nextUrl
 
-  const fullPathname = nextJsBasePath + pathname
-  const signInPage = options?.pages?.signIn ?? `${nextJsBasePath}/api/auth/signin`
-  const errorPage = options?.pages?.error ?? `${nextJsBasePath}/api/auth/error`
+  const signInPage = options?.pages?.signIn ?? "/api/auth/signin"
+  const errorPage = options?.pages?.error ?? "/api/auth/error"
   const basePath = parseUrl(process.env.NEXTAUTH_URL).path
   const publicPaths = ["/_next", "/favicon.ico"]
 
   // Avoid infinite redirects/invalid response
   // on paths that never require authentication
   if (
-      fullPathname.startsWith(basePath) ||
-      [signInPage, errorPage].includes(fullPathname) ||
-      publicPaths.some((p) => fullPathname.startsWith(p))
+      `${nextJsBasePath}${pathname}`.startsWith(basePath) ||
+      [signInPage, errorPage].includes(pathname) ||
+      publicPaths.some((p) => pathname.startsWith(p))
   ) {
     return
   }
@@ -126,7 +125,7 @@ async function handleMiddleware(
       `\nhttps://next-auth.js.org/errors#no_secret`
     )
 
-    const errorUrl = new URL(errorPage, origin)
+    const errorUrl = new URL(`${nextJsBasePath}${errorPage}`, origin)
     errorUrl.searchParams.append("error", "Configuration")
 
     return NextResponse.redirect(errorUrl)
@@ -146,8 +145,8 @@ async function handleMiddleware(
   if (isAuthorized) return await onSuccess?.(token)
 
   // the user is not logged in, redirect to the sign-in page
-  const signInUrl = new URL(signInPage, origin)
-  signInUrl.searchParams.append("callbackUrl", `${fullPathname}${search}`)
+  const signInUrl = new URL(`${nextJsBasePath}${signInPage}`, origin)
+  signInUrl.searchParams.append("callbackUrl", `${nextJsBasePath}${pathname}${search}`)
   return NextResponse.redirect(signInUrl)
 }
 
