@@ -111,9 +111,9 @@ async function handleMiddleware(
   // Avoid infinite redirects/invalid response
   // on paths that never require authentication
   if (
-      `${nextJsBasePath}${pathname}`.startsWith(basePath) ||
-      [signInPage, errorPage].includes(pathname) ||
-      publicPaths.some((p) => pathname.startsWith(p))
+    `${nextJsBasePath}${pathname}`.startsWith(basePath) ||
+    [signInPage, errorPage].includes(pathname) ||
+    publicPaths.some((p) => pathname.startsWith(p))
   ) {
     return
   }
