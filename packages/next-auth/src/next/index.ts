@@ -101,18 +101,18 @@ export async function unstable_getServerSession(
     options
   )
 
-  const { status = 200, headers, body } = response
+  const { status = 200, headers } = response
 
   for (const [key, val] of headers.entries()) {
     const value = key === "set-cookie" ? val.split(",") : val
     res.setHeader(key, value)
   }
 
-  const data = JSON.parse((body as unknown as Buffer).toString()) // REVIEW: response.json() should work (node-fetch?)
+  const data = await response.json()
 
   if (!data || !Object.keys(data).length) return null
-  if (status === 200) return data as Session
-  throw new Error(data.message)
+  if (status === 200) return data as unknown as Session
+  throw new Error((data as unknown as Error).message)
 }
 
 declare global {

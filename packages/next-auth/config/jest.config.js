@@ -1,3 +1,4 @@
+const swcConfig = require("./swc.config")
 /** @type {import('jest').Config} */
 module.exports = {
   projects: [
@@ -6,18 +7,18 @@ module.exports = {
       testMatch: ["<rootDir>/tests/**/*.test.ts"],
       rootDir: ".",
       transform: {
-        "\\.(ts|tsx)$": "@swc/jest",
+        "\\.(js|jsx|ts|tsx)$": ["@swc/jest", swcConfig],
       },
       coveragePathIgnorePatterns: ["tests"],
-      testEnvironment: "@edge-runtime/jest-environment",
+      // testEnvironment: "@edge-runtime/jest-environment",
     },
     {
       displayName: "client",
-      testMatch: ["**/*.test.js"],
+      testMatch: ["<rootDir>/src/client/**/*.test.js"],
       setupFilesAfterEnv: ["./config/jest-setup.js"],
       rootDir: ".",
       transform: {
-        "\\.(js|jsx|ts|tsx)$": ["@swc/jest", require("./swc.config")],
+        "\\.(js|jsx|ts|tsx)$": ["@swc/jest", swcConfig],
       },
       testEnvironment: "jsdom",
       coveragePathIgnorePatterns: ["__tests__"],

@@ -1,13 +1,15 @@
-import { createHash } from "crypto"
+import { createHash } from "node:crypto"
 import { AuthHandler } from "../src/core"
 import type { LoggerInstance, NextAuthOptions } from "../src"
 import type { Adapter } from "../src/adapters"
 
-export const mockLogger: () => LoggerInstance = () => ({
-  error: jest.fn(() => {}),
-  warn: jest.fn(() => {}),
-  debug: jest.fn(() => {}),
-})
+export function mockLogger(): Record<keyof LoggerInstance, jest.Mock> {
+  return {
+    error: jest.fn(() => {}),
+    warn: jest.fn(() => {}),
+    debug: jest.fn(() => {}),
+  }
+}
 
 interface HandlerOptions {
   prod?: boolean
@@ -40,9 +42,14 @@ export async function handler(
 
   return {
     res: {
-      ...response,
+      status: response.status,
+      headers: response.headers,
+      body: response.body,
+      redirect: response.headers.get("location"),
       html:
-        response.headers?.[0].value === "text/html" ? response.body : undefined,
+        response.headers?.get("content-type") === "text/html"
+          ? await response.clone().text()
+          : undefined,
     },
     log: logger,
   }

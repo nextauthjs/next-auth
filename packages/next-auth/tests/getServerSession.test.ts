@@ -46,7 +46,7 @@ describe("Treat secret correctly", () => {
     expect(logger.error).not.toBeCalledWith("NO_SECRET")
   })
 
-  it("Error if missing NEXTAUTH_SECRET and secret", async () => {
+  it.only("Error if missing NEXTAUTH_SECRET and secret", async () => {
     const configError = new Error(
       "There is a problem with the server configuration. Check the server logs for more information."
     )
@@ -83,7 +83,7 @@ describe("Return correct data", () => {
   })
 
   it("Should return null if there is no session", async () => {
-    const spy = jest.spyOn(core, "NextAuthHandler")
+    const spy = jest.spyOn(core, "AuthHandler")
     // @ts-expect-error
     spy.mockReturnValue({ body: {} })
 
@@ -109,7 +109,7 @@ describe("Return correct data", () => {
       },
     }
 
-    const spy = jest.spyOn(core, "NextAuthHandler")
+    const spy = jest.spyOn(core, "AuthHandler")
     // @ts-expect-error
     spy.mockReturnValue(mockedResponse)
 
