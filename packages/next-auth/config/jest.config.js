@@ -3,13 +3,13 @@ module.exports = {
   projects: [
     {
       displayName: "core",
-      testMatch: ["**/*.test.ts"],
+      testMatch: ["<rootDir>/tests/**/*.test.ts"],
       rootDir: ".",
-      setupFilesAfterEnv: ["./config/jest-setup.js"],
       transform: {
-        "\\.(js|jsx|ts|tsx)$": ["@swc/jest", require("./swc.config")],
+        "\\.(ts|tsx)$": "@swc/jest",
       },
       coveragePathIgnorePatterns: ["tests"],
+      testEnvironment: "@edge-runtime/jest-environment",
     },
     {
       displayName: "client",
