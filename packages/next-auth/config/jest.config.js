@@ -10,7 +10,14 @@ module.exports = {
         "\\.(js|jsx|ts|tsx)$": ["@swc/jest", swcConfig],
       },
       coveragePathIgnorePatterns: ["tests"],
-      // testEnvironment: "@edge-runtime/jest-environment",
+      testEnvironment: "@edge-runtime/jest-environment",
+      transformIgnorePatterns: ["node_modules/(?!uuid)/"],
+      // This assumes patching `@edge-runtime/jest-environment`. See `patches`
+      testEnvironmentOptions: {
+        codeGeneration: {
+          strings: true,
+        },
+      },
     },
     {
       displayName: "client",

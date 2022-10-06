@@ -1,0 +1,12 @@
+diff --git a/dist/index.js b/dist/index.js
+index 25ee9a86fa8766b172ac25b140d746c38098a59d..1e9ba944f8b573d82d21ddc067bdb738789db04f 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -81,6 +81,7 @@ module.exports = class EdgeEnvironment {
+                 context.Buffer = Buffer;
+                 return context;
+             },
++            ...(config.projectConfig ?? config)?.testEnvironmentOptions
+         });
+         revealPrimitives(vm);
+         this.context = vm.context;
