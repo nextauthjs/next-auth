@@ -1,4 +1,5 @@
 const swcConfig = require("./swc.config")
+
 /** @type {import('jest').Config} */
 module.exports = {
   projects: [
@@ -12,7 +13,7 @@ module.exports = {
       coveragePathIgnorePatterns: ["tests"],
       testEnvironment: "@edge-runtime/jest-environment",
       transformIgnorePatterns: ["node_modules/(?!uuid)/"],
-      // This assumes patching `@edge-runtime/jest-environment`. See `patches`
+      /** @type {import("@edge-runtime/vm").EdgeVMOptions} */
       testEnvironmentOptions: {
         codeGeneration: {
           strings: true,
