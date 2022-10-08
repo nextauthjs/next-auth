@@ -66,6 +66,10 @@ async function AuthHandlerInternal<
         body: { message } as any,
       }
     }
+
+    // We can throw in development to surface the issue in the browser too.
+    if (process.env.NODE_ENV === "development") throw assertionResult
+
     const { pages, theme } = userOptions
 
     const authOnErrorPage =

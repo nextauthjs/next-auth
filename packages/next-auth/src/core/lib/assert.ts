@@ -5,6 +5,7 @@ import {
   MissingSecret,
   UnsupportedStrategy,
   InvalidCallbackUrl,
+  InvalidEndpoints,
 } from "../errors"
 import parseUrl from "../../utils/parse-url"
 import { defaultCookies } from "./cookie"
@@ -19,6 +20,7 @@ type ConfigError =
   | UnsupportedStrategy
   | MissingAuthorize
   | MissingAdapter
+  | InvalidEndpoints
 
 let warned = false
 
@@ -93,6 +95,20 @@ export function assertConfig(params: {
   let hasTwitterOAuth2
 
   for (const provider of options.providers) {
+    if (provider.type === "oauth" && !provider.issuer) {
+      const { authorization: a, token: t, userinfo: u } = provider
+      let key
+      if (typeof a !== "string" && !a?.url) key = "authorization"
+      else if (typeof t !== "string" && !t?.url) key = "token"
+      else if (typeof u !== "string" && !u?.url) key = "userinfo"
+
+      if (key) {
+        return new InvalidEndpoints(
+          `Provider "${provider.id}" is missing both \`issuer\` and \`${key}\` endpoint config. At least one of them is required.`
+        )
+      }
+    }
+
     if (provider.type === "credentials") hasCredentials = true
     else if (provider.type === "email") hasEmail = true
     else if (provider.id === "twitter" && provider.version === "2.0")

@@ -64,8 +64,13 @@ export class UnsupportedStrategy extends UnknownError {
 }
 
 export class InvalidCallbackUrl extends UnknownError {
-  name = "InvalidCallbackUrl"
+  name = "InvalidCallbackUrlError"
   code = "INVALID_CALLBACK_URL_ERROR"
+}
+
+export class InvalidEndpoints extends UnknownError {
+  name = "InvalidEndpoints"
+  code = "INVALID_ENDPOINTS_ERROR"
 }
 
 type Method = (...args: any[]) => Promise<any>
