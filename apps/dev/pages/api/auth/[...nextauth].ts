@@ -37,45 +37,34 @@ import WorkOS from "next-auth/providers/workos"
 import Zitadel from "next-auth/providers/zitadel"
 
 // Adapters
-import { PrismaClient } from "@prisma/client"
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import { Client as FaunaClient } from "faunadb"
-import { FaunaAdapter } from "@next-auth/fauna-adapter"
-import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
 
-// Add an adapter you want to test here.
-const adapters = {
-  prisma() {
-    const client = globalThis.prisma || new PrismaClient()
-    if (process.env.NODE_ENV !== "production") globalThis.prisma = client
-    return PrismaAdapter(client)
-  },
-  typeorm() {
-    return TypeORMLegacyAdapter({
-      type: "sqlite",
-      name: "next-auth-test-memory",
-      database: "./typeorm/dev.db",
-      synchronize: true,
-    })
-  },
-  fauna() {
-    const client =
-      globalThis.fauna ||
-      new FaunaClient({
-        secret: process.env.FAUNA_SECRET,
-        domain: process.env.FAUNA_DOMAIN,
-      })
-    if (process.env.NODE_ENV !== "production") global.fauna = client
-    return FaunaAdapter(client)
-  },
-  noop() {
-    return undefined
-  },
-}
+// // Prisma
+// import { PrismaClient } from "@prisma/client"
+// import { PrismaAdapter } from "@next-auth/prisma-adapter"
+// const client = globalThis.prisma || new PrismaClient()
+// if (process.env.NODE_ENV !== "production") globalThis.prisma = client
+// const adapter = PrismaAdapter(client)
+
+// // Fauna
+// import { Client as FaunaClient } from "faunadb"
+// import { FaunaAdapter } from "@next-auth/fauna-adapter"
+// const opts = { secret: process.env.FAUNA_SECRET, domain: process.env.FAUNA_DOMAIN }
+// const client = globalThis.fauna || new FaunaClient(opts)
+// if (process.env.NODE_ENV !== "production") globalThis.fauna = client
+// const adapter = FaunaAdapter(client)
+
+// // TypeORM
+// import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
+// const adapter = TypeORMLegacyAdapter({
+//   type: "sqlite",
+//   name: "next-auth-test-memory",
+//   database: "./typeorm/dev.db",
+//   synchronize: true,
+// })
 
 export const authOptions: NextAuthOptions = {
-  adapter: adapters.noop(),
-  debug: true,
+  // adapter,
+  debug: process.env.NODE_ENV !== "production",
   theme: {
     logo: "https://next-auth.js.org/img/logo/logo-sm.png",
     brandColor: "#1786fb",
