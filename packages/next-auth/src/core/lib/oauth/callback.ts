@@ -35,7 +35,6 @@ export default async function oAuthCallback(params: {
     throw error
   }
 
-
   if (provider.version?.startsWith("1.")) {
     try {
       const client = await oAuth1Client(options)
