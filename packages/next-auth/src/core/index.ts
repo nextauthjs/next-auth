@@ -29,7 +29,7 @@ export interface InternalResponse<
   status?: number
   headers?: NextAuthHeader[]
   body?: Body
-  redirect?: string
+  redirect?: URL | string // TODO: refactor to only allow URL
   cookies?: Cookie[]
 }
 

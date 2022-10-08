@@ -87,7 +87,7 @@ export function toResponse(res: InternalResponse): Response {
   })
 
   if (res.redirect) {
-    response.headers.set("Location", res.redirect)
+    response.headers.set("Location", res.redirect.toString())
   }
 
   return response
