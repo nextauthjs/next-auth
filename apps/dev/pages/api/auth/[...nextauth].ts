@@ -1,5 +1,4 @@
-import NextAuth from "next-auth"
-import type { NextAuthOptions } from "next-auth"
+import NextAuth, { type NextAuthOptions } from "next-auth"
 
 // Providers
 import Apple from "next-auth/providers/apple"
