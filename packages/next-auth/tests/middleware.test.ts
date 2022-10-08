@@ -75,7 +75,7 @@ it("should redirect according to nextUrl basePath", async () => {
     }, headers: { authorization: "" }
   } as any, null as any)
 
-  //then
+  // then
   expect(res).toBeDefined()
   expect(res.status).toEqual(307)
   expect(res.headers.get("location")).toContain("http://127.0.0.1/custom-base-path/api/auth/signin?callbackUrl=%2Fcustom-base-path%2Fprotected%2FpathA")
