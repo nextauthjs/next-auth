@@ -34,7 +34,7 @@ export default async function oAuthCallback(params: {
     logger.debug("OAUTH_CALLBACK_HANDLER_ERROR", { body })
     throw error
   }
-  
+
 
   if (provider.version?.startsWith("1.")) {
     try {
@@ -189,7 +189,7 @@ async function getProfile({
       account: {
         provider: provider.id,
         type: provider.type,
-        providerAccountId: profile.id.toString(),
+        providerAccountId: profile.id?.toString(),
         ...tokens,
       },
       OAuthProfile,
