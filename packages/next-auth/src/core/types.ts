@@ -3,7 +3,7 @@ import type {
   Provider,
   CredentialInput,
   ProviderType,
-  OAuthConfig,
+  OAuthConfigInternal,
   EmailConfig,
   CredentialsConfig,
 } from "../providers"
@@ -500,7 +500,7 @@ export interface User extends Record<string, unknown>, DefaultUser {}
 
 /** @internal */
 export type InternalProvider<T extends ProviderType = any> = (T extends "oauth"
-  ? OAuthConfig<any>
+  ? OAuthConfigInternal<any>
   : T extends "email"
   ? EmailConfig
   : T extends "credentials"

@@ -1,7 +1,7 @@
 import { merge } from "../../utils/merge"
 
 import type { InternalProvider } from "../types"
-import type { Provider } from "../../providers"
+import type { EndpointHandler, Provider } from "../../providers"
 import type { InternalUrl } from "../../utils/parse-url"
 
 /**
@@ -18,16 +18,18 @@ export default function parseProviders(params: {
 } {
   const { url, providerId } = params
 
-  const providers = params.providers.map(({ options, ...rest }) => {
-    const defaultOptions = normalizeProvider(rest as Provider)
-    const userOptions = normalizeProvider(options as Provider)
+  const providers: InternalProvider[] = params.providers.map(
+    ({ options, ...rest }) => {
+      const defaultOptions = normalizeProvider(rest as Provider)
+      const userOptions = normalizeProvider(options as Provider)
 
-    return merge(defaultOptions, {
-      ...userOptions,
-      signinUrl: `${url}/signin/${userOptions?.id ?? rest.id}`,
-      callbackUrl: `${url}/callback/${userOptions?.id ?? rest.id}`,
-    })
-  })
+      return merge(defaultOptions, {
+        ...userOptions,
+        signinUrl: `${url}/signin/${userOptions?.id ?? rest.id}`,
+        callbackUrl: `${url}/callback/${userOptions?.id ?? rest.id}`,
+      })
+    }
+  )
 
   const provider = providers.find(({ id }) => id === providerId)
 
@@ -41,13 +43,21 @@ function normalizeProvider(provider?: Provider) {
     provider
   ).reduce<InternalProvider>((acc, [key, value]) => {
     if (
-      ["authorization", "token", "userinfo"].includes(key) &&
-      typeof value === "string"
+      provider.type === "oauth" &&
+      ["authorization", "token", "userinfo"].includes(key)
     ) {
-      const url = new URL(value)
-      acc[key] = {
-        url: `${url.origin}${url.pathname}`,
-        params: Object.fromEntries(url.searchParams ?? []),
+      const v = value as EndpointHandler<any>
+      if (typeof v === "string") {
+        acc[key] = { url: new URL(v) }
+      } else {
+        // NOTE: If v.url is undefined, it's because the provider config
+        // assumes that we will use the issuer endpoint.
+        // The existence of either v.url or provider.issuer is checked in
+        // assert.ts
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const url = new URL(v.url!)
+        for (const k in v.params) url.searchParams.set(k, v.params[k])
+        acc[key] = { url }
       }
     } else {
       acc[key] = value

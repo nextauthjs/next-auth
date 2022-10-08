@@ -23,26 +23,22 @@ export default async function getAuthorizationUrl({
   query: InternalRequest["query"]
 }) {
   const { logger, provider } = options
-  let params: any = {}
+  let params
 
-  if (typeof provider.authorization === "string") {
-    const parsedUrl = new URL(provider.authorization)
-    const parsedParams = Object.fromEntries(parsedUrl.searchParams.entries())
-    params = { ...params, ...parsedParams }
+  if (provider.authorization?.url) {
+    params = Object.assign(
+      Object.fromEntries(provider.authorization.url.searchParams.entries()),
+      query
+    )
   } else {
-    params = { ...params, ...provider.authorization?.params }
+    params = query
   }
-
-  params = { ...params, ...query }
 
   // Handle OAuth v1.x
   if (provider.version?.startsWith("1.")) {
     const client = oAuth1Client(options)
     const tokens = (await client.getOAuthRequestToken(params)) as any
-    const url = `${
-      // @ts-expect-error
-      provider.authorization?.url ?? provider.authorization
-    }?${new URLSearchParams({
+    const url = `${provider.authorization?.url}?${new URLSearchParams({
       oauth_token: tokens.oauth_token,
       oauth_token_secret: tokens.oauth_token_secret,
       ...tokens.params,
@@ -68,7 +64,7 @@ export default async function getAuthorizationUrl({
     authorizationParams.nonce = nonce.value
     cookies.push(nonce.cookie)
   }
-    
+
   const pkce = await createPKCE(options)
   if (pkce) {
     authorizationParams.code_challenge = pkce.code_challenge

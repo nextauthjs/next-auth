@@ -21,14 +21,13 @@ export async function openidClient(
     issuer = await Issuer.discover(provider.wellKnown)
   } else {
     issuer = new Issuer({
-      issuer: provider.issuer as string,
-      authorization_endpoint:
-        // @ts-expect-error
-        provider.authorization?.url ?? provider.authorization,
-      // @ts-expect-error
-      token_endpoint: provider.token?.url ?? provider.token,
-      // @ts-expect-error
-      userinfo_endpoint: provider.userinfo?.url ?? provider.userinfo,
+      // NOTE: We verify that either `issuer` or the other endpoints
+      // are always defined in assert.ts
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      issuer: provider.issuer!,
+      authorization_endpoint: provider.authorization?.url.toString(),
+      token_endpoint: provider.token?.url.toString(),
+      userinfo_endpoint: provider.userinfo?.url.toString(),
     })
   }
 

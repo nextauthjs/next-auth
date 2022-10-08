@@ -30,7 +30,7 @@ type EndpointRequest<C, R, P> = (
     /** `openid-client` Client */
     client: Client
     /** Provider is passed for convenience, ans also contains the `callbackUrl`. */
-    provider: OAuthConfig<P> & {
+    provider: (OAuthConfig<P> | OAuthConfigInternal<P>) & {
       signinUrl: string
       callbackUrl: string
     }
@@ -89,6 +89,11 @@ export type UserinfoEndpointHandler = EndpointHandler<
   Profile
 >
 
+export type ProfileCallback<P> = (
+  profile: P,
+  tokens: TokenSet
+) => Awaitable<User & { id: string }>
+
 export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   /**
    * OpenID Connect (OIDC) compliant providers can configure
@@ -110,7 +115,7 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   userinfo?: string | UserinfoEndpointHandler
   type: "oauth"
   version?: string
-  profile?: (profile: P, tokens: TokenSet) => Awaitable<User & { id: string }>
+  profile?: ProfileCallback<P>
   checks?: ChecksType | ChecksType[]
   client?: Partial<ClientMetadata>
   jwks?: { keys: JWK[] }
@@ -145,6 +150,19 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   requestTokenUrl?: string
   profileUrl?: string
   encoding?: string
+}
+
+/**
+ * We parsesd `authorization`, `token` and `userinfo`
+ * to always contain a valid `URL`, with the params
+ */
+export type OAuthConfigInternal<P> = Omit<
+  OAuthConfig<P>,
+  "authorization" | "token" | "userinfo"
+> & {
+  authorization?: { url: URL }
+  token?: { url: URL; request: TokenEndpointHandler["request"] }
+  userinfo?: { url: URL; request: UserinfoEndpointHandler["request"] }
 }
 
 export type OAuthUserConfig<P> = Omit<

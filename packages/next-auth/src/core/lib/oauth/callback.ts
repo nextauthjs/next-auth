@@ -8,7 +8,7 @@ import { OAuthCallbackError } from "../../errors"
 
 import type { CallbackParamsType, OpenIDCallbackChecks } from "openid-client"
 import type { Account, LoggerInstance, Profile } from "../../.."
-import type { OAuthChecks, OAuthConfig } from "../../../providers"
+import type { OAuthConfigInternal, ProfileCallback } from "../../../providers"
 import type { InternalOptions } from "../../types"
 import type { InternalRequest, InternalResponse } from "../.."
 import type { Cookie } from "../cookie"
@@ -34,7 +34,6 @@ export default async function oAuthCallback(params: {
     logger.debug("OAUTH_CALLBACK_HANDLER_ERROR", { body })
     throw error
   }
-  
 
   if (provider.version?.startsWith("1.")) {
     try {
@@ -71,7 +70,7 @@ export default async function oAuthCallback(params: {
 
     let tokens: TokenSet
 
-    const checks: OAuthChecks = {}
+    const checks: OpenIDCallbackChecks = {}
     const resCookies: Cookie[] = []
 
     const state = await useState(cookies?.[options.cookies.state.name], options)
@@ -82,7 +81,7 @@ export default async function oAuthCallback(params: {
 
     const nonce = await useNonce(cookies?.[options.cookies.nonce.name], options)
     if (nonce && provider.idToken) {
-      (checks as OpenIDCallbackChecks).nonce = nonce.value
+      checks.nonce = nonce.value
       resCookies.push(nonce.cookie)
     }
 
@@ -106,9 +105,7 @@ export default async function oAuthCallback(params: {
       ...provider.token?.params,
     }
 
-    // @ts-expect-error
     if (provider.token?.request) {
-      // @ts-expect-error
       const response = await provider.token.request({
         provider,
         params,
@@ -128,9 +125,7 @@ export default async function oAuthCallback(params: {
     }
 
     let profile: Profile
-    // @ts-expect-error
     if (provider.userinfo?.request) {
-      // @ts-expect-error
       profile = await provider.userinfo.request({
         provider,
         tokens,
@@ -160,13 +155,12 @@ export default async function oAuthCallback(params: {
 export interface GetProfileParams {
   profile: Profile
   tokens: TokenSet
-  provider: OAuthConfig<any>
+  provider: OAuthConfigInternal<any>
   logger: LoggerInstance
 }
 
 export interface GetProfileResult {
-  // @ts-expect-error
-  profile: ReturnType<OAuthConfig["profile"]> | null
+  profile: ReturnType<ProfileCallback<any>> | null
   account: Omit<Account, "userId"> | null
   OAuthProfile: Profile
 }
