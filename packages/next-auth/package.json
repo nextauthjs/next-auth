@@ -78,12 +78,16 @@
     "uuid": "^8.3.2"
   },
   "peerDependencies": {
+    "@panva/oauth4webapi": "1.2.0",
     "next": "^12.2.5",
     "nodemailer": "^6.6.5",
     "react": "^17.0.2 || ^18",
     "react-dom": "^17.0.2 || ^18"
   },
   "peerDependenciesMeta": {
+    "@panva/oauth4webapi": {
+      "optional": true
+    },
     "nodemailer": {
       "optional": true
     }
@@ -99,6 +103,7 @@
     "@edge-runtime/jest-environment": "1.1.0-beta.35",
     "@edge-runtime/vm": "1.1.0-beta.36",
     "@next-auth/tsconfig": "workspace:*",
+    "@panva/oauth4webapi": "1.2.0",
     "@swc/core": "^1.2.198",
     "@swc/jest": "^0.2.21",
     "@testing-library/dom": "^8.13.0",
