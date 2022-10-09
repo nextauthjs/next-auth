@@ -50,7 +50,7 @@ function normalizeProvider(provider?: Provider) {
       if (typeof v === "string") {
         acc[key] = { url: new URL(v) }
       } else {
-        // NOTE: If v.url is undefined, it's because the provider config
+        // If v.url is undefined, it's because the provider config
         // assumes that we will use the issuer endpoint.
         // The existence of either v.url or provider.issuer is checked in
         // assert.ts

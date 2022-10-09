@@ -158,8 +158,9 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
  */
 export type OAuthConfigInternal<P> = Omit<
   OAuthConfig<P>,
-  "authorization" | "token" | "userinfo"
+  "authorization" | "token" | "userinfo" | "clientId"
 > & {
+  clientId: string
   authorization?: { url: URL }
   token?: { url: URL; request: TokenEndpointHandler["request"] }
   userinfo?: { url: URL; request: UserinfoEndpointHandler["request"] }

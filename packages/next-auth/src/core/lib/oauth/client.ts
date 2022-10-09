@@ -2,13 +2,7 @@ import { Issuer, custom } from "openid-client"
 import type { Client } from "openid-client"
 import type { InternalOptions } from "../../types"
 
-/**
- * NOTE: We can add auto discovery of the provider's endpoint
- * that requires only one endpoint to be specified by the user.
- * Check out `Issuer.discover`
- *
- * Client supporting OAuth 2.x and OIDC
- */
+/** Node.js reliant client supporting OAuth 2.x and OIDC */
 export async function openidClient(
   options: InternalOptions<"oauth">
 ): Promise<Client> {
@@ -21,7 +15,7 @@ export async function openidClient(
     issuer = await Issuer.discover(provider.wellKnown)
   } else {
     issuer = new Issuer({
-      // NOTE: We verify that either `issuer` or the other endpoints
+      // We verify that either `issuer` or the other endpoints
       // are always defined in assert.ts
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       issuer: provider.issuer!,
@@ -33,7 +27,8 @@ export async function openidClient(
 
   const client = new issuer.Client(
     {
-      client_id: provider.clientId as string,
+      // clientId can technically be undefined, should we check this in assert.ts or rely on the Authorization Server to do it?
+      client_id: provider.clientId,
       client_secret: provider.clientSecret as string,
       redirect_uris: [provider.callbackUrl],
       ...provider.client,
