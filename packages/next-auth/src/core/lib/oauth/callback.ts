@@ -160,7 +160,7 @@ export interface GetProfileParams {
 }
 
 export interface GetProfileResult {
-  profile: ReturnType<ProfileCallback<any>> | null
+  profile: Awaited<ReturnType<ProfileCallback<any>>> | null
   account: Omit<Account, "userId"> | null
   OAuthProfile: Profile
 }
