@@ -5,7 +5,6 @@ import {
   Unique,
   PrimaryKey,
   Entity,
-  Enum,
   OneToMany,
   Collection,
   ManyToOne,
@@ -35,7 +34,7 @@ export class User implements RemoveIndex<AdapterUser> {
 
   @Property({ type: types.string, nullable: true })
   @Unique()
-  email?: string
+  email: string = ""
 
   @Property({ type: types.datetime, nullable: true })
   emailVerified: Date | null = null
