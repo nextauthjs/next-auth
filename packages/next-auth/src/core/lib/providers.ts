@@ -18,7 +18,7 @@ export default function parseProviders(params: {
   providerId?: string
 }): {
   providers: InternalProvider[]
-  provider: InternalProvider
+  provider?: InternalProvider
 } {
   const { url, providerId } = params
 
@@ -45,7 +45,6 @@ export default function parseProviders(params: {
 
   return {
     providers,
-    // @ts-expect-error -- provider is guaranteed to be found
     provider: providers.find(({ id }) => id === providerId),
   }
 }
