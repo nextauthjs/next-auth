@@ -21,7 +21,7 @@ import type { SessionToken } from "./cookie"
  */
 export default async function callbackHandler(params: {
   sessionToken?: SessionToken
-  profile: (User & { id: string }) | AdapterUser | { email: string }
+  profile: User | AdapterUser | { email: string }
   account: Account | null
   options: InternalOptions
 }) {
@@ -42,7 +42,7 @@ export default async function callbackHandler(params: {
   // If no adapter is configured then we don't have a database and cannot
   // persist data; in this mode we just return a dummy session object.
   if (!adapter) {
-    return { user: _profile as User & { id: string }, account }
+    return { user: _profile as User, account }
   }
 
   const profile = _profile as AdapterUser
