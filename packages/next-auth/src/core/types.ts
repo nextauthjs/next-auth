@@ -526,9 +526,7 @@ export interface InternalOptions<
    */
   url: InternalUrl
   action: NextAuthAction
-  provider: TProviderType extends ProviderType
-    ? InternalProvider<TProviderType>
-    : InternalProvider<TProviderType> | undefined
+  provider: InternalProvider<TProviderType>
   csrfToken?: string
   csrfTokenVerified?: boolean
   secret: string
