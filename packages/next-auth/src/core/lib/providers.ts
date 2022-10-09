@@ -26,7 +26,7 @@ export default function parseProviders(params: {
     ({ options: userOptions, ...rest }) => {
       if (rest.type === "oauth") {
         const normalizedOptions = normalizeOAuthOptions(rest)
-        const normalizedUserOptions = normalizeOAuthOptions(userOptions)
+        const normalizedUserOptions = normalizeOAuthOptions(userOptions, true)
         return merge(normalizedOptions, {
           ...normalizedUserOptions,
           signinUrl: `${url}/signin/${normalizedUserOptions?.id ?? rest.id}`,
@@ -50,8 +50,12 @@ export default function parseProviders(params: {
   }
 }
 
+/**
+ * Transform OAuth options `authorization`, `token` and `profile` strings to `{ url: string; params: Record<string, string> }`
+ */
 function normalizeOAuthOptions(
-  oauthOptions?: Partial<OAuthConfig<any>> | Record<string, unknown>
+  oauthOptions?: Partial<OAuthConfig<any>> | Record<string, unknown>,
+  isUserOptions = false
 ) {
   if (!oauthOptions) return
 
@@ -78,9 +82,10 @@ function normalizeOAuthOptions(
     {} as any
   )
 
-  if (!normalized.version?.startsWith("1.")) {
+  if (!isUserOptions && !normalized.version?.startsWith("1.")) {
     // If provider has as an "openid-configuration" well-known endpoint
     // or an "openid" scope request, it will also likely be able to receive an `id_token`
+    // Only do this if this function is not called with user options to avoid overriding in later stage.
     normalized.idToken = Boolean(
       normalized.idToken ??
         normalized.wellKnown?.includes("openid-configuration") ??
