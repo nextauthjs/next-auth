@@ -1,6 +1,6 @@
 {
   "name": "next-auth",
-  "version": "4.12.3",
+  "version": "4.13.0",
   "description": "Authentication for Next.js",
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/next-auth.git",
@@ -97,7 +97,6 @@
     "@babel/preset-react": "^7.17.12",
     "@babel/preset-typescript": "^7.17.12",
     "@edge-runtime/jest-environment": "1.1.0-beta.35",
-    "@edge-runtime/vm": "1.1.0-beta.36",
     "@next-auth/tsconfig": "workspace:*",
     "@swc/core": "^1.2.198",
     "@swc/jest": "^0.2.21",

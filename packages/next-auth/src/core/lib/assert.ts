@@ -5,6 +5,7 @@ import {
   MissingSecret,
   UnsupportedStrategy,
   InvalidCallbackUrl,
+  MissingAdapterMethods,
 } from "../errors"
 import parseUrl from "../../utils/parse-url"
 import { defaultCookies } from "./cookie"
@@ -120,8 +121,23 @@ export function assertConfig(params: {
     }
   }
 
-  if (hasEmail && !options.adapter) {
-    return new MissingAdapter("E-mail login requires an adapter.")
+  if (hasEmail) {
+    const { adapter } = options
+    if (!adapter) {
+      return new MissingAdapter("E-mail login requires an adapter.")
+    }
+
+    const missingMethods = [
+      "createVerificationToken",
+      "useVerificationToken",
+      "getUserByEmail",
+    ].filter((method) => !adapter[method])
+
+    if (missingMethods.length) {
+      return new MissingAdapterMethods(
+        `Required adapter methods were missing: ${missingMethods.join(", ")}`
+      )
+    }
   }
 
   if (!warned) {

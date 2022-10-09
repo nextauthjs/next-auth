@@ -38,7 +38,7 @@ runBasicTests({
       return format.from(result?.records[0]?.get("u")?.properties)
     },
 
-    async session(sessionToken: any) {
+    async session(sessionToken: string) {
       const result = await neo4jSession.readTransaction((tx) =>
         tx.run(
           `MATCH (u:User)-[:HAS_SESSION]->(s:Session)
