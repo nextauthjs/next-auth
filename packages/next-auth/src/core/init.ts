@@ -71,6 +71,7 @@ export async function init({
     // and are request-specific.
     url,
     action,
+    // @ts-expect-errors
     provider,
     cookies: {
       ...cookie.defaultCookies(

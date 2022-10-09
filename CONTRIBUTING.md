@@ -26,7 +26,6 @@ Anyone can be a contributor. Either you found a typo, or you have an awesome fea
 
 A quick guide on how to setup _next-auth_ locally to work on it and test out any changes:
 
-
 1. Clone the repo:
 
 ```sh
@@ -34,13 +33,21 @@ git clone git@github.com:nextauthjs/next-auth.git
 cd next-auth
 ```
 
-1. Install packages. Developing requires Node.js v16:
+2. Set up the correct pnpm version, using [Corepack](https://nodejs.org/api/corepack.html). Run the following in the project'a root:
+
+```sh
+corepack enable pnpm
+```
+
+(Now, if you run `pnpm --version`, it should print the same verion as the `packageManager` property in the [`package.json` file](https://github.com/nextauthjs/next-auth/blob/main/package.json))
+
+3. Install packages. Developing requires Node.js v16:
 
 ```sh
 pnpm install
 ```
 
-3. Populate `.env.local`:
+4. Populate `.env.local`:
 
 Copy `apps/dev/.env.local.example` to `apps/dev/.env.local`, and add your env variables for each provider you want to test.
 
@@ -52,11 +59,12 @@ cp .env.local.example .env.local
 > NOTE: You can add any environment variables to .env.local that you would like to use in your dev app.
 > You can find the next-auth config under`apps/dev/pages/api/auth/[...nextauth].js`.
 
-4. Start the developer application/server:
+5. Start the developer application/server:
 
 ```sh
 pnpm dev
 ```
+
 Your developer application will be available on `http://localhost:3000`
 
 That's it! 🎉

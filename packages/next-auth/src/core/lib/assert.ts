@@ -1,11 +1,12 @@
 import {
   MissingAdapter,
+  MissingAdapterMethods,
   MissingAPIRoute,
   MissingAuthorize,
   MissingSecret,
-  UnsupportedStrategy,
   InvalidCallbackUrl,
   InvalidEndpoints,
+  UnsupportedStrategy,
 } from "../errors"
 import parseUrl from "../../utils/parse-url"
 import { defaultCookies } from "./cookie"
@@ -15,12 +16,15 @@ import type { WarningCode } from "../../utils/logger"
 import type { NextAuthOptions } from "../types"
 
 type ConfigError =
-  | MissingAPIRoute
-  | MissingSecret
-  | UnsupportedStrategy
-  | MissingAuthorize
   | MissingAdapter
+  | MissingAdapterMethods
+  | MissingAPIRoute
+  | MissingAuthorize
+  | MissingSecret
+  | InvalidCallbackUrl
+  | UnsupportedStrategy
   | InvalidEndpoints
+  | UnsupportedStrategy
 
 let warned = false
 
@@ -136,8 +140,23 @@ export function assertConfig(params: {
     }
   }
 
-  if (hasEmail && !options.adapter) {
-    return new MissingAdapter("E-mail login requires an adapter.")
+  if (hasEmail) {
+    const { adapter } = options
+    if (!adapter) {
+      return new MissingAdapter("E-mail login requires an adapter.")
+    }
+
+    const missingMethods = [
+      "createVerificationToken",
+      "useVerificationToken",
+      "getUserByEmail",
+    ].filter((method) => !adapter[method])
+
+    if (missingMethods.length) {
+      return new MissingAdapterMethods(
+        `Required adapter methods were missing: ${missingMethods.join(", ")}`
+      )
+    }
   }
 
   if (!warned) {

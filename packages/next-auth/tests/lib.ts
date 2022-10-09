@@ -69,6 +69,7 @@ export function createCSRF() {
 export function mockAdapter(): Adapter {
   const adapter: Adapter = {
     createVerificationToken: jest.fn(() => {}),
+    useVerificationToken: jest.fn(() => {}),
     getUserByEmail: jest.fn(() => {}),
   } as unknown as Adapter
   return adapter

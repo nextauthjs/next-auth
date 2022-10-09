@@ -7,10 +7,10 @@ import { useNonce } from "./nonce-handler"
 import { OAuthCallbackError } from "../../errors"
 
 import type { CallbackParamsType, OpenIDCallbackChecks } from "openid-client"
-import type { Account, LoggerInstance, Profile } from "../../.."
-import type { OAuthConfigInternal, ProfileCallback } from "../../../providers"
+import type { LoggerInstance, Profile } from "../../.."
+import type { OAuthConfigInternal } from "../../../providers"
 import type { InternalOptions } from "../../types"
-import type { InternalRequest, InternalResponse } from "../.."
+import type { InternalRequest } from "../.."
 import type { Cookie } from "../cookie"
 
 export default async function oAuthCallback(params: {
@@ -19,7 +19,7 @@ export default async function oAuthCallback(params: {
   body: InternalRequest["body"]
   method: Required<InternalRequest>["method"]
   cookies: InternalRequest["cookies"]
-}): Promise<GetProfileResult & { cookies?: InternalResponse["cookies"] }> {
+}) {
   const { options, query, body, method, cookies } = params
   const { logger, provider } = options
 
@@ -40,16 +40,13 @@ export default async function oAuthCallback(params: {
       const client = await oAuth1Client(options)
       // Handle OAuth v1.x
       const { oauth_token, oauth_verifier } = query ?? {}
-      // @ts-expect-error
-      const tokens: TokenSet = await client.getOAuthAccessToken(
-        oauth_token as string,
-        // @ts-expect-error
+      const tokens = (await (client as any).getOAuthAccessToken(
+        oauth_token,
         null,
         oauth_verifier
-      )
-      // @ts-expect-error
-      let profile: Profile = await client.get(
-        (provider as any).profileUrl,
+      )) as TokenSet
+      let profile: Profile = await (client as any).get(
+        provider.profileUrl,
         tokens.oauth_token,
         tokens.oauth_token_secret
       )
@@ -58,7 +55,8 @@ export default async function oAuthCallback(params: {
         profile = JSON.parse(profile)
       }
 
-      return await getProfile({ profile, tokens, provider, logger })
+      const newProfile = await getProfile({ profile, tokens, provider, logger })
+      return { ...newProfile, cookies: [] }
     } catch (error) {
       logger.error("OAUTH_V1_GET_ACCESS_TOKEN_ERROR", error as Error)
       throw error
@@ -101,8 +99,7 @@ export default async function oAuthCallback(params: {
         body,
         method,
       }),
-      // @ts-expect-error
-      ...provider.token?.params,
+      ...Object.fromEntries(provider.token?.url.searchParams.entries() ?? []),
     }
 
     if (provider.token?.request) {
@@ -134,10 +131,10 @@ export default async function oAuthCallback(params: {
     } else if (provider.idToken) {
       profile = tokens.claims()
     } else {
-      profile = await client.userinfo(tokens, {
-        // @ts-expect-error
-        params: provider.userinfo?.params,
-      })
+      const params = Object.fromEntries(
+        provider.userinfo?.url.searchParams.entries() ?? []
+      )
+      profile = await client.userinfo(tokens, { params })
     }
 
     const profileResult = await getProfile({
@@ -159,24 +156,22 @@ export interface GetProfileParams {
   logger: LoggerInstance
 }
 
-export interface GetProfileResult {
-  profile: Awaited<ReturnType<ProfileCallback<any>>> | null
-  account: Omit<Account, "userId"> | null
-  OAuthProfile: Profile
-}
-
 /** Returns profile, raw profile and auth provider details */
 async function getProfile({
   profile: OAuthProfile,
   tokens,
   provider,
   logger,
-}: GetProfileParams): Promise<GetProfileResult> {
+}: GetProfileParams) {
   try {
     logger.debug("PROFILE_DATA", { OAuthProfile })
-    // @ts-expect-error
     const profile = await provider.profile(OAuthProfile, tokens)
     profile.email = profile.email?.toLowerCase()
+    if (!profile.id)
+      throw new TypeError(
+        `Profile id is missing in ${provider.name} OAuth profile response`
+      )
+
     // Return profile, raw profile and auth provider details
     return {
       profile,
@@ -196,11 +191,9 @@ async function getProfile({
     // all providers, so we return an empty object; the user should then be
     // redirected back to the sign up page. We log the error to help developers
     // who might be trying to debug this when configuring a new provider.
-    logger.error("OAUTH_PARSE_PROFILE_ERROR", error as Error)
-    return {
-      profile: null,
-      account: null,
+    logger.error("OAUTH_PARSE_PROFILE_ERROR", {
+      error: error as Error,
       OAuthProfile,
-    }
+    })
   }
 }

@@ -54,7 +54,7 @@
       }
     ]
   },
-  "packageManager": "pnpm@7.5.1",
+  "packageManager": "pnpm@7.13.3",
   "funding": [
     {
       "type": "github",

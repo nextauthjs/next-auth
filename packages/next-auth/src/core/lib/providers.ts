@@ -1,7 +1,13 @@
 import { merge } from "../../utils/merge"
 
 import type { InternalProvider } from "../types"
-import type { EndpointHandler, Provider } from "../../providers"
+import type {
+  OAuthConfigInternal,
+  OAuthConfig,
+  Provider,
+  OAuthUserConfig,
+  OAuthEndpointType,
+} from "../../providers"
 import type { InternalUrl } from "../../utils/parse-url"
 
 /**
@@ -18,66 +24,74 @@ export default function parseProviders(params: {
 } {
   const { url, providerId } = params
 
-  const providers: InternalProvider[] = params.providers.map(
-    ({ options, ...rest }) => {
-      const defaultOptions = normalizeProvider(rest as Provider)
-      const userOptions = normalizeProvider(options as Provider)
-
-      return merge(defaultOptions, {
-        ...userOptions,
-        signinUrl: `${url}/signin/${userOptions?.id ?? rest.id}`,
-        callbackUrl: `${url}/callback/${userOptions?.id ?? rest.id}`,
-      })
+  const providers = params.providers.map((provider) => {
+    let { options: userOptions, ...rest } = provider
+    if (provider.type === "oauth") {
+      // @ts-expect-error after normalization, we don't match the initial type of rest
+      rest = normalizeOAuth(rest as OAuthConfig<any>)
+      userOptions = normalizeOAuth(userOptions as OAuthUserConfig<any>)
     }
-  )
+    return merge(rest, {
+      ...userOptions,
+      signinUrl: `${url}/signin/${userOptions?.id ?? rest.id}`,
+      callbackUrl: `${url}/callback/${userOptions?.id ?? rest.id}`,
+    })
+  })
 
-  const provider = providers.find(({ id }) => id === providerId)
-
-  return { providers, provider }
+  return {
+    providers,
+    provider: providers.find(({ id }) => id === providerId),
+  }
 }
 
-function normalizeProvider(provider?: Provider) {
-  if (!provider) return
+/**
+ * Transform OAuth options `authorization`, `token` and `profile` to `{ url: URL }`
+ */
+function normalizeOAuth(
+  config?: OAuthConfig<any> | OAuthUserConfig<any>
+): OAuthConfigInternal<any> | {} {
+  if (!config) return {}
 
-  const normalized: InternalProvider = Object.entries(
-    provider
-  ).reduce<InternalProvider>((acc, [key, value]) => {
-    if (
-      provider.type === "oauth" &&
-      ["authorization", "token", "userinfo"].includes(key)
-    ) {
-      const v = value as EndpointHandler<any>
-      if (typeof v === "string") {
-        acc[key] = { url: new URL(v) }
-      } else {
-        // If v.url is undefined, it's because the provider config
-        // assumes that we will use the issuer endpoint.
-        // The existence of either v.url or provider.issuer is checked in
-        // assert.ts
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const url = new URL(v.url!)
-        for (const k in v.params) url.searchParams.set(k, v.params[k])
-        acc[key] = { url }
-      }
-    } else {
-      acc[key] = value
-    }
+  const authorization = normalizeEndpoint(config.authorization)
+  const token = normalizeEndpoint(config.token)
+  const userinfo = normalizeEndpoint(config.userinfo)
 
-    return acc
-    // eslint-disable-next-line @typescript-eslint/prefer-reduce-type-parameter, @typescript-eslint/consistent-type-assertions
-  }, {} as any)
+  if (!config.version?.startsWith("1.")) {
+    config.idToken =
+      config.idToken ??
+      // If a provider has as an "openid-configuration" well-known endpoint
+      config.wellKnown?.includes("openid-configuration") ??
+      // or an "openid" scope request, it will also likely be return an `id_token`
+      authorization?.url.searchParams.get("scope")?.includes("openid")
 
-  if (normalized.type === "oauth" && !normalized.version?.startsWith("1.")) {
-    // If provider has as an "openid-configuration" well-known endpoint
-    // or an "openid" scope request, it will also likely be able to receive an `id_token`
-    normalized.idToken = Boolean(
-      normalized.idToken ??
-        normalized.wellKnown?.includes("openid-configuration") ??
-        // @ts-expect-error
-        normalized.authorization?.params?.scope?.includes("openid")
-    )
-
-    if (!normalized.checks) normalized.checks = ["state"]
+    // Set default check to state
+    config.checks = Array.isArray(config.checks)
+      ? config.checks
+      : [config.checks ?? "state"]
   }
-  return normalized
+
+  return {
+    ...config,
+    authorization,
+    token,
+    userinfo,
+  } as unknown as OAuthConfigInternal<any>
+}
+
+function normalizeEndpoint(
+  e?: OAuthConfig<any>[OAuthEndpointType]
+): OAuthConfigInternal<any>[OAuthEndpointType] {
+  if (!e) return
+  if (typeof e === "string") {
+    return { url: new URL(e) }
+  }
+  // If v.url is undefined, it's because the provider config
+  // assumes that we will use the issuer endpoint.
+  // The existence of either v.url or provider.issuer is checked in
+  // assert.ts
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const url = new URL(e.url!)
+  for (const k in e.params) url.searchParams.set(k, e.params[k] as any)
+
+  return { url }
 }

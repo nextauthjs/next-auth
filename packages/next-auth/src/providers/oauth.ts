@@ -92,7 +92,7 @@ export type UserinfoEndpointHandler = EndpointHandler<
 export type ProfileCallback<P> = (
   profile: P,
   tokens: TokenSet
-) => Awaitable<User & { id: string }>
+) => Awaitable<User>
 
 export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   /**
@@ -152,25 +152,29 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   encoding?: string
 }
 
+export type OAuthEndpointType = "authorization" | "token" | "userinfo"
+
 /**
  * We parsesd `authorization`, `token` and `userinfo`
  * to always contain a valid `URL`, with the params
  */
 export type OAuthConfigInternal<P> = Omit<
   OAuthConfig<P>,
-  "authorization" | "token" | "userinfo" | "clientId"
+  OAuthEndpointType | "clientId" | "checks" | "profile"
 > & {
   clientId: string
   authorization?: { url: URL }
-  token?: { url: URL; request: TokenEndpointHandler["request"] }
-  userinfo?: { url: URL; request: UserinfoEndpointHandler["request"] }
+  token?: { url: URL; request?: TokenEndpointHandler["request"] }
+  userinfo?: { url: URL; request?: UserinfoEndpointHandler["request"] }
+  checks: ChecksType[]
+  profile: ProfileCallback<P>
 }
 
 export type OAuthUserConfig<P> = Omit<
   Partial<OAuthConfig<P>>,
   "options" | "type"
 > &
-  Required<Pick<OAuthConfig<P>, "clientId" | "clientSecret">>
+  Required<Pick<OAuthConfig<P>, "clientId" | "clientSecret" | "profile">>
 
 export type OAuthProvider = (
   options: Partial<OAuthConfig<any>>
