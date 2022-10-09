@@ -5,17 +5,16 @@ import {
   Unique,
   PrimaryKey,
   Entity,
-  Enum,
   OneToMany,
   Collection,
   ManyToOne,
   types,
 } from "@mikro-orm/core"
 
-import type { DefaultAccount } from "next-auth"
 import type {
-  AdapterSession,
   AdapterUser,
+  AdapterAccount,
+  AdapterSession,
   VerificationToken as AdapterVerificationToken,
 } from "next-auth/adapters"
 import type { ProviderType } from "next-auth/providers"
@@ -35,7 +34,7 @@ export class User implements RemoveIndex<AdapterUser> {
 
   @Property({ type: types.string, nullable: true })
   @Unique()
-  email?: string
+  email: string = ""
 
   @Property({ type: types.datetime, nullable: true })
   emailVerified: Date | null = null
@@ -44,7 +43,7 @@ export class User implements RemoveIndex<AdapterUser> {
   image?: string
 
   @OneToMany({
-    entity: 'Session',
+    entity: "Session",
     mappedBy: (session: Session) => session.user,
     hidden: true,
     orphanRemoval: true,
@@ -52,7 +51,7 @@ export class User implements RemoveIndex<AdapterUser> {
   sessions = new Collection<Session, object>(this)
 
   @OneToMany({
-    entity: 'Account',
+    entity: "Account",
     mappedBy: (account: Account) => account.user,
     hidden: true,
     orphanRemoval: true,
@@ -67,7 +66,7 @@ export class Session implements AdapterSession {
   id: string = randomUUID()
 
   @ManyToOne({
-    entity: 'User',
+    entity: "User",
     hidden: true,
     onDelete: "cascade",
   })
@@ -76,7 +75,7 @@ export class Session implements AdapterSession {
   @Property({ type: types.string, persist: false })
   userId!: string
 
-  @Property({ type: 'Date' })
+  @Property({ type: "Date" })
   expires!: Date
 
   @Property({ type: types.string })
@@ -86,13 +85,13 @@ export class Session implements AdapterSession {
 
 @Entity()
 @Unique({ properties: ["provider", "providerAccountId"] })
-export class Account implements RemoveIndex<DefaultAccount> {
+export class Account implements RemoveIndex<AdapterAccount> {
   @PrimaryKey()
   @Property({ type: types.string })
   id: string = randomUUID()
 
   @ManyToOne({
-    entity: 'User',
+    entity: "User",
     hidden: true,
     onDelete: "cascade",
   })
@@ -139,7 +138,7 @@ export class VerificationToken implements AdapterVerificationToken {
   @Property({ type: types.string })
   token!: string
 
-  @Property({ type: 'Date' })
+  @Property({ type: "Date" })
   expires!: Date
 
   @Property({ type: types.string })

@@ -59,10 +59,10 @@ export function createCSRF() {
 }
 
 export function mockAdapter(): Adapter {
-  // @ts-expect-error
   const adapter: Adapter = {
     createVerificationToken: jest.fn(() => {}),
+    useVerificationToken: jest.fn(() => {}),
     getUserByEmail: jest.fn(() => {}),
   }
-  return adapter;
+  return adapter
 }

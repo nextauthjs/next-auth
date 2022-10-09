@@ -1,7 +1,4 @@
-import { Options, types } from "@mikro-orm/core"
 import type { SqliteDriver } from "@mikro-orm/sqlite"
-import { MikroORM, wrap } from "@mikro-orm/core"
-import { runBasicTests } from "@next-auth/adapter-test"
 import { MikroOrmAdapter, defaultEntities } from "../src"
 import {
   Cascade,
@@ -11,8 +8,12 @@ import {
   PrimaryKey,
   Property,
   Unique,
+  MikroORM,
+  wrap,
+  Options,
+  types,
 } from "@mikro-orm/core"
-import { randomUUID } from "@next-auth/adapter-test"
+import { randomUUID, runBasicTests } from "@next-auth/adapter-test"
 
 @Entity()
 export class User implements defaultEntities.User {
@@ -25,16 +26,16 @@ export class User implements defaultEntities.User {
 
   @Property({ type: types.string, nullable: true })
   @Unique()
-  email?: string
+  email: string = ""
 
-  @Property({ type: 'Date', nullable: true })
+  @Property({ type: "Date", nullable: true })
   emailVerified: Date | null = null
 
   @Property({ type: types.string, nullable: true })
   image?: string
 
   @OneToMany({
-    entity: 'Session',
+    entity: "Session",
     mappedBy: (session: defaultEntities.Session) => session.user,
     hidden: true,
     orphanRemoval: true,
@@ -43,7 +44,7 @@ export class User implements defaultEntities.User {
   sessions = new Collection<defaultEntities.Session>(this)
 
   @OneToMany({
-    entity: 'Account',
+    entity: "Account",
     mappedBy: (account: defaultEntities.Account) => account.user,
     hidden: true,
     orphanRemoval: true,

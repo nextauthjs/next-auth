@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 NEO4J_USER=neo4j
 NEO4J_PASS=password
 CONTAINER_NAME=next-auth-neo4j-test-e
@@ -29,7 +28,7 @@ neo4j:4.2.0
 # -e NEO4J_ACCEPT_LICENSE_AGREEMENT=yes \
 # neo4j:4.2.0-enterprise
 
-echo "Waiting 5 sec for db to start..." && sleep 5
+echo "Waiting 10 sec for db to start..." && sleep 10
 
 if $JEST_WATCH; then
     # Run jest in watch mode
