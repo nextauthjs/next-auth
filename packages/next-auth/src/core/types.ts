@@ -461,6 +461,13 @@ export interface SessionOptions {
    * @default 86400 // 1 day
    */
   updateAge: number
+  /**
+   * Generate a custom session token for database-based sessions.
+   * By default, a random UUID or string is generated depending on the Node.js version.
+   * However, you can specify your own custom string (such as CUID) to be used.
+   * @default `randomUUID` or `randomBytes.toHex` depending on the Node.js version
+   */
+  generateSessionToken: () => string
 }
 
 export interface DefaultUser {
