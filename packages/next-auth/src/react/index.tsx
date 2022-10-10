@@ -1,11 +1,10 @@
 // Note about signIn() and signOut() methods:
 //
-// On signIn() and signOut() we pass 'json: true' to request a response in JSON
-// instead of HTTP as redirect URLs on other domains are not returned to
-// requests made using the fetch API in the browser, and we need to ask the API
-// to return the response as a JSON object (the end point still defaults to
-// returning an HTTP response with a redirect for non-JavaScript clients).
-//
+// On signIn() and signOut() we pass a "X-Auth-Return-Redirect" header
+// to request a response in JSON instead of HTTP as redirect URLs on other domains
+// are not returned to requests made using the fetch API in the browser,
+// and we need to ask the API to return the response as a JSON object
+// (the endpoint still defaults to returning an HTTP response with a redirect for non-JavaScript clients).
 // We use HTTP POST requests with CSRF Tokens to protect against CSRF attacks.
 
 import * as React from "react"
@@ -216,13 +215,13 @@ export async function signIn<
     method: "post",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
+      "X-Auth-Return-Redirect": "1",
     },
     // @ts-expect-error
     body: new URLSearchParams({
       ...options,
       csrfToken: await getCsrfToken(),
       callbackUrl,
-      json: true,
     }),
   })
 
@@ -266,12 +265,12 @@ export async function signOut<R extends boolean = true>(
     method: "post",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
+      "X-Auth-Return-Redirect": "1",
     },
     // @ts-expect-error
     body: new URLSearchParams({
       csrfToken: await getCsrfToken(),
       callbackUrl,
-      json: true,
     }),
   }
   const res = await fetch(`${baseUrl}/signout`, fetchOptions)
