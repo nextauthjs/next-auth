@@ -1,5 +1,4 @@
-import { randomBytes } from "crypto"
-import { hashToken } from "../utils"
+import { randomString, createHash } from "../spec"
 import type { InternalOptions } from "../../types"
 
 /**
@@ -13,8 +12,7 @@ export default async function email(
   const { url, adapter, provider, callbackUrl, theme } = options
   // Generate token
   const token =
-    (await provider.generateVerificationToken?.()) ??
-    randomBytes(32).toString("hex")
+    (await provider.generateVerificationToken?.()) ?? randomString(32)
 
   const ONE_DAY_IN_SECONDS = 86400
   const expires = new Date(
@@ -25,6 +23,7 @@ export default async function email(
   const params = new URLSearchParams({ callbackUrl, token, email: identifier })
   const _url = `${url}/callback/${provider.id}?${params}`
 
+  const secret = provider.secret ?? options.secret
   await Promise.all([
     // Send to user
     provider.sendVerificationRequest({
@@ -38,7 +37,7 @@ export default async function email(
     // Save in database
     adapter.createVerificationToken({
       identifier,
-      token: hashToken(token, options),
+      token: await createHash(`${token}${secret}`),
       expires,
     }),
   ])

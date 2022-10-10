@@ -1,3 +1,4 @@
+import "./inject-globals"
 import { AuthHandler } from "../core"
 import { detectHost } from "../utils/detect-host"
 import { getBody } from "./utils"

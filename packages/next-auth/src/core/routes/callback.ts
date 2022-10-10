@@ -1,6 +1,6 @@
 import oAuthCallback from "../lib/oauth/callback"
 import callbackHandler from "../lib/callback-handler"
-import { hashToken } from "../lib/utils"
+import { createHash } from "../lib/spec"
 import getUserFromEmail from "../lib/email/getUserFromEmail"
 
 import type { InternalOptions } from "../types"
@@ -206,10 +206,11 @@ export default async function callback(params: {
         return { redirect: `${url}/error?error=configuration`, cookies }
       }
 
+      const secret = provider.secret ?? options.secret
       // @ts-expect-error -- Verified in `assertConfig`. adapter: Adapter<true>
       const invite = await adapter.useVerificationToken({
         identifier,
-        token: hashToken(token, options),
+        token: await createHash(`${token}${secret}`),
       })
 
       const invalidInvite = !invite || invite.expires.valueOf() < Date.now()
