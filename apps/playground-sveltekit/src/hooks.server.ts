@@ -6,7 +6,9 @@ export const handle: Handle = async function handle({
   resolve,
 }): Promise<Response> {
   const session = await getServerSession(event.request, nextAuthOptions)
-  event.locals.session = session
+  if (session) {
+    event.locals.session = session
+  }
 
   return resolve(event)
 }

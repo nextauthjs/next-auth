@@ -4,6 +4,15 @@ NextAuth.js is committed to bringing easy authentication to other frameworks. ht
 
 SvelteKit support with NextAuth.js is currently experimental. This directory contains a minimal, proof-of-concept application. Parts of this is expected to be abstracted away into a package like `@next-auth/sveltekit`
 
+## Running this Demo
+
+- Copy `.env.example` to `.env`
+- In `.env`, set `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`
+  - See [https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app))
+  - When creating the OAuth app, set "Homepage URL" to `http://localhost:5173` and Authorization callack URL to `http://localhost:5173/api/auth/callback/github`
+- In `.env`, set `NEXTAUTH_SECRET` to any random string
+- Build and run the application: `yarn build && yarn start`
+
 ## Existing Project
 
 ### Add API Route
