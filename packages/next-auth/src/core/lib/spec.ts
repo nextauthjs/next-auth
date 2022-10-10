@@ -1,33 +1,7 @@
 import { serialize, parse as parseCookie } from "cookie"
 import { detectHost } from "../../utils/detect-host"
-import type { OutgoingResponse, RequestInternal } from ".."
-import type { NextAuthAction } from "../types"
-
-const decoder = new TextDecoder()
-
-async function readJSONBody(
-  body: ReadableStream | Buffer
-): Promise<Record<string, any> | undefined> {
-  try {
-    if (body instanceof ReadableStream) {
-      const reader = body.getReader()
-      const bytes: number[] = []
-      while (true) {
-        const { value, done } = await reader.read()
-        if (done) break
-        bytes.push(...value)
-      }
-      const b = new Uint8Array(bytes)
-      return JSON.parse(decoder.decode(b))
-    }
-
-    // Handle `node-fetch` implementation of `body`
-    // We expect it to be a JSON.stringify'd object in a `Buffer`
-    return JSON.parse(body.toString())
-  } catch (e) {
-    console.error(e)
-  }
-}
+import type { ResponseInternal, RequestInternal } from ".."
+import type { AuthAction } from "../types"
 
 export async function toInternalRequest(
   req: Request
@@ -46,7 +20,7 @@ export async function toInternalRequest(
     ) ?? {}
 
   return {
-    action: nextauth[0] as NextAuthAction,
+    action: nextauth[0] as AuthAction,
     method: req.method,
     headers,
     body: req.body ? await readJSONBody(req.body) : undefined,
@@ -58,7 +32,7 @@ export async function toInternalRequest(
   }
 }
 
-export function toResponse(res: OutgoingResponse): Response {
+export function toResponse(res: ResponseInternal): Response {
   const headers = new Headers(
     res.headers?.reduce((acc, { key, value }) => {
       acc[key] = value

@@ -1,7 +1,7 @@
 import * as o from "@panva/oauth4webapi"
 
 import type { CookiesOptions, InternalOptions } from "../../../types"
-import type { InternalRequest, InternalResponse } from "../../.."
+import type { RequestInternal, ResponseInternal } from "../../.."
 import type { Cookie } from "../../cookie"
 
 /**
@@ -14,8 +14,8 @@ export default async function getAuthorizationUrl({
   query,
 }: {
   options: InternalOptions<"oauth">
-  query: InternalRequest["query"]
-}): Promise<InternalResponse> {
+  query: RequestInternal["query"]
+}): Promise<ResponseInternal> {
   const { logger, provider } = options
 
   if (provider.version?.startsWith("1.")) {

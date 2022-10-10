@@ -149,7 +149,7 @@ export default async function oAuthCallback(params: {
   }
 }
 
-export interface GetProfileParams {
+interface GetProfileParams {
   profile: Profile
   tokens: TokenSet
   provider: OAuthConfigInternal<any>

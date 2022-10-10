@@ -7,13 +7,12 @@ import type {
   NextApiRequest,
   NextApiResponse,
 } from "next"
-import type { NextAuthOptions, Session } from ".."
-import type { NextAuthRequest, NextAuthResponse } from "../core/types"
+import type { AuthOptions, Session } from ".."
 
 async function NextAuthHandler(
   req: NextApiRequest,
   res: NextApiResponse,
-  options: NextAuthOptions
+  options: AuthOptions
 ) {
   options.secret ??= options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
 
@@ -47,21 +46,19 @@ async function NextAuthHandler(
   return res.send(body)
 }
 
-function NextAuth(options: NextAuthOptions): any
+function NextAuth(options: AuthOptions): any
 function NextAuth(
   req: NextApiRequest,
   res: NextApiResponse,
-  options: NextAuthOptions
+  options: AuthOptions
 ): any
 
 /** The main entry point to next-auth */
 function NextAuth(
-  ...args:
-    | [NextAuthOptions]
-    | [NextApiRequest, NextApiResponse, NextAuthOptions]
+  ...args: [AuthOptions] | [NextApiRequest, NextApiResponse, AuthOptions]
 ) {
   if (args.length === 1) {
-    return async (req: NextAuthRequest, res: NextAuthResponse) =>
+    return async (req: NextApiRequest, res: NextApiResponse) =>
       await NextAuthHandler(req, res, args[0])
   }
 
@@ -76,9 +73,9 @@ export async function unstable_getServerSession(
     | [
         GetServerSidePropsContext["req"],
         GetServerSidePropsContext["res"],
-        NextAuthOptions
+        AuthOptions
       ]
-    | [NextApiRequest, NextApiResponse, NextAuthOptions]
+    | [NextApiRequest, NextApiResponse, AuthOptions]
 ): Promise<Session | null> {
   if (!experimentalWarningShown && process.env.NODE_ENV !== "production") {
     console.warn(

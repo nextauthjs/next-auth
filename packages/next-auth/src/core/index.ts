@@ -6,7 +6,7 @@ import { init } from "./init"
 import { assertConfig } from "./lib/assert"
 import { SessionStore } from "./lib/cookie"
 
-import type { NextAuthAction, NextAuthOptions } from "./types"
+import type { AuthAction, AuthOptions } from "./types"
 import type { Cookie } from "./lib/cookie"
 import type { ErrorType } from "./pages/error"
 
@@ -18,22 +18,21 @@ export interface RequestInternal {
   headers?: Record<string, any>
   query?: Record<string, any>
   body?: Record<string, any>
-  action: NextAuthAction
+  action: AuthAction
   providerId?: string
   error?: string
 }
 
-export interface NextAuthHeader {
+interface AuthHeader {
   key: string
   value: string
 }
 
-// TODO: Rename to `ResponseInternal`
-export interface OutgoingResponse<
+export interface ResponseInternal<
   Body extends string | Record<string, any> | any[] = any
 > {
   status?: number
-  headers?: NextAuthHeader[]
+  headers?: AuthHeader[]
   body?: Body
   redirect?: URL | string // TODO: refactor to only allow URL
   cookies?: Cookie[]
@@ -43,10 +42,10 @@ async function AuthHandlerInternal<
   Body extends string | Record<string, any> | any[]
 >(params: {
   req: RequestInternal
-  options: NextAuthOptions
+  options: AuthOptions
   /** REVIEW: Is this the best way to skip parsing the body in Node.js? */
   parsedBody?: any
-}): Promise<OutgoingResponse<Body>> {
+}): Promise<ResponseInternal<Body>> {
   const { options: userOptions, req } = params
   setLogger(userOptions.logger, userOptions.debug)
 
@@ -271,7 +270,7 @@ async function AuthHandlerInternal<
  */
 export async function AuthHandler(
   request: Request,
-  options: NextAuthOptions
+  options: AuthOptions
 ): Promise<Response> {
   const req = await toInternalRequest(request)
   const internalResponse = await AuthHandlerInternal({ req, options })

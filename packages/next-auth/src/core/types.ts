@@ -12,8 +12,6 @@ import type { JWT, JWTOptions } from "../jwt"
 import type { LoggerInstance } from "../utils/logger"
 import type { CookieSerializeOptions } from "cookie"
 
-import type { NextApiRequest, NextApiResponse } from "next"
-
 import type { InternalUrl } from "../utils/parse-url"
 
 export type Awaitable<T> = T | PromiseLike<T>
@@ -25,7 +23,7 @@ export type { LoggerInstance }
  *
  * [Documentation](https://next-auth.js.org/configuration/options#options)
  */
-export interface NextAuthOptions {
+export interface AuthOptions {
   /**
    * An array of authentication providers for signing in
    * (e.g. Google, Facebook, Twitter, GitHub, Email, etc) in any order.
@@ -503,7 +501,7 @@ export type InternalProvider<T = ProviderType> = (T extends "oauth"
   callbackUrl: string
 }
 
-export type NextAuthAction =
+export type AuthAction =
   | "providers"
   | "session"
   | "csrf"
@@ -525,7 +523,7 @@ export interface InternalOptions<
    * @default "http://localhost:3000/api/auth"
    */
   url: InternalUrl
-  action: NextAuthAction
+  action: AuthAction
   provider: InternalProvider<TProviderType>
   csrfToken?: string
   csrfTokenVerified?: boolean
@@ -544,18 +542,3 @@ export interface InternalOptions<
   cookies: CookiesOptions
   callbackUrl: string
 }
-
-/** @internal */
-export interface NextAuthRequest extends NextApiRequest {
-  options: InternalOptions
-}
-
-/** @internal */
-export type NextAuthResponse<T = any> = NextApiResponse<T>
-
-/** @internal */
-// eslint-disable-next-line @typescript-eslint/no-invalid-void-type
-export type NextAuthApiHandler<Result = void, Response = any> = (
-  req: NextAuthRequest,
-  res: NextAuthResponse<Response>
-) => Awaitable<Result>

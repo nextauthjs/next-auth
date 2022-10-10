@@ -18,7 +18,7 @@ import {
   apiBaseUrl,
   fetchData,
   now,
-  NextAuthClientConfig,
+  AuthClientConfig,
 } from "../client/_utils"
 
 import type {
@@ -46,7 +46,7 @@ export * from "./types"
 //    relative URLs are valid in that context and so defaults to empty.
 // 2. When invoked server side the value is picked up from an environment
 //    variable and defaults to 'http://localhost:3000'.
-const __NEXTAUTH: NextAuthClientConfig = {
+const __NEXTAUTH: AuthClientConfig = {
   baseUrl: parseUrl(process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL).origin,
   basePath: parseUrl(process.env.NEXTAUTH_URL).path,
   baseUrlServer: parseUrl(
@@ -74,9 +74,9 @@ export type SessionContextValue<R extends boolean = false> = R extends true
       | { data: Session; status: "authenticated" }
       | { data: null; status: "unauthenticated" | "loading" }
 
-export const SessionContext = React.createContext<SessionContextValue | undefined>(
-  undefined
-)
+export const SessionContext = React.createContext<
+  SessionContextValue | undefined
+>(undefined)
 
 /**
  * React Hook that gives you access
