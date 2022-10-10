@@ -27,18 +27,18 @@ export default function parseProviders(params: {
       if (rest.type === "oauth") {
         const normalizedOptions = normalizeOAuthOptions(rest)
         const normalizedUserOptions = normalizeOAuthOptions(userOptions, true)
+        const id = normalizedUserOptions?.id ?? rest.id
         return merge(normalizedOptions, {
           ...normalizedUserOptions,
-          signinUrl: `${url}/signin/${normalizedUserOptions?.id ?? rest.id}`,
-          callbackUrl: `${url}/callback/${
-            normalizedUserOptions?.id ?? rest.id
-          }`,
+          signinUrl: `${url}/signin/${id}`,
+          callbackUrl: `${url}/callback/${id}`,
         })
       }
+      const id = (userOptions?.id as string) ?? rest.id
       return merge(rest, {
         ...userOptions,
-        signinUrl: `${url}/signin/${userOptions?.id ?? rest.id}`,
-        callbackUrl: `${url}/callback/${userOptions?.id ?? rest.id}`,
+        signinUrl: `${url}/signin/${id}`,
+        callbackUrl: `${url}/callback/${id}`,
       })
     }
   )
