@@ -31,10 +31,11 @@ export default function parseProviders(params: {
       rest = normalizeOAuth(rest as OAuthConfig<any>)
       userOptions = normalizeOAuth(userOptions as OAuthUserConfig<any>)
     }
+    const id = (userOptions?.id as string | undefined) ?? rest.id
     return merge(rest, {
       ...userOptions,
-      signinUrl: `${url}/signin/${userOptions?.id ?? rest.id}`,
-      callbackUrl: `${url}/callback/${userOptions?.id ?? rest.id}`,
+      signinUrl: `${url}/signin/${id}`,
+      callbackUrl: `${url}/callback/${id}`,
     })
   })
 
@@ -91,6 +92,7 @@ function normalizeEndpoint(
   // assert.ts
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const url = new URL(e.url!)
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   for (const k in e.params) url.searchParams.set(k, e.params[k] as any)
 
   return { url }
