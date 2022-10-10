@@ -10,7 +10,7 @@ import {
 import parseUrl from "../../utils/parse-url"
 import { defaultCookies } from "./cookie"
 
-import type { InternalRequest } from ".."
+import type { RequestInternal } from ".."
 import type { WarningCode } from "../../utils/logger"
 import type { NextAuthOptions } from "../types"
 
@@ -41,7 +41,7 @@ function isValidHttpUrl(url: string, baseUrl: string) {
  */
 export function assertConfig(params: {
   options: NextAuthOptions
-  req: InternalRequest
+  req: RequestInternal
 }): ConfigError | WarningCode[] {
   const { options, req } = params
 

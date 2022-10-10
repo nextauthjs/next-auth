@@ -1,4 +1,4 @@
-import type { InternalResponse } from ".."
+import type { OutgoingResponse } from ".."
 import type { InternalProvider } from "../types"
 
 export interface PublicProvider {
@@ -16,7 +16,7 @@ export interface PublicProvider {
  */
 export default function providers(
   providers: InternalProvider[]
-): InternalResponse<Record<string, PublicProvider>> {
+): OutgoingResponse<Record<string, PublicProvider>> {
   return {
     headers: [{ key: "Content-Type", value: "application/json" }],
     body: providers.reduce<Record<string, PublicProvider>>(

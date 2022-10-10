@@ -1,6 +1,6 @@
 import { serialize, parse as parseCookie } from "cookie"
 import { detectHost } from "../../utils/detect-host"
-import type { InternalResponse, InternalRequest } from ".."
+import type { OutgoingResponse, RequestInternal } from ".."
 import type { NextAuthAction } from "../types"
 
 const decoder = new TextDecoder()
@@ -31,7 +31,7 @@ async function readJSONBody(
 
 export async function toInternalRequest(
   req: Request
-): Promise<InternalRequest> {
+): Promise<RequestInternal> {
   const url = new URL(req.url)
   const nextauth = url.pathname.split("/").slice(3)
   const headers = Object.fromEntries(req.headers.entries())
@@ -58,7 +58,7 @@ export async function toInternalRequest(
   }
 }
 
-export function toResponse(res: InternalResponse): Response {
+export function toResponse(res: OutgoingResponse): Response {
   const headers = new Headers(
     res.headers?.reduce((acc, { key, value }) => {
       acc[key] = value

@@ -46,7 +46,7 @@ describe("Treat secret correctly", () => {
     expect(logger.error).not.toBeCalledWith("NO_SECRET")
   })
 
-  it.only("Error if missing NEXTAUTH_SECRET and secret", async () => {
+  it("Error if missing NEXTAUTH_SECRET and secret", async () => {
     const configError = new Error(
       "There is a problem with the server configuration. Check the server logs for more information."
     )
