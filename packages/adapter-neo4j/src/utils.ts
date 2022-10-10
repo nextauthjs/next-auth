@@ -54,7 +54,10 @@ export function client(session: Session) {
      * Reads/writes values from/to the database.
      * Properties are available under `$data`
      */
-    async write<T>(statement: string, values: T): Promise<any> {
+    async write<T extends Record<string, any>>(
+      statement: string,
+      values: T
+    ): Promise<any> {
       const result = await session.writeTransaction((tx) =>
         tx.run(statement, { data: format.to(values) })
       )
