@@ -84,8 +84,8 @@ describe("Return correct data", () => {
 
   it("Should return null if there is no session", async () => {
     const spy = jest.spyOn(core, "AuthHandler")
-    // @ts-expect-error
-    spy.mockReturnValue({ body: {} })
+    // @ts-expect-error [Response.json](https://developer.mozilla.org/en-US/docs/Web/API/Response/json)
+    spy.mockReturnValue(Promise.resolve(Response.json(null)))
 
     const session = await unstable_getServerSession(req, res, {
       providers: [],
@@ -97,21 +97,19 @@ describe("Return correct data", () => {
   })
 
   it("Should return the session if one is found", async () => {
-    const mockedResponse = {
-      body: {
-        user: {
-          name: "John Doe",
-          email: "test@example.com",
-          image: "",
-          id: "1234",
-        },
-        expires: "",
+    const mockedBody = {
+      user: {
+        name: "John Doe",
+        email: "test@example.com",
+        image: "",
+        id: "1234",
       },
+      expires: "",
     }
 
     const spy = jest.spyOn(core, "AuthHandler")
-    // @ts-expect-error
-    spy.mockReturnValue(mockedResponse)
+    // @ts-expect-error [Response.json](https://developer.mozilla.org/en-US/docs/Web/API/Response/json)
+    spy.mockReturnValue(Promise.resolve(Response.json(mockedBody)))
 
     const session = await unstable_getServerSession(req, res, {
       providers: [],
@@ -119,6 +117,6 @@ describe("Return correct data", () => {
       secret: "secret",
     })
 
-    expect(session).toEqual(mockedResponse.body)
+    expect(session).toEqual(mockedBody)
   })
 })
