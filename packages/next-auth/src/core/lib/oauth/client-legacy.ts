@@ -13,7 +13,7 @@ export function oAuth1Client(options: InternalOptions<"oauth">) {
   const oauth1Client = new OAuth(
     provider.requestTokenUrl as string,
     provider.accessTokenUrl as string,
-    provider.clientId as string,
+    provider.clientId,
     provider.clientSecret as string,
     provider.version ?? "1.0",
     provider.callbackUrl,
