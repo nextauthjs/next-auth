@@ -45,38 +45,31 @@ export default function parseProviders(params: {
   }
 }
 
-/**
- * Transform OAuth options `authorization`, `token` and `profile` to `{ url: URL }`
- */
 function normalizeOAuth(
-  config?: OAuthConfig<any> | OAuthUserConfig<any>
+  c?: OAuthConfig<any> | OAuthUserConfig<any>
 ): OAuthConfigInternal<any> | {} {
-  if (!config) return {}
+  if (!c) return {}
 
-  const authorization = normalizeEndpoint(config.authorization)
-  const token = normalizeEndpoint(config.token)
-  const userinfo = normalizeEndpoint(config.userinfo)
+  const authorization = normalizeEndpoint(c.authorization)
 
-  if (!config.version?.startsWith("1.")) {
-    config.idToken =
-      config.idToken ??
+  if (!c.version?.startsWith("1.")) {
+    c.idToken ??=
       // If a provider has as an "openid-configuration" well-known endpoint
-      config.wellKnown?.includes("openid-configuration") ??
+      c.wellKnown?.includes("openid-configuration") ??
       // or an "openid" scope request, it will also likely be return an `id_token`
       authorization?.url.searchParams.get("scope")?.includes("openid")
 
     // Set default check to state
-    config.checks = Array.isArray(config.checks)
-      ? config.checks
-      : [config.checks ?? "state"]
+    c.checks ??= ["state"]
+    if (!Array.isArray(c.checks)) c.checks = [c.checks]
   }
 
   return {
-    ...config,
-    authorization,
-    token,
-    userinfo,
-  } as unknown as OAuthConfigInternal<any>
+    ...c,
+    ...(authorization ? { authorization } : undefined),
+    ...(c.token ? { token: normalizeEndpoint(c.token) } : undefined),
+    ...(c.userinfo ? { userinfo: normalizeEndpoint(c.userinfo) } : undefined),
+  }
 }
 
 function normalizeEndpoint(
