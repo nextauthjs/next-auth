@@ -1,4 +1,4 @@
-import { createHash, randomString } from "./spec"
+import { createHash, randomString } from "./web"
 import type { InternalOptions } from "../types"
 
 interface CreateCSRFTokenParams {

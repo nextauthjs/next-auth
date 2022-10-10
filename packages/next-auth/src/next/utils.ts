@@ -1,5 +1,4 @@
 import type { GetServerSidePropsContext, NextApiRequest } from "next"
-import type { NextRequest } from "next/server"
 
 export function setCookie(res, value: string) {
   // Preserve any existing cookies that have already been set in the same session
@@ -13,14 +12,16 @@ export function setCookie(res, value: string) {
 }
 
 export function getBody(
-  req: NextApiRequest | NextRequest | GetServerSidePropsContext["req"]
-) {
+  req: NextApiRequest | GetServerSidePropsContext["req"]
+): { body: RequestInit["body"] } | undefined {
   if (!("body" in req) || !req.body || req.method !== "POST") {
     return
   }
 
-  if (req.body instanceof ReadableStream) {
-    return { body: req.body }
+  const contentType = req.headers?.["content-type"]
+  if (contentType?.includes("application/json")) {
+    return { body: JSON.stringify(req.body) }
+  } else if (contentType?.includes("application/x-www-form-urlencoded")) {
+    return { body: new URLSearchParams(req.body) }
   }
-  return { body: JSON.stringify(req.body) }
 }

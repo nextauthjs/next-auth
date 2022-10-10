@@ -1,4 +1,4 @@
-import { createHash, randomUUID } from "./lib/spec"
+import { createHash, randomUUID } from "./lib/web"
 import { AuthOptions } from ".."
 import logger from "../utils/logger"
 import parseUrl from "../utils/parse-url"

@@ -1,6 +1,6 @@
 import oAuthCallback from "../lib/oauth/callback"
 import callbackHandler from "../lib/callback-handler"
-import { createHash } from "../lib/spec"
+import { createHash } from "../lib/web"
 import getUserFromEmail from "../lib/email/getUserFromEmail"
 
 import type { InternalOptions } from "../types"

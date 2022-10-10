@@ -1,4 +1,4 @@
-import { randomString, createHash } from "../spec"
+import { randomString, createHash } from "../web"
 import type { InternalOptions } from "../../types"
 
 /**

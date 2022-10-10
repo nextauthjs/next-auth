@@ -1,5 +1,5 @@
 import logger, { setLogger } from "../utils/logger"
-import { toInternalRequest, toResponse } from "./lib/spec"
+import { toInternalRequest, toResponse } from "./lib/web"
 import * as routes from "./routes"
 import renderPage from "./pages"
 import { init } from "./init"

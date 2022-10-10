@@ -70,7 +70,7 @@ export default async function getAuthorizationUrl({
     if (as && !as.code_challenge_methods_supported?.includes("S256")) {
       // We assume S256 PKCE support, if the server does not advertise that,
       // a random `nonce` must be used for CSRF protection.
-      provider.checks = "nonce"
+      provider.checks = ["nonce"]
     } else {
       const { code_challenge, pkce } = await createPKCE(options)
       authParams.set("code_challenge", code_challenge)
