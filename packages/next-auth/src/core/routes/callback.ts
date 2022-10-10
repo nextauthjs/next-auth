@@ -4,21 +4,21 @@ import { hashToken } from "../lib/utils"
 import getUserFromEmail from "../lib/email/getUserFromEmail"
 
 import type { InternalOptions } from "../types"
-import type { InternalRequest, InternalResponse } from ".."
+import type { RequestInternal, OutgoingResponse } from ".."
 import type { Cookie, SessionStore } from "../lib/cookie"
 import type { User } from "../.."
 import type { AdapterSession } from "../../adapters"
 
 /** Handle callbacks from login services */
 export default async function callback(params: {
-  options: InternalOptions<"oauth" | "credentials" | "email">
-  query: InternalRequest["query"]
-  method: Required<InternalRequest>["method"]
-  body: InternalRequest["body"]
-  headers: InternalRequest["headers"]
-  cookies: InternalRequest["cookies"]
+  options: InternalOptions
+  query: RequestInternal["query"]
+  method: Required<RequestInternal>["method"]
+  body: RequestInternal["body"]
+  headers: RequestInternal["headers"]
+  cookies: RequestInternal["cookies"]
   sessionStore: SessionStore
-}): Promise<InternalResponse> {
+}): Promise<OutgoingResponse> {
   const { options, query, body, method, headers, sessionStore } = params
   const {
     provider,

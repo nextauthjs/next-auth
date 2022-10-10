@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto"
+import { createHash } from "crypto"
 import { AuthHandler } from "../src/core"
 import type { LoggerInstance, NextAuthOptions } from "../src"
 import type { Adapter } from "../src/adapters"

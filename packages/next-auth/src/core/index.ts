@@ -1,16 +1,16 @@
 import logger, { setLogger } from "../utils/logger"
+import { toInternalRequest, toResponse } from "./lib/spec"
 import * as routes from "./routes"
 import renderPage from "./pages"
 import { init } from "./init"
 import { assertConfig } from "./lib/assert"
 import { SessionStore } from "./lib/cookie"
-import { toInternalRequest, toResponse } from "./lib/spec"
 
 import type { NextAuthAction, NextAuthOptions } from "./types"
 import type { Cookie } from "./lib/cookie"
 import type { ErrorType } from "./pages/error"
 
-export interface InternalRequest {
+export interface RequestInternal {
   /** @default "http://localhost:3000" */
   host?: string
   method?: string
@@ -23,7 +23,13 @@ export interface InternalRequest {
   error?: string
 }
 
-export interface InternalResponse<
+export interface NextAuthHeader {
+  key: string
+  value: string
+}
+
+// TODO: Rename to `ResponseInternal`
+export interface OutgoingResponse<
   Body extends string | Record<string, any> | any[] = any
 > {
   status?: number
@@ -33,19 +39,14 @@ export interface InternalResponse<
   cookies?: Cookie[]
 }
 
-export interface NextAuthHeader {
-  key: string
-  value: string
-}
-
 async function AuthHandlerInternal<
   Body extends string | Record<string, any> | any[]
 >(params: {
-  req: InternalRequest
+  req: RequestInternal
   options: NextAuthOptions
   /** REVIEW: Is this the best way to skip parsing the body in Node.js? */
   parsedBody?: any
-}): Promise<InternalResponse<Body>> {
+}): Promise<OutgoingResponse<Body>> {
   const { options: userOptions, req } = params
   setLogger(userOptions.logger, userOptions.debug)
 

@@ -6,7 +6,7 @@ import { createPKCE } from "./pkce-handler"
 
 import type { AuthorizationParameters } from "openid-client"
 import type { InternalOptions } from "../../types"
-import type { InternalRequest } from "../.."
+import type { RequestInternal } from "../.."
 import type { Cookie } from "../cookie"
 
 /**
@@ -20,7 +20,7 @@ export default async function getAuthorizationUrl({
   query,
 }: {
   options: InternalOptions<"oauth">
-  query: InternalRequest["query"]
+  query: RequestInternal["query"]
 }) {
   const { logger, provider } = options
   let params

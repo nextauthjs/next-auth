@@ -1,13 +1,13 @@
 import type { Adapter } from "../../adapters"
 import type { InternalOptions } from "../types"
-import type { InternalResponse } from ".."
+import type { OutgoingResponse } from ".."
 import type { SessionStore } from "../lib/cookie"
 
 /** Handle requests to /api/auth/signout */
 export default async function signout(params: {
   options: InternalOptions
   sessionStore: SessionStore
-}): Promise<InternalResponse> {
+}): Promise<OutgoingResponse> {
   const { options, sessionStore } = params
   const { adapter, events, jwt, callbackUrl, logger, session } = options
 
