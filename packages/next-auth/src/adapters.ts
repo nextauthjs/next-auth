@@ -2,11 +2,15 @@ import { Account, User, Awaitable } from "."
 
 export interface AdapterUser extends User {
   id: string
+  email: string
   emailVerified: Date | null
 }
 
+export interface AdapterAccount extends Account {
+  userId: string
+}
+
 export interface AdapterSession {
-  id: string
   /** A randomly generated value that is used to get hold of the session. */
   sessionToken: string
   /** Used to connect the session to a particular user */
@@ -55,13 +59,30 @@ export interface VerificationToken {
  * [Adapters Overview](https://next-auth.js.org/adapters/overview) |
  * [Create a custom adapter](https://next-auth.js.org/tutorials/creating-a-database-adapter)
  */
-export interface Adapter {
+export type Adapter<WithVerificationToken = boolean> = DefaultAdapter &
+  (WithVerificationToken extends true
+    ? {
+        createVerificationToken: (
+          verificationToken: VerificationToken
+        ) => Awaitable<VerificationToken | null | undefined>
+        /**
+         * Return verification token from the database
+         * and delete it so it cannot be used again.
+         */
+        useVerificationToken: (params: {
+          identifier: string
+          token: string
+        }) => Awaitable<VerificationToken | null>
+      }
+    : {})
+
+export interface DefaultAdapter {
   createUser: (user: Omit<AdapterUser, "id">) => Awaitable<AdapterUser>
   getUser: (id: string) => Awaitable<AdapterUser | null>
   getUserByEmail: (email: string) => Awaitable<AdapterUser | null>
   /** Using the provider id and the id of the user for a specific account, get the user. */
   getUserByAccount: (
-    providerAccountId: Pick<Account, "provider" | "providerAccountId">
+    providerAccountId: Pick<AdapterAccount, "provider" | "providerAccountId">
   ) => Awaitable<AdapterUser | null>
   updateUser: (user: Partial<Omit<AdapterUser, "id">> & Pick<AdapterUser, "id">) => Awaitable<AdapterUser>
   /** @todo Implement */
@@ -69,12 +90,12 @@ export interface Adapter {
     userId: string
   ) => Promise<void> | Awaitable<AdapterUser | null | undefined>
   linkAccount: (
-    account: Account
-  ) => Promise<void> | Awaitable<Account | null | undefined>
+    account: AdapterAccount
+  ) => Promise<void> | Awaitable<AdapterAccount | null | undefined>
   /** @todo Implement */
   unlinkAccount?: (
-    providerAccountId: Pick<Account, "provider" | "providerAccountId">
-  ) => Promise<void> | Awaitable<Account | undefined>
+    providerAccountId: Pick<AdapterAccount, "provider" | "providerAccountId">
+  ) => Promise<void> | Awaitable<AdapterAccount | undefined>
   /** Creates a session for the user and returns it. */
   createSession: (session: {
     sessionToken: string

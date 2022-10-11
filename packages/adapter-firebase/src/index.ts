@@ -15,17 +15,18 @@ import {
   where,
   connectFirestoreEmulator,
 } from "firebase/firestore"
-import type { Account } from "next-auth"
+
 import type {
   Adapter,
-  AdapterSession,
   AdapterUser,
+  AdapterAccount,
+  AdapterSession,
   VerificationToken,
 } from "next-auth/adapters"
 
 import { getConverter } from "./converter"
 
-type IndexableObject = Record<string, unknown>
+export type IndexableObject = Record<string, unknown>
 
 export interface FirestoreAdapterOptions {
   emulator?: {
@@ -50,13 +51,13 @@ export function FirestoreAdapter({
   }
 
   const Users = collection(db, "users").withConverter(
-    getConverter<AdapterUser>()
+    getConverter<AdapterUser & IndexableObject>()
   )
   const Sessions = collection(db, "sessions").withConverter(
     getConverter<AdapterSession & IndexableObject>()
   )
   const Accounts = collection(db, "accounts").withConverter(
-    getConverter<Account>()
+    getConverter<AdapterAccount>()
   )
   const VerificationTokens = collection(db, "verificationTokens").withConverter(
     getConverter<VerificationToken & IndexableObject>({ excludeId: true })
