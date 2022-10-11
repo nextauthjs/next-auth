@@ -59,7 +59,6 @@ export default async function signin(params: {
       email,
       // @ts-expect-error -- Verified in `assertConfig`. adapter: Adapter<true>
       adapter: options.adapter,
-      withId: true,
     })
 
     const account: Account = {
