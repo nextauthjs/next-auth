@@ -320,14 +320,14 @@ export default async function callback(params: {
   } else if (provider.type === "credentials" && method === "POST") {
     const credentials = body
 
-    let user: User
+    let user: User | null
     try {
-      user = (await provider.authorize(credentials, {
+      user = await provider.authorize(credentials, {
         query,
         body,
         headers,
         method,
-      })) as User
+      })
       if (!user) {
         return {
           status: 401,
