@@ -40,7 +40,7 @@ providers: [
 ```
 
 :::warning
-The scope and redirect_uri fields are mandatory. Without them the authentication flow will fail. Do not forget to include **openid** as part of the scope.
+The scope and redirect_uri fields are mandatory. Without them the authentication flow will fail. Do not forget to include openid as part of the scope.
 :::
 
 :::tip
