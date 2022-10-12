@@ -114,12 +114,6 @@ export const authOptions: NextAuthOptions = {
     WorkOS({ clientId: process.env.WORKOS_ID, clientSecret: process.env.WORKOS_SECRET }),
     Zitadel({ issuer: process.env.ZITADEL_ISSUER, clientId: process.env.ZITADEL_CLIENT_ID, clientSecret: process.env.ZITADEL_CLIENT_SECRET }),
   ],
-  callbacks: {
-    signIn({ user }) {
-      console.log("signIn", user.id, user.foo)
-      return true
-    },
-  },
 }
 
 if (authOptions.adapter) {
