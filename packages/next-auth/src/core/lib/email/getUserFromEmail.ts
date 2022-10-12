@@ -1,14 +1,20 @@
+import { AdapterUser } from "src/adapters"
 import type { InternalOptions } from "../../types"
 
-export default async function getUserFromEmail({
+/**
+ * Query the database for a user by email address.
+ * If is an existing user return a user object (otherwise use placeholder).
+ */
+export default async function getAdapterUserFromEmail({
   email,
   adapter,
 }: {
   email: string
   adapter: InternalOptions<"email">["adapter"]
-}) {
+}): Promise<AdapterUser> {
   const { getUserByEmail } = adapter
   const adapterUser = email ? await getUserByEmail(email) : null
-  // If is an existing user return a user object (otherwise use placeholder)
-  return adapterUser ?? { id: email, email }
+  if (adapterUser) return adapterUser
+
+  return { id: email, email, emailVerified: null }
 }

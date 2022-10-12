@@ -1,6 +1,6 @@
 import getAuthorizationUrl from "../lib/oauth/authorization-url"
 import emailSignin from "../lib/email/signin"
-import getUserFromEmail from "../lib/email/getUserFromEmail"
+import getAdapterUserFromEmail from "../lib/email/getUserFromEmail"
 import type { RequestInternal, OutgoingResponse } from ".."
 import type { InternalOptions } from "../types"
 import type { Account } from "../.."
@@ -55,7 +55,7 @@ export default async function signin(params: {
       return { redirect: `${url}/error?error=EmailSignin` }
     }
 
-    const user = await getUserFromEmail({
+    const user = await getAdapterUserFromEmail({
       email,
       // @ts-expect-error -- Verified in `assertConfig`. adapter: Adapter<true>
       adapter: options.adapter,

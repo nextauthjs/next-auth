@@ -1,7 +1,7 @@
 import oAuthCallback from "../lib/oauth/callback"
 import callbackHandler from "../lib/callback-handler"
 import { hashToken } from "../lib/utils"
-import getUserFromEmail from "../lib/email/getUserFromEmail"
+import getAdapterUserFromEmail from "../lib/email/getUserFromEmail"
 
 import type { InternalOptions } from "../types"
 import type { RequestInternal, OutgoingResponse } from ".."
@@ -217,7 +217,7 @@ export default async function callback(params: {
         return { redirect: `${url}/error?error=Verification`, cookies }
       }
 
-      const profile = await getUserFromEmail({
+      const profile = await getAdapterUserFromEmail({
         email: identifier,
         // @ts-expect-error -- Verified in `assertConfig`. adapter: Adapter<true>
         adapter,

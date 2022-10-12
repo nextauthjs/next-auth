@@ -1,4 +1,4 @@
-import type { Adapter } from "../adapters"
+import type { Adapter, AdapterUser } from "../adapters"
 import type {
   Provider,
   CredentialInput,
@@ -265,7 +265,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    * [Documentation](https://next-auth.js.org/configuration/callbacks#sign-in-callback)
    */
   signIn: (params: {
-    user: User
+    user: User | AdapterUser
     account: A | null
     /**
      * If OAuth provider is used, it contains the full
@@ -317,7 +317,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    */
   session: (params: {
     session: Session
-    user: User
+    user: User | AdapterUser
     token: JWT
   }) => Awaitable<Session>
   /**
@@ -334,7 +334,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    */
   jwt: (params: {
     token: JWT
-    user?: User
+    user?: User | AdapterUser
     account?: A | null
     profile?: P
     isNewUser?: boolean
@@ -385,9 +385,9 @@ export interface EventCallbacks {
   createUser: (message: { user: User }) => Awaitable<void>
   updateUser: (message: { user: User }) => Awaitable<void>
   linkAccount: (message: {
-    user: User
+    user: User | AdapterUser
     account: Account
-    profile: User
+    profile: User | AdapterUser
   }) => Awaitable<void>
   /**
    * The message object will contain one of these depending on
