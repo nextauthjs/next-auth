@@ -1,4 +1,4 @@
-import { AdapterUser } from "src/adapters"
+import type { AdapterUser } from "../../adapters"
 import type { InternalOptions } from "../../types"
 
 /**
