@@ -31,7 +31,6 @@ providers: [
     authorization: {
       params: {
         scope: 'openid military teacher',
-        redirect_uri: `${process.env.NEXTAUTH_URL}/api/auth/callback/idme`
       }
     }
   })
