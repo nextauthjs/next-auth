@@ -265,7 +265,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    * [Documentation](https://next-auth.js.org/configuration/callbacks#sign-in-callback)
    */
   signIn: (params: {
-    user: User | { email: string }
+    user: User | AdapterUser
     account: A | null
     /**
      * If OAuth provider is used, it contains the full
@@ -317,7 +317,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    */
   session: (params: {
     session: Session
-    user: User
+    user: User | AdapterUser
     token: JWT
   }) => Awaitable<Session>
   /**
@@ -385,9 +385,9 @@ export interface EventCallbacks {
   createUser: (message: { user: User }) => Awaitable<void>
   updateUser: (message: { user: User }) => Awaitable<void>
   linkAccount: (message: {
-    user: User | AdapterUser | { email: string }
+    user: User | AdapterUser
     account: Account
-    profile: User | AdapterUser | { email: string }
+    profile: User | AdapterUser
   }) => Awaitable<void>
   /**
    * The message object will contain one of these depending on
