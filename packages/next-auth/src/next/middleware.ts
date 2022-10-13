@@ -80,7 +80,7 @@ export interface NextAuthMiddlewareOptions {
      * ```
      *
      * ---
-     * [Documentation](https://next-auth.js.org/getting-started/nextjs/middleware#api) | [`signIn` callback](configuration/callbacks#sign-in-callback)
+     * [Documentation](https://next-auth.js.org/configuration/nextjs#middleware) | [`signIn` callback](configuration/callbacks#sign-in-callback)
      */
     authorized?: AuthorizedCallback
   }
@@ -101,17 +101,17 @@ async function handleMiddleware(
   options: NextAuthMiddlewareOptions | undefined,
   onSuccess?: (token: JWT | null) => Promise<NextMiddlewareResult>
 ) {
-  const { pathname, search, origin } = req.nextUrl
+  const { pathname, search, origin, basePath } = req.nextUrl
 
   const signInPage = options?.pages?.signIn ?? "/api/auth/signin"
   const errorPage = options?.pages?.error ?? "/api/auth/error"
-  const basePath = parseUrl(process.env.NEXTAUTH_URL).path
+  const authPath = parseUrl(process.env.NEXTAUTH_URL).path
   const publicPaths = ["/_next", "/favicon.ico"]
 
   // Avoid infinite redirects/invalid response
   // on paths that never require authentication
   if (
-    pathname.startsWith(basePath) ||
+    `${basePath}${pathname}`.startsWith(authPath) ||
     [signInPage, errorPage].includes(pathname) ||
     publicPaths.some((p) => pathname.startsWith(p))
   ) {
@@ -125,7 +125,7 @@ async function handleMiddleware(
       `\nhttps://next-auth.js.org/errors#no_secret`
     )
 
-    const errorUrl = new URL(errorPage, origin)
+    const errorUrl = new URL(`${basePath}${errorPage}`, origin)
     errorUrl.searchParams.append("error", "Configuration")
 
     return NextResponse.redirect(errorUrl)
@@ -145,8 +145,8 @@ async function handleMiddleware(
   if (isAuthorized) return await onSuccess?.(token)
 
   // the user is not logged in, redirect to the sign-in page
-  const signInUrl = new URL(signInPage, origin)
-  signInUrl.searchParams.append("callbackUrl", `${pathname}${search}`)
+  const signInUrl = new URL(`${basePath}${signInPage}`, origin)
+  signInUrl.searchParams.append("callbackUrl", `${basePath}${pathname}${search}`)
   return NextResponse.redirect(signInUrl)
 }
 

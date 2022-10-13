@@ -14,7 +14,7 @@ connectFirestoreEmulator(firestore, 'localhost', 8080);
 
 type IndexableObject = Record<string, unknown>;
 
-const Users = collection(firestore, 'users').withConverter(getConverter<AdapterUser>());
+const Users = collection(firestore, 'users').withConverter(getConverter<AdapterUser & IndexableObject>());
 const Sessions = collection(firestore, 'sessions').withConverter(getConverter<AdapterSession & IndexableObject>());
 const Accounts = collection(firestore, 'accounts').withConverter(getConverter<Account>());
 const VerificationTokens = collection(firestore, 'verificationTokens').withConverter(getConverter<VerificationToken & IndexableObject>({ excludeId: true }));

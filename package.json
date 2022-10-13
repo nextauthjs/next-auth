@@ -4,14 +4,14 @@
   "private": true,
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "scripts": {
-    "build:app": "turbo run build --filter=next-auth-app --include-dependencies",
+    "build:app": "turbo run build --filter=next-auth-app",
     "build": "turbo run build --filter=next-auth --filter=@next-auth/* --no-deps",
     "lint": "turbo run lint --filter=!next-auth-docs --parallel",
     "test": "turbo run test --concurrency=1 --filter=!@next-auth/pouchdb-adapter --filter=!@next-auth/upstash-redis-adapter --filter=!next-auth-* --filter=[HEAD^1]",
     "clean": "turbo run clean --no-cache",
-    "dev:app": "turbo run dev --parallel --continue --filter=next-auth-app...",
+    "dev:db": "turbo run dev --parallel --continue --filter=next-auth-app...",
+    "dev": "turbo run dev --parallel --continue --filter=next-auth-app... --filter=!./packages/adapter-*",
     "dev:docs": "turbo run dev --filter=next-auth-docs",
-    "dev": "pnpm dev:app",
     "email": "cd apps/dev && pnpm email",
     "release": "release",
     "version:pr": "node ./config/version-pr"
@@ -31,13 +31,13 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
     "husky": "^7.0.4",
-    "prettier": "2.4.1",
+    "prettier": "2.7.1",
     "pretty-quick": "^3.1.2",
     "semver": "7.3.5",
     "stream-to-array": "2.3.0",
     "ts-node": "10.5.0",
     "turbo": "1.3.1",
-    "typescript": "4.7.4"
+    "typescript": "4.8.4"
   },
   "engines": {
     "node": "^12.19.0 || ^14.15.0 || ^16.13.0"
@@ -54,7 +54,7 @@
       }
     ]
   },
-  "packageManager": "pnpm@7.5.1",
+  "packageManager": "pnpm@7.13.3",
   "funding": [
     {
       "type": "github",

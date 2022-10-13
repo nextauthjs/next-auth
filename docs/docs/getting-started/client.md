@@ -58,7 +58,7 @@ export default function Component() {
 `useSession()` returns an object containing two values: `data` and `status`:
 
 - **`data`**: This can be three values: [`Session`](https://github.com/nextauthjs/next-auth/blob/8ff4b260143458c5d8a16b80b11d1b93baa0690f/types/index.d.ts#L437-L444) / `undefined` / `null`.
-  - when the session hasn't been fetched yet, `data` will `undefined`
+  - when the session hasn't been fetched yet, `data` will be `undefined`
   - in case it failed to retrieve the session, `data` will be `null`
   - in case of success, `data` will be [`Session`](https://github.com/nextauthjs/next-auth/blob/8ff4b260143458c5d8a16b80b11d1b93baa0690f/types/index.d.ts#L437-L444).
 - **`status`**: enum mapping to three possible session states: `"loading" | "authenticated" | "unauthenticated"`
