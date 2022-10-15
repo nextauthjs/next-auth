@@ -11,7 +11,7 @@ import nextAuthUserLoggedIn from "./img/getting-started-nextauth-success.png"
 
 We know, authentication is hard. Is a rabbit hole and it's easy to get lost on it. The goal of making NextAuth.js is that you can add authentication easily to your project with just a few lines of code.
 
-The easiest way is to setup NextAuth.js with an [OAuth](https://en.wikipedia.org/wiki/OAuth) provider. In this tutorial we'll be setting NextAuth.js in a **NextJS app** to be able to login with **Github**.
+The easiest way is to setup NextAuth.js with an [OAuth](https://en.wikipedia.org/wiki/OAuth) provider. In this tutorial we'll be setting NextAuth.js in a **Next.js app** to be able to login with **Github**.
 
 :::info
 NextAuth.js comes with a long list of [built-in providers](/reference/Providers/) (Google, Facebook, Twitter, etc...) you can also integrate it with your own OAuth service easily by [building a custom provider](/beta/guides/oauth/custom-provider). NextAuth.js can integrate as well with other frameworks like SvelteKit and Gatsby.
@@ -21,7 +21,7 @@ NextAuth.js comes with a long list of [built-in providers](/reference/Providers/
 
 ### Creating the server config
 
-To add NextAuth.js to a [**NextJS**](https://nextjs.org/) project, create the following [API route](https://nextjs.org/docs/api-routes/introduction):
+To add NextAuth.js to a [**Next.js**](https://nextjs.org/) project, create the following [API route](https://nextjs.org/docs/api-routes/introduction):
 
 ```
 pages/api/auth/[...nextauth].ts
@@ -154,13 +154,13 @@ export default async function listMovies(req, res) {
 
 ## 2. Configuring OAuth Provider
 
-Ok, we have our NextJS app setup with NextAuth, however, if you run the app right now, it won't work as we haven't configured our OAuth provider (**Github**) yet.
+Ok, we have our Next.js app setup with NextAuth, however, if you run the app right now, it won't work as we haven't configured our OAuth provider (**Github**) yet.
 
 :::info
 When using OAuth you're asking for a third-party service (in this case Github, although it could be Google, Twitter, etc...) to handle user authentication for your app.
 :::
 
-We need to register our new NextJS app in Github, so that when NextAuth.js forwards the authorization requests to it, Github can recognize your application and prompt the user to sign in.
+We need to register our new Next.js app in Github, so that when NextAuth.js forwards the authorization requests to it, Github can recognize your application and prompt the user to sign in.
 
 <img src={creatingOauthAppImg} />
 
@@ -180,7 +180,7 @@ http://localhost:3000/api/auth/callback/github
 ```
 
 :::info
-NextAuth.js will already magically create this API endpoint for you when we start the application later. Note that because we're using NextJS, locally it starts our server on the port `3000`, hence the origin is `http://localhost:3000`.
+NextAuth.js will already magically create this API endpoint for you when we start the application later. Note that because we're using Next.js, locally it starts our server on the port `3000`, hence the origin is `http://localhost:3000`.
 :::
 
 Next you'll be presented with the following screen which presents all the configuration for your new OAuth app. For now, let's we need two things from it: the **Client ID** and **Client Secret** for our new OAuth app:
@@ -229,7 +229,7 @@ export default NextAuth({
 })
 ```
 
-Great! We're now ready to run our application locally. Start the NextJS app by running on your terminal the following command and navigating to [`http://localhost:3000`](http://localhost:3000):
+Great! We're now ready to run our application locally. Start the Next.js app by running on your terminal the following command and navigating to [`http://localhost:3000`](http://localhost:3000):
 ```
 $ npm run next dev
 ```
