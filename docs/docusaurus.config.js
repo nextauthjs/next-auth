@@ -195,6 +195,10 @@ module.exports = {
             v3: {
               label: "v3",
             },
+            beta: {
+              label: "v4-unreleased",
+              banner: "unreleased",
+            },
           },
         },
         theme: {
