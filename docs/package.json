@@ -1,5 +1,9 @@
 {
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nextauthjs/docs.git"
+  },
   "name": "next-auth-docs",
   "version": "0.2.0",
   "scripts": {
@@ -10,9 +14,7 @@
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "serve": "docusaurus serve",
-    "clear": "docusaurus clear",
-    "lint": "prettier .",
-    "lint:fix": "prettier --write .",
+    "clear": "docusauqtier --write .",
     "generate-providers": "node ./scripts/generate-providers.js"
   },
   "dependencies": {
