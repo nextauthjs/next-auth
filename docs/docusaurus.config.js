@@ -6,6 +6,8 @@ module.exports = {
   favicon: "img/favicon.ico",
   organizationName: "nextauthjs",
   projectName: "next-auth",
+  // TODO: remove this once BETA is ready
+  onBrokenLinks: "log",
   themeConfig: {
     prism: {
       theme: require("prism-react-renderer/themes/vsDark"),
@@ -30,6 +32,33 @@ module.exports = {
         src: "img/logo/logo-xs.png",
       },
       items: [
+        // TODO: This is the new navigation for the BETA Docs.
+        //       Add an env var at build time to switch between this nav
+        //       and the old at build time.
+        // {
+        //   to: "/beta/getting-started/introduction",
+        //   activeBasePath: "/beta/getting-started/",
+        //   label: "Getting started",
+        //   position: "left",
+        // },
+        // {
+        //   to: "/beta/guides/overview",
+        //   activeBasePath: "/beta/guides/",
+        //   label: "Guides",
+        //   position: "left",
+        // },
+        // {
+        //   to: "/beta/reference/index",
+        //   activeBasePath: "/beta/reference",
+        //   label: "Reference",
+        //   position: "left",
+        // },
+        // {
+        //   to: "/beta/concepts/faq",
+        //   activeBasePath: "/beta/concepts",
+        //   label: "Concepts",
+        //   position: "left",
+        // },
         {
           to: "/getting-started/introduction",
           activeBasePath: "docs",
