@@ -32,28 +32,55 @@ module.exports = {
         src: "img/logo/logo-xs.png",
       },
       items: [
+        // TODO: This is the new navigation for the BETA Docs.
+        //       Add an env var at build time to switch between this nav
+        //       and the old at build time.
+        // {
+        //   to: "/beta/getting-started/introduction",
+        //   activeBasePath: "/beta/getting-started/",
+        //   label: "Getting started",
+        //   position: "left",
+        // },
+        // {
+        //   to: "/beta/guides/overview",
+        //   activeBasePath: "/beta/guides/",
+        //   label: "Guides",
+        //   position: "left",
+        // },
+        // {
+        //   to: "/beta/reference/index",
+        //   activeBasePath: "/beta/reference",
+        //   label: "Reference",
+        //   position: "left",
+        // },
+        // {
+        //   to: "/beta/concepts/faq",
+        //   activeBasePath: "/beta/concepts",
+        //   label: "Concepts",
+        //   position: "left",
+        // },
         {
-          to: "/beta/getting-started/introduction",
-          activeBasePath: "/beta/getting-started/",
-          label: "Getting started",
+          to: "/getting-started/introduction",
+          activeBasePath: "docs",
+          label: "Documentation",
           position: "left",
         },
         {
-          to: "/beta/guides/overview",
-          activeBasePath: "/beta/guides/",
-          label: "Guides",
+          to: "/tutorials",
+          activeBasePath: "docs",
+          label: "Tutorials",
           position: "left",
         },
         {
-          to: "/beta/reference/index",
-          activeBasePath: "/beta/reference",
-          label: "Reference",
+          to: "/faq",
+          activeBasePath: "docs",
+          label: "FAQ",
           position: "left",
         },
         {
-          to: "/beta/concepts/faq",
-          activeBasePath: "/beta/concepts",
-          label: "Concepts",
+          to: "/security",
+          activeBasePath: "docs",
+          label: "Security",
           position: "left",
         },
         {
