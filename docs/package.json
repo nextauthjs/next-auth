@@ -1,10 +1,7 @@
 {
+  "private": true,
   "name": "next-auth-docs",
   "version": "0.2.0",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/nextauthjs/docs.git"
-  },
   "scripts": {
     "start": "npm run generate-providers && docusaurus start --no-open --port 8000",
     "dev": "npm run start",
@@ -32,11 +29,10 @@
     "styled-components": "5.3.3"
   },
   "devDependencies": {
-    "@docusaurus/core": "2.0.0-beta.22",
-    "@docusaurus/module-type-aliases": "2.0.0-beta.22",
-    "@docusaurus/preset-classic": "2.0.0-beta.22",
-    "@docusaurus/theme-common": "2.0.0-beta.22",
-    "prettier": "^2.6.2"
+    "@docusaurus/core": "2.1.0",
+    "@docusaurus/module-type-aliases": "2.1.0",
+    "@docusaurus/preset-classic": "2.1.0",
+    "@docusaurus/theme-common": "2.1.0"
   },
   "browserslist": {
     "production": [
@@ -49,9 +45,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "prettier": {
-    "semi": false,
-    "singleQuote": false
   }
 }
