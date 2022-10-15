@@ -19,7 +19,7 @@ The Email provider can be used in conjunction with (or instead of) one or more O
 On initial sign in, a **Verification Token** is sent to the email address provided. By default this token **is valid for 24 hours**. If the Verification Token is used within that time (i.e. by clicking on the link in the email) an account is created for the user and they are signed in.
 
 :::tip
-The Email Provider can be used with both JSON Web Tokens and database sessions, but you [must configure a database adapter](/guides/adapters/setting-up-a-database-adapter) to use it. It is not possible to enable email sign in without using a database.
+The Email Provider can be used with both JSON Web Tokens and database sessions, but you [must configure a database adapter](/beta/guides/adapters/setting-up-a-database-adapter) to use it. It is not possible to enable email sign in without using a database.
 :::
 
 ## 1. Installing `nodemailer`
@@ -30,7 +30,7 @@ The Email Provider can be used with both JSON Web Tokens and database sessions, 
 npm install -D nodemailer
 ```
 
-`nodemailer` will enable us to send emails from NodeJS, which the runtime on which NextJS application operate.
+`nodemailer` will enable us to send emails from NodeJS, which the runtime on which Next.js application operate.
 
 ## 2. Setting up a SMTP service
 
@@ -49,7 +49,7 @@ Next paste the API in your terminal as so, and run the command:
 echo -n '<YOUR_API_KEY>' | openssl base64
 ```
 
-Next, as [per Sendgrid documentation](https://docs.sendgrid.com/for-developers/sending-email/integrating-with-the-smtp-api), let's add the following [environment variables](https://nextjs.org/docs/basic-features/environment-variables) in our NextJS app:
+Next, as [per Sendgrid documentation](https://docs.sendgrid.com/for-developers/sending-email/integrating-with-the-smtp-api), let's add the following [environment variables](https://nextjs.org/docs/basic-features/environment-variables) in our Next.js app:
 
 ```bash title=".env.local"
 SMTP_USER=apikey
@@ -166,14 +166,14 @@ export default NextAuth({
 
 Now that everything is properly configured, let's try to sign in via email on our application.
 
-Let's start by running a NextJS application with NextAuth, making sure the **EmailProvider** and a Database Adapter are properly configured as per the instructions above. 
+Let's start by running a Next.js application with NextAuth, making sure the **EmailProvider** and a Database Adapter are properly configured as per the instructions above. 
 
 For this tutorial we're gonna be using NextAuth example app. Launch the app and click on "Sign in", we're redirected to the Sign In page:
 
 <img src={startPageImg} alt="Screenshot of sign in page" />
 
 :::info
-You can customize the look and feel of your Sign in page pretty easily with NextAuth. Refer to our [pages guide](/guides/basics/pages) for that!
+You can customize the look and feel of your Sign in page pretty easily with NextAuth. Refer to our [pages guide](/beta/guides/basics/pages) for that!
 :::
 
 Then we insert the email address we want to log-in with in the Email credentials section and click on "Sign in with Email".

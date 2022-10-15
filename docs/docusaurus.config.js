@@ -1,3 +1,4 @@
+/** @type {import("@docusaurus/types").Config} */
 module.exports = {
   title: "NextAuth.js",
   tagline: "Authentication for Next.js",
@@ -194,6 +195,10 @@ module.exports = {
             },
             v3: {
               label: "v3",
+            },
+            beta: {
+              label: "v4-unreleased",
+              banner: "unreleased",
             },
           },
         },
