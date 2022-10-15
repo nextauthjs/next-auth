@@ -68,7 +68,6 @@ import NextAuth from "next-auth"
 import EmailProvider from "next-auth/providers/email"
 
 export default NextAuth({
-  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     Email({
       server: {

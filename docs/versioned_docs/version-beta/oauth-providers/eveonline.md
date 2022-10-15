@@ -40,9 +40,6 @@ providers: [
 ```js
 ...
 options: {
-  jwt: {
-    secret: process.env.JWT_SECRET,
-  },
   callbacks: {
     session: async ({ session, token }) => {
       session.user.id = token.id;

@@ -156,7 +156,7 @@ interface OAuthConfig {
    */
   id: string
   version: string
-  profile(profile: P, tokens: TokenSet): Awaitable<User & { id: string }>
+  profile(profile: P, tokens: TokenSet): Awaitable<User>
   checks?: ChecksType | ChecksType[]
   clientId: string
   clientSecret: string

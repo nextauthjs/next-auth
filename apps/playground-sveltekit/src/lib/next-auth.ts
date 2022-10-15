@@ -11,8 +11,8 @@ import {
   NEXTAUTH_SECRET,
 } from "$env/static/private"
 import { PUBLIC_NEXTAUTH_URL } from "$env/static/public"
-import getFormBody from "./utils/get-form-body"
 
+// @ts-expect-error import is exported on .default during SSR
 const github = GithubProvider?.default || GithubProvider
 
 export const options: NextAuthOptions = {
@@ -24,9 +24,11 @@ export const options: NextAuthOptions = {
   ],
 }
 
-const toSvelteKitResponse = async (
+const toSvelteKitResponse = async <
+  T extends string | any[] | Record<string, any>
+>(
   request: Request,
-  nextAuthResponse: NextAuthResponse<unknown>
+  nextAuthResponse: NextAuthResponse<T>
 ): Promise<Response> => {
   const { cookies, redirect } = nextAuthResponse
 
@@ -50,14 +52,14 @@ const toSvelteKitResponse = async (
   let status = nextAuthResponse.status || 200
 
   if (redirect) {
-    let formData = null
+    let formData: FormData | null = null
     try {
       formData = await request.formData()
-      formData = getFormBody(formData)
     } catch {
       // no formData passed
     }
-    if (formData?.json !== "true") {
+    const { json } = Object.fromEntries(formData ?? [])
+    if (json !== "true") {
       status = 302
       headers.set("Location", redirect)
     } else {
@@ -79,17 +81,16 @@ const SKNextAuthHandler = async (
   options: NextAuthOptions
 ): Promise<Response> => {
   const [action, provider] = params.nextauth!.split("/")
-  let body = undefined
+  let body: FormData | undefined
   try {
     body = await request.formData()
-    body = getFormBody(body)
   } catch {
     // no formData passed
   }
   options.secret = NEXTAUTH_SECRET
   const req: RequestInternal = {
     host: PUBLIC_NEXTAUTH_URL,
-    body,
+    body: Object.fromEntries(body ?? []),
     query: Object.fromEntries(url.searchParams),
     headers: request.headers,
     method: request.method,
@@ -135,8 +136,8 @@ export const getServerSession = async (
 export const NextAuth = (
   options: NextAuthOptions
 ): {
-  GET: (event) => Promise<unknown>
-  POST: (event) => Promise<unknown>
+  GET: (event: ServerLoadEvent) => Promise<unknown>
+  POST: (event: ServerLoadEvent) => Promise<unknown>
 } => ({
   GET: (event) => SKNextAuthHandler(event, options),
   POST: (event) => SKNextAuthHandler(event, options),

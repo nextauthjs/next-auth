@@ -18,6 +18,7 @@ import Freshbooks from "next-auth/providers/freshbooks"
 import GitHub from "next-auth/providers/github"
 import Gitlab from "next-auth/providers/gitlab"
 import Google from "next-auth/providers/google"
+import Hubspot from "next-auth/providers/hubspot"
 import IDS4 from "next-auth/providers/identity-server4"
 import Instagram from "next-auth/providers/instagram"
 import Keycloak from "next-auth/providers/keycloak"
@@ -35,95 +36,48 @@ import Twitter, { TwitterLegacy } from "next-auth/providers/twitter"
 import Vk from "next-auth/providers/vk"
 import Wikimedia from "next-auth/providers/wikimedia"
 import WorkOS from "next-auth/providers/workos"
-import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
-import clientPromise from "../../../lib/mongodb/client"
+import Zitadel from "next-auth/providers/zitadel"
 
 // Adapters
-import { PrismaClient } from "@prisma/client"
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import { Client as FaunaClient } from "faunadb"
-import { FaunaAdapter } from "@next-auth/fauna-adapter"
-import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
 
-// Add an adapter you want to test here.
-const adapters = {
-  prisma() {
-    const client = globalThis.prisma || new PrismaClient()
-    if (process.env.NODE_ENV !== "production") globalThis.prisma = client
-    return PrismaAdapter(client)
-  },
-  typeorm() {
-    return TypeORMLegacyAdapter({
-      type: "sqlite",
-      name: "next-auth-test-memory",
-      database: "./typeorm/dev.db",
-      synchronize: true,
-    })
-  },
-  fauna() {
-    const client =
-      globalThis.fauna ||
+// // Prisma
+// import { PrismaClient } from "@prisma/client"
+// import { PrismaAdapter } from "@next-auth/prisma-adapter"
+// const client = globalThis.prisma || new PrismaClient()
+// if (process.env.NODE_ENV !== "production") globalThis.prisma = client
+// const adapter = PrismaAdapter(client)
 
-      new FaunaClient({
-        secret: process.env.FAUNA_SECRET,
-        domain: process.env.FAUNA_DOMAIN,
-      })
-    if (process.env.NODE_ENV !== "production") global.fauna = client
-    return FaunaAdapter(client)
-  },
-  noop() {
-    return undefined
-  },
-}
+// // Fauna
+// import { Client as FaunaClient } from "faunadb"
+// import { FaunaAdapter } from "@next-auth/fauna-adapter"
+// const opts = { secret: process.env.FAUNA_SECRET, domain: process.env.FAUNA_DOMAIN }
+// const client = globalThis.fauna || new FaunaClient(opts)
+// if (process.env.NODE_ENV !== "production") globalThis.fauna = client
+// const adapter = FaunaAdapter(client)
+
+// // TypeORM
+// import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
+// const adapter = TypeORMLegacyAdapter({
+//   type: "sqlite",
+//   name: "next-auth-test-memory",
+//   database: "./typeorm/dev.db",
+//   synchronize: true,
+// })
 
 export const authOptions: NextAuthOptions = {
-  adapter: MongoDBAdapter(clientPromise),
-  debug: true,
+  // adapter,
+  debug: process.env.NODE_ENV !== "production",
   theme: {
     logo: "https://next-auth.js.org/img/logo/logo-sm.png",
     brandColor: "#1786fb",
   },
   providers: [
     Credentials({
-      name: 'Credentials',
-      credentials: {
-        email: { label: "Email", type: "email", placeholder: "foo@bar.com" },
-        password: {  label: "Password", type: "password", placeholder: "•••••••••" }
-      },
+      credentials: { password: { label: "Password", type: "password" } },
       async authorize(credentials) {
-        // TODO: in a real API probably you would instead make a POST request to a `/user/login` 
-        //       endpoint and if the user exists this would return you the user details.
-        //       In this example, to keep it simple we just make a GET request.
-        try {
-          const authResult = await fetch('http://localhost:3004/users/1xdf6', {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-          })
-
-          if (authResult.status !== 200) throw new Error('Invalid user or password')
-  
-          const authResponse = await authResult.json()
-          
-          console.log(authResponse)
-          return authResponse
-        } catch(e) {
-          console.error("Invalid auth", e)
-          return null
-        }
+        if (credentials.password !== "pw") return null
+        return { name: "Fill Murray", email: "bill@fillmurray.com", image: "https://www.fillmurray.com/64/64" }
       },
-    }),
-    Email({
-      server: {
-        host: process.env.SMTP_HOST,
-        port: Number(process.env.SMTP_PORT),
-        auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASSWORD
-        }
-      },
-      from: process.env.EMAIL_FROM
     }),
     Apple({ clientId: process.env.APPLE_ID, clientSecret: process.env.APPLE_SECRET }),
     Auth0({ clientId: process.env.AUTH0_ID, clientSecret: process.env.AUTH0_SECRET, issuer: process.env.AUTH0_ISSUER }),
@@ -139,6 +93,7 @@ export const authOptions: NextAuthOptions = {
     GitHub({ clientId: process.env.GITHUB_ID, clientSecret: process.env.GITHUB_SECRET }),
     Gitlab({ clientId: process.env.GITLAB_ID, clientSecret: process.env.GITLAB_SECRET }),
     Google({ clientId: process.env.GOOGLE_ID, clientSecret: process.env.GOOGLE_SECRET }),
+    Hubspot({ clientId: process.env.HUBSPOT_ID, clientSecret: process.env.HUBSPOT_SECRET }),
     IDS4({ clientId: process.env.IDS4_ID, clientSecret: process.env.IDS4_SECRET, issuer: process.env.IDS4_ISSUER }),
     Instagram({ clientId: process.env.INSTAGRAM_ID, clientSecret: process.env.INSTAGRAM_SECRET }),
     Keycloak({ clientId: process.env.KEYCLOAK_ID, clientSecret: process.env.KEYCLOAK_SECRET, issuer: process.env.KEYCLOAK_ISSUER }),
@@ -157,7 +112,16 @@ export const authOptions: NextAuthOptions = {
     Vk({ clientId: process.env.VK_ID, clientSecret: process.env.VK_SECRET }),
     Wikimedia({ clientId: process.env.WIKIMEDIA_ID, clientSecret: process.env.WIKIMEDIA_SECRET }),
     WorkOS({ clientId: process.env.WORKOS_ID, clientSecret: process.env.WORKOS_SECRET }),
+    Zitadel({ issuer: process.env.ZITADEL_ISSUER, clientId: process.env.ZITADEL_CLIENT_ID, clientSecret: process.env.ZITADEL_CLIENT_SECRET }),
   ],
+}
+
+if (authOptions.adapter) {
+  authOptions.providers.unshift(
+    // NOTE: You can start a fake e-mail server with `pnpm email`
+    // and then go to `http://localhost:1080` in the browser
+    Email({ server: "smtp://127.0.0.1:1025?tls.rejectUnauthorized=false" })
+  )
 }
 
 export default NextAuth(authOptions)

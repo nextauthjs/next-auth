@@ -4,10 +4,10 @@ import type {
   BatchWriteCommandInput,
   DynamoDBDocument,
 } from "@aws-sdk/lib-dynamodb"
-import type { Account } from "next-auth"
 import type {
   Adapter,
   AdapterSession,
+  AdapterAccount,
   AdapterUser,
   VerificationToken,
 } from "next-auth/adapters"
@@ -86,7 +86,7 @@ export function DynamoDBAdapter(
       })
       if (!data.Items?.length) return null
 
-      const accounts = data.Items[0] as Account
+      const accounts = data.Items[0] as AdapterAccount
       const res = await client.get({
         TableName,
         Key: {
@@ -174,7 +174,7 @@ export function DynamoDBAdapter(
           ":gsi1sk": `ACCOUNT#${providerAccountId}`,
         },
       })
-      const account = format.from<Account>(data.Items?.[0])
+      const account = format.from<AdapterAccount>(data.Items?.[0])
       if (!account) return
       await client.delete({
         TableName,

@@ -60,10 +60,6 @@ export default NextAuth({
       return { ...session, user: { username: token.username } }
     },
   },
-  secret: process.env.NEXTAUTH_SECRET,
-  jwt: {
-    secret: process.env.JWT_SECRET,
-  },
 })
 ```
 
@@ -74,7 +70,6 @@ This is then passed back to any API routes and retrieved as such:
 ```js title="/pages/api/doLDAPWork.js"
 token = await jwt.getToken({
   req,
-  secret: process.env.NEXTAUTH_SECRET,
 })
 const { username, password } = token
 ```

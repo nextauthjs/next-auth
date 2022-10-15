@@ -1,6 +1,10 @@
-import type { Adapter, AdapterSession, AdapterUser } from "next-auth/adapters"
+import type {
+  Adapter,
+  AdapterUser,
+  AdapterAccount,
+  AdapterSession,
+} from "next-auth/adapters"
 import { DataSourceOptions, DataSource, EntityManager } from "typeorm"
-import type { Account } from "next-auth"
 import * as defaultEntities from "./entities"
 import { parseDataSourceConfig, updateConnectionEntities } from "./utils"
 
@@ -87,7 +91,7 @@ export function TypeORMLegacyAdapter(
     },
     async getUserByAccount(provider_providerAccountId) {
       const m = await getManager(c)
-      const account = await m.findOne<Account & { user: AdapterUser }>(
+      const account = await m.findOne<AdapterAccount & { user: AdapterUser }>(
         "AccountEntity",
         { where: provider_providerAccountId, relations: ["user"] }
       )
@@ -115,9 +119,8 @@ export function TypeORMLegacyAdapter(
     },
     async unlinkAccount(providerAccountId) {
       const m = await getManager(c)
-      await m.delete<Account>("AccountEntity", providerAccountId)
+      await m.delete<AdapterAccount>("AccountEntity", providerAccountId)
     },
-    // @ts-expect-error
     async createSession(data) {
       const m = await getManager(c)
       const session = await m.save("SessionEntity", data)
