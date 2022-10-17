@@ -11,6 +11,15 @@ https://docs.gitlab.com/ee/api/oauth2.html
 
 https://gitlab.com/-/profile/applications
 
+The "redirect URIs" used when creating the credentials must include your full domain and end in the callback path. For example;
+
+- For production: `https://{YOUR_DOMAIN}/api/auth/callback/gitlab`
+- For development: `http://localhost:3000/api/auth/callback/gitlab`
+
+:::tip
+Gitlab allows multiple redirect URI's for the same application, one line per URI
+:::
+
 ## Options
 
 The **Gitlab Provider** comes with a set of default options:
