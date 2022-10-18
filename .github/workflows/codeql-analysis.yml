@@ -2,7 +2,7 @@ name: Code Analysis
 
 on:
   push:
-    branches: [main, beta, next]
+    branches: [beta, next]
   pull_request:
     branches: [main]
   schedule:

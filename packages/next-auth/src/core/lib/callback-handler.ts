@@ -1,4 +1,3 @@
-import { randomBytes, randomUUID } from "crypto"
 import { AccountNotLinkedError } from "../errors"
 import { fromDate } from "./utils"
 
@@ -22,11 +21,11 @@ import type { SessionToken } from "./cookie"
  */
 export default async function callbackHandler(params: {
   sessionToken?: SessionToken
-  profile: User
-  account: Account
+  profile: User | AdapterUser | { email: string }
+  account: Account | null
   options: InternalOptions
 }) {
-  const { sessionToken, profile, account, options } = params
+  const { sessionToken, profile: _profile, account, options } = params
   // Input validation
   if (!account?.providerAccountId || !account.type)
     throw new Error("Missing or invalid provider account")
@@ -37,14 +36,16 @@ export default async function callbackHandler(params: {
     adapter,
     jwt,
     events,
-    session: { strategy: sessionStrategy },
+    session: { strategy: sessionStrategy, generateSessionToken },
   } = options
 
   // If no adapter is configured then we don't have a database and cannot
   // persist data; in this mode we just return a dummy session object.
   if (!adapter) {
-    return { user: profile, account, session: {} }
+    return { user: _profile as User, account }
   }
+
+  const profile = _profile as AdapterUser
 
   const {
     createUser,
@@ -85,9 +86,7 @@ export default async function callbackHandler(params: {
 
   if (account.type === "email") {
     // If signing in with an email, check if an account with the same email address exists already
-    const userByEmail = profile.email
-      ? await getUserByEmail(profile.email)
-      : null
+    const userByEmail = await getUserByEmail(profile.email)
     if (userByEmail) {
       // If they are not already signed in as the same user, this flow will
       // sign them out of the current session and sign them in as the new user
@@ -102,8 +101,7 @@ export default async function callbackHandler(params: {
       user = await updateUser({ id: userByEmail.id, emailVerified: new Date() })
       await events.updateUser?.({ user })
     } else {
-      const newUser = { ...profile, emailVerified: new Date() }
-      delete (newUser as Omit<AdapterUser, "id">).id
+      const { id: _, ...newUser } = { ...profile, emailVerified: new Date() }
       // Create user account if there isn't one for the email address already
       user = await createUser(newUser)
       await events.createUser?.({ user })
@@ -199,8 +197,7 @@ export default async function callbackHandler(params: {
       // If no account matching the same [provider].id or .email exists, we can
       // create a new account for the user, link it to the OAuth acccount and
       // create a new session for them so they are signed in with it.
-      const newUser = { ...profile, emailVerified: null }
-      delete (newUser as Omit<AdapterUser, "id">).id
+      const { id: _, ...newUser } = { ...profile, emailVerified: null }
       user = await createUser(newUser)
       await events.createUser?.({ user })
 
@@ -218,9 +215,6 @@ export default async function callbackHandler(params: {
       return { session, user, isNewUser: true }
     }
   }
-}
 
-function generateSessionToken() {
-  // Use `randomUUID` if available. (Node 15.6++)
-  return randomUUID?.() ?? randomBytes(32).toString("hex")
+  throw new Error("Unsupported account type")
 }
