@@ -12,15 +12,12 @@ export interface InternalUrl {
 }
 
 /** Returns an `URL` like object to make requests/redirects from server-side */
-export default function parseUrl(url?: string): InternalUrl {
-  const defaultUrl = new URL("http://localhost:3000/api/auth")
-
-  if (url && !url.startsWith("http")) {
-    url = `https://${url}`
+export default function parseUrl(plain?: string): InternalUrl {
+  if(!plain) {
+    throw new Error("url is empty, please check environment variables (ex NEXTAUTH_URL, NEXTAUTH_URL, NEXTAUTH_URL_INTERNAL...)")
   }
-
-  const _url = new URL(url ?? defaultUrl)
-  const path = (_url.pathname === "/" ? defaultUrl.pathname : _url.pathname)
+  const _url = new URL(plain)
+  const path = (_url.pathname === "/" ? '/api/auth' : _url.pathname)
     // Remove trailing slash
     .replace(/\/$/, "")
 
