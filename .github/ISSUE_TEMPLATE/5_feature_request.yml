@@ -9,6 +9,7 @@ body:
   - type: markdown
     attributes:
       value: |
+        **NOTE:** Issues that are potentially security related should be reported to us by following the [Security guidelines](https://next-auth.js.org/security) rather than on GitHub.
         Thank you very much for reaching out to us regarding the awesome feature that you believe should be included in the NextAuth.js library.
 
         _NOTE: Feature requests are converted to [discussions (Ideas 💡)](https://github.com/nextauthjs/next-auth/discussions/categories/ideas). Make sure your idea hasn't been asked yet, and upvote the existing one before opening a new instead._

@@ -94,10 +94,18 @@ export function BroadcastChannel(name = "nextauth.message") {
     /** Notify other tabs/windows. */
     post(message: Record<string, unknown>) {
       if (typeof window === "undefined") return
-      localStorage.setItem(
-        name,
-        JSON.stringify({ ...message, timestamp: now() })
-      )
+      try {
+        localStorage.setItem(
+          name,
+          JSON.stringify({ ...message, timestamp: now() })
+        )
+      } catch {
+        /**
+         * The localStorage API isn't always available.
+         * It won't work in private mode prior to Safari 11 for example.
+         * Notifications are simply dropped if an error is encountered.
+         */
+      }
     },
   }
 }
