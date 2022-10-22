@@ -36,7 +36,6 @@ export default async function email(
       theme,
     }),
     // Save in database
-    // @ts-expect-error // verified in `assertConfig`
     adapter.createVerificationToken({
       identifier,
       token: hashToken(token, options),

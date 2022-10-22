@@ -66,7 +66,7 @@ export interface GetTokenParams<R extends boolean = false> {
  * [Documentation](https://next-auth.js.org/tutorials/securing-pages-and-api-routes#using-gettoken)
  */
 export async function getToken<R extends boolean = false>(
-  params?: GetTokenParams<R>
+  params: GetTokenParams<R>
 ): Promise<R extends true ? string : JWT | null> {
   const {
     req,
@@ -79,7 +79,7 @@ export async function getToken<R extends boolean = false>(
     decode: _decode = decode,
     logger = console,
     secret = process.env.NEXTAUTH_SECRET,
-  } = params ?? {}
+  } = params
 
   if (!req) throw new Error("Must pass `req` to JWT getToken()")
 
