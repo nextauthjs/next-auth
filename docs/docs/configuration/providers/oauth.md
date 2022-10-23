@@ -173,6 +173,7 @@ interface OAuthConfig {
   region?: string
   issuer?: string
   client?: Partial<ClientMetadata>
+  allowDangerousEmailAccountLinking?: boolean
 }
 ```
 
@@ -277,6 +278,10 @@ If your Provider is OpenID Connect (OIDC) compliant, we recommend using the `wel
 ### `client` option
 
 An advanced option, hopefully you won't need it in most cases. `next-auth` uses `openid-client` under the hood, see the docs on this option [here](https://github.com/panva/node-openid-client/blob/main/docs/README.md#new-clientmetadata-jwks-options).
+
+### `allowDangerousEmailAccountLinking` option
+
+Normally, when you sign in with an OAuth provider and another account with the same email address already exists, the accounts are not linked automatically. Automatic account linking on sign in is not secure between arbitrary providers and is disabled by default (see our [Security FAQ](https://next-auth.js.org/faq#security)).  However, it may be desirable to allow automatic account linking if you trust that the provider involved has securely verified the email address associated with the account. Just set `allowDangerousEmailAccountLinking: true` in your provider configuration to enable automatic account linking.
 
 ## Using a custom provider
 
@@ -401,6 +406,18 @@ GoogleProvider({
       // to be able identify the account when added to a database
     }
   },
+})
+```
+
+An example of how to enable automatic account linking:
+
+```js title=/api/auth/[...nextauth].js
+import GoogleProvider from "next-auth/providers/google"
+
+GoogleProvider({
+  clientId: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  allowDangerousEmailAccountLinking: true,
 })
 ```
 
