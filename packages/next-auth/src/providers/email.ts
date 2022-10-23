@@ -1,7 +1,6 @@
 import { createTransport } from "nodemailer"
 
 import type { CommonProviderOptions } from "."
-import type { Options as SMTPTransportOptions } from "nodemailer/lib/smtp-transport"
 import type { Awaitable } from ".."
 import type { Theme } from "../core/types"
 
@@ -16,8 +15,14 @@ export interface SendVerificationRequestParams {
 
 export interface EmailConfig extends CommonProviderOptions {
   type: "email"
-  // TODO: Make use of https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html
-  server: string | SMTPTransportOptions
+  server: `smtp://${string}:${string}@${string}.${string}:${number}` | {
+    host: string;
+    port: number;
+    auth: {
+      user: string;
+      pass: string
+    }
+  }
   /** @default "NextAuth <no-reply@example.com>" */
   from?: string
   /**
