@@ -322,7 +322,7 @@ export async function signOut<R extends boolean = true>(
  * [Documentation](https://next-auth.js.org/getting-started/client#sessionprovider)
  */
 export function SessionProvider(props: SessionProviderProps) {
-  const { children, basePath } = props
+  const { children, basePath, refetchInterval, refetchWhenOffline } = props
 
   if (basePath) __NEXTAUTH.basePath = basePath
 
@@ -427,11 +427,9 @@ export function SessionProvider(props: SessionProviderProps) {
 
   const isOnline = useOnline()
   // TODO: Flip this behavior in next major version
-  const shouldRefetch = props.refetchWhenOffline !== false || isOnline
+  const shouldRefetch = refetchWhenOffline !== false || isOnline
 
   React.useEffect(() => {
-    const { refetchInterval } = props
-
     if (refetchInterval && shouldRefetch) {
       const refetchIntervalTimer = setInterval(() => {
         if (__NEXTAUTH._session) {
@@ -440,7 +438,7 @@ export function SessionProvider(props: SessionProviderProps) {
       }, refetchInterval * 1000)
       return () => clearInterval(refetchIntervalTimer)
     }
-  }, [props.refetchInterval, shouldRefetch])
+  }, [refetchInterval, shouldRefetch])
 
   const value: any = React.useMemo(
     () => ({
