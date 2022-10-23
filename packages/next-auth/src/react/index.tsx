@@ -66,6 +66,27 @@ const broadcast = BroadcastChannel()
 
 const logger = proxyLogger(_logger, __NEXTAUTH.basePath)
 
+function useOnline() {
+  const [isOnline, setIsOnline] = React.useState(
+    typeof navigator !== "undefined" ? navigator.onLine : false
+  )
+
+  const setOnline = () => setIsOnline(true)
+  const setOffline = () => setIsOnline(false)
+
+  React.useEffect(() => {
+    window.addEventListener("online", setOnline)
+    window.addEventListener("offline", setOffline)
+
+    return () => {
+      window.removeEventListener("online", setOnline)
+      window.removeEventListener("offline", setOffline)
+    }
+  }, [])
+
+  return isOnline
+}
+
 export type SessionContextValue<R extends boolean = false> = R extends true
   ?
       | { data: Session; status: "authenticated" }
@@ -74,9 +95,9 @@ export type SessionContextValue<R extends boolean = false> = R extends true
       | { data: Session; status: "authenticated" }
       | { data: null; status: "unauthenticated" | "loading" }
 
-export const SessionContext = React.createContext<SessionContextValue | undefined>(
-  undefined
-)
+export const SessionContext = React.createContext<
+  SessionContextValue | undefined
+>(undefined)
 
 /**
  * React Hook that gives you access
@@ -301,7 +322,7 @@ export async function signOut<R extends boolean = true>(
  * [Documentation](https://next-auth.js.org/getting-started/client#sessionprovider)
  */
 export function SessionProvider(props: SessionProviderProps) {
-  const { children, basePath } = props
+  const { children, basePath, refetchInterval, refetchWhenOffline } = props
 
   if (basePath) __NEXTAUTH.basePath = basePath
 
@@ -404,10 +425,12 @@ export function SessionProvider(props: SessionProviderProps) {
       document.removeEventListener("visibilitychange", visibilityHandler, false)
   }, [props.refetchOnWindowFocus])
 
+  const isOnline = useOnline()
+  // TODO: Flip this behavior in next major version
+  const shouldRefetch = refetchWhenOffline !== false || isOnline
+
   React.useEffect(() => {
-    const { refetchInterval } = props
-    // Set up polling
-    if (refetchInterval) {
+    if (refetchInterval && shouldRefetch) {
       const refetchIntervalTimer = setInterval(() => {
         if (__NEXTAUTH._session) {
           __NEXTAUTH._getSession({ event: "poll" })
@@ -415,7 +438,7 @@ export function SessionProvider(props: SessionProviderProps) {
       }, refetchInterval * 1000)
       return () => clearInterval(refetchIntervalTimer)
     }
-  }, [props.refetchInterval])
+  }, [refetchInterval, shouldRefetch])
 
   const value: any = React.useMemo(
     () => ({
