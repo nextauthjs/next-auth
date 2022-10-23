@@ -426,6 +426,7 @@ export function SessionProvider(props: SessionProviderProps) {
   }, [props.refetchOnWindowFocus])
 
   const isOnline = useOnline()
+  // TODO: Flip this behavior in next major version
   const shouldRefetch = props.refetchWhenOffline !== false || isOnline
 
   React.useEffect(() => {
