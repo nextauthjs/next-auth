@@ -80,7 +80,7 @@ export interface NextAuthMiddlewareOptions {
      * ```
      *
      * ---
-     * [Documentation](https://next-auth.js.org/getting-started/nextjs/middleware#api) | [`signIn` callback](configuration/callbacks#sign-in-callback)
+     * [Documentation](https://next-auth.js.org/configuration/nextjs#middleware) | [`signIn` callback](configuration/callbacks#sign-in-callback)
      */
     authorized?: AuthorizedCallback
   }
@@ -92,20 +92,28 @@ export interface NextAuthMiddlewareOptions {
   secret?: string
 }
 
-type NextMiddlewareResult = ReturnType<NextMiddleware>
+// TODO: `NextMiddleware` should allow returning `void`
+// Simplify when https://github.com/vercel/next.js/pull/38625 is merged.
+type NextMiddlewareResult = ReturnType<NextMiddleware> | void // eslint-disable-line @typescript-eslint/no-invalid-void-type
 
 async function handleMiddleware(
   req: NextRequest,
   options: NextAuthMiddlewareOptions | undefined,
   onSuccess?: (token: JWT | null) => Promise<NextMiddlewareResult>
 ) {
+  const { pathname, search, origin, basePath } = req.nextUrl
+
   const signInPage = options?.pages?.signIn ?? "/api/auth/signin"
   const errorPage = options?.pages?.error ?? "/api/auth/error"
-  const basePath = parseUrl(process.env.NEXTAUTH_URL).path
-  // Avoid infinite redirect loop
+  const authPath = parseUrl(process.env.NEXTAUTH_URL).path
+  const publicPaths = ["/_next", "/favicon.ico"]
+
+  // Avoid infinite redirects/invalid response
+  // on paths that never require authentication
   if (
-    req.nextUrl.pathname.startsWith(basePath) ||
-    [signInPage, errorPage].includes(req.nextUrl.pathname)
+    `${basePath}${pathname}`.startsWith(authPath) ||
+    [signInPage, errorPage].includes(pathname) ||
+    publicPaths.some((p) => pathname.startsWith(p))
   ) {
     return
   }
@@ -117,7 +125,7 @@ async function handleMiddleware(
       `\nhttps://next-auth.js.org/errors#no_secret`
     )
 
-    const errorUrl = new URL(errorPage, req.nextUrl.origin)
+    const errorUrl = new URL(`${basePath}${errorPage}`, origin)
     errorUrl.searchParams.append("error", "Configuration")
 
     return NextResponse.redirect(errorUrl)
@@ -137,20 +145,26 @@ async function handleMiddleware(
   if (isAuthorized) return await onSuccess?.(token)
 
   // the user is not logged in, redirect to the sign-in page
-  const signInUrl = new URL(signInPage, req.nextUrl.origin)
-  signInUrl.searchParams.append(
-    "callbackUrl",
-    `${req.nextUrl.pathname}${req.nextUrl.search}`
-  )
+  const signInUrl = new URL(`${basePath}${signInPage}`, origin)
+  signInUrl.searchParams.append("callbackUrl", `${basePath}${pathname}${search}`)
   return NextResponse.redirect(signInUrl)
 }
 
+export interface NextRequestWithAuth extends NextRequest {
+  nextauth: { token: JWT | null }
+}
+
+export type NextMiddlewareWithAuth = (
+  request: NextRequestWithAuth,
+  event: NextFetchEvent
+) => NextMiddlewareResult | Promise<NextMiddlewareResult>
+
 export type WithAuthArgs =
-  | [NextRequest]
-  | [NextRequest, NextFetchEvent]
-  | [NextRequest, NextAuthMiddlewareOptions]
-  | [NextMiddleware]
-  | [NextMiddleware, NextAuthMiddlewareOptions]
+  | [NextRequestWithAuth]
+  | [NextRequestWithAuth, NextFetchEvent]
+  | [NextRequestWithAuth, NextAuthMiddlewareOptions]
+  | [NextMiddlewareWithAuth]
+  | [NextMiddlewareWithAuth, NextAuthMiddlewareOptions]
   | [NextAuthMiddlewareOptions]
   | []
 
@@ -167,7 +181,7 @@ export type WithAuthArgs =
  * ```
  *
  * ---
- * [Documentation](https://next-auth.js.org/getting-started/middleware)
+ * [Documentation](https://next-auth.js.org/configuration/nextjs#middleware)
  */
 export function withAuth(...args: WithAuthArgs) {
   if (!args.length || args[0] instanceof NextRequest) {
@@ -178,9 +192,9 @@ export function withAuth(...args: WithAuthArgs) {
   if (typeof args[0] === "function") {
     const middleware = args[0]
     const options = args[1] as NextAuthMiddlewareOptions | undefined
-    return async (...args: Parameters<NextMiddleware>) =>
+    return async (...args: Parameters<NextMiddlewareWithAuth>) =>
       await handleMiddleware(args[0], options, async (token) => {
-        ;(args[0] as any).nextauth = { token }
+        args[0].nextauth = { token }
         return await middleware(...args)
       })
   }

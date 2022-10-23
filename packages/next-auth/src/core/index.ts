@@ -90,19 +90,42 @@ export async function NextAuthHandler<
 
   const assertionResult = assertConfig({ options: userOptions, req })
 
-  if (typeof assertionResult === "string") {
-    logger.warn(assertionResult)
+  if (Array.isArray(assertionResult)) {
+    assertionResult.forEach(logger.warn)
   } else if (assertionResult instanceof Error) {
     // Bail out early if there's an error in the user config
-    const { pages, theme } = userOptions
     logger.error(assertionResult.code, assertionResult)
-    if (pages?.error) {
+
+    const htmlPages = ["signin", "signout", "error", "verify-request"]
+    if (!htmlPages.includes(req.action) || req.method !== "GET") {
+      const message = `There is a problem with the server configuration. Check the server logs for more information.`
       return {
-        redirect: `${pages.error}?error=Configuration`,
+        status: 500,
+        headers: [{ key: "Content-Type", value: "application/json" }],
+        body: { message } as any,
       }
     }
-    const render = renderPage({ theme })
-    return render.error({ error: "configuration" })
+    const { pages, theme } = userOptions
+
+    const authOnErrorPage =
+      pages?.error && req.query?.callbackUrl?.startsWith(pages.error)
+
+    if (!pages?.error || authOnErrorPage) {
+      if (authOnErrorPage) {
+        logger.error(
+          "AUTH_ON_ERROR_PAGE_ERROR",
+          new Error(
+            `The error page ${pages?.error} should not require authentication`
+          )
+        )
+      }
+      const render = renderPage({ theme })
+      return render.error({ error: "configuration" })
+    }
+
+    return {
+      redirect: `${pages.error}?error=Configuration`,
+    }
   }
 
   const { action, providerId, error, method = "GET" } = req

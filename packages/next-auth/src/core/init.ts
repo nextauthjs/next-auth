@@ -1,9 +1,10 @@
+import { randomBytes, randomUUID } from "crypto"
 import { NextAuthOptions } from ".."
 import logger from "../utils/logger"
 import parseUrl from "../utils/parse-url"
 import { adapterErrorHandler, eventsErrorHandler } from "./errors"
 import parseProviders from "./lib/providers"
-import createSecret from "./lib/utils"
+import { createSecret } from "./lib/utils"
 import * as cookie from "./lib/cookie"
 import * as jwt from "../jwt"
 import { defaultCallbacks } from "./lib/default-callbacks"
@@ -70,6 +71,7 @@ export async function init({
     // and are request-specific.
     url,
     action,
+    // @ts-expect-errors
     provider,
     cookies: {
       ...cookie.defaultCookies(
@@ -86,6 +88,10 @@ export async function init({
       strategy: userOptions.adapter ? "database" : "jwt",
       maxAge,
       updateAge: 24 * 60 * 60,
+      generateSessionToken: () => {
+        // Use `randomUUID` if available. (Node 15.6+)
+        return randomUUID?.() ?? randomBytes(32).toString("hex")
+      },
       ...userOptions.session,
     },
     // JWT options

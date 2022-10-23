@@ -1,7 +1,7 @@
-import type { Account as AdapterAccount } from "next-auth"
 import type {
   Adapter,
   AdapterUser,
+  AdapterAccount,
   AdapterSession,
   VerificationToken,
 } from "next-auth/adapters"
@@ -117,7 +117,6 @@ export function UpstashRedisAdapter(
       const id = uuid()
       // TypeScript thinks the emailVerified field is missing
       // but all fields are copied directly from user, so it's there
-      // @ts-expect-error
       return await setUser(id, { ...user, id })
     },
     getUser,
@@ -144,10 +143,7 @@ export function UpstashRedisAdapter(
       const id = `${account.provider}:${account.providerAccountId}`
       return await setAccount(id, { ...account, id })
     },
-    async createSession(session) {
-      const id = session.sessionToken
-      return await setSession(id, { ...session, id })
-    },
+    createSession: (session) => setSession(session.sessionToken, session),
     async getSessionAndUser(sessionToken) {
       const session = await getSession(sessionToken)
       if (!session) return null
@@ -165,13 +161,20 @@ export function UpstashRedisAdapter(
     },
     async createVerificationToken(verificationToken) {
       await setObjectAsJson(
-        verificationTokenKeyPrefix + verificationToken.identifier,
+        verificationTokenKeyPrefix +
+          verificationToken.identifier +
+          ":" +
+          verificationToken.token,
         verificationToken
       )
       return verificationToken
     },
     async useVerificationToken(verificationToken) {
-      const tokenKey = verificationTokenKeyPrefix + verificationToken.identifier
+      const tokenKey =
+        verificationTokenKeyPrefix +
+        verificationToken.identifier +
+        ":" +
+        verificationToken.token
 
       const token = await client.get<VerificationToken>(tokenKey)
       if (!token) return null

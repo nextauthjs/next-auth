@@ -49,7 +49,7 @@ const features = [
       <ul>
         <li>Signed, prefixed, server-only cookies</li>
         <li>HTTP POST + CSRF Token validation</li>
-        <li>JWT with JWS / JWE / JWK / JWK</li>
+        <li>JWT with JWS / JWE / JWK</li>
         <li>Tab syncing, auto-revalidation, keepalives</li>
         <li>Doesn't rely on client side JavaScript</li>
       </ul>

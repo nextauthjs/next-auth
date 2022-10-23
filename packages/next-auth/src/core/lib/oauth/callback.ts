@@ -3,13 +3,14 @@ import { openidClient } from "./client"
 import { oAuth1Client } from "./client-legacy"
 import { useState } from "./state-handler"
 import { usePKCECodeVerifier } from "./pkce-handler"
+import { useNonce } from "./nonce-handler"
 import { OAuthCallbackError } from "../../errors"
 
-import type { CallbackParamsType } from "openid-client"
-import type { Account, LoggerInstance, Profile } from "../../.."
+import type { CallbackParamsType, OpenIDCallbackChecks } from "openid-client"
+import type { LoggerInstance, Profile } from "../../.."
 import type { OAuthChecks, OAuthConfig } from "../../../providers"
 import type { InternalOptions } from "../../types"
-import type { RequestInternal, OutgoingResponse } from "../.."
+import type { RequestInternal } from "../.."
 import type { Cookie } from "../cookie"
 
 export default async function oAuthCallback(params: {
@@ -18,7 +19,7 @@ export default async function oAuthCallback(params: {
   body: RequestInternal["body"]
   method: Required<RequestInternal>["method"]
   cookies: RequestInternal["cookies"]
-}): Promise<GetProfileResult & { cookies?: OutgoingResponse["cookies"] }> {
+}) {
   const { options, query, body, method, cookies } = params
   const { logger, provider } = options
 
@@ -28,9 +29,9 @@ export default async function oAuthCallback(params: {
     logger.error("OAUTH_CALLBACK_HANDLER_ERROR", {
       error,
       error_description: query?.error_description,
-      body,
       providerId: provider.id,
     })
+    logger.debug("OAUTH_CALLBACK_HANDLER_ERROR", { body })
     throw error
   }
 
@@ -39,16 +40,13 @@ export default async function oAuthCallback(params: {
       const client = await oAuth1Client(options)
       // Handle OAuth v1.x
       const { oauth_token, oauth_verifier } = query ?? {}
-      // @ts-expect-error
-      const tokens: TokenSet = await client.getOAuthAccessToken(
-        oauth_token as string,
-        // @ts-expect-error
+      const tokens = (await (client as any).getOAuthAccessToken(
+        oauth_token,
         null,
         oauth_verifier
-      )
-      // @ts-expect-error
-      let profile: Profile = await client.get(
-        (provider as any).profileUrl,
+      )) as TokenSet
+      let profile: Profile = await (client as any).get(
+        provider.profileUrl,
         tokens.oauth_token,
         tokens.oauth_token_secret
       )
@@ -57,7 +55,8 @@ export default async function oAuthCallback(params: {
         profile = JSON.parse(profile)
       }
 
-      return await getProfile({ profile, tokens, provider, logger })
+      const newProfile = await getProfile({ profile, tokens, provider, logger })
+      return { ...newProfile, cookies: [] }
     } catch (error) {
       logger.error("OAUTH_V1_GET_ACCESS_TOKEN_ERROR", error as Error)
       throw error
@@ -73,10 +72,15 @@ export default async function oAuthCallback(params: {
     const resCookies: Cookie[] = []
 
     const state = await useState(cookies?.[options.cookies.state.name], options)
-
     if (state) {
       checks.state = state.value
       resCookies.push(state.cookie)
+    }
+
+    const nonce = await useNonce(cookies?.[options.cookies.nonce.name], options)
+    if (nonce && provider.idToken) {
+      ;(checks as OpenIDCallbackChecks).nonce = nonce.value
+      resCookies.push(nonce.cookie)
     }
 
     const codeVerifier = cookies?.[options.cookies.pkceCodeVerifier.name]
@@ -95,13 +99,10 @@ export default async function oAuthCallback(params: {
         body,
         method,
       }),
-      // @ts-expect-error
       ...provider.token?.params,
     }
 
-    // @ts-expect-error
     if (provider.token?.request) {
-      // @ts-expect-error
       const response = await provider.token.request({
         provider,
         params,
@@ -121,9 +122,7 @@ export default async function oAuthCallback(params: {
     }
 
     let profile: Profile
-    // @ts-expect-error
     if (provider.userinfo?.request) {
-      // @ts-expect-error
       profile = await provider.userinfo.request({
         provider,
         tokens,
@@ -133,7 +132,6 @@ export default async function oAuthCallback(params: {
       profile = tokens.claims()
     } else {
       profile = await client.userinfo(tokens, {
-        // @ts-expect-error
         params: provider.userinfo?.params,
       })
     }
@@ -146,10 +144,6 @@ export default async function oAuthCallback(params: {
     })
     return { ...profileResult, cookies: resCookies }
   } catch (error) {
-    logger.error("OAUTH_CALLBACK_ERROR", {
-      error: error as Error,
-      providerId: provider.id,
-    })
     throw new OAuthCallbackError(error as Error)
   }
 }
@@ -161,25 +155,22 @@ export interface GetProfileParams {
   logger: LoggerInstance
 }
 
-export interface GetProfileResult {
-  // @ts-expect-error
-  profile: ReturnType<OAuthConfig["profile"]> | null
-  account: Omit<Account, "userId"> | null
-  OAuthProfile: Profile
-}
-
 /** Returns profile, raw profile and auth provider details */
 async function getProfile({
   profile: OAuthProfile,
   tokens,
   provider,
   logger,
-}: GetProfileParams): Promise<GetProfileResult> {
+}: GetProfileParams) {
   try {
     logger.debug("PROFILE_DATA", { OAuthProfile })
-    // @ts-expect-error
     const profile = await provider.profile(OAuthProfile, tokens)
     profile.email = profile.email?.toLowerCase()
+    if (!profile.id)
+      throw new TypeError(
+        `Profile id is missing in ${provider.name} OAuth profile response`
+      )
+
     // Return profile, raw profile and auth provider details
     return {
       profile,
@@ -203,10 +194,5 @@ async function getProfile({
       error: error as Error,
       OAuthProfile,
     })
-    return {
-      profile: null,
-      account: null,
-      OAuthProfile,
-    }
   }
 }

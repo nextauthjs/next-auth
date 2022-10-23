@@ -58,7 +58,7 @@ export default function Component() {
 `useSession()` returns an object containing two values: `data` and `status`:
 
 - **`data`**: This can be three values: [`Session`](https://github.com/nextauthjs/next-auth/blob/8ff4b260143458c5d8a16b80b11d1b93baa0690f/types/index.d.ts#L437-L444) / `undefined` / `null`.
-  - when the session hasn't been fetched yet, `data` will `undefined`
+  - when the session hasn't been fetched yet, `data` will be `undefined`
   - in case it failed to retrieve the session, `data` will be `null`
   - in case of success, `data` will be [`Session`](https://github.com/nextauthjs/next-auth/blob/8ff4b260143458c5d8a16b80b11d1b93baa0690f/types/index.d.ts#L437-L444).
 - **`status`**: enum mapping to three possible session states: `"loading" | "authenticated" | "unauthenticated"`
@@ -67,7 +67,7 @@ export default function Component() {
 
 Due to the way how Next.js handles `getServerSideProps` and `getInitialProps`, every protected page load has to make a server-side request to check if the session is valid and then generate the requested page (SSR). This increases server load, and if you are good with making the requests from the client, there is an alternative. You can use `useSession` in a way that makes sure you always have a valid session. If after the initial loading state there was no session found, you can define the appropriate action to respond.
 
-The default behavior is to redirect the user to the sign-in page, from where - after a successful login - they will be sent back to the page they started on. You can also define an `onFail()` callback, if you would like to do something else:
+The default behavior is to redirect the user to the sign-in page, from where - after a successful login - they will be sent back to the page they started on. You can also define an `onUnauthenticated()` callback, if you would like to do something else:
 
 #### Example
 
@@ -148,13 +148,9 @@ Because of how `_app` is written, it won't unnecessarily contact the `/api/auth/
 
 More information can be found in the following [GitHub Issue](https://github.com/nextauthjs/next-auth/issues/1210).
 
-### NextAuth.js + React-Query
+### NextAuth.js + React Query
 
-There is also an alternative client-side API library based upon [`react-query`](https://www.npmjs.com/package/react-query) available under [`nextauthjs/react-query`](https://github.com/nextauthjs/react-query).
-
-If you use `react-query` in your project already, you can leverage it with NextAuth.js to handle the client-side session management for you as well. This replaces NextAuth.js's native `useSession` and `SessionProvider` from `next-auth/react`.
-
-See repository [`README`](https://github.com/nextauthjs/react-query) for more details.
+You can create your own session management solution using data fetching libraries like [React Query](https://tanstack.com/query/v4/docs/adapters/react-query) or [SWR](https://swr.vercel.app). You can use the [original implementation of `@next-auth/react-query`](https://github.com/nextauthjs/react-query) and look at the [`next-auth/react` source code](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/react/index.tsx) as a starting point.
 
 ---
 

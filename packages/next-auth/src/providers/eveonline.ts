@@ -17,14 +17,9 @@ export default function EVEOnline<P extends EVEOnlineProfile>(
     id: "eveonline",
     name: "EVE Online",
     type: "oauth",
-    wellKnown:
-      "https://login.eveonline.com/.well-known/oauth-authorization-server",
-    authorization: {
-      params: {
-        scope: "publicData",
-      },
-    },
-    idToken: true,
+    authorization: "https://login.eveonline.com/v2/oauth/authorize?scope=publicData",
+    token: "https://login.eveonline.com/v2/oauth/token",
+    userinfo: "https://login.eveonline.com/oauth/verify",
     profile(profile) {
       return {
         id: String(profile.CharacterID),

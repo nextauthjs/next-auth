@@ -11,6 +11,7 @@ Without these people, the project could not have become one of the most used aut
 - [Balázs Orbán](https://github.com/balazsorban44) - **Lead Maintainer**
 - [Nico Domino](https://github.com/ndom91) - Maintainer (Documentation, Core)
 - [Lluis Agusti](https://github.com/lluia) - Maintainer (Documentation, Testing, TypeScript)
+- [Thang Huu Vu](https://github.com/ThangHuuVu) - Maintainer (Core, TypeScript)
 
 ## Special thanks
 

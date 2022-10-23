@@ -74,7 +74,7 @@ export type SessionContextValue<R extends boolean = false> = R extends true
       | { data: Session; status: "authenticated" }
       | { data: null; status: "unauthenticated" | "loading" }
 
-const SessionContext = React.createContext<SessionContextValue | undefined>(
+export const SessionContext = React.createContext<SessionContextValue | undefined>(
   undefined
 )
 
@@ -228,6 +228,7 @@ export async function signIn<
 
   const data = await res.json()
 
+  // TODO: Do not redirect for Credentials and Email providers by default in next major
   if (redirect || !isSupportingReturn) {
     const url = data.url ?? callbackUrl
     window.location.href = url

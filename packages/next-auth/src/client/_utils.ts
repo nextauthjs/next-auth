@@ -35,20 +35,17 @@ export async function fetchData<T = any>(
   logger: LoggerInstance,
   { ctx, req = ctx?.req }: CtxOrReq = {}
 ): Promise<T | null> {
+  const url = `${apiBaseUrl(__NEXTAUTH)}/${path}`
   try {
     const options = req?.headers.cookie
       ? { headers: { cookie: req.headers.cookie } }
       : {}
-    const res = await fetch(`${apiBaseUrl(__NEXTAUTH)}/${path}`, options)
+    const res = await fetch(url, options)
     const data = await res.json()
     if (!res.ok) throw data
     return Object.keys(data).length > 0 ? data : null // Return null if data empty
   } catch (error) {
-    logger.error("CLIENT_FETCH_ERROR", {
-      error: error as Error,
-      path,
-      ...(req ? { header: req.headers } : {}),
-    })
+    logger.error("CLIENT_FETCH_ERROR", { error: error as Error, url })
     return null
   }
 }
@@ -97,10 +94,18 @@ export function BroadcastChannel(name = "nextauth.message") {
     /** Notify other tabs/windows. */
     post(message: Record<string, unknown>) {
       if (typeof window === "undefined") return
-      localStorage.setItem(
-        name,
-        JSON.stringify({ ...message, timestamp: now() })
-      )
+      try {
+        localStorage.setItem(
+          name,
+          JSON.stringify({ ...message, timestamp: now() })
+        )
+      } catch {
+        /**
+         * The localStorage API isn't always available.
+         * It won't work in private mode prior to Safari 11 for example.
+         * Notifications are simply dropped if an error is encountered.
+         */
+      }
     },
   }
 }

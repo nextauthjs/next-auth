@@ -7,9 +7,16 @@ title: Reddit
 
 https://www.reddit.com/dev/api/
 
-## Configuration
+## App Configuration
 
-https://www.reddit.com/prefs/apps/
+1. Visit https://www.reddit.com/prefs/apps/ and create a new web app
+2. Provide a name for your web app
+3. Provide a redirect uri ending with `/api/auth/callback/reddit`:
+
+![next-auth-reddit-provider-config](https://user-images.githubusercontent.com/200280/185804449-88f8d0f2-35fa-4eb5-8ecc-5e0a6c813954.png)
+
+4. All other fields are optional
+5. Click the "create app" button
 
 ## Options
 
@@ -46,27 +53,15 @@ This Provider template only has a one hour access token to it and only has the "
 
 ```js
 providers: [
-  {
-    id: "reddit",
-    name: "Reddit",
+  RedditProvider({
     clientId: process.env.REDDIT_CLIENT_ID,
     clientSecret: process.env.REDDIT_CLIENT_SECRET,
-    scope: "identity mysubreddits read", //Check Reddit API Documentation for more. The identity scope is required.
-    type: "oauth",
-    version: "2.0",
-    params: { grant_type: "authorization_code" },
-    accessTokenUrl: " https://www.reddit.com/api/v1/access_token",
-    authorizationUrl:
-      "https://www.reddit.com/api/v1/authorize?response_type=code&duration=permanent",
-    profileUrl: "https://oauth.reddit.com/api/v1/me",
-    profile: (profile) => {
-      return {
-        id: profile.id,
-        name: profile.name,
-        email: null,
-      }
+    authorization: {
+      params: {
+        duration: 'permanent',
+      },
     },
-  },
+  }),
 ]
 ```
 

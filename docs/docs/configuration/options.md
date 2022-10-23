@@ -13,12 +13,12 @@ When deploying to production, set the `NEXTAUTH_URL` environment variable to the
 NEXTAUTH_URL=https://example.com
 ```
 
-If your Next.js application uses a custom base path, specify the route to the API endpoint in full. More informations about the usage of custom base path [here](/getting-started/client#custom-base-path).
+If your Next.js application uses a custom base path, specify the route to the API endpoint in full. More information about the usage of custom base path [here](/getting-started/client#custom-base-path).
 
 _e.g. `NEXTAUTH_URL=https://example.com/custom-route/api/auth`_
 
 :::tip
-When you're using a custom base path, you will need to pass the `basePath` page prop to the `<SessionProvider>`. More informations [here](/getting-started/client#custom-base-path).
+When you're using a custom base path, you will need to pass the `basePath` page prop to the `<SessionProvider>`. More information [here](/getting-started/client#custom-base-path).
 :::
 
 :::note
@@ -68,7 +68,7 @@ A random string is used to hash tokens, sign/encrypt cookies and generate crypto
 
 If you set [`NEXTAUTH_SECRET`](#nextauth_secret) as an environment variable, you don't have to define this option.
 
-If no value specified specified in development (and there is no `NEXTAUTH_SECRET` variable either), it uses a hash for all configuration options, including OAuth Client ID / Secrets for entropy.
+If no value is specified in development (and there is no `NEXTAUTH_SECRET` variable either), it uses a hash for all configuration options, including OAuth Client ID / Secrets for entropy.
 
 :::warning
 Not providing any `secret` or `NEXTAUTH_SECRET` will throw [an error](/errors#no_secret) in production.
@@ -114,6 +114,12 @@ session: {
   // Use it to limit write operations. Set to 0 to always update the database.
   // Note: This option is ignored if using JSON Web Tokens
   updateAge: 24 * 60 * 60, // 24 hours
+  
+  // The session token is usually either a random UUID or string, however if you
+  // need a more customized session token string, you can define your own generate function.
+  generateSessionToken: () => {
+    return randomUUID?.() ?? randomBytes(32).toString("hex")
+  }
 }
 ```
 
@@ -326,7 +332,7 @@ Set debug to `true` to enable debug messages for authentication and database ope
 
 #### Description
 
-Override any of the logger levels (`undefined` levels will use the built-in logger), and intercept logs in NextAuth. You can use this to send NextAuth logs to a third-party logging service.
+Override any of the logger levels (`undefined` levels will use the built-in logger), and intercept logs in NextAuth.js. You can use this to send NextAuth.js logs to a third-party logging service.
 
 The `code` parameter for `error` and `warn` are explained in the [Warnings](/warnings) and [Errors](/errors) pages respectively.
 
@@ -471,6 +477,15 @@ cookies: {
   },
   state: {
     name: `${cookiePrefix}next-auth.state`,
+    options: {
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/",
+      secure: useSecureCookies,
+    },
+  },
+  nonce: {
+    name: `${cookiePrefix}next-auth.nonce`,
     options: {
       httpOnly: true,
       sameSite: "lax",
