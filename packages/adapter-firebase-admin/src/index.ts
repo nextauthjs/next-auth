@@ -1,7 +1,7 @@
 import admin from "firebase-admin"
-import { Account } from "next-auth"
 import type {
   Adapter,
+  AdapterAccount,
   AdapterSession,
   AdapterUser,
   VerificationToken,
@@ -10,9 +10,9 @@ import { getConverter } from "./converter"
 
 type IndexableObject = Record<string, unknown>
 
-const userConverter = getConverter<AdapterUser>()
+const userConverter = getConverter<AdapterUser & IndexableObject>()
 const sessionConverter = getConverter<AdapterSession & IndexableObject>()
-const accountConverter = getConverter<Account>()
+const accountConverter = getConverter<AdapterAccount & IndexableObject>()
 const verificationTokenConverter = getConverter<
   VerificationToken & IndexableObject
 >({
@@ -29,8 +29,7 @@ export function FirestoreAdapterAdmin(db: admin.firestore.Firestore): Adapter {
 
   return {
     async createUser(newUser: Omit<AdapterUser, "id">) {
-      //todo: check if `as any` is OK here
-      const userRef = await Users.add(newUser as any)
+      const userRef = await Users.add(newUser as AdapterUser & IndexableObject)
       const userSnapshot = await userRef.withConverter(userConverter).get()
 
       if (userSnapshot.exists && userConverter) {
@@ -131,8 +130,9 @@ export function FirestoreAdapterAdmin(db: admin.firestore.Firestore): Adapter {
     },
 
     async createSession(session) {
-      //todo: check if `as any` is OK here
-      const sessionRef = await Sessions.add(session as any)
+      const sessionRef = await Sessions.add(
+        session as AdapterSession & IndexableObject
+      )
       const sessionSnapshot = await sessionRef.get()
 
       if (sessionSnapshot.exists && sessionConverter) {
@@ -208,15 +208,14 @@ export function FirestoreAdapterAdmin(db: admin.firestore.Firestore): Adapter {
     },
 
     async createVerificationToken(verificationToken) {
-      //todo: check if `as any` is OK here
       const verificationTokenRef = await VerificationTokens.add(
-        verificationToken as any
+        verificationToken as VerificationToken & IndexableObject
       )
 
       const verificationTokenSnapshot = await verificationTokenRef.get()
 
       if (verificationTokenSnapshot.exists && verificationTokenConverter) {
-        const { id, ...verificationToken } = verificationTokenSnapshot.data()
+        const { ...verificationToken } = verificationTokenSnapshot.data()
 
         return verificationToken
       }
@@ -237,7 +236,7 @@ export function FirestoreAdapterAdmin(db: admin.firestore.Firestore): Adapter {
       if (verificationTokenSnapshot?.exists && verificationTokenConverter) {
         await verificationTokenSnapshot.ref.delete()
 
-        const { id, ...verificationToken } = verificationTokenSnapshot.data()
+        const { ...verificationToken } = verificationTokenSnapshot.data()
 
         return verificationToken
       }

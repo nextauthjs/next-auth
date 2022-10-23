@@ -25,6 +25,10 @@ export const getConverter = <Document extends Record<string, unknown>>(
   },
   // We need to explicitly type `snapshot` since it uses `DocumentData` for generic type
   fromFirestore(snapshot: QueryDocumentSnapshot<Document>) {
+    if (!snapshot.exists) {
+      return null
+    }
+
     let document: Document = snapshot.data()
 
     if (!options?.excludeId) {

@@ -3,9 +3,9 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-    "strict": true,
+    "strict": false,
     "noUncheckedIndexedAccess": true,
     "moduleResolution": "node"
   },
-  "exclude": ["tests", "dist", "jest.config.js"]
+  "exclude": ["dist"]
 }
