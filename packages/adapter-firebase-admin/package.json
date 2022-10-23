@@ -1,0 +1,45 @@
+{
+  "name": "@next-auth/firebase-admin-adapter",
+  "version": "1.0.2",
+  "description": "Firebase admin adapter for next-auth.",
+  "homepage": "https://next-auth.js.org",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "Norbert Huethmayr norbert.huethmayr@live.at>",
+  "contributors": [],
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "index.d.ts"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "firebase"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "peerDependencies": {
+    "firebase": "^9.7.0",
+    "next-auth": "^4"
+  },
+  "devDependencies": {
+    "@next-auth/adapter-test": "workspace:*",
+    "@next-auth/tsconfig": "workspace:*",
+    "firebase": "^9.7.0",
+    "firebase-tools": "^10.7.2",
+    "jest": "^27.4.3",
+    "next-auth": "workspace:*"
+  },
+  "dependencies": {
+    "firebase-admin": "^11.2.0"
+  }
+}
