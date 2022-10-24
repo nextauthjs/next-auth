@@ -405,7 +405,6 @@ importers:
       '@next-auth/tsconfig': workspace:^0.0.0
       '@xata.io/client': ^0.13.0
       jest: ^27.4.3
-      mongodb: ^4.4.0
       next-auth: workspace:*
       typescript: ^4.7.4
     devDependencies:
@@ -413,7 +412,6 @@ importers:
       '@next-auth/tsconfig': link:../tsconfig
       '@xata.io/client': 0.13.0_typescript@4.7.4
       jest: 27.5.1
-      mongodb: 4.7.0
       next-auth: link:../next-auth
       typescript: 4.7.4
 
