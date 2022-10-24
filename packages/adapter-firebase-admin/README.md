@@ -2,14 +2,14 @@
    <br/>
    <a href="https://next-auth.js.org" target="_blank">
     <img height="64px" src="https://next-auth.js.org/img/logo/logo-sm.png" /></a><img height="64px" src="https://raw.githubusercontent.com/nextauthjs/adapters/main/packages/firebase/logo.svg" />
-   <h3 align="center"><b>Firebase Adapter</b> - NextAuth.js</h3>
+   <h3 align="center"><b>Firebase Admin Adapter</b> - NextAuth.js</h3>
    <p align="center">
    Open Source. Full Stack. Own Your Data.
    </p>
    <p align="center" style="align: center;">
       <img src="https://github.com/nextauthjs/next-auth/actions/workflows/release.yml/badge.svg?branch=main" alt="Build Test" />
-      <img src="https://img.shields.io/bundlephobia/minzip/@next-auth/firebase-adapter/latest" alt="Bundle Size"/>
-      <img src="https://img.shields.io/npm/v/@next-auth/firebase-adapter" alt="@next-auth/firebase-adapter Version" />
+      <img src="https://img.shields.io/bundlephobia/minzip/@next-auth/firebase-admin-adapter/latest" alt="Bundle Size"/>
+      <img src="https://img.shields.io/npm/v/@next-auth/firebase-adapter" alt="@next-auth/firebase-admin-adapter Version" />
    </p>
 </p>
 
