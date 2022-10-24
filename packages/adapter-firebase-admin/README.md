@@ -27,58 +27,58 @@ You can find more Firebase information in the docs at [next-auth.js.org/adapters
 npm install next-auth @next-auth/firebase-admin-adapter
 ```
 
-2. Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object.
+2. Add this code to your `init.js`.
 
 ```js
-import NextAuth from "next-auth"
-import Providers from "next-auth/providers"
-import { FirestoreAdapter } from "@next-auth/firebase-adapter"
+import admin from "firebase-admin"
 
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore"
+if (!admin.apps.length) {
+  try {
+    admin.initializeApp({
+      credential: admin.credential.cert({
+        type: "service_account",
+        projectId: process.env.FIREBASE_PROJECT_ID,
+        privateKeyId: process.env.FIREBASE_PRIVATE_KEY_ID,
+        privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+        clientId: process.env.FIREBASE_CLIENT_ID,
+        authUri: "https://accounts.google.com/o/oauth2/auth",
+        token_uri: "https://oauth2.googleapis.com/token",
+        authProviderX509CertUrl: "https://www.googleapis.com/oauth2/v1/certs",
+        clientX509CertUrl: process.env.FIREBASE_X509_CERT_URL,
+      }),
+    })
+    admin.firestore().settings({ ignoreUndefinedProperties: true })
+  } catch (error) {
+    console.log("Firebase admin initialization error", error.stack)
+  }
+}
+export default admin.firestore()
+```
 
-const app = initializeApp({ projectId: "next-auth-test" });
-const firestore = getFirestore(app);
+3. Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object.
+
+```js
+import NextAuth, { NextAuthOptions } from "next-auth"
+import { FirestoreAdapterAdmin } from "next-auth-adapter/index"
+import TwitterProvider from "next-auth/providers/twitter"
+import db from "@firebase/init"
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
-export default NextAuth({
+export const authOptions: NextAuthOptions = {
   // https://next-auth.js.org/configuration/providers
   providers: [
-    Providers.Google({
-      clientId: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_SECRET,
+    TwitterProvider({
+      clientId: process.env.TWITTER_API_KEY,
+      clientSecret: process.env.TWITTER_API_SECRET,
     }),
   ],
-  adapter: FirestoreAdapter(firestore),
-  ...
-})
-```
-
-## Options
-
-When initializing the firestore adapter, you must pass in the firebase config object with the details from your project. More details on how to obtain that config object can be found [here](https://support.google.com/firebase/answer/7015592).
-
-An example firebase config looks like this:
-
-```js
-const firebaseConfig = {
-  apiKey: "AIzaSyDOCAbC123dEf456GhI789jKl01-MnO",
-  authDomain: "myapp-project-123.firebaseapp.com",
-  databaseURL: "https://myapp-project-123.firebaseio.com",
-  projectId: "myapp-project-123",
-  storageBucket: "myapp-project-123.appspot.com",
-  messagingSenderId: "65211879809",
-  appId: "1:65211879909:web:3ae38ef1cdcb2e01fe5f0c",
-  measurementId: "G-8GSGZQ44ST",
+  adapter: FirestoreAdapterAdmin(db),
 }
+
+export default NextAuth(authOptions)
 ```
-
-See [firebase.google.com/docs/web/setup](https://firebase.google.com/docs/web/setup) for more details.
-
-> **From Firebase - Caution**: We do not recommend manually modifying an app's Firebase config file or object. If you initialize an app with invalid or missing values for any of these required "Firebase options", then your end users may experience serious issues.
->
-> For open source projects, we generally do not recommend including the app's Firebase config file or object in source control because, in most cases, your users should create their own Firebase projects and point their apps to their own Firebase resources (via their own Firebase config file or object).
 
 ## Contributing
 
