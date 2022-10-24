@@ -9,7 +9,7 @@
    <p align="center" style="align: center;">
       <img src="https://github.com/nextauthjs/next-auth/actions/workflows/release.yml/badge.svg?branch=main" alt="Build Test" />
       <img src="https://img.shields.io/bundlephobia/minzip/@next-auth/firebase-admin-adapter/latest" alt="Bundle Size"/>
-      <img src="https://img.shields.io/npm/v/@next-auth/firebase-adapter" alt="@next-auth/firebase-admin-adapter Version" />
+      <img src="https://img.shields.io/npm/v/@next-auth/firebase-admin-adapter" alt="@next-auth/firebase-admin-adapter Version" />
    </p>
 </p>
 
