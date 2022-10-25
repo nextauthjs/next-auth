@@ -31,6 +31,7 @@
     "./jwt": "./jwt/index.js",
     "./react": "./react/index.js",
     "./core": "./core/index.js",
+    "./core/pages/*": "./core/pages/*.js",
     "./next": "./next/index.js",
     "./middleware": "./middleware.js",
     "./client/_utils": "./client/_utils.js",
