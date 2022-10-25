@@ -69,11 +69,20 @@ const toSvelteKitResponse = async <
     body = nextAuthResponse.body
   }
 
-  // @ts-expect-error - body is a known HTML document or JSON object
-  return new Response(body, {
-    status,
-    headers,
-  })
+
+	if (typeof body === 'string') {
+		return new Response(body, {
+			status,
+			headers
+		});
+	} else {
+    // If not a string, JSON stringify `body`. Otherwise, `body` is coerced to
+    // a string like `[object Object]`.
+		return new Response(JSON.stringify(body), {
+			status,
+			headers
+		});
+	}
 }
 
 const SKNextAuthHandler = async (
