@@ -281,7 +281,7 @@ An advanced option, hopefully you won't need it in most cases. `next-auth` uses 
 
 ### `allowDangerousEmailAccountLinking` option
 
-Normally, when you sign in with an OAuth provider and another account with the same email address already exists, the accounts are not linked automatically. Automatic account linking on sign in is not secure between arbitrary providers and is disabled by default (see our [Security FAQ](https://next-auth.js.org/faq#security)).  However, it may be desirable to allow automatic account linking if you trust that the provider involved has securely verified the email address associated with the account. Just set `allowDangerousEmailAccountLinking: true` in your provider configuration to enable automatic account linking.
+Normally, when you sign in with an OAuth provider and another account with the same email address already exists, the accounts are not linked automatically. Automatic account linking on sign in is not secure between arbitrary providers and is disabled by default (see our [Security FAQ](https://next-auth.js.org/faq#security)). However, it may be desirable to allow automatic account linking if you trust that the provider involved has securely verified the email address associated with the account. Just set `allowDangerousEmailAccountLinking: true` in your provider configuration to enable automatic account linking.
 
 ## Using a custom provider
 
@@ -425,10 +425,11 @@ GoogleProvider({
 
 If you think your custom provider might be useful to others, we encourage you to open a PR and add it to the built-in list so others can discover it much more easily!
 
-You only need to add two changes:
+You only need to add three changes:
 
 1. Add your config: [`src/providers/{provider}.ts`](https://github.com/nextauthjs/next-auth/tree/main/packages/next-auth/src/providers)<br />
    • make sure you use a named default export, like this: `export default function YourProvider`
 2. Add provider documentation: [`/docs/providers/{provider}.md`](https://github.com/nextauthjs/next-auth/tree/main/docs/docs/providers)
+3. Add the new provider name to the `Provider type` dropdown options in [`the provider issue template`](<[http](https://github.com/nextauthjs/next-auth/edit/main/.github/ISSUE_TEMPLATE/2_bug_provider.yml)>)
 
 That's it! 🎉 Others will be able to discover and use this provider much more easily now!
