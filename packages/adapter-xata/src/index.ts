@@ -77,7 +77,7 @@ export function XataAdapter(client: XataClient): Adapter {
         user: { id: userId },
         session: { id: newXataSession.id },
       })
-      return { ...newXataSession, ...session, userId }
+      return { ...session, ...newXataSession, userId }
     },
     async getSessionAndUser(sessionToken) {
       const result = await client.db.nextauth_users_sessions
