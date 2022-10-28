@@ -40,9 +40,9 @@ runBasicTests({
         where: { identifier_token },
       })
       if (!result) return null
-      // @ts-ignore
-      const { id: _, ...verificationToken } = result
-      return verificationToken
+      // @ts-ignore // MongoDB needs an ID, but we don't
+      delete result.id
+      return result
     },
   },
 })

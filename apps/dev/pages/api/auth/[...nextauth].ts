@@ -18,6 +18,7 @@ import Freshbooks from "next-auth/providers/freshbooks"
 import GitHub from "next-auth/providers/github"
 import Gitlab from "next-auth/providers/gitlab"
 import Google from "next-auth/providers/google"
+import Hubspot from "next-auth/providers/hubspot"
 import IDS4 from "next-auth/providers/identity-server4"
 import Instagram from "next-auth/providers/instagram"
 import Keycloak from "next-auth/providers/keycloak"
@@ -29,53 +30,44 @@ import Osu from "next-auth/providers/osu"
 import Patreon from "next-auth/providers/patreon"
 import Slack from "next-auth/providers/slack"
 import Spotify from "next-auth/providers/spotify"
+import Todoist from "next-auth/providers/todoist"
 import Trakt from "next-auth/providers/trakt"
 import Twitch from "next-auth/providers/twitch"
 import Twitter, { TwitterLegacy } from "next-auth/providers/twitter"
 import Vk from "next-auth/providers/vk"
 import Wikimedia from "next-auth/providers/wikimedia"
 import WorkOS from "next-auth/providers/workos"
+import Zitadel from "next-auth/providers/zitadel"
 
 // Adapters
-import { PrismaClient } from "@prisma/client"
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import { Client as FaunaClient } from "faunadb"
-import { FaunaAdapter } from "@next-auth/fauna-adapter"
-import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
 
-// Add an adapter you want to test here.
-const adapters = {
-  prisma() {
-    const client = globalThis.prisma || new PrismaClient()
-    if (process.env.NODE_ENV !== "production") globalThis.prisma = client
-    return PrismaAdapter(client)
-  },
-  typeorm() {
-    return TypeORMLegacyAdapter({
-      type: "sqlite",
-      name: "next-auth-test-memory",
-      database: "./typeorm/dev.db",
-      synchronize: true,
-    })
-  },
-  fauna() {
-    const client =
-      globalThis.fauna ||
-      new FaunaClient({
-        secret: process.env.FAUNA_SECRET,
-        domain: process.env.FAUNA_DOMAIN,
-      })
-    if (process.env.NODE_ENV !== "production") global.fauna = client
-    return FaunaAdapter(client)
-  },
-  noop() {
-    return undefined
-  },
-}
+// // Prisma
+// import { PrismaClient } from "@prisma/client"
+// import { PrismaAdapter } from "@next-auth/prisma-adapter"
+// const client = globalThis.prisma || new PrismaClient()
+// if (process.env.NODE_ENV !== "production") globalThis.prisma = client
+// const adapter = PrismaAdapter(client)
+
+// // Fauna
+// import { Client as FaunaClient } from "faunadb"
+// import { FaunaAdapter } from "@next-auth/fauna-adapter"
+// const opts = { secret: process.env.FAUNA_SECRET, domain: process.env.FAUNA_DOMAIN }
+// const client = globalThis.fauna || new FaunaClient(opts)
+// if (process.env.NODE_ENV !== "production") globalThis.fauna = client
+// const adapter = FaunaAdapter(client)
+
+// // TypeORM
+// import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
+// const adapter = TypeORMLegacyAdapter({
+//   type: "sqlite",
+//   name: "next-auth-test-memory",
+//   database: "./typeorm/dev.db",
+//   synchronize: true,
+// })
 
 export const authOptions: NextAuthOptions = {
-  adapter: adapters.noop(),
-  debug: true,
+  // adapter,
+  debug: process.env.NODE_ENV !== "production",
   theme: {
     logo: "https://next-auth.js.org/img/logo/logo-sm.png",
     brandColor: "#1786fb",
@@ -102,6 +94,7 @@ export const authOptions: NextAuthOptions = {
     GitHub({ clientId: process.env.GITHUB_ID, clientSecret: process.env.GITHUB_SECRET }),
     Gitlab({ clientId: process.env.GITLAB_ID, clientSecret: process.env.GITLAB_SECRET }),
     Google({ clientId: process.env.GOOGLE_ID, clientSecret: process.env.GOOGLE_SECRET }),
+    Hubspot({ clientId: process.env.HUBSPOT_ID, clientSecret: process.env.HUBSPOT_SECRET }),
     IDS4({ clientId: process.env.IDS4_ID, clientSecret: process.env.IDS4_SECRET, issuer: process.env.IDS4_ISSUER }),
     Instagram({ clientId: process.env.INSTAGRAM_ID, clientSecret: process.env.INSTAGRAM_SECRET }),
     Keycloak({ clientId: process.env.KEYCLOAK_ID, clientSecret: process.env.KEYCLOAK_SECRET, issuer: process.env.KEYCLOAK_ISSUER }),
@@ -113,6 +106,7 @@ export const authOptions: NextAuthOptions = {
     Patreon({ clientId: process.env.PATREON_ID, clientSecret: process.env.PATREON_SECRET }),
     Slack({ clientId: process.env.SLACK_ID, clientSecret: process.env.SLACK_SECRET }),
     Spotify({ clientId: process.env.SPOTIFY_ID, clientSecret: process.env.SPOTIFY_SECRET }),
+    Todoist({ clientId: process.env.TODOIST_ID, clientSecret: process.env.TODOIST_SECRET }),
     Trakt({ clientId: process.env.TRAKT_ID, clientSecret: process.env.TRAKT_SECRET }),
     Twitch({ clientId: process.env.TWITCH_ID, clientSecret: process.env.TWITCH_SECRET }),
     Twitter({ version: "2.0", clientId: process.env.TWITTER_ID, clientSecret: process.env.TWITTER_SECRET }),
@@ -120,6 +114,7 @@ export const authOptions: NextAuthOptions = {
     Vk({ clientId: process.env.VK_ID, clientSecret: process.env.VK_SECRET }),
     Wikimedia({ clientId: process.env.WIKIMEDIA_ID, clientSecret: process.env.WIKIMEDIA_SECRET }),
     WorkOS({ clientId: process.env.WORKOS_ID, clientSecret: process.env.WORKOS_SECRET }),
+    Zitadel({ issuer: process.env.ZITADEL_ISSUER, clientId: process.env.ZITADEL_CLIENT_ID, clientSecret: process.env.ZITADEL_CLIENT_SECRET }),
   ],
 }
 

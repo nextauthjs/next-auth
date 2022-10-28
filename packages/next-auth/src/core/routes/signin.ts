@@ -1,8 +1,9 @@
 import getAuthorizationUrl from "../lib/oauth/authorization-url"
 import emailSignin from "../lib/email/signin"
+import getAdapterUserFromEmail from "../lib/email/getUserFromEmail"
 import type { RequestInternal, OutgoingResponse } from ".."
 import type { InternalOptions } from "../types"
-import type { Account, User } from "../.."
+import type { Account } from "../.."
 
 /** Handle requests to /api/auth/signin */
 export default async function signin(params: {
@@ -11,7 +12,7 @@ export default async function signin(params: {
   body: RequestInternal["body"]
 }): Promise<OutgoingResponse> {
   const { options, query, body } = params
-  const { url, adapter, callbacks, logger, provider } = options
+  const { url, callbacks, logger, provider } = options
 
   if (!provider.type) {
     return {
@@ -54,14 +55,11 @@ export default async function signin(params: {
       return { redirect: `${url}/error?error=EmailSignin` }
     }
 
-    // Verified in `assertConfig`
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const { getUserByEmail } = adapter!
-    // If is an existing user return a user object (otherwise use placeholder)
-    const user: User = (email ? await getUserByEmail(email) : null) ?? {
+    const user = await getAdapterUserFromEmail({
       email,
-      id: email,
-    }
+      // @ts-expect-error -- Verified in `assertConfig`. adapter: Adapter<true>
+      adapter: options.adapter,
+    })
 
     const account: Account = {
       providerAccountId: email,
@@ -72,7 +70,6 @@ export default async function signin(params: {
 
     // Check if user is allowed to sign in
     try {
-      // @ts-expect-error
       const signInCallbackResponse = await callbacks.signIn({
         user,
         account,

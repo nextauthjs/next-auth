@@ -42,7 +42,7 @@ export default function Page() {
 
 ### Next.js (Middleware)
 
-With NextAuth.js 4.2.0 and Next.js 12, you can now protect your pages via the middleware pattern more easily. If you would like to protect all pages, you can create a `_middleware.js` file in your root `pages` directory which looks like this:
+With NextAuth.js 4.2.0 and Next.js 12, you can now protect your pages via the middleware pattern more easily. If you would like to protect all pages, you can create a `middleware.js` file in your root `pages` directory which looks like this:
 
 ```js title="/middleware.js"
 export { default } from "next-auth/middleware"
@@ -59,6 +59,12 @@ export const config = { matcher: ["/dashboard"] }
 For the time being, the `withAuth` middleware only supports `"jwt"` as [session strategy](https://next-auth.js.org/configuration/options#session).
 
 More details can be found [here](https://next-auth.js.org/configuration/nextjs#middleware).
+
+:::tip
+To inclue all `dashboard` nested routes (sub pages like `/dashboard/settings`, `/dashboard/profile`) you can pass `matcher: "/dashboard/:path*"` to `config`.
+
+For other patterns check out the [Next.js Middleware documentation](https://nextjs.org/docs/advanced-features/middleware#matcher).
+:::
 
 ### Server Side
 

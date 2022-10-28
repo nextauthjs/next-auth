@@ -15,6 +15,7 @@ The Email provider can be used in conjunction with (or instead of) one or more O
 
 On initial sign in, a **Verification Token** is sent to the email address provided. By default this token is valid for 24 hours. If the Verification Token is used within that time (i.e. by clicking on the link in the email) an account is created for the user and they are signed in.
 
+
 If someone provides the email address of an _existing account_ when signing in, an email is sent and they are signed into the account associated with that email address when they follow the link in the email.
 
 :::tip
@@ -32,7 +33,7 @@ You can override any of the options to suit your own use case.
 ## Configuration
 
 1. NextAuth.js does not include `nodemailer` as a dependency, so you'll need to install it yourself if you want to use the Email Provider. Run `npm install nodemailer` or `yarn add nodemailer`.
-2. You will need an SMTP account; ideally for one of the [services known to work with `nodemailer`](http://nodemailer.com/smtp/well-known/).
+2. You will need an SMTP account; ideally for one of the [services known to work with `nodemailer`](https://community.nodemailer.com/2-0-0-beta/setup-smtp/well-known-services/).
 3. There are two ways to configure the SMTP server connection.
 
 You can either use a connection string or a `nodemailer` configuration object.
