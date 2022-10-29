@@ -33,6 +33,7 @@ body:
         - "@next-auth/sequelize-adapter"
         - "@next-auth/typeorm-legacy-adapter"
         - "@next-auth/upstash-redis-adapter"
+        - "@next-auth/xata-adapter"
     validations:
       required: true
   - type: textarea
