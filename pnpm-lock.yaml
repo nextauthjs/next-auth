@@ -399,6 +399,22 @@ importers:
       jest: 27.5.1
       next-auth: link:../next-auth
 
+  packages/adapter-xata:
+    specifiers:
+      '@next-auth/adapter-test': workspace:^0.0.0
+      '@next-auth/tsconfig': workspace:^0.0.0
+      '@xata.io/client': ^0.13.0
+      jest: ^27.4.3
+      next-auth: workspace:*
+      typescript: ^4.7.4
+    devDependencies:
+      '@next-auth/adapter-test': link:../adapter-test
+      '@next-auth/tsconfig': link:../tsconfig
+      '@xata.io/client': 0.13.0_typescript@4.7.4
+      jest: 27.5.1
+      next-auth: link:../next-auth
+      typescript: 4.7.4
+
   packages/next-auth:
     specifiers:
       '@babel/cli': ^7.17.10
@@ -9158,6 +9174,14 @@ packages:
     dependencies:
       '@webassemblyjs/ast': 1.11.1
       '@xtuc/long': 4.2.2
+    dev: true
+
+  /@xata.io/client/0.13.0_typescript@4.7.4:
+    resolution: {integrity: sha512-/s4yiCSWRR5iXpDT49dMXcpeZjJmptmgFCs1MAW4btxqg5b4PONpf8JgWIfb0p9FT+4LXPICwVlXa33IEtTmRg==}
+    peerDependencies:
+      typescript: '>=4.5'
+    dependencies:
+      typescript: 4.7.4
     dev: true
 
   /@xmldom/xmldom/0.7.5:

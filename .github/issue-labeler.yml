@@ -35,3 +35,6 @@ typeorm-legacy:
 
 upstash-redis:
   - "@next-auth/upstash-redis-adapter"
+
+xata:
+  - "@next-auth/xata-adapter"
