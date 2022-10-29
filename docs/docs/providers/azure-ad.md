@@ -47,11 +47,16 @@ In `pages/api/auth/[...nextauth].js` find or add the `AzureAD` entries:
 import AzureADProvider from "next-auth/providers/azure-ad";
 
 ...
-providers: [
+providers: [  
   AzureADProvider({
-    clientId: process.env.AZURE_AD_CLIENT_ID,
-    clientSecret: process.env.AZURE_AD_CLIENT_SECRET,
-    tenantId: process.env.AZURE_AD_TENANT_ID,
+      clientId: process.env.NEXT_PUBLIC_AZURE_AD_CLIENT_ID!,
+      clientSecret: process.env.AZURE_AD_CLIENT_SECRET!,
+      tenantId: process.env.AZURE_AD_TENANT_ID,
+      authorization: {
+          params: {
+              scope: 'openid profile email User.Read',
+          },
+      },
   }),
 ]
 ...
