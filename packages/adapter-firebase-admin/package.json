@@ -25,7 +25,8 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "test": "echo 'Test skipped'"
   },
   "peerDependencies": {
     "next-auth": "^4"
