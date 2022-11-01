@@ -5,7 +5,17 @@ function isDate(value: any) {
   return value && isoDateRE.test(value) && !isNaN(Date.parse(value))
 }
 
-export const format = {
+export interface DynamoDBAdapterOptions {
+  tableName: string;
+  partitionKey: string;
+  sortKey: string
+  indexName: string;
+  indexPartitionKey: string;
+  indexSortKey: string;
+  ttlAttribute: string;
+}
+
+export const formatFactory = (options: DynamoDBAdapterOptions) => ({
   /** Takes a plain old JavaScript object and turns it into a Dynamodb object */
   to(object: Record<string, any>) {
     const newObject: Record<string, unknown> = {}
@@ -13,7 +23,7 @@ export const format = {
       const value = object[key]
       if (value instanceof Date) {
         // DynamoDB requires the TTL attribute be a UNIX timestamp (in secs).
-        if (key === "expires") newObject[key] = value.getTime() / 1000
+        if (key === options.ttlAttribute) newObject[key] = value.getTime() / 1000
         else newObject[key] = value.toISOString()
       } else newObject[key] = value
     }
@@ -26,7 +36,7 @@ export const format = {
     for (const key in object) {
       // Filter DynamoDB specific attributes so it doesn't get passed to core,
       // to avoid revealing the type of database
-      if (["pk", "sk", "GSI1PK", "GSI1SK"].includes(key)) continue
+      if ([options.partitionKey, options.sortKey, options.indexPartitionKey, options.indexSortKey].includes(key)) continue
 
       const value = object[key]
 
@@ -36,20 +46,20 @@ export const format = {
         continue
       // The expires property is stored as a UNIX timestamp in seconds, but
       // JavaScript needs it in milliseconds, so multiply by 1000.
-      else if (key === "expires" && typeof value === "number")
+      else if (key === options.ttlAttribute && typeof value === "number")
         newObject[key] = new Date(value * 1000)
       else newObject[key] = value
     }
     return newObject as T
   },
-}
+})
 
-export function generateUpdateExpression(object: Record<string, any>): {
+export function generateUpdateExpression(object: Record<string, any>, formatter: ReturnType<typeof formatFactory>): {
   UpdateExpression: string
   ExpressionAttributeNames: Record<string, string>
   ExpressionAttributeValues: Record<string, unknown>
 } {
-  const formatedSession = format.to(object)
+  const formatedSession = formatter.to(object)
   let UpdateExpression = "set"
   const ExpressionAttributeNames: Record<string, string> = {}
   const ExpressionAttributeValues: Record<string, unknown> = {}

@@ -143,5 +143,6 @@ const adapter = DynamoDBAdapter(client, {
   indexName: "custom-index-name",
   indexPartitionKey: "custom-index-pk",
   indexSortKey: "custom-index-sk",
+  ttlAttribute: "custom-ttl-attribute",
 })
 ```
