@@ -96,7 +96,11 @@ export function assertConfig(params: {
   for (const provider of options.providers) {
     if (provider.type === "credentials") hasCredentials = true
     else if (provider.type === "email") hasEmail = true
-    else if (provider.id === "twitter" && provider.version === "2.0")
+    else if (
+      provider.type === "oauth" &&
+      "twitter" &&
+      provider.version === "2.0"
+    )
       hasTwitterOAuth2 = true
   }
 

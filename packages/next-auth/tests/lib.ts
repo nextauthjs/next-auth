@@ -47,9 +47,7 @@ export async function handler(
   }
 }
 
-export function createCSRF() {
-  const secret = "secret"
-  const value = "csrf"
+export function createCSRF(value: string = "csrf", secret: string = "secret") {
   const token = createHash("sha256").update(`${value}${secret}`).digest("hex")
 
   return {
@@ -60,8 +58,12 @@ export function createCSRF() {
 
 export function mockAdapter(): Adapter {
   const adapter: Adapter = {
+    createSession: jest.fn(() => {}),
+    createUser: jest.fn(() => {}),
     createVerificationToken: jest.fn(() => {}),
+    linkAccount: jest.fn(() => {}),
     useVerificationToken: jest.fn(() => {}),
+    getUserByAccount: jest.fn(() => {}),
     getUserByEmail: jest.fn(() => {}),
   }
   return adapter

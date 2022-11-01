@@ -4,6 +4,7 @@ module.exports = {
     parser: {
       syntax: "typescript",
       tsx: true,
+      dynamicImport: true,
     },
     transform: {
       react: {
