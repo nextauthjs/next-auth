@@ -23,6 +23,7 @@ We have a list of official adapters that are distributed as their own packages u
 - [`sequelize`](./sequelize)
 - [`dgraph`](./dgraph)
 - [`upstash-redis`](./upstash-redis)
+- [`hasura`](./hasura)
 
 ## Custom Adapter
 
