@@ -41,7 +41,7 @@ corepack enable pnpm
 
 (Now, if you run `pnpm --version`, it should print the same verion as the `packageManager` property in the [`package.json` file](https://github.com/nextauthjs/next-auth/blob/main/package.json))
 
-3. Install packages. Developing requires Node.js v16:
+3. Install packages. Developing requires Node.js v18:
 
 ```sh
 pnpm install
