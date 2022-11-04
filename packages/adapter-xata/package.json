@@ -1,6 +1,6 @@
 {
   "name": "@next-auth/xata-adapter",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Xata adapter for next-auth.",
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -22,9 +22,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "preversion": "build",
-    "prepublish": "build",
-    "test": "echo 'Test skipped'"
+    "test": "jest"
   },
   "files": [
     "README.md",
