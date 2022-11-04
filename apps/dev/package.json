@@ -19,7 +19,7 @@
     "@next-auth/typeorm-legacy-adapter": "workspace:*",
     "@prisma/client": "^3",
     "faunadb": "^4",
-    "next": "13.0.1",
+    "next": "13.0.2",
     "next-auth": "workspace:*",
     "nodemailer": "^6",
     "react": "^18",
