@@ -1,7 +1,7 @@
 import { rest } from "msw"
 import { renderHook } from "@testing-library/react-hooks"
 import { render, waitFor } from "@testing-library/react"
-import { SessionProvider, useSession, signOut } from "../../react"
+import { SessionProvider, useSession, signOut, getSession } from "../../react"
 import { server, mockSession } from "./helpers/mocks"
 
 const origConsoleError = console.error
@@ -137,4 +137,35 @@ test("will call custom redirect logic if supplied when the user could not authen
   })
 
   expect(customRedirect).toHaveBeenCalledTimes(1)
+})
+
+test("it keeps the session provider in-sync with the result of the latest call to `getSession`", async () => {
+  const updatedSessionMock = {
+    image: null,
+    name: "Lisa",
+    email: "lisa@email.com",
+  };
+
+  const { result } = renderHook(() => useSession(), {
+    wrapper: SessionProvider,
+  })
+
+  await waitFor(() => {
+    expect(result.current.data).toEqual(mockSession)
+    expect(result.current.status).toBe("authenticated")
+  })
+
+  // Simulate a session update on the backend
+  server.use(
+    rest.get("*/api/auth/session", (req, res, ctx) =>
+      res(ctx.status(200), ctx.json(updatedSessionMock))
+    ),
+  )
+
+  await getSession();
+
+  await waitFor(() => {
+    expect(result.current.data).toEqual(updatedSessionMock)
+    expect(result.current.status).toBe("authenticated")
+  })
 })

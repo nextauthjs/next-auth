@@ -37,6 +37,7 @@ import type {
   BuiltInProviderType,
   RedirectableProviderType,
 } from "../providers"
+import { createEventEmitter } from "../client/_event-emitter"
 
 export * from "./types"
 
@@ -63,6 +64,10 @@ const __NEXTAUTH: NextAuthClientConfig = {
 }
 
 const broadcast = BroadcastChannel()
+
+const eventEmitter = createEventEmitter<{
+  sessionUpdate: (data: Session | null) => void;
+}>();
 
 const logger = proxyLogger(_logger, __NEXTAUTH.basePath)
 
@@ -149,6 +154,9 @@ export async function getSession(params?: GetSessionParams) {
     logger,
     params
   )
+
+  eventEmitter.emit("sessionUpdate", session);
+
   if (params?.broadcast ?? true) {
     broadcast.post({ event: "session", data: { trigger: "getSession" } })
   }
@@ -354,7 +362,6 @@ export function SessionProvider(props: SessionProviderProps) {
           __NEXTAUTH._session = await getSession({
             broadcast: !storageEvent,
           })
-          setSession(__NEXTAUTH._session)
           return
         }
 
@@ -377,7 +384,6 @@ export function SessionProvider(props: SessionProviderProps) {
         // An event or session staleness occurred, update the client session.
         __NEXTAUTH._lastSync = now()
         __NEXTAUTH._session = await getSession()
-        setSession(__NEXTAUTH._session)
       } catch (error) {
         logger.error("CLIENT_SESSION_ERROR", error as Error)
       } finally {
@@ -409,6 +415,16 @@ export function SessionProvider(props: SessionProviderProps) {
     )
 
     return () => unsubscribe()
+  }, [])
+
+  React.useEffect(() => {
+    // Listen for session updates coming from `getSession`
+    const unbind = eventEmitter.on("sessionUpdate", (session) => {
+      __NEXTAUTH._session = session;
+      setSession(session);
+    })
+
+    return () => unbind()
   }, [])
 
   React.useEffect(() => {
