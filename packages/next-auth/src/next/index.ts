@@ -106,7 +106,12 @@ export async function unstable_getServerSession(
     experimentalWarningShown = true
   }
 
-  if (!experimentalRSCWarningShown && process.env.NODE_ENV !== "production") {
+  const isRSC = args.length === 1
+  if (
+    !experimentalRSCWarningShown &&
+    isRSC &&
+    process.env.NODE_ENV !== "production"
+  ) {
     console.warn(
       "[next-auth][warn][EXPERIMENTAL_API]",
       "\n`unstable_getServerSession` is used in a React Server Component.",
@@ -116,7 +121,6 @@ export async function unstable_getServerSession(
     experimentalRSCWarningShown = true
   }
 
-  const isRSC = args.length === 1
   const [req, res, options] = isRSC
     ? [
         {
