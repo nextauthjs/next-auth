@@ -127,9 +127,11 @@ export async function unstable_getServerSession(
     const { headers, cookies } = require("next/headers")
     req = {
       headers,
-      cookies: cookies()
-        .getAll()
-        .reduce((acc, c) => ({ ...acc, [c.name]: c.value }), {}),
+      cookies: Object.fromEntries(
+        cookies()
+          .getAll()
+          .map((c) => [c.name, c.value])
+      ),
     }
     res = { getHeader() {}, setCookie() {}, setHeader() {} }
   } else {
