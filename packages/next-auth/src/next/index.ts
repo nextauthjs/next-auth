@@ -1,7 +1,6 @@
 import { NextAuthHandler } from "../core"
 import { detectHost } from "../utils/detect-host"
 import { setCookie } from "./utils"
-import { cookies as nextCookies, headers } from "next/headers"
 
 import type {
   GetServerSidePropsContext,
@@ -121,18 +120,18 @@ export async function unstable_getServerSession(
     experimentalRSCWarningShown = true
   }
 
-  const [req, res, options] = isRSC
-    ? [
-        {
-          headers: headers(),
-          cookies: nextCookies()
-            .getAll()
-            .reduce((acc, c) => ({ ...acc, [c.name]: c.value }), {}),
-        } as any,
-        { getHeader() {}, setCookie() {}, setHeader() {} } as any,
-        args[0],
-      ]
-    : args
+  let req, res, options: NextAuthOptions
+  if (isRSC) {
+    options = args[0]
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const { headers, cookies } = require("next/headers")
+    req = { headers, cookies }
+    res = { getHeader() {}, setCookie() {}, setHeader() {} }
+  } else {
+    req = args[0]
+    res = args[1]
+    options = args[2]
+  }
 
   options.secret = options.secret ?? process.env.NEXTAUTH_SECRET
 
