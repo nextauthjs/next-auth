@@ -177,8 +177,10 @@ function ensureAvailable(fn: () => any) {
   try {
     return fn()
   } catch (error) {
-    throw new Error(
+    console.error(error)
+    console.error(
       `Could not access ${fn.name}(). If you are not in a React Server Cmponent, pass the request and response.`
     )
+    // Cannot throw since Next.js expects DynamicServerError
   }
 }
