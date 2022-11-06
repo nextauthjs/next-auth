@@ -154,7 +154,7 @@ export async function unstable_getServerSession(
   if (body && typeof body !== "string" && Object.keys(body).length) {
     if (status === 200) {
       // @ts-expect-error
-      delete body.expires
+      if (isRSC) delete body.expires
       return body as Session
     }
     throw new Error((body as any).message)
