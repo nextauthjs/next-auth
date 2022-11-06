@@ -125,7 +125,12 @@ export async function unstable_getServerSession(
     options = args[0]
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { headers, cookies } = require("next/headers")
-    req = { headers, cookies }
+    req = {
+      headers,
+      cookies: cookies()
+        .getAll()
+        .reduce((acc, c) => ({ ...acc, [c.name]: c.value }), {}),
+    }
     res = { getHeader() {}, setCookie() {}, setHeader() {} }
   } else {
     req = args[0]
