@@ -30,7 +30,11 @@ providers: [
     clientSecret: process.env.PINTEREST_SECRET
   })
 ]
-...
+```
+
+:::warning
+Email address is not returned by Pinterest.
+:::
 
 :::tip
 To use in production, make sure the app has standard API access and not trial access
