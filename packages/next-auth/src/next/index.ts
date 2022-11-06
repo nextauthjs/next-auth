@@ -124,8 +124,8 @@ export async function unstable_getServerSession(
   const [req, res, options] = isRSC
     ? [
         {
-          headers: ensureAvailable(headers),
-          cookies: ensureAvailable(nextCookies)
+          headers: headers(),
+          cookies: nextCookies()
             .getAll()
             .reduce((acc, c) => ({ ...acc, [c.name]: c.value }), {}),
         } as any,
@@ -170,17 +170,5 @@ declare global {
       NEXTAUTH_URL?: string
       VERCEL?: "1"
     }
-  }
-}
-
-function ensureAvailable(fn: () => any) {
-  try {
-    return fn()
-  } catch (error) {
-    console.error(error)
-    console.error(
-      `Could not access ${fn.name}(). If you are not in a React Server Cmponent, pass the request and response.`
-    )
-    // Cannot throw since Next.js expects DynamicServerError
   }
 }
