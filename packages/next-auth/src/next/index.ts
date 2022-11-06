@@ -1,6 +1,7 @@
 import { NextAuthHandler } from "../core"
 import { detectHost } from "../utils/detect-host"
 import { setCookie } from "./utils"
+import { cookies as nextCookies, headers } from "next/headers"
 
 import type {
   GetServerSidePropsContext,
@@ -84,6 +85,7 @@ function NextAuth(
 export default NextAuth
 
 let experimentalWarningShown = false
+let experimentalRSCWarningShown = false
 export async function unstable_getServerSession(
   ...args:
     | [
@@ -92,6 +94,7 @@ export async function unstable_getServerSession(
         NextAuthOptions
       ]
     | [NextApiRequest, NextApiResponse, NextAuthOptions]
+    | [NextAuthOptions]
 ): Promise<Session | null> {
   if (!experimentalWarningShown && process.env.NODE_ENV !== "production") {
     console.warn(
@@ -103,11 +106,37 @@ export async function unstable_getServerSession(
     experimentalWarningShown = true
   }
 
-  const [req, res, options] = args
+  const isRSC = args.length === 1
+  if (
+    !experimentalRSCWarningShown &&
+    isRSC &&
+    process.env.NODE_ENV !== "production"
+  ) {
+    console.warn(
+      "[next-auth][warn][EXPERIMENTAL_API]",
+      "\n`unstable_getServerSession` is used in a React Server Component.",
+      `\nhttps://next-auth.js.org/configuration/nextjs#unstable_getServerSession}`,
+      `\nhttps://next-auth.js.org/warnings#EXPERIMENTAL_API`
+    )
+    experimentalRSCWarningShown = true
+  }
+
+  const [req, res, options] = isRSC
+    ? [
+        {
+          headers: headers(),
+          cookies: nextCookies()
+            .getAll()
+            .reduce((acc, c) => ({ ...acc, [c.name]: c.value }), {}),
+        } as any,
+        { getHeader() {}, setCookie() {}, setHeader() {} } as any,
+        args[0],
+      ]
+    : args
 
   options.secret = options.secret ?? process.env.NEXTAUTH_SECRET
 
-  const session = await NextAuthHandler<Session | {}>({
+  const session = await NextAuthHandler<Session | {} | string>({
     options,
     req: {
       host: detectHost(req.headers["x-forwarded-host"]),
@@ -118,11 +147,19 @@ export async function unstable_getServerSession(
     },
   })
 
-  const { body, cookies } = session
+  const { body, cookies, status = 200 } = session
 
   cookies?.forEach((cookie) => setCookie(res, cookie))
 
-  if (body && Object.keys(body).length) return body as Session
+  if (body && typeof body !== "string" && Object.keys(body).length) {
+    if (status === 200) {
+      // @ts-expect-error
+      if (isRSC) delete body.expires
+      return body as Session
+    }
+    throw new Error((body as any).message)
+  }
+
   return null
 }
 
