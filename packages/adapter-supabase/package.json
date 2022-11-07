@@ -24,13 +24,13 @@
     "test": "./tests/test.sh"
   },
   "peerDependencies": {
-    "@supabase/supabase-js": "^1.35.4",
+    "@supabase/supabase-js": "^2.0.5",
     "next-auth": "workspace:*"
   },
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:^0.0.0",
     "@next-auth/tsconfig": "workspace:^0.0.0",
-    "@supabase/supabase-js": "^1.35.4",
+    "@supabase/supabase-js": "^2.0.5",
     "jest": "^27.4.3",
     "next-auth": "workspace:*"
   },

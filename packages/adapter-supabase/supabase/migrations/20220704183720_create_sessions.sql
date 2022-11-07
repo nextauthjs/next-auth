@@ -19,6 +19,9 @@ CREATE TABLE IF NOT EXISTS public.sessions
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.sessions
+    ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE IF EXISTS public.sessions
     OWNER to postgres;
 
 GRANT ALL ON TABLE public.sessions TO authenticated;

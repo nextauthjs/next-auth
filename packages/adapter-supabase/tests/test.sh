@@ -6,10 +6,10 @@ if [ "$CI" = true ]; then
 	sudo dpkg -i supabase.deb
 fi
 
-# Start Supabase, grep key and set it as SUPABASE_KEY environment variable
+# Start Supabase, grep key and set it as SUPABASE_SERVICE_ROLE_KEY environment variable
 line=$(supabase start | grep 'service_role key')
 IFS=':'; arr=($line); unset IFS;
-export SUPABASE_KEY=${arr[1]}
+export SUPABASE_SERVICE_ROLE_KEY=${arr[1]}
 
 # Always stop Supabase, but exit with 1 when tests are failing
 if npx jest; then

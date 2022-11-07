@@ -29,6 +29,9 @@ CREATE TABLE IF NOT EXISTS public.accounts
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.accounts
+    ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE IF EXISTS public.accounts
     OWNER to postgres;
 
 GRANT ALL ON TABLE public.accounts TO authenticated;

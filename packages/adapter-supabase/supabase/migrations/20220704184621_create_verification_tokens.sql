@@ -15,6 +15,9 @@ CREATE TABLE IF NOT EXISTS public.verification_tokens
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.verification_tokens
+    ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE IF EXISTS public.verification_tokens
     OWNER to postgres;
 
 GRANT ALL ON TABLE public.verification_tokens TO authenticated;

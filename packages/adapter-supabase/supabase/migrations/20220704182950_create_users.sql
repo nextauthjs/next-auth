@@ -16,6 +16,9 @@ CREATE TABLE IF NOT EXISTS public.users
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.users
+    ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE IF EXISTS public.users
     OWNER to postgres;
 
 GRANT ALL ON TABLE public.users TO authenticated;

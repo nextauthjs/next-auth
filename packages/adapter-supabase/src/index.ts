@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
+import { Database } from "./database.types"
 import {
   Adapter,
   AdapterSession,
@@ -26,10 +27,15 @@ export function format<T>(obj: Record<string, any>): T {
   return obj as T
 }
 
-export const SupabaseAdapter = (supabase: SupabaseClient): Adapter => {
+export const SupabaseAdapter = (supabaseClient: SupabaseClient): Adapter => {
+  const supabase = supabaseClient as SupabaseClient<Database>
   return {
     async createUser(user) {
-      const { data, error } = await supabase.from("users").insert(user).single()
+      const { data, error } = await supabase
+        .from("users")
+        .insert(user)
+        .select()
+        .single()
 
       if (error) throw error
 
@@ -74,8 +80,12 @@ export const SupabaseAdapter = (supabase: SupabaseClient): Adapter => {
     async updateUser(user) {
       const { data, error } = await supabase
         .from("users")
-        .update(user)
+        .update({
+          ...user,
+          emailVerified: user.emailVerified?.toISOString(),
+        })
         .eq("id", user.id)
+        .select()
         .single()
 
       if (error) throw error
@@ -103,7 +113,8 @@ export const SupabaseAdapter = (supabase: SupabaseClient): Adapter => {
     async createSession({ sessionToken, userId, expires }) {
       const { data, error } = await supabase
         .from("sessions")
-        .insert({ sessionToken, userId, expires })
+        .insert({ sessionToken, userId, expires: expires.toISOString() })
+        .select()
         .single()
 
       if (error) throw error
@@ -123,15 +134,21 @@ export const SupabaseAdapter = (supabase: SupabaseClient): Adapter => {
       const { users: user, ...session } = data
 
       return {
-        user: format<AdapterUser>(user),
+        user: format<AdapterUser>(
+          user as Database["public"]["Tables"]["users"]["Row"]
+        ),
         session: format<AdapterSession>(session),
       }
     },
     async updateSession(session) {
       const { data, error } = await supabase
         .from("sessions")
-        .update(session)
+        .update({
+          ...session,
+          expires: session.expires?.toISOString(),
+        })
         .eq("sessionToken", session.sessionToken)
+        .select()
         .single()
 
       if (error) throw error
@@ -149,7 +166,11 @@ export const SupabaseAdapter = (supabase: SupabaseClient): Adapter => {
     async createVerificationToken(token) {
       const { data, error } = await supabase
         .from("verification_tokens")
-        .insert(token)
+        .insert({
+          ...token,
+          expires: token.expires.toISOString(),
+        })
+        .select()
         .single()
 
       if (error) throw error
@@ -161,8 +182,9 @@ export const SupabaseAdapter = (supabase: SupabaseClient): Adapter => {
     async useVerificationToken({ identifier, token }) {
       const { data, error } = await supabase
         .from("verification_tokens")
-        .delete({ returning: "representation" })
+        .delete()
         .match({ identifier, token })
+        .select()
         .maybeSingle()
 
       if (error) throw error
