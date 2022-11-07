@@ -27,7 +27,7 @@ export default async function getAuthorizationUrl({
 
   if (typeof provider.authorization === "string") {
     const parsedUrl = new URL(provider.authorization)
-    const parsedParams = Object.fromEntries(parsedUrl.searchParams.entries())
+    const parsedParams = Object.fromEntries(parsedUrl.searchParams)
     params = { ...params, ...parsedParams }
   } else {
     params = { ...params, ...provider.authorization?.params }
