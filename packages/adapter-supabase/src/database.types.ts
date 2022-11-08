@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export interface Database {
-  public: {
+  next_auth: {
     Tables: {
       accounts: {
         Row: {
@@ -127,7 +127,10 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      uid: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never

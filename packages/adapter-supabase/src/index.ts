@@ -27,8 +27,10 @@ export function format<T>(obj: Record<string, any>): T {
   return obj as T
 }
 
-export const SupabaseAdapter = (supabaseClient: SupabaseClient): Adapter => {
-  const supabase = supabaseClient as SupabaseClient<Database>
+export const SupabaseAdapter = (
+  supabaseClient: SupabaseClient<any, "next_auth">
+): Adapter => {
+  const supabase = supabaseClient as SupabaseClient<Database, "next_auth">
   return {
     async createUser(user) {
       const { data, error } = await supabase
@@ -135,7 +137,7 @@ export const SupabaseAdapter = (supabaseClient: SupabaseClient): Adapter => {
 
       return {
         user: format<AdapterUser>(
-          user as Database["public"]["Tables"]["users"]["Row"]
+          user as Database["next_auth"]["Tables"]["users"]["Row"]
         ),
         session: format<AdapterSession>(session),
       }
