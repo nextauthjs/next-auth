@@ -1,5 +1,6 @@
 import NextAuth from "next-auth"
 import type { NextAuthOptions } from "next-auth"
+import jwt from "jsonwebtoken"
 
 // Providers
 import Apple from "next-auth/providers/apple"
@@ -42,6 +43,8 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { Client as FaunaClient } from "faunadb"
 import { FaunaAdapter } from "@next-auth/fauna-adapter"
 import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
+import { SupabaseAdapter } from "@next-auth/supabase-adapter"
+import { createClient } from "@supabase/supabase-js"
 
 // Add an adapter you want to test here.
 const adapters = {
@@ -68,6 +71,10 @@ const adapters = {
     if (process.env.NODE_ENV !== "production") global.fauna = client
     return FaunaAdapter(client)
   },
+  supabase() {
+    const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, { db: { schema: "next_auth" } })
+    return SupabaseAdapter(supabase)
+  },
   noop() {
     return undefined
   },
@@ -75,6 +82,23 @@ const adapters = {
 
 export const authOptions: NextAuthOptions = {
   adapter: adapters.noop(),
+  callbacks: {
+    async session({ session, user }) {
+      // NOTE: this is needed when using Supabase with RLS. Otherwise this callback can be removed.
+      const signingSecret = process.env.SUPABASE_JWT_SECRET
+      if (signingSecret) {
+        const payload = {
+          aud: "authenticated",
+          exp: Math.floor(new Date(session.expires).getTime() / 1000),
+          sub: user.id,
+          email: user.email,
+          role: "authenticated",
+        }
+        session.supabase_access_token = jwt.sign(payload, signingSecret)
+      }
+      return session
+    },
+  },
   debug: true,
   theme: {
     logo: "https://next-auth.js.org/img/logo/logo-sm.png",

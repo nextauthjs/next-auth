@@ -7,7 +7,7 @@ project_id = "nextauth"
 port = 54321
 # Schemas to expose in your API. Tables, views and stored procedures in this schema will get API
 # endpoints. public and storage are always included.
-schemas = []
+schemas = ["next_auth"]
 # Extra schemas to add to the search_path of every request.
 extra_search_path = ["extensions"]
 # The maximum number of rows returns from a view, table, or stored procedure. Limits payload size
