@@ -58,10 +58,8 @@ async function toInternalRequest(
     const url = new URL(req.url)
     // TODO: handle custom paths?
     const nextauth = url.pathname.split("/").slice(3)
-    const headers = Object.fromEntries(req.headers.entries())
-    const query: Record<string, any> = Object.fromEntries(
-      url.searchParams.entries()
-    )
+    const headers = Object.fromEntries(req.headers)
+    const query: Record<string, any> = Object.fromEntries(url.searchParams)
     query.nextauth = nextauth
 
     return {

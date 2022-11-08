@@ -84,6 +84,7 @@ function NextAuth(
 export default NextAuth
 
 let experimentalWarningShown = false
+let experimentalRSCWarningShown = false
 export async function unstable_getServerSession(
   ...args:
     | [
@@ -92,6 +93,8 @@ export async function unstable_getServerSession(
         NextAuthOptions
       ]
     | [NextApiRequest, NextApiResponse, NextAuthOptions]
+    | [NextAuthOptions]
+    | []
 ): Promise<Session | null> {
   if (!experimentalWarningShown && process.env.NODE_ENV !== "production") {
     console.warn(
@@ -103,7 +106,40 @@ export async function unstable_getServerSession(
     experimentalWarningShown = true
   }
 
-  const [req, res, options] = args
+  const isRSC = args.length === 0 || args.length === 1
+  if (
+    !experimentalRSCWarningShown &&
+    isRSC &&
+    process.env.NODE_ENV !== "production"
+  ) {
+    console.warn(
+      "[next-auth][warn][EXPERIMENTAL_API]",
+      "\n`unstable_getServerSession` is used in a React Server Component.",
+      `\nhttps://next-auth.js.org/configuration/nextjs#unstable_getServerSession}`,
+      `\nhttps://next-auth.js.org/warnings#EXPERIMENTAL_API`
+    )
+    experimentalRSCWarningShown = true
+  }
+
+  let req, res, options: NextAuthOptions
+  if (isRSC) {
+    options = args[0] ?? { providers: [] }
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const { headers, cookies } = require("next/headers")
+    req = {
+      headers: Object.fromEntries(headers() as Headers),
+      cookies: Object.fromEntries(
+        cookies()
+          .getAll()
+          .map((c) => [c.name, c.value])
+      ),
+    }
+    res = { getHeader() {}, setCookie() {}, setHeader() {} }
+  } else {
+    req = args[0]
+    res = args[1]
+    options = args[2]
+  }
 
   options.secret = options.secret ?? process.env.NEXTAUTH_SECRET
 
@@ -123,7 +159,11 @@ export async function unstable_getServerSession(
   cookies?.forEach((cookie) => setCookie(res, cookie))
 
   if (body && typeof body !== "string" && Object.keys(body).length) {
-    if (status === 200) return body as Session
+    if (status === 200) {
+      // @ts-expect-error
+      if (isRSC) delete body.expires
+      return body as Session
+    }
     throw new Error((body as any).message)
   }
 
