@@ -12,11 +12,11 @@ Otherwise, if you only want to get the session token, see [`getToken`](/tutorial
 
 `unstable_getServerSession` requires passing the same object you would pass to `NextAuth` when initializing NextAuth.js. To do so, you can export your NextAuth.js options in the following way:
 
-In `[...nextauth.js]`:
+In `[...nextauth].ts`:
 ```ts
 import { NextAuth } from 'next-auth'
 import type { NextAuthOptions } from 'next-auth'
- 
+
 export const authOptions: NextAuthOptions = {
   // your configs
 }
@@ -24,9 +24,9 @@ export const authOptions: NextAuthOptions = {
 export default NextAuth(authOptions);
 ```
 
-In `getServerSideProps`:
+### In `getServerSideProps`:
 ```js
-import { authOptions } from 'pages/api/[...nextauth]'
+import { authOptions } from 'pages/api/auth/[...nextauth]'
 import { unstable_getServerSession } from "next-auth/next"
 
 export async function getServerSideProps(context) {
@@ -48,9 +48,10 @@ export async function getServerSideProps(context) {
   }
 }
 ```
-In API routes:
+
+### In API Routes:
 ```js
-import { authOptions } from 'pages/api/[...nextauth]'
+import { authOptions } from 'pages/api/auth/[...nextauth]'
 import { unstable_getServerSession } from "next-auth/next"
 
 
@@ -67,6 +68,23 @@ export async function handler(req, res) {
   })
 }
 ```
+
+### In `app/` directory:
+
+You can also use `unstable_getServerSession` in Next.js' server components:
+
+```tsx
+import { unstable_getServerSession } from "next-auth/next"
+
+export default async function Page() {
+  const session = await unstable_getServerSession()
+  return <pre>{JSON.stringify(session, null, 2)}</pre>
+}
+```
+
+:::warning
+Currently, the underlying Next.js `cookies()` method does [only provides read access](https://beta.nextjs.org/docs/api-reference/cookies) to the request cookies. This means that the `expires` value is stripped away from `session` in Server Components. Furthermore, there is a hard expiry on sessions, after which the user will be required to sign in again. (The default expiry is 30 days).
+:::
 
 ## Middleware
 
@@ -145,8 +163,8 @@ This should match the `pages` configuration that's found in `[...nextauth].ts`.
 
 ```js
 pages: {
-  signIn: '/auth/signin',
-  error: '/auth/error',
+  signIn: '/api/auth/signin',
+  error: '/api/auth/error',
 }
 ```
 
@@ -160,7 +178,7 @@ See the documentation for the [pages option](/configuration/pages) for more info
 
 #### Description
 
-The same `secret` used in the [NextAuth config](/configuration/options#options).
+The same `secret` used in the [NextAuth.js config](/configuration/options#options).
 
 #### Example (default value)
 

@@ -1,5 +1,5 @@
 {
-  "extends": "@next-auth/tsconfig/base.json",
+  "extends": "@next-auth/tsconfig/tsconfig.base.json",
   "compilerOptions": {
     "emitDeclarationOnly": true,
     "strictNullChecks": true,
@@ -15,9 +15,19 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "outDir": ".",
+    "rootDir": "src",
     "paths": {
-      "next": ["node_modules/next"]
+      "next": ["node_modules/next"],
+      "react": ["node_modules/react"]
     }
   },
-  "exclude": ["./*.js", "./*.d.ts", "config", "**/__tests__", "tests"]
+  "include": ["src/**/*", "tests/**/*", "config/**/*"],
+  "exclude": [
+    "./*.js",
+    "./*.d.ts",
+    "./config",
+    "./tests",
+    "./coverage",
+    "./**/__test__"
+  ]
 }

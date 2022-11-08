@@ -1,6 +1,6 @@
 {
   "name": "next-auth",
-  "version": "4.10.2",
+  "version": "4.16.4",
   "description": "Authentication for Next.js",
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/next-auth.git",
@@ -38,17 +38,16 @@
   },
   "scripts": {
     "build": "pnpm clean && pnpm build:js && pnpm build:css",
-    "clean": "rm -rf client css utils providers core jwt react next index.d.ts index.js adapters.d.ts middleware.d.ts middleware.js",
-    "build:js": "pnpm clean && pnpm generate-providers && tsc && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
+    "build:js": "pnpm clean && pnpm generate-providers && pnpm tsc --project tsconfig.json && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
+    "clean": "rm -rf coverage client css utils providers core jwt react next index.d.ts index.js adapters.d.ts middleware.d.ts middleware.js",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir . && node config/wrap-css.js",
+    "dev": "pnpm clean && pnpm generate-providers && concurrently \"pnpm watch:css\" \"pnpm watch:ts\"",
+    "watch:ts": "pnpm tsc --project tsconfig.dev.json",
     "watch:css": "postcss --config config/postcss.config.js --watch src/**/*.css --base src --dir .",
-    "test:client": "jest --config ./config/jest.client.config.js",
-    "test:core": "jest --config ./config/jest.core.config.js",
-    "test": "pnpm test:core && pnpm test:client",
+    "test": "jest --config ./config/jest.config.js",
     "prepublishOnly": "pnpm build",
     "generate-providers": "node ./config/generate-providers.js",
-    "setup": "pnpm generate-providers",
-    "lint": "eslint src config"
+    "lint": "eslint src config tests"
   },
   "files": [
     "lib",
@@ -70,8 +69,8 @@
   "dependencies": {
     "@babel/runtime": "^7.16.3",
     "@panva/hkdf": "^1.0.1",
-    "cookie": "^0.4.1",
-    "jose": "^4.3.7",
+    "cookie": "^0.5.0",
+    "jose": "^4.9.3",
     "oauth": "^0.9.15",
     "openid-client": "^5.1.0",
     "preact": "^10.6.3",
@@ -79,6 +78,7 @@
     "uuid": "^8.3.2"
   },
   "peerDependencies": {
+    "next": "^12.2.5 || ^13",
     "nodemailer": "^6.6.5",
     "react": "^17.0.2 || ^18",
     "react-dom": "^17.0.2 || ^18"
@@ -96,7 +96,8 @@
     "@babel/preset-env": "^7.18.2",
     "@babel/preset-react": "^7.17.12",
     "@babel/preset-typescript": "^7.17.12",
-    "@next-auth/tsconfig": "workspace:^0.0.0",
+    "@edge-runtime/jest-environment": "1.1.0-beta.35",
+    "@next-auth/tsconfig": "workspace:*",
     "@swc/core": "^1.2.198",
     "@swc/jest": "^0.2.21",
     "@testing-library/dom": "^8.13.0",
@@ -113,12 +114,13 @@
     "autoprefixer": "^10.4.7",
     "babel-plugin-jsx-pragmatic": "^1.0.2",
     "babel-preset-preact": "^2.0.0",
+    "concurrently": "^7",
     "cssnano": "^5.1.11",
     "jest": "^28.1.1",
     "jest-environment-jsdom": "^28.1.1",
     "jest-watch-typeahead": "^1.1.0",
     "msw": "^0.42.3",
-    "next": "12.2.0",
+    "next": "13.0.2",
     "postcss": "^8.4.14",
     "postcss-cli": "^9.1.0",
     "postcss-nested": "^5.0.6",
@@ -127,16 +129,6 @@
     "whatwg-fetch": "^3.6.2"
   },
   "engines": {
-    "node": "^12.19.0 || ^14.15.0 || ^16.13.0"
-  },
-  "eslintConfig": {
-    "parserOptions": {
-      "project": "./tsconfig.eslint.json"
-    }
-  },
-  "eslintIgnore": [
-    "./*.d.ts",
-    "**/tests",
-    "**/__tests__"
-  ]
+    "node": "^12.19.0 || ^14.15.0 || ^16.13.0 || ^18.12.0"
+  }
 }

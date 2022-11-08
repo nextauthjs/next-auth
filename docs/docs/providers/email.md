@@ -15,6 +15,7 @@ The Email provider can be used in conjunction with (or instead of) one or more O
 
 On initial sign in, a **Verification Token** is sent to the email address provided. By default this token is valid for 24 hours. If the Verification Token is used within that time (i.e. by clicking on the link in the email) an account is created for the user and they are signed in.
 
+
 If someone provides the email address of an _existing account_ when signing in, an email is sent and they are signed into the account associated with that email address when they follow the link in the email.
 
 :::tip
@@ -32,7 +33,7 @@ You can override any of the options to suit your own use case.
 ## Configuration
 
 1. NextAuth.js does not include `nodemailer` as a dependency, so you'll need to install it yourself if you want to use the Email Provider. Run `npm install nodemailer` or `yarn add nodemailer`.
-2. You will need an SMTP account; ideally for one of the [services known to work with `nodemailer`](http://nodemailer.com/smtp/well-known/).
+2. You will need an SMTP account; ideally for one of the [services known to work with `nodemailer`](https://community.nodemailer.com/2-0-0-beta/setup-smtp/well-known-services/).
 3. There are two ways to configure the SMTP server connection.
 
 You can either use a connection string or a `nodemailer` configuration object.
@@ -71,7 +72,7 @@ EMAIL_SERVER_PORT=587
 EMAIL_FROM=noreply@example.com
 ```
 
-Now you can add the provider settings to the NextAuth options object in the Email Provider.
+Now you can add the provider settings to the NextAuth.js options object in the Email Provider.
 
 ```js title="pages/api/auth/[...nextauth].js"
 import EmailProvider from "next-auth/providers/email";
@@ -223,3 +224,31 @@ providers: [
   })
 ],
 ```
+
+## Normalizing the email address
+
+By default, NextAuth.js will normalize the email address. It treats values as case-insensitive (which is technically not compliant to the [RFC 2821 spec](https://datatracker.ietf.org/doc/html/rfc2821), but in practice this causes more problems than it solves, eg. when looking up users by e-mail from databases.) and also removes any secondary email address that was passed in as a comma-separated list. You can apply your own normalization via the `normalizeIdentifier` method on the `EmailProvider`. The following example shows the default behavior:
+```ts
+  EmailProvider({
+    // ...
+    normalizeIdentifier(identifier: string): string {
+      // Get the first two elements only,
+      // separated by `@` from user input.
+      let [local, domain] = identifier.toLowerCase().trim().split("@")
+      // The part before "@" can contain a ","
+      // but we remove it on the domain part
+      domain = domain.split(",")[0]
+      return `${local}@${domain}`
+
+      // You can also throw an error, which will redirect the user
+      // to the error page with error=EmailSignin in the URL
+      // if (identifier.split("@").length > 2) {
+      //   throw new Error("Only one email allowed")
+      // }
+    },
+  })
+```
+
+:::warning
+Always make sure this returns a single e-mail address, even if multiple ones were passed in.
+:::

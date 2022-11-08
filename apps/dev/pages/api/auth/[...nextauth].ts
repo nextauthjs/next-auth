@@ -100,7 +100,7 @@ export const authOptions: NextAuthOptions = {
       return session
     },
   },
-  debug: true,
+  debug: process.env.NODE_ENV !== "production",
   theme: {
     logo: "https://next-auth.js.org/img/logo/logo-sm.png",
     brandColor: "#1786fb",

@@ -51,6 +51,9 @@ typeorm-legacy:
 upstash-redis:
   - packages/adapter-upstash-redis/**
 
+xata:
+  - packages/adapter-xata/**
+
 core:
   - packages/next-auth/src/**/*
 
