@@ -24,6 +24,7 @@ import Instagram from "next-auth/providers/instagram"
 import Keycloak from "next-auth/providers/keycloak"
 import Line from "next-auth/providers/line"
 import LinkedIn from "next-auth/providers/linkedin"
+import Notion from "next-auth/providers/notion"
 import Mailchimp from "next-auth/providers/mailchimp"
 import Okta from "next-auth/providers/okta"
 import Osu from "next-auth/providers/osu"
@@ -100,6 +101,7 @@ export const authOptions: NextAuthOptions = {
     Keycloak({ clientId: process.env.KEYCLOAK_ID, clientSecret: process.env.KEYCLOAK_SECRET, issuer: process.env.KEYCLOAK_ISSUER }),
     Line({ clientId: process.env.LINE_ID, clientSecret: process.env.LINE_SECRET }),
     LinkedIn({ clientId: process.env.LINKEDIN_ID, clientSecret: process.env.LINKEDIN_SECRET }),
+    Notion({ clientId: process.env.NOTION_ID, clientSecret: process.env.NOTION_SECRET }),
     Mailchimp({ clientId: process.env.MAILCHIMP_ID, clientSecret: process.env.MAILCHIMP_SECRET }),
     Okta({ clientId: process.env.OKTA_ID, clientSecret: process.env.OKTA_SECRET, issuer: process.env.OKTA_ISSUER }),
     Osu({ clientId: process.env.OSU_CLIENT_ID, clientSecret: process.env.OSU_CLIENT_SECRET }),
