@@ -91,14 +91,10 @@ export default function Header() {
             <Link href="/middleware-protected">Middleware protected</Link>
           </li>
           <li className={styles.navItem}>
-            <Link href="/supabase-client-rls">
-              <a>Supabase RLS</a>
-            </Link>
+            <Link href="/supabase-client-rls">Supabase RLS</Link>
           </li>
           <li className={styles.navItem}>
-            <Link href="/supabase-ssr">
-              <a>Supabase RLS(SSR)</a>
-            </Link>
+            <Link href="/supabase-ssr">Supabase RLS(SSR)</Link>
           </li>
         </ul>
       </nav>

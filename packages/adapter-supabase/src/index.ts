@@ -44,7 +44,10 @@ export const SupabaseAdapter = ({
     async createUser(user) {
       const { data, error } = await supabase
         .from("users")
-        .insert(user)
+        .insert({
+          ...user,
+          emailVerified: user.emailVerified?.toISOString(),
+        })
         .select()
         .single()
 
