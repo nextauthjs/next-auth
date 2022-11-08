@@ -11,13 +11,13 @@ export default function Page() {
     if (session) {
       console.log(session)
       // User is logged in, let's fetch their data.
-      const { supabase_access_token } = session
+      const { supabaseAccessToken } = session
       const supabase = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL,
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
         {
           global: {
-            headers: { Authorization: `Bearer ${supabase_access_token}` },
+            headers: { Authorization: `Bearer ${supabaseAccessToken}` },
           },
         }
       )

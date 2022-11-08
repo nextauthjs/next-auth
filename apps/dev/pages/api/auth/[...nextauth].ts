@@ -44,7 +44,6 @@ import { Client as FaunaClient } from "faunadb"
 import { FaunaAdapter } from "@next-auth/fauna-adapter"
 import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
 import { SupabaseAdapter } from "@next-auth/supabase-adapter"
-import { createClient } from "@supabase/supabase-js"
 
 // Add an adapter you want to test here.
 const adapters = {
@@ -72,8 +71,10 @@ const adapters = {
     return FaunaAdapter(client)
   },
   supabase() {
-    const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, { db: { schema: "next_auth" } })
-    return SupabaseAdapter(supabase)
+    return SupabaseAdapter({
+      url: process.env.NEXT_PUBLIC_SUPABASE_URL,
+      secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    })
   },
   noop() {
     return undefined
@@ -94,7 +95,7 @@ export const authOptions: NextAuthOptions = {
           email: user.email,
           role: "authenticated",
         }
-        session.supabase_access_token = jwt.sign(payload, signingSecret)
+        session.supabaseAccessToken = jwt.sign(payload, signingSecret)
       }
       return session
     },

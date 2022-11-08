@@ -1,4 +1,4 @@
-import type { SupabaseClient } from "@supabase/supabase-js"
+import { createClient } from "@supabase/supabase-js"
 import { Database } from "./database.types"
 import {
   Adapter,
@@ -27,10 +27,19 @@ export function format<T>(obj: Record<string, any>): T {
   return obj as T
 }
 
-export const SupabaseAdapter = (
-  supabaseClient: SupabaseClient<any, "next_auth">
-): Adapter => {
-  const supabase = supabaseClient as SupabaseClient<Database, "next_auth">
+export const SupabaseAdapter = ({
+  url,
+  secret,
+}: {
+  url: string
+  secret: string
+}): Adapter => {
+  const supabase = createClient<Database, "next_auth">(url, secret, {
+    db: { schema: "next_auth" },
+    global: {
+      headers: { "X-Client-Info": "@next-auth/supabase-adapter@0.1.0" },
+    },
+  })
   return {
     async createUser(user) {
       const { data, error } = await supabase

@@ -42,7 +42,7 @@ export async function getServerSideProps(context) {
       },
     }
 
-  const { supabase_access_token } = session
+  const { supabaseAccessToken } = session
 
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -50,7 +50,7 @@ export async function getServerSideProps(context) {
     {
       global: {
         headers: {
-          Authorization: `Bearer ${supabase_access_token}`,
+          Authorization: `Bearer ${supabaseAccessToken}`,
         },
       },
     }
