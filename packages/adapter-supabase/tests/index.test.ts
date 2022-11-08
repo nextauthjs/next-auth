@@ -16,7 +16,12 @@ const supabase = createClient(
 )
 
 runBasicTests({
-  adapter: SupabaseAdapter(supabase),
+  adapter: SupabaseAdapter({
+    url: process.env.SUPABASE_URL ?? "http://localhost:54321",
+    secret:
+      process.env.SUPABASE_SERVICE_ROLE_KEY ??
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSJ9.vI9obAHOGyVVKa3pD--kJlyxp-Z2zV9UUMAhKpNLAcU",
+  }),
   db: {
     async session(sessionToken) {
       const { data, error } = await supabase

@@ -32,13 +32,6 @@ npm install @supabase/supabase-js next-auth @next-auth/supabase-adapter
 ```js
 import NextAuth from "next-auth"
 import { SupabaseAdapter } from "@next-auth/supabase-adapter"
-import { createClient } from "@supabase/supabase-js"
-
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY,
-  { db: { schema: "next_auth" } }
-)
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
@@ -47,7 +40,10 @@ export default NextAuth({
   providers: [
     // ...
   ],
-  adapter: SupabaseAdapter(supabase),
+  adapter: SupabaseAdapter({
+    url: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
+  }),
   // ...
 })
 ```

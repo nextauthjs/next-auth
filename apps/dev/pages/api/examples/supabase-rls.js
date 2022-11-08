@@ -10,7 +10,7 @@ export default async (req, res) => {
   if (!session)
     return res.send(JSON.stringify({ error: "No session!" }, null, 2))
 
-  const { supabase_access_token } = session
+  const { supabaseAccessToken } = session
 
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -18,7 +18,7 @@ export default async (req, res) => {
     {
       global: {
         headers: {
-          Authorization: `Bearer ${supabase_access_token}`,
+          Authorization: `Bearer ${supabaseAccessToken}`,
         },
       },
     }
@@ -26,5 +26,5 @@ export default async (req, res) => {
   // Now you can query with RLS enabled.
   const { data, error } = await supabase.from("users").select("*")
 
-  res.send(JSON.stringify({ supabase_access_token, data, error }, null, 2))
+  res.send(JSON.stringify({ supabaseAccessToken, data, error }, null, 2))
 }
