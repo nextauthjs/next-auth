@@ -1,7 +1,6 @@
 --
 -- Name: next_auth; Type: SCHEMA; Schema: -; Owner: supabase_admin
 --
-
 CREATE SCHEMA next_auth;
 
 ALTER SCHEMA next_auth OWNER TO supabase_admin;

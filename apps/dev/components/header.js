@@ -108,6 +108,16 @@ export default function Header() {
               <a>Middleware protected</a>
             </Link>
           </li>
+          <li className={styles.navItem}>
+            <Link href="/supabase-client-rls">
+              <a>Supabase RLS</a>
+            </Link>
+          </li>
+          <li className={styles.navItem}>
+            <Link href="/supabase-ssr">
+              <a>Supabase RLS(SSR)</a>
+            </Link>
+          </li>
         </ul>
       </nav>
     </header>
