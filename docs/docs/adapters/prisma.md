@@ -60,7 +60,7 @@ You need to use at least Prisma 2.26.0. Create a schema file in `prisma/schema.p
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  shadowDatabaseUrl = env("SHADOW_DATABASE_URL") // Only needed when using a cloud provider that doesn't support the creation of new databases, like Heroku. Learn more: https://pris.ly/migrate-shadow
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL") // Only needed when using a cloud provider that doesn't support the creation of new databases, like Heroku. Learn more: https://www.prisma.io/docs/concepts/components/prisma-migrate/shadow-database
 }
 
 generator client {
