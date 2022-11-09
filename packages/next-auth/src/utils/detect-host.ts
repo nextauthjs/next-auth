@@ -1,8 +1,12 @@
 /** Extract the host from the environment */
-export function detectHost(forwardedHost: any) {
-  if (process.env.VERCEL ?? process.env.AUTH_TRUST_HOST) return forwardedHost
+export function detectHost(
+  trusted: boolean,
+  forwardedValue: string | string[] | undefined | null,
+  defaultValue: string | false
+): string | undefined {
+  if (trusted && forwardedValue) {
+    return Array.isArray(forwardedValue) ? forwardedValue[0] : forwardedValue
+  }
 
-  return process.env.NEXTAUTH_URL ?? process.env.NODE_ENV !== "production"
-    ? "http://localhost:3000"
-    : undefined
+  return defaultValue || undefined
 }
