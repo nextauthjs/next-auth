@@ -166,7 +166,7 @@ When developing locally add `next_auth` to the `schemas` array in the `config.to
 
 ## Enabling Row Level Security (RLS)
 
-Postgres provides a powerful feature called [Row Level Security (RSL)](https://supabase.com/docs/guides/auth/row-level-security?utm_source=next-auth-docs&medium=referral&campaign=next-auth) to limit access to data.
+Postgres provides a powerful feature called [Row Level Security (RLS)](https://supabase.com/docs/guides/auth/row-level-security?utm_source=next-auth-docs&medium=referral&campaign=next-auth) to limit access to data.
 
 This works by sending a signed JWT to your [Supabase Serverless API](https://supabase.com/docs/guides/api?utm_source=next-auth-docs&medium=referral&campaign=next-auth). There is two steps to make this work with NextAuth:
 
