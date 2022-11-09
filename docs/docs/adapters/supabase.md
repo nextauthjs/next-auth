@@ -278,3 +278,38 @@ const supabase = createClient(
 // Now you can query with RLS enabled.
 const { data, error } = await supabase.from("users").select("*")
 ```
+
+## Usage with TypeScript
+
+You can pass types that were [generated with the Supabase CLI](/docs/reference/javascript/typescript-support#generating-types) to the Supabase Client to get enhanced type safety and auto completion.
+
+Creating a new supabase client object:
+
+```tsx
+import { createClient } from "@supabase/supabase-js"
+import { Database } from "../database.types"
+
+const supabase = createClient<Database>()
+```
+
+### Extend the session type with the `supabaseAccessToken`
+
+In order to extend the `session` object with the `supabaseAccessToken` we need to extend the `session` interface in a `types/next-auth.d.ts` file:
+
+```ts title="types/next-auth.d.ts"
+import NextAuth, { DefaultSession } from "next-auth"
+
+declare module "next-auth" {
+  /**
+   * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
+   */
+  interface Session {
+    // A JWT which can be used as Authorization header with supabase-js for RLS.
+    supabaseAccessToken?: string
+    user: {
+      /** The user's postal address. */
+      address: string
+    } & DefaultSession["user"]
+  }
+}
+```
