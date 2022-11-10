@@ -35,7 +35,6 @@ providers: [
   ZitadelProvider({
     issuer: process.env.ZITADEL_ISSUER,
     clientId: process.env.ZITADEL_CLIENT_ID,
-    clientSecret: process.env.ZITADEL_CLIENT_SECRET,
   })
 ]
 ...

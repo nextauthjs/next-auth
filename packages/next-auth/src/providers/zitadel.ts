@@ -24,10 +24,18 @@ export interface ZitadelProfile extends Record<string, any> {
   sub: string // Subject ID of the user
 }
 
+type ZitadelConfig<P> = Omit<OAuthUserConfig<P>, "clientSecret"> & {
+  /**
+   * ZITADEL only requires a client secret when used with a POST Authentication Method
+   */
+  clientSecret?: string
+}
+
 export default function Zitadel<P extends ZitadelProfile>(
-  options: OAuthUserConfig<P>
+  config: ZitadelConfig<P>
 ): OAuthConfig<P> {
-  const { issuer } = options
+  const { issuer, clientSecret } = config
+  const options = { ...config, clientSecret: clientSecret ?? "" }
 
   return {
     id: "zitadel",
@@ -38,6 +46,9 @@ export default function Zitadel<P extends ZitadelProfile>(
     authorization: { params: { scope: "openid email profile" } },
     idToken: true,
     checks: ["pkce", "state"],
+    client: {
+      token_endpoint_auth_method: "none",
+    },
     async profile(profile) {
       return {
         id: profile.sub,
