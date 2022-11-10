@@ -1,0 +1,50 @@
+{
+  "name": "@next-auth/edgedb-adapter",
+  "version": "0.1.0",
+  "description": "EdgeDB adapter for next-auth.",
+  "homepage": "https://next-auth.js.org",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "Bruno Crosier",
+  "main": "dist/src/index.js",
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "oauth",
+    "edgedb"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "generate": "npx @edgedb/generate edgeql-js --out src/dbschema"
+  },
+  "files": [
+    "README.md",
+    "dist"
+  ],
+  "peerDependencies": {
+    "edgedb": "^1.0.1",
+    "next-auth": "^4"
+  },
+  "devDependencies": {
+    "@edgedb/generate": "^0.0.4",
+    "@next-auth/adapter-test": "workspace:^0.0.0",
+    "@next-auth/tsconfig": "workspace:^0.0.0",
+    "jest": "^27.4.3",
+    "next-auth": "workspace:*",
+    "typescript": "^4.7.4"
+  },
+  "jest": {
+    "preset": "@next-auth/adapter-test/jest"
+  },
+  "dependencies": {
+    "edgedb": "^1.0.1"
+  }
+}
