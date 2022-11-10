@@ -23,7 +23,7 @@
   "scripts": {
     "build": "tsc",
     "test": "jest",
-    "generate": "npx @edgedb/generate edgeql-js --out src/dbschema"
+    "generate": "npx @edgedb/generate edgeql-js"
   },
   "files": [
     "README.md",
