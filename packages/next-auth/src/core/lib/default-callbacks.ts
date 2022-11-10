@@ -5,9 +5,13 @@ export const defaultCallbacks: CallbacksOptions = {
     return true
   },
   redirect({ url, baseUrl }) {
-    if (url.startsWith("/")) return `${baseUrl}${url}`
-    else if (new URL(url).origin === baseUrl) return url
-    return baseUrl
+    try {
+      if (url.startsWith("/")) return `${baseUrl}${url}`
+      else if (new URL(url).origin === baseUrl) return url
+      return baseUrl
+    } catch (err) {
+      return baseUrl
+    }
   },
   session({ session }) {
     return session
