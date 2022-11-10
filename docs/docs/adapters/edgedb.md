@@ -14,8 +14,9 @@ npm install @edgedb/generate --save-dev
 
 ## Installation
 
-First, ensure you have the EdgeDB CLI installed. Refer to the [official EdgeDB docs](https://www.edgedb.com/install) if you encounter problems.
+First, ensure you have the EdgeDB CLI installed. 
 
+Follow the instructions below, or read the [EdgeDB quickstart](https://www.edgedb.com/docs/intro/quickstart) to install the EdgeDB CLI and initialize a project
 
 ### Linux or macOS
 ```bash
@@ -62,11 +63,9 @@ export default NextAuth({
 })
 ```
 
-Schema for the EdgeDB Adapter (`@next-auth/edgedb-adapter`)
-
 ### Create the EdgeDB schema
 
-Replace the contents of the auto-generated file in `dbscema/default.esdl` with the following:
+Replace the contents of the auto-generated file in `dbschema/default.esdl` with the following:
 
 > This schema is adapted for use in EdgeDB and based upon our main [schema](/adapters/models)
 
@@ -209,7 +208,7 @@ First deploy an EdgeDB instance on your preferred cloud provider:
 
 ### Find your instance’s DSN
 
-The DSN is also known as a connection string. It will have the format `edgedb://username:password@hostname:port`. The exact instructions for this depend on which cloud you are deploying to. 
+The DSN is also known as a connection string. It will have the format `edgedb://username:password@hostname:port`. The exact instructions for this depend on which cloud you are deploying to.
 
 ### Set an environment variable
 
