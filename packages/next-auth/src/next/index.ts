@@ -94,6 +94,7 @@ export async function unstable_getServerSession(
       ]
     | [NextApiRequest, NextApiResponse, NextAuthOptions]
     | [NextAuthOptions]
+    | []
 ): Promise<Session | null> {
   if (!experimentalWarningShown && process.env.NODE_ENV !== "production") {
     console.warn(
@@ -105,7 +106,7 @@ export async function unstable_getServerSession(
     experimentalWarningShown = true
   }
 
-  const isRSC = args.length === 1
+  const isRSC = args.length === 0 || args.length === 1
   if (
     !experimentalRSCWarningShown &&
     isRSC &&
@@ -122,11 +123,11 @@ export async function unstable_getServerSession(
 
   let req, res, options: NextAuthOptions
   if (isRSC) {
-    options = args[0]
+    options = args[0] ?? { providers: [] }
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { headers, cookies } = require("next/headers")
     req = {
-      headers,
+      headers: Object.fromEntries(headers() as Headers),
       cookies: Object.fromEntries(
         cookies()
           .getAll()
