@@ -17,9 +17,7 @@ export default function Footer() {
           <a href="https://github.com/nextauthjs/next-auth-example">GitHub</a>
         </li>
         <li className={styles.navItem}>
-          <Link href="/policy">
-            <a>Policy</a>
-          </Link>
+          <Link href="/policy">Policy</Link>
         </li>
         <li className={styles.navItem}>
           <em>next-auth@{packageJSON.dependencies["next-auth"]}</em>

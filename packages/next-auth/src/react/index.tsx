@@ -95,7 +95,7 @@ export type SessionContextValue<R extends boolean = false> = R extends true
       | { data: Session; status: "authenticated" }
       | { data: null; status: "unauthenticated" | "loading" }
 
-export const SessionContext = React.createContext<
+export const SessionContext = React.createContext?.<
   SessionContextValue | undefined
 >(undefined)
 
@@ -106,6 +106,10 @@ export const SessionContext = React.createContext<
  * [Documentation](https://next-auth.js.org/getting-started/client#usesession)
  */
 export function useSession<R extends boolean>(options?: UseSessionOptions<R>) {
+  if (!SessionContext) {
+    throw new Error("React Context is unavailable in Server Components")
+  }
+
   // @ts-expect-error Satisfy TS if branch on line below
   const value: SessionContextValue<R> = React.useContext(SessionContext)
   if (!value && process.env.NODE_ENV !== "production") {
@@ -322,6 +326,10 @@ export async function signOut<R extends boolean = true>(
  * [Documentation](https://next-auth.js.org/getting-started/client#sessionprovider)
  */
 export function SessionProvider(props: SessionProviderProps) {
+  if (!SessionContext) {
+    throw new Error("React Context is unavailable in Server Components")
+  }
+
   const { children, basePath, refetchInterval, refetchWhenOffline } = props
 
   if (basePath) __NEXTAUTH.basePath = basePath
