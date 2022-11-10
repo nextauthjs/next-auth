@@ -48,6 +48,12 @@ import Zitadel from "next-auth/providers/zitadel"
 // if (process.env.NODE_ENV !== "production") globalThis.prisma = client
 // const adapter = PrismaAdapter(client)
 
+// // EdgeDB
+// import { createClient } from "edgedb"
+// import { EdgeDBAdapter } from "@next-auth/edgedb-adapter"
+// const client = createClient()
+// const adapter = EdgeDBAdapter(client)
+
 // // Fauna
 // import { Client as FaunaClient } from "faunadb"
 // import { FaunaAdapter } from "@next-auth/fauna-adapter"

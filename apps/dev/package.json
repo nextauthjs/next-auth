@@ -14,10 +14,12 @@
   },
   "license": "ISC",
   "dependencies": {
+    "@next-auth/edgedb-adapter": "workspace:*",
     "@next-auth/fauna-adapter": "workspace:*",
     "@next-auth/prisma-adapter": "workspace:*",
     "@next-auth/typeorm-legacy-adapter": "workspace:*",
     "@prisma/client": "^3",
+    "edgedb": "^1.0.1",
     "faunadb": "^4",
     "next": "13.0.2",
     "next-auth": "workspace:*",
@@ -26,6 +28,7 @@
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@edgedb/generate": "^0.0.4",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "fake-smtp-server": "^0.8.0",
