@@ -23,7 +23,8 @@
   "scripts": {
     "build": "tsc",
     "test": "jest",
-    "generate": "npx @edgedb/generate edgeql-js"
+    "generate": "npx @edgedb/generate edgeql-js",
+    "postinstall": "pnpm generate"
   },
   "files": [
     "README.md",
