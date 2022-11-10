@@ -1,7 +1,7 @@
-import type { PrismaClient, Prisma } from "@prisma/client"
+import type { Prisma, PrismaClient } from "@prisma/client"
 import type { Adapter, AdapterAccount } from "next-auth/adapters"
 
-export function PrismaAdapter(p: PrismaClient): Adapter {
+export function PrismaAdapter<T extends PrismaClient>(p: T): Adapter {
   return {
     createUser: (data) => p.user.create({ data }),
     getUser: (id) => p.user.findUnique({ where: { id } }),
