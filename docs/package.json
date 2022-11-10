@@ -8,7 +8,7 @@
   "version": "0.2.0",
   "scripts": {
     "start": "npm run generate-providers && docusaurus start --no-open --port 8000",
-    "dev": "npm run start",
+    "dev": "pnpm docusaurus start --poll --no-open --port 8000",
     "build": "npm run generate-providers && docusaurus build",
     "docusaurus": "docusaurus",
     "swizzle": "docusaurus swizzle",

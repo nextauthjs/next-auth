@@ -57,6 +57,7 @@ module.exports = {
       items: [
         "adapters/models",
         "adapters/prisma",
+        "adapters/edgedb",
         "adapters/fauna",
         "adapters/dynamodb",
         "adapters/firebase",
