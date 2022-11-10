@@ -192,6 +192,9 @@ export function runBasicTests(options: TestOptions) {
       provider: account.provider,
       providerAccountId: account.providerAccountId,
     })
+    
+    delete userByAccount.createdAt;
+
     expect(userByAccount).toEqual(user)
   })
 
