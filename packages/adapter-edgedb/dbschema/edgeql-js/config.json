@@ -1,0 +1,2 @@
+// EdgeDB query builder. To update, run `npx @edgedb/generate edgeql-js`
+{"target":"ts"}
