@@ -50,12 +50,15 @@ importers:
 
   apps/dev:
     specifiers:
+      '@edgedb/generate': ^0.0.4
+      '@next-auth/edgedb-adapter': workspace:*
       '@next-auth/fauna-adapter': workspace:*
       '@next-auth/prisma-adapter': workspace:*
       '@next-auth/typeorm-legacy-adapter': workspace:*
       '@prisma/client': ^3
       '@types/react': ^18.0.15
       '@types/react-dom': ^18.0.6
+      edgedb: ^1.0.1
       fake-smtp-server: ^0.8.0
       faunadb: ^4
       next: 13.0.2
@@ -68,10 +71,12 @@ importers:
       sqlite3: ^5.0.8
       typeorm: 0.3.7
     dependencies:
+      '@next-auth/edgedb-adapter': link:../../packages/adapter-edgedb
       '@next-auth/fauna-adapter': link:../../packages/adapter-fauna
       '@next-auth/prisma-adapter': link:../../packages/adapter-prisma
       '@next-auth/typeorm-legacy-adapter': link:../../packages/adapter-typeorm-legacy
       '@prisma/client': 3.15.2_prisma@3.15.2
+      edgedb: 1.0.1
       faunadb: 4.6.0
       next: 13.0.2_biqbaboplfbrettd7655fr4n2y
       next-auth: link:../../packages/next-auth
@@ -79,6 +84,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     devDependencies:
+      '@edgedb/generate': 0.0.4_edgedb@1.0.1
       '@types/react': 18.0.15
       '@types/react-dom': 18.0.6
       fake-smtp-server: 0.8.0
@@ -166,6 +172,25 @@ importers:
       '@shelf/jest-dynamodb': 2.2.4_qsruu6yolbxs4rh6ixjhkibvwu
       jest: 27.5.1
       next-auth: link:../next-auth
+
+  packages/adapter-edgedb:
+    specifiers:
+      '@edgedb/generate': ^0.0.4
+      '@next-auth/adapter-test': workspace:^0.0.0
+      '@next-auth/tsconfig': workspace:^0.0.0
+      edgedb: ^1.0.1
+      jest: ^27.4.3
+      next-auth: workspace:*
+      typescript: ^4.7.4
+    dependencies:
+      edgedb: 1.0.1
+    devDependencies:
+      '@edgedb/generate': 0.0.4_edgedb@1.0.1
+      '@next-auth/adapter-test': link:../adapter-test
+      '@next-auth/tsconfig': link:../tsconfig
+      jest: 27.5.1
+      next-auth: link:../next-auth
+      typescript: 4.8.4
 
   packages/adapter-fauna:
     specifiers:
@@ -5859,6 +5884,17 @@ packages:
       '@edge-runtime/primitives': 1.1.0-beta.36
     dev: true
 
+  /@edgedb/generate/0.0.4_edgedb@1.0.1:
+    resolution: {integrity: sha512-54Z0Z+kEDgATkpmm/Y1g4rdfzBB6waJeOCzkFYGJ6QENlnyjIo9fxKCxOJZM0FAF9n3VcCgZdsSgLFUjLiHh4g==}
+    engines: {node: '>= 12.0.0'}
+    hasBin: true
+    peerDependencies:
+      edgedb: ^1.0.0-alpha.0
+    dependencies:
+      chokidar: 3.5.3
+      edgedb: 1.0.1
+    dev: true
+
   /@emotion/is-prop-valid/0.8.8:
     resolution: {integrity: sha512-u5WtneEAr5IDG2Wv65yhunPSMLIpuKsbuOktRojfrEiEvRyC85LgPMZI63cr7NUqT8ZIGdSVg8ZKGxIug4lXcA==}
     dependencies:
@@ -6509,7 +6545,7 @@ packages:
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     dependencies:
       '@jest/types': 27.5.1
-      '@types/node': 18.0.0
+      '@types/node': 18.11.9
       chalk: 4.1.2
       jest-message-util: 27.5.1
       jest-util: 27.5.1
@@ -6554,7 +6590,7 @@ packages:
       '@jest/test-result': 27.5.1
       '@jest/transform': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 18.0.0
+      '@types/node': 18.11.9
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       emittery: 0.8.1
@@ -6683,7 +6719,7 @@ packages:
     dependencies:
       '@jest/fake-timers': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 18.0.0
+      '@types/node': 18.11.9
       jest-mock: 27.5.1
     dev: true
 
@@ -6757,7 +6793,7 @@ packages:
     dependencies:
       '@jest/types': 27.5.1
       '@sinonjs/fake-timers': 8.1.0
-      '@types/node': 18.0.0
+      '@types/node': 18.11.9
       jest-message-util: 27.5.1
       jest-mock: 27.5.1
       jest-util: 27.5.1
@@ -6845,7 +6881,7 @@ packages:
       '@jest/test-result': 27.5.1
       '@jest/transform': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 18.0.0
+      '@types/node': 18.11.9
       chalk: 4.1.2
       collect-v8-coverage: 1.0.1
       exit: 0.1.2
@@ -7141,7 +7177,7 @@ packages:
     dependencies:
       '@types/istanbul-lib-coverage': 2.0.4
       '@types/istanbul-reports': 3.0.1
-      '@types/node': 18.0.0
+      '@types/node': 18.11.9
       '@types/yargs': 16.0.4
       chalk: 4.1.2
     dev: true
@@ -8327,7 +8363,7 @@ packages:
   /@types/graceful-fs/4.1.5:
     resolution: {integrity: sha512-anKkLmZZ+xm4p8JWBf4hElkM4XR+EZeA2M9BAkkTldmcyDY4mbdIJnRghDJH3Ov5ooY7/UAoENtmdMSkaAd7Cw==}
     dependencies:
-      '@types/node': 18.0.0
+      '@types/node': 18.11.9
     dev: true
 
   /@types/hast/2.3.4:
@@ -8469,6 +8505,10 @@ packages:
 
   /@types/node/18.0.0:
     resolution: {integrity: sha512-cHlGmko4gWLVI27cGJntjs/Sj8th9aYwplmZFwmmgYQQvL5NUsgVJG7OddLvNfLqYS31KFN0s3qlaD9qCaxACA==}
+    dev: true
+
+  /@types/node/18.11.9:
+    resolution: {integrity: sha512-CRpX21/kGdzjOpFsZSkcrXMGIBWMGNIHXXBVFSH+ggkftxg+XYP20TESbh+zFvFj3EQOl5byk0HTRn1IL6hbqg==}
     dev: true
 
   /@types/nodemailer/6.4.4:
@@ -12569,6 +12609,11 @@ packages:
     dependencies:
       safe-buffer: 5.2.1
 
+  /edgedb/1.0.1:
+    resolution: {integrity: sha512-kO1QR3K/Reg0N3Y2zwST/b59h57U/HI2O92dYt0xzWqPhatwvDS5jfV7NXELslgrvjMl91vCUira6SNgJn53Dw==}
+    engines: {node: '>= 12.0.0'}
+    hasBin: true
+
   /editorconfig/0.15.3:
     resolution: {integrity: sha512-M9wIMFx96vq0R4F+gRpY3o2exzb8hEj/n9S8unZtHSvYjibBp/iMufSzvmOcV/laG0ZtuTVGtiJggPOSW2r93g==}
     hasBin: true
@@ -15667,7 +15712,7 @@ packages:
       '@jest/environment': 27.5.1
       '@jest/test-result': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 18.0.0
+      '@types/node': 18.11.9
       chalk: 4.1.2
       co: 4.6.0
       dedent: 0.7.0
@@ -16123,7 +16168,7 @@ packages:
       '@jest/environment': 27.5.1
       '@jest/fake-timers': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 18.0.0
+      '@types/node': 18.11.9
       jest-mock: 27.5.1
       jest-util: 27.5.1
       jsdom: 16.7.0
@@ -16160,7 +16205,7 @@ packages:
       '@jest/environment': 27.5.1
       '@jest/fake-timers': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 18.0.0
+      '@types/node': 18.11.9
       jest-mock: 27.5.1
       jest-util: 27.5.1
     dev: true
@@ -16215,7 +16260,7 @@ packages:
     dependencies:
       '@jest/types': 27.5.1
       '@types/graceful-fs': 4.1.5
-      '@types/node': 18.0.0
+      '@types/node': 18.11.9
       anymatch: 3.1.2
       fb-watchman: 2.0.1
       graceful-fs: 4.2.10
@@ -16275,7 +16320,7 @@ packages:
       '@jest/source-map': 27.5.1
       '@jest/test-result': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 18.0.0
+      '@types/node': 18.11.9
       chalk: 4.1.2
       co: 4.6.0
       expect: 27.5.1
@@ -16411,7 +16456,7 @@ packages:
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     dependencies:
       '@jest/types': 27.5.1
-      '@types/node': 18.0.0
+      '@types/node': 18.11.9
     dev: true
 
   /jest-mock/28.1.1:
@@ -16575,7 +16620,7 @@ packages:
       '@jest/test-result': 27.5.1
       '@jest/transform': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 18.0.0
+      '@types/node': 18.11.9
       chalk: 4.1.2
       emittery: 0.8.1
       graceful-fs: 4.2.10
@@ -16750,7 +16795,7 @@ packages:
     resolution: {integrity: sha512-jZCyo6iIxO1aqUxpuBlwTDMkzOAJS4a3eYz3YzgxxVQFwLeSA7Jfq5cbqCY+JLvTDrWirgusI/0KwxKMgrdf7w==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     dependencies:
-      '@types/node': 18.0.0
+      '@types/node': 18.11.9
       graceful-fs: 4.2.10
     dev: true
 
@@ -16852,7 +16897,7 @@ packages:
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     dependencies:
       '@jest/types': 27.5.1
-      '@types/node': 18.0.0
+      '@types/node': 18.11.9
       chalk: 4.1.2
       ci-info: 3.3.2
       graceful-fs: 4.2.10
@@ -16953,7 +16998,7 @@ packages:
     dependencies:
       '@jest/test-result': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 18.0.0
+      '@types/node': 18.11.9
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       jest-util: 27.5.1
@@ -17006,7 +17051,7 @@ packages:
     resolution: {integrity: sha512-7vuh85V5cdDofPyxn58nrPjBktZo0u9x1g8WtjQol+jZDaE+fhN+cIvTj11GndBnMnyfrUOG1sZQxCdjKh+DKg==}
     engines: {node: '>= 10.13.0'}
     dependencies:
-      '@types/node': 18.0.0
+      '@types/node': 18.11.9
       merge-stream: 2.0.0
       supports-color: 8.1.1
     dev: true
@@ -23814,6 +23859,7 @@ packages:
 
   /w3c-hr-time/1.0.2:
     resolution: {integrity: sha512-z8P5DvDNjKDoFIHK7q8r8lackT6l+jo/Ye3HOle7l9nICP9lf1Ci25fy9vHd0JOWewkIFzXIEig3TdKT7JQ5fQ==}
+    deprecated: Use your platform's native performance.now() and performance.timeOrigin.
     dependencies:
       browser-process-hrtime: 1.0.0
     dev: true
