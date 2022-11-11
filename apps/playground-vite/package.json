@@ -3,7 +3,6 @@
     "dev": "pnpm run server",
     "prod": "pnpm run build && pnpm run server:prod",
     "build": "vite build",
-    "vercel-build": "vite build",
     "server": "tsx ./server",
     "server:prod": "cross-env NODE_ENV=production tsx ./server"
   },
