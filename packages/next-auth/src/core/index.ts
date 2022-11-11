@@ -79,7 +79,7 @@ async function toInternalRequest(
 
 export async function NextAuthHandler<
   Body extends string | Record<string, any> | any[],
-  S extends Session
+  S extends Session = Session
 >(params: NextAuthHandlerParams<S>): Promise<OutgoingResponse<Body>> {
   const { options: userOptions, req: incomingRequest } = params
 

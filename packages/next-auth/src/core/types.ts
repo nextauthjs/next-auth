@@ -97,7 +97,7 @@ export interface NextAuthOptions<S extends Session = Session> {
    *
    * [Documentation](https://next-auth.js.org/configuration/options#callbacks) | [Callbacks documentation](https://next-auth.js.org/configuration/callbacks)
    */
-  callbacks?: Partial<CallbacksOptions<S>>
+  callbacks?: Partial<CallbacksOptions<Profile, Account, S>>
   /**
    * Events are asynchronous functions that do not return a response, they are useful for audit logging.
    * You can specify a handler for any of these events below - e.g. for debugging or to create an audit log.

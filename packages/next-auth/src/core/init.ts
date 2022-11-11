@@ -14,7 +14,7 @@ import { RequestInternal } from "."
 
 import type { InternalOptions, Session } from "./types"
 
-interface InitParams<S extends Session> {
+interface InitParams<S extends Session = Session> {
   host?: string
   userOptions: NextAuthOptions<S>
   providerId?: string
@@ -106,7 +106,6 @@ export async function init<S extends Session>({
     events: eventsErrorHandler(userOptions.events ?? {}, logger),
     adapter: adapterErrorHandler(userOptions.adapter, logger),
     // Callback functions
-    // @ts-expect-error
     callbacks: { ...defaultCallbacks, ...userOptions.callbacks },
     logger,
     callbackUrl: url.origin,
