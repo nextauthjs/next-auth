@@ -63,9 +63,14 @@ export default async function session(
       const token = await callbacks.jwt({ token: decodedToken })
       // @ts-expect-error
       const newSession = await callbacks.session({ session, token })
+      // @ts-expect-error
+      const sessionAdditionalData = await callbacks.additionalSessionData?.({
+        session,
+        token,
+      })
 
       // Return session payload as response
-      response.body = newSession
+      response.body = { ...newSession, ...sessionAdditionalData }
 
       // Refresh JWT expiry by re-signing it, with an updated expiry date
       const newToken = await jwt.encode({

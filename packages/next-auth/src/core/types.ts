@@ -25,7 +25,7 @@ export type { LoggerInstance }
  *
  * [Documentation](https://next-auth.js.org/configuration/options#options)
  */
-export interface NextAuthOptions {
+export interface NextAuthOptions<S extends Session = Session> {
   /**
    * An array of authentication providers for signing in
    * (e.g. Google, Facebook, Twitter, GitHub, Email, etc) in any order.
@@ -97,7 +97,7 @@ export interface NextAuthOptions {
    *
    * [Documentation](https://next-auth.js.org/configuration/options#callbacks) | [Callbacks documentation](https://next-auth.js.org/configuration/callbacks)
    */
-  callbacks?: Partial<CallbacksOptions>
+  callbacks?: Partial<CallbacksOptions<S>>
   /**
    * Events are asynchronous functions that do not return a response, they are useful for audit logging.
    * You can specify a handler for any of these events below - e.g. for debugging or to create an audit log.
@@ -256,7 +256,11 @@ export interface Profile {
 }
 
 /** [Documentation](https://next-auth.js.org/configuration/callbacks) */
-export interface CallbacksOptions<P = Profile, A = Account> {
+export interface CallbacksOptions<
+  P = Profile,
+  A = Account,
+  S extends Session = Session
+> {
   /**
    * Use this callback to control if a user is allowed to sign in.
    * Returning true will continue the sign-in flow.
@@ -319,7 +323,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
     session: Session
     user: User | AdapterUser
     token: JWT
-  }) => Awaitable<Session>
+  }) => Awaitable<S>
   /**
    * This callback is called whenever a JSON Web Token is created (i.e. at sign in)
    * or updated (i.e whenever a session is accessed in the client).
@@ -431,7 +435,7 @@ export interface DefaultSession {
  * [`SessionProvider`](https://next-auth.js.org/getting-started/client#sessionprovider) |
  * [`session` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback)
  */
-export interface Session extends DefaultSession {}
+export type Session<D = {}> = DefaultSession & D
 
 export type SessionStrategy = "jwt" | "database"
 

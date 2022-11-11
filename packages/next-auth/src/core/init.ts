@@ -12,11 +12,11 @@ import { createCSRFToken } from "./lib/csrf-token"
 import { createCallbackUrl } from "./lib/callback-url"
 import { RequestInternal } from "."
 
-import type { InternalOptions } from "./types"
+import type { InternalOptions, Session } from "./types"
 
-interface InitParams {
+interface InitParams<S extends Session> {
   host?: string
-  userOptions: NextAuthOptions
+  userOptions: NextAuthOptions<S>
   providerId?: string
   action: InternalOptions["action"]
   /** Callback URL value extracted from the incoming request. */
@@ -29,7 +29,7 @@ interface InitParams {
 }
 
 /** Initialize all internal options and cookies. */
-export async function init({
+export async function init<S extends Session>({
   userOptions,
   providerId,
   action,
@@ -38,7 +38,7 @@ export async function init({
   callbackUrl: reqCallbackUrl,
   csrfToken: reqCsrfToken,
   isPost,
-}: InitParams): Promise<{
+}: InitParams<S>): Promise<{
   options: InternalOptions
   cookies: cookie.Cookie[]
 }> {
@@ -106,6 +106,7 @@ export async function init({
     events: eventsErrorHandler(userOptions.events ?? {}, logger),
     adapter: adapterErrorHandler(userOptions.adapter, logger),
     // Callback functions
+    // @ts-expect-error
     callbacks: { ...defaultCallbacks, ...userOptions.callbacks },
     logger,
     callbackUrl: url.origin,

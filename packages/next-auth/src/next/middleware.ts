@@ -20,7 +20,7 @@ export interface NextAuthMiddlewareOptions {
    * ---
    * [Documentation](https://next-auth.js.org/configuration/pages)
    */
-  pages?: NextAuthOptions["pages"]
+  pages?: NextAuthOptions<any>["pages"]
 
   /**
    * You can override the default cookie names and options for any of the cookies
@@ -38,7 +38,7 @@ export interface NextAuthMiddlewareOptions {
    */
   cookies?: Partial<
     Record<
-      keyof Pick<keyof NextAuthOptions["cookies"], "sessionToken">,
+      keyof Pick<keyof NextAuthOptions<any>["cookies"], "sessionToken">,
       Omit<CookieOption, "options">
     >
   >
@@ -146,7 +146,10 @@ async function handleMiddleware(
 
   // the user is not logged in, redirect to the sign-in page
   const signInUrl = new URL(`${basePath}${signInPage}`, origin)
-  signInUrl.searchParams.append("callbackUrl", `${basePath}${pathname}${search}`)
+  signInUrl.searchParams.append(
+    "callbackUrl",
+    `${basePath}${pathname}${search}`
+  )
   return NextResponse.redirect(signInUrl)
 }
 

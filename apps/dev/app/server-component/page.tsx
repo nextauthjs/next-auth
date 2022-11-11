@@ -1,9 +1,18 @@
-import { getToken } from "next-auth/jwt"
+import { Session } from "next-auth"
+import { JWT } from "next-auth/jwt"
 import { unstable_getServerSession } from "next-auth/next"
 
+type SessionWithToken = Session & { token: JWT }
+
 export default async function Page() {
-  const session = await unstable_getServerSession()
-  const token = await getToken()
+  const { token, ...session } =
+    await unstable_getServerSession<SessionWithToken>({
+      providers: [],
+      callbacks: {
+        session: ({ session, token }) => ({ ...session, token }),
+      },
+    })
+
   return (
     <>
       <h2>Session</h2>

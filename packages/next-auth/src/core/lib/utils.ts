@@ -1,7 +1,7 @@
 import { createHash } from "crypto"
 
 import type { NextAuthOptions } from "../.."
-import type { InternalOptions } from "../types"
+import type { InternalOptions, Session } from "../types"
 import type { InternalUrl } from "../../utils/parse-url"
 
 /**
@@ -28,8 +28,8 @@ export function hashToken(token: string, options: InternalOptions<"email">) {
  * If no secret option is specified then it creates one on the fly
  * based on options passed here. If options contains unique data, such as
  * OAuth provider secrets and database credentials it should be sufficent. If no secret provided in production, we throw an error. */
-export function createSecret(params: {
-  userOptions: NextAuthOptions
+export function createSecret<S extends Session>(params: {
+  userOptions: NextAuthOptions<S>
   url: InternalUrl
 }) {
   const { userOptions, url } = params

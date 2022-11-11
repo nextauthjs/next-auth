@@ -14,10 +14,10 @@ import type {
   NextAuthResponse,
 } from "../core/types"
 
-async function NextAuthNextHandler(
+async function NextAuthNextHandler<S extends Session>(
   req: NextApiRequest,
   res: NextApiResponse,
-  options: NextAuthOptions
+  options: NextAuthOptions<S>
 ) {
   const { nextauth, ...query } = req.query
 
@@ -60,18 +60,18 @@ async function NextAuthNextHandler(
   return res.send(handler.body)
 }
 
-function NextAuth(options: NextAuthOptions): any
-function NextAuth(
+function NextAuth<S extends Session>(options: NextAuthOptions<S>): any
+function NextAuth<S extends Session>(
   req: NextApiRequest,
   res: NextApiResponse,
-  options: NextAuthOptions
+  options: NextAuthOptions<S>
 ): any
 
 /** The main entry point to next-auth */
-function NextAuth(
+function NextAuth<S extends Session>(
   ...args:
-    | [NextAuthOptions]
-    | [NextApiRequest, NextApiResponse, NextAuthOptions]
+    | [NextAuthOptions<S>]
+    | [NextApiRequest, NextApiResponse, NextAuthOptions<S>]
 ) {
   if (args.length === 1) {
     return async (req: NextAuthRequest, res: NextAuthResponse) =>
@@ -85,17 +85,17 @@ export default NextAuth
 
 let experimentalWarningShown = false
 let experimentalRSCWarningShown = false
-export async function unstable_getServerSession(
+export async function unstable_getServerSession<S extends Session>(
   ...args:
     | [
         GetServerSidePropsContext["req"],
         GetServerSidePropsContext["res"],
-        NextAuthOptions
+        NextAuthOptions<S>
       ]
-    | [NextApiRequest, NextApiResponse, NextAuthOptions]
-    | [NextAuthOptions]
+    | [NextApiRequest, NextApiResponse, NextAuthOptions<S>]
+    | [NextAuthOptions<S>]
     | []
-): Promise<Session | null> {
+): Promise<S | null> {
   if (!experimentalWarningShown && process.env.NODE_ENV !== "production") {
     console.warn(
       "[next-auth][warn][EXPERIMENTAL_API]",
@@ -121,7 +121,7 @@ export async function unstable_getServerSession(
     experimentalRSCWarningShown = true
   }
 
-  let req, res, options: NextAuthOptions
+  let req, res, options: NextAuthOptions<S>
   if (isRSC) {
     options = args[0] ?? { providers: [] }
     // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -143,7 +143,7 @@ export async function unstable_getServerSession(
 
   options.secret = options.secret ?? process.env.NEXTAUTH_SECRET
 
-  const session = await NextAuthHandler<Session | {} | string>({
+  const session = await NextAuthHandler<S | {} | string, S>({
     options,
     req: {
       host: detectHost(req.headers["x-forwarded-host"]),
@@ -162,7 +162,7 @@ export async function unstable_getServerSession(
     if (status === 200) {
       // @ts-expect-error
       if (isRSC) delete body.expires
-      return body as Session
+      return body as S
     }
     throw new Error((body as any).message)
   }
