@@ -71,9 +71,7 @@ export default function SigninPage(props: SignInServerPageParams) {
     default: "Unable to sign in.",
   }
 
-  const error =
-    (errorType && Object.hasOwn(errors, errorType) && errors[errorType]) ||
-    errors.default
+  const error = errorType && (Object.hasOwn(errors, errorType) ? errors[errorType] : errors.default)
 
   return (
     <div className="signin">
