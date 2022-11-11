@@ -3,7 +3,6 @@ import hkdf from "@panva/hkdf"
 import { v4 as uuid } from "uuid"
 import { SessionStore } from "../core/lib/cookie"
 import type { GetServerSidePropsContext, NextApiRequest } from "next"
-import { headers, cookies } from "next/headers"
 import type { NextRequest } from "next/server"
 import type { JWT, JWTDecodeParams, JWTEncodeParams, JWTOptions } from "./types"
 import type { LoggerInstance } from ".."
@@ -39,7 +38,7 @@ export async function decode(params: JWTDecodeParams): Promise<JWT | null> {
 
 export interface GetTokenParams<R extends boolean = false> {
   /** The request containing the JWT either in the cookies or in the `Authorization` header. */
-  req?: GetServerSidePropsContext["req"] | NextRequest | NextApiRequest
+  req: GetServerSidePropsContext["req"] | NextRequest | NextApiRequest
   /**
    * Use secure prefix for cookie name, unless URL in `NEXTAUTH_URL` is http://
    * or not set (e.g. development or test instance) case use unprefixed name
@@ -67,10 +66,10 @@ export interface GetTokenParams<R extends boolean = false> {
  * [Documentation](https://next-auth.js.org/tutorials/securing-pages-and-api-routes#using-gettoken)
  */
 export async function getToken<R extends boolean = false>(
-  params: GetTokenParams<R> = {}
+  params: GetTokenParams<R>
 ): Promise<R extends true ? string : JWT | null> {
   const {
-    req: providedReq,
+    req,
     secureCookie = process.env.NEXTAUTH_URL?.startsWith("https://") ??
       !!process.env.VERCEL,
     cookieName = secureCookie
@@ -82,14 +81,7 @@ export async function getToken<R extends boolean = false>(
     secret = process.env.NEXTAUTH_SECRET,
   } = params
 
-  const req = providedReq ?? {
-    headers: Object.fromEntries(headers()),
-    cookies: Object.fromEntries(
-      cookies()
-        .getAll()
-        .map((c: any) => [c.name, c.value])
-    ),
-  }
+  if (!req) throw new Error("Must pass `req` to JWT getToken()")
 
   const sessionStore = new SessionStore(
     { name: cookieName, options: { secure: secureCookie } },

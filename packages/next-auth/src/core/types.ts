@@ -435,7 +435,7 @@ export interface DefaultSession {
  * [`SessionProvider`](https://next-auth.js.org/getting-started/client#sessionprovider) |
  * [`session` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback)
  */
-export type Session<D = {}> = DefaultSession & D
+export interface Session extends DefaultSession {}
 
 export type SessionStrategy = "jwt" | "database"
 

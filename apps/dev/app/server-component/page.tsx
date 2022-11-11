@@ -5,13 +5,19 @@ import { unstable_getServerSession } from "next-auth/next"
 type SessionWithToken = Session & { token: JWT }
 
 export default async function Page() {
-  const { token, ...session } =
-    await unstable_getServerSession<SessionWithToken>({
-      providers: [],
-      callbacks: {
-        session: ({ session, token }) => ({ ...session, token }),
-      },
-    })
+  const newLocal: Partial<
+    import("/Users/sebastien/dev/next-auth/packages/next-auth/index").CallbacksOptions<
+      Session,
+      import("/Users/sebastien/dev/next-auth/packages/next-auth/index").Account,
+      import("/Users/sebastien/dev/next-auth/packages/next-auth/index").DefaultSession
+    >
+  > = {
+    session: ({ session, token }) => ({ ...session, token }),
+  }
+  const { token, ...session } = await unstable_getServerSession({
+    providers: [],
+    callbacks: newLocal,
+  })
 
   return (
     <>
