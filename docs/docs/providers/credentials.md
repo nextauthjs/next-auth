@@ -73,6 +73,15 @@ providers: [
 
 See the [callbacks documentation](/configuration/callbacks) for more information on how to interact with the token.
 
+## Example - Sign-in with email and password
+
+The credentials provider can be used to set-up authentication with email and password.
+
+For more information, check out the example app below:
+
+- [Example App Repo](https://github.com/Issam-Boubcher/credentials-next-auth-example).
+- [Example App Demo](https://credentials-next-auth-example.vercel.app/).
+
 ## Example - Web3 / Signin With Ethereum
 
 The credentials provider can also be used to integrate with a service like [Sign-in With Ethereum](https://login.xyz).
