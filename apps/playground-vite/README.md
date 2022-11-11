@@ -4,6 +4,8 @@ NextAuth.js is committed to bringing easy authentication to other frameworks. [#
 
 This is an example application that shows how next-auth is applied to a Vite app (vite-plugin-ssr)[https://vite-plugin-ssr.com/].
 
+Demo: https://vite-ssr-next-auth.vercel.app
+
 ## Getting Started
 
 ### 1. Install dependencies
