@@ -8,7 +8,7 @@ export function Page ({ session }: { session: Session }) {
       <h1>Server Side Rendering</h1>
       <p>
         This page uses the <strong>unstable_getServerSession()</strong> method
-        in <strong>onBeforeRender()</strong> of [vite-plugin-ssr](https://vite-plugin-ssr.com/data-fetching).
+        in <strong>onBeforeRender()</strong> of <a href="https://vite-plugin-ssr.com/data-fetching" target="_blank">vite-plugin-ssr</a>.
       </p>
       <p>
         Using <strong>unstable_getServerSession()</strong> in{' '}
