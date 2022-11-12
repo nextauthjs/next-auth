@@ -1,4 +1,5 @@
 import type { InternalProvider, Theme } from "../types"
+import React from "react"
 
 /**
  * The following errors are passed as error query parameters to the default or overridden sign-in page.
@@ -101,8 +102,39 @@ export default function SigninPage(props: SignInServerPageParams) {
                 {callbackUrl && (
                   <input type="hidden" name="callbackUrl" value={callbackUrl} />
                 )}
-                <button type="submit" className="button">
-                  Sign in with {provider.name}
+                <button
+                  type="submit"
+                  className="button"
+                  style={
+                    {
+                      "--provider-bg": provider.style?.bg ?? "",
+                      "--provider-dark-bg": provider.style?.bgDark ?? "",
+                      "--provider-color": provider.style?.text ?? "",
+                      "--provider-dark-color": provider.style?.textDark ?? "",
+                    } as React.CSSProperties
+                  }
+                >
+                  {provider.style?.logo && (
+                    <svg
+                      height="36"
+                      width="36"
+                      id="provider-logo"
+                      dangerouslySetInnerHTML={{
+                        __html: provider.style?.logo ?? "",
+                      }}
+                    />
+                  )}
+                  {provider.style?.logoDark && (
+                    <svg
+                      height="36"
+                      width="36"
+                      id="provider-logo-dark"
+                      dangerouslySetInnerHTML={{
+                        __html: provider.style?.logoDark ?? "",
+                      }}
+                    />
+                  )}
+                  <span>Sign in with {provider.name}</span>
                 </button>
               </form>
             )}
@@ -128,7 +160,7 @@ export default function SigninPage(props: SignInServerPageParams) {
                   placeholder="email@example.com"
                   required
                 />
-                <button type="submit">Sign in with {provider.name}</button>
+                <button type="submit"><span>Sign in with {provider.name}</span></button>
               </form>
             )}
             {provider.type === "credentials" && (
@@ -155,7 +187,7 @@ export default function SigninPage(props: SignInServerPageParams) {
                     </div>
                   )
                 })}
-                <button type="submit">Sign in with {provider.name}</button>
+                <button type="submit"><span>Sign in with {provider.name}</span></button>
               </form>
             )}
             {(provider.type === "email" || provider.type === "credentials") &&

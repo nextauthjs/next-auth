@@ -1,6 +1,6 @@
 :root {
   --border-width: 1px;
-  --border-radius: 0.3rem;
+  --border-radius: 0.5rem;
   --color-error: #c94b4b;
   --color-info: #157efb;
   --color-info-text: #fff;
@@ -111,22 +111,24 @@ button,
 a.button {
   margin: 0 0 0.75rem 0;
   padding: 0.75rem 1rem;
-  border: var(--border-width) solid var(--color-control-border);
-  color: var(--color-primary);
-  background-color: var(--color-background);
-  font-size: 1rem;
+  color: var(--provider-color, var(--color-primary));
+  background-color: var(--provider-bg, var(--color-background));
+  font-size: 1.1rem;
+  min-height: 62px;
+  /* border: none; */
+  border-color: rgba(0, 0, 0, 0.1);
   border-radius: var(--border-radius);
   transition: all 0.1s ease-in-out;
-  box-shadow: 0 0.15rem 0.3rem rgba(0, 0, 0, 0.15),
-    inset 0 0.1rem 0.2rem var(--color-background),
-    inset 0 -0.1rem 0.1rem rgba(0, 0, 0, 0.05);
+  box-shadow: #000 0px 0px 0px 0px, #000 0px 0px 0px 0px,
+    rgba(0, 0, 0, 0.2) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px;
   font-weight: 500;
   position: relative;
+  display: flex;
+  align-items: center;
 
   &:hover {
     cursor: pointer;
   }
-
   &:active {
     box-shadow: 0 0.15rem 0.3rem rgba(0, 0, 0, 0.15),
       inset 0 0.1rem 0.2rem var(--color-background),
@@ -134,6 +136,29 @@ a.button {
     background-color: var(--color-button-active-background);
     border-color: var(--color-button-active-border);
     cursor: pointer;
+  }
+  #provider-logo {
+    display: block;
+  }
+  #provider-logo-dark {
+    display: none;
+  }
+  span {
+    flex-grow: 1;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  button,
+  a.button {
+    color: var(--provider-dark-color, var(--color-primary));
+    background-color: var(--provider-dark-bg, var(--color-background));
+  }
+  #provider-logo {
+    display: none !important;
+  }
+  #provider-logo-dark {
+    display: block !important;
   }
 }
 
@@ -177,8 +202,6 @@ a.site {
 }
 
 .signin {
-  button,
-  a.button,
   input[type="text"] {
     margin-left: auto;
     margin-right: auto;
