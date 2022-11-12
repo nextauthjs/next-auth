@@ -1,7 +1,6 @@
 import { runBasicTests } from "@next-auth/adapter-test"
 import { EdgeDBAdapter } from "../src"
 import { createClient } from "edgedb"
-import e from "../dbschema/edgeql-js";
 
 if (process.env.CI) {
   // TODO: Fix this
@@ -17,72 +16,74 @@ runBasicTests({
   adapter: EdgeDBAdapter(client),
   db: {
     connect: async () => {
-      await Promise.all([
-        e.delete(e.User).run(client),
-        e.delete(e.Account).run(client),
-        e.delete(e.Session).run(client),
-        e.delete(e.VerificationToken).run(client),
-      ])
+      await client.query(`
+        delete User;
+        delete Account;
+        delete Session;
+        delete VerificationToken;
+      `)
     },
     disconnect: async () => {
-      await Promise.all([
-        e.delete(e.User).run(client),
-        e.delete(e.Account).run(client),
-        e.delete(e.Session).run(client),
-        e.delete(e.VerificationToken).run(client),
-      ])
+      await client.query(`
+        delete User;
+        delete Account;
+        delete Session;
+        delete VerificationToken;
+      `)
     },
     user: async (id) => {
-      const query = e.select(e.User, () => ({
-        id: true,
-        email: true,
-        emailVerified: true,
-        name: true,
-        image: true,
-        filter_single: { id },
-      }));
-
-      return await query.run(client);
+      return await client.querySingle(`
+      select User {
+        id,
+        email,
+        emailVerified,
+        name,
+        image
+      } filter .id = <uuid>$id
+      `, { id })
     },
-    account: async ({ providerAccountId }) => {
-      const query = e.select(e.Account, () => ({
-        provider: true,
-        providerAccountId: true,
-        type: true,
-        access_token: true,
-        expires_at: true,
-        id_token: true,
-        refresh_token: true,
-        token_type: true,
-        scope: true,
-        session_state: true,
-        id: true,
-        userId: true,
-        filter_single: { providerAccountId }
-      }));
-
-      return await query.run(client);
+    account: async ({ providerAccountId, provider }) => {
+      return await client.querySingle(`
+      select Account {
+        provider,
+        providerAccountId,
+        type,
+        access_token,
+        expires_at,
+        id_token,
+        refresh_token,
+        token_type,
+        scope,
+        session_state,
+        id,
+        userId
+      } 
+      filter 
+        .providerAccountId = <str>$providerAccountId
+      and
+        .provider = <str>$provider 
+      `, { providerAccountId, provider })
     },
     session: async (sessionToken) => {
-      const query = e.select(e.Session, () => ({
-        userId: true,
-        id: true,
-        expires: true,
-        sessionToken: true,
-        filter_single: { sessionToken },
-      }));
-
-      return await query.run(client);
+      return await client.querySingle(`
+      select Session {
+        userId,
+        id,
+        expires,
+        sessionToken,
+      }
+      filter .sessionToken = <str>$sessionToken
+      `, { sessionToken })
     },
     async verificationToken({ token }) {
-      const query = e.select(e.VerificationToken, () => ({
-        identifier: true,
-        expires: true,
-        token: true,
-        filter_single: { token }
-      }))
-
-      return await query.run(client)
+      return await client.querySingle(`
+      select VerificationToken {
+        identifier,
+        expires,
+        token,
+      }
+      filter .token = <str>$token
+      `, { token })
     },
   },
 })

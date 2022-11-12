@@ -192,9 +192,6 @@ export function runBasicTests(options: TestOptions) {
       provider: account.provider,
       providerAccountId: account.providerAccountId,
     })
-    
-    delete userByAccount.createdAt;
-
     expect(userByAccount).toEqual(user)
   })
 
@@ -298,7 +295,6 @@ export function runBasicTests(options: TestOptions) {
     delete session.id
     await adapter.createSession(session)
     await adapter.linkAccount(account)
-
     await adapter.deleteUser?.(user.id)
     dbUser = await db.user(user.id)
     // User should not exist after it is deleted
