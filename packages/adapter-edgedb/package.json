@@ -8,7 +8,7 @@
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
   "author": "Bruno Crosier",
-  "main": "dist/src/index.js",
+  "main": "dist/index.js",
   "license": "ISC",
   "keywords": [
     "next-auth",
@@ -22,9 +22,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "jest",
-    "generate": "npx @edgedb/generate edgeql-js",
-    "postinstall": "pnpm generate"
+    "test": "jest"
   },
   "files": [
     "README.md",
@@ -35,7 +33,6 @@
     "next-auth": "^4"
   },
   "devDependencies": {
-    "@edgedb/generate": "^0.0.4",
     "@next-auth/adapter-test": "workspace:^0.0.0",
     "@next-auth/tsconfig": "workspace:^0.0.0",
     "jest": "^27.4.3",

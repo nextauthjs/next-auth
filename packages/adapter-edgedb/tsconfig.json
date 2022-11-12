@@ -1,7 +1,7 @@
 {
   "extends": "@next-auth/tsconfig/tsconfig.adapters.json",
   "compilerOptions": {
-    "rootDirs": ["src", "dbschema"],
+    "rootDir": "src",
     "outDir": "dist",
   },
   "include": ["."],

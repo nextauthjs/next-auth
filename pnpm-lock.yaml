@@ -175,7 +175,6 @@ importers:
 
   packages/adapter-edgedb:
     specifiers:
-      '@edgedb/generate': ^0.0.4
       '@next-auth/adapter-test': workspace:^0.0.0
       '@next-auth/tsconfig': workspace:^0.0.0
       edgedb: ^1.0.1
@@ -185,7 +184,6 @@ importers:
     dependencies:
       edgedb: 1.0.1
     devDependencies:
-      '@edgedb/generate': 0.0.4_edgedb@1.0.1
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
       jest: 27.5.1
