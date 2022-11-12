@@ -86,7 +86,7 @@ module default {
     }
 
     type Account {
-       required property userId -> str;
+       required property userId := .user.id;
        required property type -> str;
        required property provider -> str;
        required property providerAccountId -> str {
@@ -99,7 +99,7 @@ module default {
        property scope -> str;
        property id_token -> str;
        property session_state -> str;
-       link user -> User {
+       required link user -> User {
             on target delete delete source;
        };
        property createdAt -> datetime {
@@ -113,9 +113,9 @@ module default {
         required property sessionToken -> str {
             constraint exclusive;
         }
-        required property userId -> str;
+        required property userId := .user.id;
         required property expires -> datetime;
-        link user -> User {
+        required link user -> User {
             on target delete delete source;
         };
         property createdAt -> datetime {
@@ -136,6 +136,11 @@ module default {
         constraint exclusive on ((.identifier, .token))
     }
 }
+
+# Disable the application of access policies within access policies
+# themselves. This behavior will become the default in EdgeDB 3.0.
+# See: https://www.edgedb.com/docs/reference/ddl/access_policies#nonrecursive
+using future nonrecursive_access_policies;
 ```
 
 ### Migrate the database schema

@@ -14,7 +14,7 @@ module default {
     }
 
     type Account {
-       required property userId -> str;
+       required property userId := .user.id;
        required property type -> str;
        required property provider -> str;
        required property providerAccountId -> str {
@@ -27,7 +27,7 @@ module default {
        property scope -> str;
        property id_token -> str;
        property session_state -> str;
-       link user -> User {
+       required link user -> User {
             on target delete delete source;
        };
        property createdAt -> datetime {
@@ -41,9 +41,9 @@ module default {
         required property sessionToken -> str {
             constraint exclusive;
         }
-        required property userId -> str;
+        required property userId := .user.id;
         required property expires -> datetime;
-        link user -> User {
+        required link user -> User {
             on target delete delete source;
         };
         property createdAt -> datetime {

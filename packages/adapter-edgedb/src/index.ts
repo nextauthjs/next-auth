@@ -123,8 +123,7 @@ export function EdgeDBAdapter(client: Client): Adapter {
       await client.execute(
         `
         with 
-          userId := <str>$userId,
-          userIdAsUUID := <uuid>userId,
+          userId := <optional str>$userId,
           refresh_token := <optional str>$refresh_token,
           access_token := <optional str>$access_token,
           expires_at := <optional str>$expires_at,
@@ -134,7 +133,6 @@ export function EdgeDBAdapter(client: Client): Adapter {
           session_state := <optional str>$session_state
 
         insert Account {
-          userId := userId,
           type := <str>$type,
           provider := <str>$provider,
           providerAccountId := <str>$providerAccountId,
@@ -146,7 +144,7 @@ export function EdgeDBAdapter(client: Client): Adapter {
           id_token := id_token ?? .id_token,
           session_state := session_state ?? .session_state,
           user := (
-            select User filter .id = userIdAsUUID
+            select User filter .id = <uuid>userId
           )
         }
         `,
@@ -178,18 +176,13 @@ export function EdgeDBAdapter(client: Client): Adapter {
     },
     async createSession({ expires, sessionToken, userId }) {
       return await client.queryRequiredSingle(
-        `
-        with 
-          userId := <str>$userId,
-          userIdAsUUID := <uuid>userId
-        
+        `   
         select (
           insert Session {
             expires := <datetime>$expires,
             sessionToken := <str>$sessionToken,
-            userId := userId,
             user := (
-              select User filter .id = userIdAsUUID
+              select User filter .id = <uuid>$userId
             )
           }
         ) {
@@ -244,7 +237,10 @@ export function EdgeDBAdapter(client: Client): Adapter {
         with 
           sessionToken := <optional str>$sessionToken,
           expires := <optional str>$expires, 
-          userId := <optional str>$userId
+          userId := <optional str>$userId,
+          user := (
+            select User filter .id = <uuid>userId
+          )
 
         select (          
           update Session
@@ -252,7 +248,7 @@ export function EdgeDBAdapter(client: Client): Adapter {
           set {
             sessionToken := sessionToken ?? .sessionToken,
             expires := <datetime>expires ?? .expires,
-            userId := userId ?? .userId
+            user := user ?? .user
           }
         ) {
           sessionToken,
