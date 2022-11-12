@@ -160,7 +160,7 @@ export default function SigninPage(props: SignInServerPageParams) {
                   placeholder="email@example.com"
                   required
                 />
-                <button type="submit"><span>Sign in with {provider.name}</span></button>
+                <button type="submit">Sign in with {provider.name}</button>
               </form>
             )}
             {provider.type === "credentials" && (
@@ -187,7 +187,7 @@ export default function SigninPage(props: SignInServerPageParams) {
                     </div>
                   )
                 })}
-                <button type="submit"><span>Sign in with {provider.name}</span></button>
+                <button type="submit">Sign in with {provider.name}</button>
               </form>
             )}
             {(provider.type === "email" || provider.type === "credentials") &&
