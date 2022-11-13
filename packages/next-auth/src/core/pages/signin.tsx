@@ -115,23 +115,12 @@ export default function SigninPage(props: SignInServerPageParams) {
                   }
                 >
                   {provider.style?.logo && (
-                    <svg
-                      height="36"
-                      width="36"
-                      id="provider-logo"
-                      dangerouslySetInnerHTML={{
-                        __html: provider.style?.logo ?? "",
-                      }}
-                    />
+                    <img id="provider-logo" src={provider.style.logo} />
                   )}
                   {provider.style?.logoDark && (
-                    <svg
-                      height="36"
-                      width="36"
+                    <img
                       id="provider-logo-dark"
-                      dangerouslySetInnerHTML={{
-                        __html: provider.style?.logoDark ?? "",
-                      }}
+                      src={provider.style.logoDark}
                     />
                   )}
                   <span>Sign in with {provider.name}</span>

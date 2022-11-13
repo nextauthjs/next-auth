@@ -126,7 +126,7 @@ a.button {
   align-items: center;
   justify-content: center;
 
-  &:has(svg) {
+  &:has(img) {
     justify-content: unset;
     span {
       flex-grow: 1;
@@ -157,7 +157,8 @@ a.button {
     color: var(--provider-dark-color, var(--color-primary));
     background-color: var(--provider-dark-bg, var(--color-background));
     box-shadow: #ccc 0px 0px 0px 0px, #ccc 0px 0px 0px 0px,
-      rgba(255,255,255, 0.1) 0px 5px 5px -3px, rgba(255, 255, 255, 0.1) 0px 4px 6px -4px;
+      rgba(255, 255, 255, 0.1) 0px 5px 5px -3px,
+      rgba(255, 255, 255, 0.1) 0px 4px 6px -4px;
   }
   #provider-logo {
     display: none !important;
