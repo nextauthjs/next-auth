@@ -1,5 +1,5 @@
 import type { InternalProvider, Theme } from "../types"
-import React from "react"
+import type React from "react"
 
 /**
  * The following errors are passed as error query parameters to the default or overridden sign-in page.
