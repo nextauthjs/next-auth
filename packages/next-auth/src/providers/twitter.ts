@@ -119,6 +119,15 @@ export function TwitterLegacy<
         ),
       }
     },
+    style: {
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/ndom91/login-btn-styling/packages/next-auth/provider-logos/twitter.svg",
+      logoDark:
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/ndom91/login-btn-styling/packages/next-auth/provider-logos/twitter-dark.svg",
+      bg: "#fff",
+      text: "#1da1f2",
+      bgDark: "#1da1f2",
+      textDark: "#fff",
+    },
     options,
   }
 }
