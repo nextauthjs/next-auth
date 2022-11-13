@@ -117,6 +117,14 @@ export default function Apple<P extends AppleProfile>(
       }
     },
     checks: ["pkce"],
+    style: {
+      logo: 'https://raw.githubusercontent.com/nextauthjs/next-auth/ndom91/login-btn-styling/packages/next-auth/provider-logos/apple.svg',
+      logoDark: 'https://raw.githubusercontent.com/nextauthjs/next-auth/ndom91/login-btn-styling/packages/next-auth/provider-logos/apple.svg',
+      bg: "#fff",
+      text: "#000",
+      bgDark: "#000",
+      textDark: "#fff",
+    },
     options,
   }
 }
