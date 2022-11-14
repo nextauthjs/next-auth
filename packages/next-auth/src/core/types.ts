@@ -58,10 +58,8 @@ export interface NextAuthOptions {
    */
   session?: Partial<SessionOptions>
   /**
-   * JSON Web Tokens are enabled by default if you have not specified a database.
-   * By default JSON Web Tokens are signed (JWS) but not encrypted (JWE),
-   * as JWT encryption adds additional overhead and comes with some caveats.
-   * You can enable encryption by setting `encryption: true`.
+   * JSON Web Tokens are enabled by default if you have not specified an adapter.
+   * JSON Web Tokens are encrypted (JWE) by default. We recommend you keep this behaviour.
    * * **Default value**: See the documentation page
    * * **Required**: *No*
    *
