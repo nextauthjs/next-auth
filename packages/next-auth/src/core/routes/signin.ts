@@ -2,7 +2,7 @@ import getAuthorizationUrl from "../lib/oauth/authorization-url"
 import emailSignin from "../lib/email/signin"
 import getAdapterUserFromEmail from "../lib/email/getUserFromEmail"
 import type { RequestInternal, OutgoingResponse } from ".."
-import type { InternalOptions } from "../types"
+import type { Awaitable, InternalOptions } from "../types"
 import type { Account } from "../.."
 
 /** Handle requests to /api/auth/signin */
@@ -36,7 +36,7 @@ export default async function signin(params: {
   } else if (provider.type === "email") {
     let email: string = body?.email
     if (!email) return { redirect: `${url}/error?error=EmailSignin` }
-    const normalizer: (identifier: string) => string =
+    const normalizer: (identifier: string) => Awaitable<string> =
       provider.normalizeIdentifier ??
       ((identifier) => {
         // Get the first two elements only,
@@ -49,7 +49,7 @@ export default async function signin(params: {
       })
 
     try {
-      email = normalizer(body?.email)
+      email = await normalizer(body?.email)
     } catch (error) {
       logger.error("SIGNIN_EMAIL_ERROR", { error, providerId: provider.id })
       return { redirect: `${url}/error?error=EmailSignin` }

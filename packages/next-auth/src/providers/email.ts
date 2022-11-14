@@ -60,7 +60,7 @@ export interface EmailConfig extends CommonProviderOptions {
    *
    * [Documentation](https://next-auth.js.org/providers/email#normalizing-the-e-mail-address) | [RFC 2821](https://tools.ietf.org/html/rfc2821) | [Email syntax](https://en.wikipedia.org/wiki/Email_address#Syntax)
    */
-  normalizeIdentifier?: (identifier: string) => string
+  normalizeIdentifier?: (identifier: string) => Awaitable<string>
   options: EmailUserConfig
 }
 
