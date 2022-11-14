@@ -139,8 +139,6 @@ a.button {
     box-shadow: 0 0.15rem 0.3rem rgba(0, 0, 0, 0.15),
       inset 0 0.1rem 0.2rem var(--color-background),
       inset 0 -0.1rem 0.1rem rgba(0, 0, 0, 0.1);
-    background-color: var(--color-button-active-background);
-    border-color: var(--color-button-active-border);
     cursor: pointer;
   }
   #provider-logo {
