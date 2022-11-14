@@ -106,6 +106,7 @@ export default function SigninPage(props: SignInServerPageParams) {
                   type="submit"
                   className="button"
                   style={
+                    // eslint-disable-next-line
                     {
                       "--provider-bg": provider.style?.bg ?? "",
                       "--provider-dark-bg": provider.style?.bgDark ?? "",
