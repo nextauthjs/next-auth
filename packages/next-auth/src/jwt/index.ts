@@ -67,7 +67,10 @@ export interface GetTokenParams<R extends boolean = false> {
  */
 export async function getToken<R extends boolean = false>(
   params: GetTokenParams<R>
-): Promise<R extends true ? string : JWT | null> {
+): Promise<R extends true ? string : JWT | null>
+export async function getToken(
+  params: GetTokenParams
+): Promise<string | JWT | null> {
   const {
     req,
     secureCookie = process.env.NEXTAUTH_URL?.startsWith("https://") ??
@@ -82,6 +85,8 @@ export async function getToken<R extends boolean = false>(
   } = params
 
   if (!req) throw new Error("Must pass `req` to JWT getToken()")
+  if (!secret)
+    throw new Error("Must pass `secret` if not set to JWT getToken()")
 
   const sessionStore = new SessionStore(
     { name: cookieName, options: { secure: secureCookie } },
@@ -101,17 +106,13 @@ export async function getToken<R extends boolean = false>(
     token = decodeURIComponent(urlEncodedToken)
   }
 
-  // @ts-expect-error
   if (!token) return null
 
-  // @ts-expect-error
   if (raw) return token
 
   try {
-    // @ts-expect-error
     return await _decode({ token, secret })
   } catch {
-    // @ts-expect-error
     return null
   }
 }
