@@ -154,9 +154,10 @@ a.button {
   a.button {
     color: var(--provider-dark-color, var(--color-primary));
     background-color: var(--provider-dark-bg, var(--color-background));
-    box-shadow: #ccc 0px 0px 0px 0px, #ccc 0px 0px 0px 0px,
-      rgba(255, 255, 255, 0.1) 0px 5px 5px -3px,
-      rgba(255, 255, 255, 0.1) 0px 4px 6px -4px;
+    border: 1px solid #0d0d0d;
+    box-shadow: #000 0px 0px 0px 0px, #ccc 0px 0px 0px 0px,
+      rgba(255, 255, 255, 0.01) 0px 5px 5px -3px,
+      rgba(255, 255, 255, 0.05) 0px 4px 6px -4px;
   }
   #provider-logo {
     display: none !important;
