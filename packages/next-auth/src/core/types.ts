@@ -325,7 +325,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    * where you can control what should be returned to the client.
    * Anything else will be kept from your front-end.
    *
-   * ⚠ By default the JWT is signed, but not encrypted.
+   * By default the JWT is signed and encrypted.
    *
    * [Documentation](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
    * [`session` callback](https://next-auth.js.org/configuration/callbacks#session-callback)
