@@ -56,6 +56,13 @@ export default function SigninPage(props: SignInServerPageParams) {
     )
   }
 
+  if (typeof document !== "undefined" && theme.buttonText) {
+    document.documentElement.style.setProperty(
+      "--button-text-color",
+      theme.buttonText
+    )
+  }
+  console.log(providersToRender)
   const errors: Record<SignInErrorTypes, string> = {
     Signin: "Try signing in with a different account.",
     OAuthSignin: "Try signing in with a different account.",
@@ -87,8 +94,19 @@ export default function SigninPage(props: SignInServerPageParams) {
           }}
         />
       )}
-      {theme.logo && <img src={theme.logo} alt="Logo" className="logo" />}
+      {theme.buttonText && (
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+        :root {
+          --button-text-color: ${theme.buttonText}
+        }
+      `,
+          }}
+        />
+      )}
       <div className="card">
+        {theme.logo && <img src={theme.logo} alt="Logo" className="logo" />}
         {error && (
           <div className="error">
             <p>{error}</p>
@@ -177,7 +195,9 @@ export default function SigninPage(props: SignInServerPageParams) {
                     </div>
                   )
                 })}
-                <button type="submit">Sign in with {provider.name}</button>
+                <button id="submitButton" type="submit">
+                  Sign in with {provider.name}
+                </button>
               </form>
             )}
             {(provider.type === "email" || provider.type === "credentials") &&
