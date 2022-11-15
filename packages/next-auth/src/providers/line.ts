@@ -36,8 +36,8 @@ export default function LINE<P extends LineProfile>(
     style: {
       logo: 'https://raw.githubusercontent.com/nextauthjs/next-auth/ndom91/login-btn-styling/packages/next-auth/provider-logos/line.svg',
       logoDark: 'https://raw.githubusercontent.com/nextauthjs/next-auth/ndom91/login-btn-styling/packages/next-auth/provider-logos/line.svg',
-      bg: "#00C300",
-      text: "#fff",
+      bg: "#fff",
+      text: "#00C300",
       bgDark: "#00C300",
       textDark: "#fff",
     },
