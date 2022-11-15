@@ -1,15 +1,9 @@
 --
--- Name: next_auth; Type: SCHEMA; Schema: -; Owner: supabase_admin
+-- Name: next_auth; Type: SCHEMA;
 --
 CREATE SCHEMA next_auth;
 
-ALTER SCHEMA next_auth OWNER TO supabase_admin;
-
-GRANT USAGE ON SCHEMA next_auth TO anon;
-GRANT USAGE ON SCHEMA next_auth TO authenticated;
 GRANT USAGE ON SCHEMA next_auth TO service_role;
-GRANT ALL ON SCHEMA next_auth TO supabase_auth_admin;
-GRANT ALL ON SCHEMA next_auth TO dashboard_user;
 GRANT ALL ON SCHEMA next_auth TO postgres;
 
 --
@@ -25,7 +19,6 @@ CREATE TABLE IF NOT EXISTS next_auth.users
     CONSTRAINT users_pkey PRIMARY KEY (id)
 );
 
-GRANT ALL ON TABLE next_auth.users TO dashboard_user;
 GRANT ALL ON TABLE next_auth.users TO postgres;
 GRANT ALL ON TABLE next_auth.users TO service_role;
 
@@ -56,7 +49,6 @@ CREATE TABLE IF NOT EXISTS  next_auth.sessions
         ON DELETE CASCADE
 );
 
-GRANT ALL ON TABLE next_auth.sessions TO dashboard_user;
 GRANT ALL ON TABLE next_auth.sessions TO postgres;
 GRANT ALL ON TABLE next_auth.sessions TO service_role;
 
@@ -86,7 +78,6 @@ CREATE TABLE IF NOT EXISTS  next_auth.accounts
         ON DELETE CASCADE
 );
 
-GRANT ALL ON TABLE next_auth.accounts TO dashboard_user;
 GRANT ALL ON TABLE next_auth.accounts TO postgres;
 GRANT ALL ON TABLE next_auth.accounts TO service_role;
 
@@ -102,6 +93,5 @@ CREATE TABLE IF NOT EXISTS  next_auth.verification_tokens
     CONSTRAINT verification_tokens_pkey PRIMARY KEY (id)
 );
 
-GRANT ALL ON TABLE next_auth.verification_tokens TO dashboard_user;
 GRANT ALL ON TABLE next_auth.verification_tokens TO postgres;
 GRANT ALL ON TABLE next_auth.verification_tokens TO service_role;
