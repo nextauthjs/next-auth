@@ -62,7 +62,7 @@ export default function SigninPage(props: SignInServerPageParams) {
       theme.buttonText
     )
   }
-  console.log(providersToRender)
+
   const errors: Record<SignInErrorTypes, string> = {
     Signin: "Try signing in with a different account.",
     OAuthSignin: "Try signing in with a different account.",
