@@ -50,9 +50,9 @@ export default function Slack<P extends SlackProfile>(
       }
     },
     style: {
-      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/ndom91/login-btn-styling/packages/next-auth/provider-logos/slack.svg",
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/slack.svg",
       logoDark:
-        "https://raw.githubusercontent.com/nextauthjs/next-auth/ndom91/login-btn-styling/packages/next-auth/provider-logos/slack.svg",
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/slack.svg",
       bg: "#fff",
       text: "#000",
       bgDark: "#000",

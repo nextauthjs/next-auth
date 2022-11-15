@@ -306,9 +306,9 @@ export default function VK<P extends Record<string, any> = VkProfile>(
       }
     },
     style: {
-      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/ndom91/login-btn-styling/packages/next-auth/provider-logos/vk.svg",
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/vk.svg",
       logoDark:
-        "https://raw.githubusercontent.com/nextauthjs/next-auth/ndom91/login-btn-styling/packages/next-auth/provider-logos/vk-dark.svg",
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/vk-dark.svg",
       bg: "#fff",
       text: "#07F",
       bgDark: "#07F",

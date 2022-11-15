@@ -99,9 +99,9 @@ export default function Github<P extends GithubProfile>(
       }
     },
     style: {
-      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/ndom91/login-btn-styling/packages/next-auth/provider-logos/github.svg",
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/github.svg",
       logoDark:
-        "https://raw.githubusercontent.com/nextauthjs/next-auth/ndom91/login-btn-styling/packages/next-auth/provider-logos/github-dark.svg",
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/github-dark.svg",
       bg: "#fff",
       bgDark: "#000",
       text: "#000",
