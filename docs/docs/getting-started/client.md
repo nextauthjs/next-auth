@@ -290,7 +290,7 @@ export default ({ email }) => (
 
 ### Specifying a `callbackUrl`
 
-The `callbackUrl` specifies to which URL the user will be redirected after signing in. It defaults to the current URL of a user.
+The `callbackUrl` specifies to which URL the user will be redirected after signing in. Defaults to the page URL the sign-in is initiated from.
 
 You can specify a different `callbackUrl` by specifying it as the second argument of `signIn()`. This works for all providers.
 
@@ -490,6 +490,8 @@ When `refetchInterval` is set to `0` (the default) there will be no session poll
 If set to any value other than zero, it specifies in seconds how often the client should contact the server to update the session state. If the session state has expired when it is triggered, all open tabs/windows will be updated to reflect this.
 
 The value for `refetchInterval` should always be lower than the value of the session `maxAge` [session option](/configuration/options#session).
+
+By default, session polling will keep trying, even when the device has no internet access. To circumvent this, you can also set `refetchWhenOffline` to `false`. This will use [`navigator.onLine`](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/onLine) to only poll when the device is online.
 
 #### Refetch On Window Focus
 

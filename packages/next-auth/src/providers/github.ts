@@ -98,6 +98,15 @@ export default function Github<P extends GithubProfile>(
         image: profile.avatar_url,
       }
     },
+    style: {
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/github.svg",
+      logoDark:
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/github-dark.svg",
+      bg: "#fff",
+      bgDark: "#000",
+      text: "#000",
+      textDark: "#fff",
+    },
     options,
   }
 }

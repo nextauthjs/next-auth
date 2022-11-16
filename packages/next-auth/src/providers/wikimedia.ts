@@ -180,6 +180,15 @@ export default function Wikimedia<P extends WikimediaProfile>(
         email: profile.email,
       }
     },
+    style: {
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/wikimedia.svg",
+      logoDark:
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/wikimedia-dark.svg",
+      bg: "#fff",
+      text: "#000",
+      bgDark: "#000",
+      textDark: "#fff",
+    },
     options,
   }
 }

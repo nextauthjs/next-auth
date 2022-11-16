@@ -62,10 +62,19 @@ export default function GitLab<P extends GitLabProfile>(
     profile(profile) {
       return {
         id: profile.id.toString(),
-        name:  profile.name ?? profile.username,
+        name: profile.name ?? profile.username,
         email: profile.email,
         image: profile.avatar_url,
       }
+    },
+    style: {
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/gitlab.svg",
+      logoDark:
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/gitlab-dark.svg",
+      bg: "#fff",
+      text: "#FC6D26",
+      bgDark: "#FC6D26",
+      textDark: "#fff",
     },
     options,
   }

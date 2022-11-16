@@ -31,6 +31,7 @@ import Osu from "next-auth/providers/osu"
 import Patreon from "next-auth/providers/patreon"
 import Slack from "next-auth/providers/slack"
 import Spotify from "next-auth/providers/spotify"
+import Todoist from "next-auth/providers/todoist"
 import Trakt from "next-auth/providers/trakt"
 import Twitch from "next-auth/providers/twitch"
 import Twitter, { TwitterLegacy } from "next-auth/providers/twitter"
@@ -107,6 +108,7 @@ export const authOptions: NextAuthOptions = {
     Patreon({ clientId: process.env.PATREON_ID, clientSecret: process.env.PATREON_SECRET }),
     Slack({ clientId: process.env.SLACK_ID, clientSecret: process.env.SLACK_SECRET }),
     Spotify({ clientId: process.env.SPOTIFY_ID, clientSecret: process.env.SPOTIFY_SECRET }),
+    Todoist({ clientId: process.env.TODOIST_ID, clientSecret: process.env.TODOIST_SECRET }),
     Trakt({ clientId: process.env.TRAKT_ID, clientSecret: process.env.TRAKT_SECRET }),
     Twitch({ clientId: process.env.TWITCH_ID, clientSecret: process.env.TWITCH_SECRET }),
     Twitter({ version: "2.0", clientId: process.env.TWITTER_ID, clientSecret: process.env.TWITTER_SECRET }),

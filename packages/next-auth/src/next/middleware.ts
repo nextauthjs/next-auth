@@ -184,7 +184,7 @@ export type WithAuthArgs =
  * [Documentation](https://next-auth.js.org/configuration/nextjs#middleware)
  */
 export function withAuth(...args: WithAuthArgs) {
-  if (!args.length || args[0] instanceof NextRequest) {
+  if (!args.length || args[0] instanceof Request) {
     // @ts-expect-error
     return handleMiddleware(...args)
   }
