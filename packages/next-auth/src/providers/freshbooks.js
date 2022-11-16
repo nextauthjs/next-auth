@@ -18,9 +18,9 @@ export default function Freshbooks(options) {
       }
     },
     style: {
-      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/ndom91/login-btn-styling/packages/next-auth/provider-logos/freshbooks.svg",
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/freshbooks.svg",
       logoDark:
-        "https://raw.githubusercontent.com/nextauthjs/next-auth/ndom91/login-btn-styling/packages/next-auth/provider-logos/freshbooks-dark.svg",
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/freshbooks-dark.svg",
       bg: "#fff",
       text: "#0075dd",
       bgDark: "#0075dd",

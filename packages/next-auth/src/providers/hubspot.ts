@@ -65,9 +65,9 @@ export default function HubSpot<P extends HubSpotProfile>(
       }
     },
     style: {
-      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/ndom91/login-btn-styling/packages/next-auth/provider-logos/hubspot.svg",
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/hubspot.svg",
       logoDark:
-        "https://raw.githubusercontent.com/nextauthjs/next-auth/ndom91/login-btn-styling/packages/next-auth/provider-logos/hubspot-dark.svg",
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/hubspot-dark.svg",
       bg: "#fff",
       text: "#ff7a59",
       bgDark: "#ff7a59",
