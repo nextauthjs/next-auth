@@ -1,3 +1,4 @@
+import { MissingSecret } from "./../../../../apps/playground-nuxt/src/runtime/lib/errors"
 import { EncryptJWT, jwtDecrypt } from "jose"
 import hkdf from "@panva/hkdf"
 import { v4 as uuid } from "uuid"
@@ -86,7 +87,7 @@ export async function getToken(
 
   if (!req) throw new Error("Must pass `req` to JWT getToken()")
   if (!secret)
-    throw new Error("Must pass `secret` if not set to JWT getToken()")
+    throw new MissingSecret("Must pass `secret` if not set to JWT getToken()")
 
   const sessionStore = new SessionStore(
     { name: cookieName, options: { secure: secureCookie } },
