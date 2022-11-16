@@ -1,4 +1,3 @@
-import { MissingSecret } from "./../../../../apps/playground-nuxt/src/runtime/lib/errors"
 import { EncryptJWT, jwtDecrypt } from "jose"
 import hkdf from "@panva/hkdf"
 import { v4 as uuid } from "uuid"
@@ -7,6 +6,7 @@ import type { GetServerSidePropsContext, NextApiRequest } from "next"
 import type { NextRequest } from "next/server"
 import type { JWT, JWTDecodeParams, JWTEncodeParams, JWTOptions } from "./types"
 import type { LoggerInstance } from ".."
+import { MissingSecret } from "src/core/errors"
 
 export * from "./types"
 
