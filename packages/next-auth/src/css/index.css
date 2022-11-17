@@ -126,6 +126,10 @@ a.button {
   align-items: center;
   justify-content: center;
 
+  @media (max-width: 450px) {
+    font-size: 0.9rem;
+  }
+
   &:has(img) {
     justify-content: unset;
     span {
@@ -190,7 +194,6 @@ a.site {
 
   > div {
     text-align: center;
-    padding: 0.5rem;
   }
 }
 
@@ -271,7 +274,13 @@ a.site {
 }
 
 .card {
-  max-width: max-content;
+  @media screen and (min-width: 450px) {
+    width: 350px;
+  }
+  @media screen and (max-width: 450px) {
+    width: 200px;
+  }
+
   background-color: var(--color-background-card);
   border-radius: 30px;
   padding: 20px 50px;
