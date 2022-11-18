@@ -33,6 +33,14 @@ export default function LINE<P extends LineProfile>(
     client: {
       id_token_signed_response_alg: "HS256",
     },
+    style: {
+      logo: 'https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/line.svg',
+      logoDark: 'https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/line.svg',
+      bg: "#fff",
+      text: "#00C300",
+      bgDark: "#00C300",
+      textDark: "#fff",
+    },
     options,
   }
 }
