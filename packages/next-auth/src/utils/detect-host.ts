@@ -1,25 +1,23 @@
 /** Extract the host from the environment */
-function detectHost(
-  trusted: boolean | undefined,
-  forwardedValue: string | string[] | undefined | null
-): URL {
-  let host =
-    process.env.NEXTAUTH_URL ??
-    (process.env.NODE_ENV !== "production" && "http://localhost:3000")
-  if (trusted && forwardedValue) {
-    host = Array.isArray(forwardedValue) ? forwardedValue[0] : forwardedValue
-  }
-  if (host) return new URL(host)
-  throw new TypeError("Invalid URL")
-}
-
 export function getURL(
   url: string | undefined | null,
-  ...args: Parameters<typeof detectHost>
+  trusted: boolean | undefined = !!(
+    process.env.AUTH_TRUST_HOST ?? process.env.VERCEL
+  ),
+  forwardedValue: string | string[] | undefined | null
 ): URL | Error {
   try {
-    args[0] ??= Boolean(process.env.AUTH_TRUST_HOST ?? process.env.VERCEL)
-    return new URL(url ?? "", detectHost(...args))
+    let host =
+      process.env.NEXTAUTH_URL ??
+      (process.env.NODE_ENV !== "production" && "http://localhost:3000")
+
+    if (trusted && forwardedValue) {
+      host = Array.isArray(forwardedValue) ? forwardedValue[0] : forwardedValue
+    }
+
+    if (!host) throw new TypeError("Invalid host")
+
+    return new URL(url ?? "", new URL(host))
   } catch (error) {
     return error as Error
   }
