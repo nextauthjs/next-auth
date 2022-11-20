@@ -41,6 +41,7 @@ async function NextAuthHandler(
   // If the request expects a return URL, send it as JSON
   // instead of doing an actual redirect.
   const redirect = headers.get("Location")
+
   if (req.body?.json === "true" && redirect) {
     res.removeHeader("Location")
     return res.json({ url: redirect })

@@ -117,6 +117,7 @@ export async function nodeHandler(
     json: jest.fn(),
     status: jest.fn().mockReturnValue({ end: jest.fn() }),
     setHeader: jest.fn(),
+    removeHeader: jest.fn(),
     send: jest.fn(),
   }
 
