@@ -154,15 +154,13 @@ export async function unstable_getServerSession(
 
   const data = await response.json()
 
-  if (Object.keys(data).length) {
-    if (status === 200) {
-      if (isRSC) delete data.expires
-      return data as Session
-    }
-    throw new Error(data.message)
-  }
+  if (!data || !Object.keys(data).length) return null
 
-  return null
+  if (status === 200) {
+    if (isRSC) delete data.expires
+    return data as Session
+  }
+  throw new Error(data.message)
 }
 
 declare global {

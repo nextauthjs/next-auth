@@ -26,7 +26,7 @@ export async function handler(
   if (prod) process.env.NODE_ENV = "production"
 
   const url = new URL(
-    `http://localhost/api/auth/${path ?? "signin"}?${new URLSearchParams(
+    `http://localhost:3000/api/auth/${path ?? "signin"}?${new URLSearchParams(
       params ?? {}
     )}`
   )
