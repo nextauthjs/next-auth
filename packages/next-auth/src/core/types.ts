@@ -212,7 +212,7 @@ export interface NextAuthOptions {
    * - ⚠ **This is an advanced option.** Advanced options are passed the same way as basic options,
    * but **may have complex implications** or side effects.
    * You should **try to avoid using advanced options** unless you are very comfortable using them.
-   * @default Boolean(process.env.VERCEL ?? process.env.AUTH_TRUST_HOST)
+   * @default Boolean(process.env.AUTH_TRUST_HOST ?? process.env.VERCEL)
    */
   trustHost?: boolean
 }

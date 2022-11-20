@@ -22,7 +22,7 @@ async function NextAuthNextHandler(
   const { nextauth, ...query } = req.query
 
   options.secret ??= options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
-  options.trustHost ??= !!(process.env.VERCEL ?? process.env.AUTH_TRUST_HOST)
+  options.trustHost ??= !!(process.env.AUTH_TRUST_HOST ?? process.env.VERCEL)
 
   const handler = await NextAuthHandler({
     req: {
@@ -147,7 +147,7 @@ export async function unstable_getServerSession(
   }
 
   options.secret ??= process.env.NEXTAUTH_SECRET
-  options.trustHost ??= !!(process.env.VERCEL ?? process.env.AUTH_TRUST_HOST)
+  options.trustHost ??= !!(process.env.AUTH_TRUST_HOST ?? process.env.VERCEL)
 
   const session = await NextAuthHandler<Session | {} | string>({
     options,
