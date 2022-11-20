@@ -42,11 +42,17 @@ prisma:
 sequelize:
   - packages/adapter-sequelize/**
 
+supabase:
+  - packages/adapter-supabase/**
+
 typeorm-legacy:
   - packages/adapter-typeorm-legacy/**
 
 upstash-redis:
   - packages/adapter-upstash-redis/**
+
+xata:
+  - packages/adapter-xata/**
 
 core:
   - packages/next-auth/src/**/*

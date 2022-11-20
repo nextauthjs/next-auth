@@ -1,5 +1,6 @@
 import NextAuth from "next-auth"
 import type { NextAuthOptions } from "next-auth"
+import jwt from "jsonwebtoken"
 
 // Providers
 import Apple from "next-auth/providers/apple"
@@ -18,7 +19,6 @@ import Freshbooks from "next-auth/providers/freshbooks"
 import GitHub from "next-auth/providers/github"
 import Gitlab from "next-auth/providers/gitlab"
 import Google from "next-auth/providers/google"
-import Hubspot from "next-auth/providers/hubspot"
 import IDS4 from "next-auth/providers/identity-server4"
 import Instagram from "next-auth/providers/instagram"
 import Keycloak from "next-auth/providers/keycloak"
@@ -36,36 +36,70 @@ import Twitter, { TwitterLegacy } from "next-auth/providers/twitter"
 import Vk from "next-auth/providers/vk"
 import Wikimedia from "next-auth/providers/wikimedia"
 import WorkOS from "next-auth/providers/workos"
-import Zitadel from "next-auth/providers/zitadel"
 
 // Adapters
+import { PrismaClient } from "@prisma/client"
+import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import { Client as FaunaClient } from "faunadb"
+import { FaunaAdapter } from "@next-auth/fauna-adapter"
+import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
+import { SupabaseAdapter } from "@next-auth/supabase-adapter"
 
-// // Prisma
-// import { PrismaClient } from "@prisma/client"
-// import { PrismaAdapter } from "@next-auth/prisma-adapter"
-// const client = globalThis.prisma || new PrismaClient()
-// if (process.env.NODE_ENV !== "production") globalThis.prisma = client
-// const adapter = PrismaAdapter(client)
-
-// // Fauna
-// import { Client as FaunaClient } from "faunadb"
-// import { FaunaAdapter } from "@next-auth/fauna-adapter"
-// const opts = { secret: process.env.FAUNA_SECRET, domain: process.env.FAUNA_DOMAIN }
-// const client = globalThis.fauna || new FaunaClient(opts)
-// if (process.env.NODE_ENV !== "production") globalThis.fauna = client
-// const adapter = FaunaAdapter(client)
-
-// // TypeORM
-// import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
-// const adapter = TypeORMLegacyAdapter({
-//   type: "sqlite",
-//   name: "next-auth-test-memory",
-//   database: "./typeorm/dev.db",
-//   synchronize: true,
-// })
+// Add an adapter you want to test here.
+const adapters = {
+  prisma() {
+    const client = globalThis.prisma || new PrismaClient()
+    if (process.env.NODE_ENV !== "production") globalThis.prisma = client
+    return PrismaAdapter(client)
+  },
+  typeorm() {
+    return TypeORMLegacyAdapter({
+      type: "sqlite",
+      name: "next-auth-test-memory",
+      database: "./typeorm/dev.db",
+      synchronize: true,
+    })
+  },
+  fauna() {
+    const client =
+      globalThis.fauna ||
+      new FaunaClient({
+        secret: process.env.FAUNA_SECRET,
+        domain: process.env.FAUNA_DOMAIN,
+      })
+    if (process.env.NODE_ENV !== "production") global.fauna = client
+    return FaunaAdapter(client)
+  },
+  supabase() {
+    return SupabaseAdapter({
+      url: process.env.NEXT_PUBLIC_SUPABASE_URL,
+      secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    })
+  },
+  noop() {
+    return undefined
+  },
+}
 
 export const authOptions: NextAuthOptions = {
-  // adapter,
+  adapter: adapters.noop(),
+  callbacks: {
+    async session({ session, user }) {
+      // NOTE: this is needed when using Supabase with RLS. Otherwise this callback can be removed.
+      const signingSecret = process.env.SUPABASE_JWT_SECRET
+      if (signingSecret) {
+        const payload = {
+          aud: "authenticated",
+          exp: Math.floor(new Date(session.expires).getTime() / 1000),
+          sub: user.id,
+          email: user.email,
+          role: "authenticated",
+        }
+        session.supabaseAccessToken = jwt.sign(payload, signingSecret)
+      }
+      return session
+    },
+  },
   debug: process.env.NODE_ENV !== "production",
   theme: {
     logo: "https://next-auth.js.org/img/logo/logo-sm.png",
@@ -93,7 +127,6 @@ export const authOptions: NextAuthOptions = {
     GitHub({ clientId: process.env.GITHUB_ID, clientSecret: process.env.GITHUB_SECRET }),
     Gitlab({ clientId: process.env.GITLAB_ID, clientSecret: process.env.GITLAB_SECRET }),
     Google({ clientId: process.env.GOOGLE_ID, clientSecret: process.env.GOOGLE_SECRET }),
-    Hubspot({ clientId: process.env.HUBSPOT_ID, clientSecret: process.env.HUBSPOT_SECRET }),
     IDS4({ clientId: process.env.IDS4_ID, clientSecret: process.env.IDS4_SECRET, issuer: process.env.IDS4_ISSUER }),
     Instagram({ clientId: process.env.INSTAGRAM_ID, clientSecret: process.env.INSTAGRAM_SECRET }),
     Keycloak({ clientId: process.env.KEYCLOAK_ID, clientSecret: process.env.KEYCLOAK_SECRET, issuer: process.env.KEYCLOAK_ISSUER }),
@@ -112,7 +145,6 @@ export const authOptions: NextAuthOptions = {
     Vk({ clientId: process.env.VK_ID, clientSecret: process.env.VK_SECRET }),
     Wikimedia({ clientId: process.env.WIKIMEDIA_ID, clientSecret: process.env.WIKIMEDIA_SECRET }),
     WorkOS({ clientId: process.env.WORKOS_ID, clientSecret: process.env.WORKOS_SECRET }),
-    Zitadel({ issuer: process.env.ZITADEL_ISSUER, clientId: process.env.ZITADEL_CLIENT_ID, clientSecret: process.env.ZITADEL_CLIENT_SECRET }),
   ],
 }
 

@@ -65,6 +65,7 @@ dev.db*
 packages/adapter-prisma/prisma/dev.db
 packages/adapter-prisma/prisma/migrations
 db.sqlite
+packages/adapter-supabase/supabase/.branches
 
 # Tests
 coverage

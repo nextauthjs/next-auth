@@ -1,5 +1,4 @@
 import { serialize, parse as parseCookie } from "cookie"
-import { detectHost } from "../../utils/detect-host"
 import type { OutgoingResponse, RequestInternal } from ".."
 import type { NextAuthAction } from "../types"
 
@@ -34,10 +33,8 @@ export async function toInternalRequest(
 ): Promise<RequestInternal> {
   const url = new URL(req.url)
   const nextauth = url.pathname.split("/").slice(3)
-  const headers = Object.fromEntries(req.headers.entries())
-  const query: Record<string, any> = Object.fromEntries(
-    url.searchParams.entries()
-  )
+  const headers = Object.fromEntries(req.headers)
+  const query: Record<string, any> = Object.fromEntries(url.searchParams)
 
   const cookieHeader = req.headers.get("cookie") ?? ""
   const cookies =
@@ -53,7 +50,7 @@ export async function toInternalRequest(
     cookies: cookies,
     providerId: nextauth[1],
     error: url.searchParams.get("error") ?? undefined,
-    host: detectHost(headers["x-forwarded-host"] ?? headers.host),
+    host: new URL(req.url).origin,
     query,
   }
 }

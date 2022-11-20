@@ -16,16 +16,20 @@
   "dependencies": {
     "@next-auth/fauna-adapter": "workspace:*",
     "@next-auth/prisma-adapter": "workspace:*",
+    "@next-auth/supabase-adapter": "workspace:*",
     "@next-auth/typeorm-legacy-adapter": "workspace:*",
     "@prisma/client": "^3",
+    "@supabase/supabase-js": "^2.0.5",
     "faunadb": "^4",
-    "next": "12.3.1",
+    "jsonwebtoken": "^8.5.1",
+    "next": "13.0.2",
     "next-auth": "workspace:*",
     "nodemailer": "^6",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^8.5.5",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "fake-smtp-server": "^0.8.0",
