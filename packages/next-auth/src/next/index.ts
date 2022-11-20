@@ -1,6 +1,5 @@
 import { AuthHandler } from "../core"
-import { getURL } from "../utils/detect-host"
-import { getBody } from "./utils"
+import { getURL, getBody } from "../utils/node"
 
 import type {
   GetServerSidePropsContext,
@@ -161,16 +160,4 @@ export async function unstable_getServerSession(
     return data as Session
   }
   throw new Error(data.message)
-}
-
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace NodeJS {
-    interface ProcessEnv {
-      AUTH_TRUST_HOST?: string
-      NEXTAUTH_URL?: string
-      NEXTAUTH_SECRET?: string
-      VERCEL?: "1"
-    }
-  }
 }

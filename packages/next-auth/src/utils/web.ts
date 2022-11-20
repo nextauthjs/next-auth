@@ -1,6 +1,6 @@
 import { serialize, parse as parseCookie } from "cookie"
-import type { OutgoingResponse, RequestInternal } from ".."
-import type { NextAuthAction } from "../types"
+import type { OutgoingResponse, RequestInternal } from "../core"
+import type { NextAuthAction } from "../core/types"
 
 const decoder = new TextDecoder()
 

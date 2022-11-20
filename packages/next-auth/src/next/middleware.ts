@@ -6,7 +6,7 @@ import { NextResponse, NextRequest } from "next/server"
 
 import { getToken } from "../jwt"
 import parseUrl from "../utils/parse-url"
-import { getURL } from "../utils/detect-host"
+import { getURL } from "../utils/node"
 
 type AuthorizedCallback = (params: {
   token: JWT | null
