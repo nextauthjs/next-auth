@@ -16,7 +16,7 @@ export function EdgeDBAdapter(client: Client): Adapter {
             email:= <str>$email,
             emailVerified:= <datetime>emailVerified,
             name:= name ?? .name,
-            image:= image ?? .name,
+            image:= image ?? .image,
           }
         ) {
             id,
