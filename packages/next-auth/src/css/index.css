@@ -280,7 +280,7 @@ a.site {
   @media screen and (max-width: 450px) {
     width: 200px;
   }
-
+  margin: 20px 0 20px 0;
   background-color: var(--color-background-card);
   border-radius: 30px;
   padding: 20px 50px;
