@@ -31,6 +31,15 @@ export default function Atlassian<P extends AtlassianProfile>(
         image: profile.picture,
       }
     },
+    style: {
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/atlassian.svg",
+      logoDark:
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/atlassian-dark.svg",
+      bg: "#0052cc",
+      text: "#fff",
+      bgDark: "#fff",
+      textDark: "#0052cc",
+    },
     options,
   }
 }

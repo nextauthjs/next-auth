@@ -36,6 +36,15 @@ export default function Twitch<P extends TwitchProfile>(
         image: profile.picture,
       }
     },
+    style: {
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/twitch.svg",
+      logoDark:
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/twitch-dark.svg",
+      bg: "#fff",
+      text: "#65459B",
+      bgDark: "#65459B",
+      textDark: "#fff",
+    },
     options,
   }
 }

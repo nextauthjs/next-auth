@@ -24,6 +24,15 @@ export default function Cognito<P extends CognitoProfile>(
         image: profile.picture,
       }
     },
+    style: {
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/cognito.svg",
+      logoDark:
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/cognito.svg",
+      bg: "#fff",
+      text: "#C17B9E",
+      bgDark: "#fff",
+      textDark: "#C17B9E",
+    },
     options,
   }
 }

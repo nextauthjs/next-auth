@@ -43,6 +43,15 @@ export default function Keycloak<P extends KeycloakProfile>(
         image: profile.picture,
       }
     },
+    style: {
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/keycloak.svg",
+      logoDark:
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/keycloak.svg",
+      bg: "#fff",
+      text: "#000",
+      bgDark: "#fff",
+      textDark: "#000",
+    },
     options,
   }
 }

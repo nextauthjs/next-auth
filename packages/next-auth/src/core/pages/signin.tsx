@@ -1,4 +1,5 @@
 import type { InternalProvider, Theme } from "../types"
+import type React from "react"
 
 /**
  * The following errors are passed as error query parameters to the default or overridden sign-in page.
@@ -101,8 +102,29 @@ export default function SigninPage(props: SignInServerPageParams) {
                 {callbackUrl && (
                   <input type="hidden" name="callbackUrl" value={callbackUrl} />
                 )}
-                <button type="submit" className="button">
-                  Sign in with {provider.name}
+                <button
+                  type="submit"
+                  className="button"
+                  style={
+                    // eslint-disable-next-line
+                    {
+                      "--provider-bg": provider.style?.bg ?? "",
+                      "--provider-dark-bg": provider.style?.bgDark ?? "",
+                      "--provider-color": provider.style?.text ?? "",
+                      "--provider-dark-color": provider.style?.textDark ?? "",
+                    } as React.CSSProperties
+                  }
+                >
+                  {provider.style?.logo && (
+                    <img id="provider-logo" src={provider.style.logo} />
+                  )}
+                  {provider.style?.logoDark && (
+                    <img
+                      id="provider-logo-dark"
+                      src={provider.style.logoDark}
+                    />
+                  )}
+                  <span>Sign in with {provider.name}</span>
                 </button>
               </form>
             )}
