@@ -37,6 +37,15 @@ export default function Google<P extends GoogleProfile>(
         image: profile.picture,
       }
     },
+    style: {
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/google.svg",
+      logoDark:
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/google.svg",
+      bgDark: "#fff",
+      bg: "#fff",
+      text: "#000",
+      textDark: "#000",
+    },
     options,
   }
 }

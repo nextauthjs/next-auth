@@ -44,6 +44,15 @@ export default function WorkOS<P extends WorkOSProfile>(
         image: profile.raw_attributes.picture ?? null,
       }
     },
+    style: {
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/workos.svg",
+      logoDark:
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/workos-dark.svg",
+      bg: "#fff",
+      text: "#6363f1",
+      bgDark: "#6363f1",
+      textDark: "#fff",
+    },
     options,
   }
 }
