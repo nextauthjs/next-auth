@@ -15,8 +15,8 @@ export function EdgeDBAdapter(client: Client): Adapter {
           insert User {
             email:= <str>$email,
             emailVerified:= <datetime>emailVerified,
-            name:= name ?? .name,
-            image:= image ?? .image,
+            name:= name,
+            image:= image,
           }
         ) {
             id,
@@ -60,17 +60,18 @@ export function EdgeDBAdapter(client: Client): Adapter {
     async getUserByAccount({ providerAccountId, provider }) {
       return await client.querySingle(
         `
-        select User {
+        with account := (
+          select Account
+          filter .providerAccountId = <str>$providerAccountId
+             and .provider = <str>$provider
+        )
+        select account.user {
           id,
           email,
           image,
           name,
-          emailVerified,
-        } filter 
-          .accounts.providerAccountId = <str>$providerAccountId
-          and
-          .accounts.provider = <str>$provider
-          limit 1;
+          emailVerified
+        }
         `,
         { providerAccountId, provider }
       );
@@ -136,13 +137,13 @@ export function EdgeDBAdapter(client: Client): Adapter {
           type := <str>$type,
           provider := <str>$provider,
           providerAccountId := <str>$providerAccountId,
-          refresh_token := refresh_token ?? .refresh_token,
-          access_token := access_token ?? .access_token,
+          refresh_token := refresh_token,
+          access_token := access_token,
           expires_at := <int64>expires_at,
-          token_type := token_type ?? .token_type,
-          scope := scope ?? .scope,
-          id_token := id_token ?? .id_token,
-          session_state := session_state ?? .session_state,
+          token_type := token_type,
+          scope := scope,
+          id_token := id_token,
+          session_state := session_state,
           user := (
             select User filter .id = <uuid>userId
           )
