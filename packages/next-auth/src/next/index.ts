@@ -21,12 +21,17 @@ async function NextAuthNextHandler(
 ) {
   const { nextauth, ...query } = req.query
 
-  options.secret =
-    options.secret ?? options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
+  options.secret ??= options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
+  options.trustHost ??= !!(process.env.AUTH_TRUST_HOST ?? process.env.VERCEL)
 
   const handler = await NextAuthHandler({
     req: {
-      host: detectHost(req.headers["x-forwarded-host"]),
+      host: detectHost(
+        options.trustHost,
+        req.headers["x-forwarded-host"],
+        process.env.NEXTAUTH_URL ??
+          (process.env.NODE_ENV !== "production" && "http://localhost:3000")
+      ),
       body: req.body,
       query,
       cookies: req.cookies,
@@ -141,12 +146,18 @@ export async function unstable_getServerSession(
     options = args[2]
   }
 
-  options.secret = options.secret ?? process.env.NEXTAUTH_SECRET
+  options.secret ??= process.env.NEXTAUTH_SECRET
+  options.trustHost ??= !!(process.env.AUTH_TRUST_HOST ?? process.env.VERCEL)
 
   const session = await NextAuthHandler<Session | {} | string>({
     options,
     req: {
-      host: detectHost(req.headers["x-forwarded-host"]),
+      host: detectHost(
+        options.trustHost,
+        req.headers["x-forwarded-host"],
+        process.env.NEXTAUTH_URL ??
+          (process.env.NODE_ENV !== "production" && "http://localhost:3000")
+      ),
       action: "session",
       method: "GET",
       cookies: req.cookies,

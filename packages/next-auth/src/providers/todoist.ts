@@ -53,6 +53,15 @@ export default function TodoistProvider<P extends TodoistProfile>(
         image: profile.avatar_big,
       }
     },
+    style: {
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/todoist.svg",
+      logoDark:
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/todoist.svg",
+      bg: "#fff",
+      text: "#E44332",
+      bgDark: "#000",
+      textDark: "#E44332",
+    },
     ...options,
   }
 }

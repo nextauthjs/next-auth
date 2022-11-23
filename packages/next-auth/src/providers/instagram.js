@@ -36,7 +36,7 @@ export default function Instagram(options) {
     userinfo:
       "https://graph.instagram.com/me?fields=id,username,account_type,name",
     client: {
-      token_endpoint_auth_method: 'client_secret_post',
+      token_endpoint_auth_method: "client_secret_post",
     },
     async profile(profile) {
       return {
@@ -45,6 +45,15 @@ export default function Instagram(options) {
         email: null,
         image: null,
       }
+    },
+    style: {
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/instagram.svg",
+      logoDark:
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/instagram.svg",
+      bg: "#fff",
+      text: "#000",
+      bgDark: "#fff",
+      textDark: "#000",
     },
     options,
   }
