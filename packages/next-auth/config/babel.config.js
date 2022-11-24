@@ -17,7 +17,7 @@ module.exports = (api) => {
   }
   return {
     presets: [
-      ["@babel/preset-env", { targets: { node: 12 } }],
+      ["@babel/preset-env", { targets: { node: 14 } }],
       "@babel/preset-typescript",
     ],
     plugins: [
@@ -39,7 +39,15 @@ module.exports = (api) => {
           "../src/client/**",
         ],
         presets: [
-          ["@babel/preset-env", { targets: { ie: 11 } }],
+          ["@babel/preset-env", {
+            targets: {
+              chrome: 64,
+              edge: 79,
+              firefox: 67,
+              opera: 51,
+              safari: 12
+            }
+          }],
           ["@babel/preset-react", { runtime: "automatic" }],
         ],
       },
