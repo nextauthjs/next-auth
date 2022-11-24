@@ -9,7 +9,6 @@ import type {
 } from "next"
 import type { NextAuthOptions, Session } from ".."
 import type {
-  CallbacksOptions,
   NextAuthAction,
   NextAuthRequest,
   NextAuthResponse,
@@ -88,7 +87,7 @@ let experimentalWarningShown = false
 let experimentalRSCWarningShown = false
 
 type GetServerSessionOptions = Partial<Omit<NextAuthOptions, "callbacks">> & {
-  callbacks?: Omit<Partial<CallbacksOptions>, "session"> & {
+  callbacks?: Omit<NextAuthOptions['callbacks'], "session"> & {
     session?: (...args: Parameters<CallbacksOptions["session"]>) => any
   }
 }
