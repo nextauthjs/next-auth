@@ -9,7 +9,7 @@ import type {
 } from "next"
 import type { NextAuthOptions, Session } from ".."
 import type {
-  CallbackOptions,
+  CallbacksOptions,
   NextAuthAction,
   NextAuthRequest,
   NextAuthResponse,
