@@ -12,6 +12,8 @@ Please raise any significant new functionality or breaking change an issue for d
 
 Anyone can be a contributor. Either you found a typo, or you have an awesome feature request you could implement, we encourage you to create a Pull Request.
 
+Before contributing, we recommend you read the [Tour de Source: NextAuth.js](https://sourcegraph.com/notebooks/Tm90ZWJvb2s6MTc2MQ==) post to become more familiar with the libraries inner workings.
+
 ### Pull Requests
 
 - The latest changes are always in `main`, so please make your Pull Request against that branch.

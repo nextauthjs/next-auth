@@ -44,6 +44,15 @@ export default function Discord<P extends DiscordProfile>(
         image: profile.image_url,
       }
     },
+    style: {
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/discord.svg",
+      logoDark:
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/discord-dark.svg",
+      bg: "#fff",
+      text: "#7289DA",
+      bgDark: "#7289DA",
+      textDark: "#fff",
+    },
     options,
   }
 }

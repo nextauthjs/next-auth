@@ -26,6 +26,15 @@ export default function BattleNet<P extends BattleNetProfile>(
         image: null,
       }
     },
+    style: {
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/battlenet.svg",
+      logoDark:
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/battlenet-dark.svg",
+      bg: "#fff",
+      text: "#148eff",
+      bgDark: "#148eff",
+      textDark: "#fff",
+    },
     options,
   }
 }

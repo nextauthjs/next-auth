@@ -41,6 +41,15 @@ export default function Facebook<P extends FacebookProfile>(
         image: profile.picture.data.url,
       }
     },
+    style: {
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/facebook.svg",
+      logoDark:
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/facebook-dark.svg",
+      bg: "#fff",
+      text: "#006aff",
+      bgDark: "#006aff",
+      textDark: "#fff",
+    },
     options,
   }
 }

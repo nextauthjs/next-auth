@@ -19,22 +19,19 @@ npm install next-auth @next-auth/mongodb-adapter mongodb
 
 ```js
 // This approach is taken from https://github.com/vercel/next.js/tree/canary/examples/with-mongodb
-import { MongoClient } from "mongodb"
-
-const uri = process.env.MONGODB_URI
-const options = {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
-}
-
-let client
-let clientPromise
+import { MongoClient } from 'mongodb'
 
 if (!process.env.MONGODB_URI) {
-  throw new Error("Please add your Mongo URI to .env.local")
+  throw new Error('Invalid/Missing environment variable: "MONGODB_URI"')
 }
 
-if (process.env.NODE_ENV === "development") {
+const uri = process.env.MONGODB_URI
+const options = {}
+
+let client
+let clientPromise: Promise<MongoClient>
+
+if (process.env.NODE_ENV === 'development') {
   // In development mode, use a global variable so that the value
   // is preserved across module reloads caused by HMR (Hot Module Replacement).
   if (!global._mongoClientPromise) {
