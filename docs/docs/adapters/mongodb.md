@@ -15,9 +15,9 @@ The MongoDB adapter does not handle connections automatically, so you will have 
 npm install next-auth @next-auth/mongodb-adapter mongodb
 ```
 
-2. Add `lib/mongodb.js`
+2. Add `lib/mongodb.ts`
 
-```js
+```ts
 // This approach is taken from https://github.com/vercel/next.js/tree/canary/examples/with-mongodb
 import { MongoClient } from 'mongodb'
 
