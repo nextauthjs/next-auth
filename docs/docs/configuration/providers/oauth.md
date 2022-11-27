@@ -174,6 +174,10 @@ interface OAuthConfig {
   issuer?: string
   client?: Partial<ClientMetadata>
   allowDangerousEmailAccountLinking?: boolean
+  /**
+   * Object containing the settings for the styling of the providers sign-in buttons
+   */
+  style: ProviderStyleType
 }
 ```
 
@@ -429,6 +433,7 @@ You only need to add three changes:
 
 1. Add your config: [`src/providers/{provider}.ts`](https://github.com/nextauthjs/next-auth/tree/main/packages/next-auth/src/providers)<br />
    • make sure you use a named default export, like this: `export default function YourProvider`
+   • add two SVG's of the provider logo, like `google_dark.svg`/`google_light.svg` to the `/packages/next-auth/provider-logos/` directory. 
 2. Add provider documentation: [`/docs/providers/{provider}.md`](https://github.com/nextauthjs/next-auth/tree/main/docs/docs/providers)
 3. Add the new provider name to the `Provider type` dropdown options in [`the provider issue template`](<[http](https://github.com/nextauthjs/next-auth/edit/main/.github/ISSUE_TEMPLATE/2_bug_provider.yml)>)
 
