@@ -61,7 +61,7 @@ For the time being, the `withAuth` middleware only supports `"jwt"` as [session 
 More details can be found [here](https://next-auth.js.org/configuration/nextjs#middleware).
 
 :::tip
-To inclue all `dashboard` nested routes (sub pages like `/dashboard/settings`, `/dashboard/profile`) you can pass `matcher: "/dashboard/:path*"` to `config`.
+To include all `dashboard` nested routes (sub pages like `/dashboard/settings`, `/dashboard/profile`) you can pass `matcher: "/dashboard/:path*"` to `config`.
 
 For other patterns check out the [Next.js Middleware documentation](https://nextjs.org/docs/advanced-features/middleware#matcher).
 :::
