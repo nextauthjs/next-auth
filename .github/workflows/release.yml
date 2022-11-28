@@ -15,17 +15,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Init
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 2
       - name: Install pnpm
-        uses: pnpm/action-setup@v2.2.1
+        uses: pnpm/action-setup@v2.2.4
         with:
           version: 7.5.1
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
@@ -49,17 +49,17 @@ jobs:
     environment: Production
     steps:
       - name: Init
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Install pnpm
-        uses: pnpm/action-setup@v2.2.1
+        uses: pnpm/action-setup@v2.2.4
         with:
           version: 7.5.1
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
@@ -81,15 +81,15 @@ jobs:
     environment: Preview
     steps:
       - name: Init
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install pnpm
-        uses: pnpm/action-setup@v2.2.1
+        uses: pnpm/action-setup@v2.2.4
         with:
           version: 7.5.1
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
@@ -106,7 +106,7 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN_PKG }}
       - name: Comment version on PR
-        uses: NejcZdovc/comment-pr@v1
+        uses: NejcZdovc/comment-pr@v2
         with:
           message:
             "🎉 Experimental release [published 📦️ on npm](https://npmjs.com/package/next-auth/v/${{ env.VERSION }})!\n \

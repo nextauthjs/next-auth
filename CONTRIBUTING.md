@@ -12,6 +12,8 @@ Please raise any significant new functionality or breaking change an issue for d
 
 Anyone can be a contributor. Either you found a typo, or you have an awesome feature request you could implement, we encourage you to create a Pull Request.
 
+Before contributing, we recommend you read the [Tour de Source: NextAuth.js](https://sourcegraph.com/notebooks/Tm90ZWJvb2s6MTc2MQ==) post to become more familiar with the libraries inner workings.
+
 ### Pull Requests
 
 - The latest changes are always in `main`, so please make your Pull Request against that branch.
@@ -41,7 +43,7 @@ corepack enable pnpm
 
 (Now, if you run `pnpm --version`, it should print the same verion as the `packageManager` property in the [`package.json` file](https://github.com/nextauthjs/next-auth/blob/main/package.json))
 
-3. Install packages. Developing requires Node.js v16:
+3. Install packages. Developing requires Node.js v18:
 
 ```sh
 pnpm install

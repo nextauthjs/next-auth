@@ -6,6 +6,7 @@ import { NextResponse, NextRequest } from "next/server"
 
 import { getToken } from "../jwt"
 import parseUrl from "../utils/parse-url"
+import { detectHost } from "../utils/detect-host"
 
 type AuthorizedCallback = (params: {
   token: JWT | null
@@ -89,7 +90,17 @@ export interface NextAuthMiddlewareOptions {
    * The same `secret` used in the `NextAuth` configuration.
    * Defaults to the `NEXTAUTH_SECRET` environment variable.
    */
-  secret?: string
+  secret?: NextAuthOptions["secret"]
+  /**
+   * If set to `true`, NextAuth.js will use either the `x-forwarded-host` or `host` headers,
+   * instead of `NEXTAUTH_URL`
+   * Make sure that reading `x-forwarded-host` on your hosting platform can be trusted.
+   * - ⚠ **This is an advanced option.** Advanced options are passed the same way as basic options,
+   * but **may have complex implications** or side effects.
+   * You should **try to avoid using advanced options** unless you are very comfortable using them.
+   * @default Boolean(process.env.VERCEL ?? process.env.AUTH_TRUST_HOST)
+   */
+  trustHost?: NextAuthOptions["trustHost"]
 }
 
 // TODO: `NextMiddleware` should allow returning `void`
@@ -98,14 +109,25 @@ type NextMiddlewareResult = ReturnType<NextMiddleware> | void // eslint-disable-
 
 async function handleMiddleware(
   req: NextRequest,
-  options: NextAuthMiddlewareOptions | undefined,
+  options: NextAuthMiddlewareOptions | undefined = {},
   onSuccess?: (token: JWT | null) => Promise<NextMiddlewareResult>
 ) {
   const { pathname, search, origin, basePath } = req.nextUrl
 
   const signInPage = options?.pages?.signIn ?? "/api/auth/signin"
   const errorPage = options?.pages?.error ?? "/api/auth/error"
-  const authPath = parseUrl(process.env.NEXTAUTH_URL).path
+
+  options.trustHost = Boolean(
+    options.trustHost ?? process.env.VERCEL ?? process.env.AUTH_TRUST_HOST
+  )
+
+  const host = detectHost(
+    options.trustHost,
+    req.headers.get("x-forwarded-host"),
+    process.env.NEXTAUTH_URL ??
+      (process.env.NODE_ENV !== "production" && "http://localhost:3000")
+  )
+  const authPath = parseUrl(host).path
   const publicPaths = ["/_next", "/favicon.ico"]
 
   // Avoid infinite redirects/invalid response
@@ -146,7 +168,10 @@ async function handleMiddleware(
 
   // the user is not logged in, redirect to the sign-in page
   const signInUrl = new URL(`${basePath}${signInPage}`, origin)
-  signInUrl.searchParams.append("callbackUrl", `${basePath}${pathname}${search}`)
+  signInUrl.searchParams.append(
+    "callbackUrl",
+    `${basePath}${pathname}${search}`
+  )
   return NextResponse.redirect(signInUrl)
 }
 
@@ -184,7 +209,7 @@ export type WithAuthArgs =
  * [Documentation](https://next-auth.js.org/configuration/nextjs#middleware)
  */
 export function withAuth(...args: WithAuthArgs) {
-  if (!args.length || args[0] instanceof NextRequest) {
+  if (!args.length || args[0] instanceof Request) {
     // @ts-expect-error
     return handleMiddleware(...args)
   }

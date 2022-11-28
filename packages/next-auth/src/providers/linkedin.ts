@@ -55,6 +55,15 @@ export default function LinkedIn<P extends LinkedInProfile>(
             ?.identifiers?.[0]?.identifier,
       }
     },
+    style: {
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/linkedin.svg",
+      logoDark:
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/linkedin-dark.svg",
+      bg: "#fff",
+      text: "#069",
+      bgDark: "#069",
+      textDark: "#fff",
+    },
     options,
   }
 }

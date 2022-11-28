@@ -29,6 +29,15 @@ export default function Patreon<P extends PatreonProfile>(
         image: profile.data.attributes.image_url,
       }
     },
+    style: {
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/patreon.svg",
+      logoDark:
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/patreon.svg",
+      bg: "#fff",
+      text: "#e85b46",
+      bgDark: "#000",
+      textDark: "#e85b46",
+    },
     options,
   }
 }

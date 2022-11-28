@@ -52,16 +52,15 @@ async function getBody(req: Request): Promise<Record<string, any> | undefined> {
 
 // TODO:
 async function toInternalRequest(
-  req: RequestInternal | Request
+  req: RequestInternal | Request,
+  trustHost: boolean = false
 ): Promise<RequestInternal> {
   if (req instanceof Request) {
     const url = new URL(req.url)
     // TODO: handle custom paths?
     const nextauth = url.pathname.split("/").slice(3)
-    const headers = Object.fromEntries(req.headers.entries())
-    const query: Record<string, any> = Object.fromEntries(
-      url.searchParams.entries()
-    )
+    const headers = Object.fromEntries(req.headers)
+    const query: Record<string, any> = Object.fromEntries(url.searchParams)
     query.nextauth = nextauth
 
     return {
@@ -72,7 +71,11 @@ async function toInternalRequest(
       cookies: parseCookie(req.headers.get("cookie") ?? ""),
       providerId: nextauth[1],
       error: url.searchParams.get("error") ?? nextauth[1],
-      host: detectHost(headers["x-forwarded-host"] ?? headers.host),
+      host: detectHost(
+        trustHost,
+        headers["x-forwarded-host"] ?? headers.host,
+        "http://localhost:3000"
+      ),
       query,
     }
   }
@@ -84,7 +87,7 @@ export async function NextAuthHandler<
 >(params: NextAuthHandlerParams): Promise<OutgoingResponse<Body>> {
   const { options: userOptions, req: incomingRequest } = params
 
-  const req = await toInternalRequest(incomingRequest)
+  const req = await toInternalRequest(incomingRequest, userOptions.trustHost)
 
   setLogger(userOptions.logger, userOptions.debug)
 

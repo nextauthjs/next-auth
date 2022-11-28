@@ -9,6 +9,7 @@ import type {
 } from "next"
 import type { NextAuthOptions, Session } from ".."
 import type {
+  CallbacksOptions,
   NextAuthAction,
   NextAuthRequest,
   NextAuthResponse,
@@ -21,12 +22,17 @@ async function NextAuthNextHandler(
 ) {
   const { nextauth, ...query } = req.query
 
-  options.secret =
-    options.secret ?? options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
+  options.secret ??= options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
+  options.trustHost ??= !!(process.env.AUTH_TRUST_HOST ?? process.env.VERCEL)
 
   const handler = await NextAuthHandler({
     req: {
-      host: detectHost(req.headers["x-forwarded-host"]),
+      host: detectHost(
+        options.trustHost,
+        req.headers["x-forwarded-host"],
+        process.env.NEXTAUTH_URL ??
+          (process.env.NODE_ENV !== "production" && "http://localhost:3000")
+      ),
       body: req.body,
       query,
       cookies: req.cookies,
@@ -84,15 +90,26 @@ function NextAuth(
 export default NextAuth
 
 let experimentalWarningShown = false
-export async function unstable_getServerSession(
+let experimentalRSCWarningShown = false
+
+type GetServerSessionOptions = Partial<Omit<NextAuthOptions, "callbacks">> & {
+  callbacks?: Omit<NextAuthOptions['callbacks'], "session"> & {
+    session?: (...args: Parameters<CallbacksOptions["session"]>) => any
+  }
+}
+
+export async function unstable_getServerSession<
+  O extends GetServerSessionOptions,
+  R = O["callbacks"] extends { session: (...args: any[]) => infer U }
+    ? U
+    : Session
+>(
   ...args:
-    | [
-        GetServerSidePropsContext["req"],
-        GetServerSidePropsContext["res"],
-        NextAuthOptions
-      ]
-    | [NextApiRequest, NextApiResponse, NextAuthOptions]
-): Promise<Session | null> {
+    | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"], O]
+    | [NextApiRequest, NextApiResponse, O]
+    | [O]
+    | []
+): Promise<R | null> {
   if (!experimentalWarningShown && process.env.NODE_ENV !== "production") {
     console.warn(
       "[next-auth][warn][EXPERIMENTAL_API]",
@@ -103,14 +120,54 @@ export async function unstable_getServerSession(
     experimentalWarningShown = true
   }
 
-  const [req, res, options] = args
+  const isRSC = args.length === 0 || args.length === 1
+  if (
+    !experimentalRSCWarningShown &&
+    isRSC &&
+    process.env.NODE_ENV !== "production"
+  ) {
+    console.warn(
+      "[next-auth][warn][EXPERIMENTAL_API]",
+      "\n`unstable_getServerSession` is used in a React Server Component.",
+      `\nhttps://next-auth.js.org/configuration/nextjs#unstable_getServerSession}`,
+      `\nhttps://next-auth.js.org/warnings#EXPERIMENTAL_API`
+    )
+    experimentalRSCWarningShown = true
+  }
 
-  options.secret = options.secret ?? process.env.NEXTAUTH_SECRET
+  let req, res, options: NextAuthOptions
+  if (isRSC) {
+    options = Object.assign({}, args[0], { providers: [] })
+
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const { headers, cookies } = require("next/headers")
+    req = {
+      headers: Object.fromEntries(headers() as Headers),
+      cookies: Object.fromEntries(
+        cookies()
+          .getAll()
+          .map((c) => [c.name, c.value])
+      ),
+    }
+    res = { getHeader() {}, setCookie() {}, setHeader() {} }
+  } else {
+    req = args[0]
+    res = args[1]
+    options = Object.assign(args[2], { providers: [] })
+  }
+
+  options.secret ??= process.env.NEXTAUTH_SECRET
+  options.trustHost ??= !!(process.env.AUTH_TRUST_HOST ?? process.env.VERCEL)
 
   const session = await NextAuthHandler<Session | {} | string>({
     options,
     req: {
-      host: detectHost(req.headers["x-forwarded-host"]),
+      host: detectHost(
+        options.trustHost,
+        req.headers["x-forwarded-host"],
+        process.env.NEXTAUTH_URL ??
+          (process.env.NODE_ENV !== "production" && "http://localhost:3000")
+      ),
       action: "session",
       method: "GET",
       cookies: req.cookies,
@@ -123,7 +180,11 @@ export async function unstable_getServerSession(
   cookies?.forEach((cookie) => setCookie(res, cookie))
 
   if (body && typeof body !== "string" && Object.keys(body).length) {
-    if (status === 200) return body as Session
+    if (status === 200) {
+      // @ts-expect-error
+      if (isRSC) delete body.expires
+      return body as R
+    }
     throw new Error((body as any).message)
   }
 

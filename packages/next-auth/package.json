@@ -1,6 +1,6 @@
 {
   "name": "next-auth",
-  "version": "4.14.0",
+  "version": "4.17.0",
   "description": "Authentication for Next.js",
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/next-auth.git",
@@ -78,7 +78,7 @@
     "uuid": "^8.3.2"
   },
   "peerDependencies": {
-    "next": "^12.2.5",
+    "next": "^12.2.5 || ^13",
     "nodemailer": "^6.6.5",
     "react": "^17.0.2 || ^18",
     "react-dom": "^17.0.2 || ^18"
@@ -120,7 +120,7 @@
     "jest-environment-jsdom": "^28.1.1",
     "jest-watch-typeahead": "^1.1.0",
     "msw": "^0.42.3",
-    "next": "12.3.1",
+    "next": "13.0.2",
     "postcss": "^8.4.14",
     "postcss-cli": "^9.1.0",
     "postcss-nested": "^5.0.6",
@@ -129,6 +129,6 @@
     "whatwg-fetch": "^3.6.2"
   },
   "engines": {
-    "node": "^12.19.0 || ^14.15.0 || ^16.13.0"
+    "node": "^12.19.0 || ^14.15.0 || ^16.13.0 || ^18.12.0"
   }
 }

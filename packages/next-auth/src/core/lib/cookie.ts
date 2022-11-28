@@ -1,6 +1,7 @@
-import type { IncomingHttpHeaders } from "http"
 import type { CookiesOptions } from "../.."
 import type { CookieOption, LoggerInstance, SessionStrategy } from "../types"
+import type { NextRequest } from "next/server"
+import type { NextApiRequest } from "next"
 
 // Uncomment to recalculate the estimated size
 // of an empty session cookie
@@ -130,10 +131,10 @@ export class SessionStore {
 
   constructor(
     option: CookieOption,
-    req: {
-      cookies?: Partial<Record<string, string> | Map<string, string>>
-      headers?: Headers | IncomingHttpHeaders | Record<string, string>
-    },
+    req: Partial<{
+      cookies: NextRequest["cookies"] | NextApiRequest["cookies"]
+      headers: NextRequest["headers"] | NextApiRequest["headers"]
+    }>,
     logger: LoggerInstance | Console
   ) {
     this.#logger = logger
@@ -142,7 +143,14 @@ export class SessionStore {
     const { cookies } = req
     const { name: cookieName } = option
 
-    if (cookies instanceof Map) {
+    if (typeof cookies?.getAll === "function") {
+      // Next.js ^v13.0.1 (Edge Env)
+      for (const { name, value } of cookies.getAll()) {
+        if (name.startsWith(cookieName)) {
+          this.#chunks[name] = value
+        }
+      }
+    } else if (cookies instanceof Map) {
       for (const name of cookies.keys()) {
         if (name.startsWith(cookieName)) this.#chunks[name] = cookies.get(name)
       }
