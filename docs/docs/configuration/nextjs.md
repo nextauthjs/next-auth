@@ -83,7 +83,7 @@ export default async function Page() {
 ```
 
 :::warning
-Currently, the underlying Next.js `cookies()` method does [only provides read access](https://beta.nextjs.org/docs/api-reference/cookies) to the request cookies. This means that the `expires` value is stripped away from `session` in Server Components. Furthermore, there is a hard expiry on sessions, after which the user will be required to sign in again. (The default expiry is 30 days).
+Currently, the underlying Next.js `cookies()` method [only provides read access](https://beta.nextjs.org/docs/api-reference/cookies) to the request cookies. This means that the `expires` value is stripped away from `session` in Server Components. Furthermore, there is a hard expiry on sessions, after which the user will be required to sign in again. (The default expiry is 30 days).
 :::
 
 ## Middleware
