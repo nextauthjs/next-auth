@@ -109,6 +109,10 @@ a.button {
   }
 }
 
+button span {
+  flex-grow: 1;
+}
+
 button,
 a.button {
   margin: 0 0 0.75rem 0;
@@ -130,12 +134,6 @@ a.button {
     font-size: 0.9rem;
   }
 
-  &:has(img) {
-    justify-content: unset;
-    span {
-      flex-grow: 1;
-    }
-  }
   &:hover {
     cursor: pointer;
   }
