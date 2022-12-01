@@ -74,10 +74,11 @@ export async function handler(req, res) {
 You can also use `unstable_getServerSession` in Next.js' server components:
 
 ```tsx
+import { authOptions } from 'pages/api/auth/[...nextauth]'
 import { unstable_getServerSession } from "next-auth/next"
 
 export default async function Page() {
-  const session = await unstable_getServerSession()
+  const session = await unstable_getServerSession(authOptions)
   return <pre>{JSON.stringify(session, null, 2)}</pre>
 }
 ```
