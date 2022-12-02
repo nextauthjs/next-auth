@@ -258,7 +258,7 @@ export async function signIn<
     const url = data.url ?? callbackUrl
     window.location.href = url
     // If url contains a hash, the browser does not reload the page. We reload manually
-    if (url.includes("#")) window.location.reload()
+    if (url.includes("#") && (!/^https?:/.test(url) || url.startsWith(window.location.origin))) window.location.reload()
     return
   }
 
