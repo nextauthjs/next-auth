@@ -31,16 +31,16 @@ export default function parseProviders(params: {
         return merge(normalizedOptions, {
           ...normalizedUserOptions,
           signinUrl: `${url}/signin/${id}`,
-          callbackUrl: `${url}/callback/${id}`,
+          callbackUrl:
+            normalizedUserOptions?.callbackUrl ??
+            `${url}/callback/${id}`,
         })
       }
       const id = (userOptions?.id as string) ?? rest.id
       return merge(rest, {
         ...userOptions,
         signinUrl: `${url}/signin/${id}`,
-        callbackUrl:
-          userOptions?.callbackUrl ??
-          `${url}/callback/${userOptions?.id ?? rest.id}`,
+        callbackUrl: `${url}/callback/${id}`,
       })
     }
   )
