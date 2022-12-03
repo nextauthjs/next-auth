@@ -1,4 +1,4 @@
-import * as o from "@panva/oauth4webapi"
+import * as o from "oauth4webapi"
 
 import type { CookiesOptions, InternalOptions } from "../../../types"
 import type { RequestInternal, ResponseInternal } from "../../.."
