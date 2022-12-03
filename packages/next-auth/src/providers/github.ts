@@ -107,6 +107,7 @@ export default function Github<P extends GithubProfile>(
       text: "#000",
       textDark: "#fff",
     },
+    checks: ["pkce"],
     options,
   }
 }

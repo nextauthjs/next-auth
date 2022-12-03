@@ -69,12 +69,7 @@ export async function toInternalRequest(
 }
 
 export function toResponse(res: ResponseInternal): Response {
-  const headers = new Headers(
-    res.headers?.reduce((acc, { key, value }) => {
-      acc[key] = value
-      return acc
-    }, {})
-  )
+  const headers = new Headers(res.headers)
 
   res.cookies?.forEach((cookie) => {
     const { name, value, options } = cookie

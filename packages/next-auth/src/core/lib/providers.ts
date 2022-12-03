@@ -18,6 +18,7 @@ export default function parseProviders(params: {
   providers: Provider[]
   url: InternalUrl
   providerId?: string
+  runtime?: "web" | "nodejs"
 }): {
   providers: InternalProvider[]
   provider?: InternalProvider
@@ -25,18 +26,21 @@ export default function parseProviders(params: {
   const { url, providerId } = params
 
   const providers = params.providers.map((provider) => {
-    let { options: userOptions, ...rest } = provider
-    if (provider.type === "oauth") {
-      // @ts-expect-error after normalization, we don't match the initial type of rest
-      rest = normalizeOAuth(rest as OAuthConfig<any>)
-      userOptions = normalizeOAuth(userOptions as OAuthUserConfig<any>)
-    }
-    const id = (userOptions?.id as string | undefined) ?? rest.id
-    return merge(rest, {
-      ...userOptions,
+    const { options: userOptions, ...defaults } = provider
+
+    const id = (userOptions?.id ?? defaults.id) as string
+    const merged = merge(defaults, userOptions, {
       signinUrl: `${url}/signin/${id}`,
       callbackUrl: `${url}/callback/${id}`,
     })
+
+    if (provider.type === "oauth") {
+      const p = normalizeOAuth(merged)
+
+      return p
+    }
+
+    return merged
   })
 
   return {
@@ -46,36 +50,49 @@ export default function parseProviders(params: {
 }
 
 function normalizeOAuth(
-  c?: OAuthConfig<any> | OAuthUserConfig<any>
+  c?: OAuthConfig<any> | OAuthUserConfig<any>,
+  runtime?: "web" | "nodejs"
 ): OAuthConfigInternal<any> | {} {
   if (!c) return {}
 
-  const authorization = normalizeEndpoint(c.authorization)
+  const hasIssuer = !!c.issuer
+  const authorization = normalizeEndpoint(c.authorization, hasIssuer)
 
   if (!c.version?.startsWith("1.")) {
+    // Set default check to state
+    c.checks ??= ["pkce"]
+    c.checks = Array.isArray(c.checks) ? c.checks : [c.checks]
+    if (runtime === "web" && !c.checks.includes("pkce")) c.checks.push("pkce")
+
+    if (!Array.isArray(c.checks)) c.checks = [c.checks]
+
+    // REVIEW: Deprecate `idToken` in favor of `type: "oidc"`?
     c.idToken ??=
       // If a provider has as an "openid-configuration" well-known endpoint
       c.wellKnown?.includes("openid-configuration") ??
-      // or an "openid" scope request, it will also likely be return an `id_token`
+      // or an "openid" scope request, it must also return an `id_token`
       authorization?.url.searchParams.get("scope")?.includes("openid")
 
-    // Set default check to state
-    c.checks ??= ["state"]
-    if (!Array.isArray(c.checks)) c.checks = [c.checks]
+    if (c.issuer && c.idToken) {
+      c.wellKnown ??= `${c.issuer}/.well-known/openid-configuration`
+    }
   }
 
   return {
     ...c,
     ...(authorization ? { authorization } : undefined),
-    ...(c.token ? { token: normalizeEndpoint(c.token) } : undefined),
-    ...(c.userinfo ? { userinfo: normalizeEndpoint(c.userinfo) } : undefined),
+    ...(c.token ? { token: normalizeEndpoint(c.token, hasIssuer) } : undefined),
+    ...(c.userinfo
+      ? { userinfo: normalizeEndpoint(c.userinfo, hasIssuer) }
+      : undefined),
   }
 }
 
 function normalizeEndpoint(
-  e?: OAuthConfig<any>[OAuthEndpointType]
+  e?: OAuthConfig<any>[OAuthEndpointType],
+  hasIssuer?: boolean
 ): OAuthConfigInternal<any>[OAuthEndpointType] {
-  if (!e) return
+  if (!e || hasIssuer) return
   if (typeof e === "string") {
     return { url: new URL(e) }
   }

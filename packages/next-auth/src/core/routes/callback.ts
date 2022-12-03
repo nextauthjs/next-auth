@@ -1,4 +1,6 @@
-import oAuthCallback from "../lib/oauth/callback"
+// TODO: Make this interchangeable with the Node.js import
+// based on import of `next-auth` or `next-auth/web`
+import { handleOAuthCallback } from "../lib/oauth/callback"
 import callbackHandler from "../lib/callback-handler"
 import { createHash } from "../lib/web"
 import getAdapterUserFromEmail from "../lib/email/getUserFromEmail"
@@ -10,7 +12,7 @@ import type { User } from "../.."
 import type { AdapterSession } from "../../adapters"
 
 /** Handle callbacks from login services */
-export default async function callback(params: {
+export async function callback(params: {
   options: InternalOptions
   query: RequestInternal["query"]
   method: Required<RequestInternal>["method"]
@@ -44,7 +46,7 @@ export default async function callback(params: {
         account,
         OAuthProfile,
         cookies: oauthCookies,
-      } = await oAuthCallback({
+      } = await handleOAuthCallback({
         query,
         body,
         method,

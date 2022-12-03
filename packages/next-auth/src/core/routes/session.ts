@@ -16,7 +16,7 @@ interface SessionParams {
  * for Single Page App clients
  */
 
-export default async function session(
+export async function session(
   params: SessionParams
 ): Promise<ResponseInternal<Session | {}>> {
   const { options, sessionStore } = params
@@ -31,7 +31,7 @@ export default async function session(
 
   const response: ResponseInternal<Session | {}> = {
     body: {},
-    headers: [{ key: "Content-Type", value: "application/json" }],
+    headers: { "Content-Type": "application/json" },
     cookies: [],
   }
 

@@ -13,7 +13,7 @@ import type { InternalOptions } from "../../types"
 import type { RequestInternal } from "../.."
 import type { Cookie } from "../cookie"
 
-export default async function oAuthCallback(params: {
+export async function handleOAuthCallback(params: {
   options: InternalOptions<"oauth">
   query: RequestInternal["query"]
   body: RequestInternal["body"]

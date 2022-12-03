@@ -211,6 +211,10 @@ export interface AuthOptions {
    * @default Boolean(process.env.AUTH_TRUST_HOST ?? process.env.VERCEL)
    */
   trustHost?: boolean
+  /** @internal */
+  __internal__?: {
+    runtime?: "web" | "nodejs"
+  }
 }
 
 /**

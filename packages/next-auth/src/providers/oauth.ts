@@ -186,7 +186,7 @@ export type OAuthUserConfig<P> = Omit<
   Partial<OAuthConfig<P>>,
   "options" | "type"
 > &
-  Required<Pick<OAuthConfig<P>, "clientId" | "clientSecret" | "profile">>
+  Required<Pick<OAuthConfig<P>, "clientId" | "clientSecret">>
 
 export type OAuthProvider = (
   options: Partial<OAuthConfig<any>>

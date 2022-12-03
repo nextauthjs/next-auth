@@ -22,17 +22,11 @@ export interface RequestInternal {
   providerId?: string
   error?: string
 }
-
-interface AuthHeader {
-  key: string
-  value: string
-}
-
 export interface ResponseInternal<
   Body extends string | Record<string, any> | any[] = any
 > {
   status?: number
-  headers?: AuthHeader[]
+  headers?: Headers | HeadersInit
   body?: Body
   redirect?: URL | string // TODO: refactor to only allow URL
   cookies?: Cookie[]
@@ -62,7 +56,7 @@ async function AuthHandlerInternal<
       const message = `There is a problem with the server configuration. Check the server logs for more information.`
       return {
         status: 500,
-        headers: [{ key: "Content-Type", value: "application/json" }],
+        headers: { "Content-Type": "application/json" },
         body: { message } as any,
       }
     }
@@ -126,7 +120,7 @@ async function AuthHandlerInternal<
       }
       case "csrf":
         return {
-          headers: [{ key: "Content-Type", value: "application/json" }],
+          headers: { "Content-Type": "application/json" },
           body: { csrfToken: options.csrfToken } as any,
           cookies,
         }

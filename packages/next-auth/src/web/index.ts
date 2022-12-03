@@ -5,6 +5,7 @@ export * from "../core/types"
 
 async function WebAuthHandler(req: Request, options: AuthOptions) {
   options.secret ??= options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
+  options.__internal__ = { runtime: "web" }
 
   const url = new URL(req.url ?? "")
 

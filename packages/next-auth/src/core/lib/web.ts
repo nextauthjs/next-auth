@@ -32,21 +32,12 @@ export async function toInternalRequest(
 }
 
 export function toResponse(res: ResponseInternal): Response {
-  const headers = new Headers(
-    res.headers?.reduce((acc, { key, value }) => {
-      acc[key] = value
-      return acc
-    }, {})
-  )
+  const headers = new Headers(res.headers)
 
   res.cookies?.forEach((cookie) => {
     const { name, value, options } = cookie
     const cookieHeader = serialize(name, value, options)
-    if (headers.has("Set-Cookie")) {
-      headers.append("Set-Cookie", cookieHeader)
-    } else {
-      headers.set("Set-Cookie", cookieHeader)
-    }
+    headers.append("Set-Cookie", cookieHeader)
   })
 
   const body =
@@ -119,6 +110,6 @@ async function getBody(req: Request): Promise<Record<string, any> | undefined> {
     return await req.json()
   } else if (contentType?.includes("application/x-www-form-urlencoded")) {
     const params = new URLSearchParams(await req.text())
-    return Object.fromEntries(params.entries())
+    return Object.fromEntries(params)
   }
 }

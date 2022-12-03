@@ -1,4 +1,6 @@
-import getAuthorizationUrl from "../lib/oauth/authorization-url"
+// TODO: Make this interchangeable with the Node.js import
+// based on import of `next-auth` or `next-auth/web`
+import { getAuthorizationUrl } from "../lib/oauth/authorization-url"
 import emailSignin from "../lib/email/signin"
 import getAdapterUserFromEmail from "../lib/email/getUserFromEmail"
 import type { RequestInternal, ResponseInternal } from ".."
@@ -6,7 +8,7 @@ import type { InternalOptions } from "../types"
 import type { Account } from "../.."
 
 /** Handle requests to /api/auth/signin */
-export default async function signin(params: {
+export async function signin(params: {
   options: InternalOptions<"oauth" | "email">
   query: RequestInternal["query"]
   body: RequestInternal["body"]
@@ -24,8 +26,7 @@ export default async function signin(params: {
 
   if (provider.type === "oauth") {
     try {
-      const response = await getAuthorizationUrl({ options, query })
-      return response
+      return await getAuthorizationUrl({ options, query })
     } catch (error) {
       logger.error("SIGNIN_OAUTH_ERROR", {
         error: error as Error,

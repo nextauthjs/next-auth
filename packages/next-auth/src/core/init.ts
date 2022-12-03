@@ -59,6 +59,7 @@ export async function init({
     providers: userOptions.providers,
     url,
     providerId,
+    runtime: userOptions.__internal__?.runtime,
   })
 
   const maxAge = 30 * 24 * 60 * 60 // Sessions expire after 30 days of being idle by default

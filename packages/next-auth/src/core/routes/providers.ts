@@ -14,11 +14,11 @@ export interface PublicProvider {
  * and their signin and callback URLs. This makes it possible to automatically
  * generate buttons for all providers when rendering client side.
  */
-export default function providers(
+export function providers(
   providers: InternalProvider[]
 ): ResponseInternal<Record<string, PublicProvider>> {
   return {
-    headers: [{ key: "Content-Type", value: "application/json" }],
+    headers: { "Content-Type": "application/json" },
     body: providers.reduce<Record<string, PublicProvider>>(
       (acc, { id, name, type, signinUrl, callbackUrl }) => {
         acc[id] = { id, name, type, signinUrl, callbackUrl }

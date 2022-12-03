@@ -11,7 +11,7 @@ export default function Twitch<P extends TwitchProfile>(
   options: OAuthUserConfig<P>
 ): OAuthConfig<P> {
   return {
-    wellKnown: "https://id.twitch.tv/oauth2/.well-known/openid-configuration",
+    issuer: "https://id.twitch.tv/oauth2",
     id: "twitch",
     name: "Twitch",
     type: "oauth",

@@ -9,7 +9,7 @@ import type { Cookie } from "../../cookie"
  *
  * [OAuth 2](https://www.oauth.com/oauth2-servers/authorization/the-authorization-request/)
  */
-export default async function getAuthorizationUrl({
+export async function getAuthorizationUrl({
   options,
   query,
 }: {
@@ -61,9 +61,9 @@ export default async function getAuthorizationUrl({
   const cookies: Cookie[] = []
 
   if (provider.checks?.includes("state")) {
-    const state = await createState(options)
-    authParams.set("state", state.value)
-    cookies.push(state)
+    const { value, raw } = await createState(options)
+    authParams.set("state", raw)
+    cookies.push(value)
   }
 
   if (provider.checks?.includes("pkce")) {
@@ -113,8 +113,8 @@ const STATE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 async function createState(options: InternalOptions<"oauth">) {
   const raw = o.generateRandomState()
   const maxAge = STATE_MAX_AGE
-  const state = await signCookie("state", raw, maxAge, options)
-  return state
+  const value = await signCookie("state", raw, maxAge, options)
+  return { value, raw }
 }
 
 const PKCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
