@@ -13,7 +13,7 @@ async function streamToString(stream): Promise<string> {
   })
 }
 
-export async function readJSONBody(
+async function readJSONBody(
   body: ReadableStream
 ): Promise<Record<string, any> | undefined> {
   try {

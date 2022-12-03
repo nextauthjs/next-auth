@@ -33,8 +33,8 @@ async function NextAuthHandler(
   })
 
   options.secret ??= options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
-  const { status, headers, body } = await AuthHandler(request, options)
-
+  const response = await AuthHandler(request, options)
+  const { status, headers } = response
   res.status(status)
 
   for (const [key, val] of headers.entries()) {
@@ -51,7 +51,7 @@ async function NextAuthHandler(
     return res.json({ url: redirect })
   }
 
-  return res.send(body)
+  return res.send(await response.text())
 }
 
 function NextAuth(options: NextAuthOptions): any
