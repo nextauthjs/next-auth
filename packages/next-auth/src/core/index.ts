@@ -1,5 +1,5 @@
 import logger, { setLogger } from "../utils/logger"
-import { detectHost } from "../utils/detect-host"
+import { toInternalRequest, toResponse } from "../utils/web"
 import * as routes from "./routes"
 import renderPage from "./pages"
 import { init } from "./init"
@@ -9,7 +9,6 @@ import { SessionStore } from "./lib/cookie"
 import type { NextAuthAction, NextAuthOptions } from "./types"
 import type { Cookie } from "./lib/cookie"
 import type { ErrorType } from "./pages/error"
-import { parse as parseCookie } from "cookie"
 
 export interface RequestInternal {
   /** @default "http://localhost:3000" */
@@ -29,6 +28,7 @@ export interface NextAuthHeader {
   value: string
 }
 
+// TODO: Rename to `ResponseInternal`
 export interface OutgoingResponse<
   Body extends string | Record<string, any> | any[] = any
 > {
@@ -39,56 +39,15 @@ export interface OutgoingResponse<
   cookies?: Cookie[]
 }
 
-export interface NextAuthHandlerParams {
-  req: Request | RequestInternal
-  options: NextAuthOptions
-}
-
-async function getBody(req: Request): Promise<Record<string, any> | undefined> {
-  try {
-    return await req.json()
-  } catch {}
-}
-
-// TODO:
-async function toInternalRequest(
-  req: RequestInternal | Request,
-  trustHost: boolean = false
-): Promise<RequestInternal> {
-  if (req instanceof Request) {
-    const url = new URL(req.url)
-    // TODO: handle custom paths?
-    const nextauth = url.pathname.split("/").slice(3)
-    const headers = Object.fromEntries(req.headers)
-    const query: Record<string, any> = Object.fromEntries(url.searchParams)
-    query.nextauth = nextauth
-
-    return {
-      action: nextauth[0] as NextAuthAction,
-      method: req.method,
-      headers,
-      body: await getBody(req),
-      cookies: parseCookie(req.headers.get("cookie") ?? ""),
-      providerId: nextauth[1],
-      error: url.searchParams.get("error") ?? nextauth[1],
-      host: detectHost(
-        trustHost,
-        headers["x-forwarded-host"] ?? headers.host,
-        "http://localhost:3000"
-      ),
-      query,
-    }
-  }
-  return req
-}
-
-export async function NextAuthHandler<
+async function AuthHandlerInternal<
   Body extends string | Record<string, any> | any[]
->(params: NextAuthHandlerParams): Promise<OutgoingResponse<Body>> {
-  const { options: userOptions, req: incomingRequest } = params
-
-  const req = await toInternalRequest(incomingRequest, userOptions.trustHost)
-
+>(params: {
+  req: RequestInternal
+  options: NextAuthOptions
+  /** REVIEW: Is this the best way to skip parsing the body in Node.js? */
+  parsedBody?: any
+}): Promise<OutgoingResponse<Body>> {
+  const { options: userOptions, req } = params
   setLogger(userOptions.logger, userOptions.debug)
 
   const assertionResult = assertConfig({ options: userOptions, req })
@@ -159,6 +118,7 @@ export async function NextAuthHandler<
       case "session": {
         const session = await routes.session({ options, sessionStore })
         if (session.cookies) cookies.push(...session.cookies)
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
         return { ...session, cookies } as any
       }
       case "csrf":
@@ -298,4 +258,18 @@ export async function NextAuthHandler<
     status: 400,
     body: `Error: This action with HTTP ${method} is not supported by NextAuth.js` as any,
   }
+}
+
+/**
+ * The core functionality of `next-auth`.
+ * It receives a standard [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request)
+ * and returns a standard [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response).
+ */
+export async function AuthHandler(
+  request: Request,
+  options: NextAuthOptions
+): Promise<Response> {
+  const req = await toInternalRequest(request)
+  const internalResponse = await AuthHandlerInternal({ req, options })
+  return toResponse(internalResponse)
 }

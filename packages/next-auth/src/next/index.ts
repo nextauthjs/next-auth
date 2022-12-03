@@ -1,6 +1,5 @@
-import { NextAuthHandler } from "../core"
-import { detectHost } from "../utils/detect-host"
-import { setCookie } from "./utils"
+import { AuthHandler } from "../core"
+import { getURL, getBody } from "../utils/node"
 
 import type {
   GetServerSidePropsContext,
@@ -10,60 +9,49 @@ import type {
 import type { NextAuthOptions, Session } from ".."
 import type {
   CallbacksOptions,
-  NextAuthAction,
   NextAuthRequest,
   NextAuthResponse,
 } from "../core/types"
 
-async function NextAuthNextHandler(
+async function NextAuthHandler(
   req: NextApiRequest,
   res: NextApiResponse,
   options: NextAuthOptions
 ) {
-  const { nextauth, ...query } = req.query
+  const url = getURL(
+    req.url,
+    options.trustHost,
+    req.headers["x-forwarded-host"] ?? req.headers.host
+  )
 
-  options.secret ??= options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
-  options.trustHost ??= !!(process.env.AUTH_TRUST_HOST ?? process.env.VERCEL)
+  if (url instanceof Error) return res.status(400).end()
 
-  const handler = await NextAuthHandler({
-    req: {
-      host: detectHost(
-        options.trustHost,
-        req.headers["x-forwarded-host"],
-        process.env.NEXTAUTH_URL ??
-          (process.env.NODE_ENV !== "production" && "http://localhost:3000")
-      ),
-      body: req.body,
-      query,
-      cookies: req.cookies,
-      headers: req.headers,
-      method: req.method,
-      action: nextauth?.[0] as NextAuthAction,
-      providerId: nextauth?.[1],
-      error: (req.query.error as string | undefined) ?? nextauth?.[1],
-    },
-    options,
+  const request = new Request(url, {
+    headers: new Headers(req.headers as any),
+    method: req.method,
+    ...getBody(req),
   })
 
-  res.status(handler.status ?? 200)
+  options.secret ??= options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
+  const response = await AuthHandler(request, options)
+  const { status, headers } = response
+  res.status(status)
 
-  handler.cookies?.forEach((cookie) => setCookie(res, cookie))
-
-  handler.headers?.forEach((h) => res.setHeader(h.key, h.value))
-
-  if (handler.redirect) {
-    // If the request expects a return URL, send it as JSON
-    // instead of doing an actual redirect.
-    if (req.body?.json !== "true") {
-      // Could chain. .end() when lowest target is Node 14
-      // https://github.com/nodejs/node/issues/33148
-      res.status(302).setHeader("Location", handler.redirect)
-      return res.end()
-    }
-    return res.json({ url: handler.redirect })
+  for (const [key, val] of headers.entries()) {
+    const value = key === "set-cookie" ? val.split(",") : val
+    res.setHeader(key, value)
   }
 
-  return res.send(handler.body)
+  // If the request expects a return URL, send it as JSON
+  // instead of doing an actual redirect.
+  const redirect = headers.get("Location")
+
+  if (req.body?.json === "true" && redirect) {
+    res.removeHeader("Location")
+    return res.json({ url: redirect })
+  }
+
+  return res.send(await response.text())
 }
 
 function NextAuth(options: NextAuthOptions): any
@@ -81,10 +69,10 @@ function NextAuth(
 ) {
   if (args.length === 1) {
     return async (req: NextAuthRequest, res: NextAuthResponse) =>
-      await NextAuthNextHandler(req, res, args[0])
+      await NextAuthHandler(req, res, args[0])
   }
 
-  return NextAuthNextHandler(args[0], args[1], args[2])
+  return NextAuthHandler(args[0], args[1], args[2])
 }
 
 export default NextAuth
@@ -93,7 +81,7 @@ let experimentalWarningShown = false
 let experimentalRSCWarningShown = false
 
 type GetServerSessionOptions = Partial<Omit<NextAuthOptions, "callbacks">> & {
-  callbacks?: Omit<NextAuthOptions['callbacks'], "session"> & {
+  callbacks?: Omit<NextAuthOptions["callbacks"], "session"> & {
     session?: (...args: Parameters<CallbacksOptions["session"]>) => any
   }
 }
@@ -156,47 +144,34 @@ export async function unstable_getServerSession<
     options = Object.assign(args[2], { providers: [] })
   }
 
+  const urlOrError = getURL(
+    "/api/auth/session",
+    options.trustHost,
+    req.headers["x-forwarded-host"] ?? req.headers.host
+  )
+
+  if (urlOrError instanceof Error) throw urlOrError
+
   options.secret ??= process.env.NEXTAUTH_SECRET
-  options.trustHost ??= !!(process.env.AUTH_TRUST_HOST ?? process.env.VERCEL)
+  const response = await AuthHandler(
+    new Request(urlOrError, { headers: req.headers }),
+    options
+  )
 
-  const session = await NextAuthHandler<Session | {} | string>({
-    options,
-    req: {
-      host: detectHost(
-        options.trustHost,
-        req.headers["x-forwarded-host"],
-        process.env.NEXTAUTH_URL ??
-          (process.env.NODE_ENV !== "production" && "http://localhost:3000")
-      ),
-      action: "session",
-      method: "GET",
-      cookies: req.cookies,
-      headers: req.headers,
-    },
-  })
+  const { status = 200, headers } = response
 
-  const { body, cookies, status = 200 } = session
-
-  cookies?.forEach((cookie) => setCookie(res, cookie))
-
-  if (body && typeof body !== "string" && Object.keys(body).length) {
-    if (status === 200) {
-      // @ts-expect-error
-      if (isRSC) delete body.expires
-      return body as R
-    }
-    throw new Error((body as any).message)
+  for (const [key, val] of headers.entries()) {
+    const value = key === "set-cookie" ? val.split(",") : val
+    res.setHeader(key, value)
   }
 
-  return null
-}
+  const data = await response.json()
 
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace NodeJS {
-    interface ProcessEnv {
-      NEXTAUTH_URL?: string
-      VERCEL?: "1"
-    }
+  if (!data || !Object.keys(data).length) return null
+
+  if (status === 200) {
+    if (isRSC) delete data.expires
+    return data as R
   }
+  throw new Error(data.message)
 }
