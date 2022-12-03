@@ -4,11 +4,20 @@ import type { NextAuthAction } from "../core/types"
 
 const decoder = new TextDecoder()
 
-async function readJSONBody(
-  body: ReadableStream | Buffer
+async function streamToString(stream): Promise<string> {
+  const chunks: Uint8Array[] = []
+  return await new Promise((resolve, reject) => {
+    stream.on("data", (chunk) => chunks.push(Buffer.from(chunk)))
+    stream.on("error", (err) => reject(err))
+    stream.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")))
+  })
+}
+
+export async function readJSONBody(
+  body: ReadableStream
 ): Promise<Record<string, any> | undefined> {
   try {
-    if (body instanceof ReadableStream) {
+    if ("getReader" in body) {
       const reader = body.getReader()
       const bytes: number[] = []
       while (true) {
@@ -20,9 +29,8 @@ async function readJSONBody(
       return JSON.parse(decoder.decode(b))
     }
 
-    // Handle `node-fetch` implementation of `body`
-    // We expect it to be a JSON.stringify'd object in a `Buffer`
-    return JSON.parse(body.toString())
+    // node-fetch
+    return JSON.parse(await streamToString(body))
   } catch (e) {
     console.error(e)
   }
