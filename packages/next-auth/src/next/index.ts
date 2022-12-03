@@ -6,7 +6,7 @@ import type {
   NextApiRequest,
   NextApiResponse,
 } from "next"
-import type { NextAuthOptions, Session } from ".."
+import type { AuthOptions, Session } from ".."
 import type {
   CallbacksOptions,
   NextAuthRequest,
@@ -16,7 +16,7 @@ import type {
 async function NextAuthHandler(
   req: NextApiRequest,
   res: NextApiResponse,
-  options: NextAuthOptions
+  options: AuthOptions
 ) {
   const url = getURL(
     req.url,
@@ -58,14 +58,12 @@ function NextAuth(options: NextAuthOptions): any
 function NextAuth(
   req: NextApiRequest,
   res: NextApiResponse,
-  options: NextAuthOptions
+  options: AuthOptions
 ): any
 
 /** The main entry point to next-auth */
 function NextAuth(
-  ...args:
-    | [NextAuthOptions]
-    | [NextApiRequest, NextApiResponse, NextAuthOptions]
+  ...args: [AuthOptions] | [NextApiRequest, NextApiResponse, AuthOptions]
 ) {
   if (args.length === 1) {
     return async (req: NextAuthRequest, res: NextAuthResponse) =>
@@ -80,8 +78,8 @@ export default NextAuth
 let experimentalWarningShown = false
 let experimentalRSCWarningShown = false
 
-type GetServerSessionOptions = Partial<Omit<NextAuthOptions, "callbacks">> & {
-  callbacks?: Omit<NextAuthOptions["callbacks"], "session"> & {
+type GetServerSessionOptions = Partial<Omit<AuthOptions, "callbacks">> & {
+  callbacks?: Omit<AuthOptions["callbacks"], "session"> & {
     session?: (...args: Parameters<CallbacksOptions["session"]>) => any
   }
 }
@@ -123,7 +121,7 @@ export async function unstable_getServerSession<
     experimentalRSCWarningShown = true
   }
 
-  let req, res, options: NextAuthOptions
+  let req, res, options: AuthOptions
   if (isRSC) {
     options = Object.assign({}, args[0], { providers: [] })
 

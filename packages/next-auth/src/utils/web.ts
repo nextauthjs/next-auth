@@ -1,6 +1,6 @@
 import { serialize, parse as parseCookie } from "cookie"
 import type { ResponseInternal, RequestInternal } from "../core"
-import type { NextAuthAction } from "../core/types"
+import type { AuthAction } from "../core/types"
 
 const decoder = new TextDecoder()
 
@@ -56,7 +56,7 @@ export async function toInternalRequest(
     ) ?? {}
 
   return {
-    action: nextauth[0] as NextAuthAction,
+    action: nextauth[0] as AuthAction,
     method: req.method,
     headers,
     body: req.body ? await readJSONBody(req.body) : undefined,
