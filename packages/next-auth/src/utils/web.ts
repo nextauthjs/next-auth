@@ -14,7 +14,7 @@ async function streamToString(stream): Promise<string> {
 }
 
 async function readJSONBody(
-  body: ReadableStream
+  body: ReadableStream | Buffer
 ): Promise<Record<string, any> | undefined> {
   try {
     if ("getReader" in body) {
@@ -27,6 +27,10 @@ async function readJSONBody(
       }
       const b = new Uint8Array(bytes)
       return JSON.parse(decoder.decode(b))
+    }
+
+    if (typeof Buffer !== "undefined" && Buffer.isBuffer(body)) {
+      return JSON.parse(body.toString("utf8"))
     }
 
     // node-fetch
