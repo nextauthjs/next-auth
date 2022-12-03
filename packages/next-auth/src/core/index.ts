@@ -29,7 +29,7 @@ export interface NextAuthHeader {
 }
 
 // TODO: Rename to `ResponseInternal`
-export interface OutgoingResponse<
+export interface ResponseInternal<
   Body extends string | Record<string, any> | any[] = any
 > {
   status?: number
@@ -46,7 +46,7 @@ async function AuthHandlerInternal<
   options: NextAuthOptions
   /** REVIEW: Is this the best way to skip parsing the body in Node.js? */
   parsedBody?: any
-}): Promise<OutgoingResponse<Body>> {
+}): Promise<ResponseInternal<Body>> {
   const { options: userOptions, req } = params
   setLogger(userOptions.logger, userOptions.debug)
 

@@ -1,5 +1,5 @@
 import { serialize, parse as parseCookie } from "cookie"
-import type { OutgoingResponse, RequestInternal } from "../core"
+import type { ResponseInternal, RequestInternal } from "../core"
 import type { NextAuthAction } from "../core/types"
 
 const decoder = new TextDecoder()
@@ -68,7 +68,7 @@ export async function toInternalRequest(
   }
 }
 
-export function toResponse(res: OutgoingResponse): Response {
+export function toResponse(res: ResponseInternal): Response {
   const headers = new Headers(
     res.headers?.reduce((acc, { key, value }) => {
       acc[key] = value
