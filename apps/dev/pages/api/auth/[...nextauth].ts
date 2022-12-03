@@ -1,6 +1,4 @@
-import NextAuth from "next-auth"
-import type { NextAuthOptions } from "next-auth"
-import jwt from "jsonwebtoken"
+import NextAuth, { type NextAuthOptions } from "next-auth"
 
 // Providers
 import Apple from "next-auth/providers/apple"
@@ -70,23 +68,6 @@ import WorkOS from "next-auth/providers/workos"
 
 export const authOptions: NextAuthOptions = {
   // adapter,
-  callbacks: {
-    async session({ session, user }) {
-      // NOTE: this is needed when using Supabase with RLS. Otherwise this callback can be removed.
-      const signingSecret = process.env.SUPABASE_JWT_SECRET
-      if (signingSecret) {
-        const payload = {
-          aud: "authenticated",
-          exp: Math.floor(new Date(session.expires).getTime() / 1000),
-          sub: user.id,
-          email: user.email,
-          role: "authenticated",
-        }
-        session.supabaseAccessToken = jwt.sign(payload, signingSecret)
-      }
-      return session
-    },
-  },
   debug: process.env.NODE_ENV !== "production",
   theme: {
     logo: "https://next-auth.js.org/img/logo/logo-sm.png",
