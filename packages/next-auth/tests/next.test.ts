@@ -1,5 +1,5 @@
 import { MissingAPIRoute } from "../src/core/errors"
-import { nodeHandler, readJSONBody } from "./utils"
+import { nodeHandler } from "./utils"
 
 it("Missing req.url throws MISSING_NEXTAUTH_API_ROUTE_ERROR", async () => {
   const { res, logger } = await nodeHandler()
@@ -12,7 +12,7 @@ it("Missing req.url throws MISSING_NEXTAUTH_API_ROUTE_ERROR", async () => {
   )
   expect(res.setHeader).toBeCalledWith("content-type", "application/json")
   const body = res.send.mock.calls[0][0]
-  expect(await readJSONBody(body)).toEqual({
+  expect(JSON.parse(body)).toEqual({
     message:
       "There is a problem with the server configuration. Check the server logs for more information.",
   })
@@ -61,7 +61,7 @@ it("Defined host does not throw in production if trusted and valid URL", async (
     options: { trustHost: true },
   })
   expect(res.status).toBeCalledWith(200)
-  expect(await readJSONBody(res.send.mock.calls[0][0])).toEqual({})
+  expect(JSON.parse(res.send.mock.calls[0][0])).toEqual({})
   // @ts-expect-error
   process.env.NODE_ENV = "test"
 })
@@ -72,7 +72,7 @@ it("Use process.env.NEXTAUTH_URL for host if present", async () => {
     req: { url: "/api/auth/session" },
   })
   expect(res.status).toBeCalledWith(200)
-  expect(await readJSONBody(res.send.mock.calls[0][0])).toEqual({})
+  expect(JSON.parse(res.send.mock.calls[0][0])).toEqual({})
 })
 
 it("Redirects if necessary", async () => {

@@ -7,8 +7,6 @@ import NextAuth from "../src/next"
 
 import type { NextApiRequest, NextApiResponse } from "next"
 
-export { readJSONBody } from "../src/utils/web"
-
 export function mockLogger(): Record<keyof LoggerInstance, jest.Mock> {
   return {
     error: jest.fn(() => {}),
