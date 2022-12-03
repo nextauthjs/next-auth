@@ -88,7 +88,7 @@ export function toResponse(res: OutgoingResponse): Response {
 
   const response = new Response(body, {
     headers,
-    status: res.redirect ? 301 : res.status ?? 200,
+    status: res.redirect ? 302 : res.status ?? 200,
   })
 
   if (res.redirect) {
