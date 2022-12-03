@@ -7,6 +7,8 @@ import NextAuth from "../src/next"
 
 import type { NextApiRequest, NextApiResponse } from "next"
 
+export { readJSONBody } from "../src/utils/web"
+
 export function mockLogger(): Record<keyof LoggerInstance, jest.Mock> {
   return {
     error: jest.fn(() => {}),
@@ -77,23 +79,6 @@ export function mockAdapter(): Adapter {
     getUserByEmail: jest.fn(() => {}),
   } as unknown as Adapter
   return adapter
-}
-
-export async function streamToJSON(
-  stream: ReadableStream<Uint8Array>
-): Promise<any> {
-  let result = new Uint8Array(0)
-  const reader = stream.getReader()
-  while (true) {
-    const { done, value } = await reader.read()
-    if (done) break
-    const newResult = new Uint8Array(result.length + value.length)
-    newResult.set(result)
-    newResult.set(value, result.length)
-    result = newResult
-  }
-  const string = new TextDecoder().decode(result)
-  return JSON.parse(string)
 }
 
 export async function nodeHandler(

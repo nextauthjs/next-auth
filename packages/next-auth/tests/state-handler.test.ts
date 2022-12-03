@@ -1,5 +1,16 @@
-import { mockLogger } from "./lib"
-import type { InternalOptions, LoggerInstance, InternalProvider, CallbacksOptions, Account, Awaitable, Profile, Session, User, CookiesOptions } from "../src"
+import { mockLogger } from "./utils"
+import type {
+  InternalOptions,
+  LoggerInstance,
+  InternalProvider,
+  CallbacksOptions,
+  Account,
+  Awaitable,
+  Profile,
+  Session,
+  User,
+  CookiesOptions,
+} from "../src"
 import { createState } from "../src/core/lib/oauth/state-handler"
 import { InternalUrl } from "../src/utils/parse-url"
 import { JWT, JWTOptions, encode, decode } from "../src/jwt"
@@ -21,7 +32,7 @@ beforeEach(() => {
     host: "localhost:3000",
     path: "/api/auth",
     base: "http://localhost:3000/api/auth",
-    toString: () => "http://localhost:3000/api/auth"
+    toString: () => "http://localhost:3000/api/auth",
   }
 
   provider = {
@@ -30,29 +41,48 @@ beforeEach(() => {
     name: "testName",
     signinUrl: "/",
     callbackUrl: "/",
-    checks: ["pkce", "state"]
+    checks: ["pkce", "state"],
   }
 
   jwt = {
     secret: "secret",
     maxAge: 0,
     encode,
-    decode
+    decode,
   }
 
   callbacks = {
-    signIn: function (params: { user: User; account: Account; profile: Profile & Record<string, unknown>; email: { verificationRequest?: boolean | undefined }; credentials?: Record<string, CredentialInput> | undefined }): Awaitable<string | boolean> {
+    signIn: function (params: {
+      user: User
+      account: Account
+      profile: Profile & Record<string, unknown>
+      email: { verificationRequest?: boolean | undefined }
+      credentials?: Record<string, CredentialInput> | undefined
+    }): Awaitable<string | boolean> {
       throw new Error("Function not implemented.")
     },
-    redirect: function (params: { url: string; baseUrl: string }): Awaitable<string> {
+    redirect: function (params: {
+      url: string
+      baseUrl: string
+    }): Awaitable<string> {
       throw new Error("Function not implemented.")
     },
-    session: function (params: { session: Session; user: User; token: JWT }): Awaitable<Session> {
+    session: function (params: {
+      session: Session
+      user: User
+      token: JWT
+    }): Awaitable<Session> {
       throw new Error("Function not implemented.")
     },
-    jwt: function (params: { token: JWT; user?: User | undefined; account?: Account | undefined; profile?: Profile | undefined; isNewUser?: boolean | undefined }): Awaitable<JWT> {
+    jwt: function (params: {
+      token: JWT
+      user?: User | undefined
+      account?: Account | undefined
+      profile?: Profile | undefined
+      isNewUser?: boolean | undefined
+    }): Awaitable<JWT> {
       throw new Error("Function not implemented.")
-    }
+    },
   }
 
   cookies = {
@@ -61,7 +91,7 @@ beforeEach(() => {
     csrfToken: { name: "", options: undefined },
     pkceCodeVerifier: { name: "", options: undefined },
     state: { name: "", options: {} },
-    nonce: { name: "", options: undefined }
+    nonce: { name: "", options: undefined },
   }
 
   options = {
@@ -77,9 +107,9 @@ beforeEach(() => {
     events: {},
     callbacks,
     cookies,
-    callbackUrl: '',
+    callbackUrl: "",
     providers: [],
-    theme: {}
+    theme: {},
   }
 })
 
@@ -104,7 +134,7 @@ describe("createState", () => {
     const expires = new Date()
     expires.setTime(expires.getTime() + defaultMaxAge * 1000)
 
-    validateCookieExpiration({state, expires})
+    validateCookieExpiration({ state, expires })
     expect(state?.cookie.options.maxAge).toBeUndefined()
   })
 
@@ -117,14 +147,14 @@ describe("createState", () => {
     const expires = new Date()
     expires.setTime(expires.getTime() + maxAge * 1000)
 
-    validateCookieExpiration({state, expires})
+    validateCookieExpiration({ state, expires })
     expect(state?.cookie.options.maxAge).toEqual(maxAge)
   })
 })
 
 // comparing the parts instead of getTime() because the milliseconds
 // will not match since the two Date objects are created milliseconds apart
-const validateCookieExpiration = ({state, expires}) => {
+const validateCookieExpiration = ({ state, expires }) => {
   const cookieExpires = state?.cookie.options.expires
   expect(cookieExpires.getFullYear()).toEqual(expires.getFullYear())
   expect(cookieExpires.getMonth()).toEqual(expires.getMonth())
