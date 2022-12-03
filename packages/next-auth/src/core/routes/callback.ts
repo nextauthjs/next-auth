@@ -3,11 +3,12 @@ import callbackHandler from "../lib/callback-handler"
 import { hashToken } from "../lib/utils"
 import getAdapterUserFromEmail from "../lib/email/getUserFromEmail"
 
-import type { InternalOptions } from "../types"
+import type { Account, InternalOptions } from "../types"
 import type { RequestInternal, OutgoingResponse } from ".."
 import type { Cookie, SessionStore } from "../lib/cookie"
 import type { User } from "../.."
-import type { AdapterSession } from "../../adapters"
+import type { AdapterSession, AdapterUser } from "../../adapters"
+import { EthereumInput } from "src/providers/ethereum"
 
 /** Handle callbacks from login services */
 export default async function callback(params: {
@@ -223,6 +224,12 @@ export default async function callback(params: {
         adapter,
       })
 
+      // Profile was fetched by email, so the email must exist.
+      // Refine the type.
+      if (!profile.email) {
+        throw new Error()
+      }
+
       const account = {
         providerAccountId: profile.email,
         type: "email" as const,
@@ -412,6 +419,148 @@ export default async function callback(params: {
     await events.signIn?.({ user, account })
 
     return { redirect: callbackUrl, cookies }
+  } else if (provider.type === "ethereum" && method === "POST") {
+    const parameters = body as EthereumInput
+
+    let verifiedAddress: string | null = null
+    try {
+      const verifyResponse = await provider.verifySignature(
+        {
+          csrfToken: parameters.csrfToken,
+          domain: url.host,
+          message: parameters.message,
+          signature: parameters.signature,
+        },
+        {
+          query,
+          body,
+          headers,
+          method,
+        }
+      )
+      if (verifyResponse) verifiedAddress = verifyResponse.address
+    } catch (e) {
+      return {
+        status: 401,
+        redirect: `${url}/error?error=${encodeURIComponent(
+          (e as Error).message
+        )}`,
+        cookies,
+      }
+    }
+
+    if (!verifiedAddress) {
+      // Signature wasn't correct
+      return {
+        status: 401,
+        redirect: `${url}/error?${new URLSearchParams({
+          error: "EthereumSignin",
+          provider: provider.id,
+        })}`,
+        cookies,
+      }
+    }
+
+    const account: Account = {
+      providerAccountId: verifiedAddress,
+      type: "ethereum",
+      provider: provider.id,
+    }
+
+    let adapterUser: AdapterUser | null = null
+    if (adapter) {
+      adapterUser = await adapter.getUserByAccount({
+        providerAccountId: account.providerAccountId,
+        provider: provider.id,
+      })
+    }
+
+    try {
+      const isAllowed = await callbacks.signIn({
+        user: adapterUser ?? { id: verifiedAddress },
+        account,
+      })
+      if (!isAllowed) {
+        return { redirect: `${url}/error?error=AccessDenied`, cookies }
+      } else if (typeof isAllowed === "string") {
+        return { redirect: isAllowed, cookies }
+      }
+    } catch (error) {
+      return {
+        redirect: `${url}/error?error=${encodeURIComponent(
+          (error as Error).message
+        )}`,
+        cookies,
+      }
+    }
+
+    try {
+      // Sign user in
+      const { user, session, isNewUser } = await callbackHandler({
+        sessionToken: sessionStore.value,
+        profile: adapterUser ?? { id: verifiedAddress },
+        account,
+        options,
+      })
+
+      if (useJwtSession) {
+        const defaultToken = {
+          name: user.name,
+          email: user.email,
+          picture: user.image,
+          sub: user.id?.toString(),
+        }
+        const token = await callbacks.jwt({
+          token: defaultToken,
+          user,
+          account,
+          isNewUser,
+        })
+
+        // Encode token
+        const newToken = await jwt.encode({ ...jwt, token })
+
+        // Set cookie expiry date
+        const cookieExpires = new Date()
+        cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
+
+        const sessionCookies = sessionStore.chunk(newToken, {
+          expires: cookieExpires,
+        })
+        cookies.push(...sessionCookies)
+      } else {
+        // Save Session Token in cookie
+        cookies.push({
+          name: options.cookies.sessionToken.name,
+          value: (session as AdapterSession).sessionToken,
+          options: {
+            ...options.cookies.sessionToken.options,
+            expires: (session as AdapterSession).expires,
+          },
+        })
+      }
+
+      await events.signIn?.({ user, account, isNewUser })
+
+      // Handle first logins on new accounts
+      // e.g. option to send users to a new account landing page on initial login
+      // Note that the callback URL is preserved, so the journey can still be resumed
+      if (isNewUser && pages.newUser) {
+        return {
+          redirect: `${pages.newUser}${
+            pages.newUser.includes("?") ? "&" : "?"
+          }callbackUrl=${encodeURIComponent(callbackUrl)}`,
+          cookies,
+        }
+      }
+
+      // Callback URL is already verified at this point, so safe to use if specified
+      return { redirect: callbackUrl, cookies }
+    } catch (error) {
+      // TODO: Fix this
+      logger.error("ETHEREUM_SIGNIN_ERROR", error as Error)
+      return { redirect: `${url}/error?error=Callback`, cookies }
+    }
   }
   return {
     status: 500,

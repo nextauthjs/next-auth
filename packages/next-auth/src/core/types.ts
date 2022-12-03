@@ -6,6 +6,7 @@ import type {
   EmailConfig,
   CredentialsConfig,
   InternalOAuthConfig,
+  EthereumConfig,
 } from "../providers"
 import type { TokenSetParameters } from "openid-client"
 import type { JWT, JWTOptions } from "../jwt"
@@ -506,6 +507,8 @@ export type InternalProvider<T = ProviderType> = (T extends "oauth"
   ? EmailConfig
   : T extends "credentials"
   ? CredentialsConfig
+  : T extends "ethereum"
+  ? EthereumConfig
   : never) & {
   signinUrl: string
   callbackUrl: string

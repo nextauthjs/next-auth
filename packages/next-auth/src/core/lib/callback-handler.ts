@@ -30,7 +30,7 @@ export default async function callbackHandler(params: {
   // Input validation
   if (!account?.providerAccountId || !account.type)
     throw new Error("Missing or invalid provider account")
-  if (!["email", "oauth"].includes(account.type))
+  if (!["email", "oauth", "ethereum"].includes(account.type))
     throw new Error("Provider not supported")
 
   const {
@@ -87,7 +87,7 @@ export default async function callbackHandler(params: {
 
   if (account.type === "email") {
     // If signing in with an email, check if an account with the same email address exists already
-    const userByEmail = await getUserByEmail(profile.email)
+    const userByEmail = profile.email ? await getUserByEmail(profile.email) : null
     if (userByEmail) {
       // If they are not already signed in as the same user, this flow will
       // sign them out of the current session and sign them in as the new user
@@ -181,11 +181,11 @@ export default async function callbackHandler(params: {
         ? await getUserByEmail(profile.email)
         : null
       if (userByEmail) {
-        const provider = options.provider as OAuthConfig<any>;
+        const provider = options.provider as OAuthConfig<any>
         if (provider?.allowDangerousEmailAccountLinking) {
-          // If you trust the oauth provider to correctly verify email addresses, you can opt-in to 
+          // If you trust the oauth provider to correctly verify email addresses, you can opt-in to
           // account linking even when the user is not signed-in.
-          user = userByEmail;
+          user = userByEmail
         } else {
           // We end up here when we don't have an account with the same [provider].id *BUT*
           // we do already have an account with the same email address as the one in the
@@ -208,6 +208,61 @@ export default async function callbackHandler(params: {
         const { id: _, ...newUser } = { ...profile, emailVerified: null }
         user = await createUser(newUser)
       }
+      await events.createUser?.({ user })
+
+      await linkAccount({ ...account, userId: user.id })
+      await events.linkAccount?.({ user, account, profile })
+
+      session = useJwtSession
+        ? {}
+        : await createSession({
+            sessionToken: generateSessionToken(),
+            userId: user.id,
+            expires: fromDate(options.session.maxAge),
+          })
+
+      return { session, user, isNewUser: true }
+    }
+  } else if (account.type === "ethereum") {
+    // If signing in with ethereum, check to see if user already has an
+    // associated ethereum account
+    const userByAccount = await getUserByAccount({
+      providerAccountId: account.providerAccountId,
+      provider: account.provider,
+    })
+    if (userByAccount) {
+      if (user) {
+        // If the user is already signed in with this account, we don't need to do anything
+        if (userByAccount.id === user.id) {
+          return { session, user, isNewUser }
+        }
+        if (!useJwtSession && sessionToken) {
+          // Otherwise, delete the current session
+          await deleteSession(sessionToken)
+        }
+      }
+      // Create a session for the new user
+      session = useJwtSession
+        ? {}
+        : await createSession({
+            sessionToken: generateSessionToken(),
+            userId: userByAccount.id,
+            expires: fromDate(options.session.maxAge),
+          })
+
+      return { session, user: userByAccount, isNewUser }
+    } else {
+      if (!account) {
+        // Will not occur for ethereum logins
+        throw new Error("No account provided")
+      }
+      // There's no user for the account, so create one
+      user = await createUser({
+        emailVerified: null,
+        name: account.providerAccountId,
+        // Ethereum accounts don't have an email
+        email: null as unknown as string,
+      })
       await events.createUser?.({ user })
 
       await linkAccount({ ...account, userId: user.id })

@@ -12,7 +12,7 @@ module.exports = {
       },
       coveragePathIgnorePatterns: ["tests"],
       testEnvironment: "@edge-runtime/jest-environment",
-      transformIgnorePatterns: ["node_modules/(?!uuid)/"],
+      transformIgnorePatterns: ["node_modules/(?!uuid)/", "/apg-js/"],
       /** @type {import("@edge-runtime/vm").EdgeVMOptions} */
       testEnvironmentOptions: {
         codeGeneration: {
