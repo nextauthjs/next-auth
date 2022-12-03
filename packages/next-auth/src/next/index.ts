@@ -7,7 +7,11 @@ import type {
   NextApiResponse,
 } from "next"
 import type { NextAuthOptions, Session } from ".."
-import type { NextAuthRequest, NextAuthResponse } from "../core/types"
+import type {
+  CallbacksOptions,
+  NextAuthRequest,
+  NextAuthResponse,
+} from "../core/types"
 
 async function NextAuthHandler(
   req: NextApiRequest,
@@ -75,17 +79,25 @@ export default NextAuth
 
 let experimentalWarningShown = false
 let experimentalRSCWarningShown = false
-export async function unstable_getServerSession(
+
+type GetServerSessionOptions = Partial<Omit<NextAuthOptions, "callbacks">> & {
+  callbacks?: Omit<NextAuthOptions["callbacks"], "session"> & {
+    session?: (...args: Parameters<CallbacksOptions["session"]>) => any
+  }
+}
+
+export async function unstable_getServerSession<
+  O extends GetServerSessionOptions,
+  R = O["callbacks"] extends { session: (...args: any[]) => infer U }
+    ? U
+    : Session
+>(
   ...args:
-    | [
-        GetServerSidePropsContext["req"],
-        GetServerSidePropsContext["res"],
-        NextAuthOptions
-      ]
-    | [NextApiRequest, NextApiResponse, NextAuthOptions]
-    | [NextAuthOptions]
+    | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"], O]
+    | [NextApiRequest, NextApiResponse, O]
+    | [O]
     | []
-): Promise<Session | null> {
+): Promise<R | null> {
   if (!experimentalWarningShown && process.env.NODE_ENV !== "production") {
     console.warn(
       "[next-auth][warn][EXPERIMENTAL_API]",
@@ -113,7 +125,8 @@ export async function unstable_getServerSession(
 
   let req, res, options: NextAuthOptions
   if (isRSC) {
-    options = args[0] ?? { providers: [] }
+    options = Object.assign({}, args[0], { providers: [] })
+
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { headers, cookies } = require("next/headers")
     req = {
@@ -128,7 +141,7 @@ export async function unstable_getServerSession(
   } else {
     req = args[0]
     res = args[1]
-    options = args[2]
+    options = Object.assign(args[2], { providers: [] })
   }
 
   const urlOrError = getURL(
@@ -158,7 +171,7 @@ export async function unstable_getServerSession(
 
   if (status === 200) {
     if (isRSC) delete data.expires
-    return data as Session
+    return data as R
   }
   throw new Error(data.message)
 }
