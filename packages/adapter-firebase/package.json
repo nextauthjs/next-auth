@@ -29,7 +29,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "FIRESTORE_EMULATOR_HOST=localhost:8080 firebase --debug --token '$FIREBASE_TOKEN' emulators:exec --only firestore --project next-auth-test jest"
+    "test": "FIRESTORE_EMULATOR_HOST=localhost:8080 firebase --token '$FIREBASE_TOKEN' emulators:exec --only firestore --project next-auth-test jest"
   },
   "peerDependencies": {
     "firebase": "^9.7.0",
