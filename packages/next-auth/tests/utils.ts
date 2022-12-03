@@ -1,6 +1,6 @@
 import { createHash } from "crypto"
 import { AuthHandler } from "../src/core"
-import type { LoggerInstance, NextAuthOptions } from "../src"
+import type { LoggerInstance, AuthOptions } from "../src"
 import type { Adapter } from "../src/adapters"
 
 import NextAuth from "../src/next"
@@ -23,7 +23,7 @@ interface HandlerOptions {
 }
 
 export async function handler(
-  options: NextAuthOptions,
+  options: AuthOptions,
   { prod, path, params, requestInit }: HandlerOptions
 ) {
   // @ts-expect-error
@@ -83,7 +83,7 @@ export async function nodeHandler(
   params: {
     req?: Partial<NextApiRequest>
     res?: Partial<NextApiResponse>
-    options?: Partial<NextAuthOptions>
+    options?: Partial<AuthOptions>
   } = {}
 ) {
   const req = {
