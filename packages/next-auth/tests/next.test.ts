@@ -84,7 +84,7 @@ it("Redirects if necessary", async () => {
       body: { json: "true" },
     },
   })
-  expect(res.status).toBeCalledWith(301)
+  expect(res.status).toBeCalledWith(302)
   expect(res.removeHeader).toBeCalledWith("Location")
   expect(res.json).toBeCalledWith({
     url: "http://localhost/api/auth/signin?csrf=true",
