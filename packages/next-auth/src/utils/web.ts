@@ -29,11 +29,12 @@ async function readJSONBody(
       return JSON.parse(decoder.decode(b))
     }
 
+    // node-fetch
+
     if (typeof Buffer !== "undefined" && Buffer.isBuffer(body)) {
       return JSON.parse(body.toString("utf8"))
     }
 
-    // node-fetch
     return JSON.parse(await streamToString(body))
   } catch (e) {
     console.error(e)
