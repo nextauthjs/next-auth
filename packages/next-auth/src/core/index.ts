@@ -22,6 +22,7 @@ export interface RequestInternal {
   providerId?: string
   error?: string
 }
+
 export interface ResponseInternal<
   Body extends string | Record<string, any> | any[] = any
 > {
