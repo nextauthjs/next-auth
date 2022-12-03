@@ -1,7 +1,6 @@
 import "./inject-globals"
 import { AuthHandler } from "../core"
-import { detectHost } from "../utils/detect-host"
-import { getBody } from "./utils"
+import { getBody, getURL } from "../utils/node"
 
 import type {
   GetServerSidePropsContext,
@@ -9,26 +8,30 @@ import type {
   NextApiResponse,
 } from "next"
 import type { AuthOptions, Session } from ".."
+import type { CallbacksOptions } from "../core/types"
 
 async function NextAuthHandler(
   req: NextApiRequest,
   res: NextApiResponse,
   options: AuthOptions
 ) {
-  options.secret ??= options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
-
-  const host = detectHost(req.headers["x-forwarded-host"])
-  const url = new URL(req.url ?? "", host)
-
-  const { status, headers, body } = await AuthHandler(
-    new Request(url, {
-      headers: new Headers(req.headers as any),
-      method: req.method,
-      ...getBody(req),
-    }),
-    options
+  const url = getURL(
+    req.url,
+    options.trustHost,
+    req.headers["x-forwarded-host"] ?? req.headers.host
   )
 
+  if (url instanceof Error) return res.status(400).end()
+
+  const request = new Request(url, {
+    headers: new Headers(req.headers as any),
+    method: req.method,
+    ...getBody(req),
+  })
+
+  options.secret ??= options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
+  const response = await AuthHandler(request, options)
+  const { status, headers } = response
   res.status(status)
 
   for (const [key, val] of headers.entries()) {
@@ -44,7 +47,7 @@ async function NextAuthHandler(
     return res.json({ url: redirect })
   }
 
-  return res.send(body)
+  return res.send(await response.text())
 }
 
 function NextAuth(options: AuthOptions): any
@@ -69,15 +72,26 @@ function NextAuth(
 export default NextAuth
 
 let experimentalWarningShown = false
-export async function unstable_getServerSession(
+let experimentalRSCWarningShown = false
+
+type GetServerSessionOptions = Partial<Omit<AuthOptions, "callbacks">> & {
+  callbacks?: Omit<AuthOptions["callbacks"], "session"> & {
+    session?: (...args: Parameters<CallbacksOptions["session"]>) => any
+  }
+}
+
+export async function unstable_getServerSession<
+  O extends GetServerSessionOptions,
+  R = O["callbacks"] extends { session: (...args: any[]) => infer U }
+    ? U
+    : Session
+>(
   ...args:
-    | [
-        GetServerSidePropsContext["req"],
-        GetServerSidePropsContext["res"],
-        AuthOptions
-      ]
-    | [NextApiRequest, NextApiResponse, AuthOptions]
-): Promise<Session | null> {
+    | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"], O]
+    | [NextApiRequest, NextApiResponse, O]
+    | [O]
+    | []
+): Promise<R | null> {
   if (!experimentalWarningShown && process.env.NODE_ENV !== "production") {
     console.warn(
       "[next-auth][warn][EXPERIMENTAL_API]",
@@ -88,14 +102,53 @@ export async function unstable_getServerSession(
     experimentalWarningShown = true
   }
 
-  const [req, res, options] = args
+  const isRSC = args.length === 0 || args.length === 1
+  if (
+    !experimentalRSCWarningShown &&
+    isRSC &&
+    process.env.NODE_ENV !== "production"
+  ) {
+    console.warn(
+      "[next-auth][warn][EXPERIMENTAL_API]",
+      "\n`unstable_getServerSession` is used in a React Server Component.",
+      `\nhttps://next-auth.js.org/configuration/nextjs#unstable_getServerSession}`,
+      `\nhttps://next-auth.js.org/warnings#EXPERIMENTAL_API`
+    )
+    experimentalRSCWarningShown = true
+  }
 
-  options.secret = options.secret ?? process.env.NEXTAUTH_SECRET
-  const host = detectHost(req.headers["x-forwarded-host"])
-  const url = new URL("/api/auth/session", host)
+  let req, res, options: AuthOptions
+  if (isRSC) {
+    options = Object.assign({}, args[0], { providers: [] })
 
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const { headers, cookies } = require("next/headers")
+    req = {
+      headers: Object.fromEntries(headers() as Headers),
+      cookies: Object.fromEntries(
+        cookies()
+          .getAll()
+          .map((c) => [c.name, c.value])
+      ),
+    }
+    res = { getHeader() {}, setCookie() {}, setHeader() {} }
+  } else {
+    req = args[0]
+    res = args[1]
+    options = Object.assign(args[2], { providers: [] })
+  }
+
+  const urlOrError = getURL(
+    "/api/auth/session",
+    options.trustHost,
+    req.headers["x-forwarded-host"] ?? req.headers.host
+  )
+
+  if (urlOrError instanceof Error) throw urlOrError
+
+  options.secret ??= process.env.NEXTAUTH_SECRET
   const response = await AuthHandler(
-    new Request(url, { headers: req.headers as any }),
+    new Request(urlOrError, { headers: req.headers }),
     options
   )
 
@@ -109,18 +162,10 @@ export async function unstable_getServerSession(
   const data = await response.json()
 
   if (!data || !Object.keys(data).length) return null
-  if (status === 200) return data as unknown as Session
-  throw new Error((data as unknown as Error).message)
-}
 
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace NodeJS {
-    interface ProcessEnv {
-      AUTH_TRUST_HOST?: string
-      NEXTAUTH_URL?: string
-      NEXTAUTH_SECRET?: string
-      VERCEL?: "1"
-    }
+  if (status === 200) {
+    if (isRSC) delete data.expires
+    return data as R
   }
+  throw new Error(data.message)
 }

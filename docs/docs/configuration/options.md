@@ -13,12 +13,12 @@ When deploying to production, set the `NEXTAUTH_URL` environment variable to the
 NEXTAUTH_URL=https://example.com
 ```
 
-If your Next.js application uses a custom base path, specify the route to the API endpoint in full. More informations about the usage of custom base path [here](/getting-started/client#custom-base-path).
+If your Next.js application uses a custom base path, specify the route to the API endpoint in full. More information about the usage of custom base path [here](/getting-started/client#custom-base-path).
 
 _e.g. `NEXTAUTH_URL=https://example.com/custom-route/api/auth`_
 
 :::tip
-When you're using a custom base path, you will need to pass the `basePath` page prop to the `<SessionProvider>`. More informations [here](/getting-started/client#custom-base-path).
+When you're using a custom base path, you will need to pass the `basePath` page prop to the `<SessionProvider>`. More information [here](/getting-started/client#custom-base-path).
 :::
 
 :::note
@@ -472,7 +472,8 @@ cookies: {
       httpOnly: true,
       sameSite: 'lax',
       path: '/',
-      secure: useSecureCookies
+      secure: useSecureCookies,
+      maxAge: 900
     }
   },
   state: {
@@ -482,6 +483,7 @@ cookies: {
       sameSite: "lax",
       path: "/",
       secure: useSecureCookies,
+      maxAge: 900
     },
   },
   nonce: {

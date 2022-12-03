@@ -36,8 +36,8 @@ export interface AuthOptions {
   providers: Provider[]
   /**
    * A random string used to hash tokens, sign cookies and generate cryptographic keys.
-   * If not specified, it falls back to `jwt.secret` or `NEXTAUTH_SECRET` from environment vairables.
-   * Otherwise it will use a hash of all configuration options, including Client ID / Secrets for entropy.
+   * If not specified, it falls back to `jwt.secret` or `NEXTAUTH_SECRET` from environment variables.
+   * Otherwise, it will use a hash of all configuration options, including Client ID / Secrets for entropy.
    *
    * NOTE: The last behavior is extremely volatile, and will throw an error in production.
    * * **Default value**: `string` (SHA hash of the "options" object)
@@ -56,10 +56,8 @@ export interface AuthOptions {
    */
   session?: Partial<SessionOptions>
   /**
-   * JSON Web Tokens are enabled by default if you have not specified a database.
-   * By default JSON Web Tokens are signed (JWS) but not encrypted (JWE),
-   * as JWT encryption adds additional overhead and comes with some caveats.
-   * You can enable encryption by setting `encryption: true`.
+   * JSON Web Tokens are enabled by default if you have not specified an adapter.
+   * JSON Web Tokens are encrypted (JWE) by default. We recommend you keep this behaviour.
    * * **Default value**: See the documentation page
    * * **Required**: *No*
    *
@@ -203,6 +201,16 @@ export interface AuthOptions {
    * [Documentation](https://next-auth.js.org/configuration/options#cookies) | [Usage example](https://next-auth.js.org/configuration/options#example)
    */
   cookies?: Partial<CookiesOptions>
+  /**
+   * If set to `true`, NextAuth.js will use either the `x-forwarded-host` or `host` headers,
+   * instead of `NEXTAUTH_URL`
+   * Make sure that reading `x-forwarded-host` on your hosting platform can be trusted.
+   * - ⚠ **This is an advanced option.** Advanced options are passed the same way as basic options,
+   * but **may have complex implications** or side effects.
+   * You should **try to avoid using advanced options** unless you are very comfortable using them.
+   * @default Boolean(process.env.AUTH_TRUST_HOST ?? process.env.VERCEL)
+   */
+  trustHost?: boolean
 }
 
 /**
@@ -263,7 +271,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    * [Documentation](https://next-auth.js.org/configuration/callbacks#sign-in-callback)
    */
   signIn: (params: {
-    user: User | { email: string }
+    user: User | AdapterUser
     account: A | null
     /**
      * If OAuth provider is used, it contains the full
@@ -315,7 +323,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    */
   session: (params: {
     session: Session
-    user: User
+    user: User | AdapterUser
     token: JWT
   }) => Awaitable<Session>
   /**
@@ -383,9 +391,9 @@ export interface EventCallbacks {
   createUser: (message: { user: User }) => Awaitable<void>
   updateUser: (message: { user: User }) => Awaitable<void>
   linkAccount: (message: {
-    user: User | AdapterUser | { email: string }
+    user: User | AdapterUser
     account: Account
-    profile: User | AdapterUser | { email: string }
+    profile: User | AdapterUser
   }) => Awaitable<void>
   /**
    * The message object will contain one of these depending on

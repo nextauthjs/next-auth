@@ -4,7 +4,7 @@ import {
   MissingAdapterMethods,
   MissingSecret,
 } from "../src/core/errors"
-import { handler } from "./lib"
+import { handler } from "./utils"
 import EmailProvider from "../src/providers/email"
 
 it("Show error page if secret is not defined", async () => {

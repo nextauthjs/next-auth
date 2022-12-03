@@ -1,7 +1,7 @@
 import * as core from "../src/core"
 import { MissingSecret } from "../src/core/errors"
 import { unstable_getServerSession } from "../src/next"
-import { mockLogger } from "./lib"
+import { mockLogger } from "./utils"
 
 const originalWarn = console.warn
 let logger = mockLogger()

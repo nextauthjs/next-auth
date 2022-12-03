@@ -1,5 +1,4 @@
 import { serialize, parse as parseCookie } from "cookie"
-import { detectHost } from "../../utils/detect-host"
 import type { ResponseInternal, RequestInternal } from ".."
 import type { AuthAction } from "../types"
 
@@ -27,7 +26,7 @@ export async function toInternalRequest(
     cookies: cookies,
     providerId: nextauth[1],
     error: url.searchParams.get("error") ?? undefined,
-    host: detectHost(headers["x-forwarded-host"] ?? headers.host),
+    host: new URL(req.url).origin,
     query,
   }
 }

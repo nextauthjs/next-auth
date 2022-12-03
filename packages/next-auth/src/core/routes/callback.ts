@@ -1,7 +1,7 @@
 import oAuthCallback from "../lib/oauth/callback"
 import callbackHandler from "../lib/callback-handler"
 import { createHash } from "../lib/web"
-import getUserFromEmail from "../lib/email/getUserFromEmail"
+import getAdapterUserFromEmail from "../lib/email/getUserFromEmail"
 
 import type { InternalOptions } from "../types"
 import type { RequestInternal, ResponseInternal } from ".."
@@ -218,7 +218,7 @@ export default async function callback(params: {
         return { redirect: `${url}/error?error=Verification`, cookies }
       }
 
-      const profile = await getUserFromEmail({
+      const profile = await getAdapterUserFromEmail({
         email: identifier,
         // @ts-expect-error -- Verified in `assertConfig`. adapter: Adapter<true>
         adapter,
@@ -321,14 +321,14 @@ export default async function callback(params: {
   } else if (provider.type === "credentials" && method === "POST") {
     const credentials = body
 
-    let user: User
+    let user: User | null
     try {
-      user = (await provider.authorize(credentials, {
+      user = await provider.authorize(credentials, {
         query,
         body,
         headers,
         method,
-      })) as User
+      })
       if (!user) {
         return {
           status: 401,

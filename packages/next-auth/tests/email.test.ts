@@ -1,4 +1,4 @@
-import { createCSRF, handler, mockAdapter } from "./lib"
+import { createCSRF, handler, mockAdapter } from "./utils"
 import EmailProvider from "../src/providers/email"
 
 it("Send e-mail to the only address correctly", async () => {

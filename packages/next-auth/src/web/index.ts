@@ -1,5 +1,4 @@
 import { AuthHandler } from "../core"
-import { detectHost } from "../utils/detect-host"
 
 import type { AuthOptions } from ".."
 export * from "../core/types"
@@ -7,8 +6,7 @@ export * from "../core/types"
 async function WebAuthHandler(req: Request, options: AuthOptions) {
   options.secret ??= options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
 
-  const host = detectHost(req.headers["x-forwarded-host"])
-  const url = new URL(req.url ?? "", host)
+  const url = new URL(req.url ?? "")
 
   const res = await AuthHandler(new Request(url, req), options)
 
