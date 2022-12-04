@@ -1,6 +1,4 @@
-import NextAuth from "next-auth"
-import type { NextAuthOptions } from "next-auth"
-import jwt from "jsonwebtoken"
+import NextAuth, { type NextAuthOptions } from "next-auth"
 
 // Providers
 import Apple from "next-auth/providers/apple"
@@ -37,69 +35,39 @@ import Vk from "next-auth/providers/vk"
 import Wikimedia from "next-auth/providers/wikimedia"
 import WorkOS from "next-auth/providers/workos"
 
-// Adapters
-import { PrismaClient } from "@prisma/client"
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import { Client as FaunaClient } from "faunadb"
-import { FaunaAdapter } from "@next-auth/fauna-adapter"
-import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
-import { SupabaseAdapter } from "@next-auth/supabase-adapter"
+// // Prisma
+// import { PrismaClient } from "@prisma/client"
+// import { PrismaAdapter } from "@next-auth/prisma-adapter"
+// const client = globalThis.prisma || new PrismaClient()
+// if (process.env.NODE_ENV !== "production") globalThis.prisma = client
+// const adapter = PrismaAdapter(client)
 
-// Add an adapter you want to test here.
-const adapters = {
-  prisma() {
-    const client = globalThis.prisma || new PrismaClient()
-    if (process.env.NODE_ENV !== "production") globalThis.prisma = client
-    return PrismaAdapter(client)
-  },
-  typeorm() {
-    return TypeORMLegacyAdapter({
-      type: "sqlite",
-      name: "next-auth-test-memory",
-      database: "./typeorm/dev.db",
-      synchronize: true,
-    })
-  },
-  fauna() {
-    const client =
-      globalThis.fauna ||
-      new FaunaClient({
-        secret: process.env.FAUNA_SECRET,
-        domain: process.env.FAUNA_DOMAIN,
-      })
-    if (process.env.NODE_ENV !== "production") global.fauna = client
-    return FaunaAdapter(client)
-  },
-  supabase() {
-    return SupabaseAdapter({
-      url: process.env.NEXT_PUBLIC_SUPABASE_URL,
-      secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
-    })
-  },
-  noop() {
-    return undefined
-  },
-}
+// // Fauna
+// import { Client as FaunaClient } from "faunadb"
+// import { FaunaAdapter } from "@next-auth/fauna-adapter"
+// const opts = { secret: process.env.FAUNA_SECRET, domain: process.env.FAUNA_DOMAIN }
+// const client = globalThis.fauna || new FaunaClient(opts)
+// if (process.env.NODE_ENV !== "production") globalThis.fauna = client
+// const adapter = FaunaAdapter(client)
+
+// // TypeORM
+// import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
+// const adapter = TypeORMLegacyAdapter({
+//   type: "sqlite",
+//   name: "next-auth-test-memory",
+//   database: "./typeorm/dev.db",
+//   synchronize: true,
+// })
+
+// // Supabase
+// import { SupabaseAdapter } from "@next-auth/supabase-adapter"
+// const adapter = SupabaseAdapter({
+//   url: process.env.NEXT_PUBLIC_SUPABASE_URL,
+//   secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
+// })
 
 export const authOptions: NextAuthOptions = {
-  adapter: adapters.noop(),
-  callbacks: {
-    async session({ session, user }) {
-      // NOTE: this is needed when using Supabase with RLS. Otherwise this callback can be removed.
-      const signingSecret = process.env.SUPABASE_JWT_SECRET
-      if (signingSecret) {
-        const payload = {
-          aud: "authenticated",
-          exp: Math.floor(new Date(session.expires).getTime() / 1000),
-          sub: user.id,
-          email: user.email,
-          role: "authenticated",
-        }
-        session.supabaseAccessToken = jwt.sign(payload, signingSecret)
-      }
-      return session
-    },
-  },
+  // adapter,
   debug: process.env.NODE_ENV !== "production",
   theme: {
     logo: "https://next-auth.js.org/img/logo/logo-sm.png",

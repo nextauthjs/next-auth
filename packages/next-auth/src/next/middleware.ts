@@ -6,7 +6,7 @@ import { NextResponse, NextRequest } from "next/server"
 
 import { getToken } from "../jwt"
 import parseUrl from "../utils/parse-url"
-import { detectHost } from "../utils/detect-host"
+import { getURL } from "../utils/node"
 
 type AuthorizedCallback = (params: {
   token: JWT | null
@@ -103,14 +103,10 @@ export interface NextAuthMiddlewareOptions {
   trustHost?: NextAuthOptions["trustHost"]
 }
 
-// TODO: `NextMiddleware` should allow returning `void`
-// Simplify when https://github.com/vercel/next.js/pull/38625 is merged.
-type NextMiddlewareResult = ReturnType<NextMiddleware> | void // eslint-disable-line @typescript-eslint/no-invalid-void-type
-
 async function handleMiddleware(
   req: NextRequest,
   options: NextAuthMiddlewareOptions | undefined = {},
-  onSuccess?: (token: JWT | null) => Promise<NextMiddlewareResult>
+  onSuccess?: (token: JWT | null) => ReturnType<NextMiddleware>
 ) {
   const { pathname, search, origin, basePath } = req.nextUrl
 
@@ -121,13 +117,15 @@ async function handleMiddleware(
     options.trustHost ?? process.env.VERCEL ?? process.env.AUTH_TRUST_HOST
   )
 
-  const host = detectHost(
+  let authPath
+  const url = getURL(
+    null,
     options.trustHost,
-    req.headers.get("x-forwarded-host"),
-    process.env.NEXTAUTH_URL ??
-      (process.env.NODE_ENV !== "production" && "http://localhost:3000")
+    req.headers.get("x-forwarded-host") ?? req.headers.get("host")
   )
-  const authPath = parseUrl(host).path
+  if (url instanceof URL) authPath = parseUrl(url).path
+  else authPath = "/api/auth"
+
   const publicPaths = ["/_next", "/favicon.ico"]
 
   // Avoid infinite redirects/invalid response
@@ -140,8 +138,8 @@ async function handleMiddleware(
     return
   }
 
-  const secret = options?.secret ?? process.env.NEXTAUTH_SECRET
-  if (!secret) {
+  options.secret ??= process.env.NEXTAUTH_SECRET
+  if (!options.secret) {
     console.error(
       `[next-auth][error][NO_SECRET]`,
       `\nhttps://next-auth.js.org/errors#no_secret`
@@ -155,9 +153,9 @@ async function handleMiddleware(
 
   const token = await getToken({
     req,
-    decode: options?.jwt?.decode,
+    decode: options.jwt?.decode,
     cookieName: options?.cookies?.sessionToken?.name,
-    secret,
+    secret: options.secret,
   })
 
   const isAuthorized =
@@ -182,7 +180,7 @@ export interface NextRequestWithAuth extends NextRequest {
 export type NextMiddlewareWithAuth = (
   request: NextRequestWithAuth,
   event: NextFetchEvent
-) => NextMiddlewareResult | Promise<NextMiddlewareResult>
+) => ReturnType<NextMiddleware>
 
 export type WithAuthArgs =
   | [NextRequestWithAuth]
