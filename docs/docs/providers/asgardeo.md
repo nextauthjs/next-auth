@@ -18,21 +18,23 @@ https://wso2.com/asgardeo/docs/guides/authentication
 - Add Authorized redirect URLs & Allowed origins fields.
 - Make Email, First Name, Photo URL user attributes mandatory from the console.
 
-In `.env` add the following entries:
+Create a `.env` file in the project root add the following entries:
+
+These values can be collected from the application created.
 
 ```
-ASGARDEO_CLIENT_ID=<copy Application (client) ID here>
-ASGARDEO_CLIENT_SECRET=<copy generated client secret value here>
-ASGARDEO_ISSUER=<copy the serverOrigin param taken from asgardeo console here>
+ASGARDEO_CLIENT_ID=<Copy client ID from protocol tab here>
+ASGARDEO_CLIENT_SECRET=<Copy client from protocol tab here>
+ASGARDEO_ISSUER=<Copy the issuer url from the info tab here>
 ```
 
 In `pages/api/auth/[...nextauth].js` find or add the `Asgardeo` entries:
 
 ```js
-import AsgardeoProvider from "next-auth/providers/asgardeo";
+import Asgardeo from "next-auth/providers/asgardeo";
 ...
 providers: [
-  AsgardeoProvider({
+  Asgardeo({
     clientId: process.env.ASGARDEO_CLIENT_ID,
     clientSecret: process.env.ASGARDEO_CLIENT_SECRET,
     issuer: process.env.ASGARDEO_ISSUER

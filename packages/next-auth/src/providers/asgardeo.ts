@@ -19,6 +19,7 @@ export default function Asgardeo<P extends Record<string, any> = AsgardeoProfile
       params: { scope: "openid email profile" }
     },
     checks: ["pkce", "state"],
+    idToken: true,
     profile(profile) {
       return {
         id: profile?.sub,
@@ -26,6 +27,15 @@ export default function Asgardeo<P extends Record<string, any> = AsgardeoProfile
         email: profile?.email,
         image: profile?.picture
       }
+    },
+    style: {
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/asgardeo.svg",
+      logoDark:
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/asgardeo-dark.svg",
+      bg: "#fff",
+      text: "#000",
+      bgDark: "#000",
+      textDark: "#fff",
     },
     options,
   }

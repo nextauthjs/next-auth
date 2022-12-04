@@ -3,7 +3,7 @@ import type { NextAuthOptions } from "next-auth"
 
 // Providers
 import Apple from "next-auth/providers/apple"
-import AsgardeoProvider from "next-auth/providers/asgardeo"
+import Asgardeo from "next-auth/providers/asgardeo"
 import Auth0 from "next-auth/providers/auth0"
 import AzureAD from "next-auth/providers/azure-ad"
 import AzureB2C from "next-auth/providers/azure-ad-b2c"
@@ -82,7 +82,7 @@ export const authOptions: NextAuthOptions = {
       },
     }),
     Apple({ clientId: process.env.APPLE_ID, clientSecret: process.env.APPLE_SECRET }),
-    AsgardeoProvider({ clientId: process.env.ASGARDEO_CLIENT_ID, clientSecret: process.env.ASGARDEO_CLIENT_SECRET, issuer: process.env.ASGARDEO_ISSUER }),
+    Asgardeo({ clientId: process.env.ASGARDEO_CLIENT_ID, clientSecret: process.env.ASGARDEO_CLIENT_SECRET, issuer: process.env.ASGARDEO_ISSUER }),
     Auth0({ clientId: process.env.AUTH0_ID, clientSecret: process.env.AUTH0_SECRET, issuer: process.env.AUTH0_ISSUER }),
     AzureAD({ clientId: process.env.AZURE_AD_CLIENT_ID, clientSecret: process.env.AZURE_AD_CLIENT_SECRET, tenantId: process.env.AZURE_AD_TENANT_ID }),
     AzureB2C({ clientId: process.env.AZURE_B2C_ID, clientSecret: process.env.AZURE_B2C_SECRET, issuer: process.env.AZURE_B2C_ISSUER }),
@@ -118,6 +118,22 @@ export const authOptions: NextAuthOptions = {
     WorkOS({ clientId: process.env.WORKOS_ID, clientSecret: process.env.WORKOS_SECRET }),
     Zitadel({ issuer: process.env.ZITADEL_ISSUER, clientId: process.env.ZITADEL_CLIENT_ID, clientSecret: process.env.ZITADEL_CLIENT_SECRET }),
   ],
+  callbacks: {
+    redirect({ url, baseUrl }) {
+      console.log({url});
+      console.log({baseUrl});
+      if (url.startsWith(baseUrl)) return url;
+
+      if (url === 'signOut') {
+        const ssoLogoutUrl = 'https://sso.example.com/auth/realms/master/protocol/openid-connect/logout';
+        const redirectUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+        const signoutWithRedirectUrl = `${ssoLogoutUrl}?redirect_uri=${encodeURIComponent(
+          redirectUrl,
+        )}`;
+        return signoutWithRedirectUrl;
+      }
+    }
+  }
 }
 
 if (authOptions.adapter) {
