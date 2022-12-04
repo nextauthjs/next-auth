@@ -87,6 +87,7 @@ If you think your custom provider might be useful to others, we encourage you to
 
 1. Add your config: [`src/providers/{provider}.js`](https://github.com/nextauthjs/next-auth/tree/main/packages/next-auth/src/providers) (Make sure you use a named default export, like `export default function YourProvider`!)
 2. Add provider documentation: [`www/docs/providers/{provider}.md`](https://github.com/nextauthjs/next-auth/tree/main/www/docs/providers)
+3. Add provider logo svgs, like `google-dark.svg` (dark mode) and `google.svg` (light mode) to the `/packages/next-auth/provider-logos/` directory. Don't forget to set the provider's styling options in the `provider.style` config object.
 
 That's it! 🎉 Others will be able to discover this provider much more easily now!
 

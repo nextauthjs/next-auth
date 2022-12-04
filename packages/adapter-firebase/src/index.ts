@@ -86,10 +86,10 @@ export function FirestoreAdapter({
     async getUserByEmail(email) {
       const userQuery = query(Users, where("email", "==", email), limit(1))
       const userSnapshots = await getDocs(userQuery)
-      const userSnpashot = userSnapshots.docs[0]
+      const userSnapshot = userSnapshots.docs[0]
 
-      if (userSnpashot?.exists() && Users.converter) {
-        return Users.converter.fromFirestore(userSnpashot)
+      if (userSnapshot?.exists() && Users.converter) {
+        return Users.converter.fromFirestore(userSnapshot)
       }
 
       return null

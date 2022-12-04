@@ -1,5 +1,5 @@
 import { randomBytes, randomUUID } from "crypto"
-import { NextAuthOptions } from ".."
+import { AuthOptions } from ".."
 import logger from "../utils/logger"
 import parseUrl from "../utils/parse-url"
 import { adapterErrorHandler, eventsErrorHandler } from "./errors"
@@ -16,7 +16,7 @@ import type { InternalOptions } from "./types"
 
 interface InitParams {
   host?: string
-  userOptions: NextAuthOptions
+  userOptions: AuthOptions
   providerId?: string
   action: InternalOptions["action"]
   /** Callback URL value extracted from the incoming request. */
