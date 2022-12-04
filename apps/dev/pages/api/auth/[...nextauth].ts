@@ -116,22 +116,6 @@ export const authOptions: NextAuthOptions = {
     Wikimedia({ clientId: process.env.WIKIMEDIA_ID, clientSecret: process.env.WIKIMEDIA_SECRET }),
     WorkOS({ clientId: process.env.WORKOS_ID, clientSecret: process.env.WORKOS_SECRET }),
   ],
-  callbacks: {
-    redirect({ url, baseUrl }) {
-      console.log({url});
-      console.log({baseUrl});
-      if (url.startsWith(baseUrl)) return url;
-
-      if (url === 'signOut') {
-        const ssoLogoutUrl = 'https://sso.example.com/auth/realms/master/protocol/openid-connect/logout';
-        const redirectUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
-        const signoutWithRedirectUrl = `${ssoLogoutUrl}?redirect_uri=${encodeURIComponent(
-          redirectUrl,
-        )}`;
-        return signoutWithRedirectUrl;
-      }
-    }
-  }
 }
 
 if (authOptions.adapter) {
