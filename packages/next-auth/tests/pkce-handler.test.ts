@@ -1,5 +1,16 @@
-import { mockLogger } from "./lib"
-import type { InternalOptions, LoggerInstance, InternalProvider, CallbacksOptions, Account, Awaitable, Profile, Session, User, CookiesOptions } from "../src"
+import { mockLogger } from "./utils"
+import type {
+  InternalOptions,
+  LoggerInstance,
+  InternalProvider,
+  CallbacksOptions,
+  Account,
+  Awaitable,
+  Profile,
+  Session,
+  User,
+  CookiesOptions,
+} from "../src"
 import { createPKCE } from "../src/core/lib/oauth/pkce-handler"
 import { InternalUrl } from "../src/utils/parse-url"
 import { JWT, JWTDecodeParams, JWTEncodeParams, JWTOptions } from "../src/jwt"
@@ -21,7 +32,7 @@ beforeEach(() => {
     host: "localhost:3000",
     path: "/api/auth",
     base: "http://localhost:3000/api/auth",
-    toString: () => "http://localhost:3000/api/auth"
+    toString: () => "http://localhost:3000/api/auth",
   }
 
   provider = {
@@ -30,7 +41,7 @@ beforeEach(() => {
     name: "testName",
     signinUrl: "/",
     callbackUrl: "/",
-    checks: ["pkce", "state"]
+    checks: ["pkce", "state"],
   }
 
   jwt = {
@@ -41,22 +52,41 @@ beforeEach(() => {
     },
     decode: function (params: JWTDecodeParams): Awaitable<JWT | null> {
       throw new Error("Function not implemented.")
-    }
+    },
   }
 
   callbacks = {
-    signIn: function (params: { user: User; account: Account; profile: Profile & Record<string, unknown>; email: { verificationRequest?: boolean | undefined }; credentials?: Record<string, CredentialInput> | undefined }): Awaitable<string | boolean> {
+    signIn: function (params: {
+      user: User
+      account: Account
+      profile: Profile & Record<string, unknown>
+      email: { verificationRequest?: boolean | undefined }
+      credentials?: Record<string, CredentialInput> | undefined
+    }): Awaitable<string | boolean> {
       throw new Error("Function not implemented.")
     },
-    redirect: function (params: { url: string; baseUrl: string }): Awaitable<string> {
+    redirect: function (params: {
+      url: string
+      baseUrl: string
+    }): Awaitable<string> {
       throw new Error("Function not implemented.")
     },
-    session: function (params: { session: Session; user: User; token: JWT }): Awaitable<Session> {
+    session: function (params: {
+      session: Session
+      user: User
+      token: JWT
+    }): Awaitable<Session> {
       throw new Error("Function not implemented.")
     },
-    jwt: function (params: { token: JWT; user?: User | undefined; account?: Account | undefined; profile?: Profile | undefined; isNewUser?: boolean | undefined }): Awaitable<JWT> {
+    jwt: function (params: {
+      token: JWT
+      user?: User | undefined
+      account?: Account | undefined
+      profile?: Profile | undefined
+      isNewUser?: boolean | undefined
+    }): Awaitable<JWT> {
       throw new Error("Function not implemented.")
-    }
+    },
   }
 
   cookies = {
@@ -65,7 +95,7 @@ beforeEach(() => {
     csrfToken: { name: "", options: undefined },
     pkceCodeVerifier: { name: "", options: {} },
     state: { name: "", options: undefined },
-    nonce: { name: "", options: undefined }
+    nonce: { name: "", options: undefined },
   }
 
   options = {
@@ -81,9 +111,9 @@ beforeEach(() => {
     events: {},
     callbacks,
     cookies,
-    callbackUrl: '',
+    callbackUrl: "",
     providers: [],
-    theme: {}
+    theme: {},
   }
 })
 
@@ -109,7 +139,7 @@ describe("createPKCE", () => {
     const expires = new Date()
     expires.setTime(expires.getTime() + defaultMaxAge * 1000)
 
-    validateCookieExpiration({pkce, expires})
+    validateCookieExpiration({ pkce, expires })
     expect(pkce?.cookie.options.maxAge).toBeUndefined()
   })
 
@@ -122,14 +152,14 @@ describe("createPKCE", () => {
     const expires = new Date()
     expires.setTime(expires.getTime() + maxAge * 1000)
 
-    validateCookieExpiration({pkce, expires})
+    validateCookieExpiration({ pkce, expires })
     expect(pkce?.cookie.options.maxAge).toEqual(maxAge)
   })
 })
 
 // comparing the parts instead of getTime() because the milliseconds
 // will not match since the two Date objects are created milliseconds apart
-const validateCookieExpiration = ({pkce, expires}) => {
+const validateCookieExpiration = ({ pkce, expires }) => {
   const cookieExpires = pkce?.cookie.options.expires
   expect(cookieExpires.getFullYear()).toEqual(expires.getFullYear())
   expect(cookieExpires.getMonth()).toEqual(expires.getMonth())
