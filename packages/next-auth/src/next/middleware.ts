@@ -1,5 +1,5 @@
 import type { NextMiddleware, NextFetchEvent } from "next/server"
-import type { Awaitable, CookieOption, NextAuthOptions } from ".."
+import type { Awaitable, CookieOption, AuthOptions } from ".."
 import type { JWT, JWTOptions } from "../jwt"
 
 import { NextResponse, NextRequest } from "next/server"
@@ -21,7 +21,7 @@ export interface NextAuthMiddlewareOptions {
    * ---
    * [Documentation](https://next-auth.js.org/configuration/pages)
    */
-  pages?: NextAuthOptions["pages"]
+  pages?: AuthOptions["pages"]
 
   /**
    * You can override the default cookie names and options for any of the cookies
@@ -39,7 +39,7 @@ export interface NextAuthMiddlewareOptions {
    */
   cookies?: Partial<
     Record<
-      keyof Pick<keyof NextAuthOptions["cookies"], "sessionToken">,
+      keyof Pick<keyof AuthOptions["cookies"], "sessionToken">,
       Omit<CookieOption, "options">
     >
   >
@@ -57,7 +57,7 @@ export interface NextAuthMiddlewareOptions {
      * Callback that receives the user's JWT payload
      * and returns `true` to allow the user to continue.
      *
-     * This is similar to the `signIn` callback in `NextAuthOptions`.
+     * This is similar to the `signIn` callback in `AuthOptions`.
      *
      * If it returns `false`, the user is redirected to the sign-in page instead
      *
@@ -90,7 +90,7 @@ export interface NextAuthMiddlewareOptions {
    * The same `secret` used in the `NextAuth` configuration.
    * Defaults to the `NEXTAUTH_SECRET` environment variable.
    */
-  secret?: NextAuthOptions["secret"]
+  secret?: AuthOptions["secret"]
   /**
    * If set to `true`, NextAuth.js will use either the `x-forwarded-host` or `host` headers,
    * instead of `NEXTAUTH_URL`
@@ -100,7 +100,7 @@ export interface NextAuthMiddlewareOptions {
    * You should **try to avoid using advanced options** unless you are very comfortable using them.
    * @default Boolean(process.env.VERCEL ?? process.env.AUTH_TRUST_HOST)
    */
-  trustHost?: NextAuthOptions["trustHost"]
+  trustHost?: AuthOptions["trustHost"]
 }
 
 async function handleMiddleware(
