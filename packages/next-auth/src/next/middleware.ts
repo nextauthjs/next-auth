@@ -57,7 +57,7 @@ export interface NextAuthMiddlewareOptions {
      * Callback that receives the user's JWT payload
      * and returns `true` to allow the user to continue.
      *
-     * This is similar to the `signIn` callback in `NextAuthOptions`.
+     * This is similar to the `signIn` callback in `AuthOptions`.
      *
      * If it returns `false`, the user is redirected to the sign-in page instead
      *
