@@ -54,7 +54,7 @@ async function NextAuthHandler(
   return res.send(await response.text())
 }
 
-function NextAuth(options: NextAuthOptions): any
+function NextAuth(options: AuthOptions): any
 function NextAuth(
   req: NextApiRequest,
   res: NextApiResponse,
