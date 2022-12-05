@@ -167,7 +167,8 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
 export type OAuthEndpointType = "authorization" | "token" | "userinfo"
 
 /**
- * We parsesd `authorization`, `token` and `userinfo`
+ * @internal
+ * We parsed `authorization`, `token` and `userinfo`
  * to always contain a valid `URL`, with the params
  */
 export type OAuthConfigInternal<P> = Omit<
