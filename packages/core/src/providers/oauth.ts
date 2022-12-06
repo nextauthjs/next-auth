@@ -1,17 +1,16 @@
 import type { CommonProviderOptions } from "../providers"
 import type { Profile, TokenSet, User, Awaitable } from ".."
 
-import type {
-  AuthorizationParameters,
-  CallbackParamsType,
-  Issuer,
-  ClientMetadata,
-  IssuerMetadata,
-  OAuthCallbackChecks,
-  OpenIDCallbackChecks,
-  HttpOptions,
-} from "openid-client"
 import type { JWK } from "jose"
+
+// TODO:
+type AuthorizationParameters = any
+type CallbackParamsType = any
+type Issuer = any
+type ClientMetadata = any
+type IssuerMetadata = any
+type OAuthCallbackChecks = any
+type OpenIDCallbackChecks = any
 
 type Client = InstanceType<Issuer["Client"]>
 
@@ -27,7 +26,7 @@ type UrlParams = Record<string, unknown>
 
 type EndpointRequest<C, R, P> = (
   context: C & {
-    /** `openid-client` Client */
+    /** `oauth4webapi` Client. TODO: */
     client: Client
     /** Provider is passed for convenience, ans also contains the `callbackUrl`. */
     provider: (OAuthConfig<P> | OAuthConfigInternal<P>) & {
@@ -144,8 +143,6 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   region?: string
   // TODO: only allow for some
   issuer?: string
-  /** Read more at: https://github.com/panva/node-openid-client/tree/main/docs#customizing-http-requests */
-  httpOptions?: HttpOptions
 
   style?: OAuthProviderButtonStyles
 

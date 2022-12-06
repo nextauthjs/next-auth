@@ -45,7 +45,6 @@
     "@types/react": "18.0.26",
     "autoprefixer": "10.4.13",
     "cssnano": "5.1.14",
-    "openid-client": "^5.1.0",
     "postcss": "8.4.19",
     "postcss-cli": "10.1.0",
     "postcss-nested": "6.0.0"
