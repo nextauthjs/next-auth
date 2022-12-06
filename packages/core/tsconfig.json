@@ -1,0 +1,31 @@
+{
+  "extends": "@next-auth/tsconfig/tsconfig.base.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "baseUrl": ".",
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "resolveJsonModule": true,
+    "rootDir": "src",
+    "skipDefaultLibCheck": true,
+    "strict": false,
+    "strictNullChecks": true,
+    "stripInternal": true,
+  },
+  "include": [
+    "src/**/*",
+  ],
+  "exclude": [
+    "./*.js",
+    "./*.d.ts",
+    "./config",
+  ]
+}
