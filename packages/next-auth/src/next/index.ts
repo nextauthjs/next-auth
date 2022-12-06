@@ -139,7 +139,7 @@ export async function unstable_getServerSession<
   } else {
     req = args[0]
     res = args[1]
-    options = Object.assign(args[2], { providers: [] })
+    options = Object.assign({}, args[2], { providers: [] })
   }
 
   const urlOrError = getURL(
