@@ -69,7 +69,7 @@ import GitHub from "next-auth/providers/github"
 
 export const authOptions: AuthOptions = {
   // adapter,
-  debug: process.env.NODE_ENV !== "production",
+  // debug: process.env.NODE_ENV !== "production",
   theme: {
     logo: "https://next-auth.js.org/img/logo/logo-sm.png",
     brandColor: "#1786fb",
@@ -97,7 +97,6 @@ export const authOptions: AuthOptions = {
     // Facebook({ clientId: process.env.FACEBOOK_ID, clientSecret: process.env.FACEBOOK_SECRET }),
     // Foursquare({ clientId: process.env.FOURSQUARE_ID, clientSecret: process.env.FOURSQUARE_SECRET }),
     // Freshbooks({ clientId: process.env.FRESHBOOKS_ID, clientSecret: process.env.FRESHBOOKS_SECRET }),
-
     GitHub({ clientId: process.env.GITHUB_ID, clientSecret: process.env.GITHUB_SECRET }),
     // Gitlab({ clientId: process.env.GITLAB_ID, clientSecret: process.env.GITLAB_SECRET }),
     // Google({ clientId: process.env.GOOGLE_ID, clientSecret: process.env.GOOGLE_SECRET }),

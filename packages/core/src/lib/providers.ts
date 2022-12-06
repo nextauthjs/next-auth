@@ -58,6 +58,7 @@ function normalizeOAuth(
   const hasIssuer = !!c.issuer
   const authorization = normalizeEndpoint(c.authorization, hasIssuer)
 
+  // TODO: deprecate OAuth 1.0 support
   if (!c.version?.startsWith("1.")) {
     // Set default check to state
     c.checks ??= ["pkce"]

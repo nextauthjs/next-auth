@@ -104,41 +104,58 @@ export async function handleOAuthCallback(params: {
       throw new Error("TODO: Handle OAuth 2.0 redirect error")
     }
 
-    const response = await o.authorizationCodeGrantRequest(
+    const codeGrantResponse = await o.authorizationCodeGrantRequest(
       as,
       client,
       parameters,
       provider.callbackUrl,
-      codeVerifier?.codeVerifier ?? "yooo" // TODO: review fallback code verifier
+      codeVerifier?.codeVerifier ?? "auth" // TODO: review fallback code verifier
     )
 
     let challenges: o.WWWAuthenticateChallenge[] | undefined
-    if ((challenges = o.parseWwwAuthenticateChallenges(response))) {
+    if ((challenges = o.parseWwwAuthenticateChallenges(codeGrantResponse))) {
       for (const challenge of challenges) {
         console.log("challenge", challenge)
       }
       throw new Error("TODO: Handle www-authenticate challenges as needed")
     }
 
-    const tokens = await o.processAuthorizationCodeOAuth2Response(
-      as,
-      client,
-      response
-    )
-    if (o.isOAuth2Error(tokens)) {
-      console.log("error", tokens)
-      throw new Error("TODO: Handle OAuth 2.0 response body error")
-    }
-
     let profile: Profile = {}
+    let tokens: TokenSet
 
-    if (provider.userinfo?.url) {
-      const userinfoResponse = await o.userInfoRequest(
+    if (provider.idToken) {
+      const result = await o.processAuthorizationCodeOpenIDResponse(
         as,
         client,
-        tokens.access_token
+        codeGrantResponse
       )
-      profile = await userinfoResponse.json()
+
+      if (o.isOAuth2Error(result)) {
+        console.log("error", result)
+        throw new Error("TODO: Handle OIDC response body error")
+      }
+
+      profile = o.getValidatedIdTokenClaims(result)
+      tokens = result
+    } else {
+      tokens = await o.processAuthorizationCodeOAuth2Response(
+        as,
+        client,
+        codeGrantResponse
+      )
+      if (o.isOAuth2Error(tokens as any)) {
+        console.log("error", tokens)
+        throw new Error("TODO: Handle OAuth 2.0 response body error")
+      }
+
+      if (provider.userinfo?.url) {
+        const userinfoResponse = await o.userInfoRequest(
+          as,
+          client,
+          (tokens as any).access_token
+        )
+        profile = await userinfoResponse.json()
+      }
     }
 
     const profileResult = await getProfile({

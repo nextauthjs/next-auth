@@ -238,14 +238,15 @@ export interface Theme {
  * Some of them are available with different casing,
  * but they refer to the same value.
  */
-export type TokenSet = Partial<OAuth2TokenEndpointResponse> &
-  Partial<OpenIDTokenEndpointResponse>
+export type TokenSet = Partial<
+  OAuth2TokenEndpointResponse | OpenIDTokenEndpointResponse
+>
 
 /**
  * Usually contains information about the provider being used
  * and also extends `TokenSet`, which is different tokens returned by OAuth Providers.
  */
-export interface Account extends TokenSet {
+export interface Account extends Partial<OpenIDTokenEndpointResponse> {
   /**
    * This value depends on the type of the provider being used to create the account.
    * - oauth: The OAuth account's id, returned from the `profile()` callback.

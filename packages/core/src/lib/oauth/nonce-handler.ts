@@ -66,7 +66,7 @@ export async function useNonce(
   const value = (await jwt.decode({ ...options.jwt, token: nonce })) as any
 
   return {
-    value: value?.nonce ?? undefined,
+    value: value?.value ?? undefined,
     cookie: {
       name: cookies.nonce.name,
       value: "",

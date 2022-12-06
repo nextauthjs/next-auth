@@ -77,7 +77,7 @@ export async function usePKCECodeVerifier(
   })) as any
 
   return {
-    codeVerifier: pkce?.code_verifier ?? undefined,
+    codeVerifier: pkce?.value ?? undefined,
     cookie: {
       name: cookies.pkceCodeVerifier.name,
       value: "",

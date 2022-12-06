@@ -53,7 +53,7 @@ export async function useState(
   const value = (await jwt.decode({ ...options.jwt, token: state })) as any
 
   return {
-    value: value?.state ?? undefined,
+    value: value?.value ?? undefined,
     cookie: {
       name: cookies.state.name,
       value: "",

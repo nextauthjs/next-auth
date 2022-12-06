@@ -55,8 +55,10 @@ export async function getAuthorizationUrl({
       // clientId can technically be undefined, should we check this in assert.ts or rely on the Authorization Server to do it?
       client_id: provider.clientId,
       redirect_uri: provider.callbackUrl,
+      // @ts-expect-error TODO:
+      ...(provider.authorization.params ?? {}),
     }, // Defaults
-    Object.fromEntries(authParams.entries()), // From provider config
+    Object.fromEntries(authParams), // From provider config
     query // From `signIn` call
   )
 
@@ -89,6 +91,7 @@ export async function getAuthorizationUrl({
     cookies.push(nonce)
   }
 
+  url.searchParams.delete("nextauth")
   logger.debug("GET_AUTHORIZATION_URL", { url, cookies, provider })
   return { redirect: url, cookies }
 }
