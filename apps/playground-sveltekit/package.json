@@ -34,7 +34,8 @@
   "type": "module",
   "dependencies": {
     "cookie": "0.5.0",
-    "next-auth": "latest"
+    "next-auth-core": "workspace:^0.0.1",
+    "next-auth-sveltekit": "workspace:^0.0.1"
   },
   "prettier": {
     "semi": false,

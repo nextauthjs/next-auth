@@ -11,6 +11,7 @@
     "clean": "turbo run clean --no-cache",
     "dev:db": "turbo run dev --parallel --continue --filter=next-auth-app...",
     "dev": "turbo run dev --parallel --continue --filter=next-auth-app... --filter=!./packages/adapter-*",
+    "dev:kit": "turbo run dev --parallel --continue --filter=sveltekit-nextauth... --filter=!./packages/adapter-*",
     "dev:docs": "turbo run dev --filter=next-auth-docs",
     "email": "cd apps/dev && pnpm email",
     "release": "release",
