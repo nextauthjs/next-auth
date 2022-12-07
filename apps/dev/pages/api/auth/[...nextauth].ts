@@ -136,10 +136,7 @@ function Auth(...args: any[]) {
     return async (req: Request) => {
       args[0].secret ??= process.env.NEXTAUTH_SECRET
       const res = await AuthHandler(req, args[0])
-
-      // If the request expects a return URL, send it as JSON
-      // instead of doing an actual redirect.
-      const redirect = res.headers.get("Location") || /* TODO: remove */ (await req.json().json)
+      const redirect = /* TODO: remove */ await req.json().json
       if (req.headers.get("X-Auth-Return-Redirect") && redirect) {
         res.headers.delete("Location")
         return new Response(JSON.stringify({ url: redirect }), res)
