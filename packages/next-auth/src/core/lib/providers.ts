@@ -2,7 +2,7 @@ import { merge } from "../../utils/merge"
 
 import type { InternalProvider } from "../types"
 import type {
-  InternalOAuthConfig,
+  OAuthConfigInternal,
   OAuthConfig,
   Provider,
 } from "../../providers"
@@ -59,7 +59,7 @@ function normalizeOAuthOptions(
   if (!oauthOptions) return
 
   const normalized = Object.entries(oauthOptions).reduce<
-    InternalOAuthConfig<Record<string, unknown>>
+    OAuthConfigInternal<Record<string, unknown>>
   >(
     (acc, [key, value]) => {
       if (
