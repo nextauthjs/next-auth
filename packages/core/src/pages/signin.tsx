@@ -74,6 +74,9 @@ export default function SigninPage(props: SignInServerPageParams) {
 
   const error = errorType && (errors[errorType] ?? errors.default)
 
+  // TODO: move logos
+  const logos =
+    "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos"
   return (
     <div className="signin">
       {theme.brandColor && (
@@ -111,11 +114,19 @@ export default function SigninPage(props: SignInServerPageParams) {
                     } as CSSProperties
                   }
                 >
-                  <Logo id="provider-logo" src={provider.style?.logo} />
-                  <Logo
-                    id="provider-logo-dark"
-                    src={provider.style?.logoDark}
+                  <img
+                    id="provider-logo"
+                    src={`${provider.style?.logo.startsWith("/") ? logos : ""}${
+                      provider.style?.logo
+                    }`}
                   />
+                  <img
+                    id="provider-logo-dark"
+                    src={`${provider.style?.logo.startsWith("/") ? logos : ""}${
+                      provider.style?.logoDark
+                    }`}
+                  />
+
                   <span>Sign in with {provider.name}</span>
                 </button>
               </form>
@@ -179,15 +190,4 @@ export default function SigninPage(props: SignInServerPageParams) {
       </div>
     </div>
   )
-}
-
-function Logo({ id, src }: { id: string; src?: string }) {
-  if (!src) return null
-  const _src = `${
-    src.startsWith("/")
-      ? // TODO: move logos
-        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos"
-      : ""
-  }${src}`
-  return <img id={id} src={_src} />
 }
