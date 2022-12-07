@@ -26,6 +26,7 @@ interface InitParams {
   /** Is the incoming request a POST request? */
   isPost: boolean
   cookies: RequestInternal["cookies"]
+  isHttps: boolean
 }
 
 /** Initialize all internal options and cookies. */
@@ -38,11 +39,12 @@ export async function init({
   callbackUrl: reqCallbackUrl,
   csrfToken: reqCsrfToken,
   isPost,
+  isHttps,
 }: InitParams): Promise<{
   options: InternalOptions
   cookies: cookie.Cookie[]
 }> {
-  const url = parseUrl(host)
+  const url = parseUrl(host, isHttps ? "https" : "http")
 
   const secret = createSecret({ userOptions, url })
 

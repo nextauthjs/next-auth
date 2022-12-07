@@ -101,6 +101,7 @@ async function AuthHandlerInternal<
     csrfToken: req.body?.csrfToken,
     cookies: req.cookies,
     isPost: method === "POST",
+    isHttps: req.headers?.["x-forwarded-proto"] as unknown as string === "https"
   })
 
   const sessionStore = new SessionStore(
