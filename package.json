@@ -65,5 +65,10 @@
       "type": "opencollective",
       "url": "https://opencollective.com/nextauth"
     }
-  ]
+  ],
+  "pnpm": {
+    "overrides": {
+      "undici": "5.11.0"
+    }
+  }
 }
