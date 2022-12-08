@@ -29,9 +29,8 @@ export default function WorkOS<P extends WorkOSProfile>(
     name: "WorkOS",
     type: "oauth",
     authorization: `${issuer}sso/authorize`,
-    token: {
-      url: `${issuer}sso/token`,
-    },
+    token: `${issuer}sso/token`,
+    // @ts-expect-error TODO: support client options
     client: {
       token_endpoint_auth_method: "client_secret_post",
     },

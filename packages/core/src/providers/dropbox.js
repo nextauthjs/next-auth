@@ -45,7 +45,6 @@ export default function Dropbox(options) {
         image: profile.profile_photo_url,
       }
     },
-    checks: ["state", "pkce"],
     options,
   }
 }

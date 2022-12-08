@@ -291,6 +291,7 @@ export default function VK<P extends Record<string, any> = VkProfile>(
     name: "VK",
     type: "oauth",
     authorization: `https://oauth.vk.com/authorize?scope=email&v=${apiVersion}`,
+    // @ts-expect-error TODO: support client options
     client: {
       token_endpoint_auth_method: "client_secret_post",
     },

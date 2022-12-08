@@ -95,11 +95,10 @@ export function assertConfig(params: {
   }
 
   let hasCredentials, hasEmail
-  let hasTwitterOAuth2
 
   for (const provider of options.providers) {
     if (
-      provider.type === "oauth" &&
+      (provider.type === "oauth" || provider.type === "oidc") &&
       !(provider.issuer ?? provider.options?.issuer)
     ) {
       const { authorization: a, token: t, userinfo: u } = provider
@@ -118,8 +117,6 @@ export function assertConfig(params: {
 
     if (provider.type === "credentials") hasCredentials = true
     else if (provider.type === "email") hasEmail = true
-    else if (provider.id === "twitter" && provider.version === "2.0")
-      hasTwitterOAuth2 = true
   }
 
   if (hasCredentials) {
@@ -162,10 +159,7 @@ export function assertConfig(params: {
     }
   }
 
-  if (!warned) {
-    if (hasTwitterOAuth2) warnings.push("TWITTER_OAUTH_2_BETA")
-    warned = true
-  }
+  if (!warned) warned = true
 
   return warnings
 }

@@ -18,18 +18,9 @@ export default function LINE<P extends LineProfile>(
   return {
     id: "line",
     name: "LINE",
-    type: "oauth",
-    authorization: { params: { scope: "openid profile" } },
-    idToken: true,
-    wellKnown: "https://access.line.me/.well-known/openid-configuration",
-    profile(profile) {
-      return {
-        id: profile.sub,
-        name: profile.name,
-        email: profile.email,
-        image: profile.picture,
-      }
-    },
+    type: "oidc",
+    issuer: "https://access.line.me",
+    // @ts-expect-error TODO: support client options
     client: {
       id_token_signed_response_alg: "HS256",
     },

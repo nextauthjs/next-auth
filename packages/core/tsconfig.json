@@ -10,10 +10,10 @@
       "dom.iterable",
       "esnext"
     ],
-    "module": "esnext",
+    "target": "ES2020",
+    "module": "ESNext",
     "moduleResolution": "node",
     "outDir": "dist",
-    "resolveJsonModule": true,
     "rootDir": "src",
     "skipDefaultLibCheck": true,
     "strict": false,
@@ -23,9 +23,4 @@
   "include": [
     "src/**/*",
   ],
-  "exclude": [
-    "./*.js",
-    "./*.d.ts",
-    "./config",
-  ]
 }

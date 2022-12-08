@@ -26,7 +26,6 @@ export default function Salesforce<P extends SalesforceProfile>(
         image: profile.picture,
       }
     },
-    checks: ["none"],
     options,
   }
 }

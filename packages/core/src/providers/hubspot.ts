@@ -11,12 +11,6 @@ interface HubSpotProfile extends Record<string, any> {
   hub_id: string
 }
 
-const HubSpotConfig = {
-  authorizationUrl: "https://app.hubspot.com/oauth/authorize",
-  tokenUrl: "https://api.hubapi.com/oauth/v1/token",
-  profileUrl: "https://api.hubapi.com/oauth/v1/access-tokens",
-}
-
 export default function HubSpot<P extends HubSpotProfile>(
   options: OAuthUserConfig<P>
 ): OAuthConfig<P> {
@@ -24,33 +18,24 @@ export default function HubSpot<P extends HubSpotProfile>(
     id: "hubspot",
     name: "HubSpot",
     type: "oauth",
-
-    ...HubSpotConfig,
-
     authorization: {
-      url: HubSpotConfig.authorizationUrl,
-      params: {
-        scope: "oauth",
-        client_id: options.clientId,
-      },
+      url: "https://app.hubspot.com/oauth/authorize",
+      params: { scope: "oauth", client_id: options.clientId },
     },
+    // @ts-expect-error TODO: support client_secret_post and other client options
     client: {
       token_endpoint_auth_method: "client_secret_post",
     },
-    token: HubSpotConfig.tokenUrl,
+    token: "https://api.hubapi.com/oauth/v1/token",
     userinfo: {
-      url: HubSpotConfig.profileUrl,
-      async request(context) {
-        const url = `${HubSpotConfig.profileUrl}/${context.tokens.access_token}`
+      url: "https://api.hubapi.com/oauth/v1/access-tokens",
+      async request({ tokens, provider }) {
+        const url = `${provider.userinfo?.url}/${tokens.access_token}`
 
-        const response = await fetch(url, {
-          headers: {
-            "Content-Type": "application/json",
-          },
+        return await fetch(url, {
+          headers: { "Content-Type": "application/json" },
           method: "GET",
-        })
-
-        return await response.json()
+        }).then(async (res) => await res.json())
       },
     },
     profile(profile) {

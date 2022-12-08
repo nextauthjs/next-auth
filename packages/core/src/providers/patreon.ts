@@ -14,7 +14,6 @@ export default function Patreon<P extends PatreonProfile>(
     id: "patreon",
     name: "Patreon",
     type: "oauth",
-    version: "2.0",
     authorization: {
       url: "https://www.patreon.com/oauth2/authorize",
       params: { scope: "identity identity[email]" },

@@ -13,17 +13,7 @@ export default function Cognito<P extends CognitoProfile>(
   return {
     id: "cognito",
     name: "Cognito",
-    type: "oauth",
-    wellKnown: `${options.issuer}/.well-known/openid-configuration`,
-    idToken: true,
-    profile(profile) {
-      return {
-        id: profile.sub,
-        name: profile.name,
-        email: profile.email,
-        image: profile.picture,
-      }
-    },
+    type: "oidc",
     style: {
       logo: "/cognito.svg",
       logoDark: "/cognito.svg",

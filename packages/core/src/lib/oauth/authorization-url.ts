@@ -22,12 +22,6 @@ export async function getAuthorizationUrl({
 }): Promise<ResponseInternal> {
   const { logger, provider } = options
 
-  if (provider.version?.startsWith("1.")) {
-    const error = new Error("OAuth v1.x is not supported in next-auth/web")
-    logger.error("GET_AUTHORIZATION_URL", error)
-    throw error
-  }
-
   let url = provider.authorization?.url
   let as: o.AuthorizationServer | undefined
 
@@ -56,7 +50,7 @@ export async function getAuthorizationUrl({
       client_id: provider.clientId,
       redirect_uri: provider.callbackUrl,
       // @ts-expect-error TODO:
-      ...(provider.authorization.params ?? {}),
+      ...provider.authorization?.params,
     }, // Defaults
     Object.fromEntries(authParams), // From provider config
     query // From `signIn` call
@@ -92,6 +86,13 @@ export async function getAuthorizationUrl({
   }
 
   url.searchParams.delete("nextauth")
+
+  // TODO: This does not work in normalizeOAuth because authorization endpoint can come from discovery
+  // Need to make normalizeOAuth async
+  if (provider.type === "oidc" && !url.searchParams.has("scope")) {
+    url.searchParams.set("scope", "openid profile email")
+  }
+
   logger.debug("GET_AUTHORIZATION_URL", { url, cookies, provider })
   return { redirect: url, cookies }
 }

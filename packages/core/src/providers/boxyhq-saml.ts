@@ -14,13 +14,9 @@ export default function SAMLJackson<P extends BoxyHQSAMLProfile>(
     id: "boxyhq-saml",
     name: "BoxyHQ SAML",
     type: "oauth",
-    version: "2.0",
-    checks: ["pkce", "state"],
     authorization: {
       url: `${options.issuer}/api/oauth/authorize`,
-      params: {
-        provider: "saml",
-      },
+      params: { provider: "saml" },
     },
     token: `${options.issuer}/api/oauth/token`,
     userinfo: `${options.issuer}/api/oauth/userinfo`,

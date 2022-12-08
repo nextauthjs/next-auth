@@ -38,17 +38,8 @@ export default function Slack<P extends SlackProfile>(
   return {
     id: "slack",
     name: "Slack",
-    type: "oauth",
-    wellKnown: "https://slack.com/.well-known/openid-configuration",
-    authorization: { params: { scope: "openid profile email" } },
-    profile(profile) {
-      return {
-        id: profile.sub,
-        name: profile.name,
-        email: profile.email,
-        image: profile.picture,
-      }
-    },
+    type: "oidc",
+    issuer: "https://slack.com",
     style: {
       logo: "/slack.svg",
       logoDark: "/slack.svg",

@@ -70,15 +70,16 @@ export default function Github<P extends GithubProfile>(
     token: "https://github.com/login/oauth/access_token",
     userinfo: {
       url: "https://api.github.com/user",
-      async request({ client, tokens }) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const profile = await client.userinfo(tokens.access_token!)
+      async request({ tokens, provider }) {
+        const profile = await fetch(provider.userinfo?.url as URL, {
+          headers: { Authorization: `Bearer ${tokens.access_token}` },
+        }).then(async (res) => await res.json())
 
         if (!profile.email) {
           // If the user does not have a public email, get another via the GitHub API
           // See https://docs.github.com/en/rest/users/emails#list-public-email-addresses-for-the-authenticated-user
           const res = await fetch("https://api.github.com/user/emails", {
-            headers: { Authorization: `token ${tokens.access_token}` },
+            headers: { Authorization: `Bearer ${tokens.access_token}` },
           })
 
           if (res.ok) {
@@ -106,7 +107,6 @@ export default function Github<P extends GithubProfile>(
       text: "#000",
       textDark: "#fff",
     },
-    checks: ["pkce"],
     options,
   }
 }

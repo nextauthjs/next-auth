@@ -36,7 +36,6 @@ export default function Naver<P extends NaverProfile>(
         image: profile.response.profile_image,
       }
     },
-    checks: ["state"],
     options,
   }
 }

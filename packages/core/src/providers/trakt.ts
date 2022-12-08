@@ -22,25 +22,19 @@ export default function Trakt<P extends TraktUser>(
     id: "trakt",
     name: "Trakt",
     type: "oauth",
-    authorization: {
-      url: "https://trakt.tv/oauth/authorize",
-      params: { scope: "" }, // when default, trakt returns auth error
-    },
+    // when default, trakt returns auth error. TODO: Does it?
+    authorization: "https://trakt.tv/oauth/authorize?scope=",
     token: "https://api.trakt.tv/oauth/token",
-
     userinfo: {
-      async request(context) {
-        const res = await fetch("https://api.trakt.tv/users/me?extended=full", {
+      url: "https://api.trakt.tv/users/me?extended=full",
+      async request({ tokens, provider }) {
+        return await fetch(provider.userinfo?.url as URL, {
           headers: {
-            Authorization: `Bearer ${context.tokens.access_token}`,
+            Authorization: `Bearer ${tokens.access_token}`,
             "trakt-api-version": "2",
-            "trakt-api-key": context.provider.clientId as string,
+            "trakt-api-key": provider.clientId,
           },
-        })
-
-        if (res.ok) return await res.json()
-
-        throw new Error("Expected 200 OK from the userinfo endpoint")
+        }).then(async (res) => await res.json())
       },
     },
     profile(profile) {

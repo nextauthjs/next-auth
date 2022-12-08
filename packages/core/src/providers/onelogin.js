@@ -3,18 +3,9 @@ export default function OneLogin(options) {
   return {
     id: "onelogin",
     name: "OneLogin",
-    type: "oauth",
+    type: "oidc",
+    // TODO: Verify if issuer has "oidc/2" and remove if it does
     wellKnown: `${options.issuer}/oidc/2/.well-known/openid-configuration`,
-    authorization: { params: { scope: "openid profile email" } },
-    idToken: true,
-    profile(profile) {
-      return {
-        id: profile.sub,
-        name: profile.nickname,
-        email: profile.email,
-        image: profile.picture,
-      }
-    },
     options,
   }
 }

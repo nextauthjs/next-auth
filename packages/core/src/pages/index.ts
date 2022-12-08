@@ -1,5 +1,5 @@
 import renderToString from "preact-render-to-string"
-import css from "../css"
+import css from "../styles"
 import ErrorPage from "./error"
 import SigninPage from "./signin"
 import SignoutPage from "./signout"
@@ -31,7 +31,7 @@ export default function renderPage(params: RenderPageParams) {
       cookies,
       status,
       headers: { "Content-Type": "text/html" },
-      body: `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>${css()}</style><title>${title}</title></head><body class="__next-auth-theme-${
+      body: `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>${css}</style><title>${title}</title></head><body class="__next-auth-theme-${
         theme?.colorScheme ?? "auto"
       }"><div class="page">${renderToString(html)}</div></body></html>`,
     }
@@ -42,7 +42,16 @@ export default function renderPage(params: RenderPageParams) {
       return send({
         html: SigninPage({
           csrfToken: params.csrfToken,
-          providers: params.providers,
+          // We only want to render providers
+          providers: params.providers?.filter(
+            (provider) =>
+              // Always render oauth and email type providers
+              ["email", "oauth", "oidc"].includes(provider.type) ||
+              // Only render credentials type provider if credentials are defined
+              (provider.type === "credentials" && provider.credentials) ||
+              // Don't render other provider types
+              false
+          ),
           callbackUrl: params.callbackUrl,
           theme,
           ...query,

@@ -14,7 +14,7 @@ export default function Twitch<P extends TwitchProfile>(
     issuer: "https://id.twitch.tv/oauth2",
     id: "twitch",
     name: "Twitch",
-    type: "oauth",
+    type: "oidc",
     authorization: {
       params: {
         scope: "openid user:read:email",
@@ -26,15 +26,6 @@ export default function Twitch<P extends TwitchProfile>(
           },
         },
       },
-    },
-    idToken: true,
-    profile(profile) {
-      return {
-        id: profile.sub,
-        name: profile.preferred_username,
-        email: profile.email,
-        image: profile.picture,
-      }
     },
     style: {
       logo: "/twitch.svg",

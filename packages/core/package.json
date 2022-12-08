@@ -13,8 +13,18 @@
     "Thang Huu Vu <thvu@hey.com>",
     "Iain Collins <me@iaincollins.com"
   ],
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./providers/*": {
+      "import": "./dist/providers/*.js",
+      "types": "./dist/providers/*.d.ts"
+    }
+  },
   "license": "ISC",
   "dependencies": {
     "@panva/hkdf": "1.0.2",
@@ -34,8 +44,9 @@
     }
   },
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc -w",
+    "build": "tsc && pnpm css",
+    "css": "node ./scripts/generate-css.js",
+    "dev": "pnpm css && tsc -w",
     "test": "jest"
   },
   "devDependencies": {
@@ -46,7 +57,6 @@
     "autoprefixer": "10.4.13",
     "cssnano": "5.1.14",
     "postcss": "8.4.19",
-    "postcss-cli": "10.1.0",
     "postcss-nested": "6.0.0"
   }
 }

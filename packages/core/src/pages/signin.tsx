@@ -30,24 +30,12 @@ export interface SignInServerPageParams {
 export default function SigninPage(props: SignInServerPageParams) {
   const {
     csrfToken,
-    providers,
+    providers = [],
     callbackUrl,
     theme,
     email,
     error: errorType,
   } = props
-  // We only want to render providers
-  const providersToRender = providers.filter((provider) => {
-    if (provider.type === "oauth" || provider.type === "email") {
-      // Always render oauth and email type providers
-      return true
-    } else if (provider.type === "credentials" && provider.credentials) {
-      // Only render credentials type provider if credentials are defined
-      return true
-    }
-    // Don't render other provider types
-    return false
-  })
 
   if (typeof document !== "undefined" && theme.brandColor) {
     document.documentElement.style.setProperty(
@@ -74,6 +62,9 @@ export default function SigninPage(props: SignInServerPageParams) {
 
   const error = errorType && (errors[errorType] ?? errors.default)
 
+  // TODO: move logos
+  const logos =
+    "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos"
   return (
     <div className="signin">
       {theme.brandColor && (
@@ -90,9 +81,9 @@ export default function SigninPage(props: SignInServerPageParams) {
             <p>{error}</p>
           </div>
         )}
-        {providersToRender.map((provider, i: number) => (
+        {providers.map((provider, i) => (
           <div key={provider.id} className="provider">
-            {provider.type === "oauth" && (
+            {provider.type === "oauth" || provider.type === "oidc" ? (
               <form action={provider.signinUrl} method="POST">
                 <input type="hidden" name="csrfToken" value={csrfToken} />
                 {callbackUrl && (
@@ -111,19 +102,27 @@ export default function SigninPage(props: SignInServerPageParams) {
                     } as CSSProperties
                   }
                 >
-                  <Logo id="provider-logo" src={provider.style?.logo} />
-                  <Logo
-                    id="provider-logo-dark"
-                    src={provider.style?.logoDark}
+                  <img
+                    id="provider-logo"
+                    src={`${provider.style?.logo.startsWith("/") ? logos : ""}${
+                      provider.style?.logo
+                    }`}
                   />
+                  <img
+                    id="provider-logo-dark"
+                    src={`${provider.style?.logo.startsWith("/") ? logos : ""}${
+                      provider.style?.logoDark
+                    }`}
+                  />
+
                   <span>Sign in with {provider.name}</span>
                 </button>
               </form>
-            )}
+            ) : null}
             {(provider.type === "email" || provider.type === "credentials") &&
               i > 0 &&
-              providersToRender[i - 1].type !== "email" &&
-              providersToRender[i - 1].type !== "credentials" && <hr />}
+              providers[i - 1].type !== "email" &&
+              providers[i - 1].type !== "credentials" && <hr />}
             {provider.type === "email" && (
               <form action={provider.signinUrl} method="POST">
                 <input type="hidden" name="csrfToken" value={csrfToken} />
@@ -173,21 +172,10 @@ export default function SigninPage(props: SignInServerPageParams) {
               </form>
             )}
             {(provider.type === "email" || provider.type === "credentials") &&
-              i + 1 < providersToRender.length && <hr />}
+              i + 1 < providers.length && <hr />}
           </div>
         ))}
       </div>
     </div>
   )
-}
-
-function Logo({ id, src }: { id: string; src?: string }) {
-  if (!src) return null
-  const _src = `${
-    src.startsWith("/")
-      ? // TODO: move logos
-        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos"
-      : ""
-  }${src}`
-  return <img id={id} src={_src} />
 }

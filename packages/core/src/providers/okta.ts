@@ -40,18 +40,7 @@ export default function Okta<P extends OktaProfile>(
   return {
     id: "okta",
     name: "Okta",
-    type: "oauth",
-    wellKnown: `${options.issuer}/.well-known/openid-configuration`,
-    authorization: { params: { scope: "openid email profile" } },
-    idToken: true,
-    profile(profile) {
-      return {
-        id: profile.sub,
-        name: profile.name ?? profile.preferred_username,
-        email: profile.email,
-        image: profile.picture,
-      }
-    },
+    type: "oidc",
     style: {
       logo: "/okta.svg",
       logoDark: "/okta-dark.svg",
