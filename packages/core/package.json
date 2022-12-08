@@ -13,8 +13,18 @@
     "Thang Huu Vu <thvu@hey.com>",
     "Iain Collins <me@iaincollins.com"
   ],
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./providers/*": {
+      "import": "./dist/providers/*.js",
+      "types": "./dist/providers/*.d.ts"
+    }
+  },
   "license": "ISC",
   "dependencies": {
     "@panva/hkdf": "1.0.2",
