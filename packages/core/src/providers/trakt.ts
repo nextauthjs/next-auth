@@ -26,8 +26,9 @@ export default function Trakt<P extends TraktUser>(
     authorization: "https://trakt.tv/oauth/authorize?scope=",
     token: "https://api.trakt.tv/oauth/token",
     userinfo: {
+      url: "https://api.trakt.tv/users/me?extended=full",
       async request({ tokens, provider }) {
-        return await fetch("https://api.trakt.tv/users/me?extended=full", {
+        return await fetch(provider.userinfo?.url as URL, {
           headers: {
             Authorization: `Bearer ${tokens.access_token}`,
             "trakt-api-version": "2",

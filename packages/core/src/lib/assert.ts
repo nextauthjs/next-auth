@@ -98,9 +98,8 @@ export function assertConfig(params: {
 
   for (const provider of options.providers) {
     if (
-      provider.type === "oauth" ||
-      (provider.type === "oidc" &&
-        !(provider.issuer ?? provider.options?.issuer))
+      (provider.type === "oauth" || provider.type === "oidc") &&
+      !(provider.issuer ?? provider.options?.issuer)
     ) {
       const { authorization: a, token: t, userinfo: u } = provider
 

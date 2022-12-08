@@ -19,7 +19,7 @@ export default function LINE<P extends LineProfile>(
     id: "line",
     name: "LINE",
     type: "oidc",
-    wellKnown: "https://access.line.me/.well-known/openid-configuration",
+    issuer: "https://access.line.me",
     // @ts-expect-error TODO: support client options
     client: {
       id_token_signed_response_alg: "HS256",

@@ -19,22 +19,22 @@ export default function AzureAD<P extends AzureADProfile>(
   }
 ): OAuthConfig<P> {
   const { tenantId = "common", profilePhotoSize = 48, ...rest } = options
-
+  rest.issuer ??= `https://login.microsoftonline.com/${tenantId}/v2.0`
   return {
     id: "azure-ad",
     name: "Azure Active Directory",
     type: "oidc",
-    wellKnown: `https://login.microsoftonline.com/${tenantId}/v2.0/.well-known/openid-configuration?appid=${options.clientId}`,
+    wellKnown: `${rest.issuer}}/.well-known/openid-configuration?appid=${options.clientId}`,
     async profile(profile, tokens) {
       // https://docs.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0#examples
-      const profilePicture = await fetch(
+      const response = await fetch(
         `https://graph.microsoft.com/v1.0/me/photos/${profilePhotoSize}x${profilePhotoSize}/$value`,
         { headers: { Authorization: `Bearer ${tokens.access_token}` } }
       )
 
       // Confirm that profile photo was returned
-      if (profilePicture.ok) {
-        const pictureBuffer = await profilePicture.arrayBuffer()
+      if (response.ok) {
+        const pictureBuffer = await response.arrayBuffer()
         const pictureBase64 = Buffer.from(pictureBuffer).toString("base64")
         return {
           id: profile.sub,
