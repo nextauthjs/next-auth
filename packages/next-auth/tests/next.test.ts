@@ -1,21 +1,22 @@
-import { MissingAPIRoute } from "../src/core/errors"
+// import { MissingAPIRoute } from "../src/core/errors"
 import { nodeHandler } from "./utils"
 
 it("Missing req.url throws MISSING_NEXTAUTH_API_ROUTE_ERROR", async () => {
-  const { res, logger } = await nodeHandler()
+  const { res } = await nodeHandler()
 
-  expect(res.status).toBeCalledWith(500)
-  expect(logger.error).toBeCalledTimes(1)
-  expect(logger.error).toBeCalledWith(
-    "MISSING_NEXTAUTH_API_ROUTE_ERROR",
-    expect.any(MissingAPIRoute)
-  )
-  expect(res.setHeader).toBeCalledWith("content-type", "application/json")
-  const body = res.send.mock.calls[0][0]
-  expect(JSON.parse(body)).toEqual({
-    message:
-      "There is a problem with the server configuration. Check the server logs for more information.",
-  })
+  expect(res.status).toBeCalledWith(400)
+  // Moved to host detection in getUrl
+  // expect(logger.error).toBeCalledTimes(1)
+  // expect(logger.error).toBeCalledWith(
+  //   "MISSING_NEXTAUTH_API_ROUTE_ERROR",
+  //   expect.any(MissingAPIRoute)
+  // )
+  // expect(res.setHeader).toBeCalledWith("content-type", "application/json")
+  // const body = res.send.mock.calls[0][0]
+  // expect(JSON.parse(body)).toEqual({
+  //   message:
+  //     "There is a problem with the server configuration. Check the server logs for more information.",
+  // })
 })
 
 it("Missing host throws 400 in production", async () => {
