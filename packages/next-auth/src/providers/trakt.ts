@@ -51,6 +51,15 @@ export default function Trakt<P extends TraktUser>(
         image: profile.images.avatar.full, // trakt does not allow hotlinking
       }
     },
+    style: {
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/trakt.svg",
+      logoDark:
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/trakt-dark.svg",
+      bg: "#fff",
+      text: "#ED2224",
+      bgDark: "#ED2224",
+      textDark: "#fff",
+    },
     options,
   }
 }

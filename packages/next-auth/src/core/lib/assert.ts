@@ -12,7 +12,7 @@ import { defaultCookies } from "./cookie"
 
 import type { RequestInternal } from ".."
 import type { WarningCode } from "../../utils/logger"
-import type { NextAuthOptions } from "../types"
+import type { AuthOptions } from "../types"
 
 type ConfigError =
   | MissingAPIRoute
@@ -40,7 +40,7 @@ function isValidHttpUrl(url: string, baseUrl: string) {
  * REVIEW: Make some of these and corresponding docs less Next.js specific?
  */
 export function assertConfig(params: {
-  options: NextAuthOptions
+  options: AuthOptions
   req: RequestInternal
 }): ConfigError | WarningCode[] {
   const { options, req } = params

@@ -31,8 +31,10 @@ body:
         - "@next-auth/pouchdb-adapter"
         - "@next-auth/prisma-adapter"
         - "@next-auth/sequelize-adapter"
+        - "@next-auth/supabase-adapter"
         - "@next-auth/typeorm-legacy-adapter"
         - "@next-auth/upstash-redis-adapter"
+        - "@next-auth/xata-adapter"
     validations:
       required: true
   - type: textarea

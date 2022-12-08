@@ -89,6 +89,15 @@ export type UserinfoEndpointHandler = EndpointHandler<
   Profile
 >
 
+export interface OAuthProviderButtonStyles {
+  logo: string
+  logoDark: string
+  bg: string
+  bgDark: string
+  text: string
+  textDark: string
+}
+
 export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   /**
    * OpenID Connect (OIDC) compliant providers can configure
@@ -133,6 +142,8 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   /** Read more at: https://github.com/panva/node-openid-client/tree/main/docs#customizing-http-requests */
   httpOptions?: HttpOptions
 
+  style?: OAuthProviderButtonStyles
+
   /**
    * The options provided by the user.
    * We will perform a deep-merge of these values
@@ -145,10 +156,11 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   requestTokenUrl?: string
   profileUrl?: string
   encoding?: string
+  allowDangerousEmailAccountLinking?: boolean
 }
 
 /** @internal */
-export interface InternalOAuthConfig<P>
+export interface OAuthConfigInternal<P>
   extends Omit<OAuthConfig<P>, "authorization" | "token" | "userinfo"> {
   authorization?: AuthorizationEndpointHandler
   token?: TokenEndpointHandler

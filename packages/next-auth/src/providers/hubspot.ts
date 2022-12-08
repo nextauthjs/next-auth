@@ -64,6 +64,15 @@ export default function HubSpot<P extends HubSpotProfile>(
         image: null,
       }
     },
+    style: {
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/hubspot.svg",
+      logoDark:
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/hubspot-dark.svg",
+      bg: "#fff",
+      text: "#ff7a59",
+      bgDark: "#ff7a59",
+      textDark: "#fff",
+    },
     options,
   }
 }

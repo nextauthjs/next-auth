@@ -64,49 +64,37 @@ export default function Header() {
       <nav>
         <ul className={styles.navItems}>
           <li className={styles.navItem}>
-            <Link href="/">
-              <a>Home</a>
-            </Link>
+            <Link href="/">Home</Link>
           </li>
           <li className={styles.navItem}>
-            <Link href="/client">
-              <a>Client</a>
-            </Link>
+            <Link href="/client">Client</Link>
           </li>
           <li className={styles.navItem}>
-            <Link href="/server">
-              <a>Server</a>
-            </Link>
+            <Link href="/server">Server</Link>
           </li>
           <li className={styles.navItem}>
-            <Link href="/protected">
-              <a>Protected</a>
-            </Link>
+            <Link href="/protected">Protected</Link>
           </li>
           <li className={styles.navItem}>
-            <Link href="/protected-ssr">
-              <a>Protected(SSR)</a>
-            </Link>
+            <Link href="/protected-ssr">Protected(SSR)</Link>
           </li>
           <li className={styles.navItem}>
-            <Link href="/api-example">
-              <a>API</a>
-            </Link>
+            <Link href="/api-example">API</Link>
           </li>
           <li className={styles.navItem}>
-            <Link href="/credentials">
-              <a>Credentials</a>
-            </Link>
+            <Link href="/credentials">Credentials</Link>
           </li>
           <li className={styles.navItem}>
-            <Link href="/email">
-              <a>Email</a>
-            </Link>
+            <Link href="/email">Email</Link>
           </li>
           <li className={styles.navItem}>
-            <Link href="/middleware-protected">
-              <a>Middleware protected</a>
-            </Link>
+            <Link href="/middleware-protected">Middleware protected</Link>
+          </li>
+          <li className={styles.navItem}>
+            <Link href="/supabase-client-rls">Supabase RLS</Link>
+          </li>
+          <li className={styles.navItem}>
+            <Link href="/supabase-ssr">Supabase RLS(SSR)</Link>
           </li>
         </ul>
       </nav>

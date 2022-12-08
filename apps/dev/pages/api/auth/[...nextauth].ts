@@ -1,5 +1,4 @@
-import NextAuth from "next-auth"
-import type { NextAuthOptions } from "next-auth"
+import NextAuth, { type NextAuthOptions } from "next-auth"
 
 // Providers
 import Apple from "next-auth/providers/apple"
@@ -18,7 +17,6 @@ import Freshbooks from "next-auth/providers/freshbooks"
 import GitHub from "next-auth/providers/github"
 import Gitlab from "next-auth/providers/gitlab"
 import Google from "next-auth/providers/google"
-import Hubspot from "next-auth/providers/hubspot"
 import IDS4 from "next-auth/providers/identity-server4"
 import Instagram from "next-auth/providers/instagram"
 import Keycloak from "next-auth/providers/keycloak"
@@ -36,9 +34,6 @@ import Twitter, { TwitterLegacy } from "next-auth/providers/twitter"
 import Vk from "next-auth/providers/vk"
 import Wikimedia from "next-auth/providers/wikimedia"
 import WorkOS from "next-auth/providers/workos"
-import Zitadel from "next-auth/providers/zitadel"
-
-// Adapters
 
 // // Prisma
 // import { PrismaClient } from "@prisma/client"
@@ -62,6 +57,13 @@ import Zitadel from "next-auth/providers/zitadel"
 //   name: "next-auth-test-memory",
 //   database: "./typeorm/dev.db",
 //   synchronize: true,
+// })
+
+// // Supabase
+// import { SupabaseAdapter } from "@next-auth/supabase-adapter"
+// const adapter = SupabaseAdapter({
+//   url: process.env.NEXT_PUBLIC_SUPABASE_URL,
+//   secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
 // })
 
 export const authOptions: NextAuthOptions = {
@@ -93,7 +95,6 @@ export const authOptions: NextAuthOptions = {
     GitHub({ clientId: process.env.GITHUB_ID, clientSecret: process.env.GITHUB_SECRET }),
     Gitlab({ clientId: process.env.GITLAB_ID, clientSecret: process.env.GITLAB_SECRET }),
     Google({ clientId: process.env.GOOGLE_ID, clientSecret: process.env.GOOGLE_SECRET }),
-    Hubspot({ clientId: process.env.HUBSPOT_ID, clientSecret: process.env.HUBSPOT_SECRET }),
     IDS4({ clientId: process.env.IDS4_ID, clientSecret: process.env.IDS4_SECRET, issuer: process.env.IDS4_ISSUER }),
     Instagram({ clientId: process.env.INSTAGRAM_ID, clientSecret: process.env.INSTAGRAM_SECRET }),
     Keycloak({ clientId: process.env.KEYCLOAK_ID, clientSecret: process.env.KEYCLOAK_SECRET, issuer: process.env.KEYCLOAK_ISSUER }),
@@ -112,7 +113,6 @@ export const authOptions: NextAuthOptions = {
     Vk({ clientId: process.env.VK_ID, clientSecret: process.env.VK_SECRET }),
     Wikimedia({ clientId: process.env.WIKIMEDIA_ID, clientSecret: process.env.WIKIMEDIA_SECRET }),
     WorkOS({ clientId: process.env.WORKOS_ID, clientSecret: process.env.WORKOS_SECRET }),
-    Zitadel({ issuer: process.env.ZITADEL_ISSUER, clientId: process.env.ZITADEL_CLIENT_ID, clientSecret: process.env.ZITADEL_CLIENT_SECRET }),
   ],
 }
 
