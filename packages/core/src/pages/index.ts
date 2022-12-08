@@ -1,5 +1,5 @@
 import renderToString from "preact-render-to-string"
-import { css } from "../css"
+import css from "../styles"
 import ErrorPage from "./error"
 import SigninPage from "./signin"
 import SignoutPage from "./signout"
