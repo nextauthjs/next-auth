@@ -44,7 +44,7 @@ export function getURL(
 
     if (!host) throw new TypeError("Invalid host")
 
-    return new URL(url ?? "", new URL(host))
+    return new URL(`${host}${url ?? ""}`)
   } catch (error) {
     return error as Error
   }
