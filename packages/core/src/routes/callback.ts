@@ -36,7 +36,7 @@ export async function callback(params: {
 
   const useJwtSession = sessionStrategy === "jwt"
 
-  if (provider.type === "oauth") {
+  if (provider.type === "oauth" || provider.type === "oidc") {
     try {
       const {
         profile,

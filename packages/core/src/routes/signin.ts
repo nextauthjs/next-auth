@@ -26,7 +26,7 @@ export async function signin(params: {
     }
   }
 
-  if (provider.type === "oauth") {
+  if (provider.type === "oauth" || provider.type === "oidc") {
     try {
       return await getAuthorizationUrl({ options, query })
     } catch (error) {

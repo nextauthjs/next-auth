@@ -34,10 +34,8 @@ export default function parseProviders(params: {
       callbackUrl: `${url}/callback/${id}`,
     })
 
-    if (provider.type === "oauth") {
-      const p = normalizeOAuth(merged)
-
-      return p
+    if (provider.type === "oauth" || provider.type === "oidc") {
+      return normalizeOAuth(merged)
     }
 
     return merged
@@ -50,50 +48,45 @@ export default function parseProviders(params: {
 }
 
 function normalizeOAuth(
-  c?: OAuthConfig<any> | OAuthUserConfig<any>,
-  runtime?: "web" | "nodejs"
+  c?: OAuthConfig<any> | OAuthUserConfig<any>
 ): OAuthConfigInternal<any> | {} {
   if (!c) return {}
 
-  const hasIssuer = !!c.issuer
-  const authorization = normalizeEndpoint(c.authorization, hasIssuer)
+  if (c.issuer) c.wellKnown ??= `${c.issuer}/.well-known/openid-configuration`
 
-  // TODO: deprecate OAuth 1.0 support
-  if (!c.version?.startsWith("1.")) {
-    // Set default check to state
-    c.checks ??= ["pkce"]
-    c.checks = Array.isArray(c.checks) ? c.checks : [c.checks]
-    if (runtime === "web" && !c.checks.includes("pkce")) c.checks.push("pkce")
-
-    if (!Array.isArray(c.checks)) c.checks = [c.checks]
-
-    // REVIEW: Deprecate `idToken` in favor of `type: "oidc"`?
-    c.idToken ??=
-      // If a provider has as an "openid-configuration" well-known endpoint
-      c.wellKnown?.includes("openid-configuration") ??
-      // or an "openid" scope request, it must also return an `id_token`
-      authorization?.url.searchParams.get("scope")?.includes("openid")
-
-    if (c.issuer && c.idToken) {
-      c.wellKnown ??= `${c.issuer}/.well-known/openid-configuration`
-    }
+  const authorization = normalizeEndpoint(c.authorization, c.issuer)
+  if (authorization && !authorization.url?.searchParams.has("scope")) {
+    authorization.url.searchParams.set("scope", "openid profile email")
   }
+
+  const token = normalizeEndpoint(c.token, c.issuer)
+
+  const userinfo = normalizeEndpoint(c.userinfo, c.issuer)
 
   return {
     ...c,
-    ...(authorization ? { authorization } : undefined),
-    ...(c.token ? { token: normalizeEndpoint(c.token, hasIssuer) } : undefined),
-    ...(c.userinfo
-      ? { userinfo: normalizeEndpoint(c.userinfo, hasIssuer) }
-      : undefined),
+    authorization,
+    token,
+    checks: c.checks ?? ["pkce"],
+    userinfo,
+    profile: c.profile ?? defaultProfile,
   }
 }
 
+function defaultProfile(profile: any) {
+  return {
+    id: profile.sub ?? profile.id,
+    name:
+      profile.name ?? profile.nickname ?? profile.preferred_username ?? null,
+    email: profile.email ?? null,
+    image: profile.picture ?? null,
+  }
+}
 function normalizeEndpoint(
   e?: OAuthConfig<any>[OAuthEndpointType],
-  hasIssuer?: boolean
+  issuer?: string
 ): OAuthConfigInternal<any>[OAuthEndpointType] {
-  if (!e || hasIssuer) return
+  if (!e || issuer) return
   if (typeof e === "string") {
     return { url: new URL(e) }
   }

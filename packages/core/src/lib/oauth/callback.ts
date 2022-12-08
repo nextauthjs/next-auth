@@ -70,8 +70,7 @@ export async function handleOAuthCallback(params: {
     const client: o.Client = {
       client_id: provider.clientId,
       client_secret: provider.clientSecret,
-      token_endpoint_auth_method:
-        "client_secret_basic" ?? provider.client?.token_endpoint_auth_method,
+      token_endpoint_auth_method: "client_secret_basic",
       // TODO: support other client options
     }
 
@@ -88,7 +87,7 @@ export async function handleOAuthCallback(params: {
 
     // TODO:
     const nonce = await useNonce(cookies?.[options.cookies.nonce.name], options)
-    if (nonce && provider.idToken) {
+    if (nonce && provider.type === "oidc") {
       resCookies.push(nonce.cookie)
     }
 
@@ -123,7 +122,7 @@ export async function handleOAuthCallback(params: {
     let profile: Profile = {}
     let tokens: TokenSet
 
-    if (provider.idToken) {
+    if (provider.type === "oidc") {
       const result = await o.processAuthorizationCodeOpenIDResponse(
         as,
         client,
@@ -148,7 +147,9 @@ export async function handleOAuthCallback(params: {
         throw new Error("TODO: Handle OAuth 2.0 response body error")
       }
 
-      if (provider.userinfo?.url) {
+      if (provider.userinfo?.request) {
+        profile = await provider.userinfo.request({ tokens, provider })
+      } else if (provider.userinfo?.url) {
         const userinfoResponse = await o.userInfoRequest(
           as,
           client,

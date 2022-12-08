@@ -30,24 +30,12 @@ export interface SignInServerPageParams {
 export default function SigninPage(props: SignInServerPageParams) {
   const {
     csrfToken,
-    providers,
+    providers = [],
     callbackUrl,
     theme,
     email,
     error: errorType,
   } = props
-  // We only want to render providers
-  const providersToRender = providers.filter((provider) => {
-    if (provider.type === "oauth" || provider.type === "email") {
-      // Always render oauth and email type providers
-      return true
-    } else if (provider.type === "credentials" && provider.credentials) {
-      // Only render credentials type provider if credentials are defined
-      return true
-    }
-    // Don't render other provider types
-    return false
-  })
 
   if (typeof document !== "undefined" && theme.brandColor) {
     document.documentElement.style.setProperty(
@@ -93,9 +81,9 @@ export default function SigninPage(props: SignInServerPageParams) {
             <p>{error}</p>
           </div>
         )}
-        {providersToRender.map((provider, i: number) => (
+        {providers.map((provider, i) => (
           <div key={provider.id} className="provider">
-            {provider.type === "oauth" && (
+            {provider.type === "oauth" || provider.type === "oidc" ? (
               <form action={provider.signinUrl} method="POST">
                 <input type="hidden" name="csrfToken" value={csrfToken} />
                 {callbackUrl && (
@@ -130,11 +118,11 @@ export default function SigninPage(props: SignInServerPageParams) {
                   <span>Sign in with {provider.name}</span>
                 </button>
               </form>
-            )}
+            ) : null}
             {(provider.type === "email" || provider.type === "credentials") &&
               i > 0 &&
-              providersToRender[i - 1].type !== "email" &&
-              providersToRender[i - 1].type !== "credentials" && <hr />}
+              providers[i - 1].type !== "email" &&
+              providers[i - 1].type !== "credentials" && <hr />}
             {provider.type === "email" && (
               <form action={provider.signinUrl} method="POST">
                 <input type="hidden" name="csrfToken" value={csrfToken} />
@@ -184,7 +172,7 @@ export default function SigninPage(props: SignInServerPageParams) {
               </form>
             )}
             {(provider.type === "email" || provider.type === "credentials") &&
-              i + 1 < providersToRender.length && <hr />}
+              i + 1 < providers.length && <hr />}
           </div>
         ))}
       </div>

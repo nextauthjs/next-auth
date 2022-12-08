@@ -42,7 +42,16 @@ export default function renderPage(params: RenderPageParams) {
       return send({
         html: SigninPage({
           csrfToken: params.csrfToken,
-          providers: params.providers,
+          // We only want to render providers
+          providers: params.providers?.filter(
+            (provider) =>
+              // Always render oauth and email type providers
+              ["email", "oauth", "oidc"].includes(provider.type) ||
+              // Only render credentials type provider if credentials are defined
+              (provider.type === "credentials" && provider.credentials) ||
+              // Don't render other provider types
+              false
+          ),
           callbackUrl: params.callbackUrl,
           theme,
           ...query,
