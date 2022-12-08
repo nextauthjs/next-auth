@@ -158,10 +158,9 @@ export async function unstable_getServerSession<
 
   const { status = 200, headers } = response
 
-  for (const [key, val] of headers.entries()) {
-    const value = key === "set-cookie" ? val.split(",") : val
-    res.setHeader(key, value)
-  }
+  // This would otherwise break rendering
+  // with `getServerSideProps` that needs to always return HTML
+  res.removeHeader?.("Content-Type")
 
   const data = await response.json()
 
