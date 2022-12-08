@@ -10,6 +10,7 @@
       "dom.iterable",
       "esnext"
     ],
+    "target": "ES2020",
     "module": "ESNext",
     "moduleResolution": "node",
     "outDir": "dist",
