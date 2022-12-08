@@ -44,7 +44,10 @@ export function getURL(
 
     if (!host) throw new TypeError("Invalid host")
 
-    return new URL(`${host}${url ?? ""}`)
+    if (host.startsWith("http://") || host.startsWith("https://")) {
+      return new URL(`${host}${url ?? ""}`)
+    }
+    return new URL(`https://${host}${url ?? ""}`)
   } catch (error) {
     return error as Error
   }
