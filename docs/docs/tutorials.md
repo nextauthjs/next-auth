@@ -46,6 +46,10 @@ title: Tutorials and Explainers
 - Learn how to use Sign-In With Ethereum to authenticate your users with their existing Ethereum wallets - identifiers they personally control.
 - Example application: [spruceid/siwe-next-auth-example](https://github.com/spruceid/siwe-next-auth-example)
 
+#### [Next.js Authentication with Okta and NextAuth.js 4.0](https://thetombomb.com/posts/nextjs-nextauth-okta) <svg xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '5px', marginBottom:'-6px'}} height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>External</title> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /> </svg>
+
+- Learn how to perform authentication with an OIDC Application in Okta and NextAuth.js.
+
 ## Fullstack
 
 #### [Build a FullStack App with Next.js, NextAuth.js, Supabase & Prisma](https://themodern.dev/courses/build-a-fullstack-app-with-nextjs-supabase-and-prisma-322389284337222224) <svg xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '5px', marginBottom:'-6px'}} height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>External</title> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /> </svg>
