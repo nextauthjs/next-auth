@@ -26,6 +26,7 @@ export default function Strava<P extends StravaProfile>(
       url: "https://www.strava.com/api/v3/oauth/token",
     },
     userinfo: "https://www.strava.com/api/v3/athlete",
+    // @ts-expect-error TODO: support client options
     client: {
       token_endpoint_auth_method: "client_secret_post",
     },

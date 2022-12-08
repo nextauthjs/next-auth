@@ -27,18 +27,7 @@ export default function Authentik<P extends AuthentikProfile>(
   return {
     id: "authentik",
     name: "Authentik",
-    wellKnown: `${options.issuer}/.well-known/openid-configuration`,
-    type: "oauth",
-    authorization: { params: { scope: "openid email profile" } },
-    checks: ["pkce", "state"],
-    profile(profile) {
-      return {
-        id: profile.sub,
-        name: profile.name ?? profile.preferred_username,
-        email: profile.email,
-        image: profile.picture,
-      }
-    },
+    type: "oidc",
     options,
   }
 }

@@ -18,7 +18,6 @@ export default function PinterestProvider<P extends PinterestProfile>(
       url: "https://www.pinterest.com/oauth",
       params: { scope: "user_accounts:read" },
     },
-    checks: ["state"],
     token: "https://api.pinterest.com/v5/oauth/token",
     userinfo: "https://api.pinterest.com/v5/user_account",
     profile({ username, profile_image }) {

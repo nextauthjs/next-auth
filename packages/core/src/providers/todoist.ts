@@ -22,11 +22,12 @@ export default function TodoistProvider<P extends TodoistProfile>(
       params: { scope: "data:read" },
     },
     token: "https://todoist.com/oauth/access_token",
+    // @ts-expect-error TODO: support client options
     client: {
       token_endpoint_auth_method: "client_secret_post",
     },
     userinfo: {
-      request: async ({ tokens }) => {
+      async request({ tokens }) {
         // To obtain Todoist user info, we need to call the Sync API
         // See https://developer.todoist.com/sync/v9
         const res = await fetch("https://api.todoist.com/sync/v9/sync", {
@@ -45,7 +46,7 @@ export default function TodoistProvider<P extends TodoistProfile>(
         return profile
       },
     },
-    profile: async (profile) => {
+    profile(profile) {
       return {
         id: profile.id,
         email: profile.email,
@@ -61,6 +62,6 @@ export default function TodoistProvider<P extends TodoistProfile>(
       bgDark: "#000",
       textDark: "#E44332",
     },
-    ...options,
+    options,
   }
 }

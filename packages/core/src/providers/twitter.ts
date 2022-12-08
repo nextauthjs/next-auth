@@ -1,3 +1,4 @@
+// @ts-nocheck TODO: Deprecate / move OAuth 1.0
 import type { OAuthConfig, OAuthUserConfig } from "."
 
 export interface TwitterLegacyProfile {

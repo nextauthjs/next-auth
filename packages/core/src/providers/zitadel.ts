@@ -1,4 +1,4 @@
-import type { OAuthConfig, OAuthUserConfig } from "."
+import type { OIDCConfig, OAuthUserConfig } from "."
 
 export interface ZitadelProfile extends Record<string, any> {
   amr: string // Authentication Method References as defined in RFC8176
@@ -26,26 +26,11 @@ export interface ZitadelProfile extends Record<string, any> {
 
 export default function Zitadel<P extends ZitadelProfile>(
   options: OAuthUserConfig<P>
-): OAuthConfig<P> {
-  const { issuer } = options
-
+): OIDCConfig<P> {
   return {
     id: "zitadel",
     name: "ZITADEL",
-    type: "oauth",
-    version: "2",
-    wellKnown: `${issuer}/.well-known/openid-configuration`,
-    authorization: { params: { scope: "openid email profile" } },
-    idToken: true,
-    checks: ["pkce", "state"],
-    async profile(profile) {
-      return {
-        id: profile.sub,
-        name: profile.name,
-        email: profile.email,
-        image: profile.picture,
-      }
-    },
+    type: "oidc",
     options,
   }
 }

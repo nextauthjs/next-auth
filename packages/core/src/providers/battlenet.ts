@@ -16,8 +16,7 @@ export default function BattleNet<P extends BattleNetProfile>(
   return {
     id: "battlenet",
     name: "Battle.net",
-    type: "oauth",
-    wellKnown: `${options.issuer}/.well-known/openid-configuration`,
+    type: "oidc",
     profile(profile) {
       return {
         id: profile.sub,

@@ -57,12 +57,7 @@ export default function Osu<P extends OsuProfile>(
     name: "Osu!",
     type: "oauth",
     token: "https://osu.ppy.sh/oauth/token",
-    authorization: {
-      url: "https://osu.ppy.sh/oauth/authorize",
-      params: {
-        scope: "identify",
-      },
-    },
+    authorization: "https://osu.ppy.sh/oauth/authorize?scope=identify",
     userinfo: "https://osu.ppy.sh/api/v2/me",
     profile(profile) {
       return {

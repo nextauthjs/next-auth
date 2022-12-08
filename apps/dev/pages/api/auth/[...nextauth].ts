@@ -3,19 +3,19 @@ import { AuthHandler, AuthOptions } from "next-auth-core"
 
 // Providers
 // import Apple from "next-auth/providers/apple"
-import Auth0 from "next-auth/providers/auth0"
+import Auth0 from "next-auth-core/providers/auth0"
 // import AzureAD from "next-auth/providers/azure-ad"
 // import AzureB2C from "next-auth/providers/azure-ad-b2c"
 // import BoxyHQSAML from "next-auth/providers/boxyhq-saml"
 // import Cognito from "next-auth/providers/cognito"
-import Credentials from "next-auth/providers/credentials"
+import Credentials from "next-auth-core/providers/credentials"
 // import Discord from "next-auth/providers/discord"
 // import DuendeIDS6 from "next-auth/providers/duende-identity-server6"
 // import Email from "next-auth/providers/email"
-// import Facebook from "next-auth/providers/facebook"
+import Facebook from "next-auth/providers/facebook"
 // import Foursquare from "next-auth/providers/foursquare"
 // import Freshbooks from "next-auth/providers/freshbooks"
-import GitHub from "next-auth/providers/github"
+import GitHub from "next-auth-core/providers/github"
 // import Gitlab from "next-auth/providers/gitlab"
 // import Google from "next-auth/providers/google"
 // import IDS4 from "next-auth/providers/identity-server4"
@@ -94,7 +94,7 @@ export const authOptions: AuthOptions = {
     // Cognito({ clientId: process.env.COGNITO_ID, clientSecret: process.env.COGNITO_SECRET, issuer: process.env.COGNITO_ISSUER }),
     // Discord({ clientId: process.env.DISCORD_ID, clientSecret: process.env.DISCORD_SECRET }),
     // DuendeIDS6({ clientId: "interactive.confidential", clientSecret: "secret", issuer: "https://demo.duendesoftware.com" }),
-    // Facebook({ clientId: process.env.FACEBOOK_ID, clientSecret: process.env.FACEBOOK_SECRET }),
+    Facebook({ clientId: process.env.FACEBOOK_ID, clientSecret: process.env.FACEBOOK_SECRET }),
     // Foursquare({ clientId: process.env.FOURSQUARE_ID, clientSecret: process.env.FOURSQUARE_SECRET }),
     // Freshbooks({ clientId: process.env.FRESHBOOKS_ID, clientSecret: process.env.FRESHBOOKS_SECRET }),
     GitHub({ clientId: process.env.GITHUB_ID, clientSecret: process.env.GITHUB_SECRET }),

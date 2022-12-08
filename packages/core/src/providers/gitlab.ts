@@ -52,13 +52,9 @@ export default function GitLab<P extends GitLabProfile>(
     id: "gitlab",
     name: "GitLab",
     type: "oauth",
-    authorization: {
-      url: "https://gitlab.com/oauth/authorize",
-      params: { scope: "read_user" },
-    },
+    authorization: "https://gitlab.com/oauth/authorize?scope=read_user",
     token: "https://gitlab.com/oauth/token",
     userinfo: "https://gitlab.com/api/v4/user",
-    checks: ["pkce", "state"],
     profile(profile) {
       return {
         id: profile.id.toString(),

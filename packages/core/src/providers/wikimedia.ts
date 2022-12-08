@@ -169,15 +169,15 @@ export default function Wikimedia<P extends WikimediaProfile>(
     type: "oauth",
     token: "https://meta.wikimedia.org/w/rest.php/oauth2/access_token",
     userinfo: "https://meta.wikimedia.org/w/rest.php/oauth2/resource/profile",
-    authorization: {
-      url: "https://meta.wikimedia.org/w/rest.php/oauth2/authorize",
-      params: { scope: "" },
-    },
+    // TODO: is empty scope necessary?
+    authorization:
+      "https://meta.wikimedia.org/w/rest.php/oauth2/authorize?scope=",
     profile(profile) {
       return {
         id: profile.sub,
         name: profile.username,
         email: profile.email,
+        image: null,
       }
     },
     style: {

@@ -1,18 +1,16 @@
 import type { OAuthConfig, OAuthProvider, OAuthProviderType } from "./oauth"
-
 import type { EmailConfig, EmailProvider, EmailProviderType } from "./email"
-
 import type {
   CredentialsConfig,
   CredentialsProvider,
   CredentialsProviderType,
 } from "./credentials"
 
-export * from "./oauth"
-export * from "./email"
 export * from "./credentials"
+export * from "./email"
+export * from "./oauth"
 
-export type ProviderType = "oauth" | "email" | "credentials"
+export type ProviderType = "oidc" | "oauth" | "email" | "credentials"
 
 export interface CommonProviderOptions {
   id: string
