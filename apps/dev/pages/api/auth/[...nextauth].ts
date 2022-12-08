@@ -130,16 +130,21 @@ if (authOptions.adapter) {
   // )
 }
 
-// TODO: move
+// TODO: move to next-auth/edge
 function Auth(...args: any[]) {
   if (args.length === 1)
     return async (req: Request) => {
       args[0].secret ??= process.env.NEXTAUTH_SECRET
+
+      // TODO: remove when `next-auth/react` sends `X-Auth-Return-Redirect`
+      const shouldRedirect = req.method === "POST" && req.headers.get("Content-Type") === "application/json" ? (await req.clone().json()).json : false
+
+      // TODO: This can be directly in core
       const res = await AuthHandler(req, args[0])
-      const redirect = /* TODO: remove */ await req.json().json
-      if (req.headers.get("X-Auth-Return-Redirect") && redirect) {
+      if (req.headers.get("X-Auth-Return-Redirect") || shouldRedirect) {
+        const url = res.headers.get("Location")
         res.headers.delete("Location")
-        return new Response(JSON.stringify({ url: redirect }), res)
+        return new Response(JSON.stringify({ url }), res)
       }
       return res
     }
