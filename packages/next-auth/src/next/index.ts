@@ -1,5 +1,5 @@
 import { AuthHandler } from "../core"
-import { getURL, getBody } from "../utils/node"
+import { getURL, getBody, setHeaders } from "../utils/node"
 
 import type {
   GetServerSidePropsContext,
@@ -37,10 +37,7 @@ async function NextAuthHandler(
   const { status, headers } = response
   res.status(status)
 
-  for (const [key, val] of headers.entries()) {
-    const value = key === "set-cookie" ? val.split(",") : val
-    res.setHeader(key, value)
-  }
+  setHeaders(headers, res)
 
   // If the request expects a return URL, send it as JSON
   // instead of doing an actual redirect.
@@ -158,10 +155,11 @@ export async function unstable_getServerSession<
 
   const { status = 200, headers } = response
 
-  for (const [key, val] of headers.entries()) {
-    const value = key === "set-cookie" ? val.split(",") : val
-    res.setHeader(key, value)
-  }
+  setHeaders(headers, res)
+
+  // This would otherwise break rendering
+  // with `getServerSideProps` that needs to always return HTML
+  res.removeHeader?.("Content-Type")
 
   const data = await response.json()
 
