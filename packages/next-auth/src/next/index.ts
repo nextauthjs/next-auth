@@ -1,5 +1,6 @@
 import { AuthHandler } from "../core"
-import { getURL, getBody, setHeaders } from "../utils/node"
+import { getBody, setHeaders } from "../utils/node"
+import { detectHost } from "../utils/web"
 
 import type {
   GetServerSidePropsContext,
@@ -18,14 +19,23 @@ async function NextAuthHandler(
   res: NextApiResponse,
   options: AuthOptions
 ) {
-  const url = getURL(
-    req.url,
-    options.trustHost,
-    req.headers["x-forwarded-host"] ?? req.headers.host
+  options.trustHost ??= !!(
+    process.env.NEXTAUTH_URL ??
+    process.env.AUTH_TRUST_HOST ??
+    process.env.VERCEL
   )
 
-  if (url instanceof Error) return res.status(400).end()
+  const { nextauth } = req.query ?? {}
+  const host = detectHost(
+    options.trustHost,
+    req.headers["x-forwarded-host"],
+    process.env.NEXTAUTH_URL ??
+      (process.env.NODE_ENV !== "production" && "http://localhost:3000")
+  )
 
+  const url = `${host}/${
+    Array.isArray(nextauth) ? nextauth.join("/") : nextauth
+  }`
   const request = new Request(url, {
     headers: new Headers(req.headers as any),
     method: req.method,
