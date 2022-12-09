@@ -45,6 +45,7 @@ export async function toInternalRequest(
   req: Request
 ): Promise<RequestInternal> {
   const url = new URL(req.url)
+  // TODO: fix supporting custom basePath
   const nextauth = url.pathname.split("/").slice(3)
   const cookieHeader = req.headers.get("cookie") ?? ""
 

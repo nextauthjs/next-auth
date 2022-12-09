@@ -1,4 +1,4 @@
-import type { IncomingMessage, ServerResponse } from "http"
+import type { IncomingHttpHeaders, IncomingMessage, ServerResponse } from "http"
 import type { GetServerSidePropsContext, NextApiRequest } from "next"
 
 export function setCookie(res, value: string) {
@@ -25,32 +25,31 @@ export function getBody(
   return { body: JSON.stringify(req.body) }
 }
 
-/** Extract the host from the environment */
+/** Extract the full request URL from the environment */
 export function getURL(
-  url: string | undefined | null,
-  trusted: boolean | undefined = !!(
-    process.env.AUTH_TRUST_HOST ?? process.env.VERCEL
-  ),
-  forwardedValue: string | string[] | undefined | null
-): URL | Error {
+  url: string,
+  headers?: IncomingHttpHeaders | Headers
+): URL {
   try {
-    let host =
-      process.env.NEXTAUTH_URL ??
-      (process.env.NODE_ENV !== "production" && "http://localhost:3000")
-
-    if (trusted && forwardedValue) {
-      host = Array.isArray(forwardedValue) ? forwardedValue[0] : forwardedValue
+    let proto, host
+    if (headers instanceof Headers) {
+      proto = headers.get("x-forwarded-proto")
+      host = headers.get("x-forwarded-host") ?? headers.get("host")
+    } else {
+      proto = headers?.["x-forwarded-proto"]
+      host = headers?.["x-forwarded-host"] ?? headers?.host
     }
 
-    if (!host) throw new TypeError("Invalid host")
-    if (!url) throw new TypeError("Invalid URL, cannot determine action")
+    proto ??= "https"
+    let base = `${proto}://${host}`
 
-    if (host.startsWith("http://") || host.startsWith("https://")) {
-      return new URL(`${host}${url}`)
+    if (process.env.NODE_ENV !== "production" && !base) {
+      base = "http://localhost:3000"
     }
-    return new URL(`https://${host}${url}`)
+
+    return new URL(url, base)
   } catch (error) {
-    return error as Error
+    return new URL("http://localhost:3000")
   }
 }
 
