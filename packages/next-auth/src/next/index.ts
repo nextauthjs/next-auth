@@ -13,27 +13,52 @@ import type {
   NextAuthRequest,
   NextAuthResponse,
 } from "../core/types"
+import { MissingAPIRoute } from "../core/errors"
 
 async function NextAuthHandler(
   req: NextApiRequest,
   res: NextApiResponse,
   options: AuthOptions
 ) {
+  const errorLogger = options.logger?.error ?? console.error
+  const { nextauth = [] } = req.query ?? {}
+  if (!nextauth.length) {
+    const error = new MissingAPIRoute(
+      "Cannot find [...nextauth].{js,ts} in `/pages/api/auth`. Make sure the filename is written correctly."
+    )
+    if (process.env.NODE_ENV === "production") {
+      errorLogger(error)
+      const message = `There is a problem with the server configuration. Check the server logs for more information.`
+      res.status(500)
+      return res.json({ message })
+    }
+    throw error
+  }
+
   options.trustHost ??= !!(
     process.env.NEXTAUTH_URL ??
     process.env.AUTH_TRUST_HOST ??
     process.env.VERCEL
   )
-
-  const { nextauth } = req.query ?? {}
   const host = detectHost(
     options.trustHost,
     req.headers["x-forwarded-host"],
     process.env.NEXTAUTH_URL ??
-      (process.env.NODE_ENV !== "production" && "http://localhost:3000")
+      (process.env.NODE_ENV === "development" && "http://localhost:3000")
   )
 
-  const url = `${host}/${
+  if (!host) {
+    const error = new Error("Could not detect host.")
+    if (process.env.NODE_ENV === "production") {
+      errorLogger(error)
+      const message = `There is a problem with the server configuration. Check the server logs for more information.`
+      res.status(500)
+      return res.json({ message })
+    }
+    throw error
+  }
+
+  const url = `${host.replace("/api/auth", "")}/api/auth/${
     Array.isArray(nextauth) ? nextauth.join("/") : nextauth
   }`
   const request = new Request(url, {
