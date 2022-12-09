@@ -1,29 +1,50 @@
-// import { MissingAPIRoute } from "../src/core/errors"
+import { MissingAPIRoute } from "../src/core/errors"
 import { nodeHandler } from "./utils"
 
-it("Missing req.url throws MISSING_NEXTAUTH_API_ROUTE_ERROR", async () => {
-  const { res } = await nodeHandler()
-
-  expect(res.status).toBeCalledWith(400)
-  // Moved to host detection in getUrl
-  // expect(logger.error).toBeCalledTimes(1)
-  // expect(logger.error).toBeCalledWith(
-  //   "MISSING_NEXTAUTH_API_ROUTE_ERROR",
-  //   expect.any(MissingAPIRoute)
-  // )
-  // expect(res.setHeader).toBeCalledWith("content-type", "application/json")
-  // const body = res.send.mock.calls[0][0]
-  // expect(JSON.parse(body)).toEqual({
-  //   message:
-  //     "There is a problem with the server configuration. Check the server logs for more information.",
-  // })
+it("Missing req.url throws in dev", async () => {
+  await expect(nodeHandler).rejects.toThrow(MissingAPIRoute)
 })
 
-it("Missing host throws 400 in production", async () => {
+const configErrorMessage =
+  "There is a problem with the server configuration. Check the server logs for more information."
+
+it("Missing req.url returns config error in prod", async () => {
   // @ts-expect-error
   process.env.NODE_ENV = "production"
-  const { res } = await nodeHandler()
-  expect(res.status).toBeCalledWith(400)
+  const { res, logger } = await nodeHandler()
+
+  expect(logger.error).toBeCalledTimes(1)
+  const error = new MissingAPIRoute(
+    "Cannot find [...nextauth].{js,ts} in `/pages/api/auth`. Make sure the filename is written correctly."
+  )
+  expect(logger.error).toBeCalledWith(error)
+
+  expect(res.status).toBeCalledWith(500)
+  expect(res.json).toBeCalledWith({ message: configErrorMessage })
+  expect(logger.error).toBeCalledWith(error)
+  // @ts-expect-error
+  process.env.NODE_ENV = "test"
+})
+
+it("Missing host throws in dev", async () => {
+  await expect(
+    async () =>
+      await nodeHandler({
+        req: { query: { nextauth: ["session"] } },
+      })
+  ).rejects.toThrow(Error)
+})
+
+it("Missing host config error in prod", async () => {
+  // @ts-expect-error
+  process.env.NODE_ENV = "production"
+  const { res, logger } = await nodeHandler({
+    req: { query: { nextauth: ["session"] } },
+  })
+  expect(res.status).toBeCalledWith(500)
+  expect(res.json).toBeCalledWith({ message: configErrorMessage })
+
+  expect(logger.error).toBeCalledWith(new Error("Could not detect host."))
   // @ts-expect-error
   process.env.NODE_ENV = "test"
 })
