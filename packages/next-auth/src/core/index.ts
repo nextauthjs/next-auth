@@ -14,7 +14,8 @@ import type { ErrorType } from "./pages/error"
 export interface RequestInternal {
   /** @default "http://localhost:3000" */
   origin?: string
-  method?: string
+  /** @default "GET" */
+  method: string
   cookies?: Partial<Record<string, string>>
   headers?: Record<string, any>
   query?: Record<string, any>
@@ -86,7 +87,7 @@ async function AuthHandlerInternal<
     }
   }
 
-  const { action, providerId, error, method = "GET" } = req
+  const { action, providerId, error, method } = req
 
   const { options, cookies } = await init({
     authOptions,

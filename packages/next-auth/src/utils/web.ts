@@ -50,7 +50,7 @@ export async function toInternalRequest(
 
   return {
     action: nextauth[0] as AuthAction,
-    method: req.method,
+    method: req.method ?? "GET",
     headers: Object.fromEntries(req.headers),
     body: req.body ? await readJSONBody(req.body) : undefined,
     cookies:
