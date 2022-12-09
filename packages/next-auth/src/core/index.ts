@@ -12,7 +12,7 @@ import type { ErrorType } from "./pages/error"
 
 export interface RequestInternal {
   /** @default "http://localhost:3000" */
-  host?: string
+  origin?: string
   method?: string
   cookies?: Partial<Record<string, string>>
   headers?: Record<string, any>
@@ -96,7 +96,7 @@ async function AuthHandlerInternal<
     userOptions,
     action,
     providerId,
-    host: req.host,
+    origin: req.origin,
     callbackUrl: req.body?.callbackUrl ?? req.query?.callbackUrl,
     csrfToken: req.body?.csrfToken,
     cookies: req.cookies,

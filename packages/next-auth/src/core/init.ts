@@ -15,7 +15,7 @@ import { RequestInternal } from "."
 import type { InternalOptions } from "./types"
 
 interface InitParams {
-  host?: string
+  origin?: string
   userOptions: AuthOptions
   providerId?: string
   action: InternalOptions["action"]
@@ -33,7 +33,7 @@ export async function init({
   userOptions,
   providerId,
   action,
-  host,
+  origin,
   cookies: reqCookies,
   callbackUrl: reqCallbackUrl,
   csrfToken: reqCsrfToken,
@@ -42,7 +42,7 @@ export async function init({
   options: InternalOptions
   cookies: cookie.Cookie[]
 }> {
-  const url = parseUrl(host)
+  const url = parseUrl(origin)
 
   const secret = createSecret({ userOptions, url })
 

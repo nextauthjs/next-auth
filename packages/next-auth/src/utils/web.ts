@@ -63,7 +63,7 @@ export async function toInternalRequest(
     cookies: cookies,
     providerId: nextauth[1],
     error: url.searchParams.get("error") ?? undefined,
-    host: new URL(req.url).origin,
+    origin: url.origin,
     query,
   }
 }
