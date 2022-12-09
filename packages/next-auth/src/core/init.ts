@@ -16,7 +16,7 @@ import type { InternalOptions } from "./types"
 
 interface InitParams {
   origin?: string
-  userOptions: AuthOptions
+  authOptions: AuthOptions
   providerId?: string
   action: InternalOptions["action"]
   /** Callback URL value extracted from the incoming request. */
@@ -30,7 +30,7 @@ interface InitParams {
 
 /** Initialize all internal options and cookies. */
 export async function init({
-  userOptions,
+  authOptions,
   providerId,
   action,
   origin,
@@ -44,10 +44,10 @@ export async function init({
 }> {
   const url = parseUrl(origin)
 
-  const secret = createSecret({ userOptions, url })
+  const secret = createSecret({ authOptions, url })
 
   const { providers, provider } = parseProviders({
-    providers: userOptions.providers,
+    providers: authOptions.providers,
     url,
     providerId,
   })
@@ -66,7 +66,7 @@ export async function init({
       buttonText: "",
     },
     // Custom options override defaults
-    ...userOptions,
+    ...authOptions,
     // These computed settings can have values in userOptions but we override them
     // and are request-specific.
     url,
@@ -75,24 +75,24 @@ export async function init({
     provider,
     cookies: {
       ...cookie.defaultCookies(
-        userOptions.useSecureCookies ?? url.base.startsWith("https://")
+        authOptions.useSecureCookies ?? url.base.startsWith("https://")
       ),
       // Allow user cookie options to override any cookie settings above
-      ...userOptions.cookies,
+      ...authOptions.cookies,
     },
     secret,
     providers,
     // Session options
     session: {
       // If no adapter specified, force use of JSON Web Tokens (stateless)
-      strategy: userOptions.adapter ? "database" : "jwt",
+      strategy: authOptions.adapter ? "database" : "jwt",
       maxAge,
       updateAge: 24 * 60 * 60,
       generateSessionToken: () => {
         // Use `randomUUID` if available. (Node 15.6+)
         return randomUUID?.() ?? randomBytes(32).toString("hex")
       },
-      ...userOptions.session,
+      ...authOptions.session,
     },
     // JWT options
     jwt: {
@@ -100,13 +100,13 @@ export async function init({
       maxAge, // same as session maxAge,
       encode: jwt.encode,
       decode: jwt.decode,
-      ...userOptions.jwt,
+      ...authOptions.jwt,
     },
     // Event messages
-    events: eventsErrorHandler(userOptions.events ?? {}, logger),
-    adapter: adapterErrorHandler(userOptions.adapter, logger),
+    events: eventsErrorHandler(authOptions.events ?? {}, logger),
+    adapter: adapterErrorHandler(authOptions.adapter, logger),
     // Callback functions
-    callbacks: { ...defaultCallbacks, ...userOptions.callbacks },
+    callbacks: { ...defaultCallbacks, ...authOptions.callbacks },
     logger,
     callbackUrl: url.origin,
   }

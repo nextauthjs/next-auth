@@ -47,10 +47,10 @@ async function AuthHandlerInternal<
   /** REVIEW: Is this the best way to skip parsing the body in Node.js? */
   parsedBody?: any
 }): Promise<ResponseInternal<Body>> {
-  const { options: userOptions, req } = params
-  setLogger(userOptions.logger, userOptions.debug)
+  const { options: authOptions, req } = params
+  setLogger(authOptions.logger, authOptions.debug)
 
-  const assertionResult = assertConfig({ options: userOptions, req })
+  const assertionResult = assertConfig({ options: authOptions, req })
 
   if (Array.isArray(assertionResult)) {
     assertionResult.forEach(logger.warn)
@@ -67,7 +67,7 @@ async function AuthHandlerInternal<
         body: { message } as any,
       }
     }
-    const { pages, theme } = userOptions
+    const { pages, theme } = authOptions
 
     const authOnErrorPage =
       pages?.error && req.query?.callbackUrl?.startsWith(pages.error)
@@ -93,7 +93,7 @@ async function AuthHandlerInternal<
   const { action, providerId, error, method = "GET" } = req
 
   const { options, cookies } = await init({
-    userOptions,
+    authOptions,
     action,
     providerId,
     origin: req.origin,
@@ -240,7 +240,7 @@ async function AuthHandlerInternal<
         }
         break
       case "_log":
-        if (userOptions.logger) {
+        if (authOptions.logger) {
           try {
             const { code, level, ...metadata } = req.body ?? {}
             logger[level](code, metadata)
