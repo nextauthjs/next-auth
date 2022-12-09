@@ -109,7 +109,15 @@ it("Returns redirect if `X-Auth-Return-Redirect` header is present", async () =>
 
   expect(res.status).toBeCalledWith(200)
   expect(res.setHeader).toBeCalledWith("content-type", "application/json")
-  expect(res.setHeader).toBeCalledTimes(1)
+  expect(res.setHeader).toBeCalledWith("set-cookie", [
+    expect.stringMatching(
+      /next-auth.csrf-token=.*; Path=\/; HttpOnly; SameSite=Lax/
+    ),
+    `next-auth.callback-url=${encodeURIComponent(
+      process.env.NEXTAUTH_URL
+    )}; Path=/; HttpOnly; SameSite=Lax`,
+  ])
+  expect(res.setHeader).toBeCalledTimes(2)
   expect(res.send).toBeCalledWith(
     JSON.stringify({ url: "http://localhost/api/auth/signin?csrf=true" })
   )
