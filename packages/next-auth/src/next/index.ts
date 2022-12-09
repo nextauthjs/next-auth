@@ -139,19 +139,12 @@ export async function unstable_getServerSession<
     options = Object.assign({}, args[2], { providers: [] })
   }
 
-  const urlOrError = getURL(
-    "/api/auth/session",
-    options.trustHost,
-    req.headers["x-forwarded-host"] ?? req.headers.host
-  )
-
-  if (urlOrError instanceof Error) throw urlOrError
+  const request = new Request("http://a/api/auth/session", {
+    headers: new Headers(req.headers),
+  })
 
   options.secret ??= process.env.NEXTAUTH_SECRET
-  const response = await AuthHandler(
-    new Request(urlOrError, { headers: req.headers }),
-    options
-  )
+  const response = await AuthHandler(request, options)
 
   const { status = 200, headers } = response
 
