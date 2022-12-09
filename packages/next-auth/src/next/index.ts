@@ -34,19 +34,9 @@ async function NextAuthHandler(
 
   options.secret ??= options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
   const response = await AuthHandler(request, options)
-  const { status, headers } = response
-  res.status(status)
 
-  setHeaders(headers, res)
-
-  // If the request expects a return URL, send it as JSON
-  // instead of doing an actual redirect.
-  const redirect = headers.get("Location")
-
-  if (req.body?.json === "true" && redirect) {
-    res.removeHeader("Location")
-    return res.json({ url: redirect })
-  }
+  res.status(response.status)
+  setHeaders(response.headers, res)
 
   return res.send(await response.text())
 }
