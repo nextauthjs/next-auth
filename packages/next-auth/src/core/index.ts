@@ -277,9 +277,12 @@ export async function AuthHandler(
   // If the request expects a return URL, send it as JSON
   // instead of doing an actual redirect.
   const redirect = response.headers.get("Location")
-  if (request.headers.get("X-Auth-Return-Redirect") && redirect) {
+  if (request.headers.has("X-Auth-Return-Redirect") && redirect) {
+    response.headers.delete("Location")
+    response.headers.set("Content-Type", "application/json")
     return new Response(JSON.stringify({ url: redirect }), {
-      headers: { "Content-Type": "application/json" },
+      headers: response.headers,
+      status: 200,
     })
   }
   return response
