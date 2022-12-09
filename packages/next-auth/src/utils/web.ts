@@ -46,35 +46,26 @@ export async function toInternalRequest(
 ): Promise<RequestInternal> {
   const url = new URL(req.url)
   const nextauth = url.pathname.split("/").slice(3)
-  const headers = Object.fromEntries(req.headers)
-  const query: Record<string, any> = Object.fromEntries(url.searchParams)
-
   const cookieHeader = req.headers.get("cookie") ?? ""
-  const cookies =
-    parseCookie(
-      Array.isArray(cookieHeader) ? cookieHeader.join(";") : cookieHeader
-    ) ?? {}
 
   return {
     action: nextauth[0] as AuthAction,
     method: req.method,
-    headers,
+    headers: Object.fromEntries(req.headers),
     body: req.body ? await readJSONBody(req.body) : undefined,
-    cookies: cookies,
+    cookies:
+      parseCookie(
+        Array.isArray(cookieHeader) ? cookieHeader.join(";") : cookieHeader
+      ) ?? {},
     providerId: nextauth[1],
     error: url.searchParams.get("error") ?? undefined,
     origin: url.origin,
-    query,
+    query: Object.fromEntries(url.searchParams),
   }
 }
 
 export function toResponse(res: ResponseInternal): Response {
-  const headers = new Headers(
-    res.headers?.reduce((acc, { key, value }) => {
-      acc[key] = value
-      return acc
-    }, {})
-  )
+  const headers = new Headers(res.headers)
 
   res.cookies?.forEach((cookie) => {
     const { name, value, options } = cookie

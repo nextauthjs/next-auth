@@ -10,6 +10,7 @@ import type { AuthAction, AuthOptions } from "./types"
 import type { Cookie } from "./lib/cookie"
 import type { ErrorType } from "./pages/error"
 
+/** @internal */
 export interface RequestInternal {
   /** @default "http://localhost:3000" */
   origin?: string
@@ -23,17 +24,12 @@ export interface RequestInternal {
   error?: string
 }
 
-export interface NextAuthHeader {
-  key: string
-  value: string
-}
-
-// TODO: Rename to `ResponseInternal`
+/** @internal */
 export interface ResponseInternal<
   Body extends string | Record<string, any> | any[] = any
 > {
   status?: number
-  headers?: NextAuthHeader[]
+  headers?: Record<string, string>
   body?: Body
   redirect?: string
   cookies?: Cookie[]
@@ -63,7 +59,7 @@ async function AuthHandlerInternal<
       const message = `There is a problem with the server configuration. Check the server logs for more information.`
       return {
         status: 500,
-        headers: [{ key: "Content-Type", value: "application/json" }],
+        headers: { "Content-Type": "application/json" },
         body: { message } as any,
       }
     }
@@ -123,7 +119,7 @@ async function AuthHandlerInternal<
       }
       case "csrf":
         return {
-          headers: [{ key: "Content-Type", value: "application/json" }],
+          headers: { "Content-Type": "application/json" },
           body: { csrfToken: options.csrfToken } as any,
           cookies,
         }
