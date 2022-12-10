@@ -42,17 +42,8 @@ async function readJSONBody(
   }
 }
 
-const actions = [
-  "providers",
-  "session",
-  "csrf",
-  "signin",
-  "signout",
-  "callback",
-  "verify-request",
-  "error",
-  "_log",
-]
+// prettier-ignore
+const actions: AuthAction[] = [ "providers", "session", "csrf", "signin", "signout", "callback", "verify-request", "error", "_log" ]
 
 export async function toInternalRequest(
   req: Request
@@ -61,9 +52,7 @@ export async function toInternalRequest(
     const url = new URL(req.url.replace(/\/$/, ""))
     const { pathname } = url
 
-    const action = actions.find((a) => pathname.includes(a)) as
-      | AuthAction
-      | undefined
+    const action = actions.find((a) => pathname.includes(a))
     if (!action) {
       throw new UnknownAction("Cannot detect action.")
     }
