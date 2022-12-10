@@ -1,4 +1,5 @@
 import { serialize, parse as parseCookie } from "cookie"
+import { UnknownAction } from "../core/errors"
 import type { ResponseInternal, RequestInternal } from "../core"
 import type { AuthAction } from "../core/types"
 
@@ -41,27 +42,60 @@ async function readJSONBody(
   }
 }
 
+const actions = [
+  "providers",
+  "session",
+  "csrf",
+  "signin",
+  "signout",
+  "callback",
+  "verify-request",
+  "error",
+  "_log",
+]
+
 export async function toInternalRequest(
   req: Request
-): Promise<RequestInternal> {
-  const url = new URL(req.url)
-  // TODO: fix supporting custom basePath
-  const nextauth = url.pathname.split("/").slice(3)
-  const cookieHeader = req.headers.get("cookie") ?? ""
+): Promise<RequestInternal | Error> {
+  try {
+    const url = new URL(req.url.replace(/\/$/, ""))
+    const { pathname } = url
 
-  return {
-    action: nextauth[0] as AuthAction,
-    method: req.method ?? "GET",
-    headers: Object.fromEntries(req.headers),
-    body: req.body ? await readJSONBody(req.body) : undefined,
-    cookies:
-      parseCookie(
-        Array.isArray(cookieHeader) ? cookieHeader.join(";") : cookieHeader
-      ) ?? {},
-    providerId: nextauth[1],
-    error: url.searchParams.get("error") ?? undefined,
-    origin: url.origin,
-    query: Object.fromEntries(url.searchParams),
+    const action = actions.find((a) => pathname.includes(a)) as
+      | AuthAction
+      | undefined
+    if (!action) {
+      throw new UnknownAction("Cannot detect action.")
+    }
+
+    const providerIdOrAction = pathname.split("/").pop()
+    let providerId
+    if (
+      providerIdOrAction &&
+      !action.includes(providerIdOrAction) &&
+      ["signin", "callback"].includes(action)
+    ) {
+      providerId = providerIdOrAction
+    }
+
+    const cookieHeader = req.headers.get("cookie") ?? ""
+
+    return {
+      url,
+      action,
+      providerId,
+      method: req.method ?? "GET",
+      headers: Object.fromEntries(req.headers),
+      body: req.body ? await readJSONBody(req.body) : undefined,
+      cookies:
+        parseCookie(
+          Array.isArray(cookieHeader) ? cookieHeader.join(";") : cookieHeader
+        ) ?? {},
+      error: url.searchParams.get("error") ?? undefined,
+      query: Object.fromEntries(url.searchParams),
+    }
+  } catch (error) {
+    return error
   }
 }
 
@@ -95,6 +129,7 @@ export function toResponse(res: ResponseInternal): Response {
   return response
 }
 
+// TODO: Remove
 /** Extract the host from the environment */
 export function detectHost(
   trusted: boolean,

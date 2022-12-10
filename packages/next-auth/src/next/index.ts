@@ -1,6 +1,5 @@
 import { AuthHandler } from "../core"
-import { getBody, setHeaders } from "../utils/node"
-import { detectHost } from "../utils/web"
+import { getBody, getURL, setHeaders } from "../utils/node"
 
 import type {
   GetServerSidePropsContext,
@@ -13,70 +12,48 @@ import type {
   NextAuthRequest,
   NextAuthResponse,
 } from "../core/types"
-import { MissingAPIRoute } from "../core/errors"
 
 async function NextAuthHandler(
   req: NextApiRequest,
   res: NextApiResponse,
   options: AuthOptions
 ) {
-  const errorLogger = options.logger?.error ?? console.error
-  const { nextauth = [] } = req.query ?? {}
-  if (!nextauth.length) {
-    const error = new MissingAPIRoute(
-      "Cannot find [...nextauth].{js,ts} in `/pages/api/auth`. Make sure the filename is written correctly."
-    )
-    if (process.env.NODE_ENV === "production") {
-      errorLogger(error)
-      const message = `There is a problem with the server configuration. Check the server logs for more information.`
-      res.status(500)
-      return res.json({ message })
-    }
-    throw error
+  const headers = new Headers(req.headers as any)
+  const url = getURL(req.url, headers)
+  if (url instanceof Error) {
+    if (process.env.NODE_ENV !== "production") throw url
+    const errorLogger = options.logger?.error ?? console.error
+    errorLogger("INVALID_URL", url)
+    res.status(500)
+    return res.json({
+      message:
+        "There is a problem with the server configuration. Check the server logs for more information.",
+    })
   }
 
-  options.trustHost ??= !!(
-    process.env.NEXTAUTH_URL ??
-    process.env.AUTH_TRUST_HOST ??
-    process.env.VERCEL
-  )
-  const host = detectHost(
-    options.trustHost,
-    req.headers["x-forwarded-host"],
-    process.env.NEXTAUTH_URL ??
-      (process.env.NODE_ENV === "development" && "http://localhost:3000")
-  )
-
-  if (!host) {
-    const error = new Error("Could not detect host.")
-    if (process.env.NODE_ENV === "production") {
-      errorLogger(error)
-      const message = `There is a problem with the server configuration. Check the server logs for more information.`
-      res.status(500)
-      return res.json({ message })
-    }
-    throw error
-  }
-
-  const url = `${host.replace("/api/auth", "")}/api/auth/${
-    Array.isArray(nextauth) ? nextauth.join("/") : nextauth
-  }`
   const request = new Request(url, {
-    headers: new Headers(req.headers as any),
+    headers,
     method: req.method,
     ...getBody(req),
   })
 
   options.secret ??= options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
+  options.trustHost ??= !!(
+    process.env.NEXTAUTH_URL ??
+    process.env.AUTH_TRUST_HOST ??
+    process.env.VERCEL ??
+    process.env.NODE_ENV !== "production"
+  )
+
   const response = await AuthHandler(request, options)
-  const { status, headers } = response
+  const { status } = response
   res.status(status)
 
-  setHeaders(headers, res)
+  setHeaders(response.headers, res)
 
   // If the request expects a return URL, send it as JSON
   // instead of doing an actual redirect.
-  const redirect = headers.get("Location")
+  const redirect = response.headers.get("Location")
 
   if (req.body?.json === "true" && redirect) {
     res.removeHeader("Location")
@@ -179,6 +156,7 @@ export async function unstable_getServerSession<
   })
 
   options.secret ??= process.env.NEXTAUTH_SECRET
+  options.trustHost = true
   const response = await AuthHandler(request, options)
 
   const { status = 200, headers } = response

@@ -1,19 +1,19 @@
 import logger, { setLogger } from "../utils/logger"
 import { toInternalRequest, toResponse } from "../utils/web"
-import * as routes from "./routes"
-import renderPage from "./pages"
 import { init } from "./init"
 import { assertConfig } from "./lib/assert"
 import { SessionStore } from "./lib/cookie"
+import renderPage from "./pages"
+import * as routes from "./routes"
 
-import type { AuthAction, AuthOptions } from "./types"
+import { UntrustedHost } from "./errors"
 import type { Cookie } from "./lib/cookie"
 import type { ErrorType } from "./pages/error"
+import type { AuthAction, AuthOptions } from "./types"
 
 /** @internal */
 export interface RequestInternal {
-  /** @default "http://localhost:3000" */
-  origin?: string
+  url: URL
   /** @default "GET" */
   method: string
   cookies?: Partial<Record<string, string>>
@@ -36,6 +36,9 @@ export interface ResponseInternal<
   cookies?: Cookie[]
 }
 
+const configErrorMessage =
+  "There is a problem with the server configuration. Check the server logs for more information."
+
 async function AuthHandlerInternal<
   Body extends string | Record<string, any> | any[]
 >(params: {
@@ -45,7 +48,6 @@ async function AuthHandlerInternal<
   parsedBody?: any
 }): Promise<ResponseInternal<Body>> {
   const { options: authOptions, req } = params
-  setLogger(authOptions.logger, authOptions.debug)
 
   const assertionResult = assertConfig({ options: authOptions, req })
 
@@ -57,11 +59,10 @@ async function AuthHandlerInternal<
 
     const htmlPages = ["signin", "signout", "error", "verify-request"]
     if (!htmlPages.includes(req.action) || req.method !== "GET") {
-      const message = `There is a problem with the server configuration. Check the server logs for more information.`
       return {
         status: 500,
         headers: { "Content-Type": "application/json" },
-        body: { message } as any,
+        body: { message: configErrorMessage } as any,
       }
     }
     const { pages, theme } = authOptions
@@ -93,7 +94,7 @@ async function AuthHandlerInternal<
     authOptions,
     action,
     providerId,
-    origin: req.origin,
+    origin: req.url.origin,
     callbackUrl: req.body?.callbackUrl ?? req.query?.callbackUrl,
     csrfToken: req.body?.csrfToken,
     cookies: req.cookies,
@@ -266,7 +267,28 @@ export async function AuthHandler(
   request: Request,
   options: AuthOptions
 ): Promise<Response> {
+  setLogger(options.logger, options.debug)
+
+  if (!options.trustHost) {
+    const error = new UntrustedHost(
+      `Host must be trusted. URL was: ${request.url}`
+    )
+    logger.error(error.code, error)
+
+    return new Response(JSON.stringify({ message: configErrorMessage }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    })
+  }
+
   const req = await toInternalRequest(request)
+  if (req instanceof Error) {
+    logger.error((req as any).code, req)
+    return new Response(
+      `Error: This action with HTTP ${request.method} is not supported.`,
+      { status: 400 }
+    )
+  }
   const internalResponse = await AuthHandlerInternal({ req, options })
   return toResponse(internalResponse)
 }

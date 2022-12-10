@@ -1,4 +1,4 @@
-import type { IncomingHttpHeaders, IncomingMessage, ServerResponse } from "http"
+import type { IncomingMessage, ServerResponse } from "http"
 import type { GetServerSidePropsContext, NextApiRequest } from "next"
 
 export function setCookie(res, value: string) {
@@ -26,30 +26,26 @@ export function getBody(
 }
 
 /** Extract the full request URL from the environment */
-export function getURL(
-  url: string,
-  headers?: IncomingHttpHeaders | Headers
-): URL {
+export function getURL(url: string | undefined, headers: Headers): URL | Error {
   try {
-    let proto, host
-    if (headers instanceof Headers) {
-      proto = headers.get("x-forwarded-proto")
-      host = headers.get("x-forwarded-host") ?? headers.get("host")
-    } else {
-      proto = headers?.["x-forwarded-proto"]
-      host = headers?.["x-forwarded-host"] ?? headers?.host
+    if (!url) throw new Error("Missing url")
+    if (process.env.NEXTAUTH_URL) {
+      const base = process.env.NEXTAUTH_URL
+      const segments = base.split("/").filter(Boolean)
+      const hasCustomPath = segments.join("/").endsWith("api/auth")
+      if (hasCustomPath) {
+        const custom = segments.slice(0, -2).join("/")
+        // FIXME: path seems to have duplicate segments
+        return new URL(custom + url, base)
+      }
+      return new URL(url, base)
     }
-
-    proto ??= "https"
-    let base = `${proto}://${host}`
-
-    if (process.env.NODE_ENV !== "production" && !base) {
-      base = "http://localhost:3000"
-    }
-
-    return new URL(url, base)
+    const proto = headers.get("x-forwarded-proto") ?? "https"
+    const host = headers.get("x-forwarded-host") ?? headers.get("host")
+    const origin = `${proto}://${host}`
+    return new URL(url, origin)
   } catch (error) {
-    return new URL("http://localhost:3000")
+    return error as Error
   }
 }
 
