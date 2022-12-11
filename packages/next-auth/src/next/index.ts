@@ -24,7 +24,7 @@ async function NextAuthHandler(
     if (process.env.NODE_ENV !== "production") throw url
     const errorLogger = options.logger?.error ?? console.error
     errorLogger("INVALID_URL", url)
-    res.status(500)
+    res.status(400)
     return res.json({
       message:
         "There is a problem with the server configuration. Check the server logs for more information.",
