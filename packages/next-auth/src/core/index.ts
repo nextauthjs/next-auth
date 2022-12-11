@@ -282,7 +282,6 @@ export async function AuthHandler(
     response.headers.set("Content-Type", "application/json")
     return new Response(JSON.stringify({ url: redirect }), {
       headers: response.headers,
-      status: 200,
     })
   }
   return response
