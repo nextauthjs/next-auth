@@ -22,6 +22,8 @@ We have a list of official adapters that are distributed as their own packages u
 - [`sequelize`](./sequelize)
 - [`dgraph`](./dgraph)
 - [`upstash-redis`](./upstash-redis)
+- [`xata`](./xata)
+- [`supabase`](./supabase)
 
 ## Custom Adapter
 
