@@ -1,8 +1,7 @@
-import { MissingAPIRoute } from "../src/core/errors"
 import { nodeHandler } from "./utils"
 
 it("Missing req.url throws in dev", async () => {
-  await expect(nodeHandler).rejects.toThrow(MissingAPIRoute)
+  await expect(nodeHandler).rejects.toThrow(new Error("Missing url"))
 })
 
 const configErrorMessage =
@@ -14,14 +13,12 @@ it("Missing req.url returns config error in prod", async () => {
   const { res, logger } = await nodeHandler()
 
   expect(logger.error).toBeCalledTimes(1)
-  const error = new MissingAPIRoute(
-    "Cannot find [...nextauth].{js,ts} in `/pages/api/auth`. Make sure the filename is written correctly."
-  )
-  expect(logger.error).toBeCalledWith(error)
+  const error = new Error("Missing url")
+  expect(logger.error).toBeCalledWith("INVALID_URL", error)
 
-  expect(res.status).toBeCalledWith(500)
+  expect(res.status).toBeCalledWith(400)
   expect(res.json).toBeCalledWith({ message: configErrorMessage })
-  expect(logger.error).toBeCalledWith(error)
+
   // @ts-expect-error
   process.env.NODE_ENV = "test"
 })
@@ -41,10 +38,10 @@ it("Missing host config error in prod", async () => {
   const { res, logger } = await nodeHandler({
     req: { query: { nextauth: ["session"] } },
   })
-  expect(res.status).toBeCalledWith(500)
+  expect(res.status).toBeCalledWith(400)
   expect(res.json).toBeCalledWith({ message: configErrorMessage })
 
-  expect(logger.error).toBeCalledWith(new Error("Could not detect host."))
+  expect(logger.error).toBeCalledWith("INVALID_URL", new Error("Missing url"))
   // @ts-expect-error
   process.env.NODE_ENV = "test"
 })
