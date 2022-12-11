@@ -37,12 +37,14 @@ export function getURL(url: string | undefined, headers: Headers): URL | Error {
       if (!["http:", "https:"].includes(base.protocol)) {
         throw new Error("Invalid protocol")
       }
-      const segments = base.pathname.split("/").filter(Boolean)
-      // TODO: Support custom path without /api/auth
-      const hasCustomPath = segments.join("/").endsWith("api/auth")
+      const hasCustomPath = base.pathname !== "/"
+
       if (hasCustomPath) {
-        const custom = segments.slice(0, -2).join("/")
-        return new URL("/" + custom + url, base.origin)
+        const apiAuthRe = /\/api\/auth\/?$/
+        const basePathname = base.pathname.match(apiAuthRe)
+          ? base.pathname.replace(apiAuthRe, "")
+          : base.pathname
+        return new URL(basePathname.replace(/\/$/, "") + url, base.origin)
       }
       return new URL(url, base)
     }

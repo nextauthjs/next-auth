@@ -70,15 +70,32 @@ describe("process.env.NEXTAUTH_URL", () => {
       "http://localhost:3000/custom/api/auth/session"
     )
 
+    // With trailing slash
+    process.env.NEXTAUTH_URL = "http://localhost:3000/custom/api/auth/"
+    expect(getURL("/api/auth/session", {})).toBeURL(
+      "http://localhost:3000/custom/api/auth/session"
+    )
+
     // Multiple custom segments
     process.env.NEXTAUTH_URL = "http://localhost:3000/custom/path/api/auth"
     expect(getURL("/api/auth/session", {})).toBeURL(
       "http://localhost:3000/custom/path/api/auth/session"
     )
 
-    // Different than /api/auth
+    process.env.NEXTAUTH_URL = "http://localhost:3000/custom/path/api/auth/"
+    expect(getURL("/api/auth/session", {})).toBeURL(
+      "http://localhost:3000/custom/path/api/auth/session"
+    )
+
+    // No /api/auth
     process.env.NEXTAUTH_URL = "http://localhost:3000/custom/nextauth"
-    expect(getURL("/nextauth/session", {})).toBeURL(
+    expect(getURL("/session", {})).toBeURL(
+      "http://localhost:3000/custom/nextauth/session"
+    )
+
+    // No /api/auth, with trailing slash
+    process.env.NEXTAUTH_URL = "http://localhost:3000/custom/nextauth/"
+    expect(getURL("/session", {})).toBeURL(
       "http://localhost:3000/custom/nextauth/session"
     )
   })
