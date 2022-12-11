@@ -14,6 +14,7 @@ it("Send e-mail to the only address correctly", async () => {
       providers: [EmailProvider({ sendVerificationRequest })],
       callbacks: { signIn },
       secret,
+      trustHost: true,
     },
     {
       path: "signin/email",
@@ -54,6 +55,7 @@ it("Send e-mail to first address only", async () => {
       providers: [EmailProvider({ sendVerificationRequest })],
       callbacks: { signIn },
       secret,
+      trustHost: true,
     },
     {
       path: "signin/email",
@@ -94,6 +96,7 @@ it("Send e-mail to address with first domain", async () => {
       providers: [EmailProvider({ sendVerificationRequest })],
       callbacks: { signIn },
       secret,
+      trustHost: true,
     },
     {
       path: "signin/email",
@@ -140,6 +143,7 @@ it("Redirect to error page if multiple addresses aren't allowed", async () => {
         }),
       ],
       secret,
+      trustHost: true,
     },
     {
       path: "signin/email",
