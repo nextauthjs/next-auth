@@ -11,6 +11,8 @@ https://developers.notion.com/docs/authorization
 
 https://www.notion.so/my-integrations
 
+Note: You need to select "Public Integration" on the configuration page to get an `oauth_id` and `oauth_secret`. Private integrations do not provide these details. 
+
 ## Options
 
 The **Notion Provider** comes with a set of default options:
