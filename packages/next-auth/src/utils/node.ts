@@ -25,24 +25,32 @@ export function getBody(
   return { body: JSON.stringify(req.body) }
 }
 
-/** Extract the full request URL from the environment */
+/**
+ * Extract the full request URL from the environment.
+ * NOTE: It does not verify if the host should be trusted.
+ */
 export function getURL(url: string | undefined, headers: Headers): URL | Error {
   try {
     if (!url) throw new Error("Missing url")
     if (process.env.NEXTAUTH_URL) {
-      const base = process.env.NEXTAUTH_URL
-      const segments = base.split("/").filter(Boolean)
+      const base = new URL(process.env.NEXTAUTH_URL)
+      if (!["http:", "https:"].includes(base.protocol)) {
+        throw new Error("Invalid protocol")
+      }
+      const segments = base.pathname.split("/").filter(Boolean)
+      // TODO: Support custom path without /api/auth
       const hasCustomPath = segments.join("/").endsWith("api/auth")
       if (hasCustomPath) {
         const custom = segments.slice(0, -2).join("/")
-        // FIXME: path seems to have duplicate segments
-        return new URL(custom + url, base)
+        return new URL("/" + custom + url, base.origin)
       }
       return new URL(url, base)
     }
     const proto = headers.get("x-forwarded-proto") ?? "https"
     const host = headers.get("x-forwarded-host") ?? headers.get("host")
+    if (!["http", "https"].includes(proto)) throw new Error("Invalid protocol")
     const origin = `${proto}://${host}`
+    if (!host) throw new Error("Missing host")
     return new URL(url, origin)
   } catch (error) {
     return error as Error
