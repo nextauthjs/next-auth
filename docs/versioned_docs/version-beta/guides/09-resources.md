@@ -17,8 +17,6 @@ If you did not find a guide or tutorial covering your use case, please [open an 
 - [Next.js Authentication with Okta and NextAuth.js 4.0](https://thetombomb.com/posts/nextjs-nextauth-okta)
   - Learn how to perform authentication with an OIDC Application in Okta and NextAuth.js.
 
-  
-
 ### Advanced
 
 - [Refresh Token Rotation](/tutorials/refresh-token-rotation)

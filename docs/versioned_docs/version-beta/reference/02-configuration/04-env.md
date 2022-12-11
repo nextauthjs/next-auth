@@ -1,6 +1,6 @@
 ---
 title: Environment variables
-sidebar_label: Env vars
+sidebar_label: Environment Variables
 ---
 
 ## NEXTAUTH_URL
