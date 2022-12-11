@@ -95,6 +95,8 @@ If set to any value other than zero, it specifies in seconds how often the clien
 
 The value for `refetchInterval` should always be lower than the value of the session `maxAge` [session option](/configuration/options#session).
 
+By default, session polling will keep trying, even when the device has no internet access. To circumvent this, you can also set `refetchWhenOffline` to `false`. This will use [`navigator.onLine`](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/onLine) to only poll when the device is online.
+
 #### Refetch On Window Focus
 
 The `refetchOnWindowFocus` option can be used to control whether it automatically updates the session state when you switch a focus on tabs/windows.

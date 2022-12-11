@@ -164,7 +164,7 @@ export default ({ email }) => (
 
 ### Specifying a `callbackUrl`
 
-The `callbackUrl` specifies to which URL the user will be redirected after signing in. It defaults to the current URL of a user.
+The `callbackUrl` specifies to which URL the user will be redirected after signing in. Defaults to the page URL the sign-in is initiated from.
 
 You can specify a different `callbackUrl` by specifying it as the second argument of `signIn()`. This works for all providers.
 
@@ -269,4 +269,3 @@ If you need to redirect to another page but you want to avoid a page reload, you
 `const data = await signOut({redirect: false, callbackUrl: "/foo"})`
 where `data.url` is the validated URL you can redirect the user to without any flicker by using Next.js's `useRouter().push(data.url)`
 :::
-
