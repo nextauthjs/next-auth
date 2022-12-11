@@ -82,12 +82,43 @@ it("Redirects if necessary", async () => {
     req: {
       method: "post",
       url: "/api/auth/signin/github",
-      body: { json: "true" },
     },
   })
   expect(res.status).toBeCalledWith(302)
-  expect(res.removeHeader).toBeCalledWith("Location")
-  expect(res.json).toBeCalledWith({
-    url: "http://localhost/api/auth/signin?csrf=true",
+  expect(res.setHeader).toBeCalledWith("set-cookie", [
+    expect.stringMatching(
+      /next-auth.csrf-token=.*; Path=\/; HttpOnly; SameSite=Lax/
+    ),
+    `next-auth.callback-url=${encodeURIComponent(
+      process.env.NEXTAUTH_URL
+    )}; Path=/; HttpOnly; SameSite=Lax`,
+  ])
+  expect(res.setHeader).toBeCalledTimes(2)
+  expect(res.send).toBeCalledWith("")
+})
+
+it("Returns redirect if `X-Auth-Return-Redirect` header is present", async () => {
+  process.env.NEXTAUTH_URL = "http://localhost"
+  const { res } = await nodeHandler({
+    req: {
+      method: "post",
+      url: "/api/auth/signin/github",
+      headers: { "X-Auth-Return-Redirect": "1" },
+    },
   })
+
+  expect(res.status).toBeCalledWith(200)
+  expect(res.setHeader).toBeCalledWith("content-type", "application/json")
+  expect(res.setHeader).toBeCalledWith("set-cookie", [
+    expect.stringMatching(
+      /next-auth.csrf-token=.*; Path=\/; HttpOnly; SameSite=Lax/
+    ),
+    `next-auth.callback-url=${encodeURIComponent(
+      process.env.NEXTAUTH_URL
+    )}; Path=/; HttpOnly; SameSite=Lax`,
+  ])
+  expect(res.setHeader).toBeCalledTimes(2)
+  expect(res.send).toBeCalledWith(
+    JSON.stringify({ url: "http://localhost/api/auth/signin?csrf=true" })
+  )
 })

@@ -271,5 +271,18 @@ export async function AuthHandler(
 ): Promise<Response> {
   const req = await toInternalRequest(request)
   const internalResponse = await AuthHandlerInternal({ req, options })
-  return toResponse(internalResponse)
+
+  const response = await toResponse(internalResponse)
+
+  // If the request expects a return URL, send it as JSON
+  // instead of doing an actual redirect.
+  const redirect = response.headers.get("Location")
+  if (request.headers.has("X-Auth-Return-Redirect") && redirect) {
+    response.headers.delete("Location")
+    response.headers.set("Content-Type", "application/json")
+    return new Response(JSON.stringify({ url: redirect }), {
+      headers: response.headers,
+    })
+  }
+  return response
 }
