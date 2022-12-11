@@ -23,6 +23,7 @@ import Keycloak from "next-auth/providers/keycloak"
 import Line from "next-auth/providers/line"
 import LinkedIn from "next-auth/providers/linkedin"
 import Mailchimp from "next-auth/providers/mailchimp"
+import Notion from "next-auth/providers/notion"
 import Okta from "next-auth/providers/okta"
 import Osu from "next-auth/providers/osu"
 import Patreon from "next-auth/providers/patreon"
@@ -101,6 +102,7 @@ export const authOptions: NextAuthOptions = {
     Line({ clientId: process.env.LINE_ID, clientSecret: process.env.LINE_SECRET }),
     LinkedIn({ clientId: process.env.LINKEDIN_ID, clientSecret: process.env.LINKEDIN_SECRET }),
     Mailchimp({ clientId: process.env.MAILCHIMP_ID, clientSecret: process.env.MAILCHIMP_SECRET }),
+    Notion({ clientId: process.env.NOTION_ID, clientSecret: process.env.NOTION_SECRET }),
     Okta({ clientId: process.env.OKTA_ID, clientSecret: process.env.OKTA_SECRET, issuer: process.env.OKTA_ISSUER }),
     Osu({ clientId: process.env.OSU_CLIENT_ID, clientSecret: process.env.OSU_CLIENT_SECRET }),
     Patreon({ clientId: process.env.PATREON_ID, clientSecret: process.env.PATREON_SECRET }),
