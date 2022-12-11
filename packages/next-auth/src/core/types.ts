@@ -14,8 +14,6 @@ import type { CookieSerializeOptions } from "cookie"
 
 import type { NextApiRequest, NextApiResponse } from "next"
 
-import type { InternalUrl } from "../utils/parse-url"
-
 export type Awaitable<T> = T | PromiseLike<T>
 
 export type { LoggerInstance }
@@ -528,11 +526,7 @@ export interface InternalOptions<
   WithVerificationToken = TProviderType extends "email" ? true : false
 > {
   providers: InternalProvider[]
-  /**
-   * Parsed from `NEXTAUTH_URL` or `x-forwarded-host` on Vercel.
-   * @default "http://localhost:3000/api/auth"
-   */
-  url: InternalUrl
+  url: URL
   action: AuthAction
   provider: InternalProvider<TProviderType>
   csrfToken?: string

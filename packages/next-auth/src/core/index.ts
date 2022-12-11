@@ -94,7 +94,7 @@ async function AuthHandlerInternal<
     authOptions,
     action,
     providerId,
-    origin: req.url.origin,
+    url: req.url,
     callbackUrl: req.body?.callbackUrl ?? req.query?.callbackUrl,
     csrfToken: req.body?.csrfToken,
     cookies: req.cookies,

@@ -1,7 +1,6 @@
 import { randomBytes, randomUUID } from "crypto"
 import { AuthOptions } from ".."
 import logger from "../utils/logger"
-import parseUrl from "../utils/parse-url"
 import { adapterErrorHandler, eventsErrorHandler } from "./errors"
 import parseProviders from "./lib/providers"
 import { createSecret } from "./lib/utils"
@@ -13,9 +12,10 @@ import { createCallbackUrl } from "./lib/callback-url"
 import { RequestInternal } from "."
 
 import type { InternalOptions } from "./types"
+import parseUrl from "../utils/parse-url"
 
 interface InitParams {
-  origin?: string
+  url: URL
   authOptions: AuthOptions
   providerId?: string
   action: InternalOptions["action"]
@@ -33,7 +33,7 @@ export async function init({
   authOptions,
   providerId,
   action,
-  origin,
+  url: reqUrl,
   cookies: reqCookies,
   callbackUrl: reqCallbackUrl,
   csrfToken: reqCsrfToken,
@@ -42,7 +42,11 @@ export async function init({
   options: InternalOptions
   cookies: cookie.Cookie[]
 }> {
-  const url = parseUrl(origin)
+  const parsed = parseUrl(
+    reqUrl.origin +
+      reqUrl.pathname.replace(`/${action}`, "").replace(`/${providerId}`, "")
+  )
+  const url = new URL(parsed.toString())
 
   const secret = createSecret({ authOptions, url })
 
@@ -75,7 +79,7 @@ export async function init({
     provider,
     cookies: {
       ...cookie.defaultCookies(
-        authOptions.useSecureCookies ?? url.base.startsWith("https://")
+        authOptions.useSecureCookies ?? url.protocol === "https:"
       ),
       // Allow user cookie options to override any cookie settings above
       ...authOptions.cookies,
