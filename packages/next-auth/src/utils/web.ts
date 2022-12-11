@@ -49,6 +49,8 @@ export async function toInternalRequest(
   req: Request
 ): Promise<RequestInternal | Error> {
   try {
+    // TODO: .toString() should not inclide action and providerId
+    // see init.ts
     const url = new URL(req.url.replace(/\/$/, ""))
     const { pathname } = url
 
