@@ -16,24 +16,23 @@ it("Should return error when invalid protocol", () => {
 
 it("Should return error when invalid host", () => {
   expect(getURL("/", { host: "/" })).toEqual(
-    new TypeError("Invalid base URL: https:///")
+    new TypeError("Invalid base URL: http:///")
   )
 })
 
 it("Should read host headers", () => {
   expect(getURL("/api/auth/session", { host: "localhost" })).toBeURL(
-    // also checks that default protocol is https
-    "https://localhost/api/auth/session"
+    "http://localhost/api/auth/session"
   )
 
   expect(
     getURL("/custom/api/auth/session", { "x-forwarded-host": "localhost:3000" })
-  ).toBeURL("https://localhost:3000/custom/api/auth/session")
+  ).toBeURL("http://localhost:3000/custom/api/auth/session")
 
   // Prefer x-forwarded-host over host
   expect(
     getURL("/", { host: "localhost", "x-forwarded-host": "localhost:3000" })
-  ).toBeURL("https://localhost:3000/")
+  ).toBeURL("http://localhost:3000/")
 })
 
 it("Should read protocol headers", () => {
