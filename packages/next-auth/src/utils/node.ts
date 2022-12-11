@@ -48,7 +48,9 @@ export function getURL(url: string | undefined, headers: Headers): URL | Error {
       }
       return new URL(url, base)
     }
-    const proto = headers.get("x-forwarded-proto") ?? "https"
+    const proto =
+      headers.get("x-forwarded-proto") ??
+      (process.env.NODE_ENV !== "production" ? "http" : "https")
     const host = headers.get("x-forwarded-host") ?? headers.get("host")
     if (!["http", "https"].includes(proto)) throw new Error("Invalid protocol")
     const origin = `${proto}://${host}`

@@ -140,9 +140,19 @@ export async function unstable_getServerSession<
     options = Object.assign({}, args[2], { providers: [] })
   }
 
-  const request = new Request("http://a/api/auth/session", {
-    headers: new Headers(req.headers),
-  })
+  const url = getURL("/api/auth/session", new Headers(req.headers))
+  if (url instanceof Error) {
+    if (process.env.NODE_ENV !== "production") throw url
+    const errorLogger = options.logger?.error ?? console.error
+    errorLogger("INVALID_URL", url)
+    res.status(400)
+    return res.json({
+      message:
+        "There is a problem with the server configuration. Check the server logs for more information.",
+    })
+  }
+
+  const request = new Request(url, { headers: new Headers(req.headers) })
 
   options.secret ??= process.env.NEXTAUTH_SECRET
   options.trustHost = true
