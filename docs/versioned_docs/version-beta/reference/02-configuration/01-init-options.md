@@ -426,7 +426,8 @@ cookies: {
       httpOnly: true,
       sameSite: 'lax',
       path: '/',
-      secure: useSecureCookies
+      secure: useSecureCookies,
+      maxAge: 900
     }
   },
   state: {
@@ -436,6 +437,7 @@ cookies: {
       sameSite: "lax",
       path: "/",
       secure: useSecureCookies,
+      maxAge: 900
     },
   },
 }
