@@ -1,19 +1,21 @@
 import logger, { setLogger } from "../utils/logger"
-import { toInternalRequest, toResponse } from "./lib/web"
-import * as routes from "./routes"
-import renderPage from "./pages"
+import { toInternalRequest, toResponse } from "../utils/web"
 import { init } from "./init"
 import { assertConfig } from "./lib/assert"
 import { SessionStore } from "./lib/cookie"
+import renderPage from "./pages"
+import * as routes from "./routes"
 
-import type { AuthAction, AuthOptions } from "./types"
+import { UntrustedHost } from "./errors"
 import type { Cookie } from "./lib/cookie"
 import type { ErrorType } from "./pages/error"
+import type { AuthAction, AuthOptions } from "./types"
 
+/** @internal */
 export interface RequestInternal {
-  /** @default "http://localhost:3000" */
-  host?: string
-  method?: string
+  url: URL
+  /** @default "GET" */
+  method: string
   cookies?: Partial<Record<string, string>>
   headers?: Record<string, any>
   query?: Record<string, any>
@@ -23,15 +25,19 @@ export interface RequestInternal {
   error?: string
 }
 
+/** @internal */
 export interface ResponseInternal<
   Body extends string | Record<string, any> | any[] = any
 > {
   status?: number
-  headers?: Headers | HeadersInit
+  headers?: Record<string, string>
   body?: Body
   redirect?: URL | string // TODO: refactor to only allow URL
   cookies?: Cookie[]
 }
+
+const configErrorMessage =
+  "There is a problem with the server configuration. Check the server logs for more information."
 
 async function AuthHandlerInternal<
   Body extends string | Record<string, any> | any[]
@@ -41,10 +47,9 @@ async function AuthHandlerInternal<
   /** REVIEW: Is this the best way to skip parsing the body in Node.js? */
   parsedBody?: any
 }): Promise<ResponseInternal<Body>> {
-  const { options: userOptions, req } = params
-  setLogger(userOptions.logger, userOptions.debug)
+  const { options: authOptions, req } = params
 
-  const assertionResult = assertConfig({ options: userOptions, req })
+  const assertionResult = assertConfig({ options: authOptions, req })
 
   if (Array.isArray(assertionResult)) {
     assertionResult.forEach(logger.warn)
@@ -54,18 +59,13 @@ async function AuthHandlerInternal<
 
     const htmlPages = ["signin", "signout", "error", "verify-request"]
     if (!htmlPages.includes(req.action) || req.method !== "GET") {
-      const message = `There is a problem with the server configuration. Check the server logs for more information.`
       return {
         status: 500,
         headers: { "Content-Type": "application/json" },
-        body: { message } as any,
+        body: { message: configErrorMessage } as any,
       }
     }
-
-    // We can throw in development to surface the issue in the browser too.
-    if (process.env.NODE_ENV === "development") throw assertionResult
-
-    const { pages, theme } = userOptions
+    const { pages, theme } = authOptions
 
     const authOnErrorPage =
       pages?.error && req.query?.callbackUrl?.startsWith(pages.error)
@@ -88,13 +88,13 @@ async function AuthHandlerInternal<
     }
   }
 
-  const { action, providerId, error, method = "GET" } = req
+  const { action, providerId, error, method } = req
 
   const { options, cookies } = await init({
-    userOptions,
+    authOptions,
     action,
     providerId,
-    host: req.host,
+    url: req.url,
     callbackUrl: req.body?.callbackUrl ?? req.query?.callbackUrl,
     csrfToken: req.body?.csrfToken,
     cookies: req.cookies,
@@ -238,7 +238,7 @@ async function AuthHandlerInternal<
         }
         break
       case "_log":
-        if (userOptions.logger) {
+        if (authOptions.logger) {
           try {
             const { code, level, ...metadata } = req.body ?? {}
             logger[level](code, metadata)
@@ -267,15 +267,41 @@ export async function AuthHandler(
   request: Request,
   options: AuthOptions
 ): Promise<Response> {
+  setLogger(options.logger, options.debug)
+
+  if (!options.trustHost) {
+    const error = new UntrustedHost(
+      `Host must be trusted. URL was: ${request.url}`
+    )
+    logger.error(error.code, error)
+
+    return new Response(JSON.stringify({ message: configErrorMessage }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    })
+  }
+
   const req = await toInternalRequest(request)
+  if (req instanceof Error) {
+    logger.error((req as any).code, req)
+    return new Response(
+      `Error: This action with HTTP ${request.method} is not supported.`,
+      { status: 400 }
+    )
+  }
   const internalResponse = await AuthHandlerInternal({ req, options })
+
   const response = await toResponse(internalResponse)
-  const redirect = response.headers.get("Location")
+
   // If the request expects a return URL, send it as JSON
   // instead of doing an actual redirect.
-  if (request.headers.get("X-Auth-Return-Redirect") && redirect) {
+  const redirect = response.headers.get("Location")
+  if (request.headers.has("X-Auth-Return-Redirect") && redirect) {
     response.headers.delete("Location")
-    return new Response(JSON.stringify({ url: redirect }), response)
+    response.headers.set("Content-Type", "application/json")
+    return new Response(JSON.stringify({ url: redirect }), {
+      headers: response.headers,
+    })
   }
   return response
 }

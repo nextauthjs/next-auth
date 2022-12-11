@@ -292,9 +292,8 @@ export async function signOut<R extends boolean = true>(
       "Content-Type": "application/x-www-form-urlencoded",
       "X-Auth-Return-Redirect": "1",
     },
-    // @ts-expect-error
     body: new URLSearchParams({
-      csrfToken: await getCsrfToken(),
+      csrfToken: (await getCsrfToken()) ?? "",
       callbackUrl,
     }),
   }
