@@ -47,7 +47,7 @@ export function assertConfig(params: {
   const warnings: WarningCode[] = []
 
   if (!warned) {
-    if (!req.url.origin) warnings.push("NEXTAUTH_URL")
+    if (!url.origin) warnings.push("NEXTAUTH_URL")
 
     // TODO: Make this throw an error in next major. This will also get rid of `NODE_ENV`
     if (!options.secret && process.env.NODE_ENV !== "production")
