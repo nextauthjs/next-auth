@@ -8,15 +8,15 @@ This feature is experimental and may be removed or changed in the future.
 
 When calling from server-side i.e. in API routes or in `getServerSideProps`, we recommend using this function instead of `getSession` to retrieve the `session` object. This method is especially useful when you are using NextAuth.js with a database. This method can _drastically_ reduce response time when used over `getSession` server-side, due to avoiding an extra `fetch` to an API Route (this is generally [not recommended in Next.js](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props#getserversideprops-or-api-routes)). In addition, `unstable_getServerSession` will correctly update the cookie expiry time and update the session content if `callbacks.jwt` or `callbacks.session` changed something.
 
-Otherwise, if you only want to get the session token, see [`getToken`](tutorials/securing-pages-and-api-routes#using-gettoken).
+Otherwise, if you only want to get the session token, see [`getToken`](/tutorials/securing-pages-and-api-routes#using-gettoken).
 
 `unstable_getServerSession` requires passing the same object you would pass to `NextAuth` when initializing NextAuth.js. To do so, you can export your NextAuth.js options in the following way:
 
-In `[...nextauth.js]`:
+In `[...nextauth].ts`:
 ```ts
 import { NextAuth } from 'next-auth'
 import type { NextAuthOptions } from 'next-auth'
- 
+
 export const authOptions: NextAuthOptions = {
   // your configs
 }
@@ -26,7 +26,7 @@ export default NextAuth(authOptions);
 
 ### In `getServerSideProps`:
 ```js
-import { authOptions } from 'pages/api/[...nextauth]'
+import { authOptions } from 'pages/api/auth/[...nextauth]'
 import { unstable_getServerSession } from "next-auth/next"
 
 export async function getServerSideProps(context) {
@@ -49,9 +49,9 @@ export async function getServerSideProps(context) {
 }
 ```
 
-### In API routes:
+### In API Routes:
 ```js
-import { authOptions } from 'pages/api/[...nextauth]'
+import { authOptions } from 'pages/api/auth/[...nextauth]'
 import { unstable_getServerSession } from "next-auth/next"
 
 
@@ -75,9 +75,10 @@ You can also use `unstable_getServerSession` in Next.js' server components:
 
 ```tsx
 import { unstable_getServerSession } from "next-auth/next"
+import { authOptions } from "pages/api/auth/[...nextauth]"
 
 export default async function Page() {
-  const session = await unstable_getServerSession()
+  const session = await unstable_getServerSession(authOptions)
   return <pre>{JSON.stringify(session, null, 2)}</pre>
 }
 ```
@@ -98,10 +99,11 @@ You can get the `withAuth` middleware function from `next-auth/middleware` eithe
 
 ### Prerequisites
 
-You must set the [`NEXTAUTH_SECRET`](/configuration/options#nextauth_secret) environment variable when using this middleware. If you are using the [`secret` option](/configuration/options#secret) this value must match.
+You must set the same secret in the middleware that you use in NextAuth. The easiest way is to set the [`NEXTAUTH_SECRET`](/configuration/options#nextauth_secret) environment variable. It will be picked up by both the [NextAuth config](/configuration/options#options), as well as the middleware config.
 
-**We strongly recommend** replacing the `secret` value completely with this `NEXTAUTH_SECRET` environment variable. This environment variable will be picked up by both the [NextAuth config](/configuration/options#options), as well as the middleware config.
+Alternatively, you can provide the secret using the [`secret`](#secret) option in the middleware config.
 
+**We strongly recommend** replacing the `secret` value completely with this `NEXTAUTH_SECRET` environment variable.
 
 ### Basic usage
 
@@ -154,16 +156,36 @@ Callbacks are asynchronous functions you can use to control what happens when an
 
 Specify URLs to be used if you want to create custom sign in, and error pages. Pages specified will override the corresponding built-in page.
 
+:::note
+This should match the `pages` configuration that's found in `[...nextauth].ts`.
+:::
+
 #### Example (default value)
 
 ```js
 pages: {
-  signIn: '/auth/signin',
-  error: '/auth/error',
+  signIn: '/api/auth/signin',
+  error: '/api/auth/error',
 }
 ```
 
 See the documentation for the [pages option](/configuration/pages) for more information.
+
+---
+
+### `secret`
+
+- **Required**: _No_
+
+#### Description
+
+The same `secret` used in the [NextAuth.js config](/configuration/options#options).
+
+#### Example (default value)
+
+```js
+secret: process.env.NEXTAUTH_SECRET
+```
 
 ---
 
@@ -178,13 +200,11 @@ If you do not define the options, NextAuth.js will use the default values for th
 #### wrap middleware
 
 ```ts title="middleware.ts"
-import type { NextRequest } from "next/server"
-import type { JWT } from "next-auth/jwt"
 import { withAuth } from "next-auth/middleware"
 
 export default withAuth(
-  // `withAuth` can augment your Request with the user's token.
-  function middleware(req: NextRequest & { nextauth: { token: JWT | null } }) {
+  // `withAuth` augments your `Request` with the user's token.
+  function middleware(req) {
     console.log(req.nextauth.token)
   },
   {
