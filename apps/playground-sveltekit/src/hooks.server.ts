@@ -6,7 +6,7 @@ export const handle: Handle = async function handle({
   event,
   resolve,
 }): Promise<Response> {
-  const session = await getServerSession(event.request, authOptions)
+  const session = await getServerSession(event.request, authOptions) as App.Session
   if (session) {
     event.locals.session = session
   }

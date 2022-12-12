@@ -2,6 +2,7 @@
 	"name": "next-auth-sveltekit",
 	"version": "0.0.1",
 	"scripts": {
+		"predev": "pnpm check",
 		"dev": "svelte-package -w",
 		"build": "svelte-kit sync && svelte-package",
 		"prepublishOnly": "echo 'Did you mean to publish `./package/`, instead of `./`?' && exit 1",

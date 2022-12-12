@@ -543,7 +543,7 @@ importers:
       next-auth-core: link:../../core
     devDependencies:
       '@sveltejs/adapter-auto': 1.0.0-next.90
-      '@sveltejs/kit': 1.0.0-next.572_svelte@3.54.0+vite@3.2.5
+      '@sveltejs/kit': 1.0.0-next.581_svelte@3.54.0+vite@3.2.5
       '@sveltejs/package': 1.0.0-next.1_gf4dcx76vtk2o62ixxeqx7chra
       '@typescript-eslint/eslint-plugin': 5.45.1_tdm6ms4ntwhlpozn7kjqrhum74
       '@typescript-eslint/parser': 5.45.1_s5ps7njkmjlaqajutnox5ntcla
@@ -564,10 +564,8 @@ importers:
       '@sveltejs/adapter-auto': next
       '@sveltejs/kit': next
       '@sveltejs/package': next
-      '@types/cookie': ^0.5.1
       '@typescript-eslint/eslint-plugin': ^5.45.0
       '@typescript-eslint/parser': ^5.45.0
-      cookie: ^0.5.0
       eslint: ^8.28.0
       eslint-config-prettier: ^8.5.0
       eslint-plugin-svelte3: ^4.0.0
@@ -581,13 +579,11 @@ importers:
       typescript: ^4.9.3
       vite: ^3.2.4
     dependencies:
-      cookie: 0.5.0
       next-auth-core: link:../../../core
     devDependencies:
       '@sveltejs/adapter-auto': 1.0.0-next.90
-      '@sveltejs/kit': 1.0.0-next.572_svelte@3.54.0+vite@3.2.5
+      '@sveltejs/kit': 1.0.0-next.581_svelte@3.54.0+vite@3.2.5
       '@sveltejs/package': 1.0.0-next.1_gf4dcx76vtk2o62ixxeqx7chra
-      '@types/cookie': 0.5.1
       '@typescript-eslint/eslint-plugin': 5.45.1_tdm6ms4ntwhlpozn7kjqrhum74
       '@typescript-eslint/parser': 5.45.1_s5ps7njkmjlaqajutnox5ntcla
       eslint: 8.29.0
@@ -8219,19 +8215,20 @@ packages:
       - supports-color
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.572_svelte@3.54.0+vite@3.2.5:
-    resolution: {integrity: sha512-PiKEr55L/uJyMKvDPdyoa5MlAYQwdgs8HLMbr28YcCBmhw/v6V7gutKOKdqeXc3YwKEFVS3z7TvW6c7eDokJdQ==}
+  /@sveltejs/kit/1.0.0-next.581_svelte@3.54.0+vite@3.2.5:
+    resolution: {integrity: sha512-BIBJpx4q+MOa1fFuGNhRTIm8wygl8cK6b+Ei/iaG4F1GfqbZkVclrh4p9lGobSXtuXzCBLabe88mvHQ1cd5ZqA==}
     engines: {node: '>=16.14'}
     hasBin: true
     requiresBuild: true
     peerDependencies:
-      svelte: ^3.44.0
-      vite: ^3.2.0
+      svelte: ^3.54.0
+      vite: ^4.0.0
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 1.4.0_svelte@3.54.0+vite@3.2.5
+      '@sveltejs/vite-plugin-svelte': 2.0.0_svelte@3.54.0+vite@3.2.5
       '@types/cookie': 0.5.1
       cookie: 0.5.0
       devalue: 4.2.0
+      esm-env: 1.0.0
       kleur: 4.1.5
       magic-string: 0.27.0
       mime: 3.0.0
@@ -8273,6 +8270,25 @@ packages:
       deepmerge: 4.2.2
       kleur: 4.1.5
       magic-string: 0.26.7
+      svelte: 3.54.0
+      svelte-hmr: 0.15.1_svelte@3.54.0
+      vite: 3.2.5
+      vitefu: 0.2.2_vite@3.2.5
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /@sveltejs/vite-plugin-svelte/2.0.0_svelte@3.54.0+vite@3.2.5:
+    resolution: {integrity: sha512-oUFrYQarRv4fppmxdrv00qw3wX8Ycdj0uv33MfpRZyR8K67dyxiOcHnqkB0zSy5sDJA8RC/2aNtYhXJ8NINVHQ==}
+    engines: {node: ^14.18.0 || >= 16}
+    peerDependencies:
+      svelte: ^3.54.0
+      vite: ^4.0.0
+    dependencies:
+      debug: 4.3.4
+      deepmerge: 4.2.2
+      kleur: 4.1.5
+      magic-string: 0.27.0
       svelte: 3.54.0
       svelte-hmr: 0.15.1_svelte@3.54.0
       vite: 3.2.5
@@ -14411,6 +14427,10 @@ packages:
       text-table: 0.2.0
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /esm-env/1.0.0:
+    resolution: {integrity: sha512-Cf6VksWPsTuW01vU9Mk/3vRue91Zevka5SjyNf3nEpokFRuqt/KjUQoGAwq9qMmhpLTHmXzSIrFRw8zxWzmFBA==}
     dev: true
 
   /esm/3.2.25:
