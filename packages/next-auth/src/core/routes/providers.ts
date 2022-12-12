@@ -18,7 +18,7 @@ export default function providers(
   providers: InternalProvider[]
 ): ResponseInternal<Record<string, PublicProvider>> {
   return {
-    headers: [{ key: "Content-Type", value: "application/json" }],
+    headers: { "Content-Type": "application/json" },
     body: providers.reduce<Record<string, PublicProvider>>(
       (acc, { id, name, type, signinUrl, callbackUrl }) => {
         acc[id] = { id, name, type, signinUrl, callbackUrl }
