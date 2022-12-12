@@ -1,4 +1,4 @@
-export interface InternalUrl {
+interface InternalUrl {
   /** @default "http://localhost:3000" */
   origin: string
   /** @default "localhost:3000" */

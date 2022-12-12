@@ -102,19 +102,22 @@ export default function SigninPage(props: SignInServerPageParams) {
                     } as CSSProperties
                   }
                 >
-                  <img
-                    id="provider-logo"
-                    src={`${provider.style?.logo.startsWith("/") ? logos : ""}${
-                      provider.style?.logo
-                    }`}
-                  />
-                  <img
-                    id="provider-logo-dark"
-                    src={`${provider.style?.logo.startsWith("/") ? logos : ""}${
-                      provider.style?.logoDark
-                    }`}
-                  />
-
+                  {provider.style?.logo && (
+                    <img
+                      id="provider-logo"
+                      src={`${
+                        provider.style.logo.startsWith("/") ? logos : ""
+                      }${provider.style.logo}`}
+                    />
+                  )}
+                  {provider.style?.logoDark && (
+                    <img
+                      id="provider-logo-dark"
+                      src={`${
+                        provider.style.logo.startsWith("/") ? logos : ""
+                      }${provider.style.logoDark}`}
+                    />
+                  )}
                   <span>Sign in with {provider.name}</span>
                 </button>
               </form>

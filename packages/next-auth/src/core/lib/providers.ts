@@ -8,7 +8,6 @@ import type {
   OAuthUserConfig,
   OAuthEndpointType,
 } from "../../providers"
-import type { InternalUrl } from "../../utils/parse-url"
 
 /**
  * Adds `signinUrl` and `callbackUrl` to each provider
@@ -16,7 +15,7 @@ import type { InternalUrl } from "../../utils/parse-url"
  */
 export default function parseProviders(params: {
   providers: Provider[]
-  url: InternalUrl
+  url: URL
   providerId?: string
   runtime?: "web" | "nodejs"
 }): {

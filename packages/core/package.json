@@ -44,7 +44,8 @@
     }
   },
   "scripts": {
-    "build": "tsc && pnpm css",
+    "build": "pnpm clean && tsc && pnpm css",
+    "clean": "rm -rf dist",
     "css": "node ./scripts/generate-css.js",
     "dev": "pnpm css && tsc -w",
     "test": "jest"
