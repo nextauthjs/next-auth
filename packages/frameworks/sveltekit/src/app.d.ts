@@ -13,4 +13,7 @@ declare namespace App {
 
 declare module '$env/static/private' {
 	export const AUTH_SECRET: string;
+	export const NEXTAUTH_URL: string;
+	export const AUTH_TRUST_HOST: string;
+	export const VERCEL: string;
 }
