@@ -1,4 +1,4 @@
-import { nodeHandler } from "./utils"
+import { mockReqRes, nodeHandler } from "./utils"
 
 it("Missing req.url throws in dev", async () => {
   await expect(nodeHandler).rejects.toThrow(new Error("Missing url"))
@@ -80,6 +80,7 @@ it("Defined host does not throw in production if trusted and valid URL", async (
     options: { trustHost: true },
   })
   expect(res.status).toBeCalledWith(200)
+  // @ts-expect-error
   expect(JSON.parse(res.send.mock.calls[0][0])).toEqual({})
   // @ts-expect-error
   process.env.NODE_ENV = "test"
@@ -91,6 +92,7 @@ it("Use process.env.NEXTAUTH_URL for host if present", async () => {
     req: { url: "/api/auth/session" },
   })
   expect(res.status).toBeCalledWith(200)
+  // @ts-expect-error
   expect(JSON.parse(res.send.mock.calls[0][0])).toEqual({})
 })
 
@@ -103,15 +105,18 @@ it("Redirects if necessary", async () => {
     },
   })
   expect(res.status).toBeCalledWith(302)
-  expect(res.setHeader).toBeCalledWith("set-cookie", [
-    expect.stringMatching(
-      /next-auth.csrf-token=.*; Path=\/; HttpOnly; SameSite=Lax/
-    ),
-    `next-auth.callback-url=${encodeURIComponent(
-      process.env.NEXTAUTH_URL
-    )}; Path=/; HttpOnly; SameSite=Lax`,
-  ])
-  expect(res.setHeader).toBeCalledTimes(2)
+  expect(res.getHeaders()).toEqual({
+    location: "http://localhost/api/auth/signin?csrf=true",
+    "set-cookie": [
+      expect.stringMatching(
+        /next-auth.csrf-token=.*; Path=\/; HttpOnly; SameSite=Lax/
+      ),
+      `next-auth.callback-url=${encodeURIComponent(
+        process.env.NEXTAUTH_URL
+      )}; Path=/; HttpOnly; SameSite=Lax`,
+    ],
+  })
+
   expect(res.send).toBeCalledWith("")
 })
 
@@ -126,16 +131,48 @@ it("Returns redirect if `X-Auth-Return-Redirect` header is present", async () =>
   })
 
   expect(res.status).toBeCalledWith(200)
-  expect(res.setHeader).toBeCalledWith("content-type", "application/json")
-  expect(res.setHeader).toBeCalledWith("set-cookie", [
-    expect.stringMatching(
-      /next-auth.csrf-token=.*; Path=\/; HttpOnly; SameSite=Lax/
-    ),
-    `next-auth.callback-url=${encodeURIComponent(
-      process.env.NEXTAUTH_URL
-    )}; Path=/; HttpOnly; SameSite=Lax`,
-  ])
-  expect(res.setHeader).toBeCalledTimes(2)
+
+  expect(res.getHeaders()).toEqual({
+    "content-type": "application/json",
+    "set-cookie": [
+      expect.stringMatching(
+        /next-auth.csrf-token=.*; Path=\/; HttpOnly; SameSite=Lax/
+      ),
+      `next-auth.callback-url=${encodeURIComponent(
+        process.env.NEXTAUTH_URL
+      )}; Path=/; HttpOnly; SameSite=Lax`,
+    ],
+  })
+
+  expect(res.send).toBeCalledWith(
+    JSON.stringify({ url: "http://localhost/api/auth/signin?csrf=true" })
+  )
+})
+
+it("Should preserve user's `set-cookie` headers", async () => {
+  const { req, res } = mockReqRes({
+    method: "post",
+    url: "/api/auth/signin/credentials",
+    headers: { host: "localhost", "X-Auth-Return-Redirect": "1" },
+  })
+  res.setHeader("set-cookie", ["foo=bar", "bar=baz"])
+
+  await nodeHandler({ req, res })
+
+  expect(res.getHeaders()).toEqual({
+    "content-type": "application/json",
+    "set-cookie": [
+      "foo=bar",
+      "bar=baz",
+      expect.stringMatching(
+        /next-auth.csrf-token=.*; Path=\/; HttpOnly; SameSite=Lax/
+      ),
+      `next-auth.callback-url=${encodeURIComponent(
+        "http://localhost"
+      )}; Path=/; HttpOnly; SameSite=Lax`,
+    ],
+  })
+
   expect(res.send).toBeCalledWith(
     JSON.stringify({ url: "http://localhost/api/auth/signin?csrf=true" })
   )
