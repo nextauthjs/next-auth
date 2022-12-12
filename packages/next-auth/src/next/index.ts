@@ -1,5 +1,5 @@
 import { AuthHandler } from "../core"
-import { getURL, getBody } from "../utils/node"
+import { getBody, getURL, setHeaders } from "../utils/node"
 
 import type {
   GetServerSidePropsContext,
@@ -18,38 +18,36 @@ async function NextAuthHandler(
   res: NextApiResponse,
   options: AuthOptions
 ) {
-  const url = getURL(
-    req.url,
-    options.trustHost,
-    req.headers["x-forwarded-host"] ?? req.headers.host
-  )
-
-  if (url instanceof Error) return res.status(400).end()
+  const headers = new Headers(req.headers as any)
+  const url = getURL(req.url, headers)
+  if (url instanceof Error) {
+    if (process.env.NODE_ENV !== "production") throw url
+    const errorLogger = options.logger?.error ?? console.error
+    errorLogger("INVALID_URL", url)
+    res.status(400)
+    return res.json({
+      message:
+        "There is a problem with the server configuration. Check the server logs for more information.",
+    })
+  }
 
   const request = new Request(url, {
-    headers: new Headers(req.headers as any),
+    headers,
     method: req.method,
     ...getBody(req),
   })
 
   options.secret ??= options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
+  options.trustHost ??= !!(
+    process.env.NEXTAUTH_URL ??
+    process.env.AUTH_TRUST_HOST ??
+    process.env.VERCEL ??
+    process.env.NODE_ENV !== "production"
+  )
+
   const response = await AuthHandler(request, options)
-  const { status, headers } = response
-  res.status(status)
-
-  for (const [key, val] of headers.entries()) {
-    const value = key === "set-cookie" ? val.split(",") : val
-    res.setHeader(key, value)
-  }
-
-  // If the request expects a return URL, send it as JSON
-  // instead of doing an actual redirect.
-  const redirect = headers.get("Location")
-
-  if (req.body?.json === "true" && redirect) {
-    res.removeHeader("Location")
-    return res.json({ url: redirect })
-  }
+  res.status(response.status)
+  setHeaders(response.headers, res)
 
   return res.send(await response.text())
 }
@@ -139,29 +137,34 @@ export async function unstable_getServerSession<
   } else {
     req = args[0]
     res = args[1]
-    options = Object.assign(args[2], { providers: [] })
+    options = Object.assign({}, args[2], { providers: [] })
   }
 
-  const urlOrError = getURL(
-    "/api/auth/session",
-    options.trustHost,
-    req.headers["x-forwarded-host"] ?? req.headers.host
-  )
+  const url = getURL("/api/auth/session", new Headers(req.headers))
+  if (url instanceof Error) {
+    if (process.env.NODE_ENV !== "production") throw url
+    const errorLogger = options.logger?.error ?? console.error
+    errorLogger("INVALID_URL", url)
+    res.status(400)
+    return res.json({
+      message:
+        "There is a problem with the server configuration. Check the server logs for more information.",
+    })
+  }
 
-  if (urlOrError instanceof Error) throw urlOrError
+  const request = new Request(url, { headers: new Headers(req.headers) })
 
   options.secret ??= process.env.NEXTAUTH_SECRET
-  const response = await AuthHandler(
-    new Request(urlOrError, { headers: req.headers }),
-    options
-  )
+  options.trustHost = true
+  const response = await AuthHandler(request, options)
 
   const { status = 200, headers } = response
 
-  for (const [key, val] of headers.entries()) {
-    const value = key === "set-cookie" ? val.split(",") : val
-    res.setHeader(key, value)
-  }
+  setHeaders(headers, res)
+
+  // This would otherwise break rendering
+  // with `getServerSideProps` that needs to always return HTML
+  res.removeHeader?.("Content-Type")
 
   const data = await response.json()
 

@@ -1,4 +1,5 @@
 import { serialize, parse as parseCookie } from "cookie"
+import { UnknownAction } from "../core/errors"
 import type { ResponseInternal, RequestInternal } from "../core"
 import type { AuthAction } from "../core/types"
 
@@ -41,40 +42,56 @@ async function readJSONBody(
   }
 }
 
+// prettier-ignore
+const actions: AuthAction[] = [ "providers", "session", "csrf", "signin", "signout", "callback", "verify-request", "error", "_log" ]
+
 export async function toInternalRequest(
   req: Request
-): Promise<RequestInternal> {
-  const url = new URL(req.url)
-  const nextauth = url.pathname.split("/").slice(3)
-  const headers = Object.fromEntries(req.headers)
-  const query: Record<string, any> = Object.fromEntries(url.searchParams)
+): Promise<RequestInternal | Error> {
+  try {
+    // TODO: .toString() should not inclide action and providerId
+    // see init.ts
+    const url = new URL(req.url.replace(/\/$/, ""))
+    const { pathname } = url
 
-  const cookieHeader = req.headers.get("cookie") ?? ""
-  const cookies =
-    parseCookie(
-      Array.isArray(cookieHeader) ? cookieHeader.join(";") : cookieHeader
-    ) ?? {}
+    const action = actions.find((a) => pathname.includes(a))
+    if (!action) {
+      throw new UnknownAction("Cannot detect action.")
+    }
 
-  return {
-    action: nextauth[0] as AuthAction,
-    method: req.method,
-    headers,
-    body: req.body ? await readJSONBody(req.body) : undefined,
-    cookies: cookies,
-    providerId: nextauth[1],
-    error: url.searchParams.get("error") ?? undefined,
-    host: new URL(req.url).origin,
-    query,
+    const providerIdOrAction = pathname.split("/").pop()
+    let providerId
+    if (
+      providerIdOrAction &&
+      !action.includes(providerIdOrAction) &&
+      ["signin", "callback"].includes(action)
+    ) {
+      providerId = providerIdOrAction
+    }
+
+    const cookieHeader = req.headers.get("cookie") ?? ""
+
+    return {
+      url,
+      action,
+      providerId,
+      method: req.method ?? "GET",
+      headers: Object.fromEntries(req.headers),
+      body: req.body ? await readJSONBody(req.body) : undefined,
+      cookies:
+        parseCookie(
+          Array.isArray(cookieHeader) ? cookieHeader.join(";") : cookieHeader
+        ) ?? {},
+      error: url.searchParams.get("error") ?? undefined,
+      query: Object.fromEntries(url.searchParams),
+    }
+  } catch (error) {
+    return error
   }
 }
 
 export function toResponse(res: ResponseInternal): Response {
-  const headers = new Headers(
-    res.headers?.reduce((acc, { key, value }) => {
-      acc[key] = value
-      return acc
-    }, {})
-  )
+  const headers = new Headers(res.headers)
 
   res.cookies?.forEach((cookie) => {
     const { name, value, options } = cookie
@@ -101,4 +118,18 @@ export function toResponse(res: ResponseInternal): Response {
   }
 
   return response
+}
+
+// TODO: Remove
+/** Extract the host from the environment */
+export function detectHost(
+  trusted: boolean,
+  forwardedValue: string | string[] | undefined | null,
+  defaultValue: string | false
+): string | undefined {
+  if (trusted && forwardedValue) {
+    return Array.isArray(forwardedValue) ? forwardedValue[0] : forwardedValue
+  }
+
+  return defaultValue || undefined
 }

@@ -6,7 +6,7 @@ import { NextResponse, NextRequest } from "next/server"
 
 import { getToken } from "../jwt"
 import parseUrl from "../utils/parse-url"
-import { getURL } from "../utils/node"
+import { detectHost } from "../utils/web"
 
 type AuthorizedCallback = (params: {
   token: JWT | null
@@ -113,18 +113,19 @@ async function handleMiddleware(
   const signInPage = options?.pages?.signIn ?? "/api/auth/signin"
   const errorPage = options?.pages?.error ?? "/api/auth/error"
 
-  options.trustHost = Boolean(
-    options.trustHost ?? process.env.VERCEL ?? process.env.AUTH_TRUST_HOST
+  options.trustHost ??= !!(
+    process.env.NEXTAUTH_URL ??
+    process.env.VERCEL ??
+    process.env.AUTH_TRUST_HOST
   )
 
-  let authPath
-  const url = getURL(
-    null,
+  const host = detectHost(
     options.trustHost,
-    req.headers.get("x-forwarded-host") ?? req.headers.get("host")
+    req.headers?.get("x-forwarded-host"),
+    process.env.NEXTAUTH_URL ??
+      (process.env.NODE_ENV !== "production" && "http://localhost:3000")
   )
-  if (url instanceof URL) authPath = parseUrl(url).path
-  else authPath = "/api/auth"
+  const authPath = parseUrl(host).path
 
   const publicPaths = ["/_next", "/favicon.ico"]
 
