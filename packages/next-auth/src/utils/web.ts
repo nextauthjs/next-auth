@@ -49,7 +49,7 @@ export async function toInternalRequest(
   req: Request
 ): Promise<RequestInternal | Error> {
   try {
-    // TODO: .toString() should not inclide action and providerId
+    // TODO: url.toString() should not include action and providerId
     // see init.ts
     const url = new URL(req.url.replace(/\/$/, ""))
     const { pathname } = url
@@ -69,8 +69,6 @@ export async function toInternalRequest(
       providerId = providerIdOrAction
     }
 
-    const cookieHeader = req.headers.get("cookie") ?? ""
-
     return {
       url,
       action,
@@ -78,10 +76,7 @@ export async function toInternalRequest(
       method: req.method ?? "GET",
       headers: Object.fromEntries(req.headers),
       body: req.body ? await readJSONBody(req.body) : undefined,
-      cookies:
-        parseCookie(
-          Array.isArray(cookieHeader) ? cookieHeader.join(";") : cookieHeader
-        ) ?? {},
+      cookies: parseCookie(req.headers.get("cookie") ?? "") ?? {},
       error: url.searchParams.get("error") ?? undefined,
       query: Object.fromEntries(url.searchParams),
     }
@@ -118,18 +113,4 @@ export function toResponse(res: ResponseInternal): Response {
   }
 
   return response
-}
-
-// TODO: Remove
-/** Extract the host from the environment */
-export function detectHost(
-  trusted: boolean,
-  forwardedValue: string | string[] | undefined | null,
-  defaultValue: string | false
-): string | undefined {
-  if (trusted && forwardedValue) {
-    return Array.isArray(forwardedValue) ? forwardedValue[0] : forwardedValue
-  }
-
-  return defaultValue || undefined
 }
