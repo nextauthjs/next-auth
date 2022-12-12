@@ -69,8 +69,6 @@ export async function toInternalRequest(
       providerId = providerIdOrAction
     }
 
-    const cookieHeader = req.headers.get("cookie") ?? ""
-
     return {
       url,
       action,
@@ -78,10 +76,7 @@ export async function toInternalRequest(
       method: req.method ?? "GET",
       headers: Object.fromEntries(req.headers),
       body: req.body ? await readJSONBody(req.body) : undefined,
-      cookies:
-        parseCookie(
-          Array.isArray(cookieHeader) ? cookieHeader.join(";") : cookieHeader
-        ) ?? {},
+      cookies: parseCookie(req.headers.get("cookie") ?? "") ?? {},
       error: url.searchParams.get("error") ?? undefined,
       query: Object.fromEntries(url.searchParams),
     }
