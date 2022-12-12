@@ -1,4 +1,4 @@
-import { EventCallbacks, LoggerInstance } from "./types"
+import type { EventCallbacks, LoggerInstance } from "./types"
 
 /**
  * Same as the default `Error`, but it is JSON serializable.
