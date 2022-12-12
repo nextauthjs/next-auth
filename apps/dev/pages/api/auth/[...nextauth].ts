@@ -31,7 +31,7 @@ import Slack from "next-auth-core/providers/slack"
 import Spotify from "next-auth-core/providers/spotify"
 import Trakt from "next-auth-core/providers/trakt"
 import Twitch from "next-auth-core/providers/twitch"
-import Twitter, { TwitterLegacy } from "next-auth-core/providers/twitter"
+import Twitter from "next-auth-core/providers/twitter"
 import Vk from "next-auth-core/providers/vk"
 import Wikimedia from "next-auth-core/providers/wikimedia"
 import WorkOS from "next-auth-core/providers/workos"
@@ -113,7 +113,7 @@ export const authOptions: AuthOptions = {
     Spotify({ clientId: process.env.SPOTIFY_ID, clientSecret: process.env.SPOTIFY_SECRET }),
     Trakt({ clientId: process.env.TRAKT_ID, clientSecret: process.env.TRAKT_SECRET }),
     Twitch({ clientId: process.env.TWITCH_ID, clientSecret: process.env.TWITCH_SECRET }),
-    Twitter({ version: "2.0", clientId: process.env.TWITTER_ID, clientSecret: process.env.TWITTER_SECRET }),
+    Twitter({ clientId: process.env.TWITTER_ID, clientSecret: process.env.TWITTER_SECRET }),
     // TwitterLegacy({ clientId: process.env.TWITTER_LEGACY_ID, clientSecret: process.env.TWITTER_LEGACY_SECRET }),
     Vk({ clientId: process.env.VK_ID, clientSecret: process.env.VK_SECRET }),
     Wikimedia({ clientId: process.env.WIKIMEDIA_ID, clientSecret: process.env.WIKIMEDIA_SECRET }),
@@ -132,25 +132,24 @@ if (authOptions.adapter) {
 
 // TODO: move to next-auth/edge
 function Auth(...args: any[]) {
-  if (args.length === 1)
-    return async (req: Request) => {
-      args[0].secret ??= process.env.NEXTAUTH_SECRET
-
-      // TODO: remove when `next-auth/react` sends `X-Auth-Return-Redirect`
-      const shouldRedirect = req.method === "POST" && req.headers.get("Content-Type") === "application/json" ? (await req.clone().json()).json : false
-
-      // TODO: This can be directly in core
-      const res = await AuthHandler(req, args[0])
-      if (req.headers.get("X-Auth-Return-Redirect") || shouldRedirect) {
-        const url = res.headers.get("Location")
-        res.headers.delete("Location")
-        return new Response(JSON.stringify({ url }), res)
-      }
-      return res
+  const envSecret = process.env.NEXTAUTH_SECRET
+  const envTrustHost = !!(process.env.NEXTAUTH_URL ?? process.env.AUTH_TRUST_HOST ?? process.env.VERCEL ?? process.env.NODE_ENV !== "production")
+  if (args.length === 1) {
+    return (req: Request) => {
+      args[0].secret ??= envSecret
+      args[0].trustHost ??= envTrustHost
+      return AuthHandler(req, args[0])
     }
+  }
+  args[1].secret ??= envSecret
+  args[1].trustHost ??= envTrustHost
   return AuthHandler(args[0], args[1])
 }
 
-export default Auth(authOptions)
+// export default Auth(authOptions)
+
+export default function handle(request: Request) {
+  return Auth(request, authOptions)
+}
 
 export const config = { runtime: "experimental-edge" }
