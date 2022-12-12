@@ -20,9 +20,9 @@ const features = [
           <br />
           <em>(Google, Facebook, Auth0, Apple…)</em>
         </li>
+        <li>Use with OAuth 2+ &amp; OpenID Connect providers</li>
         <li>Built in email / passwordless / magic link</li>
         <li>Use with any username / password store</li>
-        <li>Use with OAuth 1.0 &amp; 2.0 services</li>
       </ul>
     ),
   },
@@ -31,14 +31,22 @@ const features = [
     imageUrl: "img/undraw_authentication.svg",
     description: (
       <ul>
-        <li>Built for Serverless, runs anywhere</li>
+        <li>
+          Runtime agnostic, runs anywhere!
+          <br />
+          <em>Vercel Edge Functions, Serverless…</em>
+        </li>
+        <li>
+          Use with any modern framework!
+          <br />
+          <em>Next.js, SvelteKit…</em>
+        </li>
         <li>
           Bring Your Own Database - or none!
           <br />
-          <em>(MySQL, Postgres, MSSQL, MongoDB…)</em>
+          <em>MySQL, Postgres, MSSQL, MongoDB…</em>
         </li>
         <li>Choose database sessions or JWT</li>
-        <li>Secure web pages and API routes</li>
       </ul>
     ),
   },
@@ -48,7 +56,7 @@ const features = [
     description: (
       <ul>
         <li>Signed, prefixed, server-only cookies</li>
-        <li>HTTP POST + CSRF Token validation</li>
+        <li>Built-in CSRF protection</li>
         <li>JWT with JWS / JWE / JWK</li>
         <li>Tab syncing, auto-revalidation, keepalives</li>
         <li>Doesn't rely on client side JavaScript</li>
@@ -73,7 +81,7 @@ function Feature({ imageUrl, title, description }) {
         </div>
       )}
       <h3 className="text--center">{title}</h3>
-      <div>{description}</div>
+      {description}
     </div>
   )
 }
