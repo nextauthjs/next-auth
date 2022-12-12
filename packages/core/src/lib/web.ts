@@ -1,5 +1,7 @@
 import { parse as parseCookie, serialize } from "cookie"
-import type { AuthAction, RequestInternal, ResponseInternal } from ".."
+import type { RequestInternal, ResponseInternal } from ".."
+import { UnknownAction } from "../errors"
+import type { AuthAction } from "../types"
 
 async function getBody(req: Request): Promise<Record<string, any> | undefined> {
   if (!("body" in req) || !req.body || req.method !== "POST") return
@@ -12,31 +14,46 @@ async function getBody(req: Request): Promise<Record<string, any> | undefined> {
     return Object.fromEntries(params)
   }
 }
+// prettier-ignore
+const actions: AuthAction[] = [ "providers", "session", "csrf", "signin", "signout", "callback", "verify-request", "error", "_log" ]
 
 export async function toInternalRequest(
   req: Request
-): Promise<RequestInternal> {
-  const url = new URL(req.url)
-  const nextauth = url.pathname.split("/").slice(3)
-  const headers = Object.fromEntries(req.headers)
-  const query: Record<string, any> = Object.fromEntries(url.searchParams)
+): Promise<RequestInternal | Error> {
+  try {
+    // TODO: url.toString() should not include action and providerId
+    // see init.ts
+    const url = new URL(req.url.replace(/\/$/, ""))
+    const { pathname } = url
 
-  const cookieHeader = req.headers.get("cookie") ?? ""
-  const cookies =
-    parseCookie(
-      Array.isArray(cookieHeader) ? cookieHeader.join(";") : cookieHeader
-    ) ?? {}
+    const action = actions.find((a) => pathname.includes(a))
+    if (!action) {
+      throw new UnknownAction("Cannot detect action.")
+    }
 
-  return {
-    action: nextauth[0] as AuthAction,
-    method: req.method,
-    headers,
-    body: req.body ? await getBody(req) : undefined,
-    cookies: cookies,
-    providerId: nextauth[1],
-    error: url.searchParams.get("error") ?? undefined,
-    host: new URL(req.url).origin,
-    query,
+    const providerIdOrAction = pathname.split("/").pop()
+    let providerId
+    if (
+      providerIdOrAction &&
+      !action.includes(providerIdOrAction) &&
+      ["signin", "callback"].includes(action)
+    ) {
+      providerId = providerIdOrAction
+    }
+
+    return {
+      url,
+      action,
+      providerId,
+      method: req.method ?? "GET",
+      headers: Object.fromEntries(req.headers),
+      body: req.body ? await getBody(req) : undefined,
+      cookies: parseCookie(req.headers.get("cookie") ?? "") ?? {},
+      error: url.searchParams.get("error") ?? undefined,
+      query: Object.fromEntries(url.searchParams),
+    }
+  } catch (error) {
+    return error
   }
 }
 
@@ -46,8 +63,11 @@ export function toResponse(res: ResponseInternal): Response {
   res.cookies?.forEach((cookie) => {
     const { name, value, options } = cookie
     const cookieHeader = serialize(name, value, options)
-    // FIXME: Should be .append. Cannot set multiple cookies right now.
-    headers.set("Set-Cookie", cookieHeader)
+    if (headers.has("Set-Cookie")) {
+      headers.append("Set-Cookie", cookieHeader)
+    } else {
+      headers.set("Set-Cookie", cookieHeader)
+    }
   })
 
   const body =

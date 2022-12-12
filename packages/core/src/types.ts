@@ -15,7 +15,6 @@ import type {
 import type { JWT, JWTOptions } from "./jwt"
 import type { Cookie } from "./lib/cookie"
 import type { LoggerInstance } from "./utils/logger"
-import type { InternalUrl } from "./utils/parse-url"
 
 export type Awaitable<T> = T | PromiseLike<T>
 
@@ -211,7 +210,7 @@ export interface AuthOptions {
    * - ⚠ **This is an advanced option.** Advanced options are passed the same way as basic options,
    * but **may have complex implications** or side effects.
    * You should **try to avoid using advanced options** unless you are very comfortable using them.
-   * @default Boolean(process.env.AUTH_TRUST_HOST ?? process.env.VERCEL)
+   * @default Boolean(process.env.NEXTAUTH_URL ?? process.env.AUTH_TRUST_HOST ?? process.env.VERCEL)
    */
   trustHost?: boolean
   /** @internal */
@@ -532,8 +531,7 @@ export type AuthAction =
 
 /** @internal */
 export interface RequestInternal {
-  /** @default "http://localhost:3000" */
-  host?: string
+  url: URL
   method?: string
   cookies?: Partial<Record<string, string>>
   headers?: Record<string, any>
@@ -561,11 +559,7 @@ export interface InternalOptions<
   WithVerificationToken = TProviderType extends "email" ? true : false
 > {
   providers: InternalProvider[]
-  /**
-   * Parsed from `NEXTAUTH_URL` or `x-forwarded-host` on Vercel.
-   * @default "http://localhost:3000/api/auth"
-   */
-  url: InternalUrl
+  url: URL
   action: AuthAction
   provider: InternalProvider<TProviderType>
   csrfToken?: string

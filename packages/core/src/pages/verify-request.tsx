@@ -1,8 +1,7 @@
 import type { Theme } from ".."
-import type { InternalUrl } from "../utils/parse-url"
 
 interface VerifyRequestPageProps {
-  url: InternalUrl
+  url: URL
   theme: Theme
 }
 
