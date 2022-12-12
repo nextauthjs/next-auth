@@ -33,55 +33,28 @@ module.exports = {
         src: "img/logo/logo-xs.png",
       },
       items: [
-        // TODO: This is the new navigation for the BETA Docs.
-        //       Add an env var at build time to switch between this nav
-        //       and the old at build time.
-        // {
-        //   to: "/beta/getting-started/introduction",
-        //   activeBasePath: "/beta/getting-started/",
-        //   label: "Getting started",
-        //   position: "left",
-        // },
-        // {
-        //   to: "/beta/guides/overview",
-        //   activeBasePath: "/beta/guides/",
-        //   label: "Guides",
-        //   position: "left",
-        // },
-        // {
-        //   to: "/beta/reference/index",
-        //   activeBasePath: "/beta/reference",
-        //   label: "Reference",
-        //   position: "left",
-        // },
-        // {
-        //   to: "/beta/concepts/faq",
-        //   activeBasePath: "/beta/concepts",
-        //   label: "Concepts",
-        //   position: "left",
-        // },
         {
           to: "/getting-started/introduction",
-          activeBasePath: "docs",
-          label: "Documentation",
+          activeBasePath: "/getting-started/",
+          label: "Getting started",
           position: "left",
         },
         {
-          to: "/tutorials",
-          activeBasePath: "docs",
-          label: "Tutorials",
+          to: "/guides/overview",
+          activeBasePath: "/guides/",
+          label: "Guides",
           position: "left",
         },
         {
-          to: "/faq",
-          activeBasePath: "docs",
-          label: "FAQ",
+          to: "/reference/index",
+          activeBasePath: "/reference",
+          label: "Reference",
           position: "left",
         },
         {
-          to: "/security",
-          activeBasePath: "docs",
-          label: "Security",
+          to: "/concepts/faq",
+          activeBasePath: "/concepts",
+          label: "Concepts",
           position: "left",
         },
         {
@@ -179,7 +152,7 @@ module.exports = {
       {
         docs: {
           routeBasePath: "/",
-          sidebarPath: require.resolve("./sidebars.js"),
+          sidebarPath: require.resolve("./sidebars.json"),
           editUrl: "https://github.com/nextauthjs/next-auth/edit/main/docs",
           lastVersion: "current",
           showLastUpdateAuthor: true,
@@ -196,9 +169,8 @@ module.exports = {
             v3: {
               label: "v3",
             },
-            beta: {
-              label: "v4-unreleased",
-              banner: "unreleased",
+            "v4-old": {
+              label: "v4-old",
             },
           },
         },

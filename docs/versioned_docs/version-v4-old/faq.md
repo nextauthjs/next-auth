@@ -35,7 +35,7 @@ You can use also NextAuth.js with any database using a custom database adapter, 
 <p>
 
 <p>NextAuth.js includes built-in support for signing in with&nbsp;
-{Object.values(require("../providers.json")).sort().join(", ")}.
+{Object.values(require("../../providers.json")).sort().join(", ")}.
 (See also: <a href="/configuration/providers/oauth">Providers</a>)
 </p>
 

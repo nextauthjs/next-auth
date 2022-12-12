@@ -1,11 +1,10 @@
 ---
 title: Initialization
-sidebar_label: Init options
 ---
 
 ## Options
 
-Options are passed to NextAuth.js when initializing it in an API route.
+Options are passed to NextAuth.js when initializing it in a server environment like a Next.js API Route.
 
 ### providers
 

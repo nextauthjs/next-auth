@@ -16,15 +16,6 @@
           "value": "1; mode=block"
         }
       ]
-    },
-    {
-      "source": "/beta(.*)",
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex"
-        }
-      ]
     }
   ],
   "redirects": [

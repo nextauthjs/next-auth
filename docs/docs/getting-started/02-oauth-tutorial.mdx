@@ -1,6 +1,7 @@
 ---
 title: OAuth authentication
 ---
+
 import creatingOauthAppImg from "./img/getting-started-creating-oauth-app.png"
 import addingCallbackUrlImg from "./img/getting-started-oauth-callback-url.png"
 import gettingClientIdSecretImg from "./img/getting-started-oauth-clientid-secret.png"
@@ -8,13 +9,12 @@ import startAppAndSignInImg from "./img/getting-started-app-start.png"
 import githubAuthCredentials from "./img/getting-started-github-auth.png"
 import nextAuthUserLoggedIn from "./img/getting-started-nextauth-success.png"
 
-
 We know, authentication is hard. Is a rabbit hole and it's easy to get lost on it. The goal of making NextAuth.js is that you can add authentication easily to your project with just a few lines of code.
 
 The easiest way is to setup NextAuth.js with an [OAuth](https://en.wikipedia.org/wiki/OAuth) provider. In this tutorial we'll be setting NextAuth.js in a **Next.js app** to be able to login with **Github**.
 
 :::info
-NextAuth.js comes with a long list of [built-in providers](/reference/Providers/) (Google, Facebook, Twitter, etc...) you can also integrate it with your own OAuth service easily by [building a custom provider](/beta/guides/oauth/custom-provider). NextAuth.js can integrate as well with other frameworks like SvelteKit and Gatsby.
+NextAuth.js comes with a long list of [built-in providers](/reference/Providers/) (Google, Facebook, Twitter, etc...) you can also integrate it with your own OAuth service easily by [building a custom provider](/guides/oauth/custom-provider). NextAuth.js can integrate as well with other frameworks like SvelteKit and Gatsby.
 :::
 
 ## 1. Configuring NextAuth.js
@@ -63,7 +63,7 @@ $ openssl rand -base64 32
 or https://generate-secret.vercel.app/32 to generate a random value for it.
 
 :::info
-NextAuth.js is extremely customizable, [our guides section](/beta/guides/overview) will teach you how you can set it up to handle auth in different ways. All the possible configuration options are [listed here](/reference/server/configuration).
+NextAuth.js is extremely customizable, [our guides section](/guides/overview) will teach you how you can set it up to handle auth in different ways. All the possible configuration options are [listed here](/reference/server/configuration).
 :::
 
 ### Exposing the session via provider
@@ -171,10 +171,13 @@ Next you'll be presented with a screen to add details about your new application
 <img src={addingCallbackUrlImg} />
 
 The callback URL we insert should have the following pattern:
+
 ```
 [origin]/api/auth/callback/[provider]
 ```
+
 In this case, given we want to try our authentication working locally on our machine and we're using **Github** as our OAuth provider, it'll be:
+
 ```
 http://localhost:3000/api/auth/callback/github
 ```
@@ -194,6 +197,7 @@ The Client ID is always there, a public identifier of your OAuth application wit
 :::
 
 Now let's copy both the Client ID and Client Secret and paste them in an environment file in the root of your project like so:
+
 ```title=".env.local"
 GITHUB_ID=12345
 GITHUB_SECRET=67890
@@ -205,11 +209,12 @@ Cool! We have finished the configuring our OAuth provider, now let's wire all to
 As noted previously, NextAuth.js has built-in support for multiple OAuth providers, <a href="">here the full list</a>. You can also easily build your own in case the provider you need is not on the list.
 
 Note that, for each provider, the configuration process will be similar to what we just did:
+
 1. Log in to the provider
 2. Create create your OAuth application within it
 3. Set the callback URL
 4. Get the Client ID and Generate a Client Secret
-:::
+   :::
 
 ## 3. Wiring all together
 
@@ -230,9 +235,11 @@ export default NextAuth({
 ```
 
 Great! We're now ready to run our application locally. Start the Next.js app by running on your terminal the following command and navigating to [`http://localhost:3000`](http://localhost:3000):
+
 ```
 $ npm run next dev
 ```
+
 You should see the following page:
 
 <img src={startAppAndSignInImg} />
@@ -257,20 +264,23 @@ You can create your own Sign In page instead of using the default one from NextA
 
 It's normal to test your application under different environments. Usually you'll have a development environment (when you run the application locally in your machine), a staging environment (for teams members to try the application) and a production environment.
 
-For each environment, you're going to need to create an OAuth application in your provider respectively, as [we did previously](#2-configuring-oauth-provider), and point the **callback URL** to it. 
+For each environment, you're going to need to create an OAuth application in your provider respectively, as [we did previously](#2-configuring-oauth-provider), and point the **callback URL** to it.
 
 For instance in the previous section, we pointed the callback URL to:
+
 ```
 http://localhost:3000/api/auth/callback/github
-``` 
+```
+
 as we wanted to test our application in the development environment.
 
 If we were to deploy our app to production, we would need to create again a new **OAuth App** in Github (calling it something like "Van life – prod") and point the **callback URL** to our production domain:
+
 ```
 https://example.com/api/auth/callback/github
 ```
 
-Finally, we would need just to point the environment variables we set ( `GITHUB_ID` and `GITHUB_SECRET` ) to the credentials of the OAuth app we want our application to run against. 
+Finally, we would need just to point the environment variables we set ( `GITHUB_ID` and `GITHUB_SECRET` ) to the credentials of the OAuth app we want our application to run against.
 
 ### Setting up `NEXTAUTH_URL`
 
@@ -287,5 +297,3 @@ To set environment variables on Vercel, you can use the [dashboard](https://verc
 :::
 
 For more information please check out our [deployment page](/deployment).
-
-
