@@ -18,6 +18,7 @@ module.exports = {
       parserOptions: {
         project: [
           path.resolve(__dirname, "./packages/**/tsconfig.eslint.json"),
+          path.resolve(__dirname, "./packages/frameworks/**/tsconfig.json"),
           path.resolve(__dirname, "./apps/**/tsconfig.json"),
         ],
       },

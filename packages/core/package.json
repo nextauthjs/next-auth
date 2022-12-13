@@ -1,0 +1,75 @@
+{
+  "name": "@auth/core",
+  "version": "0.1.1",
+  "description": "Authentication for the web.",
+  "homepage": "https://next-auth.js.org",
+  "repository": "https://github.com/nextauthjs/next-auth.git",
+  "author": "Balázs Orbán <info@balazsorban.com>",
+  "contributors": [
+    "Balázs Orbán <info@balazsorban.com>",
+    "Nico Domino <yo@ndo.dev>",
+    "Lluis Agusti <hi@llu.lu>",
+    "Thang Huu Vu <thvu@hey.com>",
+    "Iain Collins <me@iaincollins.com"
+  ],
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "adapters.*",
+    "index.*",
+    "jwt",
+    "lib",
+    "providers",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    },
+    "./adapters": {
+      "types": "./adapters.d.ts"
+    },
+    "./jwt": {
+      "types": "./jwt/index.d.ts",
+      "import": "./jwt/index.js"
+    },
+    "./providers/*": {
+      "types": "./providers/*.d.ts",
+      "import": "./providers/*.js"
+    }
+  },
+  "license": "ISC",
+  "dependencies": {
+    "@panva/hkdf": "1.0.2",
+    "cookie": "0.5.0",
+    "jose": "4.11.1",
+    "oauth4webapi": "2.0.4",
+    "preact": "10.11.3",
+    "preact-render-to-string": "5.2.3"
+  },
+  "peerDependencies": {
+    "nodemailer": "6.8.0"
+  },
+  "peerDependenciesMeta": {
+    "nodemailer": {
+      "optional": true
+    }
+  },
+  "scripts": {
+    "build": "pnpm clean && tsc && pnpm css",
+    "clean": "rm -rf adapters.* index.* jwt lib providers",
+    "css": "node ./scripts/generate-css.js",
+    "dev": "pnpm css && tsc -w"
+  },
+  "devDependencies": {
+    "@next-auth/tsconfig": "workspace:*",
+    "@types/node": "18.11.10",
+    "@types/nodemailer": "6.4.6",
+    "@types/react": "18.0.26",
+    "autoprefixer": "10.4.13",
+    "cssnano": "5.1.14",
+    "postcss": "8.4.19",
+    "postcss-nested": "6.0.0"
+  }
+}
