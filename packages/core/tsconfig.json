@@ -19,6 +19,8 @@
     "strict": false,
     "strictNullChecks": true,
     "stripInternal": true,
+    "declarationMap": true,
+    "declaration": true,
   },
   "include": [
     "src/**/*",

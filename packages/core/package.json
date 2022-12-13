@@ -15,14 +15,18 @@
   ],
   "type": "module",
   "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     },
     "./providers/*": {
-      "import": "./dist/providers/*.js",
-      "types": "./dist/providers/*.d.ts"
+      "types": "./dist/providers/*.d.ts",
+      "import": "./dist/providers/*.js"
     }
   },
   "license": "ISC",
