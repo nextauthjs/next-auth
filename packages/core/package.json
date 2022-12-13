@@ -32,8 +32,7 @@
     "jose": "4.11.1",
     "oauth4webapi": "2.0.4",
     "preact": "10.11.3",
-    "preact-render-to-string": "5.2.3",
-    "uuid": "9.0.0"
+    "preact-render-to-string": "5.2.3"
   },
   "peerDependencies": {
     "nodemailer": "6.8.0"

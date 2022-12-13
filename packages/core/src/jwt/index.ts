@@ -1,6 +1,5 @@
 import { EncryptJWT, jwtDecrypt } from "jose"
 import hkdf from "@panva/hkdf"
-import { v4 as uuid } from "uuid"
 import { SessionStore } from "../lib/cookie"
 import type { JWT, JWTDecodeParams, JWTEncodeParams, JWTOptions } from "./types"
 import type { LoggerInstance } from ".."
@@ -19,7 +18,7 @@ export async function encode(params: JWTEncodeParams) {
     .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
     .setIssuedAt()
     .setExpirationTime(now() + maxAge)
-    .setJti(uuid())
+    .setJti(crypto.randomUUID())
     .encrypt(encryptionSecret)
 }
 
