@@ -21,11 +21,11 @@ The NextAuth.js client library makes it easy to interact with sessions from Reac
 :::tip
 The session data returned to the client does not contain sensitive information such as the Session Token or OAuth tokens. It contains a minimal payload that includes enough data needed to display information on a page about the user who is signed in for presentation purposes (e.g name, email, image).
 
-You can use the [session callback](/configuration/callbacks#session-callback) to customize the session object returned to the client if you need to return additional data in the session object.
+You can use the [session callback](../configuration/callbacks#session-callback) to customize the session object returned to the client if you need to return additional data in the session object.
 :::
 
 :::note
-The `expires` value is rotated, meaning whenever the session is retrieved from the [REST API](/getting-started/rest-api), this value will be updated as well, to avoid session expiry.
+The `expires` value is rotated, meaning whenever the session is retrieved from the [REST API](../getting-started/rest-api), this value will be updated as well, to avoid session expiry.
 :::
 
 ---
@@ -157,7 +157,7 @@ You can create your own session management solution using data fetching librarie
 ## getSession()
 
 - Client Side: **Yes**
-- Server Side: **No** (See: [`unstable_getServerSession()`](/configuration/nextjs#unstable_getserversession)
+- Server Side: **No** (See: [`unstable_getServerSession()`](../configuration/nextjs#unstable_getserversession)
 
 NextAuth.js provides a `getSession()` helper which should be called **client side only** to return the current active session.
 
@@ -178,7 +178,7 @@ async function myFunction() {
 }
 ```
 
-Read the tutorial [securing pages and API routes](/tutorials/securing-pages-and-api-routes) to know how to fetch the session in server side calls using `unstable_getServerSession()`.
+Read the tutorial [securing pages and API routes](../tutorials/securing-pages-and-api-routes) to know how to fetch the session in server side calls using `unstable_getServerSession()`.
 
 ---
 
@@ -300,7 +300,7 @@ e.g.
 - `signIn('google', { callbackUrl: 'http://localhost:3000/bar' })`
 - `signIn('email', { email, callbackUrl: 'http://localhost:3000/foo' })`
 
-The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect-callback). By default it requires the URL to be an absolute URL at the same host name, or a relative url starting with a slash. If it does not match it will redirect to the homepage. You can define your own [redirect callback](/configuration/callbacks#redirect-callback) to allow other URLs.
+The URL must be considered valid by the [redirect callback handler](../configuration/callbacks#redirect-callback). By default it requires the URL to be an absolute URL at the same host name, or a relative url starting with a slash. If it does not match it will redirect to the homepage. You can define your own [redirect callback](../configuration/callbacks#redirect-callback) to allow other URLs.
 
 ### Using the `redirect: false` option
 
@@ -354,7 +354,7 @@ e.g.
 - `signIn("auth0", null, { login_hint: "info@example.com" })` _hints the e-mail address to the provider_
 
 :::note
-You can also set these parameters through [`provider.authorizationParams`](/configuration/providers/oauth#options).
+You can also set these parameters through [`provider.authorizationParams`](../configuration/providers/oauth#options).
 :::
 
 :::note
@@ -384,7 +384,7 @@ As with the `signIn()` function, you can specify a `callbackUrl` parameter by pa
 
 e.g. `signOut({ callbackUrl: 'http://localhost:3000/foo' })`
 
-The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect-callback). By default, it requires the URL to be an absolute URL at the same host name, or you can also supply a relative URL starting with a slash. If it does not match it will redirect to the homepage. You can define your own [redirect callback](/configuration/callbacks#redirect-callback) to allow other URLs.
+The URL must be considered valid by the [redirect callback handler](../configuration/callbacks#redirect-callback). By default, it requires the URL to be an absolute URL at the same host name, or you can also supply a relative URL starting with a slash. If it does not match it will redirect to the homepage. You can define your own [redirect callback](../configuration/callbacks#redirect-callback) to allow other URLs.
 
 ### Using the `redirect: false` option
 
@@ -442,7 +442,7 @@ If every one of your pages needs to be protected, you can do this in `getInitial
 
 The session state is automatically synchronized across all open tabs/windows and they are all updated whenever they gain or lose focus or the state changes (e.g. a user signs in or out) when `refetchOnWindowFocus` is `true`.
 
-If you have session expiry times of 30 days (the default) or more then you probably don't need to change any of the default options in the Provider. If you need to, you can trigger an update of the session object across all tabs/windows by calling [`getSession()`](/getting-started/client#getsession) from a client side function.
+If you have session expiry times of 30 days (the default) or more then you probably don't need to change any of the default options in the Provider. If you need to, you can trigger an update of the session object across all tabs/windows by calling [`getSession()`](../getting-started/client#getsession) from a client side function.
 
 However, if you need to customize the session behavior and/or are using short session expiry times, you can pass options to the provider to customize the behavior of the `useSession()` hook.
 
@@ -489,7 +489,7 @@ When `refetchInterval` is set to `0` (the default) there will be no session poll
 
 If set to any value other than zero, it specifies in seconds how often the client should contact the server to update the session state. If the session state has expired when it is triggered, all open tabs/windows will be updated to reflect this.
 
-The value for `refetchInterval` should always be lower than the value of the session `maxAge` [session option](/configuration/options#session).
+The value for `refetchInterval` should always be lower than the value of the session `maxAge` [session option](../configuration/options#session).
 
 By default, session polling will keep trying, even when the device has no internet access. To circumvent this, you can also set `refetchWhenOffline` to `false`. This will use [`navigator.onLine`](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/onLine) to only poll when the device is online.
 
@@ -506,7 +506,7 @@ See [**the Next.js documentation**](https://nextjs.org/docs/advanced-features/cu
 :::
 
 ### Custom base path
-When your Next.js application uses a custom base path, set the `NEXTAUTH_URL` environment variable to the route to the API endpoint in full - as in the example below and as explained [here](/configuration/options#nextauth_url).
+When your Next.js application uses a custom base path, set the `NEXTAUTH_URL` environment variable to the route to the API endpoint in full - as in the example below and as explained [here](../configuration/options#nextauth_url).
 
 Also, make sure to pass the `basePath` page prop to the `<SessionProvider>` – as in the example below – so your custom base path is fully configured and used by NextAuth.js.
 

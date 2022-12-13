@@ -18,7 +18,7 @@ npm install next-auth
 ```
 
 :::info
-If you are using TypeScript, NextAuth.js comes with its types definitions within the package. To learn more about TypeScript for `next-auth`, check out the [TypeScript documentation](/getting-started/typescript)
+If you are using TypeScript, NextAuth.js comes with its types definitions within the package. To learn more about TypeScript for `next-auth`, check out the [TypeScript documentation](../getting-started/typescript)
 :::
 
 
@@ -48,12 +48,12 @@ All requests to `/api/auth/*` (`signIn`, `callback`, `signOut`, etc.) will autom
 
 **Further Reading**:
 
-- See the [options documentation](/configuration/options) for more details on how to configure providers, databases and other options.
-- Read more about how to add authentication providers [here](/providers).
+- See the [options documentation](../configuration/options) for more details on how to configure providers, databases and other options.
+- Read more about how to add authentication providers [here](../providers).
 
 #### Configure Shared session state
 
-To be able to use `useSession` first you'll need to expose the session context, [`<SessionProvider />`](/getting-started/client#sessionprovider), at the top level of your application:
+To be able to use `useSession` first you'll need to expose the session context, [`<SessionProvider />`](../getting-started/client#sessionprovider), at the top level of your application:
 
 ```jsx title="pages/_app.jsx" showLineNumbers
 import { SessionProvider } from "next-auth/react"
@@ -73,12 +73,12 @@ export default function App({
 Instances of `useSession` will then have access to the session data and status. The `<SessionProvider />` also takes care of keeping the session updated and synced between browser tabs and windows.
 
 :::tip
-Check out the [client documentation](/getting-started/client) to see how you can improve the user experience and page performance by using the NextAuth.js client.
+Check out the [client documentation](../getting-started/client) to see how you can improve the user experience and page performance by using the NextAuth.js client.
 :::
 
 ### Frontend - Add React Hook
 
-The [`useSession()`](/getting-started/client#usesession) React Hook in the NextAuth.js client is the easiest way to check if someone is signed in.
+The [`useSession()`](../getting-started/client#usesession) React Hook in the NextAuth.js client is the easiest way to check if someone is signed in.
 
 ```jsx title="components/login-btn.jsx" showLineNumbers
 import { useSession, signIn, signOut } from "next-auth/react"
@@ -106,7 +106,7 @@ You can use the `useSession` hook from anywhere in your application (e.g. in a h
 
 ### Backend - API Route
 
-To protect an API Route, you can use the [`unstable_getServerSession()`](/configuration/nextjs#unstable_getserversession) method.
+To protect an API Route, you can use the [`unstable_getServerSession()`](../configuration/nextjs#unstable_getserversession) method.
 
 ```javascript title="pages/api/restricted.js" showLineNumbers
 import { unstable_getServerSession } from "next-auth/next"
@@ -132,9 +132,9 @@ export default async (req, res) => {
 
 #### Using NextAuth.js Callbacks
 
-NextAuth.js allows you to hook into various parts of the authentication flow via our [built-in callbacks](/configuration/callbacks).
+NextAuth.js allows you to hook into various parts of the authentication flow via our [built-in callbacks](../configuration/callbacks).
 
-For example, to pass a value from the sign-in to the frontend, client-side, you can use a combination of the [`session`](/configuration/callbacks#session-callback) and [`jwt`](/configuration/callbacks#jwt-callback) callback like so:
+For example, to pass a value from the sign-in to the frontend, client-side, you can use a combination of the [`session`](../configuration/callbacks#session-callback) and [`jwt`](../configuration/callbacks#jwt-callback) callback like so:
 
 ```javascript title="pages/api/auth/[...nextauth].js"
 ...
@@ -157,7 +157,7 @@ callbacks: {
 ...
 ```
 
-Now whenever you call [`getSession`](/getting-started/client#getsession) or [`useSession`](/getting-started/client#usesession), the data object which is returned will include the `accessToken` value.
+Now whenever you call [`getSession`](../getting-started/client#getsession) or [`useSession`](../getting-started/client#usesession), the data object which is returned will include the `accessToken` value.
 
 ```jsx title="components/accessToken.jsx" showLineNumbers
 import { useSession, signIn, signOut } from "next-auth/react"
@@ -173,11 +173,11 @@ export default function Component() {
 
 ## Configuring callback URL (OAuth only)
 
-If you are using an OAuth provider either through one of our [built-in providers](/configuration/providers/oauth)
-or through a [custom provider](/configuration/providers/oauth#using-a-custom-provider), you'll need to configure
+If you are using an OAuth provider either through one of our [built-in providers](../configuration/providers/oauth)
+or through a [custom provider](../configuration/providers/oauth#using-a-custom-provider), you'll need to configure
 a callback URL in your provider's settings. Each provider has a "Configuration" section that should give you pointers on how to do that.
 
-Follow [these steps](/configuration/providers/oauth#how-to) to learn how to integrate with an OAuth provider.
+Follow [these steps](../configuration/providers/oauth#how-to) to learn how to integrate with an OAuth provider.
 
 ## Deploying to production
 
@@ -193,4 +193,4 @@ In production, this needs to be set as an environment variable on the service yo
 To set environment variables on Vercel, you can use the [dashboard](https://vercel.com/dashboard) or the `vercel env pull` [command](https://vercel.com/docs/build-step#development-environment-variables).
 :::
 
-For more information please check out our [deployment page](/deployment).
+For more information please check out our [deployment page](../deployment).

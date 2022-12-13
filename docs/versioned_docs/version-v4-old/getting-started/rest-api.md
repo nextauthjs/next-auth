@@ -20,7 +20,7 @@ Learn more about this in the [OAuth specification](https://datatracker.ietf.org/
 
 In case of using the Email provider, calling this endpoint will send a sign-in URL to the user's e-mail address.
 
-This endpoint is also used by the [`signIn`](/getting-started/client#signin) method internally.
+This endpoint is also used by the [`signIn`](../getting-started/client#signin) method internally.
 
 #### `GET`/`POST` /api/auth/callback/:provider
 
@@ -36,17 +36,17 @@ Displays the built-in/unbranded sign out page.
 
 #### `POST` /api/auth/signout
 
-Handles signing the user out - this is a `POST` submission to prevent malicious links from triggering signing a user out without their consent. The user session will be invalidated/removed from the cookie/database, depending on the flow you chose to [store sessions](/configuration/options#session).
+Handles signing the user out - this is a `POST` submission to prevent malicious links from triggering signing a user out without their consent. The user session will be invalidated/removed from the cookie/database, depending on the flow you chose to [store sessions](../configuration/options#session).
 
 The `POST` submission requires CSRF token from `/api/auth/csrf`.
 
-This endpoint is also used by the [`signOut`](/getting-started/client#signout) method internally.
+This endpoint is also used by the [`signOut`](../getting-started/client#signout) method internally.
 
 #### `GET` /api/auth/session
 
 Returns client-safe session object - or an empty object if there is no session.
 
-The contents of the session object that is returned are configurable with the [`session` callback](/configuration/callbacks#session-callback).
+The contents of the session object that is returned are configurable with the [`session` callback](../configuration/callbacks#session-callback).
 
 #### `GET` /api/auth/csrf
 
