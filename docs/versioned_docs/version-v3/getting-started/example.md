@@ -15,7 +15,7 @@ The easiest way to get started is to clone the [example app](https://github.com/
 
 To add NextAuth.js to a project create a file called `[...nextauth].js` in `pages/api/auth`.
 
-[Read more about how to add authentication providers.](/providers)
+[Read more about how to add authentication providers.](../providers)
 
 ```javascript title="pages/api/auth/[...nextauth].js"
 import NextAuth from "next-auth"
@@ -39,7 +39,7 @@ export default NextAuth({
 All requests to `/api/auth/*` (signin, callback, signout, etc) will automatically be handed by NextAuth.js.
 
 :::tip
-See the [options documentation](/configuration/options) for how to configure providers, databases and other options.
+See the [options documentation](../configuration/options) for how to configure providers, databases and other options.
 :::
 
 ### Add React Hook
@@ -92,7 +92,7 @@ export default function App({ Component, pageProps }) {
 ```
 
 :::tip
-Check out the [client documentation](/getting-started/client) to see how you can improve the user experience and page performance by using the NextAuth.js client.
+Check out the [client documentation](./client) to see how you can improve the user experience and page performance by using the NextAuth.js client.
 :::
 
 ### Deploying to production

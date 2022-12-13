@@ -9,12 +9,12 @@ NextAuth.js is a complete open source authentication solution for [Next.js](http
 
 It is designed from the ground up to support Next.js and Serverless.
 
-[Check out the example code](/getting-started/example) to see how easy it is to use NextAuth.js for authentication.
+[Check out the example code](./example) to see how easy it is to use NextAuth.js for authentication.
 
 ### Flexible and easy to use
 
 - Designed to work with any OAuth service, it supports OAuth 1.0, 1.0A and 2.0
-- Built-in support for [many popular sign-in services](/configuration/providers/oauth)
+- Built-in support for [many popular sign-in services](../configuration/providers/oauth)
 - Supports email / passwordless authentication
 - Supports stateless authentication with any backend (Active Directory, LDAP, etc)
 - Supports both JSON Web Tokens and database sessions
@@ -26,7 +26,7 @@ NextAuth.js can be used with or without a database.
 
 - An open source solution that allows you to keep control of your data
 - Supports Bring Your Own Database (BYOD) and can be used with any database
-- Built-in support for [MySQL, MariaDB, Postgres, SQL Server, MongoDB and SQLite](/configuration/databases)
+- Built-in support for [MySQL, MariaDB, Postgres, SQL Server, MongoDB and SQLite](../configuration/databases)
 - Works great with databases from popular hosting providers
 - Can also be used _without a database_ (e.g. OAuth + JWT)
 
@@ -48,8 +48,8 @@ Advanced options allow you to define your own routines to handle controlling wha
 
 ## Credits
 
-NextAuth.js is an open source project that is only possible [thanks to contributors](/contributors).
+NextAuth.js is an open source project that is only possible [thanks to contributors](../contributors).
 
 ## Getting Started
 
-[Check out the example code](/getting-started/example) to see how easy it is to use NextAuth.js for authentication.
+[Check out the example code](./example) to see how easy it is to use NextAuth.js for authentication.
