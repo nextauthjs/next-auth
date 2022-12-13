@@ -1,12 +1,9 @@
 import type { OAuthConfig, OAuthUserConfig } from "."
 
 interface HubSpotProfile extends Record<string, any> {
-  // TODO: figure out additional fields, for now using
   // https://legacydocs.hubspot.com/docs/methods/oauth2/get-access-token-information
-
   user: string
   user_id: string
-
   hub_domain: string
   hub_id: string
 }

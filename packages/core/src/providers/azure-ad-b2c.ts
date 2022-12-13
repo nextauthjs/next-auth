@@ -34,7 +34,6 @@ export default function AzureADB2C<P extends AzureB2CProfile>(
         id: profile.sub,
         name: profile.name,
         email: profile.emails[0],
-        // TODO: Find out how to retrieve the profile picture
         image: null,
       }
     },

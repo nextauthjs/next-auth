@@ -1,6 +1,5 @@
 import { UnknownError } from "../errors"
 
-// TODO: better typing
 /** Makes sure that error is always serializable */
 function formatError(o: unknown): unknown {
   if (o instanceof Error && !(o instanceof UnknownError)) {

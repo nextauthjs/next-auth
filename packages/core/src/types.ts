@@ -550,7 +550,7 @@ export interface ResponseInternal<
   status?: number
   headers?: Headers | HeadersInit
   body?: Body
-  redirect?: URL | string // TODO: refactor to only allow URL
+  redirect?: URL | string
   cookies?: Cookie[]
 }
 
