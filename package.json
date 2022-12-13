@@ -11,6 +11,7 @@
     "clean": "turbo run clean --no-cache",
     "dev:db": "turbo run dev --parallel --continue --filter=next-auth-app...",
     "dev": "turbo run dev --parallel --continue --filter=next-auth-app... --filter=!./packages/adapter-*",
+    "dev:kit": "turbo run dev --parallel --continue --filter=sveltekit-nextauth...",
     "dev:docs": "turbo run dev --filter=next-auth-docs",
     "email": "cd apps/dev && pnpm email",
     "release": "release",
@@ -41,7 +42,8 @@
   },
   "release": {
     "packageDirectories": [
-      "packages"
+      "packages",
+      "packages/frameworks"
     ]
   },
   "engines": {
@@ -69,5 +71,10 @@
       "type": "opencollective",
       "url": "https://opencollective.com/nextauth"
     }
-  ]
+  ],
+  "pnpm": {
+    "overrides": {
+      "undici": "5.11.0"
+    }
+  }
 }
