@@ -1,5 +1,5 @@
 import type { Handle } from '@sveltejs/kit';
-import { AUTH_SECRET, NEXTAUTH_URL, AUTH_TRUST_HOST, VERCEL } from '$env/static/private';
+import { AUTH_SECRET, AUTH_TRUST_HOST, VERCEL } from '$env/static/private';
 import { dev } from '$app/environment';
 
 import { AuthHandler, type AuthOptions, type AuthAction } from 'next-auth-core';
@@ -30,26 +30,36 @@ interface SvelteKitAuthOptions extends AuthOptions {
 	prefix?: string;
 }
 
-const actions = [ "providers", "session", "csrf", "signin", "signout", "callback", "verify-request", "error", "_log" ]
+const actions: AuthAction[] = [
+	'providers',
+	'session',
+	'csrf',
+	'signin',
+	'signout',
+	'callback',
+	'verify-request',
+	'error',
+	'_log'
+];
 
 /** The main entry point to next-auth-sveltekit */
-function SvelteKitAuth({prefix = '/auth', ...options }: SvelteKitAuthOptions) {
-
+function SvelteKitAuth({ prefix = '/auth', ...options }: SvelteKitAuthOptions) {
 	options.secret ??= AUTH_SECRET;
-	options.trustHost ??= !!(NEXTAUTH_URL ?? AUTH_TRUST_HOST ?? VERCEL ?? dev);
+	options.trustHost ??= !!(AUTH_TRUST_HOST ?? VERCEL ?? dev);
 
 	return (({ event, resolve }) => {
 		const [action] = event.url.pathname.slice(prefix.length + 1).split('/');
-		const isAuth = actions.includes(action)
-		
-		event.locals.getSession = async () => getServerSession(event.request, options)
-    
+		const isAuth = actions.includes(action as AuthAction);
+
+		if (!event.locals.getSession)
+			event.locals.getSession = async () => getServerSession(event.request, options);
+
 		if (!event.url.pathname.startsWith(prefix + '/') || !isAuth) {
-			return resolve(event)
+			return resolve(event);
 		}
 
 		return AuthHandler(event.request, options);
-  }) satisfies Handle
+	}) satisfies Handle;
 }
 
 export default SvelteKitAuth;
