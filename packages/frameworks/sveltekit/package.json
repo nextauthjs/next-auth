@@ -1,6 +1,14 @@
 {
   "name": "@auth/sveltekit",
-  "version": "0.0.1",
+  "version": "0.0.0",
+  "author": "Thang Huu Vu <hi@thvu.dev>",
+  "contributors": [
+    "Thang Huu Vu <hi@thvu.dev>",
+    "Balázs Orbán <info@balazsorban.com>",
+    "Nico Domino <yo@ndo.dev>",
+    "Lluis Agusti <hi@llu.lu>",
+    "Iain Collins <me@iaincollins.com"
+  ],
   "scripts": {
     "dev": "svelte-package -w",
     "clean": "rm -rf client.* index.* package",
