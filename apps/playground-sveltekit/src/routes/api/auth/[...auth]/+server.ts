@@ -10,7 +10,7 @@ import {
 } from "$env/static/private"
 import type { AuthOptions } from "next-auth-core";
 
-export const authOptions: AuthOptions = {
+export const _authOptions: AuthOptions = {
   providers: [
     GitHub({ clientId: GITHUB_CLIENT_ID, clientSecret: GITHUB_CLIENT_SECRET }),
     Google({ clientId: GOOGLE_CLIENT_ID, clientSecret: GOOGLE_CLIENT_SECRET }),
@@ -25,4 +25,4 @@ export const authOptions: AuthOptions = {
   debug: true,
 }
 
-export const { GET, POST } = SvelteKitAuth(authOptions)
+export const { GET, POST } = SvelteKitAuth(_authOptions)

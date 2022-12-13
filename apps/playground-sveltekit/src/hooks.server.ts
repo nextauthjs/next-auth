@@ -1,15 +1,12 @@
 import type { Handle } from "@sveltejs/kit"
-import { authOptions } from "./routes/api/auth/[...nextauth]/+server"
+import { _authOptions } from "./routes/api/auth/[...auth]/+server"
 import { getServerSession } from 'next-auth-sveltekit'
 
 export const handle: Handle = async function handle({
   event,
   resolve,
 }): Promise<Response> {
-  const session = await getServerSession(event.request, authOptions) as App.Session
-  if (session) {
-    event.locals.session = session
-  }
+  event.locals.session = await getServerSession(event.request, _authOptions) as App.Session
 
   return resolve(event)
 }
