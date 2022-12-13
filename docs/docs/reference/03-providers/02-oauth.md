@@ -322,6 +322,6 @@ You only need to add three changes:
    - Make sure you use a named default export, like this: `export default function YourProvider`
    - Add two SVG's of the provider logo, like `google-dark.svg` (dark mode) and `google.svg` (light mode), to the `/packages/next-auth/provider-logos/` directory as well as the styling config to the provider config object. See existing provider for example
 2. Add provider documentation: [`/docs/providers/{provider}.md`](https://github.com/nextauthjs/next-auth/tree/main/docs/docs/providers)
-3. Add the new provider name to the `Provider type` dropdown options in [`the provider issue template`](<[http](https://github.com/nextauthjs/next-auth/edit/main/.github/ISSUE_TEMPLATE/2_bug_provider.yml)>)
+3. Add the new provider name to the `Provider type` dropdown options in [`the provider issue template`](https://github.com/nextauthjs/next-auth/edit/main/.github/ISSUE_TEMPLATE/2_bug_provider.yml)
 
 That's it! 🎉 Others will be able to discover and use this provider much more easily now!
