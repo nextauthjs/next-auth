@@ -8,7 +8,7 @@ import logger, { setLogger } from "./utils/logger"
 
 import type { ErrorType } from "./lib/pages/error"
 import type { AuthOptions, RequestInternal, ResponseInternal } from "./types"
-import { UntrustedHost } from "./errors"
+import { UntrustedHost } from "./lib/errors"
 
 export * from "./types"
 

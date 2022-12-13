@@ -1,4 +1,4 @@
-import { OAuthCallbackError } from "../../errors"
+import { OAuthCallbackError } from "../errors"
 import { useNonce } from "./nonce-handler"
 import { usePKCECodeVerifier } from "./pkce-handler"
 import { useState } from "./state-handler"

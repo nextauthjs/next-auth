@@ -1,4 +1,4 @@
-import { AccountNotLinkedError } from "../errors"
+import { AccountNotLinkedError } from "./errors"
 import { fromDate } from "../utils/date"
 
 import type { Account, InternalOptions, User } from ".."

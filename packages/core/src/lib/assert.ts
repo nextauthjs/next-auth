@@ -7,7 +7,7 @@ import {
   MissingAuthorize,
   MissingSecret,
   UnsupportedStrategy,
-} from "../errors"
+} from "./errors"
 import { defaultCookies } from "./cookie"
 
 import type { AuthOptions, RequestInternal } from ".."

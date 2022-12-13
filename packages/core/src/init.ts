@@ -1,4 +1,4 @@
-import { adapterErrorHandler, eventsErrorHandler } from "./errors"
+import { adapterErrorHandler, eventsErrorHandler } from "./lib/errors"
 import * as jwt from "./jwt"
 import { createCallbackUrl } from "./lib/callback-url"
 import * as cookie from "./lib/cookie"
