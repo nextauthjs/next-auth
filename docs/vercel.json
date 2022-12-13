@@ -49,5 +49,18 @@
       "destination": "/adapters/overview",
       "permanent": true
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "key": "",
+          "value": "sveltekit.authjs.dev"
+        }
+      ],
+      "destination": "/reference/sveltekit/:path*"
+    }
   ]
 }
