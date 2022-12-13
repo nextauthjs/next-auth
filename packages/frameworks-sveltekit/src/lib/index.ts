@@ -3,10 +3,10 @@ import { dev } from "$app/environment"
 
 import { AuthHandler, type AuthOptions, type AuthAction } from "@auth/core"
 
-export const getServerSession = async (
+export async function getServerSession(
   req: Request,
   options: AuthOptions
-): Promise<unknown> => {
+): Promise<unknown> {
   options.secret ??= AUTH_SECRET
   options.trustHost ??= true
 
