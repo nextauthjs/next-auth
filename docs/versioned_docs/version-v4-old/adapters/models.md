@@ -48,7 +48,7 @@ erDiagram
 More information about each Model / Table can be found below.
 
 :::note
-You can [create your own adapter](/tutorials/creating-a-database-adapter) if you want to use NextAuth.js with a database that is not supported out of the box, or you have to change fields on any of the models.
+You can [create your own adapter](../tutorials/creating-a-database-adapter) if you want to use NextAuth.js with a database that is not supported out of the box, or you have to change fields on any of the models.
 :::
 
 ---
@@ -62,10 +62,10 @@ Email address is optional, but if one is specified for a User then it must be un
 :::note
 If a user first signs in with OAuth then their email address is automatically populated using the one from their OAuth profile, if the OAuth provider returns one.
 
-This provides a way to contact users and for users to maintain access to their account and sign in using email in the event they are unable to sign in with the OAuth provider in future (if the [Email Provider](/providers/email) is configured).
+This provides a way to contact users and for users to maintain access to their account and sign in using email in the event they are unable to sign in with the OAuth provider in future (if the [Email Provider](../providers/email) is configured).
 :::
 
-User creation in the database is automatic, and happens when the user is logging in for the first time with a provider. The default data saved is `id`, `name`, `email` and `image`. You can add more profile data by returning extra fields in your [OAuth provider's `profile()`](/configuration/providers/oauth#options) callback.
+User creation in the database is automatic, and happens when the user is logging in for the first time with a provider. The default data saved is `id`, `name`, `email` and `image`. You can add more profile data by returning extra fields in your [OAuth provider's `profile()`](../configuration/providers/oauth#options) callback.
 
 ## Account
 
@@ -77,7 +77,7 @@ In case of an OAuth 1.0 provider (like Twitter), you will have to look for `oaut
 
 A single User can have multiple Accounts, but each Account can only have one User.
 
-Linking Accounts to Users happen automatically, only when they have the same e-mail address, and the user is currently signed in. Check the [FAQ](/faq#security) for more information why this is a requirement.
+Linking Accounts to Users happen automatically, only when they have the same e-mail address, and the user is currently signed in. Check the [FAQ](../faq#security) for more information why this is a requirement.
 
 :::tip
 You can manually unlink accounts, if your adapter implements the `unlinkAccount` method. Make sure to take all the necessary security steps to avoid data loss.
@@ -89,7 +89,7 @@ Linking and unlinking accounts through an API is a planned feature: https://gith
 
 ## Session
 
-The Session model is used for database sessions. It is not used if JSON Web Tokens are enabled. Keep in mind, that you can use a database to persist Users and Accounts, and still use JWT for sessions. See the [`session.strategy`](/configuration/options#session) option.
+The Session model is used for database sessions. It is not used if JSON Web Tokens are enabled. Keep in mind, that you can use a database to persist Users and Accounts, and still use JWT for sessions. See the [`session.strategy`](../configuration/options#session) option.
 
 A single User can have multiple Sessions, each Session can only have one User.
 
@@ -106,7 +106,7 @@ A single User can have multiple open Verification Tokens (e.g. to sign in to dif
 It has been designed to be extendable for other verification purposes in the future (e.g. 2FA / short codes).
 
 :::note
-NextAuth.js makes sure that every token is usable only once, and by default has a short (1 day, can be configured by [`maxAge`](/configuration/providers/email#options)) lifetime. If your user did not manage to finish the sign-in flow in time, they will have to start the sign-in process again.
+NextAuth.js makes sure that every token is usable only once, and by default has a short (1 day, can be configured by [`maxAge`](../configuration/providers/email#options)) lifetime. If your user did not manage to finish the sign-in flow in time, they will have to start the sign-in process again.
 :::
 
 :::tip

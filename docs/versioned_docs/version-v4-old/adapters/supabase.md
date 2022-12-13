@@ -44,7 +44,7 @@ export default NextAuth({
 
 ### Create the `next_auth` schema in Supabase
 
-Setup your database as described in our main [schema](/adapters/models), by copying the SQL schema below in the Supabase [SQL Editor](https://app.supabase.com/project/_/sql).
+Setup your database as described in our main [schema](./models), by copying the SQL schema below in the Supabase [SQL Editor](https://app.supabase.com/project/_/sql).
 
 Alternatively you can select the NextAuth Quickstart card on the [SQL Editor page](https://app.supabase.com/project/_/sql), or [create a migration with the Supabase CLI](https://supabase.com/docs/guides/cli/local-development#database-migrations?utm_source=next-auth-docs&medium=referral&campaign=next-auth).
 
@@ -275,7 +275,9 @@ const { data, error } = await supabase.from("users").select("*")
 
 ## Usage with TypeScript
 
-You can pass types that were [generated with the Supabase CLI](/docs/reference/javascript/typescript-support#generating-types) to the Supabase Client to get enhanced type safety and auto completion.
+<!-- TODO: The following link is incorrect -->
+<!-- You can pass types that were [generated with the Supabase CLI](/docs/reference/javascript/typescript-support#generating-types) to the Supabase Client to get enhanced type safety and auto completion. -->
+You can pass types that were [generated with the Supabase CLI](/) to the Supabase Client to get enhanced type safety and auto completion.
 
 Creating a new supabase client object:
 

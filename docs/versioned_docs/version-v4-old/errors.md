@@ -68,7 +68,7 @@ This error occurs during the redirection to the authorization URL of the OAuth p
 1. Cookie handling
 Either PKCE code verifier or the generation of the CSRF token hash in the internal state failed.
 
-If set, check your [`cookies` configuration](/configuration/options#cookies), and make sure the browser is not blocking/restricting cookies.
+If set, check your [`cookies` configuration](./configuration/options#cookies), and make sure the browser is not blocking/restricting cookies.
 
 2. OAuth misconfiguration
 

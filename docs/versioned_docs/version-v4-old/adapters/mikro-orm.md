@@ -32,7 +32,7 @@ export default NextAuth({
 
 The MikroORM adapter ships with its own set of entities. If you'd like to extend them, you can optionally pass them to the adapter.
 
-> This schema is adapted for use in MikroORM and based upon our main [schema](/adapters/models)
+> This schema is adapted for use in MikroORM and based upon our main [schema](./models)
 
 ```typescript title="pages/api/auth/[...nextauth].ts"
 import config from "config/mikro-orm.ts"
