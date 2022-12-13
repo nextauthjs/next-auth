@@ -1,14 +1,12 @@
 /** @type {import("@docusaurus/types").Config} */
 module.exports = {
-  title: "NextAuth.js",
-  tagline: "Authentication for the web",
+  title: "Auth.js",
+  tagline: "Authentication for the web.",
   url: "https://next-auth.js.org",
   baseUrl: "/",
   favicon: "img/favicon.ico",
   organizationName: "nextauthjs",
   projectName: "next-auth",
-  // TODO: remove this once BETA is ready
-  onBrokenLinks: "log",
   themeConfig: {
     prism: {
       theme: require("prism-react-renderer/themes/vsDark"),
@@ -27,9 +25,9 @@ module.exports = {
       searchParameters: {},
     },
     navbar: {
-      title: "NextAuth.js",
+      title: "Auth.js",
       logo: {
-        alt: "NextAuth Logo",
+        alt: "Auth.js Logo",
         src: "img/logo/logo-xs.png",
       },
       items: [
@@ -80,17 +78,17 @@ module.exports = {
         },
       ],
     },
-    // announcementBar: {
-    //   id: "new-major-announcement",
-    //   content:
-    //     "The default documentation is for v4 which has been released to GA 🚨 migration to <b>v4</b> docs can be found <a href='/getting-started/upgrade-v4'>here</a> 👈 The old v3 docs can be found <a href='/v3/getting-started/introduction'>here</a>.",
-    //   backgroundColor: "#1786fb",
-    //   textColor: "#fff",
-    // },
+    announcementBar: {
+      id: "new-major-announcement",
+      content:
+        "NextAuth.js is becoming Auth.js! 🎉 We're creating Authentication for the Web. Everyone included. Starting with SvelteKit, check out the docs <a target='_blank' rel='noopener noreferrer' href='/reference/sveltekit'>here</a>.",
+      backgroundColor: "#000",
+      textColor: "#fff",
+    },
     footer: {
       links: [
         {
-          title: "About NextAuth.js",
+          title: "About Auth.js",
           items: [
             {
               label: "Introduction",
@@ -140,7 +138,7 @@ module.exports = {
           ],
         },
       ],
-      copyright: `NextAuth.js &copy; Iain Collins ${new Date().getFullYear()}`,
+      copyright: `Auth.js &copy; Balázs Orbán ${new Date().getFullYear()}`,
     },
     colorMode: {
       respectPrefersColorScheme: true,
