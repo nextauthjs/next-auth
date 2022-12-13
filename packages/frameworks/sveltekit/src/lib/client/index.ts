@@ -1,5 +1,5 @@
-import type { LiteralUnion, SignInOptions, SignInAuthorizationParams, SignOutParams } from "next-auth-core";
-import type { BuiltInProviderType, RedirectableProviderType } from "next-auth-core/providers/index";
+import type { LiteralUnion, SignInOptions, SignInAuthorizationParams, SignOutParams } from "@auth/core";
+import type { BuiltInProviderType, RedirectableProviderType } from "@auth/core/providers/index";
 
 /**
  * Client-side method to initiate a signin flow

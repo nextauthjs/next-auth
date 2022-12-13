@@ -1,9 +1,10 @@
 {
-	"name": "next-auth-sveltekit",
+	"name": "@auth/sveltekit",
 	"version": "0.0.1",
 	"scripts": {
 		"dev": "svelte-package -w",
-		"build": "vite build",
+    "clean": "rm -rf client index.* package",
+		"build": "pnpm clean && svelte-package && node ./scripts/postbuild.js",
 		"preview": "vite preview",
 		"test": "playwright test",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -34,5 +35,22 @@
 	"dependencies": {
 		"@auth/core": "workspace:*"
 	},
-	"type": "module"
+	"type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "client",
+    "index.*",
+    "src"
+  ],
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    },
+    "./client": {
+      "types": "./client/index.d.ts",
+      "import": "./client/index.js"
+    }
+  }
 }

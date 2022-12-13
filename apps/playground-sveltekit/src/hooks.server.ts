@@ -1,7 +1,7 @@
-import SvelteKitAuth from "next-auth-sveltekit"
-import GitHub from 'next-auth-core/providers/github';
-import Google from 'next-auth-core/providers/google';
-import Credentials from 'next-auth-core/providers/credentials';
+import SvelteKitAuth from "@auth/sveltekit"
+import GitHub from '@auth/core/providers/github';
+import Google from '@auth/core/providers/google';
+import Credentials from '@auth/core/providers/credentials';
 import {
   GITHUB_CLIENT_ID,
   GITHUB_CLIENT_SECRET,

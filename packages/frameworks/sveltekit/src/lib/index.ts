@@ -42,7 +42,7 @@ const actions: AuthAction[] = [
 	'_log'
 ];
 
-/** The main entry point to next-auth-sveltekit */
+/** The main entry point to @auth/sveltekit */
 function SvelteKitAuth({ prefix = '/auth', ...options }: SvelteKitAuthOptions) {
 	options.secret ??= AUTH_SECRET;
 	options.trustHost ??= !!(AUTH_TRUST_HOST ?? VERCEL ?? dev);
