@@ -16,7 +16,7 @@ interface SessionParams {
  * for Single Page App clients
  */
 
-export async function session(
+export default async function session(
   params: SessionParams
 ): Promise<ResponseInternal<Session | {}>> {
   const { options, sessionStore } = params

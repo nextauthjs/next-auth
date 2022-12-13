@@ -1,10 +1,11 @@
 // Note about signIn() and signOut() methods:
 //
-// On signIn() and signOut() we pass a "X-Auth-Return-Redirect" header
-// to request a response in JSON instead of HTTP as redirect URLs on other domains
-// are not returned to requests made using the fetch API in the browser,
-// and we need to ask the API to return the response as a JSON object
-// (the endpoint still defaults to returning an HTTP response with a redirect for non-JavaScript clients).
+// On signIn() and signOut() we pass 'json: true' to request a response in JSON
+// instead of HTTP as redirect URLs on other domains are not returned to
+// requests made using the fetch API in the browser, and we need to ask the API
+// to return the response as a JSON object (the end point still defaults to
+// returning an HTTP response with a redirect for non-JavaScript clients).
+//
 // We use HTTP POST requests with CSRF Tokens to protect against CSRF attacks.
 
 import * as React from "react"

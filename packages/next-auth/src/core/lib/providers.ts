@@ -5,8 +5,6 @@ import type {
   OAuthConfigInternal,
   OAuthConfig,
   Provider,
-  OAuthUserConfig,
-  OAuthEndpointType,
 } from "../../providers"
 
 /**
@@ -17,30 +15,32 @@ export default function parseProviders(params: {
   providers: Provider[]
   url: URL
   providerId?: string
-  runtime?: "web" | "nodejs"
 }): {
   providers: InternalProvider[]
   provider?: InternalProvider
 } {
   const { url, providerId } = params
 
-  const providers = params.providers.map((provider) => {
-    const { options: userOptions, ...defaults } = provider
-
-    const id = (userOptions?.id ?? defaults.id) as string
-    const merged = merge(defaults, userOptions, {
-      signinUrl: `${url}/signin/${id}`,
-      callbackUrl: `${url}/callback/${id}`,
-    })
-
-    if (provider.type === "oauth") {
-      const p = normalizeOAuth(merged)
-
-      return p
+  const providers = params.providers.map<InternalProvider>(
+    ({ options: userOptions, ...rest }) => {
+      if (rest.type === "oauth") {
+        const normalizedOptions = normalizeOAuthOptions(rest)
+        const normalizedUserOptions = normalizeOAuthOptions(userOptions, true)
+        const id = normalizedUserOptions?.id ?? rest.id
+        return merge(normalizedOptions, {
+          ...normalizedUserOptions,
+          signinUrl: `${url}/signin/${id}`,
+          callbackUrl: `${url}/callback/${id}`,
+        })
+      }
+      const id = (userOptions?.id as string) ?? rest.id
+      return merge(rest, {
+        ...userOptions,
+        signinUrl: `${url}/signin/${id}`,
+        callbackUrl: `${url}/callback/${id}`,
+      })
     }
-
-    return merged
-  })
+  )
 
   return {
     providers,
@@ -48,61 +48,49 @@ export default function parseProviders(params: {
   }
 }
 
-function normalizeOAuth(
-  c?: OAuthConfig<any> | OAuthUserConfig<any>,
-  runtime?: "web" | "nodejs"
-): OAuthConfigInternal<any> | {} {
-  if (!c) return {}
+/**
+ * Transform OAuth options `authorization`, `token` and `profile` strings to `{ url: string; params: Record<string, string> }`
+ */
+function normalizeOAuthOptions(
+  oauthOptions?: Partial<OAuthConfig<any>> | Record<string, unknown>,
+  isUserOptions = false
+) {
+  if (!oauthOptions) return
 
-  const hasIssuer = !!c.issuer
-  const authorization = normalizeEndpoint(c.authorization, hasIssuer)
+  const normalized = Object.entries(oauthOptions).reduce<
+    OAuthConfigInternal<Record<string, unknown>>
+  >(
+    (acc, [key, value]) => {
+      if (
+        ["authorization", "token", "userinfo"].includes(key) &&
+        typeof value === "string"
+      ) {
+        const url = new URL(value)
+        acc[key] = {
+          url: `${url.origin}${url.pathname}`,
+          params: Object.fromEntries(url.searchParams ?? []),
+        }
+      } else {
+        acc[key] = value
+      }
 
-  if (!c.version?.startsWith("1.")) {
-    // Set default check to state
-    c.checks ??= ["pkce"]
-    c.checks = Array.isArray(c.checks) ? c.checks : [c.checks]
-    if (runtime === "web" && !c.checks.includes("pkce")) c.checks.push("pkce")
+      return acc
+    },
+    // eslint-disable-next-line @typescript-eslint/prefer-reduce-type-parameter
+    {} as any
+  )
 
-    if (!Array.isArray(c.checks)) c.checks = [c.checks]
+  if (!isUserOptions && !normalized.version?.startsWith("1.")) {
+    // If provider has as an "openid-configuration" well-known endpoint
+    // or an "openid" scope request, it will also likely be able to receive an `id_token`
+    // Only do this if this function is not called with user options to avoid overriding in later stage.
+    normalized.idToken = Boolean(
+      normalized.idToken ??
+        normalized.wellKnown?.includes("openid-configuration") ??
+        normalized.authorization?.params?.scope?.includes("openid")
+    )
 
-    // REVIEW: Deprecate `idToken` in favor of `type: "oidc"`?
-    c.idToken ??=
-      // If a provider has as an "openid-configuration" well-known endpoint
-      c.wellKnown?.includes("openid-configuration") ??
-      // or an "openid" scope request, it must also return an `id_token`
-      authorization?.url.searchParams.get("scope")?.includes("openid")
-
-    if (c.issuer && c.idToken) {
-      c.wellKnown ??= `${c.issuer}/.well-known/openid-configuration`
-    }
+    if (!normalized.checks) normalized.checks = ["state"]
   }
-
-  return {
-    ...c,
-    ...(authorization ? { authorization } : undefined),
-    ...(c.token ? { token: normalizeEndpoint(c.token, hasIssuer) } : undefined),
-    ...(c.userinfo
-      ? { userinfo: normalizeEndpoint(c.userinfo, hasIssuer) }
-      : undefined),
-  }
-}
-
-function normalizeEndpoint(
-  e?: OAuthConfig<any>[OAuthEndpointType],
-  hasIssuer?: boolean
-): OAuthConfigInternal<any>[OAuthEndpointType] {
-  if (!e || hasIssuer) return
-  if (typeof e === "string") {
-    return { url: new URL(e) }
-  }
-  // If v.url is undefined, it's because the provider config
-  // assumes that we will use the issuer endpoint.
-  // The existence of either v.url or provider.issuer is checked in
-  // assert.ts
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const url = new URL(e.url!)
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-  for (const k in e.params) url.searchParams.set(k, e.params[k] as any)
-
-  return { url }
+  return normalized
 }

@@ -16,7 +16,7 @@ export default function Auth0<P extends Auth0Profile>(
     wellKnown: `${options.issuer}/.well-known/openid-configuration`,
     type: "oauth",
     authorization: { params: { scope: "openid email profile" } },
-    checks: ["pkce"],
+    checks: ["pkce", "state"],
     idToken: true,
     profile(profile) {
       return {

@@ -1,8 +1,6 @@
-// TODO: Make this interchangeable with the Node.js import
-// based on import of `next-auth` or `next-auth/web`
-import { handleOAuthCallback } from "../lib/oauth/callback"
+import oAuthCallback from "../lib/oauth/callback"
 import callbackHandler from "../lib/callback-handler"
-import { createHash } from "../lib/web"
+import { hashToken } from "../lib/utils"
 import getAdapterUserFromEmail from "../lib/email/getUserFromEmail"
 
 import type { InternalOptions } from "../types"
@@ -12,7 +10,7 @@ import type { User } from "../.."
 import type { AdapterSession } from "../../adapters"
 
 /** Handle callbacks from login services */
-export async function callback(params: {
+export default async function callback(params: {
   options: InternalOptions
   query: RequestInternal["query"]
   method: Required<RequestInternal>["method"]
@@ -46,7 +44,7 @@ export async function callback(params: {
         account,
         OAuthProfile,
         cookies: oauthCookies,
-      } = await handleOAuthCallback({
+      } = await oAuthCallback({
         query,
         body,
         method,
@@ -208,11 +206,10 @@ export async function callback(params: {
         return { redirect: `${url}/error?error=configuration`, cookies }
       }
 
-      const secret = provider.secret ?? options.secret
       // @ts-expect-error -- Verified in `assertConfig`. adapter: Adapter<true>
       const invite = await adapter.useVerificationToken({
         identifier,
-        token: await createHash(`${token}${secret}`),
+        token: hashToken(token, options),
       })
 
       const invalidInvite = !invite || invite.expires.valueOf() < Date.now()

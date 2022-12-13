@@ -1,4 +1,5 @@
-import { createHash, randomString } from "./web"
+import { createHash, randomBytes } from "crypto"
+
 import type { InternalOptions } from "../types"
 
 interface CreateCSRFTokenParams {
@@ -22,7 +23,7 @@ interface CreateCSRFTokenParams {
  * https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie
  * https://owasp.org/www-chapter-london/assets/slides/David_Johansson-Double_Defeat_of_Double-Submit_Cookie.pdf
  */
-export async function createCSRFToken({
+export function createCSRFToken({
   options,
   cookieValue,
   isPost,
@@ -30,11 +31,9 @@ export async function createCSRFToken({
 }: CreateCSRFTokenParams) {
   if (cookieValue) {
     const [csrfToken, csrfTokenHash] = cookieValue.split("|")
-
-    const expectedCsrfTokenHash = await createHash(
-      `${csrfToken}${options.secret}`
-    )
-
+    const expectedCsrfTokenHash = createHash("sha256")
+      .update(`${csrfToken}${options.secret}`)
+      .digest("hex")
     if (csrfTokenHash === expectedCsrfTokenHash) {
       // If hash matches then we trust the CSRF token value
       // If this is a POST request and the CSRF Token in the POST request matches
@@ -46,8 +45,10 @@ export async function createCSRFToken({
   }
 
   // New CSRF token
-  const csrfToken = randomString(32)
-  const csrfTokenHash = await createHash(`${csrfToken}${options.secret}`)
+  const csrfToken = randomBytes(32).toString("hex")
+  const csrfTokenHash = createHash("sha256")
+    .update(`${csrfToken}${options.secret}`)
+    .digest("hex")
   const cookie = `${csrfToken}|${csrfTokenHash}`
 
   return { cookie, csrfToken }

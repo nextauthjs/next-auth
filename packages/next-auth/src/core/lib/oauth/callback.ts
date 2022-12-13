@@ -8,12 +8,12 @@ import { OAuthCallbackError } from "../../errors"
 
 import type { CallbackParamsType, OpenIDCallbackChecks } from "openid-client"
 import type { LoggerInstance, Profile } from "../../.."
-import type { OAuthConfigInternal } from "../../../providers"
+import type { OAuthChecks, OAuthConfig } from "../../../providers"
 import type { InternalOptions } from "../../types"
 import type { RequestInternal } from "../.."
 import type { Cookie } from "../cookie"
 
-export async function handleOAuthCallback(params: {
+export default async function oAuthCallback(params: {
   options: InternalOptions<"oauth">
   query: RequestInternal["query"]
   body: RequestInternal["body"]
@@ -68,7 +68,7 @@ export async function handleOAuthCallback(params: {
 
     let tokens: TokenSet
 
-    const checks: OpenIDCallbackChecks = {}
+    const checks: OAuthChecks = {}
     const resCookies: Cookie[] = []
 
     const state = await useState(cookies?.[options.cookies.state.name], options)
@@ -79,7 +79,7 @@ export async function handleOAuthCallback(params: {
 
     const nonce = await useNonce(cookies?.[options.cookies.nonce.name], options)
     if (nonce && provider.idToken) {
-      checks.nonce = nonce.value
+      ;(checks as OpenIDCallbackChecks).nonce = nonce.value
       resCookies.push(nonce.cookie)
     }
 
@@ -99,7 +99,7 @@ export async function handleOAuthCallback(params: {
         body,
         method,
       }),
-      ...Object.fromEntries(provider.token?.url.searchParams.entries() ?? []),
+      ...provider.token?.params,
     }
 
     if (provider.token?.request) {
@@ -131,10 +131,9 @@ export async function handleOAuthCallback(params: {
     } else if (provider.idToken) {
       profile = tokens.claims()
     } else {
-      const params = Object.fromEntries(
-        provider.userinfo?.url.searchParams.entries() ?? []
-      )
-      profile = await client.userinfo(tokens, { params })
+      profile = await client.userinfo(tokens, {
+        params: provider.userinfo?.params,
+      })
     }
 
     const profileResult = await getProfile({
@@ -149,10 +148,10 @@ export async function handleOAuthCallback(params: {
   }
 }
 
-interface GetProfileParams {
+export interface GetProfileParams {
   profile: Profile
   tokens: TokenSet
-  provider: OAuthConfigInternal<any>
+  provider: OAuthConfig<any>
   logger: LoggerInstance
 }
 

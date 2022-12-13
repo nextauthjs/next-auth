@@ -68,14 +68,10 @@ export class UnsupportedStrategy extends UnknownError {
 }
 
 export class InvalidCallbackUrl extends UnknownError {
-  name = "InvalidCallbackUrlError"
+  name = "InvalidCallbackUrl"
   code = "INVALID_CALLBACK_URL_ERROR"
 }
 
-export class InvalidEndpoints extends UnknownError {
-  name = "InvalidEndpoints"
-  code = "INVALID_ENDPOINTS_ERROR"
-}
 export class UnknownAction extends UnknownError {
   name = "UnknownAction"
   code = "UNKNOWN_ACTION_ERROR"

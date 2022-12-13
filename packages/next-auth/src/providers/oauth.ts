@@ -30,7 +30,7 @@ type EndpointRequest<C, R, P> = (
     /** `openid-client` Client */
     client: Client
     /** Provider is passed for convenience, ans also contains the `callbackUrl`. */
-    provider: (OAuthConfig<P> | OAuthConfigInternal<P>) & {
+    provider: OAuthConfig<P> & {
       signinUrl: string
       callbackUrl: string
     }
@@ -89,11 +89,6 @@ export type UserinfoEndpointHandler = EndpointHandler<
   Profile
 >
 
-export type ProfileCallback<P> = (
-  profile: P,
-  tokens: TokenSet
-) => Awaitable<User>
-
 export interface OAuthProviderButtonStyles {
   logo: string
   logoDark: string
@@ -124,7 +119,7 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   userinfo?: string | UserinfoEndpointHandler
   type: "oauth"
   version?: string
-  profile?: ProfileCallback<P>
+  profile: (profile: P, tokens: TokenSet) => Awaitable<User>
   checks?: ChecksType | ChecksType[]
   client?: Partial<ClientMetadata>
   jwks?: { keys: JWK[] }
@@ -140,6 +135,9 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
    * [`id_token` explanation](https://www.oauth.com/oauth2-servers/openid-connect/id-tokens)
    */
   idToken?: boolean
+  // TODO: only allow for BattleNet
+  region?: string
+  // TODO: only allow for some
   issuer?: string
   /** Read more at: https://github.com/panva/node-openid-client/tree/main/docs#customizing-http-requests */
   httpOptions?: HttpOptions
@@ -161,23 +159,12 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   allowDangerousEmailAccountLinking?: boolean
 }
 
-export type OAuthEndpointType = "authorization" | "token" | "userinfo"
-
-/**
- * @internal
- * We parsed `authorization`, `token` and `userinfo`
- * to always contain a valid `URL`, with the params
- */
-export type OAuthConfigInternal<P> = Omit<
-  OAuthConfig<P>,
-  OAuthEndpointType | "clientId" | "checks" | "profile"
-> & {
-  clientId: string
-  authorization?: { url: URL }
-  token?: { url: URL; request?: TokenEndpointHandler["request"] }
-  userinfo?: { url: URL; request?: UserinfoEndpointHandler["request"] }
-  checks: ChecksType[]
-  profile: ProfileCallback<P>
+/** @internal */
+export interface OAuthConfigInternal<P>
+  extends Omit<OAuthConfig<P>, "authorization" | "token" | "userinfo"> {
+  authorization?: AuthorizationEndpointHandler
+  token?: TokenEndpointHandler
+  userinfo?: UserinfoEndpointHandler
 }
 
 export type OAuthUserConfig<P> = Omit<

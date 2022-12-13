@@ -1,4 +1,3 @@
-import "./inject-globals"
 import { AuthHandler } from "../core"
 import { getBody, getURL, setHeaders } from "../utils/node"
 
@@ -8,7 +7,11 @@ import type {
   NextApiResponse,
 } from "next"
 import type { AuthOptions, Session } from ".."
-import type { CallbacksOptions } from "../core/types"
+import type {
+  CallbacksOptions,
+  NextAuthRequest,
+  NextAuthResponse,
+} from "../core/types"
 
 async function NextAuthHandler(
   req: NextApiRequest,
@@ -61,7 +64,7 @@ function NextAuth(
   ...args: [AuthOptions] | [NextApiRequest, NextApiResponse, AuthOptions]
 ) {
   if (args.length === 1) {
-    return async (req: NextApiRequest, res: NextApiResponse) =>
+    return async (req: NextAuthRequest, res: NextAuthResponse) =>
       await NextAuthHandler(req, res, args[0])
   }
 

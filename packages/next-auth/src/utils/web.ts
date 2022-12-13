@@ -109,7 +109,7 @@ export function toResponse(res: ResponseInternal): Response {
   })
 
   if (res.redirect) {
-    response.headers.set("Location", res.redirect.toString())
+    response.headers.set("Location", res.redirect)
   }
 
   return response
