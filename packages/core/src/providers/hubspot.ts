@@ -19,7 +19,6 @@ export default function HubSpot<P extends HubSpotProfile>(
       url: "https://app.hubspot.com/oauth/authorize",
       params: { scope: "oauth", client_id: options.clientId },
     },
-    // @ts-expect-error TODO: support client_secret_post and other client options
     client: {
       token_endpoint_auth_method: "client_secret_post",
     },

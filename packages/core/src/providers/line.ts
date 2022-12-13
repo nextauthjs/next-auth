@@ -20,7 +20,6 @@ export default function LINE<P extends LineProfile>(
     name: "LINE",
     type: "oidc",
     issuer: "https://access.line.me",
-    // @ts-expect-error TODO: support client options
     client: {
       id_token_signed_response_alg: "HS256",
     },

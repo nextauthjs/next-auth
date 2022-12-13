@@ -1,5 +1,6 @@
 import type { CommonProviderOptions } from "../providers"
 import type { Profile, TokenSet, User, Awaitable } from ".."
+import type { Client } from "oauth4webapi"
 
 // TODO:
 type AuthorizationParameters = any
@@ -134,6 +135,7 @@ export interface OAuth2Config<P> extends CommonProviderOptions, PartialIssuer {
   checks?: ChecksType[]
   clientId?: string
   clientSecret?: string
+  client?: Partial<Client>
   style?: OAuthProviderButtonStyles
   /**
    * [Documentation](https://next-auth.js.org/configuration/providers/oauth#allowdangerousemailaccountlinking-option)
