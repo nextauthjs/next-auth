@@ -22,18 +22,15 @@ import {
 
 import type {
   ClientSafeProvider,
-  SessionProviderProps,
-  SignOutResponse,
-  UseSessionOptions,
-} from "./types"
-
-import type {
   LiteralUnion,
+  SessionProviderProps,
   SignInAuthorizationParams,
   SignInOptions,
   SignInResponse,
-  SignOutParams
-} from 'next-auth-core'
+  SignOutParams,
+  SignOutResponse,
+  UseSessionOptions,
+} from "./types"
 
 import type {
   BuiltInProviderType,
