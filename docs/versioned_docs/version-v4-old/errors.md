@@ -128,7 +128,7 @@ The default `code_challenge_method` is `"S256"`. This is currently not configura
 
 #### INVALID_CALLBACK_URL_ERROR
 
-The `callbackUrl` provided was either invalid or not defined. See [specifying a `callbackUrl`](/getting-started/client#specifying-a-callbackurl) for more information.
+The `callbackUrl` provided was either invalid or not defined. See [specifying a `callbackUrl`](./getting-started/client#specifying-a-callbackurl) for more information.
 
 ---
 

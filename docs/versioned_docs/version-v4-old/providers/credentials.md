@@ -71,7 +71,7 @@ providers: [
 ...
 ```
 
-See the [callbacks documentation](./configuration/callbacks) for more information on how to interact with the token.
+See the [callbacks documentation](../configuration/callbacks) for more information on how to interact with the token.
 
 ## Example - Web3 / Signin With Ethereum
 
