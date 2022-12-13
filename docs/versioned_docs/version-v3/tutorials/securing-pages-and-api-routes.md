@@ -136,5 +136,5 @@ You can use the `getToken()` helper function in any application as long as you s
 :::note
 Pass `getToken` the same value for `secret` as specified in `pages/api/auth/[...nextauth].js`.
 
-See [the documentation for the JWT option](/configuration/options#jwt) for more information.
+See [the documentation for the JWT option](../configuration/options#jwt) for more information.
 :::
