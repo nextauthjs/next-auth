@@ -5,16 +5,16 @@
 // for information about these interfaces
 // and what to do when importing types
 declare namespace App {
-	// interface Error {}
-	interface Locals {
-		getSession: () => Promise<unknown>;
-	}
-	// interface PageData {}
-	// interface Platform {}
+  // interface Error {}
+  interface Locals {
+    getSession: () => Promise<unknown>
+  }
+  // interface PageData {}
+  // interface Platform {}
 }
 
-declare module '$env/static/private' {
-	export const AUTH_SECRET: string;
-	export const AUTH_TRUST_HOST: string;
-	export const VERCEL: string;
+declare module "$env/static/private" {
+  export const AUTH_SECRET: string
+  export const AUTH_TRUST_HOST: string
+  export const VERCEL: string
 }
