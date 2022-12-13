@@ -7,8 +7,6 @@ module.exports = {
   favicon: "img/favicon.ico",
   organizationName: "nextauthjs",
   projectName: "next-auth",
-  // TODO: remove this once BETA is ready
-  onBrokenLinks: "log",
   themeConfig: {
     prism: {
       theme: require("prism-react-renderer/themes/vsDark"),
@@ -107,13 +105,13 @@ module.exports = {
         },
       ],
     },
-    // announcementBar: {
-    //   id: "new-major-announcement",
-    //   content:
-    //     "The default documentation is for v4 which has been released to GA 🚨 migration to <b>v4</b> docs can be found <a href='/getting-started/upgrade-v4'>here</a> 👈 The old v3 docs can be found <a href='/v3/getting-started/introduction'>here</a>.",
-    //   backgroundColor: "#1786fb",
-    //   textColor: "#fff",
-    // },
+    announcementBar: {
+      id: "new-major-announcement",
+      content:
+        "NextAuth.js is becoming Auth.js! 🎉 We're creating Authentication for the Web. Everyone included. You are looking at the NextAuth.js (v4) documentation. For the new documentation go to <a target='_blank' rel='noopener noreferrer' href='https://authjs.dev'>authjs.dev</a>.",
+      backgroundColor: "#000",
+      textColor: "#fff",
+    },
     footer: {
       links: [
         {
@@ -195,10 +193,6 @@ module.exports = {
             },
             v3: {
               label: "v3",
-            },
-            beta: {
-              label: "v4-unreleased",
-              banner: "unreleased",
             },
           },
         },
