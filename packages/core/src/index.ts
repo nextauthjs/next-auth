@@ -2,11 +2,11 @@ import { init } from "./init"
 import { assertConfig } from "./lib/assert"
 import { SessionStore } from "./lib/cookie"
 import { toInternalRequest, toResponse } from "./lib/web"
-import renderPage from "./pages"
+import renderPage from "./lib/pages"
 import * as routes from "./routes"
 import logger, { setLogger } from "./utils/logger"
 
-import type { ErrorType } from "./pages/error"
+import type { ErrorType } from "./lib/pages/error"
 import type { AuthOptions, RequestInternal, ResponseInternal } from "./types"
 import { UntrustedHost } from "./errors"
 

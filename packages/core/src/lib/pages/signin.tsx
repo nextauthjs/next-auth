@@ -1,4 +1,4 @@
-import type { InternalProvider, Theme } from ".."
+import type { InternalProvider, Theme } from "../.."
 import type { CSSProperties } from "react"
 
 /**

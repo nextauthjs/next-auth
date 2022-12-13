@@ -1,4 +1,4 @@
-import type { Theme } from ".."
+import type { Theme } from "../.."
 
 interface VerifyRequestPageProps {
   url: URL
