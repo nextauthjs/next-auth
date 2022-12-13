@@ -1,4 +1,4 @@
-import { init } from "./init"
+import { init } from "./lib/init"
 import { assertConfig } from "./lib/assert"
 import { SessionStore } from "./lib/cookie"
 import { toInternalRequest, toResponse } from "./lib/web"
