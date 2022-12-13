@@ -79,3 +79,10 @@ test.schema.gql
 # docusaurus
 docs/.docusaurus
 docs/providers.json
+
+# Core
+packages/core/adapters.*
+packages/core/index.*
+packages/core/jwt
+packages/core/lib
+packages/core/providers
