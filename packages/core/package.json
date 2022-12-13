@@ -60,8 +60,7 @@
     "build": "pnpm clean && tsc && pnpm css",
     "clean": "rm -rf adapters.* index.* jwt lib providers",
     "css": "node ./scripts/generate-css.js",
-    "dev": "pnpm css && tsc -w",
-    "test": "jest"
+    "dev": "pnpm css && tsc -w"
   },
   "devDependencies": {
     "@next-auth/tsconfig": "workspace:*",
