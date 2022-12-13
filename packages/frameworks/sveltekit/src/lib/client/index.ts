@@ -8,6 +8,7 @@
 export async function signIn(providerId?: any, options?: any, authorizationParams?: any) {
 	const { callbackUrl = window.location.href, redirect = true } = options ?? {};
 
+	// TODO: Support custom providers
 	const isCredentials = providerId === 'credentials';
 	const isEmail = providerId === 'email';
 	const isSupportingReturn = isCredentials || isEmail;

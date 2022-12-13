@@ -41,10 +41,7 @@ function SvelteKitAuth(...args: [AuthOptions]): {
 	const options = args[0];
 	return {
 		GET: async (event) => await SKAuthHandler(event, options),
-		POST: async (event) => {
-			console.log('POST', event);
-			await SKAuthHandler(event, options);
-		}
+		POST: async (event) => await SKAuthHandler(event, options)
 	};
 }
 

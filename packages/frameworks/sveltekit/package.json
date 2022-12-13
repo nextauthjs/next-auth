@@ -2,35 +2,38 @@
 	"name": "next-auth-sveltekit",
 	"version": "0.0.1",
 	"scripts": {
-		"predev": "pnpm check",
 		"dev": "svelte-package -w",
-		"build": "svelte-kit sync && svelte-package",
-		"prepublishOnly": "echo 'Did you mean to publish `./package/`, instead of `./`?' && exit 1",
+		"build": "vite build",
+		"preview": "vite preview",
+		"test": "playwright test",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"test:unit": "vitest",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
+		"@playwright/test": "^1.28.1",
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "next",
-		"@sveltejs/package": "next",
+		"@sveltejs/package": "1.0.0-next.6",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
 		"eslint": "^8.28.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-svelte3": "^4.0.0",
+		"next-auth-core": "workspace:*",
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.8.1",
-		"svelte": "^3.53.1",
+		"svelte": "^3.54.0",
 		"svelte-check": "^2.9.2",
-		"svelte-preprocess": "^4.10.7",
 		"tslib": "^2.4.1",
 		"typescript": "^4.9.3",
-		"vite": "^3.2.4"
+		"vite": "^4.0.0",
+		"vitest": "^0.25.3"
 	},
-	"type": "module",
-	"dependencies": {
-		"next-auth-core": "workspace:^0.0.1"
-	}
+	"peerDependencies": {
+		"next-auth-core": "workspace:*"
+	},
+	"type": "module"
 }
