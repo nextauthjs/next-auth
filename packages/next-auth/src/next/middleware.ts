@@ -6,7 +6,17 @@ import { NextResponse, NextRequest } from "next/server"
 
 import { getToken } from "../jwt"
 import parseUrl from "../utils/parse-url"
-import { detectHost } from "../utils/web"
+
+// // TODO: Remove
+/** Extract the host from the environment */
+export function detectHost(
+  trusted: boolean,
+  forwardedValue: string | null,
+  defaultValue: string | false
+): string | undefined {
+  if (trusted && forwardedValue) return forwardedValue
+  return defaultValue || undefined
+}
 
 type AuthorizedCallback = (params: {
   token: JWT | null

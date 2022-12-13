@@ -142,8 +142,14 @@ function getSetCookies(cookiesString: string) {
 
 export function setHeaders(headers: Headers, res: ServerResponse) {
   for (const [key, val] of headers.entries()) {
+    let value: string | string[] = val
     // See: https://github.com/whatwg/fetch/issues/973
-    const value = key === "set-cookie" ? getSetCookies(val) : val
+    if (key === "set-cookie") {
+      const cookies = getSetCookies(value)
+      let original = res.getHeader("set-cookie") as string[] | string
+      original = Array.isArray(original) ? original : [original]
+      value = original.concat(cookies).filter(Boolean)
+    }
     res.setHeader(key, value)
   }
 }
