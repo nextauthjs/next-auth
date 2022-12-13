@@ -18,7 +18,7 @@ There you can find the following adapters:
 
 ## Custom Adapter
 
-See the tutorial for [creating a database Adapter](/tutorials/creating-a-database-adapter) for more information on how to create a custom Adapter. Have a look at the [Adapter repository](https://github.com/nextauthjs/adapters) to see community maintained custom Adapter or add your own.
+See the tutorial for [creating a database Adapter](../tutorials/creating-a-database-adapter) for more information on how to create a custom Adapter. Have a look at the [Adapter repository](https://github.com/nextauthjs/adapters) to see community maintained custom Adapter or add your own.
 
 ### Editor integration
 

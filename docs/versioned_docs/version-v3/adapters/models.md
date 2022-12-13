@@ -8,7 +8,7 @@ Models in NextAuth.js are built for ANSI SQL but are polymorphic and are transfo
 All table/collection names in the built in models are plural, and all table names and column names use `snake_case` when used with an SQL database and `camelCase` when used with Document database.
 
 :::note
-You can [extend the built in models](/v3/tutorials/typeorm-custom-models) and even [create your own database adapter](/tutorials/creating-a-database-adapter) if you want to use NextAuth.js with a database that is not supported out of the box.
+You can [extend the built in models](../tutorials/typeorm-custom-models) and even [create your own database adapter](../tutorials/creating-a-database-adapter) if you want to use NextAuth.js with a database that is not supported out of the box.
 :::
 
 ---
