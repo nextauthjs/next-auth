@@ -13,12 +13,12 @@ When deploying to production, set the `NEXTAUTH_URL` environment variable to the
 NEXTAUTH_URL=https://example.com
 ```
 
-If your Next.js application uses a custom base path, specify the route to the API endpoint in full. More information about the usage of custom base path [here](/getting-started/client#custom-base-path).
+If your Next.js application uses a custom base path, specify the route to the API endpoint in full. More information about the usage of custom base path [here](../getting-started/client#custom-base-path).
 
 _e.g. `NEXTAUTH_URL=https://example.com/custom-route/api/auth`_
 
 :::tip
-When you're using a custom base path, you will need to pass the `basePath` page prop to the `<SessionProvider>`. More information [here](/getting-started/client#custom-base-path).
+When you're using a custom base path, you will need to pass the `basePath` page prop to the `<SessionProvider>`. More information [here](../getting-started/client#custom-base-path).
 :::
 
 :::note
@@ -27,7 +27,7 @@ Using [System Environment Variables](https://vercel.com/docs/concepts/projects/e
 
 ### NEXTAUTH_SECRET
 
-Used to encrypt the NextAuth.js JWT, and to hash [email verification tokens](/adapters/models#verification-token). This is the default value for the `secret` option in [NextAuth](/configuration/options#secret) and [Middleware](/configuration/nextjs#secret).
+Used to encrypt the NextAuth.js JWT, and to hash [email verification tokens](../adapters/models#verification-token). This is the default value for the `secret` option in [NextAuth](../configuration/options#secret) and [Middleware](../configuration/nextjs#secret).
 
 
 ### NEXTAUTH_URL_INTERNAL
@@ -53,7 +53,7 @@ Options are passed to NextAuth.js when initializing it in an API route.
 
 An array of authentication providers for signing in (e.g. Google, Facebook, Twitter, GitHub, Email, etc) in any order. This can be one of the built-in providers or an object with a custom provider.
 
-See the [providers documentation](/configuration/providers/oauth) for a list of supported providers and how to use them.
+See the [providers documentation](../configuration/providers/oauth) for a list of supported providers and how to use them.
 
 ---
 
@@ -71,7 +71,7 @@ If you set [`NEXTAUTH_SECRET`](#nextauth_secret) as an environment variable, you
 If no value is specified in development (and there is no `NEXTAUTH_SECRET` variable either), it uses a hash for all configuration options, including OAuth Client ID / Secrets for entropy.
 
 :::warning
-Not providing any `secret` or `NEXTAUTH_SECRET` will throw [an error](/errors#no_secret) in production.
+Not providing any `secret` or `NEXTAUTH_SECRET` will throw [an error](../errors#no_secret) in production.
 :::
 
 You can quickly create a good value on the command line via this `openssl` command.
@@ -239,7 +239,7 @@ pages: {
 When using this configuration, ensure that these pages actually exist. For example `error: '/auth/error'` refers to a page file at `pages/auth/error.js`.
 :::
 
-See the documentation for the [pages option](/configuration/pages) for more information.
+See the documentation for the [pages option](../configuration/pages) for more information.
 
 ---
 
@@ -273,7 +273,7 @@ callbacks: {
 }
 ```
 
-See the [callbacks documentation](/configuration/callbacks) for more information on how to use the callback functions.
+See the [callbacks documentation](../configuration/callbacks) for more information on how to use the callback functions.
 
 ---
 
@@ -288,7 +288,7 @@ Events are asynchronous functions that do not return a response, they are useful
 
 You can specify a handler for any of these events below - e.g. for debugging or to create an audit log.
 
-The content of the message object varies depending on the flow (e.g. OAuth or Email authentication flow, JWT or database sessions, etc). See the [events documentation](/configuration/events) for more information on the form of each message object and how to use the events functions.
+The content of the message object varies depending on the flow (e.g. OAuth or Email authentication flow, JWT or database sessions, etc). See the [events documentation](../configuration/events) for more information on the form of each message object and how to use the events functions.
 
 ```js
 events: {
@@ -310,7 +310,7 @@ events: {
 
 #### Description
 
-By default NextAuth.js does not include an adapter any longer. If you would like to persist user / account data, please install one of the many available adapters. More information can be found in the [adapter documentation](/adapters/overview).
+By default NextAuth.js does not include an adapter any longer. If you would like to persist user / account data, please install one of the many available adapters. More information can be found in the [adapter documentation](../adapters/overview).
 
 ---
 
@@ -334,7 +334,7 @@ Set debug to `true` to enable debug messages for authentication and database ope
 
 Override any of the logger levels (`undefined` levels will use the built-in logger), and intercept logs in NextAuth.js. You can use this to send NextAuth.js logs to a third-party logging service.
 
-The `code` parameter for `error` and `warn` are explained in the [Warnings](/warnings) and [Errors](/errors) pages respectively.
+The `code` parameter for `error` and `warn` are explained in the [Warnings](../warnings) and [Errors](../errors) pages respectively.
 
 Example:
 
@@ -371,7 +371,7 @@ If the `debug` level is defined by the user, it will be called regardless of the
 
 #### Description
 
-Changes the color scheme theme of [pages](/configuration/pages) as well as allows some minor customization. Set `theme.colorScheme` to `"light"`, if you want to force pages to always be light. Set to `"dark"`, if you want to force pages to always be dark. Set to `"auto"`, (or leave this option out) if you want the pages to follow the preferred system theme. (Uses the [prefers-color-scheme](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) media query.)
+Changes the color scheme theme of [pages](../configuration/pages) as well as allows some minor customization. Set `theme.colorScheme` to `"light"`, if you want to force pages to always be light. Set to `"dark"`, if you want to force pages to always be dark. Set to `"auto"`, (or leave this option out) if you want the pages to follow the preferred system theme. (Uses the [prefers-color-scheme](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) media query.)
 
 In addition, you can define a logo URL in `theme.logo` which will be rendered above the main card in the default signin/signout/error/verify-request pages, as well as a `theme.brandColor` which will affect the accent color of these pages.
 
@@ -508,7 +508,7 @@ Using a custom cookie policy may introduce security flaws into your application 
 
 NextAuth.js uses encrypted JSON Web Tokens ([JWE](https://datatracker.ietf.org/doc/html/rfc7516)) by default. Unless you have a good reason, we recommend keeping this behaviour. Although you can override this using the `encode` and `decode` methods. Both methods must be defined at the same time.
 
-**IMPORTANT: If you use middleware to protect routes, make sure the same method is also set in the [`_middleware.ts` options](/configuration/nextjs#custom-jwt-decode-method)**
+**IMPORTANT: If you use middleware to protect routes, make sure the same method is also set in the [`_middleware.ts` options](../configuration/nextjs#custom-jwt-decode-method)**
 
 ```js
 jwt: {

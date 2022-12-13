@@ -25,7 +25,7 @@ providers: [
 ...
 ```
 
-See the [Email provider documentation](/providers/email) for more information on how to configure email sign in.
+See the [Email provider documentation](../../providers/email) for more information on how to configure email sign in.
 
 :::note
 The email provider requires a database, it cannot be used without one.

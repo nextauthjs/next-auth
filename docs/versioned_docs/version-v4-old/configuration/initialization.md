@@ -21,7 +21,7 @@ export default NextAuth({
 })
 ```
 
-Here, you only need to pass your [options](/configuration/options) to `NextAuth`, and `NextAuth` does the rest.
+Here, you only need to pass your [options](../configuration/options) to `NextAuth`, and `NextAuth` does the rest.
 
 This is the preferred initialization in tutorials/other parts of the documentation, as it simplifies the code and reduces potential errors in the authentication flow.
 
@@ -43,7 +43,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
 }
 ```
 
-The `...` section will still be your [options](/configuration/options), but you now have the possibility to execute/modify certain things on the request.
+The `...` section will still be your [options](../configuration/options), but you now have the possibility to execute/modify certain things on the request.
 
 You could for example log the request, add headers, read `query` or `body` parameters, whatever you would do in an API route.
 
@@ -114,10 +114,10 @@ export default async function auth(req, res) {
 }
 ```
 
-For more details on all available actions and which methods are supported, please check out the [REST API documentation](/getting-started/rest-api) or the appropriate area in [the source code](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/index.ts)
+For more details on all available actions and which methods are supported, please check out the [REST API documentation](../getting-started/rest-api) or the appropriate area in [the source code](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/index.ts)
 
 This way of initializing `NextAuth` is very powerful, but should be used sparingly.
 
 :::warning
-Changing parts of the request that is essential to `NextAuth` to do it's job - like messing with the [default cookies](/configuration/options#cookies) - can have unforeseen consequences, and have the potential to introduce security holes if done incorrectly. Only change those if you understand consequences.
+Changing parts of the request that is essential to `NextAuth` to do it's job - like messing with the [default cookies](../configuration/options#cookies) - can have unforeseen consequences, and have the potential to introduce security holes if done incorrectly. Only change those if you understand consequences.
 :::

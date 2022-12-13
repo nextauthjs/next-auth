@@ -8,7 +8,7 @@ This feature is experimental and may be removed or changed in the future.
 
 When calling from server-side i.e. in API routes or in `getServerSideProps`, we recommend using this function instead of `getSession` to retrieve the `session` object. This method is especially useful when you are using NextAuth.js with a database. This method can _drastically_ reduce response time when used over `getSession` server-side, due to avoiding an extra `fetch` to an API Route (this is generally [not recommended in Next.js](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props#getserversideprops-or-api-routes)). In addition, `unstable_getServerSession` will correctly update the cookie expiry time and update the session content if `callbacks.jwt` or `callbacks.session` changed something.
 
-Otherwise, if you only want to get the session token, see [`getToken`](/tutorials/securing-pages-and-api-routes#using-gettoken).
+Otherwise, if you only want to get the session token, see [`getToken`](../tutorials/securing-pages-and-api-routes#using-gettoken).
 
 `unstable_getServerSession` requires passing the same object you would pass to `NextAuth` when initializing NextAuth.js. To do so, you can export your NextAuth.js options in the following way:
 
@@ -93,13 +93,13 @@ You can use a Next.js Middleware with NextAuth.js to protect your site.
 
 Next.js 12 has introduced [Middleware](https://nextjs.org/docs/middleware). It is a way to run logic before accessing any page, even when they are static. On platforms like Vercel, Middleware is run at the [Edge](https://nextjs.org/docs/api-reference/edge-runtime).
 
-If the following options look familiar, this is because they are a subset of [these options](/configuration/options#options). You can extract these to a common configuration object to reuse them. In the future, we would like to be able to run everything in Middleware. (See [Caveats](#caveats)).
+If the following options look familiar, this is because they are a subset of [these options](../configuration/options#options). You can extract these to a common configuration object to reuse them. In the future, we would like to be able to run everything in Middleware. (See [Caveats](#caveats)).
 
 You can get the `withAuth` middleware function from `next-auth/middleware` either as a default or a named import:
 
 ### Prerequisites
 
-You must set the same secret in the middleware that you use in NextAuth. The easiest way is to set the [`NEXTAUTH_SECRET`](/configuration/options#nextauth_secret) environment variable. It will be picked up by both the [NextAuth config](/configuration/options#options), as well as the middleware config.
+You must set the same secret in the middleware that you use in NextAuth. The easiest way is to set the [`NEXTAUTH_SECRET`](../configuration/options#nextauth_secret) environment variable. It will be picked up by both the [NextAuth config](../configuration/options#options), as well as the middleware config.
 
 Alternatively, you can provide the secret using the [`secret`](#secret) option in the middleware config.
 
@@ -169,7 +169,7 @@ pages: {
 }
 ```
 
-See the documentation for the [pages option](/configuration/pages) for more information.
+See the documentation for the [pages option](../configuration/pages) for more information.
 
 ---
 
@@ -179,7 +179,7 @@ See the documentation for the [pages option](/configuration/pages) for more info
 
 #### Description
 
-The same `secret` used in the [NextAuth.js config](/configuration/options#options).
+The same `secret` used in the [NextAuth.js config](../configuration/options#options).
 
 #### Example (default value)
 
@@ -263,4 +263,4 @@ export default withAuth({
 ### Caveats
 
 - Currently only supports session verification, as parts of the sign-in code need to run in a Node.js environment. In the future, we would like to make sure that NextAuth.js can fully run at the [Edge](https://nextjs.org/docs/api-reference/edge-runtime)
-- Only supports the `"jwt"` [session strategy](/configuration/options#session). We need to wait until databases at the Edge become mature enough to ensure a fast experience. (If you know of an Edge-compatible database, we would like if you proposed a new [Adapter](/tutorials/creating-a-database-adapter))
+- Only supports the `"jwt"` [session strategy](../configuration/options#session). We need to wait until databases at the Edge become mature enough to ensure a fast experience. (If you know of an Edge-compatible database, we would like if you proposed a new [Adapter](../tutorials/creating-a-database-adapter))

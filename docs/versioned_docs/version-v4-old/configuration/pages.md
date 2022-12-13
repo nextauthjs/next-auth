@@ -33,8 +33,8 @@ We purposefully restrict the returned error codes for increased security.
 
 The following errors are passed as error query parameters to the default or overridden error page:
 
-- **Configuration**: There is a problem with the server configuration. Check if your [options](/configuration/options#options) are correct.
-- **AccessDenied**: Usually occurs, when you restricted access through the [`signIn` callback](/configuration/callbacks#sign-in-callback), or [`redirect` callback](/configuration/callbacks#redirect-callback)
+- **Configuration**: There is a problem with the server configuration. Check if your [options](../configuration/options#options) are correct.
+- **AccessDenied**: Usually occurs, when you restricted access through the [`signIn` callback](../configuration/callbacks#sign-in-callback), or [`redirect` callback](../configuration/callbacks#redirect-callback)
 - **Verification**: Related to the Email provider. The token has expired or has already been used
 - **Default**: Catch all, will apply, if none of the above matched
 
@@ -51,25 +51,25 @@ The following errors are passed as error query parameters to the default or over
 - **Callback**: Error in the [OAuth callback handler route](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/routes/callback.ts)
 - **OAuthAccountNotLinked**: If the email on the account is already linked, but not with this OAuth account
 - **EmailSignin**: Sending the e-mail with the verification token failed
-- **CredentialsSignin**: The `authorize` callback returned `null` in the [Credentials provider](/providers/credentials). We don't recommend providing information about which part of the credentials were wrong, as it might be abused by malicious hackers.
-- **SessionRequired**: The content of this page requires you to be signed in at all times. See [useSession](/getting-started/client#require-session) for configuration.
+- **CredentialsSignin**: The `authorize` callback returned `null` in the [Credentials provider](../providers/credentials). We don't recommend providing information about which part of the credentials were wrong, as it might be abused by malicious hackers.
+- **SessionRequired**: The content of this page requires you to be signed in at all times. See [useSession](../getting-started/client#require-session) for configuration.
 - **Default**: Catch all, will apply, if none of the above matched
 
 Example: `/auth/signin?error=Default`
 
 ## Theming
 
-By default, the built-in pages will follow the system theme, utilizing the [`prefer-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) Media Query. You can override this to always use a dark or light theme, through the [`theme.colorScheme` option](/configuration/options#theme).
+By default, the built-in pages will follow the system theme, utilizing the [`prefer-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) Media Query. You can override this to always use a dark or light theme, through the [`theme.colorScheme` option](../configuration/options#theme).
 
 In addition, you can define a `theme.brandColor` to define a custom accent color for these built-in pages. You can also define a URL to a logo in `theme.logo` which will be rendered above the primary card in these pages.
 
 #### Sign In
 
-![Customized Signin Page](/img/pages_signin.png)
+![Customized Signin Page](../img/pages_signin.png)
 
 #### Sign Out
 
-![Customized Signout Page](/img/pages_signout.png)
+![Customized Signout Page](../img/pages_signout.png)
 
 ## Examples
 
