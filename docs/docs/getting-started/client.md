@@ -436,6 +436,8 @@ export async function getServerSideProps({ req, res }) {
 }
 ```
 
+When using the pattern above, make sure that authOptions is supplied. And that you have exported authOptions from the [...nextauth].js file, e.g. 'export const authOptions = {...}'.
+
 If every one of your pages needs to be protected, you can do this in `getInitialProps` in `_app`, otherwise you can do it on a page-by-page basis. Alternatively, you can do per page authentication checks client side, instead of having each authentication check be blocking (SSR) by using the method described below in [alternative client session handling](#custom-client-session-handling).
 
 ### Options
