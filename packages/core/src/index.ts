@@ -7,10 +7,14 @@ import * as routes from "./lib/routes"
 import logger, { setLogger } from "./utils/logger"
 
 import type { ErrorType } from "./lib/pages/error"
-import type { AuthOptions, RequestInternal, ResponseInternal } from "./types"
+import type {
+  AuthOptions,
+  RequestInternal,
+  ResponseInternal,
+} from "./lib/types"
 import { UntrustedHost } from "./lib/errors"
 
-export * from "./types"
+export * from "./lib/types"
 
 const configErrorMessage =
   "There is a problem with the server configuration. Check the server logs for more information."

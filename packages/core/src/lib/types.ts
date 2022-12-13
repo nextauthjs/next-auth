@@ -1,5 +1,5 @@
 import type { CookieSerializeOptions } from "cookie"
-import type { Adapter, AdapterUser } from "./adapters"
+import type { Adapter, AdapterUser } from "../adapters"
 import type {
   CredentialInput,
   CredentialsConfig,
@@ -7,14 +7,14 @@ import type {
   OAuthConfigInternal,
   Provider,
   ProviderType,
-} from "./providers"
+} from "../providers"
 import type {
   OAuth2TokenEndpointResponse,
   OpenIDTokenEndpointResponse,
 } from "oauth4webapi"
-import type { JWT, JWTOptions } from "./jwt"
-import type { Cookie } from "./lib/cookie"
-import type { LoggerInstance } from "./utils/logger"
+import type { JWT, JWTOptions } from "../jwt"
+import type { Cookie } from "./cookie"
+import type { LoggerInstance } from "../utils/logger"
 
 export type Awaitable<T> = T | PromiseLike<T>
 
