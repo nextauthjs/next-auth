@@ -1,4 +1,4 @@
-import { merge } from "../utils/merge"
+import { merge } from "./utils/merge"
 
 import type { InternalProvider } from ".."
 import type {

@@ -5,8 +5,8 @@ import * as cookie from "./cookie"
 import { createCSRFToken } from "./csrf-token"
 import { defaultCallbacks } from "./default-callbacks"
 import parseProviders from "./providers"
-import logger from "../utils/logger"
-import parseUrl from "../utils/parse-url"
+import logger from "./utils/logger"
+import parseUrl from "./utils/parse-url"
 
 import type { AuthOptions, InternalOptions, RequestInternal } from ".."
 

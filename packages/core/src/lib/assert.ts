@@ -11,7 +11,7 @@ import {
 import { defaultCookies } from "./cookie"
 
 import type { AuthOptions, RequestInternal } from ".."
-import type { WarningCode } from "../utils/logger"
+import type { WarningCode } from "./utils/logger"
 
 type ConfigError =
   | MissingAdapter

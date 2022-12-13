@@ -4,7 +4,7 @@ import { SessionStore } from "./lib/cookie"
 import { toInternalRequest, toResponse } from "./lib/web"
 import renderPage from "./lib/pages"
 import * as routes from "./lib/routes"
-import logger, { setLogger } from "./utils/logger"
+import logger, { setLogger } from "./lib/utils/logger"
 
 import type { ErrorType } from "./lib/pages/error"
 import type {

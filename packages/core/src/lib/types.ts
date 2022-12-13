@@ -14,7 +14,7 @@ import type {
 } from "oauth4webapi"
 import type { JWT, JWTOptions } from "../jwt"
 import type { Cookie } from "./cookie"
-import type { LoggerInstance } from "../utils/logger"
+import type { LoggerInstance } from "./utils/logger"
 
 export type Awaitable<T> = T | PromiseLike<T>
 
