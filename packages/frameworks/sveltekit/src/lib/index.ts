@@ -2,7 +2,7 @@ import type { Handle } from '@sveltejs/kit';
 import { AUTH_SECRET, AUTH_TRUST_HOST, VERCEL } from '$env/static/private';
 import { dev } from '$app/environment';
 
-import { AuthHandler, type AuthOptions, type AuthAction } from 'next-auth-core';
+import { AuthHandler, type AuthOptions, type AuthAction } from '@auth/core';
 
 export const getServerSession = async (req: Request, options: AuthOptions): Promise<unknown> => {
 	options.secret ??= AUTH_SECRET;

@@ -22,7 +22,6 @@
 		"eslint": "^8.28.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-svelte3": "^4.0.0",
-		"next-auth-core": "workspace:*",
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.8.1",
 		"svelte": "^3.54.0",
@@ -32,8 +31,8 @@
 		"vite": "^4.0.0",
 		"vitest": "^0.25.3"
 	},
-	"peerDependencies": {
-		"next-auth-core": "workspace:*"
+	"dependencies": {
+		"@auth/core": "workspace:*"
 	},
 	"type": "module"
 }
