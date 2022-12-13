@@ -42,7 +42,8 @@
   },
   "release": {
     "packageDirectories": [
-      "packages"
+      "packages",
+      "packages/frameworks"
     ]
   },
   "engines": {
