@@ -100,13 +100,13 @@ Please double check your Email settings.
 
 The Email authentication provider can only be used if a database is configured.
 
-This is required to store the verification token. Please see the [email provider](/providers/email#configuration) for more details.
+This is required to store the verification token. Please see the [email provider](./providers/email#configuration) for more details.
 
 #### CALLBACK_CREDENTIALS_JWT_ERROR
 
 The Credentials Provider can only be used if JSON Web Tokens are used for sessions.
 
-JSON Web Tokens are used for Sessions by default if you have not specified a database. However, if you are using a database, then Database Sessions are enabled by default and you need to [explicitly enable JWT Sessions](/configuration/options#session) to use the Credentials Provider.
+JSON Web Tokens are used for Sessions by default if you have not specified a database. However, if you are using a database, then Database Sessions are enabled by default and you need to [explicitly enable JWT Sessions](./configuration/options#session) to use the Credentials Provider.
 
 If you are using a Credentials Provider, NextAuth.js will not persist users or sessions in a database - user accounts used with the Credentials Provider must be created and managed outside of NextAuth.js.
 
@@ -166,7 +166,7 @@ Make sure the file is there and the filename is written correctly.
 
 #### NO_SECRET
 
-In production, we expect you to define a `secret` property in your configuration. In development, this is shown as a warning for convenience. [Read more](/configuration/options#secret)
+In production, we expect you to define a `secret` property in your configuration. In development, this is shown as a warning for convenience. [Read more](./configuration/options#secret)
 
 
 #### AUTH_ON_ERROR_PAGE_ERROR

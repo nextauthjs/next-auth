@@ -21,7 +21,7 @@ It is not commercial software and is not associated with a commercial organizati
 </summary>
 <p>
 
-You can use NextAuth.js with MySQL, MariaDB, Postgres, MongoDB and SQLite or without a database. (See also: [Databases](/configuration/databases))
+You can use NextAuth.js with MySQL, MariaDB, Postgres, MongoDB and SQLite or without a database. (See also: [Databases](./configuration/databases))
 
 You can use also NextAuth.js with any database using a custom database adapter, or by using a custom credentials authentication provider - e.g. to support signing in with a username and password stored in an existing database.
 
@@ -80,7 +80,7 @@ NextAuth.js was originally designed for use with Next.js and Serverless. However
 
 **Same domain**: you can create a website that handles sign-in with NextAuth.js and then access those sessions on a website that does not use NextAuth.js as long as the websites are on the same domain.
 
-**Same root domain, different subdomains**: If you use NextAuth.js on a website with a different subdomain than the rest of your website (e.g. `auth.example.com` vs. `www.example.com`) you will need to set a custom cookie domain policy for the Session Token cookie. (See also: [Cookies](/configuration/options#cookies)).
+**Same root domain, different subdomains**: If you use NextAuth.js on a website with a different subdomain than the rest of your website (e.g. `auth.example.com` vs. `www.example.com`) you will need to set a custom cookie domain policy for the Session Token cookie. (See also: [Cookies](./configuration/options#cookies)).
 
 :::warning
 Changing the default cookies domain policy can lead to security issues if done incorrectly. Make sure you're aware of the implications before proceeding.
@@ -112,7 +112,7 @@ It is not intended to be used in native applications on desktop or mobile applic
 </summary>
 <p>
 
-Yes! Check out the [TypeScript docs](/getting-started/typescript)
+Yes! Check out the [TypeScript docs](./getting-started/typescript)
 
 </p>
 </details>
@@ -123,7 +123,7 @@ Yes! Check out the [TypeScript docs](/getting-started/typescript)
 </summary>
 <p>
 
-[Next.js Middleware](https://nextjs.org/docs/middleware) is supported. Head over to the [this page](/configuration/nextjs#middleware)
+[Next.js Middleware](https://nextjs.org/docs/middleware) is supported. Head over to the [this page](./configuration/nextjs#middleware)
 
 </p>
 </details>
@@ -190,7 +190,7 @@ If you are deploying directly to a particular cloud platform you may also want t
 
 ## Security
 
-Parts of this section has been moved to its [own page](/security).
+Parts of this section has been moved to its [own page](./security).
 
 <details>
 <summary>
@@ -207,7 +207,7 @@ NextAuth.js records Refresh Tokens and Access Tokens on sign in (if supplied by 
 
 You can then look them up from the database or persist them to the JSON Web Token.
 
-Note: NextAuth.js does not currently handle Access Token rotation for OAuth providers for you, however you can check out [this tutorial](/tutorials/refresh-token-rotation) if you want to implement it.
+Note: NextAuth.js does not currently handle Access Token rotation for OAuth providers for you, however you can check out [this tutorial](./tutorials/refresh-token-rotation) if you want to implement it.
 
 We also have an [example repository](https://github.com/nextauthjs/next-auth-refresh-token-example) / project based upon NextAuth.js v4 where we demonstrate how to use a refresh token to refresh the provided access token.
 
@@ -289,7 +289,7 @@ Ultimately if your request is not accepted or is not actively in development, yo
 </summary>
 <p>
 
-NextAuth.js by default uses JSON Web Tokens for saving the user's session. However, if you use a [database adapter](/adapters/overview), the database will be used to persist the user's session. You can force the usage of JWT when using a database [through the configuration options](/configuration/options#session). Since v4 all our JWT tokens are now encrypted by default with A256GCM.
+NextAuth.js by default uses JSON Web Tokens for saving the user's session. However, if you use a [database adapter](./adapters/overview), the database will be used to persist the user's session. You can force the usage of JWT when using a database [through the configuration options](./configuration/options#session). Since v4 all our JWT tokens are now encrypted by default with A256GCM.
 
 </p>
 </details>
