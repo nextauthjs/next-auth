@@ -5,7 +5,6 @@ import * as cookie from "./lib/cookie"
 import { createCSRFToken } from "./lib/csrf-token"
 import { defaultCallbacks } from "./lib/default-callbacks"
 import parseProviders from "./lib/providers"
-import { createHash } from "./lib/web"
 import logger from "./utils/logger"
 import parseUrl from "./utils/parse-url"
 
@@ -46,18 +45,6 @@ export async function init({
   )
   const url = new URL(parsed.toString())
 
-  /**
-   * Secret used to salt cookies and tokens (e.g. for CSRF protection).
-   * If no secret option is specified then it creates one on the fly
-   * based on options passed here. If options contains unique data, such as
-   * OAuth provider secrets and database credentials it should be sufficent.
-   * If no secret provided in production, we throw an error.
-   */
-  const secret =
-    authOptions.secret ??
-    // TODO: Remove this, always ask the user for a secret, even in dev! (Fix assert.ts too)
-    (await createHash(JSON.stringify({ ...url, ...authOptions })))
-
   const { providers, provider } = parseProviders({
     providers: authOptions.providers,
     url,
@@ -92,7 +79,6 @@ export async function init({
       // Allow user cookie options to override any cookie settings above
       ...authOptions.cookies,
     },
-    secret,
     providers,
     // Session options
     session: {
@@ -105,7 +91,9 @@ export async function init({
     },
     // JWT options
     jwt: {
-      secret, // Use application secret if no keys specified
+      // Asserted in assert.ts
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      secret: authOptions.secret!,
       maxAge, // same as session maxAge,
       encode: jwt.encode,
       decode: jwt.decode,

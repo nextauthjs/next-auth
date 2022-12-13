@@ -38,12 +38,13 @@ export interface AuthOptions {
   providers: Provider[]
   /**
    * A random string used to hash tokens, sign cookies and generate cryptographic keys.
-   * If not specified, it falls back to `jwt.secret` or `NEXTAUTH_SECRET` from environment variables.
-   * Otherwise, it will use a hash of all configuration options, including Client ID / Secrets for entropy.
+   * If not specified, it falls back to `AUTH_SECRET` or `NEXTAUTH_SECRET` from environment variables.
+   * To generate a random string, you can use the following command:
    *
-   * NOTE: The last behavior is extremely volatile, and will throw an error in production.
-   * * **Default value**: `string` (SHA hash of the "options" object)
-   * * **Required**: No - **but strongly recommended**!
+   * On Unix systems: `openssl rand -hex 32`
+   * Or go to https://generate-secret.vercel.app/32
+   *
+   * @default process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET
    *
    * [Documentation](https://next-auth.js.org/configuration/options#secret)
    */

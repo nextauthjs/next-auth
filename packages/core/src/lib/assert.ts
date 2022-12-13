@@ -52,15 +52,10 @@ export function assertConfig(params: {
 
   if (!warned) {
     if (!url.origin) warnings.push("NEXTAUTH_URL")
-
-    // TODO: Make this throw an error in next major. This will also get rid of `NODE_ENV`
-    if (!options.secret && process.env.NODE_ENV !== "production")
-      warnings.push("NO_SECRET")
-
     if (options.debug) warnings.push("DEBUG_ENABLED")
   }
 
-  if (!options.secret && process.env.NODE_ENV === "production") {
+  if (!options.secret) {
     return new MissingSecret("Please define a `secret` in production.")
   }
 

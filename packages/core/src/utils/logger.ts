@@ -19,11 +19,7 @@ function hasErrorProperty(
   return !!(x as any)?.error
 }
 
-export type WarningCode =
-  | "NEXTAUTH_URL"
-  | "NO_SECRET"
-  | "TWITTER_OAUTH_2_BETA"
-  | "DEBUG_ENABLED"
+export type WarningCode = "NEXTAUTH_URL" | "DEBUG_ENABLED"
 
 /**
  * Override any of the methods, and the rest will use the default logger.
