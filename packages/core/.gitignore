@@ -1,5 +1,5 @@
-./adapters.*
-./index.*
-./jwt
-./lib
-./providers
+adapters.*
+index.*
+jwt
+lib
+providers
