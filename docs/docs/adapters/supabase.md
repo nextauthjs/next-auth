@@ -275,7 +275,7 @@ const { data, error } = await supabase.from("users").select("*")
 
 ## Usage with TypeScript
 
-You can pass types that were [generated with the Supabase CLI](/docs/reference/javascript/typescript-support#generating-types) to the Supabase Client to get enhanced type safety and auto completion.
+You can pass types that were [generated with the Supabase CLI](https://supabase.com/docs/reference/javascript/typescript-support#generating-types) to the Supabase Client to get enhanced type safety and auto completion.
 
 Creating a new supabase client object:
 
