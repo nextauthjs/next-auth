@@ -2,9 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "watch": true,
-    "emitDeclarationOnly": false,
-    "module": "none",
-    "resolveJsonModule": false
+    "emitDeclarationOnly": false
   },
   "watchOptions": {
     "excludeDirectories": [
