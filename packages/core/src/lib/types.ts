@@ -518,7 +518,6 @@ export type InternalProvider<T = ProviderType> = (T extends "oauth"
   callbackUrl: string
 }
 
-/** @internal */
 export type AuthAction =
   | "providers"
   | "session"
