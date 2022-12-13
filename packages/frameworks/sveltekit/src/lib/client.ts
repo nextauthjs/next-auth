@@ -3,11 +3,11 @@ import type {
   SignInOptions,
   SignInAuthorizationParams,
   SignOutParams,
-} from "@auth/core"
+} from "next-auth/react"
 import type {
   BuiltInProviderType,
   RedirectableProviderType,
-} from "@auth/core/providers/index"
+} from "next-auth/providers/index"
 
 /**
  * Client-side method to initiate a signin flow
