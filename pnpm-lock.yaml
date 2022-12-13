@@ -50,6 +50,7 @@ importers:
 
   apps/dev:
     specifiers:
+      '@auth/core': workspace:*
       '@next-auth/fauna-adapter': workspace:*
       '@next-auth/prisma-adapter': workspace:*
       '@next-auth/supabase-adapter': workspace:*
@@ -63,7 +64,6 @@ importers:
       faunadb: ^4
       next: 13.0.6
       next-auth: workspace:*
-      next-auth-core: workspace:*
       nodemailer: ^6
       pg: ^8.7.3
       prisma: ^3
@@ -72,6 +72,7 @@ importers:
       sqlite3: ^5.0.8
       typeorm: 0.3.7
     dependencies:
+      '@auth/core': link:../../packages/core
       '@next-auth/fauna-adapter': link:../../packages/adapter-fauna
       '@next-auth/prisma-adapter': link:../../packages/adapter-prisma
       '@next-auth/supabase-adapter': link:../../packages/adapter-supabase
@@ -81,7 +82,6 @@ importers:
       faunadb: 4.6.0
       next: 13.0.6_biqbaboplfbrettd7655fr4n2y
       next-auth: link:../../packages/next-auth
-      next-auth-core: link:../../packages/core
       nodemailer: 6.7.5
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -470,6 +470,19 @@ importers:
       postcss: 8.4.19
       postcss-nested: 6.0.0_postcss@8.4.19
 
+  packages/frameworks/nextjs:
+    specifiers:
+      '@auth/core': workspace:*
+      '@next-auth/tsconfig': workspace:*
+      '@types/node': 18.11.10
+      next: 13.0.6
+    dependencies:
+      '@auth/core': link:../../core
+    devDependencies:
+      '@next-auth/tsconfig': link:../../tsconfig
+      '@types/node': 18.11.10
+      next: 13.0.6
+
   packages/next-auth:
     specifiers:
       '@babel/cli': ^7.17.10
@@ -509,7 +522,6 @@ importers:
       msw: ^0.42.3
       next: 13.0.6
       oauth: ^0.9.15
-      oauth4webapi: 2.0.4
       openid-client: ^5.1.0
       postcss: ^8.4.14
       postcss-cli: ^9.1.0
@@ -563,7 +575,6 @@ importers:
       jest-watch-typeahead: 1.1.0_jest@28.1.1
       msw: 0.42.3
       next: 13.0.6_4cc5zw5azim2bix77d63le72su
-      oauth4webapi: 2.0.4
       postcss: 8.4.14
       postcss-cli: 9.1.0_postcss@8.4.14
       postcss-nested: 5.0.6_postcss@8.4.14
@@ -19254,6 +19265,48 @@ packages:
   /next-tick/1.1.0:
     resolution: {integrity: sha512-CXdUiJembsNjuToQvxayPZF9Vqht7hewsvy2sOWafLvi2awflj9mOC6bHIg50orX8IJvWKY9wYQ/zB2kogPslQ==}
 
+  /next/13.0.6:
+    resolution: {integrity: sha512-COvigvms2LRt1rrzfBQcMQ2GZd86Mvk1z+LOLY5pniFtL4VrTmhZ9salrbKfSiXbhsD01TrDdD68ec3ABDyscA==}
+    engines: {node: '>=14.6.0'}
+    hasBin: true
+    peerDependencies:
+      fibers: '>= 3.1.0'
+      node-sass: ^6.0.0 || ^7.0.0
+      react: ^18.2.0
+      react-dom: ^18.2.0
+      sass: ^1.3.0
+    peerDependenciesMeta:
+      fibers:
+        optional: true
+      node-sass:
+        optional: true
+      sass:
+        optional: true
+    dependencies:
+      '@next/env': 13.0.6
+      '@swc/helpers': 0.4.14
+      caniuse-lite: 1.0.30001431
+      postcss: 8.4.14
+      styled-jsx: 5.1.0
+    optionalDependencies:
+      '@next/swc-android-arm-eabi': 13.0.6
+      '@next/swc-android-arm64': 13.0.6
+      '@next/swc-darwin-arm64': 13.0.6
+      '@next/swc-darwin-x64': 13.0.6
+      '@next/swc-freebsd-x64': 13.0.6
+      '@next/swc-linux-arm-gnueabihf': 13.0.6
+      '@next/swc-linux-arm64-gnu': 13.0.6
+      '@next/swc-linux-arm64-musl': 13.0.6
+      '@next/swc-linux-x64-gnu': 13.0.6
+      '@next/swc-linux-x64-musl': 13.0.6
+      '@next/swc-win32-arm64-msvc': 13.0.6
+      '@next/swc-win32-ia32-msvc': 13.0.6
+      '@next/swc-win32-x64-msvc': 13.0.6
+    transitivePeerDependencies:
+      - '@babel/core'
+      - babel-plugin-macros
+    dev: true
+
   /next/13.0.6_4cc5zw5azim2bix77d63le72su:
     resolution: {integrity: sha512-COvigvms2LRt1rrzfBQcMQ2GZd86Mvk1z+LOLY5pniFtL4VrTmhZ9salrbKfSiXbhsD01TrDdD68ec3ABDyscA==}
     engines: {node: '>=14.6.0'}
@@ -19572,6 +19625,7 @@ packages:
 
   /oauth4webapi/2.0.4:
     resolution: {integrity: sha512-d6NmQuOlCo6+HzNPG70Pl8T4WnHo/XPvQ3Dxus3fRvRjFmt9H+BggI/APyzQ4/jlcdIjPaOw81wIO6WkRGKfkg==}
+    dev: false
 
   /object-assign/4.1.1:
     resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
@@ -23247,6 +23301,22 @@ packages:
       shallowequal: 1.1.0
       supports-color: 5.5.0
     dev: false
+
+  /styled-jsx/5.1.0:
+    resolution: {integrity: sha512-/iHaRJt9U7T+5tp6TRelLnqBqiaIT0HsO0+vgyj8hK2KUk7aejFqRrumqPUlAqDwAj8IbS/1hk3IhBAAK/FCUQ==}
+    engines: {node: '>= 12.0.0'}
+    peerDependencies:
+      '@babel/core': '*'
+      babel-plugin-macros: '*'
+      react: '>= 16.8.0 || 17.x.x || ^18.0.0-0'
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      babel-plugin-macros:
+        optional: true
+    dependencies:
+      client-only: 0.0.1
+    dev: true
 
   /styled-jsx/5.1.0_5wvcx74lvxq2lfpc5x4ihgp2jm:
     resolution: {integrity: sha512-/iHaRJt9U7T+5tp6TRelLnqBqiaIT0HsO0+vgyj8hK2KUk7aejFqRrumqPUlAqDwAj8IbS/1hk3IhBAAK/FCUQ==}

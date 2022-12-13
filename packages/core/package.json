@@ -1,5 +1,5 @@
 {
-  "name": "next-auth-core",
+  "name": "@auth/core",
   "version": "0.0.0",
   "description": "Authentication for the web.",
   "homepage": "https://next-auth.js.org",

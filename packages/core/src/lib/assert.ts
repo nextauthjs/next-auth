@@ -37,7 +37,7 @@ function isValidHttpUrl(url: string, baseUrl: string) {
 }
 
 /**
- * Verify that the user configured `next-auth` correctly.
+ * Verify that the user configured Auth.js correctly.
  * Good place to mention deprecations as well.
  *
  * REVIEW: Make some of these and corresponding docs less Next.js specific?
