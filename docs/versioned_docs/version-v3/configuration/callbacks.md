@@ -81,7 +81,7 @@ When using NextAuth.js without a database, the user object it will always be a p
 :::note
 Redirects returned by this callback cancel the authentication flow. Only redirect to error pages that, for example, tell the user why they're not allowed to sign in.
 
-To redirect to a page after a successful sign in, please use [the `callbackUrl` option](/getting-started/client#specifying-a-callbackurl) or [the redirect callback](/configuration/callbacks#redirect-callback).
+To redirect to a page after a successful sign in, please use [the `callbackUrl` option](../getting-started/client#specifying-a-callbackurl) or [the redirect callback](#redirect-callback).
 :::
 
 ## Redirect callback

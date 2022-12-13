@@ -18,9 +18,9 @@ NextAuth.js comes with multiple ways of connecting to a database:
 
 **This document covers the default adapter (TypeORM).**
 
-See the [documentation for adapters](/adapters/overview) to learn more about using Prisma adapter or using a custom adapter.
+See the [documentation for adapters](../adapters/overview) to learn more about using Prisma adapter or using a custom adapter.
 
-To learn more about databases in NextAuth.js and how they are used, check out [databases in the FAQ](/faq#databases).
+To learn more about databases in NextAuth.js and how they are used, check out [databases in the FAQ](../faq#databases).
 
 ---
 
@@ -78,8 +78,8 @@ Using SQL to create tables and columns is the recommended way to set up an SQL d
 
 Check out the links below for SQL you can run to set up a database for NextAuth.js.
 
-- [MySQL Schema](/v3/adapters/typeorm/mysql)
-- [Postgres Schema](/v3/adapters/typeorm/postgres)
+- [MySQL Schema](../adapters/typeorm/mysql)
+- [Postgres Schema](../adapters/typeorm/postgres)
 
 _If you are running SQLite, MongoDB or a Document database you can skip this step._
 
@@ -218,4 +218,4 @@ database: "sqlite://localhost/:memory:"
 
 ## Other databases
 
-See the [documentation for adapters](/adapters/overview) for more information on advanced configuration, including how to use NextAuth.js with other databases using a [custom adapter](/tutorials/creating-a-database-adapter).
+See the [documentation for adapters](../adapters/overview) for more information on advanced configuration, including how to use NextAuth.js with other databases using a [custom adapter](../tutorials/creating-a-database-adapter).

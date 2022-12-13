@@ -44,7 +44,7 @@ Options are passed to NextAuth.js when initializing it in an API route.
 
 An array of authentication providers for signing in (e.g. Google, Facebook, Twitter, GitHub, Email, etc) in any order. This can be one of the built-in providers or an object with a custom provider.
 
-See the [providers documentation](/configuration/providers/oauth) for a list of supported providers and how to use them.
+See the [providers documentation](../configuration/providers#available-providers) for a list of supported providers and how to use them.
 
 ---
 
@@ -55,7 +55,7 @@ See the [providers documentation](/configuration/providers/oauth) for a list of 
 
 #### Description
 
-[A database connection string or configuration object.](/configuration/databases)
+[A database connection string or configuration object.](./databases)
 
 ---
 
@@ -233,7 +233,7 @@ pages: {
 }
 ```
 
-See the documentation for the [pages option](/configuration/pages) for more information.
+See the documentation for the [pages option](./pages) for more information.
 
 ---
 
@@ -267,7 +267,7 @@ callbacks: {
 }
 ```
 
-See the [callbacks documentation](/configuration/callbacks) for more information on how to use the callback functions.
+See the [callbacks documentation](./callbacks) for more information on how to use the callback functions.
 
 ---
 
@@ -282,7 +282,7 @@ Events are asynchronous functions that do not return a response, they are useful
 
 You can specify a handler for any of these events below - e.g. for debugging or to create an audit log.
 
-The content of the message object varies depending on the flow (e.g. OAuth or Email authentication flow, JWT or database sessions, etc). See the [events documentation](/configuration/events) for more information on the form of each message object and how to use the events functions.
+The content of the message object varies depending on the flow (e.g. OAuth or Email authentication flow, JWT or database sessions, etc). See the [events documentation](./events) for more information on the form of each message object and how to use the events functions.
 
 ```js
 events: {
@@ -309,7 +309,7 @@ By default NextAuth.js uses a database adapter that uses TypeORM and supports My
 
 You can use the `adapter` option to use the Prisma adapter - or pass in your own adapter if you want to use a database that is not supported by one of the built-in adapters.
 
-See the [adapter documentation](/adapters/overview) for more information.
+See the [adapter documentation](../adapters/overview) for more information.
 
 :::note
 If the `adapter` option is specified it overrides the `database` option, only specify one or the other.
@@ -372,7 +372,7 @@ If the `debug` level is defined by the user, it will be called regardless of the
 
 #### Description
 
-Changes the theme of [pages](/configuration/pages). Set to `"light"`, if you want to force pages to always be light. Set to `"dark"`, if you want to force pages to always be dark. Set to `"auto"`, (or leave this option out) if you want the pages to follow the preferred system theme. (Uses the [prefers-color-scheme](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) media query.)
+Changes the theme of [pages](./pages). Set to `"light"`, if you want to force pages to always be light. Set to `"dark"`, if you want to force pages to always be dark. Set to `"auto"`, (or leave this option out) if you want the pages to follow the preferred system theme. (Uses the [prefers-color-scheme](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) media query.)
 
 ---
 

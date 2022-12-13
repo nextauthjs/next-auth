@@ -29,8 +29,8 @@ We purposefully restrict the returned error codes for increased security.
 
 The following errors are passed as error query parameters to the default or overriden error page:
 
-- **Configuration**: There is a problem with the server configuration. Check if your [options](/configuration/options#options) is correct.
-- **AccessDenied**: Usually occurs, when you restricted access through the [`signIn` callback](/configuration/callbacks#sign-in-callback), or [`redirect` callback](/configuration/callbacks#redirect-callback)
+- **Configuration**: There is a problem with the server configuration. Check if your [options](./options#options) is correct.
+- **AccessDenied**: Usually occurs, when you restricted access through the [`signIn` callback](./callbacks#sign-in-callback), or [`redirect` callback](./callbacks#redirect-callback)
 - **Verification**: Related to the Email provider. The token has expired or has already been used
 - **Default**: Catch all, will apply, if none of the above matched
 
@@ -47,14 +47,14 @@ The following errors are passed as error query parameters to the default or over
 - **Callback**: Error in the [OAuth callback handler route](https://github.com/nextauthjs/next-auth/blob/main/src/server/routes/callback.js)
 - **OAuthAccountNotLinked**: If the email on the account is already linked, but not with this OAuth account
 - **EmailSignin**: Sending the e-mail with the verification token failed
-- **CredentialsSignin**: The `authorize` callback returned `null` in the [Credentials provider](/providers/credentials). We don't recommend providing information about which part of the credentials were wrong, as it might be abused by malicious hackers.
+- **CredentialsSignin**: The `authorize` callback returned `null` in the [Credentials provider](../providers/credentials). We don't recommend providing information about which part of the credentials were wrong, as it might be abused by malicious hackers.
 - **Default**: Catch all, will apply, if none of the above matched
 
 Example: `/auth/error?error=Default`
 
 ## Theming
 
-By default, the built-in pages will follow the system theme, utilizing the [`prefer-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) Media Query. You can override this to always use a dark or light theme, through the [`theme` option](/configuration/options#theme).
+By default, the built-in pages will follow the system theme, utilizing the [`prefer-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) Media Query. You can override this to always use a dark or light theme, through the [`theme` option](./options#theme).
 
 ## Examples
 

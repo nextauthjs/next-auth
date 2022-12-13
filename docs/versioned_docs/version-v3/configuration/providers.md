@@ -213,7 +213,7 @@ providers: [
 ...
 ```
 
-See the [Email provider documentation](/providers/email) for more information on how to configure email sign in.
+See the [Email provider documentation](../providers/email) for more information on how to configure email sign in.
 
 :::note
 The email provider requires a database, it cannot be used without one.
@@ -279,7 +279,7 @@ providers: [
 ...
 ```
 
-See the [Credentials provider documentation](/providers/credentials) for more information.
+See the [Credentials provider documentation](../providers/credentials) for more information.
 
 :::note
 The Credentials provider can only be used if JSON Web Tokens are enabled for sessions. Users authenticated with the Credentials provider are not persisted in the database.
