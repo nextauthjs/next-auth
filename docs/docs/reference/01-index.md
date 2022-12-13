@@ -3,9 +3,17 @@ title: Reference
 sidebar_label: Overview
 ---
 
-## Reference Information
 
-Here you will find all reference information for NextAuth.js. For example:
+## Providers
+- OAuth/OIDC
+- Email/Passwordless
+- Credentials
 
-- OAuth Providers
-- Adapters
+## Database Adapters
+
+## Frameworks
+- Next.js
+- SvelteKit 🏗
+- Remix 🏗
+- Nuxt 🏗
+- Gatsby 🏗
