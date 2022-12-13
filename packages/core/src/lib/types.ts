@@ -16,6 +16,7 @@ import type { JWT, JWTOptions } from "../jwt"
 import type { Cookie } from "./cookie"
 import type { LoggerInstance } from "./utils/logger"
 
+/** @internal */
 export type Awaitable<T> = T | PromiseLike<T>
 
 export type { LoggerInstance }
@@ -426,7 +427,7 @@ export interface PagesOptions {
   newUser: string
 }
 
-export type ISODateString = string
+type ISODateString = string
 
 export interface DefaultSession {
   user?: {
