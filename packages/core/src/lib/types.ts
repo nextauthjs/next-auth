@@ -16,6 +16,7 @@ import type { JWT, JWTOptions } from "../jwt"
 import type { Cookie } from "./cookie"
 import type { LoggerInstance } from "./utils/logger"
 
+/** @internal */
 export type Awaitable<T> = T | PromiseLike<T>
 
 export type { LoggerInstance }
@@ -214,10 +215,6 @@ export interface AuthOptions {
    * @default Boolean(process.env.NEXTAUTH_URL ?? process.env.AUTH_TRUST_HOST ?? process.env.VERCEL)
    */
   trustHost?: boolean
-  /** @internal */
-  __internal__?: {
-    runtime?: "web" | "nodejs"
-  }
 }
 
 /**
@@ -426,7 +423,7 @@ export interface PagesOptions {
   newUser: string
 }
 
-export type ISODateString = string
+type ISODateString = string
 
 export interface DefaultSession {
   user?: {
