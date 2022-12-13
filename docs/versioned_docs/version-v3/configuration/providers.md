@@ -26,7 +26,7 @@ NextAuth.js is designed to work with any OAuth service, it supports **OAuth 1.0*
   .sort(([, a], [, b]) => a.localeCompare(b))
   .map(([key, name]) => (
     <span key={key}>
-      <a href={`/providers/${key}`}>{name}</a>
+      <a href={`../providers/${key}`}>{name}</a>
       <span className="provider-name-list__comma">,</span>
     </span>
   )

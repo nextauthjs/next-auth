@@ -367,7 +367,7 @@ NextAuth.js comes with a set of built-in providers. You can find them [here](htt
   .sort(([, a], [, b]) => a.localeCompare(b))
   .map(([key, name]) => (
     <span key={key}>
-      <a href={`/providers/${key}`}>{name}</a>
+      <a href={`../../providers/${key}`}>{name}</a>
       <span className="provider-name-list__comma">,</span>
     </span>
   )
