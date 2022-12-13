@@ -260,7 +260,7 @@ e.g.
 - `signIn("auth0", null, { login_hint: "info@example.com" })` _hints the e-mail address to the provider_
 
 :::note
-You can also set these parameters through [`provider.authorizationParams`](../configuration/providers/oauth#options).
+You can also set these parameters through [`provider.authorizationParams`](../configuration/providers#options).
 :::
 
 :::note

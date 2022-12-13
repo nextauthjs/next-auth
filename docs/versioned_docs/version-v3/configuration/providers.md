@@ -18,21 +18,6 @@ NextAuth.js is designed to work with any OAuth service, it supports **OAuth 1.0*
 
 ## OAuth Providers
 
-### Available providers
-
-<div className="provider-name-list">
-{Object.entries(require("../../../providers.json"))
-  .filter(([key]) => !["email", "credentials"].includes(key))
-  .sort(([, a], [, b]) => a.localeCompare(b))
-  .map(([key, name]) => (
-    <span key={key}>
-      <a href={`../providers/${key}`}>{name}</a>
-      <span className="provider-name-list__comma">,</span>
-    </span>
-  )
-)}
-</div>
-
 ### How to
 
 1. Register your application at the developer portal of your provider. There are links above to the developer docs for most supported providers with details on how to register your application.
