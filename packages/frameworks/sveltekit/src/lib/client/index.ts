@@ -1,3 +1,6 @@
+import type { LiteralUnion, SignInOptions, SignInAuthorizationParams, SignOutParams } from "next-auth-core";
+import type { BuiltInProviderType, RedirectableProviderType } from "next-auth-core/providers/index";
+
 /**
  * Client-side method to initiate a signin flow
  * or send the user to the signin page listing all possible providers.
@@ -5,7 +8,13 @@
  *
  * [Documentation](https://next-auth.js.org/getting-started/client#signin)
  */
-export async function signIn(providerId?: any, options?: any, authorizationParams?: any) {
+export async function signIn<
+  P extends RedirectableProviderType | undefined = undefined
+>(providerId?: LiteralUnion<
+    P extends RedirectableProviderType
+      ? P | BuiltInProviderType
+      : BuiltInProviderType
+  >, options?: SignInOptions, authorizationParams?: SignInAuthorizationParams) {
 	const { callbackUrl = window.location.href, redirect = true } = options ?? {};
 
 	// TODO: Support custom providers
@@ -29,6 +38,7 @@ export async function signIn(providerId?: any, options?: any, authorizationParam
 			'Content-Type': 'application/x-www-form-urlencoded',
 			'X-Auth-Return-Redirect': '1'
 		},
+		// @ts-expect-error -- ignore
 		body: new URLSearchParams({
 			...options,
 			csrfToken,
@@ -56,7 +66,7 @@ export async function signIn(providerId?: any, options?: any, authorizationParam
  *
  * [Documentation](https://next-auth.js.org/getting-started/client#signout)
  */
-export async function signOut(options?: any) {
+export async function signOut(options?: SignOutParams) {
 	const { callbackUrl = window.location.href } = options ?? {};
 	// TODO: Custom base path
 	// TODO: Remove this since Sveltekit offers the CSRF protection via origin check
