@@ -28,6 +28,13 @@
       "types": "./index.d.ts",
       "import": "./index.js"
     },
+    "./adapters": {
+      "types": "./adapters.d.ts"
+    },
+    "./jwt": {
+      "types": "./jwt/index.d.ts",
+      "import": "./jwt/index.js"
+    },
     "./providers/*": {
       "types": "./providers/*.d.ts",
       "import": "./providers/*.js"
