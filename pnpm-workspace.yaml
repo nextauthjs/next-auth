@@ -1,4 +1,5 @@
 packages:
   - "packages/**"
+  - "packages/frameworks/**"
   - "apps/dev"
   - "docs"
