@@ -501,7 +501,6 @@ importers:
       postcss-nested: 6.0.0
       preact: 10.11.3
       preact-render-to-string: 5.2.3
-      uuid: 9.0.0
     dependencies:
       '@panva/hkdf': 1.0.2
       cookie: 0.5.0
@@ -509,7 +508,6 @@ importers:
       oauth4webapi: 2.0.4
       preact: 10.11.3
       preact-render-to-string: 5.2.3_preact@10.11.3
-      uuid: 9.0.0
     devDependencies:
       '@next-auth/tsconfig': link:../tsconfig
       '@types/node': 18.11.10

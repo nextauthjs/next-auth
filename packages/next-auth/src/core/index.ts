@@ -32,7 +32,7 @@ export interface ResponseInternal<
   status?: number
   headers?: Record<string, string>
   body?: Body
-  redirect?: URL | string // TODO: refactor to only allow URL
+  redirect?: string
   cookies?: Cookie[]
 }
 

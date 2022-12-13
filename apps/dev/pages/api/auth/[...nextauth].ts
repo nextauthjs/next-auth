@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { AuthHandler, AuthOptions } from "next-auth-core"
 
 // Providers
@@ -132,13 +131,13 @@ if (authOptions.adapter) {
 
 // TODO: move to next-auth/edge
 function Auth(...args: any[]) {
-  const envSecret = process.env.NEXTAUTH_SECRET
+  const envSecret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET
   const envTrustHost = !!(process.env.NEXTAUTH_URL ?? process.env.AUTH_TRUST_HOST ?? process.env.VERCEL ?? process.env.NODE_ENV !== "production")
   if (args.length === 1) {
-    return (req: Request) => {
+    return async (req: Request) => {
       args[0].secret ??= envSecret
       args[0].trustHost ??= envTrustHost
-      return AuthHandler(req, args[0])
+      return await AuthHandler(req, args[0])
     }
   }
   args[1].secret ??= envSecret

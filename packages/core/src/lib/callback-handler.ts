@@ -1,5 +1,5 @@
-import { AccountNotLinkedError } from "../errors"
-import { fromDate } from "../utils/date"
+import { AccountNotLinkedError } from "./errors"
+import { fromDate } from "./utils/date"
 
 import type { Account, InternalOptions, User } from ".."
 import type { AdapterSession, AdapterUser } from "../adapters"

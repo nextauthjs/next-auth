@@ -62,7 +62,8 @@
     "index.js",
     "adapters.d.ts",
     "middleware.d.ts",
-    "middleware.js"
+    "middleware.js",
+    "utils"
   ],
   "license": "ISC",
   "dependencies": {
@@ -97,7 +98,6 @@
     "@babel/preset-typescript": "^7.17.12",
     "@edge-runtime/jest-environment": "1.1.0-beta.35",
     "@next-auth/tsconfig": "workspace:*",
-    "oauth4webapi": "2.0.4",
     "@swc/core": "^1.2.198",
     "@swc/jest": "^0.2.21",
     "@testing-library/dom": "^8.13.0",

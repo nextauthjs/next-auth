@@ -5,8 +5,8 @@ import SigninPage from "./signin"
 import SignoutPage from "./signout"
 import VerifyRequestPage from "./verify-request"
 
-import type { InternalOptions, RequestInternal, ResponseInternal } from ".."
-import type { Cookie } from "../lib/cookie"
+import type { InternalOptions, RequestInternal, ResponseInternal } from "../.."
+import type { Cookie } from "../cookie"
 import type { ErrorType } from "./error"
 
 type RenderPageParams = {

@@ -1,4 +1,4 @@
-import { OAuthCallbackError } from "../../errors"
+import { OAuthCallbackError } from "../errors"
 import { useNonce } from "./nonce-handler"
 import { usePKCECodeVerifier } from "./pkce-handler"
 import { useState } from "./state-handler"
@@ -70,8 +70,7 @@ export async function handleOAuthCallback(params: {
     const client: o.Client = {
       client_id: provider.clientId,
       client_secret: provider.clientSecret,
-      token_endpoint_auth_method: "client_secret_basic",
-      // TODO: support other client options
+      ...provider.client,
     }
 
     const resCookies: Cookie[] = []

@@ -1,8 +1,9 @@
-import { createHash, randomUUID } from "./lib/web"
+import { randomBytes, randomUUID } from "crypto"
 import { AuthOptions } from ".."
 import logger from "../utils/logger"
 import { adapterErrorHandler, eventsErrorHandler } from "./errors"
 import parseProviders from "./lib/providers"
+import { createSecret } from "./lib/utils"
 import * as cookie from "./lib/cookie"
 import * as jwt from "../jwt"
 import { defaultCallbacks } from "./lib/default-callbacks"
@@ -48,17 +49,7 @@ export async function init({
   )
   const url = new URL(parsed.toString())
 
-  /**
-   * Secret used to salt cookies and tokens (e.g. for CSRF protection).
-   * If no secret option is specified then it creates one on the fly
-   * based on options passed here. If options contains unique data, such as
-   * OAuth provider secrets and database credentials it should be sufficent.
-   * If no secret provided in production, we throw an error.
-   */
-  const secret =
-    authOptions.secret ??
-    // TODO: Remove this, always ask the user for a secret, even in dev! (Fix assert.ts too)
-    (await createHash(JSON.stringify({ ...url, ...authOptions })))
+  const secret = createSecret({ authOptions, url })
 
   const { providers, provider } = parseProviders({
     providers: authOptions.providers,
@@ -102,7 +93,10 @@ export async function init({
       strategy: authOptions.adapter ? "database" : "jwt",
       maxAge,
       updateAge: 24 * 60 * 60,
-      generateSessionToken: randomUUID,
+      generateSessionToken: () => {
+        // Use `randomUUID` if available. (Node 15.6+)
+        return randomUUID?.() ?? randomBytes(32).toString("hex")
+      },
       ...authOptions.session,
     },
     // JWT options
@@ -130,7 +124,7 @@ export async function init({
     csrfToken,
     cookie: csrfCookie,
     csrfTokenVerified,
-  } = await createCSRFToken({
+  } = createCSRFToken({
     options,
     cookieValue: reqCookies?.[options.cookies.csrfToken.name],
     isPost,

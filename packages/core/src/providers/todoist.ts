@@ -22,7 +22,6 @@ export default function TodoistProvider<P extends TodoistProfile>(
       params: { scope: "data:read" },
     },
     token: "https://todoist.com/oauth/access_token",
-    // @ts-expect-error TODO: support client options
     client: {
       token_endpoint_auth_method: "client_secret_post",
     },

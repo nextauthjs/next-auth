@@ -4,7 +4,7 @@ import type { ResponseInternal } from ".."
 import type { SessionStore } from "../lib/cookie"
 
 /** Handle requests to /api/auth/signout */
-export async function signout(params: {
+export default async function signout(params: {
   options: InternalOptions
   sessionStore: SessionStore
 }): Promise<ResponseInternal> {

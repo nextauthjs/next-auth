@@ -1,7 +1,6 @@
 {
   "name": "next-auth-core",
-  "private": true,
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "Authentication for the web.",
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/next-auth.git",
@@ -14,15 +13,30 @@
     "Iain Collins <me@iaincollins.com"
   ],
   "type": "module",
-  "types": "./dist/index.d.ts",
+  "types": "./index.d.ts",
+  "files": [
+    "adapters.*",
+    "index.*",
+    "jwt",
+    "lib",
+    "providers",
+    "src"
+  ],
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    },
+    "./adapters": {
+      "types": "./adapters.d.ts"
+    },
+    "./jwt": {
+      "types": "./jwt/index.d.ts",
+      "import": "./jwt/index.js"
     },
     "./providers/*": {
-      "import": "./dist/providers/*.js",
-      "types": "./dist/providers/*.d.ts"
+      "types": "./providers/*.d.ts",
+      "import": "./providers/*.js"
     }
   },
   "license": "ISC",
@@ -32,8 +46,7 @@
     "jose": "4.11.1",
     "oauth4webapi": "2.0.4",
     "preact": "10.11.3",
-    "preact-render-to-string": "5.2.3",
-    "uuid": "9.0.0"
+    "preact-render-to-string": "5.2.3"
   },
   "peerDependencies": {
     "nodemailer": "6.8.0"
@@ -45,7 +58,7 @@
   },
   "scripts": {
     "build": "pnpm clean && tsc && pnpm css",
-    "clean": "rm -rf dist",
+    "clean": "rm -rf adapters.* index.* jwt lib providers",
     "css": "node ./scripts/generate-css.js",
     "dev": "pnpm css && tsc -w",
     "test": "jest"

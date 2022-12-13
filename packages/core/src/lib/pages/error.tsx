@@ -1,4 +1,4 @@
-import type { Theme } from ".."
+import type { Theme } from "../.."
 
 /**
  * The following errors are passed as error query parameters to the default or overridden error page.

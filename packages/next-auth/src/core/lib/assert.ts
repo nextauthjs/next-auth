@@ -1,12 +1,11 @@
 import {
   MissingAdapter,
-  MissingAdapterMethods,
   MissingAPIRoute,
   MissingAuthorize,
   MissingSecret,
-  InvalidCallbackUrl,
-  InvalidEndpoints,
   UnsupportedStrategy,
+  InvalidCallbackUrl,
+  MissingAdapterMethods,
 } from "../errors"
 import { defaultCookies } from "./cookie"
 
@@ -15,15 +14,11 @@ import type { WarningCode } from "../../utils/logger"
 import type { AuthOptions } from "../types"
 
 type ConfigError =
-  | MissingAdapter
-  | MissingAdapterMethods
   | MissingAPIRoute
-  | MissingAuthorize
   | MissingSecret
-  | InvalidCallbackUrl
   | UnsupportedStrategy
-  | InvalidEndpoints
-  | UnsupportedStrategy
+  | MissingAuthorize
+  | MissingAdapter
 
 let warned = false
 
@@ -96,20 +91,6 @@ export function assertConfig(params: {
   let hasTwitterOAuth2
 
   for (const provider of options.providers) {
-    if (provider.type === "oauth" && !provider.issuer) {
-      const { authorization: a, token: t, userinfo: u } = provider
-      let key
-      if (typeof a !== "string" && !a?.url) key = "authorization"
-      else if (typeof t !== "string" && !t?.url) key = "token"
-      else if (typeof u !== "string" && !u?.url) key = "userinfo"
-
-      if (key) {
-        return new InvalidEndpoints(
-          `Provider "${provider.id}" is missing both \`issuer\` and \`${key}\` endpoint config. At least one of them is required.`
-        )
-      }
-    }
-
     if (provider.type === "credentials") hasCredentials = true
     else if (provider.type === "email") hasEmail = true
     else if (provider.id === "twitter" && provider.version === "2.0")

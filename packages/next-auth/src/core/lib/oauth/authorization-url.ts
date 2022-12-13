@@ -15,7 +15,7 @@ import type { Cookie } from "../cookie"
  *
  * [OAuth 2](https://www.oauth.com/oauth2-servers/authorization/the-authorization-request/) | [OAuth 1](https://oauth.net/core/1.0a/#auth_step2)
  */
-export async function getAuthorizationUrl({
+export default async function getAuthorizationUrl({
   options,
   query,
 }: {
@@ -23,16 +23,17 @@ export async function getAuthorizationUrl({
   query: RequestInternal["query"]
 }) {
   const { logger, provider } = options
-  let params
+  let params: any = {}
 
-  if (provider.authorization?.url) {
-    params = Object.assign(
-      Object.fromEntries(provider.authorization.url.searchParams.entries()),
-      query
-    )
+  if (typeof provider.authorization === "string") {
+    const parsedUrl = new URL(provider.authorization)
+    const parsedParams = Object.fromEntries(parsedUrl.searchParams)
+    params = { ...params, ...parsedParams }
   } else {
-    params = query
+    params = { ...params, ...provider.authorization?.params }
   }
+
+  params = { ...params, ...query }
 
   // Handle OAuth v1.x
   if (provider.version?.startsWith("1.")) {

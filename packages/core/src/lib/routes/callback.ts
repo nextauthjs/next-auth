@@ -1,11 +1,11 @@
-import callbackHandler from "../lib/callback-handler"
-import getAdapterUserFromEmail from "../lib/email/getUserFromEmail"
-import { handleOAuthCallback } from "../lib/oauth/callback"
-import { createHash } from "../lib/web"
+import callbackHandler from "../callback-handler"
+import getAdapterUserFromEmail from "../email/getUserFromEmail"
+import { handleOAuthCallback } from "../oauth/callback"
+import { createHash } from "../web"
 
-import type { RequestInternal, ResponseInternal, User } from ".."
-import type { AdapterSession } from "../adapters"
-import type { Cookie, SessionStore } from "../lib/cookie"
+import type { RequestInternal, ResponseInternal, User } from "../.."
+import type { AdapterSession } from "../../adapters"
+import type { Cookie, SessionStore } from "../cookie"
 import type { InternalOptions } from "../types"
 
 /** Handle callbacks from login services */

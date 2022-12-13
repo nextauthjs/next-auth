@@ -12,6 +12,8 @@ import type { JWT, JWTOptions } from "../jwt"
 import type { LoggerInstance } from "../utils/logger"
 import type { CookieSerializeOptions } from "cookie"
 
+import type { NextApiRequest, NextApiResponse } from "next"
+
 export type Awaitable<T> = T | PromiseLike<T>
 
 export type { LoggerInstance }
@@ -209,10 +211,6 @@ export interface AuthOptions {
    * @default Boolean(process.env.NEXTAUTH_URL ?? process.env.AUTH_TRUST_HOST ?? process.env.VERCEL)
    */
   trustHost?: boolean
-  /** @internal */
-  __internal__?: {
-    runtime?: "web" | "nodejs"
-  }
 }
 
 /**
@@ -548,3 +546,18 @@ export interface InternalOptions<
   cookies: CookiesOptions
   callbackUrl: string
 }
+
+/** @internal */
+export interface NextAuthRequest extends NextApiRequest {
+  options: InternalOptions
+}
+
+/** @internal */
+export type NextAuthResponse<T = any> = NextApiResponse<T>
+
+/** @internal */
+// eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+export type NextAuthApiHandler<Result = void, Response = any> = (
+  req: NextAuthRequest,
+  res: NextAuthResponse<Response>
+) => Awaitable<Result>

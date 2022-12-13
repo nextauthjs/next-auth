@@ -22,11 +22,6 @@ export function getBody(
   if (req.body instanceof ReadableStream) {
     return { body: req.body }
   }
-
-  if (req.headers["content-type"] === "application/x-www-form-urlencoded") {
-    return { body: new URLSearchParams(req.body) }
-  }
-
   return { body: JSON.stringify(req.body) }
 }
 

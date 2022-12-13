@@ -1,16 +1,20 @@
-import { init } from "./init"
+import { init } from "./lib/init"
 import { assertConfig } from "./lib/assert"
 import { SessionStore } from "./lib/cookie"
 import { toInternalRequest, toResponse } from "./lib/web"
-import renderPage from "./pages"
-import * as routes from "./routes"
-import logger, { setLogger } from "./utils/logger"
+import renderPage from "./lib/pages"
+import * as routes from "./lib/routes"
+import logger, { setLogger } from "./lib/utils/logger"
 
-import type { ErrorType } from "./pages/error"
-import type { AuthOptions, RequestInternal, ResponseInternal } from "./types"
-import { UntrustedHost } from "./errors"
+import type { ErrorType } from "./lib/pages/error"
+import type {
+  AuthOptions,
+  RequestInternal,
+  ResponseInternal,
+} from "./lib/types"
+import { UntrustedHost } from "./lib/errors"
 
-export * from "./types"
+export * from "./lib/types"
 
 const configErrorMessage =
   "There is a problem with the server configuration. Check the server logs for more information."

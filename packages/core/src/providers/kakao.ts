@@ -76,7 +76,6 @@ export default function Kakao<P extends KakaoProfile>(
     authorization: "https://kauth.kakao.com/oauth/authorize?scope",
     token: "https://kauth.kakao.com/oauth/token",
     userinfo: "https://kapi.kakao.com/v2/user/me",
-    // @ts-expect-error TODO: support client options
     client: {
       token_endpoint_auth_method: "client_secret_post",
     },

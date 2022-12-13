@@ -1,4 +1,4 @@
-import type { InternalProvider, ResponseInternal } from ".."
+import type { InternalProvider, ResponseInternal } from "../.."
 
 export interface PublicProvider {
   id: string
