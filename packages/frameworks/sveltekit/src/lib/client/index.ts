@@ -23,13 +23,13 @@ export async function signIn<
 	const isSupportingReturn = isCredentials || isEmail;
 
 	// TODO: Handle custom base path
-	const signInUrl = `/api/auth/${isCredentials ? 'callback' : 'signin'}/${providerId}`;
+	const signInUrl = `/auth/${isCredentials ? 'callback' : 'signin'}/${providerId}`;
 
 	const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`;
 
 	// TODO: Handle custom base path
 	// TODO: Remove this since Sveltekit offers the CSRF protection via origin check
-	const csrfTokenResponse = await fetch('/api/auth/csrf');
+	const csrfTokenResponse = await fetch('/auth/csrf');
 	const { csrfToken } = await csrfTokenResponse.json();
 
 	const res = await fetch(_signInUrl, {
@@ -70,9 +70,9 @@ export async function signOut(options?: SignOutParams) {
 	const { callbackUrl = window.location.href } = options ?? {};
 	// TODO: Custom base path
 	// TODO: Remove this since Sveltekit offers the CSRF protection via origin check
-	const csrfTokenResponse = await fetch('/api/auth/csrf');
+	const csrfTokenResponse = await fetch('/auth/csrf');
 	const { csrfToken } = await csrfTokenResponse.json();
-	const res = await fetch(`/api/auth/signout`, {
+	const res = await fetch(`/auth/signout`, {
 		method: 'post',
 		headers: {
 			'Content-Type': 'application/x-www-form-urlencoded',

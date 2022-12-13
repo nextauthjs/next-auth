@@ -1,4 +1,4 @@
-import type { ServerLoadEvent } from '@sveltejs/kit';
+import type { Handle } from '@sveltejs/kit';
 import { AUTH_SECRET, NEXTAUTH_URL, AUTH_TRUST_HOST, VERCEL } from '$env/static/private';
 import { dev } from '$app/environment';
 
@@ -23,26 +23,36 @@ export const getServerSession = async (req: Request, options: AuthOptions): Prom
 	throw new Error(data.message);
 };
 
-const SKAuthHandler = async (
-	{ request }: ServerLoadEvent,
-	options: AuthOptions
-): Promise<Response> => {
+interface SvelteKitAuthOptions extends AuthOptions {
+	/**
+	 * @default '/auth'
+	 */
+	prefix?: string;
+}
+const actions = [ "providers", "session", "csrf", "signin", "signout", "callback", "verify-request", "error", "_log" ]
+
+/** The main entry point to next-auth-sveltekit */
+function SvelteKitAuth({prefix = '/auth', ...options }: SvelteKitAuthOptions) {
+
 	options.secret ??= AUTH_SECRET;
 	options.trustHost ??= !!(NEXTAUTH_URL ?? AUTH_TRUST_HOST ?? VERCEL ?? dev);
 
-	return await AuthHandler(request, options);
-};
-
-/** The main entry point to next-auth-sveltekit */
-function SvelteKitAuth(...args: [AuthOptions]): {
-	GET: (event: ServerLoadEvent) => Promise<unknown>;
-	POST: (event: ServerLoadEvent) => Promise<unknown>;
-} {
-	const options = args[0];
-	return {
-		GET: async (event) => await SKAuthHandler(event, options),
-		POST: async (event) => await SKAuthHandler(event, options)
-	};
+	return (({ event, resolve }) => {
+		const [action] = event.url.pathname.slice(prefix.length + 1).split('/');
+		const isAuth = actions.includes(action)
+		event.locals.getSession = async () => {
+			const session = getServerSession(event.request, options)
+			return session
+		};
+    if (!event.url.pathname.startsWith(prefix + '/') || !isAuth) {
+			return resolve(event)
+		}
+		event.locals.getSession = async () => {
+			const session = getServerSession(event.request, options)
+			return session
+		};
+		return AuthHandler(event.request, options);
+  }) satisfies Handle
 }
 
 export default SvelteKitAuth;

@@ -1,4 +1,5 @@
 /// <reference types="@sveltejs/kit" />
+/// <reference types="next-auth-sveltekit" />
 import type {
   User as NextAuthUser,
   Session as NextAuthSession,
@@ -18,7 +19,8 @@ interface AppSession extends NextAuthSession {
 declare global {
   declare namespace App {
     interface Locals {
-      session: AppSession
+      // session: AppSession
+      getSession: () => Promise<AppSession>
     }
 
     interface Platform {}
