@@ -68,6 +68,7 @@ export function toResponse(res: ResponseInternal): Response {
     } else {
       headers.set("Set-Cookie", cookieHeader)
     }
+    // headers.set("Set-Cookie", cookieHeader) // TODO: Remove. Seems to be a bug with Headers in the runtime
   })
 
   const body =
