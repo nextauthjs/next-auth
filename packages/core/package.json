@@ -14,19 +14,23 @@
     "Iain Collins <me@iaincollins.com"
   ],
   "type": "module",
-  "types": "./dist/index.d.ts",
+  "types": "./index.d.ts",
   "files": [
-    "dist",
+    "adapters.*",
+    "index.*",
+    "jwt",
+    "lib",
+    "providers",
     "src"
   ],
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "types": "./index.d.ts",
+      "import": "./index.js"
     },
     "./providers/*": {
-      "types": "./dist/providers/*.d.ts",
-      "import": "./dist/providers/*.js"
+      "types": "./providers/*.d.ts",
+      "import": "./providers/*.js"
     }
   },
   "license": "ISC",
@@ -48,7 +52,7 @@
   },
   "scripts": {
     "build": "pnpm clean && tsc && pnpm css",
-    "clean": "rm -rf dist",
+    "clean": "rm -rf adapters.* index.* jwt lib providers",
     "css": "node ./scripts/generate-css.js",
     "dev": "pnpm css && tsc -w",
     "test": "jest"
