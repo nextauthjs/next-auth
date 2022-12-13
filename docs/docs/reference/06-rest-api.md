@@ -20,7 +20,7 @@ Learn more about this in the [OAuth specification](https://datatracker.ietf.org/
 
 In case of using the Email provider, calling this endpoint will send a sign-in URL to the user's e-mail address.
 
-This endpoint is also used by the [`signIn`](/getting-started/client#signin) method internally.
+This endpoint is also used by the [`signIn`](./configuration/client#signin) method internally.
 
 #### `GET`/`POST` /api/auth/callback/:provider
 
