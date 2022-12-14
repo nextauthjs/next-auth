@@ -50,7 +50,7 @@
       "permanent": true
     },
     {
-      "source": "(.*)",
+      "source": "/",
       "has": [
         {
           "type": "host",
