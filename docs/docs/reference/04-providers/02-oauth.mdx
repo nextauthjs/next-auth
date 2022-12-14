@@ -1,0 +1,193 @@
+---
+title: OAuth Provider Options
+sidebar_label: OAuth options
+---
+
+## Provider Options
+
+Whenever you configure a custom or a built-in OAuth provider, you have the following options available:
+
+```ts
+interface OAuthConfig {
+  /**
+   * OpenID Connect (OIDC) compliant providers can configure
+   * this instead of `authorize`/`token`/`userinfo` options
+   * without further configuration needed in most cases.
+   * You can still use the `authorize`/`token`/`userinfo`
+   * options for advanced control.
+   *
+   * [Authorization Server Metadata](https://datatracker.ietf.org/doc/html/rfc8414#section-3)
+   */
+  wellKnown?: string
+  /**
+   * The login process will be initiated by sending the user to this URL.
+   *
+   * [Authorization endpoint](https://datatracker.ietf.org/doc/html/rfc6749#section-3.1)
+   */
+  authorization: EndpointHandler<AuthorizationParameters>
+  /**
+   * Endpoint that returns OAuth 2/OIDC tokens and information about them.
+   * This includes `access_token`, `id_token`, `refresh_token`, etc.
+   *
+   * [Token endpoint](https://datatracker.ietf.org/doc/html/rfc6749#section-3.2)
+   */
+  token: EndpointHandler<
+    UrlParams,
+    {
+      /**
+       * Parameters extracted from the request to the `/api/auth/callback/:providerId` endpoint.
+       * Contains params like `state`.
+       */
+      params: CallbackParamsType
+      /**
+       * When using this custom flow, make sure to do all the necessary security checks.
+       * This object contains parameters you have to match against the request to make sure it is valid.
+       */
+      checks: OAuthChecks
+    },
+    { tokens: TokenSet }
+  >
+  /**
+   * When using an OAuth 2 provider, the user information must be requested
+   * through an additional request from the userinfo endpoint.
+   *
+   * [Userinfo endpoint](https://www.oauth.com/oauth2-servers/signing-in-with-google/verifying-the-user-info)
+   */
+  userinfo?: EndpointHandler<UrlParams, { tokens: TokenSet }, Profile>
+  type: "oauth"
+  /**
+   * Used in URLs to refer to a certain provider.
+   * @example /api/auth/callback/twitter // where the `id` is "twitter"
+   */
+  id: string
+  version: string
+  profile(profile: P, tokens: TokenSet): Awaitable<User & { id: string }>
+  checks?: ChecksType | ChecksType[]
+  clientId: string
+  clientSecret: string
+  /**
+   * If set to `true`, the user information will be extracted
+   * from the `id_token` claims, instead of
+   * making a request to the `userinfo` endpoint.
+   *
+   * `id_token` is usually present in OpenID Connect (OIDC) compliant providers.
+   *
+   * [`id_token` explanation](https://www.oauth.com/oauth2-servers/openid-connect/id-tokens)
+   */
+  idToken?: boolean
+  region?: string
+  issuer?: string
+  client?: Partial<ClientMetadata>
+  allowDangerousEmailAccountLinking?: boolean
+  /**
+   * Object containing the settings for the styling of the providers sign-in buttons
+   */
+  style: ProviderStyleType
+}
+```
+
+### `authorization` option
+
+Configure how to construct the request to the [_Authorization endpoint_](https://datatracker.ietf.org/doc/html/rfc6749#section-3.1).
+
+There are two ways to use this option:
+
+1. You can either set `authorization` to be a full URL, like `"https://example.com/oauth/authorization?scope=email"`.
+2. Use an object with `url` and `params` like so
+   ```js
+   authorization: {
+     url: "https://example.com/oauth/authorization",
+     params: { scope: "email" }
+   }
+   ```
+
+:::tip
+If your Provider is OpenID Connect (OIDC) compliant, we recommend using the `wellKnown` option instead.
+:::
+
+### `token` option
+
+Configure how to construct the request to the [_Token endpoint_](https://datatracker.ietf.org/doc/html/rfc6749#section-3.2).
+
+There are three ways to use this option:
+
+1. You can either set `token` to be a full URL, like `"https://example.com/oauth/token?some=param"`.
+2. Use an object with `url` and `params` like so
+   ```js
+   token: {
+     url: "https://example.com/oauth/token",
+     params: { some: "param" }
+   }
+   ```
+3. Completely take control of the request:
+   ```js
+   token: {
+     url: "https://example.com/oauth/token",
+     async request(context) {
+       // context contains useful properties to help you make the request.
+       const tokens = await makeTokenRequest(context)
+       return { tokens }
+     }
+   }
+   ```
+
+:::warning
+Option 3. should not be necessary in most cases, but if your provider does not follow the spec, or you have some very unique constraints it can be useful. Try to avoid it, if possible.
+:::
+
+:::tip
+If your Provider is OpenID Connect (OIDC) compliant, we recommend using the `wellKnown` option instead.
+:::
+
+### `userinfo` option
+
+A `userinfo` endpoint returns information about the logged-in user. It is not part of the OAuth specification, but usually available for most providers.
+
+There are three ways to use this option:
+
+1. You can either set `userinfo` to be a full URL, like `"https://example.com/oauth/userinfo?some=param"`.
+2. Use an object with `url` and `params` like so
+   ```js
+   userinfo: {
+     url: "https://example.com/oauth/userinfo",
+     params: { some: "param" }
+   }
+   ```
+3. Completely take control of the request:
+   ```js
+   userinfo: {
+     url: "https://example.com/oauth/userinfo",
+     // The result of this method will be the input to the `profile` callback.
+     async request(context) {
+       // context contains useful properties to help you make the request.
+       return await makeUserinfoRequest(context)
+     }
+   }
+   ```
+
+:::warning
+Option 3. should not be necessary in most cases, but if your provider does not follow the spec, or you have some very unique constraints it can be useful. Try to avoid it, if possible.
+:::
+
+:::tip
+In the rare case you don't care about what this endpoint returns, or your provider does not have one, you could create a noop function:
+
+```js
+userinfo: {
+  request: () => {}
+}
+```
+
+:::
+
+:::tip
+If your Provider is OpenID Connect (OIDC) compliant, we recommend using the `wellKnown` option instead. OIDC usually returns an `id_token` from the `token` endpoint. `next-auth` can decode the `id_token` to get the user information, instead of making an additional request to the `userinfo` endpoint. Just set `idToken: true` at the top-level of your provider configuration. If not set, `next-auth` will still try to contact this endpoint.
+:::
+
+### `client` option
+
+An advanced option, hopefully you won't need it in most cases. `next-auth` uses `openid-client` under the hood, see the docs on this option [here](https://github.com/panva/node-openid-client/blob/main/docs/README.md#new-clientmetadata-jwks-options).
+
+### `allowDangerousEmailAccountLinking` option
+
+Normally, when you sign in with an OAuth provider and another account with the same email address already exists, the accounts are not linked automatically. Automatic account linking on sign in is not secure between arbitrary providers and is disabled by default (see our [Security FAQ](https://next-auth.js.org/faq#security)). However, it may be desirable to allow automatic account linking if you trust that the provider involved has securely verified the email address associated with the account. Just set `allowDangerousEmailAccountLinking: true` in your provider configuration to enable automatic account linking.
