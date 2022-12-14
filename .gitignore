@@ -86,3 +86,12 @@ packages/core/index.*
 packages/core/jwt
 packages/core/lib
 packages/core/providers
+
+
+# SvelteKit
+packages/frameworks-sveltekit/index.*
+packages/frameworks-sveltekit/client.*
+packages/frameworks-sveltekit/.svelte-kit
+packages/frameworks-sveltekit/package
+packages/frameworks-sveltekit/vite.config.js.timestamp-*
+packages/frameworks-sveltekit/vite.config.ts.timestamp-*

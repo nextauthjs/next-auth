@@ -56,7 +56,7 @@ export function assertConfig(params: {
   }
 
   if (!options.secret) {
-    return new MissingSecret("Please define a `secret` in production.")
+    return new MissingSecret("Please define a `secret`.")
   }
 
   // req.query isn't defined when asserting `unstable_getServerSession` for example

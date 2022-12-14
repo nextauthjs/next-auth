@@ -1,14 +1,7 @@
-import type { Handle } from "@sveltejs/kit"
-import { getServerSession, options as nextAuthOptions } from "$lib/next-auth"
+import SvelteKitAuth from "@auth/sveltekit"
+import GitHub from "@auth/core/providers/github"
+import { GITHUB_ID, GITHUB_SECRET } from "$env/static/private"
 
-export const handle: Handle = async function handle({
-  event,
-  resolve,
-}): Promise<Response> {
-  const session = await getServerSession(event.request, nextAuthOptions)
-  if (session) {
-    event.locals.session = session
-  }
-
-  return resolve(event)
-}
+export const handle = SvelteKitAuth({
+  providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })],
+})
