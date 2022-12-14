@@ -1,6 +1,6 @@
 {
   "name": "@auth/sveltekit",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Authentication for SvelteKit.",
   "homepage": "https://sveltekit.authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth.git",
