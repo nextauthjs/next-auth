@@ -15,7 +15,7 @@
   "scripts": {
     "dev": "svelte-package -w",
     "clean": "rm -rf client.* index.* package",
-    "build": "pnpm clean && svelte-package && node ./scripts/postbuild.js && rm -rf package",
+    "build": "pnpm clean && pnpm check && svelte-package && node ./scripts/postbuild.js && rm -rf package",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",

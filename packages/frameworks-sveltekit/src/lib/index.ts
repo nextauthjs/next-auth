@@ -2,6 +2,7 @@ import { AUTH_SECRET, AUTH_TRUST_HOST, VERCEL } from "$env/static/private"
 import { dev } from "$app/environment"
 
 import { AuthHandler, type AuthOptions, type AuthAction } from "@auth/core"
+import type { Handle } from "@sveltejs/kit"
 
 export async function getServerSession(
   req: Request,
@@ -48,11 +49,14 @@ const actions: AuthAction[] = [
 ]
 
 /** The main entry point to @auth/sveltekit */
-function SvelteKitAuth({ prefix = "/auth", ...options }: SvelteKitAuthOptions) {
+function SvelteKitAuth({
+  prefix = "/auth",
+  ...options
+}: SvelteKitAuthOptions): Handle {
   options.secret ??= AUTH_SECRET
   options.trustHost ??= !!(AUTH_TRUST_HOST ?? VERCEL ?? dev)
 
-  return (({ event, resolve }) => {
+  return ({ event, resolve }) => {
     const [action] = event.url.pathname.slice(prefix.length + 1).split("/")
     const isAuth = actions.includes(action as AuthAction)
 
@@ -65,7 +69,7 @@ function SvelteKitAuth({ prefix = "/auth", ...options }: SvelteKitAuthOptions) {
     }
 
     return AuthHandler(event.request, options)
-  }) satisfies Handle
+  }
 }
 
 export default SvelteKitAuth

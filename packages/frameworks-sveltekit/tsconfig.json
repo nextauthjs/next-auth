@@ -1,5 +1,5 @@
 {
-  // "extends": "./.svelte-kit/tsconfig.json",
+  "extends": "./.svelte-kit/tsconfig.json",
   "compilerOptions": {
     "allowJs": true,
     "checkJs": true,
@@ -8,8 +8,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "strict": true,
-    "moduleResolution": "node"
+    "strict": true
   },
   // Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias
   //
