@@ -6,8 +6,8 @@
   <header>
     <div class="signedInStatus">
       <p class="nojs-show loaded">
-        {#if Object.keys($page.data.session || {}).length}
-          {#if $page.data.session.user.image}
+        {#if $page.data.session}
+          {#if $page.data.session.user?.image}
             <span
               style="background-image: url('{$page.data.session.user.image}')"
               class="avatar"
@@ -16,8 +16,8 @@
           <span class="signedInText">
             <small>Signed in as</small><br />
             <strong
-              >{$page.data.session.user.email ||
-                $page.data.session.user.name}</strong
+              >{$page.data.session.user?.email ??
+                $page.data.session.user?.name}</strong
             >
           </span>
           <a href="/auth/signout" class="button">Sign out</a>
