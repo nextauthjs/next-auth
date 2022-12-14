@@ -1,20 +1,20 @@
-import { init } from "./lib/init"
-import { assertConfig } from "./lib/assert"
-import { SessionStore } from "./lib/cookie"
-import { toInternalRequest, toResponse } from "./lib/web"
-import renderPage from "./lib/pages"
-import * as routes from "./lib/routes"
-import logger, { setLogger } from "./lib/utils/logger"
+import { init } from "./lib/init.js"
+import { assertConfig } from "./lib/assert.js"
+import { SessionStore } from "./lib/cookie.js"
+import { toInternalRequest, toResponse } from "./lib/web.js"
+import renderPage from "./lib/pages/index.js"
+import * as routes from "./lib/routes/index.js"
+import logger, { setLogger } from "./lib/utils/logger.js"
 
-import type { ErrorType } from "./lib/pages/error"
+import type { ErrorType } from "./lib/pages/error.js"
 import type {
   AuthOptions,
   RequestInternal,
   ResponseInternal,
-} from "./lib/types"
-import { UntrustedHost } from "./lib/errors"
+} from "./lib/types.js"
+import { UntrustedHost } from "./lib/errors.js"
 
-export * from "./lib/types"
+export * from "./lib/types.js"
 
 const configErrorMessage =
   "There is a problem with the server configuration. Check the server logs for more information."
@@ -35,7 +35,7 @@ async function AuthHandlerInternal<
     assertionResult.forEach(logger.warn)
   } else if (assertionResult instanceof Error) {
     // Bail out early if there's an error in the user config
-    logger.error(assertionResult.code, assertionResult)
+    logger.error((assertionResult as any).code, assertionResult)
 
     const htmlPages = ["signin", "signout", "error", "verify-request"]
     if (!htmlPages.includes(req.action) || req.method !== "GET") {

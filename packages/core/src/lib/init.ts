@@ -1,14 +1,14 @@
-import { adapterErrorHandler, eventsErrorHandler } from "./errors"
-import * as jwt from "../jwt"
-import { createCallbackUrl } from "./callback-url"
-import * as cookie from "./cookie"
-import { createCSRFToken } from "./csrf-token"
-import { defaultCallbacks } from "./default-callbacks"
-import parseProviders from "./providers"
-import logger from "./utils/logger"
-import parseUrl from "./utils/parse-url"
+import { adapterErrorHandler, eventsErrorHandler } from "./errors.js"
+import * as jwt from "../jwt/index.js"
+import { createCallbackUrl } from "./callback-url.js"
+import * as cookie from "./cookie.js"
+import { createCSRFToken } from "./csrf-token.js"
+import { defaultCallbacks } from "./default-callbacks.js"
+import parseProviders from "./providers.js"
+import logger from "./utils/logger.js"
+import parseUrl from "./utils/parse-url.js"
 
-import type { AuthOptions, InternalOptions, RequestInternal } from ".."
+import type { AuthOptions, InternalOptions, RequestInternal } from "../index.js"
 
 interface InitParams {
   url: URL

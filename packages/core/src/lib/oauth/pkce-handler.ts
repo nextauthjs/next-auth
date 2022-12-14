@@ -1,8 +1,8 @@
 import * as o from "oauth4webapi"
-import * as jwt from "../../jwt"
+import * as jwt from "../../jwt/index.js"
 
-import type { InternalOptions } from "../.."
-import type { Cookie } from "../cookie"
+import type { InternalOptions } from "../../index.js"
+import type { Cookie } from "../cookie.js"
 
 const PKCE_CODE_CHALLENGE_METHOD = "S256"
 const PKCE_MAX_AGE = 60 * 15 // 15 minutes in seconds

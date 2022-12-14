@@ -1,5 +1,5 @@
-import type { CommonProviderOptions } from "../providers"
-import type { Profile, TokenSet, User, Awaitable } from ".."
+import type { CommonProviderOptions } from "../providers/index.js"
+import type { Profile, TokenSet, User, Awaitable } from "../index.js"
 import type { Client } from "oauth4webapi"
 
 // TODO:
@@ -9,7 +9,7 @@ type IssuerMetadata = any
 type OAuthCallbackChecks = any
 type OpenIDCallbackChecks = any
 
-export type { OAuthProviderType } from "./oauth-types"
+export type { OAuthProviderType } from "./oauth-types.js"
 
 type ChecksType = "pkce" | "state" | "none" | "nonce"
 
@@ -96,6 +96,17 @@ export interface OAuthProviderButtonStyles {
 }
 
 export interface OAuth2Config<P> extends CommonProviderOptions, PartialIssuer {
+  /**
+   * Identifies the provider when you want to sign in to
+   * a specific provider.
+   * @example
+   * ```js
+   * signIn('github') // "github" is the provider ID
+   * ```
+   */
+  id: string
+  /** The name of the provider. shown on the default sign in page. */
+  name: string
   /**
    * OpenID Connect (OIDC) compliant providers can configure
    * this instead of `authorize`/`token`/`userinfo` options

@@ -1,4 +1,4 @@
-import type { OAuthConfig, OAuthUserConfig } from "."
+import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 /** https://developers.naver.com/docs/login/profile/profile.md */
 export interface NaverProfile extends Record<string, any> {

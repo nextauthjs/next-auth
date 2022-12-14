@@ -1,4 +1,4 @@
-import type { InternalProvider, Theme } from "../.."
+import type { InternalProvider, Theme } from "../../index.js"
 
 /**
  * The following errors are passed as error query parameters to the default or overridden sign-in page.

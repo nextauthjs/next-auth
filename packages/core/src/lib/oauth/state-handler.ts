@@ -1,5 +1,5 @@
-import type { InternalOptions } from "../.."
-import type { Cookie } from "../cookie"
+import type { InternalOptions } from "../../index.js"
+import type { Cookie } from "../cookie.js"
 import * as o from "oauth4webapi"
 
 const STATE_MAX_AGE = 60 * 15 // 15 minutes in seconds
