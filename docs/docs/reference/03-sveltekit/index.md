@@ -26,6 +26,8 @@ export const handle = SvelteKitAuth({
 })
 ```
 
+Don't forget to set the `AUTH_SECRET` environment variable. This should be a random 32 character string. On unix systems you can use `openssl rand -hex 32`.
+
 ## Signing in and signing out
 
 ```ts
