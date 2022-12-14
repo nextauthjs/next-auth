@@ -1,7 +1,7 @@
 import { parse as parseCookie, serialize } from "cookie"
-import type { RequestInternal, ResponseInternal } from ".."
-import { UnknownAction } from "./errors"
-import type { AuthAction } from "./types"
+import type { RequestInternal, ResponseInternal } from "../index.js"
+import { UnknownAction } from "./errors.js"
+import type { AuthAction } from "./types.js"
 
 async function getBody(req: Request): Promise<Record<string, any> | undefined> {
   if (!("body" in req) || !req.body || req.method !== "POST") return

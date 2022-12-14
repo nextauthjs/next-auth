@@ -1,13 +1,13 @@
 /** @type {import("@docusaurus/types").Config} */
 module.exports = {
-  title: "NextAuth.js",
-  tagline: "Authentication for Next.js",
+  title: "Auth.js",
+  tagline: "Authentication for the web.",
   url: "https://next-auth.js.org",
   baseUrl: "/",
   favicon: "img/favicon.ico",
   organizationName: "nextauthjs",
   projectName: "next-auth",
-  // TODO: remove this once BETA is ready
+  // TODO: remove this once ready	
   onBrokenLinks: "log",
   themeConfig: {
     prism: {
@@ -27,61 +27,34 @@ module.exports = {
       searchParameters: {},
     },
     navbar: {
-      title: "NextAuth.js",
+      title: "Auth.js",
       logo: {
-        alt: "NextAuth Logo",
+        alt: "Auth.js Logo",
         src: "img/logo/logo-xs.png",
       },
       items: [
-        // TODO: This is the new navigation for the BETA Docs.
-        //       Add an env var at build time to switch between this nav
-        //       and the old at build time.
-        // {
-        //   to: "/beta/getting-started/introduction",
-        //   activeBasePath: "/beta/getting-started/",
-        //   label: "Getting started",
-        //   position: "left",
-        // },
-        // {
-        //   to: "/beta/guides/overview",
-        //   activeBasePath: "/beta/guides/",
-        //   label: "Guides",
-        //   position: "left",
-        // },
-        // {
-        //   to: "/beta/reference/index",
-        //   activeBasePath: "/beta/reference",
-        //   label: "Reference",
-        //   position: "left",
-        // },
-        // {
-        //   to: "/beta/concepts/faq",
-        //   activeBasePath: "/beta/concepts",
-        //   label: "Concepts",
-        //   position: "left",
-        // },
         {
           to: "/getting-started/introduction",
-          activeBasePath: "docs",
-          label: "Documentation",
+          activeBasePath: "/getting-started/",
+          label: "Getting started",
           position: "left",
         },
         {
-          to: "/tutorials",
-          activeBasePath: "docs",
-          label: "Tutorials",
+          to: "/guides/overview",
+          activeBasePath: "/guides/",
+          label: "Guides",
           position: "left",
         },
         {
-          to: "/faq",
-          activeBasePath: "docs",
-          label: "FAQ",
+          to: "/reference/index",
+          activeBasePath: "/reference",
+          label: "Reference",
           position: "left",
         },
         {
-          to: "/security",
-          activeBasePath: "docs",
-          label: "Security",
+          to: "/concepts/faq",
+          activeBasePath: "/concepts",
+          label: "Concepts",
           position: "left",
         },
         {
@@ -107,17 +80,17 @@ module.exports = {
         },
       ],
     },
-    // announcementBar: {
-    //   id: "new-major-announcement",
-    //   content:
-    //     "The default documentation is for v4 which has been released to GA 🚨 migration to <b>v4</b> docs can be found <a href='/getting-started/upgrade-v4'>here</a> 👈 The old v3 docs can be found <a href='/v3/getting-started/introduction'>here</a>.",
-    //   backgroundColor: "#1786fb",
-    //   textColor: "#fff",
-    // },
+    announcementBar: {
+      id: "new-major-announcement",
+      content:
+        "<a target='_blank' rel='noopener noreferrer' href='https://v4.authjs.dev'>NextAuth.js</a> is becoming Auth.js! 🎉 We're creating Authentication for the Web. Everyone included. Starting with SvelteKit, check out the docs <a  href='/reference/sveltekit'>here</a>.",
+      backgroundColor: "#000",
+      textColor: "#fff",
+    },
     footer: {
       links: [
         {
-          title: "About NextAuth.js",
+          title: "About Auth.js",
           items: [
             {
               label: "Introduction",
@@ -167,7 +140,7 @@ module.exports = {
           ],
         },
       ],
-      copyright: `NextAuth.js &copy; Iain Collins ${new Date().getFullYear()}`,
+      copyright: `Auth.js &copy; Balázs Orbán ${new Date().getFullYear()}`,
     },
     colorMode: {
       respectPrefersColorScheme: true,
@@ -191,15 +164,8 @@ module.exports = {
           ],
           versions: {
             current: {
-              label: "v4",
-            },
-            v3: {
-              label: "v3",
-            },
-            beta: {
-              label: "v4-unreleased",
-              banner: "unreleased",
-            },
+              label: "experimental",
+            }
           },
         },
         theme: {

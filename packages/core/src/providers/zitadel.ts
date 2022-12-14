@@ -1,4 +1,4 @@
-import type { OIDCConfig, OAuthUserConfig } from "."
+import type { OIDCConfig, OAuthUserConfig } from "./index.js"
 
 export interface ZitadelProfile extends Record<string, any> {
   amr: string // Authentication Method References as defined in RFC8176

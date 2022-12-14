@@ -1,5 +1,5 @@
-import type { AdapterUser } from "../../adapters"
-import type { InternalOptions } from "../.."
+import type { AdapterUser } from "../../adapters.js"
+import type { InternalOptions } from "../../index.js"
 
 /**
  * Query the database for a user by email address.

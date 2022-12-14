@@ -16,15 +16,6 @@
           "value": "1; mode=block"
         }
       ]
-    },
-    {
-      "source": "/beta(.*)",
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex"
-        }
-      ]
     }
   ],
   "redirects": [
@@ -57,6 +48,18 @@
       "source": "/schemas/adapters",
       "destination": "/adapters/overview",
       "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "sveltekit.authjs.dev"
+        }
+      ],
+      "destination": "/reference/sveltekit/:path*"
     }
   ]
 }

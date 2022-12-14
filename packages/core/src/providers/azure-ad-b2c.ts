@@ -1,4 +1,4 @@
-import type { OAuthConfig, OAuthUserConfig } from "."
+import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 export interface AzureB2CProfile extends Record<string, any> {
   exp: number

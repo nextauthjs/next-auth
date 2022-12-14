@@ -1,4 +1,4 @@
-import type { OAuthConfig, OAuthUserConfig } from "."
+import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 interface Identifier {
   identifier: string

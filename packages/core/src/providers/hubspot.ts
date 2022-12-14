@@ -1,4 +1,4 @@
-import type { OAuthConfig, OAuthUserConfig } from "."
+import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 interface HubSpotProfile extends Record<string, any> {
   // https://legacydocs.hubspot.com/docs/methods/oauth2/get-access-token-information

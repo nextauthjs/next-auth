@@ -1,8 +1,8 @@
 import { createTransport } from "nodemailer"
 
-import type { CommonProviderOptions } from "."
+import type { CommonProviderOptions } from "./index.js"
 import type { Options as SMTPTransportOptions } from "nodemailer/lib/smtp-transport"
-import type { Awaitable, Theme } from ".."
+import type { Awaitable, Theme } from "../index.js"
 
 export interface SendVerificationRequestParams {
   identifier: string

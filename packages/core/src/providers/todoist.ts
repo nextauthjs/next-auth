@@ -1,4 +1,4 @@
-import type { OAuthConfig, OAuthUserConfig } from "."
+import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 /**
  * @see https://developer.todoist.com/sync/v9/#user

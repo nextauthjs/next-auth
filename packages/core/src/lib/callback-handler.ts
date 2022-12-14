@@ -1,11 +1,11 @@
-import { AccountNotLinkedError } from "./errors"
-import { fromDate } from "./utils/date"
+import { AccountNotLinkedError } from "./errors.js"
+import { fromDate } from "./utils/date.js"
 
-import type { Account, InternalOptions, User } from ".."
-import type { AdapterSession, AdapterUser } from "../adapters"
-import type { JWT } from "../jwt"
-import type { OAuthConfig } from "../providers"
-import type { SessionToken } from "./cookie"
+import type { Account, InternalOptions, User } from "../index.js"
+import type { AdapterSession, AdapterUser } from "../adapters.js"
+import type { JWT } from "../jwt/index.js"
+import type { OAuthConfig } from "../providers/index.js"
+import type { SessionToken } from "./cookie.js"
 
 /**
  * This function handles the complex flow of signing users in, and either creating,

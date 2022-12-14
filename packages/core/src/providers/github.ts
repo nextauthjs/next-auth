@@ -1,4 +1,4 @@
-import type { OAuthConfig, OAuthUserConfig } from "."
+import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 /** @see https://docs.github.com/en/rest/users/users#get-the-authenticated-user */
 export interface GithubProfile extends Record<string, any> {

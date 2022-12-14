@@ -1,4 +1,4 @@
-import { OAuthConfig, OAuthUserConfig } from "."
+import { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 /**
  * See more at:
