@@ -9,10 +9,12 @@ title: SvelteKit
 ## Installation
 
 ```bash npm2yarn2pnpm
-npm install @auth/{core,sveltekit}
+npm install @auth/core @auth/sveltekit
 ```
 
 ## Usage
+
+Learn more about `@auth/sveltekit` [here](https://vercel.com/blog/announcing-sveltekit-auth)
 
 ```ts title="src/hooks.server.ts"
 import SvelteKitAuth from "@auth/sveltekit"
