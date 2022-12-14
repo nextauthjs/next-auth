@@ -1,6 +1,6 @@
 ---
 title: Using the Credentials Provider
-sidebar_label: Credentials Provider
+sidebar_label: Using the Credentials Provider
 ---
 
 The Credentials provider allows you to handle signing in with arbitrary credentials, such as a username and password, two-factor authentication or hardware device (e.g. YubiKey U2F / FIDO).
