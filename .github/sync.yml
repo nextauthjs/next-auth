@@ -5,7 +5,7 @@ nextauthjs/next-auth-example:
   - .github/FUNDING.yml
   - LICENSE
 
-nextauthjs/sveltekit-example:
+nextauthjs/sveltekit-auth-example:
   - source: apps/example-sveltekit
     dest: .
     deleteOrphaned: true
