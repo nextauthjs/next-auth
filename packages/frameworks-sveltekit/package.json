@@ -1,6 +1,9 @@
 {
   "name": "@auth/sveltekit",
-  "version": "0.1.1",
+  "version": "0.1.2",
+  "description": "Authentication for SvelteKit.",
+  "homepage": "https://sveltekit.authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth.git",
   "author": "Thang Huu Vu <hi@thvu.dev>",
   "contributors": [
     "Thang Huu Vu <hi@thvu.dev>",
@@ -31,7 +34,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-svelte3": "^4.0.0",
     "next-auth": "workspace:*",
-    "prettier": "^2.8.0",
+    "prettier": "2.8.1",
     "prettier-plugin-svelte": "^2.8.1",
     "svelte": "^3.54.0",
     "svelte-check": "^2.9.2",

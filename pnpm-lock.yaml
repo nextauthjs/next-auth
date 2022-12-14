@@ -21,7 +21,7 @@ importers:
       eslint-plugin-node: ^11.1.0
       eslint-plugin-promise: ^6.0.0
       husky: ^7.0.4
-      prettier: 2.7.1
+      prettier: 2.8.1
       pretty-quick: ^3.1.2
       semver: 7.3.5
       stream-to-array: 2.3.0
@@ -43,8 +43,8 @@ importers:
       eslint-plugin-node: 11.1.0_eslint@7.32.0
       eslint-plugin-promise: 6.0.0_eslint@7.32.0
       husky: 7.0.4
-      prettier: 2.7.1
-      pretty-quick: 3.1.3_prettier@2.7.1
+      prettier: 2.8.1
+      pretty-quick: 3.1.3_prettier@2.8.1
       semver: 7.3.5
       stream-to-array: 2.3.0
       ts-node: 10.5.0_ksn4eycaeggbrckn3ykh37hwf4
@@ -128,7 +128,7 @@ importers:
       '@fontsource/fira-mono': 4.5.10
       '@neoconfetti/svelte': 1.0.0
       '@sveltejs/adapter-auto': 1.0.0-next.90
-      '@sveltejs/kit': 1.0.0-next.586_svelte@3.54.0+vite@4.0.1
+      '@sveltejs/kit': 1.0.0-next.587_svelte@3.54.0+vite@4.0.1
       '@types/cookie': 0.5.1
       '@typescript-eslint/eslint-plugin': 5.45.1_tdm6ms4ntwhlpozn7kjqrhum74
       '@typescript-eslint/parser': 5.45.1_s5ps7njkmjlaqajutnox5ntcla
@@ -496,7 +496,7 @@ importers:
       cookie: 0.5.0
       cssnano: 5.1.14
       jose: 4.11.1
-      oauth4webapi: 2.0.4
+      oauth4webapi: 2.0.5
       postcss: 8.4.19
       postcss-nested: 6.0.0
       preact: 10.11.3
@@ -505,7 +505,7 @@ importers:
       '@panva/hkdf': 1.0.2
       cookie: 0.5.0
       jose: 4.11.1
-      oauth4webapi: 2.0.4
+      oauth4webapi: 2.0.5
       preact: 10.11.3
       preact-render-to-string: 5.2.3_preact@10.11.3
     devDependencies:
@@ -531,7 +531,7 @@ importers:
       eslint-config-prettier: ^8.5.0
       eslint-plugin-svelte3: ^4.0.0
       next-auth: workspace:*
-      prettier: ^2.8.0
+      prettier: 2.8.1
       prettier-plugin-svelte: ^2.8.1
       svelte: ^3.54.0
       svelte-check: ^2.9.2
@@ -544,7 +544,7 @@ importers:
     devDependencies:
       '@playwright/test': 1.28.1
       '@sveltejs/adapter-auto': 1.0.0-next.90
-      '@sveltejs/kit': 1.0.0-next.586_svelte@3.54.0+vite@4.0.1
+      '@sveltejs/kit': 1.0.0-next.587_svelte@3.54.0+vite@4.0.1
       '@sveltejs/package': 1.0.0-next.6_gf4dcx76vtk2o62ixxeqx7chra
       '@typescript-eslint/eslint-plugin': 5.45.1_tdm6ms4ntwhlpozn7kjqrhum74
       '@typescript-eslint/parser': 5.45.1_s5ps7njkmjlaqajutnox5ntcla
@@ -552,8 +552,8 @@ importers:
       eslint-config-prettier: 8.5.0_eslint@8.29.0
       eslint-plugin-svelte3: 4.0.0_2aagxyyd66x6iymg5nfckajqjq
       next-auth: link:../next-auth
-      prettier: 2.8.0
-      prettier-plugin-svelte: 2.8.1_kaioqtfwjumrsfopsgfoca65re
+      prettier: 2.8.1
+      prettier-plugin-svelte: 2.8.1_sro2v6ld777payjtkjtiuogcxi
       svelte: 3.54.0
       svelte-check: 2.10.1_svelte@3.54.0
       tslib: 2.4.1
@@ -8303,8 +8303,8 @@ packages:
       import-meta-resolve: 2.2.0
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.586_svelte@3.54.0+vite@4.0.1:
-    resolution: {integrity: sha512-lTYWy4voh/r4jz8qnurIATyrH2ZgHPUswYQ9KauyASSjQGYeB1TPDgwcafM/LtgMxpcvFgWsx2KeflykSHXKxg==}
+  /@sveltejs/kit/1.0.0-next.587_svelte@3.54.0+vite@4.0.1:
+    resolution: {integrity: sha512-F8zYXd7URcq57sGfrBRWTLtfj6JKkhNhwM4M8w4hNnJsJlZawPUvpybOSlIP87Z8URO8iCmyigQHxAYYzedrOg==}
     engines: {node: '>=16.14'}
     hasBin: true
     requiresBuild: true
@@ -20461,8 +20461,8 @@ packages:
     resolution: {integrity: sha512-a5ERWK1kh38ExDEfoO6qUHJb32rd7aYmPHuyCu3Fta/cnICvYmgd2uhuKXvPD+PXB+gCEYYEaQdIRAjCOwAKNA==}
     dev: false
 
-  /oauth4webapi/2.0.4:
-    resolution: {integrity: sha512-d6NmQuOlCo6+HzNPG70Pl8T4WnHo/XPvQ3Dxus3fRvRjFmt9H+BggI/APyzQ4/jlcdIjPaOw81wIO6WkRGKfkg==}
+  /oauth4webapi/2.0.5:
+    resolution: {integrity: sha512-KmoR3KxCwmr9KvL/c/6UVzQnc4CUjo+j8NSgD3bWYlZXpUmyOVw97nDVb0BKZhCcUtGsbll16v8vsnR5JbTZ9A==}
     dev: false
 
   /object-assign/4.1.1:
@@ -22371,6 +22371,16 @@ packages:
       svelte: 3.54.0
     dev: true
 
+  /prettier-plugin-svelte/2.8.1_sro2v6ld777payjtkjtiuogcxi:
+    resolution: {integrity: sha512-KA3K1J3/wKDnCxW7ZDRA/QL2Q67N7Xs3gOERqJ5X1qFjq1DdnN3K1R29scSKwh+kA8FF67pXbYytUpvN/i3iQw==}
+    peerDependencies:
+      prettier: ^1.16.4 || ^2.0.0
+      svelte: ^3.2.0
+    dependencies:
+      prettier: 2.8.1
+      svelte: 3.54.0
+    dev: true
+
   /prettier/2.7.1:
     resolution: {integrity: sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==}
     engines: {node: '>=10.13.0'}
@@ -22379,6 +22389,12 @@ packages:
 
   /prettier/2.8.0:
     resolution: {integrity: sha512-9Lmg8hTFZKG0Asr/kW9Bp8tJjRVluO8EJQVfY2T7FMw9T5jy4I/Uvx0Rca/XWf50QQ1/SS48+6IJWnrb+2yemA==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
+    dev: true
+
+  /prettier/2.8.1:
+    resolution: {integrity: sha512-lqGoSJBQNJidqCHE80vqZJHWHRFoNYsSpP9AjFhlhi9ODCJA541svILes/+/1GM3VaL/abZi7cpFzOpdR9UPKg==}
     engines: {node: '>=10.13.0'}
     hasBin: true
     dev: true
@@ -22447,7 +22463,7 @@ packages:
     engines: {node: '>= 0.8'}
     dev: true
 
-  /pretty-quick/3.1.3_prettier@2.7.1:
+  /pretty-quick/3.1.3_prettier@2.8.1:
     resolution: {integrity: sha512-kOCi2FJabvuh1as9enxYmrnBC6tVMoVOenMaBqRfsvBHB0cbpYHjdQEpSglpASDFEXVwplpcGR4CLEaisYAFcA==}
     engines: {node: '>=10.13'}
     hasBin: true
@@ -22460,7 +22476,7 @@ packages:
       ignore: 5.2.0
       mri: 1.2.0
       multimatch: 4.0.0
-      prettier: 2.7.1
+      prettier: 2.8.1
     dev: true
 
   /pretty-time/1.1.0:
