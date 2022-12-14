@@ -3,12 +3,10 @@ id: typeorm
 title: TypeORM
 ---
 
-# TypeORM
-
 This Adapter is used to support SQL-flavored databases (like SQLite, MySQL, MSSQL, MariaDB, CockroachDB, etc.) through [TypeORM](https://typeorm.io), and mostly kept around for legacy reasons. (See the warning below.)
 
 :::note
-If you previously used this Adapter with MongoDB, check out the [MongoDB Adapter](/adapters/mongodb) instead.
+If you previously used this Adapter with MongoDB, check out the [MongoDB Adapter](/reference/adapters/mongodb) instead.
 :::
 
 :::warning
@@ -44,7 +42,7 @@ The TypeORM adapter uses [`Entity` classes](https://github.com/typeorm/typeorm/b
 
 If you want to override the default entities (for example to add a `role` field to your `UserEntity`), you will have to do the following:
 
-> This schema is adapted for use in TypeORM and based upon our main [schema](/adapters/models)
+> This schema is adapted for use in TypeORM and based upon our main [schema](/reference/adapters/models)
 
 1. Create a file containing your modified entities:
 

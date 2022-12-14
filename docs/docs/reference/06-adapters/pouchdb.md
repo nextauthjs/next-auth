@@ -3,8 +3,6 @@ id: pouchdb
 title: PouchDB
 ---
 
-# PouchDB
-
 :::warning
 This adapter is still experimental and does not work with NextAuth.js 4 or newer. If you would like to help out upgrading it, please [open a PR](https://github.com/nextauthjs/next-auth/tree/main/packages)
 :::
@@ -58,7 +56,7 @@ export default NextAuth({
 
 If you need to boost your authentication layer performance, you may use PouchDB's powerful sync features and various adapters, to build a memory-first caching strategy.
 
-Use an in-memory PouchDB as your main authentication database, and synchronize it with any other persisted PouchDB. You may do a one way, one-off replication at startup from the persisted PouchDB into the in-memory PouchDB, then two-way, continuous, retriable sync.
+Use an in-memory PouchDB as your main authentication database, and synchronize it with any other persisted PouchDB. You may do a one way, one-off replication at startup from the persisted PouchDB into the in-memory PouchDB, then two-way, continuous sync.
 
 This will most likely not increase performance much in a serverless environment due to various reasons such as concurrency, function startup time increases, etc.
 

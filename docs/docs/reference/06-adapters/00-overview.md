@@ -18,3 +18,7 @@ Auth.js comes with a lot of built-in database adapters to suit your needs. Here'
 - [TypeORM](/reference/adapters/typeorm)
 - [Upstash Redis](/reference/adapters/upstash-redis)
 - [Xata](/reference/adapters/xata)
+
+In case you want to [create your own custom adapter](/guides/adapters/creating-a-database-adapter) or configure one of the existing adapters, make sure you are familiar with the Auth.js uses when talking to adapters:
+
+- [Database model structure](/reference/adapters/models)

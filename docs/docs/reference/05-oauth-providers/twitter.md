@@ -4,7 +4,7 @@ title: Twitter
 ---
 
 :::note
-Twitter is currently the only built-in provider using the OAuth 1.0 spec. This means that you won't receive an `access_token` or `refresh_token`, but an `oauth_token` and `oauth_token_secret` respectively. Remember to add these to your database schema, in case if you are using an [Adapter](/adapters/overview).
+Twitter is currently the only built-in provider using the OAuth 1.0 spec. This means that you won't receive an `access_token` or `refresh_token`, but an `oauth_token` and `oauth_token_secret` respectively. Remember to add these to your database schema, in case if you are using an [Adapter](/reference/adapters/overview).
 :::
 
 ## Documentation
@@ -58,5 +58,5 @@ TwitterProvider({
 Keep in mind that although this change is easy, it changes how and with which of [Twitter APIs](https://developer.twitter.com/en/docs/api-reference-index) you can interact with. Read the official [Twitter OAuth 2 documentation](https://developer.twitter.com/en/docs/authentication/oauth-2-0) for more details.
 
 :::note
-Email is currently not supported by Twitter OAuth 2.0. 
+Email is currently not supported by Twitter OAuth 2.0.
 :::

@@ -39,13 +39,13 @@ export async function getServerSideProps(ctx) {
 }
 ```
 
-If every one of your pages needs to be protected, you can do this in `getInitialProps` in `_app`, otherwise you can do it on a page-by-page basis. Alternatively, you can do per page authentication checks client side, instead of having each authentication check be blocking (SSR) by using the method described below in [alternative client session handling](#custom-client-session-handling).
+If every one of your pages needs to be protected, you can do this in `getInitialProps` in `_app`, otherwise you can do it on a page-by-page basis. Alternatively, you can do per page authentication checks client side, instead of having each authentication check be blocking (SSR) by using the method described below in [alternative client session handling](/reference/utilities/#getsession).
 
 ### Options
 
 The session state is automatically synchronized across all open tabs/windows and they are all updated whenever they gain or lose focus or the state changes (e.g. a user signs in or out) when `refetchOnWindowFocus` is `true`.
 
-If you have session expiry times of 30 days (the default) or more then you probably don't need to change any of the default options in the Provider. If you need to, you can trigger an update of the session object across all tabs/windows by calling [`getSession()`](/getting-started/client#getsession) from a client side function.
+If you have session expiry times of 30 days (the default) or more then you probably don't need to change any of the default options in the Provider. If you need to, you can trigger an update of the session object across all tabs/windows by calling [`getSession()`](/reference/utilities/#getsession) from a client side function.
 
 However, if you need to customize the session behavior and/or are using short session expiry times, you can pass options to the provider to customize the behavior of the `useSession()` hook.
 
@@ -92,7 +92,7 @@ When `refetchInterval` is set to `0` (the default) there will be no session poll
 
 If set to any value other than zero, it specifies in seconds how often the client should contact the server to update the session state. If the session state has expired when it is triggered, all open tabs/windows will be updated to reflect this.
 
-The value for `refetchInterval` should always be lower than the value of the session `maxAge` [session option](/configuration/options#session).
+The value for `refetchInterval` should always be lower than the value of the session `maxAge` [session option](/reference/configuration/auth-config#session).
 
 By default, session polling will keep trying, even when the device has no internet access. To circumvent this, you can also set `refetchWhenOffline` to `false`. This will use [`navigator.onLine`](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/onLine) to only poll when the device is online.
 

@@ -3,8 +3,6 @@ id: fauna
 title: FaunaDB
 ---
 
-# FaunaDB
-
 This is the Fauna Adapter for [`next-auth`](https://next-auth.js.org). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
 
 You can find the Fauna schema and seed information in the docs at [next-auth.js.org/adapters/fauna](https://next-auth.js.org/adapters/fauna).
@@ -82,4 +80,4 @@ CreateIndex({
 })
 ```
 
-> This schema is adapted for use in Fauna and based upon our main [schema](/adapters/models)
+> This schema is adapted for use in Fauna and based upon our main [schema](/reference/adapters/models)

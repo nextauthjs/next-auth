@@ -3,8 +3,6 @@ id: firebase
 title: Firebase
 ---
 
-# Firebase
-
 :::warning
 This adapter is still experimental and does not work with NextAuth.js 4 or newer. If you would like to help out upgrading it, please visit [this PR](https://github.com/nextauthjs/next-auth/pull/3873)
 :::

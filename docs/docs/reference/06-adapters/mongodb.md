@@ -3,8 +3,6 @@ id: mongodb
 title: MongoDB
 ---
 
-# MongoDB
-
 The MongoDB adapter does not handle connections automatically, so you will have to make sure that you pass the Adapter a `MongoClient` that is connected already. Below you can see an example how to do this.
 
 ## Usage
@@ -19,7 +17,7 @@ npm install next-auth @next-auth/mongodb-adapter mongodb
 
 ```ts
 // This approach is taken from https://github.com/vercel/next.js/tree/canary/examples/with-mongodb
-import { MongoClient } from 'mongodb'
+import { MongoClient } from "mongodb"
 
 if (!process.env.MONGODB_URI) {
   throw new Error('Invalid/Missing environment variable: "MONGODB_URI"')
@@ -31,7 +29,7 @@ const options = {}
 let client
 let clientPromise: Promise<MongoClient>
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === "development") {
   // In development mode, use a global variable so that the value
   // is preserved across module reloads caused by HMR (Hot Module Replacement).
   if (!global._mongoClientPromise) {

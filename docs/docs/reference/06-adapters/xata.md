@@ -3,8 +3,6 @@ id: xata
 title: Xata
 ---
 
-# Xata
-
 This adapter allows using next-auth with Xata as a database to store users, sessions, and more. The preferred way to create a Xata project and use Xata databases is using the [Xata Command Line Interface (CLI)](https://docs.xata.io/cli/getting-started). The CLI allows generating a `XataClient` that will help you work with Xata in a safe way, and that this adapter depends on.
 
 <!-- @todo add GIFs -->

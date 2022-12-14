@@ -3,8 +3,6 @@ id: neo4j
 title: Neo4j
 ---
 
-# Neo4j
-
 This is the Neo4j Adapter for [`next-auth`](https://next-auth.js.org). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
 
 ## Getting Started
@@ -58,7 +56,7 @@ The following relationships and relationship labels are used.
 
 ### Properties
 
-This schema is adapted for use in Neo4J and is based upon our main [models](/adapters/models). Please check there for the node properties. Relationships have no properties.
+This schema is adapted for use in Neo4J and is based upon our main [models](/reference/adapters/models). Please check there for the node properties. Relationships have no properties.
 
 ### Indexes
 

@@ -36,7 +36,7 @@ You can use also NextAuth.js with any database using a custom database adapter, 
 
 <p>NextAuth.js includes built-in support for signing in with&nbsp;
 --------- DISPLAY PROVIDERS HERE ----------
-(See also: <a href="/reference/oauth-providers/">Providers</a>)
+(See also: <a href="/reference/providers/oauth-builtin">Providers</a>)
 </p>
 
 NextAuth.js also supports email for passwordless sign in, which is useful for account recovery or for people who are not able to use an account with the configured OAuth services (e.g. due to service outage, account suspension or otherwise becoming locked out of an account).

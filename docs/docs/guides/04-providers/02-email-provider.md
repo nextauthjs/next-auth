@@ -1,9 +1,7 @@
 ---
 id: email
-title: Email
+title: Email Provider
 ---
-
-## Overview
 
 The Email provider uses email to send "magic links" that can be used to sign in, you will likely have seen these if you have used services like Slack before.
 
@@ -25,7 +23,7 @@ The Email Provider can be used with both JSON Web Tokens and database sessions, 
 
 The **Email Provider** comes with a set of default options:
 
-- [Email Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/email.ts)
+- [Email Provider options](/reference/providers/email)
 
 You can override any of the options to suit your own use case.
 
@@ -91,7 +89,7 @@ providers: [
 ],
 ```
 
-3. Do not forget to setup one of the database [adapters](/adapters/overview) for storing the Email verification token.
+3. Do not forget to setup one of the database [adapters](/reference/adapters/overview) for storing the Email verification token.
 
 4. You can now sign in with an email address at `/api/auth/signin`.
 
