@@ -5,8 +5,8 @@ import type {
   InternalOptions,
   RequestInternal,
   ResponseInternal,
-} from "../.."
-import type { Cookie } from "../cookie"
+} from "../../index.js"
+import type { Cookie } from "../cookie.js"
 
 /**
  * Generates an authorization/request token URL.

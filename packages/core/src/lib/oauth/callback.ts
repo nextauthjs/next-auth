@@ -1,7 +1,7 @@
-import { OAuthCallbackError } from "../errors"
-import { useNonce } from "./nonce-handler"
-import { usePKCECodeVerifier } from "./pkce-handler"
-import { useState } from "./state-handler"
+import { OAuthCallbackError } from "../errors.js"
+import { useNonce } from "./nonce-handler.js"
+import { usePKCECodeVerifier } from "./pkce-handler.js"
+import { useState } from "./state-handler.js"
 import * as o from "oauth4webapi"
 
 import type {
@@ -10,9 +10,9 @@ import type {
   Profile,
   RequestInternal,
   TokenSet,
-} from "../.."
-import type { OAuthConfigInternal } from "../../providers"
-import type { Cookie } from "../cookie"
+} from "../../index.js"
+import type { OAuthConfigInternal } from "../../providers/index.js"
+import type { Cookie } from "../cookie.js"
 
 export async function handleOAuthCallback(params: {
   options: InternalOptions<"oauth">

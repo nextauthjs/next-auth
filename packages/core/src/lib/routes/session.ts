@@ -1,8 +1,8 @@
-import { fromDate } from "../utils/date"
+import { fromDate } from "../utils/date.js"
 
-import type { InternalOptions, ResponseInternal, Session } from "../.."
-import type { Adapter } from "../../adapters"
-import type { SessionStore } from "../cookie"
+import type { InternalOptions, ResponseInternal, Session } from "../../index.js"
+import type { Adapter } from "../../adapters.js"
+import type { SessionStore } from "../cookie.js"
 
 interface SessionParams {
   options: InternalOptions

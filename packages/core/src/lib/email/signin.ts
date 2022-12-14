@@ -1,5 +1,5 @@
-import { randomString, createHash } from "../web"
-import type { InternalOptions } from "../.."
+import { randomString, createHash } from "../web.js"
+import type { InternalOptions } from "../../index.js"
 
 /**
  * Starts an e-mail login flow, by generating a token,

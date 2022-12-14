@@ -1,12 +1,12 @@
-import callbackHandler from "../callback-handler"
-import getAdapterUserFromEmail from "../email/getUserFromEmail"
-import { handleOAuthCallback } from "../oauth/callback"
-import { createHash } from "../web"
+import callbackHandler from "../callback-handler.js"
+import getAdapterUserFromEmail from "../email/getUserFromEmail.js"
+import { handleOAuthCallback } from "../oauth/callback.js"
+import { createHash } from "../web.js"
 
-import type { RequestInternal, ResponseInternal, User } from "../.."
-import type { AdapterSession } from "../../adapters"
-import type { Cookie, SessionStore } from "../cookie"
-import type { InternalOptions } from "../types"
+import type { RequestInternal, ResponseInternal, User } from "../../index.js"
+import type { AdapterSession } from "../../adapters.js"
+import type { Cookie, SessionStore } from "../cookie.js"
+import type { InternalOptions } from "../types.js"
 
 /** Handle callbacks from login services */
 export async function callback(params: {

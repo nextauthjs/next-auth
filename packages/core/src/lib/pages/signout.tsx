@@ -1,4 +1,4 @@
-import type { Theme } from "../.."
+import type { Theme } from "../../index.js"
 
 export interface SignoutProps {
   url: URL

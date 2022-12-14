@@ -1,10 +1,15 @@
 import { EncryptJWT, jwtDecrypt } from "jose"
-import hkdf from "@panva/hkdf"
-import { SessionStore } from "../lib/cookie"
-import type { JWT, JWTDecodeParams, JWTEncodeParams, JWTOptions } from "./types"
-import type { LoggerInstance } from ".."
+import { hkdf } from "@panva/hkdf"
+import { SessionStore } from "../lib/cookie.js"
+import type {
+  JWT,
+  JWTDecodeParams,
+  JWTEncodeParams,
+  JWTOptions,
+} from "./types.js"
+import type { LoggerInstance } from "../index.js"
 
-export * from "./types"
+export * from "./types.js"
 
 const DEFAULT_MAX_AGE = 30 * 24 * 60 * 60 // 30 days
 

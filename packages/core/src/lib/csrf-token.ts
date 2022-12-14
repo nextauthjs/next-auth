@@ -1,5 +1,5 @@
-import { createHash, randomString } from "./web"
-import type { InternalOptions } from "./types"
+import { createHash, randomString } from "./web.js"
+import type { InternalOptions } from "./types.js"
 
 interface CreateCSRFTokenParams {
   options: InternalOptions
