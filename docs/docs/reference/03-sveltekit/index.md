@@ -51,7 +51,6 @@ export const handle = SvelteKitAuth({
     <button on:click={() => signIn("github")}>Sign In with GitHub</button>
   {/if}
 </p>
-
 ```
 
 

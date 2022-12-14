@@ -1,5 +1,4 @@
 import type { InternalProvider, Theme } from "../.."
-import type { CSSProperties } from "react"
 
 /**
  * The following errors are passed as error query parameters to the default or overridden sign-in page.
@@ -92,15 +91,12 @@ export default function SigninPage(props: SignInServerPageParams) {
                 <button
                   type="submit"
                   className="button"
-                  style={
-                    // eslint-disable-next-line
-                    {
-                      "--provider-bg": provider.style?.bg ?? "",
-                      "--provider-dark-bg": provider.style?.bgDark ?? "",
-                      "--provider-color": provider.style?.text ?? "",
-                      "--provider-dark-color": provider.style?.textDark ?? "",
-                    } as CSSProperties
-                  }
+                  style={{
+                    "--provider-bg": provider.style?.bg ?? "",
+                    "--provider-dark-bg": provider.style?.bgDark ?? "",
+                    "--provider-color": provider.style?.text ?? "",
+                    "--provider-dark-color": provider.style?.textDark ?? "",
+                  }}
                 >
                   {provider.style?.logo && (
                     <img
