@@ -6,7 +6,7 @@ nextauthjs/next-auth-example:
   - LICENSE
 
 nextauthjs/next-auth-gatsby-example:
-  - source: apps/example-gatsby
+  - source: apps/playground-gatsby
     dest: .
     deleteOrphaned: true
   - .github/FUNDING.yml
