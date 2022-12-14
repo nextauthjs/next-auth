@@ -1,4 +1,6 @@
-# Next.js
+---
+title: Next.js
+---
 
 ## `unstable_getServerSession`
 
@@ -13,29 +15,35 @@ Otherwise, if you only want to get the session token, see [`getToken`](/tutorial
 `unstable_getServerSession` requires passing the same object you would pass to `NextAuth` when initializing NextAuth.js. To do so, you can export your NextAuth.js options in the following way:
 
 In `[...nextauth].ts`:
+
 ```ts
-import { NextAuth } from 'next-auth'
-import type { NextAuthOptions } from 'next-auth'
+import { NextAuth } from "next-auth"
+import type { NextAuthOptions } from "next-auth"
 
 export const authOptions: NextAuthOptions = {
   // your configs
 }
 
-export default NextAuth(authOptions);
+export default NextAuth(authOptions)
 ```
 
 ### In `getServerSideProps`:
+
 ```js
-import { authOptions } from 'pages/api/auth/[...nextauth]'
+import { authOptions } from "pages/api/auth/[...nextauth]"
 import { unstable_getServerSession } from "next-auth/next"
 
 export async function getServerSideProps(context) {
-  const session = await unstable_getServerSession(context.req, context.res, authOptions)
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  )
 
   if (!session) {
     return {
       redirect: {
-        destination: '/',
+        destination: "/",
         permanent: false,
       },
     }
@@ -50,21 +58,21 @@ export async function getServerSideProps(context) {
 ```
 
 ### In API Routes:
-```js
-import { authOptions } from 'pages/api/auth/[...nextauth]'
-import { unstable_getServerSession } from "next-auth/next"
 
+```js
+import { authOptions } from "pages/api/auth/[...nextauth]"
+import { unstable_getServerSession } from "next-auth/next"
 
 export async function handler(req, res) {
   const session = await unstable_getServerSession(req, res, authOptions)
 
   if (!session) {
-    res.status(401).json({ message: "You must be logged in." });
-    return;
+    res.status(401).json({ message: "You must be logged in." })
+    return
   }
 
   return res.json({
-    message: 'Success',
+    message: "Success",
   })
 }
 ```
@@ -128,6 +136,7 @@ Now you will still be able to visit every page, but only `/dashboard` will requi
 If a user is not logged in, the default behavior is to redirect them to the sign-in page.
 
 ---
+
 ### `callbacks`
 
 - **Required:** No
@@ -226,6 +235,7 @@ The `middleware` function will only be invoked if the `authorized` callback retu
 If you have a custom jwt decode method set in `[...nextauth].ts`, you must also pass the same `decode` method to `withAuth` in order to read the custom-signed JWT correctly. You may want to extract the encode/decode logic to a separate function for consistency.
 
 ``
+
 ```ts title="/api/auth/[...nextauth].ts"
 import type { NextAuthOptions } from "next-auth"
 import NextAuth from "next-auth"
@@ -250,7 +260,7 @@ And:
 
 ```ts title="middleware.ts"
 import withAuth from "next-auth/middleware"
-import { authOptions } from "pages/api/auth/[...nextauth]";
+import { authOptions } from "pages/api/auth/[...nextauth]"
 
 export default withAuth({
   jwt: { decode: authOptions.jwt },

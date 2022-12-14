@@ -1,6 +1,7 @@
 ---
 title: How OAuth works
 ---
+
 Authentication Providers in **NextAuth.js** are OAuth definitions that allow your users to sign in with their favorite preexisting logins. You can use any of our many predefined providers, or write your own custom OAuth configuration.
 
 - [Using a built-in OAuth Provider](#built-in-providers) (e.g Github, Twitter, Google, etc...)

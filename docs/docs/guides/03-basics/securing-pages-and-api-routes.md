@@ -1,4 +1,6 @@
-# Securing Pages & API routes
+---
+title: Securing Pages & API routes
+---
 
 You can easily protect client and server side rendered pages and API routes with NextAuth.js.
 

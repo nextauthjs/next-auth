@@ -1,4 +1,6 @@
-# Contributors
+---
+title: Contributors
+---
 
 ## Core team
 

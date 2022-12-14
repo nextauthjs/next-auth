@@ -2,7 +2,6 @@
 title: React
 ---
 
-
 ## SessionProvider
 
 Using the supplied `<SessionProvider>` allows instances of `useSession()` to share the session object across components, by using [React Context](https://reactjs.org/docs/context.html) under the hood. It also takes care of keeping the session updated and synced between tabs/windows.
@@ -109,7 +108,7 @@ However, if it was set to `false`, it stops re-fetching the session and the comp
 See [**the Next.js documentation**](https://nextjs.org/docs/advanced-features/custom-app) for more information on **\_app.js** in Next.js applications.
 :::
 
---- 
+---
 
 ## useSession()
 

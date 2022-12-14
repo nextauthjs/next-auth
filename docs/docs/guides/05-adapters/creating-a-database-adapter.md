@@ -1,4 +1,6 @@
-# Creating a database adapter
+---
+title: Creating a database adapter
+---
 
 Using a custom adapter you can connect to any database back-end or even several different databases. Official adapters created and maintained by our community can be found in the [adapters](https://github.com/nextauthjs/next-auth/tree/main/packages) packages. Feel free to add a custom adapter from your project to the repository, or even become a maintainer of a certain adapter. Custom adapters can still be created and used in a project without being added to the repository.
 

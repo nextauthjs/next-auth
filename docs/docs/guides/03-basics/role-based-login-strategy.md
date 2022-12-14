@@ -1,4 +1,6 @@
-# Role based logins
+---
+title: Role based logins
+---
 
 To add role based authentication to your application, you must do three things.
 

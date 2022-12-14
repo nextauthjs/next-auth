@@ -3,8 +3,8 @@ title: Reference
 sidebar_label: Overview
 ---
 
-
 ## Providers
+
 - OAuth/OIDC
 - Email/Passwordless
 - Credentials
@@ -12,6 +12,7 @@ sidebar_label: Overview
 ## Database Adapters
 
 ## Frameworks
+
 - Next.js
 - SvelteKit 🏗
 - Remix 🏗

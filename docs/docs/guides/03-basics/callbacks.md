@@ -1,4 +1,6 @@
-# Callbacks
+---
+title: Callbacks
+---
 
 Callbacks are **asynchronous** functions you can use to control what happens when an action is performed.
 

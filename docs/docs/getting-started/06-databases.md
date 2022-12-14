@@ -1,4 +1,6 @@
-# Databases
+---
+title: Databases
+---
 
 NextAuth.js offers multiple database adapters. Check out [the overview](/adapters/overview).
 

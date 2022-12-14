@@ -1,4 +1,6 @@
-# Using a database adapter
+---
+title: Using a database adapter
+---
 
 An **Adapter** in NextAuth.js connects your application to whatever database or backend system you want to use to store data for users, their accounts, sessions, etc. Adapters are optional, unless you need to persist user information in your own database, or you want to implement certain flows. The [Email Provider](/providers/email) requires an adapter to be able to save [Verification Tokens](/adapters/models#verification-token).
 
@@ -22,4 +24,4 @@ We have a list of official adapters that are distributed as their own packages u
 
 ## Let's get started
 
-In this guide we're going to use the `prisma` Adapter in conjunction with the **Email Provider**. 
+In this guide we're going to use the `prisma` Adapter in conjunction with the **Email Provider**.

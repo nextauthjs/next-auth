@@ -1,4 +1,6 @@
-# Events
+---
+title: Events
+---
 
 Events are asynchronous functions that do not return a response, they are useful for audit logs / reporting or handling any other side-effects.
 
