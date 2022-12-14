@@ -52,14 +52,14 @@
   ],
   "rewrites": [
     {
-      "source": "/:path*",
+      "source": ".*",
       "has": [
         {
           "type": "host",
           "value": "sveltekit.authjs.dev"
         }
       ],
-      "destination": "/reference/sveltekit/:path*"
+      "destination": "/reference/sveltekit/"
     }
   ]
 }
