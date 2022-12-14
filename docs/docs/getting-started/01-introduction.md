@@ -16,8 +16,8 @@ Check our tutorials to see how easy it is to use Auth.js for authentication:
 
 ### Flexible and easy to use
 
-- Designed to work with any [OAuth service, it supports OAuth 1.0, 1.0A, 2.0 and OpenID Connect](/providers)
-- Built-in support for [many popular sign-in services](/configuration/providers/oauth)
+- Designed to work with any OAuth service, it supports OAuth 1.0, 1.0A, 2.0 and OpenID Connect
+- Built-in support for [many popular sign-in services](/reference/providers/oauth-builtin)
 - Supports [email / passwordless authentication](/getting-started/email-tutorial)
 - Supports stateless authentication with [any backend](/getting-started/credentials-tutorial) (Active Directory, LDAP, etc)
 - Supports both JSON Web Tokens and database sessions
@@ -29,7 +29,7 @@ NextAuth.js can be used with or without a database.
 
 - An open-source solution that allows you to keep control of your data
 - Supports Bring Your Own Database (BYOD) and can be used with any database
-- Built-in support for [MySQL, MariaDB, Postgres, SQL Server, MongoDB and SQLite](/configuration/databases)
+- Built-in support for [MySQL, MariaDB, Postgres, SQL Server, MongoDB and SQLite](/getting-started/databases)
 - Works great with databases from popular hosting providers
 - Can also be used _without a database_ (e.g. OAuth + JWT)
 

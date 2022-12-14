@@ -1,0 +1,16 @@
+---
+title: Built-in OAuth providers
+---
+
+Auth.js comes with a set of built-in providers. You can find them [here](https://github.com/nextauthjs/next-auth/tree/main/packages/core/src/providers). Each built-in provider has its own documentation page:
+
+<ul>
+  {Object.entries(require("../../../providers.json"))
+    .filter(([key]) => !["email", "credentials"].includes(key))
+    .sort(([, a], [, b]) => a.localeCompare(b))
+    .map(([key, name]) => (
+      <li key={key}>
+        <a href={`/providers/${key}`}>{name}</a>
+      </li>
+    ))}
+</ul>

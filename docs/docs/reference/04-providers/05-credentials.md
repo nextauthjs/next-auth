@@ -1,6 +1,6 @@
 ---
 title: Credentials Provider options
-sidebar_label: Credentials provider
+sidebar_label: Credentials options
 ---
 
 |    Name     |                    Description                    |                 Type                  | Required |

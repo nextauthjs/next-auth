@@ -1,6 +1,6 @@
 ---
 title: Email Provider options
-sidebar_label: Email provider
+sidebar_label: Email options
 ---
 
 |          Name           |                                     Description                                     |               Type               | Required |
