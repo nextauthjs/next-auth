@@ -2,7 +2,7 @@
 module.exports = {
   title: "Auth.js",
   tagline: "Authentication for the web.",
-  url: "https://next-auth.js.org",
+  url: "https://authjs.dev",
   baseUrl: "/",
   favicon: "img/favicon.ico",
   organizationName: "nextauthjs",
