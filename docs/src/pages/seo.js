@@ -13,12 +13,12 @@ const Seo = () => {
       <link rel="canonical" href={url} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={tagline} />
-      <meta property="og:image" content={`${url}/img/social-media-card.png`} />
+      <meta property="og:image" content={`${url}/img/og-image.png`} />
       <meta property="og:url" content={url} />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={tagline} />
-      <meta name="twitter:image" content={`${url}/img/social-media-card.png`} />
+      <meta name="twitter:image" content={`${url}/img/og-image.png`} />
     </Head>
   )
 }
