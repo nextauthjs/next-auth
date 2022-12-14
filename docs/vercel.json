@@ -57,7 +57,7 @@
           "value": "sveltekit.authjs.dev"
         }
       ],
-      "destination": "/reference/sveltekit/"
+      "destination": "https://authjs.dev/reference/sveltekit/"
     }
   ]
 }
