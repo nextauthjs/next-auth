@@ -5,6 +5,12 @@
 
 <h1>SvelteKit Auth Example</h1>
 <p>
+  This is an example site to demonstrate how to use <a
+    href="https://kit.svelte.dev/">SvelteKit</a
+  >
+  with <a href="https://sveltekit.authjs.dev">SvelteKit Auth</a> for
+  authentication.
+
   {#if $page.data.session}
     {#if $page.data.session.user?.image}
       <span
@@ -14,7 +20,10 @@
     {/if}
     <span class="signedInText">
       <small>Signed in as</small><br />
-      <strong>{$page.data.session.user?.name ?? "User"}</strong>
+      <strong
+        >{$page.data.session.user?.email ??
+          $page.data.session.user?.name}</strong
+      >
     </span>
     <button on:click={() => signOut()} class="button">Sign out</button>
   {:else}
