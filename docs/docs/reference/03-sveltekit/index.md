@@ -22,11 +22,11 @@ import GitHub from "@auth/core/providers/github"
 import { GITHUB_ID, GITHUB_SECRET } from "$env/static/private"
 
 export const handle = SvelteKitAuth({
-  providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })]
+  providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })],
 })
 ```
 
-Don't forget to set the `AUTH_SECRET` environment variable. This should be a random 32 character string. On unix systems you can use `openssl rand -hex 32`.
+Don't forget to set the `AUTH_SECRET` environment variable. This should be a random 32 character string. On unix systems you can use `openssl rand -hex 32` or check out `https://generate-secret.vercel.app/32`.
 
 ## Signing in and signing out
 
@@ -56,7 +56,3 @@ Don't forget to set the `AUTH_SECRET` environment variable. This should be a ran
   {/if}
 </p>
 ```
-
-
-
-
