@@ -6,8 +6,6 @@ const providersPath = path.join(
   "/docs/reference/05-oauth-providers"
 )
 
-console.log(providersPath)
-
 const files = fs.readdirSync(providersPath, "utf8")
 
 const result = files.reduce((acc, file) => {
