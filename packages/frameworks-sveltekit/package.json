@@ -46,6 +46,10 @@
   "dependencies": {
     "@auth/core": "workspace:*"
   },
+  "peerDependencies": {
+    "svelte": "^3.54.0",
+    "svelte-kit": "^1.0.0"
+  },
   "type": "module",
   "types": "./index.d.ts",
   "files": [

@@ -1,6 +1,7 @@
 /// <reference types="@sveltejs/kit" />
 import { dev } from "$app/environment"
-import { AUTH_SECRET, AUTH_TRUST_HOST, VERCEL } from "$env/static/private"
+import { env } from "$env/dynamic/private"
+import { AUTH_SECRET } from "$env/static/private"
 import {
   AuthHandler,
   type AuthAction,
@@ -81,7 +82,7 @@ function SvelteKitAuthHandler(
 export default function SvelteKitAuth(options: SvelteKitAuthOptions): Handle {
   const { prefix = "/auth", ...authOptions } = options
   authOptions.secret ??= AUTH_SECRET
-  authOptions.trustHost ??= !!(AUTH_TRUST_HOST ?? VERCEL ?? dev)
+  authOptions.trustHost ??= !!(env.AUTH_TRUST_HOST ?? env.VERCEL ?? dev)
 
   return SvelteKitAuthHandler(prefix, authOptions)
 }
@@ -98,8 +99,11 @@ declare global {
   }
 }
 
-declare module "$env/static/private" {
-  export const AUTH_SECRET: string
+declare module "$env/dynamic/private" {
   export const AUTH_TRUST_HOST: string
   export const VERCEL: string
+}
+
+declare module "$env/static/private" {
+  export const AUTH_SECRET: string
 }
