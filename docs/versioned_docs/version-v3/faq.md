@@ -17,7 +17,7 @@ It is not commercial software and is not associated with a commercial organizati
 
 ### What databases does NextAuth.js support?
 
-You can use NextAuth.js with MySQL, MariaDB, Postgres, MongoDB and SQLite or without a database. (See also: [Databases](/configuration/databases))
+You can use NextAuth.js with MySQL, MariaDB, Postgres, MongoDB and SQLite or without a database. (See also: [Databases](/v3/configuration/databases)
 
 You can use also NextAuth.js with any database using a custom database adapter, or by using a custom credentials authentication provider - e.g. to support signing in with a username and password stored in an existing database.
 
@@ -25,7 +25,7 @@ You can use also NextAuth.js with any database using a custom database adapter, 
 
 <p>NextAuth.js includes built-in support for signing in with&nbsp;
 {Object.values(require("../../providers.json")).sort().join(", ")}.
-(See also: <a href="/configuration/providers/oauth">Providers</a>)
+(See also: <a href="/v3/configuration/providers#oauth-providers">Providers</a>)
 </p>
 
 NextAuth.js also supports email for passwordless sign in, which is useful for account recovery or for people who are not able to use an account with the configured OAuth services (e.g. due to service outage, account suspension or otherwise becoming locked out of an account).
@@ -46,7 +46,7 @@ NextAuth.js is designed for use with Next.js and Serverless.
 
 If you are using a different framework for you website, you can create a website that handles sign in with Next.js and then access those sessions on a website that does not use Next.js as long as the websites are on the same domain.
 
-If you use NextAuth.js on a website with a different subdomain then the rest of your website (e.g. `auth.example.com` vs `www.example.com`) you will need to set a custom cookie domain policy for the Session Token cookie. (See also: [Cookies](/configuration/options#cookies))
+If you use NextAuth.js on a website with a different subdomain then the rest of your website (e.g. `auth.example.com` vs `www.example.com`) you will need to set a custom cookie domain policy for the Session Token cookie. (See also: [Cookies](/v3/configuration/options#cookies))
 
 NextAuth.js does not currently support automatically signing into sites on different top level domains (e.g. `www.example.com` vs `www.example.org`) using a single session.
 
@@ -58,7 +58,7 @@ It is not intended to be used in native applications on desktop or mobile applic
 
 ### Is NextAuth.js supporting TypeScript?
 
-Yes! Check out the [TypeScript docs](/getting-started/typescript)
+Yes! Check out the [TypeScript docs](./getting-started/typescript)
 
 ---
 
@@ -117,7 +117,7 @@ NextAuth.js records Refresh Tokens and Access Tokens on sign in (if supplied by 
 
 You can then look them up from the database or persist them to the JSON Web Token.
 
-Note: NextAuth.js does not currently handle Access Token rotation for OAuth providers for you, however you can check out [this tutorial](/tutorials/refresh-token-rotation) if you want to implement it.
+Note: NextAuth.js does not currently handle Access Token rotation for OAuth providers for you, however you can check out [this tutorial](./tutorials/refresh-token-rotation) if you want to implement it.
 
 ### When I sign in with another account with the same email address, why are accounts not linked automatically?
 

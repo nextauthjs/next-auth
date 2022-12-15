@@ -9,16 +9,16 @@
    </p>
    <p align="center" style="align: center;">
       <a href="https://npm.im/next-auth">
-        <img alt="npm" src="https://img.shields.io/npm/v/next-auth?color=green&label=next-auth">
+        <img alt="npm" src="https://img.shields.io/npm/v/next-auth?color=green&label=next-auth&style=flat-square">
       </a>
       <a href="https://bundlephobia.com/result?p=next-auth-example">
-        <img src="https://img.shields.io/bundlephobia/minzip/next-auth?label=next-auth" alt="Bundle Size"/>
+        <img src="https://img.shields.io/bundlephobia/minzip/next-auth?label=size&style=flat-square" alt="Bundle Size"/>
       </a>
       <a href="https://www.npmtrends.com/next-auth">
-        <img src="https://img.shields.io/npm/dm/next-auth?label=next-auth%20downloads" alt="Downloads" />
+        <img src="https://img.shields.io/npm/dm/next-auth?label=downloads&style=flat-square" alt="Downloads" />
       </a>
       <a href="https://npm.im/next-auth">
-        <img src="https://img.shields.io/badge/npm-TypeScript-blue" alt="TypeScript" />
+        <img src="https://img.shields.io/badge/TypeScript-blue?style=flat-square" alt="TypeScript" />
       </a>
    </p>
 </p>

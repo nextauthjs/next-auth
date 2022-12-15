@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "watch": true,
+    "emitDeclarationOnly": false
+  },
+  "watchOptions": {
+    "excludeDirectories": [
+      "jwt",
+      "lib",
+      "providers",
+    ],
+    "excludeFiles": [
+      "./*.d.ts",
+      "./*.js"
+    ]
+  }
+}
