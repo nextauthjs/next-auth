@@ -28,6 +28,8 @@ export const handle = SvelteKitAuth({
 
 Don't forget to set the `AUTH_SECRET` [environment variable](https://kit.svelte.dev/docs/modules#$env-static-private). This should be a random 32 character string. On unix systems you can use `openssl rand -hex 32` or check out `https://generate-secret.vercel.app/32`.
 
+When deploying your app outside Vercel, set the `AUTH_TRUST_HOST` variable to your Home URL, for example `https://skauth.pages.dev` for Cloudflare Pages.
+
 ## Signing in and signing out
 
 ```ts
