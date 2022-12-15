@@ -1,5 +1,4 @@
-import type { Adapter } from 'next-auth/adapters'
-import type { EventCallbacks, LoggerInstance } from 'next-auth'
+import type { EventCallbacks, LoggerInstance } from '@auth/core'
 
 /**
  * Same as the default `Error`, but it is JSON serializable.
@@ -8,6 +7,7 @@ import type { EventCallbacks, LoggerInstance } from 'next-auth'
 export class UnknownError extends Error {
   code: string
   constructor (error: Error | string) {
+    // @ts-expect-error: todo
     super((error as Error)?.message ?? error)
     this.name = 'UnknownError'
     this.code = (error as any).code
@@ -92,9 +92,9 @@ export function eventsErrorHandler (
 
 /** Handles adapter induced errors. */
 export function adapterErrorHandler (
-  adapter: Adapter | undefined,
+  adapter: any | undefined,
   logger: LoggerInstance
-): Adapter | undefined {
+): any | undefined {
   if (!adapter) { return }
 
   return Object.keys(adapter).reduce<any>((acc, name) => {
