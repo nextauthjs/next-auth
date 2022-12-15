@@ -1,6 +1,6 @@
-import type { InternalOptions, ResponseInternal } from "../.."
-import type { Adapter } from "../../adapters"
-import type { SessionStore } from "../cookie"
+import type { InternalOptions, ResponseInternal } from "../../index.js"
+import type { Adapter } from "../../adapters.js"
+import type { SessionStore } from "../cookie.js"
 
 /** Handle requests to /api/auth/signout */
 export async function signout(params: {

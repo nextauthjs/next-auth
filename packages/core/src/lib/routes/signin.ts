@@ -1,13 +1,13 @@
-import getAdapterUserFromEmail from "../email/getUserFromEmail"
-import emailSignin from "../email/signin"
-import { getAuthorizationUrl } from "../oauth/authorization-url"
+import getAdapterUserFromEmail from "../email/getUserFromEmail.js"
+import emailSignin from "../email/signin.js"
+import { getAuthorizationUrl } from "../oauth/authorization-url.js"
 
 import type {
   Account,
   InternalOptions,
   RequestInternal,
   ResponseInternal,
-} from "../.."
+} from "../../index.js"
 
 /** Handle requests to /api/auth/signin */
 export async function signin(params: {

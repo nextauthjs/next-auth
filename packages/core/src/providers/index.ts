@@ -1,14 +1,14 @@
-import type { OAuthConfig, OAuthProvider, OAuthProviderType } from "./oauth"
-import type { EmailConfig, EmailProvider, EmailProviderType } from "./email"
+import type { OAuthConfig, OAuthProvider, OAuthProviderType } from "./oauth.js"
+import type { EmailConfig, EmailProvider, EmailProviderType } from "./email.js"
 import type {
   CredentialsConfig,
   CredentialsProvider,
   CredentialsProviderType,
-} from "./credentials"
+} from "./credentials.js"
 
-export * from "./credentials"
-export * from "./email"
-export * from "./oauth"
+export * from "./credentials.js"
+export * from "./email.js"
+export * from "./oauth.js"
 
 export type ProviderType = "oidc" | "oauth" | "email" | "credentials"
 

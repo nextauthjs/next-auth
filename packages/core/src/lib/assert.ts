@@ -7,11 +7,11 @@ import {
   MissingAuthorize,
   MissingSecret,
   UnsupportedStrategy,
-} from "./errors"
-import { defaultCookies } from "./cookie"
+} from "./errors.js"
+import { defaultCookies } from "./cookie.js"
 
-import type { AuthOptions, RequestInternal } from ".."
-import type { WarningCode } from "./utils/logger"
+import type { AuthOptions, RequestInternal } from "../index.js"
+import type { WarningCode } from "./utils/logger.js"
 
 type ConfigError =
   | MissingAdapter
@@ -56,7 +56,7 @@ export function assertConfig(params: {
   }
 
   if (!options.secret) {
-    return new MissingSecret("Please define a `secret` in production.")
+    return new MissingSecret("Please define a `secret`.")
   }
 
   // req.query isn't defined when asserting `unstable_getServerSession` for example

@@ -1,13 +1,17 @@
-import renderToString from "preact-render-to-string"
-import css from "../styles"
-import ErrorPage from "./error"
-import SigninPage from "./signin"
-import SignoutPage from "./signout"
-import VerifyRequestPage from "./verify-request"
+import { renderToString } from "preact-render-to-string"
+import css from "../styles/index.js"
+import ErrorPage from "./error.js"
+import SigninPage from "./signin.js"
+import SignoutPage from "./signout.js"
+import VerifyRequestPage from "./verify-request.js"
 
-import type { InternalOptions, RequestInternal, ResponseInternal } from "../.."
-import type { Cookie } from "../cookie"
-import type { ErrorType } from "./error"
+import type {
+  InternalOptions,
+  RequestInternal,
+  ResponseInternal,
+} from "../../index.js"
+import type { Cookie } from "../cookie.js"
+import type { ErrorType } from "./error.js"
 
 type RenderPageParams = {
   query?: RequestInternal["query"]

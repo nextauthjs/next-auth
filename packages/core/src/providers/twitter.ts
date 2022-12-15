@@ -1,5 +1,5 @@
 // TODO: move OAuth 1.0 support or remove it?
-import type { OAuthConfig, OAuthUserConfig } from "."
+import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 export interface TwitterLegacyProfile {
   id: number

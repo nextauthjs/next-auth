@@ -1,4 +1,4 @@
-import type { Account, Awaitable, User } from "."
+import type { Account, Awaitable, User } from "./index.js"
 
 export interface AdapterUser extends User {
   id: string
