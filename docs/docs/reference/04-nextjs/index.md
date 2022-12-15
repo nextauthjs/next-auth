@@ -8,11 +8,11 @@ title: Next.js
 This feature is experimental and may be removed or changed in the future.
 :::
 
-When calling from server-side i.e. in API routes or in `getServerSideProps`, we recommend using this function instead of `getSession` to retrieve the `session` object. This method is especially useful when you are using NextAuth.js with a database. This method can _drastically_ reduce response time when used over `getSession` server-side, due to avoiding an extra `fetch` to an API Route (this is generally [not recommended in Next.js](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props#getserversideprops-or-api-routes)). In addition, `unstable_getServerSession` will correctly update the cookie expiry time and update the session content if `callbacks.jwt` or `callbacks.session` changed something.
+When calling from server-side i.e. in API routes or in `getServerSideProps`, we recommend using this function instead of `getSession` to retrieve the `session` object. This method is especially useful when you are using Auth.js with a database. This method can _drastically_ reduce response time when used over `getSession` server-side, due to avoiding an extra `fetch` to an API Route (this is generally [not recommended in Next.js](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props#getserversideprops-or-api-routes)). In addition, `unstable_getServerSession` will correctly update the cookie expiry time and update the session content if `callbacks.jwt` or `callbacks.session` changed something.
 
 Otherwise, if you only want to get the session token, see [`getToken`](/guides/basics/securing-pages-and-api-routes#using-gettoken).
 
-`unstable_getServerSession` requires passing the same object you would pass to `NextAuth` when initializing NextAuth.js. To do so, you can export your NextAuth.js options in the following way:
+`unstable_getServerSession` requires passing the same object you would pass to `NextAuth` when initializing Auth.js. To do so, you can export your Auth.js options in the following way:
 
 In `[...nextauth].ts`:
 
@@ -97,7 +97,7 @@ Currently, the underlying Next.js `cookies()` method does [only provides read ac
 
 ## Middleware
 
-You can use a Next.js Middleware with NextAuth.js to protect your site.
+You can use a Next.js Middleware with Auth.js to protect your site.
 
 Next.js 12 has introduced [Middleware](https://nextjs.org/docs/middleware). It is a way to run logic before accessing any page, even when they are static. On platforms like Vercel, Middleware is run at the [Edge](https://nextjs.org/docs/api-reference/edge-runtime).
 
@@ -200,10 +200,10 @@ secret: process.env.NEXTAUTH_SECRET
 
 ### Advanced usage
 
-NextAuth.js Middleware is very flexible, there are multiple ways to use it.
+Auth.js Middleware is very flexible, there are multiple ways to use it.
 
 :::note
-If you do not define the options, NextAuth.js will use the default values for the omitted options.
+If you do not define the options, Auth.js will use the default values for the omitted options.
 :::
 
 #### wrap middleware
@@ -272,5 +272,5 @@ export default withAuth({
 
 ### Caveats
 
-- Currently only supports session verification, as parts of the sign-in code need to run in a Node.js environment. In the future, we would like to make sure that NextAuth.js can fully run at the [Edge](https://nextjs.org/docs/api-reference/edge-runtime)
+- Currently only supports session verification, as parts of the sign-in code need to run in a Node.js environment. In the future, we would like to make sure that Auth.js can fully run at the [Edge](https://nextjs.org/docs/api-reference/edge-runtime)
 - Only supports the `"jwt"` [session strategy](/reference/configuration/auth-config#session). We need to wait until databases at the Edge become mature enough to ensure a fast experience. (If you know of an Edge-compatible database, we would like if [you proposed a new Adapter](/guides/adapters/creating-a-database-adapter))

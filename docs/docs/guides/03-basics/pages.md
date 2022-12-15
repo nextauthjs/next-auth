@@ -2,9 +2,9 @@
 title: Pages
 ---
 
-NextAuth.js automatically creates simple, unbranded authentication pages for handling Sign in, Sign out, Email Verification and displaying error messages.
+Auth.js automatically creates simple, unbranded authentication pages for handling Sign in, Sign out, Email Verification and displaying error messages.
 
-The options displayed on the sign-up page are automatically generated based on the providers specified in the options passed to NextAuth.js.
+The options displayed on the sign-up page are automatically generated based on the providers specified in the options passed to Auth.js.
 
 To add a custom login page, you can use the `pages` option:
 
