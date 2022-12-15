@@ -27,13 +27,4 @@ a {
 hr {
   border: 1px solid #ddd;
 }
-
-iframe {
-  background: #ccc;
-  border: 1px solid #ccc;
-  height: 10rem;
-  width: 100%;
-  border-radius: .5rem;
-  filter: invert(1);
-}
 </style>
