@@ -1,4 +1,4 @@
-import { NuxtAuthHandler } from '@/lib/auth/server/handler'
+import { NuxtAuthHandler } from '@/lib/auth/server'
 import GithubProvider from '@auth/core/providers/github'
 import type { AuthOptions } from '@auth/core'
 

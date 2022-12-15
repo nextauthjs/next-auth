@@ -7,11 +7,6 @@ export default defineNuxtConfig({
       clientSecret: process.env.GITHUB_CLIENT_SECRET
     }
   },
-  // https://v3.nuxtjs.org/guide/concepts/esm#aliasing-libraries
-  // Fix for GithubProvider is not a function error in Vite
-  alias: {
-    'next-auth/providers/github': 'node_modules/next-auth/providers/github.js'
-  },
   vite: {
     define: {
       'process.env.NEXTAUTH_URL': JSON.stringify(process.env.NEXTAUTH_URL),

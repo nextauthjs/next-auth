@@ -106,9 +106,11 @@ importers:
       eslint: ^8.29.0
       h3: 1.0.2
       nuxt: 3.0.0
+      requrl: ^3.0.2
     dependencies:
       '@auth/core': link:../../packages/core
       '@hattip/adapter-node': 0.0.22
+      requrl: 3.0.2
     devDependencies:
       '@nuxt/eslint-config': 0.1.1_eslint@8.29.0
       eslint: 8.29.0
@@ -24991,6 +24993,10 @@ packages:
     dependencies:
       lodash: 4.17.21
     dev: true
+
+  /requrl/3.0.2:
+    resolution: {integrity: sha512-f3gjR6d8MhOpn46PP+DSJywbmxi95fxQm3coXBFwognjFLla9X6tr8BdNyaIKNOEkaRbRcm0/zYAqN19N1oyhg==}
+    dev: false
 
   /resolve-cwd/3.0.0:
     resolution: {integrity: sha512-OrZaX2Mb+rJCpH/6CpSqt9xFVpN++x01XnN2ie9g6P5/3xelLAkXWVADpdz1IHD/KFfEXyE6V0U01OQ3UO2rEg==}

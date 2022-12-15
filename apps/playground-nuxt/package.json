@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
+    "dev": "export NODE_OPTIONS='--no-experimental-fetch' && nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@auth/core": "workspace:*",
-    "@hattip/adapter-node": "^0.0.22"
+    "@hattip/adapter-node": "^0.0.22",
+    "requrl": "^3.0.2"
   }
 }
