@@ -106,11 +106,9 @@ importers:
       eslint: ^8.29.0
       h3: 1.0.2
       nuxt: 3.0.0
-      oauth4webapi: 2.0.5
     dependencies:
       '@auth/core': link:../../packages/core
       '@hattip/adapter-node': 0.0.22
-      oauth4webapi: 2.0.5
     devDependencies:
       '@nuxt/eslint-config': 0.1.1_eslint@8.29.0
       eslint: 8.29.0

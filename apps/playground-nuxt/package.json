@@ -16,7 +16,6 @@
   },
   "dependencies": {
     "@auth/core": "workspace:*",
-    "@hattip/adapter-node": "^0.0.22",
-    "oauth4webapi": "2.0.5"
+    "@hattip/adapter-node": "^0.0.22"
   }
 }
