@@ -58,6 +58,26 @@
         }
       ],
       "destination": "https://authjs.dev/reference/sveltekit/"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "errors.authjs.dev"
+        }
+      ],
+      "destination": "https://authjs.dev/reference/errors"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "warnings.authjs.dev"
+        }
+      ],
+      "destination": "https://authjs.dev/reference/warnings/"
     }
   ]
 }
