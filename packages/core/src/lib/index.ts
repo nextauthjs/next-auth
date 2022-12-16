@@ -15,7 +15,7 @@ export async function AuthInternal<
 ): Promise<ResponseInternal<Body>> {
   const { action, providerId, error, method } = request
 
-  const { config, cookies } = await init({
+  const { options, cookies } = await init({
     authConfig,
     action,
     providerId,
@@ -27,19 +27,19 @@ export async function AuthInternal<
   })
 
   const sessionStore = new SessionStore(
-    config.cookies.sessionToken,
+    options.cookies.sessionToken,
     request,
-    config.logger
+    options.logger
   )
 
   if (method === "GET") {
-    const render = renderPage({ ...config, query: request.query, cookies })
-    const { pages } = config
+    const render = renderPage({ ...options, query: request.query, cookies })
+    const { pages } = options
     switch (action) {
       case "providers":
-        return (await routes.providers(config.providers)) as any
+        return (await routes.providers(options.providers)) as any
       case "session": {
-        const session = await routes.session(sessionStore, config)
+        const session = await routes.session(sessionStore, options)
         if (session.cookies) cookies.push(...session.cookies)
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
         return { ...session, cookies } as any
@@ -47,14 +47,14 @@ export async function AuthInternal<
       case "csrf":
         return {
           headers: { "Content-Type": "application/json" },
-          body: { csrfToken: config.csrfToken } as any,
+          body: { csrfToken: options.csrfToken } as any,
           cookies,
         }
       case "signin":
         if (pages.signIn) {
           let signinUrl = `${pages.signIn}${
             pages.signIn.includes("?") ? "&" : "?"
-          }callbackUrl=${encodeURIComponent(config.callbackUrl)}`
+          }callbackUrl=${encodeURIComponent(options.callbackUrl)}`
           if (error)
             signinUrl = `${signinUrl}&error=${encodeURIComponent(error)}`
           return { redirect: signinUrl, cookies }
@@ -66,14 +66,14 @@ export async function AuthInternal<
 
         return render.signout()
       case "callback":
-        if (config.provider) {
+        if (options.provider) {
           const callback = await routes.callback({
             body: request.body,
             query: request.query,
             headers: request.headers,
             cookies: request.cookies,
             method,
-            config: config,
+            options: options,
             sessionStore,
           })
           if (callback.cookies) cookies.push(...callback.cookies)
@@ -103,7 +103,7 @@ export async function AuthInternal<
             "SessionRequired",
           ].includes(error as string)
         ) {
-          return { redirect: `${config.url}/signin?error=${error}`, cookies }
+          return { redirect: `${options.url}/signin?error=${error}`, cookies }
         }
 
         if (pages.error) {
@@ -122,33 +122,33 @@ export async function AuthInternal<
     switch (action) {
       case "signin":
         // Verified CSRF Token required for all sign in routes
-        if (config.csrfTokenVerified && config.provider) {
+        if (options.csrfTokenVerified && options.provider) {
           const signin = await routes.signin(
             request.query,
             request.body,
-            config
+            options
           )
           if (signin.cookies) cookies.push(...signin.cookies)
           return { ...signin, cookies }
         }
 
-        return { redirect: `${config.url}/signin?csrf=true`, cookies }
+        return { redirect: `${options.url}/signin?csrf=true`, cookies }
       case "signout":
         // Verified CSRF Token required for signout
-        if (config.csrfTokenVerified) {
-          const signout = await routes.signout(sessionStore, config)
+        if (options.csrfTokenVerified) {
+          const signout = await routes.signout(sessionStore, options)
           if (signout.cookies) cookies.push(...signout.cookies)
           return { ...signout, cookies }
         }
-        return { redirect: `${config.url}/signout?csrf=true`, cookies }
+        return { redirect: `${options.url}/signout?csrf=true`, cookies }
       case "callback":
-        if (config.provider) {
+        if (options.provider) {
           // Verified CSRF Token required for credentials providers only
           if (
-            config.provider.type === "credentials" &&
-            !config.csrfTokenVerified
+            options.provider.type === "credentials" &&
+            !options.csrfTokenVerified
           ) {
-            return { redirect: `${config.url}/signin?csrf=true`, cookies }
+            return { redirect: `${options.url}/signin?csrf=true`, cookies }
           }
 
           const callback = await routes.callback({
@@ -157,7 +157,7 @@ export async function AuthInternal<
             headers: request.headers,
             cookies: request.cookies,
             method,
-            config: config,
+            options: options,
             sessionStore,
           })
           if (callback.cookies) cookies.push(...callback.cookies)

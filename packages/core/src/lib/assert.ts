@@ -40,18 +40,18 @@ function isValidHttpUrl(url: string, baseUrl: string) {
  */
 export function assertConfig(
   request: RequestInternal,
-  config: AuthConfig
+  options: AuthConfig
 ): ConfigError | WarningCode[] {
   const { url } = request
   const warnings: WarningCode[] = []
 
-  if (!warned && config.debug) warnings.push("debug_enabled")
+  if (!warned && options.debug) warnings.push("debug_enabled")
 
-  if (!config.trustHost) {
+  if (!options.trustHost) {
     return new UntrustedHost(`Host must be trusted. URL was: ${request.url}`)
   }
 
-  if (!config.secret) {
+  if (!options.secret) {
     return new MissingSecret("Please define a `secret`.")
   }
 
@@ -64,11 +64,11 @@ export function assertConfig(
   }
 
   const { callbackUrl: defaultCallbackUrl } = defaultCookies(
-    config.useSecureCookies ?? url.protocol === "https://"
+    options.useSecureCookies ?? url.protocol === "https://"
   )
   const callbackUrlCookie =
     request.cookies?.[
-      config.cookies?.callbackUrl?.name ?? defaultCallbackUrl.name
+      options.cookies?.callbackUrl?.name ?? defaultCallbackUrl.name
     ]
 
   if (callbackUrlCookie && !isValidHttpUrl(callbackUrlCookie, url.origin)) {
@@ -79,7 +79,7 @@ export function assertConfig(
 
   let hasCredentials, hasEmail
 
-  for (const provider of config.providers) {
+  for (const provider of options.providers) {
     if (
       (provider.type === "oauth" || provider.type === "oidc") &&
       !(provider.issuer ?? provider.options?.issuer)
@@ -93,7 +93,7 @@ export function assertConfig(
 
       if (key) {
         return new InvalidEndpoints(
-          `Provider "${provider.id}" is missing both \`issuer\` and \`${key}\` endpoint config. At least one of them is required.`
+          `Provider "${provider.id}" is missing both \`issuer\` and \`${key}\` endpoint options. At least one of them is required.`
         )
       }
     }
@@ -103,8 +103,8 @@ export function assertConfig(
   }
 
   if (hasCredentials) {
-    const dbStrategy = config.session?.strategy === "database"
-    const onlyCredentials = !config.providers.some(
+    const dbStrategy = options.session?.strategy === "database"
+    const onlyCredentials = !options.providers.some(
       (p) => p.type !== "credentials"
     )
     if (dbStrategy && onlyCredentials) {
@@ -113,7 +113,7 @@ export function assertConfig(
       )
     }
 
-    const credentialsNoAuthorize = config.providers.some(
+    const credentialsNoAuthorize = options.providers.some(
       (p) => p.type === "credentials" && !p.authorize
     )
     if (credentialsNoAuthorize) {
@@ -124,7 +124,7 @@ export function assertConfig(
   }
 
   if (hasEmail) {
-    const { adapter } = config
+    const { adapter } = options
     if (!adapter) {
       return new MissingAdapter("E-mail login requires an adapter.")
     }

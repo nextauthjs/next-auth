@@ -1,6 +1,6 @@
 import { SignOutError } from "../errors.js"
 
-import type { AuthConfigInternal, ResponseInternal } from "../../index.js"
+import type { InternalOptions, ResponseInternal } from "../../index.js"
 import type { SessionStore } from "../cookie.js"
 
 /**
@@ -12,9 +12,9 @@ import type { SessionStore } from "../cookie.js"
  */
 export async function signout(
   sessionStore: SessionStore,
-  config: AuthConfigInternal
+  options: InternalOptions
 ): Promise<ResponseInternal> {
-  const { jwt, events, callbackUrl: redirect, logger, session } = config
+  const { jwt, events, callbackUrl: redirect, logger, session } = options
 
   const sessionToken = sessionStore.value
   if (!sessionToken) return { redirect }
@@ -24,7 +24,7 @@ export async function signout(
       const token = await jwt.decode({ ...jwt, token: sessionToken })
       await events.signOut?.({ token })
     } else {
-      const session = await config.adapter?.deleteSession(sessionToken)
+      const session = await options.adapter?.deleteSession(sessionToken)
       await events.signOut?.({ session })
     }
   } catch (error) {

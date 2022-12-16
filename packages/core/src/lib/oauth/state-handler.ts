@@ -1,5 +1,5 @@
 import * as o from "oauth4webapi"
-import type { AuthConfigInternal, RequestInternal } from "../../index.js"
+import type { InternalOptions, RequestInternal } from "../../index.js"
 import type { Cookie } from "../cookie.js"
 import { InvalidState } from "../errors.js"
 
@@ -7,7 +7,7 @@ const STATE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 
 /** Returns state if the provider supports it */
 export async function createState(
-  options: AuthConfigInternal<"oauth">
+  options: InternalOptions<"oauth">
 ): Promise<{ cookie: Cookie; value: string } | undefined> {
   const { logger, provider, jwt, cookies } = options
 
@@ -47,25 +47,25 @@ export async function createState(
 export async function useState(
   cookies: RequestInternal["cookies"],
   resCookies: Cookie[],
-  config: AuthConfigInternal<"oauth">
+  options: InternalOptions<"oauth">
 ): Promise<string | undefined> {
-  const { provider, jwt } = config
+  const { provider, jwt } = options
   if (!provider.checks.includes("state")) return
 
-  const state = cookies?.[config.cookies.state.name]
+  const state = cookies?.[options.cookies.state.name]
 
   if (!state) throw new InvalidState("State was missing from the cookies.")
 
   // IDEA: Let the user do something with the returned state
-  const value = (await jwt.decode({ ...config.jwt, token: state })) as any
+  const value = (await jwt.decode({ ...options.jwt, token: state })) as any
 
   if (!value?.value) throw new InvalidState("Could not parse state cookie.")
 
   // Clear the state cookie after use
   resCookies.push({
-    name: config.cookies.state.name,
+    name: options.cookies.state.name,
     value: "",
-    options: { ...config.cookies.state.options, maxAge: 0 },
+    options: { ...options.cookies.state.options, maxAge: 0 },
   })
 
   return value.value

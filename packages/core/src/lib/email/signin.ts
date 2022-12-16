@@ -1,5 +1,5 @@
-import { randomString, createHash } from "../web.js"
-import type { AuthConfigInternal } from "../../index.js"
+import type { InternalOptions } from "../../index.js"
+import { createHash, randomString } from "../web.js"
 
 /**
  * Starts an e-mail login flow, by generating a token,
@@ -7,7 +7,7 @@ import type { AuthConfigInternal } from "../../index.js"
  */
 export default async function email(
   identifier: string,
-  options: AuthConfigInternal<"email">
+  options: InternalOptions<"email">
 ): Promise<string> {
   const { url, adapter, provider, callbackUrl, theme } = options
   const token =

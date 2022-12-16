@@ -5,7 +5,7 @@ import { usePKCECodeVerifier } from "./pkce-handler.js"
 import { useState } from "./state-handler.js"
 
 import type {
-  AuthConfigInternal,
+  InternalOptions,
   LoggerInstance,
   Profile,
   RequestInternal,
@@ -26,9 +26,9 @@ import type { Cookie } from "../cookie.js"
 export async function handleOAuth(
   query: RequestInternal["query"],
   cookies: RequestInternal["cookies"],
-  config: AuthConfigInternal<"oauth">
+  options: InternalOptions<"oauth">
 ) {
-  const { logger, provider } = config
+  const { logger, provider } = options
   let as: o.AuthorizationServer
 
   if (!provider.token?.url && !provider.userinfo?.url) {
@@ -68,7 +68,7 @@ export async function handleOAuth(
 
   const resCookies: Cookie[] = []
 
-  const state = await useState(cookies, resCookies, config)
+  const state = await useState(cookies, resCookies, options)
 
   const parameters = o.validateAuthResponse(
     as,
@@ -87,14 +87,14 @@ export async function handleOAuth(
   }
 
   const codeVerifier = await usePKCECodeVerifier(
-    cookies?.[config.cookies.pkceCodeVerifier.name],
-    config
+    cookies?.[options.cookies.pkceCodeVerifier.name],
+    options
   )
 
   if (codeVerifier) resCookies.push(codeVerifier.cookie)
 
   // TODO:
-  const nonce = await useNonce(cookies?.[config.cookies.nonce.name], config)
+  const nonce = await useNonce(cookies?.[options.cookies.nonce.name], options)
   if (nonce && provider.type === "oidc") {
     resCookies.push(nonce.cookie)
   }

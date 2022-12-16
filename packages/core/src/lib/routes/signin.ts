@@ -4,7 +4,7 @@ import { getAdapterUserFromEmail, handleAuthorized } from "./shared.js"
 
 import type {
   Account,
-  AuthConfigInternal,
+  InternalOptions,
   RequestInternal,
   ResponseInternal,
 } from "../../index.js"
@@ -18,18 +18,18 @@ import { SignInError } from "../errors.js"
 export async function signin(
   query: RequestInternal["query"],
   body: RequestInternal["body"],
-  config: AuthConfigInternal<"oauth" | "email">
+  options: InternalOptions<"oauth" | "email">
 ): Promise<ResponseInternal> {
-  const { url, logger, provider } = config
+  const { url, logger, provider } = options
   try {
     if (provider.type === "oauth" || provider.type === "oidc") {
-      return await getAuthorizationUrl(query, config)
+      return await getAuthorizationUrl(query, options)
     } else if (provider.type === "email") {
       const normalizer = provider.normalizeIdentifier ?? defaultNormalizer
       const email = normalizer(body?.email)
 
       // @ts-expect-error -- Verified in `assertConfig`
-      const user = await getAdapterUserFromEmail(email, config.adapter)
+      const user = await getAdapterUserFromEmail(email, options.adapter)
 
       const account: Account = {
         providerAccountId: email,
@@ -40,12 +40,12 @@ export async function signin(
 
       const unauthorizedOrError = await handleAuthorized(
         { user, account, email: { verificationRequest: true } },
-        config
+        options
       )
 
       if (unauthorizedOrError) return unauthorizedOrError
 
-      const redirect = await emailSignin(email, config)
+      const redirect = await emailSignin(email, options)
       return { redirect }
     }
     return { redirect: `${url}/signin` }

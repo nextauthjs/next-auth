@@ -1,11 +1,11 @@
 import { AuthorizedCallbackError } from "../errors.js"
-import { AuthConfigInternal } from "../types.js"
+import { InternalOptions } from "../types.js"
 
 import type { Adapter, AdapterUser } from "../../adapters.js"
 
 export async function handleAuthorized(
   params: any,
-  { url, logger, callbacks: { authorized: callback } }: AuthConfigInternal
+  { url, logger, callbacks: { authorized: callback } }: InternalOptions
 ) {
   url.pathname += "/error"
   try {

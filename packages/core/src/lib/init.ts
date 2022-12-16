@@ -10,8 +10,8 @@ import parseUrl from "./utils/parse-url.js"
 
 import type {
   AuthConfig,
-  AuthConfigInternal,
   EventCallbacks,
+  InternalOptions,
   RequestInternal,
 } from "../index.js"
 
@@ -19,7 +19,7 @@ interface InitParams {
   url: URL
   authConfig: AuthConfig
   providerId?: string
-  action: AuthConfigInternal["action"]
+  action: InternalOptions["action"]
   /** Callback URL value extracted from the incoming request. */
   callbackUrl?: string
   /** CSRF token value extracted from the incoming request. From body if POST, from query if GET */
@@ -40,7 +40,7 @@ export async function init({
   csrfToken: reqCsrfToken,
   isPost,
 }: InitParams): Promise<{
-  config: AuthConfigInternal
+  options: InternalOptions
   cookies: cookie.Cookie[]
 }> {
   // TODO: move this to web.ts
@@ -60,7 +60,7 @@ export async function init({
 
   // User provided options are overriden by other options,
   // except for the options with special handling above
-  const config: AuthConfigInternal = {
+  const options: InternalOptions = {
     debug: false,
     pages: {},
     theme: {
@@ -122,38 +122,38 @@ export async function init({
     cookie: csrfCookie,
     csrfTokenVerified,
   } = await createCSRFToken({
-    options: config,
-    cookieValue: reqCookies?.[config.cookies.csrfToken.name],
+    options: options,
+    cookieValue: reqCookies?.[options.cookies.csrfToken.name],
     isPost,
     bodyValue: reqCsrfToken,
   })
 
-  config.csrfToken = csrfToken
-  config.csrfTokenVerified = csrfTokenVerified
+  options.csrfToken = csrfToken
+  options.csrfTokenVerified = csrfTokenVerified
 
   if (csrfCookie) {
     cookies.push({
-      name: config.cookies.csrfToken.name,
+      name: options.cookies.csrfToken.name,
       value: csrfCookie,
-      options: config.cookies.csrfToken.options,
+      options: options.cookies.csrfToken.options,
     })
   }
 
   const { callbackUrl, callbackUrlCookie } = await createCallbackUrl({
-    options: config,
-    cookieValue: reqCookies?.[config.cookies.callbackUrl.name],
+    options: options,
+    cookieValue: reqCookies?.[options.cookies.callbackUrl.name],
     paramValue: reqCallbackUrl,
   })
-  config.callbackUrl = callbackUrl
+  options.callbackUrl = callbackUrl
   if (callbackUrlCookie) {
     cookies.push({
-      name: config.cookies.callbackUrl.name,
+      name: options.cookies.callbackUrl.name,
       value: callbackUrlCookie,
-      options: config.cookies.callbackUrl.options,
+      options: options.cookies.callbackUrl.options,
     })
   }
 
-  return { config, cookies }
+  return { options, cookies }
 }
 
 type Method = (...args: any[]) => Promise<any>

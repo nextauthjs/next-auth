@@ -6,8 +6,8 @@ import css from "./styles.js"
 import VerifyRequestPage from "./verify-request.js"
 
 import type {
-  AuthConfigInternal,
   ErrorPageParam,
+  InternalOptions,
   RequestInternal,
   ResponseInternal,
 } from "../../index.js"
@@ -29,7 +29,7 @@ type RenderPageParams = {
   cookies?: Cookie[]
 } & Partial<
   Pick<
-    AuthConfigInternal,
+    InternalOptions,
     "url" | "callbackUrl" | "csrfToken" | "providers" | "theme"
   >
 >

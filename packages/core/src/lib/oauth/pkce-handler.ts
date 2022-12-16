@@ -1,7 +1,7 @@
 import * as o from "oauth4webapi"
 import * as jwt from "../../jwt/index.js"
 
-import type { AuthConfigInternal } from "../../index.js"
+import type { InternalOptions } from "../../index.js"
 import type { Cookie } from "../cookie.js"
 
 const PKCE_CODE_CHALLENGE_METHOD = "S256"
@@ -11,7 +11,7 @@ const PKCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
  * Returns `code_challenge` and `code_challenge_method`
  * and saves them in a cookie.
  */
-export async function createPKCE(options: AuthConfigInternal<"oauth">): Promise<
+export async function createPKCE(options: InternalOptions<"oauth">): Promise<
   | undefined
   | {
       code_challenge: string
@@ -63,7 +63,7 @@ export async function createPKCE(options: AuthConfigInternal<"oauth">): Promise<
  */
 export async function usePKCECodeVerifier(
   codeVerifier: string | undefined,
-  options: AuthConfigInternal<"oauth">
+  options: InternalOptions<"oauth">
 ): Promise<{ codeVerifier: string; cookie: Cookie } | undefined> {
   const { cookies, provider } = options
 

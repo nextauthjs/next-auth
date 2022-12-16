@@ -2,17 +2,13 @@ import { JWTSessionError, SessionTokenError } from "../errors.js"
 import { fromDate } from "../utils/date.js"
 
 import type { Adapter } from "../../adapters.js"
-import type {
-  AuthConfigInternal,
-  ResponseInternal,
-  Session,
-} from "../../index.js"
+import type { InternalOptions, ResponseInternal, Session } from "../../index.js"
 import type { SessionStore } from "../cookie.js"
 
 /** Return a session object filtered via `callbacks.session` */
 export async function session(
   sessionStore: SessionStore,
-  config: AuthConfigInternal
+  options: InternalOptions
 ): Promise<ResponseInternal<Session | {}>> {
   const {
     adapter,
@@ -21,7 +17,7 @@ export async function session(
     callbacks,
     logger,
     session: { strategy: sessionStrategy, maxAge: sessionMaxAge },
-  } = config
+  } = options
 
   const response: ResponseInternal<Session | {}> = {
     body: {},
@@ -63,7 +59,7 @@ export async function session(
       const newToken = await jwt.encode({
         ...jwt,
         token,
-        maxAge: config.session.maxAge,
+        maxAge: options.session.maxAge,
       })
 
       // Set cookie, to also update expiry date on cookie
@@ -103,7 +99,7 @@ export async function session(
     if (userAndSession) {
       const { user, session } = userAndSession
 
-      const sessionUpdateAge = config.session.updateAge
+      const sessionUpdateAge = options.session.updateAge
       // Calculate last updated date to throttle write updates to database
       // Formula: ({expiry date} - sessionMaxAge) + sessionUpdateAge
       //     e.g. ({expiry date} - 30 days) + 1 hour
@@ -143,10 +139,10 @@ export async function session(
 
       // Set cookie again to update expiry
       response.cookies?.push({
-        name: config.cookies.sessionToken.name,
+        name: options.cookies.sessionToken.name,
         value: sessionId,
         options: {
-          ...config.cookies.sessionToken.options,
+          ...options.cookies.sessionToken.options,
           expires: newExpires,
         },
       })

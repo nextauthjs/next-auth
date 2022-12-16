@@ -388,8 +388,9 @@ export interface ResponseInternal<
   cookies?: Cookie[]
 }
 
+// TODO: rename to AuthConfigInternal
 /** @internal */
-export interface AuthConfigInternal<P = ProviderType> {
+export interface InternalOptions<P = ProviderType> {
   providers: InternalProvider[]
   url: URL
   action: AuthAction

@@ -7,11 +7,11 @@ import { handleAuthorized } from "./shared.js"
 import type { AdapterSession } from "../../adapters.js"
 import type { RequestInternal, ResponseInternal, User } from "../../index.js"
 import type { Cookie, SessionStore } from "../cookie.js"
-import type { AuthConfigInternal } from "../types.js"
+import type { InternalOptions } from "../types.js"
 
 /** Handle callbacks from login services */
 export async function callback(params: {
-  config: AuthConfigInternal
+  options: InternalOptions
   query: RequestInternal["query"]
   method: Required<RequestInternal>["method"]
   body: RequestInternal["body"]
@@ -19,7 +19,7 @@ export async function callback(params: {
   cookies: RequestInternal["cookies"]
   sessionStore: SessionStore
 }): Promise<ResponseInternal> {
-  const { config, query, body, method, headers, sessionStore } = params
+  const { options, query, body, method, headers, sessionStore } = params
   const {
     provider,
     adapter,
@@ -31,7 +31,7 @@ export async function callback(params: {
     callbacks,
     session: { strategy: sessionStrategy, maxAge: sessionMaxAge },
     logger,
-  } = config
+  } = options
 
   const cookies: Cookie[] = []
 
@@ -42,7 +42,7 @@ export async function callback(params: {
       const authorizationResult = await handleOAuth(
         query,
         params.cookies,
-        config
+        options
       )
 
       if (authorizationResult.cookies.length) {
@@ -79,7 +79,7 @@ export async function callback(params: {
 
       const unauthorizedOrError = await handleAuthorized(
         { user: userOrProfile, account, profile: OAuthProfile },
-        config
+        options
       )
 
       if (unauthorizedOrError) return { ...unauthorizedOrError, cookies }
@@ -89,7 +89,7 @@ export async function callback(params: {
         sessionStore.value,
         profile,
         account,
-        config
+        options
       )
 
       if (useJwtSession) {
@@ -121,10 +121,10 @@ export async function callback(params: {
       } else {
         // Save Session Token in cookie
         cookies.push({
-          name: config.cookies.sessionToken.name,
+          name: options.cookies.sessionToken.name,
           value: (session as AdapterSession).sessionToken,
           options: {
-            ...config.cookies.sessionToken.options,
+            ...options.cookies.sessionToken.options,
             expires: (session as AdapterSession).expires,
           },
         })
@@ -155,7 +155,7 @@ export async function callback(params: {
         return { redirect: `${url}/error?error=configuration`, cookies }
       }
 
-      const secret = provider.secret ?? config.secret
+      const secret = provider.secret ?? options.secret
       // @ts-expect-error -- Verified in `assertConfig`.
       const invite = await adapter.useVerificationToken({
         identifier,
@@ -179,7 +179,7 @@ export async function callback(params: {
       // Check if user is allowed to sign in
       const unauthorizedOrError = await handleAuthorized(
         { user: profile, account },
-        config
+        options
       )
 
       if (unauthorizedOrError) return { ...unauthorizedOrError, cookies }
@@ -189,7 +189,7 @@ export async function callback(params: {
         sessionStore.value,
         profile,
         account,
-        config
+        options
       )
 
       if (useJwtSession) {
@@ -220,10 +220,10 @@ export async function callback(params: {
       } else {
         // Save Session Token in cookie
         cookies.push({
-          name: config.cookies.sessionToken.name,
+          name: options.cookies.sessionToken.name,
           value: (session as AdapterSession).sessionToken,
           options: {
-            ...config.cookies.sessionToken.options,
+            ...options.cookies.sessionToken.options,
             expires: (session as AdapterSession).expires,
           },
         })
@@ -285,7 +285,7 @@ export async function callback(params: {
 
       const unauthorizedOrError = await handleAuthorized(
         { user, account, credentials },
-        config
+        options
       )
 
       if (unauthorizedOrError) return { ...unauthorizedOrError, cookies }

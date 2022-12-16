@@ -1,8 +1,8 @@
 import { AccountNotLinked } from "./errors.js"
 import { fromDate } from "./utils/date.js"
 
-import type { Account, AuthConfigInternal, User } from "../index.js"
 import type { AdapterSession, AdapterUser } from "../adapters.js"
+import type { Account, InternalOptions, User } from "../index.js"
 import type { JWT } from "../jwt/index.js"
 import type { OAuthConfig } from "../providers/index.js"
 import type { SessionToken } from "./cookie.js"
@@ -23,7 +23,7 @@ export async function handleLogin(
   sessionToken: SessionToken,
   _profile: User | AdapterUser | { email: string },
   account: Account | null,
-  config: AuthConfigInternal
+  options: InternalOptions
 ) {
   // Input validation
   if (!account?.providerAccountId || !account.type)
@@ -36,7 +36,7 @@ export async function handleLogin(
     jwt,
     events,
     session: { strategy: sessionStrategy, generateSessionToken },
-  } = config
+  } = options
 
   // If no adapter is configured then we don't have a database and cannot
   // persist data; in this mode we just return a dummy session object.
@@ -113,7 +113,7 @@ export async function handleLogin(
       : await createSession({
           sessionToken: generateSessionToken(),
           userId: user.id,
-          expires: fromDate(config.session.maxAge),
+          expires: fromDate(options.session.maxAge),
         })
 
     return { session, user, isNewUser }
@@ -143,7 +143,7 @@ export async function handleLogin(
         : await createSession({
             sessionToken: generateSessionToken(),
             userId: userByAccount.id,
-            expires: fromDate(config.session.maxAge),
+            expires: fromDate(options.session.maxAge),
           })
 
       return { session, user: userByAccount, isNewUser }
@@ -179,7 +179,7 @@ export async function handleLogin(
         ? await getUserByEmail(profile.email)
         : null
       if (userByEmail) {
-        const provider = config.provider as OAuthConfig<any>
+        const provider = options.provider as OAuthConfig<any>
         if (provider?.allowDangerousEmailAccountLinking) {
           // If you trust the oauth provider to correctly verify email addresses, you can opt-in to
           // account linking even when the user is not signed-in.
@@ -216,7 +216,7 @@ export async function handleLogin(
         : await createSession({
             sessionToken: generateSessionToken(),
             userId: user.id,
-            expires: fromDate(config.session.maxAge),
+            expires: fromDate(options.session.maxAge),
           })
 
       return { session, user, isNewUser: true }
