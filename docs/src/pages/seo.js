@@ -1,7 +1,9 @@
+// eslint-disable-next-line no-use-before-define
+import * as React from "react"
 import Head from "@docusaurus/Head"
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext"
 
-const Seo = () => {
+export default function Seo() {
   const context = useDocusaurusContext()
   const { siteConfig = {} } = context
   const { title, tagline, url } = siteConfig
@@ -21,5 +23,3 @@ const Seo = () => {
     </Head>
   )
 }
-
-export default Seo

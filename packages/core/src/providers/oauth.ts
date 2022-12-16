@@ -1,6 +1,6 @@
-import type { CommonProviderOptions } from "../providers/index.js"
-import type { Profile, TokenSet, User, Awaitable } from "../index.js"
 import type { Client } from "oauth4webapi"
+import type { Awaitable, Profile, TokenSet, User } from "../index.js"
+import type { CommonProviderOptions } from "../providers/index.js"
 
 // TODO:
 type AuthorizationParameters = any
@@ -99,6 +99,7 @@ export interface OAuth2Config<P> extends CommonProviderOptions, PartialIssuer {
   /**
    * Identifies the provider when you want to sign in to
    * a specific provider.
+   *
    * @example
    * ```js
    * signIn('github') // "github" is the provider ID
@@ -153,10 +154,11 @@ export interface OAuth2Config<P> extends CommonProviderOptions, PartialIssuer {
    */
   allowDangerousEmailAccountLinking?: boolean
   /**
-   * @internal
    * The options provided by the user.
    * We will perform a deep-merge of these values
    * with the default configuration.
+   *
+   * @internal
    */
   options?: OAuthUserConfig<P>
 }
