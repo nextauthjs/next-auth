@@ -10,14 +10,21 @@ import {
   LinkAccountMutation,
   CreateSessionAndLinkUserMutation,
 } from "./grafbase"
-import { Session } from "next-auth"
 
 export interface GrafbaseClientOptions {
+  /**
+   * Grafbase API Endpoint
+   *
+   * The endpoint is provided by the Grafbase CLI, or via your project settings when deployed to the edge.
+   *
+   */
   url: string
   /**
    * `x-api-key` header value
+   *
+   * No API key is required when running the Grafbase CLI.
    */
-  apiKey: string
+  apiKey?: string
 }
 
 export interface GrafbaseAdapterOptions {
@@ -34,9 +41,11 @@ export function GrafbaseAdaper(options: GrafbaseClientOptions): Adapter {
   }
 
   const client = new GraphQLClient(options.url, {
-    headers: {
-      "x-api-key": options.apiKey,
-    },
+    ...(options?.apiKey && {
+      headers: {
+        "x-api-key": options.apiKey,
+      },
+    }),
   })
 
   return {
@@ -60,15 +69,18 @@ export function GrafbaseAdaper(options: GrafbaseClientOptions): Adapter {
       return user ?? null
     },
     async getUserByEmail(email) {
-      const { user } = await client.request(GetUserByEmailQuery, {
-        email,
-      })
+      const { user } = await client.request<{ user: AdapterUser }>(
+        GetUserByEmailQuery,
+        {
+          email,
+        }
+      )
 
       return user ?? null
     },
     async getUserByAccount({ providerAccountId, provider }) {
       // TODO: @unique scope
-      return null
+      throw new Error("`getUserByAccount` not implemented")
     },
     async updateUser({ id, ...user }) {
       const { updateUser } = await client.request<{
@@ -121,7 +133,7 @@ export function GrafbaseAdaper(options: GrafbaseClientOptions): Adapter {
     },
     async unlinkAccount({ providerAccountId, provider }) {
       // TODO: @unique scope
-      return
+      throw new Error("`unlinkAccount` not implemented")
     },
     async createSession({ userId, ...payload }) {
       const { sessionCreate } = await client.request(
@@ -143,20 +155,16 @@ export function GrafbaseAdaper(options: GrafbaseClientOptions): Adapter {
       }
     },
     async getSessionAndUser(sessionToken) {
-      // TODO: Filter/scope or workaround
-
-      return null
+      throw new Error("`getSessionAndUser` not implemented")
     },
     async updateSession({ sessionToken, ...data }) {
-      // TODO: UpdateSessionBySessionTokenMutation
-      return null
+      throw new Error("`updateSession` not implemented")
     },
     async deleteSession(sessionToken) {
-      // TODO: DeleteSessionBySessionTokenMutation
-      return null
+      throw new Error("`deleteSession` not implemented")
     },
     async useVerificationToken(token) {
-      return null
+      throw new Error("`useVerificationToken` not implemented")
     },
   }
 }
