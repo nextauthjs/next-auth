@@ -25,14 +25,13 @@ export async function session(
     cookies: [],
   }
 
-  const sessionJWTOrId = sessionStore.value
+  const sessionToken = sessionStore.value
 
-  if (!sessionJWTOrId) return response
+  if (!sessionToken) return response
 
   if (sessionStrategy === "jwt") {
-    const sessionJWT = sessionJWTOrId
     try {
-      const decodedToken = await jwt.decode({ ...jwt, token: sessionJWT })
+      const decodedToken = await jwt.decode({ ...jwt, token: sessionToken })
 
       const newExpires = fromDate(sessionMaxAge)
 
@@ -80,19 +79,17 @@ export async function session(
   }
 
   // Retrieve session from database
-  const sessionId = sessionJWTOrId
-
   try {
     const { getSessionAndUser, deleteSession, updateSession } =
       adapter as Adapter
-    let userAndSession = await getSessionAndUser(sessionId)
+    let userAndSession = await getSessionAndUser(sessionToken)
 
     // If session has expired, clean up the database
     if (
       userAndSession &&
       userAndSession.session.expires.valueOf() < Date.now()
     ) {
-      await deleteSession(sessionId)
+      await deleteSession(sessionToken)
       userAndSession = null
     }
 
@@ -113,7 +110,7 @@ export async function session(
       // if the session was last updated more than {sessionUpdateAge} ago
       if (sessionIsDueToBeUpdatedDate <= Date.now()) {
         await updateSession({
-          sessionToken: sessionId,
+          sessionToken: sessionToken,
           expires: newExpires,
         })
       }
@@ -140,7 +137,7 @@ export async function session(
       // Set cookie again to update expiry
       response.cookies?.push({
         name: options.cookies.sessionToken.name,
-        value: sessionId,
+        value: sessionToken,
         options: {
           ...options.cookies.sessionToken.options,
           expires: newExpires,
@@ -149,7 +146,7 @@ export async function session(
 
       // @ts-expect-error
       await events.session?.({ session: sessionPayload })
-    } else if (sessionId) {
+    } else if (sessionToken) {
       // If `sessionToken` was found set but it's not valid for a session then
       // remove the sessionToken cookie from browser.
       response.cookies?.push(...sessionStore.clean())

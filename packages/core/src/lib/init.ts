@@ -31,7 +31,7 @@ interface InitParams {
 
 /** Initialize all internal options and cookies. */
 export async function init({
-  authOptions: authConfig,
+  authOptions,
   providerId,
   action,
   url: reqUrl,
@@ -51,7 +51,7 @@ export async function init({
   const url = new URL(parsed.toString())
 
   const { providers, provider } = parseProviders({
-    providers: authConfig.providers,
+    providers: authOptions.providers,
     url,
     providerId,
   })
@@ -70,7 +70,7 @@ export async function init({
       buttonText: "",
     },
     // Custom options override defaults
-    ...authConfig,
+    ...authOptions,
     // These computed settings can have values in userOptions but we override them
     // and are request-specific.
     url,
@@ -79,36 +79,36 @@ export async function init({
     provider,
     cookies: {
       ...cookie.defaultCookies(
-        authConfig.useSecureCookies ?? url.protocol === "https:"
+        authOptions.useSecureCookies ?? url.protocol === "https:"
       ),
       // Allow user cookie options to override any cookie settings above
-      ...authConfig.cookies,
+      ...authOptions.cookies,
     },
     providers,
     // Session options
     session: {
       // If no adapter specified, force use of JSON Web Tokens (stateless)
-      strategy: authConfig.adapter ? "database" : "jwt",
+      strategy: authOptions.adapter ? "database" : "jwt",
       maxAge,
       updateAge: 24 * 60 * 60,
       generateSessionToken: crypto.randomUUID,
-      ...authConfig.session,
+      ...authOptions.session,
     },
     // JWT options
     jwt: {
       // Asserted in assert.ts
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      secret: authConfig.secret!,
+      secret: authOptions.secret!,
       maxAge, // same as session maxAge,
       encode: jwt.encode,
       decode: jwt.decode,
-      ...authConfig.jwt,
+      ...authOptions.jwt,
     },
     // Event messages
-    events: eventsErrorHandler(authConfig.events ?? {}, logger),
-    adapter: adapterErrorHandler(authConfig.adapter, logger),
+    events: eventsErrorHandler(authOptions.events ?? {}, logger),
+    adapter: adapterErrorHandler(authOptions.adapter, logger),
     // Callback functions
-    callbacks: { ...defaultCallbacks, ...authConfig.callbacks },
+    callbacks: { ...defaultCallbacks, ...authOptions.callbacks },
     logger,
     callbackUrl: url.origin,
   }

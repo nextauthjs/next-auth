@@ -11,12 +11,12 @@ export async function AuthInternal<
   Body extends string | Record<string, any> | any[]
 >(
   request: RequestInternal,
-  authConfig: AuthConfig
+  authOptions: AuthConfig
 ): Promise<ResponseInternal<Body>> {
   const { action, providerId, error, method } = request
 
   const { options, cookies } = await init({
-    authOptions: authConfig,
+    authOptions,
     action,
     providerId,
     url: request.url,
