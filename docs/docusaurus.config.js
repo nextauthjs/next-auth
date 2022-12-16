@@ -7,7 +7,7 @@ module.exports = {
   favicon: "img/favicon.ico",
   organizationName: "nextauthjs",
   projectName: "next-auth",
-  // TODO: remove this once ready	
+  // TODO: remove this once ready
   onBrokenLinks: "log",
   themeConfig: {
     prism: {
@@ -165,7 +165,7 @@ module.exports = {
           versions: {
             current: {
               label: "experimental",
-            }
+            },
           },
         },
         theme: {

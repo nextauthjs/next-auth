@@ -1,4 +1,4 @@
-import React from "react"
+import { memo } from "react"
 import Marquee, { Motion, randomIntFromInterval } from "react-marquee-slider"
 import styles from "./ProviderMarqueeStyle.module.css"
 
@@ -19,7 +19,7 @@ const icons = [
   "/img/providers/twitter.svg",
 ]
 
-const ProviderMarquee = React.memo(() => {
+const ProviderMarquee = memo(() => {
   let scale = 0.4
 
   if (typeof window !== "undefined") {

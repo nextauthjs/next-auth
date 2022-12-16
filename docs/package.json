@@ -1,11 +1,7 @@
 {
   "private": true,
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/nextauthjs/next-auth.git"
-  },
-  "name": "next-auth-docs",
-  "version": "0.2.0",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "name": "docs",
   "scripts": {
     "start": "npm run generate-providers && docusaurus start --no-open --port 8000",
     "dev": "npm run start",
@@ -15,8 +11,8 @@
     "deploy": "docusaurus deploy",
     "serve": "docusaurus serve",
     "clear": "docusaurus clear",
-    "lint": "prettier .",
-    "lint:fix": "prettier --write .",
+    "lint": "eslint .",
+    "format": "prettier --write .",
     "generate-providers": "node ./scripts/generate-providers.js"
   },
   "dependencies": {
@@ -34,6 +30,7 @@
   },
   "devDependencies": {
     "@docusaurus/core": "2.2.0",
+    "@docusaurus/eslint-plugin": "2.2.0",
     "@docusaurus/module-type-aliases": "2.2.0",
     "@docusaurus/preset-classic": "2.2.0",
     "@docusaurus/theme-common": "2.2.0",
