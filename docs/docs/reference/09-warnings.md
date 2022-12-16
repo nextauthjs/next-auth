@@ -3,7 +3,7 @@ id: warnings
 title: Warnings
 ---
 
-This is a list of warning output from NextAuth.js.
+This is a list of warning output from Auth.js.
 
 All warnings indicate things which you should take a look at, but do not inhibit normal operation.
 
