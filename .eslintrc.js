@@ -33,6 +33,23 @@ module.exports = {
       plugins: ["@docusaurus"],
       extends: ["plugin:@docusaurus/recommended"],
     },
+    {
+      files: ["packages/core/src/**/*"],
+      plugins: ["jsdoc"],
+      extends: ["plugin:jsdoc/recommended"],
+      rules: {
+        "jsdoc/require-param": "off",
+        "jsdoc/require-returns": "off",
+        "jsdoc/require-jsdoc": [
+          "warn",
+          {
+            publicOnly: true,
+            enableFixer: false,
+          },
+        ],
+        "jsdoc/no-multi-asterisks": ["warn", { allowWhitespace: true }],
+      },
+    },
   ],
   plugins: ["jest"],
   ignorePatterns: [

@@ -463,12 +463,14 @@ export interface SessionOptions {
   strategy: SessionStrategy
   /**
    * Relative time from now in seconds when to expire the session
+   *
    * @default 2592000 // 30 days
    */
   maxAge: number
   /**
    * How often the session should be updated in seconds.
    * If set to `0`, session is updated every time.
+   *
    * @default 86400 // 1 day
    */
   updateAge: number
@@ -476,6 +478,7 @@ export interface SessionOptions {
    * Generate a custom session token for database-based sessions.
    * By default, a random UUID or string is generated depending on the Node.js version.
    * However, you can specify your own custom string (such as CUID) to be used.
+   *
    * @default `randomUUID` or `randomBytes.toHex` depending on the Node.js version
    */
   generateSessionToken: () => string
