@@ -10,7 +10,7 @@ npm install next-auth @prisma/client @next-auth/prisma-adapter
 npm install prisma --save-dev
 ```
 
-Configure your NextAuth.js to use the Prisma Adapter:
+Configure your Auth.js to use the Prisma Adapter:
 
 ```javascript title="pages/api/auth/[...nextauth].js"
 import NextAuth from "next-auth"
@@ -131,7 +131,7 @@ npx prisma migrate dev
 
 ### MongoDB
 
-Prisma supports MongoDB, and so does NextAuth.js. Following the instructions of the [Prisma documentation](https://www.prisma.io/docs/concepts/database-connectors/mongodb) on the MongoDB connector, things you have to change are:
+Prisma supports MongoDB, and so does Auth.js. Following the instructions of the [Prisma documentation](https://www.prisma.io/docs/concepts/database-connectors/mongodb) on the MongoDB connector, things you have to change are:
 
 1. Make sure that the id fields are mapped correctly
 
@@ -151,7 +151,7 @@ Everything else should be the same.
 
 ## Naming Conventions
 
-If mixed snake_case and camelCase column names is an issue for you and/or your underlying database system, we recommend using Prisma's `@map()`([see the documentation here](https://www.prisma.io/docs/concepts/components/prisma-schema/names-in-underlying-database)) feature to change the field names. This won't affect NextAuth.js, but will allow you to customize the column names to whichever naming convention you wish.
+If mixed snake_case and camelCase column names is an issue for you and/or your underlying database system, we recommend using Prisma's `@map()`([see the documentation here](https://www.prisma.io/docs/concepts/components/prisma-schema/names-in-underlying-database)) feature to change the field names. This won't affect Auth.js, but will allow you to customize the column names to whichever naming convention you wish.
 
 For example, moving to `snake_case` and plural table names.
 

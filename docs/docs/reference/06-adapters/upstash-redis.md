@@ -9,7 +9,7 @@ To use this Adapter, you need to install `@upstash/redis` and `@next-auth/upstas
 npm install @upstash/redis @next-auth/upstash-redis-adapter
 ```
 
-Configure your NextAuth.js to use the Upstash Redis Adapter:
+Configure your Auth.js to use the Upstash Redis Adapter:
 
 ```javascript title="pages/api/auth/[...nextauth].js"
 import NextAuth from "next-auth"

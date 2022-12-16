@@ -4,7 +4,7 @@ title: Initialization
 
 ## Options
 
-Options are passed to NextAuth.js when initializing it in a server environment like a Next.js API Route.
+Options are passed to Auth.js when initializing it in a server environment like a Next.js API Route.
 
 ### providers
 
@@ -94,7 +94,7 @@ JSON Web Tokens can be used for session tokens if enabled with `session: { strat
 
 ```js
 jwt: {
-  // The maximum age of the NextAuth.js issued JWT in seconds.
+  // The maximum age of the Auth.js issued JWT in seconds.
   // Defaults to `session.maxAge`.
   maxAge: 60 * 60 * 24 * 30,
   // You can define your own encode/decode functions for signing and encryption
@@ -266,7 +266,7 @@ events: {
 
 #### Description
 
-By default NextAuth.js does not include an adapter any longer. If you would like to persist user / account data, please install one of the many available adapters. More information can be found in the [adapter documentation](/reference/adapters/overview).
+By default Auth.js does not include an adapter any longer. If you would like to persist user / account data, please install one of the many available adapters. More information can be found in the [adapter documentation](/reference/adapters/overview).
 
 ---
 
@@ -354,7 +354,7 @@ Advanced options are passed the same way as basic options, but may have complex 
 
 #### Description
 
-When set to `true` (the default for all site URLs that start with `https://`) then all cookies set by NextAuth.js will only be accessible from HTTPS URLs.
+When set to `true` (the default for all site URLs that start with `https://`) then all cookies set by Auth.js will only be accessible from HTTPS URLs.
 
 This option defaults to `false` on URLs that start with `http://` (e.g. `http://localhost:3000`) for developer convenience.
 
@@ -375,9 +375,9 @@ Setting this option to _false_ in production is a security risk and may allow se
 
 #### Description
 
-Cookies in NextAuth.js are chunked by default, meaning that once they reach the 4kb limit, we will create a new cookie with the `.{number}` suffix and reassemble the cookies in the correct order when parsing / reading them. This was introduced to avoid size constraints which can occur when users want to store additional data in their sessionToken, for example.
+Cookies in Auth.js are chunked by default, meaning that once they reach the 4kb limit, we will create a new cookie with the `.{number}` suffix and reassemble the cookies in the correct order when parsing / reading them. This was introduced to avoid size constraints which can occur when users want to store additional data in their sessionToken, for example.
 
-You can override the default cookie names and options for any of the cookies used by NextAuth.js.
+You can override the default cookie names and options for any of the cookies used by Auth.js.
 
 This is an advanced option and using it is not recommended as you may break authentication or introduce security flaws into your application.
 

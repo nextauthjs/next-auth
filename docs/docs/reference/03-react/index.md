@@ -82,7 +82,7 @@ Using low values for `refetchInterval` will increase network traffic and load on
 
 #### Base path
 
-If you are using a custom base path, and your application entry point is not at the root of the domain "/" but something else, for example "/my-app/" you can use the `basePath` prop to make NextAuth.js aware of that so that all redirects and session handling work as expected.
+If you are using a custom base path, and your application entry point is not at the root of the domain "/" but something else, for example "/my-app/" you can use the `basePath` prop to make Auth.js aware of that so that all redirects and session handling work as expected.
 
 #### Refetch interval
 
@@ -115,7 +115,7 @@ See [**the Next.js documentation**](https://nextjs.org/docs/advanced-features/cu
 - Client Side: **Yes**
 - Server Side: No
 
-The `useSession()` React Hook in the NextAuth.js client is the easiest way to check if someone is signed in.
+The `useSession()` React Hook in the Auth.js client is the easiest way to check if someone is signed in.
 
 Make sure that [`<SessionProvider>`](#sessionprovider) is added to `pages/_app.js`.
 
@@ -228,10 +228,10 @@ Because of how `_app` is written, it won't unnecessarily contact the `/api/auth/
 
 More information can be found in the following [GitHub Issue](https://github.com/nextauthjs/next-auth/issues/1210).
 
-### NextAuth.js + React-Query
+### Auth.js + React-Query
 
 There is also an alternative client-side API library based upon [`react-query`](https://www.npmjs.com/package/react-query) available under [`nextauthjs/react-query`](https://github.com/nextauthjs/react-query).
 
-If you use `react-query` in your project already, you can leverage it with NextAuth.js to handle the client-side session management for you as well. This replaces NextAuth.js's native `useSession` and `SessionProvider` from `next-auth/react`.
+If you use `react-query` in your project already, you can leverage it with Auth.js to handle the client-side session management for you as well. This replaces Auth.js's native `useSession` and `SessionProvider` from `next-auth/react`.
 
 See repository [`README`](https://github.com/nextauthjs/react-query) for more details.
