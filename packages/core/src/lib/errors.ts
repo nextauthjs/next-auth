@@ -1,141 +1,68 @@
-import type { EventCallbacks, LoggerInstance } from "./types.js"
-
-/**
- * Same as the default `Error`, but it is JSON serializable.
- * @source https://iaincollins.medium.com/error-handling-in-javascript-a6172ccdf9af
- */
-export class UnknownError extends Error {
-  code: string
-  constructor(error: Error | string) {
-    // Support passing error or string
-    super((error as Error)?.message ?? error)
-    this.name = "UnknownError"
-    this.code = (error as any).code
-    if (error instanceof Error) {
-      this.stack = error.stack
-    }
+/** @internal */
+export class AuthError extends Error {
+  metadata?: Record<string, unknown>
+  constructor(message: Error | string, metadata?: Record<string, unknown>) {
+    if (message instanceof Error) {
+      super(message.message)
+      this.stack = message.stack
+    } else super(message)
+    this.name = this.constructor.name
+    this.metadata = metadata
+    Error.captureStackTrace?.(this, this.constructor)
   }
-
-  toJSON() {
-    return {
-      name: this.name,
-      message: this.message,
-      stack: this.stack,
-    }
-  }
-}
-
-export class OAuthCallbackError extends UnknownError {
-  name = "OAuthCallbackError"
 }
 
 /**
  * Thrown when an Email address is already associated with an account
  * but the user is trying an OAuth account that is not linked to it.
  */
-export class AccountNotLinkedError extends UnknownError {
-  name = "AccountNotLinkedError"
-}
+export class AccountNotLinked extends AuthError {}
 
-export class MissingAPIRoute extends UnknownError {
-  name = "MissingAPIRouteError"
-  code = "MISSING_NEXTAUTH_API_ROUTE_ERROR"
-}
+/** One of the database `Adapter` methods failed. */
+export class AdapterError extends AuthError {}
 
-export class MissingSecret extends UnknownError {
-  name = "MissingSecretError"
-  code = "NO_SECRET"
-}
+export class AuthorizedCallbackError extends AuthError {}
 
-export class MissingAuthorize extends UnknownError {
-  name = "MissingAuthorizeError"
-  code = "CALLBACK_CREDENTIALS_HANDLER_ERROR"
-}
+export class CallbackRouteError extends AuthError {}
 
-export class MissingAdapter extends UnknownError {
-  name = "MissingAdapterError"
-  code = "EMAIL_REQUIRES_ADAPTER_ERROR"
-}
+export class ErrorPageLoop extends AuthError {}
 
-export class MissingAdapterMethods extends UnknownError {
-  name = "MissingAdapterMethodsError"
-  code = "MISSING_ADAPTER_METHODS_ERROR"
-}
+export class EventError extends AuthError {}
 
-export class UnsupportedStrategy extends UnknownError {
-  name = "UnsupportedStrategyError"
-  code = "CALLBACK_CREDENTIALS_JWT_ERROR"
-}
+export class InvalidCallbackUrl extends AuthError {}
 
-export class InvalidCallbackUrl extends UnknownError {
-  name = "InvalidCallbackUrlError"
-  code = "INVALID_CALLBACK_URL_ERROR"
-}
+export class InvalidEndpoints extends AuthError {}
 
-export class InvalidEndpoints extends UnknownError {
-  name = "InvalidEndpoints"
-  code = "INVALID_ENDPOINTS_ERROR"
-}
-export class UnknownAction extends UnknownError {
-  name = "UnknownAction"
-  code = "UNKNOWN_ACTION_ERROR"
-}
+export class InvalidState extends AuthError {}
 
-export class UntrustedHost extends UnknownError {
-  name = "UntrustedHost"
-  code = "UNTRUST_HOST_ERROR"
-}
+export class JWTSessionError extends AuthError {}
 
-type Method = (...args: any[]) => Promise<any>
+export class MissingAdapter extends AuthError {}
 
-export function upperSnake(s: string) {
-  return s.replace(/([A-Z])/g, "_$1").toUpperCase()
-}
+export class MissingAdapterMethods extends AuthError {}
 
-export function capitalize(s: string) {
-  return `${s[0].toUpperCase()}${s.slice(1)}`
-}
+export class MissingAPIRoute extends AuthError {}
 
-/**
- * Wraps an object of methods and adds error handling.
- */
-export function eventsErrorHandler(
-  methods: Partial<EventCallbacks>,
-  logger: LoggerInstance
-): Partial<EventCallbacks> {
-  return Object.keys(methods).reduce<any>((acc, name) => {
-    acc[name] = async (...args: any[]) => {
-      try {
-        const method: Method = methods[name as keyof Method]
-        return await method(...args)
-      } catch (e) {
-        logger.error(`${upperSnake(name)}_EVENT_ERROR`, e as Error)
-      }
-    }
-    return acc
-  }, {})
-}
+export class MissingAuthorize extends AuthError {}
 
-/** Handles adapter induced errors. */
-export function adapterErrorHandler<TAdapter>(
-  adapter: TAdapter | undefined,
-  logger: LoggerInstance
-): TAdapter | undefined {
-  if (!adapter) return
+export class MissingSecret extends AuthError {}
 
-  return Object.keys(adapter).reduce<any>((acc, name) => {
-    acc[name] = async (...args: any[]) => {
-      try {
-        logger.debug(`adapter_${name}`, { args })
-        const method: Method = adapter[name as keyof Method]
-        return await method(...args)
-      } catch (error) {
-        logger.error(`adapter_error_${name}`, error as Error)
-        const e = new UnknownError(error as Error)
-        e.name = `${capitalize(name)}Error`
-        throw e
-      }
-    }
-    return acc
-  }, {})
-}
+export class OAuthSignInError extends AuthError {}
+
+export class OAuthCallbackError extends AuthError {}
+
+export class OAuthCreateUserError extends AuthError {}
+
+export class OAuthProfileParseError extends AuthError {}
+
+export class SessionTokenError extends AuthError {}
+
+export class SignInError extends AuthError {}
+
+export class SignOutError extends AuthError {}
+
+export class UnknownAction extends AuthError {}
+
+export class UnsupportedStrategy extends AuthError {}
+
+export class UntrustedHost extends AuthError {}
