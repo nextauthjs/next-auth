@@ -19,7 +19,25 @@ import type { Provider } from "./providers/index.js"
 
 export * from "./lib/types.js"
 
-/** The core functionality provided by Auth.js. */
+/**
+ * Core functionality provided by Auth.js.
+ *
+ * Receives a standard {@link Request} and returns a {@link Response}.
+ *
+ * @example
+ * ```js
+ * import Auth from "@auth/core"
+ *
+ * const request = new Request("https://example.com")
+ * const resposne = await AuthHandler(request, {
+ *   providers: [...],
+ *   secret: "...",
+ *   trustHost: true,
+ * })
+ *```
+ * @see [Documentation](https://authjs.dev)
+ * @link {Provider}
+ */
 export async function Auth(
   request: Request,
   config: AuthConfig
