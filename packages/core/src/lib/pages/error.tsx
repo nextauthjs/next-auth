@@ -3,7 +3,8 @@ import type { ErrorPageParam, Theme } from "../../index.js"
 /**
  * The following errors are passed as error query parameters to the default or overridden error page.
  *
- * [Documentation](https://next-auth.js.org/configuration/pages#error-page) */
+ * [Documentation](https://next-auth.js.org/configuration/pages#error-page)
+ */
 
 export interface ErrorProps {
   url?: URL

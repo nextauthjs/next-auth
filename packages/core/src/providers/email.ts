@@ -22,6 +22,7 @@ export interface EmailConfig extends CommonProviderOptions {
   /**
    * How long until the e-mail can be used to log the user in,
    * in seconds. Defaults to 1 day
+   *
    * @default 86400
    */
   maxAge?: number
@@ -32,6 +33,7 @@ export interface EmailConfig extends CommonProviderOptions {
   /**
    * By default, we are generating a random verification token.
    * You can make it predictable or modify it as you like with this method.
+   *
    * @example
    * ```js
    *  Providers.Email({

@@ -60,6 +60,8 @@
     "build": "pnpm clean && tsc && pnpm css",
     "clean": "rm -rf adapters.* index.* jwt lib providers",
     "css": "node ./scripts/generate-css.js",
+    "lint": "eslint src",
+    "format": "pnpm lint --fix",
     "dev": "pnpm css && tsc -w"
   },
   "devDependencies": {
