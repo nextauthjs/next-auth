@@ -1,44 +1,35 @@
-import type { InternalOptions, ResponseInternal } from "../../index.js"
-import type { Adapter } from "../../adapters.js"
+import { SignOutError } from "../errors.js"
+
+import type { AuthConfigInternal, ResponseInternal } from "../../index.js"
 import type { SessionStore } from "../cookie.js"
 
-/** Handle requests to /api/auth/signout */
-export async function signout(params: {
-  options: InternalOptions
-  sessionStore: SessionStore
-}): Promise<ResponseInternal> {
-  const { options, sessionStore } = params
-  const { adapter, events, jwt, callbackUrl, logger, session } = options
+/**
+ * Destroys the session.
+ * If the session strategy is database,
+ * The session is also deleted from the database.
+ * In any case, the session cookie is cleared and
+ * an `events.signOut` is emitted.
+ */
+export async function signout(
+  sessionStore: SessionStore,
+  config: AuthConfigInternal
+): Promise<ResponseInternal> {
+  const { jwt, events, callbackUrl: redirect, logger, session } = config
 
-  const sessionToken = sessionStore?.value
-  if (!sessionToken) {
-    return { redirect: callbackUrl }
-  }
+  const sessionToken = sessionStore.value
+  if (!sessionToken) return { redirect }
 
-  if (session.strategy === "jwt") {
-    // Dispatch signout event
-    try {
-      const decodedJwt = await jwt.decode({ ...jwt, token: sessionToken })
-      // @ts-expect-error
-      await events.signOut?.({ token: decodedJwt })
-    } catch (error) {
-      // Do nothing if decoding the JWT fails
-      logger.error("SIGNOUT_ERROR", error)
-    }
-  } else {
-    try {
-      const session = await (adapter as Adapter).deleteSession(sessionToken)
-      // Dispatch signout event
-      // @ts-expect-error
+  try {
+    if (session.strategy === "jwt") {
+      const token = await jwt.decode({ ...jwt, token: sessionToken })
+      await events.signOut?.({ token })
+    } else {
+      const session = await config.adapter?.deleteSession(sessionToken)
       await events.signOut?.({ session })
-    } catch (error) {
-      // If error, log it but continue
-      logger.error("SIGNOUT_ERROR", error as Error)
     }
+  } catch (error) {
+    logger.error(new SignOutError(error))
   }
 
-  // Remove Session Token
-  const sessionCookies = sessionStore.clean()
-
-  return { redirect: callbackUrl, cookies: sessionCookies }
+  return { redirect, cookies: sessionStore.clean() }
 }

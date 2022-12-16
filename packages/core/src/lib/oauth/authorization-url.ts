@@ -1,8 +1,8 @@
 import * as o from "oauth4webapi"
 
 import type {
+  AuthConfigInternal,
   CookiesOptions,
-  InternalOptions,
   RequestInternal,
   ResponseInternal,
 } from "../../index.js"
@@ -13,14 +13,11 @@ import type { Cookie } from "../cookie.js"
  *
  * [OAuth 2](https://www.oauth.com/oauth2-servers/authorization/the-authorization-request/)
  */
-export async function getAuthorizationUrl({
-  options,
-  query,
-}: {
-  options: InternalOptions<"oauth">
-  query: RequestInternal["query"]
-}): Promise<ResponseInternal> {
-  const { logger, provider } = options
+export async function getAuthorizationUrl(
+  query: RequestInternal["query"],
+  config: AuthConfigInternal<"oauth">
+): Promise<ResponseInternal> {
+  const { logger, provider } = config
 
   let url = provider.authorization?.url
   let as: o.AuthorizationServer | undefined
@@ -61,7 +58,7 @@ export async function getAuthorizationUrl({
   const cookies: Cookie[] = []
 
   if (provider.checks?.includes("state")) {
-    const { value, raw } = await createState(options)
+    const { value, raw } = await createState(config)
     authParams.set("state", raw)
     cookies.push(value)
   }
@@ -72,7 +69,7 @@ export async function getAuthorizationUrl({
       // a random `nonce` must be used for CSRF protection.
       provider.checks = ["nonce"]
     } else {
-      const { code_challenge, pkce } = await createPKCE(options)
+      const { code_challenge, pkce } = await createPKCE(config)
       authParams.set("code_challenge", code_challenge)
       authParams.set("code_challenge_method", "S256")
       cookies.push(pkce)
@@ -80,12 +77,10 @@ export async function getAuthorizationUrl({
   }
 
   if (provider.checks?.includes("nonce")) {
-    const nonce = await createNonce(options)
+    const nonce = await createNonce(config)
     authParams.set("nonce", nonce.value)
     cookies.push(nonce)
   }
-
-  url.searchParams.delete("nextauth")
 
   // TODO: This does not work in normalizeOAuth because authorization endpoint can come from discovery
   // Need to make normalizeOAuth async
@@ -93,7 +88,7 @@ export async function getAuthorizationUrl({
     url.searchParams.set("scope", "openid profile email")
   }
 
-  logger.debug("GET_AUTHORIZATION_URL", { url, cookies, provider })
+  logger.debug("authorization url is ready", { url, cookies, provider })
   return { redirect: url, cookies }
 }
 
@@ -102,7 +97,7 @@ export async function signCookie(
   type: keyof CookiesOptions,
   value: string,
   maxAge: number,
-  options: InternalOptions<"oauth">
+  options: AuthConfigInternal<"oauth">
 ): Promise<Cookie> {
   const { cookies, jwt, logger } = options
 
@@ -118,7 +113,7 @@ export async function signCookie(
 }
 
 const STATE_MAX_AGE = 60 * 15 // 15 minutes in seconds
-async function createState(options: InternalOptions<"oauth">) {
+async function createState(options: AuthConfigInternal<"oauth">) {
   const raw = o.generateRandomState()
   const maxAge = STATE_MAX_AGE
   const value = await signCookie("state", raw, maxAge, options)
@@ -126,7 +121,7 @@ async function createState(options: InternalOptions<"oauth">) {
 }
 
 const PKCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
-async function createPKCE(options: InternalOptions<"oauth">) {
+async function createPKCE(options: AuthConfigInternal<"oauth">) {
   const code_verifier = o.generateRandomCodeVerifier()
   const code_challenge = await o.calculatePKCECodeChallenge(code_verifier)
   const maxAge = PKCE_MAX_AGE
@@ -140,7 +135,7 @@ async function createPKCE(options: InternalOptions<"oauth">) {
 }
 
 const NONCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
-async function createNonce(options: InternalOptions<"oauth">) {
+async function createNonce(options: AuthConfigInternal<"oauth">) {
   const raw = o.generateRandomNonce()
   const maxAge = NONCE_MAX_AGE
   return await signCookie("nonce", raw, maxAge, options)

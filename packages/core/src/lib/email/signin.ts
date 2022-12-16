@@ -1,5 +1,5 @@
 import { randomString, createHash } from "../web.js"
-import type { InternalOptions } from "../../index.js"
+import type { AuthConfigInternal } from "../../index.js"
 
 /**
  * Starts an e-mail login flow, by generating a token,
@@ -7,10 +7,9 @@ import type { InternalOptions } from "../../index.js"
  */
 export default async function email(
   identifier: string,
-  options: InternalOptions<"email">
+  options: AuthConfigInternal<"email">
 ): Promise<string> {
   const { url, adapter, provider, callbackUrl, theme } = options
-  // Generate token
   const token =
     (await provider.generateVerificationToken?.()) ?? randomString(32)
 
@@ -25,7 +24,6 @@ export default async function email(
 
   const secret = provider.secret ?? options.secret
   await Promise.all([
-    // Send to user
     provider.sendVerificationRequest({
       identifier,
       token,
@@ -34,8 +32,8 @@ export default async function email(
       provider,
       theme,
     }),
-    // Save in database
-    adapter.createVerificationToken({
+    // @ts-expect-error -- Verified in `assertConfig`.
+    adapter.createVerificationToken?.({
       identifier,
       token: await createHash(`${token}${secret}`),
       expires,

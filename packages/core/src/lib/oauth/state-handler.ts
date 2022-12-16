@@ -1,12 +1,13 @@
-import type { InternalOptions } from "../../index.js"
-import type { Cookie } from "../cookie.js"
 import * as o from "oauth4webapi"
+import type { AuthConfigInternal, RequestInternal } from "../../index.js"
+import type { Cookie } from "../cookie.js"
+import { InvalidState } from "../errors.js"
 
 const STATE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 
 /** Returns state if the provider supports it */
 export async function createState(
-  options: InternalOptions<"oauth">
+  options: AuthConfigInternal<"oauth">
 ): Promise<{ cookie: Cookie; value: string } | undefined> {
   const { logger, provider, jwt, cookies } = options
 
@@ -39,25 +40,33 @@ export async function createState(
 }
 
 /**
- * Returns state from if the provider supports states,
+ * Returns state from the saved cookie
+ * if the provider supports states,
  * and clears the container cookie afterwards.
  */
 export async function useState(
-  state: string | undefined,
-  options: InternalOptions<"oauth">
-): Promise<{ value: string; cookie: Cookie } | undefined> {
-  const { cookies, provider, jwt } = options
+  cookies: RequestInternal["cookies"],
+  resCookies: Cookie[],
+  config: AuthConfigInternal<"oauth">
+): Promise<string | undefined> {
+  const { provider, jwt } = config
+  if (!provider.checks.includes("state")) return
 
-  if (!provider.checks?.includes("state") || !state) return
+  const state = cookies?.[config.cookies.state.name]
 
-  const value = (await jwt.decode({ ...options.jwt, token: state })) as any
+  if (!state) throw new InvalidState("State was missing from the cookies.")
 
-  return {
-    value: value?.value ?? undefined,
-    cookie: {
-      name: cookies.state.name,
-      value: "",
-      options: { ...cookies.pkceCodeVerifier.options, maxAge: 0 },
-    },
-  }
+  // IDEA: Let the user do something with the returned state
+  const value = (await jwt.decode({ ...config.jwt, token: state })) as any
+
+  if (!value?.value) throw new InvalidState("Could not parse state cookie.")
+
+  // Clear the state cookie after use
+  resCookies.push({
+    name: config.cookies.state.name,
+    value: "",
+    options: { ...config.cookies.state.options, maxAge: 0 },
+  })
+
+  return value.value
 }

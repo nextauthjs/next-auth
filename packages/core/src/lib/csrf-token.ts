@@ -1,8 +1,8 @@
 import { createHash, randomString } from "./web.js"
-import type { InternalOptions } from "./types.js"
+import type { AuthConfigInternal } from "./types.js"
 
 interface CreateCSRFTokenParams {
-  options: InternalOptions
+  options: AuthConfigInternal
   cookieValue?: string
   isPost: boolean
   bodyValue?: string

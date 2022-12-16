@@ -1,7 +1,7 @@
 import type { CallbacksOptions } from "../index.js"
 
 export const defaultCallbacks: CallbacksOptions = {
-  signIn() {
+  authorized() {
     return true
   },
   redirect({ url, baseUrl }) {

@@ -1,7 +1,7 @@
-import { AccountNotLinkedError } from "./errors.js"
+import { AccountNotLinked } from "./errors.js"
 import { fromDate } from "./utils/date.js"
 
-import type { Account, InternalOptions, User } from "../index.js"
+import type { Account, AuthConfigInternal, User } from "../index.js"
 import type { AdapterSession, AdapterUser } from "../adapters.js"
 import type { JWT } from "../jwt/index.js"
 import type { OAuthConfig } from "../providers/index.js"
@@ -19,13 +19,12 @@ import type { SessionToken } from "./cookie.js"
  * done prior to this handler being called to avoid additonal complexity in this
  * handler.
  */
-export default async function callbackHandler(params: {
-  sessionToken?: SessionToken
-  profile: User | AdapterUser | { email: string }
-  account: Account | null
-  options: InternalOptions
-}) {
-  const { sessionToken, profile: _profile, account, options } = params
+export async function handleLogin(
+  sessionToken: SessionToken,
+  _profile: User | AdapterUser | { email: string },
+  account: Account | null,
+  config: AuthConfigInternal
+) {
   // Input validation
   if (!account?.providerAccountId || !account.type)
     throw new Error("Missing or invalid provider account")
@@ -37,7 +36,7 @@ export default async function callbackHandler(params: {
     jwt,
     events,
     session: { strategy: sessionStrategy, generateSessionToken },
-  } = options
+  } = config
 
   // If no adapter is configured then we don't have a database and cannot
   // persist data; in this mode we just return a dummy session object.
@@ -114,7 +113,7 @@ export default async function callbackHandler(params: {
       : await createSession({
           sessionToken: generateSessionToken(),
           userId: user.id,
-          expires: fromDate(options.session.maxAge),
+          expires: fromDate(config.session.maxAge),
         })
 
     return { session, user, isNewUser }
@@ -133,7 +132,7 @@ export default async function callbackHandler(params: {
         // If the user is currently signed in, but the new account they are signing in
         // with is already associated with another user, then we cannot link them
         // and need to return an error.
-        throw new AccountNotLinkedError(
+        throw new AccountNotLinked(
           "The account is already associated with another user"
         )
       }
@@ -144,7 +143,7 @@ export default async function callbackHandler(params: {
         : await createSession({
             sessionToken: generateSessionToken(),
             userId: userByAccount.id,
-            expires: fromDate(options.session.maxAge),
+            expires: fromDate(config.session.maxAge),
           })
 
       return { session, user: userByAccount, isNewUser }
@@ -180,7 +179,7 @@ export default async function callbackHandler(params: {
         ? await getUserByEmail(profile.email)
         : null
       if (userByEmail) {
-        const provider = options.provider as OAuthConfig<any>
+        const provider = config.provider as OAuthConfig<any>
         if (provider?.allowDangerousEmailAccountLinking) {
           // If you trust the oauth provider to correctly verify email addresses, you can opt-in to
           // account linking even when the user is not signed-in.
@@ -193,7 +192,7 @@ export default async function callbackHandler(params: {
           // We don't want to have two accounts with the same email address, and we don't
           // want to link them in case it's not safe to do so, so instead we prompt the user
           // to sign in via email to verify their identity and then link the accounts.
-          throw new AccountNotLinkedError(
+          throw new AccountNotLinked(
             "Another account already exists with the same e-mail address"
           )
         }
@@ -217,7 +216,7 @@ export default async function callbackHandler(params: {
         : await createSession({
             sessionToken: generateSessionToken(),
             userId: user.id,
-            expires: fromDate(options.session.maxAge),
+            expires: fromDate(config.session.maxAge),
           })
 
       return { session, user, isNewUser: true }

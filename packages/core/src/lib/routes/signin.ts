@@ -1,103 +1,70 @@
-import getAdapterUserFromEmail from "../email/getUserFromEmail.js"
 import emailSignin from "../email/signin.js"
 import { getAuthorizationUrl } from "../oauth/authorization-url.js"
+import { getAdapterUserFromEmail, handleAuthorized } from "./shared.js"
 
 import type {
   Account,
-  InternalOptions,
+  AuthConfigInternal,
   RequestInternal,
   ResponseInternal,
 } from "../../index.js"
+import { SignInError } from "../errors.js"
 
-/** Handle requests to /api/auth/signin */
-export async function signin(params: {
-  options: InternalOptions<"oauth" | "email">
-  query: RequestInternal["query"]
-  body: RequestInternal["body"]
-}): Promise<ResponseInternal> {
-  const { options, query, body } = params
-  const { url, callbacks, logger, provider } = options
+/**
+ * Initiates the sign in process for OAuth and Email flows .
+ * For OAuth, redirects to the provider's authorization URL.
+ * For Email, sends an email with a sign in link.
+ */
+export async function signin(
+  query: RequestInternal["query"],
+  body: RequestInternal["body"],
+  config: AuthConfigInternal<"oauth" | "email">
+): Promise<ResponseInternal> {
+  const { url, logger, provider } = config
+  try {
+    if (provider.type === "oauth" || provider.type === "oidc") {
+      return await getAuthorizationUrl(query, config)
+    } else if (provider.type === "email") {
+      const normalizer = provider.normalizeIdentifier ?? defaultNormalizer
+      const email = normalizer(body?.email)
 
-  if (!provider.type) {
-    return {
-      status: 500,
-      // @ts-expect-error
-      text: `Error: Type not specified for ${provider.name}`,
-    }
-  }
+      // @ts-expect-error -- Verified in `assertConfig`
+      const user = await getAdapterUserFromEmail(email, config.adapter)
 
-  if (provider.type === "oauth" || provider.type === "oidc") {
-    try {
-      return await getAuthorizationUrl({ options, query })
-    } catch (error) {
-      logger.error("SIGNIN_OAUTH_ERROR", {
-        error: error as Error,
-        providerId: provider.id,
-      })
-      return { redirect: `${url}/error?error=OAuthSignin` }
-    }
-  } else if (provider.type === "email") {
-    let email: string = body?.email
-    if (!email) return { redirect: `${url}/error?error=EmailSignin` }
-    const normalizer: (identifier: string) => string =
-      provider.normalizeIdentifier ??
-      ((identifier) => {
-        // Get the first two elements only,
-        // separated by `@` from user input.
-        let [local, domain] = identifier.toLowerCase().trim().split("@")
-        // The part before "@" can contain a ","
-        // but we remove it on the domain part
-        domain = domain.split(",")[0]
-        return `${local}@${domain}`
-      })
-
-    try {
-      email = normalizer(body?.email)
-    } catch (error) {
-      logger.error("SIGNIN_EMAIL_ERROR", { error, providerId: provider.id })
-      return { redirect: `${url}/error?error=EmailSignin` }
-    }
-
-    const user = await getAdapterUserFromEmail({
-      email,
-      // @ts-expect-error -- Verified in `assertConfig`. adapter: Adapter<true>
-      adapter: options.adapter,
-    })
-
-    const account: Account = {
-      providerAccountId: email,
-      userId: email,
-      type: "email",
-      provider: provider.id,
-    }
-
-    // Check if user is allowed to sign in
-    try {
-      const signInCallbackResponse = await callbacks.signIn({
-        user,
-        account,
-        email: { verificationRequest: true },
-      })
-      if (!signInCallbackResponse) {
-        return { redirect: `${url}/error?error=AccessDenied` }
-      } else if (typeof signInCallbackResponse === "string") {
-        return { redirect: signInCallbackResponse }
+      const account: Account = {
+        providerAccountId: email,
+        userId: email,
+        type: "email",
+        provider: provider.id,
       }
-    } catch (error) {
-      return {
-        redirect: `${url}/error?${new URLSearchParams({
-          error: error as string,
-        })}`,
-      }
-    }
 
-    try {
-      const redirect = await emailSignin(email, options)
+      const unauthorizedOrError = await handleAuthorized(
+        { user, account, email: { verificationRequest: true } },
+        config
+      )
+
+      if (unauthorizedOrError) return unauthorizedOrError
+
+      const redirect = await emailSignin(email, config)
       return { redirect }
-    } catch (error) {
-      logger.error("SIGNIN_EMAIL_ERROR", { error, providerId: provider.id })
-      return { redirect: `${url}/error?error=EmailSignin` }
     }
+    return { redirect: `${url}/signin` }
+  } catch (e) {
+    const error = new SignInError(e, { provider: provider.id })
+    logger.error(error)
+    url.searchParams.set("error", error.name)
+    url.pathname += "/error"
+    return { redirect: url }
   }
-  return { redirect: `${url}/signin` }
+}
+
+function defaultNormalizer(email?: string) {
+  if (!email) throw new Error("Missing email from request body.")
+  // Get the first two elements only,
+  // separated by `@` from user input.
+  let [local, domain] = email.toLowerCase().trim().split("@")
+  // The part before "@" can contain a ","
+  // but we remove it on the domain part
+  domain = domain.split(",")[0]
+  return `${local}@${domain}`
 }

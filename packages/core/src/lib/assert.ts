@@ -1,27 +1,25 @@
+import { defaultCookies } from "./cookie.js"
 import {
   InvalidCallbackUrl,
   InvalidEndpoints,
   MissingAdapter,
   MissingAdapterMethods,
-  MissingAPIRoute,
   MissingAuthorize,
   MissingSecret,
   UnsupportedStrategy,
+  UntrustedHost,
 } from "./errors.js"
-import { defaultCookies } from "./cookie.js"
 
-import type { AuthOptions, RequestInternal } from "../index.js"
+import type { AuthConfig, RequestInternal } from "../index.js"
 import type { WarningCode } from "./utils/logger.js"
 
 type ConfigError =
+  | InvalidCallbackUrl
+  | InvalidEndpoints
   | MissingAdapter
   | MissingAdapterMethods
-  | MissingAPIRoute
   | MissingAuthorize
   | MissingSecret
-  | InvalidCallbackUrl
-  | UnsupportedStrategy
-  | InvalidEndpoints
   | UnsupportedStrategy
 
 let warned = false
@@ -39,34 +37,25 @@ function isValidHttpUrl(url: string, baseUrl: string) {
 /**
  * Verify that the user configured Auth.js correctly.
  * Good place to mention deprecations as well.
- *
- * REVIEW: Make some of these and corresponding docs less Next.js specific?
  */
-export function assertConfig(params: {
-  options: AuthOptions
-  req: RequestInternal
-}): ConfigError | WarningCode[] {
-  const { options, req } = params
-  const { url } = req
+export function assertConfig(
+  request: RequestInternal,
+  config: AuthConfig
+): ConfigError | WarningCode[] {
+  const { url } = request
   const warnings: WarningCode[] = []
 
-  if (!warned) {
-    if (!url.origin) warnings.push("NEXTAUTH_URL")
-    if (options.debug) warnings.push("DEBUG_ENABLED")
+  if (!warned && config.debug) warnings.push("debug_enabled")
+
+  if (!config.trustHost) {
+    return new UntrustedHost(`Host must be trusted. URL was: ${request.url}`)
   }
 
-  if (!options.secret) {
+  if (!config.secret) {
     return new MissingSecret("Please define a `secret`.")
   }
 
-  // req.query isn't defined when asserting `unstable_getServerSession` for example
-  if (!req.query?.nextauth && !req.action) {
-    return new MissingAPIRoute(
-      "Cannot find [...nextauth].{js,ts} in `/pages/api/auth`. Make sure the filename is written correctly."
-    )
-  }
-
-  const callbackUrlParam = req.query?.callbackUrl as string | undefined
+  const callbackUrlParam = request.query?.callbackUrl as string | undefined
 
   if (callbackUrlParam && !isValidHttpUrl(callbackUrlParam, url.origin)) {
     return new InvalidCallbackUrl(
@@ -75,10 +64,12 @@ export function assertConfig(params: {
   }
 
   const { callbackUrl: defaultCallbackUrl } = defaultCookies(
-    options.useSecureCookies ?? url.protocol === "https://"
+    config.useSecureCookies ?? url.protocol === "https://"
   )
   const callbackUrlCookie =
-    req.cookies?.[options.cookies?.callbackUrl?.name ?? defaultCallbackUrl.name]
+    request.cookies?.[
+      config.cookies?.callbackUrl?.name ?? defaultCallbackUrl.name
+    ]
 
   if (callbackUrlCookie && !isValidHttpUrl(callbackUrlCookie, url.origin)) {
     return new InvalidCallbackUrl(
@@ -88,7 +79,7 @@ export function assertConfig(params: {
 
   let hasCredentials, hasEmail
 
-  for (const provider of options.providers) {
+  for (const provider of config.providers) {
     if (
       (provider.type === "oauth" || provider.type === "oidc") &&
       !(provider.issuer ?? provider.options?.issuer)
@@ -112,8 +103,8 @@ export function assertConfig(params: {
   }
 
   if (hasCredentials) {
-    const dbStrategy = options.session?.strategy === "database"
-    const onlyCredentials = !options.providers.some(
+    const dbStrategy = config.session?.strategy === "database"
+    const onlyCredentials = !config.providers.some(
       (p) => p.type !== "credentials"
     )
     if (dbStrategy && onlyCredentials) {
@@ -122,7 +113,7 @@ export function assertConfig(params: {
       )
     }
 
-    const credentialsNoAuthorize = options.providers.some(
+    const credentialsNoAuthorize = config.providers.some(
       (p) => p.type === "credentials" && !p.authorize
     )
     if (credentialsNoAuthorize) {
@@ -133,7 +124,7 @@ export function assertConfig(params: {
   }
 
   if (hasEmail) {
-    const { adapter } = options
+    const { adapter } = config
     if (!adapter) {
       return new MissingAdapter("E-mail login requires an adapter.")
     }

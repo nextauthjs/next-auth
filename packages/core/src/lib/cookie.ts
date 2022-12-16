@@ -160,6 +160,10 @@ export class SessionStore {
     }
   }
 
+  /**
+   * The JWT Session or database Session ID
+   * constructed from the cookie chunks.
+   */
   get value() {
     return Object.values(this.#chunks)?.join("")
   }
