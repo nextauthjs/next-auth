@@ -1,4 +1,4 @@
-import { OAuthConfig, OAuthUserConfig } from "./oauth"
+import type { OAuthConfig, OAuthUserConfig } from "./oauth.js"
 
 /** This is the default openid signature returned from FusionAuth
  * it can be customized using [lambda functions](https://fusionauth.io/docs/v1/tech/lambdas)
