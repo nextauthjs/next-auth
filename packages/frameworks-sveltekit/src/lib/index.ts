@@ -3,9 +3,9 @@ import { dev } from "$app/environment"
 import { env } from "$env/dynamic/private"
 import { AUTH_SECRET } from "$env/static/private"
 import {
-  AuthHandler,
+  Auth,
   type AuthAction,
-  type AuthOptions,
+  type AuthConfig,
   type Session,
 } from "@auth/core"
 import type { Handle } from "@sveltejs/kit"
@@ -14,15 +14,15 @@ export type GetSessionResult = Promise<Session | null>
 
 export async function getSession(
   req: Request,
-  options: AuthOptions
+  config: AuthConfig
 ): GetSessionResult {
-  options.secret ??= AUTH_SECRET
-  options.trustHost ??= true
+  config.secret ??= AUTH_SECRET
+  config.trustHost ??= true
 
   const url = new URL("/api/auth/session", req.url)
-  const response = await AuthHandler(
+  const response = await Auth(
     new Request(url, { headers: req.headers }),
-    options
+    config
   )
 
   const { status = 200 } = response
@@ -34,7 +34,7 @@ export async function getSession(
   throw new Error(data.message)
 }
 
-export interface SvelteKitAuthOptions extends AuthOptions {
+export interface SvelteKitAuthConfig extends AuthConfig {
   /**
    * Defines the base path for the auth routes.
    * @default '/auth'
@@ -51,24 +51,20 @@ const actions: AuthAction[] = [
   "callback",
   "verify-request",
   "error",
-  "_log",
 ]
 
-function SvelteKitAuthHandler(
-  prefix: string,
-  authOptions: AuthOptions
-): Handle {
+function SvelteKitAuthHandler(prefix: string, authConfig: AuthConfig): Handle {
   return ({ event, resolve }) => {
     const { url, request } = event
 
-    event.locals.getSession ??= () => getSession(request, authOptions)
+    event.locals.getSession ??= () => getSession(request, authConfig)
 
     const [action] = url.pathname.slice(prefix.length + 1).split("/")
     if (
       actions.includes(action as AuthAction) &&
       url.pathname.startsWith(prefix + "/")
     ) {
-      return AuthHandler(request, authOptions)
+      return Auth(request, authConfig)
     }
 
     return resolve(event)
@@ -79,7 +75,7 @@ function SvelteKitAuthHandler(
  * The main entry point to `@auth/sveltekit`
  * @see https://sveltekit.authjs.dev
  */
-export default function SvelteKitAuth(options: SvelteKitAuthOptions): Handle {
+export default function SvelteKitAuth(options: SvelteKitAuthConfig): Handle {
   const { prefix = "/auth", ...authOptions } = options
   authOptions.secret ??= AUTH_SECRET
   authOptions.trustHost ??= !!(env.AUTH_TRUST_HOST ?? env.VERCEL ?? dev)
