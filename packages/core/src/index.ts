@@ -98,8 +98,6 @@ export async function Auth(
   return response
 }
 
-export default Auth
-
 /**
  * Configure the {@link Auth} method.
  *
