@@ -86,6 +86,7 @@ packages/core/index.*
 packages/core/jwt
 packages/core/lib
 packages/core/providers
+packages/core/docs
 
 
 # SvelteKit
