@@ -1,6 +1,6 @@
 {
   "name": "@auth/sveltekit",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Authentication for SvelteKit.",
   "homepage": "https://sveltekit.authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth.git",
@@ -48,7 +48,7 @@
   },
   "peerDependencies": {
     "svelte": "^3.54.0",
-    "svelte-kit": "^1.0.0"
+    "@sveltejs/kit": "^1.0.0"
   },
   "type": "module",
   "types": "./index.d.ts",
