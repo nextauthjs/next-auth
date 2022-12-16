@@ -93,7 +93,7 @@ export function assertConfig(
 
       if (key) {
         return new InvalidEndpoints(
-          `Provider "${provider.id}" is missing both \`issuer\` and \`${key}\` endpoint options. At least one of them is required.`
+          `Provider "${provider.id}" is missing both \`issuer\` and \`${key}\` endpoint config. At least one of them is required.`
         )
       }
     }

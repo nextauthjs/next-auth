@@ -390,11 +390,11 @@ export interface ResponseInternal<
 
 // TODO: rename to AuthConfigInternal
 /** @internal */
-export interface InternalOptions<P = ProviderType> {
+export interface InternalOptions<TProviderType = ProviderType> {
   providers: InternalProvider[]
   url: URL
   action: AuthAction
-  provider: InternalProvider<P>
+  provider: InternalProvider<TProviderType>
   csrfToken?: string
   csrfTokenVerified?: boolean
   secret: string

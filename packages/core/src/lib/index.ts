@@ -16,7 +16,7 @@ export async function AuthInternal<
   const { action, providerId, error, method } = request
 
   const { options, cookies } = await init({
-    authConfig,
+    authOptions: authConfig,
     action,
     providerId,
     url: request.url,
@@ -73,7 +73,7 @@ export async function AuthInternal<
             headers: request.headers,
             cookies: request.cookies,
             method,
-            options: options,
+            options,
             sessionStore,
           })
           if (callback.cookies) cookies.push(...callback.cookies)
@@ -157,7 +157,7 @@ export async function AuthInternal<
             headers: request.headers,
             cookies: request.cookies,
             method,
-            options: options,
+            options,
             sessionStore,
           })
           if (callback.cookies) cookies.push(...callback.cookies)

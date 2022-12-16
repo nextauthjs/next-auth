@@ -37,7 +37,7 @@ export default function SigninPage(props: {
     callbackUrl,
     theme,
     email,
-    error: errorParam,
+    error: errorType,
   } = props
 
   if (typeof document !== "undefined" && theme.brandColor) {
@@ -48,8 +48,7 @@ export default function SigninPage(props: {
   }
 
   const error =
-    errorParam &&
-    (signinErrors[errorParam.toLowerCase()] ?? signinErrors.default)
+    errorType && (signinErrors[errorType.toLowerCase()] ?? signinErrors.default)
 
   // TODO: move logos
   const logos =
@@ -70,10 +69,10 @@ export default function SigninPage(props: {
             <p>{error}</p>
           </div>
         )}
-        {providers.map((p, i) => (
-          <div key={p.id} className="provider">
-            {p.type === "oauth" || p.type === "oidc" ? (
-              <form action={p.signinUrl} method="POST">
+        {providers.map((provider, i) => (
+          <div key={provider.id} className="provider">
+            {provider.type === "oauth" || provider.type === "oidc" ? (
+              <form action={provider.signinUrl} method="POST">
                 <input type="hidden" name="csrfToken" value={csrfToken} />
                 {callbackUrl && (
                   <input type="hidden" name="callbackUrl" value={callbackUrl} />
@@ -82,47 +81,47 @@ export default function SigninPage(props: {
                   type="submit"
                   className="button"
                   style={{
-                    "--provider-bg": p.style?.bg ?? "",
-                    "--provider-dark-bg": p.style?.bgDark ?? "",
-                    "--provider-color": p.style?.text ?? "",
-                    "--provider-dark-color": p.style?.textDark ?? "",
+                    "--provider-bg": provider.style?.bg ?? "",
+                    "--provider-dark-bg": provider.style?.bgDark ?? "",
+                    "--provider-color": provider.style?.text ?? "",
+                    "--provider-dark-color": provider.style?.textDark ?? "",
                   }}
                 >
-                  {p.style?.logo && (
+                  {provider.style?.logo && (
                     <img
                       id="provider-logo"
-                      src={`${p.style.logo.startsWith("/") ? logos : ""}${
-                        p.style.logo
-                      }`}
+                      src={`${
+                        provider.style.logo.startsWith("/") ? logos : ""
+                      }${provider.style.logo}`}
                     />
                   )}
-                  {p.style?.logoDark && (
+                  {provider.style?.logoDark && (
                     <img
                       id="provider-logo-dark"
-                      src={`${p.style.logo.startsWith("/") ? logos : ""}${
-                        p.style.logoDark
-                      }`}
+                      src={`${
+                        provider.style.logo.startsWith("/") ? logos : ""
+                      }${provider.style.logoDark}`}
                     />
                   )}
-                  <span>Sign in with {p.name}</span>
+                  <span>Sign in with {provider.name}</span>
                 </button>
               </form>
             ) : null}
-            {(p.type === "email" || p.type === "credentials") &&
+            {(provider.type === "email" || provider.type === "credentials") &&
               i > 0 &&
               providers[i - 1].type !== "email" &&
               providers[i - 1].type !== "credentials" && <hr />}
-            {p.type === "email" && (
-              <form action={p.signinUrl} method="POST">
+            {provider.type === "email" && (
+              <form action={provider.signinUrl} method="POST">
                 <input type="hidden" name="csrfToken" value={csrfToken} />
                 <label
                   className="section-header"
-                  htmlFor={`input-email-for-${p.id}-provider`}
+                  htmlFor={`input-email-for-${provider.id}-provider`}
                 >
                   Email
                 </label>
                 <input
-                  id={`input-email-for-${p.id}-provider`}
+                  id={`input-email-for-${provider.id}-provider`}
                   autoFocus
                   type="email"
                   name="email"
@@ -130,37 +129,37 @@ export default function SigninPage(props: {
                   placeholder="email@example.com"
                   required
                 />
-                <button type="submit">Sign in with {p.name}</button>
+                <button type="submit">Sign in with {provider.name}</button>
               </form>
             )}
-            {p.type === "credentials" && (
-              <form action={p.callbackUrl} method="POST">
+            {provider.type === "credentials" && (
+              <form action={provider.callbackUrl} method="POST">
                 <input type="hidden" name="csrfToken" value={csrfToken} />
-                {Object.keys(p.credentials).map((credential) => {
+                {Object.keys(provider.credentials).map((credential) => {
                   return (
-                    <div key={`input-group-${p.id}`}>
+                    <div key={`input-group-${provider.id}`}>
                       <label
                         className="section-header"
-                        htmlFor={`input-${credential}-for-${p.id}-provider`}
+                        htmlFor={`input-${credential}-for-${provider.id}-provider`}
                       >
-                        {p.credentials[credential].label ?? credential}
+                        {provider.credentials[credential].label ?? credential}
                       </label>
                       <input
                         name={credential}
-                        id={`input-${credential}-for-${p.id}-provider`}
-                        type={p.credentials[credential].type ?? "text"}
+                        id={`input-${credential}-for-${provider.id}-provider`}
+                        type={provider.credentials[credential].type ?? "text"}
                         placeholder={
-                          p.credentials[credential].placeholder ?? ""
+                          provider.credentials[credential].placeholder ?? ""
                         }
-                        {...p.credentials[credential]}
+                        {...provider.credentials[credential]}
                       />
                     </div>
                   )
                 })}
-                <button type="submit">Sign in with {p.name}</button>
+                <button type="submit">Sign in with {provider.name}</button>
               </form>
             )}
-            {(p.type === "email" || p.type === "credentials") &&
+            {(provider.type === "email" || provider.type === "credentials") &&
               i + 1 < providers.length && <hr />}
           </div>
         ))}

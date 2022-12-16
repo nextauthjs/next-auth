@@ -1,4 +1,5 @@
 import emailSignin from "../email/signin.js"
+import { SignInError } from "../errors.js"
 import { getAuthorizationUrl } from "../oauth/authorization-url.js"
 import { getAdapterUserFromEmail, handleAuthorized } from "./shared.js"
 
@@ -8,7 +9,6 @@ import type {
   RequestInternal,
   ResponseInternal,
 } from "../../index.js"
-import { SignInError } from "../errors.js"
 
 /**
  * Initiates the sign in process for OAuth and Email flows .

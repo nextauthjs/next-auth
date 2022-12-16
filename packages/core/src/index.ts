@@ -22,9 +22,9 @@ export * from "./lib/types.js"
 /** The core functionality provided by Auth.js. */
 export async function Auth(
   request: Request,
-  options: AuthConfig
+  config: AuthConfig
 ): Promise<Response> {
-  setLogger(options.logger, options.debug)
+  setLogger(config.logger, config.debug)
 
   const internalRequest = await toInternalRequest(request)
   if (internalRequest instanceof Error) {
@@ -35,10 +35,10 @@ export async function Auth(
     )
   }
 
-  const assertionResult = assertConfig(internalRequest, options)
+  const assertionResult = assertConfig(internalRequest, config)
 
   if (Array.isArray(assertionResult)) {
-    assertionResult.forEach((c) => logger.warn(c))
+    assertionResult.forEach(logger.warn)
   } else if (assertionResult instanceof Error) {
     // Bail out early if there's an error in the user config
     logger.error(assertionResult)
@@ -57,7 +57,7 @@ export async function Auth(
       )
     }
 
-    const { pages, theme } = options
+    const { pages, theme } = config
 
     const authOnErrorPage =
       pages?.error &&
@@ -81,7 +81,7 @@ export async function Auth(
     return Response.redirect(`${pages.error}?error=Configuration`)
   }
 
-  const internalResponse = await AuthInternal(internalRequest, options)
+  const internalResponse = await AuthInternal(internalRequest, config)
 
   const response = await toResponse(internalResponse)
 

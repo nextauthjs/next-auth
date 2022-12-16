@@ -17,7 +17,7 @@ import type {
 
 interface InitParams {
   url: URL
-  authConfig: AuthConfig
+  authOptions: AuthConfig
   providerId?: string
   action: InternalOptions["action"]
   /** Callback URL value extracted from the incoming request. */
@@ -31,7 +31,7 @@ interface InitParams {
 
 /** Initialize all internal options and cookies. */
 export async function init({
-  authConfig,
+  authOptions: authConfig,
   providerId,
   action,
   url: reqUrl,
@@ -122,7 +122,7 @@ export async function init({
     cookie: csrfCookie,
     csrfTokenVerified,
   } = await createCSRFToken({
-    options: options,
+    options,
     cookieValue: reqCookies?.[options.cookies.csrfToken.name],
     isPost,
     bodyValue: reqCsrfToken,
@@ -140,7 +140,7 @@ export async function init({
   }
 
   const { callbackUrl, callbackUrlCookie } = await createCallbackUrl({
-    options: options,
+    options,
     cookieValue: reqCookies?.[options.cookies.callbackUrl.name],
     paramValue: reqCallbackUrl,
   })
