@@ -7,7 +7,7 @@ module.exports = {
   favicon: "img/favicon.ico",
   organizationName: "nextauthjs",
   projectName: "next-auth",
-  // TODO: remove this once ready	
+  // TODO: remove this once ready
   onBrokenLinks: "log",
   themeConfig: {
     prism: {
@@ -83,7 +83,7 @@ module.exports = {
     announcementBar: {
       id: "new-major-announcement",
       content:
-        "<a target='_blank' rel='noopener noreferrer' href='https://v4.authjs.dev'>NextAuth.js</a> is becoming Auth.js! 🎉 We're creating Authentication for the Web. Everyone included. Starting with SvelteKit, check out the docs <a  href='/reference/sveltekit'>here</a>.",
+        "<a target='_blank' rel='noopener noreferrer' href='https://next-auth.js.org'>NextAuth.js</a> is becoming Auth.js! 🎉 We're creating Authentication for the Web. Everyone included. Starting with SvelteKit, check out the docs <a  href='/reference/sveltekit'>here</a>.",
       backgroundColor: "#000",
       textColor: "#fff",
     },
@@ -165,7 +165,7 @@ module.exports = {
           versions: {
             current: {
               label: "experimental",
-            }
+            },
           },
         },
         theme: {

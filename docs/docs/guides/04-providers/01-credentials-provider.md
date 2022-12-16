@@ -77,7 +77,7 @@ The credentials provider can also be used to integrate with a service like [Sign
 
 For more information, check out the links below:
 
-- [Tutorial](https://docs.login.xyz/integrations/nextauth.js)
+- [Tutorial](https://docs.login.xyz/integrations/Auth.js)
 - [Example App Repo](https://github.com/spruceid/siwe-next-auth-example).
 - [Example App Demo](https://siwe-next-auth-example2.vercel.app/).
 

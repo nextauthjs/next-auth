@@ -1,13 +1,13 @@
-import React, { useEffect } from "react"
-import classnames from "classnames"
-import Layout from "@theme/Layout"
 import Link from "@docusaurus/Link"
-import useDocusaurusContext from "@docusaurus/useDocusaurusContext"
 import useBaseUrl from "@docusaurus/useBaseUrl"
+import useDocusaurusContext from "@docusaurus/useDocusaurusContext"
 import CodeBlock from "@theme/CodeBlock"
+import Layout from "@theme/Layout"
+import classnames from "classnames"
+import { useEffect } from "react"
 import ProviderMarquee from "../components/ProviderMarquee"
-import Seo from "./seo"
 import styles from "./index.module.css"
+import Seo from "./seo"
 
 const features = [
   {

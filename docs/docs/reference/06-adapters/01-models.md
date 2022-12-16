@@ -3,7 +3,7 @@ id: models
 title: Models
 ---
 
-NextAuth.js can be used with any database. Models tell you what structures NextAuth.js expects from your database. Models will vary slightly depending on which adapter you use, but in general, will look something like this. Each adapter's model/schema will be slightly adapted for its needs, but will look very much like this schema below:
+Auth.js can be used with any database. Models tell you what structures Auth.js expects from your database. Models will vary slightly depending on which adapter you use, but in general, will look something like this. Each adapter's model/schema will be slightly adapted for its needs, but will look very much like this schema below:
 
 ```mermaid
 erDiagram
@@ -48,7 +48,7 @@ erDiagram
 More information about each Model / Table can be found below.
 
 :::note
-You can [create your own adapter](/guides/adapters/creating-a-database-adapter) if you want to use NextAuth.js with a database that is not supported out of the box, or you have to change fields on any of the models.
+You can [create your own adapter](/guides/adapters/creating-a-database-adapter) if you want to use Auth.js with a database that is not supported out of the box, or you have to change fields on any of the models.
 :::
 
 ---
@@ -106,7 +106,7 @@ A single User can have multiple open Verification Tokens (e.g. to sign in to dif
 It has been designed to be extendable for other verification purposes in the future (e.g. 2FA / short codes).
 
 :::note
-NextAuth.js makes sure that every token is usable only once, and by default has a short (1 day, can be configured by [`maxAge`](/reference/providers/email)) lifetime. If your user did not manage to finish the sign-in flow in time, they will have to start the sign-in process again.
+Auth.js makes sure that every token is usable only once, and by default has a short (1 day, can be configured by [`maxAge`](/reference/providers/email)) lifetime. If your user did not manage to finish the sign-in flow in time, they will have to start the sign-in process again.
 :::
 
 :::tip
@@ -115,4 +115,4 @@ Due to users forgetting or failing at the sign-in flow, you might end up with un
 
 ## RDBMS Naming Convention
 
-In the NextAuth.js v4 some schemas for the providers which support classic RDBMS type databases, like Prisma and TypeORM, have ended up with column names with mixed casing, i.e. snake_case and camelCase. If this is an issue for you or your underlying database system, please take a look at the "Naming Convention" section in the Prisma or TypeORM page.
+In the Auth.js v4 some schemas for the providers which support classic RDBMS type databases, like Prisma and TypeORM, have ended up with column names with mixed casing, i.e. snake_case and camelCase. If this is an issue for you or your underlying database system, please take a look at the "Naming Convention" section in the Prisma or TypeORM page.

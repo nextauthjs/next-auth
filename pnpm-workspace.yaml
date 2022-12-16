@@ -3,4 +3,5 @@ packages:
   # - "packages/frameworks/**"
   - "apps/dev"
   - "apps/playground-sveltekit"
+  - "apps/playground-nuxt"
   - "docs"
