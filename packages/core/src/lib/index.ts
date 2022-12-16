@@ -87,6 +87,8 @@ export async function AuthInternal<
         return render.verifyRequest()
       case "error":
         // These error messages are displayed in line on the sign in page
+        // TODO: verify these. We should redirect these to signin directly, instead of
+        // first to error and then to signin.
         if (
           [
             "Signin",
