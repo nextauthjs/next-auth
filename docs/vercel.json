@@ -60,7 +60,7 @@
       "destination": "https://authjs.dev/reference/sveltekit/"
     },
     {
-      "source": "/:path*",
+      "source": "/:path(.*)",
       "has": [
         {
           "type": "host",
@@ -70,7 +70,7 @@
       "destination": "https://authjs.dev/reference/errors/:path*"
     },
     {
-      "source": "/:path*",
+      "source": "/:path(.*)",
       "has": [
         {
           "type": "host",
