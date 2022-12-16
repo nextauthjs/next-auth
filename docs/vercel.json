@@ -60,24 +60,24 @@
       "destination": "https://authjs.dev/reference/sveltekit/"
     },
     {
-      "source": "/",
+      "source": "/:path*",
       "has": [
         {
           "type": "host",
           "value": "errors.authjs.dev"
         }
       ],
-      "destination": "https://authjs.dev/reference/errors"
+      "destination": "https://authjs.dev/reference/errors/:path*"
     },
     {
-      "source": "/",
+      "source": "/:path*",
       "has": [
         {
           "type": "host",
           "value": "warnings.authjs.dev"
         }
       ],
-      "destination": "https://authjs.dev/reference/warnings/"
+      "destination": "https://authjs.dev/reference/warnings/:path*"
     }
   ]
 }
