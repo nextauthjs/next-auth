@@ -2,10 +2,14 @@
   "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
     "build": {
-      "dependsOn": ["^build"]
+      "dependsOn": [
+        "^build"
+      ]
     },
     "next-auth#build": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "outputs": [
         "lib/**",
         "css/**",
@@ -32,14 +36,20 @@
       "outputs": []
     },
     "test": {
-      "dependsOn": ["lint"],
+      "dependsOn": [
+        "lint"
+      ],
       "outputs": []
     },
     "format": {
       "outputs": []
     },
     "@next-auth/upstash-redis-adapter#test": {
-      "dependsOn": ["$UPSTASH_REDIS_KEY", "$UPSTASH_REDIS_URL"]
+      "dependsOn": [],
+      "env": [
+        "UPSTASH_REDIS_KEY",
+        "UPSTASH_REDIS_URL"
+      ]
     }
   }
 }
