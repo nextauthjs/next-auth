@@ -2,13 +2,13 @@
 title: How OAuth works
 ---
 
-Authentication Providers in **NextAuth.js** are OAuth definitions that allow your users to sign in with their favorite preexisting logins. You can use any of our many predefined providers, or write your own custom OAuth configuration.
+Authentication Providers in **Auth.js** are OAuth definitions that allow your users to sign in with their favorite preexisting logins. You can use any of our many predefined providers, or write your own custom OAuth configuration.
 
 - [Using a built-in OAuth Provider](#built-in-providers) (e.g Github, Twitter, Google, etc...)
 - [Using a custom OAuth Provider](#using-a-custom-provider)
 
 :::note
-NextAuth.js is designed to work with any OAuth service, it supports **OAuth 1.0**, **1.0A**, **2.0** and **OpenID Connect** and has built-in support for most popular sign-in services.
+Auth.js is designed to work with any OAuth service, it supports **OAuth 1.0**, **1.0A**, **2.0** and **OpenID Connect** and has built-in support for most popular sign-in services.
 :::
 
 Without going into too much detail, the OAuth flow generally has 6 parts:

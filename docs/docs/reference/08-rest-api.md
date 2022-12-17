@@ -3,7 +3,7 @@ id: rest-api
 title: REST API
 ---
 
-NextAuth.js exposes a REST API that is used by the NextAuth.js client.
+Auth.js exposes a REST API that is used by the Auth.js client.
 
 ### GET → `/api/auth/signin`
 
@@ -50,7 +50,7 @@ The contents of the session object that is returned are configurable with the [`
 
 ### GET → `/api/auth/csrf`
 
-Returns object containing CSRF token. In NextAuth.js, CSRF protection is present on all authentication routes. It uses the "double submit cookie method", which uses a signed HttpOnly, host-only cookie.
+Returns object containing CSRF token. In Auth.js, CSRF protection is present on all authentication routes. It uses the "double submit cookie method", which uses a signed HttpOnly, host-only cookie.
 
 The CSRF token returned by this endpoint must be passed as form variable named `csrfToken` in all `POST` submissions to any API endpoint.
 

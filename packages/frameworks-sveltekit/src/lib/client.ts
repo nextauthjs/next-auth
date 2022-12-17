@@ -7,7 +7,7 @@ import type {
 import type {
   BuiltInProviderType,
   RedirectableProviderType,
-} from "next-auth/providers/index"
+} from "@auth/core/providers"
 
 /**
  * Client-side method to initiate a signin flow

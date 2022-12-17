@@ -9,7 +9,7 @@ To use this Adapter, you need to install Mikro ORM, the driver that suits your d
 npm install next-auth @next-auth/mikro-orm-adapter @mikro-orm/core @mikro-orm/[YOUR DRIVER]
 ```
 
-Configure NextAuth.js to use the MikroORM Adapter:
+Configure Auth.js to use the MikroORM Adapter:
 
 ```typescript title="pages/api/auth/[...nextauth].ts"
 import NextAuth from "next-auth"

@@ -1,0 +1,50 @@
+{
+  "excludeNotDocumented": true,
+  "$schema": "https://typedoc.org/schema.json",
+  "allReflectionsHaveOwnDocument": true,
+  "disableSources": true,
+  "hideBreadcrumbs": true,
+  "excludeExternals": true,
+  "excludeInternal": true,
+  "excludePrivate": true,
+  "cleanOutputDir": true,
+  "excludeProtected": true,
+  "gitRevision": "main",
+  "hideGenerator": true,
+  "intentionallyNotExported": [
+    "ReturnTypes",
+    "CallbackParameters",
+    "JsonValue"
+  ],
+  "readme": "none",
+  "sort": [
+    "kind",
+    "static-first",
+    "required-first",
+    "alphabetical"
+  ],
+  "kindSortOrder": [
+    "Function",
+    "TypeAlias",
+    "Interface",
+    "Reference",
+    "Project",
+    "Module",
+    "Namespace",
+    "Class",
+    "Constructor",
+    "Property",
+    "Variable",
+    "Accessor",
+    "Method",
+    "ObjectLiteral",
+    "Parameter",
+    "TypeParameter",
+    "TypeLiteral",
+    "CallSignature",
+    "ConstructorSignature",
+    "IndexSignature",
+    "GetSignature",
+    "SetSignature"
+  ]
+}

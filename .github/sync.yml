@@ -1,9 +1,10 @@
-nextauthjs/next-auth-example:
-  - source: apps/example-nextjs
-    dest: .
-    deleteOrphaned: true
-  - .github/FUNDING.yml
-  - LICENSE
+# Should be synced from v4 branch
+# nextauthjs/next-auth-example:
+#  - source: apps/example-nextjs
+#    dest: .
+#    deleteOrphaned: true
+#  - .github/FUNDING.yml
+#  - LICENSE
 
 nextauthjs/sveltekit-auth-example:
   - source: apps/example-sveltekit

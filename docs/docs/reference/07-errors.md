@@ -3,7 +3,7 @@ id: errors
 title: Errors
 ---
 
-This is a list of errors output from NextAuth.js.
+This is a list of errors output from Auth.js.
 
 All errors indicate an unexpected problem, you should not expect to see errors.
 
@@ -101,9 +101,9 @@ The Credentials Provider can only be used if JSON Web Tokens are used for sessio
 
 JSON Web Tokens are used for Sessions by default if you have not specified a database. However, if you are using a database, then Database Sessions are enabled by default and you need to [explicitly enable JWT Sessions](/reference/configuration/auth-config#session) to use the Credentials Provider.
 
-If you are using a Credentials Provider, NextAuth.js will not persist users or sessions in a database - user accounts used with the Credentials Provider must be created and managed outside of NextAuth.js.
+If you are using a Credentials Provider, Auth.js will not persist users or sessions in a database - user accounts used with the Credentials Provider must be created and managed outside of Auth.js.
 
-In _most cases_ it does not make sense to specify a database in NextAuth.js options and support a Credentials Provider.
+In _most cases_ it does not make sense to specify a database in Auth.js options and support a Credentials Provider.
 
 #### `CALLBACK_CREDENTIALS_HANDLER_ERROR`
 

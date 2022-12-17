@@ -2,17 +2,17 @@
 title: Deployment
 ---
 
-Deploying NextAuth.js only requires a few steps. It can be run anywhere a Next.js application can. Therefore, in a default configuration using only JWT session strategy, i.e. without a database, you will only need these few things in addition to your application:
+Deploying Auth.js only requires a few steps. It can be run anywhere a Next.js application can. Therefore, in a default configuration using only JWT session strategy, i.e. without a database, you will only need these few things in addition to your application:
 
-1. NextAuth.js environment variables
+1. Auth.js environment variables
 
    - `NEXTAUTH_SECRET`
    - `NEXTAUTH_URL`
 
-2. NextAuth.js API Route and its configuration (`/pages/api/auth/[...nextauth].js`).
+2. Auth.js API Route and its configuration (`/pages/api/auth/[...nextauth].js`).
    - OAuth Provider `clientId` / `clientSecret`
 
-Deploying a modern JavaScript application using NextAuth.js consists of making sure your environment variables are set correctly as well as the configuration in the NextAuth.js API route is setup, as well as any configuration (like Callback URLs, etc.) are correctly done in your OAuth provider(s) themselves.
+Deploying a modern JavaScript application using Auth.js consists of making sure your environment variables are set correctly as well as the configuration in the Auth.js API route is setup, as well as any configuration (like Callback URLs, etc.) are correctly done in your OAuth provider(s) themselves.
 
 See below for more detailed provider settings.
 
@@ -31,7 +31,7 @@ A few notes about deploying to Vercel. The environment variables are read server
 
 ### Securing a preview deployment
 
-Securing a preview deployment (with an OAuth provider) comes with some critical obstacles. Most OAuth providers only allow a single redirect/callback URL, or at least a set of full static URLs. Meaning you cannot set the value before publishing the site and you cannot use wildcard subdomains in the callback URL settings of your OAuth provider. Here are a few ways you can still use NextAuth.js to secure your Preview Deployments.
+Securing a preview deployment (with an OAuth provider) comes with some critical obstacles. Most OAuth providers only allow a single redirect/callback URL, or at least a set of full static URLs. Meaning you cannot set the value before publishing the site and you cannot use wildcard subdomains in the callback URL settings of your OAuth provider. Here are a few ways you can still use Auth.js to secure your Preview Deployments.
 
 #### Using the Credentials Provider
 
@@ -87,7 +87,7 @@ Preview deployments at Vercel are often available via multiple URLs. For example
 
 Netlify is very similar to Vercel in that you can deploy a Next.js project without almost any extra work.
 
-In order to setup NextAuth.js correctly here, you will want to make sure you add your `NEXTAUTH_SECRET` environment variable in the project settings. If you are using the [Essential Next.js Build Plugin](https://github.com/netlify/netlify-plugin-nextjs) within your project, you **do not** need to set the `NEXTAUTH_URL` environment variable as it is set automatically as part of the build process.
+In order to setup Auth.js correctly here, you will want to make sure you add your `NEXTAUTH_SECRET` environment variable in the project settings. If you are using the [Essential Next.js Build Plugin](https://github.com/netlify/netlify-plugin-nextjs) within your project, you **do not** need to set the `NEXTAUTH_URL` environment variable as it is set automatically as part of the build process.
 
 Netlify also exposes some [system environment variables](https://docs.netlify.com/configure-builds/environment-variables/) from which you can check which `NODE_ENV` you are currently in and much more.
 
