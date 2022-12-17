@@ -1,6 +1,7 @@
 ---
 title: Reference
-sidebar_label: Overview
+sidebar_label: Reference
+sidebar_position: 0
 ---
 
 ## Providers
