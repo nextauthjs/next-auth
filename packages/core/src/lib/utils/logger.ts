@@ -23,7 +23,7 @@ export type WarningCode = "NEXTAUTH_URL" | "DEBUG_ENABLED"
 /**
  * Override any of the methods, and the rest will use the default logger.
  *
- * [Documentation](https://next-auth.js.org/configuration/options#logger)
+ * [Documentation](https://authjs.dev/reference/configuration/auth-config#logger)
  */
 export interface LoggerInstance extends Record<string, Function> {
   warn: (code: WarningCode) => void
@@ -44,7 +44,7 @@ const _logger: LoggerInstance = {
     metadata = formatError(metadata) as Error
     console.error(
       `[next-auth][error][${code}]`,
-      `\nhttps://next-auth.js.org/errors#${code.toLowerCase()}`,
+      `\nhttps://authjs.dev/reference/errors#${code.toLowerCase()}`,
       metadata.message,
       metadata
     )
@@ -52,7 +52,7 @@ const _logger: LoggerInstance = {
   warn(code) {
     console.warn(
       `[next-auth][warn][${code}]`,
-      `\nhttps://next-auth.js.org/warnings#${code.toLowerCase()}`
+      `\nhttps://authjs.dev/reference/warnings#${code.toLowerCase()}`
     )
   },
   debug(code, metadata) {

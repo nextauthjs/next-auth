@@ -9,7 +9,7 @@
     "oauth",
     "dynamodb"
   ],
-  "homepage": "https://next-auth.js.org",
+  "homepage": "https://authjs.dev",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },

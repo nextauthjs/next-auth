@@ -3,7 +3,7 @@ import type { InternalProvider, Theme } from "../../index.js"
 /**
  * The following errors are passed as error query parameters to the default or overridden sign-in page.
  *
- * [Documentation](https://next-auth.js.org/configuration/pages#sign-in-page) */
+ * [Documentation](https://authjs.dev/guides/basics/pages#sign-in-page) */
 export type SignInErrorTypes =
   | "Signin"
   | "OAuthSignin"

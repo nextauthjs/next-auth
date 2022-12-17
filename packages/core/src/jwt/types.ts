@@ -10,7 +10,7 @@ export interface DefaultJWT extends Record<string, unknown> {
 /**
  * Returned by the `jwt` callback and `getToken`, when using JWT sessions
  *
- * [`jwt` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback) | [`getToken`](https://next-auth.js.org/tutorials/securing-pages-and-api-routes#using-gettoken)
+ * [`jwt` callback](https://authjs.dev/guides/basics/callbacks#jwt-callback) | [`getToken`](https://authjs.dev/guides/basics/securing-pages-and-api-routes#using-gettoken)
  */
 export interface JWT extends Record<string, unknown>, DefaultJWT {}
 

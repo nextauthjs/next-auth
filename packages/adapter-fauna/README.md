@@ -1,7 +1,7 @@
 <p align="center">
    <br/>
-   <a href="https://next-auth.js.org" target="_blank">
-   <img height="64px" src="https://next-auth.js.org/img/logo/logo-sm.png" /></a>&nbsp;&nbsp;&nbsp;&nbsp;<img height="64px" src="https://raw.githubusercontent.com/nextauthjs/adapters/main/packages/fauna/logo.svg" />
+   <a href="https://authjs.dev" target="_blank">
+   <img height="64px" src="https://authjs.dev/img/logo/logo-sm.png" /></a>&nbsp;&nbsp;&nbsp;&nbsp;<img height="64px" src="https://raw.githubusercontent.com/nextauthjs/adapters/main/packages/fauna/logo.svg" />
    <h3 align="center"><b>Fauna Adapter</b> - NextAuth.js</h3>
    <p align="center">
    Open Source. Full Stack. Own Your Data.
@@ -15,9 +15,9 @@
 
 ## Overview
 
-This is the Fauna Adapter for [`next-auth`](https://next-auth.js.org). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
+This is the Fauna Adapter for [`auth.js`](https://authjs.dev). This package can only be used in conjunction with the primary `auth.js` package. It is not a standalone package.
 
-You can find the Fauna schema and seed information in the docs at [next-auth.js.org/adapters/fauna](https://next-auth.js.org/adapters/fauna).
+You can find the Fauna schema and seed information in the docs at [authjs.dev/reference/adapters/fauna](https://authjs.dev/reference/adapters/fauna).
 
 ## Getting Started
 
@@ -42,9 +42,9 @@ const client = new FaunaClient({
 })
 
 // For more information on each option (and a full list of options) go to
-// https://next-auth.js.org/configuration/options
+// https://authjs.dev/reference/configuration/auth-options
 export default NextAuth({
-  // https://next-auth.js.org/configuration/providers
+  // https://authjs.dev/reference/providers/oauth-builtin
   providers: [],
   adapter: FaunaAdapter(client)
   ...

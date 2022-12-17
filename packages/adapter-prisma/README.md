@@ -1,6 +1,6 @@
 <p align="center">
    <br/>
-   <a href="https://next-auth.js.org" target="_blank"><img height="64px" src="https://next-auth.js.org/img/logo/logo-sm.png" /></a>&nbsp;&nbsp;&nbsp;&nbsp;<img height="64px" src="https://raw.githubusercontent.com/nextauthjs/adapters/main/packages/prisma/logo.svg" />
+   <a href="https://authjs.dev" target="_blank"><img height="64px" src="https://authjs.dev/img/logo/logo-sm.png" /></a>&nbsp;&nbsp;&nbsp;&nbsp;<img height="64px" src="https://raw.githubusercontent.com/nextauthjs/adapters/main/packages/prisma/logo.svg" />
    <h3 align="center"><b>Prisma Adapter</b> - NextAuth.js</h3>
    <p align="center">
    Open Source. Full Stack. Own Your Data.
@@ -14,9 +14,9 @@
 
 ## Overview
 
-This is the Prisma Adapter for [`next-auth`](https://next-auth.js.org). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
+This is the Prisma Adapter for [`auth.js`](https://authjs.dev). This package can only be used in conjunction with the primary `auth.js` package. It is not a standalone package.
 
-You can find the Prisma schema in the docs at [next-auth.js.org/adapters/prisma](https://next-auth.js.org/adapters/prisma).
+You can find the Prisma schema in the docs at [authjs.dev/reference/adapters/prisma](https://authjs.dev/reference/adapters/prisma).
 
 ## Getting Started
 
@@ -37,9 +37,9 @@ import * as Prisma from "@prisma/client"
 const prisma = new Prisma.PrismaClient()
 
 // For more information on each option (and a full list of options) go to
-// https://next-auth.js.org/configuration/options
+// https://authjs.dev/reference/configuration/auth-options
 export default NextAuth({
-  // https://next-auth.js.org/configuration/providers
+  // https://authjs.dev/reference/providers/oauth-builtin
   providers: [],
   adapter: PrismaAdapter(prisma)
   ...
