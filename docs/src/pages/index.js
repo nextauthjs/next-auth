@@ -7,7 +7,6 @@ import classnames from "classnames"
 import { useEffect } from "react"
 import ProviderMarquee from "../components/ProviderMarquee"
 import styles from "./index.module.css"
-import Seo from "./seo"
 
 const features = [
   {
@@ -106,7 +105,6 @@ function Home() {
   }, [])
   return (
     <Layout description={siteConfig.tagline}>
-      <Seo />
       <div className="home-wrapper">
         <header className={classnames("hero", styles.heroBanner)}>
           <div className="container">

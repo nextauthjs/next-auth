@@ -1,5 +1,5 @@
 /** @type {import("@docusaurus/types").Config} */
-module.exports = {
+const docusaurusConfig = {
   title: "Auth.js",
   tagline: "Authentication for the web.",
   url: "https://authjs.dev",
@@ -40,13 +40,13 @@ module.exports = {
           position: "left",
         },
         {
-          to: "/guides/overview",
+          to: "/guides",
           activeBasePath: "/guides/",
           label: "Guides",
           position: "left",
         },
         {
-          to: "/reference/index",
+          to: "/reference",
           activeBasePath: "/reference",
           label: "Reference",
           position: "left",
@@ -152,7 +152,7 @@ module.exports = {
       {
         docs: {
           routeBasePath: "/",
-          sidebarPath: require.resolve("./sidebars.js"),
+          // sidebarPath: require.resolve("./sidebars.js"),
           editUrl: "https://github.com/nextauthjs/next-auth/edit/main/docs",
           lastVersion: "current",
           showLastUpdateAuthor: true,
@@ -160,7 +160,6 @@ module.exports = {
           remarkPlugins: [
             require("@sapphire/docusaurus-plugin-npm2yarn2pnpm").npm2yarn2pnpm,
             require("remark-github"),
-            require("mdx-mermaid"),
           ],
           versions: {
             current: {
@@ -175,3 +174,77 @@ module.exports = {
     ],
   ],
 }
+
+docusaurusConfig.headTags = [
+  {
+    tagName: "meta",
+    attributes: {
+      charSet: "utf-8",
+    },
+  },
+  {
+    tagName: "link",
+    attributes: {
+      rel: "canonical",
+      href: docusaurusConfig.url,
+    },
+  },
+  {
+    tagName: "meta",
+    attributes: {
+      property: "og:title",
+      content: docusaurusConfig.title,
+    },
+  },
+  {
+    tagName: "meta",
+    attributes: {
+      property: "og:description",
+      content: docusaurusConfig.tagline,
+    },
+  },
+  {
+    tagName: "meta",
+    attributes: {
+      property: "og:image",
+      content: `${docusaurusConfig.url}/img/og-image.png`,
+    },
+  },
+  {
+    tagName: "meta",
+    attributes: {
+      property: "og:url",
+      content: docusaurusConfig.url,
+    },
+  },
+  {
+    tagName: "meta",
+    attributes: {
+      name: "twitter:card",
+      content: "summary_large_image",
+    },
+  },
+  {
+    tagName: "meta",
+    attributes: {
+      name: "twitter:title",
+      content: docusaurusConfig.title,
+    },
+  },
+  {
+    tagName: "meta",
+    attributes: {
+      name: "twitter:description",
+      content: docusaurusConfig.tagline,
+    },
+  },
+  {
+    tagName: "meta",
+    attributes: {
+      name: "twitter:image",
+      content: `${docusaurusConfig.url}/img/og-image.png`,
+    },
+  },
+]
+
+module.exports = docusaurusConfig
