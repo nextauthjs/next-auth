@@ -35,6 +35,7 @@
     "eslint-plugin-promise": "^6.0.0",
     "husky": "^7.0.4",
     "prettier": "2.8.1",
+    "prettier-plugin-jsdoc": "^0.4.2",
     "pretty-quick": "^3.1.2",
     "semver": "7.3.5",
     "stream-to-array": "2.3.0",
@@ -51,18 +52,6 @@
   },
   "engines": {
     "node": "^12.19.0 || ^14.15.0 || ^16.13.0 || ^18.12.0"
-  },
-  "prettier": {
-    "semi": false,
-    "singleQuote": false,
-    "overrides": [
-      {
-        "files": "apps/dev/pages/api/auth/[...nextauth].ts",
-        "options": {
-          "printWidth": 150
-        }
-      }
-    ]
   },
   "packageManager": "pnpm@7.13.3",
   "funding": [

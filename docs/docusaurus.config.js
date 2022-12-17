@@ -1,3 +1,6 @@
+const typedocConfig = require("./typedoc.json")
+delete typedocConfig.$schema
+
 /** @type {import("@docusaurus/types").Config} */
 module.exports = {
   title: "Auth.js",
@@ -170,6 +173,34 @@ module.exports = {
         },
         theme: {
           customCss: require.resolve("./src/css/index.css"),
+        },
+      },
+    ],
+  ],
+  plugins: [
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        ...typedocConfig,
+        plugin: ["./tyepdoc-custom"],
+        entryPoints: [
+          "../packages/core/src/index.ts",
+          "../packages/core/src/adapters.ts",
+          "../packages/core/src/providers/index.ts",
+          "../packages/core/src/providers/github.ts",
+          "../packages/core/src/providers/spotify.ts",
+          "../packages/core/src/providers/email.ts",
+          "../packages/core/src/providers/credentials.ts",
+          "../packages/core/src/jwt/index.ts",
+        ],
+        tsconfig: "../packages/core/tsconfig.json",
+        out: "reference/03-core",
+        watch: process.env.TYPEDOC_WATCH,
+        includeExtension: false,
+        sidebar: {
+          categoryLabel: "Core",
+          position: 2,
+          // fullNames: true, // REVIEW do we want this?
         },
       },
     ],
