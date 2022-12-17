@@ -152,7 +152,7 @@ const docusaurusConfig = {
       {
         docs: {
           routeBasePath: "/",
-          // sidebarPath: require.resolve("./sidebars.js"),
+          sidebarPath: require.resolve("./sidebars.js"),
           editUrl: "https://github.com/nextauthjs/next-auth/edit/main/docs",
           lastVersion: "current",
           showLastUpdateAuthor: true,
