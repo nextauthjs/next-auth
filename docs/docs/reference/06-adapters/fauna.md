@@ -3,9 +3,9 @@ id: fauna
 title: FaunaDB
 ---
 
-This is the Fauna Adapter for [`next-auth`](https://next-auth.js.org). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
+This is the Fauna Adapter for [`next-auth`](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
 
-You can find the Fauna schema and seed information in the docs at [next-auth.js.org/adapters/fauna](https://next-auth.js.org/adapters/fauna).
+You can find the Fauna schema and seed information in the docs at [authjs.dev/reference/adapters/fauna](https://authjs.dev/reference/adapters/fauna).
 
 ## Getting Started
 
@@ -30,9 +30,9 @@ const client = new FaunaClient({
 })
 
 // For more information on each option (and a full list of options) go to
-// https://next-auth.js.org/configuration/options
+// https://authjs.dev/reference/configuration/auth-options
 export default NextAuth({
-  // https://next-auth.js.org/providers/overview
+  // https://authjs.dev/reference/providers/
   providers: [],
   adapter: FaunaAdapter(client)
   ...
