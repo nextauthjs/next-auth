@@ -1,3 +1,5 @@
+// eslint-disable-next-line no-use-before-define
+import * as React from "react"
 import Link from "@docusaurus/Link"
 import useBaseUrl from "@docusaurus/useBaseUrl"
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext"
@@ -86,7 +88,7 @@ function Feature({ imageUrl, title, description }) {
   )
 }
 
-function Home() {
+export default function Home() {
   const context = useDocusaurusContext()
   const { siteConfig = {} } = context
 
@@ -298,5 +300,3 @@ export default NextAuth({
   ]
 })
 `.trim()
-
-export default Home
