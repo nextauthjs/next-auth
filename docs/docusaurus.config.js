@@ -7,8 +7,6 @@ const docusaurusConfig = {
   favicon: "img/favicon.ico",
   organizationName: "nextauthjs",
   projectName: "next-auth",
-  // TODO: remove this once ready
-  onBrokenLinks: "log",
   themeConfig: {
     prism: {
       theme: require("prism-react-renderer/themes/vsDark"),
