@@ -98,7 +98,7 @@ module.exports = {
             },
             {
               html: `
-            <a target="_blank" rel="noopener noreferrer" href="https://vercel.com?utm_source=nextauthjs&utm_campaign=oss">
+            <a target="_blank" rel="noopener noreferrer" href="https://vercel.com?utm_source=authjs&utm_campaign=oss">
               <img
                 alt="Powered by Vercel"
                 style="margin-top: 8px"
