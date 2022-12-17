@@ -39,7 +39,7 @@ const docusaurusConfig = {
         },
         {
           to: "/guides",
-          activeBasePath: "/guides/",
+          activeBasePath: "/guides",
           label: "Guides",
           position: "left",
         },
