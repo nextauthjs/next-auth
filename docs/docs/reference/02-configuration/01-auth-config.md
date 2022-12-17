@@ -4,7 +4,7 @@ title: Initialization
 
 ## Options
 
-Options are passed to NextAuth.js when initializing it in a server environment like a Next.js API Route.
+Options are passed to Auth.js when initializing it in a server environment like a Next.js API Route.
 
 ### providers
 
@@ -15,7 +15,7 @@ Options are passed to NextAuth.js when initializing it in a server environment l
 
 An array of authentication providers for signing in (e.g. Google, Facebook, Twitter, GitHub, Email, etc) in any order. This can be one of the built-in providers or an object with a custom provider.
 
-See the [providers documentation](/configuration/providers/oauth) for a list of supported providers and how to use them.
+Refer to the list of [all available Oauth providers](/reference/providers/oauth-builtin) and the [Oauth tutorial](/getting-started/oauth-tutorial) on how to use them.
 
 ---
 
@@ -33,7 +33,7 @@ If you set [`NEXTAUTH_SECRET`](#nextauth_secret) as an environment variable, you
 If no value specified specified in development (and there is no `NEXTAUTH_SECRET` variable either), it uses a hash for all configuration options, including OAuth Client ID / Secrets for entropy.
 
 :::warning
-Not providing any `secret` or `NEXTAUTH_SECRET` will throw [an error](/errors#no_secret) in production.
+Not providing any `secret` or `NEXTAUTH_SECRET` will throw [an error](/reference/errors#no_secret) in production.
 :::
 
 You can quickly create a good value on the command line via this `openssl` command.
@@ -94,7 +94,7 @@ JSON Web Tokens can be used for session tokens if enabled with `session: { strat
 
 ```js
 jwt: {
-  // The maximum age of the NextAuth.js issued JWT in seconds.
+  // The maximum age of the Auth.js issued JWT in seconds.
   // Defaults to `session.maxAge`.
   maxAge: 60 * 60 * 24 * 30,
   // You can define your own encode/decode functions for signing and encryption
@@ -195,7 +195,7 @@ pages: {
 When using this configuration, ensure that these pages actually exist. For example `error: '/auth/error'` refers to a page file at `pages/auth/error.js`.
 :::
 
-See the documentation for the [pages option](/configuration/pages) for more information.
+See the documentation for the [creating custom pages guide](/guides/basics/pages) for more information.
 
 ---
 
@@ -229,7 +229,7 @@ callbacks: {
 }
 ```
 
-See the [callbacks documentation](/configuration/callbacks) for more information on how to use the callback functions.
+See [our callbacks guide](/guides/basics/callbacks) for more information on how to use the callback functions.
 
 ---
 
@@ -244,7 +244,7 @@ Events are asynchronous functions that do not return a response, they are useful
 
 You can specify a handler for any of these events below - e.g. for debugging or to create an audit log.
 
-The content of the message object varies depending on the flow (e.g. OAuth or Email authentication flow, JWT or database sessions, etc). See the [events documentation](/configuration/events) for more information on the form of each message object and how to use the events functions.
+The content of the message object varies depending on the flow (e.g. OAuth or Email authentication flow, JWT or database sessions, etc). See the [events guide](/guides/basics/events) for more information on the form of each message object and how to use the events functions.
 
 ```js
 events: {
@@ -266,7 +266,7 @@ events: {
 
 #### Description
 
-By default NextAuth.js does not include an adapter any longer. If you would like to persist user / account data, please install one of the many available adapters. More information can be found in the [adapter documentation](/adapters/overview).
+By default Auth.js does not include an adapter any longer. If you would like to persist user / account data, please install one of the many available adapters. More information can be found in the [adapter documentation](/reference/adapters/overview).
 
 ---
 
@@ -290,7 +290,7 @@ Set debug to `true` to enable debug messages for authentication and database ope
 
 Override any of the logger levels (`undefined` levels will use the built-in logger), and intercept logs in NextAuth. You can use this to send NextAuth logs to a third-party logging service.
 
-The `code` parameter for `error` and `warn` are explained in the [Warnings](/warnings) and [Errors](/errors) pages respectively.
+The `code` parameter for `error` and `warn` are explained in the [Warnings](/reference/warnings) and [Errors](/reference/errors) pages respectively.
 
 Example:
 
@@ -327,7 +327,7 @@ If the `debug` level is defined by the user, it will be called regardless of the
 
 #### Description
 
-Changes the color scheme theme of [pages](/configuration/pages) as well as allows some minor customization. Set `theme.colorScheme` to `"light"`, if you want to force pages to always be light. Set to `"dark"`, if you want to force pages to always be dark. Set to `"auto"`, (or leave this option out) if you want the pages to follow the preferred system theme. (Uses the [prefers-color-scheme](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) media query.)
+Changes the color scheme theme of [pages](/reference/configuration/auth-config#pages) as well as allows some minor customization. Set `theme.colorScheme` to `"light"`, if you want to force pages to always be light. Set to `"dark"`, if you want to force pages to always be dark. Set to `"auto"`, (or leave this option out) if you want the pages to follow the preferred system theme. (Uses the [prefers-color-scheme](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) media query.)
 
 In addition, you can define a logo URL in `theme.logo` which will be rendered above the main card in the default signin/signout/error/verify-request pages, as well as a `theme.brandColor` which will affect the accent color of these pages.
 
@@ -354,7 +354,7 @@ Advanced options are passed the same way as basic options, but may have complex 
 
 #### Description
 
-When set to `true` (the default for all site URLs that start with `https://`) then all cookies set by NextAuth.js will only be accessible from HTTPS URLs.
+When set to `true` (the default for all site URLs that start with `https://`) then all cookies set by Auth.js will only be accessible from HTTPS URLs.
 
 This option defaults to `false` on URLs that start with `http://` (e.g. `http://localhost:3000`) for developer convenience.
 
@@ -375,9 +375,9 @@ Setting this option to _false_ in production is a security risk and may allow se
 
 #### Description
 
-Cookies in NextAuth.js are chunked by default, meaning that once they reach the 4kb limit, we will create a new cookie with the `.{number}` suffix and reassemble the cookies in the correct order when parsing / reading them. This was introduced to avoid size constraints which can occur when users want to store additional data in their sessionToken, for example.
+Cookies in Auth.js are chunked by default, meaning that once they reach the 4kb limit, we will create a new cookie with the `.{number}` suffix and reassemble the cookies in the correct order when parsing / reading them. This was introduced to avoid size constraints which can occur when users want to store additional data in their sessionToken, for example.
 
-You can override the default cookie names and options for any of the cookies used by NextAuth.js.
+You can override the default cookie names and options for any of the cookies used by Auth.js.
 
 This is an advanced option and using it is not recommended as you may break authentication or introduce security flaws into your application.
 

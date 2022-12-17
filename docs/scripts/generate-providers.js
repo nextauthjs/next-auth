@@ -3,7 +3,7 @@ const fs = require("fs")
 
 const providersPath = path.join(
   process.cwd(),
-  "/docs/reference/04-oauth-providers"
+  "/docs/reference/05-oauth-providers"
 )
 
 const files = fs.readdirSync(providersPath, "utf8")

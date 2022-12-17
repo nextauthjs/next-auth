@@ -1,0 +1,237 @@
+---
+title: React
+---
+
+## SessionProvider
+
+Using the supplied `<SessionProvider>` allows instances of `useSession()` to share the session object across components, by using [React Context](https://reactjs.org/docs/context.html) under the hood. It also takes care of keeping the session updated and synced between tabs/windows.
+
+```jsx title="pages/_app.js"
+import { SessionProvider } from "next-auth/react"
+
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}) {
+  return (
+    <SessionProvider session={session}>
+      <Component {...pageProps} />
+    </SessionProvider>
+  )
+}
+```
+
+If you pass the `session` page prop to the `<SessionProvider>` – as in the example above – you can avoid checking the session twice on pages that support both server and client side rendering.
+
+This only works on pages where you provide the correct `pageProps`, however. This is normally done in `getInitialProps` or `getServerSideProps` on an individual page basis like so:
+
+```js title="pages/index.js"
+import { unstable_getServerSession } from "next-auth/next"
+
+...
+
+export async function getServerSideProps(ctx) {
+  return {
+    props: {
+      session: await unstable_getServerSession(ctx)
+    }
+  }
+}
+```
+
+If every one of your pages needs to be protected, you can do this in `getInitialProps` in `_app`, otherwise you can do it on a page-by-page basis. Alternatively, you can do per page authentication checks client side, instead of having each authentication check be blocking (SSR) by using the method described below in [alternative client session handling](/reference/utilities/#getsession).
+
+### Options
+
+The session state is automatically synchronized across all open tabs/windows and they are all updated whenever they gain or lose focus or the state changes (e.g. a user signs in or out) when `refetchOnWindowFocus` is `true`.
+
+If you have session expiry times of 30 days (the default) or more then you probably don't need to change any of the default options in the Provider. If you need to, you can trigger an update of the session object across all tabs/windows by calling [`getSession()`](/reference/utilities/#getsession) from a client side function.
+
+However, if you need to customize the session behavior and/or are using short session expiry times, you can pass options to the provider to customize the behavior of the `useSession()` hook.
+
+```jsx title="pages/_app.js"
+import { SessionProvider } from "next-auth/react"
+
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}) {
+  return (
+    <SessionProvider
+      session={session}
+      // In case you use a custom path and your app lives at "/cool-app" rather than at the root "/"
+      basePath="cool-app"
+      // Re-fetch session every 5 minutes
+      refetchInterval={5 * 60}
+      // Re-fetches session when window is focused
+      refetchOnWindowFocus={true}
+    >
+      <Component {...pageProps} />
+    </SessionProvider>
+  )
+}
+```
+
+:::note
+**These options have no effect on clients that are not signed in.**
+
+Every tab/window maintains its own copy of the local session state; the session is not stored in shared storage like localStorage or sessionStorage. Any update in one tab/window triggers a message to other tabs/windows to update their own session state.
+
+Using low values for `refetchInterval` will increase network traffic and load on authenticated clients and may impact hosting costs and performance.
+:::
+
+#### Base path
+
+If you are using a custom base path, and your application entry point is not at the root of the domain "/" but something else, for example "/my-app/" you can use the `basePath` prop to make Auth.js aware of that so that all redirects and session handling work as expected.
+
+#### Refetch interval
+
+The `refetchInterval` option can be used to contact the server to avoid a session expiring.
+
+When `refetchInterval` is set to `0` (the default) there will be no session polling.
+
+If set to any value other than zero, it specifies in seconds how often the client should contact the server to update the session state. If the session state has expired when it is triggered, all open tabs/windows will be updated to reflect this.
+
+The value for `refetchInterval` should always be lower than the value of the session `maxAge` [session option](/reference/configuration/auth-config#session).
+
+By default, session polling will keep trying, even when the device has no internet access. To circumvent this, you can also set `refetchWhenOffline` to `false`. This will use [`navigator.onLine`](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/onLine) to only poll when the device is online.
+
+#### Refetch On Window Focus
+
+The `refetchOnWindowFocus` option can be used to control whether it automatically updates the session state when you switch a focus on tabs/windows.
+
+When `refetchOnWindowFocus` is set to `true` (the default) tabs/windows will be updated and initialize the components' state when they gain or lose focus.
+
+However, if it was set to `false`, it stops re-fetching the session and the components will stay as it is.
+
+:::note
+See [**the Next.js documentation**](https://nextjs.org/docs/advanced-features/custom-app) for more information on **\_app.js** in Next.js applications.
+:::
+
+---
+
+## useSession()
+
+- Client Side: **Yes**
+- Server Side: No
+
+The `useSession()` React Hook in the Auth.js client is the easiest way to check if someone is signed in.
+
+Make sure that [`<SessionProvider>`](#sessionprovider) is added to `pages/_app.js`.
+
+#### Example
+
+```jsx
+import { useSession } from "next-auth/react"
+
+export default function Component() {
+  const { data: session, status } = useSession()
+
+  if (status === "authenticated") {
+    return <p>Signed in as {session.user.email}</p>
+  }
+
+  return <a href="/api/auth/signin">Sign in</a>
+}
+```
+
+`useSession()` returns an object containing two values: `data` and `status`:
+
+- **`data`**: This can be three values: [`Session`](https://github.com/nextauthjs/next-auth/blob/8ff4b260143458c5d8a16b80b11d1b93baa0690f/types/index.d.ts#L437-L444) / `undefined` / `null`.
+  - when the session hasn't been fetched yet, `data` will `undefined`
+  - in case it failed to retrieve the session, `data` will be `null`
+  - in case of success, `data` will be [`Session`](https://github.com/nextauthjs/next-auth/blob/8ff4b260143458c5d8a16b80b11d1b93baa0690f/types/index.d.ts#L437-L444).
+- **`status`**: enum mapping to three possible session states: `"loading" | "authenticated" | "unauthenticated"`
+
+### Require session
+
+Due to the way how Next.js handles `getServerSideProps` and `getInitialProps`, every protected page load has to make a server-side request to check if the session is valid and then generate the requested page (SSR). This increases server load, and if you are good with making the requests from the client, there is an alternative. You can use `useSession` in a way that makes sure you always have a valid session. If after the initial loading state there was no session found, you can define the appropriate action to respond.
+
+The default behavior is to redirect the user to the sign-in page, from where - after a successful login - they will be sent back to the page they started on. You can also define an `onUnauthenticated()` callback, if you would like to do something else:
+
+#### Example
+
+```jsx title="pages/protected.jsx"
+import { useSession } from "next-auth/react"
+
+export default function Admin() {
+  const { status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      // The user is not authenticated, handle it here.
+    },
+  })
+
+  if (status === "loading") {
+    return "Loading or not authenticated..."
+  }
+
+  return "User is logged in"
+}
+```
+
+### Custom Client Session Handling
+
+Due to the way Next.js handles `getServerSideProps` / `getInitialProps`, every protected page load has to make a server-side request to check if the session is valid and then generate the requested page. This alternative solution allows for showing a loading state on the initial check and every page transition afterward will be client-side, without having to check with the server and regenerate pages.
+
+```js title="pages/admin.jsx"
+export default function AdminDashboard() {
+  const { data: session } = useSession()
+  // session is always non-null inside this page, all the way down the React tree.
+  return "Some super secret dashboard"
+}
+
+AdminDashboard.auth = true
+```
+
+```jsx title="pages/_app.jsx"
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}) {
+  return (
+    <SessionProvider session={session}>
+      {Component.auth ? (
+        <Auth>
+          <Component {...pageProps} />
+        </Auth>
+      ) : (
+        <Component {...pageProps} />
+      )}
+    </SessionProvider>
+  )
+}
+
+function Auth({ children }) {
+  // if `{ required: true }` is supplied, `status` can only be "loading" or "authenticated"
+  const { status } = useSession({ required: true })
+
+  if (status === "loading") {
+    return <div>Loading...</div>
+  }
+
+  return children
+}
+```
+
+It can be easily extended/modified to support something like an options object for role based authentication on pages. An example:
+
+```jsx title="pages/admin.jsx"
+AdminDashboard.auth = {
+  role: "admin",
+  loading: <AdminLoadingSkeleton />,
+  unauthorized: "/login-with-different-user", // redirect to this url
+}
+```
+
+Because of how `_app` is written, it won't unnecessarily contact the `/api/auth/session` endpoint for pages that do not require authentication.
+
+More information can be found in the following [GitHub Issue](https://github.com/nextauthjs/next-auth/issues/1210).
+
+### Auth.js + React-Query
+
+There is also an alternative client-side API library based upon [`react-query`](https://www.npmjs.com/package/react-query) available under [`nextauthjs/react-query`](https://github.com/nextauthjs/react-query).
+
+If you use `react-query` in your project already, you can leverage it with Auth.js to handle the client-side session management for you as well. This replaces Auth.js's native `useSession` and `SessionProvider` from `next-auth/react`.
+
+See repository [`README`](https://github.com/nextauthjs/react-query) for more details.

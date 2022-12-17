@@ -9,7 +9,6 @@ export default function Page() {
 
   useEffect(() => {
     if (session) {
-      console.log(session)
       // User is logged in, let's fetch their data.
       const { supabaseAccessToken } = session
       const supabase = createClient(

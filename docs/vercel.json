@@ -48,18 +48,36 @@
       "source": "/schemas/adapters",
       "destination": "/adapters/overview",
       "permanent": true
-    }
-  ],
-  "rewrites": [
+    },
     {
-      "source": "/:path*",
+      "source": "/",
       "has": [
         {
           "type": "host",
           "value": "sveltekit.authjs.dev"
         }
       ],
-      "destination": "/reference/sveltekit/:path*"
+      "destination": "https://authjs.dev/reference/sveltekit/"
+    },
+    {
+      "source": "/:path(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "errors.authjs.dev"
+        }
+      ],
+      "destination": "https://authjs.dev/reference/errors/:path*"
+    },
+    {
+      "source": "/:path(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "warnings.authjs.dev"
+        }
+      ],
+      "destination": "https://authjs.dev/reference/warnings/:path*"
     }
   ]
 }

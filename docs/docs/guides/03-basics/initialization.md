@@ -1,16 +1,16 @@
 ---
-title: Custom Initialization 
+title: Custom Initialization
 ---
 
 In Next.js, you can define an API route that will catch all requests that begin with a certain path. Conveniently, this is called [Catch all API routes](https://nextjs.org/docs/api-routes/dynamic-api-routes#catch-all-api-routes).
 
-When you define a `/pages/api/auth/[...nextauth]` JS/TS file, you instruct NextAuth.js that every API request beginning with `/api/auth/*` should be handled by the code written in the `[...nextauth]` file.
+When you define a `/pages/api/auth/[...nextauth]` JS/TS file, you instruct Auth.js that every API request beginning with `/api/auth/*` should be handled by the code written in the `[...nextauth]` file.
 
-Depending on your use case, you can initialize NextAuth.js in two different ways:
+Depending on your use case, you can initialize Auth.js in two different ways:
 
 ## Simple initialization
 
-In most cases, you won't need to worry about what `NextAuth.js` does, and you will get by just fine with the following initialization:
+In most cases, you won't need to worry about what `Auth.js` does, and you will get by just fine with the following initialization:
 
 ```ts title="/pages/api/auth/[...nextauth].js"
 import NextAuth from "next-auth"
@@ -20,15 +20,15 @@ export default NextAuth({
 })
 ```
 
-Here, you only need to pass your [options](/configuration/options) to `NextAuth`, and `NextAuth` does the rest.
+Here, you only need to pass your [options](/reference/configuration/auth-config) to `NextAuth`, and `NextAuth` does the rest.
 
 This is the preferred initialization in tutorials/other parts of the documentation, as it simplifies the code and reduces potential errors in the authentication flow.
 
 ## Advanced initialization
 
-If you have a specific use case and need to make NextAuth.js do something slightly different than what it is designed for, keep in mind, the `[...nextauth].js` config file is still just **a regular [API Route](https://nextjs.org/docs/api-routes/introduction)** at the end of the day.
+If you have a specific use case and need to make Auth.js do something slightly different than what it is designed for, keep in mind, the `[...nextauth].js` config file is still just **a regular [API Route](https://nextjs.org/docs/api-routes/introduction)** at the end of the day.
 
-That said, you can initialize NextAuth.js like this:
+That said, you can initialize Auth.js like this:
 
 ```ts title="/pages/api/auth/[...nextauth].ts"
 import type { NextApiRequest, NextApiResponse } from "next"
@@ -42,12 +42,12 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
 }
 ```
 
-The `...` section will still be your [options](/configuration/options), but you now have the possibility to execute/modify certain things on the request.
+The `...` section will still be your [options](/reference/configuration/auth-config), but you now have the possibility to execute/modify certain things on the request.
 
 You could for example log the request, add headers, read `query` or `body` parameters, whatever you would do in an API route.
 
 :::tip
-Since this is a catch-all route, remember to check what kind of NextAuth.js "action" is running. Compare the REST API with the `req.query.nextauth` parameter.
+Since this is a catch-all route, remember to check what kind of Auth.js "action" is running. Compare the REST API with the `req.query.nextauth` parameter.
 
 For example to execute something on the "callback" action when the request is a POST method, you can check for `req.query.nextauth.includes("callback") && req.method === "POST"`
 :::
@@ -113,10 +113,10 @@ export default async function auth(req, res) {
 }
 ```
 
-For more details on all available actions and which methods are supported, please check out the [REST API documentation](/getting-started/rest-api) or the appropriate area in [the source code](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/index.ts)
+For more details on all available actions and which methods are supported, please check out the [REST API documentation](/reference/rest-api) or the appropriate area in [the source code](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/index.ts)
 
 This way of initializing `NextAuth` is very powerful, but should be used sparingly.
 
 :::warning
-Changing parts of the request that is essential to `NextAuth` to do it's job - like messing with the [default cookies](/configuration/options#cookies) - can have unforeseen consequences, and have the potential to introduce security holes if done incorrectly. Only change those if you understand consequences.
+Changing parts of the request that is essential to `NextAuth` to do it's job - like messing with the [default cookies](/reference/configuration/auth-config#cookies) - can have unforeseen consequences, and have the potential to introduce security holes if done incorrectly. Only change those if you understand consequences.
 :::
