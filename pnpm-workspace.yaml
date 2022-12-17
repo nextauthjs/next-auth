@@ -1,6 +1,4 @@
 packages:
   - "packages/**"
-  # - "packages/frameworks/**"
   - "apps/dev"
-  - "apps/playground-sveltekit"
   - "docs"

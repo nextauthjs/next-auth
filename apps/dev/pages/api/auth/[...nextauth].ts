@@ -1,39 +1,39 @@
-import { AuthHandler, type AuthOptions } from "@auth/core"
+import NextAuth, { NextAuthOptions } from "next-auth"
 
 // Providers
-import Apple from "@auth/core/providers/apple"
-import Auth0 from "@auth/core/providers/auth0"
-import AzureAD from "@auth/core/providers/azure-ad"
-import AzureB2C from "@auth/core/providers/azure-ad-b2c"
-import BoxyHQSAML from "@auth/core/providers/boxyhq-saml"
-// import Cognito from "@auth/core/providers/cognito"
-import Credentials from "@auth/core/providers/credentials"
-import Discord from "@auth/core/providers/discord"
-import DuendeIDS6 from "@auth/core/providers/duende-identity-server6"
-// import Email from "@auth/core/providers/email"
-import Facebook from "@auth/core/providers/facebook"
-import Foursquare from "@auth/core/providers/foursquare"
-import Freshbooks from "@auth/core/providers/freshbooks"
-import GitHub from "@auth/core/providers/github"
-import Gitlab from "@auth/core/providers/gitlab"
-import Google from "@auth/core/providers/google"
-// import IDS4 from "@auth/core/providers/identity-server4"
-import Instagram from "@auth/core/providers/instagram"
-// import Keycloak from "@auth/core/providers/keycloak"
-import Line from "@auth/core/providers/line"
-import LinkedIn from "@auth/core/providers/linkedin"
-import Mailchimp from "@auth/core/providers/mailchimp"
-// import Okta from "@auth/core/providers/okta"
-import Osu from "@auth/core/providers/osu"
-import Patreon from "@auth/core/providers/patreon"
-import Slack from "@auth/core/providers/slack"
-import Spotify from "@auth/core/providers/spotify"
-import Trakt from "@auth/core/providers/trakt"
-import Twitch from "@auth/core/providers/twitch"
-import Twitter from "@auth/core/providers/twitter"
-import Vk from "@auth/core/providers/vk"
-import Wikimedia from "@auth/core/providers/wikimedia"
-import WorkOS from "@auth/core/providers/workos"
+import Apple from "next-auth/providers/apple"
+import Auth0 from "next-auth/providers/auth0"
+import AzureAD from "next-auth/providers/azure-ad"
+import AzureB2C from "next-auth/providers/azure-ad-b2c"
+import BoxyHQSAML from "next-auth/providers/boxyhq-saml"
+// import Cognito from "next-auth/providers/cognito"
+import Credentials from "next-auth/providers/credentials"
+import Discord from "next-auth/providers/discord"
+import DuendeIDS6 from "next-auth/providers/duende-identity-server6"
+// import Email from "next-auth/providers/email"
+import Facebook from "next-auth/providers/facebook"
+import Foursquare from "next-auth/providers/foursquare"
+import Freshbooks from "next-auth/providers/freshbooks"
+import GitHub from "next-auth/providers/github"
+import Gitlab from "next-auth/providers/gitlab"
+import Google from "next-auth/providers/google"
+// import IDS4 from "next-auth/providers/identity-server4"
+import Instagram from "next-auth/providers/instagram"
+// import Keycloak from "next-auth/providers/keycloak"
+import Line from "next-auth/providers/line"
+import LinkedIn from "next-auth/providers/linkedin"
+import Mailchimp from "next-auth/providers/mailchimp"
+// import Okta from "next-auth/providers/okta"
+import Osu from "next-auth/providers/osu"
+import Patreon from "next-auth/providers/patreon"
+import Slack from "next-auth/providers/slack"
+import Spotify from "next-auth/providers/spotify"
+import Trakt from "next-auth/providers/trakt"
+import Twitch from "next-auth/providers/twitch"
+import Twitter from "next-auth/providers/twitter"
+import Vk from "next-auth/providers/vk"
+import Wikimedia from "next-auth/providers/wikimedia"
+import WorkOS from "next-auth/providers/workos"
 
 // // Prisma
 // import { PrismaClient } from "@prisma/client"
@@ -66,7 +66,7 @@ import WorkOS from "@auth/core/providers/workos"
 //   secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
 // })
 
-export const authOptions: AuthOptions = {
+export const authOptions: NextAuthOptions = {
   // adapter,
   // debug: process.env.NODE_ENV !== "production",
   theme: {
@@ -129,26 +129,4 @@ if (authOptions.adapter) {
   // )
 }
 
-// TODO: move to next-auth/edge
-function Auth(...args: any[]) {
-  const envSecret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET
-  const envTrustHost = !!(process.env.NEXTAUTH_URL ?? process.env.AUTH_TRUST_HOST ?? process.env.VERCEL ?? process.env.NODE_ENV !== "production")
-  if (args.length === 1) {
-    return async (req: Request) => {
-      args[0].secret ??= envSecret
-      args[0].trustHost ??= envTrustHost
-      return await AuthHandler(req, args[0])
-    }
-  }
-  args[1].secret ??= envSecret
-  args[1].trustHost ??= envTrustHost
-  return AuthHandler(args[0], args[1])
-}
-
-// export default Auth(authOptions)
-
-export default function handle(request: Request) {
-  return Auth(request, authOptions)
-}
-
-export const config = { runtime: "experimental-edge" }
+export default NextAuth(authOptions)
