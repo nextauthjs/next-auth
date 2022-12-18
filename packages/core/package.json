@@ -64,8 +64,8 @@
     "generate-reference": "pnpm typedoc --plugin typedoc-plugin-markdown src/index.ts",
     "clean": "rm -rf adapters.* index.* jwt lib providers",
     "css": "node ./scripts/generate-css.js",
-    "lint": "eslint src",
-    "format": "pnpm lint --fix",
+    "lint": "eslint",
+    "format": "prettier",
     "dev": "pnpm css && tsc -w"
   },
   "devDependencies": {

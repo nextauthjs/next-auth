@@ -15,7 +15,9 @@ module.exports = {
       files: "packages/core/src/**/*.ts",
       excludeFiles: "packages/core/src/providers/oauth-types.ts",
       options: {
-        plugins: ["prettier-plugin-jsdoc"],
+        // Re-enable, but jsdocLineWrappingStyle is a bit greedy:
+        // https://github.com/hosseinmd/prettier-plugin-jsdoc#options
+        // plugins: ["prettier-plugin-jsdoc"],
       },
     },
   ],

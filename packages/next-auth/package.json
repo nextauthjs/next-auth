@@ -47,7 +47,8 @@
     "test": "jest --config ./config/jest.config.js",
     "prepublishOnly": "pnpm build",
     "generate-providers": "node ./config/generate-providers.js",
-    "lint": "eslint src config tests"
+    "lint": "eslint",
+    "format": "prettier"
   },
   "files": [
     "lib",

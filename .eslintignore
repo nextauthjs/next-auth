@@ -1,0 +1,6 @@
+../core/adapters.*
+../core/index.*
+../core/jwt
+../core/lib
+../core/providers
+.gitignore
