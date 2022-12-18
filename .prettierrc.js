@@ -16,6 +16,7 @@ module.exports = {
       excludeFiles: "packages/core/src/providers/oauth-types.ts",
       options: {
         plugins: ["prettier-plugin-jsdoc"],
+        tsdoc: true,
       },
     },
   ],
