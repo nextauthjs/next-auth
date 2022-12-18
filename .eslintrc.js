@@ -12,6 +12,8 @@ module.exports = {
     "@typescript-eslint/strict-boolean-expressions": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/restrict-template-expressions": "off",
+    "@typescript-eslint/triple-slash-reference": "off",
+    "@typescript-eslint/promise-function-async": "off",
   },
   overrides: [
     {
@@ -48,6 +50,19 @@ module.exports = {
           },
         ],
         "jsdoc/no-multi-asterisks": ["warn", { allowWhitespace: true }],
+      },
+    },
+    {
+      files: ["packages/frameworks-sveltekit/**/*"],
+      plugins: ["svelte3", "@typescript-eslint"],
+      parserOptions: {
+        sourceType: "module",
+        ecmaVersion: 2020,
+      },
+      env: {
+        browser: true,
+        es2017: true,
+        node: true,
       },
     },
   ],

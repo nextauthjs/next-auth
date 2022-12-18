@@ -24,6 +24,7 @@
   "devDependencies": {
     "@actions/core": "^1.10.0",
     "@balazsorban/monorepo-release": "0.1.0",
+    "@docusaurus/eslint-plugin": "2.2.0",
     "@types/jest": "^29.2.4",
     "@types/node": "^18.11.17",
     "@typescript-eslint/eslint-plugin": "^5.46.1",

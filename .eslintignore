@@ -4,3 +4,9 @@
 ../core/lib
 ../core/providers
 .gitignore
+
+../frameworks-sveltekit/*.cjs
+../frameworks-sveltekit/client.*
+../frameworks-sveltekit/index.*
+../frameworks-sveltekit/tests
+../frameworks-sveltekit/.svelte-kit
