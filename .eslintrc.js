@@ -42,12 +42,10 @@ module.exports = {
         "jsdoc/require-returns": "off",
         "jsdoc/require-jsdoc": [
           "warn",
-          {
-            publicOnly: true,
-            enableFixer: false,
-          },
+          { publicOnly: true, enableFixer: false },
         ],
         "jsdoc/no-multi-asterisks": ["warn", { allowWhitespace: true }],
+        "jsdoc/tag-lines": "off",
       },
     },
   ],
