@@ -8,7 +8,8 @@ const NONCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 
 /**
  * Returns nonce if the provider supports it
- * and saves it in a cookie */
+ * and saves it in a cookie
+ */
 export async function createNonce(options: InternalOptions<"oauth">): Promise<
   | undefined
   | {

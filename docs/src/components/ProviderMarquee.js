@@ -1,4 +1,5 @@
-import { memo } from "react"
+// eslint-disable-next-line no-use-before-define
+import * as React from "react"
 import Marquee, { Motion, randomIntFromInterval } from "react-marquee-slider"
 import styles from "./ProviderMarqueeStyle.module.css"
 
@@ -19,7 +20,7 @@ const icons = [
   "/img/providers/twitter.svg",
 ]
 
-const ProviderMarquee = memo(() => {
+export default React.memo(function ProviderMarquee() {
   let scale = 0.4
 
   if (typeof window !== "undefined") {
@@ -76,5 +77,3 @@ const ProviderMarquee = memo(() => {
     </div>
   )
 })
-
-export default ProviderMarquee

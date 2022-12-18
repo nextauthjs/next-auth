@@ -52,6 +52,7 @@ export interface GetTokenParams<R extends boolean = false> {
   cookieName?: string
   /**
    * `getToken()` will return the raw JWT if this is set to `true`
+   *
    * @default false
    */
   raw?: R
