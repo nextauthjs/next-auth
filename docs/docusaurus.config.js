@@ -9,6 +9,8 @@ const docusaurusConfig = {
   baseUrl: "/",
   favicon: "img/favicon.ico",
   organizationName: "nextauthjs",
+  // TODO: remove this once ready
+  onBrokenLinks: "log",
   projectName: "next-auth",
   themeConfig: {
     prism: {
