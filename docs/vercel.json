@@ -88,6 +88,10 @@
         }
       ],
       "destination": "https://authjs.dev/reference/warnings/:path*"
+    },
+    {
+      "source": "/concepts",
+      "destination": "/concepts/faq"
     }
   ]
 }

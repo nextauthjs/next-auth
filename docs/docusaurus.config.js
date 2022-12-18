@@ -8,6 +8,7 @@ module.exports = {
   url: "https://authjs.dev",
   baseUrl: "/",
   favicon: "img/favicon.ico",
+  // trailingSlash: false,
   organizationName: "nextauthjs",
   projectName: "next-auth",
   // TODO: remove this once ready
@@ -43,13 +44,13 @@ module.exports = {
           position: "left",
         },
         {
-          to: "/guides/overview",
-          activeBasePath: "/guides/",
+          to: "/guides",
+          activeBasePath: "/guides",
           label: "Guides",
           position: "left",
         },
         {
-          to: "/reference/index",
+          to: "/reference",
           activeBasePath: "/reference",
           label: "Reference",
           position: "left",
@@ -154,6 +155,7 @@ module.exports = {
       "@docusaurus/preset-classic",
       {
         docs: {
+          breadcrumbs: false,
           routeBasePath: "/",
           sidebarPath: require.resolve("./sidebars.js"),
           editUrl: "https://github.com/nextauthjs/next-auth/edit/main/docs",
@@ -197,10 +199,9 @@ module.exports = {
         out: "reference/03-core",
         watch: process.env.TYPEDOC_WATCH,
         includeExtension: false,
+        /** @type {import("docusaurus-plugin-typedoc/dist/types").SidebarOptions} */
         sidebar: {
-          categoryLabel: "Core",
-          position: 2,
-          // fullNames: true, // REVIEW do we want this?
+          // autoConfiguration: false,
         },
       },
     ],

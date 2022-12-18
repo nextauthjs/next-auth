@@ -1,3 +1,9 @@
+/**
+ * Types for creating database adapters.
+ *
+ * @module adapters
+ */
+
 import type { Account, Awaitable, User } from "./index.js"
 
 export interface AdapterUser extends User {
@@ -25,15 +31,17 @@ export interface VerificationToken {
 }
 
 /**
- * Using a custom adapter you can connect to any database backend or even several different databases.
- * Custom adapters created and maintained by our community can be found in the adapters repository.
- * Feel free to add a custom adapter from your project to the repository,
- * or even become a maintainer of a certain adapter.
- * Custom adapters can still be created and used in a project without being added to the repository.
+ * Using a custom adapter you can connect to any database backend or even
+ * several different databases. Custom adapters created and maintained by our
+ * community can be found in the adapters repository. Feel free to add a custom
+ * adapter from your project to the repository, or even become a maintainer of a
+ * certain adapter. Custom adapters can still be created and used in a project
+ * without being added to the repository.
  *
  * **Required methods**
  *
  * _(These methods are required for all sign in flows)_
+ *
  * - `createUser`
  * - `getUser`
  * - `getUserByEmail`
@@ -52,12 +60,15 @@ export interface VerificationToken {
  *
  * **Unimplemented methods**
  *
- * _(These methods will be required in a future release, but are not yet invoked)_
+ * _(These methods will be required in a future release, but are not yet
+ * invoked)_
+ *
  * - `deleteUser`
  * - `unlinkAccount`
  *
- * [Adapters Overview](https://next-auth.js.org/adapters/overview) |
- * [Create a custom adapter](https://next-auth.js.org/tutorials/creating-a-database-adapter)
+ * [Adapters Overview](https://next-auth.js.org/adapters/overview) | [Create a
+ * custom
+ * adapter](https://next-auth.js.org/tutorials/creating-a-database-adapter)
  */
 export type Adapter<WithVerificationToken = boolean> = DefaultAdapter &
   (WithVerificationToken extends true
@@ -66,8 +77,8 @@ export type Adapter<WithVerificationToken = boolean> = DefaultAdapter &
           verificationToken: VerificationToken
         ) => Awaitable<VerificationToken | null | undefined>
         /**
-         * Return verification token from the database
-         * and delete it so it cannot be used again.
+         * Return verification token from the database and delete it so it
+         * cannot be used again.
          */
         useVerificationToken: (params: {
           identifier: string
@@ -80,7 +91,10 @@ export interface DefaultAdapter {
   createUser: (user: Omit<AdapterUser, "id">) => Awaitable<AdapterUser>
   getUser: (id: string) => Awaitable<AdapterUser | null>
   getUserByEmail: (email: string) => Awaitable<AdapterUser | null>
-  /** Using the provider id and the id of the user for a specific account, get the user. */
+  /**
+   * Using the provider id and the id of the user for a specific account, get
+   * the user.
+   */
   getUserByAccount: (
     providerAccountId: Pick<AdapterAccount, "provider" | "providerAccountId">
   ) => Awaitable<AdapterUser | null>
@@ -109,9 +123,8 @@ export interface DefaultAdapter {
     session: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">
   ) => Awaitable<AdapterSession | null | undefined>
   /**
-   * Deletes a session from the database.
-   * It is preferred that this method also returns the session
-   * that is being deleted for logging purposes.
+   * Deletes a session from the database. It is preferred that this method also
+   * returns the session that is being deleted for logging purposes.
    */
   deleteSession: (
     sessionToken: string
@@ -120,8 +133,8 @@ export interface DefaultAdapter {
     verificationToken: VerificationToken
   ) => Awaitable<VerificationToken | null | undefined>
   /**
-   * Return verification token from the database
-   * and delete it so it cannot be used again.
+   * Return verification token from the database and delete it so it cannot be
+   * used again.
    */
   useVerificationToken?: (params: {
     identifier: string

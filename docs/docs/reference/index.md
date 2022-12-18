@@ -1,7 +1,8 @@
 ---
-title: Reference
-sidebar_label: Overview
+title: Overview
 ---
+
+## Core
 
 ## Providers
 

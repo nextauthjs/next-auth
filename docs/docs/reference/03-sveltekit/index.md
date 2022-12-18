@@ -1,5 +1,6 @@
 ---
 title: SvelteKit
+sidebar_label: "@auth/sveltekit"
 ---
 
 :::warning
