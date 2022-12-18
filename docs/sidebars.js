@@ -58,7 +58,7 @@ module.exports = {
     },
     {
       type: "category",
-      label: "@auth/*-adapter",
+      label: "Database Adapters",
       link: {
         type: "doc",
         id: "reference/adapters/overview",
