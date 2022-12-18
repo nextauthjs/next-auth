@@ -69,6 +69,8 @@
   "dependencies": {
     "@babel/runtime": "^7.16.3",
     "@panva/hkdf": "^1.0.1",
+    "@simplewebauthn/browser": "^6.2.2",
+    "@simplewebauthn/server": "^6.2.2",
     "cookie": "^0.5.0",
     "jose": "^4.9.3",
     "oauth": "^0.9.15",
@@ -98,6 +100,7 @@
     "@babel/preset-typescript": "^7.17.12",
     "@edge-runtime/jest-environment": "1.1.0-beta.35",
     "@next-auth/tsconfig": "workspace:*",
+    "@simplewebauthn/typescript-types": "6.3.0-alpha.1",
     "@swc/core": "^1.2.198",
     "@swc/jest": "^0.2.21",
     "@testing-library/dom": "^8.13.0",
