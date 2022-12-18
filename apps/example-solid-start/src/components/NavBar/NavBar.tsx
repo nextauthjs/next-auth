@@ -1,8 +1,8 @@
 import { Match, Show, Switch, type Component } from "solid-js";
 import { createServerData$ } from "solid-start/server";
 import { authOpts } from "~/routes/api/auth/[...solidauth]";
-import { signIn, signOut } from "@solid-auth/next/utils";
-import { getSession } from "@solid-auth/next/session";
+import { signIn, signOut } from "@solid-auth/next/client";
+import { getSession } from "@solid-auth/next";
 
 interface INavBarProps {}
 

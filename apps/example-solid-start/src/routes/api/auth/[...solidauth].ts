@@ -1,12 +1,9 @@
-import {
-  SolidAuth,
-  type ISolidAuthHandlerOpts,
-} from "@solid-auth/next/handler";
+import { SolidAuth, type SolidAuthConfig } from "@solid-auth/next";
 import GitHub from "@auth/core/providers/github";
 import { serverEnv } from "~/env/server";
 import { type APIEvent } from "solid-start";
 
-export const authOpts: ISolidAuthHandlerOpts = {
+export const authOpts: SolidAuthConfig = {
   providers: [
     GitHub({
       clientId: serverEnv.GITHUB_ID,
@@ -16,11 +13,4 @@ export const authOpts: ISolidAuthHandlerOpts = {
   debug: false,
 };
 
-const handler = SolidAuth(authOpts);
-
-export async function GET(event: APIEvent) {
-  return await handler(event);
-}
-export async function POST(event: APIEvent) {
-  return await handler(event);
-}
+export const { GET, POST } = SolidAuth(authOpts);
