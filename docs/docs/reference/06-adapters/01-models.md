@@ -31,7 +31,6 @@ erDiagram
   string refresh_token
   string access_token
   int expires_at
-  int expires_in
   string token_type
   string scope
   string id_token
