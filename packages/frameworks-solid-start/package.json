@@ -4,30 +4,25 @@
   "version": "0.0.1",
   "type": "module",
   "files": [
-    "handler.*",
-    "session.*",
-    "utils.*",
+    "client.*",
+    "index.*",
     "src"
   ],
   "exports": {
-    "./handler": {
-      "types": "./handler.d.ts",
-      "import": "./handler.js"
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
     },
-    "./session": {
-      "types": "./session.d.ts",
-      "import": "./session.js"
-    },
-    "./utils": {
-      "types": "./utils.d.ts",
-      "import": "./utils.js"
+    "./client": {
+      "types": "./client.d.ts",
+      "import": "./client.js"
     },
     "./package.json": "./package.json"
   },
   "scripts": {
     "build": "tsup --config ./tsup.config.js",
     "patch": "npm version patch --no-git-tag-version",
-    "clean": "rm -rf utils.* handler.* session.*"
+    "clean": "rm -rf client.* index.*"
   },
   "publishConfig": {
     "access": "public"
@@ -55,8 +50,7 @@
     "SolidStart",
     "Auth"
   ],
-  "author": "OrJDev",
-  "private": false,
+  "author": "OrJDev <orjdeveloper@gmail.com>",
   "repository": "https://github.com/nextauthjs/next-auth",
   "license": "ISC"
 }

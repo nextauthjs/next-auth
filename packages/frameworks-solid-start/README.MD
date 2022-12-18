@@ -33,14 +33,10 @@ GITHUB_SECRET=your_github_oatuh_secret
 
 ```ts
 // routes/api/auth/[...solidauth].ts
-import {
-  SolidAuth,
-  type ISolidAuthHandlerOpts,
-} from "@auth/solid-start/handler";
+import { SolidAuth, type SolidAuthConfig } from "@auth/solid-start";
 import GitHub from "@auth/core/providers/github";
-import { type APIEvent } from "solid-start";
 
-export const authOpts: ISolidAuthHandlerOpts = {
+export const authOpts: SolidAuthConfig = {
   providers: [
     GitHub({
       clientId: process.env.GITHUB_ID,
@@ -50,20 +46,13 @@ export const authOpts: ISolidAuthHandlerOpts = {
   debug: false,
 };
 
-const handler = SolidAuth(authOpts);
-
-export function GET(event: APIEvent) {
-  return await handler(event);
-}
-export function POST(event: APIEvent) {
-  return await handler(event);
-}
+export const { GET, POST } = SolidAuth(authOpts);
 ```
 
 ## Signing in and out
 
 ```ts
-import { signIn, signOut } from "@auth/solid-start/utils";
+import { signIn, signOut } from "@auth/solid-start/client";
 const login = () => signIn("github");
 const logout = () => signOut();
 ```
@@ -71,7 +60,7 @@ const logout = () => signOut();
 ## Getting the current session
 
 ```ts
-import { getSession } from "@auth/solid-start/session";
+import { getSession } from "@auth/solid-start";
 import { createServerData$ } from "solid-start/server";
 import { authOpts } from "~/routes/api/auth/[...solidauth]";
 

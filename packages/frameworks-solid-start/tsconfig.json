@@ -1,8 +1,17 @@
 {
-  "extends": "./tsconfig.m.json",
   "compilerOptions": {
+    "declaration": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "esnext",
+    "moduleResolution": "Node",
+    "strict": false,
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "module": "esnext",
+    "types": ["vite/client", "node"],
     "outDir": "./dist",
     "rootDir": "./src"
   },
+  "exclude": ["node_modules", "dist"],
   "include": ["./src"]
 }

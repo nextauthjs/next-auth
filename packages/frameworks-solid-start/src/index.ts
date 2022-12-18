@@ -1,4 +1,9 @@
-import { AuthHandler, type AuthAction, type AuthOptions } from "@auth/core";
+import {
+  AuthHandler,
+  type AuthAction,
+  type AuthOptions,
+  type Session,
+} from "@auth/core";
 import { Cookie, parseString, splitCookiesString } from "set-cookie-parser";
 import { serialize } from "cookie";
 
@@ -19,11 +24,11 @@ const actions: AuthAction[] = [
   "callback",
   "verify-request",
   "error",
-  "_log",
 ];
 
-export type ISolidAuthHandlerOpts = AuthOptions & {
-  failureRedirect?: string;
+export type SolidAuthConfig = AuthOptions & {
+    // might be fixed in the pr?
+//   failureRedirect?: string; 
 };
 
 // currently multiple cookies are not supported, so we keep the next-auth.pkce.code_verifier cookie for now:
@@ -46,7 +51,7 @@ const getSetCookieCallback = (cook?: string | null): Cookie | undefined => {
   return parseString(splitCookie?.[0] ?? ""); // just return the first cookie if no session token is found
 };
 
-function SolidAuthHandler(prefix: string, authOptions: ISolidAuthHandlerOpts) {
+function SolidAuthHandler(prefix: string, authOptions: SolidAuthConfig) {
   return async (event: APIEvent) => {
     const { request } = event;
     const url = new URL(request.url);
@@ -73,16 +78,6 @@ function SolidAuthHandler(prefix: string, authOptions: ISolidAuthHandlerOpts) {
       }
       return res;
     }
-    const h = authOptions.failureRedirect ?? "/";
-    const error = url.searchParams.get("error");
-    const error_description = url.searchParams.get("error_description");
-    const error_uri = url.searchParams.get("error_uri");
-    throw redirect(
-      `${h}?error=${error}&error_description=${error_description}&error_uri=${error_uri}`,
-      {
-        status: 302,
-      }
-    );
   };
 }
 
@@ -94,39 +89,40 @@ export function SolidAuth(options: SoliduthOptions) {
     process.env.VERCEL ??
     process.env.NODE_ENV !== "production"
   );
-  return SolidAuthHandler(prefix, authOptions);
+  const handler = SolidAuthHandler(prefix, authOptions);
+  return {
+    async GET(event: APIEvent) {
+      return await handler(event);
+    },
+    async POST(event: APIEvent) {
+      return await handler(event);
+    },
+  };
 }
 
-// unknown file extension error will be thrown when using "solid-start", so we copy what we actually need
+export type GetSessionResult = Promise<Session | null>;
+
+export async function getSession(
+  req: Request,
+  options: AuthOptions
+): GetSessionResult {
+  options.secret ??= process.env.AUTH_SECRET;
+  options.trustHost ??= true;
+
+  const url = new URL("/api/auth/session", req.url);
+  const response = await AuthHandler(
+    new Request(url, { headers: req.headers }),
+    options
+  );
+
+  const { status = 200 } = response;
+
+  const data = await response.json();
+
+  if (!data || !Object.keys(data).length) return null;
+  if (status === 200) return data;
+  throw new Error(data.message);
+}
 
 type APIEvent = any;
 
-const LocationHeader = "Location";
-function redirect(url: string, init: number | ResponseInit = 302): Response {
-  let responseInit = init;
-  if (typeof responseInit === "number") {
-    responseInit = { status: responseInit };
-  } else if (typeof responseInit.status === "undefined") {
-    responseInit.status = 302;
-  }
-
-  if (url === "") {
-    url = "/";
-  }
-
-  if (process.env.NODE_ENV === "development") {
-    if (url.startsWith(".")) {
-      throw new Error("Relative URLs are not allowed in redirect");
-    }
-  }
-
-  let headers = new Headers(responseInit.headers);
-  headers.set(LocationHeader, url);
-
-  const response = new Response(null, {
-    ...responseInit,
-    headers: headers,
-  });
-
-  return response;
-}

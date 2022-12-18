@@ -19,3 +19,11 @@ nextauthjs/next-auth-gatsby-example:
     deleteOrphaned: true
   - .github/FUNDING.yml
   - LICENSE
+
+
+nextauthjs/solid-start-auth-example:
+  - source: apps/example-solid-start
+    dest: .
+    deleteOrphaned: true
+  - .github/FUNDING.yml
+  - LICENSE
