@@ -3,4 +3,5 @@ dist
 **/*.d.ts
 **/*.js
 !tsup.config.js
+!scripts/**/*.js
 .vercel
