@@ -20,7 +20,7 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "tsup --config ./tsup.config.js",
+    "build": "tsup --config ./tsup.config.js && node scripts/postbuild",
     "patch": "npm version patch --no-git-tag-version",
     "clean": "rm -rf client.* index.*"
   },
