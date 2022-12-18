@@ -1,6 +1,5 @@
 ---
-title: Next.js
-sidebar_label: "@auth/nextjs"
+title: Next.js Auth
 ---
 
 :::warning WIP
