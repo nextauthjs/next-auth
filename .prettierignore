@@ -1,20 +1,22 @@
+.DS_Store
+node_modules
+.turbo
+
 # apps/example-* should have their standalonw config
 # as they might be cloned via a template like https://github.com/nextauthjs/next-auth-example
 # Note: The root is inside the package
 
-
-
-.DS_Store
-node_modules
-.docusaurus
-build
-.turbo
-static
+# packages
 dist
 
+# docs
+.docusaurus
+build
+static
+
 # @auth/core
-src/lib/styles/index.ts
-src/providers/oauth-types.ts
+**/lib/styles/index.ts
+**/providers/oauth-types.ts
 
 # @auth/sveltekit
 package
