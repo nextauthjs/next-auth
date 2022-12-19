@@ -40,6 +40,9 @@
     "./providers/*": {
       "types": "./providers/*.d.ts",
       "import": "./providers/*.js"
+    },
+    "./types": {
+      "types": "./lib/types.d.ts"
     }
   },
   "license": "ISC",
@@ -60,8 +63,7 @@
     }
   },
   "scripts": {
-    "build": "pnpm clean && tsc && pnpm css",
-    "generate-reference": "pnpm typedoc --plugin typedoc-plugin-markdown src/index.ts",
+    "build": "pnpm clean && pnpm css && tsc",
     "clean": "rm -rf adapters.* index.* jwt lib providers",
     "css": "node ./scripts/generate-css.js",
     "lint": "eslint src",
