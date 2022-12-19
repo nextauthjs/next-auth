@@ -2,7 +2,7 @@
 title: Testing with Cypress
 ---
 
-To test an implementation of NextAuth.js, we encourage you to use [Cypress](https://cypress.io).
+To test an implementation of Auth.js, we encourage you to use [Cypress](https://cypress.io).
 
 ## Setting up Cypress
 
@@ -42,7 +42,7 @@ Second, a cypress file for environment variables. These can be defined in `cypre
 }
 ```
 
-You must change the login credentials you want to use, but you can also redefine the name of the `GOOGLE_*` variables if you're using a different provider. `COOKIE_NAME`, however, must be set to that value for NextAuth.js.
+You must change the login credentials you want to use, but you can also redefine the name of the `GOOGLE_*` variables if you're using a different provider. `COOKIE_NAME`, however, must be set to that value for Auth.js.
 
 Third, if you're using the `cypress-social-login` plugin, you must add this to your `/cypress/plugins/index.js` file like so:
 
@@ -65,7 +65,7 @@ Finally, you can also add the following npm scripts to your `package.json`:
 
 ## Writing a test
 
-Once we've got all that configuration out of the way, we can begin writing tests to login using NextAuth.js.
+Once we've got all that configuration out of the way, we can begin writing tests to login using Auth.js.
 
 The basic login test looks like this:
 

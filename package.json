@@ -6,13 +6,14 @@
   "scripts": {
     "build:app": "turbo run build --filter=next-auth-app",
     "build": "turbo run build --filter=next-auth --filter=@next-auth/* --filter=@auth/* --no-deps",
-    "lint": "turbo run lint --filter=!next-auth-docs --parallel",
-    "test": "turbo run test --concurrency=1 --filter=!@next-auth/pouchdb-adapter --filter=!@next-auth/upstash-redis-adapter --filter=!next-auth-* --filter=[HEAD^1]",
+    "lint": "turbo run lint --parallel",
+    "format": "turbo run format --parallel",
+    "test": "turbo run test --concurrency=1 --filter=[HEAD^1] --filter=./packages/* --filter=!*pouchdb-* --filter=!@*upstash*",
     "clean": "turbo run clean --no-cache",
     "dev:db": "turbo run dev --parallel --continue --filter=next-auth-app...",
     "dev": "turbo run dev --parallel --continue --filter=next-auth-app... --filter=!./packages/adapter-*",
     "dev:kit": "turbo run dev --parallel --continue --filter=sveltekit-nextauth...",
-    "dev:docs": "turbo run dev --filter=next-auth-docs",
+    "dev:docs": "turbo run dev --filter=docs",
     "email": "cd apps/dev && pnpm email",
     "release": "release",
     "version:pr": "node ./config/version-pr"
@@ -29,15 +30,19 @@
     "eslint-config-standard-with-typescript": "^21.0.1",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-jest": "^27.0.1",
+    "eslint-plugin-jsdoc": "^39.6.4",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
     "husky": "^7.0.4",
     "prettier": "2.8.1",
+    "prettier-plugin-jsdoc": "^0.4.2",
     "pretty-quick": "^3.1.2",
     "semver": "7.3.5",
     "stream-to-array": "2.3.0",
     "ts-node": "10.5.0",
     "turbo": "1.3.1",
+    "typedoc": "^0.23.22",
+    "typedoc-plugin-markdown": "^3.14.0",
     "typescript": "4.8.4"
   },
   "release": {
@@ -47,18 +52,6 @@
   },
   "engines": {
     "node": "^12.19.0 || ^14.15.0 || ^16.13.0 || ^18.12.0"
-  },
-  "prettier": {
-    "semi": false,
-    "singleQuote": false,
-    "overrides": [
-      {
-        "files": "apps/dev/pages/api/auth/[...nextauth].ts",
-        "options": {
-          "printWidth": 150
-        }
-      }
-    ]
   },
   "packageManager": "pnpm@7.13.3",
   "funding": [

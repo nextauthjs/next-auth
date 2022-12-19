@@ -1,3 +1,6 @@
+const typedocConfig = require("./typedoc.json")
+delete typedocConfig.$schema
+
 /** @type {import("@docusaurus/types").Config} */
 module.exports = {
   title: "Auth.js",
@@ -7,7 +10,7 @@ module.exports = {
   favicon: "img/favicon.ico",
   organizationName: "nextauthjs",
   projectName: "next-auth",
-  // TODO: remove this once ready	
+  // TODO: remove this once ready
   onBrokenLinks: "log",
   themeConfig: {
     prism: {
@@ -83,7 +86,7 @@ module.exports = {
     announcementBar: {
       id: "new-major-announcement",
       content:
-        "<a target='_blank' rel='noopener noreferrer' href='https://v4.authjs.dev'>NextAuth.js</a> is becoming Auth.js! 🎉 We're creating Authentication for the Web. Everyone included. Starting with SvelteKit, check out the docs <a  href='/reference/sveltekit'>here</a>.",
+        "<a target='_blank' rel='noopener noreferrer' href='https://next-auth.js.org'>NextAuth.js</a> is becoming Auth.js! 🎉 We're creating Authentication for the Web. Everyone included. Starting with SvelteKit, check out the docs <a  href='/reference/sveltekit'>here</a>.",
       backgroundColor: "#000",
       textColor: "#fff",
     },
@@ -165,11 +168,39 @@ module.exports = {
           versions: {
             current: {
               label: "experimental",
-            }
+            },
           },
         },
         theme: {
           customCss: require.resolve("./src/css/index.css"),
+        },
+      },
+    ],
+  ],
+  plugins: [
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        ...typedocConfig,
+        plugin: ["./tyepdoc-custom"],
+        entryPoints: [
+          "../packages/core/src/index.ts",
+          "../packages/core/src/adapters.ts",
+          "../packages/core/src/providers/index.ts",
+          "../packages/core/src/providers/github.ts",
+          "../packages/core/src/providers/spotify.ts",
+          "../packages/core/src/providers/email.ts",
+          "../packages/core/src/providers/credentials.ts",
+          "../packages/core/src/jwt/index.ts",
+        ],
+        tsconfig: "../packages/core/tsconfig.json",
+        out: "reference/03-core",
+        watch: process.env.TYPEDOC_WATCH,
+        includeExtension: false,
+        sidebar: {
+          categoryLabel: "Core",
+          position: 2,
+          // fullNames: true, // REVIEW do we want this?
         },
       },
     ],

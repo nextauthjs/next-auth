@@ -34,6 +34,9 @@
       "types": "./jwt/index.d.ts",
       "import": "./jwt/index.js"
     },
+    "./providers": {
+      "types": "./providers/index.d.ts"
+    },
     "./providers/*": {
       "types": "./providers/*.d.ts",
       "import": "./providers/*.js"
@@ -58,8 +61,11 @@
   },
   "scripts": {
     "build": "pnpm clean && tsc && pnpm css",
+    "generate-reference": "pnpm typedoc --plugin typedoc-plugin-markdown src/index.ts",
     "clean": "rm -rf adapters.* index.* jwt lib providers",
     "css": "node ./scripts/generate-css.js",
+    "lint": "eslint src",
+    "format": "pnpm lint --fix",
     "dev": "pnpm css && tsc -w"
   },
   "devDependencies": {
