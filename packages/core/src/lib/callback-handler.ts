@@ -118,7 +118,7 @@ export default async function callbackHandler(params: {
         })
 
     return { session, user, isNewUser }
-  } else if (account.type === "oauth") {
+  } else if (account.type === "oauth" || account.type === "oidc") {
     // If signing in with OAuth account, check to see if the account exists already
     const userByAccount = await getUserByAccount({
       providerAccountId: account.providerAccountId,
