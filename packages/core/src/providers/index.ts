@@ -1,10 +1,3 @@
-/**
- * `@auth/core/providers` contains types for creating providers.
- *
- * @module providers
- * @see [Providers](https://authjs.dev/reference/providers)
- */
-
 import type { OAuthConfig, OAuthProvider, OAuthProviderType } from "./oauth.js"
 import type { EmailConfig, EmailProvider, EmailProviderType } from "./email.js"
 import type {
