@@ -37,7 +37,7 @@ module.exports = {
     },
     {
       type: "category",
-      label: "@auth/nextjs 🏗",
+      label: "@auth/nextjs",
       link: {
         type: "doc",
         id: "reference/nextjs/index",

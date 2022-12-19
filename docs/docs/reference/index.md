@@ -15,7 +15,9 @@ title: Overview
 ## Frameworks
 
 - Next.js
-- SvelteKit 🏗
-- Remix 🏗
-- Nuxt 🏗
-- Gatsby 🏗
+- SvelteKit
+- SolidState
+- Remix
+- Nuxt
+- Gatsby
+- etc.
