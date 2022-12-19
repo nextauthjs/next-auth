@@ -41,10 +41,11 @@ jobs:
         run: |
           echo "The job_id is: $GITHUB_JOB"   # reference the default environment variables
           echo "The id of this action is: $GITHUB_ACTION"   # reference the default environment variables
+          echo "The id of this action is: $GITHUB_ACTION_PATH"   # reference the default path
           echo "The run id is: $GITHUB_RUN_ID"
           echo "The GitHub Actor's username is: $GITHUB_ACTOR"
           echo "GitHub SHA: $GITHUB_SHA"
-      - name: 'Run issue validator'
+      - name: "Run issue validator"
         run: node /home/runner/work/next-auth/next-auth/.github/actions/issue-validator/index.mjs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
