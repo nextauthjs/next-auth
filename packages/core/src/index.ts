@@ -1,13 +1,29 @@
 /**
+ *
+ * `@auth/core` is the main entry point for the Auth.js library.
+ *
+ * Based on the {@link https://developer.mozilla.org/en-US/docs/Web/API/Request Request}
+ * and {@link https://developer.mozilla.org/en-US/docs/Web/API/Response Response} Web standard APIs.
+ *
+ * ```ts
+ * import { Auth } from "@auth/core"
+ *
+ * const request = new Request("https://example.com"
+ * const response = await Auth(request, {...})
+ *
+ * console.log(response instanceof Response) // true
+ * ```
+ *
+ * Primarily used to implement [framework](https://authjs.dev/concepts/frameworks)-specific packages,
+ * but it can also be used directly.
+ *
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
  * npm install @auth/core
  * ```
  *
- * ## Usage
- *
- * @module index
+ * @module main
  */
 
 import { init } from "./lib/init.js"

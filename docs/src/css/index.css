@@ -273,3 +273,15 @@ html[data-theme="dark"] #carbonads .carbon-poweredby {
   color: #aaa;
   background: #1e2021;
 }
+
+
+
+/* 
+  This is a hack to hide the "Reflection" category from the sidebar.
+  This is because otherwise opening any page under the "Reflection" category
+  would hide the entire sidebar.
+  See sidebars.js
+*/
+.reflection-category {
+  display: none;
+}

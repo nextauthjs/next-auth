@@ -44,13 +44,15 @@ module.exports = {
           position: "left",
         },
         {
-          to: "/guides",
+          to: "/guides/overview",
           activeBasePath: "/guides",
           label: "Guides",
           position: "left",
         },
         {
-          to: "/reference",
+          to: "/reference/core/modules/main",
+          // TODO: change to this when the overview page looks better.
+          // to: "/reference",
           activeBasePath: "/reference",
           label: "Reference",
           position: "left",
@@ -149,6 +151,11 @@ module.exports = {
     colorMode: {
       respectPrefersColorScheme: true,
     },
+    docs: {
+      sidebar: {
+        autoCollapseCategories: true,
+      },
+    },
   },
   presets: [
     [
@@ -194,6 +201,7 @@ module.exports = {
           "../packages/core/src/providers/email.ts",
           "../packages/core/src/providers/credentials.ts",
           "../packages/core/src/jwt/index.ts",
+          "../packages/core/src/lib/types.ts",
         ],
         tsconfig: "../packages/core/tsconfig.json",
         out: "reference/03-core",
