@@ -48,6 +48,12 @@ module.exports = {
         "jsdoc/tag-lines": "off",
       },
     },
+    {
+      files: ["packages/core/src/adapters.ts"],
+      rules: {
+        "@typescript-eslint/method-signature-style": "off",
+      },
+    },
   ],
   plugins: ["jest"],
   ignorePatterns: [

@@ -66,9 +66,6 @@
   "pnpm": {
     "overrides": {
       "undici": "5.11.0"
-    },
-    "patchedDependencies": {
-      "typedoc-plugin-markdown@3.14.0": "patches/typedoc-plugin-markdown@3.14.0.patch"
     }
   }
 }
