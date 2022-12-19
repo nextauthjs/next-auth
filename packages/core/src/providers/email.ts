@@ -35,7 +35,7 @@ export interface EmailConfig extends CommonProviderOptions {
    * You can make it predictable or modify it as you like with this method.
    *
    * @example
-   * ```js
+   * ```ts
    *  Providers.Email({
    *    async generateVerificationToken() {
    *      return "ABC123"

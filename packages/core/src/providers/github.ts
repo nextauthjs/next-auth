@@ -64,7 +64,7 @@ export interface GithubProfile extends Record<string, any> {
  *
  * @example
  *
- * ```js
+ * ```ts
  * import Auth from "@auth/core"
  * import { GitHub } from "@auth/core/providers/github"
  *

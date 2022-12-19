@@ -101,7 +101,7 @@ export interface OAuth2Config<P> extends CommonProviderOptions, PartialIssuer {
    * a specific provider.
    *
    * @example
-   * ```js
+   * ```ts
    * signIn('github') // "github" is the provider ID
    * ```
    */

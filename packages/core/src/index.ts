@@ -39,7 +39,7 @@ export * from "./lib/types.js"
  * Receives a standard {@link Request} and returns a {@link Response}.
  *
  * @example
- * ```js
+ * ```ts
  * import Auth from "@auth/core"
  *
  * const request = new Request("https://example.com")
@@ -133,7 +133,7 @@ export async function Auth(
  * Configure the {@link Auth} method.
  *
  * @example
- * ```
+ * ```ts
  * import Auth, { type AuthConfig } from "@auth/core"
  *
  * export const authConfig: AuthConfig = {...}
@@ -194,7 +194,7 @@ export interface AuthConfig {
    * * **Required**: *No*
    * @example
    *
-   * ```js
+   * ```ts
    *   pages: {
    *     signIn: '/auth/signin',
    *     signOut: '/auth/signout',
@@ -257,7 +257,7 @@ export interface AuthConfig {
    *
    * @example
    *
-   * ```js
+   * ```ts
    * // /pages/api/auth/[...nextauth].js
    * import log from "logging-service"
    * export default NextAuth({
