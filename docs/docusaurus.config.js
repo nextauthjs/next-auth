@@ -4,7 +4,7 @@ delete typedocConfig.$schema
 /** @type {import("@docusaurus/types").Config} */
 module.exports = {
   title: "Auth.js",
-  tagline: "Authentication for the web.",
+  tagline: "Authentication for the Web.",
   url: "https://authjs.dev",
   baseUrl: "/",
   favicon: "img/favicon.ico",
