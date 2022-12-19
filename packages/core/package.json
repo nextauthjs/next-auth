@@ -40,6 +40,9 @@
     "./providers/*": {
       "types": "./providers/*.d.ts",
       "import": "./providers/*.js"
+    },
+    "./types": {
+      "types": "./lib/types.d.ts"
     }
   },
   "license": "ISC",
@@ -60,7 +63,7 @@
     }
   },
   "scripts": {
-    "build": "pnpm clean && tsc && pnpm css",
+    "build": "pnpm clean && pnpm css && tsc",
     "clean": "rm -rf adapters.* index.* jwt lib providers",
     "css": "node ./scripts/generate-css.js",
     "lint": "pnpm prettier --check src && eslint src",
