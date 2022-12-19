@@ -184,7 +184,7 @@ module.exports = {
       "docusaurus-plugin-typedoc",
       {
         ...typedocConfig,
-        plugin: ["./tyepdoc-custom"],
+        plugin: ["./tyepdoc"],
         entryPoints: [
           "../packages/core/src/index.ts",
           "../packages/core/src/adapters.ts",
@@ -199,10 +199,6 @@ module.exports = {
         out: "reference/03-core",
         watch: process.env.TYPEDOC_WATCH,
         includeExtension: false,
-        /** @type {import("docusaurus-plugin-typedoc/dist/types").SidebarOptions} */
-        sidebar: {
-          // autoConfiguration: false,
-        },
       },
     ],
   ],
