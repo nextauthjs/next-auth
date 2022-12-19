@@ -10,7 +10,7 @@ import type {
   Profile,
   RequestInternal,
   TokenSet,
-} from "../../index.js"
+} from "../types"
 import type { OAuthConfigInternal } from "../../providers/index.js"
 import type { Cookie } from "../cookie.js"
 

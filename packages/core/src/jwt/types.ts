@@ -1,4 +1,4 @@
-import type { Awaitable } from "../index.js"
+import type { Awaitable } from "../lib/types.js"
 
 export interface DefaultJWT extends Record<string, unknown> {
   name?: string | null

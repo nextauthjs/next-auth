@@ -1,6 +1,6 @@
 import { createHash, randomString } from "../web.js"
 
-import type { InternalOptions } from "../../index.js"
+import type { InternalOptions } from "../types"
 /**
  * Starts an e-mail login flow, by generating a token,
  * and sending it to the user's e-mail (with the help of a DB adapter)

@@ -1,5 +1,5 @@
 import type { CommonProviderOptions } from "./index.js"
-import type { Awaitable, RequestInternal, User } from "../index.js"
+import type { Awaitable, RequestInternal, User } from "lib/types.js"
 
 export interface CredentialInput {
   label?: string

@@ -29,10 +29,6 @@ import type {
 } from "./lib/types.js"
 import type { Provider } from "./providers/index.js"
 
-// Only thing exported from this file should be `AuthHandler` and `AuthOptions`
-// TODO Don't re-export, just add `@auth/core/types` exports in package.json and change references these types
-export * from "./lib/types.js"
-
 /**
  * Core functionality provided by Auth.js.
  *

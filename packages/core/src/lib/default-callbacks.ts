@@ -1,4 +1,4 @@
-import type { CallbacksOptions } from "../index.js"
+import type { CallbacksOptions } from "./types.js"
 
 export const defaultCallbacks: CallbacksOptions = {
   authorized() {

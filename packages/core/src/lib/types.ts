@@ -14,6 +14,8 @@ import type {
 } from "../providers/index.js"
 import type { Cookie } from "./cookie.js"
 import type { LoggerInstance } from "./utils/logger.js"
+
+export type { AuthConfig } from "../index.js"
 export type Awaitable<T> = T | PromiseLike<T>
 export type { LoggerInstance }
 

@@ -13,7 +13,7 @@ import type {
   EventCallbacks,
   InternalOptions,
   RequestInternal,
-} from "../index.js"
+} from "./types.js"
 
 interface InitParams {
   url: URL

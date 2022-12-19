@@ -10,7 +10,7 @@ import {
   UntrustedHost,
 } from "./errors.js"
 
-import type { AuthConfig, RequestInternal } from "../index.js"
+import type { AuthConfig, RequestInternal } from "./types.js"
 import type { WarningCode } from "./utils/logger.js"
 
 type ConfigError =

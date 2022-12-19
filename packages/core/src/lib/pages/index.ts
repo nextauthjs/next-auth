@@ -10,7 +10,7 @@ import type {
   InternalOptions,
   RequestInternal,
   ResponseInternal,
-} from "../../index.js"
+} from "../types.js"
 import type { Cookie } from "../cookie.js"
 
 function send({ html, title, status, cookies, theme }: any): ResponseInternal {

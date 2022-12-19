@@ -1,5 +1,5 @@
 import * as o from "oauth4webapi"
-import type { InternalOptions, RequestInternal } from "../../index.js"
+import type { InternalOptions, RequestInternal } from "../types"
 import type { Cookie } from "../cookie.js"
 import { InvalidState } from "../errors.js"
 

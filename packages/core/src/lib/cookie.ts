@@ -3,7 +3,7 @@ import type {
   CookiesOptions,
   LoggerInstance,
   SessionStrategy,
-} from "../index.js"
+} from "../lib/types.js"
 
 // Uncomment to recalculate the estimated size
 // of an empty session cookie

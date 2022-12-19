@@ -4,8 +4,12 @@ import { init } from "./init.js"
 import renderPage from "./pages/index.js"
 import * as routes from "./routes/index.js"
 
-import type { AuthConfig, ErrorPageParam } from "../index.js"
-import type { RequestInternal, ResponseInternal } from "./types.js"
+import type {
+  RequestInternal,
+  ResponseInternal,
+  AuthConfig,
+  ErrorPageParam,
+} from "./types.js"
 
 export async function AuthInternal<
   Body extends string | Record<string, any> | any[]

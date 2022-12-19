@@ -7,7 +7,7 @@ import type {
   JWTEncodeParams,
   JWTOptions,
 } from "./types.js"
-import type { LoggerInstance } from "../index.js"
+import type { LoggerInstance } from "../lib/types.js"
 
 export * from "./types.js"
 
