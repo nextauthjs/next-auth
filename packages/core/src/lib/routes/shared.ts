@@ -5,11 +5,11 @@ import type { Adapter, AdapterUser } from "../../adapters.js"
 
 export async function handleAuthorized(
   params: any,
-  { url, logger, callbacks: { authorized: callback } }: InternalOptions
+  { url, logger, callbacks: { signIn } }: InternalOptions
 ) {
   url.pathname += "/error"
   try {
-    const authorized = await callback(params)
+    const authorized = await signIn(params)
     if (!authorized) {
       logger.debug("User not authorized", params)
       url.searchParams.set("error", "AccessDenied")

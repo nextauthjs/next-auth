@@ -89,8 +89,9 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    * an `AuthorizedCallbackError` is logged on the server.
    *
    * @see https://authjs.dev/reference/errors#authorizedcallbackerror
+   * @todo rename to `authorized`
    */
-  authorized: (params: {
+  signIn: (params: {
     user: User | AdapterUser
     account: A | null
     /**
