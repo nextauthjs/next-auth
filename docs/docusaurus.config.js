@@ -1,3 +1,6 @@
+const typedocConfig = require("./typedoc.json")
+delete typedocConfig.$schema
+
 /** @type {import("@docusaurus/types").Config} */
 module.exports = {
   title: "Auth.js",
@@ -5,13 +8,14 @@ module.exports = {
   url: "https://authjs.dev",
   baseUrl: "/",
   favicon: "img/favicon.ico",
+  trailingSlash: false,
   organizationName: "nextauthjs",
   projectName: "next-auth",
-  // TODO: remove this once ready	
+  // TODO: remove this once ready
   onBrokenLinks: "log",
   themeConfig: {
     prism: {
-      theme: require("prism-react-renderer/themes/vsDark"),
+      theme: require("prism-react-renderer/themes/nightOwl"),
       magicComments: [
         {
           className: "theme-code-block-highlighted-line",
@@ -41,12 +45,14 @@ module.exports = {
         },
         {
           to: "/guides/overview",
-          activeBasePath: "/guides/",
+          activeBasePath: "/guides",
           label: "Guides",
           position: "left",
         },
         {
-          to: "/reference/index",
+          to: "/reference/core/modules/main",
+          // TODO: change to this when the overview page looks better.
+          // to: "/reference",
           activeBasePath: "/reference",
           label: "Reference",
           position: "left",
@@ -145,12 +151,18 @@ module.exports = {
     colorMode: {
       respectPrefersColorScheme: true,
     },
+    docs: {
+      sidebar: {
+        autoCollapseCategories: true,
+      },
+    },
   },
   presets: [
     [
       "@docusaurus/preset-classic",
       {
         docs: {
+          breadcrumbs: false,
           routeBasePath: "/",
           sidebarPath: require.resolve("./sidebars.js"),
           editUrl: "https://github.com/nextauthjs/next-auth/edit/main/docs",
@@ -165,12 +177,36 @@ module.exports = {
           versions: {
             current: {
               label: "experimental",
-            }
+            },
           },
         },
         theme: {
           customCss: require.resolve("./src/css/index.css"),
         },
+      },
+    ],
+  ],
+  plugins: [
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        ...typedocConfig,
+        plugin: ["./tyepdoc"],
+        entryPoints: [
+          "../packages/core/src/index.ts",
+          "../packages/core/src/adapters.ts",
+          "../packages/core/src/providers/index.ts",
+          "../packages/core/src/providers/github.ts",
+          "../packages/core/src/providers/spotify.ts",
+          "../packages/core/src/providers/email.ts",
+          "../packages/core/src/providers/credentials.ts",
+          "../packages/core/src/jwt/index.ts",
+          "../packages/core/src/lib/types.ts",
+        ],
+        tsconfig: "../packages/core/tsconfig.json",
+        out: "reference/03-core",
+        watch: process.env.TYPEDOC_WATCH,
+        includeExtension: false,
       },
     ],
   ],

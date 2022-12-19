@@ -6,7 +6,6 @@
   "scripts": {
     "clean": "rm -rf .next",
     "dev": "next dev",
-    "lint": "next lint",
     "build": "next build",
     "start": "next start",
     "email": "fake-smtp-server",

@@ -1,13 +1,15 @@
-import React, { useEffect } from "react"
-import classnames from "classnames"
-import Layout from "@theme/Layout"
+// eslint-disable-next-line no-use-before-define
+import * as React from "react"
 import Link from "@docusaurus/Link"
-import useDocusaurusContext from "@docusaurus/useDocusaurusContext"
 import useBaseUrl from "@docusaurus/useBaseUrl"
+import useDocusaurusContext from "@docusaurus/useDocusaurusContext"
 import CodeBlock from "@theme/CodeBlock"
+import Layout from "@theme/Layout"
+import classnames from "classnames"
+import { useEffect } from "react"
 import ProviderMarquee from "../components/ProviderMarquee"
-import Seo from "./seo"
 import styles from "./index.module.css"
+import Seo from "./seo"
 
 const features = [
   {
@@ -86,7 +88,7 @@ function Feature({ imageUrl, title, description }) {
   )
 }
 
-function Home() {
+export default function Home() {
   const context = useDocusaurusContext()
   const { siteConfig = {} } = context
 
@@ -244,9 +246,10 @@ function Home() {
 
 const svelteKitCode = `
 import SvelteKitAuth from "@auth/sveltekit"
-import GitHub from 'next-auth/providers/github'
-import FacebookProvider from 'next-auth/providers/facebook'
-import GoogleProvider from 'next-auth/providers/google'
+import GitHub from '@auth/core/providers/github'
+import Facebook from '@auth/core/providers/facebook'
+import Google from '@auth/core/providers/google'
+
 import { 
   GITHUB_ID,
   GITHUB_SECRET,
@@ -258,18 +261,9 @@ import {
 
 export const handle = SvelteKitAuth({
   providers: [
-    GitHub({ 
-      clientId: GITHUB_ID,
-      clientSecret: GITHUB_SECRET
-    }),
-    FacebookProvider({
-      clientId: FACEBOOK_ID,
-      clientSecret: FACEBOOK_SECRET
-    }),
-    GoogleProvider({
-      clientId: GOOGLE_ID,
-      clientSecret: GOOGLE_SECRET
-    })
+    GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET }),
+    Facebook({ clientId: FACEBOOK_ID, clientSecret: FACEBOOK_SECRET }),
+    Google({ clientId: GOOGLE_ID, clientSecret: GOOGLE_SECRET })
   ],
 })
 `.trim()
@@ -277,26 +271,23 @@ export const handle = SvelteKitAuth({
 const nextJsCode = `
 import NextAuth from 'next-auth'
 import GitHub from 'next-auth/providers/github'
-import FacebookProvider from 'next-auth/providers/facebook'
-import GoogleProvider from 'next-auth/providers/google'
+import Facebook from 'next-auth/providers/facebook'
+import Google from 'next-auth/providers/google'
 
 export default NextAuth({
   providers: [
-    // OAuth authentication providers...
     GitHub({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET
     }),
-    FacebookProvider({
+    Facebook({
       clientId: process.env.FACEBOOK_ID,
       clientSecret: process.env.FACEBOOK_SECRET
     }),
-    GoogleProvider({
+    Google({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET
     })
   ]
 })
 `.trim()
-
-export default Home
