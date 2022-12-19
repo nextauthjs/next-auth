@@ -8,14 +8,14 @@ module.exports = {
   url: "https://authjs.dev",
   baseUrl: "/",
   favicon: "img/favicon.ico",
-  // trailingSlash: false,
+  trailingSlash: false,
   organizationName: "nextauthjs",
   projectName: "next-auth",
   // TODO: remove this once ready
   onBrokenLinks: "log",
   themeConfig: {
     prism: {
-      theme: require("prism-react-renderer/themes/vsDark"),
+      theme: require("prism-react-renderer/themes/nightOwl"),
       magicComments: [
         {
           className: "theme-code-block-highlighted-line",
