@@ -8,13 +8,14 @@ module.exports = {
   url: "https://authjs.dev",
   baseUrl: "/",
   favicon: "img/favicon.ico",
+  trailingSlash: false,
   organizationName: "nextauthjs",
   projectName: "next-auth",
   // TODO: remove this once ready
   onBrokenLinks: "log",
   themeConfig: {
     prism: {
-      theme: require("prism-react-renderer/themes/vsDark"),
+      theme: require("prism-react-renderer/themes/nightOwl"),
       magicComments: [
         {
           className: "theme-code-block-highlighted-line",
@@ -43,13 +44,13 @@ module.exports = {
           position: "left",
         },
         {
-          to: "/guides/overview",
-          activeBasePath: "/guides/",
+          to: "/guides",
+          activeBasePath: "/guides",
           label: "Guides",
           position: "left",
         },
         {
-          to: "/reference/index",
+          to: "/reference",
           activeBasePath: "/reference",
           label: "Reference",
           position: "left",
@@ -154,6 +155,7 @@ module.exports = {
       "@docusaurus/preset-classic",
       {
         docs: {
+          breadcrumbs: false,
           routeBasePath: "/",
           sidebarPath: require.resolve("./sidebars.js"),
           editUrl: "https://github.com/nextauthjs/next-auth/edit/main/docs",
@@ -182,7 +184,7 @@ module.exports = {
       "docusaurus-plugin-typedoc",
       {
         ...typedocConfig,
-        plugin: ["./tyepdoc-custom"],
+        plugin: ["./tyepdoc"],
         entryPoints: [
           "../packages/core/src/index.ts",
           "../packages/core/src/adapters.ts",
@@ -197,11 +199,6 @@ module.exports = {
         out: "reference/03-core",
         watch: process.env.TYPEDOC_WATCH,
         includeExtension: false,
-        sidebar: {
-          categoryLabel: "Core",
-          position: 2,
-          // fullNames: true, // REVIEW do we want this?
-        },
       },
     ],
   ],

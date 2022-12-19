@@ -61,7 +61,6 @@
   },
   "scripts": {
     "build": "pnpm clean && tsc && pnpm css",
-    "generate-reference": "pnpm typedoc --plugin typedoc-plugin-markdown src/index.ts",
     "clean": "rm -rf adapters.* index.* jwt lib providers",
     "css": "node ./scripts/generate-css.js",
     "lint": "pnpm prettier --check src && eslint src",

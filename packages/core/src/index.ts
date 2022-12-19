@@ -1,3 +1,15 @@
+/**
+ * ## Installation
+ *
+ * ```bash npm2yarn2pnpm
+ * npm install @auth/core
+ * ```
+ *
+ * ## Usage
+ *
+ * @module index
+ */
+
 import { assertConfig } from "./lib/assert.js"
 import { ErrorPageLoop } from "./lib/errors.js"
 import { AuthInternal } from "./lib/index.js"
@@ -17,6 +29,8 @@ import type {
 } from "./lib/types.js"
 import type { Provider } from "./providers/index.js"
 
+// Only thing exported from this file should be `AuthHandler` and `AuthOptions`
+// TODO Don't re-export, just add `@auth/core/types` exports in package.json and change references these types
 export * from "./lib/types.js"
 
 /**
@@ -36,7 +50,6 @@ export * from "./lib/types.js"
  * })
  *```
  * @see [Documentation](https://authjs.dev)
- * @link {Provider}
  */
 export async function Auth(
   request: Request,
