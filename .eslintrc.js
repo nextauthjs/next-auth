@@ -5,7 +5,7 @@ const path = require("path")
 module.exports = {
   root: true,
   parser: "@typescript-eslint/parser",
-  extends: ["standard-with-typescript", "prettier"],
+  extends: ["standard-with-typescript", "prettier/prettier"],
   rules: {
     camelcase: "off",
     "@typescript-eslint/naming-convention": "off",
@@ -29,7 +29,7 @@ module.exports = {
       env: { jest: true },
     },
     {
-      files: ["docs"],
+      files: ["docs/**"],
       plugins: ["@docusaurus"],
       extends: ["plugin:@docusaurus/recommended"],
     },
