@@ -3,21 +3,21 @@ Add $1 login to your page.
 ## Example
 
 @example
+
 ```js
 import Auth from "@auth/core"
 import { $1 } from "@auth/core/providers/$2"
 
 const request = new Request("https://example.com")
 const resposne = await AuthHandler(request, {
-  providers: [
-    $1({clientId: "", clientSecret: ""})
-  ]
+  providers: [$1({ clientId: "", clientSecret: "" })],
 })
 ```
 
 ---
 
 ## Resources
+
 @see [Link 1](https://example.com)
 
 ---
