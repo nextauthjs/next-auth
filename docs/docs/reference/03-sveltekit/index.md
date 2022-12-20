@@ -1,9 +1,9 @@
 ---
-title: SvelteKit
+title: SvelteKit Auth
 ---
 
 :::warning
-`@auth/sveltekit` is currently experimental. 🏗
+`@auth/sveltekit` is currently experimental.
 :::
 
 ## Installation

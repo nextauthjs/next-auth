@@ -1,3 +1,31 @@
+/**
+ *
+ * `@auth/core` is the main entry point for the Auth.js library.
+ *
+ * Based on the {@link https://developer.mozilla.org/en-US/docs/Web/API/Request Request}
+ * and {@link https://developer.mozilla.org/en-US/docs/Web/API/Response Response} Web standard APIs.
+ *
+ * ```ts
+ * import { Auth } from "@auth/core"
+ *
+ * const request = new Request("https://example.com"
+ * const response = await Auth(request, {...})
+ *
+ * console.log(response instanceof Response) // true
+ * ```
+ *
+ * Primarily used to implement [framework](https://authjs.dev/concepts/frameworks)-specific packages,
+ * but it can also be used directly.
+ *
+ * ## Installation
+ *
+ * ```bash npm2yarn2pnpm
+ * npm install @auth/core
+ * ```
+ *
+ * @module main
+ */
+
 import { init } from "./lib/init.js"
 import { assertConfig } from "./lib/assert.js"
 import { SessionStore } from "./lib/cookie.js"
@@ -14,6 +42,8 @@ import type {
 } from "./lib/types.js"
 import { UntrustedHost } from "./lib/errors.js"
 
+// Only thing exported from this file should be `AuthHandler` and `AuthOptions`
+// TODO Don't re-export, just add `@auth/core/types` exports in package.json and change references these types
 export * from "./lib/types.js"
 
 const configErrorMessage =
@@ -239,9 +269,10 @@ async function AuthHandlerInternal<
 }
 
 /**
- * The core functionality of Auth.js.
- * It receives a standard [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request)
- * and returns a standard [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response).
+ * The core functionality of Auth.js. It receives a standard
+ * [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request) and
+ * returns a standard
+ * [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response).
  */
 export async function AuthHandler(
   request: Request,

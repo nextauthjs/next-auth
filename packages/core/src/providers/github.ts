@@ -7,9 +7,7 @@ export interface GithubEmail extends Record<string, any> {
   visibility: "public" | "private"
 }
 
-/**
- * @see [Get the authenticated user](https://docs.github.com/en/rest/users/users#get-the-authenticated-user)
- */
+/** @see [Get the authenticated user](https://docs.github.com/en/rest/users/users#get-the-authenticated-user) */
 export interface GithubProfile extends Record<string, any> {
   login: string
   id: number
@@ -59,33 +57,30 @@ export interface GithubProfile extends Record<string, any> {
 }
 
 /**
- * Add GitHub login to your page and make requests to [GitHub APIs](https://docs.github.com/en/rest).
+ * Add GitHub login to your page and make requests to [GitHub
+ * APIs](https://docs.github.com/en/rest).
  *
  * ## Example
  *
  * @example
+ *
  * ```js
  * import Auth from "@auth/core"
  * import { GitHub } from "@auth/core/providers/github"
  *
  * const request = new Request("https://example.com")
  * const resposne = await AuthHandler(request, {
- *   providers: [
- *     GitHub({clientId: "", clientSecret: ""})
- *   ]
+ *   providers: [GitHub({ clientId: "", clientSecret: "" })],
  * })
  * ```
  *
- * ---
- *
  * ## Resources
+ *
  * @see [GitHub - Creating an OAuth App](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app)
  * @see [GitHub - Authorizing OAuth Apps](https://docs.github.com/en/developers/apps/building-oauth-apps/authorizing-oauth-apps)
  * @see [GitHub - Configure your GitHub OAuth Apps](https://github.com/settings/developers)
  * @see [Learn more about OAuth](https://authjs.dev/concepts/oauth)
- * @see [Source code](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/github.ts)
- *
- * ---
+ * @see [Source code](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/github.ts) ---
  *
  * ## Notes
  *

@@ -1,8 +1,10 @@
 ---
-title: Reference
-sidebar_label: Reference
+title: Overview
+sidebar_label: Overview
 sidebar_position: 0
 ---
+
+## Core
 
 ## Providers
 
@@ -15,7 +17,9 @@ sidebar_position: 0
 ## Frameworks
 
 - Next.js
-- SvelteKit 🏗
-- Remix 🏗
-- Nuxt 🏗
-- Gatsby 🏗
+- SvelteKit
+- SolidState
+- Remix
+- Nuxt
+- Gatsby
+- etc.

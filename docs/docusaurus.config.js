@@ -4,17 +4,18 @@ delete typedocConfig.$schema
 /** @type {import("@docusaurus/types").Config} */
 const docusaurusConfig = {
   title: "Auth.js",
-  tagline: "Authentication for the web.",
+  tagline: "Authentication for the Web.",
   url: "https://authjs.dev",
   baseUrl: "/",
   favicon: "img/favicon.ico",
+  trailingSlash: false,
   organizationName: "nextauthjs",
   // TODO: remove this once ready
   onBrokenLinks: "log",
   projectName: "next-auth",
   themeConfig: {
     prism: {
-      theme: require("prism-react-renderer/themes/vsDark"),
+      theme: require("prism-react-renderer/themes/nightOwl"),
       magicComments: [
         {
           className: "theme-code-block-highlighted-line",
@@ -49,7 +50,9 @@ const docusaurusConfig = {
           position: "left",
         },
         {
-          to: "/reference",
+          to: "/reference/core/modules/main",
+          // TODO: change to this when the overview page looks better.
+          // to: "/reference",
           activeBasePath: "/reference",
           label: "Reference",
           position: "left",
@@ -148,12 +151,18 @@ const docusaurusConfig = {
     colorMode: {
       respectPrefersColorScheme: true,
     },
+    docs: {
+      sidebar: {
+        autoCollapseCategories: true,
+      },
+    },
   },
   presets: [
     [
       "@docusaurus/preset-classic",
       {
         docs: {
+          breadcrumbs: false,
           routeBasePath: "/",
           sidebarPath: require.resolve("./sidebars.js"),
           editUrl: "https://github.com/nextauthjs/next-auth/edit/main/docs",
@@ -181,7 +190,7 @@ const docusaurusConfig = {
       "docusaurus-plugin-typedoc",
       {
         ...typedocConfig,
-        plugin: ["./tyepdoc-custom"],
+        plugin: ["./tyepdoc"],
         entryPoints: [
           "../packages/core/src/index.ts",
           "../packages/core/src/adapters.ts",
@@ -191,16 +200,12 @@ const docusaurusConfig = {
           "../packages/core/src/providers/email.ts",
           "../packages/core/src/providers/credentials.ts",
           "../packages/core/src/jwt/index.ts",
+          "../packages/core/src/lib/types.ts",
         ],
         tsconfig: "../packages/core/tsconfig.json",
         out: "reference/03-core",
         watch: process.env.TYPEDOC_WATCH,
         includeExtension: false,
-        sidebar: {
-          categoryLabel: "Core",
-          position: 2,
-          // fullNames: true, // REVIEW do we want this?
-        },
       },
     ],
   ],
