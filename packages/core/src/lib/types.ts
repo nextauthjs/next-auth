@@ -1,3 +1,10 @@
+/**
+ *
+ * The `@auth/core/types` module contains all public types and interfaces of the core package.
+ *
+ * @module types
+ */
+
 import type { CookieSerializeOptions } from "cookie"
 import type { Adapter, AdapterUser } from "../adapters.js"
 import type {
