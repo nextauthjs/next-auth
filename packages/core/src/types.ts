@@ -1,6 +1,5 @@
 /**
- *
- * The `@auth/core/types` module contains all public types and interfaces of the core package.
+ * `@auth/core/types` contains all public types and interfaces of the core package.
  *
  * @module types
  */
