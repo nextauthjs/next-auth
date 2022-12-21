@@ -1,5 +1,5 @@
 import { createHash } from "crypto"
-import { NextAuthHandler } from "../src/core"
+import { AuthHandler } from "../src/core"
 import type { LoggerInstance, AuthOptions } from "../src"
 import type { Adapter } from "../src/adapters"
 
@@ -30,7 +30,7 @@ export async function handler(
   )
   const req = new Request(url, { headers: { host: "" }, ...requestInit })
   const logger = mockLogger()
-  const response = await NextAuthHandler({
+  const response = await AuthHandler({
     req,
     options: { secret: "secret", ...options, logger },
   })

@@ -1,4 +1,4 @@
-import { NextAuthHandler } from "../core"
+import { AuthHandler } from "../core"
 import { detectHost } from "../utils/detect-host"
 import { setCookie } from "./utils"
 
@@ -15,7 +15,7 @@ import type {
   NextAuthResponse,
 } from "../core/types"
 
-async function NextAuthNextHandler(
+async function NextAuthHandler(
   req: NextApiRequest,
   res: NextApiResponse,
   options: AuthOptions
@@ -25,7 +25,7 @@ async function NextAuthNextHandler(
   options.secret =
     options.secret ?? options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
 
-  const handler = await NextAuthHandler({
+  const handler = await AuthHandler({
     req: {
       host: detectHost(req.headers["x-forwarded-host"]),
       body: req.body,
@@ -74,10 +74,10 @@ function NextAuth(
 ) {
   if (args.length === 1) {
     return async (req: NextAuthRequest, res: NextAuthResponse) =>
-      await NextAuthNextHandler(req, res, args[0])
+      await NextAuthHandler(req, res, args[0])
   }
 
-  return NextAuthNextHandler(args[0], args[1], args[2])
+  return NextAuthHandler(args[0], args[1], args[2])
 }
 
 export default NextAuth
@@ -151,7 +151,7 @@ export async function unstable_getServerSession<
 
   options.secret = options.secret ?? process.env.NEXTAUTH_SECRET
 
-  const session = await NextAuthHandler<Session | {} | string>({
+  const session = await AuthHandler<Session | {} | string>({
     options,
     req: {
       host: detectHost(req.headers["x-forwarded-host"]),

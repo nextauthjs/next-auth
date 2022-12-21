@@ -94,7 +94,7 @@ export async function getToken<R extends boolean = false>(
   const authorizationHeader =
     req.headers instanceof Headers
       ? req.headers.get("authorization")
-      : req.headers.authorization
+      : req.headers?.authorization
 
   if (!token && authorizationHeader?.split(" ")[0] === "Bearer") {
     const urlEncodedToken = authorizationHeader.split(" ")[1]

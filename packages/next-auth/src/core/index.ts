@@ -77,7 +77,7 @@ async function toInternalRequest(
   return req
 }
 
-export async function NextAuthHandler<
+export async function AuthHandler<
   Body extends string | Record<string, any> | any[]
 >(params: NextAuthHandlerParams): Promise<ResponseInternal<Body>> {
   const { options: authOptions, req: incomingRequest } = params
