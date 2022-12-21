@@ -18,6 +18,7 @@
     "adapters.*",
     "index.*",
     "jwt.*",
+    "types.*",
     "lib",
     "providers",
     "src"
@@ -42,7 +43,7 @@
       "import": "./providers/*.js"
     },
     "./types": {
-      "types": "./lib/types.d.ts"
+      "types": "./types.d.ts"
     }
   },
   "license": "ISC",
@@ -64,7 +65,7 @@
   },
   "scripts": {
     "build": "pnpm clean && pnpm css && tsc",
-    "clean": "rm -rf adapters.* index.* jwt lib providers",
+    "clean": "rm -rf adapters.* index.* jwt.* types.* lib providers",
     "css": "node ./scripts/generate-css.js",
     "lint": "eslint src",
     "format": "pnpm lint --fix",

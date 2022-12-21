@@ -81,12 +81,11 @@ docs/.docusaurus
 docs/providers.json
 
 # Core
-packages/core/adapters.*
-packages/core/index.*
-packages/core/jwt.*
+packages/core/*.js
+packages/core/*.d.ts
+packages/core/*.d.ts.map
 packages/core/lib
 packages/core/providers
-packages/core/docs
 docs/docs/reference/03-core
 
 
