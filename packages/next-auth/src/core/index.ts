@@ -80,13 +80,13 @@ async function toInternalRequest(
 export async function NextAuthHandler<
   Body extends string | Record<string, any> | any[]
 >(params: NextAuthHandlerParams): Promise<ResponseInternal<Body>> {
-  const { options: userOptions, req: incomingRequest } = params
+  const { options: authOptions, req: incomingRequest } = params
 
   const req = await toInternalRequest(incomingRequest)
 
-  setLogger(userOptions.logger, userOptions.debug)
+  setLogger(authOptions.logger, authOptions.debug)
 
-  const assertionResult = assertConfig({ options: userOptions, req })
+  const assertionResult = assertConfig({ options: authOptions, req })
 
   if (Array.isArray(assertionResult)) {
     assertionResult.forEach(logger.warn)
@@ -103,7 +103,7 @@ export async function NextAuthHandler<
         body: { message } as any,
       }
     }
-    const { pages, theme } = userOptions
+    const { pages, theme } = authOptions
 
     const authOnErrorPage =
       pages?.error && req.query?.callbackUrl?.startsWith(pages.error)
@@ -129,7 +129,7 @@ export async function NextAuthHandler<
   const { action, providerId, error, method = "GET" } = req
 
   const { options, cookies } = await init({
-    userOptions,
+    authOptions: authOptions,
     action,
     providerId,
     host: req.host,
@@ -275,7 +275,7 @@ export async function NextAuthHandler<
         }
         break
       case "_log":
-        if (userOptions.logger) {
+        if (authOptions.logger) {
           try {
             const { code, level, ...metadata } = req.body ?? {}
             logger[level](code, metadata)

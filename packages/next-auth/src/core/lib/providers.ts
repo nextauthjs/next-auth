@@ -23,20 +23,20 @@ export default function parseProviders(params: {
   const { url, providerId } = params
 
   const providers = params.providers.map<InternalProvider>(
-    ({ options: userOptions, ...rest }) => {
+    ({ options: authOptions, ...rest }) => {
       if (rest.type === "oauth") {
         const normalizedOptions = normalizeOAuthOptions(rest)
-        const normalizedUserOptions = normalizeOAuthOptions(userOptions, true)
-        const id = normalizedUserOptions?.id ?? rest.id
+        const normalizedauthOptions = normalizeOAuthOptions(authOptions, true)
+        const id = normalizedauthOptions?.id ?? rest.id
         return merge(normalizedOptions, {
-          ...normalizedUserOptions,
+          ...normalizedauthOptions,
           signinUrl: `${url}/signin/${id}`,
           callbackUrl: `${url}/callback/${id}`,
         })
       }
-      const id = (userOptions?.id as string) ?? rest.id
+      const id = (authOptions?.id as string) ?? rest.id
       return merge(rest, {
-        ...userOptions,
+        ...authOptions,
         signinUrl: `${url}/signin/${id}`,
         callbackUrl: `${url}/callback/${id}`,
       })
@@ -54,7 +54,7 @@ export default function parseProviders(params: {
  */
 function normalizeOAuthOptions(
   oauthOptions?: Partial<OAuthConfig<any>> | Record<string, unknown>,
-  isUserOptions = false
+  isauthOptions = false
 ) {
   if (!oauthOptions) return
 
@@ -81,7 +81,7 @@ function normalizeOAuthOptions(
     {} as any
   )
 
-  if (!isUserOptions && !normalized.version?.startsWith("1.")) {
+  if (!isauthOptions && !normalized.version?.startsWith("1.")) {
     // If provider has as an "openid-configuration" well-known endpoint
     // or an "openid" scope request, it will also likely be able to receive an `id_token`
     // Only do this if this function is not called with user options to avoid overriding in later stage.
