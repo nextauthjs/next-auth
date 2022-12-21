@@ -44,7 +44,7 @@ export async function init({
 }> {
   const url = parseUrl(host)
 
-  const secret = createSecret({ authOptions: authOptions, url })
+  const secret = createSecret({ authOptions, url })
 
   const { providers, provider } = parseProviders({
     providers: authOptions.providers,

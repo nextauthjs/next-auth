@@ -83,7 +83,7 @@ describe("Return correct data", () => {
   })
 
   it("Should return null if there is no session", async () => {
-    const spy = jest.spyOn(core, "NextAuthHandler")
+    const spy = jest.spyOn(core, "AuthHandler")
     // @ts-expect-error
     spy.mockReturnValue({ body: {} })
 
@@ -109,7 +109,7 @@ describe("Return correct data", () => {
       },
     }
 
-    const spy = jest.spyOn(core, "NextAuthHandler")
+    const spy = jest.spyOn(core, "AuthHandler")
     // @ts-expect-error
     spy.mockReturnValue(mockedResponse)
 

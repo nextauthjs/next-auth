@@ -129,7 +129,7 @@ export async function AuthHandler<
   const { action, providerId, error, method = "GET" } = req
 
   const { options, cookies } = await init({
-    authOptions: authOptions,
+    authOptions,
     action,
     providerId,
     host: req.host,
