@@ -1,20 +1,14 @@
-import { mockLogger } from "./utils"
+import { mockLogger } from "./lib"
 import type {
   InternalOptions,
   LoggerInstance,
   InternalProvider,
   CallbacksOptions,
-  Account,
-  Awaitable,
-  Profile,
-  Session,
-  User,
   CookiesOptions,
 } from "../src"
 import { createState } from "../src/core/lib/oauth/state-handler"
 import { InternalUrl } from "../src/utils/parse-url"
-import { JWT, JWTOptions, encode, decode } from "../src/jwt"
-import { CredentialInput } from "../src/providers"
+import { JWTOptions, encode, decode } from "../src/jwt"
 
 let logger: LoggerInstance
 let url: InternalUrl
@@ -42,6 +36,9 @@ beforeEach(() => {
     signinUrl: "/",
     callbackUrl: "/",
     checks: ["pkce", "state"],
+    profile() {
+      return { id: "", name: "", email: "" }
+    },
   }
 
   jwt = {
@@ -52,35 +49,16 @@ beforeEach(() => {
   }
 
   callbacks = {
-    signIn: function (params: {
-      user: User
-      account: Account
-      profile: Profile & Record<string, unknown>
-      email: { verificationRequest?: boolean | undefined }
-      credentials?: Record<string, CredentialInput> | undefined
-    }): Awaitable<string | boolean> {
+    signIn: function () {
       throw new Error("Function not implemented.")
     },
-    redirect: function (params: {
-      url: string
-      baseUrl: string
-    }): Awaitable<string> {
+    redirect: function () {
       throw new Error("Function not implemented.")
     },
-    session: function (params: {
-      session: Session
-      user: User
-      token: JWT
-    }): Awaitable<Session> {
+    session: function () {
       throw new Error("Function not implemented.")
     },
-    jwt: function (params: {
-      token: JWT
-      user?: User | undefined
-      account?: Account | undefined
-      profile?: Profile | undefined
-      isNewUser?: boolean | undefined
-    }): Awaitable<JWT> {
+    jwt: function () {
       throw new Error("Function not implemented.")
     },
   }
@@ -96,12 +74,20 @@ beforeEach(() => {
 
   options = {
     url,
+    adapter: undefined,
     action: "session",
     provider,
     secret: "",
     debug: false,
     logger,
-    session: { strategy: "jwt", maxAge: 0, updateAge: 0 },
+    session: {
+      strategy: "jwt",
+      maxAge: 0,
+      updateAge: 0,
+      generateSessionToken() {
+        return ""
+      },
+    },
     pages: {},
     jwt,
     events: {},
