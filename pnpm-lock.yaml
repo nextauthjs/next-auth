@@ -584,7 +584,7 @@ importers:
       msw: ^0.42.3
       next: 13.0.6
       oauth: ^0.9.15
-      openid-client: ^5.1.0
+      openid-client: 5.3.1
       postcss: ^8.4.14
       postcss-cli: ^9.1.0
       postcss-nested: ^5.0.6
@@ -600,7 +600,7 @@ importers:
       cookie: 0.5.0
       jose: 4.11.0
       oauth: 0.9.15
-      openid-client: 5.1.6
+      openid-client: 5.3.1
       preact: 10.8.2
       preact-render-to-string: 5.2.0_preact@10.8.2
       uuid: 8.3.2
@@ -22260,9 +22260,8 @@ packages:
     hasBin: true
     dev: true
 
-  /openid-client/5.1.6:
-    resolution: {integrity: sha512-HTFaXWdUHvLFw4GaEMgC0jXYBgpjgzQQNHW1pZsSqJorSgrXzxJ+4u/LWCGaClDEse5HLjXRV+zU5Bn3OefiZw==}
-    engines: {node: ^12.19.0 || ^14.15.0 || ^16.13.0}
+  /openid-client/5.3.1:
+    resolution: {integrity: sha512-RLfehQiHch9N6tRWNx68cicf3b1WR0x74bJWHRc25uYIbSRwjxYcTFaRnzbbpls5jroLAaB/bFIodTgA5LJMvw==}
     dependencies:
       jose: 4.11.1
       lru-cache: 6.0.0
