@@ -7,10 +7,10 @@ import type {
   NextApiRequest,
   NextApiResponse,
 } from "next"
-import type { NextAuthOptions, Session } from ".."
+import type { AuthOptions, Session } from ".."
 import type {
   CallbacksOptions,
-  NextAuthAction,
+  AuthAction,
   NextAuthRequest,
   NextAuthResponse,
 } from "../core/types"
@@ -18,7 +18,7 @@ import type {
 async function NextAuthNextHandler(
   req: NextApiRequest,
   res: NextApiResponse,
-  options: NextAuthOptions
+  options: AuthOptions
 ) {
   const { nextauth, ...query } = req.query
 
@@ -33,7 +33,7 @@ async function NextAuthNextHandler(
       cookies: req.cookies,
       headers: req.headers,
       method: req.method,
-      action: nextauth?.[0] as NextAuthAction,
+      action: nextauth?.[0] as AuthAction,
       providerId: nextauth?.[1],
       error: (req.query.error as string | undefined) ?? nextauth?.[1],
     },
@@ -61,18 +61,16 @@ async function NextAuthNextHandler(
   return res.send(handler.body)
 }
 
-function NextAuth(options: NextAuthOptions): any
+function NextAuth(options: AuthOptions): any
 function NextAuth(
   req: NextApiRequest,
   res: NextApiResponse,
-  options: NextAuthOptions
+  options: AuthOptions
 ): any
 
 /** The main entry point to next-auth */
 function NextAuth(
-  ...args:
-    | [NextAuthOptions]
-    | [NextApiRequest, NextApiResponse, NextAuthOptions]
+  ...args: [AuthOptions] | [NextApiRequest, NextApiResponse, AuthOptions]
 ) {
   if (args.length === 1) {
     return async (req: NextAuthRequest, res: NextAuthResponse) =>
@@ -87,8 +85,8 @@ export default NextAuth
 let experimentalWarningShown = false
 let experimentalRSCWarningShown = false
 
-type GetServerSessionOptions = Partial<Omit<NextAuthOptions, "callbacks">> & {
-  callbacks?: Omit<NextAuthOptions["callbacks"], "session"> & {
+type GetServerSessionOptions = Partial<Omit<AuthOptions, "callbacks">> & {
+  callbacks?: Omit<AuthOptions["callbacks"], "session"> & {
     session?: (...args: Parameters<CallbacksOptions["session"]>) => any
   }
 }
@@ -130,7 +128,7 @@ export async function unstable_getServerSession<
     experimentalRSCWarningShown = true
   }
 
-  let req, res, options: NextAuthOptions
+  let req, res, options: AuthOptions
   if (isRSC) {
     options = Object.assign({}, args[0], { providers: [] })
 

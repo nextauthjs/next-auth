@@ -6,7 +6,7 @@ import { init } from "./init"
 import { assertConfig } from "./lib/assert"
 import { SessionStore } from "./lib/cookie"
 
-import type { NextAuthAction, NextAuthOptions } from "./types"
+import type { AuthAction, AuthOptions } from "./types"
 import type { Cookie } from "./lib/cookie"
 import type { ErrorType } from "./pages/error"
 import { parse as parseCookie } from "cookie"
@@ -19,7 +19,7 @@ export interface RequestInternal {
   headers?: Record<string, any>
   query?: Record<string, any>
   body?: Record<string, any>
-  action: NextAuthAction
+  action: AuthAction
   providerId?: string
   error?: string
 }
@@ -29,7 +29,7 @@ export interface NextAuthHeader {
   value: string
 }
 
-export interface OutgoingResponse<
+export interface ResponseInternal<
   Body extends string | Record<string, any> | any[] = any
 > {
   status?: number
@@ -41,7 +41,7 @@ export interface OutgoingResponse<
 
 export interface NextAuthHandlerParams {
   req: Request | RequestInternal
-  options: NextAuthOptions
+  options: AuthOptions
 }
 
 async function getBody(req: Request): Promise<Record<string, any> | undefined> {
@@ -63,7 +63,7 @@ async function toInternalRequest(
     query.nextauth = nextauth
 
     return {
-      action: nextauth[0] as NextAuthAction,
+      action: nextauth[0] as AuthAction,
       method: req.method,
       headers,
       body: await getBody(req),
@@ -79,7 +79,7 @@ async function toInternalRequest(
 
 export async function NextAuthHandler<
   Body extends string | Record<string, any> | any[]
->(params: NextAuthHandlerParams): Promise<OutgoingResponse<Body>> {
+>(params: NextAuthHandlerParams): Promise<ResponseInternal<Body>> {
   const { options: userOptions, req: incomingRequest } = params
 
   const req = await toInternalRequest(incomingRequest)

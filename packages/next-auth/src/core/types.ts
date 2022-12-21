@@ -5,7 +5,7 @@ import type {
   ProviderType,
   EmailConfig,
   CredentialsConfig,
-  InternalOAuthConfig,
+  OAuthConfigInternal,
 } from "../providers"
 import type { TokenSetParameters } from "openid-client"
 import type { JWT, JWTOptions } from "../jwt"
@@ -25,7 +25,7 @@ export type { LoggerInstance }
  *
  * [Documentation](https://next-auth.js.org/configuration/options#options)
  */
-export interface NextAuthOptions {
+export interface AuthOptions {
   /**
    * An array of authentication providers for signing in
    * (e.g. Google, Facebook, Twitter, GitHub, Email, etc) in any order.
@@ -491,7 +491,7 @@ export interface User extends DefaultUser {}
 
 /** @internal */
 export type InternalProvider<T = ProviderType> = (T extends "oauth"
-  ? InternalOAuthConfig<any>
+  ? OAuthConfigInternal<any>
   : T extends "email"
   ? EmailConfig
   : T extends "credentials"
@@ -501,7 +501,7 @@ export type InternalProvider<T = ProviderType> = (T extends "oauth"
   callbackUrl: string
 }
 
-export type NextAuthAction =
+export type AuthAction =
   | "providers"
   | "session"
   | "csrf"
@@ -523,7 +523,7 @@ export interface InternalOptions<
    * @default "http://localhost:3000/api/auth"
    */
   url: InternalUrl
-  action: NextAuthAction
+  action: AuthAction
   provider: InternalProvider<TProviderType>
   csrfToken?: string
   csrfTokenVerified?: boolean
