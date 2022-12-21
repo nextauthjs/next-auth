@@ -1,9 +1,15 @@
 /**
- * ::: warning
- * This module is is not finished yet. The documentation/API is a work in progress and will change.
- * :::
+ * `@authjs/core/jwt` provides functions
+ * to encode and decode {@link https://authjs.dev/concepts/session-strategies#jwt JWT}s
+ * issued and used by Auth.js. It is meant for being used in the app only.
+ * If you need JWT authentication for your API, you should rely on your Identity Provider.
  *
- * @module core/jwt
+ * The JWT created by Auth.js is encrypted using the `A256GCM` algorithm ({@link https://www.rfc-editor.org/rfc/rfc7516 JWE}). by default.
+ * It uses the `AUTH_SECRET` environment variable to dervice a sufficient encryption key.
+ *
+ * @see [RFC7519 - JSON Web Token (JWT)](https://www.rfc-editor.org/rfc/rfc7519)
+ *
+ * @module jwt
  */
 
 import { hkdf } from "@panva/hkdf"
