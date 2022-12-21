@@ -5,7 +5,7 @@ import type {
   ProviderType,
   EmailConfig,
   CredentialsConfig,
-  OAuthConfigInternal,
+  InternalOAuthConfig,
 } from "../providers"
 import type { TokenSetParameters } from "openid-client"
 import type { JWT, JWTOptions } from "../jwt"
@@ -13,6 +13,8 @@ import type { LoggerInstance } from "../utils/logger"
 import type { CookieSerializeOptions } from "cookie"
 
 import type { NextApiRequest, NextApiResponse } from "next"
+
+import type { InternalUrl } from "../utils/parse-url"
 
 export type Awaitable<T> = T | PromiseLike<T>
 
@@ -23,7 +25,7 @@ export type { LoggerInstance }
  *
  * [Documentation](https://next-auth.js.org/configuration/options#options)
  */
-export interface AuthOptions {
+export interface NextAuthOptions {
   /**
    * An array of authentication providers for signing in
    * (e.g. Google, Facebook, Twitter, GitHub, Email, etc) in any order.
@@ -201,16 +203,6 @@ export interface AuthOptions {
    * [Documentation](https://next-auth.js.org/configuration/options#cookies) | [Usage example](https://next-auth.js.org/configuration/options#example)
    */
   cookies?: Partial<CookiesOptions>
-  /**
-   * If set to `true`, NextAuth.js will use either the `x-forwarded-host` or `host` headers,
-   * instead of `NEXTAUTH_URL`
-   * Make sure that reading `x-forwarded-host` on your hosting platform can be trusted.
-   * - ⚠ **This is an advanced option.** Advanced options are passed the same way as basic options,
-   * but **may have complex implications** or side effects.
-   * You should **try to avoid using advanced options** unless you are very comfortable using them.
-   * @default Boolean(process.env.NEXTAUTH_URL ?? process.env.AUTH_TRUST_HOST ?? process.env.VERCEL)
-   */
-  trustHost?: boolean
 }
 
 /**
@@ -499,7 +491,7 @@ export interface User extends DefaultUser {}
 
 /** @internal */
 export type InternalProvider<T = ProviderType> = (T extends "oauth"
-  ? OAuthConfigInternal<any>
+  ? InternalOAuthConfig<any>
   : T extends "email"
   ? EmailConfig
   : T extends "credentials"
@@ -509,7 +501,7 @@ export type InternalProvider<T = ProviderType> = (T extends "oauth"
   callbackUrl: string
 }
 
-export type AuthAction =
+export type NextAuthAction =
   | "providers"
   | "session"
   | "csrf"
@@ -526,8 +518,12 @@ export interface InternalOptions<
   WithVerificationToken = TProviderType extends "email" ? true : false
 > {
   providers: InternalProvider[]
-  url: URL
-  action: AuthAction
+  /**
+   * Parsed from `NEXTAUTH_URL` or `x-forwarded-host` on Vercel.
+   * @default "http://localhost:3000/api/auth"
+   */
+  url: InternalUrl
+  action: NextAuthAction
   provider: InternalProvider<TProviderType>
   csrfToken?: string
   csrfTokenVerified?: boolean

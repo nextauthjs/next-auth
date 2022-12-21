@@ -1,7 +1,7 @@
 import type { IncomingMessage } from "http"
 import type { LoggerInstance, Session } from ".."
 
-export interface AuthClientConfig {
+export interface NextAuthClientConfig {
   baseUrl: string
   basePath: string
   baseUrlServer: string
@@ -31,7 +31,7 @@ export interface CtxOrReq {
  */
 export async function fetchData<T = any>(
   path: string,
-  __NEXTAUTH: AuthClientConfig,
+  __NEXTAUTH: NextAuthClientConfig,
   logger: LoggerInstance,
   { ctx, req = ctx?.req }: CtxOrReq = {}
 ): Promise<T | null> {
@@ -50,7 +50,7 @@ export async function fetchData<T = any>(
   }
 }
 
-export function apiBaseUrl(__NEXTAUTH: AuthClientConfig) {
+export function apiBaseUrl(__NEXTAUTH: NextAuthClientConfig) {
   if (typeof window === "undefined") {
     // Return absolute path when called server side
     return `${__NEXTAUTH.baseUrlServer}${__NEXTAUTH.basePathServer}`

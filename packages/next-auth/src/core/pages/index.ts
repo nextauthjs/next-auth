@@ -6,7 +6,7 @@ import ErrorPage from "./error"
 import css from "../../css"
 
 import type { InternalOptions } from "../types"
-import type { RequestInternal, ResponseInternal } from ".."
+import type { RequestInternal, OutgoingResponse } from ".."
 import type { Cookie } from "../lib/cookie"
 import type { ErrorType } from "./error"
 
@@ -27,11 +27,11 @@ type RenderPageParams = {
 export default function renderPage(params: RenderPageParams) {
   const { url, theme, query, cookies } = params
 
-  function send({ html, title, status }: any): ResponseInternal {
+  function send({ html, title, status }: any): OutgoingResponse {
     return {
       cookies,
       status,
-      headers: { "Content-Type": "text/html" },
+      headers: [{ key: "Content-Type", value: "text/html" }],
       body: `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>${css()}</style><title>${title}</title></head><body class="__next-auth-theme-${
         theme?.colorScheme ?? "auto"
       }"><div class="page">${renderToString(html)}</div></body></html>`,

@@ -1,6 +1,7 @@
 import { randomBytes, randomUUID } from "crypto"
-import { AuthOptions } from ".."
+import { NextAuthOptions } from ".."
 import logger from "../utils/logger"
+import parseUrl from "../utils/parse-url"
 import { adapterErrorHandler, eventsErrorHandler } from "./errors"
 import parseProviders from "./lib/providers"
 import { createSecret } from "./lib/utils"
@@ -12,11 +13,10 @@ import { createCallbackUrl } from "./lib/callback-url"
 import { RequestInternal } from "."
 
 import type { InternalOptions } from "./types"
-import parseUrl from "../utils/parse-url"
 
 interface InitParams {
-  url: URL
-  authOptions: AuthOptions
+  host?: string
+  userOptions: NextAuthOptions
   providerId?: string
   action: InternalOptions["action"]
   /** Callback URL value extracted from the incoming request. */
@@ -30,10 +30,10 @@ interface InitParams {
 
 /** Initialize all internal options and cookies. */
 export async function init({
-  authOptions,
+  userOptions,
   providerId,
   action,
-  url: reqUrl,
+  host,
   cookies: reqCookies,
   callbackUrl: reqCallbackUrl,
   csrfToken: reqCsrfToken,
@@ -42,17 +42,12 @@ export async function init({
   options: InternalOptions
   cookies: cookie.Cookie[]
 }> {
-  // TODO: move this to web.ts
-  const parsed = parseUrl(
-    reqUrl.origin +
-      reqUrl.pathname.replace(`/${action}`, "").replace(`/${providerId}`, "")
-  )
-  const url = new URL(parsed.toString())
+  const url = parseUrl(host)
 
-  const secret = createSecret({ authOptions, url })
+  const secret = createSecret({ userOptions, url })
 
   const { providers, provider } = parseProviders({
-    providers: authOptions.providers,
+    providers: userOptions.providers,
     url,
     providerId,
   })
@@ -71,7 +66,7 @@ export async function init({
       buttonText: "",
     },
     // Custom options override defaults
-    ...authOptions,
+    ...userOptions,
     // These computed settings can have values in userOptions but we override them
     // and are request-specific.
     url,
@@ -80,24 +75,24 @@ export async function init({
     provider,
     cookies: {
       ...cookie.defaultCookies(
-        authOptions.useSecureCookies ?? url.protocol === "https:"
+        userOptions.useSecureCookies ?? url.base.startsWith("https://")
       ),
       // Allow user cookie options to override any cookie settings above
-      ...authOptions.cookies,
+      ...userOptions.cookies,
     },
     secret,
     providers,
     // Session options
     session: {
       // If no adapter specified, force use of JSON Web Tokens (stateless)
-      strategy: authOptions.adapter ? "database" : "jwt",
+      strategy: userOptions.adapter ? "database" : "jwt",
       maxAge,
       updateAge: 24 * 60 * 60,
       generateSessionToken: () => {
         // Use `randomUUID` if available. (Node 15.6+)
         return randomUUID?.() ?? randomBytes(32).toString("hex")
       },
-      ...authOptions.session,
+      ...userOptions.session,
     },
     // JWT options
     jwt: {
@@ -105,13 +100,13 @@ export async function init({
       maxAge, // same as session maxAge,
       encode: jwt.encode,
       decode: jwt.decode,
-      ...authOptions.jwt,
+      ...userOptions.jwt,
     },
     // Event messages
-    events: eventsErrorHandler(authOptions.events ?? {}, logger),
-    adapter: adapterErrorHandler(authOptions.adapter, logger),
+    events: eventsErrorHandler(userOptions.events ?? {}, logger),
+    adapter: adapterErrorHandler(userOptions.adapter, logger),
     // Callback functions
-    callbacks: { ...defaultCallbacks, ...authOptions.callbacks },
+    callbacks: { ...defaultCallbacks, ...userOptions.callbacks },
     logger,
     callbackUrl: url.origin,
   }

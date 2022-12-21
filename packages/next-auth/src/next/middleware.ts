@@ -1,22 +1,11 @@
 import type { NextMiddleware, NextFetchEvent } from "next/server"
-import type { Awaitable, CookieOption, AuthOptions } from ".."
+import type { Awaitable, CookieOption, NextAuthOptions } from ".."
 import type { JWT, JWTOptions } from "../jwt"
 
 import { NextResponse, NextRequest } from "next/server"
 
 import { getToken } from "../jwt"
 import parseUrl from "../utils/parse-url"
-
-// // TODO: Remove
-/** Extract the host from the environment */
-export function detectHost(
-  trusted: boolean,
-  forwardedValue: string | null,
-  defaultValue: string | false
-): string | undefined {
-  if (trusted && forwardedValue) return forwardedValue
-  return defaultValue || undefined
-}
 
 type AuthorizedCallback = (params: {
   token: JWT | null
@@ -31,7 +20,7 @@ export interface NextAuthMiddlewareOptions {
    * ---
    * [Documentation](https://next-auth.js.org/configuration/pages)
    */
-  pages?: AuthOptions["pages"]
+  pages?: NextAuthOptions["pages"]
 
   /**
    * You can override the default cookie names and options for any of the cookies
@@ -49,7 +38,7 @@ export interface NextAuthMiddlewareOptions {
    */
   cookies?: Partial<
     Record<
-      keyof Pick<keyof AuthOptions["cookies"], "sessionToken">,
+      keyof Pick<keyof NextAuthOptions["cookies"], "sessionToken">,
       Omit<CookieOption, "options">
     >
   >
@@ -67,7 +56,7 @@ export interface NextAuthMiddlewareOptions {
      * Callback that receives the user's JWT payload
      * and returns `true` to allow the user to continue.
      *
-     * This is similar to the `signIn` callback in `AuthOptions`.
+     * This is similar to the `signIn` callback in `NextAuthOptions`.
      *
      * If it returns `false`, the user is redirected to the sign-in page instead
      *
@@ -100,43 +89,23 @@ export interface NextAuthMiddlewareOptions {
    * The same `secret` used in the `NextAuth` configuration.
    * Defaults to the `NEXTAUTH_SECRET` environment variable.
    */
-  secret?: AuthOptions["secret"]
-  /**
-   * If set to `true`, NextAuth.js will use either the `x-forwarded-host` or `host` headers,
-   * instead of `NEXTAUTH_URL`
-   * Make sure that reading `x-forwarded-host` on your hosting platform can be trusted.
-   * - ⚠ **This is an advanced option.** Advanced options are passed the same way as basic options,
-   * but **may have complex implications** or side effects.
-   * You should **try to avoid using advanced options** unless you are very comfortable using them.
-   * @default Boolean(process.env.VERCEL ?? process.env.AUTH_TRUST_HOST)
-   */
-  trustHost?: AuthOptions["trustHost"]
+  secret?: string
 }
+
+// TODO: `NextMiddleware` should allow returning `void`
+// Simplify when https://github.com/vercel/next.js/pull/38625 is merged.
+type NextMiddlewareResult = ReturnType<NextMiddleware> | void // eslint-disable-line @typescript-eslint/no-invalid-void-type
 
 async function handleMiddleware(
   req: NextRequest,
-  options: NextAuthMiddlewareOptions | undefined = {},
-  onSuccess?: (token: JWT | null) => ReturnType<NextMiddleware>
+  options: NextAuthMiddlewareOptions | undefined,
+  onSuccess?: (token: JWT | null) => Promise<NextMiddlewareResult>
 ) {
   const { pathname, search, origin, basePath } = req.nextUrl
 
   const signInPage = options?.pages?.signIn ?? "/api/auth/signin"
   const errorPage = options?.pages?.error ?? "/api/auth/error"
-
-  options.trustHost ??= !!(
-    process.env.NEXTAUTH_URL ??
-    process.env.VERCEL ??
-    process.env.AUTH_TRUST_HOST
-  )
-
-  const host = detectHost(
-    options.trustHost,
-    req.headers?.get("x-forwarded-host"),
-    process.env.NEXTAUTH_URL ??
-      (process.env.NODE_ENV !== "production" && "http://localhost:3000")
-  )
-  const authPath = parseUrl(host).path
-
+  const authPath = parseUrl(process.env.NEXTAUTH_URL).path
   const publicPaths = ["/_next", "/favicon.ico"]
 
   // Avoid infinite redirects/invalid response
@@ -149,8 +118,8 @@ async function handleMiddleware(
     return
   }
 
-  options.secret ??= process.env.NEXTAUTH_SECRET
-  if (!options.secret) {
+  const secret = options?.secret ?? process.env.NEXTAUTH_SECRET
+  if (!secret) {
     console.error(
       `[next-auth][error][NO_SECRET]`,
       `\nhttps://next-auth.js.org/errors#no_secret`
@@ -164,9 +133,9 @@ async function handleMiddleware(
 
   const token = await getToken({
     req,
-    decode: options.jwt?.decode,
+    decode: options?.jwt?.decode,
     cookieName: options?.cookies?.sessionToken?.name,
-    secret: options.secret,
+    secret,
   })
 
   const isAuthorized =
@@ -177,10 +146,7 @@ async function handleMiddleware(
 
   // the user is not logged in, redirect to the sign-in page
   const signInUrl = new URL(`${basePath}${signInPage}`, origin)
-  signInUrl.searchParams.append(
-    "callbackUrl",
-    `${basePath}${pathname}${search}`
-  )
+  signInUrl.searchParams.append("callbackUrl", `${basePath}${pathname}${search}`)
   return NextResponse.redirect(signInUrl)
 }
 
@@ -191,7 +157,7 @@ export interface NextRequestWithAuth extends NextRequest {
 export type NextMiddlewareWithAuth = (
   request: NextRequestWithAuth,
   event: NextFetchEvent
-) => ReturnType<NextMiddleware>
+) => NextMiddlewareResult | Promise<NextMiddlewareResult>
 
 export type WithAuthArgs =
   | [NextRequestWithAuth]

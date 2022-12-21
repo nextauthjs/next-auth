@@ -2,10 +2,11 @@ import { merge } from "../../utils/merge"
 
 import type { InternalProvider } from "../types"
 import type {
-  OAuthConfigInternal,
+  InternalOAuthConfig,
   OAuthConfig,
   Provider,
 } from "../../providers"
+import type { InternalUrl } from "../../utils/parse-url"
 
 /**
  * Adds `signinUrl` and `callbackUrl` to each provider
@@ -13,7 +14,7 @@ import type {
  */
 export default function parseProviders(params: {
   providers: Provider[]
-  url: URL
+  url: InternalUrl
   providerId?: string
 }): {
   providers: InternalProvider[]
@@ -58,7 +59,7 @@ function normalizeOAuthOptions(
   if (!oauthOptions) return
 
   const normalized = Object.entries(oauthOptions).reduce<
-    OAuthConfigInternal<Record<string, unknown>>
+    InternalOAuthConfig<Record<string, unknown>>
   >(
     (acc, [key, value]) => {
       if (

@@ -160,7 +160,7 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
 }
 
 /** @internal */
-export interface OAuthConfigInternal<P>
+export interface InternalOAuthConfig<P>
   extends Omit<OAuthConfig<P>, "authorization" | "token" | "userinfo"> {
   authorization?: AuthorizationEndpointHandler
   token?: TokenEndpointHandler
