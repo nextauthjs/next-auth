@@ -1,3 +1,13 @@
+const fs = require("fs")
+const path = require("path")
+
+// list providers entries from @auth/core/providers/*.ts
+const coreSrc = "../packages/core/src"
+const providers = fs
+  .readdirSync(path.join(__dirname, coreSrc, "/providers"))
+  .filter((file) => file.endsWith(".ts") && !file.startsWith("oauth"))
+  .map((p) => `${coreSrc}/providers/${p}`)
+
 const typedocConfig = require("./typedoc.json")
 delete typedocConfig.$schema
 
@@ -192,17 +202,9 @@ module.exports = {
       {
         ...typedocConfig,
         plugin: ["./tyepdoc"],
-        entryPoints: [
-          "../packages/core/src/index.ts",
-          "../packages/core/src/adapters.ts",
-          "../packages/core/src/providers/index.ts",
-          "../packages/core/src/providers/github.ts",
-          "../packages/core/src/providers/spotify.ts",
-          "../packages/core/src/providers/email.ts",
-          "../packages/core/src/providers/credentials.ts",
-          "../packages/core/src/jwt/index.ts",
-          "../packages/core/src/lib/types.ts",
-        ],
+        entryPoints: ["index.ts", "adapters.ts", "jwt.ts", "lib/types.ts"]
+          .map((e) => `${coreSrc}/${e}`)
+          .concat(providers),
         tsconfig: "../packages/core/tsconfig.json",
         out: "reference/03-core",
         watch: process.env.TYPEDOC_WATCH,

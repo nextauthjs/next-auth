@@ -19,7 +19,7 @@ import type {
   OAuth2TokenEndpointResponse,
   OpenIDTokenEndpointResponse,
 } from "oauth4webapi"
-import type { JWT, JWTOptions } from "../jwt/types.js"
+import type { JWT, JWTOptions } from "../jwt.js"
 import type { Cookie } from "./cookie.js"
 import type { LoggerInstance } from "./utils/logger.js"
 
