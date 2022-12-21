@@ -1,7 +1,8 @@
 import { Theme } from "../.."
+import { InternalUrl } from "../../utils/parse-url"
 
 export interface SignoutProps {
-  url: URL
+  url: InternalUrl
   csrfToken: string
   theme: Theme
 }

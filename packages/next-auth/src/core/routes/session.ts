@@ -31,7 +31,7 @@ export default async function session(
 
   const response: ResponseInternal<Session | {}> = {
     body: {},
-    headers: { "Content-Type": "application/json" },
+    headers: [{ key: "Content-Type", value: "application/json" }],
     cookies: [],
   }
 

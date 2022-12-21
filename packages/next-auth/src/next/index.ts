@@ -1,5 +1,6 @@
 import { AuthHandler } from "../core"
-import { getBody, getURL, setHeaders } from "../utils/node"
+import { detectHost } from "../utils/detect-host"
+import { setCookie } from "./utils"
 
 import type {
   GetServerSidePropsContext,
@@ -9,6 +10,7 @@ import type {
 import type { AuthOptions, Session } from ".."
 import type {
   CallbacksOptions,
+  AuthAction,
   NextAuthRequest,
   NextAuthResponse,
 } from "../core/types"
@@ -18,38 +20,45 @@ async function NextAuthHandler(
   res: NextApiResponse,
   options: AuthOptions
 ) {
-  const headers = new Headers(req.headers as any)
-  const url = getURL(req.url, headers)
-  if (url instanceof Error) {
-    if (process.env.NODE_ENV !== "production") throw url
-    const errorLogger = options.logger?.error ?? console.error
-    errorLogger("INVALID_URL", url)
-    res.status(400)
-    return res.json({
-      message:
-        "There is a problem with the server configuration. Check the server logs for more information.",
-    })
-  }
+  const { nextauth, ...query } = req.query
 
-  const request = new Request(url, {
-    headers,
-    method: req.method,
-    ...getBody(req),
+  options.secret =
+    options.secret ?? options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
+
+  const handler = await AuthHandler({
+    req: {
+      host: detectHost(req.headers["x-forwarded-host"]),
+      body: req.body,
+      query,
+      cookies: req.cookies,
+      headers: req.headers,
+      method: req.method,
+      action: nextauth?.[0] as AuthAction,
+      providerId: nextauth?.[1],
+      error: (req.query.error as string | undefined) ?? nextauth?.[1],
+    },
+    options,
   })
 
-  options.secret ??= options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
-  options.trustHost ??= !!(
-    process.env.NEXTAUTH_URL ??
-    process.env.AUTH_TRUST_HOST ??
-    process.env.VERCEL ??
-    process.env.NODE_ENV !== "production"
-  )
+  res.status(handler.status ?? 200)
 
-  const response = await AuthHandler(request, options)
-  res.status(response.status)
-  setHeaders(response.headers, res)
+  handler.cookies?.forEach((cookie) => setCookie(res, cookie))
 
-  return res.send(await response.text())
+  handler.headers?.forEach((h) => res.setHeader(h.key, h.value))
+
+  if (handler.redirect) {
+    // If the request expects a return URL, send it as JSON
+    // instead of doing an actual redirect.
+    if (req.body?.json !== "true") {
+      // Could chain. .end() when lowest target is Node 14
+      // https://github.com/nodejs/node/issues/33148
+      res.status(302).setHeader("Location", handler.redirect)
+      return res.end()
+    }
+    return res.json({ url: handler.redirect })
+  }
+
+  return res.send(handler.body)
 }
 
 function NextAuth(options: AuthOptions): any
@@ -140,39 +149,41 @@ export async function unstable_getServerSession<
     options = Object.assign({}, args[2], { providers: [] })
   }
 
-  const url = getURL("/api/auth/session", new Headers(req.headers))
-  if (url instanceof Error) {
-    if (process.env.NODE_ENV !== "production") throw url
-    const errorLogger = options.logger?.error ?? console.error
-    errorLogger("INVALID_URL", url)
-    res.status(400)
-    return res.json({
-      message:
-        "There is a problem with the server configuration. Check the server logs for more information.",
-    })
+  options.secret = options.secret ?? process.env.NEXTAUTH_SECRET
+
+  const session = await AuthHandler<Session | {} | string>({
+    options,
+    req: {
+      host: detectHost(req.headers["x-forwarded-host"]),
+      action: "session",
+      method: "GET",
+      cookies: req.cookies,
+      headers: req.headers,
+    },
+  })
+
+  const { body, cookies, status = 200 } = session
+
+  cookies?.forEach((cookie) => setCookie(res, cookie))
+
+  if (body && typeof body !== "string" && Object.keys(body).length) {
+    if (status === 200) {
+      // @ts-expect-error
+      if (isRSC) delete body.expires
+      return body as R
+    }
+    throw new Error((body as any).message)
   }
 
-  const request = new Request(url, { headers: new Headers(req.headers) })
+  return null
+}
 
-  options.secret ??= process.env.NEXTAUTH_SECRET
-  options.trustHost = true
-  const response = await AuthHandler(request, options)
-
-  const { status = 200, headers } = response
-
-  setHeaders(headers, res)
-
-  // This would otherwise break rendering
-  // with `getServerSideProps` that needs to always return HTML
-  res.removeHeader?.("Content-Type")
-
-  const data = await response.json()
-
-  if (!data || !Object.keys(data).length) return null
-
-  if (status === 200) {
-    if (isRSC) delete data.expires
-    return data as R
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace NodeJS {
+    interface ProcessEnv {
+      NEXTAUTH_URL?: string
+      VERCEL?: "1"
+    }
   }
-  throw new Error(data.message)
 }

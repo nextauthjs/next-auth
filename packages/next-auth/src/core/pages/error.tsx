@@ -1,4 +1,5 @@
 import { Theme } from "../.."
+import { InternalUrl } from "../../utils/parse-url"
 
 /**
  * The following errors are passed as error query parameters to the default or overridden error page.
@@ -11,7 +12,7 @@ export type ErrorType =
   | "verification"
 
 export interface ErrorProps {
-  url?: URL
+  url?: InternalUrl
   theme?: Theme
   error?: ErrorType
 }

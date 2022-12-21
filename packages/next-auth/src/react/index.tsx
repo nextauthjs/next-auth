@@ -124,8 +124,7 @@ export function useSession<R extends boolean>(options?: UseSessionOptions<R>) {
 
   React.useEffect(() => {
     if (requiredAndNotLoading) {
-      const baseUrl = apiBaseUrl(__NEXTAUTH)
-      const url = `${baseUrl}/signin?${new URLSearchParams({
+      const url = `/api/auth/signin?${new URLSearchParams({
         error: "SessionRequired",
         callbackUrl: window.location.href,
       })}`
@@ -242,13 +241,13 @@ export async function signIn<
     method: "post",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
-      "X-Auth-Return-Redirect": "1",
     },
     // @ts-expect-error
     body: new URLSearchParams({
       ...options,
       csrfToken: await getCsrfToken(),
       callbackUrl,
+      json: true,
     }),
   })
 
@@ -292,11 +291,12 @@ export async function signOut<R extends boolean = true>(
     method: "post",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
-      "X-Auth-Return-Redirect": "1",
     },
+    // @ts-expect-error
     body: new URLSearchParams({
-      csrfToken: (await getCsrfToken()) ?? "",
+      csrfToken: await getCsrfToken(),
       callbackUrl,
+      json: true,
     }),
   }
   const res = await fetch(`${baseUrl}/signout`, fetchOptions)

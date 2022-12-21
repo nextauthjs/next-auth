@@ -14,6 +14,8 @@ import type { CookieSerializeOptions } from "cookie"
 
 import type { NextApiRequest, NextApiResponse } from "next"
 
+import type { InternalUrl } from "../utils/parse-url"
+
 export type Awaitable<T> = T | PromiseLike<T>
 
 export type { LoggerInstance }
@@ -201,16 +203,6 @@ export interface AuthOptions {
    * [Documentation](https://next-auth.js.org/configuration/options#cookies) | [Usage example](https://next-auth.js.org/configuration/options#example)
    */
   cookies?: Partial<CookiesOptions>
-  /**
-   * If set to `true`, NextAuth.js will use either the `x-forwarded-host` or `host` headers,
-   * instead of `NEXTAUTH_URL`
-   * Make sure that reading `x-forwarded-host` on your hosting platform can be trusted.
-   * - ⚠ **This is an advanced option.** Advanced options are passed the same way as basic options,
-   * but **may have complex implications** or side effects.
-   * You should **try to avoid using advanced options** unless you are very comfortable using them.
-   * @default Boolean(process.env.NEXTAUTH_URL ?? process.env.AUTH_TRUST_HOST ?? process.env.VERCEL)
-   */
-  trustHost?: boolean
 }
 
 /**
@@ -526,7 +518,11 @@ export interface InternalOptions<
   WithVerificationToken = TProviderType extends "email" ? true : false
 > {
   providers: InternalProvider[]
-  url: URL
+  /**
+   * Parsed from `NEXTAUTH_URL` or `x-forwarded-host` on Vercel.
+   * @default "http://localhost:3000/api/auth"
+   */
+  url: InternalUrl
   action: AuthAction
   provider: InternalProvider<TProviderType>
   csrfToken?: string

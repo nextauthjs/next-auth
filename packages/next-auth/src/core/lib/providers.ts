@@ -6,6 +6,7 @@ import type {
   OAuthConfig,
   Provider,
 } from "../../providers"
+import type { InternalUrl } from "../../utils/parse-url"
 
 /**
  * Adds `signinUrl` and `callbackUrl` to each provider
@@ -13,7 +14,7 @@ import type {
  */
 export default function parseProviders(params: {
   providers: Provider[]
-  url: URL
+  url: InternalUrl
   providerId?: string
 }): {
   providers: InternalProvider[]

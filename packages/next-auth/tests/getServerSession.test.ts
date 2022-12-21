@@ -1,7 +1,7 @@
 import * as core from "../src/core"
 import { MissingSecret } from "../src/core/errors"
 import { unstable_getServerSession } from "../src/next"
-import { mockLogger } from "./utils"
+import { mockLogger } from "./lib"
 
 const originalWarn = console.warn
 let logger = mockLogger()
@@ -84,8 +84,8 @@ describe("Return correct data", () => {
 
   it("Should return null if there is no session", async () => {
     const spy = jest.spyOn(core, "AuthHandler")
-    // @ts-expect-error [Response.json](https://developer.mozilla.org/en-US/docs/Web/API/Response/json)
-    spy.mockReturnValue(Promise.resolve(Response.json(null)))
+    // @ts-expect-error
+    spy.mockReturnValue({ body: {} })
 
     const session = await unstable_getServerSession(req, res, {
       providers: [],
@@ -97,19 +97,21 @@ describe("Return correct data", () => {
   })
 
   it("Should return the session if one is found", async () => {
-    const mockedBody = {
-      user: {
-        name: "John Doe",
-        email: "test@example.com",
-        image: "",
-        id: "1234",
+    const mockedResponse = {
+      body: {
+        user: {
+          name: "John Doe",
+          email: "test@example.com",
+          image: "",
+          id: "1234",
+        },
+        expires: "",
       },
-      expires: "",
     }
 
     const spy = jest.spyOn(core, "AuthHandler")
-    // @ts-expect-error [Response.json](https://developer.mozilla.org/en-US/docs/Web/API/Response/json)
-    spy.mockReturnValue(Promise.resolve(Response.json(mockedBody)))
+    // @ts-expect-error
+    spy.mockReturnValue(mockedResponse)
 
     const session = await unstable_getServerSession(req, res, {
       providers: [],
@@ -117,6 +119,6 @@ describe("Return correct data", () => {
       secret: "secret",
     })
 
-    expect(session).toEqual(mockedBody)
+    expect(session).toEqual(mockedResponse.body)
   })
 })
