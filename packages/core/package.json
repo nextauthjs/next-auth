@@ -17,7 +17,7 @@
   "files": [
     "adapters.*",
     "index.*",
-    "jwt",
+    "jwt.*",
     "lib",
     "providers",
     "src"
@@ -31,8 +31,8 @@
       "types": "./adapters.d.ts"
     },
     "./jwt": {
-      "types": "./jwt/index.d.ts",
-      "import": "./jwt/index.js"
+      "types": "./jwt.d.ts",
+      "import": "./jwt.js"
     },
     "./providers": {
       "types": "./providers/index.d.ts"

@@ -277,11 +277,12 @@ html[data-theme="dark"] #carbonads .carbon-poweredby {
 
 
 /* 
-  This is a hack to hide the "Reflection" category from the sidebar.
-  This is because otherwise opening any page under the "Reflection" category
-  would hide the entire sidebar.
+  This is a hack to hide the "Reflection" category and "main" module from the sidebar.
+  This is because:
+  1. opening any page under the "Reflection" category would hide the entire sidebar.
+  2. the "main" module would show up twice.
   See sidebars.js
 */
-.reflection-category {
+.reflection-category, .theme-doc-sidebar-item-link-level-2 [href="/reference/core/modules/main"] {
   display: none;
 }
