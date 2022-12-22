@@ -1,5 +1,5 @@
 import emailSignin from "../email/signin.js"
-import { SignInError } from "../errors.js"
+import { SignInError } from "../../errors.js"
 import { getAuthorizationUrl } from "../oauth/authorization-url.js"
 import { getAdapterUserFromEmail, handleAuthorized } from "./shared.js"
 

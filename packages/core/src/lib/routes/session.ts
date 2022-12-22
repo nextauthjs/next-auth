@@ -1,4 +1,4 @@
-import { JWTSessionError, SessionTokenError } from "../errors.js"
+import { JWTSessionError, SessionTokenError } from "../../errors.js"
 import { fromDate } from "../utils/date.js"
 
 import type { Adapter } from "../../adapters.js"

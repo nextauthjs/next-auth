@@ -1,5 +1,5 @@
 import { SessionStore } from "./cookie.js"
-import { UnknownAction } from "./errors.js"
+import { UnknownAction } from "../errors.js"
 import { init } from "./init.js"
 import renderPage from "./pages/index.js"
 import * as routes from "./routes/index.js"

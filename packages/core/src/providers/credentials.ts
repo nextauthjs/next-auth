@@ -12,7 +12,7 @@ export interface CredentialInput
   label?: string
 }
 
-/** TODO: */
+/** The Credentials Provider needs to be configured. */
 export interface CredentialsConfig<
   CredentialsInputs extends Record<string, CredentialInput> = Record<
     string,
@@ -24,18 +24,26 @@ export interface CredentialsConfig<
   /**
    * Gives full control over how you handle the credentials received from the user.
    *
-   * :::warning **NOTE**
-   *
-   * There is no validation on the inputs, so make sure you do so.
-   *
+   * :::warning
+   * There is no validation on the user inputs by default, so make sure you do so
+   * by a popular library like [Zod](https://zod.dev)
    * :::
    *
+   * @example
+   * ```ts
+   * //...
+   * async authorize(, request) {
+   *   const response = await fetch(request)
+   *   if(!response.ok) return null
+   *   return await response.json() ?? null
+   * }
+   * //...
    */
   authorize: (
     /** See {@link CredentialInput} */
     credentials: Record<keyof CredentialsInputs, string> | undefined,
-    /** @todo Return the original `Request` as is. */
-    request: Pick<RequestInternal, "body" | "query" | "headers" | "method">
+    /** The original request is forward for convenience */
+    request: Request
   ) => Awaitable<User | null>
 }
 
@@ -96,7 +104,7 @@ export default function Credentials<
     string,
     CredentialInput
   >
->(config: CredentialsConfig<CredentialsInputs>): CredentialsConfig {
+>(config: Partial<CredentialsConfig<CredentialsInputs>>): CredentialsConfig {
   return {
     id: "credentials",
     name: "Credentials",

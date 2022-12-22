@@ -15,10 +15,8 @@
   "type": "module",
   "types": "./index.d.ts",
   "files": [
-    "adapters.*",
-    "index.*",
-    "jwt.*",
-    "types.*",
+    "*.js",
+    "*.d.ts",
     "lib",
     "providers",
     "src"
@@ -30,6 +28,10 @@
     },
     "./adapters": {
       "types": "./adapters.d.ts"
+    },
+    "./errors": {
+      "import": "./errors.js",
+      "types": "./errors.d.ts"
     },
     "./jwt": {
       "types": "./jwt.d.ts",
@@ -65,7 +67,7 @@
   },
   "scripts": {
     "build": "pnpm clean && pnpm css && tsc",
-    "clean": "rm -rf adapters.* index.* jwt.* types.* lib providers",
+    "clean": "rm -rf *.js *.d.ts lib providers",
     "css": "node ./scripts/generate-css.js",
     "lint": "pnpm prettier --check src && eslint src",
     "format": "pnpm lint --fix",

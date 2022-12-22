@@ -33,7 +33,7 @@
  */
 
 import { assertConfig } from "./lib/assert.js"
-import { ErrorPageLoop } from "./lib/errors.js"
+import { ErrorPageLoop } from "./errors.js"
 import { AuthInternal } from "./lib/index.js"
 import renderPage from "./lib/pages/index.js"
 import { logger, setLogger, type LoggerInstance } from "./lib/utils/logger.js"

@@ -1,5 +1,5 @@
 import * as o from "oauth4webapi"
-import { OAuthCallbackError, OAuthProfileParseError } from "../errors.js"
+import { OAuthCallbackError, OAuthProfileParseError } from "../../errors.js"
 import { useNonce } from "./nonce-handler.js"
 import { usePKCECodeVerifier } from "./pkce-handler.js"
 import { useState } from "./state-handler.js"

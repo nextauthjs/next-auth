@@ -1,5 +1,5 @@
 import { handleLogin } from "../callback-handler.js"
-import { CallbackRouteError } from "../errors.js"
+import { CallbackRouteError } from "../../errors.js"
 import { handleOAuth } from "../oauth/callback.js"
 import { createHash } from "../web.js"
 import { handleAuthorized } from "./shared.js"
@@ -249,13 +249,16 @@ export async function callback(params: {
       const credentials = body
 
       let user: User | null
+
       try {
-        user = await provider.authorize(credentials, {
-          query,
-          body,
-          headers,
-          method,
-        })
+        // TODO: Forward the original request as is, instead of reconstructing it
+        // prettier-ignore
+        Object.entries(query ?? {}).forEach(([k, v]) => url.searchParams.set(k, v))
+        user = await provider.authorize(
+          credentials,
+          // prettier-ignore
+          new Request(url, { headers, method, body: JSON.stringify(body) })
+        )
         if (!user) {
           return {
             status: 401,

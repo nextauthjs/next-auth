@@ -1,4 +1,4 @@
-import { AuthError } from "../errors.js"
+import { AuthError } from "../../errors.js"
 
 export type WarningCode = "debug_enabled"
 

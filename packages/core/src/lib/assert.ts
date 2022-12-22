@@ -8,7 +8,7 @@ import {
   MissingSecret,
   UnsupportedStrategy,
   UntrustedHost,
-} from "./errors.js"
+} from "../errors.js"
 
 import type { AuthConfig, RequestInternal } from "../types.js"
 import type { WarningCode } from "./utils/logger.js"

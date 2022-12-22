@@ -1,7 +1,7 @@
 import * as o from "oauth4webapi"
 import type { InternalOptions, RequestInternal } from "../../types.js"
 import type { Cookie } from "../cookie.js"
-import { InvalidState } from "../errors.js"
+import { InvalidState } from "../../errors.js"
 
 const STATE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 

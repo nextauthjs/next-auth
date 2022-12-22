@@ -1,4 +1,4 @@
-import { AccountNotLinked } from "./errors.js"
+import { AccountNotLinked } from "../errors.js"
 import { fromDate } from "./utils/date.js"
 
 import type { AdapterSession, AdapterUser } from "../adapters.js"

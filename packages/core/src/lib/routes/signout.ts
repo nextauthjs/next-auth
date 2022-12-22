@@ -1,4 +1,4 @@
-import { SignOutError } from "../errors.js"
+import { SignOutError } from "../../errors.js"
 
 import type { InternalOptions, ResponseInternal } from "../../types.js"
 import type { SessionStore } from "../cookie.js"
