@@ -1,4 +1,4 @@
-import type { InternalProvider, ResponseInternal } from "../../index.js"
+import type { InternalProvider, ResponseInternal } from "../../types.js"
 
 export interface PublicProvider {
   id: string

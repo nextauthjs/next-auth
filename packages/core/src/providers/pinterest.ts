@@ -1,4 +1,4 @@
-import { OAuthConfig, OAuthUserConfig } from "./index.js"
+import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 export interface PinterestProfile extends Record<string, any> {
   account_type: "BUSINESS" | "PINNER"

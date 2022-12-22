@@ -17,7 +17,8 @@ export interface SpotifyProfile extends Record<string, any> {
  * ## Example
  *
  * @example
- * ```js
+ *
+ * ```ts
  * import Auth from "@auth/core"
  * import { Spotify } from "@auth/core/providers/spotify"
  *

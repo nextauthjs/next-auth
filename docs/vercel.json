@@ -1,4 +1,5 @@
 {
+  "cleanUrls": true,
   "headers": [
     {
       "source": "/(.*)",
@@ -50,6 +51,16 @@
       "permanent": true
     },
     {
+      "source": "/new/provider-issue",
+      "destination": "https://github.com/nextauthjs/next-auth/issues/new?assignees=&labels=triage%2Cproviders&template=2_bug_provider.yml",
+      "permanent": true
+    },
+    {
+      "source": "/new/github-discussions",
+      "destination": "https://github.com/nextauthjs/next-auth/discussions/categories/questions",
+      "permanent": true
+    },
+    {
       "source": "/",
       "has": [
         {
@@ -67,7 +78,7 @@
           "value": "errors.authjs.dev"
         }
       ],
-      "destination": "https://authjs.dev/reference/errors/:path*"
+      "destination": "https://authjs.dev/reference/core/modules/errors/:path*"
     },
     {
       "source": "/:path(.*)",
