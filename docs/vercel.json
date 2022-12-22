@@ -89,6 +89,16 @@
         }
       ],
       "destination": "https://authjs.dev/reference/warnings/:path*"
+    },
+    {
+      "source": "/:path(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "adapters.authjs.dev"
+        }
+      ],
+      "destination": "https://authjs.dev/reference/adapters/:path*"
     }
   ]
 }
