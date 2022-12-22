@@ -67,7 +67,6 @@ Optimum indexes will vary on your edition of Neo4j i.e. community or enterprise,
 #### Neo4j v5
 
 ```cypher
-
 CREATE CONSTRAINT user_id_constraint IF NOT EXISTS
 FOR (u:User) REQUIRE u.id IS UNIQUE;
 
@@ -87,7 +86,6 @@ FOR (s:Session) ON (s.sessionToken);
 #### Neo4j v4 and below
 
 ```cypher
-
 CREATE CONSTRAINT user_id_constraint IF NOT EXISTS
 ON (u:User) ASSERT u.id IS UNIQUE;
 
