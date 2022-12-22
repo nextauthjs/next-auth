@@ -1,4 +1,4 @@
-import type { OAuthConfig, OAuthUserConfig } from "./oauth"
+import type { OAuthConfig, OAuthUserConfig } from "./oauth.js"
 
 export interface DuendeISUser extends Record<string, any> {
   email: string

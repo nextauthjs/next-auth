@@ -3,6 +3,11 @@ lockfileVersion: 5.4
 overrides:
   undici: 5.11.0
 
+patchedDependencies:
+  typedoc-plugin-markdown@3.14.0:
+    hash: p7xjg2asbi3h7h4efxnoor54kq
+    path: patches/typedoc-plugin-markdown@3.14.0.patch
+
 importers:
 
   .:
@@ -54,7 +59,7 @@ importers:
       ts-node: 10.5.0_ksn4eycaeggbrckn3ykh37hwf4
       turbo: 1.3.1
       typedoc: 0.23.22_typescript@4.8.4
-      typedoc-plugin-markdown: 3.14.0_typedoc@0.23.22
+      typedoc-plugin-markdown: 3.14.0_p7xjg2asbi3h7h4efxnoor54kq_typedoc@0.23.22
       typescript: 4.8.4
 
   apps/dev:
@@ -28922,7 +28927,7 @@ packages:
     dependencies:
       is-typedarray: 1.0.0
 
-  /typedoc-plugin-markdown/3.14.0_typedoc@0.23.22:
+  /typedoc-plugin-markdown/3.14.0_p7xjg2asbi3h7h4efxnoor54kq_typedoc@0.23.22:
     resolution: {integrity: sha512-UyQLkLRkfTFhLdhSf3RRpA3nNInGn+k6sll2vRXjflaMNwQAAiB61SYbisNZTg16t4K1dt1bPQMMGLrxS0GZ0Q==}
     peerDependencies:
       typedoc: '>=0.23.0'
@@ -28930,6 +28935,7 @@ packages:
       handlebars: 4.7.7
       typedoc: 0.23.22_typescript@4.8.4
     dev: true
+    patched: true
 
   /typedoc/0.23.22_typescript@4.8.4:
     resolution: {integrity: sha512-5sJkjK60xp8A7YpcYniu3+Wf0QcgojEnhzHuCN+CkdpQkKRhOspon/9+sGTkGI8kjVkZs3KHrhltpQyVhRMVfw==}

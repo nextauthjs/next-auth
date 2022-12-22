@@ -1,6 +1,7 @@
 const path = require("path")
 const fs = require("fs")
 
+// TODO: generate from core package
 const providersPath = path.join(
   process.cwd(),
   "/docs/reference/05-oauth-providers"

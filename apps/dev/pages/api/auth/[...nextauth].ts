@@ -1,4 +1,4 @@
-import { AuthHandler, type AuthOptions } from "@auth/core"
+import { Auth, type AuthConfig } from "@auth/core"
 
 // Providers
 import Apple from "@auth/core/providers/apple"
@@ -66,7 +66,7 @@ import WorkOS from "@auth/core/providers/workos"
 //   secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
 // })
 
-export const authOptions: AuthOptions = {
+export const authConfig: AuthConfig = {
   // adapter,
   // debug: process.env.NODE_ENV !== "production",
   theme: {
@@ -118,9 +118,10 @@ export const authOptions: AuthOptions = {
     Wikimedia({ clientId: process.env.WIKIMEDIA_ID, clientSecret: process.env.WIKIMEDIA_SECRET }),
     WorkOS({ clientId: process.env.WORKOS_ID, clientSecret: process.env.WORKOS_SECRET }),
   ],
+  // debug: process.env.NODE_ENV !== "production",
 }
 
-if (authOptions.adapter) {
+if (authConfig.adapter) {
   // TODO:
   // authOptions.providers.unshift(
   //   // NOTE: You can start a fake e-mail server with `pnpm email`
@@ -130,25 +131,21 @@ if (authOptions.adapter) {
 }
 
 // TODO: move to next-auth/edge
-function Auth(...args: any[]) {
+function AuthHandler(...args: any[]) {
   const envSecret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET
   const envTrustHost = !!(process.env.NEXTAUTH_URL ?? process.env.AUTH_TRUST_HOST ?? process.env.VERCEL ?? process.env.NODE_ENV !== "production")
   if (args.length === 1) {
     return async (req: Request) => {
       args[0].secret ??= envSecret
       args[0].trustHost ??= envTrustHost
-      return await AuthHandler(req, args[0])
+      return Auth(req, args[0])
     }
   }
   args[1].secret ??= envSecret
   args[1].trustHost ??= envTrustHost
-  return AuthHandler(args[0], args[1])
+  return Auth(args[0], args[1])
 }
 
-// export default Auth(authOptions)
-
-export default function handle(request: Request) {
-  return Auth(request, authOptions)
-}
+export default AuthHandler(authConfig)
 
 export const config = { runtime: "experimental-edge" }

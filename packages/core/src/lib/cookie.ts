@@ -3,7 +3,7 @@ import type {
   CookiesOptions,
   LoggerInstance,
   SessionStrategy,
-} from "../index.js"
+} from "../types.js"
 
 // Uncomment to recalculate the estimated size
 // of an empty session cookie
@@ -160,6 +160,10 @@ export class SessionStore {
     }
   }
 
+  /**
+   * The JWT Session or database Session ID
+   * constructed from the cookie chunks.
+   */
   get value() {
     return Object.values(this.#chunks)?.join("")
   }
