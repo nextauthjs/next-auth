@@ -17,7 +17,8 @@
   "files": [
     "adapters.*",
     "index.*",
-    "jwt",
+    "jwt.*",
+    "types.*",
     "lib",
     "providers",
     "src"
@@ -31,8 +32,8 @@
       "types": "./adapters.d.ts"
     },
     "./jwt": {
-      "types": "./jwt/index.d.ts",
-      "import": "./jwt/index.js"
+      "types": "./jwt.d.ts",
+      "import": "./jwt.js"
     },
     "./providers": {
       "types": "./providers/index.d.ts"
@@ -42,7 +43,7 @@
       "import": "./providers/*.js"
     },
     "./types": {
-      "types": "./lib/types.d.ts"
+      "types": "./types.d.ts"
     }
   },
   "license": "ISC",
@@ -64,7 +65,7 @@
   },
   "scripts": {
     "build": "pnpm clean && pnpm css && tsc",
-    "clean": "rm -rf adapters.* index.* jwt lib providers",
+    "clean": "rm -rf adapters.* index.* jwt.* types.* lib providers",
     "css": "node ./scripts/generate-css.js",
     "lint": "pnpm prettier --check src && eslint src",
     "format": "pnpm lint --fix",

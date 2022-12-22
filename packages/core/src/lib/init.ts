@@ -1,4 +1,4 @@
-import * as jwt from "../jwt/index.js"
+import * as jwt from "../jwt.js"
 import { createCallbackUrl } from "./callback-url.js"
 import * as cookie from "./cookie.js"
 import { createCSRFToken } from "./csrf-token.js"

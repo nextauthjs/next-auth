@@ -11,7 +11,6 @@ import type {
   OpenIDTokenEndpointResponse,
 } from "oauth4webapi"
 import type { Adapter, AdapterUser } from "../adapters.js"
-import type { JWT, JWTOptions } from "../jwt/types.js"
 import type {
   CredentialInput,
   CredentialsConfig,
@@ -19,6 +18,7 @@ import type {
   OAuthConfigInternal,
   ProviderType,
 } from "../providers/index.js"
+import type { JWT, JWTOptions } from "../jwt.js"
 import type { Cookie } from "./cookie.js"
 import type { LoggerInstance } from "./utils/logger.js"
 
