@@ -10,7 +10,9 @@ import { useEffect } from "react"
 import ProviderMarquee from "../components/ProviderMarquee"
 import styles from "./index.module.css"
 import Seo from "./seo"
+import providers from "../../providers.json"
 
+const providersCount = Object.keys(providers).length + 2 // email, credentials
 const features = [
   {
     title: "Easy",
@@ -18,13 +20,17 @@ const features = [
     description: (
       <ul>
         <li>
-          Built in support for popular services
+          Built in support for {providersCount}+ popular services
           <br />
           <em>(Google, Facebook, Auth0, Apple…)</em>
         </li>
-        <li>Use with OAuth 2+ &amp; OpenID Connect providers</li>
+        <li>
+          Use with <i>any</i> OAuth 2 or OpenID Connect provider
+        </li>
         <li>Built in email / passwordless / magic link</li>
-        <li>Use with any username / password store</li>
+        <li>
+          Use with <i>any</i> username / password store
+        </li>
       </ul>
     ),
   },
@@ -36,7 +42,7 @@ const features = [
         <li>
           Runtime agnostic, runs anywhere!
           <br />
-          <em>Vercel Edge Functions, Serverless…</em>
+          <em>Vercel Edge Functions, Node.js, Serverless…</em>
         </li>
         <li>
           Use with any modern framework!
@@ -60,7 +66,7 @@ const features = [
         <li>Signed, prefixed, server-only cookies</li>
         <li>Built-in CSRF protection</li>
         <li>JWT with JWS / JWE / JWK</li>
-        <li>Tab syncing, auto-revalidation, keepalives</li>
+        {/* <li>Tab syncing, auto-revalidation, keepalives</li> */}
         <li>Doesn't rely on client side JavaScript</li>
       </ul>
     ),
@@ -203,7 +209,7 @@ export default function Home() {
                 <div className="col col--6">
                   <div className="code">
                     <h4 className="code-heading">
-                      Next.js <span>/pages/api/auth/[...nextauth].js</span>
+                      Next.js <span>/pages/api/auth/[...nextauth].ts</span>
                     </h4>
                     <CodeBlock className="prism-code language-js">
                       {nextJsCode}
@@ -236,7 +242,7 @@ export default function Home() {
             </div>
           </section>
           <div className={styles.homeSubtitle}>
-            <p>NextAuth.js is an open source community project.</p>
+            <p>Auth.js is an open source community project.</p>
           </div>
         </main>
       </div>
