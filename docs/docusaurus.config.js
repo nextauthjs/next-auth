@@ -202,7 +202,7 @@ module.exports = {
       {
         ...typedocConfig,
         plugin: ["./tyepdoc"],
-        entryPoints: ["index.ts", "adapters.ts", "jwt.ts", "lib/types.ts"]
+        entryPoints: ["index.ts", "adapters.ts", "jwt.ts", "types.ts"]
           .map((e) => `${coreSrc}/${e}`)
           .concat(providers),
         tsconfig: "../packages/core/tsconfig.json",
