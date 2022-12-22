@@ -26,6 +26,11 @@ export const handle = SvelteKitAuth({
 })
 ```
 
+The callback URL used should have the following pattern:
+```
+[origin]/auth/callback/[provider]
+``` 
+
 Don't forget to set the `AUTH_SECRET` [environment variable](https://kit.svelte.dev/docs/modules#$env-static-private). This should be a random 32 character string. On unix systems you can use `openssl rand -hex 32` or check out `https://generate-secret.vercel.app/32`.
 
 When deploying your app outside Vercel, set the `AUTH_TRUST_HOST` variable to `true` for other hosting providers like Cloudflare Pages or Netlify.
