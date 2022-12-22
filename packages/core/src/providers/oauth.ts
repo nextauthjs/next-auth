@@ -134,7 +134,7 @@ export interface OAuth2Config<P> extends CommonProviderOptions, PartialIssuer {
    * This will be used to create the user in the database.
    * Defaults to: `id`, `email`, `name`, `image`
    *
-   * [Documentation](https://next-auth.js.org/adapters/models#user)
+   * [Documentation](https://authjs.dev/reference/adapters/models#user)
    */
   profile?: ProfileCallback<P>
   /**
@@ -151,7 +151,7 @@ export interface OAuth2Config<P> extends CommonProviderOptions, PartialIssuer {
   client?: Partial<Client>
   style?: OAuthProviderButtonStyles
   /**
-   * [Documentation](https://next-auth.js.org/configuration/providers/oauth#allowdangerousemailaccountlinking-option)
+   * [Documentation](https://authjs.dev/reference/providers/oauth#allowdangerousemailaccountlinking-option)
    */
   allowDangerousEmailAccountLinking?: boolean
   /**

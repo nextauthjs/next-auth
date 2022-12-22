@@ -7,7 +7,7 @@ title: Firebase
 This adapter is still experimental and does not work with Auth.js 4 or newer. If you would like to help out upgrading it, please visit [this PR](https://github.com/nextauthjs/next-auth/pull/3873)
 :::
 
-This is the Firebase Adapter for [`next-auth`](https://next-auth.js.org). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
+This is the Firebase Adapter for [`next-auth`](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
 
 ## Getting Started
 
@@ -32,9 +32,9 @@ const firestore = (
 ).firestore()
 
 // For more information on each option (and a full list of options) go to
-// https://next-auth.js.org/configuration/options
+// https://authjs.dev/reference/configuration/auth-options
 export default NextAuth({
-  // https://next-auth.js.org/providers/overview
+  // https://authjs.dev/reference/providers/
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_ID,

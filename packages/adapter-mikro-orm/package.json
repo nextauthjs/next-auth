@@ -2,7 +2,7 @@
   "name": "@next-auth/mikro-orm-adapter",
   "version": "3.0.1",
   "description": "MikroORM adapter for next-auth.",
-  "homepage": "https://next-auth.js.org",
+  "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"

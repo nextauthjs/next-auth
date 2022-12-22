@@ -99,7 +99,7 @@ export interface GetTokenParams<R extends boolean = false> {
 /**
  * Takes a Auth.js request (`req`) and returns either the Auth.js issued JWT's payload,
  * or the raw JWT string. We look for the JWT in the either the cookies, or the `Authorization` header.
- * [Documentation](https://next-auth.js.org/tutorials/securing-pages-and-api-routes#using-gettoken)
+ * [Documentation](https://authjs.dev/guides/basics/securing-pages-and-api-routes#using-gettoken)
  */
 export async function getToken<R extends boolean = false>(
   params: GetTokenParams<R>

@@ -3,7 +3,7 @@ id: dgraph
 title: Dgraph
 ---
 
-This is the Dgraph Adapter for [`next-auth`](https://next-auth.js.org).
+This is the Dgraph Adapter for [`next-auth`](https://authjs.dev).
 
 ## Getting Started
 
@@ -20,9 +20,9 @@ import NextAuth from "next-auth"
 import { DgraphAdapter } from "@next-auth/dgraph-adapter"
 
 // For more information on each option (and a full list of options) go to
-// https://next-auth.js.org/configuration/options
+// https://authjs.dev/reference/configuration/auth-options
 export default NextAuth({
-  // https://next-auth.js.org/configuration/providers
+  // https://authjs.dev/reference/provideres/oauth-builtin
   providers: [],
   adapter: DgraphAdapter({
     endpoint: process.env.DGRAPH_GRAPHQL_ENDPOINT,
