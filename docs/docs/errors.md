@@ -189,6 +189,6 @@ Useful links:
 
 #### Troubleshooting
 ###### CLIENT_FETCH_ERROR
-Can also be caused by stale cookies and other configuration errors. To fix, open your browser devtools and clear your cookies from `application` tab for dev website e.g localhost:3000. 
-Here's a useful link to a stackoverflow [solution](https://stackoverflow.com/questions/73564345/next-auth-credentials-provider-server-error) on similar problem.
+Can also be caused by stale cookies and other configuration errors. To fix the stale cookies issue, open your browser devtools for your dev app, go to the `Application` tab and click "Clear Storage". 
+For more information, check out this [stackoverflow](https://stackoverflow.com/questions/73564345/next-auth-credentials-provider-server-error).
   
