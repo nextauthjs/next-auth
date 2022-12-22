@@ -108,7 +108,7 @@
           "value": "providers.authjs.dev"
         }
       ],
-      "destination": "https://authjs.dev/reference/providers/:path*"
+      "destination": "https://authjs.dev/reference/core/functions/providers_(:path).default"
     }
   ]
 }
