@@ -95,6 +95,7 @@ export interface OAuthProviderButtonStyles {
   textDark: string
 }
 
+/** TODO: */
 export interface OAuth2Config<P> extends CommonProviderOptions, PartialIssuer {
   /**
    * Identifies the provider when you want to sign in to
@@ -163,6 +164,7 @@ export interface OAuth2Config<P> extends CommonProviderOptions, PartialIssuer {
   options?: OAuthUserConfig<P>
 }
 
+/** TODO: */
 export interface OIDCConfig<P> extends Omit<OAuth2Config<P>, "type"> {
   type: "oidc"
 }
@@ -192,7 +194,3 @@ export type OAuthUserConfig<P> = Omit<
   "options" | "type"
 > &
   Required<Pick<OAuthConfig<P>, "clientId" | "clientSecret">>
-
-export type OAuthProvider = (
-  options: Partial<OAuthConfig<any>>
-) => OAuthConfig<any>

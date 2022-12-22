@@ -84,7 +84,7 @@ export interface AdapterAccount extends Account {
 }
 
 /**
- * The session object implementing this interface is
+ * The session object implementing this interface
  * is used to look up the user in the database.
  */
 export interface AdapterSession {
@@ -113,87 +113,66 @@ export interface VerificationToken {
 }
 
 /**
- * Using a custom adapter you can connect to any database backend or even
- * several different databases. Custom adapters created and maintained by our
- * community can be found in the adapters repository. Feel free to add a custom
- * adapter from your project to the repository, or even become a maintainer of a
- * certain adapter. Custom adapters can still be created and used in a project
- * without being added to the repository.
+ * Using a custom adapter you can connect to any database backend or even several different databases.
+ * Custom adapters created and maintained by our community can be found in the adapters repository.
+ * Feel free to add a custom adapter from your project to the repository,
+ * or even become a maintainer of a certain adapter.
+ * Custom adapters can still be created and used in a project without being added to the repository.
  *
- * ## Useful resources
+ * ## Resources
  *
- * @see [Session strategies](https://authjs.dev/concepts/session-strategies#database)
- * @see [Using a database adapter](https://authjs.dev/guides/adapters/using-a-database-adapter)
- * @see [Creating a database adapter](https://authjs.dev/guides/adapters/creating-a-database-adapter)
+ * - [Session strategies](https://authjs.dev/concepts/session-strategies#database)
+ * - [Using a database adapter](https://authjs.dev/guides/adapters/using-a-database-adapter)
+ * - [Creating a database adapter](https://authjs.dev/guides/adapters/creating-a-database-adapter)
  */
-export type Adapter<WithVerificationToken = boolean> = DefaultAdapter &
-  (WithVerificationToken extends true
-    ? {
-        createVerificationToken: (
-          verificationToken: VerificationToken
-        ) => Awaitable<VerificationToken | null | undefined>
-        /**
-         * Return verification token from the database and delete it so it
-         * cannot be used again.
-         */
-        useVerificationToken: (params: {
-          identifier: string
-          token: string
-        }) => Awaitable<VerificationToken | null>
-      }
-    : {})
-
-export interface DefaultAdapter {
-  createUser: (user: Omit<AdapterUser, "id">) => Awaitable<AdapterUser>
-  getUser: (id: string) => Awaitable<AdapterUser | null>
-  getUserByEmail: (email: string) => Awaitable<AdapterUser | null>
-  /**
-   * Using the provider id and the id of the user for a specific account, get
-   * the user.
-   */
-  getUserByAccount: (
+export interface Adapter {
+  createUser(user: Omit<AdapterUser, "id">): Awaitable<AdapterUser>
+  getUser(id: string): Awaitable<AdapterUser | null>
+  getUserByEmail(email: string): Awaitable<AdapterUser | null>
+  /** Using the provider id and the id of the user for a specific account, get the user. */
+  getUserByAccount(
     providerAccountId: Pick<AdapterAccount, "provider" | "providerAccountId">
-  ) => Awaitable<AdapterUser | null>
-  updateUser: (user: Partial<AdapterUser>) => Awaitable<AdapterUser>
-  /** @todo Implement */
-  deleteUser?: (
+  ): Awaitable<AdapterUser | null>
+  updateUser(user: Partial<AdapterUser>): Awaitable<AdapterUser>
+  /** @todo This method is currently not implemented. Defining it will have no effect */
+  deleteUser?(
     userId: string
-  ) => Promise<void> | Awaitable<AdapterUser | null | undefined>
-  linkAccount: (
+  ): Promise<void> | Awaitable<AdapterUser | null | undefined>
+  linkAccount(
     account: AdapterAccount
-  ) => Promise<void> | Awaitable<AdapterAccount | null | undefined>
-  /** @todo Implement */
-  unlinkAccount?: (
+  ): Promise<void> | Awaitable<AdapterAccount | null | undefined>
+  /** @todo This method is currently not implemented. Defining it will have no effect */
+  unlinkAccount?(
     providerAccountId: Pick<AdapterAccount, "provider" | "providerAccountId">
-  ) => Promise<void> | Awaitable<AdapterAccount | undefined>
+  ): Promise<void> | Awaitable<AdapterAccount | undefined>
   /** Creates a session for the user and returns it. */
-  createSession: (session: {
+  createSession(session: {
     sessionToken: string
     userId: string
     expires: Date
-  }) => Awaitable<AdapterSession>
-  getSessionAndUser: (
+  }): Awaitable<AdapterSession>
+  getSessionAndUser(
     sessionToken: string
-  ) => Awaitable<{ session: AdapterSession; user: AdapterUser } | null>
-  updateSession: (
+  ): Awaitable<{ session: AdapterSession; user: AdapterUser } | null>
+  updateSession(
     session: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">
-  ) => Awaitable<AdapterSession | null | undefined>
+  ): Awaitable<AdapterSession | null | undefined>
   /**
    * Deletes a session from the database. It is preferred that this method also
    * returns the session that is being deleted for logging purposes.
    */
-  deleteSession: (
+  deleteSession(
     sessionToken: string
-  ) => Promise<void> | Awaitable<AdapterSession | null | undefined>
-  createVerificationToken?: (
+  ): Promise<void> | Awaitable<AdapterSession | null | undefined>
+  createVerificationToken?(
     verificationToken: VerificationToken
-  ) => Awaitable<VerificationToken | null | undefined>
+  ): Awaitable<VerificationToken | null | undefined>
   /**
    * Return verification token from the database and delete it so it cannot be
    * used again.
    */
-  useVerificationToken?: (params: {
+  useVerificationToken?(params: {
     identifier: string
     token: string
-  }) => Awaitable<VerificationToken | null>
+  }): Awaitable<VerificationToken | null>
 }
