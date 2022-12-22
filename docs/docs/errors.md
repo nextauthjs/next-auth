@@ -23,6 +23,8 @@ This error occurs when the `SessionProvider` Context has a problem fetching sess
 
 If you see `CLIENT_FETCH_ERROR` make sure you have configured the `NEXTAUTH_URL` environment variable.
 
+In case `NEXTAUTH_URL` is configured, check [troubleshooting](#troubleshooting) section for possible solutions.
+
 ---
 
 ## Server
@@ -182,4 +184,11 @@ Useful links:
 - https://next-auth.js.org/configuration/nextjs#pages
 - https://next-auth.js.org/configuration/pages
 - https://nextjs.org/docs/advanced-features/middleware#matcher
+
+---
+
+#### Troubleshooting
+###### CLIENT_FETCH_ERROR
+Can also be caused by stale cookies and other configuration errors. To fix, open your browser devtools and clear your cookies from `application` tab for dev website e.g localhost:3000. 
+Here's a useful link to a stackoverflow [solution](https://stackoverflow.com/questions/73564345/next-auth-credentials-provider-server-error) on similar problem.
   
