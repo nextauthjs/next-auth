@@ -16,7 +16,7 @@ title: Overview
 
 - Next.js
 - SvelteKit
-- SolidState
+- SolidStart
 - Remix
 - Nuxt
 - Gatsby

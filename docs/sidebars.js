@@ -74,6 +74,15 @@ module.exports = {
     },
     {
       type: "category",
+      label: "@auth/solid-start",
+      link: {
+        type: "doc",
+        id: "reference/solid-start/index",
+      },
+      items: [],
+    },
+    {
+      type: "category",
       label: "Database Adapters",
       link: {
         type: "doc",
