@@ -1,19 +1,15 @@
-import type { Theme } from "../../index.js"
+import type { ErrorPageParam, Theme } from "../../types.js"
 
 /**
  * The following errors are passed as error query parameters to the default or overridden error page.
  *
- * [Documentation](https://next-auth.js.org/configuration/pages#error-page) */
-export type ErrorType =
-  | "default"
-  | "configuration"
-  | "accessdenied"
-  | "verification"
+ * [Documentation](https://next-auth.js.org/configuration/pages#error-page)
+ */
 
 export interface ErrorProps {
   url?: URL
   theme?: Theme
-  error?: ErrorType
+  error?: ErrorPageParam
 }
 
 interface ErrorView {
@@ -28,7 +24,7 @@ export default function ErrorPage(props: ErrorProps) {
   const { url, error = "default", theme } = props
   const signinPageUrl = `${url}/signin`
 
-  const errors: Record<ErrorType, ErrorView> = {
+  const errors: Record<Lowercase<ErrorPageParam | "default">, ErrorView> = {
     default: {
       status: 200,
       heading: "Error",

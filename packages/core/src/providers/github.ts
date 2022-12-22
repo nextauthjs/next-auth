@@ -57,14 +57,13 @@ export interface GithubProfile extends Record<string, any> {
 }
 
 /**
- * Add GitHub login to your page and make requests to [GitHub
- * APIs](https://docs.github.com/en/rest).
+ * Add GitHub login to your page and make requests to [GitHub APIs](https://docs.github.com/en/rest).
  *
  * ## Example
  *
  * @example
  *
- * ```js
+ * ```ts
  * import Auth from "@auth/core"
  * import { GitHub } from "@auth/core/providers/github"
  *
@@ -80,7 +79,7 @@ export interface GithubProfile extends Record<string, any> {
  * @see [GitHub - Authorizing OAuth Apps](https://docs.github.com/en/developers/apps/building-oauth-apps/authorizing-oauth-apps)
  * @see [GitHub - Configure your GitHub OAuth Apps](https://github.com/settings/developers)
  * @see [Learn more about OAuth](https://authjs.dev/concepts/oauth)
- * @see [Source code](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/github.ts) ---
+ * @see [Source code](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/github.ts)
  *
  * ## Notes
  *
