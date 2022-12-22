@@ -1,5 +1,6 @@
 ---
 title: Introduction
+sidebar_position: 0
 ---
 
 ## About Auth.js

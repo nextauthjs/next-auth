@@ -7,7 +7,7 @@ title: PouchDB
 This adapter is still experimental and does not work with Auth.js 4 or newer. If you would like to help out upgrading it, please [open a PR](https://github.com/nextauthjs/next-auth/tree/main/packages)
 :::
 
-This is the PouchDB Adapter for [`next-auth`](https://next-auth.js.org). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
+This is the PouchDB Adapter for [`next-auth`](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
 
 Depending on your architecture you can use PouchDB's http adapter to reach any database compliant with the CouchDB protocol (CouchDB, Cloudant, ...) or use any other PouchDB compatible adapter (leveldb, in-memory, ...)
 
@@ -36,9 +36,9 @@ PouchDB.plugin(require("pouchdb-adapter-leveldb")) // Any other adapter
 const pouchdb = new PouchDB("auth_db", { adapter: "leveldb" })
 
 // For more information on each option (and a full list of options) go to
-// https://next-auth.js.org/configuration/options
+// https://authjs.dev/reference/configuration/auth-options
 export default NextAuth({
-  // https://next-auth.js.org/providers/overview
+  // https://authjs.dev/reference/providers/
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_ID,
