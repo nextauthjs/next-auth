@@ -45,6 +45,51 @@ export interface GitLabProfile extends Record<string, any> {
   extra_shared_runners_minutes_limit: number
 }
 
+/**
+ * Add GitLab login to your page.
+ *
+ * ## Example
+ *
+ * @example
+ *
+ * ```js
+ * import Auth from "@auth/core"
+ * import { GitLab } from "@auth/core/providers/gitlab"
+ *
+ * const request = new Request("https://example.com")
+ * const resposne = await AuthHandler(request, {
+ *   providers: [
+ *     GitLab({clientId: "", clientSecret: ""})
+ *   ]
+ * })
+ * ```
+ *
+ * ## Resources
+ *
+ * @see [Link 1](https://example.com)
+ *
+ * ## Notes
+ *
+ * By default, Auth.js assumes that the GitLab provider is
+ * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
+ *
+ * :::tip
+ *
+ * The GitLab provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/gitlab.ts).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ *
+ * :::
+ *
+ * :::info **Disclaimer**
+ *
+ * If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
+ *
+ * Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
+ * the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
+ * we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).
+ *
+ * :::
+ */
 export default function GitLab<P extends GitLabProfile>(
   options: OAuthUserConfig<P>
 ): OAuthConfig<P> {

@@ -1,227 +1,80 @@
 /**
  *
- * The `@auth/core/types` module contains all public types and interfaces of the core package.
+ * This module contains public types and interfaces of the core package.
+ *
+ * ## Installation
+ *
+ * ```bash npm2yarn2pnpm
+ * npm install @auth/core
+ * ```
+ *
+ * You can then import this submodule from `@auth/core/type`.
+ *
+ * ## Usage
+ *
+ * Even if you don't use TypeScript, IDEs like VSCode will pick up types to provide you with a better developer experience.
+ * While you are typing, you will get suggestions about what certain objects/functions look like,
+ * and sometimes links to documentation, examples, and other valuable resources.
+ *
+ * Generally, you will not need to import types from this module.
+ * Mostly when using the `Auth` function and optionally the `AuthConfig` interface,
+ * everything inside there will already be typed.
+ *
+ * :::tip
+ * Inside the `Auth` function, you won't need to use a single type from this module.
+ *
+ * @example
+ * ```ts title=index.ts
+ * import { Auth } from "@auth/core"
+ *
+ * const request = new Request("https://example.com")
+ * const response = await Auth(request, {
+ *   callbacks: {
+ *     jwt(): JWT { // <-- This is unnecessary!
+ *       return { foo: "bar" }
+ *     },
+ *     session(
+ *        { session, token }: { session: Session; token: JWT } // <-- This is unnecessary!
+ *     ) {
+ *       return session
+ *     },
+ *   }
+ * })
+ * ```
+ * :::
+ *
+ * :::info
+ * We are advocates of TypeScript, as it will help you catch errors at build-time, before your users do. 😉
+ * :::
+ *
+ * ## Resources
+ *
+ * - [TypeScript - The Basics](https://www.typescriptlang.org/docs/handbook/2/basic-types.html)
+ * - [Extending built-in types](https://authjs.dev/getting-started/typescript#module-augmentation)
  *
  * @module types
  */
 
-import type { CookieSerializeOptions } from "cookie"
-import type { Adapter, AdapterUser } from "../adapters.js"
+import type { CookieSerializeOptions } from 'cookie'
+import type {
+  OAuth2TokenEndpointResponse,
+  OpenIDTokenEndpointResponse
+} from 'oauth4webapi'
+import type { Adapter, AdapterUser } from './adapters.js'
 import type {
   CredentialInput,
   CredentialsConfig,
   EmailConfig,
   OAuthConfigInternal,
-  Provider,
-  ProviderType,
-} from "../providers/index.js"
-import type {
-  OAuth2TokenEndpointResponse,
-  OpenIDTokenEndpointResponse,
-} from "oauth4webapi"
-import type { JWT, JWTOptions } from "../jwt/types.js"
-import type { Cookie } from "./cookie.js"
-import type { LoggerInstance } from "./utils/logger.js"
+  ProviderType
+} from './providers/index.js'
+import type { JWT, JWTOptions } from './jwt.js'
+import type { Cookie } from './lib/cookie.js'
+import type { LoggerInstance } from './lib/utils/logger.js'
 
+export type { AuthConfig } from './index.js'
 export type Awaitable<T> = T | PromiseLike<T>
-
 export type { LoggerInstance }
-
-/**
- * Configure your NextAuth instance
- *
- * [Documentation](https://authjs.dev/reference/configuration/auth-config#options)
- */
-export interface AuthOptions {
-  /**
-   * An array of authentication providers for signing in
-   * (e.g. Google, Facebook, Twitter, GitHub, Email, etc) in any order.
-   * This can be one of the built-in providers or an object with a custom provider.
-   * * **Default value**: `[]`
-   * * **Required**: *Yes*
-   *
-   * [Documentation](https://authjs.dev/reference/configuration/auth-config#providers) | [Providers documentation](https://authjs.dev/reference/providers/oauth-builtin)
-   */
-  providers: Provider[]
-  /**
-   * A random string used to hash tokens, sign cookies and generate cryptographic keys.
-   * If not specified, it falls back to `AUTH_SECRET` or `NEXTAUTH_SECRET` from environment variables.
-   * To generate a random string, you can use the following command:
-   *
-   * On Unix systems: `openssl rand -hex 32`
-   * Or go to https://generate-secret.vercel.app/32
-   *
-   * @default process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET
-   *
-   * [Documentation](https://authjs.dev/reference/configuration/auth-config#secret)
-   */
-  secret?: string
-  /**
-   * Configure your session like if you want to use JWT or a database,
-   * how long until an idle session expires, or to throttle write operations in case you are using a database.
-   * * **Default value**: See the documentation page
-   * * **Required**: No
-   *
-   * [Documentation](https://authjs.dev/reference/configuration/auth-config#session)
-   */
-  session?: Partial<SessionOptions>
-  /**
-   * JSON Web Tokens are enabled by default if you have not specified an adapter.
-   * JSON Web Tokens are encrypted (JWE) by default. We recommend you keep this behaviour.
-   * * **Default value**: See the documentation page
-   * * **Required**: *No*
-   *
-   * [Documentation](https://authjs.dev/reference/configuration/auth-config#jwt)
-   */
-  jwt?: Partial<JWTOptions>
-  /**
-   * Specify URLs to be used if you want to create custom sign in, sign out and error pages.
-   * Pages specified will override the corresponding built-in page.
-   * * **Default value**: `{}`
-   * * **Required**: *No*
-   * @example
-   *
-   * ```js
-   *   pages: {
-   *     signIn: '/auth/signin',
-   *     signOut: '/auth/signout',
-   *     error: '/auth/error',
-   *     verifyRequest: '/auth/verify-request',
-   *     newUser: '/auth/new-user'
-   *   }
-   * ```
-   *
-   * [Documentation](https://authjs.dev/reference/configuration/auth-config#pages) | [Pages documentation](https://authjs.dev/guides/basics/pages)
-   */
-  pages?: Partial<PagesOptions>
-  /**
-   * Callbacks are asynchronous functions you can use to control what happens when an action is performed.
-   * Callbacks are *extremely powerful*, especially in scenarios involving JSON Web Tokens
-   * as they **allow you to implement access controls without a database** and to **integrate with external databases or APIs**.
-   * * **Default value**: See the Callbacks documentation
-   * * **Required**: *No*
-   *
-   * [Documentation](https://authjs.dev/reference/configuration/auth-config#callbacks) | [Callbacks documentation](https://authjs.dev/guides/basics/callbacks)
-   */
-  callbacks?: Partial<CallbacksOptions>
-  /**
-   * Events are asynchronous functions that do not return a response, they are useful for audit logging.
-   * You can specify a handler for any of these events below - e.g. for debugging or to create an audit log.
-   * The content of the message object varies depending on the flow
-   * (e.g. OAuth or Email authentication flow, JWT or database sessions, etc),
-   * but typically contains a user object and/or contents of the JSON Web Token
-   * and other information relevant to the event.
-   * * **Default value**: `{}`
-   * * **Required**: *No*
-   *
-   * [Documentation](https://authjs.dev/reference/configuration/auth-config#events) | [Events documentation](https://authjs.dev/guides/basics/events)
-   */
-  events?: Partial<EventCallbacks>
-  /**
-   * You can use the adapter option to pass in your database adapter.
-   *
-   * * **Required**: *No*
-   *
-   * [Documentation](https://authjs.dev/reference/configuration/auth-config#adapter) |
-   * [Adapters Overview](https://authjs.dev/reference/adapters/overview)
-   */
-  adapter?: Adapter
-  /**
-   * Set debug to true to enable debug messages for authentication and database operations.
-   * * **Default value**: `false`
-   * * **Required**: *No*
-   *
-   * - ⚠ If you added a custom `logger`, this setting is ignored.
-   *
-   * [Documentation](https://authjs.dev/reference/configuration/auth-config#debug) | [Logger documentation](https://authjs.dev/reference/configuration/auth-config#logger)
-   */
-  debug?: boolean
-  /**
-   * Override any of the logger levels (`undefined` levels will use the built-in logger),
-   * and intercept logs in NextAuth. You can use this option to send NextAuth logs to a third-party logging service.
-   * * **Default value**: `console`
-   * * **Required**: *No*
-   *
-   * @example
-   *
-   * ```js
-   * // /pages/api/auth/[...nextauth].js
-   * import log from "logging-service"
-   * export default NextAuth({
-   *   logger: {
-   *     error(code, ...message) {
-   *       log.error(code, message)
-   *     },
-   *     warn(code, ...message) {
-   *       log.warn(code, message)
-   *     },
-   *     debug(code, ...message) {
-   *       log.debug(code, message)
-   *     }
-   *   }
-   * })
-   * ```
-   *
-   * - ⚠ When set, the `debug` option is ignored
-   *
-   * [Documentation](https://authjs.dev/reference/configuration/auth-config#logger) |
-   * [Debug documentation](https://authjs.dev/reference/configuration/auth-config#debug)
-   */
-  logger?: Partial<LoggerInstance>
-  /**
-   * Changes the theme of pages.
-   * Set to `"light"` if you want to force pages to always be light.
-   * Set to `"dark"` if you want to force pages to always be dark.
-   * Set to `"auto"`, (or leave this option out)if you want the pages to follow the preferred system theme.
-   * * **Default value**: `"auto"`
-   * * **Required**: *No*
-   *
-   * [Documentation](https://authjs.dev/reference/configuration/auth-config#theme) | [Pages documentation]("https://authjs.dev/guides/basics/pages")
-   */
-  theme?: Theme
-  /**
-   * When set to `true` then all cookies set by NextAuth.js will only be accessible from HTTPS URLs.
-   * This option defaults to `false` on URLs that start with `http://` (e.g. http://localhost:3000) for developer convenience.
-   * You can manually set this option to `false` to disable this security feature and allow cookies
-   * to be accessible from non-secured URLs (this is not recommended).
-   * * **Default value**: `true` for HTTPS and `false` for HTTP sites
-   * * **Required**: No
-   *
-   * [Documentation](https://authjs.dev/reference/configuration/auth-config#usesecurecookies)
-   *
-   * - ⚠ **This is an advanced option.** Advanced options are passed the same way as basic options,
-   * but **may have complex implications** or side effects.
-   * You should **try to avoid using advanced options** unless you are very comfortable using them.
-   */
-  useSecureCookies?: boolean
-  /**
-   * You can override the default cookie names and options for any of the cookies used by NextAuth.js.
-   * You can specify one or more cookies with custom properties,
-   * but if you specify custom options for a cookie you must provide all the options for that cookie.
-   * If you use this feature, you will likely want to create conditional behavior
-   * to support setting different cookies policies in development and production builds,
-   * as you will be opting out of the built-in dynamic policy.
-   * * **Default value**: `{}`
-   * * **Required**: No
-   *
-   * - ⚠ **This is an advanced option.** Advanced options are passed the same way as basic options,
-   * but **may have complex implications** or side effects.
-   * You should **try to avoid using advanced options** unless you are very comfortable using them.
-   *
-   * [Documentation](https://authjs.dev/reference/configuration/auth-config#cookies) | [Usage example](https://authjs.dev/reference/configuration/auth-config#example)
-   */
-  cookies?: Partial<CookiesOptions>
-  /**
-   * If set to `true`, NextAuth.js will use either the `x-forwarded-host` or `host` headers,
-   * instead of `NEXTAUTH_URL`
-   * Make sure that reading `x-forwarded-host` on your hosting platform can be trusted.
-   * - ⚠ **This is an advanced option.** Advanced options are passed the same way as basic options,
-   * but **may have complex implications** or side effects.
-   * You should **try to avoid using advanced options** unless you are very comfortable using them.
-   * @default Boolean(process.env.NEXTAUTH_URL ?? process.env.AUTH_TRUST_HOST ?? process.env.VERCEL)
-   */
-  trustHost?: boolean
-}
 
 /**
  * Change the theme of the built-in pages.
@@ -230,7 +83,7 @@ export interface AuthOptions {
  * [Pages](https://authjs.dev/guides/basics/pages)
  */
 export interface Theme {
-  colorScheme?: "auto" | "dark" | "light"
+  colorScheme?: 'auto' | 'dark' | 'light'
   logo?: string
   brandColor?: string
   buttonText?: string
@@ -242,7 +95,7 @@ export interface Theme {
  * but they refer to the same value.
  */
 export type TokenSet = Partial<
-  OAuth2TokenEndpointResponse | OpenIDTokenEndpointResponse
+OAuth2TokenEndpointResponse | OpenIDTokenEndpointResponse
 >
 
 /**
@@ -276,11 +129,17 @@ export interface Profile {
 /** [Documentation](https://authjs.dev/guides/basics/callbacks) */
 export interface CallbacksOptions<P = Profile, A = Account> {
   /**
-   * Use this callback to control if a user is allowed to sign in.
-   * Returning true will continue the sign-in flow.
-   * Throwing an error or returning a string will stop the flow, and redirect the user.
+   * Control whether a user is allowed to sign in or not.
+   * Returning `true` continues the sign-in flow, while
+   * returning `false` redirects to the {@link PagesOptions.error error page}.
+   * The `error` {@link ErrorPageParam parameter} is set to `AccessDenied`.
    *
-   * [Documentation](https://authjs.dev/guides/basics/callbacks#sign-in-callback)
+   * Unhandled errors are redirected to the error page
+   * The `error` parameter is set to `Configuration`.
+   * an `AuthorizedCallbackError` is logged on the server.
+   *
+   * @see https://authjs.dev/reference/errors#authorizedcallbackerror
+   * @todo rename to `authorized`
    */
   signIn: (params: {
     user: User | AdapterUser
@@ -303,7 +162,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
     }
     /** If Credentials provider is used, it contains the user credentials */
     credentials?: Record<string, CredentialInput>
-  }) => Awaitable<string | boolean>
+  }) => Awaitable<boolean>
   /**
    * This callback is called anytime the user is redirected to a callback URL (e.g. on signin or signout).
    * By default only URLs on the same URL as the site are allowed,
@@ -399,7 +258,11 @@ export interface EventCallbacks {
    * - `token`: The JWT token for this session.
    * - `session`: The session object from your adapter that is being ended.
    */
-  signOut: (message: { session: Session; token: JWT }) => Awaitable<void>
+  signOut: (
+    message:
+    | { session: Awaited<ReturnType<Adapter['deleteSession']>> }
+    | { token: Awaited<ReturnType<JWTOptions['decode']>> }
+  ) => Awaitable<void>
   createUser: (message: { user: User }) => Awaitable<void>
   updateUser: (message: { user: User }) => Awaitable<void>
   linkAccount: (message: {
@@ -413,16 +276,46 @@ export interface EventCallbacks {
    * - `token`: The JWT token for this session.
    * - `session`: The session object from your adapter.
    */
-  session: (message: { session: Session; token: JWT }) => Awaitable<void>
+  session: (message: { session: Session, token: JWT }) => Awaitable<void>
 }
 
 export type EventType = keyof EventCallbacks
 
-/** [Documentation](https://authjs.dev/guides/basics/pages) */
+/** TODO: Check if all these are used/correct */
+export type ErrorPageParam = 'Configuration' | 'AccessDenied' | 'Verification'
+
+/** TODO: Check if all these are used/correct */
+export type SignInPageErrorParam =
+  | 'Signin'
+  | 'OAuthSignin'
+  | 'OAuthCallback'
+  | 'OAuthCreateAccount'
+  | 'EmailCreateAccount'
+  | 'Callback'
+  | 'OAuthAccountNotLinked'
+  | 'EmailSignin'
+  | 'CredentialsSignin'
+  | 'SessionRequired'
+
 export interface PagesOptions {
+  /**
+   * The path to the sign in page.
+   *
+   * The optional "error" query parameter is set to
+   * one of the {@link SignInPageErrorParam available} values.
+   *
+   * @default "/signin"
+   */
   signIn: string
   signOut: string
-  /** Error code passed in query string as ?error= */
+  /**
+   * The path to the error page.
+   *
+   * The optional "error" query parameter is set to
+   * one of the {@link ErrorPageParam available} values.
+   *
+   * @default "/error"
+   */
   error: string
   verifyRequest: string
   /** If set, new users will be directed here on first sign in */
@@ -451,7 +344,7 @@ export interface DefaultSession {
  */
 export interface Session extends DefaultSession {}
 
-export type SessionStrategy = "jwt" | "database"
+export type SessionStrategy = 'jwt' | 'database'
 
 /** [Documentation](https://authjs.dev/reference/configuration/auth-config#session) */
 export interface SessionOptions {
@@ -513,32 +406,31 @@ export interface User extends DefaultUser {}
 // Below are types that are only supposed be used by next-auth internally
 
 /** @internal */
-export type InternalProvider<T = ProviderType> = (T extends "oauth"
+export type InternalProvider<T = ProviderType> = (T extends 'oauth'
   ? OAuthConfigInternal<any>
-  : T extends "email"
-  ? EmailConfig
-  : T extends "credentials"
-  ? CredentialsConfig
-  : never) & {
-  signinUrl: string
-  callbackUrl: string
-}
+  : T extends 'email'
+    ? EmailConfig
+    : T extends 'credentials'
+      ? CredentialsConfig
+      : never) & {
+        signinUrl: string
+        callbackUrl: string
+      }
 
 export type AuthAction =
-  | "providers"
-  | "session"
-  | "csrf"
-  | "signin"
-  | "signout"
-  | "callback"
-  | "verify-request"
-  | "error"
-  | "_log"
+  | 'providers'
+  | 'session'
+  | 'csrf'
+  | 'signin'
+  | 'signout'
+  | 'callback'
+  | 'verify-request'
+  | 'error'
 
 /** @internal */
 export interface RequestInternal {
   url: URL
-  method?: string
+  method: 'GET' | 'POST'
   cookies?: Partial<Record<string, string>>
   headers?: Record<string, any>
   query?: Record<string, any>
@@ -559,11 +451,9 @@ export interface ResponseInternal<
   cookies?: Cookie[]
 }
 
+// TODO: rename to AuthConfigInternal
 /** @internal */
-export interface InternalOptions<
-  TProviderType = ProviderType,
-  WithVerificationToken = TProviderType extends "email" ? true : false
-> {
+export interface InternalOptions<TProviderType = ProviderType> {
   providers: InternalProvider[]
   url: URL
   action: AuthAction
@@ -578,9 +468,7 @@ export interface InternalOptions<
   pages: Partial<PagesOptions>
   jwt: JWTOptions
   events: Partial<EventCallbacks>
-  adapter: WithVerificationToken extends true
-    ? Adapter<WithVerificationToken>
-    : Adapter<WithVerificationToken> | undefined
+  adapter: Adapter | undefined
   callbacks: CallbacksOptions
   cookies: CookiesOptions
   callbackUrl: string

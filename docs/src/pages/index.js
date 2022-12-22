@@ -1,41 +1,47 @@
 // eslint-disable-next-line no-use-before-define
-import * as React from "react"
-import Link from "@docusaurus/Link"
-import useBaseUrl from "@docusaurus/useBaseUrl"
-import useDocusaurusContext from "@docusaurus/useDocusaurusContext"
-import CodeBlock from "@theme/CodeBlock"
-import Layout from "@theme/Layout"
-import classnames from "classnames"
-import { useEffect } from "react"
-import ProviderMarquee from "../components/ProviderMarquee"
-import styles from "./index.module.css"
+import * as React from 'react'
+import Link from '@docusaurus/Link'
+import useBaseUrl from '@docusaurus/useBaseUrl'
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
+import CodeBlock from '@theme/CodeBlock'
+import Layout from '@theme/Layout'
+import classnames from 'classnames'
+import { useEffect } from 'react'
+import ProviderMarquee from '../components/ProviderMarquee'
+import styles from './index.module.css'
+import providers from '../../providers.json'
 
+const providersCount = Object.keys(providers).length + 2 // email, credentials
 const features = [
   {
-    title: "Easy",
-    imageUrl: "img/undraw_social.svg",
+    title: 'Easy',
+    imageUrl: 'img/undraw_social.svg',
     description: (
       <ul>
         <li>
-          Built in support for popular services
+          Built in support for {providersCount}+ popular services
           <br />
           <em>(Google, Facebook, Auth0, Apple…)</em>
         </li>
-        <li>Use with OAuth 2+ &amp; OpenID Connect providers</li>
+        <li>
+          Use with <i>any</i> OAuth 2 or OpenID Connect provider
+        </li>
         <li>Built in email / passwordless / magic link</li>
-        <li>Use with any username / password store</li>
+        <li>
+          Use with <i>any</i> username / password store
+        </li>
       </ul>
-    ),
+    )
   },
   {
-    title: "Flexible",
-    imageUrl: "img/undraw_authentication.svg",
+    title: 'Flexible',
+    imageUrl: 'img/undraw_authentication.svg',
     description: (
       <ul>
         <li>
           Runtime agnostic, runs anywhere!
           <br />
-          <em>Vercel Edge Functions, Serverless…</em>
+          <em>Vercel Edge Functions, Node.js, Serverless…</em>
         </li>
         <li>
           Use with any modern framework!
@@ -49,31 +55,31 @@ const features = [
         </li>
         <li>Choose database sessions or JWT</li>
       </ul>
-    ),
+    )
   },
   {
-    title: "Secure",
-    imageUrl: "img/undraw_secure.svg",
+    title: 'Secure',
+    imageUrl: 'img/undraw_secure.svg',
     description: (
       <ul>
         <li>Signed, prefixed, server-only cookies</li>
         <li>Built-in CSRF protection</li>
         <li>JWT with JWS / JWE / JWK</li>
-        <li>Tab syncing, auto-revalidation, keepalives</li>
+        {/* <li>Tab syncing, auto-revalidation, keepalives</li> */}
         <li>Doesn't rely on client side JavaScript</li>
       </ul>
-    ),
-  },
+    )
+  }
 ]
 
 const kFormatter = (num) => {
-  return Math.sign(num) * (Math.abs(num) / 1000).toFixed(1) + "k"
+  return Math.sign(num) * (Math.abs(num) / 1000).toFixed(1) + 'k'
 }
 
-function Feature({ imageUrl, title, description }) {
+function Feature ({ imageUrl, title, description }) {
   const imgUrl = useBaseUrl(imageUrl)
   return (
-    <div className={classnames("col col--4", styles.feature)}>
+    <div className={classnames('col col--4', styles.feature)}>
       {imgUrl && (
         <div className="text--center">
           <div className="feature-image-wrapper">
@@ -87,28 +93,28 @@ function Feature({ imageUrl, title, description }) {
   )
 }
 
-export default function Home() {
+export default function Home () {
   const context = useDocusaurusContext()
   const { siteConfig = {} } = context
 
   useEffect(() => {
     window
-      .fetch("https://api.github.com/repos/nextauthjs/next-auth")
+      .fetch('https://api.github.com/repos/nextauthjs/next-auth')
       .then((res) => res.json())
       .then((data) => {
         const navLinks = document.getElementsByClassName(
-          "navbar__item navbar__link"
+          'navbar__item navbar__link'
         )
-        const githubStat = document.createElement("span")
+        const githubStat = document.createElement('span')
         githubStat.innerHTML = kFormatter(data.stargazers_count)
-        githubStat.className = "github-counter"
+        githubStat.className = 'github-counter'
         navLinks[4].appendChild(githubStat)
       })
   }, [])
   return (
     <Layout description={siteConfig.tagline}>
       <div className="home-wrapper">
-        <header className={classnames("hero", styles.heroBanner)}>
+        <header className={classnames('hero', styles.heroBanner)}>
           <div className="container">
             <div className="hero-inner">
               <img
@@ -123,7 +129,7 @@ export default function Home() {
               <div className={styles.buttons}>
                 <a
                   className={classnames(
-                    "button button--outline button--secondary button--lg rounded-pill",
+                    'button button--outline button--secondary button--lg rounded-pill',
                     styles.button
                   )}
                   href="https://next-auth-example.vercel.app"
@@ -132,7 +138,7 @@ export default function Home() {
                 </a>
                 <a
                   className={classnames(
-                    "button button--outline button--secondary button--lg rounded-pill",
+                    'button button--outline button--secondary button--lg rounded-pill',
                     styles.button
                   )}
                   href="https://sveltekit-auth-example.vercel.app"
@@ -141,10 +147,10 @@ export default function Home() {
                 </a>
                 <Link
                   className={classnames(
-                    "button button--primary button--lg rounded-pill",
+                    'button button--primary button--lg rounded-pill',
                     styles.button
                   )}
-                  to={useBaseUrl("/getting-started/introduction")}
+                  to={useBaseUrl('/getting-started/introduction')}
                 >
                   Get Started
                 </Link>
@@ -164,7 +170,7 @@ export default function Home() {
               <div className="row">
                 <div className="col">
                   <h2 className={styles.featuresTitle}>
-                    <span>Open Source.</span> <span>Full Stack.</span>{" "}
+                    <span>Open Source.</span> <span>Full Stack.</span>{' '}
                     <span>Own Your Data.</span>
                   </h2>
                 </div>
@@ -192,7 +198,7 @@ export default function Home() {
               </div>
               <div className="row">
                 <div className="col">
-                  <h2 className="text--center" style={{ fontSize: "2.5rem" }}>
+                  <h2 className="text--center" style={{ fontSize: '2.5rem' }}>
                     Add authentication in minutes!
                   </h2>
                 </div>
@@ -201,7 +207,7 @@ export default function Home() {
                 <div className="col col--6">
                   <div className="code">
                     <h4 className="code-heading">
-                      Next.js <span>/pages/api/auth/[...nextauth].js</span>
+                      Next.js <span>/pages/api/auth/[...nextauth].ts</span>
                     </h4>
                     <CodeBlock className="prism-code language-js">
                       {nextJsCode}
@@ -221,7 +227,7 @@ export default function Home() {
               </div>
               <div className="row">
                 <div className="col">
-                  <p className="text--center" style={{ marginTop: "2rem" }}>
+                  <p className="text--center" style={{ marginTop: '2rem' }}>
                     <Link
                       to="/getting-started/introduction"
                       className="button button--primary button--lg rounded-pill"
@@ -234,7 +240,7 @@ export default function Home() {
             </div>
           </section>
           <div className={styles.homeSubtitle}>
-            <p>NextAuth.js is an open source community project.</p>
+            <p>Auth.js is an open source community project.</p>
           </div>
         </main>
       </div>

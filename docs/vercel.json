@@ -78,7 +78,7 @@
           "value": "errors.authjs.dev"
         }
       ],
-      "destination": "https://authjs.dev/reference/errors/:path*"
+      "destination": "https://authjs.dev/reference/core/modules/errors/:path*"
     },
     {
       "source": "/:path(.*)",
@@ -89,6 +89,26 @@
         }
       ],
       "destination": "https://authjs.dev/reference/warnings/:path*"
+    },
+    {
+      "source": "/:path(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "adapters.authjs.dev"
+        }
+      ],
+      "destination": "https://authjs.dev/reference/adapters/:path*"
+    },
+    {
+      "source": "/:path",
+      "has": [
+        {
+          "type": "host",
+          "value": "providers.authjs.dev"
+        }
+      ],
+      "destination": "https://authjs.dev/reference/core/functions/providers_:path.default"
     }
   ]
 }

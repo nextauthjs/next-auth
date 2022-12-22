@@ -2,7 +2,7 @@ import { createTransport } from "nodemailer"
 
 import type { CommonProviderOptions } from "./index.js"
 import type { Options as SMTPTransportOptions } from "nodemailer/lib/smtp-transport"
-import type { Awaitable, Theme } from "../index.js"
+import type { Awaitable, Theme } from "../types.js"
 
 export interface SendVerificationRequestParams {
   identifier: string
@@ -13,11 +13,24 @@ export interface SendVerificationRequestParams {
   theme: Theme
 }
 
+/**
+ * The Email Provider needs to be configured with an e-mail client.
+ * By default, it uses `nodemailer`, which you have to install if this
+ * provider is present.
+ *
+ * You can use a other services as well, like:
+ * - [Postmark](https://postmarkapp.com)
+ * - [Mailgun](https://www.mailgun.com)
+ * - [SendGrid](https://sendgrid.com)
+ * - etc.
+ *
+ * @see [Custom email service with Auth.js](https://authjs.dev/guides/providers/email#custom-email-service)
+ */
 export interface EmailConfig extends CommonProviderOptions {
   type: "email"
   // TODO: Make use of https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html
   server: string | SMTPTransportOptions
-  /** @default "NextAuth <no-reply@example.com>" */
+  /** @default `"Auth.js <no-reply@authjs.dev>"` */
   from?: string
   /**
    * How long until the e-mail can be used to log the user in,
@@ -35,7 +48,7 @@ export interface EmailConfig extends CommonProviderOptions {
    * You can make it predictable or modify it as you like with this method.
    *
    * @example
-   * ```js
+   * ```ts
    *  Providers.Email({
    *    async generateVerificationToken() {
    *      return "ABC123"
@@ -62,25 +75,20 @@ export interface EmailConfig extends CommonProviderOptions {
    * [Documentation](https://authjs.dev/reference/providers/email#normalizing-the-e-mail-address) | [RFC 2821](https://tools.ietf.org/html/rfc2821) | [Email syntax](https://en.wikipedia.org/wiki/Email_address#Syntax)
    */
   normalizeIdentifier?: (identifier: string) => string
-  options: EmailUserConfig
 }
-
-export type EmailUserConfig = Partial<Omit<EmailConfig, "options">>
-
-export type EmailProvider = (options: EmailUserConfig) => EmailConfig
 
 // TODO: Rename to Token provider
 // when started working on https://github.com/nextauthjs/next-auth/discussions/1465
-export type EmailProviderType = "Email"
+export type EmailProviderType = "email"
 
-export default function Email(options: EmailUserConfig): EmailConfig {
+/** TODO: */
+export function Email(config: EmailConfig): EmailConfig {
   return {
     id: "email",
     type: "email",
     name: "Email",
-    // Server can be an SMTP connection string or a nodemailer config object
     server: { host: "localhost", port: 25, auth: { user: "", pass: "" } },
-    from: "NextAuth <no-reply@example.com>",
+    from: "Auth.js <no-reply@authjs.dev>",
     maxAge: 24 * 60 * 60,
     async sendVerificationRequest(params) {
       const { identifier, url, provider, theme } = params
@@ -98,7 +106,8 @@ export default function Email(options: EmailUserConfig): EmailConfig {
         throw new Error(`Email (${failed.join(", ")}) could not be sent`)
       }
     },
-    options,
+    // @ts-expect-error
+    options: config,
   }
 }
 
