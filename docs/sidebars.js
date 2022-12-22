@@ -83,7 +83,6 @@ module.exports = {
     },
     "reference/utilities/client",
     "reference/warnings",
-    "reference/errors",
   ],
   concepts: [
     {

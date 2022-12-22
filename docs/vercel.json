@@ -78,7 +78,7 @@
           "value": "errors.authjs.dev"
         }
       ],
-      "destination": "https://authjs.dev/reference/errors/:path*"
+      "destination": "https://authjs.dev/reference/core/modules/errors/:path*"
     },
     {
       "source": "/:path(.*)",

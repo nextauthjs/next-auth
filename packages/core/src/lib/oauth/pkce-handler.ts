@@ -1,7 +1,7 @@
 import * as o from "oauth4webapi"
 import * as jwt from "../../jwt.js"
 
-import type { InternalOptions } from "../../index.js"
+import type { InternalOptions } from "../../types.js"
 import type { Cookie } from "../cookie.js"
 
 const PKCE_CODE_CHALLENGE_METHOD = "S256"
