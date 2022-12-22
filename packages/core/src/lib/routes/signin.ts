@@ -8,7 +8,7 @@ import type {
   InternalOptions,
   RequestInternal,
   ResponseInternal,
-} from "../types"
+} from "../../types.js"
 
 /**
  * Initiates the sign in process for OAuth and Email flows .

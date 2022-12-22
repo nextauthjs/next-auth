@@ -15,7 +15,7 @@
 import { hkdf } from "@panva/hkdf"
 import { EncryptJWT, jwtDecrypt } from "jose"
 import { SessionStore } from "./lib/cookie.js"
-import { Awaitable } from "./lib/types.js"
+import { Awaitable } from "./types.js"
 import type { LoggerInstance } from "./lib/utils/logger.js"
 
 const DEFAULT_MAX_AGE = 30 * 24 * 60 * 60 // 30 days

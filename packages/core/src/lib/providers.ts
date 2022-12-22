@@ -1,6 +1,6 @@
 import { merge } from "./utils/merge.js"
 
-import type { InternalProvider } from "./types"
+import type { InternalProvider } from "../types.js"
 import type {
   OAuthConfig,
   OAuthConfigInternal,

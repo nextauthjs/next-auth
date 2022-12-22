@@ -47,7 +47,7 @@
  * @module adapters
  */
 
-import type { Account, Awaitable, User } from "./lib/types"
+import type { Account, Awaitable, User } from "./types.js"
 
 // TODO: Discuss if we should expose methods to serialize and deserialize
 // the data? Many adapters share this logic, so it could be useful to

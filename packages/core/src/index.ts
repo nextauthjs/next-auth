@@ -34,7 +34,6 @@ import { logger, setLogger, type LoggerInstance } from "./lib/utils/logger.js"
 import { toInternalRequest, toResponse } from "./lib/web.js"
 
 import type { Adapter } from "./adapters.js"
-import type { JWTOptions } from "./jwt/types.js"
 import type {
   CallbacksOptions,
   CookiesOptions,
@@ -42,8 +41,9 @@ import type {
   PagesOptions,
   SessionOptions,
   Theme,
-} from "./lib/types.js"
+} from "./types.js"
 import type { Provider } from "./providers/index.js"
+import { JWTOptions } from "./jwt.js"
 
 /**
  * Core functionality provided by Auth.js.

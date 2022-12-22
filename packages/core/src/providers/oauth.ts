@@ -1,5 +1,5 @@
 import type { Client } from "oauth4webapi"
-import type { Awaitable, Profile, TokenSet, User } from "../lib/types.js"
+import type { Awaitable, Profile, TokenSet, User } from "../types.js"
 import type { CommonProviderOptions } from "../providers/index.js"
 
 // TODO:

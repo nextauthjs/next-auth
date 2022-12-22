@@ -1,5 +1,5 @@
 import { AuthorizedCallbackError } from "../errors.js"
-import { InternalOptions } from "../types.js"
+import { InternalOptions } from "../../types.js"
 
 import type { Adapter, AdapterUser } from "../../adapters.js"
 

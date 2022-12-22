@@ -5,7 +5,7 @@ import type {
   InternalOptions,
   RequestInternal,
   ResponseInternal,
-} from "../types.js"
+} from "../../types.js"
 import type { Cookie } from "../cookie.js"
 
 /**

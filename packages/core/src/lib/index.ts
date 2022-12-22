@@ -9,7 +9,7 @@ import type {
   ResponseInternal,
   AuthConfig,
   ErrorPageParam,
-} from "./types.js"
+} from "../types.js"
 
 export async function AuthInternal<
   Body extends string | Record<string, any> | any[]

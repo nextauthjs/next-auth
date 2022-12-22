@@ -1,4 +1,4 @@
-import type { ErrorPageParam, Theme } from "../types.js"
+import type { ErrorPageParam, Theme } from "../../types.js"
 
 /**
  * The following errors are passed as error query parameters to the default or overridden error page.

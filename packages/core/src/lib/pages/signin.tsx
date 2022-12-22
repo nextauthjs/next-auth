@@ -1,4 +1,8 @@
-import type { InternalProvider, SignInPageErrorParam, Theme } from "../types"
+import type {
+  InternalProvider,
+  SignInPageErrorParam,
+  Theme,
+} from "../../types.js"
 
 const signinErrors: Record<
   Lowercase<SignInPageErrorParam | "default">,
