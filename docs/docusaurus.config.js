@@ -178,7 +178,7 @@ module.exports = {
         docs: {
           routeBasePath: "/",
           sidebarPath: require.resolve("./sidebars.js"),
-          editUrl: "https://github.com/nextauthjs/next-auth/edit/main/docs",
+          editUrl: "https://github.com/nextauthjs/next-auth/edit/v4/docs",
           lastVersion: "current",
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
