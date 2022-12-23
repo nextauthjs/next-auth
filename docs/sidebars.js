@@ -60,7 +60,7 @@ module.exports = {
         type: "doc",
         id: "reference/solidstart/index",
       },
-      items: ["reference/solid-tart/client"],
+      items: ["reference/solidstart/client"],
     },
     {
       type: "category",
