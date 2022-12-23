@@ -158,7 +158,6 @@ export async function Auth(
  *
  * const request = new Request("https://example.com")
  * const resposne = await AuthHandler(request, authConfig)
- *
  * ```
  *
  * @see [Initiailzation](https://authjs.dev/reference/configuration/auth-options)
@@ -168,10 +167,8 @@ export interface AuthConfig {
    * List of authentication providers for signing in
    * (e.g. Google, Facebook, Twitter, GitHub, Email, etc) in any order.
    * This can be one of the built-in providers or an object with a custom provider.
-   * * **Default value**: `[]`
-   * * **Required**: *Yes*
    *
-   * [Documentation](https://next-auth.js.org/configuration/options#providers) | [Providers documentation](https://next-auth.js.org/configuration/providers)
+   * @default []
    */
   providers: Provider[]
   /**
@@ -181,36 +178,23 @@ export interface AuthConfig {
    *
    * On Unix systems: `openssl rand -hex 32`
    * Or go to https://generate-secret.vercel.app/32
-   *
-   * @default process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET
-   *
-   * [Documentation](https://next-auth.js.org/configuration/options#secret)
    */
   secret?: string
   /**
    * Configure your session like if you want to use JWT or a database,
    * how long until an idle session expires, or to throttle write operations in case you are using a database.
-   * * **Default value**: See the documentation page
-   * * **Required**: No
-   *
-   * [Documentation](https://next-auth.js.org/configuration/options#session)
    */
   session?: Partial<SessionOptions>
   /**
-   * JSON Web Tokens are enabled by default if you have not specified an adapter.
+   * JSON Web Tokens are enabled by default if you have not specified an {@link AuthConfig.adapter}.
    * JSON Web Tokens are encrypted (JWE) by default. We recommend you keep this behaviour.
-   * * **Default value**: See the documentation page
-   * * **Required**: *No*
-   *
-   * [Documentation](https://next-auth.js.org/configuration/options#jwt)
    */
   jwt?: Partial<JWTOptions>
   /**
    * Specify URLs to be used if you want to create custom sign in, sign out and error pages.
    * Pages specified will override the corresponding built-in page.
-   * * **Default value**: `{}`
-   * * **Required**: *No*
    *
+   * @default {}
    * @example
    *
    * ```ts
@@ -222,18 +206,12 @@ export interface AuthConfig {
    *     newUser: '/auth/new-user'
    *   }
    * ```
-   *
-   * [Documentation](https://next-auth.js.org/configuration/options#pages) | [Pages documentation](https://next-auth.js.org/configuration/pages)
    */
   pages?: Partial<PagesOptions>
   /**
    * Callbacks are asynchronous functions you can use to control what happens when an action is performed.
    * Callbacks are *extremely powerful*, especially in scenarios involving JSON Web Tokens
    * as they **allow you to implement access controls without a database** and to **integrate with external databases or APIs**.
-   * * **Default value**: See the Callbacks documentation
-   * * **Required**: *No*
-   *
-   * [Documentation](https://next-auth.js.org/configuration/options#callbacks) | [Callbacks documentation](https://next-auth.js.org/configuration/callbacks)
    */
   callbacks?: Partial<CallbacksOptions>
   /**
@@ -243,36 +221,23 @@ export interface AuthConfig {
    * (e.g. OAuth or Email authentication flow, JWT or database sessions, etc),
    * but typically contains a user object and/or contents of the JSON Web Token
    * and other information relevant to the event.
-   * * **Default value**: `{}`
-   * * **Required**: *No*
    *
-   * [Documentation](https://next-auth.js.org/configuration/options#events) | [Events documentation](https://next-auth.js.org/configuration/events)
+   * @default {}
    */
   events?: Partial<EventCallbacks>
-  /**
-   * You can use the adapter option to pass in your database adapter.
-   *
-   * * **Required**: *No*
-   *
-   * [Documentation](https://next-auth.js.org/configuration/options#adapter) |
-   * [Adapters Overview](https://next-auth.js.org/adapters/overview)
-   */
+  /** You can use the adapter option to pass in your database adapter. */
   adapter?: Adapter
   /**
    * Set debug to true to enable debug messages for authentication and database operations.
-   * * **Default value**: `false`
-   * * **Required**: *No*
    *
-   * - ⚠ If you added a custom `logger`, this setting is ignored.
+   * - ⚠ If you added a custom {@link AuthConfig.logger}, this setting is ignored.
    *
-   * [Documentation](https://next-auth.js.org/configuration/options#debug) | [Logger documentation](https://next-auth.js.org/configuration/options#logger)
+   * @default false
    */
   debug?: boolean
   /**
    * Override any of the logger levels (`undefined` levels will use the built-in logger),
    * and intercept logs in NextAuth. You can use this option to send NextAuth logs to a third-party logging service.
-   * * **Default value**: `console`
-   * * **Required**: *No*
    *
    * @example
    *
@@ -294,36 +259,24 @@ export interface AuthConfig {
    * })
    * ```
    *
-   * - ⚠ When set, the `debug` option is ignored
+   * - ⚠ When set, the {@link AuthConfig.debug} option is ignored
    *
-   * [Documentation](https://next-auth.js.org/configuration/options#logger) |
-   * [Debug documentation](https://next-auth.js.org/configuration/options#debug)
+   * @default console
    */
   logger?: Partial<LoggerInstance>
-  /**
-   * Changes the theme of pages.
-   * Set to `"light"` if you want to force pages to always be light.
-   * Set to `"dark"` if you want to force pages to always be dark.
-   * Set to `"auto"`, (or leave this option out)if you want the pages to follow the preferred system theme.
-   * * **Default value**: `"auto"`
-   * * **Required**: *No*
-   *
-   * [Documentation](https://next-auth.js.org/configuration/options#theme) | [Pages documentation]("https://next-auth.js.org/configuration/pages")
-   */
+  /** Changes the theme of built-in {@link AuthConfig.pages}. */
   theme?: Theme
   /**
    * When set to `true` then all cookies set by NextAuth.js will only be accessible from HTTPS URLs.
    * This option defaults to `false` on URLs that start with `http://` (e.g. http://localhost:3000) for developer convenience.
    * You can manually set this option to `false` to disable this security feature and allow cookies
    * to be accessible from non-secured URLs (this is not recommended).
-   * * **Default value**: `true` for HTTPS and `false` for HTTP sites
-   * * **Required**: No
-   *
-   * [Documentation](https://next-auth.js.org/configuration/options#usesecurecookies)
    *
    * - ⚠ **This is an advanced option.** Advanced options are passed the same way as basic options,
    * but **may have complex implications** or side effects.
    * You should **try to avoid using advanced options** unless you are very comfortable using them.
+   *
+   * The default is `false` HTTP and `true` for HTTPS sites.
    */
   useSecureCookies?: boolean
   /**
@@ -333,25 +286,14 @@ export interface AuthConfig {
    * If you use this feature, you will likely want to create conditional behavior
    * to support setting different cookies policies in development and production builds,
    * as you will be opting out of the built-in dynamic policy.
-   * * **Default value**: `{}`
-   * * **Required**: No
    *
    * - ⚠ **This is an advanced option.** Advanced options are passed the same way as basic options,
    * but **may have complex implications** or side effects.
    * You should **try to avoid using advanced options** unless you are very comfortable using them.
    *
-   * [Documentation](https://next-auth.js.org/configuration/options#cookies) | [Usage example](https://next-auth.js.org/configuration/options#example)
+   * @default {}
    */
   cookies?: Partial<CookiesOptions>
-  /**
-   * If set to `true`, NextAuth.js will use either the `x-forwarded-host` or `host` headers,
-   * instead of `NEXTAUTH_URL`
-   * Make sure that reading `x-forwarded-host` on your hosting platform can be trusted.
-   * - ⚠ **This is an advanced option.** Advanced options are passed the same way as basic options,
-   * but **may have complex implications** or side effects.
-   * You should **try to avoid using advanced options** unless you are very comfortable using them.
-   *
-   * @default Boolean(process.env.NEXTAUTH_URL ?? process.env.AUTH_TRUST_HOST ?? process.env.VERCEL)
-   */
+  /** @todo */
   trustHost?: boolean
 }
