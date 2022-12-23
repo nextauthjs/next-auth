@@ -1,14 +1,17 @@
-import React, { useEffect } from "react"
-import classnames from "classnames"
-import Layout from "@theme/Layout"
+// eslint-disable-next-line no-use-before-define
+import * as React from "react"
 import Link from "@docusaurus/Link"
-import useDocusaurusContext from "@docusaurus/useDocusaurusContext"
 import useBaseUrl from "@docusaurus/useBaseUrl"
+import useDocusaurusContext from "@docusaurus/useDocusaurusContext"
 import CodeBlock from "@theme/CodeBlock"
+import Layout from "@theme/Layout"
+import classnames from "classnames"
+import { useEffect } from "react"
 import ProviderMarquee from "../components/ProviderMarquee"
-import Seo from "./seo"
 import styles from "./index.module.css"
+import providers from "../../providers.json"
 
+const providersCount = Object.keys(providers).length + 2 // email, credentials
 const features = [
   {
     title: "Easy",
@@ -16,13 +19,17 @@ const features = [
     description: (
       <ul>
         <li>
-          Built in support for popular services
+          Built in support for {providersCount}+ popular services
           <br />
           <em>(Google, Facebook, Auth0, Apple…)</em>
         </li>
+        <li>
+          Use with <i>any</i> OAuth 2 or OpenID Connect provider
+        </li>
         <li>Built in email / passwordless / magic link</li>
-        <li>Use with any username / password store</li>
-        <li>Use with OAuth 1.0 &amp; 2.0 services</li>
+        <li>
+          Use with <i>any</i> username / password store
+        </li>
       </ul>
     ),
   },
@@ -31,14 +38,22 @@ const features = [
     imageUrl: "img/undraw_authentication.svg",
     description: (
       <ul>
-        <li>Built for Serverless, runs anywhere</li>
+        <li>
+          Runtime agnostic, runs anywhere!
+          <br />
+          <em>Vercel Edge Functions, Node.js, Serverless…</em>
+        </li>
+        <li>
+          Use with any modern framework!
+          <br />
+          <em>Next.js, SvelteKit…</em>
+        </li>
         <li>
           Bring Your Own Database - or none!
           <br />
-          <em>(MySQL, Postgres, MSSQL, MongoDB…)</em>
+          <em>MySQL, Postgres, MSSQL, MongoDB…</em>
         </li>
         <li>Choose database sessions or JWT</li>
-        <li>Secure web pages and API routes</li>
       </ul>
     ),
   },
@@ -48,9 +63,9 @@ const features = [
     description: (
       <ul>
         <li>Signed, prefixed, server-only cookies</li>
-        <li>HTTP POST + CSRF Token validation</li>
+        <li>Built-in CSRF protection</li>
         <li>JWT with JWS / JWE / JWK</li>
-        <li>Tab syncing, auto-revalidation, keepalives</li>
+        {/* <li>Tab syncing, auto-revalidation, keepalives</li> */}
         <li>Doesn't rely on client side JavaScript</li>
       </ul>
     ),
@@ -73,12 +88,12 @@ function Feature({ imageUrl, title, description }) {
         </div>
       )}
       <h3 className="text--center">{title}</h3>
-      <div>{description}</div>
+      {description}
     </div>
   )
 }
 
-function Home() {
+export default function Home() {
   const context = useDocusaurusContext()
   const { siteConfig = {} } = context
 
@@ -98,7 +113,6 @@ function Home() {
   }, [])
   return (
     <Layout description={siteConfig.tagline}>
-      <Seo />
       <div className="home-wrapper">
         <header className={classnames("hero", styles.heroBanner)}>
           <div className="container">
@@ -120,14 +134,23 @@ function Home() {
                   )}
                   href="https://next-auth-example.vercel.app"
                 >
-                  Live Demo
+                  Live Demo (Next.js)
+                </a>
+                <a
+                  className={classnames(
+                    "button button--outline button--secondary button--lg rounded-pill",
+                    styles.button
+                  )}
+                  href="https://sveltekit-auth-example.vercel.app"
+                >
+                  Live Demo (SvelteKit)
                 </a>
                 <Link
                   className={classnames(
                     "button button--primary button--lg rounded-pill",
                     styles.button
                   )}
-                  to={useBaseUrl("/getting-started/example")}
+                  to={useBaseUrl("/getting-started/introduction")}
                 >
                   Get Started
                 </Link>
@@ -165,10 +188,10 @@ function Home() {
                 <div className="col">
                   <p className="text--center">
                     <a
-                      href="https://www.npmjs.com/package/next-auth"
+                      href="https://www.npmjs.com/package/@auth/core"
                       className="button button--primary button--outline rounded-pill button--lg"
                     >
-                      npm install next-auth
+                      npm install @auth/core
                     </a>
                   </p>
                 </div>
@@ -184,26 +207,20 @@ function Home() {
                 <div className="col col--6">
                   <div className="code">
                     <h4 className="code-heading">
-                      Server <span>/pages/api/auth/[...nextauth].js</span>
+                      Next.js <span>/pages/api/auth/[...nextauth].ts</span>
                     </h4>
                     <CodeBlock className="prism-code language-js">
-                      {serverlessFunctionCode}
+                      {nextJsCode}
                     </CodeBlock>
                   </div>
                 </div>
                 <div className="col col--6">
                   <div className="code">
                     <h4 className="code-heading">
-                      Client (App) <span>/pages/_app.jsx</span>
+                      SvelteKit <span>/hooks.server.ts</span>
                     </h4>
                     <CodeBlock className="prism-code language-js">
-                      {appCode}
-                    </CodeBlock>
-                    <h4 className="code-heading">
-                      Client (Page) <span>/pages/index.js</span>
-                    </h4>
-                    <CodeBlock className="prism-code language-js">
-                      {pageCode}
+                      {svelteKitCode}
                     </CodeBlock>
                   </div>
                 </div>
@@ -212,7 +229,7 @@ function Home() {
                 <div className="col">
                   <p className="text--center" style={{ marginTop: "2rem" }}>
                     <Link
-                      to="/getting-started/example"
+                      to="/getting-started/introduction"
                       className="button button--primary button--lg rounded-pill"
                     >
                       Example Code
@@ -223,7 +240,7 @@ function Home() {
             </div>
           </section>
           <div className={styles.homeSubtitle}>
-            <p>NextAuth.js is an open source community project.</p>
+            <p>Auth.js is an open source community project.</p>
           </div>
         </main>
       </div>
@@ -231,65 +248,50 @@ function Home() {
   )
 }
 
-const appCode = `
-import { SessionProvider } from "next-auth/react"
+const svelteKitCode = `
+import SvelteKitAuth from "@auth/sveltekit"
+import GitHub from '@auth/core/providers/github'
+import Facebook from '@auth/core/providers/facebook'
+import Google from '@auth/core/providers/google'
 
-export default function App({
-  Component, pageProps: { session, ...pageProps }
-}) {
-  return (
-    <SessionProvider session={session}>
-      <Component {...pageProps}/>
-    </SessionProvider>
-  )
-}`.trim()
+import { 
+  GITHUB_ID,
+  GITHUB_SECRET,
+  FACEBOOK_ID,
+  FACEBOOK_SECRET,
+  GOOGLE_ID,
+  GOOGLE_SECRET
+} from "$env/static/private"
 
-const pageCode = `
-import { useSession, signIn, signOut } from "next-auth/react"
-
-export default function Component() {
-  const { data: session } = useSession()
-  if(session) {
-    return <>
-      Signed in as {session.user.email} <br/>
-      <button onClick={() => signOut()}>Sign out</button>
-    </>
-  }
-  return <>
-    Not signed in <br/>
-    <button onClick={() => signIn()}>Sign in</button>
-  </>
-}`.trim()
-
-const serverlessFunctionCode = `
-import NextAuth from 'next-auth'
-import AppleProvider from 'next-auth/providers/apple'
-import FacebookProvider from 'next-auth/providers/facebook'
-import GoogleProvider from 'next-auth/providers/google'
-import EmailProvider from 'next-auth/providers/email'
-
-export default NextAuth({
+export const handle = SvelteKitAuth({
   providers: [
-    // OAuth authentication providers...
-    AppleProvider({
-      clientId: process.env.APPLE_ID,
-      clientSecret: process.env.APPLE_SECRET
-    }),
-    FacebookProvider({
-      clientId: process.env.FACEBOOK_ID,
-      clientSecret: process.env.FACEBOOK_SECRET
-    }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_SECRET
-    }),
-    // Passwordless / email sign in
-    EmailProvider({
-      server: process.env.MAIL_SERVER,
-      from: 'NextAuth.js <no-reply@example.com>'
-    }),
-  ]
+    GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET }),
+    Facebook({ clientId: FACEBOOK_ID, clientSecret: FACEBOOK_SECRET }),
+    Google({ clientId: GOOGLE_ID, clientSecret: GOOGLE_SECRET })
+  ],
 })
 `.trim()
 
-export default Home
+const nextJsCode = `
+import NextAuth from 'next-auth'
+import GitHub from 'next-auth/providers/github'
+import Facebook from 'next-auth/providers/facebook'
+import Google from 'next-auth/providers/google'
+
+export default NextAuth({
+  providers: [
+    GitHub({
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET
+    }),
+    Facebook({
+      clientId: process.env.FACEBOOK_ID,
+      clientSecret: process.env.FACEBOOK_SECRET
+    }),
+    Google({
+      clientId: process.env.GOOGLE_ID,
+      clientSecret: process.env.GOOGLE_SECRET
+    })
+  ]
+})
+`.trim()

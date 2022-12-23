@@ -250,12 +250,8 @@ export function FirestoreAdapter({
       const verificationTokenSnapshot = await getDoc(verificationTokenRef)
 
       if (verificationTokenSnapshot.exists() && VerificationTokens.converter) {
-        const {
-          id,
-          ...verificationToken
-        } = VerificationTokens.converter.fromFirestore(
-          verificationTokenSnapshot
-        )
+        const { id, ...verificationToken } =
+          VerificationTokens.converter.fromFirestore(verificationTokenSnapshot)
 
         return verificationToken
       }
@@ -274,12 +270,8 @@ export function FirestoreAdapter({
       if (verificationTokenSnapshot?.exists() && VerificationTokens.converter) {
         await deleteDoc(verificationTokenSnapshot.ref)
 
-        const {
-          id,
-          ...verificationToken
-        } = VerificationTokens.converter.fromFirestore(
-          verificationTokenSnapshot
-        )
+        const { id, ...verificationToken } =
+          VerificationTokens.converter.fromFirestore(verificationTokenSnapshot)
 
         return verificationToken
       }

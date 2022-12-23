@@ -6,7 +6,6 @@
   "scripts": {
     "clean": "rm -rf .next",
     "dev": "next dev",
-    "lint": "next lint",
     "build": "next build",
     "start": "next start",
     "email": "fake-smtp-server",
@@ -23,6 +22,7 @@
     "faunadb": "^4",
     "next": "13.0.6",
     "next-auth": "workspace:*",
+    "@auth/core": "workspace:*",
     "nodemailer": "^6",
     "react": "^18",
     "react-dom": "^18"

@@ -1,40 +1,40 @@
-import NextAuth, { type NextAuthOptions } from "next-auth"
+import { Auth, type AuthConfig } from "@auth/core"
 
 // Providers
-import Apple from "next-auth/providers/apple"
-import Auth0 from "next-auth/providers/auth0"
-import AzureAD from "next-auth/providers/azure-ad"
-import AzureB2C from "next-auth/providers/azure-ad-b2c"
-import BeyondIdentity from "next-auth/providers/beyondidentity"
-import BoxyHQSAML from "next-auth/providers/boxyhq-saml"
-import Cognito from "next-auth/providers/cognito"
-import Credentials from "next-auth/providers/credentials"
-import Discord from "next-auth/providers/discord"
-import DuendeIDS6 from "next-auth/providers/duende-identity-server6"
-import Email from "next-auth/providers/email"
-import Facebook from "next-auth/providers/facebook"
-import Foursquare from "next-auth/providers/foursquare"
-import Freshbooks from "next-auth/providers/freshbooks"
-import GitHub from "next-auth/providers/github"
-import Gitlab from "next-auth/providers/gitlab"
-import Google from "next-auth/providers/google"
-import IDS4 from "next-auth/providers/identity-server4"
-import Instagram from "next-auth/providers/instagram"
-import Keycloak from "next-auth/providers/keycloak"
-import Line from "next-auth/providers/line"
-import LinkedIn from "next-auth/providers/linkedin"
-import Mailchimp from "next-auth/providers/mailchimp"
-import Okta from "next-auth/providers/okta"
-import Osu from "next-auth/providers/osu"
-import Patreon from "next-auth/providers/patreon"
-import Slack from "next-auth/providers/slack"
-import Spotify from "next-auth/providers/spotify"
-import Trakt from "next-auth/providers/trakt"
-import Twitch from "next-auth/providers/twitch"
-import Twitter, { TwitterLegacy } from "next-auth/providers/twitter"
-import Vk from "next-auth/providers/vk"
-import Wikimedia from "next-auth/providers/wikimedia"
-import WorkOS from "next-auth/providers/workos"
+import Apple from "@auth/core/providers/apple"
+import Auth0 from "@auth/core/providers/auth0"
+import AzureAD from "@auth/core/providers/azure-ad"
+import AzureB2C from "@auth/core/providers/azure-ad-b2c"
+// import BeyondIdentity from "@auth/core/providers/beyondidentity"
+import BoxyHQSAML from "@auth/core/providers/boxyhq-saml"
+// import Cognito from "@auth/core/providers/cognito"
+import Credentials from "@auth/core/providers/credentials"
+import Discord from "@auth/core/providers/discord"
+import DuendeIDS6 from "@auth/core/providers/duende-identity-server6"
+// import Email from "@auth/core/providers/email"
+import Facebook from "@auth/core/providers/facebook"
+import Foursquare from "@auth/core/providers/foursquare"
+import Freshbooks from "@auth/core/providers/freshbooks"
+import GitHub from "@auth/core/providers/github"
+import Gitlab from "@auth/core/providers/gitlab"
+import Google from "@auth/core/providers/google"
+// import IDS4 from "@auth/core/providers/identity-server4"
+import Instagram from "@auth/core/providers/instagram"
+// import Keycloak from "@auth/core/providers/keycloak"
+import Line from "@auth/core/providers/line"
+import LinkedIn from "@auth/core/providers/linkedin"
+import Mailchimp from "@auth/core/providers/mailchimp"
+// import Okta from "@auth/core/providers/okta"
+import Osu from "@auth/core/providers/osu"
+import Patreon from "@auth/core/providers/patreon"
+import Slack from "@auth/core/providers/slack"
+import Spotify from "@auth/core/providers/spotify"
+import Trakt from "@auth/core/providers/trakt"
+import Twitch from "@auth/core/providers/twitch"
+import Twitter from "@auth/core/providers/twitter"
+import Vk from "@auth/core/providers/vk"
+import Wikimedia from "@auth/core/providers/wikimedia"
+import WorkOS from "@auth/core/providers/workos"
 
 // // Prisma
 // import { PrismaClient } from "@prisma/client"
@@ -67,9 +67,9 @@ import WorkOS from "next-auth/providers/workos"
 //   secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
 // })
 
-export const authOptions: NextAuthOptions = {
+export const authConfig: AuthConfig = {
   // adapter,
-  debug: process.env.NODE_ENV !== "production",
+  // debug: process.env.NODE_ENV !== "production",
   theme: {
     logo: "https://next-auth.js.org/img/logo/logo-sm.png",
     brandColor: "#1786fb",
@@ -79,16 +79,20 @@ export const authOptions: NextAuthOptions = {
       credentials: { password: { label: "Password", type: "password" } },
       async authorize(credentials) {
         if (credentials.password !== "pw") return null
-        return { name: "Fill Murray", email: "bill@fillmurray.com", image: "https://www.fillmurray.com/64/64" }
+        return { name: "Fill Murray", email: "bill@fillmurray.com", image: "https://www.fillmurray.com/64/64", id: "1", foo: "" }
       },
     }),
     Apple({ clientId: process.env.APPLE_ID, clientSecret: process.env.APPLE_SECRET }),
     Auth0({ clientId: process.env.AUTH0_ID, clientSecret: process.env.AUTH0_SECRET, issuer: process.env.AUTH0_ISSUER }),
-    AzureAD({ clientId: process.env.AZURE_AD_CLIENT_ID, clientSecret: process.env.AZURE_AD_CLIENT_SECRET, tenantId: process.env.AZURE_AD_TENANT_ID }),
+    AzureAD({
+      clientId: process.env.AZURE_AD_CLIENT_ID,
+      clientSecret: process.env.AZURE_AD_CLIENT_SECRET,
+      tenantId: process.env.AZURE_AD_TENANT_ID,
+    }),
     AzureB2C({ clientId: process.env.AZURE_B2C_ID, clientSecret: process.env.AZURE_B2C_SECRET, issuer: process.env.AZURE_B2C_ISSUER }),
-    BeyondIdentity({ clientId: process.env.BEYOND_IDENTITY_CLIENT_ID, clientSecret: process.env.BEYOND_IDENTITY_CLIENT_SECRET, issuer: process.env.BEYOND_IDENTITY_ISSUER }),
+    // BeyondIdentity({ clientId: process.env.BEYOND_IDENTITY_CLIENT_ID, clientSecret: process.env.BEYOND_IDENTITY_CLIENT_SECRET, issuer: process.env.BEYOND_IDENTITY_ISSUER }),
     BoxyHQSAML({ issuer: "https://jackson-demo.boxyhq.com", clientId: "tenant=boxyhq.com&product=saml-demo.boxyhq.com", clientSecret: "dummy" }),
-    Cognito({ clientId: process.env.COGNITO_ID, clientSecret: process.env.COGNITO_SECRET, issuer: process.env.COGNITO_ISSUER }),
+    // Cognito({ clientId: process.env.COGNITO_ID, clientSecret: process.env.COGNITO_SECRET, issuer: process.env.COGNITO_ISSUER }),
     Discord({ clientId: process.env.DISCORD_ID, clientSecret: process.env.DISCORD_SECRET }),
     DuendeIDS6({ clientId: "interactive.confidential", clientSecret: "secret", issuer: "https://demo.duendesoftware.com" }),
     Facebook({ clientId: process.env.FACEBOOK_ID, clientSecret: process.env.FACEBOOK_SECRET }),
@@ -97,33 +101,53 @@ export const authOptions: NextAuthOptions = {
     GitHub({ clientId: process.env.GITHUB_ID, clientSecret: process.env.GITHUB_SECRET }),
     Gitlab({ clientId: process.env.GITLAB_ID, clientSecret: process.env.GITLAB_SECRET }),
     Google({ clientId: process.env.GOOGLE_ID, clientSecret: process.env.GOOGLE_SECRET }),
-    IDS4({ clientId: process.env.IDS4_ID, clientSecret: process.env.IDS4_SECRET, issuer: process.env.IDS4_ISSUER }),
+    // IDS4({ clientId: process.env.IDS4_ID, clientSecret: process.env.IDS4_SECRET, issuer: process.env.IDS4_ISSUER }),
     Instagram({ clientId: process.env.INSTAGRAM_ID, clientSecret: process.env.INSTAGRAM_SECRET }),
-    Keycloak({ clientId: process.env.KEYCLOAK_ID, clientSecret: process.env.KEYCLOAK_SECRET, issuer: process.env.KEYCLOAK_ISSUER }),
+    // Keycloak({ clientId: process.env.KEYCLOAK_ID, clientSecret: process.env.KEYCLOAK_SECRET, issuer: process.env.KEYCLOAK_ISSUER }),
     Line({ clientId: process.env.LINE_ID, clientSecret: process.env.LINE_SECRET }),
     LinkedIn({ clientId: process.env.LINKEDIN_ID, clientSecret: process.env.LINKEDIN_SECRET }),
     Mailchimp({ clientId: process.env.MAILCHIMP_ID, clientSecret: process.env.MAILCHIMP_SECRET }),
-    Okta({ clientId: process.env.OKTA_ID, clientSecret: process.env.OKTA_SECRET, issuer: process.env.OKTA_ISSUER }),
+    // Okta({ clientId: process.env.OKTA_ID, clientSecret: process.env.OKTA_SECRET, issuer: process.env.OKTA_ISSUER }),
     Osu({ clientId: process.env.OSU_CLIENT_ID, clientSecret: process.env.OSU_CLIENT_SECRET }),
     Patreon({ clientId: process.env.PATREON_ID, clientSecret: process.env.PATREON_SECRET }),
     Slack({ clientId: process.env.SLACK_ID, clientSecret: process.env.SLACK_SECRET }),
     Spotify({ clientId: process.env.SPOTIFY_ID, clientSecret: process.env.SPOTIFY_SECRET }),
     Trakt({ clientId: process.env.TRAKT_ID, clientSecret: process.env.TRAKT_SECRET }),
     Twitch({ clientId: process.env.TWITCH_ID, clientSecret: process.env.TWITCH_SECRET }),
-    Twitter({ version: "2.0", clientId: process.env.TWITTER_ID, clientSecret: process.env.TWITTER_SECRET }),
-    TwitterLegacy({ clientId: process.env.TWITTER_LEGACY_ID, clientSecret: process.env.TWITTER_LEGACY_SECRET }),
+    Twitter({ clientId: process.env.TWITTER_ID, clientSecret: process.env.TWITTER_SECRET }),
+    // TwitterLegacy({ clientId: process.env.TWITTER_LEGACY_ID, clientSecret: process.env.TWITTER_LEGACY_SECRET }),
     Vk({ clientId: process.env.VK_ID, clientSecret: process.env.VK_SECRET }),
     Wikimedia({ clientId: process.env.WIKIMEDIA_ID, clientSecret: process.env.WIKIMEDIA_SECRET }),
     WorkOS({ clientId: process.env.WORKOS_ID, clientSecret: process.env.WORKOS_SECRET }),
   ],
+  // debug: process.env.NODE_ENV !== "production",
 }
 
-if (authOptions.adapter) {
-  authOptions.providers.unshift(
-    // NOTE: You can start a fake e-mail server with `pnpm email`
-    // and then go to `http://localhost:1080` in the browser
-    Email({ server: "smtp://127.0.0.1:1025?tls.rejectUnauthorized=false" })
-  )
+if (authConfig.adapter) {
+  // TODO:
+  // authOptions.providers.unshift(
+  //   // NOTE: You can start a fake e-mail server with `pnpm email`
+  //   // and then go to `http://localhost:1080` in the browser
+  //   Email({ server: "smtp://127.0.0.1:1025?tls.rejectUnauthorized=false" })
+  // )
 }
 
-export default NextAuth(authOptions)
+// TODO: move to next-auth/edge
+function AuthHandler(...args: any[]) {
+  const envSecret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET
+  const envTrustHost = !!(process.env.NEXTAUTH_URL ?? process.env.AUTH_TRUST_HOST ?? process.env.VERCEL ?? process.env.NODE_ENV !== "production")
+  if (args.length === 1) {
+    return async (req: Request) => {
+      args[0].secret ??= envSecret
+      args[0].trustHost ??= envTrustHost
+      return Auth(req, args[0])
+    }
+  }
+  args[1].secret ??= envSecret
+  args[1].trustHost ??= envTrustHost
+  return Auth(args[0], args[1])
+}
+
+export default AuthHandler(authConfig)
+
+export const config = { runtime: "experimental-edge" }

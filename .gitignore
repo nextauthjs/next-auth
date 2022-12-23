@@ -51,7 +51,7 @@ apps/dev/typeorm
 /.vs/slnx.sqlite-journal
 /.vs/slnx.sqlite
 /.vs
-.vscode
+.vscode/generated*
 
 # Jetbrains
 .idea
@@ -79,3 +79,21 @@ test.schema.gql
 # docusaurus
 docs/.docusaurus
 docs/providers.json
+
+# Core
+packages/core/*.js
+packages/core/*.d.ts
+packages/core/*.d.ts.map
+packages/core/lib
+packages/core/providers
+docs/docs/reference/03-core
+docs/docs/reference/04-sveltekit
+
+
+# SvelteKit
+packages/frameworks-sveltekit/index.*
+packages/frameworks-sveltekit/client.*
+packages/frameworks-sveltekit/.svelte-kit
+packages/frameworks-sveltekit/package
+packages/frameworks-sveltekit/vite.config.js.timestamp-*
+packages/frameworks-sveltekit/vite.config.ts.timestamp-*
