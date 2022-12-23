@@ -1,0 +1,77 @@
+node_modules
+build
+.turbo
+static
+.github
+.vscode
+.DS_Store
+.npmrc
+.env
+.env.*
+firebase-debug.log
+.pnpm-debug.log
+pnpm-lock.yaml
+.next
+dist
+apps
+.docusaurus
+.cache-loader
+packages/next-auth/providers
+packages/next-auth/src/providers/oauth-types.ts
+packages/next-auth/client
+packages/next-auth/css
+packages/next-auth/utils
+packages/next-auth/core
+packages/next-auth/jwt
+packages/next-auth/react
+packages/next-auth/*.d.ts
+packages/next-auth/*.js
+packages/next-auth/next
+
+# Development app
+apps/dev/src/css
+apps/dev/prisma/migrations
+apps/dev/typeorm
+
+# VS
+.vscode/generated*
+
+# GitHub Actions runner
+/actions-runner
+/_work
+
+# DB
+dev.db*
+packages/adapter-prisma/prisma/dev.db
+packages/adapter-prisma/prisma/migrations
+db.sqlite
+packages/adapter-supabase/supabase/.branches
+
+# Tests
+coverage
+dynamodblocal-bin
+firestore-debug.log
+test.schema.gql
+
+
+# docusaurus
+docs/.docusaurus
+docs/providers.json
+
+# Core
+packages/core/*.js
+packages/core/*.d.ts
+packages/core/*.d.ts.map
+packages/core/lib
+packages/core/providers
+docs/docs/reference/03-core
+docs/docs/reference/04-sveltekit
+
+
+# SvelteKit
+packages/frameworks-sveltekit/index.*
+packages/frameworks-sveltekit/client.*
+packages/frameworks-sveltekit/.svelte-kit
+packages/frameworks-sveltekit/package
+packages/frameworks-sveltekit/vite.config.js.timestamp-*
+packages/frameworks-sveltekit/vite.config.ts.timestamp-*
