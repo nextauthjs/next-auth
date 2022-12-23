@@ -23,6 +23,8 @@ module.exports = {
       apiKey: "97c0894508f2d1d4a2fef4fe6db28448",
       indexName: "next-auth-v4",
       searchParameters: {},
+      contextualSearch: false,
+      externalUrlRegex: "authjs\\.dev|next-auth\\.js\\.org",
     },
     navbar: {
       title: "NextAuth.js",
