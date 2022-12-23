@@ -55,12 +55,12 @@ module.exports = {
     },
     {
       type: "category",
-      label: "@auth/solid-start",
+      label: "@auth/solidstart",
       link: {
         type: "doc",
-        id: "reference/solid-start/index",
+        id: "reference/solidstart/index",
       },
-      items: ["reference/solid-start/client"],
+      items: ["reference/solid-tart/client"],
     },
     {
       type: "category",

@@ -7,7 +7,7 @@ title: Client
 ```ts
 import { signIn } from "@auth/solid-start/client"
 signIn()
-signIn("provider") // exaple: signIn("github")
+signIn("provider") // example: signIn("github")
 ```
 
 ## Signing out

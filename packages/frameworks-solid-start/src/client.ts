@@ -80,7 +80,6 @@ export async function signIn<
 export async function signOut(options?: SignOutParams) {
   const { callbackUrl = window.location.href } = options ?? {}
   // TODO: Custom base path
-  // TODO: Remove this since Sveltekit offers the CSRF protection via origin check
   const csrfTokenResponse = await fetch("/api/auth/csrf")
   const { csrfToken } = await csrfTokenResponse.json()
   const res = await fetch(`/api/auth/signout`, {
