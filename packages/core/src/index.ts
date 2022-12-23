@@ -210,6 +210,7 @@ export interface AuthConfig {
    * Pages specified will override the corresponding built-in page.
    * * **Default value**: `{}`
    * * **Required**: *No*
+   *
    * @example
    *
    * ```ts
@@ -349,6 +350,7 @@ export interface AuthConfig {
    * - ⚠ **This is an advanced option.** Advanced options are passed the same way as basic options,
    * but **may have complex implications** or side effects.
    * You should **try to avoid using advanced options** unless you are very comfortable using them.
+   *
    * @default Boolean(process.env.NEXTAUTH_URL ?? process.env.AUTH_TRUST_HOST ?? process.env.VERCEL)
    */
   trustHost?: boolean
