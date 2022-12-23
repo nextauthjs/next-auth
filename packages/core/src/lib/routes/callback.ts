@@ -5,7 +5,12 @@ import { createHash } from "../web.js"
 import { handleAuthorized } from "./shared.js"
 
 import type { AdapterSession } from "../../adapters.js"
-import type { RequestInternal, ResponseInternal, User , InternalOptions } from "../../types.js"
+import type {
+  RequestInternal,
+  ResponseInternal,
+  User,
+  InternalOptions,
+} from "../../types.js"
 import type { Cookie, SessionStore } from "../cookie.js"
 
 /** Handle callbacks from login services */
