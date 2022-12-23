@@ -16,6 +16,8 @@ dist
 apps
 .docusaurus
 .cache-loader
+.eslintrc.js
+
 packages/next-auth/providers
 packages/next-auth/src/providers/oauth-types.ts
 packages/next-auth/client
@@ -52,7 +54,8 @@ coverage
 dynamodblocal-bin
 firestore-debug.log
 test.schema.gql
-
+tests
+*.test.ts
 
 # docusaurus
 docs/.docusaurus
@@ -62,6 +65,7 @@ docs/providers.json
 packages/core/*.js
 packages/core/*.d.ts
 packages/core/*.d.ts.map
+
 packages/core/lib
 packages/core/providers
 docs/docs/reference/03-core
