@@ -1,5 +1,5 @@
 import type { CommonProviderOptions } from "./index.js"
-import type { Awaitable, RequestInternal, User } from "../types.js"
+import type { Awaitable, User } from "../types.js"
 import type { JSXInternal } from "preact/src/jsx.js"
 
 /**
