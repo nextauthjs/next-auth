@@ -1,6 +1,6 @@
 {
   "name": "@auth/core",
-  "version": "0.1.4",
+  "version": "0.2.1",
   "description": "Authentication for the web.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth.git",
@@ -15,10 +15,8 @@
   "type": "module",
   "types": "./index.d.ts",
   "files": [
-    "adapters.*",
-    "index.*",
-    "jwt.*",
-    "types.*",
+    "*.js",
+    "*.d.ts",
     "lib",
     "providers",
     "src"
@@ -30,6 +28,10 @@
     },
     "./adapters": {
       "types": "./adapters.d.ts"
+    },
+    "./errors": {
+      "import": "./errors.js",
+      "types": "./errors.d.ts"
     },
     "./jwt": {
       "types": "./jwt.d.ts",
@@ -65,10 +67,10 @@
   },
   "scripts": {
     "build": "pnpm clean && pnpm css && tsc",
-    "clean": "rm -rf adapters.* index.* jwt.* types.* lib providers",
+    "clean": "rm -rf *.js *.d.ts lib providers",
     "css": "node ./scripts/generate-css.js",
-    "lint": "eslint src",
-    "format": "pnpm lint --fix",
+    "lint": "pnpm prettier --check src && eslint src",
+    "format": "pnpm prettier --write . && eslint src --fix",
     "dev": "pnpm css && tsc -w"
   },
   "devDependencies": {

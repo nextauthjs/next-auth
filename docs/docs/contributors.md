@@ -1,5 +1,6 @@
 ---
 title: Contributors
+displayed_sidebar: null
 ---
 
 ## Core team

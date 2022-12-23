@@ -6,11 +6,7 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "target": "ES2020",
     "module": "ESNext",
     "moduleResolution": "node",
@@ -21,16 +17,8 @@
     "strictNullChecks": true,
     "stripInternal": true,
     "declarationMap": true,
-    "declaration": true,
+    "declaration": true
   },
-  "include": [
-    "src/**/*",
-  ],
-  "exclude": [
-    "adapters.*",
-    "index.*",
-    "jwt",
-    "lib",
-    "providers",
-  ],
+  "include": ["src/**/*"],
+  "exclude": ["adapters.*", "index.*", "jwt", "lib", "providers"]
 }

@@ -3,7 +3,7 @@ id: sequelize
 title: Sequelize
 ---
 
-This is the Sequelize Adapter for [`next-auth`](https://next-auth.js.org).
+This is the Sequelize Adapter for [`next-auth`](https://authjs.dev).
 
 ## Getting Started
 
@@ -28,9 +28,9 @@ import { Sequelize } from "sequelize"
 const sequelize = new Sequelize("yourconnectionstring")
 
 // For more information on each option (and a full list of options) go to
-// https://next-auth.js.org/configuration/options
+// https://authjs.dev/reference/configuration/auth-config
 export default NextAuth({
-  // https://next-auth.js.org/providers/overview
+  // https://authjs.dev/reference/providers/
   providers: [],
   adapter: SequelizeAdapter(sequelize),
 })
@@ -38,7 +38,7 @@ export default NextAuth({
 
 ## Updating the database schema
 
-By default, the sequelize adapter will not create tables in your database. In production, best practice is to create the [required tables](https://next-auth.js.org/adapters/models) in your database via [migrations](https://sequelize.org/master/manual/migrations.html). In development, you are able to call [`sequelize.sync()`](https://sequelize.org/master/manual/model-basics.html#model-synchronization) to have sequelize create the necessary tables, foreign keys and indexes:
+By default, the sequelize adapter will not create tables in your database. In production, best practice is to create the [required tables](https://authjs.dev/reference/adapters/models) in your database via [migrations](https://sequelize.org/master/manual/migrations.html). In development, you are able to call [`sequelize.sync()`](https://sequelize.org/master/manual/model-basics.html#model-synchronization) to have sequelize create the necessary tables, foreign keys and indexes:
 
 > This schema is adapted for use in Sequelize and based upon our main [schema](/reference/adapters/models)
 
@@ -72,7 +72,7 @@ import Sequelize, { DataTypes } from "sequelize"
 const sequelize = new Sequelize("sqlite::memory:")
 
 export default NextAuth({
-  // https://next-auth.js.org/providers/overview
+  // https://authjs.dev/reference/providers/
   providers: [],
   adapter: SequelizeAdapter(sequelize, {
     models: {

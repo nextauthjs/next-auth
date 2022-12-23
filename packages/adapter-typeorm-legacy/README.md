@@ -1,6 +1,6 @@
 <p align="center">
    <br/>
-    <a href="https://next-auth.js.org" target="_blank"><img height="64px" src="https://next-auth.js.org/img/logo/logo-sm.png" />&nbsp;&nbsp;&nbsp;&nbsp;</a><img height="64px" src="https://raw.githubusercontent.com/nextauthjs/adapters/canary/packages/typeorm-legacy/logo.png" />
+    <a href="https://authjs.dev" target="_blank"><img height="64px" src="https://authjs.dev/img/logo/logo-sm.png" />&nbsp;&nbsp;&nbsp;&nbsp;</a><img height="64px" src="https://raw.githubusercontent.com/nextauthjs/adapters/canary/packages/typeorm-legacy/logo.png" />
    <h3 align="center"><b>TypeORM (Legacy) Adapter</b> - NextAuth.js</h3>
    <p align="center">
    Open Source. Full Stack. Own Your Data.
@@ -14,9 +14,9 @@
 
 ## Overview
 
-This is the TypeORM Adapter for [`next-auth`](https://next-auth.js.org). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
+This is the TypeORM Adapter for [`auth.js`](https://authjs.dev). This package can only be used in conjunction with the primary `auth.js` package. It is not a standalone package.
 
-You can find more TypeORM information in the docs at [next-auth.js.org/adapters/typeorm](https://next-auth.js.org/adapters/typeorm).
+You can find more TypeORM information in the docs at [authjs.dev/adapters/typeorm](https://authjs.dev/reference/adapters/typeorm).
 
 ## Getting Started
 
@@ -33,9 +33,9 @@ import NextAuth from "next-auth"
 import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
 
 // For more information on each option (and a full list of options) go to
-// https://next-auth.js.org/configuration/options
+// https://authjs.dev/reference/configuration/auth-config
 export default NextAuth({
-  // https://next-auth.js.org/configuration/providers
+  // https://authjs.dev/reference/providers/oauth-builtin
   providers: [],
   adapter: TypeORMLegacyAdapter({
     type: 'sqlite',  // or mysql, postgresql, mssql
@@ -54,7 +54,7 @@ export default NextAuth({
 
 This adapter supports MySQL, PostgreSQL, SQLite, as well as MSSQL. Further configuration options are listed below.
 
-> If you're looking for MongoDB support, it's been pulled out into its own adapter [@next-auth/mongodb-adapter](https://next-auth.js.org/adapters/mongodb).
+> If you're looking for MongoDB support, it's been pulled out into its own adapter [@next-auth/mongodb-adapter](https://authjs.dev/reference/adapters/mongodb).
 
 ### SQLite
 

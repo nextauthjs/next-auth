@@ -29,7 +29,7 @@ module.exports = {
       env: { jest: true },
     },
     {
-      files: ["docs"],
+      files: ["docs/**"],
       plugins: ["@docusaurus"],
       extends: ["plugin:@docusaurus/recommended"],
     },

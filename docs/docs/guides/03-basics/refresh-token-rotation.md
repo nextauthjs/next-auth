@@ -12,7 +12,7 @@ A working example can be accessed [here](https://github.com/nextauthjs/next-auth
 
 ### Server Side
 
-Using a [JWT callback](https://next-auth.js.org/configuration/callbacks#jwt-callback) and a [session callback](https://next-auth.js.org/configuration/callbacks#session-callback), we can persist OAuth tokens and refresh them when they expire.
+Using a [JWT callback](https://authjs.dev/guides/basics/callbacks#jwt-callback) and a [session callback](https://authjs.dev/guides/basics/callbacks#session-callback), we can persist OAuth tokens and refresh them when they expire.
 
 Below is a sample implementation using Google's Identity Provider. Please note that the OAuth 2.0 request in the `refreshAccessToken()` function will vary between different providers, but the core logic should remain similar.
 

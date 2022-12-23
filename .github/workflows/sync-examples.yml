@@ -16,3 +16,4 @@ jobs:
         with:
           GH_PAT: ${{ secrets.SYNC_EXAMPLE_PAT }}
           SKIP_PR: true
+          ORIGINAL_MESSAGE: true

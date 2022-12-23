@@ -22,7 +22,7 @@
  * </button>
  * ...
  * ```
- * [NextAuth.js Documentation](https://next-auth.js.org/providers/instagram) | [Instagram Documentation](https://developers.facebook.com/docs/instagram-basic-display-api/getting-started) | [Configuration](https://developers.facebook.com/apps)
+ * [NextAuth.js Documentation](https://authjs.dev/reference/providers/instagram) | [Instagram Documentation](https://developers.facebook.com/docs/instagram-basic-display-api/getting-started) | [Configuration](https://developers.facebook.com/apps)
  */
 /** @type {import(".").OAuthProvider} */
 export default function Instagram(options) {

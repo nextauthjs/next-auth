@@ -5,14 +5,7 @@
     "emitDeclarationOnly": false
   },
   "watchOptions": {
-    "excludeDirectories": [
-      "jwt",
-      "lib",
-      "providers",
-    ],
-    "excludeFiles": [
-      "./*.d.ts",
-      "./*.js"
-    ]
+    "excludeDirectories": ["jwt", "lib", "providers"],
+    "excludeFiles": ["./*.d.ts", "./*.js"]
   }
 }

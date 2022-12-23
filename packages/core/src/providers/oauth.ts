@@ -1,5 +1,5 @@
 import type { Client } from "oauth4webapi"
-import type { Awaitable, Profile, TokenSet, User } from "../index.js"
+import type { Awaitable, Profile, TokenSet, User } from "../types.js"
 import type { CommonProviderOptions } from "../providers/index.js"
 
 // TODO:
@@ -95,13 +95,14 @@ export interface OAuthProviderButtonStyles {
   textDark: string
 }
 
+/** TODO: */
 export interface OAuth2Config<P> extends CommonProviderOptions, PartialIssuer {
   /**
    * Identifies the provider when you want to sign in to
    * a specific provider.
    *
    * @example
-   * ```js
+   * ```ts
    * signIn('github') // "github" is the provider ID
    * ```
    */
@@ -133,7 +134,7 @@ export interface OAuth2Config<P> extends CommonProviderOptions, PartialIssuer {
    * This will be used to create the user in the database.
    * Defaults to: `id`, `email`, `name`, `image`
    *
-   * [Documentation](https://next-auth.js.org/adapters/models#user)
+   * [Documentation](https://authjs.dev/reference/adapters/models#user)
    */
   profile?: ProfileCallback<P>
   /**
@@ -150,7 +151,7 @@ export interface OAuth2Config<P> extends CommonProviderOptions, PartialIssuer {
   client?: Partial<Client>
   style?: OAuthProviderButtonStyles
   /**
-   * [Documentation](https://next-auth.js.org/configuration/providers/oauth#allowdangerousemailaccountlinking-option)
+   * [Documentation](https://authjs.dev/reference/providers/oauth#allowdangerousemailaccountlinking-option)
    */
   allowDangerousEmailAccountLinking?: boolean
   /**
@@ -163,6 +164,7 @@ export interface OAuth2Config<P> extends CommonProviderOptions, PartialIssuer {
   options?: OAuthUserConfig<P>
 }
 
+/** TODO: */
 export interface OIDCConfig<P> extends Omit<OAuth2Config<P>, "type"> {
   type: "oidc"
 }
@@ -192,7 +194,3 @@ export type OAuthUserConfig<P> = Omit<
   "options" | "type"
 > &
   Required<Pick<OAuthConfig<P>, "clientId" | "clientSecret">>
-
-export type OAuthProvider = (
-  options: Partial<OAuthConfig<any>>
-) => OAuthConfig<any>

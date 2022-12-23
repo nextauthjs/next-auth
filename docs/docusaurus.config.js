@@ -12,7 +12,7 @@ const typedocConfig = require("./typedoc.json")
 delete typedocConfig.$schema
 
 /** @type {import("@docusaurus/types").Config} */
-module.exports = {
+const docusaurusConfig = {
   title: "Auth.js",
   tagline: "Authentication for the Web.",
   url: "https://authjs.dev",
@@ -20,9 +20,9 @@ module.exports = {
   favicon: "img/favicon.ico",
   trailingSlash: false,
   organizationName: "nextauthjs",
-  projectName: "next-auth",
   // TODO: remove this once ready
   onBrokenLinks: "log",
+  projectName: "next-auth",
   themeConfig: {
     prism: {
       theme: require("prism-react-renderer/themes/nightOwl"),
@@ -54,7 +54,7 @@ module.exports = {
           position: "left",
         },
         {
-          to: "/guides/overview",
+          to: "/guides",
           activeBasePath: "/guides",
           label: "Guides",
           position: "left",
@@ -114,7 +114,7 @@ module.exports = {
             },
             {
               html: `
-            <a target="_blank" rel="noopener noreferrer" href="https://vercel.com?utm_source=nextauthjs&utm_campaign=oss">
+            <a target="_blank" rel="noopener noreferrer" href="https://vercel.com?utm_source=authjs&utm_campaign=oss">
               <img
                 alt="Powered by Vercel"
                 style="margin-top: 8px"
@@ -179,11 +179,7 @@ module.exports = {
           lastVersion: "current",
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
-          remarkPlugins: [
-            require("@sapphire/docusaurus-plugin-npm2yarn2pnpm").npm2yarn2pnpm,
-            require("remark-github"),
-            require("mdx-mermaid"),
-          ],
+          remarkPlugins: [require("@sapphire/docusaurus-plugin-npm2yarn2pnpm").npm2yarn2pnpm, require("remark-github")],
           versions: {
             current: {
               label: "experimental",
@@ -201,15 +197,42 @@ module.exports = {
       "docusaurus-plugin-typedoc",
       {
         ...typedocConfig,
+        id: "core",
         plugin: ["./tyepdoc"],
-        entryPoints: ["index.ts", "adapters.ts", "jwt.ts", "lib/types.ts"]
-          .map((e) => `${coreSrc}/${e}`)
-          .concat(providers),
+        entryPoints: ["index.ts", "adapters.ts", "errors.ts", "jwt.ts", "types.ts"].map((e) => `${coreSrc}/${e}`).concat(providers),
         tsconfig: "../packages/core/tsconfig.json",
         out: "reference/03-core",
         watch: process.env.TYPEDOC_WATCH,
         includeExtension: false,
       },
     ],
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        ...typedocConfig,
+        id: "sveltekit",
+        plugin: ["./tyepdoc"],
+        entryPoints: ["index.ts", "client.ts"].map((e) => `../packages/frameworks-sveltekit/src/lib/${e}`),
+        tsconfig: "../packages/frameworks-sveltekit/tsconfig.json",
+        out: "reference/04-sveltekit",
+        watch: process.env.TYPEDOC_WATCH,
+        includeExtension: false,
+      },
+    ],
   ],
 }
+
+docusaurusConfig.headTags = [
+  { tagName: "meta", attributes: { charSet: "utf-8" } },
+  { tagName: "link", attributes: { rel: "canonical", href: docusaurusConfig.url } },
+  { tagName: "meta", attributes: { property: "og:title", content: docusaurusConfig.title } },
+  { tagName: "meta", attributes: { property: "og:description", content: docusaurusConfig.tagline } },
+  { tagName: "meta", attributes: { property: "og:image", content: `${docusaurusConfig.url}/img/og-image.png` } },
+  { tagName: "meta", attributes: { property: "og:url", content: docusaurusConfig.url } },
+  { tagName: "meta", attributes: { name: "twitter:card", content: "summary_large_image" } },
+  { tagName: "meta", attributes: { name: "twitter:title", content: docusaurusConfig.title } },
+  { tagName: "meta", attributes: { name: "twitter:description", content: docusaurusConfig.tagline } },
+  { tagName: "meta", attributes: { name: "twitter:image", content: `${docusaurusConfig.url}/img/og-image.png` } },
+]
+
+module.exports = docusaurusConfig

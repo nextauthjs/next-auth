@@ -1,27 +1,25 @@
+import { defaultCookies } from "./cookie.js"
 import {
   InvalidCallbackUrl,
   InvalidEndpoints,
   MissingAdapter,
   MissingAdapterMethods,
-  MissingAPIRoute,
   MissingAuthorize,
   MissingSecret,
   UnsupportedStrategy,
-} from "./errors.js"
-import { defaultCookies } from "./cookie.js"
+  UntrustedHost,
+} from "../errors.js"
 
-import type { AuthOptions, RequestInternal } from "../index.js"
+import type { AuthConfig, RequestInternal } from "../types.js"
 import type { WarningCode } from "./utils/logger.js"
 
 type ConfigError =
+  | InvalidCallbackUrl
+  | InvalidEndpoints
   | MissingAdapter
   | MissingAdapterMethods
-  | MissingAPIRoute
   | MissingAuthorize
   | MissingSecret
-  | InvalidCallbackUrl
-  | UnsupportedStrategy
-  | InvalidEndpoints
   | UnsupportedStrategy
 
 let warned = false
@@ -39,34 +37,25 @@ function isValidHttpUrl(url: string, baseUrl: string) {
 /**
  * Verify that the user configured Auth.js correctly.
  * Good place to mention deprecations as well.
- *
- * REVIEW: Make some of these and corresponding docs less Next.js specific?
  */
-export function assertConfig(params: {
-  options: AuthOptions
-  req: RequestInternal
-}): ConfigError | WarningCode[] {
-  const { options, req } = params
-  const { url } = req
+export function assertConfig(
+  request: RequestInternal,
+  options: AuthConfig
+): ConfigError | WarningCode[] {
+  const { url } = request
   const warnings: WarningCode[] = []
 
-  if (!warned) {
-    if (!url.origin) warnings.push("NEXTAUTH_URL")
-    if (options.debug) warnings.push("DEBUG_ENABLED")
+  if (!warned && options.debug) warnings.push("debug_enabled")
+
+  if (!options.trustHost) {
+    return new UntrustedHost(`Host must be trusted. URL was: ${request.url}`)
   }
 
   if (!options.secret) {
     return new MissingSecret("Please define a `secret`.")
   }
 
-  // req.query isn't defined when asserting `unstable_getServerSession` for example
-  if (!req.query?.nextauth && !req.action) {
-    return new MissingAPIRoute(
-      "Cannot find [...nextauth].{js,ts} in `/pages/api/auth`. Make sure the filename is written correctly."
-    )
-  }
-
-  const callbackUrlParam = req.query?.callbackUrl as string | undefined
+  const callbackUrlParam = request.query?.callbackUrl as string | undefined
 
   if (callbackUrlParam && !isValidHttpUrl(callbackUrlParam, url.origin)) {
     return new InvalidCallbackUrl(
@@ -78,7 +67,9 @@ export function assertConfig(params: {
     options.useSecureCookies ?? url.protocol === "https://"
   )
   const callbackUrlCookie =
-    req.cookies?.[options.cookies?.callbackUrl?.name ?? defaultCallbackUrl.name]
+    request.cookies?.[
+      options.cookies?.callbackUrl?.name ?? defaultCallbackUrl.name
+    ]
 
   if (callbackUrlCookie && !isValidHttpUrl(callbackUrlCookie, url.origin)) {
     return new InvalidCallbackUrl(

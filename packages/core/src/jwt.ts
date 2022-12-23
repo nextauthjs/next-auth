@@ -1,13 +1,37 @@
 /**
- * `@authjs/core/jwt` provides functions
- * to encode and decode {@link https://authjs.dev/concepts/session-strategies#jwt JWT}s
- * issued and used by Auth.js. It is meant for being used in the app only.
- * If you need JWT authentication for your API, you should rely on your Identity Provider.
  *
- * The JWT created by Auth.js is encrypted using the `A256GCM` algorithm ({@link https://www.rfc-editor.org/rfc/rfc7516 JWE}). by default.
+ *
+ * This module contains functions and types
+ * to encode and decode {@link https://authjs.dev/concepts/session-strategies#jwt JWT}s
+ * issued and used by Auth.js.
+ *
+ * The JWT issued by Auth.js is _encrypted by default_, using the _A256GCM_ algorithm ({@link https://www.rfc-editor.org/rfc/rfc7516 JWE}).
  * It uses the `AUTH_SECRET` environment variable to dervice a sufficient encryption key.
  *
- * @see [RFC7519 - JSON Web Token (JWT)](https://www.rfc-editor.org/rfc/rfc7519)
+ * :::info Note
+ * Auth.js JWTs are meant to be used by the same app that issued them.
+ * If you need JWT authentication for your third-party API, you should rely on your Identity Provider instead.
+ * :::
+ *
+ * ## Installation
+ *
+ * ```bash npm2yarn2pnpm
+ * npm install @auth/core
+ * ```
+ *
+ * You can then import this submodule from `@auth/core/jwt`.
+ *
+ * ## Usage
+ *
+ * :::warning Warning
+ * This module *will* be refactored/changed. We do not recommend relying on it right now.
+ * :::
+ *
+ *
+ * ## Resources
+ *
+ * - [What is a JWT session strategy](https://authjs.dev/concepts/session-strategies#jwt)
+ * - [RFC7519 - JSON Web Token (JWT)](https://www.rfc-editor.org/rfc/rfc7519)
  *
  * @module jwt
  */
@@ -15,7 +39,7 @@
 import { hkdf } from "@panva/hkdf"
 import { EncryptJWT, jwtDecrypt } from "jose"
 import { SessionStore } from "./lib/cookie.js"
-import { Awaitable } from "./lib/types.js"
+import { Awaitable } from "./types.js"
 import type { LoggerInstance } from "./lib/utils/logger.js"
 
 const DEFAULT_MAX_AGE = 30 * 24 * 60 * 60 // 30 days
@@ -75,7 +99,7 @@ export interface GetTokenParams<R extends boolean = false> {
 /**
  * Takes a Auth.js request (`req`) and returns either the Auth.js issued JWT's payload,
  * or the raw JWT string. We look for the JWT in the either the cookies, or the `Authorization` header.
- * [Documentation](https://next-auth.js.org/tutorials/securing-pages-and-api-routes#using-gettoken)
+ * [Documentation](https://authjs.dev/guides/basics/securing-pages-and-api-routes#using-gettoken)
  */
 export async function getToken<R extends boolean = false>(
   params: GetTokenParams<R>

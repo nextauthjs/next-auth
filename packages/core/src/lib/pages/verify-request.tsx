@@ -1,4 +1,4 @@
-import type { Theme } from "../../index.js"
+import type { Theme } from "../../types.js"
 
 interface VerifyRequestPageProps {
   url: URL

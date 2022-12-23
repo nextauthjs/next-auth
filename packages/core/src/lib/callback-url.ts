@@ -1,4 +1,4 @@
-import type { InternalOptions } from "../index.js"
+import type { InternalOptions } from "../types.js"
 
 interface CreateCallbackUrlParams {
   options: InternalOptions

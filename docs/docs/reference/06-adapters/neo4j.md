@@ -3,7 +3,7 @@ id: neo4j
 title: Neo4j
 ---
 
-This is the Neo4j Adapter for [`next-auth`](https://next-auth.js.org). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
+This is the Neo4j Adapter for [`next-auth`](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
 
 ## Getting Started
 
@@ -27,9 +27,9 @@ const driver = neo4j.driver(
 const neo4jSession = driver.session()
 
 // For more information on each option (and a full list of options) go to
-// https://next-auth.js.org/configuration/options
+// https://authjs.dev/reference/configuration/auth-options
 export default NextAuth({
-  // https://next-auth.js.org/configuration/providers
+  // https://authjs.dev/reference/providers/oauth-builtin
   providers: [],
   adapter: Neo4jAdapter(neo4jSession),
   ...
