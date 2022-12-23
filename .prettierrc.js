@@ -6,10 +6,11 @@ module.exports = {
   singleQuote: false,
   overrides: [
     {
-      files: "apps/dev/pages/api/auth/[...nextauth].ts",
-      options: {
-        printWidth: 150,
-      },
+      files: [
+        "apps/dev/pages/api/auth/[...nextauth].ts",
+        "docs/{sidebars,docusaurus.config}.js",
+      ],
+      options: { printWidth: 150 },
     },
   ],
 }

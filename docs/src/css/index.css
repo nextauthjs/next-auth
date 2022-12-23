@@ -281,7 +281,9 @@ html[data-theme="dark"] #carbonads .carbon-poweredby {
   2. the "main" module would show up twice.
   See sidebars.js
 */
-.reflection-category, .theme-doc-sidebar-item-link-level-2 [href="/reference/core/modules/main"] {
+.reflection-category,
+.theme-doc-sidebar-item-link-level-2 [href="/reference/core/modules/main"],
+.theme-doc-sidebar-item-link-level-2 [href="/reference/sveltekit/modules/main"] {
   display: none;
 }
 

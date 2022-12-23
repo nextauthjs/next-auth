@@ -87,6 +87,7 @@ packages/core/*.d.ts.map
 packages/core/lib
 packages/core/providers
 docs/docs/reference/03-core
+docs/docs/reference/04-sveltekit
 
 
 # SvelteKit
