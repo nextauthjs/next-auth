@@ -46,7 +46,7 @@ const features = [
         <li>
           Use with any modern framework!
           <br />
-          <em>Next.js, SvelteKit…</em>
+          <em>Next.js, SolidStart, SvelteKit…</em>
         </li>
         <li>
           Bring Your Own Database - or none!
@@ -145,6 +145,15 @@ export default function Home() {
                 >
                   Live Demo (SvelteKit)
                 </a>
+                <a
+                  className={classnames(
+                    "button button--outline button--secondary button--lg rounded-pill",
+                    styles.button
+                  )}
+                  href="https://auth-solid.vercel.app"
+                >
+                  Live Demo (SolidStart)
+                </a>
                 <Link
                   className={classnames(
                     "button button--primary button--lg rounded-pill",
@@ -224,6 +233,16 @@ export default function Home() {
                     </CodeBlock>
                   </div>
                 </div>
+                <div className="col col--6">
+                  <div className="code">
+                    <h4 className="code-heading">
+                      SolidStart <span>/routes/api/auth/[...solidauth].ts</span>
+                    </h4>
+                    <CodeBlock className="prism-code language-js">
+                      {solidStartCode}
+                    </CodeBlock>
+                  </div>
+                </div>
               </div>
               <div className="row">
                 <div className="col">
@@ -271,6 +290,22 @@ export const handle = SvelteKitAuth({
   ],
 })
 `.trim()
+
+const solidStartCode =
+  `import { SolidAuth, type SolidAuthConfig } from "@auth/solid-start";
+import GitHub from "@auth/core/providers/github";
+
+export const authOpts: SolidAuthConfig = {
+  providers: [
+    GitHub({
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET,
+    }),
+  ],
+  debug: false,
+};
+
+export const { GET, POST } = SolidAuth(authOpts);`.trim()
 
 const nextJsCode = `
 import NextAuth from 'next-auth'

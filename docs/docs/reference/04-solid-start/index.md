@@ -1,3 +1,7 @@
+---
+title: SolidStart Auth
+---
+
 # Getting started
 
 Recommended to use [create-jd-app](https://github.com/OrJDev/create-jd-app)
@@ -12,14 +16,6 @@ npm install @auth/solid-start@latest @auth/core@latest
 
 ```
 AUTH_SECRET=your_auth_secret
-```
-
-### On Production
-
-Don't forget to trust the host.
-
-```
-AUTH_TRUST_HOST=true
 ```
 
 ## Creating the api handler

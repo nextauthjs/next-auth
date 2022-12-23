@@ -55,6 +55,15 @@ module.exports = {
     },
     {
       type: "category",
+      label: "@auth/solid-start",
+      link: {
+        type: "doc",
+        id: "reference/solid-start/index",
+      },
+      items: ["reference/solid-start/client"],
+    },
+    {
+      type: "category",
       label: "@auth/nextjs",
       link: {
         type: "doc",

@@ -18,7 +18,7 @@ sidebar_position: 0
 
 - Next.js
 - SvelteKit
-- SolidState
+- SolidStart
 - Remix
 - Nuxt
 - Gatsby
