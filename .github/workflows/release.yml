@@ -16,8 +16,6 @@ jobs:
     steps:
       - name: Init
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 2
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
         with:
@@ -49,7 +47,7 @@ jobs:
       - name: Init
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 100
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
         with:
@@ -66,7 +64,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NO_VERIFIY: 1
+          NO_VERIFY: 1
   release-pr:
     name: Publish PR
     runs-on: ubuntu-latest
