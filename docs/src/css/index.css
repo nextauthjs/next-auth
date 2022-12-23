@@ -281,15 +281,18 @@ html[data-theme="dark"] #carbonads .carbon-poweredby {
   2. the "main" module would show up twice.
   See sidebars.js
 */
-.reflection-category, .theme-doc-sidebar-item-link-level-2 [href="/reference/core/modules/main"] {
+.reflection-category,
+.theme-doc-sidebar-item-link-level-2 [href="/reference/core/modules/main"],
+.theme-doc-sidebar-item-link-level-2
+  [href="/reference/sveltekit/modules/main"] {
   display: none;
 }
-
 
 /*
  HACK: to hide the "Classes" header and duplicate items together with the "typedoc-plugin-markdown" patch.
  See: https://github.com/TypeStrong/typedoc/issues/2006
 */
-#classes, h3.anchor + p:has(code, strong) {
+#classes,
+h3.anchor + p:has(code, strong) {
   display: none;
 }

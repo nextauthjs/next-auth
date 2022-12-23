@@ -1,6 +1,6 @@
-import { AuthError } from '../../errors.js'
+import { AuthError } from "../../errors.js"
 
-export type WarningCode = 'debug_enabled'
+export type WarningCode = "debug_enabled"
 
 /**
  * Override any of the methods, and the rest will use the default logger.
@@ -13,13 +13,13 @@ export interface LoggerInstance extends Record<string, Function> {
   debug: (message: string, metadata?: unknown) => void
 }
 
-const red = '\x1b[31m'
-const yellow = '\x1b[33m'
-const grey = '\x1b[90m'
-const reset = '\x1b[0m'
+const red = "\x1b[31m"
+const yellow = "\x1b[33m"
+const grey = "\x1b[90m"
+const reset = "\x1b[0m"
 
 export const logger: LoggerInstance = {
-  error (error: AuthError) {
+  error(error: AuthError) {
     const url = `https://errors.authjs.dev#${error.name.toLowerCase()}`
     console.error(error.stack)
     console.error(
@@ -27,23 +27,23 @@ export const logger: LoggerInstance = {
     )
     error.metadata && console.error(JSON.stringify(error.metadata, null, 2))
   },
-  warn (code) {
+  warn(code) {
     const url = `https://errors.authjs.dev#${code}`
     console.warn(`${yellow}[auth][warn][${code}]${reset}`, `Read more: ${url}`)
   },
-  debug (message, metadata) {
+  debug(message, metadata) {
     console.log(
       `${grey}[auth][debug]:${reset} ${message}`,
       JSON.stringify(metadata, null, 2)
     )
-  }
+  },
 }
 
 /**
  * Override the built-in logger with user's implementation.
  * Any `undefined` level will use the default logger.
  */
-export function setLogger (
+export function setLogger(
   newLogger: Partial<LoggerInstance> = {},
   debug?: boolean
 ) {

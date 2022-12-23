@@ -179,10 +179,7 @@ const docusaurusConfig = {
           lastVersion: "current",
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
-          remarkPlugins: [
-            require("@sapphire/docusaurus-plugin-npm2yarn2pnpm").npm2yarn2pnpm,
-            require("remark-github"),
-          ],
+          remarkPlugins: [require("@sapphire/docusaurus-plugin-npm2yarn2pnpm").npm2yarn2pnpm, require("remark-github")],
           versions: {
             current: {
               label: "experimental",
@@ -200,18 +197,24 @@ const docusaurusConfig = {
       "docusaurus-plugin-typedoc",
       {
         ...typedocConfig,
+        id: "core",
         plugin: ["./tyepdoc"],
-        entryPoints: [
-          "index.ts",
-          "adapters.ts",
-          "errors.ts",
-          "jwt.ts",
-          "types.ts",
-        ]
-          .map((e) => `${coreSrc}/${e}`)
-          .concat(providers),
+        entryPoints: ["index.ts", "adapters.ts", "errors.ts", "jwt.ts", "types.ts"].map((e) => `${coreSrc}/${e}`).concat(providers),
         tsconfig: "../packages/core/tsconfig.json",
         out: "reference/03-core",
+        watch: process.env.TYPEDOC_WATCH,
+        includeExtension: false,
+      },
+    ],
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        ...typedocConfig,
+        id: "sveltekit",
+        plugin: ["./tyepdoc"],
+        entryPoints: ["index.ts", "client.ts"].map((e) => `../packages/frameworks-sveltekit/src/lib/${e}`),
+        tsconfig: "../packages/frameworks-sveltekit/tsconfig.json",
+        out: "reference/04-sveltekit",
         watch: process.env.TYPEDOC_WATCH,
         includeExtension: false,
       },
@@ -220,75 +223,16 @@ const docusaurusConfig = {
 }
 
 docusaurusConfig.headTags = [
-  {
-    tagName: "meta",
-    attributes: {
-      charSet: "utf-8",
-    },
-  },
-  {
-    tagName: "link",
-    attributes: {
-      rel: "canonical",
-      href: docusaurusConfig.url,
-    },
-  },
-  {
-    tagName: "meta",
-    attributes: {
-      property: "og:title",
-      content: docusaurusConfig.title,
-    },
-  },
-  {
-    tagName: "meta",
-    attributes: {
-      property: "og:description",
-      content: docusaurusConfig.tagline,
-    },
-  },
-  {
-    tagName: "meta",
-    attributes: {
-      property: "og:image",
-      content: `${docusaurusConfig.url}/img/og-image.png`,
-    },
-  },
-  {
-    tagName: "meta",
-    attributes: {
-      property: "og:url",
-      content: docusaurusConfig.url,
-    },
-  },
-  {
-    tagName: "meta",
-    attributes: {
-      name: "twitter:card",
-      content: "summary_large_image",
-    },
-  },
-  {
-    tagName: "meta",
-    attributes: {
-      name: "twitter:title",
-      content: docusaurusConfig.title,
-    },
-  },
-  {
-    tagName: "meta",
-    attributes: {
-      name: "twitter:description",
-      content: docusaurusConfig.tagline,
-    },
-  },
-  {
-    tagName: "meta",
-    attributes: {
-      name: "twitter:image",
-      content: `${docusaurusConfig.url}/img/og-image.png`,
-    },
-  },
+  { tagName: "meta", attributes: { charSet: "utf-8" } },
+  { tagName: "link", attributes: { rel: "canonical", href: docusaurusConfig.url } },
+  { tagName: "meta", attributes: { property: "og:title", content: docusaurusConfig.title } },
+  { tagName: "meta", attributes: { property: "og:description", content: docusaurusConfig.tagline } },
+  { tagName: "meta", attributes: { property: "og:image", content: `${docusaurusConfig.url}/img/og-image.png` } },
+  { tagName: "meta", attributes: { property: "og:url", content: docusaurusConfig.url } },
+  { tagName: "meta", attributes: { name: "twitter:card", content: "summary_large_image" } },
+  { tagName: "meta", attributes: { name: "twitter:title", content: docusaurusConfig.title } },
+  { tagName: "meta", attributes: { name: "twitter:description", content: docusaurusConfig.tagline } },
+  { tagName: "meta", attributes: { name: "twitter:image", content: `${docusaurusConfig.url}/img/og-image.png` } },
 ]
 
 module.exports = docusaurusConfig

@@ -5,7 +5,7 @@ const path = require("path")
 module.exports = {
   root: true,
   parser: "@typescript-eslint/parser",
-  extends: ["standard-with-typescript", "prettier/prettier"],
+  extends: ["standard-with-typescript", "prettier"],
   rules: {
     camelcase: "off",
     "@typescript-eslint/naming-convention": "off",

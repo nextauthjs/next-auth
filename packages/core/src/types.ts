@@ -55,24 +55,24 @@
  * @module types
  */
 
-import type { CookieSerializeOptions } from 'cookie'
+import type { CookieSerializeOptions } from "cookie"
 import type {
   OAuth2TokenEndpointResponse,
-  OpenIDTokenEndpointResponse
-} from 'oauth4webapi'
-import type { Adapter, AdapterUser } from './adapters.js'
+  OpenIDTokenEndpointResponse,
+} from "oauth4webapi"
+import type { Adapter, AdapterUser } from "./adapters.js"
 import type {
   CredentialInput,
   CredentialsConfig,
   EmailConfig,
   OAuthConfigInternal,
-  ProviderType
-} from './providers/index.js'
-import type { JWT, JWTOptions } from './jwt.js'
-import type { Cookie } from './lib/cookie.js'
-import type { LoggerInstance } from './lib/utils/logger.js'
+  ProviderType,
+} from "./providers/index.js"
+import type { JWT, JWTOptions } from "./jwt.js"
+import type { Cookie } from "./lib/cookie.js"
+import type { LoggerInstance } from "./lib/utils/logger.js"
 
-export type { AuthConfig } from './index.js'
+export type { AuthConfig } from "./index.js"
 export type Awaitable<T> = T | PromiseLike<T>
 export type { LoggerInstance }
 
@@ -83,7 +83,7 @@ export type { LoggerInstance }
  * [Pages](https://authjs.dev/guides/basics/pages)
  */
 export interface Theme {
-  colorScheme?: 'auto' | 'dark' | 'light'
+  colorScheme?: "auto" | "dark" | "light"
   logo?: string
   brandColor?: string
   buttonText?: string
@@ -95,7 +95,7 @@ export interface Theme {
  * but they refer to the same value.
  */
 export type TokenSet = Partial<
-OAuth2TokenEndpointResponse | OpenIDTokenEndpointResponse
+  OAuth2TokenEndpointResponse | OpenIDTokenEndpointResponse
 >
 
 /**
@@ -260,8 +260,8 @@ export interface EventCallbacks {
    */
   signOut: (
     message:
-    | { session: Awaited<ReturnType<Adapter['deleteSession']>> }
-    | { token: Awaited<ReturnType<JWTOptions['decode']>> }
+      | { session: Awaited<ReturnType<Adapter["deleteSession"]>> }
+      | { token: Awaited<ReturnType<JWTOptions["decode"]>> }
   ) => Awaitable<void>
   createUser: (message: { user: User }) => Awaitable<void>
   updateUser: (message: { user: User }) => Awaitable<void>
@@ -276,26 +276,26 @@ export interface EventCallbacks {
    * - `token`: The JWT token for this session.
    * - `session`: The session object from your adapter.
    */
-  session: (message: { session: Session, token: JWT }) => Awaitable<void>
+  session: (message: { session: Session; token: JWT }) => Awaitable<void>
 }
 
 export type EventType = keyof EventCallbacks
 
 /** TODO: Check if all these are used/correct */
-export type ErrorPageParam = 'Configuration' | 'AccessDenied' | 'Verification'
+export type ErrorPageParam = "Configuration" | "AccessDenied" | "Verification"
 
 /** TODO: Check if all these are used/correct */
 export type SignInPageErrorParam =
-  | 'Signin'
-  | 'OAuthSignin'
-  | 'OAuthCallback'
-  | 'OAuthCreateAccount'
-  | 'EmailCreateAccount'
-  | 'Callback'
-  | 'OAuthAccountNotLinked'
-  | 'EmailSignin'
-  | 'CredentialsSignin'
-  | 'SessionRequired'
+  | "Signin"
+  | "OAuthSignin"
+  | "OAuthCallback"
+  | "OAuthCreateAccount"
+  | "EmailCreateAccount"
+  | "Callback"
+  | "OAuthAccountNotLinked"
+  | "EmailSignin"
+  | "CredentialsSignin"
+  | "SessionRequired"
 
 export interface PagesOptions {
   /**
@@ -344,7 +344,7 @@ export interface DefaultSession {
  */
 export interface Session extends DefaultSession {}
 
-export type SessionStrategy = 'jwt' | 'database'
+export type SessionStrategy = "jwt" | "database"
 
 /** [Documentation](https://authjs.dev/reference/configuration/auth-config#session) */
 export interface SessionOptions {
@@ -406,31 +406,31 @@ export interface User extends DefaultUser {}
 // Below are types that are only supposed be used by next-auth internally
 
 /** @internal */
-export type InternalProvider<T = ProviderType> = (T extends 'oauth'
+export type InternalProvider<T = ProviderType> = (T extends "oauth"
   ? OAuthConfigInternal<any>
-  : T extends 'email'
-    ? EmailConfig
-    : T extends 'credentials'
-      ? CredentialsConfig
-      : never) & {
-        signinUrl: string
-        callbackUrl: string
-      }
+  : T extends "email"
+  ? EmailConfig
+  : T extends "credentials"
+  ? CredentialsConfig
+  : never) & {
+  signinUrl: string
+  callbackUrl: string
+}
 
 export type AuthAction =
-  | 'providers'
-  | 'session'
-  | 'csrf'
-  | 'signin'
-  | 'signout'
-  | 'callback'
-  | 'verify-request'
-  | 'error'
+  | "providers"
+  | "session"
+  | "csrf"
+  | "signin"
+  | "signout"
+  | "callback"
+  | "verify-request"
+  | "error"
 
 /** @internal */
 export interface RequestInternal {
   url: URL
-  method: 'GET' | 'POST'
+  method: "GET" | "POST"
   cookies?: Partial<Record<string, string>>
   headers?: Record<string, any>
   query?: Record<string, any>

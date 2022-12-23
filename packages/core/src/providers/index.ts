@@ -1,6 +1,6 @@
 import { Profile } from "../types.js"
+import CredentialsProvider from "./credentials.js"
 import type {
-  default as CredentialsProvider,
   CredentialsConfig,
   CredentialsProviderType,
 } from "./credentials.js"
