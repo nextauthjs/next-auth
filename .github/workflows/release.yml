@@ -64,7 +64,9 @@ jobs:
       - name: Publish to npm and GitHub
         run: pnpm release
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          # Use GH_PAT when this is fixed:
+          # https://github.com/github/roadmap/issues/622
+          GITHUB_TOKEN: ${{ secrets.GH_PAT_CLASSIC }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NO_VERIFY: 1
   release-pr:
