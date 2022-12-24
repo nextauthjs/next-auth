@@ -112,4 +112,3 @@ jobs:
         env:
           VERSION: ${{ steps.determine-version.outputs.version }}
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-

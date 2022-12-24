@@ -1,6 +1,6 @@
 import { unstable_getServerSession } from "next-auth/next"
 import Layout from "../components/layout"
-import { authOptions } from './api/auth/[...nextauth]';
+import { authOptions } from "./api/auth/[...nextauth]"
 
 export default function Page() {
   // As this page uses Server Side Rendering, the `session` will be already

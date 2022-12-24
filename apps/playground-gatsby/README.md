@@ -34,7 +34,7 @@ Auth.js is an easy to implement, full-stack (client/server) open source authenti
 
 Go to [authjs.dev](https://authjs.dev) for more information and documentation.
 
-> Auth.js is not officially associated with Vercel or Next.js._
+> Auth.js is not officially associated with Vercel or Next.js.\_
 
 ## Getting Started
 
