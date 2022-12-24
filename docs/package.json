@@ -11,10 +11,8 @@
     "deploy": "docusaurus deploy",
     "serve": "docusaurus serve",
     "clear": "docusaurus clear",
-    "lint": "eslint .",
-    "format": "prettier --write .",
-    "providers": "node ./scripts/generate-providers",
-    "snippets": "node ./scripts/generate-snippets"
+    "providers": "node scripts/generate-providers.mjs",
+    "snippets": "node scripts/generate-snippets.mjs"
   },
   "dependencies": {
     "@auth/core": "workspace:*",

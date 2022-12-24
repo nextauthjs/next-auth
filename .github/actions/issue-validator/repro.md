@@ -35,4 +35,3 @@ Upvoting issues to show your interest will help us prioritize and address them a
 - [How to create a Minimal, Complete, and Verifiable example](https://stackoverflow.com/help/mcve)
 - [Reporting a NextAuth.js bug](https://github.com/nextauthjs/next-auth/blob/main/.github/ISSUE_TEMPLATE/1_bug_framework.yml)
 - [How to Contribute to Open Source (Next.js)](https://www.youtube.com/watch?v=cuoNzXFLitc)
-

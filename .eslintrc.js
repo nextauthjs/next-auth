@@ -2,22 +2,36 @@
 
 /** @type {import("eslint").ESLint.ConfigData} */
 module.exports = {
-  root: true,
-  parser: "@typescript-eslint/parser",
-  extends: ["standard-with-typescript", "prettier"],
-  rules: {
-    camelcase: "off",
-    "@typescript-eslint/naming-convention": "off",
-    "@typescript-eslint/strict-boolean-expressions": "off",
-    "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/restrict-template-expressions": "off",
-  },
-  parserOptions: {
-    project: ["./packages/**/tsconfig.json"],
-  },
+  env: { browser: true, es2022: true, node: true },
+  extends: ["eslint:recommended", "prettier"],
   overrides: [
     {
+      files: ["*.ts", "*.tsx"],
+      parser: "@typescript-eslint/parser",
+      parserOptions: {
+        project: ["./packages/**/tsconfig.json", "./apps/**/tsconfig.json"],
+      },
+      settings: { react: { version: "18" } },
+      extends: [
+        "plugin:react/recommended",
+        "plugin:react/jsx-runtime",
+        "standard-with-typescript",
+        "prettier",
+      ],
+      rules: {
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/method-signature-style": "off",
+        "@typescript-eslint/naming-convention": "off",
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/restrict-template-expressions": "off",
+        "@typescript-eslint/strict-boolean-expressions": "off",
+        "react/prop-types": "off",
+        "react/no-unescaped-entities": "off",
+      },
+    },
+    {
       files: ["*.test.ts", "*.test.js"],
+      extends: ["plugin:jest/recommended"],
       env: { jest: true },
     },
     {
@@ -26,7 +40,8 @@ module.exports = {
       extends: ["plugin:@docusaurus/recommended"],
     },
     {
-      files: ["packages/core/src/**/*"],
+      // TODO: Expand to all packages
+      files: ["packages/{core,sveltekit}/*.ts"],
       plugins: ["jsdoc"],
       extends: ["plugin:jsdoc/recommended"],
       rules: {
@@ -41,11 +56,20 @@ module.exports = {
       },
     },
     {
-      files: ["packages/core/src/adapters.ts"],
-      rules: {
-        "@typescript-eslint/method-signature-style": "off",
+      files: ["packages/frameworks-sveltekit"],
+      plugins: ["svelte3"],
+      overrides: [{ files: ["*.svelte"], processor: "svelte3/svelte3" }],
+      settings: {
+        "svelte3/typescript": () => require("typescript"),
       },
+      parserOptions: { sourceType: "module", ecmaVersion: 2020 },
+      env: { browser: true, es2017: true, node: true },
     },
   ],
-  plugins: ["jest"],
+  parserOptions: {
+    sourceType: "module",
+    ecmaVersion: "latest",
+    ecmaFeatures: { jsx: true },
+  },
+  root: true,
 }

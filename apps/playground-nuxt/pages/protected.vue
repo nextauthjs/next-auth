@@ -2,7 +2,7 @@
 const session = useSession()
 
 definePageMeta({
-  middleware: 'auth'
+  middleware: "auth",
 })
 </script>
 
