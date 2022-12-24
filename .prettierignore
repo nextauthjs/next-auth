@@ -9,8 +9,6 @@ node_modules
 patches
 pnpm-lock.yaml
 .github/actions/issue-validator/index.mjs
-*.cjs
-*.js
 *.d.ts
 *.d.ts.map
 
@@ -30,6 +28,8 @@ static
 
 coverage
 dist
+packages/**/*.cjs
+packages/**/*.js
 
 # @auth/core
 packages/core/src/providers/oauth-types.ts
