@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { signIn, signOut } from '@/lib/auth/client'
+import { signIn, signOut } from "@/lib/auth/client"
 
 const session = useSession()
 </script>
@@ -9,30 +9,37 @@ const session = useSession()
     <div class="signedInStatus">
       <p :class="['nojs-show', 'loaded']">
         <template v-if="session">
-          <span v-if="session.user?.image" :style="{ backgroundImage: `url(${session.user.image})` }" class="avatar" />
+          <span
+            v-if="session.user?.image"
+            :style="{ backgroundImage: `url(${session.user.image})` }"
+            class="avatar"
+          />
           <span class="signedInText">
-            <small>Signed in as</small><br>
+            <small>Signed in as</small><br />
             <strong>{{ session.user?.email || session.user?.name }}</strong>
           </span>
-          <a href="/api/auth/signout" class="button" @click.prevent="signOut">Sign out</a>
+          <a href="/api/auth/signout" class="button" @click.prevent="signOut"
+            >Sign out</a
+          >
         </template>
         <template v-else>
           <span class="notSignedInText">You are not signed in</span>
-          <a href="/api/auth/signin" class="buttonPrimary" @click.prevent="signIn">Sign in</a>
+          <a
+            href="/api/auth/signin"
+            class="buttonPrimary"
+            @click.prevent="signIn"
+            >Sign in</a
+          >
         </template>
       </p>
     </div>
     <nav>
       <ul class="navItems">
         <li class="navItem">
-          <NuxtLink to="/">
-            Home
-          </NuxtLink>
+          <NuxtLink to="/"> Home </NuxtLink>
         </li>
         <li class="navItem">
-          <NuxtLink to="/protected">
-            Protected
-          </NuxtLink>
+          <NuxtLink to="/protected"> Protected </NuxtLink>
         </li>
       </ul>
     </nav>
@@ -57,10 +64,10 @@ const session = useSession()
   top: 0;
   opacity: 1;
   overflow: hidden;
-  border-radius: 0 0 .6rem .6rem;
-  padding: .6rem 1rem;
+  border-radius: 0 0 0.6rem 0.6rem;
+  padding: 0.6rem 1rem;
   margin: 0;
-  background-color: rgba(0,0,0,.05);
+  background-color: rgba(0, 0, 0, 0.05);
   transition: all 0.2s ease-in;
 }
 
@@ -72,7 +79,7 @@ const session = useSession()
 .signedInText,
 .notSignedInText {
   position: absolute;
-  padding-top: .8rem;
+  padding-top: 0.8rem;
   left: 1rem;
   right: 6.5rem;
   white-space: nowrap;
@@ -101,13 +108,13 @@ const session = useSession()
 .button,
 .buttonPrimary {
   float: right;
-  margin-right: -.4rem;
+  margin-right: -0.4rem;
   font-weight: 500;
-  border-radius: .3rem;
+  border-radius: 0.3rem;
   cursor: pointer;
   font-size: 1rem;
   line-height: 1.4rem;
-  padding: .7rem .8rem;
+  padding: 0.7rem 0.8rem;
   position: relative;
   z-index: 10;
   background-color: transparent;
@@ -119,11 +126,11 @@ const session = useSession()
   border-color: #346df1;
   color: #fff;
   text-decoration: none;
-  padding: .7rem 1.4rem;
+  padding: 0.7rem 1.4rem;
 }
 
 .buttonPrimary:hover {
-  box-shadow: inset 0 0 5rem rgba(0,0,0,0.2)
+  box-shadow: inset 0 0 5rem rgba(0, 0, 0, 0.2);
 }
 
 .navItems {
