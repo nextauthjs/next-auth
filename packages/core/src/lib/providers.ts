@@ -97,5 +97,5 @@ function normalizeEndpoint(
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   for (const k in e.params) url.searchParams.set(k, e.params[k] as any)
 
-  return { url }
+  return { ...e, url }
 }
