@@ -9,6 +9,10 @@ node_modules
 patches
 pnpm-lock.yaml
 .github/actions/issue-validator/index.mjs
+*.cjs
+*.js
+*.d.ts
+*.d.ts.map
 
 .svelte-kit
 .next
@@ -26,9 +30,6 @@ static
 
 coverage
 dist
-packages/**/*.js
-packages/**/*.d.ts
-packages/**/*.d.ts.map
 
 # @auth/core
 packages/core/src/providers/oauth-types.ts
@@ -40,6 +41,7 @@ packages/frameworks-sveltekit/vite.config.{js,ts}.timestamp-*
 
 # next-auth
 packages/next-auth/src/providers/oauth-types.ts
+packages/next-auth/css/index.css
 
 
 # Adapters
