@@ -1,81 +1,70 @@
-node_modules
-build
-.turbo
-static
-.github
-.vscode
-.DS_Store
-.npmrc
-.env
-.env.*
-firebase-debug.log
-.pnpm-debug.log
-pnpm-lock.yaml
-.next
-dist
-apps
-.docusaurus
-.cache-loader
 .eslintrc.js
-
-packages/next-auth/providers
-packages/next-auth/src/providers/oauth-types.ts
-packages/next-auth/client
-packages/next-auth/css
-packages/next-auth/utils
-packages/next-auth/core
-packages/next-auth/jwt
-packages/next-auth/react
-packages/next-auth/*.d.ts
-packages/next-auth/*.js
-packages/next-auth/next
-
-# Development app
-apps/dev/src/css
-apps/dev/prisma/migrations
-apps/dev/typeorm
-
-# VS
+.cache-loader
+.DS_Store
+.pnpm-debug.log
+.turbo
 .vscode/generated*
-
-# GitHub Actions runner
-/actions-runner
 /_work
+/actions-runner
+node_modules
+patches
+pnpm-lock.yaml
+.github/actions/issue-validator/index.mjs
+*.cjs
+*.js
+*.d.ts
+*.d.ts.map
 
-# DB
-dev.db*
-packages/adapter-prisma/prisma/dev.db
-packages/adapter-prisma/prisma/migrations
-db.sqlite
-packages/adapter-supabase/supabase/.branches
+.svelte-kit
+.next
+.nuxt
 
-# Tests
-coverage
-dynamodblocal-bin
-firestore-debug.log
-test.schema.gql
-tests
-*.test.ts
+# --------------- Docs ---------------
 
-# docusaurus
-docs/.docusaurus
-docs/providers.json
-
-# Core
-packages/core/*.js
-packages/core/*.d.ts
-packages/core/*.d.ts.map
-
-packages/core/lib
-packages/core/providers
+.docusaurus
+build
 docs/docs/reference/03-core
 docs/docs/reference/04-sveltekit
+static
 
+# --------------- Packages ---------------
 
-# SvelteKit
-packages/frameworks-sveltekit/index.*
-packages/frameworks-sveltekit/client.*
-packages/frameworks-sveltekit/.svelte-kit
+coverage
+dist
+
+# @auth/core
+packages/core/src/providers/oauth-types.ts
+packages/core/src/lib/pages/styles.ts
+
+# @auth/sveltekit
 packages/frameworks-sveltekit/package
-packages/frameworks-sveltekit/vite.config.js.timestamp-*
-packages/frameworks-sveltekit/vite.config.ts.timestamp-*
+packages/frameworks-sveltekit/vite.config.{js,ts}.timestamp-*
+
+# next-auth
+packages/next-auth/src/providers/oauth-types.ts
+packages/next-auth/css/index.css
+
+
+# Adapters
+.branches
+db.sqlite
+dev.db
+dynamodblocal-bin
+firebase-debug.log
+firestore-debug.log
+migrations
+test.schema.gql
+
+# --------------- Apps ---------------
+
+
+# Examples should have their own Prettier config since they are templates too
+apps/example-sveltekit
+
+# Development app
+apps
+
+
+# --------------- Tests ---------------
+# TODO: these should be linted
+packages/**/*test*
