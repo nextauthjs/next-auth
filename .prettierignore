@@ -23,6 +23,7 @@ build
 docs/docs/reference/03-core
 docs/docs/reference/04-sveltekit
 static
+docs/providers.json
 
 # --------------- Packages ---------------
 
