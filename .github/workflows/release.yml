@@ -20,8 +20,6 @@ jobs:
           fetch-depth: 2
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
-        with:
-          version: 7.5.1
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
@@ -53,8 +51,6 @@ jobs:
           token: ${{ secrets.GH_PAT_CLASSIC }}
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
-        with:
-          version: 7.5.1
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
@@ -80,8 +76,6 @@ jobs:
         uses: actions/checkout@v3
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
-        with:
-          version: 7.5.1
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
