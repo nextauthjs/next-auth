@@ -69,8 +69,6 @@
     "build": "pnpm clean && pnpm css && tsc",
     "clean": "rm -rf *.js *.d.ts lib providers",
     "css": "node ./scripts/generate-css.js",
-    "lint": "pnpm prettier --check src && eslint src",
-    "format": "pnpm prettier --write . && eslint src --fix",
     "dev": "pnpm css && tsc -w"
   },
   "devDependencies": {

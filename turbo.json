@@ -28,14 +28,7 @@
     "dev": {
       "cache": false
     },
-    "lint": {
-      "outputs": []
-    },
     "test": {
-      "dependsOn": ["lint"],
-      "outputs": []
-    },
-    "format": {
       "outputs": []
     },
     "@next-auth/upstash-redis-adapter#test": {
