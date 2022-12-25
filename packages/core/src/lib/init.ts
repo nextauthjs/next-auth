@@ -169,7 +169,7 @@ function eventsErrorHandler(
         const method: Method = methods[name as keyof Method]
         return await method(...args)
       } catch (e) {
-        logger.error(new EventError(e))
+        logger.error(new EventError(e as Error))
       }
     }
     return acc
@@ -190,7 +190,7 @@ function adapterErrorHandler<TAdapter>(
         const method: Method = adapter[name as keyof Method]
         return await method(...args)
       } catch (e) {
-        const error = new AdapterError(e)
+        const error = new AdapterError(e as Error)
         logger.error(error)
         throw error
       }

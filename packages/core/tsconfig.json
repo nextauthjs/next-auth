@@ -13,12 +13,11 @@
     "outDir": ".",
     "rootDir": "src",
     "skipDefaultLibCheck": true,
-    "strict": false,
     "strictNullChecks": true,
     "stripInternal": true,
     "declarationMap": true,
     "declaration": true
   },
   "include": ["src/**/*"],
-  "exclude": ["adapters.*", "index.*", "jwt", "lib", "providers"]
+  "exclude": ["*.js", "*.d.ts", "lib", "providers"]
 }
