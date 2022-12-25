@@ -30,6 +30,7 @@
   "devDependencies": {
     "@auth/core": "workspace:*",
     "@solidjs/meta": "^0.28.0",
+    "@types/cookie": "0.5.1",
     "@types/node": "^18.7.14",
     "@types/set-cookie-parser": "^2.4.2",
     "next-auth": "workspace:*",
@@ -44,7 +45,6 @@
     "solid-start": "^0.2.1"
   },
   "dependencies": {
-    "@types/cookie": "^0.5.1",
     "set-cookie-parser": "^2.5.1"
   },
   "keywords": [
