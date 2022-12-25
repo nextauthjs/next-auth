@@ -80,7 +80,7 @@ export default function ErrorPage(props: ErrorProps) {
   }
 
   const { status, heading, message, signin } =
-    errors[error.toLowerCase()] ?? errors.default
+    errors[error.toLowerCase() as Lowercase<ErrorPageParam>] ?? errors.default
 
   return {
     status,

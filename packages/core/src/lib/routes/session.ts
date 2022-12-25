@@ -69,8 +69,8 @@ export async function session(
       response.cookies?.push(...sessionCookies)
 
       await events.session?.({ session: newSession, token })
-    } catch (error) {
-      logger.error(new JWTSessionError(error))
+    } catch (e) {
+      logger.error(new JWTSessionError(e as Error))
       // If the JWT is not verifiable remove the broken session cookie(s).
       response.cookies?.push(...sessionStore.clean())
     }
@@ -151,8 +151,8 @@ export async function session(
       // remove the sessionToken cookie from browser.
       response.cookies?.push(...sessionStore.clean())
     }
-  } catch (error) {
-    logger.error(new SessionTokenError(error))
+  } catch (e) {
+    logger.error(new SessionTokenError(e as Error))
   }
 
   return response

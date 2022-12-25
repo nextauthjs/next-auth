@@ -27,8 +27,8 @@ export async function signout(
       const session = await options.adapter?.deleteSession(sessionToken)
       await events.signOut?.({ session })
     }
-  } catch (error) {
-    logger.error(new SignOutError(error))
+  } catch (e) {
+    logger.error(new SignOutError(e as Error))
   }
 
   return { redirect, cookies: sessionStore.clean() }

@@ -65,8 +65,8 @@ export async function toInternalRequest(
       error: url.searchParams.get("error") ?? undefined,
       query: Object.fromEntries(url.searchParams),
     }
-  } catch (error) {
-    return error
+  } catch (e) {
+    return e as Error
   }
 }
 
@@ -102,7 +102,7 @@ export function toResponse(res: ResponseInternal): Response {
 }
 
 /** Web compatible method to create a hash, using SHA256 */
-export async function createHash(message) {
+export async function createHash(message: string) {
   const data = new TextEncoder().encode(message)
   const hash = await crypto.subtle.digest("SHA-256", data)
   return Array.from(new Uint8Array(hash))

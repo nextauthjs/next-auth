@@ -273,11 +273,11 @@ export async function callback(params: {
             cookies,
           }
         }
-      } catch (error) {
+      } catch (e) {
         return {
           status: 401,
           redirect: `${url}/error?error=${encodeURIComponent(
-            (error as Error).message
+            (e as Error).message
           )}`,
           cookies,
         }
@@ -337,7 +337,7 @@ export async function callback(params: {
       cookies,
     }
   } catch (e) {
-    const error = new CallbackRouteError(e, { provider: provider.id })
+    const error = new CallbackRouteError(e as Error, { provider: provider.id })
 
     logger.error(error)
     url.searchParams.set("error", CallbackRouteError.name)

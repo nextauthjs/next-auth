@@ -16,7 +16,7 @@ export async function handleAuthorized(
       return { status: 403 as const, redirect: url }
     }
   } catch (e) {
-    const error = new AuthorizedCallbackError(e)
+    const error = new AuthorizedCallbackError(e as Error)
     logger.error(error)
     url.searchParams.set("error", "Configuration")
     return { status: 500 as const, redirect: url }
