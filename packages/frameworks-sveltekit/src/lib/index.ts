@@ -38,6 +38,9 @@
  *
  * ## Signing in and signing out
  *
+ * The data for the current session in this example was made available through the $page store which can be set through you root +page.server.ts file.
+ * It is not necessary to store the data there, however, this makes it globally accessible throughout your application simplifying state management.
+ *
  * ```ts
  * <script>
  *   import { signIn, signOut } from "@auth/sveltekit/client"
@@ -64,6 +67,25 @@
  *   {/if}
  * </p>
  * ```
+ *
+ * ## Managing the session
+ *
+ * The above example checks for a session available in $page.data.session, however that needs to be set by us somewhere.
+ * If you want this data to be available to all your routes you can add this to your root +page.server.ts file.
+ * The following code sets the session data in the $page store to be available to all routes.
+ *
+ * ```ts
+ * import type { LayoutServerLoad } from './$types';
+ *
+ * export const load: LayoutServerLoad = async (event) => {
+ *   return {
+ *     session: await event.locals.getSession()
+ *   };
+ * }; 
+ * ```
+ *
+ * What you return in the function LayoutServerLoad will be available inside the $page store, in the data property: $page.data.
+ * In this case we return an object with the 'session' property which is what we are accessing in the other code paths.
  *
  * ## Notes
  *
