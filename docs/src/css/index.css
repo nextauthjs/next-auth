@@ -292,7 +292,7 @@ html[data-theme="dark"] #carbonads .carbon-poweredby {
  HACK: to hide the "Classes" header and duplicate items together with the "typedoc-plugin-markdown" patch.
  See: https://github.com/TypeStrong/typedoc/issues/2006
 */
-#classes,
-h3.anchor + p:has(code, strong) {
+/* h3.anchor + p:has(code, strong), */ /** hack did not work as it hides property types elsewhere */
+#classes {
   display: none;
 }
