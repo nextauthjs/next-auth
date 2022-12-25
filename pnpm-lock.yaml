@@ -484,6 +484,7 @@ importers:
     specifiers:
       '@next-auth/tsconfig': workspace:*
       '@panva/hkdf': 1.0.2
+      '@types/cookie': 0.5.1
       '@types/node': 18.11.10
       '@types/nodemailer': 6.4.6
       '@types/react': 18.0.26
@@ -505,6 +506,7 @@ importers:
       preact-render-to-string: 5.2.3_preact@10.11.3
     devDependencies:
       '@next-auth/tsconfig': link:../tsconfig
+      '@types/cookie': 0.5.1
       '@types/node': 18.11.10
       '@types/nodemailer': 6.4.6
       '@types/react': 18.0.26

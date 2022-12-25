@@ -48,7 +48,9 @@ export default function SigninPage(props: {
   }
 
   const error =
-    errorType && (signinErrors[errorType.toLowerCase()] ?? signinErrors.default)
+    errorType &&
+    (signinErrors[errorType.toLowerCase() as Lowercase<SignInPageErrorParam>] ??
+      signinErrors.default)
 
   // TODO: move logos
   const logos =

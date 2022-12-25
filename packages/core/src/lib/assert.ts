@@ -129,11 +129,13 @@ export function assertConfig(
       return new MissingAdapter("E-mail login requires an adapter.")
     }
 
-    const missingMethods = [
-      "createVerificationToken",
-      "useVerificationToken",
-      "getUserByEmail",
-    ].filter((method) => !adapter[method])
+    const missingMethods = (
+      [
+        "createVerificationToken",
+        "useVerificationToken",
+        "getUserByEmail",
+      ] as const
+    ).filter((method) => !adapter[method])
 
     if (missingMethods.length) {
       return new MissingAdapterMethods(

@@ -187,7 +187,7 @@ async function getProfile(
       },
       OAuthProfile,
     }
-  } catch (error) {
+  } catch (e) {
     // If we didn't get a response either there was a problem with the provider
     // response *or* the user cancelled the action with the provider.
     //
@@ -196,6 +196,6 @@ async function getProfile(
     // redirected back to the sign up page. We log the error to help developers
     // who might be trying to debug this when configuring a new provider.
     logger.debug("getProfile error details", OAuthProfile)
-    logger.error(new OAuthProfileParseError(error))
+    logger.error(new OAuthProfileParseError(e as Error))
   }
 }

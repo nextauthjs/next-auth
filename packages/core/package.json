@@ -77,13 +77,14 @@
     }
   },
   "scripts": {
-    "build": "pnpm clean && pnpm css && tsc",
-    "clean": "rm -rf *.js *.d.ts lib providers",
-    "css": "node ./scripts/generate-css.js",
+    "build": "pnpm css && tsc",
+    "clean": "rm -rf *.js *.d.ts* lib providers",
+    "css": "node scripts/generate-css",
     "dev": "pnpm css && tsc -w"
   },
   "devDependencies": {
     "@next-auth/tsconfig": "workspace:*",
+    "@types/cookie": "0.5.1",
     "@types/node": "18.11.10",
     "@types/nodemailer": "6.4.6",
     "@types/react": "18.0.26",
