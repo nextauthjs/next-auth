@@ -1,18 +1,23 @@
-import { adapterErrorHandler, eventsErrorHandler } from "./errors.js"
-import * as jwt from "../jwt/index.js"
+import * as jwt from "../jwt.js"
 import { createCallbackUrl } from "./callback-url.js"
 import * as cookie from "./cookie.js"
 import { createCSRFToken } from "./csrf-token.js"
 import { defaultCallbacks } from "./default-callbacks.js"
+import { AdapterError, EventError } from "../errors.js"
 import parseProviders from "./providers.js"
-import logger from "./utils/logger.js"
+import { logger, type LoggerInstance } from "./utils/logger.js"
 import parseUrl from "./utils/parse-url.js"
 
-import type { AuthOptions, InternalOptions, RequestInternal } from "../index.js"
+import type {
+  AuthConfig,
+  EventCallbacks,
+  InternalOptions,
+  RequestInternal,
+} from "../types.js"
 
 interface InitParams {
   url: URL
-  authOptions: AuthOptions
+  authOptions: AuthConfig
   providerId?: string
   action: InternalOptions["action"]
   /** Callback URL value extracted from the incoming request. */
@@ -149,4 +154,47 @@ export async function init({
   }
 
   return { options, cookies }
+}
+
+type Method = (...args: any[]) => Promise<any>
+
+/** Wraps an object of methods and adds error handling. */
+function eventsErrorHandler(
+  methods: Partial<EventCallbacks>,
+  logger: LoggerInstance
+): Partial<EventCallbacks> {
+  return Object.keys(methods).reduce<any>((acc, name) => {
+    acc[name] = async (...args: any[]) => {
+      try {
+        const method: Method = methods[name as keyof Method]
+        return await method(...args)
+      } catch (e) {
+        logger.error(new EventError(e as Error))
+      }
+    }
+    return acc
+  }, {})
+}
+
+/** Handles adapter induced errors. */
+function adapterErrorHandler<TAdapter>(
+  adapter: TAdapter | undefined,
+  logger: LoggerInstance
+): TAdapter | undefined {
+  if (!adapter) return
+
+  return Object.keys(adapter).reduce<any>((acc, name) => {
+    acc[name] = async (...args: any[]) => {
+      try {
+        logger.debug(`adapter_${name}`, { args })
+        const method: Method = adapter[name as keyof Method]
+        return await method(...args)
+      } catch (e) {
+        const error = new AdapterError(e as Error)
+        logger.error(error)
+        throw error
+      }
+    }
+    return acc
+  }, {})
 }

@@ -3,7 +3,7 @@ id: warnings
 title: Warnings
 ---
 
-This is a list of warning output from NextAuth.js.
+This is a list of warning output from Auth.js.
 
 All warnings indicate things which you should take a look at, but do not inhibit normal operation.
 
@@ -27,11 +27,11 @@ These warnings are displayed on the terminal.
 
 #### NO_SECRET
 
-In development, we generate a `secret` based on your configuration for convenience. This is volatile and will throw an error in production. [Read more](https://next-auth.js.org/configuration/options#secret)
+In development, we generate a `secret` based on your configuration for convenience. This is volatile and will throw an error in production. [Read more](https://authjs.dev/reference/configuration/auth-config/#secret)
 
 #### TWITTER_OAUTH_2_BETA
 
-Twitter OAuth 2.0 is currently in beta as certain changes might still be necessary. This is not covered by semver. See the docs https://next-auth.js.org/providers/twitter#oauth-2
+Twitter OAuth 2.0 is currently in beta as certain changes might still be necessary. This is not covered by semver. See the docs https://authjs.dev/reference/providers/twitter#oauth-2
 
 #### EXPERIMENTAL_API
 

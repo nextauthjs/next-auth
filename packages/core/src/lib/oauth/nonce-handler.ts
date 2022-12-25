@@ -1,14 +1,15 @@
 import * as o from "oauth4webapi"
-import * as jwt from "../../jwt/index.js"
+import * as jwt from "../../jwt.js"
 
-import type { InternalOptions } from "../../index.js"
+import type { InternalOptions } from "../../types.js"
 import type { Cookie } from "../cookie.js"
 
 const NONCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 
 /**
  * Returns nonce if the provider supports it
- * and saves it in a cookie */
+ * and saves it in a cookie
+ */
 export async function createNonce(options: InternalOptions<"oauth">): Promise<
   | undefined
   | {

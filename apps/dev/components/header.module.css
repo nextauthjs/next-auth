@@ -11,10 +11,10 @@
   top: 0;
   opacity: 1;
   overflow: hidden;
-  border-radius: 0 0 .6rem .6rem;
-  padding: .6rem 1rem;
+  border-radius: 0 0 0.6rem 0.6rem;
+  padding: 0.6rem 1rem;
   margin: 0;
-  background-color: rgba(0,0,0,.05);
+  background-color: rgba(0, 0, 0, 0.05);
   transition: all 0.2s ease-in;
 }
 
@@ -26,13 +26,13 @@
 .signedInText,
 .notSignedInText {
   position: absolute;
-  padding-top: .8rem;
+  padding-top: 0.8rem;
   left: 1rem;
   right: 6.5rem;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  display: inherit;  
+  display: inherit;
   z-index: 1;
   line-height: 1.3rem;
 }
@@ -55,13 +55,13 @@
 .button,
 .buttonPrimary {
   float: right;
-  margin-right: -.4rem;
+  margin-right: -0.4rem;
   font-weight: 500;
-  border-radius: .3rem;
+  border-radius: 0.3rem;
   cursor: pointer;
   font-size: 1rem;
   line-height: 1.4rem;
-  padding: .7rem .8rem;
+  padding: 0.7rem 0.8rem;
   position: relative;
   z-index: 10;
   background-color: transparent;
@@ -73,11 +73,11 @@
   border-color: #346df1;
   color: #fff;
   text-decoration: none;
-  padding: .7rem 1.4rem;
+  padding: 0.7rem 1.4rem;
 }
 
 .buttonPrimary:hover {
-  box-shadow: inset 0 0 5rem rgba(0,0,0,0.2)
+  box-shadow: inset 0 0 5rem rgba(0, 0, 0, 0.2);
 }
 
 .navItems {

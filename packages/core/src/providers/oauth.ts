@@ -1,6 +1,6 @@
-import type { CommonProviderOptions } from "../providers/index.js"
-import type { Profile, TokenSet, User, Awaitable } from "../index.js"
 import type { Client } from "oauth4webapi"
+import type { Awaitable, Profile, TokenSet, User } from "../types.js"
+import type { CommonProviderOptions } from "../providers/index.js"
 
 // TODO:
 type AuthorizationParameters = any
@@ -10,8 +10,6 @@ type OAuthCallbackChecks = any
 type OpenIDCallbackChecks = any
 
 export type { OAuthProviderType } from "./oauth-types.js"
-
-type ChecksType = "pkce" | "state" | "none" | "nonce"
 
 export type OAuthChecks = OpenIDCallbackChecks | OAuthCallbackChecks
 
@@ -95,12 +93,14 @@ export interface OAuthProviderButtonStyles {
   textDark: string
 }
 
+/** TODO: */
 export interface OAuth2Config<P> extends CommonProviderOptions, PartialIssuer {
   /**
    * Identifies the provider when you want to sign in to
    * a specific provider.
+   *
    * @example
-   * ```js
+   * ```ts
    * signIn('github') // "github" is the provider ID
    * ```
    */
@@ -132,35 +132,37 @@ export interface OAuth2Config<P> extends CommonProviderOptions, PartialIssuer {
    * This will be used to create the user in the database.
    * Defaults to: `id`, `email`, `name`, `image`
    *
-   * [Documentation](https://next-auth.js.org/adapters/models#user)
+   * [Documentation](https://authjs.dev/reference/adapters/models#user)
    */
   profile?: ProfileCallback<P>
   /**
    * The CSRF protection performed on the callback endpoint.
-   * Defaults to `["pkce"]` if undefined.
+   * @default ["pkce"]
    *
    * [RFC 7636 - Proof Key for Code Exchange by OAuth Public Clients (PKCE)](https://www.rfc-editor.org/rfc/rfc7636.html#section-4) |
    * [RFC 6749 - The OAuth 2.0 Authorization Framework](https://www.rfc-editor.org/rfc/rfc6749.html#section-4.1.1) |
    * [OpenID Connect Core 1.0](https://openid.net/specs/openid-connect-core-1_0.html#IDToken) |
    */
-  checks?: ChecksType[]
+  checks?: Array<"pkce" | "state" | "none" | "nonce">
   clientId?: string
   clientSecret?: string
   client?: Partial<Client>
   style?: OAuthProviderButtonStyles
   /**
-   * [Documentation](https://next-auth.js.org/configuration/providers/oauth#allowdangerousemailaccountlinking-option)
+   * [Documentation](https://authjs.dev/reference/providers/oauth#allowdangerousemailaccountlinking-option)
    */
   allowDangerousEmailAccountLinking?: boolean
   /**
-   * @internal
    * The options provided by the user.
    * We will perform a deep-merge of these values
    * with the default configuration.
+   *
+   * @internal
    */
   options?: OAuthUserConfig<P>
 }
 
+/** TODO: */
 export interface OIDCConfig<P> extends Omit<OAuth2Config<P>, "type"> {
   type: "oidc"
 }
@@ -173,24 +175,14 @@ export type OAuthEndpointType = "authorization" | "token" | "userinfo"
  * We parsesd `authorization`, `token` and `userinfo`
  * to always contain a valid `URL`, with the params
  */
-export type OAuthConfigInternal<P> = Omit<
-  OAuthConfig<P>,
-  OAuthEndpointType | "clientId" | "checks" | "profile"
-> & {
-  clientId: string
+export type OAuthConfigInternal<P> = Omit<OAuthConfig<P>, OAuthEndpointType> & {
   authorization?: { url: URL }
   token?: { url: URL; request?: TokenEndpointHandler["request"] }
   userinfo?: { url: URL; request?: UserinfoEndpointHandler["request"] }
-  checks: ChecksType[]
-  profile: ProfileCallback<P>
-}
+} & Pick<Required<OAuthConfig<P>>, "clientId" | "checks" | "profile">
 
 export type OAuthUserConfig<P> = Omit<
   Partial<OAuthConfig<P>>,
   "options" | "type"
 > &
   Required<Pick<OAuthConfig<P>, "clientId" | "clientSecret">>
-
-export type OAuthProvider = (
-  options: Partial<OAuthConfig<any>>
-) => OAuthConfig<any>

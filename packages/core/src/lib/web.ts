@@ -1,7 +1,7 @@
 import { parse as parseCookie, serialize } from "cookie"
-import type { RequestInternal, ResponseInternal } from "../index.js"
-import { UnknownAction } from "./errors.js"
-import type { AuthAction } from "./types.js"
+import { AuthError, UnknownAction } from "../errors.js"
+
+import type { AuthAction, RequestInternal, ResponseInternal } from "../types.js"
 
 async function getBody(req: Request): Promise<Record<string, any> | undefined> {
   if (!("body" in req) || !req.body || req.method !== "POST") return
@@ -14,12 +14,21 @@ async function getBody(req: Request): Promise<Record<string, any> | undefined> {
     return Object.fromEntries(params)
   }
 }
-// prettier-ignore
-const actions: AuthAction[] = [ "providers", "session", "csrf", "signin", "signout", "callback", "verify-request", "error", "_log" ]
+
+const actions: AuthAction[] = [
+  "providers",
+  "session",
+  "csrf",
+  "signin",
+  "signout",
+  "callback",
+  "verify-request",
+  "error",
+]
 
 export async function toInternalRequest(
   req: Request
-): Promise<RequestInternal | Error> {
+): Promise<RequestInternal | AuthError> {
   try {
     // TODO: url.toString() should not include action and providerId
     // see init.ts
@@ -29,6 +38,10 @@ export async function toInternalRequest(
     const action = actions.find((a) => pathname.includes(a))
     if (!action) {
       throw new UnknownAction("Cannot detect action.")
+    }
+
+    if (req.method !== "GET" && req.method !== "POST") {
+      throw new UnknownAction("Only GET and POST requests are supported.")
     }
 
     const providerIdOrAction = pathname.split("/").pop()
@@ -45,15 +58,15 @@ export async function toInternalRequest(
       url,
       action,
       providerId,
-      method: req.method ?? "GET",
+      method: req.method,
       headers: Object.fromEntries(req.headers),
       body: req.body ? await getBody(req) : undefined,
       cookies: parseCookie(req.headers.get("cookie") ?? "") ?? {},
       error: url.searchParams.get("error") ?? undefined,
       query: Object.fromEntries(url.searchParams),
     }
-  } catch (error) {
-    return error
+  } catch (e) {
+    return e as Error
   }
 }
 
@@ -89,7 +102,7 @@ export function toResponse(res: ResponseInternal): Response {
 }
 
 /** Web compatible method to create a hash, using SHA256 */
-export async function createHash(message) {
+export async function createHash(message: string) {
   const data = new TextEncoder().encode(message)
   const hash = await crypto.subtle.digest("SHA-256", data)
   return Array.from(new Uint8Array(hash))

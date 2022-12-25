@@ -21,7 +21,7 @@ To use this Adapter, you need to install the following packages:
 npm install next-auth @next-auth/typeorm-legacy-adapter typeorm
 ```
 
-Configure your NextAuth.js to use the TypeORM Adapter:
+Configure your Auth.js to use the TypeORM Adapter:
 
 ```javascript title="pages/api/auth/[...nextauth].js"
 import NextAuth from "next-auth"
@@ -207,7 +207,7 @@ The `synchronize: true` option in TypeORM will generate SQL that exactly matches
 
 ## Naming Conventions
 
-If mixed snake_case and camelCase column names are an issue for you and/or your underlying database system, we recommend using TypeORM's naming strategy feature to change the target field names. There is a package called `typeorm-naming-strategies` which includes a `snake_case` strategy which will translate the fields from how NextAuth.js expects them, to snake_case in the actual database.
+If mixed snake_case and camelCase column names are an issue for you and/or your underlying database system, we recommend using TypeORM's naming strategy feature to change the target field names. There is a package called `typeorm-naming-strategies` which includes a `snake_case` strategy which will translate the fields from how Auth.js expects them, to snake_case in the actual database.
 
 For example, you can add the naming convention option to the connection object in your NextAuth config.
 

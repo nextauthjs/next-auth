@@ -1,7 +1,7 @@
 <p align="center">
    <br/>
-   <a href="https://next-auth.js.org" target="_blank">
-    <img height="64px" src="https://next-auth.js.org/img/logo/logo-sm.png" /></a><img height="64px" src="https://raw.githubusercontent.com/nextauthjs/adapters/main/packages/firebase/logo.svg" />
+   <a href="https://authjs.dev" target="_blank">
+    <img height="64px" src="https://authjs.dev/img/logo/logo-sm.png" /></a><img height="64px" src="https://raw.githubusercontent.com/nextauthjs/adapters/main/packages/firebase/logo.svg" />
    <h3 align="center"><b>Firebase Adapter</b> - NextAuth.js</h3>
    <p align="center">
    Open Source. Full Stack. Own Your Data.
@@ -15,9 +15,9 @@
 
 ## Overview
 
-This is the Firebase Adapter for [`next-auth`](https://next-auth.js.org). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
+This is the Firebase Adapter for [`auth.js`](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
 
-You can find more Firebase information in the docs at [next-auth.js.org/adapters/firebase](https://next-auth.js.org/adapters/firebase).
+You can find more Firebase information in the docs at [authjs.dev/reference/adapters/firebase](https://authjs.dev/reference/adapters/firebase).
 
 ## Getting Started
 
@@ -41,9 +41,9 @@ const app = initializeApp({ projectId: "next-auth-test" });
 const firestore = getFirestore(app);
 
 // For more information on each option (and a full list of options) go to
-// https://next-auth.js.org/configuration/options
+// https://authjs.dev/reference/configuration/auth-options
 export default NextAuth({
-  // https://next-auth.js.org/configuration/providers
+  // https://authjs.dev/reference/providers/oauth-builtin
   providers: [
     Providers.Google({
       clientId: process.env.GOOGLE_ID,
