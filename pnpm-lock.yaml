@@ -490,9 +490,8 @@ importers:
       '@types/react': 18.0.26
       autoprefixer: 10.4.13
       cookie: 0.5.0
-      cssnano: 5.1.14
       jose: 4.11.1
-      oauth4webapi: 2.0.5
+      oauth4webapi: 2.0.6
       postcss: 8.4.19
       postcss-nested: 6.0.0
       preact: 10.11.3
@@ -501,7 +500,7 @@ importers:
       '@panva/hkdf': 1.0.2
       cookie: 0.5.0
       jose: 4.11.1
-      oauth4webapi: 2.0.5
+      oauth4webapi: 2.0.6
       preact: 10.11.3
       preact-render-to-string: 5.2.3_preact@10.11.3
     devDependencies:
@@ -21959,8 +21958,8 @@ packages:
     resolution: {integrity: sha512-a5ERWK1kh38ExDEfoO6qUHJb32rd7aYmPHuyCu3Fta/cnICvYmgd2uhuKXvPD+PXB+gCEYYEaQdIRAjCOwAKNA==}
     dev: false
 
-  /oauth4webapi/2.0.5:
-    resolution: {integrity: sha512-KmoR3KxCwmr9KvL/c/6UVzQnc4CUjo+j8NSgD3bWYlZXpUmyOVw97nDVb0BKZhCcUtGsbll16v8vsnR5JbTZ9A==}
+  /oauth4webapi/2.0.6:
+    resolution: {integrity: sha512-smacvTzkfgWxXTTfjZeKeCwtiZ7/HIgM+PWcgTltAmEbfmJQRfl/nbWktA9tnzSjezvWNg9N96PJomuMi0zkxQ==}
     dev: false
 
   /object-assign/4.1.1:
