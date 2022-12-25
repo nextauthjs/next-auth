@@ -1,4 +1,11 @@
 {
+  "private": true,
+  "description": "An example project for Auth.js with SvelteKit",
+  "repository": "https://github.com/nextauthjs/sveltekit-auth-example",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "homepage": "https://sveltekit-auth-example.vercel.app",
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
