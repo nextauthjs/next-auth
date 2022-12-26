@@ -87,6 +87,35 @@
  * What you return in the function LayoutServerLoad will be available inside the $page store, in the data property: $page.data.
  * In this case we return an object with the 'session' property which is what we are accessing in the other code paths.
  *
+ * ## Handling authorization
+ *
+ * In SvelteKit there are a few ways you could protect routes from unauthenticated users.
+ * The simplest case is protecting a single page, in which case you should put the logic in the +page.server.ts file.
+ * 
+ * ```ts
+ * import { redirect } from '@sveltejs/kit';
+ * import type { PageLoad } from './$types';
+ *
+ * export const load: PageLoad = async ({ parent }) => {
+ *   const { session } = await parent();
+ *   if (!session?.user) {
+ *     throw redirect(302, '/auth');
+ *   }
+ *   return {};
+ * };
+ * ```
+ * 
+ * :::danger
+ * Make sure to ALWAYS grab the session information from the parent instead of using the store in the case of a PageLoad.
+ * Not doing so can lead to users being able to incorrectly access protected information in the case the +layout.server.ts does not run for that page load.
+ * This code sample already implements the correct method by using `const { session } = await parent();`
+ * :::
+ *
+ * You should NOT put authorization logic in a +layout.server.ts as the logic is not guaranteed to propragate to leafs in the tree.
+ * Prefer to manually protect each route through the +page.server.ts file to avoid mistakes.
+ * It is possible to force the layout file to run the load function on all routes, however that relies certain behaviours that can change and are not easily checked.
+ * For more information about these caveats make sure to read this issue in the SvelteKit repository: https://github.com/sveltejs/kit/issues/6315
+ *
  * ## Notes
  *
  * :::info
