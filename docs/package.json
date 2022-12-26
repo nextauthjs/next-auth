@@ -5,7 +5,7 @@
   "scripts": {
     "start": "TYPEDOC_WATCH=true docusaurus start --no-open --port 8000",
     "dev": "pnpm providers && pnpm snippets && pnpm start",
-    "build": "cd ../ && pnpm build && cd docs && pnpm providers && docusaurus build",
+    "build": "pnpm providers && docusaurus build",
     "docusaurus": "docusaurus",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
