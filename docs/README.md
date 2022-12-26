@@ -59,7 +59,7 @@ And thats all! Now you should have a local copy of this docs site running at [lo
 
 ## Contributing
 
-We're open to all community contributions! If you'd like to contribute in any way, please first read our [Contributing Guide](https://github.com/nextauthjs/next-auth/blob/main/docs/docs/contributors.md).
+We're open to all community contributions! If you'd like to contribute in any way, please first read our [Contributing Guide](https://github.com/nextauthjs/.github/blob/63cd813065552b522785c7a07980366178634ecf/CONTRIBUTING.md).
 
 ## License
 
