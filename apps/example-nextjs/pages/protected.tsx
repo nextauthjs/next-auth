@@ -18,7 +18,6 @@ export default function ProtectedPage() {
     }
     fetchData()
   }, [session])
- 
 
   // If no session exists, display access denied message
   if (!session) {

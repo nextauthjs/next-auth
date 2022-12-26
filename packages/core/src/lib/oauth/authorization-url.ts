@@ -5,7 +5,7 @@ import type {
   InternalOptions,
   RequestInternal,
   ResponseInternal,
-} from "../../index.js"
+} from "../../types.js"
 import type { Cookie } from "../cookie.js"
 
 /**
@@ -13,13 +13,10 @@ import type { Cookie } from "../cookie.js"
  *
  * [OAuth 2](https://www.oauth.com/oauth2-servers/authorization/the-authorization-request/)
  */
-export async function getAuthorizationUrl({
-  options,
-  query,
-}: {
+export async function getAuthorizationUrl(
+  query: RequestInternal["query"],
   options: InternalOptions<"oauth">
-  query: RequestInternal["query"]
-}): Promise<ResponseInternal> {
+): Promise<ResponseInternal> {
   const { logger, provider } = options
 
   let url = provider.authorization?.url
@@ -85,15 +82,13 @@ export async function getAuthorizationUrl({
     cookies.push(nonce)
   }
 
-  url.searchParams.delete("nextauth")
-
   // TODO: This does not work in normalizeOAuth because authorization endpoint can come from discovery
   // Need to make normalizeOAuth async
   if (provider.type === "oidc" && !url.searchParams.has("scope")) {
     url.searchParams.set("scope", "openid profile email")
   }
 
-  logger.debug("GET_AUTHORIZATION_URL", { url, cookies, provider })
+  logger.debug("authorization url is ready", { url, cookies, provider })
   return { redirect: url, cookies }
 }
 

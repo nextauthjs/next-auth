@@ -1,9 +1,9 @@
-import { AuthHandler, AuthOptions, Session } from '@auth/core'
-import { fromNodeMiddleware, H3Event } from 'h3'
-import getURL from 'requrl'
-import { createMiddleware } from "@hattip/adapter-node";
+import { AuthHandler, AuthOptions, Session } from "@auth/core"
+import { fromNodeMiddleware, H3Event } from "h3"
+import getURL from "requrl"
+import { createMiddleware } from "@hattip/adapter-node"
 
-export function NuxtAuthHandler (options: AuthOptions) {
+export function NuxtAuthHandler(options: AuthOptions) {
   async function handler(ctx: { request: Request }) {
     options.trustHost ??= true
 
@@ -24,7 +24,7 @@ export async function getSession(
   const headers = getRequestHeaders(event)
   const nodeHeaders = new Headers()
 
-  const url = new URL('/api/auth/session', getURL(event.node.req))
+  const url = new URL("/api/auth/session", getURL(event.node.req))
 
   Object.keys(headers).forEach((key) => {
     nodeHeaders.append(key, headers[key] as any)

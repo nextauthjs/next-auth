@@ -4,6 +4,7 @@ import * as github from "@actions/github"
 // @ts-expect-error
 import * as core from "@actions/core"
 import { readFileSync } from "node:fs"
+import { join } from "node:path"
 
 const addReproductionLabel = "incomplete"
 
@@ -40,7 +41,13 @@ async function run() {
       label: { name: newLabel },
     } = payload
 
-    if (pull_request || !issue?.body || !process.env.GITHUB_TOKEN) return
+    if (
+      pull_request ||
+      !issue?.body ||
+      !process.env.GITHUB_TOKEN ||
+      !process.env.GITHUB_ACTION_PATH
+    )
+      return
 
     const labels = issue.labels.map((l) => l.name)
     // const isBugReport =
@@ -70,7 +77,10 @@ async function run() {
         }),
         client.issues.createComment({
           ...issueCommon,
-          body: readFileSync("repro.md", "utf8"),
+          body: readFileSync(
+            join(process.env.GITHUB_ACTION_PATH, "repro.md"),
+            "utf8"
+          ),
         }),
       ])
       return core.info(

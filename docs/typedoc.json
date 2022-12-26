@@ -17,12 +17,7 @@
     "JsonValue"
   ],
   "readme": "none",
-  "sort": [
-    "kind",
-    "static-first",
-    "required-first",
-    "alphabetical"
-  ],
+  "sort": ["kind", "static-first", "required-first", "alphabetical"],
   "kindSortOrder": [
     "Function",
     "TypeAlias",

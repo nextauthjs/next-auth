@@ -1,5 +1,7 @@
 ---
 title: Overview
+sidebar_label: Guides
+sidebar_position: 0
 ---
 
 We're creating internal guides to help understand how to use Auth.js and all the possible configurations and uses cases it supports.

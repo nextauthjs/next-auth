@@ -1,32 +1,36 @@
-import type { InternalProvider, Theme } from "../../index.js"
+import type {
+  InternalProvider,
+  SignInPageErrorParam,
+  Theme,
+} from "../../types.js"
 
-/**
- * The following errors are passed as error query parameters to the default or overridden sign-in page.
- *
- * [Documentation](https://next-auth.js.org/configuration/pages#sign-in-page) */
-export type SignInErrorTypes =
-  | "Signin"
-  | "OAuthSignin"
-  | "OAuthCallback"
-  | "OAuthCreateAccount"
-  | "EmailCreateAccount"
-  | "Callback"
-  | "OAuthAccountNotLinked"
-  | "EmailSignin"
-  | "CredentialsSignin"
-  | "SessionRequired"
-  | "default"
+const signinErrors: Record<
+  Lowercase<SignInPageErrorParam | "default">,
+  string
+> = {
+  default: "Unable to sign in.",
+  signin: "Try signing in with a different account.",
+  oauthsignin: "Try signing in with a different account.",
+  oauthcallback: "Try signing in with a different account.",
+  oauthcreateaccount: "Try signing in with a different account.",
+  emailcreateaccount: "Try signing in with a different account.",
+  callback: "Try signing in with a different account.",
+  oauthaccountnotlinked:
+    "To confirm your identity, sign in with the same account you used originally.",
+  emailsignin: "The e-mail could not be sent.",
+  credentialssignin:
+    "Sign in failed. Check the details you provided are correct.",
+  sessionrequired: "Please sign in to access this page.",
+}
 
-export interface SignInServerPageParams {
+export default function SigninPage(props: {
   csrfToken: string
   providers: InternalProvider[]
   callbackUrl: string
   email: string
-  error: SignInErrorTypes
+  error?: SignInPageErrorParam
   theme: Theme
-}
-
-export default function SigninPage(props: SignInServerPageParams) {
+}) {
   const {
     csrfToken,
     providers = [],
@@ -43,23 +47,10 @@ export default function SigninPage(props: SignInServerPageParams) {
     )
   }
 
-  const errors: Record<SignInErrorTypes, string> = {
-    Signin: "Try signing in with a different account.",
-    OAuthSignin: "Try signing in with a different account.",
-    OAuthCallback: "Try signing in with a different account.",
-    OAuthCreateAccount: "Try signing in with a different account.",
-    EmailCreateAccount: "Try signing in with a different account.",
-    Callback: "Try signing in with a different account.",
-    OAuthAccountNotLinked:
-      "To confirm your identity, sign in with the same account you used originally.",
-    EmailSignin: "The e-mail could not be sent.",
-    CredentialsSignin:
-      "Sign in failed. Check the details you provided are correct.",
-    SessionRequired: "Please sign in to access this page.",
-    default: "Unable to sign in.",
-  }
-
-  const error = errorType && (errors[errorType] ?? errors.default)
+  const error =
+    errorType &&
+    (signinErrors[errorType.toLowerCase() as Lowercase<SignInPageErrorParam>] ??
+      signinErrors.default)
 
   // TODO: move logos
   const logos =

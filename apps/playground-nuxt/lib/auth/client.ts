@@ -3,11 +3,11 @@ import type {
   SignInOptions,
   SignInAuthorizationParams,
   SignOutParams,
-} from './types'
+} from "./types"
 import type {
   BuiltInProviderType,
   RedirectableProviderType,
-} from '@auth/core/providers'
+} from "@auth/core/providers"
 
 /**
  * Client-side method to initiate a signin flow
