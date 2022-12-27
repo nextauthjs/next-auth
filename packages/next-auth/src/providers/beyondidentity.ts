@@ -29,12 +29,12 @@ export default function BeyondIdentity<P extends BeyondIdentityProfile>(
     clientSecret: options.clientSecret,
     idToken: true,
     style: {
-      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/beyondidentity.png",
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/beyondidentity.svg",
       logoDark:
-        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/beyondidentity-dark.png",
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/beyondidentity-dark.svg",
       bg: "#fff",
-      text: "#000",
-      bgDark: "#000",
+      bgDark: "#5077c5",
+      text: "#5077c5",
       textDark: "#fff",
     },
     options,
