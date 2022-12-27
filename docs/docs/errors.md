@@ -78,7 +78,7 @@ If you are using an OAuth v1 provider, check your OAuth v1 provider settings, es
 
 3. `openid-client` version mismatch
 
-If you are seeing `expected 200 OK with body but no body was returned`, it might have happened due to `openid-client` (which is peer dependency) node version mismatch. For instance, `openid-client` requires `>=14.2.0` for `lts/fermium` and has similar limits for the other versions. For the full list of the compatible node versions please see [package.json](https://github.com/panva/node-openid-client/blob/2a84e46992e1ebeaf685c3f87b65663d126e81aa/package.json#L78).
+If you are seeing `expected 200 OK with body but no body was returned`, it might have happened due to `openid-client` (which is a dependency we rely on) node version mismatch. For instance, `openid-client` requires `>=14.2.0` for `lts/fermium` and has similar limits for the other versions. For the full list of the compatible node versions please see [package.json](https://github.com/panva/node-openid-client/blob/2a84e46992e1ebeaf685c3f87b65663d126e81aa/package.json#L78).
 
 #### OAUTH_CALLBACK_ERROR
 
