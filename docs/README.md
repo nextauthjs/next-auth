@@ -1,7 +1,7 @@
 <p align="center">
    <br/>
-   <a href="https://next-auth.js.org" target="_blank"><img width="150px" src="https://next-auth.js.org/img/logo/logo-sm.png" /></a>
-   <h3 align="center">NextAuth.js</h3>
+   <a href="https://authjs.dev" target="_blank"><img width="150px" src="https://authjs.dev/img/logo/logo-sm.png" /></a>
+   <h3 align="center">Auth.js</h3>
    <p align="center">Authentication for Next.js</p>
    <p align="center">
    Open Source. Full Stack. Own Your Data.
@@ -10,16 +10,16 @@
       <a href="https://github.com/nextauthjs/next-auth/actions/workflows/release.yml?query=workflow%3ARelease">
         <img src="https://github.com/nextauthjs/next-auth/actions/workflows/release.yml/badge.svg" alt="Release" />
       </a>
-      <a href="https://packagephobia.com/result?p=next-auth">
-        <img src="https://packagephobia.com/badge?p=next-auth" alt="Bundle Size"/>
+      <a href="https://packagephobia.com/result?p=@auth/core">
+        <img src="https://packagephobia.com/badge?p=@auth/core" alt="Bundle Size"/>
       </a>
-      <a href="https://www.npmtrends.com/next-auth">
-        <img src="https://img.shields.io/npm/dm/next-auth" alt="Downloads" />
+      <a href="https://www.npmtrends.com/@auth/core">
+        <img src="https://img.shields.io/npm/dm/@auth/core" alt="Downloads" />
       </a>
       <a href="https://github.com/nextauthjs/next-auth/stargazers">
         <img src="https://img.shields.io/github/stars/nextauthjs/next-auth" alt="Github Stars" />
       </a>
-      <a href="https://www.npmjs.com/package/next-auth">
+      <a href="https://www.npmjs.com/package/@auth/core">
         <img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?label=latest" alt="Github Stable Release" />
       </a>
    </p>
@@ -27,7 +27,7 @@
 
 ## Overview
 
-This is the repository for the documentation page for NextAuth.js!
+This is the repository for the documentation page for Auth.js!
 
 NextAuth.js is a complete open source authentication solution for [Next.js](http://nextjs.org/) applications.
 
@@ -59,7 +59,7 @@ And thats all! Now you should have a local copy of this docs site running at [lo
 
 ## Contributing
 
-We're open to all community contributions! If you'd like to contribute in any way, please first read our [Contributing Guide](https://github.com/nextauthjs/next-auth/blob/main/CONTRIBUTING.md).
+We're open to all community contributions! If you'd like to contribute in any way, please first read our [Contributing Guide](https://github.com/nextauthjs/.github/blob/63cd813065552b522785c7a07980366178634ecf/CONTRIBUTING.md).
 
 ## License
 

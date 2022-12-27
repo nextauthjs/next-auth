@@ -1,94 +1,55 @@
 import logger, { setLogger } from "../utils/logger"
-import { detectHost } from "../utils/detect-host"
-import * as routes from "./routes"
-import renderPage from "./pages"
+import { toInternalRequest, toResponse } from "../utils/web"
 import { init } from "./init"
 import { assertConfig } from "./lib/assert"
 import { SessionStore } from "./lib/cookie"
+import renderPage from "./pages"
+import * as routes from "./routes"
 
-import type { NextAuthAction, NextAuthOptions } from "./types"
+import { UntrustedHost } from "./errors"
 import type { Cookie } from "./lib/cookie"
 import type { ErrorType } from "./pages/error"
-import { parse as parseCookie } from "cookie"
+import type { AuthAction, AuthOptions } from "./types"
 
+/** @internal */
 export interface RequestInternal {
-  /** @default "http://localhost:3000" */
-  host?: string
-  method?: string
+  url: URL
+  /** @default "GET" */
+  method: string
   cookies?: Partial<Record<string, string>>
   headers?: Record<string, any>
   query?: Record<string, any>
   body?: Record<string, any>
-  action: NextAuthAction
+  action: AuthAction
   providerId?: string
   error?: string
 }
 
-export interface NextAuthHeader {
-  key: string
-  value: string
-}
-
-export interface OutgoingResponse<
+/** @internal */
+export interface ResponseInternal<
   Body extends string | Record<string, any> | any[] = any
 > {
   status?: number
-  headers?: NextAuthHeader[]
+  headers?: Record<string, string>
   body?: Body
   redirect?: string
   cookies?: Cookie[]
 }
 
-export interface NextAuthHandlerParams {
-  req: Request | RequestInternal
-  options: NextAuthOptions
-}
+const configErrorMessage =
+  "There is a problem with the server configuration. Check the server logs for more information."
 
-async function getBody(req: Request): Promise<Record<string, any> | undefined> {
-  try {
-    return await req.json()
-  } catch {}
-}
-
-// TODO:
-async function toInternalRequest(
-  req: RequestInternal | Request
-): Promise<RequestInternal> {
-  if (req instanceof Request) {
-    const url = new URL(req.url)
-    // TODO: handle custom paths?
-    const nextauth = url.pathname.split("/").slice(3)
-    const headers = Object.fromEntries(req.headers.entries())
-    const query: Record<string, any> = Object.fromEntries(
-      url.searchParams.entries()
-    )
-    query.nextauth = nextauth
-
-    return {
-      action: nextauth[0] as NextAuthAction,
-      method: req.method,
-      headers,
-      body: await getBody(req),
-      cookies: parseCookie(req.headers.get("cookie") ?? ""),
-      providerId: nextauth[1],
-      error: url.searchParams.get("error") ?? nextauth[1],
-      host: detectHost(headers["x-forwarded-host"] ?? headers.host),
-      query,
-    }
-  }
-  return req
-}
-
-export async function NextAuthHandler<
+async function AuthHandlerInternal<
   Body extends string | Record<string, any> | any[]
->(params: NextAuthHandlerParams): Promise<OutgoingResponse<Body>> {
-  const { options: userOptions, req: incomingRequest } = params
+>(params: {
+  req: RequestInternal
+  options: AuthOptions
+  /** REVIEW: Is this the best way to skip parsing the body in Node.js? */
+  parsedBody?: any
+}): Promise<ResponseInternal<Body>> {
+  const { options: authOptions, req } = params
 
-  const req = await toInternalRequest(incomingRequest)
-
-  setLogger(userOptions.logger, userOptions.debug)
-
-  const assertionResult = assertConfig({ options: userOptions, req })
+  const assertionResult = assertConfig({ options: authOptions, req })
 
   if (Array.isArray(assertionResult)) {
     assertionResult.forEach(logger.warn)
@@ -98,14 +59,13 @@ export async function NextAuthHandler<
 
     const htmlPages = ["signin", "signout", "error", "verify-request"]
     if (!htmlPages.includes(req.action) || req.method !== "GET") {
-      const message = `There is a problem with the server configuration. Check the server logs for more information.`
       return {
         status: 500,
-        headers: [{ key: "Content-Type", value: "application/json" }],
-        body: { message } as any,
+        headers: { "Content-Type": "application/json" },
+        body: { message: configErrorMessage } as any,
       }
     }
-    const { pages, theme } = userOptions
+    const { pages, theme } = authOptions
 
     const authOnErrorPage =
       pages?.error && req.query?.callbackUrl?.startsWith(pages.error)
@@ -128,13 +88,13 @@ export async function NextAuthHandler<
     }
   }
 
-  const { action, providerId, error, method = "GET" } = req
+  const { action, providerId, error, method } = req
 
   const { options, cookies } = await init({
-    userOptions,
+    authOptions,
     action,
     providerId,
-    host: req.host,
+    url: req.url,
     callbackUrl: req.body?.callbackUrl ?? req.query?.callbackUrl,
     csrfToken: req.body?.csrfToken,
     cookies: req.cookies,
@@ -156,11 +116,12 @@ export async function NextAuthHandler<
       case "session": {
         const session = await routes.session({ options, sessionStore })
         if (session.cookies) cookies.push(...session.cookies)
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
         return { ...session, cookies } as any
       }
       case "csrf":
         return {
-          headers: [{ key: "Content-Type", value: "application/json" }],
+          headers: { "Content-Type": "application/json" },
           body: { csrfToken: options.csrfToken } as any,
           cookies,
         }
@@ -277,7 +238,7 @@ export async function NextAuthHandler<
         }
         break
       case "_log":
-        if (userOptions.logger) {
+        if (authOptions.logger) {
           try {
             const { code, level, ...metadata } = req.body ?? {}
             logger[level](code, metadata)
@@ -295,4 +256,52 @@ export async function NextAuthHandler<
     status: 400,
     body: `Error: This action with HTTP ${method} is not supported by NextAuth.js` as any,
   }
+}
+
+/**
+ * The core functionality of `next-auth`.
+ * It receives a standard [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request)
+ * and returns a standard [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response).
+ */
+export async function AuthHandler(
+  request: Request,
+  options: AuthOptions
+): Promise<Response> {
+  setLogger(options.logger, options.debug)
+
+  if (!options.trustHost) {
+    const error = new UntrustedHost(
+      `Host must be trusted. URL was: ${request.url}`
+    )
+    logger.error(error.code, error)
+
+    return new Response(JSON.stringify({ message: configErrorMessage }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    })
+  }
+
+  const req = await toInternalRequest(request)
+  if (req instanceof Error) {
+    logger.error((req as any).code, req)
+    return new Response(
+      `Error: This action with HTTP ${request.method} is not supported.`,
+      { status: 400 }
+    )
+  }
+  const internalResponse = await AuthHandlerInternal({ req, options })
+
+  const response = await toResponse(internalResponse)
+
+  // If the request expects a return URL, send it as JSON
+  // instead of doing an actual redirect.
+  const redirect = response.headers.get("Location")
+  if (request.headers.has("X-Auth-Return-Redirect") && redirect) {
+    response.headers.delete("Location")
+    response.headers.set("Content-Type", "application/json")
+    return new Response(JSON.stringify({ url: redirect }), {
+      headers: response.headers,
+    })
+  }
+  return response
 }

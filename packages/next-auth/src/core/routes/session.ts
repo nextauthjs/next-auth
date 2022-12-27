@@ -2,7 +2,7 @@ import { fromDate } from "../lib/utils"
 
 import type { Adapter } from "../../adapters"
 import type { InternalOptions } from "../types"
-import type { OutgoingResponse } from ".."
+import type { ResponseInternal } from ".."
 import type { Session } from "../.."
 import type { SessionStore } from "../lib/cookie"
 
@@ -18,7 +18,7 @@ interface SessionParams {
 
 export default async function session(
   params: SessionParams
-): Promise<OutgoingResponse<Session | {}>> {
+): Promise<ResponseInternal<Session | {}>> {
   const { options, sessionStore } = params
   const {
     adapter,
@@ -29,9 +29,9 @@ export default async function session(
     session: { strategy: sessionStrategy, maxAge: sessionMaxAge },
   } = options
 
-  const response: OutgoingResponse<Session | {}> = {
+  const response: ResponseInternal<Session | {}> = {
     body: {},
-    headers: [{ key: "Content-Type", value: "application/json" }],
+    headers: { "Content-Type": "application/json" },
     cookies: [],
   }
 

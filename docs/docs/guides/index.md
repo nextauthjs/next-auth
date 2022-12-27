@@ -1,14 +1,9 @@
 ---
-id: guides
-title: Guides
+title: Overview
+sidebar_label: Guides
+sidebar_position: 0
 ---
 
-# Guides
+We're creating internal guides to help understand how to use Auth.js and all the possible configurations and uses cases it supports.
 
-We have internal guides in three levels of difficulty.
-
-- [Basics](/guides/basics)
-- [Fullstack](/guides/fullstack)
-- [Testing](/guides/testing)
-
-If you can't find what you're looking for here, maybe take a look at our third-party [tutorials](/tutorials) page.
+If you can't find what you're looking for, [raise an issue](https://github.com/nextauthjs/next-auth/issues/new/choose) then take a look at our third-party [community resources](/guides/resources).
