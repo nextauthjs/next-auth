@@ -129,7 +129,7 @@
  * The way to handle authorization through the URI is to override your handle hook.
  * The handle hook, available in hooks.server.ts, is a function that receives ALL requests sent to your SvelteKit webapp.
  * You may intercept them inside the handle hook, add and modify things in the request, block requests, etc.
- * Some readers may notice we are already using this handle hook for SvelteKitAuth.
+ * Some readers may notice we are already using this handle hook for SvelteKitAuth which returns a handle itself, so we are going to use SvelteKit's sequence to provide middleware-like functions that set the handle hook.
  * 
  * ```ts
  * import { SvelteKitAuth } from '@auth/sveltekit';
@@ -154,6 +154,9 @@
  * 	return result;
  * }
  * 
+ * // First handle authentication, then authorization
+ * // Each function acts as a middleware, receiving the request handle
+ * // And returning a handle which gets passed to the next function
  * export const handle: Handle = sequence(
  * 	SvelteKitAuth({
  * 		providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })]
@@ -161,6 +164,14 @@
  * 	authorization
  * );
  * ```
+ *
+ * :::info
+ * Learn more about SvelteKit's handle hooks and sequence [here](https://kit.svelte.dev/docs/modules#sveltejs-kit-hooks-sequence).
+ * :::
+ *
+ * Now any routes under /authenticated will be transparently protected by the handle hook.
+ * You may add more middleware-like functions to the sequence and also implement more complex authorization business logic inside this file.
+ * This can also be used along with the component-based approach in case you need a specific page to be protected and doing it by URI could be faulty.
  *
  * ## Notes
  *
