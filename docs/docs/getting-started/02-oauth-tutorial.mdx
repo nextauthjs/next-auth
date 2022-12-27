@@ -100,7 +100,7 @@ import { useSession, signIn, signOut } from "next-auth/react"
 
 export default function CamperVanPage() {
   const { data: session, status } = useSession()
-  const userEmail = session ? session.user.email : null;
+  const userEmail = session?.user.email;
 
   if (status === "loading") {
     return <p>Hang on there...</p>
