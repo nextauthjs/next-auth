@@ -92,7 +92,7 @@ export async function init({
       maxAge,
       updateAge: 24 * 60 * 60,
       generateSessionToken: ()=>{
-        return  crypto.randomUUID();
+        return crypto.randomUUID();
       },
       ...authOptions.session,
     },
