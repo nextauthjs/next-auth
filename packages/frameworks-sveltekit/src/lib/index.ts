@@ -94,16 +94,15 @@
  * ### Per component
  *
  * The simplest case is protecting a single page, in which case you should put the logic in the +page.server.ts file.
- * 
+ * Notice in this case that you could also await event.parent and grab the session from there, however this implementation works even if you haven't done the above in your root layout.server
+ *
  * ```ts
  * import { redirect } from '@sveltejs/kit';
  * import type { PageServerLoad } from './$types';
  *
- * export const load: PageServerLoad = async ({ parent }) => {
- *   const { session } = await parent();
- *   if (!session?.user) {
- *     throw redirect(302, '/auth');
- *   }
+ * export const load: PageServerLoad = async (event) => {
+ *   const session = await event.locals.getSession();
+ *   if (!session?.user) throw redirect(303, '/auth');
  *   return {};
  * };
  * ```
@@ -141,7 +140,7 @@
  * 
  * async function authorization({ event, resolve }) {
  * 	// Protect any routes under /authenticated
- * 	if (event.url.pathname.startsWith('/app')) {
+ * 	if (event.url.pathname.startsWith('/authenticated')) {
  *    const session = await event.locals.getSession();
  * 		if (!session) {
  * 			throw redirect(303, '/auth');
