@@ -90,6 +90,9 @@
  * ## Handling authorization
  *
  * In SvelteKit there are a few ways you could protect routes from unauthenticated users.
+ *
+ * ### Per component
+ *
  * The simplest case is protecting a single page, in which case you should put the logic in the +page.server.ts file.
  * 
  * ```ts
@@ -115,6 +118,50 @@
  * Prefer to manually protect each route through the +page.server.ts file to avoid mistakes.
  * It is possible to force the layout file to run the load function on all routes, however that relies certain behaviours that can change and are not easily checked.
  * For more information about these caveats make sure to read this issue in the SvelteKit repository: https://github.com/sveltejs/kit/issues/6315
+ *
+ * ### Per path
+ *
+ * Another method that's possible for handling authorization is by restricting certain URIs from being available.
+ * For many projects this is better because:
+ * - This automatically protects actions and api routes in those URIs
+ * - No code duplication between components
+ * - Very easy to modify
+ *
+ * The way to handle authorization through the URI is to override your handle hook.
+ * The handle hook, available in hooks.server.ts, is a function that receives ALL requests sent to your SvelteKit webapp.
+ * You may intercept them inside the handle hook, add and modify things in the request, block requests, etc.
+ * Some readers may notice we are already using this handle hook for SvelteKitAuth.
+ * 
+ * ```ts
+ * import { SvelteKitAuth } from '@auth/sveltekit';
+ * import GitHub from '@auth/core/providers/github';
+ * import { GITHUB_ID, GITHUB_SECRET } from '$env/static/private';
+ * import { redirect, type Handle } from '@sveltejs/kit';
+ * import { sequence } from '@sveltejs/kit/hooks';
+ * 
+ * async function authorization({ event, resolve }) {
+ * 	// Protect any routes under /authenticated
+ * 	if (event.url.pathname.startsWith('/app')) {
+ *    const session = await event.locals.getSession();
+ * 		if (!session) {
+ * 			throw redirect(303, '/auth');
+ * 		}
+ * 	}
+ * 
+ * 	// If the request is still here, just proceed as normally
+ * 	const result = await resolve(event, {
+ * 		transformPageChunk: ({ html }) => html
+ * 	});
+ * 	return result;
+ * }
+ * 
+ * export const handle: Handle = sequence(
+ * 	SvelteKitAuth({
+ * 		providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })]
+ * 	}),
+ * 	authorization
+ * );
+ * ```
  *
  * ## Notes
  *
