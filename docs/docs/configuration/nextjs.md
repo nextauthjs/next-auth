@@ -14,7 +14,7 @@ Otherwise, if you only want to get the session token, see [`getToken`](/tutorial
 
 In `[...nextauth].ts`:
 ```ts
-import { NextAuth } from 'next-auth'
+import NextAuth from 'next-auth'
 import type { NextAuthOptions } from 'next-auth'
 
 export const authOptions: NextAuthOptions = {
