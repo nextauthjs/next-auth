@@ -36,8 +36,8 @@ import GithubProvider from "next-auth/providers/github"
 export default NextAuth({
   providers: [
     GithubProvider({
-      clientId: /* We'll fill this later */,
-      clientSecret: /* We'll fill this later*/,
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET,
     }),
   ],
 })
@@ -100,7 +100,7 @@ import { useSession, signIn, signOut } from "next-auth/react"
 
 export default function CamperVanPage() {
   const { data: session, status } = useSession()
-  const userEmail = session.user.email
+  const userEmail = session?.user.email;
 
   if (status === "loading") {
     return <p>Hang on there...</p>
