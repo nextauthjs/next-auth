@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-use-before-define
 import * as React from "react"
 import Link from "@docusaurus/Link"
 import useBaseUrl from "@docusaurus/useBaseUrl"
@@ -9,7 +8,6 @@ import classnames from "classnames"
 import { useEffect } from "react"
 import ProviderMarquee from "../components/ProviderMarquee"
 import styles from "./index.module.css"
-import Seo from "./seo"
 import providers from "../../providers.json"
 
 const providersCount = Object.keys(providers).length + 2 // email, credentials
@@ -114,7 +112,6 @@ export default function Home() {
   }, [])
   return (
     <Layout description={siteConfig.tagline}>
-      <Seo />
       <div className="home-wrapper">
         <header className={classnames("hero", styles.heroBanner)}>
           <div className="container">

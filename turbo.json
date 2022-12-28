@@ -1,26 +1,14 @@
 {
   "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
+    "docs#build": {
+      "dependsOn": ["^build", "next-auth#build"]
+    },
     "build": {
       "dependsOn": ["^build"]
     },
     "next-auth#build": {
-      "dependsOn": ["^build"],
-      "outputs": [
-        "lib/**",
-        "css/**",
-        "jwt/**",
-        "react/**",
-        "next/**",
-        "client/**",
-        "providers/**",
-        "core/**",
-        "index.d.ts",
-        "index.js",
-        "adapters.d.ts",
-        "middleware.d.ts",
-        "middleware.js"
-      ]
+      "dependsOn": ["^build"]
     },
     "clean": {
       "cache": false
@@ -28,18 +16,11 @@
     "dev": {
       "cache": false
     },
-    "lint": {
-      "outputs": []
-    },
     "test": {
-      "dependsOn": ["lint"],
-      "outputs": []
-    },
-    "format": {
       "outputs": []
     },
     "@next-auth/upstash-redis-adapter#test": {
-      "dependsOn": ["$UPSTASH_REDIS_KEY", "$UPSTASH_REDIS_URL"]
+      "env": ["UPSTASH_REDIS_KEY", "UPSTASH_REDIS_URL"]
     }
   }
 }

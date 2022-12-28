@@ -1,13 +1,13 @@
-const path = require("path")
-const fs = require("fs")
+import { join } from "path"
+import { readdirSync, readFileSync, writeFileSync } from "fs"
 
-const snippetsPath = path.join(process.cwd(), "snippets")
+const snippetsPath = join(process.cwd(), "snippets")
 
-const files = fs.readdirSync(snippetsPath, "utf8")
+const files = readdirSync(snippetsPath, "utf8")
 
 const result = {}
 for (const file of files) {
-  const snippet = fs.readFileSync(path.join(snippetsPath, file), "utf-8")
+  const snippet = readFileSync(join(snippetsPath, file), "utf-8")
   const body = snippet
     .replace(/\n/g, "\n * ")
     .split("\n")
@@ -25,7 +25,7 @@ for (const file of files) {
   }
 }
 
-fs.writeFileSync(
-  path.join(process.cwd(), "../.vscode/generated-snippets.code-snippets"),
+writeFileSync(
+  join(process.cwd(), "../.vscode/generated-snippets.code-snippets"),
   JSON.stringify(result, null, 2)
 )

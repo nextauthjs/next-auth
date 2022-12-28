@@ -5,9 +5,13 @@ import { createHash } from "../web.js"
 import { handleAuthorized } from "./shared.js"
 
 import type { AdapterSession } from "../../adapters.js"
-import type { RequestInternal, ResponseInternal, User } from "../../types.js"
+import type {
+  RequestInternal,
+  ResponseInternal,
+  User,
+  InternalOptions,
+} from "../../types.js"
 import type { Cookie, SessionStore } from "../cookie.js"
-import type { InternalOptions } from "../../types.js"
 
 /** Handle callbacks from login services */
 export async function callback(params: {
@@ -269,11 +273,11 @@ export async function callback(params: {
             cookies,
           }
         }
-      } catch (error) {
+      } catch (e) {
         return {
           status: 401,
           redirect: `${url}/error?error=${encodeURIComponent(
-            (error as Error).message
+            (e as Error).message
           )}`,
           cookies,
         }
@@ -333,7 +337,7 @@ export async function callback(params: {
       cookies,
     }
   } catch (e) {
-    const error = new CallbackRouteError(e, { provider: provider.id })
+    const error = new CallbackRouteError(e as Error, { provider: provider.id })
 
     logger.error(error)
     url.searchParams.set("error", CallbackRouteError.name)

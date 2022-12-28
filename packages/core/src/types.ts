@@ -79,8 +79,8 @@ export type { LoggerInstance }
 /**
  * Change the theme of the built-in pages.
  *
- * [Documentation](https://next-auth.js.org/configuration/options#theme) |
- * [Pages](https://next-auth.js.org/configuration/pages)
+ * [Documentation](https://authjs.dev/reference/configuration/auth-config#theme) |
+ * [Pages](https://authjs.dev/guides/basics/pages)
  */
 export interface Theme {
   colorScheme?: "auto" | "dark" | "light"
@@ -126,7 +126,7 @@ export interface Profile {
   image?: string
 }
 
-/** [Documentation](https://next-auth.js.org/configuration/callbacks) */
+/** [Documentation](https://authjs.dev/guides/basics/callbacks) */
 export interface CallbacksOptions<P = Profile, A = Account> {
   /**
    * Control whether a user is allowed to sign in or not.
@@ -168,7 +168,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    * By default only URLs on the same URL as the site are allowed,
    * you can use this callback to customise that behaviour.
    *
-   * [Documentation](https://next-auth.js.org/configuration/callbacks#redirect-callback)
+   * [Documentation](https://authjs.dev/guides/basics/callbacks#redirect-callback)
    */
   redirect: (params: {
     /** URL provided as callback URL by the client */
@@ -186,10 +186,10 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    * If you want to make something available you added to the token through the `jwt` callback,
    * you have to explicitly forward it here to make it available to the client.
    *
-   * [Documentation](https://next-auth.js.org/configuration/callbacks#session-callback) |
-   * [`jwt` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
-   * [`useSession`](https://next-auth.js.org/getting-started/client#usesession) |
-   * [`getSession`](https://next-auth.js.org/getting-started/client#getsession) |
+   * [Documentation](https://authjs.dev/guides/basics/callbacks#session-callback) |
+   * [`jwt` callback](https://authjs.dev/guides/basics/callbacks#jwt-callback) |
+   * [`useSession`](https://authjs.dev/reference/react/#usesession) |
+   * [`getSession`](https://authjs.dev/reference/utilities/#getsession) |
    *
    */
   session: (params: {
@@ -206,8 +206,8 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    *
    * ⚠ By default the JWT is signed, but not encrypted.
    *
-   * [Documentation](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
-   * [`session` callback](https://next-auth.js.org/configuration/callbacks#session-callback)
+   * [Documentation](https://authjs.dev/guides/basics/callbacks#jwt-callback) |
+   * [`session` callback](https://authjs.dev/guides/basics/callbacks#session-callback)
    */
   jwt: (params: {
     token: JWT
@@ -218,13 +218,13 @@ export interface CallbacksOptions<P = Profile, A = Account> {
   }) => Awaitable<JWT>
 }
 
-/** [Documentation](https://next-auth.js.org/configuration/options#cookies) */
+/** [Documentation](https://authjs.dev/reference/configuration/auth-config#cookies) */
 export interface CookieOption {
   name: string
   options: CookieSerializeOptions
 }
 
-/** [Documentation](https://next-auth.js.org/configuration/options#cookies) */
+/** [Documentation](https://authjs.dev/reference/configuration/auth-config#cookies) */
 export interface CookiesOptions {
   sessionToken: CookieOption
   callbackUrl: CookieOption
@@ -237,7 +237,7 @@ export interface CookiesOptions {
 /**
  *  The various event callbacks you can register for from next-auth
  *
- * [Documentation](https://next-auth.js.org/configuration/events)
+ * [Documentation](https://authjs.dev/guides/basics/events)
  */
 export interface EventCallbacks {
   /**
@@ -337,16 +337,16 @@ export interface DefaultSession {
  * Returned by `useSession`, `getSession`, returned by the `session` callback
  * and also the shape received as a prop on the `SessionProvider` React Context
  *
- * [`useSession`](https://next-auth.js.org/getting-started/client#usesession) |
- * [`getSession`](https://next-auth.js.org/getting-started/client#getsession) |
- * [`SessionProvider`](https://next-auth.js.org/getting-started/client#sessionprovider) |
- * [`session` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback)
+ * [`useSession`](https://authjs.dev/reference/react/#usesession) |
+ * [`getSession`](https://authjs.dev/reference/utilities#getsession) |
+ * [`SessionProvider`](https://authjs.dev/reference/react#sessionprovider) |
+ * [`session` callback](https://authjs.dev/guides/basics/callbacks#jwt-callback)
  */
 export interface Session extends DefaultSession {}
 
 export type SessionStrategy = "jwt" | "database"
 
-/** [Documentation](https://next-auth.js.org/configuration/options#session) */
+/** [Documentation](https://authjs.dev/reference/configuration/auth-config#session) */
 export interface SessionOptions {
   /**
    * Choose how you want to save the user session.
@@ -358,7 +358,7 @@ export interface SessionOptions {
    * When using `"database"`, the session cookie will only contain a `sessionToken` value,
    * which is used to look up the session in the database.
    *
-   * [Documentation](https://next-auth.js.org/configuration/options#session) | [Adapter](https://next-auth.js.org/configuration/options#adapter) | [About JSON Web Tokens](https://next-auth.js.org/faq#json-web-tokens)
+   * [Documentation](https://authjs.dev/reference/configuration/auth-config#session) | [Adapter](https://authjs.dev/reference/configuration/auth-config#adapter) | [About JSON Web Tokens](https://authjs.dev/reference/faq#json-web-tokens)
    */
   strategy: SessionStrategy
   /**
@@ -396,10 +396,10 @@ export interface DefaultUser {
  * available in the `jwt` and `session` callbacks,
  * or the second parameter of the `session` callback, when using a database.
  *
- * [`signIn` callback](https://next-auth.js.org/configuration/callbacks#sign-in-callback) |
- * [`session` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
- * [`jwt` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
- * [`profile` OAuth provider callback](https://next-auth.js.org/configuration/providers#using-a-custom-provider)
+ * [`signIn` callback](https://authjs.dev/guides/basics/callbacks#sign-in-callback) |
+ * [`session` callback](https://authjs.dev/guides/basics/callbacks#jwt-callback) |
+ * [`jwt` callback](https://authjs.dev/guides/basics/callbacks#jwt-callback) |
+ * [`profile` OAuth provider callback](https://authjs.dev/guides/providers/custom-provider)
  */
 export interface User extends DefaultUser {}
 

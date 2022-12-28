@@ -35,7 +35,7 @@ type RenderPageParams = {
 >
 
 /**
- * Unless the user defines their [own pages](https://next-auth.js.org/configuration/pages),
+ * Unless the user defines their [own pages](https://authjs.dev/guides/basics/pages),
  * we render a set of default ones, using Preact SSR.
  */
 export default function renderPage(params: RenderPageParams) {
