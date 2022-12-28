@@ -41,7 +41,6 @@ packages/next-auth/index.js
 packages/next-auth/next
 packages/next-auth/middleware.d.ts
 packages/next-auth/middleware.js
-src/lib/pages/styles.ts
 
 # Development app
 apps/dev/src/css
@@ -87,6 +86,7 @@ packages/core/*.d.ts
 packages/core/*.d.ts.map
 packages/core/lib
 packages/core/providers
+packages/core/src/lib/pages/styles.ts
 docs/docs/reference/03-core
 docs/docs/reference/04-sveltekit
 
