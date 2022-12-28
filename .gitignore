@@ -41,6 +41,7 @@ packages/next-auth/index.js
 packages/next-auth/next
 packages/next-auth/middleware.d.ts
 packages/next-auth/middleware.js
+src/lib/pages/styles.ts
 
 # Development app
 apps/dev/src/css
