@@ -25,7 +25,7 @@ export default function Root() {
       <Body>
         <Suspense>
           <NavBar />
-          <div class="py-32">
+          <div class="py-44 px-8">
             <ErrorBoundary>
               <Routes>
                 <FileRoutes />
