@@ -25,11 +25,13 @@ export default function Root() {
       <Body>
         <Suspense>
           <NavBar />
-          <ErrorBoundary>
-            <Routes>
-              <FileRoutes />
-            </Routes>
-          </ErrorBoundary>
+          <div class="py-32">
+            <ErrorBoundary>
+              <Routes>
+                <FileRoutes />
+              </Routes>
+            </ErrorBoundary>
+          </div>
         </Suspense>
         <Scripts />
       </Body>
