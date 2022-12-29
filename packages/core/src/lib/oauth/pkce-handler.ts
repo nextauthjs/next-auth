@@ -80,7 +80,7 @@ export async function usePKCECodeVerifier(
     codeVerifier: pkce?.value ?? undefined,
     cookie: {
       name: cookies.pkceCodeVerifier.name,
-      value: "",
+      value: pkce?.value ?? undefined,
       options: { ...cookies.pkceCodeVerifier.options, maxAge: 0 },
     },
   }

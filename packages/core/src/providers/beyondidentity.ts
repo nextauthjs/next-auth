@@ -14,7 +14,15 @@ export default function BeyondIdentity<P extends BeyondIdentityProfile>(
     id: "beyondidentity",
     name: "Beyond Identity",
     type: "oidc",
-    checks: ["state"],
+    profile(profile) {
+      return {
+        id: profile.sub,
+        name: profile.name,
+        preferred_username: profile.preferred_username,
+        email: profile.email,
+      }
+    },
+    checks: ["pkce"],
     style: {
       logo: "/beyondidentity.svg",
       logoDark: "/beyondidentity-dark.svg",
