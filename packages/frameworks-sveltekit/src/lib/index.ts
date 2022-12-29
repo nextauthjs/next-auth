@@ -38,7 +38,7 @@
  *
  * ## Signing in and signing out
  *
- * The data for the current session in this example was made available through the $page store which can be set through you root +page.server.ts file.
+ * The data for the current session in this example was made available through the `$page` store which can be set through you root `+page.server.ts` file.
  * It is not necessary to store the data there, however, this makes it globally accessible throughout your application simplifying state management.
  *
  * ```ts
@@ -70,9 +70,9 @@
  *
  * ## Managing the session
  *
- * The above example checks for a session available in $page.data.session, however that needs to be set by us somewhere.
- * If you want this data to be available to all your routes you can add this to your root +page.server.ts file.
- * The following code sets the session data in the $page store to be available to all routes.
+ * The above example checks for a session available in `$page.data.session`, however that needs to be set by us somewhere.
+ * If you want this data to be available to all your routes you can add this to your root `+page.server.ts` file.
+ * The following code sets the session data in the `$page` store to be available to all routes.
  *
  * ```ts
  * import type { LayoutServerLoad } from './$types';
@@ -84,7 +84,7 @@
  * }; 
  * ```
  *
- * What you return in the function LayoutServerLoad will be available inside the $page store, in the data property: $page.data.
+ * What you return in the function `LayoutServerLoad` will be available inside the `$page` store, in the `data` property: `$page.data`.
  * In this case we return an object with the 'session' property which is what we are accessing in the other code paths.
  *
  * ## Handling authorization
@@ -93,8 +93,8 @@
  *
  * ### Per component
  *
- * The simplest case is protecting a single page, in which case you should put the logic in the +page.server.ts file.
- * Notice in this case that you could also await event.parent and grab the session from there, however this implementation works even if you haven't done the above in your root layout.server
+ * The simplest case is protecting a single page, in which case you should put the logic in the `+page.server.ts` file.
+ * Notice in this case that you could also await event.parent and grab the session from there, however this implementation works even if you haven't done the above in your root `+layout.server.ts`
  *
  * ```ts
  * import { redirect } from '@sveltejs/kit';
@@ -108,13 +108,13 @@
  * ```
  * 
  * :::danger
- * Make sure to ALWAYS grab the session information from the parent instead of using the store in the case of a PageLoad.
- * Not doing so can lead to users being able to incorrectly access protected information in the case the +layout.server.ts does not run for that page load.
+ * Make sure to ALWAYS grab the session information from the parent instead of using the store in the case of a `PageLoad`.
+ * Not doing so can lead to users being able to incorrectly access protected information in the case the `+layout.server.ts` does not run for that page load.
  * This code sample already implements the correct method by using `const { session } = await parent();`
  * :::
  *
- * You should NOT put authorization logic in a +layout.server.ts as the logic is not guaranteed to propragate to leafs in the tree.
- * Prefer to manually protect each route through the +page.server.ts file to avoid mistakes.
+ * You should NOT put authorization logic in a `+layout.server.ts` as the logic is not guaranteed to propragate to leafs in the tree.
+ * Prefer to manually protect each route through the `+page.server.ts` file to avoid mistakes.
  * It is possible to force the layout file to run the load function on all routes, however that relies certain behaviours that can change and are not easily checked.
  * For more information about these caveats make sure to read this issue in the SvelteKit repository: https://github.com/sveltejs/kit/issues/6315
  *
@@ -127,7 +127,7 @@
  * - Very easy to modify
  *
  * The way to handle authorization through the URI is to override your handle hook.
- * The handle hook, available in hooks.server.ts, is a function that receives ALL requests sent to your SvelteKit webapp.
+ * The handle hook, available in `hooks.server.ts`, is a function that receives ALL requests sent to your SvelteKit webapp.
  * You may intercept them inside the handle hook, add and modify things in the request, block requests, etc.
  * Some readers may notice we are already using this handle hook for SvelteKitAuth which returns a handle itself, so we are going to use SvelteKit's sequence to provide middleware-like functions that set the handle hook.
  * 
@@ -169,7 +169,7 @@
  * Learn more about SvelteKit's handle hooks and sequence [here](https://kit.svelte.dev/docs/modules#sveltejs-kit-hooks-sequence).
  * :::
  *
- * Now any routes under /authenticated will be transparently protected by the handle hook.
+ * Now any routes under `/authenticated` will be transparently protected by the handle hook.
  * You may add more middleware-like functions to the sequence and also implement more complex authorization business logic inside this file.
  * This can also be used along with the component-based approach in case you need a specific page to be protected and doing it by URI could be faulty.
  *
