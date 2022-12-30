@@ -61,7 +61,7 @@ importers:
       typedoc-plugin-markdown: 3.14.0_p7xjg2asbi3h7h4efxnoor54kq_typedoc@0.23.22
       typescript: 4.9.4
 
-  apps/dev:
+  apps/dev/nextjs:
     specifiers:
       '@auth/core': workspace:*
       '@next-auth/fauna-adapter': workspace:*
@@ -85,22 +85,22 @@ importers:
       sqlite3: ^5.0.8
       typeorm: 0.3.7
     dependencies:
-      '@auth/core': link:../../packages/core
-      '@next-auth/fauna-adapter': link:../../packages/adapter-fauna
-      '@next-auth/prisma-adapter': link:../../packages/adapter-prisma
-      '@next-auth/supabase-adapter': link:../../packages/adapter-supabase
-      '@next-auth/typeorm-legacy-adapter': link:../../packages/adapter-typeorm-legacy
+      '@auth/core': link:../../../packages/core
+      '@next-auth/fauna-adapter': link:../../../packages/adapter-fauna
+      '@next-auth/prisma-adapter': link:../../../packages/adapter-prisma
+      '@next-auth/supabase-adapter': link:../../../packages/adapter-supabase
+      '@next-auth/typeorm-legacy-adapter': link:../../../packages/adapter-typeorm-legacy
       '@prisma/client': 3.15.2_prisma@3.15.2
       '@supabase/supabase-js': 2.0.5
       faunadb: 4.6.0
       next: 13.1.1_biqbaboplfbrettd7655fr4n2y
-      next-auth: link:../../packages/next-auth
+      next-auth: link:../../../packages/next-auth
       nodemailer: 6.7.5
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     devDependencies:
       '@types/jsonwebtoken': 8.5.8
-      '@types/react': 18.0.15
+      '@types/react': 18.0.26
       '@types/react-dom': 18.0.6
       fake-smtp-server: 0.8.0
       pg: 8.7.3
@@ -7953,7 +7953,7 @@ packages:
       npmlog: 5.0.1
       rimraf: 3.0.2
       semver: 7.3.8
-      tar: 6.1.11
+      tar: 6.1.13
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -8297,6 +8297,7 @@ packages:
   /@npmcli/move-file/1.1.2:
     resolution: {integrity: sha512-1SUf/Cg2GzGDyaf15aR9St9TWlb+XvbZXWpDx8YKs7MLzMH/BCeopv+y9vzrzgkfykCGuWOlSu3mZhj2+FQcrg==}
     engines: {node: '>=10'}
+    deprecated: This functionality has been moved to @npmcli/fs
     dependencies:
       mkdirp: 1.0.4
       rimraf: 3.0.2
@@ -11741,7 +11742,7 @@ packages:
     dev: true
 
   /base32.js/0.1.0:
-    resolution: {integrity: sha1-tYLexpPC8R6JPPBk7mrFthMaIgI=}
+    resolution: {integrity: sha512-n3TkB02ixgBOhTvANakDb4xaMXnYUVkNoRFJjQflcqMQhyEKxEHdj3E6N8t8sUQ0mjH/3/JxzlXuz3ul/J90pQ==}
     engines: {node: '>=0.12.0'}
     dev: true
 
@@ -17642,7 +17643,7 @@ packages:
     dev: true
 
   /ipv6-normalize/1.0.1:
-    resolution: {integrity: sha1-GzJYKQ02X6gyOeiZB93kWS52IKg=}
+    resolution: {integrity: sha512-Bm6H79i01DjgGTCWjUuCjJ6QDo1HB96PT/xCYuyJUP9WFbVDrLSbG4EZCvOCun2rNswZb0c3e4Jt/ws795esHA==}
     dev: true
 
   /is-alphabetical/1.0.4:
@@ -20237,7 +20238,7 @@ packages:
     dev: true
 
   /libqp/1.1.0:
-    resolution: {integrity: sha1-9ebgatdLeU+1tbZpiL9yjvHe2+g=}
+    resolution: {integrity: sha512-4Rgfa0hZpG++t1Vi2IiqXG9Ad1ig4QTmtuZF946QJP4bPqOYC78ixUXgz5TW/wE7lNaNKlplSYTxQ+fR2KZ0EA==}
     dev: true
 
   /libsodium-wrappers/0.7.10:
@@ -21650,7 +21651,7 @@ packages:
       npmlog: 6.0.2
       rimraf: 3.0.2
       semver: 7.3.8
-      tar: 6.1.11
+      tar: 6.1.13
       which: 2.0.2
     transitivePeerDependencies:
       - bluebird
@@ -25582,7 +25583,7 @@ packages:
     dependencies:
       '@mapbox/node-pre-gyp': 1.0.9
       node-addon-api: 4.3.0
-      tar: 6.1.11
+      tar: 6.1.13
     optionalDependencies:
       node-gyp: 8.4.1
     transitivePeerDependencies:
