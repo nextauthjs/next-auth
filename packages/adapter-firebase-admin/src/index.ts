@@ -63,7 +63,9 @@ export const getConverter = <Document extends Record<string, any>>(options: {
       return document
     },
 
-    fromFirestore(snapshot: QueryDocumentSnapshot<Document>): Document {
+    fromFirestore(
+      snapshot: FirebaseFirestore.QueryDocumentSnapshot<Document>
+    ): Document {
       const document = snapshot.data()! // we can guarentee it exists
 
       const object: Record<string, unknown> = {}
