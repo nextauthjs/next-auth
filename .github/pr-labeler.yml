@@ -24,6 +24,9 @@ fauna:
 firebase:
   - packages/adapter-firebase/**
 
+firebase-admin:
+  - packages/adapter-firebase-admin/**
+
 mikro-orm:
   - packages/adapter-mikro-orm/**
 
