@@ -8,20 +8,15 @@ import type {
 } from "next-auth/adapters"
 import type { Account } from "next-auth"
 
-const supabase = createClient(
-  process.env.SUPABASE_URL ?? "http://localhost:54321",
-  process.env.SUPABASE_SERVICE_ROLE_KEY ??
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSJ9.vI9obAHOGyVVKa3pD--kJlyxp-Z2zV9UUMAhKpNLAcU",
-  { db: { schema: "next_auth" } }
-)
+const url = process.env.SUPABASE_URL ?? "http://localhost:54321"
+const secret =
+  process.env.SUPABASE_SERVICE_ROLE_KEY ||
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSJ9.vI9obAHOGyVVKa3pD--kJlyxp-Z2zV9UUMAhKpNLAcU"
+
+const supabase = createClient(url, secret, { db: { schema: "next_auth" } })
 
 runBasicTests({
-  adapter: SupabaseAdapter({
-    url: process.env.SUPABASE_URL ?? "http://localhost:54321",
-    secret:
-      process.env.SUPABASE_SERVICE_ROLE_KEY ??
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSJ9.vI9obAHOGyVVKa3pD--kJlyxp-Z2zV9UUMAhKpNLAcU",
-  }),
+  adapter: SupabaseAdapter({ url, secret }),
   db: {
     async session(sessionToken) {
       const { data, error } = await supabase

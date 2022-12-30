@@ -1,6 +1,6 @@
 {
   "name": "@auth/core",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Authentication for the Web.",
   "keywords": [
     "authentication",
@@ -64,7 +64,7 @@
     "@panva/hkdf": "1.0.2",
     "cookie": "0.5.0",
     "jose": "4.11.1",
-    "oauth4webapi": "2.0.5",
+    "oauth4webapi": "2.0.6",
     "preact": "10.11.3",
     "preact-render-to-string": "5.2.3"
   },
@@ -77,18 +77,18 @@
     }
   },
   "scripts": {
-    "build": "pnpm clean && pnpm css && tsc",
-    "clean": "rm -rf *.js *.d.ts lib providers",
-    "css": "node ./scripts/generate-css.js",
+    "build": "pnpm css && tsc",
+    "clean": "rm -rf *.js *.d.ts* lib providers",
+    "css": "node scripts/generate-css",
     "dev": "pnpm css && tsc -w"
   },
   "devDependencies": {
     "@next-auth/tsconfig": "workspace:*",
+    "@types/cookie": "0.5.1",
     "@types/node": "18.11.10",
     "@types/nodemailer": "6.4.6",
     "@types/react": "18.0.26",
     "autoprefixer": "10.4.13",
-    "cssnano": "5.1.14",
     "postcss": "8.4.19",
     "postcss-nested": "6.0.0"
   }
