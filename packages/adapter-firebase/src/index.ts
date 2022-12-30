@@ -40,7 +40,7 @@ export function FirestoreAdapter({
   emulator,
   ...firebaseOptions
 }: FirebaseOptions & FirestoreAdapterOptions): Adapter {
-  const firebaseApp = getFirebase(firebaseOptions) //initializeApp(firebaseOptions)
+  const firebaseApp = getFirebase(firebaseOptions)
   const db = getFirestore(firebaseApp)
 
   if (emulator) {
