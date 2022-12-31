@@ -6,7 +6,6 @@ import type { GetServerSidePropsContext, NextApiRequest } from "next"
 import type { NextRequest } from "next/server"
 import type { JWT, JWTDecodeParams, JWTEncodeParams, JWTOptions } from "./types"
 import type { LoggerInstance } from ".."
-import { MissingSecret } from "src/core/errors"
 
 export * from "./types"
 
@@ -68,10 +67,7 @@ export interface GetTokenParams<R extends boolean = false> {
  */
 export async function getToken<R extends boolean = false>(
   params: GetTokenParams<R>
-): Promise<R extends true ? string : JWT | null>
-export async function getToken(
-  params: GetTokenParams
-): Promise<string | JWT | null> {
+): Promise<R extends true ? string : JWT | null> {
   const {
     req,
     secureCookie = process.env.NEXTAUTH_URL?.startsWith("https://") ??
@@ -86,8 +82,6 @@ export async function getToken(
   } = params
 
   if (!req) throw new Error("Must pass `req` to JWT getToken()")
-  if (!secret)
-    throw new MissingSecret("Must pass `secret` if not set to JWT getToken()")
 
   const sessionStore = new SessionStore(
     { name: cookieName, options: { secure: secureCookie } },
@@ -107,13 +101,17 @@ export async function getToken(
     token = decodeURIComponent(urlEncodedToken)
   }
 
+  // @ts-expect-error
   if (!token) return null
 
+  // @ts-expect-error
   if (raw) return token
 
   try {
+    // @ts-expect-error
     return await _decode({ token, secret })
   } catch {
+    // @ts-expect-error
     return null
   }
 }
