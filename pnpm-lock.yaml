@@ -150,7 +150,7 @@ importers:
       '@types/react': 18.0.26
       typescript: 4.9.4
 
-  apps/examples/solid-start:
+  apps/examples/solidstart:
     specifiers:
       '@auth/core': ^0.1.4
       '@solid-auth/next': ^0.0.19
@@ -21106,7 +21106,7 @@ packages:
     engines: {node: '>=8.0.0'}
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: 1.15.1_debug@4.3.4
+      follow-redirects: 1.15.1
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
