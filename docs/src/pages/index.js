@@ -120,6 +120,8 @@ export default function Home() {
                 src="/img/logo/logo-sm.png"
                 alt="Shield with key icon"
                 className={styles.heroLogo}
+                height="142"
+                width="128"
               />
               <div className={styles.heroText}>
                 <h1 className="hero__title">{siteConfig.title}</h1>
