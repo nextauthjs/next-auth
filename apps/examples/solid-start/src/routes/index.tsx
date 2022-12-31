@@ -29,7 +29,7 @@ const Home: ParentComponent = () => {
           </A>{" "}
           with{" "}
           <A
-            href="https://authjs.dev/reference/solid-start/modules/main"
+            href="https://authjs.dev/reference/solidstart"
             class="text-blue-500 underline font-bold"
           >
             SolidStart Auth
