@@ -202,9 +202,9 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    * or updated (i.e whenever a session is accessed in the client).
    * Its content is forwarded to the `session` callback,
    * where you can control what should be returned to the client.
-   * Anything else will be kept from your front-end.
+   * Anything else will be kept inaccessible from the client.
    *
-   * ⚠ By default the JWT is signed, but not encrypted.
+   * By default the JWT is encrypted.
    *
    * [Documentation](https://authjs.dev/guides/basics/callbacks#jwt-callback) |
    * [`session` callback](https://authjs.dev/guides/basics/callbacks#session-callback)
