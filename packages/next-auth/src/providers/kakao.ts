@@ -2,7 +2,6 @@ import type { OAuthConfig, OAuthUserConfig } from "."
 
 export type DateTime = string
 export type Gender = "female" | "male"
-export type BirthDay = "SOLAR" | "LUNAR"
 export type AgeRange =
   | "1-9"
   | "10-14"
@@ -56,7 +55,7 @@ export interface KakaoProfile extends Record<string, any> {
     birthyear?: string
     birthday_needs_agreement?: boolean
     birthday?: string
-    birthday_type?: BirthDay
+    birthday_type?: string
     gender_needs_agreement?: boolean
     gender?: Gender
     phone_number_needs_agreement?: boolean
