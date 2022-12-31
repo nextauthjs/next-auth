@@ -7,12 +7,12 @@ nextauthjs/sveltekit-auth-example:
   - .github/FUNDING.yml
   - LICENSE
 
-nextauthjs/solid-start-auth-example:
-  - source: "apps/examples/solidstart"
-    dest: .
-    deleteOrphaned: true
-  - .github/FUNDING.yml
-  - LICENSE
+# nextauthjs/solid-start-auth-example:
+#   - source: "apps/examples/solidstart"
+#     dest: .
+#     deleteOrphaned: true
+#   - .github/FUNDING.yml
+#   - LICENSE
 
 nextauthjs/next-auth-gatsby-example:
   - source: apps/playgrounds/gatsby
