@@ -156,6 +156,7 @@ it("Redirect to error page if multiple addresses aren't allowed", async () => {
   expect(signIn).toBeCalledTimes(0)
   expect(sendVerificationRequest).toBeCalledTimes(0)
 
+  // @ts-expect-error
   expect(log.error.mock.calls[0]).toEqual([
     "SIGNIN_EMAIL_ERROR",
     { error, providerId: "email" },

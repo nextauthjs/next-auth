@@ -30,7 +30,7 @@ providers: [
     PatreonProvider({
       clientId: process.env.PATREON_ID,
       clientSecret: process.env.PATREON_SECRET,
-    }))
+    })
 ]
 ...
 ```

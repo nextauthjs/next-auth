@@ -1,7 +1,7 @@
 import type { IncomingMessage } from "http"
 import type { LoggerInstance, Session } from ".."
 
-export interface NextAuthClientConfig {
+export interface AuthClientConfig {
   baseUrl: string
   basePath: string
   baseUrlServer: string
@@ -31,7 +31,7 @@ export interface CtxOrReq {
  */
 export async function fetchData<T = any>(
   path: string,
-  __NEXTAUTH: NextAuthClientConfig,
+  __NEXTAUTH: AuthClientConfig,
   logger: LoggerInstance,
   { ctx, req = ctx?.req }: CtxOrReq = {}
 ): Promise<T | null> {
@@ -50,7 +50,7 @@ export async function fetchData<T = any>(
   }
 }
 
-export function apiBaseUrl(__NEXTAUTH: NextAuthClientConfig) {
+export function apiBaseUrl(__NEXTAUTH: AuthClientConfig) {
   if (typeof window === "undefined") {
     // Return absolute path when called server side
     return `${__NEXTAUTH.baseUrlServer}${__NEXTAUTH.basePathServer}`
@@ -94,10 +94,18 @@ export function BroadcastChannel(name = "nextauth.message") {
     /** Notify other tabs/windows. */
     post(message: Record<string, unknown>) {
       if (typeof window === "undefined") return
-      localStorage.setItem(
-        name,
-        JSON.stringify({ ...message, timestamp: now() })
-      )
+      try {
+        localStorage.setItem(
+          name,
+          JSON.stringify({ ...message, timestamp: now() })
+        )
+      } catch {
+        /**
+         * The localStorage API isn't always available.
+         * It won't work in private mode prior to Safari 11 for example.
+         * Notifications are simply dropped if an error is encountered.
+         */
+      }
     },
   }
 }

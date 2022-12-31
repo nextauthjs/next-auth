@@ -1,3 +1,4 @@
+/** @type {import("@docusaurus/types").Config} */
 module.exports = {
   title: "NextAuth.js",
   tagline: "Authentication for Next.js",
@@ -20,8 +21,10 @@ module.exports = {
     algolia: {
       appId: "OUEDA16KPG",
       apiKey: "97c0894508f2d1d4a2fef4fe6db28448",
-      indexName: "next-auth",
+      indexName: "next-auth-v4",
       searchParameters: {},
+      contextualSearch: false,
+      externalUrlRegex: "authjs\\.dev|next-auth\\.js\\.org",
     },
     navbar: {
       title: "NextAuth.js",
@@ -30,6 +33,33 @@ module.exports = {
         src: "img/logo/logo-xs.png",
       },
       items: [
+        // TODO: This is the new navigation for the BETA Docs.
+        //       Add an env var at build time to switch between this nav
+        //       and the old at build time.
+        // {
+        //   to: "/beta/getting-started/introduction",
+        //   activeBasePath: "/beta/getting-started/",
+        //   label: "Getting started",
+        //   position: "left",
+        // },
+        // {
+        //   to: "/beta/guides/overview",
+        //   activeBasePath: "/beta/guides/",
+        //   label: "Guides",
+        //   position: "left",
+        // },
+        // {
+        //   to: "/beta/reference/index",
+        //   activeBasePath: "/beta/reference",
+        //   label: "Reference",
+        //   position: "left",
+        // },
+        // {
+        //   to: "/beta/concepts/faq",
+        //   activeBasePath: "/beta/concepts",
+        //   label: "Concepts",
+        //   position: "left",
+        // },
         {
           to: "/getting-started/introduction",
           activeBasePath: "docs",
@@ -77,13 +107,13 @@ module.exports = {
         },
       ],
     },
-    // announcementBar: {
-    //   id: "new-major-announcement",
-    //   content:
-    //     "The default documentation is for v4 which has been released to GA 🚨 migration to <b>v4</b> docs can be found <a href='/getting-started/upgrade-v4'>here</a> 👈 The old v3 docs can be found <a href='/v3/getting-started/introduction'>here</a>.",
-    //   backgroundColor: "#1786fb",
-    //   textColor: "#fff",
-    // },
+    announcementBar: {
+      id: "new-major-announcement",
+      content:
+        "NextAuth.js is becoming Auth.js! 🎉 We're creating Authentication for the Web. Everyone included. You are looking at the NextAuth.js (v4) documentation. For the new documentation go to <a target='_blank' rel='noopener noreferrer' href='https://authjs.dev'>authjs.dev</a>.",
+      backgroundColor: "#000",
+      textColor: "#fff",
+    },
     footer: {
       links: [
         {
@@ -150,7 +180,7 @@ module.exports = {
         docs: {
           routeBasePath: "/",
           sidebarPath: require.resolve("./sidebars.js"),
-          editUrl: "https://github.com/nextauthjs/next-auth/edit/main/docs",
+          editUrl: "https://github.com/nextauthjs/next-auth/edit/v4/docs",
           lastVersion: "current",
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,

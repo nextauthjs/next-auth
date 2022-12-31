@@ -35,6 +35,7 @@ packages/next-auth/core
 packages/next-auth/jwt
 packages/next-auth/react
 packages/next-auth/adapters.d.ts
+packages/next-auth/adapters.js
 packages/next-auth/index.d.ts
 packages/next-auth/index.js
 packages/next-auth/next
@@ -64,6 +65,7 @@ dev.db*
 packages/adapter-prisma/prisma/dev.db
 packages/adapter-prisma/prisma/migrations
 db.sqlite
+packages/adapter-supabase/supabase/.branches
 
 # Tests
 coverage
@@ -77,3 +79,19 @@ test.schema.gql
 # docusaurus
 docs/.docusaurus
 docs/providers.json
+
+# Core
+packages/core/adapters.*
+packages/core/index.*
+packages/core/jwt
+packages/core/lib
+packages/core/providers
+
+
+# SvelteKit
+packages/frameworks-sveltekit/index.*
+packages/frameworks-sveltekit/client.*
+packages/frameworks-sveltekit/.svelte-kit
+packages/frameworks-sveltekit/package
+packages/frameworks-sveltekit/vite.config.js.timestamp-*
+packages/frameworks-sveltekit/vite.config.ts.timestamp-*

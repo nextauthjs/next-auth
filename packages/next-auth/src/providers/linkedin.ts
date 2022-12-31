@@ -31,6 +31,9 @@ export default function LinkedIn<P extends LinkedInProfile>(
       params: { scope: "r_liteprofile r_emailaddress" },
     },
     token: "https://www.linkedin.com/oauth/v2/accessToken",
+    client: {
+      token_endpoint_auth_method: "client_secret_post",
+    },
     userinfo: {
       url: "https://api.linkedin.com/v2/me",
       params: {
@@ -51,6 +54,15 @@ export default function LinkedIn<P extends LinkedInProfile>(
           profile.profilePicture?.["displayImage~"]?.elements?.[0]
             ?.identifiers?.[0]?.identifier,
       }
+    },
+    style: {
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/linkedin.svg",
+      logoDark:
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/linkedin-dark.svg",
+      bg: "#fff",
+      text: "#069",
+      bgDark: "#069",
+      textDark: "#fff",
     },
     options,
   }

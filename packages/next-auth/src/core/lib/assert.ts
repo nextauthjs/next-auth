@@ -5,13 +5,14 @@ import {
   MissingSecret,
   UnsupportedStrategy,
   InvalidCallbackUrl,
+  MissingAdapterMethods,
 } from "../errors"
 import parseUrl from "../../utils/parse-url"
 import { defaultCookies } from "./cookie"
 
 import type { RequestInternal } from ".."
 import type { WarningCode } from "../../utils/logger"
-import type { NextAuthOptions } from "../types"
+import type { AuthOptions } from "../types"
 
 type ConfigError =
   | MissingAPIRoute
@@ -39,7 +40,7 @@ function isValidHttpUrl(url: string, baseUrl: string) {
  * REVIEW: Make some of these and corresponding docs less Next.js specific?
  */
 export function assertConfig(params: {
-  options: NextAuthOptions
+  options: AuthOptions
   req: RequestInternal
 }): ConfigError | WarningCode[] {
   const { options, req } = params
@@ -120,8 +121,23 @@ export function assertConfig(params: {
     }
   }
 
-  if (hasEmail && !options.adapter) {
-    return new MissingAdapter("E-mail login requires an adapter.")
+  if (hasEmail) {
+    const { adapter } = options
+    if (!adapter) {
+      return new MissingAdapter("E-mail login requires an adapter.")
+    }
+
+    const missingMethods = [
+      "createVerificationToken",
+      "useVerificationToken",
+      "getUserByEmail",
+    ].filter((method) => !adapter[method])
+
+    if (missingMethods.length) {
+      return new MissingAdapterMethods(
+        `Required adapter methods were missing: ${missingMethods.join(", ")}`
+      )
+    }
   }
 
   if (!warned) {

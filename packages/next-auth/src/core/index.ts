@@ -6,7 +6,7 @@ import { init } from "./init"
 import { assertConfig } from "./lib/assert"
 import { SessionStore } from "./lib/cookie"
 
-import type { NextAuthAction, NextAuthOptions } from "./types"
+import type { AuthAction, AuthOptions } from "./types"
 import type { Cookie } from "./lib/cookie"
 import type { ErrorType } from "./pages/error"
 import { parse as parseCookie } from "cookie"
@@ -19,7 +19,7 @@ export interface RequestInternal {
   headers?: Record<string, any>
   query?: Record<string, any>
   body?: Record<string, any>
-  action: NextAuthAction
+  action: AuthAction
   providerId?: string
   error?: string
 }
@@ -29,7 +29,7 @@ export interface NextAuthHeader {
   value: string
 }
 
-export interface OutgoingResponse<
+export interface ResponseInternal<
   Body extends string | Record<string, any> | any[] = any
 > {
   status?: number
@@ -41,7 +41,7 @@ export interface OutgoingResponse<
 
 export interface NextAuthHandlerParams {
   req: Request | RequestInternal
-  options: NextAuthOptions
+  options: AuthOptions
 }
 
 async function getBody(req: Request): Promise<Record<string, any> | undefined> {
@@ -58,14 +58,12 @@ async function toInternalRequest(
     const url = new URL(req.url)
     // TODO: handle custom paths?
     const nextauth = url.pathname.split("/").slice(3)
-    const headers = Object.fromEntries(req.headers.entries())
-    const query: Record<string, any> = Object.fromEntries(
-      url.searchParams.entries()
-    )
+    const headers = Object.fromEntries(req.headers)
+    const query: Record<string, any> = Object.fromEntries(url.searchParams)
     query.nextauth = nextauth
 
     return {
-      action: nextauth[0] as NextAuthAction,
+      action: nextauth[0] as AuthAction,
       method: req.method,
       headers,
       body: await getBody(req),
@@ -79,28 +77,36 @@ async function toInternalRequest(
   return req
 }
 
-export async function NextAuthHandler<
+export async function AuthHandler<
   Body extends string | Record<string, any> | any[]
->(params: NextAuthHandlerParams): Promise<OutgoingResponse<Body>> {
-  const { options: userOptions, req: incomingRequest } = params
+>(params: NextAuthHandlerParams): Promise<ResponseInternal<Body>> {
+  const { options: authOptions, req: incomingRequest } = params
 
   const req = await toInternalRequest(incomingRequest)
 
-  setLogger(userOptions.logger, userOptions.debug)
+  setLogger(authOptions.logger, authOptions.debug)
 
-  const assertionResult = assertConfig({ options: userOptions, req })
+  const assertionResult = assertConfig({ options: authOptions, req })
 
   if (Array.isArray(assertionResult)) {
     assertionResult.forEach(logger.warn)
   } else if (assertionResult instanceof Error) {
     // Bail out early if there's an error in the user config
-    const { pages, theme } = userOptions
     logger.error(assertionResult.code, assertionResult)
 
+    const htmlPages = ["signin", "signout", "error", "verify-request"]
+    if (!htmlPages.includes(req.action) || req.method !== "GET") {
+      const message = `There is a problem with the server configuration. Check the server logs for more information.`
+      return {
+        status: 500,
+        headers: [{ key: "Content-Type", value: "application/json" }],
+        body: { message } as any,
+      }
+    }
+    const { pages, theme } = authOptions
+
     const authOnErrorPage =
-      pages?.error &&
-      req.action === "signin" &&
-      req.query?.callbackUrl.startsWith(pages.error)
+      pages?.error && req.query?.callbackUrl?.startsWith(pages.error)
 
     if (!pages?.error || authOnErrorPage) {
       if (authOnErrorPage) {
@@ -123,7 +129,7 @@ export async function NextAuthHandler<
   const { action, providerId, error, method = "GET" } = req
 
   const { options, cookies } = await init({
-    userOptions,
+    authOptions,
     action,
     providerId,
     host: req.host,
@@ -269,7 +275,7 @@ export async function NextAuthHandler<
         }
         break
       case "_log":
-        if (userOptions.logger) {
+        if (authOptions.logger) {
           try {
             const { code, level, ...metadata } = req.body ?? {}
             logger[level](code, metadata)

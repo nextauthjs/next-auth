@@ -1,6 +1,6 @@
 import { createHash } from "crypto"
 
-import type { NextAuthOptions } from "../.."
+import type { AuthOptions } from "../.."
 import type { InternalOptions } from "../types"
 import type { InternalUrl } from "../../utils/parse-url"
 
@@ -29,16 +29,16 @@ export function hashToken(token: string, options: InternalOptions<"email">) {
  * based on options passed here. If options contains unique data, such as
  * OAuth provider secrets and database credentials it should be sufficent. If no secret provided in production, we throw an error. */
 export function createSecret(params: {
-  userOptions: NextAuthOptions
+  authOptions: AuthOptions
   url: InternalUrl
 }) {
-  const { userOptions, url } = params
+  const { authOptions, url } = params
 
   return (
-    userOptions.secret ??
+    authOptions.secret ??
     // TODO: Remove falling back to default secret, and error in dev if one isn't provided
     createHash("sha256")
-      .update(JSON.stringify({ ...url, ...userOptions }))
+      .update(JSON.stringify({ ...url, ...authOptions }))
       .digest("hex")
   )
 }

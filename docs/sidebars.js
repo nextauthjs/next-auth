@@ -65,6 +65,7 @@ module.exports = {
         "adapters/neo4j",
         "adapters/typeorm",
         "adapters/sequelize",
+        "adapters/supabase",
         "adapters/mikro-orm",
         "adapters/dgraph",
         "adapters/upstash-redis",
