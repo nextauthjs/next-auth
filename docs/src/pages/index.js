@@ -117,7 +117,7 @@ export default function Home() {
           <div className="container">
             <div className="hero-inner">
               <img
-                src="/img/logo/logo-sm.png"
+                src="/img/logo/logo-sm.webp"
                 alt="Shield with key icon"
                 className={styles.heroLogo}
                 height="142"
