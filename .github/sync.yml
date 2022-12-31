@@ -7,8 +7,11 @@ nextauthjs/sveltekit-auth-example:
   - .github/FUNDING.yml
   - LICENSE
 
+# FIXME: Should re-enable, but currently fails:
+# https://github.com/nextauthjs/next-auth/actions/runs/3811709391/jobs/6484533340
+# (issue seems to be the name of the target repo)
 # nextauthjs/solid-start-auth-example:
-#   - source: "apps/examples/solidstart"
+#   - source: "apps/examples/solid-start"
 #     dest: .
 #     deleteOrphaned: true
 #   - .github/FUNDING.yml
