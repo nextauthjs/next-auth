@@ -58,9 +58,9 @@ module.exports = {
       label: "@auth/solid-start",
       link: {
         type: "doc",
-        id: "reference/solid-start/index",
+        id: "reference/solidstart/index",
       },
-      items: ["reference/solid-start/client", "reference/solid-start/protected"],
+      items: ["reference/solidstart/client", "reference/solidstart/protected"],
     },
     {
       type: "category",
