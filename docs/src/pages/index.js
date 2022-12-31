@@ -117,9 +117,11 @@ export default function Home() {
           <div className="container">
             <div className="hero-inner">
               <img
-                src="/img/logo/logo-sm.png"
+                src="/img/logo/logo-sm.webp"
                 alt="Shield with key icon"
                 className={styles.heroLogo}
+                height="142"
+                width="128"
               />
               <div className={styles.heroText}>
                 <h1 className="hero__title">{siteConfig.title}</h1>
@@ -214,9 +216,9 @@ export default function Home() {
               <div className="row">
                 <div className="col col--6">
                   <div className="code">
-                    <h4 className="code-heading">
+                    <div className="code-heading">
                       Next.js <span>/pages/api/auth/[...nextauth].ts</span>
-                    </h4>
+                    </div>
                     <CodeBlock className="prism-code language-js">
                       {nextJsCode}
                     </CodeBlock>
@@ -224,9 +226,9 @@ export default function Home() {
                 </div>
                 <div className="col col--6">
                   <div className="code">
-                    <h4 className="code-heading">
+                    <div className="code-heading">
                       SvelteKit <span>/hooks.server.ts</span>
-                    </h4>
+                    </div>
                     <CodeBlock className="prism-code language-js">
                       {svelteKitCode}
                     </CodeBlock>
@@ -234,9 +236,9 @@ export default function Home() {
                 </div>
                 <div className="col col--6">
                   <div className="code">
-                    <h4 className="code-heading">
+                    <div className="code-heading">
                       SolidStart <span>/routes/api/auth/[...solidauth].ts</span>
-                    </h4>
+                    </div>
                     <CodeBlock className="prism-code language-js">
                       {solidStartCode}
                     </CodeBlock>

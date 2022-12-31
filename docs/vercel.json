@@ -61,6 +61,11 @@
       "permanent": true
     },
     {
+      "source": "/reference/solid-start/:path*",
+      "destination": "/reference/solidstart/:path*",
+      "permanent": true
+    },
+    {
       "source": "/",
       "has": [
         {
