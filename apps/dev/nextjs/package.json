@@ -1,7 +1,7 @@
 {
   "name": "next-auth-app",
   "version": "1.0.0",
-  "description": "NextAuth.js Developer app",
+  "description": "Next.js + Auth.js Developer app",
   "private": true,
   "scripts": {
     "clean": "rm -rf .next",
