@@ -7,13 +7,16 @@ import { authOpts } from "~/routes/api/auth/[...solidauth]";
 
 const Protected = (Comp: IProtectedComponent) => {
   const routeData = () => {
-    return createServerData$(async (_, event) => {
-      const session = await getSession(event.request, authOpts);
-      if (!session || !session.user) {
-        throw redirect("/");
-      }
-      return session;
-    });
+    return createServerData$(
+      async (_, event) => {
+        const session = await getSession(event.request, authOpts);
+        if (!session || !session.user) {
+          throw redirect("/");
+        }
+        return session;
+      },
+      { key: () => ["auth_user"] }
+    );
   };
 
   return {
