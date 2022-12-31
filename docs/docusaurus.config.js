@@ -1,17 +1,31 @@
+const fs = require("fs")
+const path = require("path")
+
+// list providers entries from @auth/core/providers/*.ts
+const coreSrc = "../packages/core/src"
+const providers = fs
+  .readdirSync(path.join(__dirname, coreSrc, "/providers"))
+  .filter((file) => file.endsWith(".ts") && !file.startsWith("oauth"))
+  .map((p) => `${coreSrc}/providers/${p}`)
+
+const typedocConfig = require("./typedoc.json")
+delete typedocConfig.$schema
+
 /** @type {import("@docusaurus/types").Config} */
-module.exports = {
-  title: "NextAuth.js",
-  tagline: "Authentication for Next.js",
-  url: "https://next-auth.js.org",
+const docusaurusConfig = {
+  title: "Auth.js",
+  tagline: "Authentication for the Web.",
+  url: "https://authjs.dev",
   baseUrl: "/",
   favicon: "img/favicon.ico",
+  trailingSlash: false,
   organizationName: "nextauthjs",
-  projectName: "next-auth",
-  // TODO: remove this once BETA is ready
+  // TODO: remove this once ready
   onBrokenLinks: "log",
+  projectName: "next-auth",
   themeConfig: {
     prism: {
-      theme: require("prism-react-renderer/themes/vsDark"),
+      theme: require("prism-react-renderer/themes/nightOwl"),
       magicComments: [
         {
           className: "theme-code-block-highlighted-line",
@@ -25,63 +39,40 @@ module.exports = {
       apiKey: "97c0894508f2d1d4a2fef4fe6db28448",
       indexName: "next-auth",
       searchParameters: {},
+      contextualSearch: false,
+      externalUrlRegex: "authjs\\.dev|next-auth\\.js\\.org",
     },
     navbar: {
-      title: "NextAuth.js",
+      title: "Auth.js",
       logo: {
-        alt: "NextAuth Logo",
+        alt: "Auth.js Logo",
         src: "img/logo/logo-xs.png",
       },
       items: [
-        // TODO: This is the new navigation for the BETA Docs.
-        //       Add an env var at build time to switch between this nav
-        //       and the old at build time.
-        // {
-        //   to: "/beta/getting-started/introduction",
-        //   activeBasePath: "/beta/getting-started/",
-        //   label: "Getting started",
-        //   position: "left",
-        // },
-        // {
-        //   to: "/beta/guides/overview",
-        //   activeBasePath: "/beta/guides/",
-        //   label: "Guides",
-        //   position: "left",
-        // },
-        // {
-        //   to: "/beta/reference/index",
-        //   activeBasePath: "/beta/reference",
-        //   label: "Reference",
-        //   position: "left",
-        // },
-        // {
-        //   to: "/beta/concepts/faq",
-        //   activeBasePath: "/beta/concepts",
-        //   label: "Concepts",
-        //   position: "left",
-        // },
         {
           to: "/getting-started/introduction",
-          activeBasePath: "docs",
-          label: "Documentation",
+          activeBasePath: "/getting-started/",
+          label: "Getting started",
           position: "left",
         },
         {
-          to: "/tutorials",
-          activeBasePath: "docs",
-          label: "Tutorials",
+          to: "/guides",
+          activeBasePath: "/guides",
+          label: "Guides",
           position: "left",
         },
         {
-          to: "/faq",
-          activeBasePath: "docs",
-          label: "FAQ",
+          to: "/reference/core/modules/main",
+          // TODO: change to this when the overview page looks better.
+          // to: "/reference",
+          activeBasePath: "/reference",
+          label: "Reference",
           position: "left",
         },
         {
-          to: "/security",
-          activeBasePath: "docs",
-          label: "Security",
+          to: "/concepts/faq",
+          activeBasePath: "/concepts",
+          label: "Concepts",
           position: "left",
         },
         {
@@ -107,17 +98,17 @@ module.exports = {
         },
       ],
     },
-    // announcementBar: {
-    //   id: "new-major-announcement",
-    //   content:
-    //     "The default documentation is for v4 which has been released to GA 🚨 migration to <b>v4</b> docs can be found <a href='/getting-started/upgrade-v4'>here</a> 👈 The old v3 docs can be found <a href='/v3/getting-started/introduction'>here</a>.",
-    //   backgroundColor: "#1786fb",
-    //   textColor: "#fff",
-    // },
+    announcementBar: {
+      id: "new-major-announcement",
+      content:
+        "<a target='_blank' rel='noopener noreferrer' href='https://next-auth.js.org'>NextAuth.js</a> is becoming Auth.js! 🎉 We're creating Authentication for the Web. Everyone included. Starting with SvelteKit, check out the docs <a  href='/reference/sveltekit'>here</a>.",
+      backgroundColor: "#000",
+      textColor: "#fff",
+    },
     footer: {
       links: [
         {
-          title: "About NextAuth.js",
+          title: "About Auth.js",
           items: [
             {
               label: "Introduction",
@@ -125,7 +116,7 @@ module.exports = {
             },
             {
               html: `
-            <a target="_blank" rel="noopener noreferrer" href="https://vercel.com?utm_source=nextauthjs&utm_campaign=oss">
+            <a target="_blank" rel="noopener noreferrer" href="https://vercel.com?utm_source=authjs&utm_campaign=oss">
               <img
                 alt="Powered by Vercel"
                 style="margin-top: 8px"
@@ -167,10 +158,15 @@ module.exports = {
           ],
         },
       ],
-      copyright: `NextAuth.js &copy; Iain Collins ${new Date().getFullYear()}`,
+      copyright: `Auth.js &copy; Balázs Orbán ${new Date().getFullYear()}`,
     },
     colorMode: {
       respectPrefersColorScheme: true,
+    },
+    docs: {
+      sidebar: {
+        autoCollapseCategories: true,
+      },
     },
   },
   presets: [
@@ -178,27 +174,17 @@ module.exports = {
       "@docusaurus/preset-classic",
       {
         docs: {
+          breadcrumbs: false,
           routeBasePath: "/",
           sidebarPath: require.resolve("./sidebars.js"),
           editUrl: "https://github.com/nextauthjs/next-auth/edit/main/docs",
           lastVersion: "current",
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
-          remarkPlugins: [
-            require("@sapphire/docusaurus-plugin-npm2yarn2pnpm").npm2yarn2pnpm,
-            require("remark-github"),
-            require("mdx-mermaid"),
-          ],
+          remarkPlugins: [require("@sapphire/docusaurus-plugin-npm2yarn2pnpm").npm2yarn2pnpm, require("remark-github")],
           versions: {
             current: {
-              label: "v4",
-            },
-            v3: {
-              label: "v3",
-            },
-            beta: {
-              label: "v4-unreleased",
-              banner: "unreleased",
+              label: "experimental",
             },
           },
         },
@@ -208,4 +194,106 @@ module.exports = {
       },
     ],
   ],
+  plugins: [
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        ...typedocConfig,
+        id: "core",
+        plugin: ["./tyepdoc"],
+        entryPoints: ["index.ts", "adapters.ts", "errors.ts", "jwt.ts", "types.ts"].map((e) => `${coreSrc}/${e}`).concat(providers),
+        tsconfig: "../packages/core/tsconfig.json",
+        out: "reference/03-core",
+        watch: process.env.TYPEDOC_WATCH,
+        includeExtension: false,
+      },
+    ],
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        ...typedocConfig,
+        id: "sveltekit",
+        plugin: ["./tyepdoc"],
+        entryPoints: ["index.ts", "client.ts"].map((e) => `../packages/frameworks-sveltekit/src/lib/${e}`),
+        tsconfig: "../packages/frameworks-sveltekit/tsconfig.json",
+        out: "reference/04-sveltekit",
+        watch: process.env.TYPEDOC_WATCH,
+        includeExtension: false,
+      },
+    ],
+  ],
 }
+
+docusaurusConfig.headTags = [
+  {
+    tagName: "meta",
+    attributes: {
+      charSet: "utf-8",
+    },
+  },
+  {
+    tagName: "link",
+    attributes: {
+      rel: "canonical",
+      href: docusaurusConfig.url,
+    },
+  },
+  {
+    tagName: "meta",
+    attributes: {
+      property: "og:title",
+      content: docusaurusConfig.title,
+    },
+  },
+  {
+    tagName: "meta",
+    attributes: {
+      property: "og:description",
+      content: docusaurusConfig.tagline,
+    },
+  },
+  {
+    tagName: "meta",
+    attributes: {
+      property: "og:image",
+      content: `${docusaurusConfig.url}/img/og-image.png`,
+    },
+  },
+  {
+    tagName: "meta",
+    attributes: {
+      property: "og:url",
+      content: docusaurusConfig.url,
+    },
+  },
+  {
+    tagName: "meta",
+    attributes: {
+      name: "twitter:card",
+      content: "summary_large_image",
+    },
+  },
+  {
+    tagName: "meta",
+    attributes: {
+      name: "twitter:title",
+      content: docusaurusConfig.title,
+    },
+  },
+  {
+    tagName: "meta",
+    attributes: {
+      name: "twitter:description",
+      content: docusaurusConfig.tagline,
+    },
+  },
+  {
+    tagName: "meta",
+    attributes: {
+      name: "twitter:image",
+      content: `${docusaurusConfig.url}/img/og-image.png`,
+    },
+  },
+]
+
+module.exports = docusaurusConfig

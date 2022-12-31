@@ -1,6 +1,6 @@
 <p align="center">
    <br/>
-   <a href="https://next-auth.js.org" target="_blank"><img height="64px" src="https://next-auth.js.org/img/logo/logo-sm.png" /></a>&nbsp;&nbsp;&nbsp;&nbsp;<img height="64px" src="./logo.svg" />
+   <a href="https://authjs.dev" target="_blank"><img height="64px" src="https://authjs.dev/img/logo/logo-sm.png" /></a>&nbsp;&nbsp;&nbsp;&nbsp;<img height="64px" src="./logo.svg" />
    <h3 align="center"><b>Neo4j Adapter</b> - NextAuth.js</h3>
    <p align="center">
    Open Source. Full Stack. Own Your Data.
@@ -14,9 +14,9 @@
 
 ## Overview
 
-This is the Neo4j Adapter for [`next-auth`](https://next-auth.js.org). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
+This is the Neo4j Adapter for [`auth.js`](https://authjs.dev). This package can only be used in conjunction with the primary `auth.js` package. It is not a standalone package.
 
-You can find the Neo4j schema in the docs at [next-auth.js.org/adapters/neo4j](next-auth.js.org/adapters/neo4j).
+You can find the Neo4j schema in the docs at [authjs.dev/reference/adapters/neo4j](authjs.dev/reference/adapters/neo4j).
 
 ## Getting Started
 
@@ -41,7 +41,7 @@ const driver = neo4j.driver(
 const neo4jSession = driver.session()
 
 export default NextAuth({
-  // https://next-auth.js.org/configuration/providers
+  // https://authjs.dev/reference/providers/oauth-builtin
   providers: [],
   adapter: Neo4jAdapter(neo4jSession),
   ...
@@ -50,7 +50,7 @@ export default NextAuth({
 
 ## Contributing
 
-We're open to all community contributions! If you'd like to contribute in any way, please first read our [Contributing Guide](https://github.com/nextauthjs/next-auth/blob/canary/CONTRIBUTING.md).
+We're open to all community contributions! If you'd like to contribute in any way, please first read our [Contributing Guide](https://github.com/nextauthjs/.github/blob/main/CONTRIBUTING.md).
 
 ## License
 

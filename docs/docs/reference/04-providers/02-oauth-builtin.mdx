@@ -1,0 +1,23 @@
+---
+title: Available OAuth providers
+sidebar_label: Oauth providers
+---
+
+Authentication Providers in **Auth.js** are services that can be used to sign in a user.
+
+Auth.js comes with a set of built-in providers. You can find them [here](https://github.com/nextauthjs/next-auth/tree/main/packages/core/src/providers). Each built-in provider has its own documentation page:
+
+:::note
+Auth.js is designed to work with any OAuth service, it supports **OAuth 1.0**, **1.0A**, **2.0** and **OpenID Connect (OIDC)** and has built-in support for most popular sign-in services.
+:::
+
+<ul>
+  {Object.entries(require("../../../providers.json"))
+    .filter(([key]) => !["email", "credentials"].includes(key))
+    .sort(([, a], [, b]) => a.localeCompare(b))
+    .map(([key, name]) => (
+      <li key={key}>
+        <a href={`/reference/oauth-providers/${key}`}>{name}</a>
+      </li>
+    ))}
+</ul>
