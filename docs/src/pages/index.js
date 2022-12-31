@@ -216,9 +216,9 @@ export default function Home() {
               <div className="row">
                 <div className="col col--6">
                   <div className="code">
-                    <h4 className="code-heading">
+                    <div className="code-heading">
                       Next.js <span>/pages/api/auth/[...nextauth].ts</span>
-                    </h4>
+                    </div>
                     <CodeBlock className="prism-code language-js">
                       {nextJsCode}
                     </CodeBlock>
@@ -226,9 +226,9 @@ export default function Home() {
                 </div>
                 <div className="col col--6">
                   <div className="code">
-                    <h4 className="code-heading">
+                    <div className="code-heading">
                       SvelteKit <span>/hooks.server.ts</span>
-                    </h4>
+                    </div>
                     <CodeBlock className="prism-code language-js">
                       {svelteKitCode}
                     </CodeBlock>
@@ -236,9 +236,9 @@ export default function Home() {
                 </div>
                 <div className="col col--6">
                   <div className="code">
-                    <h4 className="code-heading">
+                    <div className="code-heading">
                       SolidStart <span>/routes/api/auth/[...solidauth].ts</span>
-                    </h4>
+                    </div>
                     <CodeBlock className="prism-code language-js">
                       {solidStartCode}
                     </CodeBlock>
