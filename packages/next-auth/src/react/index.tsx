@@ -18,7 +18,7 @@ import {
   apiBaseUrl,
   fetchData,
   now,
-  NextAuthClientConfig,
+  AuthClientConfig,
 } from "../client/_utils"
 
 import type {
@@ -46,7 +46,7 @@ export * from "./types"
 //    relative URLs are valid in that context and so defaults to empty.
 // 2. When invoked server side the value is picked up from an environment
 //    variable and defaults to 'http://localhost:3000'.
-const __NEXTAUTH: NextAuthClientConfig = {
+const __NEXTAUTH: AuthClientConfig = {
   baseUrl: parseUrl(process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL).origin,
   basePath: parseUrl(process.env.NEXTAUTH_URL).path,
   baseUrlServer: parseUrl(
@@ -241,13 +241,13 @@ export async function signIn<
     method: "post",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
+      "X-Auth-Return-Redirect": "1",
     },
     // @ts-expect-error
     body: new URLSearchParams({
       ...options,
       csrfToken: await getCsrfToken(),
       callbackUrl,
-      json: true,
     }),
   })
 
@@ -291,12 +291,11 @@ export async function signOut<R extends boolean = true>(
     method: "post",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
+      "X-Auth-Return-Redirect": "1",
     },
-    // @ts-expect-error
     body: new URLSearchParams({
-      csrfToken: await getCsrfToken(),
+      csrfToken: (await getCsrfToken()) ?? "",
       callbackUrl,
-      json: true,
     }),
   }
   const res = await fetch(`${baseUrl}/signout`, fetchOptions)

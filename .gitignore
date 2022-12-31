@@ -1,7 +1,7 @@
 # Misc
 .DS_Store
 .npmrc
-
+.eslintcache
 .env
 .env.local
 .env.development.local
@@ -51,7 +51,7 @@ apps/dev/typeorm
 /.vs/slnx.sqlite-journal
 /.vs/slnx.sqlite
 /.vs
-.vscode
+.vscode/generated*
 
 # Jetbrains
 .idea
@@ -65,6 +65,7 @@ dev.db*
 packages/adapter-prisma/prisma/dev.db
 packages/adapter-prisma/prisma/migrations
 db.sqlite
+packages/adapter-supabase/supabase/.branches
 
 # Tests
 coverage
@@ -78,3 +79,22 @@ test.schema.gql
 # docusaurus
 docs/.docusaurus
 docs/providers.json
+
+# Core
+packages/core/*.js
+packages/core/*.d.ts
+packages/core/*.d.ts.map
+packages/core/lib
+packages/core/providers
+packages/core/src/lib/pages/styles.ts
+docs/docs/reference/03-core
+docs/docs/reference/04-sveltekit
+
+
+# SvelteKit
+packages/frameworks-sveltekit/index.*
+packages/frameworks-sveltekit/client.*
+packages/frameworks-sveltekit/.svelte-kit
+packages/frameworks-sveltekit/package
+packages/frameworks-sveltekit/vite.config.js.timestamp-*
+packages/frameworks-sveltekit/vite.config.ts.timestamp-*
