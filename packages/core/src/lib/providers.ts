@@ -52,11 +52,11 @@ function normalizeOAuth(
 
   if (c.issuer) c.wellKnown ??= `${c.issuer}/.well-known/openid-configuration`
 
-  if (c.authorization?.params) {
-		c.authorization.params.scope ??=  "openid profile email"
-	}
-  
   const authorization = normalizeEndpoint(c.authorization, c.issuer)
+  if (authorization?.url?.searchParams.has("scope") === false) {
+    authorization.url.searchParams.set("scope", "openid profile email");
+  }
+
   const token = normalizeEndpoint(c.token, c.issuer)
 
   const userinfo = normalizeEndpoint(c.userinfo, c.issuer)
