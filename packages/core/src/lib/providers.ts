@@ -52,11 +52,11 @@ function normalizeOAuth(
 
   if (c.issuer) c.wellKnown ??= `${c.issuer}/.well-known/openid-configuration`
 
+  if (c.authorization?.params) {
+		c.authorization.params.scope ??=  "openid profile email"
+	}
+  
   const authorization = normalizeEndpoint(c.authorization, c.issuer)
-  if (authorization && !authorization.url?.searchParams.has("scope")) {
-    authorization.url.searchParams.set("scope", "openid profile email")
-  }
-
   const token = normalizeEndpoint(c.token, c.issuer)
 
   const userinfo = normalizeEndpoint(c.userinfo, c.issuer)
@@ -84,10 +84,11 @@ function normalizeEndpoint(
   e?: OAuthConfig<any>[OAuthEndpointType],
   issuer?: string
 ): OAuthConfigInternal<any>[OAuthEndpointType] {
-  if (!e || issuer) return
+  if (!e) return e;
   if (typeof e === "string") {
     return { url: new URL(e) }
   }
+  if (!e.url) return e;
   // If v.url is undefined, it's because the provider config
   // assumes that we will use the issuer endpoint.
   // The existence of either v.url or provider.issuer is checked in
