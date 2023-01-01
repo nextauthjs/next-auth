@@ -13,10 +13,10 @@ You can find the full schema in the table structure section below.
 
 ## Getting Started
 
-1. Install `next-auth` and `@next-auth/dynamodb-adapter`
+1. Install `next-auth`, `@next-auth/dynamodb-adapter`, `@aws-sdk/client-dynamodb` and `@aws-sdk/lib-dynamodb`
 
 ```bash npm2yarn2pnpm
-npm install next-auth @next-auth/dynamodb-adapter
+npm install next-auth @next-auth/dynamodb-adapter @aws-sdk/client-dynamodb @aws-sdk/lib-dynamodb
 ```
 
 2. Add this adapter to your `pages/api/auth/[...nextauth].js` next-auth configuration object.
