@@ -40,17 +40,17 @@ import { logger, setLogger, type LoggerInstance } from "./lib/utils/logger.js"
 import { toInternalRequest, toResponse } from "./lib/web.js"
 
 import type { Adapter } from "./adapters.js"
-import type {
-  CallbacksOptions,
-  CookiesOptions,
-  EventCallbacks,
-  PagesOptions,
-  SessionOptions,
-  Theme,
-} from "./types.js"
+import type { CallbacksOptions, CookiesOptions, EventCallbacks, PagesOptions, SessionOptions, Theme } from "./types.js"
 import type { Provider } from "./providers/index.js"
 import { JWTOptions } from "./jwt.js"
+import { ProvidersRequest, ProvidersResponse, SessionRequest, SessionResponse } from "./lib/web-extension.js"
 
+export * from "./lib/web-extension.js"
+
+/** Returns a special {@link SessionResponse} instance to read the session from the request. */
+export function Auth(request: SessionRequest, config: AuthConfig): Promise<SessionResponse>
+/** Returns a special {@link ProvidersResponse} instance to read the list of providers in a client-safe way. */
+export function Auth(request: ProvidersRequest, config: AuthConfig): Promise<ProvidersResponse>
 /**
  * Core functionality provided by Auth.js.
  *
@@ -69,19 +69,18 @@ import { JWTOptions } from "./jwt.js"
  *```
  * @see [Documentation](https://authjs.dev)
  */
-export async function Auth(
-  request: Request,
-  config: AuthConfig
-): Promise<Response> {
+export function Auth(request: Request, config: AuthConfig): Promise<Response>
+export async function Auth(request: Request, config: AuthConfig): Promise<Response> {
   setLogger(config.logger, config.debug)
+
+  const isAuthRequest = request instanceof SessionRequest || request instanceof ProvidersRequest
+
+  if (isAuthRequest) config.trustHost = true
 
   const internalRequest = await toInternalRequest(request)
   if (internalRequest instanceof Error) {
     logger.error(internalRequest)
-    return new Response(
-      `Error: This action with HTTP ${request.method} is not supported.`,
-      { status: 400 }
-    )
+    return new Response(`Error: This action with HTTP ${request.method} is not supported.`, { status: 400 })
   }
 
   const assertionResult = assertConfig(internalRequest, config)
@@ -92,14 +91,10 @@ export async function Auth(
     // Bail out early if there's an error in the user config
     logger.error(assertionResult)
     const htmlPages = ["signin", "signout", "error", "verify-request"]
-    if (
-      !htmlPages.includes(internalRequest.action) ||
-      internalRequest.method !== "GET"
-    ) {
+    if (!htmlPages.includes(internalRequest.action) || internalRequest.method !== "GET") {
       return new Response(
         JSON.stringify({
-          message:
-            "There was a problem with the server configuration. Check the server logs for more information.",
+          message: "There was a problem with the server configuration. Check the server logs for more information.",
           code: assertionResult.name,
         }),
         { status: 500, headers: { "Content-Type": "application/json" } }
@@ -108,19 +103,11 @@ export async function Auth(
 
     const { pages, theme } = config
 
-    const authOnErrorPage =
-      pages?.error &&
-      internalRequest.url.searchParams
-        .get("callbackUrl")
-        ?.startsWith(pages.error)
+    const authOnErrorPage = pages?.error && internalRequest.url.searchParams.get("callbackUrl")?.startsWith(pages.error)
 
     if (!pages?.error || authOnErrorPage) {
       if (authOnErrorPage) {
-        logger.error(
-          new ErrorPageLoop(
-            `The error page ${pages?.error} should not require authentication`
-          )
-        )
+        logger.error(new ErrorPageLoop(`The error page ${pages?.error} should not require authentication`))
       }
       const render = renderPage({ theme })
       const page = render.error({ error: "Configuration" })
@@ -144,6 +131,18 @@ export async function Auth(
       headers: response.headers,
     })
   }
+
+  if (isAuthRequest) {
+    switch (request.action) {
+      case "session":
+        return new SessionResponse(response.body, response)
+      case "providers":
+        return new ProvidersResponse(response.body, response)
+      default:
+        return response
+    }
+  }
+
   return response
 }
 

@@ -9,6 +9,7 @@ module.exports = {
       files: [
         "apps/dev/pages/api/auth/[...nextauth].ts",
         "docs/{sidebars,docusaurus.config}.js",
+        "packages/core/src/index.ts",
       ],
       options: { printWidth: 150 },
     },

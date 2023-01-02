@@ -2,6 +2,7 @@ import { parse as parseCookie, serialize } from "cookie"
 import { AuthError, UnknownAction } from "../errors.js"
 
 import type { AuthAction, RequestInternal, ResponseInternal } from "../types.js"
+import { ProvidersRequest, SessionRequest } from "./web-extension.js"
 
 async function getBody(req: Request): Promise<Record<string, any> | undefined> {
   if (!("body" in req) || !req.body || req.method !== "POST") return
@@ -34,8 +35,11 @@ export async function toInternalRequest(
     // see init.ts
     const url = new URL(req.url.replace(/\/$/, ""))
     const { pathname } = url
+    let action: AuthAction | undefined
+    if (req instanceof SessionRequest || req instanceof ProvidersRequest) {
+      action = req.action
+    } else action = actions.find((a) => pathname.includes(a))
 
-    const action = actions.find((a) => pathname.includes(a))
     if (!action) {
       throw new UnknownAction("Cannot detect action.")
     }
