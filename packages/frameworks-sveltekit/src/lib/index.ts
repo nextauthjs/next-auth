@@ -18,7 +18,7 @@
  * ## Usage
  *
  * ```ts title="src/hooks.server.ts"
- * import SvelteKitAuth from "@auth/sveltekit"
+ * import { SvelteKitAuth } from "@auth/sveltekit"
  * import GitHub from "@auth/core/providers/github"
  * import { GITHUB_ID, GITHUB_SECRET } from "$env/static/private"
  *
