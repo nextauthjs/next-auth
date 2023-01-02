@@ -34,29 +34,29 @@
   ],
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "types": "./index.d.ts",
+      "import": "./index.js"
     },
     "./adapters": {
-      "types": "./dist/adapters.d.ts"
+      "types": "./adapters.d.ts"
     },
     "./errors": {
-      "import": "./dist/errors.js",
-      "types": "./dist/errors.d.ts"
+      "import": "./errors.js",
+      "types": "./errors.d.ts"
     },
     "./jwt": {
-      "types": "./dist/jwt.d.ts",
-      "import": "./dist/jwt.js"
+      "types": "./jwt.d.ts",
+      "import": "./jwt.js"
     },
     "./providers": {
-      "types": "./dist/providers/index.d.ts"
+      "types": "./providers/index.d.ts"
     },
     "./providers/*": {
-      "types": "./dist/providers/*.d.ts",
-      "import": "./dist/providers/*.js"
+      "types": "./providers/*.d.ts",
+      "import": "./providers/*.js"
     },
     "./types": {
-      "types": "./dist/types.d.ts"
+      "types": "./types.d.ts"
     }
   },
   "license": "ISC",
