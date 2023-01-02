@@ -293,6 +293,6 @@ html[data-theme="dark"] #carbonads .carbon-poweredby {
  See: https://github.com/TypeStrong/typedoc/issues/2006
 */
 /* h3.anchor + p:has(code, strong), */ /** hack did not work as it hides property types elsewhere */
-#classes {
+/* #classes {
   display: none;
-}
+} */
