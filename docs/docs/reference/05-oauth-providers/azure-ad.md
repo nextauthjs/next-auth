@@ -44,7 +44,7 @@ Azure AD returns the profile picture in an ArrayBuffer, instead of just a URL to
 In `pages/api/auth/[...nextauth].js` find or add the `AzureAD` entries:
 
 ```js
-import AzureADProvider from "next-auth/providers/azure-ad";
+import AzureADProvider from "@auth/core/providers/azure-ad";
 
 ...
 providers: [
