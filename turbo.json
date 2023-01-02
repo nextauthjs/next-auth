@@ -15,14 +15,13 @@
     "next-auth#build": {
       "dependsOn": ["^build"],
       "outputs": [
-        "lib/**",
+        "client/**",
+        "core/**",
         "css/**",
         "jwt/**",
-        "react/**",
         "next/**",
-        "client/**",
         "providers/**",
-        "core/**",
+        "react/**",
         "index.d.ts",
         "index.js",
         "adapters.d.ts",
