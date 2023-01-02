@@ -1,14 +1,24 @@
 # Note that nextauthjs/next-auth-example syncs from the v4 branch
 
 nextauthjs/sveltekit-auth-example:
-  - source: apps/example-sveltekit
+  - source: apps/examples/sveltekit
     dest: .
     deleteOrphaned: true
   - .github/FUNDING.yml
   - LICENSE
 
+# FIXME: Should re-enable, but currently fails:
+# https://github.com/nextauthjs/next-auth/actions/runs/3811709391/jobs/6484533340
+# (issue seems to be the name of the target repo)
+# nextauthjs/solid-start-auth-example:
+#   - source: "apps/examples/solid-start"
+#     dest: .
+#     deleteOrphaned: true
+#   - .github/FUNDING.yml
+#   - LICENSE
+
 nextauthjs/next-auth-gatsby-example:
-  - source: apps/playground-gatsby
+  - source: apps/playgrounds/gatsby
     dest: .
     deleteOrphaned: true
   - .github/FUNDING.yml

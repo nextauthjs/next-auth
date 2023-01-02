@@ -2,13 +2,33 @@
   "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
     "docs#build": {
-      "dependsOn": ["^build", "next-auth#build"]
+      "dependsOn": [
+        "^build",
+        "next-auth#build",
+        "@auth/core#build",
+        "@auth/sveltekit#build"
+      ]
     },
     "build": {
       "dependsOn": ["^build"]
     },
     "next-auth#build": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "outputs": [
+        "lib/**",
+        "css/**",
+        "jwt/**",
+        "react/**",
+        "next/**",
+        "client/**",
+        "providers/**",
+        "core/**",
+        "index.d.ts",
+        "index.js",
+        "adapters.d.ts",
+        "middleware.d.ts",
+        "middleware.js"
+      ]
     },
     "clean": {
       "cache": false

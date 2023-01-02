@@ -61,6 +61,11 @@
       "permanent": true
     },
     {
+      "source": "/reference/solid-start/:path*",
+      "destination": "/reference/solidstart/:path*",
+      "permanent": true
+    },
+    {
       "source": "/",
       "has": [
         {
@@ -69,6 +74,16 @@
         }
       ],
       "destination": "https://authjs.dev/reference/sveltekit/modules/main"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "solid-start.authjs.dev"
+        }
+      ],
+      "destination": "https://authjs.dev/reference/solid-start"
     },
     {
       "source": "/:path(.*)",

@@ -41,6 +41,7 @@ import { EncryptJWT, jwtDecrypt } from "jose"
 import { SessionStore } from "./lib/cookie.js"
 import { Awaitable } from "./types.js"
 import type { LoggerInstance } from "./lib/utils/logger.js"
+import { MissingSecret } from "./errors.js"
 
 const DEFAULT_MAX_AGE = 30 * 24 * 60 * 60 // 30 days
 
@@ -97,13 +98,16 @@ export interface GetTokenParams<R extends boolean = false> {
 }
 
 /**
- * Takes a Auth.js request (`req`) and returns either the Auth.js issued JWT's payload,
+ * Takes an Auth.js request (`req`) and returns either the Auth.js issued JWT's payload,
  * or the raw JWT string. We look for the JWT in the either the cookies, or the `Authorization` header.
  * [Documentation](https://authjs.dev/guides/basics/securing-pages-and-api-routes#using-gettoken)
  */
 export async function getToken<R extends boolean = false>(
   params: GetTokenParams<R>
-): Promise<R extends true ? string : JWT | null> {
+): Promise<R extends true ? string : JWT | null>
+export async function getToken(
+  params: GetTokenParams
+): Promise<string | JWT | null> {
   const {
     req,
     secureCookie = process.env.NEXTAUTH_URL?.startsWith("https://") ??
@@ -118,6 +122,8 @@ export async function getToken<R extends boolean = false>(
   } = params
 
   if (!req) throw new Error("Must pass `req` to JWT getToken()")
+  if (!secret)
+    throw new MissingSecret("Must pass `secret` if not set to JWT getToken()")
 
   const sessionStore = new SessionStore(
     { name: cookieName, options: { secure: secureCookie } },
@@ -138,17 +144,13 @@ export async function getToken<R extends boolean = false>(
     token = decodeURIComponent(urlEncodedToken)
   }
 
-  // @ts-expect-error
   if (!token) return null
 
-  // @ts-expect-error
   if (raw) return token
 
   try {
-    // @ts-expect-error
     return await _decode({ token, secret })
   } catch {
-    // @ts-expect-error
     return null
   }
 }

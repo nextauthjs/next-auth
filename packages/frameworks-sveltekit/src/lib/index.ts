@@ -27,7 +27,7 @@
  * })
  * ```
  *
- * Don't forget to set the `AUTH_SECRET` [environment variable](https://kit.svelte.dev/docs/modules#$env-static-private). This should be a random 32 character string. On unix systems you can use `openssl rand -hex 32` or check out `https://generate-secret.vercel.app/32`.
+ * Don't forget to set the `AUTH_SECRET` [environment variable](https://kit.svelte.dev/docs/modules#$env-dynamic-private). This should be a minimum of 32 characters, random string. On UNIX systems you can use `openssl rand -hex 32` or check out `https://generate-secret.vercel.app/32`.
  *
  * When deploying your app outside Vercel, set the `AUTH_TRUST_HOST` variable to `true` for other hosting providers like Cloudflare Pages or Netlify.
  *
@@ -191,7 +191,6 @@ import type { Handle } from "@sveltejs/kit"
 
 import { dev } from "$app/environment"
 import { env } from "$env/dynamic/private"
-import { AUTH_SECRET } from "$env/static/private"
 
 import { Auth } from "@auth/core"
 import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
@@ -200,7 +199,7 @@ export async function getSession(
   req: Request,
   config: AuthConfig
 ): ReturnType<App.Locals["getSession"]> {
-  config.secret ??= AUTH_SECRET
+  config.secret ??= env.AUTH_SECRET
   config.trustHost ??= true
 
   const url = new URL("/api/auth/session", req.url)
@@ -262,7 +261,7 @@ function AuthHandle(prefix: string, authOptions: AuthConfig): Handle {
  */
 export function SvelteKitAuth(options: SvelteKitAuthConfig): Handle {
   const { prefix = "/auth", ...authOptions } = options
-  authOptions.secret ??= AUTH_SECRET
+  authOptions.secret ??= env.AUTH_SECRET
   authOptions.trustHost ??= !!(env.AUTH_TRUST_HOST ?? env.VERCEL ?? dev)
   return AuthHandle(prefix, authOptions)
 }
@@ -280,10 +279,7 @@ declare global {
 }
 
 declare module "$env/dynamic/private" {
+  export const AUTH_SECRET: string
   export const AUTH_TRUST_HOST: string
   export const VERCEL: string
-}
-
-declare module "$env/static/private" {
-  export const AUTH_SECRET: string
 }
