@@ -14,7 +14,7 @@
     "stripInternal": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "outDir": "dist",
+    "outDir": ".",
     "rootDir": "src",
     "paths": {
       "next": ["node_modules/next"],
