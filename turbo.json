@@ -13,21 +13,7 @@
       "dependsOn": ["^build"]
     },
     "next-auth#build": {
-      "dependsOn": ["^build"],
-      "outputs": [
-        "client/**",
-        "core/**",
-        "css/**",
-        "jwt/**",
-        "next/**",
-        "providers/**",
-        "react/**",
-        "index.d.ts",
-        "index.js",
-        "adapters.d.ts",
-        "middleware.d.ts",
-        "middleware.js"
-      ]
+      "dependsOn": ["^build"]
     },
     "clean": {
       "cache": false

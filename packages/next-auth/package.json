@@ -27,18 +27,18 @@
     "nextauth"
   ],
   "exports": {
-    ".": "./index.js",
-    "./jwt": "./jwt/index.js",
-    "./react": "./react/index.js",
-    "./core": "./core/index.js",
-    "./next": "./next/index.js",
-    "./middleware": "./middleware.js",
-    "./client/_utils": "./client/_utils.js",
-    "./providers/*": "./providers/*.js"
+    ".": "./dist/index.js",
+    "./jwt": "./dist/jwt/index.js",
+    "./react": "./dist/react/index.js",
+    "./core": "./dist/core/index.js",
+    "./next": "./dist/next/index.js",
+    "./middleware": "./dist/middleware.js",
+    "./client/_utils": "./dist/client/_utils.js",
+    "./providers/*": "./dist/providers/*.js"
   },
   "scripts": {
     "build": "pnpm clean && pnpm build:js && pnpm build:css",
-    "build:js": "pnpm clean && pnpm generate-providers && pnpm tsc --project tsconfig.json && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
+    "build:js": "pnpm clean && pnpm generate-providers && pnpm tsc --project tsconfig.json && babel --config-file ./config/babel.config.js src --out-dir dist --extensions \".tsx,.ts,.js,.jsx\"",
     "clean": "rm -rf coverage client css utils providers core jwt react next index.d.ts index.js adapters.d.ts middleware.d.ts middleware.js",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir . && node config/wrap-css.js",
     "dev": "pnpm clean && pnpm generate-providers && concurrently \"pnpm watch:css\" \"pnpm watch:ts\"",
@@ -49,20 +49,7 @@
     "generate-providers": "node ./config/generate-providers.js"
   },
   "files": [
-    "lib",
-    "css",
-    "jwt",
-    "react",
-    "next",
-    "client",
-    "providers",
-    "core",
-    "index.d.ts",
-    "index.js",
-    "adapters.d.ts",
-    "middleware.d.ts",
-    "middleware.js",
-    "utils"
+    "dist"
   ],
   "license": "ISC",
   "dependencies": {
