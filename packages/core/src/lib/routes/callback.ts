@@ -260,8 +260,9 @@ export async function callback(params: {
       const credentials = body
 
       // TODO: Forward the original request as is, instead of reconstructing it
-      // prettier-ignore
-      Object.entries(query ?? {}).forEach(([k, v]) => url.searchParams.set(k, v))
+      Object.entries(query ?? {}).forEach(([k, v]) =>
+        url.searchParams.set(k, v)
+      )
       const user = await provider.authorize(
         credentials,
         // prettier-ignore
