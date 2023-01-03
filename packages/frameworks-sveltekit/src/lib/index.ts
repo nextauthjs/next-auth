@@ -35,7 +35,19 @@
  * ```
  * [origin]/auth/callback/[provider]
  * ```
+ * ## Load the session into layout
+ * Create a `+layout.svelte` and a `+layout.server.ts`, just put whatever in the `+layout.svelte` as long as you have a slot for the content.
+ * To load the current session into the layout use the snippet provided below:
+ * ```ts title="+layout.server.ts"
+ *import type { LayoutServerLoad } from "./$types"
  *
+ *export const load: LayoutServerLoad = async (event) => {
+ *  return {
+ *    session: await event.locals.getSession(),
+ *  }
+ *}
+ *```
+ * 
  * ## Signing in and signing out
  *
  * ```ts
@@ -70,7 +82,9 @@
  * :::info
  * Learn more about `@auth/sveltekit` [here](https://vercel.com/blog/announcing-sveltekit-auth).
  * :::
- *
+ * :::info
+ * Type errors with providers can be resolved by disabling `strict` mode in your `tsconfig.json`. 
+ * :::
  * :::info
  * PRs to improve this documentation are welcome! See [this file](https://github.com/nextauthjs/next-auth/blob/main/packages/frameworks-sveltekit/src/lib/index.ts).
  * :::
