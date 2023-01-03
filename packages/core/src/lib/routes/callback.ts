@@ -154,10 +154,12 @@ export async function callback(params: {
       const identifier = query?.email as string | undefined
 
       if (!token || !identifier) {
-        throw new TypeError(
+        const e = new TypeError(
           "Missing token or email. The sign-in URL was manually opened without token/identifier or the link was not sent correctly in the email.",
           { cause: { hasToken: !!token, hasEmail: !!identifier } }
         )
+        e.name = "Configuration"
+        throw e
       }
 
       const secret = provider.secret ?? options.secret
