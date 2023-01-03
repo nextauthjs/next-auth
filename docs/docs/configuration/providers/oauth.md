@@ -51,6 +51,8 @@ sequenceDiagram
 
 For more details, check out Aaron Parecki's blog post [OAuth2 Simplified](https://aaronparecki.com/oauth-2-simplified/) or Postman's blog post [OAuth 2.0: Implicit Flow is Dead, Try PKCE Instead](https://blog.postman.com/pkce-oauth-how-to/).
 
+Note that **NextAuth.js** does not support the OAuth implicit flow (also note [that the implicit flow is not recommended anymore](https://oauth.net/2/grant-types/implicit/)). 
+
 ## How to
 
 1. Register your application at the developer portal of your provider. There are usually links to the portals included in the aforementioned documentation pages for each supported provider with details on how to register your application.
