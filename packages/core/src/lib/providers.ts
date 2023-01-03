@@ -84,18 +84,18 @@ function normalizeEndpoint(
   e?: OAuthConfig<any>[OAuthEndpointType],
   issuer?: string
 ): OAuthConfigInternal<any>[OAuthEndpointType] {
-  if (!e || issuer) return
+  if (!e && issuer) return
   if (typeof e === "string") {
     return { url: new URL(e) }
   }
-  // If v.url is undefined, it's because the provider config
+  // If e.url is undefined, it's because the provider config
   // assumes that we will use the issuer endpoint.
-  // The existence of either v.url or provider.issuer is checked in
+  // The existence of either e.url or provider.issuer is checked in
   // assert.ts
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const url = new URL(e.url!)
+  // @ts-expect-error
+  const url = new URL(e?.url)
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-  for (const k in e.params) url.searchParams.set(k, e.params[k] as any)
+  if (e?.params) for (const k in e.params) url.searchParams.set(k, e.params[k])
 
   return { ...e, url }
 }
