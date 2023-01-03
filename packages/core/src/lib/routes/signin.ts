@@ -33,7 +33,7 @@ export async function signin(
 
       const account: Account = {
         providerAccountId: email,
-        userId: email,
+        userId: user.id,
         type: "email",
         provider: provider.id,
       }
