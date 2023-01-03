@@ -1,0 +1,41 @@
+{
+  "private": true,
+  "sideEffects": false,
+  "scripts": {
+    "build": "remix build",
+    "dev": "remix build && run-p \"dev:*\"",
+    "dev:node": "cross-env NODE_ENV=development nodemon --require dotenv/config ./server.js --watch ./server.js",
+    "dev:remix": "remix watch",
+    "start": "cross-env NODE_ENV=production node ./server.js",
+    "typecheck": "tsc -b"
+  },
+  "dependencies": {
+    "@remix-run/express": "^1.9.0",
+    "@remix-run/node": "^1.9.0",
+    "@remix-run/react": "^1.9.0",
+    "next-auth": "workspace:*",
+    "@auth/core": "workspace:*",
+    "@auth/remix": "workspace:*",
+    "compression": "^1.7.4",
+    "cross-env": "^7.0.3",
+    "express": "^4.18.2",
+    "isbot": "^3.6.5",
+    "morgan": "^1.10.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@remix-run/dev": "^1.9.0",
+    "@remix-run/eslint-config": "^1.9.0",
+    "@types/react": "^18.0.25",
+    "@types/react-dom": "^18.0.8",
+    "dotenv": "^16.0.3",
+    "eslint": "^8.27.0",
+    "nodemon": "^2.0.20",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^4.8.4"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}
