@@ -1,4 +1,4 @@
-import { OAuthConfig } from "./oauth"
+import { OAuthConfig, OAuthUserConfig } from "./oauth"
 
 export interface MattermostProfile
   extends Record<string, string | number | boolean> {
@@ -7,21 +7,17 @@ export interface MattermostProfile
   email: string
 }
 
-export default function mattermostProvider({
-  mattermostUrl: mmUrl,
-  clientId,
-  clientSecret,
-}: {
-  mattermostUrl: string
-  clientId: string
-  clientSecret: string
-}) {
+export default function mattermostProvider<P extends MattermostProfile>(
+  options: OAuthUserConfig<P> & { mattermostUrl: string }
+): OAuthConfig<P> {
+  const mmUrl = options.mattermostUrl
+
   return {
     id: "mattermost",
     name: "Mattermost",
     type: "oauth",
     token: {
-      url: `${mmUrl}/oauth/access_token?client_id=${clientId}&client_secret=${clientSecret}`,
+      url: `${mmUrl}/oauth/access_token?client_id=${options.clientId}&client_secret=${options.clientSecret}`,
     },
     authorization: `${mmUrl}/oauth/authorize`,
     userinfo: {
@@ -41,7 +37,6 @@ export default function mattermostProvider({
         email: profile.email,
       }
     },
-    clientId,
-    clientSecret,
-  } satisfies OAuthConfig<MattermostProfile>
+    options,
+  }
 }
