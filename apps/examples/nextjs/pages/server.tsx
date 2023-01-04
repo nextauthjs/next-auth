@@ -3,9 +3,10 @@ import { authOptions } from "./api/auth/[...nextauth]"
 import Layout from "../components/layout"
 
 import type { GetServerSidePropsContext } from "next"
-import type { Session } from "next-auth"
+import { useSession } from "next-auth/react"
 
-export default function ServerSidePage({ session }: { session: Session }) {
+export default function ServerSidePage() {
+  const { data: session } = useSession()
   // As this page uses Server Side Rendering, the `session` will be already
   // populated on render without needing to go through a loading stage.
   return (

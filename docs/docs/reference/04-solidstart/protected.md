@@ -70,7 +70,7 @@ export default Page;
 
 ## When Using CSR
 
-When using CSR, the `Protected` component will not work as expected and will cause the screen to flash, so I had to come up with a tricky solution, we will use a Solid-Start middleare:
+When using CSR, the `Protected` component will not work as expected and will cause the screen to flash, so I had to come up with a tricky solution, we will use a Solid-Start middleware:
 
 ```tsx
 // entry-server.tsx
