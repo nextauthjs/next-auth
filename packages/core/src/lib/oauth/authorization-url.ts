@@ -22,7 +22,8 @@ export async function getAuthorizationUrl(
   let url = provider.authorization?.url
   let as: o.AuthorizationServer | undefined
 
-  if (!url) {
+  // Falls back to authjs.dev if the user only passed params
+  if (!url || url.host === "authjs.dev") {
     // If url is undefined, we assume that issuer is always defined
     // We check this in assert.ts
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -48,9 +49,9 @@ export async function getAuthorizationUrl(
       redirect_uri: provider.callbackUrl,
       // @ts-expect-error TODO:
       ...provider.authorization?.params,
-    }, // Defaults
-    Object.fromEntries(authParams), // From provider config
-    query // From `signIn` call
+    },
+    Object.fromEntries(provider.authorization?.url.searchParams ?? []),
+    query
   )
 
   for (const k in params) authParams.set(k, params[k])
