@@ -4,7 +4,7 @@
     "allowSyntheticDefaultImports": true,
     "target": "esnext",
     "moduleResolution": "Node",
-    "strict": false,
+    "strict": true,
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
     "module": "esnext",

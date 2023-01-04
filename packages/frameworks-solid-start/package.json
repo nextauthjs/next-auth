@@ -6,6 +6,8 @@
   "files": [
     "client.*",
     "index.*",
+    "types.*",
+    "utils.*",
     "src"
   ],
   "exports": {
@@ -15,14 +17,22 @@
     },
     "./client": {
       "types": "./client.d.ts",
-      "import": "./client.js"
+      "import": "./client.jsx"
+    },
+    "./utils": {
+      "types": "./utils.d.ts",
+      "import": "./utils.js"
+    },
+    "./types": {
+      "types": "./types.d.ts",
+      "import": "./types.js"
     },
     "./package.json": "./package.json"
   },
   "scripts": {
     "build": "tsup --config ./tsup.config.js && node scripts/postbuild",
     "patch": "npm version patch --no-git-tag-version",
-    "clean": "rm -rf client.* index.*"
+    "clean": "rm -rf client.* index.* utils.* types.*"
   },
   "publishConfig": {
     "access": "public"
@@ -33,7 +43,6 @@
     "@types/cookie": "0.5.1",
     "@types/node": "^18.7.14",
     "@types/set-cookie-parser": "^2.4.2",
-    "next-auth": "workspace:*",
     "solid-js": "^1.5.7",
     "solid-start": "^0.2.1",
     "tsup": "^6.5.0",

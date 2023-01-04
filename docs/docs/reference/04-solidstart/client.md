@@ -16,3 +16,14 @@ signIn("provider") // example: signIn("github")
 import { signOut } from "@auth/solid-start/client"
 signOut()
 ```
+
+## Getting the session
+
+```ts
+import { useSession } from "@auth/solid-start/client"
+
+const session = useSession() // client side session
+
+session.user
+session.expires
+```

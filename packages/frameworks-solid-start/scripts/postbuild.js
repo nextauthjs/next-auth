@@ -8,7 +8,8 @@ const __dirname = path.dirname(__filename);
 async function main() {
   const root = path.join(__dirname, "../");
   const dist = path.join(root, "dist");
-  await fs.cp(dist, root, {
+  await fs.rename(path.join(dist, 'client.js'), path.join(dist, 'client.jsx'));
+   await fs.cp(dist, root, {
     recursive: true,
   });
 }

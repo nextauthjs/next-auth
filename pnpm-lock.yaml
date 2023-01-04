@@ -152,8 +152,8 @@ importers:
 
   apps/examples/solid-start:
     specifiers:
-      '@auth/core': ^0.1.4
-      '@solid-auth/next': ^0.0.19
+      '@auth/core': workspace:*
+      '@auth/solid-start': workspace:*
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.6.0
       autoprefixer: ^10.4.13
@@ -168,8 +168,8 @@ importers:
       vite: ^3.1.0
       zod: ^3.19.1
     dependencies:
-      '@auth/core': 0.1.4
-      '@solid-auth/next': 0.0.19_ex5p5uzaq2oricr4l45eaiohri
+      '@auth/core': link:../../../packages/core
+      '@auth/solid-start': link:../../../packages/frameworks-solid-start
       '@solidjs/meta': 0.28.2_solid-js@1.6.6
       '@solidjs/router': 0.6.0_solid-js@1.6.6
       solid-js: 1.6.6
@@ -616,7 +616,6 @@ importers:
       '@types/cookie': 0.5.1
       '@types/node': ^18.7.14
       '@types/set-cookie-parser': ^2.4.2
-      next-auth: workspace:*
       set-cookie-parser: ^2.5.1
       solid-js: ^1.5.7
       solid-start: ^0.2.1
@@ -630,7 +629,6 @@ importers:
       '@types/cookie': 0.5.1
       '@types/node': 18.11.10
       '@types/set-cookie-parser': 2.4.2
-      next-auth: link:../next-auth
       solid-js: 1.6.6
       solid-start: 0.2.8_ol5sfeg2xpjsxxfgzadulo7fdi
       tsup: 6.5.0_typescript@4.9.4
@@ -939,22 +937,6 @@ packages:
     transitivePeerDependencies:
       - encoding
       - supports-color
-    dev: false
-
-  /@auth/core/0.1.4:
-    resolution: {integrity: sha512-RsGtCWzbimuTUfV0ODE8NDxiJ5iDJAR3Wedj5OgdyZxTlCxSirXKf7+6g+krE6gHG3PoOkkd6xN6QENk+D60xw==}
-    peerDependencies:
-      nodemailer: 6.8.0
-    peerDependenciesMeta:
-      nodemailer:
-        optional: true
-    dependencies:
-      '@panva/hkdf': 1.0.2
-      cookie: 0.5.0
-      jose: 4.11.1
-      oauth4webapi: 2.0.5
-      preact: 10.11.3
-      preact-render-to-string: 5.2.3_preact@10.11.3
     dev: false
 
   /@aws-crypto/ie11-detection/2.0.0:
@@ -10718,19 +10700,6 @@ packages:
       webpack-sources: 3.2.3
     dev: true
 
-  /@solid-auth/next/0.0.19_ex5p5uzaq2oricr4l45eaiohri:
-    resolution: {integrity: sha512-aGcEePidVKh6iYS5JHghv/MFKh1mE0PQUmD8+dHiRRWcnVOF38fyHTz5L5PQCmrl8xE9J8rK3ymVlt0lzw2dQg==}
-    peerDependencies:
-      '@auth/core': ~0.1.4 || ^0.1.4
-      solid-js: ^1.5.7
-      solid-start: ^0.2.1
-    dependencies:
-      '@auth/core': 0.1.4
-      set-cookie-parser: 2.5.1
-      solid-js: 1.6.6
-      solid-start: 0.2.9_7g4juq64zsg2futgalxovnqs54
-    dev: false
-
   /@solidjs/meta/0.28.2_solid-js@1.6.6:
     resolution: {integrity: sha512-avlLgBPdk4KVxzRGFlYp/MIJo8B5jVgXPgk6OUnUP8km21Z+ovO+DUd7ZPA7ejv8PBdWi9GE3zCzw8RU2YuV2Q==}
     peerDependencies:
@@ -13606,7 +13575,7 @@ packages:
   /axios/0.21.4_debug@3.2.7:
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
-      follow-redirects: 1.15.1_debug@3.2.7
+      follow-redirects: 1.15.1
     transitivePeerDependencies:
       - debug
     dev: false
@@ -13630,7 +13599,7 @@ packages:
   /axios/0.25.0_debug@4.3.4:
     resolution: {integrity: sha512-cD8FOb0tRH3uuEe6+evtAbgJtfxr7ly3fQjYcMcuPlgkwVS9xboaVIpcDV+cYQe+yGykgwZCs1pzjntcGa6l5g==}
     dependencies:
-      follow-redirects: 1.15.1
+      follow-redirects: 1.15.1_debug@4.3.4
     transitivePeerDependencies:
       - debug
 
@@ -19297,18 +19266,6 @@ packages:
       debug:
         optional: true
 
-  /follow-redirects/1.15.1_debug@3.2.7:
-    resolution: {integrity: sha512-yLAMQs+k0b2m7cVxpS1VKJVvoz7SS9Td1zss3XRwXj+ZDH00RJgnuLx7E44wx02kQLrdM3aOOy+FpzS7+8OizA==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
-    dependencies:
-      debug: 3.2.7
-    dev: false
-
   /follow-redirects/1.15.1_debug@4.3.4:
     resolution: {integrity: sha512-yLAMQs+k0b2m7cVxpS1VKJVvoz7SS9Td1zss3XRwXj+ZDH00RJgnuLx7E44wx02kQLrdM3aOOy+FpzS7+8OizA==}
     engines: {node: '>=4.0'}
@@ -19319,7 +19276,6 @@ packages:
         optional: true
     dependencies:
       debug: 4.3.4
-    dev: true
 
   /for-each/0.3.3:
     resolution: {integrity: sha512-jqYfLp7mo9vIyQf8ykW2v7A+2N4QjeCeI5+Dz9XraiO1ign81wjiH7Fb9vSOWvQfNtmSa4H2RoQTrrXivdUZmw==}
@@ -26057,10 +26013,6 @@ packages:
 
   /oauth/0.9.15:
     resolution: {integrity: sha512-a5ERWK1kh38ExDEfoO6qUHJb32rd7aYmPHuyCu3Fta/cnICvYmgd2uhuKXvPD+PXB+gCEYYEaQdIRAjCOwAKNA==}
-    dev: false
-
-  /oauth4webapi/2.0.5:
-    resolution: {integrity: sha512-KmoR3KxCwmr9KvL/c/6UVzQnc4CUjo+j8NSgD3bWYlZXpUmyOVw97nDVb0BKZhCcUtGsbll16v8vsnR5JbTZ9A==}
     dev: false
 
   /oauth4webapi/2.0.6:
