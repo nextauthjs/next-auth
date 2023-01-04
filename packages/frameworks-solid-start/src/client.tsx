@@ -1,4 +1,3 @@
-// @@jsxRuntime automatic
 import type {
   BuiltInProviderType,
   RedirectableProviderType,

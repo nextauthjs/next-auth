@@ -6,6 +6,8 @@
     "moduleResolution": "Node",
     "strict": true,
     "jsx": "preserve",
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
     "jsxImportSource": "solid-js",
     "module": "esnext",
     "outDir": "./dist",
