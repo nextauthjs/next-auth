@@ -33,7 +33,7 @@ export async function signin(
 
       const account: Account = {
         providerAccountId: email,
-        userId: email,
+        userId: user.id,
         type: "email",
         provider: provider.id,
       }
@@ -50,7 +50,7 @@ export async function signin(
     }
     return { redirect: `${url}/signin` }
   } catch (e) {
-    const error = new SignInError(e, { provider: provider.id })
+    const error = new SignInError(e as Error, { provider: provider.id })
     logger.error(error)
     url.searchParams.set("error", error.name)
     url.pathname += "/error"

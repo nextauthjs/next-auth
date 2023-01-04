@@ -146,6 +146,7 @@ export default function Twitter<
     id: "twitter",
     name: "Twitter",
     type: "oauth",
+    checks: ["pkce", "state"],
     authorization: {
       url: "https://twitter.com/i/oauth2/authorize",
       params: { scope: "users.read tweet.read offline.access" },

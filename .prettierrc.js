@@ -12,5 +12,11 @@ module.exports = {
       ],
       options: { printWidth: 150 },
     },
+    {
+      files: ["**/*package.json"],
+      options: {
+        trailingComma: "none",
+      },
+    },
   ],
 }

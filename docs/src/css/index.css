@@ -140,19 +140,19 @@ html[data-theme="dark"] hr {
   border-radius: 10rem;
   overflow: visible;
   box-shadow: 0 0 2rem rgba(0, 0, 0, 0.1);
-  background-image: url("/img/mesh-1.jpg");
+  background-image: url("/img/mesh-1.webp");
   background-size: cover;
   background-origin: center;
 }
 
 .home-main .section-features .row .col:nth-child(2) .feature-image-wrapper {
-  background-image: url("/img/mesh-2.jpg");
+  background-image: url("/img/mesh-2.webp");
   background-size: cover;
   background-origin: center;
 }
 
 .home-main .section-features .row .col:nth-child(3) .feature-image-wrapper {
-  background-image: url("/img/mesh-3.jpg");
+  background-image: url("/img/mesh-3.webp");
   background-size: cover;
   background-origin: center;
 }
@@ -292,7 +292,7 @@ html[data-theme="dark"] #carbonads .carbon-poweredby {
  HACK: to hide the "Classes" header and duplicate items together with the "typedoc-plugin-markdown" patch.
  See: https://github.com/TypeStrong/typedoc/issues/2006
 */
-#classes,
-h3.anchor + p:has(code, strong) {
+/* h3.anchor + p:has(code, strong), */ /** hack did not work as it hides property types elsewhere */
+#classes {
   display: none;
 }

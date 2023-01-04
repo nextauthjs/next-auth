@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-use-before-define
 import * as React from "react"
 import Link from "@docusaurus/Link"
 import useBaseUrl from "@docusaurus/useBaseUrl"
@@ -46,7 +45,7 @@ const features = [
         <li>
           Use with any modern framework!
           <br />
-          <em>Next.js, SvelteKit…</em>
+          <em>Next.js, SolidStart, SvelteKit…</em>
         </li>
         <li>
           Bring Your Own Database - or none!
@@ -118,9 +117,11 @@ export default function Home() {
           <div className="container">
             <div className="hero-inner">
               <img
-                src="/img/logo/logo-sm.png"
+                src="/img/logo/logo-sm.webp"
                 alt="Shield with key icon"
                 className={styles.heroLogo}
+                height="142"
+                width="128"
               />
               <div className={styles.heroText}>
                 <h1 className="hero__title">{siteConfig.title}</h1>
@@ -144,6 +145,15 @@ export default function Home() {
                   href="https://sveltekit-auth-example.vercel.app"
                 >
                   Live Demo (SvelteKit)
+                </a>
+                <a
+                  className={classnames(
+                    "button button--outline button--secondary button--lg rounded-pill",
+                    styles.button
+                  )}
+                  href="https://auth-solid.vercel.app"
+                >
+                  Live Demo (SolidStart)
                 </a>
                 <Link
                   className={classnames(
@@ -206,9 +216,9 @@ export default function Home() {
               <div className="row">
                 <div className="col col--6">
                   <div className="code">
-                    <h4 className="code-heading">
+                    <div className="code-heading">
                       Next.js <span>/pages/api/auth/[...nextauth].ts</span>
-                    </h4>
+                    </div>
                     <CodeBlock className="prism-code language-js">
                       {nextJsCode}
                     </CodeBlock>
@@ -216,11 +226,21 @@ export default function Home() {
                 </div>
                 <div className="col col--6">
                   <div className="code">
-                    <h4 className="code-heading">
+                    <div className="code-heading">
                       SvelteKit <span>/hooks.server.ts</span>
-                    </h4>
+                    </div>
                     <CodeBlock className="prism-code language-js">
                       {svelteKitCode}
+                    </CodeBlock>
+                  </div>
+                </div>
+                <div className="col col--6">
+                  <div className="code">
+                    <div className="code-heading">
+                      SolidStart <span>/routes/api/auth/[...solidauth].ts</span>
+                    </div>
+                    <CodeBlock className="prism-code language-js">
+                      {solidStartCode}
                     </CodeBlock>
                   </div>
                 </div>
@@ -271,6 +291,22 @@ export const handle = SvelteKitAuth({
   ],
 })
 `.trim()
+
+const solidStartCode =
+  `import { SolidAuth, type SolidAuthConfig } from "@auth/solid-start";
+import GitHub from "@auth/core/providers/github";
+
+export const authOpts: SolidAuthConfig = {
+  providers: [
+    GitHub({
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET,
+    }),
+  ],
+  debug: false,
+};
+
+export const { GET, POST } = SolidAuth(authOpts);`.trim()
 
 const nextJsCode = `
 import NextAuth from 'next-auth'

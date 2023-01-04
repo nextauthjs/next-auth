@@ -31,7 +31,12 @@ export async function handleOAuth(
   const { logger, provider } = options
   let as: o.AuthorizationServer
 
-  if (!provider.token?.url && !provider.userinfo?.url) {
+  const { token, userinfo } = provider
+  // Falls back to authjs.dev if the user only passed params
+  if (
+    (!token?.url || token.url.host === "authjs.dev") &&
+    (!userinfo?.url || userinfo.url.host === "authjs.dev")
+  ) {
     // We assume that issuer is always defined as this has been asserted earlier
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const issuer = new URL(provider.issuer!)
@@ -54,9 +59,9 @@ export async function handleOAuth(
     as = discoveredAs
   } else {
     as = {
-      issuer: provider.issuer ?? "https://a", // TODO: review fallback issuer
-      token_endpoint: provider.token?.url.toString(),
-      userinfo_endpoint: provider.userinfo?.url.toString(),
+      issuer: provider.issuer ?? "https://authjs.dev", // TODO: review fallback issuer
+      token_endpoint: token?.url.toString(),
+      userinfo_endpoint: userinfo?.url.toString(),
     }
   }
 
@@ -143,9 +148,9 @@ export async function handleOAuth(
       throw new Error("TODO: Handle OAuth 2.0 response body error")
     }
 
-    if (provider.userinfo?.request) {
-      profile = await provider.userinfo.request({ tokens, provider })
-    } else if (provider.userinfo?.url) {
+    if (userinfo?.request) {
+      profile = await userinfo.request({ tokens, provider })
+    } else if (userinfo?.url) {
       const userinfoResponse = await o.userInfoRequest(
         as,
         client,
@@ -187,7 +192,7 @@ async function getProfile(
       },
       OAuthProfile,
     }
-  } catch (error) {
+  } catch (e) {
     // If we didn't get a response either there was a problem with the provider
     // response *or* the user cancelled the action with the provider.
     //
@@ -196,6 +201,6 @@ async function getProfile(
     // redirected back to the sign up page. We log the error to help developers
     // who might be trying to debug this when configuring a new provider.
     logger.debug("getProfile error details", OAuthProfile)
-    logger.error(new OAuthProfileParseError(error))
+    logger.error(new OAuthProfileParseError(e as Error))
   }
 }
