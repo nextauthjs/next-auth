@@ -5,11 +5,11 @@ title: Mattermost
 
 ## Documentation
 
-https://developers.mattermost.com/integrate/apps/authentication/oauth2/
+https://developers.mattermost.com/integrate/apps/authentication/oauth2
 
 ## Configuration
 
-http://localhost:8065/finn/integrations/oauth2-apps
+http://my-cool-server.cloud.mattermost.com/mycoolteam/integrations/oauth2-apps
 
 ## Options
 
@@ -22,14 +22,14 @@ You can override any of the options to suit your own use case.
 ## Example
 
 ```ts
-import mattermostProvider from "next-auth/providers/mattermost";
+import MattermostProvider from "next-auth/providers/mattermost";
 ...
 providers: [
-  mattermostProvider({
+  MattermostProvider({
     // The base url of your Mattermost instance. e.g https://my-cool-server.cloud.mattermost.com
-    mattermostUrl: env.MM_URL,
-    clientId: env.MM_CLIENT_ID,
-    clientSecret: env.MM_CLIENT_SECRET,
+    mattermostUrl: env.MATTERMOST_URL,
+    clientId: env.MATTERMOST_CLIENT_ID,
+    clientSecret: env.MATTERMOST_CLIENT_SECRET,
   })
 ]
 ...
