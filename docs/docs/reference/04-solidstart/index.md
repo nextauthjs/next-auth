@@ -57,17 +57,6 @@ const logout = () => signOut()
 
 ### Server
 
-### Client
-
-```ts
-import { useSession } from "@auth/solid-start/client"
-
-const session = useSession() // client side session
-
-session.user
-session.expires
-```
-
 ```ts
 import { getSession } from "@auth/solid-start"
 import { createServerData$ } from "solid-start/server"
@@ -86,4 +75,15 @@ export const useSession = () => {
 const session = useSession()
 const loading = session.loading
 const user = () => session()?.user
+```
+
+### Client
+
+```ts
+import { useSession } from "@auth/solid-start/client"
+
+const session = useSession() // client side session
+
+session.user
+session.expires
 ```
