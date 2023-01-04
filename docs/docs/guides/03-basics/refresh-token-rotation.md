@@ -36,12 +36,7 @@ export default Auth(new Request("https://example.com"), {
     Google({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET,
-      authorization: {
-        // https://accounts.google.com/.well-known/openid-configuration
-        // We need the `authorization_endpoint`.
-        url: "https://accounts.google.com/o/oauth2/v2/auth",
-        params: { access_type: "offline", prompt: "consent" },
-      },
+      authorization: { params: { access_type: "offline", prompt: "consent" } },
     }),
   ],
   callbacks: {
@@ -133,10 +128,7 @@ export default Auth(new Request("https://example.com"), {
     Google({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET,
-      authorization: {
-        url: "https://accounts.google.com/o/oauth2/v2/auth",
-        params: { access_type: "offline", prompt: "consent" },
-      },
+      authorization: { params: { access_type: "offline", prompt: "consent" } },
     }),
   ],
   callbacks: {
@@ -206,7 +198,7 @@ declare module "@auth/core/jwt" {
 
 ### Client Side
 
-The `RefreshAccessTokenError` error that is caught in the `refreshAccessToken()` method is passed all the way to the client. This means that you can direct the user to the sign in flow if we cannot refresh their token.
+The `RefreshAccessTokenError` error that is caught in the `refreshAccessToken()` method is passed to the client. This means that you can direct the user to the sign-in flow if we cannot refresh their token.
 
 We can handle this functionality as a side effect:
 

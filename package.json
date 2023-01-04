@@ -13,7 +13,7 @@
     "dev": "turbo run dev --parallel --continue --filter=next-auth-app... --filter=!./packages/adapter-*",
     "dev:kit": "turbo run dev --parallel --continue --filter=sveltekit-auth-app...",
     "dev:docs": "turbo run dev --filter=docs",
-    "email": "cd apps/dev && pnpm email",
+    "email": "cd apps/dev/nextjs && pnpm email",
     "eslint": "eslint --cache .",
     "lint": "prettier --check .",
     "format": "prettier --write .",
