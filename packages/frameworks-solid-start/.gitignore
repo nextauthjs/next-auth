@@ -2,6 +2,7 @@ node_modules
 dist
 **/*.d.ts
 **/*.js
+**/*.jsx
 !tsup.config.js
 !scripts/**/*.js
 .vercel
