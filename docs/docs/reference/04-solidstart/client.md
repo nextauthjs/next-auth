@@ -24,6 +24,6 @@ import { useSession } from "@auth/solid-start/client"
 
 const session = useSession() // client side session
 
-session.user
-session.expires
+session()?.user
+session()?.expires
 ```
