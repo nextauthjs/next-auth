@@ -10,7 +10,6 @@ export default function mattermostProvider({
   mattermostUrl: mmUrl,
   clientId: client_id,
   clientSecret: client_secret,
-  callbackUrl: callbackUri,
 }: {
   mattermostUrl: string
   clientId: string
@@ -24,12 +23,7 @@ export default function mattermostProvider({
     token: {
       url: `${mmUrl}/oauth/access_token?client_id=${client_id}&client_secret=${client_secret}`,
     },
-    authorization: {
-      url: `${mmUrl}/oauth/authorize`,
-      params: {
-        callbackUri,
-      },
-    },
+    authorization: `${mmUrl}/oauth/authorize`,
     userinfo: {
       async request({ tokens }) {
         const profile = await fetch(new URL(`${mmUrl}/api/v4/users/me`), {
