@@ -21,6 +21,10 @@
         "middleware.js"
       ]
     },
+    "@auth/core#build": {
+      "dependsOn": ["^build"],
+      "outputs": ["lib/**", "providers/**", "*.js", "*.d.ts", "*.d.ts.map"]
+    },
     "clean": {
       "cache": false
     },
