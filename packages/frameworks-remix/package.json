@@ -35,7 +35,6 @@
     "typescript": "^4.8.2"
   },
   "peerDependencies": {
-    "@auth/core": "~0.2.2 || ^0.2.2",
     "@remix-run/react": "^1.0.0",
     "@remix-run/server-runtime": "^1.0.0"
   },
