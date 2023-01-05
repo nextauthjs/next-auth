@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { signIn, signOut, useSession } from "next-auth/react"
+import { useSession } from "next-auth/react"
 import styles from "./header.module.css"
 
 // The approach used in this component shows how to built a sign in and sign out
@@ -24,14 +24,7 @@ export default function Header() {
               <span className={styles.notSignedInText}>
                 You are not signed in
               </span>
-              <a
-                href="/api/auth/signin"
-                className={styles.buttonPrimary}
-                onClick={(e) => {
-                  e.preventDefault()
-                  signIn()
-                }}
-              >
+              <a href="/api/auth/signin" className={styles.buttonPrimary}>
                 Sign in
               </a>
             </>
@@ -47,14 +40,7 @@ export default function Header() {
                 <strong>{session.user.email} </strong>
                 {session.user.name ? `(${session.user.name})` : null}
               </span>
-              <a
-                href="/api/auth/signout"
-                className={styles.button}
-                onClick={(e) => {
-                  e.preventDefault()
-                  signOut()
-                }}
-              >
+              <a href="/api/auth/signout" className={styles.button}>
                 Sign out
               </a>
             </>
