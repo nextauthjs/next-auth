@@ -1,5 +1,6 @@
 import type { OAuthConfig, OAuthUserConfig } from "./oauth"
 
+/** @see [Get a user](https://api.mattermost.com/#tag/users/operation/GetUser) */
 export interface MattermostProfile {
   id: string
   create_at: number
