@@ -58,7 +58,7 @@ export interface MattermostProfile {
 }
 
 /**
- * To create your mattermost OAuth2 app go to http://`<your Mattermost instance url>`/`<your team>`/integrations/oauth2-apps
+ * To create your Mattermost OAuth2 app visit http://`<your Mattermost instance url>`/`<your team>`/integrations/oauth2-apps
  *
  * ## Example
  *
