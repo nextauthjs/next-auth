@@ -1,42 +1,73 @@
-import { OAuthConfig, OAuthUserConfig } from "./oauth"
+import type { OAuthConfig, OAuthUserConfig } from "./oauth"
 
-export interface MattermostProfile
-  extends Record<string, string | number | boolean> {
+export interface MattermostProfile {
   id: string
+  create_at: number
+  update_at: number
+  delete_at: number
   username: string
+  auth_data: string
+  auth_service: string
   email: string
+  email_verified: boolean
+  nickname: string
+  first_name: string
+  last_name: string
+  position: string
+  roles: string
+  notify_props: {
+    channel: string
+    comments: string
+    desktop: string
+    desktop_sound: string
+    desktop_threads: string
+    email: string
+    email_threads: string
+    first_name: string
+    mention_keys: string
+    push: string
+    push_status: string
+    push_threads: string
+  }
+  last_password_update: number
+  locale: string
+  timezone: {
+    automaticTimezone: string
+    manualTimezone: string
+    useAutomaticTimezone: string
+  }
+  disable_welcome_email: boolean
 }
 
-export default function mattermostProvider<P extends MattermostProfile>(
-  options: OAuthUserConfig<P> & { mattermostUrl: string }
+export default function Mattermost<P extends MattermostProfile>(
+  config: OAuthUserConfig<P> & { issuer: string }
 ): OAuthConfig<P> {
-  const mmUrl = options.mattermostUrl
+  const { issuer, ...rest } = config
 
   return {
     id: "mattermost",
     name: "Mattermost",
     type: "oauth",
-    token: {
-      url: `${mmUrl}/oauth/access_token?client_id=${options.clientId}&client_secret=${options.clientSecret}`,
-    },
-    authorization: `${mmUrl}/oauth/authorize`,
-    userinfo: {
-      async request({ tokens }) {
-        const profile = await fetch(new URL(`${mmUrl}/api/v4/users/me`), {
-          headers: {
-            Authorization: `Bearer ${tokens.access_token}`,
-          },
-        }).then(async (res) => await res.json())
-        return profile
-      },
-    },
+    client: { token_endpoint_auth_method: "client_secret_post" },
+    token: `${issuer}/oauth/access_token`,
+    authorization: `${issuer}/oauth/authorize`,
+    userinfo: `${issuer}/api/v4/users/me`,
     profile(profile) {
       return {
         id: profile.id,
-        name: profile.username,
+        name: profile.username ?? `${profile.first_name} ${profile.last_name}`,
         email: profile.email,
+        image: null,
       }
     },
-    options,
+    style: {
+      logo: "/mattermost.svg",
+      logoDark: "/mattermost-dark.svg",
+      bg: "#fff",
+      text: "#000",
+      bgDark: "#000",
+      textDark: "#fff",
+    },
+    options: rest,
   }
 }
