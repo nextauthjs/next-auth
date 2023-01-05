@@ -41,8 +41,8 @@
       "types": "./adapters.d.ts"
     },
     "./errors": {
-      "import": "./errors.js",
-      "types": "./errors.d.ts"
+      "types": "./errors.d.ts",
+      "import": "./errors.js"
     },
     "./jwt": {
       "types": "./jwt.d.ts",
