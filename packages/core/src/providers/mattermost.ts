@@ -52,9 +52,9 @@ export interface MattermostProfile {
   }
   disable_welcome_email: boolean
   /** ID of accepted terms of service, if any. This field is not present if empty. */
-  terms_of_service_id: string
+  terms_of_service_id?: string
   /** The time in milliseconds the user accepted the terms of service */
-  terms_of_service_create_at: number
+  terms_of_service_create_at?: number
 }
 
 export default function Mattermost<P extends MattermostProfile>(
