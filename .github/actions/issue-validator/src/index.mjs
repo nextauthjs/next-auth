@@ -4,7 +4,7 @@ import * as github from "@actions/github"
 // @ts-expect-error
 import * as core from "@actions/core"
 import { readFileSync } from "node:fs"
-import { join } from "node:path"
+import { join, dirname } from "node:path"
 
 const addReproductionLabel = "incomplete"
 
@@ -71,7 +71,10 @@ async function run() {
         }),
         client.issues.createComment({
           ...issueCommon,
-          body: readFileSync(join(import.meta.url, "repro.md"), "utf8"),
+          body: readFileSync(
+            join(dirname(import.meta.url), "../repro.md"),
+            "utf8"
+          ),
         }),
       ])
       return core.info(
