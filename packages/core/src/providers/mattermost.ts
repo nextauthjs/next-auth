@@ -57,6 +57,29 @@ export interface MattermostProfile {
   terms_of_service_create_at?: number
 }
 
+/**
+ * To create your Mattermost OAuth2 app visit http://`<your Mattermost instance url>`/`<your team>`/integrations/oauth2-apps
+ *
+ * ## Example
+ *
+ * ```ts
+ * import Mattermost from "@auth/core/providers/mattermost";
+ * ...
+ * providers: [
+ *   Mattermost({
+ *     clientId: env.MATTERMOST_ID,
+ *     clientSecret: env.MATTERMOST_SECRET,
+ *     // The base url of your Mattermost instance. e.g https://my-cool-server.cloud.mattermost.com
+ *     issuer: env.MATTERMOST_ISSUER,
+ *   })
+ * ]
+ * ...
+ * ```
+ *
+ * :::warning
+ * The Mattermost provider requires the `issuer` option to be set. This is the base url of your Mattermost instance. e.g https://my-cool-server.cloud.mattermost.com
+ * :::
+ */
 export default function Mattermost<P extends MattermostProfile>(
   config: OAuthUserConfig<P> & { issuer: string }
 ): OAuthConfig<P> {
