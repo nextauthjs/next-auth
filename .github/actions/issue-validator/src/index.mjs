@@ -41,13 +41,7 @@ async function run() {
       label: { name: newLabel },
     } = payload
 
-    if (
-      pull_request ||
-      !issue?.body ||
-      !process.env.GITHUB_TOKEN ||
-      !process.env.GITHUB_ACTION_PATH
-    )
-      return
+    if (pull_request || !issue?.body || !process.env.GITHUB_TOKEN) return
 
     const labels = issue.labels.map((l) => l.name)
     // const isBugReport =
@@ -77,10 +71,7 @@ async function run() {
         }),
         client.issues.createComment({
           ...issueCommon,
-          body: readFileSync(
-            join(process.env.GITHUB_ACTION_PATH, "repro.md"),
-            "utf8"
-          ),
+          body: readFileSync(join(import.meta.url, "repro.md"), "utf8"),
         }),
       ])
       return core.info(
