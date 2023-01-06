@@ -69,7 +69,7 @@ export default defineConfig(() => {
   
 ```
 
-### Enviroment Variables
+### Environment Variables
 
 - `ENABLE_VC_BUILD`=`1` .
 
