@@ -61,7 +61,7 @@ import { JWTOptions } from "./jwt.js"
  * import Auth from "@auth/core"
  *
  * const request = new Request("https://example.com")
- * const resposne = await AuthHandler(request, {
+ * const response = await AuthHandler(request, {
  *   providers: [...],
  *   secret: "...",
  *   trustHost: true,
