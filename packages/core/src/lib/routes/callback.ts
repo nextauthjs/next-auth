@@ -2,7 +2,7 @@ import { handleLogin } from "../callback-handler.js"
 import { CallbackRouteError } from "../../errors.js"
 import { handleOAuth } from "../oauth/callback.js"
 import { createHash } from "../web.js"
-import { handleAuthorized } from "./shared.js"
+import { getAdapterUserFromEmail, handleAuthorized } from "./shared.js"
 
 import type { AdapterSession } from "../../adapters.js"
 import type {
@@ -10,6 +10,7 @@ import type {
   ResponseInternal,
   User,
   InternalOptions,
+  Account,
 } from "../../types.js"
 import type { Cookie, SessionStore } from "../cookie.js"
 
@@ -172,40 +173,40 @@ export async function callback(params: {
       }
 
       // @ts-expect-error -- Verified in `assertConfig`.
-      const profile = await getAdapterUserFromEmail(identifier, adapter)
+      const user = await getAdapterUserFromEmail(identifier, adapter)
 
-      const account = {
-        providerAccountId: profile.email,
+      const account: Account = {
+        providerAccountId: user.email,
+        userId: user.id,
         type: "email" as const,
         provider: provider.id,
       }
 
       // Check if user is allowed to sign in
       const unauthorizedOrError = await handleAuthorized(
-        { user: profile, account },
+        { user, account },
         options
       )
 
       if (unauthorizedOrError) return { ...unauthorizedOrError, cookies }
 
       // Sign user in
-      const { user, session, isNewUser } = await handleLogin(
-        sessionStore.value,
-        profile,
-        account,
-        options
-      )
+      const {
+        user: loggedInUser,
+        session,
+        isNewUser,
+      } = await handleLogin(sessionStore.value, user, account, options)
 
       if (useJwtSession) {
         const defaultToken = {
-          name: user.name,
-          email: user.email,
-          picture: user.image,
-          sub: user.id?.toString(),
+          name: loggedInUser.name,
+          email: loggedInUser.email,
+          picture: loggedInUser.image,
+          sub: loggedInUser.id?.toString(),
         }
         const token = await callbacks.jwt({
           token: defaultToken,
-          user,
+          user: loggedInUser,
           account,
           isNewUser,
         })
@@ -233,7 +234,7 @@ export async function callback(params: {
         })
       }
 
-      await events.signIn?.({ user, account, isNewUser })
+      await events.signIn?.({ user: loggedInUser, account, isNewUser })
 
       // Handle first logins on new accounts
       // e.g. option to send users to a new account landing page on initial login

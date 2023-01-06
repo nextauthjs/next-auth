@@ -87,10 +87,14 @@ export default function SigninPage(props: {
                     "--provider-dark-bg": provider.style?.bgDark ?? "",
                     "--provider-color": provider.style?.text ?? "",
                     "--provider-dark-color": provider.style?.textDark ?? "",
+                    gap: 8,
                   }}
                 >
                   {provider.style?.logo && (
                     <img
+                      loading="lazy"
+                      height={24}
+                      width={24}
                       id="provider-logo"
                       src={`${
                         provider.style.logo.startsWith("/") ? logos : ""
@@ -99,6 +103,9 @@ export default function SigninPage(props: {
                   )}
                   {provider.style?.logoDark && (
                     <img
+                      loading="lazy"
+                      height={24}
+                      width={24}
                       id="provider-logo-dark"
                       src={`${
                         provider.style.logo.startsWith("/") ? logos : ""
