@@ -1,5 +1,5 @@
 import { handleLogin } from "../callback-handler.js"
-import { CallbackRouteError } from "../../errors.js"
+import { CallbackRouteError, Verification } from "../../errors.js"
 import { handleOAuth } from "../oauth/callback.js"
 import { createHash } from "../web.js"
 import { getAdapterUserFromEmail, handleAuthorized } from "./shared.js"
@@ -8,7 +8,6 @@ import type { AdapterSession } from "../../adapters.js"
 import type {
   RequestInternal,
   ResponseInternal,
-  User,
   InternalOptions,
   Account,
 } from "../../types.js"
@@ -155,9 +154,13 @@ export async function callback(params: {
       const token = query?.token as string | undefined
       const identifier = query?.email as string | undefined
 
-      // If these are missing, the sign-in URL was manually opened without these params or the `sendVerificationRequest` method did not send the link correctly in the email.
       if (!token || !identifier) {
-        return { redirect: `${url}/error?error=configuration`, cookies }
+        const e = new TypeError(
+          "Missing token or email. The sign-in URL was manually opened without token/identifier or the link was not sent correctly in the email.",
+          { cause: { hasToken: !!token, hasEmail: !!identifier } }
+        )
+        e.name = "Configuration"
+        throw e
       }
 
       const secret = provider.secret ?? options.secret
@@ -167,10 +170,10 @@ export async function callback(params: {
         token: await createHash(`${token}${secret}`),
       })
 
-      const invalidInvite = !invite || invite.expires.valueOf() < Date.now()
-      if (invalidInvite) {
-        return { redirect: `${url}/error?error=Verification`, cookies }
-      }
+      const hasInvite = !!invite
+      const expired = invite ? invite.expires.valueOf() < Date.now() : undefined
+      const invalidInvite = !hasInvite || expired
+      if (invalidInvite) throw new Verification({ hasInvite, expired })
 
       // @ts-expect-error -- Verified in `assertConfig`.
       const user = await getAdapterUserFromEmail(identifier, adapter)
@@ -253,33 +256,22 @@ export async function callback(params: {
     } else if (provider.type === "credentials" && method === "POST") {
       const credentials = body
 
-      let user: User | null
-
-      try {
-        // TODO: Forward the original request as is, instead of reconstructing it
+      // TODO: Forward the original request as is, instead of reconstructing it
+      Object.entries(query ?? {}).forEach(([k, v]) =>
+        url.searchParams.set(k, v)
+      )
+      const user = await provider.authorize(
+        credentials,
         // prettier-ignore
-        Object.entries(query ?? {}).forEach(([k, v]) => url.searchParams.set(k, v))
-        user = await provider.authorize(
-          credentials,
-          // prettier-ignore
-          new Request(url, { headers, method, body: JSON.stringify(body) })
-        )
-        if (!user) {
-          return {
-            status: 401,
-            redirect: `${url}/error?${new URLSearchParams({
-              error: "CredentialsSignin",
-              provider: provider.id,
-            })}`,
-            cookies,
-          }
-        }
-      } catch (e) {
+        new Request(url, { headers, method, body: JSON.stringify(body) })
+      )
+      if (!user) {
         return {
           status: 401,
-          redirect: `${url}/error?error=${encodeURIComponent(
-            (e as Error).message
-          )}`,
+          redirect: `${url}/error?${new URLSearchParams({
+            error: "CredentialsSignin",
+            provider: provider.id,
+          })}`,
           cookies,
         }
       }

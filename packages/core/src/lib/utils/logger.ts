@@ -21,11 +21,21 @@ const reset = "\x1b[0m"
 export const logger: LoggerInstance = {
   error(error: AuthError) {
     const url = `https://errors.authjs.dev#${error.name.toLowerCase()}`
-    console.error(error.stack)
     console.error(
-      `${red}[auth][error][${error.name}]${reset}: Read more at ${url}`
+      `${red}[auth][error][${error.name}]${reset}:${
+        error.message ? ` ${error.message}.` : ""
+      } Read more at ${url}`
     )
-    error.metadata && console.error(JSON.stringify(error.metadata, null, 2))
+    if (error.cause) {
+      const { err, ...data } = error.cause as any
+      console.error(`${red}[auth][cause]${reset}:`, (err as Error).stack)
+      console.error(
+        `${red}[auth][details]${reset}:`,
+        JSON.stringify(data, null, 2)
+      )
+    } else if (error.stack) {
+      console.error(error.stack.replace(/.*/, "").substring(1))
+    }
   },
   warn(code) {
     const url = `https://errors.authjs.dev#${code}`
