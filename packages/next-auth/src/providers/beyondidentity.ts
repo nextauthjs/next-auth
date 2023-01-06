@@ -24,7 +24,7 @@ export default function BeyondIdentity<P extends BeyondIdentityProfile>(
         email: profile.email,
       }
     },
-    checks: ["state"],
+    checks: ["pkce"],
     clientId: options.clientId,
     clientSecret: options.clientSecret,
     idToken: true,
