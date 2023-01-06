@@ -169,14 +169,10 @@ export async function callback(params: {
         token: await createHash(`${token}${secret}`),
       })
 
-      const now = Date.now()
-      const invalidInvite = !invite || invite.expires.valueOf() < now
-      if (invalidInvite) {
-        throw new Verification({
-          hasInvite: !!invite,
-          expired: invite ? invite.expires.valueOf() < now : undefined,
-        })
-      }
+      const hasInvite = !!invite
+      const expired = invite ? invite.expires.valueOf() < Date.now() : undefined
+      const invalidInvite = !hasInvite || expired
+      if (invalidInvite) throw new Verification({ hasInvite, expired })
 
       // @ts-expect-error -- Verified in `assertConfig`.
       const profile = await getAdapterUserFromEmail(identifier, adapter)
