@@ -32,8 +32,8 @@ export function getBody(
 export function getURL(url: string | undefined, headers: Headers): URL | Error {
   try {
     if (!url) throw new Error("Missing url")
-    if (process.env.NEXTAUTH_URL) {
-      const base = new URL(process.env.NEXTAUTH_URL)
+    if (process.env.NEXTAUTH_URL_INTERNAL ?? process.env.NEXTAUTH_URL) {
+      const base = new URL(process.env.NEXTAUTH_URL_INTERNAL ?? process.env.NEXTAUTH_URL)
       if (!["http:", "https:"].includes(base.protocol)) {
         throw new Error("Invalid protocol")
       }
