@@ -14,6 +14,8 @@ jobs:
         # Can update to v1 when https://github.com/BetaHuhn/repo-file-sync-action/issues/168 is resolved
         uses: BetaHuhn/repo-file-sync-action@v1.19.0
         with:
+          GIT_EMAIL: "balazsorban@users.noreply.github.com"
+          GIT_USERNAME: "balazsorban44"
           GH_PAT: ${{ secrets.GH_PAT }}
           IS_FINE_GRAINED: true
           SKIP_PR: true
