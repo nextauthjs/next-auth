@@ -59,9 +59,7 @@ export default function SigninPage(props: {
     (signinErrors[errorType.toLowerCase() as Lowercase<SignInPageErrorParam>] ??
       signinErrors.default)
 
-  // TODO: move logos
-  const logos =
-    "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos"
+  const logos = "https://authjs.dev/providers"
   return (
     <div className="signin">
       {theme.brandColor && (
