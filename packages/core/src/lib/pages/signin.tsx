@@ -59,7 +59,7 @@ export default function SigninPage(props: {
     (signinErrors[errorType.toLowerCase() as Lowercase<SignInPageErrorParam>] ??
       signinErrors.default)
 
-  const logos = "https://authjs.dev/providers"
+  const logos = "https://authjs.dev/img/providers"
   return (
     <div className="signin">
       {theme.brandColor && (
