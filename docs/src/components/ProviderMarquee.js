@@ -4,20 +4,19 @@ import Marquee, { Motion, randomIntFromInterval } from "react-marquee-slider"
 import styles from "./ProviderMarqueeStyle.module.css"
 
 const icons = [
-  "/img/providers/apple-black.svg",
-  "/img/providers/auth0.svg",
-  "/img/providers/aws-cognito.svg",
-  "/img/providers/battle.net.svg",
-  "/img/providers/box.svg",
-  "/img/providers/facebook-2.svg",
-  "/img/providers/github-1.svg",
-  "/img/providers/gitlab.svg",
-  "/img/providers/google-icon.svg",
-  "/img/providers/okta-3.svg",
-  "/img/providers/openid.svg",
-  "/img/providers/slack.svg",
-  "/img/providers/spotify.svg",
-  "/img/providers/twitter.svg",
+  "/providers/apple.svg",
+  "/providers/auth0.svg",
+  "/providers/cognito.svg",
+  "/providers/battlenet.svg",
+  "/providers/box.svg",
+  "/providers/facebook.svg",
+  "/providers/github.svg",
+  "/providers/gitlab.svg",
+  "/providers/google.svg",
+  "/providers/okta.svg",
+  "/providers/slack.svg",
+  "/providers/spotify.svg",
+  "/providers/twitter.svg",
 ]
 
 export default React.memo(function ProviderMarquee() {
