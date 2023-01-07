@@ -15,5 +15,6 @@ jobs:
         uses: BetaHuhn/repo-file-sync-action@v1.19.0
         with:
           GH_PAT: ${{ secrets.GH_PAT }}
+          IS_FINE_GRAINED: true
           SKIP_PR: true
           ORIGINAL_MESSAGE: true
