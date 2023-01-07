@@ -90,7 +90,7 @@ export function createSession<R extends boolean>(
   })
 
   if (requiredAndNotLoading()) {
-    return createMemo(() => ({ data: value().data, status: "loading" } as any))
+    return () => ({ data: value().data, status: "loading" }) as any
   }
 
   return value
