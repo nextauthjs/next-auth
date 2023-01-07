@@ -32,7 +32,6 @@
 
 This is the official SvelteKit Auth example for [Auth.js](https://sveltekit.authjs.dev).
 
-
 ## Getting started
 
 You can instantly deploy this example to [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=sveltekit-auth-example) by clicking the following button.
