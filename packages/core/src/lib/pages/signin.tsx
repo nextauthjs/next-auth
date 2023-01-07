@@ -47,6 +47,13 @@ export default function SigninPage(props: {
     )
   }
 
+  if (typeof document !== "undefined" && theme.buttonText) {
+    document.documentElement.style.setProperty(
+      "--button-text-color",
+      theme.buttonText
+    )
+  }
+
   const error =
     errorType &&
     (signinErrors[errorType.toLowerCase() as Lowercase<SignInPageErrorParam>] ??
@@ -64,7 +71,17 @@ export default function SigninPage(props: {
           }}
         />
       )}
-      {theme.logo && <img src={theme.logo} alt="Logo" className="logo" />}
+      {theme.buttonText && (
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+        :root {
+          --button-text-color: ${theme.buttonText}
+        }
+      `,
+          }}
+        />
+      )}
       <div className="card">
         {error && (
           <div className="error">
@@ -165,7 +182,9 @@ export default function SigninPage(props: {
                     </div>
                   )
                 })}
-                <button type="submit">Sign in with {provider.name}</button>
+                <button id="submitButton" type="submit">
+                  Sign in with {provider.name}
+                </button>
               </form>
             )}
             {(provider.type === "email" || provider.type === "credentials") &&
