@@ -3,7 +3,7 @@ import type {
   SignInOptions,
   SignInAuthorizationParams,
   SignOutParams,
-} from "next-auth/react"
+} from "@auth/core/types"
 import type {
   BuiltInProviderType,
   RedirectableProviderType,

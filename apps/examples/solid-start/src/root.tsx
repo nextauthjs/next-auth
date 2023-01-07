@@ -1,6 +1,6 @@
 // @refresh reload
-import "./root.css";
-import { Suspense } from "solid-js";
+import "./root.css"
+import { Suspense } from "solid-js"
 import {
   Body,
   ErrorBoundary,
@@ -11,8 +11,9 @@ import {
   Routes,
   Scripts,
   Title,
-} from "solid-start";
-import { NavBar } from "./components";
+} from "solid-start"
+import { NavBar } from "./components"
+import { SessionProvider } from "@auth/solid-start/client"
 
 export default function Root() {
   return (
@@ -23,18 +24,20 @@ export default function Root() {
         <Meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <Body>
-        <Suspense>
-          <NavBar />
-          <div class="py-44 px-8">
-            <ErrorBoundary>
-              <Routes>
-                <FileRoutes />
-              </Routes>
-            </ErrorBoundary>
-          </div>
-        </Suspense>
+        <SessionProvider>
+          <Suspense>
+            <NavBar />
+            <div class="py-44 px-8">
+              <ErrorBoundary>
+                <Routes>
+                  <FileRoutes />
+                </Routes>
+              </ErrorBoundary>
+            </div>
+          </Suspense>
+        </SessionProvider>
         <Scripts />
       </Body>
     </Html>
-  );
+  )
 }

@@ -10,7 +10,9 @@
     "module": "esnext",
     "outDir": "./dist",
     "rootDir": "./src",
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true
   },
   "exclude": ["node_modules", "dist"],
   "include": ["./src"]
