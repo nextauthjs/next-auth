@@ -56,13 +56,6 @@ export default function SigninPage(props: SignInServerPageParams) {
     )
   }
 
-  if (typeof document !== "undefined" && theme.buttonText) {
-    document.documentElement.style.setProperty(
-      "--button-text-color",
-      theme.buttonText
-    )
-  }
-
   const errors: Record<SignInErrorTypes, string> = {
     Signin: "Try signing in with a different account.",
     OAuthSignin: "Try signing in with a different account.",
@@ -94,19 +87,8 @@ export default function SigninPage(props: SignInServerPageParams) {
           }}
         />
       )}
-      {theme.buttonText && (
-        <style
-          dangerouslySetInnerHTML={{
-            __html: `
-        :root {
-          --button-text-color: ${theme.buttonText}
-        }
-      `,
-          }}
-        />
-      )}
+      {theme.logo && <img src={theme.logo} alt="Logo" className="logo" />}
       <div className="card">
-        {theme.logo && <img src={theme.logo} alt="Logo" className="logo" />}
         {error && (
           <div className="error">
             <p>{error}</p>

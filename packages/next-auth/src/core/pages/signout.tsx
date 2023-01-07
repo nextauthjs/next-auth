@@ -22,26 +22,13 @@ export default function SignoutPage(props: SignoutProps) {
           }}
         />
       )}
-      {theme.buttonText && (
-        <style
-          dangerouslySetInnerHTML={{
-            __html: `
-        :root {
-          --button-text-color: ${theme.buttonText}
-        }
-      `,
-          }}
-        />
-      )}
+      {theme.logo && <img src={theme.logo} alt="Logo" className="logo" />}
       <div className="card">
-        {theme.logo && <img src={theme.logo} alt="Logo" className="logo" />}
         <h1>Signout</h1>
         <p>Are you sure you want to sign out?</p>
         <form action={`${url}/signout`} method="POST">
           <input type="hidden" name="csrfToken" value={csrfToken} />
-          <button id="submitButton" type="submit">
-            Sign out
-          </button>
+          <button type="submit">Sign out</button>
         </form>
       </div>
     </div>
