@@ -12,8 +12,8 @@ jobs:
         uses: actions/checkout@v3
       - name: Run GitHub File Sync
         # Can update to v1 when https://github.com/BetaHuhn/repo-file-sync-action/issues/168 is resolved
-        uses: BetaHuhn/repo-file-sync-action@v1.16.5
+        uses: BetaHuhn/repo-file-sync-action@v1.19.0
         with:
-          GH_PAT: ${{ secrets.GH_PAT_CLASSIC }}
+          GH_PAT: ${{ secrets.GH_PAT }}
           SKIP_PR: true
           ORIGINAL_MESSAGE: true
