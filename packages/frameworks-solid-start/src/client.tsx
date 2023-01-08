@@ -16,6 +16,7 @@ import {
   createMemo,
   createSignal,
   onCleanup,
+  useContext,
 } from "solid-js"
 import {
   UseSessionOptions,

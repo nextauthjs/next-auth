@@ -33,6 +33,8 @@ const getSetCookieCallback = (cook?: string | null): Cookie | undefined => {
     "next-auth.session-token",
     "next-auth.pkce.code_verifier",
     "__Secure-next-auth.pkce.code_verifier",
+    "next-auth.state",
+    "__Secure-next-auth.state",
   ]) {
     const temp = splitCookie.find((e) => e.startsWith(`${cookName}=`))
     if (temp) {
