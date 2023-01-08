@@ -22,19 +22,21 @@ const actions: AuthAction[] = [
   "error",
 ]
 
-// currently multiple cookies are not supported, so we keep the next-auth.pkce.code_verifier cookie for now:
+// currently multiple cookies are not supported, so we keep the important ones
 // because it gets updated anyways
 // src: https://github.com/solidjs/solid-start/issues/293
-const getSetCookieCallback = (cook?: string | null): Cookie | undefined => {
+const getSetCookieCallback = (
+  cook?: string | null,
+  useSecureCookies?: boolean
+): Cookie | undefined => {
   if (!cook) return
   const splitCookie = splitCookiesString(cook)
+  const withSecure = useSecureCookies ? "__Secure-" : ""
   for (const cookName of [
-    "__Secure-next-auth.session-token",
-    "next-auth.session-token",
-    "next-auth.pkce.code_verifier",
-    "__Secure-next-auth.pkce.code_verifier",
-    "next-auth.state",
-    "__Secure-next-auth.state",
+    `${withSecure}next-auth.session-token`,
+    `${withSecure}next-auth.pkce.code_verifier`,
+    `${withSecure}next-auth.state`,
+    `${withSecure}next-auth.nonce`,
   ]) {
     const temp = splitCookie.find((e) => e.startsWith(`${cookName}=`))
     if (temp) {
@@ -56,10 +58,12 @@ function SolidAuthHandler(prefix: string, authOptions: SolidAuthConfig) {
       return
     }
 
+    authOptions.useSecureCookies ??= url.protocol === "https:"
     const res = await Auth(request, authOptions)
     if (["callback", "signin", "signout"].includes(action)) {
       const parsedCookie = getSetCookieCallback(
-        res.clone().headers.get("Set-Cookie")
+        res.clone().headers.get("Set-Cookie"),
+        authOptions.useSecureCookies
       )
       if (parsedCookie) {
         res.headers.set(
