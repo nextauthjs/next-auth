@@ -72,6 +72,10 @@ export default defineConfig(() => {
 ### Environment Variables
 
 - `ENABLE_VC_BUILD`=`1` .
+- `AUTH_TRUST_HOST`=`true`
+- `GITHUB_ID`=`your_github_oauth_id`
+- `GITHUB_SECRET`=`your_github_oauth_secret_`
+- `AUTH_SECRET`=`your_generated_secret`
 
 ### Finishing up
 
