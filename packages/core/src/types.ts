@@ -488,7 +488,7 @@ export interface SignInOptions extends Record<string, unknown> {
    *
    * [Documentation](https://next-auth.js.org/getting-started/client#specifying-a-callbackurl)
    */
-  callbackUrl?: string
+  redirectTo?: string
   /** [Documentation](https://next-auth.js.org/getting-started/client#using-the-redirect-false-option) */
   redirect?: boolean
 }

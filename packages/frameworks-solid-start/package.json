@@ -20,8 +20,7 @@
       "import": "./client.jsx"
     },
     "./types": {
-      "types": "./types.d.ts",
-      "import": "./types.js"
+      "types": "./types.d.ts"
     },
     "./utils": {
       "types": "./utils.d.ts",

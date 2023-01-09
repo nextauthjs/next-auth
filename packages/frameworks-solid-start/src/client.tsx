@@ -25,7 +25,7 @@ import {
 } from "./types"
 import { now, objectIsSession, parseUrl } from "./utils"
 
-const __NEXTAUTH: AuthClientConfig = {
+const __SOLIDAUTH: AuthClientConfig = {
   baseUrl: parseUrl(process.env.AUTH_URL ?? process.env.VERCEL_URL).origin,
   basePath: parseUrl(process.env.AUTH_URL).path,
   baseUrlServer: parseUrl(
@@ -56,13 +56,6 @@ export const SessionContext = createContext<SessionContextValue | undefined>(
   undefined
 )
 
-/**
- * React Hook that gives you access
- * to the logged in user's session data.
- *
- * [Documentation](https://next-auth.js.org/getting-started/client#usesession)
- */
-
 export function createSession<R extends boolean>(
   options?: UseSessionOptions<R>
 ): Accessor<SessionContextInner<R>> {
@@ -91,7 +84,7 @@ export function createSession<R extends boolean>(
   })
 
   if (requiredAndNotLoading()) {
-    return () => ({ data: value().data, status: "loading" }) as any
+    return () => ({ data: value().data, status: "loading" } as any)
   }
 
   return value
@@ -106,7 +99,7 @@ export function createSession<R extends boolean>(
  */
 export function SessionProvider(props: SessionProviderProps) {
   const { basePath, refetchInterval } = props
-  if (basePath) __NEXTAUTH.basePath = basePath
+  if (basePath) __SOLIDAUTH.basePath = basePath
   /**
    * If session was `null`, there was an attempt to fetch it,
    * but it failed, but we still treat it as a valid initial value.
@@ -114,11 +107,11 @@ export function SessionProvider(props: SessionProviderProps) {
   const hasInitialSession = props.session !== undefined
 
   /** If session was passed, initialize as already synced */
-  __NEXTAUTH._lastSync = hasInitialSession ? now() : 0
+  __SOLIDAUTH._lastSync = hasInitialSession ? now() : 0
 
   const [session, setSession] = createSignal(
     (() => {
-      if (hasInitialSession) __NEXTAUTH._session = props.session
+      if (hasInitialSession) __SOLIDAUTH._session = props.session
       return props.session
     })()
   )
@@ -127,15 +120,15 @@ export function SessionProvider(props: SessionProviderProps) {
   const [loading, setLoading] = createSignal(!hasInitialSession)
 
   createEffect(() => {
-    __NEXTAUTH._getSession = async ({ event } = {}) => {
+    __SOLIDAUTH._getSession = async ({ event } = {}) => {
       try {
         const storageEvent = event === "storage"
         // We should always update if we don't have a client session yet
         // or if there are events from other tabs/windows
-        if (storageEvent || __NEXTAUTH._session === undefined) {
-          __NEXTAUTH._lastSync = now()
-          __NEXTAUTH._session = await getSession()
-          setSession(__NEXTAUTH._session)
+        if (storageEvent || __SOLIDAUTH._session === undefined) {
+          __SOLIDAUTH._lastSync = now()
+          __SOLIDAUTH._session = await getSession()
+          setSession(__SOLIDAUTH._session)
           return
         }
 
@@ -148,28 +141,28 @@ export function SessionProvider(props: SessionProviderProps) {
           // the server to check if it does (if they have signed in via another
           // tab or window that will come through as a "stroage" event
           // event anyway)
-          __NEXTAUTH._session === null ||
+          __SOLIDAUTH._session === null ||
           // Bail out early if the client session is not stale yet
-          now() < __NEXTAUTH._lastSync
+          now() < __SOLIDAUTH._lastSync
         ) {
           return
         }
 
         // An event or session staleness occurred, update the client session.
-        __NEXTAUTH._lastSync = now()
-        __NEXTAUTH._session = await getSession()
-        setSession(__NEXTAUTH._session)
+        __SOLIDAUTH._lastSync = now()
+        __SOLIDAUTH._session = await getSession()
+        setSession(__SOLIDAUTH._session)
       } finally {
         setLoading(false)
       }
     }
 
-    __NEXTAUTH._getSession()
+    __SOLIDAUTH._getSession()
 
     onCleanup(() => {
-      __NEXTAUTH._lastSync = 0
-      __NEXTAUTH._session = undefined
-      __NEXTAUTH._getSession = () => {}
+      __SOLIDAUTH._lastSync = 0
+      __SOLIDAUTH._session = undefined
+      __SOLIDAUTH._getSession = () => {}
     })
   })
 
@@ -180,7 +173,7 @@ export function SessionProvider(props: SessionProviderProps) {
     // this feature is not disabled.
     const visibilityHandler = () => {
       if (refetchOnWindowFocus && document.visibilityState === "visible")
-        __NEXTAUTH._getSession({ event: "visibilitychange" })
+        __SOLIDAUTH._getSession({ event: "visibilitychange" })
     }
     document.addEventListener("visibilitychange", visibilityHandler, false)
     onCleanup(() =>
@@ -191,8 +184,8 @@ export function SessionProvider(props: SessionProviderProps) {
   createEffect(() => {
     if (refetchInterval) {
       const refetchIntervalTimer = setInterval(() => {
-        if (__NEXTAUTH._session) {
-          __NEXTAUTH._getSession({ event: "poll" })
+        if (__SOLIDAUTH._session) {
+          __SOLIDAUTH._getSession({ event: "poll" })
         }
       }, refetchInterval * 1000)
       onCleanup(() => clearInterval(refetchIntervalTimer))
@@ -220,7 +213,7 @@ export function SessionProvider(props: SessionProviderProps) {
  * or send the user to the signin page listing all possible providers.
  * Automatically adds the CSRF token to the request.
  *
- * [Documentation](https://next-auth.js.org/getting-started/client#signin)
+ * [Documentation](https://authjs.dev/reference/utilities/#signin)
  */
 export async function signIn<
   P extends RedirectableProviderType | undefined = undefined
@@ -274,7 +267,7 @@ export async function signIn<
     return
   }
   if (res.ok) {
-    await __NEXTAUTH._getSession({ event: "storage" })
+    await __SOLIDAUTH._getSession({ event: "storage" })
   }
   return res
 }
@@ -283,7 +276,7 @@ export async function signIn<
  * Signs the user out, by removing the session cookie.
  * Automatically adds the CSRF token to the request.
  *
- * [Documentation](https://next-auth.js.org/getting-started/client#signout)
+ * [Documentation](https://authjs.dev/reference/utilities/#signout)
  */
 export async function signOut(options?: SignOutParams) {
   const { callbackUrl = window.location.href } = options ?? {}
@@ -308,7 +301,7 @@ export async function signOut(options?: SignOutParams) {
     // If url contains a hash, the browser does not reload the page. We reload manually
     if (url.includes("#")) window.location.reload()
   }
-  await __NEXTAUTH._getSession({ event: "storage" })
+  await __SOLIDAUTH._getSession({ event: "storage" })
   return res
 }
 
