@@ -45,7 +45,6 @@ export interface CommonProviderOptions {
   name: string
   /** See {@link ProviderType} */
   type: ProviderType
-  decodeJWT?: boolean
 }
 
 /**

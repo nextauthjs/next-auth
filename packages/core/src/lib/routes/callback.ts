@@ -32,7 +32,6 @@ export async function callback(params: {
     pages,
     jwt,
     events,
-    decodeJWT,
     callbacks,
     session: { strategy: sessionStrategy, maxAge: sessionMaxAge },
     logger,
@@ -41,13 +40,6 @@ export async function callback(params: {
   const cookies: Cookie[] = []
 
   const useJwtSession = sessionStrategy === "jwt"
-
-  const decodedToken = useJwtSession && decodeJWT
-    ? await jwt.decode({
-      ...jwt,
-      token: sessionStore.value,
-    })
-    : undefined
 
   try {
     if (provider.type === "oauth" || provider.type === "oidc") {
@@ -112,7 +104,7 @@ export async function callback(params: {
           sub: user.id?.toString(),
         }
         const token = await callbacks.jwt({
-          token: decodedToken || defaultToken,
+          token: defaultToken,
           user,
           account,
           profile: OAuthProfile,
@@ -221,7 +213,7 @@ export async function callback(params: {
           sub: loggedInUser.id?.toString(),
         }
         const token = await callbacks.jwt({
-          token: decodedToken || defaultToken,
+          token: defaultToken,
           user: loggedInUser,
           account,
           isNewUser,
@@ -316,7 +308,7 @@ export async function callback(params: {
       }
 
       const token = await callbacks.jwt({
-        token: decodedToken || defaultToken,
+        token: defaultToken,
         user,
         // @ts-expect-error
         account,

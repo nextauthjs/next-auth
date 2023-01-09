@@ -464,7 +464,6 @@ export interface InternalOptions<TProviderType = ProviderType> {
   theme: Theme
   debug: boolean
   logger: LoggerInstance
-  decodeJWT?: boolean
   session: Required<SessionOptions>
   pages: Partial<PagesOptions>
   jwt: JWTOptions
