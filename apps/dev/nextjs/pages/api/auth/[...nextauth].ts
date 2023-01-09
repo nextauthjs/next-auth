@@ -5,6 +5,7 @@ import Apple from "@auth/core/providers/apple"
 import Auth0 from "@auth/core/providers/auth0"
 import AzureAD from "@auth/core/providers/azure-ad"
 import AzureB2C from "@auth/core/providers/azure-ad-b2c"
+import BankIDNorway from "@auth/core/providers/bankid-no"
 import BoxyHQSAML from "@auth/core/providers/boxyhq-saml"
 // import Cognito from "@auth/core/providers/cognito"
 import Credentials from "@auth/core/providers/credentials"
@@ -89,6 +90,7 @@ export const authConfig: AuthConfig = {
       tenantId: process.env.AZURE_AD_TENANT_ID,
     }),
     AzureB2C({ clientId: process.env.AZURE_B2C_ID, clientSecret: process.env.AZURE_B2C_SECRET, issuer: process.env.AZURE_B2C_ISSUER }),
+    BankIDNorway({ clientId: process.env.BANKID_NO_ID, clientSecret: process.env.BANKID_NO_SECRET }),
     BoxyHQSAML({ issuer: "https://jackson-demo.boxyhq.com", clientId: "tenant=boxyhq.com&product=saml-demo.boxyhq.com", clientSecret: "dummy" }),
     // Cognito({ clientId: process.env.COGNITO_ID, clientSecret: process.env.COGNITO_SECRET, issuer: process.env.COGNITO_ISSUER }),
     Discord({ clientId: process.env.DISCORD_ID, clientSecret: process.env.DISCORD_SECRET }),
