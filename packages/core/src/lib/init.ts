@@ -91,7 +91,7 @@ export async function init({
       strategy: authOptions.adapter ? "database" : "jwt",
       maxAge,
       updateAge: 24 * 60 * 60,
-      generateSessionToken: crypto.randomUUID,
+      generateSessionToken: () => crypto.randomUUID(),
       ...authOptions.session,
     },
     // JWT options
