@@ -19,7 +19,6 @@ export interface CommonProviderOptions {
   name: string
   type: ProviderType
   options?: Record<string, unknown>
-  decodeJWT?: boolean
 }
 
 export type Provider = OAuthConfig<any> | EmailConfig | CredentialsConfig
