@@ -215,7 +215,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
     account?: A | null
     profile?: P
     isNewUser?: boolean
-  }) => Awaitable<JWT>
+  }) => Awaitable<JWT|null>
 }
 
 /** [Documentation](https://authjs.dev/reference/configuration/auth-config#cookies) */
@@ -464,6 +464,7 @@ export interface InternalOptions<TProviderType = ProviderType> {
   theme: Theme
   debug: boolean
   logger: LoggerInstance
+  decodeJWT?: boolean
   session: Required<SessionOptions>
   pages: Partial<PagesOptions>
   jwt: JWTOptions
