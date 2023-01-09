@@ -1,11 +1,23 @@
+/**
+ * <div style={{backgroundColor: '#39134c', display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <span>Built-in <b>BankID Norway</b> integration.</span>
+ * <a href="https://www.bankid.no/en">
+ *   <img style={{display: "block"}} src="https://raw.githubusercontent.com/nextauthjs/next-auth/b2b0c05da8e2f61435d14fbce6afa6e8b607e971/docs/static/img/providers/bankid-no.svg" height="48" width="48"/>
+ * </a>
+ * </div>
+ *
+ * ---
+ * @module providers/bankid-no
+ */
+
 import { decodeJwt } from "jose"
-import type { OAuthConfig, OAuthUserConfig } from "./index.js"
+import type { OAuthUserConfig, OIDCConfig } from "./index.js"
 
 /**
  * @see [Core conepts - ID Token](https://confluence.bankidnorge.no/confluence/pdoidcl/technical-documentation/core-concepts/id-token)
  * @see [userinfo](https://confluence.bankidnorge.no/confluence/pdoidcl/technical-documentation/api/userinfo)
  */
-export interface BankIDNorway {
+export interface BankIDNorwayProfile {
   exp: number
   iat: number
   /** Epoc time */
@@ -81,9 +93,54 @@ export interface BankIDNorway {
   nnin_altsub?: string
 }
 
-export default function BankIDNorwayProvider<P extends BankIDNorway>(
+/**
+ * Add BankID Norge login to your page.
+ *
+ * ## Example
+ *
+ * ```ts
+ * import { Auth } from "@auth/core"
+ * import BankIDNorway from "@auth/core/providers/bankid-no"
+ *
+ * const request = new Request("https://example.com")
+ * const resposne = await Auth(request, {
+ *   providers: [BankIDNorway({ clientId: "", clientSecret: "", issuer: "" })],
+ * })
+ * ```
+ *
+ * ---
+ *
+ * ## Resources
+ *
+ * - [OpenID Connect Provider from BankID](https://confluence.bankidnorge.no/confluence/pdoidcl)
+ *
+ * ---
+ *
+ * ## Notes
+ *
+ * By default, Auth.js assumes that the BankIDNorway provider is
+ * based on the [OIDC](https://openid.net/specs/openid-connect-core-1_0.html) specification.
+ *
+ * :::tip
+ *
+ * The BankIDNorway provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/bankid-no.ts).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ *
+ * :::
+ *
+ * :::info **Disclaimer**
+ *
+ * If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
+ *
+ * Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
+ * the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
+ * we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).
+ *
+ * :::
+ */
+export default function BankIDNorway<P extends BankIDNorwayProfile>(
   config: OAuthUserConfig<P>
-): OAuthConfig<P> {
+): OIDCConfig<P> {
   config.issuer ??= "https://auth.current.bankid.no/auth/realms/current"
   return {
     id: "bankid-no",
