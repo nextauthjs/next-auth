@@ -65,22 +65,26 @@ export default async function session(
       const newSession = await callbacks.session({ session, token })
 
       // Return session payload as response
-      response.body = newSession
+      if (newSession) response.body = newSession
 
-      // Refresh JWT expiry by re-signing it, with an updated expiry date
-      const newToken = await jwt.encode({
-        ...jwt,
-        token,
-        maxAge: options.session.maxAge,
-      })
+      // Clear cookies if token is falsy
+      if (!token) {
+        response.cookies?.push(...sessionStore.clean())
+      } else {
+        // Refresh JWT expiry by re-signing it, with an updated expiry date
+        const newToken = await jwt.encode({
+          ...jwt,
+          token,
+          maxAge: options.session.maxAge,
+        })
 
-      // Set cookie, to also update expiry date on cookie
-      const sessionCookies = sessionStore.chunk(newToken, {
-        expires: newExpires,
-      })
+        // Set cookie, to also update expiry date on cookie
+        const sessionCookies = sessionStore.chunk(newToken, {
+          expires: newExpires,
+        })
 
-      response.cookies?.push(...sessionCookies)
-
+        response.cookies?.push(...sessionCookies)
+      }
       await events.session?.({ session: newSession, token })
     } catch (error) {
       // If JWT not verifiable, make sure the cookie for it is removed and return empty object
@@ -138,19 +142,23 @@ export default async function session(
           user,
         })
 
-        // Return session payload as response
-        response.body = sessionPayload
+        // Clear cookies if sessionPayload is falsy
+        if (!sessionPayload) {
+          response.cookies?.push(...sessionStore.clean())
+        } else {
+          // Return session payload as response
+          response.body = sessionPayload
 
-        // Set cookie again to update expiry
-        response.cookies?.push({
-          name: options.cookies.sessionToken.name,
-          value: sessionToken,
-          options: {
-            ...options.cookies.sessionToken.options,
-            expires: newExpires,
-          },
-        })
-
+          // Set cookie again to update expiry
+          response.cookies?.push({
+            name: options.cookies.sessionToken.name,
+            value: sessionToken,
+            options: {
+              ...options.cookies.sessionToken.options,
+              expires: newExpires,
+            },
+          })
+        }
         // @ts-expect-error
         await events.session?.({ session: sessionPayload })
       } else if (sessionToken) {

@@ -15,6 +15,7 @@ import type { CookieSerializeOptions } from "cookie"
 import type { NextApiRequest, NextApiResponse } from "next"
 
 export type Awaitable<T> = T | PromiseLike<T>
+export type Falsy = null|undefined|false
 
 export type { LoggerInstance }
 
@@ -325,7 +326,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
     session: Session
     user: User | AdapterUser
     token: JWT
-  }) => Awaitable<Session>
+  }) => Awaitable<Session|Falsy>
   /**
    * This callback is called whenever a JSON Web Token is created (i.e. at sign in)
    * or updated (i.e whenever a session is accessed in the client).
@@ -344,7 +345,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
     account?: A | null
     profile?: P
     isNewUser?: boolean
-  }) => Awaitable<JWT>
+  }) => Awaitable<JWT|Falsy>
 }
 
 /** [Documentation](https://next-auth.js.org/configuration/options#cookies) */
@@ -401,7 +402,7 @@ export interface EventCallbacks {
    * - `token`: The JWT token for this session.
    * - `session`: The session object from your adapter.
    */
-  session: (message: { session: Session; token: JWT }) => Awaitable<void>
+  session: (message: { session: Session|Falsy; token: JWT|Falsy }) => Awaitable<void>
 }
 
 export type EventType = keyof EventCallbacks
@@ -535,6 +536,7 @@ export interface InternalOptions<
   theme: Theme
   debug: boolean
   logger: LoggerInstance
+  decodeJWT?: boolean
   session: Required<SessionOptions>
   pages: Partial<PagesOptions>
   jwt: JWTOptions
