@@ -502,7 +502,7 @@ export type SignInAuthorizationParams =
 
 export interface SignOutParams<R extends boolean = true> {
   /** [Documentation](https://next-auth.js.org/getting-started/client#specifying-a-callbackurl-1) */
-  callbackUrl?: string
+  redirectTo?: string
   /** [Documentation](https://next-auth.js.org/getting-started/client#using-the-redirect-false-option-1 */
   redirect?: R
 }
