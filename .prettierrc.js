@@ -7,7 +7,7 @@ module.exports = {
   overrides: [
     {
       files: [
-        "apps/dev/pages/api/auth/[...nextauth].ts",
+        "apps/dev/nextjs/pages/api/auth/[...nextauth].ts",
         "docs/{sidebars,docusaurus.config}.js",
       ],
       options: { printWidth: 150 },
