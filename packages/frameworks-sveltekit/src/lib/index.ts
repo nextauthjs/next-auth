@@ -71,7 +71,7 @@
  * ## Managing the session
  *
  * The above example checks for a session available in `$page.data.session`, however that needs to be set by us somewhere.
- * If you want this data to be available to all your routes you can add this to your root `+page.server.ts` file.
+ * If you want this data to be available to all your routes you can add this to your root `+layout.server.ts` file.
  * The following code sets the session data in the `$page` store to be available to all routes.
  *
  * ```ts
