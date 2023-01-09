@@ -1,6 +1,18 @@
+/**
+ * <div style={{backgroundColor: "#24292f", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <span>Built-in <b>GitHub</b> integration.</span>
+ * <a href="https://github.com">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/github-dark.svg" height="48" width="48"/>
+ * </a>
+ * </div>
+ *
+ * ---
+ * @module providers/github
+ */
+
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
-export interface GithubEmail extends Record<string, any> {
+export interface GitHubEmail extends Record<string, any> {
   email: string
   primary: boolean
   verified: boolean
@@ -8,7 +20,7 @@ export interface GithubEmail extends Record<string, any> {
 }
 
 /** @see [Get the authenticated user](https://docs.github.com/en/rest/users/users#get-the-authenticated-user) */
-export interface GithubProfile extends Record<string, any> {
+export interface GitHubProfile extends Record<string, any> {
   login: string
   id: number
   node_id: string
@@ -64,11 +76,11 @@ export interface GithubProfile extends Record<string, any> {
  * @example
  *
  * ```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import { GitHub } from "@auth/core/providers/github"
  *
  * const request = new Request("https://example.com")
- * const resposne = await AuthHandler(request, {
+ * const resposne = await Auth(request, {
  *   providers: [GitHub({ clientId: "", clientSecret: "" })],
  * })
  * ```
@@ -103,7 +115,7 @@ export interface GithubProfile extends Record<string, any> {
  *
  * :::
  */
-export default function GitHub<Profile extends GithubProfile>(
+export default function GitHub<Profile extends GitHubProfile>(
   options: OAuthUserConfig<Profile>
 ): OAuthConfig<Profile> {
   return {
@@ -130,7 +142,7 @@ export default function GitHub<Profile extends GithubProfile>(
           })
 
           if (res.ok) {
-            const emails: GithubEmail[] = await res.json()
+            const emails: GitHubEmail[] = await res.json()
             profile.email = (emails.find((e) => e.primary) ?? emails[0]).email
           }
         }
@@ -150,7 +162,7 @@ export default function GitHub<Profile extends GithubProfile>(
       logo: "/github.svg",
       logoDark: "/github-dark.svg",
       bg: "#fff",
-      bgDark: "#000",
+      bgDark: "#24292f",
       text: "#000",
       textDark: "#fff",
     },
