@@ -12,7 +12,7 @@
 
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
-export interface GitHubEmail extends Record<string, any> {
+export interface GitHubEmail {
   email: string
   primary: boolean
   verified: boolean
@@ -20,7 +20,7 @@ export interface GitHubEmail extends Record<string, any> {
 }
 
 /** @see [Get the authenticated user](https://docs.github.com/en/rest/users/users#get-the-authenticated-user) */
-export interface GitHubProfile extends Record<string, any> {
+export interface GitHubProfile {
   login: string
   id: number
   node_id: string
@@ -73,11 +73,9 @@ export interface GitHubProfile extends Record<string, any> {
  *
  * ## Example
  *
- * @example
- *
  * ```ts
  * import { Auth } from "@auth/core"
- * import { GitHub } from "@auth/core/providers/github"
+ * import GitHub from "@auth/core/providers/github"
  *
  * const request = new Request("https://example.com")
  * const resposne = await Auth(request, {
@@ -115,9 +113,9 @@ export interface GitHubProfile extends Record<string, any> {
  *
  * :::
  */
-export default function GitHub<Profile extends GitHubProfile>(
-  options: OAuthUserConfig<Profile>
-): OAuthConfig<Profile> {
+export default function GitHub(
+  config: OAuthUserConfig<GitHubProfile>
+): OAuthConfig<GitHubProfile> {
   return {
     id: "github",
     name: "GitHub",
@@ -166,6 +164,6 @@ export default function GitHub<Profile extends GitHubProfile>(
       text: "#000",
       textDark: "#fff",
     },
-    options,
+    options: config,
   }
 }
