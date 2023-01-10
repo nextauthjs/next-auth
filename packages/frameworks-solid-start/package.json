@@ -29,7 +29,7 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "tsc -p . && node scripts/postbuild",
+    "build": "tsc -p . && rollup -c && node scripts/postbuild",
     "patch": "npm version patch --no-git-tag-version",
     "clean": "rm -rf client.* index.* types.* utils.*"
   },
@@ -52,6 +52,9 @@
     "solid-start": "^0.2.1"
   },
   "dependencies": {
+    "@rollup/plugin-babel": "^6.0.3",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "rollup": "^3.9.1",
     "set-cookie-parser": "^2.5.1"
   },
   "keywords": [
