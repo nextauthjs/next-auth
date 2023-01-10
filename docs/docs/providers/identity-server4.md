@@ -35,27 +35,3 @@ providers: [
 ]
 ...
 ```
-
-## Demo IdentityServer
-
-The configuration below is for the demo server at https://demo.identityserver.io/
-
-If you want to try it out, you can copy and paste the configuration below.
-
-You can sign in to the demo service with either <b>bob/bob</b> or <b>alice/alice</b>.
-
-```js
-import IdentityServer4Provider from `next-auth/providers/identity-server4`
-...
-providers: [
-  IdentityServer4Provider({
-    id: "demo-identity-server",
-    name: "Demo IdentityServer4",
-    authorization: { params: { scope: "openid profile email api offline_access" } },
-    issuer:  "https://demo.identityserver.io/",
-    clientId: "interactive.confidential",
-    clientSecret: "secret",
-  })
-}
-...
-```
