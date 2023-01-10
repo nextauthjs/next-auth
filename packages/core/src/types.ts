@@ -207,7 +207,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    * Returning `null` will invalidate the JWT session by clearing
    * the user's cookies. You'll still have to monitor and invalidate
    * unexpired tokens from future requests yourself to prevent
-   * unauthoried access.
+   * unauthorized access.
    *
    * By default the JWT is encrypted.
    *
