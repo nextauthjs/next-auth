@@ -12,7 +12,7 @@
   "dependencies": {
     "dotenv": "^16.0.0",
     "gatsby": "next",
-    "next-auth": "latest",
+    "next-auth": "workspace:*",
     "react": "^18",
     "react-dom": "^18"
   },

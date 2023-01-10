@@ -22,8 +22,8 @@
     "vite": "4.0.1"
   },
   "dependencies": {
-    "@auth/core": "latest",
-    "@auth/sveltekit": "latest"
+    "@auth/core": "^0.2.5",
+    "@auth/sveltekit": "^0.1.12"
   },
   "type": "module"
 }
