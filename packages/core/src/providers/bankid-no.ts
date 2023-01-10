@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: '#39134c', display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div style={{backgroundColor: "#39134c", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>BankID Norway</b> integration.</span>
  * <a href="https://www.bankid.no/en">
  *   <img style={{display: "block"}} src="https://raw.githubusercontent.com/nextauthjs/next-auth/b2b0c05da8e2f61435d14fbce6afa6e8b607e971/docs/static/img/providers/bankid-no.svg" height="48" width="48"/>
