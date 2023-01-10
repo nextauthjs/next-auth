@@ -133,7 +133,8 @@ export async function handleLogin(
         // with is already associated with another user, then we cannot link them
         // and need to return an error.
         throw new AccountNotLinked(
-          "The account is already associated with another user"
+          "The account is already associated with another user",
+          { provider: account.provider }
         )
       }
       // If there is no active session, but the account being signed in with is already
@@ -193,7 +194,8 @@ export async function handleLogin(
           // want to link them in case it's not safe to do so, so instead we prompt the user
           // to sign in via email to verify their identity and then link the accounts.
           throw new AccountNotLinked(
-            "Another account already exists with the same e-mail address"
+            "Another account already exists with the same e-mail address",
+            { provider: account.provider }
           )
         }
       } else {
