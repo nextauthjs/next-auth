@@ -15,17 +15,18 @@ import {
   where,
   //connectFirestoreEmulator,
 } from "firebase/firestore"
-import type { Account } from "next-auth"
+
 import type {
   Adapter,
-  AdapterSession,
   AdapterUser,
+  AdapterAccount,
+  AdapterSession,
   VerificationToken,
 } from "next-auth/adapters"
 
 import { getConverter } from "./converter"
 
-type IndexableObject = Record<string, unknown>
+export type IndexableObject = Record<string, unknown>
 
 // export interface FirestoreAdapterOptions {
 //   emulator?: {
@@ -47,13 +48,13 @@ export function FirestoreAdapter(firebaseApp: FirebaseApp): Adapter {
   // }
 
   const Users = collection(db, "users").withConverter(
-    getConverter<AdapterUser>()
+    getConverter<AdapterUser & IndexableObject>()
   )
   const Sessions = collection(db, "sessions").withConverter(
     getConverter<AdapterSession & IndexableObject>()
   )
   const Accounts = collection(db, "accounts").withConverter(
-    getConverter<Account>()
+    getConverter<AdapterAccount>()
   )
   const VerificationTokens = collection(db, "verificationTokens").withConverter(
     getConverter<VerificationToken & IndexableObject>({ excludeId: true })
@@ -82,10 +83,10 @@ export function FirestoreAdapter(firebaseApp: FirebaseApp): Adapter {
     async getUserByEmail(email) {
       const userQuery = query(Users, where("email", "==", email), limit(1))
       const userSnapshots = await getDocs(userQuery)
-      const userSnpashot = userSnapshots.docs[0]
+      const userSnapshot = userSnapshots.docs[0]
 
-      if (userSnpashot?.exists() && Users.converter) {
-        return Users.converter.fromFirestore(userSnpashot)
+      if (userSnapshot?.exists() && Users.converter) {
+        return Users.converter.fromFirestore(userSnapshot)
       }
 
       return null
@@ -246,12 +247,8 @@ export function FirestoreAdapter(firebaseApp: FirebaseApp): Adapter {
       const verificationTokenSnapshot = await getDoc(verificationTokenRef)
 
       if (verificationTokenSnapshot.exists() && VerificationTokens.converter) {
-        const {
-          id,
-          ...verificationToken
-        } = VerificationTokens.converter.fromFirestore(
-          verificationTokenSnapshot
-        )
+        const { id, ...verificationToken } =
+          VerificationTokens.converter.fromFirestore(verificationTokenSnapshot)
 
         return verificationToken
       }
@@ -270,12 +267,8 @@ export function FirestoreAdapter(firebaseApp: FirebaseApp): Adapter {
       if (verificationTokenSnapshot?.exists() && VerificationTokens.converter) {
         await deleteDoc(verificationTokenSnapshot.ref)
 
-        const {
-          id,
-          ...verificationToken
-        } = VerificationTokens.converter.fromFirestore(
-          verificationTokenSnapshot
-        )
+        const { id, ...verificationToken } =
+          VerificationTokens.converter.fromFirestore(verificationTokenSnapshot)
 
         return verificationToken
       }

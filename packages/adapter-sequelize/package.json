@@ -1,8 +1,8 @@
 {
   "name": "@next-auth/sequelize-adapter",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "description": "Sequelize adapter for next-auth.",
-  "homepage": "https://next-auth.js.org",
+  "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"

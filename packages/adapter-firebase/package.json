@@ -1,8 +1,8 @@
 {
   "name": "@next-auth/firebase-adapter",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Firebase adapter for next-auth.",
-  "homepage": "https://next-auth.js.org",
+  "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
@@ -29,7 +29,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "FIRESTORE_EMULATOR_HOST=localhost:8080 firebase emulators:exec --only firestore --project next-auth-test jest"
+    "test": "FIRESTORE_EMULATOR_HOST=localhost:8080 firebase --token '$FIREBASE_TOKEN' emulators:exec --only firestore --project next-auth-test jest"
   },
   "peerDependencies": {
     "firebase": "^9.7.0",
@@ -38,8 +38,8 @@
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:*",
     "@next-auth/tsconfig": "workspace:*",
-    "firebase": "^9.7.0",
-    "firebase-tools": "^10.7.2",
+    "firebase": "^9.14.0",
+    "firebase-tools": "^11.16.1",
     "jest": "^27.4.3",
     "next-auth": "workspace:*"
   }

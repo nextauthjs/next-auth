@@ -103,7 +103,7 @@ export async function updateConnectionEntities(
   if (dataSource.options.synchronize !== false) {
     console.warn(
       "[next-auth][warn][adapter_typeorm_updating_entities]",
-      "\nhttps://next-auth.js.org/warnings#adapter_typeorm_updating_entities"
+      "\nhttps://authjs.dev/reference/warnings#adapter_typeorm_updating_entities"
     )
     await dataSource.synchronize()
   }

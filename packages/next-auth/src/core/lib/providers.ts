@@ -1,8 +1,11 @@
 import { merge } from "../../utils/merge"
 
 import type { InternalProvider } from "../types"
-import type { Provider } from "../../providers"
-import type { InternalUrl } from "../../utils/parse-url"
+import type {
+  OAuthConfigInternal,
+  OAuthConfig,
+  Provider,
+} from "../../providers"
 
 /**
  * Adds `signinUrl` and `callbackUrl` to each provider
@@ -10,7 +13,7 @@ import type { InternalUrl } from "../../utils/parse-url"
  */
 export default function parseProviders(params: {
   providers: Provider[]
-  url: InternalUrl
+  url: URL
   providerId?: string
 }): {
   providers: InternalProvider[]
@@ -18,52 +21,72 @@ export default function parseProviders(params: {
 } {
   const { url, providerId } = params
 
-  const providers = params.providers.map(({ options, ...rest }) => {
-    const defaultOptions = normalizeProvider(rest as Provider)
-    const userOptions = normalizeProvider(options as Provider)
+  const providers = params.providers.map<InternalProvider>(
+    ({ options: userOptions, ...rest }) => {
+      if (rest.type === "oauth") {
+        const normalizedOptions = normalizeOAuthOptions(rest)
+        const normalizedUserOptions = normalizeOAuthOptions(userOptions, true)
+        const id = normalizedUserOptions?.id ?? rest.id
+        return merge(normalizedOptions, {
+          ...normalizedUserOptions,
+          signinUrl: `${url}/signin/${id}`,
+          callbackUrl: `${url}/callback/${id}`,
+        })
+      }
+      const id = (userOptions?.id as string) ?? rest.id
+      return merge(rest, {
+        ...userOptions,
+        signinUrl: `${url}/signin/${id}`,
+        callbackUrl: `${url}/callback/${id}`,
+      })
+    }
+  )
 
-    return merge(defaultOptions, {
-      ...userOptions,
-      signinUrl: `${url}/signin/${userOptions?.id ?? rest.id}`,
-      callbackUrl: `${url}/callback/${userOptions?.id ?? rest.id}`,
-    })
-  })
-
-  const provider = providers.find(({ id }) => id === providerId)
-
-  return { providers, provider }
+  return {
+    providers,
+    provider: providers.find(({ id }) => id === providerId),
+  }
 }
 
-function normalizeProvider(provider?: Provider) {
-  if (!provider) return
+/**
+ * Transform OAuth options `authorization`, `token` and `profile` strings to `{ url: string; params: Record<string, string> }`
+ */
+function normalizeOAuthOptions(
+  oauthOptions?: Partial<OAuthConfig<any>> | Record<string, unknown>,
+  isUserOptions = false
+) {
+  if (!oauthOptions) return
 
-  const normalized: InternalProvider = Object.entries(
-    provider
-  ).reduce<InternalProvider>((acc, [key, value]) => {
-    if (
-      ["authorization", "token", "userinfo"].includes(key) &&
-      typeof value === "string"
-    ) {
-      const url = new URL(value)
-      acc[key] = {
-        url: `${url.origin}${url.pathname}`,
-        params: Object.fromEntries(url.searchParams ?? []),
+  const normalized = Object.entries(oauthOptions).reduce<
+    OAuthConfigInternal<Record<string, unknown>>
+  >(
+    (acc, [key, value]) => {
+      if (
+        ["authorization", "token", "userinfo"].includes(key) &&
+        typeof value === "string"
+      ) {
+        const url = new URL(value)
+        acc[key] = {
+          url: `${url.origin}${url.pathname}`,
+          params: Object.fromEntries(url.searchParams ?? []),
+        }
+      } else {
+        acc[key] = value
       }
-    } else {
-      acc[key] = value
-    }
 
-    return acc
-    // eslint-disable-next-line @typescript-eslint/prefer-reduce-type-parameter, @typescript-eslint/consistent-type-assertions
-  }, {} as any)
+      return acc
+    },
+    // eslint-disable-next-line @typescript-eslint/prefer-reduce-type-parameter
+    {} as any
+  )
 
-  if (normalized.type === "oauth" && !normalized.version?.startsWith("1.")) {
+  if (!isUserOptions && !normalized.version?.startsWith("1.")) {
     // If provider has as an "openid-configuration" well-known endpoint
     // or an "openid" scope request, it will also likely be able to receive an `id_token`
+    // Only do this if this function is not called with user options to avoid overriding in later stage.
     normalized.idToken = Boolean(
       normalized.idToken ??
         normalized.wellKnown?.includes("openid-configuration") ??
-        // @ts-expect-error
         normalized.authorization?.params?.scope?.includes("openid")
     )
 

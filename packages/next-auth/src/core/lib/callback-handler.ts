@@ -6,6 +6,7 @@ import type { AdapterSession, AdapterUser } from "../../adapters"
 import type { JWT } from "../../jwt"
 import type { Account, User } from "../.."
 import type { SessionToken } from "./cookie"
+import { OAuthConfig } from "src/providers"
 
 /**
  * This function handles the complex flow of signing users in, and either creating,
@@ -21,11 +22,11 @@ import type { SessionToken } from "./cookie"
  */
 export default async function callbackHandler(params: {
   sessionToken?: SessionToken
-  profile: User
-  account: Account
+  profile: User | AdapterUser | { email: string }
+  account: Account | null
   options: InternalOptions
 }) {
-  const { sessionToken, profile, account, options } = params
+  const { sessionToken, profile: _profile, account, options } = params
   // Input validation
   if (!account?.providerAccountId || !account.type)
     throw new Error("Missing or invalid provider account")
@@ -42,8 +43,10 @@ export default async function callbackHandler(params: {
   // If no adapter is configured then we don't have a database and cannot
   // persist data; in this mode we just return a dummy session object.
   if (!adapter) {
-    return { user: profile, account, session: {} }
+    return { user: _profile as User, account }
   }
+
+  const profile = _profile as AdapterUser
 
   const {
     createUser,
@@ -84,9 +87,7 @@ export default async function callbackHandler(params: {
 
   if (account.type === "email") {
     // If signing in with an email, check if an account with the same email address exists already
-    const userByEmail = profile.email
-      ? await getUserByEmail(profile.email)
-      : null
+    const userByEmail = await getUserByEmail(profile.email)
     if (userByEmail) {
       // If they are not already signed in as the same user, this flow will
       // sign them out of the current session and sign them in as the new user
@@ -101,8 +102,7 @@ export default async function callbackHandler(params: {
       user = await updateUser({ id: userByEmail.id, emailVerified: new Date() })
       await events.updateUser?.({ user })
     } else {
-      const newUser = { ...profile, emailVerified: new Date() }
-      delete (newUser as Omit<AdapterUser, "id">).id
+      const { id: _, ...newUser } = { ...profile, emailVerified: new Date() }
       // Create user account if there isn't one for the email address already
       user = await createUser(newUser)
       await events.createUser?.({ user })
@@ -181,26 +181,33 @@ export default async function callbackHandler(params: {
         ? await getUserByEmail(profile.email)
         : null
       if (userByEmail) {
-        // We end up here when we don't have an account with the same [provider].id *BUT*
-        // we do already have an account with the same email address as the one in the
-        // OAuth profile the user has just tried to sign in with.
+        const provider = options.provider as OAuthConfig<any>
+        if (provider?.allowDangerousEmailAccountLinking) {
+          // If you trust the oauth provider to correctly verify email addresses, you can opt-in to
+          // account linking even when the user is not signed-in.
+          user = userByEmail
+        } else {
+          // We end up here when we don't have an account with the same [provider].id *BUT*
+          // we do already have an account with the same email address as the one in the
+          // OAuth profile the user has just tried to sign in with.
+          //
+          // We don't want to have two accounts with the same email address, and we don't
+          // want to link them in case it's not safe to do so, so instead we prompt the user
+          // to sign in via email to verify their identity and then link the accounts.
+          throw new AccountNotLinkedError(
+            "Another account already exists with the same e-mail address"
+          )
+        }
+      } else {
+        // If the current user is not logged in and the profile isn't linked to any user
+        // accounts (by email or provider account id)...
         //
-        // We don't want to have two accounts with the same email address, and we don't
-        // want to link them in case it's not safe to do so, so instead we prompt the user
-        // to sign in via email to verify their identity and then link the accounts.
-        throw new AccountNotLinkedError(
-          "Another account already exists with the same e-mail address"
-        )
+        // If no account matching the same [provider].id or .email exists, we can
+        // create a new account for the user, link it to the OAuth acccount and
+        // create a new session for them so they are signed in with it.
+        const { id: _, ...newUser } = { ...profile, emailVerified: null }
+        user = await createUser(newUser)
       }
-      // If the current user is not logged in and the profile isn't linked to any user
-      // accounts (by email or provider account id)...
-      //
-      // If no account matching the same [provider].id or .email exists, we can
-      // create a new account for the user, link it to the OAuth acccount and
-      // create a new session for them so they are signed in with it.
-      const newUser = { ...profile, emailVerified: null }
-      delete (newUser as Omit<AdapterUser, "id">).id
-      user = await createUser(newUser)
       await events.createUser?.({ user })
 
       await linkAccount({ ...account, userId: user.id })
@@ -217,4 +224,6 @@ export default async function callbackHandler(params: {
       return { session, user, isNewUser: true }
     }
   }
+
+  throw new Error("Unsupported account type")
 }

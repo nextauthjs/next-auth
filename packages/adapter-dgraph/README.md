@@ -1,6 +1,6 @@
 <p align="center">
    <br/>
-   <a href="https://next-auth.js.org" target="_blank"><img height="64px" src="https://next-auth.js.org/img/logo/logo-sm.png" /></a>&nbsp;&nbsp;&nbsp;&nbsp;<img height="64px" src="https://cloud.dgraph.io/logo.svg" />
+   <a href="https://authjs.dev" target="_blank"><img height="64px" src="https://authjs.dev/img/logo/logo-sm.png" /></a>&nbsp;&nbsp;&nbsp;&nbsp;<img height="64px" src="https://cloud.dgraph.io/logo.svg" />
    <h3 align="center"><b>Dgraph Adapter</b> - NextAuth.js</h3>
    <p align="center">
    Open Source. Full Stack. Own Your Data.
@@ -14,9 +14,9 @@
 
 ## Overview
 
-This is the Dgraph Adapter for [`next-auth`](https://next-auth.js.org). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
+This is the Dgraph Adapter for [`auth.js`](https://authjs.dev). This package can only be used in conjunction with the primary `auth.js` package. It is not a standalone package.
 
-You can find two Graphql schemas in the [`docs`](https://next-auth.js.org/adapters/dgraph/schema.gql).
+You can find two Graphql schemas in the [`docs`](https://authjs.dev/adapters/dgraph/schema.gql).
 
 1. The unsecure don't implement any auth directive is perfect for a quick start.
 2. The second one is more secure and require you replace some value before copy pasting it into your Dgraph console ([`see Securing your database`](#securing-your-database)).
@@ -36,9 +36,9 @@ import NextAuth from "next-auth"
 import { DgraphAdapter } from "@next-auth/dgraph-adapter";
 
 // For more information on each option (and a full list of options) go to
-// https://next-auth.js.org/configuration/options
+// https://authjs.dev/reference/configuration/auth-options
 export default NextAuth({
-  // https://next-auth.js.org/configuration/providers
+  // https://authjs.dev/reference/providers/oauth-builtin
   providers: [
     ...,
   ],
@@ -150,7 +150,8 @@ type User
 
 ## Contributing
 
-We're open to all community contributions! If you'd like to contribute in any way, please read our [Contributing Guide](https://github.com/nextauthjs/next-auth/blob/main/CONTRIBUTING.md).
+We're open to all community contributions! If you'd like to contribute in any way, please read our [Contributing Guide](https://github.com/nextauthjs/.github/blob/main/CONTRIBUTING.md).
+
 
 ## License
 

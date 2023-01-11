@@ -69,7 +69,7 @@ export const format = {
     const newObject: Record<string, unknown> = {}
     for (const key in object) {
       const value = object[key]
-      if (value?.value && typeof value.value === 'string') {
+      if (value?.value && typeof value.value === "string") {
         newObject[key] = new Date(value.value)
       } else {
         newObject[key] = value
