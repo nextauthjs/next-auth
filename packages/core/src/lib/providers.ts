@@ -96,6 +96,5 @@ function normalizeEndpoint(
   // NOTE: This need to be checked when constructing the URL
   // for the authorization, token and userinfo endpoints.
   const url = new URL(e?.url ?? "https://authjs.dev")
-  for (const k in e?.params) url.searchParams.set(k, e?.params[k])
-  return { url, request: e?.request }
+  return { url, request: e?.request, conform: e?.conform }
 }
