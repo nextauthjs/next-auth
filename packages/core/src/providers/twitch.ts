@@ -15,6 +15,7 @@ export default function Twitch(
     id: "twitch",
     name: "Twitch",
     type: "oidc",
+    client: { token_endpoint_auth_method: "client_secret_post" },
     authorization: {
       params: {
         scope: "openid user:read:email",

@@ -68,8 +68,6 @@ export async function handleOAuth(
   const client: o.Client = {
     client_id: provider.clientId,
     client_secret: provider.clientSecret,
-    token_endpoint_auth_method: as
-      .token_endpoint_auth_methods_supported?.[0] as o.ClientAuthenticationMethod,
     ...provider.client,
   }
 
