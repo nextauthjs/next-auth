@@ -207,7 +207,7 @@ export function DynamoDBAdapter(
         KeyConditionExpression: "#gsi1pk = :gsi1pk AND #gsi1sk = :gsi1sk",
         ExpressionAttributeNames: {
           "#gsi1pk": GSI1PK,
-          "#gsi1sk": "SI1SK,
+          "#gsi1sk": GSI1SK,
         },
         ExpressionAttributeValues: {
           ":gsi1pk": `SESSION#${sessionToken}`,
