@@ -1,14 +1,15 @@
-import { SessionStore } from "./cookie.js"
 import { UnknownAction } from "../errors.js"
+import { skipCSRFCheck } from "../index.js"
+import { SessionStore } from "./cookie.js"
 import { init } from "./init.js"
 import renderPage from "./pages/index.js"
 import * as routes from "./routes/index.js"
 
 import type {
-  RequestInternal,
-  ResponseInternal,
   AuthConfig,
   ErrorPageParam,
+  RequestInternal,
+  ResponseInternal,
 } from "../types.js"
 
 export async function AuthInternal<
@@ -19,6 +20,8 @@ export async function AuthInternal<
 ): Promise<ResponseInternal<Body>> {
   const { action, providerId, error, method } = request
 
+  const csrfDisabled = authOptions.skipCSRFCheck === skipCSRFCheck
+
   const { options, cookies } = await init({
     authOptions,
     action,
@@ -28,6 +31,7 @@ export async function AuthInternal<
     csrfToken: request.body?.csrfToken,
     cookies: request.cookies,
     isPost: method === "POST",
+    csrfDisabled,
   })
 
   const sessionStore = new SessionStore(
@@ -125,8 +129,7 @@ export async function AuthInternal<
   } else {
     switch (action) {
       case "signin":
-        // Verified CSRF Token required for all sign in routes
-        if (options.csrfTokenVerified && options.provider) {
+        if ((csrfDisabled || options.csrfTokenVerified) && options.provider) {
           const signin = await routes.signin(
             request.query,
             request.body,
@@ -138,8 +141,7 @@ export async function AuthInternal<
 
         return { redirect: `${options.url}/signin?csrf=true`, cookies }
       case "signout":
-        // Verified CSRF Token required for signout
-        if (options.csrfTokenVerified) {
+        if (csrfDisabled || options.csrfTokenVerified) {
           const signout = await routes.signout(sessionStore, options)
           if (signout.cookies) cookies.push(...signout.cookies)
           return { ...signout, cookies }
@@ -150,7 +152,7 @@ export async function AuthInternal<
           // Verified CSRF Token required for credentials providers only
           if (
             options.provider.type === "credentials" &&
-            !options.csrfTokenVerified
+            (!csrfDisabled || !options.csrfTokenVerified)
           ) {
             return { redirect: `${options.url}/signin?csrf=true`, cookies }
           }
