@@ -52,12 +52,22 @@ export async function AuthInternal<
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
         return { ...session, cookies } as any
       }
-      case "csrf":
+      case "csrf": {
+        if (csrfDisabled) {
+          options.logger.warn("csrf-disabled")
+          cookies.push({
+            name: options.cookies.csrfToken.name,
+            value: "",
+            options: { ...options.cookies.csrfToken.options, maxAge: 0 },
+          })
+          return { status: 404, cookies }
+        }
         return {
           headers: { "Content-Type": "application/json" },
           body: { csrfToken: options.csrfToken } as any,
           cookies,
         }
+      }
       case "signin":
         if (pages.signIn) {
           let signinUrl = `${pages.signIn}${
