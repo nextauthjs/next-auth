@@ -152,7 +152,8 @@ export async function AuthInternal<
           // Verified CSRF Token required for credentials providers only
           if (
             options.provider.type === "credentials" &&
-            (!csrfDisabled || !options.csrfTokenVerified)
+            !csrfDisabled &&
+            !options.csrfTokenVerified
           ) {
             return { redirect: `${options.url}/signin?csrf=true`, cookies }
           }
