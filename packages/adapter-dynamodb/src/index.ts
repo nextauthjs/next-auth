@@ -16,7 +16,7 @@ import { format, generateUpdateExpression } from "./utils"
 
 export { format, generateUpdateExpression }
 
-type AdapterOptions = {
+export interface DynamoDBAdapterOptions {
   tableName?: string,
   partitionKey?: string,
   sortKey?: string,
@@ -27,7 +27,7 @@ type AdapterOptions = {
 
 export function DynamoDBAdapter(
   client: DynamoDBDocument,
-  options?: AdapterOptions
+  options?: DynamoDBAdapterOptions
 ): Adapter {
   const TableName = options?.tableName ?? "next-auth"
   const pk = options?.partitionKey ?? 'pk'
