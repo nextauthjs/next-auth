@@ -5,14 +5,15 @@
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "scripts": {
     "build:app": "turbo run build --filter=next-auth-app",
+    "build:docs": "turbo run build --filter=docs",
     "build": "turbo run build --filter=next-auth --filter=@next-auth/* --filter=@auth/* --no-deps",
     "test": "turbo run test --concurrency=1 --filter=[HEAD^1] --filter=./packages/* --filter=!*pouchdb-* --filter=!@*upstash* --filter=!*dynamodb-*",
     "clean": "turbo run clean --no-cache",
     "dev:db": "turbo run dev --parallel --continue --filter=next-auth-app...",
     "dev": "turbo run dev --parallel --continue --filter=next-auth-app... --filter=!./packages/adapter-*",
-    "dev:kit": "turbo run dev --parallel --continue --filter=sveltekit-nextauth...",
+    "dev:kit": "turbo run dev --parallel --continue --filter=sveltekit-auth-app...",
     "dev:docs": "turbo run dev --filter=docs",
-    "email": "cd apps/dev && pnpm email",
+    "email": "cd apps/dev/nextjs && pnpm email",
     "eslint": "eslint --cache .",
     "lint": "prettier --check .",
     "format": "prettier --write .",
@@ -46,7 +47,7 @@
   "engines": {
     "node": "^16.13.0 || ^18.12.0"
   },
-  "packageManager": "pnpm@7.19.0",
+  "packageManager": "pnpm@7.23.0",
   "funding": [
     {
       "type": "github",

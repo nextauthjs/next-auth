@@ -1,7 +1,5 @@
 packages:
-  - "packages/**"
-  - "apps/dev"
-  - "apps/playground-sveltekit"
-  - "apps/playground-nuxt"
-  - "apps/example-nextjs"
+  - "packages/*"
+  - "apps/dev/*"
+  - "apps/playgrounds/*"
   - "docs"

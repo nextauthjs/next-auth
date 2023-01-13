@@ -3,7 +3,7 @@ id: dynamodb
 title: DynamoDB
 ---
 
-This is the AWS DynamoDB Adapter for next-auth. This package can only be used in conjunction with the primary next-auth package. It is not a standalone package.
+This is the AWS DynamoDB Adapter for `next-auth`. This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
 
 By default, the adapter expects a table with a partition key `pk` and a sort key `sk`, as well as a global secondary index named `GSI1` with `GSI1PK` as partition key and `GSI1SK` as sorting key. To automatically delete sessions and verification requests after they expire using [dynamodb TTL](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TTL.html) you should [enable the TTL](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/time-to-live-ttl-how-to.html) with attribute name 'expires'. You can set whatever you want as the table name and the billing method.
 
@@ -11,10 +11,10 @@ You can find the full schema in the table structure section below.
 
 ## Getting Started
 
-1. Install `next-auth` and `@next-auth/dynamodb-adapter`
+1. Install `next-auth`, `@next-auth/dynamodb-adapter`, `@aws-sdk/client-dynamodb` and `@aws-sdk/lib-dynamodb`
 
-```bash npm2yarn
-npm install next-auth @next-auth/dynamodb-adapter
+```bash npm2yarn2pnpm
+npm install next-auth @next-auth/dynamodb-adapter @aws-sdk/client-dynamodb @aws-sdk/lib-dynamodb
 ```
 
 2. Add this adapter to your `pages/api/auth/[...nextauth].js` next-auth configuration object.
@@ -23,7 +23,7 @@ You need to pass `DynamoDBDocument` client from the modular [`aws-sdk`](https://
 The default table name is `next-auth`, but you can customise that by passing `{ tableName: 'your-table-name' }` as the second parameter in the adapter.
 
 ```javascript title="pages/api/auth/[...nextauth].js"
-import { DynamoDB } from "@aws-sdk/client-dynamodb"
+import { DynamoDB, DynamoDBClientConfig } from "@aws-sdk/client-dynamodb"
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb"
 import NextAuth from "next-auth";
 import Providers from "next-auth/providers";
@@ -73,7 +73,7 @@ The table respects the single table design pattern. This has many advantages:
 
 - Only one table to manage, monitor and provision.
 - Querying relations is faster than with multi-table schemas (for eg. retrieving all sessions for a user).
-- Only one table needs to be replicated, if you want to go multi-region.
+- Only one table needs to be replicated if you want to go multi-region.
 
 > This schema is adapted for use in DynamoDB and based upon our main [schema](/reference/adapters/models)
 
@@ -94,7 +94,7 @@ new dynamodb.Table(this, `NextAuthTable`, {
 })
 ```
 
-Alternatively you can use this cloudformation template:
+Alternatively, you can use this cloudformation template:
 
 ```yaml title=cloudformation.yaml
 NextAuthTable:

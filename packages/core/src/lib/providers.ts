@@ -45,11 +45,11 @@ export default function parseProviders(params: {
   }
 }
 
+// TODO: Also add discovery here, if some endpoints/config are missing.
+// We should return both a client and authorization server config.
 function normalizeOAuth(
-  c?: OAuthConfig<any> | OAuthUserConfig<any>
+  c: OAuthConfig<any> | OAuthUserConfig<any>
 ): OAuthConfigInternal<any> | {} {
-  if (!c) return {}
-
   if (c.issuer) c.wellKnown ??= `${c.issuer}/.well-known/openid-configuration`
 
   const authorization = normalizeEndpoint(c.authorization, c.issuer)
@@ -84,18 +84,18 @@ function normalizeEndpoint(
   e?: OAuthConfig<any>[OAuthEndpointType],
   issuer?: string
 ): OAuthConfigInternal<any>[OAuthEndpointType] {
-  if (!e || issuer) return
+  if (!e && issuer) return
   if (typeof e === "string") {
     return { url: new URL(e) }
   }
-  // If v.url is undefined, it's because the provider config
+  // If e.url is undefined, it's because the provider config
   // assumes that we will use the issuer endpoint.
-  // The existence of either v.url or provider.issuer is checked in
-  // assert.ts
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const url = new URL(e.url!)
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-  for (const k in e.params) url.searchParams.set(k, e.params[k] as any)
-
-  return { ...e, url }
+  // The existence of either e.url or provider.issuer is checked in
+  // assert.ts. We fallback to "https://authjs.dev" to be able to pass around
+  // a valid URL even if the user only provided params.
+  // NOTE: This need to be checked when constructing the URL
+  // for the authorization, token and userinfo endpoints.
+  const url = new URL(e?.url ?? "https://authjs.dev")
+  for (const k in e?.params) url.searchParams.set(k, e?.params[k])
+  return { url, request: e?.request }
 }
