@@ -15,6 +15,8 @@ export interface AuthClientConfig {
    * trigger session updates from places like `signIn` or `signOut`
    */
   _getSession: (...args: any[]) => any
+
+  credentials?: RequestCredentials
 }
 
 export interface CtxOrReq {
@@ -40,7 +42,10 @@ export async function fetchData<T = any>(
     const options = req?.headers.cookie
       ? { headers: { cookie: req.headers.cookie } }
       : {}
-    const res = await fetch(url, options)
+    const res = await fetch(url, {
+      ...options,
+      credentials: __NEXTAUTH.credentials || "same-origin",
+    })
     const data = await res.json()
     if (!res.ok) throw data
     return Object.keys(data).length > 0 ? data : null // Return null if data empty
@@ -56,7 +61,7 @@ export function apiBaseUrl(__NEXTAUTH: AuthClientConfig) {
     return `${__NEXTAUTH.baseUrlServer}${__NEXTAUTH.basePathServer}`
   }
   // Return relative path when called client side
-  return __NEXTAUTH.basePath
+  return `${__NEXTAUTH.baseUrl}${__NEXTAUTH.basePath}`
 }
 
 /** Returns the number of seconds elapsed since January 1, 1970 00:00:00 UTC. */

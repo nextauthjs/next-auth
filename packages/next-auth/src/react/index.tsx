@@ -329,9 +329,18 @@ export function SessionProvider(props: SessionProviderProps) {
     throw new Error("React Context is unavailable in Server Components")
   }
 
-  const { children, basePath, refetchInterval, refetchWhenOffline } = props
+  const {
+    children,
+    basePath,
+    baseUrl,
+    credentials,
+    refetchInterval,
+    refetchWhenOffline,
+  } = props
 
   if (basePath) __NEXTAUTH.basePath = basePath
+  if (baseUrl) __NEXTAUTH.baseUrl = baseUrl
+  if (credentials) __NEXTAUTH.credentials = credentials
 
   /**
    * If session was `null`, there was an attempt to fetch it,
