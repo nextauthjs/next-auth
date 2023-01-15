@@ -9,7 +9,8 @@
     "build": "next build",
     "start": "next start",
     "email": "fake-smtp-server",
-    "start:email": "pnpm email"
+    "start:email": "pnpm email",
+    "e2e": "pnpm dlx playwright test"
   },
   "license": "ISC",
   "dependencies": {

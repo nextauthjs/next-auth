@@ -36,13 +36,19 @@ jobs:
           TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
           TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
       - name: Run E2E tests
-        run: cd apps/examples/nextjs && pnpm e2e
+        run: pnpm e2e
         timeout-minutes: 15
         env:
           AUTH0_USERNAME: ${{ secrets.AUTH0_USERNAME }}
           AUTH0_PASSWORD: ${{ secrets.AUTH0_PASSWORD }}
           TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
           TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
       # - name: Coverage
       #   uses: codecov/codecov-action@v1
       #   with:

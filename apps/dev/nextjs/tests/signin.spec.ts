@@ -1,7 +1,5 @@
 import { test, expect } from "@playwright/test"
 
-
-
 test("Sign in with Auth0", async ({ page }) => {
   // Go to NextAuth example app
   await page.goto("https://next-auth-example.vercel.app")
@@ -17,7 +15,7 @@ test("Sign in with Auth0", async ({ page }) => {
   await page.type("#password", process.env.AUTH0_PASSWORD!)
 
   // Snap a screenshot
-  await page.screenshot({ path: "1-auth0-login.png", fullPage: true })
+  // await page.screenshot({ path: "1-auth0-login.png", fullPage: true })
 
   // Press submit on Auth0 form
   await page.click('body > div > main > section > div button[type="submit"]')
@@ -26,10 +24,10 @@ test("Sign in with Auth0", async ({ page }) => {
   await page.waitForTimeout(2000)
 
   // Snap a screenshot
-  await page.screenshot({
-    path: "2-next-auth-redirect-result.png",
-    fullPage: false,
-  })
+  // await page.screenshot({
+  //   path: "2-next-auth-redirect-result.png",
+  //   fullPage: false,
+  // })
 
   // Check session object after successful login
   const response = await page.goto(
