@@ -31,7 +31,7 @@
     "dist"
   ],
   "dependencies": {
-    "surrealdb-rest-ts": "^1.0.1"
+    "surrealdb-rest-ts": "^1.0.2"
   },
   "peerDependencies": {
     "mongodb": "^4.1.1",
