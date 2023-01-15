@@ -258,7 +258,7 @@ export async function signIn<
     }),
   })
 
-  const data = await res.clone().json()
+  const data = await res.json()
   if (redirect || !isSupportingReturn) {
     // TODO: Do not redirect for Credentials and Email providers by default in next major
     window.location.href = data.url ?? data.redirect ?? redirectTo
@@ -266,10 +266,16 @@ export async function signIn<
     if (data.url.includes("#")) window.location.reload()
     return
   }
+  const error = new URL(data.url).searchParams.get("error")
   if (res.ok) {
     await __SOLIDAUTH._getSession({ event: "storage" })
   }
-  return res
+  return {
+    error,
+    status: res.status,
+    ok: res.ok,
+    url: error ? null : data.url,
+  } as const
 }
 
 /**
@@ -278,7 +284,9 @@ export async function signIn<
  *
  * [Documentation](https://authjs.dev/reference/utilities/#signout)
  */
-export async function signOut(options?: SignOutParams) {
+export async function signOut(
+  options?: SignOutParams & { redirectTo?: string }
+) {
   const { redirectTo = window.location.href, redirect } = options ?? {}
   // TODO: Custom base path
   const csrfTokenResponse = await fetch("/api/auth/csrf")
@@ -294,15 +302,15 @@ export async function signOut(options?: SignOutParams) {
       callbackUrl: redirectTo,
     }),
   })
-  const data = await res.clone().json()
-  if (redirect) {
+  const data = await res.json()
+  if (redirect ?? true) {
     const url = data.url ?? data.redirect ?? redirectTo
     window.location.href = url
     // If url contains a hash, the browser does not reload the page. We reload manually
     if (url.includes("#")) window.location.reload()
   }
   await __SOLIDAUTH._getSession({ event: "storage" })
-  return res
+  return data
 }
 
 export async function getSession() {
