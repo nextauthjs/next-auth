@@ -9,8 +9,7 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start",
-    "e2e": "playwright test"
+    "start": "next start"
   },
   "author": "Iain Collins <me@iaincollins.com>",
   "contributors": [
