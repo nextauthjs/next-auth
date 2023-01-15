@@ -39,6 +39,8 @@ jobs:
         run: cd apps/examples/nextjs && pnpm e2e
         timeout-minutes: 15
         env:
+          AUTH0_USERNAME: ${{ secrets.AUTH0_USERNAME }}
+          AUTH0_PASSWORD: ${{ secrets.AUTH0_PASSWORD }}
           TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
           TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
       # - name: Coverage
