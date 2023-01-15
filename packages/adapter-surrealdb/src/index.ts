@@ -1,5 +1,7 @@
-import type Surreal from "surrealdb.js"
-import type { Result } from "surrealdb.js"
+import type {
+  SurrealREST as Surreal,
+  SurrealRESTResponse as Result,
+} from "surrealdb-rest-ts"
 import type {
   Adapter,
   AdapterUser,

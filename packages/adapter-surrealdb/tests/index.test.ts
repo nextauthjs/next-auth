@@ -1,5 +1,5 @@
-import Surreal from "surrealdb.js"
-import type { Result } from "surrealdb.js"
+import { SurrealREST as Surreal } from "surrealdb-rest-ts"
+import type { SurrealRESTResponse as Result } from "surrealdb-rest-ts"
 import { runBasicTests } from "@next-auth/adapter-test"
 
 import {
@@ -11,24 +11,21 @@ import {
 import type { UserDoc, AccountDoc, SessionDoc } from "../src/index"
 import { VerificationToken } from "next-auth/adapters"
 
-const clientPromise = new Promise<Surreal>(async (resolve, reject) => {
-  const surreal = new Surreal("http://localhost:8000/rpc")
-  try {
-    await surreal.signin({ user: "test", pass: "test" })
-    await surreal.use("test", "test")
-    resolve(surreal)
-  } catch (e) {
-    console.error("ERROR", e)
-    reject(e)
-  }
+const clientPromise = new Promise<Surreal>((resolve) => {
+  resolve(
+    new Surreal("http://localhost:8000", {
+      ns: "test",
+      db: "test",
+      user: "test",
+      password: "test",
+    })
+  )
 })
 
 runBasicTests({
   adapter: SurrealDBAdapter(clientPromise),
   db: {
-    async disconnect() {
-      ;(await clientPromise).close()
-    },
+    async disconnect() {},
     async user(id) {
       const surreal = await clientPromise
       try {
