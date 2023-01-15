@@ -35,6 +35,12 @@ jobs:
           UPSTASH_REDIS_KEY: ${{ secrets.UPSTASH_REDIS_KEY }}
           TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
           TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      - name: Run E2E tests
+        run: cd apps/examples/nextjs && pnpm e2e
+        timeout-minutes: 15
+        env:
+          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+          TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
       # - name: Coverage
       #   uses: codecov/codecov-action@v1
       #   with:
