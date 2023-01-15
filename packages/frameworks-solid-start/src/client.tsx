@@ -303,7 +303,7 @@ export async function signOut(
     }),
   })
   const data = await res.json()
-  if (redirect ?? true) {
+  if (redirect) {
     const url = data.url ?? data.redirect ?? redirectTo
     window.location.href = url
     // If url contains a hash, the browser does not reload the page. We reload manually
