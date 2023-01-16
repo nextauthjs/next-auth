@@ -20,8 +20,9 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "pnpm clean && tsc -p .",
-    "clean": "rm -rf dist client.* index.* utils.* types.*"
+    "build": "tsup --config ./tsup.config.js",
+    "patch": "npm version patch --no-git-tag-version",
+    "clean": "rm -rf utils.* index.* types.*" 
   },
   "publishConfig": {
     "access": "public"
@@ -38,6 +39,7 @@
     "react": "^18",
     "react-dom": "^18",
     "typescript": "^4.8.2",
+    "tsup": "^6.5.0",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6"
   },
