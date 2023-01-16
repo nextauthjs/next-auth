@@ -1,120 +1,51 @@
-// TODO: move OAuth 1.0 support or remove it?
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
-export interface TwitterLegacyProfile {
-  id: number
-  id_str: string
-  name: string
-  screen_name: string
-  location: string
-  description: string
-  url: string
-  entities: {
-    url: {
-      urls: Array<{
-        url: string
-        expanded_url: string
-        display_url: string
-        indices: number[]
-      }>
-    }
-    description: {
-      urls: any[]
-    }
-  }
-  protected: boolean
-  followers_count: number
-  friends_count: number
-  listed_count: number
-  created_at: string
-  favourites_count: number
-  utc_offset?: any
-  time_zone?: any
-  geo_enabled: boolean
-  verified: boolean
-  statuses_count: number
-  lang?: any
-  status: {
-    created_at: string
-    id: number
-    id_str: string
-    text: string
-    truncated: boolean
-    entities: {
-      hashtags: any[]
-      symbols: any[]
-      user_mentions: Array<{
-        screen_name: string
-        name: string
-        id: number
-        id_str: string
-        indices: number[]
-      }>
-      urls: any[]
-    }
-    source: string
-    in_reply_to_status_id: number
-    in_reply_to_status_id_str: string
-    in_reply_to_user_id: number
-    in_reply_to_user_id_str: string
-    in_reply_to_screen_name: string
-    geo?: any
-    coordinates?: any
-    place?: any
-    contributors?: any
-    is_quote_status: boolean
-    retweet_count: number
-    favorite_count: number
-    favorited: boolean
-    retweeted: boolean
-    lang: string
-  }
-  contributors_enabled: boolean
-  is_translator: boolean
-  is_translation_enabled: boolean
-  profile_background_color: string
-  profile_background_image_url: string
-  profile_background_image_url_https: string
-  profile_background_tile: boolean
-  profile_image_url: string
-  profile_image_url_https: string
-  profile_banner_url: string
-  profile_link_color: string
-  profile_sidebar_border_color: string
-  profile_sidebar_fill_color: string
-  profile_text_color: string
-  profile_use_background_image: boolean
-  has_extended_profile: boolean
-  default_profile: boolean
-  default_profile_image: boolean
-  following: boolean
-  follow_request_sent: boolean
-  notifications: boolean
-  translator_type: string
-  withheld_in_countries: any[]
-  suspended: boolean
-  needs_phone_verification: boolean
-}
-
 /**
- * [Documentation](https://developer.twitter.com/en/docs/twitter-api/users/lookup/api-reference/get-users-me)
+ * [Users lookup](https://developer.twitter.com/en/docs/twitter-api/users/lookup/api-reference/get-users-me)
  */
 export interface TwitterProfile {
   data: {
+    /**
+     * Unique identifier of this user. This is returned as a string in order to avoid complications with languages and tools
+     * that cannot handle large integers.
+     */
     id: string
+    /** The friendly name of this user, as shown on their profile. */
     name: string
+    /** @note Email is currently unsupported by Twitter.  */
+    email?: string
+    /** The Twitter handle (screen name) of this user. */
     username: string
+    /**
+     * The location specified in the user's profile, if the user provided one.
+     * As this is a freeform value, it may not indicate a valid location, but it may be fuzzily evaluated when performing searches with location queries.
+     *
+     * To return this field, add `user.fields=location` in the authorization request's query parameter.
+     */
     location?: string
+    /**
+     * This object and its children fields contain details about text that has a special meaning in the user's description.
+     *
+     *To return this field, add `user.fields=entities` in the authorization request's query parameter.
+     */
     entities?: {
+      /** Contains details about the user's profile website. */
       url: {
+        /** Contains details about the user's profile website. */
         urls: Array<{
+          /** The start position (zero-based) of the recognized user's profile website. All start indices are inclusive. */
           start: number
+          /** The end position (zero-based) of the recognized user's profile website. This end index is exclusive. */
           end: number
+          /** The URL in the format entered by the user. */
           url: string
+          /** The fully resolved URL. */
           expanded_url: string
+          /** The URL as displayed in the user's profile. */
           display_url: string
         }>
       }
+      /** Contains details about URLs, Hashtags, Cashtags, or mentions located within a user's description. */
       description: {
         hashtags: Array<{
           start: number
@@ -123,11 +54,32 @@ export interface TwitterProfile {
         }>
       }
     }
+    /**
+     * Indicate if this user is a verified Twitter user.
+     *
+     * To return this field, add `user.fields=verified` in the authorization request's query parameter.
+     */
     verified?: boolean
+    /**
+     * The text of this user's profile description (also known as bio), if the user provided one.
+     *
+     * To return this field, add `user.fields=description` in the authorization request's query parameter.
+     */
     description?: string
+    /**
+     * The URL specified in the user's profile, if present.
+     *
+     * To return this field, add `user.fields=url` in the authorization request's query parameter.
+     */
     url?: string
+    /** The URL to the profile image for this user, as shown on the user's profile. */
     profile_image_url?: string
     protected?: boolean
+    /**
+     * Unique identifier of this user's pinned Tweet.
+     *
+     *  You can obtain the expanded object in `includes.tweets` by adding `expansions=pinned_tweet_id` in the authorization request's query parameter.
+     */
     pinned_tweet_id?: string
     created_at?: string
   }
@@ -139,41 +91,24 @@ export interface TwitterProfile {
   }
 }
 
-export default function Twitter<
-  P extends Record<string, any> = TwitterLegacyProfile | TwitterProfile
->(options: OAuthUserConfig<P> & { version?: "2.0" }): OAuthConfig<P> {
+export default function Twitter(
+  config: OAuthUserConfig<TwitterProfile>
+): OAuthConfig<TwitterProfile> {
   return {
     id: "twitter",
     name: "Twitter",
     type: "oauth",
     checks: ["pkce", "state"],
-    authorization: {
-      url: "https://twitter.com/i/oauth2/authorize",
-      params: { scope: "users.read tweet.read offline.access" },
-    },
-    token: {
-      url: "https://api.twitter.com/2/oauth2/token",
-      // @ts-expect-error TODO: Remove this
-      async request({ client, params, checks, provider }) {
-        const response = await client.oauthCallback(
-          provider.callbackUrl,
-          params,
-          checks,
-          { exchangeBody: { client_id: options.clientId } }
-        )
-        return { tokens: response }
-      },
-    },
-    userinfo: {
-      url: "https://api.twitter.com/2/users/me",
-      params: { "user.fields": "profile_image_url" },
-    },
+    authorization:
+      "https://twitter.com/i/oauth2/authorize?scope=users.read tweet.read offline.access",
+    token: "https://api.twitter.com/2/oauth2/token",
+    userinfo:
+      "https://api.twitter.com/2/users/me?user.fields=profile_image_url",
     profile({ data }) {
       return {
         id: data.id,
         name: data.name,
-        // NOTE: E-mail is currently unsupported by OAuth 2 Twitter.
-        email: null,
+        email: data.email ?? null,
         image: data.profile_image_url,
       }
     },
@@ -185,6 +120,6 @@ export default function Twitter<
       bgDark: "#1da1f2",
       textDark: "#fff",
     },
-    options,
+    options: config,
   }
 }
