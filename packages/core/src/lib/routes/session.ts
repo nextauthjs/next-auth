@@ -48,27 +48,32 @@ export async function session(
 
       // @ts-expect-error
       const token = await callbacks.jwt({ token: decodedToken })
-      // @ts-expect-error
-      const newSession = await callbacks.session({ session, token })
 
-      // Return session payload as response
-      response.body = newSession
+      if (token !== null) {
+        // @ts-expect-error
+        const newSession = await callbacks.session({ session, token })
 
-      // Refresh JWT expiry by re-signing it, with an updated expiry date
-      const newToken = await jwt.encode({
-        ...jwt,
-        token,
-        maxAge: options.session.maxAge,
-      })
+        // Return session payload as response
+        response.body = newSession
 
-      // Set cookie, to also update expiry date on cookie
-      const sessionCookies = sessionStore.chunk(newToken, {
-        expires: newExpires,
-      })
+        // Refresh JWT expiry by re-signing it, with an updated expiry date
+        const newToken = await jwt.encode({
+          ...jwt,
+          token,
+          maxAge: options.session.maxAge,
+        })
 
-      response.cookies?.push(...sessionCookies)
+        // Set cookie, to also update expiry date on cookie
+        const sessionCookies = sessionStore.chunk(newToken, {
+          expires: newExpires,
+        })
 
-      await events.session?.({ session: newSession, token })
+        response.cookies?.push(...sessionCookies)
+
+        await events.session?.({ session: newSession, token })
+      } else {
+        response.cookies?.push(...sessionStore.clean())
+      } 
     } catch (e) {
       logger.error(new JWTSessionError(e as Error))
       // If the JWT is not verifiable remove the broken session cookie(s).

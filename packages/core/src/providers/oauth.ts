@@ -79,8 +79,8 @@ export type UserinfoEndpointHandler = EndpointHandler<
   Profile
 >
 
-export type ProfileCallback<P> = (
-  profile: P,
+export type ProfileCallback<Profile> = (
+  profile: Profile,
   tokens: TokenSet
 ) => Awaitable<User>
 
@@ -94,7 +94,9 @@ export interface OAuthProviderButtonStyles {
 }
 
 /** TODO: */
-export interface OAuth2Config<P> extends CommonProviderOptions, PartialIssuer {
+export interface OAuth2Config<Profile>
+  extends CommonProviderOptions,
+    PartialIssuer {
   /**
    * Identifies the provider when you want to sign in to
    * a specific provider.
@@ -134,7 +136,7 @@ export interface OAuth2Config<P> extends CommonProviderOptions, PartialIssuer {
    *
    * [Documentation](https://authjs.dev/reference/adapters/models#user)
    */
-  profile?: ProfileCallback<P>
+  profile?: ProfileCallback<Profile>
   /**
    * The CSRF protection performed on the callback endpoint.
    * @default ["pkce"]
@@ -159,30 +161,41 @@ export interface OAuth2Config<P> extends CommonProviderOptions, PartialIssuer {
    *
    * @internal
    */
-  options?: OAuthUserConfig<P>
+  options?: OAuthUserConfig<Profile>
 }
 
 /** TODO: */
-export interface OIDCConfig<P> extends Omit<OAuth2Config<P>, "type"> {
+export interface OIDCConfig<Profile>
+  extends Omit<OAuth2Config<Profile>, "type"> {
   type: "oidc"
 }
 
-export type OAuthConfig<P> = OIDCConfig<P> | OAuth2Config<P>
+export type OAuthConfig<Profile> = OIDCConfig<Profile> | OAuth2Config<Profile>
 
 export type OAuthEndpointType = "authorization" | "token" | "userinfo"
 
 /**
- * We parsesd `authorization`, `token` and `userinfo`
+ * We parsed `authorization`, `token` and `userinfo`
  * to always contain a valid `URL`, with the params
+ * @internal
  */
-export type OAuthConfigInternal<P> = Omit<OAuthConfig<P>, OAuthEndpointType> & {
+export type OAuthConfigInternal<Profile> = Omit<
+  OAuthConfig<Profile>,
+  OAuthEndpointType
+> & {
   authorization?: { url: URL }
   token?: { url: URL; request?: TokenEndpointHandler["request"] }
   userinfo?: { url: URL; request?: UserinfoEndpointHandler["request"] }
-} & Pick<Required<OAuthConfig<P>>, "clientId" | "checks" | "profile">
+} & Pick<Required<OAuthConfig<Profile>>, "clientId" | "checks" | "profile">
 
-export type OAuthUserConfig<P> = Omit<
-  Partial<OAuthConfig<P>>,
+export type OAuthUserConfig<Profile> = Omit<
+  Partial<OAuthConfig<Profile>>,
   "options" | "type"
 > &
-  Required<Pick<OAuthConfig<P>, "clientId" | "clientSecret">>
+  Required<Pick<OAuthConfig<Profile>, "clientId" | "clientSecret">>
+
+export type OIDCUserConfig<Profile> = Omit<
+  Partial<OIDCConfig<Profile>>,
+  "options" | "type"
+> &
+  Required<Pick<OIDCConfig<Profile>, "clientId" | "clientSecret">>

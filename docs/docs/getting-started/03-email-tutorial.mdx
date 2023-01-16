@@ -37,7 +37,7 @@ npm install -D nodemailer
 Next we need a [SMTP service](https://sendgrid.com/blog/what-is-an-smtp-server/) which will be in charge of sending emails from our application. There's a number of services available for this, however [here are the ones](http://nodemailer.com/smtp/well-known/) known to work with `nodemailer`.
 
 :::info
-For this tutorial, we're gonna be using [Sendgrid](https://sendgrid.com/), but any of the services linked above should work the same
+For this tutorial, we're going to be using [Sendgrid](https://sendgrid.com/), but any of the services linked above should work the same
 :::
 
 First create an account in and then login to the dashboard, then navigate to "Settings → API Keys" and create an API key:
@@ -60,7 +60,7 @@ SMTP_PORT=587
 EMAIL_FROM={SENDER_EMAIL}
 ```
 
-Note that we're also specifying from which domain email are going to be sent from. You're gonna need to verify [a sender identity](https://docs.sendgrid.com/for-developers/sending-email/sender-identity) so that Sendgrid can send emails from your domain.
+Note that we're also specifying from which domain email are going to be sent from. You're going to need to verify [a sender identity](https://docs.sendgrid.com/for-developers/sending-email/sender-identity) so that Sendgrid can send emails from your domain.
 
 Nice! We're getting there. Now we need to read supply this values as the configuration for our Email Provider. Open `pages/api/auth/[...nextauth].ts` and do the following:
 
@@ -170,7 +170,7 @@ Now that everything is properly configured, let's try to sign in via email on ou
 
 Let's start by running a Next.js application with NextAuth, making sure the **EmailProvider** and a Database Adapter are properly configured as per the instructions above.
 
-For this tutorial we're gonna be using NextAuth example app. Launch the app and click on "Sign in", we're redirected to the Sign In page:
+For this tutorial we're going to be using NextAuth example app. Launch the app and click on "Sign in", we're redirected to the Sign In page:
 
 <img src={startPageImg} alt="Screenshot of sign in page" />
 
