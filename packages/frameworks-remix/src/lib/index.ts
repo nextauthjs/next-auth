@@ -3,12 +3,21 @@ import type {
   AppLoadContext,
 } from "@remix-run/server-runtime"
 import { redirect, json } from "@remix-run/server-runtime"
-import type { RedirectableProviderType } from "@auth/core/providers"
+// import type { RedirectableProviderType } from "@auth/core/providers"
 import { Auth } from "@auth/core"
 import { parse } from "cookie"
 import { getBody, getValue, authjsDefaultCookies } from "../utils"
-import type { AuthAction } from "@auth/core/types"
-import type { ProviderID, RemixAuthConfig } from "remix-auth/src/types"
+import type { ProviderID, RemixAuthConfig } from "../types"
+type AuthAction =
+  | "providers"
+  | "session"
+  | "csrf"
+  | "signin"
+  | "signout"
+  | "callback"
+  | "verify-request"
+  | "error"
+
 const actions = [
   "providers",
   "session",
@@ -33,9 +42,7 @@ export class RemixAuthenticator<User = unknown> {
     )
   }
 
-  async handleAuthRoute<
-    P extends RedirectableProviderType | undefined = undefined
-  >({
+  async handleAuthRoute<P extends any | undefined = undefined>({
     request,
     params,
   }: {
