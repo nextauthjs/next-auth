@@ -8,9 +8,9 @@
     "jsx": "react-jsx",
     "module": "esnext",
     "outDir": "./dist",
-    "rootDir": "../../../",
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "rootDir": "./src",
   },
   "exclude": ["node_modules", "dist"],
-  "include": ["./src/lib"]
+  "include": ["./src"]
 }

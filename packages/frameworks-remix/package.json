@@ -26,18 +26,23 @@
   "publishConfig": {
     "access": "public"
   },
+  "dependencies": {
+    "cookie": "^0.5.0"
+  },
   "devDependencies": {
     "@auth/core": "workspace:*",
-    "@remix-run/react": "^1.9.0",
-    "@remix-run/server-runtime": "^1.9.0",
+    "@remix-run/react": "^1.10.1",
+    "@remix-run/server-runtime": "^1.10.1",
     "@types/node": "^18.7.14",
     "next-auth": "workspace:*",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "typescript": "^4.8.2"
   },
   "peerDependencies": {
-    "@remix-run/react": "^1.0.0",
-    "@remix-run/server-runtime": "^1.0.0",
-    "@auth/core": "~0.2.2 || ^0.2.2"
+    "@auth/core": "~0.2.2 || ^0.2.2",
+    "@remix-run/react": "^1.10.0",
+    "@remix-run/server-runtime": "^1.10.0"
   },
   "keywords": [
     "Remix",
