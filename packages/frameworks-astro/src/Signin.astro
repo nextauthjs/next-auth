@@ -1,0 +1,28 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+import type { BuiltInProviderType } from '@auth/core/providers';
+import type { LiteralUnion, SignInAuthorizationParams, SignInOptions } from 'next-auth/react/types';
+
+interface Props extends HTMLAttributes<'button'> {
+  /** The authentication provider to sign in with. */
+  provider: LiteralUnion<BuiltInProviderType, string>
+  options?: SignInOptions
+  authParams?: SignInAuthorizationParams
+}
+
+const { ...attrs } = Astro.props
+
+attrs.class = `sign-in ${attrs.class ?? ''}`
+---
+
+<button {...attrs}>
+  <slot/>
+</button>
+
+<script>
+  (async function() {
+    let { signIn } = await import('../client')
+
+    document.querySelector('.sign-in')?.addEventListener('click', () => signIn('github'))
+  })()
+</script>

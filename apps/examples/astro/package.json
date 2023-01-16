@@ -13,6 +13,6 @@
   "dependencies": {
     "@auth/astro": "workspace:^0.1.0",
     "@auth/core": "workspace:^0.2.5",
-    "astro": "^1.9.2"
+    "astro": "2.0.0-beta.2"
   }
 }

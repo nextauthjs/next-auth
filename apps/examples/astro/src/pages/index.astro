@@ -1,30 +1,24 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getSession } from '@auth/astro';
-import { authOpts } from './api/auth/[...astroAuth]';
-
-let session = await getSession(Astro.request, authOpts)
+import type { Session } from '@auth/core/types';
+import { Auth, Signin, Signout } from '@auth/astro/client';
+import { authOpts } from './api/auth/[...astroAuth]'
 ---
 
 <Layout title="Welcome to Astro Auth">
-	<main>
-		<h1>Astro + AuthJS</h1>
-    <p>
-      <a href="/protected">Protected Route</a>
-    </p>
-    <button class="sign-out">Logout</button>
-    <button class="sign-in">Login</button>
-    <p>
-      {session ? `Logged in as ${session.user?.name}` : 'Not logged in'}
-    </p>
-	</main>
-
-  <script>
-    (async function() {
-      let { signIn, signOut } = await import('@auth/astro/client')
-  
-      document.querySelector('.sign-in')?.addEventListener('click', () => signIn('github'))
-      document.querySelector('.sign-out')?.addEventListener('click', () => signOut())
-    })()
-  </script>
+  <Auth authOpts={authOpts}>
+    {(session: Session) => 
+      <main>
+        <h1>Astro + AuthJS</h1>
+        <p>
+          <a href="/protected">Protected Route</a>
+        </p>
+        <Signin provider="github">Login</Signin>
+        <Signout>Logout</Signout>
+        <p>
+          {session ? `Logged in as ${session.user?.name}` : 'Not logged in'}
+        </p>
+      </main>
+    }
+  </Auth>
 </Layout>
