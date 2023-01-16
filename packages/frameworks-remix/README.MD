@@ -138,3 +138,5 @@ export default function App() {
   )
 }
 ```
+
+Special thanks to Sergio Xalambrí of https://github.com/sergiodxa/remix-auth / https://sergiodxa.com

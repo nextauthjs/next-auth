@@ -1,5 +1,6 @@
 import { createPagesFunctionHandler } from "@remix-run/cloudflare-pages"
 import * as build from "@remix-run/dev/server-build"
+import { createCookieSessionStorage } from "@remix-run/cloudflare" // or cloudflare/deno
 import { createRequestHandlerWithAuth } from "@auth/remix"
 import Google from "@auth/core/providers/google"
 import type { Profile } from "@auth/core/types"

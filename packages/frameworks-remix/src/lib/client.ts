@@ -34,6 +34,7 @@ export async function signIn<
   const isEmail = providerId === "email";
   const isSupportingReturn = isCredentials || isEmail;
 
+  
   // TODO: Handle custom base path
   const signInUrl = `/auth/${
     isCredentials ? "callback" : "signin"

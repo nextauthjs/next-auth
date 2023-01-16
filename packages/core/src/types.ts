@@ -417,15 +417,18 @@ export type InternalProvider<T = ProviderType> = (T extends "oauth"
   callbackUrl: string
 }
 
-export type AuthAction =
-  | "providers"
-  | "session"
-  | "csrf"
-  | "signin"
-  | "signout"
-  | "callback"
-  | "verify-request"
-  | "error"
+export const actions = [
+  "providers",
+  "session",
+  "csrf",
+  "signin",
+  "signout",
+  "callback",
+  "verify-request",
+  "error",
+] as const
+
+export type AuthAction = typeof actions[number]
 
 /** @internal */
 export interface RequestInternal {
