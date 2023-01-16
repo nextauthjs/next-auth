@@ -1,0 +1,4 @@
+*.js
+*.d.ts
+!*.config.js
+!postbuild.js

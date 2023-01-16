@@ -1,0 +1,22 @@
+---
+import { getSession } from "@auth/astro"
+import { authOpts } from "./api/auth/[...astroAuth]";
+
+let session = await getSession(Astro.request, authOpts)
+
+if (!session) {
+  return Astro.redirect("/")
+}
+---
+
+<p>
+  Only logged in users can see this page.
+</p>
+
+<p>
+  Logged in as {session?.user?.name}
+</p>
+
+<p>
+  <a href="/">Home</a>
+</p>
