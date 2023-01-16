@@ -37,5 +37,5 @@ providers: [
 ```
 
 :::note
-`issuer` should include the realm – e.g. `https://my-keycloak-domain.com/realms/My_Realm`
+`issuer` should include the realm – e.g. `https://my-keycloak-domain.com/realms/My_Realm`. If the Keycloak server is older versions, for example, lower than or equal to 16.1.1, then the url should include the `/auth` part - e.g. `https://my-keycloak-domain.com/auth/realms/My_Realm`. 
 :::
