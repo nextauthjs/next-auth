@@ -64,6 +64,14 @@ module.exports = {
     },
     {
       type: "category",
+      label: "@auth/astro",
+      link: { type: "doc", id: "reference/astro/index" },
+      items: [
+        "reference/astro/client",
+      ],
+    },
+    {
+      type: "category",
       label: "@auth/nextjs",
       link: {
         type: "doc",
