@@ -9,10 +9,6 @@ import type {
   RedirectableProviderType,
 } from "@auth/core/providers"
 
-export { default as Auth } from "./src/Auth.astro"
-export { default as Signin } from "./src/Signin.astro"
-export { default as Signout } from "./src/Signout.astro"
-
 /**
  * Client-side method to initiate a signin flow
  * or send the user to the signin page listing all possible providers.

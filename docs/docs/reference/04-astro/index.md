@@ -93,7 +93,7 @@ Alternatively, you can use the `Auth` component to fetch the session using a ren
 ```tsx title="src/pages/index.astro"
 ---
 import type { Session } from '@auth/core/types';
-import { Auth, Signin, Signout } from '@auth/astro/client';
+import { Auth, Signin, Signout } from '@auth/astro/components';
 import { authOpts } from './api/auth/[...astroAuth]'
 ---
 <Auth authOpts={authOpts}>

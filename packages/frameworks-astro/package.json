@@ -31,21 +31,26 @@
     "astro": "^2.0.0-beta.2"
   },
   "type": "module",
-  "types": "./index.d.ts",
+  "types": "./index.ts",
   "exports": {
     ".": {
-      "types": "./index.d.ts",
-      "import": "./index.js"
+      "types": "./index.ts",
+      "import": "./index.ts"
     },
     "./client": {
-      "types": "./client.d.ts",
-      "import": "./client.js"
+      "types": "./client.ts",
+      "import": "./client.ts"
+    },
+    "./components": {
+      "types": "./components.ts",
+      "import": "./components.ts"
     },
     "./package.json": "./package.json"
   },
   "files": [
     "client.*",
     "index.*",
+    "components.*",
     "src"
   ]
 }
