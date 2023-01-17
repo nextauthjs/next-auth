@@ -105,6 +105,8 @@ The callback URL used by the [providers](https://authjs.dev/reference/core/modul
 
 ## Signing in, signing out and getting the user
 
+(and yes it takes advantage of remix's progressive enhancement and works without javascript!)
+
 ```ts title="index.tsx"
 import type { LoaderFunction } from "@remix-run/cloudflare"
 import { useFetcher, useLoaderData } from "@remix-run/react"
