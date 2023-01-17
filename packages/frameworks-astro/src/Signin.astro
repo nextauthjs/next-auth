@@ -5,7 +5,7 @@ import type { LiteralUnion, SignInAuthorizationParams, SignInOptions } from 'nex
 
 interface Props extends HTMLAttributes<'button'> {
   /** The authentication provider to sign in with. */
-  provider: LiteralUnion<BuiltInProviderType, string>
+  provider?: LiteralUnion<BuiltInProviderType, string>
   options?: SignInOptions
   authParams?: SignInAuthorizationParams
 }

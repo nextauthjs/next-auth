@@ -53,11 +53,11 @@ GITHUB_SECRET=<github-oauth-clientSecret>
 
 ```ts title="src/pages/api/auth/[...astroauth].ts"
 import { AstroAuth, type AstroAuthConfig } from "@auth/astro"
-import GitHub from "@auth/core/providers/github"
+import Github from "@auth/core/providers/github"
 
 export const authOpts: AstroAuthConfig = {
   providers: [
-    // @ts-ignore
+    //@ts-expect-error issue https://github.com/nextauthjs/next-auth/issues/6174
     GitHub({
       clientId: import.meta.env.GITHUB_ID,
       clientSecret: import.meta.env.GITHUB_SECRET,

@@ -71,8 +71,17 @@ async function handler(
 
 export function AstroAuth(config: AstroAuthConfig) {
   const { prefix = "/api/auth", ...authConfig } = config
-  // @ts-ignore import.meta.env is used by Astro
+  // @ts-expect-error import.meta.env is used by Astro
   authConfig.secret ??= import.meta.env.AUTH_SECRET
+  // @ts-expect-error
+  authConfig.trustHost ??= !!(
+    // @ts-expect-error
+    import.meta.env.env.AUTH_TRUST_HOST ??
+    // @ts-expect-error
+    import.meta.env.env.VERCEL ??
+    // @ts-expect-error
+    import.meta.env.env.NODE_ENV !== "production"
+  )
 
   return {
     async get(event: any) {
