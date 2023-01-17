@@ -10,7 +10,9 @@ It wraps the core Auth.js library for Astro, exposing helper methods and compone
 
 Install the core Auth.js package as well as the @auth/astro wrapper.
 
-_Note:_ The @auth/astro wrapper will not work independently, it relies on @auth/core as a dependency.
+:::info
+The @auth/astro wrapper will not work independently, it relies on @auth/core as a dependency.
+:::
 
 ```bash
 npm install @auth/astro@latest @auth/core@latest
@@ -82,7 +84,7 @@ Astro Auth exposes two ways to sign in and out. Inline scripts and Astro Compone
 
 The `signIn` and `signOut` methods can be imported dynamically in an inline script.
 
-```astro
+```html
 ---
 ---
 <html>
@@ -102,7 +104,7 @@ The `signIn` and `signOut` methods can be imported dynamically in an inline scri
 
 Alternatively, you can use the `SignIn` and `SignOut` button components provided by `@auth/astro/components` importing them into your Astro [component's script](https://docs.astro.build/en/core-concepts/astro-components/#the-component-script) 
 
-```astro
+```jsx
 ---
 import { SignIn, SignOut } from '@auth/astro/components'
 ---
@@ -122,7 +124,7 @@ You can fetch the session in one of two ways. The `getSession` method can be use
 
 ### Within the component script section
 
-```astro title="src/pages/index.astro"
+```tsx title="src/pages/index.astro"
 ---
 import { getSession } from '@astro/auth';
 import { authOpts } from './api/auth/[...astroauth]';
@@ -139,7 +141,7 @@ const session = await getSession(Astro.request, authOpts)
 
 Alternatively, you can use the `Auth` component to fetch the session using a render prop.
 
-```astro title="src/pages/index.astro"
+```tsx title="src/pages/index.astro"
 ---
 import type { Session } from '@auth/core/types';
 import { Auth, Signin, Signout } from '@auth/astro/components';
