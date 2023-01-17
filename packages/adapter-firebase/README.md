@@ -15,7 +15,7 @@
 
 ## Overview
 
-This is the Firebase Admin Adapter for [`auth.js`](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
+This is the Firebase Adapter for [`auth.js`](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
 
 You can find more Firebase information in the docs at [authjs.dev/reference/adapters/firebase-admin](https://authjs.dev/reference/adapters/firebase-admin).
 

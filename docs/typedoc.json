@@ -1,7 +1,6 @@
 {
   "excludeNotDocumented": true,
   "$schema": "https://typedoc.org/schema.json",
-  "allReflectionsHaveOwnDocument": true,
   "disableSources": true,
   "hideBreadcrumbs": true,
   "excludeExternals": true,
@@ -17,7 +16,12 @@
     "JsonValue"
   ],
   "readme": "none",
-  "sort": ["kind", "static-first", "required-first", "alphabetical"],
+  "sort": [
+    "kind",
+    "static-first",
+    "required-first",
+    "alphabetical"
+  ],
   "kindSortOrder": [
     "Function",
     "TypeAlias",

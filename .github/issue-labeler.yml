@@ -12,9 +12,6 @@ fauna:
 firebase:
   - "@next-auth/firebase-adapter"
 
-firebase-admin:
-  - "@next-auth/firebase-admin-adapter"
-
 mikro-orm:
   - "@next-auth/mikro-orm-adapter"
 

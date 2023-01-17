@@ -182,10 +182,7 @@ const docusaurusConfig = {
           lastVersion: "current",
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
-          remarkPlugins: [
-            require("@sapphire/docusaurus-plugin-npm2yarn2pnpm").npm2yarn2pnpm,
-            require("remark-github"),
-          ],
+          remarkPlugins: [require("@sapphire/docusaurus-plugin-npm2yarn2pnpm").npm2yarn2pnpm, require("remark-github")],
           versions: {
             current: {
               label: "experimental",
@@ -205,15 +202,7 @@ const docusaurusConfig = {
         ...typedocConfig,
         id: "core",
         plugin: ["./tyepdoc"],
-        entryPoints: [
-          "index.ts",
-          "adapters.ts",
-          "errors.ts",
-          "jwt.ts",
-          "types.ts",
-        ]
-          .map((e) => `${coreSrc}/${e}`)
-          .concat(providers),
+        entryPoints: ["index.ts", "adapters.ts", "errors.ts", "jwt.ts", "types.ts"].map((e) => `${coreSrc}/${e}`).concat(providers),
         tsconfig: "../packages/core/tsconfig.json",
         out: "reference/03-core",
         watch: process.env.TYPEDOC_WATCH,
@@ -226,13 +215,28 @@ const docusaurusConfig = {
         ...typedocConfig,
         id: "sveltekit",
         plugin: ["./tyepdoc"],
-        entryPoints: ["index.ts", "client.ts"].map(
-          (e) => `../packages/frameworks-sveltekit/src/lib/${e}`
-        ),
+        entryPoints: ["index.ts", "client.ts"].map((e) => `../packages/frameworks-sveltekit/src/lib/${e}`),
         tsconfig: "../packages/frameworks-sveltekit/tsconfig.json",
         out: "reference/04-sveltekit",
         watch: process.env.TYPEDOC_WATCH,
         includeExtension: false,
+      },
+    ],
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        ...typedocConfig,
+        id: "firebase-adapter",
+        plugin: ["./tyepdoc"],
+        entryPoints: ["../packages/adapter-firebase/src/index.ts"],
+        tsconfig: "../packages/adapter-firebase/tsconfig.json",
+        out: "reference/adapter/firebase",
+        watch: process.env.TYPEDOC_WATCH,
+        includeExtension: false,
+        sidebar: {
+          position: 1,
+          indexLabel: "Firebase",
+        },
       },
     ],
   ],
