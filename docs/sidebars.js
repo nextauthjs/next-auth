@@ -67,6 +67,7 @@ module.exports = {
       label: "@auth/astro",
       link: { type: "doc", id: "reference/astro/index" },
       items: [
+        "reference/astro/components",
         "reference/astro/client",
       ],
     },
