@@ -8,15 +8,7 @@ import { Auth } from "@auth/core"
 import { parse } from "cookie"
 import { getBody, getValue, authjsDefaultCookies } from "../utils"
 import type { ProviderID, RemixAuthConfig } from "../types"
-type AuthAction =
-  | "providers"
-  | "session"
-  | "csrf"
-  | "signin"
-  | "signout"
-  | "callback"
-  | "verify-request"
-  | "error"
+import type { AuthAction } from "@auth/core/types"
 
 const actions = [
   "providers",
@@ -27,7 +19,7 @@ const actions = [
   "callback",
   "verify-request",
   "error",
-] as const
+] satisfies AuthAction[]
 export class RemixAuthenticator<User = unknown> {
   private readonly options: RemixAuthConfig
 
@@ -51,7 +43,7 @@ export class RemixAuthenticator<User = unknown> {
   }) {
     const url = new URL(request.url)
     const searchParams = url.searchParams || new URLSearchParams()
-    const formData = (await getBody(request.clone())) || {}
+    const formData = (await getBody(request.clone())) ?? {}
     Object.entries(formData).forEach(([key, val]) => {
       if (typeof val === "string") {
         searchParams.set(key, val)
@@ -77,7 +69,7 @@ export class RemixAuthenticator<User = unknown> {
       searchParams,
       params
     )
-    let csrfToken =
+    const csrfToken =
       cookies[authjsCookies.csrfToken.name] ||
       getValue("csrfToken", searchParams, params)
 
@@ -96,14 +88,14 @@ export class RemixAuthenticator<User = unknown> {
     if (!providerId && isPost) {
       // IF POST, PROVIDER IS REQUIRED
       status.body = 'Missing "provider" parameter'
-    } else if (!action || !actions.includes(action as AuthAction)) {
-      //ACTION IS REQUIRED
+    } else if (!action || !actions.includes(action)) {
+      // ACTION IS REQUIRED
       status.body = 'Invalid/Missing "action" parameter'
     } else {
-      //SEEMS VALID
+      // SEEMS VALID
       if (action === "callback") {
         // if a callback action we just let AuthJS handle it
-        return Auth(request, this.options)
+        return await Auth(request, this.options)
       } else if ((!csrfToken || !isInternal) && isPost) {
         // IF IT IS A POST, fresh csrfToken IS REQUIRED
         // So figure out the path to the csrf endpoint
@@ -138,7 +130,7 @@ export class RemixAuthenticator<User = unknown> {
       ) {
         // If we redirected a post request to get the csrfToken do the post request now
         url.searchParams.delete("remixAuthRedirectUrlMethod")
-        let res = await fetch(url.origin + url.pathname, {
+        const res = await fetch(url.origin + url.pathname, {
           method: "POST",
           credentials: "same-origin",
           headers: {
@@ -174,7 +166,7 @@ export class RemixAuthenticator<User = unknown> {
         }
         return res
       } else if (isPost) {
-        //other posts let Authjs handle it
+        // other posts let Authjs handle it
         return await Auth(request, this.options)
       } else {
         // If we got here it is a get request so let auth handle, potentially with a redirect
@@ -231,7 +223,7 @@ export class RemixAuthenticator<User = unknown> {
 
     if (!data || !Object.keys(data).length) return null
     if (status === 200) return data
-    throw new Error(data?.message || data?.error || "Unknown error")
+    throw new Error(data?.message ?? data?.error ?? "Unknown error")
   }
 
   /**
@@ -289,12 +281,18 @@ export class RemixAuthenticator<User = unknown> {
   ): Promise<User | null> {
     const session = await this.getSession(request)
 
-    if (session && session.user) {
-      if (options.successRedirect) throw redirect(options.successRedirect)
-      else return session.user
+    if (session?.user) {
+      if (options.successRedirect) {
+        redirect(options.successRedirect)
+      }
+
+      return session.user
     }
 
-    if (options.failureRedirect) throw redirect(options.failureRedirect)
-    else return null
+    if (options.failureRedirect) {
+      redirect(options.failureRedirect)
+    }
+
+    return null
   }
 }
