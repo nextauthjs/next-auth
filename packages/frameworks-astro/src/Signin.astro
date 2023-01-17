@@ -10,7 +10,7 @@ interface Props extends HTMLAttributes<'button'> {
   authParams?: SignInAuthorizationParams
 }
 
-const { ...attrs } = Astro.props
+const { provider, options, authParams, ...attrs } = Astro.props
 
 attrs.class = `sign-in ${attrs.class ?? ''}`
 ---
@@ -20,9 +20,11 @@ attrs.class = `sign-in ${attrs.class ?? ''}`
 </button>
 
 <script>
-  (async function() {
-    let { signIn } = await import('../client')
+  import { signIn } from '../client'
+  // @ts-ignore
+  window.signIn = signIn
+</script>
 
-    document.querySelector('.sign-in')?.addEventListener('click', () => signIn('github'))
-  })()
+<script define:vars={{provider, options, authParams}}>
+  document.querySelector('.sign-in')?.addEventListener('click', () => signIn(provider, options, authParams))
 </script>
