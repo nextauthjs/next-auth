@@ -3,12 +3,17 @@ import type {
   AppLoadContext,
 } from "@remix-run/server-runtime"
 import { redirect, json } from "@remix-run/server-runtime"
-// import type { RedirectableProviderType } from "@auth/core/providers"
+import type { RedirectableProviderType } from "@auth/core/providers"
 import { Auth } from "@auth/core"
 import { parse } from "cookie"
-import { getBody, getValue, authjsDefaultCookies } from "../utils"
+import {
+  getBody,
+  getValue,
+  authjsDefaultCookies,
+  getPathForRouter,
+} from "../utils"
 import type { ProviderID, RemixAuthConfig } from "../types"
-import type { AuthAction } from "@auth/core/types"
+import { AuthAction } from "@auth/core/types"
 
 const actions = [
   "providers",
@@ -34,7 +39,9 @@ export class RemixAuthenticator<User = unknown> {
     )
   }
 
-  async handleAuthRoute<P extends any | undefined = undefined>({
+  async handleAuthRoute<
+    P extends RedirectableProviderType | undefined = undefined
+  >({
     request,
     params,
   }: {
@@ -42,7 +49,8 @@ export class RemixAuthenticator<User = unknown> {
     params?: DataFunctionArgs["params"]
   }) {
     const url = new URL(request.url)
-    const searchParams = url.searchParams || new URLSearchParams()
+    this.options.host ??= url.origin
+    const searchParams = url.searchParams ?? new URLSearchParams()
     const formData = (await getBody(request.clone())) ?? {}
     Object.entries(formData).forEach(([key, val]) => {
       if (typeof val === "string") {
@@ -116,11 +124,14 @@ export class RemixAuthenticator<User = unknown> {
           "remixAuthRedirectUrlMethod",
           method
         )
-        return redirect(remixAuthRedirectUrl.href, {
-          headers: {
-            "X-Remix-Auth-Internal": "1",
-          },
-        })
+        return redirect(
+          getPathForRouter(remixAuthRedirectUrl, this.options.host),
+          {
+            headers: {
+              "X-Remix-Auth-Internal": "1",
+            },
+          }
+        )
       } else if (
         csrfToken &&
         !isPost &&
@@ -132,7 +143,6 @@ export class RemixAuthenticator<User = unknown> {
         url.searchParams.delete("remixAuthRedirectUrlMethod")
         const res = await fetch(url.origin + url.pathname, {
           method: "POST",
-          credentials: "same-origin",
           headers: {
             Cookie: request.headers.get("Cookie") as string,
             "Content-Type": "application/x-www-form-urlencoded",
@@ -153,7 +163,8 @@ export class RemixAuthenticator<User = unknown> {
           const mutableRes = new Response(res.body, res)
           mutableRes.headers.set("X-Remix-Auth-Internal", "1")
           mutableRes.headers.delete("Content-Type")
-          return redirect(data.url ?? callbackUrl, {
+          const redirectUrl = new URL(data.url ?? callbackUrl)
+          return redirect(getPathForRouter(redirectUrl, this.options.host), {
             ...mutableRes,
             status: 302,
             headers: mutableRes.headers,
@@ -180,7 +191,7 @@ export class RemixAuthenticator<User = unknown> {
           searchParams.forEach((val, key) => {
             remixAuthRedirectUrl.searchParams.set(key, val)
           })
-          const authJson = ((await authResult.json()) || {}) as Record<
+          const authJson = ((await authResult.clone().json()) || {}) as Record<
             string,
             any
           >
@@ -191,11 +202,14 @@ export class RemixAuthenticator<User = unknown> {
           const mutableAuthResult = new Response(authResult.body, authResult)
           mutableAuthResult.headers.set("X-Remix-Auth-Internal", "1")
           mutableAuthResult.headers.delete("Content-Type")
-          return redirect(remixAuthRedirectUrl.href, {
-            ...mutableAuthResult,
-            status: 302,
-            headers: mutableAuthResult.headers,
-          })
+          return redirect(
+            getPathForRouter(remixAuthRedirectUrl, this.options.host),
+            {
+              ...mutableAuthResult,
+              status: 302,
+              headers: mutableAuthResult.headers,
+            }
+          )
         } else {
           return authResult
         }

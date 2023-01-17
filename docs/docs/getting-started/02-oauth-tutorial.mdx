@@ -70,7 +70,7 @@ Auth.js is extremely customizable, [our guides section](/guides/overview) will t
 
 To be able to use `useSession` first you'll need to expose the session context, [`<SessionProvider />`](/reference/react/#sessionprovider), at the top level of your application:
 
-```ts title="pages/_app.ts"
+```ts title="pages/_app.tsx"
 import { SessionProvider } from "next-auth/react"
 
 export default function App({
@@ -186,14 +186,14 @@ http://localhost:3000/api/auth/callback/github
 Auth.js will already magically create this API endpoint for you when we start the application later. Note that because we're using Next.js, locally it starts our server on the port `3000`, hence the origin is `http://localhost:3000`.
 :::
 
-Next you'll be presented with the following screen which presents all the configuration for your new OAuth app. For now, let's we need two things from it: the **Client ID** and **Client Secret** for our new OAuth app:
+Next you'll be presented with the following screen which presents all the configuration for your new OAuth app. For now, we need two things from it: the **Client ID** and **Client Secret** for our new OAuth app:
 
 <img src={gettingClientIdSecretImg} />
 
 The Client ID is always there, a public identifier of your OAuth application within Github. Click on the **Generate a new client Secret** button and should be presented with a new string (which is just a randomized string).
 
 :::warning
-🔥 Keep both your Client ID and Client Secret secure and never expose them to the public or shared with people outside your organization. With tem a malicious actor could hijack your application and cause you and your user serious problems!
+🔥 Keep both your Client ID and Client Secret secure and never expose them to the public or shared with people outside your organization. With them, a malicious actor could hijack your application and cause you and your user serious problems!
 :::
 
 Now let's copy both the Client ID and Client Secret and paste them in an environment file in the root of your project like so:
