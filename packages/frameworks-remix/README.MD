@@ -9,85 +9,71 @@ npm install @auth/core @auth/remix
 
 ## Usage
 
-Replace the return of createRequestHandler with the return of createRequestHandlerWithAuth.
+Create a .server file to create and access the authenticator
+```ts title="services/auth.server.ts"
+import { RemixAuthenticator } from "remix-auth/src/lib";
+import Google from "@auth/core/providers/google";
+import type { AppLoadContext } from "@remix-run/cloudflare";
 
-createRequestHandlerWithAuth takes the following arguments:
-req: Request
-env: Record<string, string> - the environment variables including AUTH_SECRET
-context: Record<string, any> - the context object to add the getSession function to that can be accessed in your loaders
-authConfig: RemixAuthConfig - the auth config
+// Create an instance of the authenticator
+let authenticator: RemixAuthenticator<{ user: any }>;
 
-e.g if using express
+export const getAuthenticator = (
+  env: Record<string, string | undefined> | AppLoadContext
+) => {
+  if (!authenticator) {
+    authenticator = new RemixAuthenticator(
+      {
+        debug: false, // env.NODE_ENV === "development",
+        providers: [
+          Google({
+            clientId: env.GOOGLE_CLIENT_ID as string,
+            clientSecret: env.GOOGLE_CLIENT_SECRET as string,
+          }) as unknown as any,
+        ],
+      },
+      env
+    );
+  }
+  return authenticator;
+};
 
-```js title="remix.config.js"
-module.exports = {
-  ...,
-  server: "./server.ts",
-  serverDependenciesToBundle: ["@auth/core", "@auth/remix"],
-}
+
 ```
 
-```ts title="server.ts"
-const context = {
-  data: {},
-}
-const requestHandler = createRequestHandler({
-  build: require(BUILD_DIR),
-  mode: process.env.NODE_ENV,
-  getLoadContext: (res: any, req: any) => ({ env: process.env, ...context }),
-})
+Create a route for your auth, this is most simply done using optional routes like file named `auth.($action).($providerId).tsx`
 
-app.all("*", (req: Request, res: any, next: any) => {
-  console.log("request made", req.url)
-  process.env.NODE_ENV === "development" && purgeRequireCache()
-  createRequestHandlerWithAuth(
-    req,
-    process.env,
-    context.data,
-    {
-      providers: [
-        Google({
-          clientId: process.env.GOOGLE_CLIENT_ID!,
-          clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-        }),
-      ],
-    },
-    async () => {
-      await requestHandler(req, res, next)
-      return res
-    }
-  )
-})
+```ts title="auth.($action).($providerId).tsx"
+import type { ActionFunction, LoaderFunction } from "@remix-run/cloudflare";
+import { getAuthenticator } from "~/services/auth.server";
+
+export let loader: LoaderFunction = async ({ request, params, context }) => {
+  const result = getAuthenticator(
+    context.env as Record<string, string>
+  ).handleAuthRoute({
+    request,
+    action: params.action!,
+    providerId: params.providerId,
+    params,
+  });
+  return result;
+};
+
+export let action: ActionFunction = async ({ request, params, context }) => {
+  const result = getAuthenticator(
+    context.env as Record<string, string>
+  ).handleAuthRoute({
+    request,
+    action: params.action!,
+    providerId: params.providerId,
+    params,
+  });
+  return result;
+};
+
 ```
 
-Or if using cloudflare pages
 
-```ts title="server.ts"
-const pagesFunctionHandler = createPagesFunctionHandler({
-  build,
-  mode: process.env.NODE_ENV,
-  getLoadContext: (context) => ({ data: context.data, env: context.env }),
-})
-
-export function onRequest(context: EventContext<any, any, any>) {
-  return createRequestHandlerWithAuth(
-    context.request,
-    context.env,
-    context.data,
-    {
-      providers: [
-        GitHub({
-          clientId: context.env.GOOGLE_CLIENT_ID!,
-          clientSecret: context.env.GOOGLE_CLIENT_SECRET!,
-        }) as unknown as Provider<Profile>,
-      ],
-    },
-    () => pagesFunctionHandler(context)
-  )
-}
-```
-
-the getSession function is added to the context.data object
 
 Don't forget to set the `AUTH_SECRET` [environment variable](https://kit.svelte.dev/docs/modules#$env-static-private). This should be a random 32 character string. On unix systems you can use `openssl rand -hex 32` or check out `https://generate-secret.vercel.app/32`.
 
@@ -99,44 +85,56 @@ The callback URL used by the [providers](https://authjs.dev/reference/core/modul
 [origin]/auth/callback/[provider]
 ```
 
-## Signing in and signing out
+## Signing in, signing out and getting the user
 
-```ts
-import { signIn, signOut } from "@auth/remix/client"
-export let loader: LoaderFunction = async ({ context }) => {
-  const session = await (context.data as Record<string, any>).getSession()
-  return { session }
-}
-export default function App() {
-  const { session } = useLoaderData()
+```ts title="index.tsx"
+import type { LoaderFunction } from "@remix-run/cloudflare";
+import { useFetcher, useLoaderData } from "@remix-run/react";
+import { getAuthenticator } from "~/services/auth.server";
+export let loader: LoaderFunction = async ({ request, context }) => {
+  const user = await getAuthenticator(
+    context.env as Record<string, string>
+  ).isAuthenticated(request);
+
+  return { user };
+};
+export default function Index() {
+  const { user } = useLoaderData();
+  const fetcher = useFetcher();
 
   return (
-    <html>
-      <head>
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        <Div100vh>
-          {session?.user ? (
-            <div>
-              <h1 className="text-center text-4xl">{session?.user?.name}</h1>
-              <button color="secondary" onClick={() => signOut()}>
+    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
+      {user ? (
+        <div>
+          <h1 className="text-center text-4xl">{user.name}</h1>
+          <fetcher.Form method="post" action="/auth/signout/google">
+            <p>
+              <button
+                type="submit"
+                disabled={fetcher.state === "submitting"}
+              >
                 Sign Out
               </button>
-            </div>
-          ) : (
-            <button color="primary" onClick={() => signIn("google")}>
-              Sign In with Google
+            </p>
+          </fetcher.Form>
+        </div>
+      ) : (
+        <fetcher.Form method="post" action="/auth/signin/google">
+          <p>
+            <button
+              type="submit"
+              disabled={fetcher.state === "submitting"}
+            >
+              Sign In
             </button>
-          )}
-          <Outlet />
-          <ScrollRestoration /> <Scripts /> <LiveReload />
-        </Div100vh>
-      </body>
-    </html>
-  )
+          </p>
+        </fetcher.Form>
+      )}
+    </div>
+  );
 }
+
+
 ```
 
 Special thanks to Sergio Xalambrí of https://github.com/sergiodxa/remix-auth / https://sergiodxa.com

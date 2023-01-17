@@ -43,9 +43,13 @@ export class RemixAuthenticator<User = unknown> {
     P extends RedirectableProviderType | undefined = undefined
   >({
     request,
+    action,
+    providerId,
     params,
   }: {
     request: Request;
+    action: string;
+    providerId?: ProviderID<P> | undefined;
     params?: DataFunctionArgs["params"];
   }) {
 
@@ -70,10 +74,9 @@ export class RemixAuthenticator<User = unknown> {
       ...this.options.cookies,
     };
 
-    const action = getValue("action", searchParams, params) as
-      | AuthAction
-      | undefined;
-    const providerId: ProviderID<P> | undefined = getValue(
+    action = action || getValue("action", searchParams, params) as
+      | AuthAction;
+    providerId = providerId || getValue(
       "providerId",
       searchParams,
       params
@@ -305,3 +308,4 @@ export class RemixAuthenticator<User = unknown> {
     else return null;
   }
 }
+
