@@ -15,70 +15,60 @@
 
 ## Overview
 
-This is the Firebase Adapter for [`auth.js`](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
+This is the Firebase Admin Adapter for [`auth.js`](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
 
-You can find more Firebase information in the docs at [authjs.dev/reference/adapters/firebase](https://authjs.dev/reference/adapters/firebase).
+You can find more Firebase information in the docs at [authjs.dev/reference/adapters/firebase-admin](https://authjs.dev/reference/adapters/firebase-admin).
 
 ## Getting Started
 
-1. Install `next-auth` and `@next-auth/firebase-adapter`.
+1. Install the necessary packages
 
-```js
-npm install next-auth @next-auth/firebase-adapter
+```bash npm2yarn
+npm install next-auth @next-auth/firebase-admin-adapter firebase-admin
 ```
 
-2. Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object.
+2. Create a Firebase project and generate a service account key. See [instructions](https://firebase.google.com/docs/admin/setup).
 
-```js
+3. Add this adapter to your `pages/api/auth/[...nextauth].js` next-auth configuration object.
+
+```javascript title="pages/api/auth/[...nextauth].js"
 import NextAuth from "next-auth"
-import Providers from "next-auth/providers"
-import { FirestoreAdapter } from "@next-auth/firebase-adapter"
+import GoogleProvider from "next-auth/providers/google"
+import { FirestoreAdminAdapter } from "@next-auth/firebase-admin-adapter"
 
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore"
+import admin from "firebase-admin"
 
-const app = initializeApp({ projectId: "next-auth-test" });
-const firestore = getFirestore(app);
+// Initialize the firebase admin app. By default, the firebase admin sdk will
+// look for the GOOGLE_APPLICATION_CREDENTIALS environment variable and use
+// that to authenticate with the firebase project. See other authentication
+// methods here: https://firebase.google.com/docs/admin/setup
+const app = admin.initializeApp()
+
+const firestore = app.firestore()
 
 // For more information on each option (and a full list of options) go to
 // https://authjs.dev/reference/configuration/auth-options
 export default NextAuth({
-  // https://authjs.dev/reference/providers/oauth-builtin
+  // https://authjs.dev/reference/providers/
   providers: [
-    Providers.Google({
+    GoogleProvider({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET,
     }),
   ],
-  adapter: FirestoreAdapter(firestore),
+  adapter: FirestoreAdminAdapter(firestore),
   ...
 })
 ```
 
-## Options
+## Naming Conventions
 
-When initializing the firestore adapter, you must pass in the firebase config object with the details from your project. More details on how to obtain that config object can be found [here](https://support.google.com/firebase/answer/7015592).
+If mixed snake_case and camelCase field names in the database is an issue for you, you can pass the option `preferSnakeCase: true` to the adapter. This will convert all
+fields names and collection names to snake_case e.g. the collection `verificationTokens` will instead be `verification_tokens`, and fields like `emailVerified` will instead be `email_verified`.
 
-An example firebase config looks like this:
-
-```js
-const firebaseConfig = {
-  apiKey: "AIzaSyDOCAbC123dEf456GhI789jKl01-MnO",
-  authDomain: "myapp-project-123.firebaseapp.com",
-  databaseURL: "https://myapp-project-123.firebaseio.com",
-  projectId: "myapp-project-123",
-  storageBucket: "myapp-project-123.appspot.com",
-  messagingSenderId: "65211879809",
-  appId: "1:65211879909:web:3ae38ef1cdcb2e01fe5f0c",
-  measurementId: "G-8GSGZQ44ST",
-}
+```javascript
+FirestoreAdminAdapter(firestore, { preferSnakeCase: true })
 ```
-
-See [firebase.google.com/docs/web/setup](https://firebase.google.com/docs/web/setup) for more details.
-
-> **From Firebase - Caution**: We do not recommend manually modifying an app's Firebase config file or object. If you initialize an app with invalid or missing values for any of these required "Firebase options", then your end users may experience serious issues.
->
-> For open source projects, we generally do not recommend including the app's Firebase config file or object in source control because, in most cases, your users should create their own Firebase projects and point their apps to their own Firebase resources (via their own Firebase config file or object).
 
 ## Contributing
 

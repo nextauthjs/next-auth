@@ -1,118 +1,59 @@
+import admin, { FirebaseArrayIndexError } from "firebase-admin"
 import { runBasicTests } from "@next-auth/adapter-test"
-import { FirestoreAdapter } from "../src"
 
 import {
-  getFirestore,
-  connectFirestoreEmulator,
-  terminate,
-  collection,
-  query,
-  where,
-  limit,
-  getDocs,
+  FirestoreAdapter,
+  type FirestoreAdapterOptions,
+  mapFieldsFactory,
+  collestionsFactory,
+  getOneDoc,
   getDoc,
-  doc,
-} from "firebase/firestore"
-import { initializeApp } from "firebase/app"
-import { getConverter } from "../src/converter"
-import type {
-  AdapterSession,
-  AdapterUser,
-  VerificationToken,
-} from "next-auth/adapters"
-import type { Account } from "next-auth"
+} from "../src"
 
-const app = initializeApp({ projectId: "next-auth-test" })
-const firestore = getFirestore(app)
+describe.each([
+  { preferSnakeCase: true },
+  { preferSnakeCase: false },
+] as Partial<FirestoreAdapterOptions>[])(
+  "FirebaseAdapter with config: %s",
+  (config) => {
+    const app = admin.initializeApp(
+      { projectId: "next-auth-test", databaseURL: "http://localhost:8080" },
+      `next-auth-test-${config.preferSnakeCase}`
+    )
+    const db = app.firestore()
 
-connectFirestoreEmulator(firestore, "localhost", 8080)
+    const mapper = mapFieldsFactory(config.preferSnakeCase)
 
-type IndexableObject = Record<string, unknown>
+    const C = collestionsFactory(db, config.preferSnakeCase)
 
-const Users = collection(firestore, "users").withConverter(
-  getConverter<AdapterUser & IndexableObject>()
+    for (const [name, collection] of Object.entries(C)) {
+      test(`collection "${name}" should be empty`, async () => {
+        expect((await collection.count().get()).data().count).toBe(0)
+      })
+    }
+
+    runBasicTests({
+      adapter: FirestoreAdapter({ ...config, db }),
+      db: {
+        disconnect: db.terminate,
+        session: (sessionToken) =>
+          getOneDoc(
+            C.sessions.where(mapper.toDb("sessionToken"), "==", sessionToken)
+          ),
+        user: (userId) => getDoc(C.users.doc(userId)),
+        account: ({ provider, providerAccountId }) =>
+          getOneDoc(
+            C.accounts
+              .where("provider", "==", provider)
+              .where(mapper.toDb("providerAccountId"), "==", providerAccountId)
+          ),
+        verificationToken: ({ identifier, token }) =>
+          getOneDoc(
+            C.verification_tokens
+              .where("identifier", "==", identifier)
+              .where("token", "==", token)
+          ),
+      },
+    })
+  }
 )
-const Sessions = collection(firestore, "sessions").withConverter(
-  getConverter<AdapterSession & IndexableObject>()
-)
-const Accounts = collection(firestore, "accounts").withConverter(
-  getConverter<Account>()
-)
-const VerificationTokens = collection(
-  firestore,
-  "verificationTokens"
-).withConverter(
-  getConverter<VerificationToken & IndexableObject>({ excludeId: true })
-)
-
-runBasicTests({
-  adapter: FirestoreAdapter({ projectId: "next-auth-test" }),
-  db: {
-    async disconnect() {
-      await terminate(firestore)
-    },
-    async session(sessionToken) {
-      const snapshotQuery = query(
-        Sessions,
-        where("sessionToken", "==", sessionToken),
-        limit(1)
-      )
-      const snapshots = await getDocs(snapshotQuery)
-      const snapshot = snapshots.docs[0]
-
-      if (snapshot?.exists() && Sessions.converter) {
-        const session = Sessions.converter.fromFirestore(snapshot)
-
-        return session
-      }
-
-      return null
-    },
-    async user(id) {
-      const snapshot = await getDoc(doc(Users, id))
-
-      if (snapshot?.exists() && Users.converter) {
-        const user = Users.converter.fromFirestore(snapshot)
-
-        return user
-      }
-
-      return null
-    },
-    async account({ provider, providerAccountId }) {
-      const snapshotQuery = query(
-        Accounts,
-        where("provider", "==", provider),
-        where("providerAccountId", "==", providerAccountId),
-        limit(1)
-      )
-      const snapshots = await getDocs(snapshotQuery)
-      const snapshot = snapshots.docs[0]
-
-      if (snapshot?.exists() && Accounts.converter) {
-        const account = Accounts.converter.fromFirestore(snapshot)
-
-        return account
-      }
-
-      return null
-    },
-    async verificationToken({ identifier, token }) {
-      const snapshotQuery = query(
-        VerificationTokens,
-        where("identifier", "==", identifier),
-        where("token", "==", token),
-        limit(1)
-      )
-      const snapshots = await getDocs(snapshotQuery)
-      const snapshot = snapshots.docs[0]
-
-      if (snapshot?.exists() && VerificationTokens.converter) {
-        const verificationToken =
-          VerificationTokens.converter.fromFirestore(snapshot)
-
-        return verificationToken
-      }
-    },
-  },
-})
