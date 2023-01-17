@@ -1,15 +1,15 @@
 import { handleLogin } from "../callback-handler.js"
-import { CallbackRouteError } from "../../errors.js"
+import { CallbackRouteError, Verification } from "../../errors.js"
 import { handleOAuth } from "../oauth/callback.js"
 import { createHash } from "../web.js"
-import { handleAuthorized } from "./shared.js"
+import { getAdapterUserFromEmail, handleAuthorized } from "./shared.js"
 
 import type { AdapterSession } from "../../adapters.js"
 import type {
   RequestInternal,
   ResponseInternal,
-  User,
   InternalOptions,
+  Account,
 } from "../../types.js"
 import type { Cookie, SessionStore } from "../cookie.js"
 
@@ -111,17 +111,22 @@ export async function callback(params: {
           isNewUser,
         })
 
-        // Encode token
-        const newToken = await jwt.encode({ ...jwt, token })
+        // Clear cookies if token is null
+        if (token === null) {
+          cookies.push(...sessionStore.clean())
+        } else {
+          // Encode token
+          const newToken = await jwt.encode({ ...jwt, token })
 
-        // Set cookie expiry date
-        const cookieExpires = new Date()
-        cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
+          // Set cookie expiry date
+          const cookieExpires = new Date()
+          cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
 
-        const sessionCookies = sessionStore.chunk(newToken, {
-          expires: cookieExpires,
-        })
-        cookies.push(...sessionCookies)
+          const sessionCookies = sessionStore.chunk(newToken, {
+            expires: cookieExpires,
+          })
+          cookies.push(...sessionCookies)
+        }
       } else {
         // Save Session Token in cookie
         cookies.push({
@@ -154,9 +159,13 @@ export async function callback(params: {
       const token = query?.token as string | undefined
       const identifier = query?.email as string | undefined
 
-      // If these are missing, the sign-in URL was manually opened without these params or the `sendVerificationRequest` method did not send the link correctly in the email.
       if (!token || !identifier) {
-        return { redirect: `${url}/error?error=configuration`, cookies }
+        const e = new TypeError(
+          "Missing token or email. The sign-in URL was manually opened without token/identifier or the link was not sent correctly in the email.",
+          { cause: { hasToken: !!token, hasEmail: !!identifier } }
+        )
+        e.name = "Configuration"
+        throw e
       }
 
       const secret = provider.secret ?? options.secret
@@ -166,61 +175,66 @@ export async function callback(params: {
         token: await createHash(`${token}${secret}`),
       })
 
-      const invalidInvite = !invite || invite.expires.valueOf() < Date.now()
-      if (invalidInvite) {
-        return { redirect: `${url}/error?error=Verification`, cookies }
-      }
+      const hasInvite = !!invite
+      const expired = invite ? invite.expires.valueOf() < Date.now() : undefined
+      const invalidInvite = !hasInvite || expired
+      if (invalidInvite) throw new Verification({ hasInvite, expired })
 
       // @ts-expect-error -- Verified in `assertConfig`.
-      const profile = await getAdapterUserFromEmail(identifier, adapter)
+      const user = await getAdapterUserFromEmail(identifier, adapter)
 
-      const account = {
-        providerAccountId: profile.email,
+      const account: Account = {
+        providerAccountId: user.email,
+        userId: user.id,
         type: "email" as const,
         provider: provider.id,
       }
 
       // Check if user is allowed to sign in
       const unauthorizedOrError = await handleAuthorized(
-        { user: profile, account },
+        { user, account },
         options
       )
 
       if (unauthorizedOrError) return { ...unauthorizedOrError, cookies }
 
       // Sign user in
-      const { user, session, isNewUser } = await handleLogin(
-        sessionStore.value,
-        profile,
-        account,
-        options
-      )
+      const {
+        user: loggedInUser,
+        session,
+        isNewUser,
+      } = await handleLogin(sessionStore.value, user, account, options)
 
       if (useJwtSession) {
         const defaultToken = {
-          name: user.name,
-          email: user.email,
-          picture: user.image,
-          sub: user.id?.toString(),
+          name: loggedInUser.name,
+          email: loggedInUser.email,
+          picture: loggedInUser.image,
+          sub: loggedInUser.id?.toString(),
         }
         const token = await callbacks.jwt({
           token: defaultToken,
-          user,
+          user: loggedInUser,
           account,
           isNewUser,
         })
 
-        // Encode token
-        const newToken = await jwt.encode({ ...jwt, token })
+        // Clear cookies if token is null
+        if (token === null) {
+          cookies.push(...sessionStore.clean())
+        } else {
+          // Encode token
+          const newToken = await jwt.encode({ ...jwt, token })
 
-        // Set cookie expiry date
-        const cookieExpires = new Date()
-        cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
+          // Set cookie expiry date
+          const cookieExpires = new Date()
+          cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
 
-        const sessionCookies = sessionStore.chunk(newToken, {
-          expires: cookieExpires,
-        })
-        cookies.push(...sessionCookies)
+          const sessionCookies = sessionStore.chunk(newToken, {
+            expires: cookieExpires,
+          })
+          cookies.push(...sessionCookies)
+        }
       } else {
         // Save Session Token in cookie
         cookies.push({
@@ -233,7 +247,7 @@ export async function callback(params: {
         })
       }
 
-      await events.signIn?.({ user, account, isNewUser })
+      await events.signIn?.({ user: loggedInUser, account, isNewUser })
 
       // Handle first logins on new accounts
       // e.g. option to send users to a new account landing page on initial login
@@ -252,33 +266,22 @@ export async function callback(params: {
     } else if (provider.type === "credentials" && method === "POST") {
       const credentials = body
 
-      let user: User | null
-
-      try {
-        // TODO: Forward the original request as is, instead of reconstructing it
+      // TODO: Forward the original request as is, instead of reconstructing it
+      Object.entries(query ?? {}).forEach(([k, v]) =>
+        url.searchParams.set(k, v)
+      )
+      const user = await provider.authorize(
+        credentials,
         // prettier-ignore
-        Object.entries(query ?? {}).forEach(([k, v]) => url.searchParams.set(k, v))
-        user = await provider.authorize(
-          credentials,
-          // prettier-ignore
-          new Request(url, { headers, method, body: JSON.stringify(body) })
-        )
-        if (!user) {
-          return {
-            status: 401,
-            redirect: `${url}/error?${new URLSearchParams({
-              error: "CredentialsSignin",
-              provider: provider.id,
-            })}`,
-            cookies,
-          }
-        }
-      } catch (e) {
+        new Request(url, { headers, method, body: JSON.stringify(body) })
+      )
+      if (!user) {
         return {
           status: 401,
-          redirect: `${url}/error?error=${encodeURIComponent(
-            (e as Error).message
-          )}`,
+          redirect: `${url}/error?${new URLSearchParams({
+            error: "CredentialsSignin",
+            provider: provider.id,
+          })}`,
           cookies,
         }
       }
@@ -312,18 +315,23 @@ export async function callback(params: {
         isNewUser: false,
       })
 
-      // Encode token
-      const newToken = await jwt.encode({ ...jwt, token })
+      // Clear cookies if token is null
+      if (token === null) {
+        cookies.push(...sessionStore.clean())
+      } else {
+        // Encode token
+        const newToken = await jwt.encode({ ...jwt, token })
 
-      // Set cookie expiry date
-      const cookieExpires = new Date()
-      cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
+        // Set cookie expiry date
+        const cookieExpires = new Date()
+        cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
 
-      const sessionCookies = sessionStore.chunk(newToken, {
-        expires: cookieExpires,
-      })
+        const sessionCookies = sessionStore.chunk(newToken, {
+          expires: cookieExpires,
+        })
 
-      cookies.push(...sessionCookies)
+        cookies.push(...sessionCookies)
+      }
 
       // @ts-expect-error
       await events.signIn?.({ user, account })

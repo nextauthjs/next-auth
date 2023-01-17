@@ -46,7 +46,7 @@ const docusaurusConfig = {
       title: "Auth.js",
       logo: {
         alt: "Auth.js Logo",
-        src: "img/logo/logo-xs.png",
+        src: "img/logo/logo-xs.webp",
       },
       items: [
         {
@@ -101,7 +101,7 @@ const docusaurusConfig = {
     announcementBar: {
       id: "new-major-announcement",
       content:
-        "<a target='_blank' rel='noopener noreferrer' href='https://next-auth.js.org'>NextAuth.js</a> is becoming Auth.js! 🎉 We're creating Authentication for the Web. Everyone included. Starting with SvelteKit, check out the docs <a  href='/reference/sveltekit'>here</a>.",
+        "<a target='_blank' rel='noopener noreferrer' href='https://next-auth.js.org'>NextAuth.js</a> is becoming Auth.js! 🎉 We're creating Authentication for the Web. Everyone included. Starting with SvelteKit, check out <a href='/reference/sveltekit'>the docs</a>.",
       backgroundColor: "#000",
       textColor: "#fff",
     },
@@ -121,6 +121,7 @@ const docusaurusConfig = {
                 alt="Powered by Vercel"
                 style="margin-top: 8px"
                 height="32"
+                width="167"
                 src="https://raw.githubusercontent.com/nextauthjs/next-auth/main/docs/static/img/powered-by-vercel.svg"
               />
             </a>`,
@@ -181,7 +182,10 @@ const docusaurusConfig = {
           lastVersion: "current",
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
-          remarkPlugins: [require("@sapphire/docusaurus-plugin-npm2yarn2pnpm").npm2yarn2pnpm, require("remark-github")],
+          remarkPlugins: [
+            require("@sapphire/docusaurus-plugin-npm2yarn2pnpm").npm2yarn2pnpm,
+            require("remark-github"),
+          ],
           versions: {
             current: {
               label: "experimental",
@@ -201,7 +205,15 @@ const docusaurusConfig = {
         ...typedocConfig,
         id: "core",
         plugin: ["./tyepdoc"],
-        entryPoints: ["index.ts", "adapters.ts", "errors.ts", "jwt.ts", "types.ts"].map((e) => `${coreSrc}/${e}`).concat(providers),
+        entryPoints: [
+          "index.ts",
+          "adapters.ts",
+          "errors.ts",
+          "jwt.ts",
+          "types.ts",
+        ]
+          .map((e) => `${coreSrc}/${e}`)
+          .concat(providers),
         tsconfig: "../packages/core/tsconfig.json",
         out: "reference/03-core",
         watch: process.env.TYPEDOC_WATCH,
@@ -214,7 +226,9 @@ const docusaurusConfig = {
         ...typedocConfig,
         id: "sveltekit",
         plugin: ["./tyepdoc"],
-        entryPoints: ["index.ts", "client.ts"].map((e) => `../packages/frameworks-sveltekit/src/lib/${e}`),
+        entryPoints: ["index.ts", "client.ts"].map(
+          (e) => `../packages/frameworks-sveltekit/src/lib/${e}`
+        ),
         tsconfig: "../packages/frameworks-sveltekit/tsconfig.json",
         out: "reference/04-sveltekit",
         watch: process.env.TYPEDOC_WATCH,
