@@ -7,16 +7,39 @@ It provides a simple way to add authentication to your Remix app in a few lines 
 npm install @auth/core @auth/remix
 ```
 
+## Configuration
+
+In your remix.config.js we need to add the esm modules so they are properly bundled.
+
+This will always include @auth/core, oauth4webapi, preact-render-to-string and any providers you use.
+
+e.g
+
+```js title="remix.config.js"
+
+module.exports = {
+  ...
+  serverDependenciesToBundle: [
+    "@auth/core",
+    "oauth4webapi",
+    "preact-render-to-string",
+    "@auth/core/providers/google",
+  ],
+};
+
+```
+
 ## Usage
 
 Create a .server file to create and access the authenticator
+
 ```ts title="services/auth.server.ts"
-import { RemixAuthenticator } from "remix-auth/src/lib";
-import Google from "@auth/core/providers/google";
-import type { AppLoadContext } from "@remix-run/cloudflare";
+import { RemixAuthenticator } from "remix-auth/src/lib"
+import Google from "@auth/core/providers/google"
+import type { AppLoadContext } from "@remix-run/cloudflare"
 
 // Create an instance of the authenticator
-let authenticator: RemixAuthenticator<{ user: any }>;
+let authenticator: RemixAuthenticator<{ user: any }>
 
 export const getAuthenticator = (
   env: Record<string, string | undefined> | AppLoadContext
@@ -33,19 +56,17 @@ export const getAuthenticator = (
         ],
       },
       env
-    );
+    )
   }
-  return authenticator;
-};
-
-
+  return authenticator
+}
 ```
 
 Create a route for your auth, this is most simply done using optional routes like file named `auth.($action).($providerId).tsx`
 
 ```ts title="auth.($action).($providerId).tsx"
-import type { ActionFunction, LoaderFunction } from "@remix-run/cloudflare";
-import { getAuthenticator } from "~/services/auth.server";
+import type { ActionFunction, LoaderFunction } from "@remix-run/node"
+import { getAuthenticator } from "~/services/auth.server"
 
 export let loader: LoaderFunction = async ({ request, params, context }) => {
   const result = getAuthenticator(
@@ -55,9 +76,9 @@ export let loader: LoaderFunction = async ({ request, params, context }) => {
     action: params.action!,
     providerId: params.providerId,
     params,
-  });
-  return result;
-};
+  })
+  return result
+}
 
 export let action: ActionFunction = async ({ request, params, context }) => {
   const result = getAuthenticator(
@@ -67,13 +88,10 @@ export let action: ActionFunction = async ({ request, params, context }) => {
     action: params.action!,
     providerId: params.providerId,
     params,
-  });
-  return result;
-};
-
+  })
+  return result
+}
 ```
-
-
 
 Don't forget to set the `AUTH_SECRET` [environment variable](https://kit.svelte.dev/docs/modules#$env-static-private). This should be a random 32 character string. On unix systems you can use `openssl rand -hex 32` or check out `https://generate-secret.vercel.app/32`.
 
@@ -88,19 +106,19 @@ The callback URL used by the [providers](https://authjs.dev/reference/core/modul
 ## Signing in, signing out and getting the user
 
 ```ts title="index.tsx"
-import type { LoaderFunction } from "@remix-run/cloudflare";
-import { useFetcher, useLoaderData } from "@remix-run/react";
-import { getAuthenticator } from "~/services/auth.server";
+import type { LoaderFunction } from "@remix-run/cloudflare"
+import { useFetcher, useLoaderData } from "@remix-run/react"
+import { getAuthenticator } from "~/services/auth.server"
 export let loader: LoaderFunction = async ({ request, context }) => {
   const user = await getAuthenticator(
     context.env as Record<string, string>
-  ).isAuthenticated(request);
+  ).isAuthenticated(request)
 
-  return { user };
-};
+  return { user }
+}
 export default function Index() {
-  const { user } = useLoaderData();
-  const fetcher = useFetcher();
+  const { user } = useLoaderData()
+  const fetcher = useFetcher()
 
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
@@ -109,10 +127,7 @@ export default function Index() {
           <h1 className="text-center text-4xl">{user.name}</h1>
           <fetcher.Form method="post" action="/auth/signout/google">
             <p>
-              <button
-                type="submit"
-                disabled={fetcher.state === "submitting"}
-              >
+              <button type="submit" disabled={fetcher.state === "submitting"}>
                 Sign Out
               </button>
             </p>
@@ -121,20 +136,15 @@ export default function Index() {
       ) : (
         <fetcher.Form method="post" action="/auth/signin/google">
           <p>
-            <button
-              type="submit"
-              disabled={fetcher.state === "submitting"}
-            >
+            <button type="submit" disabled={fetcher.state === "submitting"}>
               Sign In
             </button>
           </p>
         </fetcher.Form>
       )}
     </div>
-  );
+  )
 }
-
-
 ```
 
 Special thanks to Sergio Xalambrí of https://github.com/sergiodxa/remix-auth / https://sergiodxa.com

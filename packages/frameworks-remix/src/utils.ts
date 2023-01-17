@@ -1,29 +1,29 @@
-import type { DataFunctionArgs } from "@remix-run/server-runtime";
+import type { DataFunctionArgs } from "@remix-run/server-runtime"
 
 export const getBody = async (
   req: Request
 ): Promise<Record<string, any> | undefined> => {
-  if (!("body" in req) || !req.body || req.method !== "POST") return;
+  if (!("body" in req) || !req.body || req.method !== "POST") return
 
-  const contentType = req.headers.get("content-type");
+  const contentType = req.headers.get("content-type")
   if (contentType?.includes("application/json")) {
-    return await req.json();
+    return await req.json()
   } else if (contentType?.includes("application/x-www-form-urlencoded")) {
-    const params = new URLSearchParams(await req.text());
-    return Object.fromEntries(params);
+    const params = new URLSearchParams(await req.text())
+    return Object.fromEntries(params)
   }
-};
+}
 
 export const getValue = (
   key: string,
   searchParams: URLSearchParams,
   params?: DataFunctionArgs["params"]
 ): string | undefined => {
-  return searchParams.get(key) || params?.[key];
-};
+  return searchParams.get(key) || params?.[key]
+}
 
 export function authjsDefaultCookies(useSecureCookies: boolean) {
-  const cookiePrefix = useSecureCookies ? "__Secure-" : "";
+  const cookiePrefix = useSecureCookies ? "__Secure-" : ""
   return {
     // default cookie options
     sessionToken: {
@@ -46,12 +46,5 @@ export function authjsDefaultCookies(useSecureCookies: boolean) {
     nonce: {
       name: `${cookiePrefix}next-auth.nonce`,
     },
-  };
+  }
 }
-
-export const getPathForRouter = (
-  url: URL,
-    rootHost: string = "",
-): string => {
-  return url.href.replace(rootHost, '')
-};

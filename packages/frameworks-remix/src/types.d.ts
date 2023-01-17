@@ -7,7 +7,7 @@ import type {
 
 import type { LiteralUnion } from "next-auth/react";
 
-type ProviderID<P> = LiteralUnion<
+export type ProviderID<P> = LiteralUnion<
   P extends RedirectableProviderType
     ? P | BuiltInProviderType
     : BuiltInProviderType
@@ -16,5 +16,4 @@ type ProviderID<P> = LiteralUnion<
 export interface RemixAuthConfig extends AuthConfig {
   trustHost?: boolean;
   secret?: string;
-  host?: string;
 }
