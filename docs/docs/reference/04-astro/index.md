@@ -2,9 +2,15 @@
 title: Astro Auth
 ---
 
-Astro Auth is the official Auth.js implementation for Astro. It wraps the core library, exposing helper methods and components to make it easy to add authentication to your app.
+Astro Auth is the official Auth.js implementation for Astro. 
+
+It wraps the core Auth.js library for Astro, exposing helper methods and components to make it easy to add authentication to your app.
 
 ## Installation
+
+Install the core Auth.js package as well as the @auth/astro wrapper.
+
+_Note:_ The @auth/astro wrapper will not work independently, it relies on @auth/core as a dependency.
 
 ```bash
 npm install @auth/astro@latest @auth/core@latest
@@ -12,7 +18,36 @@ npm install @auth/astro@latest @auth/core@latest
 
 ## Usage
 
-To accept authentication request, no matter which provider(s) you use, you need to create an [endpoint](https://docs.astro.build/en/core-concepts/endpoints/) that handles requests. Depending on the provider, you will have to provide different app credentials. These should be set as environment variables, and imported using `import.meta.env`.
+### Setup Environment Variables
+
+Generate an auth secret by running `openssl rand -hex 32` in a local terminal or by visiting [generate-secret.vercel.app](https://generate-secret.vercel.app/32), copy the string, then set it as the `AUTH_SECRET` environment variable describe below.
+
+#### Deploying to Vercel?
+`AUTH_TRUST_HOST` can be set to false.
+
+#### Deploying to another provider not named Vercel?
+Set the `AUTH_TRUST_HOST` environment variable to `true` for hosting providers like Cloudflare Pages or Netlify.
+
+```sh
+AUTH_SECRET=<auth-secret>
+AUTH_TRUST_HOST=true
+```
+
+### Create an AstroAuth Endpoint
+
+No matter which provider(s) you use, you need to create one Astro [endpoint](https://docs.astro.build/en/core-concepts/endpoints/) that handles requests. 
+
+Depending on the provider(s) you select, you will have to provide different additional app credentials within your `.env` file.
+
+*App Credentials should be set as environment variables, and imported using `import.meta.env`.*
+
+```ts title="/.env/
+AUTH_SECRET=<auth-secret>
+AUTH_TRUST_HOST=<true | false>
+...
+GITHUB_ID=<github-oauth-clientID>
+GITHUB_SECRET=<github-oauth-clientSecret>
+```
 
 ```ts title="src/pages/api/auth/[...astroauth].ts"
 import { AstroAuth, type AstroAuthConfig } from "@auth/astro"
@@ -31,52 +66,65 @@ export const authOpts: AstroAuthConfig = {
 
 export const { get, post } = AstroAuth(authOpts)
 ```
-
+Some OAuth Providers request a callback URL be submitted alongside requesting a Client ID, and Client Secret. 
 The callback URL used by the [providers](https://authjs.dev/reference/core/modules/providers) must be set to the following, unless you override the `prefix` field in `authOpts`:
 ```
 [origin]/api/auth/callback/[provider]
 ```
 
-When deploying your app outside Vercel, set the `AUTH_TRUST_HOST` variable to `true` for other hosting providers like Cloudflare Pages or Netlify.
 
-
-## Auth Secret
-
-Generate an auth secret by running `openssl rand -hex 32` or checking out [generate-secret.vercel.app](https://generate-secret.vercel.app/32), then set it as an environment variable:
-
-```sh
-AUTH_SECRET=<auth-secret>
-```
 
 ## Sign in & Sign out
 
-Astro Auth exposes two ways to sign in and out. The `signIn` and `signOut` methods can be imported dynamically in an inline script.
+Astro Auth exposes two ways to sign in and out. Inline scripts and Astro Components.
 
-```html
-<button id="login">Login</button>
-<button id="logout">Logout</button>
+### With Inline script tags
 
-<script>
-  let { signIn, signOut } = await import("@auth/astro/client")
-  document.querySelector("#login").onclick = () => signIn("github")
-  document.querySelector("#logout").onclick = () => signOut()
-</script>
+The `signIn` and `signOut` methods can be imported dynamically in an inline script.
+
+```astro
+---
+---
+<html>
+<body>
+  <button id="login">Login</button>
+  <button id="logout">Logout</button>
+
+  <script>
+    let { signIn, signOut } = await import("@auth/astro/client")
+    document.querySelector("#login").onclick = () => signIn("github")
+    document.querySelector("#logout").onclick = () => signOut()
+  </script>
+</body>
+</html>
 ```
+### With @auth/astro's Components
 
-Alternatively, you can use the `SignIn` and `SignOut` button components.
+Alternatively, you can use the `SignIn` and `SignOut` button components provided by `@auth/astro/components` importing them into your Astro [component's script](https://docs.astro.build/en/core-concepts/astro-components/#the-component-script) 
 
-```html
-<SignIn provider="github" />
-<SignOut />
+```astro
+---
+import { SignIn, SignOut } from '@auth/astro/components'
+---
+<html>
+  <body>
+    ...
+    <SignIn provider="github" />
+    <SignOut />
+    ...
+  </body>
+</html>
 ```
 
 ## Fetching the session
 
-You can fetch the session in one of two ways. The `getSession` method can be used in the [component script](https://docs.astro.build/en/core-concepts/astro-components/#the-component-script) to fetch the session.
+You can fetch the session in one of two ways. The `getSession` method can be used in the component script section to fetch the session.
 
-```tsx title="src/pages/index.astro"
+### Within the component script section
+
+```astro title="src/pages/index.astro"
 ---
-import { type AstroAuthConfig, getSession } from '@astro/auth';
+import { getSession } from '@astro/auth';
 import { authOpts } from './api/auth/[...astroauth]';
 
 const session = await getSession(Astro.request, authOpts)
@@ -87,10 +135,11 @@ const session = await getSession(Astro.request, authOpts)
   <p>Not logged in</p>
 )}
 ```
+### Within the Auth component
 
 Alternatively, you can use the `Auth` component to fetch the session using a render prop.
 
-```tsx title="src/pages/index.astro"
+```astro title="src/pages/index.astro"
 ---
 import type { Session } from '@auth/core/types';
 import { Auth, Signin, Signout } from '@auth/astro/components';
