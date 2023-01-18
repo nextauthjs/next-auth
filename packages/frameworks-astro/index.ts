@@ -40,33 +40,33 @@ const getSetCookieCallback = (cook?: string | null): Cookie | undefined => {
   return parseString(splitCookie?.[0] ?? "") // just return the first cookie if no session token is found
 }
 
-async function handler(
+function AstroAuthHandler(
   prefix: string,
-  authConfig: AstroAuthConfig,
-  { request }: { request: Request }
+  authConfig: AstroAuthConfig
 ) {
-  const url = new URL(request.url)
-  const action = url.pathname
-    .slice(prefix.length + 1)
-    .split("/")[0] as AuthAction
+  return async ({ request }: { request: Request }) => {
+    const url = new URL(request.url)
+    const action = url.pathname
+      .slice(prefix.length + 1)
+      .split("/")[0] as AuthAction
 
-  if (!actions.includes(action) || !url.pathname.startsWith(prefix + "/"))
-    return
+    if (!actions.includes(action) || !url.pathname.startsWith(prefix + "/"))
+      return
 
-  const res = await Auth(request, authConfig)
-
-  if (["callback", "signin", "signout"].includes(action)) {
-    const parsedCookie = getSetCookieCallback(
-      res.clone().headers.get("Set-Cookie")
-    )
-    if (parsedCookie) {
-      res.headers.set(
-        "Set-Cookie",
-        serialize(parsedCookie.name, parsedCookie.value, parsedCookie as any)
+    const res = await Auth(request, authConfig)
+    if (["callback", "signin", "signout"].includes(action)) {
+      const parsedCookie = getSetCookieCallback(
+        res.clone().headers.get("Set-Cookie")
       )
+      if (parsedCookie) {
+        res.headers.set(
+          "Set-Cookie",
+          serialize(parsedCookie.name, parsedCookie.value, parsedCookie as any)
+        )
+      }
     }
+    return res
   }
-  return res
 }
 
 export function AstroAuth(config: AstroAuthConfig) {
@@ -81,12 +81,13 @@ export function AstroAuth(config: AstroAuthConfig) {
     NODE_ENV !== "production"
   )
 
+  const handler = AstroAuthHandler(prefix, authConfig)
   return {
     async get(event: any) {
-      return await handler(prefix, authConfig, event)
+      return await handler(event)
     },
     async post(event: any) {
-      return await handler(prefix, authConfig, event)
+      return await handler(event)
     },
   }
 }
