@@ -43,10 +43,11 @@ jobs:
           AUTH0_PASSWORD: ${{ secrets.AUTH0_PASSWORD }}
           TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
           TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
-      - uses: actions/upload-artifact@v3
+      - name: Upload E2E artifacts
+        uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: playwright-report
+          name: apps/dev/nextjs/playwright-report
           path: playwright-report/
           retention-days: 30
       # - name: Coverage
