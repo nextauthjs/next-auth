@@ -32,10 +32,13 @@ Enabling server-side rendering within an Astro project requires a [deployment `a
 
 These settings can be configured within the `astro.config.mjs` file, located in the root of your project directory.
 
-Example config:
+:::info
+The example below use the [Node `adapter`](https://docs.astro.build/en/guides/integrations-guide/node/#overview)
+:::
 ```js title="astro.config.mjs"
 import { defineConfig } from 'astro/config';
 import node from '@astrojs/node';
+
 export default defineConfig({
   output: 'server',
   adapter: node({
