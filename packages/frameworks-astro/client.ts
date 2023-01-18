@@ -9,6 +9,16 @@ import type {
   RedirectableProviderType,
 } from "@auth/core/providers"
 
+interface AstroSignInOptions extends SignInOptions {
+  /** The base path for authentication (default: /api/auth) */
+  prefix?: string
+}
+
+interface AstroSignOutParams extends SignOutParams {
+  /** The base path for authentication (default: /api/auth) */
+  prefix?: string
+}
+
 /**
  * Client-side method to initiate a signin flow
  * or send the user to the signin page listing all possible providers.
@@ -24,10 +34,11 @@ export async function signIn<
       ? P | BuiltInProviderType
       : BuiltInProviderType
   >,
-  options?: SignInOptions,
+  options?: AstroSignInOptions,
   authorizationParams?: SignInAuthorizationParams
 ) {
   const { callbackUrl = window.location.href, redirect = true } = options ?? {}
+  const { prefix = "/api/auth", ...opts } = options ?? {}
 
   // TODO: Support custom providers
   const isCredentials = providerId === "credentials"
@@ -35,14 +46,14 @@ export async function signIn<
   const isSupportingReturn = isCredentials || isEmail
 
   // TODO: Handle custom base path
-  const signInUrl = `/api/auth/${
+  const signInUrl = `${prefix}/${
     isCredentials ? "callback" : "signin"
   }/${providerId}`
 
   const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
 
   // TODO: Handle custom base path
-  const csrfTokenResponse = await fetch("/api/auth/csrf")
+  const csrfTokenResponse = await fetch(`${prefix}/csrf`)
   const { csrfToken } = await csrfTokenResponse.json()
 
   const res = await fetch(_signInUrl, {
@@ -53,7 +64,7 @@ export async function signIn<
     },
     // @ts-expect-error -- ignore
     body: new URLSearchParams({
-      ...options,
+      ...opts,
       csrfToken,
       callbackUrl,
     }),
@@ -79,12 +90,12 @@ export async function signIn<
  *
  * [Documentation](https://authjs.dev/reference/utilities/#signout)
  */
-export async function signOut(options?: SignOutParams) {
-  const { callbackUrl = window.location.href } = options ?? {}
+export async function signOut(options?: AstroSignOutParams) {
+  const { callbackUrl = window.location.href, prefix = "/api/auth" } = options ?? {}
   // TODO: Custom base path
-  const csrfTokenResponse = await fetch("/api/auth/csrf")
+  const csrfTokenResponse = await fetch(`${prefix}/csrf`)
   const { csrfToken } = await csrfTokenResponse.json()
-  const res = await fetch(`/api/auth/signout`, {
+  const res = await fetch(`${prefix}/signout`, {
     method: "post",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",

@@ -94,13 +94,13 @@ export function AstroAuth(config: AstroAuthConfig) {
 
 export async function getSession(
   req: Request,
-  options: AuthConfig
+  options: AstroAuthConfig
 ): Promise<Session | null> {
   // @ts-expect-error import.meta.env is used by Astro
   options.secret ??= import.meta.env.AUTH_SECRET
   options.trustHost ??= true
 
-  const url = new URL("/api/auth/session", req.url)
+  const url = new URL(`${options.prefix}/session`, req.url)
   const response = await Auth(
     new Request(url, { headers: req.headers }),
     options
