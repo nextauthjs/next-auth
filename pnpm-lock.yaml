@@ -535,6 +535,7 @@ importers:
   packages/frameworks-astro:
     specifiers:
       '@auth/core': workspace:*
+      '@types/cookie': 0.5.1
       '@types/set-cookie-parser': ^2.4.2
       astro: ^2.0.0-beta.2
       next-auth: workspace:*
@@ -544,6 +545,7 @@ importers:
       '@auth/core': link:../core
       set-cookie-parser: 2.5.1
     devDependencies:
+      '@types/cookie': 0.5.1
       '@types/set-cookie-parser': 2.4.2
       astro: 2.0.0-beta.2
       next-auth: link:../next-auth

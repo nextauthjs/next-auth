@@ -72,15 +72,13 @@ async function handler(
 export function AstroAuth(config: AstroAuthConfig) {
   const { prefix = "/api/auth", ...authConfig } = config
   // @ts-expect-error import.meta.env is used by Astro
-  authConfig.secret ??= import.meta.env.AUTH_SECRET
-  // @ts-expect-error
+  const { AUTH_SECRET, AUTH_TRUST_HOST, VERCEL, NODE_ENV } = import.meta.env
+
+  authConfig.secret ??= AUTH_SECRET
   authConfig.trustHost ??= !!(
-    // @ts-expect-error
-    import.meta.env.AUTH_TRUST_HOST ??
-    // @ts-expect-error
-    import.meta.env.VERCEL ??
-    // @ts-expect-error
-    import.meta.env.NODE_ENV !== "production"
+    AUTH_TRUST_HOST ??
+    VERCEL ??
+    NODE_ENV !== "production"
   )
 
   return {
@@ -97,16 +95,9 @@ export async function getSession(
   req: Request,
   options: AuthConfig
 ): Promise<Session | null> {
-  // @ts-ignore import.meta.env is used by Astro
+  // @ts-expect-error import.meta.env is used by Astro
   options.secret ??= import.meta.env.AUTH_SECRET
-  options.trustHost ??= !!(
-    // @ts-expect-error
-    import.meta.env.AUTH_TRUST_HOST ??
-    // @ts-expect-error
-    import.meta.env.VERCEL ??
-    // @ts-expect-error
-    import.meta.env.NODE_ENV !== "production"
-  )
+  options.trustHost ??= true
 
   const url = new URL("/api/auth/session", req.url)
   const response = await Auth(
