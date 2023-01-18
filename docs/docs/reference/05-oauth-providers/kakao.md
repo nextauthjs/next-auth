@@ -11,6 +11,11 @@ https://developers.kakao.com/product/kakaoLogin
 
 https://developers.kakao.com/docs/latest/en/kakaologin/common
 
+Kakao provides up to 10 "Redirect URI" ("Authorized Redirect URIs" in Google). And you must include your full domain and end in the callback path and You can set the URI by selecting "Kakao Login" in "Product Settings".For example;
+
+For production: https://{YOUR_DOMAIN}/api/auth/callback/kakao
+For development: http://localhost:3000/api/auth/callback/kakao
+
 ## Options
 
 The **Kakao Provider** comes with a set of default options:
