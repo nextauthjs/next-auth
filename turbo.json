@@ -35,7 +35,7 @@
       "outputs": []
     },
     "e2e": {
-      "outputs": []
+      "outputs": ["playwright-report/**"]
     },
     "@next-auth/upstash-redis-adapter#test": {
       "env": ["UPSTASH_REDIS_KEY", "UPSTASH_REDIS_URL"]
