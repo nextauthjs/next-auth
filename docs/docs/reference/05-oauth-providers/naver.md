@@ -11,6 +11,11 @@ https://developers.naver.com/docs/login/overview/overview.md
 
 https://developers.naver.com/docs/login/api/api.md
 
+Naver provides up to 5 "Callback URLs" ("Authorized Redirect URIs" in Google). And you must include your full domain and end in the callback path. For example;
+
+For production: https://{YOUR_DOMAIN}/api/auth/callback/naver
+For development: http://localhost:3000/api/auth/callback/naver
+
 ## Options
 
 The **Naver Provider** comes with a set of default options:
