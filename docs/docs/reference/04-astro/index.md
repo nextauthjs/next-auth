@@ -20,6 +20,37 @@ npm install @auth/astro@latest @auth/core@latest
 
 ## Usage
 
+### Requirements
+- Node version `>= 19.x`
+- Astro config set to output mode `server`
+
+### Enable SSR in Your AstroJS Project
+
+Initialize a new Astro project and enable server-side rendering.
+
+Enabling server-side rendering within an Astro project requires a [deployment `adapter`](https://docs.astro.build/en/guides/deploy/) to be configured.
+
+These settings can be configured within the `astro.config.mjs` file, located in the root of your project directory.
+
+:::info
+The example below use the [Node `adapter`](https://docs.astro.build/en/guides/integrations-guide/node/#overview)
+:::
+```js title="astro.config.mjs"
+import { defineConfig } from 'astro/config';
+import node from '@astrojs/node';
+
+export default defineConfig({
+  output: 'server',
+  adapter: node({
+    mode: 'standalone | middleware'
+  }),
+});
+```
+
+Resources:
+- [Enabling SSR in Your Project](https://docs.astro.build/en/guides/server-side-rendering/#enabling-ssr-in-your-project)
+- [Adding an Adapter](https://docs.astro.build/en/guides/server-side-rendering/#adding-an-adapter)
+
 ### Setup Environment Variables
 
 Generate an auth secret by running `openssl rand -hex 32` in a local terminal or by visiting [generate-secret.vercel.app](https://generate-secret.vercel.app/32), copy the string, then set it as the `AUTH_SECRET` environment variable describe below.
@@ -39,11 +70,11 @@ AUTH_TRUST_HOST=true
 
 No matter which provider(s) you use, you need to create one Astro [endpoint](https://docs.astro.build/en/core-concepts/endpoints/) that handles requests. 
 
-Depending on the provider(s) you select, you will have to provide different additional app credentials within your `.env` file.
+Depending on the provider(s) you select, you will have to provide additional app credentials as environment variables within your `.env` file.
 
 *App Credentials should be set as environment variables, and imported using `import.meta.env`.*
 
-```ts title="/.env/
+```ts title=".env"
 AUTH_SECRET=<auth-secret>
 AUTH_TRUST_HOST=<true | false>
 ...
@@ -53,17 +84,15 @@ GITHUB_SECRET=<github-oauth-clientSecret>
 
 ```ts title="src/pages/api/auth/[...astroauth].ts"
 import { AstroAuth, type AstroAuthConfig } from "@auth/astro"
-import Github from "@auth/core/providers/github"
+import GitHub from "@auth/core/providers/github"
 
 export const authOpts: AstroAuthConfig = {
   providers: [
-    //@ts-expect-error issue https://github.com/nextauthjs/next-auth/issues/6174
     GitHub({
       clientId: import.meta.env.GITHUB_ID,
       clientSecret: import.meta.env.GITHUB_SECRET,
     }),
-  ],
-  trustHost: true,
+  ]
 }
 
 export const { get, post } = AstroAuth(authOpts)
@@ -72,6 +101,9 @@ Some OAuth Providers request a callback URL be submitted alongside requesting a 
 The callback URL used by the [providers](https://authjs.dev/reference/core/modules/providers) must be set to the following, unless you override the `prefix` field in `authOpts`:
 ```
 [origin]/api/auth/callback/[provider]
+
+// example
+// http://localhost:3000/api/auth/callback/github
 ```
 
 
