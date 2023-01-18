@@ -47,8 +47,8 @@ jobs:
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: apps/dev/nextjs/playwright-report
-          path: playwright-report/
+          name: playwright-report
+          path: apps/dev/nextjs/playwright-report/
           retention-days: 30
       # - name: Coverage
       #   uses: codecov/codecov-action@v1
