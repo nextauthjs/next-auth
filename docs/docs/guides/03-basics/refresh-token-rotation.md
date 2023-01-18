@@ -136,7 +136,7 @@ export default Auth(new Request("https://example.com"), {
       const [google] = await prisma.account.findMany({
         where: { userId: user.id, provider: "google" },
       })
-      if (google.expires_at >= Date.now()) {
+      if (google.expires_at <= Date.now()) {
         // If the access token has expired, try to refresh it
         try {
           // https://accounts.google.com/.well-known/openid-configuration
