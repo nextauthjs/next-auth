@@ -76,11 +76,11 @@ export function AstroAuth(config: AstroAuthConfig) {
   // @ts-expect-error
   authConfig.trustHost ??= !!(
     // @ts-expect-error
-    import.meta.env.env.AUTH_TRUST_HOST ??
+    import.meta.env.AUTH_TRUST_HOST ??
     // @ts-expect-error
-    import.meta.env.env.VERCEL ??
+    import.meta.env.VERCEL ??
     // @ts-expect-error
-    import.meta.env.env.NODE_ENV !== "production"
+    import.meta.env.NODE_ENV !== "production"
   )
 
   return {
@@ -99,7 +99,14 @@ export async function getSession(
 ): Promise<Session | null> {
   // @ts-ignore import.meta.env is used by Astro
   options.secret ??= import.meta.env.AUTH_SECRET
-  options.trustHost ??= true
+  options.trustHost ??= !!(
+    // @ts-expect-error
+    import.meta.env.AUTH_TRUST_HOST ??
+    // @ts-expect-error
+    import.meta.env.VERCEL ??
+    // @ts-expect-error
+    import.meta.env.NODE_ENV !== "production"
+  )
 
   const url = new URL("/api/auth/session", req.url)
   const response = await Auth(
