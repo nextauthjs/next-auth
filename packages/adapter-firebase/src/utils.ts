@@ -137,11 +137,9 @@ export function collestionsFactory(
 }
 
 export function firestore(appOptions: AppOptions) {
-  appOptions.projectId ??= "authjs-firebase-adapter"
-  const apps = getApps()
-  const app = apps.find((app) => app.name === appOptions.projectId) ?? apps[0]
-  if (app) {
-    return getFirestore(app)
+  const prevApp = getApps()[0]
+  if (prevApp) {
+    return getFirestore(prevApp)
   } else {
     const app = initializeApp(appOptions)
     return initializeFirestore(app)

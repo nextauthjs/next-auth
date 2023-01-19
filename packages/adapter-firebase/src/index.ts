@@ -33,11 +33,6 @@ import {
 /** Configure the Firebase Adapter. */
 export interface FirebaseAdapterConfig extends AppOptions {
   /**
-   * The ID of the Google Cloud project associated with the App.
-   * @default "authjs-firebase-adapter"
-   */
-  projectId?: string
-  /**
    * Use this option if mixed `snake_case` and `camelCase` field names in the database is an issue for you.
    * Passing `snake_case` convert all field and collection names to `snake_case`.
    * E.g. the collection `verificationTokens` will instead be `verification_tokens`,
