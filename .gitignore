@@ -35,13 +35,11 @@ packages/next-auth/utils
 packages/next-auth/core
 packages/next-auth/jwt
 packages/next-auth/react
-packages/next-auth/adapters.d.ts
-packages/next-auth/adapters.js
-packages/next-auth/index.d.ts
-packages/next-auth/index.js
 packages/next-auth/next
-packages/next-auth/middleware.d.ts
-packages/next-auth/middleware.js
+packages/*/*.js
+packages/*/*.d.ts
+packages/*/*.d.ts.map
+
 
 # Development app
 apps/dev/src/css
@@ -82,9 +80,6 @@ docs/.docusaurus
 docs/providers.json
 
 # Core
-packages/core/*.js
-packages/core/*.d.ts
-packages/core/*.d.ts.map
 packages/core/lib
 packages/core/providers
 packages/core/src/lib/pages/styles.ts

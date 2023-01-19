@@ -18,156 +18,25 @@
  * @module @next-auth/firebase-adapter
  */
 
-import { firestore } from "firebase-admin"
+import { type AppOptions } from "firebase-admin/app"
 
-import type {
-  Adapter,
-  AdapterUser,
-  AdapterAccount,
-  AdapterSession,
-  VerificationToken,
-} from "next-auth/adapters"
-
-// for consistency, store all fields as snake_case in the database
-const MAP_TO_FIRESTORE: Record<string, string | undefined> = {
-  userId: "user_id",
-  sessionToken: "session_token",
-  providerAccountId: "provider_account_id",
-  emailVerified: "email_verified",
-}
-const MAP_FROM_FIRESTORE: Record<string, string | undefined> = {}
-
-for (const key in MAP_TO_FIRESTORE) {
-  MAP_FROM_FIRESTORE[MAP_TO_FIRESTORE[key]!] = key
-}
-
-const identity = <T>(x: T) => x
-
-/** @internal */
-export function mapFieldsFactory(preferSnakeCase?: boolean) {
-  if (preferSnakeCase) {
-    return {
-      toDb: (field: string) => MAP_TO_FIRESTORE[field] ?? field,
-      fromDb: (field: string) => MAP_FROM_FIRESTORE[field] ?? field,
-    }
-  }
-  return { toDb: identity, fromDb: identity }
-}
-
-/** @internal */
-export function getConverter<Document extends Record<string, any>>(options: {
-  excludeId?: boolean
-  preferSnakeCase?: boolean
-}): FirebaseFirestore.FirestoreDataConverter<Document> {
-  const mapper = mapFieldsFactory(options?.preferSnakeCase ?? false)
-
-  return {
-    toFirestore(object) {
-      const document: Record<string, unknown> = {}
-
-      for (const key in object) {
-        if (key === "id") continue
-        const value = object[key]
-        if (value !== undefined) {
-          document[mapper.toDb(key)] = value
-        } else {
-          console.warn(
-            `FirestoreAdapterAdmin: value for key "${key}" is undefined`
-          )
-        }
-      }
-
-      return document
-    },
-
-    fromFirestore(
-      snapshot: FirebaseFirestore.QueryDocumentSnapshot<Document>
-    ): Document {
-      const document = snapshot.data()! // we can guarentee it exists
-
-      const object: Record<string, unknown> = {}
-
-      if (!options?.excludeId) {
-        object.id = snapshot.id
-      }
-
-      for (const key in document) {
-        let value: any = document[key]
-        if (value instanceof firestore.Timestamp) value = value.toDate()
-
-        object[mapper.fromDb(key)] = value
-      }
-
-      return object as Document
-    },
-  }
-}
-
-/** @internal */
-export async function getOneDoc<T>(
-  querySnapshot: FirebaseFirestore.Query<T>
-): Promise<T | null> {
-  const querySnap = await querySnapshot.limit(1).get()
-  return querySnap.docs[0]?.data() ?? null
-}
-
-/** @internal */
-export async function deleteDocs<T>(
-  querySnapshot: FirebaseFirestore.Query<T>
-): Promise<void> {
-  const querySnap = await querySnapshot.get()
-  for (const doc of querySnap.docs) {
-    await doc.ref.delete()
-  }
-}
-
-/** @internal */
-export async function getDoc<T>(
-  docRef: FirebaseFirestore.DocumentReference<T>
-): Promise<T | null> {
-  const docSnap = await docRef.get()
-  return docSnap.data() ?? null
-}
-
-/** @internal */
-export function collestionsFactory(
-  db: FirebaseFirestore.Firestore,
-  preferSnakeCase = false
-) {
-  return {
-    users: db
-      .collection("users")
-      .withConverter(getConverter<AdapterUser>({ preferSnakeCase })),
-    sessions: db
-      .collection("sessions")
-      .withConverter(getConverter<AdapterSession>({ preferSnakeCase })),
-    accounts: db
-      .collection("accounts")
-      .withConverter(getConverter<AdapterAccount>({ preferSnakeCase })),
-    verification_tokens: db
-      .collection(
-        preferSnakeCase ? "verification_tokens" : "verificationTokens"
-      )
-      .withConverter(
-        getConverter<VerificationToken>({ preferSnakeCase, excludeId: true })
-      ),
-  }
-}
+import type { Adapter, AdapterUser } from "next-auth/adapters"
+import {
+  collestionsFactory,
+  deleteDocs,
+  firestore,
+  getDoc,
+  getOneDoc,
+  mapFieldsFactory,
+} from "./utils"
 
 /** Configure the Firebase Adapter. */
-export interface FirestoreAdapterConfig {
+export interface FirebaseAdapterConfig extends AppOptions {
   /**
-   * A Firestore instance using the Firebase Admin SDK.
-   * @example
-   * ```ts
-   * import admin from "firebase-admin"
-   * const app = admin.initializeApp()
-   * const firestore = app.firestore()
-   * ```
-   *
-   * @see [Firebase Admin SDK setup](https://firebase.google.com/docs/admin/setup)
+   * The ID of the Google Cloud project associated with the App.
+   * @default "authjs-firebase-adapter"
    */
-  db: FirebaseFirestore.Firestore
+  projectId?: string
   /**
    * Use this option if mixed `snake_case` and `camelCase` field names in the database is an issue for you.
    * Passing `snake_case` convert all field and collection names to `snake_case`.
@@ -183,26 +52,23 @@ export interface FirestoreAdapterConfig {
  *
  * #### Usage
  *
- * 1. Create a Firebase project and generate a service account key. Refer to [Firebase Admin SDK setup](https://firebase.google.com/docs/admin/setup).
- * 2. Add the adapter to your Auth.js / NextAuth.js configuration.
+ * 1. Create a Firebase project and generate a service account key.
+ * 2. Add `GOOGLE_APPLICATION_CREDENTIALS` to your environment variables.
+ * 3. Add the adapter to your Auth.js / NextAuth.js configuration.
  *
- * @example
+ * ##### References
+ * - [Firebase Admin SDK setup](https://firebase.google.com/docs/admin/setup)
+ * - [`GOOGLE_APPLICATION_CREDENTIALS`](https://cloud.google.com/docs/authentication/application-default-credentials#GAC)
+ *
+ * ##### Example
  *
  * ```ts title="pages/api/auth/[...nextauth].ts"
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
  * import { FirestoreAdapter } from "@next-auth/firebase-adapter"
- * import admin from "firebase-admin"
- *
- * // Initialize the Firebase admin app. By default, the Firebase Admin SDK will
- * // look for the GOOGLE_APPLICATION_CREDENTIALS environment variable and use
- * // that to authenticate with the firebase project. See other authentication
- * // methods here: https://firebase.google.com/docs/admin/setup
- * const app = admin.initializeApp()
- * const db = app.firestore()
  *
  * export default NextAuth({
- *   adapter: FirestoreAdapter({ db }),
+ *   adapter: FirestoreAdapter(),
  *   providers: [
  *     GoogleProvider({
  *       clientId: process.env.GOOGLE_ID,
@@ -213,8 +79,10 @@ export interface FirestoreAdapterConfig {
  * })
  * ```
  */
-export function FirestoreAdapter(config: FirestoreAdapterConfig): Adapter {
-  const { db, namingStrategy } = config
+export function FirestoreAdapter(config?: FirebaseAdapterConfig): Adapter {
+  const { namingStrategy = "default", ...appOptions } = config ?? {}
+  const db = firestore(appOptions)
+
   const preferSnakeCase = namingStrategy === "snake_case"
   const C = collestionsFactory(db, preferSnakeCase)
   const mapper = mapFieldsFactory(preferSnakeCase)

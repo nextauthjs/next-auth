@@ -12,10 +12,16 @@
     "Nico Domino <yo@ndo.dev>",
     "Alex Meuer <github@alexmeuer.com>"
   ],
-  "main": "dist/index.js",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
   "files": [
-    "dist",
-    "index.d.ts"
+    "*.js",
+    "*.d.ts"
   ],
   "license": "ISC",
   "keywords": [
