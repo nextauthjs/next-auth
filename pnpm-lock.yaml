@@ -183,7 +183,6 @@ importers:
       react: ^18.2.0
       react-dom: ^18.2.0
       react-marquee-slider: ^1.1.5
-      remark-github: 10.1.0
       styled-components: 5.3.6
       typedoc: ^0.23.24
       typedoc-plugin-markdown: https://gitpkg.now.sh/balazsorban44/typedoc-plugin-markdown/packages/typedoc-plugin-markdown?next
@@ -200,7 +199,6 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-marquee-slider: 1.1.5_styled-components@5.3.6
-      remark-github: 10.1.0
       styled-components: 5.3.6_biqbaboplfbrettd7655fr4n2y
     devDependencies:
       '@docusaurus/core': 2.2.0_if65ga6ul5jnw5c4373drfty5m
@@ -25272,14 +25270,6 @@ packages:
       unist-util-visit: 2.0.3
     dev: true
 
-  /mdast-util-find-and-replace/1.1.1:
-    resolution: {integrity: sha512-9cKl33Y21lyckGzpSmEQnIDjEfeeWelN5s1kUW1LwdB0Fkuq2u+4GdqcGEygYxJE8GVqCl0741bYXHgamfWAZA==}
-    dependencies:
-      escape-string-regexp: 4.0.0
-      unist-util-is: 4.1.0
-      unist-util-visit-parents: 3.1.1
-    dev: false
-
   /mdast-util-to-hast/10.0.1:
     resolution: {integrity: sha512-BW3LM9SEMnjf4HXXVApZMt8gLQWVNXc3jryK0nJu/rOXPOnlkUjmdkDlmxMirpbU9ILncGFIwLH/ubnWBbcdgA==}
     dependencies:
@@ -25292,10 +25282,6 @@ packages:
       unist-util-position: 3.1.0
       unist-util-visit: 2.0.3
     dev: true
-
-  /mdast-util-to-string/1.1.0:
-    resolution: {integrity: sha512-jVU0Nr2B9X3MU4tSK7JP1CMkSvOj7X5l/GboG1tKRw52lLF1x2Ju92Ms9tNetCcbfX3hzlM73zYo2NKkWSfF/A==}
-    dev: false
 
   /mdast-util-to-string/2.0.0:
     resolution: {integrity: sha512-AW4DRS3QbBayY/jJmD8437V1Gombjf8RSOUCMFBuo5iHi58AGEgVCKQ+ezHkZZDpAQS75hcBMpLqjpJTjtUL7w==}
@@ -29371,14 +29357,6 @@ packages:
   /remark-footnotes/2.0.0:
     resolution: {integrity: sha512-3Clt8ZMH75Ayjp9q4CorNeyjwIxHFcTkaektplKGl2A1jNGEUey8cKL0ZC5vJwfcD5GFGsNLImLG/NGzWIzoMQ==}
     dev: true
-
-  /remark-github/10.1.0:
-    resolution: {integrity: sha512-q0BTFb41N6/uXQVkxRwLRTFRfLFPYP+8li26Js5XC0GKritCSaxrftd+t+8sfN+1i9BtmJPUKoS7CZwtccj0Fg==}
-    dependencies:
-      mdast-util-find-and-replace: 1.1.1
-      mdast-util-to-string: 1.1.0
-      unist-util-visit: 2.0.3
-    dev: false
 
   /remark-mdx/1.6.22:
     resolution: {integrity: sha512-phMHBJgeV76uyFkH4rvzCftLfKCr2RZuF+/gmVcaKrpsihyzmhXjA0BEMDaPTXG5y8qZOKPVo83NAOX01LPnOQ==}

@@ -182,17 +182,7 @@ const docusaurusConfig = {
           lastVersion: "current",
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
-          remarkPlugins: [
-            require("@sapphire/docusaurus-plugin-npm2yarn2pnpm").npm2yarn2pnpm,
-            [
-              require("remark-github"),
-              {
-                buildUrl(values, defaultBuildUrl) {
-                  return values.type === "mention" ? false : defaultBuildUrl(values)
-                },
-              },
-            ],
-          ],
+          remarkPlugins: [require("@sapphire/docusaurus-plugin-npm2yarn2pnpm").npm2yarn2pnpm],
           versions: {
             current: {
               label: "experimental",
