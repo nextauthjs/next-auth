@@ -3,7 +3,7 @@
   "repository": "https://github.com/nextauthjs/next-auth",
   "name": "docs",
   "scripts": {
-    "start": "TYPEDOC_WATCH=true docusaurus start --no-open --port 8000",
+    "start": "TYPEDOC_WATCH=true docusaurus start --no-open",
     "dev": "pnpm providers && pnpm snippets && pnpm start",
     "build": "pnpm providers && docusaurus build",
     "docusaurus": "docusaurus",

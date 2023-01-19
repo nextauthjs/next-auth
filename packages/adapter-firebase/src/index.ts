@@ -1,4 +1,19 @@
 /**
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
+ * <span>
+ *  Official <b>Firebase</b> adapter for Auth.js / NextAuth.js,
+ *  using the <a href="https://firebase.google.com/docs/admin/setup">Firebase Admin SDK</a>
+ *  &nbsp;and <a href="https://firebase.google.com/docs/firestore">Firestore</a>.</span>
+ * <a href="https://firebase.google.com/">
+ *   <img style={{display: "block"}} src="https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/adapter-firebase/logo.svg" height="48" width="48"/>
+ * </a>
+ * </div>
+ *
+ * ## Installation
+ *
+ * ```bash npm2yarn2pnpm
+ * npm install next-auth @next-auth/firebase-admin-adapter firebase-admin
+ * ```
  *
  * @module @next-auth/firebase-adapter
  */
@@ -28,6 +43,7 @@ for (const key in MAP_TO_FIRESTORE) {
 
 const identity = <T>(x: T) => x
 
+/** @internal */
 export function mapFieldsFactory(preferSnakeCase?: boolean) {
   if (preferSnakeCase) {
     return {
@@ -38,6 +54,7 @@ export function mapFieldsFactory(preferSnakeCase?: boolean) {
   return { toDb: identity, fromDb: identity }
 }
 
+/** @internal */
 export function getConverter<Document extends Record<string, any>>(options: {
   excludeId?: boolean
   preferSnakeCase?: boolean
@@ -86,6 +103,7 @@ export function getConverter<Document extends Record<string, any>>(options: {
   }
 }
 
+/** @internal */
 export async function getOneDoc<T>(
   querySnapshot: FirebaseFirestore.Query<T>
 ): Promise<T | null> {
@@ -93,6 +111,7 @@ export async function getOneDoc<T>(
   return querySnap.docs[0]?.data() ?? null
 }
 
+/** @internal */
 export async function deleteDocs<T>(
   querySnapshot: FirebaseFirestore.Query<T>
 ): Promise<void> {
@@ -102,6 +121,7 @@ export async function deleteDocs<T>(
   }
 }
 
+/** @internal */
 export async function getDoc<T>(
   docRef: FirebaseFirestore.DocumentReference<T>
 ): Promise<T | null> {
@@ -109,6 +129,7 @@ export async function getDoc<T>(
   return docSnap.data() ?? null
 }
 
+/** @internal */
 export function collestionsFactory(
   db: FirebaseFirestore.Firestore,
   preferSnakeCase = false
@@ -133,64 +154,68 @@ export function collestionsFactory(
   }
 }
 
-export interface FirestoreAdapterOptions {
+/** Configure the Firebase Adapter. */
+export interface FirestoreAdapterConfig {
+  /**
+   * A Firestore instance using the Firebase Admin SDK.
+   * @example
+   * ```ts
+   * import admin from "firebase-admin"
+   * const app = admin.initializeApp()
+   * const firestore = app.firestore()
+   * ```
+   *
+   * @see [Firebase Admin SDK setup](https://firebase.google.com/docs/admin/setup)
+   */
   db: FirebaseFirestore.Firestore
-  preferSnakeCase?: boolean
+  /**
+   * Use this option if mixed `snake_case` and `camelCase` field names in the database is an issue for you.
+   * Passing `snake_case` convert all field and collection names to `snake_case`.
+   * E.g. the collection `verificationTokens` will instead be `verification_tokens`,
+   * and fields like `emailVerified` will be `email_verified` instead.
+   *
+   * @default "default"
+   */
+  namingStrategy?: "snake_case" | "default"
 }
 
 /**
  *
- * 1. Install the necessary packages
+ * #### Usage
  *
- * ```bash npm2yarn2pnpm
- * npm install next-auth @next-auth/firebase-admin-adapter firebase-admin
- * ```
+ * 1. Create a Firebase project and generate a service account key. Refer to [Firebase Admin SDK setup](https://firebase.google.com/docs/admin/setup).
+ * 2. Add the adapter to your Auth.js / NextAuth.js configuration.
  *
- * 2. Create a Firebase project and generate a service account key. See [instructions](https://firebase.google.com/docs/admin/setup).
+ * @example
  *
- * 3. Add this adapter to your `pages/api/auth/[...nextauth].js` next-auth configuration object.
- *
- * ```ts title="pages/api/auth/[...nextauth].js"
+ * ```ts title="pages/api/auth/[...nextauth].ts"
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
- * import { FirestoreAdminAdapter } from "@next-auth/firebase-admin-adapter"
- *
+ * import { FirestoreAdapter } from "@next-auth/firebase-adapter"
  * import admin from "firebase-admin"
  *
- * // Initialize the firebase admin app. By default, the firebase admin sdk will
+ * // Initialize the Firebase admin app. By default, the Firebase Admin SDK will
  * // look for the GOOGLE_APPLICATION_CREDENTIALS environment variable and use
  * // that to authenticate with the firebase project. See other authentication
  * // methods here: https://firebase.google.com/docs/admin/setup
  * const app = admin.initializeApp()
+ * const db = app.firestore()
  *
- * const firestore = app.firestore()
- *
- * // For more information on each option (and a full list of options) go to
- * // https://authjs.dev/reference/configuration/auth-options
  * export default NextAuth({
- *   // https://authjs.dev/reference/providers/
+ *   adapter: FirestoreAdapter({ db }),
  *   providers: [
  *     GoogleProvider({
  *       clientId: process.env.GOOGLE_ID,
  *       clientSecret: process.env.GOOGLE_SECRET,
  *     }),
  *   ],
- *   adapter: FirestoreAdminAdapter(firestore),
  *   ...
  * })
  * ```
- *
- * ## Naming Conventions
- *
- * If mixed snake_case and camelCase field names in the database is an issue for you, you can pass the option `preferSnakeCase: true` to the adapter. This will convert all
- * fields names and collection names to snake_case e.g. the collection `verificationTokens` will instead be `verification_tokens`, and fields like `emailVerified` will instead be `email_verified`.
- *
- * ```ts
- * FirestoreAdminAdapter(firestore, { preferSnakeCase: true })
- * ```
  */
-export function FirestoreAdapter(options: FirestoreAdapterOptions): Adapter {
-  const { db, preferSnakeCase = false } = options
+export function FirestoreAdapter(config: FirestoreAdapterConfig): Adapter {
+  const { db, namingStrategy } = config
+  const preferSnakeCase = namingStrategy === "snake_case"
   const C = collestionsFactory(db, preferSnakeCase)
   const mapper = mapFieldsFactory(preferSnakeCase)
 
