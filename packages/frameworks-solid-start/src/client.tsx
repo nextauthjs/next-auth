@@ -316,8 +316,5 @@ export async function signOut(
 export async function getSession() {
   const res = await fetch(`/api/auth/session`)
   const data = await res.json()
-  if (objectIsSession(data)) {
-    return data
-  }
-  return null
+  return objectIsSession(data) ? data : null
 }
