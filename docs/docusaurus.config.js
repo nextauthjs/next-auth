@@ -182,7 +182,17 @@ const docusaurusConfig = {
           lastVersion: "current",
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
-          remarkPlugins: [require("@sapphire/docusaurus-plugin-npm2yarn2pnpm").npm2yarn2pnpm, require("remark-github")],
+          remarkPlugins: [
+            require("@sapphire/docusaurus-plugin-npm2yarn2pnpm").npm2yarn2pnpm,
+            [
+              require("remark-github"),
+              {
+                buildUrl(values, defaultBuildUrl) {
+                  return values.type === "mention" ? false : defaultBuildUrl(values)
+                },
+              },
+            ],
+          ],
           versions: {
             current: {
               label: "experimental",
@@ -205,7 +215,7 @@ const docusaurusConfig = {
         watch: process.env.TYPEDOC_WATCH,
         entryPoints: ["index.ts", "adapters.ts", "errors.ts", "jwt.ts", "types.ts"].map((e) => `${coreSrc}/${e}`).concat(providers),
         tsconfig: "../packages/core/tsconfig.json",
-        out: "reference/03-core",
+        out: "reference/core",
       },
     ],
     [
