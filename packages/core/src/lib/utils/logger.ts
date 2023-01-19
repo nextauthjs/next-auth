@@ -1,6 +1,6 @@
 import { AuthError } from "../../errors.js"
 
-export type WarningCode = "debug_enabled"
+export type WarningCode = "debug-enabled" | "csrf-disabled"
 
 /**
  * Override any of the methods, and the rest will use the default logger.
@@ -38,7 +38,7 @@ export const logger: LoggerInstance = {
     }
   },
   warn(code) {
-    const url = `https://errors.authjs.dev#${code}`
+    const url = `https://warnings.authjs.dev#${code}`
     console.warn(`${yellow}[auth][warn][${code}]${reset}`, `Read more: ${url}`)
   },
   debug(message, metadata) {

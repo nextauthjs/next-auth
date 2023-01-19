@@ -3,57 +3,13 @@ id: warnings
 title: Warnings
 ---
 
-This is a list of warning output from Auth.js.
+A list of warnings from Auth.js that need your attention.
 
-All warnings indicate things which you should take a look at, but do not inhibit normal operation.
 
----
+## Debug enabled
 
-## Client
+The `debug` option was evaluated to `true`. It adds extra logs in the terminal which is useful in development, but since it can print sensitive information about users, make sure to set this to `false` in production. In Node.js environments, you can for example set `debug: process.env.NODE_ENV !== "production"`. Consult with your runtime/framework on how to set this value correctly.
 
-#### NEXTAUTH_URL
+## CSRF disabled
 
-Environment variable `NEXTAUTH_URL` missing. Please set it in your `.env` file.
-
-:::note
-On [Vercel](https://vercel.com) deployments, we will read the `VERCEL_URL` environment variable, so you won't need to define `NEXTAUTH_URL`.
-:::
-
----
-
-## Server
-
-These warnings are displayed on the terminal.
-
-#### NO_SECRET
-
-In development, we generate a `secret` based on your configuration for convenience. This is volatile and will throw an error in production. [Read more](https://authjs.dev/reference/configuration/auth-config/#secret)
-
-#### TWITTER_OAUTH_2_BETA
-
-Twitter OAuth 2.0 is currently in beta as certain changes might still be necessary. This is not covered by semver. See the docs https://authjs.dev/reference/providers/twitter#oauth-2
-
-#### EXPERIMENTAL_API
-
-Some APIs are still experimental; they may be changed or removed in the future. Use at your own risk.
-
-## Adapter
-
-### ADAPTER_TYPEORM_UPDATING_ENTITIES
-
-This warning occurs when typeorm finds that the provided entities differ from the database entities. By default while not in `production` the typeorm adapter will always synchronize changes made to the entities codefiles.
-
-Disable this warning by setting `synchronize: false` in your typeorm config
-
-Example:
-
-```js title="/pages/api/auth/[...nextauth].js"
-adapter: TypeORMLegacyAdapter({
-  type: 'mysql',
-  username: process.env.DATABASE_USERNAME,
-  password: process.env.DATABASE_PASSWORD,
-  host: process.env.DATABASE_HOST,
-  database: process.env.DATABASE_DB,
-  synchronize: false
-}),
-```
+You were trying to get a CSRF response from Auth.js (eg.: by calling a `/csrf` endpoint), but in this setup, CSRF protection via Auth.js was turned off. This is likely if you are not directly using `@auth/core` but a framework library (like `@auth/sveltekit`) that already has CSRF protection built-in. You likely won't need the CSRF response.
