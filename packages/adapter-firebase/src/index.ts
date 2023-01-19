@@ -47,9 +47,10 @@ export interface FirebaseAdapterConfig extends AppOptions {
  *
  * #### Usage
  *
- * 1. Create a Firebase project and generate a service account key.
- * 2. Add `GOOGLE_APPLICATION_CREDENTIALS` to your environment variables.
- * 3. Add the adapter to your Auth.js / NextAuth.js configuration.
+ * 1. Create a Firebase project and generate a service account key. `https://console.firebase.google.com/u/0/project/{project-id}/settings/serviceaccounts/adminsdk`
+ * 2. Download the service account key and save it in your project. (Make sure to add it to your `.gitignore`!)
+ * 3. Add `GOOGLE_APPLICATION_CREDENTIALS` to your environment variables and point it to the service account key file.
+ * 4. Add the adapter to your Auth.js / NextAuth.js configuration.
  *
  * ##### References
  * - [Firebase Admin SDK setup](https://firebase.google.com/docs/admin/setup)
