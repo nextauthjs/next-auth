@@ -27,7 +27,7 @@
  * ## Resources
  *
  * - [Getting started](https://authjs.dev/getting-started/introduction)
- * - [Most common use case guides](https://authjs.dev/guides/overview)
+ * - [Most common use case guides](https://authjs.dev/guides)
  *
  * @module main
  */
