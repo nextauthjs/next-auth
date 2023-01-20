@@ -1,6 +1,6 @@
 <p align="center">
    <br/>
-   <a href="https://next-auth.js.org" target="_blank"><img height="64px" src="https://next-auth.js.org/img/logo/logo-sm.png" /></a>&nbsp;&nbsp;&nbsp;&nbsp;<img height="64px" src="logo.svg" />
+   <a href="https://authjs.dev" target="_blank"><img height="64px" src="https://authjs.dev/img/logo/logo-sm.png" /></a>&nbsp;&nbsp;&nbsp;&nbsp;<img height="64px" src="logo.svg" />
    <h3 align="center"><b>Xata Adapter</b> - NextAuth.js</h3>
    <p align="center">
    Think data, not databases.
@@ -41,7 +41,6 @@ Now that we're ready, let's create a new Xata project using our next-auth schema
 
 ```json title="schema.json"
 {
-  "formatVersion": "",
   "tables": [
     {
       "name": "nextauth_users",

@@ -4,12 +4,12 @@ import {
   MissingAdapterMethods,
   MissingSecret,
 } from "../src/core/errors"
-import { handler } from "./lib"
+import { handler } from "./utils"
 import EmailProvider from "../src/providers/email"
 
 it("Show error page if secret is not defined", async () => {
   const { res, log } = await handler(
-    { providers: [], secret: undefined },
+    { providers: [], secret: undefined, trustHost: true },
     { prod: true }
   )
 
@@ -28,6 +28,7 @@ it("Show error page if adapter is missing functions when using with email", asyn
       adapter: missingFunctionAdapter,
       providers: [EmailProvider({ sendVerificationRequest })],
       secret: "secret",
+      trustHost: true,
     },
     { prod: true }
   )
@@ -48,6 +49,7 @@ it("Show error page if adapter is not configured when using with email", async (
     {
       providers: [EmailProvider({ sendVerificationRequest })],
       secret: "secret",
+      trustHost: true,
     },
     { prod: true }
   )
@@ -64,7 +66,7 @@ it("Show error page if adapter is not configured when using with email", async (
 
 it("Should show configuration error page on invalid `callbackUrl`", async () => {
   const { res, log } = await handler(
-    { providers: [] },
+    { providers: [], trustHost: true },
     { prod: true, params: { callbackUrl: "invalid-callback" } }
   )
 
@@ -80,7 +82,7 @@ it("Should show configuration error page on invalid `callbackUrl`", async () => 
 
 it("Allow relative `callbackUrl`", async () => {
   const { res, log } = await handler(
-    { providers: [] },
+    { providers: [], trustHost: true },
     { prod: true, params: { callbackUrl: "/callback" } }
   )
 

@@ -5,7 +5,7 @@ import type {
   ProviderType,
   EmailConfig,
   CredentialsConfig,
-  InternalOAuthConfig,
+  OAuthConfigInternal,
 } from "../providers"
 import type { TokenSetParameters } from "openid-client"
 import type { JWT, JWTOptions } from "../jwt"
@@ -13,8 +13,6 @@ import type { LoggerInstance } from "../utils/logger"
 import type { CookieSerializeOptions } from "cookie"
 
 import type { NextApiRequest, NextApiResponse } from "next"
-
-import type { InternalUrl } from "../utils/parse-url"
 
 export type Awaitable<T> = T | PromiseLike<T>
 
@@ -25,7 +23,7 @@ export type { LoggerInstance }
  *
  * [Documentation](https://next-auth.js.org/configuration/options#options)
  */
-export interface NextAuthOptions {
+export interface AuthOptions {
   /**
    * An array of authentication providers for signing in
    * (e.g. Google, Facebook, Twitter, GitHub, Email, etc) in any order.
@@ -38,10 +36,10 @@ export interface NextAuthOptions {
   providers: Provider[]
   /**
    * A random string used to hash tokens, sign cookies and generate cryptographic keys.
-   * If not specified, it falls back to `jwt.secret` or `NEXTAUTH_SECRET` from environment vairables.
-   * Otherwise it will use a hash of all configuration options, including Client ID / Secrets for entropy.
+   * If not specified, it falls back to `jwt.secret` or `NEXTAUTH_SECRET` from environment variables.
+   * Otherwise, it will use a hash of all configuration options, including Client ID / Secrets for entropy.
    *
-   * NOTE: The last behavior is extrmely volatile, and will throw an error in production.
+   * NOTE: The last behavior is extremely volatile, and will throw an error in production.
    * * **Default value**: `string` (SHA hash of the "options" object)
    * * **Required**: No - **but strongly recommended**!
    *
@@ -210,7 +208,7 @@ export interface NextAuthOptions {
    * - ⚠ **This is an advanced option.** Advanced options are passed the same way as basic options,
    * but **may have complex implications** or side effects.
    * You should **try to avoid using advanced options** unless you are very comfortable using them.
-   * @default Boolean(process.env.AUTH_TRUST_HOST ?? process.env.VERCEL)
+   * @default Boolean(process.env.NEXTAUTH_URL ?? process.env.AUTH_TRUST_HOST ?? process.env.VERCEL)
    */
   trustHost?: boolean
 }
@@ -501,7 +499,7 @@ export interface User extends DefaultUser {}
 
 /** @internal */
 export type InternalProvider<T = ProviderType> = (T extends "oauth"
-  ? InternalOAuthConfig<any>
+  ? OAuthConfigInternal<any>
   : T extends "email"
   ? EmailConfig
   : T extends "credentials"
@@ -511,7 +509,7 @@ export type InternalProvider<T = ProviderType> = (T extends "oauth"
   callbackUrl: string
 }
 
-export type NextAuthAction =
+export type AuthAction =
   | "providers"
   | "session"
   | "csrf"
@@ -528,12 +526,8 @@ export interface InternalOptions<
   WithVerificationToken = TProviderType extends "email" ? true : false
 > {
   providers: InternalProvider[]
-  /**
-   * Parsed from `NEXTAUTH_URL` or `x-forwarded-host` on Vercel.
-   * @default "http://localhost:3000/api/auth"
-   */
-  url: InternalUrl
-  action: NextAuthAction
+  url: URL
+  action: AuthAction
   provider: InternalProvider<TProviderType>
   csrfToken?: string
   csrfTokenVerified?: boolean
