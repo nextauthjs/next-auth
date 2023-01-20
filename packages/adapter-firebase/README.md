@@ -1,8 +1,8 @@
 <p align="center">
    <br/>
    <a href="https://authjs.dev" target="_blank">
-    <img height="64px" src="https://authjs.dev/img/logo/logo-sm.png" /></a><img height="64px" src="https://raw.githubusercontent.com/nextauthjs/adapters/main/packages/firebase/logo.svg" />
-   <h3 align="center"><b>Firebase Adapter</b> - NextAuth.js</h3>
+    <img height="64px" src="https://authjs.dev/img/logo/logo-sm.png" /></a><img height="64px" src="https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/adapter-firebase/logo.svg" />
+   <h3 align="center"><b>Firebase Adapter</b> - Auth.js</h3>
    <p align="center">
    Open Source. Full Stack. Own Your Data.
    </p>
@@ -13,62 +13,12 @@
    </p>
 </p>
 
-## Overview
 
-This is the Firebase Adapter for [`auth.js`](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
+This is the official Firebase Adapter for [Auth.js](https://authjs.dev) / [NextAuth.js](https://next-auth.js.org/), using the [Firebase Admin SDK](https://firebase.google.com/docs/admin/setup) and [Firestore](https://firebase.google.com/docs/firestore).
 
-You can find more Firebase information in the docs at [authjs.dev/reference/adapters/firebase-admin](https://authjs.dev/reference/adapters/firebase-admin).
+## Documentation
 
-## Getting Started
-
-1. Install the necessary packages
-
-```bash npm2yarn
-npm install next-auth @next-auth/firebase-admin-adapter firebase-admin
-```
-
-2. Create a Firebase project and generate a service account key. See [instructions](https://firebase.google.com/docs/admin/setup).
-
-3. Add this adapter to your `pages/api/auth/[...nextauth].js` next-auth configuration object.
-
-```javascript title="pages/api/auth/[...nextauth].js"
-import NextAuth from "next-auth"
-import GoogleProvider from "next-auth/providers/google"
-import { FirestoreAdminAdapter } from "@next-auth/firebase-admin-adapter"
-
-import admin from "firebase-admin"
-
-// Initialize the firebase admin app. By default, the firebase admin sdk will
-// look for the GOOGLE_APPLICATION_CREDENTIALS environment variable and use
-// that to authenticate with the firebase project. See other authentication
-// methods here: https://firebase.google.com/docs/admin/setup
-const app = admin.initializeApp()
-
-const firestore = app.firestore()
-
-// For more information on each option (and a full list of options) go to
-// https://authjs.dev/reference/configuration/auth-options
-export default NextAuth({
-  // https://authjs.dev/reference/providers/
-  providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_SECRET,
-    }),
-  ],
-  adapter: FirestoreAdminAdapter(firestore),
-  ...
-})
-```
-
-## Naming Conventions
-
-If mixed snake_case and camelCase field names in the database is an issue for you, you can pass the option `preferSnakeCase: true` to the adapter. This will convert all
-fields names and collection names to snake_case e.g. the collection `verificationTokens` will instead be `verification_tokens`, and fields like `emailVerified` will instead be `email_verified`.
-
-```javascript
-FirestoreAdminAdapter(firestore, { preferSnakeCase: true })
-```
+Check out the [documentation](https://authjs.dev/reference/adapter/firebase) to learn how to use this adapter in your project.
 
 ## Contributing
 
