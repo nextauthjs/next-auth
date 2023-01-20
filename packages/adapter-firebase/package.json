@@ -35,6 +35,7 @@
     "access": "public"
   },
   "scripts": {
+    "dev": "tsc -w",
     "build": "tsc",
     "test": "firebase emulators:exec --only firestore --project next-auth-test jest"
   },
