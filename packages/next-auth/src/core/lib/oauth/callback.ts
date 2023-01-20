@@ -12,6 +12,7 @@ import type { OAuthChecks, OAuthConfig } from "../../../providers"
 import type { InternalOptions } from "../../types"
 import type { RequestInternal } from "../.."
 import type { Cookie } from "../cookie"
+import oAuth1TokenStore from "./oauth1-token-store"
 
 export default async function oAuthCallback(params: {
   options: InternalOptions<"oauth">
@@ -40,9 +41,10 @@ export default async function oAuthCallback(params: {
       const client = await oAuth1Client(options)
       // Handle OAuth v1.x
       const { oauth_token, oauth_verifier } = query ?? {}
+      const oauth_token_secret = oAuth1TokenStore.getTokenSecret(oauth_token);
       const tokens = (await (client as any).getOAuthAccessToken(
         oauth_token,
-        null,
+        oauth_token_secret,
         oauth_verifier
       )) as TokenSet
       let profile: Profile = await (client as any).get(
@@ -62,6 +64,8 @@ export default async function oAuthCallback(params: {
       throw error
     }
   }
+
+  if (query?.oauth_token) oAuth1TokenStore.removeTokenSecret(query.oauth_token);
 
   try {
     const client = await openidClient(options)
