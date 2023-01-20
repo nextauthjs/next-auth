@@ -3,7 +3,7 @@ import { runBasicTests } from "@next-auth/adapter-test"
 import { FirestoreAdapter, type FirebaseAdapterConfig } from "../src"
 import {
   collestionsFactory,
-  firestore,
+  initFirestore,
   getDoc,
   getOneDoc,
   mapFieldsFactory,
@@ -15,15 +15,11 @@ describe.each([
 ] as Partial<FirebaseAdapterConfig>[])(
   "FirebaseAdapter with config: %s",
   (config) => {
-    config.appName = `next-auth-test-${config.namingStrategy}`
-    const db = firestore(
-      {
-        projectId: "next-auth-test",
-        databaseURL: "http://localhost:8080",
-      },
-      config.appName
-    )
+    config.name = `next-auth-test-${config.namingStrategy}`
+    config.projectId = "next-auth-test"
+    config.databaseURL = "http://localhost:8080"
 
+    const db = initFirestore(config)
     const preferSnakeCase = config.namingStrategy === "snake_case"
     const mapper = mapFieldsFactory(preferSnakeCase)
     const C = collestionsFactory(db, preferSnakeCase)

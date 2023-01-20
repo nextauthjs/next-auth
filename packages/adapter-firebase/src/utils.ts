@@ -1,4 +1,5 @@
-import { type AppOptions, getApps, initializeApp } from "firebase-admin/app"
+import { AppOptions, getApps, initializeApp } from "firebase-admin/app"
+
 import {
   getFirestore,
   initializeFirestore,
@@ -11,6 +12,7 @@ import type {
   AdapterSession,
   VerificationToken,
 } from "next-auth/adapters"
+import { FirebaseAdapterConfig } from "."
 
 // for consistency, store all fields as snake_case in the database
 const MAP_TO_FIRESTORE: Record<string, string | undefined> = {
@@ -136,11 +138,31 @@ export function collestionsFactory(
   }
 }
 
-export function firestore(appOptions: AppOptions, name?: string) {
+/**
+ * Utility function that helps making sure that there is no duplicate app initialization issues in serverless environments.
+ * If no parameter is passed, it will use the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to initialize a Firestore instance.
+ *
+ * @example
+ * ```ts title="lib/firestore.ts"
+ * import { initFirestore } from "@next-auth/firebase-adapter"
+ * import { cert } from "firebase-admin/app"
+ *
+ * export const firestore = initFirestore({
+ *  credential: cert({
+ *    projectId: process.env.FIREBASE_PROJECT_ID,
+ *    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+ *    privateKey: process.env.FIREBASE_PRIVATE_KEY,
+ *  })
+ * })
+ * ```
+ */
+export function initFirestore(
+  options: AppOptions & { name?: FirebaseAdapterConfig["name"] } = {}
+) {
   const apps = getApps()
-  const app = name ? apps.find((a) => a.name === name) : apps[0]
+  const app = options.name ? apps.find((a) => a.name === options.name) : apps[0]
 
   if (app) return getFirestore(app)
 
-  return initializeFirestore(initializeApp(appOptions, name))
+  return initializeFirestore(initializeApp(options, options.name))
 }
