@@ -1,30 +1,32 @@
-import admin, { FirebaseArrayIndexError } from "firebase-admin"
 import { runBasicTests } from "@next-auth/adapter-test"
 
+import { FirestoreAdapter, type FirebaseAdapterConfig } from "../src"
 import {
-  FirestoreAdapter,
-  type FirestoreAdapterOptions,
-  mapFieldsFactory,
   collestionsFactory,
-  getOneDoc,
+  firestore,
   getDoc,
-} from "../src"
+  getOneDoc,
+  mapFieldsFactory,
+} from "../src/utils"
 
 describe.each([
-  { preferSnakeCase: true },
-  { preferSnakeCase: false },
-] as Partial<FirestoreAdapterOptions>[])(
+  { namingStrategy: "snake_case" },
+  { namingStrategy: "default" },
+] as Partial<FirebaseAdapterConfig>[])(
   "FirebaseAdapter with config: %s",
   (config) => {
-    const app = admin.initializeApp(
-      { projectId: "next-auth-test", databaseURL: "http://localhost:8080" },
-      `next-auth-test-${config.preferSnakeCase}`
+    config.appName = `next-auth-test-${config.namingStrategy}`
+    const db = firestore(
+      {
+        projectId: "next-auth-test",
+        databaseURL: "http://localhost:8080",
+      },
+      config.appName
     )
-    const db = app.firestore()
 
-    const mapper = mapFieldsFactory(config.preferSnakeCase)
-
-    const C = collestionsFactory(db, config.preferSnakeCase)
+    const preferSnakeCase = config.namingStrategy === "snake_case"
+    const mapper = mapFieldsFactory(preferSnakeCase)
+    const C = collestionsFactory(db, preferSnakeCase)
 
     for (const [name, collection] of Object.entries(C)) {
       test(`collection "${name}" should be empty`, async () => {
@@ -33,9 +35,9 @@ describe.each([
     }
 
     runBasicTests({
-      adapter: FirestoreAdapter({ ...config, db }),
+      adapter: FirestoreAdapter(config),
       db: {
-        disconnect: db.terminate,
+        disconnect: async () => await db.terminate(),
         session: (sessionToken) =>
           getOneDoc(
             C.sessions.where(mapper.toDb("sessionToken"), "==", sessionToken)

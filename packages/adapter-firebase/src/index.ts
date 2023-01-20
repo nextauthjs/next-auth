@@ -33,6 +33,10 @@ import {
 /** Configure the Firebase Adapter. */
 export interface FirebaseAdapterConfig extends AppOptions {
   /**
+   * The name of the app passed to {@link https://firebase.google.com/docs/reference/admin/node/firebase-admin.md#initializeapp `initializeApp()`}.
+   */
+  appName?: string
+  /**
    * Use this option if mixed `snake_case` and `camelCase` field names in the database is an issue for you.
    * Passing `snake_case` convert all field and collection names to `snake_case`.
    * E.g. the collection `verificationTokens` will instead be `verification_tokens`,
@@ -76,8 +80,8 @@ export interface FirebaseAdapterConfig extends AppOptions {
  * ```
  */
 export function FirestoreAdapter(config?: FirebaseAdapterConfig): Adapter {
-  const { namingStrategy = "default", ...appOptions } = config ?? {}
-  const db = firestore(appOptions)
+  const { namingStrategy = "default", appName, ...appOptions } = config ?? {}
+  const db = firestore(appOptions, appName)
 
   const preferSnakeCase = namingStrategy === "snake_case"
   const C = collestionsFactory(db, preferSnakeCase)

@@ -136,12 +136,11 @@ export function collestionsFactory(
   }
 }
 
-export function firestore(appOptions: AppOptions) {
-  const prevApp = getApps()[0]
-  if (prevApp) {
-    return getFirestore(prevApp)
-  } else {
-    const app = initializeApp(appOptions)
-    return initializeFirestore(app)
-  }
+export function firestore(appOptions: AppOptions, name?: string) {
+  const apps = getApps()
+  const app = name ? apps.find((a) => a.name === name) : apps[0]
+
+  if (app) return getFirestore(app)
+
+  return initializeFirestore(initializeApp(appOptions, name))
 }
