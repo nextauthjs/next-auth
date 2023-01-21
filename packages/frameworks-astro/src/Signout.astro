@@ -6,7 +6,7 @@ interface Props extends HTMLAttributes<'button'> {
   params?: SignOutParams<true>
 }
 
-const { ...attrs } = Astro.props
+const { params, ...attrs } = Astro.props
 
 attrs.class = `sign-out ${attrs.class ?? ''}`
 ---
@@ -16,9 +16,11 @@ attrs.class = `sign-out ${attrs.class ?? ''}`
 </button>
 
 <script>
-  (async function() {
-    let { signOut } = await import('../client')
+  import { signOut } from '../client'
+  // @ts-ignore
+  window.signOut = signOut
+</script>
 
-    document.querySelector('.sign-out')?.addEventListener('click', () => signOut())
-  })()
+<script define:vars={{params}}>
+  document.querySelector('.sign-out')?.addEventListener('click', () => signIn(params))
 </script>
