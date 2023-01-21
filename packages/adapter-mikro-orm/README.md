@@ -1,6 +1,6 @@
 <p align="center">
    <br/>
-   <a href="https://next-auth.js.org" target="_blank"><img height="64px" src="https://next-auth.js.org/img/logo/logo-sm.png" /></a>&nbsp;&nbsp;&nbsp;&nbsp;<img height="64px" src="https://raw.githubusercontent.com/nextauthjs/adapters/main/packages/mikro-orm/logo.svg" />
+   <a href="https://authjs.dev" target="_blank"><img height="64px" src="https://authjs.dev/img/logo/logo-sm.png" /></a>&nbsp;&nbsp;&nbsp;&nbsp;<img height="64px" src="https://raw.githubusercontent.com/nextauthjs/adapters/main/packages/mikro-orm/logo.svg" />
    <h3 align="center"><b>Mikro ORM Adapter</b> - NextAuth.js</h3>
    <p align="center">
    Open Source. Full Stack. Own Your Data.
@@ -14,7 +14,7 @@
 
 ## Overview
 
-This is the MikroORM Adapter for [`next-auth`](https://next-auth.js.org). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
+This is the MikroORM Adapter for [`auth.js`](https://authjs.dev). This package can only be used in conjunction with the primary `auth.js` package. It is not a standalone package.
 
 ## Getting Started
 
@@ -31,9 +31,9 @@ This is the MikroORM Adapter for [`next-auth`](https://next-auth.js.org). This p
    import { MikroOrmAdapter } from "@next-auth/mikro-orm-adapter"
 
    // For more information on each option (and a full list of options) go to
-   // https://next-auth.js.org/configuration/options
+   // https://authjs.dev/reference/configuration/auth-options
    export default NextAuth({
-      // https://next-auth.js.org/configuration/providers
+      // https://authjs.dev/reference/providers/oauth-builtin
       providers: [],
       adapter: MikroOrmAdapter({
          dbName: "./db.sqlite",
@@ -49,7 +49,7 @@ This is the MikroORM Adapter for [`next-auth`](https://next-auth.js.org). This p
 
 ## Contributing
 
-We're open to all community contributions! If you'd like to contribute in any way, please read our [Contributing Guide](https://github.com/nextauthjs/next-auth/blob/main/CONTRIBUTING.md).
+We're open to all community contributions! If you'd like to contribute in any way, please read our [Contributing Guide](https://github.com/nextauthjs/.github/blob/main/CONTRIBUTING.md).
 
 ## License
 

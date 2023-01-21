@@ -2,7 +2,7 @@
 title: Securing Pages & API routes
 ---
 
-You can easily protect client and server side rendered pages and API routes with NextAuth.js.
+You can easily protect client and server side rendered pages and API routes with Auth.js.
 
 _You can find working examples of the approaches shown below in the [example project](https://github.com/nextauthjs/next-auth-example/)._
 
@@ -41,7 +41,7 @@ export default function Page() {
 
 ### Next.js (Middleware)
 
-With NextAuth.js 4.2.0 and Next.js 12, you can now protect your pages via the middleware pattern more easily. If you would like to protect all pages, you can create a `_middleware.js` file in your root `pages` directory which looks like this.
+With Auth.js 4.2.0 and Next.js 12, you can now protect your pages via the middleware pattern more easily. If you would like to protect all pages, you can create a `_middleware.js` file in your root `pages` directory which looks like this.
 
 ```js title="/middleware.js"
 export { default } from "next-auth/middleware"
@@ -66,8 +66,6 @@ import { useSession } from "next-auth/react"
 
 export default function Page() {
   const { data: session } = useSession()
-
-  if (typeof window === "undefined") return null
 
   if (session) {
     return (

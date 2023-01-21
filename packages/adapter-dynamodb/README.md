@@ -1,6 +1,6 @@
 <p align="center">
    <br/>
-   <a href="https://next-auth.js.org" target="_blank"><img height="64px" src="https://next-auth.js.org/img/logo/logo-sm.png" /></a>&nbsp;&nbsp;&nbsp;&nbsp;<img height="64px" src="https://raw.githubusercontent.com/nextauthjs/adapters/main/packages/dynamodb/logo.png" />
+   <a href="https://authjs.dev" target="_blank"><img height="64px" src="https://authjs.dev/img/logo/logo-sm.png" /></a>&nbsp;&nbsp;&nbsp;&nbsp;<img height="64px" src="https://raw.githubusercontent.com/nextauthjs/adapters/main/packages/dynamodb/logo.png" />
    <h3 align="center"><b>DynamoDB Adapter</b> - NextAuth.js</h3>
    <p align="center">
    Open Source. Full Stack. Own Your Data.
@@ -20,7 +20,7 @@ You need a table with a partition key `pk` and a sort key `sk`. Your table also 
 
 If you want sessions and verification tokens to get automatically removed from your table you need to [activate TTL](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TTL.html) on your table with the TTL attribute name set to `expires`
 
-You can find the DynamoDB schema in the docs at [next-auth.js.org/adapters/dynamodb](https://next-auth.js.org/adapters/dynamodb).
+You can find the DynamoDB schema in the docs at [authjs.dev/reference/adapters/dynamodb](https://authjs.dev/reference/adapters/dynamodb).
 
 ## Getting Started
 
@@ -96,7 +96,7 @@ Here is a schema of the table :
 
 ## Contributing
 
-We're open to all community contributions! If you'd like to contribute in any way, please read our [Contributing Guide](https://github.com/nextauthjs/next-auth/blob/main/CONTRIBUTING.md).
+We're open to all community contributions! If you'd like to contribute in any way, please read our [Contributing Guide](https://github.com/nextauthjs/.github/blob/main/CONTRIBUTING.md).
 
 ## License
 

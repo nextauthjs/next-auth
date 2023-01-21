@@ -5,7 +5,7 @@ import type {
   InternalOptions,
   RequestInternal,
   ResponseInternal,
-} from "../../index.js"
+} from "../../types.js"
 import type { Cookie } from "../cookie.js"
 
 /**
@@ -13,19 +13,17 @@ import type { Cookie } from "../cookie.js"
  *
  * [OAuth 2](https://www.oauth.com/oauth2-servers/authorization/the-authorization-request/)
  */
-export async function getAuthorizationUrl({
-  options,
-  query,
-}: {
+export async function getAuthorizationUrl(
+  query: RequestInternal["query"],
   options: InternalOptions<"oauth">
-  query: RequestInternal["query"]
-}): Promise<ResponseInternal> {
+): Promise<ResponseInternal> {
   const { logger, provider } = options
 
   let url = provider.authorization?.url
   let as: o.AuthorizationServer | undefined
 
-  if (!url) {
+  // Falls back to authjs.dev if the user only passed params
+  if (!url || url.host === "authjs.dev") {
     // If url is undefined, we assume that issuer is always defined
     // We check this in assert.ts
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -51,9 +49,9 @@ export async function getAuthorizationUrl({
       redirect_uri: provider.callbackUrl,
       // @ts-expect-error TODO:
       ...provider.authorization?.params,
-    }, // Defaults
-    Object.fromEntries(authParams), // From provider config
-    query // From `signIn` call
+    },
+    Object.fromEntries(provider.authorization?.url.searchParams ?? []),
+    query
   )
 
   for (const k in params) authParams.set(k, params[k])
@@ -85,15 +83,13 @@ export async function getAuthorizationUrl({
     cookies.push(nonce)
   }
 
-  url.searchParams.delete("nextauth")
-
   // TODO: This does not work in normalizeOAuth because authorization endpoint can come from discovery
   // Need to make normalizeOAuth async
   if (provider.type === "oidc" && !url.searchParams.has("scope")) {
     url.searchParams.set("scope", "openid profile email")
   }
 
-  logger.debug("GET_AUTHORIZATION_URL", { url, cookies, provider })
+  logger.debug("authorization url is ready", { url, cookies, provider })
   return { redirect: url, cookies }
 }
 

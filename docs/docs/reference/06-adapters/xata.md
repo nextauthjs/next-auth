@@ -32,7 +32,6 @@ Now that we're ready, let's create a new Xata project using our next-auth schema
 
 ```json title="schema.json"
 {
-  "formatVersion": "",
   "tables": [
     {
       "name": "nextauth_users",

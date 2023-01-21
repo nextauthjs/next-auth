@@ -9,25 +9,25 @@ import startAppAndSignInImg from "./img/getting-started-app-start.png"
 import githubAuthCredentials from "./img/getting-started-github-auth.png"
 import nextAuthUserLoggedIn from "./img/getting-started-nextauth-success.png"
 
-We know, authentication is hard. Is a rabbit hole and it's easy to get lost on it. The goal of making NextAuth.js is that you can add authentication easily to your project with just a few lines of code.
+We know, authentication is hard. Is a rabbit hole and it's easy to get lost on it. The goal of making Auth.js is that you can add authentication easily to your project with just a few lines of code.
 
-The easiest way is to setup NextAuth.js with an [OAuth](https://en.wikipedia.org/wiki/OAuth) provider. In this tutorial we'll be setting NextAuth.js in a **Next.js app** to be able to login with **Github**.
+The easiest way is to setup Auth.js with an [OAuth](https://en.wikipedia.org/wiki/OAuth) provider. In this tutorial we'll be setting Auth.js in a **Next.js app** to be able to login with **Github**.
 
 :::info
-NextAuth.js comes with a long list of [built-in providers](/reference/providers/oauth-builtin) (Google, Facebook, Twitter, etc...) you can also integrate it with your own OAuth service easily by [building a custom provider](/guides/providers/custom-provider). NextAuth.js can integrate as well with other frameworks like SvelteKit and Gatsby.
+Auth.js comes with a long list of [built-in providers](/reference/providers/oauth-builtin) (Google, Facebook, Twitter, etc...) you can also integrate it with your own OAuth service easily by [building a custom provider](/guides/providers/custom-provider). Auth.js can integrate as well with other frameworks like SvelteKit, SolidStart and Gatsby.
 :::
 
-## 1. Configuring NextAuth.js
+## 1. Configuring Auth.js
 
 ### Creating the server config
 
-To add NextAuth.js to a [**Next.js**](https://nextjs.org/) project, create the following [API route](https://nextjs.org/docs/api-routes/introduction):
+To add Auth.js to a [**Next.js**](https://nextjs.org/) project, create the following [API route](https://nextjs.org/docs/api-routes/introduction):
 
 ```
 pages/api/auth/[...nextauth].ts
 ```
 
-This route will contain the **dynamic route handler** for NextAuth.js which describes your global auth configuration:
+This route will contain the **dynamic route handler** for Auth.js which describes your global auth configuration:
 
 ```ts title="pages/api/auth/[...nextauth].js"
 import NextAuth from "next-auth"
@@ -36,8 +36,8 @@ import GithubProvider from "next-auth/providers/github"
 export default NextAuth({
   providers: [
     GithubProvider({
-      clientId: /* We'll fill this later */,
-      clientSecret: /* We'll fill this later*/,
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET,
     }),
   ],
 })
@@ -47,10 +47,10 @@ Behind the scenes this creates all the relevant OAuth API routes within `/api/au
 
 - `/api/auth/callback`
 - `/api/auth/signIn`
-- `/api/auth/singOut`
+- `/api/auth/signOut`
 - etc...
 
-can be handled by NextAuth.js. In this way, NextAuth.js stays in charge of handling the whole authentication request/response flow of your application for you.
+can be handled by Auth.js. In this way, Auth.js stays in charge of handling the whole authentication request/response flow of your application for you.
 
 You may notice there are some environment variables in the code example above. `GITHUB_ID` and `GITHUB_SECRET` are provided by the OAuth provider (in this case **Github**) see ["Configuring OAuth Provider"](/getting-started/oauth-tutorial#2-configuring-oauth-provider) section on how to get those.
 
@@ -63,14 +63,14 @@ $ openssl rand -base64 32
 or https://generate-secret.vercel.app/32 to generate a random value for it.
 
 :::info
-NextAuth.js is extremely customizable, [our guides section](/guides/overview) will teach you how you can set it up to handle auth in different ways. All the possible configuration options are [listed here](/reference/configuration/auth-config).
+Auth.js is extremely customizable, [our guides section](/guides/overview) will teach you how you can set it up to handle auth in different ways. All the possible configuration options are [listed here](/reference/configuration/auth-config).
 :::
 
 ### Exposing the session via provider
 
 To be able to use `useSession` first you'll need to expose the session context, [`<SessionProvider />`](/reference/react/#sessionprovider), at the top level of your application:
 
-```ts title="pages/_app.ts"
+```ts title="pages/_app.tsx"
 import { SessionProvider } from "next-auth/react"
 
 export default function App({
@@ -93,14 +93,14 @@ Check our [client docs](/reference/react/) to learn all the available options fo
 
 ### Consuming the session via hooks
 
-NextAuth.js exposes a [`useSession()`](/reference/react/#usesession) React Hook so that you can easily check if someone is signed in:
+Auth.js exposes a [`useSession()`](/reference/react/#usesession) React Hook so that you can easily check if someone is signed in:
 
 ```ts title="pages/overview.tsx"
 import { useSession, signIn, signOut } from "next-auth/react"
 
 export default function CamperVanPage() {
   const { data: session, status } = useSession()
-  const userEmail = session.user.email
+  const userEmail = session?.user.email;
 
   if (status === "loading") {
     return <p>Hang on there...</p>
@@ -112,7 +112,7 @@ export default function CamperVanPage() {
         <p>Signed in as {userEmail}</p>
         <button onClick={() => signOut()}>Sign out</button>
         <img src="https://cdn.pixabay.com/photo/2017/08/11/19/36/vw-2632486_1280.png" />
-      </img>
+      </>
     )
   }
 
@@ -160,7 +160,7 @@ Ok, we have our Next.js app setup with NextAuth, however, if you run the app rig
 When using OAuth you're asking for a third-party service (in this case Github, although it could be Google, Twitter, etc...) to handle user authentication for your app.
 :::
 
-We need to register our new Next.js app in Github, so that when NextAuth.js forwards the authorization requests to it, Github can recognize your application and prompt the user to sign in.
+We need to register our new Next.js app in Github, so that when Auth.js forwards the authorization requests to it, Github can recognize your application and prompt the user to sign in.
 
 <img src={creatingOauthAppImg} />
 
@@ -183,17 +183,17 @@ http://localhost:3000/api/auth/callback/github
 ```
 
 :::info
-NextAuth.js will already magically create this API endpoint for you when we start the application later. Note that because we're using Next.js, locally it starts our server on the port `3000`, hence the origin is `http://localhost:3000`.
+Auth.js will already magically create this API endpoint for you when we start the application later. Note that because we're using Next.js, locally it starts our server on the port `3000`, hence the origin is `http://localhost:3000`.
 :::
 
-Next you'll be presented with the following screen which presents all the configuration for your new OAuth app. For now, let's we need two things from it: the **Client ID** and **Client Secret** for our new OAuth app:
+Next you'll be presented with the following screen which presents all the configuration for your new OAuth app. For now, we need two things from it: the **Client ID** and **Client Secret** for our new OAuth app:
 
 <img src={gettingClientIdSecretImg} />
 
 The Client ID is always there, a public identifier of your OAuth application within Github. Click on the **Generate a new client Secret** button and should be presented with a new string (which is just a randomized string).
 
 :::warning
-🔥 Keep both your Client ID and Client Secret secure and never expose them to the public or shared with people outside your organization. With tem a malicious actor could hijack your application and cause you and your user serious problems!
+🔥 Keep both your Client ID and Client Secret secure and never expose them to the public or shared with people outside your organization. With them, a malicious actor could hijack your application and cause you and your user serious problems!
 :::
 
 Now let's copy both the Client ID and Client Secret and paste them in an environment file in the root of your project like so:
@@ -206,7 +206,7 @@ GITHUB_SECRET=67890
 Cool! We have finished the configuring our OAuth provider, now let's wire all together so we can finally see authentication working in our app!
 
 :::info
-As noted previously, NextAuth.js has built-in support for multiple OAuth providers, <a href="">here the full list</a>. You can also easily build your own in case the provider you need is not on the list.
+As noted previously, Auth.js has built-in support for multiple OAuth providers, <a href="">here the full list</a>. You can also easily build your own in case the provider you need is not on the list.
 
 Note that, for each provider, the configuration process will be similar to what we just did:
 
@@ -218,7 +218,7 @@ Note that, for each provider, the configuration process will be similar to what 
 
 ## 3. Wiring all together
 
-Finally, we just need to reference our **Client ID** and **Client Secret** we just generated in the previous in our NextAuth.js config. In this way the library will be able to use them when forwarding users to Github, and Github will be able to recognize the request as generated from our application:
+Finally, we just need to reference our **Client ID** and **Client Secret** we just generated in the previous in our Auth.js config. In this way the library will be able to use them when forwarding users to Github, and Github will be able to recognize the request as generated from our application:
 
 ```ts title="pages/api/auth/[...nextauth].js"
 import NextAuth from "next-auth"
@@ -244,18 +244,18 @@ You should see the following page:
 
 <img src={startAppAndSignInImg} />
 
-Click on "Sign in" and then on "Sign in with Github": NextAuth.js will redirect you to Github, and Github will recognize our app [that we just registered](#2-configuring-oauth-provider) and ask the user (in this case you) to enter its credentials to proceed:
+Click on "Sign in" and then on "Sign in with Github": Auth.js will redirect you to Github, and Github will recognize our app [that we just registered](#2-configuring-oauth-provider) and ask the user (in this case you) to enter its credentials to proceed:
 
 <img src={githubAuthCredentials} />
 
-Once inserted and correct, Github will redirect the user to our app and NextAuth.js will take care of any further calls with Github to get access to the user profile and start a user sessions safely in the background:
+Once inserted and correct, Github will redirect the user to our app and Auth.js will take care of any further calls with Github to get access to the user profile and start a user sessions safely in the background:
 
 <img src={nextAuthUserLoggedIn} />
 
 Great! We have completed the whole E2E authentication flow setup so that users can login in our application through Github!
 
 :::info
-You can create your own Sign In page instead of using the default one from NextAuth.js. You can learn how to do so in our dedicated guide for it.
+You can create your own Sign In page instead of using the default one from Auth.js. You can learn how to do so in our dedicated guide for it.
 :::
 
 ## 4. Deploying to production

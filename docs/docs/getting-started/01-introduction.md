@@ -1,10 +1,11 @@
 ---
 title: Introduction
+sidebar_position: 0
 ---
 
-## About NextAuth.js
+## About Auth.js
 
-NextAuth.js is a complete open-source authentication solution for [Next.js](http://nextjs.org/) applications.
+Auth.js is a complete open-source authentication solution for [Next.js](http://nextjs.org/) applications.
 
 It is designed from the ground up to support Next.js and Serverless.
 
@@ -25,7 +26,7 @@ Check our tutorials to see how easy it is to use Auth.js for authentication:
 
 ### Own your own data
 
-NextAuth.js can be used with or without a database.
+Auth.js can be used with or without a database.
 
 - An open-source solution that allows you to keep control of your data
 - Supports Bring Your Own Database (BYOD) and can be used with any database
@@ -50,6 +51,6 @@ Advanced options allow you to define your own routines to handle controlling wha
 
 ## Credits
 
-NextAuth.js is an open-source project that is only possible [thanks to contributors](/contributors).
+Auth.js is an open-source project that is only possible [thanks to contributors](/contributors).
 
-If you would like to financially support the development of NextAuth.js, you can find more information on our [OpenCollective](https://opencollective.com/nextauth) page.
+If you would like to financially support the development of Auth.js, you can find more information on our [OpenCollective](https://opencollective.com/nextauth) page.

@@ -1,5 +1,6 @@
 ---
 title: Contributors
+displayed_sidebar: null
 ---
 
 ## Core team
@@ -22,20 +23,20 @@ Special thanks to Lori Karikari for creating most of the original provider confi
 
 ## Other contributors
 
-NextAuth.js as it exists today has been possible thanks to the work of many individual contributors.
+Auth.js as it exists today has been possible thanks to the work of many individual contributors.
 
-Thank you to the [dozens of individual contributors](https://github.com/nextauthjs/next-auth/graphs/contributors) who have help shaped NextAuth.js.
+Thank you to the [dozens of individual contributors](https://github.com/nextauthjs/next-auth/graphs/contributors) who have help shaped Auth.js.
 
 ## Open Collective
 
-You can find NextAuth.js on Open Collective. We are very thankful for all of our existing contributors and would be delighted if you or your company would decide to join them.
+You can find Auth.js on Open Collective. We are very thankful for all of our existing contributors and would be delighted if you or your company would decide to join them.
 
 More information can be found at: https://opencollective.com/nextauth
 
 ## History
 
-- NextAuth.js was originally developed by <a href="https://github.com/iaincollins">Iain Collins</a> in 2016 for Next.js.
+- Auth.js was originally developed by <a href="https://github.com/iaincollins">Iain Collins</a> in 2016 for Next.js.
 
-- In 2020, NextAuth.js was rebuilt from the ground up to support Serverless, with support for MySQL, Postgres and MongoDB, JSON Web Tokens and built in support for over a dozen authentication providers.
+- In 2020, Auth.js was rebuilt from the ground up to support Serverless, with support for MySQL, Postgres and MongoDB, JSON Web Tokens and built in support for over a dozen authentication providers.
 
-- In 2021, efforts have started to move NextAuth.js to other frameworks and to support as many databases and providers as possible.
+- In 2021, efforts have started to move Auth.js to other frameworks and to support as many databases and providers as possible.

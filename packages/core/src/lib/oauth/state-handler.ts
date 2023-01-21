@@ -1,6 +1,7 @@
-import type { InternalOptions } from "../../index.js"
-import type { Cookie } from "../cookie.js"
 import * as o from "oauth4webapi"
+import type { InternalOptions, RequestInternal } from "../../types.js"
+import type { Cookie } from "../cookie.js"
+import { InvalidState } from "../../errors.js"
 
 const STATE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 
@@ -39,25 +40,33 @@ export async function createState(
 }
 
 /**
- * Returns state from if the provider supports states,
+ * Returns state from the saved cookie
+ * if the provider supports states,
  * and clears the container cookie afterwards.
  */
 export async function useState(
-  state: string | undefined,
+  cookies: RequestInternal["cookies"],
+  resCookies: Cookie[],
   options: InternalOptions<"oauth">
-): Promise<{ value: string; cookie: Cookie } | undefined> {
-  const { cookies, provider, jwt } = options
+): Promise<string | undefined> {
+  const { provider, jwt } = options
+  if (!provider.checks.includes("state")) return
 
-  if (!provider.checks?.includes("state") || !state) return
+  const state = cookies?.[options.cookies.state.name]
 
+  if (!state) throw new InvalidState("State was missing from the cookies.")
+
+  // IDEA: Let the user do something with the returned state
   const value = (await jwt.decode({ ...options.jwt, token: state })) as any
 
-  return {
-    value: value?.value ?? undefined,
-    cookie: {
-      name: cookies.state.name,
-      value: "",
-      options: { ...cookies.pkceCodeVerifier.options, maxAge: 0 },
-    },
-  }
+  if (!value?.value) throw new InvalidState("Could not parse state cookie.")
+
+  // Clear the state cookie after use
+  resCookies.push({
+    name: options.cookies.state.name,
+    value: "",
+    options: { ...options.cookies.state.options, maxAge: 0 },
+  })
+
+  return value.value
 }

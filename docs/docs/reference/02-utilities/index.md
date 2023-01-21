@@ -3,7 +3,7 @@ id: client
 title: Utilities
 ---
 
-The NextAuth.js client library makes it easy to interact with sessions from React applications.
+The Auth.js client library makes it easy to interact with sessions from React applications.
 
 #### Example Session Object
 
@@ -33,7 +33,7 @@ The `expires` value is rotated, meaning whenever the session is retrieved from t
 - Client Side: **Yes**
 - Server Side: **No** (See: [`unstable_getServerSession()`](/reference/nextjs/#unstable_getserversession)
 
-NextAuth.js provides a `getSession()` helper which should be called **client side only** to return the current active session.
+Auth.js provides a `getSession()` helper which should be called **client side only** to return the current active session.
 
 On the server side, **this is still available to use**, however, we recommend using `unstable_getServerSession` going forward. The idea behind this is to avoid an additional unnecessary `fetch` call on the server side. For more information, please check out [this issue](https://github.com/nextauthjs/next-auth/issues/1535).
 
@@ -138,7 +138,7 @@ export default () => <button onClick={() => signIn()}>Sign in</button>
 
 ### Starts OAuth sign-in flow when clicked
 
-By default, when calling the `signIn()` method with no arguments, you will be redirected to the NextAuth.js sign-in page. If you want to skip that and get redirected to your provider's page immediately, call the `signIn()` method with the provider's `id`.
+By default, when calling the `signIn()` method with no arguments, you will be redirected to the Auth.js sign-in page. If you want to skip that and get redirected to your provider's page immediately, call the `signIn()` method with the provider's `id`.
 
 For example to sign in with Google:
 

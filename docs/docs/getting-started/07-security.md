@@ -4,9 +4,9 @@ title: Security
 
 ## Reporting a Vulnerability
 
-NextAuth.js practices responsible disclosure.
+Auth.js practices responsible disclosure.
 
-We request that you contact us directly to report serious issues that might impact the security of sites using NextAuth.js.
+We request that you contact us directly to report serious issues that might impact the security of sites using Auth.js.
 
 If you contact us regarding a serious issue:
 

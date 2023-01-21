@@ -2,7 +2,7 @@
 title: Upgrade Guide (v4)
 ---
 
-NextAuth.js version 4 includes a few breaking changes from the last major version (3.x). So we're here to help you upgrade your applications as smoothly as possible. It should be possible to upgrade from any version of 3.x to the latest 4 release by following the next few migration steps.
+Auth.js version 4 includes a few breaking changes from the last major version (3.x). So we're here to help you upgrade your applications as smoothly as possible. It should be possible to upgrade from any version of 3.x to the latest 4 release by following the next few migration steps.
 
 :::note
 Version 4 has been released to GA 🚨
@@ -222,7 +222,7 @@ export default NextAuth({
 The logger API has been simplified to use at most two parameters, where the second is usually an object (`metadata`) containing an `error` object. If you are not using the logger settings you can ignore this change.
 
 ```diff
-// [...nextauth.js]
+// [...Auth.js]
 import log from "some-logger-service"
 ...
 logger: {
@@ -269,7 +269,7 @@ The `session.jwt: boolean` option has been renamed to `session.strategy: "jwt" |
 
 1. No adapter, `strategy: "jwt"`: This is the default. The session is saved in a cookie and never persisted anywhere.
 2. With Adapter, `strategy: "database"`: If an Adapter is defined, this will be the implicit setting. No user config is needed.
-3. With Adapter, `strategy: "jwt"`: The user can explicitly instruct `next-auth` to use JWT even if a database is available. This can result in faster lookups in compromise of lowered security. Read more about: https://next-auth.js.org/faq#json-web-tokens
+3. With Adapter, `strategy: "jwt"`: The user can explicitly instruct `next-auth` to use JWT even if a database is available. This can result in faster lookups in compromise of lowered security. Read more about: https://authjs.dev/concepts/faq#json-web-tokens
 
 Example:
 
@@ -288,7 +288,7 @@ Most importantly, the core `next-auth` package no longer ships with `typeorm` or
 
 You can find the official Adapters in the `packages` directory in the primary monorepo ([nextauthjs/next-auth](https://github.com/nextauthjs/next-auth)). Although you can still [create your own](/guides/adapters/creating-a-database-adapter) with a new, [simplified Adapter API](https://github.com/nextauthjs/next-auth/pull/2361).
 
-If you have a database that was created with a `3.x.x` or earlier version of NextAuth.js, you will need to run a migration to update the schema to the new version 4 database model. See the bottom of this migration guide for database specific migration examples.
+If you have a database that was created with a `3.x.x` or earlier version of Auth.js, you will need to run a migration to update the schema to the new version 4 database model. See the bottom of this migration guide for database specific migration examples.
 
 1. If you use the built-in TypeORM or Prisma adapters, these have been removed from the core `next-auth` package. Thankfully the migration is easy; you just need to install the external packages for your database and change the import in your `[...nextauth].js`.
 
@@ -408,7 +408,7 @@ For more info, see the [Models page](/reference/adapters/models).
 
 ### Database migration
 
-NextAuth.js v4 has a slightly different database schema compared to v3. If you're using any of our adapters and want to upgrade, you can use on of the below schemas.
+Auth.js v4 has a slightly different database schema compared to v3. If you're using any of our adapters and want to upgrade, you can use on of the below schemas.
 
 They are designed to be run directly against the database itself. So instead of having one in Prisma syntax, one in TypeORM syntax, etc. we've decided to just make one for each underlying database type. i.e. one for Postgres, one for MySQL, one for MongoDB, etc.
 
@@ -424,7 +424,7 @@ RENAME COLUMN "provider_id" "provider"
 RENAME COLUMN "provider_account_id" "providerAccountId"
 DROP COLUMN "provider_type"
 DROP COLUMN "compound_id"
-/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
+/* The following two timestamp columns have never been necessary for Auth.js to function, but can be kept if you want */
 DROP COLUMN "created_at"
 DROP COLUMN "updated_at"
 
@@ -440,7 +440,7 @@ ADD COLUMN "oauth_token" varchar(255) NULL
 /* USER */
 ALTER TABLE users
 RENAME COLUMN "email_verified" "emailVerified"
-/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
+/* The following two timestamp columns have never been necessary for Auth.js to function, but can be kept if you want */
 DROP COLUMN "created_at"
 DROP COLUMN "updated_at"
 
@@ -450,7 +450,7 @@ RENAME COLUMN "session_token" "sessionToken"
 CHANGE "user_id" "userId" varchar(255)
 ADD CONSTRAINT fk_user_id FOREIGN KEY (userId) REFERENCES users(id)
 DROP COLUMN "access_token"
-/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
+/* The following two timestamp columns have never been necessary for Auth.js to function, but can be kept if you want */
 DROP COLUMN "created_at"
 DROP COLUMN "updated_at"
 
@@ -458,7 +458,7 @@ DROP COLUMN "updated_at"
 ALTER TABLE verification_requests RENAME verification_tokens
 ALTER TABLE verification_tokens
 DROP COLUMN id
-/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
+/* The following two timestamp columns have never been necessary for Auth.js to function, but can be kept if you want */
 DROP COLUMN "created_at"
 DROP COLUMN "updated_at"
 ```
@@ -486,7 +486,7 @@ ALTER TABLE accounts ALTER COLUMN "providerAccountId" TYPE TEXT;
 ALTER TABLE accounts ADD CONSTRAINT fk_user_id FOREIGN KEY ("userId") REFERENCES users(id);
 ALTER TABLE accounts
 DROP COLUMN IF EXISTS "compound_id";
-/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
+/* The following two timestamp columns have never been necessary for Auth.js to function, but can be kept if you want */
 ALTER TABLE accounts
 DROP COLUMN IF EXISTS "created_at",
 DROP COLUMN IF EXISTS "updated_at";
@@ -511,7 +511,7 @@ ALTER TABLE users ALTER COLUMN "email" TYPE TEXT;
 ALTER TABLE users ALTER COLUMN "image" TYPE TEXT;
 /* Do conversion of TIMESTAMPTZ to BIGINT and then TEXT */
 ALTER TABLE users ALTER COLUMN "emailVerified" TYPE TEXT USING CAST(CAST(extract(epoch FROM "emailVerified") AS BIGINT)*1000 AS TEXT);
-/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
+/* The following two timestamp columns have never been necessary for Auth.js to function, but can be kept if you want */
 ALTER TABLE users
 DROP COLUMN IF EXISTS "created_at",
 DROP COLUMN IF EXISTS "updated_at";
@@ -528,7 +528,7 @@ ALTER TABLE sessions ADD CONSTRAINT fk_user_id FOREIGN KEY ("userId") REFERENCES
 /* Do conversion of TIMESTAMPTZ to BIGINT and then TEXT */
 ALTER TABLE sessions ALTER COLUMN "expires" TYPE TEXT USING CAST(CAST(extract(epoch FROM "expires") AS BIGINT)*1000 AS TEXT);
 ALTER TABLE sessions DROP COLUMN IF EXISTS "access_token";
-/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
+/* The following two timestamp columns have never been necessary for Auth.js to function, but can be kept if you want */
 ALTER TABLE sessions
 DROP COLUMN IF EXISTS "created_at",
 DROP COLUMN IF EXISTS "updated_at";
@@ -541,7 +541,7 @@ ALTER TABLE verification_tokens ALTER COLUMN "identifier" TYPE TEXT;
 ALTER TABLE verification_tokens ALTER COLUMN "token" TYPE TEXT;
 /* Do conversion of TIMESTAMPTZ to BIGINT and then TEXT */
 ALTER TABLE verification_tokens ALTER COLUMN "expires" TYPE TEXT USING CAST(CAST(extract(epoch FROM "expires") AS BIGINT)*1000 AS TEXT);
-/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
+/* The following two timestamp columns have never been necessary for Auth.js to function, but can be kept if you want */
 ALTER TABLE verification_tokens
 DROP COLUMN IF EXISTS "created_at",
 DROP COLUMN IF EXISTS "updated_at";
@@ -575,7 +575,7 @@ db.getCollection('sessions').updateMany({}, {
 
 ## Missing `secret`
 
-NextAuth.js used to generate a secret for convenience, when the user did not define one. This might have been useful in development, but can be a concern in production. We have always been clear about that in the docs, but from now on, if you forget to define a `secret` property in production, we will show the user an error page. Read more about this option [here](/reference/configuration/auth-config#secret)
+Auth.js used to generate a secret for convenience, when the user did not define one. This might have been useful in development, but can be a concern in production. We have always been clear about that in the docs, but from now on, if you forget to define a `secret` property in production, we will show the user an error page. Read more about this option [here](/reference/configuration/auth-config#secret)
 
 You can generate a secret to be placed in the `secret` configuration option via the following command:
 
@@ -583,7 +583,7 @@ You can generate a secret to be placed in the `secret` configuration option via 
 $ openssl rand -base64 32
 ```
 
-Therefore, your NextAuth.js config should look something like this:
+Therefore, your Auth.js config should look something like this:
 
 ```javascript title="/pages/api/auth/[...nextauth].js"
 ...

@@ -8,7 +8,7 @@ import checkPageImg from "./img/email-tutorial-check.png"
 import mailboxImg from "./img/email-tutorial-mailbox.png"
 import loggedInImg from "./img/email-tutorial-logged.png"
 
-Aside from authenticating users in NextAuth.js via [OAuth](/getting-started/oauth-tutorial), you can also enable the option to authenticate them via "magic links". These are links that are sent to the user's email and when clicking on them they'll sign up the user automatically.
+Aside from authenticating users in Auth.js via [OAuth](/getting-started/oauth-tutorial), you can also enable the option to authenticate them via "magic links". These are links that are sent to the user's email and when clicking on them they'll sign up the user automatically.
 
 Adding support for signing in via email in addition to one or more OAuth services provides a way for users to sign in if they lose access to their OAuth account (e.g. if it is locked or deleted).
 
@@ -37,7 +37,7 @@ npm install -D nodemailer
 Next we need a [SMTP service](https://sendgrid.com/blog/what-is-an-smtp-server/) which will be in charge of sending emails from our application. There's a number of services available for this, however [here are the ones](http://nodemailer.com/smtp/well-known/) known to work with `nodemailer`.
 
 :::info
-For this tutorial, we're gonna be using [Sendgrid](https://sendgrid.com/), but any of the services linked above should work the same
+For this tutorial, we're going to be using [Sendgrid](https://sendgrid.com/), but any of the services linked above should work the same
 :::
 
 First create an account in and then login to the dashboard, then navigate to "Settings → API Keys" and create an API key:
@@ -56,11 +56,11 @@ Next, as [per Sendgrid documentation](https://docs.sendgrid.com/for-developers/s
 SMTP_USER=apikey
 SMTP_PASSWORD={API_KEY}
 SMTP_HOST=smtp.sendgrid.net
-SMTP_PROT=587
+SMTP_PORT=587
 EMAIL_FROM={SENDER_EMAIL}
 ```
 
-Note that we're also specifying from which domain email are going to be sent from. You're gonna need to verify [a sender identity](https://docs.sendgrid.com/for-developers/sending-email/sender-identity) so that Sendgrid can send emails from your domain.
+Note that we're also specifying from which domain email are going to be sent from. You're going to need to verify [a sender identity](https://docs.sendgrid.com/for-developers/sending-email/sender-identity) so that Sendgrid can send emails from your domain.
 
 Nice! We're getting there. Now we need to read supply this values as the configuration for our Email Provider. Open `pages/api/auth/[...nextauth].ts` and do the following:
 
@@ -89,7 +89,7 @@ export default NextAuth({
 
 Finally, we'll need to set up a database adapter to store verification tokens the Email Provider will emit when verifying users.
 
-An **Adapter** in NextAuth.js connects your application to whatever database or backend system you want to use to store data for users, their accounts, sessions, etc...
+An **Adapter** in Auth.js connects your application to whatever database or backend system you want to use to store data for users, their accounts, sessions, etc...
 
 For this tutorial, we're going to use the **MongoDB** adapter, other any of the other adapters will work just fine.
 
@@ -137,7 +137,7 @@ if (process.env.NODE_ENV === "development") {
 export default clientPromise
 ```
 
-And now let's reference this new adapter from our NextAuth.js configuration file:
+And now let's reference this new adapter from our Auth.js configuration file:
 
 ```diff title="pages/api/auth/[...nextauth].ts"
 import NextAuth from "next-auth"
@@ -170,7 +170,7 @@ Now that everything is properly configured, let's try to sign in via email on ou
 
 Let's start by running a Next.js application with NextAuth, making sure the **EmailProvider** and a Database Adapter are properly configured as per the instructions above.
 
-For this tutorial we're gonna be using NextAuth example app. Launch the app and click on "Sign in", we're redirected to the Sign In page:
+For this tutorial we're going to be using NextAuth example app. Launch the app and click on "Sign in", we're redirected to the Sign In page:
 
 <img src={startPageImg} alt="Screenshot of sign in page" />
 
