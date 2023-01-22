@@ -118,13 +118,15 @@ export default function SigninPage(props: SignInServerPageParams) {
                   {provider.style?.logo && (
                     <img
                       id="provider-logo"
-                      src={`https://authjs.dev/img/providers/${provider.style.logo}`}
+                      src={(provider.style.logo.startsWith('https://') || provider.style.logo.startsWith('http://'))
+                        ? provider.style.logo : `https://authjs.dev/img/providers/${provider.style.logo}`}
                     />
                   )}
                   {provider.style?.logoDark && (
                     <img
                       id="provider-logo-dark"
-                      src={`https://authjs.dev/img/providers/${provider.style.logoDark}`}
+                      src={(provider.style.logoDark.startsWith('https://') || provider.style.logoDark.startsWith('http://'))
+                        ? provider.style.logoDark : `https://authjs.dev/img/providers/${provider.style.logoDark}`}
                     />
                   )}
                   <span>Sign in with {provider.name}</span>
