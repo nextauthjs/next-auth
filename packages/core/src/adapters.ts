@@ -80,7 +80,7 @@ export interface AdapterUser extends User {
 }
 
 export interface AdapterAccount extends Account {
-  userId: string
+  userId: AdapterUser['id']
 }
 
 /**
@@ -91,7 +91,7 @@ export interface AdapterSession {
   /** A randomly generated value that is used to get hold of the session. */
   sessionToken: string
   /** Connects the active session to a user in the database */
-  userId: string
+  userId: AdapterUser['id']
   /**
    * The absolute date when the session expires.
    *
@@ -127,7 +127,7 @@ export interface VerificationToken {
  */
 export interface Adapter {
   createUser(user: Omit<AdapterUser, "id">): Awaitable<AdapterUser>
-  getUser(id: string): Awaitable<AdapterUser | null>
+  getUser(id: AdapterUser['id']): Awaitable<AdapterUser | null>
   getUserByEmail(email: string): Awaitable<AdapterUser | null>
   /** Using the provider id and the id of the user for a specific account, get the user. */
   getUserByAccount(
@@ -136,7 +136,7 @@ export interface Adapter {
   updateUser(user: Partial<AdapterUser>): Awaitable<AdapterUser>
   /** @todo This method is currently not implemented. Defining it will have no effect */
   deleteUser?(
-    userId: string
+    userId: AdapterUser['id']
   ): Promise<void> | Awaitable<AdapterUser | null | undefined>
   linkAccount(
     account: AdapterAccount
@@ -148,7 +148,7 @@ export interface Adapter {
   /** Creates a session for the user and returns it. */
   createSession(session: {
     sessionToken: string
-    userId: string
+    userId: Adapteruser['id']
     expires: Date
   }): Awaitable<AdapterSession>
   getSessionAndUser(
