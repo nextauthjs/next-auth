@@ -42,6 +42,8 @@ interface AdvancedEndpointHandler<P extends UrlParams, C, R> {
    * You should **try to avoid using advanced options** unless you are very comfortable using them.
    */
   request?: EndpointRequest<C, R, P>
+  /** @internal */
+  conform?: (response: Response) => Awaitable<Response | undefined>
 }
 
 /** Either an URL (containing all the parameters) or an object with more granular control. */
@@ -184,7 +186,11 @@ export type OAuthConfigInternal<Profile> = Omit<
   OAuthEndpointType
 > & {
   authorization?: { url: URL }
-  token?: { url: URL; request?: TokenEndpointHandler["request"] }
+  token?: {
+    url: URL
+    request?: TokenEndpointHandler["request"]
+    conform?: TokenEndpointHandler["conform"]
+  }
   userinfo?: { url: URL; request?: UserinfoEndpointHandler["request"] }
 } & Pick<Required<OAuthConfig<Profile>>, "clientId" | "checks" | "profile">
 

@@ -296,4 +296,16 @@ export interface AuthConfig {
   cookies?: Partial<CookiesOptions>
   /** @todo */
   trustHost?: boolean
+  skipCSRFCheck?: typeof skipCSRFCheck
 }
+
+/**
+ * :::danger
+ * This option is inteded for framework authors.
+ * :::
+ *
+ * Auth.js comes with built-in {@link https://authjs.dev/concepts/security#csrf CSRF} protection, but
+ * if you are implementing a framework that is already protected against CSRF attacks, you can skip this check by
+ * passing this value to {@link AuthConfig.skipCSRFCheck}.
+ */
+export const skipCSRFCheck = Symbol("skip-csrf-check")

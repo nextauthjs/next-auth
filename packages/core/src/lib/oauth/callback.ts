@@ -104,13 +104,19 @@ export async function handleOAuth(
     resCookies.push(nonce.cookie)
   }
 
-  const codeGrantResponse = await o.authorizationCodeGrantRequest(
+  let codeGrantResponse = await o.authorizationCodeGrantRequest(
     as,
     client,
     parameters,
     provider.callbackUrl,
     codeVerifier?.codeVerifier ?? "auth" // TODO: review fallback code verifier
   )
+
+  if (provider.token?.conform) {
+    codeGrantResponse =
+      (await provider.token.conform(codeGrantResponse.clone())) ??
+      codeGrantResponse
+  }
 
   let challenges: o.WWWAuthenticateChallenge[] | undefined
   if ((challenges = o.parseWwwAuthenticateChallenges(codeGrantResponse))) {
