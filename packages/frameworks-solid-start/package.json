@@ -17,6 +17,7 @@
     },
     "./client": {
       "types": "./client.d.ts",
+      "solid": "./client.js",
       "import": "./client.js"
     },
     "./types": {
