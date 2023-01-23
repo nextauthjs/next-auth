@@ -5,7 +5,7 @@ export default {
   input: "src/client.tsx",
   output: [
     {
-      file: "dist/client.jsx",
+      file: "dist/client.js",
       format: "es",
     },
   ],
