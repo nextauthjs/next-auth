@@ -36,6 +36,7 @@ jobs:
           TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
           TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
       - name: Run E2E tests
+        if: github.repository == 'nextauthjs/next-auth'
         run: pnpm e2e
         timeout-minutes: 15
         env:
@@ -44,6 +45,7 @@ jobs:
           TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
           TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
       - name: Upload E2E artifacts
+        if: github.repository == 'nextauthjs/next-auth'
         uses: actions/upload-artifact@v3
         if: always()
         with:
