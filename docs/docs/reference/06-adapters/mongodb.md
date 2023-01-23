@@ -62,3 +62,31 @@ export default NextAuth({
   ...
 })
 ```
+
+4. Optional - Accessing the MongoDB _id in the session object
+
+```js
+import NextAuth from "next-auth"
+import GithubProvider from "next-auth/providers/github";
+import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
+import clientPromise from "../../../lib/mongodb"
+
+// For more information on each option (and a full list of options) go to
+// https://authjs.dev/reference/providers/oauth
+export default NextAuth({
+  adapter: MongoDBAdapter(clientPromise),
+  providers: [
+    GithubProvider({
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET,
+    }),
+  ],
+  callbacks: { 
+    // The reduced session.user object is replaced by the 
+    // MongoDB users collection document, which includes the _id. 
+    session: async ({ session, user }) => {
+      return { ...session, user };
+    },
+  },
+})
+```
