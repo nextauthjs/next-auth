@@ -1,12 +1,6 @@
 import {randomBytes} from "crypto";
-import {TableClient, TableEntityResult} from "@azure/data-tables";
+import {TableClient} from "@azure/data-tables";
 import {keys} from "./keys";
-import {format} from "./utils";
-import type {
-  AdapterSession,
-  AdapterUser,
-  VerificationToken,
-} from "next-auth/adapters";
 
 export const TableStorageAdapter = (client: TableClient) => {
   return {
