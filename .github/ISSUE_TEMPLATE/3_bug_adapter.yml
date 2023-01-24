@@ -35,6 +35,7 @@ body:
         - "@next-auth/typeorm-legacy-adapter"
         - "@next-auth/upstash-redis-adapter"
         - "@next-auth/xata-adapter"
+        - "@next-auth/table-storage-adapter"
     validations:
       required: true
   - type: textarea

@@ -41,3 +41,6 @@ upstash-redis:
 
 xata:
   - "@next-auth/xata-adapter"
+
+table-storage:
+  - "@next-auth/table-storage-adapter"
