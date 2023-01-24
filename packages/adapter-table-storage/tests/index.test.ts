@@ -1,15 +1,15 @@
 import { runBasicTests } from "@next-auth/adapter-test"
 import { TableStorageAdapter } from "../src"
 import {AzureNamedKeyCredential, TableServiceClient, TableClient} from "@azure/data-tables";
-import {keys} from "../src/keys";
+import {keys, UserById, VerificationToken} from "../src/types";
 
-const testAccount = {
+const testAccount = { // default constants used by a dev instance of azurite
   name: 'devstoreaccount1',
   key: 'Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==',
   tableEndpoint: 'http://127.0.0.1:10002/devstoreaccount1'
 };
 
-const authTableName = "test";
+const authTableName = "authTest";
 
 const credential = new AzureNamedKeyCredential(testAccount.name, testAccount.key);
 
@@ -24,7 +24,7 @@ runBasicTests({
     },
     async user(id) {
       try {
-        const userById: { email: string } = await authClient.getEntity(keys.userById, id);
+        const userById = await authClient.getEntity<UserById>(keys.userById, id);
         const user = await authClient.getEntity(keys.user, userById.email);
 
         return withoutKeys(user);
@@ -53,7 +53,7 @@ runBasicTests({
     },
     async verificationToken(identifier_token) {
       try {
-        const verificationToken = await authClient.getEntity(keys.verificationToken, identifier_token.token);
+        const verificationToken = await authClient.getEntity<VerificationToken>(keys.verificationToken, identifier_token.token);
 
         if (verificationToken.identifier !== identifier_token.identifier) {
           return null;
