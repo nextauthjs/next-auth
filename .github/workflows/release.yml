@@ -47,7 +47,6 @@ jobs:
       - name: Upload E2E artifacts
         if: github.repository == 'nextauthjs/next-auth'
         uses: actions/upload-artifact@v3
-        if: always()
         with:
           name: playwright-report
           path: apps/dev/nextjs/playwright-report/
