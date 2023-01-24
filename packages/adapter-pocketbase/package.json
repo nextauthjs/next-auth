@@ -1,0 +1,41 @@
+{
+  "name": "@next-auth/pocketbase-adapter",
+  "version": "0.0.1",
+  "description": "Pocketbase adapter for Next.js",
+  "homepage": "https://authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "Taj Kirkpatrick <taj.kirkpatrick@gmail.com>",
+  "main": "dist/index.js",
+  "keywords": [
+    "next-auth",
+    "auth.js",
+    "pocketbase"
+  ],
+  "license": "ISC",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "peerDependencies": {
+    "pocketbase": "^0.10.1",
+    "next-auth": "^4.18.7"
+  },
+  "devDependencies": {
+    "@next-auth/adapter-test": "workspace:*",
+    "@next-auth/tsconfig": "workspace:*",
+    "next-auth": "workspace:*",
+    "pocketbase": "^0.10.1",
+    "jest": "^27.4.3",
+    "cross-fetch": "^3.1.5"
+  },
+  "jest": {
+    "preset": "@next-auth/adapter-test/jest"
+  }
+}
