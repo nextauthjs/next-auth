@@ -74,6 +74,7 @@ export default function SigninPage(props: SignInServerPageParams) {
 
   const error = errorType && (errors[errorType] ?? errors.default)
 
+  const logos = "https://authjs.dev/img/providers"
   return (
     <div className="signin">
       {theme.brandColor && (
@@ -117,16 +118,24 @@ export default function SigninPage(props: SignInServerPageParams) {
                 >
                   {provider.style?.logo && (
                     <img
+                      loading="lazy"
+                      height={24}
+                      width={24}
                       id="provider-logo"
-                      src={(provider.style.logo.startsWith('https://') || provider.style.logo.startsWith('http://'))
-                        ? provider.style.logo : `https://authjs.dev/img/providers/${provider.style.logo}`}
+                      src={`${
+                        provider.style.logo.startsWith("/") ? logos : ""
+                      }${provider.style.logo}`}
                     />
                   )}
                   {provider.style?.logoDark && (
                     <img
+                      loading="lazy"
+                      height={24}
+                      width={24}
                       id="provider-logo-dark"
-                      src={(provider.style.logoDark.startsWith('https://') || provider.style.logoDark.startsWith('http://'))
-                        ? provider.style.logoDark : `https://authjs.dev/img/providers/${provider.style.logoDark}`}
+                      src={`${
+                        provider.style.logo.startsWith("/") ? logos : ""
+                      }${provider.style.logoDark}`}
                     />
                   )}
                   <span>Sign in with {provider.name}</span>
