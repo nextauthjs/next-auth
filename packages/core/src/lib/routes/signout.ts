@@ -8,7 +8,7 @@ import type { SessionStore } from "../cookie.js"
  * If the session strategy is database,
  * The session is also deleted from the database.
  * In any case, the session cookie is cleared and
- * an `events.signOut` is emitted.
+ * {@link EventCallbacks.signOut} is emitted.
  */
 export async function signout(
   sessionStore: SessionStore,

@@ -72,9 +72,9 @@ export async function AuthInternal<
         if (pages.signIn) {
           let signinUrl = `${pages.signIn}${
             pages.signIn.includes("?") ? "&" : "?"
-          }callbackUrl=${encodeURIComponent(options.callbackUrl)}`
+          }${new URLSearchParams({ callbackUrl: options.callbackUrl })}`
           if (error)
-            signinUrl = `${signinUrl}&error=${encodeURIComponent(error)}`
+            signinUrl = `${signinUrl}&${new URLSearchParams({ error })}`
           return { redirect: signinUrl, cookies }
         }
 
