@@ -31,6 +31,7 @@ npm install @azure/data-tables next-auth @next-auth/table-storage-adapter@next
 ```js
 import NextAuth from "next-auth"
 import { TableStorageAdapter } from "@next-auth/table-storage-adapter"
+import { AzureNamedKeyCredential, TableClient } from "@azure/data-tables"
 
 const credential = new AzureNamedKeyCredential(process.env.AZURE_ACCOUNT, process.env.AZURE_ACCESS_KEY);
 const authClient = new TableClient(process.env.AZURE_TABLES_ENDPOINT, 'auth', credential);
