@@ -25,6 +25,10 @@
       "dependsOn": ["^build"],
       "outputs": ["lib/**", "providers/**", "*.js", "*.d.ts", "*.d.ts.map"]
     },
+    "@auth/sveltekit#build": {
+      "dependsOn": ["^build"],
+      "outputs": ["client.*", "index.*"]
+    },
     "clean": {
       "cache": false
     },
