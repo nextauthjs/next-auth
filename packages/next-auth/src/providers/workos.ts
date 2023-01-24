@@ -45,8 +45,8 @@ export default function WorkOS<P extends WorkOSProfile>(
       }
     },
     style: {
-      logo: "workos.svg",
-      logoDark: "workos-dark.svg",
+      logo: "/workos.svg",
+      logoDark: "/workos-dark.svg",
       bg: "#fff",
       text: "#6363f1",
       bgDark: "#6363f1",

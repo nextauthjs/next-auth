@@ -53,8 +53,8 @@ export default function Okta<P extends OktaProfile>(
       }
     },
     style: {
-      logo: "okta.svg",
-      logoDark: "okta-dark.svg",
+      logo: "/okta.svg",
+      logoDark: "/okta-dark.svg",
       bg: "#fff",
       text: "#000",
       bgDark: "#000",

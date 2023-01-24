@@ -68,8 +68,8 @@ export default function GitLab<P extends GitLabProfile>(
       }
     },
     style: {
-      logo: "gitlab.svg",
-      logoDark: "gitlab-dark.svg",
+      logo: "/gitlab.svg",
+      logoDark: "/gitlab-dark.svg",
       bg: "#fff",
       text: "#FC6D26",
       bgDark: "#FC6D26",

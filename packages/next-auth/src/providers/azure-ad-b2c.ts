@@ -43,8 +43,8 @@ export default function AzureADB2C<P extends AzureB2CProfile>(
       }
     },
     style: {
-      logo: "azure.svg",
-      logoDark: "azure-dark.svg",
+      logo: "/azure.svg",
+      logoDark: "/azure-dark.svg",
       bg: "#fff",
       text: "#0072c6",
       bgDark: "#0072c6",

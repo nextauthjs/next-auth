@@ -16,8 +16,8 @@ export default function Mailchimp(options) {
       }
     },
     style: {
-      logo: "mailchimp.svg",
-      logoDark: "mailchimp-dark.svg",
+      logo: "/mailchimp.svg",
+      logoDark: "/mailchimp-dark.svg",
       bg: "#fff",
       text: "#000",
       bgDark: "#000",

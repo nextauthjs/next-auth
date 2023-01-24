@@ -30,8 +30,8 @@ export default function Patreon<P extends PatreonProfile>(
       }
     },
     style: {
-      logo: "patreon.svg",
-      logoDark: "patreon.svg",
+      logo: "/patreon.svg",
+      logoDark: "/patreon.svg",
       bg: "#fff",
       text: "#e85b46",
       bgDark: "#000",

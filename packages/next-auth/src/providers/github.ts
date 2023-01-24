@@ -99,8 +99,8 @@ export default function Github<P extends GithubProfile>(
       }
     },
     style: {
-      logo: "github.svg",
-      logoDark: "github-dark.svg",
+      logo: "/github.svg",
+      logoDark: "/github-dark.svg",
       bg: "#fff",
       bgDark: "#000",
       text: "#000",

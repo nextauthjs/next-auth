@@ -16,8 +16,8 @@ export default function Box(options) {
       }
     },
     style: {
-      logo: "box.svg",
-      logoDark: "box-dark.svg",
+      logo: "/box.svg",
+      logoDark: "/box-dark.svg",
       bg: "#fff",
       text: "#0075C9",
       bgDark: "#0075C9",

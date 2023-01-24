@@ -45,8 +45,8 @@ export default function Discord<P extends DiscordProfile>(
       }
     },
     style: {
-      logo: "discord.svg",
-      logoDark: "discord-dark.svg",
+      logo: "/discord.svg",
+      logoDark: "/discord-dark.svg",
       bg: "#fff",
       text: "#7289DA",
       bgDark: "#7289DA",

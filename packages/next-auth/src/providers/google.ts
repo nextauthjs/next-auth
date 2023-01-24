@@ -38,8 +38,8 @@ export default function Google<P extends GoogleProfile>(
       }
     },
     style: {
-      logo: "google.svg",
-      logoDark: "google.svg",
+      logo: "/google.svg",
+      logoDark: "/google.svg",
       bgDark: "#fff",
       bg: "#fff",
       text: "#000",

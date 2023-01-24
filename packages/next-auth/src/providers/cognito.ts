@@ -25,8 +25,8 @@ export default function Cognito<P extends CognitoProfile>(
       }
     },
     style: {
-      logo: "cognito.svg",
-      logoDark: "cognito.svg",
+      logo: "/cognito.svg",
+      logoDark: "/cognito.svg",
       bg: "#fff",
       text: "#C17B9E",
       bgDark: "#fff",
