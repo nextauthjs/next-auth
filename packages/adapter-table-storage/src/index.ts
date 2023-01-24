@@ -16,7 +16,7 @@ export const TableStorageAdapter = (client: TableClient) => {
     },
     async getUser(id: string) {
       try {
-        const { email } = await client.getEntity(keys.userById, id);
+        const { email }: { email: string } = await client.getEntity(keys.userById, id);
         const user = await client.getEntity(keys.user, email);
 
         return withoutKeys(user);
@@ -59,12 +59,13 @@ export const TableStorageAdapter = (client: TableClient) => {
     },
     async deleteUser(userId) {
       try {
-        const { email } = await client.getEntity(keys.userById, userId);
+        const { email }: { email: string } = await client.getEntity(keys.userById, userId);
         const user = await client.getEntity(keys.user, email);
-        const { sessionToken } = await client.getEntity(keys.sessionByUserId, userId);
+        const { sessionToken }: { sessionToken: string } = await client.getEntity(keys.sessionByUserId, userId);
         const accounts = withoutKeys(await client.getEntity(keys.accountByUserId, userId));
 
-        const deleteAccounts = Object.keys(accounts).filter(property => client.deleteEntity(keys.account, `${accounts[property]}_${property}`))
+        const deleteAccounts = Object.keys(accounts)
+            .map(property => client.deleteEntity(keys.account, `${accounts[property]}_${property}`))
 
         await Promise.all([
           client.deleteEntity(keys.user, email),
@@ -93,9 +94,10 @@ export const TableStorageAdapter = (client: TableClient) => {
     async unlinkAccount({ providerAccountId, provider }) {
       try {
         const rowKey = `${providerAccountId}_${provider}`;
-        const account = await client.getEntity(keys.account, rowKey);
+        const account: { userId: string } = await client.getEntity(keys.account, rowKey);
 
         await client.deleteEntity(keys.account, rowKey);
+        await client.deleteEntity(keys.accountByUserId, account.userId);
 
         return withoutKeys(account);
       } catch {
@@ -110,13 +112,13 @@ export const TableStorageAdapter = (client: TableClient) => {
     },
     async getSessionAndUser(sessionToken) {
       try {
-        const session = await client.getEntity(keys.session, sessionToken);
+        const session: { expires: Date, userId: string } = await client.getEntity(keys.session, sessionToken);
 
         if (session.expires.valueOf() < Date.now()) {
           await client.deleteEntity(keys.session, sessionToken);
         }
 
-        const userById = await client.getEntity(keys.userById, session.userId);
+        const userById: { email: string } = await client.getEntity(keys.userById, session.userId);
         const user = await client.getEntity(keys.user, userById.email);
         return {
           session: withoutKeys(session),
@@ -137,7 +139,7 @@ export const TableStorageAdapter = (client: TableClient) => {
     },
     async deleteSession(sessionToken) {
       try {
-        const session = await client.getEntity(keys.session, sessionToken);
+        const session: { userId: string } = await client.getEntity(keys.session, sessionToken);
 
         await Promise.all([
           client.deleteEntity(keys.session, sessionToken),
