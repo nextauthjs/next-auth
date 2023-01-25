@@ -1,34 +1,34 @@
 export const keys = {
-    user: 'user',
-    userById: 'userById',
-    account: 'account',
-    accountByUserId: 'accountByUserId',
-    session: 'session',
-    sessionByUserId: 'sessionByUserId',
-    verificationToken: 'verificationToken',
-};
+  user: "user",
+  userById: "userById",
+  account: "account",
+  accountByUserId: "accountByUserId",
+  session: "session",
+  sessionByUserId: "sessionByUserId",
+  verificationToken: "verificationToken",
+}
 
 export interface UserById {
-    email: string;
+  email: string
 }
 
 export interface Account {
-    userId: string;
+  userId: string
 }
 
 export interface AccountByUserId {
-    [account: string]: string;
+  [account: string]: string
 }
 
 export interface Session {
-    expires: Date;
-    userId: string;
+  expires: Date
+  userId: string
 }
 
 export interface SessionByUserId {
-    sessionToken: string;
+  sessionToken: string
 }
 
 export interface VerificationToken {
-    identifier: string;
+  identifier: string
 }

@@ -33,22 +33,30 @@ import NextAuth from "next-auth"
 import { TableStorageAdapter } from "@next-auth/table-storage-adapter"
 import { AzureNamedKeyCredential, TableClient } from "@azure/data-tables"
 
-const credential = new AzureNamedKeyCredential(process.env.AZURE_ACCOUNT, process.env.AZURE_ACCESS_KEY);
-const authClient = new TableClient(process.env.AZURE_TABLES_ENDPOINT, 'auth', credential);
+const credential = new AzureNamedKeyCredential(
+  process.env.AZURE_ACCOUNT,
+  process.env.AZURE_ACCESS_KEY
+)
+const authClient = new TableClient(
+  process.env.AZURE_TABLES_ENDPOINT,
+  "auth",
+  credential
+)
 
 // For more information on each option (and a full list of options) go to
 // https://authjs.dev/reference/configuration/auth-options
 export default NextAuth({
-    // https://authjs.dev/reference/providers/oauth-builtin
-    providers: [
-        // ...
-    ],
-    adapter: TableStorageAdapter(authClient),
+  // https://authjs.dev/reference/providers/oauth-builtin
+  providers: [
     // ...
+  ],
+  adapter: TableStorageAdapter(authClient),
+  // ...
 })
 ```
 
 Environment variable are as follows:
+
 ```
 AZURE_ACCOUNT=storageaccountname
 AZURE_ACCESS_KEY=longRandomKey
