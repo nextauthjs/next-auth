@@ -1,8 +1,6 @@
+import * as checks from "./checks.js"
 import * as o from "oauth4webapi"
 import { OAuthCallbackError, OAuthProfileParseError } from "../../errors.js"
-import { useNonce } from "./nonce-handler.js"
-import { usePKCECodeVerifier } from "./pkce-handler.js"
-import { useState } from "./state-handler.js"
 
 import type {
   InternalOptions,
@@ -73,7 +71,7 @@ export async function handleOAuth(
 
   const resCookies: Cookie[] = []
 
-  const state = await useState(cookies, resCookies, options)
+  const state = await checks.state.use(cookies, resCookies, options)
 
   const parameters = o.validateAuthResponse(
     as,
@@ -91,7 +89,7 @@ export async function handleOAuth(
     throw new OAuthCallbackError(parameters.error)
   }
 
-  const codeVerifier = await usePKCECodeVerifier(
+  const codeVerifier = await checks.pkce.use(
     cookies?.[options.cookies.pkceCodeVerifier.name],
     options
   )
@@ -99,18 +97,27 @@ export async function handleOAuth(
   if (codeVerifier) resCookies.push(codeVerifier.cookie)
 
   // TODO:
-  const nonce = await useNonce(cookies?.[options.cookies.nonce.name], options)
+  const nonce = await checks.nonce.use(
+    cookies?.[options.cookies.nonce.name],
+    options
+  )
   if (nonce && provider.type === "oidc") {
     resCookies.push(nonce.cookie)
   }
 
-  const codeGrantResponse = await o.authorizationCodeGrantRequest(
+  let codeGrantResponse = await o.authorizationCodeGrantRequest(
     as,
     client,
     parameters,
     provider.callbackUrl,
     codeVerifier?.codeVerifier ?? "auth" // TODO: review fallback code verifier
   )
+
+  if (provider.token?.conform) {
+    codeGrantResponse =
+      (await provider.token.conform(codeGrantResponse.clone())) ??
+      codeGrantResponse
+  }
 
   let challenges: o.WWWAuthenticateChallenge[] | undefined
   if ((challenges = o.parseWwwAuthenticateChallenges(codeGrantResponse))) {

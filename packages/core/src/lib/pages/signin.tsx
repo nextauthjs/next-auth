@@ -47,14 +47,19 @@ export default function SigninPage(props: {
     )
   }
 
+  if (typeof document !== "undefined" && theme.buttonText) {
+    document.documentElement.style.setProperty(
+      "--button-text-color",
+      theme.buttonText
+    )
+  }
+
   const error =
     errorType &&
     (signinErrors[errorType.toLowerCase() as Lowercase<SignInPageErrorParam>] ??
       signinErrors.default)
 
-  // TODO: move logos
-  const logos =
-    "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos"
+  const logos = "https://authjs.dev/img/providers"
   return (
     <div className="signin">
       {theme.brandColor && (
@@ -64,7 +69,17 @@ export default function SigninPage(props: {
           }}
         />
       )}
-      {theme.logo && <img src={theme.logo} alt="Logo" className="logo" />}
+      {theme.buttonText && (
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+        :root {
+          --button-text-color: ${theme.buttonText}
+        }
+      `,
+          }}
+        />
+      )}
       <div className="card">
         {error && (
           <div className="error">
@@ -87,10 +102,14 @@ export default function SigninPage(props: {
                     "--provider-dark-bg": provider.style?.bgDark ?? "",
                     "--provider-color": provider.style?.text ?? "",
                     "--provider-dark-color": provider.style?.textDark ?? "",
+                    gap: 8,
                   }}
                 >
                   {provider.style?.logo && (
                     <img
+                      loading="lazy"
+                      height={24}
+                      width={24}
                       id="provider-logo"
                       src={`${
                         provider.style.logo.startsWith("/") ? logos : ""
@@ -99,6 +118,9 @@ export default function SigninPage(props: {
                   )}
                   {provider.style?.logoDark && (
                     <img
+                      loading="lazy"
+                      height={24}
+                      width={24}
                       id="provider-logo-dark"
                       src={`${
                         provider.style.logo.startsWith("/") ? logos : ""
@@ -158,7 +180,9 @@ export default function SigninPage(props: {
                     </div>
                   )
                 })}
-                <button type="submit">Sign in with {provider.name}</button>
+                <button id="submitButton" type="submit">
+                  Sign in with {provider.name}
+                </button>
               </form>
             )}
             {(provider.type === "email" || provider.type === "credentials") &&

@@ -16,4 +16,4 @@ sidebar_label: Email options
 See our guides on magic links authentication for further tips on how to customize this provider:
 
 - [Tutorial](/getting-started/email-tutorial)
-- [Guide deep-dive](guides/providers/email)
+- [Guide deep-dive](/guides/providers/email)

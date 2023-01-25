@@ -45,7 +45,7 @@ export function assertConfig(
   const { url } = request
   const warnings: WarningCode[] = []
 
-  if (!warned && options.debug) warnings.push("debug_enabled")
+  if (!warned && options.debug) warnings.push("debug-enabled")
 
   if (!options.trustHost) {
     return new UntrustedHost(`Host must be trusted. URL was: ${request.url}`)
