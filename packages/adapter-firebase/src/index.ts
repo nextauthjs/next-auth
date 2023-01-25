@@ -25,6 +25,7 @@ import type {
 } from "next-auth/adapters"
 
 import { getConverter } from "./converter"
+import getFirebase from "./getFirebase"
 
 export type IndexableObject = Record<string, unknown>
 
@@ -39,7 +40,7 @@ export function FirestoreAdapter({
   emulator,
   ...firebaseOptions
 }: FirebaseOptions & FirestoreAdapterOptions): Adapter {
-  const firebaseApp = initializeApp(firebaseOptions)
+  const firebaseApp = getFirebase(firebaseOptions)
   const db = getFirestore(firebaseApp)
 
   if (emulator) {
