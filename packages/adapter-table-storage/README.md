@@ -1,7 +1,7 @@
 <p align="center">
    <br/>
    <a href="https://authjs.dev" target="_blank"><img height="64px" src="https://authjs.dev/img/logo/logo-sm.png" /></a>&nbsp;&nbsp;&nbsp;&nbsp;<img height="64px" src="./logo.svg" />
-   <h3 align="center"><b>Azure Table Storage Adapter</b> - NextAuth.js</h3>
+   <h3 align="center"><b>Azure Table Storage Adapter</b> - Auth.js</h3>
    <p align="center">
    Open Source. Full Stack. Own Your Data.
    </p>
