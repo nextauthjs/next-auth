@@ -62,7 +62,11 @@ export const getAuthenticator = (
 }
 ```
 
-Create a route for your auth, this is most simply done using optional routes like file named `auth.($action).($providerId).tsx`
+Create a route for your auth, this is most simply done using optional routes like file named `auth.$action.($providerId).tsx`
+
+WARNING: In order to fully and securely support progressive enhancement for auth actions (automatically handling getting csrf tokens regardless of javascript) this route MUST be a [Resource Route](https://remix.run/docs/en/v1/guides/api-routes#resource-routes).
+
+Relevant remix discussion (here)[https://github.com/remix-run/remix/discussions/5258]
 
 ```ts title="auth.($action).($providerId).tsx"
 import type { ActionFunction, LoaderFunction } from "@remix-run/node"

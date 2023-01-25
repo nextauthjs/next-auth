@@ -16,4 +16,6 @@ export type ProviderID<P> = LiteralUnion<
 export interface RemixAuthConfig extends AuthConfig {
   trustHost?: boolean;
   secret?: string;
+  //deafults to false, will need to properly handle for fetch requests
+  allowHtmlReturn?: boolean;
 }

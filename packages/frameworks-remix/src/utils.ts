@@ -19,7 +19,7 @@ export const getValue = (
   searchParams: URLSearchParams,
   params?: DataFunctionArgs["params"]
 ): string | undefined => {
-  return searchParams.get(key) || params?.[key]
+  return searchParams.get(key) ?? params?.[key]
 }
 
 export function authjsDefaultCookies(useSecureCookies: boolean) {
