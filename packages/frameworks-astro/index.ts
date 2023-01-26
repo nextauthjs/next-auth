@@ -22,7 +22,7 @@
  * :::
  *
  * ```bash npm2yarn2pnpm
- * npm install @auth/core @auth/sveltekit
+ * npm install @auth/core @auth/astro
  * ```
  *
  * @module main
