@@ -1,5 +1,4 @@
 import { UnknownAction } from "../errors.js"
-import { skipCSRFCheck } from "../index.js"
 import { SessionStore } from "./cookie.js"
 import { init } from "./init.js"
 import renderPage from "./pages/index.js"
@@ -186,3 +185,14 @@ export async function AuthInternal<
   }
   throw new UnknownAction(`Cannot handle action: ${action}`)
 }
+
+/**
+ * :::danger
+ * This option is inteded for framework authors.
+ * :::
+ *
+ * Auth.js comes with built-in {@link https://authjs.dev/concepts/security#csrf CSRF} protection, but
+ * if you are implementing a framework that is already protected against CSRF attacks, you can skip this check by
+ * passing this value to {@link AuthConfig.skipCSRFCheck}.
+ */
+export const skipCSRFCheck = Symbol("skip-csrf-check")
