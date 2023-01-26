@@ -89,6 +89,7 @@ packages/core/providers
 packages/core/src/lib/pages/styles.ts
 docs/docs/reference/03-core
 docs/docs/reference/04-sveltekit
+docs/docs/reference/04-astro
 
 
 # SvelteKit

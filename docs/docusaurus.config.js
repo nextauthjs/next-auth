@@ -235,6 +235,21 @@ const docusaurusConfig = {
         includeExtension: false,
       },
     ],
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        ...typedocConfig,
+        id: "astro",
+        plugin: ["./tyepdoc"],
+        entryPoints: ["index.ts", "client.ts"].map(
+          (e) => `../packages/frameworks-astro/${e}`
+        ),
+        tsconfig: "../packages/frameworks-astro/tsconfig.json",
+        out: "reference/04-astro",
+        watch: process.env.TYPEDOC_WATCH,
+        includeExtension: false
+      },
+    ],
   ],
 }
 

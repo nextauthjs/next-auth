@@ -17,6 +17,7 @@
   "dependencies": {
     "@auth/core": "workspace:*",
     "@auth/sveltekit": "workspace:*",
+    "@auth/astro": "workspace:*",
     "@mdx-js/react": "1.6.22",
     "@sapphire/docusaurus-plugin-npm2yarn2pnpm": "1.1.4",
     "classnames": "^2.3.2",

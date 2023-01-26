@@ -133,27 +133,6 @@ importers:
       typescript: 4.9.4
       vite: 4.0.1
 
-  apps/examples/nextjs:
-    specifiers:
-      '@types/node': ^17
-      '@types/react': ^18.0.15
-      next: latest
-      next-auth: latest
-      nodemailer: ^6
-      react: ^18.2.0
-      react-dom: ^18.2.0
-      typescript: ^4
-    dependencies:
-      next: 13.1.2_biqbaboplfbrettd7655fr4n2y
-      next-auth: 4.18.8_xpfrgizk2uibqsegg5y3s2zbwy
-      nodemailer: 6.8.0
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-    devDependencies:
-      '@types/node': 17.0.45
-      '@types/react': 18.0.26
-      typescript: 4.9.4
-
   apps/playgrounds/gatsby:
     specifiers:
       dotenv: ^16.0.0
@@ -164,7 +143,7 @@ importers:
       vercel: ^23.1.2
     dependencies:
       dotenv: 16.0.3
-      gatsby: 5.5.0-next.0_biqbaboplfbrettd7655fr4n2y
+      gatsby: 5.6.0-next.0_biqbaboplfbrettd7655fr4n2y
       next-auth: link:../../../packages/next-auth
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -192,6 +171,7 @@ importers:
 
   docs:
     specifiers:
+      '@auth/astro': workspace:*
       '@auth/core': workspace:*
       '@auth/sveltekit': workspace:*
       '@docusaurus/core': 2.2.0
@@ -214,6 +194,7 @@ importers:
       remark-github: 10.1.0
       styled-components: 5.3.6
     dependencies:
+      '@auth/astro': link:../packages/frameworks-astro
       '@auth/core': link:../packages/core
       '@auth/sveltekit': link:../packages/frameworks-sveltekit
       '@mdx-js/react': 1.6.22_react@18.2.0
@@ -7463,8 +7444,8 @@ packages:
     resolution: {integrity: sha512-Tbsj02wXCbqGmzdnXNk0SOF19ChhRU70BsroIi4Pm6Ehp56in6vch94mfbdQ17DozxkL3BAVjbZ4Qc1a0HFRAg==}
     dev: false
 
-  /@builder.io/partytown/0.5.4:
-    resolution: {integrity: sha512-qnikpQgi30AS01aFlNQV6l8/qdZIcP76mp90ti+u4rucXHsn4afSKivQXApqxvrQG9+Ibv45STyvHizvxef/7A==}
+  /@builder.io/partytown/0.7.5:
+    resolution: {integrity: sha512-Zbr2Eo0AQ4yzmQr/36/h+6LKjmdVBB3Q5cGzO6rtlIKB/IOpbQVUZW+XAnhpJmJr9sIF97OZjgbhG9k7Sjn4yw==}
     hasBin: true
     dev: false
 
@@ -9067,14 +9048,14 @@ packages:
     dev: true
     optional: true
 
-  /@gatsbyjs/parcel-namer-relative-to-cwd/2.5.0-next.0_@parcel+core@2.8.2:
-    resolution: {integrity: sha512-1BEOXlcXkIrOPgRdNXf404CfmqmtpcKcAgmde+gpGUS040fT5BRTT+9kxnJQaj7ZbLMhRxI83zjZ6Nkwi/8g8w==}
+  /@gatsbyjs/parcel-namer-relative-to-cwd/2.6.0-next.0_@parcel+core@2.8.2:
+    resolution: {integrity: sha512-YAEMsZhRG59bs9Ps3TKh/jxQ2ysnHU7+eVEEq/gssh2o+og//WTiR7KldR6xFEWQWMmmYQThAGyuJe/sN9hVNA==}
     engines: {node: '>=18.0.0', parcel: 2.x}
     dependencies:
       '@babel/runtime': 7.20.7
       '@parcel/namer-default': 2.8.2_@parcel+core@2.8.2
       '@parcel/plugin': 2.8.2_@parcel+core@2.8.2
-      gatsby-core-utils: 4.5.0-next.0
+      gatsby-core-utils: 4.6.0-next.0
     transitivePeerDependencies:
       - '@parcel/core'
     dev: false
@@ -10605,25 +10586,12 @@ packages:
   /@next/env/13.1.1:
     resolution: {integrity: sha512-vFMyXtPjSAiOXOywMojxfKIqE3VWN5RCAx+tT3AS3pcKjMLFTCJFUWsKv8hC+87Z1F4W3r68qTwDFZIFmd5Xkw==}
 
-  /@next/env/13.1.2:
-    resolution: {integrity: sha512-PpT4UZIX66VMTqXt4HKEJ+/PwbS+tWmmhZlazaws1a+dbUA5pPdjntQ46Jvj616i3ZKN9doS9LHx3y50RLjAWg==}
-    dev: false
-
   /@next/swc-android-arm-eabi/13.1.1:
     resolution: {integrity: sha512-qnFCx1kT3JTWhWve4VkeWuZiyjG0b5T6J2iWuin74lORCupdrNukxkq9Pm+Z7PsatxuwVJMhjUoYz7H4cWzx2A==}
     engines: {node: '>= 10'}
     cpu: [arm]
     os: [android]
     requiresBuild: true
-    optional: true
-
-  /@next/swc-android-arm-eabi/13.1.2:
-    resolution: {integrity: sha512-7mRz1owoGsbfIcdOJA3kk7KEwPZ+OvVT1z9DkR/yru4QdVLF69h/1SHy0vlUNQMxDRllabhxCfkoZCB34GOGAg==}
-    engines: {node: '>= 10'}
-    cpu: [arm]
-    os: [android]
-    requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-android-arm64/13.1.1:
@@ -10634,30 +10602,12 @@ packages:
     requiresBuild: true
     optional: true
 
-  /@next/swc-android-arm64/13.1.2:
-    resolution: {integrity: sha512-mgjZ2eJSayovQm1LcE54BLSI4jjnnnLtq5GY5g+DdPuUiCT644gKtjZ/w2BQvuIecCqqBO+Ph9yzo/wUTq7NLg==}
-    engines: {node: '>= 10'}
-    cpu: [arm64]
-    os: [android]
-    requiresBuild: true
-    dev: false
-    optional: true
-
   /@next/swc-darwin-arm64/13.1.1:
     resolution: {integrity: sha512-9zRJSSIwER5tu9ADDkPw5rIZ+Np44HTXpYMr0rkM656IvssowPxmhK0rTreC1gpUCYwFsRbxarUJnJsTWiutPg==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
-    optional: true
-
-  /@next/swc-darwin-arm64/13.1.2:
-    resolution: {integrity: sha512-RikoQqy109r2222UJlyGs4dZw2BibkfPqpeFdW5JEGv+L2PStlHID8DwyVYbmHfQ0VIBGvbf/NAUtFakAWlhwg==}
-    engines: {node: '>= 10'}
-    cpu: [arm64]
-    os: [darwin]
-    requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-darwin-x64/13.1.1:
@@ -10668,30 +10618,12 @@ packages:
     requiresBuild: true
     optional: true
 
-  /@next/swc-darwin-x64/13.1.2:
-    resolution: {integrity: sha512-JbDZjaTvL8gyPC5TAH6OnD4jmXPkyUxRYPvu08ZmhT/XAFBb/Cso0BdXyDax/BPCG70mimP9d3hXNKNq+A0VtQ==}
-    engines: {node: '>= 10'}
-    cpu: [x64]
-    os: [darwin]
-    requiresBuild: true
-    dev: false
-    optional: true
-
   /@next/swc-freebsd-x64/13.1.1:
     resolution: {integrity: sha512-UwP4w/NcQ7V/VJEj3tGVszgb4pyUCt3lzJfUhjDMUmQbzG9LDvgiZgAGMYH6L21MoyAATJQPDGiAMWAPKsmumA==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [freebsd]
     requiresBuild: true
-    optional: true
-
-  /@next/swc-freebsd-x64/13.1.2:
-    resolution: {integrity: sha512-ax4j8VrdFQ/xc3W7Om0u1vnDxVApQHKsChBbAMynCrnycZmpbqK4MZu4ZkycT+mx2eccCiqZROpbzDbEdPosEw==}
-    engines: {node: '>= 10'}
-    cpu: [x64]
-    os: [freebsd]
-    requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-linux-arm-gnueabihf/13.1.1:
@@ -10702,30 +10634,12 @@ packages:
     requiresBuild: true
     optional: true
 
-  /@next/swc-linux-arm-gnueabihf/13.1.2:
-    resolution: {integrity: sha512-NcRHTesnCxnUvSJa637PQJffBBkmqi5XS/xVWGY7dI6nyJ+pC96Oj7kd+mcjnFUQI5lHKbg39qBWKtOzbezc4w==}
-    engines: {node: '>= 10'}
-    cpu: [arm]
-    os: [linux]
-    requiresBuild: true
-    dev: false
-    optional: true
-
   /@next/swc-linux-arm64-gnu/13.1.1:
     resolution: {integrity: sha512-JfDq1eri5Dif+VDpTkONRd083780nsMCOKoFG87wA0sa4xL8LGcXIBAkUGIC1uVy9SMsr2scA9CySLD/i+Oqiw==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
-    optional: true
-
-  /@next/swc-linux-arm64-gnu/13.1.2:
-    resolution: {integrity: sha512-AxJdjocLtPrsBY4P2COSBIc3crT5bpjgGenNuINoensOlXhBkYM0aRDYZdydwXOhG+kN2ngUvfgitop9pa204w==}
-    engines: {node: '>= 10'}
-    cpu: [arm64]
-    os: [linux]
-    requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-linux-arm64-musl/13.1.1:
@@ -10736,30 +10650,12 @@ packages:
     requiresBuild: true
     optional: true
 
-  /@next/swc-linux-arm64-musl/13.1.2:
-    resolution: {integrity: sha512-JmNimDkcCRq7P5zpkdqeaSZ69qKDntEPtyIaMNWqy5M0WUJxGim0Fs6Qzxayiyvuuh9Guxks4woQ/j/ZvX/c8Q==}
-    engines: {node: '>= 10'}
-    cpu: [arm64]
-    os: [linux]
-    requiresBuild: true
-    dev: false
-    optional: true
-
   /@next/swc-linux-x64-gnu/13.1.1:
     resolution: {integrity: sha512-nnjuBrbzvqaOJaV+XgT8/+lmXrSCOt1YYZn/irbDb2fR2QprL6Q7WJNgwsZNxiLSfLdv+2RJGGegBx9sLBEzGA==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
     requiresBuild: true
-    optional: true
-
-  /@next/swc-linux-x64-gnu/13.1.2:
-    resolution: {integrity: sha512-TsLsjZwUlgmvI42neTuIoD6K9RlXCUzqPtvIClgXxVO0um0DiZwK+M+0zX/uVXhMVphfPY2c5YeR1zFSIONY4A==}
-    engines: {node: '>= 10'}
-    cpu: [x64]
-    os: [linux]
-    requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-linux-x64-musl/13.1.1:
@@ -10770,30 +10666,12 @@ packages:
     requiresBuild: true
     optional: true
 
-  /@next/swc-linux-x64-musl/13.1.2:
-    resolution: {integrity: sha512-eSkyXgCXydEFPTkcncQOGepafedPte6JT/OofB9uvruucrrMVBagCASOuPxodWEMrlfEKSXVnExMKIlfmQMD7A==}
-    engines: {node: '>= 10'}
-    cpu: [x64]
-    os: [linux]
-    requiresBuild: true
-    dev: false
-    optional: true
-
   /@next/swc-win32-arm64-msvc/13.1.1:
     resolution: {integrity: sha512-pzUHOGrbgfGgPlOMx9xk3QdPJoRPU+om84hqVoe6u+E0RdwOG0Ho/2UxCgDqmvpUrMab1Deltlt6RqcXFpnigQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
-    optional: true
-
-  /@next/swc-win32-arm64-msvc/13.1.2:
-    resolution: {integrity: sha512-DmXFaRTgt2KrV9dmRLifDJE+cYiutHVFIw5/C9BtnwXH39uf3YbPxeD98vNrtqqqZVVLXY/1ySaSIwzYnqeY9g==}
-    engines: {node: '>= 10'}
-    cpu: [arm64]
-    os: [win32]
-    requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-win32-ia32-msvc/13.1.1:
@@ -10804,30 +10682,12 @@ packages:
     requiresBuild: true
     optional: true
 
-  /@next/swc-win32-ia32-msvc/13.1.2:
-    resolution: {integrity: sha512-3+nBkuFs/wT+lmRVQNH5SyDT7I4vUlNPntosEaEP63FuYQdPLaxz0GvcR66MdFSFh2fsvazpe4wciOwVS4FItQ==}
-    engines: {node: '>= 10'}
-    cpu: [ia32]
-    os: [win32]
-    requiresBuild: true
-    dev: false
-    optional: true
-
   /@next/swc-win32-x64-msvc/13.1.1:
     resolution: {integrity: sha512-mVF0/3/5QAc5EGVnb8ll31nNvf3BWpPY4pBb84tk+BfQglWLqc5AC9q1Ht/YMWiEgs8ALNKEQ3GQnbY0bJF2Gg==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
     requiresBuild: true
-    optional: true
-
-  /@next/swc-win32-x64-msvc/13.1.2:
-    resolution: {integrity: sha512-avsyveEvcvH42PvKjR4Pb8JlLttuGURr2H3ZhS2b85pHOiZ7yjH3rMUoGnNzuLMApyxYaCvd4MedPrLhnNhkog==}
-    engines: {node: '>= 10'}
-    cpu: [x64]
-    os: [win32]
-    requiresBuild: true
-    dev: false
     optional: true
 
   /@nicolo-ribaudo/chokidar-2/2.1.8-no-fsevents.3:
@@ -14770,21 +14630,12 @@ packages:
     engines: {node: '>=4'}
     dev: false
 
-  /axios/0.21.4_debug@3.2.7:
+  /axios/0.21.4_debug@4.3.4:
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
       follow-redirects: 1.15.1
     transitivePeerDependencies:
       - debug
-    dev: false
-
-  /axios/0.21.4_debug@4.3.4:
-    resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
-    dependencies:
-      follow-redirects: 1.15.1_debug@4.3.4
-    transitivePeerDependencies:
-      - debug
-    dev: true
 
   /axios/0.25.0:
     resolution: {integrity: sha512-cD8FOb0tRH3uuEe6+evtAbgJtfxr7ly3fQjYcMcuPlgkwVS9xboaVIpcDV+cYQe+yGykgwZCs1pzjntcGa6l5g==}
@@ -15176,8 +15027,8 @@ packages:
       - supports-color
     dev: true
 
-  /babel-plugin-remove-graphql-queries/5.5.0-next.0_jqsf6f3mvfsscspe5xblmymkvm:
-    resolution: {integrity: sha512-y7xJGPPHPljVR3nhZNllraBJ42F1j1iJsrUlUWQW5nLDNM/iPyWdpKmvKaChvU9gez5cs8pQexVcFh6NbUzcMg==}
+  /babel-plugin-remove-graphql-queries/5.6.0-next.0_34zmit57noivsgqvgdpgpcttx4:
+    resolution: {integrity: sha512-hrxx7U73x6TUL+x/h2/OrQT4hdeGkYjK39oiYtt6erSVz8q1iOYl4tfCYN0wuHyrvpRdXJ7UBrAhLgBFIPn8Gw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@babel/core': ^7.0.0
@@ -15186,8 +15037,8 @@ packages:
       '@babel/core': 7.20.12
       '@babel/runtime': 7.20.7
       '@babel/types': 7.20.7
-      gatsby: 5.5.0-next.0_biqbaboplfbrettd7655fr4n2y
-      gatsby-core-utils: 4.5.0-next.0
+      gatsby: 5.6.0-next.0_biqbaboplfbrettd7655fr4n2y
+      gatsby-core-utils: 4.6.0-next.0
     dev: false
 
   /babel-plugin-styled-components/2.0.7_styled-components@5.3.6:
@@ -15271,8 +15122,8 @@ packages:
       - supports-color
     dev: false
 
-  /babel-preset-gatsby/3.5.0-next.0_pp2vm42zn6vfmnpuhar3irht7i:
-    resolution: {integrity: sha512-ljJsjFAfZjfKoCwO0bw3vxC3PmbE4XTZ91kIlKv8p+au5bOtDu2cFxltLte8khR6aAg5vEwUwvr4D4PUP4Wgsg==}
+  /babel-preset-gatsby/3.6.0-next.0_pp2vm42zn6vfmnpuhar3irht7i:
+    resolution: {integrity: sha512-Yg3s+TqJcaiolWzERdtCc/nQMnQDGqv6VvB4CEsRFAzZy9YoDLN6BauTpJ/FWeJc595TdszCYLqYLoa0cXcfVw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@babel/core': ^7.11.6
@@ -15293,8 +15144,8 @@ packages:
       babel-plugin-macros: 3.1.0
       babel-plugin-transform-react-remove-prop-types: 0.4.24
       core-js: 3.26.0
-      gatsby-core-utils: 4.5.0-next.0
-      gatsby-legacy-polyfills: 3.5.0-next.0
+      gatsby-core-utils: 4.6.0-next.0
+      gatsby-legacy-polyfills: 3.6.0-next.0
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -15533,6 +15384,7 @@ packages:
       term-size: 2.2.1
       type-fest: 0.8.1
       widest-line: 3.1.0
+    dev: true
 
   /boxen/5.1.2:
     resolution: {integrity: sha512-9gYgQKXx+1nP8mP7CzFyaUARhg7D3n1dF/FnErWmu9l6JvGpNUN278h0aSb+QjoiKSWG+iZ3uHrcqk0qrY9RQQ==}
@@ -15966,6 +15818,7 @@ packages:
     dependencies:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
+    dev: true
 
   /chalk/4.1.1:
     resolution: {integrity: sha512-diHzdDKxcU+bAsUboHLPEDQiw0qEe0qd7SYUn3HgcFlWgbDcfLGswOHYeGrHKzG9z6UYf01d9VFMfZxPM1xZSg==}
@@ -16753,8 +16606,8 @@ packages:
       readable-stream: 3.6.0
     dev: true
 
-  /create-gatsby/3.5.0-next.0:
-    resolution: {integrity: sha512-KmDOCTD0AO/kY2ctCP5j+5Cxc8TGuMs32vvyaKEbLAhkctuvQoRKUQ9NR4+uWSJoWuO5zEm008e3HKI+TpM60A==}
+  /create-gatsby/3.6.0-next.0:
+    resolution: {integrity: sha512-eeTIlCWsSWhQkfbcRstHO8n7I6kkf/tWkyjHt5nEGoIn2HW1457Qt4QMLhMyowhNBw/nXHiU+QuUvg+1oY8z9g==}
     hasBin: true
     dependencies:
       '@babel/runtime': 7.20.7
@@ -20838,6 +20691,16 @@ packages:
       graceful-fs: 4.2.10
       jsonfile: 6.1.0
       universalify: 2.0.0
+    dev: true
+
+  /fs-extra/11.1.0:
+    resolution: {integrity: sha512-0rcTq621PD5jM/e0a3EJoGC/1TC5ZBCERW82LQuwfGnCa1V8w7dpYH1yNu+SLb6E5dkeCBzKEyLGlFrnr+dUyw==}
+    engines: {node: '>=14.14'}
+    dependencies:
+      graceful-fs: 4.2.10
+      jsonfile: 6.1.0
+      universalify: 2.0.0
+    dev: false
 
   /fs-extra/7.0.1:
     resolution: {integrity: sha512-YJDaCJZEnBmcbw13fvdAM9AwNOJwOzrE4pqMqBq5nFiEqXUqHwlK4B+3pUw6JNvfSPtX05xFHtYy/1ni01eGCw==}
@@ -20936,8 +20799,8 @@ packages:
   /functions-have-names/1.2.3:
     resolution: {integrity: sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==}
 
-  /gatsby-cli/5.5.0-next.0:
-    resolution: {integrity: sha512-zDxea5Umb9LKU2kXSac84J/5QL4TvvGxyBkqUtvRq9rZRGYV+MTXgQTIzhlJQens+5kBepahERMLcifB9pJAwg==}
+  /gatsby-cli/5.6.0-next.0:
+    resolution: {integrity: sha512-B38HOsNXQ1r8EAap/J0E6CRv2QYxuf8J+Uc+aASbbDgEmfZw8A95ayT6JM8rqYaf9mambUmzot/QF/hKQBY1uA==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     requiresBuild: true
@@ -20958,13 +20821,13 @@ packages:
       clipboardy: 2.3.0
       common-tags: 1.8.2
       convert-hrtime: 3.0.0
-      create-gatsby: 3.5.0-next.0
+      create-gatsby: 3.6.0-next.0
       envinfo: 7.8.1
       execa: 5.1.1
       fs-exists-cached: 1.0.0
-      fs-extra: 10.1.0
-      gatsby-core-utils: 4.5.0-next.0
-      gatsby-telemetry: 4.5.0-next.0
+      fs-extra: 11.1.0
+      gatsby-core-utils: 4.6.0-next.0
+      gatsby-telemetry: 4.6.0-next.0
       hosted-git-info: 3.0.8
       is-valid-path: 0.1.1
       joi: 17.7.0
@@ -20988,8 +20851,8 @@ packages:
       - supports-color
     dev: false
 
-  /gatsby-core-utils/4.5.0-next.0:
-    resolution: {integrity: sha512-5rnnAppOADM+aRkglo0ImObnOsENc80NOR0RT1v5Qr/BFhs1KFIDQc4lSW0dvDDCeBDi8Ngj52t1GMvCTuUaTg==}
+  /gatsby-core-utils/4.6.0-next.0:
+    resolution: {integrity: sha512-4cc4d7WfJmYWprWBIxQBRiwyT2uECR9/40rqPCe62yeshTHIZUVCxeqzEeU6R0qkDpLjHkP0F/itv2oNa0AspQ==}
     engines: {node: '>=18.0.0'}
     dependencies:
       '@babel/runtime': 7.20.7
@@ -20997,8 +20860,9 @@ packages:
       configstore: 5.0.1
       fastq: 1.15.0
       file-type: 16.5.4
-      fs-extra: 10.1.0
+      fs-extra: 11.1.0
       got: 11.8.6
+      hash-wasm: 4.9.0
       import-from: 4.0.0
       lmdb: 2.5.3
       lock: 1.1.0
@@ -21009,20 +20873,20 @@ packages:
       xdg-basedir: 4.0.0
     dev: false
 
-  /gatsby-graphiql-explorer/3.5.0-next.0:
-    resolution: {integrity: sha512-CY0paEPQwJWJyXi9U8I79ubL3FKWc7Z8QeR6B6QMacodmWdn8KHl7j+qMYG+ErHmM3ruAhxMI5HJyCDOZaHFwA==}
+  /gatsby-graphiql-explorer/3.6.0-next.0:
+    resolution: {integrity: sha512-pXW8ufxLdklCjVtKyUZ6Nr6ROjH/5dUqbnp6hMdUGLWFjvpj3AWc/DH3wsDOLw//bBEZqHAcEyj2DwNcFv8mHw==}
     engines: {node: '>=18.0.0'}
     dev: false
 
-  /gatsby-legacy-polyfills/3.5.0-next.0:
-    resolution: {integrity: sha512-UW+/a4IGFcv7fCEK5BF4K7cwIBE3FEtbuVDSJ8a89zWSHWFLs82cSfc3+bDXPqv3m5/E2rWs0KLCWwEerzHNhQ==}
+  /gatsby-legacy-polyfills/3.6.0-next.0:
+    resolution: {integrity: sha512-XwGPOPDF/Xo/wZWW52YmFlZ/89Qb/jZdxBaPHfs2zRKvTAFmFkHBl+KAy5MBISY4IFWTfOyBN2UjnklmxRn93w==}
     dependencies:
       '@babel/runtime': 7.20.7
       core-js-compat: 3.9.0
     dev: false
 
-  /gatsby-link/5.5.0-next.0_y2kppt6lrltqk6wasg3eswwzsa:
-    resolution: {integrity: sha512-+TydIhkhkIs/8DnVK7Zv6gai6VSmeloGOPlme2aN/Y1a0DaYLlfH9pkF0to7DVYCC6Fn99n3VlHmUrWQxnA1bw==}
+  /gatsby-link/5.6.0-next.0_y2kppt6lrltqk6wasg3eswwzsa:
+    resolution: {integrity: sha512-tKTT58UQI3PQdWTmALZ9UYZ7hN4lgxrkLNhHRlfhhjsZXAwqqVXfR51gfV8cvEltEOdqdfrUSMZ9167KxEnp5A==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@gatsbyjs/reach-router': ^2.0.0
@@ -21031,33 +20895,33 @@ packages:
     dependencies:
       '@gatsbyjs/reach-router': 2.0.0_biqbaboplfbrettd7655fr4n2y
       '@types/reach__router': 1.3.11
-      gatsby-page-utils: 3.5.0-next.0
+      gatsby-page-utils: 3.6.0-next.0
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     dev: false
 
-  /gatsby-page-utils/3.5.0-next.0:
-    resolution: {integrity: sha512-MHD6azIuWYxwSxQ7pgow5K53OdIVbsKUKRKP8/0WUIMG8xZkOBZtRCgGL0QrPB7ze73hujxhMDGd8firz8bNYw==}
+  /gatsby-page-utils/3.6.0-next.0:
+    resolution: {integrity: sha512-3jul3U94W/33H8DMoaEfo6z26Tlp62Lf9FtS828s1A076ao9CFBpT2xrCCAn+rF8uXKAY1oB3b337Oaxdyx70g==}
     engines: {node: '>=18.0.0'}
     dependencies:
       '@babel/runtime': 7.20.7
       bluebird: 3.7.2
       chokidar: 3.5.3
       fs-exists-cached: 1.0.0
-      gatsby-core-utils: 4.5.0-next.0
+      gatsby-core-utils: 4.6.0-next.0
       glob: 7.2.3
       lodash: 4.17.21
       micromatch: 4.0.5
     dev: false
 
-  /gatsby-parcel-config/1.5.0-next.0_@parcel+core@2.8.2:
-    resolution: {integrity: sha512-k+MqR2JQX1/siMttbyIX1zOfv3ZI390H2Pk2SjdUFJxV4dYZzcLermRkAOSNHUQIrrQ7TaLDMtq9AOcIjMmNmA==}
+  /gatsby-parcel-config/1.6.0-next.0_@parcel+core@2.8.2:
+    resolution: {integrity: sha512-zqNIyHiaegO0hX8LJ6qmPAsZC0G3QmjjDvcmKVp4xvU8c21L7LUDJP++9Ek1iKm45gfuCweXeeKX01W5EWzDFA==}
     engines: {parcel: 2.x}
     peerDependencies:
       '@parcel/core': ^2.0.0
     dependencies:
-      '@gatsbyjs/parcel-namer-relative-to-cwd': 2.5.0-next.0_@parcel+core@2.8.2
+      '@gatsbyjs/parcel-namer-relative-to-cwd': 2.6.0-next.0_@parcel+core@2.8.2
       '@parcel/bundler-default': 2.8.2_@parcel+core@2.8.2
       '@parcel/compressor-raw': 2.8.2_@parcel+core@2.8.2
       '@parcel/core': 2.8.2
@@ -21072,8 +20936,8 @@ packages:
       '@parcel/transformer-json': 2.8.2_@parcel+core@2.8.2
     dev: false
 
-  /gatsby-plugin-page-creator/5.5.0-next.0_tiqeetwuawru2xunllrkp6n53m:
-    resolution: {integrity: sha512-OY0BOHl93aKqHCVwCFrABlGJFCW5T7tp5XqY5MPBmXRgCqWKVuZuZqgpHXoDTwjJSXMcn3sVzC5RhH7OgKIAiQ==}
+  /gatsby-plugin-page-creator/5.6.0-next.0_4kofk2l43xwpw753oec5pxbv5e:
+    resolution: {integrity: sha512-zNfm0f5wpVhlwDnvGwkfQtIcIHJeRJBeYQCkUYUPwoA1s4AJFY6+wbYSRYHcM8r2K5aDfE1/t32YEY43UNIzGA==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       gatsby: ^5.0.0-next
@@ -21083,12 +20947,12 @@ packages:
       '@sindresorhus/slugify': 1.1.2
       chokidar: 3.5.3
       fs-exists-cached: 1.0.0
-      fs-extra: 10.1.0
-      gatsby: 5.5.0-next.0_biqbaboplfbrettd7655fr4n2y
-      gatsby-core-utils: 4.5.0-next.0
-      gatsby-page-utils: 3.5.0-next.0
-      gatsby-plugin-utils: 4.5.0-next.0_tiqeetwuawru2xunllrkp6n53m
-      gatsby-telemetry: 4.5.0-next.0
+      fs-extra: 11.1.0
+      gatsby: 5.6.0-next.0_biqbaboplfbrettd7655fr4n2y
+      gatsby-core-utils: 4.6.0-next.0
+      gatsby-page-utils: 3.6.0-next.0
+      gatsby-plugin-utils: 4.6.0-next.0_4kofk2l43xwpw753oec5pxbv5e
+      gatsby-telemetry: 4.6.0-next.0
       globby: 11.1.0
       lodash: 4.17.21
     transitivePeerDependencies:
@@ -21097,8 +20961,8 @@ packages:
       - supports-color
     dev: false
 
-  /gatsby-plugin-typescript/5.5.0-next.0_gatsby@5.5.0-next.0:
-    resolution: {integrity: sha512-Snj6bZC1hPf+tmhbSJ2UBUO6f2vd6AGvEF06M3Tk22jSpZZ3ia0wPCQzAWal03hV0QO2CTRaY/1ZVns7WSlDzg==}
+  /gatsby-plugin-typescript/5.6.0-next.0_gatsby@5.6.0-next.0:
+    resolution: {integrity: sha512-CUguJx8GjTQHymcfBOcwUXZtetfhLYtgUehkM8ovvNlscgavGxmbGD90gXMmo5JgrLPhdx8krtMsdIeCOOvo4w==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       gatsby: ^5.0.0-next
@@ -21109,14 +20973,14 @@ packages:
       '@babel/plugin-proposal-optional-chaining': 7.20.7_@babel+core@7.20.12
       '@babel/preset-typescript': 7.18.6_@babel+core@7.20.12
       '@babel/runtime': 7.20.7
-      babel-plugin-remove-graphql-queries: 5.5.0-next.0_jqsf6f3mvfsscspe5xblmymkvm
-      gatsby: 5.5.0-next.0_biqbaboplfbrettd7655fr4n2y
+      babel-plugin-remove-graphql-queries: 5.6.0-next.0_34zmit57noivsgqvgdpgpcttx4
+      gatsby: 5.6.0-next.0_biqbaboplfbrettd7655fr4n2y
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /gatsby-plugin-utils/4.5.0-next.0_tiqeetwuawru2xunllrkp6n53m:
-    resolution: {integrity: sha512-PomEO3MOAEGAxhpiAVqvCd6FH4VNk5ce3J/2YDAY3mZcNl7443TzyBoLyebki27BY+cAhddYXx5dxsa23UplKw==}
+  /gatsby-plugin-utils/4.6.0-next.0_4kofk2l43xwpw753oec5pxbv5e:
+    resolution: {integrity: sha512-3xidC+kpOz9xtsG5yv4UGB87pA0bo3YEHBTtUf5kshNEycMeTeh6xgb6gnD56kCVQ4DFrUBAe5U95hWH8n65Aw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       gatsby: ^5.0.0-next
@@ -21124,10 +20988,10 @@ packages:
     dependencies:
       '@babel/runtime': 7.20.7
       fastq: 1.15.0
-      fs-extra: 10.1.0
-      gatsby: 5.5.0-next.0_biqbaboplfbrettd7655fr4n2y
-      gatsby-core-utils: 4.5.0-next.0
-      gatsby-sharp: 1.5.0-next.0
+      fs-extra: 11.1.0
+      gatsby: 5.6.0-next.0_biqbaboplfbrettd7655fr4n2y
+      gatsby-core-utils: 4.6.0-next.0
+      gatsby-sharp: 1.6.0-next.0
       graphql: 16.6.0
       graphql-compose: 9.0.10_graphql@16.6.0
       import-from: 4.0.0
@@ -21135,8 +20999,8 @@ packages:
       mime: 3.0.0
     dev: false
 
-  /gatsby-react-router-scroll/6.5.0-next.0_y2kppt6lrltqk6wasg3eswwzsa:
-    resolution: {integrity: sha512-x8prKBH32JDvDVjo04j0XHZ1kXKcshqkTCUDQu/5yQ/l3dy485Ut/kXlTylbp591fw8uuEqjgvF5ElsBrmMlWg==}
+  /gatsby-react-router-scroll/6.6.0-next.0_y2kppt6lrltqk6wasg3eswwzsa:
+    resolution: {integrity: sha512-zSVEibH40eR64HROVbQ2OTV4sSDVXCgAEIG9yykhGJv5oz2yEFwWcjmPYWEtaiu2qcjPnLSkjsPOw5tVqrFr7A==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@gatsbyjs/reach-router': ^2.0.0
@@ -21150,8 +21014,8 @@ packages:
       react-dom: 18.2.0_react@18.2.0
     dev: false
 
-  /gatsby-script/2.5.0-next.0_y2kppt6lrltqk6wasg3eswwzsa:
-    resolution: {integrity: sha512-eYFPQQ6QwjZxw8H4ojuJIFM62cFDos/CZFHxKAxyEvt9Qv1m2bzWCIK4PxRswESa0jAQYpbx+i/nLFA3P3zYsQ==}
+  /gatsby-script/2.6.0-next.0_y2kppt6lrltqk6wasg3eswwzsa:
+    resolution: {integrity: sha512-kJQ+NqtS4ue3I7t0Asgy+bAdnwQ0Wzu6BK3z/jnj57lU6mBthU5XWj9RiCu3W4GjsIW/qqjN1e/rqvukN+sWMw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@gatsbyjs/reach-router': ^2.0.0
@@ -21163,16 +21027,16 @@ packages:
       react-dom: 18.2.0_react@18.2.0
     dev: false
 
-  /gatsby-sharp/1.5.0-next.0:
-    resolution: {integrity: sha512-6ETKQa9CgNqpuxfrAovKxJsC8kwqbw3mhMTDBgD6ceeQr6GgKx9xG6jmNBbA6IxEiFvKpwz5cAIuJr8P5ylznw==}
+  /gatsby-sharp/1.6.0-next.0:
+    resolution: {integrity: sha512-QaGkqU55JaZAbjgU1QyrX0rbyRUEFluMT7LykLlfGMCdox4DzE5ERtP5BVIHCzRXc0JAZtmFCDcFmpPSKxB28w==}
     engines: {node: '>=18.0.0'}
     dependencies:
       '@types/sharp': 0.31.1
       sharp: 0.31.3
     dev: false
 
-  /gatsby-telemetry/4.5.0-next.0:
-    resolution: {integrity: sha512-RcD7x7hnc9wOe9K0xvufQHLBjNW8xcQcf4e6DY7ffftBVIlYAudIlBe1n9BRtTUXOHPumHIGDhp97CyDv+m4HQ==}
+  /gatsby-telemetry/4.6.0-next.0:
+    resolution: {integrity: sha512-LQcqw21mO0s5sKPoi5MWYqcK7iVp5qej5fTpOYgDenabGDSIxYAoRa5CGQ6tRwGUjMu3NYykmCpPdsY0DHNHyw==}
     engines: {node: '>=18.0.0'}
     requiresBuild: true
     dependencies:
@@ -21180,10 +21044,10 @@ packages:
       '@babel/runtime': 7.20.7
       '@turist/fetch': 7.2.0_node-fetch@2.6.7
       '@turist/time': 0.0.2
-      boxen: 4.2.0
+      boxen: 5.1.2
       configstore: 5.0.1
-      fs-extra: 10.1.0
-      gatsby-core-utils: 4.5.0-next.0
+      fs-extra: 11.1.0
+      gatsby-core-utils: 4.6.0-next.0
       git-up: 7.0.0
       is-docker: 2.2.1
       lodash: 4.17.21
@@ -21192,20 +21056,20 @@ packages:
       - encoding
     dev: false
 
-  /gatsby-worker/2.5.0-next.0:
-    resolution: {integrity: sha512-u/IdMyXh1vxWNG19oq4KCD9p9tcYzQ3tFcG98Jai6phyzjIOvl4RIhV8jByTJ5YvupIWlOtfsrd4ra+cuGLAoA==}
+  /gatsby-worker/2.6.0-next.0:
+    resolution: {integrity: sha512-C2bBppw4MqtEo1pEUma2UE06txv22q+ix04G3idMxjqFLtWq+H3+fQmuDZB4laI601ClzyAHK99dSNKQrfGqeA==}
     engines: {node: '>=18.0.0'}
     dependencies:
       '@babel/core': 7.20.12
       '@babel/runtime': 7.20.7
-      fs-extra: 10.1.0
+      fs-extra: 11.1.0
       signal-exit: 3.0.7
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /gatsby/5.5.0-next.0_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-5wR5rmmQ96PbMF3J4vNCwN7eIHcbrp3ReNVPzL6Pt673Pzlt3ga/Jaf6qUmeUORXaHpp5faDfWvcrfF9a92zQQ==}
+  /gatsby/5.6.0-next.0_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-QwM9R3JtRo7Qk1A0v5Hgpo45SXtRYh7OzZntOaj8VsDk7HebITZ5eLrdTq/wPYNYn3Jlng2bG+bObcIEjjqcyw==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     requiresBuild: true
@@ -21221,7 +21085,7 @@ packages:
       '@babel/runtime': 7.20.7
       '@babel/traverse': 7.20.12
       '@babel/types': 7.20.7
-      '@builder.io/partytown': 0.5.4
+      '@builder.io/partytown': 0.7.5
       '@gatsbyjs/reach-router': 2.0.0_biqbaboplfbrettd7655fr4n2y
       '@gatsbyjs/webpack-hot-middleware': 2.25.3
       '@graphql-codegen/add': 3.2.3_graphql@16.6.0
@@ -21245,14 +21109,14 @@ packages:
       address: 1.2.2
       anser: 2.1.1
       autoprefixer: 10.4.13_postcss@8.4.20
-      axios: 0.21.4_debug@3.2.7
+      axios: 0.21.4_debug@4.3.4
       babel-jsx-utils: 1.1.0
       babel-loader: 8.3.0_la66t7xldg4uecmyawueag5wkm
       babel-plugin-add-module-exports: 1.0.4
       babel-plugin-dynamic-import-node: 2.3.3
       babel-plugin-lodash: 3.3.4
-      babel-plugin-remove-graphql-queries: 5.5.0-next.0_jqsf6f3mvfsscspe5xblmymkvm
-      babel-preset-gatsby: 3.5.0-next.0_pp2vm42zn6vfmnpuhar3irht7i
+      babel-plugin-remove-graphql-queries: 5.6.0-next.0_34zmit57noivsgqvgdpgpcttx4
+      babel-preset-gatsby: 3.6.0-next.0_pp2vm42zn6vfmnpuhar3irht7i
       better-opn: 2.1.1
       bluebird: 3.7.2
       browserslist: 4.21.4
@@ -21261,14 +21125,14 @@ packages:
       chokidar: 3.5.3
       common-tags: 1.8.2
       compression: 1.7.4
-      cookie: 0.4.2
+      cookie: 0.5.0
       core-js: 3.26.0
       cors: 2.8.5
       css-loader: 5.2.7_webpack@5.75.0
       css-minimizer-webpack-plugin: 2.0.0_webpack@5.75.0
       css.escape: 1.5.1
       date-fns: 2.29.3
-      debug: 3.2.7
+      debug: 4.3.4
       deepmerge: 4.2.2
       detect-port: 1.5.1
       devcert: 1.2.2
@@ -21292,21 +21156,21 @@ packages:
       file-loader: 6.2.0_webpack@5.75.0
       find-cache-dir: 3.3.2
       fs-exists-cached: 1.0.0
-      fs-extra: 10.1.0
-      gatsby-cli: 5.5.0-next.0
-      gatsby-core-utils: 4.5.0-next.0
-      gatsby-graphiql-explorer: 3.5.0-next.0
-      gatsby-legacy-polyfills: 3.5.0-next.0
-      gatsby-link: 5.5.0-next.0_y2kppt6lrltqk6wasg3eswwzsa
-      gatsby-page-utils: 3.5.0-next.0
-      gatsby-parcel-config: 1.5.0-next.0_@parcel+core@2.8.2
-      gatsby-plugin-page-creator: 5.5.0-next.0_tiqeetwuawru2xunllrkp6n53m
-      gatsby-plugin-typescript: 5.5.0-next.0_gatsby@5.5.0-next.0
-      gatsby-plugin-utils: 4.5.0-next.0_tiqeetwuawru2xunllrkp6n53m
-      gatsby-react-router-scroll: 6.5.0-next.0_y2kppt6lrltqk6wasg3eswwzsa
-      gatsby-script: 2.5.0-next.0_y2kppt6lrltqk6wasg3eswwzsa
-      gatsby-telemetry: 4.5.0-next.0
-      gatsby-worker: 2.5.0-next.0
+      fs-extra: 11.1.0
+      gatsby-cli: 5.6.0-next.0
+      gatsby-core-utils: 4.6.0-next.0
+      gatsby-graphiql-explorer: 3.6.0-next.0
+      gatsby-legacy-polyfills: 3.6.0-next.0
+      gatsby-link: 5.6.0-next.0_y2kppt6lrltqk6wasg3eswwzsa
+      gatsby-page-utils: 3.6.0-next.0
+      gatsby-parcel-config: 1.6.0-next.0_@parcel+core@2.8.2
+      gatsby-plugin-page-creator: 5.6.0-next.0_4kofk2l43xwpw753oec5pxbv5e
+      gatsby-plugin-typescript: 5.6.0-next.0_gatsby@5.6.0-next.0
+      gatsby-plugin-utils: 4.6.0-next.0_4kofk2l43xwpw753oec5pxbv5e
+      gatsby-react-router-scroll: 6.6.0-next.0_y2kppt6lrltqk6wasg3eswwzsa
+      gatsby-script: 2.6.0-next.0_y2kppt6lrltqk6wasg3eswwzsa
+      gatsby-telemetry: 4.6.0-next.0
+      gatsby-worker: 2.6.0-next.0
       glob: 7.2.3
       globby: 11.1.0
       got: 11.8.6
@@ -21323,11 +21187,10 @@ packages:
       latest-version: 7.0.0
       lmdb: 2.5.3
       lodash: 4.17.21
-      md5-file: 5.0.0
       meant: 1.0.3
       memoizee: 0.4.15
       micromatch: 4.0.5
-      mime: 2.6.0
+      mime: 3.0.0
       mini-css-extract-plugin: 1.6.2_webpack@5.75.0
       mitt: 1.2.0
       moment: 2.29.4
@@ -21377,11 +21240,11 @@ packages:
       webpack-dev-middleware: 4.3.0_webpack@5.75.0
       webpack-merge: 5.8.0
       webpack-stats-plugin: 1.1.1
-      webpack-virtual-modules: 0.3.2
+      webpack-virtual-modules: 0.5.0
       xstate: 4.35.2
       yaml-loader: 0.8.0
     optionalDependencies:
-      gatsby-sharp: 1.5.0-next.0
+      gatsby-sharp: 1.6.0-next.0
     transitivePeerDependencies:
       - '@swc/core'
       - '@types/webpack'
@@ -22157,6 +22020,10 @@ packages:
   /hash-sum/2.0.0:
     resolution: {integrity: sha512-WdZTbAByD+pHfl/g9QSsBIIwy8IT+EsPiKDs0KNX+zSHhdDLFKdZu0BQHljvO+0QI/BasbMSUa8wYNCZTvhslg==}
     dev: true
+
+  /hash-wasm/4.9.0:
+    resolution: {integrity: sha512-7SW7ejyfnRxuOc7ptQHSf4LDoZaWOivfzqw+5rpcQku0nHfmicPKE51ra9BiRLAmT8+gGLestr1XroUkqdjL6w==}
+    dev: false
 
   /hasha/5.2.2:
     resolution: {integrity: sha512-Hrp5vIK/xr5SkeN2onO32H0MgNZ0f17HRNH39WfL0SYUNOTZ5Lz1TJ8Pajo/87dYGEFlLMm7mIc/k/s6Bvz9HQ==}
@@ -26243,12 +26110,6 @@ packages:
     hasBin: true
     dev: true
 
-  /md5-file/5.0.0:
-    resolution: {integrity: sha512-xbEFXCYVWrSx/gEKS1VPlg84h/4L20znVIulKw6kMfmBUAZNAnF00eczz9ICMl+/hjQGo5KSXRxbL/47X3rmMw==}
-    engines: {node: '>=10.13.0'}
-    hasBin: true
-    dev: false
-
   /mdast-squeeze-paragraphs/4.0.0:
     resolution: {integrity: sha512-zxdPn69hkQ1rm4J+2Cs2j6wDEv7O17TfXTJ33tl/+JPIoEmtV9t2ZzBM5LPHE8QlHsmVD8t3vPKCyY3oH+H8MQ==}
     dependencies:
@@ -27346,33 +27207,6 @@ packages:
     engines: {node: '>= 0.4.0'}
     dev: true
 
-  /next-auth/4.18.8_xpfrgizk2uibqsegg5y3s2zbwy:
-    resolution: {integrity: sha512-USP8ihmvB7iCGtkS0+toe2QPrzdbZfkydQZX56JOI9Ft5n/BardOXh3D4wQ2An+vpq/jDKojGlgfv21wVElW7A==}
-    engines: {node: ^12.19.0 || ^14.15.0 || ^16.13.0 || ^18.12.0}
-    peerDependencies:
-      next: ^12.2.5 || ^13
-      nodemailer: ^6.6.5
-      react: ^17.0.2 || ^18
-      react-dom: ^17.0.2 || ^18
-    peerDependenciesMeta:
-      nodemailer:
-        optional: true
-    dependencies:
-      '@babel/runtime': 7.20.7
-      '@panva/hkdf': 1.0.2
-      cookie: 0.5.0
-      jose: 4.11.1
-      next: 13.1.2_biqbaboplfbrettd7655fr4n2y
-      nodemailer: 6.8.0
-      oauth: 0.9.15
-      openid-client: 5.1.6
-      preact: 10.11.3
-      preact-render-to-string: 5.2.3_preact@10.11.3
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-      uuid: 8.3.2
-    dev: false
-
   /next-tick/1.1.0:
     resolution: {integrity: sha512-CXdUiJembsNjuToQvxayPZF9Vqht7hewsvy2sOWafLvi2awflj9mOC6bHIg50orX8IJvWKY9wYQ/zB2kogPslQ==}
 
@@ -27459,50 +27293,6 @@ packages:
       '@next/swc-win32-arm64-msvc': 13.1.1
       '@next/swc-win32-ia32-msvc': 13.1.1
       '@next/swc-win32-x64-msvc': 13.1.1
-    transitivePeerDependencies:
-      - '@babel/core'
-      - babel-plugin-macros
-    dev: false
-
-  /next/13.1.2_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-Rdnnb2YH///w78FEOR/IQ6TXga+qpth4OqFSem48ng1PYYKr6XBsIk1XVaRcIGM3o6iiHnun0nJvkJHDf+ICyQ==}
-    engines: {node: '>=14.6.0'}
-    hasBin: true
-    peerDependencies:
-      fibers: '>= 3.1.0'
-      node-sass: ^6.0.0 || ^7.0.0
-      react: ^18.2.0
-      react-dom: ^18.2.0
-      sass: ^1.3.0
-    peerDependenciesMeta:
-      fibers:
-        optional: true
-      node-sass:
-        optional: true
-      sass:
-        optional: true
-    dependencies:
-      '@next/env': 13.1.2
-      '@swc/helpers': 0.4.14
-      caniuse-lite: 1.0.30001431
-      postcss: 8.4.14
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-      styled-jsx: 5.1.1_react@18.2.0
-    optionalDependencies:
-      '@next/swc-android-arm-eabi': 13.1.2
-      '@next/swc-android-arm64': 13.1.2
-      '@next/swc-darwin-arm64': 13.1.2
-      '@next/swc-darwin-x64': 13.1.2
-      '@next/swc-freebsd-x64': 13.1.2
-      '@next/swc-linux-arm-gnueabihf': 13.1.2
-      '@next/swc-linux-arm64-gnu': 13.1.2
-      '@next/swc-linux-arm64-musl': 13.1.2
-      '@next/swc-linux-x64-gnu': 13.1.2
-      '@next/swc-linux-x64-musl': 13.1.2
-      '@next/swc-win32-arm64-msvc': 13.1.2
-      '@next/swc-win32-ia32-msvc': 13.1.2
-      '@next/swc-win32-x64-msvc': 13.1.2
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
@@ -33213,6 +33003,7 @@ packages:
   /term-size/2.2.1:
     resolution: {integrity: sha512-wK0Ri4fOGjv/XPy8SBHZChl8CM7uMc5VML7SqiQ0zG7+J5Vr+RMQDoHa2CNT6KHUnTGIXH34UDMkPzAUyapBZg==}
     engines: {node: '>=8'}
+    dev: true
 
   /terminal-link/2.1.1:
     resolution: {integrity: sha512-un0FmiRUQNr5PJqy9kP7c40F5BOfpGlYTrxonDChEZB7pzZxRNp/bt+ymiy9/npwXya9KH99nJ/GXFIiUkYGFQ==}
@@ -35547,17 +35338,8 @@ packages:
     resolution: {integrity: sha512-aWwE/YuO2W7VCOyWwyDJ7BRSYRYjeXat+X31YiasMM3FS6/4X9W4Mb9Q0g+jIdVgArr1Mb08sHBJKMT5M9+gVA==}
     dev: false
 
-  /webpack-virtual-modules/0.3.2:
-    resolution: {integrity: sha512-RXQXioY6MhzM4CNQwmBwKXYgBs6ulaiQ8bkNQEl2J6Z+V+s7lgl/wGvaI/I0dLnYKB8cKsxQc17QOAVIphPLDw==}
-    dependencies:
-      debug: 3.2.7
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
   /webpack-virtual-modules/0.5.0:
     resolution: {integrity: sha512-kyDivFZ7ZM0BVOUteVbDFhlRt7Ah/CSPwJdi8hBpkK7QLumUqdLtVfm/PX/hkcnrvr0i77fO5+TjZ94Pe+C9iw==}
-    dev: true
 
   /webpack/5.73.0:
     resolution: {integrity: sha512-svjudQRPPa0YiOYa2lM/Gacw0r6PvxptHj4FuEKQ2kX05ZLkjbVc5MnPs6its5j7IZljnIqSVo/OsY2X0IpHGA==}
