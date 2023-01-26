@@ -149,7 +149,7 @@ export async function callback(params: {
         return {
           redirect: `${pages.newUser}${
             pages.newUser.includes("?") ? "&" : "?"
-          }callbackUrl=${encodeURIComponent(callbackUrl)}`,
+          }${new URLSearchParams({ callbackUrl })}`,
           cookies,
         }
       }
@@ -256,7 +256,7 @@ export async function callback(params: {
         return {
           redirect: `${pages.newUser}${
             pages.newUser.includes("?") ? "&" : "?"
-          }callbackUrl=${encodeURIComponent(callbackUrl)}`,
+          }${new URLSearchParams({ callbackUrl })}`,
           cookies,
         }
       }
@@ -350,6 +350,6 @@ export async function callback(params: {
     logger.error(error)
     url.searchParams.set("error", CallbackRouteError.name)
     url.pathname += "/error"
-    return { redirect: url, cookies }
+    return { redirect: url.toString(), cookies }
   }
 }

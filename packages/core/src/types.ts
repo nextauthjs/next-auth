@@ -203,7 +203,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    * Its content is forwarded to the `session` callback,
    * where you can control what should be returned to the client.
    * Anything else will be kept inaccessible from the client.
-   * 
+   *
    * Returning `null` will invalidate the JWT session by clearing
    * the user's cookies. You'll still have to monitor and invalidate
    * unexpired tokens from future requests yourself to prevent
@@ -220,7 +220,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
     account?: A | null
     profile?: P
     isNewUser?: boolean
-  }) => Awaitable<JWT|null>
+  }) => Awaitable<JWT | null>
 }
 
 /** [Documentation](https://authjs.dev/reference/configuration/auth-config#cookies) */
@@ -452,7 +452,7 @@ export interface ResponseInternal<
   status?: number
   headers?: Headers | HeadersInit
   body?: Body
-  redirect?: URL | string
+  redirect?: string
   cookies?: Cookie[]
 }
 
