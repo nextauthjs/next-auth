@@ -150,6 +150,11 @@ export interface OAuth2Config<Profile>
   checks?: Array<"pkce" | "state" | "none" | "nonce">
   clientId?: string
   clientSecret?: string
+  /**
+   * If specified, the OAuth will redirect to this URL after the authorization step instead of the default callback URL which is inferred from the host.
+   * This is especially useful if you want to redirect users on the Preview environment without having to set different URLs in the OAuth provider portal.
+   */
+  callbackUrl?: string
   client?: Partial<Client>
   style?: OAuthProviderButtonStyles
   /**

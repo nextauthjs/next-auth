@@ -29,7 +29,7 @@ export default function parseProviders(params: {
     const id = (userOptions?.id ?? defaults.id) as string
     const merged = merge(defaults, userOptions, {
       signinUrl: `${url}/signin/${id}`,
-      callbackUrl: `${url}/callback/${id}`,
+      callbackUrl: userOptions?.callbackUrl ?? `${url}/callback/${id}`,
     })
 
     if (provider.type === "oauth" || provider.type === "oidc") {
