@@ -285,7 +285,7 @@ export function EdgeDBAdapter(client: Client): Adapter {
       );
     },
     async useVerificationToken({ token }) {
-      return await client.querySingle(
+      const verificationToken = await client.querySingle(
         `
         select (
           delete VerificationToken filter .token = <str>$token
@@ -297,6 +297,10 @@ export function EdgeDBAdapter(client: Client): Adapter {
         `,
         { token }
       );
+
+      if (verificationToken.id) delete verificationToken.id
+      
+      return verificationToken
     },
   };
 }

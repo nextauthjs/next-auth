@@ -66,6 +66,12 @@ import WorkOS from "@auth/core/providers/workos"
 //   secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
 // })
 
+// // EdgeDB
+// import { EdgeDBAdapter } from "@next-auth/edgedb-adapter"
+// import { createClient } from "edgedb"
+// const client = createClient()
+// const adapter = EdgeDBAdapter(client)
+
 export const authConfig: AuthConfig = {
   // adapter,
   // debug: process.env.NODE_ENV !== "production",
