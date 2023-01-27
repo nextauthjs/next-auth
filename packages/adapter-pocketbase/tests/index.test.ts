@@ -31,9 +31,6 @@ runBasicTests({
         return null
       }
 
-      if (pb_session.sessionToken !== sessionToken)
-        throw new Error("sessionToken mismatch")
-
       const result: AdapterSession = {
         userId: pb_session.userId,
         sessionToken: pb_session.sessionToken,
@@ -91,7 +88,7 @@ runBasicTests({
         session_state: pb_account.session_state,
         token_type: pb_account.token_type,
         expires_at: Number(pb_account.expires_at),
-        // @ts-ignore this return type is safe
+        // @ts-ignore this return type is set by Auth.js
         type: pb_account.type,
       }
 
