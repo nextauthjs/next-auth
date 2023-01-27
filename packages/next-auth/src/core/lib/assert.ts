@@ -7,12 +7,11 @@ import {
   InvalidCallbackUrl,
   MissingAdapterMethods,
 } from "../errors"
-import parseUrl from "../../utils/parse-url"
 import { defaultCookies } from "./cookie"
 
 import type { RequestInternal } from ".."
 import type { WarningCode } from "../../utils/logger"
-import type { NextAuthOptions } from "../types"
+import type { AuthOptions } from "../types"
 
 type ConfigError =
   | MissingAPIRoute
@@ -40,15 +39,15 @@ function isValidHttpUrl(url: string, baseUrl: string) {
  * REVIEW: Make some of these and corresponding docs less Next.js specific?
  */
 export function assertConfig(params: {
-  options: NextAuthOptions
+  options: AuthOptions
   req: RequestInternal
 }): ConfigError | WarningCode[] {
   const { options, req } = params
-
+  const { url } = req
   const warnings: WarningCode[] = []
 
   if (!warned) {
-    if (!req.host) warnings.push("NEXTAUTH_URL")
+    if (!url.origin) warnings.push("NEXTAUTH_URL")
 
     // TODO: Make this throw an error in next major. This will also get rid of `NODE_ENV`
     if (!options.secret && process.env.NODE_ENV !== "production")
@@ -70,21 +69,19 @@ export function assertConfig(params: {
 
   const callbackUrlParam = req.query?.callbackUrl as string | undefined
 
-  const url = parseUrl(req.host)
-
-  if (callbackUrlParam && !isValidHttpUrl(callbackUrlParam, url.base)) {
+  if (callbackUrlParam && !isValidHttpUrl(callbackUrlParam, url.origin)) {
     return new InvalidCallbackUrl(
       `Invalid callback URL. Received: ${callbackUrlParam}`
     )
   }
 
   const { callbackUrl: defaultCallbackUrl } = defaultCookies(
-    options.useSecureCookies ?? url.base.startsWith("https://")
+    options.useSecureCookies ?? url.protocol === "https://"
   )
   const callbackUrlCookie =
     req.cookies?.[options.cookies?.callbackUrl?.name ?? defaultCallbackUrl.name]
 
-  if (callbackUrlCookie && !isValidHttpUrl(callbackUrlCookie, url.base)) {
+  if (callbackUrlCookie && !isValidHttpUrl(callbackUrlCookie, url.origin)) {
     return new InvalidCallbackUrl(
       `Invalid callback URL. Received: ${callbackUrlCookie}`
     )
