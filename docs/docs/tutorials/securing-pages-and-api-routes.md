@@ -68,12 +68,12 @@ For other patterns check out the [Next.js Middleware documentation](https://next
 
 ### Server Side
 
-You can protect server side rendered pages using the `unstable_getServerSession` method. This is different from the old `getSession()` method, in that it does not do an extra fetch out over the internet to confirm data from itself, increasing performance significantly.
+You can protect server side rendered pages using the `getServerSession` method. This is different from the old `getSession()` method, in that it does not do an extra fetch out over the internet to confirm data from itself, increasing performance significantly.
 
-You need to add this to every server rendered page you want to protect. Be aware, `unstable_getServerSession` takes slightly different arguments than the method it is replacing, `getSession`.
+You need to add this to every server rendered page you want to protect. Be aware, `getServerSession` takes slightly different arguments than the method it is replacing, `getSession`.
 
 ```js title="pages/server-side-example.js"
-import { unstable_getServerSession } from "next-auth/next"
+import { getServerSession } from "next-auth/next"
 import { authOptions } from "./api/auth/[...nextauth]"
 import { useSession } from "next-auth/react"
 
@@ -96,7 +96,7 @@ export default function Page() {
 export async function getServerSideProps(context) {
   return {
     props: {
-      session: await unstable_getServerSession(
+      session: await getServerSession(
         context.req,
         context.res,
         authOptions
@@ -128,16 +128,16 @@ export default function App({
 
 ## Securing API Routes
 
-### Using unstable_getServerSession()
+### Using getServerSession()
 
-You can protect API routes using the `unstable_getServerSession()` method.
+You can protect API routes using the `getServerSession()` method.
 
 ```js title="pages/api/get-session-example.js"
-import { unstable_getServerSession } from "next-auth/next"
+import { getServerSession } from "next-auth/next"
 import { authOptions } from "./auth/[...nextauth]"
 
 export default async (req, res) => {
-  const session = await unstable_getServerSession(req, res, authOptions)
+  const session = await getServerSession(req, res, authOptions)
   if (session) {
     // Signed in
     console.log("Session", JSON.stringify(session, null, 2))

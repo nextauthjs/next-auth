@@ -1,6 +1,6 @@
 // This is an example of how to protect content using server rendering
 // and fetching data from Supabase with RLS enabled.
-import { unstable_getServerSession } from "next-auth/next"
+import { getServerSession } from "next-auth/next"
 import { authOptions } from "./api/auth/[...nextauth]"
 import { createClient } from "@supabase/supabase-js"
 import Layout from "../components/layout"
@@ -27,11 +27,7 @@ export default function Page({ data, session }) {
 }
 
 export async function getServerSideProps(context) {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  )
+  const session = await getServerSession(context.req, context.res, authOptions)
 
   if (!session)
     return {
