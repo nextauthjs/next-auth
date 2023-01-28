@@ -405,6 +405,26 @@ export const PocketBaseAdapter = (
         )
       }
     },
+    async deleteUser(userId) {
+      try {
+        await client.collection("next_auth_user").delete(userId)
+      } catch (_) {
+        return null
+      }
+    },
+    async unlinkAccount({ provider, providerAccountId }) {
+      try {
+        const pb_account = await client
+          .collection("next_auth_account")
+          .getFirstListItem<PocketBaseAccount>(
+            `providerAccountId="${providerAccountId} && provider=${provider}"`
+          )
+
+        await client.collection("next_auth_account").delete(pb_account.id)
+      } catch (_) {
+        return undefined
+      }
+    },
   }
 }
 
