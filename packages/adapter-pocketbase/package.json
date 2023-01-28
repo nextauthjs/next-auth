@@ -1,7 +1,7 @@
 {
   "name": "@next-auth/pocketbase-adapter",
-  "version": "0.0.1",
-  "description": "Pocketbase adapter for Next.js",
+  "version": "0.1.0",
+  "description": "Pocketbase adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
