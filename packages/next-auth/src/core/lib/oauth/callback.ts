@@ -1,6 +1,6 @@
 import { TokenSet } from "openid-client"
 import { openidClient } from "./client"
-import { oAuth1Client } from "./client-legacy"
+import { oAuth1Client, oAuth1TokenStore } from "./client-legacy"
 import { useState } from "./state-handler"
 import { usePKCECodeVerifier } from "./pkce-handler"
 import { useNonce } from "./nonce-handler"
@@ -42,7 +42,7 @@ export default async function oAuthCallback(params: {
       const { oauth_token, oauth_verifier } = query ?? {}
       const tokens = (await (client as any).getOAuthAccessToken(
         oauth_token,
-        null,
+        oAuth1TokenStore.get(oauth_token),
         oauth_verifier
       )) as TokenSet
       let profile: Profile = await (client as any).get(
@@ -62,6 +62,8 @@ export default async function oAuthCallback(params: {
       throw error
     }
   }
+
+  if (query?.oauth_token) oAuth1TokenStore.delete(query.oauth_token)
 
   try {
     const client = await openidClient(options)
