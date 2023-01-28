@@ -1,11 +1,11 @@
 // This is an example of how to query data from Supabase with RLS.
 // Learn more about Row Levele Security (RLS): https://supabase.com/docs/guides/auth/row-level-security
-import { unstable_getServerSession } from "next-auth/next"
+import { getServerSession } from "next-auth/next"
 import { authOptions } from "../auth/[...nextauth]"
 import { createClient } from "@supabase/supabase-js"
 
 export default async (req, res) => {
-  const session = await unstable_getServerSession(req, res, authOptions)
+  const session = await getServerSession(req, res, authOptions)
 
   if (!session)
     return res.send(JSON.stringify({ error: "No session!" }, null, 2))

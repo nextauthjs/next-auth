@@ -2,15 +2,15 @@
 
 ## `unstable_getServerSession`
 
-:::warning
-This feature is experimental and may be removed or changed in the future.
-:::
+This method was renamed to `getServerSession`. See the documentation below.
 
-When calling from server-side i.e. in API routes or in `getServerSideProps`, we recommend using this function instead of `getSession` to retrieve the `session` object. This method is especially useful when you are using NextAuth.js with a database. This method can _drastically_ reduce response time when used over `getSession` server-side, due to avoiding an extra `fetch` to an API Route (this is generally [not recommended in Next.js](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props#getserversideprops-or-api-routes)). In addition, `unstable_getServerSession` will correctly update the cookie expiry time and update the session content if `callbacks.jwt` or `callbacks.session` changed something.
+## `getServerSession`
+
+When calling from server-side i.e. in API routes or in `getServerSideProps`, we recommend using this function instead of `getSession` to retrieve the `session` object. This method is especially useful when you are using NextAuth.js with a database. This method can _drastically_ reduce response time when used over `getSession` server-side, due to avoiding an extra `fetch` to an API Route (this is generally [not recommended in Next.js](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props#getserversideprops-or-api-routes)). In addition, `getServerSession` will correctly update the cookie expiry time and update the session content if `callbacks.jwt` or `callbacks.session` changed something.
 
 Otherwise, if you only want to get the session token, see [`getToken`](/tutorials/securing-pages-and-api-routes#using-gettoken).
 
-`unstable_getServerSession` requires passing the same object you would pass to `NextAuth` when initializing NextAuth.js. To do so, you can export your NextAuth.js options in the following way:
+`getServerSession` requires passing the same object you would pass to `NextAuth` when initializing NextAuth.js. To do so, you can export your NextAuth.js options in the following way:
 
 In `[...nextauth].ts`:
 ```ts
@@ -27,10 +27,10 @@ export default NextAuth(authOptions);
 ### In `getServerSideProps`:
 ```js
 import { authOptions } from 'pages/api/auth/[...nextauth]'
-import { unstable_getServerSession } from "next-auth/next"
+import { getServerSession } from "next-auth/next"
 
 export async function getServerSideProps(context) {
-  const session = await unstable_getServerSession(context.req, context.res, authOptions)
+  const session = await getServerSession(context.req, context.res, authOptions)
 
   if (!session) {
     return {
@@ -52,11 +52,11 @@ export async function getServerSideProps(context) {
 ### In API Routes:
 ```js
 import { authOptions } from 'pages/api/auth/[...nextauth]'
-import { unstable_getServerSession } from "next-auth/next"
+import { getServerSession } from "next-auth/next"
 
 
 export async function handler(req, res) {
-  const session = await unstable_getServerSession(req, res, authOptions)
+  const session = await getServerSession(req, res, authOptions)
 
   if (!session) {
     res.status(401).json({ message: "You must be logged in." });
@@ -71,14 +71,14 @@ export async function handler(req, res) {
 
 ### In `app/` directory:
 
-You can also use `unstable_getServerSession` in Next.js' server components:
+You can also use `getServerSession` in Next.js' server components:
 
 ```tsx
-import { unstable_getServerSession } from "next-auth/next"
+import { getServerSession } from "next-auth/next"
 import { authOptions } from "pages/api/auth/[...nextauth]"
 
 export default async function Page() {
-  const session = await unstable_getServerSession(authOptions)
+  const session = await getServerSession(authOptions)
   return <pre>{JSON.stringify(session, null, 2)}</pre>
 }
 ```

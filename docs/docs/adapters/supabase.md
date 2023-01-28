@@ -254,7 +254,7 @@ The `supabaseAccessToken` is now available on the `session` object and can be pa
 
 ```js
 // ...
-// Use `useSession()` or `unstable_getServerSession()` to get the NextAuth session.
+// Use `useSession()` or `getServerSession()` to get the NextAuth session.
 
 const { supabaseAccessToken } = session
 

@@ -61,7 +61,7 @@ export function assertConfig(params: {
     return new MissingSecret("Please define a `secret` in production.")
   }
 
-  // req.query isn't defined when asserting `unstable_getServerSession` for example
+  // req.query isn't defined when asserting `getServerSession` for example
   if (!req.query?.nextauth && !req.action) {
     return new MissingAPIRoute(
       "Cannot find [...nextauth].{js,ts} in `/pages/api/auth`. Make sure the filename is written correctly."

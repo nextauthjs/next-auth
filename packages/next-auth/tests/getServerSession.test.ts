@@ -1,6 +1,6 @@
 import * as core from "../src/core"
 import { MissingSecret } from "../src/core/errors"
-import { unstable_getServerSession } from "../src/next"
+import { getServerSession } from "../src/next"
 import { mockLogger } from "./lib"
 
 const originalWarn = console.warn
@@ -27,7 +27,7 @@ afterEach(() => {
 describe("Treat secret correctly", () => {
   it("Read from NEXTAUTH_SECRET", async () => {
     process.env.NEXTAUTH_SECRET = "secret"
-    await unstable_getServerSession(req, res, { providers: [], logger })
+    await getServerSession(req, res, { providers: [], logger })
 
     expect(logger.error).toBeCalledTimes(0)
     expect(logger.error).not.toBeCalledWith("NO_SECRET")
@@ -36,7 +36,7 @@ describe("Treat secret correctly", () => {
   })
 
   it("Read from options.secret", async () => {
-    await unstable_getServerSession(req, res, {
+    await getServerSession(req, res, {
       providers: [],
       logger,
       secret: "secret",
@@ -51,7 +51,7 @@ describe("Treat secret correctly", () => {
       "There is a problem with the server configuration. Check the server logs for more information."
     )
     await expect(
-      unstable_getServerSession(req, res, { providers: [], logger })
+      getServerSession(req, res, { providers: [], logger })
     ).rejects.toThrowError(configError)
 
     expect(logger.error).toBeCalledTimes(1)
@@ -61,17 +61,17 @@ describe("Treat secret correctly", () => {
   it("Only logs warning once and in development", async () => {
     process.env.NEXTAUTH_SECRET = "secret"
     // Expect console.warn to NOT be called due to NODE_ENV=production
-    await unstable_getServerSession(req, res, { providers: [], logger })
+    await getServerSession(req, res, { providers: [], logger })
     expect(console.warn).toBeCalledTimes(0)
 
     // Expect console.warn to be called ONCE due to NODE_ENV=development
     // @ts-expect-error
     process.env.NODE_ENV = "development"
-    await unstable_getServerSession(req, res, { providers: [], logger })
+    await getServerSession(req, res, { providers: [], logger })
     expect(console.warn).toBeCalledTimes(1)
 
     // Expect console.warn to be still only be called ONCE
-    await unstable_getServerSession(req, res, { providers: [], logger })
+    await getServerSession(req, res, { providers: [], logger })
     expect(console.warn).toBeCalledTimes(1)
     delete process.env.NEXTAUTH_SECRET
   })
@@ -87,7 +87,7 @@ describe("Return correct data", () => {
     // @ts-expect-error
     spy.mockReturnValue({ body: {} })
 
-    const session = await unstable_getServerSession(req, res, {
+    const session = await getServerSession(req, res, {
       providers: [],
       logger,
       secret: "secret",
@@ -113,7 +113,7 @@ describe("Return correct data", () => {
     // @ts-expect-error
     spy.mockReturnValue(mockedResponse)
 
-    const session = await unstable_getServerSession(req, res, {
+    const session = await getServerSession(req, res, {
       providers: [],
       logger,
       secret: "secret",

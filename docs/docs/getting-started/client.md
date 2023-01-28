@@ -157,14 +157,14 @@ You can create your own session management solution using data fetching librarie
 ## getSession()
 
 - Client Side: **Yes**
-- Server Side: **No** (See: [`unstable_getServerSession()`](/configuration/nextjs#unstable_getserversession)
+- Server Side: **No** (See: [`getServerSession()`](/configuration/nextjs#unstable_getserversession)
 
 NextAuth.js provides a `getSession()` helper which should be called **client side only** to return the current active session.
 
-On the server side, **this is still available to use**, however, we recommend using `unstable_getServerSession` going forward. The idea behind this is to avoid an additional unnecessary `fetch` call on the server side. For more information, please check out [this issue](https://github.com/nextauthjs/next-auth/issues/1535).
+On the server side, **this is still available to use**, however, we recommend using `getServerSession` going forward. The idea behind this is to avoid an additional unnecessary `fetch` call on the server side. For more information, please check out [this issue](https://github.com/nextauthjs/next-auth/issues/1535).
 
 :::note
-The `unstable_getServerSession` only has the prefix `unstable_` at the moment, because the API may change in the future. There are no known bugs at the moment and it is safe to use. If you discover any issues, please do report them as a [GitHub Issue](https://github.com/nextauthjs/next-auth/issues) and we will patch them as soon as possible.
+The `getServerSession` only has the prefix `unstable_` at the moment, because the API may change in the future. There are no known bugs at the moment and it is safe to use. If you discover any issues, please do report them as a [GitHub Issue](https://github.com/nextauthjs/next-auth/issues) and we will patch them as soon as possible.
 :::
 
 This helper is helpful in case you want to read the session outside of the context of React.
@@ -178,7 +178,7 @@ async function myFunction() {
 }
 ```
 
-Read the tutorial [securing pages and API routes](/tutorials/securing-pages-and-api-routes) to know how to fetch the session in server side calls using `unstable_getServerSession()`.
+Read the tutorial [securing pages and API routes](/tutorials/securing-pages-and-api-routes) to know how to fetch the session in server side calls using `getServerSession()`.
 
 ---
 
@@ -422,7 +422,7 @@ If you pass the `session` page prop to the `<SessionProvider>` – as in the exa
 This only works on pages where you provide the correct `pageProps`, however. This is normally done in `getInitialProps` or `getServerSideProps` on an individual page basis like so:
 
 ```js title="pages/index.js"
-import { unstable_getServerSession } from "next-auth/next"
+import { getServerSession } from "next-auth/next"
 import { authOptions } from './api/auth/[...nextauth]'
 
 ...
@@ -430,7 +430,7 @@ import { authOptions } from './api/auth/[...nextauth]'
 export async function getServerSideProps({ req, res }) {
   return {
     props: {
-      session: await unstable_getServerSession(req, res, authOptions)
+      session: await getServerSession(req, res, authOptions)
     }
   }
 }

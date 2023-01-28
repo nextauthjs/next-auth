@@ -82,7 +82,6 @@ function NextAuth(
 
 export default NextAuth
 
-let experimentalWarningShown = false
 let experimentalRSCWarningShown = false
 
 type GetServerSessionOptions = Partial<Omit<AuthOptions, "callbacks">> & {
@@ -91,7 +90,7 @@ type GetServerSessionOptions = Partial<Omit<AuthOptions, "callbacks">> & {
   }
 }
 
-export async function unstable_getServerSession<
+export async function getServerSession<
   O extends GetServerSessionOptions,
   R = O["callbacks"] extends { session: (...args: any[]) => infer U }
     ? U
@@ -103,16 +102,6 @@ export async function unstable_getServerSession<
     | [O]
     | []
 ): Promise<R | null> {
-  if (!experimentalWarningShown && process.env.NODE_ENV !== "production") {
-    console.warn(
-      "[next-auth][warn][EXPERIMENTAL_API]",
-      "\n`unstable_getServerSession` is experimental and may be removed or changed in the future, as the name suggested.",
-      `\nhttps://next-auth.js.org/configuration/nextjs#unstable_getServerSession}`,
-      `\nhttps://next-auth.js.org/warnings#EXPERIMENTAL_API`
-    )
-    experimentalWarningShown = true
-  }
-
   const isRSC = args.length === 0 || args.length === 1
   if (
     !experimentalRSCWarningShown &&
@@ -121,8 +110,8 @@ export async function unstable_getServerSession<
   ) {
     console.warn(
       "[next-auth][warn][EXPERIMENTAL_API]",
-      "\n`unstable_getServerSession` is used in a React Server Component.",
-      `\nhttps://next-auth.js.org/configuration/nextjs#unstable_getServerSession}`,
+      "\n`getServerSession` is used in a React Server Component.",
+      `\nhttps://next-auth.js.org/configuration/nextjs#getServerSession}`,
       `\nhttps://next-auth.js.org/warnings#EXPERIMENTAL_API`
     )
     experimentalRSCWarningShown = true
@@ -176,6 +165,22 @@ export async function unstable_getServerSession<
   }
 
   return null
+}
+
+let deprecatedWarningShown = false
+
+/** @deprecated renamed to `getServerSession` */
+export function unstable_getServerSession(
+  ...args: Parameters<typeof getServerSession>
+): ReturnType<typeof getServerSession> {
+  if (!deprecatedWarningShown && process.env.NODE_ENV !== "production") {
+    console.warn(
+      "`unstable_getServerSession` has been renamed to `getServerSession`."
+    )
+    deprecatedWarningShown = true
+  }
+
+  return getServerSession(...args)
 }
 
 declare global {
