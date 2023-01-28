@@ -406,11 +406,10 @@ export const PocketBaseAdapter = (
       }
     },
     async deleteUser(userId) {
-      try {
-        await client.collection("next_auth_user").delete(userId)
-      } catch (_) {
-        return null
-      }
+      await client
+        .collection("next_auth_user")
+        .delete(userId)
+        .catch((_) => null)
     },
     async unlinkAccount({ provider, providerAccountId }) {
       try {
