@@ -2,7 +2,7 @@
   "name": "@next-auth/edgedb-adapter",
   "version": "0.1.0",
   "description": "EdgeDB adapter for next-auth.",
-  "homepage": "https://next-auth.js.org",
+  "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
@@ -41,8 +41,5 @@
   },
   "jest": {
     "preset": "@next-auth/adapter-test/jest"
-  },
-  "dependencies": {
-    "edgedb": "^1.0.1"
   }
 }

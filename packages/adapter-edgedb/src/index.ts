@@ -1,5 +1,5 @@
-import type { Adapter, AdapterSession, AdapterUser } from "next-auth/adapters";
-import type { Client } from "edgedb";
+import type { Adapter, AdapterSession, AdapterUser } from "next-auth/adapters"
+import type { Client } from "edgedb"
 
 export function EdgeDBAdapter(client: Client): Adapter {
   return {
@@ -26,8 +26,13 @@ export function EdgeDBAdapter(client: Client): Adapter {
             image
           }
         `,
-        { email, emailVerified: emailVerified && new Date(emailVerified).toISOString(), name, image }
-      );
+        {
+          email,
+          emailVerified: emailVerified && new Date(emailVerified).toISOString(),
+          name,
+          image,
+        }
+      )
     },
     async getUser(id) {
       return await client.querySingle(
@@ -41,7 +46,7 @@ export function EdgeDBAdapter(client: Client): Adapter {
         } filter .id = <uuid>$id;
         `,
         { id }
-      );
+      )
     },
     async getUserByEmail(email) {
       return await client.querySingle(
@@ -55,7 +60,7 @@ export function EdgeDBAdapter(client: Client): Adapter {
         } filter .email = <str>$email;
         `,
         { email }
-      );
+      )
     },
     async getUserByAccount({ providerAccountId, provider }) {
       return await client.querySingle(
@@ -74,7 +79,7 @@ export function EdgeDBAdapter(client: Client): Adapter {
         }
         `,
         { providerAccountId, provider }
-      );
+      )
     },
     async updateUser({ email, emailVerified, id, image, name }) {
       return await client.queryRequiredSingle(
@@ -102,11 +107,17 @@ export function EdgeDBAdapter(client: Client): Adapter {
           name
         }
         `,
-        { email, emailVerified: emailVerified && new Date(emailVerified).toISOString(), id, image, name }
-      );
+        {
+          email,
+          emailVerified: emailVerified && new Date(emailVerified).toISOString(),
+          id,
+          image,
+          name,
+        }
+      )
     },
     async deleteUser(id) {
-      await client.execute(`delete User filter .id = <uuid>$id;`, { id });
+      await client.execute(`delete User filter .id = <uuid>$id;`, { id })
     },
     async linkAccount({
       userId,
@@ -162,7 +173,7 @@ export function EdgeDBAdapter(client: Client): Adapter {
           id_token,
           session_state,
         }
-      );
+      )
     },
     async unlinkAccount({ providerAccountId, provider }) {
       await client.execute(
@@ -173,7 +184,7 @@ export function EdgeDBAdapter(client: Client): Adapter {
         .provider = <str>$provider
         `,
         { providerAccountId, provider }
-      );
+      )
     },
     async createSession({ expires, sessionToken, userId }) {
       return await client.queryRequiredSingle(
@@ -193,7 +204,7 @@ export function EdgeDBAdapter(client: Client): Adapter {
         };
       `,
         { expires, sessionToken, userId }
-      );
+      )
     },
     async getSessionAndUser(sessionToken) {
       const sessionAndUser = await client.querySingle<
@@ -215,22 +226,22 @@ export function EdgeDBAdapter(client: Client): Adapter {
         } filter .sessionToken = <str>$sessionToken;
       `,
         { sessionToken }
-      );
+      )
 
       if (!sessionAndUser) {
-        return null;
+        return null
       }
 
-      const { user, ...session } = sessionAndUser;
+      const { user, ...session } = sessionAndUser
 
       if (!user || !session) {
-        return null;
+        return null
       }
 
       return {
         user,
         session,
-      };
+      }
     },
     async updateSession({ sessionToken, expires, userId }) {
       return await client.querySingle(
@@ -257,14 +268,18 @@ export function EdgeDBAdapter(client: Client): Adapter {
           expires
         }
       `,
-        { sessionToken, expires: expires && new Date(expires).toISOString(), userId }
-      );
+        {
+          sessionToken,
+          expires: expires && new Date(expires).toISOString(),
+          userId,
+        }
+      )
     },
     async deleteSession(sessionToken) {
       await client.query(
         `delete Session filter .sessionToken = <str>$sessionToken`,
         { sessionToken }
-      );
+      )
     },
     async createVerificationToken({ identifier, expires, token }) {
       return await client.querySingle(
@@ -282,7 +297,7 @@ export function EdgeDBAdapter(client: Client): Adapter {
         }
         `,
         { identifier, expires, token }
-      );
+      )
     },
     async useVerificationToken({ token }) {
       const verificationToken = await client.querySingle(
@@ -296,11 +311,22 @@ export function EdgeDBAdapter(client: Client): Adapter {
         }
         `,
         { token }
-      );
+      )
 
-      if (verificationToken.id) delete verificationToken.id
-      
-      return verificationToken
+      if (
+        verificationToken &&
+        typeof verificationToken === "object" &&
+        "identifier" in verificationToken &&
+        "expires" in verificationToken &&
+        "token" in verificationToken
+      ) {
+        if ("id" in verificationToken) {
+          delete verificationToken.id
+        }
+        return verificationToken
+      } else {
+        throw Error("no bueno")
+      }
     },
-  };
+  }
 }
