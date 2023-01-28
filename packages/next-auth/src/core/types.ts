@@ -465,7 +465,7 @@ export interface SessionOptions {
    * However, you can specify your own custom string (such as CUID) to be used.
    * @default `randomUUID` or `randomBytes.toHex` depending on the Node.js version
    */
-  generateSessionToken: () => string
+  generateSessionToken: () => Awaitable<string>
 }
 
 export interface DefaultUser {
