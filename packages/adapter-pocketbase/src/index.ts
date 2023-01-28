@@ -13,10 +13,7 @@ import type {
 } from "./pocketbase.types"
 import type Pocketbase from "pocketbase"
 
-export const PocketBaseAdapter = (
-  client: Pocketbase,
-  options = {}
-): Adapter => {
+export const PocketBaseAdapter = (client: Pocketbase): Adapter => {
   return {
     async createUser(user) {
       let pb_user: any
