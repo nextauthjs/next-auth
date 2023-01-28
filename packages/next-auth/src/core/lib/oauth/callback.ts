@@ -40,10 +40,9 @@ export default async function oAuthCallback(params: {
       const client = await oAuth1Client(options)
       // Handle OAuth v1.x
       const { oauth_token, oauth_verifier } = query ?? {}
-      const oauth_token_secret = oAuth1TokenStore.get(oauth_token)
       const tokens = (await (client as any).getOAuthAccessToken(
         oauth_token,
-        oauth_token_secret,
+        oAuth1TokenStore.get(oauth_token),
         oauth_verifier
       )) as TokenSet
       let profile: Profile = await (client as any).get(
