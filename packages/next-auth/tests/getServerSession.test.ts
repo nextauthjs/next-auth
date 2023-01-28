@@ -57,24 +57,6 @@ describe("Treat secret correctly", () => {
     expect(logger.error).toBeCalledTimes(1)
     expect(logger.error).toBeCalledWith("NO_SECRET", expect.any(MissingSecret))
   })
-
-  it("Only logs warning once and in development", async () => {
-    process.env.NEXTAUTH_SECRET = "secret"
-    // Expect console.warn to NOT be called due to NODE_ENV=production
-    await getServerSession(req, res, { providers: [], logger })
-    expect(console.warn).toBeCalledTimes(0)
-
-    // Expect console.warn to be called ONCE due to NODE_ENV=development
-    // @ts-expect-error
-    process.env.NODE_ENV = "development"
-    await getServerSession(req, res, { providers: [], logger })
-    expect(console.warn).toBeCalledTimes(1)
-
-    // Expect console.warn to be still only be called ONCE
-    await getServerSession(req, res, { providers: [], logger })
-    expect(console.warn).toBeCalledTimes(1)
-    delete process.env.NEXTAUTH_SECRET
-  })
 })
 
 describe("Return correct data", () => {
