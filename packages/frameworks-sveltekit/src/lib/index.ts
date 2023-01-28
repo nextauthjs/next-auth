@@ -81,7 +81,7 @@
  *   return {
  *     session: await event.locals.getSession()
  *   };
- * }; 
+ * };
  * ```
  *
  * What you return in the function `LayoutServerLoad` will be available inside the `$page` store, in the `data` property: `$page.data`.
@@ -106,7 +106,7 @@
  *   return {};
  * };
  * ```
- * 
+ *
  * :::danger
  * Make sure to ALWAYS grab the session information from the parent instead of using the store in the case of a `PageLoad`.
  * Not doing so can lead to users being able to incorrectly access protected information in the case the `+layout.server.ts` does not run for that page load.
@@ -130,14 +130,14 @@
  * The handle hook, available in `hooks.server.ts`, is a function that receives ALL requests sent to your SvelteKit webapp.
  * You may intercept them inside the handle hook, add and modify things in the request, block requests, etc.
  * Some readers may notice we are already using this handle hook for SvelteKitAuth which returns a handle itself, so we are going to use SvelteKit's sequence to provide middleware-like functions that set the handle hook.
- * 
+ *
  * ```ts
  * import { SvelteKitAuth } from '@auth/sveltekit';
  * import GitHub from '@auth/core/providers/github';
  * import { GITHUB_ID, GITHUB_SECRET } from '$env/static/private';
  * import { redirect, type Handle } from '@sveltejs/kit';
  * import { sequence } from '@sveltejs/kit/hooks';
- * 
+ *
  * async function authorization({ event, resolve }) {
  * 	// Protect any routes under /authenticated
  * 	if (event.url.pathname.startsWith('/authenticated')) {
@@ -146,14 +146,14 @@
  * 			throw redirect(303, '/auth');
  * 		}
  * 	}
- * 
+ *
  * 	// If the request is still here, just proceed as normally
  * 	const result = await resolve(event, {
  * 		transformPageChunk: ({ html }) => html
  * 	});
  * 	return result;
  * }
- * 
+ *
  * // First handle authentication, then authorization
  * // Each function acts as a middleware, receiving the request handle
  * // And returning a handle which gets passed to the next function
@@ -190,7 +190,7 @@
 import type { Handle } from "@sveltejs/kit"
 
 import { dev } from "$app/environment"
-import { env } from "$env/dynamic/private"
+import { AUTH_SECRET, AUTH_TRUST_HOST, VERCEL } from "$env/static/private"
 
 import { Auth } from "@auth/core"
 import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
@@ -199,7 +199,7 @@ export async function getSession(
   req: Request,
   config: AuthConfig
 ): ReturnType<App.Locals["getSession"]> {
-  config.secret ??= env.AUTH_SECRET
+  config.secret ??= AUTH_SECRET
   config.trustHost ??= true
 
   const url = new URL("/api/auth/session", req.url)
@@ -261,8 +261,8 @@ function AuthHandle(prefix: string, authOptions: AuthConfig): Handle {
  */
 export function SvelteKitAuth(options: SvelteKitAuthConfig): Handle {
   const { prefix = "/auth", ...authOptions } = options
-  authOptions.secret ??= env.AUTH_SECRET
-  authOptions.trustHost ??= !!(env.AUTH_TRUST_HOST ?? env.VERCEL ?? dev)
+  authOptions.secret ??= AUTH_SECRET
+  authOptions.trustHost ??= !!(AUTH_TRUST_HOST ?? VERCEL ?? dev)
   return AuthHandle(prefix, authOptions)
 }
 
