@@ -1,6 +1,6 @@
 import { TokenSet } from "openid-client"
 import { openidClient } from "./client"
-import { oAuth1Client } from "./client-legacy"
+import { oAuth1Client, oAuth1TokenStore } from "./client-legacy"
 import { useState } from "./state-handler"
 import { usePKCECodeVerifier } from "./pkce-handler"
 import { useNonce } from "./nonce-handler"
@@ -12,7 +12,6 @@ import type { OAuthChecks, OAuthConfig } from "../../../providers"
 import type { InternalOptions } from "../../types"
 import type { RequestInternal } from "../.."
 import type { Cookie } from "../cookie"
-import oAuth1TokenStore from "./oauth1-token-store"
 
 export default async function oAuthCallback(params: {
   options: InternalOptions<"oauth">
@@ -41,7 +40,7 @@ export default async function oAuthCallback(params: {
       const client = await oAuth1Client(options)
       // Handle OAuth v1.x
       const { oauth_token, oauth_verifier } = query ?? {}
-      const oauth_token_secret = oAuth1TokenStore.getTokenSecret(oauth_token);
+      const oauth_token_secret = oAuth1TokenStore.get(oauth_token)
       const tokens = (await (client as any).getOAuthAccessToken(
         oauth_token,
         oauth_token_secret,
@@ -65,7 +64,7 @@ export default async function oAuthCallback(params: {
     }
   }
 
-  if (query?.oauth_token) oAuth1TokenStore.removeTokenSecret(query.oauth_token);
+  if (query?.oauth_token) oAuth1TokenStore.delete(query.oauth_token)
 
   try {
     const client = await openidClient(options)

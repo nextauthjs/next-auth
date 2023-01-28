@@ -1,5 +1,5 @@
 import { openidClient } from "./client"
-import { oAuth1Client } from "./client-legacy"
+import { oAuth1Client, oAuth1TokenStore } from "./client-legacy"
 import { createState } from "./state-handler"
 import { createNonce } from "./nonce-handler"
 import { createPKCE } from "./pkce-handler"
@@ -8,7 +8,6 @@ import type { AuthorizationParameters } from "openid-client"
 import type { InternalOptions } from "../../types"
 import type { RequestInternal } from "../.."
 import type { Cookie } from "../cookie"
-import oAuth1TokenStore from "./oauth1-token-store"
 
 /**
  *
@@ -45,7 +44,7 @@ export default async function getAuthorizationUrl({
       oauth_token_secret: tokens.oauth_token_secret,
       ...tokens.params,
     })}`
-    oAuth1TokenStore.setTokenSecret(tokens.oauth_token, tokens.oauth_token_secret);
+    oAuth1TokenStore.set(tokens.oauth_token, tokens.oauth_token_secret)
     logger.debug("GET_AUTHORIZATION_URL", { url, provider })
     return { redirect: url }
   }
