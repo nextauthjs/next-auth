@@ -170,7 +170,7 @@ export async function getServerSession<
 let deprecatedWarningShown = false
 
 /** @deprecated renamed to `getServerSession` */
-export function unstable_getServerSession(
+export async function unstable_getServerSession(
   ...args: Parameters<typeof getServerSession>
 ): ReturnType<typeof getServerSession> {
   if (!deprecatedWarningShown && process.env.NODE_ENV !== "production") {
@@ -180,7 +180,7 @@ export function unstable_getServerSession(
     deprecatedWarningShown = true
   }
 
-  return getServerSession(...args)
+  return await getServerSession(...args)
 }
 
 declare global {
