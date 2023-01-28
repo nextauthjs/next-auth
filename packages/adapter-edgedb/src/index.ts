@@ -1,4 +1,9 @@
-import type { Adapter, AdapterSession, AdapterUser } from "next-auth/adapters"
+import type {
+  Adapter,
+  AdapterSession,
+  AdapterUser,
+  VerificationToken,
+} from "next-auth/adapters"
 import type { Client } from "edgedb"
 
 export function EdgeDBAdapter(client: Client): Adapter {
@@ -35,7 +40,7 @@ export function EdgeDBAdapter(client: Client): Adapter {
       )
     },
     async getUser(id) {
-      return await client.querySingle(
+      return await client.querySingle<AdapterUser>(
         `
         select User {
           id,
@@ -49,7 +54,7 @@ export function EdgeDBAdapter(client: Client): Adapter {
       )
     },
     async getUserByEmail(email) {
-      return await client.querySingle(
+      return await client.querySingle<AdapterUser>(
         `
         select User {
           id,
@@ -63,7 +68,7 @@ export function EdgeDBAdapter(client: Client): Adapter {
       )
     },
     async getUserByAccount({ providerAccountId, provider }) {
-      return await client.querySingle(
+      return await client.querySingle<AdapterUser>(
         `
         with account := (
           select Account
@@ -82,7 +87,7 @@ export function EdgeDBAdapter(client: Client): Adapter {
       )
     },
     async updateUser({ email, emailVerified, id, image, name }) {
-      return await client.queryRequiredSingle(
+      return await client.queryRequiredSingle<AdapterUser>(
         `       
         with 
           email := <optional str>$email,
@@ -187,7 +192,7 @@ export function EdgeDBAdapter(client: Client): Adapter {
       )
     },
     async createSession({ expires, sessionToken, userId }) {
-      return await client.queryRequiredSingle(
+      return await client.queryRequiredSingle<AdapterSession>(
         `   
         select (
           insert Session {
@@ -244,7 +249,7 @@ export function EdgeDBAdapter(client: Client): Adapter {
       }
     },
     async updateSession({ sessionToken, expires, userId }) {
-      return await client.querySingle(
+      return await client.querySingle<AdapterSession>(
         `
         with 
           sessionToken := <optional str>$sessionToken,
@@ -282,8 +287,9 @@ export function EdgeDBAdapter(client: Client): Adapter {
       )
     },
     async createVerificationToken({ identifier, expires, token }) {
-      return await client.querySingle(
-        `
+      const createdVerificationToken =
+        await client.querySingle<VerificationToken>(
+          `
         select (
           insert VerificationToken {
             identifier := <str>$identifier,
@@ -296,11 +302,13 @@ export function EdgeDBAdapter(client: Client): Adapter {
           token
         }
         `,
-        { identifier, expires, token }
-      )
+          { identifier, expires, token }
+        )
+
+      return createdVerificationToken
     },
     async useVerificationToken({ token }) {
-      const verificationToken = await client.querySingle(
+      const verificationToken = await client.querySingle<VerificationToken>(
         `
         select (
           delete VerificationToken filter .token = <str>$token
@@ -313,20 +321,10 @@ export function EdgeDBAdapter(client: Client): Adapter {
         { token }
       )
 
-      if (
-        verificationToken &&
-        typeof verificationToken === "object" &&
-        "identifier" in verificationToken &&
-        "expires" in verificationToken &&
-        "token" in verificationToken
-      ) {
-        if ("id" in verificationToken) {
-          delete verificationToken.id
-        }
-        return verificationToken
-      } else {
-        throw Error("no bueno")
+      if (verificationToken && "id" in verificationToken) {
+        delete verificationToken.id
       }
+      return verificationToken
     },
   }
 }
