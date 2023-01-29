@@ -19,7 +19,7 @@ export default function TikTok(options) {
         client_secret: options.clientSecret,
       },
     },
-    userinfo: "https://open-api.tiktok.com/user/info/",
+    userinfo: "https://open-api.tiktok.com/user/info",
     profile(profile) {
       return {
         id: profile.open_id,
