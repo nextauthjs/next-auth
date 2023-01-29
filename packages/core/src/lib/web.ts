@@ -76,27 +76,22 @@ export function toResponse(res: ResponseInternal): Response {
   res.cookies?.forEach((cookie) => {
     const { name, value, options } = cookie
     const cookieHeader = serialize(name, value, options)
-    if (headers.has("Set-Cookie")) {
-      headers.append("Set-Cookie", cookieHeader)
-    } else {
-      headers.set("Set-Cookie", cookieHeader)
-    }
+    if (headers.has("Set-Cookie")) headers.append("Set-Cookie", cookieHeader)
+    else headers.set("Set-Cookie", cookieHeader)
     // headers.set("Set-Cookie", cookieHeader) // TODO: Remove. Seems to be a bug with Headers in the runtime
   })
 
-  const body =
-    headers.get("content-type") === "application/json"
-      ? JSON.stringify(res.body)
-      : res.body
+  let body = res.body
 
-  const response = new Response(body, {
-    headers,
-    status: res.redirect ? 302 : res.status ?? 200,
-  })
+  if (headers.get("content-type") === "application/json")
+    body = JSON.stringify(res.body)
+  else if (headers.get("content-type") === "application/x-www-form-urlencoded")
+    body = new URLSearchParams(res.body).toString()
 
-  if (res.redirect) {
-    response.headers.set("Location", res.redirect.toString())
-  }
+  const status = res.redirect ? 302 : res.status ?? 200
+  const response = new Response(body, { headers, status })
+
+  if (res.redirect) response.headers.set("Location", res.redirect)
 
   return response
 }

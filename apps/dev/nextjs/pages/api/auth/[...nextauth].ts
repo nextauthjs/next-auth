@@ -2,6 +2,7 @@ import { Auth, type AuthConfig } from "@auth/core"
 
 // Providers
 import Apple from "@auth/core/providers/apple"
+import Asgardeo from "@auth/core/providers/asgardeo"
 import Auth0 from "@auth/core/providers/auth0"
 import AzureAD from "@auth/core/providers/azure-ad"
 import AzureB2C from "@auth/core/providers/azure-ad-b2c"
@@ -88,7 +89,8 @@ export const authConfig: AuthConfig = {
       },
     }),
     Apple({ clientId: process.env.APPLE_ID, clientSecret: process.env.APPLE_SECRET }),
-    // Auth0({ clientId: process.env.AUTH0_ID, clientSecret: process.env.AUTH0_SECRET, issuer: process.env.AUTH0_ISSUER }),
+    Asgardeo({ clientId: process.env.ASGARDEO_CLIENT_ID, clientSecret: process.env.ASGARDEO_CLIENT_SECRET, issuer: process.env.ASGARDEO_ISSUER }),
+    Auth0({ clientId: process.env.AUTH0_ID, clientSecret: process.env.AUTH0_SECRET, issuer: process.env.AUTH0_ISSUER }),
     AzureAD({
       clientId: process.env.AZURE_AD_CLIENT_ID,
       clientSecret: process.env.AZURE_AD_CLIENT_SECRET,
