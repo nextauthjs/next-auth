@@ -5,9 +5,11 @@ sidebar_position: 0
 
 ## About Auth.js
 
-Auth.js is a complete open-source authentication solution for [Next.js](http://nextjs.org/) applications.
+Auth.js is a complete open-source authentication solution for web applications. It was designed for Next.js but has gone framework-agnostic and can work with any JavaScript framework or library. Check out the live demos of Auth.js in action:
 
-It is designed from the ground up to support Next.js and Serverless.
+- [Next.js](https://next-auth-example.vercel.app/)
+- [SvelteKit](https://sveltekit-auth-example.vercel.app/)
+- [SolidStart](https://auth-solid.vercel.app/)
 
 Check our tutorials to see how easy it is to use Auth.js for authentication:
 
@@ -17,24 +19,25 @@ Check our tutorials to see how easy it is to use Auth.js for authentication:
 
 ### Flexible and easy to use
 
-- Designed to work with any OAuth service, it supports OAuth 1.0, 1.0A, 2.0 and OpenID Connect
+- Designed to work with any OAuth service, it supports OAuth 1.0, 1.0A, 2.0, and OpenID Connect
 - Built-in support for [many popular sign-in services](/reference/providers/oauth-builtin)
 - Supports [email / passwordless authentication](/getting-started/email-tutorial)
 - Supports stateless authentication with [any backend](/getting-started/credentials-tutorial) (Active Directory, LDAP, etc)
 - Supports both JSON Web Tokens and database sessions
-- Designed for Serverless but runs anywhere (AWS Lambda, Docker, Heroku, etc…)
+- Designed for Serverless but runs anywhere (AWS Lambda, Docker, Heroku, etc.)
+- Runtime-agnostic, run on Node.js, Deno, Cloudflare Workers, etc.
 
-### Own your own data
+### Own your data
 
-Auth.js can be used with or without a database.
+Auth.js can work with or without a database.
 
 - An open-source solution that allows you to keep control of your data
 - Supports Bring Your Own Database (BYOD) and can be used with any database
-- Built-in support for [MySQL, MariaDB, Postgres, SQL Server, MongoDB and SQLite](/getting-started/databases)
+- Built-in support for [MySQL, MariaDB, Postgres, SQL Server, MongoDB, and SQLite](/getting-started/databases)
 - Works great with databases from popular hosting providers
 - Can also be used _without a database_ (e.g. OAuth + JWT)
 
-_Note: Email sign-in requires a database to be configured to store single-use verification tokens._
+_Note: Email sign-in requires a database to store single-use verification tokens._
 
 ### Secure by default
 
@@ -47,10 +50,10 @@ _Note: Email sign-in requires a database to be configured to store single-use ve
 - Features tab/window syncing and keepalive messages to support short-lived sessions
 - Attempts to implement the latest guidance published by [Open Web Application Security Project](https://owasp.org/)
 
-Advanced options allow you to define your own routines to handle controlling what accounts are allowed to sign in, for encoding and decoding JSON Web Tokens and to set custom cookie security policies and session properties, so you can control who can sign in and how often sessions have to be re-validated.
+Advanced options allow you to define your routines to handle what accounts are allowed to sign in, for encoding and decoding JSON Web Tokens, and to set custom cookie security policies and session properties, so you can control who can sign in and how often sessions have to be re-validated.
 
 ## Credits
 
 Auth.js is an open-source project that is only possible [thanks to contributors](/contributors).
 
-If you would like to financially support the development of Auth.js, you can find more information on our [OpenCollective](https://opencollective.com/nextauth) page.
+To financially support the development of Auth.js, you can check our [OpenCollective](https://opencollective.com/nextauth) page. We appreciate your support 💚.

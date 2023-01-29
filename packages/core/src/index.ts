@@ -18,7 +18,7 @@
  * ```ts
  * import { Auth } from "@auth/core"
  *
- * const request = new Request("https://example.com"
+ * const request = new Request("https://example.com")
  * const response = await Auth(request, {...})
  *
  * console.log(response instanceof Response) // true
