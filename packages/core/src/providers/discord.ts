@@ -97,7 +97,7 @@ export default function Discord<P extends DiscordProfile>(
         id: profile.id,
         name: profile.username,
         email: profile.email,
-        image: profile.image_url
+        image: profile.image_url,
       }
     },
     style: {
