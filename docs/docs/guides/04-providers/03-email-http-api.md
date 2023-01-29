@@ -84,46 +84,49 @@ export const authOptions: NextAuthOptions = {
 
         try {
           // Finally, call the cloud Email provider API for sending messages
-          const sendResponse = await fetch("https://api.sendgrid.com/v3/mail/send", {
-            // The body format will vary depending on provider, please see their documentation
-            // for further details.
-            body: JSON.stringify({
-              "personalizations": [
-                {
-                  "to": [
-                    {
-                      "email": email
-                    }
-                  ]
-                }
-              ],
-              "from": {
-                "email": "noreply@company.com"
+          const sendResponse = await fetch(
+            'https://api.sendgrid.com/v3/mail/send',
+            {
+              // The body format will vary depending on provider, please see their documentation
+              // for further details.
+              body: JSON.stringify({
+                personalizations: [
+                  {
+                    to: [
+                      {
+                        email: email,
+                      },
+                    ],
+                  },
+                ],
+                from: {
+                  email: 'noreply@company.com',
+                },
+                subject: 'Auth.js Magic Link',
+                content: [
+                  {
+                    type: 'text/plain',
+                    value: `Please click here to authenticate - ${url}`,
+                  },
+                ],
+              }),
+              headers: {
+                // Authentication will also vary from provider to provider, please see their docs.
+                Authorization: `Bearer ${process.env.SENDGRID_API}`,
+                'Content-Type': 'application/json',
               },
-              "subject": "Auth.js Magic Link",
-              "content": [
-                {
-                  "type": "text/plain",
-                  "value": `Please click here to authenticate - ${url}`
-                }
-              ]
-            }),
-            headers: {
-              // Authentication will also vary from provider to provider, please see their docs.
-              Authorization: `Bearer ${process.env.SENDGRID_API}`,
-              "Content-Type": "application/json"
-            },
-            method: "POST"
-          })
+              method: 'POST',
+            }
+          )
 
-          if (!res.ok) {
+          if (!sendResponse.ok) {
             const responseJson = await sendResponse.json()
             throw new Error(JSON.stringify(responseJson.errors))
           }
         } catch (e) {
           console.error('Could not send Email', e)
         }
-      }
+      },
     })
   ],
   ...
