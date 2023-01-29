@@ -7,31 +7,24 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 export interface DiscordProfile extends Record<string, any> {
   /** the user's id (i.e. the numerical snowflake) */
   id: string
-
   /** the user's username, not unique across the platform */
   username: string
-
   /** the user's 4-digit discord-tag */
   discriminator: string
-
   /**
    * the user's avatar hash:
    * https://discord.com/developers/docs/reference#image-formatting
    */
   avatar: string | null
-
   /** whether the user belongs to an OAuth2 application */
   bot?: boolean
-
   /**
    * whether the user is an Official Discord System user (part of the urgent
    * message system)
    */
   system?: boolean
-
   /** whether the user has two factor enabled on their account */
   mfa_enabled: boolean
-
   /**
    * the user's banner hash:
    * https://discord.com/developers/docs/reference#image-formatting
@@ -46,48 +39,37 @@ export interface DiscordProfile extends Record<string, any> {
    * https://discord.com/developers/docs/reference#locales
    */
   locale: string
-
   /** whether the email on this account has been verified */
   verified: boolean
-
   /** the user's email */
   email: string | null
-
   /**
    * the flags on a user's account:
    * https://discord.com/developers/docs/resources/user#user-object-user-flags
    */
   flags: number
-
   /**
    * the type of Nitro subscription on a user's account:
    * https://discord.com/developers/docs/resources/user#user-object-premium-types
    */
   premium_type: number
-
   /**
    * the public flags on a user's account:
    * https://discord.com/developers/docs/resources/user#user-object-user-flags
    */
   public_flags: number
-
-  // --------------------------------------------------------------------------
-
   /** undocumented field; corresponds to the user's custom nickname */
   display_name: string | null
-
   /**
    * undocumented field; corresponds to the Discord feature where you can e.g.
    * put your avatar inside of an ice cube
    */
   avatar_decoration: string | null
-
   /**
    * undocumented field; corresponds to the premium feature where you can
    * select a custom banner color
    */
   banner_color: string | null
-
   /** undocumented field; the CDN URL of their profile picture */
   image_url: string
 }
@@ -112,18 +94,10 @@ export default function Discord<P extends DiscordProfile>(
         profile.image_url = `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.${format}`
       }
       return {
-        // Default profile fields for all providers.
         id: profile.id,
         name: profile.username,
         email: profile.email,
-        image: profile.image_url,
-
-        // Extended profile fields for specifically this Discord provider.
-        // (We use snake_case here to match the original fields from Discord.)
-        discriminator: profile.discriminator,
-        mfa_enabled: profile.mfa_enabled,
-        locale: profile.locale,
-        verified: profile.verified,
+        image: profile.image_url
       }
     },
     style: {
