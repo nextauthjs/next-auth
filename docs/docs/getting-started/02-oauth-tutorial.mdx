@@ -11,12 +11,12 @@ import nextAuthUserLoggedIn from "./img/getting-started-nextauth-success.png"
 import Tabs from "@theme/Tabs"
 import TabItem from "@theme/TabItem"
 
-We understand that authentication is tedious - It is a rabbit hole that is super easy to get lost on. The goal of making Auth.js is to help you easily add authentication to your project with just a few lines of code.
+We understand that authentication is tedious - It is a rabbit hole that is super easy to get lost on. The goal of Auth.js is to help you add authentication to your project with just a few lines of code.
 
-The easiest way is to set up Auth.js with an [OAuth](https://en.wikipedia.org/wiki/OAuth) provider. In this tutorial, we'll be setting Auth.js in an application with a framework of your choice to be able to log in with **GitHub**.
+The fastest way to set up Auth.js is with an [OAuth](https://en.wikipedia.org/wiki/OAuth) provider. In this tutorial, we'll be setting Auth.js in a web application to be able to log in with **GitHub**.
 
 :::info
-Auth.js comes with a long list of [built-in providers](/reference/providers/oauth-builtin) (Google, Facebook, Twitter, etc.). You can also integrate it with your OAuth service easily by [building a custom provider](/guides/providers/custom-provider).
+Auth.js comes with a long list of [built-in providers](/reference/providers/oauth-builtin) (Google, Facebook, Twitter, etc.). You can also integrate it with your OAuth service by [building a custom provider](/guides/providers/custom-provider).
 :::
 
 ## 1. Configuring Auth.js
@@ -26,17 +26,24 @@ To add Auth.js to your project:
 <Tabs groupId="frameworks" queryString>
   <TabItem value="next" label="Next.js" default>
 
+### Prerequisites
+This tutorial assumes you have a Next.js application set up. If you don't, you can follow the [Next.js tutorial](https://nextjs.org/learn/basics/create-nextjs-app) to get started.
+
+### Installing NextAuth.js
+
+```bash npm2yarn
+npm install next-auth
+```
+
+:::info
+We are working on a new `@auth/nextjs` package that will make it easier to set up Auth.js with Next.js. Stay tuned! For now, you can use the `next-auth` package.
+:::
+
 ### Creating the server config
 
-Create the following [API route](https://nextjs.org/docs/api-routes/introduction) file:
+Create the following [API route](https://nextjs.org/docs/api-routes/dynamic-api-routes#catch-all-api-routes) file. This route contains the necessary configuration for NextAuth.js, as well as the dynamic route handler:
 
-```
-pages/api/auth/[...nextauth].ts
-```
-
-This route will contain the **dynamic route handler** for Auth.js that describes your global auth configuration:
-
-```ts title="pages/api/auth/[...nextauth].js"
+```ts title="pages/api/auth/[...nextauth].ts"
 import NextAuth from "next-auth"
 import GithubProvider from "next-auth/providers/github"
 
@@ -50,16 +57,18 @@ export default NextAuth({
 })
 ```
 
-You may notice we are using environment variables in the code example above. We take the value of `GITHUB_ID` and `GITHUB_SECRET` from the GitHub Developer OAuth Portal. See [Configuring OAuth Provider](/getting-started/oauth-tutorial#2-configuring-oauth-provider) section on how to get those.
-
 :::info
 
 Behind the scenes, this creates all the relevant OAuth API routes within `/api/auth/*` so that auth API requests to:
 
-- `/api/auth/callback`
-- `/api/auth/signin`
-- `/api/auth/signout`
-- etc.
+- [GET `/api/auth/signin`](https://authjs.dev/reference/rest-api#get--apiauthsignin)
+- [POST `/api/auth/signin/:provider`](https://authjs.dev/reference/rest-api#post--apiauthsigninprovider)
+- [GET/POST `/api/auth/callback/:provider`](https://authjs.dev/reference/rest-api#get--post--apiauthcallbackprovider)
+- [GET `/api/auth/signout`](https://authjs.dev/reference/rest-api#get--apiauthsignout)
+- [POST `/api/auth/signout`](https://authjs.dev/reference/rest-api#post--apiauthsignout)
+- [GET `/api/auth/session`](https://authjs.dev/reference/rest-api#get--apiauthsession)
+- [GET `/api/auth/csrf`](https://authjs.dev/reference/rest-api#get--apiauthcsrf)
+- [GET `/api/auth/providers`](https://authjs.dev/reference/rest-api#get--apiauthproviders)
 
 can be handled by NextAuth.js. In this way, NextAuth.js stays in charge of the whole application's authentication request/response flow.
 
@@ -67,8 +76,9 @@ NextAuth.js is fully customizable - [our guides section](/guides/overview) teach
 :::
 
 ### Adding environment variables
+You may notice we are using environment variables in the code example above. We take the value of `GITHUB_ID` and `GITHUB_SECRET` from the GitHub Developer OAuth Portal. See [Configuring OAuth Provider](/getting-started/oauth-tutorial#2-configuring-oauth-provider) section on how to get those.
 
-In your project root, create a `.env.local` file and add the following environment variables:
+In your project root, create a `.env.local` file and add the `NEXTAUTH_SECRET` environment variable:
 
 ```title=".env.local"
 NEXTAUTH_SECRET="This is an example"
@@ -83,8 +93,7 @@ $ openssl rand -base64 32
 or https://generate-secret.vercel.app/32 to generate a random value for it.
 
 ### Exposing the session via `SessionProvider`:
-
-To use `useSession` first you'll need to expose the session context - [`<SessionProvider />`](/reference/react/#sessionprovider) - at the top level of your application:
+NextAuth.js provides [`useSession()`](/reference/react/#usesession) - a [React Hooks](https://reactjs.org/docs/hooks-intro.html) to access the session data and status. To use it first you'll need to expose the session context - [`<SessionProvider />`](/reference/react/#sessionprovider) - at the top level of your application:
 
 ```ts title="pages/_app.tsx"
 import { SessionProvider } from "next-auth/react"
@@ -109,7 +118,7 @@ Check our [client docs](/reference/react/) to learn all the available options fo
 
 ### Consuming the session via hooks
 
-NextAuth.js exposes a [`useSession()`](/reference/react/#usesession) React Hook so that you can check if someone is logged in:
+You can use the `useSession` hook from anywhere in your application (E.g. in a header component). Behind the scenes, the hook will connect to the `<SessionProvider />` to read the current user session. Learn more about React Context in the [React docs](https://reactjs.org/docs/context.html).
 
 ```ts title="pages/overview.tsx"
 import { useSession, signIn, signOut } from "next-auth/react"
@@ -135,17 +144,15 @@ export default function CamperVanPage() {
   return (
     <>
       <p>Not signed in.</p>
-      <button onClick={() => signIn()}>Sign in</button>
+      <button onClick={() => signIn("github")}>Sign in</button>
     </>
   )
 }
 ```
 
-You can use the `useSession` hook from anywhere in your application (E.g. in a header component). Behind the scenes, the hook will connect to the `<SessionProvider />` to read the current user session.
-
 ### Protecting API Routes
 
-Protecting your API Routes (blocking unauthorized access to resources) is easy! You can use [`getServerSession()`](/reference/nextjs#getserversession) to know whether a session exists or not:
+To protecting your API Routes (blocking unauthorized access to resources), you can use [`getServerSession()`](/reference/nextjs#getserversession) to know whether a session exists or not:
 
 ```ts title="pages/api/movies/list.ts"
 import { getServerSession } from "next-auth/next"
@@ -175,6 +182,9 @@ TODO: SvelteKit
   </TabItem>
   <TabItem value="solidstart" label="SolidStart">
 TODO: SolidStart
+  </TabItem>
+  <TabItem value="core" label="Vanilla (No Framework)">
+TODO Core
   </TabItem>
 </Tabs>
 
@@ -226,7 +236,14 @@ NextAuth.js will already create this API endpoint for you when we start the appl
   <TabItem value="solidstart" label="SolidStart">
     TODO SolidStart
   </TabItem>
+  <TabItem value="core" label="Vanilla (No Framework)">
+TODO Core
+  </TabItem>
 </Tabs>
+:::info
+The last part of the URL, `[provider]`, is the ID of the provider you're using. In this case, we're using GitHub, so it's `github`. If you're using Google, it'll be `google`, etc... We keep track of the provider IDs internally.
+The same id is used in the `signIn()` method we saw earlier.
+:::
 To register, tap on "Register application" button.
 
 The next screen shows all the configurations for your newly created OAuth app. For now, we need two things from it - the **Client ID** and **Client Secret**:
@@ -263,7 +280,7 @@ GITHUB_ID=12345
 GITHUB_SECRET=67890
 ```
 
-Here is our API route file again:
+Here is our server configuration file again:
 
 <Tabs groupId="frameworks">
   <TabItem value="next" label="Next.js" default>
@@ -295,6 +312,9 @@ TODO SvelteKit
   <TabItem value="solidstart" label="SolidStart">
 TODO SolidStart
   </TabItem>
+  <TabItem value="core" label="Vanilla (No Framework)">
+TODO Core
+  </TabItem>
 </Tabs>
 
 You should see the following page:
@@ -310,10 +330,6 @@ Once inserted and correct, GitHub will redirect the user to our app and NextAuth
 <img src={nextAuthUserLoggedIn} />
 
 Great! We have completed the whole E2E authentication flow setup so that users can log in to our application through GitHub!
-
-:::info
-You can create your Sign In page instead of using the default one from Auth.js. You can learn how to do so in our dedicated guide for it.
-:::
 
 ## 4. Deploying to production
 
