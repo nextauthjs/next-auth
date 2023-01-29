@@ -10,15 +10,15 @@ export default function TikTok(options) {
       params: {
         scope: "user.info.basic",
         response_type: "code",
-        client_key: process.env.TIKTOK_CLIENT_KEY,
+        client_key: options.clientId,
         redirect_uri: options.redirect_uri,
       },
     },
     token: {
       url: "https://open-api.tiktok.com/oauth/access_token/",
       params: {
-        client_key: process.env.TIKTOK_CLIENT_KEY,
-        client_secret: process.env.TIKTOK_CLIENT_SECRET,
+        client_key: options.clientId,
+        client_secret: options.clientSecret,
         grant_type: "authorization_code",
       },
     },
