@@ -267,16 +267,18 @@ importers:
 
   packages/adapter-edgedb:
     specifiers:
+      '@auth/core': workspace:*
       '@next-auth/adapter-test': workspace:^0.0.0
       '@next-auth/tsconfig': workspace:^0.0.0
+      edgedb: ^1.0.1
       jest: ^27.4.3
-      next-auth: workspace:*
       typescript: ^4.7.4
     devDependencies:
+      '@auth/core': link:../core
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
+      edgedb: 1.0.2
       jest: 27.5.1
-      next-auth: link:../next-auth
       typescript: 4.9.4
 
   packages/adapter-fauna:

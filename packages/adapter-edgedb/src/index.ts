@@ -3,7 +3,7 @@ import type {
   AdapterSession,
   AdapterUser,
   VerificationToken,
-} from "next-auth/adapters"
+} from "@auth/core/adapters"
 import type { Client } from "edgedb"
 
 export function EdgeDBAdapter(client: Client): Adapter {

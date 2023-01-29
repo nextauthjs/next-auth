@@ -2,7 +2,7 @@ import { Auth, type AuthConfig } from "@auth/core"
 
 // Providers
 import Apple from "@auth/core/providers/apple"
-import Asgardeo from "@auth/core/providers/asgardeo"
+// import Asgardeo from "@auth/core/providers/asgardeo"
 import Auth0 from "@auth/core/providers/auth0"
 import AzureAD from "@auth/core/providers/azure-ad"
 import AzureB2C from "@auth/core/providers/azure-ad-b2c"
@@ -11,7 +11,7 @@ import BoxyHQSAML from "@auth/core/providers/boxyhq-saml"
 import Credentials from "@auth/core/providers/credentials"
 import Discord from "@auth/core/providers/discord"
 import DuendeIDS6 from "@auth/core/providers/duende-identity-server6"
-// import Email from "@auth/core/providers/email"
+import EmailProvider from "next-auth"
 import Facebook from "@auth/core/providers/facebook"
 import Foursquare from "@auth/core/providers/foursquare"
 import Freshbooks from "@auth/core/providers/freshbooks"
@@ -67,14 +67,14 @@ import WorkOS from "@auth/core/providers/workos"
 //   secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
 // })
 
-// // EdgeDB
-// import { EdgeDBAdapter } from "@next-auth/edgedb-adapter"
-// import { createClient } from "edgedb"
-// const client = createClient()
-// const adapter = EdgeDBAdapter(client)
+// EdgeDB
+import { EdgeDBAdapter } from "@next-auth/edgedb-adapter"
+import { createHttpClient } from "edgedb"
+const client = createHttpClient()
+const adapter = EdgeDBAdapter(client)
 
 export const authConfig: AuthConfig = {
-  // adapter,
+  adapter,
   // debug: process.env.NODE_ENV !== "production",
   theme: {
     logo: "https://next-auth.js.org/img/logo/logo-sm.png",
@@ -89,8 +89,8 @@ export const authConfig: AuthConfig = {
       },
     }),
     Apple({ clientId: process.env.APPLE_ID, clientSecret: process.env.APPLE_SECRET }),
-    Asgardeo({ clientId: process.env.ASGARDEO_CLIENT_ID, clientSecret: process.env.ASGARDEO_CLIENT_SECRET, issuer: process.env.ASGARDEO_ISSUER }),
-    Auth0({ clientId: process.env.AUTH0_ID, clientSecret: process.env.AUTH0_SECRET, issuer: process.env.AUTH0_ISSUER }),
+    // Asgardeo({ clientId: process.env.ASGARDEO_CLIENT_ID, clientSecret: process.env.ASGARDEO_CLIENT_SECRET, issuer: process.env.ASGARDEO_ISSUER }),
+    // Auth0({ clientId: process.env.AUTH0_ID, clientSecret: process.env.AUTH0_SECRET, issuer: process.env.AUTH0_ISSUER }),
     AzureAD({
       clientId: process.env.AZURE_AD_CLIENT_ID,
       clientSecret: process.env.AZURE_AD_CLIENT_SECRET,
@@ -125,8 +125,13 @@ export const authConfig: AuthConfig = {
     Vk({ clientId: process.env.VK_ID, clientSecret: process.env.VK_SECRET }),
     Wikimedia({ clientId: process.env.WIKIMEDIA_ID, clientSecret: process.env.WIKIMEDIA_SECRET }),
     WorkOS({ clientId: process.env.WORKOS_ID, clientSecret: process.env.WORKOS_SECRET }),
+    EmailProvider({
+      server: process.env.EMAIL_SERVER,
+      from: process.env.EMAIL_FROM
+    }),
+  
   ],
-  // debug: process.env.NODE_ENV !== "production",
+  debug: process.env.NODE_ENV !== "production",
 }
 
 if (authConfig.adapter) {
@@ -156,4 +161,4 @@ function AuthHandler(...args: any[]) {
 
 export default AuthHandler(authConfig)
 
-export const config = { runtime: "experimental-edge" }
+// export const config = { runtime: "experimental-edge" }
