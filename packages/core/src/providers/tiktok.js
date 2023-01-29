@@ -6,20 +6,17 @@ export default function TikTok(options) {
     type: "oauth",
     version: "2.0",
     authorization: {
-      url: "https://www.tiktok.com/auth/authorize/",
+      url: "https://www.tiktok.com/auth/authorize",
       params: {
         scope: "user.info.basic",
-        response_type: "code",
         client_key: options.clientId,
-        redirect_uri: options.redirect_uri,
       },
     },
     token: {
-      url: "https://open-api.tiktok.com/oauth/access_token/",
+      url: "https://open-api.tiktok.com/oauth/access_token",
       params: {
         client_key: options.clientId,
         client_secret: options.clientSecret,
-        grant_type: "authorization_code",
       },
     },
     userinfo: "https://open-api.tiktok.com/user/info/",
@@ -30,7 +27,6 @@ export default function TikTok(options) {
         image: profile.avatar_url
       };
     },
-    checks: ["state"],
     options
   }
 }
