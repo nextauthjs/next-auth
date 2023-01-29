@@ -278,7 +278,7 @@ declare global {
   }
 }
 
-declare module "$env/dynamic/private" {
+declare module "$env/static/private" {
   export const AUTH_SECRET: string
   export const AUTH_TRUST_HOST: string
   export const VERCEL: string
