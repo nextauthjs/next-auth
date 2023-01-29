@@ -11,7 +11,7 @@ Auth.js is a complete open-source authentication solution for web applications. 
 - [SvelteKit](https://sveltekit-auth-example.vercel.app/)
 - [SolidStart](https://auth-solid.vercel.app/)
 
-Check our tutorials to see how easy it is to use Auth.js for authentication:
+Continue to our tutorials to see how easy it is to use Auth.js for authentication:
 
 - [Setup with OAuth](/getting-started/oauth-tutorial)
 - [Setup with magic links](/getting-started/email-tutorial)

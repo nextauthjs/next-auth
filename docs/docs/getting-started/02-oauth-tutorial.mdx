@@ -23,7 +23,7 @@ Auth.js comes with a long list of [built-in providers](/reference/providers/oaut
 
 To add Auth.js to your project:
 
-<Tabs groupId="frameworks">
+<Tabs groupId="frameworks" queryString>
   <TabItem value="next" label="Next.js" default>
 
 ### Creating the server config
@@ -50,6 +50,10 @@ export default NextAuth({
 })
 ```
 
+You may notice we are using environment variables in the code example above. We take the value of `GITHUB_ID` and `GITHUB_SECRET` from the GitHub Developer OAuth Portal. See [Configuring OAuth Provider](/getting-started/oauth-tutorial#2-configuring-oauth-provider) section on how to get those.
+
+:::info
+
 Behind the scenes, this creates all the relevant OAuth API routes within `/api/auth/*` so that auth API requests to:
 
 - `/api/auth/callback`
@@ -59,10 +63,7 @@ Behind the scenes, this creates all the relevant OAuth API routes within `/api/a
 
 can be handled by Auth.js. In this way, Auth.js stays in charge of the whole application's authentication request/response flow.
 
-You may notice there are some environment variables in the code example above. `GITHUB_ID` and `GITHUB_SECRET` are provided by the OAuth provider (in this case **GitHub**). See ["Configuring OAuth Provider"](/getting-started/oauth-tutorial#2-configuring-oauth-provider) section on how to get those.
-
-:::info
-Auth.js is customizable - [our guides section](/guides/overview) will teach you how to set it up to handle auth in different ways. All the possible configuration options are [listed here](/reference/configuration/auth-config).
+Auth.js is fullly customizable - [our guides section](/guides/overview) will teach you how to set it up to handle auth in different ways. All the possible configuration options are [listed here](/reference/configuration/auth-config).
 :::
 
 ### Adding environment variables
@@ -83,7 +84,7 @@ or https://generate-secret.vercel.app/32 to generate a random value for it.
 
 ### Exposing the session via `SessionProvider`:
 
-To be able to use `useSession` first you'll need to expose the session context, [`<SessionProvider />`](/reference/react/#sessionprovider), at the top level of your application:
+To use `useSession` first you'll need to expose the session context - [`<SessionProvider />`](/reference/react/#sessionprovider) - at the top level of your application:
 
 ```ts title="pages/_app.tsx"
 import { SessionProvider } from "next-auth/react"
@@ -144,13 +145,14 @@ You can use the `useSession` hook from anywhere in your application (E.g. in a h
 
 ### Protecting API Routes
 
-Protecting your API Routes (blocking unauthorized access to resources) is easy! You can either: use [`getSession()`](/reference/utilities/#getsession) to know whether a session exists or not:
+Protecting your API Routes (blocking unauthorized access to resources) is easy! You can use [`getServerSession()`](/reference/nextjs#getserversession) to know whether a session exists or not:
 
 ```ts title="pages/api/movies/list.ts"
-import { getSession } from "next-auth/react"
+import { getServerSession } from "next-auth/next"
+import authOptions from "@/pages/api/auth/[...nextauth]"
 
 export default async function listMovies(req, res) {
-  const session = await getSession({ req })
+  const session = await getServerSession(req, res, authOptions)
 
   if (session) {
     res.send({
@@ -169,10 +171,10 @@ export default async function listMovies(req, res) {
 
   </TabItem>
   <TabItem value="sveltekit" label="SvelteKit">
-SvelteKit
+TODO: SvelteKit
   </TabItem>
   <TabItem value="solidstart" label="SolidStart">
-SolidStart
+TODO: SolidStart
   </TabItem>
 </Tabs>
 
@@ -225,8 +227,9 @@ Auth.js will already magically create this API endpoint for you when we start th
     TODO SolidStart
   </TabItem>
 </Tabs>
+To register, tap on "Register application" button.
 
-Next, you'll be presented with the following screen which presents all the configurations for your new OAuth app. For now, we need two things from it: the **Client ID** and **Client Secret** for our new OAuth app:
+The next screen shows all the configurations for your newly created OAuth app. For now, we need two things from it - the **Client ID** and **Client Secret**:
 
 <img src={gettingClientIdSecretImg} />
 
@@ -251,10 +254,7 @@ Note that, for each provider, the configuration process will be similar to what 
 
 ## 3. Wiring all together
 
-Finally, we just need to reference our **Client ID** and **Client Secret** we just generated in the previous in our Auth.js config. In this way, the library will be able to use them when forwarding users to GitHub, and GitHub will be able to recognize the request as generated from our application:
-
-<Tabs groupId="frameworks">
-  <TabItem value="next" label="Next.js" default>
+Finally, we just need to reference our **Client ID** and **Client Secret** we just generated in the previous in our Auth.js config. In this way, the library will be able to use them when forwarding users to GitHub, and GitHub will be able to recognize the request as generated from our application.
 
 Now let's copy both the Client ID and Client Secret and paste them into an environment file in the root of your project like so:
 
@@ -264,6 +264,10 @@ GITHUB_SECRET=67890
 ```
 
 Here is our API route file again:
+
+<Tabs groupId="frameworks">
+  <TabItem value="next" label="Next.js" default>
+
 ```ts title="pages/api/auth/[...nextauth].ts"
 import NextAuth from "next-auth"
 import GithubProvider from "next-auth/providers/github"
@@ -327,9 +331,10 @@ Finally, we would need to point the environment variables we set ( `GITHUB_ID` a
 
 ### Setting up `NEXTAUTH_URL`
 
-:::info
-Skip this section if you are deploying to Vercel. 
+:::tip
+Skip this section if you are deploying to Vercel.
 :::
+
 When deploying your site, **you need to set** the `NEXTAUTH_URL` environment variable to the canonical URL of your website:
 
 ```
