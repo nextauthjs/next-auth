@@ -84,6 +84,7 @@ docs/providers.json
 packages/core/*.js
 packages/core/*.d.ts
 packages/core/*.d.ts.map
+packages/core/src/providers/oauth-types.ts
 packages/core/lib
 packages/core/providers
 packages/core/src/lib/pages/styles.ts
