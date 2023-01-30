@@ -5,7 +5,7 @@ title: Using HTTP Email APIs with Auth.js
 
 ## Introduction
 
-We have always provided an Email provider with Auth.js with which you could provide to any SMTP server of your choice to send use "magic link" emails to sign-in with. However, as time went on, we had more and more people as us to make it easy to use HTTP-based Email providers, like AWS SES, Postmark, Sendgrid, etc. This was theoretically always possible, but we didn't make it as straight-forward as possible. In this guide I'm going to explain how to use our Email magic link provider with any of the more modern HTTP-based Email APIs.
+We have always had a built-in Email provider with which you could connect to the SMTP server of your choice to send "magic link" emails for sign-in purposes. However, the Email provider can also be used with HTTP-based email services, like AWS SES, Postmark, Sendgrid, etc. In this guide we are going to explain how to use our Email magic link provider with any of the more modern HTTP-based Email APIs.
 
 For this API I will be using [Sendgrid](https://sendgrid.com), but any Email provider which provides an HTTP API / JS-client library will do the trick.
 
