@@ -36,9 +36,9 @@
     "@docusaurus/preset-classic": "2.2.0",
     "@docusaurus/theme-common": "2.2.0",
     "@docusaurus/types": "2.2.0",
-    "docusaurus-plugin-typedoc": "https://gitpkg.now.sh/balazsorban44/typedoc-plugin-markdown/packages/docusaurus-plugin-typedoc?next",
+    "docusaurus-plugin-typedoc": "next",
     "typedoc": "^0.23.24",
-    "typedoc-plugin-markdown": "https://gitpkg.now.sh/balazsorban44/typedoc-plugin-markdown/packages/typedoc-plugin-markdown?next"
+    "typedoc-plugin-markdown": "next"
   },
   "browserslist": {
     "production": [

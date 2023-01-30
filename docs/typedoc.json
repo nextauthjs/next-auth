@@ -7,11 +7,10 @@
   "excludeNotDocumented": true,
   "excludePrivate": true,
   "excludeProtected": true,
-  "fileStructure": "modules",
+  "hideHierarchy": true,
   "gitRevision": "main",
   "hideBreadcrumbs": true,
   "hideGenerator": true,
-  "includeExtension": false,
   "kindSortOrder": [
     "Function",
     "TypeAlias",

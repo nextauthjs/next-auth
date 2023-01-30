@@ -66,12 +66,6 @@ export interface FirebaseAdapterConfig extends AppOptions {
 }
 
 /**
- * ### Installation
- *
- * ```bash npm2yarn2pnpm
- * npm install next-auth @next-auth/firebase-admin-adapter firebase-admin
- * ```
- *
  * #### Usage
  *
  * First, create a Firebase project and generate a service account key.
