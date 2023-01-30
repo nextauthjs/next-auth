@@ -62,7 +62,7 @@ const docusaurusConfig = {
           position: "left",
         },
         {
-          to: "/reference/core/main",
+          to: "/reference/core",
           // TODO: change to this when the overview page looks better.
           // to: "/reference",
           activeBasePath: "/reference",
@@ -206,6 +206,9 @@ const docusaurusConfig = {
         entryPoints: ["index.ts", "adapters.ts", "errors.ts", "jwt.ts", "types.ts"].map((e) => `${coreSrc}/${e}`).concat(providers),
         tsconfig: "../packages/core/tsconfig.json",
         out: "reference/core",
+        sidebar: {
+          indexLabel: "index",
+        },
       },
     ],
     [
@@ -218,6 +221,9 @@ const docusaurusConfig = {
         entryPoints: ["index.ts", "client.ts"].map((e) => `../packages/frameworks-sveltekit/src/lib/${e}`),
         tsconfig: "../packages/frameworks-sveltekit/tsconfig.json",
         out: "reference/04-sveltekit",
+        sidebar: {
+          indexLabel: "index",
+        },
       },
     ],
     [
@@ -231,7 +237,6 @@ const docusaurusConfig = {
         tsconfig: "../packages/adapter-firebase/tsconfig.json",
         out: "reference/adapter/firebase",
         sidebar: {
-          position: 1,
           indexLabel: "Firebase",
         },
       },
