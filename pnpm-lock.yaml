@@ -136,7 +136,7 @@ importers:
       vercel: ^23.1.2
     dependencies:
       dotenv: 16.0.3
-      gatsby: 5.6.0-next.1_biqbaboplfbrettd7655fr4n2y
+      gatsby: 5.6.0-next.2_biqbaboplfbrettd7655fr4n2y
       next-auth: link:../../../packages/next-auth
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -175,7 +175,7 @@ importers:
       '@mdx-js/react': 1.6.22
       '@sapphire/docusaurus-plugin-npm2yarn2pnpm': 1.1.4
       classnames: ^2.3.2
-      docusaurus-plugin-typedoc: next
+      docusaurus-plugin-typedoc: 1.0.0-next.1
       mdx-mermaid: 1.2.2
       mermaid: 9.0.1
       next-auth: workspace:*
@@ -185,7 +185,7 @@ importers:
       react-marquee-slider: ^1.1.5
       styled-components: 5.3.6
       typedoc: ^0.23.24
-      typedoc-plugin-markdown: next
+      typedoc-plugin-markdown: 4.0.0-next.2
     dependencies:
       '@auth/core': link:../packages/core
       '@auth/sveltekit': link:../packages/frameworks-sveltekit
@@ -207,9 +207,9 @@ importers:
       '@docusaurus/preset-classic': 2.2.0_biqbaboplfbrettd7655fr4n2y
       '@docusaurus/theme-common': 2.2.0_if65ga6ul5jnw5c4373drfty5m
       '@docusaurus/types': 2.2.0_biqbaboplfbrettd7655fr4n2y
-      docusaurus-plugin-typedoc: 1.0.0-next.1_b2hlkhvagxloeum427jyf4vgj4
+      docusaurus-plugin-typedoc: 1.0.0-next.1_kb65gbyd32jlgdze2tbrhv364a
       typedoc: 0.23.24
-      typedoc-plugin-markdown: 4.0.0-next.1_typedoc@0.23.24
+      typedoc-plugin-markdown: 4.0.0-next.2_typedoc@0.23.24
 
   packages/adapter-dgraph:
     specifiers:
@@ -13683,10 +13683,8 @@ packages:
       indent-string: 4.0.0
     dev: true
 
-  /ajv-formats/2.1.1_ajv@8.11.0:
+  /ajv-formats/2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
-    peerDependencies:
-      ajv: ^8.0.0
     peerDependenciesMeta:
       ajv:
         optional: true
@@ -14612,7 +14610,7 @@ packages:
       - supports-color
     dev: true
 
-  /babel-plugin-remove-graphql-queries/5.6.0-next.0_p3iup564ewjn2qef5f2v3idxju:
+  /babel-plugin-remove-graphql-queries/5.6.0-next.0_x3fnz3zp5bgltr62wwyqvgm7l4:
     resolution: {integrity: sha512-hrxx7U73x6TUL+x/h2/OrQT4hdeGkYjK39oiYtt6erSVz8q1iOYl4tfCYN0wuHyrvpRdXJ7UBrAhLgBFIPn8Gw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
@@ -14622,7 +14620,7 @@ packages:
       '@babel/core': 7.20.12
       '@babel/runtime': 7.20.7
       '@babel/types': 7.20.7
-      gatsby: 5.6.0-next.1_biqbaboplfbrettd7655fr4n2y
+      gatsby: 5.6.0-next.2_biqbaboplfbrettd7655fr4n2y
       gatsby-core-utils: 4.6.0-next.0
     dev: false
 
@@ -17595,14 +17593,14 @@ packages:
     dependencies:
       esutils: 2.0.3
 
-  /docusaurus-plugin-typedoc/1.0.0-next.1_b2hlkhvagxloeum427jyf4vgj4:
+  /docusaurus-plugin-typedoc/1.0.0-next.1_kb65gbyd32jlgdze2tbrhv364a:
     resolution: {integrity: sha512-SaQc1saPxJjQksTyRe+cBqd0qw5r6UyA+2vKzplcFyWThtPsiOi5dSzQE5IPQt3ZFPNm0DQmSXHyvTjpfYpt+A==}
     peerDependencies:
       typedoc: '>=0.23.0'
       typedoc-plugin-markdown: '>=4.0.0-next.1'
     dependencies:
       typedoc: 0.23.24
-      typedoc-plugin-markdown: 4.0.0-next.1_typedoc@0.23.24
+      typedoc-plugin-markdown: 4.0.0-next.2_typedoc@0.23.24
     dev: true
 
   /dom-accessibility-api/0.5.14:
@@ -19380,7 +19378,7 @@ packages:
     dependencies:
       '@apidevtools/json-schema-ref-parser': 9.0.9
       ajv: 8.11.0
-      ajv-formats: 2.1.1_ajv@8.11.0
+      ajv-formats: 2.1.1
       body-parser: 1.20.0
       content-type: 1.0.4
       deep-freeze: 0.0.1
@@ -20441,7 +20439,7 @@ packages:
       '@parcel/transformer-json': 2.8.2_@parcel+core@2.8.2
     dev: false
 
-  /gatsby-plugin-page-creator/5.6.0-next.1_zznw3vsocghj5yw5jjizqaoutu:
+  /gatsby-plugin-page-creator/5.6.0-next.1_wxxlwg4kb5uwyfjvsdo3jviy2e:
     resolution: {integrity: sha512-9yE2C4Xbc+llNRzzC9MbpgSM1GQCi4lUqlNy8Hq/C25S0wTTRW+FQZxuWTiR+AUTUL8MK9wJsNF5f0bZc8hfJw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
@@ -20453,10 +20451,10 @@ packages:
       chokidar: 3.5.3
       fs-exists-cached: 1.0.0
       fs-extra: 11.1.0
-      gatsby: 5.6.0-next.1_biqbaboplfbrettd7655fr4n2y
+      gatsby: 5.6.0-next.2_biqbaboplfbrettd7655fr4n2y
       gatsby-core-utils: 4.6.0-next.0
       gatsby-page-utils: 3.6.0-next.0
-      gatsby-plugin-utils: 4.6.0-next.1_zznw3vsocghj5yw5jjizqaoutu
+      gatsby-plugin-utils: 4.6.0-next.1_wxxlwg4kb5uwyfjvsdo3jviy2e
       gatsby-telemetry: 4.6.0-next.0
       globby: 11.1.0
       lodash: 4.17.21
@@ -20466,7 +20464,7 @@ packages:
       - supports-color
     dev: false
 
-  /gatsby-plugin-typescript/5.6.0-next.0_gatsby@5.6.0-next.1:
+  /gatsby-plugin-typescript/5.6.0-next.0_gatsby@5.6.0-next.2:
     resolution: {integrity: sha512-CUguJx8GjTQHymcfBOcwUXZtetfhLYtgUehkM8ovvNlscgavGxmbGD90gXMmo5JgrLPhdx8krtMsdIeCOOvo4w==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
@@ -20478,13 +20476,13 @@ packages:
       '@babel/plugin-proposal-optional-chaining': 7.20.7_@babel+core@7.20.12
       '@babel/preset-typescript': 7.18.6_@babel+core@7.20.12
       '@babel/runtime': 7.20.7
-      babel-plugin-remove-graphql-queries: 5.6.0-next.0_p3iup564ewjn2qef5f2v3idxju
-      gatsby: 5.6.0-next.1_biqbaboplfbrettd7655fr4n2y
+      babel-plugin-remove-graphql-queries: 5.6.0-next.0_x3fnz3zp5bgltr62wwyqvgm7l4
+      gatsby: 5.6.0-next.2_biqbaboplfbrettd7655fr4n2y
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /gatsby-plugin-utils/4.6.0-next.1_zznw3vsocghj5yw5jjizqaoutu:
+  /gatsby-plugin-utils/4.6.0-next.1_wxxlwg4kb5uwyfjvsdo3jviy2e:
     resolution: {integrity: sha512-RhM2cQ6RYmdGQkXKs4d+KfG5ovGjvbF4fps/H4Sk81nJ1AnlPGbUlMaCdgFhhTJL1ID8l4rYdpQKXM87THJosQ==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
@@ -20494,7 +20492,7 @@ packages:
       '@babel/runtime': 7.20.7
       fastq: 1.15.0
       fs-extra: 11.1.0
-      gatsby: 5.6.0-next.1_biqbaboplfbrettd7655fr4n2y
+      gatsby: 5.6.0-next.2_biqbaboplfbrettd7655fr4n2y
       gatsby-core-utils: 4.6.0-next.0
       gatsby-sharp: 1.6.0-next.0
       graphql: 16.6.0
@@ -20573,8 +20571,8 @@ packages:
       - supports-color
     dev: false
 
-  /gatsby/5.6.0-next.1_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-oe1rHLtxJV/aiUYZE2b3V9UcWe6DVkkgmSo+Z0pZ5xTSenW3PdJIBnBaJVKyYkQvtOl8N1UFgqa6IxjTLaQCYg==}
+  /gatsby/5.6.0-next.2_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-cXyyDjlA2V3NhnfJtLhcrShrYU6k/FB67el5MZIqzrHjb7sg77lJztMpoy4PvXs4MlNvhRupSclIO+o9+G0pyg==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     requiresBuild: true
@@ -20620,7 +20618,7 @@ packages:
       babel-plugin-add-module-exports: 1.0.4
       babel-plugin-dynamic-import-node: 2.3.3
       babel-plugin-lodash: 3.3.4
-      babel-plugin-remove-graphql-queries: 5.6.0-next.0_p3iup564ewjn2qef5f2v3idxju
+      babel-plugin-remove-graphql-queries: 5.6.0-next.0_x3fnz3zp5bgltr62wwyqvgm7l4
       babel-preset-gatsby: 3.6.0-next.0_pp2vm42zn6vfmnpuhar3irht7i
       better-opn: 2.1.1
       bluebird: 3.7.2
@@ -20669,9 +20667,9 @@ packages:
       gatsby-link: 5.6.0-next.0_y2kppt6lrltqk6wasg3eswwzsa
       gatsby-page-utils: 3.6.0-next.0
       gatsby-parcel-config: 1.6.0-next.0_@parcel+core@2.8.2
-      gatsby-plugin-page-creator: 5.6.0-next.1_zznw3vsocghj5yw5jjizqaoutu
-      gatsby-plugin-typescript: 5.6.0-next.0_gatsby@5.6.0-next.1
-      gatsby-plugin-utils: 4.6.0-next.1_zznw3vsocghj5yw5jjizqaoutu
+      gatsby-plugin-page-creator: 5.6.0-next.1_wxxlwg4kb5uwyfjvsdo3jviy2e
+      gatsby-plugin-typescript: 5.6.0-next.0_gatsby@5.6.0-next.2
+      gatsby-plugin-utils: 4.6.0-next.1_wxxlwg4kb5uwyfjvsdo3jviy2e
       gatsby-react-router-scroll: 6.6.0-next.0_y2kppt6lrltqk6wasg3eswwzsa
       gatsby-script: 2.6.0-next.0_y2kppt6lrltqk6wasg3eswwzsa
       gatsby-telemetry: 4.6.0-next.0
@@ -30523,7 +30521,7 @@ packages:
     dependencies:
       '@types/json-schema': 7.0.11
       ajv: 8.11.0
-      ajv-formats: 2.1.1_ajv@8.11.0
+      ajv-formats: 2.1.1
       ajv-keywords: 5.1.0_ajv@8.11.0
     dev: true
 
@@ -32877,8 +32875,8 @@ packages:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
     dev: false
 
-  /typedoc-plugin-markdown/4.0.0-next.1_typedoc@0.23.24:
-    resolution: {integrity: sha512-aRvW7xmT6OGQx/FLfXGEGs8yQuF+VOp6VBefivWaZz0ylPkXSSC3mc+vQIuaASzuiD0q6KZ+BvwXvE5dVA/e1Q==}
+  /typedoc-plugin-markdown/4.0.0-next.2_typedoc@0.23.24:
+    resolution: {integrity: sha512-5Uz3/Wq2syMKh1OiLxqrj7GXz0vwfxjJiyRW3QATrbpwTiRY+5v5n735+FgR5NQyLSoANGqAwMmSxpVnvFqamA==}
     peerDependencies:
       typedoc: '>=0.23.0'
     dependencies:

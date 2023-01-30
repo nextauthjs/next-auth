@@ -36,9 +36,9 @@
     "@docusaurus/preset-classic": "2.2.0",
     "@docusaurus/theme-common": "2.2.0",
     "@docusaurus/types": "2.2.0",
-    "docusaurus-plugin-typedoc": "next",
+    "docusaurus-plugin-typedoc": "1.0.0-next.1",
     "typedoc": "^0.23.24",
-    "typedoc-plugin-markdown": "next"
+    "typedoc-plugin-markdown": "4.0.0-next.2"
   },
   "browserslist": {
     "production": [
