@@ -19,7 +19,7 @@ First, clone and setup a basic Auth.js project like the the one [provided in our
 
 At this point, you should have a `[...nextauth].ts` file which looks something like this:
 
-```js title="/src/pages/api/auth/[...nextauth].ts"
+```ts title="pages/api/auth/[...nextauth].ts"
 import NextAuth, { NextAuthOptions } from "next-auth"
 import EmailProvider from "next-auth/providers/email"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
