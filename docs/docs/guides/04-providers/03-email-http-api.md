@@ -1,6 +1,6 @@
 ---
 id: email-http
-title: Using HTTP Email APIs with Auth.js
+title: HTTP-based Email Provider
 ---
 
 ## Introduction
