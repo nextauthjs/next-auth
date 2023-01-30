@@ -176,12 +176,8 @@ export async function unstable_getServerSession<
     ? U
     : Session
 >(
-  ...args:
-    | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"], O]
-    | [NextApiRequest, NextApiResponse, O]
-    | [O]
-    | []
-): Promise<R | null> {
+  ...args: Parameters<typeof getServerSession<O, R>>
+): ReturnType<typeof getServerSession<O, R>> {
   if (!deprecatedWarningShown && process.env.NODE_ENV !== "production") {
     console.warn(
       "`unstable_getServerSession` has been renamed to `getServerSession`."
