@@ -28,7 +28,6 @@ import prisma from "../../../lib/db"
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
 export const authOptions: NextAuthOptions = {
-  // https://next-auth.js.org/configuration/providers/oauth
   providers: [
     EmailProvider({
       server: process.env.EMAIL_SERVER,
