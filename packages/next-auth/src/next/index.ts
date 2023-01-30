@@ -170,9 +170,14 @@ export async function getServerSession<
 let deprecatedWarningShown = false
 
 /** @deprecated renamed to `getServerSession` */
-export async function unstable_getServerSession(
-  ...args: Parameters<typeof getServerSession>
-): ReturnType<typeof getServerSession> {
+export async function unstable_getServerSession<
+  O extends GetServerSessionOptions,
+  R = O["callbacks"] extends { session: (...args: any[]) => infer U }
+    ? U
+    : Session
+>(
+  ...args: Parameters<typeof getServerSession<O, R>>
+): ReturnType<typeof getServerSession<O, R>> {
   if (!deprecatedWarningShown && process.env.NODE_ENV !== "production") {
     console.warn(
       "`unstable_getServerSession` has been renamed to `getServerSession`."
