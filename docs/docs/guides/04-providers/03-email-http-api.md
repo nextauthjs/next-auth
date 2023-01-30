@@ -72,7 +72,7 @@ So the goal now is to simply call the HTTP endpoint from our cloud email provide
 
 As mentioned earlier, I'm going to be using Sendgrid in this example, so the endpoint I need to use is `https://api.sendgrid.com/v3/mail/send` ([Docs](https://docs.sendgrid.com/for-developers/sending-email/api-getting-started)). Therefore, after pulling out some of the important information from the `params` parameter, I'm going to continue by making a `fetch()` call to the previously mentioned API endpoint.
 
-```js title="/src/pages/api/auth/[...nextauth].ts"
+```js title="pages/api/auth/[...nextauth].ts"
 export const authOptions: NextAuthOptions = {
   ...,
   providers: [
