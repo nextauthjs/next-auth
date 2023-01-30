@@ -13,12 +13,24 @@ import type {
 } from "./pocketbase.types"
 import type Pocketbase from "pocketbase"
 
-export const PocketBaseAdapter = (client: Pocketbase): Adapter => {
+async function adminLogin(
+  pb: Pocketbase,
+  options: { username: string; password: string }
+) {
+  return await pb.admins.authWithPassword(options.username, options.password)
+}
+
+export const PocketBaseAdapter = (
+  client: Pocketbase,
+  options: { username: string; password: string }
+): Adapter => {
   return {
     async createUser(user) {
       let pb_user: any
 
       try {
+        await adminLogin(client, options)
+
         pb_user = await client
           .collection("next_auth_user")
           .create<PocketBaseUser>({
@@ -47,6 +59,8 @@ export const PocketBaseAdapter = (client: Pocketbase): Adapter => {
       let pb_user: any
 
       try {
+        await adminLogin(client, options)
+
         pb_user = await client
           .collection("next_auth_user")
           .getOne<PocketBaseUser>(id)
@@ -73,6 +87,8 @@ export const PocketBaseAdapter = (client: Pocketbase): Adapter => {
       let pb_user: any
 
       try {
+        await adminLogin(client, options)
+
         pb_user = await client
           .collection("next_auth_user")
           .getFirstListItem<PocketBaseUser>(`email="${email}"`)
@@ -100,6 +116,8 @@ export const PocketBaseAdapter = (client: Pocketbase): Adapter => {
       let pb_user: any
 
       try {
+        await adminLogin(client, options)
+
         pb_account = await client
           .collection("next_auth_account")
           .getFirstListItem<PocketBaseAccount>(
@@ -142,6 +160,8 @@ export const PocketBaseAdapter = (client: Pocketbase): Adapter => {
       let pb_user: any
 
       try {
+        await adminLogin(client, options)
+
         pb_user = await client
           .collection("next_auth_user")
           .update<PocketBaseUser>(user.id as string, {
@@ -171,6 +191,8 @@ export const PocketBaseAdapter = (client: Pocketbase): Adapter => {
       let pb_account: any
 
       try {
+        await adminLogin(client, options)
+
         pb_account = await client
           .collection("next_auth_account")
           .create<PocketBaseAccount>({
@@ -218,6 +240,8 @@ export const PocketBaseAdapter = (client: Pocketbase): Adapter => {
       let pb_session: any
 
       try {
+        await adminLogin(client, options)
+
         pb_session = await client
           .collection("next_auth_session")
           .create<PocketBaseSession>({
@@ -245,6 +269,8 @@ export const PocketBaseAdapter = (client: Pocketbase): Adapter => {
       let pb_session: any
 
       try {
+        await adminLogin(client, options)
+
         pb_session = await client
           .collection("next_auth_session")
           .getFirstListItem<PocketBaseSession>(`sessionToken="${sessionToken}"`)
@@ -292,6 +318,8 @@ export const PocketBaseAdapter = (client: Pocketbase): Adapter => {
       let pb_session: any
 
       try {
+        await adminLogin(client, options)
+
         record = await client
           .collection("next_auth_session")
           .getFirstListItem<PocketBaseSession>(
@@ -330,6 +358,8 @@ export const PocketBaseAdapter = (client: Pocketbase): Adapter => {
       let record: any
 
       try {
+        await adminLogin(client, options)
+
         record = await client
           .collection("next_auth_session")
           .getFirstListItem<PocketBaseSession>(`sessionToken="${sessionToken}"`)
@@ -343,6 +373,8 @@ export const PocketBaseAdapter = (client: Pocketbase): Adapter => {
       let pb_veriToken: any
 
       try {
+        await adminLogin(client, options)
+
         pb_veriToken = await client
           .collection("next_auth_verificationToken")
           .create<PocketBaseVerificationToken>({
@@ -370,6 +402,8 @@ export const PocketBaseAdapter = (client: Pocketbase): Adapter => {
     async useVerificationToken({ identifier, token }) {
       let pb_veriToken: any
       try {
+        await adminLogin(client, options)
+
         pb_veriToken = await client
           .collection("next_auth_verificationToken")
           .getFirstListItem<PocketBaseVerificationToken>(
@@ -403,6 +437,8 @@ export const PocketBaseAdapter = (client: Pocketbase): Adapter => {
       }
     },
     async deleteUser(userId) {
+      await adminLogin(client, options)
+
       await client
         .collection("next_auth_user")
         .delete(userId)
@@ -410,6 +446,8 @@ export const PocketBaseAdapter = (client: Pocketbase): Adapter => {
     },
     async unlinkAccount({ provider, providerAccountId }) {
       try {
+        await adminLogin(client, options)
+
         const pb_account = await client
           .collection("next_auth_account")
           .getFirstListItem<PocketBaseAccount>(
