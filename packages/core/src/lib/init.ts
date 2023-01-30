@@ -25,6 +25,7 @@ interface InitParams {
   /** CSRF token value extracted from the incoming request. From body if POST, from query if GET */
   csrfToken?: string
   /** Is the incoming request a POST request? */
+  csrfDisabled: boolean
   isPost: boolean
   cookies: RequestInternal["cookies"]
 }
@@ -38,6 +39,7 @@ export async function init({
   cookies: reqCookies,
   callbackUrl: reqCallbackUrl,
   csrfToken: reqCsrfToken,
+  csrfDisabled,
   isPost,
 }: InitParams): Promise<{
   options: InternalOptions
@@ -91,7 +93,7 @@ export async function init({
       strategy: authOptions.adapter ? "database" : "jwt",
       maxAge,
       updateAge: 24 * 60 * 60,
-      generateSessionToken: crypto.randomUUID,
+      generateSessionToken: () => crypto.randomUUID(),
       ...authOptions.session,
     },
     // JWT options
@@ -117,26 +119,28 @@ export async function init({
 
   const cookies: cookie.Cookie[] = []
 
-  const {
-    csrfToken,
-    cookie: csrfCookie,
-    csrfTokenVerified,
-  } = await createCSRFToken({
-    options,
-    cookieValue: reqCookies?.[options.cookies.csrfToken.name],
-    isPost,
-    bodyValue: reqCsrfToken,
-  })
-
-  options.csrfToken = csrfToken
-  options.csrfTokenVerified = csrfTokenVerified
-
-  if (csrfCookie) {
-    cookies.push({
-      name: options.cookies.csrfToken.name,
-      value: csrfCookie,
-      options: options.cookies.csrfToken.options,
+  if (!csrfDisabled) {
+    const {
+      csrfToken,
+      cookie: csrfCookie,
+      csrfTokenVerified,
+    } = await createCSRFToken({
+      options,
+      cookieValue: reqCookies?.[options.cookies.csrfToken.name],
+      isPost,
+      bodyValue: reqCsrfToken,
     })
+
+    options.csrfToken = csrfToken
+    options.csrfTokenVerified = csrfTokenVerified
+
+    if (csrfCookie) {
+      cookies.push({
+        name: options.cookies.csrfToken.name,
+        value: csrfCookie,
+        options: options.cookies.csrfToken.options,
+      })
+    }
   }
 
   const { callbackUrl, callbackUrlCookie } = await createCallbackUrl({

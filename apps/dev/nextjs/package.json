@@ -9,7 +9,8 @@
     "build": "next build",
     "start": "next start",
     "email": "fake-smtp-server",
-    "start:email": "pnpm email"
+    "start:email": "pnpm email",
+    "e2e": "pnpm dlx playwright test"
   },
   "license": "ISC",
   "dependencies": {
@@ -28,9 +29,11 @@
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@playwright/test": "1.29.2",
     "@types/jsonwebtoken": "^8.5.5",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
+    "dotenv": "^16.0.3",
     "fake-smtp-server": "^0.8.0",
     "pg": "^8.7.3",
     "prisma": "^3",

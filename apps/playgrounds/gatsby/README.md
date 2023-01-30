@@ -22,7 +22,7 @@
 
 ## Overview
 
-Auth.js is a complete open source authentication solution.
+Auth.js is a complete open-source authentication solution.
 
 This is an example application that shows how `@auth/core` is applied to a basic Gatsby app. We are showing how to configure the backend both as a [Vercel Function](https://vercel.com/docs/concepts/functions/introduction) for deployment to Vercel, and also for [Gatsby Functions](https://www.gatsbyjs.com/docs/reference/functions) for other platforms.
 
@@ -30,7 +30,7 @@ The deployed version can be found at [`next-auth-gatsby-example.vercel.app`](htt
 
 ### About Auth.js
 
-Auth.js is an easy to implement, full-stack (client/server) open source authentication library originally designed for [Next.js](https://nextjs.org) and [Serverless](https://vercel.com), but this example shows how to use it in a Gatsby project. Our goal is to [support even more frameworks](https://github.com/nextauthjs/next-auth/issues/2294) in the future.
+Auth.js is an easy-to-implement, full-stack (client/server) open-source authentication library originally designed for [Next.js](https://nextjs.org) and [Serverless](https://vercel.com), but this example shows how to use it in a Gatsby project. Our goal is to [support even more frameworks](https://github.com/nextauthjs/next-auth/issues/2294) in the future.
 
 Go to [authjs.dev](https://authjs.dev) for more information and documentation.
 

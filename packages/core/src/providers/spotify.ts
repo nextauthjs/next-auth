@@ -23,7 +23,7 @@ export interface SpotifyProfile extends Record<string, any> {
  * import { Spotify } from "@auth/core/providers/spotify"
  *
  * const request = new Request("https://example.com")
- * const resposne = await AuthHandler(request, {
+ * const response = await AuthHandler(request, {
  *   providers: [
  *     Spotify({clientId: "", clientSecret: ""})
  *   ]

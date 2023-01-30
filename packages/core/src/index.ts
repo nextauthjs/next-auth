@@ -27,14 +27,14 @@
  * ## Resources
  *
  * - [Getting started](https://authjs.dev/getting-started/introduction)
- * - [Most common use case guides](https://authjs.dev/guides/overview)
+ * - [Most common use case guides](https://authjs.dev/guides)
  *
  * @module main
  */
 
 import { assertConfig } from "./lib/assert.js"
 import { ErrorPageLoop } from "./errors.js"
-import { AuthInternal } from "./lib/index.js"
+import { AuthInternal, skipCSRFCheck } from "./lib/index.js"
 import renderPage from "./lib/pages/index.js"
 import { logger, setLogger, type LoggerInstance } from "./lib/utils/logger.js"
 import { toInternalRequest, toResponse } from "./lib/web.js"
@@ -51,6 +51,8 @@ import type {
 import type { Provider } from "./providers/index.js"
 import { JWTOptions } from "./jwt.js"
 
+export { skipCSRFCheck }
+
 /**
  * Core functionality provided by Auth.js.
  *
@@ -61,7 +63,7 @@ import { JWTOptions } from "./jwt.js"
  * import Auth from "@auth/core"
  *
  * const request = new Request("https://example.com")
- * const resposne = await AuthHandler(request, {
+ * const response = await AuthHandler(request, {
  *   providers: [...],
  *   secret: "...",
  *   trustHost: true,
@@ -157,7 +159,7 @@ export async function Auth(
  * export const authConfig: AuthConfig = {...}
  *
  * const request = new Request("https://example.com")
- * const resposne = await AuthHandler(request, authConfig)
+ * const response = await AuthHandler(request, authConfig)
  * ```
  *
  * @see [Initiailzation](https://authjs.dev/reference/configuration/auth-options)
@@ -296,4 +298,5 @@ export interface AuthConfig {
   cookies?: Partial<CookiesOptions>
   /** @todo */
   trustHost?: boolean
+  skipCSRFCheck?: typeof skipCSRFCheck
 }

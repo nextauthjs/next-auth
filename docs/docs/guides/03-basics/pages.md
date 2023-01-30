@@ -60,7 +60,7 @@ Example: `/auth/signin?error=Default`
 
 By default, the built-in pages will follow the system theme, utilizing the [`prefer-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) Media Query. You can override this to always use a dark or light theme, through the [`theme.colorScheme` option](/reference/configuration/auth-config#theme).
 
-In addition, you can define a `theme.brandColor` to define a custom accent color for these built-in pages. You can also define a URL to a logo in `theme.logo` which will be rendered above the primary card in these pages.
+In addition, you can define the background color and text color of the button with the `theme.brandColor` and `theme.buttonText` options. You can also define a URL to a logo in `theme.logo` which will be rendered at the top of the card.
 
 #### Sign In
 

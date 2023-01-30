@@ -78,7 +78,7 @@ export type CredentialsConfigInternal<
  * import { Credentials } from "@auth/core/providers/credentials"
  *
  * const request = new Request("https://example.com")
- * const resposne = await AuthHandler(request, {
+ * const response = await AuthHandler(request, {
  *   providers: [
  *     Credentials({
  *       credentials: {
