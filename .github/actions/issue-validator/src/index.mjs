@@ -7,8 +7,6 @@ import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
 const addReproductionLabel = "incomplete"
-const __dirname =
-  "/home/runner/work/nextauthjs/next-auth/.github/actions/issue-validator"
 
 /**
  * @typedef {{
@@ -73,7 +71,12 @@ async function run() {
         }),
         client.issues.createComment({
           ...issueCommon,
-          body: readFileSync(join(__dirname, "repro.md"), "utf8"),
+          body: readFileSync(
+            join(
+              "/home/runner/work/next-auth/next-auth/.github/actions/issue-validator/repro.md"
+            ),
+            "utf8"
+          ),
         }),
       ])
       return core.info(

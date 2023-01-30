@@ -25,6 +25,7 @@ import type {
 } from "next-auth/adapters"
 
 import { getConverter } from "./converter"
+import getFirebase from "./getFirebase"
 
 export type IndexableObject = Record<string, unknown>
 
@@ -39,7 +40,7 @@ export function FirestoreAdapter({
   emulator,
   ...firebaseOptions
 }: FirebaseOptions & FirestoreAdapterOptions): Adapter {
-  const firebaseApp = initializeApp(firebaseOptions)
+  const firebaseApp = getFirebase(firebaseOptions)
   const db = getFirestore(firebaseApp)
 
   if (emulator) {
@@ -250,12 +251,8 @@ export function FirestoreAdapter({
       const verificationTokenSnapshot = await getDoc(verificationTokenRef)
 
       if (verificationTokenSnapshot.exists() && VerificationTokens.converter) {
-        const {
-          id,
-          ...verificationToken
-        } = VerificationTokens.converter.fromFirestore(
-          verificationTokenSnapshot
-        )
+        const { id, ...verificationToken } =
+          VerificationTokens.converter.fromFirestore(verificationTokenSnapshot)
 
         return verificationToken
       }
@@ -274,12 +271,8 @@ export function FirestoreAdapter({
       if (verificationTokenSnapshot?.exists() && VerificationTokens.converter) {
         await deleteDoc(verificationTokenSnapshot.ref)
 
-        const {
-          id,
-          ...verificationToken
-        } = VerificationTokens.converter.fromFirestore(
-          verificationTokenSnapshot
-        )
+        const { id, ...verificationToken } =
+          VerificationTokens.converter.fromFirestore(verificationTokenSnapshot)
 
         return verificationToken
       }
