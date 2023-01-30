@@ -47,11 +47,11 @@ migrate(
           },
         },
       ],
-      listRule: "",
-      viewRule: "",
-      createRule: "",
-      updateRule: "",
-      deleteRule: "",
+      listRule: "@request.auth.id != ''",
+      viewRule: "@request.auth.id != ''",
+      createRule: "@request.auth.id != ''",
+      updateRule: "@request.auth.id != ''",
+      deleteRule: "@request.auth.id != ''",
       options: {},
     })
 
