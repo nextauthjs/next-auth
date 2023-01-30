@@ -11,10 +11,10 @@ For this example we will be using [Sendgrid](https://sendgrid.com), but any emai
 
 ## Setup 
 
-First, clone and setup a basic Auth.js project like the the one [provided in our example repo](https://github.com/nextauthjs/next-auth-example.git). I won't go into the details of setting up your project for Auth.js's [Email provider](https://next-auth.js.org/providers/email), but you will need to make at least the following modifications to the example repository, or any other project you're adding this support to, including:
+First, clone and setup a basic Auth.js project like the the one [provided in our example repo](https://github.com/nextauthjs/next-auth-example.git). I won't go into the details of setting up your project for Auth.js's [Email provider](/providers/email), but you will need to make at least the following modifications to the example repository, or any other project you're adding this support to, including:
 
   - Install `nodemailer` as a dependency. The email provider also requires the use of a database adapter for Auth.js.
-  - Install `@prisma/client` and `@next-auth/prisma-adapter` as dependencies, and `prisma` as a dev dependency and setup Prisma as detailed in [our guide](https://next-auth.js.org/adapters/prisma).
+  - Install and configure any [Auth.js Database Adapter](/adapters/overview), as it is a requirement for the Email provider.
   - Generate an API key from your cloud Email provider of choice and add it to your `.env.*` file. For example, mine is going to be called `SENDGRID_API`.
 
 At this point, you should have a `[...nextauth].ts` file which looks something like this:
