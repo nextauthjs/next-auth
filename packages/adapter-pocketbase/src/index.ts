@@ -5,20 +5,15 @@ import type {
   AdapterUser,
   VerificationToken,
 } from "next-auth/src/adapters"
-import type {
-  PocketBaseAccount,
-  PocketBaseSession,
-  PocketBaseUser,
-  PocketBaseVerificationToken,
-} from "./pocketbase.types"
+import {
+  type PocketBaseAccount,
+  type PocketBaseSession,
+  type PocketBaseUser,
+  type PocketBaseVerificationToken,
+  format,
+  adminLogin,
+} from "./pocketbase.helpers"
 import type Pocketbase from "pocketbase"
-
-async function adminLogin(
-  pb: Pocketbase,
-  options: { username: string; password: string }
-) {
-  return await pb.admins.authWithPassword(options.username, options.password)
-}
 
 export const PocketBaseAdapter = (
   client: Pocketbase,
@@ -46,14 +41,7 @@ export const PocketBaseAdapter = (
       if (pb_user.code)
         throw new Error("error creating user in database - see pocketbase logs")
 
-      const returnVal: AdapterUser = {
-        id: pb_user.id,
-        name: pb_user.name,
-        email: pb_user.email,
-        emailVerified: new Date(pb_user.emailVerified),
-      }
-
-      return returnVal
+      return format<AdapterUser>(pb_user)
     },
     async getUser(id) {
       let pb_user: any
@@ -73,15 +61,7 @@ export const PocketBaseAdapter = (
           "error getting user from database - see pocketbase logs"
         )
 
-      const returnVal: AdapterUser = {
-        id: pb_user.id as string,
-        email: pb_user.email,
-        emailVerified: new Date(pb_user.emailVerified),
-        name: pb_user.name,
-        image: pb_user.image,
-      }
-
-      return returnVal
+      return format<AdapterUser>(pb_user)
     },
     async getUserByEmail(email) {
       let pb_user: any
@@ -101,15 +81,7 @@ export const PocketBaseAdapter = (
           "error getting user from database using email filter - see pocketbase logs"
         )
 
-      const returnVal: AdapterUser = {
-        id: pb_user.id as string,
-        email: pb_user.email,
-        image: pb_user.image,
-        name: pb_user.name,
-        emailVerified: new Date(pb_user.emailVerified),
-      }
-
-      return returnVal
+      return format<AdapterUser>(pb_user)
     },
     async getUserByAccount({ providerAccountId, provider }) {
       let pb_account: any
@@ -146,15 +118,7 @@ export const PocketBaseAdapter = (
           "error getting user from database within account filter function - see pocketbase logs"
         )
 
-      const returnVal: AdapterUser = {
-        id: pb_user.id,
-        email: pb_user.email,
-        image: pb_user.image,
-        name: pb_user.name,
-        emailVerified: new Date(pb_user.emailVerified),
-      }
-
-      return returnVal
+      return format<AdapterUser>(pb_user)
     },
     async updateUser(user) {
       let pb_user: any
@@ -177,15 +141,7 @@ export const PocketBaseAdapter = (
       if (pb_user.code)
         throw new Error("error updating user in database - see pocketbase logs")
 
-      const returnVal: AdapterUser = {
-        id: pb_user.id,
-        email: pb_user.email,
-        image: pb_user.image,
-        name: pb_user.name,
-        emailVerified: new Date(pb_user.emailVerified),
-      }
-
-      return returnVal
+      return format<AdapterUser>(pb_user)
     },
     async linkAccount(account) {
       let pb_account: any
@@ -219,22 +175,7 @@ export const PocketBaseAdapter = (
           "error linking account in database - see pocketbase logs"
         )
 
-      const returnVal: AdapterAccount = {
-        id: pb_account.id,
-        userId: pb_account.userId,
-        provider: pb_account.provider,
-        providerAccountId: pb_account.providerAccountId,
-        access_token: pb_account.access_token,
-        id_token: pb_account.id_token,
-        refresh_token: pb_account.refresh_token,
-        scope: pb_account.scope,
-        session_state: pb_account.session_state,
-        token_type: pb_account.token_type,
-        expires_at: Number(pb_account.expires_at),
-        type: pb_account.type,
-      }
-
-      return returnVal
+      return format<AdapterAccount>(pb_account)
     },
     async createSession(session) {
       let pb_session: any
@@ -259,11 +200,7 @@ export const PocketBaseAdapter = (
           "error creating session in database - see pocketbase logs"
         )
 
-      return {
-        sessionToken: pb_session.sessionToken,
-        userId: pb_session.userId,
-        expires: new Date(pb_session.expires),
-      }
+      return format<AdapterSession>(pb_session)
     },
     async getSessionAndUser(sessionToken) {
       let pb_session: any
@@ -292,22 +229,8 @@ export const PocketBaseAdapter = (
           "error getting user from database within getSessionAndUser func - see pocketbase logs"
         )
 
-      const session: AdapterSession = {
-        expires: new Date(pb_session.expires),
-        userId: pb_user.id,
-        sessionToken: pb_session.sessionToken,
-        // @ts-expect-error
-        id: pb_session.id as string,
-      }
-
-      const user: AdapterUser = {
-        id: pb_user.id,
-        email: pb_user.email,
-        image: pb_user.image,
-        name: pb_user.name,
-        emailVerified: new Date(pb_user.emailVerified),
-      }
-
+      const session = format<AdapterSession>(pb_session)
+      const user = format<AdapterUser>(pb_user)
       return {
         session,
         user,
@@ -346,13 +269,7 @@ export const PocketBaseAdapter = (
           "error updating session in database - see pocketbase logs"
         )
 
-      const returnVal: AdapterSession = {
-        sessionToken: pb_session.sessionToken,
-        userId: pb_session.userId,
-        expires: new Date(pb_session.expires),
-      }
-
-      return returnVal
+      return format<AdapterSession>(pb_session)
     },
     async deleteSession(sessionToken) {
       let record: any
@@ -391,13 +308,7 @@ export const PocketBaseAdapter = (
           "error creating verificationToken in database - see pocketbase logs"
         )
 
-      const returnVal: VerificationToken = {
-        token: pb_veriToken.token,
-        identifier: pb_veriToken.identifier,
-        expires: new Date(pb_veriToken.expires),
-      }
-
-      return returnVal
+      return format<VerificationToken>(pb_veriToken)
     },
     async useVerificationToken({ identifier, token }) {
       let pb_veriToken: any
@@ -423,12 +334,8 @@ export const PocketBaseAdapter = (
         .delete(pb_veriToken.id)
 
       if (success) {
-        const returnVal: VerificationToken = {
-          token: pb_veriToken.token,
-          identifier: pb_veriToken.identifier,
-          expires: new Date(pb_veriToken.expires),
-        }
-
+        // @ts-expect-error internal id's are not to be returned with the rest of the token
+        const { id, ...returnVal } = format<VerificationToken>(pb_veriToken)
         return returnVal
       } else {
         throw new Error(
@@ -454,9 +361,12 @@ export const PocketBaseAdapter = (
             `providerAccountId="${providerAccountId} && provider=${provider}"`
           )
 
-        await client.collection("next_auth_account").delete(pb_account.id)
+        await client
+          .collection("next_auth_account")
+          .delete(pb_account.id)
+          .then((_) => null)
       } catch (_) {
-        return undefined
+        return null
       }
     },
   }

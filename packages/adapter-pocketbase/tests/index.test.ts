@@ -7,11 +7,12 @@ import type {
   AdapterSession,
 } from "next-auth/src/adapters"
 import {
-  PocketBaseAccount,
-  PocketBaseSession,
-  PocketBaseUser,
-  PocketBaseVerificationToken,
-} from "../src/pocketbase.types"
+  type PocketBaseAccount,
+  type PocketBaseSession,
+  type PocketBaseUser,
+  type PocketBaseVerificationToken,
+  format,
+} from "../src/pocketbase.helpers"
 
 import "cross-fetch/polyfill"
 
@@ -20,104 +21,70 @@ const pb = new Pocketbase("http://127.0.0.1:8090")
 
 runBasicTests({
   adapter: PocketBaseAdapter(pb, {
-    username: "",
-    password: "",
+    username: "test@test.com",
+    password: "pocketbase1234",
   }),
   db: {
     async session(sessionToken) {
-      let pb_session: any
       try {
-        pb_session = await pb
+        let pb_session = await pb
           .collection("next_auth_session")
           .getFirstListItem<PocketBaseSession>(`sessionToken="${sessionToken}"`)
+
+        return format<AdapterSession>(pb_session)
       } catch (_) {
         return null
       }
-
-      const result: AdapterSession = {
-        userId: pb_session.userId,
-        sessionToken: pb_session.sessionToken,
-        // @ts-ignore
-        id: pb_session.id as string,
-        expires: new Date(pb_session.expires),
-      }
-
-      return result
     },
     async user(id) {
-      let pb_user: any
       try {
-        pb_user = await pb
+        let pb_user = await pb
           .collection("next_auth_user")
           .getOne<PocketBaseUser>(id)
+        if (pb_user.code) throw new Error("could not find user")
+
+        return format<AdapterUser>(pb_user)
       } catch (_) {
         return null
       }
-      if (pb_user.code) throw new Error("could not find user")
-
-      const result: AdapterUser = {
-        id: pb_user.id as string,
-        name: pb_user.name,
-        email: pb_user.email,
-        image: pb_user.image,
-        emailVerified: new Date(pb_user.emailVerified),
-      }
-
-      return result
     },
     async account({ provider, providerAccountId }) {
-      let pb_account: any
       try {
-        pb_account = await pb
+        let pb_account = await pb
           .collection("next_auth_account")
           .getFirstListItem<PocketBaseAccount>(
             `provider="${provider}" && providerAccountId="${providerAccountId}"`
           )
+
+        if (pb_account.code) throw new Error("could not find account")
+
+        // Token and Token Secret are a part of the docs' adapter models schema but not expected to be included with the adapter-test account object
+        const { oauth_token, oauth_token_secret, ...adapterAccount } =
+          format<AdapterAccount>(pb_account)
+
+        return adapterAccount
       } catch (_) {
         return null
       }
-
-      if (pb_account.code) throw new Error("could not find account")
-
-      const result: AdapterAccount = {
-        userId: pb_account.userId,
-        id: pb_account.id,
-        provider: pb_account.provider,
-        providerAccountId: pb_account.providerAccountId,
-        access_token: pb_account.access_token,
-        id_token: pb_account.id_token,
-        refresh_token: pb_account.refresh_token,
-        scope: pb_account.scope,
-        session_state: pb_account.session_state,
-        token_type: pb_account.token_type,
-        expires_at: Number(pb_account.expires_at),
-        // @ts-ignore this return type is set by Auth.js
-        type: pb_account.type,
-      }
-
-      return result
     },
     async verificationToken({ identifier, token }) {
-      let pb_veriToken: any
       try {
-        pb_veriToken = await pb
+        let pb_veriToken = await pb
           .collection("next_auth_verificationToken")
           .getFirstListItem<PocketBaseVerificationToken>(
             `identifier="${identifier}" && token="${token}"`
           )
+        if (pb_veriToken.code)
+          throw new Error("could not get verificationToken")
+
+        // @ts-expect-error
+        const { id, ...verificationToken } =
+          format<VerificationToken>(pb_veriToken)
+
+        return verificationToken
       } catch (_) {
         return null
       }
-
-      if (pb_veriToken.code) throw new Error("could not get verificationToken")
-
-      const result: VerificationToken = {
-        token: pb_veriToken.token,
-        identifier: pb_veriToken.identifier,
-        expires: new Date(pb_veriToken.expires),
-      }
-
-      return result
     },
   },
 })
