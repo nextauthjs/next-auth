@@ -53,7 +53,7 @@ export async function callback(params: {
         cookies.push(...authorizationResult.cookies)
       }
 
-      logger.debug("authroization result", authorizationResult)
+      logger.debug("authorization result", authorizationResult)
 
       const { profile, account, OAuthProfile } = authorizationResult
 
