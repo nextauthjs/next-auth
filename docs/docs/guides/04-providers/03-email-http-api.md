@@ -49,7 +49,7 @@ This is a standard Auth.js Email provider + Prisma adapter setup. At this point,
 
 To make this change, first remove any of the existing options inside the object being passed to the `EmailProvider` and add `sendVerificationRequest`, like so:
 
-```js title="/src/pages/api/auth/[...nextauth].ts"
+```js title="pages/api/auth/[...nextauth].ts"
 export const authOptions: NextAuthOptions = {
   ...,
   providers: [
