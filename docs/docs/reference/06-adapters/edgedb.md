@@ -8,7 +8,7 @@ title: EdgeDB
 To use this Adapter, you need to install `edgedb`, `@edgedb/generate`, and the separate `@next-auth/edgedb-adapter` package:
 
 ```bash npm2yarn2pnpm
-npm install next-auth edgedb @next-auth/edgedb-adapter
+npm install edgedb @next-auth/edgedb-adapter
 npm install @edgedb/generate --save-dev
 ```
 
