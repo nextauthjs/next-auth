@@ -19,7 +19,10 @@ import Pocketbase from "pocketbase"
 const pb = new Pocketbase("http://127.0.0.1:8090")
 
 runBasicTests({
-  adapter: PocketBaseAdapter(pb),
+  adapter: PocketBaseAdapter(pb, {
+    username: "",
+    password: "",
+  }),
   db: {
     async session(sessionToken) {
       let pb_session: any
