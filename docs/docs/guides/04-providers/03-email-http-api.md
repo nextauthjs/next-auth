@@ -111,5 +111,5 @@ export const authOptions: NextAuthOptions = {
 
 ## Further Reading
 
-1. Auth.js Email provider documentation with example HTML generation function and more - https://next-auth.js.org/providers/email
-2. SendGrid JSON Body documentation - https://docs.sendgrid.com/api-reference/mail-send/mail-send#body
+- [Email provider documentation with HTML generation and more](/reference/core/modules/providers_email)
+- [SendGrid JSON Body documentation](https://docs.sendgrid.com/api-reference/mail-send/mail-send#body)
