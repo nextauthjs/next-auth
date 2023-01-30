@@ -34,10 +34,7 @@ export const authOptions: NextAuthOptions = {
       from: process.env.EMAIL_FROM
     }),
   ],
-  adapter: PrismaAdapter(prisma),
-  theme: {
-    colorScheme: "dark",
-  },
+  // ...
 }
 
 export default NextAuth(authOptions)
