@@ -40,7 +40,7 @@ export const authOptions: NextAuthOptions = {
 export default NextAuth(authOptions)
 ```
 
-## Customisation
+## Customization
 
 This is a standard Auth.js Email provider + Prisma adapter setup. At this point, we will customize a few things in order to avoid using the built-in SMTP connectivity to send emails, and instead use the HTTP API endpoint provided to us by our cloud Email provider of choice.
 
