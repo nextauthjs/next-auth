@@ -10,12 +10,17 @@
  * @module providers/beyondidentity
  */
 
-import type { OAuthConfig, OAuthUserConfig } from "./index.js"
+import type { OIDCConfig, OIDCUserConfig } from "./index.js"
 
-export interface BeyondIdentityProfile extends Record<string, any> {
+/** @see [Beyond Identity Developer Docs](https://developer.beyondidentity.com/) */
+export interface BeyondIdentityProfile {
+  /** The user's unique identifier. */
   sub: string
+  /** The user's full name. */
   name: string
+  /** The user's preferred username. */
   preferred_username: string
+  /** The user's email address. */
   email: string
 }
 
@@ -65,9 +70,9 @@ export interface BeyondIdentityProfile extends Record<string, any> {
  * :::
  */
 
-export default function BeyondIdentity<P extends BeyondIdentityProfile>(
-  options: OAuthUserConfig<P>
-): OAuthConfig<P> {
+export default function BeyondIdentity(
+  config: OIDCUserConfig<BeyondIdentityProfile>
+): OIDCConfig<BeyondIdentityProfile> {
   return {
     id: "beyondidentity",
     name: "Beyond Identity",
@@ -89,6 +94,6 @@ export default function BeyondIdentity<P extends BeyondIdentityProfile>(
       text: "#5077c5",
       textDark: "#fff",
     },
-    options,
+    options: config,
   }
 }
