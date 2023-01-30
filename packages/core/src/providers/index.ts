@@ -65,12 +65,16 @@ export type Provider<P extends Profile = Profile> = (
   | EmailConfig
   | CredentialsConfig
 ) & {
+  /**
+   * Used to deep merge user-provided config with the default config
+   * @internal
+   */
   options: Record<string, unknown>
 }
 
 export type BuiltInProviders = Record<
   OAuthProviderType,
-  (options: Partial<OAuthConfig<any>>) => OAuthConfig<any>
+  (config: Partial<OAuthConfig<any>>) => OAuthConfig<any>
 > &
   Record<CredentialsProviderType, typeof CredentialsProvider> &
   Record<EmailProviderType, typeof EmailProvider>

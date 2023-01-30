@@ -49,10 +49,6 @@ export interface CredentialsConfig<
 
 export type CredentialsProviderType = "Credentials"
 
-export type CredentialsConfigInternal<
-  C extends Record<string, CredentialInput> = Record<string, CredentialInput>
-> = CredentialsConfig<C> & { options: CredentialsConfig<C> }
-
 /**
  * The Credentials provider allows you to handle signing in with arbitrary credentials,
  * such as a username and password, domain, or two factor authentication or hardware device (e.g. YubiKey U2F / FIDO).
