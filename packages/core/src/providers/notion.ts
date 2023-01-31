@@ -75,8 +75,6 @@ const NOTION_API_VERSION = "2022-06-28"
  * ---
  *
  * ## Resources
- *
- * - [Authenticate - Auth0 docs](https://auth0.com/docs/authenticate)
  * - [Notion Docs](https://developers.notion.com/docs)
  * - [Notion Authorization Docs](https://developers.notion.com/docs/authorization)
  * - [Notion Integrations](https://www.notion.so/my-integrations)
@@ -112,11 +110,6 @@ export default function NotionProvider<P extends NotionProfile>(
     name: "Notion",
     type: "oauth",
     token: {
-      params: {
-        grant_type: "authorization_code",
-        clientId: options.clientId,
-        clientSecret: options.clientSecret,
-      },
       url: `${NOTION_HOST}/v1/oauth/token`,
     },
     userinfo: {
