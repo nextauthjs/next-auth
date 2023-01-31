@@ -16,7 +16,7 @@ First, if you do not have a project using Auth.js, clone and setup a basic Auth.
 - Install and configure any [Auth.js Database Adapter](/adapters/overview), as it is a requirement for the Email provider.
 - Generate an API key from your cloud Email provider of choice and add it to your `.env.*` file. For example, mine is going to be called `SENDGRID_API`.
 
-At this point, you should have a `[...nextauth].ts` file which looks something like this:
+At this point, you should have a default `[...nextauth].ts` file which looks something like this:
 
 ```ts title="pages/api/auth/[...nextauth].ts"
 import NextAuth, { NextAuthOptions } from "next-auth"
@@ -41,37 +41,39 @@ export default NextAuth(authOptions)
 
 ## Customization
 
-This is a standard Auth.js Email provider + Prisma adapter setup. At this point, we will customize a few things in order to avoid using the built-in SMTP connectivity to send emails, and instead use the HTTP API endpoint provided to us by our cloud Email provider of choice.
+This is a standard Auth.js Email provider + Prisma adapter setup. So we will customize a few things in order to avoid using the built-in EmailProvider and its SMTP connectivity to send emails, and instead use a custom provider and the HTTP API endpoint provided to us by our cloud Email provider of choice.
 
-To make this change, first remove any of the existing options inside the object being passed to the `EmailProvider` and add `sendVerificationRequest`, like so:
+To make this change, first remove the `EmailProvider` you may have in your `providers` array, and add an object with `id`, `type` and `sendVerificationRequest` keys like below:
 
 ```js title="pages/api/auth/[...nextauth].ts"
 export const authOptions: NextAuthOptions = {
-  ...,
+  adapter: PrismaAdapter(prisma),
   providers: [
-    EmailProvider({
-      sendVerificationRequest: async (params) => {
+    {
+      id: 'sendgrid',
+      type: 'email',
+      async sendVerificationRequest(params) {
         const { identifier: email, url } = params
 
         // Coming soon...
       }
-    })
+    }
   ],
   ...
 }
 ```
 
-This method allows us to override the sending behaviour of the email adapter. It was designed exactly for this reason, to be able to override the default `nodemailer` SMTP transport, so you could theoretically use another SMTP library, or send emails via a totally different route, as we are doing here.
+Next, all thats left to do is call the HTTP endpoint from our cloud email provider and pass it required metadata like the `to` address, the email `body`, and any other fields we may need to include.
 
-The goal now is to simply call the HTTP endpoint from our cloud email provider to send a message and pass it the `to` address, the email `body`, and any other fields we may want to include.
-
-As mentioned earlier, we're going to be using Sendgrid in this example, so the endpoint we need to use is `https://api.sendgrid.com/v3/mail/send` ([Docs](https://docs.sendgrid.com/for-developers/sending-email/api-getting-started)). Therefore, after pulling out some of the important information from the `params` parameter, we're going to continue by making a `fetch()` call to the previously mentioned API endpoint.
+As mentioned earlier, we're going to be using SendGrid in this example, so the appropriate endpoint is `https://api.sendgrid.com/v3/mail/send` ([more info](https://docs.sendgrid.com/for-developers/sending-email/api-getting-started)). Therefore, we're going to pull out some of the important information from the `params` argument and use it in a `fetch()` call to the previously mentioned SendGrid API.
 
 ```js title="pages/api/auth/[...nextauth].ts"
 export const authOptions: NextAuthOptions = {
   ...,
   providers: [
-    EmailProvider({
+    {
+      id: 'sendgrid',
+      type: 'email',
       async sendVerificationRequest(params) {
         const { identifier: email, url } = params
         // Call the cloud Email provider API for sending messages
@@ -102,13 +104,15 @@ export const authOptions: NextAuthOptions = {
           throw new Error(JSON.stringify(errors))
         }
       },
-    })
+    }
   ],
   ...
 }
 ```
 
-That's all we need to do to send Emails via an HTTP API like that from SendGrid, Postmark, AWS SES, etc. Note here that the example is only using `text/plain` as the body type. You'll probably want to change that to `text/html` and pass in a nice looking HTML email. See, for example, our `html` function in [the docs](/providers/email#customizing-emails).
+And that's all we need to do to send Emails via an HTTP API! Note here that the example is only using `text/plain` as the body type. You'll probably want to change that to `text/html` and pass in a nice looking HTML email. See, for example, our `html` function in [the Auth.js docs](/providers/email#customizing-emails).
+
+In addition, we're using a custom provider here, but we can refer to it by its `id` as the first argument to the `signIn()` function in any custom signin pages, just like any other provider. So this one would be referred to, for example, in a buttons `onClick` handler like `signIn('sendgrid', { email: 'user@company.com' })`.
 
 ## Further Reading
 
