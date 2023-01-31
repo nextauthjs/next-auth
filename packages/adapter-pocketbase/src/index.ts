@@ -4,25 +4,25 @@ import type {
   AdapterSession,
   AdapterUser,
   VerificationToken,
-} from "next-auth/src/adapters"
-import {
-  type PocketBaseAccount,
-  type PocketBaseSession,
-  type PocketBaseUser,
-  type PocketBaseVerificationToken,
-  format,
-  adminLogin,
-} from "./pocketbase.helpers"
+} from "@auth/core/src/adapters"
 import type Pocketbase from "pocketbase"
+import type {
+  loginOpts,
+  PocketBaseAccount,
+  PocketBaseSession,
+  PocketBaseUser,
+  PocketBaseVerificationToken,
+} from "./pocketbase.types"
+import { adminLogin, checkCollections, format } from "./pocketbase.helpers"
 
-export const PocketBaseAdapter = (
+export const PocketbaseAdapter = (
   client: Pocketbase,
-  options: { username: string; password: string }
+  options: loginOpts
 ): Adapter => {
   return {
     async createUser(user) {
       try {
-        await adminLogin(client, options)
+        await checkCollections(client, options)
 
         const pb_user = await client
           .collection("next_auth_user")
@@ -132,7 +132,7 @@ export const PocketBaseAdapter = (
     },
     async linkAccount(account) {
       try {
-        await adminLogin(client, options)
+        await checkCollections(client, options)
 
         const pb_account = await client
           .collection("next_auth_account")
@@ -164,7 +164,7 @@ export const PocketBaseAdapter = (
     },
     async createSession(session) {
       try {
-        await adminLogin(client, options)
+        await checkCollections(client, options)
 
         const pb_session = await client
           .collection("next_auth_session")
@@ -261,7 +261,7 @@ export const PocketBaseAdapter = (
     },
     async createVerificationToken(verificationToken) {
       try {
-        await adminLogin(client, options)
+        await checkCollections(client, options)
 
         const pb_veriToken = await client
           .collection("next_auth_verificationToken")
@@ -342,4 +342,4 @@ export const PocketBaseAdapter = (
   }
 }
 
-export { PocketBaseAdapter as default }
+export { PocketbaseAdapter as default }

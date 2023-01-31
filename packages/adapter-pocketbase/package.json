@@ -25,9 +25,11 @@
   },
   "peerDependencies": {
     "pocketbase": "^0.10.1",
-    "next-auth": "^4"
+    "next-auth": "^4",
+    "@auth/core": "^0.3.0"
   },
   "devDependencies": {
+    "@auth/core": "workspace:*",
     "@next-auth/adapter-test": "workspace:*",
     "@next-auth/tsconfig": "workspace:*",
     "next-auth": "workspace:*",
