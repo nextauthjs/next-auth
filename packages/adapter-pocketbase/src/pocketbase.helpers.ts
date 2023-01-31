@@ -48,7 +48,7 @@ export async function adminLogin(pb: Pocketbase, options: loginOpts) {
   return await pb.admins.authWithPassword(options.username, options.password)
 }
 
-export async function initCollections(pb: Pocketbase, options: loginOpts) {
+async function initCollections(pb: Pocketbase, options: loginOpts) {
   try {
     await adminLogin(pb, options)
     await pb.collections.import(nextAuthCollections, false)
