@@ -175,7 +175,7 @@ importers:
       '@mdx-js/react': 1.6.22
       '@sapphire/docusaurus-plugin-npm2yarn2pnpm': 1.1.4
       classnames: ^2.3.2
-      docusaurus-plugin-typedoc: 1.0.0-next.1
+      docusaurus-plugin-typedoc: 1.0.0-next.2
       mdx-mermaid: 1.2.2
       mermaid: 9.0.1
       next-auth: workspace:*
@@ -207,7 +207,7 @@ importers:
       '@docusaurus/preset-classic': 2.2.0_biqbaboplfbrettd7655fr4n2y
       '@docusaurus/theme-common': 2.2.0_if65ga6ul5jnw5c4373drfty5m
       '@docusaurus/types': 2.2.0_biqbaboplfbrettd7655fr4n2y
-      docusaurus-plugin-typedoc: 1.0.0-next.1_kb65gbyd32jlgdze2tbrhv364a
+      docusaurus-plugin-typedoc: 1.0.0-next.2_kb65gbyd32jlgdze2tbrhv364a
       typedoc: 0.23.24
       typedoc-plugin-markdown: 4.0.0-next.2_typedoc@0.23.24
 
@@ -13683,8 +13683,10 @@ packages:
       indent-string: 4.0.0
     dev: true
 
-  /ajv-formats/2.1.1:
+  /ajv-formats/2.1.1_ajv@8.11.0:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
+    peerDependencies:
+      ajv: ^8.0.0
     peerDependenciesMeta:
       ajv:
         optional: true
@@ -17593,11 +17595,11 @@ packages:
     dependencies:
       esutils: 2.0.3
 
-  /docusaurus-plugin-typedoc/1.0.0-next.1_kb65gbyd32jlgdze2tbrhv364a:
-    resolution: {integrity: sha512-SaQc1saPxJjQksTyRe+cBqd0qw5r6UyA+2vKzplcFyWThtPsiOi5dSzQE5IPQt3ZFPNm0DQmSXHyvTjpfYpt+A==}
+  /docusaurus-plugin-typedoc/1.0.0-next.2_kb65gbyd32jlgdze2tbrhv364a:
+    resolution: {integrity: sha512-JQOdw8U7Ix1lETgmlgkm1WpUrpmsTthWSQlMJRYiEnX06s2g/wSE+cg1JcP5ILAyeTjxDlF/DPwtOBIzTuzSTg==}
     peerDependencies:
       typedoc: '>=0.23.0'
-      typedoc-plugin-markdown: '>=4.0.0-next.1'
+      typedoc-plugin-markdown: '>=4.0.0-next.2'
     dependencies:
       typedoc: 0.23.24
       typedoc-plugin-markdown: 4.0.0-next.2_typedoc@0.23.24
@@ -19378,7 +19380,7 @@ packages:
     dependencies:
       '@apidevtools/json-schema-ref-parser': 9.0.9
       ajv: 8.11.0
-      ajv-formats: 2.1.1
+      ajv-formats: 2.1.1_ajv@8.11.0
       body-parser: 1.20.0
       content-type: 1.0.4
       deep-freeze: 0.0.1
@@ -30521,7 +30523,7 @@ packages:
     dependencies:
       '@types/json-schema': 7.0.11
       ajv: 8.11.0
-      ajv-formats: 2.1.1
+      ajv-formats: 2.1.1_ajv@8.11.0
       ajv-keywords: 5.1.0_ajv@8.11.0
     dev: true
 
