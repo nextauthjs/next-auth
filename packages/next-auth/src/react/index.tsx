@@ -118,7 +118,9 @@ export function useSession<R extends boolean>(options?: UseSessionOptions<R>) {
     )
   }
 
-  const { required, onUnauthenticated } = options ?? {}
+  const prevStatus = React.useRef<SessionContextValue["status"]>(value.status)
+
+  const { required, onUnauthenticated, onSignIn, onSignOut } = options ?? {}
 
   const requiredAndNotLoading = required && value.status === "unauthenticated"
 
@@ -132,6 +134,26 @@ export function useSession<R extends boolean>(options?: UseSessionOptions<R>) {
       else window.location.href = url
     }
   }, [requiredAndNotLoading, onUnauthenticated])
+
+  React.useEffect(() => {
+    if (value.status === prevStatus.current) return
+
+    if (
+      onSignIn &&
+      prevStatus.current === "unauthenticated" &&
+      value.status === "authenticated"
+    )
+      onSignIn()
+
+    if (
+      onSignOut &&
+      prevStatus.current === "authenticated" &&
+      value.status === "unauthenticated"
+    )
+      onSignOut()
+
+    prevStatus.current = value.status
+  }, [value.status, onSignIn, onSignOut])
 
   if (requiredAndNotLoading) {
     return { data: value.data, status: "loading" } as const

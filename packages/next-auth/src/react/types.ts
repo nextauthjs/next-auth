@@ -5,6 +5,8 @@ export interface UseSessionOptions<R extends boolean> {
   required: R
   /** Defaults to `signIn` */
   onUnauthenticated?: () => void
+  onSignIn?: () => void
+  onSignOut?: () => void
 }
 
 /**
