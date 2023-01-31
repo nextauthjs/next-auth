@@ -71,7 +71,12 @@ export async function signIn<
     return
   }
 
-  return res
+  return {
+    error,
+    status: res.status,
+    ok: res.ok,
+    url: error ? null : data.url,
+  }
 }
 
 /**
