@@ -27,7 +27,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "sh test.sh"
+    "test": "bash test.sh"
   },
   "peerDependencies": {
     "@azure/cosmos": "^3.0.0",
