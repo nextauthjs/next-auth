@@ -543,7 +543,6 @@ importers:
       '@types/cookie': 0.5.1
       '@types/node': ^18.7.14
       '@types/set-cookie-parser': ^2.4.2
-      next-auth: workspace:*
       set-cookie-parser: ^2.5.1
       solid-js: ^1.5.7
       solid-start: ^0.2.1
@@ -557,7 +556,6 @@ importers:
       '@types/cookie': 0.5.1
       '@types/node': 18.11.10
       '@types/set-cookie-parser': 2.4.2
-      next-auth: link:../next-auth
       solid-js: 1.6.6
       solid-start: 0.2.8_ol5sfeg2xpjsxxfgzadulo7fdi
       tsup: 6.5.0_typescript@4.9.4
@@ -570,7 +568,6 @@ importers:
       '@sveltejs/adapter-auto': ^1.0.0
       '@sveltejs/kit': ^1.0.0
       '@sveltejs/package': ^1.0.0
-      next-auth: workspace:*
       svelte: ^3.54.0
       svelte-check: ^2.9.2
       tslib: ^2.4.1
@@ -584,7 +581,6 @@ importers:
       '@sveltejs/adapter-auto': 1.0.0_@sveltejs+kit@1.0.1
       '@sveltejs/kit': 1.0.1_svelte@3.54.0+vite@4.0.1
       '@sveltejs/package': 1.0.1_gf4dcx76vtk2o62ixxeqx7chra
-      next-auth: link:../next-auth
       svelte: 3.54.0
       svelte-check: 2.10.1_svelte@3.54.0
       tslib: 2.4.1

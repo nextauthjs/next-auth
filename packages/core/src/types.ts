@@ -478,3 +478,28 @@ export interface InternalOptions<TProviderType = ProviderType> {
   cookies: CookiesOptions
   callbackUrl: string
 }
+
+/**
+ * Util type that matches some strings literally, but allows any other string as well.
+ * @source https://github.com/microsoft/TypeScript/issues/29729#issuecomment-832522611
+ */
+export type LiteralUnion<T extends U, U = string> =
+  | T
+  | (U & Record<never, never>)
+
+export interface SignInOptions extends Record<string, unknown> {
+  redirectTo?: string
+  redirect?: boolean
+}
+
+/** Match `inputType` of `new URLSearchParams(inputType)` */
+export type SignInAuthorizationParams =
+  | string
+  | string[][]
+  | Record<string, string>
+  | URLSearchParams
+
+export interface SignOutParams<R extends boolean = true> {
+  redirectTo?: string
+  redirect?: R
+}

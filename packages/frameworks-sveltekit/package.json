@@ -36,7 +36,6 @@
     "@sveltejs/adapter-auto": "^1.0.0",
     "@sveltejs/kit": "^1.0.0",
     "@sveltejs/package": "^1.0.0",
-    "next-auth": "workspace:*",
     "svelte": "^3.54.0",
     "svelte-check": "^2.9.2",
     "tslib": "^2.4.1",
@@ -48,8 +47,8 @@
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "svelte": "^3.54.0",
-    "@sveltejs/kit": "^1.0.0"
+    "@sveltejs/kit": "^1.0.0",
+    "svelte": "^3.54.0"
   },
   "type": "module",
   "types": "./index.d.ts",

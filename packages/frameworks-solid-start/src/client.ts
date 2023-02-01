@@ -3,7 +3,7 @@ import type {
   SignInOptions,
   SignInAuthorizationParams,
   SignOutParams,
-} from "next-auth/react"
+} from "@auth/core/types"
 import type {
   BuiltInProviderType,
   RedirectableProviderType,
@@ -27,7 +27,7 @@ export async function signIn<
   options?: SignInOptions,
   authorizationParams?: SignInAuthorizationParams
 ) {
-  const { callbackUrl = window.location.href, redirect = true } = options ?? {}
+  const { redirectTo = window.location.href, redirect = true } = options ?? {}
 
   // TODO: Support custom providers
   const isCredentials = providerId === "credentials"
@@ -55,7 +55,7 @@ export async function signIn<
     body: new URLSearchParams({
       ...options,
       csrfToken,
-      callbackUrl,
+      callbackUrl: redirectTo,
     }),
   })
 
@@ -63,7 +63,7 @@ export async function signIn<
   const error = new URL(data.url).searchParams.get("error")
   if (redirect || !isSupportingReturn || !error) {
     // TODO: Do not redirect for Credentials and Email providers by default in next major
-    window.location.href = data.url ?? data.redirect ?? callbackUrl
+    window.location.href = data.url ?? data.redirect ?? redirectTo
     // If url contains a hash, the browser does not reload the page. We reload manually
     if (data.url.includes("#")) window.location.reload()
     return
@@ -78,7 +78,7 @@ export async function signIn<
  * [Documentation](https://next-auth.js.org/getting-started/client#signout)
  */
 export async function signOut(options?: SignOutParams) {
-  const { callbackUrl = window.location.href } = options ?? {}
+  const { redirectTo = window.location.href } = options ?? {}
   // TODO: Custom base path
   const csrfTokenResponse = await fetch("/api/auth/csrf")
   const { csrfToken } = await csrfTokenResponse.json()
@@ -90,12 +90,12 @@ export async function signOut(options?: SignOutParams) {
     },
     body: new URLSearchParams({
       csrfToken,
-      callbackUrl,
+      callbackUrl: redirectTo,
     }),
   })
   const data = await res.json()
 
-  const url = data.url ?? data.redirect ?? callbackUrl
+  const url = data.url ?? data.redirect ?? redirectTo
   window.location.href = url
   // If url contains a hash, the browser does not reload the page. We reload manually
   if (url.includes("#")) window.location.reload()
