@@ -13,7 +13,7 @@ import type {
   PocketBaseUser,
   PocketBaseVerificationToken,
 } from "./pocketbase.types"
-import { adminLogin, checkCollections, format } from "./pocketbase.helpers"
+import { adminLogin, checkCollections, format } from "./pocketbase.utils"
 
 export const PocketbaseAdapter = (
   client: Pocketbase,
@@ -27,9 +27,7 @@ export const PocketbaseAdapter = (
         const pb_user = await client
           .collection("next_auth_user")
           .create<PocketBaseUser>({
-            name: user.name,
-            image: user.image,
-            email: user.email,
+            ...user,
             emailVerified: user.emailVerified?.toISOString().replace("T", " "),
           })
 
@@ -115,9 +113,7 @@ export const PocketbaseAdapter = (
         const pb_user = await client
           .collection("next_auth_user")
           .update<PocketBaseUser>(user.id as string, {
-            name: user.name,
-            image: user.image,
-            email: user.email,
+            ...user,
             email_verified: user.emailVerified?.toISOString().replace("T", " "),
           })
         if (pb_user.code)
@@ -137,17 +133,7 @@ export const PocketbaseAdapter = (
         const pb_account = await client
           .collection("next_auth_account")
           .create<PocketBaseAccount>({
-            userId: account.userId,
-            type: account.type,
-            provider: account.provider,
-            providerAccountId: account.providerAccountId,
-            access_token: account.access_token,
-            id_token: account.id_token,
-            token_type: account.token_type,
-            refresh_token: account.refresh_token,
-            scope: account.scope,
-            session_state: account.session_state,
-            expires_at: Number(account.expires_at),
+            ...account,
           })
 
         if (pb_account.code)
@@ -169,9 +155,8 @@ export const PocketbaseAdapter = (
         const pb_session = await client
           .collection("next_auth_session")
           .create<PocketBaseSession>({
+            ...session,
             expires: session.expires.toISOString().replace("T", " "),
-            sessionToken: session.sessionToken,
-            userId: session.userId,
           })
 
         if (pb_session.code)
@@ -231,9 +216,8 @@ export const PocketbaseAdapter = (
         const pb_session = await client
           .collection("next_auth_session")
           .update<PocketBaseSession>(record.id, {
+            ...session,
             expires: session.expires?.toISOString().replace("T", " "),
-            sessionToken: session.sessionToken,
-            userId: session.userId,
           })
 
         if (pb_session.code)
@@ -266,8 +250,7 @@ export const PocketbaseAdapter = (
         const pb_veriToken = await client
           .collection("next_auth_verificationToken")
           .create<PocketBaseVerificationToken>({
-            identifier: verificationToken.identifier,
-            token: verificationToken.token,
+            ...verificationToken,
             expires: verificationToken.expires.toISOString().replace("T", " "),
           })
 
