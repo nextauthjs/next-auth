@@ -27,7 +27,7 @@ export async function signIn<
   options?: SignInOptions,
   authorizationParams?: SignInAuthorizationParams
 ) {
-  const { redirectTo = window.location.href, redirect = true } = options ?? {}
+  const { returnTo = window.location.href, redirect = true } = options ?? {}
 
   // TODO: Support custom providers
   const isCredentials = providerId === "credentials"
@@ -56,7 +56,7 @@ export async function signIn<
     body: new URLSearchParams({
       ...options,
       csrfToken,
-      callbackUrl: redirectTo,
+      callbackUrl: returnTo,
     }),
   })
 
@@ -65,7 +65,7 @@ export async function signIn<
 
   if (redirect || !isSupportingReturn || !error) {
     // TODO: Do not redirect for Credentials and Email providers by default in next major
-    window.location.href = data.url ?? redirectTo
+    window.location.href = data.url ?? returnTo
     // If url contains a hash, the browser does not reload the page. We reload manually
     if (data.url.includes("#")) window.location.reload()
     return
@@ -81,7 +81,7 @@ export async function signIn<
  * [Documentation](https://authjs.dev/reference/utilities/#signout)
  */
 export async function signOut(options?: SignOutParams) {
-  const { redirectTo = window.location.href } = options ?? {}
+  const { returnTo = window.location.href } = options ?? {}
   // TODO: Custom base path
   // TODO: Remove this since Sveltekit offers the CSRF protection via origin check
   const csrfTokenResponse = await fetch("/auth/csrf")
@@ -94,12 +94,12 @@ export async function signOut(options?: SignOutParams) {
     },
     body: new URLSearchParams({
       csrfToken,
-      callbackUrl: redirectTo,
+      callbackUrl: returnTo,
     }),
   })
   const data = await res.json()
 
-  const url = data.url ?? redirectTo
+  const url = data.url ?? returnTo
   window.location.href = url
   // If url contains a hash, the browser does not reload the page. We reload manually
   if (url.includes("#")) window.location.reload()

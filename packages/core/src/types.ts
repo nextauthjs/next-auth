@@ -488,7 +488,7 @@ export type LiteralUnion<T extends U, U = string> =
   | (U & Record<never, never>)
 
 export interface SignInOptions extends Record<string, unknown> {
-  redirectTo?: string
+  returnTo?: string
   redirect?: boolean
 }
 
@@ -500,6 +500,6 @@ export type SignInAuthorizationParams =
   | URLSearchParams
 
 export interface SignOutParams<R extends boolean = true> {
-  redirectTo?: string
+  returnTo?: string
   redirect?: R
 }
