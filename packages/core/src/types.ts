@@ -487,17 +487,16 @@ export type LiteralUnion<T extends U, U = string> =
   | T
   | (U & Record<never, never>)
 
-export interface SignInOptions extends Record<string, unknown> {
+export interface SignInParams extends Record<string, unknown> {
   returnTo?: string
   redirect?: boolean
 }
 
-/** Match `inputType` of `new URLSearchParams(inputType)` */
-export type SignInAuthorizationParams =
-  | string
-  | string[][]
-  | Record<string, string>
-  | URLSearchParams
+export type URLSearchParamsInit = typeof URLSearchParams extends new (
+  ...args: infer U
+) => URLSearchParams
+  ? U[0]
+  : never
 
 export interface SignOutParams<R extends boolean = true> {
   returnTo?: string

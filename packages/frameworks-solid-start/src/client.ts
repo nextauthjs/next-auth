@@ -1,7 +1,7 @@
 import type {
   LiteralUnion,
-  SignInOptions,
-  SignInAuthorizationParams,
+  SignInParams,
+  URLSearchParamsInit,
   SignOutParams,
 } from "@auth/core/types"
 import type {
@@ -24,8 +24,8 @@ export async function signIn<
       ? P | BuiltInProviderType
       : BuiltInProviderType
   >,
-  options?: SignInOptions,
-  authorizationParams?: SignInAuthorizationParams
+  options?: SignInParams,
+  authorizationParams?: URLSearchParamsInit
 ) {
   const { returnTo = window.location.href, redirect = true } = options ?? {}
 
