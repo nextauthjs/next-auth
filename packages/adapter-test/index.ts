@@ -2,6 +2,7 @@ import type { Adapter } from "next-auth/adapters"
 import { createHash, randomUUID } from "crypto"
 
 export interface TestOptions {
+  beforeEach?: () => void
   adapter: Adapter
   db: {
     /** Generates UUID v4 by default. Use it to override how the test suite should generate IDs, like user id. */
@@ -44,8 +45,11 @@ export function runBasicTests(options: TestOptions) {
   beforeAll(async () => {
     await options.db.connect?.()
   })
-
   const { adapter, db } = options
+
+  beforeEach(() => {
+    if (options.beforeEach) options.beforeEach()
+  })
 
   afterAll(async () => {
     // @ts-expect-error This is only used for the TypeORM adapter
