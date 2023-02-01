@@ -1,6 +1,6 @@
 import { runBasicTests } from "@next-auth/adapter-test"
 import { PocketbaseAdapter } from "../src"
-import { format } from "../src/pocketbase.helpers"
+import { format } from "../src/pocketbase.utils"
 import type {
   AdapterAccount,
   VerificationToken,
@@ -21,8 +21,8 @@ const pb = new Pocketbase("http://127.0.0.1:8090")
 
 runBasicTests({
   adapter: PocketbaseAdapter(pb, {
-    username: "Test@test.com",
-    password: "pocketbase1234",
+    username: "",
+    password: "",
   }),
   db: {
     async session(sessionToken) {

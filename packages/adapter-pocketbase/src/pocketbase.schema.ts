@@ -151,7 +151,7 @@ const accountSchema: Collection = {
     },
     {
       id: "rxozyv0h",
-      name: "expires_at",
+      name: "expires_in",
       type: "number",
       system: false,
       required: false,
