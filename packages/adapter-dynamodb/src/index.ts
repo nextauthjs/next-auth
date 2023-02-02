@@ -1,4 +1,4 @@
-import { randomBytes } from "crypto"
+import { v4 as uuid } from "uuid"
 
 import type {
   BatchWriteCommandInput,
@@ -17,11 +17,11 @@ import { format, generateUpdateExpression } from "./utils"
 export { format, generateUpdateExpression }
 
 export interface DynamoDBAdapterOptions {
-  tableName?: string,
-  partitionKey?: string,
-  sortKey?: string,
-  indexName?: string,
-  indexPartitionKey?: string,
+  tableName?: string
+  partitionKey?: string
+  sortKey?: string
+  indexName?: string
+  indexPartitionKey?: string
   indexSortKey?: string
 }
 
@@ -30,17 +30,17 @@ export function DynamoDBAdapter(
   options?: DynamoDBAdapterOptions
 ): Adapter {
   const TableName = options?.tableName ?? "next-auth"
-  const pk = options?.partitionKey ?? 'pk'
-  const sk = options?.sortKey ?? 'sk'
-  const IndexName = options?.indexName ?? 'GSI1'
-  const GSI1PK = options?.indexPartitionKey ?? 'GSI1PK'
-  const GSI1SK = options?.indexSortKey ?? 'GSI1SK'
+  const pk = options?.partitionKey ?? "pk"
+  const sk = options?.sortKey ?? "sk"
+  const IndexName = options?.indexName ?? "GSI1"
+  const GSI1PK = options?.indexPartitionKey ?? "GSI1PK"
+  const GSI1SK = options?.indexSortKey ?? "GSI1SK"
 
   return {
     async createUser(data) {
       const user: AdapterUser = {
         ...(data as any),
-        id: randomBytes(16).toString("hex"),
+        id: uuid(),
       }
 
       await client.put({
@@ -50,8 +50,8 @@ export function DynamoDBAdapter(
           [pk]: `USER#${user.id}`,
           [sk]: `USER#${user.id}`,
           type: "USER",
-          [GSI1PK]: `USER#${user.email as string}`,
-          [GSI1SK]: `USER#${user.email as string}`,
+          [GSI1PK]: `USER#${user.email}`,
+          [GSI1SK]: `USER#${user.email}`,
         }),
       })
 
@@ -165,7 +165,7 @@ export function DynamoDBAdapter(
     async linkAccount(data) {
       const item = {
         ...data,
-        id: randomBytes(16).toString("hex"),
+        id: uuid(),
         [pk]: `USER#${data.userId}`,
         [sk]: `ACCOUNT#${data.provider}#${data.providerAccountId}`,
         [GSI1PK]: `ACCOUNT#${data.provider}`,
@@ -229,7 +229,7 @@ export function DynamoDBAdapter(
     },
     async createSession(data) {
       const session = {
-        id: randomBytes(16).toString("hex"),
+        id: uuid(),
         ...data,
       }
       await client.put({
