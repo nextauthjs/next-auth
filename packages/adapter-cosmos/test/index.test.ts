@@ -5,12 +5,7 @@ import https from "node:https"
 import { SqlQuerySpec } from "@azure/cosmos"
 import { convertCosmosDocument } from "../src/util"
 
-var IP_ADDR: string | undefined = undefined
-process.argv.forEach((v) => {
-  if (v.includes("-ip=")) IP_ADDR = v.replace("-ip=", "")
-})
-
-const ENDPOINT = `https://${"localhost"}:8081`
+const ENDPOINT = "https://localhost:8081"
 const KEY =
   "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw=="
 
@@ -24,14 +19,7 @@ const CLIENT_OPTIONS = {
 
 const db = getCosmos({ clientOptions: CLIENT_OPTIONS })
 
-const adapter = MyAdapter({
-  clientOptions: CLIENT_OPTIONS,
-})
-
 runBasicTests({
-  beforeEach: () => {
-    process.env.NODE_TLS_UNAUTHORIZED = "0"
-  },
   adapter: MyAdapter({
     clientOptions: CLIENT_OPTIONS,
   }),
@@ -47,7 +35,6 @@ runBasicTests({
         query: `select * from sessions s where s.sessionToken=@sessionTokenValue`,
         parameters: [{ name: "@sessionTokenValue", value: sessionToken }],
       }
-      // here?
       const { resources } = await (await db.sessions()).items
         .query(snapshotQuery)
         .fetchAll()

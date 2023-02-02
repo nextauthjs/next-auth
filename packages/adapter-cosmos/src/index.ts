@@ -59,7 +59,6 @@ export default function MyAdapter(options: CosmosDBInitOptions): Adapter {
         const { resource } = await (await db.users())
           .item(userId, options.containerOptions?.usersOptions?.partitionKey)
           .read()
-        console.log(resource)
         return convertCosmosDocument(resource)
       }
       return null
@@ -150,7 +149,6 @@ export default function MyAdapter(options: CosmosDBInitOptions): Adapter {
         })
         .fetchAll()
       if (resources.length > 0) {
-        console.log("deleted")
         await accounts
           .item(
             resources[0].id,
