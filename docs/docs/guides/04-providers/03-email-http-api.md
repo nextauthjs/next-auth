@@ -7,7 +7,7 @@ title: HTTP-based Email Provider
 
 We have always had a built-in Email provider with which you could connect to the SMTP server of your choice to send "magic link" emails for sign-in purposes. However, the Email provider can also be used with HTTP-based email services, like AWS SES, Postmark, Sendgrid, etc. In this guide we are going to explain how to use our Email magic link provider with any of the more modern HTTP-based Email APIs.
 
-For this example we will be using [Sendgrid](https://sendgrid.com), but any email service providing an HTTP API or JS client library will work.
+For this example, we will be using [SendGrid](https://sendgrid.com), but any email service providing an HTTP API or JS client library will work.
 
 ## Setup
 
