@@ -1,0 +1,27 @@
+name: test
+
+on:
+  push:
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Init
+        uses: actions/checkout@v3
+        with: 
+          fetch-depth: 2
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.4
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "pnpm"
+      - name: Go to directory
+        run: cd ./packages/adapter-cosmos
+      - name: Install dependencies
+        run: pnpm install
+      - name: Run tests
+        run: pnpm test
