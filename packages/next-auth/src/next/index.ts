@@ -90,18 +90,18 @@ type GetServerSessionOptions = Partial<Omit<AuthOptions, "callbacks">> & {
   }
 }
 
+type GetServerSessionParams<O extends GetServerSessionOptions> =
+  | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"], O]
+  | [NextApiRequest, NextApiResponse, O]
+  | [O]
+  | []
+
 export async function getServerSession<
   O extends GetServerSessionOptions,
   R = O["callbacks"] extends { session: (...args: any[]) => infer U }
     ? U
     : Session
->(
-  ...args:
-    | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"], O]
-    | [NextApiRequest, NextApiResponse, O]
-    | [O]
-    | []
-): Promise<R | null> {
+>(...args: GetServerSessionParams<O>): Promise<R | null> {
   const isRSC = args.length === 0 || args.length === 1
   if (
     !experimentalRSCWarningShown &&
@@ -175,9 +175,7 @@ export async function unstable_getServerSession<
   R = O["callbacks"] extends { session: (...args: any[]) => infer U }
     ? U
     : Session
->(
-  ...args: Parameters<typeof getServerSession<O, R>>
-): ReturnType<typeof getServerSession<O, R>> {
+>(...args: GetServerSessionParams<O>): Promise<R | null> {
   if (!deprecatedWarningShown && process.env.NODE_ENV !== "production") {
     console.warn(
       "`unstable_getServerSession` has been renamed to `getServerSession`."
