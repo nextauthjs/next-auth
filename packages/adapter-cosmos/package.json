@@ -27,7 +27,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "bash test.sh"
+    "test": "bash test.sh",
+    "jest": "jest"
   },
   "peerDependencies": {
     "@azure/cosmos": "^3.0.0",
@@ -38,6 +39,7 @@
     "@next-auth/adapter-test": "workspace:*",
     "@next-auth/tsconfig": "workspace:*",
     "jest": "^27.4.3",
-    "next-auth": "workspace:*"
+    "next-auth": "workspace:*",
+    "@zeit/cosmosdb-server": "^0.13.4"
   }
 }

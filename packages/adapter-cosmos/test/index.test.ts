@@ -44,9 +44,10 @@ runBasicTests({
     },
     async session(sessionToken) {
       const snapshotQuery: SqlQuerySpec = {
-        query: `select * from sessions s where s.sessionToken=@sessionTokenValue offset 0 limit 1`,
+        query: `select * from sessions s where s.sessionToken=@sessionTokenValue`,
         parameters: [{ name: "@sessionTokenValue", value: sessionToken }],
       }
+      // here?
       const { resources } = await (await db.sessions()).items
         .query(snapshotQuery)
         .fetchAll()
@@ -57,12 +58,14 @@ runBasicTests({
       return null
     },
     async user(id) {
-      return adapter.getUser(id)
+      const { resource } = await (await db.users()).item(id).read()
+      if (resource) return convertCosmosDocument(resource)
+      return null
     },
     async account({ provider, providerAccountId }) {
       const snapshotQuery: SqlQuerySpec = {
         query:
-          "select * from accounts a where a.provider=@providerValue and a.providerAccountId=@providerAccountIdValue offset 0 limit 1",
+          "select * from accounts a where a.provider=@providerValue and a.providerAccountId=@providerAccountIdValue",
         parameters: [
           { name: "@providerValue", value: provider },
           { name: "@providerAccountIdValue", value: providerAccountId },
@@ -80,7 +83,7 @@ runBasicTests({
     async verificationToken({ identifier, token }) {
       const snapshotQuery: SqlQuerySpec = {
         query:
-          "select * from tokens v where v.identifier=@identifierValue and v.token=@tokenValue offset 0 limit 1",
+          "select * from tokens v where v.identifier=@identifierValue and v.token=@tokenValue",
         parameters: [
           { name: "@identifierValue", value: identifier },
           { name: "@tokenValue", value: token },

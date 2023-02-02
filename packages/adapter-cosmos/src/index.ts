@@ -1,4 +1,4 @@
-import { PatchOperation, SqlQuerySpec } from "@azure/cosmos"
+import { SqlQuerySpec } from "@azure/cosmos"
 import {
   Adapter,
   AdapterSession,
@@ -19,7 +19,9 @@ export default function MyAdapter(options: CosmosDBInitOptions): Adapter {
     },
     async getUser(id) {
       const users = await db.users()
-      const { resource } = await users.item(id).read()
+      const { resource } = await users
+        .item(id, options.containerOptions?.usersOptions?.partitionKey)
+        .read()
       if (resource === undefined) return null
       return convertCosmosDocument(resource)
     },
@@ -42,7 +44,7 @@ export default function MyAdapter(options: CosmosDBInitOptions): Adapter {
     async getUserByAccount({ providerAccountId, provider }) {
       const querySpec: SqlQuerySpec = {
         query:
-          "select * from accounts a where a.provider=@providerValue and a.providerAccountId=@providerAccountIdValue offset 0 limit 1",
+          "select * from accounts a where a.provider=@providerValue and a.providerAccountId=@providerAccountIdValue",
         parameters: [
           { name: "@providerValue", value: provider },
           { name: "@providerAccountIdValue", value: providerAccountId },
@@ -54,32 +56,37 @@ export default function MyAdapter(options: CosmosDBInitOptions): Adapter {
         .fetchAll()
       if (account_result && account_result.length > 0) {
         const { userId } = account_result[0] as AdapterAccount
-        const { resource } = await (await db.users()).item(userId).read()
+        const { resource } = await (await db.users())
+          .item(userId, options.containerOptions?.usersOptions?.partitionKey)
+          .read()
         console.log(resource)
         return convertCosmosDocument(resource)
       }
       return null
     },
     async updateUser(user) {
-      try {
-        const users = await db.users()
-        const { resource } = await users.item(user.id as string).patch(
-          Object.keys(user).reduce<PatchOperation[]>((prev, cur) => {
-            if (cur === "id") return prev
-            prev.push({
-              op: "add",
-              path: "/" + cur,
-              value: user[cur as keyof typeof user],
-            })
-            return prev
-          }, [])
-        )
-        if (resource === undefined) throw new Error("user is not defined")
-        return convertCosmosDocument(resource)
-      } catch (e) {
-        console.log(e)
-        throw new Error("update user failed to update user")
-      }
+      const users = await db.users()
+      const target = users.item(
+        user.id as string,
+        options.containerOptions?.usersOptions?.partitionKey
+      )
+      const { resource: original_user } = await target.read()
+      const replacement = Object.assign(original_user, user)
+      const { resource } = await target.replace(replacement)
+      /*
+      const { resource } = await users.item(user.id as string).patch(
+        Object.keys(user).reduce<PatchOperation[]>((prev, cur) => {
+          if (cur === "id") return prev
+          prev.push({
+            op: "add",
+            path: "/" + cur,
+            value: user[cur as keyof typeof user],
+          })
+          return prev
+        }, [])
+      ) */
+      if (resource === undefined) throw new Error("user is not defined")
+      return convertCosmosDocument(resource)
     },
     async deleteUser(userId) {
       const users = await db.users()
@@ -96,7 +103,13 @@ export default function MyAdapter(options: CosmosDBInitOptions): Adapter {
       if (hit_account.length > 0) {
         await Promise.all(
           hit_account.map(
-            async (account) => await accounts.item(account.id).delete()
+            async (account) =>
+              await accounts
+                .item(
+                  account.id,
+                  options.containerOptions?.accountsOptions?.partitionKey
+                )
+                .delete()
           )
         )
       }
@@ -109,7 +122,13 @@ export default function MyAdapter(options: CosmosDBInitOptions): Adapter {
       if (hit_session.length > 0) {
         await Promise.all(
           hit_session.map(
-            async (session) => await sessions.item(session.id).delete()
+            async (session) =>
+              await sessions
+                .item(
+                  session.id,
+                  options.containerOptions?.sessionsOptions?.partitionKey
+                )
+                .delete()
           )
         )
       }
@@ -123,7 +142,7 @@ export default function MyAdapter(options: CosmosDBInitOptions): Adapter {
       const { resources } = await accounts.items
         .query({
           query:
-            "select a.id from accounts a where a.provider=@providerValue and a.providerAccountId=@accountIdValue offset 0 limit 1",
+            "select a.id from accounts a where a.provider=@providerValue and a.providerAccountId=@accountIdValue",
           parameters: [
             { name: "@providerValue", value: provider },
             { name: "@accountIdValue", value: providerAccountId },
@@ -132,7 +151,12 @@ export default function MyAdapter(options: CosmosDBInitOptions): Adapter {
         .fetchAll()
       if (resources.length > 0) {
         console.log("deleted")
-        await accounts.item(resources[0].id).delete()
+        await accounts
+          .item(
+            resources[0].id,
+            options.containerOptions?.accountsOptions?.partitionKey
+          )
+          .delete()
       }
     },
     async createSession(session) {
@@ -145,7 +169,7 @@ export default function MyAdapter(options: CosmosDBInitOptions): Adapter {
       const sessions = await db.sessions()
       const sessionQuery: SqlQuerySpec = {
         query:
-          "select * from sessions s where s.sessionToken=@sessionTokenValue offset 0 limit 1",
+          "select * from sessions s where s.sessionToken=@sessionTokenValue",
         parameters: [{ name: "@sessionTokenValue", value: sessionToken }],
       }
       const { resources } = await sessions.items
@@ -154,8 +178,14 @@ export default function MyAdapter(options: CosmosDBInitOptions): Adapter {
       if (resources.length > 0) {
         const session = resources[0] as AdapterSession
         const users = await db.users()
-        const user = (await users.item(session.userId).read<AdapterUser>())
-          .resource
+        const user = (
+          await users
+            .item(
+              session.userId,
+              options.containerOptions?.usersOptions?.partitionKey
+            )
+            .read<AdapterUser>()
+        ).resource
         return {
           session: convertCosmosDocument(session),
           user: convertCosmosDocument(user),
@@ -167,7 +197,7 @@ export default function MyAdapter(options: CosmosDBInitOptions): Adapter {
       const sessions = await db.sessions()
       const sessionQuery: SqlQuerySpec = {
         query:
-          "select * from sessions s where s.sessionToken=@sessionTokenValue offset 0 limit 1",
+          "select * from sessions s where s.sessionToken=@sessionTokenValue",
         parameters: [
           {
             name: "@sessionTokenValue",
@@ -179,6 +209,13 @@ export default function MyAdapter(options: CosmosDBInitOptions): Adapter {
         .query<AdapterSession & { id: string }>(sessionQuery)
         .fetchAll()
       if (resources && resources.length > 0) {
+        const target = sessions.item(
+          (resources[0] as AdapterSession & { id: string }).id,
+          options.containerOptions?.sessionsOptions?.partitionKey
+        )
+        const { resource: original_session } = await target.read()
+        const replacement = Object.assign(original_session, partialSession)
+        /*
         const { resource } = await sessions
           .item((resources[0] as AdapterSession & { id: string }).id)
           .patch(
@@ -194,7 +231,8 @@ export default function MyAdapter(options: CosmosDBInitOptions): Adapter {
               },
               []
             )
-          )
+          ) */
+        const { resource } = await target.replace(replacement)
         if (resource === undefined) throw new Error("user is not defined")
         return convertCosmosDocument(resource)
       }
@@ -224,7 +262,7 @@ export default function MyAdapter(options: CosmosDBInitOptions): Adapter {
       const tokens = await db.tokens()
       const tokenQuery: SqlQuerySpec = {
         query:
-          "select t.id from verificationTokens t where t.identifier=@verificationTokenIdentifier and t.token=@verificationTokenToken offset 0 limit 1",
+          "select t.id from verificationTokens t where t.identifier=@verificationTokenIdentifier and t.token=@verificationTokenToken",
         parameters: [
           {
             name: "@verificationTokenIdentifier",
@@ -235,7 +273,10 @@ export default function MyAdapter(options: CosmosDBInitOptions): Adapter {
       }
       const { resources } = await tokens.items.query(tokenQuery).fetchAll()
       if (resources.length > 0) {
-        const item = tokens.item(resources[0].id)
+        const item = tokens.item(
+          resources[0].id,
+          options.containerOptions?.tokensOptions?.partitionKey
+        )
         const token = (await item.read()).resource
         await item.delete()
         return convertCosmosDocument(token)
