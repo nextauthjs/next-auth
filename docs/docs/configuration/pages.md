@@ -77,7 +77,7 @@ In addition, you can define a `theme.brandColor` to define a custom accent color
 
 In order to get the available authentication providers and the URLs to use for them, you can make a request to the API endpoint `/api/auth/providers`:
 
-```tsx title="pages/auth/signin.ts"
+```tsx title="pages/auth/signin.tsx"
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { getProviders, signIn } from "next-auth/react"
 
@@ -109,7 +109,7 @@ There is another, more fully styled example signin page available [here](https:/
 
 If you create a custom sign in form for email sign in, you will need to submit both fields for the **email** address and **csrfToken** from **/api/auth/csrf** in a POST request to **/api/auth/signin/email**.
 
-```tsx title="pages/auth/email-signin.ts"
+```tsx title="pages/auth/email-signin.tsx"
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { getCsrfToken } from "next-auth/react"
 
@@ -144,7 +144,7 @@ signIn("email", { email: "jsmith@example.com" })
 
 If you create a sign in form for credentials based authentication, you will need to pass a **csrfToken** from **/api/auth/csrf** in a POST request to **/api/auth/callback/credentials**.
 
-```tsx title="pages/auth/credentials-signin.ts"
+```tsx title="pages/auth/credentials-signin.tsx"
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { getCsrfToken } from "next-auth/react"
 
