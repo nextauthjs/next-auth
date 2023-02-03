@@ -80,6 +80,8 @@ In order to get the available authentication providers and the URLs to use for t
 ```tsx title="pages/auth/signin.tsx"
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { getProviders, signIn } from "next-auth/react"
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "../api/auth/[...nextauth]";
 
 export default function SignIn({ providers }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
@@ -96,7 +98,17 @@ export default function SignIn({ providers }: InferGetServerSidePropsType<typeof
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const providers = await getProviders()
+  const session = await getServerSession(context.req, context.res, authOptions);
+  
+  // If the user is already logged in, redirect.
+  // Note: Make sure not to redirect to the same page
+  // To avoid an infinite loop!
+  if (session) {
+    return { redirect: { destination: "/" } };
+  }
+
+  const providers = await getProviders(context);
+  
   return {
     props: { providers: Object.values(providers) ?? [] },
   }
