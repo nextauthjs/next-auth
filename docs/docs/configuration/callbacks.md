@@ -139,8 +139,8 @@ The session callback is called whenever a session is checked. By default, **only
 
 e.g. `getSession()`, `useSession()`, `/api/auth/session`
 
-- When using database sessions, the User object is passed as an argument.
-- When using JSON Web Tokens for sessions, the JWT payload is provided instead.
+- When using database sessions, the User (`user`) object is passed as an argument.
+- When using JSON Web Tokens for sessions, the JWT payload (`token`) is provided instead.
 
 ```js title="pages/api/auth/[...nextauth].js"
 ...
