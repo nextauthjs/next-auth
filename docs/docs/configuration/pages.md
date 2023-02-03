@@ -99,11 +99,13 @@ export default function SignIn({ providers }) {
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
   
-  // If sign in is successful, redirect to homepage
-  if (session) {
-    return {
-      redirect: { destination: "/" },
-    };
+  // If the user is already logged in, redirect,
+  // unless the destination is on the same page,
+  // to prevent infinite redirects
+  const destination = "/"
+  // Note, this does not check hash (#) or search params (?)
+  if (session && destination !== authOptions.pages?.signIn) {
+    return { redirect: { destination } };
   }
 
   const providers = await getProviders(context);
