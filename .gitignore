@@ -34,13 +34,10 @@ packages/next-auth/utils
 packages/next-auth/core
 packages/next-auth/jwt
 packages/next-auth/react
-packages/next-auth/adapters.d.ts
-packages/next-auth/adapters.js
-packages/next-auth/index.d.ts
-packages/next-auth/index.js
 packages/next-auth/next
-packages/next-auth/middleware.d.ts
-packages/next-auth/middleware.js
+packages/*/*.js
+packages/*/*.d.ts
+packages/*/*.d.ts.map
 
 # Development app
 apps/dev/src/css
@@ -88,7 +85,7 @@ packages/core/src/providers/oauth-types.ts
 packages/core/lib
 packages/core/providers
 packages/core/src/lib/pages/styles.ts
-docs/docs/reference/03-core
+docs/docs/reference/core
 docs/docs/reference/04-sveltekit
 
 
