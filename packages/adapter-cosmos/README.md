@@ -15,7 +15,7 @@
 
 ## Overview
 
-This is the Azure Cosmos DB Adapter for [`auth.js`](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
+This is the Azure Cosmos DB Adapter for [`auth.js`](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package. Currently only supports NoSQL version of Azure Cosmos DB.
 
 You can find more Azure Cosmos DB information in the docs at [authjs.dev/reference/adapters/cosmos](https://authjs.dev/reference/adapters/cosmos).
 
@@ -139,6 +139,8 @@ const costmosDBDetailedConfig = {
   }
 }
 ```
+
+> **Azure Cosmos DB - Caution**: Currently, this library only works with NoSQL version of Azure Cosmos DB. If you wnat to make another versions of Azure Cosmos DB, [try making your own](https://next-auth.js.org/tutorials/creating-a-database-adapter) or [contritube](https://github.com/nextauthjs/.github/blob/main/CONTRIBUTING.md) to this repository.
 
 ## Contributing
 

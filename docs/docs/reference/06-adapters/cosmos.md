@@ -129,3 +129,5 @@ const costmosDBDetailedConfig = {
   }
 }
 ```
+
+> **Azure Cosmos DB - Caution**: Currently, this library only works with NoSQL version of Azure Cosmos DB. If you wnat to make another versions of Azure Cosmos DB, [try making your own](https://next-auth.js.org/tutorials/creating-a-database-adapter) or [contritube](https://github.com/nextauthjs/.github/blob/main/CONTRIBUTING.md) to this repository.
