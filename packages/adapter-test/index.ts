@@ -44,6 +44,7 @@ export function runBasicTests(options: TestOptions) {
   beforeAll(async () => {
     await options.db.connect?.()
   })
+
   const { adapter, db } = options
 
   afterAll(async () => {

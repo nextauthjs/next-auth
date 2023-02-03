@@ -1,5 +1,5 @@
 import { runBasicTests } from "@next-auth/adapter-test"
-import MyAdapter from "../src"
+import { CosmosAdapter } from "../src"
 import { getCosmos } from "../src/cosmos"
 import https from "node:https"
 import { SqlQuerySpec } from "@azure/cosmos"
@@ -20,7 +20,7 @@ const CLIENT_OPTIONS = {
 const db = getCosmos({ clientOptions: CLIENT_OPTIONS })
 
 runBasicTests({
-  adapter: MyAdapter({
+  adapter: CosmosAdapter({
     clientOptions: CLIENT_OPTIONS,
   }),
   db: {

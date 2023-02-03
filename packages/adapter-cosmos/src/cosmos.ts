@@ -5,6 +5,7 @@ import {
   CosmosClientOptions,
   Database,
   DatabaseRequest,
+  RequestOptions,
 } from "@azure/cosmos"
 
 let client: null | CosmosClient = null
@@ -30,99 +31,105 @@ function getClient(options?: CosmosClientOptions): CosmosClient {
   return client as CosmosClient
 }
 
-async function setDb(clientOptions: CosmosClientOptions, req: DatabaseRequest) {
-  db = (await getClient(clientOptions).databases.createIfNotExists(req))
-    .database
+async function setDb(
+  clientOptions: CosmosClientOptions,
+  dbOptions: CosmosDataBaseOptions
+) {
+  db = (
+    await getClient(clientOptions).databases.createIfNotExists(
+      dbOptions.body,
+      dbOptions.options
+    )
+  ).database
 }
 
 interface CosmosDBBaseOptions {
   clientOptions: CosmosClientOptions
-  dbOptions?: DatabaseRequest
+  dbOptions?: CosmosDataBaseOptions
+}
+interface CosmosDataBaseOptions {
+  body: DatabaseRequest
+  options?: RequestOptions
+}
+interface CosmosContainerOptions {
+  body: ContainerRequest
+  options?: RequestOptions
 }
 
 export interface CosmosDBInitOptions extends CosmosDBBaseOptions {
   containerOptions?: {
-    usersOptions?: ContainerRequest
-    accountsOptions?: ContainerRequest
-    sessionsOptions?: ContainerRequest
-    tokensOptions?: ContainerRequest
+    usersOptions?: CosmosContainerOptions
+    accountsOptions?: CosmosContainerOptions
+    sessionsOptions?: CosmosContainerOptions
+    tokensOptions?: CosmosContainerOptions
   }
 }
 
 async function init(options: CosmosDBBaseOptions) {
-  if (client === null) setClient(options.clientOptions)
+  const { clientOptions, dbOptions } = options
+  if (client === null) setClient(clientOptions)
   if (db === null) {
-    await setDb(
-      options.clientOptions,
-      options.dbOptions ?? { id: DEFAULT_DB_NAME }
-    )
+    await setDb(clientOptions, dbOptions ?? { body: { id: DEFAULT_DB_NAME } })
   }
 }
 
 export async function getContainer(
-  options: CosmosDBBaseOptions,
-  req: ContainerRequest & { id: string }
+  dbOptions: CosmosDBBaseOptions,
+  body: ContainerRequest & { id: string },
+  options?: RequestOptions
 ) {
-  if (!container[req.id]) {
-    await init(options)
-    container[req.id] = (
-      await (db as Database).containers.createIfNotExists(req)
+  if (!container[body.id]) {
+    await init(dbOptions)
+    container[body.id] = (
+      await (db as Database).containers.createIfNotExists(body, options)
     ).container
   }
-  return container[req.id] as Container
+  return container[body.id] as Container
 }
-
 export const getCosmos = (options: CosmosDBInitOptions) => {
   const { containerOptions, ...baseOptions } = options
   return {
     users: async () => {
       return await getContainer(
         baseOptions,
-        containerOptions?.usersOptions
-          ? Object.assign({ id: CONTAINER_USER }, containerOptions.usersOptions)
-          : {
-              id: CONTAINER_USER,
-              uniqueKeyPolicy: { uniqueKeys: [{ paths: ["/email"] }] },
-            }
+        Object.assign(
+          {
+            id: CONTAINER_USER,
+            uniqueKeyPolicy: { uniqueKeys: [{ paths: ["/email"] }] },
+          },
+          containerOptions?.usersOptions?.body
+        ),
+        containerOptions?.usersOptions?.options
       )
     },
     accounts: async () => {
       return await getContainer(
         baseOptions,
-        containerOptions?.usersOptions
-          ? Object.assign(
-              { id: CONTAINER_ACCOUNTS },
-              containerOptions.usersOptions
-            )
-          : {
-              id: CONTAINER_ACCOUNTS,
-            }
+        Object.assign(
+          { id: CONTAINER_ACCOUNTS },
+          containerOptions?.accountsOptions?.body
+        ),
+        containerOptions?.accountsOptions?.options
       )
     },
     sessions: async () => {
       return await getContainer(
         baseOptions,
-        containerOptions?.usersOptions
-          ? Object.assign(
-              { id: CONTAINER_SESSIONS },
-              containerOptions.usersOptions
-            )
-          : {
-              id: CONTAINER_SESSIONS,
-            }
+        Object.assign(
+          { id: CONTAINER_SESSIONS },
+          containerOptions?.sessionsOptions?.body
+        ),
+        containerOptions?.sessionsOptions?.options
       )
     },
     tokens: async () => {
       return await getContainer(
         baseOptions,
-        containerOptions?.usersOptions
-          ? Object.assign(
-              { id: CONTAINER_TOKENS },
-              containerOptions.usersOptions
-            )
-          : {
-              id: CONTAINER_TOKENS,
-            }
+        Object.assign(
+          { id: CONTAINER_TOKENS },
+          containerOptions?.tokensOptions?.body
+        ),
+        containerOptions?.tokensOptions?.options
       )
     },
   }

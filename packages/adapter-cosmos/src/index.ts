@@ -8,7 +8,7 @@ import {
 import { CosmosDBInitOptions, getCosmos } from "./cosmos"
 import { convertCosmosDocument } from "./util"
 
-export default function MyAdapter(options: CosmosDBInitOptions): Adapter {
+export function CosmosAdapter(options: CosmosDBInitOptions): Adapter {
   // const BULK_DELETE_PROCEDURE = "bulkDelete"
   const db = getCosmos(options)
   return {
@@ -20,7 +20,7 @@ export default function MyAdapter(options: CosmosDBInitOptions): Adapter {
     async getUser(id) {
       const users = await db.users()
       const { resource } = await users
-        .item(id, options.containerOptions?.usersOptions?.partitionKey)
+        .item(id, options.containerOptions?.usersOptions?.body?.partitionKey)
         .read()
       if (resource === undefined) return null
       return convertCosmosDocument(resource)
@@ -57,7 +57,10 @@ export default function MyAdapter(options: CosmosDBInitOptions): Adapter {
       if (account_result && account_result.length > 0) {
         const { userId } = account_result[0] as AdapterAccount
         const { resource } = await (await db.users())
-          .item(userId, options.containerOptions?.usersOptions?.partitionKey)
+          .item(
+            userId,
+            options.containerOptions?.usersOptions?.body?.partitionKey
+          )
           .read()
         return convertCosmosDocument(resource)
       }
@@ -67,7 +70,7 @@ export default function MyAdapter(options: CosmosDBInitOptions): Adapter {
       const users = await db.users()
       const target = users.item(
         user.id as string,
-        options.containerOptions?.usersOptions?.partitionKey
+        options.containerOptions?.usersOptions?.body?.partitionKey
       )
       const { resource: original_user } = await target.read()
       const replacement = Object.assign(original_user, user)
@@ -106,7 +109,7 @@ export default function MyAdapter(options: CosmosDBInitOptions): Adapter {
               await accounts
                 .item(
                   account.id,
-                  options.containerOptions?.accountsOptions?.partitionKey
+                  options.containerOptions?.accountsOptions?.body?.partitionKey
                 )
                 .delete()
           )
@@ -125,7 +128,7 @@ export default function MyAdapter(options: CosmosDBInitOptions): Adapter {
               await sessions
                 .item(
                   session.id,
-                  options.containerOptions?.sessionsOptions?.partitionKey
+                  options.containerOptions?.sessionsOptions?.body?.partitionKey
                 )
                 .delete()
           )
@@ -152,7 +155,7 @@ export default function MyAdapter(options: CosmosDBInitOptions): Adapter {
         await accounts
           .item(
             resources[0].id,
-            options.containerOptions?.accountsOptions?.partitionKey
+            options.containerOptions?.accountsOptions?.body?.partitionKey
           )
           .delete()
       }
@@ -180,7 +183,7 @@ export default function MyAdapter(options: CosmosDBInitOptions): Adapter {
           await users
             .item(
               session.userId,
-              options.containerOptions?.usersOptions?.partitionKey
+              options.containerOptions?.usersOptions?.body?.partitionKey
             )
             .read<AdapterUser>()
         ).resource
@@ -209,7 +212,7 @@ export default function MyAdapter(options: CosmosDBInitOptions): Adapter {
       if (resources && resources.length > 0) {
         const target = sessions.item(
           (resources[0] as AdapterSession & { id: string }).id,
-          options.containerOptions?.sessionsOptions?.partitionKey
+          options.containerOptions?.sessionsOptions?.body?.partitionKey
         )
         const { resource: original_session } = await target.read()
         const replacement = Object.assign(original_session, partialSession)
@@ -273,7 +276,7 @@ export default function MyAdapter(options: CosmosDBInitOptions): Adapter {
       if (resources.length > 0) {
         const item = tokens.item(
           resources[0].id,
-          options.containerOptions?.tokensOptions?.partitionKey
+          options.containerOptions?.tokensOptions?.body?.partitionKey
         )
         const token = (await item.read()).resource
         await item.delete()
@@ -283,3 +286,5 @@ export default function MyAdapter(options: CosmosDBInitOptions): Adapter {
     },
   }
 }
+
+export { CosmosDBInitOptions }
