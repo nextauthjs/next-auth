@@ -77,10 +77,11 @@
     }
   },
   "scripts": {
-    "build": "pnpm css && tsc",
+    "build": "pnpm css && pnpm providers && tsc",
     "clean": "rm -rf *.js *.d.ts* lib providers",
     "css": "node scripts/generate-css",
-    "dev": "pnpm css && tsc -w"
+    "dev": "pnpm css && pnpm providers && tsc -w",
+    "providers": "node scripts/generate-providers"
   },
   "devDependencies": {
     "@next-auth/tsconfig": "workspace:*",

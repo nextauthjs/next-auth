@@ -188,7 +188,7 @@ export async function AuthInternal<
 
 /**
  * :::danger
- * This option is inteded for framework authors.
+ * This option is intended for framework authors.
  * :::
  *
  * Auth.js comes with built-in {@link https://authjs.dev/concepts/security#csrf CSRF} protection, but
