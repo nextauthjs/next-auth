@@ -84,7 +84,7 @@ import { getProviders, signIn } from "next-auth/react"
 export default function SignIn({ providers }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
-      {providers && Object.values(providers).map((provider) => (
+      {Object.values(providers).map((provider) => (
         <div key={provider.name}>
           <button onClick={() => signIn(provider.id)}>
             Sign in with {provider.name}
@@ -98,7 +98,7 @@ export default function SignIn({ providers }: InferGetServerSidePropsType<typeof
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const providers = await getProviders()
   return {
-    props: { providers },
+    props: { providers: Object.values(providers) ?? [] },
   }
 }
 ```
