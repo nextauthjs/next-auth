@@ -220,7 +220,7 @@ const docusaurusConfig = {
         watch: process.env.TYPEDOC_WATCH,
         entryPoints: ["index.ts", "client.ts"].map((e) => `../packages/frameworks-sveltekit/src/lib/${e}`),
         tsconfig: "../packages/frameworks-sveltekit/tsconfig.json",
-        out: "reference/04-sveltekit",
+        out: "reference/sveltekit",
         sidebar: {
           indexLabel: "index",
         },

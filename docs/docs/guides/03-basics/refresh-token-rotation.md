@@ -22,7 +22,7 @@ Using a JWT to store the `refresh_token` is less secure than saving it in a data
 
 #### JWT strategy
 
-Using the [jwt](../../reference/03-core/interfaces/types.CallbacksOptions.md#jwt) and [session](../../reference/03-core/interfaces/types.CallbacksOptions.md#session) callbacks, we can persist OAuth tokens and refresh them when they expire.
+Using the [jwt](../../reference/core/interfaces/types.CallbacksOptions.md#jwt) and [session](../../reference/core/interfaces/types.CallbacksOptions.md#session) callbacks, we can persist OAuth tokens and refresh them when they expire.
 
 Below is a sample implementation using Google's Identity Provider. Please note that the OAuth 2.0 request in the `refreshAccessToken()` function will vary between different providers, but the core logic should remain similar.
 
