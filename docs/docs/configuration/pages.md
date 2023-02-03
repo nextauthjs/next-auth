@@ -80,7 +80,7 @@ In order to get the available authentication providers and the URLs to use for t
 ```jsx title="pages/auth/signin.js"
 import { getProviders, signIn } from "next-auth/react"
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "../../pages/api/auth/[...nextauth]";
+import { authOptions } from "../api/auth/[...nextauth]";
 
 export default function SignIn({ providers }) {
   return (
