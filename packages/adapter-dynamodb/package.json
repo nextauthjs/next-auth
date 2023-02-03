@@ -1,7 +1,7 @@
 {
   "name": "@next-auth/dynamodb-adapter",
   "repository": "https://github.com/nextauthjs/next-auth",
-  "version": "2.0.0",
+  "version": "2.0.0-experimental.0",
   "description": "AWS DynamoDB adapter for next-auth.",
   "keywords": [
     "next-auth",
@@ -15,7 +15,16 @@
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
-  "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    },
+    "./utils": {
+      "types": "./utils.d.ts",
+      "import": "./utils.js"
+    }
+  },
   "private": false,
   "publishConfig": {
     "access": "public"
@@ -28,9 +37,12 @@
   },
   "files": [
     "README.md",
-    "*.js",
-    "*.d.ts",
-    "*.d.ts.map",
+    "index.js",
+    "index.d.ts",
+    "index.d.ts.map",
+    "utils.js",
+    "utils.d.ts",
+    "utils.d.ts.map",
     "src"
   ],
   "author": "Pol Marnette",
