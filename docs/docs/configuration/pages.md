@@ -77,12 +77,13 @@ In addition, you can define a `theme.brandColor` to define a custom accent color
 
 In order to get the available authentication providers and the URLs to use for them, you can make a request to the API endpoint `/api/auth/providers`:
 
-```jsx title="pages/auth/signin.js"
+```tsx title="pages/auth/signin.tsx"
+import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { getProviders, signIn } from "next-auth/react"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "../api/auth/[...nextauth]";
 
-export default function SignIn({ providers }) {
+export default function SignIn({ providers }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
       {Object.values(providers).map((provider) => (
@@ -96,7 +97,7 @@ export default function SignIn({ providers }) {
   )
 }
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerSession(context.req, context.res, authOptions);
   
   // If the user is already logged in, redirect.
@@ -109,7 +110,7 @@ export async function getServerSideProps(context) {
   const providers = await getProviders(context);
   
   return {
-    props: { providers },
+    props: { providers: Object.values(providers) ?? [] },
   }
 }
 ```
@@ -120,10 +121,11 @@ There is another, more fully styled example signin page available [here](https:/
 
 If you create a custom sign in form for email sign in, you will need to submit both fields for the **email** address and **csrfToken** from **/api/auth/csrf** in a POST request to **/api/auth/signin/email**.
 
-```jsx title="pages/auth/email-signin.js"
+```tsx title="pages/auth/email-signin.tsx"
+import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { getCsrfToken } from "next-auth/react"
 
-export default function SignIn({ csrfToken }) {
+export default function SignIn({ csrfToken }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <form method="post" action="/api/auth/signin/email">
       <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
@@ -136,7 +138,7 @@ export default function SignIn({ csrfToken }) {
   )
 }
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   const csrfToken = await getCsrfToken(context)
   return {
     props: { csrfToken },
@@ -146,7 +148,7 @@ export async function getServerSideProps(context) {
 
 You can also use the `signIn()` function which will handle obtaining the CSRF token for you:
 
-```js
+```ts
 signIn("email", { email: "jsmith@example.com" })
 ```
 
@@ -154,10 +156,11 @@ signIn("email", { email: "jsmith@example.com" })
 
 If you create a sign in form for credentials based authentication, you will need to pass a **csrfToken** from **/api/auth/csrf** in a POST request to **/api/auth/callback/credentials**.
 
-```jsx title="pages/auth/credentials-signin.js"
+```tsx title="pages/auth/credentials-signin.tsx"
+import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { getCsrfToken } from "next-auth/react"
 
-export default function SignIn({ csrfToken }) {
+export default function SignIn({ csrfToken }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <form method="post" action="/api/auth/callback/credentials">
       <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
@@ -174,7 +177,7 @@ export default function SignIn({ csrfToken }) {
   )
 }
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       csrfToken: await getCsrfToken(context),
@@ -185,7 +188,7 @@ export async function getServerSideProps(context) {
 
 You can also use the `signIn()` function which will handle obtaining the CSRF token for you:
 
-```js
+```ts
 signIn("credentials", { username: "jsmith", password: "1234" })
 ```
 
