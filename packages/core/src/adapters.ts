@@ -107,7 +107,7 @@
  *
  * ### Federated logout
  *
- * Auth.js _currently_ does not support {@link https://authjs.dev/concepts/oidc#federated-logout federated logout} out of the box.
+ * Auth.js _currently_ does not support {@link https://authjs.dev/concepts/oauth#federated-logout federated logout} out of the box.
  * This means that even if an active session is deleted from the database, the user will still be signed in to the identity provider,
  * they will only be signed out of the application.
  * Eg. if you use Google as an identity provider, and you delete the session from the database,
