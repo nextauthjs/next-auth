@@ -113,9 +113,8 @@
  * Eg. if you use Google as an identity provider, and you delete the session from the database,
  * the user will still be signed in to Google, but they will be signed out of your application.
  *
- * <!-- TODO: Create a federated logout guide. -->
  * If your users might be using the application from a publicly shared computer (eg: library), you might want to implement federated logout.
- * [This discussion](https://github.com/nextauthjs/next-auth/discussions/3938) should provide the necessary steps.
+ * {@link https://authjs.dev/guides/providers/federated-logout This guide} should provide the necessary steps.
  *
  * @module adapters
  */
