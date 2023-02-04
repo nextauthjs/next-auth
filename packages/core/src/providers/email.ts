@@ -111,6 +111,8 @@ export function Email(config: EmailConfig): EmailConfig {
   }
 }
 
+export default Email
+
 /**
  * Email HTML body
  * Insert invisible space into domains from being turned into a hyperlink by email
