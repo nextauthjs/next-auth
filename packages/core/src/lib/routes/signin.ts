@@ -54,7 +54,7 @@ export async function signin(
     logger.error(error)
     url.searchParams.set("error", error.name)
     url.pathname += "/error"
-    return { redirect: url }
+    return { redirect: url.toString() }
   }
 }
 

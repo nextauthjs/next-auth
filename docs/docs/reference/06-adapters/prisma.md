@@ -139,9 +139,10 @@ Prisma supports MongoDB, and so does Auth.js. Following the instructions of the 
 id  String  @id @default(auto()) @map("_id") @db.ObjectId
 ```
 
-2. The Native database type attribute to `@db.String` from `@db.Text`.
+2. The Native database type attribute to `@db.String` from `@db.Text` and userId to `@db.ObjectId`.
 
 ```prisma
+user_id            String   @db.ObjectId
 refresh_token      String?  @db.String
 access_token       String?  @db.String
 id_token           String?  @db.String

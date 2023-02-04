@@ -40,7 +40,6 @@ packages/*/*.js
 packages/*/*.d.ts
 packages/*/*.d.ts.map
 
-
 # Development app
 apps/dev/src/css
 apps/dev/prisma/migrations
@@ -80,11 +79,12 @@ docs/.docusaurus
 docs/providers.json
 
 # Core
+packages/core/src/providers/oauth-types.ts
 packages/core/lib
 packages/core/providers
 packages/core/src/lib/pages/styles.ts
 docs/docs/reference/core
-docs/docs/reference/04-sveltekit
+docs/docs/reference/sveltekit
 
 
 # SvelteKit

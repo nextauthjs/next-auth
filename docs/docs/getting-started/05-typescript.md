@@ -5,7 +5,7 @@ title: TypeScript
 Auth.js has its own type definitions to use in your TypeScript projects safely. Even if you don't use TypeScript, IDEs like VSCode will pick this up to provide you with a better developer experience. While you are typing, you will get suggestions about what certain objects/functions look like, and sometimes links to documentation, examples, and other valuable resources.
 
 Check out the example repository showcasing how to use `next-auth` on a Next.js application with TypeScript:  
-https://github.com/nextauthjs/next-auth-typescript-example
+https://github.com/nextauthjs/next-auth-example
 
 ---
 

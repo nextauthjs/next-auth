@@ -2,6 +2,7 @@ import { Auth, type AuthConfig } from "@auth/core"
 
 // Providers
 import Apple from "@auth/core/providers/apple"
+import Asgardeo from "@auth/core/providers/asgardeo"
 import Auth0 from "@auth/core/providers/auth0"
 import AzureAD from "@auth/core/providers/azure-ad"
 import AzureB2C from "@auth/core/providers/azure-ad-b2c"
@@ -23,6 +24,7 @@ import Instagram from "@auth/core/providers/instagram"
 import Line from "@auth/core/providers/line"
 import LinkedIn from "@auth/core/providers/linkedin"
 import Mailchimp from "@auth/core/providers/mailchimp"
+import Notion from "@auth/core/providers/notion"
 // import Okta from "@auth/core/providers/okta"
 import Osu from "@auth/core/providers/osu"
 import Patreon from "@auth/core/providers/patreon"
@@ -68,7 +70,7 @@ import WorkOS from "@auth/core/providers/workos"
 
 export const authConfig: AuthConfig = {
   // adapter,
-  // debug: process.env.NODE_ENV !== "production",
+  debug: process.env.NODE_ENV !== "production",
   theme: {
     logo: "https://next-auth.js.org/img/logo/logo-sm.png",
     brandColor: "#1786fb",
@@ -82,6 +84,7 @@ export const authConfig: AuthConfig = {
       },
     }),
     Apple({ clientId: process.env.APPLE_ID, clientSecret: process.env.APPLE_SECRET }),
+    Asgardeo({ clientId: process.env.ASGARDEO_CLIENT_ID, clientSecret: process.env.ASGARDEO_CLIENT_SECRET, issuer: process.env.ASGARDEO_ISSUER }),
     Auth0({ clientId: process.env.AUTH0_ID, clientSecret: process.env.AUTH0_SECRET, issuer: process.env.AUTH0_ISSUER }),
     AzureAD({
       clientId: process.env.AZURE_AD_CLIENT_ID,
@@ -105,6 +108,7 @@ export const authConfig: AuthConfig = {
     Line({ clientId: process.env.LINE_ID, clientSecret: process.env.LINE_SECRET }),
     LinkedIn({ clientId: process.env.LINKEDIN_ID, clientSecret: process.env.LINKEDIN_SECRET }),
     Mailchimp({ clientId: process.env.MAILCHIMP_ID, clientSecret: process.env.MAILCHIMP_SECRET }),
+    Notion({ clientId: process.env.NOTION_ID, clientSecret: process.env.NOTION_SECRET, redirectUri: process.env.NOTION_REDIRECT_URI }),
     // Okta({ clientId: process.env.OKTA_ID, clientSecret: process.env.OKTA_SECRET, issuer: process.env.OKTA_ISSUER }),
     Osu({ clientId: process.env.OSU_CLIENT_ID, clientSecret: process.env.OSU_CLIENT_SECRET }),
     Patreon({ clientId: process.env.PATREON_ID, clientSecret: process.env.PATREON_SECRET }),
