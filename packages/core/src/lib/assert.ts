@@ -37,6 +37,8 @@ function isValidHttpUrl(url: string, baseUrl: string) {
 /**
  * Verify that the user configured Auth.js correctly.
  * Good place to mention deprecations as well.
+ *
+ * This is invoked before the init method, so default values are not available yet.
  */
 export function assertConfig(
   request: RequestInternal,
