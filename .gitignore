@@ -96,8 +96,3 @@ packages/frameworks-sveltekit/.svelte-kit
 packages/frameworks-sveltekit/package
 packages/frameworks-sveltekit/vite.config.js.timestamp-*
 packages/frameworks-sveltekit/vite.config.ts.timestamp-*
-
-# DynamoDB
-packages/adapter-dynamodb/*.d.ts
-packages/adapter-dynamodb/*.d.ts.map
-packages/adapter-dynamodb/*.js
