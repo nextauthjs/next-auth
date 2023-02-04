@@ -19,10 +19,6 @@
     ".": {
       "types": "./index.d.ts",
       "import": "./index.js"
-    },
-    "./utils": {
-      "types": "./utils.d.ts",
-      "import": "./utils.js"
     }
   },
   "private": false,
@@ -40,9 +36,6 @@
     "index.js",
     "index.d.ts",
     "index.d.ts.map",
-    "utils.js",
-    "utils.d.ts",
-    "utils.d.ts.map",
     "src"
   ],
   "author": "Pol Marnette",
