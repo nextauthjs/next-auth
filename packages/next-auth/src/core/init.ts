@@ -54,6 +54,7 @@ export async function init({
   const { providers, provider } = parseProviders({
     providers: authOptions.providers,
     url,
+    callbackUrl: reqCallbackUrl,
     providerId,
   })
 

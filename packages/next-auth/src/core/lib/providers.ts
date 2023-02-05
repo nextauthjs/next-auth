@@ -14,12 +14,13 @@ import type {
 export default function parseProviders(params: {
   providers: Provider[]
   url: URL
+  callbackUrl: string | undefined
   providerId?: string
 }): {
   providers: InternalProvider[]
   provider?: InternalProvider
 } {
-  const { url, providerId } = params
+  const { url, callbackUrl, providerId } = params
 
   const providers = params.providers.map<InternalProvider>(
     ({ options: userOptions, ...rest }) => {
@@ -30,14 +31,14 @@ export default function parseProviders(params: {
         return merge(normalizedOptions, {
           ...normalizedUserOptions,
           signinUrl: `${url}/signin/${id}`,
-          callbackUrl: `${url}/callback/${id}`,
+          callbackUrl: callbackUrl || `${url}/callback/${id}`,
         })
       }
       const id = (userOptions?.id as string) ?? rest.id
       return merge(rest, {
         ...userOptions,
         signinUrl: `${url}/signin/${id}`,
-        callbackUrl: `${url}/callback/${id}`,
+        callbackUrl: callbackUrl || `${url}/callback/${id}`,
       })
     }
   )

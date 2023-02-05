@@ -16,12 +16,13 @@ import type {
 export default function parseProviders(params: {
   providers: Provider[]
   url: URL
+  callbackUrl: string | undefined
   providerId?: string
 }): {
   providers: InternalProvider[]
   provider?: InternalProvider
 } {
-  const { url, providerId } = params
+  const { url, callbackUrl, providerId } = params
 
   const providers = params.providers.map((provider) => {
     const { options: userOptions, ...defaults } = provider
@@ -29,7 +30,7 @@ export default function parseProviders(params: {
     const id = (userOptions?.id ?? defaults.id) as string
     const merged = merge(defaults, userOptions, {
       signinUrl: `${url}/signin/${id}`,
-      callbackUrl: `${url}/callback/${id}`,
+      callbackUrl: callbackUrl || `${url}/callback/${id}`,
     })
 
     if (provider.type === "oauth" || provider.type === "oidc") {
