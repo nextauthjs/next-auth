@@ -93,7 +93,7 @@
           "value": "errors.authjs.dev"
         }
       ],
-      "destination": "https://authjs.dev/reference/core/modules/errors/:path*"
+      "destination": "https://authjs.dev/reference/core/errors/:path*"
     },
     {
       "source": "/:path(.*)",
@@ -123,7 +123,7 @@
           "value": "providers.authjs.dev"
         }
       ],
-      "destination": "https://authjs.dev/reference/core/functions/providers_:path.default"
+      "destination": "https://authjs.dev/reference/core/providers_:path.default"
     }
   ]
 }
