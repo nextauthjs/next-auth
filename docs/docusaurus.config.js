@@ -226,6 +226,21 @@ const docusaurusConfig = {
         },
       },
     ],
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        ...typedocConfig,
+        id: "firebase-adapter",
+        plugin: [require.resolve("./typedoc-mdn-links")],
+        watch: process.env.TYPEDOC_WATCH,
+        entryPoints: ["../packages/adapter-firebase/src/index.ts"],
+        tsconfig: "../packages/adapter-firebase/tsconfig.json",
+        out: "reference/adapter/firebase",
+        sidebar: {
+          indexLabel: "Firebase",
+        },
+      },
+    ],
   ],
 }
 

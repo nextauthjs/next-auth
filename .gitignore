@@ -12,6 +12,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 firebase-debug.log
+ui-debug.log
 .pnpm-debug.log
 
 
@@ -78,9 +79,6 @@ docs/.docusaurus
 docs/providers.json
 
 # Core
-packages/core/*.js
-packages/core/*.d.ts
-packages/core/*.d.ts.map
 packages/core/src/providers/oauth-types.ts
 packages/core/lib
 packages/core/providers
@@ -96,3 +94,7 @@ packages/frameworks-sveltekit/.svelte-kit
 packages/frameworks-sveltekit/package
 packages/frameworks-sveltekit/vite.config.js.timestamp-*
 packages/frameworks-sveltekit/vite.config.ts.timestamp-*
+
+# Adapters
+
+docs/docs/reference/adapter
