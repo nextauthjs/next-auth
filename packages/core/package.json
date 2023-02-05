@@ -27,7 +27,7 @@
   "types": "./index.d.ts",
   "files": [
     "*.js",
-    "*.d.ts",
+    "*.d.ts*",
     "lib",
     "providers",
     "src"
