@@ -6,5 +6,6 @@ export default {
   ...rest,
   testEnvironmentOptions: {
     url: testURL
-  }
+  },
+  rootDir: ".."
 }

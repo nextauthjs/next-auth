@@ -20,8 +20,9 @@
     }
   },
   "files": [
+    "src",
     "*.js",
-    "*.d.ts"
+    "*.d.ts*"
   ],
   "license": "ISC",
   "keywords": [
@@ -37,7 +38,7 @@
   "scripts": {
     "dev": "tsc -w",
     "build": "tsc",
-    "test": "firebase emulators:exec --only firestore --project next-auth-test jest"
+    "test": "firebase emulators:exec --only firestore --project next-auth-test 'jest -c tests/jest.config.js'"
   },
   "peerDependencies": {
     "firebase-admin": "^11.4.1",

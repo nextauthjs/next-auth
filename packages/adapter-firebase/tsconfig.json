@@ -18,7 +18,6 @@
     "src/**/*"
   ],
   "exclude": [
-    "tests",
-    "jest.config.js"
+    "tests"
   ]
 }
