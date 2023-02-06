@@ -56,7 +56,9 @@ export { default } from "next-auth/middleware"
 export const config = { matcher: ["/dashboard"] }
 ```
 
-For the time being, the `withAuth` middleware only supports `"jwt"` as [session strategy](https://next-auth.js.org/configuration/options#session).
+For the time being, the `withAuth` middleware only supports `"jwt"` as [session strategy](https://next-auth.js.org/configuration/options#session). Currently, this should be adapated by adding the following to the authOptions API route file e.g. `[...nextauth].ts`:
+
+`session: { strategy: "jwt" }`
 
 More details can be found [here](https://next-auth.js.org/configuration/nextjs#middleware).
 
