@@ -1,6 +1,6 @@
 {
   "name": "@feynman/auth-core",
-  "version": "0.4.0@next",
+  "version": "0.4.1",
   "description": "Authentication for the Web.",
   "keywords": [
     "authentication",
