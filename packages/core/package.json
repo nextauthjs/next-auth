@@ -1,5 +1,5 @@
 {
-  "name": "@auth/core",
+  "name": "@feynman/auth-core",
   "version": "0.4.0",
   "description": "Authentication for the Web.",
   "keywords": [
