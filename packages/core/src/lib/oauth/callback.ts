@@ -124,7 +124,7 @@ export async function handleOAuth(
     for (const challenge of challenges) {
       console.log("challenge", challenge)
     }
-    throw new Error("TODO: Handle www-authenticate challenges as needed")
+    console.warn("TODO: Handle www-authenticate challenges as needed")
   }
 
   let profile: Profile = {}
