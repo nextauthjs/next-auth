@@ -51,6 +51,7 @@
     "docs#build": {
       "dependsOn": ["^build"],
       "outputs": [
+        "build",
         "docs/reference/core",
         "docs/reference/sveltekit",
         "docs/reference/adapter/**"
