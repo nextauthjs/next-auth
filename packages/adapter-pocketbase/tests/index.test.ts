@@ -21,8 +21,8 @@ const pb = new Pocketbase("http://127.0.0.1:8090")
 
 runBasicTests({
   adapter: PocketbaseAdapter(pb, {
-    username: "test@test.com",
-    password: "pocketbase1234",
+    username: "",
+    password: "",
   }),
   db: {
     async session(sessionToken) {
