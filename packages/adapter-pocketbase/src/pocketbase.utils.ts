@@ -1,6 +1,6 @@
 import Pocketbase from "pocketbase"
 import { nextAuthCollections } from "./pocketbase.schema"
-import { loginOpts } from "./pocketbase.types"
+import { PocketbaseAdapterOptions } from "./pocketbase.types"
 
 const PB_RECORD_KEYS = [
   "created",
@@ -44,11 +44,17 @@ export function format<TAdapterType>(obj: Record<string, any>): TAdapterType {
   return obj as TAdapterType
 }
 
-export async function adminLogin(pb: Pocketbase, options: loginOpts) {
+export async function adminLogin(
+  pb: Pocketbase,
+  options: PocketbaseAdapterOptions
+) {
   return await pb.admins.authWithPassword(options.username, options.password)
 }
 
-async function initCollections(pb: Pocketbase, options: loginOpts) {
+async function initCollections(
+  pb: Pocketbase,
+  options: PocketbaseAdapterOptions
+) {
   try {
     await adminLogin(pb, options)
     await pb.collections.import(nextAuthCollections, false)
@@ -59,7 +65,10 @@ async function initCollections(pb: Pocketbase, options: loginOpts) {
   }
 }
 
-export async function checkCollections(pb: Pocketbase, options: loginOpts) {
+export async function checkCollections(
+  pb: Pocketbase,
+  options: PocketbaseAdapterOptions
+) {
   try {
     await adminLogin(pb, options)
 

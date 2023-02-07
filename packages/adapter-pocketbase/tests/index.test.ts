@@ -6,7 +6,7 @@ import type {
   VerificationToken,
   AdapterUser,
   AdapterSession,
-} from "@auth/core/src/adapters"
+} from "next-auth/src/adapters"
 import type {
   PocketBaseAccount,
   PocketBaseSession,

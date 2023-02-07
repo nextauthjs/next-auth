@@ -1,6 +1,6 @@
 import { type Record as PBRecord } from "pocketbase"
 
-export interface loginOpts {
+export interface PocketbaseAdapterOptions {
   username: string
   password: string
 }
