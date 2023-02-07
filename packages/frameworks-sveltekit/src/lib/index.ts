@@ -192,8 +192,8 @@ import type { Handle } from "@sveltejs/kit"
 import { dev } from "$app/environment"
 import { env } from "$env/dynamic/private"
 
-import { Auth } from "@auth/core"
-import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
+import { Auth } from "@feynman/auth-core"
+import type { AuthAction, AuthConfig, Session } from "@feynman/auth-core/types"
 
 export async function getSession(
   req: Request,

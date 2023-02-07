@@ -1,5 +1,8 @@
 packages:
-  - "packages/*"
-  - "apps/dev/*"
-  - "apps/playgrounds/*"
-  - "docs"
+  - "packages/frameworks-sveltekit"
+  - "packages/core"
+  - "packages/tsconfig"
+  - "packages/next-auth"
+  # - "apps/dev/*"
+  # - "apps/playgrounds/*"
+  # - "docs"

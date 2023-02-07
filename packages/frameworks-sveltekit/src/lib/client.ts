@@ -7,7 +7,7 @@ import type {
 import type {
   BuiltInProviderType,
   RedirectableProviderType,
-} from "@auth/core/providers"
+} from "@feynman/auth-core/providers"
 
 /**
  * Client-side method to initiate a signin flow
