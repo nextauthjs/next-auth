@@ -4,10 +4,10 @@ import type {
   AdapterSession,
   AdapterUser,
   VerificationToken,
-} from "@auth/core/src/adapters"
+} from "next-auth/src/adapters"
 import type Pocketbase from "pocketbase"
 import type {
-  loginOpts,
+  PocketbaseAdapterOptions,
   PocketBaseAccount,
   PocketBaseSession,
   PocketBaseUser,
@@ -17,7 +17,7 @@ import { adminLogin, checkCollections, format } from "./pocketbase.utils"
 
 export const PocketbaseAdapter = (
   client: Pocketbase,
-  options: loginOpts
+  options: PocketbaseAdapterOptions
 ): Adapter => {
   return {
     async createUser(user) {

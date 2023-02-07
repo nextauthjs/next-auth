@@ -1,7 +1,7 @@
 {
   "name": "@next-auth/pocketbase-adapter",
   "version": "0.1.0",
-  "description": "Pocketbase adapter for Auth.js",
+  "description": "PocketBase Adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
@@ -25,11 +25,9 @@
   },
   "peerDependencies": {
     "pocketbase": "^0.10.1",
-    "next-auth": "^4",
-    "@auth/core": "^0.3.0"
+    "next-auth": "^4"
   },
   "devDependencies": {
-    "@auth/core": "workspace:*",
     "@next-auth/adapter-test": "workspace:*",
     "@next-auth/tsconfig": "workspace:*",
     "next-auth": "workspace:*",
