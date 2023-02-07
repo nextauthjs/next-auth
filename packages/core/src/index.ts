@@ -1,5 +1,9 @@
 /**
  *
+ * :::warning Experimental
+ * `@auth/core` is under active development.
+ * :::
+ *
  * This is the main entry point to the Auth.js library.
  *
  * Based on the {@link https://developer.mozilla.org/en-US/docs/Web/API/Request Request}
@@ -29,7 +33,7 @@
  * - [Getting started](https://authjs.dev/getting-started/introduction)
  * - [Most common use case guides](https://authjs.dev/guides)
  *
- * @module main
+ * @module index
  */
 
 import { assertConfig } from "./lib/assert.js"

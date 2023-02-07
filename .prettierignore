@@ -20,8 +20,8 @@ pnpm-lock.yaml
 
 .docusaurus
 build
-docs/docs/reference/03-core
-docs/docs/reference/04-sveltekit
+docs/docs/reference/core
+docs/docs/reference/sveltekit
 static
 docs/providers.json
 
