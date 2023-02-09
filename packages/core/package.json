@@ -1,6 +1,6 @@
 {
   "name": "@auth/core",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Authentication for the Web.",
   "keywords": [
     "authentication",
@@ -27,7 +27,7 @@
   "types": "./index.d.ts",
   "files": [
     "*.js",
-    "*.d.ts",
+    "*.d.ts*",
     "lib",
     "providers",
     "src"

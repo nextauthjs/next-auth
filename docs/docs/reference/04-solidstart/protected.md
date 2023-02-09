@@ -11,7 +11,7 @@ When using SSR, I recommend creating a `Protected` component that will trigger s
 
 ```tsx
 // components/Protected.tsx
-import { type Session } from "@auth/core";
+import { type Session } from "@auth/core/types";
 import { getSession } from "@auth/solid-start";
 import { Component, Show } from "solid-js";
 import { useRouteData } from "solid-start";
