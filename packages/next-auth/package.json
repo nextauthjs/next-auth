@@ -67,12 +67,12 @@
   ],
   "license": "ISC",
   "dependencies": {
-    "@babel/runtime": "^7.16.3",
-    "@panva/hkdf": "^1.0.1",
+    "@babel/runtime": "^7.20.13",
+    "@panva/hkdf": "^1.0.2",
     "cookie": "^0.5.0",
-    "jose": "^4.9.3",
+    "jose": "^4.11.4",
     "oauth": "^0.9.15",
-    "openid-client": "^5.1.0",
+    "openid-client": "^5.4.0",
     "preact": "^10.6.3",
     "preact-render-to-string": "^5.1.19",
     "uuid": "^8.3.2"
