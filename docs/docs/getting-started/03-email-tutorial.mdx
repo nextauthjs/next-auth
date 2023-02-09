@@ -147,8 +147,8 @@ import EmailProvider from "next-auth/providers/email"
 
 export default NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
++ adapter: MongoDBAdapter(clientPromise),
   providers: [
-+   adapter: MongoDBAdapter(clientPromise),
     EmailProvider({
       server: {
         host: process.env.EMAIL_SERVER_HOST,
