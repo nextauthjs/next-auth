@@ -109,8 +109,8 @@ importers:
     specifiers:
       '@auth/core': workspace:*
       '@auth/sveltekit': workspace:*
-      '@sveltejs/adapter-auto': next
-      '@sveltejs/kit': next
+      '@sveltejs/adapter-auto': 2.0.0
+      '@sveltejs/kit': 1.5.2
       svelte: 3.55.0
       svelte-check: 2.10.2
       typescript: 4.9.4
@@ -119,8 +119,8 @@ importers:
       '@auth/core': link:../../../packages/core
       '@auth/sveltekit': link:../../../packages/frameworks-sveltekit
     devDependencies:
-      '@sveltejs/adapter-auto': 1.0.0-next.91_l5ueyfihz3gpzzvvyo2ean5u3e
-      '@sveltejs/kit': 1.0.0-next.589_svelte@3.55.0+vite@4.0.1
+      '@sveltejs/adapter-auto': 2.0.0_@sveltejs+kit@1.5.2
+      '@sveltejs/kit': 1.5.2_svelte@3.55.0+vite@4.0.1
       svelte: 3.55.0
       svelte-check: 2.10.2_svelte@3.55.0
       typescript: 4.9.4
@@ -136,7 +136,7 @@ importers:
       vercel: ^23.1.2
     dependencies:
       dotenv: 16.0.3
-      gatsby: 5.7.0-next.0_biqbaboplfbrettd7655fr4n2y
+      gatsby: 5.7.0-next.1_biqbaboplfbrettd7655fr4n2y
       next-auth: link:../../../packages/next-auth
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -577,9 +577,8 @@ importers:
       typescript: ^4.9.3
       vite: ^4.0.0
       vitest: ^0.25.3
-    dependencies:
-      '@auth/core': link:../core
     devDependencies:
+      '@auth/core': link:../core
       '@playwright/test': 1.29.2
       '@sveltejs/adapter-auto': 1.0.0_@sveltejs+kit@1.0.1
       '@sveltejs/kit': 1.0.1_svelte@3.54.0+vite@4.0.1
@@ -10033,7 +10032,7 @@ packages:
       detect-libc: 2.0.1
       https-proxy-agent: 5.0.1
       make-dir: 3.1.0
-      node-fetch: 2.6.7
+      node-fetch: 2.6.9
       nopt: 5.0.0
       npmlog: 5.0.1
       rimraf: 3.0.2
@@ -11469,15 +11468,6 @@ packages:
       - encoding
       - supports-color
 
-  /@sveltejs/adapter-auto/1.0.0-next.91_l5ueyfihz3gpzzvvyo2ean5u3e:
-    resolution: {integrity: sha512-U57tQdzTfFINim8tzZSARC9ztWPzwOoHwNOpGdb2o6XrD0mEQwU9DsII7dBblvzg+xCnmd0pw7PDtXz5c5t96w==}
-    peerDependencies:
-      '@sveltejs/kit': ^1.0.0-next.587
-    dependencies:
-      '@sveltejs/kit': 1.0.0-next.589_svelte@3.55.0+vite@4.0.1
-      import-meta-resolve: 2.2.0
-    dev: true
-
   /@sveltejs/adapter-auto/1.0.0_@sveltejs+kit@1.0.1:
     resolution: {integrity: sha512-yKyPvlLVua1bJ/42FrR3X041mFGdB4GzTZOAEoHUcNBRE5Mhx94+eqHpC3hNvAOiLEDcKfVO0ObyKSu7qldU+w==}
     peerDependencies:
@@ -11487,32 +11477,13 @@ packages:
       import-meta-resolve: 2.2.0
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.589_svelte@3.55.0+vite@4.0.1:
-    resolution: {integrity: sha512-5ABRw46z9B+cCe/YWhcx+I/azNZg1NCDEkVJifZn8ToFoJ3a1eP0OexNIrvMEWpllMbNMPcJm2TC9tnz9oPfWQ==}
-    engines: {node: '>=16.14'}
-    hasBin: true
-    requiresBuild: true
+  /@sveltejs/adapter-auto/2.0.0_@sveltejs+kit@1.5.2:
+    resolution: {integrity: sha512-b+gkHFZgD771kgV3aO4avHFd7y1zhmMYy9i6xOK7m/rwmwaRO8gnF5zBc0Rgca80B2PMU1bKNxyBTHA14OzUAQ==}
     peerDependencies:
-      svelte: ^3.54.0
-      vite: ^4.0.0
+      '@sveltejs/kit': ^1.0.0
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 2.0.0_svelte@3.55.0+vite@4.0.1
-      '@types/cookie': 0.5.1
-      cookie: 0.5.0
-      devalue: 4.2.0
-      esm-env: 1.0.0
-      kleur: 4.1.5
-      magic-string: 0.27.0
-      mime: 3.0.0
-      sade: 1.8.1
-      set-cookie-parser: 2.5.1
-      sirv: 2.0.2
-      svelte: 3.55.0
-      tiny-glob: 0.2.9
-      undici: 5.11.0
-      vite: 4.0.1
-    transitivePeerDependencies:
-      - supports-color
+      '@sveltejs/kit': 1.5.2_svelte@3.55.0+vite@4.0.1
+      import-meta-resolve: 2.2.0
     dev: true
 
   /@sveltejs/kit/1.0.1_svelte@3.54.0+vite@4.0.1:
@@ -11536,6 +11507,34 @@ packages:
       set-cookie-parser: 2.5.1
       sirv: 2.0.2
       svelte: 3.54.0
+      tiny-glob: 0.2.9
+      undici: 5.11.0
+      vite: 4.0.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /@sveltejs/kit/1.5.2_svelte@3.55.0+vite@4.0.1:
+    resolution: {integrity: sha512-ZLi5x1dy5M4EU/NlH/fvSJ1k2wT3/04NaEOkSMJvGS0JYyFPn+H2tXbVQg7XI/eX84d5GeScxwmn4UVZWaMbsA==}
+    engines: {node: ^16.14 || >=18}
+    hasBin: true
+    requiresBuild: true
+    peerDependencies:
+      svelte: ^3.54.0
+      vite: ^4.0.0
+    dependencies:
+      '@sveltejs/vite-plugin-svelte': 2.0.0_svelte@3.55.0+vite@4.0.1
+      '@types/cookie': 0.5.1
+      cookie: 0.5.0
+      devalue: 4.2.3
+      esm-env: 1.0.0
+      kleur: 4.1.5
+      magic-string: 0.27.0
+      mime: 3.0.0
+      sade: 1.8.1
+      set-cookie-parser: 2.5.1
+      sirv: 2.0.2
+      svelte: 3.55.0
       tiny-glob: 0.2.9
       undici: 5.11.0
       vite: 4.0.1
@@ -13750,8 +13749,10 @@ packages:
       indent-string: 4.0.0
     dev: true
 
-  /ajv-formats/2.1.1:
+  /ajv-formats/2.1.1_ajv@8.11.0:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
+    peerDependencies:
+      ajv: ^8.0.0
     peerDependenciesMeta:
       ajv:
         optional: true
@@ -14281,7 +14282,7 @@ packages:
   /axios/0.21.4_debug@4.3.4:
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
-      follow-redirects: 1.15.1
+      follow-redirects: 1.15.1_debug@4.3.4
     transitivePeerDependencies:
       - debug
 
@@ -14693,7 +14694,7 @@ packages:
       - supports-color
     dev: true
 
-  /babel-plugin-remove-graphql-queries/5.7.0-next.0_kwfgdicz63ldiwfqlkadmrpj4y:
+  /babel-plugin-remove-graphql-queries/5.7.0-next.0_cxr7kolukxcsg4uwvujushu6be:
     resolution: {integrity: sha512-dguL6QCS9duTt22QZYlu4ZY/DW/EjCkUc/43YDkfR/lbx32OqKwg1+zKYAE67bJ5PKhdK7PP+dh0486dt4iavQ==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
@@ -14703,7 +14704,7 @@ packages:
       '@babel/core': 7.20.12
       '@babel/runtime': 7.20.13
       '@babel/types': 7.20.7
-      gatsby: 5.7.0-next.0_biqbaboplfbrettd7655fr4n2y
+      gatsby: 5.7.0-next.1_biqbaboplfbrettd7655fr4n2y
       gatsby-core-utils: 4.7.0-next.0
     dev: false
 
@@ -17655,6 +17656,10 @@ packages:
     resolution: {integrity: sha512-mbjoAaCL2qogBKgeFxFPOXAUsZchircF+B/79LD4sHH0+NHfYm8gZpQrskKDn5gENGt35+5OI1GUF7hLVnkPDw==}
     dev: true
 
+  /devalue/4.2.3:
+    resolution: {integrity: sha512-JG6Q248aN0pgFL57e3zqTVeFraBe+5W2ugvv1mLXsJP6YYIYJhRZhAl7QP8haJrqob6X10F9NEkuCvNILZTPeQ==}
+    dev: true
+
   /devcert/1.2.2:
     resolution: {integrity: sha512-UsLqvtJGPiGwsIZnJINUnFYaWgK7CroreGRndWHZkRD58tPFr3pVbbSyHR8lbh41+azR4jKvuNZ+eCoBZGA5kA==}
     dependencies:
@@ -19542,7 +19547,7 @@ packages:
     dependencies:
       '@apidevtools/json-schema-ref-parser': 9.0.9
       ajv: 8.11.0
-      ajv-formats: 2.1.1
+      ajv-formats: 2.1.1_ajv@8.11.0
       body-parser: 1.20.0
       content-type: 1.0.4
       deep-freeze: 0.0.1
@@ -20197,6 +20202,7 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
+    dev: true
 
   /follow-redirects/1.15.1_debug@4.3.4:
     resolution: {integrity: sha512-yLAMQs+k0b2m7cVxpS1VKJVvoz7SS9Td1zss3XRwXj+ZDH00RJgnuLx7E44wx02kQLrdM3aOOy+FpzS7+8OizA==}
@@ -20208,7 +20214,6 @@ packages:
         optional: true
     dependencies:
       debug: 4.3.4
-    dev: true
 
   /for-each/0.3.3:
     resolution: {integrity: sha512-jqYfLp7mo9vIyQf8ykW2v7A+2N4QjeCeI5+Dz9XraiO1ign81wjiH7Fb9vSOWvQfNtmSa4H2RoQTrrXivdUZmw==}
@@ -20603,7 +20608,7 @@ packages:
       '@parcel/transformer-json': 2.8.3_@parcel+core@2.8.3
     dev: false
 
-  /gatsby-plugin-page-creator/5.7.0-next.0_5qnviuipb4fcbildeubwcez6ia:
+  /gatsby-plugin-page-creator/5.7.0-next.0_e44oxwzymwip3tpyxtznkbhvbu:
     resolution: {integrity: sha512-Lq7lyHBNiHvgjTXeybUo+cn/QjOjoN1PnoZlKyM0wGpJOX9nn6hrED+C5FylOKf4hS/RjLPaGf4OnYzeOAkWtQ==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
@@ -20615,10 +20620,10 @@ packages:
       chokidar: 3.5.3
       fs-exists-cached: 1.0.0
       fs-extra: 11.1.0
-      gatsby: 5.7.0-next.0_biqbaboplfbrettd7655fr4n2y
+      gatsby: 5.7.0-next.1_biqbaboplfbrettd7655fr4n2y
       gatsby-core-utils: 4.7.0-next.0
       gatsby-page-utils: 3.7.0-next.0
-      gatsby-plugin-utils: 4.7.0-next.0_5qnviuipb4fcbildeubwcez6ia
+      gatsby-plugin-utils: 4.7.0-next.0_e44oxwzymwip3tpyxtznkbhvbu
       gatsby-telemetry: 4.7.0-next.0
       globby: 11.1.0
       lodash: 4.17.21
@@ -20628,7 +20633,7 @@ packages:
       - supports-color
     dev: false
 
-  /gatsby-plugin-typescript/5.7.0-next.0_gatsby@5.7.0-next.0:
+  /gatsby-plugin-typescript/5.7.0-next.0_gatsby@5.7.0-next.1:
     resolution: {integrity: sha512-r60b1a2SOAZRYmV+rpPCW58QgeutbCHpOeaG7mDBHSNU3nnL2WWjvSmJFpbvwYRsTUhd54k1EXYENB7nX4Sw/w==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
@@ -20640,13 +20645,13 @@ packages:
       '@babel/plugin-proposal-optional-chaining': 7.20.7_@babel+core@7.20.12
       '@babel/preset-typescript': 7.18.6_@babel+core@7.20.12
       '@babel/runtime': 7.20.13
-      babel-plugin-remove-graphql-queries: 5.7.0-next.0_kwfgdicz63ldiwfqlkadmrpj4y
-      gatsby: 5.7.0-next.0_biqbaboplfbrettd7655fr4n2y
+      babel-plugin-remove-graphql-queries: 5.7.0-next.0_cxr7kolukxcsg4uwvujushu6be
+      gatsby: 5.7.0-next.1_biqbaboplfbrettd7655fr4n2y
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /gatsby-plugin-utils/4.7.0-next.0_5qnviuipb4fcbildeubwcez6ia:
+  /gatsby-plugin-utils/4.7.0-next.0_e44oxwzymwip3tpyxtznkbhvbu:
     resolution: {integrity: sha512-yWgUlqItsOST/cmqxAYuzZKoLv/lnmztQn5Pk7jtJup/jnISqzq1LVYKS027ZFIRDTp1u0flRwlC3vlhH4kd8Q==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
@@ -20656,7 +20661,7 @@ packages:
       '@babel/runtime': 7.20.13
       fastq: 1.15.0
       fs-extra: 11.1.0
-      gatsby: 5.7.0-next.0_biqbaboplfbrettd7655fr4n2y
+      gatsby: 5.7.0-next.1_biqbaboplfbrettd7655fr4n2y
       gatsby-core-utils: 4.7.0-next.0
       gatsby-sharp: 1.7.0-next.0
       graphql: 16.6.0
@@ -20735,8 +20740,8 @@ packages:
       - supports-color
     dev: false
 
-  /gatsby/5.7.0-next.0_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-QBYsyxuct7qhGLkl1jdU0zJS5C5B6wDaxUnReaI9qD+R898cc0KZgGcxhWFzXTk3c6mKGXebW0BBcRBMZ8f3+A==}
+  /gatsby/5.7.0-next.1_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-rrFzcpLRBg9X2sFAsE/AgWS2R80pDKCtIhf7U5aY8RujGKm3+ULkvJGQT5hHaDdW6AFdCT1DAx+jp9B+KoHGlQ==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     requiresBuild: true
@@ -20782,7 +20787,7 @@ packages:
       babel-plugin-add-module-exports: 1.0.4
       babel-plugin-dynamic-import-node: 2.3.3
       babel-plugin-lodash: 3.3.4
-      babel-plugin-remove-graphql-queries: 5.7.0-next.0_kwfgdicz63ldiwfqlkadmrpj4y
+      babel-plugin-remove-graphql-queries: 5.7.0-next.0_cxr7kolukxcsg4uwvujushu6be
       babel-preset-gatsby: 3.7.0-next.0_pp2vm42zn6vfmnpuhar3irht7i
       better-opn: 2.1.1
       bluebird: 3.7.2
@@ -20831,9 +20836,9 @@ packages:
       gatsby-link: 5.7.0-next.0_uxzdzcrcylloub4rxar25ny6ra
       gatsby-page-utils: 3.7.0-next.0
       gatsby-parcel-config: 1.7.0-next.0_@parcel+core@2.8.3
-      gatsby-plugin-page-creator: 5.7.0-next.0_5qnviuipb4fcbildeubwcez6ia
-      gatsby-plugin-typescript: 5.7.0-next.0_gatsby@5.7.0-next.0
-      gatsby-plugin-utils: 4.7.0-next.0_5qnviuipb4fcbildeubwcez6ia
+      gatsby-plugin-page-creator: 5.7.0-next.0_e44oxwzymwip3tpyxtznkbhvbu
+      gatsby-plugin-typescript: 5.7.0-next.0_gatsby@5.7.0-next.1
+      gatsby-plugin-utils: 4.7.0-next.0_e44oxwzymwip3tpyxtznkbhvbu
       gatsby-react-router-scroll: 6.7.0-next.0_uxzdzcrcylloub4rxar25ny6ra
       gatsby-script: 2.7.0-next.0_uxzdzcrcylloub4rxar25ny6ra
       gatsby-telemetry: 4.7.0-next.0
@@ -21995,7 +22000,7 @@ packages:
     engines: {node: '>=8.0.0'}
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: 1.15.1
+      follow-redirects: 1.15.1_debug@4.3.4
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
@@ -30982,7 +30987,7 @@ packages:
     dependencies:
       '@types/json-schema': 7.0.11
       ajv: 8.11.0
-      ajv-formats: 2.1.1
+      ajv-formats: 2.1.1_ajv@8.11.0
       ajv-keywords: 5.1.0_ajv@8.11.0
     dev: true
 

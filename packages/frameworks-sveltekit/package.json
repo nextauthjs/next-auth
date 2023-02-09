@@ -32,6 +32,7 @@
     "test:unit": "vitest"
   },
   "devDependencies": {
+    "@auth/core": "workspace:*",
     "@playwright/test": "1.29.2",
     "@sveltejs/adapter-auto": "^1.0.0",
     "@sveltejs/kit": "^1.0.0",
@@ -44,10 +45,8 @@
     "vite": "^4.0.0",
     "vitest": "^0.25.3"
   },
-  "dependencies": {
-    "@auth/core": "workspace:*"
-  },
   "peerDependencies": {
+    "@auth/core": "^4.0.0",
     "svelte": "^3.54.0",
     "@sveltejs/kit": "^1.0.0"
   },
