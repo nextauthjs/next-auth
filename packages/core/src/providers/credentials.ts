@@ -43,7 +43,7 @@ export interface CredentialsConfig<
     /**
      * The available keys are determined by {@link CredentialInput}.
      *
-     * @note The existence/correctness of a field cannot be guaranteed at runtime,
+     * @note The existence/correctness of a field cannot be guaranteed at compile time,
      * so you should always validate the input before using it.
      *
      * You can add basic validation depending on your use case,
