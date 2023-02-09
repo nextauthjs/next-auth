@@ -112,7 +112,7 @@ providers: [
       identifier: email,
       url,
       provider: { server, from },
-      requestHeaders, // for example can be used to request user agent to parse and pass on to the user
+      requestHeaders, // for example can be used to get the user agent (`requestHeaders["user-agent"]`) to parse and pass on to the user in the email so they can be more confident they originated the request
       requestQuery,
       requestBody
     }) {
