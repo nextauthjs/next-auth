@@ -131,7 +131,6 @@ async function sendVerificationRequest({
   identifier: email,
   url,
   provider: { server, from },
-  requestHeaders,
 }) {
   const { host } = new URL(url)
   const transport = nodemailer.createTransport(server)
