@@ -112,6 +112,9 @@ providers: [
       identifier: email,
       url,
       provider: { server, from },
+      requestHeaders, // for example can be used to request user agent to parse and pass on to the user
+      requestQuery,
+      requestBody
     }) {
       /* your function */
     },
@@ -128,15 +131,17 @@ async function sendVerificationRequest({
   identifier: email,
   url,
   provider: { server, from },
+  requestHeaders,
 }) {
   const { host } = new URL(url)
   const transport = nodemailer.createTransport(server)
+  const userAgent = requestHeaders?.["user-agent"]
   await transport.sendMail({
     to: email,
     from,
     subject: `Sign in to ${host}`,
     text: text({ url, host }),
-    html: html({ url, host, email }),
+    html: html({ url, host, email, userAgent }),
   })
 }
 
@@ -184,6 +189,9 @@ function html({ url, host, email }: Record<"url" | "host" | "email", string>) {
     <tr>
       <td align="center" style="padding: 0px 0px 10px 0px; font-size: 16px; line-height: 22px; font-family: Helvetica, Arial, sans-serif; color: ${textColor};">
         If you did not request this email you can safely ignore it.
+      </td>
+      <td align="center" style="padding: 0px 0px 10px 0px; font-size: 16px; line-height: 22px; font-family: Helvetica, Arial, sans-serif; color: ${textColor};">
+        This login was requested using ${userAgent}.
       </td>
     </tr>
   </table>

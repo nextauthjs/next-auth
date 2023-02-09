@@ -11,9 +11,9 @@ export interface SendVerificationRequestParams {
   provider: EmailConfig
   token: string
   theme: Theme
-  headers: RequestInternal["headers"]
-  query: RequestInternal["query"]
-  body: RequestInternal["body"]
+  requestHeaders: RequestInternal["headers"]
+  requestQuery: RequestInternal["query"]
+  requestBody: RequestInternal["body"]
 }
 
 /**
@@ -94,16 +94,15 @@ export function Email(config: EmailConfig): EmailConfig {
     from: "Auth.js <no-reply@authjs.dev>",
     maxAge: 24 * 60 * 60,
     async sendVerificationRequest(params) {
-      const { identifier, url, provider, theme, headers } = params
+      const { identifier, url, provider, theme } = params
       const { host } = new URL(url)
       const transport = createTransport(provider.server)
-      const userAgent = headers?.["user-agent"]
       const result = await transport.sendMail({
         to: identifier,
         from: provider.from,
         subject: `Sign in to ${host}`,
         text: text({ url, host }),
-        html: html({ url, host, theme, using: userAgent }),
+        html: html({ url, host, theme }),
       })
       const failed = result.rejected.concat(result.pending).filter(Boolean)
       if (failed.length) {
@@ -127,9 +126,8 @@ function html(params: {
   url: string
   host: string
   theme: Theme
-  using: string
 }) {
-  const { url, host, theme, using } = params
+  const { url, host, theme } = params
 
   const escapedHost = host.replace(/\./g, "&#8203;.")
 
@@ -150,14 +148,10 @@ function html(params: {
   return `
 <body style="background: ${color.background};">
   <table width="100%" border="0" cellspacing="20" cellpadding="0"
-    style="background: ${
-      color.mainBackground
-    }; max-width: 600px; margin: auto; border-radius: 10px;">
+    style="background: ${color.mainBackground}; max-width: 600px; margin: auto; border-radius: 10px;">
     <tr>
       <td align="center"
-        style="padding: 10px 0px; font-size: 22px; font-family: Helvetica, Arial, sans-serif; color: ${
-          color.text
-        };">
+        style="padding: 10px 0px; font-size: 22px; font-family: Helvetica, Arial, sans-serif; color: ${color.text};">
         Sign in to <strong>${escapedHost}</strong>
       </td>
     </tr>
@@ -165,15 +159,9 @@ function html(params: {
       <td align="center" style="padding: 20px 0;">
         <table border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td align="center" style="border-radius: 5px;" bgcolor="${
-              color.buttonBackground
-            }"><a href="${url}"
+            <td align="center" style="border-radius: 5px;" bgcolor="${color.buttonBackground}"><a href="${url}"
                 target="_blank"
-                style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: ${
-                  color.buttonText
-                }; text-decoration: none; border-radius: 5px; padding: 10px 20px; border: 1px solid ${
-    color.buttonBorder
-  }; display: inline-block; font-weight: bold;">Sign
+                style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: ${color.buttonText}; text-decoration: none; border-radius: 5px; padding: 10px 20px; border: 1px solid ${color.buttonBorder}; display: inline-block; font-weight: bold;">Sign
                 in</a></td>
           </tr>
         </table>
@@ -181,20 +169,8 @@ function html(params: {
     </tr>
     <tr>
       <td align="center"
-        style="padding: 0px 0px 10px 0px; font-size: 16px; line-height: 22px; font-family: Helvetica, Arial, sans-serif; color: ${
-          color.text
-        };">
+        style="padding: 0px 0px 10px 0px; font-size: 16px; line-height: 22px; font-family: Helvetica, Arial, sans-serif; color: ${color.text};">
         If you did not request this email you can safely ignore it.
-      </td>
-      <td align="center"
-        style="padding: 0px 0px 10px 0px; font-size: 16px; line-height: 22px; font-family: Helvetica, Arial, sans-serif; color: ${
-          color.text
-        };">
-        This login was requested at ${
-          new Date().toLocaleString("en-US", {
-            timeZone: "America/Los_Angeles",
-          }) + " PST"
-        } using ${using}.
       </td>
     </tr>
   </table>
