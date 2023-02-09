@@ -18,7 +18,8 @@ import type {
 export async function signin(
   query: RequestInternal["query"],
   body: RequestInternal["body"],
-  options: InternalOptions<"oauth" | "email">
+  options: InternalOptions<"oauth" | "email">,
+  request: RequestInternal
 ): Promise<ResponseInternal> {
   const { url, logger, provider } = options
   try {
@@ -45,7 +46,7 @@ export async function signin(
 
       if (unauthorizedOrError) return unauthorizedOrError
 
-      const redirect = await emailSignin(email, options)
+      const redirect = await emailSignin(email, options, request)
       return { redirect }
     }
     return { redirect: `${url}/signin` }

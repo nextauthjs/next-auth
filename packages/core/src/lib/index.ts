@@ -142,7 +142,8 @@ export async function AuthInternal<
           const signin = await routes.signin(
             request.query,
             request.body,
-            options
+            options,
+            request
           )
           if (signin.cookies) cookies.push(...signin.cookies)
           return { ...signin, cookies }
