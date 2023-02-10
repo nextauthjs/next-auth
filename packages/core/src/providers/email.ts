@@ -2,7 +2,7 @@ import { createTransport } from "nodemailer"
 
 import type { CommonProviderOptions } from "./index.js"
 import type { Options as SMTPTransportOptions } from "nodemailer/lib/smtp-transport"
-import type { Awaitable, RequestInternal, Theme } from "../types.js"
+import type { Awaitable, Theme } from "../types.js"
 
 export interface SendVerificationRequestParams {
   identifier: string
@@ -11,9 +11,7 @@ export interface SendVerificationRequestParams {
   provider: EmailConfig
   token: string
   theme: Theme
-  requestHeaders: RequestInternal["headers"]
-  requestQuery: RequestInternal["query"]
-  requestBody: RequestInternal["body"]
+  request: Request
 }
 
 /**
@@ -122,11 +120,7 @@ export function Email(config: EmailConfig): EmailConfig {
  *
  * @note We don't add the email address to avoid needing to escape it, if you do, remember to sanitize it!
  */
-function html(params: {
-  url: string
-  host: string
-  theme: Theme
-}) {
+function html(params: { url: string; host: string; theme: Theme }) {
   const { url, host, theme } = params
 
   const escapedHost = host.replace(/\./g, "&#8203;.")

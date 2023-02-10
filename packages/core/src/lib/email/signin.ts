@@ -32,9 +32,11 @@ export default async function email(
       url: _url,
       provider,
       theme,
-      requestHeaders: request.headers,
-      requestQuery: request.query,
-      requestBody: request.body,
+      request: new Request(request.url, {
+        headers: request.headers,
+        method: request.method,
+        body: JSON.stringify(request.body ?? {}),
+      }),
     }),
     // @ts-expect-error -- Verified in `assertConfig`.
     adapter.createVerificationToken?.({
