@@ -35,7 +35,10 @@ export default async function email(
       request: new Request(request.url, {
         headers: request.headers,
         method: request.method,
-        body: JSON.stringify(request.body ?? {}),
+        body:
+          request.method !== "POST"
+            ? JSON.stringify(request.body ?? {})
+            : undefined,
       }),
     }),
     // @ts-expect-error -- Verified in `assertConfig`.
