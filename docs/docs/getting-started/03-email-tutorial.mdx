@@ -72,11 +72,11 @@ export default NextAuth({
   providers: [
     Email({
       server: {
-        host: process.env.EMAIL_SERVER_HOST,
-        port: Number(process.env.EMAIL_SERVER_PORT),
+        host: process.env.SMTP_HOST,
+        port: Number(process.env.SMTP_PORT),
         auth: {
-          user: process.env.EMAIL_SERVER_USER,
-          pass: process.env.EMAIL_SERVER_PASSWORD,
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASSWORD,
         },
       },
       from: process.env.EMAIL_FROM,
