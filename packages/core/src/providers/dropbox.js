@@ -23,7 +23,7 @@
  * ...
  * ```
  * *Resources:*
- * - [NextAuth.js Documentation](https://next-auth.js.org/providers/dropbox)
+ * - [NextAuth.js Documentation](https://authjs.dev/reference/oauth-providers/dropbox)
  * - [Dropbox Documentation](https://developers.dropbox.com/oauth-guide)
  * - [Configuration](https://www.dropbox.com/developers/apps)
  */

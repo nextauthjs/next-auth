@@ -1,9 +1,9 @@
-import { AccountNotLinkedError } from "./errors.js"
+import { AccountNotLinked } from "../errors.js"
 import { fromDate } from "./utils/date.js"
 
-import type { Account, InternalOptions, User } from "../index.js"
 import type { AdapterSession, AdapterUser } from "../adapters.js"
-import type { JWT } from "../jwt/index.js"
+import type { Account, InternalOptions, User } from "../types.js"
+import type { JWT } from "../jwt.js"
 import type { OAuthConfig } from "../providers/index.js"
 import type { SessionToken } from "./cookie.js"
 
@@ -19,13 +19,12 @@ import type { SessionToken } from "./cookie.js"
  * done prior to this handler being called to avoid additonal complexity in this
  * handler.
  */
-export default async function callbackHandler(params: {
-  sessionToken?: SessionToken
-  profile: User | AdapterUser | { email: string }
-  account: Account | null
+export async function handleLogin(
+  sessionToken: SessionToken,
+  _profile: User | AdapterUser | { email: string },
+  account: Account | null,
   options: InternalOptions
-}) {
-  const { sessionToken, profile: _profile, account, options } = params
+) {
   // Input validation
   if (!account?.providerAccountId || !account.type)
     throw new Error("Missing or invalid provider account")
@@ -133,8 +132,9 @@ export default async function callbackHandler(params: {
         // If the user is currently signed in, but the new account they are signing in
         // with is already associated with another user, then we cannot link them
         // and need to return an error.
-        throw new AccountNotLinkedError(
-          "The account is already associated with another user"
+        throw new AccountNotLinked(
+          "The account is already associated with another user",
+          { provider: account.provider }
         )
       }
       // If there is no active session, but the account being signed in with is already
@@ -193,8 +193,9 @@ export default async function callbackHandler(params: {
           // We don't want to have two accounts with the same email address, and we don't
           // want to link them in case it's not safe to do so, so instead we prompt the user
           // to sign in via email to verify their identity and then link the accounts.
-          throw new AccountNotLinkedError(
-            "Another account already exists with the same e-mail address"
+          throw new AccountNotLinked(
+            "Another account already exists with the same e-mail address",
+            { provider: account.provider }
           )
         }
       } else {

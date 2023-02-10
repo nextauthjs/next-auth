@@ -34,22 +34,21 @@ export default function AzureAD<P extends AzureADProfile>(
       )
 
       // Confirm that profile photo was returned
-      if (response.ok) {
-        const pictureBuffer = await response.arrayBuffer()
-        const pictureBase64 = Buffer.from(pictureBuffer).toString("base64")
-        return {
-          id: profile.sub,
-          name: profile.name,
-          email: profile.email,
-          image: `data:image/jpeg;base64, ${pictureBase64}`,
-        }
-      } else {
-        return {
-          id: profile.sub,
-          name: profile.name,
-          email: profile.email,
-          image: null,
-        }
+      let image
+      // TODO: Do this without Buffer
+      if (response.ok && typeof Buffer !== "undefined") {
+        try {
+          const pictureBuffer = await response.arrayBuffer()
+          const pictureBase64 = Buffer.from(pictureBuffer).toString("base64")
+          image = `data:image/jpeg;base64, ${pictureBase64}`
+        } catch {}
+      }
+
+      return {
+        id: profile.sub,
+        name: profile.name,
+        email: profile.email,
+        image: image ?? null,
       }
     },
     style: {

@@ -1,5 +1,8 @@
 {
-  "emulators": {
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "emulator": {
     "firestore": {
       "port": 8080
     }

@@ -1,18 +1,23 @@
-import { adapterErrorHandler, eventsErrorHandler } from "./errors.js"
-import * as jwt from "../jwt/index.js"
+import * as jwt from "../jwt.js"
 import { createCallbackUrl } from "./callback-url.js"
 import * as cookie from "./cookie.js"
 import { createCSRFToken } from "./csrf-token.js"
 import { defaultCallbacks } from "./default-callbacks.js"
+import { AdapterError, EventError } from "../errors.js"
 import parseProviders from "./providers.js"
-import logger from "./utils/logger.js"
+import { logger, type LoggerInstance } from "./utils/logger.js"
 import parseUrl from "./utils/parse-url.js"
 
-import type { AuthOptions, InternalOptions, RequestInternal } from "../index.js"
+import type {
+  AuthConfig,
+  EventCallbacks,
+  InternalOptions,
+  RequestInternal,
+} from "../types.js"
 
 interface InitParams {
   url: URL
-  authOptions: AuthOptions
+  authOptions: AuthConfig
   providerId?: string
   action: InternalOptions["action"]
   /** Callback URL value extracted from the incoming request. */
@@ -20,6 +25,7 @@ interface InitParams {
   /** CSRF token value extracted from the incoming request. From body if POST, from query if GET */
   csrfToken?: string
   /** Is the incoming request a POST request? */
+  csrfDisabled: boolean
   isPost: boolean
   cookies: RequestInternal["cookies"]
 }
@@ -33,6 +39,7 @@ export async function init({
   cookies: reqCookies,
   callbackUrl: reqCallbackUrl,
   csrfToken: reqCsrfToken,
+  csrfDisabled,
   isPost,
 }: InitParams): Promise<{
   options: InternalOptions
@@ -86,7 +93,7 @@ export async function init({
       strategy: authOptions.adapter ? "database" : "jwt",
       maxAge,
       updateAge: 24 * 60 * 60,
-      generateSessionToken: crypto.randomUUID,
+      generateSessionToken: () => crypto.randomUUID(),
       ...authOptions.session,
     },
     // JWT options
@@ -112,26 +119,28 @@ export async function init({
 
   const cookies: cookie.Cookie[] = []
 
-  const {
-    csrfToken,
-    cookie: csrfCookie,
-    csrfTokenVerified,
-  } = await createCSRFToken({
-    options,
-    cookieValue: reqCookies?.[options.cookies.csrfToken.name],
-    isPost,
-    bodyValue: reqCsrfToken,
-  })
-
-  options.csrfToken = csrfToken
-  options.csrfTokenVerified = csrfTokenVerified
-
-  if (csrfCookie) {
-    cookies.push({
-      name: options.cookies.csrfToken.name,
-      value: csrfCookie,
-      options: options.cookies.csrfToken.options,
+  if (!csrfDisabled) {
+    const {
+      csrfToken,
+      cookie: csrfCookie,
+      csrfTokenVerified,
+    } = await createCSRFToken({
+      options,
+      cookieValue: reqCookies?.[options.cookies.csrfToken.name],
+      isPost,
+      bodyValue: reqCsrfToken,
     })
+
+    options.csrfToken = csrfToken
+    options.csrfTokenVerified = csrfTokenVerified
+
+    if (csrfCookie) {
+      cookies.push({
+        name: options.cookies.csrfToken.name,
+        value: csrfCookie,
+        options: options.cookies.csrfToken.options,
+      })
+    }
   }
 
   const { callbackUrl, callbackUrlCookie } = await createCallbackUrl({
@@ -149,4 +158,47 @@ export async function init({
   }
 
   return { options, cookies }
+}
+
+type Method = (...args: any[]) => Promise<any>
+
+/** Wraps an object of methods and adds error handling. */
+function eventsErrorHandler(
+  methods: Partial<EventCallbacks>,
+  logger: LoggerInstance
+): Partial<EventCallbacks> {
+  return Object.keys(methods).reduce<any>((acc, name) => {
+    acc[name] = async (...args: any[]) => {
+      try {
+        const method: Method = methods[name as keyof Method]
+        return await method(...args)
+      } catch (e) {
+        logger.error(new EventError(e as Error))
+      }
+    }
+    return acc
+  }, {})
+}
+
+/** Handles adapter induced errors. */
+function adapterErrorHandler<TAdapter>(
+  adapter: TAdapter | undefined,
+  logger: LoggerInstance
+): TAdapter | undefined {
+  if (!adapter) return
+
+  return Object.keys(adapter).reduce<any>((acc, name) => {
+    acc[name] = async (...args: any[]) => {
+      try {
+        logger.debug(`adapter_${name}`, { args })
+        const method: Method = adapter[name as keyof Method]
+        return await method(...args)
+      } catch (e) {
+        const error = new AdapterError(e as Error)
+        logger.error(error)
+        throw error
+      }
+    }
+    return acc
+  }, {})
 }

@@ -1,7 +1,18 @@
 {
   "name": "@auth/core",
-  "version": "0.1.4",
-  "description": "Authentication for the web.",
+  "version": "0.4.0",
+  "description": "Authentication for the Web.",
+  "keywords": [
+    "authentication",
+    "authjs",
+    "jwt",
+    "oauth",
+    "oidc",
+    "passwordless",
+    "standard",
+    "vanilla",
+    "webapi"
+  ],
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "author": "Balázs Orbán <info@balazsorban.com>",
@@ -9,15 +20,14 @@
     "Balázs Orbán <info@balazsorban.com>",
     "Nico Domino <yo@ndo.dev>",
     "Lluis Agusti <hi@llu.lu>",
-    "Thang Huu Vu <thvu@hey.com>",
+    "Thang Huu Vu <hi@thvu.dev>",
     "Iain Collins <me@iaincollins.com"
   ],
   "type": "module",
   "types": "./index.d.ts",
   "files": [
-    "adapters.*",
-    "index.*",
-    "jwt",
+    "*.js",
+    "*.d.ts*",
     "lib",
     "providers",
     "src"
@@ -30,9 +40,13 @@
     "./adapters": {
       "types": "./adapters.d.ts"
     },
+    "./errors": {
+      "types": "./errors.d.ts",
+      "import": "./errors.js"
+    },
     "./jwt": {
-      "types": "./jwt/index.d.ts",
-      "import": "./jwt/index.js"
+      "types": "./jwt.d.ts",
+      "import": "./jwt.js"
     },
     "./providers": {
       "types": "./providers/index.d.ts"
@@ -40,19 +54,22 @@
     "./providers/*": {
       "types": "./providers/*.d.ts",
       "import": "./providers/*.js"
+    },
+    "./types": {
+      "types": "./types.d.ts"
     }
   },
   "license": "ISC",
   "dependencies": {
-    "@panva/hkdf": "1.0.2",
+    "@panva/hkdf": "^1.0.2",
     "cookie": "0.5.0",
-    "jose": "4.11.1",
-    "oauth4webapi": "2.0.5",
+    "jose": "^4.11.1",
+    "oauth4webapi": "^2.0.6",
     "preact": "10.11.3",
     "preact-render-to-string": "5.2.3"
   },
   "peerDependencies": {
-    "nodemailer": "6.8.0"
+    "nodemailer": "^6.8.0"
   },
   "peerDependenciesMeta": {
     "nodemailer": {
@@ -60,21 +77,19 @@
     }
   },
   "scripts": {
-    "build": "pnpm clean && tsc && pnpm css",
-    "generate-reference": "pnpm typedoc --plugin typedoc-plugin-markdown src/index.ts",
-    "clean": "rm -rf adapters.* index.* jwt lib providers",
-    "css": "node ./scripts/generate-css.js",
-    "lint": "eslint src",
-    "format": "pnpm lint --fix",
-    "dev": "pnpm css && tsc -w"
+    "build": "pnpm css && pnpm providers && tsc",
+    "clean": "rm -rf *.js *.d.ts* lib providers",
+    "css": "node scripts/generate-css",
+    "dev": "pnpm css && pnpm providers && tsc -w",
+    "providers": "node scripts/generate-providers"
   },
   "devDependencies": {
     "@next-auth/tsconfig": "workspace:*",
+    "@types/cookie": "0.5.1",
     "@types/node": "18.11.10",
     "@types/nodemailer": "6.4.6",
     "@types/react": "18.0.26",
     "autoprefixer": "10.4.13",
-    "cssnano": "5.1.14",
     "postcss": "8.4.19",
     "postcss-nested": "6.0.0"
   }

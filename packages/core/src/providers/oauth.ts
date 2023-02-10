@@ -1,5 +1,5 @@
 import type { Client } from "oauth4webapi"
-import type { Awaitable, Profile, TokenSet, User } from "../index.js"
+import type { Awaitable, Profile, TokenSet, User } from "../types.js"
 import type { CommonProviderOptions } from "../providers/index.js"
 
 // TODO:
@@ -10,8 +10,6 @@ type OAuthCallbackChecks = any
 type OpenIDCallbackChecks = any
 
 export type { OAuthProviderType } from "./oauth-types.js"
-
-type ChecksType = "pkce" | "state" | "none" | "nonce"
 
 export type OAuthChecks = OpenIDCallbackChecks | OAuthCallbackChecks
 
@@ -44,6 +42,8 @@ interface AdvancedEndpointHandler<P extends UrlParams, C, R> {
    * You should **try to avoid using advanced options** unless you are very comfortable using them.
    */
   request?: EndpointRequest<C, R, P>
+  /** @internal */
+  conform?: (response: Response) => Awaitable<Response | undefined>
 }
 
 /** Either an URL (containing all the parameters) or an object with more granular control. */
@@ -66,7 +66,7 @@ export type TokenEndpointHandler = EndpointHandler<
     params: CallbackParamsType
     /**
      * When using this custom flow, make sure to do all the necessary security checks.
-     * Thist object contains parameters you have to match against the request to make sure it is valid.
+     * This object contains parameters you have to match against the request to make sure it is valid.
      */
     checks: OAuthChecks
   },
@@ -81,8 +81,8 @@ export type UserinfoEndpointHandler = EndpointHandler<
   Profile
 >
 
-export type ProfileCallback<P> = (
-  profile: P,
+export type ProfileCallback<Profile> = (
+  profile: Profile,
   tokens: TokenSet
 ) => Awaitable<User>
 
@@ -95,13 +95,16 @@ export interface OAuthProviderButtonStyles {
   textDark: string
 }
 
-export interface OAuth2Config<P> extends CommonProviderOptions, PartialIssuer {
+/** TODO: */
+export interface OAuth2Config<Profile>
+  extends CommonProviderOptions,
+    PartialIssuer {
   /**
    * Identifies the provider when you want to sign in to
    * a specific provider.
    *
    * @example
-   * ```js
+   * ```ts
    * signIn('github') // "github" is the provider ID
    * ```
    */
@@ -133,24 +136,24 @@ export interface OAuth2Config<P> extends CommonProviderOptions, PartialIssuer {
    * This will be used to create the user in the database.
    * Defaults to: `id`, `email`, `name`, `image`
    *
-   * [Documentation](https://next-auth.js.org/adapters/models#user)
+   * [Documentation](https://authjs.dev/reference/adapters/models#user)
    */
-  profile?: ProfileCallback<P>
+  profile?: ProfileCallback<Profile>
   /**
    * The CSRF protection performed on the callback endpoint.
-   * Defaults to `["pkce"]` if undefined.
+   * @default ["pkce"]
    *
    * [RFC 7636 - Proof Key for Code Exchange by OAuth Public Clients (PKCE)](https://www.rfc-editor.org/rfc/rfc7636.html#section-4) |
    * [RFC 6749 - The OAuth 2.0 Authorization Framework](https://www.rfc-editor.org/rfc/rfc6749.html#section-4.1.1) |
    * [OpenID Connect Core 1.0](https://openid.net/specs/openid-connect-core-1_0.html#IDToken) |
    */
-  checks?: ChecksType[]
+  checks?: Array<"pkce" | "state" | "none" | "nonce">
   clientId?: string
   clientSecret?: string
   client?: Partial<Client>
   style?: OAuthProviderButtonStyles
   /**
-   * [Documentation](https://next-auth.js.org/configuration/providers/oauth#allowdangerousemailaccountlinking-option)
+   * [Documentation](https://authjs.dev/reference/providers/oauth#allowdangerousemailaccountlinking-option)
    */
   allowDangerousEmailAccountLinking?: boolean
   /**
@@ -160,39 +163,45 @@ export interface OAuth2Config<P> extends CommonProviderOptions, PartialIssuer {
    *
    * @internal
    */
-  options?: OAuthUserConfig<P>
+  options?: OAuthUserConfig<Profile>
 }
 
-export interface OIDCConfig<P> extends Omit<OAuth2Config<P>, "type"> {
+/** TODO: */
+export interface OIDCConfig<Profile>
+  extends Omit<OAuth2Config<Profile>, "type"> {
   type: "oidc"
 }
 
-export type OAuthConfig<P> = OIDCConfig<P> | OAuth2Config<P>
+export type OAuthConfig<Profile> = OIDCConfig<Profile> | OAuth2Config<Profile>
 
 export type OAuthEndpointType = "authorization" | "token" | "userinfo"
 
 /**
- * We parsesd `authorization`, `token` and `userinfo`
+ * We parsed `authorization`, `token` and `userinfo`
  * to always contain a valid `URL`, with the params
+ * @internal
  */
-export type OAuthConfigInternal<P> = Omit<
-  OAuthConfig<P>,
-  OAuthEndpointType | "clientId" | "checks" | "profile"
+export type OAuthConfigInternal<Profile> = Omit<
+  OAuthConfig<Profile>,
+  OAuthEndpointType
 > & {
-  clientId: string
   authorization?: { url: URL }
-  token?: { url: URL; request?: TokenEndpointHandler["request"] }
+  token?: {
+    url: URL
+    request?: TokenEndpointHandler["request"]
+    conform?: TokenEndpointHandler["conform"]
+  }
   userinfo?: { url: URL; request?: UserinfoEndpointHandler["request"] }
-  checks: ChecksType[]
-  profile: ProfileCallback<P>
-}
+} & Pick<Required<OAuthConfig<Profile>>, "clientId" | "checks" | "profile">
 
-export type OAuthUserConfig<P> = Omit<
-  Partial<OAuthConfig<P>>,
+export type OAuthUserConfig<Profile> = Omit<
+  Partial<OAuthConfig<Profile>>,
   "options" | "type"
 > &
-  Required<Pick<OAuthConfig<P>, "clientId" | "clientSecret">>
+  Required<Pick<OAuthConfig<Profile>, "clientId" | "clientSecret">>
 
-export type OAuthProvider = (
-  options: Partial<OAuthConfig<any>>
-) => OAuthConfig<any>
+export type OIDCUserConfig<Profile> = Omit<
+  Partial<OIDCConfig<Profile>>,
+  "options" | "type"
+> &
+  Required<Pick<OIDCConfig<Profile>, "clientId" | "clientSecret">>
