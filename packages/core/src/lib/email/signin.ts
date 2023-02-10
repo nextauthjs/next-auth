@@ -36,7 +36,7 @@ export default async function email(
         headers: request.headers,
         method: request.method,
         body:
-          request.method !== "POST"
+          request.method === "POST"
             ? JSON.stringify(request.body ?? {})
             : undefined,
       }),
