@@ -71,7 +71,7 @@ export type CredentialsProviderType = "Credentials"
  * @example
  * ```js
  * import Auth from "@auth/core"
- * import { Credentials } from "@auth/core/providers/credentials"
+ * import Credentials from "@auth/core/providers/credentials"
  *
  * const request = new Request("https://example.com")
  * const resposne = await AuthHandler(request, {
