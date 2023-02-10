@@ -40,7 +40,7 @@ sequenceDiagram
     Note left of Browser: User inserts their<br/>credentials in Github
     Browser->>Auth Server (Github): Github validates the inserted credentials
     Auth Server (Github)->>Auth Server (Github): Generates one time access code<br/>and calls callback<br>URL defined in<br/>App settings
-    Auth Server (Github)->>App Server: GET<br/>"api/auth/github/callback?code=123"
+    Auth Server (Github)->>App Server: GET<br/>"api/auth/callback/github?code=123"
     App Server->>App Server: Grabs code<br/>to exchange it for<br/>access token
     App Server->>Auth Server (Github): POST<br/>"github.com/login/oauth/access_token"<br/>{code: 123}
     Auth Server (Github)->>Auth Server (Github): Verifies code is<br/>valid and generates<br/>access token
