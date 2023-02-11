@@ -36,7 +36,7 @@ providers: [
 In your signIn function, you'll need to add `state` with **any** random string to the `signIn()` function's `authorizationParams` argument
 
 ```js
-<button onClick={() => signIn("reddit", undefined, { state: 'reddit_needs_this_to_work' }) }>Sign In</button>
+<button onClick={ () => signIn("reddit", undefined, { state: 'reddit_needs_this_to_work' }) }>Sign In</button>
 ```
 
 :::warning
