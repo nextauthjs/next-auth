@@ -186,7 +186,7 @@ async function getProfile({
     // If we didn't get a response either there was a problem with the provider
     // response *or* the user cancelled the action with the provider.
     //
-    // Unfortunately, we can't tell which - at least not in a way that works for
+    // Unfortuately, we can't tell which - at least not in a way that works for
     // all providers, so we return an empty object; the user should then be
     // redirected back to the sign up page. We log the error to help developers
     // who might be trying to debug this when configuring a new provider.

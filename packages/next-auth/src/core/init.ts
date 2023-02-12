@@ -59,7 +59,7 @@ export async function init({
 
   const maxAge = 30 * 24 * 60 * 60 // Sessions expire after 30 days of being idle by default
 
-  // User provided options are overridden by other options,
+  // User provided options are overriden by other options,
   // except for the options with special handling above
   const options: InternalOptions = {
     debug: false,

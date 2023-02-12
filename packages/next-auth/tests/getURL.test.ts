@@ -52,9 +52,9 @@ describe("process.env.NEXTAUTH_URL", () => {
   })
 
   it("catch errors", () => {
-    process.env.NEXTAUTH_URL = "invalid-url"
+    process.env.NEXTAUTH_URL = "invald-url"
     expect(getURL("/api/auth/session", {})).toEqual(
-      new TypeError("Invalid URL: invalid-url")
+      new TypeError("Invalid URL: invald-url")
     )
 
     process.env.NEXTAUTH_URL = "file://localhost"
