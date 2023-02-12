@@ -79,7 +79,7 @@ export default NextAuth({
 
 #### Using the branch based preview URL
 
-Preview deployments at Vercel are often available via multiple URLs. For example, PR's merged to `master` or `main`, will be available the commit and PR specific preview URLs, but also the branch specific preview URLs. This branch specific URL will obviously not change as long as you work with that same branch. Therefore, you could add to your OAuth provider your `{project}-git-main-{user}.vercel.app` preview URL. As this will stay constant for that branch, you can reuse that preview deployment / URL for testing any authentication related deployments.
+Preview deployments at Vercel are often available via multiple URLs. For example, PR's merged to `master` or `main`, will be available via commit and PR specific preview URLs, but also the branch specific preview URLs. This branch specific URL will obviously not change as long as you work with that same branch. Therefore, you could add to your OAuth provider your `{project}-git-main-{user}.vercel.app` preview URL. As this will stay constant for that branch, you can reuse that preview deployment / URL for testing any authentication related deployments.
 
 ## Netlify
 
