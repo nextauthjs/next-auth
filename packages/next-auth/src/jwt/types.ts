@@ -36,7 +36,7 @@ export interface JWTDecodeParams {
 export interface JWTOptions {
   /**
    * The secret used to encode/decode the NextAuth.js issued JWT.
-   * @deprecated  Set the `NEXTAUTH_SECRET` environment vairable or
+   * @deprecated  Set the `NEXTAUTH_SECRET` environment variable or
    * use the top-level `secret` option instead
    */
   secret: string

@@ -372,7 +372,7 @@ export function SessionProvider(props: SessionProviderProps) {
           !event ||
           // If the client doesn't have a session then we don't need to call
           // the server to check if it does (if they have signed in via another
-          // tab or window that will come through as a "stroage" event
+          // tab or window that will come through as a "storage" event
           // event anyway)
           __NEXTAUTH._session === null ||
           // Bail out early if the client session is not stale yet

@@ -3,7 +3,7 @@ import type { Awaitable, User } from "../types.js"
 import type { JSXInternal } from "preact/src/jsx.js"
 
 /**
- * Besieds providing type safety inside {@link CredentialsConfig.authorize}
+ * Besides providing type safety inside {@link CredentialsConfig.authorize}
  * it also determines how the credentials input fields will be rendered
  * on the default sign in page.
  */
@@ -82,7 +82,7 @@ export type CredentialsProviderType = "Credentials"
  * import Credentials from "@auth/core/providers/credentials"
  *
  * const request = new Request("https://example.com")
- * const resposne = await AuthHandler(request, {
+ * const response = await AuthHandler(request, {
  *   providers: [
  *     Credentials({
  *       credentials: {

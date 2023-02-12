@@ -8,7 +8,7 @@ export interface AuthClientConfig {
   basePathServer: string
   /** Stores last session response */
   _session?: Session | null | undefined
-  /** Used for timestamp since last sycned (in seconds) */
+  /** Used for timestamp since last synced (in seconds) */
   _lastSync: number
   /**
    * Stores the `SessionProvider`'s session update method to be able to
@@ -26,7 +26,7 @@ export interface CtxOrReq {
  * If passed 'appContext' via getInitialProps() in _app.js
  * then get the req object from ctx and use that for the
  * req value to allow `fetchData` to
- * work seemlessly in getInitialProps() on server side
+ * work seamlessly in getInitialProps() on server side
  * pages *and* in _app.js.
  */
 export async function fetchData<T = any>(
