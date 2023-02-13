@@ -142,8 +142,14 @@ export async function handleOAuth(
       throw new Error("TODO: Handle OIDC response body error")
     }
 
-    profile = o.getValidatedIdTokenClaims(result)
+    // profile = o.getValidatedIdTokenClaims(result)
     tokens = result
+
+    if (provider.userinfo?.request) {
+      profile = await provider.userinfo.request({ tokens, provider })
+    } else {
+      profile = o.getValidatedIdTokenClaims(result)
+    }
   } else {
     tokens = await o.processAuthorizationCodeOAuth2Response(
       as,
