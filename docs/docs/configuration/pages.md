@@ -107,10 +107,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { redirect: { destination: "/" } };
   }
 
-  const providers = await getProviders(context);
+  const providers = await getProviders();
   
   return {
-    props: { providers: Object.values(providers) ?? [] },
+    props: { providers: providers ?? [] },
   }
 }
 ```
