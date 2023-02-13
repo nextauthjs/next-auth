@@ -1,4 +1,3 @@
-import { decodeJwt } from "jose"
 import type { OIDCConfig, OIDCUserConfig } from "./index.js"
 
 export interface VippsProfile extends Record<string, any> {
@@ -47,8 +46,7 @@ export default function Vipps<P extends VippsProfile>(
         return await response.json()
       },
     },
-    profile(profile, tokens) {
-      console.log("TOKEN", tokens.access_token)
+    profile(profile) {
       return {
         id: profile.sub,
         name: profile.name,
