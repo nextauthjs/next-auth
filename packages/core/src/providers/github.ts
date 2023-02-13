@@ -78,7 +78,7 @@ export interface GitHubProfile {
  * import GitHub from "@auth/core/providers/github"
  *
  * const request = new Request("https://example.com")
- * const resposne = await Auth(request, {
+ * const response = await Auth(request, {
  *   providers: [GitHub({ clientId: "", clientSecret: "" })],
  * })
  * ```

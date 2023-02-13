@@ -113,7 +113,7 @@
  * This code sample already implements the correct method by using `const { session } = await parent();`
  * :::
  *
- * You should NOT put authorization logic in a `+layout.server.ts` as the logic is not guaranteed to propragate to leafs in the tree.
+ * You should NOT put authorization logic in a `+layout.server.ts` as the logic is not guaranteed to propagate to leafs in the tree.
  * Prefer to manually protect each route through the `+page.server.ts` file to avoid mistakes.
  * It is possible to force the layout file to run the load function on all routes, however that relies certain behaviours that can change and are not easily checked.
  * For more information about these caveats make sure to read this issue in the SvelteKit repository: https://github.com/sveltejs/kit/issues/6315

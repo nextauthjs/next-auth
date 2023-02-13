@@ -41,7 +41,7 @@ export const PouchDBAdapter: Adapter<
 > = (pouchdb) => {
   return {
     async getAdapter({ session, secret, ...appOptions }) {
-      // create PoucDB indexes if they don't exist
+      // create PouchDB indexes if they don't exist
       const res = await pouchdb.getIndexes()
       const indexes = res.indexes.map((index) => index.name, [])
       if (!indexes.includes("nextAuthUserByEmail")) {

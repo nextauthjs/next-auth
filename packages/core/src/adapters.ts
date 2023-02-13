@@ -5,7 +5,7 @@
  * A database adapter provides a common interface for Auth.js so that it can work with
  * _any_ database/ORM adapter without concerning itself with the implementation details of the database/ORM.
  *
- * Auth.js supports 2 session strtategies to persist the login state of a user.
+ * Auth.js supports 2 session strategies to persist the login state of a user.
  * The default is to use a cookie + {@link https://authjs.dev/concepts/session-strategies#jwt JWT}
  * based session store (`strategy: "jwt"`),
  * but you can also use a database adapter to store the session in a database.
@@ -26,7 +26,7 @@
  *
  * ## Usage
  *
- * {@link https://authjs.dev/reference/adapters/overview Built-in adapters} already implement this interfac, so you likely won't need to
+ * {@link https://authjs.dev/reference/adapters/overview Built-in adapters} already implement this interface, so you likely won't need to
  * implement it yourself. If you do, you can use the following example as a
  * starting point.
  *
