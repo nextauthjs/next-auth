@@ -1,9 +1,30 @@
 import type { PrismaClient, Prisma } from "@prisma/client"
 import type { Adapter, AdapterAccount } from "next-auth/adapters"
 
+function filterKey<T extends object>(obj: T, ...keys: string[]): T {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([key]) => keys.includes(key))
+  ) as T;
+}
+
 export function PrismaAdapter(p: PrismaClient): Adapter {
   return {
-    createUser: (data) => p.user.create({ data }),
+    createUser: (data) =>
+      p.user.create({
+        data: filterKey(
+          data,
+          "id",
+          "image",
+          "name",
+          "email",
+          "emailVerified",
+          "createdAt",
+          "updatedAt",
+          "role",
+          "accounts",
+          "sessions",
+        ),
+      }),
     getUser: (id) => p.user.findUnique({ where: { id } }),
     getUserByEmail: (email) => p.user.findUnique({ where: { email } }),
     async getUserByAccount(provider_providerAccountId) {
@@ -16,7 +37,24 @@ export function PrismaAdapter(p: PrismaClient): Adapter {
     updateUser: ({ id, ...data }) => p.user.update({ where: { id }, data }),
     deleteUser: (id) => p.user.delete({ where: { id } }),
     linkAccount: (data) =>
-      p.account.create({ data }) as unknown as AdapterAccount,
+      p.account.create({
+        data: filterKey(
+          data,
+          "id",
+          "provider",
+          "providerAccountId",
+          "access_token",
+          "token_type",
+          "id_token",
+          "refresh_token",
+          "scope",
+          "expires_at",
+          "session_state",
+          "user",
+          "type",
+          "userId",
+        ),
+      }) as unknown as AdapterAccount,
     unlinkAccount: (provider_providerAccountId) =>
       p.account.delete({
         where: { provider_providerAccountId },
