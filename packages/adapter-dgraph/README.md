@@ -60,7 +60,7 @@ The simplest way to use Dgraph is by copy pasting the unsecure schema into your 
 
 ## Securing your database
 
-Fore sake of security and mostly if your client directly communicate with the graphql server you obviously want to restrict the access to the types used by next-auth. That's why you see a lot of @auth directive alongide this types in the schema.
+Fore sake of security and mostly if your client directly communicate with the graphql server you obviously want to restrict the access to the types used by next-auth. That's why you see a lot of @auth directive alongside this types in the schema.
 
 ### Dgraph.Authorization
 

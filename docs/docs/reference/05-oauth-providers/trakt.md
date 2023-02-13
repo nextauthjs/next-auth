@@ -33,7 +33,7 @@ providers: [
 ```
 
 :::warning
-Trakt does not allow hotlinking images. Even the authenticated user's profie picture.
+Trakt does not allow hotlinking images. Even the authenticated user's profile picture.
 :::
 
 :::warning

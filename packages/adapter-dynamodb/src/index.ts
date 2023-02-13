@@ -375,14 +375,14 @@ function generateUpdateExpression(object: Record<string, any>): {
   ExpressionAttributeNames: Record<string, string>
   ExpressionAttributeValues: Record<string, unknown>
 } {
-  const formatedSession = format.to(object)
+  const formattedSession = format.to(object)
   let UpdateExpression = "set"
   const ExpressionAttributeNames: Record<string, string> = {}
   const ExpressionAttributeValues: Record<string, unknown> = {}
-  for (const property in formatedSession) {
+  for (const property in formattedSession) {
     UpdateExpression += ` #${property} = :${property},`
     ExpressionAttributeNames["#" + property] = property
-    ExpressionAttributeValues[":" + property] = formatedSession[property]
+    ExpressionAttributeValues[":" + property] = formattedSession[property]
   }
   UpdateExpression = UpdateExpression.slice(0, -1)
   return {
