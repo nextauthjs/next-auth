@@ -77,6 +77,14 @@ export default function Vipps<P extends VippsProfile>(
         email: profile.email,
       }
     },
+    style: {
+      bgDark: "#f05c18",
+      bg: "#f05c18",
+      text: "#fff",
+      textDark: "#fff",
+      logo: "/vipps.svg",
+      logoDark: "/vipps-dark.svg",
+    },
     options,
   }
 }
