@@ -13,10 +13,9 @@ export interface VippsProfile extends Record<string, any> {
   sub: string
 }
 
-interface AdditonalConfig {
-  redirectUri?: string
+type AdditionalConfig = {
+  host: string
 }
-
 /**
  * @see [Vipps Login API](https://vippsas.github.io/vipps-developer-docs/docs/APIs/login-api/vipps-login-api)
  *
@@ -29,53 +28,33 @@ interface AdditonalConfig {
  *  Vipps({
  *    clientId: process.env.VIPPS_CLIENT_ID,
  *    clientSecret: process.env.VIPPS_CLIENT_SECRET,
+ *    host: "https://api.vipps.no",
+ *    issuer: "https://api.vipps.no/access-management-1.0/access/",
  *  })
  * ]
  * ...
  * ```
- * ::: note
- * If you're testing, make sure to override the issuer option with apitest.vipps.no
+ * :::info
+ * If you're testing, make sure to override the issuer and host option with apitest.vipps.no
  * :::
  */
 
 export default function Vipps<P extends VippsProfile>(
-  options: OIDCUserConfig<P> & AdditonalConfig
+  options: OIDCUserConfig<P> & AdditionalConfig
 ): OIDCConfig<P> {
-  options.issuer ??= "https://api.vipps.no/access-management-1.0/access"
+  options.issuer ??= `https://api.vipps.no/access-management-1.0/access/`
   return {
     id: "vipps",
     name: "Vipps",
     type: "oidc",
-    client: {
-      token_endpoint_auth_method: "client_secret_post",
-    },
+    wellKnown: `${options.host}/access-management-1.0/access/.well-known/openid-configuration`,
     authorization: {
       params: {
         scope: "openid name email",
-        client_id: options.clientId,
-        response_type: "code",
       },
     },
-    userinfo: {
-      async request({ tokens }) {
-        const response = await fetch(
-          "https://apitest.vipps.no/vipps-userinfo-api/userinfo",
-          {
-            headers: {
-              Authorization: `Bearer ${tokens.access_token}`,
-            },
-          }
-        )
-
-        return await response.json()
-      },
-    },
-    profile(profile) {
-      return {
-        id: profile.sub,
-        name: profile.name,
-        email: profile.email,
-      }
+    client: {
+      token_endpoint_auth_method: "client_secret_post",
     },
     style: {
       bgDark: "#f05c18",
