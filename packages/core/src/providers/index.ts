@@ -4,11 +4,8 @@ import type {
   CredentialsConfig,
   CredentialsProviderType,
 } from "./credentials.js"
-import type {
-  Email as EmailProvider,
-  EmailConfig,
-  EmailProviderType,
-} from "./email.js"
+import type EmailProvider from "./email.js"
+import type { EmailConfig, EmailProviderType } from "./email.js"
 import type {
   OAuth2Config,
   OAuthConfig,

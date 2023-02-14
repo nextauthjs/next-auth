@@ -91,7 +91,7 @@ type VerificationToken {
 ## Securing your database
 
 For production deployments you will want to restrict the access to the types used
-by next-auth. The main form of access control used in Dgraph is via `@auth` directive alongide types in the schema.
+by next-auth. The main form of access control used in Dgraph is via `@auth` directive alongside types in the schema.
 
 #### Secure schema
 

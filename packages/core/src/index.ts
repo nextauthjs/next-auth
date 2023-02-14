@@ -166,7 +166,7 @@ export async function Auth(
  * const response = await AuthHandler(request, authConfig)
  * ```
  *
- * @see [Initiailzation](https://authjs.dev/reference/configuration/auth-options)
+ * @see [Initialization](https://authjs.dev/reference/configuration/auth-options)
  */
 export interface AuthConfig {
   /**

@@ -20,7 +20,7 @@
     "Balázs Orbán <info@balazsorban.com>",
     "Nico Domino <yo@ndo.dev>",
     "Lluis Agusti <hi@llu.lu>",
-    "Iain Collins <me@iaincollins.com"
+    "Iain Collins <me@iaincollins.com>"
   ],
   "scripts": {
     "dev": "svelte-package -w",
