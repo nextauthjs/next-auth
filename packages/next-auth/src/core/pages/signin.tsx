@@ -107,6 +107,7 @@ export default function SigninPage(props: SignInServerPageParams) {
         />
       )}
       <div className="card">
+        {theme.logo && <img src={theme.logo} alt="Logo" className="logo" />}
         {error && (
           <div className="error">
             <p>{error}</p>
