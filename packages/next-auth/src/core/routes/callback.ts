@@ -43,6 +43,7 @@ export default async function callback(params: {
         profile,
         account,
         OAuthProfile,
+        state,
         cookies: oauthCookies,
       } = await oAuthCallback({
         query,
@@ -94,6 +95,7 @@ export default async function callback(params: {
             user: userOrProfile,
             account,
             profile: OAuthProfile,
+            state,
           })
           if (!isAllowed) {
             return { redirect: `${url}/error?error=AccessDenied`, cookies }
@@ -156,7 +158,7 @@ export default async function callback(params: {
         }
 
         // @ts-expect-error
-        await events.signIn?.({ user, account, profile, isNewUser })
+        await events.signIn?.({ user, account, profile, state, isNewUser })
 
         // Handle first logins on new accounts
         // e.g. option to send users to a new account landing page on initial login

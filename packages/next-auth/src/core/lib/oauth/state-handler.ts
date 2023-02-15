@@ -7,7 +7,8 @@ const STATE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 
 /** Returns state if the provider supports it */
 export async function createState(
-  options: InternalOptions<"oauth">
+  options: InternalOptions<"oauth">,
+  authorizationParamsState: string | undefined,
 ): Promise<{ cookie: Cookie; value: string } | undefined> {
   const { logger, provider, jwt, cookies } = options
 
@@ -16,7 +17,7 @@ export async function createState(
     return
   }
 
-  const state = generators.state()
+  const state = authorizationParamsState ?? generators.state()
   const maxAge = cookies.state.options.maxAge ?? STATE_MAX_AGE
 
   const encodedState = await jwt.encode({

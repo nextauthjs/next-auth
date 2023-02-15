@@ -56,7 +56,7 @@ export default async function oAuthCallback(params: {
       }
 
       const newProfile = await getProfile({ profile, tokens, provider, logger })
-      return { ...newProfile, cookies: [] }
+      return { ...newProfile, state: undefined, cookies: [] }
     } catch (error) {
       logger.error("OAUTH_V1_GET_ACCESS_TOKEN_ERROR", error as Error)
       throw error
@@ -142,7 +142,7 @@ export default async function oAuthCallback(params: {
       tokens,
       logger,
     })
-    return { ...profileResult, cookies: resCookies }
+    return { ...profileResult, state: state?.value, cookies: resCookies }
   } catch (error) {
     throw new OAuthCallbackError(error as Error)
   }

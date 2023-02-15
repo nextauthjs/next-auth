@@ -291,6 +291,12 @@ export interface CallbacksOptions<P = Profile, A = Account> {
     }
     /** If Credentials provider is used, it contains the user credentials */
     credentials?: Record<string, CredentialInput>
+    /**
+     * If state check is enabled for the provider, it contains the value of the state.
+     * The state value may either be the user-supplied value for the `state` property
+     * in the provider's authorization params, or a dynamically generated value.
+    */
+    state?: string
   }) => Awaitable<string | boolean>
   /**
    * This callback is called anytime the user is redirected to a callback URL (e.g. on signin or signout).

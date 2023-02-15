@@ -54,7 +54,7 @@ export default async function getAuthorizationUrl({
   const authorizationParams: AuthorizationParameters = params
   const cookies: Cookie[] = []
 
-  const state = await createState(options)
+  const state = await createState(options, authorizationParams.state)
   if (state) {
     authorizationParams.state = state.value
     cookies.push(state.cookie)
