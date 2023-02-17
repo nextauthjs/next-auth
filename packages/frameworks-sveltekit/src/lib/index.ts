@@ -26,6 +26,21 @@
  *   providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })],
  * })
  * ```
+ * 
+ * or to use sveltekit platform environment variables for platforms like Cloudflare
+ * 
+ * ```ts title="src/hooks.server.ts"
+ * import { SvelteKitAuth } from "@auth/sveltekit"
+ * import GitHub from "@auth/core/providers/github"
+ * import type { Handle } from "@sveltejs/kit";
+ *
+ * export const handle = SvelteKitAuth({providers: []},(event, options) => {
+ *   const providers = [GitHub({ clientId: event.platform.env.GITHUB_ID, clientSecret: event.platform.env.GITHUB_SECRET })]
+ *   options.providers = providers
+ *   options.secret = event.platform.env.AUTH_SECRET
+ *   return options
+ * }) satisfies Handle;
+ * ```
  *
  * Don't forget to set the `AUTH_SECRET` [environment variable](https://kit.svelte.dev/docs/modules#$env-dynamic-private). This should be a minimum of 32 characters, random string. On UNIX systems you can use `openssl rand -hex 32` or check out `https://generate-secret.vercel.app/32`.
  *
@@ -187,7 +202,7 @@
  */
 
 /// <reference types="@sveltejs/kit" />
-import type { Handle } from "@sveltejs/kit"
+import type { Handle, RequestEvent } from "@sveltejs/kit"
 
 import { dev } from "$app/environment"
 import { env } from "$env/dynamic/private"
@@ -237,11 +252,12 @@ const actions: AuthAction[] = [
   "error",
 ]
 
-function AuthHandle(prefix: string, authOptions: AuthConfig): Handle {
+function AuthHandle(prefix: string, authOptions: AuthConfig, dynamicOptions?: (event: RequestEvent, options: SvelteKitAuthConfig) => SvelteKitAuthConfig): Handle {
   return function ({ event, resolve }) {
+    const resolvedAuthOptions = dynamicOptions?.(event, authOptions) ?? authOptions
     const { url, request } = event
 
-    event.locals.getSession ??= () => getSession(request, authOptions)
+    event.locals.getSession ??= () => getSession(request, resolvedAuthOptions)
 
     const action = url.pathname
       .slice(prefix.length + 1)
@@ -251,7 +267,7 @@ function AuthHandle(prefix: string, authOptions: AuthConfig): Handle {
       return resolve(event)
     }
 
-    return Auth(request, authOptions)
+    return Auth(request, resolvedAuthOptions)
   }
 }
 
@@ -259,11 +275,11 @@ function AuthHandle(prefix: string, authOptions: AuthConfig): Handle {
  * The main entry point to `@auth/sveltekit`
  * @see https://sveltekit.authjs.dev
  */
-export function SvelteKitAuth(options: SvelteKitAuthConfig): Handle {
+export function SvelteKitAuth(options: SvelteKitAuthConfig, dynamicOptions?: (event: RequestEvent, options: SvelteKitAuthConfig) => SvelteKitAuthConfig): Handle {
   const { prefix = "/auth", ...authOptions } = options
   authOptions.secret ??= env.AUTH_SECRET
   authOptions.trustHost ??= !!(env.AUTH_TRUST_HOST ?? env.VERCEL ?? dev)
-  return AuthHandle(prefix, authOptions)
+  return AuthHandle(prefix, authOptions, dynamicOptions)
 }
 
 declare global {
