@@ -12,7 +12,7 @@ import type {
   AdapterSession,
   VerificationToken,
 } from "next-auth/adapters"
-import { FirebaseAdapterConfig } from "."
+import { FirebaseAdapterConfig } from "./index.js"
 
 // for consistency, store all fields as snake_case in the database
 const MAP_TO_FIRESTORE: Record<string, string | undefined> = {
