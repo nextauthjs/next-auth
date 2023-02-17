@@ -33,9 +33,9 @@ import {
   getDoc,
   getOneDoc,
   mapFieldsFactory,
-} from "./utils"
+} from "./utils.js"
 
-export { initFirestore } from "./utils"
+export { initFirestore } from "./utils.js"
 
 /** Configure the Firebase Adapter. */
 export interface FirebaseAdapterConfig extends AppOptions {
