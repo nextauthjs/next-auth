@@ -12,7 +12,7 @@
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install next-auth @next-auth/firebase-admin-adapter firebase-admin
+ * npm install next-auth @next-auth/firebase-adapter firebase-admin
  * ```
  *
  * ## References
