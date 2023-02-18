@@ -1,16 +1,26 @@
 {
+  "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx"],
   "compilerOptions": {
-    "declaration": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "esnext",
-    "moduleResolution": "Node",
-    "strict": false,
+    "lib": ["DOM", "DOM.Iterable", "ES2019"],
+    "isolatedModules": true,
+    "esModuleInterop": true,
     "jsx": "react-jsx",
-    "module": "esnext",
-    "outDir": "./dist",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "target": "esnext",
+    "strict": false,
+    "allowJs": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./app/*"]
+    },
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
     "strictNullChecks": true,
-    "rootDir": "./src",
-  },
-  "exclude": ["node_modules", "dist"],
-  "include": ["./src"]
+
+    // Remix takes care of building everything in `remix build`.
+    "noEmit": true,
+    "types": ["@cloudflare/workers-types"]
+  }
 }

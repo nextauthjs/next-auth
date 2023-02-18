@@ -37,17 +37,20 @@ Create a .server file to create and access the authenticator
 import { RemixAuthenticator } from "remix-auth/src/lib"
 import Google from "@auth/core/providers/google"
 import type { AppLoadContext } from "@remix-run/cloudflare"
+import { D1Adapter } from "@auth/adapter-d1"
 
 // Create an instance of the authenticator
-let authenticator: RemixAuthenticator<{ user: any }>
+let authenticator: RemixAuthenticator<Record<string, unknown>>
 
-export const getAuthenticator = (
-  env: Record<string, string | undefined> | AppLoadContext
-) => {
+export const getAuthenticator = (env: Record<string, any> | AppLoadContext) => {
   if (!authenticator) {
     authenticator = new RemixAuthenticator(
       {
-        debug: false, // env.NODE_ENV === "development",
+        session: {
+          strategy: "jwt",
+        },
+        debug: env.NODE_ENV === "development",
+        adapter: D1Adapter(env["vsle-keystone"] as D1Database),
         providers: [
           Google({
             clientId: env.GOOGLE_CLIENT_ID as string,
@@ -68,7 +71,7 @@ WARNING: In order to fully and securely support progressive enhancement for auth
 
 Relevant remix discussion (here)[https://github.com/remix-run/remix/discussions/5258]
 
-```ts title="auth.($action).($providerId).tsx"
+```ts title="auth.$action.($providerId).tsx"
 import type { ActionFunction, LoaderFunction } from "@remix-run/node"
 import { getAuthenticator } from "~/services/auth.server"
 
@@ -112,42 +115,74 @@ The callback URL used by the [providers](https://authjs.dev/reference/core/modul
 (and yes it takes advantage of remix's progressive enhancement and works without javascript!)
 
 ```ts title="index.tsx"
-import type { LoaderFunction } from "@remix-run/cloudflare"
-import { useFetcher, useLoaderData } from "@remix-run/react"
 import { getAuthenticator } from "~/services/auth.server"
-export let loader: LoaderFunction = async ({ request, context }) => {
-  const user = await getAuthenticator(
-    context.env as Record<string, string>
-  ).isAuthenticated(request)
-
-  return { user }
+import type { DataFunctionArgs } from "@remix-run/cloudflare"
+import { useRef } from "react"
+import { useFetcher, useLoaderData } from "@remix-run/react"
+import { SignInForm, SignOutForm } from "remix-auth/src/lib/components"
+export const loader = async ({ request, context }: DataFunctionArgs) => {
+  const authenticator = getAuthenticator(context.env as Record<string, any>)
+  const providers = await authenticator.getProviders(request)
+  const user = await authenticator.isAuthenticated(request)
+  return { user, providers }
 }
-export default function Index() {
-  const { user } = useLoaderData()
-  const fetcher = useFetcher()
 
+export default function Auth() {
+  const { user, providers } = useLoaderData<typeof loader>()
+  const fetcher = useFetcher()
+  const loading = fetcher.state === "loading" || fetcher.state === "submitting"
+  const signOutForm = useRef<HTMLFormElement>(null)
   return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
-      {user ? (
-        <div>
-          <h1 className="text-center text-4xl">{user.name}</h1>
-          <fetcher.Form method="post" action="/auth/signout/google">
-            <p>
-              <button type="submit" disabled={fetcher.state === "submitting"}>
+    <div className="">
+      <section className="container">
+        {user ? (
+          <div>
+            <h1 className="">{user.name}</h1>
+            <SignOutForm ref={signOutForm} fetcher={fetcher}>
+              <button disabled={loading} aria-busy={loading}>
                 Sign Out
               </button>
-            </p>
-          </fetcher.Form>
-        </div>
-      ) : (
-        <fetcher.Form method="post" action="/auth/signin/google">
-          <p>
-            <button type="submit" disabled={fetcher.state === "submitting"}>
-              Sign In
-            </button>
-          </p>
-        </fetcher.Form>
-      )}
+            </SignOutForm>
+          </div>
+        ) : (
+          <>
+            {Object.entries(providers).map(([key, provider]) => {
+              return (
+                <SignInForm
+                  fetcher={fetcher}
+                  providerId={provider.id}
+                  key={key}
+                >
+                  <input
+                    type="hidden"
+                    name="callbackUrl"
+                    value={
+                      typeof document !== "undefined"
+                        ? window.location.href
+                        : ""
+                    }
+                  />
+                  {provider.type === "email" && (
+                    <>
+                      <label htmlFor="email">Email address</label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Email address"
+                        required
+                      />
+                    </>
+                  )}
+                  <button disabled={loading} aria-busy={loading}>
+                    Sign In with {provider.name}
+                  </button>
+                </SignInForm>
+              )
+            })}
+          </>
+        )}
+      </section>
     </div>
   )
 }
