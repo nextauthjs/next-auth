@@ -1,5 +1,9 @@
 /**
  *
+ * :::warning Experimental
+ * `@auth/core` is under active development.
+ * :::
+ *
  * This is the main entry point to the Auth.js library.
  *
  * Based on the {@link https://developer.mozilla.org/en-US/docs/Web/API/Request Request}
@@ -18,7 +22,7 @@
  * ```ts
  * import { Auth } from "@auth/core"
  *
- * const request = new Request("https://example.com"
+ * const request = new Request("https://example.com")
  * const response = await Auth(request, {...})
  *
  * console.log(response instanceof Response) // true
@@ -29,7 +33,7 @@
  * - [Getting started](https://authjs.dev/getting-started/introduction)
  * - [Most common use case guides](https://authjs.dev/guides)
  *
- * @module main
+ * @module index
  */
 
 import { assertConfig } from "./lib/assert.js"
@@ -162,7 +166,7 @@ export async function Auth(
  * const response = await AuthHandler(request, authConfig)
  * ```
  *
- * @see [Initiailzation](https://authjs.dev/reference/configuration/auth-options)
+ * @see [Initialization](https://authjs.dev/reference/configuration/auth-options)
  */
 export interface AuthConfig {
   /**

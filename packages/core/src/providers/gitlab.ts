@@ -54,7 +54,7 @@ export interface GitLabProfile extends Record<string, any> {
  *
  * ```js
  * import Auth from "@auth/core"
- * import { GitLab } from "@auth/core/providers/gitlab"
+ * import GitLab from "@auth/core/providers/gitlab"
  *
  * const request = new Request("https://example.com")
  * const response = await AuthHandler(request, {

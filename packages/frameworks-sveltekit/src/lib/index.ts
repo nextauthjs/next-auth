@@ -81,7 +81,7 @@
  *   return {
  *     session: await event.locals.getSession()
  *   };
- * }; 
+ * };
  * ```
  *
  * What you return in the function `LayoutServerLoad` will be available inside the `$page` store, in the `data` property: `$page.data`.
@@ -106,14 +106,14 @@
  *   return {};
  * };
  * ```
- * 
+ *
  * :::danger
  * Make sure to ALWAYS grab the session information from the parent instead of using the store in the case of a `PageLoad`.
  * Not doing so can lead to users being able to incorrectly access protected information in the case the `+layout.server.ts` does not run for that page load.
  * This code sample already implements the correct method by using `const { session } = await parent();`
  * :::
  *
- * You should NOT put authorization logic in a `+layout.server.ts` as the logic is not guaranteed to propragate to leafs in the tree.
+ * You should NOT put authorization logic in a `+layout.server.ts` as the logic is not guaranteed to propagate to leafs in the tree.
  * Prefer to manually protect each route through the `+page.server.ts` file to avoid mistakes.
  * It is possible to force the layout file to run the load function on all routes, however that relies certain behaviours that can change and are not easily checked.
  * For more information about these caveats make sure to read this issue in the SvelteKit repository: https://github.com/sveltejs/kit/issues/6315
@@ -130,14 +130,14 @@
  * The handle hook, available in `hooks.server.ts`, is a function that receives ALL requests sent to your SvelteKit webapp.
  * You may intercept them inside the handle hook, add and modify things in the request, block requests, etc.
  * Some readers may notice we are already using this handle hook for SvelteKitAuth which returns a handle itself, so we are going to use SvelteKit's sequence to provide middleware-like functions that set the handle hook.
- * 
+ *
  * ```ts
  * import { SvelteKitAuth } from '@auth/sveltekit';
  * import GitHub from '@auth/core/providers/github';
  * import { GITHUB_ID, GITHUB_SECRET } from '$env/static/private';
  * import { redirect, type Handle } from '@sveltejs/kit';
  * import { sequence } from '@sveltejs/kit/hooks';
- * 
+ *
  * async function authorization({ event, resolve }) {
  * 	// Protect any routes under /authenticated
  * 	if (event.url.pathname.startsWith('/authenticated')) {
@@ -146,14 +146,14 @@
  * 			throw redirect(303, '/auth');
  * 		}
  * 	}
- * 
+ *
  * 	// If the request is still here, just proceed as normally
  * 	const result = await resolve(event, {
  * 		transformPageChunk: ({ html }) => html
  * 	});
  * 	return result;
  * }
- * 
+ *
  * // First handle authentication, then authorization
  * // Each function acts as a middleware, receiving the request handle
  * // And returning a handle which gets passed to the next function
@@ -183,7 +183,7 @@
  * PRs to improve this documentation are welcome! See [this file](https://github.com/nextauthjs/next-auth/blob/main/packages/frameworks-sveltekit/src/lib/index.ts).
  * :::
  *
- * @module main
+ * @module index
  */
 
 /// <reference types="@sveltejs/kit" />

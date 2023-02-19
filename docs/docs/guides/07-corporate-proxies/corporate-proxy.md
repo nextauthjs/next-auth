@@ -2,7 +2,7 @@
 title: Corporate proxy
 ---
 
-Using Auth.js behind a corporate proxy is not supported out of the box. This is due to the fact that the underlying library we use, [`openid-client`](https://npm.im/openid-client) which uses the built-in Node.js `http` / `https` libraries, and those do not support proxys by default:
+Using Auth.js behind a corporate proxy is not supported out of the box. This is due to the fact that the underlying library we use, [`openid-client`](https://npm.im/openid-client) which uses the built-in Node.js `http` / `https` libraries, and those do not support proxies by default:
 
 - [`http` docs](https://nodejs.org/dist/latest-v18.x/docs/api/http.html)
 - [`https` docs](https://nodejs.org/dist/latest-v18.x/docs/api/https.html)

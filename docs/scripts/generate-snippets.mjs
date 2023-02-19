@@ -18,7 +18,7 @@ for (const file of files) {
   body.push(" */")
   const name = file.replace(/\.md$/, "")
   result[name] = {
-    description: `Snippet genereated from ${file} by pnpm \`generate-snippet\``,
+    description: `Snippet generated from ${file} by pnpm \`generate-snippet\``,
     scope: "typescript",
     prefix: name,
     body,

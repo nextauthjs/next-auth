@@ -22,7 +22,7 @@ Using a JWT to store the `refresh_token` is less secure than saving it in a data
 
 #### JWT strategy
 
-Using the [jwt](../../reference/03-core/interfaces/types.CallbacksOptions.md#jwt) and [session](../../reference/03-core/interfaces/types.CallbacksOptions.md#session) callbacks, we can persist OAuth tokens and refresh them when they expire.
+Using the [jwt](../../reference/core/types#jwt) and [session](../../reference/core/types#session) callbacks, we can persist OAuth tokens and refresh them when they expire.
 
 Below is a sample implementation using Google's Identity Provider. Please note that the OAuth 2.0 request in the `refreshAccessToken()` function will vary between different providers, but the core logic should remain similar.
 
@@ -45,10 +45,10 @@ export default Auth(new Request("https://example.com"), {
         // Save the access token and refresh token in the JWT on the initial login
         return {
           access_token: account.access_token,
-          expires_at: Date.now() + account.expires_in * 1000,
+          expires_at: Math.floor(Date.now() / 1000 + account.expires_in),
           refresh_token: account.refresh_token,
         }
-      } else if (Date.now() < token.expires_at) {
+      } else if (Date.now() < token.expires_at * 1000) {
         // If the access token has not expired yet, return it
         return token
       } else {
@@ -74,7 +74,7 @@ export default Auth(new Request("https://example.com"), {
           return {
             ...token, // Keep the previous token properties
             access_token: tokens.access_token,
-            expires_at: Date.now() + tokens.expires_in * 1000,
+            expires_at: Math.floor(Date.now() / 1000 + tokens.expires_in),
             // Fall back to old refresh token, but note that
             // many providers may only allow using a refresh token once.
             refresh_token: tokens.refresh_token ?? token.refresh_token,
@@ -136,7 +136,7 @@ export default Auth(new Request("https://example.com"), {
       const [google] = await prisma.account.findMany({
         where: { userId: user.id, provider: "google" },
       })
-      if (google.expires_at < Date.now()) {
+      if (google.expires_at * 1000 < Date.now()) {
         // If the access token has expired, try to refresh it
         try {
           // https://accounts.google.com/.well-known/openid-configuration
@@ -159,7 +159,7 @@ export default Auth(new Request("https://example.com"), {
           await prisma.account.update({
             data: {
               access_token: tokens.access_token,
-              expires_at: Date.now() + tokens.expires_in * 1000,
+              expires_at: Math.floor(Date.now() / 1000 + tokens.expires_in),
               refresh_token: tokens.refresh_token ?? google.refresh_token,
             },
             where: {

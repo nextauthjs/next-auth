@@ -9,7 +9,7 @@ import startAppAndSignInImg from "./img/getting-started-app-start.png"
 import githubAuthCredentials from "./img/getting-started-github-auth.png"
 import nextAuthUserLoggedIn from "./img/getting-started-nextauth-success.png"
 
-We know, authentication is hard. Is a rabbit hole and it's easy to get lost on it. The goal of making Auth.js is that you can add authentication easily to your project with just a few lines of code.
+We know, authentication is hard. It's a rabbit hole and it's easy to get lost on it. The goal of making Auth.js is that you can add authentication easily to your project with just a few lines of code.
 
 The easiest way is to setup Auth.js with an [OAuth](https://en.wikipedia.org/wiki/OAuth) provider. In this tutorial we'll be setting Auth.js in a **Next.js app** to be able to login with **Github**.
 
@@ -214,7 +214,7 @@ Note that, for each provider, the configuration process will be similar to what 
 2. Create create your OAuth application within it
 3. Set the callback URL
 4. Get the Client ID and Generate a Client Secret
-   :::
+:::
 
 ## 3. Wiring all together
 
@@ -253,10 +253,12 @@ Once inserted and correct, Github will redirect the user to our app and Auth.js 
 <img src={nextAuthUserLoggedIn} />
 
 Great! We have completed the whole E2E authentication flow setup so that users can login in our application through Github!
+:::
 
 :::info
-You can create your own Sign In page instead of using the default one from Auth.js. You can learn how to do so in our dedicated guide for it.
+You can create your own Sign In page instead of using the default one from Auth.js. You can learn how to do so in our [dedicated guide for it](/guides/basics/pages).
 :::
+
 
 ## 4. Deploying to production
 
