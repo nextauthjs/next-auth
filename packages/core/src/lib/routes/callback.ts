@@ -53,7 +53,7 @@ export async function callback(params: {
         cookies.push(...authorizationResult.cookies)
       }
 
-      logger.debug("authroization result", authorizationResult)
+      logger.debug("authorization result", authorizationResult)
 
       const { profile, account, OAuthProfile } = authorizationResult
 
@@ -149,7 +149,7 @@ export async function callback(params: {
         return {
           redirect: `${pages.newUser}${
             pages.newUser.includes("?") ? "&" : "?"
-          }callbackUrl=${encodeURIComponent(callbackUrl)}`,
+          }${new URLSearchParams({ callbackUrl })}`,
           cookies,
         }
       }
@@ -256,7 +256,7 @@ export async function callback(params: {
         return {
           redirect: `${pages.newUser}${
             pages.newUser.includes("?") ? "&" : "?"
-          }callbackUrl=${encodeURIComponent(callbackUrl)}`,
+          }${new URLSearchParams({ callbackUrl })}`,
           cookies,
         }
       }
@@ -264,7 +264,7 @@ export async function callback(params: {
       // Callback URL is already verified at this point, so safe to use if specified
       return { redirect: callbackUrl, cookies }
     } else if (provider.type === "credentials" && method === "POST") {
-      const credentials = body
+      const credentials = body ?? {}
 
       // TODO: Forward the original request as is, instead of reconstructing it
       Object.entries(query ?? {}).forEach(([k, v]) =>
@@ -350,6 +350,6 @@ export async function callback(params: {
     logger.error(error)
     url.searchParams.set("error", CallbackRouteError.name)
     url.pathname += "/error"
-    return { redirect: url, cookies }
+    return { redirect: url.toString(), cookies }
   }
 }

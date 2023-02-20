@@ -72,11 +72,11 @@ export default NextAuth({
   providers: [
     Email({
       server: {
-        host: process.env.EMAIL_SERVER_HOST,
-        port: Number(process.env.EMAIL_SERVER_PORT),
+        host: process.env.SMTP_HOST,
+        port: Number(process.env.SMTP_PORT),
         auth: {
-          user: process.env.EMAIL_SERVER_USER,
-          pass: process.env.EMAIL_SERVER_PASSWORD,
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASSWORD,
         },
       },
       from: process.env.EMAIL_FROM,
@@ -147,8 +147,8 @@ import EmailProvider from "next-auth/providers/email"
 
 export default NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
++ adapter: MongoDBAdapter(clientPromise),
   providers: [
-+   adapter: MongoDBAdapter(clientPromise),
     EmailProvider({
       server: {
         host: process.env.EMAIL_SERVER_HOST,
@@ -188,7 +188,7 @@ Let's now check our email, and look for one sent from NextAuth (check your spam 
 
 <img src={mailboxImg} alt="Screenshot of mailbox" />
 
-Nice! We got one, coming from the sender specified in the `EMAIL_FROM` environment variable from our configuration above and that's is the sender we verified in Sengrid.
+Nice! We got one, coming from the sender specified in the `EMAIL_FROM` environment variable from our configuration above and that's is the sender we verified in Sendgrid.
 
 Click on "Sign in" and a new browser tab will open, you should then land on your application as authenticated!
 

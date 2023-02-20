@@ -25,6 +25,10 @@
       "dependsOn": ["^build"],
       "outputs": ["lib/**", "providers/**", "*.js", "*.d.ts", "*.d.ts.map"]
     },
+    "@auth/sveltekit#build": {
+      "dependsOn": ["^build"],
+      "outputs": ["client.*", "index.*"]
+    },
     "clean": {
       "cache": false
     },
@@ -39,6 +43,19 @@
     },
     "@next-auth/upstash-redis-adapter#test": {
       "env": ["UPSTASH_REDIS_KEY", "UPSTASH_REDIS_URL"]
+    },
+    "docs#dev": {
+      "dependsOn": ["^build"],
+      "cache": false
+    },
+    "docs#build": {
+      "dependsOn": ["^build"],
+      "outputs": [
+        "build",
+        "docs/reference/core",
+        "docs/reference/sveltekit",
+        "docs/reference/adapter/**"
+      ]
     }
   }
 }

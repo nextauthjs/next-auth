@@ -45,7 +45,7 @@ You need to use at least Prisma 2.26.0. Create a schema file in `prisma/schema.p
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  shadowDatabaseUrl = env("SHADOW_DATABASE_URL") // Only needed when using a cloud provider that doesn't support the creation of new databases, like Heroku. Learn more: https://pris.ly/migrate-shadow
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL") // Only needed when using a cloud provider that doesn't support the creation of new databases, like Heroku. Learn more: https://pris.ly/d/migrate-shadow
 }
 
 generator client {
@@ -139,9 +139,10 @@ Prisma supports MongoDB, and so does Auth.js. Following the instructions of the 
 id  String  @id @default(auto()) @map("_id") @db.ObjectId
 ```
 
-2. The Native database type attribute to `@db.String` from `@db.Text`.
+2. The Native database type attribute to `@db.String` from `@db.Text` and userId to `@db.ObjectId`.
 
 ```prisma
+user_id            String   @db.ObjectId
 refresh_token      String?  @db.String
 access_token       String?  @db.String
 id_token           String?  @db.String

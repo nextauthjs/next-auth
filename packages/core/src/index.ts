@@ -1,5 +1,9 @@
 /**
  *
+ * :::warning Experimental
+ * `@auth/core` is under active development.
+ * :::
+ *
  * This is the main entry point to the Auth.js library.
  *
  * Based on the {@link https://developer.mozilla.org/en-US/docs/Web/API/Request Request}
@@ -18,7 +22,7 @@
  * ```ts
  * import { Auth } from "@auth/core"
  *
- * const request = new Request("https://example.com"
+ * const request = new Request("https://example.com")
  * const response = await Auth(request, {...})
  *
  * console.log(response instanceof Response) // true
@@ -27,14 +31,14 @@
  * ## Resources
  *
  * - [Getting started](https://authjs.dev/getting-started/introduction)
- * - [Most common use case guides](https://authjs.dev/guides/overview)
+ * - [Most common use case guides](https://authjs.dev/guides)
  *
- * @module main
+ * @module index
  */
 
 import { assertConfig } from "./lib/assert.js"
 import { ErrorPageLoop } from "./errors.js"
-import { AuthInternal } from "./lib/index.js"
+import { AuthInternal, skipCSRFCheck } from "./lib/index.js"
 import renderPage from "./lib/pages/index.js"
 import { logger, setLogger, type LoggerInstance } from "./lib/utils/logger.js"
 import { toInternalRequest, toResponse } from "./lib/web.js"
@@ -50,6 +54,8 @@ import type {
 } from "./types.js"
 import type { Provider } from "./providers/index.js"
 import { JWTOptions } from "./jwt.js"
+
+export { skipCSRFCheck }
 
 /**
  * Core functionality provided by Auth.js.
@@ -160,7 +166,7 @@ export async function Auth(
  * const response = await AuthHandler(request, authConfig)
  * ```
  *
- * @see [Initiailzation](https://authjs.dev/reference/configuration/auth-options)
+ * @see [Initialization](https://authjs.dev/reference/configuration/auth-options)
  */
 export interface AuthConfig {
   /**
@@ -298,14 +304,3 @@ export interface AuthConfig {
   trustHost?: boolean
   skipCSRFCheck?: typeof skipCSRFCheck
 }
-
-/**
- * :::danger
- * This option is inteded for framework authors.
- * :::
- *
- * Auth.js comes with built-in {@link https://authjs.dev/concepts/security#csrf CSRF} protection, but
- * if you are implementing a framework that is already protected against CSRF attacks, you can skip this check by
- * passing this value to {@link AuthConfig.skipCSRFCheck}.
- */
-export const skipCSRFCheck = Symbol("skip-csrf-check")

@@ -84,7 +84,7 @@ export interface Auth0Profile {
  * import Auth0 from "@auth/core/providers/auth0"
  *
  * const request = new Request("https://example.com")
- * const resposne = await Auth(request, {
+ * const response = await Auth(request, {
  *   providers: [Auth0({ clientId: "", clientSecret: "", issuer: "" })],
  * })
  * ```

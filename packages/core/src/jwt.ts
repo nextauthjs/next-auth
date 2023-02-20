@@ -6,7 +6,7 @@
  * issued and used by Auth.js.
  *
  * The JWT issued by Auth.js is _encrypted by default_, using the _A256GCM_ algorithm ({@link https://www.rfc-editor.org/rfc/rfc7516 JWE}).
- * It uses the `AUTH_SECRET` environment variable to dervice a sufficient encryption key.
+ * It uses the `AUTH_SECRET` environment variable to derive a sufficient encryption key.
  *
  * :::info Note
  * Auth.js JWTs are meant to be used by the same app that issued them.
@@ -203,7 +203,7 @@ export interface JWTOptions {
   /**
    * The secret used to encode/decode the Auth.js issued JWT.
    *
-   * @deprecated  Set the `AUTH_SECRET` environment vairable or
+   * @deprecated  Set the `AUTH_SECRET` environment variable or
    * use the top-level `secret` option instead
    */
   secret: string

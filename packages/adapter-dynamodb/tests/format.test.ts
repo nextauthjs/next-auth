@@ -1,4 +1,4 @@
-import { format } from "../src/utils"
+import { format } from "../src/"
 
 describe("dynamodb utils.format", () => {
   it("format.to() preserves non-Date non-expires properties", () => {

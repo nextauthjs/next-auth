@@ -90,5 +90,5 @@ export async function getAuthorizationUrl(
   }
 
   logger.debug("authorization url is ready", { url, cookies, provider })
-  return { redirect: url, cookies }
+  return { redirect: url.toString(), cookies }
 }
