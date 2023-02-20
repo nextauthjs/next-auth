@@ -252,9 +252,9 @@ const actions: AuthAction[] = [
   "error",
 ]
 
-function AuthHandle(prefix: string, authOptions: AuthConfig, dynamicOptions?: (event: RequestEvent, options: SvelteKitAuthConfig) => SvelteKitAuthConfig): Handle {
-  return function ({ event, resolve }) {
-    const resolvedAuthOptions = dynamicOptions?.(event, authOptions) ?? authOptions
+function AuthHandle(prefix: string, authOptions: AuthConfig, dynamicOptions?: (event: RequestEvent, options: SvelteKitAuthConfig) => Promise<SvelteKitAuthConfig> | SvelteKitAuthConfig): Handle {
+  return async function ({ event, resolve }) {
+    const resolvedAuthOptions: SvelteKitAuthConfig = await dynamicOptions?.(event, authOptions) || authOptions
     const { url, request } = event
 
     event.locals.getSession ??= () => getSession(request, resolvedAuthOptions)
