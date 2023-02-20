@@ -114,6 +114,8 @@ The callback URL used by the [providers](https://authjs.dev/reference/core/modul
 
 (and yes it takes advantage of remix's progressive enhancement and works without javascript!)
 
+!WARN for email you will likely need to alter the route or the login page to properly handle the response from email which should give a message that an email has been sent
+
 ```ts title="index.tsx"
 import { getAuthenticator } from "~/services/auth.server"
 import type { DataFunctionArgs } from "@remix-run/cloudflare"
