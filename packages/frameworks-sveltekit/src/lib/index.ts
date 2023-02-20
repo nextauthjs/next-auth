@@ -34,7 +34,8 @@
  * import GitHub from "@auth/core/providers/github"
  * import type { Handle } from "@sveltejs/kit";
  *
- * export const handle = SvelteKitAuth({providers: []},(event, options) => {
+ * export const handle = SvelteKitAuth({providers: []}, async (event, options) => {
+ *   // await somethingAsync()
  *   const providers = [GitHub({ clientId: event.platform.env.GITHUB_ID, clientSecret: event.platform.env.GITHUB_SECRET })]
  *   options.providers = providers
  *   options.secret = event.platform.env.AUTH_SECRET
