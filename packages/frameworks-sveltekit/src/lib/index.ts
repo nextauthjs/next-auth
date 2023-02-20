@@ -252,7 +252,9 @@ const actions: AuthAction[] = [
   "error",
 ]
 
-function AuthHandle(prefix: string, authOptions: AuthConfig, dynamicOptions?: (event: RequestEvent, options: SvelteKitAuthConfig) => Promise<SvelteKitAuthConfig> | SvelteKitAuthConfig): Handle {
+type OptionsFunction = (event: RequestEvent, options: SvelteKitAuthConfig) => Promise<SvelteKitAuthConfig> | SvelteKitAuthConfig
+
+function AuthHandle(prefix: string, authOptions: AuthConfig, dynamicOptions?: OptionsFunction): Handle {
   return async function ({ event, resolve }) {
     const resolvedAuthOptions: SvelteKitAuthConfig = await dynamicOptions?.(event, authOptions) || authOptions
     const { url, request } = event
@@ -275,7 +277,7 @@ function AuthHandle(prefix: string, authOptions: AuthConfig, dynamicOptions?: (e
  * The main entry point to `@auth/sveltekit`
  * @see https://sveltekit.authjs.dev
  */
-export function SvelteKitAuth(options: SvelteKitAuthConfig, dynamicOptions?: (event: RequestEvent, options: SvelteKitAuthConfig) => SvelteKitAuthConfig): Handle {
+export function SvelteKitAuth(options: SvelteKitAuthConfig, dynamicOptions?: OptionsFunction): Handle {
   const { prefix = "/auth", ...authOptions } = options
   authOptions.secret ??= env.AUTH_SECRET
   authOptions.trustHost ??= !!(env.AUTH_TRUST_HOST ?? env.VERCEL ?? dev)
