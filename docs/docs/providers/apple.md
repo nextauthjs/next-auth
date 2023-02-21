@@ -64,7 +64,7 @@ Edit your host file and point your site to `127.0.0.1`.
 _Linux/macOS_
 
 ```
-sudo echo '127.0.0.1 dev.example.com' >> /etc/hosts
+echo '127.0.0.1 dev.example.com' | sudo tee -a /etc/hosts
 ```
 
 _Windows_ (run PowerShell as administrator)
