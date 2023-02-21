@@ -88,14 +88,7 @@ export default function LinkedIn<P extends LinkedInProfile>(
         image: profile.picture
       }
     },
-    style: {
-      logo: "/linkedin.svg",
-      logoDark: "/linkedin-dark.svg",
-      bg: "#fff",
-      text: "#069",
-      bgDark: "#069",
-      textDark: "#fff",
-    },
+    style: { logo: "/linkedin-dark.svg", bg: "#069", text: "#fff" },
     options,
   }
 }

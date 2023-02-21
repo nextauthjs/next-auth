@@ -197,14 +197,7 @@ export default function Twitter(
         image: data.profile_image_url,
       }
     },
-    style: {
-      logo: "/twitter.svg",
-      logoDark: "/twitter-dark.svg",
-      bg: "#fff",
-      text: "#1da1f2",
-      bgDark: "#1da1f2",
-      textDark: "#fff",
-    },
+    style: { logo: "/twitter-dark.svg", bg: "#1da1f2", text: "#fff" },
     options: config,
   }
 }

@@ -124,14 +124,7 @@ export default function GitLab<P extends GitLabProfile>(
         image: profile.avatar_url,
       }
     },
-    style: {
-      logo: "/gitlab.svg",
-      logoDark: "/gitlab-dark.svg",
-      bg: "#fff",
-      text: "#FC6D26",
-      bgDark: "#FC6D26",
-      textDark: "#fff",
-    },
+    style: { logo: "/gitlab-dark.svg", bg: "#FC6D26", text: "#fff" },
     options,
   }
 }

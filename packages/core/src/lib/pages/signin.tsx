@@ -86,109 +86,129 @@ export default function SigninPage(props: {
             <p>{error}</p>
           </div>
         )}
-        {providers.map((provider, i) => (
-          <div key={provider.id} className="provider">
-            {provider.type === "oauth" || provider.type === "oidc" ? (
-              <form action={provider.signinUrl} method="POST">
-                <input type="hidden" name="csrfToken" value={csrfToken} />
-                {callbackUrl && (
-                  <input type="hidden" name="callbackUrl" value={callbackUrl} />
-                )}
-                <button
-                  type="submit"
-                  className="button"
-                  style={{
-                    "--provider-bg": provider.style?.bg ?? "",
-                    "--provider-dark-bg": provider.style?.bgDark ?? "",
-                    "--provider-color": provider.style?.text ?? "",
-                    "--provider-dark-color": provider.style?.textDark ?? "",
-                    gap: 8,
-                  }}
-                >
-                  {provider.style?.logo && (
-                    <img
-                      loading="lazy"
-                      height={24}
-                      width={24}
-                      id="provider-logo"
-                      src={`${
-                        provider.style.logo.startsWith("/") ? logos : ""
-                      }${provider.style.logo}`}
+        {providers.map((provider, i) => {
+          let bg, text, logo, logoDark, bgDark, textDark
+          if (provider.type === "oauth" || provider.type === "oidc") {
+            ;({
+              bg = "",
+              text = "",
+              logo = "",
+              bgDark = bg,
+              textDark = text,
+              logoDark = "",
+            } = provider.style ?? {})
+
+            logo = logo.startsWith("/") ? logos + logo : logo
+            logoDark = logoDark.startsWith("/")
+              ? logos + logoDark
+              : logoDark || logo
+
+            logoDark ||= logo
+          }
+          return (
+            <div key={provider.id} className="provider">
+              {provider.type === "oauth" || provider.type === "oidc" ? (
+                <form action={provider.signinUrl} method="POST">
+                  <input type="hidden" name="csrfToken" value={csrfToken} />
+                  {callbackUrl && (
+                    <input
+                      type="hidden"
+                      name="callbackUrl"
+                      value={callbackUrl}
                     />
                   )}
-                  {provider.style?.logoDark && (
-                    <img
-                      loading="lazy"
-                      height={24}
-                      width={24}
-                      id="provider-logo-dark"
-                      src={`${
-                        provider.style.logo.startsWith("/") ? logos : ""
-                      }${provider.style.logoDark}`}
-                    />
-                  )}
-                  <span>Sign in with {provider.name}</span>
-                </button>
-              </form>
-            ) : null}
-            {(provider.type === "email" || provider.type === "credentials") &&
-              i > 0 &&
-              providers[i - 1].type !== "email" &&
-              providers[i - 1].type !== "credentials" && <hr />}
-            {provider.type === "email" && (
-              <form action={provider.signinUrl} method="POST">
-                <input type="hidden" name="csrfToken" value={csrfToken} />
-                <label
-                  className="section-header"
-                  htmlFor={`input-email-for-${provider.id}-provider`}
-                >
-                  Email
-                </label>
-                <input
-                  id={`input-email-for-${provider.id}-provider`}
-                  autoFocus
-                  type="email"
-                  name="email"
-                  value={email}
-                  placeholder="email@example.com"
-                  required
-                />
-                <button type="submit">Sign in with {provider.name}</button>
-              </form>
-            )}
-            {provider.type === "credentials" && (
-              <form action={provider.callbackUrl} method="POST">
-                <input type="hidden" name="csrfToken" value={csrfToken} />
-                {Object.keys(provider.credentials).map((credential) => {
-                  return (
-                    <div key={`input-group-${provider.id}`}>
-                      <label
-                        className="section-header"
-                        htmlFor={`input-${credential}-for-${provider.id}-provider`}
-                      >
-                        {provider.credentials[credential].label ?? credential}
-                      </label>
-                      <input
-                        name={credential}
-                        id={`input-${credential}-for-${provider.id}-provider`}
-                        type={provider.credentials[credential].type ?? "text"}
-                        placeholder={
-                          provider.credentials[credential].placeholder ?? ""
-                        }
-                        {...provider.credentials[credential]}
+                  <button
+                    type="submit"
+                    className="button"
+                    style={{
+                      "--provider-bg": bg,
+                      "--provider-dark-bg": bgDark,
+                      "--provider-color": text,
+                      "--provider-dark-color": textDark,
+                      gap: 8,
+                    }}
+                  >
+                    {logo && (
+                      <img
+                        loading="lazy"
+                        height={24}
+                        width={24}
+                        id="provider-logo"
+                        src={logo}
                       />
-                    </div>
-                  )
-                })}
-                <button id="submitButton" type="submit">
-                  Sign in with {provider.name}
-                </button>
-              </form>
-            )}
-            {(provider.type === "email" || provider.type === "credentials") &&
-              i + 1 < providers.length && <hr />}
-          </div>
-        ))}
+                    )}
+                    {logoDark && (
+                      <img
+                        loading="lazy"
+                        height={24}
+                        width={24}
+                        id="provider-logo-dark"
+                        src={logoDark}
+                      />
+                    )}
+                    <span>Sign in with {provider.name}</span>
+                  </button>
+                </form>
+              ) : null}
+              {(provider.type === "email" || provider.type === "credentials") &&
+                i > 0 &&
+                providers[i - 1].type !== "email" &&
+                providers[i - 1].type !== "credentials" && <hr />}
+              {provider.type === "email" && (
+                <form action={provider.signinUrl} method="POST">
+                  <input type="hidden" name="csrfToken" value={csrfToken} />
+                  <label
+                    className="section-header"
+                    htmlFor={`input-email-for-${provider.id}-provider`}
+                  >
+                    Email
+                  </label>
+                  <input
+                    id={`input-email-for-${provider.id}-provider`}
+                    autoFocus
+                    type="email"
+                    name="email"
+                    value={email}
+                    placeholder="email@example.com"
+                    required
+                  />
+                  <button type="submit">Sign in with {provider.name}</button>
+                </form>
+              )}
+              {provider.type === "credentials" && (
+                <form action={provider.callbackUrl} method="POST">
+                  <input type="hidden" name="csrfToken" value={csrfToken} />
+                  {Object.keys(provider.credentials).map((credential) => {
+                    return (
+                      <div key={`input-group-${provider.id}`}>
+                        <label
+                          className="section-header"
+                          htmlFor={`input-${credential}-for-${provider.id}-provider`}
+                        >
+                          {provider.credentials[credential].label ?? credential}
+                        </label>
+                        <input
+                          name={credential}
+                          id={`input-${credential}-for-${provider.id}-provider`}
+                          type={provider.credentials[credential].type ?? "text"}
+                          placeholder={
+                            provider.credentials[credential].placeholder ?? ""
+                          }
+                          {...provider.credentials[credential]}
+                        />
+                      </div>
+                    )
+                  })}
+                  <button id="submitButton" type="submit">
+                    Sign in with {provider.name}
+                  </button>
+                </form>
+              )}
+              {(provider.type === "email" || provider.type === "credentials") &&
+                i + 1 < providers.length && <hr />}
+            </div>
+          )
+        })}
       </div>
     </div>
   )
