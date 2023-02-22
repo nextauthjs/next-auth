@@ -45,52 +45,16 @@ export default NextAuth({
 3. Initialize a Grafbase backend in the root of your project:
 
 ```bash
-npx grafbase init
+npx grafbase init --template https://github.com/nextauthjs/next-auth/tree/main/packages/adapter-grafbase
 ```
 
-4. Add the following models to your `grafbase/schema.graphql` file:
-
-```graphql
-type Account @model {
-  id: ID!
-  type: String!
-  provider: String!
-  providerAccountId: String!
-  refreshToken: String
-  accessToken: String
-  expiresAt: Int
-  tokenType: String
-  scope: String
-  idToken: String
-  sessionState: String
-  user: User!
-}
-
-type Session @model {
-  id: ID!
-  sessionToken: String! @unique
-  expires: DateTime!
-  user: User!
-}
-
-type User @model {
-  id: ID!
-  name: String
-  email: Email! @unique
-  emailVerified: DateTime
-  image: String
-  accounts: [Account]
-  sessions: [Session]
-}
-```
-
-5. Run your backend locally, or deploy to the edge:
+4. Run your backend locally, or deploy to the edge:
 
 ```bash
 npx grafbase dev
 ```
 
-You will want to add the `GRAFBASE_API_URL` with your local backend URL to `.env.local`. You can ignore the apiKey in development.
+You will need to add the `GRAFBASE_API_URL` with your local backend URL to `.env.local`. You can ignore adding a `apiKey` value in development.
 
 ## Contributing
 
