@@ -1,12 +1,13 @@
 import { AuthHandler } from "../core"
 import { detectHost } from "../utils/detect-host"
-import { setCookie } from "./utils"
+import { setCookie, getBody, toResponse } from "./utils"
 
 import type {
   GetServerSidePropsContext,
   NextApiRequest,
   NextApiResponse,
 } from "next"
+import { NextRequest } from "next/server"
 import type { AuthOptions, Session } from ".."
 import type {
   CallbacksOptions,
@@ -61,6 +62,37 @@ async function NextAuthHandler(
   return res.send(handler.body)
 }
 
+// @see https://beta.nextjs.org/docs/routing/route-handlers
+async function NextAuthRouteHandler(
+  req: NextRequest,
+  context: { params: { nextauth: string[] } },
+  options: AuthOptions
+) {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { headers, cookies } = require("next/headers")
+  const nextauth = context.params?.nextauth
+  const query = Object.fromEntries(req.nextUrl.searchParams)
+  const internalResponse = await AuthHandler({
+    req: {
+      host: detectHost(req.headers["x-forwarded-host"]),
+      body: await getBody(req),
+      query,
+      cookies: Object.fromEntries(
+        cookies()
+          .getAll()
+          .map((c) => [c.name, c.value])
+      ),
+      headers: Object.fromEntries(headers() as Headers),
+      method: req.method,
+      action: nextauth?.[0] as AuthAction,
+      providerId: nextauth?.[1],
+      error: query.error ?? nextauth?.[1],
+    },
+    options,
+  })
+  return toResponse(internalResponse)
+}
+
 function NextAuth(options: AuthOptions): any
 function NextAuth(
   req: NextApiRequest,
@@ -73,8 +105,25 @@ function NextAuth(
   ...args: [AuthOptions] | [NextApiRequest, NextApiResponse, AuthOptions]
 ) {
   if (args.length === 1) {
-    return async (req: NextAuthRequest, res: NextAuthResponse) =>
-      await NextAuthHandler(req, res, args[0])
+    return async (
+      req: NextAuthRequest | NextRequest,
+      res: NextAuthResponse | { params: { nextauth: string[] } }
+    ) => {
+      if ((res as any).params) {
+        return await NextAuthRouteHandler(req as any, res as any, args[0])
+      }
+      return await NextAuthHandler(req as any, res as any, args[0])
+
+      // REVIEW: req instanceof Request should return true on Route Handlers
+      // if (req instanceof Request) {
+      //   return await NextAuthRouteHandler(
+      //     req,
+      //     res as { params: { nextauth: string[] } },
+      //     args[0]
+      //   )
+      // }
+      // return await NextAuthHandler(req, res as NextApiResponse, args[0])
+    }
   }
 
   return NextAuthHandler(args[0], args[1], args[2])
