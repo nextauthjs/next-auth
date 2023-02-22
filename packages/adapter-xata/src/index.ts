@@ -1,4 +1,15 @@
-import type { Adapter } from "next-auth/adapters"
+/**
+ * @todo - Temporary workaround for unnecessary dependency
+ * of @auth/core or next-auth
+ */
+
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-ignore - @auth/core/adapters dynamic import
+import type { Adapter as CoreAdapter } from '@auth/core/adapters';
+// @ts-ignore - next-auth/adapters dynamic import
+import type { Adapter as NextAuthAdapter } from 'next-auth/adapters';
+
+export interface Adapter extends CoreAdapter, NextAuthAdapter {}
 
 import type { XataClient } from "./xata"
 
