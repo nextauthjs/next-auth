@@ -1,0 +1,34 @@
+type Account @model {
+  type: String!
+  provider: String!
+  providerAccountId: String! @unique
+  refreshToken: String
+  accessToken: String
+  expiresAt: Int
+  tokenType: String
+  scope: String
+  idToken: String
+  sessionState: String
+  user: User!
+}
+
+type Session @model {
+  sessionToken: String! @unique
+  expires: DateTime!
+  user: User!
+}
+
+type User @model {
+  name: String
+  email: Email! @unique
+  emailVerified: DateTime
+  image: String
+  accounts: [Account]
+  sessions: [Session]
+}
+
+type VerificationToken {
+  identifier: String
+  token: String! @unique
+  timestamp: DateTime
+}
