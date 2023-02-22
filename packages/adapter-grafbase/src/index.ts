@@ -1,14 +1,27 @@
-import type { Adapter, AdapterUser, AdapterAccount } from "next-auth/adapters"
+import type {
+  Adapter,
+  AdapterUser,
+  AdapterAccount,
+  AdapterSession,
+  VerificationToken,
+} from "next-auth/adapters"
 import { GraphQLClient } from "graphql-request"
 
 import {
-  CreateUserMutation,
-  GetUserByIdQuery,
-  GetUserByEmailQuery,
-  UpdateUserByIdMutation,
-  DeleteUserByIdMutation,
-  LinkAccountMutation,
-  CreateSessionAndLinkUserMutation,
+  CreateUser,
+  GetUser,
+  GetUserByEmail,
+  GetUserByAccount,
+  UpdateUser,
+  DeleteUser,
+  LinkAccount,
+  UnlinkAccount,
+  CreateSession,
+  GetSessionAndUser,
+  UpdateSession,
+  DeleteSession,
+  CreateVerificationToken,
+  UseVerificationToken,
 } from "./grafbase"
 
 export interface GrafbaseClientOptions {
@@ -31,7 +44,7 @@ export interface GrafbaseAdapterOptions {
   client: GrafbaseClientOptions
 }
 
-export function GrafbaseAdaper(options: GrafbaseClientOptions): Adapter {
+export function GrafbaseAdapter(options: GrafbaseClientOptions): Adapter {
   if (!options?.url) {
     throw new Error("You must provide an endpoint for your Grafbase project")
   }
@@ -52,25 +65,22 @@ export function GrafbaseAdaper(options: GrafbaseClientOptions): Adapter {
     async createUser(user) {
       const { userCreate } = await client.request<{
         userCreate: { user: AdapterUser }
-      }>(CreateUserMutation, {
+      }>(CreateUser, {
         user,
       })
 
       return userCreate?.user
     },
     async getUser(id) {
-      const { user } = await client.request<{ user: AdapterUser }>(
-        GetUserByIdQuery,
-        {
-          id,
-        }
-      )
+      const { user } = await client.request<{ user: AdapterUser }>(GetUser, {
+        id,
+      })
 
       return user ?? null
     },
     async getUserByEmail(email) {
       const { user } = await client.request<{ user: AdapterUser }>(
-        GetUserByEmailQuery,
+        GetUserByEmail,
         {
           email,
         }
@@ -78,14 +88,24 @@ export function GrafbaseAdaper(options: GrafbaseClientOptions): Adapter {
 
       return user ?? null
     },
-    async getUserByAccount({ providerAccountId, provider }) {
-      // TODO: @unique scope
-      throw new Error("`getUserByAccount` not implemented")
+    async getUserByAccount(provider_providerAccountId) {
+      const { account } = await client.request<{
+        account: AdapterAccount & {
+          user: AdapterUser
+        }
+      }>(GetUserByAccount, {
+        // TODO: @unique scope
+        // provider_providerAccountId
+        // REMOVE THIS VARIABLE WHEN @unique scope lands
+        providerAccountId: provider_providerAccountId?.providerAccountId,
+      })
+
+      return account?.user
     },
     async updateUser({ id, ...user }) {
       const { updateUser } = await client.request<{
         updateUser: { user: AdapterUser }
-      }>(UpdateUserByIdMutation, {
+      }>(UpdateUser, {
         id: id as string,
         user,
       })
@@ -93,7 +113,7 @@ export function GrafbaseAdaper(options: GrafbaseClientOptions): Adapter {
       return updateUser?.user ?? null
     },
     async deleteUser(id) {
-      await client.request(DeleteUserByIdMutation, {
+      await client.request(DeleteUser, {
         id,
       })
 
@@ -113,9 +133,8 @@ export function GrafbaseAdaper(options: GrafbaseClientOptions): Adapter {
 
       const { accountCreate } = await client.request<{
         accountCreate: { account: AdapterAccount }
-      }>(LinkAccountMutation, {
+      }>(LinkAccount, {
         input: {
-          userId,
           accessToken,
           tokenType,
           idToken,
@@ -131,22 +150,23 @@ export function GrafbaseAdaper(options: GrafbaseClientOptions): Adapter {
 
       return accountCreate?.account ?? null
     },
-    async unlinkAccount({ providerAccountId, provider }) {
-      // TODO: @unique scope
-      throw new Error("`unlinkAccount` not implemented")
+    async unlinkAccount(provider_providerAccountId) {
+      await client.request(UnlinkAccount, {
+        // TODO: @unique scope
+        // provider_providerAccountId
+        // REMOVE THIS VARIABLE WHEN @unique scope lands
+        providerAccountId: provider_providerAccountId?.providerAccountId,
+      })
     },
     async createSession({ userId, ...payload }) {
-      const { sessionCreate } = await client.request(
-        CreateSessionAndLinkUserMutation,
-        {
-          input: {
-            ...payload,
-            user: {
-              link: userId,
-            },
+      const { sessionCreate } = await client.request(CreateSession, {
+        input: {
+          ...payload,
+          user: {
+            link: userId,
           },
-        }
-      )
+        },
+      })
 
       return {
         ...sessionCreate?.session,
@@ -155,16 +175,65 @@ export function GrafbaseAdaper(options: GrafbaseClientOptions): Adapter {
       }
     },
     async getSessionAndUser(sessionToken) {
-      throw new Error("`getSessionAndUser` not implemented")
+      const { session } = await client.request<{
+        session: AdapterSession & {
+          user: AdapterUser
+        }
+      }>(GetSessionAndUser, {
+        sessionToken,
+      })
+
+      return {
+        user: session.user,
+        session: {
+          ...session,
+          expires: new Date(session.expires),
+          userId: session.user.id,
+        },
+      }
     },
     async updateSession({ sessionToken, ...data }) {
-      throw new Error("`updateSession` not implemented")
+      const { sessionUpdate } = await client.request<{
+        sessionUpdate: {
+          session: AdapterSession
+        }
+      }>(UpdateSession, {
+        sessionToken,
+        input: data,
+      })
+
+      return {
+        ...sessionUpdate,
+        sessionToken,
+        userId: data.userId!,
+        expires: data.expires!,
+      }
     },
     async deleteSession(sessionToken) {
-      throw new Error("`deleteSession` not implemented")
+      await client.request(DeleteSession, {
+        sessionToken,
+      })
+
+      return
+    },
+    async createVerificationToken(input) {
+      const { createVerificationToken } = await client.request<{
+        createVerificationToken: {
+          verificationToken: VerificationToken
+        }
+      }>(CreateVerificationToken, { input })
+
+      return createVerificationToken?.verificationToken
     },
     async useVerificationToken(token) {
-      throw new Error("`useVerificationToken` not implemented")
+      await client.request(UseVerificationToken, {
+        token,
+      })
+
+      return {
+        ...token,
+        expires: new Date(),
+      }
     },
   }
 }

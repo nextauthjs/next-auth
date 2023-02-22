@@ -15,7 +15,6 @@ export const AccountFragment = gql`
     type
     provider
     providerAccountId
-    userId
   }
 `
 
@@ -31,8 +30,24 @@ export const TokenFragment = gql`
   }
 `
 
-export const CreateUserMutation = gql`
-  mutation UserCreate($user: UserCreateInput!) {
+export const SessionFragment = gql`
+  fragment SessionFragment on Session {
+    expires
+    id
+    sessionToken
+  }
+`
+
+export const VerificationTokenFragment = gql`
+  fragment VerificationTokenFragment on VerificationToken {
+    identifier
+    token
+    expires
+  }
+`
+
+export const CreateUser = gql`
+  mutation CreateUser($user: UserCreateInput!) {
     userCreate(input: $user) {
       user {
         ...UserFragment
@@ -42,16 +57,16 @@ export const CreateUserMutation = gql`
   ${UserFragment}
 `
 
-export const GetUserByIdQuery = gql`
-  query GetUserById($id: ID!) {
-    user(id: $id) {
+export const GetUser = gql`
+  query GetUser($id: ID!) {
+    user(by: { id: $id }) {
       ...UserFragment
     }
   }
   ${UserFragment}
 `
 
-export const GetUserByEmailQuery = gql`
+export const GetUserByEmail = gql`
   query GetUserByEmail($email: Email!) {
     user(by: { email: $email }) {
       ...UserFragment
@@ -60,9 +75,33 @@ export const GetUserByEmailQuery = gql`
   ${UserFragment}
 `
 
-export const UpdateUserByIdMutation = gql`
-  mutation UpdateUserById($id: ID!, $user: UserUpdateInput!) {
-    userUpdate(id: $id, input: $user) {
+export const GetUserByAccount = gql`
+  query GetUserByAccount(
+    $providerAccountId: String! # $provider: String!
+  ) {
+    # TODO: @unique scope
+    # account(
+    #   by: {
+    #     providerAccountIdProvider: {
+    #       providerAccountId: $providerAccountId,
+    #       provider: $provider
+    #     }
+    #   }
+    # )
+    account(by: { providerAccountId: $providerAccountId }) {
+      ...AccountFragment
+      user {
+        ...UserFragment
+      }
+    }
+  }
+  ${AccountFragment}
+  ${UserFragment}
+`
+
+export const UpdateUser = gql`
+  mutation UpdateUser($id: ID!, $user: UserUpdateInput!) {
+    userUpdate(by: { id: $id }, input: $user) {
       user {
         ...UserFragment
       }
@@ -70,16 +109,16 @@ export const UpdateUserByIdMutation = gql`
   }
 `
 
-export const DeleteUserByIdMutation = gql`
-  mutation DeleteUserById($id: ID!) {
-    userDelete(id: $id) {
+export const DeleteUser = gql`
+  mutation DeleteUser($id: ID!) {
+    userDelete(by: { id: $id }) {
       deletedId
     }
   }
 `
 
-export const LinkAccountMutation = gql`
-  mutation CreateAccountAndLinkUser($input: AccountCreateInput!) {
+export const LinkAccount = gql`
+  mutation CreateAccount($input: AccountCreateInput!) {
     accountCreate(input: $input) {
       account {
         ...TokenFragment
@@ -91,8 +130,27 @@ export const LinkAccountMutation = gql`
   ${TokenFragment}
 `
 
-export const CreateSessionAndLinkUserMutation = gql`
-  mutation CreateSessionAndLinkUser($input: SessionCreateInput!) {
+export const UnlinkAccount = gql`
+  mutation UnlinkAccount(
+    $providerAccountId: String! # $provider: String!
+  ) {
+    # TODO: @unique scope
+    deleteAccount(
+      by: {
+        # providerAccountIdProvider: {
+        #   providerAccountId: $providerAccountId,
+        #   provider: $provider
+        # }
+        providerAccountId: $providerAccountId
+      }
+    ) {
+      deletedId
+    }
+  }
+`
+
+export const CreateSession = gql`
+  mutation CreateSession($input: SessionCreateInput!) {
     sessionCreate(input: $input) {
       session {
         id
@@ -105,4 +163,57 @@ export const CreateSessionAndLinkUserMutation = gql`
     }
   }
   ${UserFragment}
+`
+
+export const GetSessionAndUser = gql`
+  query GetSessionAndUser(
+    $sessionToken: String! # $provider: String!
+  ) {
+    session(by: { sessionToken: $sessionToken }) {
+      ...SessionFragment
+      user {
+        ...UserFragment
+      }
+    }
+  }
+  ${SessionFragment}
+  ${UserFragment}
+`
+
+export const UpdateSession = gql`
+  mutation UpdateSession($sessionToken: String!, $input: SessionUpdateInput!) {
+    sessionUpdate(by: { sessionToken: $sessionToken }, input: $input) {
+      session {
+        ...SessionFragment
+      }
+    }
+  }
+  ${SessionFragment}
+`
+
+export const DeleteSession = gql`
+  mutation DeleteSession($sessionToken: String!) {
+    sessionDelete(by: { sessionToken: $sessionToken }) {
+      deletedId
+    }
+  }
+`
+
+export const CreateVerificationToken = gql`
+  mutation CreateVerificationToken($input: VerificationTokenCreateInput!) {
+    createVerificationToken(input: $input) {
+      verificationToken {
+        ...VerificationTokenFragment
+      }
+    }
+  }
+  ${VerificationTokenFragment}
+`
+
+export const UseVerificationToken = gql`
+  mutation UseVerificationToken($token: String!) {
+    sessionDelete(by: { token: $token }) {
+      deletedId
+    }
+  }
 `
