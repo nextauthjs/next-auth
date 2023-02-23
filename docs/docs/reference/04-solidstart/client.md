@@ -16,3 +16,18 @@ signIn("provider") // example: signIn("github")
 import { signOut } from "@auth/solid-start/client"
 signOut()
 ```
+
+## Getting The Current Session
+
+```tsx
+import { createSession } from "@auth/solid-start/client"
+
+export default function MyHelloWorldPage() {
+  const session = createSession()
+
+  const data = () => session()?.data
+  const user = () => data()?.user
+
+  return <h1>{...}</h1>
+}
+```
