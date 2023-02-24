@@ -139,6 +139,10 @@ function NextAuth(
     }
   }
 
+  if ((args[1] as any).params) {
+    return NextAuthRouteHandler(args[0] as any, args[1] as any, args[2])
+  }
+
   return NextAuthHandler(args[0], args[1], args[2])
 }
 
