@@ -1,6 +1,6 @@
 {
   "name": "@next-auth/upstash-redis-adapter",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "Upstash adapter for next-auth. It uses Upstash's connectionless (HTTP based) Redis client.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
