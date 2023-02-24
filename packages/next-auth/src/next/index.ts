@@ -23,8 +23,7 @@ async function NextAuthHandler(
 ) {
   const { nextauth, ...query } = req.query
 
-  options.secret =
-    options.secret ?? options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
+  options.secret ??= options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
 
   const handler = await AuthHandler({
     req: {
@@ -68,6 +67,8 @@ async function NextAuthRouteHandler(
   context: { params: { nextauth: string[] } },
   options: AuthOptions
 ) {
+  options.secret ??= process.env.NEXTAUTH_SECRET
+
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const { headers, cookies } = require("next/headers")
   const nextauth = context.params?.nextauth
@@ -187,7 +188,7 @@ export async function getServerSession<
     options = Object.assign({}, args[2], { providers: [] })
   }
 
-  options.secret = options.secret ?? process.env.NEXTAUTH_SECRET
+  options.secret ??= process.env.NEXTAUTH_SECRET
 
   const session = await AuthHandler<Session | {} | string>({
     options,
