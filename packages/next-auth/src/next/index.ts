@@ -73,10 +73,11 @@ async function NextAuthRouteHandler(
   const { headers, cookies } = require("next/headers")
   const nextauth = context.params?.nextauth
   const query = Object.fromEntries(req.nextUrl.searchParams)
+  const body = await getBody(req)
   const internalResponse = await AuthHandler({
     req: {
       host: detectHost(req.headers["x-forwarded-host"]),
-      body: await getBody(req),
+      body,
       query,
       cookies: Object.fromEntries(
         cookies()
@@ -91,7 +92,18 @@ async function NextAuthRouteHandler(
     },
     options,
   })
-  return toResponse(internalResponse)
+
+  const response = toResponse(internalResponse)
+  const redirect = response.headers.get("Location")
+  if (body?.json === "true" && redirect) {
+    response.headers.delete("Location")
+    response.headers.set("Content-Type", "application/json")
+    return new Response(JSON.stringify({ url: redirect }), {
+      headers: response.headers,
+    })
+  }
+
+  return response
 }
 
 function NextAuth(options: AuthOptions): any
