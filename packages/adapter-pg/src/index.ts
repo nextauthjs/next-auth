@@ -87,7 +87,7 @@ export default function PostgresAdapter(client: Pool): Adapter {
         UPDATE users set
         name = $2, email = $3, "emailVerified" = $4, image = $5
         where id = $1
-        RETURNING name, email, "emailVerified", image
+        RETURNING name, id, email, "emailVerified", image
       `;
       const query2 = await client.query(updateSql, [id, name, email, emailVerified, image]);
       return query2.rows[0];
