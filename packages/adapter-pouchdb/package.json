@@ -16,18 +16,30 @@
     "oauth",
     "pouchdb"
   ],
+  "type": "module",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
   "private": false,
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "build:wip": "tsc",
+    "build": "tsc",
     "tdd": "jest --watch",
     "test:wip": "jest"
   },
   "files": [
     "README.md",
-    "dist"
+    "index.js",
+    "index.d.ts",
+    "index.d.ts.map",
+    "src"
   ],
   "peerDependencies": {
     "next-auth": "^3",
