@@ -11,8 +11,8 @@ type PouchdbDocument<T> = PouchDB.Core.ExistingDocument<{ data: T }>
 type PouchdbFindResponse = PouchDB.Find.FindResponse<any>
 
 interface PouchDBAdapterConfig {
-  prefixes: AdapterDocument
-  indexes: AdapterDocument
+  prefixes?: AdapterDocument
+  indexes?: AdapterDocument
 }
 
 interface AdapterDocument {
@@ -71,9 +71,15 @@ export const PouchDBAdapter = ({
   indexes,
   ...pouchdb
 }: PouchDB.Database & PouchDBAdapterConfig): Adapter => {
+  const {
+    user: userPrefix = "USER",
+    account: accountPrefix = "ACCOUNT",
+    session: sessionPrefix = "SESSION",
+    verificationToken: verificationTokenPrefix = "VERIFICATION-TOKEN",
+  } = prefixes ?? {}
   return {
     async createUser(user) {
-      const doc = { ...user, _id: [prefixes.user, ulid()].join("_") }
+      const doc = { ...user, _id: [userPrefix, ulid()].join("_") }
       await pouchdb.put(doc)
       return { ...user, id: doc._id }
     },
@@ -84,12 +90,13 @@ export const PouchDBAdapter = ({
         res.data.emailVerified = new Date(res.data.emailVerified)
       }
 
+      console.log({ res })
       return res?.data ?? null
     },
 
     async getUserByEmail(email) {
       const res: PouchdbFindResponse = await pouchdb.find({
-        use_index: prefixes.user,
+        use_index: userPrefix,
         selector: { "data.email": { $eq: email } },
         limit: 1,
       })
@@ -105,7 +112,7 @@ export const PouchDBAdapter = ({
 
     async getUserByAccount({ provider, providerAccountId }) {
       const res: PouchdbFindResponse = await pouchdb.find({
-        use_index: prefixes.account,
+        use_index: accountPrefix,
         selector: {
           "data.providerId": { $eq: provider },
           "data.providerAccountId": { $eq: providerAccountId },
@@ -143,14 +150,14 @@ export const PouchDBAdapter = ({
 
     async linkAccount(account) {
       await pouchdb.put({
-        _id: [prefixes.account, ulid()].join("_"),
+        _id: [account, ulid()].join("_"),
         data: account,
       })
     },
 
     async unlinkAccount({ provider, providerAccountId }) {
-      const account = await pouchdb.find({
-        use_index: prefixes.account,
+      const _account = await pouchdb.find({
+        use_index: accountPrefix,
         selector: {
           "data.providerId": { $eq: provider },
           "data.providerAccountId": { $eq: providerAccountId },
@@ -158,14 +165,14 @@ export const PouchDBAdapter = ({
         limit: 1,
       })
       await pouchdb.put({
-        ...account.docs[0],
+        ..._account.docs[0],
         _deleted: true,
       })
     },
 
     async createSession(data) {
       await pouchdb.put({
-        _id: [prefixes.session, ulid()].join("_"),
+        _id: [sessionPrefix, ulid()].join("_"),
         data,
       })
       return data
@@ -173,7 +180,7 @@ export const PouchDBAdapter = ({
 
     async getSessionAndUser(sessionToken) {
       const res: PouchdbFindResponse = await pouchdb.find({
-        use_index: prefixes.session,
+        use_index: sessionPrefix,
         selector: {
           "data.sessionToken": { $eq: sessionToken },
         },
@@ -193,7 +200,7 @@ export const PouchDBAdapter = ({
 
     async updateSession(data) {
       const res: PouchdbFindResponse = await pouchdb.find({
-        use_index: prefixes.session,
+        use_index: sessionPrefix,
         selector: {
           "data.sessionToken": { $eq: data.sessionToken },
         },
@@ -216,7 +223,7 @@ export const PouchDBAdapter = ({
 
     async deleteSession(sessionToken) {
       const res = await pouchdb.find({
-        use_index: prefixes.session,
+        use_index: sessionPrefix,
         selector: {
           "data.sessionToken": { $eq: sessionToken },
         },
@@ -231,7 +238,7 @@ export const PouchDBAdapter = ({
 
     async createVerificationToken(data) {
       await pouchdb.put({
-        _id: [indexes.verificationToken, ulid()].join("_"),
+        _id: [verificationTokenPrefix, ulid()].join("_"),
         ...data,
       })
 
@@ -240,7 +247,7 @@ export const PouchDBAdapter = ({
 
     async useVerificationToken({ identifier, token }) {
       const res = await pouchdb.find({
-        use_index: prefixes.verificationToken,
+        use_index: verificationTokenPrefix,
         selector: {
           "data.identifier": { $eq: identifier },
           "data.token": { $eq: token },
