@@ -67,7 +67,7 @@ _If you use a custom credentials provider user accounts will not be persisted in
 </summary>
 <p>
 
-NextAuth.js was originally designed for use with Next.js and Serverless. However, today you could use the NextAuth.js core with any other framework. Checkout the examples for <a href="https://github.com/nextauthjs/next-auth/tree/main/apps/playground-gatsby" target="_blank">Gatsby</a> and <a href="https://sveltekit.authjs.dev/" target="_blank">SvelteKit</a>. If you would add another integration with other frameworks, feel free to work on it and send a pull request. Make sure to check if there's any on-going work before open a new issue.
+NextAuth.js was originally designed for use with Next.js and Serverless. However, today you could use the NextAuth.js core with any other framework. Checkout the examples for <a href="https://github.com/nextauthjs/next-auth/tree/main/apps/playground-gatsby" target="_blank">Gatsby</a> and <a href="https://sveltekit.authjs.dev/" target="_blank">SvelteKit</a>. If you would add another integration with other frameworks, feel free to work on it and send a pull request. Make sure to check if there's any on-going work before opening a new issue.
 
 </p>
 </details>
