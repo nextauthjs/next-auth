@@ -190,6 +190,20 @@ We're happy to announce we've recently created an [OpenCollective](https://openc
   <tbody>
     <tr>
       <td align="center" valign="top">
+        <a href="https://stytch.com" target="_blank">
+          <img width="128px" src="https://avatars.githubusercontent.com/u/69983493?s=200&v=4" alt="Stytch Logo" />
+        </a><br />
+        <div>Stytch</div><br />
+        <sub>🥈 Silver Financial Sponsor</sub>
+      </td>
+      <td align="center" valign="top">
+        <a href="https://beyondidentity.com" target="_blank">
+          <img width="128px" src="https://avatars.githubusercontent.com/u/69811361?s=200&v=4" alt="Beyond Identity Logo" />
+        </a><br />
+        <div>Beyond Identity</div><br />
+        <sub>🥈 Silver Financial Sponsor</sub>
+      </td>
+      <td align="center" valign="top">
         <a href="https://vercel.com" target="_blank">
           <img width="128px" src="https://avatars.githubusercontent.com/u/14985020?v=4" alt="Vercel Logo" />
         </a><br />
