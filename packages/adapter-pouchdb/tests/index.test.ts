@@ -1,6 +1,6 @@
 import { runBasicTests } from "@next-auth/adapter-test"
 import {
-  createIndexesPouchDBAdapter,
+  createIndexes,
   PouchDBAdapter,
   toAdapterAccount,
   toAdapterSession,
@@ -39,7 +39,7 @@ runBasicTests({
   skipTests: ["deleteUser"],
   db: {
     async connect() {
-      await createIndexesPouchDBAdapter(pouchdb)
+      await createIndexes(pouchdb)
     },
     disconnect,
     user: async (id) => {

@@ -13,7 +13,6 @@ type PrefixConfig = Record<
 >
 type IndexConfig = Record<
   | "userByEmail"
-  | "userById"
   | "accountByProviderId"
   | "sessionByToken"
   | "verificationTokenByToken",
@@ -22,108 +21,6 @@ type IndexConfig = Record<
 interface PouchDBAdapterConfig {
   prefixes?: PrefixConfig
   indexes?: IndexConfig
-}
-
-export const createIndexesPouchDBAdapter = async (
-  pouchdb: PouchDB.Database,
-  indexes?: IndexConfig
-) => {
-  const {
-    userByEmail = "nextAuthUserByEmail",
-    userById = "nextAuthUserById",
-    accountByProviderId = "nextAuthAccountByProviderId",
-    sessionByToken = "nextAuthSessionByToken",
-    verificationTokenByToken = "nextAuthVerificationRequestByToken",
-  } = indexes ?? {}
-  await Promise.allSettled([
-    await pouchdb.createIndex({
-      index: {
-        name: userByEmail,
-        ddoc: userByEmail,
-        fields: ["email"],
-      },
-    }),
-    await pouchdb.createIndex({
-      index: {
-        name: userById,
-        ddoc: userById,
-        fields: ["id"],
-      },
-    }),
-    await pouchdb.createIndex({
-      index: {
-        name: accountByProviderId,
-        ddoc: accountByProviderId,
-        fields: ["provider", "providerAccountId"],
-      },
-    }),
-    await pouchdb.createIndex({
-      index: {
-        name: sessionByToken,
-        ddoc: sessionByToken,
-        fields: ["sessionToken"],
-      },
-    }),
-    await pouchdb.createIndex({
-      index: {
-        name: verificationTokenByToken,
-        ddoc: verificationTokenByToken,
-        fields: ["identifier", "token"],
-      },
-    }),
-  ])
-}
-
-/** @internal */
-const toAdapter = <T>(
-  dbObject: T & PouchDB.Core.IdMeta & PouchDB.Core.GetMeta
-) => {
-  const {
-    _id,
-    _rev,
-    _conflicts,
-    _attachments,
-    _revisions,
-    _revs_info,
-    ...rest
-  } = dbObject
-  return rest
-}
-
-/** @internal */
-export const toAdapterUser = (
-  user: AdapterUser & PouchDB.Core.IdMeta & PouchDB.Core.GetMeta
-) => {
-  if (typeof user?.emailVerified === "string")
-    user.emailVerified = new Date(user.emailVerified)
-  return { ...toAdapter(user), id: user._id }
-}
-
-/** @internal */
-export const toAdapterSession = (
-  session: AdapterSession & PouchDB.Core.IdMeta & PouchDB.Core.GetMeta
-) => {
-  if (typeof session?.expires === "string")
-    session.expires = new Date(session.expires)
-  return { ...toAdapter(session), id: session._id }
-}
-
-/** @internal */
-export const toAdapterAccount = (
-  account: AdapterAccount & PouchDB.Core.IdMeta & PouchDB.Core.GetMeta
-) => {
-  return { ...toAdapter(account), id: account._id }
-}
-
-/** @internal */
-export const toVerificationToken = (
-  verificationToken: VerificationToken &
-    PouchDB.Core.IdMeta &
-    PouchDB.Core.GetMeta
-) => {
-  if (typeof verificationToken?.expires === "string")
-    verificationToken.expires = new Date(verificationToken.expires)
-  return { ...toAdapter(verificationToken) }
 }
 
 export const PouchDBAdapter = ({
@@ -339,4 +236,98 @@ export const PouchDBAdapter = ({
       return null
     },
   }
+}
+
+export const createIndexes = async (
+  pouchdb: PouchDB.Database,
+  indexes?: IndexConfig
+) => {
+  const {
+    userByEmail = "nextAuthUserByEmail",
+    accountByProviderId = "nextAuthAccountByProviderId",
+    sessionByToken = "nextAuthSessionByToken",
+    verificationTokenByToken = "nextAuthVerificationRequestByToken",
+  } = indexes ?? {}
+  await Promise.allSettled([
+    await pouchdb.createIndex({
+      index: {
+        name: userByEmail,
+        ddoc: userByEmail,
+        fields: ["email"],
+      },
+    }),
+    await pouchdb.createIndex({
+      index: {
+        name: accountByProviderId,
+        ddoc: accountByProviderId,
+        fields: ["provider", "providerAccountId"],
+      },
+    }),
+    await pouchdb.createIndex({
+      index: {
+        name: sessionByToken,
+        ddoc: sessionByToken,
+        fields: ["sessionToken"],
+      },
+    }),
+    await pouchdb.createIndex({
+      index: {
+        name: verificationTokenByToken,
+        ddoc: verificationTokenByToken,
+        fields: ["identifier", "token"],
+      },
+    }),
+  ])
+}
+
+/** @internal */
+const toAdapter = <T>(
+  dbObject: T & PouchDB.Core.IdMeta & PouchDB.Core.GetMeta
+) => {
+  const {
+    _id,
+    _rev,
+    _conflicts,
+    _attachments,
+    _revisions,
+    _revs_info,
+    ...rest
+  } = dbObject
+  return { ...rest }
+}
+
+/** @internal */
+export const toAdapterUser = (
+  user: AdapterUser & PouchDB.Core.IdMeta & PouchDB.Core.GetMeta
+) => {
+  if (typeof user?.emailVerified === "string")
+    user.emailVerified = new Date(user.emailVerified)
+  return { ...toAdapter(user), id: user._id }
+}
+
+/** @internal */
+export const toAdapterSession = (
+  session: AdapterSession & PouchDB.Core.IdMeta & PouchDB.Core.GetMeta
+) => {
+  if (typeof session?.expires === "string")
+    session.expires = new Date(session.expires)
+  return { ...toAdapter(session), id: session._id }
+}
+
+/** @internal */
+export const toAdapterAccount = (
+  account: AdapterAccount & PouchDB.Core.IdMeta & PouchDB.Core.GetMeta
+) => {
+  return { ...toAdapter(account), id: account._id }
+}
+
+/** @internal */
+export const toVerificationToken = (
+  verificationToken: VerificationToken &
+    PouchDB.Core.IdMeta &
+    PouchDB.Core.GetMeta
+) => {
+  if (typeof verificationToken?.expires === "string")
+    verificationToken.expires = new Date(verificationToken.expires)
+  return { ...toAdapter(verificationToken) }
 }
