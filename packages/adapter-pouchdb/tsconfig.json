@@ -2,6 +2,7 @@
   "extends": "@next-auth/tsconfig/tsconfig.adapters.json",
   "compilerOptions": {
     "rootDir": "src",
+    "allowSyntheticDefaultImports": true,
     "outDir": ".",
     "target": "ES2020",
     "module": "ESNext",

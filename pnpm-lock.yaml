@@ -133,7 +133,7 @@ importers:
       vercel: ^23.1.2
     dependencies:
       dotenv: 16.0.3
-      gatsby: 5.8.0-next.0_biqbaboplfbrettd7655fr4n2y
+      gatsby: 5.8.0-next.1_biqbaboplfbrettd7655fr4n2y
       next-auth: link:../../../packages/next-auth
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -350,7 +350,7 @@ importers:
       jest: ^27.4.3
       next-auth: workspace:*
       pouchdb: ^8.0.1
-      pouchdb-adapter-memory: ^7.2.2
+      pouchdb-adapter-memory: ^8.0.1
       pouchdb-find: ^8.0.1
       ulid: ^2.3.0
     dependencies:
@@ -362,7 +362,7 @@ importers:
       jest: 27.5.1
       next-auth: link:../next-auth
       pouchdb: 8.0.1
-      pouchdb-adapter-memory: 7.3.0
+      pouchdb-adapter-memory: 8.0.1
       pouchdb-find: 8.0.1
 
   packages/adapter-prisma:
@@ -14007,10 +14007,6 @@ packages:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
     dev: true
 
-  /argsarray/0.0.1:
-    resolution: {integrity: sha512-u96dg2GcAKtpTrBdDoFIM7PjcBA+6rSP0OR94MOReNRyUECL6MtQt5XXmRr4qrftYaef9+l5hcpO5te7sML1Cg==}
-    dev: true
-
   /argv-formatter/1.0.0:
     resolution: {integrity: sha512-F2+Hkm9xFaRg+GkaNnbwXNDV5O6pnCFEmqyhvfC/Ic5LbgOWjJh3L+mN/s91rxVL3znE7DYVpW0GJFT+4YBgWw==}
     dev: true
@@ -14276,7 +14272,7 @@ packages:
   /axios/0.21.4_debug@4.3.4:
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
-      follow-redirects: 1.15.1_debug@4.3.4
+      follow-redirects: 1.15.1
     transitivePeerDependencies:
       - debug
 
@@ -14688,7 +14684,7 @@ packages:
       - supports-color
     dev: true
 
-  /babel-plugin-remove-graphql-queries/5.8.0-next.0_osdpouujtlfd2op5ubueuc4aqi:
+  /babel-plugin-remove-graphql-queries/5.8.0-next.0_dmgxmrsfffyjslonyvmibqmeny:
     resolution: {integrity: sha512-emjOEAt/rnb1eGC1ximT3/Rs1i6U6DT2K385uteLPsGsZ8s6fCPvmzm8TLjRM3iWT4LTVc9OBGghkFPCJ8C6Vg==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
@@ -14698,7 +14694,7 @@ packages:
       '@babel/core': 7.20.12
       '@babel/runtime': 7.20.13
       '@babel/types': 7.20.7
-      gatsby: 5.8.0-next.0_biqbaboplfbrettd7655fr4n2y
+      gatsby: 5.8.0-next.1_biqbaboplfbrettd7655fr4n2y
       gatsby-core-utils: 4.8.0-next.0
     dev: false
 
@@ -20187,7 +20183,6 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
-    dev: true
 
   /follow-redirects/1.15.1_debug@4.3.4:
     resolution: {integrity: sha512-yLAMQs+k0b2m7cVxpS1VKJVvoz7SS9Td1zss3XRwXj+ZDH00RJgnuLx7E44wx02kQLrdM3aOOy+FpzS7+8OizA==}
@@ -20199,6 +20194,7 @@ packages:
         optional: true
     dependencies:
       debug: 4.3.4
+    dev: true
 
   /for-each/0.3.3:
     resolution: {integrity: sha512-jqYfLp7mo9vIyQf8ykW2v7A+2N4QjeCeI5+Dz9XraiO1ign81wjiH7Fb9vSOWvQfNtmSa4H2RoQTrrXivdUZmw==}
@@ -20593,7 +20589,7 @@ packages:
       '@parcel/transformer-json': 2.8.3_@parcel+core@2.8.3
     dev: false
 
-  /gatsby-plugin-page-creator/5.8.0-next.0_irjlgbbmdc6sbwac5pl62frsae:
+  /gatsby-plugin-page-creator/5.8.0-next.0_3wxjiiig4wrx4zjd5cbjvpqtn4:
     resolution: {integrity: sha512-G3NxUJOTZQFt+b2OO0A9yOxfKGiwnUdvpBymob9kJ/YyxLX82ri3xlXPTxp7imQDIbv1BbVRVFV45EVWrWJWKg==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
@@ -20605,10 +20601,10 @@ packages:
       chokidar: 3.5.3
       fs-exists-cached: 1.0.0
       fs-extra: 11.1.0
-      gatsby: 5.8.0-next.0_biqbaboplfbrettd7655fr4n2y
+      gatsby: 5.8.0-next.1_biqbaboplfbrettd7655fr4n2y
       gatsby-core-utils: 4.8.0-next.0
       gatsby-page-utils: 3.8.0-next.0
-      gatsby-plugin-utils: 4.8.0-next.0_irjlgbbmdc6sbwac5pl62frsae
+      gatsby-plugin-utils: 4.8.0-next.0_3wxjiiig4wrx4zjd5cbjvpqtn4
       gatsby-telemetry: 4.8.0-next.0
       globby: 11.1.0
       lodash: 4.17.21
@@ -20618,7 +20614,7 @@ packages:
       - supports-color
     dev: false
 
-  /gatsby-plugin-typescript/5.8.0-next.0_gatsby@5.8.0-next.0:
+  /gatsby-plugin-typescript/5.8.0-next.0_gatsby@5.8.0-next.1:
     resolution: {integrity: sha512-ofnAJ/oR0VctV8QqKxYPhLWJPO1iz0Ek4U4mZb2YkknRTPKLnQdeAbohucst66BuHcY8zlZTTwZ2cUw+UW1dnQ==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
@@ -20630,13 +20626,13 @@ packages:
       '@babel/plugin-proposal-optional-chaining': 7.20.7_@babel+core@7.20.12
       '@babel/preset-typescript': 7.18.6_@babel+core@7.20.12
       '@babel/runtime': 7.20.13
-      babel-plugin-remove-graphql-queries: 5.8.0-next.0_osdpouujtlfd2op5ubueuc4aqi
-      gatsby: 5.8.0-next.0_biqbaboplfbrettd7655fr4n2y
+      babel-plugin-remove-graphql-queries: 5.8.0-next.0_dmgxmrsfffyjslonyvmibqmeny
+      gatsby: 5.8.0-next.1_biqbaboplfbrettd7655fr4n2y
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /gatsby-plugin-utils/4.8.0-next.0_irjlgbbmdc6sbwac5pl62frsae:
+  /gatsby-plugin-utils/4.8.0-next.0_3wxjiiig4wrx4zjd5cbjvpqtn4:
     resolution: {integrity: sha512-Uzj8sP0tzpMF1wvgW7uct7LiSzkIl2bUpWhuJ9BS63mtWohYPAJIgc+kmeCS501C/SZtUz+Iipk5DKp9mjOV1Q==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
@@ -20646,7 +20642,7 @@ packages:
       '@babel/runtime': 7.20.13
       fastq: 1.15.0
       fs-extra: 11.1.0
-      gatsby: 5.8.0-next.0_biqbaboplfbrettd7655fr4n2y
+      gatsby: 5.8.0-next.1_biqbaboplfbrettd7655fr4n2y
       gatsby-core-utils: 4.8.0-next.0
       gatsby-sharp: 1.8.0-next.0
       graphql: 16.6.0
@@ -20725,8 +20721,8 @@ packages:
       - supports-color
     dev: false
 
-  /gatsby/5.8.0-next.0_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-9C7q/Nl8lEIyatk1hryDlUw/TVLsKsJoJ+ZR8Z0t0eE2ulRjpFI3vMFuJLnLQFGfdrWtETrnhZha4NJvTo8Pbw==}
+  /gatsby/5.8.0-next.1_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-mHjGSptP2qdF/j7atPyjqN0RpCjJpnGEeT7IWH48gPuG3BFxYBv8J7XYmjv3TUe3i8pRxxHzEvB8Nu2VyEsH5g==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     requiresBuild: true
@@ -20772,7 +20768,7 @@ packages:
       babel-plugin-add-module-exports: 1.0.4
       babel-plugin-dynamic-import-node: 2.3.3
       babel-plugin-lodash: 3.3.4
-      babel-plugin-remove-graphql-queries: 5.8.0-next.0_osdpouujtlfd2op5ubueuc4aqi
+      babel-plugin-remove-graphql-queries: 5.8.0-next.0_dmgxmrsfffyjslonyvmibqmeny
       babel-preset-gatsby: 3.8.0-next.0_pp2vm42zn6vfmnpuhar3irht7i
       better-opn: 2.1.1
       bluebird: 3.7.2
@@ -20821,9 +20817,9 @@ packages:
       gatsby-link: 5.8.0-next.0_uxzdzcrcylloub4rxar25ny6ra
       gatsby-page-utils: 3.8.0-next.0
       gatsby-parcel-config: 1.8.0-next.0_@parcel+core@2.8.3
-      gatsby-plugin-page-creator: 5.8.0-next.0_irjlgbbmdc6sbwac5pl62frsae
-      gatsby-plugin-typescript: 5.8.0-next.0_gatsby@5.8.0-next.0
-      gatsby-plugin-utils: 4.8.0-next.0_irjlgbbmdc6sbwac5pl62frsae
+      gatsby-plugin-page-creator: 5.8.0-next.0_3wxjiiig4wrx4zjd5cbjvpqtn4
+      gatsby-plugin-typescript: 5.8.0-next.0_gatsby@5.8.0-next.1
+      gatsby-plugin-utils: 4.8.0-next.0_3wxjiiig4wrx4zjd5cbjvpqtn4
       gatsby-react-router-scroll: 6.8.0-next.0_uxzdzcrcylloub4rxar25ny6ra
       gatsby-script: 2.8.0-next.0_uxzdzcrcylloub4rxar25ny6ra
       gatsby-telemetry: 4.8.0-next.0
@@ -26132,7 +26128,7 @@ packages:
     dev: false
 
   /memdown/1.4.1:
-    resolution: {integrity: sha1-tOThkhdGZP+65BNhqlAPMRnv4hU=}
+    resolution: {integrity: sha512-iVrGHZB8i4OQfM155xx8akvG9FIj+ht14DX5CQkCTG4EHzZ3d3sgckIf/Lm9ivZalEsFuEVnWv2B2WZvbrro2w==}
     dependencies:
       abstract-leveldown: 2.7.2
       functional-red-black-tree: 1.0.1
@@ -29274,48 +29270,46 @@ packages:
       - encoding
     dev: true
 
-  /pouchdb-adapter-leveldb-core/7.3.0:
-    resolution: {integrity: sha512-OyUsEae1JlqR2jSGMohP03gj6VANh9fDR/3nPIa1vYyoQWlwQzOS7knKqDaJm7Nui3JC5q/lWos7/FGZBFuF5Q==}
+  /pouchdb-adapter-leveldb-core/8.0.1:
+    resolution: {integrity: sha512-XPVwW8f8VnbvQ5mGREeaKm0zEeHoHGO0osNAxD1BBOfU4x2In+3SNn+P+7b0adoZuHfiCSkcD9UHLgBtNMSsEQ==}
     dependencies:
-      argsarray: 0.0.1
       buffer-from: 1.1.2
       double-ended-queue: 2.1.0-0
       levelup: 4.4.0
-      pouchdb-adapter-utils: 7.3.0
-      pouchdb-binary-utils: 7.3.0
-      pouchdb-collections: 7.3.0
-      pouchdb-errors: 7.3.0
-      pouchdb-json: 7.3.0
-      pouchdb-md5: 7.3.0
-      pouchdb-merge: 7.3.0
-      pouchdb-utils: 7.3.0
-      sublevel-pouchdb: 7.3.0
+      pouchdb-adapter-utils: 8.0.1
+      pouchdb-binary-utils: 8.0.1
+      pouchdb-collections: 8.0.1
+      pouchdb-core: 8.0.1
+      pouchdb-errors: 8.0.1
+      pouchdb-json: 8.0.1
+      pouchdb-md5: 8.0.1
+      pouchdb-merge: 8.0.1
+      pouchdb-utils: 8.0.1
+      sublevel-pouchdb: 8.0.1
       through2: 3.0.2
+    transitivePeerDependencies:
+      - encoding
     dev: true
 
-  /pouchdb-adapter-memory/7.3.0:
-    resolution: {integrity: sha512-nUdYi5KpbUa0uv0L3IJorpiUnIOBPxX9qplCX9i7JE8OtLPeLyKuX3WC+3M1//8Lmmxg3b1wXSNIod6FJy4wAQ==}
+  /pouchdb-adapter-memory/8.0.1:
+    resolution: {integrity: sha512-bQPJR4877yPgHyakryThxzjT9LYRvL48XFPQWH3cILsX/tcoPEvWc42SZR1T6xXXPvRd2IwXPv8jxdaOsmbGuw==}
     dependencies:
       memdown: 1.4.1
-      pouchdb-adapter-leveldb-core: 7.3.0
-      pouchdb-utils: 7.3.0
+      pouchdb-adapter-leveldb-core: 8.0.1
+      pouchdb-utils: 8.0.1
+    transitivePeerDependencies:
+      - encoding
     dev: true
 
-  /pouchdb-adapter-utils/7.3.0:
-    resolution: {integrity: sha512-mU1+smcagWSpInVx/VQk7VVjjnJlyagKtusUS3OdCMFZY35L6RbXC8eIhoNVDbkBfEv3cIwqQ3t7fdvkaa1odQ==}
+  /pouchdb-adapter-utils/8.0.1:
+    resolution: {integrity: sha512-2nTeYaImu958BU4e46SSdv0IdkXYS/PSy5CXyfb7jK9g0aBAp/JRi7qh9nsTjk4FewpT6OpaE/7evxMQa7UuMg==}
     dependencies:
-      pouchdb-binary-utils: 7.3.0
-      pouchdb-collections: 7.3.0
-      pouchdb-errors: 7.3.0
-      pouchdb-md5: 7.3.0
-      pouchdb-merge: 7.3.0
-      pouchdb-utils: 7.3.0
-    dev: true
-
-  /pouchdb-binary-utils/7.3.0:
-    resolution: {integrity: sha512-xvBH/XGHGcou2vkEzszJxkCc7YElfRUrkLUg51Jbdmh1mogLDUO0bU3Tj6TOIIJfRkQrU/HV+dDkMAhsil0amQ==}
-    dependencies:
-      buffer-from: 1.1.2
+      pouchdb-binary-utils: 8.0.1
+      pouchdb-collections: 8.0.1
+      pouchdb-errors: 8.0.1
+      pouchdb-md5: 8.0.1
+      pouchdb-merge: 8.0.1
+      pouchdb-utils: 8.0.1
     dev: true
 
   /pouchdb-binary-utils/8.0.1:
@@ -29324,22 +29318,34 @@ packages:
       buffer-from: 1.1.2
     dev: true
 
-  /pouchdb-collate/8.0.1:
-    resolution: {integrity: sha512-DTuNz1UJjBTGZMUlWS1klSE1rPsmHy8IIDie3MFH1ZTz/C+SwGgGwkiAyUDv/n00D18EMLgXq5mu+r7L6K1BwQ==}
+  /pouchdb-changes-filter/8.0.1:
+    resolution: {integrity: sha512-UKgH6YRA9PnvIGHb0FuDEEqeTewgHugbbBt5vpVo0QmbWKxNiau/JiTC9mY5Hj9l7ghaIUpO0TFG95a6RXWsQA==}
+    dependencies:
+      pouchdb-errors: 8.0.1
+      pouchdb-selector-core: 8.0.1
+      pouchdb-utils: 8.0.1
     dev: true
 
-  /pouchdb-collections/7.3.0:
-    resolution: {integrity: sha512-Xr54m2+fErShXn+qAT4xwqJ+8NwddNPeTMJT4z4k1sZsrwfHmZsWbsKAyGPMF04eQaaU+7DDRMciu2VzaBUXyg==}
+  /pouchdb-collate/8.0.1:
+    resolution: {integrity: sha512-DTuNz1UJjBTGZMUlWS1klSE1rPsmHy8IIDie3MFH1ZTz/C+SwGgGwkiAyUDv/n00D18EMLgXq5mu+r7L6K1BwQ==}
     dev: true
 
   /pouchdb-collections/8.0.1:
     resolution: {integrity: sha512-TlkQ2GGHJApJgL0b7bJMQcwX6eMfVenLeoK9mqHfC2fJssui+HWJJ5LYKHOWan11SeB90BQVFbO6rHN6CJQeDg==}
     dev: true
 
-  /pouchdb-errors/7.3.0:
-    resolution: {integrity: sha512-dTBbIC1BbCy6J9W/Csg5xROgb3wJN3HpbgAJHHSEtAkb8oA45KZmU3ZwEpNhf0AfPuQm4XgW1936PvlDlGgJiw==}
+  /pouchdb-core/8.0.1:
+    resolution: {integrity: sha512-Qkcmh3eoMHiKUma5Y/rH0Z7kjxXrr6p54j/WOH+TZ/RlJAchmdVY1TRfqay5CoK+8Ka0m8eibP+wD1DKZKJbDg==}
     dependencies:
-      inherits: 2.0.4
+      pouchdb-changes-filter: 8.0.1
+      pouchdb-collections: 8.0.1
+      pouchdb-errors: 8.0.1
+      pouchdb-fetch: 8.0.1
+      pouchdb-merge: 8.0.1
+      pouchdb-utils: 8.0.1
+      uuid: 8.3.2
+    transitivePeerDependencies:
+      - encoding
     dev: true
 
   /pouchdb-errors/8.0.1:
@@ -29370,8 +29376,8 @@ packages:
       - encoding
     dev: true
 
-  /pouchdb-json/7.3.0:
-    resolution: {integrity: sha512-D4wyi20ltyiFpuziQeMk3CbXs/Q58VoGTYTJQY8MWBw37OidtHGQAt1Kh5yJ435wJqDzJZyxMA5RxGZxEOBDVg==}
+  /pouchdb-json/8.0.1:
+    resolution: {integrity: sha512-P9P0QuD+q5QAcz1ykTZHJ/F2CHCfEr7RF/Gj+hjDj6+CeYwlO0TjvwKI0Dg83eLWz6W2cqaVIARDl62DS98dFw==}
     dependencies:
       vuvuzela: 1.0.3
     dev: true
@@ -29383,13 +29389,6 @@ packages:
       pouchdb-utils: 8.0.1
     dev: true
 
-  /pouchdb-md5/7.3.0:
-    resolution: {integrity: sha512-wL04QgoKyd/L/TV5gxgcvlEyCJiZoXCOEFJklTzkdza/kBQNJGPH7i0ZhKa7Sb+AvZYoWZHddf1Zgv7rBScHkA==}
-    dependencies:
-      pouchdb-binary-utils: 7.3.0
-      spark-md5: 3.0.2
-    dev: true
-
   /pouchdb-md5/8.0.1:
     resolution: {integrity: sha512-shVcs/K/iilrcAhDEERpLIrGm/cnDVsXiocOzs7kycJEuBqYnLD9nj58VwWDcum26wfa8T9cznvEGE1jlYVNPQ==}
     dependencies:
@@ -29397,8 +29396,10 @@ packages:
       spark-md5: 3.0.2
     dev: true
 
-  /pouchdb-merge/7.3.0:
-    resolution: {integrity: sha512-E7LmchMzwYFm6V8OBxejzARLisanpksOju2LEfuiYnotGfNDeW7MByP0qBH0/zF8BfUyyjA1cl7ByaEpsapkeQ==}
+  /pouchdb-merge/8.0.1:
+    resolution: {integrity: sha512-79dw6+K7js2+/kt9u4hKOkGCnz+ov0+yft2k21n6M+ylFEQyMKuWHEZRoFWr72o1vxwjhIXhUM1PB2PIdxIh0Q==}
+    dependencies:
+      pouchdb-utils: 8.0.1
     dev: true
 
   /pouchdb-selector-core/8.0.1:
@@ -29406,19 +29407,6 @@ packages:
     dependencies:
       pouchdb-collate: 8.0.1
       pouchdb-utils: 8.0.1
-    dev: true
-
-  /pouchdb-utils/7.3.0:
-    resolution: {integrity: sha512-HH+5IXXWn/ZgVCSnrlydBMYn6MabT7RS7SNoo9w8qVH9efpZSp3eLchw6yMQNLw8LQefWmbbskiHV9VgJmSVWQ==}
-    dependencies:
-      argsarray: 0.0.1
-      clone-buffer: 1.0.0
-      immediate: 3.3.0
-      inherits: 2.0.4
-      pouchdb-collections: 7.3.0
-      pouchdb-errors: 7.3.0
-      pouchdb-md5: 7.3.0
-      uuid: 8.3.2
     dev: true
 
   /pouchdb-utils/8.0.1:
@@ -32221,10 +32209,9 @@ packages:
     resolution: {integrity: sha512-GP6WDNWf+o403jrEp9c5jibKavrtLW+/qYGhFxFrG8maXhwTBI7gLLhiBb0o7uFccWN+EOS9aMO6cGHWAO07OA==}
     dev: false
 
-  /sublevel-pouchdb/7.3.0:
-    resolution: {integrity: sha512-zp7u4jmv2N/s+dXZkWTtL4BjREs3SZ1nGBNNJ8RWX4yqN59oHgKmti4CfVOqfsAW9RMasmTqQAEPxL9hX8+CIA==}
+  /sublevel-pouchdb/8.0.1:
+    resolution: {integrity: sha512-IPbDh2meYVOorQwYuRgKCXsfemfy4UtQ920pq/b01W71n1yls/8BvAJTTmJjkWQ2szIXNCTXzflCOscCQ03M1w==}
     dependencies:
-      inherits: 2.0.4
       level-codec: 9.0.2
       ltgt: 2.2.1
       readable-stream: 1.1.14

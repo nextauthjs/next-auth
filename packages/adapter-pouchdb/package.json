@@ -56,7 +56,7 @@
     "jest": "^27.4.3",
     "next-auth": "workspace:*",
     "pouchdb": "^8.0.1",
-    "pouchdb-adapter-memory": "^7.2.2",
+    "pouchdb-adapter-memory": "^8.0.1",
     "pouchdb-find": "^8.0.1"
   },
   "jest": {

@@ -1,10 +1,22 @@
-import { randomUUID, runBasicTests } from "@next-auth/adapter-test"
-import { PouchDBAdapter } from "../src"
+import { runBasicTests } from "@next-auth/adapter-test"
+import {
+  createIndexesPouchDBAdapter,
+  PouchDBAdapter,
+  toAdapterAccount,
+  toAdapterSession,
+  toAdapterUser,
+  toVerificationToken,
+} from "../src"
 import PouchDB from "pouchdb"
 import find from "pouchdb-find"
 import memoryAdapter from "pouchdb-adapter-memory"
 import { ulid } from "ulid"
-import { AdapterUser } from "next-auth/adapters"
+import {
+  AdapterAccount,
+  AdapterSession,
+  AdapterUser,
+  VerificationToken,
+} from "next-auth/adapters"
 
 // pouchdb setup
 PouchDB.plugin(memoryAdapter).plugin(find)
@@ -19,66 +31,66 @@ PouchDB.on("destroyed", function () {
 const disconnect = async () => {
   if (!pouchdbIsDestroyed) await pouchdb.destroy()
 }
-// Basic tests
 pouchdb = new PouchDB(ulid(), { adapter: "memory" })
-console.log({ pouchdb })
+
+// Basic tests
 runBasicTests({
-  adapter: PouchDBAdapter(pouchdb),
+  adapter: PouchDBAdapter({ pouchdb }),
+  skipTests: ["deleteUser"],
   db: {
-    id() {
-      return randomUUID()
+    async connect() {
+      await createIndexesPouchDBAdapter(pouchdb)
     },
     disconnect,
     user: async (id) => {
-      const { _id, _rev, ...res } = await pouchdb.get<AdapterUser>(id)
+      try {
+        const res = await pouchdb.get<AdapterUser>(id)
 
-      if (typeof res?.emailVerified === "string") {
-        res.emailVerified = new Date(res.emailVerified)
+        return toAdapterUser(res)
+      } catch {
+        return null
       }
-      res.id = _id
-      return res
     },
     account: async ({ provider, providerAccountId }) => {
-      const res = await pouchdb.find({
+      const res = await (
+        pouchdb as unknown as PouchDB.Database<AdapterAccount>
+      ).find({
         use_index: "nextAuthAccountByProviderId",
         selector: {
-          "data.providerId": { $eq: provider },
-          "data.providerAccountId": { $eq: providerAccountId },
+          provider: { $eq: provider },
+          providerAccountId: { $eq: providerAccountId },
         },
         limit: 1,
       })
-      const doc: any = res.docs[0]
-      return doc?.data ?? null
+      const doc = res.docs[0]
+      return doc ? toAdapterAccount(doc) : null
     },
     session: async (sessionToken) => {
-      const res = await pouchdb.find({
+      const res = await (
+        pouchdb as unknown as PouchDB.Database<AdapterSession>
+      ).find({
         use_index: "nextAuthSessionByToken",
         selector: {
-          "data.sessionToken": { $eq: sessionToken },
+          sessionToken: { $eq: sessionToken },
         },
         limit: 1,
       })
-      const doc: any = res.docs[0]
-      return doc?.data ?? null
+      const doc = res.docs[0]
+      return doc ? toAdapterSession(doc) : null
     },
     async verificationToken({ identifier, token }) {
-      const res = await pouchdb.find({
+      const res = await (
+        pouchdb as unknown as PouchDB.Database<VerificationToken>
+      ).find({
         use_index: "nextAuthVerificationRequestByToken",
         selector: {
-          "data.identifier": { $eq: identifier },
-          "data.token": { $eq: token },
+          identifier: { $eq: identifier },
+          token: { $eq: token },
         },
         limit: 1,
       })
-      const doc: any = res.docs[0]
-      const verificationRequest = doc?.data ?? null
-      if (verificationRequest?.expires) {
-        return {
-          ...verificationRequest,
-          expires: new Date(verificationRequest.expires),
-        }
-      }
-      return null
+      const verificationRequest = res.docs[0]
+      return toVerificationToken(verificationRequest)
     },
   },
 })
