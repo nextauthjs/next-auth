@@ -274,7 +274,7 @@ function AuthHandle(svelteKitAuthOptions: SvelteKitAuthConfig | DynamicSvelteKit
       return resolve(event)
     }
 
-    return Auth(request, resolvedAuthOptions)
+    return Auth(request, authOptions)
   }
 }
 
