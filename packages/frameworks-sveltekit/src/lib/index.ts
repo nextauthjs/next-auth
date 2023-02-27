@@ -257,7 +257,11 @@ type DynamicSvelteKitAuthConfig = (event: RequestEvent, options: SvelteKitAuthCo
 
 function AuthHandle(svelteKitAuthOptions: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig): Handle {
   return async function ({ event, resolve }) {
-    const resolvedAuthOptions: SvelteKitAuthConfig = await dynamicOptions?.(event, authOptions) || authOptions
+    const authOptions =
+      typeof svelteKitAuthOptions === "object"
+        ? svelteKitAuthOptions
+        : await svelteKitAuthOptions(event)
+     const { prefix = "/auth" } = authOptions
     const { url, request } = event
 
     event.locals.getSession ??= () => getSession(request, resolvedAuthOptions)
