@@ -264,7 +264,7 @@ function AuthHandle(svelteKitAuthOptions: SvelteKitAuthConfig | DynamicSvelteKit
      const { prefix = "/auth" } = authOptions
     const { url, request } = event
 
-    event.locals.getSession ??= () => getSession(request, resolvedAuthOptions)
+    event.locals.getSession ??= () => getSession(request, authOptions)
 
     const action = url.pathname
       .slice(prefix.length + 1)
