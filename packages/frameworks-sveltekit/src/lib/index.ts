@@ -34,12 +34,13 @@
  * import GitHub from "@auth/core/providers/github"
  * import type { Handle } from "@sveltejs/kit";
  *
- * export const handle = SvelteKitAuth({providers: []}, async (event, options) => {
- *   // await somethingAsync()
- *   const providers = [GitHub({ clientId: event.platform.env.GITHUB_ID, clientSecret: event.platform.env.GITHUB_SECRET })]
- *   options.providers = providers
- *   options.secret = event.platform.env.AUTH_SECRET
- *   return options
+ * export const handle = SvelteKitAuth(async (event) => {
+ *   const authOptions = {
+ *     providers: [GitHub({ clientId: event.platform.env.GITHUB_ID, clientSecret: event.platform.env.GITHUB_SECRET })]
+ *     secret: event.platform.env.AUTH_SECRET,
+ *     trustHost: true
+ *   }
+ *   return authOptions
  * }) satisfies Handle;
  * ```
  *
@@ -253,7 +254,7 @@ const actions: AuthAction[] = [
   "error",
 ]
 
-type DynamicSvelteKitAuthConfig = (event: RequestEvent, options: SvelteKitAuthConfig) => PromiseLike<SvelteKitAuthConfig>
+type DynamicSvelteKitAuthConfig = (event: RequestEvent) => PromiseLike<SvelteKitAuthConfig>
 
 function AuthHandle(svelteKitAuthOptions: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig): Handle {
   return async function ({ event, resolve }) {
@@ -261,7 +262,7 @@ function AuthHandle(svelteKitAuthOptions: SvelteKitAuthConfig | DynamicSvelteKit
       typeof svelteKitAuthOptions === "object"
         ? svelteKitAuthOptions
         : await svelteKitAuthOptions(event)
-     const { prefix = "/auth" } = authOptions
+    const { prefix = "/auth" } = authOptions
     const { url, request } = event
 
     event.locals.getSession ??= () => getSession(request, authOptions)
@@ -282,11 +283,14 @@ function AuthHandle(svelteKitAuthOptions: SvelteKitAuthConfig | DynamicSvelteKit
  * The main entry point to `@auth/sveltekit`
  * @see https://sveltekit.authjs.dev
  */
-export function SvelteKitAuth(options: SvelteKitAuthConfig, dynamicOptions?: OptionsFunction): Handle {
-  const { prefix = "/auth", ...authOptions } = options
-  authOptions.secret ??= env.AUTH_SECRET
-  authOptions.trustHost ??= !!(env.AUTH_TRUST_HOST ?? env.VERCEL ?? dev)
-  return AuthHandle(prefix, authOptions, dynamicOptions)
+export function SvelteKitAuth(options: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig): Handle {
+  if(typeof options === "object") {
+    options.secret ??= env.AUTH_SECRET
+    options.trustHost ??= !!(env.AUTH_TRUST_HOST ?? env.VERCEL ?? dev)
+    return AuthHandle(options)
+  } else {
+    return AuthHandle(options)
+  }
 }
 
 declare global {
