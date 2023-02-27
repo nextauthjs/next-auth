@@ -253,7 +253,7 @@ const actions: AuthAction[] = [
   "error",
 ]
 
-type OptionsFunction = (event: RequestEvent, options: SvelteKitAuthConfig) => Promise<SvelteKitAuthConfig> | SvelteKitAuthConfig
+type DynamicSvelteKitAuthConfig = (event: RequestEvent, options: SvelteKitAuthConfig) => PromiseLike<SvelteKitAuthConfig>
 
 function AuthHandle(prefix: string, authOptions: AuthConfig, dynamicOptions?: OptionsFunction): Handle {
   return async function ({ event, resolve }) {
