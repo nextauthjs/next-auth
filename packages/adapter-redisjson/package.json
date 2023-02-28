@@ -1,0 +1,51 @@
+{
+  "name": "@next-auth/redisjson-adapter",
+  "version": "1.0.0",
+  "description": "RedisJSON adapter for next-auth. It uses the official node-redis client and requires the RedisJSON module to be installed on the Redis server.",
+  "homepage": "https://authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "github.com/akremer",
+  "main": "dist/index.js",
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "oauth",
+    "redis"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "jest",
+    "build": "tsc"
+  },
+  "files": [
+    "README.md",
+    "dist"
+  ],
+  "peerDependencies": {
+    "redis": "^4.5",
+    "next-auth": "^4"
+  },
+  "devDependencies": {
+    "@next-auth/adapter-test": "workspace:*",
+    "@next-auth/tsconfig": "workspace:*",
+    "@types/uuid": "^8.3.3",
+    "redis": "^4.5",
+    "dotenv": "^10.0.0",
+    "isomorphic-fetch": "3.0.0",
+    "jest": "^27.4.3",
+    "next-auth": "workspace:*"
+  },
+  "dependencies": {
+    "uuid": "^8.3.2"
+  },
+  "jest": {
+    "preset": "@next-auth/adapter-test/jest"
+  }
+}
