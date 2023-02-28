@@ -60,7 +60,6 @@ export async function session(
         const newToken = await jwt.encode({
           ...jwt,
           token,
-          maxAge: options.session.maxAge,
         })
 
         // Set cookie, to also update expiry date on cookie
@@ -73,7 +72,7 @@ export async function session(
         await events.session?.({ session: newSession, token })
       } else {
         response.cookies?.push(...sessionStore.clean())
-      } 
+      }
     } catch (e) {
       logger.error(new JWTSessionError(e as Error))
       // If the JWT is not verifiable remove the broken session cookie(s).

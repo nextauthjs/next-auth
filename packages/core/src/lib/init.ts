@@ -101,7 +101,7 @@ export async function init({
       // Asserted in assert.ts
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       secret: authOptions.secret!,
-      maxAge, // same as session maxAge,
+      maxAge: authOptions.session?.maxAge ?? maxAge, // default to same as `session.maxAge`
       encode: jwt.encode,
       decode: jwt.decode,
       ...authOptions.jwt,
