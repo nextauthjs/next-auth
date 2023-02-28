@@ -14,9 +14,9 @@ Ensure the link is pointing to a codebase that is accessible (e.g. not a private
 
 ### **What happens if I don't provide a sufficient minimal reproduction?**
 
-Issues with the `incomplete` label that receives no meaningful activity (e.g. new comments with a reproduction link) are automatically closed and locked after 30 days.
+Issues with the `incomplete` label that receives no meaningful activity (e.g. new comments with a reproduction link) are closed after 7 days.
 
-If your issue has _not_ been resolved in that time and it has been closed/locked, please open a new issue with the required reproduction.
+If your issue has _not_ been resolved in that time and it has been closed/locked, please open a new issue with the required reproduction. (It's less likely that we check back on already closed issues.)
 
 ### **I did not open this issue, but it is relevant to me, what can I do to help?**
 
