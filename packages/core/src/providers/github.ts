@@ -129,14 +129,14 @@ export default function GitHub(
       url: "https://api.github.com/user",
       async request({ tokens, provider }) {
         const profile = await fetch(provider.userinfo?.url as URL, {
-          headers: { Authorization: `Bearer ${tokens.access_token}` },
+          headers: { Authorization: `Bearer ${tokens.access_token}`, 'User-Agent': 'authjs' },
         }).then(async (res) => await res.json())
 
         if (!profile.email) {
           // If the user does not have a public email, get another via the GitHub API
           // See https://docs.github.com/en/rest/users/emails#list-public-email-addresses-for-the-authenticated-user
           const res = await fetch("https://api.github.com/user/emails", {
-            headers: { Authorization: `Bearer ${tokens.access_token}` },
+            headers: { Authorization: `Bearer ${tokens.access_token}`, 'User-Agent': 'authjs' },
           })
 
           if (res.ok) {
