@@ -287,10 +287,8 @@ export function SvelteKitAuth(options: SvelteKitAuthConfig | DynamicSvelteKitAut
   if(typeof options === "object") {
     options.secret ??= env.AUTH_SECRET
     options.trustHost ??= !!(env.AUTH_TRUST_HOST ?? env.VERCEL ?? dev)
-    return AuthHandle(options)
-  } else {
-    return AuthHandle(options)
   }
+    return AuthHandle(options)
 }
 
 declare global {
