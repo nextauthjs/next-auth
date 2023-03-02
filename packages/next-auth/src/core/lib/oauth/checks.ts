@@ -6,9 +6,9 @@ import {
 import * as jwt from "../../../jwt"
 
 import type { RequestInternal } from "../.."
+import type { OAuthChecks } from "../../../providers"
 import type { CookiesOptions, InternalOptions } from "../../types"
 import type { Cookie } from "../cookie"
-import { OAuthChecks } from "src/providers"
 
 /** Returns a signed cookie. */
 export async function signCookie(
