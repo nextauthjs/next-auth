@@ -49,7 +49,9 @@ export async function useState(
 ): Promise<{ value: string; cookie: Cookie } | undefined> {
   const { cookies, provider, jwt } = options
 
-  if (!provider.checks?.includes("state") || !state) return
+  if (!provider.checks?.includes("state")) return
+
+  if (!state) throw new Error("No state provided")
 
   const value = (await jwt.decode({ ...options.jwt, token: state })) as any
 
