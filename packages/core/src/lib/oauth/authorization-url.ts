@@ -46,7 +46,7 @@ export async function getAuthorizationUrl(
       response_type: "code",
       // clientId can technically be undefined, should we check this in assert.ts or rely on the Authorization Server to do it?
       client_id: provider.clientId,
-      redirect_uri: provider.callbackUrl,
+      redirect_uri: provider.redirectProxy ?? provider.callbackUrl,
       // @ts-expect-error TODO:
       ...provider.authorization?.params,
     },
@@ -58,7 +58,13 @@ export async function getAuthorizationUrl(
 
   const cookies: Cookie[] = []
 
-  const state = await checks.state.create(options)
+  const data =
+    provider.redirectProxy &&
+    !options.url.origin?.startsWith(provider.redirectProxy)
+      ? { origin: provider.callbackUrl }
+      : undefined
+
+  const state = await checks.state.create(options, data)
   if (state) {
     authParams.set("state", state.value)
     cookies.push(state.cookie)

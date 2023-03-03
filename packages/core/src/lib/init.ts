@@ -56,6 +56,7 @@ export async function init({
     providers: authOptions.providers,
     url,
     providerId,
+    options: authOptions,
   })
 
   const maxAge = 30 * 24 * 60 * 60 // Sessions expire after 30 days of being idle by default

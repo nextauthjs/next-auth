@@ -1,6 +1,6 @@
 import { merge } from "./utils/merge.js"
 
-import type { InternalProvider } from "../types.js"
+import type { AuthConfig, InternalProvider } from "../types.js"
 import type {
   OAuthConfig,
   OAuthConfigInternal,
@@ -17,11 +17,12 @@ export default function parseProviders(params: {
   providers: Provider[]
   url: URL
   providerId?: string
+  options: AuthConfig
 }): {
   providers: InternalProvider[]
   provider?: InternalProvider
 } {
-  const { url, providerId } = params
+  const { url, providerId, options } = params
 
   const providers = params.providers.map((provider) => {
     const { options: userOptions, ...defaults } = provider
@@ -33,6 +34,7 @@ export default function parseProviders(params: {
     })
 
     if (provider.type === "oauth" || provider.type === "oidc") {
+      merged.redirectProxy ??= options.redirectProxy
       return normalizeOAuth(merged)
     }
 
@@ -61,11 +63,17 @@ function normalizeOAuth(
 
   const userinfo = normalizeEndpoint(c.userinfo, c.issuer)
 
+  const checks = c.checks ?? ["pkce"]
+  if (c.redirectProxy) {
+    if (!checks.includes("state")) checks.push("state")
+    c.redirectProxy = `${c.redirectProxy}/callback/${c.id}`
+  }
+
   return {
     ...c,
     authorization,
     token,
-    checks: c.checks ?? ["pkce"],
+    checks,
     userinfo,
     profile: c.profile ?? defaultProfile,
   }

@@ -1,6 +1,7 @@
 import { handleLogin } from "../callback-handler.js"
 import { CallbackRouteError, Verification } from "../../errors.js"
 import { handleOAuth } from "../oauth/callback.js"
+import { decodeState } from "../oauth/checks.js"
 import { createHash } from "../web.js"
 import { getAdapterUserFromEmail, handleAuthorized } from "./shared.js"
 
@@ -43,10 +44,29 @@ export async function callback(params: {
 
   try {
     if (provider.type === "oauth" || provider.type === "oidc") {
+      let randomState: string | undefined
+
+      if (provider.redirectProxy) {
+        const state = decodeState<{ origin: string; random: string }>(
+          query?.state
+        )
+
+        randomState = state?.random
+
+        // TODO: verify that redirect is safe
+        if (
+          state?.origin &&
+          provider.redirectProxy?.startsWith(options.url.origin)
+        ) {
+          return { redirect: `${state.origin}?${new URLSearchParams(query)}` }
+        }
+      }
+
       const authorizationResult = await handleOAuth(
         query,
         params.cookies,
-        options
+        options,
+        randomState
       )
 
       if (authorizationResult.cookies.length) {

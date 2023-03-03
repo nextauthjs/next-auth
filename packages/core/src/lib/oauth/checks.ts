@@ -1,4 +1,5 @@
 import * as o from "oauth4webapi"
+import * as jose from "jose"
 import * as jwt from "../../jwt.js"
 
 import type {
@@ -16,6 +17,7 @@ export async function signCookie(
   value: string,
   maxAge: number,
   options: InternalOptions<"oauth" | "oidc">,
+  data?: any
 ): Promise<Cookie> {
   const { cookies, logger } = options
 
@@ -23,9 +25,11 @@ export async function signCookie(
 
   const expires = new Date()
   expires.setTime(expires.getTime() + maxAge * 1000)
+  const token: any = { value }
+  if (type === "state" && data) token.data = data
   return {
     name: cookies[type].name,
-    value: await jwt.encode({ ...options.jwt, maxAge, token: { value } }),
+    value: await jwt.encode({ ...options.jwt, maxAge, token }),
     options: { ...cookies[type].options, expires },
   }
 }
@@ -76,13 +80,33 @@ export const pkce = {
 }
 
 const STATE_MAX_AGE = 60 * 15 // 15 minutes in seconds
+export function decodeState<T>(value: string): T | undefined {
+  try {
+    const decoder = new TextDecoder()
+    return JSON.parse(decoder.decode(jose.base64url.decode(value)))
+  } catch {}
+}
+
 export const state = {
-  async create(options: InternalOptions<"oauth">) {
-    if (!options.provider.checks.includes("state")) return
-    // TODO: support customizing the state
-    const value = o.generateRandomState()
+  async create(options: InternalOptions<"oauth">, data: any) {
+    const { provider } = options
+    if (!provider.checks.includes("state")) {
+      if (data) {
+        throw new Error(
+          "State data was provided but the provider is not configured to use state."
+        )
+      }
+      return
+    }
+
+    const value = data
+      ? jose.base64url.encode(
+          JSON.stringify({ ...data, random: o.generateRandomState() })
+        )
+      : o.generateRandomState()
+
     const maxAge = STATE_MAX_AGE
-    const cookie = await signCookie("state", value, maxAge, options)
+    const cookie = await signCookie("state", value, maxAge, options, data)
     return { cookie, value }
   },
   /**
@@ -93,7 +117,8 @@ export const state = {
   async use(
     cookies: RequestInternal["cookies"],
     resCookies: Cookie[],
-    options: InternalOptions<"oauth">
+    options: InternalOptions<"oauth">,
+    paramRandom?: string
   ): Promise<string | undefined> {
     const { provider, jwt } = options
     if (!provider.checks.includes("state")) return
@@ -106,6 +131,18 @@ export const state = {
     const value = (await jwt.decode({ ...options.jwt, token: state })) as any
 
     if (!value?.value) throw new InvalidState("Could not parse state cookie.")
+
+    if (options.provider.redirectProxy) {
+      if (!paramRandom)
+        throw new InvalidState(
+          "Random state was missing in the decoded `state` parameter, but required when using `redirectProxy`."
+        )
+      const cookieRandom = decodeState<{ random: string }>(value.value)?.random
+      if (cookieRandom !== paramRandom)
+        throw new InvalidState(
+          `Random state values did not match. Expected: ${cookieRandom}. Got: ${paramRandom}`
+        )
+    }
 
     // Clear the state cookie after use
     resCookies.push({
