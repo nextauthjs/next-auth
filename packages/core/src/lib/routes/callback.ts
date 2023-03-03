@@ -46,19 +46,19 @@ export async function callback(params: {
     if (provider.type === "oauth" || provider.type === "oidc") {
       let randomState: string | undefined
 
-      // TODO: verify that comparison is safe
-      const isOriginProxy = provider.redirectProxy?.startsWith(
-        options.url.origin
-      )
-      if (isOriginProxy && query?.state) {
+      if (provider.redirectProxy && query?.state) {
         const state = decodeState<{ origin: string; random: string }>(
           query.state
         )
 
         randomState = state?.random
 
+        // TODO: verify that comparison is safe
+        const isOriginProxy = provider.redirectProxy.startsWith(
+          options.url.origin
+        )
         // TODO: verify that redirect is safe
-        if (state?.origin) {
+        if (isOriginProxy && state?.origin) {
           return { redirect: `${state.origin}?${new URLSearchParams(query)}` }
         }
       }
