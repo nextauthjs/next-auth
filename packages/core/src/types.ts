@@ -66,6 +66,7 @@ import type {
   CredentialsConfig,
   EmailConfig,
   OAuthConfigInternal,
+  OIDCConfigInternal,
   ProviderType,
 } from "./providers/index.js"
 import type { JWT, JWTOptions } from "./jwt.js"
@@ -413,12 +414,15 @@ export interface User extends DefaultUser {}
 /** @internal */
 export type InternalProvider<T = ProviderType> = (T extends "oauth"
   ? OAuthConfigInternal<any>
+  : T extends "oidc"
+  ? OIDCConfigInternal<any>
   : T extends "email"
   ? EmailConfig
   : T extends "credentials"
   ? CredentialsConfig
   : never) & {
   signinUrl: string
+  /** @example `"https://example.com/api/auth/callback/id"` */
   callbackUrl: string
 }
 
@@ -477,4 +481,5 @@ export interface InternalOptions<TProviderType = ProviderType> {
   callbacks: CallbacksOptions
   cookies: CookiesOptions
   callbackUrl: string
+  redirectProxy?: string
 }

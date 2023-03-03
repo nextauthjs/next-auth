@@ -15,7 +15,7 @@ import type { Cookie } from "../cookie.js"
  */
 export async function getAuthorizationUrl(
   query: RequestInternal["query"],
-  options: InternalOptions<"oauth">
+  options: InternalOptions<"oauth" | "oidc">
 ): Promise<ResponseInternal> {
   const { logger, provider } = options
 
@@ -68,7 +68,7 @@ export async function getAuthorizationUrl(
     if (as && !as.code_challenge_methods_supported?.includes("S256")) {
       // We assume S256 PKCE support, if the server does not advertise that,
       // a random `nonce` must be used for CSRF protection.
-      provider.checks = ["nonce"]
+      if (provider.type === "oidc") provider.checks = ["nonce"] as any
     } else {
       const { value, cookie } = await checks.pkce.create(options)
       authParams.set("code_challenge", value)

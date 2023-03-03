@@ -24,7 +24,7 @@ import type { Cookie } from "../cookie.js"
 export async function handleOAuth(
   query: RequestInternal["query"],
   cookies: RequestInternal["cookies"],
-  options: InternalOptions<"oauth">
+  options: InternalOptions<"oauth" | "oidc">,
 ) {
   const { logger, provider } = options
   let as: o.AuthorizationServer

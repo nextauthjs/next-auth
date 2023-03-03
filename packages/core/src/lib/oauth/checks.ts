@@ -15,7 +15,7 @@ export async function signCookie(
   type: keyof CookiesOptions,
   value: string,
   maxAge: number,
-  options: InternalOptions<"oauth">
+  options: InternalOptions<"oauth" | "oidc">,
 ): Promise<Cookie> {
   const { cookies, logger } = options
 
@@ -120,7 +120,7 @@ export const state = {
 
 const NONCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 export const nonce = {
-  async create(options: InternalOptions<"oauth">) {
+  async create(options: InternalOptions<"oidc">) {
     if (!options.provider.checks.includes("nonce")) return
     const value = o.generateRandomNonce()
     const maxAge = NONCE_MAX_AGE
@@ -133,7 +133,7 @@ export const nonce = {
    */
   async use(
     nonce: string | undefined,
-    options: InternalOptions<"oauth">
+    options: InternalOptions<"oidc">
   ): Promise<{ value: string; cookie: Cookie } | undefined> {
     const { cookies, provider } = options
 
