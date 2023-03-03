@@ -132,7 +132,8 @@ export const state = {
 
     if (!value?.value) throw new InvalidState("Could not parse state cookie.")
 
-    if (options.provider.redirectProxy) {
+    const isOriginProxy = provider.redirectProxy?.startsWith(options.url.origin)
+    if (!isOriginProxy) {
       if (!paramRandom)
         throw new InvalidState(
           "Random state was missing in the decoded `state` parameter, but required when using `redirectProxy`."
