@@ -29,7 +29,7 @@ export default async function callback(params: {
     jwt,
     events,
     callbacks,
-    session: { strategy: sessionStrategy, maxAge: sessionMaxAge },
+    session: { strategy: sessionStrategy, maxAge: sessionMaxAge, generateSessionToken },
     logger,
   } = options
 
@@ -380,33 +380,51 @@ export default async function callback(params: {
       }
     }
 
-    const defaultToken = {
-      name: user.name,
-      email: user.email,
-      picture: user.image,
-      sub: user.id?.toString(),
+    if (sessionStrategy === "jwt") {
+      const defaultToken = {
+        name: user.name,
+        email: user.email,
+        picture: user.image,
+        sub: user.id?.toString(),
+      }
+
+      const token = await callbacks.jwt({
+        token: defaultToken,
+        user,
+        // @ts-expect-error
+        account,
+        isNewUser: false,
+      })
+
+      // Encode token
+      const newToken = await jwt.encode({ ...jwt, token })
+
+      // Set cookie expiry date
+      const cookieExpires = new Date()
+      cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
+
+      const sessionCookies = sessionStore.chunk(newToken, {
+        expires: cookieExpires,
+      })
+
+      cookies.push(...sessionCookies)
+    } else if (adapter) {
+      const session = await adapter?.createSession({
+        sessionToken: generateSessionToken(),
+        expires: new Date(Date.now() + sessionMaxAge * 1000),
+        userId: user.id,
+      })
+
+      // Save Session Token in cookie
+      cookies.push({
+        name: options.cookies.sessionToken.name,
+        value: session.sessionToken,
+        options: {
+          ...options.cookies.sessionToken.options,
+          expires: session.expires,
+        },
+      })
     }
-
-    const token = await callbacks.jwt({
-      token: defaultToken,
-      user,
-      // @ts-expect-error
-      account,
-      isNewUser: false,
-    })
-
-    // Encode token
-    const newToken = await jwt.encode({ ...jwt, token })
-
-    // Set cookie expiry date
-    const cookieExpires = new Date()
-    cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
-
-    const sessionCookies = sessionStore.chunk(newToken, {
-      expires: cookieExpires,
-    })
-
-    cookies.push(...sessionCookies)
 
     // @ts-expect-error
     await events.signIn?.({ user, account })
