@@ -58,9 +58,12 @@ export async function getAuthorizationUrl(
 
   const cookies: Cookie[] = []
 
-  // TODO: verify that comparison is safe
-  const isOriginProxy = provider.redirectProxy?.startsWith(options.url.origin)
-  const data = isOriginProxy ? undefined : { origin: provider.callbackUrl }
+  const data =
+    !provider.redirectProxy ||
+    // TODO: verify that comparison is safe
+    provider.redirectProxy.startsWith(options.url.origin)
+      ? undefined
+      : { origin: provider.callbackUrl }
 
   const state = await checks.state.create(options, data)
   if (state) {
