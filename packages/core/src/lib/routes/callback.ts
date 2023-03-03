@@ -46,9 +46,9 @@ export async function callback(params: {
     if (provider.type === "oauth" || provider.type === "oidc") {
       let randomState: string | undefined
 
-      if (provider.redirectProxy) {
+      if (provider.redirectProxy && query?.state) {
         const state = decodeState<{ origin: string; random: string }>(
-          query?.state
+          query.state
         )
 
         randomState = state?.random
