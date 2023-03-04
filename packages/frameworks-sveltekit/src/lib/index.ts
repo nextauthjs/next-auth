@@ -284,11 +284,11 @@ function AuthHandle(svelteKitAuthOptions: SvelteKitAuthConfig | DynamicSvelteKit
  * @see https://sveltekit.authjs.dev
  */
 export function SvelteKitAuth(options: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig): Handle {
-  if(typeof options === "object") {
+  if (typeof options === "object") {
     options.secret ??= env.AUTH_SECRET
     options.trustHost ??= !!(env.AUTH_TRUST_HOST ?? env.VERCEL ?? dev)
   }
-    return AuthHandle(options)
+  return AuthHandle(options)
 }
 
 declare global {
