@@ -223,7 +223,7 @@ export async function handleLogin(
             expires: fromDate(options.session.maxAge),
           })
 
-      return { session, user, isNewUser: isNewUser }
+      return { session, user, isNewUser }
     }
   }
 
