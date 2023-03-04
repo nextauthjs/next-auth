@@ -12,7 +12,10 @@ interface InternalUrl {
 }
 
 /** Returns an `URL` like object to make requests/redirects from server-side */
-export default function parseUrl(url?: string | URL): InternalUrl {
+export default function parseUrl(
+  url?: string | URL,
+  prefix?: string
+): InternalUrl {
   const defaultUrl = new URL("http://localhost:3000/api/auth")
 
   if (url && !url.toString().startsWith("http")) {
@@ -20,7 +23,9 @@ export default function parseUrl(url?: string | URL): InternalUrl {
   }
 
   const _url = new URL(url ?? defaultUrl)
-  const path = (_url.pathname === "/" ? defaultUrl.pathname : _url.pathname)
+  const path = (
+    _url.pathname === "/" ? prefix ?? defaultUrl.pathname : _url.pathname
+  )
     // Remove trailing slash
     .replace(/\/$/, "")
 

@@ -26,9 +26,9 @@
  *   providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })],
  * })
  * ```
- * 
+ *
  * or to use sveltekit platform environment variables for platforms like Cloudflare
- * 
+ *
  * ```ts title="src/hooks.server.ts"
  * import { SvelteKitAuth } from "@auth/sveltekit"
  * import GitHub from "@auth/core/providers/github"
@@ -209,17 +209,37 @@ import type { Handle, RequestEvent } from "@sveltejs/kit"
 import { dev } from "$app/environment"
 import { env } from "$env/dynamic/private"
 
-import { Auth } from "@auth/core"
+import { Auth, skipCSRFCheck } from "@auth/core"
 import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
+import type { Provider } from "@auth/core/providers"
 
 export async function getSession(
   req: Request,
-  config: AuthConfig
+  config: SvelteKitAuthConfig
 ): ReturnType<App.Locals["getSession"]> {
   config.secret ??= env.AUTH_SECRET
   config.trustHost ??= true
 
-  const url = new URL("/api/auth/session", req.url)
+  const url = new URL(`${config.prefix}/session`, req.url)
+  const request = new Request(url, { headers: req.headers })
+  const response = await Auth(request, config)
+
+  const { status = 200 } = response
+  const data = await response.json()
+
+  if (!data || !Object.keys(data).length) return null
+  if (status === 200) return data
+  throw new Error(data.message)
+}
+
+export async function getProviders(
+  req: Request,
+  config: SvelteKitAuthConfig
+): ReturnType<App.Locals["getProviders"]> {
+  config.secret ??= env.AUTH_SECRET
+  config.trustHost ??= true
+
+  const url = new URL(`${config.prefix}/providers`, req.url)
   const request = new Request(url, { headers: req.headers })
   const response = await Auth(request, config)
 
@@ -232,16 +252,7 @@ export async function getSession(
 }
 
 /** Configure the {@link SvelteKitAuth} method. */
-export interface SvelteKitAuthConfig extends AuthConfig {
-  /**
-   * Defines the base path for the auth routes.
-   * If you change the default value,
-   * you must also update the callback URL used by the [providers](https://authjs.dev/reference/core/modules/providers).
-   *
-   * @default "/auth"
-   */
-  prefix?: string
-}
+export interface SvelteKitAuthConfig extends AuthConfig {}
 
 const actions: AuthAction[] = [
   "providers",
@@ -254,24 +265,36 @@ const actions: AuthAction[] = [
   "error",
 ]
 
-type DynamicSvelteKitAuthConfig = (event: RequestEvent) => PromiseLike<SvelteKitAuthConfig>
+type DynamicSvelteKitAuthConfig = (
+  event: RequestEvent
+) => PromiseLike<SvelteKitAuthConfig>
 
-function AuthHandle(svelteKitAuthOptions: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig): Handle {
+function AuthHandle(
+  svelteKitAuthOptions: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig
+): Handle {
   return async function ({ event, resolve }) {
-    const authOptions =
+    const _authOptions =
       typeof svelteKitAuthOptions === "object"
         ? svelteKitAuthOptions
         : await svelteKitAuthOptions(event)
-    const { prefix = "/auth" } = authOptions
     const { url, request } = event
+    const authOptions = {
+      ..._authOptions,
+      skipCSRFCheck,
+      prefix: _authOptions.prefix ?? "/auth",
+    } satisfies AuthConfig
 
     event.locals.getSession ??= () => getSession(request, authOptions)
+    event.locals.getProviders ??= () => getProviders(request, authOptions)
 
     const action = url.pathname
-      .slice(prefix.length + 1)
+      .slice(authOptions.prefix.length + 1)
       .split("/")[0] as AuthAction
 
-    if (!actions.includes(action) || !url.pathname.startsWith(prefix + "/")) {
+    if (
+      !actions.includes(action) ||
+      !url.pathname.startsWith(authOptions.prefix + "/")
+    ) {
       return resolve(event)
     }
 
@@ -283,7 +306,9 @@ function AuthHandle(svelteKitAuthOptions: SvelteKitAuthConfig | DynamicSvelteKit
  * The main entry point to `@auth/sveltekit`
  * @see https://sveltekit.authjs.dev
  */
-export function SvelteKitAuth(options: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig): Handle {
+export function SvelteKitAuth(
+  options: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig
+): Handle {
   if (typeof options === "object") {
     options.secret ??= env.AUTH_SECRET
     options.trustHost ??= !!(env.AUTH_TRUST_HOST ?? env.VERCEL ?? dev)
@@ -296,9 +321,11 @@ declare global {
   namespace App {
     interface Locals {
       getSession(): Promise<Session | null>
+      getProviders(): Promise<Provider[] | null>
     }
     interface PageData {
       session: Session | null
+      providers: Provider[] | null
     }
   }
 }

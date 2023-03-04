@@ -303,4 +303,12 @@ export interface AuthConfig {
   /** @todo */
   trustHost?: boolean
   skipCSRFCheck?: typeof skipCSRFCheck
+  /**
+   * Defines the base path for the auth routes.
+   * If you change the default value,
+   * you must also update the callback URL used by the [providers](https://authjs.dev/reference/core/modules/providers).
+   *
+   * @default "/api/auth"
+   */
+  prefix?: string
 }

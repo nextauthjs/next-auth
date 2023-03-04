@@ -41,11 +41,6 @@ export async function signIn<
 
   const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
 
-  // TODO: Handle custom base path
-  // TODO: Remove this since Sveltekit offers the CSRF protection via origin check
-  const csrfTokenResponse = await fetch("/auth/csrf")
-  const { csrfToken } = await csrfTokenResponse.json()
-
   const res = await fetch(_signInUrl, {
     method: "post",
     headers: {
@@ -55,7 +50,6 @@ export async function signIn<
     // @ts-expect-error -- ignore
     body: new URLSearchParams({
       ...options,
-      csrfToken,
       callbackUrl,
     }),
   })
@@ -84,8 +78,6 @@ export async function signOut(options?: SignOutParams) {
   const { callbackUrl = window.location.href } = options ?? {}
   // TODO: Custom base path
   // TODO: Remove this since Sveltekit offers the CSRF protection via origin check
-  const csrfTokenResponse = await fetch("/auth/csrf")
-  const { csrfToken } = await csrfTokenResponse.json()
   const res = await fetch(`/auth/signout`, {
     method: "post",
     headers: {
@@ -93,7 +85,6 @@ export async function signOut(options?: SignOutParams) {
       "X-Auth-Return-Redirect": "1",
     },
     body: new URLSearchParams({
-      csrfToken,
       callbackUrl,
     }),
   })

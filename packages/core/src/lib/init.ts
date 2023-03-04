@@ -48,7 +48,8 @@ export async function init({
   // TODO: move this to web.ts
   const parsed = parseUrl(
     reqUrl.origin +
-      reqUrl.pathname.replace(`/${action}`, "").replace(`/${providerId}`, "")
+      reqUrl.pathname.replace(`/${action}`, "").replace(`/${providerId}`, ""),
+    authOptions.prefix
   )
   const url = new URL(parsed.toString())
 
