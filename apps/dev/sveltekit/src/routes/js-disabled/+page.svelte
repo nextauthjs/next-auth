@@ -19,11 +19,11 @@
     >
   </span>
   <form action="/auth/signout" method="POST">
-    <button id="submitButton" type="submit">Sign out</button>
+    <button type="submit">Sign out</button>
   </form>
 {:else}
   <span class="notSignedInText">You are not signed in</span>
   {#each Object.values($page.data.providers) as provider}
-    <SignInButton {provider} />
+    <SignInButton {provider} callbackUrl={$page.data.callbackUrl} />
   {/each}
 {/if}
