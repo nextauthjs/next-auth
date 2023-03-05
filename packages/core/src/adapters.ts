@@ -5,9 +5,10 @@
  *
  * This module contains utility functions and types to create an Auth.js compatible adapter.
  *
- * An adapter is a unified interface of methods that Auth.js is calling internally.
- * They all have the same signature and return the same data structure,
- * so Auth.js does not need to concern itself with the data layer's implementation details.
+ * Auth.js supports 2 session strategies to persist the login state of a user.
+ * The default is to use a cookie + {@link https://authjs.dev/concepts/session-strategies#jwt JWT}
+ * based session store (`strategy: "jwt"`),
+ * but you can also use a database adapter to store the session in a database.
  *
  * Before you continue, Auth.js has a list of {@link https://authjs.dev/reference/adapters/overview official database adapters}. If your database is listed there, you
  * probably do not need to create your own. If you are using a data solution that cannot be integrated with an official adapter, this module will help you create a compatible adapter.
@@ -27,11 +28,6 @@
  * Then, you can import this submodule from `@auth/core/adapters`.
  *
  * ## Usage
- *
- * Adapter methods often use a client/ORM package to interact with the data layer.
- * Therefore, official adapters are usually functions that return an `Adapter` interface,
- * to which you pass a client/ORM instance and other configuration options.
- * _It is not a requirement, but it is a common pattern._
  *
  * Each adapter method and its function signature is documented in the {@link Adapter} interface.
  *

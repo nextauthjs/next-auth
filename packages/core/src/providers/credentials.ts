@@ -3,7 +3,7 @@ import type { Awaitable, User } from "../types.js"
 import type { JSXInternal } from "preact/src/jsx.js"
 
 /**
- * Besieds providing type safety inside {@link CredentialsConfig.authorize}
+ * Besides providing type safety inside {@link CredentialsConfig.authorize}
  * it also determines how the credentials input fields will be rendered
  * on the default sign in page.
  */
@@ -40,8 +40,16 @@ export interface CredentialsConfig<
    * //...
    */
   authorize: (
-    /** See {@link CredentialInput} */
-    credentials: Record<keyof CredentialsInputs, string> | undefined,
+    /**
+     * The available keys are determined by {@link CredentialInput}.
+     *
+     * @note The existence/correctness of a field cannot be guaranteed at compile time,
+     * so you should always validate the input before using it.
+     *
+     * You can add basic validation depending on your use case,
+     * or you can use a popular library like [Zod](https://zod.dev) for example.
+     */
+    credentials: Partial<Record<keyof CredentialsInputs, unknown>>,
     /** The original request is forward for convenience */
     request: Request
   ) => Awaitable<User | null>
@@ -71,10 +79,10 @@ export type CredentialsProviderType = "Credentials"
  * @example
  * ```js
  * import Auth from "@auth/core"
- * import { Credentials } from "@auth/core/providers/credentials"
+ * import Credentials from "@auth/core/providers/credentials"
  *
  * const request = new Request("https://example.com")
- * const resposne = await AuthHandler(request, {
+ * const response = await AuthHandler(request, {
  *   providers: [
  *     Credentials({
  *       credentials: {

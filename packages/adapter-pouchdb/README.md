@@ -22,7 +22,7 @@ Depending on your architecture you can use PouchDB's http adapter to reach any d
 
 1. Install `next-auth` and `@next-auth/pouchdb-adapter`, as well as `pouchdb`.
 
-> **Prerequesite**: Your PouchDB instance MUST provide the `pouchdb-find` plugin since it is used internally by the adapter to build and manage indexes
+> **Prerequisite**: Your PouchDB instance MUST provide the `pouchdb-find` plugin since it is used internally by the adapter to build and manage indexes
 
 ```js
 npm install next-auth @next-auth/pouchdb-adapter pouchdb

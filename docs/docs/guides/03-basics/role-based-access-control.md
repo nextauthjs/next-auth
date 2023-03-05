@@ -1,8 +1,8 @@
 ---
-title: Role-based authentication
+title: Role-based access control
 ---
 
-There are two ways to add role-based authentication (RBAC) to your application, based on the [session strategy](/concepts/session-strategies) you choose. Let's see an example for each of these.
+There are two ways to add role-based access control (RBAC) to your application, based on the [session strategy](/concepts/session-strategies) you choose. Let's see an example for each of these.
 
 ## Getting the role
 

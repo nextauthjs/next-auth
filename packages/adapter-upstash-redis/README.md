@@ -24,7 +24,7 @@ This is the Upstash Redis adapter for [`next-auth`](https://authjs.dev). This pa
 npm install next-auth @next-auth/upstash-redis-adapter @upstash/redis
 ```
 
-2. Add the follwing code to your `pages/api/[...nextauth].js` next-auth configuration object.
+2. Add the following code to your `pages/api/[...nextauth].js` next-auth configuration object.
 
 ```js
 import NextAuth from "next-auth"
