@@ -1,6 +1,4 @@
 import { Auth } from "@auth/core"
-import { Cookie, parseString, splitCookiesString } from "set-cookie-parser"
-import { serialize } from "cookie"
 import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
 
 export interface SolidAuthConfig extends AuthConfig {
@@ -22,26 +20,6 @@ const actions: AuthAction[] = [
   "error",
 ]
 
-// currently multiple cookies are not supported, so we keep the next-auth.pkce.code_verifier cookie for now:
-// because it gets updated anyways
-// src: https://github.com/solidjs/solid-start/issues/293
-const getSetCookieCallback = (cook?: string | null): Cookie | undefined => {
-  if (!cook) return
-  const splitCookie = splitCookiesString(cook)
-  for (const cookName of [
-    "__Secure-next-auth.session-token",
-    "next-auth.session-token",
-    "next-auth.pkce.code_verifier",
-    "__Secure-next-auth.pkce.code_verifier",
-  ]) {
-    const temp = splitCookie.find((e) => e.startsWith(`${cookName}=`))
-    if (temp) {
-      return parseString(temp)
-    }
-  }
-  return parseString(splitCookie?.[0] ?? "") // just return the first cookie if no session token is found
-}
-
 function SolidAuthHandler(prefix: string, authOptions: SolidAuthConfig) {
   return async (event: any) => {
     const { request } = event
@@ -54,19 +32,7 @@ function SolidAuthHandler(prefix: string, authOptions: SolidAuthConfig) {
       return
     }
 
-    const res = await Auth(request, authOptions)
-    if (["callback", "signin", "signout"].includes(action)) {
-      const parsedCookie = getSetCookieCallback(
-        res.clone().headers.get("Set-Cookie")
-      )
-      if (parsedCookie) {
-        res.headers.set(
-          "Set-Cookie",
-          serialize(parsedCookie.name, parsedCookie.value, parsedCookie as any)
-        )
-      }
-    }
-    return res
+    return await Auth(request, authOptions)
   }
 }
 

@@ -6,6 +6,7 @@ import Asgardeo from "@auth/core/providers/asgardeo"
 import Auth0 from "@auth/core/providers/auth0"
 import AzureAD from "@auth/core/providers/azure-ad"
 import AzureB2C from "@auth/core/providers/azure-ad-b2c"
+import BeyondIdentity from "@auth/core/providers/beyondidentity"
 import BoxyHQSAML from "@auth/core/providers/boxyhq-saml"
 // import Cognito from "@auth/core/providers/cognito"
 import Credentials from "@auth/core/providers/credentials"
@@ -24,6 +25,7 @@ import Instagram from "@auth/core/providers/instagram"
 import Line from "@auth/core/providers/line"
 import LinkedIn from "@auth/core/providers/linkedin"
 import Mailchimp from "@auth/core/providers/mailchimp"
+import Notion from "@auth/core/providers/notion"
 // import Okta from "@auth/core/providers/okta"
 import Osu from "@auth/core/providers/osu"
 import Patreon from "@auth/core/providers/patreon"
@@ -69,7 +71,7 @@ import WorkOS from "@auth/core/providers/workos"
 
 export const authConfig: AuthConfig = {
   // adapter,
-  // debug: process.env.NODE_ENV !== "production",
+  debug: process.env.NODE_ENV !== "production",
   theme: {
     logo: "https://next-auth.js.org/img/logo/logo-sm.png",
     brandColor: "#1786fb",
@@ -91,6 +93,7 @@ export const authConfig: AuthConfig = {
       tenantId: process.env.AZURE_AD_TENANT_ID,
     }),
     AzureB2C({ clientId: process.env.AZURE_B2C_ID, clientSecret: process.env.AZURE_B2C_SECRET, issuer: process.env.AZURE_B2C_ISSUER }),
+    BeyondIdentity({ clientId: process.env.BEYOND_IDENTITY_CLIENT_ID, clientSecret: process.env.BEYOND_IDENTITY_CLIENT_SECRET, issuer: process.env.BEYOND_IDENTITY_ISSUER }),
     BoxyHQSAML({ issuer: "https://jackson-demo.boxyhq.com", clientId: "tenant=boxyhq.com&product=saml-demo.boxyhq.com", clientSecret: "dummy" }),
     // Cognito({ clientId: process.env.COGNITO_ID, clientSecret: process.env.COGNITO_SECRET, issuer: process.env.COGNITO_ISSUER }),
     Discord({ clientId: process.env.DISCORD_ID, clientSecret: process.env.DISCORD_SECRET }),
@@ -107,6 +110,7 @@ export const authConfig: AuthConfig = {
     Line({ clientId: process.env.LINE_ID, clientSecret: process.env.LINE_SECRET }),
     LinkedIn({ clientId: process.env.LINKEDIN_ID, clientSecret: process.env.LINKEDIN_SECRET }),
     Mailchimp({ clientId: process.env.MAILCHIMP_ID, clientSecret: process.env.MAILCHIMP_SECRET }),
+    Notion({ clientId: process.env.NOTION_ID, clientSecret: process.env.NOTION_SECRET, redirectUri: process.env.NOTION_REDIRECT_URI }),
     // Okta({ clientId: process.env.OKTA_ID, clientSecret: process.env.OKTA_SECRET, issuer: process.env.OKTA_ISSUER }),
     Osu({ clientId: process.env.OSU_CLIENT_ID, clientSecret: process.env.OSU_CLIENT_SECRET }),
     Patreon({ clientId: process.env.PATREON_ID, clientSecret: process.env.PATREON_SECRET }),
