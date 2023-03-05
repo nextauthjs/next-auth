@@ -31,6 +31,7 @@ export function Whop<P extends WhopProfile>(
         name: profile.username,
         email: profile.email,
         image: profile.profile_pic_url,
+        social_accounts: profile.social_accounts,
       }
     },
     style: {
