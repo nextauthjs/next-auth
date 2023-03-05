@@ -85,7 +85,7 @@ export async function session(
   // Retrieve session from database
   try {
     const { getSessionAndUser, deleteSession, updateSession } =
-      adapter as Adapter
+      adapter as Required<Adapter>
     let userAndSession = await getSessionAndUser(sessionToken)
 
     // If session has expired, clean up the database
