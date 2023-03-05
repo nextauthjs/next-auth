@@ -14,7 +14,7 @@ yarn-error.log*
 firebase-debug.log
 ui-debug.log
 .pnpm-debug.log
-
+.husky
 
 # Dependencies
 node_modules

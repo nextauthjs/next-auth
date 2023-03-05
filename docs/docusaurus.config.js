@@ -241,6 +241,21 @@ const docusaurusConfig = {
         },
       },
     ],
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        ...typedocConfig,
+        id: "dgraph-adapter",
+        plugin: [require.resolve("./typedoc-mdn-links")],
+        watch: process.env.TYPEDOC_WATCH,
+        entryPoints: ["../packages/adapter-dgraph/src/index.ts"],
+        tsconfig: "../packages/adapter-dgraph/tsconfig.json",
+        out: "reference/adapter/dgraph",
+        sidebar: {
+          indexLabel: "Dgraph",
+        },
+      },
+    ],
   ],
 }
 
