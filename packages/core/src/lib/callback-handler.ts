@@ -1,7 +1,11 @@
 import { AccountNotLinked } from "../errors.js"
 import { fromDate } from "./utils/date.js"
 
-import type { AdapterSession, AdapterUser } from "../adapters.js"
+import type {
+  AdapterAccount,
+  AdapterSession,
+  AdapterUser,
+} from "../adapters.js"
 import type { Account, InternalOptions, User } from "../types.js"
 import type { JWT } from "../jwt.js"
 import type { OAuthConfig } from "../providers/index.js"
@@ -22,13 +26,13 @@ import type { SessionToken } from "./cookie.js"
 export async function handleLogin(
   sessionToken: SessionToken,
   _profile: User | AdapterUser | { email: string },
-  account: Account | null,
+  _account: AdapterAccount | Account | null,
   options: InternalOptions
 ) {
   // Input validation
-  if (!account?.providerAccountId || !account.type)
+  if (!_account?.providerAccountId || !_account.type)
     throw new Error("Missing or invalid provider account")
-  if (!["email", "oauth", "oidc"].includes(account.type))
+  if (!["email", "oauth", "oidc"].includes(_account.type))
     throw new Error("Provider not supported")
 
   const {
@@ -41,10 +45,11 @@ export async function handleLogin(
   // If no adapter is configured then we don't have a database and cannot
   // persist data; in this mode we just return a dummy session object.
   if (!adapter) {
-    return { user: _profile as User, account }
+    return { user: _profile as User, account: _account as Account }
   }
 
   const profile = _profile as AdapterUser
+  const account = _account as AdapterAccount
 
   const {
     createUser,

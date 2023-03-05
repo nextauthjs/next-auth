@@ -181,10 +181,10 @@ function eventsErrorHandler(
 }
 
 /** Handles adapter induced errors. */
-function adapterErrorHandler<TAdapter>(
-  adapter: TAdapter | undefined,
+function adapterErrorHandler(
+  adapter: AuthConfig["adapter"],
   logger: LoggerInstance
-): TAdapter | undefined {
+) {
   if (!adapter) return
 
   return Object.keys(adapter).reduce<any>((acc, name) => {
