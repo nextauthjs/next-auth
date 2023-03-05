@@ -1,6 +1,9 @@
 /**
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- *  <p style={{fontWeight: "normal"}}>Official <a href="https://dgraph.io/">Dgraph</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <p style={{fontWeight: "normal"}}>Official <a href="https://dgraph.io/docs">Dgraph</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <a href="https://dgraph.io/">
+ *   <img style={{display: "block"}} src="https://cloud.dgraph.io/logo.svg" height="30"/>
+ *  </a>
  * </div>
  *
  * ## Installation
@@ -41,7 +44,7 @@ export { format }
 /**
  * ### Basic usage
  *
- * Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object.
+ * Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object:
  *
  * ```ts title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
