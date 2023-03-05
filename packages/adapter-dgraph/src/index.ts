@@ -1,6 +1,6 @@
 /**
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- *  <h2 style={{fontWeight: "normal"}}>Official <a href="https://dgraph.io/">Dgraph</a> adapter for Auth.js / NextAuth.js.</h2>
+ *  <p style={{fontWeight: "normal"}}>Official <a href="https://dgraph.io/">Dgraph</a> adapter for Auth.js / NextAuth.js.</p>
  * </div>
  *
  * ## Installation
