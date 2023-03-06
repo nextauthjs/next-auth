@@ -31,5 +31,5 @@ providers: [
 ```
 
 :::note
-`issuer` has been known to sometimes require a trailing slash (e.g., `https://my-authentik-domain.com/application/o/my_slug/`) and others time require no trailing slash (e.g. `https://my-authentik-domain.com/application/o/my_slug`).
+`issuer` requires a trailing slash (e.g. `https://my-authentik-domain.com/application/o/my_slug/`).
 :::
