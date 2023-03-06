@@ -81,6 +81,8 @@ export default function SigninPage(props: {
         />
       )}
       <div className="card">
+        {theme.logo && <img src={theme.logo} alt="Logo" className="logo" />}
+
         {error && (
           <div className="error">
             <p>{error}</p>
@@ -111,9 +113,8 @@ export default function SigninPage(props: {
                       height={24}
                       width={24}
                       id="provider-logo"
-                      src={`${
-                        provider.style.logo.startsWith("/") ? logos : ""
-                      }${provider.style.logo}`}
+                      src={`${provider.style.logo.startsWith("/") ? logos : ""
+                        }${provider.style.logo}`}
                     />
                   )}
                   {provider.style?.logoDark && (
@@ -122,9 +123,8 @@ export default function SigninPage(props: {
                       height={24}
                       width={24}
                       id="provider-logo-dark"
-                      src={`${
-                        provider.style.logo.startsWith("/") ? logos : ""
-                      }${provider.style.logoDark}`}
+                      src={`${provider.style.logo.startsWith("/") ? logos : ""
+                        }${provider.style.logoDark}`}
                     />
                   )}
                   <span>Sign in with {provider.name}</span>
