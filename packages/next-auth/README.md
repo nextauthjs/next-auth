@@ -203,8 +203,6 @@ We're happy to announce we've recently created an [OpenCollective](https://openc
         <div>Beyond Identity</div><br />
         <sub>🥈 Silver Financial Sponsor</sub>
       </td>
-    </tr>
-    <tr>
       <td align="center" valign="top">
         <a href="https://vercel.com" target="_blank">
           <img width="128px" src="https://avatars.githubusercontent.com/u/14985020?v=4" alt="Vercel Logo" />
@@ -226,6 +224,8 @@ We're happy to announce we've recently created an [OpenCollective](https://openc
         <div>Clerk</div><br />
         <sub>🥉 Bronze Financial Sponsor</sub>
       </td>
+    </tr>
+    <tr>
       <td align="center" valign="top">
         <a href="https://lowdefy.com" target="_blank">
           <img width="128px" src="https://avatars.githubusercontent.com/u/47087496?s=200&v=4" alt="Lowdefy Logo" />
@@ -247,8 +247,6 @@ We're happy to announce we've recently created an [OpenCollective](https://openc
         <div>FusionAuth</div><br />
         <sub>🥉 Bronze Financial Sponsor</sub>
       </td>
-    </tr>
-    <tr>
       <td align="center" valign="top">
         <a href="https://checklyhq.com" target="_blank">
           <img width="128px" src="https://avatars.githubusercontent.com/u/25982255?v=4" alt="Checkly Logo" />
