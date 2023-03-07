@@ -224,6 +224,8 @@ We're happy to announce we've recently created an [OpenCollective](https://openc
         <div>Clerk</div><br />
         <sub>🥉 Bronze Financial Sponsor</sub>
       </td>
+    </tr>
+    <tr>
       <td align="center" valign="top">
         <a href="https://lowdefy.com" target="_blank">
           <img width="128px" src="https://avatars.githubusercontent.com/u/47087496?s=200&v=4" alt="Lowdefy Logo" />
@@ -236,6 +238,13 @@ We're happy to announce we've recently created an [OpenCollective](https://openc
           <img width="128px" src="https://avatars.githubusercontent.com/u/47638084?s=200&v=4" alt="WorkOS Logo" />
         </a><br />
         <div>WorkOS</div><br />
+        <sub>🥉 Bronze Financial Sponsor</sub>
+      </td>
+      <td align="center" valign="top">
+        <a href="https://fusionauth.io/" target="_blank">
+          <img width="128px" src="https://avatars.githubusercontent.com/u/41974756?s=200&v=4" alt="FusionAuth Logo" />
+        </a><br />
+        <div>FusionAuth</div><br />
         <sub>🥉 Bronze Financial Sponsor</sub>
       </td>
       <td align="center" valign="top">
