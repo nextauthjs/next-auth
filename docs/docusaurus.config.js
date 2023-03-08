@@ -15,17 +15,18 @@ delete typedocConfig.$schema
 
 /**
  * @param {string} name
+ * @param {string | undefined} slug
  * @returns Record<string, any>
  */
-function createTypeDocAdapterConfig(name) {
-  const slug = name.toLowerCase().replace(" ", "-")
+function createTypeDocAdapterConfig(name, slug = "") {
+  const actualSlug = slug || name.toLowerCase().replace(" ", "-")
   return {
-    id: slug,
+    id: actualSlug,
     plugin: [require.resolve("./typedoc-mdn-links")],
     watch: process.env.TYPEDOC_WATCH,
-    entryPoints: [`../packages/adapter-${slug}/src/index.ts`],
-    tsconfig: `../packages/adapter-${slug}/tsconfig.json`,
-    out: `reference/adapter/${slug}`,
+    entryPoints: [`../packages/adapter-${actualSlug}/src/index.ts`],
+    tsconfig: `../packages/adapter-${actualSlug}/tsconfig.json`,
+    out: `reference/adapter/${actualSlug}`,
     sidebar: {
       indexLabel: name,
     },
@@ -266,6 +267,21 @@ const docusaurusConfig = {
       {
         ...typedocConfig,
         ...createTypeDocAdapterConfig("Prisma"),
+      },
+    ],
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        ...typedocConfig,
+        id: "typeorm",
+        plugin: [require.resolve("./typedoc-mdn-links")],
+        watch: process.env.TYPEDOC_WATCH,
+        entryPoints: [`../packages/adapter-typeorm-legacy/src/index.ts`],
+        tsconfig: `../packages/adapter-typeorm-legacy/tsconfig.json`,
+        out: `reference/adapter/typeorm`,
+        sidebar: {
+          indexLabel: "TypeORM",
+        },
       },
     ],
   ],
