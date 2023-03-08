@@ -268,6 +268,13 @@ const docusaurusConfig = {
         ...createTypeDocAdapterConfig("Prisma"),
       },
     ],
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        ...typedocConfig,
+        ...createTypeDocAdapterConfig("MongoDB"),
+      },
+    ],
   ],
 }
 
