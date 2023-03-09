@@ -225,6 +225,7 @@ importers:
       '@docusaurus/types': 2.2.0
       '@mdx-js/react': 1.6.22
       '@next-auth/dgraph-adapter': workspace:*
+      '@next-auth/dynamodb-adapter': workspace:*
       '@next-auth/firebase-adapter': workspace:*
       '@next-auth/mongodb-adapter': workspace:*
       '@next-auth/prisma-adapter': workspace:*
@@ -247,6 +248,7 @@ importers:
       '@auth/sveltekit': link:../packages/frameworks-sveltekit
       '@mdx-js/react': 1.6.22_react@18.2.0
       '@next-auth/dgraph-adapter': link:../packages/adapter-dgraph
+      '@next-auth/dynamodb-adapter': link:../packages/adapter-dynamodb
       '@next-auth/firebase-adapter': link:../packages/adapter-firebase
       '@next-auth/mongodb-adapter': link:../packages/adapter-mongodb
       '@next-auth/prisma-adapter': link:../packages/adapter-prisma

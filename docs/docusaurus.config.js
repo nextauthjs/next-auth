@@ -288,6 +288,13 @@ const docusaurusConfig = {
       "docusaurus-plugin-typedoc",
       {
         ...typedocConfig,
+        ...createTypeDocAdapterConfig("DynamoDB"),
+      },
+    ],
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        ...typedocConfig,
         ...createTypeDocAdapterConfig("MongoDB"),
       },
     ],

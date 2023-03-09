@@ -23,6 +23,7 @@
     "@next-auth/prisma-adapter": "workspace:*",
     "@next-auth/mongodb-adapter": "workspace:*",
     "@next-auth/typeorm-legacy-adapter": "workspace:*",
+    "@next-auth/dynamodb-adapter": "workspace:*",
     "@sapphire/docusaurus-plugin-npm2yarn2pnpm": "1.1.4",
     "classnames": "^2.3.2",
     "mdx-mermaid": "1.2.2",
