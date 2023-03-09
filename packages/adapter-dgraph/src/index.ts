@@ -1,18 +1,18 @@
 /**
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- *  <p style={{fontWeight: "normal"}}>Official <a href="https://dgraph.io/docs">Dgraph</a> adapter for Auth.js / NextAuth.js.</p>
- *  <a href="https://dgraph.io/">
- *   <img style={{display: "block"}} src="https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/adapter-dgraph/logo.svg" height="30"/>
+ *  <p style={{fontWeight: "normal"}}>Official <a href="https://docs.aws.amazon.com/dynamodb/index.html">DynamoDB</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <a href="https://aws.amazon.com/dynamodb/">
+ *   <img style={{display: "block"}} src="https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/adapter-dynamodb/logo.svg" height="30"/>
  *  </a>
  * </div>
  *
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install next-auth @next-auth/dgraph-adapter
+ * npm install next-auth @next-auth/dynamodb-adapter @aws-sdk/client-dynamodb @aws-sdk/lib-dynamodb
  * ```
  *
- * @module @next-auth/dgraph-adapter
+ * @module @next-auth/dynamodb-adapter
  */
 import { client as dgraphClient } from "./client"
 import { format } from "./utils"

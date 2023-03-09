@@ -1,3 +1,19 @@
+/**
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
+ *  <p style={{fontWeight: "normal"}}>Official <a href="https://dgraph.io/docs">Dgraph</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <a href="https://dgraph.io/">
+ *   <img style={{display: "block"}} src="https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/adapter-dgraph/logo.svg" height="30"/>
+ *  </a>
+ * </div>
+ *
+ * ## Installation
+ *
+ * ```bash npm2yarn2pnpm
+ * npm install next-auth @next-auth/dgraph-adapter
+ * ```
+ *
+ * @module @next-auth/dgraph-adapter
+ */
 import { v4 as uuid } from "uuid"
 
 import type {
