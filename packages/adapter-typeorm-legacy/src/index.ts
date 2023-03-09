@@ -64,26 +64,9 @@ export async function getManager(options: {
 }
 
 /**
- * ## Disclaimer
- *
- * This Adapter is used to support SQL-flavored databases (like SQLite, MySQL, MSSQL, MariaDB, CockroachDB, etc.) through [TypeORM](https://typeorm.io), and mostly kept around for legacy reasons. (See the warning below.)
- *
- * :::note
- * If you previously used this Adapter with MongoDB, check out the [MongoDB Adapter](/reference/adapters/mongodb) instead.
- * :::
- *
- * :::warning
- * In the future, we might split up this adapter to support single flavors of SQL for easier maintenance and reduced bundle size.
- * :::
  * ## Usage
  *
- * To use this Adapter, you need to install the following packages:
- *
- * ```bash npm2yarn
- * npm install next-auth @next-auth/typeorm-legacy-adapter typeorm
- * ```
- *
- * Configure your Auth.js to use the TypeORM Adapter:
+ * Configure Auth.js to use the TypeORM Adapter:
  *
  * ```javascript title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
