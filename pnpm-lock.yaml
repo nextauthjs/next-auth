@@ -226,7 +226,9 @@ importers:
       '@mdx-js/react': 1.6.22
       '@next-auth/dgraph-adapter': workspace:*
       '@next-auth/firebase-adapter': workspace:*
+      '@next-auth/mongodb-adapter': workspace:*
       '@next-auth/prisma-adapter': workspace:*
+      '@next-auth/typeorm-legacy-adapter': workspace:*
       '@sapphire/docusaurus-plugin-npm2yarn2pnpm': 1.1.4
       classnames: ^2.3.2
       docusaurus-plugin-typedoc: 1.0.0-next.2
@@ -246,7 +248,9 @@ importers:
       '@mdx-js/react': 1.6.22_react@18.2.0
       '@next-auth/dgraph-adapter': link:../packages/adapter-dgraph
       '@next-auth/firebase-adapter': link:../packages/adapter-firebase
+      '@next-auth/mongodb-adapter': link:../packages/adapter-mongodb
       '@next-auth/prisma-adapter': link:../packages/adapter-prisma
+      '@next-auth/typeorm-legacy-adapter': link:../packages/adapter-typeorm-legacy
       '@sapphire/docusaurus-plugin-npm2yarn2pnpm': 1.1.4
       classnames: 2.3.2
       mdx-mermaid: 1.2.2_mermaid@9.0.1+react@18.2.0
