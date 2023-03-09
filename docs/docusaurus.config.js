@@ -284,6 +284,13 @@ const docusaurusConfig = {
         },
       },
     ],
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        ...typedocConfig,
+        ...createTypeDocAdapterConfig("MongoDB"),
+      },
+    ],
   ],
 }
 
