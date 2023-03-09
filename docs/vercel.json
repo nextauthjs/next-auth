@@ -66,6 +66,16 @@
       "permanent": true
     },
     {
+      "source": "/adapters/typeorm",
+      "destination": "https://authjs.dev/reference/adapter/typeorm",
+      "permanent": true
+    },
+    {
+      "source": "/adapters/mongodb",
+      "destination": "https://authjs.dev/reference/adapter/mongodb",
+      "permanent": true
+    },
+    {
       "source": "/tutorials/refresh-token-rotation",
       "destination": "https://authjs.dev/guides/basics/refresh-token-rotation",
       "permanent": true
