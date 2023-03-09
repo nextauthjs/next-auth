@@ -76,6 +76,11 @@
       "permanent": true
     },
     {
+      "source": "/adapters/dynamodb",
+      "destination": "https://authjs.dev/reference/adapter/dynamodb",
+      "permanent": true
+    },
+    {
       "source": "/tutorials/refresh-token-rotation",
       "destination": "https://authjs.dev/guides/basics/refresh-token-rotation",
       "permanent": true
