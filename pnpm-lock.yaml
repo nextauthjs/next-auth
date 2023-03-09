@@ -105,6 +105,57 @@ importers:
       sqlite3: 5.0.8
       typeorm: 0.3.7_pg@8.7.3+sqlite3@5.0.8
 
+  apps/dev/nextjs-2:
+    specifiers:
+      '@auth/core': workspace:*
+      '@next-auth/fauna-adapter': workspace:*
+      '@next-auth/prisma-adapter': workspace:*
+      '@next-auth/supabase-adapter': workspace:*
+      '@next-auth/typeorm-legacy-adapter': workspace:*
+      '@playwright/test': 1.29.2
+      '@prisma/client': ^3
+      '@supabase/supabase-js': ^2.0.5
+      '@types/jsonwebtoken': ^8.5.5
+      '@types/react': ^18.0.15
+      '@types/react-dom': ^18.0.6
+      dotenv: ^16.0.3
+      fake-smtp-server: ^0.8.0
+      faunadb: ^4
+      next: 13.1.1
+      next-auth: workspace:*
+      nodemailer: ^6
+      pg: ^8.7.3
+      prisma: ^3
+      react: ^18
+      react-dom: ^18
+      sqlite3: ^5.0.8
+      typeorm: 0.3.7
+    dependencies:
+      '@auth/core': link:../../../packages/core
+      '@next-auth/fauna-adapter': link:../../../packages/adapter-fauna
+      '@next-auth/prisma-adapter': link:../../../packages/adapter-prisma
+      '@next-auth/supabase-adapter': link:../../../packages/adapter-supabase
+      '@next-auth/typeorm-legacy-adapter': link:../../../packages/adapter-typeorm-legacy
+      '@prisma/client': 3.15.2_prisma@3.15.2
+      '@supabase/supabase-js': 2.0.5
+      faunadb: 4.6.0
+      next: 13.1.1_biqbaboplfbrettd7655fr4n2y
+      next-auth: link:../../../packages/next-auth
+      nodemailer: 6.8.0
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    devDependencies:
+      '@playwright/test': 1.29.2
+      '@types/jsonwebtoken': 8.5.9
+      '@types/react': 18.0.26
+      '@types/react-dom': 18.0.6
+      dotenv: 16.0.3
+      fake-smtp-server: 0.8.0
+      pg: 8.7.3
+      prisma: 3.15.2
+      sqlite3: 5.0.8
+      typeorm: 0.3.7_pg@8.7.3+sqlite3@5.0.8
+
   apps/dev/sveltekit:
     specifiers:
       '@auth/core': workspace:*
@@ -136,7 +187,7 @@ importers:
       vercel: ^23.1.2
     dependencies:
       dotenv: 16.0.3
-      gatsby: 5.8.0-next.0_biqbaboplfbrettd7655fr4n2y
+      gatsby: 5.8.0-next.2_biqbaboplfbrettd7655fr4n2y
       next-auth: link:../../../packages/next-auth
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -173,6 +224,9 @@ importers:
       '@docusaurus/theme-common': 2.2.0
       '@docusaurus/types': 2.2.0
       '@mdx-js/react': 1.6.22
+      '@next-auth/dgraph-adapter': workspace:*
+      '@next-auth/firebase-adapter': workspace:*
+      '@next-auth/prisma-adapter': workspace:*
       '@sapphire/docusaurus-plugin-npm2yarn2pnpm': 1.1.4
       classnames: ^2.3.2
       docusaurus-plugin-typedoc: 1.0.0-next.2
@@ -190,6 +244,9 @@ importers:
       '@auth/core': link:../packages/core
       '@auth/sveltekit': link:../packages/frameworks-sveltekit
       '@mdx-js/react': 1.6.22_react@18.2.0
+      '@next-auth/dgraph-adapter': link:../packages/adapter-dgraph
+      '@next-auth/firebase-adapter': link:../packages/adapter-firebase
+      '@next-auth/prisma-adapter': link:../packages/adapter-prisma
       '@sapphire/docusaurus-plugin-npm2yarn2pnpm': 1.1.4
       classnames: 2.3.2
       mdx-mermaid: 1.2.2_mermaid@9.0.1+react@18.2.0
@@ -6881,7 +6938,7 @@ packages:
       infima: 0.2.0-alpha.42
       lodash: 4.17.21
       nprogress: 0.2.0
-      postcss: 8.4.20
+      postcss: 8.4.21
       prism-react-renderer: 1.3.5_react@18.2.0
       prismjs: 1.28.0
       react: 18.2.0
@@ -9021,7 +9078,7 @@ packages:
       detect-libc: 2.0.1
       https-proxy-agent: 5.0.1
       make-dir: 3.1.0
-      node-fetch: 2.6.7
+      node-fetch: 2.6.9
       nopt: 5.0.0
       npmlog: 5.0.1
       rimraf: 3.0.2
@@ -9605,9 +9662,9 @@ packages:
       '@rollup/plugin-replace': 5.0.2_rollup@2.79.1
       '@vitejs/plugin-vue': 3.2.0_vite@3.2.5+vue@3.2.45
       '@vitejs/plugin-vue-jsx': 2.1.1_vite@3.2.5+vue@3.2.45
-      autoprefixer: 10.4.13_postcss@8.4.20
+      autoprefixer: 10.4.13_postcss@8.4.21
       chokidar: 3.5.3
-      cssnano: 5.1.14_postcss@8.4.20
+      cssnano: 5.1.14_postcss@8.4.21
       defu: 6.1.1
       esbuild: 0.15.16
       escape-string-regexp: 5.0.0
@@ -9623,9 +9680,9 @@ packages:
       pathe: 1.0.0
       perfect-debounce: 0.1.3
       pkg-types: 1.0.1
-      postcss: 8.4.20
-      postcss-import: 15.1.0_postcss@8.4.20
-      postcss-url: 10.1.3_postcss@8.4.20
+      postcss: 8.4.21
+      postcss-import: 15.1.0_postcss@8.4.21
+      postcss-url: 10.1.3_postcss@8.4.21
       rollup: 2.79.1
       rollup-plugin-visualizer: 5.9.0_rollup@2.79.1
       ufo: 1.0.1
@@ -12725,8 +12782,10 @@ packages:
       indent-string: 4.0.0
     dev: true
 
-  /ajv-formats/2.1.1:
+  /ajv-formats/2.1.1_ajv@8.11.0:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
+    peerDependencies:
+      ajv: ^8.0.0
     peerDependenciesMeta:
       ajv:
         optional: true
@@ -13632,7 +13691,7 @@ packages:
       - supports-color
     dev: true
 
-  /babel-plugin-remove-graphql-queries/5.8.0-next.0_osdpouujtlfd2op5ubueuc4aqi:
+  /babel-plugin-remove-graphql-queries/5.8.0-next.0_u7ozffrhm6o22jdb3uxxwj2pzm:
     resolution: {integrity: sha512-emjOEAt/rnb1eGC1ximT3/Rs1i6U6DT2K385uteLPsGsZ8s6fCPvmzm8TLjRM3iWT4LTVc9OBGghkFPCJ8C6Vg==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
@@ -13642,7 +13701,7 @@ packages:
       '@babel/core': 7.20.12
       '@babel/runtime': 7.20.13
       '@babel/types': 7.20.7
-      gatsby: 5.8.0-next.0_biqbaboplfbrettd7655fr4n2y
+      gatsby: 5.8.0-next.2_biqbaboplfbrettd7655fr4n2y
       gatsby-core-utils: 4.8.0-next.0
     dev: false
 
@@ -15490,44 +15549,6 @@ packages:
       postcss-unique-selectors: 5.1.1_postcss@8.4.20
     dev: true
 
-  /cssnano-preset-default/5.2.13_postcss@8.4.20:
-    resolution: {integrity: sha512-PX7sQ4Pb+UtOWuz8A1d+Rbi+WimBIxJTRyBdgGp1J75VU0r/HFQeLnMYgHiCAp6AR4rqrc7Y4R+1Rjk3KJz6DQ==}
-    engines: {node: ^10 || ^12 || >=14.0}
-    peerDependencies:
-      postcss: ^8.2.15
-    dependencies:
-      css-declaration-sorter: 6.3.1_postcss@8.4.20
-      cssnano-utils: 3.1.0_postcss@8.4.20
-      postcss: 8.4.20
-      postcss-calc: 8.2.4_postcss@8.4.20
-      postcss-colormin: 5.3.0_postcss@8.4.20
-      postcss-convert-values: 5.1.3_postcss@8.4.20
-      postcss-discard-comments: 5.1.2_postcss@8.4.20
-      postcss-discard-duplicates: 5.1.0_postcss@8.4.20
-      postcss-discard-empty: 5.1.1_postcss@8.4.20
-      postcss-discard-overridden: 5.1.0_postcss@8.4.20
-      postcss-merge-longhand: 5.1.7_postcss@8.4.20
-      postcss-merge-rules: 5.1.3_postcss@8.4.20
-      postcss-minify-font-values: 5.1.0_postcss@8.4.20
-      postcss-minify-gradients: 5.1.1_postcss@8.4.20
-      postcss-minify-params: 5.1.4_postcss@8.4.20
-      postcss-minify-selectors: 5.2.1_postcss@8.4.20
-      postcss-normalize-charset: 5.1.0_postcss@8.4.20
-      postcss-normalize-display-values: 5.1.0_postcss@8.4.20
-      postcss-normalize-positions: 5.1.1_postcss@8.4.20
-      postcss-normalize-repeat-style: 5.1.1_postcss@8.4.20
-      postcss-normalize-string: 5.1.0_postcss@8.4.20
-      postcss-normalize-timing-functions: 5.1.0_postcss@8.4.20
-      postcss-normalize-unicode: 5.1.1_postcss@8.4.20
-      postcss-normalize-url: 5.1.0_postcss@8.4.20
-      postcss-normalize-whitespace: 5.1.1_postcss@8.4.20
-      postcss-ordered-values: 5.1.3_postcss@8.4.20
-      postcss-reduce-initial: 5.1.1_postcss@8.4.20
-      postcss-reduce-transforms: 5.1.0_postcss@8.4.20
-      postcss-svgo: 5.1.0_postcss@8.4.20
-      postcss-unique-selectors: 5.1.1_postcss@8.4.20
-    dev: true
-
   /cssnano-preset-default/5.2.13_postcss@8.4.21:
     resolution: {integrity: sha512-PX7sQ4Pb+UtOWuz8A1d+Rbi+WimBIxJTRyBdgGp1J75VU0r/HFQeLnMYgHiCAp6AR4rqrc7Y4R+1Rjk3KJz6DQ==}
     engines: {node: ^10 || ^12 || >=14.0}
@@ -15611,18 +15632,6 @@ packages:
     dependencies:
       cssnano-preset-default: 5.2.12_postcss@8.4.20
       lilconfig: 2.0.5
-      postcss: 8.4.20
-      yaml: 1.10.2
-    dev: true
-
-  /cssnano/5.1.14_postcss@8.4.20:
-    resolution: {integrity: sha512-Oou7ihiTocbKqi0J1bB+TRJIQX5RMR3JghA8hcWSw9mjBLQ5Y3RWqEDoYG3sRNlAbCIXpqMoZGbq5KDR3vdzgw==}
-    engines: {node: ^10 || ^12 || >=14.0}
-    peerDependencies:
-      postcss: ^8.2.15
-    dependencies:
-      cssnano-preset-default: 5.2.13_postcss@8.4.20
-      lilconfig: 2.0.6
       postcss: 8.4.20
       yaml: 1.10.2
     dev: true
@@ -16236,7 +16245,6 @@ packages:
   /date-fns/2.29.3:
     resolution: {integrity: sha512-dDCnyH2WnnKusqvZZ6+jA1O51Ibt8ZMRNkDZdyAyK4YfbDwa/cEmuztzG5pk6hqlp9aSBPYcjOlktquahGwGeA==}
     engines: {node: '>=0.11'}
-    dev: false
 
   /date-utils/1.2.21:
     resolution: {integrity: sha512-wJMBjqlwXR0Iv0wUo/lFbhSQ7MmG1hl36iuxuE91kW+5b5sWbase73manEqNH9sOLFAMG83B4ffNKq9/Iq0FVA==}
@@ -18472,7 +18480,7 @@ packages:
     dependencies:
       '@apidevtools/json-schema-ref-parser': 9.0.9
       ajv: 8.11.0
-      ajv-formats: 2.1.1
+      ajv-formats: 2.1.1_ajv@8.11.0
       body-parser: 1.20.0
       content-type: 1.0.4
       deep-freeze: 0.0.1
@@ -19395,8 +19403,8 @@ packages:
   /functions-have-names/1.2.3:
     resolution: {integrity: sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==}
 
-  /gatsby-cli/5.8.0-next.0:
-    resolution: {integrity: sha512-oyWlvplp6N9KHHHGKTzqLyKtzB6KOFyS+88Z4kj2QHvRKWPX0KitO7MOp4Xmc6G8Zqrl8JWNqH9+uyVh0m3+BA==}
+  /gatsby-cli/5.8.0-next.1:
+    resolution: {integrity: sha512-IWp2ytSdo09wXD9jdoxqnVlckNEx1z2QpFdCuJcyiKbyvuRKGm/PSdwEmjuabvarPCuSEbX3A1MQKOigYi0Ppw==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     requiresBuild: true
@@ -19532,7 +19540,7 @@ packages:
       '@parcel/transformer-json': 2.8.3_@parcel+core@2.8.3
     dev: false
 
-  /gatsby-plugin-page-creator/5.8.0-next.0_irjlgbbmdc6sbwac5pl62frsae:
+  /gatsby-plugin-page-creator/5.8.0-next.0_z7kyunzhk3nj7555smr4e43evq:
     resolution: {integrity: sha512-G3NxUJOTZQFt+b2OO0A9yOxfKGiwnUdvpBymob9kJ/YyxLX82ri3xlXPTxp7imQDIbv1BbVRVFV45EVWrWJWKg==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
@@ -19544,10 +19552,10 @@ packages:
       chokidar: 3.5.3
       fs-exists-cached: 1.0.0
       fs-extra: 11.1.0
-      gatsby: 5.8.0-next.0_biqbaboplfbrettd7655fr4n2y
+      gatsby: 5.8.0-next.2_biqbaboplfbrettd7655fr4n2y
       gatsby-core-utils: 4.8.0-next.0
       gatsby-page-utils: 3.8.0-next.0
-      gatsby-plugin-utils: 4.8.0-next.0_irjlgbbmdc6sbwac5pl62frsae
+      gatsby-plugin-utils: 4.8.0-next.0_z7kyunzhk3nj7555smr4e43evq
       gatsby-telemetry: 4.8.0-next.0
       globby: 11.1.0
       lodash: 4.17.21
@@ -19557,7 +19565,7 @@ packages:
       - supports-color
     dev: false
 
-  /gatsby-plugin-typescript/5.8.0-next.0_gatsby@5.8.0-next.0:
+  /gatsby-plugin-typescript/5.8.0-next.0_gatsby@5.8.0-next.2:
     resolution: {integrity: sha512-ofnAJ/oR0VctV8QqKxYPhLWJPO1iz0Ek4U4mZb2YkknRTPKLnQdeAbohucst66BuHcY8zlZTTwZ2cUw+UW1dnQ==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
@@ -19569,13 +19577,13 @@ packages:
       '@babel/plugin-proposal-optional-chaining': 7.20.7_@babel+core@7.20.12
       '@babel/preset-typescript': 7.18.6_@babel+core@7.20.12
       '@babel/runtime': 7.20.13
-      babel-plugin-remove-graphql-queries: 5.8.0-next.0_osdpouujtlfd2op5ubueuc4aqi
-      gatsby: 5.8.0-next.0_biqbaboplfbrettd7655fr4n2y
+      babel-plugin-remove-graphql-queries: 5.8.0-next.0_u7ozffrhm6o22jdb3uxxwj2pzm
+      gatsby: 5.8.0-next.2_biqbaboplfbrettd7655fr4n2y
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /gatsby-plugin-utils/4.8.0-next.0_irjlgbbmdc6sbwac5pl62frsae:
+  /gatsby-plugin-utils/4.8.0-next.0_z7kyunzhk3nj7555smr4e43evq:
     resolution: {integrity: sha512-Uzj8sP0tzpMF1wvgW7uct7LiSzkIl2bUpWhuJ9BS63mtWohYPAJIgc+kmeCS501C/SZtUz+Iipk5DKp9mjOV1Q==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
@@ -19585,7 +19593,7 @@ packages:
       '@babel/runtime': 7.20.13
       fastq: 1.15.0
       fs-extra: 11.1.0
-      gatsby: 5.8.0-next.0_biqbaboplfbrettd7655fr4n2y
+      gatsby: 5.8.0-next.2_biqbaboplfbrettd7655fr4n2y
       gatsby-core-utils: 4.8.0-next.0
       gatsby-sharp: 1.8.0-next.0
       graphql: 16.6.0
@@ -19664,8 +19672,8 @@ packages:
       - supports-color
     dev: false
 
-  /gatsby/5.8.0-next.0_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-9C7q/Nl8lEIyatk1hryDlUw/TVLsKsJoJ+ZR8Z0t0eE2ulRjpFI3vMFuJLnLQFGfdrWtETrnhZha4NJvTo8Pbw==}
+  /gatsby/5.8.0-next.2_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-DckTpIu9AHHBODu/oqqPXeACNAUk8/QELhEje4Tdn46ZEiJgC7S65FEFYD+6Q38lpfffz0RiM1wSiIPUK0HNfg==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     requiresBuild: true
@@ -19711,7 +19719,7 @@ packages:
       babel-plugin-add-module-exports: 1.0.4
       babel-plugin-dynamic-import-node: 2.3.3
       babel-plugin-lodash: 3.3.4
-      babel-plugin-remove-graphql-queries: 5.8.0-next.0_osdpouujtlfd2op5ubueuc4aqi
+      babel-plugin-remove-graphql-queries: 5.8.0-next.0_u7ozffrhm6o22jdb3uxxwj2pzm
       babel-preset-gatsby: 3.8.0-next.0_pp2vm42zn6vfmnpuhar3irht7i
       better-opn: 2.1.1
       bluebird: 3.7.2
@@ -19753,16 +19761,16 @@ packages:
       find-cache-dir: 3.3.2
       fs-exists-cached: 1.0.0
       fs-extra: 11.1.0
-      gatsby-cli: 5.8.0-next.0
+      gatsby-cli: 5.8.0-next.1
       gatsby-core-utils: 4.8.0-next.0
       gatsby-graphiql-explorer: 3.8.0-next.0
       gatsby-legacy-polyfills: 3.8.0-next.0
       gatsby-link: 5.8.0-next.0_uxzdzcrcylloub4rxar25ny6ra
       gatsby-page-utils: 3.8.0-next.0
       gatsby-parcel-config: 1.8.0-next.0_@parcel+core@2.8.3
-      gatsby-plugin-page-creator: 5.8.0-next.0_irjlgbbmdc6sbwac5pl62frsae
-      gatsby-plugin-typescript: 5.8.0-next.0_gatsby@5.8.0-next.0
-      gatsby-plugin-utils: 4.8.0-next.0_irjlgbbmdc6sbwac5pl62frsae
+      gatsby-plugin-page-creator: 5.8.0-next.0_z7kyunzhk3nj7555smr4e43evq
+      gatsby-plugin-typescript: 5.8.0-next.0_gatsby@5.8.0-next.2
+      gatsby-plugin-utils: 4.8.0-next.0_z7kyunzhk3nj7555smr4e43evq
       gatsby-react-router-scroll: 6.8.0-next.0_uxzdzcrcylloub4rxar25ny6ra
       gatsby-script: 2.8.0-next.0_uxzdzcrcylloub4rxar25ny6ra
       gatsby-telemetry: 4.8.0-next.0
@@ -27253,13 +27261,13 @@ packages:
       enhanced-resolve: 4.5.0
     dev: true
 
-  /postcss-import/15.1.0_postcss@8.4.20:
+  /postcss-import/15.1.0_postcss@8.4.21:
     resolution: {integrity: sha512-hpr+J05B2FVYUAXHeK1YyI267J/dDDhMU6B6civm8hSY1jYJnBXxzKDKDswzJmtLHryrjhnDjqqp/49t8FALew==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       postcss: ^8.0.0
     dependencies:
-      postcss: 8.4.20
+      postcss: 8.4.21
       postcss-value-parser: 4.2.0
       read-cache: 1.0.0
       resolve: 1.22.1
@@ -28048,7 +28056,7 @@ packages:
       postcss: 8.4.21
       postcss-selector-parser: 6.0.10
 
-  /postcss-url/10.1.3_postcss@8.4.20:
+  /postcss-url/10.1.3_postcss@8.4.21:
     resolution: {integrity: sha512-FUzyxfI5l2tKmXdYc6VTu3TWZsInayEKPbiyW+P6vmmIrrb4I6CGX0BFoewgYHLK+oIL5FECEK02REYRpBvUCw==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -28057,7 +28065,7 @@ packages:
       make-dir: 3.1.0
       mime: 2.5.2
       minimatch: 3.0.4
-      postcss: 8.4.20
+      postcss: 8.4.21
       xxhashjs: 0.2.2
     dev: true
 
@@ -29851,7 +29859,7 @@ packages:
     dependencies:
       '@types/json-schema': 7.0.11
       ajv: 8.11.0
-      ajv-formats: 2.1.1
+      ajv-formats: 2.1.1_ajv@8.11.0
       ajv-keywords: 5.1.0_ajv@8.11.0
     dev: true
 
@@ -32335,7 +32343,7 @@ packages:
       buffer: 6.0.3
       chalk: 4.1.2
       cli-highlight: 2.1.11
-      date-fns: 2.28.0
+      date-fns: 2.29.3
       debug: 4.3.4
       dotenv: 16.0.3
       glob: 7.2.3
@@ -32417,7 +32425,7 @@ packages:
       buffer: 6.0.3
       chalk: 4.1.2
       cli-highlight: 2.1.11
-      date-fns: 2.28.0
+      date-fns: 2.29.3
       debug: 4.3.4
       dotenv: 16.0.3
       glob: 7.2.3
