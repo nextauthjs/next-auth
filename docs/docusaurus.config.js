@@ -11,6 +11,7 @@ const providers = fs
   .map((p) => `${coreSrc}/providers/${p}`)
 
 const typedocConfig = require("./typedoc.json")
+// @ts-expect-error
 delete typedocConfig.$schema
 
 /**
