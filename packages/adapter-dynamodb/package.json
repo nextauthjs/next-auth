@@ -29,7 +29,8 @@
     "test:default": "jest",
     "test:custom": "CUSTOM_MODEL=1 jest",
     "test": "pnpm test:default && pnpm test:custom",
-    "build": "tsc"
+    "clean": "rm index.*",
+    "build": "pnpm clean && tsc"
   },
   "files": [
     "README.md",
