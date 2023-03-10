@@ -165,8 +165,7 @@
  * 	}
  *
  * 	// If the request is still here, just proceed as normally
- * 	const response = await resolve(event);
- * 	return response;
+ * 	return resolve(event);
  * }
  *
  * // First handle authentication, then authorization
