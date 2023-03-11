@@ -274,6 +274,13 @@ const docusaurusConfig = {
       "docusaurus-plugin-typedoc",
       {
         ...typedocConfig,
+        ...createTypeDocAdapterConfig("Fauna"),
+      },
+    ],
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        ...typedocConfig,
         id: "typeorm",
         plugin: [require.resolve("./typedoc-mdn-links")],
         watch: process.env.TYPEDOC_WATCH,
