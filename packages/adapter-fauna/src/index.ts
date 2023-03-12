@@ -132,7 +132,7 @@ export function query(f: FaunaClient, format: (...args: any) => any) {
  *
  * You can find the Fauna schema and seed information in the docs at [authjs.dev/reference/adapters/fauna](https://authjs.dev/reference/adapters/fauna).
  *
- * ### Configure AuthJS
+ * ### Configure Auth.js
  *
  * ```javascript title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"

@@ -133,7 +133,7 @@ function _id(hex?: string) {
  * export default clientPromise
  * ```
  *
- * ### Configure AuthJS
+ * ### Configure Auth.js
  *
  * ```js
  * import NextAuth from "next-auth"
