@@ -83,7 +83,7 @@ export interface EmailConfig extends CommonProviderOptions {
 export type EmailProviderType = "email"
 
 /** TODO: */
-export function Email(config: EmailConfig): EmailConfig {
+export default function Email(config: EmailConfig): EmailConfig {
   return {
     id: "email",
     type: "email",

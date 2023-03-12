@@ -5,11 +5,6 @@
    <p align="center">
    Open Source. Full Stack. Own Your Data.
    </p>
-   <!-- <p align="center" style="align: center;">
-      <img src="https://github.com/nextauthjs/next-auth/actions/workflows/release.yml/badge.svg?branch=main" alt="CI Test" />
-      <img src="https://img.shields.io/bundlephobia/minzip/@next-auth/prisma-adapter" alt="Bundle Size"/>
-      <img src="https://img.shields.io/npm/v/@next-auth/prisma-adapter" alt="@next-auth/prisma-adapter Version" />
-   </p> -->
 </p>
 
 ## Overview
@@ -60,7 +55,7 @@ The simplest way to use Dgraph is by copy pasting the unsecure schema into your 
 
 ## Securing your database
 
-Fore sake of security and mostly if your client directly communicate with the graphql server you obviously want to restrict the access to the types used by next-auth. That's why you see a lot of @auth directive alongide this types in the schema.
+Fore sake of security and mostly if your client directly communicate with the graphql server you obviously want to restrict the access to the types used by next-auth. That's why you see a lot of @auth directive alongside this types in the schema.
 
 ### Dgraph.Authorization
 
@@ -151,7 +146,6 @@ type User
 ## Contributing
 
 We're open to all community contributions! If you'd like to contribute in any way, please read our [Contributing Guide](https://github.com/nextauthjs/.github/blob/main/CONTRIBUTING.md).
-
 
 ## License
 

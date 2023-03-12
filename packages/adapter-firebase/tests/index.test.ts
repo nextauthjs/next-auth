@@ -7,7 +7,7 @@ import {
   getDoc,
   getOneDoc,
   mapFieldsFactory,
-} from "../src/utils"
+} from "../src"
 
 describe.each([
   { namingStrategy: "snake_case" },

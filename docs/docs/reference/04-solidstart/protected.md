@@ -60,7 +60,7 @@ import Protected from "~/components/Protected";
 export const { routeData, Page } = Protected((session) => {
   return (
     <main class="flex flex-col gap-2 items-center">
-      <h1>This is a proteced route</h1>
+      <h1>This is a protected route</h1>
     </main>
   );
 });
@@ -110,7 +110,7 @@ And now you can easily create a protected route:
 export default () => {
   return (
     <main class="flex flex-col gap-2 items-center">
-      <h1>This is a proteced route</h1>
+      <h1>This is a protected route</h1>
     </main>
   );
 };

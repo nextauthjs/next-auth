@@ -1,7 +1,11 @@
 import { AccountNotLinked } from "../errors.js"
 import { fromDate } from "./utils/date.js"
 
-import type { AdapterSession, AdapterUser } from "../adapters.js"
+import type {
+  AdapterAccount,
+  AdapterSession,
+  AdapterUser,
+} from "../adapters.js"
 import type { Account, InternalOptions, User } from "../types.js"
 import type { JWT } from "../jwt.js"
 import type { OAuthConfig } from "../providers/index.js"
@@ -15,20 +19,20 @@ import type { SessionToken } from "./cookie.js"
  * It prevents insecure behaviour, such as linking OAuth accounts unless a user is
  * signed in and authenticated with an existing valid account.
  *
- * All verification (e.g. OAuth flows or email address verificaiton flows) are
- * done prior to this handler being called to avoid additonal complexity in this
+ * All verification (e.g. OAuth flows or email address verification flows) are
+ * done prior to this handler being called to avoid additional complexity in this
  * handler.
  */
 export async function handleLogin(
   sessionToken: SessionToken,
   _profile: User | AdapterUser | { email: string },
-  account: Account | null,
+  _account: AdapterAccount | Account | null,
   options: InternalOptions
 ) {
   // Input validation
-  if (!account?.providerAccountId || !account.type)
+  if (!_account?.providerAccountId || !_account.type)
     throw new Error("Missing or invalid provider account")
-  if (!["email", "oauth", "oidc"].includes(account.type))
+  if (!["email", "oauth", "oidc"].includes(_account.type))
     throw new Error("Provider not supported")
 
   const {
@@ -41,10 +45,11 @@ export async function handleLogin(
   // If no adapter is configured then we don't have a database and cannot
   // persist data; in this mode we just return a dummy session object.
   if (!adapter) {
-    return { user: _profile as User, account }
+    return { user: _profile as User, account: _account as Account }
   }
 
   const profile = _profile as AdapterUser
+  const account = _account as AdapterAccount
 
   const {
     createUser,
@@ -203,7 +208,7 @@ export async function handleLogin(
         // accounts (by email or provider account id)...
         //
         // If no account matching the same [provider].id or .email exists, we can
-        // create a new account for the user, link it to the OAuth acccount and
+        // create a new account for the user, link it to the OAuth account and
         // create a new session for them so they are signed in with it.
         const { id: _, ...newUser } = { ...profile, emailVerified: null }
         user = await createUser(newUser)

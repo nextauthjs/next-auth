@@ -1,3 +1,5 @@
+// @ts-check
+
 const fs = require("fs")
 const path = require("path")
 
@@ -9,7 +11,28 @@ const providers = fs
   .map((p) => `${coreSrc}/providers/${p}`)
 
 const typedocConfig = require("./typedoc.json")
+// @ts-expect-error
 delete typedocConfig.$schema
+
+/**
+ * @param {string} name
+ * @returns Record<string, any>
+ */
+function createTypeDocAdapterConfig(name) {
+  const slug = name.toLowerCase().replace(" ", "-")
+
+  return {
+    id: slug,
+    plugin: [require.resolve("./typedoc-mdn-links")],
+    watch: process.env.TYPEDOC_WATCH,
+    entryPoints: [`../packages/adapter-${slug}/src/index.ts`],
+    tsconfig: `../packages/adapter-${slug}/tsconfig.json`,
+    out: `reference/adapter/${slug}`,
+    sidebar: {
+      indexLabel: name,
+    },
+  }
+}
 
 /** @type {import("@docusaurus/types").Config} */
 const docusaurusConfig = {
@@ -230,15 +253,50 @@ const docusaurusConfig = {
       "docusaurus-plugin-typedoc",
       {
         ...typedocConfig,
-        id: "firebase-adapter",
+        ...createTypeDocAdapterConfig("Firebase"),
+      },
+    ],
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        ...typedocConfig,
+        ...createTypeDocAdapterConfig("Dgraph"),
+      },
+    ],
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        ...typedocConfig,
+        ...createTypeDocAdapterConfig("Prisma"),
+      },
+    ],
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        ...typedocConfig,
+        id: "typeorm",
         plugin: [require.resolve("./typedoc-mdn-links")],
         watch: process.env.TYPEDOC_WATCH,
-        entryPoints: ["../packages/adapter-firebase/src/index.ts"],
-        tsconfig: "../packages/adapter-firebase/tsconfig.json",
-        out: "reference/adapter/firebase",
+        entryPoints: [`../packages/adapter-typeorm-legacy/src/index.ts`],
+        tsconfig: `../packages/adapter-typeorm-legacy/tsconfig.json`,
+        out: `reference/adapter/typeorm`,
         sidebar: {
-          indexLabel: "Firebase",
+          indexLabel: "TypeORM",
         },
+      },
+    ],
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        ...typedocConfig,
+        ...createTypeDocAdapterConfig("DynamoDB"),
+      },
+    ],
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        ...typedocConfig,
+        ...createTypeDocAdapterConfig("MongoDB"),
       },
     ],
   ],
