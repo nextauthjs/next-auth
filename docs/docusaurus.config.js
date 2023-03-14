@@ -241,7 +241,7 @@ const docusaurusConfig = {
         ...typedocConfig,
         id: "astro",
         plugin: ["./tyepdoc"],
-        entryPoints: ["index.ts", "client.ts"].map(
+        entryPoints: ["index.ts", "client.ts", "server.ts", "components.d.ts"].map(
           (e) => `../packages/frameworks-astro/${e}`
         ),
         tsconfig: "../packages/frameworks-astro/tsconfig.json",
