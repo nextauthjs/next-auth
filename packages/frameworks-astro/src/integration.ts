@@ -26,6 +26,7 @@ export default (config: AstroAuthConfig): AstroIntegration => ({
       config.prefix ??= "/api/auth"
 
       if (config.injectEndpoints !== false) {
+        // @ts-ignore docusaurus doesn't like this
         const currentDir = dirname(import.meta.url)
         injectRoute({
           pattern: config.prefix + "/[...astroAuth]",

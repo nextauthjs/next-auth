@@ -1,28 +1,3 @@
-/**
- * > **caution**
- * > `auth-astro` is currently experimental. Be aware of breaking changes between versions.
- *
- *
- * Astro Auth is the unofficial Astro integration for Auth.js.
- * It provides a simple way to add authentication to your Astro site in a few lines of code.
- *
- * ## Installation
- *
- * `auth-astro` requires building your site in `server` mode with a platform adaper like `@astrojs/node`.
- * ```js
- * // astro.config.mjs
- * export default defineConfig({
- *   output: "server",
- *   adapter: node({
- *     mode: 'standalone'
- *   })
- * });
- * ```
- *
- * ```bash npm2yarn2pnpm
- * npm install @auth/core @auth/astro
- * ```
- */
 import { Auth } from '@auth/core'
 import type { AuthConfig, AuthAction, Session } from '@auth/core/types'
 import { type Cookie, parseString, splitCookiesString } from 'set-cookie-parser'
@@ -101,6 +76,10 @@ function AstroAuthHandler(prefix: string, options = authOptions) {
 
 /**
  * Creates a set of Astro endpoints for authentication.
+ * 
+ * :::caution
+ * This function is not meant to be used directly. Instead, use the [integration](/reference/astro/modules/main).
+ * :::
  *
  * @example
  * ```ts
@@ -119,6 +98,7 @@ function AstroAuthHandler(prefix: string, options = authOptions) {
  */
 export function AstroAuth(options = authOptions) {
 	const { prefix = '/api/auth', ...authConfig } = options
+  // @ts-ignore docusaurus doesn't like this
 	const { AUTH_SECRET, AUTH_TRUST_HOST, VERCEL, NODE_ENV } = import.meta.env
 
 	authConfig.secret ??= AUTH_SECRET
@@ -148,6 +128,7 @@ export async function getSession(
 	req: Request,
 	options = authOptions
 ): Promise<Session | null> {
+  // @ts-ignore docusaurus doesn't like this
 	options.secret ??= import.meta.env.AUTH_SECRET
 	options.trustHost ??= true
 
