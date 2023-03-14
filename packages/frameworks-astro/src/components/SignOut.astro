@@ -1,0 +1,28 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+import type { SignOutParams } from 'next-auth/react/types';
+
+interface Props extends HTMLAttributes<'button'> {
+  params?: SignOutParams<true>
+}
+
+const key = Math.random().toString(36).slice(2, 11)
+
+const { params, ...attrs } = Astro.props
+attrs.class = `signout-${key} ${attrs.class ?? ''}`
+---
+
+<button {...attrs}>
+  <slot/>
+</button>
+
+<script>
+  import { signOut } from '../../client'
+  // @ts-ignore
+  window.signOut = signOut
+</script>
+
+<script define:vars={{params, key}}>
+  // @ts-ignore
+  document.querySelector(`.signout-${key}`)?.addEventListener('click', () => signOut(params))
+</script>

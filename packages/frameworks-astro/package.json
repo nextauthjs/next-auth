@@ -10,6 +10,8 @@
     "oidc",
     "passwordless",
     "astro",
+    "interation",
+    "withastro",
     "astro-component"
   ],
   "repository": "https://github.com/nextauthjs/next-auth.git",
@@ -20,16 +22,18 @@
   "devDependencies": {
     "@types/cookie": "0.5.1",
     "@types/set-cookie-parser": "^2.4.2",
-    "astro": "^2.0.0-beta.2",
+    "astro": "^2.1.2",
     "next-auth": "workspace:*",
-    "typescript": "^4.9.3"
+    "typescript": "^4.9.5",
+    "vite": "^4.1.4"
   },
   "dependencies": {
     "@auth/core": "workspace:*",
-    "set-cookie-parser": "^2.5.1"
+    "set-cookie-parser": "^2.5.1",
+    "cookie": "0.5.0"
   },
   "peerDependencies": {
-    "astro": "^2.0.0-beta.2"
+    "astro": "^2.1.2"
   },
   "type": "module",
   "types": "./index.ts",
@@ -46,11 +50,19 @@
       "types": "./components.ts",
       "import": "./components.ts"
     },
+    "./server": {
+      "types": "./server.ts",
+      "import": "./server.ts"
+    },
     "./package.json": "./package.json"
+  },
+  "engines": {
+    "node": ">=17.4"
   },
   "files": [
     "client.*",
     "index.*",
+    "server.*",
     "components.*",
     "src"
   ]

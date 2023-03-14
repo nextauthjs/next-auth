@@ -1,8 +1,8 @@
 ---
-import { type AstroAuthConfig, getSession } from '..'
+import { type AstroAuthConfig, getSession } from '../../server'
 
 interface Props {
-  authOpts: AstroAuthConfig
+  authOpts?: AstroAuthConfig
 }
 
 const { authOpts } = Astro.props as Props

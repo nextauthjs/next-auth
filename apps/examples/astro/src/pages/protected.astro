@@ -1,12 +1,9 @@
 ---
-import { getSession } from "@auth/astro"
-import { authOpts } from "./api/auth/[...astroAuth]";
+import { getSession } from "@auth/astro/server"
 
-let session = await getSession(Astro.request, authOpts)
+let session = await getSession(Astro.request)
 
-if (!session) {
-  return Astro.redirect("/")
-}
+if (!session) return Astro.redirect("/")
 ---
 
 <p>

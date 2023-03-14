@@ -1,20 +1,21 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import type { Session } from '@auth/core/types';
-import { Auth, Signin, Signout } from '@auth/astro/components';
-import { authOpts } from './api/auth/[...astroAuth]';
+import { Auth, SignIn, SignOut } from '@auth/astro/components';
+import { getSession } from '@auth/astro/server'
+let session = await getSession(Astro.request);
 ---
 
 <Layout title="Welcome to Astro Auth">
-  <Auth authOpts={authOpts}>
+  <Auth>
     {(session: Session) => 
       <main>
         <h1>Astro + AuthJS</h1>
         <p>
           <a href="/protected">Protected Route</a>
         </p>
-        <Signin provider="github">Login</Signin>
-        <Signout>Logout</Signout>
+        <SignIn>Login</SignIn>
+        <SignOut>Logout</SignOut>
         <p>
           {session ? `Logged in as ${session.user?.name}` : 'Not logged in'}
         </p>
