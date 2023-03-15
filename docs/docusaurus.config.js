@@ -11,6 +11,7 @@ const providers = fs
   .map((p) => `${coreSrc}/providers/${p}`)
 
 const typedocConfig = require("./typedoc.json")
+// @ts-expect-error
 delete typedocConfig.$schema
 
 /**
@@ -19,6 +20,7 @@ delete typedocConfig.$schema
  */
 function createTypeDocAdapterConfig(name) {
   const slug = name.toLowerCase().replace(" ", "-")
+
   return {
     id: slug,
     plugin: [require.resolve("./typedoc-mdn-links")],
@@ -266,6 +268,35 @@ const docusaurusConfig = {
       {
         ...typedocConfig,
         ...createTypeDocAdapterConfig("Prisma"),
+      },
+    ],
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        ...typedocConfig,
+        id: "typeorm",
+        plugin: [require.resolve("./typedoc-mdn-links")],
+        watch: process.env.TYPEDOC_WATCH,
+        entryPoints: [`../packages/adapter-typeorm-legacy/src/index.ts`],
+        tsconfig: `../packages/adapter-typeorm-legacy/tsconfig.json`,
+        out: `reference/adapter/typeorm`,
+        sidebar: {
+          indexLabel: "TypeORM",
+        },
+      },
+    ],
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        ...typedocConfig,
+        ...createTypeDocAdapterConfig("DynamoDB"),
+      },
+    ],
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        ...typedocConfig,
+        ...createTypeDocAdapterConfig("MongoDB"),
       },
     ],
   ],

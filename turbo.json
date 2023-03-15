@@ -2,7 +2,8 @@
   "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
     "build": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**/*"]
     },
     "next-auth#build": {
       "dependsOn": ["^build"],
@@ -14,16 +15,20 @@
         "next/**",
         "providers/**",
         "react/**",
-        "index.d.ts",
-        "index.js",
-        "adapters.d.ts",
-        "middleware.d.ts",
-        "middleware.js"
+        "*.js",
+        "*.d.ts"
       ]
     },
     "@auth/core#build": {
       "dependsOn": ["^build"],
-      "outputs": ["lib/**", "providers/**", "*.js", "*.d.ts", "*.d.ts.map"]
+      "outputs": [
+        "lib/**/*",
+        "providers/**/*",
+        "*.js",
+        "*.d.ts",
+        "*.d.ts.map",
+        "src/lib/pages/styles.ts"
+      ]
     },
     "@auth/sveltekit#build": {
       "dependsOn": ["^build"],
@@ -49,11 +54,22 @@
       "cache": false
     },
     "docs#build": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "@auth/core#build",
+        "@auth/sveltekit#build",
+        "@next-auth/firebase-adapter#build",
+        "@next-auth/dgraph-adapter#build",
+        "@next-auth/prisma-adapter#build",
+        "@next-auth/mongodb-adapter#build",
+        "@next-auth/typeorm-legacy-adapter#build",
+        "@next-auth/dynamodb-adapter#build",
+        "next-auth#build"
+      ],
       "outputs": [
-        "build",
-        "docs/reference/core",
-        "docs/reference/sveltekit",
+        ".docusaurus/**/*",
+        "build/**/*",
+        "docs/reference/core/**/*",
+        "docs/reference/sveltekit/**/*",
         "docs/reference/adapter/**"
       ]
     }

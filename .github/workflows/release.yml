@@ -3,10 +3,10 @@ name: Release
 on:
   push:
     branches:
-      - "main"
-      - "beta"
-      - "next"
-      - "3.x"
+      - main
+      - beta
+      - next
+      - 3.x
   pull_request:
 
 jobs:
@@ -24,7 +24,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
       - name: Run tests
@@ -74,7 +73,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
       - name: Publish to npm and GitHub
@@ -99,7 +97,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
       - name: Determine version

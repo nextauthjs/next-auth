@@ -1,6 +1,5 @@
 # Misc
 .DS_Store
-.npmrc
 .eslintcache
 .env
 .env.local

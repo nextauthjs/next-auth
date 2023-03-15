@@ -165,10 +165,7 @@
  * 	}
  *
  * 	// If the request is still here, just proceed as normally
- * 	const result = await resolve(event, {
- * 		transformPageChunk: ({ html }) => html
- * 	});
- * 	return result;
+ * 	return resolve(event);
  * }
  *
  * // First handle authentication, then authorization
