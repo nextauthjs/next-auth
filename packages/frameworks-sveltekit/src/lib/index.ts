@@ -233,7 +233,7 @@ export interface SvelteKitAuthConfig extends AuthConfig {
   /**
    * Defines the base path for the auth routes.
    * If you change the default value,
-   * you must also update the callback URL used by the [providers](https://authjs.dev/reference/core/modules/providers).
+   * you must also update the callback URL used by the [providers](https://authjs.dev/reference/core/providers).
    *
    * @default "/auth"
    */
