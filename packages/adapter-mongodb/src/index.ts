@@ -204,7 +204,7 @@ export function MongoDBAdapter(
       const userId = _id(id)
       const m = await db
       await Promise.all([
-        m.A.deleteMany({ userId }),
+        m.A.deleteMany({ userId: userId as any }),
         m.S.deleteMany({ userId: userId as any }),
         m.U.deleteOne({ _id: userId }),
       ])
