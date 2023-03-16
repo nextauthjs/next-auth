@@ -98,7 +98,7 @@ function _id(hex?: string) {
  * npm install next-auth @next-auth/mongodb-adapter mongodb
  * ```
  *
- * ### Add the Mongo client
+ * ### Add the MongoDB client
  *
  * ```ts
  * // This approach is taken from https://github.com/vercel/next.js/tree/canary/examples/with-mongodb
