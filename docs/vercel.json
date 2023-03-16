@@ -81,6 +81,11 @@
       "permanent": true
     },
     {
+      "source": "/adapters/fauna",
+      "destination": "https://authjs.dev/reference/adapter/fauna",
+      "permanent": true
+    },
+    {
       "source": "/tutorials/refresh-token-rotation",
       "destination": "https://authjs.dev/guides/basics/refresh-token-rotation",
       "permanent": true
