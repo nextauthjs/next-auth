@@ -57,12 +57,13 @@
       "dependsOn": [
         "@auth/core#build",
         "@auth/sveltekit#build",
-        "@next-auth/firebase-adapter#build",
         "@next-auth/dgraph-adapter#build",
-        "@next-auth/prisma-adapter#build",
-        "@next-auth/mongodb-adapter#build",
-        "@next-auth/typeorm-legacy-adapter#build",
         "@next-auth/dynamodb-adapter#build",
+        "@next-auth/fauna-adapter#build",
+        "@next-auth/firebase-adapter#build",
+        "@next-auth/mongodb-adapter#build",
+        "@next-auth/prisma-adapter#build",
+        "@next-auth/typeorm-legacy-adapter#build",
         "next-auth#build"
       ],
       "outputs": [
