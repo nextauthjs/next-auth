@@ -11,19 +11,20 @@ When using a database, you can still use JWT for session handling for fast acces
 
 We have a list of official adapters that are distributed as their own packages under the `@next-auth/{name}-adapter` namespace. Their source code is available in their various adapters package directories at [`nextauthjs/next-auth`](https://github.com/nextauthjs/next-auth/tree/main/packages).
 
-- [`xata`](./xata)
-- [`prisma`](./prisma)
-- [`fauna`](./fauna)
-- [`dynamodb`](./dynamodb)
-- [`firebase`](./firebase)
-- [`pouchdb`](./pouchdb)
-- [`mongodb`](./mongodb)
-- [`neo4j`](./neo4j)
-- [`typeorm-legacy`](./typeorm)
-- [`sequelize`](./sequelize)
-- [`supabase`](./supabase)
-- [`dgraph`](./dgraph)
-- [`upstash-redis`](./upstash-redis)
+- [`dgraph`](https://authjs.dev/reference/adapter/dgraph)
+- [`dynamodb`](https://authjs.dev/reference/adapter/dynamodb)
+- [`fauna`](https://authjs.dev/reference/adapter/fauna)
+- [`firebase`](https://authjs.dev/reference/adapter/firebase)
+- [`mongodb`](https://authjs.dev/reference/adapter/mongodb)
+- [`prisma`](https://authjs.dev/reference/adapter/prisma)
+- [`typeorm-legacy`](https://authjs.dev/reference/adapter/typeorm)
+- [`MikroORM`](https://authjs.dev/reference/adapters/mikro-orm)
+- [`neo4j`](https://authjs.dev/reference/adapters/neo4j)
+- [`pouchdb`](https://authjs.dev/reference/adapters/pouchdb)
+- [`sequelize`](https://authjs.dev/reference/adapters/sequelize)
+- [`supabase`](https://authjs.dev/reference/adapters/supabase)
+- [`upstash-redis`](https://authjs.dev/reference/adapters/upstash-redis)
+- [`xata`](https://authjs.dev/reference/adapters/xata)
 
 ## Custom Adapter
 

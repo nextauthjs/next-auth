@@ -3,7 +3,7 @@ id: fullstack
 title: Fullstack
 ---
 
-### [Refresh Token Rotation](/tutorials/refresh-token-rotation)
+### [Refresh Token Rotation](https://authjs.dev/guides/basics/refresh-token-rotation)
 
 - How to implement refresh token rotation.
 
@@ -21,7 +21,7 @@ title: Fullstack
 
 ## Database
 
-### [Custom models with TypeORM](/adapters/typeorm#custom-models)
+### [Custom models with TypeORM](https://authjs.dev/reference/adapter/typeorm#custom-models)
 
 - How to use models with custom properties using the TypeORM adapter.
 
@@ -29,6 +29,6 @@ title: Fullstack
 
 - How to create a custom adapter, to use any database to fetch and store user / account data.
 
-### [Adding role based login to database session strategy](/tutorials/role-based-login-strategy)
+### [Adding role based login to database session strategy](https://authjs.dev/guides/basics/role-based-access-control)
 
 - Implement a role based login system by adding a custom session callback.

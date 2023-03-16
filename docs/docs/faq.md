@@ -207,7 +207,7 @@ NextAuth.js records Refresh Tokens and Access Tokens on sign in (if supplied by 
 
 You can then look them up from the database or persist them to the JSON Web Token.
 
-Note: NextAuth.js does not currently handle Access Token rotation for OAuth providers for you, however you can check out [this tutorial](/tutorials/refresh-token-rotation) if you want to implement it.
+Note: NextAuth.js does not currently handle Access Token rotation for OAuth providers for you, however you can check out [this tutorial](https://authjs.dev/guides/basics/refresh-token-rotation) if you want to implement it.
 
 We also have an [example repository](https://github.com/nextauthjs/next-auth-refresh-token-example) / project based upon NextAuth.js v4 where we demonstrate how to use a refresh token to refresh the provided access token.
 
