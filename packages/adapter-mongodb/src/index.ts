@@ -82,8 +82,7 @@ export const format = {
   },
 }
 
-/** Converts from string to ObjectId */
-export function _id(hex?: string) {
+function _id(hex?: string) {
   if (hex?.length !== 24) return new ObjectId()
   return new ObjectId(hex)
 }
@@ -99,7 +98,7 @@ export function _id(hex?: string) {
  * npm install next-auth @next-auth/mongodb-adapter mongodb
  * ```
  *
- * ### Add `lib/mongodb.ts`
+ * ### Add the MongoDB client
  *
  * ```ts
  * // This approach is taken from https://github.com/vercel/next.js/tree/canary/examples/with-mongodb
@@ -134,7 +133,7 @@ export function _id(hex?: string) {
  * export default clientPromise
  * ```
  *
- * ### Configure `pages/api/auth/[...nextauth].js`
+ * ### Configure Auth.js
  *
  * ```js
  * import NextAuth from "next-auth"
