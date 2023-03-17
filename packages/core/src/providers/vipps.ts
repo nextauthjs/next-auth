@@ -56,6 +56,27 @@ export default function Vipps<P extends VippsProfile>(
     client: {
       token_endpoint_auth_method: "client_secret_post",
     },
+    userinfo: {
+      async request({ tokens }) {
+        const response = await fetch(
+          "https://apitest.vipps.no/vipps-userinfo-api/userinfo",
+          {
+            headers: {
+              Authorization: `Bearer ${tokens.access_token}`,
+            },
+          }
+        )
+
+        return await response.json()
+      },
+    },
+    profile(profile) {
+      return {
+        id: profile.sub,
+        name: profile.name,
+        email: profile.email,
+      }
+    },
     style: {
       bgDark: "#f05c18",
       bg: "#f05c18",
