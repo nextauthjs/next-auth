@@ -335,7 +335,8 @@ In addition, you can define a logo URL in `theme.logo` which will be rendered ab
 theme: {
   colorScheme: "auto", // "auto" | "dark" | "light"
   brandColor: "", // Hex color code
-  logo: "" // Absolute URL to image
+  logo: "", // Absolute URL to image
+  text: "", // Plain text to show below logo
 }
 ```
 
