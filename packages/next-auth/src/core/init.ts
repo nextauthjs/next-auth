@@ -67,6 +67,7 @@ export async function init({
     theme: {
       colorScheme: "auto",
       logo: "",
+      text: "",
       brandColor: "",
       buttonText: "",
     },
