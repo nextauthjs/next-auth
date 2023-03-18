@@ -45,7 +45,7 @@ export default Auth(new Request("https://example.com"), {
         // Save the access token and refresh token in the JWT on the initial login
         return {
           access_token: account.access_token,
-          expires_at: Math.floor(Date.now() / 1000 + account.expires_in),
+          expires_at: Math.floor(Date.now() / 1000 + account.expires_in * 1000),
           refresh_token: account.refresh_token,
         }
       } else if (Date.now() < token.expires_at * 1000) {
@@ -74,7 +74,7 @@ export default Auth(new Request("https://example.com"), {
           return {
             ...token, // Keep the previous token properties
             access_token: tokens.access_token,
-            expires_at: Math.floor(Date.now() / 1000 + tokens.expires_in),
+            expires_at: Math.floor(Date.now() / 1000 + tokens.expires_in * 1000),
             // Fall back to old refresh token, but note that
             // many providers may only allow using a refresh token once.
             refresh_token: tokens.refresh_token ?? token.refresh_token,
@@ -159,7 +159,7 @@ export default Auth(new Request("https://example.com"), {
           await prisma.account.update({
             data: {
               access_token: tokens.access_token,
-              expires_at: Math.floor(Date.now() / 1000 + tokens.expires_in),
+              expires_at: Math.floor(Date.now() / 1000 + tokens.expires_in * 1000),
               refresh_token: tokens.refresh_token ?? google.refresh_token,
             },
             where: {
