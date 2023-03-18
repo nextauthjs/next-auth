@@ -5,7 +5,7 @@ title: Kysely
 
 # Kysely
 
-To use this Adapter, you need to install kysely, pg (for PostgreSQL with the examples below), and the separate `@next-auth/kysely-adapter` package.
+To use this Adapter, you need to install kysely, a dialect of your choice (we're using [`pg`](https://www.npmjs.com/package/pg) for PostgreSQL with the examples below), and the separate `@next-auth/kysely-adapter` package.
 
 This Adapter supports the same dialects that Kysely (as of v0.21.6) supports: PostgreSQL, MySQL, and SQLite.
 
@@ -44,7 +44,7 @@ This Adapter exports a wrapper around the original Kysely class, `AuthedKysely`,
 :::note
 An alternative to manually defining types is generating them from the database schema using [kysely-codegen](https://github.com/RobinBlomberg/kysely-codegen). When using the generated types with AuthedKysely, import `Codegen` and pass it as the second generic arg:
 
-```
+```ts
 import type { Codegen } from "@next-auth/kysely-adapter"
 new AuthedKysely<Database, Codegen>(...)
 
