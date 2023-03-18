@@ -49,7 +49,7 @@ export default function renderPage(params: RenderPageParams) {
           ...query,
           ...props,
         }),
-        title: "Sign In",
+        title: theme.title.signin,
       })
     },
     signout(props?: any) {
@@ -60,19 +60,19 @@ export default function renderPage(params: RenderPageParams) {
           theme,
           ...props,
         }),
-        title: "Sign Out",
+        title: theme.title.signout,
       })
     },
     verifyRequest(props?: any) {
       return send({
         html: VerifyRequestPage({ url, theme, ...props }),
-        title: "Verify Request",
+        title: theme.title.verifyrequest,
       })
     },
     error(props?: { error?: ErrorType }) {
       return send({
         ...ErrorPage({ url, theme, ...props }),
-        title: "Error",
+        title: theme.title.error,
       })
     },
   }
