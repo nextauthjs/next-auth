@@ -88,6 +88,7 @@ export default function SigninPage(props: SignInServerPageParams) {
         />
       )}
       {theme.logo && <img src={theme.logo} alt="Logo" className="logo" />}
+      {theme.text && <h1 style={{ paddingTop: "5px", fontWeight: "bold", fontSize: "larger" }}>{theme.text}</h1>}
       <div className="card">
         {error && (
           <div className="error">
