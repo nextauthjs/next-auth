@@ -14,7 +14,7 @@ mongodb: ["packages/adapter-mongodb/**/*"]
 neo4j: ["packages/adapter-neo4j/**/*"]
 playgrounds: ["apps/playgrounds/**/*"]
 pouchdb: ["packages/adapter-pouchdb/**/*"]
-prisma: ["packages/adapter-prisma/**/*"],
+prisma: ["packages/adapter-prisma/**/*"]
 kysely: ["packages/adapter-kysely/**/*"]
 providers: ["packages/core/src/providers/**/*"]
 sequelize: ["packages/adapter-sequelize/**/*"]

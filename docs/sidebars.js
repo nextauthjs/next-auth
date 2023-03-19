@@ -51,6 +51,7 @@ module.exports = {
       link: { type: "doc", id: "reference/adapters/overview" },
       items: [
         { type: "doc", id: "reference/adapter/prisma/index" },
+        { type: "doc", id: "reference/adapter/kysely/index" },
         { type: "doc", id: "reference/adapter/typeorm/index" },
         { type: "doc", id: "reference/adapter/mongodb/index" },
         { type: "doc", id: "reference/adapter/firebase/index" },

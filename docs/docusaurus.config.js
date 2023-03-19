@@ -274,6 +274,13 @@ const docusaurusConfig = {
       "docusaurus-plugin-typedoc",
       {
         ...typedocConfig,
+        ...createTypeDocAdapterConfig("Kysely"),
+      },
+    ],
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        ...typedocConfig,
         ...createTypeDocAdapterConfig("Fauna"),
       },
     ],
