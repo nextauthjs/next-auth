@@ -29,7 +29,7 @@
     "dist"
   ],
   "peerDependencies": {
-    "kysely": "^0.21.6",
+    "kysely": "^0.23.5",
     "next-auth": "^4"
   },
   "devDependencies": {
@@ -39,7 +39,7 @@
     "@types/pg": "^8.6.5",
     "better-sqlite3": "^7.6.2",
     "jest": "^27.4.3",
-    "kysely": "^0.21.6",
+    "kysely": "^0.23.5",
     "mysql2": "^2.3.3",
     "next-auth": "workspace:*",
     "pg": "^8.7.3"

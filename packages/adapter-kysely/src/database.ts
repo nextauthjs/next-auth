@@ -3,7 +3,7 @@ import type { Generated } from "kysely"
 interface User {
   id: Generated<string>
   name: string | null
-  email: string | null
+  email: string
   emailVerified: Date | string | null
   image: string | null
 }

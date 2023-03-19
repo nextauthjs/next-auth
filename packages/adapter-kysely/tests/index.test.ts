@@ -90,7 +90,7 @@ async function createDatabase(
 
   await createTableWithId(db.schema, dialect, "User")
     .addColumn("name", textColumnType)
-    .addColumn("email", textColumnType, (col) => col.unique())
+    .addColumn("email", textColumnType, (col) => col.unique().notNull())
     .addColumn("emailVerified", dateColumnType, (col) =>
       col.defaultTo(defaultTimestamp)
     )
