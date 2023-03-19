@@ -49,7 +49,7 @@ export default function renderPage(params: RenderPageParams) {
           ...query,
           ...props,
         }),
-        title: theme.title.signin,
+        title: theme.title.signin || "Sign In",
       })
     },
     signout(props?: any) {
@@ -60,19 +60,19 @@ export default function renderPage(params: RenderPageParams) {
           theme,
           ...props,
         }),
-        title: theme.title.signout,
+        title: theme.title.signout || "Sign Out",
       })
     },
     verifyRequest(props?: any) {
       return send({
         html: VerifyRequestPage({ url, theme, ...props }),
-        title: theme.title.verifyrequest,
+        title: theme.title.verifyrequest || "Verify Request",
       })
     },
     error(props?: { error?: ErrorType }) {
       return send({
         ...ErrorPage({ url, theme, ...props }),
-        title: theme.title.error,
+        title: theme.title.error || "Error",
       })
     },
   }
