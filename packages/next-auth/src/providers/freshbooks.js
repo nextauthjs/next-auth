@@ -17,6 +17,15 @@ export default function Freshbooks(options) {
         email: profile.response.email,
       }
     },
+    style: {
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/freshbooks.svg",
+      logoDark:
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/freshbooks-dark.svg",
+      bg: "#fff",
+      text: "#0075dd",
+      bgDark: "#0075dd",
+      textDark: "#fff",
+    },
     ...options,
   }
 }

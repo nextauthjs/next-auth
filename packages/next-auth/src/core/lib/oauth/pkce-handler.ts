@@ -26,13 +26,15 @@ export async function createPKCE(options: InternalOptions<"oauth">): Promise<
   const code_verifier = generators.codeVerifier()
   const code_challenge = generators.codeChallenge(code_verifier)
 
+  const maxAge = cookies.pkceCodeVerifier.options.maxAge ?? PKCE_MAX_AGE
+
   const expires = new Date()
-  expires.setTime(expires.getTime() + PKCE_MAX_AGE * 1000)
+  expires.setTime(expires.getTime() + maxAge * 1000)
 
   // Encrypt code_verifier and save it to an encrypted cookie
   const encryptedCodeVerifier = await jwt.encode({
     ...options.jwt,
-    maxAge: PKCE_MAX_AGE,
+    maxAge,
     token: { code_verifier },
   })
 
@@ -40,7 +42,7 @@ export async function createPKCE(options: InternalOptions<"oauth">): Promise<
     code_challenge,
     code_challenge_method: PKCE_CODE_CHALLENGE_METHOD,
     code_verifier,
-    PKCE_MAX_AGE,
+    maxAge,
   })
 
   return {

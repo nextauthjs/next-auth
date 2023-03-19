@@ -27,7 +27,7 @@ export default async function getAuthorizationUrl({
 
   if (typeof provider.authorization === "string") {
     const parsedUrl = new URL(provider.authorization)
-    const parsedParams = Object.fromEntries(parsedUrl.searchParams.entries())
+    const parsedParams = Object.fromEntries(parsedUrl.searchParams)
     params = { ...params, ...parsedParams }
   } else {
     params = { ...params, ...provider.authorization?.params }
@@ -39,10 +39,7 @@ export default async function getAuthorizationUrl({
   if (provider.version?.startsWith("1.")) {
     const client = oAuth1Client(options)
     const tokens = (await client.getOAuthRequestToken(params)) as any
-    const url = `${
-      // @ts-expect-error
-      provider.authorization?.url ?? provider.authorization
-    }?${new URLSearchParams({
+    const url = `${provider.authorization?.url}?${new URLSearchParams({
       oauth_token: tokens.oauth_token,
       oauth_token_secret: tokens.oauth_token_secret,
       ...tokens.params,
@@ -68,7 +65,7 @@ export default async function getAuthorizationUrl({
     authorizationParams.nonce = nonce.value
     cookies.push(nonce.cookie)
   }
-    
+
   const pkce = await createPKCE(options)
   if (pkce) {
     authorizationParams.code_challenge = pkce.code_challenge

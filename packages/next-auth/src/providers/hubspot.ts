@@ -1,28 +1,25 @@
 import type { OAuthConfig, OAuthUserConfig } from "."
 
 interface HubSpotProfile extends Record<string, any> {
-
-  // TODO: figure out additional fields, for now using 
+  // TODO: figure out additional fields, for now using
   // https://legacydocs.hubspot.com/docs/methods/oauth2/get-access-token-information
 
-  user: string,
-  user_id: string,
+  user: string
+  user_id: string
 
-  hub_domain: string,
-  hub_id: string,
+  hub_domain: string
+  hub_id: string
 }
-
 
 const HubSpotConfig = {
   authorizationUrl: "https://app.hubspot.com/oauth/authorize",
   tokenUrl: "https://api.hubapi.com/oauth/v1/token",
-  profileUrl: "https://api.hubapi.com/oauth/v1/access-tokens"
+  profileUrl: "https://api.hubapi.com/oauth/v1/access-tokens",
 }
 
 export default function HubSpot<P extends HubSpotProfile>(
   options: OAuthUserConfig<P>
 ): OAuthConfig<P> {
-
   return {
     id: "hubspot",
     name: "HubSpot",
@@ -36,7 +33,6 @@ export default function HubSpot<P extends HubSpotProfile>(
         scope: "oauth",
         client_id: options.clientId,
       },
-
     },
     client: {
       token_endpoint_auth_method: "client_secret_post",
@@ -45,34 +41,37 @@ export default function HubSpot<P extends HubSpotProfile>(
     userinfo: {
       url: HubSpotConfig.profileUrl,
       async request(context) {
-
-        const url = `${HubSpotConfig.profileUrl}/${context.tokens.access_token}`;
+        const url = `${HubSpotConfig.profileUrl}/${context.tokens.access_token}`
 
         const response = await fetch(url, {
           headers: {
             "Content-Type": "application/json",
           },
           method: "GET",
-        });
+        })
 
-        const userInfo = await response.json();
-
-        return { userInfo }
-      }
+        return await response.json()
+      },
     },
     profile(profile) {
-
-      const { userInfo } = profile
-
       return {
-        id: userInfo.user_id,
-        name: userInfo.user,
-        email: userInfo.user,
+        id: profile.user_id,
+        name: profile.user,
+        email: profile.user,
 
-        // TODO: get image from profile once it's available 
+        // TODO: get image from profile once it's available
         // Details available https://community.hubspot.com/t5/APIs-Integrations/Profile-photo-is-not-retrieved-with-User-API/m-p/325521
-        image: null
+        image: null,
       }
+    },
+    style: {
+      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/hubspot.svg",
+      logoDark:
+        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/hubspot-dark.svg",
+      bg: "#fff",
+      text: "#ff7a59",
+      bgDark: "#ff7a59",
+      textDark: "#fff",
     },
     options,
   }

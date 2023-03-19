@@ -31,6 +31,7 @@
   --ifm-navbar-background-color: rgba(255, 255, 255, 0.95);
   --ifm-h1-font-size: 3rem;
   --ifm-h1-font-size: 2rem;
+  --docusaurus-announcement-bar-height: auto !important;
 }
 
 html[data-theme="dark"]:root {
@@ -140,19 +141,19 @@ html[data-theme="dark"] hr {
   border-radius: 10rem;
   overflow: visible;
   box-shadow: 0 0 2rem rgba(0, 0, 0, 0.1);
-  background-image: url("/img/mesh-1.jpg");
+  background-image: url("/img/mesh-1.webp");
   background-size: cover;
   background-origin: center;
 }
 
 .home-main .section-features .row .col:nth-child(2) .feature-image-wrapper {
-  background-image: url("/img/mesh-2.jpg");
+  background-image: url("/img/mesh-2.webp");
   background-size: cover;
   background-origin: center;
 }
 
 .home-main .section-features .row .col:nth-child(3) .feature-image-wrapper {
-  background-image: url("/img/mesh-3.jpg");
+  background-image: url("/img/mesh-3.webp");
   background-size: cover;
   background-origin: center;
 }
