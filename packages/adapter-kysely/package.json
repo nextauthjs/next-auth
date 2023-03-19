@@ -35,14 +35,14 @@
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:*",
     "@next-auth/tsconfig": "workspace:*",
-    "@types/better-sqlite3": "^7.6.0",
+    "@types/better-sqlite3": "^7.6.3",
     "@types/pg": "^8.6.5",
-    "better-sqlite3": "^7.6.2",
+    "better-sqlite3": "^8.2.0",
     "jest": "^27.4.3",
     "kysely": "^0.23.5",
-    "mysql2": "^2.3.3",
+    "mysql2": "^3.2.0",
     "next-auth": "workspace:*",
-    "pg": "^8.7.3"
+    "pg": "^8.10.0"
   },
   "jest": {
     "preset": "@next-auth/adapter-test/jest"
