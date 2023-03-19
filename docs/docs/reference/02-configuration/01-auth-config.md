@@ -333,6 +333,12 @@ In addition, you can define a logo URL in `theme.logo` which will be rendered ab
 
 ```js
 theme: {
+  title: {
+    signin: "", // Text to show in title (head) sign in page
+    signout: "", // Text to show in title (head) sign out page
+    verifyrequest: "", // Text to show in title (head) verify request page
+    error: "" // Text to show in title (head) error page
+  },
   colorScheme: "auto", // "auto" | "dark" | "light"
   brandColor: "", // Hex color code
   logo: "", // Absolute URL to image
