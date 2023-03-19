@@ -65,6 +65,12 @@ export async function init({
     debug: false,
     pages: {},
     theme: {
+      title: {
+        signin: "",
+        signout: "",
+        verifyrequest: "",
+        error: "",
+      },
       colorScheme: "auto",
       logo: "",
       text: "",
