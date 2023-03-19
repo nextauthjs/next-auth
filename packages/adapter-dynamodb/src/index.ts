@@ -9,10 +9,10 @@
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install next-auth @next-auth/dgraph-adapter
+ * npm install next-auth @next-auth/dyanamodb-adapter
  * ```
  *
- * @module @next-auth/dgraph-adapter
+ * @module @next-auth/dyanamodb-adapter
  */
 import { v4 as uuid } from "uuid"
 
@@ -160,7 +160,7 @@ export interface DynamoDBAdapterOptions {
  *
  * You can configure your custom table schema by passing the `options` key to the adapter constructor:
  *
- * ```
+ * ```javascript
  * const adapter = DynamoDBAdapter(client, {
  *   tableName: "custom-table-name",
  *   partitionKey: "custom-pk",
@@ -169,6 +169,7 @@ export interface DynamoDBAdapterOptions {
  *   indexPartitionKey: "custom-index-pk",
  *   indexSortKey: "custom-index-sk",
  * })
+ * ```
  **/
 export function DynamoDBAdapter(
   client: DynamoDBDocument,
