@@ -82,23 +82,24 @@ export const format = {
   },
 }
 
-function _id(hex?: string) {
+/** @internal */
+export function _id(hex?: string) {
   if (hex?.length !== 24) return new ObjectId()
   return new ObjectId(hex)
 }
 
 /**
- * ## Basic Usage
+ * #### Basic Usage
  *
  * The MongoDB adapter does not handle connections automatically, so you will have to make sure that you pass the Adapter a `MongoClient` that is connected already. Below you can see an example how to do this.
  *
- * ### Installation
+ * ##### Installation
  *
  * ```bash npm2yarn2pnpm
  * npm install next-auth @next-auth/mongodb-adapter mongodb
  * ```
  *
- * ### Add the MongoDB client
+ * ##### Add the MongoDB client
  *
  * ```ts
  * // This approach is taken from https://github.com/vercel/next.js/tree/canary/examples/with-mongodb
@@ -133,7 +134,7 @@ function _id(hex?: string) {
  * export default clientPromise
  * ```
  *
- * ### Configure Auth.js
+ * ##### Configure Auth.js
  *
  * ```js
  * import NextAuth from "next-auth"
