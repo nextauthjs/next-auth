@@ -148,7 +148,7 @@ export function FirestoreAdapter(
       : { ...config, db: config?.firestore ?? initFirestore(config) }
 
   const preferSnakeCase = namingStrategy === "snake_case"
-  const C = collestionsFactory(db, preferSnakeCase)
+  const C = collectionsFactory(db, preferSnakeCase)
   const mapper = mapFieldsFactory(preferSnakeCase)
 
   return {
@@ -403,7 +403,7 @@ export async function getDoc<T>(
 }
 
 /** @internal */
-export function collestionsFactory(
+export function collectionsFactory(
   db: FirebaseFirestore.Firestore,
   preferSnakeCase = false
 ) {
