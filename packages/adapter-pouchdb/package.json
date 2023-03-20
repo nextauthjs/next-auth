@@ -8,7 +8,6 @@
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
   "author": "jpbourgeon <jeanphilippe.bourgeon@gmail.com> (https://github.com/jpbourgeon)",
-  "main": "dist/index.js",
   "license": "ISC",
   "keywords": [
     "next-auth",
@@ -17,7 +16,6 @@
     "pouchdb"
   ],
   "type": "module",
-  "types": "./index.d.ts",
   "exports": {
     ".": {
       "types": "./index.d.ts",
@@ -29,16 +27,14 @@
     "access": "public"
   },
   "scripts": {
-    "build:wip": "tsc",
-    "build": "tsc",
-    "tdd": "jest --watch",
-    "test:wip": "jest"
+    "build": "pnpm clean && tsc",
+    "clean": "rm -rf index.*",
+    "test": "jest",
+    "test:dev": "jest --watch"
   },
   "files": [
-    "README.md",
-    "index.js",
-    "index.d.ts",
-    "index.d.ts.map",
+    "*.js",
+    "*.d.ts*",
     "src"
   ],
   "peerDependencies": {
@@ -47,7 +43,7 @@
     "pouchdb-find": "^8.0.1"
   },
   "dependencies": {
-    "ulid": "^2.3.0"
+    "ulid": "2.3.0"
   },
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:*",

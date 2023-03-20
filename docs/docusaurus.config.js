@@ -306,6 +306,13 @@ const docusaurusConfig = {
         ...createTypeDocAdapterConfig("MongoDB"),
       },
     ],
+    [
+      "docusaurus-plugin-typedoc",
+      {
+        ...typedocConfig,
+        ...createTypeDocAdapterConfig("PouchDB"),
+      },
+    ],
   ],
 }
 
