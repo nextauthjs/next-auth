@@ -5,7 +5,7 @@
  *  using the <a href="https://firebase.google.com/docs/admin/setup">Firebase Admin SDK</a>
  *  &nbsp;and <a href="https://firebase.google.com/docs/firestore">Firestore</a>.</span>
  * <a href="https://firebase.google.com/">
- *   <img style={{display: "block"}} src="https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/adapter-firebase/logo.svg" height="48" width="48"/>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/firebase.svg" height="48" width="48"/>
  * </a>
  * </div>
  *

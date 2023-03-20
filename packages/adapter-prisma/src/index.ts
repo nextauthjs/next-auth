@@ -2,7 +2,7 @@
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
  *  <p style={{fontWeight: "normal"}}>Official <a href="https://www.prisma.io/docs">Prisma</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://www.prisma.io/">
- *   <img style={{display: "block"}} src="https://raw.githubusercontent.com/nextauthjs/adapters/main/packages/prisma/logo.svg" width="38" />
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/prisma.svg" width="38" />
  *  </a>
  * </div>
  *

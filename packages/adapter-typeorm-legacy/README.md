@@ -4,7 +4,7 @@
     <img height="64px" src="https://authjs.dev/img/logo/logo-sm.png" />
   </a>
   <a href="https://typeorm.io" target="_blank">
-    <img height="64px" src="https://authjs.dev/img/adapters/typeorm.svg"/>
+    <img height="64px" src="https://authjs.dev/img/adapters/typeorm.png"/>
   </a>
   <h3 align="center"><b>TypeORM Adapter</b> - NextAuth.js / Auth.js</a></h3>
   <p align="center" style="align: center;">
