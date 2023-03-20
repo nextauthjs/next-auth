@@ -101,6 +101,11 @@ html[data-theme="dark"] hr {
   border-color: #242526;
 }
 
+/* Docusaurus announcementBar close button */
+.close {
+  color: inherit;
+}
+
 .home-main .code {
   padding: 0;
   height: 100%;
