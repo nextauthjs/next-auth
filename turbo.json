@@ -22,17 +22,18 @@
     "@auth/core#build": {
       "dependsOn": ["^build"],
       "outputs": [
-        "lib/**/*",
-        "providers/**/*",
+        "lib/**",
+        "providers/**",
         "*.js",
         "*.d.ts",
         "*.d.ts.map",
-        "src/lib/pages/styles.ts"
+        "src/lib/pages/styles.ts",
+        "src/providers/oauth-types.ts"
       ]
     },
     "@auth/sveltekit#build": {
       "dependsOn": ["^build"],
-      "outputs": ["client.*", "index.*"]
+      "outputs": [".svelte-kit/**", "client.*", "index.*"]
     },
     "clean": {
       "cache": false
