@@ -1,9 +1,9 @@
 <p align="center">
   <br/>
-  <a href="https://authjs.dev/" target="_blank">
+  <a href="https://authjs.dev" target="_blank">
     <img height="64px" src="https://authjs.dev/img/logo/logo-sm.png" />
   </a>
-  <a href="https://pouchdb.com/" target="_blank">
+  <a href="https://pouchdb.com" target="_blank">
     <img height="64px" src="https://authjs.dev/img/adapters/pouchdb.svg"/>
   </a>
   <h3 align="center"><b>PouchDB Adapter</b> - NextAuth.js / Auth.js</a></h3>
