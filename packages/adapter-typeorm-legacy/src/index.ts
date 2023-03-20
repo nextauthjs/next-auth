@@ -2,7 +2,7 @@
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
  *  <p style={{fontWeight: "normal"}}>Official <a href="https://typeorm.io">TypeORM</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://typeorm.io">
- *   <img style={{display: "block", height: "56px" }} src="https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/adapter-typeorm-legacy/logo.png" />
+ *   <img style={{display: "block", height: "56px" }} src="https://authjs.dev/img/adapters/typeorm.png" />
  *  </a>
  * </div>
  *
