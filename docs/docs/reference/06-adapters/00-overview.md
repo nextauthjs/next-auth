@@ -1,7 +1,10 @@
 ---
-title: Database Adapters
+title: Overview
 ---
 
-:::warning WIP
-`@auth/*-adapter` is work in progress. for the time being, please go to [NextAuth.js Adapters](https://next-auth.js.org/adapters/overview).
+Auth.js / NextAuth.js database adapters.
+
+
+:::warning
+Auth.js (`@auth/*`) support is experimental.
 :::
