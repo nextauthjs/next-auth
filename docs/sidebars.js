@@ -58,7 +58,6 @@ module.exports = {
         "adapters/models",
         "adapters/mikro-orm",
         "adapters/neo4j",
-        "adapters/pouchdb",
         "adapters/sequelize",
         "adapters/supabase",
         "adapters/upstash-redis",
