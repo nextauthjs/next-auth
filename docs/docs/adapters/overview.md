@@ -20,7 +20,7 @@ We have a list of official adapters that are distributed as their own packages u
 - [`typeorm-legacy`](https://authjs.dev/reference/adapter/typeorm)
 - [`MikroORM`](https://authjs.dev/reference/adapters/mikro-orm)
 - [`neo4j`](https://authjs.dev/reference/adapters/neo4j)
-- [`pouchdb`](https://authjs.dev/reference/adapters/pouchdb)
+- [`pouchdb`](https://authjs.dev/reference/adapter/pouchdb)
 - [`sequelize`](https://authjs.dev/reference/adapters/sequelize)
 - [`supabase`](https://authjs.dev/reference/adapters/supabase)
 - [`upstash-redis`](https://authjs.dev/reference/adapters/upstash-redis)
