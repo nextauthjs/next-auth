@@ -1,7 +1,7 @@
 /**
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
  *  <p style={{fontWeight: "normal"}}>Official <a href="https://www.mongodb.com">MongoDB</a> adapter for Auth.js / NextAuth.js.</p>
- *  <a href="https://dgraph.io/">
+ *  <a href="https://www.mongodb.com">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/mongodb.svg" height="30"/>
  *  </a>
  * </div>
