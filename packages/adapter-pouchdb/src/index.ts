@@ -1,7 +1,7 @@
 /**
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
  *  <p style={{fontWeight: "normal"}}>Official <a href="https://pouchdb.com/api.html">PouchDB</a> adapter for Auth.js / NextAuth.js.</p>
- *  <a href="https://www.prisma.io/">
+ *  <a href="https://pouchdb.com">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/pouchdb.svg" width="38" />
  *  </a>
  * </div>
@@ -10,7 +10,6 @@
  *
  * ```bash npm2yarn2pnpm
  * npm install next-auth pouchdb pouchdb-find @next-auth/pouchdb-adapter
- * npm install prisma --save-dev
  * ```
  *
  * @module @next-auth/pouchdb-adapter
