@@ -31,6 +31,7 @@
   --ifm-navbar-background-color: rgba(255, 255, 255, 0.95);
   --ifm-h1-font-size: 3rem;
   --ifm-h1-font-size: 2rem;
+  --docusaurus-announcement-bar-height: auto !important;
 }
 
 html[data-theme="dark"]:root {
@@ -98,6 +99,11 @@ hr {
 
 html[data-theme="dark"] hr {
   border-color: #242526;
+}
+
+/* Docusaurus announcementBar close button */
+.close {
+  color: inherit;
 }
 
 .home-main .code {

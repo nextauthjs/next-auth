@@ -204,6 +204,13 @@ We're happy to announce we've recently created an [OpenCollective](https://openc
         <sub>🥈 Silver Financial Sponsor</sub>
       </td>
       <td align="center" valign="top">
+        <a href="https://fusionauth.io/" target="_blank">
+          <img width="128px" src="https://avatars.githubusercontent.com/u/41974756?s=200&v=4" alt="FusionAuth Logo" />
+        </a><br />
+        <div>FusionAuth</div><br />
+        <sub>🥈 Silver Financial Sponsor</sub>
+      </td> 
+      <td align="center" valign="top">
         <a href="https://vercel.com" target="_blank">
           <img width="128px" src="https://avatars.githubusercontent.com/u/14985020?v=4" alt="Vercel Logo" />
         </a><br />
@@ -217,13 +224,15 @@ We're happy to announce we've recently created an [OpenCollective](https://openc
         <div>Prisma</div><br />
         <sub>🥉 Bronze Financial Sponsor</sub>
       </td>
+    </tr>
+    <tr>
       <td align="center" valign="top">
         <a href="https://clerk.dev" target="_blank">
           <img width="128px" src="https://avatars.githubusercontent.com/u/49538330?s=200&v=4" alt="Prisma Logo" />
         </a><br />
         <div>Clerk</div><br />
         <sub>🥉 Bronze Financial Sponsor</sub>
-      </td>
+      </td> 
       <td align="center" valign="top">
         <a href="https://lowdefy.com" target="_blank">
           <img width="128px" src="https://avatars.githubusercontent.com/u/47087496?s=200&v=4" alt="Lowdefy Logo" />
@@ -252,7 +261,16 @@ We're happy to announce we've recently created an [OpenCollective](https://openc
         <div>superblog</div><br />
         <sub>☁️ Infrastructure Support</sub>
       </td>
-    </tr><tr></tr>
+    </tr>
+    <tr>
+       <td align="center" valign="top">
+        <a href="https://www.permit.io?utm_source=github&utm_medium=referral&utm_campaign=authjs" target="_blank">
+          <img width="128px" src="https://github.com/permitio.png" alt="permit.io Logo" />
+        </a><br />
+        <div>Permit.io</div><br />
+        <sub>🥉 Bronze Financial Sponsor</sub>
+      </td>
+    </tr>
   </tbody>
 </table>
 <br />
