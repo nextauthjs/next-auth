@@ -92,7 +92,7 @@ GoogleProvider({
 })
 ```
 
-### Adding a new built-in provider
+## Adding a new built-in provider
 
 If you think your custom provider might be useful to others, we encourage you to open a PR and add it to the built-in list.
 
