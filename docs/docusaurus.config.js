@@ -16,22 +16,26 @@ delete typedocConfig.$schema
 
 /**
  * @param {string} name
- * @returns Record<string, any>
+ * @returns Record<[string, any]>
  */
-function createTypeDocAdapterConfig(name) {
+function typedocAdapter(name) {
   const slug = name.toLowerCase().replace(" ", "-")
 
-  return {
-    id: slug,
-    plugin: [require.resolve("./typedoc-mdn-links")],
-    watch: process.env.TYPEDOC_WATCH,
-    entryPoints: [`../packages/adapter-${slug}/src/index.ts`],
-    tsconfig: `../packages/adapter-${slug}/tsconfig.json`,
-    out: `reference/adapter/${slug}`,
-    sidebar: {
-      indexLabel: name,
+  return [
+    "docusaurus-plugin-typedoc",
+    {
+      id: slug,
+      plugin: [require.resolve("./typedoc-mdn-links")],
+      watch: process.env.TYPEDOC_WATCH,
+      entryPoints: [`../packages/adapter-${slug}/src/index.ts`],
+      tsconfig: `../packages/adapter-${slug}/tsconfig.json`,
+      out: `reference/adapter/${slug}`,
+      sidebar: {
+        indexLabel: name,
+      },
+      ...typedocConfig,
     },
-  }
+  ]
 }
 
 /** @type {import("@docusaurus/types").Config} */
@@ -249,76 +253,15 @@ const docusaurusConfig = {
         },
       },
     ],
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        ...createTypeDocAdapterConfig("Firebase"),
-      },
-    ],
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        ...createTypeDocAdapterConfig("Dgraph"),
-      },
-    ],
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        ...createTypeDocAdapterConfig("Prisma"),
-      },
-    ],
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        ...createTypeDocAdapterConfig("Fauna"),
-      },
-    ],
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        ...createTypeDocAdapterConfig("Mikro ORM"),
-      },
-    ],
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        ...createTypeDocAdapterConfig("Supabase"),
-      },
-    ],
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        ...createTypeDocAdapterConfig("Neo4j"),
-      },
-    ],
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        ...createTypeDocAdapterConfig("Sequelize"),
-      },
-    ],
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        ...createTypeDocAdapterConfig("Xata"),
-      },
-    ],
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        ...createTypeDocAdapterConfig("Upstash Redis"),
-      },
-    ],
+    typedocAdapter("Dgraph"),
+    typedocAdapter("DynamoDB"),
+    typedocAdapter("Fauna"),
+    typedocAdapter("Firebase"),
+    typedocAdapter("Mikro ORM"),
+    typedocAdapter("MongoDB"),
+    typedocAdapter("Neo4j"),
+    typedocAdapter("PouchDB"),
+    typedocAdapter("Prisma"),
     [
       "docusaurus-plugin-typedoc",
       {
@@ -329,32 +272,13 @@ const docusaurusConfig = {
         entryPoints: [`../packages/adapter-typeorm-legacy/src/index.ts`],
         tsconfig: `../packages/adapter-typeorm-legacy/tsconfig.json`,
         out: `reference/adapter/typeorm`,
-        sidebar: {
-          indexLabel: "TypeORM",
-        },
+        sidebar: { indexLabel: "TypeORM" },
       },
     ],
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        ...createTypeDocAdapterConfig("DynamoDB"),
-      },
-    ],
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        ...createTypeDocAdapterConfig("MongoDB"),
-      },
-    ],
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        ...createTypeDocAdapterConfig("PouchDB"),
-      },
-    ],
+    typedocAdapter("Sequelize"),
+    typedocAdapter("Supabase"),
+    typedocAdapter("Upstash Redis"),
+    typedocAdapter("Xata"),
   ],
 }
 
