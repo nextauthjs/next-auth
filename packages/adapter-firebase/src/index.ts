@@ -64,13 +64,13 @@ export interface FirebaseAdapterConfig extends AppOptions {
 }
 
 /**
- * ## Setup
+ * ### Setup
  *
  * First, create a Firebase project and generate a service account key. Visit: `https://console.firebase.google.com/u/0/project/{project-id}/settings/serviceaccounts/adminsdk` (replace `{project-id}` with your project's id)
  *
  * Now you have a few options to authenticate with the Firebase Admin SDK in your app:
  *
- * ### Environment variables
+ * #### Environment variables
  *  - Download the service account key and save it in your project. (Make sure to add the file to your `.gitignore`!)
  *  - Add [`GOOGLE_APPLICATION_CREDENTIALS`](https://cloud.google.com/docs/authentication/application-default-credentials#GAC) to your environment variables and point it to the service account key file.
  *  - The adapter will automatically pick up the environment variable and use it to authenticate with the Firebase Admin SDK.
@@ -86,7 +86,7 @@ export interface FirebaseAdapterConfig extends AppOptions {
  * })
  * ```
  *
- * ### Service account values
+ * #### Service account values
  *
  * - Download the service account key to a temporary location. (Make sure to not commit this file to your repository!)
  * - Add the following environment variables to your project: `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY`.
@@ -110,7 +110,7 @@ export interface FirebaseAdapterConfig extends AppOptions {
  * })
  * ```
  *
- * ### Using an existing Firestore instance
+ * #### Using an existing Firestore instance
  *
  * If you already have a Firestore instance, you can pass that to the adapter directly instead.
  *
