@@ -197,7 +197,7 @@ export function query(f: FaunaClient, format: (...args: any) => any) {
  * })
  * ```
  *
- * > This schema is adapted for use in Fauna and based upon our main [schema](/reference/adapters/models)
+ * > This schema is adapted for use in Fauna and based upon our main [schema](https://authjs.dev/reference/adapters#models)
  **/
 export function FaunaAdapter(f: FaunaClient): Adapter {
   const { Users, Accounts, Sessions, VerificationTokens } = collections

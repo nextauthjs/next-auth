@@ -68,7 +68,7 @@ If you don't find an adapter for the database or service you use, you can always
 :::
 
 
-## Database Models
+## Models
 
 
 Auth.js can be used with any database. Models tell you what structures Auth.js expects from your database. Models will vary slightly depending on which adapter you use, but in general, will look something like this. Each adapter's model/schema will be slightly adapted for its needs, but will look very much like this schema below:

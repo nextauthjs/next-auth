@@ -48,7 +48,7 @@ module.exports = {
     {
       type: "category",
       label: "Database Adapters",
-      link: { type: "doc", id: "reference/adapters/overview" },
+      link: { type: "doc", id: "reference/adapters/index" },
       items: [
         { type: "doc", id: "reference/adapter/dgraph/index" },
         { type: "doc", id: "reference/adapter/dynamodb/index" },

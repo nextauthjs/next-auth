@@ -89,7 +89,7 @@ export interface SupabaseAdapterOptions {
  *
  * ### Create the NextAuth schema in Supabase
  *
- * Setup your database as described in our main [schema](/reference/adapters/models), by copying the SQL schema below in the Supabase [SQL Editor](https://app.supabase.com/project/_/sql).
+ * Setup your database as described in our main [schema](https://authjs.dev/reference/adapters#models), by copying the SQL schema below in the Supabase [SQL Editor](https://app.supabase.com/project/_/sql).
  *
  * Alternatively you can select the NextAuth Quickstart card on the [SQL Editor page](https://app.supabase.com/project/_/sql), or [create a migration with the Supabase CLI](https://supabase.com/docs/guides/cli/local-development#database-migrations?utm_source=authjs-docs&medium=referral&campaign=authjs).
  *
@@ -218,7 +218,7 @@ export interface SupabaseAdapterOptions {
  * npm install jsonwebtoken
  * ```
  *
- * Using the [NexthAuth Session callback](/reference/configuration/auth-config#callbacks) create the Supabase `access_token` and append it to the `session` object.
+ * Using the [NexthAuth.js Session callback](https://authjs.dev/reference/core/types#session) create the Supabase `access_token` and append it to the `session` object.
  *
  * To sign the JWT use the Supabase JWT secret which can be found in the [API settings](https://app.supabase.com/project/_/settings/api)
  *
