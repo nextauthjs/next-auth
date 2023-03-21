@@ -59,7 +59,8 @@
   ],
   "pnpm": {
     "patchedDependencies": {
-      "@balazsorban/monorepo-release@0.1.8": "patches/@balazsorban__monorepo-release@0.1.8.patch"
+      "@balazsorban/monorepo-release@0.1.8": "patches/@balazsorban__monorepo-release@0.1.8.patch",
+      "typedoc-plugin-markdown@4.0.0-next.3": "patches/typedoc-plugin-markdown@4.0.0-next.3.patch"
     }
   }
 }

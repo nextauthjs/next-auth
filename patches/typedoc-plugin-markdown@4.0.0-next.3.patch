@@ -1,0 +1,26 @@
+diff --git a/dist/partials/members.js b/dist/partials/members.js
+index 4fe981318e71ea716da9fca652ce6a0dc5a3e6df..f0cb07d2cfc35d989798a1bea4a9859107ee64ed 100644
+--- a/dist/partials/members.js
++++ b/dist/partials/members.js
+@@ -25,7 +25,7 @@ function members(context, container) {
+                 }));
+             }
+             else {
+-                md.push((0, els_1.heading)(headingLevel, group.title));
++                // md.push((0, els_1.heading)(headingLevel, group.title));
+                 group.children
+                     .filter((item) => !item.hasOwnDocument)
+                     .forEach((groupChild, index) => {
+diff --git a/dist/support/helpers.js b/dist/support/helpers.js
+index ecc82f703ea175f5edf75ecd3ec63f3636c439c7..f0c1b277360cd62df5d64c808f85007478bd0c30 100644
+--- a/dist/support/helpers.js
++++ b/dist/support/helpers.js
+@@ -39,7 +39,7 @@ function getReflectionHeadingLevel(reflection) {
+     if (reflection.kindOf(typedoc_1.ReflectionKind.Constructor)) {
+         return ((_b = reflection.parent) === null || _b === void 0 ? void 0 : _b.hasOwnDocument) ? 2 : 4;
+     }
+-    return ((_c = reflection.parent) === null || _c === void 0 ? void 0 : _c.hasOwnDocument) ? 3 : 5;
++    return ((_c = reflection.parent) === null || _c === void 0 ? void 0 : _c.hasOwnDocument) ? 2 : 4;
+ }
+ exports.getReflectionHeadingLevel = getReflectionHeadingLevel;
+ function getMemberHeadingLevel(reflection) {

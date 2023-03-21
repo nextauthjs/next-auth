@@ -4,6 +4,9 @@ patchedDependencies:
   '@balazsorban/monorepo-release@0.1.8':
     hash: 75pao37sq3m6hqdrtxyjcxjfry
     path: patches/@balazsorban__monorepo-release@0.1.8.patch
+  typedoc-plugin-markdown@4.0.0-next.3:
+    hash: pmni4sq27g34nk7tmvb4ojzswm
+    path: patches/typedoc-plugin-markdown@4.0.0-next.3.patch
 
 importers:
 
@@ -202,7 +205,7 @@ importers:
       '@docusaurus/types': 2.3.1_biqbaboplfbrettd7655fr4n2y
       docusaurus-plugin-typedoc: 1.0.0-next.2_uohvtzr4yhotvxhnypob3homwy
       typedoc: 0.23.28
-      typedoc-plugin-markdown: 4.0.0-next.3_typedoc@0.23.28
+      typedoc-plugin-markdown: 4.0.0-next.3_pmni4sq27g34nk7tmvb4ojzswm_typedoc@0.23.28
 
   packages/adapter-dgraph:
     specifiers:
@@ -11655,6 +11658,15 @@ packages:
       indent-string: 4.0.0
     dev: true
 
+  /ajv-formats/2.1.1:
+    resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
+    peerDependenciesMeta:
+      ajv:
+        optional: true
+    dependencies:
+      ajv: 8.11.0
+    dev: true
+
   /ajv-formats/2.1.1_ajv@8.11.0:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
     peerDependencies:
@@ -15524,7 +15536,7 @@ packages:
       typedoc-plugin-markdown: '>=4.0.0-next.2'
     dependencies:
       typedoc: 0.23.28
-      typedoc-plugin-markdown: 4.0.0-next.3_typedoc@0.23.28
+      typedoc-plugin-markdown: 4.0.0-next.3_pmni4sq27g34nk7tmvb4ojzswm_typedoc@0.23.28
     dev: true
 
   /dom-accessibility-api/0.5.14:
@@ -24079,6 +24091,7 @@ packages:
   /mimic-response/3.1.0:
     resolution: {integrity: sha512-z0yWI+4FDrrweS8Zmt4Ej5HdJmky15+L2e6Wgn3+iK5fWzb6T3fhNFq2+MeTRb064c6Wr4N/wv0DzQTjNzHNGQ==}
     engines: {node: '>=10'}
+    requiresBuild: true
 
   /mimic-response/4.0.0:
     resolution: {integrity: sha512-e5ISH9xMYU0DzrT+jl8q2ze9D6eWBto+I8CNpe+VI+K2J/F/k3PdkdTdz4wvGVH4NTpo+NRYTVIuMQEMMcsLqg==}
@@ -28714,7 +28727,7 @@ packages:
     dependencies:
       '@types/json-schema': 7.0.11
       ajv: 8.11.0
-      ajv-formats: 2.1.1_ajv@8.11.0
+      ajv-formats: 2.1.1
       ajv-keywords: 5.1.0_ajv@8.11.0
     dev: true
 
@@ -31053,13 +31066,14 @@ packages:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
     dev: false
 
-  /typedoc-plugin-markdown/4.0.0-next.3_typedoc@0.23.28:
+  /typedoc-plugin-markdown/4.0.0-next.3_pmni4sq27g34nk7tmvb4ojzswm_typedoc@0.23.28:
     resolution: {integrity: sha512-Koim98xkXOoY8KPlMNH/cKTfqTEocVEYMa3XZgoPX/DkGp7ioB6nl38p6Snl7rEmhcbHkFktcUoOQLn04Kk3sg==}
     peerDependencies:
       typedoc: '>=0.23.0'
     dependencies:
       typedoc: 0.23.28
     dev: true
+    patched: true
 
   /typedoc/0.23.28:
     resolution: {integrity: sha512-9x1+hZWTHEQcGoP7qFmlo4unUoVJLB0H/8vfO/7wqTnZxg4kPuji9y3uRzEu0ZKez63OJAUmiGhUrtukC6Uj3w==}
