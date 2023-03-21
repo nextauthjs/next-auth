@@ -2,7 +2,7 @@
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
  *  <p style={{fontWeight: "normal"}}>Official <a href="https://www.mongodb.com">MongoDB</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://www.mongodb.com">
- *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/mongodb.svg" height="30"/>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/mongodb.svg" width="30" />
  *  </a>
  * </div>
  *
@@ -89,17 +89,11 @@ export function _id(hex?: string) {
 }
 
 /**
- * #### Basic Usage
+ * ## Setup
  *
  * The MongoDB adapter does not handle connections automatically, so you will have to make sure that you pass the Adapter a `MongoClient` that is connected already. Below you can see an example how to do this.
  *
- * ##### Installation
- *
- * ```bash npm2yarn2pnpm
- * npm install next-auth @next-auth/mongodb-adapter mongodb
- * ```
- *
- * ##### Add the MongoDB client
+ * ### Add the MongoDB client
  *
  * ```ts
  * // This approach is taken from https://github.com/vercel/next.js/tree/canary/examples/with-mongodb
@@ -134,7 +128,7 @@ export function _id(hex?: string) {
  * export default clientPromise
  * ```
  *
- * ##### Configure Auth.js
+ * ### Configure Auth.js
  *
  * ```js
  * import NextAuth from "next-auth"

@@ -1,7 +1,75 @@
 ---
-id: models
-title: Models
+title: Overview
 ---
+
+Using a Auth.js / NextAuth.js adapter you can connect to any database service or even several different services at the same time. The following listed official adapters are created and maintained by the community:
+
+<div class="adapter-card-list">
+  <a href="/reference/adapter/dgraph" class="adapter-card">
+    <img src="/img/adapters/dgraph.png" width="30" />
+    <h4 class="adapter-card__title">Dgraph Adapter</h4>
+  </a>
+  <a href="/reference/adapter/dynamodb" class="adapter-card">
+    <img src="/img/adapters/dynamodb.png" width="30" />
+    <h4 class="adapter-card__title">DynamoDB Adapter</h4>
+  </a>
+  <a href="/reference/adapter/fauna" class="adapter-card">
+    <img src="/img/adapters/fauna.png" width="30" />
+    <h4 class="adapter-card__title">Fauna Adapter</h4>
+  </a>
+  <a href="/reference/adapter/firebase" class="adapter-card">
+    <img src="/img/adapters/firebase.svg" width="40" />
+    <h4 class="adapter-card__title">Firebase Adapter</h4>
+  </a>
+  <a href="/reference/adapter/mikro-orm" class="adapter-card">
+    <img src="/img/adapters/mikro-orm.png" width="30" />
+    <h4 class="adapter-card__title">Mikro ORM Adapter</h4>
+  </a>
+  <a href="/reference/adapter/mongodb" class="adapter-card">
+    <img src="/img/adapters/mongodb.svg" width="15" />
+    <h4 class="adapter-card__title">MongoDB Adapter</h4>
+  </a>
+  <a href="/reference/adapter/neo4j" class="adapter-card">
+    <img src="/img/adapters/neo4j.svg" width="50" />
+    <h4 class="adapter-card__title">Neo4j Adapter</h4>
+  </a>
+  <a href="/reference/adapter/pouchdb" class="adapter-card">
+    <img src="/img/adapters/pouchdb.svg" width="20" />
+    <h4 class="adapter-card__title">PouchDB Adapter</h4>
+  </a>
+  <a href="/reference/adapter/prisma" class="adapter-card">
+    <img src="/img/adapters/prisma.svg" width="30" />
+    <h4 class="adapter-card__title">Prisma Adapter</h4>
+  </a>
+  <a href="/reference/adapter/sequelize" class="adapter-card">
+    <img src="/img/adapters/sequelize.svg" width="30" />
+    <h4 class="adapter-card__title">Sequelize Adapter</h4>
+  </a>
+  <a href="/reference/adapter/supabase" class="adapter-card">
+    <img src="/img/adapters/supabase.svg" width="25" />
+    <h4 class="adapter-card__title">Supabase Adapter</h4>
+  </a>
+  <a href="/reference/adapter/typeorm" class="adapter-card">
+    <img src="/img/adapters/typeorm.png" width="30" />
+    <h4 class="adapter-card__title">TypeORM Adapter</h4>
+  </a> 
+  <a href="/reference/adapter/upstash-redis" class="adapter-card">
+    <img src="/img/adapters/upstash-redis.svg" width="30" />
+    <h4 class="adapter-card__title">Upstash Adapter</h4>
+  </a>
+  <a href="/reference/adapter/xata" class="adapter-card">
+    <img src="/img/adapters/xata.svg" width="20" />
+    <h4 class="adapter-card__title">Xata Adapter</h4>
+  </a>
+</div>
+
+:::info
+If you don't find an adapter for the database or service you use, you can always create one yourself. Have a look at our guide on [how to create a database adapter](/guides/adapters/creating-a-database-adapter).
+:::
+
+
+## Models
+
 
 Auth.js can be used with any database. Models tell you what structures Auth.js expects from your database. Models will vary slightly depending on which adapter you use, but in general, will look something like this. Each adapter's model/schema will be slightly adapted for its needs, but will look very much like this schema below:
 
@@ -53,7 +121,7 @@ You can [create your own adapter](/guides/adapters/creating-a-database-adapter) 
 
 ---
 
-## User
+### User
 
 The User model is for information such as the user's name and email address.
 
@@ -67,7 +135,7 @@ This provides a way to contact users and for users to maintain access to their a
 
 User creation in the database is automatic, and happens when the user is logging in for the first time with a provider. The default data saved is `id`, `name`, `email` and `image`. You can add more profile data by returning extra fields in your [OAuth provider's `profile()`](/reference/providers/oauth) callback.
 
-## Account
+### Account
 
 The Account model is for information about OAuth accounts associated with a User. It will usually contain `access_token`, `id_token` and other OAuth specific data. [`TokenSet`](https://github.com/panva/node-openid-client/blob/main/docs/README.md#new-tokensetinput) from `openid-client` might give you an idea of all the fields.
 
@@ -87,7 +155,7 @@ You can manually unlink accounts, if your adapter implements the `unlinkAccount`
 Linking and unlinking accounts through an API is a planned feature: https://github.com/nextauthjs/next-auth/issues/230
 :::
 
-## Session
+### Session
 
 The Session model is used for database sessions. It is not used if JSON Web Tokens are enabled. Keep in mind, that you can use a database to persist Users and Accounts, and still use JWT for sessions. See the [`session.strategy`](/reference/configuration/auth-config) option.
 
@@ -97,7 +165,7 @@ A single User can have multiple Sessions, each Session can only have one User.
 When a Session is read, we check if it's `expires` field indicates an invalid session, and delete it from the database. You can also do this clean-up periodically in the background to avoid our extra delete call to the database during an active session retrieval. This might result in a slight performance increase in a few cases.
 :::
 
-## Verification Token
+### Verification Token
 
 The Verification Token model is used to store tokens for passwordless sign in.
 
@@ -115,4 +183,9 @@ Due to users forgetting or failing at the sign-in flow, you might end up with un
 
 ## RDBMS Naming Convention
 
-In the Auth.js v4 some schemas for the providers which support classic RDBMS type databases, like Prisma and TypeORM, have ended up with column names with mixed casing, i.e. snake_case and camelCase. If this is an issue for you or your underlying database system, please take a look at the "Naming Convention" section in the Prisma or TypeORM page.
+Auth.js / NextAuth.js uses `camelCase` for its own database rows, while respecting the conventional `snake_case` formatting for OAuth related values. If mixed casing is an issue for you, most adapters have a dedicated section on how to use a single naming convention.
+
+
+## TypeScript
+
+Check out the [`@auth/core/adapters` API Reference](/reference/core/adapters) documentation.
