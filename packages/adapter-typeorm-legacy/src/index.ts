@@ -64,7 +64,7 @@ export async function getManager(options: {
 }
 
 /**
- * ## Usage
+ * ## Setup
  *
  * Configure Auth.js to use the TypeORM Adapter:
  *
@@ -81,7 +81,9 @@ export async function getManager(options: {
  *
  * `TypeORMLegacyAdapter` takes either a connection string, or a [`ConnectionOptions`](https://github.com/typeorm/typeorm/blob/master/docs/connection-options.md) object as its first parameter.
  *
- * ## Custom models
+ * ## Advanced usage
+ *
+ * ### Custom models
  *
  * The TypeORM adapter uses [`Entity` classes](https://github.com/typeorm/typeorm/blob/master/docs/entities.md) to define the shape of your data.
  *
@@ -250,7 +252,7 @@ export async function getManager(options: {
  * `synchronize: true` should not be enabled against production databases as it may cause data loss if the configured schema does not match the expected schema! We recommend that you synchronize/migrate your production database at build-time.
  * :::
  *
- * ## Naming Conventions
+ * ### Naming Conventions
  *
  * If mixed snake_case and camelCase column names are an issue for you and/or your underlying database system, we recommend using TypeORM's naming strategy feature to change the target field names. There is a package called `typeorm-naming-strategies` which includes a `snake_case` strategy which will translate the fields from how Auth.js expects them, to snake_case in the actual database.
  *

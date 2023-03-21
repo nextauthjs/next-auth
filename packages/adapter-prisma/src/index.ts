@@ -19,7 +19,7 @@ import type { PrismaClient, Prisma } from "@prisma/client"
 import type { Adapter, AdapterAccount } from "next-auth/adapters"
 
 /**
- * ## Basic usage
+ * ## Setup
  *
  * Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object:
  *
@@ -42,7 +42,7 @@ import type { Adapter, AdapterAccount } from "next-auth/adapters"
  * })
  * ```
  *
- * ## Schema
+ * ## Advanced usage
  *
  * ### Create the Prisma schema from scratch
  *
@@ -160,7 +160,7 @@ import type { Adapter, AdapterAccount } from "next-auth/adapters"
  *
  * Everything else should be the same.
  *
- * ## Naming Conventions
+ * ### Naming Conventions
  *
  * If mixed snake_case and camelCase column names is an issue for you and/or your underlying database system, we recommend using Prisma's `@map()`([see the documentation here](https://www.prisma.io/docs/concepts/components/prisma-schema/names-in-underlying-database)) feature to change the field names. This won't affect Auth.js, but will allow you to customize the column names to whichever naming convention you wish.
  *
