@@ -40,6 +40,10 @@ function typedocAdapter(name) {
 
 /** @type {import("@docusaurus/types").Config} */
 const docusaurusConfig = {
+  markdown: {
+    mermaid: true,
+  },
+  themes: ["@docusaurus/theme-mermaid"],
   title: "Auth.js",
   tagline: "Authentication for the Web.",
   url: "https://authjs.dev",
