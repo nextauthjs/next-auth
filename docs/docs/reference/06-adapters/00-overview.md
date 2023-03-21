@@ -2,7 +2,7 @@
 title: Overview
 ---
 
-Using a Auth.js / NextAuth.js adapter you can connect to any supported database service or even several different services at the same time. The following listed official adapters are created and maintained by the community:
+Using a Auth.js / NextAuth.js adapter you can connect to any database service or even several different services at the same time. The following listed official adapters are created and maintained by the community:
 
 <div class="adapter-card-list">
   <a href="/reference/adapter/prisma" class="adapter-card">
@@ -68,5 +68,5 @@ Using a Auth.js / NextAuth.js adapter you can connect to any supported database 
 </div>
 
 :::info
-If you don't find an adapter for the database or service you use, you can always create one yourself. Have a look at our guide on [how to create a database adapter](http://localhost:3000/guides/adapters/creating-a-database-adapter).
+If you don't find an adapter for the database or service you use, you can always create one yourself. Have a look at our guide on [how to create a database adapter](/guides/adapters/creating-a-database-adapter).
 :::
