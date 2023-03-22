@@ -1,0 +1,9 @@
+{
+  "extends": "@next-auth/tsconfig/tsconfig.adapters.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "types": ["@cloudflare/workers-types"]
+  },
+  "exclude": ["tests", "dist", "jest.config.js"]
+}
