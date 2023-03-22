@@ -88,7 +88,7 @@ export interface PouchDBAdapterOptions {
  * Depending on your architecture you can use PouchDB's http adapter to reach any database compliant with the CouchDB protocol (CouchDB, Cloudant, ...) or use any other PouchDB compatible adapter (leveldb, in-memory, ...)
  * :::
  *
- * #### Basic usage
+ * ## Setup
  *
  * :::note
  * Your PouchDB instance MUST provide the `pouchdb-find` plugin since it is used internally by the adapter to build and manage indexes
@@ -124,9 +124,9 @@ export interface PouchDBAdapterOptions {
  * })
  * ```
  *
- * #### Advanced usage
+ * ## Advanced usage
  *
- * ##### Memory-First Caching Strategy
+ * ### Memory-First Caching Strategy
  *
  * If you need to boost your authentication layer performance, you may use PouchDB's powerful sync features and various adapters, to build a memory-first caching strategy.
  *
