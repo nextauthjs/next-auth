@@ -3,6 +3,10 @@ import {up as upSQLStatements} from "./init";
 import { D1Database, D1PreparedStatement } from "@cloudflare/workers-types";
 import type { BothDB } from "..";
 
+/**
+ * 
+ * @param db 
+ */
 async function up(db: BothDB) {
     // run the migration
     upSQLStatements.forEach(async (sql)=>{

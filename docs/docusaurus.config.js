@@ -257,6 +257,7 @@ const docusaurusConfig = {
         },
       },
     ],
+    typedocAdapter("D1"),
     typedocAdapter("Dgraph"),
     typedocAdapter("DynamoDB"),
     typedocAdapter("Fauna"),

@@ -1,3 +1,24 @@
+/**
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
+ *  <p style={{fontWeight: "normal"}}>An unofficial <a href="https://developers.cloudflare.com/d1/">Cloudflare D1</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <a href="https://developers.cloudflare.com/d1/">
+ *   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 31"><path d="m18.63 37.418-9.645-12.9 9.592-12.533-1.852-2.527L5.917 23.595l-.015 1.808 10.86 14.542 1.868-2.527z"></path><path d="M21.997 6.503h-3.712l13.387 18.3-13.072 17.7h3.735L35.4 24.81 21.997 6.503z"></path><path d="M29.175 6.503h-3.758l13.598 18.082-13.598 17.918h3.765l12.908-17.01v-1.808L29.175 6.503z"></path></svg>
+ *  </a>
+ * </div>
+ * 
+ * ## Warning
+ * This adapter is not developed or maintained by Clouflare and they haven't declared the D1 api stable.  The author will make an effort to keep this adapter up to date.
+ * The adapter is compatible with the D1 api as of March 22, 2023.
+ * 
+ * ## Installation
+ *
+ * ```bash npm2yarn2pnpm
+ * npm install next-auth @next-auth/d1-adapter
+ * ```
+ *
+ * @module @next-auth/d1-adapter
+ */
+
 import { D1Database } from "@cloudflare/workers-types";
 import { D1Database as MiniflareD1Database } from "@miniflare/d1";
 import * as crypto from 'crypto';
@@ -7,10 +28,17 @@ import {
   AdapterUser,
   AdapterAccount,
 } from "next-auth/adapters";
+
+
 export { up } from "./migrations";
 
 // some handy internal type aliases
+
+/**
+ * @type @cloudflare/workers-types.D1Database | @miniflare/d1.D1Database
+ */
 export type BothDB = D1Database | MiniflareD1Database;
+
 interface AdapterVerificationToken {
   expires: Date;
   identifier: string;
@@ -143,7 +171,60 @@ export async function deleteRecord(db:BothDB, SQL:string, bindings:any[]) {
   }
 }
 
-// The Adapter Implementation
+/**
+ *
+ * ## Setup
+ *
+ * This is the D1 Adapter for [`next-auth`](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
+ *
+ * ### Configure Auth.js
+ *
+ * ```javascript title="pages/api/auth/[...nextauth].js"
+ * import NextAuth from "next-auth"
+ * import { D1Adapter, up } from "@next-auth/d1-adapter"
+ *
+ *
+ * // For more information on each option (and a full list of options) go to
+ * // https://authjs.dev/reference/configuration/auth-options
+ * export default NextAuth({
+ *   // https://authjs.dev/reference/providers/
+ *   providers: [],
+ *   adapter: D1Adapter(env.db)
+ *   ...
+ * })
+ * ```
+ *
+ * ### Migrations
+ *
+ * Somewhere in the initialization of your application you need to run the `up(env.db)` function to create the tables in D1.
+ * It will create 4 tables if they don't already exist:
+ * `authjs_accounts`, `authjs_sessions`, `authjs_users`, `authjs_verification_tokens`.
+ * 
+ * The table prefix "authjs_" is not configurable at this time.
+ * 
+ * You can use something like the following to attempt the migration once each time your worker starts up.  Running migrations more than once will not erase your existing tables.
+ * ```javascript
+ * import { up } from "@next-auth/d1-adapter"
+ * 
+ * let migrated = false;
+ * async function migrationHandle({event, resolve}) {
+ *  if(!migrated) {
+ *    try {
+ *      await up(event.platform.env.db)
+ *      migrated = true
+ *    } catch(e) {
+ *      console.log(e.cause.message, e.message)
+ *    }
+ *  }
+ *  return resolve(event)
+ * }
+ * ```
+ * 
+ *
+ * You can also initialize your tables manually.  Look in [init.ts](https://github.com/nextauthjs/next-auth/packages/adapter-d1/src/migrations/init.ts) for the relevant sql.
+ * Paste and run the SQL into your D1 dashboard query tool.
+ * 
+ **/
 export function D1Adapter(db:BothDB): Adapter {
 
   // we need to run migrations if we dont have the right tables
