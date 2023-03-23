@@ -3,11 +3,11 @@ import type { OAuthConfig, OAuthUserConfig } from "."
 export interface IWeChatProvider extends Record<string, any>  {
   id: string;
   name: string;
-  type: 'oauth';
-  version: '2.0';
-  scope: 'snsapi_login';
+  type: string;
+  version: string;
+  scope: string;
   params: {
-    grant_type: 'authorization_code';
+    grant_type: string;
   };
   accessTokenUrl: string;
   authorizationUrl: string;
