@@ -12,14 +12,6 @@ export interface IWeChatProvider extends Record<string, any>  {
   accessTokenUrl: string;
   authorizationUrl: string;
   profileUrl: string;
-  profile: (profile: any) => {
-    id: string;
-    name: string;
-    email: null;
-    image: string;
-  };
-  clientId: string;
-  clientSecret: string;
   state: boolean;
 };
 
@@ -47,8 +39,6 @@ export default function WeChatProvider<P extends IWeChatProvider>(
         image: profile.headimgurl,
       };
     },
-    clientId,
-    clientSecret,
     state: true,
     options,
   };
