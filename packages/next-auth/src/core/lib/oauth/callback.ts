@@ -102,6 +102,8 @@ export default async function oAuthCallback(params: {
       ...provider.token?.params,
     }
 
+    const callbackUrl =
+      provider?.authorization?.params?.redirect_uri || provider.callbackUrl
     if (provider.token?.request) {
       const response = await provider.token.request({
         provider,
@@ -111,9 +113,9 @@ export default async function oAuthCallback(params: {
       })
       tokens = new TokenSet(response.tokens)
     } else if (provider.idToken) {
-      tokens = await client.callback(provider.callbackUrl, params, checks)
+      tokens = await client.callback(callbackUrl, params, checks)
     } else {
-      tokens = await client.oauthCallback(provider.callbackUrl, params, checks)
+      tokens = await client.oauthCallback(callbackUrl, params, checks)
     }
 
     // REVIEW: How can scope be returned as an array?
