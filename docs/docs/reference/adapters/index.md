@@ -6,7 +6,7 @@ Using a Auth.js / NextAuth.js adapter you can connect to any database service or
 
 <div class="adapter-card-list">
   <a href="/reference/adapter/d1" class="adapter-card">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 31"><path d="m18.63 37.418-9.645-12.9 9.592-12.533-1.852-2.527L5.917 23.595l-.015 1.808 10.86 14.542 1.868-2.527z"></path><path d="M21.997 6.503h-3.712l13.387 18.3-13.072 17.7h3.735L35.4 24.81 21.997 6.503z"></path><path d="M29.175 6.503h-3.758l13.598 18.082-13.598 17.918h3.765l12.908-17.01v-1.808L29.175 6.503z"></path></svg>
+    <img src="/img/adapters/d1.svg" width="40" />
     <h4 class="adapter-card__title">D1 Adapter</h4>
   </a>
   <a href="/reference/adapter/dgraph" class="adapter-card">

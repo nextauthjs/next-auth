@@ -2,7 +2,7 @@
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
  *  <p style={{fontWeight: "normal"}}>An unofficial <a href="https://developers.cloudflare.com/d1/">Cloudflare D1</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://developers.cloudflare.com/d1/">
- *   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 31"><path d="m18.63 37.418-9.645-12.9 9.592-12.533-1.852-2.527L5.917 23.595l-.015 1.808 10.86 14.542 1.868-2.527z"></path><path d="M21.997 6.503h-3.712l13.387 18.3-13.072 17.7h3.735L35.4 24.81 21.997 6.503z"></path><path d="M29.175 6.503h-3.758l13.598 18.082-13.598 17.918h3.765l12.908-17.01v-1.808L29.175 6.503z"></path></svg>
+ *   <img style={{display: "block"}} src="/img/adapters/d1.svg" width="48" />
  *  </a>
  * </div>
  * 
