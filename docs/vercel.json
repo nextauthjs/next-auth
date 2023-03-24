@@ -91,6 +91,16 @@
       "permanent": true
     },
     {
+      "source": "/adapters/overview",
+      "destination": "https://authjs.dev/reference/adapter",
+      "permanent": true
+    },
+    {
+      "source": "/adapters/models",
+      "destination": "https://authjs.dev/reference/adapter#models",
+      "permanent": true
+    },
+    {
       "source": "/tutorials/refresh-token-rotation",
       "destination": "https://authjs.dev/guides/basics/refresh-token-rotation",
       "permanent": true
