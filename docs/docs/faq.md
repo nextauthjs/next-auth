@@ -67,7 +67,7 @@ _If you use a custom credentials provider user accounts will not be persisted in
 </summary>
 <p>
 
-NextAuth.js was originally designed for use with Next.js and Serverless. However, today you could use the NextAuth.js core with any other framework. Checkout the examples for <a href="https://github.com/nextauthjs/next-auth/tree/main/apps/playground-gatsby" target="_blank">Gatsby</a> and <a href="https://sveltekit.authjs.dev/" target="_blank">SvelteKit</a>. If you would add another integration with other frameworks, feel free to work on it and send a pull request. Make sure to check if there's any on-going work before open a new issue.
+NextAuth.js was originally designed for use with Next.js and Serverless. However, today you could use the NextAuth.js core with any other framework. Checkout the examples for <a href="https://github.com/nextauthjs/next-auth/tree/main/apps/playground-gatsby" target="_blank">Gatsby</a> and <a href="https://sveltekit.authjs.dev/" target="_blank">SvelteKit</a>. If you would add another integration with other frameworks, feel free to work on it and send a pull request. Make sure to check if there's any on-going work before opening a new issue.
 
 </p>
 </details>
@@ -207,7 +207,7 @@ NextAuth.js records Refresh Tokens and Access Tokens on sign in (if supplied by 
 
 You can then look them up from the database or persist them to the JSON Web Token.
 
-Note: NextAuth.js does not currently handle Access Token rotation for OAuth providers for you, however you can check out [this tutorial](/tutorials/refresh-token-rotation) if you want to implement it.
+Note: NextAuth.js does not currently handle Access Token rotation for OAuth providers for you, however you can check out [this tutorial](https://authjs.dev/guides/basics/refresh-token-rotation) if you want to implement it.
 
 We also have an [example repository](https://github.com/nextauthjs/next-auth-refresh-token-example) / project based upon NextAuth.js v4 where we demonstrate how to use a refresh token to refresh the provided access token.
 

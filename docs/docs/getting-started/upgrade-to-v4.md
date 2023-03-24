@@ -311,7 +311,7 @@ export default NextAuth({
 
 3. The `typeorm-legacy` adapter has been upgraded to use the newer adapter API, but has retained the `typeorm-legacy` name. We aim to migrate this to individual lighter weight adapters for each database type in the future, or switch out `typeorm`.
 
-4. MongoDB has been moved to its own adapter under `@next-auth/mongodb-adapter`. See the [MongoDB Adapter docs](/adapters/mongodb).
+4. MongoDB has been moved to its own adapter under `@next-auth/mongodb-adapter`. See the [MongoDB Adapter docs](https://authjs.dev/reference/adapter/mongodb).
 
 Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.8 and https://github.com/nextauthjs/next-auth/pull/2361
 

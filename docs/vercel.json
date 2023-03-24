@@ -4,28 +4,14 @@
     {
       "source": "/(.*)",
       "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
-        }
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-XSS-Protection", "value": "1; mode=block" }
       ]
     },
     {
       "source": "/beta(.*)",
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex"
-        }
-      ]
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
     }
   ],
   "redirects": [
@@ -67,6 +53,51 @@
     {
       "source": "/adapters/firebase",
       "destination": "https://authjs.dev/reference/adapter/firebase",
+      "permanent": true
+    },
+    {
+      "source": "/adapters/dgraph",
+      "destination": "https://authjs.dev/reference/adapter/dgraph",
+      "permanent": true
+    },
+    {
+      "source": "/adapters/prisma",
+      "destination": "https://authjs.dev/reference/adapter/prisma",
+      "permanent": true
+    },
+    {
+      "source": "/adapters/typeorm",
+      "destination": "https://authjs.dev/reference/adapter/typeorm",
+      "permanent": true
+    },
+    {
+      "source": "/adapters/mongodb",
+      "destination": "https://authjs.dev/reference/adapter/mongodb",
+      "permanent": true
+    },
+    {
+      "source": "/adapters/dynamodb",
+      "destination": "https://authjs.dev/reference/adapter/dynamodb",
+      "permanent": true
+    },
+    {
+      "source": "/adapters/fauna",
+      "destination": "https://authjs.dev/reference/adapter/fauna",
+      "permanent": true
+    },
+    {
+      "source": "/adapters/pouchdb",
+      "destination": "https://authjs.dev/reference/adapter/pouchdb",
+      "permanent": true
+    },
+    {
+      "source": "/adapters/overview",
+      "destination": "https://authjs.dev/reference/adapter",
+      "permanent": true
+    },
+    {
+      "source": "/adapters/models",
+      "destination": "https://authjs.dev/reference/adapter#models",
       "permanent": true
     },
     {
