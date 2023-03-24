@@ -15,6 +15,11 @@ module.exports = {
   ],
   referenceSidebar: [
     {
+      type: "doc",
+      id: "reference/index",
+      label: "Overview",
+    },
+    {
       type: "category",
       label: "@auth/core",
       link: { type: "doc", id: "reference/core/index" },
