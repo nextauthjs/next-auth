@@ -4,7 +4,7 @@ title: Overview
 
 This section of the documentation contains the API reference for all the official packages under the `@auth/*` and `@next-auth/*` scopes.
 
-:::warning
+:::warning Warning
 The API reference is being migrated from the [old documentation page](https://next-auth.js.org), so there are going to be references to `next-auth` still. We are continuously working on updating the naming/references.
 :::
 
