@@ -14,11 +14,7 @@ module.exports = {
     },
   ],
   referenceSidebar: [
-    {
-      type: "doc",
-      id: "reference/index",
-      label: "Overview",
-    },
+    "reference/index",
     {
       type: "category",
       label: "@auth/core",

@@ -1,5 +1,5 @@
 ---
-title: API Reference
+title: Overview
 ---
 
 This section of the documentation contains the API reference for all the official packages under the `@auth/*` and `@next-auth/*` scopes.
