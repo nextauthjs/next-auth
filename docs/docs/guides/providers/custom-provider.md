@@ -1,5 +1,5 @@
 ---
-title: Customized OAuth Provider
+title: OAuth Provider
 ---
 
 Auth.js comes with a set of built-in OAuth providers that you can import from `@auth/core/providers/*`. Every provider has their separate documentation page under the [core package's API Reference](/reference/core)
