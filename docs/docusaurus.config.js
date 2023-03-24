@@ -130,7 +130,7 @@ const docusaurusConfig = {
     announcementBar: {
       id: "new-major-announcement",
       content:
-        "<a target='_blank' rel='noopener noreferrer' href='https://next-auth.js.org'>NextAuth.js</a> is becoming Auth.js! 🎉 We're creating Authentication for the Web. Everyone included. Starting with SvelteKit, check out <a href='/reference/sveltekit'>the docs</a>. Note, this site is under active development.",
+        "<a target='_blank' rel='noopener noreferrer' href='https://next-auth.js.org'>NextAuth.js</a> is becoming Auth.js! 🎉 <a target='_blank' rel='noopener noreferrer' href='https://twitter.com/balazsorban44/status/1603082914362986496'>Read the announcement.</a> Note, this site is under active development. 🏗",
       backgroundColor: "#000",
       textColor: "#fff",
     },
