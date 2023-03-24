@@ -93,11 +93,9 @@ const docusaurusConfig = {
           position: "left",
         },
         {
-          to: "/reference/core",
-          // TODO: change to this when the overview page looks better.
-          // to: "/reference",
+          to: "/reference",
           activeBasePath: "/reference",
-          label: "Reference",
+          label: "API Reference",
           position: "left",
         },
         {
