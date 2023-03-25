@@ -2,21 +2,21 @@ import { OAuthConfig, OAuthUserConfig } from "."
 
 export interface YandexProfile {
   id: string
-  login: string | undefined
+  login?: string
   client_id: string
   display_name: string
   real_name: string
   first_name: string
-  last_name: string | undefined
-  sex: string | undefined
-  default_email: string | undefined
+  last_name?: string
+  sex?: string
+  default_email?: string
   emails: string[]
   psuid: string
-  // bithday will be in YYYY-MM-DD formated string if exists
-  birthday: string | undefined
-  is_avatar_empty: boolean | undefined
-  default_avatar_id: string | undefined
-  default_phone: { id: number; number: string } | undefined
+  /** bithday will be in YYYY-MM-DD formated string if exists */
+  birthday?: string
+  is_avatar_empty?: boolean
+  default_avatar_id?: string
+  default_phone?: { id: number; number: string }
 }
 
 export default function Yandex(
