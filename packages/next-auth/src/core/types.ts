@@ -351,18 +351,24 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    * [`session` callback](https://next-auth.js.org/configuration/callbacks#session-callback)
    */
   jwt: (
-    params:
+    // TODO: remove in `@auth/core` in favor of `trigger: "signUp"`
+    params: { isNewUser?: boolean } & (
       | {
           token: DefaultJWT
           user: User | AdapterUser
           account: A | null
           profile?: P
-          isNewUser?: boolean
           trigger: "signIn"
         }
       | {
+          token: DefaultJWT
+          user: User | AdapterUser
+          account: A | null
+          profile?: P
+          trigger: "signUp"
+        }
+      | {
           token: JWT
-          isNewUser?: boolean
           /**
            * When using {@link SessionOptions.strategy} `"jwt"`, this is the data
            * sent from the client via the [`useSession().update`](https://next-auth.js.org/getting-started/client#update-session) method.
@@ -372,7 +378,8 @@ export interface CallbacksOptions<P = Profile, A = Account> {
           session?: any
           trigger: "update"
         }
-      | { token: JWT; isNewUser?: boolean; trigger: "poll" }
+      | { token: JWT; trigger: "poll" }
+    )
   ) => Awaitable<JWT>
 }
 

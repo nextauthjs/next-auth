@@ -130,7 +130,7 @@ export default async function callback(params: {
             account,
             profile: OAuthProfile,
             isNewUser,
-            trigger: "signIn",
+            trigger: isNewUser ? "signUp" : "signIn",
           })
 
           // Encode token
@@ -270,7 +270,7 @@ export default async function callback(params: {
           user,
           account,
           isNewUser,
-          trigger: "signIn",
+          trigger: isNewUser ? "signUp" : "signIn",
         })
 
         // Encode token
