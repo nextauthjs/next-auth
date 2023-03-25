@@ -16,7 +16,7 @@ export interface YandexProfile {
   emails: string[]
   psuid: string
   // bithday will be in YYYY-MM-DD formated string if exists
-  birthday: string | null | undefined
+  birthday: string | undefined
   is_avatar_empty: boolean | undefined
   default_avatar_id: string | undefined
   default_phone: { id: number; number: string } | undefined
@@ -30,14 +30,18 @@ export default function Yandex(
     name: "Yandex",
     type: "oauth",
     authorization:
-      "https://oauth.yandex.ru/authorize?scope=login:email+login:info",
+      "https://oauth.yandex.ru/authorize?scope=login:email+login:info+login:avatar",
     token: "https://oauth.yandex.ru/token",
     userinfo: "https://login.yandex.ru/info?format=json",
     profile(profile) {
       return {
         id: profile.id,
-        name: profile.real_name || profile.display_name || null,
-        email: profile.default_email || (profile.emails.length > 0 ? profile.emails[0] : null),
+        name: profile.display_name || profile.real_name || profile.first_name,
+        email:
+          profile.default_email ||
+          (profile.emails && profile.emails.length > 0
+            ? profile.emails[0]
+            : null),
         image:
           !profile.is_avatar_empty && profile.default_avatar_id
             ? `https://avatars.yandex.net/get-yapic/${profile.default_avatar_id}/islands-200`
