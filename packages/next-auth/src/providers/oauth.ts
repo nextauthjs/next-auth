@@ -109,6 +109,7 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
    * [Authorization Server Metadata](https://datatracker.ietf.org/doc/html/rfc8414#section-3)
    */
   wellKnown?: string
+  jwks_endpoint?: string
   /**
    * The login process will be initiated by sending the user to this URL.
    *
