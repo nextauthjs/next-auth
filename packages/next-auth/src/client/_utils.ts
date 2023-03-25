@@ -37,9 +37,12 @@ export async function fetchData<T = any>(
 ): Promise<T | null> {
   const url = `${apiBaseUrl(__NEXTAUTH)}/${path}`
   try {
-    const options: RequestInit = req?.headers?.cookie
-      ? { headers: { cookie: req.headers.cookie } }
-      : {}
+    const options: RequestInit = {
+      headers: {
+        "Content-Type": "application/json",
+        ...(req?.headers?.cookie ? { cookie: req.headers.cookie } : {}),
+      },
+    }
 
     if (req?.body) {
       options.body = JSON.stringify(req.body)
