@@ -289,11 +289,10 @@ export async function AuthHandler<
       case "session": {
         // Verified CSRF Token required for session updates
         if (options.csrfTokenVerified) {
-          delete req.body?.csrfToken
           const session = await routes.session({
             options,
             sessionStore,
-            newSession: req.body,
+            newSession: req.body?.data,
             isUpdate: true,
           })
           if (session.cookies) cookies.push(...session.cookies)
