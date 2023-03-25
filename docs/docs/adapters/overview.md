@@ -1,6 +1,6 @@
 ---
-id: overview
-title: Overview
+id: adapters
+title: Adapters
 ---
 
 Visit the [authjs.dev](https://authjs.dev/reference/adapters) page for the most up-to-date documentation.

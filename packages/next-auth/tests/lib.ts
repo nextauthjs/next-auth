@@ -66,3 +66,11 @@ export function mockAdapter(): Adapter {
   } as unknown as Adapter
   return adapter
 }
+
+export function compareDates(a: Date, b: Date) {
+  expect(a.getFullYear()).toEqual(b.getFullYear())
+  expect(a.getMonth()).toEqual(b.getMonth())
+  expect(a.getFullYear()).toEqual(b.getFullYear())
+  expect(a.getHours()).toEqual(b.getHours())
+  expect(a.getMinutes()).toEqual(b.getMinutes())
+}
