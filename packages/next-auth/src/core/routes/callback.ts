@@ -130,6 +130,7 @@ export default async function callback(params: {
             account,
             profile: OAuthProfile,
             isNewUser,
+            status: "signIn",
           })
 
           // Encode token
@@ -269,6 +270,7 @@ export default async function callback(params: {
           user,
           account,
           isNewUser,
+          status: "signIn",
         })
 
         // Encode token
@@ -393,6 +395,7 @@ export default async function callback(params: {
       // @ts-expect-error
       account,
       isNewUser: false,
+      status: "signIn",
     })
 
     // Encode token

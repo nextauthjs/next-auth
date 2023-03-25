@@ -8,7 +8,7 @@ import type {
   OAuthConfigInternal,
 } from "../providers"
 import type { TokenSetParameters } from "openid-client"
-import type { JWT, JWTOptions } from "../jwt"
+import type { DefaultJWT, JWT, JWTOptions } from "../jwt"
 import type { LoggerInstance } from "../utils/logger"
 import type { CookieSerializeOptions } from "cookie"
 
@@ -313,11 +313,23 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    * [`getSession`](https://next-auth.js.org/getting-started/client#getsession) |
    *
    */
-  session: (params: {
-    session: Session
-    user: User | AdapterUser
-    token: JWT
-  }) => Awaitable<Session>
+  session: (
+    params:
+      | { session: { user: DefaultJWT; expires: ISODateString }; token: JWT }
+      | { session: DefaultSession; user: AdapterUser; status: undefined }
+      | {
+          session: DefaultSession
+          user: AdapterUser
+          status: "update"
+          /**
+           * When using {@link SessionOptions.strategy} `"database"`, this is the data
+           * sent from the client via the [`useSession().update`](https://next-auth.js.org/getting-started/client#update-session) method.
+           *
+           * ⚠ Note, you should validate this data before using it.
+           */
+          newSession?: any
+        }
+  ) => Awaitable<Session>
   /**
    * This callback is called whenever a JSON Web Token is created (i.e. at sign in)
    * or updated (i.e whenever a session is accessed in the client).
@@ -325,18 +337,35 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    * where you can control what should be returned to the client.
    * Anything else will be kept from your front-end.
    *
-   * ⚠ By default the JWT is signed, but not encrypted.
+   * The JWT is encrypted by default.
    *
    * [Documentation](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
    * [`session` callback](https://next-auth.js.org/configuration/callbacks#session-callback)
    */
-  jwt: (params: {
-    token: JWT
-    user?: User | AdapterUser
-    account?: A | null
-    profile?: P
-    isNewUser?: boolean
-  }) => Awaitable<JWT>
+  jwt: (
+    params:
+      | {
+          token: DefaultJWT
+          user: User | AdapterUser
+          account: A | null
+          profile?: P
+          isNewUser?: boolean
+          status: "signIn"
+        }
+      | {
+          token: JWT
+          isNewUser?: boolean
+          /**
+           * When using {@link SessionOptions.strategy} `"jwt"`, this is the data
+           * sent from the client via the [`useSession().update`](https://next-auth.js.org/getting-started/client#update-session) method.
+           *
+           * ⚠ Note, you should validate this data before using it.
+           */
+          session?: any
+          status: "update"
+        }
+      | { token: JWT; isNewUser?: boolean }
+  ) => Awaitable<JWT>
 }
 
 /** [Documentation](https://next-auth.js.org/configuration/options#cookies) */
