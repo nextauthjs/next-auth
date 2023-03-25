@@ -33,12 +33,9 @@ export default function Yandex(
     profile(profile) {
       return {
         id: profile.id,
-        name: profile.display_name || profile.real_name || profile.first_name,
+        name: profile.display_name ?? profile.real_name ?? profile.first_name,
         email:
-          profile.default_email ||
-          (profile.emails && profile.emails.length > 0
-            ? profile.emails[0]
-            : null),
+          profile.default_email ?? profile.emails?.[0] ?? null,
         image:
           !profile.is_avatar_empty && profile.default_avatar_id
             ? `https://avatars.yandex.net/get-yapic/${profile.default_avatar_id}/islands-200`
