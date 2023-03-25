@@ -26,8 +26,8 @@ export default function Yandex(
     id: "yandex",
     name: "Yandex",
     type: "oauth",
-    authorization:
-      "https://oauth.yandex.ru/authorize?scope=login:email+login:info+login:avatar",
+    // user will be prompted for rights which were set while creating OAuth app
+    authorization: "https://oauth.yandex.ru/authorize?scope=",
     token: "https://oauth.yandex.ru/token",
     userinfo: "https://login.yandex.ru/info?format=json",
     profile(profile) {
