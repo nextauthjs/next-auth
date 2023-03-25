@@ -87,13 +87,19 @@ function useOnline() {
   return isOnline
 }
 
+type UpdateSession = (data: any) => Promise<void>
+
 export type SessionContextValue<R extends boolean = false> = R extends true
   ?
-      | { data: Session; status: "authenticated" }
-      | { data: null; status: "loading" }
+      | { update: UpdateSession; data: Session; status: "authenticated" }
+      | { update: UpdateSession; data: null; status: "loading" }
   :
-      | { data: Session; status: "authenticated" }
-      | { data: null; status: "unauthenticated" | "loading" }
+      | { update: UpdateSession; data: Session; status: "authenticated" }
+      | {
+          update: UpdateSession
+          data: null
+          status: "unauthenticated" | "loading"
+        }
 
 export const SessionContext = React.createContext?.<
   SessionContextValue | undefined
@@ -456,6 +462,21 @@ export function SessionProvider(props: SessionProviderProps) {
         : session
         ? "authenticated"
         : "unauthenticated",
+      async update(data) {
+        setLoading(true)
+        const session = await fetchData<Session>(
+          "session",
+          __NEXTAUTH,
+          logger,
+          { req: { body: { csrfToken: await getCsrfToken(), data } } }
+        )
+        setLoading(false)
+        if (session) {
+          setSession(session)
+          broadcast.post({ event: "session", data: { trigger: "getSession" } })
+        }
+        return session
+      },
     }),
     [session, loading]
   )
