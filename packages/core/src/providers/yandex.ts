@@ -2,17 +2,14 @@ import { OAuthConfig, OAuthUserConfig } from "."
 
 export interface YandexProfile {
   id: string
-  name: string | null
-  email: string | null
-  image: string | null
-  login: string
+  login: string | undefined
   client_id: string
   display_name: string
   real_name: string
   first_name: string
-  last_name: string | null
-  sex: string | null
-  default_email: string
+  last_name: string | undefined
+  sex: string | undefined
+  default_email: string | undefined
   emails: string[]
   psuid: string
   // bithday will be in YYYY-MM-DD formated string if exists

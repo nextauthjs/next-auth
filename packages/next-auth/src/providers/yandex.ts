@@ -2,17 +2,14 @@ import { OAuthConfig, OAuthUserConfig } from "."
 
 export interface YandexProfile {
   id: string
-  name: string | null
-  email: string | null
-  image: string | null
-  login: string
+  login: string | undefined
   client_id: string
   display_name: string
   real_name: string
   first_name: string
-  last_name: string | null
-  sex: string | null
-  default_email: string
+  last_name: string | undefined
+  sex: string | undefined
+  default_email: string | undefined
   emails: string[]
   psuid: string
   // bithday will be in YYYY-MM-DD formated string if exists
@@ -30,7 +27,7 @@ export default function Yandex(
     name: "Yandex",
     type: "oauth",
     authorization:
-      "https://oauth.yandex.ru/authorize?scope=login:email+login:info+login:",
+      "https://oauth.yandex.ru/authorize?scope=login:email+login:info+login:avatar",
     token: "https://oauth.yandex.ru/token",
     userinfo: "https://login.yandex.ru/info?format=json",
     profile(profile) {
