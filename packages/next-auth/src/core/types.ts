@@ -315,12 +315,19 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    */
   session: (
     params:
-      | { session: { user: DefaultJWT; expires: ISODateString }; token: JWT }
-      | { session: DefaultSession; user: AdapterUser; status: undefined }
+      | {
+          session: { user: DefaultJWT; expires: ISODateString }
+          token: JWT
+          trigger: "jwt"
+        }
       | {
           session: DefaultSession
           user: AdapterUser
-          status: "update"
+          trigger: "database"
+        }
+      | {
+          session: DefaultSession
+          user: AdapterUser
           /**
            * When using {@link SessionOptions.strategy} `"database"`, this is the data
            * sent from the client via the [`useSession().update`](https://next-auth.js.org/getting-started/client#update-session) method.
@@ -328,6 +335,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
            * ⚠ Note, you should validate this data before using it.
            */
           newSession?: any
+          trigger: "update"
         }
   ) => Awaitable<Session>
   /**
@@ -350,7 +358,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
           account: A | null
           profile?: P
           isNewUser?: boolean
-          status: "signIn"
+          trigger: "signIn"
         }
       | {
           token: JWT
@@ -362,9 +370,9 @@ export interface CallbacksOptions<P = Profile, A = Account> {
            * ⚠ Note, you should validate this data before using it.
            */
           session?: any
-          status: "update"
+          trigger: "update"
         }
-      | { token: JWT; isNewUser?: boolean }
+      | { token: JWT; isNewUser?: boolean; trigger: "poll" }
   ) => Awaitable<JWT>
 }
 

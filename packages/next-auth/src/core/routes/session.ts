@@ -49,7 +49,7 @@ export default async function session(
 
       const token = await callbacks.jwt({
         token: decodedToken,
-        status: isUpdate ? "update" : undefined,
+        trigger: isUpdate ? "update" : "poll",
         session: newSession,
       })
 
@@ -68,6 +68,7 @@ export default async function session(
           expires: newExpires.toISOString(),
         },
         token,
+        trigger: "jwt",
       })
 
       // Return session payload as response
@@ -137,7 +138,7 @@ export default async function session(
             expires: session.expires.toISOString(),
           },
           user,
-          status: isUpdate ? "update" : undefined,
+          trigger: isUpdate ? "update" : "database",
           newSession,
         })
 
