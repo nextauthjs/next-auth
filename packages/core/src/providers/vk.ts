@@ -294,7 +294,25 @@ export default function VK<P extends Record<string, any> = VkProfile>(
     client: {
       token_endpoint_auth_method: "client_secret_post",
     },
-    token: `https://oauth.vk.com/access_token?v=${apiVersion}`,
+    token: {
+      url: `https://oauth.vk.com/access_token?v=${apiVersion}`,
+
+      async request({ client, params, checks, provider }) {
+        const response = await client.oauthCallback(
+          provider.callbackUrl,
+          params,
+          checks,
+          { exchangeBody: { client_id: options.clientId } }
+        )
+
+        return {
+          tokens: {
+            access_token: response.access_token,
+            expires_at: response.expires_at
+          }
+        }
+      },
+    },
     userinfo: `https://api.vk.com/method/users.get?fields=photo_100&v=${apiVersion}`,
     profile(result: P) {
       const profile = result.response?.[0] ?? {}
