@@ -12,12 +12,14 @@
 
 import { OAuthConfig, OAuthUserConfig } from "."
 
-/** @see [Getting information about the user](https://yandex.com/dev/id/doc/en/user-information) */
-/** @see [Access to email address](https://yandex.com/dev/id/doc/en/user-information#email-access) */
-/** @see [Access to the user's profile picture](https://yandex.com/dev/id/doc/en/user-information#avatar-access) */
-/** @see [Access to the date of birth](https://yandex.com/dev/id/doc/en/user-information#birthday-access) */
-/** @see [Access to login, first name, last name, and gender](https://yandex.com/dev/id/doc/en/user-information#name-access) */
-/** @see [Access to the phone number](https://yandex.com/dev/id/doc/en/user-information#phone-access) */
+/**
+ * @see [Getting information about the user](https://yandex.com/dev/id/doc/en/user-information)
+ * @see [Access to email address](https://yandex.com/dev/id/doc/en/user-information#email-access)
+ * @see [Access to the user's profile picture](https://yandex.com/dev/id/doc/en/user-information#avatar-access)
+ * @see [Access to the date of birth](https://yandex.com/dev/id/doc/en/user-information#birthday-access)
+ * @see [Access to login, first name, last name, and gender](https://yandex.com/dev/id/doc/en/user-information#name-access)
+ * @see [Access to the phone number](https://yandex.com/dev/id/doc/en/user-information#phone-access)
+ */
 export interface YandexProfile {
   /** User's Yandex login. */
   login: string
@@ -107,20 +109,16 @@ export interface YandexProfile {
  * @see [Source code](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/yandex.ts)
  *
  *:::tip
- *
  * The Yandex provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/yandex.ts).
  * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
- *
  * :::
  *
  * :::info **Disclaimer**
- *
  * If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
  *
  * Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
  * the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
  * we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).
- *
  * :::
  */
 export default function Yandex(
