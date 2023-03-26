@@ -121,10 +121,10 @@ export const authConfig: AuthConfig = {
     Twitch({ clientId: process.env.TWITCH_ID, clientSecret: process.env.TWITCH_SECRET }),
     Twitter({ clientId: process.env.TWITTER_ID, clientSecret: process.env.TWITTER_SECRET }),
     // TwitterLegacy({ clientId: process.env.TWITTER_LEGACY_ID, clientSecret: process.env.TWITTER_LEGACY_SECRET }),
+    Yandex({ clientId: process.env.YANDEX_ID, clientSecret: process.env.YANDEX_SECRET }),
     Vk({ clientId: process.env.VK_ID, clientSecret: process.env.VK_SECRET }),
     Wikimedia({ clientId: process.env.WIKIMEDIA_ID, clientSecret: process.env.WIKIMEDIA_SECRET }),
     WorkOS({ clientId: process.env.WORKOS_ID, clientSecret: process.env.WORKOS_SECRET }),
-    Yandex({clientId: process.env.YANDEX_ID, clientSecret: process.env.YANDEX_SECRET }),
   ],
   // debug: process.env.NODE_ENV !== "production",
 }
