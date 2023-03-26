@@ -34,10 +34,10 @@ import Spotify from "@auth/core/providers/spotify"
 import Trakt from "@auth/core/providers/trakt"
 import Twitch from "@auth/core/providers/twitch"
 import Twitter from "@auth/core/providers/twitter"
+import Yandex from "@auth/core/providers/yandex"
 import Vk from "@auth/core/providers/vk"
 import Wikimedia from "@auth/core/providers/wikimedia"
 import WorkOS from "@auth/core/providers/workos"
-import Yandex from "@auth/core/providers/yandex"
 
 // // Prisma
 // import { PrismaClient } from "@prisma/client"
