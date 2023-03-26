@@ -132,7 +132,7 @@ export default function Yandex(
     type: "oauth",
     /** @see [Data access](https://yandex.com/dev/id/doc/en/register-client#access) */
     authorization:
-      "https://oauth.yandex.ru/authorize?scope=login:emal+login:info+login:avatar",
+      "https://oauth.yandex.ru/authorize?scope=login:info+login:email+login:avatar",
     token: "https://oauth.yandex.ru/token",
     userinfo: "https://login.yandex.ru/info?format=json",
     profile(profile) {
