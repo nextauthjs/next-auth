@@ -92,12 +92,12 @@
     },
     {
       "source": "/adapters/overview",
-      "destination": "https://authjs.dev/reference/adapter",
+      "destination": "https://authjs.dev/reference/adapters",
       "permanent": true
     },
     {
       "source": "/adapters/models",
-      "destination": "https://authjs.dev/reference/adapter#models",
+      "destination": "https://authjs.dev/reference/adapters#models",
       "permanent": true
     },
     {

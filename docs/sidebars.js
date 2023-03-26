@@ -49,7 +49,7 @@ module.exports = {
         },
       ],
     },
-    "adapters/overview",
+    "adapters",
     "warnings",
     "errors",
     "deployment",

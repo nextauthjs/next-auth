@@ -289,7 +289,7 @@ Ultimately if your request is not accepted or is not actively in development, yo
 </summary>
 <p>
 
-NextAuth.js by default uses JSON Web Tokens for saving the user's session. However, if you use a [database adapter](/adapters/overview), the database will be used to persist the user's session. You can force the usage of JWT when using a database [through the configuration options](/configuration/options#session). Since v4 all our JWT tokens are now encrypted by default with A256GCM.
+NextAuth.js by default uses JSON Web Tokens for saving the user's session. However, if you use a [database adapter](https://authjs.dev/reference/adapters), the database will be used to persist the user's session. You can force the usage of JWT when using a database [through the configuration options](/configuration/options#session). Since v4 all our JWT tokens are now encrypted by default with A256GCM.
 
 </p>
 </details>
