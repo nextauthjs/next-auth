@@ -174,7 +174,7 @@ If you are deploying directly to a particular cloud platform you may also want t
 
 ## Security
 
-Parts of this section has been moved to its [own page](/getting-started/security).
+Parts of this section has been moved to its [own page](/security).
 
 <details>
 <summary>
