@@ -16,26 +16,34 @@ delete typedocConfig.$schema
 
 /**
  * @param {string} name
- * @returns Record<string, any>
+ * @returns Record<[string, any]>
  */
-function createTypeDocAdapterConfig(name) {
+function typedocAdapter(name) {
   const slug = name.toLowerCase().replace(" ", "-")
 
-  return {
-    id: slug,
-    plugin: [require.resolve("./typedoc-mdn-links")],
-    watch: process.env.TYPEDOC_WATCH,
-    entryPoints: [`../packages/adapter-${slug}/src/index.ts`],
-    tsconfig: `../packages/adapter-${slug}/tsconfig.json`,
-    out: `reference/adapter/${slug}`,
-    sidebar: {
-      indexLabel: name,
+  return [
+    "docusaurus-plugin-typedoc",
+    {
+      id: slug,
+      plugin: [require.resolve("./typedoc-mdn-links")],
+      watch: process.env.TYPEDOC_WATCH,
+      entryPoints: [`../packages/adapter-${slug}/src/index.ts`],
+      tsconfig: `../packages/adapter-${slug}/tsconfig.json`,
+      out: `reference/adapter/${slug}`,
+      sidebar: {
+        indexLabel: name,
+      },
+      ...typedocConfig,
     },
-  }
+  ]
 }
 
 /** @type {import("@docusaurus/types").Config} */
 const docusaurusConfig = {
+  markdown: {
+    mermaid: true,
+  },
+  themes: ["@docusaurus/theme-mermaid"],
   title: "Auth.js",
   tagline: "Authentication for the Web.",
   url: "https://authjs.dev",
@@ -85,17 +93,21 @@ const docusaurusConfig = {
           position: "left",
         },
         {
-          to: "/reference/core",
-          // TODO: change to this when the overview page looks better.
-          // to: "/reference",
+          to: "/reference",
           activeBasePath: "/reference",
-          label: "Reference",
+          label: "API Reference",
           position: "left",
         },
         {
           to: "/concepts/faq",
           activeBasePath: "/concepts",
           label: "Concepts",
+          position: "left",
+        },
+        {
+          to: "/security",
+          activeBasePath: "/security",
+          label: "Security",
           position: "left",
         },
         {
@@ -124,7 +136,7 @@ const docusaurusConfig = {
     announcementBar: {
       id: "new-major-announcement",
       content:
-        "<a target='_blank' rel='noopener noreferrer' href='https://next-auth.js.org'>NextAuth.js</a> is becoming Auth.js! 🎉 We're creating Authentication for the Web. Everyone included. Starting with SvelteKit, check out <a href='/reference/sveltekit'>the docs</a>. Note, this site is under active development.",
+        "<a target='_blank' rel='noopener noreferrer' href='https://next-auth.js.org'>NextAuth.js</a> is becoming Auth.js! 🎉 <a target='_blank' rel='noopener noreferrer' href='https://twitter.com/balazsorban44/status/1603082914362986496'>Read the announcement.</a> Note, this site is under active development. 🏗",
       backgroundColor: "#000",
       textColor: "#fff",
     },
@@ -249,34 +261,15 @@ const docusaurusConfig = {
         },
       },
     ],
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        ...createTypeDocAdapterConfig("Firebase"),
-      },
-    ],
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        ...createTypeDocAdapterConfig("Dgraph"),
-      },
-    ],
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        ...createTypeDocAdapterConfig("Prisma"),
-      },
-    ],
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        ...createTypeDocAdapterConfig("Fauna"),
-      },
-    ],
+    typedocAdapter("Dgraph"),
+    typedocAdapter("DynamoDB"),
+    typedocAdapter("Fauna"),
+    typedocAdapter("Firebase"),
+    typedocAdapter("Mikro ORM"),
+    typedocAdapter("MongoDB"),
+    typedocAdapter("Neo4j"),
+    typedocAdapter("PouchDB"),
+    typedocAdapter("Prisma"),
     [
       "docusaurus-plugin-typedoc",
       {
@@ -287,25 +280,13 @@ const docusaurusConfig = {
         entryPoints: [`../packages/adapter-typeorm-legacy/src/index.ts`],
         tsconfig: `../packages/adapter-typeorm-legacy/tsconfig.json`,
         out: `reference/adapter/typeorm`,
-        sidebar: {
-          indexLabel: "TypeORM",
-        },
+        sidebar: { indexLabel: "TypeORM" },
       },
     ],
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        ...createTypeDocAdapterConfig("DynamoDB"),
-      },
-    ],
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        ...createTypeDocAdapterConfig("MongoDB"),
-      },
-    ],
+    typedocAdapter("Sequelize"),
+    typedocAdapter("Supabase"),
+    typedocAdapter("Upstash Redis"),
+    typedocAdapter("Xata"),
   ],
 }
 

@@ -261,7 +261,16 @@ We're happy to announce we've recently created an [OpenCollective](https://openc
         <div>superblog</div><br />
         <sub>☁️ Infrastructure Support</sub>
       </td>
-    </tr><tr></tr>
+    </tr>
+    <tr>
+       <td align="center" valign="top">
+        <a href="https://www.permit.io?utm_source=github&utm_medium=referral&utm_campaign=authjs" target="_blank">
+          <img width="128px" src="https://github.com/permitio.png" alt="permit.io Logo" />
+        </a><br />
+        <div>Permit.io</div><br />
+        <sub>🥉 Bronze Financial Sponsor</sub>
+      </td>
+    </tr>
   </tbody>
 </table>
 <br />

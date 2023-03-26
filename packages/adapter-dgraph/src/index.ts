@@ -1,18 +1,18 @@
 /**
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- *  <p style={{fontWeight: "normal"}}>Official <a href="https://docs.aws.amazon.com/dynamodb/index.html">DynamoDB</a> adapter for Auth.js / NextAuth.js.</p>
- *  <a href="https://aws.amazon.com/dynamodb/">
- *   <img style={{display: "block"}} src="https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/adapter-dynamodb/logo.svg" height="30"/>
+ *  <p style={{fontWeight: "normal"}}>Official <a href="https://dgraph.io/docs">Dgraph</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <a href="https://dgraph.io/">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/dgraph.svg" width="100"/>
  *  </a>
  * </div>
  *
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install next-auth @next-auth/dynamodb-adapter @aws-sdk/client-dynamodb @aws-sdk/lib-dynamodb
+ * npm install next-auth @next-auth/dgraph-adapter
  * ```
  *
- * @module @next-auth/dynamodb-adapter
+ * @module @next-auth/dgraph-adapter
  */
 import { client as dgraphClient } from "./client"
 import { format } from "./utils"
@@ -42,7 +42,7 @@ export interface DgraphAdapterOptions {
 export { format }
 
 /**
- * ### Basic usage
+ * ## Setup
  *
  * Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object:
  *
@@ -61,6 +61,7 @@ export { format }
  *   }),
  * })
  * ```
+ *
  * ### Unsecure schema
  *
  * The quickest way to use Dgraph is by applying the unsecure schema to your [local](https://dgraph.io/docs/graphql/admin/#modifying-a-schema) Dgraph instance or if using Dgraph [cloud](https://dgraph.io/docs/cloud/cloud-quick-start/#the-schema) you can paste the schema in the codebox to update.
@@ -69,7 +70,7 @@ export { format }
  * This approach is not secure or for production use, and does not require a `jwtSecret`.
  * :::
  *
- * > This schema is adapted for use in Dgraph and based upon our main [schema](/reference/adapters/models)
+ * > This schema is adapted for use in Dgraph and based upon our main [schema](https://authjs.dev/reference/adapters#models)
  *
  * #### Example
  *
@@ -113,6 +114,7 @@ export { format }
  *    expires: DateTime
  *  }
  *```
+ *
  * ### Secure schema
  *
  * For production deployments you will want to restrict the access to the types used
@@ -203,7 +205,8 @@ export { format }
  *
  * # Dgraph.Authorization {"VerificationKey":"<YOUR JWT SECRET HERE>","Header":"<YOUR AUTH HEADER HERE>","Namespace":"<YOUR CUSTOM NAMESPACE HERE>","Algo":"HS256"}
  * ```
- *   ### Dgraph.Authorization
+ *
+ *  ### Dgraph.Authorization
  *
  *  In order to secure your graphql backend define the `Dgraph.Authorization` object at the
  *  bottom of your schema and provide `authHeader` and `jwtSecret` values to the DgraphClient.
@@ -239,6 +242,7 @@ export { format }
  *   ...
  *  }
  *  ```
+ *
  *  ### JWT session and `@auth` directive
  *
  * Dgraph only works with HS256 or RS256 algorithms. If you want to use session jwt to securely interact with your dgraph

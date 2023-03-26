@@ -2,7 +2,7 @@
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
  *  <p style={{fontWeight: "normal"}}>Official <a href="https://www.prisma.io/docs">Prisma</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://www.prisma.io/">
- *   <img style={{display: "block"}} src="https://raw.githubusercontent.com/nextauthjs/adapters/main/packages/prisma/logo.svg" width="38" />
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/prisma.svg" width="38" />
  *  </a>
  * </div>
  *
@@ -19,7 +19,7 @@ import type { PrismaClient, Prisma } from "@prisma/client"
 import type { Adapter, AdapterAccount } from "next-auth/adapters"
 
 /**
- * ## Basic usage
+ * ## Setup
  *
  * Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object:
  *
@@ -42,13 +42,13 @@ import type { Adapter, AdapterAccount } from "next-auth/adapters"
  * })
  * ```
  *
- * ## Schema
+ * ## Advanced usage
  *
  * ### Create the Prisma schema from scratch
  *
  * You need to use at least Prisma 2.26.0. Create a schema file in `prisma/schema.prisma` similar to this one:
  *
- * > This schema is adapted for use in Prisma and based upon our main [schema](/reference/adapters/models)
+ * > This schema is adapted for use in Prisma and based upon our main [schema](https://authjs.dev/reference/adapters#models)
  *
  * ```json title="schema.prisma"
  * datasource db {
@@ -160,7 +160,7 @@ import type { Adapter, AdapterAccount } from "next-auth/adapters"
  *
  * Everything else should be the same.
  *
- * ## Naming Conventions
+ * ### Naming Conventions
  *
  * If mixed snake_case and camelCase column names is an issue for you and/or your underlying database system, we recommend using Prisma's `@map()`([see the documentation here](https://www.prisma.io/docs/concepts/components/prisma-schema/names-in-underlying-database)) feature to change the field names. This won't affect Auth.js, but will allow you to customize the column names to whichever naming convention you wish.
  *

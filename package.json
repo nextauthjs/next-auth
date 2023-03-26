@@ -7,7 +7,7 @@
     "build:app": "turbo run build --filter=next-auth-app",
     "build:docs": "turbo run build --filter=docs",
     "build": "turbo run build --filter=next-auth --filter=@next-auth/* --filter=@auth/* --no-deps",
-    "test": "turbo run test --concurrency=1 --filter=[HEAD^1] --filter=./packages/* --filter=!*pouchdb-* --filter=!@*upstash* --filter=!*dynamodb-*",
+    "test": "turbo run test --concurrency=1 --filter=[HEAD^1] --filter=./packages/* --filter=!@*upstash* --filter=!*dynamodb-*",
     "clean": "turbo run clean --no-cache",
     "dev:db": "turbo run dev --parallel --continue --filter=next-auth-app...",
     "dev": "turbo run dev --parallel --continue --filter=next-auth-app... --filter=!./packages/adapter-*",
@@ -58,9 +58,6 @@
     }
   ],
   "pnpm": {
-    "overrides": {
-      "undici": "5.11.0"
-    },
     "patchedDependencies": {
       "@balazsorban/monorepo-release@0.1.8": "patches/@balazsorban__monorepo-release@0.1.8.patch"
     }
