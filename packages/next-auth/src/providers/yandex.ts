@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#24292f", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div style={{backgroundColor: "#ffcc00", display: "flex", justifyContent: "space-between", color: "#000", padding: 16}}>
  * <span>Built-in <b>Yandex</b> integration.</span>
  * <a href="https://github.com">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/yandex.svg" height="48" width="48"/>
@@ -12,12 +12,14 @@
 
 import { OAuthConfig, OAuthUserConfig } from "."
 
-/** @see [Getting information about the user](https://yandex.com/dev/id/doc/en/user-information) */
-/** @see [Access to email address](https://yandex.com/dev/id/doc/en/user-information#email-access) */
-/** @see [Access to the user's profile picture](https://yandex.com/dev/id/doc/en/user-information#avatar-access) */
-/** @see [Access to the date of birth](https://yandex.com/dev/id/doc/en/user-information#birthday-access) */
-/** @see [Access to login, first name, last name, and gender](https://yandex.com/dev/id/doc/en/user-information#name-access) */
-/** @see [Access to the phone number](https://yandex.com/dev/id/doc/en/user-information#phone-access) */
+/**
+ * @see [Getting information about the user](https://yandex.com/dev/id/doc/en/user-information)
+ * @see [Access to email address](https://yandex.com/dev/id/doc/en/user-information#email-access)
+ * @see [Access to the user's profile picture](https://yandex.com/dev/id/doc/en/user-information#avatar-access)
+ * @see [Access to the date of birth](https://yandex.com/dev/id/doc/en/user-information#birthday-access)
+ * @see [Access to login, first name, last name, and gender](https://yandex.com/dev/id/doc/en/user-information#name-access)
+ * @see [Access to the phone number](https://yandex.com/dev/id/doc/en/user-information#phone-access)
+ */
 export interface YandexProfile {
   /** User's Yandex login. */
   login: string
@@ -42,21 +44,19 @@ export interface YandexProfile {
   /**
    * ID of the Yandex user's profile picture.
    * The profile picture with this ID can be downloaded via a link that looks like this:
-   * https://avatars.yandex.net/get-yapic/<default_avatar_id>/<size>
-   * Available sizes:
-   * islands-small: 28×28 pixels.
-   * islands-34: 34×34 pixels.
-   * islands-middle: 42×42 pixels.
-   * islands-50: 50×50 pixels.
-   * islands-retina-small: 56×56 pixels.
-   * islands-68: 68×68 pixels.
-   * islands-75: 75×75 pixels.
-   * islands-retina-middle: 84×84 pixels.
-   * islands-retina-50: 100×100 pixels.
-   * islands-200: 200×200 pixels.
-   * Example: https://avatars.yandex.net/get-yapic/31804/BYkogAC6AoB17bN1HKRFAyKiM4-1/islands-200
+   * @example "https://avatars.yandex.net/get-yapic/31804/BYkogAC6AoB17bN1HKRFAyKiM4-1/islands-200"
    */
-  default_avatar_id?: string
+  default_avatar_id?:
+    | "islands-small"
+    | "islands-34"
+    | "islands-middle"
+    | "islands-50"
+    | "islands-retina-small"
+    | "islands-68"
+    | "islands-75"
+    | "islands-retina-middle"
+    | "islands-retina-50"
+    | "islands-200"
   /**
    * The user's date of birth in YYYY-MM-DD format.
    * Unknown elements of the date are filled in with zeros, such as: `0000-12-23`.
@@ -107,20 +107,16 @@ export interface YandexProfile {
  * @see [Source code](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/yandex.ts)
  *
  *:::tip
- *
  * The Yandex provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/yandex.ts).
  * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
- *
  * :::
  *
  * :::info **Disclaimer**
- *
  * If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
  *
  * Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
  * the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
  * we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).
- *
  * :::
  */
 export default function Yandex(
