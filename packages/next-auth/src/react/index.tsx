@@ -111,7 +111,9 @@ export const SessionContext = React.createContext?.<
  *
  * [Documentation](https://next-auth.js.org/getting-started/client#usesession)
  */
-export function useSession<R extends boolean>(options?: UseSessionOptions<R>) {
+export function useSession<R extends boolean>(
+  options?: UseSessionOptions<R>
+): SessionContextValue<R> {
   if (!SessionContext) {
     throw new Error("React Context is unavailable in Server Components")
   }
@@ -140,7 +142,11 @@ export function useSession<R extends boolean>(options?: UseSessionOptions<R>) {
   }, [requiredAndNotLoading, onUnauthenticated])
 
   if (requiredAndNotLoading) {
-    return { data: value.data, status: "loading" } as const
+    return {
+      data: value.data,
+      update: value.update,
+      status: "loading",
+    }
   }
 
   return value
