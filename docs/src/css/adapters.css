@@ -20,9 +20,13 @@
   margin: 0;
   margin-right: 8px;
   margin-bottom: 8px;
-  color: #f5f5f5;
+  color: black;
   text-decoration: none;
   transition: 0.2s background-color ease-in-out;
+}
+
+html[data-theme="dark"] .adapter-card {
+  color: #f5f5f5;
 }
 
 .adapter-card:hover {
