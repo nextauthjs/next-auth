@@ -9,7 +9,7 @@
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install install next-auth @next-auth/sequelize-adapter sequelize
+ * npm install next-auth @next-auth/sequelize-adapter sequelize
  * ```
  *
  * @module @next-auth/sequelize-adapter
