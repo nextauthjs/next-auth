@@ -7,19 +7,25 @@
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
-  "files": [
-    "dist",
-    "README.md"
-  ],
   "author": "Josh Schlesser <josh@schlesser.dev>",
   "contributors": [],
-  "main": "dist/index.js",
   "license": "ISC",
   "keywords": [
     "authjs",
     "authjs.dev",
     "cloudflare",
     "d1"
+  ],
+  "type": "module",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
   ],
   "private": false,
   "publishConfig": {
