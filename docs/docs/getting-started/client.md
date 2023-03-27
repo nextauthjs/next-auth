@@ -215,14 +215,17 @@ Assuming a `strategy: "database"` is used, the `update()` method will trigger th
 
 ```ts title="pages/api/auth/[...nextauth].ts"
 ...
+const adapter = PrismaAdapter(prisma)
 export default NextAuth({
   ...
-  adapter: PrismaAdapter(prisma),
+  adapter,
   callbacks: {
     // Using the `...rest` parameter to be able to narrow down the type based on `trigger`
-    session({ session, ...rest }) {
+    async session({ session, ...rest }) {
       if (rest.trigger === "update") {
+        // Here you can also update the session in the database if it's not already updated.
         // Note, that `rest.session` can be any arbitrary object, remember to validate it!
+        await adapter.updateUser(rest.session.user.id, { name: rest.session.name })
         session.name = rest.session.name
       }
       return session
