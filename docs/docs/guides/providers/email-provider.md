@@ -23,7 +23,7 @@ The Email Provider can be used with both JSON Web Tokens and database sessions, 
 
 The **Email Provider** comes with a set of default options:
 
-- [Email Provider options](/reference/providers/email)
+- [Email Provider options](/guides/providers/email)
 
 You can override any of the options to suit your own use case.
 
