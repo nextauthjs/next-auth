@@ -87,7 +87,7 @@ function useOnline() {
   return isOnline
 }
 
-type UpdateSession = (data: any) => Promise<void>
+type UpdateSession = (data?: any) => Promise<void>
 
 export type SessionContextValue<R extends boolean = false> = R extends true
   ?
