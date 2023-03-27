@@ -17,7 +17,7 @@ The functionality provided for credentials-based authentication is intentionally
 
 The **Credentials Provider** comes with a set of default options:
 
-- [Credentials Provider options](/reference/providers/credentials)
+- [Credentials Provider options](/reference/core/providers_credentials)
 
 You can override any of the options to suit your own use case.
 

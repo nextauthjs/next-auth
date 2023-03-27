@@ -239,7 +239,7 @@ Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.1
 
 ## `nodemailer`
 
-Like `typeorm` and `prisma`, [`nodemailer`](https://npmjs.com/package/nodemailer) is no longer included as a dependency by default. If you are using the Email provider you must install it in your project manually, or use any other Email library in the [`sendVerificationRequest`](/reference/providers/email) callback. This reduces bundle size for those not actually using the Email provider. Remember, when using the Email provider, it is mandatory to also use a database adapter due to the fact that verification tokens need to be persisted longer term for the magic link functionality to work.
+Like `typeorm` and `prisma`, [`nodemailer`](https://npmjs.com/package/nodemailer) is no longer included as a dependency by default. If you are using the Email provider you must install it in your project manually, or use any other Email library in the [`sendVerificationRequest`](/guides/providers/email) callback. This reduces bundle size for those not actually using the Email provider. Remember, when using the Email provider, it is mandatory to also use a database adapter due to the fact that verification tokens need to be persisted longer term for the magic link functionality to work.
 
 Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.2
 

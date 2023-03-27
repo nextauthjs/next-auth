@@ -105,6 +105,12 @@ const docusaurusConfig = {
           position: "left",
         },
         {
+          to: "/security",
+          activeBasePath: "/security",
+          label: "Security",
+          position: "left",
+        },
+        {
           type: "docsVersionDropdown",
           position: "right",
           dropdownActiveClassDisabled: true,
