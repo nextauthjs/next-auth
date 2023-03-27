@@ -56,7 +56,7 @@ Using a Auth.js / NextAuth.js adapter you can connect to any database service or
   <a href="/reference/adapter/typeorm" class="adapter-card">
     <img src="/img/adapters/typeorm.png" width="30" />
     <h4 class="adapter-card__title">TypeORM Adapter</h4>
-  </a> 
+  </a>
   <a href="/reference/adapter/upstash-redis" class="adapter-card">
     <img src="/img/adapters/upstash-redis.svg" width="30" />
     <h4 class="adapter-card__title">Upstash Adapter</h4>
@@ -176,7 +176,7 @@ A single User can have multiple open Verification Tokens (e.g. to sign in to dif
 It has been designed to be extendable for other verification purposes in the future (e.g. 2FA / short codes).
 
 :::note
-Auth.js makes sure that every token is usable only once, and by default has a short (1 day, can be configured by [`maxAge`](/reference/providers/email)) lifetime. If your user did not manage to finish the sign-in flow in time, they will have to start the sign-in process again.
+Auth.js makes sure that every token is usable only once, and by default has a short (1 day, can be configured by [`maxAge`](/guides/providers/email)) lifetime. If your user did not manage to finish the sign-in flow in time, they will have to start the sign-in process again.
 :::
 
 :::tip
