@@ -5,10 +5,13 @@ import type {
   ProviderType,
   EmailConfig,
   CredentialsConfig,
-  OAuthConfigInternal,
+  OAuthConfig,
+  AuthorizationEndpointHandler,
+  TokenEndpointHandler,
+  UserinfoEndpointHandler,
 } from "../providers"
 import type { TokenSetParameters } from "openid-client"
-import type { DefaultJWT, JWT, JWTOptions } from "../jwt"
+import type { JWT, JWTOptions } from "../jwt"
 import type { LoggerInstance } from "../utils/logger"
 import type { CookieSerializeOptions } from "cookie"
 
@@ -316,28 +319,22 @@ export interface CallbacksOptions<P = Profile, A = Account> {
   session: (
     params:
       | {
-          session: { user: DefaultJWT; expires: ISODateString }
+          session: DefaultSession
+          /** Available when {@link SessionOptions.strategy} is set to `"jwt"` */
           token: JWT
-          trigger: "jwt"
-        }
-      | {
-          session: DefaultSession
+          /** Available when {@link SessionOptions.strategy} is set to `"database"`. */
           user: AdapterUser
-          trigger: "database"
-        }
-      | {
-          session: DefaultSession
-          user: AdapterUser
+        } & {
           /**
-           * When using {@link SessionOptions.strategy} `"database"`, this is the data
+           * Available when using {@link SessionOptions.strategy} `"database"`, this is the data
            * sent from the client via the [`useSession().update`](https://next-auth.js.org/getting-started/client#update-session) method.
            *
            * ⚠ Note, you should validate this data before using it.
            */
-          newSession?: any
+          newSession: any
           trigger: "update"
         }
-  ) => Awaitable<Session>
+  ) => Awaitable<Session | DefaultSession>
   /**
    * This callback is called whenever a JSON Web Token is created (i.e. at sign in)
    * or updated (i.e whenever a session is accessed in the client).
@@ -352,34 +349,53 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    */
   jwt: (
     // TODO: remove in `@auth/core` in favor of `trigger: "signUp"`
-    params: { isNewUser?: boolean } & (
-      | {
-          token: DefaultJWT
-          user: User | AdapterUser
-          account: A | null
-          profile?: P
-          trigger: "signIn"
-        }
-      | {
-          token: DefaultJWT
-          user: User | AdapterUser
-          account: A | null
-          profile?: P
-          trigger: "signUp"
-        }
-      | {
-          token: JWT
-          /**
-           * When using {@link SessionOptions.strategy} `"jwt"`, this is the data
-           * sent from the client via the [`useSession().update`](https://next-auth.js.org/getting-started/client#update-session) method.
-           *
-           * ⚠ Note, you should validate this data before using it.
-           */
-          session?: any
-          trigger: "update"
-        }
-      | { token: JWT; trigger: "poll" }
-    )
+    params: {
+      /**
+       * When `trigger` is `"signIn"` or `"signUp"`, it will be a subset of {@link JWT},
+       * `name`, `email` and `picture` will be included.
+       *
+       * Otherwise, it will be the full {@link JWT} for subsequent calls.
+       */
+      token: JWT
+      /**
+       * Either the result of the {@link OAuthConfig.profile} or the {@link CredentialsConfig.authorize} callback.
+       * @note available when `trigger` is `"signIn"` or `"signUp"`.
+       *
+       * Resources:
+       * - [Credentials Provider](https://next-auth.js.org/providers/credentials)
+       * - [User database model](https://authjs.dev/reference/adapters#user)
+       */
+      user: User | AdapterUser
+      /**
+       * Contains information about the provider that was used to sign in.
+       * Also includes {@link TokenSet}
+       * @note available when `trigger` is `"signIn"` or `"signUp"`
+       */
+      account: A | null
+      /**
+       * The OAuth profile returned from your provider.
+       * (In case of OIDC it will be the decoded ID Token or /userinfo response)
+       * @note available when `trigger` is `"signIn"`.
+       */
+      profile?: P
+      /**
+       * Check why was the jwt callback invoked. Possible reasons are:
+       * - user sign-in: First time the callback is invoked, `user`, `profile` and `account` will be present.
+       * - user sign-up: a user is created for the first time in the database (when {@link SessionOptions.strategy} is set to `"database"`})
+       * - update event: Triggered by the [`useSession().update`](https://next-auth.js.org/getting-started/client#update-session) method.
+       * In case of the latter, `trigger` will be `undefined`.
+       */
+      trigger?: "signIn" | "signUp" | "update"
+      /** @deprecated use `trigger === "signUp"` instead */
+      isNewUser?: boolean
+      /**
+       * When using {@link SessionOptions.strategy} `"jwt"`, this is the data
+       * sent from the client via the [`useSession().update`](https://next-auth.js.org/getting-started/client#update-session) method.
+       *
+       * ⚠ Note, you should validate this data before using it.
+       */
+      session?: any
+    }
   ) => Awaitable<JWT>
 }
 
@@ -532,6 +548,14 @@ export interface DefaultUser {
 export interface User extends DefaultUser {}
 
 // Below are types that are only supposed be used by next-auth internally
+
+/** @internal */
+export interface OAuthConfigInternal<P>
+  extends Omit<OAuthConfig<P>, "authorization" | "token" | "userinfo"> {
+  authorization?: AuthorizationEndpointHandler
+  token?: TokenEndpointHandler
+  userinfo?: UserinfoEndpointHandler
+}
 
 /** @internal */
 export type InternalProvider<T = ProviderType> = (T extends "oauth"

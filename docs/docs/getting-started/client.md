@@ -152,7 +152,7 @@ More information can be found in the following [GitHub Issue](https://github.com
 
 The `useSession()` hook exposes a `update(data?: any): Promise<Session | null>` method that can be used to update the session, without reloading the page.
 
-You can optionally pass an arbitrary object as the first argument, that will be accessible on the server to merge with the session object.
+You can optionally pass an arbitrary object as the first argument, which will be accessible on the server to merge with the session object.
 
 If you are not passing any argument, the session will be reloaded from the server. (This is useful if you want to update the session after a server-side mutation, like updating in the database.)
 
@@ -200,10 +200,10 @@ export default NextAuth({
   ...
   callbacks: {
     // Using the `...rest` parameter to be able to narrow down the type based on `trigger`
-    jwt({ token, ...rest }) {
-      if (rest.trigger === "update") {
-        // Note, that `rest.session` can be any arbitrary object, remember to validate it!
-        token.name = rest.session.name
+    jwt({ token, trigger, session }) {
+      if (trigger === "update" && session?.name) {
+        // Note, that `session` can be any arbitrary object, remember to validate it!
+        token.name = session
       }
       return token
     }
@@ -221,12 +221,14 @@ export default NextAuth({
   adapter,
   callbacks: {
     // Using the `...rest` parameter to be able to narrow down the type based on `trigger`
-    async session({ session, ...rest }) {
-      if (rest.trigger === "update") {
-        // Here you can also update the session in the database if it's not already updated.
-        // Note, that `rest.session` can be any arbitrary object, remember to validate it!
-        await adapter.updateUser(rest.session.user.id, { name: rest.session.name })
-        session.name = rest.session.name
+    async session({ session, trigger, newSession }) {
+      // Note, that `rest.session` can be any arbitrary object, remember to validate it!
+      if (trigger === "update" && newSession?.name) {
+        // You can update the session in the database if it's not already updated.
+        // await adapter.updateUser(session.user.id, { name: newSession.name })
+
+        // Make sure the updated value is reflected on the client
+        session.name = newSession.name
       }
       return session
     }

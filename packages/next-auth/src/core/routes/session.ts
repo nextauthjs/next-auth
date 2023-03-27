@@ -47,9 +47,10 @@ export default async function session(
 
       if (!decodedToken) throw new Error("JWT invalid")
 
+      // @ts-expect-error
       const token = await callbacks.jwt({
         token: decodedToken,
-        trigger: isUpdate ? "update" : "poll",
+        ...(isUpdate && { trigger: "update" }),
         session: newSession,
       })
 
@@ -58,6 +59,7 @@ export default async function session(
       // By default, only exposes a limited subset of information to the client
       // as needed for presentation purposes (e.g. "you are logged in as...").
 
+      // @ts-expect-error Property 'user' is missing in type
       const updatedSession = await callbacks.session({
         session: {
           user: {
@@ -68,7 +70,6 @@ export default async function session(
           expires: newExpires.toISOString(),
         },
         token,
-        trigger: "jwt",
       })
 
       // Return session payload as response
@@ -130,6 +131,8 @@ export default async function session(
         }
 
         // Pass Session through to the session callback
+
+        // @ts-expect-error Property 'token' is missing in type
         const sessionPayload = await callbacks.session({
           // By default, only exposes a limited subset of information to the client
           // as needed for presentation purposes (e.g. "you are logged in as...").
@@ -138,8 +141,8 @@ export default async function session(
             expires: session.expires.toISOString(),
           },
           user,
-          trigger: isUpdate ? "update" : "database",
           newSession,
+          ...(isUpdate ? { trigger: "update" } : {}),
         })
 
         // Return session payload as response
