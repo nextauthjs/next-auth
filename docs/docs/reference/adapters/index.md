@@ -133,7 +133,7 @@ If a user first signs in with OAuth then their email address is automatically po
 This provides a way to contact users and for users to maintain access to their account and sign in using email in the event they are unable to sign in with the OAuth provider in future (if the [Email Provider](/getting-started/email-tutorial) is configured).
 :::
 
-User creation in the database is automatic, and happens when the user is logging in for the first time with a provider. The default data saved is `id`, `name`, `email` and `image`. You can add more profile data by returning extra fields in your [OAuth provider's `profile()`](/reference/providers/oauth) callback.
+User creation in the database is automatic, and happens when the user is logging in for the first time with a provider. The default data saved is `id`, `name`, `email` and `image`. You can add more profile data by returning extra fields in your [OAuth provider](/guides/providers/custom-provider)'s [`profile()`](/reference/core/providers#profile) callback.
 
 ### Account
 
