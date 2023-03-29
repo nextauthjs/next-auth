@@ -44,7 +44,7 @@ export interface AzureADB2CProfile {
  * 2. [App Registration](https://docs.microsoft.com/en-us/azure/active-directory-b2c/tutorial-register-applications)
  * 3. [User Flow](https://docs.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-user-flows)
  *
- * For the step "User attributes and token claims" you might want to set the following:
+ * For the step "User attributes and token claims" set the following:
  *
  * - Collect attribute:
  *   - Email Address

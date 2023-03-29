@@ -3,21 +3,21 @@ id: credentials
 title: Credentials Provider
 ---
 
-The Credentials provider allows you to handle signing in with arbitrary credentials, such as a username and password, domain, or two factor authentication or hardware device (e.g. YubiKey U2F / FIDO).
+The Credentials provider allows you to handle signing in with arbitrary credentials, such as a username and password, domain, or two-factor authentication or hardware device (e.g. YubiKey U2F / FIDO).
 
 It is intended to support use cases where you have an existing system you need to authenticate users against.
 
 It comes with the constraint that users authenticated in this manner are not persisted in the database, and consequently that the Credentials provider can only be used if JSON Web Tokens are enabled for sessions.
 
 :::warning
-The functionality provided for credentials based authentication is intentionally limited to discourage use of passwords due to the inherent security risks associated with them and the additional complexity associated with supporting usernames and passwords.
+The functionality provided for credentials-based authentication is intentionally limited to discourage the use of passwords due to the inherent security risks associated with them and the additional complexity associated with supporting usernames and passwords.
 :::
 
 ## Options
 
 The **Credentials Provider** comes with a set of default options:
 
-- [Credentials Provider options](/reference/providers/credentials)
+- [Credentials Provider options](/reference/core/providers_credentials)
 
 You can override any of the options to suit your own use case.
 
@@ -33,7 +33,7 @@ If you return an object it will be persisted to the JSON Web Token and the user 
 
 3. If you throw an Error, the user will be sent to the error page with the error message as a query parameter.
 
-The Credentials provider's `authorize()` method also provides the request object as the second parameter (see example below).
+The Credentials provider's `authorize()` method also provides the request object as the second parameter (see the example below).
 
 ```js title="pages/api/auth/[...nextauth].js"
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -89,7 +89,7 @@ You can specify more than one credentials provider by specifying a unique `id` f
 
 You can also use them in conjunction with other provider options.
 
-As with all providers, the order you specify them is the order they are displayed on the sign in page.
+As with all providers, the order you specify is the order they are displayed on the sign-in page.
 
 ```js
 providers: [

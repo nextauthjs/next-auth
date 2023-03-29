@@ -93,17 +93,21 @@ const docusaurusConfig = {
           position: "left",
         },
         {
-          to: "/reference/core",
-          // TODO: change to this when the overview page looks better.
-          // to: "/reference",
+          to: "/reference",
           activeBasePath: "/reference",
-          label: "Reference",
+          label: "API Reference",
           position: "left",
         },
         {
           to: "/concepts/faq",
           activeBasePath: "/concepts",
           label: "Concepts",
+          position: "left",
+        },
+        {
+          to: "/security",
+          activeBasePath: "/security",
+          label: "Security",
           position: "left",
         },
         {
@@ -132,7 +136,7 @@ const docusaurusConfig = {
     announcementBar: {
       id: "new-major-announcement",
       content:
-        "<a target='_blank' rel='noopener noreferrer' href='https://next-auth.js.org'>NextAuth.js</a> is becoming Auth.js! 🎉 We're creating Authentication for the Web. Everyone included. Starting with SvelteKit, check out <a href='/reference/sveltekit'>the docs</a>. Note, this site is under active development.",
+        "<a target='_blank' rel='noopener noreferrer' href='https://next-auth.js.org'>NextAuth.js</a> is becoming Auth.js! 🎉 <a target='_blank' rel='noopener noreferrer' href='https://twitter.com/balazsorban44/status/1603082914362986496'>Read the announcement.</a> Note, this site is under active development. 🏗",
       backgroundColor: "#000",
       textColor: "#fff",
     },
