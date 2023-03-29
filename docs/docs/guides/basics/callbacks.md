@@ -2,6 +2,9 @@
 title: Callbacks
 ---
 
+import Tabs from "@theme/Tabs"
+import TabItem from "@theme/TabItem"
+
 Callbacks are **asynchronous** functions you can use to control what happens when an action is performed.
 
 Callbacks are extremely powerful, especially in scenarios involving JSON Web Tokens as they allow you to implement access controls without a database and to integrate with external databases or APIs.
@@ -11,6 +14,59 @@ If you want to pass data such as an Access Token or User ID to the browser when 
 :::
 
 You can specify a handler for any of the callbacks below.
+
+<Tabs>
+  <TabItem value="typescript" label="typescript">
+
+```js title="pages/api/auth/[...nextauth].ts"s
+  import { User, Account, Profile, Session } from "next-auth";
+  import { AdapterUser } from "next-auth/adapters";
+  import { CredentialInput } from "next-auth/providers";
+  import { JWT } from "next-auth/jwt";
+
+  callbacks: {
+    async signIn(props: {
+      user: User | AdapterUser;
+      account: Account | null;
+      profile?: Profile;
+      email?: {
+        verificationRequest?: boolean;
+      };
+      credentials?: Record<string, CredentialInput>;
+    }) {
+      const {user, account, profile, email, credentials} = props
+      return true;
+    },
+
+    async redirect(params: { url: string, baseUrl: string }) {
+      const { url, baseUrl } = params;
+      return baseUrl;
+    },
+
+    async session(params: {
+      session: Session;
+      user: User | AdapterUser;
+      token: JWT;
+    }) {
+      const { session, user, token } = params;
+      return session;
+    },
+
+    async jwt(params: {
+      token: JWT;
+      user?: User | AdapterUser;
+      account?: Account | null;
+      profile?: Profile;
+      isNewUser?: boolean;
+    }) {
+      const { token, user, account, profile, isNewUser } = params;
+      return token;
+    }
+  }
+```
+
+  </TabItem>
+  <TabItem value="javascript" label="javascript">
 
 ```js title="pages/api/auth/[...nextauth].js"s
   callbacks: {
@@ -29,11 +85,50 @@ You can specify a handler for any of the callbacks below.
   }
 ```
 
+  </TabItem>
+</Tabs>
+
 The documentation below shows how to implement each callback, their default behavior and an example of what the response for each callback should be. Note that configuration options and authentication providers you are using can impact the values passed to the callbacks.
 
 ## Sign in callback
 
 Use the `signIn()` callback to control if a user is allowed to sign in.
+
+<Tabs>
+  <TabItem value="typescript" label="typescript">
+
+```js title="pages/api/auth/[...nextauth].ts"
+import { User, Account, Profile, Session } from "next-auth";
+import { AdapterUser } from "next-auth/adapters";
+import { CredentialInput } from "next-auth/providers";
+import { JWT } from "next-auth/jwt";
+
+callbacks: {
+  async signIn(props: {
+      user: User | AdapterUser;
+      account: Account | null;
+      profile?: Profile;
+      email?: {
+        verificationRequest?: boolean;
+      };
+      credentials?: Record<string, CredentialInput>;
+    }) {
+      const {user, account, profile, email, credentials} = props
+      const isAllowedToSignIn = true
+      if (isAllowedToSignIn) {
+        return true
+    } else {
+      // Return false to display a default error message
+        return false
+      // Or you can return a URL to redirect to:
+      // return '/unauthorized'
+    }
+  }
+}
+```
+
+</TabItem>
+<TabItem value="javascript" label="javascript">
 
 ```js title="pages/api/auth/[...nextauth].js"
 callbacks: {
@@ -50,6 +145,9 @@ callbacks: {
   }
 }
 ```
+
+  </TabItem>
+</Tabs>
 
 - When using the **Email Provider** the `signIn()` callback is triggered both when the user makes a **Verification Request** (before they are sent an email with a link that will allow them to sign in) and again _after_ they activate the link in the sign-in email.
 
@@ -79,6 +177,25 @@ By default only URLs on the same URL as the site are allowed, you can use the re
 
 The default redirect callback looks like this:
 
+<Tabs>
+  <TabItem value="typescript" label="typescript">
+
+```js title="pages/api/auth/[...nextauth].ts"
+callbacks: {
+ async redirect(params: { url: string, baseUrl: string }) {
+      const { url, baseUrl } = params;
+      // Allows relative callback URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url
+      return baseUrl
+  }
+}
+```
+
+  </TabItem>
+  <TabItem value="javascript" label="javascript">
+
 ```js title="pages/api/auth/[...nextauth].js"
 callbacks: {
   async redirect({ url, baseUrl }) {
@@ -90,6 +207,9 @@ callbacks: {
   }
 }
 ```
+
+  </TabItem>
+</Tabs>
 
 :::note
 The redirect callback may be invoked more than once in the same flow.
@@ -107,6 +227,32 @@ Requests to `/api/auth/signin`, `/api/auth/session` and calls to `getSession()`,
 
 The contents _user_, _account_, _profile_ and _isNewUser_ will vary depending on the provider and on if you are using a database or not. You can persist data such as User ID, OAuth Access Token in this token. To make it available in the browser, check out the [`session()` callback](#session-callback) as well.
 
+<Tabs>
+  <TabItem value="typescript" label="typescript">
+
+```js title="pages/api/auth/[...nextauth].ts"
+import { Account } from "next-auth";
+import { AdapterUser } from "next-auth/adapters";
+import { JWT } from "next-auth/jwt";
+
+callbacks: {
+  async jwt(params: {
+      token: JWT & { accessToken?: string };
+      account?: Account | null;
+    }) {
+      const { token, account } = params;
+      // Persist the OAuth access_token to the token right after signin
+      if (account) {
+        token.accessToken = account.access_token
+      }
+      return token
+  }
+}
+```
+
+  </TabItem>
+   <TabItem value="javascript" label="javascript">
+
 ```js title="pages/api/auth/[...nextauth].js"
 callbacks: {
   async jwt({ token, account }) {
@@ -118,6 +264,9 @@ callbacks: {
   }
 }
 ```
+
+  </TabItem>
+</Tabs>
 
 :::tip
 Use an if branch to check for the existence of parameters (apart from `token`). If they exist, this means that the callback is being invoked for the first time (i.e. the user is being signed in). This is a good place to persist additional data like an `access_token` in the JWT. Subsequent invocations will only contain the `token` parameter.
@@ -132,6 +281,31 @@ e.g. `getSession()`, `useSession()`, `/api/auth/session`
 - When using database sessions, the User object is passed as an argument.
 - When using JSON Web Tokens for sessions, the JWT payload is provided instead.
 
+<Tabs>
+  <TabItem value="typescript" label="typescript">
+
+```js title="pages/api/auth/[...nextauth].ts"
+import { User, Session } from "next-auth";
+import { AdapterUser } from "next-auth/adapters";
+import { JWT } from "next-auth/jwt";
+
+callbacks: {
+  async session(params: {
+      session: Session & { accessToken?: string };
+      user: User | AdapterUser;
+      token: JWT & { accessToken?: string };
+    }) {
+      const { session, user, token } = params;
+      // Send properties to the client, like an access_token from a provider.
+      session.accessToken = token.accessToken
+      return session
+  }
+}
+```
+
+  </TabItem>
+  <TabItem value="javascript" label="javascript">
+
 ```js title="pages/api/auth/[...nextauth].js"
 callbacks: {
   async session({ session, token, user }) {
@@ -141,6 +315,9 @@ callbacks: {
   }
 }
 ```
+
+   </TabItem>
+</Tabs>
 
 :::tip
 When using JSON Web Tokens the `jwt()` callback is invoked before the `session()` callback, so anything you add to the
