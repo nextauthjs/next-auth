@@ -231,7 +231,7 @@ export async function AuthHandler<
   } else if (method === "POST") {
     switch (action) {
       case "signin":
-        // Verified CSRF Token required for all sign in routes
+        // Verified CSRF Token required for all sign-in routes
         if (options.csrfTokenVerified && options.provider) {
           const signin = await routes.signin({
             query: req.query,
@@ -274,7 +274,7 @@ export async function AuthHandler<
           return { ...callback, cookies }
         }
         break
-      case "_log":
+      case "_log": {
         if (authOptions.logger) {
           try {
             const { code, level, ...metadata } = req.body ?? {}
@@ -285,6 +285,24 @@ export async function AuthHandler<
           }
         }
         return {}
+      }
+      case "session": {
+        // Verified CSRF Token required for session updates
+        if (options.csrfTokenVerified) {
+          const session = await routes.session({
+            options,
+            sessionStore,
+            newSession: req.body?.data,
+            isUpdate: true,
+          })
+          if (session.cookies) cookies.push(...session.cookies)
+          return { ...session, cookies } as any
+        }
+
+        // If CSRF token is invalid, return a 400 status code
+        // we should not redirect to a page as this is an API route
+        return { status: 400, body: {} as any, cookies }
+      }
       default:
     }
   }

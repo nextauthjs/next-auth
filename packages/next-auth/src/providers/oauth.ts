@@ -160,14 +160,6 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   allowDangerousEmailAccountLinking?: boolean
 }
 
-/** @internal */
-export interface OAuthConfigInternal<P>
-  extends Omit<OAuthConfig<P>, "authorization" | "token" | "userinfo"> {
-  authorization?: AuthorizationEndpointHandler
-  token?: TokenEndpointHandler
-  userinfo?: UserinfoEndpointHandler
-}
-
 export type OAuthUserConfig<P> = Omit<
   Partial<OAuthConfig<P>>,
   "options" | "type"

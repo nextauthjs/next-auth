@@ -148,10 +148,133 @@ Because of how `_app` is written, it won't unnecessarily contact the `/api/auth/
 
 More information can be found in the following [GitHub Issue](https://github.com/nextauthjs/next-auth/issues/1210).
 
-### NextAuth.js + React Query
+### Updating the session
 
-You can create your own session management solution using data fetching libraries like [React Query](https://tanstack.com/query/v4/docs/adapters/react-query) or [SWR](https://swr.vercel.app). You can use the [original implementation of `@next-auth/react-query`](https://github.com/nextauthjs/react-query) and look at the [`next-auth/react` source code](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/react/index.tsx) as a starting point.
+The `useSession()` hook exposes a `update(data?: any): Promise<Session | null>` method that can be used to update the session, without reloading the page.
 
+You can optionally pass an arbitrary object as the first argument, which will be accessible on the server to merge with the session object.
+
+If you are not passing any argument, the session will be reloaded from the server. (This is useful if you want to update the session after a server-side mutation, like updating in the database.)
+
+:::caution
+The data object is coming from the client, so it needs to be validated on the server before saving.
+:::
+
+#### Example
+
+```tsx title="pages/profile.tsx"
+import { useSession } from "next-auth/react"
+
+export default function Page() {
+  const { data: session, status, update } = useSession()
+
+  if (status === "authenticated") {
+    return (
+      <>
+        <p>Signed in as {session.user.name}</p>
+        
+        {/* Update the value by sending it to the backend. */}
+        <button onClick={() => update({ name: "John Doe" })}>
+          Edit name
+        </button>
+        {/*
+          * Only trigger a session update, assuming you already updated the value server-side.
+          * All `useSession().data` references will be updated.
+          */}
+        <button onClick={() => update()}>
+          Edit name
+        </button>
+      </>
+    )
+  }
+
+  return <a href="/api/auth/signin">Sign in</a>
+}
+```
+
+Assuming a `strategy: "jwt"` is used, the `update()` method will trigger a `jwt` callback with the `trigger: "update"` option. You can use this to update the session object on the server.
+
+```ts title="pages/api/auth/[...nextauth].ts"
+...
+export default NextAuth({
+  ...
+  callbacks: {
+    // Using the `...rest` parameter to be able to narrow down the type based on `trigger`
+    jwt({ token, trigger, session }) {
+      if (trigger === "update" && session?.name) {
+        // Note, that `session` can be any arbitrary object, remember to validate it!
+        token.name = session
+      }
+      return token
+    }
+  }
+})
+```
+
+Assuming a `strategy: "database"` is used, the `update()` method will trigger the `session` callback with the `trigger: "update"` option. You can use this to update the session object on the server.
+
+```ts title="pages/api/auth/[...nextauth].ts"
+...
+const adapter = PrismaAdapter(prisma)
+export default NextAuth({
+  ...
+  adapter,
+  callbacks: {
+    // Using the `...rest` parameter to be able to narrow down the type based on `trigger`
+    async session({ session, trigger, newSession }) {
+      // Note, that `rest.session` can be any arbitrary object, remember to validate it!
+      if (trigger === "update" && newSession?.name) {
+        // You can update the session in the database if it's not already updated.
+        // await adapter.updateUser(session.user.id, { name: newSession.name })
+
+        // Make sure the updated value is reflected on the client
+        session.name = newSession.name
+      }
+      return session
+    }
+  }
+})
+```
+
+### Refetching the session
+
+[`SessionProvider#refetchInterval`](#refetch-interval) and [`SessionProvider#refetchOnWindowFocus`](#refetch-on-window-focus) can be replaced with the `update()` method too.
+
+:::note
+The `update()` method won't sync between tabs as the `refetchInterval` and `refetchOnWindowFocus` options do.
+:::
+
+```tsx title="pages/profile.tsx"
+import {useEffect} from "react"
+import { useSession } from "next-auth/react"
+
+export default function Page() {
+  const { data: session, status, update } = useSession()
+
+  // Polling the session every 1 hour
+  useEffect(() => {
+    // TIP: You can also use `navigator.onLine` and some extra event handlers
+    // to check if the user is online and only update the session if they are.
+    // https://developer.mozilla.org/en-US/docs/Web/API/Navigator/onLine
+    const interval = setInterval(() => update(), 1000 * 60 * 60)
+    return () => clearInterval(interval)
+  }, [update])
+
+  // Listen for when the page is visible, if the user switches tabs
+  // and makes our tab visible again, re-fetch the session
+  useEffect(() => {
+    const visibilityHandler = () => document.visibilityState === "visible" && update()
+    window.addEventListener("visibilitychange", visibilityHandler, false)
+    return () => window.removeEventListener("visibilitychange", visibilityHandler, false)
+  }, [update])
+
+  return (
+    <pre>
+      {JSON.stringify(session, null, 2)}
+    </pre>
+  )
+}
+```
 ---
 
 ## getSession()
@@ -479,6 +602,8 @@ If you are using a custom base path, and your application entry point is not at 
 
 #### Refetch interval
 
+See [Session Refetching](#refetching-the-session) for an alternative option.
+
 The `refetchInterval` option can be used to contact the server to avoid a session expiring.
 
 When `refetchInterval` is set to `0` (the default) there will be no session polling.
@@ -490,6 +615,8 @@ The value for `refetchInterval` should always be lower than the value of the ses
 By default, session polling will keep trying, even when the device has no internet access. To circumvent this, you can also set `refetchWhenOffline` to `false`. This will use [`navigator.onLine`](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/onLine) to only poll when the device is online.
 
 #### Refetch On Window Focus
+
+See [Session Refetching](#refetching-the-session) for an alternative option.
 
 The `refetchOnWindowFocus` option can be used to control whether it automatically updates the session state when you switch a focus on tabs/windows.
 
