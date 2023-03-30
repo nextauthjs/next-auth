@@ -85,6 +85,8 @@ packages/core/src/lib/pages/styles.ts
 docs/docs/reference/core
 docs/docs/reference/sveltekit
 
+# Next.js
+packages/frameworks-nextjs/lib
 
 # SvelteKit
 packages/frameworks-sveltekit/index.*

@@ -1,0 +1,47 @@
+{
+  "name": "@auth/nextjs",
+  "version": "0.0.1",
+  "description": "Authentication for Next.js.",
+  "keywords": [
+    "authentication",
+    "authjs",
+    "jwt",
+    "nextjs",
+    "oauth",
+    "oidc",
+    "passwordless",
+    "react"
+  ],
+  "homepage": "https://nextjs.authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth.git",
+  "author": "Balázs Orbán <info@balazsorban.com>",
+  "scripts": {
+    "dev": "tsc -w",
+    "clean": "rm -rf *.js *.d.ts lib",
+    "build": "pnpm clean && tsc"
+  },
+  "devDependencies": {
+    "typescript": "^4",
+    "next": "^13.2.4"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "next": "^13.2.4"
+  },
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    },
+    "./package.json": "./package.json"
+  }
+}
