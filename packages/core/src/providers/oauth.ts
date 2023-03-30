@@ -150,6 +150,10 @@ export interface OAuth2Config<Profile>
   checks?: Array<"pkce" | "state" | "none" | "nonce">
   clientId?: string
   clientSecret?: string
+  /**
+   * Pass overrides to the underlying OAuth library.
+   * See [`oauth4webapi` client](https://github.com/panva/oauth4webapi/blob/main/docs/interfaces/Client.md) for details.
+   */
   client?: Partial<Client>
   style?: OAuthProviderButtonStyles
   /**
