@@ -42,15 +42,13 @@ export async function callback(params: {
   const useJwtSession = sessionStrategy === "jwt"
 
   const sessionToken = sessionStore.value
-  
-  const prevToken = useJwtSession && sessionToken
-    ? await jwt.decode({
-      ...jwt,
-      token: sessionToken,
-    })
-    : undefined
 
   try {
+    const prevToken =
+      useJwtSession && sessionToken
+        ? await jwt.decode({ ...jwt, token: sessionToken })
+        : undefined
+
     if (provider.type === "oauth" || provider.type === "oidc") {
       const authorizationResult = await handleOAuth(
         query,
@@ -114,7 +112,6 @@ export async function callback(params: {
         }
         const token = await callbacks.jwt({
           token: defaultToken,
-          // @ts-expect-error
           prevToken,
           user,
           account,
@@ -228,7 +225,6 @@ export async function callback(params: {
         }
         const token = await callbacks.jwt({
           token: defaultToken,
-          // @ts-expect-error
           prevToken,
           user: loggedInUser,
           account,
@@ -325,7 +321,6 @@ export async function callback(params: {
 
       const token = await callbacks.jwt({
         token: defaultToken,
-        // @ts-expect-error
         prevToken,
         user,
         // @ts-expect-error
