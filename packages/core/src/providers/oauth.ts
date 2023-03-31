@@ -42,6 +42,8 @@ interface AdvancedEndpointHandler<P extends UrlParams, C, R> {
    * You should **try to avoid using advanced options** unless you are very comfortable using them.
    */
   request?: EndpointRequest<C, R, P>
+  /** @internal */
+  conform?: (response: Response) => Awaitable<Response | undefined>
 }
 
 /** Either an URL (containing all the parameters) or an object with more granular control. */
@@ -64,7 +66,7 @@ export type TokenEndpointHandler = EndpointHandler<
     params: CallbackParamsType
     /**
      * When using this custom flow, make sure to do all the necessary security checks.
-     * Thist object contains parameters you have to match against the request to make sure it is valid.
+     * This object contains parameters you have to match against the request to make sure it is valid.
      */
     checks: OAuthChecks
   },
@@ -148,6 +150,10 @@ export interface OAuth2Config<Profile>
   checks?: Array<"pkce" | "state" | "none" | "nonce">
   clientId?: string
   clientSecret?: string
+  /**
+   * Pass overrides to the underlying OAuth library.
+   * See [`oauth4webapi` client](https://github.com/panva/oauth4webapi/blob/main/docs/interfaces/Client.md) for details.
+   */
   client?: Partial<Client>
   style?: OAuthProviderButtonStyles
   /**
@@ -184,7 +190,11 @@ export type OAuthConfigInternal<Profile> = Omit<
   OAuthEndpointType
 > & {
   authorization?: { url: URL }
-  token?: { url: URL; request?: TokenEndpointHandler["request"] }
+  token?: {
+    url: URL
+    request?: TokenEndpointHandler["request"]
+    conform?: TokenEndpointHandler["conform"]
+  }
   userinfo?: { url: URL; request?: UserinfoEndpointHandler["request"] }
 } & Pick<Required<OAuthConfig<Profile>>, "clientId" | "checks" | "profile">
 

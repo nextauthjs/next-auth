@@ -3,10 +3,10 @@ name: Release
 on:
   push:
     branches:
-      - "main"
-      - "beta"
-      - "next"
-      - "3.x"
+      - main
+      - beta
+      - next
+      - 3.x
   pull_request:
 
 jobs:
@@ -24,7 +24,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
       - name: Run tests
@@ -35,6 +34,22 @@ jobs:
           UPSTASH_REDIS_KEY: ${{ secrets.UPSTASH_REDIS_KEY }}
           TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
           TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      # - name: Run E2E tests
+      #   if: github.repository == 'nextauthjs/next-auth'
+      #   run: pnpm e2e
+      #   timeout-minutes: 15
+      #   env:
+      #     AUTH0_USERNAME: ${{ secrets.AUTH0_USERNAME }}
+      #     AUTH0_PASSWORD: ${{ secrets.AUTH0_PASSWORD }}
+      #     TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      #     TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      # - name: Upload E2E artifacts
+      #   if: github.repository == 'nextauthjs/next-auth'
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: playwright-report
+      #     path: apps/dev/nextjs/playwright-report/
+      #     retention-days: 30
       # - name: Coverage
       #   uses: codecov/codecov-action@v1
       #   with:
@@ -58,7 +73,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
       - name: Publish to npm and GitHub
@@ -83,7 +97,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
       - name: Determine version

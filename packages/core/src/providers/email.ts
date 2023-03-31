@@ -39,7 +39,7 @@ export interface EmailConfig extends CommonProviderOptions {
    * @default 86400
    */
   maxAge?: number
-  /** [Documentation](https://authjs.dev/reference/providers/email#customizing-emails) */
+  /** [Documentation](https://authjs.dev/guides/providers/email#customizing-emails) */
   sendVerificationRequest: (
     params: SendVerificationRequestParams
   ) => Awaitable<void>
@@ -55,7 +55,7 @@ export interface EmailConfig extends CommonProviderOptions {
    *    }
    *  })
    * ```
-   * [Documentation](https://authjs.dev/reference/providers/email#customizing-the-verification-token)
+   * [Documentation](https://authjs.dev/guides/providers/email#customizing-the-verification-token)
    */
   generateVerificationToken?: () => Awaitable<string>
   /** If defined, it is used to hash the verification token when saving to the database . */
@@ -72,7 +72,7 @@ export interface EmailConfig extends CommonProviderOptions {
    * By default, we treat email addresses as all lower case,
    * but you can override this function to change this behavior.
    *
-   * [Documentation](https://authjs.dev/reference/providers/email#normalizing-the-e-mail-address) | [RFC 2821](https://tools.ietf.org/html/rfc2821) | [Email syntax](https://en.wikipedia.org/wiki/Email_address#Syntax)
+   * [Documentation](https://authjs.dev/guides/providers/email#normalizing-the-e-mail-address) | [RFC 2821](https://tools.ietf.org/html/rfc2821) | [Email syntax](https://en.wikipedia.org/wiki/Email_address#Syntax)
    */
   normalizeIdentifier?: (identifier: string) => string
 }
@@ -82,7 +82,7 @@ export interface EmailConfig extends CommonProviderOptions {
 export type EmailProviderType = "email"
 
 /** TODO: */
-export function Email(config: EmailConfig): EmailConfig {
+export default function Email(config: EmailConfig): EmailConfig {
   return {
     id: "email",
     type: "email",

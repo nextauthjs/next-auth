@@ -1,6 +1,6 @@
 {
   "name": "@auth/sveltekit",
-  "version": "0.1.12",
+  "version": "0.3.0",
   "description": "Authentication for SvelteKit.",
   "keywords": [
     "authentication",
@@ -20,7 +20,7 @@
     "Balázs Orbán <info@balazsorban.com>",
     "Nico Domino <yo@ndo.dev>",
     "Lluis Agusti <hi@llu.lu>",
-    "Iain Collins <me@iaincollins.com"
+    "Iain Collins <me@iaincollins.com>"
   ],
   "scripts": {
     "dev": "svelte-package -w",
@@ -32,7 +32,7 @@
     "test:unit": "vitest"
   },
   "devDependencies": {
-    "@playwright/test": "^1.28.1",
+    "@playwright/test": "1.29.2",
     "@sveltejs/adapter-auto": "^1.0.0",
     "@sveltejs/kit": "^1.0.0",
     "@sveltejs/package": "^1.0.0",

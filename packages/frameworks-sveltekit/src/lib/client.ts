@@ -14,7 +14,7 @@ import type {
  * or send the user to the signin page listing all possible providers.
  * Automatically adds the CSRF token to the request.
  *
- * [Documentation](https://authjs.dev/reference/utilities/#signin)
+ * [Documentation](https://authjs.dev/reference/sveltekit/client#signin)
  */
 export async function signIn<
   P extends RedirectableProviderType | undefined = undefined
@@ -78,7 +78,7 @@ export async function signIn<
  * Signs the user out, by removing the session cookie.
  * Automatically adds the CSRF token to the request.
  *
- * [Documentation](https://authjs.dev/reference/utilities/#signout)
+ * [Documentation](https://authjs.dev/reference/sveltekit/client#signout)
  */
 export async function signOut(options?: SignOutParams) {
   const { callbackUrl = window.location.href } = options ?? {}

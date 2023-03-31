@@ -25,6 +25,7 @@ interface InitParams {
   /** CSRF token value extracted from the incoming request. From body if POST, from query if GET */
   csrfToken?: string
   /** Is the incoming request a POST request? */
+  csrfDisabled: boolean
   isPost: boolean
   cookies: RequestInternal["cookies"]
 }
@@ -38,6 +39,7 @@ export async function init({
   cookies: reqCookies,
   callbackUrl: reqCallbackUrl,
   csrfToken: reqCsrfToken,
+  csrfDisabled,
   isPost,
 }: InitParams): Promise<{
   options: InternalOptions
@@ -58,7 +60,7 @@ export async function init({
 
   const maxAge = 30 * 24 * 60 * 60 // Sessions expire after 30 days of being idle by default
 
-  // User provided options are overriden by other options,
+  // User provided options are overridden by other options,
   // except for the options with special handling above
   const options: InternalOptions = {
     debug: false,
@@ -99,7 +101,7 @@ export async function init({
       // Asserted in assert.ts
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       secret: authOptions.secret!,
-      maxAge, // same as session maxAge,
+      maxAge: authOptions.session?.maxAge ?? maxAge, // default to same as `session.maxAge`
       encode: jwt.encode,
       decode: jwt.decode,
       ...authOptions.jwt,
@@ -117,26 +119,28 @@ export async function init({
 
   const cookies: cookie.Cookie[] = []
 
-  const {
-    csrfToken,
-    cookie: csrfCookie,
-    csrfTokenVerified,
-  } = await createCSRFToken({
-    options,
-    cookieValue: reqCookies?.[options.cookies.csrfToken.name],
-    isPost,
-    bodyValue: reqCsrfToken,
-  })
-
-  options.csrfToken = csrfToken
-  options.csrfTokenVerified = csrfTokenVerified
-
-  if (csrfCookie) {
-    cookies.push({
-      name: options.cookies.csrfToken.name,
-      value: csrfCookie,
-      options: options.cookies.csrfToken.options,
+  if (!csrfDisabled) {
+    const {
+      csrfToken,
+      cookie: csrfCookie,
+      csrfTokenVerified,
+    } = await createCSRFToken({
+      options,
+      cookieValue: reqCookies?.[options.cookies.csrfToken.name],
+      isPost,
+      bodyValue: reqCsrfToken,
     })
+
+    options.csrfToken = csrfToken
+    options.csrfTokenVerified = csrfTokenVerified
+
+    if (csrfCookie) {
+      cookies.push({
+        name: options.cookies.csrfToken.name,
+        value: csrfCookie,
+        options: options.cookies.csrfToken.options,
+      })
+    }
   }
 
   const { callbackUrl, callbackUrlCookie } = await createCallbackUrl({
@@ -177,10 +181,10 @@ function eventsErrorHandler(
 }
 
 /** Handles adapter induced errors. */
-function adapterErrorHandler<TAdapter>(
-  adapter: TAdapter | undefined,
+function adapterErrorHandler(
+  adapter: AuthConfig["adapter"],
   logger: LoggerInstance
-): TAdapter | undefined {
+) {
   if (!adapter) return
 
   return Object.keys(adapter).reduce<any>((acc, name) => {
