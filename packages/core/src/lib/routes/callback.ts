@@ -41,9 +41,8 @@ export async function callback(params: {
 
   const useJwtSession = sessionStrategy === "jwt"
 
-  const sessionToken = sessionStore.value
-
   try {
+    const sessionToken = sessionStore.value
     const prevToken =
       useJwtSession && sessionToken
         ? await jwt.decode({ ...jwt, token: sessionToken })
