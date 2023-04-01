@@ -157,6 +157,49 @@ export interface DynamoDBAdapterOptions {
  *       Enabled: true
  * ```
  *
+ * or this terraform file:
+ * ``` terraform
+ * resource "aws_dynamodb_table" "next-auth" {
+ *   name     = "next-auth"
+ *   billing_mode = "PAY_PER_REQUEST"
+ *   hash_key = "pk"
+ *   range_key = "sk"
+ *
+ *   attribute {
+ *     name = "pk"
+ *     type = "S"
+ *   }
+ *
+ *   attribute {
+ *     name = "sk"
+ *     type = "S"
+ *   }
+ *
+ *   attribute {
+ *     name = "GSI1PK"
+ *     type = "S"
+ *   }
+ *
+ *   attribute {
+ *     name = "GSI1SK"
+ *     type = "S"
+ *   }
+ *
+ *   global_secondary_index {
+ *     name               = "GSI1"
+ *     hash_key           = "GSI1PK"
+ *     range_key          = "GSI1SK"
+ *     projection_type    = "ALL"
+ *   }
+ *
+ *   ttl {
+ *     attribute_name = "expires"
+ *     enabled = true
+ *   }
+ *
+ * }
+ * ```
+ *
  * ### Using a custom schema
  *
  * You can configure your custom table schema by passing the `options` key to the adapter constructor:
