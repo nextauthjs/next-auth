@@ -82,7 +82,7 @@ export function RedisJSONAdapter(
     return hydrateDates(account);
   }
 
-  const getAccount = async (id: string): Promise<AdapterAccount> => {
+  const getAccount = async (id: string): Promise<AdapterAccount | null> => {
     const account = await (await db).json.get(accountKeyPrefix + id) as AdapterAccount;
     if (!account) return null
     return hydrateDates(account);
@@ -98,8 +98,8 @@ export function RedisJSONAdapter(
     return hydrateDates(session);
   }
 
-  const getSession = async (id: string): Promise<AdapterSession> => {
-    const session = await (await db).json.get(sessionKeyPrefix + id) as AdapterSession;
+  const getSession = async (id: string): Promise<AdapterSession | null> => {
+    const session = await (await db).json.get(sessionKeyPrefix + id) as unknown as AdapterSession;
     if (!session) return null
     return hydrateDates(session);
   }
@@ -113,8 +113,8 @@ export function RedisJSONAdapter(
     return hydrateDates(user);
   }
 
-  const getUser = async (id: string): Promise<AdapterUser> => {
-    const user = await (await db).json.get(userKeyPrefix + id) as AdapterUser;
+  const getUser = async (id: string): Promise<AdapterUser | null> => {
+    const user = await (await db).json.get(userKeyPrefix + id) as unknown as AdapterUser;
     if (!user) return null
     return hydrateDates(user);
   }
@@ -183,7 +183,7 @@ export function RedisJSONAdapter(
         ":" +
         verificationToken.token
 
-      const token = await (await db).json.get(tokenKey) as VerificationToken;
+      const token = await (await db).json.get(tokenKey) as unknown as VerificationToken;
       if (!token) return null
       await (await db).json.del(tokenKey)
       return hydrateDates(token);
