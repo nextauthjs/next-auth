@@ -63,6 +63,9 @@
   "pnpm": {
     "patchedDependencies": {
       "@balazsorban/monorepo-release@0.1.8": "patches/@balazsorban__monorepo-release@0.1.8.patch"
+    },
+    "overrides": {
+      "@vscode/sqlite3": "5.1.3-vscode"
     }
   },
   "eslintIgnore": [
