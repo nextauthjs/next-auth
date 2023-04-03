@@ -38,7 +38,8 @@
     "@next-auth/adapter-test": "workspace:*",
     "@next-auth/tsconfig": "workspace:*",
     "jest": "^27.4.3",
-    "next-auth": "workspace:*"
+    "next-auth": "workspace:*",
+    "surrealdb-rest-ts": "^1.0.3"
   },
   "jest": {
     "preset": "@next-auth/adapter-test/jest"
