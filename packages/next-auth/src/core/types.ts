@@ -319,7 +319,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
   session: (
     params:
       | {
-          session: DefaultSession
+          session: Session
           /** Available when {@link SessionOptions.strategy} is set to `"jwt"` */
           token: JWT
           /** Available when {@link SessionOptions.strategy} is set to `"database"`. */
