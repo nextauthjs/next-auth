@@ -2,7 +2,7 @@ import { handleLogin } from "../callback-handler.js"
 import { CallbackRouteError, Verification } from "../../errors.js"
 import { handleOAuth } from "../oauth/callback.js"
 import { createHash } from "../web.js"
-import { getAdapterUserFromEmail, handleAuthorized } from "./shared.js"
+import { handleAuthorized } from "./shared.js"
 
 import type { AdapterSession } from "../../adapters.js"
 import type {
@@ -53,7 +53,7 @@ export async function callback(params: {
         cookies.push(...authorizationResult.cookies)
       }
 
-      logger.debug("authroization result", authorizationResult)
+      logger.debug("authorization result", authorizationResult)
 
       const { profile, account, OAuthProfile } = authorizationResult
 
@@ -149,7 +149,7 @@ export async function callback(params: {
         return {
           redirect: `${pages.newUser}${
             pages.newUser.includes("?") ? "&" : "?"
-          }callbackUrl=${encodeURIComponent(callbackUrl)}`,
+          }${new URLSearchParams({ callbackUrl })}`,
           cookies,
         }
       }
@@ -180,8 +180,11 @@ export async function callback(params: {
       const invalidInvite = !hasInvite || expired
       if (invalidInvite) throw new Verification({ hasInvite, expired })
 
-      // @ts-expect-error -- Verified in `assertConfig`.
-      const user = await getAdapterUserFromEmail(identifier, adapter)
+      const user = (await adapter!.getUserByEmail(identifier)) ?? {
+        id: identifier,
+        email: identifier,
+        emailVerified: null,
+      }
 
       const account: Account = {
         providerAccountId: user.email,
@@ -256,7 +259,7 @@ export async function callback(params: {
         return {
           redirect: `${pages.newUser}${
             pages.newUser.includes("?") ? "&" : "?"
-          }callbackUrl=${encodeURIComponent(callbackUrl)}`,
+          }${new URLSearchParams({ callbackUrl })}`,
           cookies,
         }
       }
@@ -264,7 +267,7 @@ export async function callback(params: {
       // Callback URL is already verified at this point, so safe to use if specified
       return { redirect: callbackUrl, cookies }
     } else if (provider.type === "credentials" && method === "POST") {
-      const credentials = body
+      const credentials = body ?? {}
 
       // TODO: Forward the original request as is, instead of reconstructing it
       Object.entries(query ?? {}).forEach(([k, v]) =>
@@ -350,6 +353,6 @@ export async function callback(params: {
     logger.error(error)
     url.searchParams.set("error", CallbackRouteError.name)
     url.pathname += "/error"
-    return { redirect: url, cookies }
+    return { redirect: url.toString(), cookies }
   }
 }

@@ -1,7 +1,7 @@
 import emailSignin from "../email/signin.js"
 import { SignInError } from "../../errors.js"
 import { getAuthorizationUrl } from "../oauth/authorization-url.js"
-import { getAdapterUserFromEmail, handleAuthorized } from "./shared.js"
+import { handleAuthorized } from "./shared.js"
 
 import type {
   Account,
@@ -28,8 +28,11 @@ export async function signin(
       const normalizer = provider.normalizeIdentifier ?? defaultNormalizer
       const email = normalizer(body?.email)
 
-      // @ts-expect-error -- Verified in `assertConfig`
-      const user = await getAdapterUserFromEmail(email, options.adapter)
+      const user = (await options.adapter!.getUserByEmail(email)) ?? {
+        id: email,
+        email,
+        emailVerified: null,
+      }
 
       const account: Account = {
         providerAccountId: email,
@@ -54,7 +57,7 @@ export async function signin(
     logger.error(error)
     url.searchParams.set("error", error.name)
     url.pathname += "/error"
-    return { redirect: url }
+    return { redirect: url.toString() }
   }
 }
 

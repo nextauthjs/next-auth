@@ -1,14 +1,14 @@
-import { SessionStore } from "./cookie.js"
 import { UnknownAction } from "../errors.js"
+import { SessionStore } from "./cookie.js"
 import { init } from "./init.js"
 import renderPage from "./pages/index.js"
 import * as routes from "./routes/index.js"
 
 import type {
-  RequestInternal,
-  ResponseInternal,
   AuthConfig,
   ErrorPageParam,
+  RequestInternal,
+  ResponseInternal,
 } from "../types.js"
 
 export async function AuthInternal<
@@ -19,6 +19,8 @@ export async function AuthInternal<
 ): Promise<ResponseInternal<Body>> {
   const { action, providerId, error, method } = request
 
+  const csrfDisabled = authOptions.skipCSRFCheck === skipCSRFCheck
+
   const { options, cookies } = await init({
     authOptions,
     action,
@@ -28,6 +30,7 @@ export async function AuthInternal<
     csrfToken: request.body?.csrfToken,
     cookies: request.cookies,
     isPost: method === "POST",
+    csrfDisabled,
   })
 
   const sessionStore = new SessionStore(
@@ -48,19 +51,29 @@ export async function AuthInternal<
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
         return { ...session, cookies } as any
       }
-      case "csrf":
+      case "csrf": {
+        if (csrfDisabled) {
+          options.logger.warn("csrf-disabled")
+          cookies.push({
+            name: options.cookies.csrfToken.name,
+            value: "",
+            options: { ...options.cookies.csrfToken.options, maxAge: 0 },
+          })
+          return { status: 404, cookies }
+        }
         return {
           headers: { "Content-Type": "application/json" },
           body: { csrfToken: options.csrfToken } as any,
           cookies,
         }
+      }
       case "signin":
         if (pages.signIn) {
           let signinUrl = `${pages.signIn}${
             pages.signIn.includes("?") ? "&" : "?"
-          }callbackUrl=${encodeURIComponent(options.callbackUrl)}`
+          }${new URLSearchParams({ callbackUrl: options.callbackUrl })}`
           if (error)
-            signinUrl = `${signinUrl}&error=${encodeURIComponent(error)}`
+            signinUrl = `${signinUrl}&${new URLSearchParams({ error })}`
           return { redirect: signinUrl, cookies }
         }
 
@@ -125,8 +138,7 @@ export async function AuthInternal<
   } else {
     switch (action) {
       case "signin":
-        // Verified CSRF Token required for all sign in routes
-        if (options.csrfTokenVerified && options.provider) {
+        if ((csrfDisabled || options.csrfTokenVerified) && options.provider) {
           const signin = await routes.signin(
             request.query,
             request.body,
@@ -138,8 +150,7 @@ export async function AuthInternal<
 
         return { redirect: `${options.url}/signin?csrf=true`, cookies }
       case "signout":
-        // Verified CSRF Token required for signout
-        if (options.csrfTokenVerified) {
+        if (csrfDisabled || options.csrfTokenVerified) {
           const signout = await routes.signout(sessionStore, options)
           if (signout.cookies) cookies.push(...signout.cookies)
           return { ...signout, cookies }
@@ -150,6 +161,7 @@ export async function AuthInternal<
           // Verified CSRF Token required for credentials providers only
           if (
             options.provider.type === "credentials" &&
+            !csrfDisabled &&
             !options.csrfTokenVerified
           ) {
             return { redirect: `${options.url}/signin?csrf=true`, cookies }
@@ -173,3 +185,14 @@ export async function AuthInternal<
   }
   throw new UnknownAction(`Cannot handle action: ${action}`)
 }
+
+/**
+ * :::danger
+ * This option is intended for framework authors.
+ * :::
+ *
+ * Auth.js comes with built-in {@link https://authjs.dev/concepts/security#csrf CSRF} protection, but
+ * if you are implementing a framework that is already protected against CSRF attacks, you can skip this check by
+ * passing this value to {@link AuthConfig.skipCSRFCheck}.
+ */
+export const skipCSRFCheck = Symbol("skip-csrf-check")

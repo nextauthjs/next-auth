@@ -31,14 +31,14 @@
     "dist"
   ],
   "peerDependencies": {
-    "mongodb": "^4.1.1",
+    "mongodb": "^5 | ^4",
     "next-auth": "^4"
   },
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:*",
     "@next-auth/tsconfig": "workspace:*",
     "jest": "^27.4.3",
-    "mongodb": "^4.4.0",
+    "mongodb": "^5.1.0",
     "next-auth": "workspace:*"
   },
   "jest": {

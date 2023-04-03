@@ -10,13 +10,13 @@
     "clean": "gatsby clean"
   },
   "dependencies": {
-    "dotenv": "^16.0.0",
-    "gatsby": "next",
+    "dotenv": "16.0.0",
+    "gatsby": "5.8.0-next.3",
     "next-auth": "workspace:*",
-    "react": "^18",
-    "react-dom": "^18"
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "vercel": "^23.1.2"
+    "vercel": "23.1.2"
   }
 }

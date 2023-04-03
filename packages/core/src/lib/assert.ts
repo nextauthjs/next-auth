@@ -34,9 +34,33 @@ function isValidHttpUrl(url: string, baseUrl: string) {
   }
 }
 
+let hasCredentials = false
+let hasEmail = false
+
+const emailMethods = [
+  "createVerificationToken",
+  "useVerificationToken",
+  "getUserByEmail",
+]
+
+const sessionMethods = [
+  "createUser",
+  "getUser",
+  "getUserByEmail",
+  "getUserByAccount",
+  "updateUser",
+  "linkAccount",
+  "createSession",
+  "getSessionAndUser",
+  "updateSession",
+  "deleteSession",
+]
+
 /**
  * Verify that the user configured Auth.js correctly.
  * Good place to mention deprecations as well.
+ *
+ * This is invoked before the init method, so default values are not available yet.
  */
 export function assertConfig(
   request: RequestInternal,
@@ -45,7 +69,7 @@ export function assertConfig(
   const { url } = request
   const warnings: WarningCode[] = []
 
-  if (!warned && options.debug) warnings.push("debug_enabled")
+  if (!warned && options.debug) warnings.push("debug-enabled")
 
   if (!options.trustHost) {
     return new UntrustedHost(`Host must be trusted. URL was: ${request.url}`)
@@ -76,8 +100,6 @@ export function assertConfig(
       `Invalid callback URL. Received: ${callbackUrlCookie}`
     )
   }
-
-  let hasCredentials, hasEmail
 
   for (const provider of options.providers) {
     if (
@@ -123,23 +145,29 @@ export function assertConfig(
     }
   }
 
-  if (hasEmail) {
-    const { adapter } = options
-    if (!adapter) {
-      return new MissingAdapter("E-mail login requires an adapter.")
+  const { adapter, session } = options
+  if (
+    hasEmail ||
+    session?.strategy === "database" ||
+    (!session?.strategy && adapter)
+  ) {
+    let methods: string[]
+
+    if (hasEmail) {
+      if (!adapter)
+        return new MissingAdapter("Email login requires an adapter.")
+      methods = emailMethods
+    } else {
+      if (!adapter)
+        return new MissingAdapter("Database session requires an adapter.")
+      methods = sessionMethods
     }
 
-    const missingMethods = (
-      [
-        "createVerificationToken",
-        "useVerificationToken",
-        "getUserByEmail",
-      ] as const
-    ).filter((method) => !adapter[method])
+    const missing = methods.filter((m) => !adapter[m as keyof typeof adapter])
 
-    if (missingMethods.length) {
+    if (missing.length) {
       return new MissingAdapterMethods(
-        `Required adapter methods were missing: ${missingMethods.join(", ")}`
+        `Required adapter methods were missing: ${missing.join(", ")}`
       )
     }
   }

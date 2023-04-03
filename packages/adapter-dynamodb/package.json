@@ -1,7 +1,7 @@
 {
   "name": "@next-auth/dynamodb-adapter",
   "repository": "https://github.com/nextauthjs/next-auth",
-  "version": "1.0.6",
+  "version": "3.0.1",
   "description": "AWS DynamoDB adapter for next-auth.",
   "keywords": [
     "next-auth",
@@ -9,11 +9,18 @@
     "oauth",
     "dynamodb"
   ],
+  "type": "module",
+  "types": "./index.d.ts",
   "homepage": "https://authjs.dev",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
-  "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
   "private": false,
   "publishConfig": {
     "access": "public"
@@ -22,11 +29,15 @@
     "test:default": "jest",
     "test:custom": "CUSTOM_MODEL=1 jest",
     "test": "pnpm test:default && pnpm test:custom",
-    "build": "tsc"
+    "clean": "rm -rf index.*",
+    "build": "pnpm clean && tsc"
   },
   "files": [
     "README.md",
-    "dist"
+    "index.js",
+    "index.d.ts",
+    "index.d.ts.map",
+    "src"
   ],
   "author": "Pol Marnette",
   "license": "ISC",
@@ -41,7 +52,11 @@
     "@next-auth/adapter-test": "workspace:*",
     "@next-auth/tsconfig": "workspace:*",
     "@shelf/jest-dynamodb": "^2.1.0",
+    "@types/uuid": "^9.0.0",
     "jest": "^27.4.3",
     "next-auth": "workspace:*"
+  },
+  "dependencies": {
+    "uuid": "^9.0.0"
   }
 }

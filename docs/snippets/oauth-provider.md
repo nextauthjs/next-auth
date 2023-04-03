@@ -9,7 +9,7 @@ import Auth from "@auth/core"
 import { $1 } from "@auth/core/providers/$2"
 
 const request = new Request("https://example.com")
-const resposne = await AuthHandler(request, {
+const response = await AuthHandler(request, {
   providers: [$1({ clientId: "", clientSecret: "" })],
 })
 ```
