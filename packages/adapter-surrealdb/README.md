@@ -83,7 +83,7 @@ export const clientPromise = new Promise<Surreal>((resolve) => {
       db,
       user,
       password: pass,
-    })
+    }) as unknown as Surreal
   );
 });
 ```
