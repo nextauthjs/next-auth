@@ -9,28 +9,6 @@ import type {
 } from "next-auth/adapters"
 import type { ProviderType } from "next-auth/providers"
 
-// interface Surreal {
-//   create<T extends Record<string, unknown>>(
-//     thing: string,
-//     data?: T
-//   ): Promise<
-//     T & {
-//       id: string
-//     }
-//   >
-//   select<T>(thing: string): Promise<T[]>
-//   query<T>(sql: string, vars?: Record<string, unknown>): Promise<T>
-//   change<T extends Record<string, unknown>>(thing: string, doc: T): Promise<T>
-//   delete<T extends Record<string, unknown>, U = T & { id: string }>(
-//     thing: string
-//   ): Promise<U>
-// }
-// export type Result<T> = {
-//   time: string
-//   status: "OK"
-//   result: T
-// }
-
 type Document = Record<string, string | null | undefined> & { id: string }
 export type UserDoc = Document & { email: string }
 export type AccountDoc<T = string> = {
