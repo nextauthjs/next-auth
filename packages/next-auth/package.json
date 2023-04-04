@@ -120,6 +120,7 @@
     "jest-watch-typeahead": "^1.1.0",
     "msw": "^0.42.3",
     "next": "13.1.1",
+    "nodemailer": "6.9.1",
     "postcss": "^8.4.14",
     "postcss-cli": "^9.1.0",
     "postcss-nested": "^5.0.6",
