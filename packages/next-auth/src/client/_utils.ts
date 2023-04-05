@@ -55,8 +55,8 @@ export function apiBaseUrl(__NEXTAUTH: AuthClientConfig) {
     // Return absolute path when called server side
     return `${__NEXTAUTH.baseUrlServer}${__NEXTAUTH.basePathServer}`
   }
-  // Return relative path when called client side
-  return __NEXTAUTH.basePath
+  // Return path when called client side
+  return `${__NEXTAUTH.baseUrl}${__NEXTAUTH.basePath}`
 }
 
 /** Returns the number of seconds elapsed since January 1, 1970 00:00:00 UTC. */
