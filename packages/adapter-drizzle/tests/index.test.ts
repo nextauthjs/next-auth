@@ -52,16 +52,17 @@ runBasicTests({
     verificationToken: (identifier_token) => db
       .select()
       .from(verificationTokens)
-      .where(and(
-        eq(
-          verificationTokens.token,
-          identifier_token.token
-        ),
-        eq(
-          verificationTokens.identifier,
-          identifier_token.identifier
+      .where(
+        and(
+          eq(
+            verificationTokens.token,
+            identifier_token.token
+          ),
+          eq(
+            verificationTokens.identifier,
+            identifier_token.identifier
+          )
         )
-      )
       ).get() ?? null,
   },
 })
