@@ -231,23 +231,21 @@ importers:
 
   packages/adapter-drizzle:
     specifiers:
-      '@auth/core': workspace:*
       '@next-auth/adapter-test': workspace:*
-      '@next-auth/tsconfig': workspace:*
       '@types/better-sqlite3': ^7.6.3
       better-sqlite3: ^8.2.0
       drizzle-kit: ^0.17.3
       drizzle-orm: ^0.23.5
       jest: ^27.4.3
+      next-auth: workspace:*
     devDependencies:
-      '@auth/core': link:../core
       '@next-auth/adapter-test': link:../adapter-test
-      '@next-auth/tsconfig': link:../tsconfig
       '@types/better-sqlite3': 7.6.3
       better-sqlite3: 8.2.0
       drizzle-kit: 0.17.4
       drizzle-orm: 0.23.8_bt4gsn5lapaoikflfkpz27ptty
       jest: 27.5.1
+      next-auth: link:../next-auth
 
   packages/adapter-dynamodb:
     specifiers:

@@ -15,9 +15,15 @@
  *
  * @module @next-auth/drizzle-adapter
  */
-import { accounts, users, sessions, verificationTokens, Thing } from "./schema"
+import {
+  accounts,
+  users,
+  sessions,
+  verificationTokens,
+  type Thing,
+} from "./schema"
 import { and, eq } from "drizzle-orm/expressions"
-import type { Adapter } from "@auth/core/adapters"
+import type { Adapter } from "next-auth/adapters"
 
 /**
  * ## Setup
@@ -110,25 +116,25 @@ import type { Adapter } from "@auth/core/adapters"
  **/
 export function DrizzleAdapter(client: Thing): Adapter {
   return {
-    createUser: (data) => {
+    createUser(data) {
       return client
         .insert(users)
         .values({ ...data, id: "123" })
         .returning()
         .get()
     },
-    getUser: (data) => {
+    getUser(data) {
       return client.select().from(users).where(eq(users.id, data)).get() ?? null
     },
-    getUserByEmail: (data) => {
+    getUserByEmail(data) {
       return (
         client.select().from(users).where(eq(users.email, data)).get() ?? null
       )
     },
-    createSession: (data) => {
+    createSession(data) {
       return client.insert(sessions).values(data).returning().get()
     },
-    getSessionAndUser: (data) => {
+    getSessionAndUser(data) {
       return (
         client
           .select({
@@ -141,10 +147,8 @@ export function DrizzleAdapter(client: Thing): Adapter {
           .get() ?? null
       )
     },
-    updateUser: (data) => {
-      if (!data.id) {
-        throw new Error("No user id.")
-      }
+    updateUser(data) {
+      if (!data.id) throw new Error("No user id.")
 
       return client
         .update(users)
@@ -153,7 +157,7 @@ export function DrizzleAdapter(client: Thing): Adapter {
         .returning()
         .get()
     },
-    updateSession: (data) => {
+    updateSession(data) {
       return client
         .update(sessions)
         .set(data)
@@ -161,14 +165,15 @@ export function DrizzleAdapter(client: Thing): Adapter {
         .returning()
         .get()
     },
-    linkAccount: (rawAccount) => {
+    linkAccount(rawAccount) {
       const updatedAccount = client
         .insert(accounts)
         .values(rawAccount)
         .returning()
         .get()
 
-      const account: ReturnType<Adapter["linkAccount"]> = {
+      // HACK: Should not need to set `undefined` values here
+      return {
         ...updatedAccount,
         access_token: updatedAccount.access_token ?? undefined,
         token_type: updatedAccount.token_type ?? undefined,
@@ -178,19 +183,11 @@ export function DrizzleAdapter(client: Thing): Adapter {
         expires_at: updatedAccount.expires_at ?? undefined,
         session_state: updatedAccount.session_state ?? undefined,
       }
-
-      return account
     },
-    getUserByAccount: (account) => {
+    getUserByAccount(account) {
       return (
         client
-          .select({
-            id: users.id,
-            email: users.email,
-            emailVerified: users.emailVerified,
-            image: users.image,
-            name: users.name,
-          })
+          .select()
           .from(users)
           .innerJoin(
             accounts,
@@ -199,22 +196,20 @@ export function DrizzleAdapter(client: Thing): Adapter {
               eq(accounts.provider, account.provider)
             )
           )
-          .get() ?? null
+          .get()?.users ?? null
       )
     },
-    deleteSession: (sessionToken) => {
-      return (
-        client
-          .delete(sessions)
-          .where(eq(sessions.sessionToken, sessionToken))
-          .returning()
-          .get() ?? null
-      )
+    deleteSession(sessionToken) {
+      return client
+        .delete(sessions)
+        .where(eq(sessions.sessionToken, sessionToken))
+        .returning()
+        .get()
     },
-    createVerificationToken: (token) => {
+    createVerificationToken(token) {
       return client.insert(verificationTokens).values(token).returning().get()
     },
-    useVerificationToken: (token) => {
+    useVerificationToken(token) {
       try {
         return (
           client
@@ -232,10 +227,10 @@ export function DrizzleAdapter(client: Thing): Adapter {
         throw new Error("No verification token found.")
       }
     },
-    deleteUser: (id) => {
+    deleteUser(id) {
       return client.delete(users).where(eq(users.id, id)).returning().get()
     },
-    unlinkAccount: (account) => {
+    unlinkAccount(account) {
       client
         .delete(accounts)
         .where(
@@ -246,6 +241,7 @@ export function DrizzleAdapter(client: Thing): Adapter {
         )
         .run()
 
+      // HACK: void should be fine
       return undefined
     },
   }

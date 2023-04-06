@@ -28,10 +28,10 @@
     "access": "public"
   },
   "scripts": {
-    "clean": "rm -rf ./drizzle && rm db.sqlite || echo 'Drizzle directory deleted'",
+    "clean": "rm -rf *.js *.d.ts* ./drizzle db.sqlite",
     "test:init": "pnpm clean && drizzle-kit generate:sqlite --schema=src/schema.ts --breakpoints",
     "test": "pnpm test:init && jest",
-    "build": "drizzle-kit generate:sqlite --schema=src/schema.ts && tsc",
+    "build": "pnpm clean && drizzle-kit generate:sqlite --schema=src/schema.ts && tsc",
     "dev": "drizzle-kit generate:sqlite --schema=src/schema.ts && tsc -w"
   },
   "files": [
@@ -43,14 +43,13 @@
     "drizzle-orm": "^0.23.5"
   },
   "devDependencies": {
-    "@auth/core": "workspace:*",
     "@next-auth/adapter-test": "workspace:*",
-    "@next-auth/tsconfig": "workspace:*",
     "@types/better-sqlite3": "^7.6.3",
     "better-sqlite3": "^8.2.0",
     "drizzle-kit": "^0.17.3",
     "drizzle-orm": "^0.23.5",
-    "jest": "^27.4.3"
+    "jest": "^27.4.3",
+    "next-auth": "workspace:*"
   },
   "jest": {
     "preset": "@next-auth/adapter-test/jest"
