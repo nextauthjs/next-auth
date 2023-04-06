@@ -274,17 +274,17 @@ importers:
 
   packages/adapter-fauna:
     specifiers:
-      '@fauna-labs/fauna-schema-migrate': ^2.2.1
+      '@fauna-labs/fauna-schema-migrate': ^2.1.3
       '@next-auth/adapter-test': workspace:*
       '@next-auth/tsconfig': workspace:*
-      faunadb: 4.8.0
+      faunadb: 4.3.0
       jest: ^27.4.3
       next-auth: workspace:*
     devDependencies:
-      '@fauna-labs/fauna-schema-migrate': 2.2.1_faunadb@4.8.0
+      '@fauna-labs/fauna-schema-migrate': 2.2.1_faunadb@4.3.0
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
-      faunadb: 4.8.0
+      faunadb: 4.3.0
       jest: 27.5.1
       next-auth: link:../next-auth
 
@@ -6406,7 +6406,7 @@ packages:
       text-decoding: 1.0.0
     dev: true
 
-  /@fauna-labs/fauna-schema-migrate/2.2.1_faunadb@4.8.0:
+  /@fauna-labs/fauna-schema-migrate/2.2.1_faunadb@4.3.0:
     resolution: {integrity: sha512-UYefaEMYwAg810vYvbvgQ2TbYGvnA2ZITZiX/yLG6BBSQEfTfA47AfzYeF9+1SQ0NM1fpUdse6d5z2NDmeDiTw==}
     hasBin: true
     peerDependencies:
@@ -6428,7 +6428,7 @@ packages:
       commander: 2.20.3
       deep-equal: 2.0.5
       esbuild: 0.8.57
-      faunadb: 4.8.0
+      faunadb: 4.3.0
       figures: 3.2.0
       fs-extra: 8.1.0
       glob: 7.2.3
@@ -17812,6 +17812,24 @@ packages:
     dependencies:
       reusify: 1.0.4
 
+  /faunadb/4.3.0:
+    resolution: {integrity: sha512-H5ZnInUNLAvrjqDHYXmYX+S55HP8Ib85QbF/UK1fV/bz125unl7J7LbjqKvMGcREYqOvIrpQCaniK1LwAkXHTw==}
+    requiresBuild: true
+    dependencies:
+      abort-controller: 3.0.0
+      base64-js: 1.5.1
+      boxen: 5.1.2
+      btoa-lite: 1.0.0
+      chalk: 4.1.2
+      cross-fetch: 3.1.5
+      dotenv: 8.6.0
+      fn-annotate: 1.2.0
+      object-assign: 4.1.1
+      util-deprecate: 1.0.2
+    transitivePeerDependencies:
+      - encoding
+    dev: true
+
   /faunadb/4.6.0:
     resolution: {integrity: sha512-lBCS9wOLIdoeQmhzFvNAXM9B4T3Ptv2HUf0RrPsC2LA1zPtTQFBtdhH7fvTlwRyUawIKDjs1wn5pk2o8g0Cylg==}
     requiresBuild: true
@@ -17829,24 +17847,6 @@ packages:
     transitivePeerDependencies:
       - encoding
     dev: false
-
-  /faunadb/4.8.0:
-    resolution: {integrity: sha512-pjl5WUYQ8GqM4ESk3mv0RXfxtQMHWb92XWkxjf3nWiAkf2HVtsENfTbyGPunzw4zDbdhn9aQSSxbwahaLLDR7Q==}
-    requiresBuild: true
-    dependencies:
-      base64-js: 1.5.1
-      boxen: 5.1.2
-      btoa-lite: 1.0.0
-      chalk: 4.1.2
-      cross-fetch: 3.1.5
-      dotenv: 8.6.0
-      fn-annotate: 1.2.0
-      node-abort-controller: 3.0.1
-      object-assign: 4.1.1
-      util-deprecate: 1.0.2
-    transitivePeerDependencies:
-      - encoding
-    dev: true
 
   /faye-websocket/0.11.4:
     resolution: {integrity: sha512-CzbClwlXAuiRQAlUyfqPgvPoNKTckTPGfwZV4ZdAhVcP2lh9KUxJg2b5GkE7XbjKQ3YJnQ9z6D9ntLAlB+tP8g==}
@@ -18137,7 +18137,7 @@ packages:
       winston-transport: 4.5.0
       ws: 7.5.8
     optionalDependencies:
-      esbuild: 0.15.16
+      esbuild: 0.15.18
     transitivePeerDependencies:
       - bluebird
       - bufferutil
@@ -24659,6 +24659,7 @@ packages:
 
   /node-abort-controller/3.0.1:
     resolution: {integrity: sha512-/ujIVxthRs+7q6hsdjHMaj8hRG9NuWmwrz+JdRwZ14jdFoKSkm+vDsCbF9PLpnSqjaWQJuTmVtcWHNLr+vrOFw==}
+    dev: false
 
   /node-addon-api/3.2.1:
     resolution: {integrity: sha512-mmcei9JghVNDYydghQmeDX8KoAm0FAiYyIcUt/N4nhyAipB17pllZQDOJD2fotxABnt4Mdz+dKTO7eftLg4d0A==}
