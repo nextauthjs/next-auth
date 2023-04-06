@@ -47,7 +47,7 @@
     "jest": "^27.4.3",
     "mongodb": "^4.4.0",
     "next-auth": "workspace:*",
-    "prisma": "^3.13.0"
+    "prisma": "^3.10.0"
   },
   "jest": {
     "preset": "@next-auth/adapter-test/jest"
