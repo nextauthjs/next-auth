@@ -16,7 +16,8 @@
  *
  * @module @next-auth/drizzle-adapter
  */
-import { db, accounts, users, sessions, verificationTokens, DrizzleClient } from './schema'
+import { accounts, users, sessions, verificationTokens } from './schema'
+import { db } from './client'
 import { and, eq } from 'drizzle-orm/expressions'
 import type { Adapter } from "next-auth/adapters"
 
@@ -111,35 +112,52 @@ import type { Adapter } from "next-auth/adapters"
  **/
 export function DrizzleAdapter(client: typeof db): Adapter {
   return {
-    createUser: (data) => {
-      return client
+    createUser: async (data) => {
+      await client
         .insert(users)
         .values({ ...data, id: "123" })
-        .returning()
-        .get()
+
+      return client
+        .select()
+        .from(users)
+        .where(eq(users.id, '123'))
+        .then(res => res[0])
+
     },
-    getUser: (data) => {
+
+    getUser: async (data) => {
       return client
         .select()
         .from(users)
         .where(eq(users.id, data))
-        .get() ?? null
+        .then(res => res[0])
+        ?? null
     },
-    getUserByEmail: (data) => {
+    getUserByEmail: async (data) => {
       return client
         .select()
         .from(users)
         .where(eq(users.email, data))
-        .get() ?? null
+        .then(res => res[0])
+        ?? null
     },
-    createSession: (data) => {
-      return client
+    createSession: async (data) => {
+      await client
         .insert(sessions)
         .values(data)
-        .returning()
-        .get()
+
+      return client
+        .select()
+        .from(sessions)
+        .where(
+          eq(
+            sessions.sessionToken,
+            data.sessionToken
+          )
+        )
+        .then(res => res[0])
     },
-    getSessionAndUser: (data) => {
+    getSessionAndUser: async (data) => {
       return client.select({
         session: sessions,
         user: users
@@ -147,49 +165,51 @@ export function DrizzleAdapter(client: typeof db): Adapter {
         .from(sessions)
         .where(eq(sessions.sessionToken, data))
         .innerJoin(users, eq(users.id, sessions.userId))
-        .get() ?? null
+        .then(res => res[0])
+        ?? null
     },
-    updateUser: (data) => {
+    updateUser: async (data) => {
       if (!data.id) {
         throw new Error("No user id.")
       }
 
-      return client
+      await client
         .update(users)
         .set(data)
         .where(eq(users.id, data.id))
-        .returning()
-        .get()
-    },
-    updateSession: (data) => {
+
       return client
+        .select()
+        .from(users)
+        .where(
+          eq(
+            users.id,
+            data.id
+          )
+        )
+        .then(res => res[0])
+
+
+    },
+    updateSession: async (data) => {
+      await client
         .update(sessions)
         .set(data)
         .where(eq(sessions.sessionToken, data.sessionToken))
-        .returning()
-        .get()
+
+      return client
+        .select()
+        .from(sessions)
+        .where(eq(sessions.sessionToken, data.sessionToken))
+        .then(res => res[0])
     },
-    linkAccount: (rawAccount) => {
-      const updatedAccount = client
+    linkAccount: async (rawAccount) => {
+      await client
         .insert(accounts)
         .values(rawAccount)
-        .returning()
-        .get()
-
-      const account: ReturnType<Adapter["linkAccount"]> = {
-        ...updatedAccount,
-        access_token: updatedAccount.access_token ?? undefined,
-        token_type: updatedAccount.token_type ?? undefined,
-        id_token: updatedAccount.id_token ?? undefined,
-        refresh_token: updatedAccount.refresh_token ?? undefined,
-        scope: updatedAccount.scope ?? undefined,
-        expires_at: updatedAccount.expires_at ?? undefined,
-        session_state: updatedAccount.session_state ?? undefined
-      }
-
-      return account
+        .then(res => res[0])
     },
-    getUserByAccount: (account) => {
+    getUserByAccount: async (account) => {
       return client.select({
         id: users.id,
         email: users.email,
@@ -204,26 +224,30 @@ export function DrizzleAdapter(client: typeof db): Adapter {
             eq(accounts.provider, account.provider)
           )
         ))
-        .get() ?? null
+        .then(res => res[0])
+        ?? null
     }
     ,
-    deleteSession: (sessionToken) => {
-      return client
+    deleteSession: async (sessionToken) => {
+      await client
         .delete(sessions)
         .where(eq(sessions.sessionToken, sessionToken))
-        .returning()
-        .get() ?? null
+
     },
-    createVerificationToken: (token) => {
-      return client
+    createVerificationToken: async (token) => {
+      await client
         .insert(verificationTokens)
         .values(token)
-        .returning()
-        .get()
+
+      return client
+        .select()
+        .from(verificationTokens)
+        .where(eq(verificationTokens.identifier, token.identifier))
+        .then(res => res[0])
     },
-    useVerificationToken: (token) => {
+    useVerificationToken: async (token) => {
       try {
-        return client
+        await client
           .delete(verificationTokens)
           .where(
             and(
@@ -231,29 +255,37 @@ export function DrizzleAdapter(client: typeof db): Adapter {
               eq(verificationTokens.token, token.token)
             )
           )
-          .returning()
-          .get() ?? null
+
+        return client
+          .select()
+          .from(verificationTokens)
+          .where(
+            and(
+              eq(verificationTokens.identifier, token.identifier),
+              eq(verificationTokens.token, token.token)
+            )
+          )
+          .then(res => res[0])
+          ?? null
 
       } catch (err) {
         throw new Error("No verification token found.")
       }
     },
-    deleteUser: (id) => {
-      return client
+    deleteUser: async (id) => {
+      await client
         .delete(users)
         .where(eq(users.id, id))
-        .returning()
-        .get()
+        .then(res => res[0])
     },
-    unlinkAccount: (account) => {
-      client.delete(accounts)
+    unlinkAccount: async (account) => {
+      await client.delete(accounts)
         .where(
           and(
             eq(accounts.providerAccountId, account.providerAccountId),
             eq(accounts.provider, account.provider),
           )
         )
-        .run()
 
       return undefined
     }

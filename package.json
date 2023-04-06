@@ -5,7 +5,7 @@
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "scripts": {
     "build:app": "turbo run build --filter=next-auth-app",
-    "build:docs": "turbo run build --filter=docs",
+    "build:docs": "turbo run build --filter=docs --continue",
     "build": "turbo run build --filter=next-auth --filter=@next-auth/* --filter=@auth/* --no-deps",
     "test": "turbo run test --concurrency=1 --filter=[HEAD^1] --filter=./packages/* --filter=!@*upstash* --filter=!*dynamodb-*",
     "clean": "turbo run clean --no-cache",

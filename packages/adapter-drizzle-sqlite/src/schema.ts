@@ -49,6 +49,4 @@ export const verificationTokens = sqliteTable("verificationToken", {
 
 export const db = drizzle(sqlite);
 
-export type DrizzleClient = MySqlDatabase<any, any> | PgDatabase<any, any> | BaseSQLiteDatabase<any, any>;
-
 migrate(db, { migrationsFolder: "./drizzle" })
