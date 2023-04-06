@@ -9,10 +9,10 @@
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install next-auth @next-auth/dynamodb-adapter
+ * npm install next-auth @next-auth/dyanamodb-adapter
  * ```
  *
- * @module @next-auth/dynamodb-adapter
+ * @module @next-auth/dyanamodb-adapter
  */
 import { v4 as uuid } from "uuid"
 
