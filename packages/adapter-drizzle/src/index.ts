@@ -9,18 +9,18 @@
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install next-auth drizzle-orm @next-auth/drizzle-adapter
+ * npm install next-auth drizzle-orm @auth/drizzle-adapter
  * npm install drizzle-kit --save-dev
  * ```
  *
- * @module @next-auth/drizzle-adapter
+ * @module @auth/drizzle-adapter
  */
 import {
   accounts,
   users,
   sessions,
   verificationTokens,
-  type Thing,
+  type DrizzleClient,
 } from "./schema"
 import { and, eq } from "drizzle-orm/expressions"
 import type { Adapter } from "next-auth/adapters"
@@ -33,7 +33,7 @@ import type { Adapter } from "next-auth/adapters"
  * ```js title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
- * import { DrizzleAdapter } from "@next-auth/drizzle-adapter"
+ * import { DrizzleAdapter } from "@auth/drizzle-adapter"
  * import { db } from "./db-schema"
  *
  * export default NextAuth({
@@ -114,7 +114,7 @@ import type { Adapter } from "next-auth/adapters"
  * ```
  *
  **/
-export function DrizzleAdapter(client: Thing): Adapter {
+export function DrizzleAdapter(client: DrizzleClient): Adapter {
   return {
     createUser(data) {
       return client

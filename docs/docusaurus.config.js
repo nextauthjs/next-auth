@@ -262,7 +262,7 @@ const docusaurusConfig = {
       },
     ],
     typedocAdapter("Dgraph"),
-    typedocAdapter("Drizzle"),
+    typedocAdapter("Drizzle ORM"),
     typedocAdapter("DynamoDB"),
     typedocAdapter("Fauna"),
     typedocAdapter("Firebase"),
