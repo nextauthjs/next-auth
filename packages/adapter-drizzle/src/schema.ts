@@ -1,7 +1,10 @@
 import { integer, sqliteTable, text, primaryKey } from 'drizzle-orm/sqlite-core';
 import { drizzle } from 'drizzle-orm/better-sqlite3';
-import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
+import { BaseSQLiteDatabase } from 'drizzle-orm/sqlite-core';
+import { PgDatabase } from 'drizzle-orm/pg-core'
+import { MySqlDatabase } from 'drizzle-orm/mysql-core'
 import Database from 'better-sqlite3';
+import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
 import { ProviderType } from 'next-auth/providers';
 
 const sqlite = new Database('db.sqlite');
@@ -46,6 +49,6 @@ export const verificationTokens = sqliteTable("verificationToken", {
 
 export const db = drizzle(sqlite);
 
-export type Thing = typeof db
+export type DrizzleClient = MySqlDatabase<any, any> | PgDatabase<any, any> | BaseSQLiteDatabase<any, any>;
 
 migrate(db, { migrationsFolder: "./drizzle" })
