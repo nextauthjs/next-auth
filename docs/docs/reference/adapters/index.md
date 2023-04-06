@@ -9,6 +9,10 @@ Using an Auth.js / NextAuth.js adapter you can connect to any database service o
     <img src="/img/adapters/dgraph.png" width="30" />
     <h4 class="adapter-card__title">Dgraph Adapter</h4>
   </a>
+  <a href="/reference/adapter/drizzle" class="adapter-card">
+    <img src="https://pbs.twimg.com/profile_images/1598308842391179266/CtXrfLnk_400x400.jpg" width="30" />
+    <h4 class="adapter-card__title">Drizzle Adapter</h4>
+  </a>
   <a href="/reference/adapter/dynamodb" class="adapter-card">
     <img src="/img/adapters/dynamodb.png" width="30" />
     <h4 class="adapter-card__title">DynamoDB Adapter</h4>
