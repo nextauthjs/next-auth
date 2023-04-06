@@ -16,7 +16,7 @@
  *
  * @module @next-auth/drizzle-adapter
  */
-import { db, accounts, users, sessions, verificationTokens, Thing } from './schema'
+import { db, accounts, users, sessions, verificationTokens, DrizzleClient } from './schema'
 import { and, eq } from 'drizzle-orm/expressions'
 import type { Adapter } from "next-auth/adapters"
 
@@ -109,7 +109,7 @@ import type { Adapter } from "next-auth/adapters"
  * ```
  *
  **/
-export function DrizzleAdapter(client: Thing): Adapter {
+export function DrizzleAdapter(client: typeof db): Adapter {
   return {
     createUser: (data) => {
       return client
