@@ -73,14 +73,34 @@ You can protect server side rendered pages using the `getServerSession` method. 
 You need to add this to every server rendered page you want to protect. Be aware, `getServerSession` takes slightly different arguments than the method it is replacing, `getSession`.
 
 ```js title="pages/server-side-example.js"
-import { getServerSession } from "next-auth/next"
-import { authOptions } from "./api/auth/[...nextauth]"
-import { useSession } from "next-auth/react"
 
-export default function Page() {
-  const { data: session } = useSession()
+import { useSession } from 'next-auth/react'
+import { GetServerSideProps } from 'next'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '../api/auth/[...nextauth]'
+import { useEffect, useState } from 'react'
 
-  if (typeof window === "undefined") return null
+export const getServerSideProps: GetServerSideProps = async function (context) {
+    return {
+      props: {
+        session: await getServerSession(
+          context.req,
+          context.res,
+          authOptions
+        )
+      }
+    }
+}
+
+export default function Abc() {
+  const [hasMounted, setHasMounted] = useState(false)
+  const {data: session} = useSession()
+
+  useEffect(() => {
+    setHasMounted(true)
+  }, [])
+
+  if(!hasMounted) return null
 
   if (session) {
     return (
@@ -93,17 +113,6 @@ export default function Page() {
   return <p>Access Denied</p>
 }
 
-export async function getServerSideProps(context) {
-  return {
-    props: {
-      session: await getServerSession(
-        context.req,
-        context.res,
-        authOptions
-      ),
-    },
-  }
-}
 ```
 
 :::tip
