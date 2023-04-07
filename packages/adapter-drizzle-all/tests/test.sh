@@ -1,21 +1,19 @@
 
 #!/usr/bin/env bash
 
-CONTAINER_NAME=next-auth-drizzle-pg-test
-export POSTGRES_PASSWORD=mysecretpassword
-
+CONTAINER_NAME=next-auth-drizzle-mysql-test
 
 # Start db
 docker run -d --rm \
 --name ${CONTAINER_NAME} \
--e POSTGRES_PASSWORD=mysecretpassword \
--d postgres
+-e MYSQL_ROOT_PASSWORD=my-secret-pw \
+-d mysql:8
 
 echo "Waiting 20 sec for db to start..."
 sleep 20
 
 # Create tables and indeces
-npx drizzle-kit generate:pg --schema=src/schema.ts --breakpoints
+npx drizzle-kit generate:mysql --schema=src/schema.ts --breakpoints
 
 # Always stop container, but exit with 1 when tests are failing
 if npx jest;then
