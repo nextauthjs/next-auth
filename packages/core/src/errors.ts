@@ -1,6 +1,5 @@
 interface ErrorCause extends Record<string, unknown> {}
 
-/** @internal */
 export class AuthError extends Error {
   constructor(message: string | Error | ErrorCause, cause?: ErrorCause) {
     if (message instanceof Error) {
