@@ -18,3 +18,12 @@ declare module "next-auth" {
     foo: string
   }
 }
+
+
+declare global {
+  namespace NodeJS {
+    interface ProcessEnv {
+      [key: string]: string;
+    }
+  }
+}

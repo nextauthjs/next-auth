@@ -1,6 +1,8 @@
 import Layout from "components/layout"
+import { providers } from "app/auth"
 
 export default function Page() {
+  console.log(providers())
   return (
     <Layout>
       <h1>NextAuth.js Example</h1>
