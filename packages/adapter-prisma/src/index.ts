@@ -103,8 +103,6 @@ import type { Adapter, AdapterAccount } from "next-auth/adapters"
  *   identifier String
  *   token      String   @unique
  *   expires    DateTime
- *
- *   @@unique([identifier, token])
  * }
  * ```
  *
