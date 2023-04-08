@@ -1,4 +1,4 @@
-import { SolidAuth, type SolidAuthConfig } from "@solid-auth/next";
+import { SolidAuth, type SolidAuthConfig } from "@auth/solid-start";
 import GitHub from "@auth/core/providers/github";
 import { serverEnv } from "~/env/server";
 import { type APIEvent } from "solid-start";

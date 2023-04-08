@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@auth/core": "workspace:*",
-    "@solid-auth/next": "^0.0.23",
+    "@auth/solid-start": "workspace:*",
     "@solidjs/meta": "^0.28.4",
     "@solidjs/router": "^0.8.2",
     "solid-js": "^1.7.3",

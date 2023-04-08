@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@auth/core": "latest",
-    "@solid-auth/next": "^0.0.19",
+    "@auth/solid-start": "^0.1.1",
     "@solidjs/meta": "^0.28.0",
     "@solidjs/router": "^0.6.0",
     "solid-js": "^1.5.7",

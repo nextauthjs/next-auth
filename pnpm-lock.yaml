@@ -105,7 +105,7 @@ importers:
   apps/dev/solid-start:
     specifiers:
       '@auth/core': workspace:*
-      '@solid-auth/next': ^0.0.23
+      '@auth/solid-start': workspace:*
       '@solidjs/meta': ^0.28.4
       '@solidjs/router': ^0.8.2
       autoprefixer: ^10.4.13
@@ -121,7 +121,7 @@ importers:
       zod: ^3.19.1
     dependencies:
       '@auth/core': link:../../../packages/core
-      '@solid-auth/next': 0.0.23_gpcxpg23rkpol2v32qvrl472bq
+      '@auth/solid-start': link:../../../packages/frameworks-solid-start
       '@solidjs/meta': 0.28.4_solid-js@1.7.3
       '@solidjs/router': 0.8.2_solid-js@1.7.3
       solid-js: 1.7.3
@@ -10746,20 +10746,6 @@ packages:
 
   /@socket.io/component-emitter/3.1.0:
     resolution: {integrity: sha512-+9jVqKhRSpsc591z5vX+X5Yyw+he/HCB4iQ/RYxw35CEPaY1gnsNE43nf9n9AaYjAQrTiI/mOwKUKdUs9vf7Xg==}
-    dev: false
-
-  /@solid-auth/next/0.0.23_gpcxpg23rkpol2v32qvrl472bq:
-    resolution: {integrity: sha512-1fClfQNn7MHoHGt8RoKLBnoJUgG4gAY5YjtpvtHxoysLG4WIKj9XdN3tx6r3/vJ4Aon8YgcCT5cnJRsY6wGe7A==}
-    deprecated: Use @auth/solid-start instead
-    peerDependencies:
-      '@auth/core': ^0.2.2 || ~0.2.2
-      solid-js: ^1.5.7
-      solid-start: ^0.2.1
-    dependencies:
-      '@auth/core': link:packages/core
-      set-cookie-parser: 2.6.0
-      solid-js: 1.7.3
-      solid-start: 0.2.26_gm4kotxod2e4pnudq2z6hbgeuq
     dev: false
 
   /@solidjs/meta/0.28.4_solid-js@1.7.3:
