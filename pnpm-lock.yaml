@@ -104,7 +104,7 @@ importers:
 
   apps/dev/solid-start:
     specifiers:
-      '@auth/core': latest
+      '@auth/core': workspace:*
       '@solid-auth/next': ^0.0.23
       '@solidjs/meta': ^0.28.4
       '@solidjs/router': ^0.8.2
@@ -574,8 +574,9 @@ importers:
       tsup: ^6.5.0
       typescript: ^4.8.2
       vite: ^4.2.1
-    devDependencies:
+    dependencies:
       '@auth/core': link:../core
+    devDependencies:
       '@solidjs/meta': 0.28.4_solid-js@1.7.3
       '@solidjs/router': 0.8.2_solid-js@1.7.3
       '@types/node': 18.11.10

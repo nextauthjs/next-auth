@@ -17,7 +17,7 @@
     "vite": "^4.2.1"
   },
   "dependencies": {
-    "@auth/core": "latest",
+    "@auth/core": "workspace:*",
     "@solid-auth/next": "^0.0.23",
     "@solidjs/meta": "^0.28.4",
     "@solidjs/router": "^0.8.2",
