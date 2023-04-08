@@ -566,21 +566,25 @@ importers:
     specifiers:
       '@auth/core': workspace:*
       '@solidjs/meta': ^0.28.4
+      '@solidjs/router': ^0.8.2
       '@types/node': ^18.7.14
       next-auth: workspace:*
       solid-js: ^1.7.3
       solid-start: ^0.2.26
       tsup: ^6.5.0
       typescript: ^4.8.2
+      vite: ^4.2.1
     devDependencies:
       '@auth/core': link:../core
       '@solidjs/meta': 0.28.4_solid-js@1.7.3
+      '@solidjs/router': 0.8.2_solid-js@1.7.3
       '@types/node': 18.11.10
       next-auth: link:../next-auth
       solid-js: 1.7.3
-      solid-start: 0.2.26_vdoha5hwwtmcweyeycu4e26hwm
+      solid-start: 0.2.26_vphomx4hf7x54u3yrswdoct7he
       tsup: 6.5.0_typescript@4.9.4
       typescript: 4.9.4
+      vite: 4.2.1_@types+node@18.11.10
 
   packages/frameworks-sveltekit:
     specifiers:
@@ -31048,7 +31052,7 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /solid-start/0.2.26_vdoha5hwwtmcweyeycu4e26hwm:
+  /solid-start/0.2.26_vphomx4hf7x54u3yrswdoct7he:
     resolution: {integrity: sha512-kne2HZlnSMzsirdnvNs1CsDqBl0L0uvKKt1t4de1CH7JIngyqoMcER97jTE0Ejr84KknANaKAdvJAzZcL7Ueng==}
     hasBin: true
     peerDependencies:
@@ -31089,6 +31093,7 @@ packages:
       '@babel/preset-typescript': 7.21.4_@babel+core@7.21.4
       '@babel/template': 7.20.7
       '@solidjs/meta': 0.28.4_solid-js@1.7.3
+      '@solidjs/router': 0.8.2_solid-js@1.7.3
       '@types/cookie': 0.5.1
       chokidar: 3.5.3
       compression: 1.7.4
@@ -31112,8 +31117,9 @@ packages:
       solid-js: 1.7.3
       terser: 5.16.8
       undici: 5.21.1
-      vite-plugin-inspect: 0.7.19_rollup@3.20.2
-      vite-plugin-solid: 2.7.0_solid-js@1.7.3
+      vite: 4.2.1_@types+node@18.11.10
+      vite-plugin-inspect: 0.7.19_rollup@3.20.2+vite@4.2.1
+      vite-plugin-solid: 2.7.0_solid-js@1.7.3+vite@4.2.1
       wait-on: 6.0.1_debug@4.3.4
     transitivePeerDependencies:
       - supports-color
@@ -33834,24 +33840,6 @@ packages:
       vscode-uri: 3.0.7
     dev: true
 
-  /vite-plugin-inspect/0.7.19_rollup@3.20.2:
-    resolution: {integrity: sha512-OdKObJGdzOMR7SuqykN/Rb6rVtMK1wp4EmUTM3xhTCuSR1K/oM7fi4CKeBWhpYSkqop7O4gVB/MOUk7+RO7gIQ==}
-    engines: {node: '>=14'}
-    peerDependencies:
-      vite: ^3.1.0 || ^4.0.0
-    dependencies:
-      '@antfu/utils': 0.7.2
-      '@rollup/pluginutils': 5.0.2_rollup@3.20.2
-      debug: 4.3.4
-      fs-extra: 11.1.1
-      kolorist: 1.7.0
-      sirv: 2.0.2
-      ufo: 1.1.1
-    transitivePeerDependencies:
-      - rollup
-      - supports-color
-    dev: true
-
   /vite-plugin-inspect/0.7.19_rollup@3.20.2+vite@4.2.1:
     resolution: {integrity: sha512-OdKObJGdzOMR7SuqykN/Rb6rVtMK1wp4EmUTM3xhTCuSR1K/oM7fi4CKeBWhpYSkqop7O4gVB/MOUk7+RO7gIQ==}
     engines: {node: '>=14'}
@@ -33869,24 +33857,6 @@ packages:
     transitivePeerDependencies:
       - rollup
       - supports-color
-
-  /vite-plugin-solid/2.7.0_solid-js@1.7.3:
-    resolution: {integrity: sha512-avp/Jl5zOp/Itfo67xtDB2O61U7idviaIp4mLsjhCa13PjKNasz+IID0jYTyqUp9SFx6/PmBr6v4KgDppqompg==}
-    peerDependencies:
-      solid-js: ^1.7.2
-      vite: ^3.0.0 || ^4.0.0
-    dependencies:
-      '@babel/core': 7.21.4
-      '@babel/preset-typescript': 7.21.4_@babel+core@7.21.4
-      '@types/babel__core': 7.20.0
-      babel-preset-solid: 1.7.3_@babel+core@7.21.4
-      merge-anything: 5.1.4
-      solid-js: 1.7.3
-      solid-refresh: 0.5.2_solid-js@1.7.3
-      vitefu: 0.2.4
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
 
   /vite-plugin-solid/2.7.0_solid-js@1.7.3+vite@4.2.1:
     resolution: {integrity: sha512-avp/Jl5zOp/Itfo67xtDB2O61U7idviaIp4mLsjhCa13PjKNasz+IID0jYTyqUp9SFx6/PmBr6v4KgDppqompg==}
@@ -34036,15 +34006,6 @@ packages:
       rollup: 3.20.2
     optionalDependencies:
       fsevents: 2.3.2
-    dev: true
-
-  /vitefu/0.2.4:
-    resolution: {integrity: sha512-fanAXjSaf9xXtOOeno8wZXIhgia+CZury481LsDaV++lSvcU2R9Ch2bPh3PYFyoHW+w9LqAeYRISVQjUIew14g==}
-    peerDependencies:
-      vite: ^3.0.0 || ^4.0.0
-    peerDependenciesMeta:
-      vite:
-        optional: true
     dev: true
 
   /vitefu/0.2.4_vite@4.0.1:
