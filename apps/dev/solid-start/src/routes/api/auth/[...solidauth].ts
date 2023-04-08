@@ -5,6 +5,7 @@ import { type APIEvent } from "solid-start";
 
 export const authOpts: SolidAuthConfig = {
   providers: [
+    // @ts-expect-error https://github.com/nextauthjs/next-auth/issues/6174
     GitHub({
       clientId: serverEnv.GITHUB_ID,
       clientSecret: serverEnv.GITHUB_SECRET,
