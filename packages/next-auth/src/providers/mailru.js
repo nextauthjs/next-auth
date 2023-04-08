@@ -6,7 +6,14 @@ export default function MailRu(options) {
     type: "oauth",
     authorization: "https://oauth.mail.ru/login?scope=userinfo",
     token: "https://oauth.mail.ru/token",
-    userinfo: "https://oauth.mail.ru/userinfo",
+    userinfo: {
+        async request({ tokens }) {
+          const res = await fetch(
+            `https://oauth.mail.ru/userinfo?access_token=${tokens.access_token}`
+          );
+          return await res.json();
+        },
+      },
     profile(profile) {
       return {
         id: profile.id,
