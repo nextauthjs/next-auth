@@ -101,7 +101,7 @@ import type { Adapter, AdapterAccount } from "next-auth/adapters"
  *
  * model VerificationToken {
  *   identifier String
- *   token      String   @unique
+ *   token      String  
  *   expires    DateTime
  *
  *   @@unique([identifier, token])
@@ -211,7 +211,7 @@ import type { Adapter, AdapterAccount } from "next-auth/adapters"
  *
  * model VerificationToken {
  *   identifier String
- *   token      String   @unique
+ *   token      String   
  *   expires    DateTime
  *
  *   @@unique([identifier, token])
