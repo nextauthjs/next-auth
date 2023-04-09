@@ -55,7 +55,7 @@
  * @module types
  */
 
-import type { CookieSerializeOptions } from "cookie"
+import type { CookieSerializeOptions } from "cookie-esm"
 import type {
   OAuth2TokenEndpointResponse,
   OpenIDTokenEndpointResponse,

@@ -1,4 +1,4 @@
-import { serialize, parse as parseCookie } from "cookie"
+import { serialize, parse as parseCookie } from "cookie-esm"
 import { UnknownAction } from "../core/errors"
 import type { ResponseInternal, RequestInternal } from "../core"
 import type { AuthAction } from "../core/types"

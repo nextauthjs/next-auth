@@ -68,7 +68,7 @@
   "dependencies": {
     "@babel/runtime": "^7.16.3",
     "@panva/hkdf": "^1.0.1",
-    "cookie": "^0.5.0",
+    "cookie-esm": "^1.0.1",
     "jose": "^4.9.3",
     "oauth": "^0.9.15",
     "openid-client": "^5.1.0",

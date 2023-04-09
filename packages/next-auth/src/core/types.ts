@@ -10,7 +10,7 @@ import type {
 import type { TokenSetParameters } from "openid-client"
 import type { JWT, JWTOptions } from "../jwt"
 import type { LoggerInstance } from "../utils/logger"
-import type { CookieSerializeOptions } from "cookie"
+import type { CookieSerializeOptions } from "cookie-esm"
 
 import type { NextApiRequest, NextApiResponse } from "next"
 

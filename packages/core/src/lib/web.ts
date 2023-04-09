@@ -1,4 +1,4 @@
-import { parse as parseCookie, serialize } from "cookie"
+import { parse as parseCookie, serialize } from "cookie-esm"
 import { AuthError, UnknownAction } from "../errors.js"
 
 import type { AuthAction, RequestInternal, ResponseInternal } from "../types.js"

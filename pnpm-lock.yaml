@@ -538,7 +538,7 @@ importers:
       '@types/nodemailer': 6.4.6
       '@types/react': 18.0.26
       autoprefixer: 10.4.13
-      cookie: 0.5.0
+      cookie-esm: ^1.0.1
       jose: ^4.11.1
       oauth4webapi: ^2.0.6
       postcss: 8.4.19
@@ -547,7 +547,7 @@ importers:
       preact-render-to-string: 5.2.3
     dependencies:
       '@panva/hkdf': 1.0.4
-      cookie: 0.5.0
+      cookie-esm: 1.0.1
       jose: 4.11.1
       oauth4webapi: 2.0.6
       preact: 10.11.3
@@ -646,7 +646,7 @@ importers:
       babel-plugin-jsx-pragmatic: ^1.0.2
       babel-preset-preact: ^2.0.0
       concurrently: ^7
-      cookie: ^0.5.0
+      cookie-esm: ^1.0.1
       cssnano: ^5.1.11
       jest: ^28.1.1
       jest-environment-jsdom: ^28.1.1
@@ -668,7 +668,7 @@ importers:
     dependencies:
       '@babel/runtime': 7.18.3
       '@panva/hkdf': 1.0.2
-      cookie: 0.5.0
+      cookie-esm: 1.0.1
       jose: 4.11.0
       oauth: 0.9.15
       openid-client: 5.1.6
@@ -15375,6 +15375,11 @@ packages:
   /cookie-es/0.5.0:
     resolution: {integrity: sha512-RyZrFi6PNpBFbIaQjXDlFIhFVqV42QeKSZX1yQIl6ihImq6vcHNGMtqQ/QzY3RMPuYSkvsRwtnt5M9NeYxKt0g==}
     dev: true
+
+  /cookie-esm/1.0.1:
+    resolution: {integrity: sha512-rlS/O48MCTJxpWQhndoOt/71zE/I4FKfPUOzu6fLeWK6V3Y4pAYshYC4hpilQ6qD/4vMYQLsFYdX/Vfss8VdvA==}
+    engines: {node: '>= 10.16'}
+    dev: false
 
   /cookie-signature/1.0.6:
     resolution: {integrity: sha512-QADzlaHc8icV8I7vbaJXJwod9HWYp8uCqf1xa4OfNu1T7JVxQIrUgOWtHdNDtPiywmFbiS12VjotIXLrKM3orQ==}
