@@ -42,7 +42,6 @@ export function toResponse(res: ResponseInternal): Response {
     const cookieHeader = serialize(name, value, options)
     if (headers.has("Set-Cookie")) headers.append("Set-Cookie", cookieHeader)
     else headers.set("Set-Cookie", cookieHeader)
-    // headers.set("Set-Cookie", cookieHeader) // TODO: Remove. Seems to be a bug with Headers in the runtime
   })
 
   let body = res.body
