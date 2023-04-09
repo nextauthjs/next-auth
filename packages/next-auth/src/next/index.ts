@@ -16,7 +16,11 @@ import type {
   NextAuthResponse,
 } from "../core/types"
 
-async function NextAuthHandler(
+interface RouteHandlerContext {
+  params: { nextauth: string[] }
+}
+
+async function NextAuthApiHandler(
   req: NextApiRequest,
   res: NextApiResponse,
   options: AuthOptions
@@ -120,30 +124,30 @@ function NextAuth(
   if (args.length === 1) {
     return async (
       req: NextAuthRequest | NextRequest,
-      res: NextAuthResponse | { params: { nextauth: string[] } }
+      res: NextAuthResponse | RouteHandlerContext
     ) => {
-      if ((res as any).params) {
-        return await NextAuthRouteHandler(req as any, res as any, args[0])
+      if ((res as unknown as any)?.params) {
+        return await NextAuthRouteHandler(
+          req as unknown as NextRequest,
+          res as RouteHandlerContext,
+          args[0]
+        )
       }
-      return await NextAuthHandler(req as any, res as any, args[0])
-
-      // REVIEW: req instanceof Request should return true on Route Handlers
-      // if (req instanceof Request) {
-      //   return await NextAuthRouteHandler(
-      //     req,
-      //     res as { params: { nextauth: string[] } },
-      //     args[0]
-      //   )
-      // }
-      // return await NextAuthHandler(req, res as NextApiResponse, args[0])
+      return await NextAuthApiHandler(
+        req as NextApiRequest,
+        res as NextApiResponse,
+        args[0]
+      )
     }
   }
 
-  if ((args[1] as any).params) {
-    return NextAuthRouteHandler(args[0] as any, args[1] as any, args[2])
+  if ((args[1] as any)?.params) {
+    return NextAuthRouteHandler(
+      ...(args as unknown as Parameters<typeof NextAuthRouteHandler>)
+    )
   }
 
-  return NextAuthHandler(args[0], args[1], args[2])
+  return NextAuthApiHandler(...args)
 }
 
 export default NextAuth
